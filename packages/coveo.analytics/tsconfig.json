@@ -13,6 +13,8 @@
     "src/analytics.ts",
     "src/index.ts",
     "src/objectAssign.ts",
+    "src/history.ts",
+    "src/detector.ts",
     "typings/main.d.ts"
   ]
 }
