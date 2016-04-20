@@ -1,5 +1,5 @@
 import SimpleAnalytics from './SimpleAnalytics';
-import * as _analytics from './index';
+import * as analytics from './index';
 
 declare const global: any;
 
@@ -27,6 +27,6 @@ if (coveoua && coveoua.q) {
 // Replace the quick shim with the real thing.
 global.coveoua = SimpleAnalytics;
 //
-global.coveoanalytics = _analytics;
+global.coveoanalytics = analytics;
 
 export default coveoua;

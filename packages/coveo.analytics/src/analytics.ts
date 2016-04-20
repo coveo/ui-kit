@@ -1,4 +1,3 @@
-
 export const Endpoints = {
   default: 'https://usageanalytics.coveo.com/rest/v15',
   production: 'https://usageanalytics.coveo.com/rest/v15',
@@ -11,6 +10,13 @@ export interface ClientOptions {
   endpoint?: string;
 };
 
+function defaultResponseTransformer(response: IResponse): Promise<any> {
+    return response.json().then((data: any) => {
+        data.raw = response;
+        return data;
+    });
+}
+
 export class Client {
     private endpoint: string;
     private token: string;
@@ -20,90 +26,34 @@ export class Client {
         this.token = opts.token;
     }
 
-    SendSearchEvent(request: SearchEventRequest): Promise<SearchEventResponse> {
-        return fetch(this.endpoint + '/analytics/search', {
-                method: 'POST',
-                headers: {authorization: `BEARER ${this.token}`},
-                mode: 'cors',
-                body: JSON.stringify(request)
-            }).then((response) => {
-            return response.json().then((data) => {
-                return {
-                    raw: response,
-                    visitId: data['visitId'],
-                    visitorId: data['visitorId']
-                };
-            });
+    sendEvent( eventType: string, request: any): Promise<IResponse> {
+        return fetch(`${this.endpoint}/analytics/${eventType}`, {
+            method: 'POST',
+            headers: {authorization: `BEARER ${this.token}`},
+            mode: 'cors',
+            body: JSON.stringify(request)
         });
     }
-    SendClickEvent(request: ClickEventRequest): Promise<ClickEventResponse> {
-        return fetch(this.endpoint + '/analytics/click', {
-                method: 'POST',
-                headers: {authorization: `BEARER ${this.token}`},
-                mode: 'cors',
-                body: JSON.stringify(request)
-            }).then((response) => {
-            return response.json().then((data) => {
-                return {
-                    raw: response,
-                    visitId: data['visitId'],
-                    visitorId: data['visitorId']
-                };
-            });
-        });
+
+    sendSearchEvent(request: SearchEventRequest): Promise<SearchEventResponse> {
+        return this.sendEvent('search', request).then(defaultResponseTransformer);
     }
-    SendCustomEvent(request: CustomEventRequest): Promise<CustomEventResponse> {
-        return fetch(this.endpoint + '/analytics/custom', {
-                method: 'POST',
-                headers: {authorization: `BEARER ${this.token}`},
-                mode: 'cors',
-                body: JSON.stringify(request)
-            }).then((response) => {
-            return response.json().then((data) => {
-                return {
-                    raw: response,
-                    visitId: data['visitId'],
-                    visitorId: data['visitorId']
-                };
-            });
-        });
+    sendClickEvent(request: ClickEventRequest): Promise<ClickEventResponse> {
+        return this.sendEvent('click', request).then(defaultResponseTransformer);
     }
-    SendViewEvent(request: ViewEventRequest): Promise<ViewEventResponse> {
-        return fetch(this.endpoint + '/analytics/view', {
-                method: 'POST',
-                headers: {authorization: `BEARER ${this.token}`},
-                mode: 'cors',
-                body: JSON.stringify(request)
-            }).then((response) => {
-            return response.json().then((data) => {
-                return {
-                    raw: response,
-                    visitId: data['visitId'],
-                    visitorId: data['visitorId']
-                };
-            });
-        });
+    sendCustomEvent(request: CustomEventRequest): Promise<CustomEventResponse> {
+        return this.sendEvent('custom', request).then(defaultResponseTransformer);
     }
-    GetVisit(): Promise<VisitResponse> {
-        return fetch(this.endpoint + '/analytics/visit').then((response) => {
-            return response.json().then((data) => {
-                return {
-                    raw: response,
-                    id: data['id'],
-                    visitorId: data['id'],
-                };
-            });
-        });
+    sendViewEvent(request: ViewEventRequest): Promise<ViewEventResponse> {
+        return this.sendEvent('view', request).then(defaultResponseTransformer);
     }
-    GetHealth(): Promise<HealthResponse> {
-        return fetch(this.endpoint + '/analytics/monitoring/health').then((response) => {
-            return response.json().then((data) => {
-                return {
-                    raw: response,
-                    status: data['status']
-                };
-            });
-        });
+    getVisit(): Promise<VisitResponse> {
+        return fetch(this.endpoint + '/analytics/visit')
+            .then(defaultResponseTransformer);
+    }
+    getHealth(): Promise<HealthResponse> {
+        return fetch(this.endpoint + '/analytics/monitoring/health')
+            .then(defaultResponseTransformer);
     }
 }
 

@@ -1,3 +1,5 @@
+// objectAssing ponyfill by sindresorhus ported to typescript
+// https://github.com/sindresorhus/object-assign/blob/master/index.js
 const hasOwnProperty = Object.prototype.hasOwnProperty;
 const getOwnPropertySymbols: any = (<any>Object).getOwnPropertySymbols;
 const propIsEnumerable = Object.prototype.propertyIsEnumerable;

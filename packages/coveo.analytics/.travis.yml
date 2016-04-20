@@ -9,14 +9,13 @@ script:
 - npm run-script build:tsc
 - npm run-script build:webpack
 deploy:
-  skip_cleanup: true
-  provider: npm
-  email: pa@stjean.me
-  api_key:
-    secure: mtfITnXAVyDLoFaM3QRzP3cc/uyjUzdQsmsWuTq5PHKGy/vdMtSRkZnx5WMfZCL6Ae9V314Ni2ovpN/HoQRa0VU3B13kbhCQe6HTp9TQB+aLBMjNP9aADxXZ+vYKSYUdtF0rQqo4o2xkELLwKnCM4qRb1nAsskIj3OdPFqJXPA6onmUHTHuIiy/f+hWLLiGpY0m5cs0kDjThrRplV+DCIigfP8myk4TpFV0WxtFFv0kRLE9oi7PAtgLOjzR6g+F7VNBZ8Qj4KbW5iHN8MrSoHu7M4KhL9sHSiFMq2nb31+hFsS9rysKHfCGf83v/JQq2Y4wbG6zfZMU6fDhg/Mx0zItxOOH2EKpP2CxCxu9sgfL/Nt4j5S6+2i2cF9l8v4zLRM3FpheuHA08LET5oZEq4lL5vHXEUovQf0U1E0GyzDonUpjIfCukENnwx+BX/onzzk/b2KPdkGnYesh2AQlmAVpeMJGD+6gseo8oXMNd8G+hp6Cf8b/WFJkl/O20poeoJXwvz7YoyzOOQMgEOcqPEXoScnYTK8L/+I48tLuh49WoSEY26NVAP+J+9WVx4OnJdB418qRoiuOex+nnwK7h1UYuo99/MFKafWl+AmlG7f1QK3VcgbUUsRKRW6lYUA9/Sx7Z1S7V1zDQS7nqsrCplq5wT1pkRieAZebjhQs6nus=
-  on:
-    tags: true
-    repo: coveo/coveo.analytics.js
+  - provider: npm
+    skip_cleanup: true
+    api_key:
+      secure: "XCoe55Lgr8vFo7n7+EvwL3sfbMB1qth1KqyqcTGQDhl+zPzK0c7KmF3T8ctRmoEOjJvYqoDheC3f4q8XLm0gxxml1pjPewG1bAzWFoZ/eqcnVU7ktBgwcz0CcEAzNxeS5mqxQOnsEnQGy7XgLGjmO45eXiLkNWecRe/wsK84J3yYMB5NjLuhdj8eUAFSrzw4X4yxc8bryIvCkieO8k42hsISYF3PPT5yaff8jf0WfeKwm5xbKQIyXLmQeZQHJieEOCd9aJjJeblIPH9bWxRn3qnzrs4/NKGv0lAPtZYqp1zSJ6hbjdKZZLyqij6SJxxpcB8RbA4QmiICzkrULgmFstgnuKut9h5MVIRcmUu3FV9u1IS4FNMuSUY/WeQbhs/6So9OJcr03azx+SaD/QAecY1n7KimxEckzMcm3TxaQ3H/loYHFJv0JlXJC1kOJaFuaHuGem/+g1XVaQ18vXaFYyB4Vk6RxNtrFPir6AbGf9bbL+MHVBUAuwc0Z8ddKsuKkP5zWYlT2JbXcUuLNjJDteP+eflXDPYiqjdJ/bNyxAM5lKvULN6Qs8zcSsoxEv+IMZwUkHQXMZRRSghYV3nmd2VmDc2FIQmebk26DR4Omz0zXeL6z7W8Y+VHdNxOXh+0r6Uj4olWozRx2uAqmB82DVMTpi4/9z4zrBcSFyS1B4I="
+    on:
+      tags: true
+      repo: coveo/coveo.analytics.js
 notifications:
   email:
     on_success: never

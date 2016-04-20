@@ -19,7 +19,8 @@ module.exports = {
         new webpack.ProvidePlugin({
             'Promise': 'exports?global.Promise!es6-promise',
             'window.fetch': 'exports?self.fetch!isomorphic-fetch',
-        })
+        }),
+        new webpack.optimize.UglifyJsPlugin()
     ],
     ts: {
         compilerOptions: {

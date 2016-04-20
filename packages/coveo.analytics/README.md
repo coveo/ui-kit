@@ -8,7 +8,7 @@
 
 ## Usage
 
-You have to provide your own `promise` and `fetch` api compatible libraries.
+You have to provide your own `promise` and `fetch` API compatible libraries.
 
 ```bash
 npm install coveo.analytics
@@ -23,7 +23,7 @@ var analytics = coveoanalytics.analytics;
 // Create an api client
 var client = new analytics.Client({ token : 'PLACE THE TOKEN HERE'})
 // Send your event
-client.SendCustomEvent({
+client.sendCustomEvent({
   eventType: "testEvent";
   eventValue: "Hello! Yes! This is Dog!";
 });
@@ -77,4 +77,4 @@ npm run build:webpack
 
 MIT license; see [LICENSE](./LICENSE).
 
-[![forthebadge](http://forthebadge.com/images/badges/gluten-free.svg)](http://forthebadge.com)
+[![forthebadge](http://forthebadge.com/images/badges/built-with-love.svg)](http://forthebadge.com)
