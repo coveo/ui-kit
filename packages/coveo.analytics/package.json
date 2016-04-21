@@ -7,7 +7,7 @@
   "scripts": {
     "build:webpack": "webpack",
     "build:tsc": "tsc",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "tsc -p test && ava",
     "clean": "rm -rf dist/*"
   },
   "author": "Pierre-Alexandre St-Jean <pastjean@coveo.com>",
@@ -17,6 +17,7 @@
   },
   "license": "MIT",
   "devDependencies": {
+    "ava": "^0.14.0",
     "es6-promise": "3.1.2",
     "exports-loader": "0.6.3",
     "isomorphic-fetch": "2.2.1",

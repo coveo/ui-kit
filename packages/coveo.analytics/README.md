@@ -1,4 +1,4 @@
-## coveo.analytics
+# ![coveo.analytics](media/header.png)
 
 [![Build Status](https://travis-ci.org/coveo/coveo.analytics.js.svg?branch=master)](https://travis-ci.org/coveo/coveo.analytics.js)
 [![dependency status](https://david-dm.org/coveo/coveo.analytics.js.svg)](https://david-dm.org/coveo/coveo.analytics.js)
@@ -17,26 +17,26 @@ npm install coveo.analytics
 Then use in typescript or javascript
 
 ```js
-var coveoanalytics = require('coveo.analytics')
-var analytics = coveoanalytics.analytics;
+import coveoanalytics from 'coveo.analytics';
 
 // Create an api client
-var client = new analytics.Client({ token : 'PLACE THE TOKEN HERE'})
+const client = new coveoanalytics.analytics.Client({ token : 'YOUR-TOKEN'})
 // Send your event
 client.sendCustomEvent({
-  eventType: "testEvent";
+  eventType: "dog";
   eventValue: "Hello! Yes! This is Dog!";
 });
 ```
 
-## Web Analytics Usage
+### Web Analytics Usage
 
 ```html
+CoVeo
 <script>
-(function(k,r,y,p,t,o,n){
-n='coveoua';k[n]=k[n]||function(){(k[n].q=k[n].q|| []).push(arguments)};
-k[n].t=Date.now();o=r.createElement(y);o.async=1;o.src=p;
-t=r.getElementsByTagName(y)[0];t.parentNode.insertBefore(o,t)
+(function(c,o,v,e,O,u,a){
+a='coveoua';c[a]=c[a]||function(){(c[a].q=c[a].q|| []).push(arguments)};
+c[a].t=Date.now();u=o.createElement(v);u.async=1;u.src=e;
+O=o.getElementsByTagName(v)[0];O.parentNode.insertBefore(u,O)
 })(window,document,'script','https://static.cloud.coveo.com/coveo.analytics.js/coveo.analytics.js')
 
 // Replace YOUR-TOKEN with your real token
@@ -57,9 +57,7 @@ coveoua('send','pageView',{
   contentType: options.contentType
   // ... more information ...
 });
-
 ```
-
 
 ## Contributing
 
