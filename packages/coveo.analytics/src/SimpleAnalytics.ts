@@ -20,9 +20,9 @@ class SimpleAPI {
         });
     }
 
-    send(event: string, customData: any) {
+    send(event: EventType, customData: any) {
         if (typeof this.client == 'undefined') {
-            throw new Error(`You must init before sending an event`);
+            throw new Error(`You must call init before sending an event`);
         }
 
         customData = objectAssign({}, {
@@ -44,6 +44,8 @@ class SimpleAPI {
         }
     }
 }
+
+type EventType = 'pageview';
 
 // simpleAPI singleton
 const simpleAPI = new SimpleAPI();

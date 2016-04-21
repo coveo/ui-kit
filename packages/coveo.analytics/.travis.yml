@@ -16,19 +16,6 @@ deploy:
     on:
       tags: true
       repo: coveo/coveo.analytics.js
-  - provider: s3
-    skip_cleanup: true
-    access_key_id: AKIAJQPGENIWTJ5EUEDQ
-    secret_access_key:
-      secure: "raBD5FO567rsJVIPR5Y42L/Xe9Fd9XBvRcVW/i+6nHWwACJ5o4Kh66GtE8ocEo9bOT6TxMlOdd7Ok7U8zFrsKztaU2WaYlJ3iZFO/OLJFOqR+CiUcOFkjTeAm2Y6gBzUMNV4AcJyx4CUnWE+Xf3M7OnWDtL/5K2JI7ctACZvUzf68W1nUU38CcOIpM40xBg6K/PMnzNjUIZTogv7ypISay5AQKa0rontMiT8kE361DcMr5IEUu16zX1zUO0IKGHJa4s10/OQflprZex4izNkYvF571jATrlgipYnszL+Gjewg9cd8A2dydQKR0riwgDh6t62sbDUxmFruDjcmzg0Bqa/6rqUbmk0EeG1pXkoIJgis2jLMW4gKZnJmUhpMF/J3tXg/WS7JmnwNKmWGeQbaGsYt1UpjxDivWQn+O2Aa5UfbrFROHdA7HS9bFxXBydpyEclH5U4o0DhbraEG81cjplOHkAf61G0y+o9Yj4PJUp1D9l8/T7NooZY+ZynyO/Hhuw2LHq7zPHapBqtuSWJkl7SV+S6rfhDaP7bUYlif3rBXdw0VruyYa/GB7Fi5Fy/QcvzVWIznhxyCkgb0m2wuBG7ARLik+W6HEwpJ63IvcmFwilXzqwSAyIpSTgq6foDZkwA2j44bgTmmqv3MUkcVfbl8+z7kDSg9ZXu7eebRqw="
-    bucket: coveo-public-content
-    local-dir: deploy
-    upload-dir: coveo.analytics.js
-    acl: public_read
-    on:
-      tags: true
-      repo: coveo/coveo.analytics.js
-
 notifications:
   email:
     on_success: never

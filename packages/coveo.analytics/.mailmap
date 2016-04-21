@@ -1,0 +1,9 @@
+# Generate CONTRIBUTORS.md: contributors.sh
+
+# Tip for finding duplicates (besides scanning the output of CONTRIBUTORS.md for name
+# duplicates that aren't also email duplicates): scan the output of:
+#   git log --format='%aE - %aN' | sort -uf
+#
+# For explanation on this file format: man git-shortlog
+
+Pierre-Alexandre St-Jean <pa@stjean.me> <pastjean@coveo.com>

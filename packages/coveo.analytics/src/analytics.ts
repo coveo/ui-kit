@@ -1,8 +1,10 @@
+export const Version = 'v15';
+
 export const Endpoints = {
-  default: 'https://usageanalytics.coveo.com/rest/v15',
-  production: 'https://usageanalytics.coveo.com/rest/v15',
-  dev: 'https://usageanalyticsdev.coveo.com/rest/v15',
-  staging: 'https://usageanalyticsstaging.coveo.com/rest/v15'
+  default: 'https://usageanalytics.coveo.com/rest/' + Version,
+  production: 'https://usageanalytics.coveo.com/rest/' + Version,
+  dev: 'https://usageanalyticsdev.coveo.com/rest/' + Version,
+  staging: 'https://usageanalyticsstaging.coveo.com/rest/' + Version
 };
 
 export interface ClientOptions {

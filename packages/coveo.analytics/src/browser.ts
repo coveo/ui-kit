@@ -8,7 +8,7 @@ declare const global: any;
 // queue `q` of unexecuted parameters
 export interface CoveoUAGlobal {
     (action: string, ...params: Array<string>): void;
-    // CoveoAnalytics.q ; // is the queue of last called actions before lib was included
+    // CoveoAnalytics.q is the queue of last called actions before lib was included
     q?: Array<Array<string>>;
     disableAutoHistory: boolean;
 }
@@ -26,11 +26,11 @@ if (coveoua.q) {
   });
 }
 
-const doNotTrack = [true, 'yes', '1'].indexOf( (<any>navigator).doNotTrack || (<any>navigator).msDoNotTrack || (<any>window).doNotTrack);
-
-// I don't know if doNotTrack applies here since the data is stored in the browser
-// but it is send to an api afterwards to get relevancy results.
-if (!coveoua.disableAutoHistory && !doNotTrack) {
+// According to the Mozilla Do Not Track Field Guide
+// (https://developer.mozilla.org/en-US/docs/Web/Security/Do_not_track_field_guide),
+// gathering data of actions of an user as long as it is not associated to the
+// identity of that user, doNotTrack is not enabled here.
+if (!coveoua.disableAutoHistory) {
     const store = new HistoryStore();
     store.addElement({
         type: 'view',
