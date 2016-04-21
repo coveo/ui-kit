@@ -1,0 +1,22 @@
+sudo: false
+language: node_js
+node_js:
+- stable
+install:
+- npm install
+- "$(npm bin)/typings install"
+script:
+- npm run-script build:tsc
+- npm run-script build:webpack
+deploy:
+  - provider: npm
+    skip_cleanup: true
+    api_key:
+      secure: "XCoe55Lgr8vFo7n7+EvwL3sfbMB1qth1KqyqcTGQDhl+zPzK0c7KmF3T8ctRmoEOjJvYqoDheC3f4q8XLm0gxxml1pjPewG1bAzWFoZ/eqcnVU7ktBgwcz0CcEAzNxeS5mqxQOnsEnQGy7XgLGjmO45eXiLkNWecRe/wsK84J3yYMB5NjLuhdj8eUAFSrzw4X4yxc8bryIvCkieO8k42hsISYF3PPT5yaff8jf0WfeKwm5xbKQIyXLmQeZQHJieEOCd9aJjJeblIPH9bWxRn3qnzrs4/NKGv0lAPtZYqp1zSJ6hbjdKZZLyqij6SJxxpcB8RbA4QmiICzkrULgmFstgnuKut9h5MVIRcmUu3FV9u1IS4FNMuSUY/WeQbhs/6So9OJcr03azx+SaD/QAecY1n7KimxEckzMcm3TxaQ3H/loYHFJv0JlXJC1kOJaFuaHuGem/+g1XVaQ18vXaFYyB4Vk6RxNtrFPir6AbGf9bbL+MHVBUAuwc0Z8ddKsuKkP5zWYlT2JbXcUuLNjJDteP+eflXDPYiqjdJ/bNyxAM5lKvULN6Qs8zcSsoxEv+IMZwUkHQXMZRRSghYV3nmd2VmDc2FIQmebk26DR4Omz0zXeL6z7W8Y+VHdNxOXh+0r6Uj4olWozRx2uAqmB82DVMTpi4/9z4zrBcSFyS1B4I="
+    on:
+      tags: true
+      repo: coveo/coveo.analytics.js
+notifications:
+  email:
+    on_success: never
+    on_failure: never
