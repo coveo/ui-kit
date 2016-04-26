@@ -1,5 +1,5 @@
 import * as analytics from './analytics';
-import objectAssign from './objectAssign';
+import objectAssign from './objectassign';
 
 // SimpleAPI mimics the GoogleAnalytics API.
 export class SimpleAPI {
@@ -46,7 +46,7 @@ export class SimpleAPI {
     }
 }
 
-type EventType = 'pageview';
+export type EventType = 'pageview';
 
 // simpleAPI singleton
 const simpleAPI = new SimpleAPI();
