@@ -1,4 +1,4 @@
-# ![coveo.analytics](header.png)
+# ![coveo.analytics](assets/header.png)
 
 [![Build Status](https://travis-ci.org/coveo/coveo.analytics.js.svg?branch=master)](https://travis-ci.org/coveo/coveo.analytics.js)
 [![dependency status](https://david-dm.org/coveo/coveo.analytics.js.svg)](https://david-dm.org/coveo/coveo.analytics.js)
@@ -77,3 +77,4 @@ npm run build:webpack
 MIT license; see [LICENSE](./LICENSE).
 
 [![forthebadge](http://forthebadge.com/images/badges/built-with-love.svg)](http://forthebadge.com)
+[![coveo](assets/by-coveo.svg)](http://www.coveo.com)
