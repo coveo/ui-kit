@@ -1,4 +1,4 @@
-# ![coveo.analytics](media/header.png)
+# ![coveo.analytics](header.png)
 
 [![Build Status](https://travis-ci.org/coveo/coveo.analytics.js.svg?branch=master)](https://travis-ci.org/coveo/coveo.analytics.js)
 [![dependency status](https://david-dm.org/coveo/coveo.analytics.js.svg)](https://david-dm.org/coveo/coveo.analytics.js)

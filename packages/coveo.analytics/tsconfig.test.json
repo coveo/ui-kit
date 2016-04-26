@@ -1,0 +1,17 @@
+{
+    "compilerOptions": {
+        "module": "commonjs",
+        "target": "es5",
+        "outDir": "dist_test",
+        "declaration": false,
+        "noImplicitAny": true,
+        "removeComments": true,
+        "sourceMap": true
+    },
+    "files": [
+      "test/lib.d.ts",
+      "test/simpleanalytics_test.ts",
+      "test/analytics_test.ts",
+      "typings/main.d.ts"
+      ]
+}
