@@ -29,7 +29,6 @@ test('SimpleAnalytics: can send pageview with customdata', t => {
     simpleanalytics('send', 'pageview', {somedata: 'asd'});
 });
 
-
 test('SimpleAnalytics: can\'t send and unknown event', t => {
     simpleanalytics('init', 'MYTOKEN', `http://localhost:${server.address().port}`);
     t.throws(() => { simpleanalytics('send', 'kawabunga'); }, /not implemented/);
