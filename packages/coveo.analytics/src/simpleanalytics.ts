@@ -1,15 +1,16 @@
 import * as analytics from './analytics';
-import objectAssign from './objectAssign';
+import objectAssign from './objectassign';
 
 // SimpleAPI mimics the GoogleAnalytics API.
-class SimpleAPI {
+export class SimpleAPI {
     private client: analytics.Client;
 
     // init initializes a new SimpleAPI client.
     // @param token is your coveo access_token / api_key / ...
     // @param endpoint is the endpoint you want to target defaults to the
     //        usage analytics production endpoint
-    init(token: string, endpoint: string = analytics.Endpoints.default ) {
+    init(token: string, endpoint: string ): void {
+        endpoint = endpoint || analytics.Endpoints.default;
         if (typeof token === 'undefined') {
             throw new Error(`You must pass your token when you call 'init'`);
         }
@@ -20,7 +21,7 @@ class SimpleAPI {
         });
     }
 
-    send(event: EventType, customData: any) {
+    send(event: EventType, customData: any): void {
         if (typeof this.client == 'undefined') {
             throw new Error(`You must call init before sending an event`);
         }
@@ -45,15 +46,15 @@ class SimpleAPI {
     }
 }
 
-type EventType = 'pageview';
+export type EventType = 'pageview';
 
 // simpleAPI singleton
 const simpleAPI = new SimpleAPI();
 
-export const SimpleAnalytics = (action: string, ...params: string[]) => {
+export const SimpleAnalytics = (action: string, ...params: any[]): any => {
   const actionFunction = (<any>simpleAPI)[action];
   if (actionFunction) {
-    actionFunction.apply(simpleAPI, params);
+    return actionFunction.apply(simpleAPI, params);
   }
 };
 

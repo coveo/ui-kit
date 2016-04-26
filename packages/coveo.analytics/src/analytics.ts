@@ -23,7 +23,14 @@ export class Client {
     private endpoint: string;
     private token: string;
 
-    constructor(opts: ClientOptions = {token: ''} ) {
+    constructor(opts: ClientOptions) {
+        if (typeof opts === 'undefined') {
+            throw new Error('You have to pass options to this constructor');
+        }
+        if (typeof opts.token === 'undefined') {
+            throw new Error('You have to pass opts.token');
+        }
+
         this.endpoint = opts.endpoint || Endpoints.default;
         this.token = opts.token;
     }

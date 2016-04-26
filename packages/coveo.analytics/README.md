@@ -1,22 +1,24 @@
-# ![coveo.analytics](media/header.png)
+# ![coveo.analytics](header.png)
 
 [![Build Status](https://travis-ci.org/coveo/coveo.analytics.js.svg?branch=master)](https://travis-ci.org/coveo/coveo.analytics.js)
 [![dependency status](https://david-dm.org/coveo/coveo.analytics.js.svg)](https://david-dm.org/coveo/coveo.analytics.js)
 [![dev dependency status](https://david-dm.org/coveo/coveo.analytics.js/dev-status.svg)](https://david-dm.org/coveo/coveo.analytics.js#info=devDependencies)
+[![Coverage Status](https://coveralls.io/repos/github/coveo/coveo.analytics.js/badge.svg?branch=master)](https://coveralls.io/github/coveo/coveo.analytics.js?branch=master)
 
-> Coveo's usage analytics javascript client
+> Coveo's usage analytics' javascript client
 
 ## Usage
 
-You have to provide your own `promise` and `fetch` API compatible libraries.
+You have to provide your own `fetch` API compatible libraries.
 
 ```bash
-npm install coveo.analytics
+npm install coveo.analytics isomorphic-fetch
 ```
 
 Then use in typescript or javascript
 
 ```js
+import fetch from 'isomorphic-fetch'; // isomorphic-fetch modifies global environment
 import coveoanalytics from 'coveo.analytics';
 
 // Create an api client
@@ -31,7 +33,6 @@ client.sendCustomEvent({
 ### Web Analytics Usage
 
 ```html
-CoVeo
 <script>
 (function(c,o,v,e,O,u,a){
 a='coveoua';c[a]=c[a]||function(){(c[a].q=c[a].q|| []).push(arguments)};

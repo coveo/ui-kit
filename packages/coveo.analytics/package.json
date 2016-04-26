@@ -5,9 +5,12 @@
   "main": "dist/index.js",
   "browser": "dist/bundle.js",
   "scripts": {
+    "lint": "tslint -s \"node_modules/tslint-loader/formatters/\" \"test/**/*.ts\" \"src/**/*.ts\"",
     "build:webpack": "webpack",
     "build:tsc": "tsc",
-    "test": "tsc -p test && ava",
+    "build": "npm run-script lint && npm run-script build:webpack && npm run-script build:tsc",
+    "test": "tsc -p tsconfig.test.json && nyc ava \"**/*test.js\"",
+    "coveralls": "nyc report --reporter=text-lcov | coveralls",
     "clean": "rm -rf dist/*"
   },
   "author": "Pierre-Alexandre St-Jean <pastjean@coveo.com>",
@@ -17,10 +20,15 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "ava": "^0.14.0",
+    "ava": "0.14.0",
+    "coveralls": "^2.11.9",
     "es6-promise": "3.1.2",
     "exports-loader": "0.6.3",
+    "express": "4.13.4",
     "isomorphic-fetch": "2.2.1",
+    "jsdom": "8.4.0",
+    "nyc": "^6.4.0",
+    "sinon": "1.17.3",
     "ts-loader": "0.8.2",
     "tslint": "3.8.1",
     "tslint-loader": "2.1.4",
@@ -35,5 +43,11 @@
     "dist/**/*.js.map",
     "src/**/*.ts",
     "LICENSE"
-  ]
+  ],
+  "ava": {
+    "require": [
+      "babel-register",
+      "./test/helpers/setup-browser-env.js"
+    ]
+  }
 }

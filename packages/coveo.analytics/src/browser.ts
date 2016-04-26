@@ -1,4 +1,4 @@
-import SimpleAnalytics from './SimpleAnalytics';
+import SimpleAnalytics from './simpleanalytics';
 import * as analytics from './index';
 import { HistoryStore } from './history';
 
@@ -7,9 +7,9 @@ declare const global: any;
 // CoveoUAGlobal is the interface for the global function which also has a
 // queue `q` of unexecuted parameters
 export interface CoveoUAGlobal {
-    (action: string, ...params: Array<string>): void;
+    (action: string, ...params: string[]): void;
     // CoveoAnalytics.q is the queue of last called actions before lib was included
-    q?: Array<Array<string>>;
+    q?: string[][];
     disableAutoHistory: boolean;
 }
 

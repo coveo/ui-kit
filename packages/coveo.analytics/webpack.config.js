@@ -17,14 +17,14 @@ module.exports = {
     },
     plugins:[
         new webpack.ProvidePlugin({
-            'Promise': 'exports?global.Promise!es6-promise',
-            'window.fetch': 'exports?self.fetch!isomorphic-fetch',
+            'Promise': 'es6-promise',
+            'fetch': 'exports?self.fetch!whatwg-fetch'
         }),
         new webpack.optimize.UglifyJsPlugin()
     ],
     ts: {
         compilerOptions: {
-            "declaration": false,
+            declaration: false,
         }
     },
     tslint: {

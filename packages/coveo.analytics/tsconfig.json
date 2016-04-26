@@ -1,21 +1,22 @@
 {
-  "compilerOptions": {
-    "target": "es5",
-    "outDir": "dist",
-    "module": "commonjs",
-    "declaration": true,
-    "noImplicitAny": true,
-    "removeComments": true,
-    "sourceMap": true
-  },
-  "files": [
-    "src/browser.ts",
-    "src/analytics.ts",
-    "src/index.ts",
-    "src/objectAssign.ts",
-    "src/donottrack.ts",
-    "src/history.ts",
-    "src/detector.ts",
-    "typings/main.d.ts"
-  ]
+    "compilerOptions": {
+        "module": "commonjs",
+        "target": "es5",
+        "outDir": "dist",
+        "declaration": true,
+        "noImplicitAny": true,
+        "removeComments": true,
+        "sourceMap": true
+    },
+    "files": [
+      "src/analytics.ts",
+      "src/browser.ts",
+      "src/detector.ts",
+      "src/donottrack.ts",
+      "src/history.ts",
+      "src/index.ts",
+      "src/objectassign.ts",
+      "src/simpleanalytics.ts",
+      "typings/main.d.ts"
+    ]
 }

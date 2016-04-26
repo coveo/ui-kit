@@ -1,5 +1,12 @@
 .DS_STORE
 
-dist/*
-node_modules/*
-typings/*
+# Package management
+node_modules
+typings
+npm-debug.log
+
+# Build files
+dist
+dist_test
+.nyc_output
+node_modules
