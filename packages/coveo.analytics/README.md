@@ -38,7 +38,7 @@ client.sendCustomEvent({
 a='coveoua';c[a]=c[a]||function(){(c[a].q=c[a].q|| []).push(arguments)};
 c[a].t=Date.now();u=o.createElement(v);u.async=1;u.src=e;
 O=o.getElementsByTagName(v)[0];O.parentNode.insertBefore(u,O)
-})(window,document,'script','https://static.cloud.coveo.com/coveo.analytics.js/coveo.analytics.js')
+})(window,document,'script','https://static.cloud.coveo.com/coveo.analytics.js/coveoua.js')
 
 // Replace YOUR-TOKEN with your real token
 // (eg: an API key which has the rights to write into Coveo UsageAnalytics)
