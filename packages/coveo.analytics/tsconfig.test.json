@@ -6,12 +6,14 @@
         "declaration": false,
         "noImplicitAny": true,
         "removeComments": true,
-        "sourceMap": true
+        // Inline source map are required for coverage (nyc) to map correctly to good files.
+        "inlineSourceMap": true
     },
     "files": [
-      "test/lib.d.ts",
-      "test/simpleanalytics_test.ts",
-      "test/analytics_test.ts",
-      "typings/main.d.ts"
-      ]
+        "test/coverage_check_test.ts",
+        "test/simpleanalytics_test.ts",
+        "test/analytics_test.ts",
+        "test/lib.d.ts",
+        "typings/main.d.ts"
+    ]
 }
