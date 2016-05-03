@@ -12,6 +12,7 @@ script:
 deploy:
 - provider: npm
   skip_cleanup: true
+  email: pastjean@coveo.com
   api_key:
     secure: "XCoe55Lgr8vFo7n7+EvwL3sfbMB1qth1KqyqcTGQDhl+zPzK0c7KmF3T8ctRmoEOjJvYqoDheC3f4q8XLm0gxxml1pjPewG1bAzWFoZ/eqcnVU7ktBgwcz0CcEAzNxeS5mqxQOnsEnQGy7XgLGjmO45eXiLkNWecRe/wsK84J3yYMB5NjLuhdj8eUAFSrzw4X4yxc8bryIvCkieO8k42hsISYF3PPT5yaff8jf0WfeKwm5xbKQIyXLmQeZQHJieEOCd9aJjJeblIPH9bWxRn3qnzrs4/NKGv0lAPtZYqp1zSJ6hbjdKZZLyqij6SJxxpcB8RbA4QmiICzkrULgmFstgnuKut9h5MVIRcmUu3FV9u1IS4FNMuSUY/WeQbhs/6So9OJcr03azx+SaD/QAecY1n7KimxEckzMcm3TxaQ3H/loYHFJv0JlXJC1kOJaFuaHuGem/+g1XVaQ18vXaFYyB4Vk6RxNtrFPir6AbGf9bbL+MHVBUAuwc0Z8ddKsuKkP5zWYlT2JbXcUuLNjJDteP+eflXDPYiqjdJ/bNyxAM5lKvULN6Qs8zcSsoxEv+IMZwUkHQXMZRRSghYV3nmd2VmDc2FIQmebk26DR4Omz0zXeL6z7W8Y+VHdNxOXh+0r6Uj4olWozRx2uAqmB82DVMTpi4/9z4zrBcSFyS1B4I="
   on:
@@ -23,8 +24,8 @@ deploy:
   secret_access_key:
     secure: "1QhM57Lhad0fmScPzq/N8BUfaV+8ITG3zc+7R5lqiN92+wKsh2qnU2urLyQKexoOyuhf9HENbwTj55wT5CYU4vhKKxFf6LA364CvvbmHkjuupZpJUCCJtWrm9riCLNG4+rFT86aj+m0VDoqAOJEqua+v8b+fY/ZHfiHvIynLYSe1gyQxitlC7ya5Qq3266bnDVx1b21S0CLmjSAQ0w4RpQof0IZTJ0OiLQ8moBNVCcU35GNSsveSd4uTwjWjzBhEq33jfB8/KFor/w9KM5u6am6DuXECRPDZwI7SGv//bmw5GG1K+m1DiXhJsGkimLPMqMRU11MP4RPzBCjv4f0/dy0+U8uAe+2QZMeS3MITB4/EL0b3bVzsZ1zgoR/8V3WT+DbMgc/SEFn0cmUWKnhVsR2fVCWzgX5osZVVtpwyLEKE35Q+9livKYlIrjlnQTAnc1LXMc3yVM/gj3y8wqeR9Z03RecZDgxsraiFoOkFM6H8AwDJARBzuCr8Dw+MxleJxg9H8r0UWXWipEHnzacwGSHRf4Q+uXAzJgbX4uyd1cfoPMx66W5VoauAmFgLicNa1CuziHB7gym52s/nWG1Wd92XiWGOD6WSkjWOq6sI1w9+8ka49xp4AxOegXwk9PO9icFPVnP3SoqG5S1Rn4PC/d2Me8wR1Y56y0FGJhXsu+I="
   bucket: coveo-public-content
-  local-dir: deploy
-  upload-dir: coveo.analytics.js
+  local-dir: deploy/$TRAVIS_TAG
+  upload-dir: coveo.analytics.js/$TRAVIS_TAG
   acl: public_read
   on:
     tags: true
