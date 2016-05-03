@@ -24,7 +24,7 @@ deploy:
   secret_access_key:
     secure: "1QhM57Lhad0fmScPzq/N8BUfaV+8ITG3zc+7R5lqiN92+wKsh2qnU2urLyQKexoOyuhf9HENbwTj55wT5CYU4vhKKxFf6LA364CvvbmHkjuupZpJUCCJtWrm9riCLNG4+rFT86aj+m0VDoqAOJEqua+v8b+fY/ZHfiHvIynLYSe1gyQxitlC7ya5Qq3266bnDVx1b21S0CLmjSAQ0w4RpQof0IZTJ0OiLQ8moBNVCcU35GNSsveSd4uTwjWjzBhEq33jfB8/KFor/w9KM5u6am6DuXECRPDZwI7SGv//bmw5GG1K+m1DiXhJsGkimLPMqMRU11MP4RPzBCjv4f0/dy0+U8uAe+2QZMeS3MITB4/EL0b3bVzsZ1zgoR/8V3WT+DbMgc/SEFn0cmUWKnhVsR2fVCWzgX5osZVVtpwyLEKE35Q+9livKYlIrjlnQTAnc1LXMc3yVM/gj3y8wqeR9Z03RecZDgxsraiFoOkFM6H8AwDJARBzuCr8Dw+MxleJxg9H8r0UWXWipEHnzacwGSHRf4Q+uXAzJgbX4uyd1cfoPMx66W5VoauAmFgLicNa1CuziHB7gym52s/nWG1Wd92XiWGOD6WSkjWOq6sI1w9+8ka49xp4AxOegXwk9PO9icFPVnP3SoqG5S1Rn4PC/d2Me8wR1Y56y0FGJhXsu+I="
   bucket: coveo-public-content
-  local-dir: deploy/$TRAVIS_TAG
+  local-dir: dist
   upload-dir: coveo.analytics.js/$TRAVIS_TAG
   acl: public_read
   on:
