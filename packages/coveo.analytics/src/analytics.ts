@@ -39,7 +39,7 @@ export class Client {
         return fetch(`${this.endpoint}/analytics/${eventType}`, {
             method: 'POST',
             headers: {
-                authorization: `BEARER ${this.token}`,
+                Authorization: `Bearer ${this.token}`,
                 'content-type' : 'application/json'},
             mode: 'cors',
             body: JSON.stringify(request)
