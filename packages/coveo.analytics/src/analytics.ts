@@ -56,6 +56,7 @@ export class Client {
         return this.sendEvent('custom', request).then(defaultResponseTransformer);
     }
     sendViewEvent(request: ViewEventRequest): Promise<ViewEventResponse> {
+        if (request.referrer === '') { delete request.referrer; }
         return this.sendEvent('view', request).then(defaultResponseTransformer);
     }
     getVisit(): Promise<VisitResponse> {
