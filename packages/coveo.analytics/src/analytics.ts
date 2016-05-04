@@ -38,7 +38,9 @@ export class Client {
     sendEvent( eventType: string, request: any): Promise<IResponse> {
         return fetch(`${this.endpoint}/analytics/${eventType}`, {
             method: 'POST',
-            headers: {authorization: `BEARER ${this.token}`},
+            headers: {
+                authorization: `BEARER ${this.token}`,
+                'content-type' : 'application/json'},
             mode: 'cors',
             body: JSON.stringify(request)
         });
