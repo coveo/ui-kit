@@ -43,7 +43,7 @@ O=o.getElementsByTagName(v)[0];O.parentNode.insertBefore(u,O)
 // Replace YOUR-TOKEN with your real token
 // (eg: an API key which has the rights to write into Coveo UsageAnalytics)
 coveoua('init','YOUR-TOKEN');
-coveoua('send','pageView');
+coveoua('send','pageview');
 </script>
 ```
 
@@ -52,7 +52,7 @@ To Add additional informations and/or give hints to Coveo's Reveal engine.
 ```js
 // ...
 coveoua('init','YOUR-TOKEN');
-coveoua('send','pageView',{
+coveoua('send','pageview',{
   contentIDKey: options.contentIDKey,
   contentIDValue: options.contentIDValue,
   contentType: options.contentType
