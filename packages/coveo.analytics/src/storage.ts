@@ -8,13 +8,13 @@ export interface WebStorage {
 }
 
 export function getAvailableStorage(): WebStorage {
-    if (detector.hasCookieStorage) {
+    if (detector.hasCookieStorage()) {
         return new CookieStorage();
     }
-    if (detector.hasSessionStorage) {
+    if (detector.hasSessionStorage()) {
         return sessionStorage;
     }
-    if (detector.hasLocalStorage) {
+    if (detector.hasLocalStorage()) {
         return localStorage;
     }
     return new NullStorage();
