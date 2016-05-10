@@ -13,6 +13,7 @@
         "test/coverage_check_test.ts",
         "test/simpleanalytics_test.ts",
         "test/analytics_test.ts",
+        "test/history_test.ts",
         "test/lib.d.ts",
         "typings/main.d.ts"
     ]

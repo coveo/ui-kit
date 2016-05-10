@@ -13,3 +13,7 @@ export const hasSessionStorage = ((): boolean => {
       return false;
     }
 })();
+
+export const hasCookieStorage = ((): boolean => {
+    return navigator.cookieEnabled;
+});
