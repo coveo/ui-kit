@@ -20,10 +20,7 @@ const coveoua: CoveoUAGlobal = global.coveoua || {};
 // On normal execution this library should be loaded after the snippet execution
 // so we will execute the actions in the `q` array
 if (coveoua.q) {
-  coveoua.q.forEach( (args: Array<string>) => {
-    const [ action, ...params ] = args;
-    SimpleAnalytics(action, ...params);
-  });
+  coveoua.q.forEach( (args: Array<string>) => SimpleAnalytics.apply(void 0, args));
 }
 
 // According to the Mozilla Do Not Track Field Guide
