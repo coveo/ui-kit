@@ -1,38 +1,20 @@
-import * as detector from './detector';
+import {WebStorage, getAvailableStorage} from './storage';
 
-const STORE_KEY: string = '__coveo.analytics.history';
-const MAX_NUMBER_OF_HISTORY_ELEMENTS: number = 20;
-
-function getAvailableStorage(): Storage {
-    if (detector.hasSessionStorage) {
-        return sessionStorage;
-    }
-    if (detector.hasLocalStorage) {
-        return localStorage;
-    }
-    return new NullStorage();
-}
-
-class NullStorage implements Storage {
-    length: number;
-    constructor() { this.length = 0; }
-    clear() {/**/}
-    getItem(key: string): string { return ''; }
-    key(index: number): string { return ''; }
-    removeItem(key: string) {/**/}
-    setItem(key: string, data: string): void {/**/}
-    [key: string]: any;
-    [index: number]: string;
-}
+export const STORE_KEY: string = '__coveo.analytics.history';
+export const MAX_NUMBER_OF_HISTORY_ELEMENTS: number = 20;
 
 export class HistoryStore {
-    private store: Storage;
-    constructor() {
-        this.store = getAvailableStorage();
+    private store: WebStorage;
+    constructor(store?: WebStorage) {
+        this.store = store || getAvailableStorage();
     };
 
     addElement(elem: HistoryElement) {
-        this.setHistory([elem].concat(this.getHistory()));
+        if (this.getHistory() != null) {
+            this.setHistory([elem].concat(this.getHistory()));
+        } else {
+            this.setHistory([elem]);
+        }
     }
 
     getHistory(): HistoryElement[] {
