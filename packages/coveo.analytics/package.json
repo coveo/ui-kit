@@ -23,7 +23,7 @@
     "ava": "0.14.0",
     "body-parser": "1.15.1",
     "coveralls": "2.11.9",
-    "es6-promise": "3.1.2",
+    "es6-promise": "3.2.1",
     "exports-loader": "0.6.3",
     "express": "4.13.4",
     "isomorphic-fetch": "2.2.1",
