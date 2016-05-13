@@ -1,6 +1,5 @@
 // Code originally taken from : https://developers.livechatinc.com/blog/setting-cookies-to-subdomains-in-javascript/
 export class Cookie {
-  private static prefix: string = 'coveo_';
   static set(name: string, value: string, expiration?: number) {
     var domain: string, domainParts: string[], date: any, expires: string, host: string;
 
@@ -13,9 +12,9 @@ export class Cookie {
     }
 
     host = location.hostname;
-    if (host.split('.').length === 1) {
+    if (host.indexOf('.') === -1) {
       // no "." in a domain - it's localhost or something similar
-      document.cookie = this.prefix + name + '=' + value + expires + '; path=/';
+      document.cookie = name + '=' + value + expires + '; path=/';
     } else {
       // Remember the cookie on all subdomains.
       //
@@ -30,29 +29,27 @@ export class Cookie {
       domainParts.shift();
       domain = '.' + domainParts.join('.');
 
-      document.cookie = this.prefix + name + '=' + value + expires + '; path=/; domain=' + domain;
+      document.cookie = name + '=' + value + expires + '; path=/; domain=' + domain;
 
       // check if cookie was successfuly set to the given domain
       // (otherwise it was a Top-Level Domain)
       if (Cookie.get(name) == null || Cookie.get(name) != value) {
         // append "." to current domain
         domain = '.' + host;
-        document.cookie = this.prefix + name + '=' + value + expires + '; path=/; domain=' + domain;
+        document.cookie = name + '=' + value + expires + '; path=/; domain=' + domain;
       }
     }
   }
 
   static get(name: string) {
-    var nameEQ = this.prefix + name + '=';
-    var ca = document.cookie.split(';');
-    for (var i = 0; i < ca.length; i++) {
-      var c = ca[i];
-      while (c.charAt(0) == ' ') {
-        c = c.substring(1, c.length);
-      }
+    var cookiePrefix = name + '=';
+    var cookieArray = document.cookie.split(';');
+    for (var i = 0; i < cookieArray.length; i++) {
+      var cookie = cookieArray[i];
+      cookie = cookie.replace(/^\s+/, '');
 
-      if (c.indexOf(nameEQ) == 0) {
-        return c.substring(nameEQ.length, c.length);
+      if (cookie.indexOf(cookiePrefix) == 0) {
+        return cookie.substring(cookiePrefix.length, cookie.length);
       }
     }
     return null;
