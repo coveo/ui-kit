@@ -19,6 +19,6 @@
       "src/storage.ts",
       "src/objectassign.ts",
       "src/simpleanalytics.ts",
-      "typings/main.d.ts"
+      "typings/index.d.ts"
     ]
 }
