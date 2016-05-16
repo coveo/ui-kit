@@ -1,13 +1,13 @@
 {
-  "ambientDependencies": {
+  "globalDependencies": {
     "body-parser": "registry:dt/body-parser#0.0.0+20160317120654",
     "es6-promise": "registry:dt/es6-promise#0.0.0+20160423074304",
     "express": "registry:dt/express#4.0.0+20160317120654",
     "express-serve-static-core": "registry:dt/express-serve-static-core#0.0.0+20160322035842",
-    "isomorphic-fetch": "github:DefinitelyTyped/DefinitelyTyped/isomorphic-fetch/isomorphic-fetch.d.ts#56295f5058cac7ae458540423c50ac2dcf9fc711",
+    "isomorphic-fetch": "registry:dt/isomorphic-fetch#0.0.0+20160505171433",
     "mime": "registry:dt/mime#0.0.0+20160316155526",
-    "node": "registry:dt/node#4.0.0+20160423143914",
-    "serve-static": "registry:dt/serve-static#0.0.0+20160317120654",
+    "node": "registry:dt/node#6.0.0+20160514165920",
+    "serve-static": "registry:dt/serve-static#0.0.0+20160501131543",
     "sinon": "registry:dt/sinon#1.16.0+20160317120654"
   }
 }

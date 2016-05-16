@@ -16,6 +16,6 @@
         "test/history_test.ts",
         "test/storage_test.ts",
         "test/lib.d.ts",
-        "typings/main.d.ts"
+        "typings/index.d.ts"
     ]
 }
