@@ -5,7 +5,7 @@
 [![dev dependency status](https://david-dm.org/coveo/coveo.analytics.js/dev-status.svg)](https://david-dm.org/coveo/coveo.analytics.js#info=devDependencies)
 [![Coverage Status](https://coveralls.io/repos/github/coveo/coveo.analytics.js/badge.svg?branch=master)](https://coveralls.io/github/coveo/coveo.analytics.js?branch=master)
 
-### Coveo usage analytic JavaScript client
+## Coveo usage analytic JavaScript client
 
 This JavaScript client project provides a code snippet that a website administrator can easily add to website pages to push page view events to Coveo analytics whenever end-users access the pages. The Coveo code snippet is similar to the Google Analytics one, allowing you to track user sessions.
 
@@ -13,7 +13,7 @@ When your websites have many visitors, the pageview events volume can be very la
 
 Initially, the pageview events data will be used exclusively from Coveo Reveal, a machine learning service (see [Coveo Reveal](http://www.coveo.com/go?dest=cloudhelp&lcid=9&context=177)), by an upcoming feature that will recommend relevant items based on similar user behavior. It is recommended that you start pushing your events as soon as possible so that you will have data to use when the new feature becomes available.
 
-## Pushing Coveo Analytics Pageview Events
+### Pushing Coveo Analytics Pageview Events
 
 ```html
 <script>
@@ -42,7 +42,7 @@ coveoua('send','pageview',{
 });
 ```
 
-## Usage (for developers)
+### Usage (for developers)
 
 You have to provide your own `fetch` API compatible libraries in the global environment.
 
@@ -65,7 +65,7 @@ client.sendCustomEvent({
 });
 ```
 
-## Contributing
+### Contributing
 
 ```bash
 git clone
@@ -77,7 +77,7 @@ npm run build:webpack
 # open pull request
 ```
 
-## License
+### License
 
 MIT license. See [LICENSE](LICENSE).
 
