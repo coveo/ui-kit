@@ -9,6 +9,8 @@
 
 ### Web Analytics Usage
 
+This JavaScript client project provides a code snippet that a website administrator can easily add to website pages to push page view events to Coveo analytics whenever end-users access the pages. The Coveo code snippet is similar to the Google Analytics one, allowing you to track user sessions.
+
 ```html
 <script>
 (function(c,o,v,e,O,u,a){
