@@ -11,6 +11,10 @@
 
 This JavaScript client project provides a code snippet that a website administrator can easily add to website pages to push page view events to Coveo analytics whenever end-users access the pages. The Coveo code snippet is similar to the Google Analytics one, allowing you to track user sessions.
 
+When your websites have many visitors, the pageview events volume can be very large.  Consequently, the pushed pageview events are stored in a Coveo usage analytics table which content currently cannot be viewed in usage analytics reports and the visit browser to prevent performance degradation.
+
+Initially, the pageview events data will be used exclusively from Coveo Reveal, a machine learning service (see Coveo Reveal), by an upcoming feature that will recommend relevant items based on similar user behavior. It is recommended that you start pushing your events as soon as possible so that you will have data to use when the new feature becomes available.
+
 ```html
 <script>
 (function(c,o,v,e,O,u,a){
