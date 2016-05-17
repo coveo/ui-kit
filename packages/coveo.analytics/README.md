@@ -16,7 +16,6 @@ Initially, the pageview events data will be used exclusively from Coveo Reveal, 
 ### Pushing Coveo Analytics Pageview Events
 
 1. Get your API key
-
 You need an Coveo Cloud organization API key that has the permission to write to the usage analytics sevice.
   * When using [Coveo Cloud V1](https://cloudplatform.coveo.com/), contact [Coveo Support](https://coveocommunity.force.com/) and ask to create an API key with a Write UA scope.
 ```html
