@@ -5,7 +5,7 @@
 [![dev dependency status](https://david-dm.org/coveo/coveo.analytics.js/dev-status.svg)](https://david-dm.org/coveo/coveo.analytics.js#info=devDependencies)
 [![Coverage Status](https://coveralls.io/repos/github/coveo/coveo.analytics.js/badge.svg?branch=master)](https://coveralls.io/github/coveo/coveo.analytics.js?branch=master)
 
-> Coveo's Usage Analytics' javascript client
+> Coveo usage analytic JavaScript client
 
 ### Web Analytics Usage
 
@@ -17,9 +17,8 @@ c[a].t=Date.now();u=o.createElement(v);u.async=1;u.src=e;
 O=o.getElementsByTagName(v)[0];O.parentNode.insertBefore(u,O)
 })(window,document,'script','https://static.cloud.coveo.com/coveo.analytics.js/coveoua.js')
 
-// Replace YOUR-TOKEN with your real token
-// (eg: an API key which has the rights to write into Coveo UsageAnalytics)
-coveoua('init','YOUR-TOKEN');
+// Replace YOUR_API_KEY with your real key
+coveoua('init','YOUR_API_KEY');
 coveoua('send','pageview');
 </script>
 ```
@@ -28,7 +27,7 @@ To Add additional informations or give hints to Coveo's Reveal engine.
 
 ```js
 // ...
-coveoua('init','YOUR-TOKEN');
+coveoua('init','YOUR_API_KEY');
 coveoua('send','pageview',{
   contentIDKey: options.contentIDKey,
   contentIDValue: options.contentIDValue,
