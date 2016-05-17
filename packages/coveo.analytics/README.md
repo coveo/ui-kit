@@ -13,6 +13,8 @@ When your websites have many visitors, the pageview events volume can be very la
 
 Initially, the pageview events data will be used exclusively from Coveo Reveal, a machine learning service (see [Coveo Reveal](http://www.coveo.com/go?dest=cloudhelp&lcid=9&context=177)), by an upcoming feature that will recommend relevant items based on similar user behavior. It is recommended that you start pushing your events as soon as possible so that you will have data to use when the new feature becomes available.
 
+## Pushing Coveo Analytics Pageview Events
+
 ```html
 <script>
 (function(c,o,v,e,O,u,a){
