@@ -48,7 +48,7 @@ Note: Do not use a copy of the `coveoua.js` file as you would not get the benefi
   2. n the browser developer tool, go the the **Network** tab.
   3. Reload the page, in the **Name** panel, ensure that you see a **view** event sent to Coveo analytics.
 
-To Add additional informations or give hints to Coveo's Reveal engine.
+#### Adding informations to dentifing a given item so that it will be specifically recommended by Reveal.
 
 ```js
 // ...
