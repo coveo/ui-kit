@@ -44,8 +44,11 @@ Note: Do not use a copy of the `coveoua.js` file as you would not get the automa
   2. Ask the administrator of the website to paste the modified code snippet in the appropriate location, such as a website page template, so that the code is added to all website pages.
 
 3. Validate events are pushed.
+
   1. In a browser such as Chrome, navigate to a website page to which you added the code snippet.
+
   2. n the browser developer tool, go the the **Network** tab.
+
   3. Reload the page, in the **Name** panel, ensure that you see a **view** event sent to Coveo analytics.
 
 #### Adding informations on items to be recommended
