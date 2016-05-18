@@ -33,8 +33,7 @@ c[a].t=Date.now();u=o.createElement(v);u.async=1;u.src=e;
 O=o.getElementsByTagName(v)[0];O.parentNode.insertBefore(u,O)
 })(window,document,'script','https://static.cloud.coveo.com/coveo.analytics.js/coveoua.js')
 
-// Replace YOUR_API_KEY with your real key
-coveoua('init','YOUR_API_KEY');
+coveoua('init','YOUR_API_KEY'); // Replace YOUR_API_KEY with your real key
 coveoua('send','pageview');
 </script>
 ```
