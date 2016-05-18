@@ -1,5 +1,6 @@
 #!/bin/env bash
 
+aws s3
 git config user.name "via Jenkins"
 git config user.email "jenkins@coveo.com"
 
