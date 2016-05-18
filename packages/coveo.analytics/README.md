@@ -11,7 +11,7 @@ This JavaScript client project provides a code snippet that a website administra
 
 When your websites have many visitors, the `pageview` events volume can be very large.  Consequently, the pushed `pageview` events are stored in a Coveo usage analytics table which content currently cannot be viewed in usage analytics reports and the visit browser to prevent performance degradation.
 
-Initially, the `pageview` events data will be used exclusively from Coveo Reveal, a machine learning service (see [Coveo Reveal](http://www.coveo.com/go?dest=cloudhelp&lcid=9&context=177)), by an upcoming feature that will recommend relevant items based on similar user behavior. It is recommended that you start pushing your events as soon as possible so that you will have data to use when the new feature becomes available.
+Initially, the `pageview` events data will be used exclusively from Coveo Reveal, a machine learning service (see [Coveo Reveal](http://www.coveo.com/go?dest=cloudhelp&lcid=9&context=177)), by an upcoming feature that will recommend relevant items based on user behavior. It is recommended that you start pushing your events as soon as possible so that you will have data to use when the new feature becomes available.
 
 ### Pushing Coveo Analytics Pageview Events
 
@@ -48,7 +48,7 @@ Note: Do not use a copy of the `coveoua.js` file as you would not get the automa
   2. n the browser developer tool, go the the **Network** tab.
   3. Reload the page, in the **Name** panel, ensure that you see a **view** event sent to Coveo analytics.
 
-#### Adding informations on a given item
+#### Adding informations on items to be recommended
 
 ```js
 // ...
