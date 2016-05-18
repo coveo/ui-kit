@@ -34,7 +34,7 @@ Initially, the `pageview` events data will be used exclusively from Coveo Reveal
 
 2. Add the code snippet to all your website pages.
   
-Ask an administrator to add the following code snippet in all pages of your website. Make sure you replace `YOUR_API_KEY` by the API key you got in the previous step.
+  Ask an administrator to add the following code snippet in all pages of your website. Make sure you replace `YOUR_API_KEY` by the API key you got in the previous step.
 
 ```html
 <script>
