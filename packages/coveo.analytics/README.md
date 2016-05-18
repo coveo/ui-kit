@@ -23,6 +23,7 @@ Initially, the `pageview` events data will be used exclusively from Coveo Reveal
   * When using [Coveo Cloud V2](https://platform.cloud.coveo.com/), create an API key from the [administration console] (https://platform.cloud.coveo.com/admin/#/organization/api-access/) selecting the **Edit** check box for the **Analytics data** privilege (see [API Access - Page](http://www.coveo.com/go?dest=ccv2ac&context=27)).
 
 2. Add the code snippet to all your website pages.
+  
   1. Copy the following code snippet in a text editor and replace `YOUR_API_KEY` by the API key you got in the previous step.
 
 ```html
