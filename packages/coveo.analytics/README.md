@@ -21,6 +21,7 @@ You need an Coveo Cloud organization API key that has the permission to write to
   * When using [Coveo Cloud V1](https://cloud.coveo.com/), contact [Coveo Support](https://coveocommunity.force.com/) and ask to create an API key with a Write UA scope.
 
   * When using [Coveo Cloud V2](https://platform.cloud.coveo.com/), create the API key from the [administration console] (https://platform.cloud.coveo.com/admin/#/organization/api-access/) selecting the Edit check box for the Analytics data privilege (see [API Access - Page](http://www.coveo.com/go?dest=ccv2ac&context=27)).
+2. Add the code snippet to all your website pages.
 
 ```html
 <script>
