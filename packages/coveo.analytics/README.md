@@ -62,7 +62,7 @@ coveoua('send','pageview',{
 
 ### Usage (for developers)
 
-You have to provide your own `fetch` API compatible libraries in the global environment.
+You have to provide your own `fetch` API compatible libraries in the global environment (see [Isomorphic TypeScript, fetch, promises, ava and coverage](http://source.coveo.com/2016/05/11/isomorphic-typescript-ava-w-coverage/))
 
 ```bash
 npm install coveo.analytics isomorphic-fetch
