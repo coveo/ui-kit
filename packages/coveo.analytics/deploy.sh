@@ -1,6 +1,6 @@
 #!/bin/env bash
 
-git config user.name "$CHANGE_AUTHOR"
+git config user.name "via Jenkins"
 git config user.email "jenkins@coveo.com"
 
 echo "git checkout $RELEASE_TAG"
