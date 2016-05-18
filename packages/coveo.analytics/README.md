@@ -51,7 +51,7 @@ coveoua('send','pageview');
 
 _Note: Do not copy the_ `coveoua.js` _file as it can be updated anytime and you could experience compatibility issues._
 
-3. Validate events are pushed. 
+#### How to validate events are pushed. 
 
   1. In a web browser such as Chrome, navigate to a website page to which you added the code snippet.
   2. In the browser developer tool, go the the **Network** tab.
