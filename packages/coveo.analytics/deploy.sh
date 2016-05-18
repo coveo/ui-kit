@@ -1,5 +1,8 @@
 #!/bin/env bash
 
+git config user.name "$CHANGE_AUTHOR"
+git config user.email "jenkins@coveo.com"
+
 echo "git checkout $RELEASE_TAG"
 git checkout $RELEASE_TAG
 
