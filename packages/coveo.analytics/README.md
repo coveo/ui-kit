@@ -75,8 +75,8 @@ Then use in TypeScript or JavaScript
 import fetch from 'isomorphic-fetch'; // isomorphic-fetch modifies global environment
 import coveoanalytics from 'coveo.analytics';
 
-// Create an api client
-const client = new coveoanalytics.analytics.Client({ token : 'YOUR-TOKEN'})
+// Create an API client
+const client = new coveoanalytics.analytics.Client({ token : 'YOUR_API_KEY'})
 // Send your event
 client.sendCustomEvent({
   eventType: "dog";
