@@ -49,7 +49,7 @@ coveoua('send','pageview');
 </script>
 ```
 
-_Note: Do not copy the `coveoua.js` file as it can be updated anytime and you could experience compatibility issues._
+_Note: Do not copy the_ `coveoua.js` _file as it can be updated anytime and you could experience compatibility issues._
 
 3. Validate events are pushed. 
 
