@@ -11,7 +11,7 @@ This project provides 3 ways to interact with the the Coveo usage analytics serv
 
 - A JavaScript Node.js client
 - A JavaScript browser client
-- A snippet for web administrators to add to a page.
+- A snippet for web administrators to add in websites pages.
 
 ## Usage (Web analytics)
 
