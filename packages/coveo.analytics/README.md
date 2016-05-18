@@ -41,7 +41,7 @@ coveoua('send','pageview');
 
 Note: Do not use a copy of the coveoua.js file as you would not get the benefits of automatic updates and could experience compatibility issues.
 
-  2. Ask the administrator of the website to be tracked to paste the modified code snippet in the appropriate location, such as a website page template, so that the code is added to all website pages.
+   2. Ask the administrator of the website to be tracked to paste the modified code snippet in the appropriate location, such as a website page template, so that the code is added to all website pages.
 
 To Add additional informations or give hints to Coveo's Reveal engine.
 
