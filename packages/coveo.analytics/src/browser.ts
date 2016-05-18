@@ -1,6 +1,6 @@
 import SimpleAnalytics from './simpleanalytics';
 import * as analytics from './index';
-import { HistoryStore } from './history';
+import { HistoryStore, HistoryViewElement } from './history';
 
 declare const global: any;
 
@@ -29,11 +29,13 @@ if (coveoua.q) {
 // identity of that user, doNotTrack is not enabled here.
 if (!coveoua.disableAutoHistory) {
     const store = new HistoryStore();
-    store.addElement({
-        type: 'view',
-        uri: document.location.toString(),
+    let historyElement: HistoryViewElement = {
+        name: 'PageView',
+        value: document.location.toString(),
+        time: Math.floor(Date.now() / 1000),
         title: document.title
-    });
+    };
+    store.addElement(historyElement);
 }
 
 // Replace the quick shim with the real thing.

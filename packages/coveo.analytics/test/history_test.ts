@@ -6,22 +6,28 @@ import * as history from '../src/history';
 let storage: WebStorage;
 let storageMock: Sinon.SinonMock;
 let historyStore: history.HistoryStore;
+let data: history.HistoryElement;
 
 test.beforeEach(t => {
   storage = new NullStorage();
   storageMock = sinon.mock(storage);
   historyStore = new history.HistoryStore(storage);
+  data = {
+    name: 'name',
+    value: 'value',
+    time: 111111
+  };
 });
 
 test.afterEach( t => {
   storage = null;
   storageMock = null;
   historyStore = null;
+  data = null;
 });
 
 test('HistoryStore should be able to add an element in the history', t => {
-  let data = 'test';
-  storageMock.expects('setItem').once().withArgs(history.STORE_KEY, sinon.match(data));
+  storageMock.expects('setItem').once().withArgs(history.STORE_KEY, sinon.match(JSON.stringify(data)));
   historyStore.addElement(data);
   storageMock.verify();
 });
@@ -39,7 +45,7 @@ test('HistoryStore should remove item when cleared', t => {
 });
 
 test('HistoryStore should be able to set the history', t => {
-  var historyElements = ['test', 'another_test'];
+  var historyElements: history.HistoryElement[] = [data];
   storageMock.expects('setItem').once().withArgs(history.STORE_KEY, JSON.stringify(historyElements));
   historyStore.setHistory(historyElements);
   storageMock.verify();
