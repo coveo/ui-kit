@@ -98,7 +98,7 @@ npm run build:webpack
 
 ### License
 
-MIT license. See [LICENSE](LICENSE).
+MIT license (see [LICENSE](LICENSE)).
 
 [![forthebadge](http://forthebadge.com/images/badges/built-with-love.svg)](http://forthebadge.com)
 [![coveo](./assets/by-coveo.png)](http://www.coveo.com)
