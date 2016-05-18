@@ -9,9 +9,9 @@
 
 This JavaScript client project provides a code snippet that a website administrator can easily add to website pages to push page view events to Coveo analytics whenever end-users access the pages. The Coveo code snippet is similar to the Google Analytics one, allowing you to track user sessions.
 
-When your websites have many visitors, the pageview events volume can be very large.  Consequently, the pushed pageview events are stored in a Coveo usage analytics table which content currently cannot be viewed in usage analytics reports and the visit browser to prevent performance degradation.
+When your websites have many visitors, the `pageview` events volume can be very large.  Consequently, the pushed `pageview` events are stored in a Coveo usage analytics table which content currently cannot be viewed in usage analytics reports and the visit browser to prevent performance degradation.
 
-Initially, the pageview events data will be used exclusively from Coveo Reveal, a machine learning service (see [Coveo Reveal](http://www.coveo.com/go?dest=cloudhelp&lcid=9&context=177)), by an upcoming feature that will recommend relevant items based on similar user behavior. It is recommended that you start pushing your events as soon as possible so that you will have data to use when the new feature becomes available.
+Initially, the `pageview` events data will be used exclusively from Coveo Reveal, a machine learning service (see [Coveo Reveal](http://www.coveo.com/go?dest=cloudhelp&lcid=9&context=177)), by an upcoming feature that will recommend relevant items based on similar user behavior. It is recommended that you start pushing your events as soon as possible so that you will have data to use when the new feature becomes available.
 
 ### Pushing Coveo Analytics Pageview Events
 
@@ -23,7 +23,7 @@ Initially, the pageview events data will be used exclusively from Coveo Reveal, 
   * When using [Coveo Cloud V2](https://platform.cloud.coveo.com/), create the API key from the [administration console] (https://platform.cloud.coveo.com/admin/#/organization/api-access/) selecting the **Edit** check box for the **Analytics data** privilege (see [API Access - Page](http://www.coveo.com/go?dest=ccv2ac&context=27)).
 
 2. Add the code snippet to all your website pages.
-  1. Copy the following code snippet in a text editor and change YOUR_API_KEY by the API key you got in the previous step.
+  1. Copy the following code snippet in a text editor and change `YOUR_API_KEY` by the API key you got in the previous step.
 
 ```html
 <script>
@@ -39,7 +39,7 @@ coveoua('send','pageview');
 </script>
 ```
 
-Note: Do not use a copy of the coveoua.js file as you would not get the benefits of automatic updates and could experience compatibility issues.
+Note: Do not use a copy of the `coveoua.js` file as you would not get the benefits of automatic updates and could experience compatibility issues.
 
   2. Ask the administrator of the website to be tracked to paste the modified code snippet in the appropriate location, such as a website page template, so that the code is added to all website pages.
 
