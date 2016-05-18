@@ -26,6 +26,8 @@ Initially, the `pageview` events data will be used exclusively from Coveo Reveal
   
   1. Copy the following code snippet in a text editor and replace `YOUR_API_KEY` by the API key you got in the previous step.
 
+  2. Ask the administrator of the website to paste the modified code snippet in the appropriate location, such as a website page template, so that the code is added to all website pages.
+
 ```html
 <script>
 (function(c,o,v,e,O,u,a){
@@ -40,8 +42,6 @@ coveoua('send','pageview');
 ```
 
 Note: Do not use a copy of the `coveoua.js` file as you would not get the automatic updates and could experience compatibility issues.
-
-   ii. Ask the administrator of the website to paste the modified code snippet in the appropriate location, such as a website page template, so that the code is added to all website pages.
 
 3. Validate events are pushed.
 
