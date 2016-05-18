@@ -18,9 +18,9 @@ Initially, the pageview events data will be used exclusively from Coveo Reveal, 
 1. Get your API key
 
   You need an Coveo Cloud organization API key that has the permission to write to the usage analytics sevice.
-  * When using [Coveo Cloud V1](https://cloud.coveo.com/), contact [Coveo Support](https://coveocommunity.force.com/) and ask to create an API key with a Write UA scope.
+  * When using [Coveo Cloud V1](https://cloud.coveo.com/), contact [Coveo Support](https://coveocommunity.force.com/) and ask to create an API key with a **Write UA** scope.
 
-  * When using [Coveo Cloud V2](https://platform.cloud.coveo.com/), create the API key from the [administration console] (https://platform.cloud.coveo.com/admin/#/organization/api-access/) selecting the Edit check box for the Analytics data privilege (see [API Access - Page](http://www.coveo.com/go?dest=ccv2ac&context=27)).
+  * When using [Coveo Cloud V2](https://platform.cloud.coveo.com/), create the API key from the [administration console] (https://platform.cloud.coveo.com/admin/#/organization/api-access/) selecting the **Edit** check box for the **Analytics data** privilege (see [API Access - Page](http://www.coveo.com/go?dest=ccv2ac&context=27)).
 
 2. Add the code snippet to all your website pages.
   1. Copy the following code snippet in a text editor and change YOUR_API_KEY by the API key you got in the previous step.
@@ -45,8 +45,8 @@ Note: Do not use a copy of the coveoua.js file as you would not get the benefits
 
 3. Validate events are pushed.
   1. In a browser such as Chrome, navigate to a website page to which you added the code snippet.
-  2. n the browser developer tool, go the the Network tab.
-  3. Reload the page, in the Name panel, ensure that you see a view event sent to Coveo analytics.
+  2. n the browser developer tool, go the the **Network** tab.
+  3. Reload the page, in the **Name** panel, ensure that you see a **view** event sent to Coveo analytics.
 
 To Add additional informations or give hints to Coveo's Reveal engine.
 
