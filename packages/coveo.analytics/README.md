@@ -69,7 +69,7 @@ You have to provide your own `fetch` API compatible libraries in the global envi
 npm install coveo.analytics isomorphic-fetch
 ```
 
-Then use in TypeScript or javascript
+Then use in TypeScript or JavaScript
 
 ```js
 import fetch from 'isomorphic-fetch'; // isomorphic-fetch modifies global environment
