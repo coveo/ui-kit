@@ -47,7 +47,7 @@ Note: Do not use a copy of the `coveoua.js` file as you would not get the benefi
   2. n the browser developer tool, go the the **Network** tab.
   3. Reload the page, in the **Name** panel, ensure that you see a **view** event sent to Coveo analytics.
 
-#### Adding informations to dentifing a given item so that it will be specifically recommended by Reveal.
+#### Adding informations to identify a given item
 
 ```js
 // ...
@@ -62,7 +62,7 @@ coveoua('send','pageview',{
 
 ### Usage (for developers)
 
-You have to provide your own `fetch` API compatible libraries in the global environment (see [Isomorphic TypeScript, fetch, promises, ava and coverage](http://source.coveo.com/2016/05/11/isomorphic-typescript-ava-w-coverage/))
+You have to provide your own `fetch` API compatible libraries in the global environment (see [Isomorphic TypeScript, fetch, promises, ava and coverage](http://source.coveo.com/2016/05/11/isomorphic-typescript-ava-w-coverage/)).
 
 ```bash
 npm install coveo.analytics isomorphic-fetch
