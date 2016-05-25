@@ -1,5 +1,6 @@
 import test from 'ava';
 import * as analytics from '../src/analytics';
+import * as events from "../src/events";
 import * as express from 'express';
 import * as http from 'http';
 import * as bodyParser from 'body-parser';
@@ -11,8 +12,8 @@ app.use(bodyParser.json());
 
 test('Analytics: can post a view event', t => {
 
-    const viewEvent: analytics.ViewEventRequest = {location: 'here'};
-    const response: analytics.ViewEventResponse = {
+    const viewEvent: events.ViewEventRequest = {location: 'here'};
+    const response: events.ViewEventResponse = {
         raw: undefined,
         visitId : '123',
         visitorId: '213'
@@ -43,7 +44,7 @@ test('Analytics: can post a view event', t => {
         endpoint: `http://localhost:${server.address().port}`
     });
 
-    return client.sendViewEvent(viewEvent).then((res: analytics.ViewEventResponse) => {
+    return client.sendViewEvent(viewEvent).then((res: events.ViewEventResponse) => {
         t.not(res.raw, undefined);
         t.is(res.visitId, response.visitId);
         t.is(res.visitorId, response.visitorId);
