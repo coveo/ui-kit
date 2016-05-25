@@ -1,3 +1,12 @@
+import {
+    SearchEventRequest, SearchEventResponse,
+    ClickEventRequest, ClickEventResponse,
+    CustomEventRequest, CustomEventResponse,
+    ViewEventRequest, ViewEventResponse,
+    VisitResponse, HealthResponse
+} from './events';
+import { AnalyticsClient } from './analyticsclient';
+
 export const Version = 'v15';
 
 export const Endpoints = {
@@ -19,7 +28,7 @@ function defaultResponseTransformer(response: IResponse): Promise<any> {
     });
 }
 
-export class Client {
+export class Client implements AnalyticsClient {
     private endpoint: string;
     private token: string;
 
@@ -35,7 +44,7 @@ export class Client {
         this.token = opts.token;
     }
 
-    sendEvent( eventType: string, request: any): Promise<IResponse> {
+    sendEvent(eventType: string, request: any): Promise<IResponse> {
         return fetch(`${this.endpoint}/analytics/${eventType}`, {
             method: 'POST',
             headers: {
@@ -67,88 +76,6 @@ export class Client {
         return fetch(this.endpoint + '/analytics/monitoring/health')
             .then(defaultResponseTransformer);
     }
-}
-
-export interface EventBaseRequest {
-    language?: string;
-    userAgent?: string;
-    customData?: any;
-    anonymous?: boolean;
-    username?: string;
-    userDisplayName?: any;
-    splitTestRunName?: string;
-    splitTestRunVersion?: string;
-
-    originLevel1?: string;
-    originLevel2?: string;
-    originLevel3?: string;
-}
-
-export interface SearchDocument {
-    documentUri: string;
-    documentUriHash: string;
-}
-
-export interface SearchEventRequest extends EventBaseRequest {
-    searchQueryUid: string;
-    queryText: string;
-    actionCause: string;
-    responseTime: number;
-    advancedQuery?: string;
-    numberOfResults?: number;
-    contextual?: boolean;
-    results?: SearchDocument[];
-    queryPipeline?: string;
-    userGroups?: string[];
-}
-
-export interface ClickEventRequest extends EventBaseRequest {
-    documentUri: string;
-    documentUriHash: string;
-    collectionName: string;
-    sourceName: string;
-    documentPosition: number;
-    actionCause: string;
-
-    searchQueryUid?: string;
-    documentTitle?: string;
-    documentUrl?: string;
-    documentAuthor?: string;
-    queryPipeline?: string;
-    rankingModifier?: string;
-}
-
-export interface CustomEventRequest extends EventBaseRequest {
-    eventType: string;
-    eventValue: string;
-    lastSearchQueryUid?: string;
-}
-
-export interface ViewEventRequest extends EventBaseRequest {
-    location: string;
-    referrer?: string;
-    title?: string;
-}
-
-export interface DefaultEventResponse {
-    raw: IResponse;
-    visitId: string;
-    visitorId: string;
-}
-
-export interface SearchEventResponse extends DefaultEventResponse {}
-export interface ClickEventResponse extends DefaultEventResponse {}
-export interface CustomEventResponse extends DefaultEventResponse {}
-export interface ViewEventResponse extends DefaultEventResponse {}
-
-export interface VisitResponse {
-    raw: IResponse;
-    id: string;
-    visitorId: string;
-}
-export interface HealthResponse {
-    raw: IResponse;
-    status: string;
 }
 
 export default Client;
