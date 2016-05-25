@@ -43,7 +43,6 @@ export class Client implements AnalyticsClient {
 
     sendEvent(eventType: string, request: any): Promise<IResponse> {
         var headers: any = {};
-        this.applyDefaultHeaders(headers);
         this.applyHeaders(headers);
         return fetch(`${this.endpoint}/analytics/${eventType}`, {
             method: 'POST',
@@ -80,9 +79,11 @@ export class Client implements AnalyticsClient {
             .then(defaultResponseTransformer);
     }
 
-    protected applyHeaders(headers: any) {}
+    protected applyHeaders(headers: any) {
+        this.applyDefaultHeaders(headers);
+    }
 
-    private applyDefaultHeaders(headers: any){
+    protected applyDefaultHeaders(headers: any) {
         if (this.token !== '') {
             headers['Authorization'] = `Bearer ${this.token}`;
             headers['Content-Type'] = `application/json`;
