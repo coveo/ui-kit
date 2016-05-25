@@ -97,8 +97,7 @@ client.sendCustomEvent({
 git clone
 npm install
 ./node_modules/.bin/typings install
-npm run build:tsc
-npm run build:webpack
+npm run build
 # code code code
 npm run test
 # open pull request

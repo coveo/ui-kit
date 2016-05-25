@@ -4,7 +4,7 @@ import {
     CustomEventRequest, CustomEventResponse,
     ViewEventRequest, ViewEventResponse,
     VisitResponse, HealthResponse
-} from "./events";
+} from './events';
 
 export interface AnalyticsClient {
     sendEvent(eventType: string, request: any): Promise<IResponse>;

@@ -1,6 +1,6 @@
 import test from 'ava';
 import * as analytics from '../src/analytics';
-import * as events from "../src/events";
+import * as events from '../src/events';
 import * as express from 'express';
 import * as http from 'http';
 import * as bodyParser from 'body-parser';
