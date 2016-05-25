@@ -17,7 +17,7 @@ export const Endpoints = {
 };
 
 export interface ClientOptions {
-  token: string;
+  token?: string;
   endpoint?: string;
 };
 
@@ -36,20 +36,18 @@ export class Client implements AnalyticsClient {
         if (typeof opts === 'undefined') {
             throw new Error('You have to pass options to this constructor');
         }
-        if (typeof opts.token === 'undefined') {
-            throw new Error('You have to pass opts.token');
-        }
 
         this.endpoint = opts.endpoint || Endpoints.default;
-        this.token = opts.token;
+        this.token = opts.token || '';
     }
 
     sendEvent(eventType: string, request: any): Promise<IResponse> {
+        var headers: any = {};
+        this.applyDefaultHeaders(headers);
+        this.applyHeaders(headers);
         return fetch(`${this.endpoint}/analytics/${eventType}`, {
             method: 'POST',
-            headers: {
-                Authorization: `Bearer ${this.token}`,
-                'content-type' : 'application/json'},
+            headers: headers,
             mode: 'cors',
             body: JSON.stringify(request)
         });
@@ -58,23 +56,37 @@ export class Client implements AnalyticsClient {
     sendSearchEvent(request: SearchEventRequest): Promise<SearchEventResponse> {
         return this.sendEvent('search', request).then(defaultResponseTransformer);
     }
+
     sendClickEvent(request: ClickEventRequest): Promise<ClickEventResponse> {
         return this.sendEvent('click', request).then(defaultResponseTransformer);
     }
+
     sendCustomEvent(request: CustomEventRequest): Promise<CustomEventResponse> {
         return this.sendEvent('custom', request).then(defaultResponseTransformer);
     }
+
     sendViewEvent(request: ViewEventRequest): Promise<ViewEventResponse> {
         if (request.referrer === '') { delete request.referrer; }
         return this.sendEvent('view', request).then(defaultResponseTransformer);
     }
+
     getVisit(): Promise<VisitResponse> {
         return fetch(this.endpoint + '/analytics/visit')
             .then(defaultResponseTransformer);
     }
+
     getHealth(): Promise<HealthResponse> {
         return fetch(this.endpoint + '/analytics/monitoring/health')
             .then(defaultResponseTransformer);
+    }
+
+    protected applyHeaders(headers: any) {}
+
+    private applyDefaultHeaders(headers: any){
+        if (this.token !== '') {
+            headers['Authorization'] = `Bearer ${this.token}`;
+            headers['Content-Type'] = `application/json`;
+        }
     }
 }
 
