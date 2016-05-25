@@ -38,15 +38,13 @@ export class Client implements AnalyticsClient {
         }
 
         this.endpoint = opts.endpoint || Endpoints.default;
-        this.token = opts.token || '';
+        this.token = opts.token;
     }
 
     sendEvent(eventType: string, request: any): Promise<IResponse> {
-        var headers: any = {};
-        this.applyHeaders(headers);
         return fetch(`${this.endpoint}/analytics/${eventType}`, {
             method: 'POST',
-            headers: headers,
+            headers: this.getHeaders(),
             mode: 'cors',
             body: JSON.stringify(request)
         });
@@ -79,15 +77,14 @@ export class Client implements AnalyticsClient {
             .then(defaultResponseTransformer);
     }
 
-    protected applyHeaders(headers: any) {
-        this.applyDefaultHeaders(headers);
-    }
-
-    protected applyDefaultHeaders(headers: any) {
-        if (this.token !== '') {
+    protected getHeaders(): any {
+        var headers: any = {
+            'Content-Type': `application/json`
+        };
+        if (this.token) {
             headers['Authorization'] = `Bearer ${this.token}`;
-            headers['Content-Type'] = `application/json`;
         }
+        return headers;
     }
 }
 
