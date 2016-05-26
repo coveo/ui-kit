@@ -18,7 +18,7 @@ This project provides 3 ways to interact with the the Coveo usage analytics serv
 This JavaScript client project provides a code snippet that a website administrator can easily add to website pages to track `pageview` events. The snippet is similar to the Google analytics snippet (analytics.js).
 
 The pushed `pageview` events are stored in a Coveo usage analytics table which content currently cannot be viewed in usage analytics reports and the visit browser to prevent performance degradation. But they are used by services such as the Coveo
-content recomendation system.
+content recommendation system.
 
 Initially, the `pageview` events data will be used exclusively from Coveo Reveal, a machine learning service (see [Coveo Reveal](http://www.coveo.com/go?dest=cloudhelp&lcid=9&context=177)), by an upcoming feature that will recommend relevant items based on user behavior. It is recommended that you start pushing your events as soon as possible so that you will have data to use when the new feature becomes available.
 
