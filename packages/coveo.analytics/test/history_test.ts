@@ -15,7 +15,7 @@ test.beforeEach(t => {
   data = {
     name: 'name',
     value: 'value',
-    time: 111111
+    time: JSON.stringify(new Date())
   };
 });
 

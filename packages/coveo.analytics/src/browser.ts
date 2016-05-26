@@ -32,7 +32,7 @@ if (!coveoua.disableAutoHistory) {
     let historyElement: HistoryViewElement = {
         name: 'PageView',
         value: document.location.toString(),
-        time: Math.floor(Date.now() / 1000),
+        time: JSON.stringify(new Date()),
         title: document.title
     };
     store.addElement(historyElement);

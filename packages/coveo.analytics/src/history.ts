@@ -44,7 +44,7 @@ export class HistoryStore {
 export interface HistoryElement {
     name: string;
     value: string;
-    time: number;
+    time: string;
 };
 
 export interface HistoryViewElement extends HistoryElement {
