@@ -61,7 +61,7 @@ _Note: Do not copy the_ `coveoua.js` _file as it can be updated anytime and you 
 
 #### Adding informations on items to be recommended
 
-Replace the `coveoua('send','pageview')` with the following one.
+Replace the `coveoua('send','pageview')` with the following:
 ```js
 // ...
 coveoua('send','pageview',{
