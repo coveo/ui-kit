@@ -41,11 +41,13 @@ export class HistoryStore {
     }
 }
 
-export type HistoryElement =  HistoryViewElement | any;
+export interface HistoryElement {
+    name: string;
+    value: string;
+    time: string;
+};
 
-export interface HistoryViewElement {
-    type: string;
-    uri: string;
+export interface HistoryViewElement extends HistoryElement {
     title?: string;
 }
 
