@@ -65,9 +65,9 @@ Replace the `coveoua('send','pageview')` with the following:
 ```js
 // ...
 coveoua('send','pageview',{
-  contentIDKey: options.contentIDKey,
-  contentIDValue: options.contentIDValue,
-  contentType: options.contentType
+  contentIDKey: 'value for contentIDKey',
+  contentIDValue: 'value for contentIDValue',
+  contentType: 'value for contentType'
   // ... more information ...
 });
 ```
