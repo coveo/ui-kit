@@ -65,8 +65,8 @@ Replace the `coveoua('send','pageview')` with the following:
 ```js
 // ...
 coveoua('send','pageview',{
-  contentIDKey: 'value for contentIDKey',
-  contentIDValue: 'value for contentIDValue',
+  contentIDKey: 'value for contentIDKey ex: @sysurihash (the field in the coveoindex)',
+  contentIDValue: 'value for contentIDValue ',
   contentType: 'value for contentType'
   // ... more information ...
 });
