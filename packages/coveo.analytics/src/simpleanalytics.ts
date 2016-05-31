@@ -1,6 +1,7 @@
 import AnalyticsClient from './analyticsclient';
 import * as analytics from './analytics';
 import objectAssign from './objectassign';
+import {popFromObject} from './utils';
 
 // SimpleAPI mimics the GoogleAnalytics API.
 export class SimpleAPI {
@@ -43,6 +44,9 @@ export class SimpleAPI {
                     referrer: document.referrer,
                     language: navigator.language,
                     title: document.title,
+                    contentIDKey: popFromObject(customData, 'contentIDKey'),
+                    contentIDValue: popFromObject(customData, 'contentIDValue'),
+                    contentType: popFromObject(customData, 'contentType'),
                     customData: customData
                 });
                 return;
