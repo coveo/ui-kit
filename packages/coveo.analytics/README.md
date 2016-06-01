@@ -16,7 +16,7 @@ This project provides 3 ways to interact with the the Coveo usage analytics serv
 
 ## Usage (Web analytics)
 
-This JavaScript client project provides a code snippet that a website administrator can easily add to website pages to track `pageview` events. The snippet is similar to the Google analytics snippet (analytics.js).
+This JavaScript client project provides a code snippet that a website administrator can easily add to website pages to track `pageview` events. The Coveo code snippet is similar to the Google analytics one (analytics.js).
 
 The pushed `pageview` events are stored in a Coveo usage analytics table which content currently cannot be viewed in usage analytics reports and the visit browser to prevent performance degradation. But they are used by services such as the Coveo
 content recommendation system.
