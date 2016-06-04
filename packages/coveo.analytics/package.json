@@ -20,7 +20,7 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "ava": "0.15.1",
+    "ava": "0.15.2",
     "body-parser": "1.15.1",
     "coveralls": "2.11.9",
     "es6-promise": "3.2.1",
