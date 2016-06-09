@@ -1,4 +1,5 @@
 import test from 'ava';
+import { Version } from '../src/analytics';
 import simpleanalytics from '../src/simpleanalytics';
 import AnalyticsClientMock from './helpers/analyticsclientmock';
 
@@ -7,7 +8,7 @@ import * as express from 'express';
 import * as http from 'http';
 
 var app: express.Application = express();
-app.post('/analytics/view', (req: express.Request, res: express.Response) => {
+app.post(`/rest/${Version}/analytics/view`, (req: express.Request, res: express.Response) => {
     res.status(200).send('{}');
 });
 const server: http.Server = (<any>http).createServer(app).listen();
@@ -83,4 +84,3 @@ test('SimpleAnalytics: can send pageview without sending content attributes in t
     t.is(spy.getCall(0).args[0]['customData']['contentType'], undefined);
     t.is(spy.getCall(0).args[0]['customData']['otherData'], 'data');
 });
-

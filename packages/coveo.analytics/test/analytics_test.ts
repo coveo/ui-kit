@@ -9,6 +9,7 @@ var app: express.Application = express();
 const server: http.Server = (<any>http).createServer(app).listen();
 app.set('port', server.address().port);
 app.use(bodyParser.json());
+const A_VERSION = 'v1337';
 
 test('Analytics: can post a view event', t => {
 
@@ -19,7 +20,7 @@ test('Analytics: can post a view event', t => {
         visitorId: '213'
     };
 
-    app.post('/analytics/view', (req: express.Request, res: express.Response) => {
+    app.post(`/rest/${A_VERSION}/analytics/view`, (req: express.Request, res: express.Response) => {
         if (req.header('authorization').indexOf('Bearer ') != 0) {
             res.status(500).send(JSON.stringify({error: 'no auth token were provided'}));
             return;
@@ -41,12 +42,13 @@ test('Analytics: can post a view event', t => {
 
     const client = new analytics.Client({
         token: 'token',
-        endpoint: `http://localhost:${server.address().port}`
+        endpoint: `http://localhost:${server.address().port}`,
+        version: A_VERSION
     });
 
     return client.sendViewEvent(viewEvent).then((res: events.ViewEventResponse) => {
         t.not(res.raw, undefined);
         t.is(res.visitId, response.visitId);
         t.is(res.visitorId, response.visitorId);
-    }, (error) => t.fail());
+    });
 });
