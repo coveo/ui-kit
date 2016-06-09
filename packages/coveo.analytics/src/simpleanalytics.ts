@@ -1,24 +1,31 @@
+import AnalyticsClient from './analyticsclient';
 import * as analytics from './analytics';
 import objectAssign from './objectassign';
+import {popFromObject} from './utils';
 
 // SimpleAPI mimics the GoogleAnalytics API.
 export class SimpleAPI {
-    private client: analytics.Client;
+    private client: AnalyticsClient;
 
     // init initializes a new SimpleAPI client.
     // @param token is your coveo access_token / api_key / ...
     // @param endpoint is the endpoint you want to target defaults to the
     //        usage analytics production endpoint
-    init(token: string, endpoint: string ): void {
-        endpoint = endpoint || analytics.Endpoints.default;
+    init(token: string | AnalyticsClient, endpoint: string): void {
         if (typeof token === 'undefined') {
             throw new Error(`You must pass your token when you call 'init'`);
         }
-
-        this.client = new analytics.Client({
-            token: token,
-            endpoint: endpoint
-        });
+        if (typeof token === 'string') {
+            endpoint = endpoint || analytics.Endpoints.default;
+            this.client = new analytics.Client({
+                token: token,
+                endpoint: endpoint
+            });
+        } else if (typeof token === 'object' && typeof token.sendEvent !== 'undefined') {
+            this.client = token;
+        } else {
+            throw new Error(`You must pass either your token or a valid object when you call 'init'`);
+        }
     }
 
     send(event: EventType, customData: any): void {
@@ -37,6 +44,9 @@ export class SimpleAPI {
                     referrer: document.referrer,
                     language: navigator.language,
                     title: document.title,
+                    contentIDKey: popFromObject(customData, 'contentIDKey'),
+                    contentIDValue: popFromObject(customData, 'contentIDValue'),
+                    contentType: popFromObject(customData, 'contentType'),
                     customData: customData
                 });
                 return;
