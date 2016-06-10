@@ -34,7 +34,7 @@
     "tslint": "3.11.0",
     "tslint-loader": "2.1.4",
     "typescript": "1.8.10",
-    "typings": "1.0.4",
+    "typings": "1.0.5",
     "webpack": "1.13.1"
   },
   "dependencies": {},
