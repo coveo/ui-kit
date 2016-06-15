@@ -46,7 +46,8 @@ export class Client implements AnalyticsClient {
             method: 'POST',
             headers: this.getHeaders(),
             mode: 'cors',
-            body: JSON.stringify(request)
+            body: JSON.stringify(request),
+            credentials: 'include'
         });
     }
 
