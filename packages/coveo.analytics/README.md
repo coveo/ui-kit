@@ -16,7 +16,7 @@ This project provides 3 ways to interact with the the Coveo usage analytics serv
 
 ## Usage (Web analytics)
 
-This JavaScript client project provides a code snippet that a website administrator can easily add to website pages to track `pageview` events. The snippet is similar to the Google analytics snippet (analytics.js).
+This JavaScript client project provides a code snippet that a website administrator can easily add to website pages to track `pageview` events. The Coveo code snippet is similar to the Google analytics one (analytics.js).
 
 The pushed `pageview` events are stored in a Coveo usage analytics table which content currently cannot be viewed in usage analytics reports and the visit browser to prevent performance degradation. But they are used by services such as the Coveo
 content recommendation system.
@@ -66,12 +66,29 @@ Replace the `coveoua('send','pageview')` with the following:
 ```js
 // ...
 coveoua('send','pageview',{
-  contentIDKey: 'value for contentIDKey ex: @sysurihash (the field in the coveoindex)',
-  contentIDValue: 'value for contentIDValue ',
+  contentIDKey: 'value for contentIDKey',
+  contentIDValue: 'value for contentIDValue',
   contentType: 'value for contentType'
   // ... more information ...
 });
 ```
+##### contentIDKey
+
+The field in the Coveo index that will be used to identify the current page.
+
+Ex: @sysurihash
+
+##### contentIDValue
+
+The value of the field specified with contentIDKey to find the current page.
+
+Ex: somehash3125091
+
+##### ContentType
+
+The category to tag your page in.
+
+Ex: Article
 
 ### Usage (for developers)
 

@@ -10,15 +10,16 @@ import { AnalyticsClient } from './analyticsclient';
 export const Version = 'v15';
 
 export const Endpoints = {
-  default: 'https://usageanalytics.coveo.com/rest/' + Version,
-  production: 'https://usageanalytics.coveo.com/rest/' + Version,
-  dev: 'https://usageanalyticsdev.coveo.com/rest/' + Version,
-  staging: 'https://usageanalyticsstaging.coveo.com/rest/' + Version
+  default: 'https://usageanalytics.coveo.com',
+  production: 'https://usageanalytics.coveo.com',
+  dev: 'https://usageanalyticsdev.coveo.com',
+  staging: 'https://usageanalyticsstaging.coveo.com'
 };
 
 export interface ClientOptions {
   token?: string;
   endpoint?: string;
+  version?: string;
 };
 
 function defaultResponseTransformer(response: IResponse): Promise<any> {
@@ -31,6 +32,7 @@ function defaultResponseTransformer(response: IResponse): Promise<any> {
 export class Client implements AnalyticsClient {
     private endpoint: string;
     private token: string;
+    private version: string;
 
     constructor(opts: ClientOptions) {
         if (typeof opts === 'undefined') {
@@ -39,10 +41,11 @@ export class Client implements AnalyticsClient {
 
         this.endpoint = opts.endpoint || Endpoints.default;
         this.token = opts.token;
+        this.version = opts.version || Version;
     }
 
     sendEvent(eventType: string, request: any): Promise<IResponse> {
-        return fetch(`${this.endpoint}/analytics/${eventType}`, {
+        return fetch(`${this.getRestEndpoint()}/analytics/${eventType}`, {
             method: 'POST',
             headers: this.getHeaders(),
             mode: 'cors',
@@ -69,13 +72,17 @@ export class Client implements AnalyticsClient {
     }
 
     getVisit(): Promise<VisitResponse> {
-        return fetch(this.endpoint + '/analytics/visit')
+        return fetch(`${this.getRestEndpoint()}/analytics/visit`)
             .then(defaultResponseTransformer);
     }
 
     getHealth(): Promise<HealthResponse> {
-        return fetch(this.endpoint + '/analytics/monitoring/health')
+        return fetch(`${this.getRestEndpoint()}/analytics/monitoring/health`)
             .then(defaultResponseTransformer);
+    }
+
+    protected getRestEndpoint(): string {
+        return `${this.endpoint}/rest/${this.version}`;
     }
 
     protected getHeaders(): any {
