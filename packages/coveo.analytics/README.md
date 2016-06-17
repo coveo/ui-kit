@@ -66,21 +66,21 @@ Replace the `coveoua('send','pageview')` with the following:
 ```js
 // ...
 coveoua('send','pageview',{
-  contentIDKey: 'value for contentIDKey',
-  contentIDValue: 'value for contentIDValue',
+  contentIdKey: 'value for contentIdKey',
+  contentIdValue: 'value for contentIdValue',
   contentType: 'value for contentType'
   // ... more information ...
 });
 ```
-##### contentIDKey
+##### contentIdKey
 
 The field in the Coveo index that will be used to identify the current page.
 
 Ex: @sysurihash
 
-##### contentIDValue
+##### contentIdValue
 
-The value of the field specified with contentIDKey to find the current page.
+The value of the field specified with contentIdKey to find the current page.
 
 Ex: somehash3125091
 

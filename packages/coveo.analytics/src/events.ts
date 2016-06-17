@@ -57,8 +57,8 @@ export interface ViewEventRequest extends EventBaseRequest {
     location: string;
     referrer?: string;
     title?: string;
-    contentIDKey?: string;
-    contentIDValue?: string;
+    contentIdKey?: string;
+    contentIdValue?: string;
     contentType?: string;
 }
 

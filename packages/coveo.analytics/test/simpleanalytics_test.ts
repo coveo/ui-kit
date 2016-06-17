@@ -57,13 +57,13 @@ test('SimpleAnalytics: can send pageview with content attributes', t => {
 
     simpleanalytics('init', client);
     simpleanalytics('send', 'pageview', {
-        contentIDKey: 'key',
-        contentIDValue: 'value',
+        contentIdKey: 'key',
+        contentIdValue: 'value',
         contentType: 'type'
     });
 
-    t.is(spy.getCall(0).args[0]['contentIDKey'], 'key');
-    t.is(spy.getCall(0).args[0]['contentIDValue'], 'value');
+    t.is(spy.getCall(0).args[0]['contentIdKey'], 'key');
+    t.is(spy.getCall(0).args[0]['contentIdValue'], 'value');
     t.is(spy.getCall(0).args[0]['contentType'], 'type');
 });
 
@@ -73,14 +73,14 @@ test('SimpleAnalytics: can send pageview without sending content attributes in t
 
     simpleanalytics('init', client);
     simpleanalytics('send', 'pageview', {
-        contentIDKey: 'key',
-        contentIDValue: 'value',
+        contentIdKey: 'key',
+        contentIdValue: 'value',
         contentType: 'type',
         otherData: 'data'
     });
 
-    t.is(spy.getCall(0).args[0]['customData']['contentIDKey'], undefined);
-    t.is(spy.getCall(0).args[0]['customData']['contentIDValue'], undefined);
+    t.is(spy.getCall(0).args[0]['customData']['contentIdKey'], undefined);
+    t.is(spy.getCall(0).args[0]['customData']['contentIdValue'], undefined);
     t.is(spy.getCall(0).args[0]['customData']['contentType'], undefined);
     t.is(spy.getCall(0).args[0]['customData']['otherData'], 'data');
 });

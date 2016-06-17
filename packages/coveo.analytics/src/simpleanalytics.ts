@@ -44,8 +44,8 @@ export class SimpleAPI {
                     referrer: document.referrer,
                     language: navigator.language,
                     title: document.title,
-                    contentIDKey: popFromObject(customData, 'contentIDKey'),
-                    contentIDValue: popFromObject(customData, 'contentIDValue'),
+                    contentIdKey: popFromObject(customData, 'contentIdKey'),
+                    contentIdValue: popFromObject(customData, 'contentIdValue'),
                     contentType: popFromObject(customData, 'contentType'),
                     customData: customData
                 });
