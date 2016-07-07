@@ -1,38 +1,28 @@
 import test from 'ava';
 import { assign, ponyfill } from '../src/objectassign';
 
-test('native: null target should throw', t => {
-    t.throws(() => assign(undefined, {}), /null/ );
-});
+[ponyfill, assign].forEach( (assignToTest) => {
+    const name = assignToTest === ponyfill ? 'ponyfill' : 'native assign';
 
-test('native: nested properties should be erased', t => {
-    const srcs = [{'1': 2}, {'1': 3}];
-    const result = assign({}, srcs[0], srcs[1]);
+    test(`${name}: null target should throw`, t => {
+        t.throws(() => assignToTest(undefined, {}), /null/ );
+    });
 
-    t.deepEqual(result, {'1': 3});
-});
+    test(`${name}: nested properties should be erased`, t => {
+        const srcs = [{'1': 2}, {'1': 3}];
+        const result = assignToTest({}, srcs[0], srcs[1]);
 
-test('native: multiple object copy', t => {
-    const srcs = [{'1': 2}, {'1': {'2': 3}, '2': 3}, {'3': 4}];
-    const result = assign({}, srcs[0], srcs[1], srcs[2]);
+        t.deepEqual(result, {'1': 3});
+    });
 
-    t.deepEqual(result, {'1': {'2': 3}, '2': 3, '3': 4});
-});
+    test(`${name}: should copy all properties`, t => {
+        const srcs = [{'1': 2}, {'1': {'2': 3}, '2': 3}, {'3': 4}];
+        const result = assignToTest({}, srcs[0], srcs[1], srcs[2]);
 
-test('ponyfill: null target should throw', t => {
-    t.throws(() => ponyfill(undefined, {}), /null/ );
-});
+        t.deepEqual(result, {'1': {'2': 3}, '2': 3, '3': 4});
+    });
 
-test('ponyfill: nested properties should be erased', t => {
-    const srcs = [{'1': 2}, {'1': 3}];
-    const result = ponyfill({}, srcs[0], srcs[1]);
-
-    t.deepEqual(result, {'1': 3});
-});
-
-test('ponyfill: multiple object copy', t => {
-    const srcs = [{'1': 2}, {'1': {'2': 3}, '2': 3}, {'3': 4}];
-    const result = ponyfill({}, srcs[0], srcs[1], srcs[2]);
-
-    t.deepEqual(result, {'1': {'2': 3}, '2': 3, '3': 4});
+    test(`${name}: empty object should return empty`, t => {
+        t.deepEqual(assignToTest({}, {}, {}), {});
+    });
 });
