@@ -36,5 +36,6 @@ const objectAssignPonyfill: IObjectAssign = (target: any, ...sources: any[]): an
     return output;
 };
 
+export const ponyfill = objectAssignPonyfill;
 export const assign: IObjectAssign = typeof (<any>Object).assign === 'function' ?  (<any>Object).assign : objectAssignPonyfill;
 export default assign;

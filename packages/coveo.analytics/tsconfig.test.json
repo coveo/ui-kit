@@ -14,6 +14,7 @@
         "test/simpleanalytics_test.ts",
         "test/analytics_test.ts",
         "test/history_test.ts",
+        "test/objectassign_test.ts",
         "test/storage_test.ts",
         "test/lib.d.ts",
         "typings/index.d.ts"
