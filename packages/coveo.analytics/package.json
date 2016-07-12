@@ -22,7 +22,7 @@
   "devDependencies": {
     "ava": "0.15.2",
     "body-parser": "1.15.1",
-    "coveralls": "2.11.9",
+    "coveralls": "2.11.10",
     "es6-promise": "3.2.1",
     "exports-loader": "0.6.3",
     "express": "4.14.0",
