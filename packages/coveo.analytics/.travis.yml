@@ -1,14 +1,18 @@
 sudo: false
 language: node_js
+branches:
+  only: 
+    - master
+
 node_js:
 - stable
 install:
 - npm install
 - "$(npm bin)/typings install"
 script:
-- npm run-script build
+- npm run build
 - npm test
-- npm run-script coveralls
+- npm run coveralls
 after_success:
   - mkdir deploy
   - cp dist/coveoua.js dist/coveoua.js.map deploy
