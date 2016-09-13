@@ -28,7 +28,7 @@ Initially, the `pageview` events data will be used exclusively by the Coveo Reve
 
   You need a Coveo Cloud API key that has the permission to write to the Usage Analytics service.
 
-  - For [Coveo Cloud V1](https://cloud.coveo.com/), contact [Coveo Support](https://coveocommunity.force.com/) and ask to create an API key with the *Write UA** scope.
+  - For [Coveo Cloud V1](https://cloud.coveo.com/), contact [Coveo Support](https://coveocommunity.force.com/) and ask to create an API key with the **Write UA** scope.
 
   - For [Coveo Cloud V2](https://platform.cloud.coveo.com/), create an API key from the [administration console] (https://platform.cloud.coveo.com/admin/#/organization/api-access/) selecting the **Edit** check box for the **Analytics data** privilege (see [API Access - Page](http://www.coveo.com/go?dest=ccv2ac&context=27)).
 
