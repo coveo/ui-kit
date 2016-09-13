@@ -57,21 +57,21 @@ Initially, the `pageview` events data will be used exclusively by the Coveo Reve
   
   The code snippet must contain `contentIdKey` and `contentIdValue` in order to identify items in the Coveo index. You must also add `contentType` when you want to recommend specific types of content.
   
-  | Key                   | Value                                                                        |
-  | ----------------------|------------------------------------------------------------------------------|
-  | `contentIdKey`        | The field in the Coveo index that will be used to identify the current page. |
-  | `contentIdValue`      | The value of the field specified with contentIdKey to find the current page. |
-  | `contentType`         | [Optional] The category to tag your page in (e.g., 'Article').               |
+  | Key            | Value                                                                        |
+  | ---------------|------------------------------------------------------------------------------|
+  | contentIdKey   | The field in the Coveo index that will be used to identify the current page. |
+  | contentIdValue | The value of the field specified with contentIdKey to find the current page. |
+  | contentType    | [Optional] The category to tag your page in (e.g., 'Article').               |
   
   **Note: Do not copy the_ `coveoua.js` _file as it can be updated anytime and you could experience compatibility issues.**
   
 3. Validate pageview events are pushed to the Coveo Usage Analytics service
 
-  1. In a web browser such as Chrome, navigate to a website page to which you added the code snippet.
+  a. In a web browser such as Chrome, navigate to a website page to which you added the code snippet.
 
-  2. In the browser developer tool, go the the **Network** tab.
+  b. In the browser developer tool, go the the **Network** tab.
 
-  3. Reload the page, in the **Name** panel, ensure that you see a **view** event sent to Coveo analytics.
+  c. Reload the page, in the **Name** panel, ensure that you see a **view** event sent to Coveo analytics.
 
 ### Usage (for developers)
 
