@@ -6,36 +6,35 @@
 [![Coverage Status](https://coveralls.io/repos/github/coveo/coveo.analytics.js/badge.svg?branch=master)](https://coveralls.io/github/coveo/coveo.analytics.js?branch=master)
 [![TypeScript](https://badges.frapsoft.com/typescript/code/typescript.png?v=100)](https://github.com/ellerbrock/typescript-badges/)
 
-## Coveo usage analytic JavaScript client
+## Coveo Usage Analytic JavaScript client
 
-This project provides 3 ways to interact with the the Coveo usage analytics service.
+This project provides 3 ways to interact with the the Coveo Usage Analytics service.
 
 - A JavaScript Node.js client
 - A JavaScript browser client
-- A snippet for web administrators to add in websites pages.
+- A code snippet to add in websites pages
 
 ## Usage (Web analytics)
 
-This JavaScript client project provides a code snippet that a website administrator can easily add to website pages to track `pageview` events. The Coveo code snippet is similar to the Google analytics one (analytics.js).
+This JavaScript client project provides a code snippet that website administrators can easily add to website pages to track `pageview` events. The `pageview` events are stored in a Coveo Usage Analytics table which content currently cannot be viewed in Usage Analytics reports and the visit browser to prevent performance degradation.
 
-The pushed `pageview` events are stored in a Coveo usage analytics table which content currently cannot be viewed in usage analytics reports and the visit browser to prevent performance degradation. But they are used by services such as the Coveo
-content recommendation system.
+Initially, the `pageview` events data will be used exclusively by the Coveo Reveal Recommendations feature (see [Recommendations Feature](https://onlinehelp.coveo.com/en/cloud/coveo_reveal_features.htm#Recommendations)). It is recommended that you start pushing `pageview` events to the Coveo Usage Analytics service as soon as possible so that you get relevant items recommended.
 
-Initially, the `pageview` events data will be used exclusively from Coveo Reveal, a machine learning service (see [Coveo Reveal](http://www.coveo.com/go?dest=cloudhelp&lcid=9&context=177)), by an upcoming feature that will recommend relevant items based on user behavior. It is recommended that you start pushing your events as soon as possible so that you will have data to use when the new feature becomes available.
+**Note: This Coveo code snippet is similar to the Google analytics one (analytics.js).**
 
-### Pushing Coveo Analytics Pageview Events
+### Pushing Coveo Analytics Pageview Events for Recommendations
 
-1. Get your API key
+1. Get an API key.
 
-  You need a Coveo Cloud API key that has the permission to write to the usage analytics sevice.
+  You need a Coveo Cloud API key that has the permission to write to the Usage Analytics service.
 
-  - On [Coveo Cloud V1](https://cloud.coveo.com/), contact [Coveo Support](https://coveocommunity.force.com/) and ask to create an API key with a **Write UA** scope.
+  - For Coveo Cloud V1](https://cloud.coveo.com/), contact [Coveo Support](https://coveocommunity.force.com/) and ask to create an API key with the *Write UA** scope.
 
-  - On [Coveo Cloud V2](https://platform.cloud.coveo.com/), create an API key from the [administration console] (https://platform.cloud.coveo.com/admin/#/organization/api-access/) selecting the **Edit** check box for the **Analytics data** privilege (see [API Access - Page](http://www.coveo.com/go?dest=ccv2ac&context=27)).
+  - For Coveo Cloud V2](https://platform.cloud.coveo.com/), create an API key from the [administration console] (https://platform.cloud.coveo.com/admin/#/organization/api-access/) selecting the **Edit** check box for the **Analytics data** privilege (see [API Access - Page](http://www.coveo.com/go?dest=ccv2ac&context=27)).
 
 2. Add the code snippet to all your website pages.
 
-  Ask an administrator to add the following code snippet in all pages of your website. Make sure you replace `YOUR_API_KEY` by the API key you got in the previous step.
+  Ask an administrator to add the following code snippet to all pages of your websites:
 
 ```html
 <script>
@@ -46,11 +45,27 @@ O=o.getElementsByTagName(v)[0];O.parentNode.insertBefore(u,O)
 })(window,document,'script','https://static.cloud.coveo.com/coveo.analytics.js/coveoua.js')
 
 coveoua('init','YOUR_API_KEY'); // Replace YOUR_API_KEY with your real key
-coveoua('send','pageview');
+coveoua('send','pageview',{
+  contentIdKey: 'value for contentIdKey',
+  contentIdValue: 'value for contentIdValue',
+  contentType: 'value for contentType'
+  // ... more fields ...
+});
 </script>
 ```
 
-_Note: Do not copy the_ `coveoua.js` _file as it can be updated anytime and you could experience compatibility issues._
+
+Make sure you replace `YOUR_API_KEY` by the API key you got in the previous step.
+
+**Note: Do not copy the_ `coveoua.js` _file as it can be updated anytime and you could experience compatibility issues.**
+
+The code snippet must contain `contentIdKey` and `contentIdValue` in order to identify items in the Coveo index. You can optionally add `contentType` to recommend specific types of content.
+
+| Key                   | Value                                                                                                      |
+| ----------------------|------------------------------------------------------------------------------------------------------------|
+| `contentIdKey`        | The field in the Coveo index that will be used to identify the current page (e.g., `'@sysurihash'`).       |
+| `contentIdValue`      | The value of the field specified with `contentIdKey` to find the current page (e.g., `'somehash3125091'`). |
+| `contentType`         | [Optional] The category to tag your page in (e.g., `'Article'`).                                           |
 
 #### Validate events are pushed
 
@@ -59,36 +74,6 @@ _Note: Do not copy the_ `coveoua.js` _file as it can be updated anytime and you 
   2. In the browser developer tool, go the the **Network** tab.
 
   3. Reload the page, in the **Name** panel, ensure that you see a **view** event sent to Coveo analytics.
-
-#### Adding informations on items to be recommended
-
-Replace the `coveoua('send','pageview')` with the following:
-```js
-// ...
-coveoua('send','pageview',{
-  contentIdKey: 'value for contentIdKey',
-  contentIdValue: 'value for contentIdValue',
-  contentType: 'value for contentType'
-  // ... more information ...
-});
-```
-##### contentIdKey
-
-The field in the Coveo index that will be used to identify the current page.
-
-Ex: @sysurihash
-
-##### contentIdValue
-
-The value of the field specified with contentIdKey to find the current page.
-
-Ex: somehash3125091
-
-##### ContentType
-
-The category to tag your page in.
-
-Ex: Article
 
 ### Usage (for developers)
 
