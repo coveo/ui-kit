@@ -33,41 +33,39 @@ Initially, the `pageview` events data will be used exclusively by the Coveo Reve
   - For [Coveo Cloud V2](https://platform.cloud.coveo.com/), create an API key from the [administration console] (https://platform.cloud.coveo.com/admin/#/organization/api-access/) selecting the **Edit** check box for the **Analytics data** privilege (see [API Access - Page](http://www.coveo.com/go?dest=ccv2ac&context=27)).
 
 2. Add the code snippet to all your website pages.
-
+  
   Ask an administrator to add the following code snippet to all pages of your websites:
 
-```html
-<script>
-(function(c,o,v,e,O,u,a){
-a='coveoua';c[a]=c[a]||function(){(c[a].q=c[a].q|| []).push(arguments)};
-c[a].t=Date.now();u=o.createElement(v);u.async=1;u.src=e;
-O=o.getElementsByTagName(v)[0];O.parentNode.insertBefore(u,O)
-})(window,document,'script','https://static.cloud.coveo.com/coveo.analytics.js/coveoua.js')
-
-coveoua('init','YOUR_API_KEY'); // Replace YOUR_API_KEY with your real key
-coveoua('send','pageview',{
-  contentIdKey: 'value for contentIdKey',
-  contentIdValue: 'value for contentIdValue',
-  contentType: 'value for contentType'
-  // ... more fields ...
-});
-</script>
-```
-
-
-Make sure you replace `YOUR_API_KEY` by the API key you got in the previous step.
-
-**Note: Do not copy the_ `coveoua.js` _file as it can be updated anytime and you could experience compatibility issues.**
-
-The code snippet must contain `contentIdKey` and `contentIdValue` in order to identify items in the Coveo index. Optionally add `contentType` to recommend specific types of content.
-
-| Key                   | Value                                                                                                      |
-| ----------------------|------------------------------------------------------------------------------------------------------------|
-| `contentIdKey`        | The field in the Coveo index that will be used to identify the current page (e.g., `'@sysurihash'`).       |
-| `contentIdValue`      | The value of the field specified with `contentIdKey` to find the current page (e.g., `'somehash3125091'`). |
-| `contentType`         | [Optional] The category to tag your page in (e.g., `'Article'`).                                           |
-
-#### Validate events are pushed
+  ```html
+  <script>
+  (function(c,o,v,e,O,u,a){
+  a='coveoua';c[a]=c[a]||function(){(c[a].q=c[a].q|| []).push(arguments)};
+  c[a].t=Date.now();u=o.createElement(v);u.async=1;u.src=e;
+  O=o.getElementsByTagName(v)[0];O.parentNode.insertBefore(u,O)
+  })(window,document,'script','https://static.cloud.coveo.com/coveo.analytics.js/coveoua.js')
+  
+  coveoua('init','YOUR_API_KEY'); // Replace YOUR_API_KEY with your real key
+  coveoua('send','pageview',{
+    contentIdKey: 'value for contentIdKey',
+    contentIdValue: 'value for contentIdValue',
+    contentType: 'value for contentType'
+    // ... more fields ...
+  });
+  </script>
+  ```
+  Make sure you replace `YOUR_API_KEY` by the API key you got in the previous step.
+  
+  The code snippet must contain `contentIdKey` and `contentIdValue` in order to identify items in the Coveo index. You must also add `contentType` when you want to recommend specific types of content.
+  
+  | Key                   | Value                                                                                                    |
+  | ----------------------|----------------------------------------------------------------------------------------------------------|
+  | `contentIdKey`        | The field in the Coveo index that will be used to identify the current page (e.g., '@sysurihash').     |
+  | `contentIdValue`      | The value of the field specified with contentIdKey to find the current page (e.g., 'somehash3125091'). |
+  | `contentType`         | [Optional] The category to tag your page in (e.g., 'Article').                                         |
+  
+  **Note: Do not copy the_ `coveoua.js` _file as it can be updated anytime and you could experience compatibility issues.**
+  
+3. Validate pageview events are pushed to the Coveo Usage Analytics service
 
   1. In a web browser such as Chrome, navigate to a website page to which you added the code snippet.
 
