@@ -59,7 +59,7 @@ Make sure you replace `YOUR_API_KEY` by the API key you got in the previous step
 
 **Note: Do not copy the_ `coveoua.js` _file as it can be updated anytime and you could experience compatibility issues.**
 
-The code snippet must contain `contentIdKey` and `contentIdValue` in order to identify items in the Coveo index. You can optionally add `contentType` to recommend specific types of content.
+The code snippet must contain `contentIdKey` and `contentIdValue` in order to identify items in the Coveo index. Optionally add `contentType` to recommend specific types of content.
 
 | Key                   | Value                                                                                                      |
 | ----------------------|------------------------------------------------------------------------------------------------------------|
