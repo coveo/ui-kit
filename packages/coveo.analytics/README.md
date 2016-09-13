@@ -34,7 +34,7 @@ Initially, the `pageview` events data will be used exclusively by the Coveo Reve
 
 2. Add the code snippet to all your website pages.
   
-  Ask an administrator to add a code snippet like this following to all pages of your websites:
+  Ask an administrator to add a code snippet like the following to all pages of your websites:
 
   ```html
   <script>
