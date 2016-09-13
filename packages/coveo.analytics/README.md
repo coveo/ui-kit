@@ -48,20 +48,20 @@ Initially, the `pageview` events data will be used exclusively by the Coveo Reve
   coveoua('send','pageview',{
     contentIdKey: '@sysurihash',
     contentIdValue: 'somehash3125091',
-    contentType: 'value for contentType'
-    // ... more fields ...
+    contentType: 'value for contentType' // Optional
+    // ... more information ...
   });
   </script>
   ```
   Make sure you replace `YOUR_API_KEY` by the API key you got in the previous step.
   
-  The code snippet must contain `contentIdKey` and `contentIdValue` in order to identify items in the Coveo index. You must also add `contentType` when you want to recommend specific types of content.
+  The code snippet must contain `contentIdKey` and `contentIdValue` in order to identify items in the Coveo index. When you want to recommend specific types of content, you also need to add a `contentType` parameter value.
   
-  | Key            | Value                                                                        |
-  | ---------------|------------------------------------------------------------------------------|
-  | contentIdKey   | The field in the Coveo index that will be used to identify the current page. |
-  | contentIdValue | The value of the field specified with contentIdKey to find the current page. |
-  | contentType    | [Optional] The category to tag your page in (e.g., 'Article').               |
+  | Key            | Value                                                               |
+  | ---------------|---------------------------------------------------------------------|
+  | contentIdKey   | The Coveo index field name that will be used to identify the item.  |
+  | contentIdValue | The Coveo index field value that will be used to identify the item. |
+  | contentType    | [Optional] The type of the item to be tracked (e.g., 'Article').    |
   
   **Note: Do not copy the_ `coveoua.js` _file as it can be updated anytime and you could experience compatibility issues.**
   
