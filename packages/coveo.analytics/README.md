@@ -34,7 +34,7 @@ Initially, the `pageview` events data will be used exclusively by the Coveo Reve
 
 2. Add the code snippet to all your website pages.
   
-  Ask an administrator to add the following code snippet to all pages of your websites:
+  Ask an administrator to add a code snippet like this following to all pages of your websites:
 
   ```html
   <script>
@@ -46,8 +46,8 @@ Initially, the `pageview` events data will be used exclusively by the Coveo Reve
   
   coveoua('init','YOUR_API_KEY'); // Replace YOUR_API_KEY with your real key
   coveoua('send','pageview',{
-    contentIdKey: 'value for contentIdKey',
-    contentIdValue: 'value for contentIdValue',
+    contentIdKey: '@sysurihash',
+    contentIdValue: 'somehash3125091',
     contentType: 'value for contentType'
     // ... more fields ...
   });
@@ -57,11 +57,11 @@ Initially, the `pageview` events data will be used exclusively by the Coveo Reve
   
   The code snippet must contain `contentIdKey` and `contentIdValue` in order to identify items in the Coveo index. You must also add `contentType` when you want to recommend specific types of content.
   
-  | Key                   | Value                                                                                                    |
-  | ----------------------|----------------------------------------------------------------------------------------------------------|
-  | `contentIdKey`        | The field in the Coveo index that will be used to identify the current page (e.g., '@sysurihash').     |
-  | `contentIdValue`      | The value of the field specified with contentIdKey to find the current page (e.g., 'somehash3125091'). |
-  | `contentType`         | [Optional] The category to tag your page in (e.g., 'Article').                                         |
+  | Key                   | Value                                                                        |
+  | ----------------------|------------------------------------------------------------------------------|
+  | `contentIdKey`        | The field in the Coveo index that will be used to identify the current page. |
+  | `contentIdValue`      | The value of the field specified with contentIdKey to find the current page. |
+  | `contentType`         | [Optional] The category to tag your page in (e.g., 'Article').               |
   
   **Note: Do not copy the_ `coveoua.js` _file as it can be updated anytime and you could experience compatibility issues.**
   
