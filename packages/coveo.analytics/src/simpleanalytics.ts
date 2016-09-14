@@ -42,7 +42,7 @@ export class SimpleAPI {
                 this.client.sendViewEvent({
                     location: window.location.toString(),
                     referrer: document.referrer,
-                    language: navigator.language,
+                    language: document.documentElement.lang,
                     title: document.title,
                     contentIdKey: popFromObject(customData, 'contentIdKey'),
                     contentIdValue: popFromObject(customData, 'contentIdValue'),
