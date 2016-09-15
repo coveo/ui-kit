@@ -84,3 +84,12 @@ test('SimpleAnalytics: can send pageview without sending content attributes in t
     t.is(spy.getCall(0).args[0]['customData']['contentType'], undefined);
     t.is(spy.getCall(0).args[0]['customData']['otherData'], 'data');
 });
+
+test('SimpleAnalytics: can execute callback with onLoad event', t => {
+    var numberOfTimesExecuted = 0;
+    var callback = () => numberOfTimesExecuted++;
+
+    simpleanalytics('onLoad', callback);
+
+    t.is(numberOfTimesExecuted, 1);
+});
