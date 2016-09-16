@@ -93,3 +93,7 @@ test('SimpleAnalytics: can execute callback with onLoad event', t => {
 
     t.is(numberOfTimesExecuted, 1);
 });
+
+test('SimpleAnalytics: can\'t register an invalid onLoad event', t => {
+    t.throws(() => simpleanalytics('onLoad', undefined));
+});
