@@ -54,6 +54,14 @@ export class SimpleAPI {
                 throw new Error(`Event type: '${event}' not implemented`);
         }
     }
+
+    onLoad(callback: Function) {
+        if (typeof callback == 'undefined') {
+            throw new Error(`You must pass a function when you call 'onLoad'`);
+        }
+
+        callback();
+    }
 }
 
 export type EventType = 'pageview';
