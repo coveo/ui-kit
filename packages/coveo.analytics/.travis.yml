@@ -1,6 +1,5 @@
 sudo: false
 language: node_js
-
 node_js:
 - stable
 install:
@@ -10,8 +9,8 @@ script:
 - npm test
 - npm run coveralls
 after_success:
-  - mkdir deploy
-  - cp dist/coveoua.js dist/coveoua.js.map deploy
+- mkdir deploy
+- cp dist/coveoua.js dist/coveoua.js.map deploy
 deploy:
 - provider: npm
   skip_cleanup: true
@@ -50,7 +49,7 @@ deploy:
 - provider: releases
   skip_cleanup: true
   api_key:
-    secure: 4snpEUBznkSWqvhW3GM4wT1hWjFiVMXNlYjhFxn00IXl2Rsr9ABFZo8o6J+b1Kjs+FpnZ5Uyv0zjiZTjNT1yYoRLUZgRW1fLp3zHJqNgweA4iQJMYOMP+7Yxh04JCJOeLVpG93yulszble7D9hDbh75Ptz9XIKHforGLYhhEa1sL3Ajr6fqQRaCtmBWfx5y3mfQfT7JvzptemESQjvC6mK0/7dXBNMKMbFR+3W6tZvhMUJpj9m2TXXP1kLY1I5P2b6UrK5DqPnFy4ZumSjaI3qEoUafMfg6KD9GnnSJYdjWj3MV3EgoxM8ImGqU27V41JaA/B16a6JOo0+WJJQbw5imkE7NlFRDaULX2anMleAWluWxYP5xqov+HPDbqVpizUcQ4gEJyyn9SUnDgCRRMMfQg+iVVahBkbxMMrk7IO/J1BIvUn2DWcIayaMRMuIqusZA95eZZv9a30YVXIgRbLEiJVaBgpHEYAZbftVkIlJZWpQc8VCGA5eM/iMjtBNkoQTIMcnMnKtpNjOZBVkDps5QnGa+/h9RECKlJ7OszrVsc9hhYgV57uW1twZCU1qAut8KtfYS2duotnZPi111rN2+jD7Mcr2RFj8eEsCHMUfD5Xr0mqbYGtmJySyXldmNYBRyFWSYAbFr2xmdw12sV+du/+qGSc8OH9ifjKlHCuBw=
+    secure: mveHY+4nzAAXVrK2nf7kKkJa4rcqpbzw2gh7THsZEmxq9dFqcUTOQ4KoRaJEstWGsxBlyhXlfme5x+C1dtZDnv4ZVrjlGPUuM+wVz3V4qKL9LPn70MB5y4NWOeua3N5Coei5qAC+Ab81dRI1913agNsTb1NKha9WJF9Xs0YtYcC+ZoFKHJywyZuElcITmJqtUQuNpn6AJpKKyB5SVShXll5sfV2/DXAt2UssTDmDO2C9NRrFIh73Z8pa5MyRBqOFtABHqg/r88blaKJL95i34PZusVLXV6K1c6rHOEWNzFys42vrujPgOnpleMpZUYWdlAJq50hj2Jr6T0n6tipGFggQL9FcblzvG6U7H1v0+yy+MEIUx+Ns5WrDwtBZe4QxBXDD7gmHZS9EII7565z6TtLFSeT0l5U9h3OPwrCi8TyXgmI5yIMy+b08gfhzuGR6PeGJk5SKGlr+CWSHOJ8JK7RxVIHlmE9D/69adRYiSghQCmp/sAPPkoaHO/hF/iooEtoN3QqRraTpAJ1Nfzfs4mBPS4fCldeUWdNLHgQZ5BAa/3s/7kElkotO9Pon0wpz8HQVB+7YQnhfHu2gZMfXanWF3haa60SRKIzQgGLY9FhI+xV7Hf1km/EDLWPbZnDumY5B8Zb6YLuTVlQJe3Tl368acPRTJNYqqzxHkALSt9Y=
   file:
     - dist/coveoua.js
     - dist/coveoua.js.map
