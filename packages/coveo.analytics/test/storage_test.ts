@@ -22,15 +22,3 @@ test('CookieStorage removeItem removes the cookie', t => {
   storage.removeItem(cookie_key);
   t.deepEqual(storage.getItem(cookie_key), null);
 });
-
-test('getAvailableStorage returns a CookieStorage when navigator supports cookies', t => {
-  detector.hasCookieStorage = () => { return true; };
-  t.true(getAvailableStorage() instanceof CookieStorage);
-});
-
-test('getAvailableStorage returns a NullStorage when all other storage fails', t => {
-  detector.hasCookieStorage = () => { return false; };
-  detector.hasLocalStorage = () => { return false; };
-  detector.hasSessionStorage = () => { return false; };
-  t.true(getAvailableStorage() instanceof NullStorage);
-});

@@ -8,7 +8,7 @@ import {
 } from '../../src/events';
 
 export class AnalyticsClientMock implements AnalyticsClient {
-    sendEvent(eventType: string, request: any): Promise<IResponse> {
+    sendEvent(eventType: string, request: any): Promise<Response> {
         return Promise.resolve();
     }
     sendSearchEvent(request: SearchEventRequest): Promise<SearchEventResponse> {

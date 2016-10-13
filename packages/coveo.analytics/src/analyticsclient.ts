@@ -7,7 +7,7 @@ import {
 } from './events';
 
 export interface AnalyticsClient {
-    sendEvent(eventType: string, request: any): Promise<IResponse>;
+    sendEvent(eventType: string, request: any): Promise<Response>;
     sendSearchEvent(request: SearchEventRequest): Promise<SearchEventResponse>;
     sendClickEvent(request: ClickEventRequest): Promise<ClickEventResponse>;
     sendCustomEvent(request: CustomEventRequest): Promise<CustomEventResponse>;

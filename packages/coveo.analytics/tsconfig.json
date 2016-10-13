@@ -1,25 +1,14 @@
 {
     "compilerOptions": {
         "module": "commonjs",
-        "target": "es5",
+        "target": "es2015",
         "outDir": "dist",
         "declaration": true,
         "noImplicitAny": true,
         "removeComments": true,
         "sourceMap": true
     },
-    "files": [
-      "src/analytics.ts",
-      "src/browser.ts",
-      "src/cookieutils.ts",
-      "src/detector.ts",
-      "src/donottrack.ts",
-      "src/history.ts",
-      "src/index.ts",
-      "src/storage.ts",
-      "src/objectassign.ts",
-      "src/simpleanalytics.ts",
-      "src/utils.ts",
-      "typings/index.d.ts"
+    "include": [
+        "src/**/*.ts"
     ]
 }

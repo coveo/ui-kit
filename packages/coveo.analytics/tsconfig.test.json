@@ -1,7 +1,7 @@
 {
     "compilerOptions": {
         "module": "commonjs",
-        "target": "es5",
+        "target": "es2015",
         "outDir": "dist_test",
         "declaration": false,
         "noImplicitAny": true,
@@ -9,14 +9,7 @@
         // Inline source map are required for coverage (nyc) to map correctly to good files.
         "inlineSourceMap": true
     },
-    "files": [
-        "test/coverage_check_test.ts",
-        "test/simpleanalytics_test.ts",
-        "test/analytics_test.ts",
-        "test/history_test.ts",
-        "test/objectassign_test.ts",
-        "test/storage_test.ts",
-        "test/lib.d.ts",
-        "typings/index.d.ts"
+    "include": [
+        "test/**/*.ts"
     ]
 }

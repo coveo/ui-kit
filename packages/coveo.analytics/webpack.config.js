@@ -6,18 +6,23 @@ module.exports = {
         path: "./dist/",
         filename: "coveoua.js"
     },
-        devtool: 'source-map',
-        resolve: {
-        extensions: ['', '.ts'],
+    devtool: 'source-map',
+    resolve: {
+        extensions: ['', '.webpack.js', '.web.js', '.ts', '.tsx', '.js'],
         root: __dirname
     },
     module: {
-        loaders: [{test: /\.ts$/, loader: 'ts-loader'}],
-        preLoaders: [{test: /\.ts$/, loader: 'tslint'}]
+        loaders: [{
+            test: /\.ts$/,
+            loader: 'babel-loader!ts-loader'
+        }],
+        preLoaders: [{
+            test: /\.ts$/,
+            loader: 'tslint'
+        }]
     },
-    plugins:[
+    plugins: [
         new webpack.ProvidePlugin({
-            'Promise': 'es6-promise',
             'fetch': 'exports?self.fetch!whatwg-fetch'
         }),
         new webpack.optimize.UglifyJsPlugin()

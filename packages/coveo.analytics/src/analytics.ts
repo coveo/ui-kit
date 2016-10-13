@@ -22,7 +22,7 @@ export interface ClientOptions {
   version?: string;
 };
 
-function defaultResponseTransformer(response: IResponse): Promise<any> {
+function defaultResponseTransformer(response: Response): Promise<any> {
     return response.json().then((data: any) => {
         data.raw = response;
         return data;
@@ -44,7 +44,7 @@ export class Client implements AnalyticsClient {
         this.version = opts.version || Version;
     }
 
-    sendEvent(eventType: string, request: any): Promise<IResponse> {
+    sendEvent(eventType: string, request: any): Promise<Response> {
         return fetch(`${this.getRestEndpoint()}/analytics/${eventType}`, {
             method: 'POST',
             headers: this.getHeaders(),
