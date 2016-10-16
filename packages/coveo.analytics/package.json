@@ -41,7 +41,7 @@
     "jsdom": "9.5.0",
     "nyc": "8.3.0",
     "sinon": "1.17.6",
-    "ts-loader": "^0.8.2",
+    "ts-loader": "^0.9.3",
     "tslint": "3.15.1",
     "tslint-loader": "2.1.5",
     "typescript": "2.0.3",
