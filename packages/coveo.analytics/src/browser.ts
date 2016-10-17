@@ -17,6 +17,11 @@ export interface CoveoUAGlobal {
 // on `window` in a browser
 const coveoua: CoveoUAGlobal = global.coveoua || {};
 
+// Replace the quick shim with the real thing.
+global.coveoua = SimpleAnalytics;
+
+global.coveoanalytics = analytics;
+
 // On normal execution this library should be loaded after the snippet execution
 // so we will execute the actions in the `q` array
 if (coveoua.q) {
@@ -37,10 +42,5 @@ if (!coveoua.disableAutoHistory) {
     };
     store.addElement(historyElement);
 }
-
-// Replace the quick shim with the real thing.
-global.coveoua = SimpleAnalytics;
-//
-global.coveoanalytics = analytics;
 
 export default coveoua;
