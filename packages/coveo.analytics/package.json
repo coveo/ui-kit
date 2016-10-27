@@ -8,10 +8,11 @@
     "lint": "tslint -s \"node_modules/tslint-loader/formatters/\" \"test/**/*.ts\" \"src/**/*.ts\"",
     "build:webpack": "webpack",
     "build:tsc": "tsc",
-    "build": "npm run-script lint && npm run-script build:webpack && npm run-script build:tsc",
+    "build": "npm run-script lint && npm run-script build:webpack && npm run-script build:tsc && npm run-script definitions",
     "test": "tsc -p tsconfig.test.json && nyc ava \"**/*test.js\"",
     "coveralls": "nyc report --reporter=text-lcov | coveralls",
-    "clean": "rm -rf dist/*"
+    "clean": "rm -rf dist/*",
+    "definitions": "cp src/library.d.ts dist/library.d.ts && tsc --target es6 --types whatwg-fetch dist/library.d.ts"
   },
   "author": "Pierre-Alexandre St-Jean <pastjean@coveo.com>",
   "repository": {
@@ -59,5 +60,8 @@
       "babel-register",
       "./test/helpers/setup-browser-env.js"
     ]
+  },
+  "dependencies": {
+    "whatwg-fetch": "^1.0.0"
   }
 }

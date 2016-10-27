@@ -10,7 +10,6 @@ export interface CoveoUAGlobal {
     (action: string, ...params: string[]): void;
     // CoveoAnalytics.q is the queue of last called actions before lib was included
     q?: string[][];
-    disableAutoHistory: boolean;
 }
 
 // On load of this script we get the global object `coveoua` (which would be)
@@ -26,21 +25,6 @@ global.coveoanalytics = analytics;
 // so we will execute the actions in the `q` array
 if (coveoua.q) {
   coveoua.q.forEach( (args: Array<string>) => SimpleAnalytics.apply(void 0, args));
-}
-
-// According to the Mozilla Do Not Track Field Guide
-// (https://developer.mozilla.org/en-US/docs/Web/Security/Do_not_track_field_guide),
-// gathering data of actions of an user as long as it is not associated to the
-// identity of that user, doNotTrack is not enabled here.
-if (!coveoua.disableAutoHistory) {
-    const store = new HistoryStore();
-    let historyElement: HistoryViewElement = {
-        name: 'PageView',
-        value: document.location.toString(),
-        time: JSON.stringify(new Date()),
-        title: document.title
-    };
-    store.addElement(historyElement);
 }
 
 export default coveoua;
