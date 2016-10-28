@@ -9,7 +9,7 @@
     "build:webpack": "webpack",
     "build:tsc": "tsc",
     "build": "npm run-script lint && npm run-script build:webpack && npm run-script build:tsc && npm run-script definitions",
-    "test": "tsc -p tsconfig.test.json && nyc ava \"**/*test.js\"",
+    "test": "tsc -p tsconfig.test.json && nyc ava \"./dist_test/**/*test.js\"",
     "coveralls": "nyc report --reporter=text-lcov | coveralls",
     "clean": "rm -rf dist/*",
     "definitions": "cp src/library.d.ts dist/library.d.ts && tsc --target es6 --types whatwg-fetch dist/library.d.ts"
