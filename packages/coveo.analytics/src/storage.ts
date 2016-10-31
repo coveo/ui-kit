@@ -33,7 +33,7 @@ export class CookieStorage implements WebStorage {
 }
 
 export class NullStorage implements WebStorage {
-    getItem(key: string): string { return ''; }
+    getItem(key: string): string { return null; }
     removeItem(key: string) {/**/}
     setItem(key: string, data: string): void {/**/}
 }

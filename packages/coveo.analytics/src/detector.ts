@@ -17,3 +17,11 @@ export function hasSessionStorage(): boolean {
 export function hasCookieStorage(): boolean {
     return navigator.cookieEnabled;
 };
+
+export function hasDocument(): boolean {
+    return document !== null;
+};
+
+export function hasDocumentLocation(): boolean {
+    return hasDocument() && document.location !== null;
+};

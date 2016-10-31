@@ -2,6 +2,7 @@ import {WebStorage, getAvailableStorage} from './storage';
 
 export const STORE_KEY: string = '__coveo.analytics.history';
 export const MAX_NUMBER_OF_HISTORY_ELEMENTS: number = 20;
+export const MIN_THRESHOLD_FOR_DUPLICATE_VALUE: number = 1000 * 60;
 
 export class HistoryStore {
     private store: WebStorage;
@@ -10,8 +11,13 @@ export class HistoryStore {
     };
 
     addElement(elem: HistoryElement) {
-        if (this.getHistory() != null) {
-            this.setHistory([elem].concat(this.getHistory()));
+        elem.internalTime = new Date().getTime();
+        let currentHistory = this.getHistory();
+        if (currentHistory != null) {
+            if (this.isValidEntry(elem)) {
+                this.setHistory([elem].concat(currentHistory));
+            }
+
         } else {
             this.setHistory([elem]);
         }
@@ -39,12 +45,44 @@ export class HistoryStore {
             this.store.removeItem(STORE_KEY);
         } catch (e) { /* refer to this.getHistory() */ }
     }
+
+    getMostRecentElement(): HistoryElement {
+        let currentHistory = this.getHistory();
+        if (currentHistory != null) {
+            const sorted = currentHistory.sort((first: HistoryElement, second: HistoryElement) => {
+                // Internal time might not be set for all history element (on upgrade).
+                // Ensure to return the most recent element for which we have a value for internalTime.
+                if (first.internalTime == null && second.internalTime == null) {
+                    return 0;
+                }
+                if (first.internalTime == null && second.internalTime != null) {
+                    return 1;
+                }
+                if (first.internalTime != null && second.internalTime == null) {
+                    return -1;
+                }
+                return second.internalTime - first.internalTime;
+            });
+            return sorted[0];
+        }
+        return null;
+    }
+
+    private isValidEntry(elem: HistoryElement): boolean {
+        let lastEntry = this.getMostRecentElement();
+
+        if (lastEntry && lastEntry.value == elem.value) {
+            return elem.internalTime - lastEntry.internalTime > MIN_THRESHOLD_FOR_DUPLICATE_VALUE;
+        }
+        return true;
+    }
 }
 
 export interface HistoryElement {
     name: string;
     value: string;
     time: string;
+    internalTime?: number;
 };
 
 export interface HistoryViewElement extends HistoryElement {
