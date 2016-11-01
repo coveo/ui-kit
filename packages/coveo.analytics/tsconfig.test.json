@@ -1,13 +1,14 @@
 {
     "compilerOptions": {
         "module": "commonjs",
-        "target": "es2015",
+        "target": "es5",
         "outDir": "dist_test",
         "declaration": false,
         "noImplicitAny": true,
         "removeComments": true,
         // Inline source map are required for coverage (nyc) to map correctly to good files.
-        "inlineSourceMap": true
+        "inlineSourceMap": true,
+        "lib": ["es5", "dom", "scripthost", "es6"]
     },
     "include": [
         "test/**/*.ts"
