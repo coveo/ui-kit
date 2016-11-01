@@ -1,12 +1,13 @@
 {
     "compilerOptions": {
         "module": "commonjs",
-        "target": "es2015",
+        "target": "es5",
         "outDir": "dist",
         "declaration": true,
         "noImplicitAny": true,
         "removeComments": true,
-        "sourceMap": true
+        "sourceMap": true,
+        "lib": ["es5", "dom", "scripthost", "es6"]
     },
     "include": [
         "src/**/*.ts"
