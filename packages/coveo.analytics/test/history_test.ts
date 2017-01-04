@@ -4,7 +4,7 @@ import {NullStorage, WebStorage} from '../src/storage';
 import * as history from '../src/history';
 
 let storage: WebStorage;
-let storageMock: Sinon.SinonMock;
+let storageMock: sinon.SinonMock;
 let historyStore: history.HistoryStore;
 let data: history.HistoryElement;
 
@@ -30,6 +30,18 @@ test('HistoryStore should be able to add an element in the history', t => {
   storageMock.expects('setItem').once().withArgs(history.STORE_KEY, sinon.match(/"value":"value"/));
   historyStore.addElement(data);
   storageMock.verify();
+});
+
+test('History store should trim value over > 75 char', t => {
+    data.value = '';
+    let newValue = '';
+    for (var i = 0; i < 100; i++) {
+        newValue += i.toString();
+    }
+    data.value = newValue;
+    storageMock.expects('setItem').once().withArgs(history.STORE_KEY, sinon.match(/"value":"01234[0-9]{70}"/));
+    historyStore.addElement(data);
+    storageMock.verify();
 });
 
 test('HistoryStore should be able to get the history', t => {
