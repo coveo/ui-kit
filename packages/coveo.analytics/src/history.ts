@@ -1,8 +1,9 @@
 import {WebStorage, getAvailableStorage} from './storage';
 
 export const STORE_KEY: string = '__coveo.analytics.history';
-export const MAX_NUMBER_OF_HISTORY_ELEMENTS: number = 20;
+export const MAX_NUMBER_OF_HISTORY_ELEMENTS: number = 10;
 export const MIN_THRESHOLD_FOR_DUPLICATE_VALUE: number = 1000 * 60;
+export const MAX_VALUE_SIZE = 75;
 
 export class HistoryStore {
     private store: WebStorage;
@@ -12,6 +13,9 @@ export class HistoryStore {
 
     addElement(elem: HistoryElement) {
         elem.internalTime = new Date().getTime();
+        if (elem.value != null) {
+            elem.value = elem.value.slice(0, MAX_VALUE_SIZE);
+        }
         let currentHistory = this.getHistory();
         if (currentHistory != null) {
             if (this.isValidEntry(elem)) {
