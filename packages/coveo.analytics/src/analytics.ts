@@ -74,10 +74,9 @@ export class Client implements AnalyticsClient {
         // Check if we are in a browser env
         if (hasDocumentLocation()) {
             const store = new HistoryStore();
-            const location = document.location;
             const historyElement = {
                 name: 'PageView',
-                value: location.host + location.pathname,
+                value: document.location.toString(),
                 time: JSON.stringify(new Date()),
                 title: document.title
             };
