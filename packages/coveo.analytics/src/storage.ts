@@ -1,6 +1,8 @@
 import * as detector from './detector';
 import { Cookie } from './cookieutils';
 
+export let preferredStorage: WebStorage = null;
+
 export interface WebStorage {
     getItem(key: string): string;
     removeItem(key: string): void;
@@ -8,14 +10,17 @@ export interface WebStorage {
 }
 
 export function getAvailableStorage(): WebStorage {
+    if (preferredStorage) {
+        return preferredStorage;
+    }
+    if (detector.hasLocalStorage()) {
+        return localStorage;
+    }
     if (detector.hasCookieStorage()) {
         return new CookieStorage();
     }
     if (detector.hasSessionStorage()) {
         return sessionStorage;
-    }
-    if (detector.hasLocalStorage()) {
-        return localStorage;
     }
     return new NullStorage();
 }

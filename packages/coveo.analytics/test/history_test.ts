@@ -2,9 +2,10 @@ import test from 'ava';
 import * as sinon from 'sinon';
 import {NullStorage, WebStorage} from '../src/storage';
 import * as history from '../src/history';
+import {MAX_NUMBER_OF_HISTORY_ELEMENTS} from '../src/history';
 
 let storage: WebStorage;
-let storageMock: Sinon.SinonMock;
+let storageMock: sinon.SinonMock;
 let historyStore: history.HistoryStore;
 let data: history.HistoryElement;
 
@@ -30,6 +31,45 @@ test('HistoryStore should be able to add an element in the history', t => {
   storageMock.expects('setItem').once().withArgs(history.STORE_KEY, sinon.match(/"value":"value"/));
   historyStore.addElement(data);
   storageMock.verify();
+});
+
+test('History store should trim query over > 75 char', t => {
+    data.value = '';
+    let newValue = '';
+    for (var i = 0; i < 100; i++) {
+        newValue += i.toString();
+    }
+    data.name = 'Query';
+    data.value = newValue;
+    storageMock.expects('setItem').once().withArgs(history.STORE_KEY, sinon.match(/"value":"01234[0-9]{70}"/));
+    historyStore.addElement(data);
+    storageMock.verify();
+});
+
+test('History store should not trim elements over 75 char if it\'s not a query', t => {
+    data.value = '';
+    let newValue = '';
+    for (var i = 0; i < 100; i++) {
+        newValue += i.toString();
+    }
+    data.name = 'Not A Query';
+    data.value = newValue;
+    storageMock.expects('setItem').once().withArgs(history.STORE_KEY, sinon.match(/"value":"01234[0-9]{185}"/));
+    historyStore.addElement(data);
+    storageMock.verify();
+});
+
+test('History store should not keep more then MAX_ELEMENTS', t => {
+    storageMock.expects('setItem').once().withArgs(history.STORE_KEY, sinon.match(/"value":"0"/));
+    storageMock.expects('setItem').once().withArgs(history.STORE_KEY, sinon.match(/"value":"5"/));
+    storageMock.expects('setItem').once().withArgs(history.STORE_KEY, sinon.match(/"value":"9"/));
+    storageMock.expects('setItem').never().withArgs(history.STORE_KEY, sinon.match(/"value":"10"/));
+    for (var i = 0; i < MAX_NUMBER_OF_HISTORY_ELEMENTS + 1; i++) {
+        data.value = i.toString();
+        historyStore.addElement(data);
+    }
+    storageMock.verify();
+
 });
 
 test('HistoryStore should be able to get the history', t => {

@@ -1,17 +1,25 @@
-import {WebStorage, getAvailableStorage} from './storage';
+import {WebStorage, getAvailableStorage, CookieStorage} from './storage';
+import * as detector from './detector';
 
 export const STORE_KEY: string = '__coveo.analytics.history';
 export const MAX_NUMBER_OF_HISTORY_ELEMENTS: number = 20;
 export const MIN_THRESHOLD_FOR_DUPLICATE_VALUE: number = 1000 * 60;
+export const MAX_VALUE_SIZE = 75;
 
 export class HistoryStore {
     private store: WebStorage;
     constructor(store?: WebStorage) {
         this.store = store || getAvailableStorage();
+        // cleanup any old cookie that we might have added
+        // eg : we used cookies before, but switched to local storage
+        if (!(this.store instanceof CookieStorage) && detector.hasCookieStorage()) {
+            new CookieStorage().removeItem(STORE_KEY);
+        }
     };
 
     addElement(elem: HistoryElement) {
         elem.internalTime = new Date().getTime();
+        this.cropQueryElement(elem);
         let currentHistory = this.getHistory();
         if (currentHistory != null) {
             if (this.isValidEntry(elem)) {
@@ -66,6 +74,12 @@ export class HistoryStore {
             return sorted[0];
         }
         return null;
+    }
+
+    private cropQueryElement(elem: HistoryElement) {
+        if (elem.name && elem.name.toLowerCase() == 'query' && elem.value != null) {
+            elem.value = elem.value.slice(0, MAX_VALUE_SIZE);
+        }
     }
 
     private isValidEntry(elem: HistoryElement): boolean {
