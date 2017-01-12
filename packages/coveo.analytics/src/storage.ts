@@ -1,7 +1,7 @@
 import * as detector from './detector';
 import { Cookie } from './cookieutils';
 
-export static let preferredStorage: WebStorage = null;
+export let preferredStorage: WebStorage = null;
 
 export interface WebStorage {
     getItem(key: string): string;

@@ -1,4 +1,5 @@
 import {WebStorage, getAvailableStorage, CookieStorage} from './storage';
+import * as detector from './detector';
 
 export const STORE_KEY: string = '__coveo.analytics.history';
 export const MAX_NUMBER_OF_HISTORY_ELEMENTS: number = 20;
@@ -11,7 +12,7 @@ export class HistoryStore {
         this.store = store || getAvailableStorage();
         // cleanup any old cookie that we might have added
         // eg : we used cookies before, but switched to local storage
-        if (!(this.store instanceof CookieStorage)) {
+        if (!(this.store instanceof CookieStorage) && detector.hasCookieStorage()) {
             new CookieStorage().removeItem(STORE_KEY);
         }
     };
