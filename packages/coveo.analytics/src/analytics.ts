@@ -8,6 +8,7 @@ import {
 import { AnalyticsClient } from './analyticsclient';
 import { HistoryStore } from './history';
 import { hasDocumentLocation } from './detector';
+import 'whatwg-fetch';
 
 export const Version = 'v15';
 
