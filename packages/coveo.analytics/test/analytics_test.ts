@@ -13,7 +13,7 @@ const A_VERSION = 'v1337';
 
 test('Analytics: can post a view event', t => {
 
-    const viewEvent: events.ViewEventRequest = {location: 'here'};
+    const viewEvent: events.ViewEventRequest = {location: 'here', contentIdKey: 'key', contentIdValue: 'value'};
     const response: events.ViewEventResponse = {
         raw: undefined,
         visitId : '123',
@@ -36,6 +36,8 @@ test('Analytics: can post a view event', t => {
         }
 
         t.is(req.body.location, viewEvent.location);
+        t.is(req.body.contentIdKey, viewEvent.contentIdKey);
+        t.is(req.body.contentIdValue, viewEvent.contentIdValue);
 
         res.status(200).send(JSON.stringify(response));
     });

@@ -72,17 +72,13 @@ export class Client implements AnalyticsClient {
     sendViewEvent(request: ViewEventRequest): Promise<ViewEventResponse> {
         if (request.referrer === '') { delete request.referrer; }
 
-        // Check if we are in a browser env
-        if (hasDocumentLocation()) {
-            const store = new HistoryStore();
-            const historyElement = {
-                name: 'PageView',
-                value: document.location.toString(),
-                time: JSON.stringify(new Date()),
-                title: document.title
-            };
-            store.addElement(historyElement);
-        }
+        const store = new HistoryStore();
+        const historyElement = {
+            name: 'PageView',
+            value: request.contentIdValue,
+            time: JSON.stringify(new Date()),
+        };
+        store.addElement(historyElement);
 
         return this.sendEvent('view', request).then(defaultResponseTransformer);
     }

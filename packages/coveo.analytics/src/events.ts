@@ -56,11 +56,11 @@ export interface CustomEventRequest extends EventBaseRequest {
 }
 
 export interface ViewEventRequest extends EventBaseRequest {
-    location: string;
+    location?: string;
     referrer?: string;
     title?: string;
-    contentIdKey?: string;
-    contentIdValue?: string;
+    contentIdKey: string;
+    contentIdValue: string;
     contentType?: string;
 }
 
