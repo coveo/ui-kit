@@ -89,8 +89,8 @@ import coveoanalytics from 'coveo.analytics';
 const client = new coveoanalytics.analytics.Client({ token : 'YOUR_API_KEY'})
 // Send your event
 client.sendCustomEvent({
-  eventType: "dog";
-  eventValue: "Hello! Yes! This is Dog!";
+  eventType: "dog",
+  eventValue: "Hello! Yes! This is Dog!"
 });
 ```
 
