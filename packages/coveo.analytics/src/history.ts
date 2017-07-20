@@ -18,7 +18,6 @@ export class HistoryStore {
     };
 
     addElement(elem: HistoryElement) {
-        elem.internalTime = new Date().getTime();
         this.cropQueryElement(elem);
         let currentHistory = this.getHistory();
         if (currentHistory != null) {
