@@ -93,7 +93,7 @@ test('HistoryStore should be able to remove all internalTime', t => {
         t.true(elem.hasOwnProperty('internalTime'));
     }
 
-    historyStore["stripInternalTime"](historyElements);
+    historyStore['stripInternalTime'](historyElements);
 
     for (let elem of historyElements) {
         t.false(elem.hasOwnProperty('internalTime'));
