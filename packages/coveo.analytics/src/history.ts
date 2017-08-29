@@ -31,18 +31,20 @@ export class HistoryStore {
     }
 
     getHistory(stripInternalTime: boolean = true): HistoryElement[] {
+        let history: HistoryElement[] = [];
         try {
-            let history = <HistoryElement[]> JSON.parse(this.store.getItem(STORE_KEY));
-            if (stripInternalTime) {
-                return this.stripInternalTime(history);
-            } else {
-                return history;
-            }
+            history = <HistoryElement[]> JSON.parse(this.store.getItem(STORE_KEY));
         } catch (e) {
             // When using the Storage APIs (localStorage/sessionStorage)
             // Safari says that those APIs are available but throws when making
             // a call to them.
             return [];
+        }
+
+        if (stripInternalTime) {
+            return this.stripInternalTime(history);
+        } else {
+            return history;
         }
     }
 
@@ -96,9 +98,8 @@ export class HistoryStore {
     }
 
     private stripInternalTime(history: HistoryElement[]): HistoryElement[] {
-        history.forEach(function(part, index, array) {
+        history.forEach((part, index, array) => {
                 delete part.internalTime;
-                array[index] = part;
             });
         return history;
     }
