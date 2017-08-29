@@ -18,21 +18,26 @@ export class HistoryStore {
     };
 
     addElement(elem: HistoryElement) {
+        elem.internalTime = new Date().getTime();
         this.cropQueryElement(elem);
-        let currentHistory = this.getHistory();
+        let currentHistory = this.getHistory(false);
         if (currentHistory != null) {
             if (this.isValidEntry(elem)) {
                 this.setHistory([elem].concat(currentHistory));
             }
-
         } else {
             this.setHistory([elem]);
         }
     }
 
-    getHistory(): HistoryElement[] {
+    getHistory(stripInternalTime: boolean = true): HistoryElement[] {
         try {
-            return <HistoryElement[]> JSON.parse(this.store.getItem(STORE_KEY));
+            let history = <HistoryElement[]> JSON.parse(this.store.getItem(STORE_KEY));
+            if (stripInternalTime) {
+                return this.stripInternalTime(history);
+            } else {
+                return history;
+            }
         } catch (e) {
             // When using the Storage APIs (localStorage/sessionStorage)
             // Safari says that those APIs are available but throws when making
@@ -54,7 +59,7 @@ export class HistoryStore {
     }
 
     getMostRecentElement(): HistoryElement {
-        let currentHistory = this.getHistory();
+        let currentHistory = this.getHistory(false);
         if (currentHistory != null) {
             const sorted = currentHistory.sort((first: HistoryElement, second: HistoryElement) => {
                 // Internal time might not be set for all history element (on upgrade).
@@ -88,6 +93,14 @@ export class HistoryStore {
             return elem.internalTime - lastEntry.internalTime > MIN_THRESHOLD_FOR_DUPLICATE_VALUE;
         }
         return true;
+    }
+
+    private stripInternalTime(history: HistoryElement[]): HistoryElement[] {
+        history.forEach(function(part, index, array) {
+                delete part.internalTime;
+                array[index] = part;
+            });
+        return history;
     }
 }
 

@@ -108,7 +108,7 @@ declare namespace CoveoAnalytics {
     class HistoryStore {
         constructor();
         addElement(elem: HistoryElement): void;
-        getHistory(): HistoryElement[];
+        getHistory(stripInternalTime?: boolean): HistoryElement[];
         setHistory(history: HistoryElement[]): void;
         clear(): void;
     }
