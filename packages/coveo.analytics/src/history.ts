@@ -20,7 +20,7 @@ export class HistoryStore {
     addElement(elem: HistoryElement) {
         elem.internalTime = new Date().getTime();
         this.cropQueryElement(elem);
-        let currentHistory = this.getHistory(false);
+        let currentHistory = this.getHistoryWithInternalTime();
         if (currentHistory != null) {
             if (this.isValidEntry(elem)) {
                 this.setHistory([elem].concat(currentHistory));
@@ -30,21 +30,19 @@ export class HistoryStore {
         }
     }
 
-    getHistory(stripInternalTime: boolean = true): HistoryElement[] {
-        let history: HistoryElement[] = [];
+    getHistory(): HistoryElement[] {
+        let history = this.getHistoryWithInternalTime();
+        return this.stripInternalTime(history);
+    }
+
+    private getHistoryWithInternalTime(): HistoryElement[] {
         try {
-            history = <HistoryElement[]> JSON.parse(this.store.getItem(STORE_KEY));
+            return <HistoryElement[]> JSON.parse(this.store.getItem(STORE_KEY));
         } catch (e) {
             // When using the Storage APIs (localStorage/sessionStorage)
             // Safari says that those APIs are available but throws when making
             // a call to them.
             return [];
-        }
-
-        if (stripInternalTime) {
-            return this.stripInternalTime(history);
-        } else {
-            return history;
         }
     }
 
@@ -61,7 +59,7 @@ export class HistoryStore {
     }
 
     getMostRecentElement(): HistoryElement {
-        let currentHistory = this.getHistory(false);
+        let currentHistory = this.getHistoryWithInternalTime();
         if (currentHistory != null) {
             const sorted = currentHistory.sort((first: HistoryElement, second: HistoryElement) => {
                 // Internal time might not be set for all history element (on upgrade).
