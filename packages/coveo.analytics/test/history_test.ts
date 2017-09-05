@@ -28,7 +28,7 @@ test.afterEach( t => {
 });
 
 test('HistoryStore should be able to add an element in the history', t => {
-  storageMock.expects('setItem').once().withArgs(history.STORE_KEY, sinon.match(/"value":"value"/));
+  storageMock.expects('setItem').once().withArgs(history.STORE_KEY, sinon.match(/"value":"value"/).and(sinon.match(/"time"/)).and(sinon.match(/"internalTime"/)));
   historyStore.addElement(data);
   storageMock.verify();
 });
@@ -76,6 +76,28 @@ test('HistoryStore should be able to get the history', t => {
   storageMock.expects('getItem').once().withArgs(history.STORE_KEY);
   historyStore.getHistory();
   storageMock.verify();
+});
+
+test('HistoryStore should be able to remove all internalTime', t => {
+    var historyElements: history.HistoryElement[] = [];
+    for (var i = 0; i < 5; i++) {
+        historyElements.push({
+            name: 'name' + i,
+            value: 'value' + i,
+            time: JSON.stringify(new Date()),
+            internalTime: new Date().getTime()
+        });
+    }
+
+    for (let elem of historyElements) {
+        t.true(elem.hasOwnProperty('internalTime'));
+    }
+
+    historyStore['stripInternalTime'](historyElements);
+
+    for (let elem of historyElements) {
+        t.false(elem.hasOwnProperty('internalTime'));
+    }
 });
 
 test('HistoryStore should remove item when cleared', t => {

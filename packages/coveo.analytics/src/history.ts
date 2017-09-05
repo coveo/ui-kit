@@ -18,19 +18,24 @@ export class HistoryStore {
     };
 
     addElement(elem: HistoryElement) {
+        elem.internalTime = new Date().getTime();
         this.cropQueryElement(elem);
-        let currentHistory = this.getHistory();
+        let currentHistory = this.getHistoryWithInternalTime();
         if (currentHistory != null) {
             if (this.isValidEntry(elem)) {
                 this.setHistory([elem].concat(currentHistory));
             }
-
         } else {
             this.setHistory([elem]);
         }
     }
 
     getHistory(): HistoryElement[] {
+        let history = this.getHistoryWithInternalTime();
+        return this.stripInternalTime(history);
+    }
+
+    private getHistoryWithInternalTime(): HistoryElement[] {
         try {
             return <HistoryElement[]> JSON.parse(this.store.getItem(STORE_KEY));
         } catch (e) {
@@ -54,7 +59,7 @@ export class HistoryStore {
     }
 
     getMostRecentElement(): HistoryElement {
-        let currentHistory = this.getHistory();
+        let currentHistory = this.getHistoryWithInternalTime();
         if (currentHistory != null) {
             const sorted = currentHistory.sort((first: HistoryElement, second: HistoryElement) => {
                 // Internal time might not be set for all history element (on upgrade).
@@ -88,6 +93,13 @@ export class HistoryStore {
             return elem.internalTime - lastEntry.internalTime > MIN_THRESHOLD_FOR_DUPLICATE_VALUE;
         }
         return true;
+    }
+
+    private stripInternalTime(history: HistoryElement[]): HistoryElement[] {
+        history.forEach((part, index, array) => {
+                delete part.internalTime;
+            });
+        return history;
     }
 }
 
