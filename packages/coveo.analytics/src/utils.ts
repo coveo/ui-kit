@@ -1,4 +1,4 @@
-export function popFromObject(object: any, key: string): string {
+export function popFromObject<T>(object: any, key: string): T {
     if (object) {
         var value = object[key];
         delete object[key];

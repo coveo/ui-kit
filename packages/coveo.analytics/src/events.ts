@@ -70,10 +70,10 @@ export interface DefaultEventResponse {
     visitorId: string;
 }
 
-export interface SearchEventResponse extends DefaultEventResponse {}
-export interface ClickEventResponse extends DefaultEventResponse {}
-export interface CustomEventResponse extends DefaultEventResponse {}
-export interface ViewEventResponse extends DefaultEventResponse {}
+export interface SearchEventResponse extends DefaultEventResponse { }
+export interface ClickEventResponse extends DefaultEventResponse { }
+export interface CustomEventResponse extends DefaultEventResponse { }
+export interface ViewEventResponse extends DefaultEventResponse { }
 
 export interface VisitResponse {
     raw: Response;

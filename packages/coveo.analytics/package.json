@@ -12,7 +12,7 @@
     "test": "tsc -p tsconfig.test.json && nyc ava \"./dist_test/**/*test.js\"",
     "coveralls": "nyc report --reporter=text-lcov | coveralls",
     "clean": "rm -rf dist/*",
-    "definitions": "cp src/library.d.ts dist/library.d.ts && tsc --target es6 --types whatwg-fetch dist/library.d.ts"
+    "definitions": "cp src/library.d.ts dist/library.d.ts && tsc --target es6 --skipLibCheck dist/library.d.ts"
   },
   "author": "Pierre-Alexandre St-Jean <pastjean@coveo.com>",
   "repository": {
@@ -28,7 +28,7 @@
     "@types/node": "^6.0.45",
     "@types/serve-static": "^1.7.31",
     "@types/sinon": "^1.16.31",
-    "@types/whatwg-fetch": "0.0.32",
+    "@types/whatwg-fetch": "0.0.33",
     "ava": "0.16.0",
     "babel-core": "^6.17.0",
     "babel-loader": "^6.2.5",
