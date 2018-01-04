@@ -46,16 +46,6 @@ deploy:
     tags: true
     condition: "$TRAVIS_TAG = latest"
     repo: coveo/coveo.analytics.js
-- provider: releases
-  skip_cleanup: true
-  api_key:
-    secure: mveHY+4nzAAXVrK2nf7kKkJa4rcqpbzw2gh7THsZEmxq9dFqcUTOQ4KoRaJEstWGsxBlyhXlfme5x+C1dtZDnv4ZVrjlGPUuM+wVz3V4qKL9LPn70MB5y4NWOeua3N5Coei5qAC+Ab81dRI1913agNsTb1NKha9WJF9Xs0YtYcC+ZoFKHJywyZuElcITmJqtUQuNpn6AJpKKyB5SVShXll5sfV2/DXAt2UssTDmDO2C9NRrFIh73Z8pa5MyRBqOFtABHqg/r88blaKJL95i34PZusVLXV6K1c6rHOEWNzFys42vrujPgOnpleMpZUYWdlAJq50hj2Jr6T0n6tipGFggQL9FcblzvG6U7H1v0+yy+MEIUx+Ns5WrDwtBZe4QxBXDD7gmHZS9EII7565z6TtLFSeT0l5U9h3OPwrCi8TyXgmI5yIMy+b08gfhzuGR6PeGJk5SKGlr+CWSHOJ8JK7RxVIHlmE9D/69adRYiSghQCmp/sAPPkoaHO/hF/iooEtoN3QqRraTpAJ1Nfzfs4mBPS4fCldeUWdNLHgQZ5BAa/3s/7kElkotO9Pon0wpz8HQVB+7YQnhfHu2gZMfXanWF3haa60SRKIzQgGLY9FhI+xV7Hf1km/EDLWPbZnDumY5B8Zb6YLuTVlQJe3Tl368acPRTJNYqqzxHkALSt9Y=
-  file:
-    - dist/coveoua.js
-    - dist/coveoua.js.map
-  on:
-    tags: true
-    repo: coveo/coveo.analytics.js
 notifications:
   email:
     on_success: never
