@@ -4,6 +4,14 @@ import { HistoryStore, HistoryViewElement } from './history';
 
 declare const global: any;
 
+declare var require: any;
+const promise = (window as any)['Promise'];
+if (!(promise instanceof Function)) {
+  require('es6-promise').polyfill();
+}
+import { shim } from './promiseshim';
+shim();
+
 // CoveoUAGlobal is the interface for the global function which also has a
 // queue `q` of unexecuted parameters
 export interface CoveoUAGlobal {
