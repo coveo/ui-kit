@@ -4,6 +4,9 @@ import { HistoryStore, HistoryViewElement } from './history';
 
 declare const global: any;
 
+// We need a custom trigger function for our Promise polyfill
+// because the default one can cause issues in other frameworks that relies on
+// their own Promise polyfill like the Salesforce Aura framework.
 declare var require: any;
 const promise = (window as any)['Promise'];
 if (!(promise instanceof Function)) {
