@@ -1,4 +1,4 @@
-import {WebStorage, getAvailableStorage, CookieStorage} from './storage';
+import { WebStorage, getAvailableStorage, CookieStorage } from './storage';
 import * as detector from './detector';
 
 export const STORE_KEY: string = '__coveo.analytics.history';
@@ -37,7 +37,7 @@ export class HistoryStore {
 
     private getHistoryWithInternalTime(): HistoryElement[] {
         try {
-            return <HistoryElement[]> JSON.parse(this.store.getItem(STORE_KEY));
+            return <HistoryElement[]>JSON.parse(this.store.getItem(STORE_KEY));
         } catch (e) {
             // When using the Storage APIs (localStorage/sessionStorage)
             // Safari says that those APIs are available but throws when making
@@ -96,9 +96,11 @@ export class HistoryStore {
     }
 
     private stripInternalTime(history: HistoryElement[]): HistoryElement[] {
-        history.forEach((part, index, array) => {
+        if (history) {
+            history.forEach((part, index, array) => {
                 delete part.internalTime;
             });
+        }
         return history;
     }
 }
