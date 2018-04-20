@@ -56,11 +56,11 @@ export interface CustomEventRequest extends EventBaseRequest {
 }
 
 export interface ViewEventRequest extends EventBaseRequest {
-    location: string;
+    location?: string;
     referrer?: string;
     title?: string;
-    contentIdKey?: string;
-    contentIdValue?: string;
+    contentIdKey: string;
+    contentIdValue: string;
     contentType?: string;
 }
 
@@ -70,10 +70,10 @@ export interface DefaultEventResponse {
     visitorId: string;
 }
 
-export interface SearchEventResponse extends DefaultEventResponse {}
-export interface ClickEventResponse extends DefaultEventResponse {}
-export interface CustomEventResponse extends DefaultEventResponse {}
-export interface ViewEventResponse extends DefaultEventResponse {}
+export interface SearchEventResponse extends DefaultEventResponse { }
+export interface ClickEventResponse extends DefaultEventResponse { }
+export interface CustomEventResponse extends DefaultEventResponse { }
+export interface ViewEventResponse extends DefaultEventResponse { }
 
 export interface VisitResponse {
     raw: Response;

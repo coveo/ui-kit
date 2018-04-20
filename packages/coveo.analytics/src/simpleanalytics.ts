@@ -1,7 +1,7 @@
 import AnalyticsClient from './analyticsclient';
 import * as analytics from './analytics';
 import objectAssign from './objectassign';
-import {popFromObject} from './utils';
+import { popFromObject } from './utils';
 
 // SimpleAPI mimics the GoogleAnalytics API.
 export class SimpleAPI {
@@ -44,9 +44,10 @@ export class SimpleAPI {
                     referrer: document.referrer,
                     language: popFromObject(customData, 'contentLanguage') || document.documentElement.lang,
                     title: document.title,
-                    contentIdKey: popFromObject(customData, 'contentIdKey'),
-                    contentIdValue: popFromObject(customData, 'contentIdValue'),
-                    contentType: popFromObject(customData, 'contentType'),
+                    contentIdKey: popFromObject<string>(customData, 'contentIdKey'),
+                    contentIdValue: popFromObject<string>(customData, 'contentIdValue'),
+                    contentType: popFromObject<string>(customData, 'contentType'),
+                    anonymous: popFromObject<boolean>(customData, 'anonymous'),
                     customData: customData
                 });
                 return;
@@ -70,10 +71,10 @@ export type EventType = 'pageview';
 const simpleAPI = new SimpleAPI();
 
 export const SimpleAnalytics = (action: string, ...params: any[]): any => {
-  const actionFunction = (<any>simpleAPI)[action];
-  if (actionFunction) {
-    return actionFunction.apply(simpleAPI, params);
-  }
+    const actionFunction = (<any>simpleAPI)[action];
+    if (actionFunction) {
+        return actionFunction.apply(simpleAPI, params);
+    }
 };
 
 export default SimpleAnalytics;

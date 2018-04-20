@@ -1,31 +1,43 @@
-import {WebStorage, getAvailableStorage} from './storage';
+import { WebStorage, getAvailableStorage, CookieStorage } from './storage';
+import * as detector from './detector';
 
 export const STORE_KEY: string = '__coveo.analytics.history';
 export const MAX_NUMBER_OF_HISTORY_ELEMENTS: number = 20;
 export const MIN_THRESHOLD_FOR_DUPLICATE_VALUE: number = 1000 * 60;
+export const MAX_VALUE_SIZE = 75;
 
 export class HistoryStore {
     private store: WebStorage;
     constructor(store?: WebStorage) {
         this.store = store || getAvailableStorage();
+        // cleanup any old cookie that we might have added
+        // eg : we used cookies before, but switched to local storage
+        if (!(this.store instanceof CookieStorage) && detector.hasCookieStorage()) {
+            new CookieStorage().removeItem(STORE_KEY);
+        }
     };
 
     addElement(elem: HistoryElement) {
         elem.internalTime = new Date().getTime();
-        let currentHistory = this.getHistory();
+        this.cropQueryElement(elem);
+        let currentHistory = this.getHistoryWithInternalTime();
         if (currentHistory != null) {
             if (this.isValidEntry(elem)) {
                 this.setHistory([elem].concat(currentHistory));
             }
-
         } else {
             this.setHistory([elem]);
         }
     }
 
     getHistory(): HistoryElement[] {
+        let history = this.getHistoryWithInternalTime();
+        return this.stripInternalTime(history);
+    }
+
+    private getHistoryWithInternalTime(): HistoryElement[] {
         try {
-            return <HistoryElement[]> JSON.parse(this.store.getItem(STORE_KEY));
+            return <HistoryElement[]>JSON.parse(this.store.getItem(STORE_KEY));
         } catch (e) {
             // When using the Storage APIs (localStorage/sessionStorage)
             // Safari says that those APIs are available but throws when making
@@ -47,7 +59,7 @@ export class HistoryStore {
     }
 
     getMostRecentElement(): HistoryElement {
-        let currentHistory = this.getHistory();
+        let currentHistory = this.getHistoryWithInternalTime();
         if (currentHistory != null) {
             const sorted = currentHistory.sort((first: HistoryElement, second: HistoryElement) => {
                 // Internal time might not be set for all history element (on upgrade).
@@ -68,6 +80,12 @@ export class HistoryStore {
         return null;
     }
 
+    private cropQueryElement(elem: HistoryElement) {
+        if (elem.name && elem.name.toLowerCase() == 'query' && elem.value != null) {
+            elem.value = elem.value.slice(0, MAX_VALUE_SIZE);
+        }
+    }
+
     private isValidEntry(elem: HistoryElement): boolean {
         let lastEntry = this.getMostRecentElement();
 
@@ -75,6 +93,15 @@ export class HistoryStore {
             return elem.internalTime - lastEntry.internalTime > MIN_THRESHOLD_FOR_DUPLICATE_VALUE;
         }
         return true;
+    }
+
+    private stripInternalTime(history: HistoryElement[]): HistoryElement[] {
+        if (history) {
+            history.forEach((part, index, array) => {
+                delete part.internalTime;
+            });
+        }
+        return history;
     }
 }
 

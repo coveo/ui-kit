@@ -89,10 +89,23 @@ import coveoanalytics from 'coveo.analytics';
 const client = new coveoanalytics.analytics.Client({ token : 'YOUR_API_KEY'})
 // Send your event
 client.sendCustomEvent({
-  eventType: "dog";
-  eventValue: "Hello! Yes! This is Dog!";
+  eventType: "dog",
+  eventValue: "Hello! Yes! This is Dog!"
 });
 ```
+
+### Choosing the type of storage for page view events
+There are 3 available storage you can use to store view events client side.
+
+- Cookie storage, which supports top level domain storage. This means that events from a.foo.com will be available from b.foo.com.
+Cookies have the limitation of not being able to store a lot of data, especially if your page view that are stored are long.
+
+- Local storage, which allows to store much more information client side, but has the drawback of not being able to acess data
+across multiple top level domain.
+
+- Session storage, which has roughly the same limitation and capability as Local storage, except that it is cleared when the web browser tab is closed.
+
+By default, the local storage option will automatically be chosen as the default storage, unless specified manually.
 
 ### Contributing
 

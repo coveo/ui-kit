@@ -16,7 +16,7 @@ deploy:
   skip_cleanup: true
   email: sandbox_JSUI@coveo.com
   api_key:
-    secure: "lsYaqqLuLJR3BGuvO4hqq7ptHX8QvMpyO0XdDATY7FWs35+CxeVe6GxYkX+rKOFNL0Cn4j+pi3kGbJS/3NkVvpU5+x7GldVBt04cQxrsmaE88rieJqQeYzGS9mKUyaxSk1G7Ty3NfMOi/izjWfjV5Mwt7EBXOsqwTbkGaXy0Ny3ysRnQK7LG1ZV1ZG0tJebKbk5a0zHjE8BLyARt9wQagEDQWIQF0JMIX/XYmjyh9UA8lxeovGOxxAtdtBeHijptBmA8AcqrHK4ZbgecLIFI4LxxGM7Gu1PTOaB+jcOVZgGgdLoS0frlRUXOTAnNt9pW9XteL8hrtcuPyNBdEXwMnrzxeGMOcZkClx7HM9hS0a9D8shZpOUQqd6pvxQmANhoQTIH9spNSocDQOzxN+F9TsiHA0+9fHebPIviqZ4JVx4T7tbrBDqaxlRSyvCHjvlRM0wwJZymrhHY0NAytdp590d2ub+IQe7PRdKjuctYeIhBCSWCc/oSyjp5yT6ZgQZnok/AHVS5UZipPo3/sjM1SPUSCU5KwzLWJgrrUQA6wenlUr0McAxL+BoXxcqz4F/8y05PCtbrrC2h0HstuI/X1DjMG4xpZ1zermAyFdGK69QkZ43q76u10rFNwcpmdn8y4xESX7enZLZN7gC4ZXPmc2/qFtRMTAPb1uUEYLaC3iQ="
+    secure: "WJ3Q4PqHx4G+h5RT8Yfy+2Qte5ITwchSHdu8DHMv4c7JzWcEUYmwXlDnLGJtz96koN/gidQZxAQhSb/M2jEFU6+4OoVrUjxEh6Xuc1xUz5M9SfgDXeEW1EbXkY11UvWdetIGDg6Q+3x71q1eLGD377tR/VSc2pplqm0X1Aj8SZgAfUOtd2XLJvv/EbFVNCKXEkXghHdi9MdmWnRA96HP/nrWrMq2Cmde4tZhdY4gMlb2Vv/3xtw5MdUDXk2XjLxNCfU0LwfejF00+7112xbD7jzdCGro2ru63T+WqzWnA5zILLUltQSiH3xl7FMvhCk3i/tiwXQsQJuGtGK1ZW61daxE5tue+DWqUDDqpqoPac4LvoXcprJutpafHwiovY+NY/4tz++cPTiX9odaNDAs4PB7+3/f4WbjmQ7svjZ3u48mD5hCVbVLSCPPgu00NozSBhs3hGvQomoXoruLm2u4EZruVcKMpHzld6RYrYSLtWj4r8nmmYxgkPLk76Z871xh70MvaYdf23mWaDziUFOySt60M5OTlnrdg5CpX+n+qQkLQCs8QGdNDu6x2gNt1OkRc0J7kf4UI747dAsHNo5CLR4bUWZBe/olj2y6l17XhACHUpvwlyrfKS0XC0KRdLrdDqS/DBJfsKlLYh6SLsOFG/BdhpAx5iF7KXvrpEYqKM0="
   on:
     tags: true
     condition: "$TRAVIS_TAG != latest"
@@ -45,16 +45,6 @@ deploy:
   on:
     tags: true
     condition: "$TRAVIS_TAG = latest"
-    repo: coveo/coveo.analytics.js
-- provider: releases
-  skip_cleanup: true
-  api_key:
-    secure: mveHY+4nzAAXVrK2nf7kKkJa4rcqpbzw2gh7THsZEmxq9dFqcUTOQ4KoRaJEstWGsxBlyhXlfme5x+C1dtZDnv4ZVrjlGPUuM+wVz3V4qKL9LPn70MB5y4NWOeua3N5Coei5qAC+Ab81dRI1913agNsTb1NKha9WJF9Xs0YtYcC+ZoFKHJywyZuElcITmJqtUQuNpn6AJpKKyB5SVShXll5sfV2/DXAt2UssTDmDO2C9NRrFIh73Z8pa5MyRBqOFtABHqg/r88blaKJL95i34PZusVLXV6K1c6rHOEWNzFys42vrujPgOnpleMpZUYWdlAJq50hj2Jr6T0n6tipGFggQL9FcblzvG6U7H1v0+yy+MEIUx+Ns5WrDwtBZe4QxBXDD7gmHZS9EII7565z6TtLFSeT0l5U9h3OPwrCi8TyXgmI5yIMy+b08gfhzuGR6PeGJk5SKGlr+CWSHOJ8JK7RxVIHlmE9D/69adRYiSghQCmp/sAPPkoaHO/hF/iooEtoN3QqRraTpAJ1Nfzfs4mBPS4fCldeUWdNLHgQZ5BAa/3s/7kElkotO9Pon0wpz8HQVB+7YQnhfHu2gZMfXanWF3haa60SRKIzQgGLY9FhI+xV7Hf1km/EDLWPbZnDumY5B8Zb6YLuTVlQJe3Tl368acPRTJNYqqzxHkALSt9Y=
-  file:
-    - dist/coveoua.js
-    - dist/coveoua.js.map
-  on:
-    tags: true
     repo: coveo/coveo.analytics.js
 notifications:
   email:
