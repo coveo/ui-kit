@@ -6,7 +6,7 @@ export interface SearchDocument {
 }
 
 export interface EventBaseRequest {
-    language?: string;
+    language: string;
     userAgent?: string;
     customData?: any;
     anonymous?: boolean;
