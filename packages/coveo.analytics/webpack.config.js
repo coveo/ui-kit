@@ -1,5 +1,4 @@
 const webpack = require("webpack");
-const DeclarationBundlerPlugin = require('declaration-bundler-webpack-plugin')
 
 module.exports = {
     entry: "./src/browser.ts",
