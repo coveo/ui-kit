@@ -1,41 +1,33 @@
-var webpack = require("webpack");
+const webpack = require("webpack");
+const DeclarationBundlerPlugin = require('declaration-bundler-webpack-plugin')
 
 module.exports = {
     entry: "./src/browser.ts",
+    mode: "production",
     output: {
-        path: "./dist/",
+        path: __dirname + "dist/",
         filename: "coveoua.js"
     },
-    devtool: 'source-map',
     resolve: {
-        extensions: ['', '.webpack.js', '.web.js', '.ts', '.tsx', '.js'],
-        root: __dirname
+        extensions: ['.ts', '.tsx']
     },
+    devtool: "source-map",
     module: {
-        loaders: [{
+        rules: [{
+            enforce: 'pre',
             test: /\.ts$/,
-            loader: 'babel-loader!ts-loader'
-        }],
-        preLoaders: [{
+            use: {
+                loader: 'tslint-loader',
+                options: {
+                    emitErrors: true,
+                    failOnHint: true,
+                    formattersDirectory: "node_modules/tslint-loader/formatters/",
+                    configuration: require(__dirname + '/tslint.json')
+                }
+            }
+        }, {
             test: /\.ts$/,
-            loader: 'tslint'
+            loader: 'ts-loader',
         }]
-    },
-    plugins: [
-        new webpack.ProvidePlugin({
-            'fetch': 'exports?self.fetch!whatwg-fetch'
-        }),
-        new webpack.optimize.UglifyJsPlugin()
-    ],
-    ts: {
-        compilerOptions: {
-            declaration: false,
-        }
-    },
-    tslint: {
-        emitErrors: true,
-        failOnHint: true,
-        formattersDirectory: "node_modules/tslint-loader/formatters/",
-        configuration: require(__dirname + '/tslint.json')
     }
 }
