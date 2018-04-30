@@ -14,6 +14,6 @@ export interface AnalyticsClient {
     sendViewEvent(request: ViewEventRequest): Promise<ViewEventResponse>;
     getVisit(): Promise<VisitResponse>;
     getHealth(): Promise<HealthResponse>;
-};
+}
 
 export default AnalyticsClient;

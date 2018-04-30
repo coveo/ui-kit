@@ -15,7 +15,7 @@ export class HistoryStore {
         if (!(this.store instanceof CookieStorage) && detector.hasCookieStorage()) {
             new CookieStorage().removeItem(STORE_KEY);
         }
-    };
+    }
 
     addElement(elem: HistoryElement) {
         elem.internalTime = new Date().getTime();
@@ -110,7 +110,7 @@ export interface HistoryElement {
     value: string;
     time: string;
     internalTime?: number;
-};
+}
 
 export interface HistoryViewElement extends HistoryElement {
     title?: string;

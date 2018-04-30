@@ -23,7 +23,7 @@ export interface ClientOptions {
   token?: string;
   endpoint?: string;
   version?: string;
-};
+}
 
 function defaultResponseTransformer(response: Response): Promise<any> {
     return response.json().then((data: any) => {

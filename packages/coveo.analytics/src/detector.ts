@@ -4,7 +4,7 @@ export function hasLocalStorage(): boolean {
     } catch (e) {
       return false;
     }
-};
+}
 
 export function hasSessionStorage(): boolean {
     try {
@@ -12,16 +12,16 @@ export function hasSessionStorage(): boolean {
     } catch (e) {
       return false;
     }
-};
+}
 
 export function hasCookieStorage(): boolean {
     return navigator.cookieEnabled;
-};
+}
 
 export function hasDocument(): boolean {
     return document !== null;
-};
+}
 
 export function hasDocumentLocation(): boolean {
     return hasDocument() && document.location !== null;
-};
+}
