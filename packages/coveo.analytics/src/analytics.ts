@@ -1,38 +1,46 @@
 import {
-    SearchEventRequest, SearchEventResponse,
-    ClickEventRequest, ClickEventResponse,
-    CustomEventRequest, CustomEventResponse,
-    ViewEventRequest, ViewEventResponse,
-    VisitResponse, HealthResponse
-} from './events';
-import { AnalyticsClient } from './analyticsclient';
+    AnyEventResponse,
+    ClickEventRequest,
+    ClickEventResponse,
+    CustomEventRequest,
+    CustomEventResponse,
+    HealthResponse,
+    SearchEventRequest,
+    SearchEventResponse,
+    ViewEventRequest,
+    ViewEventResponse,
+    VisitResponse
+    } from './events';
 import { HistoryStore } from './history';
-import { hasDocumentLocation } from './detector';
 import 'whatwg-fetch';
 
 export const Version = 'v15';
 
 export const Endpoints = {
-  default: 'https://usageanalytics.coveo.com',
-  production: 'https://usageanalytics.coveo.com',
-  dev: 'https://usageanalyticsdev.coveo.com',
-  staging: 'https://usageanalyticsstaging.coveo.com'
+    default: 'https://usageanalytics.coveo.com',
+    production: 'https://usageanalytics.coveo.com',
+    hipaa: 'https://usageanalyticshipaa.coveo.com'
 };
 
 export interface ClientOptions {
-  token?: string;
-  endpoint?: string;
-  version?: string;
+    token?: string;
+    endpoint?: string;
+    version?: string;
 }
 
-function defaultResponseTransformer(response: Response): Promise<any> {
-    return response.json().then((data: any) => {
-        data.raw = response;
-        return data;
-    });
+export type EventType = 'search' | 'click' | 'custom' | 'view';
+
+export interface AnalyticsClient {
+    sendEvent(eventType: string, request: any): Promise<AnyEventResponse>;
+    sendSearchEvent(request: SearchEventRequest): Promise<SearchEventResponse>;
+    sendClickEvent(request: ClickEventRequest): Promise<ClickEventResponse>;
+    sendCustomEvent(request: CustomEventRequest): Promise<CustomEventResponse>;
+    sendViewEvent(request: ViewEventRequest): Promise<ViewEventResponse>;
+    getVisit(): Promise<VisitResponse>;
+    getHealth(): Promise<HealthResponse>;
 }
 
-export class Client implements AnalyticsClient {
+export class CoveoAnalyticsClient implements AnalyticsClient {
     private endpoint: string;
     private token: string;
     private version: string;
@@ -47,50 +55,79 @@ export class Client implements AnalyticsClient {
         this.version = opts.version || Version;
     }
 
-    sendEvent(eventType: string, request: any): Promise<Response> {
-        return fetch(`${this.getRestEndpoint()}/analytics/${eventType}`, {
+    async sendEvent(eventType: EventType, request: any): Promise<AnyEventResponse> {
+        if (eventType === 'view') {
+            this.addPageViewToHistory(request.contentIdValue);
+        }
+
+        const body = this.getBodyForTypeOfEvent(eventType, request);
+
+        const response = await fetch(`${this.getRestEndpoint()}/analytics/${eventType}`, {
             method: 'POST',
             headers: this.getHeaders(),
             mode: 'cors',
-            body: JSON.stringify(request),
+            body: JSON.stringify(body),
             credentials: 'include'
         });
+        if (response.ok) {
+            return await response.json() as AnyEventResponse;
+        } else {
+            console.error(`An error has occured when sending the "${eventType}" event.`, response, request);
+            throw new Error(`An error has occurred when sending the "${eventType}" event. Check the console logs for more details.`);
+        }
     }
 
-    sendSearchEvent(request: SearchEventRequest): Promise<SearchEventResponse> {
-        return this.sendEvent('search', request).then(defaultResponseTransformer);
+    async sendSearchEvent(request: SearchEventRequest): Promise<SearchEventResponse> {
+        return this.sendEvent('search', request);
     }
 
-    sendClickEvent(request: ClickEventRequest): Promise<ClickEventResponse> {
-        return this.sendEvent('click', request).then(defaultResponseTransformer);
+    async sendClickEvent(request: ClickEventRequest): Promise<ClickEventResponse> {
+        return this.sendEvent('click', request);
     }
 
-    sendCustomEvent(request: CustomEventRequest): Promise<CustomEventResponse> {
-        return this.sendEvent('custom', request).then(defaultResponseTransformer);
+    async sendCustomEvent(request: CustomEventRequest): Promise<CustomEventResponse> {
+        return this.sendEvent('custom', request);
     }
 
-    sendViewEvent(request: ViewEventRequest): Promise<ViewEventResponse> {
-        if (request.referrer === '') { delete request.referrer; }
+    async sendViewEvent(request: ViewEventRequest): Promise<ViewEventResponse> {
+        return this.sendEvent('view', request);
+    }
 
+    async getVisit(): Promise<VisitResponse> {
+        const response = await fetch(`${this.getRestEndpoint()}/analytics/visit`);
+        return await response.json();
+    }
+
+    async getHealth(): Promise<HealthResponse> {
+        const response = await fetch(`${this.getRestEndpoint()}/analytics/monitoring/health`);
+        return await response.json();
+    }
+
+    private getBodyForTypeOfEvent(eventType: EventType, request: any) {
+        if (eventType === 'view') {
+            return {
+                location: window.location.toString(),
+                referrer: document.referrer,
+                language: document.documentElement.lang,
+                title: document.title,
+                ...request
+            } as ViewEventRequest;
+        } else {
+            return {
+                language: document.documentElement.lang,
+                ...request
+            };
+        }
+    }
+
+    private addPageViewToHistory(pageViewValue: string) {
         const store = new HistoryStore();
         const historyElement = {
             name: 'PageView',
-            value: request.contentIdValue,
+            value: pageViewValue,
             time: JSON.stringify(new Date()),
         };
         store.addElement(historyElement);
-
-        return this.sendEvent('view', request).then(defaultResponseTransformer);
-    }
-
-    getVisit(): Promise<VisitResponse> {
-        return fetch(`${this.getRestEndpoint()}/analytics/visit`)
-            .then(defaultResponseTransformer);
-    }
-
-    getHealth(): Promise<HealthResponse> {
-        return fetch(`${this.getRestEndpoint()}/analytics/monitoring/health`)
-            .then(defaultResponseTransformer);
     }
 
     protected getRestEndpoint(): string {
@@ -108,4 +145,7 @@ export class Client implements AnalyticsClient {
     }
 }
 
-export default Client;
+/** @deprecated Use CoveoAnalyticsClient instead. */
+export const Client = CoveoAnalyticsClient;
+
+export default CoveoAnalyticsClient;

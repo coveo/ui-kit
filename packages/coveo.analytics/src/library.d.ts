@@ -67,7 +67,6 @@ declare namespace CoveoAnalytics {
     }
 
     interface DefaultEventResponse {
-        raw: Response;
         visitId: string;
         visitorId: string;
     }
@@ -85,17 +84,15 @@ declare namespace CoveoAnalytics {
     }
 
     interface VisitResponse {
-        raw: Response;
         id: string;
         visitorId: string;
     }
 
     interface HealthResponse {
-        raw: Response;
         status: string;
     }
 
-    interface Client {
+    interface CoveoAnalyticsClient {
         sendEvent(eventType: string, request: any): Promise<Response>;
         sendSearchEvent(request: SearchEventRequest): Promise<SearchEventResponse>;
         sendClickEvent(request: ClickEventRequest): Promise<ClickEventResponse>;
@@ -104,6 +101,8 @@ declare namespace CoveoAnalytics {
         getVisit(): Promise<VisitResponse>;
         getHealth(): Promise<HealthResponse>;
     }
+
+    declare const Client: typeof CoveoAnalyticsClient;
 
     class HistoryStore {
         constructor();
@@ -136,21 +135,27 @@ declare namespace CoveoAnalytics {
         Client: Client;
     }
 
-    class SimpleAPI {
-        private client;
-        init(token: string | Client, endpoint: string): void;
-        send(event: EventType, customData: any): void;
+    type DeprecatedEventType = 'pageview';
+    class CoveoUA {
+        init(token: string | AnalyticsClient, endpoint: string): void;
+        send(event: EventType | DeprecatedEventType, payload: any): Promise<AnyEventResponse>;
         onLoad(callback: Function): void;
     }
+    const SimpleAPI: typeof CoveoUA;
+    const coveoua: CoveoUA;
 
-    type EventType = 'pageview';
+    type EventType = 'search' | 'click' | 'custom' | 'view';
 }
 
 declare module 'coveo.analytics' {
     export const analytics: CoveoAnalytics.AnalyticsClient;
     export const history: CoveoAnalytics.History;
     export const SimpleAnalytics: {
-        SimpleAPI: CoveoAnalytics.SimpleAPI,
+        CoveoUA: CoveoAnalytics.CoveoUA;
+        /** @deprecated */
+        SimpleAPI: CoveoAnalytics.CoveoUA,
+        handleOneAnalyticsEvent: (action: string, ...params: any[]) => any;
+        /** @deprecated */
         SimpleAnalytics: (action: string, ...params: any[]) => any;
     };
 }

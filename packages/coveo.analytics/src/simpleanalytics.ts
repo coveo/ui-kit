@@ -1,10 +1,16 @@
-import AnalyticsClient from './analyticsclient';
-import * as analytics from './analytics';
-import objectAssign from './objectassign';
-import { popFromObject } from './utils';
+import {
+    AnalyticsClient,
+    CoveoAnalyticsClient,
+    Endpoints,
+    EventType
+    } from './analytics';
+import { AnyEventResponse } from './events';
 
-// SimpleAPI mimics the GoogleAnalytics API.
-export class SimpleAPI {
+/** @deprecated */
+export type DeprecatedEventType = 'pageview';
+
+// CoveoUA mimics the GoogleAnalytics API.
+export class CoveoUA {
     private client: AnalyticsClient;
 
     // init initializes a new SimpleAPI client.
@@ -16,8 +22,8 @@ export class SimpleAPI {
             throw new Error(`You must pass your token when you call 'init'`);
         }
         if (typeof token === 'string') {
-            endpoint = endpoint || analytics.Endpoints.default;
-            this.client = new analytics.Client({
+            endpoint = endpoint || Endpoints.default;
+            this.client = new CoveoAnalyticsClient({
                 token: token,
                 endpoint: endpoint
             });
@@ -28,31 +34,37 @@ export class SimpleAPI {
         }
     }
 
-    send(event: EventType, customData: any): void {
+    send(event: EventType | DeprecatedEventType, payload: any): Promise<AnyEventResponse> {
         if (typeof this.client == 'undefined') {
             throw new Error(`You must call init before sending an event`);
         }
 
-        customData = objectAssign({}, {
-            hash: window.location.hash
-        }, customData);
+        payload = payload || {};
 
         switch (event) {
             case 'pageview':
-                this.client.sendViewEvent({
-                    location: window.location.toString(),
-                    referrer: document.referrer,
-                    language: popFromObject<string>(customData, 'contentLanguage') || document.documentElement.lang,
-                    title: document.title,
-                    contentIdKey: popFromObject<string>(customData, 'contentIdKey'),
-                    contentIdValue: popFromObject<string>(customData, 'contentIdValue'),
-                    contentType: popFromObject<string>(customData, 'contentType'),
-                    anonymous: popFromObject<boolean>(customData, 'anonymous'),
-                    customData: customData
+                const {
+                    contentLanguage,
+                    contentIdKey,
+                    contentIdValue,
+                    contentType,
+                    anonymous,
+                    customData,
+                    ...payloadRest
+                } = payload;
+
+                return this.client.sendViewEvent({
+                    contentIdKey,
+                    contentIdValue,
+                    contentType,
+                    anonymous,
+                    customData: {
+                        ...customData,
+                        ...payloadRest
+                    }
                 });
-                return;
             default:
-                throw new Error(`Event type: '${event}' not implemented`);
+                return this.client.sendEvent(event, payload);
         }
     }
 
@@ -64,17 +76,19 @@ export class SimpleAPI {
         callback();
     }
 }
+/** @deprecated */
+export const SimpleAPI = CoveoUA;
 
-export type EventType = 'pageview';
+export const coveoua = new CoveoUA();
 
-// simpleAPI singleton
-const simpleAPI = new SimpleAPI();
-
-export const SimpleAnalytics = (action: string, ...params: any[]): any => {
-    const actionFunction = (<any>simpleAPI)[action];
+export const handleOneAnalyticsEvent = (action: string, ...params: any[]): any => {
+    const actionFunction = (<any>coveoua)[action];
     if (actionFunction) {
-        return actionFunction.apply(simpleAPI, params);
+        return actionFunction.apply(coveoua, params);
     }
 };
 
-export default SimpleAnalytics;
+/** @deprecated */
+export const SimpleAnalytics = handleOneAnalyticsEvent;
+
+export default handleOneAnalyticsEvent;

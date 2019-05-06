@@ -1,16 +1,16 @@
 export function hasLocalStorage(): boolean {
     try {
-      return 'localStorage' in window && window['localStorage'] !== null;
+        return 'localStorage' in window && window['localStorage'] !== null;
     } catch (e) {
-      return false;
+        return false;
     }
 }
 
 export function hasSessionStorage(): boolean {
     try {
-      return 'sessionStorage' in window && window['sessionStorage'] !== null;
+        return 'sessionStorage' in window && window['sessionStorage'] !== null;
     } catch (e) {
-      return false;
+        return false;
     }
 }
 
