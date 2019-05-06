@@ -1,12 +1,10 @@
 {
+    "extends": "./tsconfig.json",
     "compilerOptions": {
-        "module": "commonjs",
-        "target": "es5",
         "outDir": "dist_test",
         "declaration": false,
-        "noImplicitAny": true,
-        "removeComments": true,
         // Inline source map are required for coverage (nyc) to map correctly to good files.
+        "sourceMap": false,
         "inlineSourceMap": true,
         "lib": ["es5", "dom", "scripthost", "es6"]
     },
