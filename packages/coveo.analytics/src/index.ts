@@ -10,4 +10,4 @@ export {
     history,
     SimpleAnalytics,
     storage
-}
+};
