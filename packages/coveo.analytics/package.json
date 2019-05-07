@@ -7,7 +7,7 @@
   "scripts": {
     "lint": "tslint -s \"node_modules/tslint-loader/formatters/\" \"test/**/*.ts\" \"src/**/*.ts\"",
     "build": "webpack",
-    "test": "tsc --skipLibCheck -p tsconfig.test.json && nyc ava \"./dist_test/**/*test.js\"",
+    "test": "tsc --skipLibCheck -p tsconfig.test.json && nyc ava \"./dist_test/**/*.spec.js\"",
     "coveralls": "nyc report --reporter=text-lcov | coveralls",
     "clean": "rm -rf dist/*"
   },
