@@ -26,17 +26,17 @@ export const Endpoints = {
 };
 
 export interface ClientOptions {
-    token?: string;
+    token: string;
     endpoint?: string;
     version?: string;
 }
 
 export interface AnalyticsClient {
-    sendEvent(eventType: string, request: any): Promise<AnyEventResponse>;
-    sendSearchEvent(request: SearchEventRequest): Promise<SearchEventResponse>;
-    sendClickEvent(request: ClickEventRequest): Promise<ClickEventResponse>;
-    sendCustomEvent(request: CustomEventRequest): Promise<CustomEventResponse>;
-    sendViewEvent(request: ViewEventRequest): Promise<ViewEventResponse>;
+    sendEvent(eventType: string, request: any): Promise<AnyEventResponse | void>;
+    sendSearchEvent(request: SearchEventRequest): Promise<SearchEventResponse | void>;
+    sendClickEvent(request: ClickEventRequest): Promise<ClickEventResponse | void>;
+    sendCustomEvent(request: CustomEventRequest): Promise<CustomEventResponse | void>;
+    sendViewEvent(request: ViewEventRequest): Promise<ViewEventResponse | void>;
     getVisit(): Promise<VisitResponse>;
     getHealth(): Promise<HealthResponse>;
 }
@@ -44,6 +44,7 @@ export interface AnalyticsClient {
 interface BufferedRequest {
     eventType: EventType;
     request: any;
+    handled: boolean;
 }
 
 export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider {
@@ -68,6 +69,7 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
             ...opts
         };
 
+        this.visitorId = '';
         this.baseUrl = `${endpoint}/rest/${version}`;
         this.bufferedRequests = [];
 
@@ -84,14 +86,15 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
         this.visitorId = visitorId;
     }
 
-    async sendEvent(eventType: EventType, request: any): Promise<AnyEventResponse> {
+    async sendEvent(eventType: EventType, request: any): Promise<AnyEventResponse | void> {
         if (eventType === 'view') {
             this.addPageViewToHistory(request.contentIdValue);
         }
 
         this.bufferedRequests.push({
             eventType,
-            request
+            request,
+            handled: false
         });
 
         await this.deferExecution();
@@ -104,31 +107,34 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
 
     private flushBufferWithBeacon(): void {
         while (this.bufferedRequests.length > 0) {
-            let { eventType, request } = this.bufferedRequests.pop();
+            const { eventType, request } = this.bufferedRequests.pop() as BufferedRequest;
             this.analyticsBeaconClient.sendEvent(eventType, request);
         }
     }
 
-    private sendFromBufferWithFetch(): Promise<AnyEventResponse> {
+    private async sendFromBufferWithFetch(): Promise<AnyEventResponse | void> {
         if (this.bufferedRequests.length > 0) {
-            const { eventType, request } = this.bufferedRequests.pop();
-            return this.analyticsFetchClient.sendEvent(eventType, request);
+            const popped = this.bufferedRequests.pop();
+            if (popped) {
+                const { eventType, request } = popped;
+                return this.analyticsFetchClient.sendEvent(eventType, request);
+            }
         }
     }
 
-    async sendSearchEvent(request: SearchEventRequest): Promise<SearchEventResponse> {
+    async sendSearchEvent(request: SearchEventRequest): Promise<SearchEventResponse | void> {
         return this.sendEvent('search', request);
     }
 
-    async sendClickEvent(request: ClickEventRequest): Promise<ClickEventResponse> {
+    async sendClickEvent(request: ClickEventRequest): Promise<ClickEventResponse | void> {
         return this.sendEvent('click', request);
     }
 
-    async sendCustomEvent(request: CustomEventRequest): Promise<CustomEventResponse> {
+    async sendCustomEvent(request: CustomEventRequest): Promise<CustomEventResponse | void> {
         return this.sendEvent('custom', request);
     }
 
-    async sendViewEvent(request: ViewEventRequest): Promise<ViewEventResponse> {
+    async sendViewEvent(request: ViewEventRequest): Promise<ViewEventResponse | void> {
         return this.sendEvent('view', request);
     }
 

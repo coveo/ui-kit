@@ -1,10 +1,10 @@
 import * as detector from './detector';
 import { Cookie } from './cookieutils';
 
-export let preferredStorage: WebStorage = null;
+export let preferredStorage: WebStorage | null = null;
 
 export interface WebStorage {
-    getItem(key: string): string;
+    getItem(key: string): string | null;
     removeItem(key: string): void;
     setItem(key: string, data: string): void;
 }
@@ -26,7 +26,7 @@ export function getAvailableStorage(): WebStorage {
 }
 
 export class CookieStorage implements WebStorage {
-    getItem(key: string): string {
+    getItem(key: string): string | null {
         return Cookie.get(key);
     }
     removeItem(key: string) {
@@ -38,7 +38,7 @@ export class CookieStorage implements WebStorage {
 }
 
 export class NullStorage implements WebStorage {
-    getItem(key: string): string { return null; }
+    getItem(key: string): string | null { return null; }
     removeItem(key: string) {/**/}
     setItem(key: string, data: string): void {/**/}
 }

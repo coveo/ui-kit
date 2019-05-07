@@ -3,13 +3,9 @@ import handleOneAnalyticsEvent from './simpleanalytics';
 
 declare const global: any;
 
-// We need a custom trigger function for our Promise polyfill
-// because the default one can cause issues in other frameworks that relies on
-// their own Promise polyfill like the Salesforce Aura framework.
-declare var require: any;
 const promise = (window as any)['Promise'];
 if (!(promise instanceof Function)) {
-    require('es6-promise').polyfill();
+    console.error(`This script uses window.Promise which is not supported in your browser. Consider adding a polyfill like "es6-promise".`);
 }
 
 // CoveoUAGlobal is the interface for the global function which also has a
@@ -32,7 +28,7 @@ global.coveoanalytics = analytics;
 // On normal execution this library should be loaded after the snippet execution
 // so we will execute the actions in the `q` array
 if (coveoua.q) {
-    coveoua.q.forEach((args: Array<string>) => handleOneAnalyticsEvent.apply(void 0, args));
+    coveoua.q.forEach(([eventName, ...args]: any[]) => handleOneAnalyticsEvent.call(void 0, eventName, args));
 }
 
 export default coveoua;

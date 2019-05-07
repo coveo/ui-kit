@@ -1,5 +1,5 @@
-import { WebStorage, getAvailableStorage, CookieStorage } from './storage';
 import * as detector from './detector';
+import { CookieStorage, getAvailableStorage, WebStorage } from './storage';
 
 export const STORE_KEY: string = '__coveo.analytics.history';
 export const MAX_NUMBER_OF_HISTORY_ELEMENTS: number = 20;
@@ -31,13 +31,18 @@ export class HistoryStore {
     }
 
     getHistory(): HistoryElement[] {
-        let history = this.getHistoryWithInternalTime();
+        const history = this.getHistoryWithInternalTime();
         return this.stripInternalTime(history);
     }
 
     private getHistoryWithInternalTime(): HistoryElement[] {
         try {
-            return <HistoryElement[]>JSON.parse(this.store.getItem(STORE_KEY));
+            const elements = this.store.getItem(STORE_KEY);
+            if (elements) {
+                return JSON.parse(elements) as HistoryElement[];
+            } else {
+                return [];
+            }
         } catch (e) {
             // When using the Storage APIs (localStorage/sessionStorage)
             // Safari says that those APIs are available but throws when making
@@ -58,22 +63,13 @@ export class HistoryStore {
         } catch (e) { /* refer to this.getHistory() */ }
     }
 
-    getMostRecentElement(): HistoryElement {
+    getMostRecentElement(): HistoryElement | null {
         let currentHistory = this.getHistoryWithInternalTime();
         if (currentHistory != null) {
             const sorted = currentHistory.sort((first: HistoryElement, second: HistoryElement) => {
                 // Internal time might not be set for all history element (on upgrade).
                 // Ensure to return the most recent element for which we have a value for internalTime.
-                if (first.internalTime == null && second.internalTime == null) {
-                    return 0;
-                }
-                if (first.internalTime == null && second.internalTime != null) {
-                    return 1;
-                }
-                if (first.internalTime != null && second.internalTime == null) {
-                    return -1;
-                }
-                return second.internalTime - first.internalTime;
+                return (second.internalTime || 0) - (first.internalTime || 0);
             });
             return sorted[0];
         }
@@ -90,18 +86,16 @@ export class HistoryStore {
         let lastEntry = this.getMostRecentElement();
 
         if (lastEntry && lastEntry.value == elem.value) {
-            return elem.internalTime - lastEntry.internalTime > MIN_THRESHOLD_FOR_DUPLICATE_VALUE;
+            return (elem.internalTime || 0) - (lastEntry.internalTime || 0) > MIN_THRESHOLD_FOR_DUPLICATE_VALUE;
         }
         return true;
     }
 
     private stripInternalTime(history: HistoryElement[]): HistoryElement[] {
-        if (history) {
-            history.forEach((part, index, array) => {
-                delete part.internalTime;
-            });
-        }
-        return history;
+        return history.map((part) => {
+            const { name, time, value } = part;
+            return { name, time, value };
+        });
     }
 }
 

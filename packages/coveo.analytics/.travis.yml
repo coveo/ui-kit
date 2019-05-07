@@ -2,6 +2,9 @@ sudo: false
 language: node_js
 node_js:
 - stable
+before_install:
+- source read.version.sh
+- echo $PACKAGE_JSON_MAJOR_MINOR_VERSION
 install:
 - npm install
 script:
@@ -45,7 +48,7 @@ deploy:
   on:
     tags: true
     condition: "$TRAVIS_TAG = latest"
-    repo: coveo/coveo.analytics.js
+    repo: coveo/coveo.analytics.js/$PACKAGE_JSON_MAJOR_MINOR_VERSION
 notifications:
   email:
     on_success: never

@@ -8,6 +8,7 @@
         "removeComments": true,
         "sourceMap": true,
         "skipLibCheck": true,
+        "strict": true,
         "lib": ["es5", "dom", "scripthost", "es6"]
     },
     "include": [
