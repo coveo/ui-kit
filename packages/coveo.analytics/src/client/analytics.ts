@@ -10,8 +10,8 @@ import {
     ViewEventRequest,
     ViewEventResponse,
     VisitResponse
-    } from './events';
-import { HistoryStore } from './history';
+    } from '../events';
+import { HistoryStore } from '../history';
 import 'whatwg-fetch';
 
 export const Version = 'v15';

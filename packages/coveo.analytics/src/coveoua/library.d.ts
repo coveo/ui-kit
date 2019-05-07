@@ -83,6 +83,8 @@ declare namespace CoveoAnalytics {
     interface ViewEventResponse extends DefaultEventResponse {
     }
 
+    type AnyEventResponse = SearchEventResponse | ClickEventResponse | CustomEventResponse | ViewEventResponse;
+
     interface VisitResponse {
         id: string;
         visitorId: string;
@@ -102,7 +104,7 @@ declare namespace CoveoAnalytics {
         getHealth(): Promise<HealthResponse>;
     }
 
-    declare const Client: typeof CoveoAnalyticsClient;
+    type Client = CoveoAnalyticsClient;
 
     class HistoryStore {
         constructor();

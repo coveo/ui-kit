@@ -3,8 +3,8 @@ import {
     CoveoAnalyticsClient,
     Endpoints,
     EventType
-    } from './analytics';
-import { AnyEventResponse } from './events';
+    } from '../client/analytics';
+import { AnyEventResponse } from '../events';
 
 /** @deprecated */
 export type DeprecatedEventType = 'pageview';

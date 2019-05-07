@@ -1,4 +1,4 @@
-import * as analytics from './index';
+import * as analytics from './library';
 import handleOneAnalyticsEvent from './simpleanalytics';
 
 declare const global: any;
