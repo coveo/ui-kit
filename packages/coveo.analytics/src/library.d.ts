@@ -150,11 +150,12 @@ declare namespace CoveoAnalytics {
 declare module 'coveo.analytics' {
     export const analytics: CoveoAnalytics.AnalyticsClient;
     export const history: CoveoAnalytics.History;
+    export const CoveoAnalyticsClient: CoveoAnalytics.CoveoAnalyticsClient;
+    export const CoveoUA: CoveoAnalytics.CoveoUA
+    export const handleOneAnalyticsEvent:  (action: string, ...params: any[]) => any;
     export const SimpleAnalytics: {
-        CoveoUA: CoveoAnalytics.CoveoUA;
         /** @deprecated */
         SimpleAPI: CoveoAnalytics.CoveoUA,
-        handleOneAnalyticsEvent: (action: string, ...params: any[]) => any;
         /** @deprecated */
         SimpleAnalytics: (action: string, ...params: any[]) => any;
     };
