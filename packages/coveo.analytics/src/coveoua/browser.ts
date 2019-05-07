@@ -28,7 +28,7 @@ global.coveoanalytics = analytics;
 // On normal execution this library should be loaded after the snippet execution
 // so we will execute the actions in the `q` array
 if (coveoua.q) {
-    coveoua.q.forEach((args: Array<string>) => handleOneAnalyticsEvent.apply(void 0, args));
+    coveoua.q.forEach(([eventName, ...args]: any[]) => handleOneAnalyticsEvent.call(void 0, eventName, args));
 }
 
 export default coveoua;
