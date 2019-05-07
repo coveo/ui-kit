@@ -1,9 +1,11 @@
+import { AnalyticsFetchClient } from './analyticsFetchClient';
 import {
     AnyEventResponse,
     ClickEventRequest,
     ClickEventResponse,
     CustomEventRequest,
     CustomEventResponse,
+    EventType,
     HealthResponse,
     SearchEventRequest,
     SearchEventResponse,
@@ -11,8 +13,9 @@ import {
     ViewEventResponse,
     VisitResponse
     } from '../events';
+import { BeaconAnalyticsClient as AnalyticsBeaconClient } from './analyticsBeaconClient';
 import { HistoryStore } from '../history';
-import 'whatwg-fetch';
+import { VisitorIdProvider } from './analyticsRequestClient';
 
 export const Version = 'v15';
 
@@ -28,8 +31,6 @@ export interface ClientOptions {
     version?: string;
 }
 
-export type EventType = 'search' | 'click' | 'custom' | 'view';
-
 export interface AnalyticsClient {
     sendEvent(eventType: string, request: any): Promise<AnyEventResponse>;
     sendSearchEvent(request: SearchEventRequest): Promise<SearchEventResponse>;
@@ -40,19 +41,47 @@ export interface AnalyticsClient {
     getHealth(): Promise<HealthResponse>;
 }
 
-export class CoveoAnalyticsClient implements AnalyticsClient {
-    private endpoint: string;
-    private token: string;
-    private version: string;
+interface BufferedRequest {
+    eventType: EventType;
+    request: any;
+}
+
+export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider {
+    private visitorId: string;
+    private analyticsBeaconClient: AnalyticsBeaconClient;
+    private analyticsFetchClient: AnalyticsFetchClient;
+    private baseUrl: string;
+    private bufferedRequests: BufferedRequest[];
 
     constructor(opts: ClientOptions) {
         if (typeof opts === 'undefined') {
             throw new Error('You have to pass options to this constructor');
         }
 
-        this.endpoint = opts.endpoint || Endpoints.default;
-        this.token = opts.token;
-        this.version = opts.version || Version;
+        const {
+            token,
+            endpoint,
+            version
+        } = {
+            endpoint: Endpoints.default,
+            version: Version,
+            ...opts
+        };
+
+        this.baseUrl = `${endpoint}/rest/${version}`;
+        this.bufferedRequests = [];
+
+        this.analyticsBeaconClient = new AnalyticsBeaconClient(this.baseUrl, token, this);
+        this.analyticsFetchClient = new AnalyticsFetchClient(this.baseUrl, token, this);
+        window.addEventListener('beforeunload', () => this.flushBufferWithBeacon());
+    }
+
+    get currentVisitorId() {
+        return this.visitorId;
+    }
+
+    set currentVisitorId(visitorId: string) {
+        this.visitorId = visitorId;
     }
 
     async sendEvent(eventType: EventType, request: any): Promise<AnyEventResponse> {
@@ -60,20 +89,30 @@ export class CoveoAnalyticsClient implements AnalyticsClient {
             this.addPageViewToHistory(request.contentIdValue);
         }
 
-        const body = this.getBodyForTypeOfEvent(eventType, request);
-
-        const response = await fetch(`${this.getRestEndpoint()}/analytics/${eventType}`, {
-            method: 'POST',
-            headers: this.getHeaders(),
-            mode: 'cors',
-            body: JSON.stringify(body),
-            credentials: 'include'
+        this.bufferedRequests.push({
+            eventType,
+            request
         });
-        if (response.ok) {
-            return await response.json() as AnyEventResponse;
-        } else {
-            console.error(`An error has occured when sending the "${eventType}" event.`, response, request);
-            throw new Error(`An error has occurred when sending the "${eventType}" event. Check the console logs for more details.`);
+
+        await this.deferExecution();
+        return await this.sendFromBufferWithFetch();
+    }
+
+    private deferExecution(): Promise<void> {
+        return new Promise(resolve => setTimeout(resolve, 0));
+    }
+
+    private flushBufferWithBeacon(): void {
+        while (this.bufferedRequests.length > 0) {
+            let { eventType, request } = this.bufferedRequests.pop();
+            this.analyticsBeaconClient.sendEvent(eventType, request);
+        }
+    }
+
+    private sendFromBufferWithFetch(): Promise<AnyEventResponse> {
+        if (this.bufferedRequests.length > 0) {
+            const { eventType, request } = this.bufferedRequests.pop();
+            return this.analyticsFetchClient.sendEvent(eventType, request);
         }
     }
 
@@ -94,30 +133,15 @@ export class CoveoAnalyticsClient implements AnalyticsClient {
     }
 
     async getVisit(): Promise<VisitResponse> {
-        const response = await fetch(`${this.getRestEndpoint()}/analytics/visit`);
-        return await response.json();
+        const response = await fetch(`${this.baseUrl}/analytics/visit`);
+        const visit = await response.json() as VisitResponse;
+        this.visitorId = visit.visitorId;
+        return visit;
     }
 
     async getHealth(): Promise<HealthResponse> {
-        const response = await fetch(`${this.getRestEndpoint()}/analytics/monitoring/health`);
-        return await response.json();
-    }
-
-    private getBodyForTypeOfEvent(eventType: EventType, request: any) {
-        if (eventType === 'view') {
-            return {
-                location: window.location.toString(),
-                referrer: document.referrer,
-                language: document.documentElement.lang,
-                title: document.title,
-                ...request
-            } as ViewEventRequest;
-        } else {
-            return {
-                language: document.documentElement.lang,
-                ...request
-            };
-        }
+        const response = await fetch(`${this.baseUrl}/analytics/monitoring/health`);
+        return await response.json() as HealthResponse;
     }
 
     private addPageViewToHistory(pageViewValue: string) {
@@ -128,20 +152,6 @@ export class CoveoAnalyticsClient implements AnalyticsClient {
             time: JSON.stringify(new Date()),
         };
         store.addElement(historyElement);
-    }
-
-    protected getRestEndpoint(): string {
-        return `${this.endpoint}/rest/${this.version}`;
-    }
-
-    protected getHeaders(): any {
-        var headers: any = {
-            'Content-Type': `application/json`
-        };
-        if (this.token) {
-            headers['Authorization'] = `Bearer ${this.token}`;
-        }
-        return headers;
     }
 }
 

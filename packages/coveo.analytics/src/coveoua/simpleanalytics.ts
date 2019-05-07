@@ -1,10 +1,9 @@
+import { AnyEventResponse, EventType } from '../events';
 import {
     AnalyticsClient,
     CoveoAnalyticsClient,
     Endpoints,
-    EventType
-    } from '../client/analytics';
-import { AnyEventResponse } from '../events';
+} from '../client/analytics';
 
 /** @deprecated */
 export type DeprecatedEventType = 'pageview';

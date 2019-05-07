@@ -1,4 +1,4 @@
-import 'whatwg-fetch';
+export type EventType = 'search' | 'click' | 'custom' | 'view';
 
 export interface SearchDocument {
     documentUri: string;
