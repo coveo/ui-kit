@@ -31,7 +31,7 @@ export class HistoryStore {
     }
 
     getHistory(): HistoryElement[] {
-        let history = this.getHistoryWithInternalTime();
+        const history = this.getHistoryWithInternalTime();
         return this.stripInternalTime(history);
     }
 
