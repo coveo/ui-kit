@@ -9,6 +9,8 @@ import { AnyEventResponse } from '../events';
 /** @deprecated */
 export type DeprecatedEventType = 'pageview';
 
+export type AvailableActions = keyof(CoveoUA);
+
 // CoveoUA mimics the GoogleAnalytics API.
 export class CoveoUA {
     private client: AnalyticsClient;
@@ -34,37 +36,34 @@ export class CoveoUA {
         }
     }
 
-    send(event: EventType | DeprecatedEventType, payload: any): Promise<AnyEventResponse> {
+    send(event: EventType | DeprecatedEventType, payload: any = {}): Promise<AnyEventResponse> {
         if (typeof this.client == 'undefined') {
             throw new Error(`You must call init before sending an event`);
         }
 
-        payload = payload || {};
+        if (event !== 'pageview') {
+            return this.client.sendEvent(event, payload);
+        } else {
+            const {
+                contentLanguage,
+                contentIdKey,
+                contentIdValue,
+                contentType,
+                anonymous,
+                customData,
+                ...payloadRest
+            } = payload;
 
-        switch (event) {
-            case 'pageview':
-                const {
-                    contentLanguage,
-                    contentIdKey,
-                    contentIdValue,
-                    contentType,
-                    anonymous,
-                    customData,
+            return this.client.sendViewEvent({
+                contentIdKey,
+                contentIdValue,
+                contentType,
+                anonymous,
+                customData: {
+                    ...customData,
                     ...payloadRest
-                } = payload;
-
-                return this.client.sendViewEvent({
-                    contentIdKey,
-                    contentIdValue,
-                    contentType,
-                    anonymous,
-                    customData: {
-                        ...customData,
-                        ...payloadRest
-                    }
-                });
-            default:
-                return this.client.sendEvent(event, payload);
+                }
+            });
         }
     }
 
@@ -85,6 +84,9 @@ export const handleOneAnalyticsEvent = (action: string, ...params: any[]): any =
     const actionFunction = (<any>coveoua)[action];
     if (actionFunction) {
         return actionFunction.apply(coveoua, params);
+    } else {
+        const actions: AvailableActions[] = ['init', 'send', 'onLoad'];
+        throw new Error(`The action "${action}" does not exist. Available actions: ${actions.join(', ')}.`);
     }
 };
 

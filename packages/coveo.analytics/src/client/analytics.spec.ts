@@ -1,6 +1,6 @@
-import * as analytics from '../src/analytics';
+import * as analytics from './analytics';
 import * as bodyParser from 'body-parser';
-import * as events from '../src/events';
+import * as events from '../events';
 import * as express from 'express';
 import * as http from 'http';
 import test from 'ava';

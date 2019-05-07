@@ -1,4 +1,4 @@
-import { AnalyticsClient } from '../../src/analytics';
+import { AnalyticsClient } from '../src/client/analytics';
 import {
     AnyEventResponse,
     ClickEventRequest,
@@ -11,7 +11,7 @@ import {
     ViewEventRequest,
     ViewEventResponse,
     VisitResponse
-    } from '../../src/events';
+    } from '../src/events';
 
 export class AnalyticsClientMock implements AnalyticsClient {
     sendEvent(eventType: string, request: any): Promise<AnyEventResponse> {

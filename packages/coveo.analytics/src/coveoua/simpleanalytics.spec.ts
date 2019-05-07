@@ -1,10 +1,10 @@
 import * as express from 'express';
 import * as http from 'http';
 import * as sinon from 'sinon';
-import AnalyticsClientMock from './helpers/analyticsclientmock';
+import AnalyticsClientMock from '../../test/analyticsclientmock';
 import test from 'ava';
-import { handleOneAnalyticsEvent } from '../src/simpleanalytics';
-import { Version } from '../src/analytics';
+import { handleOneAnalyticsEvent } from './simpleanalytics';
+import { Version } from '../client/analytics';
 
 
 var app: express.Application = express();

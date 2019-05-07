@@ -11,6 +11,6 @@
         "lib": ["es5", "dom", "scripthost", "es6"]
     },
     "include": [
-        "test/**/*.ts"
+        "src/**/*.spec.ts"
     ]
 }

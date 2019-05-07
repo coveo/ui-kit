@@ -1,6 +1,6 @@
+import * as detector from './detector';
 import test from 'ava';
-import {NullStorage, CookieStorage, getAvailableStorage} from '../src/storage';
-import * as detector from '../src/detector';
+import { CookieStorage, getAvailableStorage, NullStorage } from './storage';
 
 let cookie_key: string;
 let cookie_data: string;

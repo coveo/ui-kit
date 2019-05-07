@@ -1,8 +1,8 @@
-import test from 'ava';
+import * as history from './history';
 import * as sinon from 'sinon';
-import {NullStorage, WebStorage} from '../src/storage';
-import * as history from '../src/history';
-import {MAX_NUMBER_OF_HISTORY_ELEMENTS} from '../src/history';
+import test from 'ava';
+import { MAX_NUMBER_OF_HISTORY_ELEMENTS } from './history';
+import { NullStorage, WebStorage } from './storage';
 
 let storage: WebStorage;
 let storageMock: sinon.SinonMock;

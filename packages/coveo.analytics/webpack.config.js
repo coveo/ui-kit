@@ -1,7 +1,7 @@
 const path = require('path');
 
 module.exports = {
-    entry: "./src/browser.ts",
+    entry: "./src/coveoua/browser.ts",
     mode: "production",
     output: {
         path: path.resolve(__dirname, "./dist/"),
