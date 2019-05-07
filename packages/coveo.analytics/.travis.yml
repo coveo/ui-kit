@@ -4,7 +4,7 @@ node_js:
 - stable
 before_install:
 - source read.version.sh
-- echo $PACKAGE_JSON_VERSION
+- echo $PACKAGE_JSON_MAJOR_MINOR_VERSION
 install:
 - npm install
 script:
