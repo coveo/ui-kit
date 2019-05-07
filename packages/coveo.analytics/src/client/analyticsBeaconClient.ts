@@ -2,7 +2,7 @@ import { AnalyticsRequestClient } from './analyticsRequestClient';
 import { EventType } from '../events';
 import { VisitorIdProvider } from './analyticsRequestClient';
 
-export class BeaconAnalyticsClient implements AnalyticsRequestClient {
+export class AnalyticsBeaconClient implements AnalyticsRequestClient {
     constructor(private baseUrl: string,
         private token: string,
         private visitorIdProvider: VisitorIdProvider) { }

@@ -36,7 +36,7 @@
     "exports-loader": "0.6.3",
     "express": "4.14.0",
     "isomorphic-fetch": "2.2.1",
-    "jsdom": "9.8.2",
+    "jsdom": "^15.0.0",
     "nyc": "10.1.0",
     "sinon": "1.17.6",
     "ts-loader": "^4.5.0",

@@ -1,3 +1,4 @@
+import { AnalyticsBeaconClient as AnalyticsBeaconClient } from './analyticsBeaconClient';
 import { AnalyticsFetchClient } from './analyticsFetchClient';
 import {
     AnyEventResponse,
@@ -13,7 +14,6 @@ import {
     ViewEventResponse,
     VisitResponse
     } from '../events';
-import { BeaconAnalyticsClient as AnalyticsBeaconClient } from './analyticsBeaconClient';
 import { HistoryStore } from '../history';
 import { VisitorIdProvider } from './analyticsRequestClient';
 
