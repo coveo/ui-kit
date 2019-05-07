@@ -1,5 +1,3 @@
-import 'whatwg-fetch';
-
 export interface SearchDocument {
     documentUri: string;
     documentUriHash: string;

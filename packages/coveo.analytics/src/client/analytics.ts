@@ -12,7 +12,6 @@ import {
     VisitResponse
     } from '../events';
 import { HistoryStore } from '../history';
-import 'whatwg-fetch';
 
 export const Version = 'v15';
 
