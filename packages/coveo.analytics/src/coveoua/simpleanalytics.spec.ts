@@ -33,7 +33,7 @@ test('SimpleAnalytics: can send pageview', t => {
 
 test('SimpleAnalytics: can send pageview with customdata', t => {
     handleOneAnalyticsEvent('init', 'MYTOKEN', `http://localhost:${server.address().port}`);
-    handleOneAnalyticsEvent('send', 'pageview', {somedata: 'asd'});
+    handleOneAnalyticsEvent('send', 'pageview', { somedata: 'asd' });
 });
 
 test('SimpleAnalytics: can send an unknown event', t => {

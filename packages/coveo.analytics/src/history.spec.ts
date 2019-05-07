@@ -10,27 +10,27 @@ let historyStore: history.HistoryStore;
 let data: history.HistoryElement;
 
 test.beforeEach(t => {
-  storage = new NullStorage();
-  storageMock = sinon.mock(storage);
-  historyStore = new history.HistoryStore(storage);
-  data = {
-    name: 'name',
-    value: 'value',
-    time: JSON.stringify(new Date())
-  };
+    storage = new NullStorage();
+    storageMock = sinon.mock(storage);
+    historyStore = new history.HistoryStore(storage);
+    data = {
+        name: 'name',
+        value: 'value',
+        time: JSON.stringify(new Date())
+    };
 });
 
-test.afterEach( t => {
-  storage = null;
-  storageMock = null;
-  historyStore = null;
-  data = null;
+test.afterEach(t => {
+    storage = null;
+    storageMock = null;
+    historyStore = null;
+    data = null;
 });
 
 test('HistoryStore should be able to add an element in the history', t => {
-  storageMock.expects('setItem').once().withArgs(history.STORE_KEY, sinon.match(/"value":"value"/).and(sinon.match(/"time"/)).and(sinon.match(/"internalTime"/)));
-  historyStore.addElement(data);
-  storageMock.verify();
+    storageMock.expects('setItem').once().withArgs(history.STORE_KEY, sinon.match(/"value":"value"/).and(sinon.match(/"time"/)).and(sinon.match(/"internalTime"/)));
+    historyStore.addElement(data);
+    storageMock.verify();
 });
 
 test('History store should trim query over > 75 char', t => {
@@ -73,9 +73,9 @@ test('History store should not keep more then MAX_ELEMENTS', t => {
 });
 
 test('HistoryStore should be able to get the history', t => {
-  storageMock.expects('getItem').once().withArgs(history.STORE_KEY);
-  historyStore.getHistory();
-  storageMock.verify();
+    storageMock.expects('getItem').once().withArgs(history.STORE_KEY);
+    historyStore.getHistory();
+    storageMock.verify();
 });
 
 test('HistoryStore should be able to remove all internalTime', t => {
@@ -101,16 +101,16 @@ test('HistoryStore should be able to remove all internalTime', t => {
 });
 
 test('HistoryStore should remove item when cleared', t => {
-  storageMock.expects('removeItem').once().withArgs(history.STORE_KEY);
-  historyStore.clear();
-  storageMock.verify();
+    storageMock.expects('removeItem').once().withArgs(history.STORE_KEY);
+    historyStore.clear();
+    storageMock.verify();
 });
 
 test('HistoryStore should be able to set the history', t => {
-  var historyElements: history.HistoryElement[] = [data];
-  storageMock.expects('setItem').once().withArgs(history.STORE_KEY, JSON.stringify(historyElements));
-  historyStore.setHistory(historyElements);
-  storageMock.verify();
+    var historyElements: history.HistoryElement[] = [data];
+    storageMock.expects('setItem').once().withArgs(history.STORE_KEY, JSON.stringify(historyElements));
+    historyStore.setHistory(historyElements);
+    storageMock.verify();
 });
 
 test('History store should reject consecutive duplicate values', t => {
