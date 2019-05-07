@@ -36,7 +36,7 @@ export class CoveoUA {
         }
     }
 
-    send(event: EventType | DeprecatedEventType, payload: any = {}): Promise<AnyEventResponse> {
+    send(event: EventType | DeprecatedEventType, payload: any = {}): Promise<AnyEventResponse | void> {
         if (typeof this.client == 'undefined') {
             throw new Error(`You must call init before sending an event`);
         }

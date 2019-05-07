@@ -7,7 +7,7 @@ export class AnalyticsBeaconClient implements AnalyticsRequestClient {
         private token: string,
         private visitorIdProvider: VisitorIdProvider) { }
 
-    public sendEvent(eventType: EventType, request: any): Promise<void> {
+    public async sendEvent(eventType: EventType, request: any): Promise<void> {
         if (!navigator.sendBeacon) {
             throw new Error(`navigator.sendBeacon is not supported in this browser. Consider adding a polyfill like "sendbeacon-polyfill".`);
         }
