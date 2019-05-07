@@ -6,13 +6,23 @@ import test from 'ava';
 import { handleOneAnalyticsEvent } from './simpleanalytics';
 import { Version } from '../client/analytics';
 
+const someRandomEventName = 'kawabunga';
 
-var app: express.Application = express();
+const app: express.Application = express();
 app.post(`/rest/${Version}/analytics/view`, (req: express.Request, res: express.Response) => {
+    res.status(200).send('{}');
+});
+app.post(`/rest/${Version}/analytics/${someRandomEventName}`, (req: express.Request, res: express.Response) => {
     res.status(200).send('{}');
 });
 const server: http.Server = (<any>http).createServer(app).listen();
 app.set('port', server.address().port);
+
+let analyticsClientMock: AnalyticsClientMock;
+
+test.beforeEach(() => {
+    analyticsClientMock = new AnalyticsClientMock();
+});
 
 test('SimpleAnalytics: can\'t call without initiating', t => {
     t.throws(() => { handleOneAnalyticsEvent('send'); }, /init/);
@@ -36,26 +46,23 @@ test('SimpleAnalytics: can send pageview with customdata', t => {
     handleOneAnalyticsEvent('send', 'pageview', { somedata: 'asd' });
 });
 
-test('SimpleAnalytics: can send an unknown event', t => {
+test('SimpleAnalytics: can send any event to the endpoint', t => {
     handleOneAnalyticsEvent('init', 'MYTOKEN', `http://localhost:${server.address().port}`);
-    handleOneAnalyticsEvent('send', 'kawabunga');
+    handleOneAnalyticsEvent('send', someRandomEventName);
 });
 
 test('SimpleAnalytics: can initialize with analyticsClient', t => {
-    handleOneAnalyticsEvent('init', new AnalyticsClientMock());
+    handleOneAnalyticsEvent('init', analyticsClientMock);
 });
 
 test('SimpleAnalytics: can send pageview with analyticsClient', t => {
-    var client = new AnalyticsClientMock();
-    handleOneAnalyticsEvent('init', client);
     handleOneAnalyticsEvent('send', 'pageview');
 });
 
 test('SimpleAnalytics: can send pageview with content attributes', t => {
-    var client = new AnalyticsClientMock();
-    let spy = sinon.spy(client, 'sendViewEvent');
+    let spy = sinon.spy(analyticsClientMock, 'sendViewEvent');
 
-    handleOneAnalyticsEvent('init', client);
+    handleOneAnalyticsEvent('init', analyticsClientMock);
     handleOneAnalyticsEvent('send', 'pageview', {
         contentIdKey: 'key',
         contentIdValue: 'value',
@@ -68,10 +75,9 @@ test('SimpleAnalytics: can send pageview with content attributes', t => {
 });
 
 test('SimpleAnalytics: can send pageview without sending content attributes in the customdata', t => {
-    var client = new AnalyticsClientMock();
-    let spy = sinon.spy(client, 'sendViewEvent');
+    let spy = sinon.spy(analyticsClientMock, 'sendViewEvent');
 
-    handleOneAnalyticsEvent('init', client);
+    handleOneAnalyticsEvent('init', analyticsClientMock);
     handleOneAnalyticsEvent('send', 'pageview', {
         contentIdKey: 'key',
         contentIdValue: 'value',
