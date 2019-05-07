@@ -9,7 +9,7 @@
     "build": "webpack",
     "test": "tsc --skipLibCheck -p tsconfig.test.json && nyc ava \"./dist_test/**/*.spec.js\"",
     "coveralls": "nyc report --reporter=text-lcov | coveralls",
-    "clean": "rm -rf dist/*"
+    "clean": "rm -rf dist/* && rm -rf dist_test/*"
   },
   "author": "Pierre-Alexandre St-Jean <pastjean@coveo.com>",
   "repository": {
