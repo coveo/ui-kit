@@ -36,7 +36,7 @@ test('HistoryStore should be able to add an element in the history', t => {
 test('History store should trim query over > 75 char', t => {
     data.value = '';
     let newValue = '';
-    for (var i = 0; i < 100; i++) {
+    for (let i = 0; i < 100; i++) {
         newValue += i.toString();
     }
     data.name = 'Query';
@@ -49,7 +49,7 @@ test('History store should trim query over > 75 char', t => {
 test('History store should not trim elements over 75 char if it\'s not a query', t => {
     data.value = '';
     let newValue = '';
-    for (var i = 0; i < 100; i++) {
+    for (let i = 0; i < 100; i++) {
         newValue += i.toString();
     }
     data.name = 'Not A Query';
@@ -64,7 +64,7 @@ test('History store should not keep more then MAX_ELEMENTS', t => {
     storageMock.expects('setItem').once().withArgs(history.STORE_KEY, sinon.match(/"value":"5"/));
     storageMock.expects('setItem').once().withArgs(history.STORE_KEY, sinon.match(/"value":"9"/));
     storageMock.expects('setItem').never().withArgs(history.STORE_KEY, sinon.match(/"value":"10"/));
-    for (var i = 0; i < MAX_NUMBER_OF_HISTORY_ELEMENTS + 1; i++) {
+    for (let i = 0; i < MAX_NUMBER_OF_HISTORY_ELEMENTS + 1; i++) {
         data.value = i.toString();
         historyStore.addElement(data);
     }
@@ -79,8 +79,8 @@ test('HistoryStore should be able to get the history', t => {
 });
 
 test('HistoryStore should be able to remove all internalTime', t => {
-    var historyElements: history.HistoryElement[] = [];
-    for (var i = 0; i < 5; i++) {
+    const historyElements: history.HistoryElement[] = [];
+    for (let i = 0; i < 5; i++) {
         historyElements.push({
             name: 'name' + i,
             value: 'value' + i,
@@ -107,7 +107,7 @@ test('HistoryStore should remove item when cleared', t => {
 });
 
 test('HistoryStore should be able to set the history', t => {
-    var historyElements: history.HistoryElement[] = [data];
+    const historyElements: history.HistoryElement[] = [data];
     storageMock.expects('setItem').once().withArgs(history.STORE_KEY, JSON.stringify(historyElements));
     historyStore.setHistory(historyElements);
     storageMock.verify();

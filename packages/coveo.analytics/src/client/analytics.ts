@@ -123,19 +123,19 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
     }
 
     async sendSearchEvent(request: SearchEventRequest): Promise<SearchEventResponse | void> {
-        return this.sendEvent('search', request);
+        return this.sendEvent(EventType.search, request);
     }
 
     async sendClickEvent(request: ClickEventRequest): Promise<ClickEventResponse | void> {
-        return this.sendEvent('click', request);
+        return this.sendEvent(EventType.click, request);
     }
 
     async sendCustomEvent(request: CustomEventRequest): Promise<CustomEventResponse | void> {
-        return this.sendEvent('custom', request);
+        return this.sendEvent(EventType.custom, request);
     }
 
     async sendViewEvent(request: ViewEventRequest): Promise<ViewEventResponse | void> {
-        return this.sendEvent('view', request);
+        return this.sendEvent(EventType.view, request);
     }
 
     async getVisit(): Promise<VisitResponse> {

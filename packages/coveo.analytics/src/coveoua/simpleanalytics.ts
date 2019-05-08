@@ -12,14 +12,14 @@ export type AvailableActions = keyof(CoveoUA);
 
 // CoveoUA mimics the GoogleAnalytics API.
 export class CoveoUA {
-    private client: AnalyticsClient | undefined;
+    private client?: AnalyticsClient;
 
     // init initializes a new SimpleAPI client.
     // @param token is your coveo access_token / api_key / ...
     // @param endpoint is the endpoint you want to target defaults to the
     //        usage analytics production endpoint
     init(token: string | AnalyticsClient, endpoint: string): void {
-        if (typeof token === 'undefined') {
+        if (!token) {
             throw new Error(`You must pass your token when you call 'init'`);
         }
 
