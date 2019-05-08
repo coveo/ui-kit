@@ -4,6 +4,7 @@ import {
     ClickEventResponse,
     CustomEventRequest,
     CustomEventResponse,
+    EventBaseRequest,
     HealthResponse,
     SearchEventRequest,
     SearchEventResponse,
@@ -35,7 +36,7 @@ export enum EventType {
 }
 
 export interface AnalyticsClient {
-    sendEvent(eventType: string, request: any): Promise<AnyEventResponse>;
+    sendEvent(eventType: string, payload: any): Promise<AnyEventResponse>;
     sendSearchEvent(request: SearchEventRequest): Promise<SearchEventResponse>;
     sendClickEvent(request: ClickEventRequest): Promise<ClickEventResponse>;
     sendCustomEvent(request: CustomEventRequest): Promise<CustomEventResponse>;
@@ -59,24 +60,25 @@ export class CoveoAnalyticsClient implements AnalyticsClient {
         this.version = opts.version || Version;
     }
 
-    async sendEvent(eventType: EventType, request: any): Promise<AnyEventResponse> {
+    async sendEvent(eventType: EventType, payload: any): Promise<AnyEventResponse> {
         if (eventType === 'view') {
-            this.addPageViewToHistory(request.contentIdValue);
+            this.addPageViewToHistory(payload.contentIdValue);
         }
 
-        const body = this.getBodyForTypeOfEvent(eventType, request);
+        const augmentedPayload = this.augmentPayloadForTypeOfEvent(eventType, payload);
+        const cleanedPayload = this.removeEmptyPayloadValues(augmentedPayload);
 
         const response = await fetch(`${this.getRestEndpoint()}/analytics/${eventType}`, {
             method: 'POST',
             headers: this.getHeaders(),
             mode: 'cors',
-            body: JSON.stringify(body),
+            body: JSON.stringify(cleanedPayload),
             credentials: 'include'
         });
         if (response.ok) {
             return await response.json() as AnyEventResponse;
         } else {
-            console.error(`An error has occured when sending the "${eventType}" event.`, response, request);
+            console.error(`An error has occured when sending the "${eventType}" event.`, response, payload);
             throw new Error(`An error has occurred when sending the "${eventType}" event. Check the console logs for more details.`);
         }
     }
@@ -107,21 +109,34 @@ export class CoveoAnalyticsClient implements AnalyticsClient {
         return await response.json();
     }
 
-    private getBodyForTypeOfEvent(eventType: EventType, request: any) {
+    private augmentPayloadForTypeOfEvent(eventType: EventType, payload: any) {
+        const baseDefaultValues: EventBaseRequest = {
+            language: document.documentElement.lang,
+            userAgent: navigator.userAgent
+        };
         if (eventType === 'view') {
             return {
                 location: window.location.toString(),
                 referrer: document.referrer,
-                language: document.documentElement.lang,
                 title: document.title,
-                ...request
+                ...baseDefaultValues,
+                ...payload
             } as ViewEventRequest;
         } else {
             return {
-                language: document.documentElement.lang,
-                ...request
+                ...baseDefaultValues,
+                ...payload
             };
         }
+    }
+
+    private removeEmptyPayloadValues(payload: any) {
+        return Object.keys(payload)
+            .filter(key => !!payload[key])
+            .reduce((newPayload, key) => ({
+                ...newPayload,
+                [key]: payload[key]
+            }), {});
     }
 
     private addPageViewToHistory(pageViewValue: string) {
