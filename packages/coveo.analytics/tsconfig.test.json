@@ -6,9 +6,11 @@
         // Inline source map are required for coverage (nyc) to map correctly to good files.
         "sourceMap": false,
         "inlineSourceMap": true,
+        "strict": false,
         "lib": ["es5", "dom", "scripthost", "es6"]
     },
     "include": [
-        "test/**/*.ts"
-    ]
+        "src/**/*.spec.ts"
+    ],
+    "exclude": []
 }

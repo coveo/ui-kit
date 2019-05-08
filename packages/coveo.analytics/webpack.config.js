@@ -1,10 +1,10 @@
-const webpack = require("webpack");
+const path = require('path');
 
 module.exports = {
-    entry: "./src/browser.ts",
+    entry: "./src/coveoua/browser.ts",
     mode: "production",
     output: {
-        path: __dirname + "dist/",
+        path: path.resolve(__dirname, "./dist/"),
         filename: "coveoua.js"
     },
     resolve: {

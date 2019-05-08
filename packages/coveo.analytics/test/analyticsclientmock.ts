@@ -1,15 +1,21 @@
-import AnalyticsClient from '../../src/analyticsclient';
+import { AnalyticsClient } from '../src/client/analytics';
 import {
-    SearchEventRequest, SearchEventResponse,
-    ClickEventRequest, ClickEventResponse,
-    CustomEventRequest, CustomEventResponse,
-    ViewEventRequest, ViewEventResponse,
-    VisitResponse, HealthResponse
-} from '../../src/events';
+    AnyEventResponse,
+    ClickEventRequest,
+    ClickEventResponse,
+    CustomEventRequest,
+    CustomEventResponse,
+    HealthResponse,
+    SearchEventRequest,
+    SearchEventResponse,
+    ViewEventRequest,
+    ViewEventResponse,
+    VisitResponse
+    } from '../src/events';
 
 export class AnalyticsClientMock implements AnalyticsClient {
-    sendEvent(eventType: string, request: any): Promise<Response> {
-        return Promise.resolve({} as Response);
+    sendEvent(eventType: string, request: any): Promise<AnyEventResponse> {
+        return Promise.resolve({} as AnyEventResponse);
     }
     sendSearchEvent(request: SearchEventRequest): Promise<SearchEventResponse> {
         return Promise.resolve({} as SearchEventResponse);

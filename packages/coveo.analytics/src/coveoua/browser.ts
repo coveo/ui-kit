@@ -1,16 +1,15 @@
-import SimpleAnalytics from './simpleanalytics';
-import * as analytics from './index';
-import { HistoryStore, HistoryViewElement } from './history';
+import * as analytics from './library';
+import handleOneAnalyticsEvent from './simpleanalytics';
 
 declare const global: any;
 
-// We need a custom trigger function for our Promise polyfill
-// because the default one can cause issues in other frameworks that relies on
-// their own Promise polyfill like the Salesforce Aura framework.
-declare var require: any;
 const promise = (window as any)['Promise'];
 if (!(promise instanceof Function)) {
-  require('es6-promise').polyfill();
+    console.error(`This script uses window.Promise which is not supported in your browser. Consider adding a polyfill like "es6-promise".`);
+}
+const fetch = (window as any)['fetch'];
+if (!(fetch instanceof Function)) {
+    console.error(`This script uses window.fetch which is not supported in your browser. Consider adding a polyfill like "fetch".`);
 }
 
 // CoveoUAGlobal is the interface for the global function which also has a
@@ -18,7 +17,7 @@ if (!(promise instanceof Function)) {
 export interface CoveoUAGlobal {
     (action: string, ...params: string[]): void;
     // CoveoAnalytics.q is the queue of last called actions before lib was included
-    q?: string[][];
+    q?: [string, any[]][];
 }
 
 // On load of this script we get the global object `coveoua` (which would be)
@@ -26,14 +25,14 @@ export interface CoveoUAGlobal {
 const coveoua: CoveoUAGlobal = global.coveoua || {};
 
 // Replace the quick shim with the real thing.
-global.coveoua = SimpleAnalytics;
+global.coveoua = handleOneAnalyticsEvent;
 
 global.coveoanalytics = analytics;
 
 // On normal execution this library should be loaded after the snippet execution
 // so we will execute the actions in the `q` array
 if (coveoua.q) {
-  coveoua.q.forEach( (args: Array<string>) => SimpleAnalytics.apply(void 0, args));
+    coveoua.q.forEach((args: [string, any[]]) => handleOneAnalyticsEvent.apply(void 0, args));
 }
 
 export default coveoua;

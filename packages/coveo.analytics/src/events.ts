@@ -1,12 +1,10 @@
-import 'whatwg-fetch';
-
 export interface SearchDocument {
     documentUri: string;
     documentUriHash: string;
 }
 
 export interface EventBaseRequest {
-    language: string;
+    language?: string;
     userAgent?: string;
     customData?: any;
     anonymous?: boolean;
@@ -65,7 +63,6 @@ export interface ViewEventRequest extends EventBaseRequest {
 }
 
 export interface DefaultEventResponse {
-    raw: Response;
     visitId: string;
     visitorId: string;
 }
@@ -75,12 +72,12 @@ export interface ClickEventResponse extends DefaultEventResponse { }
 export interface CustomEventResponse extends DefaultEventResponse { }
 export interface ViewEventResponse extends DefaultEventResponse { }
 
+export type AnyEventResponse = SearchEventResponse | ClickEventResponse | CustomEventResponse | ViewEventResponse;
+
 export interface VisitResponse {
-    raw: Response;
     id: string;
     visitorId: string;
 }
 export interface HealthResponse {
-    raw: Response;
     status: string;
 }

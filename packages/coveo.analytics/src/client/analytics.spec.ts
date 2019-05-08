@@ -1,9 +1,9 @@
-import test from 'ava';
-import * as analytics from '../src/analytics';
-import * as events from '../src/events';
+import * as analytics from './analytics';
+import * as bodyParser from 'body-parser';
+import * as events from '../events';
 import * as express from 'express';
 import * as http from 'http';
-import * as bodyParser from 'body-parser';
+import test from 'ava';
 
 var app: express.Application = express();
 const server: http.Server = (<any>http).createServer(app).listen();
@@ -15,7 +15,6 @@ test('Analytics: can post a view event', t => {
 
     const viewEvent: events.ViewEventRequest = { location: 'here', contentIdKey: 'key', contentIdValue: 'value', language: 'en' };
     const response: events.ViewEventResponse = {
-        raw: undefined,
         visitId : '123',
         visitorId: '213'
     };
@@ -50,7 +49,6 @@ test('Analytics: can post a view event', t => {
     });
 
     return client.sendViewEvent(viewEvent).then((res: events.ViewEventResponse) => {
-        t.not(res.raw, undefined);
         t.is(res.visitId, response.visitId);
         t.is(res.visitorId, response.visitorId);
     });

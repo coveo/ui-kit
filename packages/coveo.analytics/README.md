@@ -45,7 +45,7 @@ Initially, the `pageview` events data will be used exclusively by the Coveo Reve
   })(window,document,'script','https://static.cloud.coveo.com/coveo.analytics.js/coveoua.js')
   
   coveoua('init','YOUR_API_KEY'); // Replace YOUR_API_KEY with your real key
-  coveoua('send','pageview',{
+  coveoua('send','pageview', {
     contentIdKey: '@sysurihash',
     contentIdValue: 'somehash3125091',
     contentType: 'value for contentType' // Optional
@@ -72,6 +72,32 @@ Initially, the `pageview` events data will be used exclusively by the Coveo Reve
   b. In the browser developer tool, go the the **Network** tab.
 
   c. Reload the page, in the **Name** panel, ensure that you see a **view** event sent to Coveo analytics.
+
+### Pushing Any Coveo Analytics Event
+
+Add the code snippet to all your website pages.
+
+  ```html
+  <script>
+  (function(c,o,v,e,O,u,a){
+  a='coveoua';c[a]=c[a]||function(){(c[a].q=c[a].q|| []).push(arguments)};
+  c[a].t=Date.now();u=o.createElement(v);u.async=1;u.src=e;
+  O=o.getElementsByTagName(v)[0];O.parentNode.insertBefore(u,O)
+  })(window,document,'script','https://static.cloud.coveo.com/coveo.analytics.js/coveoua.js')
+  
+  coveoua('init','YOUR_API_KEY'); // Replace YOUR_API_KEY with your real key
+  </script>
+  ```
+  
+You can now call the script using the following line:
+
+```html
+coveoua('send', 'click', {
+    ...
+});
+```
+
+Refer to the [Usage Analytics Write API](https://docs.coveo.com/en/1430/cloud-v2-developers/usage-analytics-write-api) section to see what types of events are supported and what payload you need to send.
 
 ### Usage (for developers)
 
@@ -112,7 +138,6 @@ By default, the local storage option will automatically be chosen as the default
 ```bash
 git clone
 npm install
-./node_modules/.bin/typings install
 npm run build
 # code code code
 npm run test
