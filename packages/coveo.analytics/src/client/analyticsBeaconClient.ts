@@ -7,17 +7,17 @@ export class AnalyticsBeaconClient implements AnalyticsRequestClient {
         private token: string,
         private visitorIdProvider: VisitorIdProvider) { }
 
-    public async sendEvent(eventType: EventType, request: any): Promise<void> {
+    public async sendEvent(eventType: EventType, payload: any): Promise<void> {
         if (!navigator.sendBeacon) {
             throw new Error(`navigator.sendBeacon is not supported in this browser. Consider adding a polyfill like "sendbeacon-polyfill".`);
         }
         const parsedRequestDataKey = this.getParsedRequestDataKey(eventType);
-        const parsedRequestData = `${parsedRequestDataKey}=${encodeURIComponent(JSON.stringify(request))}`;
+        const parsedRequestData = `${parsedRequestDataKey}=${encodeURIComponent(JSON.stringify(payload))}`;
         const visitorId = this.visitorIdProvider.currentVisitorId;
         const queryParams = `?access_token=${this.token}${visitorId ? `&visitorId=${visitorId}` : ''}`;
         const url = `${this.baseUrl}/analytics/${eventType}${queryParams}`;
         // tslint:disable-next-line: no-console
-        console.log(`Sending beacon for "${eventType}" with: `, JSON.stringify(request));
+        console.log(`Sending beacon for "${eventType}" with: `, JSON.stringify(payload));
         navigator.sendBeacon(url, new Blob([parsedRequestData], { type: 'application/x-www-form-urlencoded' }));
         return;
     }

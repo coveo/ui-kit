@@ -23,13 +23,12 @@ export class AnalyticsFetchClient implements AnalyticsRequestClient {
         private visitorIdProvider: VisitorIdProvider) {
     }
 
-    public async sendEvent(eventType: EventType, request: any): Promise<AnyEventResponse> {
-        const body = this.getBodyForTypeOfEvent(eventType, request);
+    public async sendEvent(eventType: EventType, payload: any): Promise<AnyEventResponse> {
         const response = await fetch(`${this.baseUrl}/analytics/${eventType}`, {
             method: 'POST',
             headers: this.getHeaders(),
             mode: 'cors',
-            body: JSON.stringify(body),
+            body: JSON.stringify(payload),
             credentials: 'include'
         });
         if (response.ok) {
@@ -37,7 +36,7 @@ export class AnalyticsFetchClient implements AnalyticsRequestClient {
             this.visitorIdProvider.currentVisitorId = visit.visitorId;
             return visit;
         } else {
-            console.error(`An error has occured when sending the "${eventType}" event.`, response, request);
+            console.error(`An error has occured when sending the "${eventType}" event.`, response, payload);
             throw new Error(`An error has occurred when sending the "${eventType}" event. Check the console logs for more details.`);
         }
     }
@@ -50,26 +49,5 @@ export class AnalyticsFetchClient implements AnalyticsRequestClient {
             headers['Authorization'] = `Bearer ${this.token}`;
         }
         return headers;
-    }
-
-    private getBodyForTypeOfEvent(eventType: EventType, request: any) {
-        const baseDefaultValues: EventBaseRequest = {
-            language: document.documentElement.lang,
-            userAgent: navigator.userAgent
-        };
-        if (eventType === 'view') {
-            return {
-                location: window.location.toString(),
-                referrer: document.referrer,
-                title: document.title,
-                ...baseDefaultValues,
-                ...request
-            } as ViewEventRequest;
-        } else {
-            return {
-                ...baseDefaultValues,
-                ...request
-            };
-        }
     }
 }

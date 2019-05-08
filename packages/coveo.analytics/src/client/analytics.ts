@@ -6,6 +6,7 @@ import {
     ClickEventResponse,
     CustomEventRequest,
     CustomEventResponse,
+    EventBaseRequest,
     EventType,
     HealthResponse,
     SearchEventRequest,
@@ -43,7 +44,7 @@ export interface AnalyticsClient {
 
 interface BufferedRequest {
     eventType: EventType;
-    request: any;
+    payload: any;
     handled: boolean;
 }
 
@@ -86,14 +87,17 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
         this.visitorId = visitorId;
     }
 
-    async sendEvent(eventType: EventType, request: any): Promise<AnyEventResponse | void> {
+    async sendEvent(eventType: EventType, payload: any): Promise<AnyEventResponse | void> {
         if (eventType === 'view') {
-            this.addPageViewToHistory(request.contentIdValue);
+            this.addPageViewToHistory(payload.contentIdValue);
         }
+
+        const payloadForEvent = this.getPayloadForTypeOfEvent(eventType, payload);
+        const cleanedPayload = this.removeEmptyPayloadValues(payloadForEvent);
 
         this.bufferedRequests.push({
             eventType,
-            request,
+            payload: cleanedPayload,
             handled: false
         });
 
@@ -107,8 +111,8 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
 
     private flushBufferWithBeacon(): void {
         while (this.bufferedRequests.length > 0) {
-            const { eventType, request } = this.bufferedRequests.pop() as BufferedRequest;
-            this.analyticsBeaconClient.sendEvent(eventType, request);
+            const { eventType, payload } = this.bufferedRequests.pop() as BufferedRequest;
+            this.analyticsBeaconClient.sendEvent(eventType, payload);
         }
     }
 
@@ -116,8 +120,8 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
         if (this.bufferedRequests.length > 0) {
             const popped = this.bufferedRequests.pop();
             if (popped) {
-                const { eventType, request } = popped;
-                return this.analyticsFetchClient.sendEvent(eventType, request);
+                const { eventType, payload } = popped;
+                return this.analyticsFetchClient.sendEvent(eventType, payload);
             }
         }
     }
@@ -158,6 +162,36 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
             time: JSON.stringify(new Date()),
         };
         store.addElement(historyElement);
+    }
+
+    private getPayloadForTypeOfEvent(eventType: EventType, payload: any) {
+        const baseDefaultValues: EventBaseRequest = {
+            language: document.documentElement.lang,
+            userAgent: navigator.userAgent
+        };
+        if (eventType === 'view') {
+            return {
+                location: window.location.toString(),
+                referrer: document.referrer,
+                title: document.title,
+                ...baseDefaultValues,
+                ...payload
+            } as ViewEventRequest;
+        } else {
+            return {
+                ...baseDefaultValues,
+                ...payload
+            };
+        }
+    }
+
+    private removeEmptyPayloadValues(payload: any) {
+        return Object.keys(payload)
+            .filter(key => !!payload[key])
+            .reduce((newPayload, key) => ({
+                ...newPayload,
+                [key]: payload[key]
+            }), {});
     }
 }
 

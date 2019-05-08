@@ -5,5 +5,5 @@ export interface VisitorIdProvider {
 }
 
 export interface AnalyticsRequestClient {
-    sendEvent(eventType: string, request: any): Promise<AnyEventResponse | void>;
+    sendEvent(eventType: string, payload: any): Promise<AnyEventResponse | void>;
 }
