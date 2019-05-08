@@ -27,7 +27,12 @@ export interface ClientOptions {
     version?: string;
 }
 
-export type EventType = 'search' | 'click' | 'custom' | 'view';
+export enum EventType {
+    search = 'search',
+    click = 'click',
+    custom = 'custom',
+    view = 'view'
+}
 
 export interface AnalyticsClient {
     sendEvent(eventType: string, request: any): Promise<AnyEventResponse>;
@@ -77,19 +82,19 @@ export class CoveoAnalyticsClient implements AnalyticsClient {
     }
 
     async sendSearchEvent(request: SearchEventRequest): Promise<SearchEventResponse> {
-        return this.sendEvent('search', request);
+        return this.sendEvent(EventType.search, request);
     }
 
     async sendClickEvent(request: ClickEventRequest): Promise<ClickEventResponse> {
-        return this.sendEvent('click', request);
+        return this.sendEvent(EventType.click, request);
     }
 
     async sendCustomEvent(request: CustomEventRequest): Promise<CustomEventResponse> {
-        return this.sendEvent('custom', request);
+        return this.sendEvent(EventType.custom, request);
     }
 
     async sendViewEvent(request: ViewEventRequest): Promise<ViewEventResponse> {
-        return this.sendEvent('view', request);
+        return this.sendEvent(EventType.view, request);
     }
 
     async getVisit(): Promise<VisitResponse> {
