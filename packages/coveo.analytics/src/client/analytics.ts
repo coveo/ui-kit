@@ -33,7 +33,7 @@ export interface ClientOptions {
 }
 
 export interface AnalyticsClient {
-    sendEvent(eventType: string, request: any): Promise<AnyEventResponse | void>;
+    sendEvent(eventType: string, payload: any): Promise<AnyEventResponse | void>;
     sendSearchEvent(request: SearchEventRequest): Promise<SearchEventResponse | void>;
     sendClickEvent(request: ClickEventRequest): Promise<ClickEventResponse | void>;
     sendCustomEvent(request: CustomEventRequest): Promise<CustomEventResponse | void>;
