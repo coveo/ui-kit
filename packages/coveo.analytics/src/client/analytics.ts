@@ -67,6 +67,14 @@ export class CoveoAnalyticsClient implements AnalyticsClient {
             ...this.defaultOptions,
             ...opts
         };
+        this.assertTokenIsDefined();
+    }
+
+    private assertTokenIsDefined() {
+        const { token } = this.options;
+        if (!token) {
+            throw new Error('You have to pass at least a token to this constructor');
+        }
     }
 
     async sendEvent(eventType: EventType, payload: IRequestPayload): Promise<AnyEventResponse> {
@@ -158,22 +166,17 @@ export class CoveoAnalyticsClient implements AnalyticsClient {
         store.addElement(historyElement);
     }
 
-    protected getRestEndpoint(): string {
+    private getRestEndpoint(): string {
         const { endpoint, version } = this.options;
         return `${endpoint}/rest/${version}`;
     }
 
-    protected getHeaders(): Record<string, string> {
-        var headers: Record<string, string> = {
+    private getHeaders(): Record<string, string> {
+        const { token } = this.options;
+        return {
+            'Authorization': `Bearer ${token}`,
             'Content-Type': `application/json`
         };
-
-        const { token } = this.options;
-        if (token) {
-            headers['Authorization'] = `Bearer ${token}`;
-        }
-
-        return headers;
     }
 }
 
