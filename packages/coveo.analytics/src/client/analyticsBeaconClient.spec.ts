@@ -8,11 +8,11 @@ test('AnalyticsBeaconClient: can send an event', async t => {
     const baseUrl = "https://bloup.com";
     const token = '👛';
     const currentVisitorId = 'hereiam';
-    const eventType = '🥔';
+    const eventType: EventType = EventType.custom;
 
     const client = new AnalyticsBeaconClient(baseUrl, token, { currentVisitorId });
 
-    await client.sendEvent(eventType as EventType, {
+    await client.sendEvent(eventType, {
         'wow': 'ok'
     });
 

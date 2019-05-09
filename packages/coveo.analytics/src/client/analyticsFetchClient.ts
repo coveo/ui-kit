@@ -1,10 +1,9 @@
 import { AnalyticsRequestClient } from './analyticsRequestClient';
 import {
     AnyEventResponse,
-    EventBaseRequest,
     EventType,
-    ViewEventRequest
-    } from '../events';
+    IRequestPayload
+} from '../events';
 
 export interface ClientOptions {
     token?: string;
@@ -23,7 +22,7 @@ export class AnalyticsFetchClient implements AnalyticsRequestClient {
         private visitorIdProvider: VisitorIdProvider) {
     }
 
-    public async sendEvent(eventType: EventType, payload: any): Promise<AnyEventResponse> {
+    public async sendEvent(eventType: EventType, payload: IRequestPayload): Promise<AnyEventResponse> {
         const response = await fetch(`${this.baseUrl}/analytics/${eventType}`, {
             method: 'POST',
             headers: this.getHeaders(),

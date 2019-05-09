@@ -1,3 +1,5 @@
+export type IRequestPayload = Record<string, any>;
+
 export enum EventType {
     search = 'search',
     click = 'click',

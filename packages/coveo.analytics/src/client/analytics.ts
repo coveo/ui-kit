@@ -13,8 +13,9 @@ import {
     SearchEventResponse,
     ViewEventRequest,
     ViewEventResponse,
-    VisitResponse
-    } from '../events';
+    VisitResponse,
+    IRequestPayload
+} from '../events';
 import { HistoryStore } from '../history';
 import { VisitorIdProvider } from './analyticsRequestClient';
 
@@ -31,8 +32,6 @@ export interface ClientOptions {
     endpoint: string;
     version: string;
 }
-
-export type IRequestPayload = Record<string, any>;
 
 export interface AnalyticsClient {
     sendEvent(eventType: string, payload: any): Promise<AnyEventResponse | void>;
@@ -118,20 +117,24 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
     }
 
     private flushBufferWithBeacon(): void {
-        while (this.bufferedRequests.length > 0) {
+        while (this.hasPendingRequests()) {
             const { eventType, payload } = this.bufferedRequests.pop() as BufferedRequest;
             this.analyticsBeaconClient.sendEvent(eventType, payload);
         }
     }
 
     private async sendFromBufferWithFetch(): Promise<AnyEventResponse | void> {
-        if (this.bufferedRequests.length > 0) {
+        if (this.hasPendingRequests()) {
             const popped = this.bufferedRequests.pop();
             if (popped) {
                 const { eventType, payload } = popped;
                 return this.analyticsFetchClient.sendEvent(eventType, payload);
             }
         }
+    }
+
+    private hasPendingRequests(): boolean {
+        return this.bufferedRequests.length > 0;
     }
 
     async sendSearchEvent(request: SearchEventRequest): Promise<SearchEventResponse | void> {
