@@ -24,8 +24,8 @@ export const Endpoints = {
 
 export interface ClientOptions {
     token: string;
-    endpoint?: string;
-    version?: string;
+    endpoint: string;
+    version: string;
 }
 
 export enum EventType {
@@ -34,6 +34,8 @@ export enum EventType {
     custom = 'custom',
     view = 'view'
 }
+
+export type IRequestPayload = Record<string, any>;
 
 export interface AnalyticsClient {
     sendEvent(eventType: string, payload: any): Promise<AnyEventResponse>;
@@ -46,21 +48,36 @@ export interface AnalyticsClient {
 }
 
 export class CoveoAnalyticsClient implements AnalyticsClient {
-    private endpoint: string;
-    private token: string;
-    private version: string;
+    private get defaultOptions(): ClientOptions {
+        return {
+            endpoint: Endpoints.default,
+            token: '',
+            version: Version
+        };
+    }
 
-    constructor(opts: ClientOptions) {
-        if (typeof opts === 'undefined') {
+    private options: ClientOptions;
+
+    constructor(opts: Partial<ClientOptions>) {
+        if (!opts) {
             throw new Error('You have to pass options to this constructor');
         }
 
-        this.endpoint = opts.endpoint || Endpoints.default;
-        this.token = opts.token;
-        this.version = opts.version || Version;
+        this.options = {
+            ...this.defaultOptions,
+            ...opts
+        };
+        this.assertTokenIsDefined();
     }
 
-    async sendEvent(eventType: EventType, payload: any): Promise<AnyEventResponse> {
+    private assertTokenIsDefined() {
+        const { token } = this.options;
+        if (!token) {
+            throw new Error('You have to pass at least a token to this constructor');
+        }
+    }
+
+    async sendEvent(eventType: EventType, payload: IRequestPayload): Promise<AnyEventResponse> {
         if (eventType === 'view') {
             this.addPageViewToHistory(payload.contentIdValue);
         }
@@ -101,15 +118,15 @@ export class CoveoAnalyticsClient implements AnalyticsClient {
 
     async getVisit(): Promise<VisitResponse> {
         const response = await fetch(`${this.getRestEndpoint()}/analytics/visit`);
-        return await response.json();
+        return response.json();
     }
 
     async getHealth(): Promise<HealthResponse> {
         const response = await fetch(`${this.getRestEndpoint()}/analytics/monitoring/health`);
-        return await response.json();
+        return response.json();
     }
 
-    private augmentPayloadForTypeOfEvent(eventType: EventType, payload: any) {
+    private augmentPayloadForTypeOfEvent(eventType: EventType, payload: IRequestPayload): IRequestPayload {
         const baseDefaultValues: EventBaseRequest = {
             language: document.documentElement.lang,
             userAgent: navigator.userAgent
@@ -130,7 +147,7 @@ export class CoveoAnalyticsClient implements AnalyticsClient {
         }
     }
 
-    private removeEmptyPayloadValues(payload: any) {
+    private removeEmptyPayloadValues(payload: IRequestPayload): IRequestPayload {
         return Object.keys(payload)
             .filter(key => !!payload[key])
             .reduce((newPayload, key) => ({
@@ -139,7 +156,7 @@ export class CoveoAnalyticsClient implements AnalyticsClient {
             }), {});
     }
 
-    private addPageViewToHistory(pageViewValue: string) {
+    private addPageViewToHistory(pageViewValue: string): void {
         const store = new HistoryStore();
         const historyElement = {
             name: 'PageView',
@@ -149,18 +166,17 @@ export class CoveoAnalyticsClient implements AnalyticsClient {
         store.addElement(historyElement);
     }
 
-    protected getRestEndpoint(): string {
-        return `${this.endpoint}/rest/${this.version}`;
+    private getRestEndpoint(): string {
+        const { endpoint, version } = this.options;
+        return `${endpoint}/rest/${version}`;
     }
 
-    protected getHeaders(): any {
-        var headers: any = {
+    private getHeaders(): Record<string, string> {
+        const { token } = this.options;
+        return {
+            'Authorization': `Bearer ${token}`,
             'Content-Type': `application/json`
         };
-        if (this.token) {
-            headers['Authorization'] = `Bearer ${this.token}`;
-        }
-        return headers;
     }
 }
 
