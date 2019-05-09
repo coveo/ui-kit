@@ -28,9 +28,11 @@ export const Endpoints = {
 
 export interface ClientOptions {
     token: string;
-    endpoint?: string;
-    version?: string;
+    endpoint: string;
+    version: string;
 }
+
+export type IRequestPayload = Record<string, any>;
 
 export interface AnalyticsClient {
     sendEvent(eventType: string, payload: any): Promise<AnyEventResponse | void>;
@@ -49,29 +51,35 @@ interface BufferedRequest {
 }
 
 export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider {
+    private get defaultOptions(): ClientOptions {
+        return {
+            endpoint: Endpoints.default,
+            token: '',
+            version: Version
+        };
+    }
+
     private visitorId: string;
     private analyticsBeaconClient: AnalyticsBeaconClient;
     private analyticsFetchClient: AnalyticsFetchClient;
-    private baseUrl: string;
     private bufferedRequests: BufferedRequest[];
+    private options: ClientOptions;
 
-    constructor(opts: ClientOptions) {
-        if (typeof opts === 'undefined') {
+    constructor(opts: Partial<ClientOptions>) {
+        if (!opts) {
             throw new Error('You have to pass options to this constructor');
         }
 
-        const {
-            token,
-            endpoint,
-            version
-        } = {
-            endpoint: Endpoints.default,
-            version: Version,
+        this.options = {
+            ...this.defaultOptions,
             ...opts
         };
 
+        const {
+            token,
+        } = this.options;
+
         this.visitorId = '';
-        this.baseUrl = `${endpoint}/rest/${version}`;
         this.bufferedRequests = [];
 
         this.analyticsBeaconClient = new AnalyticsBeaconClient(this.baseUrl, token, this);
@@ -87,7 +95,7 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
         this.visitorId = visitorId;
     }
 
-    async sendEvent(eventType: EventType, payload: any): Promise<AnyEventResponse | void> {
+    async sendEvent(eventType: EventType, payload: IRequestPayload): Promise<AnyEventResponse | void> {
         if (eventType === 'view') {
             this.addPageViewToHistory(payload.contentIdValue);
         }
@@ -185,13 +193,18 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
         }
     }
 
-    private removeEmptyPayloadValues(payload: any) {
+    private removeEmptyPayloadValues(payload: IRequestPayload): IRequestPayload {
         return Object.keys(payload)
             .filter(key => !!payload[key])
             .reduce((newPayload, key) => ({
                 ...newPayload,
                 [key]: payload[key]
             }), {});
+    }
+
+    private get baseUrl(): string {
+        const { version, endpoint } = this.options;
+        return `${endpoint}/rest/${version}`;
     }
 }
 
