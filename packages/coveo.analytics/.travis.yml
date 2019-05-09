@@ -13,7 +13,7 @@ script:
 - npm run coveralls
 after_success:
 - mkdir deploy
-- cp dist/coveoua.js dist/coveoua.js.map deploy
+- cp dist/coveoua.js dist/coveoua.js.map deploy/$PACKAGE_JSON_MAJOR_MINOR_VERSION
 deploy:
 - provider: npm
   skip_cleanup: true
@@ -35,6 +35,7 @@ deploy:
   acl: public_read
   on:
     tags: true
+    condition: "$TRAVIS_TAG != latest"
     repo: coveo/coveo.analytics.js
 - provider: s3
   skip_cleanup: true
@@ -48,7 +49,7 @@ deploy:
   on:
     tags: true
     condition: "$TRAVIS_TAG = latest"
-    repo: coveo/coveo.analytics.js/$PACKAGE_JSON_MAJOR_MINOR_VERSION
+    repo: coveo/coveo.analytics.js
 notifications:
   email:
     on_success: never
