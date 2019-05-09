@@ -10,7 +10,12 @@ test('AnalyticsBeaconClient: can send an event', async t => {
     const currentVisitorId = 'hereiam';
     const eventType: EventType = EventType.custom;
 
-    const client = new AnalyticsBeaconClient(baseUrl, token, { currentVisitorId });
+    const client = new AnalyticsBeaconClient({ baseUrl,
+        token,
+        visitorIdProvider: {
+            currentVisitorId
+        }
+    });
 
     await client.sendEvent(eventType, {
         'wow': 'ok'
