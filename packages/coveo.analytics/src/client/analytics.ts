@@ -81,8 +81,13 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
         this.visitorId = '';
         this.bufferedRequests = [];
 
-        this.analyticsBeaconClient = new AnalyticsBeaconClient(this.baseUrl, token, this);
-        this.analyticsFetchClient = new AnalyticsFetchClient(this.baseUrl, token, this);
+        const clientsOptions = {
+            baseUrl: this.baseUrl,
+            token,
+            visitorIdProvider: this
+        };
+        this.analyticsBeaconClient = new AnalyticsBeaconClient(clientsOptions);
+        this.analyticsFetchClient = new AnalyticsFetchClient(clientsOptions);
         window.addEventListener('beforeunload', () => this.flushBufferWithBeacon());
     }
 
@@ -124,12 +129,10 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
     }
 
     private async sendFromBufferWithFetch(): Promise<AnyEventResponse | void> {
-        if (this.hasPendingRequests()) {
-            const popped = this.bufferedRequests.pop();
-            if (popped) {
-                const { eventType, payload } = popped;
-                return this.analyticsFetchClient.sendEvent(eventType, payload);
-            }
+        const popped = this.bufferedRequests.pop();
+        if (popped) {
+            const { eventType, payload } = popped;
+            return this.analyticsFetchClient.sendEvent(eventType, payload);
         }
     }
 

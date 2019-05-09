@@ -1,29 +1,27 @@
-import { AnalyticsRequestClient } from './analyticsRequestClient';
+import { AnalyticsRequestClient, VisitorIdProvider } from './analyticsRequestClient';
 import {
     AnyEventResponse,
     EventType,
     IRequestPayload
 } from '../events';
 
-export interface ClientOptions {
-    token?: string;
-    endpoint?: string;
-    version?: string;
-    visitorId?: string;
-}
-
-export interface VisitorIdProvider {
-    currentVisitorId: string;
+export interface IAnalyticsFetchClientOptions {
+    baseUrl: string;
+    token: string;
+    visitorIdProvider: VisitorIdProvider;
 }
 
 export class AnalyticsFetchClient implements AnalyticsRequestClient {
-    constructor(private baseUrl: string,
-        private token: string,
-        private visitorIdProvider: VisitorIdProvider) {
+    constructor(private opts: IAnalyticsFetchClientOptions) {
     }
 
     public async sendEvent(eventType: EventType, payload: IRequestPayload): Promise<AnyEventResponse> {
-        const response = await fetch(`${this.baseUrl}/analytics/${eventType}`, {
+        const {
+            baseUrl,
+            visitorIdProvider
+        } = this.opts;
+
+        const response = await fetch(`${baseUrl}/analytics/${eventType}`, {
             method: 'POST',
             headers: this.getHeaders(),
             mode: 'cors',
@@ -32,7 +30,7 @@ export class AnalyticsFetchClient implements AnalyticsRequestClient {
         });
         if (response.ok) {
             const visit = await response.json() as AnyEventResponse;
-            this.visitorIdProvider.currentVisitorId = visit.visitorId;
+            visitorIdProvider.currentVisitorId = visit.visitorId;
             return visit;
         } else {
             console.error(`An error has occured when sending the "${eventType}" event.`, response, payload);
@@ -40,13 +38,13 @@ export class AnalyticsFetchClient implements AnalyticsRequestClient {
         }
     }
 
-    protected getHeaders(): any {
-        var headers: any = {
+    private getHeaders(): Record<string, string> {
+        const {
+            token
+        } = this.opts;
+        return {
+            'Authorization': `Bearer ${token}`,
             'Content-Type': `application/json`
         };
-        if (this.token) {
-            headers['Authorization'] = `Bearer ${this.token}`;
-        }
-        return headers;
     }
 }
