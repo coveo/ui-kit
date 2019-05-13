@@ -1,10 +1,9 @@
+import { AnyEventResponse, EventType } from '../events';
 import {
     AnalyticsClient,
     CoveoAnalyticsClient,
     Endpoints,
-    EventType
-    } from '../client/analytics';
-import { AnyEventResponse } from '../events';
+} from '../client/analytics';
 
 /** @deprecated */
 export type DeprecatedEventType = 'pageview';
@@ -37,8 +36,8 @@ export class CoveoUA {
         }
     }
 
-    send(event: EventType | DeprecatedEventType, payload: any = {}): Promise<AnyEventResponse> {
-        if (!this.client) {
+    send(event: EventType | DeprecatedEventType, payload: any = {}): Promise<AnyEventResponse | void> {
+        if (typeof this.client == 'undefined') {
             throw new Error(`You must call init before sending an event`);
         }
 

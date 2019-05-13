@@ -1,3 +1,5 @@
+import { AnalyticsBeaconClient as AnalyticsBeaconClient } from './analyticsBeaconClient';
+import { AnalyticsFetchClient } from './analyticsFetchClient';
 import {
     AnyEventResponse,
     ClickEventRequest,
@@ -5,14 +7,17 @@ import {
     CustomEventRequest,
     CustomEventResponse,
     EventBaseRequest,
+    EventType,
     HealthResponse,
     SearchEventRequest,
     SearchEventResponse,
     ViewEventRequest,
     ViewEventResponse,
-    VisitResponse
-    } from '../events';
+    VisitResponse,
+    IRequestPayload
+} from '../events';
 import { HistoryStore } from '../history';
+import { VisitorIdProvider } from './analyticsRequestClient';
 
 export const Version = 'v15';
 
@@ -28,26 +33,23 @@ export interface ClientOptions {
     version: string;
 }
 
-export enum EventType {
-    search = 'search',
-    click = 'click',
-    custom = 'custom',
-    view = 'view'
-}
-
-export type IRequestPayload = Record<string, any>;
-
 export interface AnalyticsClient {
-    sendEvent(eventType: string, payload: any): Promise<AnyEventResponse>;
-    sendSearchEvent(request: SearchEventRequest): Promise<SearchEventResponse>;
-    sendClickEvent(request: ClickEventRequest): Promise<ClickEventResponse>;
-    sendCustomEvent(request: CustomEventRequest): Promise<CustomEventResponse>;
-    sendViewEvent(request: ViewEventRequest): Promise<ViewEventResponse>;
+    sendEvent(eventType: string, payload: any): Promise<AnyEventResponse | void>;
+    sendSearchEvent(request: SearchEventRequest): Promise<SearchEventResponse | void>;
+    sendClickEvent(request: ClickEventRequest): Promise<ClickEventResponse | void>;
+    sendCustomEvent(request: CustomEventRequest): Promise<CustomEventResponse | void>;
+    sendViewEvent(request: ViewEventRequest): Promise<ViewEventResponse | void>;
     getVisit(): Promise<VisitResponse>;
     getHealth(): Promise<HealthResponse>;
 }
 
-export class CoveoAnalyticsClient implements AnalyticsClient {
+interface BufferedRequest {
+    eventType: EventType;
+    payload: any;
+    handled: boolean;
+}
+
+export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider {
     private get defaultOptions(): ClientOptions {
         return {
             endpoint: Endpoints.default,
@@ -56,6 +58,10 @@ export class CoveoAnalyticsClient implements AnalyticsClient {
         };
     }
 
+    private visitorId: string;
+    private analyticsBeaconClient: AnalyticsBeaconClient;
+    private analyticsFetchClient: AnalyticsFetchClient;
+    private bufferedRequests: BufferedRequest[];
     private options: ClientOptions;
 
     constructor(opts: Partial<ClientOptions>) {
@@ -67,66 +73,112 @@ export class CoveoAnalyticsClient implements AnalyticsClient {
             ...this.defaultOptions,
             ...opts
         };
-        this.assertTokenIsDefined();
+
+        const {
+            token,
+        } = this.options;
+
+        this.visitorId = '';
+        this.bufferedRequests = [];
+
+        const clientsOptions = {
+            baseUrl: this.baseUrl,
+            token,
+            visitorIdProvider: this
+        };
+        this.analyticsBeaconClient = new AnalyticsBeaconClient(clientsOptions);
+        this.analyticsFetchClient = new AnalyticsFetchClient(clientsOptions);
+        window.addEventListener('beforeunload', () => this.flushBufferWithBeacon());
     }
 
-    private assertTokenIsDefined() {
-        const { token } = this.options;
-        if (!token) {
-            throw new Error('You have to pass at least a token to this constructor');
-        }
+    get currentVisitorId() {
+        return this.visitorId;
     }
 
-    async sendEvent(eventType: EventType, payload: IRequestPayload): Promise<AnyEventResponse> {
+    set currentVisitorId(visitorId: string) {
+        this.visitorId = visitorId;
+    }
+
+    async sendEvent(eventType: EventType, payload: IRequestPayload): Promise<AnyEventResponse | void> {
         if (eventType === 'view') {
             this.addPageViewToHistory(payload.contentIdValue);
         }
 
-        const augmentedPayload = this.augmentPayloadForTypeOfEvent(eventType, payload);
-        const cleanedPayload = this.removeEmptyPayloadValues(augmentedPayload);
+        const payloadForEvent = this.getPayloadForTypeOfEvent(eventType, payload);
+        const cleanedPayload = this.removeEmptyPayloadValues(payloadForEvent);
 
-        const response = await fetch(`${this.getRestEndpoint()}/analytics/${eventType}`, {
-            method: 'POST',
-            headers: this.getHeaders(),
-            mode: 'cors',
-            body: JSON.stringify(cleanedPayload),
-            credentials: 'include'
+        this.bufferedRequests.push({
+            eventType,
+            payload: cleanedPayload,
+            handled: false
         });
-        if (response.ok) {
-            return await response.json() as AnyEventResponse;
-        } else {
-            console.error(`An error has occured when sending the "${eventType}" event.`, response, payload);
-            throw new Error(`An error has occurred when sending the "${eventType}" event. Check the console logs for more details.`);
+
+        await this.deferExecution();
+        return await this.sendFromBufferWithFetch();
+    }
+
+    private deferExecution(): Promise<void> {
+        return new Promise(resolve => setTimeout(resolve, 0));
+    }
+
+    private flushBufferWithBeacon(): void {
+        while (this.hasPendingRequests()) {
+            const { eventType, payload } = this.bufferedRequests.pop() as BufferedRequest;
+            this.analyticsBeaconClient.sendEvent(eventType, payload);
         }
     }
 
-    async sendSearchEvent(request: SearchEventRequest): Promise<SearchEventResponse> {
+    private async sendFromBufferWithFetch(): Promise<AnyEventResponse | void> {
+        const popped = this.bufferedRequests.pop();
+        if (popped) {
+            const { eventType, payload } = popped;
+            return this.analyticsFetchClient.sendEvent(eventType, payload);
+        }
+    }
+
+    private hasPendingRequests(): boolean {
+        return this.bufferedRequests.length > 0;
+    }
+
+    async sendSearchEvent(request: SearchEventRequest): Promise<SearchEventResponse | void> {
         return this.sendEvent(EventType.search, request);
     }
 
-    async sendClickEvent(request: ClickEventRequest): Promise<ClickEventResponse> {
+    async sendClickEvent(request: ClickEventRequest): Promise<ClickEventResponse | void> {
         return this.sendEvent(EventType.click, request);
     }
 
-    async sendCustomEvent(request: CustomEventRequest): Promise<CustomEventResponse> {
+    async sendCustomEvent(request: CustomEventRequest): Promise<CustomEventResponse | void> {
         return this.sendEvent(EventType.custom, request);
     }
 
-    async sendViewEvent(request: ViewEventRequest): Promise<ViewEventResponse> {
+    async sendViewEvent(request: ViewEventRequest): Promise<ViewEventResponse | void> {
         return this.sendEvent(EventType.view, request);
     }
 
     async getVisit(): Promise<VisitResponse> {
-        const response = await fetch(`${this.getRestEndpoint()}/analytics/visit`);
-        return response.json();
+        const response = await fetch(`${this.baseUrl}/analytics/visit`);
+        const visit = await response.json() as VisitResponse;
+        this.visitorId = visit.visitorId;
+        return visit;
     }
 
     async getHealth(): Promise<HealthResponse> {
-        const response = await fetch(`${this.getRestEndpoint()}/analytics/monitoring/health`);
-        return response.json();
+        const response = await fetch(`${this.baseUrl}/analytics/monitoring/health`);
+        return await response.json() as HealthResponse;
     }
 
-    private augmentPayloadForTypeOfEvent(eventType: EventType, payload: IRequestPayload): IRequestPayload {
+    private addPageViewToHistory(pageViewValue: string) {
+        const store = new HistoryStore();
+        const historyElement = {
+            name: 'PageView',
+            value: pageViewValue,
+            time: JSON.stringify(new Date()),
+        };
+        store.addElement(historyElement);
+    }
+
+    private getPayloadForTypeOfEvent(eventType: EventType, payload: any) {
         const baseDefaultValues: EventBaseRequest = {
             language: document.documentElement.lang,
             userAgent: navigator.userAgent
@@ -156,27 +208,9 @@ export class CoveoAnalyticsClient implements AnalyticsClient {
             }), {});
     }
 
-    private addPageViewToHistory(pageViewValue: string): void {
-        const store = new HistoryStore();
-        const historyElement = {
-            name: 'PageView',
-            value: pageViewValue,
-            time: JSON.stringify(new Date()),
-        };
-        store.addElement(historyElement);
-    }
-
-    private getRestEndpoint(): string {
-        const { endpoint, version } = this.options;
+    private get baseUrl(): string {
+        const { version, endpoint } = this.options;
         return `${endpoint}/rest/${version}`;
-    }
-
-    private getHeaders(): Record<string, string> {
-        const { token } = this.options;
-        return {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': `application/json`
-        };
     }
 }
 

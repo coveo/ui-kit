@@ -1,3 +1,12 @@
+export type IRequestPayload = Record<string, any>;
+
+export enum EventType {
+    search = 'search',
+    click = 'click',
+    custom = 'custom',
+    view = 'view'
+}
+
 export interface SearchDocument {
     documentUri: string;
     documentUriHash: string;
