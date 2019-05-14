@@ -13,7 +13,7 @@ script:
 - npm run coveralls
 after_success:
 - mkdir deploy
-- cp dist/coveoua.js dist/coveoua.js.map deploy/$PACKAGE_JSON_MAJOR_MINOR_VERSION
+- cp dist/coveoua.js dist/coveoua.js.map deploy
 deploy:
 - provider: npm
   skip_cleanup: true
@@ -44,7 +44,7 @@ deploy:
     secure: "qN1Z9yhBkm+tgD4rxzQUQnqpS+agoODn4gazlJ3Rh0WVGe5D91vuMy2Yo6rso1M3A540GLQsamue5wyDsX08Kvi0qREU0LhEB7XKHHP1kToprY8n1uRlmNMQs3tECiHyoyMWZwifaF+N92fqZkmIyaJ2NNdwPcroMEEbVTNRTQ+YC37EawtFlsvD3f1h75ja7G2UyD0PVdg5dNe2qJqpuBN7mviAAqge6ffCqSHHwlTa08QoflazFBFrGBiO/kesV1Xm22ZOR9rc+sH2Q226Bv6EEDzcOgrxR0v4forEbJvFldBPtkReZPfuC7rzJaep1AoLyqYMy/7t2TDyQH3EFHBQkTJwkF1n/jOiWX8KRAvjO1NUxsWc5ZhWRGGJCL7ZYcona8Dw2OLfUdF4lvgPWGki0ooswG6D4gqNl1xmZOvIZWajBu7QffOLkn+Ra1JpbAtZzS4YxYmNn9CehSze/nJIwLnvS6DQ5fKQGz9on0Pb13+Xy474UGr20pEOwGTlmTUzXnEk3dtIaRF+VX36yjpKxjCDOMbpMNa7+6K5GlTX+ncJz46Wg2Xn1GPmEWgL3JBHNUCkaFfX3r4G9UorRQ1HiVJ6poNkbxjT8z4uq71ZKspbzVUVzwOqq/vZza6t5seLScVIaEzPPzJicJixPtQaZmzS0/yogpbet8W/FbA="
   bucket: coveo-public-content
   local-dir: deploy
-  upload-dir: coveo.analytics.js
+  upload-dir: coveo.analytics.js/$PACKAGE_JSON_MAJOR_MINOR_VERSION
   acl: public_read
   on:
     tags: true
