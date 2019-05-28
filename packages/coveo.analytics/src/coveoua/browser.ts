@@ -33,7 +33,7 @@ global.coveoanalytics = analytics;
 // so we will execute the actions in the `q` array
 if (coveoua.q) {
     const isInitEvent = (args: [string, any[]]) => args[0] === 'init';
-    const isNotInitEvent = (args: [string, any[]]) => isInitEvent(args);
+    const isNotInitEvent = (args: [string, any[]]) => !isInitEvent(args);
     const processEvent = (args: [string, any[]]) => handleOneAnalyticsEvent.apply(void 0, args);
     coveoua.q
         .filter(isInitEvent)
