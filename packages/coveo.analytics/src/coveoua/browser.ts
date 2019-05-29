@@ -32,15 +32,9 @@ global.coveoanalytics = analytics;
 // On normal execution this library should be loaded after the snippet execution
 // so we will execute the actions in the `q` array
 if (coveoua.q) {
-    const isInitEvent = (args: [string, any[]]) => args[0] === 'init';
-    const isNotInitEvent = (args: [string, any[]]) => !isInitEvent(args);
-    const processEvent = (args: [string, any[]]) => handleOneAnalyticsEvent.apply(void 0, args);
-    coveoua.q
-        .filter(isInitEvent)
-        .forEach(processEvent);
-    coveoua.q
-        .filter(isNotInitEvent)
-        .forEach(processEvent);
+    const initEvents = coveoua.q.filter((args: [string, any[]]) => args[0] === 'init');
+    const otherEvents = coveoua.q.filter((args: [string, any[]]) => args[0] !== 'init');
+    [...initEvents, ...otherEvents].forEach((args: [string, any[]]) => handleOneAnalyticsEvent.apply(void 0, args));
 }
 
 export default coveoua;
