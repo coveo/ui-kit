@@ -36,7 +36,7 @@
     "express": "^4.17.1",
     "isomorphic-fetch": "2.2.1",
     "jsdom": "^15.0.0",
-    "nyc": "^14.1.1",
+    "nyc": "^13.3.0",
     "sinon": "1.17.6",
     "ts-loader": "^4.5.0",
     "tslint": "^5.9.1",
