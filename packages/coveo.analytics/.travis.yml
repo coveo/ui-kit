@@ -1,7 +1,9 @@
 sudo: false
 language: node_js
 node_js:
-- lts/*
+- stable
+env:
+  - NODE_ENV=test
 before_install:
 - source read.version.sh
 - echo $PACKAGE_JSON_MAJOR_MINOR_VERSION
