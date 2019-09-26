@@ -36,6 +36,22 @@ export class CoveoUA {
         }
     }
 
+    // init initializes a new client intended to be used with a proxy that injects the access token.
+    // @param endpoint is the endpoint of your proxy.
+    initForProxy(endpoint: string): void {
+        if (!endpoint) {
+            throw new Error(`You must pass your endpoint when you call 'initForProxy'`);
+        }
+
+        if (typeof endpoint !== 'string') {
+            throw new Error(`You must pass a string as the endpoint parameter when you call 'initForProxy'`);
+        }
+
+        this.client = new CoveoAnalyticsClient({
+            endpoint: endpoint
+        });
+    }
+
     send(event: EventType | DeprecatedEventType, payload: any = {}): Promise<AnyEventResponse | void> {
         if (typeof this.client == 'undefined') {
             throw new Error(`You must call init before sending an event`);

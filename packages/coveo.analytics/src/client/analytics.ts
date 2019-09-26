@@ -28,7 +28,7 @@ export const Endpoints = {
 };
 
 export interface ClientOptions {
-    token: string;
+    token?: string;
     endpoint: string;
     version: string;
 }

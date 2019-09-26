@@ -51,6 +51,11 @@ test('SimpleAnalytics: can send any event to the endpoint', t => {
     handleOneAnalyticsEvent('send', someRandomEventName);
 });
 
+test('SimpleAnalytics: can send an event with a proxy endpoint', t => {
+    handleOneAnalyticsEvent('initForProxy', `http://localhost:${server.address().port}`);
+    handleOneAnalyticsEvent('send', someRandomEventName);
+});
+
 test('SimpleAnalytics: can initialize with analyticsClient', t => {
     handleOneAnalyticsEvent('init', analyticsClientMock);
 });
