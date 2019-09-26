@@ -3,7 +3,7 @@ import { EventType, IRequestPayload } from '../events';
 
 export interface IAnalyticsBeaconClientOptions {
     baseUrl: string;
-    token: string;
+    token?: string;
     visitorIdProvider: VisitorIdProvider;
 }
 
@@ -24,8 +24,8 @@ export class AnalyticsBeaconClient implements AnalyticsRequestClient {
         const parsedRequestDataKey = this.getParsedRequestDataKey(eventType);
         const parsedRequestData = `${parsedRequestDataKey}=${encodeURIComponent(JSON.stringify(payload))}`;
         const visitorId = visitorIdProvider.currentVisitorId;
-        const queryParams = `?access_token=${token}${visitorId ? `&visitorId=${visitorId}` : ''}`;
-        const url = `${baseUrl}/analytics/${eventType}${queryParams}`;
+        const paramsFragments = [(token ? `access_token=${token}` : ''), (visitorId ? `visitorId=${visitorId}` : '')].filter(p => !!p).join('&');
+        const url = `${baseUrl}/analytics/${eventType}?${paramsFragments}`;
         // tslint:disable-next-line: no-console
         console.log(`Sending beacon for "${eventType}" with: `, JSON.stringify(payload));
         navigator.sendBeacon(url, new Blob([parsedRequestData], { type: 'application/x-www-form-urlencoded' }));

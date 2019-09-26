@@ -7,7 +7,7 @@ import {
 
 export interface IAnalyticsFetchClientOptions {
     baseUrl: string;
-    token: string;
+    token?: string;
     visitorIdProvider: VisitorIdProvider;
 }
 
@@ -43,7 +43,7 @@ export class AnalyticsFetchClient implements AnalyticsRequestClient {
             token
         } = this.opts;
         return {
-            'Authorization': `Bearer ${token}`,
+            ...(token ? { 'Authorization': `Bearer ${token}`} : {}),
             'Content-Type': `application/json`
         };
     }
