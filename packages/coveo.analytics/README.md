@@ -46,7 +46,7 @@ Initially, the `pageview` events data will be used exclusively by the Coveo Reve
   coveoua('init', 'YOUR_API_KEY'); // Replace YOUR_API_KEY with your real key
   coveoua('send', 'view', {
     contentIdKey: '@permanentid',
-    contentIdValue: 'PERMANENT_ID_VALUE_UNIQUE_PER_PAGE',
+    contentIdValue: 'PERMANENT_ID_VALUE', // Replace PERMANENT_ID_VALUE with a unique value from your page. 
     contentType: 'product' // Optional
     // ... more information ...
   });
