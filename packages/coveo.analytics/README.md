@@ -8,9 +8,8 @@
 
 ## Coveo Usage Analytic JavaScript client
 
-This project provides 3 ways to interact with the the Coveo Usage Analytics service.
+This project provides 2 ways to interact with the the Coveo Usage Analytics service.
 
-- A JavaScript Node.js client
 - A JavaScript browser client
 - A code snippet to add in websites pages
 
@@ -42,13 +41,13 @@ Initially, the `pageview` events data will be used exclusively by the Coveo Reve
   a='coveoua';c[a]=c[a]||function(){(c[a].q=c[a].q|| []).push(arguments)};
   c[a].t=Date.now();u=o.createElement(v);u.async=1;u.src=e;
   O=o.getElementsByTagName(v)[0];O.parentNode.insertBefore(u,O)
-  })(window,document,'script','https://static.cloud.coveo.com/coveo.analytics.js/coveoua.js')
+  })(window,document,'script','https://static.cloud.coveo.com/coveo.analytics.js/1.0/coveoua.js')
   
-  coveoua('init','YOUR_API_KEY'); // Replace YOUR_API_KEY with your real key
-  coveoua('send','pageview', {
-    contentIdKey: '@sysurihash',
-    contentIdValue: 'somehash3125091',
-    contentType: 'value for contentType' // Optional
+  coveoua('init', 'YOUR_API_KEY'); // Replace YOUR_API_KEY with your real key
+  coveoua('send', 'view', {
+    contentIdKey: '@permanentid',
+    contentIdValue: 'PERMANENT_ID_VALUE', // Replace PERMANENT_ID_VALUE with a unique value from your page. 
+    contentType: 'product' // Optional
     // ... more information ...
   });
   </script>
@@ -83,9 +82,9 @@ Add the code snippet to all your website pages.
   a='coveoua';c[a]=c[a]||function(){(c[a].q=c[a].q|| []).push(arguments)};
   c[a].t=Date.now();u=o.createElement(v);u.async=1;u.src=e;
   O=o.getElementsByTagName(v)[0];O.parentNode.insertBefore(u,O)
-  })(window,document,'script','https://static.cloud.coveo.com/coveo.analytics.js/coveoua.js')
+  })(window,document,'script','https://static.cloud.coveo.com/coveo.analytics.js/1.0/coveoua.js')
   
-  coveoua('init','YOUR_API_KEY'); // Replace YOUR_API_KEY with your real key
+  coveoua('init', 'YOUR_API_KEY'); // Replace YOUR_API_KEY with your real key
   </script>
   ```
   
