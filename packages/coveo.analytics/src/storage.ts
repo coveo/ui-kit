@@ -26,14 +26,15 @@ export function getAvailableStorage(): WebStorage {
 }
 
 export class CookieStorage implements WebStorage {
+    static prefix = 'coveo_';
     getItem(key: string): string | null {
-        return Cookie.get(key);
+        return Cookie.get(`${CookieStorage.prefix}${key}`);
     }
     removeItem(key: string) {
-        Cookie.erase(key);
+        Cookie.erase(`${CookieStorage.prefix}${key}`);
     }
     setItem(key: string, data: string): void {
-        Cookie.set(key, data);
+        Cookie.set(`${CookieStorage.prefix}${key}`, data);
     }
 }
 
