@@ -18,6 +18,8 @@ import {
 } from '../events';
 import { HistoryStore } from '../history';
 import { VisitorIdProvider } from './analyticsRequestClient';
+import { WebStorage, getAvailableStorage, CookieStorage } from '../storage';
+import { hasLocalStorage, hasCookieStorage } from '../detector';
 
 export const Version = 'v15';
 
@@ -59,6 +61,7 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
     }
 
     private visitorId: string;
+    private cookieStorage: WebStorage;
     private analyticsBeaconClient: AnalyticsBeaconClient;
     private analyticsFetchClient: AnalyticsFetchClient;
     private bufferedRequests: BufferedRequest[];
@@ -78,6 +81,7 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
             token,
         } = this.options;
 
+        this.cookieStorage = new CookieStorage();
         this.visitorId = '';
         this.bufferedRequests = [];
 
@@ -92,11 +96,17 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
     }
 
     get currentVisitorId() {
-        return this.visitorId;
+        return this.visitorId || (hasCookieStorage() && new CookieStorage().getItem('visitorId')) || (hasLocalStorage() && localStorage.getItem('visitorId')) || '';
     }
 
     set currentVisitorId(visitorId: string) {
         this.visitorId = visitorId;
+        if (hasCookieStorage()) {
+            new CookieStorage().setItem('visitorId', visitorId);
+        }
+        if (hasLocalStorage()) {
+            localStorage.setItem('visitorId', visitorId);
+        }
     }
 
     async sendEvent(eventType: EventType, payload: IRequestPayload): Promise<AnyEventResponse | void> {

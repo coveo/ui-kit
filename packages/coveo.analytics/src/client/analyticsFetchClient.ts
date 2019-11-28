@@ -21,7 +21,9 @@ export class AnalyticsFetchClient implements AnalyticsRequestClient {
             visitorIdProvider
         } = this.opts;
 
-        const response = await fetch(`${baseUrl}/analytics/${eventType}`, {
+        const visitorId = visitorIdProvider.currentVisitorId;
+
+        const response = await fetch(`${baseUrl}/analytics/${eventType}${visitorId ? `?visitor=${visitorId}` : ''}`, {
             method: 'POST',
             headers: this.getHeaders(),
             mode: 'cors',
