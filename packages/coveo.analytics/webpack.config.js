@@ -1,11 +1,14 @@
 const path = require('path');
 
 module.exports = {
-    entry: "./src/coveoua/browser.ts",
+    entry: {
+        coveoua: "./src/coveoua/browser.ts",
+        library: "./src/coveoua/library.ts"
+    },
     mode: "production",
     output: {
         path: path.resolve(__dirname, "./dist/"),
-        filename: "coveoua.js"
+        filename: "[name].js"
     },
     resolve: {
         extensions: ['.ts', '.tsx']

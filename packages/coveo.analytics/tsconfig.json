@@ -2,7 +2,7 @@
     "compilerOptions": {
         "module": "commonjs",
         "target": "es5",
-        "outDir": "dist",
+        "outDir": "definitions",
         "declaration": true,
         "noImplicitAny": true,
         "removeComments": true,

@@ -2,8 +2,9 @@
   "name": "coveo.analytics",
   "version": "1.0.0",
   "description": "📈 Coveo analytics client (node and browser compatible) ",
-  "main": "dist/index.js",
-  "browser": "dist/bundle.js",
+  "main": "dist/library.js",
+  "types": "dist/definitions/coveoua/library.d.ts",
+  "browser": "dist/coveoua.js",
   "scripts": {
     "lint": "tslint -s \"node_modules/tslint-loader/formatters/\" \"test/**/*.ts\" \"src/**/*.ts\"",
     "build": "webpack",
