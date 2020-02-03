@@ -1,11 +1,11 @@
 import { AnalyticsClientSendEventHook } from '../client/analytics';
-import { ViewEventRequest, EventType } from '../events';
+import { ViewEventRequest } from '../events';
 
 export const enhanceViewEvent: AnalyticsClientSendEventHook = (
     eventType,
     payload
 ) => {
-    return eventType === EventType.view
+    return eventType === 'view'
         ? ({
               location: window.location.toString(),
               referrer: document.referrer,
