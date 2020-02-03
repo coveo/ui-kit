@@ -11,7 +11,7 @@ module.exports = {
         filename: "[name].js"
     },
     resolve: {
-        extensions: ['.ts', '.tsx']
+        extensions: ['.ts', '.tsx', '.js']
     },
     devtool: "source-map",
     module: {
@@ -31,5 +31,8 @@ module.exports = {
             test: /\.ts$/,
             loader: 'ts-loader',
         }]
+    },
+    devServer: {
+        contentBase: [path.join(__dirname, "public"), path.join(__dirname, "dist")]
     }
 }
