@@ -4,13 +4,16 @@ export enum EventType {
     search = 'search',
     click = 'click',
     custom = 'custom',
-    view = 'view'
+    view = 'view',
+    collect = 'collect'
 }
 
 export interface SearchDocument {
     documentUri: string;
     documentUriHash: string;
 }
+
+export type SendEventArguments = [EventType, ...any[]];
 
 export interface EventBaseRequest {
     language?: string;

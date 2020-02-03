@@ -42,7 +42,7 @@ test('Analytics: can post a view event', t => {
         res.status(200).send(JSON.stringify(response));
     });
 
-    const client = new analytics.Client({
+    const client = new analytics.CoveoAnalyticsClient({
         token: 'token',
         endpoint: `http://localhost:${server.address().port}`,
         version: A_VERSION

@@ -1,18 +1,20 @@
-import { AnyEventResponse, EventType } from '../events';
+import { AnyEventResponse, SendEventArguments } from '../events';
 import {
     AnalyticsClient,
     CoveoAnalyticsClient,
     Endpoints,
 } from '../client/analytics';
-
-/** @deprecated */
-export type DeprecatedEventType = 'pageview';
+import { Plugins } from './plugins';
+import { EC } from '../plugins/ec';
+import { Params } from './params';
 
 export type AvailableActions = keyof(CoveoUA);
 
 // CoveoUA mimics the GoogleAnalytics API.
 export class CoveoUA {
     private client?: AnalyticsClient;
+    private plugins: Plugins = new Plugins();
+    private params: Params = new Params();
 
     // init initializes a new SimpleAPI client.
     // @param token is your coveo access_token / api_key / ...
@@ -31,6 +33,10 @@ export class CoveoUA {
             });
         } else if (typeof token === 'object' && typeof token.sendEvent !== 'undefined') {
             this.client = token;
+        }
+
+        if (this.client) {
+            this.plugins.register('ec', new EC({client: this.client, params: this.params}));
         } else {
             throw new Error(`You must pass either your token or a valid object when you call 'init'`);
         }
@@ -52,35 +58,13 @@ export class CoveoUA {
         });
     }
 
-    send(event: EventType | DeprecatedEventType, payload: any = {}): Promise<AnyEventResponse | void> {
+    send(...[event, payload]: SendEventArguments): Promise<AnyEventResponse | void> {
         if (typeof this.client == 'undefined') {
             throw new Error(`You must call init before sending an event`);
         }
 
-        if (event !== 'pageview') {
-            return this.client.sendEvent(event, payload);
-        } else {
-            const {
-                contentLanguage,
-                contentIdKey,
-                contentIdValue,
-                contentType,
-                anonymous,
-                customData,
-                ...payloadRest
-            } = payload;
+        return this.client.sendEvent(event, payload);
 
-            return this.client.sendViewEvent({
-                contentIdKey,
-                contentIdValue,
-                contentType,
-                anonymous,
-                customData: {
-                    ...customData,
-                    ...payloadRest
-                }
-            });
-        }
     }
 
     onLoad(callback: Function) {
@@ -90,23 +74,26 @@ export class CoveoUA {
 
         callback();
     }
+
+    callPlugin(pluginName: string, fn: string, ...args: any): void {
+        this.plugins.execute(pluginName, fn, ...args);
+    }
 }
-/** @deprecated */
-export const SimpleAPI = CoveoUA;
 
 export const coveoua = new CoveoUA();
 
-export const handleOneAnalyticsEvent = (action: string, ...params: any[]): any => {
-    const actionFunction = (<any>coveoua)[action];
-    if (actionFunction) {
+export const handleOneAnalyticsEvent = (command: string, ...params: any[]): any => {
+    const [, trackerName, pluginName, fn ] = /^(?:(\w+)\.)?(?:(\w+):)?(\w+)$/.exec(command)!;
+
+    const actionFunction = (<any>coveoua)[fn];
+    if (pluginName && fn) {
+        return coveoua.callPlugin(pluginName, fn, ...params);
+    } else if (actionFunction) {
         return actionFunction.apply(coveoua, params);
     } else {
         const actions: AvailableActions[] = ['init', 'send', 'onLoad'];
-        throw new Error(`The action "${action}" does not exist. Available actions: ${actions.join(', ')}.`);
+        throw new Error(`The action "${command}" does not exist. Available actions: ${actions.join(', ')}.`);
     }
 };
-
-/** @deprecated */
-export const SimpleAnalytics = handleOneAnalyticsEvent;
 
 export default handleOneAnalyticsEvent;
