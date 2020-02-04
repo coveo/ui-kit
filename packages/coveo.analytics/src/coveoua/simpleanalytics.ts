@@ -1,4 +1,4 @@
-import { AnyEventResponse, SendEventArguments } from '../events';
+import { AnyEventResponse, SendEventArguments, VariableArgumentsPayload } from '../events';
 import {
     AnalyticsClient,
     CoveoAnalyticsClient,
@@ -58,12 +58,12 @@ export class CoveoUA {
         });
     }
 
-    send(...[event, payload]: SendEventArguments): Promise<AnyEventResponse | void> {
+    send(...[event, ...payload]: SendEventArguments): Promise<AnyEventResponse | void> {
         if (typeof this.client == 'undefined') {
             throw new Error(`You must call init before sending an event`);
         }
 
-        return this.client.sendEvent(event, payload);
+        return this.client.sendEvent(event, ...payload as VariableArgumentsPayload);
 
     }
 

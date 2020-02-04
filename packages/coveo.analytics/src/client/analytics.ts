@@ -14,8 +14,8 @@ import {
     ViewEventResponse,
     VisitResponse,
     IRequestPayload,
+    VariableArgumentsPayload,
 } from '../events';
-import { HistoryStore } from '../history';
 import { VisitorIdProvider } from './analyticsRequestClient';
 import { WebStorage, CookieStorage } from '../storage';
 import { hasLocalStorage, hasCookieStorage } from '../detector';
@@ -36,10 +36,14 @@ export interface ClientOptions {
     version: string;
 }
 
-export type AnalyticsClientSendEventHook = <T>(eventType: string, payload: any) => T;
+export type AnalyticsClientSendEventHook = <TResult>(eventType: string, payload: any) => TResult;
+export type EventTypeConfig = {
+    newEventType: EventType;
+    variableLengthArgumentsNames?: string[];
+};
 
 export interface AnalyticsClient {
-    sendEvent(eventType: string, payload: any): Promise<AnyEventResponse | void>;
+    sendEvent(eventType: string, ...payload: VariableArgumentsPayload): Promise<AnyEventResponse | void>;
     sendSearchEvent(request: SearchEventRequest): Promise<SearchEventResponse | void>;
     sendClickEvent(request: ClickEventRequest): Promise<ClickEventResponse | void>;
     sendCustomEvent(request: CustomEventRequest): Promise<CustomEventResponse | void>;
@@ -47,7 +51,7 @@ export interface AnalyticsClient {
     getVisit(): Promise<VisitResponse>;
     getHealth(): Promise<HealthResponse>;
     registerBeforeSendEventHook(hook: AnalyticsClientSendEventHook): void;
-    addEventTypeMapping(eventType: string, newEventType: string): void;
+    addEventTypeMapping(eventType: string, eventConfig: EventTypeConfig): void;
 }
 
 interface BufferedRequest {
@@ -71,7 +75,7 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
     private analyticsFetchClient: AnalyticsFetchClient;
     private bufferedRequests: BufferedRequest[];
     private beforeSendHooks: AnalyticsClientSendEventHook[];
-    private eventTypeMapping: {[name: string]: EventType};
+    private eventTypeMapping: {[name: string]: EventTypeConfig};
     private options: ClientOptions;
 
     constructor(opts: Partial<ClientOptions>) {
@@ -121,15 +125,20 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
         }
     }
 
-    async sendEvent(eventType: EventType, payload: any): Promise<AnyEventResponse | void> {
-        if (eventType === EventType.view) {
-            this.addPageViewToHistory(payload.contentIdValue);
-        }
+    async sendEvent(eventType: EventType, ...payload: VariableArgumentsPayload): Promise<AnyEventResponse | void> {
+        const {
+            newEventType: eventTypeToSend = eventType,
+            variableLengthArgumentsNames = []
+        } = this.eventTypeMapping[eventType] || {};
 
-        const payloadForEvent = this.beforeSendHooks.reduce((newPayload, current) => current(eventType, newPayload), payload);
-        const cleanedPayload = this.removeEmptyPayloadValues(payloadForEvent);
+        const payloadToProcess = variableLengthArgumentsNames.length > 0
+            ? this.parseVariableArgumentsPayload(variableLengthArgumentsNames, payload)
+            : payload[0];
+
+        const processedPayload = this.beforeSendHooks.reduce((newPayload, current) => current(eventType, newPayload), payloadToProcess);
+        const cleanedPayload = this.removeEmptyPayloadValues(processedPayload);
         this.bufferedRequests.push({
-            eventType: this.eventTypeMapping[eventType] || eventType,
+            eventType: eventTypeToSend,
             payload: cleanedPayload,
             handled: false
         });
@@ -193,18 +202,25 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
         this.beforeSendHooks.push(hook);
     }
 
-    addEventTypeMapping(eventType: string, newEventType: EventType): void {
-        this.eventTypeMapping[eventType] = newEventType;
+    addEventTypeMapping(eventType: string, eventConfig: EventTypeConfig): void {
+        this.eventTypeMapping[eventType] = eventConfig;
     }
 
-    private addPageViewToHistory(pageViewValue: string) {
-        const store = new HistoryStore();
-        const historyElement = {
-            name: 'PageView',
-            value: pageViewValue,
-            time: JSON.stringify(new Date()),
-        };
-        store.addElement(historyElement);
+    private parseVariableArgumentsPayload(fieldsOrder: string[], payload: VariableArgumentsPayload) {
+        const parsedArguments: {[name: string]: any} = {};
+        for (let i = 0, length = payload.length; i < length; i++) {
+            const currentArgument = payload[i];
+            if (typeof(currentArgument) === 'string') {
+                parsedArguments[fieldsOrder[i]] = currentArgument;
+            } else if (typeof(currentArgument) === 'object') {
+                // If the argument is an object, it is considered the last argument of the chain. Its values should be returned as-is.
+                return {
+                    ...parsedArguments,
+                    ...currentArgument,
+                };
+            }
+        }
+        return parsedArguments;
     }
 
     private removeEmptyPayloadValues(payload: IRequestPayload): IRequestPayload {

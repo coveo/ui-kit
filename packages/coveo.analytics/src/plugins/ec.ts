@@ -16,26 +16,42 @@ const productKeysMapping: {[name: string]: string} = {
 };
 
 export const ECPluginEventTypes = {
-    pageview: 'pageview'
+    pageview: 'pageview',
+    event: 'event'
 };
 
 export class EC {
     private client: AnalyticsClient;
     private params: Params;
-    constructor({  client, params }: { client: AnalyticsClient;  params: Params; }) {
+    constructor({ client, params }: { client: AnalyticsClient;  params: Params; }) {
         this.client = client;
         this.params = params;
 
-        this.client.addEventTypeMapping(ECPluginEventTypes.pageview, EventType.collect);
-        this.client.registerBeforeSendEventHook((eventType, payload) => {
+        this.addHooksForPageView();
+        this.addHooksForEvent();
+    }
+
+    addProduct(product: Product) {
+        this.params.products = [...this.params.products, product];
+    }
+
+    private addHooksForPageView() {
+        this.client.addEventTypeMapping(ECPluginEventTypes.pageview, {
+            newEventType: EventType.collect,
+            variableLengthArgumentsNames: ['page']
+        });
+        this.client.registerBeforeSendEventHook((eventType, ...[payload]) => {
             return eventType === ECPluginEventTypes.pageview
                 ? this.enhancePayload(payload)
                 : payload;
         });
     }
 
-    addProduct(product: Product) {
-        this.params.products = [...this.params.products, product];
+    private addHooksForEvent() {
+        this.client.addEventTypeMapping(ECPluginEventTypes.event, {
+            newEventType: EventType.collect,
+            variableLengthArgumentsNames: ['eventCategory', 'eventAction', 'eventLabel', 'eventValue']
+        });
     }
 
     private enhancePayload(payload: any) {
