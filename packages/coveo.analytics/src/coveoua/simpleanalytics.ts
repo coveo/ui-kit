@@ -6,7 +6,6 @@ import {
 } from '../client/analytics';
 import { Plugins } from './plugins';
 import { EC } from '../plugins/ec';
-import { Params } from './params';
 
 export type AvailableActions = keyof(CoveoUA);
 
@@ -14,7 +13,6 @@ export type AvailableActions = keyof(CoveoUA);
 export class CoveoUA {
     private client?: AnalyticsClient;
     private plugins: Plugins = new Plugins();
-    private params: Params = new Params();
 
     // init initializes a new SimpleAPI client.
     // @param token is your coveo access_token / api_key / ...
@@ -36,7 +34,7 @@ export class CoveoUA {
         }
 
         if (this.client) {
-            this.plugins.register('ec', new EC({client: this.client, params: this.params}));
+            this.plugins.register('ec', new EC({ client: this.client }));
         } else {
             throw new Error(`You must pass either your token or a valid object when you call 'init'`);
         }
