@@ -64,38 +64,6 @@ test('SimpleAnalytics: can send pageview with analyticsClient', t => {
     handleOneAnalyticsEvent('send', 'pageview');
 });
 
-test('SimpleAnalytics: can send pageview with content attributes', t => {
-    let spy = sinon.spy(analyticsClientMock, 'sendViewEvent');
-
-    handleOneAnalyticsEvent('init', analyticsClientMock);
-    handleOneAnalyticsEvent('send', 'pageview', {
-        contentIdKey: 'key',
-        contentIdValue: 'value',
-        contentType: 'type'
-    });
-
-    t.is(spy.getCall(0).args[0]['contentIdKey'], 'key');
-    t.is(spy.getCall(0).args[0]['contentIdValue'], 'value');
-    t.is(spy.getCall(0).args[0]['contentType'], 'type');
-});
-
-test('SimpleAnalytics: can send pageview without sending content attributes in the customdata', t => {
-    let spy = sinon.spy(analyticsClientMock, 'sendViewEvent');
-
-    handleOneAnalyticsEvent('init', analyticsClientMock);
-    handleOneAnalyticsEvent('send', 'pageview', {
-        contentIdKey: 'key',
-        contentIdValue: 'value',
-        contentType: 'type',
-        otherData: 'data'
-    });
-
-    t.is(spy.getCall(0).args[0]['customData']['contentIdKey'], undefined);
-    t.is(spy.getCall(0).args[0]['customData']['contentIdValue'], undefined);
-    t.is(spy.getCall(0).args[0]['customData']['contentType'], undefined);
-    t.is(spy.getCall(0).args[0]['customData']['otherData'], 'data');
-});
-
 test('SimpleAnalytics: can execute callback with onLoad event', t => {
     var numberOfTimesExecuted = 0;
     var callback = () => numberOfTimesExecuted++;

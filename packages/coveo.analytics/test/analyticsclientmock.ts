@@ -35,6 +35,12 @@ export class AnalyticsClientMock implements AnalyticsClient {
     getHealth(): Promise<HealthResponse> {
         return Promise.resolve({} as HealthResponse);
     }
+    registerBeforeSendEventHook() {
+
+    }
+    addEventTypeMapping() {
+
+    }
 }
 
 export default AnalyticsClientMock;

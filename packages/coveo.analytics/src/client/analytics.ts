@@ -6,7 +6,6 @@ import {
     ClickEventResponse,
     CustomEventRequest,
     CustomEventResponse,
-    EventBaseRequest,
     EventType,
     HealthResponse,
     SearchEventRequest,
@@ -14,12 +13,14 @@ import {
     ViewEventRequest,
     ViewEventResponse,
     VisitResponse,
-    IRequestPayload
+    IRequestPayload,
 } from '../events';
 import { HistoryStore } from '../history';
 import { VisitorIdProvider } from './analyticsRequestClient';
-import { WebStorage, getAvailableStorage, CookieStorage } from '../storage';
+import { WebStorage, CookieStorage } from '../storage';
 import { hasLocalStorage, hasCookieStorage } from '../detector';
+import { addDefaultValues } from '../hook/addDefaultValues';
+import { enhanceViewEvent } from '../hook/enhanceViewEvent';
 
 export const Version = 'v15';
 
@@ -35,6 +36,8 @@ export interface ClientOptions {
     version: string;
 }
 
+export type AnalyticsClientSendEventHook = <T>(eventType: string, payload: any) => T;
+
 export interface AnalyticsClient {
     sendEvent(eventType: string, payload: any): Promise<AnyEventResponse | void>;
     sendSearchEvent(request: SearchEventRequest): Promise<SearchEventResponse | void>;
@@ -43,6 +46,8 @@ export interface AnalyticsClient {
     sendViewEvent(request: ViewEventRequest): Promise<ViewEventResponse | void>;
     getVisit(): Promise<VisitResponse>;
     getHealth(): Promise<HealthResponse>;
+    registerBeforeSendEventHook(hook: AnalyticsClientSendEventHook): void;
+    addEventTypeMapping(eventType: string, newEventType: string): void;
 }
 
 interface BufferedRequest {
@@ -65,6 +70,8 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
     private analyticsBeaconClient: AnalyticsBeaconClient;
     private analyticsFetchClient: AnalyticsFetchClient;
     private bufferedRequests: BufferedRequest[];
+    private beforeSendHooks: AnalyticsClientSendEventHook[];
+    private eventTypeMapping: {[name: string]: EventType};
     private options: ClientOptions;
 
     constructor(opts: Partial<ClientOptions>) {
@@ -84,6 +91,11 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
         this.cookieStorage = new CookieStorage();
         this.visitorId = '';
         this.bufferedRequests = [];
+        this.beforeSendHooks = [
+            enhanceViewEvent,
+            addDefaultValues,
+        ];
+        this.eventTypeMapping = {};
 
         const clientsOptions = {
             baseUrl: this.baseUrl,
@@ -96,29 +108,28 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
     }
 
     get currentVisitorId() {
-        return this.visitorId || (hasCookieStorage() && new CookieStorage().getItem('visitorId')) || (hasLocalStorage() && localStorage.getItem('visitorId')) || '';
+        return this.visitorId || (hasCookieStorage() && this.cookieStorage.getItem('visitorId')) || (hasLocalStorage() && localStorage.getItem('visitorId')) || '';
     }
 
     set currentVisitorId(visitorId: string) {
         this.visitorId = visitorId;
         if (hasCookieStorage()) {
-            new CookieStorage().setItem('visitorId', visitorId);
+            this.cookieStorage.setItem('visitorId', visitorId);
         }
         if (hasLocalStorage()) {
             localStorage.setItem('visitorId', visitorId);
         }
     }
 
-    async sendEvent(eventType: EventType, payload: IRequestPayload): Promise<AnyEventResponse | void> {
-        if (eventType === 'view') {
+    async sendEvent(eventType: EventType, payload: any): Promise<AnyEventResponse | void> {
+        if (eventType === EventType.view) {
             this.addPageViewToHistory(payload.contentIdValue);
         }
 
-        const payloadForEvent = this.getPayloadForTypeOfEvent(eventType, payload);
+        const payloadForEvent = this.beforeSendHooks.reduce((newPayload, current) => current(eventType, newPayload), payload);
         const cleanedPayload = this.removeEmptyPayloadValues(payloadForEvent);
-
         this.bufferedRequests.push({
-            eventType,
+            eventType: this.eventTypeMapping[eventType] || eventType,
             payload: cleanedPayload,
             handled: false
         });
@@ -178,6 +189,14 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
         return await response.json() as HealthResponse;
     }
 
+    registerBeforeSendEventHook(hook: AnalyticsClientSendEventHook): void {
+        this.beforeSendHooks.push(hook);
+    }
+
+    addEventTypeMapping(eventType: string, newEventType: EventType): void {
+        this.eventTypeMapping[eventType] = newEventType;
+    }
+
     private addPageViewToHistory(pageViewValue: string) {
         const store = new HistoryStore();
         const historyElement = {
@@ -186,27 +205,6 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
             time: JSON.stringify(new Date()),
         };
         store.addElement(historyElement);
-    }
-
-    private getPayloadForTypeOfEvent(eventType: EventType, payload: any) {
-        const baseDefaultValues: EventBaseRequest = {
-            language: document.documentElement.lang,
-            userAgent: navigator.userAgent
-        };
-        if (eventType === 'view') {
-            return {
-                location: window.location.toString(),
-                referrer: document.referrer,
-                title: document.title,
-                ...baseDefaultValues,
-                ...payload
-            } as ViewEventRequest;
-        } else {
-            return {
-                ...baseDefaultValues,
-                ...payload
-            };
-        }
     }
 
     private removeEmptyPayloadValues(payload: IRequestPayload): IRequestPayload {
@@ -223,8 +221,5 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
         return `${endpoint}/rest/${version}`;
     }
 }
-
-/** @deprecated Use CoveoAnalyticsClient instead. */
-export const Client = CoveoAnalyticsClient;
 
 export default CoveoAnalyticsClient;
