@@ -14,6 +14,7 @@ export interface SearchDocument {
 }
 
 export type SendEventArguments = [EventType, ...any[]];
+export type VariableArgumentsPayload = [any] | [string, any] | [string, string, any] | [string, string, string, any] | [string, string, string, string, any];
 
 export interface EventBaseRequest {
     language?: string;

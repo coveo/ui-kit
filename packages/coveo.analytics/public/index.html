@@ -9,5 +9,6 @@ O=o.getElementsByTagName(v)[0];O.parentNode.insertBefore(u,O)
 // (eg: an API key which has the rights to write into Coveo UsageAnalytics)
 coveoua('init','YOUR-TOKEN', 'https://usageanalyticsdev.coveo.com');
 coveoua('ec:addProduct', {name: "wow", id: 'something', brand: 'brand', custom: 'ok'});
-coveoua('send', 'pageview');
+coveoua('send', "pageview");
+coveoua('send', "event", "eventCategory", "eventAction", "eventLabel", "eventValue", {name: "wow", id: 'something', brand: 'brand', custom: 'ok'});
 </script>
