@@ -40,6 +40,7 @@ const contextInformationMapping: {[key in keyof DefaultContextInformation]: stri
     clientId: 'cid',
     encoding: 'de',
     location: 'dl',
+    referrer: 'dr',
     screenColor: 'sd',
     screenResolution: 'sr',
     title: 'dt',
