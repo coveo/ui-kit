@@ -128,9 +128,9 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
         }
     }
 
-    async sendEvent(eventType: EventType, ...payload: VariableArgumentsPayload): Promise<AnyEventResponse | void> {
+    async sendEvent(eventType: EventType | string, ...payload: VariableArgumentsPayload): Promise<AnyEventResponse | void> {
         const {
-            newEventType: eventTypeToSend = eventType,
+            newEventType: eventTypeToSend = eventType as EventType,
             variableLengthArgumentsNames = [],
             addDefaultContextInformation = false
         } = this.eventTypeMapping[eventType] || {};
@@ -245,16 +245,19 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
     }
 
     get defaultContextInformation() {
+        const documentContext = {
+            referrer: document.referrer,
+            title: document.title,
+            encoding: document.characterSet,
+        };
         return {
             clientId: this.visitorId,
             location: `${location.protocol}//${location.hostname}${location.pathname.indexOf('/') === 0 ? location.pathname : `/${location.pathname}`}${location.search}`,
-            referrer: document.referrer,
             screenResolution: `${screen.width}x${screen.height}`,
             screenColor: `${screen.colorDepth}-bit`,
-            encoding: document.characterSet,
             language: navigator.language,
-            title: document.title,
             userAgent: navigator.userAgent,
+            ...documentContext
         };
     }
 }
