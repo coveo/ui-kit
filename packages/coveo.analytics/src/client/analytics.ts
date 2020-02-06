@@ -250,13 +250,22 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
             title: document.title,
             encoding: document.characterSet,
         };
-        return {
-            clientId: this.visitorId,
+        const locationContext = {
             location: `${location.protocol}//${location.hostname}${location.pathname.indexOf('/') === 0 ? location.pathname : `/${location.pathname}`}${location.search}`,
+        };
+        const screenContext = {
             screenResolution: `${screen.width}x${screen.height}`,
             screenColor: `${screen.colorDepth}-bit`,
+        };
+        const navigatorContext = {
             language: navigator.language,
             userAgent: navigator.userAgent,
+        };
+        return {
+            clientId: this.visitorId,
+            ...screenContext,
+            ...navigatorContext,
+            ...locationContext,
             ...documentContext
         };
     }

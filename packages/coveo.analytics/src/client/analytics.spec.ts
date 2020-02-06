@@ -43,7 +43,7 @@ describe('Analytics', () => {
 
         expect(fetchMock.called()).toBe(true);
 
-        const [path, { headers: headers, body }] = fetchMock.lastCall();
+        const [path, { headers, body }] = fetchMock.lastCall();
         expect(path).toBe(endpointForEventType(EventType.view));
 
         const h = headers as Record<string, string>;
@@ -105,7 +105,7 @@ describe('Analytics', () => {
 
     describe('with event type mapping with variable arguments', () => {
         const specialEventType = '🌟special🌟';
-        const argumentNames = ['1️⃣', '2️⃣', '3️⃣'];
+        const argumentNames = ['eventCategory', 'eventAction', 'eventLabel', 'eventValue'];
         beforeEach(() => {
             mockFetchRequestForEventType(EventType.custom);
             client.addEventTypeMapping(specialEventType, {
@@ -125,38 +125,38 @@ describe('Analytics', () => {
         });
 
         it('should properly parse 1 argument', async () => {
-            await client.sendEvent(specialEventType, 'something');
+            await client.sendEvent(specialEventType, 'Video');
 
             const [, { body }] = fetchMock.lastCall();
 
             const parsedBody = JSON.parse(body.toString());
             expect(parsedBody).toEqual({
-                [argumentNames[0]]: 'something'
+                [argumentNames[0]]: 'Video'
             });
         });
 
         it('should properly parse all arguments', async () => {
-            await client.sendEvent(specialEventType, 'something', 'another', '🌈');
+            await client.sendEvent(specialEventType, 'Video', 'play', 'campaign');
 
             const [, { body }] = fetchMock.lastCall();
 
             const parsedBody = JSON.parse(body.toString());
             expect(parsedBody).toEqual({
-                [argumentNames[0]]: 'something',
-                [argumentNames[1]]: 'another',
-                [argumentNames[2]]: '🌈'
+                [argumentNames[0]]: 'Video',
+                [argumentNames[1]]: 'play',
+                [argumentNames[2]]: 'campaign'
             });
         });
 
         it('should properly handle a finished object argument', async () => {
-            await client.sendEvent(specialEventType, 'something', { mergethis: 'plz' });
+            await client.sendEvent(specialEventType, 'Video', { nonInteraction: true });
 
             const [, { body }] = fetchMock.lastCall();
 
             const parsedBody = JSON.parse(body.toString());
             expect(parsedBody).toEqual({
-                [argumentNames[0]]: 'something',
-                mergethis: 'plz'
+                [argumentNames[0]]: 'Video',
+                nonInteraction: true
             });
         });
     });

@@ -1,5 +1,5 @@
 module.exports = {
-    roots: ['<rootDir>/src'],
+    roots: ['<rootDir>/src', '<rootDir>/functional'],
     preset: 'ts-jest',
     moduleNameMapper: {
         '@App/(.*)': '<rootDir>/src/$1',

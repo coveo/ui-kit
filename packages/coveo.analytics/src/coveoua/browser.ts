@@ -15,14 +15,14 @@ if (!(fetch instanceof Function)) {
 // CoveoUAGlobal is the interface for the global function which also has a
 // queue `q` of unexecuted parameters
 export interface CoveoUAGlobal {
-    (action: string, ...params: string[]): void;
+    (action: string, ...params: any[]): void;
     // CoveoAnalytics.q is the queue of last called actions before lib was included
     q?: [string, any[]][];
 }
 
 // On load of this script we get the global object `coveoua` (which would be)
 // on `window` in a browser
-const coveoua: CoveoUAGlobal = global.coveoua || {};
+const coveoua: CoveoUAGlobal = global.coveoua || handleOneAnalyticsEvent;
 
 // Replace the quick shim with the real thing.
 global.coveoua = handleOneAnalyticsEvent;
