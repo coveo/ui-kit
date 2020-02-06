@@ -1,55 +1,42 @@
 import * as analytics from './analytics';
-import * as bodyParser from 'body-parser';
+import * as fetchMock from 'fetch-mock';
 import * as events from '../events';
-import * as express from 'express';
-import * as http from 'http';
-import test from 'ava';
 
-var app: express.Application = express();
-const server: http.Server = (<any>http).createServer(app).listen();
-app.set('port', server.address().port);
-app.use(bodyParser.json());
-const A_VERSION = 'v1337';
+describe('Analytics', () => {
+    const aToken = 'token';
+    const anEndpoint = 'http://bloup';
+    const A_VERSION = 'v1337';
 
-test('Analytics: can post a view event', t => {
-
+    const client = new analytics.CoveoAnalyticsClient({
+        token: aToken,
+        endpoint: anEndpoint,
+        version: A_VERSION
+    });
     const viewEvent: events.ViewEventRequest = { location: 'here', contentIdKey: 'key', contentIdValue: 'value', language: 'en' };
-    const response: events.ViewEventResponse = {
+    const viewEventResponse: events.ViewEventResponse = {
         visitId : '123',
         visitorId: '213'
     };
 
-    app.post(`/rest/${A_VERSION}/analytics/view`, (req: express.Request, res: express.Response) => {
-        if (req.header('authorization').indexOf('Bearer ') != 0) {
-            res.status(500).send(JSON.stringify({error: 'no auth token were provided'}));
-            return;
-        }
-        if (req.header('content-type').indexOf('application/json') != 0) {
-            res.status(500).send(JSON.stringify({error: 'you must provide content-type'}));
-            return;
-        }
+    it('should call fetch with the parameters', async () => {
+        const address = `${anEndpoint}/rest/${A_VERSION}/analytics/view`;
+        fetchMock.post(address, viewEventResponse);
 
-        if (req.body === undefined || req.body.length <= 0) {
-            res.status(500).send(JSON.stringify({error: 'no event were sent'}));
-            return;
-        }
+        const response = await client.sendViewEvent(viewEvent);
+        expect(response).toEqual(viewEventResponse);
 
-        t.is(req.body.location, viewEvent.location);
-        t.is(req.body.contentIdKey, viewEvent.contentIdKey);
-        t.is(req.body.contentIdValue, viewEvent.contentIdValue);
-        t.is(req.body.language, viewEvent.language);
+        expect(fetchMock.called()).toBe(true);
 
-        res.status(200).send(JSON.stringify(response));
-    });
+        const [path, params] = fetchMock.lastCall();
+        expect(path).toBe(address);
 
-    const client = new analytics.CoveoAnalyticsClient({
-        token: 'token',
-        endpoint: `http://localhost:${server.address().port}`,
-        version: A_VERSION
-    });
+        const headers = params.headers as Record<string, string>;
+        expect(headers['Authorization']).toBe(`Bearer ${aToken}`);
+        expect(headers['Content-Type']).toBe('application/json');
 
-    return client.sendViewEvent(viewEvent).then((res: events.ViewEventResponse) => {
-        t.is(res.visitId, response.visitId);
-        t.is(res.visitorId, response.visitorId);
+        expect(params.body).not.toBeUndefined();
+
+        const parsedBody = JSON.parse(params.body.toString());
+        expect(parsedBody).toMatchObject(viewEvent);
     });
 });

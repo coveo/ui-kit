@@ -3,7 +3,6 @@
     "compilerOptions": {
         "outDir": "dist_test",
         "declaration": false,
-        // Inline source map are required for coverage (nyc) to map correctly to good files.
         "sourceMap": false,
         "inlineSourceMap": true,
         "strict": false,
