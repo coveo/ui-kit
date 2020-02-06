@@ -61,7 +61,11 @@ export class CoveoUA {
             throw new Error(`You must call init before sending an event`);
         }
 
-        return this.client.sendEvent(event, ...payload as VariableArgumentsPayload);
+        if (!event) {
+            throw new Error(`You must provide an event type when calling "send".`);
+        }
+
+        return this.client.sendEvent(event.toLowerCase(), ...payload as VariableArgumentsPayload);
 
     }
 

@@ -1,4 +1,4 @@
-import { AnalyticsClient } from '../client/analytics';
+import { AnalyticsClient, DefaultContextInformation } from '../client/analytics';
 import { EventType } from '../events';
 
 // Based off: https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#enhanced-ecomm
@@ -14,16 +14,45 @@ const productKeysMapping: {[name: string]: string} = {
     coupon: 'cc'
 };
 
+const eventKeysMapping: {[name: string]: string} = {
+    eventCategory: 'ec',
+    eventAction: 'ea',
+    eventLabel: 'el',
+    eventValue: 'ev',
+};
+
 const productActionsKeysMapping: {[name: string]: string} = {
     action: 'pa',
     list: 'pal',
-    listSource: 'pls',
+    listSource: 'pls'
+};
+
+const transactionActionsKeysMappings: {[name: string]: string} = {
     id: 'ti',
     revenue: 'tr',
     tax: 'tt',
     shipping: 'ts',
     coupon: 'tcc',
     affiliation: 'ta',
+};
+
+const contextInformationMapping: {[key in keyof DefaultContextInformation]: string} = {
+    clientId: 'cid',
+    encoding: 'de',
+    location: 'dl',
+    referrer: 'dr',
+    screenColor: 'sd',
+    screenResolution: 'sr',
+    title: 'dt',
+    userAgent: 'ua',
+    language: 'ul'
+};
+
+const measurementProtocolKeysMapping: {[name: string]: string} = {
+    ...eventKeysMapping,
+    ...productActionsKeysMapping,
+    ...transactionActionsKeysMappings,
+    ...contextInformationMapping
 };
 
 export const ECPluginEventTypes = {
@@ -77,14 +106,16 @@ export class EC {
     private addHooksForPageView() {
         this.client.addEventTypeMapping(ECPluginEventTypes.pageview, {
             newEventType: EventType.collect,
-            variableLengthArgumentsNames: ['page']
+            variableLengthArgumentsNames: ['page'],
+            addDefaultContextInformation: true,
         });
     }
 
     private addHooksForEvent() {
         this.client.addEventTypeMapping(ECPluginEventTypes.event, {
             newEventType: EventType.collect,
-            variableLengthArgumentsNames: ['eventCategory', 'eventAction', 'eventLabel', 'eventValue']
+            variableLengthArgumentsNames: ['eventCategory', 'eventAction', 'eventLabel', 'eventValue'],
+            addDefaultContextInformation: true,
         });
     }
 
@@ -112,7 +143,7 @@ export class EC {
 
     private convertKeysToMeasurementProtocol(params: any) {
         return Object.keys(params).reduce((mappedKeys, key) => {
-            const newKey = productActionsKeysMapping[key] || key;
+            const newKey = measurementProtocolKeysMapping[key] || key;
             return {
                 ...mappedKeys,
                 [newKey]: params[key],

@@ -40,7 +40,10 @@ export type AnalyticsClientSendEventHook = <TResult>(eventType: string, payload:
 export type EventTypeConfig = {
     newEventType: EventType;
     variableLengthArgumentsNames?: string[];
+    addDefaultContextInformation?: boolean;
 };
+
+export type DefaultContextInformation = typeof CoveoAnalyticsClient.prototype.defaultContextInformation;
 
 export interface AnalyticsClient {
     sendEvent(eventType: string, ...payload: VariableArgumentsPayload): Promise<AnyEventResponse | void>;
@@ -128,14 +131,18 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
     async sendEvent(eventType: EventType, ...payload: VariableArgumentsPayload): Promise<AnyEventResponse | void> {
         const {
             newEventType: eventTypeToSend = eventType,
-            variableLengthArgumentsNames = []
+            variableLengthArgumentsNames = [],
+            addDefaultContextInformation = false
         } = this.eventTypeMapping[eventType] || {};
 
         const payloadToProcess = variableLengthArgumentsNames.length > 0
             ? this.parseVariableArgumentsPayload(variableLengthArgumentsNames, payload)
             : payload[0];
 
-        const processedPayload = this.beforeSendHooks.reduce((newPayload, current) => current(eventType, newPayload), payloadToProcess);
+        const processedPayload = this.beforeSendHooks.reduce((newPayload, current) => current(eventType, newPayload), {
+            ...(addDefaultContextInformation ? this.defaultContextInformation : {}),
+            ...payloadToProcess,
+        });
         const cleanedPayload = this.removeEmptyPayloadValues(processedPayload);
         this.bufferedRequests.push({
             eventType: eventTypeToSend,
@@ -235,6 +242,20 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
     private get baseUrl(): string {
         const { version, endpoint } = this.options;
         return `${endpoint}/rest/${version}`;
+    }
+
+    get defaultContextInformation() {
+        return {
+            clientId: this.visitorId,
+            location: `${location.protocol}//${location.hostname}${location.pathname.indexOf('/') === 0 ? location.pathname : `/${location.pathname}`}${location.search}`,
+            referrer: document.referrer,
+            screenResolution: `${screen.width}x${screen.height}`,
+            screenColor: `${screen.colorDepth}-bit`,
+            encoding: document.characterSet,
+            language: navigator.language,
+            title: document.title,
+            userAgent: navigator.userAgent,
+        };
     }
 }
 

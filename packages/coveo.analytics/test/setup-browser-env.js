@@ -5,6 +5,7 @@ const { window } = new JSDOM('<body></body>');
 global.window = window;
 global.document = window.document;
 global.navigator = window.navigator;
+global.screen = window.screen;
 global.fetch = require('isomorphic-fetch');
 global.location = window.location;
 global.Blob = window.Blob;
