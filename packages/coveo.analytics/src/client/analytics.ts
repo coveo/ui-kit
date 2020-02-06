@@ -159,7 +159,7 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
     }
 
     private async sendFromBufferWithFetch(): Promise<AnyEventResponse | void> {
-        const popped = this.bufferedRequests.pop();
+        const popped = this.bufferedRequests.shift();
         if (popped) {
             const { eventType, payload } = popped;
             return this.analyticsFetchClient.sendEvent(eventType, payload);

@@ -52,7 +52,7 @@ export class EC {
     }
 
     addProduct(product: Product) {
-        this.products = [...this.products, product];
+        this.products.push(product);
     }
 
     setAction(action: string, options?: any) {
