@@ -10,8 +10,8 @@ install:
 script:
 - npm run build
 - npm test
-- npm run coveralls
 after_success:
+- bash <(curl -s https://codecov.io/bash)
 - mkdir deploy
 - cp dist/coveoua.js dist/coveoua.js.map deploy
 deploy:

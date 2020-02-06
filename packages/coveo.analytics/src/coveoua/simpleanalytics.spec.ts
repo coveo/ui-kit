@@ -1,110 +1,128 @@
 import * as express from 'express';
 import * as http from 'http';
-import * as sinon from 'sinon';
-import AnalyticsClientMock from '../../test/analyticsclientmock';
-import test from 'ava';
 import { handleOneAnalyticsEvent } from './simpleanalytics';
-import { Version } from '../client/analytics';
+import { Version, AnalyticsClient } from '../client/analytics';
 
-const someRandomEventName = 'kawabunga';
+describe('simpleanalytics', () => {
+    const analyticsClientMock: jest.Mocked<AnalyticsClient> = {
+        sendEvent: jest.fn((eventType, payload) => Promise.resolve()),
+        sendClickEvent: jest.fn((request) => Promise.resolve()),
+        sendCustomEvent: jest.fn((request) => Promise.resolve()),
+        sendSearchEvent: jest.fn((request) => Promise.resolve()),
+        sendViewEvent: jest.fn((request) => Promise.resolve()),
+        getHealth: jest.fn(() => Promise.resolve({status: 'ok'})),
+        getVisit: jest.fn(() => Promise.resolve({id: 'a', visitorId: 'ok'})),
+    };
 
-const app: express.Application = express();
-app.post(`/rest/${Version}/analytics/view`, (req: express.Request, res: express.Response) => {
-    res.status(200).send('{}');
-});
-app.post(`/rest/${Version}/analytics/${someRandomEventName}`, (req: express.Request, res: express.Response) => {
-    res.status(200).send('{}');
-});
-const server: http.Server = (<any>http).createServer(app).listen();
-app.set('port', server.address().port);
+    const someRandomEventName = 'kawabunga';
 
-let analyticsClientMock: AnalyticsClientMock;
-
-test.beforeEach(() => {
-    analyticsClientMock = new AnalyticsClientMock();
-});
-
-test('SimpleAnalytics: can\'t call without initiating', t => {
-    t.throws(() => { handleOneAnalyticsEvent('send'); }, /init/);
-});
-
-test('SimpleAnalytics: can\'t init without token', t => {
-    t.throws(() => { handleOneAnalyticsEvent('init'); }, /token/);
-});
-
-test('SimpleAnalytics: can\'t init with invalid object', t => {
-    t.throws(() => { handleOneAnalyticsEvent('init', {}); }, /token/);
-});
-
-test('SimpleAnalytics: can send pageview', t => {
-    handleOneAnalyticsEvent('init', 'MYTOKEN', `http://localhost:${server.address().port}`);
-    handleOneAnalyticsEvent('send', 'pageview');
-});
-
-test('SimpleAnalytics: can send pageview with customdata', t => {
-    handleOneAnalyticsEvent('init', 'MYTOKEN', `http://localhost:${server.address().port}`);
-    handleOneAnalyticsEvent('send', 'pageview', { somedata: 'asd' });
-});
-
-test('SimpleAnalytics: can send any event to the endpoint', t => {
-    handleOneAnalyticsEvent('init', 'MYTOKEN', `http://localhost:${server.address().port}`);
-    handleOneAnalyticsEvent('send', someRandomEventName);
-});
-
-test('SimpleAnalytics: can send an event with a proxy endpoint', t => {
-    handleOneAnalyticsEvent('initForProxy', `http://localhost:${server.address().port}`);
-    handleOneAnalyticsEvent('send', someRandomEventName);
-});
-
-test('SimpleAnalytics: can initialize with analyticsClient', t => {
-    handleOneAnalyticsEvent('init', analyticsClientMock);
-});
-
-test('SimpleAnalytics: can send pageview with analyticsClient', t => {
-    handleOneAnalyticsEvent('send', 'pageview');
-});
-
-test('SimpleAnalytics: can send pageview with content attributes', t => {
-    let spy = sinon.spy(analyticsClientMock, 'sendViewEvent');
-
-    handleOneAnalyticsEvent('init', analyticsClientMock);
-    handleOneAnalyticsEvent('send', 'pageview', {
-        contentIdKey: 'key',
-        contentIdValue: 'value',
-        contentType: 'type'
+    beforeEach(() => {
+        jest.clearAllMocks();
     });
 
-    t.is(spy.getCall(0).args[0]['contentIdKey'], 'key');
-    t.is(spy.getCall(0).args[0]['contentIdValue'], 'value');
-    t.is(spy.getCall(0).args[0]['contentType'], 'type');
-});
-
-test('SimpleAnalytics: can send pageview without sending content attributes in the customdata', t => {
-    let spy = sinon.spy(analyticsClientMock, 'sendViewEvent');
-
-    handleOneAnalyticsEvent('init', analyticsClientMock);
-    handleOneAnalyticsEvent('send', 'pageview', {
-        contentIdKey: 'key',
-        contentIdValue: 'value',
-        contentType: 'type',
-        otherData: 'data'
+    it('throws when not initialized', () => {
+        expect(() => handleOneAnalyticsEvent('send')).toThrow();
     });
 
-    t.is(spy.getCall(0).args[0]['customData']['contentIdKey'], undefined);
-    t.is(spy.getCall(0).args[0]['customData']['contentIdValue'], undefined);
-    t.is(spy.getCall(0).args[0]['customData']['contentType'], undefined);
-    t.is(spy.getCall(0).args[0]['customData']['otherData'], 'data');
-});
+    it('throws when initializing without a token', () => {
+        expect(() => handleOneAnalyticsEvent('init', {})).toThrow();
+    });
 
-test('SimpleAnalytics: can execute callback with onLoad event', t => {
-    var numberOfTimesExecuted = 0;
-    var callback = () => numberOfTimesExecuted++;
+    describe('with fake server', () => {
+        let fakeServerAddress: string;
+        let server: http.Server;
 
-    handleOneAnalyticsEvent('onLoad', callback);
+        beforeAll((finished) => {
+            const app = express();
+            app.post(`/rest/${Version}/analytics/view`, (req: express.Request, res: express.Response) => {
+                res.status(200).send('{}');
+            });
+            app.post(`/rest/${Version}/analytics/${someRandomEventName}`, (req: express.Request, res: express.Response) => {
+                res.status(200).send('{}');
+            });
+            server = app.listen('9201', () => {
+                const {address, port} = server.address();
+                fakeServerAddress = `http://${address}:${port}`;
+                finished();
+            });
+        });
 
-    t.is(numberOfTimesExecuted, 1);
-});
+        afterAll(() => {
+            server.close();
+        });
 
-test('SimpleAnalytics: can\'t register an invalid onLoad event', t => {
-    t.throws(() => handleOneAnalyticsEvent('onLoad', undefined));
+        it('can send pageview', () => {
+            handleOneAnalyticsEvent('init', 'MYTOKEN', fakeServerAddress);
+            handleOneAnalyticsEvent('send', 'pageview');
+        });
+
+        it('can send pageview with customdata', () => {
+            handleOneAnalyticsEvent('init', 'MYTOKEN', fakeServerAddress);
+            handleOneAnalyticsEvent('send', 'pageview', { somedata: 'asd' });
+        });
+
+        it('can send any event to the endpoint', () => {
+            handleOneAnalyticsEvent('init', 'MYTOKEN', fakeServerAddress);
+            handleOneAnalyticsEvent('send', someRandomEventName);
+        });
+
+        it('can send an event with a proxy endpoint', () => {
+            handleOneAnalyticsEvent('initForProxy', fakeServerAddress);
+            handleOneAnalyticsEvent('send', someRandomEventName);
+        });
+    });
+
+    it('can initialize with analyticsClient', () => {
+        handleOneAnalyticsEvent('init', analyticsClientMock);
+    });
+
+    it('can send pageview with analyticsClient', () => {
+        handleOneAnalyticsEvent('init', analyticsClientMock);
+        handleOneAnalyticsEvent('send', 'pageview');
+    });
+
+    it('can send pageview with content attributes', () => {
+        handleOneAnalyticsEvent('init', analyticsClientMock);
+        handleOneAnalyticsEvent('send', 'pageview', {
+            contentIdKey: 'key',
+            contentIdValue: 'value',
+            contentType: 'type'
+        });
+
+        const eventCall = analyticsClientMock.sendViewEvent.mock.calls[0];
+
+        expect(eventCall[0].contentIdKey).toBe('key');
+        expect(eventCall[0].contentIdValue).toBe('value');
+        expect(eventCall[0].contentType).toBe('type');
+    });
+
+    test('can send pageview without sending content attributes in the customdata', () => {
+        handleOneAnalyticsEvent('init', analyticsClientMock);
+        handleOneAnalyticsEvent('send', 'pageview', {
+            contentIdKey: 'key',
+            contentIdValue: 'value',
+            contentType: 'type',
+            otherData: 'data'
+        });
+
+        const eventCall = analyticsClientMock.sendViewEvent.mock.calls[0];
+
+        expect(eventCall[0].customData.contentIdKey).toBeUndefined();
+        expect(eventCall[0].customData.contentIdValue).toBeUndefined();
+        expect(eventCall[0].customData.contentType).toBeUndefined();
+        expect(eventCall[0].customData.otherData).toBe('data');
+    });
+
+    test('can execute callback with onLoad event', () => {
+        var callback = jest.fn();
+
+        handleOneAnalyticsEvent('onLoad', callback);
+
+        expect(callback).toHaveBeenCalledTimes(1);
+    });
+
+    test('throws when registering an invalid onLoad event', () => {
+        expect(() => handleOneAnalyticsEvent('onLoad', undefined)).toThrow();
+    });
+
 });
