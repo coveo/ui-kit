@@ -1,130 +1,132 @@
 import * as history from './history';
-import * as sinon from 'sinon';
-import test from 'ava';
 import { MAX_NUMBER_OF_HISTORY_ELEMENTS } from './history';
-import { NullStorage, WebStorage } from './storage';
+import { WebStorage } from './storage';
 
-let storage: WebStorage;
-let storageMock: sinon.SinonMock;
-let historyStore: history.HistoryStore;
-let data: history.HistoryElement;
+describe('history', () => {
+    let storageMock: jest.Mocked<WebStorage>;
+    let historyStore: history.HistoryStore;
+    let data: history.HistoryElement;
 
-test.beforeEach(t => {
-    storage = new NullStorage();
-    storageMock = sinon.mock(storage);
-    historyStore = new history.HistoryStore(storage);
-    data = {
-        name: 'name',
-        value: 'value',
-        time: JSON.stringify(new Date())
-    };
-});
+    beforeEach(() => {
+        let storageData: any;
+        storageMock = {
+            getItem: jest.fn((key) => storageData),
+            setItem: jest.fn((key, data) => {storageData = data; }),
+            removeItem: jest.fn(),
+        };
+        historyStore = new history.HistoryStore(storageMock);
+        data = {
+            name: 'name',
+            value: 'value',
+            time: JSON.stringify(new Date())
+        };
+    });
 
-test.afterEach(t => {
-    storage = null;
-    storageMock = null;
-    historyStore = null;
-    data = null;
-});
-
-test('HistoryStore should be able to add an element in the history', t => {
-    storageMock.expects('setItem').once().withArgs(history.STORE_KEY, sinon.match(/"value":"value"/).and(sinon.match(/"time"/)).and(sinon.match(/"internalTime"/)));
-    historyStore.addElement(data);
-    storageMock.verify();
-});
-
-test('History store should trim query over > 75 char', t => {
-    data.value = '';
-    let newValue = '';
-    for (let i = 0; i < 100; i++) {
-        newValue += i.toString();
-    }
-    data.name = 'Query';
-    data.value = newValue;
-    storageMock.expects('setItem').once().withArgs(history.STORE_KEY, sinon.match(/"value":"01234[0-9]{70}"/));
-    historyStore.addElement(data);
-    storageMock.verify();
-});
-
-test('History store should not trim elements over 75 char if it\'s not a query', t => {
-    data.value = '';
-    let newValue = '';
-    for (let i = 0; i < 100; i++) {
-        newValue += i.toString();
-    }
-    data.name = 'Not A Query';
-    data.value = newValue;
-    storageMock.expects('setItem').once().withArgs(history.STORE_KEY, sinon.match(/"value":"01234[0-9]{185}"/));
-    historyStore.addElement(data);
-    storageMock.verify();
-});
-
-test('History store should not keep more then MAX_ELEMENTS', t => {
-    storageMock.expects('setItem').once().withArgs(history.STORE_KEY, sinon.match(/"value":"0"/));
-    storageMock.expects('setItem').once().withArgs(history.STORE_KEY, sinon.match(/"value":"5"/));
-    storageMock.expects('setItem').once().withArgs(history.STORE_KEY, sinon.match(/"value":"9"/));
-    storageMock.expects('setItem').never().withArgs(history.STORE_KEY, sinon.match(/"value":"10"/));
-    for (let i = 0; i < MAX_NUMBER_OF_HISTORY_ELEMENTS + 1; i++) {
-        data.value = i.toString();
+    it('should return the same an element after adding it to the history', () => {
         historyStore.addElement(data);
-    }
-    storageMock.verify();
 
-});
+        expect(storageMock.setItem).toHaveBeenCalledTimes(1);
+        const [setKey, setData] = storageMock.setItem.mock.calls[0];
 
-test('HistoryStore should be able to get the history', t => {
-    storageMock.expects('getItem').once().withArgs(history.STORE_KEY);
-    historyStore.getHistory();
-    storageMock.verify();
-});
+        expect(setKey).toBe(history.STORE_KEY);
+        expect(setData).toMatch(/"value":"value"/);
+        expect(setData).toMatch(/"time"/);
+        expect(setData).toMatch(/"internalTime"/);
+    });
 
-test('HistoryStore should be able to remove all internalTime', t => {
-    const historyElements: history.HistoryElement[] = [];
-    for (let i = 0; i < 5; i++) {
-        historyElements.push({
-            name: 'name' + i,
-            value: 'value' + i,
-            time: JSON.stringify(new Date()),
-            internalTime: new Date().getTime()
-        });
-    }
+    it('should trim query over > 75 char', () => {
+        data.value = '';
+        let newValue = '';
+        for (let i = 0; i < 100; i++) {
+            newValue += i.toString();
+        }
+        data.name = 'Query';
+        data.value = newValue;
 
-    for (let elem of historyElements) {
-        t.true(elem.hasOwnProperty('internalTime'));
-    }
+        historyStore.addElement(data);
 
-    const stripedHistoryElements = historyStore['stripInternalTime'](historyElements);
+        expect(storageMock.setItem).toHaveBeenCalledTimes(1);
+        const [setKey, setData] = storageMock.setItem.mock.calls[0];
 
-    for (let elem of stripedHistoryElements) {
-        t.false(elem.hasOwnProperty('internalTime'));
-    }
-});
+        expect(setKey).toBe(history.STORE_KEY);
+        expect(setData).toMatch(/"value":"01234[0-9]{70}"/);
+    });
 
-test('HistoryStore should remove item when cleared', t => {
-    storageMock.expects('removeItem').once().withArgs(history.STORE_KEY);
-    historyStore.clear();
-    storageMock.verify();
-});
+    it('should not trim elements over 75 char if it\'s not a query', () => {
+        data.value = '';
+        let newValue = '';
+        for (let i = 0; i < 100; i++) {
+            newValue += i.toString();
+        }
+        data.name = 'Not A Query';
+        data.value = newValue;
 
-test('HistoryStore should be able to set the history', t => {
-    const historyElements: history.HistoryElement[] = [data];
-    storageMock.expects('setItem').once().withArgs(history.STORE_KEY, JSON.stringify(historyElements));
-    historyStore.setHistory(historyElements);
-    storageMock.verify();
-});
+        historyStore.addElement(data);
 
-test('History store should reject consecutive duplicate values', t => {
-    storageMock.expects('setItem').once().withArgs(history.STORE_KEY, sinon.match(/"value":"value"/));
-    historyStore.addElement(data);
-    historyStore.addElement(data);
-    storageMock.verify();
-});
+        expect(storageMock.setItem).toHaveBeenCalledTimes(1);
+        const [setKey, setData] = storageMock.setItem.mock.calls[0];
 
-test('History store should accept consecutive values which are not duplicates', t => {
-    storageMock.expects('setItem').once().withArgs(history.STORE_KEY, sinon.match(/"value":"value"/));
-    storageMock.expects('setItem').once().withArgs(history.STORE_KEY, sinon.match(/"value":"something else"/));
-    historyStore.addElement(data);
-    data.value = 'something else';
-    historyStore.addElement(data);
-    storageMock.verify();
+        expect(setKey).toBe(history.STORE_KEY);
+        expect(setData).toMatch(/"value":"01234[0-9]{185}"/);
+    });
+
+    it('should not keep more then MAX_ELEMENTS', () => {
+        for (let i = 0; i < MAX_NUMBER_OF_HISTORY_ELEMENTS + 5; i++) {
+            data.value = i.toString();
+            historyStore.addElement(data);
+        }
+
+        expect(historyStore.getHistory().length).toBe(MAX_NUMBER_OF_HISTORY_ELEMENTS);
+    });
+
+    it('should be able to remove all internalTime', () => {
+        const historyElements: history.HistoryElement[] = [];
+        for (let i = 0; i < 5; i++) {
+            historyElements.push({
+                name: 'name' + i,
+                value: 'value' + i,
+                time: JSON.stringify(new Date()),
+                internalTime: new Date().getTime()
+            });
+        }
+
+        for (let elem of historyElements) {
+            expect(elem).toHaveProperty('internalTime');
+        }
+
+        const stripedHistoryElements = historyStore['stripInternalTime'](historyElements);
+
+        for (let elem of stripedHistoryElements) {
+            expect(elem).not.toHaveProperty('internalTime');
+        }
+    });
+
+    it('should remove item when cleared', () => {
+        historyStore.clear();
+
+        expect(storageMock.removeItem).toHaveBeenCalledWith(history.STORE_KEY);
+    });
+
+    it('should be able to set the history', () => {
+        const historyElements: history.HistoryElement[] = [data];
+
+        historyStore.setHistory(historyElements);
+
+        expect(storageMock.setItem).toHaveBeenCalledWith(history.STORE_KEY, expect.stringContaining(JSON.stringify(historyElements)));
+    });
+
+    it('should reject consecutive duplicate values', () => {
+        historyStore.addElement(data);
+        historyStore.addElement(data);
+
+        expect(storageMock.setItem).toHaveBeenCalledTimes(1);
+    });
+
+    it('should accept consecutive values which are not duplicates', () => {
+        historyStore.addElement(data);
+        data.value = 'something else';
+        historyStore.addElement(data);
+
+        expect(storageMock.setItem).toHaveBeenCalledTimes(2);
+    });
 });

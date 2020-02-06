@@ -32,7 +32,7 @@ Initially, the `pageview` events data will be used exclusively by the Coveo Reve
   - For [Coveo Cloud V2](https://platform.cloud.coveo.com/), create an API key from the [administration console] (https://platform.cloud.coveo.com/admin/#/organization/api-access/) selecting the **Edit** check box for the **Analytics data** privilege (see [API Access - Page](http://www.coveo.com/go?dest=ccv2ac&context=27)).
 
 2. Add the code snippet to all your website pages.
-  
+
   Ask an administrator to add a code snippet like the following to all pages of your websites:
 
   ```html
@@ -42,28 +42,28 @@ Initially, the `pageview` events data will be used exclusively by the Coveo Reve
   c[a].t=Date.now();u=o.createElement(v);u.async=1;u.src=e;
   O=o.getElementsByTagName(v)[0];O.parentNode.insertBefore(u,O)
   })(window,document,'script','https://static.cloud.coveo.com/coveo.analytics.js/1.0/coveoua.js')
-  
+
   coveoua('init', 'YOUR_API_KEY'); // Replace YOUR_API_KEY with your real key
   coveoua('send', 'view', {
     contentIdKey: '@permanentid',
-    contentIdValue: 'PERMANENT_ID_VALUE', // Replace PERMANENT_ID_VALUE with a unique value from your page. 
+    contentIdValue: 'PERMANENT_ID_VALUE', // Replace PERMANENT_ID_VALUE with a unique value from your page.
     contentType: 'product' // Optional
     // ... more information ...
   });
   </script>
   ```
   Make sure you replace `YOUR_API_KEY` by the API key you got in the previous step.
-  
+
   The code snippet must contain `contentIdKey` and `contentIdValue` in order to identify items in the Coveo index. When you want to recommend specific types of content, you also need to add a `contentType` parameter value.
-  
+
   | Key            | Value                                                               |
   | ---------------|---------------------------------------------------------------------|
   | contentIdKey   | The Coveo index field name that will be used to identify the item.  |
   | contentIdValue | The Coveo index field value that will be used to identify the item. |
   | contentType    | [Optional] The type of the item to be tracked (e.g., 'Article').    |
-  
+
   **Note: Do not copy the_ `coveoua.js` _file as it can be updated anytime and you could experience compatibility issues.**
-  
+
 3. Validate pageview events are pushed to the Coveo Usage Analytics service
 
   a. In a web browser such as Chrome, navigate to a website page to which you added the code snippet.
@@ -83,11 +83,11 @@ Add the code snippet to all your website pages.
   c[a].t=Date.now();u=o.createElement(v);u.async=1;u.src=e;
   O=o.getElementsByTagName(v)[0];O.parentNode.insertBefore(u,O)
   })(window,document,'script','https://static.cloud.coveo.com/coveo.analytics.js/1.0/coveoua.js')
-  
+
   coveoua('init', 'YOUR_API_KEY'); // Replace YOUR_API_KEY with your real key
   </script>
   ```
-  
+
 You can now call the script using the following line:
 
 ```html
