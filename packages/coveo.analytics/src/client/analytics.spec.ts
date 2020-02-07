@@ -61,10 +61,9 @@ describe('Analytics', () => {
 
         await client.sendViewEvent(viewEvent);
 
-        const [, { body }] = fetchMock.lastCall();
+        const [body] = getParsedBodyCalls();
 
-        const parsedBody = JSON.parse(body.toString());
-        expect(parsedBody).toMatchObject({
+        expect(body).toMatchObject({
             language: 'en',
             userAgent: navigator.userAgent
         });
@@ -127,10 +126,9 @@ describe('Analytics', () => {
         it('should properly parse 1 argument', async () => {
             await client.sendEvent(specialEventType, 'Video');
 
-            const [, { body }] = fetchMock.lastCall();
+            const [body] = getParsedBodyCalls();
 
-            const parsedBody = JSON.parse(body.toString());
-            expect(parsedBody).toEqual({
+            expect(body).toEqual({
                 [argumentNames[0]]: 'Video'
             });
         });
@@ -138,10 +136,9 @@ describe('Analytics', () => {
         it('should properly parse all arguments', async () => {
             await client.sendEvent(specialEventType, 'Video', 'play', 'campaign');
 
-            const [, { body }] = fetchMock.lastCall();
+            const [body] = getParsedBodyCalls();
 
-            const parsedBody = JSON.parse(body.toString());
-            expect(parsedBody).toEqual({
+            expect(body).toEqual({
                 [argumentNames[0]]: 'Video',
                 [argumentNames[1]]: 'play',
                 [argumentNames[2]]: 'campaign'
@@ -151,10 +148,9 @@ describe('Analytics', () => {
         it('should properly handle a finished object argument', async () => {
             await client.sendEvent(specialEventType, 'Video', { nonInteraction: true });
 
-            const [, { body }] = fetchMock.lastCall();
+            const [body] = getParsedBodyCalls();
 
-            const parsedBody = JSON.parse(body.toString());
-            expect(parsedBody).toEqual({
+            expect(body).toEqual({
                 [argumentNames[0]]: 'Video',
                 nonInteraction: true
             });
@@ -178,14 +174,31 @@ describe('Analytics', () => {
         it('should properly add location, screen and navigator context keys', async () => {
             await client.sendEvent(specialEventType);
 
-            const [, { body }] = fetchMock.lastCall();
+            const [body] = getParsedBodyCalls();
 
-            const parsedBody = JSON.parse(body.toString());
-            assertHaveAllProperties(parsedBody, [...locationContextKeys, ...screenContextKeys, ...navigatorContextKeys]);
+            assertHaveAllProperties(body, [...locationContextKeys, ...screenContextKeys, ...navigatorContextKeys]);
+        });
+
+        it('should generate different eventId values', async () => {
+            await client.sendEvent(specialEventType);
+            await client.sendEvent(specialEventType);
+            await client.sendEvent(specialEventType);
+
+            const [first, second, third] = getParsedBodyCalls();
+
+            expect(first.eventId).not.toBe(second.eventId);
+            expect(second.eventId).not.toBe(third.eventId);
+            expect(third.eventId).not.toBe(first.eventId);
         });
 
         const assertHaveAllProperties = (object: any, properties: string[]) => {
             properties.forEach(property => expect(object).toHaveProperty(property));
         };
     });
+
+    const getParsedBodyCalls = (): any[] => {
+        return fetchMock.calls().map(([, { body }]) => {
+            return JSON.parse(body.toString());
+        });
+    };
 });

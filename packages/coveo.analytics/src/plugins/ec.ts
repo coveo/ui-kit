@@ -45,7 +45,9 @@ const contextInformationMapping: {[key in keyof DefaultContextInformation]: stri
     screenResolution: 'sr',
     title: 'dt',
     userAgent: 'ua',
-    language: 'ul'
+    language: 'ul',
+    eventId: 'z',
+    time: 'tm',
 };
 
 const measurementProtocolKeysMapping: {[name: string]: string} = {

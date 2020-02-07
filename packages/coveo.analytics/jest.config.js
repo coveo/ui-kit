@@ -1,6 +1,7 @@
 module.exports = {
     roots: ['<rootDir>/src', '<rootDir>/functional'],
     preset: 'ts-jest',
+    setupFiles: ['./tests/setup.js'],
     moduleNameMapper: {
         '@App/(.*)': '<rootDir>/src/$1',
     },

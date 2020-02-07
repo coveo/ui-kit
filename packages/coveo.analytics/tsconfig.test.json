@@ -6,7 +6,6 @@
         "sourceMap": false,
         "inlineSourceMap": true,
         "strict": false,
-        "lib": ["es5", "dom", "scripthost", "es6"]
     },
     "include": [
         "src/**/*.spec.ts"
