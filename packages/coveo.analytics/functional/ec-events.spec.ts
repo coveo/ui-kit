@@ -48,6 +48,21 @@ describe('ec events', () => {
         });
     });
 
+    it('can send a pageview event with options', async () => {
+        coveoua('init', aToken, anEndpoint);
+        await coveoua('send', 'pageview', 'page', {
+            title: 'wow',
+            location: 'http://right.here',
+        });
+
+        assertRequestSentContainsEqual({
+            ...defaultContextValues,
+            page: 'page',
+            title: 'wow',
+            location: 'http://right.here'
+        });
+    });
+
     const assertRequestSentContainsEqual = (toContain: {[name: string]: any}) => {
         expect(fetchMock.called()).toBe(true);
 
