@@ -121,7 +121,7 @@ export class EC {
 
     private addECDataToPayload(payload: any) {
         const payloadWithConvertedKeys = this.convertKeysToMeasurementProtocol({
-            action: this.action,
+            ...(this.action ? { action: this.action } : {}),
             ...(this.actionData || {}),
             ...payload
         });
