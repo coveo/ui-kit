@@ -48,6 +48,39 @@ describe('ec events', () => {
         });
     });
 
+    it('can send a pageview event with options', async () => {
+        coveoua('init', aToken, anEndpoint);
+        await coveoua('send', 'pageview', 'page', {
+            title: 'wow',
+            location: 'http://right.here',
+        });
+
+        assertRequestSentContainsEqual({
+            ...defaultContextValues,
+            page: 'page',
+            title: 'wow',
+            location: 'http://right.here'
+        });
+    });
+
+    it('should change the pageViewId only when sending a second page view event', async () => {
+        coveoua('init', aToken, anEndpoint);
+        await coveoua('send', 'event');
+        await coveoua('send', 'event');
+        await coveoua('send', 'pageview');
+        await coveoua('send', 'event');
+        await coveoua('send', 'pageview');
+        await coveoua('send', 'event');
+
+        const [event, secondEvent, pageView, thirdEvent, secondPageView, afterSecondPageView] = getParsedBody();
+
+        expect(event.a).toBe(secondEvent.a);
+        expect(event.a).toBe(pageView.a);
+        expect(event.a).toBe(thirdEvent.a);
+        expect(event.a).not.toBe(secondPageView.a);
+        expect(secondPageView.a).toBe(afterSecondPageView.a);
+    });
+
     const assertRequestSentContainsEqual = (toContain: {[name: string]: any}) => {
         expect(fetchMock.called()).toBe(true);
 
@@ -58,5 +91,9 @@ describe('ec events', () => {
         Object.keys((key: string) => expect(parsedBody).toContainEqual({
             [key]: toContain[key]
         }));
+    };
+
+    const getParsedBody = (): any[] => {
+        return fetchMock.calls().map(([, { body }]) => JSON.parse(body.toString()));
     };
 });
