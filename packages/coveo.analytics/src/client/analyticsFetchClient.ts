@@ -21,9 +21,9 @@ export class AnalyticsFetchClient implements AnalyticsRequestClient {
             visitorIdProvider
         } = this.opts;
 
-        const visitorId = visitorIdProvider.currentVisitorId;
+        const visitorIdParam = this.shouldAppendVisitorId(eventType) ? this.visitorIdParam : '';
 
-        const response = await fetch(`${baseUrl}/analytics/${eventType}${visitorId ? `?visitor=${visitorId}` : ''}`, {
+        const response = await fetch(`${baseUrl}/analytics/${eventType}${visitorIdParam}`, {
             method: 'POST',
             headers: this.getHeaders(),
             mode: 'cors',
@@ -32,12 +32,28 @@ export class AnalyticsFetchClient implements AnalyticsRequestClient {
         });
         if (response.ok) {
             const visit = await response.json() as AnyEventResponse;
-            visitorIdProvider.currentVisitorId = visit.visitorId;
+
+            if (visit.visitorId) {
+                visitorIdProvider.currentVisitorId = visit.visitorId;
+            }
+
             return visit;
         } else {
             console.error(`An error has occured when sending the "${eventType}" event.`, response, payload);
             throw new Error(`An error has occurred when sending the "${eventType}" event. Check the console logs for more details.`);
         }
+    }
+
+    private shouldAppendVisitorId(eventType: EventType) {
+        return [EventType.click, EventType.custom, EventType.search, EventType.view].indexOf(eventType) !== -1;
+    }
+
+    private get visitorIdParam() {
+        const {
+            visitorIdProvider
+        } = this.opts;
+        const visitorId = visitorIdProvider.currentVisitorId;
+        return visitorId ? `?visitor=${visitorId}` : '';
     }
 
     private getHeaders(): Record<string, string> {

@@ -105,6 +105,8 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
         ];
         this.eventTypeMapping = {};
 
+        this.initVisitorId();
+
         const clientsOptions = {
             baseUrl: this.baseUrl,
             token,
@@ -115,8 +117,13 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
         window.addEventListener('beforeunload', () => this.flushBufferWithBeacon());
     }
 
+    private initVisitorId() {
+        const existingVisitorId = this.visitorId || (hasCookieStorage() && this.cookieStorage.getItem('visitorId')) || (hasLocalStorage() && localStorage.getItem('visitorId')) || '';
+        this.currentVisitorId = existingVisitorId || uuidv4();
+    }
+
     get currentVisitorId() {
-        return this.visitorId || (hasCookieStorage() && this.cookieStorage.getItem('visitorId')) || (hasLocalStorage() && localStorage.getItem('visitorId')) || '';
+        return this.visitorId;
     }
 
     set currentVisitorId(visitorId: string) {
