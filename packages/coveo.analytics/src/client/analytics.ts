@@ -41,10 +41,8 @@ export type AnalyticsClientSendEventHook = <TResult>(eventType: string, payload:
 export type EventTypeConfig = {
     newEventType: EventType;
     variableLengthArgumentsNames?: string[];
-    addDefaultContextInformation?: boolean;
+    addVisitorIdParameter?: boolean;
 };
-
-export type DefaultContextInformation = typeof CoveoAnalyticsClient.prototype.defaultContextInformation;
 
 export interface AnalyticsClient {
     sendEvent(eventType: string, ...payload: VariableArgumentsPayload): Promise<AnyEventResponse | void>;
@@ -140,7 +138,7 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
         const {
             newEventType: eventTypeToSend = eventType as EventType,
             variableLengthArgumentsNames = [],
-            addDefaultContextInformation = false
+            addVisitorIdParameter = false
         } = this.eventTypeMapping[eventType] || {};
 
         const payloadToProcess = variableLengthArgumentsNames.length > 0
@@ -148,7 +146,7 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
             : payload[0];
 
         const processedPayload = this.beforeSendHooks.reduce((newPayload, current) => current(eventType, newPayload), {
-            ...(addDefaultContextInformation ? this.defaultContextInformation : {}),
+            visitorId: addVisitorIdParameter ? this.visitorId : '',
             ...payloadToProcess,
         });
         const cleanedPayload = this.removeEmptyPayloadValues(processedPayload);
@@ -251,38 +249,6 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
         const { version, endpoint } = this.options;
         return `${endpoint}/rest/${version}`;
     }
-
-    get defaultContextInformation() {
-        const documentContext = {
-            referrer: document.referrer,
-            title: document.title,
-            encoding: document.characterSet,
-        };
-        const locationContext = {
-            location: `${location.protocol}//${location.hostname}${location.pathname.indexOf('/') === 0 ? location.pathname : `/${location.pathname}`}${location.search}`,
-        };
-        const screenContext = {
-            screenResolution: `${screen.width}x${screen.height}`,
-            screenColor: `${screen.colorDepth}-bit`,
-        };
-        const navigatorContext = {
-            language: navigator.language,
-            userAgent: navigator.userAgent,
-        };
-        const eventContext = {
-            clientId: this.visitorId,
-            time: new Date().valueOf().toString(),
-            eventId: uuidv4(),
-        };
-        return {
-            ...eventContext,
-            ...screenContext,
-            ...navigatorContext,
-            ...locationContext,
-            ...documentContext
-        };
-    }
-
 }
 
 export default CoveoAnalyticsClient;

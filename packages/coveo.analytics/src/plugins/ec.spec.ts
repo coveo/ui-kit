@@ -5,12 +5,27 @@ describe('EC plugin', () => {
     let ec: EC;
     let client: ReturnType<typeof createAnalyticsClientMock>;
 
+    const someUUIDGenerator = jest.fn(() => someUUID);
     const someUUID = '13ccebdb-0138-45e8-bf70-884817ead190';
-    const defaultResult = { 'a': someUUID, t: ECPluginEventTypes.event };
+    const defaultResult = {
+        a: someUUID,
+        de: document.characterSet,
+        dl: 'http://localhost/',
+        dr: 'http://somewhere.over/therainbow',
+        dt: 'MAH PAGE',
+        sd: '24-bit',
+        sr: '0x0',
+        tm: expect.any(String),
+        ua: navigator.userAgent,
+        ul: 'en-US',
+        t: ECPluginEventTypes.event,
+        z: someUUID,
+    };
 
     beforeEach(() => {
+        jest.clearAllMocks();
         client = createAnalyticsClientMock();
-        ec = new EC({ client, uuidGenerator: () => someUUID });
+        ec = new EC({ client, uuidGenerator: someUUIDGenerator });
     });
 
     it('should register a hook in the client', () => {
@@ -143,6 +158,30 @@ describe('EC plugin', () => {
             'pa': payload.action
         });
     });
+
+    it('should call the uuidv4 method', async () => {
+       await executeRegisteredHook(ECPluginEventTypes.event, {});
+       await executeRegisteredHook(ECPluginEventTypes.event, {});
+       await executeRegisteredHook(ECPluginEventTypes.event, {});
+
+       // One for generating pageViewId, one for each individual event.
+        expect(someUUIDGenerator).toHaveBeenCalledTimes(1 + 3);
+    });
+
+    it('should update the location when sending a pageview with the page parameter', async () => {
+        const payload = {
+            page: '/somepage'
+        };
+
+        const result = await executeRegisteredHook(ECPluginEventTypes.pageview, payload);
+
+        expect(result).toEqual({
+            ...defaultResult,
+            't': ECPluginEventTypes.pageview,
+            'dp': payload.page,
+            'dl': `${defaultResult.dl}${payload.page.substring(1)}`,
+        });
+     });
 
     const executeRegisteredHook = (eventType: string, payload: any) => {
         const [hook] = client.registerBeforeSendEventHook.mock.calls[0];
