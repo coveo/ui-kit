@@ -9,7 +9,6 @@ describe('ec events', () => {
     const aVisitorId = '123';
 
     const defaultContextValues = {
-        cid: '',
         dl: `${location.protocol}//${location.hostname}${location.pathname.indexOf('/') === 0 ? location.pathname : `/${location.pathname}`}${location.search}`,
         sr: `${screen.width}x${screen.height}`,
         sd: `${screen.colorDepth}-bit`,
@@ -58,8 +57,8 @@ describe('ec events', () => {
         assertRequestSentContainsEqual({
             ...defaultContextValues,
             page: 'page',
-            title: 'wow',
-            location: 'http://right.here'
+            dt: 'wow',
+            dl: 'http://right.here'
         });
     });
 
@@ -88,9 +87,9 @@ describe('ec events', () => {
         expect(body).not.toBeUndefined();
 
         const parsedBody = JSON.parse(body.toString());
-        Object.keys((key: string) => expect(parsedBody).toContainEqual({
+        Object.keys(toContain).map((key: string) => ({
             [key]: toContain[key]
-        }));
+        })).forEach((toTest) => expect(parsedBody).toMatchObject(toTest));
     };
 
     const getParsedBody = (): any[] => {
