@@ -3,11 +3,17 @@ import { EventType, ViewEventRequest, DefaultEventResponse } from '../events';
 import { CoveoAnalyticsClient } from './analytics';
 import { CookieStorage } from '../storage';
 
+const aVisitorId = '123';
+
+const uuidv4Mock = jest.fn();
+jest.mock('./crypto', () => ({
+    uuidv4: () => uuidv4Mock()
+}));
+
 describe('Analytics', () => {
     const aToken = 'token';
     const anEndpoint = 'http://bloup';
     const A_VERSION = 'v1337';
-    const aVisitorId = '123';
 
     const viewEvent: ViewEventRequest = { location: 'here', contentIdKey: 'key', contentIdValue: 'value', language: 'en' };
     const eventResponse: DefaultEventResponse = {
@@ -15,24 +21,26 @@ describe('Analytics', () => {
         visitorId: aVisitorId
     };
 
-    const endpointForEventType = (eventType: EventType) => `${anEndpoint}/rest/${A_VERSION}/analytics/${eventType}`;
+    const endpointForEventType = (eventType: EventType) => `${anEndpoint}/rest/${A_VERSION}/analytics/${eventType}?visitor=${aVisitorId}`;
     const mockFetchRequestForEventType = (eventType: EventType) => {
         const address = endpointForEventType(eventType);
         fetchMock.post(address, eventResponse);
-        fetchMock.post(`${address}?visitor=${aVisitorId}`, eventResponse);
     };
 
     let client: CoveoAnalyticsClient;
 
     beforeEach(() => {
+        jest.resetAllMocks();
         new CookieStorage().removeItem('visitorId');
         localStorage.clear();
+        fetchMock.reset();
+        uuidv4Mock.mockImplementationOnce(() => aVisitorId);
+
         client = new CoveoAnalyticsClient({
             token: aToken,
             endpoint: anEndpoint,
             version: A_VERSION
         });
-        fetchMock.reset();
     });
 
     it('should call fetch with the parameters', async () => {
@@ -179,16 +187,14 @@ describe('Analytics', () => {
             assertHaveAllProperties(body, [...locationContextKeys, ...screenContextKeys, ...navigatorContextKeys]);
         });
 
-        it('should generate different eventId values', async () => {
+        it('should each call the uuidv4 method', async () => {
+            uuidv4Mock.mockReset();
+
             await client.sendEvent(specialEventType);
             await client.sendEvent(specialEventType);
             await client.sendEvent(specialEventType);
 
-            const [first, second, third] = getParsedBodyCalls();
-
-            expect(first.eventId).not.toBe(second.eventId);
-            expect(second.eventId).not.toBe(third.eventId);
-            expect(third.eventId).not.toBe(first.eventId);
+            expect(uuidv4Mock).toHaveBeenCalledTimes(3);
         });
 
         const assertHaveAllProperties = (object: any, properties: string[]) => {

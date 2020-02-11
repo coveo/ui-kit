@@ -27,7 +27,6 @@ describe('ec events', () => {
         };
         fetchMock.reset();
         fetchMock.post(address, eventResponse);
-        fetchMock.post(`${address}?visitor=${aVisitorId}`, eventResponse);
     });
 
     it('can send a product detail view event', async () => {
