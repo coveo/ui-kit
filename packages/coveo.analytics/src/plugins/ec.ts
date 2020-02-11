@@ -1,5 +1,6 @@
 import { AnalyticsClient, DefaultContextInformation } from '../client/analytics';
 import { EventType } from '../events';
+import { uuidv4 } from '../client/crypto';
 
 // Based off: https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#enhanced-ecomm
 const productKeysMapping: {[name: string]: string} = {
@@ -19,6 +20,7 @@ const eventKeysMapping: {[name: string]: string} = {
     eventAction: 'ea',
     eventLabel: 'el',
     eventValue: 'ev',
+    pageViewId: 'a',
 };
 
 const productActionsKeysMapping: {[name: string]: string} = {
@@ -34,6 +36,8 @@ const transactionActionsKeysMappings: {[name: string]: string} = {
     shipping: 'ts',
     coupon: 'tcc',
     affiliation: 'ta',
+    step: 'cos',
+    option: 'col'
 };
 
 const contextInformationMapping: {[key in keyof DefaultContextInformation]: string} = {
@@ -70,12 +74,17 @@ export interface Product {
 
 export class EC {
     private client: AnalyticsClient;
+    private uuidGenerator: typeof uuidv4;
     private products: Product[] = [];
     private action?: string;
     private actionData: {[name: string]: string} = {};
+    private pageViewId: string;
+    private hasSentFirstPageView?: boolean;
 
-    constructor({ client }: { client: AnalyticsClient }) {
+    constructor({ client, uuidGenerator = uuidv4 }: { client: AnalyticsClient, uuidGenerator?: typeof uuidv4 }) {
         this.client = client;
+        this.uuidGenerator = uuidGenerator;
+        this.pageViewId = uuidGenerator();
 
         this.addHooksForPageView();
         this.addHooksForEvent();
@@ -100,7 +109,7 @@ export class EC {
     private addHooksForECEvents() {
         this.client.registerBeforeSendEventHook((eventType, ...[payload]) => {
             return allECEventTypes.indexOf(eventType) !== -1
-                ? this.addECDataToPayload(payload)
+                ? this.addECDataToPayload(eventType, payload)
                 : payload;
         });
     }
@@ -121,8 +130,9 @@ export class EC {
         });
     }
 
-    private addECDataToPayload(payload: any) {
+    private addECDataToPayload(eventType: string, payload: any) {
         const payloadWithConvertedKeys = this.convertKeysToMeasurementProtocol({
+            pageViewId: this.getPageViewId(eventType),
             ...(this.action ? { action: this.action } : {}),
             ...(this.actionData || {}),
             ...payload
@@ -161,5 +171,15 @@ export class EC {
                 [newKey]: product[key]
             };
         }, {});
+    }
+
+    private getPageViewId(eventType: string) {
+        if (eventType === ECPluginEventTypes.pageview) {
+            if (this.hasSentFirstPageView) {
+                this.pageViewId = this.uuidGenerator();
+            }
+            this.hasSentFirstPageView = true;
+        }
+        return this.pageViewId;
     }
 }

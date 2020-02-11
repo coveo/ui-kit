@@ -5,9 +5,12 @@ describe('EC plugin', () => {
     let ec: EC;
     let client: ReturnType<typeof createAnalyticsClientMock>;
 
+    const someUUID = '13ccebdb-0138-45e8-bf70-884817ead190';
+    const defaultResult = { 'a': someUUID };
+
     beforeEach(() => {
         client = createAnalyticsClientMock();
-        ec = new EC({ client });
+        ec = new EC({ client, uuidGenerator: () => someUUID });
     });
 
     it('should register a hook in the client', () => {
@@ -23,7 +26,7 @@ describe('EC plugin', () => {
 
         const result = executeRegisteredHook(ECPluginEventTypes.event, {});
 
-        expect(result).toEqual({ 'pr1something' : 'useful' });
+        expect(result).toEqual({ ...defaultResult, 'pr1something' : 'useful' });
     });
 
     it('should append the product with the pageview event', () => {
@@ -31,7 +34,7 @@ describe('EC plugin', () => {
 
         const result = executeRegisteredHook(ECPluginEventTypes.event, {});
 
-        expect(result).toEqual({ 'pr1something' : 'useful' });
+        expect(result).toEqual({ ...defaultResult, 'pr1something' : 'useful' });
     });
 
     it('should not append the product with a random event type', () => {
@@ -50,7 +53,7 @@ describe('EC plugin', () => {
         executeRegisteredHook('💀', {});
         const result = executeRegisteredHook(ECPluginEventTypes.event, {});
 
-        expect(result).toEqual({ 'pr1something' : 'useful' });
+        expect(result).toEqual({ ...defaultResult, 'pr1something' : 'useful' });
     });
 
     it('should convert known product keys into the measurement protocol format', () => {
@@ -58,7 +61,7 @@ describe('EC plugin', () => {
 
         const result = executeRegisteredHook(ECPluginEventTypes.event, {});
 
-        expect(result).toEqual({ 'pr1nm' : '🧀', 'pr1pr': '5.99$' });
+        expect(result).toEqual({ ...defaultResult, 'pr1nm' : '🧀', 'pr1pr': '5.99$' });
     });
 
     it('should allow adding multiple products', () => {
@@ -69,6 +72,7 @@ describe('EC plugin', () => {
         const result = executeRegisteredHook(ECPluginEventTypes.event, {});
 
         expect(result).toEqual({
+            ...defaultResult,
             'pr1nm' : '🍟',
             'pr1pr': '1.99$',
             'pr2nm' : '🍿',
@@ -88,7 +92,7 @@ describe('EC plugin', () => {
 
         const secondResult = executeRegisteredHook(ECPluginEventTypes.event, {});
 
-        expect(secondResult).toEqual({});
+        expect(secondResult).toEqual({...defaultResult});
     });
 
     it('should be able to set an action', () => {
@@ -97,6 +101,7 @@ describe('EC plugin', () => {
         const result = executeRegisteredHook(ECPluginEventTypes.event, {});
 
         expect(result).toEqual({
+            ...defaultResult,
             'pa': 'ok'
         });
     });
@@ -110,7 +115,7 @@ describe('EC plugin', () => {
 
         const secondResult = executeRegisteredHook(ECPluginEventTypes.event, {});
 
-        expect(secondResult).toEqual({});
+        expect(secondResult).toEqual({...defaultResult});
     });
 
     it('should be able to clear all the data', () => {
@@ -119,7 +124,7 @@ describe('EC plugin', () => {
 
         const result = executeRegisteredHook(ECPluginEventTypes.event, {});
 
-        expect(result).toEqual({});
+        expect(result).toEqual({...defaultResult});
     });
 
     it('should convert known EC keys to the measurement protocol format in the hook', () => {
@@ -132,6 +137,7 @@ describe('EC plugin', () => {
         const result = executeRegisteredHook(ECPluginEventTypes.event, payload);
 
         expect(result).toEqual({
+            ...defaultResult,
             'cid': payload.clientId,
             'de': payload.encoding,
             'pa': payload.action
