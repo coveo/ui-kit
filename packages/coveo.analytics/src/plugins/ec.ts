@@ -21,6 +21,7 @@ const eventKeysMapping: {[name: string]: string} = {
     eventLabel: 'el',
     eventValue: 'ev',
     pageViewId: 'a',
+    hitType: 't',
 };
 
 const productActionsKeysMapping: {[name: string]: string} = {
@@ -132,6 +133,7 @@ export class EC {
 
     private addECDataToPayload(eventType: string, payload: any) {
         const payloadWithConvertedKeys = this.convertKeysToMeasurementProtocol({
+            hitType: eventType,
             pageViewId: this.getPageViewId(eventType),
             ...(this.action ? { action: this.action } : {}),
             ...(this.actionData || {}),

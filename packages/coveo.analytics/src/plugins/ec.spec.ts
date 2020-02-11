@@ -6,7 +6,7 @@ describe('EC plugin', () => {
     let client: ReturnType<typeof createAnalyticsClientMock>;
 
     const someUUID = '13ccebdb-0138-45e8-bf70-884817ead190';
-    const defaultResult = { 'a': someUUID };
+    const defaultResult = { 'a': someUUID, t: ECPluginEventTypes.event };
 
     beforeEach(() => {
         client = createAnalyticsClientMock();

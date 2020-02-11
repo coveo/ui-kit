@@ -39,6 +39,7 @@ export class AnalyticsFetchClient implements AnalyticsRequestClient {
 
             return visit;
         } else {
+            try { response.json(); } catch { /* If you don't parse the response, it won't appear in the network tab. */ }
             console.error(`An error has occured when sending the "${eventType}" event.`, response, payload);
             throw new Error(`An error has occurred when sending the "${eventType}" event. Check the console logs for more details.`);
         }
