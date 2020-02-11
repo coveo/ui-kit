@@ -21,6 +21,7 @@ import { WebStorage, CookieStorage } from '../storage';
 import { hasLocalStorage, hasCookieStorage } from '../detector';
 import { addDefaultValues } from '../hook/addDefaultValues';
 import { enhanceViewEvent } from '../hook/enhanceViewEvent';
+import { uuidv4 } from './crypto';
 
 export const Version = 'v15';
 
@@ -261,14 +262,20 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
             language: navigator.language,
             userAgent: navigator.userAgent,
         };
-        return {
+        const eventContext = {
             clientId: this.visitorId,
+            time: new Date().valueOf().toString(),
+            eventId: uuidv4(),
+        };
+        return {
+            ...eventContext,
             ...screenContext,
             ...navigatorContext,
             ...locationContext,
             ...documentContext
         };
     }
+
 }
 
 export default CoveoAnalyticsClient;
