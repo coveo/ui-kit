@@ -84,19 +84,37 @@ describe('ec events', () => {
         const secondLocation = 'http://very.new/';
 
         await coveoua('send', 'pageview');
+        await coveoua('send', 'event', '1');
         changeDocumentLocation(secondLocation);
         await coveoua('send', 'pageview');
+        await coveoua('send', 'event', '2');
+
+        const [pageView, afterFirst, secondPageView, afterSecond] = getParsedBody();
+
+        expect(pageView.dl).toBe(initialLocation);
+        expect(pageView.dr).toBe(document.referrer);
+        expect(afterFirst.dl).toBe(initialLocation);
+        expect(afterFirst.dr).toBe(document.referrer);
+
+        expect(secondPageView.dl).toBe(secondLocation);
+        expect(secondPageView.dr).toBe(initialLocation);
+        expect(afterSecond.dl).toBe(secondLocation);
+        expect(afterSecond.dr).toBe(initialLocation);
+    });
+
+    it('should update the current location when a pageview is sent with the page parameter and keep it', async () => {
+        const initialLocation = `${window.location}`;
+
+        await coveoua('send', 'pageview', '/page');
+        await coveoua('send', 'event', '1');
 
         const [event, secondEvent] = getParsedBody();
 
-        expect(event.dl).toBe(initialLocation);
-        expect(event.dr).toBe(document.referrer);
-
-        expect(secondEvent.dl).toBe(secondLocation);
-        expect(secondEvent.dr).toBe(initialLocation);
+        expect(event.dl).toBe(`${initialLocation}page`);
+        expect(secondEvent.dl).toBe(`${initialLocation}page`);
     });
 
-    it('should updated the current location and referrer when a pageview is sent with the page parameter', async () => {
+    it('should keep the current location when a pageview is sent with the page parameter', async () => {
         const initialLocation = `${window.location}`;
 
         await coveoua('send', 'pageview', '/page');

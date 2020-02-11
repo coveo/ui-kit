@@ -173,12 +173,18 @@ describe('EC plugin', () => {
             page: '/somepage'
         };
 
-        const result = await executeRegisteredHook(ECPluginEventTypes.pageview, payload);
+        const pageview = await executeRegisteredHook(ECPluginEventTypes.pageview, payload);
+        const event = await executeRegisteredHook(ECPluginEventTypes.event, {});
 
-        expect(result).toEqual({
+        expect(pageview).toEqual({
             ...defaultResult,
             't': ECPluginEventTypes.pageview,
             'dp': payload.page,
+            'dl': `${defaultResult.dl}${payload.page.substring(1)}`,
+        });
+        expect(event).toEqual({
+            ...defaultResult,
+            't': ECPluginEventTypes.event,
             'dl': `${defaultResult.dl}${payload.page.substring(1)}`,
         });
      });

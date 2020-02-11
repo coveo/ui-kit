@@ -85,12 +85,14 @@ export class EC {
     private actionData: {[name: string]: string} = {};
     private pageViewId: string;
     private hasSentFirstPageView?: boolean;
-    private lastReferrer?: string;
+    private lastLocation: string;
+    private lastReferrer: string;
 
     constructor({ client, uuidGenerator = uuidv4 }: { client: AnalyticsClient, uuidGenerator?: typeof uuidv4 }) {
         this.client = client;
         this.uuidGenerator = uuidGenerator;
         this.pageViewId = uuidGenerator();
+        this.lastLocation = getFormattedLocation(window.location);
         this.lastReferrer = document.referrer;
 
         this.addHooksForPageView();
@@ -181,31 +183,28 @@ export class EC {
         }, {});
     }
 
-    private updateStateForNewPageView(currentLocation: string) {
+    private updateStateForNewPageView(payload: any) {
         if (this.hasSentFirstPageView) {
             this.pageViewId = this.uuidGenerator();
+            this.lastReferrer = this.lastLocation;
         }
+
+        if (!!payload.page) {
+            const removeStartingSlash = (page: string) => page.replace(/^\/?(.*)$/, '/$1');
+            const extractHostnamePart = (location: string) => location.split('/').slice(0, 3).join('/');
+            this.lastLocation = `${extractHostnamePart(this.lastLocation)}${removeStartingSlash(payload.page)}`;
+        } else {
+            this.lastLocation = getFormattedLocation(window.location);
+        }
+
         this.hasSentFirstPageView = true;
-        this.lastReferrer = currentLocation;
-    }
-
-    private resolveCurrentLocation(eventType: string, payload: any) {
-        const currentLocation = getFormattedLocation(window.location);
-        if (!payload.page || eventType !== ECPluginEventTypes.pageview) {
-            return currentLocation;
-        }
-
-        const newPage = payload.page.replace(/^\/?(.*)$/, '/$1');
-        return `${currentLocation.split(/\//).slice(0, 3).join('/')}${newPage}`;
     }
 
     getLocationInformation(eventType: string, payload: any) {
-        const referrer = this.lastReferrer;
-        const location = this.resolveCurrentLocation(eventType, payload);
-        eventType === ECPluginEventTypes.pageview && this.updateStateForNewPageView(location);
+        eventType === ECPluginEventTypes.pageview && this.updateStateForNewPageView(payload);
         return {
-            referrer,
-            location,
+            referrer: this.lastReferrer,
+            location: this.lastLocation,
         };
     }
 
@@ -227,7 +226,7 @@ export class EC {
             userAgent: navigator.userAgent,
         };
         const eventContext = {
-            time: new Date().valueOf().toString(),
+            time: Date.now().toString(),
             eventId: this.uuidGenerator(),
         };
         return {
