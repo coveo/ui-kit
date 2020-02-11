@@ -37,6 +37,7 @@ describe('ec events', () => {
 
         assertRequestSentContainsEqual({
             ...defaultContextValues,
+            t: 'pageview',
             pr1nm: 'wow',
             pr1id: 'something',
             pr1br: 'brand',
@@ -55,6 +56,7 @@ describe('ec events', () => {
 
         assertRequestSentContainsEqual({
             ...defaultContextValues,
+            t: 'pageview',
             page: 'page',
             dt: 'wow',
             dl: 'http://right.here'
