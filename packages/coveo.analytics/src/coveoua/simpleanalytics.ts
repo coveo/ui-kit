@@ -95,6 +95,12 @@ export class CoveoUA {
     callPlugin(pluginName: string, fn: string, ...args: any): void {
         this.plugins.execute(pluginName, fn, ...args);
     }
+
+    reset() {
+        this.client = undefined;
+        this.plugins = new Plugins();
+        this.params = {};
+    }
 }
 
 export const coveoua = new CoveoUA();
