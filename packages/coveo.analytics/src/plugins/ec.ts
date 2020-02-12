@@ -2,69 +2,7 @@ import { AnalyticsClient } from '../client/analytics';
 import { EventType } from '../events';
 import { uuidv4 } from '../client/crypto';
 import { getFormattedLocation } from '../client/location';
-
-// Based off: https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#enhanced-ecomm
-const productKeysMapping: {[name: string]: string} = {
-    id: 'id',
-    name: 'nm',
-    brand: 'br',
-    category: 'ca',
-    variant: 'va',
-    position: 'ps',
-    price: 'pr',
-    quantity: 'qt',
-    coupon: 'cc'
-};
-
-const eventKeysMapping: {[name: string]: string} = {
-    eventCategory: 'ec',
-    eventAction: 'ea',
-    eventLabel: 'el',
-    eventValue: 'ev',
-    page: 'dp',
-    visitorId: 'cid',
-    clientId: 'cid',
-};
-
-const productActionsKeysMapping: {[name: string]: string} = {
-    action: 'pa',
-    list: 'pal',
-    listSource: 'pls'
-};
-
-const transactionActionsKeysMappings: {[name: string]: string} = {
-    id: 'ti',
-    revenue: 'tr',
-    tax: 'tt',
-    shipping: 'ts',
-    coupon: 'tcc',
-    affiliation: 'ta',
-    step: 'cos',
-    option: 'col'
-};
-
-export type DefaultContextInformation = ReturnType<typeof EC.prototype.getDefaultContextInformation> & ReturnType<typeof EC.prototype.getLocationInformation>;
-const contextInformationMapping: {[key in keyof DefaultContextInformation]: string} = {
-    hitType: 't',
-    pageViewId: 'a',
-    encoding: 'de',
-    location: 'dl',
-    referrer: 'dr',
-    screenColor: 'sd',
-    screenResolution: 'sr',
-    title: 'dt',
-    userAgent: 'ua',
-    language: 'ul',
-    eventId: 'z',
-    time: 'tm',
-};
-
-const measurementProtocolKeysMapping: {[name: string]: string} = {
-    ...eventKeysMapping,
-    ...productActionsKeysMapping,
-    ...transactionActionsKeysMappings,
-    ...contextInformationMapping
-};
+import { convertProductToMeasurementProtocol } from '../client/measurementProtocolMapper';
 
 export const ECPluginEventTypes = {
     pageview: 'pageview',
@@ -128,6 +66,7 @@ export class EC {
             newEventType: EventType.collect,
             variableLengthArgumentsNames: ['page'],
             addVisitorIdParameter: true,
+            usesMeasurementProtocol: true,
         });
     }
 
@@ -136,22 +75,22 @@ export class EC {
             newEventType: EventType.collect,
             variableLengthArgumentsNames: ['eventCategory', 'eventAction', 'eventLabel', 'eventValue'],
             addVisitorIdParameter: true,
+            usesMeasurementProtocol: true
         });
     }
 
     private addECDataToPayload(eventType: string, payload: any) {
-        const payloadWithConvertedKeys = this.convertKeysToMeasurementProtocol({
+        const ecPayload = {
             ...(this.getLocationInformation(eventType, payload)),
             ...(this.getDefaultContextInformation(eventType)),
             ...(this.action ? { action: this.action } : {}),
             ...(this.actionData || {}),
-            ...payload
-        });
+        };
 
         const productPayload = this.products.reduce((newPayload, product, index) => {
             return {
                 ...newPayload,
-                ...this.convertProductToMeasurementProtocol(product, index),
+                ...convertProductToMeasurementProtocol(product, index),
             };
         }, {});
 
@@ -159,28 +98,9 @@ export class EC {
 
         return {
             ...productPayload,
-            ...payloadWithConvertedKeys,
+            ...ecPayload,
+            ...payload,
         };
-    }
-
-    private convertKeysToMeasurementProtocol(params: any) {
-        return Object.keys(params).reduce((mappedKeys, key) => {
-            const newKey = measurementProtocolKeysMapping[key] || key;
-            return {
-                ...mappedKeys,
-                [newKey]: params[key],
-            };
-        }, {});
-    }
-
-    private convertProductToMeasurementProtocol(product: Product, index: number) {
-        return Object.keys(product).reduce((mappedProduct, key) => {
-            const newKey = `pr${index + 1}${productKeysMapping[key] || key}`;
-            return {
-                ...mappedProduct,
-                [newKey]: product[key]
-            };
-        }, {});
     }
 
     private updateStateForNewPageView(payload: any) {

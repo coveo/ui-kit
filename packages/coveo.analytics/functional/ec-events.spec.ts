@@ -4,9 +4,12 @@ import { DefaultEventResponse } from '../src/events';
 import coveoua from '../src/coveoua/browser';
 
 describe('ec events', () => {
+    const initialLocation = `${window.location}`;
     const aToken = 'token';
     const anEndpoint = 'http://bloup';
-    const aVisitorId = '123';
+
+    const numberFormat = /[0-9]+/;
+    const guidFormat = /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/;
 
     const defaultContextValues = {
         dl: `${location.protocol}//${location.hostname}${location.pathname.indexOf('/') === 0 ? location.pathname : `/${location.pathname}`}${location.search}`,
@@ -17,16 +20,24 @@ describe('ec events', () => {
         dr: document.referrer,
         dt: document.title,
         de: document.characterSet,
+        pid: expect.stringMatching(guidFormat),
+        cid: expect.stringMatching(guidFormat),
+        tm: expect.stringMatching(numberFormat),
+        z: expect.stringMatching(guidFormat),
     };
 
     beforeEach(() => {
+        changeDocumentLocation(initialLocation);
         const address = `${anEndpoint}/rest/v15/analytics/collect`;
-        const eventResponse: DefaultEventResponse = {
-            visitId : 'firsttimevisiting',
-            visitorId: aVisitorId
-        };
         fetchMock.reset();
-        fetchMock.post(address, eventResponse);
+        fetchMock.post(address, (url, {body}) => {
+            const parsedBody = JSON.parse(body.toString());
+            const visitorId = parsedBody.cid;
+            return {
+                visitId : 'firsttimevisiting',
+                visitorId,
+            } as DefaultEventResponse;
+        });
         coveoua('init', aToken, anEndpoint);
     });
 
@@ -35,7 +46,9 @@ describe('ec events', () => {
         coveoua('ec:setAction', 'detail', {storeid: 'amazing'});
         await coveoua('send', 'pageview');
 
-        assertRequestSentContainsEqual({
+        const [body] = getParsedBody();
+
+        expect(body).toEqual({
             ...defaultContextValues,
             t: 'pageview',
             pr1nm: 'wow',
@@ -53,7 +66,9 @@ describe('ec events', () => {
             location: 'http://right.here',
         });
 
-        assertRequestSentContainsEqual({
+        const [body] = getParsedBody();
+
+        expect(body).toEqual({
             ...defaultContextValues,
             t: 'pageview',
             dp: 'page',
@@ -72,15 +87,18 @@ describe('ec events', () => {
 
         const [event, secondEvent, pageView, thirdEvent, secondPageView, afterSecondPageView] = getParsedBody();
 
-        expect(event.a).toBe(secondEvent.a);
-        expect(event.a).toBe(pageView.a);
-        expect(event.a).toBe(thirdEvent.a);
-        expect(event.a).not.toBe(secondPageView.a);
-        expect(secondPageView.a).toBe(afterSecondPageView.a);
+        [event, secondEvent, pageView, thirdEvent, secondPageView, afterSecondPageView]
+            .map(e => e.pid)
+            .forEach(pid => expect(pid).toMatch(guidFormat));
+
+        expect(event.pid).toBe(secondEvent.pid);
+        expect(event.pid).toBe(pageView.pid);
+        expect(event.pid).toBe(thirdEvent.pid);
+        expect(event.pid).not.toBe(secondPageView.pid);
+        expect(secondPageView.pid).toBe(afterSecondPageView.pid);
     });
 
     it('should update the current location and referrer on a second page view', async () => {
-        const initialLocation = `${window.location}`;
         const secondLocation = 'http://very.new/';
 
         await coveoua('send', 'pageview');
@@ -103,8 +121,6 @@ describe('ec events', () => {
     });
 
     it('should update the current location when a pageview is sent with the page parameter and keep it', async () => {
-        const initialLocation = `${window.location}`;
-
         await coveoua('send', 'pageview', '/page');
         await coveoua('send', 'event', '1');
 
@@ -115,8 +131,6 @@ describe('ec events', () => {
     });
 
     it('should keep the current location when a pageview is sent with the page parameter', async () => {
-        const initialLocation = `${window.location}`;
-
         await coveoua('send', 'pageview', '/page');
 
         const [event] = getParsedBody();
@@ -124,17 +138,19 @@ describe('ec events', () => {
         expect(event.dl).toBe(`${initialLocation}page`);
     });
 
-    const assertRequestSentContainsEqual = (toContain: {[name: string]: any}) => {
-        expect(fetchMock.called()).toBe(true);
+    it('should be able to set the userId', async () => {
+        const aUser = '👴';
+        await coveoua('set', 'userId', aUser);
+        await coveoua('send', 'pageview');
 
-        const [, { body }] = fetchMock.lastCall();
-        expect(body).not.toBeUndefined();
+        const [event] = getParsedBody();
 
-        const parsedBody = JSON.parse(body.toString());
-        Object.keys(toContain).map((key: string) => ({
-            [key]: toContain[key]
-        })).forEach((toTest) => expect(parsedBody).toMatchObject(toTest));
-    };
+        expect(event).toEqual({
+            ...defaultContextValues,
+            t: 'pageview',
+            uid: aUser
+        });
+    });
 
     const getParsedBody = (): any[] => {
         return fetchMock.calls().map(([, { body }]) => JSON.parse(body.toString()));

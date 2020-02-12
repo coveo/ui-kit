@@ -13,6 +13,7 @@ export type AvailableActions = keyof(CoveoUA);
 export class CoveoUA {
     private client?: AnalyticsClient;
     private plugins: Plugins = new Plugins();
+    private params: {[name: string]: string} = {};
 
     // init initializes a new SimpleAPI client.
     // @param token is your coveo access_token / api_key / ...
@@ -35,6 +36,10 @@ export class CoveoUA {
 
         if (this.client) {
             this.plugins.register('ec', new EC({ client: this.client }));
+            this.client.registerBeforeSendEventHook((eventType, payload) => ({
+                ...payload,
+                ...this.params
+            }));
         } else {
             throw new Error(`You must pass either your token or a valid object when you call 'init'`);
         }
@@ -54,6 +59,16 @@ export class CoveoUA {
         this.client = new CoveoAnalyticsClient({
             endpoint: endpoint
         });
+    }
+
+    set(keyOrObject: string | any, value: string): void {
+        if (typeof keyOrObject === 'string') {
+            this.params[keyOrObject] = value;
+        } else {
+            Object.keys(keyOrObject).map(key => {
+                this.params[key] = keyOrObject[key];
+            });
+        }
     }
 
     send(...[event, ...payload]: SendEventArguments): Promise<AnyEventResponse | void> {
@@ -93,7 +108,7 @@ export const handleOneAnalyticsEvent = (command: string, ...params: any[]): any 
     } else if (actionFunction) {
         return actionFunction.apply(coveoua, params);
     } else {
-        const actions: AvailableActions[] = ['init', 'send', 'onLoad'];
+        const actions: AvailableActions[] = ['init', 'set', 'send', 'onLoad', 'callPlugin'];
         throw new Error(`The action "${command}" does not exist. Available actions: ${actions.join(', ')}.`);
     }
 };
