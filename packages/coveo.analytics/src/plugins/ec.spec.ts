@@ -8,18 +8,18 @@ describe('EC plugin', () => {
     const someUUIDGenerator = jest.fn(() => someUUID);
     const someUUID = '13ccebdb-0138-45e8-bf70-884817ead190';
     const defaultResult = {
-        a: someUUID,
-        de: document.characterSet,
-        dl: 'http://localhost/',
-        dr: 'http://somewhere.over/therainbow',
-        dt: 'MAH PAGE',
-        sd: '24-bit',
-        sr: '0x0',
-        tm: expect.any(String),
-        ua: navigator.userAgent,
-        ul: 'en-US',
-        t: ECPluginEventTypes.event,
-        z: someUUID,
+        pageViewId: someUUID,
+        encoding: document.characterSet,
+        location: 'http://localhost/',
+        referrer: 'http://somewhere.over/therainbow',
+        title: 'MAH PAGE',
+        screenColor: '24-bit',
+        screenResolution: '0x0',
+        time: expect.any(String),
+        userAgent: navigator.userAgent,
+        language: 'en-US',
+        hitType: ECPluginEventTypes.event,
+        eventId: someUUID,
     };
 
     beforeEach(() => {
@@ -117,7 +117,7 @@ describe('EC plugin', () => {
 
         expect(result).toEqual({
             ...defaultResult,
-            'pa': 'ok'
+            action: 'ok'
         });
     });
 
@@ -153,9 +153,9 @@ describe('EC plugin', () => {
 
         expect(result).toEqual({
             ...defaultResult,
-            'cid': payload.clientId,
-            'de': payload.encoding,
-            'pa': payload.action
+            clientId: payload.clientId,
+            encoding: payload.encoding,
+            action: payload.action
         });
     });
 
@@ -178,14 +178,14 @@ describe('EC plugin', () => {
 
         expect(pageview).toEqual({
             ...defaultResult,
-            't': ECPluginEventTypes.pageview,
-            'dp': payload.page,
-            'dl': `${defaultResult.dl}${payload.page.substring(1)}`,
+            hitType: ECPluginEventTypes.pageview,
+            page: payload.page,
+            location: `${defaultResult.location}${payload.page.substring(1)}`,
         });
         expect(event).toEqual({
             ...defaultResult,
-            't': ECPluginEventTypes.event,
-            'dl': `${defaultResult.dl}${payload.page.substring(1)}`,
+            hitType: ECPluginEventTypes.event,
+            location: `${defaultResult.location}${payload.page.substring(1)}`,
         });
      });
 

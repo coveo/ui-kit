@@ -63,6 +63,16 @@ describe('simpleanalytics', () => {
             handleOneAnalyticsEvent('initForProxy', fakeServerAddress);
             handleOneAnalyticsEvent('send', someRandomEventName);
         });
+
+        it('can set a new parameter', () => {
+            handleOneAnalyticsEvent('set', 'userId', 'something');
+        });
+
+        it('can set parameters using an object', () => {
+            handleOneAnalyticsEvent('set', {
+                userId: 'something'
+            });
+        });
     });
 
     it('can initialize with analyticsClient', () => {

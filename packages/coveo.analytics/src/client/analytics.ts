@@ -22,6 +22,7 @@ import { hasLocalStorage, hasCookieStorage } from '../detector';
 import { addDefaultValues } from '../hook/addDefaultValues';
 import { enhanceViewEvent } from '../hook/enhanceViewEvent';
 import { uuidv4 } from './crypto';
+import { convertKeysToMeasurementProtocol } from './measurementProtocolMapper';
 
 export const Version = 'v15';
 
@@ -42,6 +43,7 @@ export type EventTypeConfig = {
     newEventType: EventType;
     variableLengthArgumentsNames?: string[];
     addVisitorIdParameter?: boolean;
+    usesMeasurementProtocol?: boolean;
 };
 
 export interface AnalyticsClient {
@@ -138,21 +140,33 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
         const {
             newEventType: eventTypeToSend = eventType as EventType,
             variableLengthArgumentsNames = [],
-            addVisitorIdParameter = false
+            addVisitorIdParameter = false,
+            usesMeasurementProtocol = false,
         } = this.eventTypeMapping[eventType] || {};
 
-        const payloadToProcess = variableLengthArgumentsNames.length > 0
-            ? this.parseVariableArgumentsPayload(variableLengthArgumentsNames, payload)
-            : payload[0];
-
-        const processedPayload = this.beforeSendHooks.reduce((newPayload, current) => current(eventType, newPayload), {
+        type ProcessPayloadStep = (currentPayload: any) => any;
+        const processVariableArgumentNamesStep: ProcessPayloadStep = (currentPayload) => variableLengthArgumentsNames.length > 0
+            ? this.parseVariableArgumentsPayload(variableLengthArgumentsNames, currentPayload)
+            : currentPayload[0];
+        const addVisitorIdStep: ProcessPayloadStep = (currentPayload) => ({
             visitorId: addVisitorIdParameter ? this.visitorId : '',
-            ...payloadToProcess,
+            ...currentPayload
         });
-        const cleanedPayload = this.removeEmptyPayloadValues(processedPayload);
+        const processBeforeSendHooksStep: ProcessPayloadStep = (currentPayload) => this.beforeSendHooks.reduce((newPayload, current) => current(eventType, newPayload), currentPayload);
+        const cleanPayloadStep: ProcessPayloadStep = (currentPayload) => this.removeEmptyPayloadValues(currentPayload);
+        const processMeasurementProtocolConversionStep: ProcessPayloadStep = (currentPayload) => usesMeasurementProtocol ? convertKeysToMeasurementProtocol(currentPayload) : currentPayload;
+
+        const payloadToSend = [
+            processVariableArgumentNamesStep,
+            addVisitorIdStep,
+            processBeforeSendHooksStep,
+            cleanPayloadStep,
+            processMeasurementProtocolConversionStep
+        ].reduce((payload, step) => step(payload), payload);
+
         this.bufferedRequests.push({
             eventType: eventTypeToSend,
-            payload: cleanedPayload,
+            payload: payloadToSend,
             handled: false
         });
 
