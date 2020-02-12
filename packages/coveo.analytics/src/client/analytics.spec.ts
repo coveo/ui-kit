@@ -166,40 +166,22 @@ describe('Analytics', () => {
     });
 
     describe('with event type mapping activating context values', () => {
-        const locationContextKeys = ['location'];
-        const screenContextKeys = ['screenResolution', 'screenColor'];
-        const navigatorContextKeys = ['language', 'userAgent'];
-
         const specialEventType = '🌟special🌟';
         beforeEach(() => {
             mockFetchRequestForEventType(EventType.custom);
             client.addEventTypeMapping(specialEventType, {
                 newEventType: EventType.custom,
-                addDefaultContextInformation: true
+                addVisitorIdParameter: true
             });
         });
 
-        it('should properly add location, screen and navigator context keys', async () => {
+        it('should properly add visitorId key', async () => {
             await client.sendEvent(specialEventType);
 
             const [body] = getParsedBodyCalls();
 
-            assertHaveAllProperties(body, [...locationContextKeys, ...screenContextKeys, ...navigatorContextKeys]);
+            expect(body).toHaveProperty('visitorId');
         });
-
-        it('should each call the uuidv4 method', async () => {
-            uuidv4Mock.mockReset();
-
-            await client.sendEvent(specialEventType);
-            await client.sendEvent(specialEventType);
-            await client.sendEvent(specialEventType);
-
-            expect(uuidv4Mock).toHaveBeenCalledTimes(3);
-        });
-
-        const assertHaveAllProperties = (object: any, properties: string[]) => {
-            properties.forEach(property => expect(object).toHaveProperty(property));
-        };
     });
 
     const getParsedBodyCalls = (): any[] => {

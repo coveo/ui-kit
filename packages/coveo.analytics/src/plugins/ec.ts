@@ -1,6 +1,7 @@
-import { AnalyticsClient, DefaultContextInformation } from '../client/analytics';
+import { AnalyticsClient } from '../client/analytics';
 import { EventType } from '../events';
 import { uuidv4 } from '../client/crypto';
+import { getFormattedLocation } from '../client/location';
 
 // Based off: https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#enhanced-ecomm
 const productKeysMapping: {[name: string]: string} = {
@@ -20,8 +21,9 @@ const eventKeysMapping: {[name: string]: string} = {
     eventAction: 'ea',
     eventLabel: 'el',
     eventValue: 'ev',
-    pageViewId: 'a',
-    hitType: 't',
+    page: 'dp',
+    visitorId: 'cid',
+    clientId: 'cid',
 };
 
 const productActionsKeysMapping: {[name: string]: string} = {
@@ -41,8 +43,10 @@ const transactionActionsKeysMappings: {[name: string]: string} = {
     option: 'col'
 };
 
+export type DefaultContextInformation = ReturnType<typeof EC.prototype.getDefaultContextInformation> & ReturnType<typeof EC.prototype.getLocationInformation>;
 const contextInformationMapping: {[key in keyof DefaultContextInformation]: string} = {
-    clientId: 'cid',
+    hitType: 't',
+    pageViewId: 'a',
     encoding: 'de',
     location: 'dl',
     referrer: 'dr',
@@ -81,11 +85,15 @@ export class EC {
     private actionData: {[name: string]: string} = {};
     private pageViewId: string;
     private hasSentFirstPageView?: boolean;
+    private lastLocation: string;
+    private lastReferrer: string;
 
     constructor({ client, uuidGenerator = uuidv4 }: { client: AnalyticsClient, uuidGenerator?: typeof uuidv4 }) {
         this.client = client;
         this.uuidGenerator = uuidGenerator;
         this.pageViewId = uuidGenerator();
+        this.lastLocation = getFormattedLocation(window.location);
+        this.lastReferrer = document.referrer;
 
         this.addHooksForPageView();
         this.addHooksForEvent();
@@ -119,7 +127,7 @@ export class EC {
         this.client.addEventTypeMapping(ECPluginEventTypes.pageview, {
             newEventType: EventType.collect,
             variableLengthArgumentsNames: ['page'],
-            addDefaultContextInformation: true,
+            addVisitorIdParameter: true,
         });
     }
 
@@ -127,14 +135,14 @@ export class EC {
         this.client.addEventTypeMapping(ECPluginEventTypes.event, {
             newEventType: EventType.collect,
             variableLengthArgumentsNames: ['eventCategory', 'eventAction', 'eventLabel', 'eventValue'],
-            addDefaultContextInformation: true,
+            addVisitorIdParameter: true,
         });
     }
 
     private addECDataToPayload(eventType: string, payload: any) {
         const payloadWithConvertedKeys = this.convertKeysToMeasurementProtocol({
-            hitType: eventType,
-            pageViewId: this.getPageViewId(eventType),
+            ...(this.getLocationInformation(eventType, payload)),
+            ...(this.getDefaultContextInformation(eventType)),
             ...(this.action ? { action: this.action } : {}),
             ...(this.actionData || {}),
             ...payload
@@ -175,13 +183,58 @@ export class EC {
         }, {});
     }
 
-    private getPageViewId(eventType: string) {
-        if (eventType === ECPluginEventTypes.pageview) {
-            if (this.hasSentFirstPageView) {
-                this.pageViewId = this.uuidGenerator();
-            }
-            this.hasSentFirstPageView = true;
+    private updateStateForNewPageView(payload: any) {
+        if (this.hasSentFirstPageView) {
+            this.pageViewId = this.uuidGenerator();
+            this.lastReferrer = this.lastLocation;
         }
-        return this.pageViewId;
+
+        if (!!payload.page) {
+            const removeStartingSlash = (page: string) => page.replace(/^\/?(.*)$/, '/$1');
+            const extractHostnamePart = (location: string) => location.split('/').slice(0, 3).join('/');
+            this.lastLocation = `${extractHostnamePart(this.lastLocation)}${removeStartingSlash(payload.page)}`;
+        } else {
+            this.lastLocation = getFormattedLocation(window.location);
+        }
+
+        this.hasSentFirstPageView = true;
+    }
+
+    getLocationInformation(eventType: string, payload: any) {
+        eventType === ECPluginEventTypes.pageview && this.updateStateForNewPageView(payload);
+        return {
+            referrer: this.lastReferrer,
+            location: this.lastLocation,
+        };
+    }
+
+    getDefaultContextInformation(eventType: string) {
+        const pageContext = {
+            hitType: eventType,
+            pageViewId: this.pageViewId
+        };
+        const documentContext = {
+            title: document.title,
+            encoding: document.characterSet,
+        };
+        const screenContext = {
+            screenResolution: `${screen.width}x${screen.height}`,
+            screenColor: `${screen.colorDepth}-bit`,
+        };
+        const navigatorContext = {
+            language: navigator.language,
+            userAgent: navigator.userAgent,
+        };
+        const eventContext = {
+            time: Date.now().toString(),
+            eventId: this.uuidGenerator(),
+        };
+        return {
+            ...pageContext,
+            ...eventContext,
+            ...screenContext,
+            ...navigatorContext,
+            ...documentContext
+        };
     }
 }
