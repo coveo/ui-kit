@@ -38,6 +38,7 @@ describe('ec events', () => {
                 visitorId,
             } as DefaultEventResponse;
         });
+        coveoua('reset');
         coveoua('init', aToken, anEndpoint);
     });
 
@@ -150,6 +151,56 @@ describe('ec events', () => {
             t: 'pageview',
             uid: aUser
         });
+    });
+
+    it('should be able to follow the complete addToCart flow', async () => {
+        // https://developers.google.com/analytics/devguides/collection/analyticsjs/enhanced-ecommerce#add-remove-cart
+        const product = {
+            'id': 'id',
+            'name': 'name',
+            'category': 'category',
+            'brand': 'brand',
+            'variant': 'variant',
+            'price': 0,
+            'quantity': 0
+        };
+        await coveoua('set', 'currencyCode', 'EUR');
+        await coveoua('ec:addProduct', product);
+        await coveoua('ec:setAction', 'add');
+        await coveoua('send', 'event', 'UX', 'click', 'add to cart');
+
+        const [event] = getParsedBody();
+
+        // Event directly extracted from `ca.js` with the same sequence of event.
+        expect(event).toEqual({
+            pid: expect.stringMatching(guidFormat), // Key changed from `a`
+            cid: expect.stringMatching(guidFormat),
+            cu: 'EUR',
+            de: defaultContextValues.de,
+            dl: defaultContextValues.dl,
+            dr: defaultContextValues.dr,
+            dt: defaultContextValues.dt,
+            ea: 'click',
+            ec: 'UX',
+            el: 'add to cart',
+            pa: 'add',
+            pr1br: product.brand,
+            pr1ca: product.category,
+            pr1id: product.id,
+            pr1nm: product.name,
+            pr1va: product.variant,
+            pr1pr: product.price,
+            pr1qt: product.quantity,
+            sd: defaultContextValues.sd,
+            sr: defaultContextValues.sr,
+            t: 'event',
+            // tid: "toosogoogleanalyticsevents0l18in4y", removed, this one is picked up from the `ca("create", TID)` call.
+            tm: expect.stringMatching(numberFormat),
+            ua: defaultContextValues.ua, // Added
+            ul: defaultContextValues.ul,
+            // v: 1, removed, we don't send version as of now.
+            z: expect.stringMatching(guidFormat)
+          });
     });
 
     const getParsedBody = (): any[] => {

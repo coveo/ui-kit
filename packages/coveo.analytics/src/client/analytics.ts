@@ -251,8 +251,9 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
     }
 
     private removeEmptyPayloadValues(payload: IRequestPayload): IRequestPayload {
+        const isNotEmptyValue = (value: any) => (typeof (value) !== 'undefined' && value !== null && value !== '');
         return Object.keys(payload)
-            .filter(key => !!payload[key])
+            .filter(key => isNotEmptyValue(payload[key]))
             .reduce((newPayload, key) => ({
                 ...newPayload,
                 [key]: payload[key]

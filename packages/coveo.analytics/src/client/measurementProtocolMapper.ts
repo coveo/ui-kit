@@ -21,7 +21,8 @@ const eventKeysMapping: {[name: string]: string} = {
     page: 'dp',
     visitorId: 'cid',
     clientId: 'cid',
-    userId: 'uid'
+    userId: 'uid',
+    currencyCode: 'cu'
 };
 
 const productActionsKeysMapping: {[name: string]: string} = {
