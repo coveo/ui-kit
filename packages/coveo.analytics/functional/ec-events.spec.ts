@@ -161,9 +161,10 @@ describe('ec events', () => {
             'category': 'category',
             'brand': 'brand',
             'variant': 'variant',
-            'price': 'price',
-            'quantity': '1'
+            'price': 0,
+            'quantity': 0
         };
+        await coveoua('set', 'currencyCode', 'EUR');
         await coveoua('ec:addProduct', product);
         await coveoua('ec:setAction', 'add');
         await coveoua('send', 'event', 'UX', 'click', 'add to cart');
@@ -174,6 +175,7 @@ describe('ec events', () => {
         expect(event).toEqual({
             pid: expect.stringMatching(guidFormat), // Key changed from `a`
             cid: expect.stringMatching(guidFormat),
+            cu: 'EUR',
             de: defaultContextValues.de,
             dl: defaultContextValues.dl,
             dr: defaultContextValues.dr,

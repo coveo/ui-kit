@@ -110,6 +110,24 @@ describe('Analytics', () => {
         assertResponseHasCustomDataWithIndex(thirdResponse, 2);
     });
 
+    it('should should only clean null, undefined, and empty string values', async () => {
+        mockFetchRequestForEventType(EventType.view);
+        await client.sendEvent(EventType.view, {
+            fine: 1,
+            ok: 0,
+            notok: '',
+            invalid: null,
+            ohno: undefined
+        });
+
+        const [body] = getParsedBodyCalls();
+
+        expect(body).toMatchObject({
+            fine: 1,
+            ok: 0
+        });
+    });
+
     describe('with event type mapping with variable arguments', () => {
         const specialEventType = '🌟special🌟';
         const argumentNames = ['eventCategory', 'eventAction', 'eventLabel', 'eventValue'];
