@@ -11,9 +11,26 @@ export const ECPluginEventTypes = {
 
 const allECEventTypes = Object.keys(ECPluginEventTypes).map(key => ECPluginEventTypes[key as keyof typeof ECPluginEventTypes]);
 
-export interface Product {
-    [name: string]: string;
+// From https://stackoverflow.com/a/49725198/497731
+type RequireAtLeastOne<T, Keys extends keyof T = keyof T> =
+    Pick<T, Exclude<keyof T, Keys>>
+    & {
+        [K in Keys]-?: Required<Pick<T, K>> & Partial<Pick<T, Exclude<Keys, K>>>
+    }[Keys];
+
+export interface ProductProperties {
+    id?: string;
+    name?: string;
+    brand?: string;
+    category?: string;
+    variant?: string;
+    price?: number;
+    quantity?: number;
+    coupon?: string;
+    position?: number;
 }
+
+export type Product = RequireAtLeastOne<ProductProperties, 'id' | 'name'>;
 
 export class EC {
     private client: AnalyticsClient;
