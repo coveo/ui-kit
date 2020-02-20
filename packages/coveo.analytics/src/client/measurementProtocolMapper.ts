@@ -1,4 +1,4 @@
-import { EC, Product } from '../plugins/ec';
+import { EC, Product, ImpressionList, BaseImpression } from '../plugins/ec';
 
 // Based off: https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#enhanced-ecomm
 const productKeysMapping: {[key in keyof Product]: string} = {
@@ -11,6 +11,16 @@ const productKeysMapping: {[key in keyof Product]: string} = {
     quantity: 'qt',
     coupon: 'cc',
     position: 'ps',
+};
+
+const impressionKeysMapping: {[key in keyof BaseImpression]: string} = {
+    id: 'id',
+    name: 'nm',
+    brand: 'br',
+    category: 'ca',
+    variant: 'va',
+    position: 'ps',
+    price: 'pr',
 };
 
 const eventKeysMapping: {[name: string]: string} = {
@@ -87,4 +97,29 @@ export const convertProductToMeasurementProtocol = (product: Product, index: num
             [newKey]: product[key]
         };
     }, {});
+};
+
+export const convertImpressionListToMeasurementProtocol = (impressionList: ImpressionList, listIndex: number) => {
+    const payload: {[name: string]: any} = impressionList.impressions.reduce((mappedImpressions, impression, productIndex) => {
+        return {
+            ...mappedImpressions,
+            ...convertImpressionToMeasurementProtocol(impression, listIndex, productIndex)
+        };
+    }, {});
+
+    if (impressionList.listName) {
+        const listNameKey = `il${listIndex + 1}nm`;
+        payload[listNameKey] = impressionList.listName;
+    }
+    return payload;
+};
+
+const convertImpressionToMeasurementProtocol = (impression: BaseImpression, listIndex: number, productIndex: number) => {
+    return keysOf(impression).reduce((mappedImpression, key) => {
+            const newKey = `il${listIndex + 1}pi${productIndex + 1}${impressionKeysMapping[key] || key}`;
+            return {
+                ...mappedImpression,
+                [newKey]: impression[key]
+            };
+        }, {});
 };

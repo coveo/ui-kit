@@ -2,7 +2,7 @@ import { AnalyticsClient } from '../client/analytics';
 import { EventType } from '../events';
 import { uuidv4 } from '../client/crypto';
 import { getFormattedLocation } from '../client/location';
-import { convertProductToMeasurementProtocol } from '../client/measurementProtocolMapper';
+import { convertProductToMeasurementProtocol, convertImpressionListToMeasurementProtocol } from '../client/measurementProtocolMapper';
 
 export const ECPluginEventTypes = {
     pageview: 'pageview',
@@ -32,10 +32,29 @@ export interface ProductProperties {
 
 export type Product = RequireAtLeastOne<ProductProperties, 'id' | 'name'>;
 
+export interface ImpressionProperties {
+    id?: string;
+    name?: string;
+    list?: string;
+    brand?: string;
+    category?: string;
+    variant?: string;
+    position?: number;
+    price?: number;
+}
+
+export type Impression = RequireAtLeastOne<ImpressionProperties, 'id' | 'name'>;
+export type BaseImpression = Omit<Impression, 'list'>;
+export interface ImpressionList {
+    listName?: string;
+    impressions: BaseImpression[];
+}
+
 export class EC {
     private client: AnalyticsClient;
     private uuidGenerator: typeof uuidv4;
     private products: Product[] = [];
+    private impressions: Impression[] = [];
     private action?: string;
     private actionData: {[name: string]: string} = {};
     private pageViewId: string;
@@ -59,6 +78,10 @@ export class EC {
         this.products.push(product);
     }
 
+    addImpression(impression: Impression) {
+        this.impressions.push(impression);
+    }
+
     setAction(action: string, options?: any) {
         this.action = action;
         this.actionData = options;
@@ -66,6 +89,7 @@ export class EC {
 
     clearData() {
         this.products = [];
+        this.impressions = [];
         this.action = undefined;
         this.actionData = {};
     }
@@ -111,13 +135,35 @@ export class EC {
             };
         }, {});
 
+        const impressionsByList = this.getImpressionsByList();
+        const impressionPayload = impressionsByList.reduce((newPayload, impressionList, index) => {
+                return {
+                    ...newPayload,
+                    ...convertImpressionListToMeasurementProtocol(impressionList, index),
+                };
+        }, {});
+
         this.clearData();
 
         return {
+            ...impressionPayload,
             ...productPayload,
             ...ecPayload,
             ...payload,
         };
+    }
+
+    private getImpressionsByList() {
+        return this.impressions.reduce((lists, impression) => {
+            const { list: listName, ...baseImpression } = impression;
+            const list = lists.find(list => list.listName === listName);
+            if (list) {
+                list.impressions.push(baseImpression);
+            } else {
+                lists.push({ listName: listName, impressions: [baseImpression] });
+            }
+            return lists;
+        }, [] as ImpressionList[]);
     }
 
     private updateStateForNewPageView(payload: any) {

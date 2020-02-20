@@ -36,78 +36,179 @@ describe('EC plugin', () => {
         expect(client.addEventTypeMapping).toHaveBeenCalledTimes(Object.keys(ECPluginEventTypes).length);
     });
 
-    it('should append the product with the specific format when the hook is called', () => {
-        ec.addProduct({ id: 'C0V30' });
+    describe('products', () => {
+        it('should append the product with the specific format when the hook is called', () => {
+            ec.addProduct({ id: 'C0V30' });
 
-        const result = executeRegisteredHook(ECPluginEventTypes.event, {});
+            const result = executeRegisteredHook(ECPluginEventTypes.event, {});
 
-        expect(result).toEqual({ ...defaultResult, 'pr1id' : 'C0V30' });
-    });
+            expect(result).toEqual({ ...defaultResult, 'pr1id' : 'C0V30' });
+        });
 
-    it('should append the product with the pageview event', () => {
-        ec.addProduct({ name: 'Relevance T-Shirt' });
+        it('should append the product with the pageview event', () => {
+            ec.addProduct({ name: 'Relevance T-Shirt' });
 
-        const result = executeRegisteredHook(ECPluginEventTypes.event, {});
+            const result = executeRegisteredHook(ECPluginEventTypes.event, {});
 
-        expect(result).toEqual({ ...defaultResult, 'pr1nm' : 'Relevance T-Shirt' });
-    });
+            expect(result).toEqual({ ...defaultResult, 'pr1nm' : 'Relevance T-Shirt' });
+        });
 
-    it('should not append the product with a random event type', () => {
-        ec.addProduct({ id: ':sorandom:' });
+        it('should not append the product with a random event type', () => {
+            ec.addProduct({ id: ':sorandom:' });
 
-        const result = executeRegisteredHook('🎲', {});
+            const result = executeRegisteredHook('🎲', {});
 
-        expect(result).toEqual({});
-    });
+            expect(result).toEqual({});
+        });
 
-    it('should keep the products until a valid event type is used', () => {
-        ec.addProduct({ id: 'P12345'});
+        it('should keep the products until a valid event type is used', () => {
+            ec.addProduct({ id: 'P12345'});
 
-        executeRegisteredHook('🎲', {});
-        executeRegisteredHook('🐟', {});
-        executeRegisteredHook('💀', {});
-        const result = executeRegisteredHook(ECPluginEventTypes.event, {});
+            executeRegisteredHook('🎲', {});
+            executeRegisteredHook('🐟', {});
+            executeRegisteredHook('💀', {});
+            const result = executeRegisteredHook(ECPluginEventTypes.event, {});
 
-        expect(result).toEqual({ ...defaultResult, 'pr1id' : 'P12345' });
-    });
+            expect(result).toEqual({ ...defaultResult, 'pr1id' : 'P12345' });
+        });
 
-    it('should convert known product keys into the measurement protocol format', () => {
-        ec.addProduct({ 'name': '🧀', price: 5.99 });
+        it('should convert known product keys into the measurement protocol format', () => {
+            ec.addProduct({ 'name': '🧀', price: 5.99 });
 
-        const result = executeRegisteredHook(ECPluginEventTypes.event, {});
+            const result = executeRegisteredHook(ECPluginEventTypes.event, {});
 
-        expect(result).toEqual({ ...defaultResult, 'pr1nm' : '🧀', 'pr1pr': 5.99 });
-    });
+            expect(result).toEqual({ ...defaultResult, 'pr1nm' : '🧀', 'pr1pr': 5.99 });
+        });
 
-    it('should allow adding multiple products', () => {
-        ec.addProduct({ 'name': '🍟', price: 1.99 });
-        ec.addProduct({ 'name': '🍿', price: 3 });
-        ec.addProduct({ 'name': '🥤', price: 2 });
+        it('should allow adding multiple products', () => {
+            ec.addProduct({ 'name': '🍟', price: 1.99 });
+            ec.addProduct({ 'name': '🍿', price: 3 });
+            ec.addProduct({ 'name': '🥤', price: 2 });
 
-        const result = executeRegisteredHook(ECPluginEventTypes.event, {});
+            const result = executeRegisteredHook(ECPluginEventTypes.event, {});
 
-        expect(result).toEqual({
-            ...defaultResult,
-            'pr1nm' : '🍟',
-            'pr1pr': 1.99,
-            'pr2nm' : '🍿',
-            'pr2pr': 3,
-            'pr3nm' : '🥤' ,
-            'pr3pr': 2,
+            expect(result).toEqual({
+                ...defaultResult,
+                'pr1nm' : '🍟',
+                'pr1pr': 1.99,
+                'pr2nm' : '🍿',
+                'pr2pr': 3,
+                'pr3nm' : '🥤',
+                'pr3pr': 2,
+            });
+        });
+
+        it('should flush the products once they are sent', () => {
+            ec.addProduct({ 'name': '🍟', price: 1.99 });
+            ec.addProduct({ 'name': '🍿', price: 3 });
+
+            const result = executeRegisteredHook(ECPluginEventTypes.event, {});
+
+            expect(result).not.toEqual({});
+
+            const secondResult = executeRegisteredHook(ECPluginEventTypes.event, {});
+
+            expect(secondResult).toEqual({...defaultResult});
         });
     });
 
-    it('should flush the products once they are sent', () => {
-        ec.addProduct({ 'name': '🍟', price: 1.99 });
-        ec.addProduct({ 'name': '🍿', price: 3 });
+    describe('impressions', () => {
+        it('should append the impression with the specific format when the hook is called', () => {
+            ec.addImpression({ id: 'C0V30' });
 
-        const result = executeRegisteredHook(ECPluginEventTypes.event, {});
+            const result = executeRegisteredHook(ECPluginEventTypes.event, {});
 
-        expect(result).not.toEqual({});
+            expect(result).toEqual({ ...defaultResult, 'il1pi1id' : 'C0V30' });
+        });
 
-        const secondResult = executeRegisteredHook(ECPluginEventTypes.event, {});
+        it('should append the impression with the pageview event', () => {
+            ec.addImpression({ name: 'Relevance T-Shirt' });
 
-        expect(secondResult).toEqual({...defaultResult});
+            const result = executeRegisteredHook(ECPluginEventTypes.event, {});
+
+            expect(result).toEqual({ ...defaultResult, 'il1pi1nm' : 'Relevance T-Shirt' });
+        });
+
+        it('should not append the impression with a random event type', () => {
+            ec.addImpression({ id: ':sorandom:' });
+
+            const result = executeRegisteredHook('🎲', {});
+
+            expect(result).toEqual({});
+        });
+
+        it('should keep the impressions until a valid event type is used', () => {
+            ec.addImpression({ id: 'P12345'});
+
+            executeRegisteredHook('🎲', {});
+            executeRegisteredHook('🐟', {});
+            executeRegisteredHook('💀', {});
+            const result = executeRegisteredHook(ECPluginEventTypes.event, {});
+
+            expect(result).toEqual({ ...defaultResult, 'il1pi1id' : 'P12345' });
+        });
+
+        it('should convert known impression keys into the measurement protocol format', () => {
+            ec.addImpression({ 'name': '🧀', price: 5.99 });
+
+            const result = executeRegisteredHook(ECPluginEventTypes.event, {});
+
+            expect(result).toEqual({ ...defaultResult, 'il1pi1nm' : '🧀', 'il1pi1pr': 5.99 });
+        });
+
+        it('should allow adding multiple impressions', () => {
+            ec.addImpression({ name: '🍟', price: 1.99 });
+            ec.addImpression({ name: '🍿', price: 3 });
+            ec.addImpression({ name: '🥤', price: 2 });
+
+            const result = executeRegisteredHook(ECPluginEventTypes.event, {});
+
+            expect(result).toEqual({
+                ...defaultResult,
+                'il1pi1nm' : '🍟',
+                'il1pi1pr': 1.99,
+                'il1pi2nm' : '🍿',
+                'il1pi2pr': 3,
+                'il1pi3nm' : '🥤',
+                'il1pi3pr': 2,
+            });
+        });
+
+        it('should allow adding impressions from multiple lists', () => {
+            ec.addImpression({ list: 'food', name: '🍟', price: 1.99 });
+            ec.addImpression({ list: 'food', name: '🍿', price: 3 });
+            ec.addImpression({ list: 'drinks', name: '🥤', price: 2 });
+            ec.addImpression({ list: 'drinks', name: '🧃', price: 0.99});
+
+            const result = executeRegisteredHook(ECPluginEventTypes.event, {});
+
+            expect(result).toEqual({
+                ...defaultResult,
+                'il1nm': 'food',
+                'il1pi1nm' : '🍟',
+                'il1pi1pr': 1.99,
+                'il1pi2nm' : '🍿',
+                'il1pi2pr': 3,
+                'il2nm': 'drinks',
+                'il2pi1nm' : '🥤',
+                'il2pi1pr': 2,
+                'il2pi2nm' : '🧃',
+                'il2pi2pr': 0.99,
+            });
+        });
+
+        it('should flush the products once they are sent', () => {
+            ec.addImpression({ 'name': '🍟', price: 1.99 });
+            ec.addImpression({ 'name': '🍿', price: 3 });
+
+            const result = executeRegisteredHook(ECPluginEventTypes.event, {});
+
+            expect(result).not.toEqual({});
+
+            const secondResult = executeRegisteredHook(ECPluginEventTypes.event, {});
+
+            expect(secondResult).toEqual({...defaultResult});
+        });
     });
 
     it('should be able to set an action', () => {
@@ -134,7 +235,8 @@ describe('EC plugin', () => {
     });
 
     it('should be able to clear all the data', () => {
-        ec.addProduct({ 'name': '🍨', price: 2.99 });
+        ec.addProduct({ name: '🍨', price: 2.99 });
+        ec.addImpression({ id: '🍦', price: 3.49 });
         ec.clearData();
 
         const result = executeRegisteredHook(ECPluginEventTypes.event, {});
