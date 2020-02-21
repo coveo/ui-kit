@@ -203,6 +203,63 @@ describe('ec events', () => {
           });
     });
 
+    it('should be able to follow the complete addImpression flow', async () => {
+        // https://developers.google.com/analytics/devguides/collection/analyticsjs/enhanced-ecommerce#product-impression
+        const productImpression1 = {
+            'id': 'P12345',
+            'name': 'Android Warhol T-Shirt',
+            'category': 'Apparel/T-Shirts',
+            'brand': 'Google',
+            'variant': 'black',
+            'list': 'Search Results',
+            'position': 1
+        };
+        const productImpression2 = {
+            'id': 'P67890',
+            'name': 'YouTube Organic T-Shirt',
+            'category': 'Apparel/T-Shirts',
+            'brand': 'YouTube',
+            'variant': 'gray',
+            'list': 'Search Results',
+            'position': 2
+        };
+
+        await coveoua('ec:addImpression', productImpression1);
+        await coveoua('ec:addImpression', productImpression2);
+        await coveoua('send', 'pageview');
+
+        const [event] = getParsedBody();
+
+        expect(event).toEqual({
+            pid: expect.stringMatching(guidFormat),
+            cid: expect.stringMatching(guidFormat),
+            de: defaultContextValues.de,
+            dl: defaultContextValues.dl,
+            dr: defaultContextValues.dr,
+            dt: defaultContextValues.dt,
+            il1nm: productImpression1.list,
+            il1pi1id: productImpression1.id,
+            il1pi1nm: productImpression1.name,
+            il1pi1ca: productImpression1.category,
+            il1pi1br: productImpression1.brand,
+            il1pi1va: productImpression1.variant,
+            il1pi1ps: productImpression1.position,
+            il1pi2id: productImpression2.id,
+            il1pi2nm: productImpression2.name,
+            il1pi2ca: productImpression2.category,
+            il1pi2br: productImpression2.brand,
+            il1pi2va: productImpression2.variant,
+            il1pi2ps: productImpression2.position,
+            sd: defaultContextValues.sd,
+            sr: defaultContextValues.sr,
+            t: 'pageview',
+            tm: expect.stringMatching(numberFormat),
+            ua: defaultContextValues.ua,
+            ul: defaultContextValues.ul,
+            z: expect.stringMatching(guidFormat)
+          });
+    });
+
     const getParsedBody = (): any[] => {
         return fetchMock.calls().map(([, { body }]) => JSON.parse(body.toString()));
     };
