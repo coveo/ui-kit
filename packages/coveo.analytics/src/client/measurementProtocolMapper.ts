@@ -1,16 +1,16 @@
 import { EC, Product } from '../plugins/ec';
 
 // Based off: https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#enhanced-ecomm
-const productKeysMapping: {[name: string]: string} = {
+const productKeysMapping: {[key in keyof Product]: string} = {
     id: 'id',
     name: 'nm',
     brand: 'br',
     category: 'ca',
     variant: 'va',
-    position: 'ps',
     price: 'pr',
     quantity: 'qt',
-    coupon: 'cc'
+    coupon: 'cc',
+    position: 'ps',
 };
 
 const eventKeysMapping: {[name: string]: string} = {
@@ -65,8 +65,12 @@ const measurementProtocolKeysMapping: {[name: string]: string} = {
     ...contextInformationMapping
 };
 
+// Object.keys returns `string[]` this adds types
+// see https://github.com/microsoft/TypeScript/pull/12253#issuecomment-393954723
+export const keysOf = Object.keys as <T>(o: T) => (Extract<keyof T, string>)[];
+
 export const convertKeysToMeasurementProtocol = (params: any) => {
-    return Object.keys(params).reduce((mappedKeys, key) => {
+    return keysOf(params).reduce((mappedKeys, key) => {
         const newKey = measurementProtocolKeysMapping[key] || key;
         return {
             ...mappedKeys,
@@ -76,7 +80,7 @@ export const convertKeysToMeasurementProtocol = (params: any) => {
 };
 
 export const convertProductToMeasurementProtocol = (product: Product, index: number) => {
-    return Object.keys(product).reduce((mappedProduct, key) => {
+    return keysOf(product).reduce((mappedProduct, key) => {
         const newKey = `pr${index + 1}${productKeysMapping[key] || key}`;
         return {
             ...mappedProduct,

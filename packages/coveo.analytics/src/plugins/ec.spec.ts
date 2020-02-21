@@ -37,23 +37,23 @@ describe('EC plugin', () => {
     });
 
     it('should append the product with the specific format when the hook is called', () => {
-        ec.addProduct({ 'something': 'useful' });
+        ec.addProduct({ id: 'C0V30' });
 
         const result = executeRegisteredHook(ECPluginEventTypes.event, {});
 
-        expect(result).toEqual({ ...defaultResult, 'pr1something' : 'useful' });
+        expect(result).toEqual({ ...defaultResult, 'pr1id' : 'C0V30' });
     });
 
     it('should append the product with the pageview event', () => {
-        ec.addProduct({ 'something': 'useful' });
+        ec.addProduct({ name: 'Relevance T-Shirt' });
 
         const result = executeRegisteredHook(ECPluginEventTypes.event, {});
 
-        expect(result).toEqual({ ...defaultResult, 'pr1something' : 'useful' });
+        expect(result).toEqual({ ...defaultResult, 'pr1nm' : 'Relevance T-Shirt' });
     });
 
     it('should not append the product with a random event type', () => {
-        ec.addProduct({ 'something': 'useful' });
+        ec.addProduct({ id: ':sorandom:' });
 
         const result = executeRegisteredHook('🎲', {});
 
@@ -61,45 +61,45 @@ describe('EC plugin', () => {
     });
 
     it('should keep the products until a valid event type is used', () => {
-        ec.addProduct({ 'something': 'useful' });
+        ec.addProduct({ id: 'P12345'});
 
         executeRegisteredHook('🎲', {});
         executeRegisteredHook('🐟', {});
         executeRegisteredHook('💀', {});
         const result = executeRegisteredHook(ECPluginEventTypes.event, {});
 
-        expect(result).toEqual({ ...defaultResult, 'pr1something' : 'useful' });
+        expect(result).toEqual({ ...defaultResult, 'pr1id' : 'P12345' });
     });
 
     it('should convert known product keys into the measurement protocol format', () => {
-        ec.addProduct({ 'name': '🧀', price: '5.99$' });
+        ec.addProduct({ 'name': '🧀', price: 5.99 });
 
         const result = executeRegisteredHook(ECPluginEventTypes.event, {});
 
-        expect(result).toEqual({ ...defaultResult, 'pr1nm' : '🧀', 'pr1pr': '5.99$' });
+        expect(result).toEqual({ ...defaultResult, 'pr1nm' : '🧀', 'pr1pr': 5.99 });
     });
 
     it('should allow adding multiple products', () => {
-        ec.addProduct({ 'name': '🍟', price: '1.99$' });
-        ec.addProduct({ 'name': '🍿', price: '3$' });
-        ec.addProduct({ 'name': '🥤', price: '2$' });
+        ec.addProduct({ 'name': '🍟', price: 1.99 });
+        ec.addProduct({ 'name': '🍿', price: 3 });
+        ec.addProduct({ 'name': '🥤', price: 2 });
 
         const result = executeRegisteredHook(ECPluginEventTypes.event, {});
 
         expect(result).toEqual({
             ...defaultResult,
             'pr1nm' : '🍟',
-            'pr1pr': '1.99$',
+            'pr1pr': 1.99,
             'pr2nm' : '🍿',
-            'pr2pr': '3$',
+            'pr2pr': 3,
             'pr3nm' : '🥤' ,
-            'pr3pr': '2$',
+            'pr3pr': 2,
         });
     });
 
     it('should flush the products once they are sent', () => {
-        ec.addProduct({ 'name': '🍟', price: '1.99$' });
-        ec.addProduct({ 'name': '🍿', price: '3$' });
+        ec.addProduct({ 'name': '🍟', price: 1.99 });
+        ec.addProduct({ 'name': '🍿', price: 3 });
 
         const result = executeRegisteredHook(ECPluginEventTypes.event, {});
 
@@ -134,7 +134,7 @@ describe('EC plugin', () => {
     });
 
     it('should be able to clear all the data', () => {
-        ec.addProduct({ 'name': '🍨', price: '2.99$' });
+        ec.addProduct({ 'name': '🍨', price: 2.99 });
         ec.clearData();
 
         const result = executeRegisteredHook(ECPluginEventTypes.event, {});
