@@ -211,6 +211,7 @@ export class EC {
         const eventContext = {
             time: Date.now().toString(),
             eventId: this.uuidGenerator(),
+            anonymizeIp: false
         };
         return {
             ...pageContext,

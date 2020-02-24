@@ -66,6 +66,7 @@ const contextInformationMapping: {[key in keyof DefaultContextInformation]: stri
     language: 'ul',
     eventId: 'z',
     time: 'tm',
+    anonymizeIp: 'aip',
 };
 
 const measurementProtocolKeysMapping: {[name: string]: string} = {

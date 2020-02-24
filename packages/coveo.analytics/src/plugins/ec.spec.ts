@@ -20,6 +20,7 @@ describe('EC plugin', () => {
         language: 'en-US',
         hitType: ECPluginEventTypes.event,
         eventId: someUUID,
+        anonymizeIp: false,
     };
 
     beforeEach(() => {

@@ -24,6 +24,7 @@ describe('ec events', () => {
         cid: expect.stringMatching(guidFormat),
         tm: expect.stringMatching(numberFormat),
         z: expect.stringMatching(guidFormat),
+        aip: false,
     };
 
     beforeEach(() => {
@@ -153,6 +154,19 @@ describe('ec events', () => {
         });
     });
 
+    it('should be able to set the anonymizeIp', async () => {
+        await coveoua('set', 'anonymizeIp', true);
+        await coveoua('send', 'pageview');
+
+        const [event] = getParsedBody();
+
+        expect(event).toEqual({
+            ...defaultContextValues,
+            t: 'pageview',
+            aip: true
+        });
+    });
+
     it('should be able to follow the complete addToCart flow', async () => {
         // https://developers.google.com/analytics/devguides/collection/analyticsjs/enhanced-ecommerce#add-remove-cart
         const product = {
@@ -199,7 +213,8 @@ describe('ec events', () => {
             ua: defaultContextValues.ua, // Added
             ul: defaultContextValues.ul,
             // v: 1, removed, we don't send version as of now.
-            z: expect.stringMatching(guidFormat)
+            z: expect.stringMatching(guidFormat),
+            aip: false,
           });
     });
 
@@ -256,7 +271,8 @@ describe('ec events', () => {
             tm: expect.stringMatching(numberFormat),
             ua: defaultContextValues.ua,
             ul: defaultContextValues.ul,
-            z: expect.stringMatching(guidFormat)
+            z: expect.stringMatching(guidFormat),
+            aip: false,
           });
     });
 
