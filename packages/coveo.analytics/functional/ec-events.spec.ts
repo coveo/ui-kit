@@ -24,7 +24,6 @@ describe('ec events', () => {
         cid: expect.stringMatching(guidFormat),
         tm: expect.stringMatching(numberFormat),
         z: expect.stringMatching(guidFormat),
-        aip: false,
     };
 
     beforeEach(() => {
@@ -214,7 +213,6 @@ describe('ec events', () => {
             ul: defaultContextValues.ul,
             // v: 1, removed, we don't send version as of now.
             z: expect.stringMatching(guidFormat),
-            aip: false,
           });
     });
 
@@ -272,7 +270,6 @@ describe('ec events', () => {
             ua: defaultContextValues.ua,
             ul: defaultContextValues.ul,
             z: expect.stringMatching(guidFormat),
-            aip: false,
           });
     });
 
