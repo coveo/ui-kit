@@ -162,7 +162,44 @@ describe('ec events', () => {
         expect(event).toEqual({
             ...defaultContextValues,
             t: 'pageview',
-            aip: true
+            aip: 1
+        });
+    });
+
+    it('should be able to set the anonymizeIp with "true" string', async () => {
+        await coveoua('set', 'anonymizeIp', 'true');
+        await coveoua('send', 'pageview');
+
+        const [event] = getParsedBody();
+
+        expect(event).toEqual({
+            ...defaultContextValues,
+            t: 'pageview',
+            aip: 1
+        });
+    });
+
+    it('should be able to set the anonymizeIp to false', async () => {
+        await coveoua('set', 'anonymizeIp', false);
+        await coveoua('send', 'pageview');
+
+        const [event] = getParsedBody();
+
+        expect(event).toEqual({
+            ...defaultContextValues,
+            t: 'pageview',
+        });
+    });
+
+    it('should be able to set the anonymizeIp to false for anything in between', async () => {
+        await coveoua('set', 'anonymizeIp', 'pôtato');
+        await coveoua('send', 'pageview');
+
+        const [event] = getParsedBody();
+
+        expect(event).toEqual({
+            ...defaultContextValues,
+            t: 'pageview',
         });
     });
 
