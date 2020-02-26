@@ -191,7 +191,19 @@ describe('ec events', () => {
         });
     });
 
-    it('should be able to set the anonymizeIp to false for anything in between', async () => {
+    it('should be able to set the anonymizeIp to false for undefined value', async () => {
+        await coveoua('set', 'anonymizeIp');
+        await coveoua('send', 'pageview');
+
+        const [event] = getParsedBody();
+
+        expect(event).toEqual({
+            ...defaultContextValues,
+            t: 'pageview',
+        });
+    });
+
+    it('should be able to set the anonymizeIp to true for anything in between', async () => {
         await coveoua('set', 'anonymizeIp', 'pôtato');
         await coveoua('send', 'pageview');
 
@@ -200,6 +212,7 @@ describe('ec events', () => {
         expect(event).toEqual({
             ...defaultContextValues,
             t: 'pageview',
+            aip: 1
         });
     });
 

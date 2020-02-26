@@ -265,8 +265,10 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
     private validateParams(payload: IRequestPayload) : IRequestPayload {
         const { anonymizeIp, ...rest } = payload;
 
-        if (anonymizeIp !== undefined && (anonymizeIp === true || anonymizeIp === 'true')) {
-            rest['anonymizeIp'] = 1;
+        if (anonymizeIp !== undefined) {
+            if (['0', 'false', 'undefined', 'null', '{}', '[]', ''].indexOf(`${anonymizeIp}`.toLowerCase()) == -1) {
+                rest['anonymizeIp'] = 1;
+            }
         }
 
         return rest;
