@@ -153,6 +153,69 @@ describe('ec events', () => {
         });
     });
 
+    it('should be able to set the anonymizeIp', async () => {
+        await coveoua('set', 'anonymizeIp', true);
+        await coveoua('send', 'pageview');
+
+        const [event] = getParsedBody();
+
+        expect(event).toEqual({
+            ...defaultContextValues,
+            t: 'pageview',
+            aip: 1
+        });
+    });
+
+    it('should be able to set the anonymizeIp with "true" string', async () => {
+        await coveoua('set', 'anonymizeIp', 'true');
+        await coveoua('send', 'pageview');
+
+        const [event] = getParsedBody();
+
+        expect(event).toEqual({
+            ...defaultContextValues,
+            t: 'pageview',
+            aip: 1
+        });
+    });
+
+    it('should be able to set the anonymizeIp to false', async () => {
+        await coveoua('set', 'anonymizeIp', false);
+        await coveoua('send', 'pageview');
+
+        const [event] = getParsedBody();
+
+        expect(event).toEqual({
+            ...defaultContextValues,
+            t: 'pageview',
+        });
+    });
+
+    it('should be able to set the anonymizeIp to false for undefined value', async () => {
+        await coveoua('set', 'anonymizeIp');
+        await coveoua('send', 'pageview');
+
+        const [event] = getParsedBody();
+
+        expect(event).toEqual({
+            ...defaultContextValues,
+            t: 'pageview',
+        });
+    });
+
+    it('should be able to set the anonymizeIp to true for anything in between', async () => {
+        await coveoua('set', 'anonymizeIp', 'pôtato');
+        await coveoua('send', 'pageview');
+
+        const [event] = getParsedBody();
+
+        expect(event).toEqual({
+            ...defaultContextValues,
+            t: 'pageview',
+            aip: 1
+        });
+    });
+
     it('should be able to follow the complete addToCart flow', async () => {
         // https://developers.google.com/analytics/devguides/collection/analyticsjs/enhanced-ecommerce#add-remove-cart
         const product = {
@@ -199,7 +262,7 @@ describe('ec events', () => {
             ua: defaultContextValues.ua, // Added
             ul: defaultContextValues.ul,
             // v: 1, removed, we don't send version as of now.
-            z: expect.stringMatching(guidFormat)
+            z: expect.stringMatching(guidFormat),
           });
     });
 
@@ -256,7 +319,7 @@ describe('ec events', () => {
             tm: expect.stringMatching(numberFormat),
             ua: defaultContextValues.ua,
             ul: defaultContextValues.ul,
-            z: expect.stringMatching(guidFormat)
+            z: expect.stringMatching(guidFormat),
           });
     });
 

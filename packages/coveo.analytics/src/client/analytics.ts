@@ -154,6 +154,7 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
         });
         const processBeforeSendHooksStep: ProcessPayloadStep = (currentPayload) => this.beforeSendHooks.reduce((newPayload, current) => current(eventType, newPayload), currentPayload);
         const cleanPayloadStep: ProcessPayloadStep = (currentPayload) => this.removeEmptyPayloadValues(currentPayload);
+        const validateParams: ProcessPayloadStep = (currentPayload) => this.validateParams(currentPayload);
         const processMeasurementProtocolConversionStep: ProcessPayloadStep = (currentPayload) => usesMeasurementProtocol ? convertKeysToMeasurementProtocol(currentPayload) : currentPayload;
 
         const payloadToSend = [
@@ -161,6 +162,7 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
             addVisitorIdStep,
             processBeforeSendHooksStep,
             cleanPayloadStep,
+            validateParams,
             processMeasurementProtocolConversionStep
         ].reduce((payload, step) => step(payload), payload);
 
@@ -258,6 +260,18 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
                 ...newPayload,
                 [key]: payload[key]
             }), {});
+    }
+
+    private validateParams(payload: IRequestPayload) : IRequestPayload {
+        const { anonymizeIp, ...rest } = payload;
+
+        if (anonymizeIp !== undefined) {
+            if (['0', 'false', 'undefined', 'null', '{}', '[]', ''].indexOf(`${anonymizeIp}`.toLowerCase()) == -1) {
+                rest['anonymizeIp'] = 1;
+            }
+        }
+
+        return rest;
     }
 
     private get baseUrl(): string {

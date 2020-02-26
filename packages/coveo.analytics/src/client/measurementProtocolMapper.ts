@@ -1,5 +1,9 @@
 import { EC, Product, ImpressionList, BaseImpression } from '../plugins/ec';
 
+const globalParamKeysMapping : {[name: string]: string} =  {
+    anonymizeIp : 'aip'
+};
+
 // Based off: https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#enhanced-ecomm
 const productKeysMapping: {[key in keyof Product]: string} = {
     id: 'id',
@@ -41,7 +45,7 @@ const productActionsKeysMapping: {[name: string]: string} = {
     listSource: 'pls'
 };
 
-const transactionActionsKeysMappings: {[name: string]: string} = {
+const transactionActionsKeysMapping: {[name: string]: string} = {
     id: 'ti',
     revenue: 'tr',
     tax: 'tt',
@@ -71,8 +75,9 @@ const contextInformationMapping: {[key in keyof DefaultContextInformation]: stri
 const measurementProtocolKeysMapping: {[name: string]: string} = {
     ...eventKeysMapping,
     ...productActionsKeysMapping,
-    ...transactionActionsKeysMappings,
-    ...contextInformationMapping
+    ...transactionActionsKeysMapping,
+    ...contextInformationMapping,
+    ...globalParamKeysMapping
 };
 
 // Object.keys returns `string[]` this adds types
