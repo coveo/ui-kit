@@ -1,13 +1,13 @@
 import * as fetchMock from 'fetch-mock';
-import { EventType, ViewEventRequest, DefaultEventResponse } from '../events';
-import { CoveoAnalyticsClient } from './analytics';
-import { CookieStorage } from '../storage';
+import {EventType, ViewEventRequest, DefaultEventResponse} from '../events';
+import {CoveoAnalyticsClient} from './analytics';
+import {CookieStorage} from '../storage';
 
 const aVisitorId = '123';
 
 const uuidv4Mock = jest.fn();
 jest.mock('./crypto', () => ({
-    uuidv4: () => uuidv4Mock()
+    uuidv4: () => uuidv4Mock(),
 }));
 
 describe('Analytics', () => {
@@ -15,13 +15,19 @@ describe('Analytics', () => {
     const anEndpoint = 'http://bloup';
     const A_VERSION = 'v1337';
 
-    const viewEvent: ViewEventRequest = { location: 'here', contentIdKey: 'key', contentIdValue: 'value', language: 'en' };
+    const viewEvent: ViewEventRequest = {
+        location: 'here',
+        contentIdKey: 'key',
+        contentIdValue: 'value',
+        language: 'en',
+    };
     const eventResponse: DefaultEventResponse = {
-        visitId : 'firsttimevisiting',
-        visitorId: aVisitorId
+        visitId: 'firsttimevisiting',
+        visitorId: aVisitorId,
     };
 
-    const endpointForEventType = (eventType: EventType) => `${anEndpoint}/rest/${A_VERSION}/analytics/${eventType}?visitor=${aVisitorId}`;
+    const endpointForEventType = (eventType: EventType) =>
+        `${anEndpoint}/rest/${A_VERSION}/analytics/${eventType}?visitor=${aVisitorId}`;
     const mockFetchRequestForEventType = (eventType: EventType) => {
         const address = endpointForEventType(eventType);
         fetchMock.post(address, eventResponse);
@@ -39,7 +45,7 @@ describe('Analytics', () => {
         client = new CoveoAnalyticsClient({
             token: aToken,
             endpoint: anEndpoint,
-            version: A_VERSION
+            version: A_VERSION,
         });
     });
 
@@ -51,7 +57,7 @@ describe('Analytics', () => {
 
         expect(fetchMock.called()).toBe(true);
 
-        const [path, { headers, body }] = fetchMock.lastCall();
+        const [path, {headers, body}] = fetchMock.lastCall();
         expect(path).toBe(endpointForEventType(EventType.view));
 
         const h = headers as Record<string, string>;
@@ -73,7 +79,7 @@ describe('Analytics', () => {
 
         expect(body).toMatchObject({
             language: 'en',
-            userAgent: navigator.userAgent
+            userAgent: navigator.userAgent,
         });
     });
 
@@ -81,21 +87,21 @@ describe('Analytics', () => {
         mockFetchRequestForEventType(EventType.view);
         const firstRequest = client.sendViewEvent({
             ...viewEvent,
-            'customData': {
-                index: 0
-            }
+            customData: {
+                index: 0,
+            },
         });
         const secondRequest = client.sendViewEvent({
             ...viewEvent,
-            'customData': {
-                index: 1
-            }
+            customData: {
+                index: 1,
+            },
         });
         const thirdRequest = client.sendViewEvent({
             ...viewEvent,
-            'customData': {
-                index: 2
-            }
+            customData: {
+                index: 2,
+            },
         });
 
         await Promise.all([firstRequest, secondRequest, thirdRequest]);
@@ -117,14 +123,14 @@ describe('Analytics', () => {
             ok: 0,
             notok: '',
             invalid: null,
-            ohno: undefined
+            ohno: undefined,
         });
 
         const [body] = getParsedBodyCalls();
 
         expect(body).toMatchObject({
             fine: 1,
-            ok: 0
+            ok: 0,
         });
     });
 
@@ -135,14 +141,14 @@ describe('Analytics', () => {
             mockFetchRequestForEventType(EventType.custom);
             client.addEventTypeMapping(specialEventType, {
                 newEventType: EventType.custom,
-                variableLengthArgumentsNames: argumentNames
+                variableLengthArgumentsNames: argumentNames,
             });
         });
 
         it('should properly parse empty arguments', async () => {
             await client.sendEvent(specialEventType);
 
-            const [path, { body }] = fetchMock.lastCall();
+            const [path, {body}] = fetchMock.lastCall();
             expect(path).toBe(endpointForEventType(EventType.custom));
 
             const parsedBody = JSON.parse(body.toString());
@@ -155,7 +161,7 @@ describe('Analytics', () => {
             const [body] = getParsedBodyCalls();
 
             expect(body).toEqual({
-                [argumentNames[0]]: 'Video'
+                [argumentNames[0]]: 'Video',
             });
         });
 
@@ -167,18 +173,20 @@ describe('Analytics', () => {
             expect(body).toEqual({
                 [argumentNames[0]]: 'Video',
                 [argumentNames[1]]: 'play',
-                [argumentNames[2]]: 'campaign'
+                [argumentNames[2]]: 'campaign',
             });
         });
 
         it('should properly handle a finished object argument', async () => {
-            await client.sendEvent(specialEventType, 'Video', { nonInteraction: true });
+            await client.sendEvent(specialEventType, 'Video', {
+                nonInteraction: true,
+            });
 
             const [body] = getParsedBodyCalls();
 
             expect(body).toEqual({
                 [argumentNames[0]]: 'Video',
-                nonInteraction: true
+                nonInteraction: true,
             });
         });
     });
@@ -189,7 +197,7 @@ describe('Analytics', () => {
             mockFetchRequestForEventType(EventType.custom);
             client.addEventTypeMapping(specialEventType, {
                 newEventType: EventType.custom,
-                addVisitorIdParameter: true
+                addVisitorIdParameter: true,
             });
         });
 
@@ -203,7 +211,7 @@ describe('Analytics', () => {
     });
 
     const getParsedBodyCalls = (): any[] => {
-        return fetchMock.calls().map(([, { body }]) => {
+        return fetchMock.calls().map(([, {body}]) => {
             return JSON.parse(body.toString());
         });
     };

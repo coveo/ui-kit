@@ -1,5 +1,5 @@
-import { AnalyticsBeaconClient as AnalyticsBeaconClient } from './analyticsBeaconClient';
-import { AnalyticsFetchClient } from './analyticsFetchClient';
+import {AnalyticsBeaconClient} from './analyticsBeaconClient';
+import {AnalyticsFetchClient} from './analyticsFetchClient';
 import {
     AnyEventResponse,
     ClickEventRequest,
@@ -16,20 +16,20 @@ import {
     IRequestPayload,
     VariableArgumentsPayload,
 } from '../events';
-import { VisitorIdProvider } from './analyticsRequestClient';
-import { WebStorage, CookieStorage } from '../storage';
-import { hasLocalStorage, hasCookieStorage } from '../detector';
-import { addDefaultValues } from '../hook/addDefaultValues';
-import { enhanceViewEvent } from '../hook/enhanceViewEvent';
-import { uuidv4 } from './crypto';
-import { convertKeysToMeasurementProtocol } from './measurementProtocolMapper';
+import {VisitorIdProvider} from './analyticsRequestClient';
+import {WebStorage, CookieStorage} from '../storage';
+import {hasLocalStorage, hasCookieStorage} from '../detector';
+import {addDefaultValues} from '../hook/addDefaultValues';
+import {enhanceViewEvent} from '../hook/enhanceViewEvent';
+import {uuidv4} from './crypto';
+import {convertKeysToMeasurementProtocol} from './measurementProtocolMapper';
 
 export const Version = 'v15';
 
 export const Endpoints = {
     default: 'https://usageanalytics.coveo.com',
     production: 'https://usageanalytics.coveo.com',
-    hipaa: 'https://usageanalyticshipaa.coveo.com'
+    hipaa: 'https://usageanalyticshipaa.coveo.com',
 };
 
 export interface ClientOptions {
@@ -69,7 +69,7 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
         return {
             endpoint: Endpoints.default,
             token: '',
-            version: Version
+            version: Version,
         };
     }
 
@@ -89,20 +89,15 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
 
         this.options = {
             ...this.defaultOptions,
-            ...opts
+            ...opts,
         };
 
-        const {
-            token,
-        } = this.options;
+        const {token} = this.options;
 
         this.cookieStorage = new CookieStorage();
         this.visitorId = '';
         this.bufferedRequests = [];
-        this.beforeSendHooks = [
-            enhanceViewEvent,
-            addDefaultValues,
-        ];
+        this.beforeSendHooks = [enhanceViewEvent, addDefaultValues];
         this.eventTypeMapping = {};
 
         this.initVisitorId();
@@ -110,7 +105,7 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
         const clientsOptions = {
             baseUrl: this.baseUrl,
             token,
-            visitorIdProvider: this
+            visitorIdProvider: this,
         };
         this.analyticsBeaconClient = new AnalyticsBeaconClient(clientsOptions);
         this.analyticsFetchClient = new AnalyticsFetchClient(clientsOptions);
@@ -118,7 +113,11 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
     }
 
     private initVisitorId() {
-        const existingVisitorId = this.visitorId || (hasCookieStorage() && this.cookieStorage.getItem('visitorId')) || (hasLocalStorage() && localStorage.getItem('visitorId')) || '';
+        const existingVisitorId =
+            this.visitorId ||
+            (hasCookieStorage() && this.cookieStorage.getItem('visitorId')) ||
+            (hasLocalStorage() && localStorage.getItem('visitorId')) ||
+            '';
         this.currentVisitorId = existingVisitorId || uuidv4();
     }
 
@@ -136,7 +135,10 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
         }
     }
 
-    async sendEvent(eventType: EventType | string, ...payload: VariableArgumentsPayload): Promise<AnyEventResponse | void> {
+    async sendEvent(
+        eventType: EventType | string,
+        ...payload: VariableArgumentsPayload
+    ): Promise<AnyEventResponse | void> {
         const {
             newEventType: eventTypeToSend = eventType as EventType,
             variableLengthArgumentsNames = [],
@@ -145,17 +147,20 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
         } = this.eventTypeMapping[eventType] || {};
 
         type ProcessPayloadStep = (currentPayload: any) => any;
-        const processVariableArgumentNamesStep: ProcessPayloadStep = (currentPayload) => variableLengthArgumentsNames.length > 0
-            ? this.parseVariableArgumentsPayload(variableLengthArgumentsNames, currentPayload)
-            : currentPayload[0];
+        const processVariableArgumentNamesStep: ProcessPayloadStep = (currentPayload) =>
+            variableLengthArgumentsNames.length > 0
+                ? this.parseVariableArgumentsPayload(variableLengthArgumentsNames, currentPayload)
+                : currentPayload[0];
         const addVisitorIdStep: ProcessPayloadStep = (currentPayload) => ({
             visitorId: addVisitorIdParameter ? this.visitorId : '',
-            ...currentPayload
+            ...currentPayload,
         });
-        const processBeforeSendHooksStep: ProcessPayloadStep = (currentPayload) => this.beforeSendHooks.reduce((newPayload, current) => current(eventType, newPayload), currentPayload);
+        const processBeforeSendHooksStep: ProcessPayloadStep = (currentPayload) =>
+            this.beforeSendHooks.reduce((newPayload, current) => current(eventType, newPayload), currentPayload);
         const cleanPayloadStep: ProcessPayloadStep = (currentPayload) => this.removeEmptyPayloadValues(currentPayload);
         const validateParams: ProcessPayloadStep = (currentPayload) => this.validateParams(currentPayload);
-        const processMeasurementProtocolConversionStep: ProcessPayloadStep = (currentPayload) => usesMeasurementProtocol ? convertKeysToMeasurementProtocol(currentPayload) : currentPayload;
+        const processMeasurementProtocolConversionStep: ProcessPayloadStep = (currentPayload) =>
+            usesMeasurementProtocol ? convertKeysToMeasurementProtocol(currentPayload) : currentPayload;
 
         const payloadToSend = [
             processVariableArgumentNamesStep,
@@ -163,13 +168,13 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
             processBeforeSendHooksStep,
             cleanPayloadStep,
             validateParams,
-            processMeasurementProtocolConversionStep
+            processMeasurementProtocolConversionStep,
         ].reduce((payload, step) => step(payload), payload);
 
         this.bufferedRequests.push({
             eventType: eventTypeToSend,
             payload: payloadToSend,
-            handled: false
+            handled: false,
         });
 
         await this.deferExecution();
@@ -177,12 +182,12 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
     }
 
     private deferExecution(): Promise<void> {
-        return new Promise(resolve => setTimeout(resolve, 0));
+        return new Promise((resolve) => setTimeout(resolve, 0));
     }
 
     private flushBufferWithBeacon(): void {
         while (this.hasPendingRequests()) {
-            const { eventType, payload } = this.bufferedRequests.pop() as BufferedRequest;
+            const {eventType, payload} = this.bufferedRequests.pop() as BufferedRequest;
             this.analyticsBeaconClient.sendEvent(eventType, payload);
         }
     }
@@ -190,7 +195,7 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
     private async sendFromBufferWithFetch(): Promise<AnyEventResponse | void> {
         const popped = this.bufferedRequests.shift();
         if (popped) {
-            const { eventType, payload } = popped;
+            const {eventType, payload} = popped;
             return this.analyticsFetchClient.sendEvent(eventType, payload);
         }
     }
@@ -217,14 +222,14 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
 
     async getVisit(): Promise<VisitResponse> {
         const response = await fetch(`${this.baseUrl}/analytics/visit`);
-        const visit = await response.json() as VisitResponse;
+        const visit = (await response.json()) as VisitResponse;
         this.visitorId = visit.visitorId;
         return visit;
     }
 
     async getHealth(): Promise<HealthResponse> {
         const response = await fetch(`${this.baseUrl}/analytics/monitoring/health`);
-        return await response.json() as HealthResponse;
+        return (await response.json()) as HealthResponse;
     }
 
     registerBeforeSendEventHook(hook: AnalyticsClientSendEventHook): void {
@@ -239,9 +244,9 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
         const parsedArguments: {[name: string]: any} = {};
         for (let i = 0, length = payload.length; i < length; i++) {
             const currentArgument = payload[i];
-            if (typeof(currentArgument) === 'string') {
+            if (typeof currentArgument === 'string') {
                 parsedArguments[fieldsOrder[i]] = currentArgument;
-            } else if (typeof(currentArgument) === 'object') {
+            } else if (typeof currentArgument === 'object') {
                 // If the argument is an object, it is considered the last argument of the chain. Its values should be returned as-is.
                 return {
                     ...parsedArguments,
@@ -253,17 +258,20 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
     }
 
     private removeEmptyPayloadValues(payload: IRequestPayload): IRequestPayload {
-        const isNotEmptyValue = (value: any) => (typeof (value) !== 'undefined' && value !== null && value !== '');
+        const isNotEmptyValue = (value: any) => typeof value !== 'undefined' && value !== null && value !== '';
         return Object.keys(payload)
-            .filter(key => isNotEmptyValue(payload[key]))
-            .reduce((newPayload, key) => ({
-                ...newPayload,
-                [key]: payload[key]
-            }), {});
+            .filter((key) => isNotEmptyValue(payload[key]))
+            .reduce(
+                (newPayload, key) => ({
+                    ...newPayload,
+                    [key]: payload[key],
+                }),
+                {}
+            );
     }
 
-    private validateParams(payload: IRequestPayload) : IRequestPayload {
-        const { anonymizeIp, ...rest } = payload;
+    private validateParams(payload: IRequestPayload): IRequestPayload {
+        const {anonymizeIp, ...rest} = payload;
 
         if (anonymizeIp !== undefined) {
             if (['0', 'false', 'undefined', 'null', '{}', '[]', ''].indexOf(`${anonymizeIp}`.toLowerCase()) == -1) {
@@ -275,7 +283,7 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
     }
 
     private get baseUrl(): string {
-        const { version, endpoint } = this.options;
+        const {version, endpoint} = this.options;
         return `${endpoint}/rest/${version}`;
     }
 }

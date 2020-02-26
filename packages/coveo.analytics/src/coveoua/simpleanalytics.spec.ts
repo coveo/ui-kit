@@ -1,8 +1,8 @@
 import * as express from 'express';
 import * as http from 'http';
-import { handleOneAnalyticsEvent } from './simpleanalytics';
-import { Version } from '../client/analytics';
-import { createAnalyticsClientMock } from '../../tests/analyticsClientMock';
+import {handleOneAnalyticsEvent} from './simpleanalytics';
+import {Version} from '../client/analytics';
+import {createAnalyticsClientMock} from '../../tests/analyticsClientMock';
 
 describe('simpleanalytics', () => {
     const analyticsClientMock = createAnalyticsClientMock();
@@ -30,9 +30,12 @@ describe('simpleanalytics', () => {
             app.post(`/rest/${Version}/analytics/view`, (req: express.Request, res: express.Response) => {
                 res.status(200).send('{}');
             });
-            app.post(`/rest/${Version}/analytics/${someRandomEventName}`, (req: express.Request, res: express.Response) => {
-                res.status(200).send('{}');
-            });
+            app.post(
+                `/rest/${Version}/analytics/${someRandomEventName}`,
+                (req: express.Request, res: express.Response) => {
+                    res.status(200).send('{}');
+                }
+            );
             server = app.listen('9201', () => {
                 const {address, port} = server.address();
                 fakeServerAddress = `http://${address}:${port}`;
@@ -51,7 +54,7 @@ describe('simpleanalytics', () => {
 
         it('can send pageview with customdata', () => {
             handleOneAnalyticsEvent('init', 'MYTOKEN', fakeServerAddress);
-            handleOneAnalyticsEvent('send', 'pageview', { somedata: 'asd' });
+            handleOneAnalyticsEvent('send', 'pageview', {somedata: 'asd'});
         });
 
         it('can send any event to the endpoint', () => {
@@ -70,7 +73,7 @@ describe('simpleanalytics', () => {
 
         it('can set parameters using an object', () => {
             handleOneAnalyticsEvent('set', {
-                userId: 'something'
+                userId: 'something',
             });
         });
     });
@@ -95,5 +98,4 @@ describe('simpleanalytics', () => {
     test('throws when registering an invalid onLoad event', () => {
         expect(() => handleOneAnalyticsEvent('onLoad', undefined)).toThrow();
     });
-
 });

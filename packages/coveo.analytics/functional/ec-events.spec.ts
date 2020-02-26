@@ -1,6 +1,6 @@
 import 'isomorphic-fetch';
 import * as fetchMock from 'fetch-mock';
-import { DefaultEventResponse } from '../src/events';
+import {DefaultEventResponse} from '../src/events';
 import coveoua from '../src/coveoua/browser';
 
 describe('ec events', () => {
@@ -12,7 +12,9 @@ describe('ec events', () => {
     const guidFormat = /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/;
 
     const defaultContextValues = {
-        dl: `${location.protocol}//${location.hostname}${location.pathname.indexOf('/') === 0 ? location.pathname : `/${location.pathname}`}${location.search}`,
+        dl: `${location.protocol}//${location.hostname}${
+            location.pathname.indexOf('/') === 0 ? location.pathname : `/${location.pathname}`
+        }${location.search}`,
         sr: `${screen.width}x${screen.height}`,
         sd: `${screen.colorDepth}-bit`,
         ul: navigator.language,
@@ -34,7 +36,7 @@ describe('ec events', () => {
             const parsedBody = JSON.parse(body.toString());
             const visitorId = parsedBody.cid;
             return {
-                visitId : 'firsttimevisiting',
+                visitId: 'firsttimevisiting',
                 visitorId,
             } as DefaultEventResponse;
         });
@@ -74,7 +76,7 @@ describe('ec events', () => {
             t: 'pageview',
             dp: 'page',
             dt: 'wow',
-            dl: 'http://right.here'
+            dl: 'http://right.here',
         });
     });
 
@@ -89,8 +91,8 @@ describe('ec events', () => {
         const [event, secondEvent, pageView, thirdEvent, secondPageView, afterSecondPageView] = getParsedBody();
 
         [event, secondEvent, pageView, thirdEvent, secondPageView, afterSecondPageView]
-            .map(e => e.pid)
-            .forEach(pid => expect(pid).toMatch(guidFormat));
+            .map((e) => e.pid)
+            .forEach((pid) => expect(pid).toMatch(guidFormat));
 
         expect(event.pid).toBe(secondEvent.pid);
         expect(event.pid).toBe(pageView.pid);
@@ -149,7 +151,7 @@ describe('ec events', () => {
         expect(event).toEqual({
             ...defaultContextValues,
             t: 'pageview',
-            uid: aUser
+            uid: aUser,
         });
     });
 
@@ -162,7 +164,7 @@ describe('ec events', () => {
         expect(event).toEqual({
             ...defaultContextValues,
             t: 'pageview',
-            aip: 1
+            aip: 1,
         });
     });
 
@@ -175,7 +177,7 @@ describe('ec events', () => {
         expect(event).toEqual({
             ...defaultContextValues,
             t: 'pageview',
-            aip: 1
+            aip: 1,
         });
     });
 
@@ -212,20 +214,20 @@ describe('ec events', () => {
         expect(event).toEqual({
             ...defaultContextValues,
             t: 'pageview',
-            aip: 1
+            aip: 1,
         });
     });
 
     it('should be able to follow the complete addToCart flow', async () => {
         // https://developers.google.com/analytics/devguides/collection/analyticsjs/enhanced-ecommerce#add-remove-cart
         const product = {
-            'id': 'id',
-            'name': 'name',
-            'category': 'category',
-            'brand': 'brand',
-            'variant': 'variant',
-            'price': 0,
-            'quantity': 0
+            id: 'id',
+            name: 'name',
+            category: 'category',
+            brand: 'brand',
+            variant: 'variant',
+            price: 0,
+            quantity: 0,
         };
         await coveoua('set', 'currencyCode', 'EUR');
         await coveoua('ec:addProduct', product);
@@ -263,28 +265,28 @@ describe('ec events', () => {
             ul: defaultContextValues.ul,
             // v: 1, removed, we don't send version as of now.
             z: expect.stringMatching(guidFormat),
-          });
+        });
     });
 
     it('should be able to follow the complete addImpression flow', async () => {
         // https://developers.google.com/analytics/devguides/collection/analyticsjs/enhanced-ecommerce#product-impression
         const productImpression1 = {
-            'id': 'P12345',
-            'name': 'Android Warhol T-Shirt',
-            'category': 'Apparel/T-Shirts',
-            'brand': 'Google',
-            'variant': 'black',
-            'list': 'Search Results',
-            'position': 1
+            id: 'P12345',
+            name: 'Android Warhol T-Shirt',
+            category: 'Apparel/T-Shirts',
+            brand: 'Google',
+            variant: 'black',
+            list: 'Search Results',
+            position: 1,
         };
         const productImpression2 = {
-            'id': 'P67890',
-            'name': 'YouTube Organic T-Shirt',
-            'category': 'Apparel/T-Shirts',
-            'brand': 'YouTube',
-            'variant': 'gray',
-            'list': 'Search Results',
-            'position': 2
+            id: 'P67890',
+            name: 'YouTube Organic T-Shirt',
+            category: 'Apparel/T-Shirts',
+            brand: 'YouTube',
+            variant: 'gray',
+            list: 'Search Results',
+            position: 2,
         };
 
         await coveoua('ec:addImpression', productImpression1);
@@ -320,11 +322,11 @@ describe('ec events', () => {
             ua: defaultContextValues.ua,
             ul: defaultContextValues.ul,
             z: expect.stringMatching(guidFormat),
-          });
+        });
     });
 
     const getParsedBody = (): any[] => {
-        return fetchMock.calls().map(([, { body }]) => JSON.parse(body.toString()));
+        return fetchMock.calls().map(([, {body}]) => JSON.parse(body.toString()));
     };
 
     const changeDocumentLocation = (url: string) => {

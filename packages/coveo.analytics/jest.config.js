@@ -12,5 +12,5 @@ module.exports = {
     },
     collectCoverageFrom: ['<rootDir>/src/**/*.{ts,tsx}'],
     coveragePathIgnorePatterns: ['.spec.*'],
-    coverageReporters: ['lcov', 'cobertura', 'text-summary']
+    coverageReporters: ['lcov', 'cobertura', 'text-summary'],
 };

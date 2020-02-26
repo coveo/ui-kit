@@ -10,8 +10,8 @@
 
 This project provides 2 ways to interact with the the Coveo Usage Analytics service.
 
-- A JavaScript browser client
-- A code snippet to add in websites pages
+-   A JavaScript browser client
+-   A code snippet to add in websites pages
 
 ## Usage (Web analytics)
 
@@ -25,75 +25,74 @@ Initially, the `pageview` events data will be used exclusively by the Coveo Reve
 
 1. Get an API key.
 
-  You need a Coveo Cloud API key that has the permission to write to the Usage Analytics service.
+You need a Coveo Cloud API key that has the permission to write to the Usage Analytics service.
 
-  - For [Coveo Cloud V1](https://cloud.coveo.com/), contact [Coveo Support](https://coveocommunity.force.com/) and ask to create an API key with the **Write UA** scope.
+-   For [Coveo Cloud V1](https://cloud.coveo.com/), contact [Coveo Support](https://coveocommunity.force.com/) and ask to create an API key with the **Write UA** scope.
 
-  - For [Coveo Cloud V2](https://platform.cloud.coveo.com/), create an API key from the [administration console] (https://platform.cloud.coveo.com/admin/#/organization/api-access/) selecting the **Edit** check box for the **Analytics data** privilege (see [API Access - Page](http://www.coveo.com/go?dest=ccv2ac&context=27)).
+-   For [Coveo Cloud V2](https://platform.cloud.coveo.com/), create an API key from the [administration console](https://platform.cloud.coveo.com/admin/#/organization/api-access/) selecting the **Edit** check box for the **Analytics data** privilege (see [API Access - Page](http://www.coveo.com/go?dest=ccv2ac&context=27)).
 
 2. Add the code snippet to all your website pages.
 
-  Ask an administrator to add a code snippet like the following to all pages of your websites:
+Ask an administrator to add a code snippet like the following to all pages of your websites:
 
-  ```html
-  <script>
+```html
+<script>
   (function(c,o,v,e,O,u,a){
   a='coveoua';c[a]=c[a]||function(){(c[a].q=c[a].q|| []).push(arguments)};
   c[a].t=Date.now();u=o.createElement(v);u.async=1;u.src=e;
   O=o.getElementsByTagName(v)[0];O.parentNode.insertBefore(u,O)
   })(window,document,'script','https://static.cloud.coveo.com/coveo.analytics.js/1.0/coveoua.js')
 
-  coveoua('init', 'YOUR_API_KEY'); // Replace YOUR_API_KEY with your real key
-  coveoua('send', 'view', {
-    contentIdKey: '@permanentid',
-    contentIdValue: 'PERMANENT_ID_VALUE', // Replace PERMANENT_ID_VALUE with a unique value from your page.
-    contentType: 'product' // Optional
-    // ... more information ...
-  });
-  </script>
-  ```
-  Make sure you replace `YOUR_API_KEY` by the API key you got in the previous step.
+    coveoua('init', 'YOUR_API_KEY'); // Replace YOUR_API_KEY with your real key
+    coveoua('send', 'view', {
+        contentIdKey: '@permanentid',
+        contentIdValue: 'PERMANENT_ID_VALUE', // Replace PERMANENT_ID_VALUE with a unique value from your page.
+        contentType: 'product', // Optional
+        // ... more information ...
+    });
+</script>
+```
 
-  The code snippet must contain `contentIdKey` and `contentIdValue` in order to identify items in the Coveo index. When you want to recommend specific types of content, you also need to add a `contentType` parameter value.
+Make sure you replace `YOUR_API_KEY` by the API key you got in the previous step.
 
-  | Key            | Value                                                               |
-  | ---------------|---------------------------------------------------------------------|
-  | contentIdKey   | The Coveo index field name that will be used to identify the item.  |
-  | contentIdValue | The Coveo index field value that will be used to identify the item. |
-  | contentType    | [Optional] The type of the item to be tracked (e.g., 'Article').    |
+The code snippet must contain `contentIdKey` and `contentIdValue` in order to identify items in the Coveo index. When you want to recommend specific types of content, you also need to add a `contentType` parameter value.
 
-  **Note: Do not copy the_ `coveoua.js` _file as it can be updated anytime and you could experience compatibility issues.**
+| Key            | Value                                                               |
+| -------------- | ------------------------------------------------------------------- |
+| contentIdKey   | The Coveo index field name that will be used to identify the item.  |
+| contentIdValue | The Coveo index field value that will be used to identify the item. |
+| contentType    | [Optional] The type of the item to be tracked (e.g., 'Article').    |
+
+**Note: Do not copy the\_ `coveoua.js` \_file as it can be updated anytime and you could experience compatibility issues.**
 
 3. Validate pageview events are pushed to the Coveo Usage Analytics service
 
-  a. In a web browser such as Chrome, navigate to a website page to which you added the code snippet.
+a. In a web browser such as Chrome, navigate to a website page to which you added the code snippet.
 
-  b. In the browser developer tool, go the the **Network** tab.
+b. In the browser developer tool, go the the **Network** tab.
 
-  c. Reload the page, in the **Name** panel, ensure that you see a **view** event sent to Coveo analytics.
+c. Reload the page, in the **Name** panel, ensure that you see a **view** event sent to Coveo analytics.
 
 ### Pushing Any Coveo Analytics Event
 
 Add the code snippet to all your website pages.
 
-  ```html
-  <script>
+```html
+<script>
   (function(c,o,v,e,O,u,a){
   a='coveoua';c[a]=c[a]||function(){(c[a].q=c[a].q|| []).push(arguments)};
   c[a].t=Date.now();u=o.createElement(v);u.async=1;u.src=e;
   O=o.getElementsByTagName(v)[0];O.parentNode.insertBefore(u,O)
   })(window,document,'script','https://static.cloud.coveo.com/coveo.analytics.js/1.0/coveoua.js')
 
-  coveoua('init', 'YOUR_API_KEY'); // Replace YOUR_API_KEY with your real key
-  </script>
-  ```
+    coveoua('init', 'YOUR_API_KEY'); // Replace YOUR_API_KEY with your real key
+</script>
+```
 
 You can now call the script using the following line:
 
 ```html
-coveoua('send', 'click', {
-    ...
-});
+coveoua('send', 'click', { ... });
 ```
 
 Refer to the [Usage Analytics Write API](https://docs.coveo.com/en/1430/cloud-v2-developers/usage-analytics-write-api) section to see what types of events are supported and what payload you need to send.
@@ -111,24 +110,25 @@ import fetch from 'isomorphic-fetch'; // isomorphic-fetch modifies the global en
 import coveoanalytics from 'coveo.analytics';
 
 // Create an API client
-const client = new coveoanalytics.analytics.Client({ token : 'YOUR_API_KEY'})
+const client = new coveoanalytics.analytics.Client({token: 'YOUR_API_KEY'});
 // Send your event
 client.sendCustomEvent({
-  eventType: "dog",
-  eventValue: "Hello! Yes! This is Dog!"
+    eventType: 'dog',
+    eventValue: 'Hello! Yes! This is Dog!',
 });
 ```
 
 ### Choosing the type of storage for page view events
+
 There are 3 available storage you can use to store view events client side.
 
-- Cookie storage, which supports top level domain storage. This means that events from a.foo.com will be available from b.foo.com.
-Cookies have the limitation of not being able to store a lot of data, especially if your page view that are stored are long.
+-   Cookie storage, which supports top level domain storage. This means that events from a.foo.com will be available from b.foo.com.
+    Cookies have the limitation of not being able to store a lot of data, especially if your page view that are stored are long.
 
-- Local storage, which allows to store much more information client side, but has the drawback of not being able to acess data
-across multiple top level domain.
+-   Local storage, which allows to store much more information client side, but has the drawback of not being able to acess data
+    across multiple top level domain.
 
-- Session storage, which has roughly the same limitation and capability as Local storage, except that it is cleared when the web browser tab is closed.
+-   Session storage, which has roughly the same limitation and capability as Local storage, except that it is cleared when the web browser tab is closed.
 
 By default, the local storage option will automatically be chosen as the default storage, unless specified manually.
 

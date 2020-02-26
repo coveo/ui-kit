@@ -1,21 +1,25 @@
-import { AnalyticsClient } from '../client/analytics';
-import { EventType } from '../events';
-import { uuidv4 } from '../client/crypto';
-import { getFormattedLocation } from '../client/location';
-import { convertProductToMeasurementProtocol, convertImpressionListToMeasurementProtocol } from '../client/measurementProtocolMapper';
+import {AnalyticsClient} from '../client/analytics';
+import {EventType} from '../events';
+import {uuidv4} from '../client/crypto';
+import {getFormattedLocation} from '../client/location';
+import {
+    convertProductToMeasurementProtocol,
+    convertImpressionListToMeasurementProtocol,
+} from '../client/measurementProtocolMapper';
 
 export const ECPluginEventTypes = {
     pageview: 'pageview',
-    event: 'event'
+    event: 'event',
 };
 
-const allECEventTypes = Object.keys(ECPluginEventTypes).map(key => ECPluginEventTypes[key as keyof typeof ECPluginEventTypes]);
+const allECEventTypes = Object.keys(ECPluginEventTypes).map(
+    (key) => ECPluginEventTypes[key as keyof typeof ECPluginEventTypes]
+);
 
 // From https://stackoverflow.com/a/49725198/497731
-type RequireAtLeastOne<T, Keys extends keyof T = keyof T> =
-    Pick<T, Exclude<keyof T, Keys>>
-    & {
-        [K in Keys]-?: Required<Pick<T, K>> & Partial<Pick<T, Exclude<Keys, K>>>
+type RequireAtLeastOne<T, Keys extends keyof T = keyof T> = Pick<T, Exclude<keyof T, Keys>> &
+    {
+        [K in Keys]-?: Required<Pick<T, K>> & Partial<Pick<T, Exclude<Keys, K>>>;
     }[Keys];
 
 export interface ProductProperties {
@@ -62,7 +66,7 @@ export class EC {
     private lastLocation: string;
     private lastReferrer: string;
 
-    constructor({ client, uuidGenerator = uuidv4 }: { client: AnalyticsClient, uuidGenerator?: typeof uuidv4 }) {
+    constructor({client, uuidGenerator = uuidv4}: {client: AnalyticsClient; uuidGenerator?: typeof uuidv4}) {
         this.client = client;
         this.uuidGenerator = uuidGenerator;
         this.pageViewId = uuidGenerator();
@@ -96,9 +100,7 @@ export class EC {
 
     private addHooksForECEvents() {
         this.client.registerBeforeSendEventHook((eventType, ...[payload]) => {
-            return allECEventTypes.indexOf(eventType) !== -1
-                ? this.addECDataToPayload(eventType, payload)
-                : payload;
+            return allECEventTypes.indexOf(eventType) !== -1 ? this.addECDataToPayload(eventType, payload) : payload;
         });
     }
 
@@ -116,15 +118,15 @@ export class EC {
             newEventType: EventType.collect,
             variableLengthArgumentsNames: ['eventCategory', 'eventAction', 'eventLabel', 'eventValue'],
             addVisitorIdParameter: true,
-            usesMeasurementProtocol: true
+            usesMeasurementProtocol: true,
         });
     }
 
     private addECDataToPayload(eventType: string, payload: any) {
         const ecPayload = {
-            ...(this.getLocationInformation(eventType, payload)),
-            ...(this.getDefaultContextInformation(eventType)),
-            ...(this.action ? { action: this.action } : {}),
+            ...this.getLocationInformation(eventType, payload),
+            ...this.getDefaultContextInformation(eventType),
+            ...(this.action ? {action: this.action} : {}),
             ...(this.actionData || {}),
         };
 
@@ -137,10 +139,10 @@ export class EC {
 
         const impressionsByList = this.getImpressionsByList();
         const impressionPayload = impressionsByList.reduce((newPayload, impressionList, index) => {
-                return {
-                    ...newPayload,
-                    ...convertImpressionListToMeasurementProtocol(impressionList, index),
-                };
+            return {
+                ...newPayload,
+                ...convertImpressionListToMeasurementProtocol(impressionList, index),
+            };
         }, {});
 
         this.clearData();
@@ -155,12 +157,12 @@ export class EC {
 
     private getImpressionsByList() {
         return this.impressions.reduce((lists, impression) => {
-            const { list: listName, ...baseImpression } = impression;
-            const list = lists.find(list => list.listName === listName);
+            const {list: listName, ...baseImpression} = impression;
+            const list = lists.find((list) => list.listName === listName);
             if (list) {
                 list.impressions.push(baseImpression);
             } else {
-                lists.push({ listName: listName, impressions: [baseImpression] });
+                lists.push({listName: listName, impressions: [baseImpression]});
             }
             return lists;
         }, [] as ImpressionList[]);
@@ -174,7 +176,11 @@ export class EC {
 
         if (!!payload.page) {
             const removeStartingSlash = (page: string) => page.replace(/^\/?(.*)$/, '/$1');
-            const extractHostnamePart = (location: string) => location.split('/').slice(0, 3).join('/');
+            const extractHostnamePart = (location: string) =>
+                location
+                    .split('/')
+                    .slice(0, 3)
+                    .join('/');
             this.lastLocation = `${extractHostnamePart(this.lastLocation)}${removeStartingSlash(payload.page)}`;
         } else {
             this.lastLocation = getFormattedLocation(window.location);
@@ -194,7 +200,7 @@ export class EC {
     getDefaultContextInformation(eventType: string) {
         const pageContext = {
             hitType: eventType,
-            pageViewId: this.pageViewId
+            pageViewId: this.pageViewId,
         };
         const documentContext = {
             title: document.title,
@@ -217,7 +223,7 @@ export class EC {
             ...eventContext,
             ...screenContext,
             ...navigatorContext,
-            ...documentContext
+            ...documentContext,
         };
     }
 }

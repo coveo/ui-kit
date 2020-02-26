@@ -1,56 +1,56 @@
 sudo: false
 language: node_js
 node_js:
-- stable
+    - stable
 before_install:
-- source read.version.sh
-- echo $PACKAGE_JSON_MAJOR_MINOR_VERSION
+    - source read.version.sh
+    - echo $PACKAGE_JSON_MAJOR_MINOR_VERSION
 install:
-- npm install
+    - npm install
 script:
-- npm run build
-- npm test
+    - npm run build
+    - npm test
 after_success:
-- bash <(curl -s https://codecov.io/bash)
-- mkdir deploy
-- cp dist/coveoua.js dist/coveoua.js.map deploy
+    - bash <(curl -s https://codecov.io/bash)
+    - mkdir deploy
+    - cp dist/coveoua.js dist/coveoua.js.map deploy
 deploy:
-- provider: npm
-  skip_cleanup: true
-  email: sandbox_JSUI@coveo.com
-  api_key:
-    secure: "UWxXzVhIuxlOH48jBlL4DWXU2HyltS4QS0t18Bo+WJX4tM0YXviOLDx7P3YZeBry8Emam+mgbaykq922QzZBMUH7Y+TXY8RU3p29vcTY6nOMtD8CRqtQfvloMJobYPhRs8YHcU2EsTWwFJWtJ+/964rcS6kwLbyWjsZqBUJw9THMN4TV5GxHKzsErrStrDoFirDrHjKP03cepoqwRMIXAQYHyDDVzzPYtstCQIdB/wSYXF6/lobQzuj9103TzsbDYVXDG+Q/SZNhWmcGlN+DR0iI1Goq2jiy8FGoFRQ9So2yqQinvxffhdWTXb7g8+Dc8DcqTtskP8NkpATL4J0FpIbNsRe4pSXko3r0NM/dfE7HsZUZUr2d95Z/YpJCWSBpK9Ay5GxBZ0P6zRoGyf23dnkN8EVWtXrO3//Te5c3FWvgVLqlAmD9X7qPfCV6HIN4hDcCHJjvTfTUNopLZs9n3Be9IXQX4U/uRUoVhYeKwsZl7zcuVHVWnuW52wi2n2h38np7+nqAsvtu2dTLx+FlBpWW/sljyPTt03JpjZ/VP6aWpibFROQW1Jk+qLUylUDQxwPB8h/n9LOYUk5421lwiH4KsyazZwcngDn4AIjrlvebqv+qXn5F0KwrEvbgqn8CHIlNhxIQ51/AODBeoew6ypEDRdfkRCSUXwWnARaPlno="
-  on:
-    tags: true
-    condition: "$TRAVIS_TAG != latest"
-    repo: coveo/coveo.analytics.js
-- provider: s3
-  skip_cleanup: true
-  access_key_id: AKIAYKDJLZITS26X53GO
-  secret_access_key:
-    secure: "qN1Z9yhBkm+tgD4rxzQUQnqpS+agoODn4gazlJ3Rh0WVGe5D91vuMy2Yo6rso1M3A540GLQsamue5wyDsX08Kvi0qREU0LhEB7XKHHP1kToprY8n1uRlmNMQs3tECiHyoyMWZwifaF+N92fqZkmIyaJ2NNdwPcroMEEbVTNRTQ+YC37EawtFlsvD3f1h75ja7G2UyD0PVdg5dNe2qJqpuBN7mviAAqge6ffCqSHHwlTa08QoflazFBFrGBiO/kesV1Xm22ZOR9rc+sH2Q226Bv6EEDzcOgrxR0v4forEbJvFldBPtkReZPfuC7rzJaep1AoLyqYMy/7t2TDyQH3EFHBQkTJwkF1n/jOiWX8KRAvjO1NUxsWc5ZhWRGGJCL7ZYcona8Dw2OLfUdF4lvgPWGki0ooswG6D4gqNl1xmZOvIZWajBu7QffOLkn+Ra1JpbAtZzS4YxYmNn9CehSze/nJIwLnvS6DQ5fKQGz9on0Pb13+Xy474UGr20pEOwGTlmTUzXnEk3dtIaRF+VX36yjpKxjCDOMbpMNa7+6K5GlTX+ncJz46Wg2Xn1GPmEWgL3JBHNUCkaFfX3r4G9UorRQ1HiVJ6poNkbxjT8z4uq71ZKspbzVUVzwOqq/vZza6t5seLScVIaEzPPzJicJixPtQaZmzS0/yogpbet8W/FbA="
-  bucket: coveo-public-content
-  local-dir: dist
-  upload-dir: coveo.analytics.js/$TRAVIS_TAG
-  acl: public_read
-  on:
-    tags: true
-    condition: "$TRAVIS_TAG != latest"
-    repo: coveo/coveo.analytics.js
-- provider: s3
-  skip_cleanup: true
-  access_key_id: AKIAYKDJLZITS26X53GO
-  secret_access_key:
-    secure: "qN1Z9yhBkm+tgD4rxzQUQnqpS+agoODn4gazlJ3Rh0WVGe5D91vuMy2Yo6rso1M3A540GLQsamue5wyDsX08Kvi0qREU0LhEB7XKHHP1kToprY8n1uRlmNMQs3tECiHyoyMWZwifaF+N92fqZkmIyaJ2NNdwPcroMEEbVTNRTQ+YC37EawtFlsvD3f1h75ja7G2UyD0PVdg5dNe2qJqpuBN7mviAAqge6ffCqSHHwlTa08QoflazFBFrGBiO/kesV1Xm22ZOR9rc+sH2Q226Bv6EEDzcOgrxR0v4forEbJvFldBPtkReZPfuC7rzJaep1AoLyqYMy/7t2TDyQH3EFHBQkTJwkF1n/jOiWX8KRAvjO1NUxsWc5ZhWRGGJCL7ZYcona8Dw2OLfUdF4lvgPWGki0ooswG6D4gqNl1xmZOvIZWajBu7QffOLkn+Ra1JpbAtZzS4YxYmNn9CehSze/nJIwLnvS6DQ5fKQGz9on0Pb13+Xy474UGr20pEOwGTlmTUzXnEk3dtIaRF+VX36yjpKxjCDOMbpMNa7+6K5GlTX+ncJz46Wg2Xn1GPmEWgL3JBHNUCkaFfX3r4G9UorRQ1HiVJ6poNkbxjT8z4uq71ZKspbzVUVzwOqq/vZza6t5seLScVIaEzPPzJicJixPtQaZmzS0/yogpbet8W/FbA="
-  bucket: coveo-public-content
-  local-dir: deploy
-  upload-dir: coveo.analytics.js/$PACKAGE_JSON_MAJOR_MINOR_VERSION
-  acl: public_read
-  on:
-    tags: true
-    condition: "$TRAVIS_TAG = latest"
-    repo: coveo/coveo.analytics.js
+    - provider: npm
+      skip_cleanup: true
+      email: sandbox_JSUI@coveo.com
+      api_key:
+          secure: 'UWxXzVhIuxlOH48jBlL4DWXU2HyltS4QS0t18Bo+WJX4tM0YXviOLDx7P3YZeBry8Emam+mgbaykq922QzZBMUH7Y+TXY8RU3p29vcTY6nOMtD8CRqtQfvloMJobYPhRs8YHcU2EsTWwFJWtJ+/964rcS6kwLbyWjsZqBUJw9THMN4TV5GxHKzsErrStrDoFirDrHjKP03cepoqwRMIXAQYHyDDVzzPYtstCQIdB/wSYXF6/lobQzuj9103TzsbDYVXDG+Q/SZNhWmcGlN+DR0iI1Goq2jiy8FGoFRQ9So2yqQinvxffhdWTXb7g8+Dc8DcqTtskP8NkpATL4J0FpIbNsRe4pSXko3r0NM/dfE7HsZUZUr2d95Z/YpJCWSBpK9Ay5GxBZ0P6zRoGyf23dnkN8EVWtXrO3//Te5c3FWvgVLqlAmD9X7qPfCV6HIN4hDcCHJjvTfTUNopLZs9n3Be9IXQX4U/uRUoVhYeKwsZl7zcuVHVWnuW52wi2n2h38np7+nqAsvtu2dTLx+FlBpWW/sljyPTt03JpjZ/VP6aWpibFROQW1Jk+qLUylUDQxwPB8h/n9LOYUk5421lwiH4KsyazZwcngDn4AIjrlvebqv+qXn5F0KwrEvbgqn8CHIlNhxIQ51/AODBeoew6ypEDRdfkRCSUXwWnARaPlno='
+      on:
+          tags: true
+          condition: '$TRAVIS_TAG != latest'
+          repo: coveo/coveo.analytics.js
+    - provider: s3
+      skip_cleanup: true
+      access_key_id: AKIAYKDJLZITS26X53GO
+      secret_access_key:
+          secure: 'qN1Z9yhBkm+tgD4rxzQUQnqpS+agoODn4gazlJ3Rh0WVGe5D91vuMy2Yo6rso1M3A540GLQsamue5wyDsX08Kvi0qREU0LhEB7XKHHP1kToprY8n1uRlmNMQs3tECiHyoyMWZwifaF+N92fqZkmIyaJ2NNdwPcroMEEbVTNRTQ+YC37EawtFlsvD3f1h75ja7G2UyD0PVdg5dNe2qJqpuBN7mviAAqge6ffCqSHHwlTa08QoflazFBFrGBiO/kesV1Xm22ZOR9rc+sH2Q226Bv6EEDzcOgrxR0v4forEbJvFldBPtkReZPfuC7rzJaep1AoLyqYMy/7t2TDyQH3EFHBQkTJwkF1n/jOiWX8KRAvjO1NUxsWc5ZhWRGGJCL7ZYcona8Dw2OLfUdF4lvgPWGki0ooswG6D4gqNl1xmZOvIZWajBu7QffOLkn+Ra1JpbAtZzS4YxYmNn9CehSze/nJIwLnvS6DQ5fKQGz9on0Pb13+Xy474UGr20pEOwGTlmTUzXnEk3dtIaRF+VX36yjpKxjCDOMbpMNa7+6K5GlTX+ncJz46Wg2Xn1GPmEWgL3JBHNUCkaFfX3r4G9UorRQ1HiVJ6poNkbxjT8z4uq71ZKspbzVUVzwOqq/vZza6t5seLScVIaEzPPzJicJixPtQaZmzS0/yogpbet8W/FbA='
+      bucket: coveo-public-content
+      local-dir: dist
+      upload-dir: coveo.analytics.js/$TRAVIS_TAG
+      acl: public_read
+      on:
+          tags: true
+          condition: '$TRAVIS_TAG != latest'
+          repo: coveo/coveo.analytics.js
+    - provider: s3
+      skip_cleanup: true
+      access_key_id: AKIAYKDJLZITS26X53GO
+      secret_access_key:
+          secure: 'qN1Z9yhBkm+tgD4rxzQUQnqpS+agoODn4gazlJ3Rh0WVGe5D91vuMy2Yo6rso1M3A540GLQsamue5wyDsX08Kvi0qREU0LhEB7XKHHP1kToprY8n1uRlmNMQs3tECiHyoyMWZwifaF+N92fqZkmIyaJ2NNdwPcroMEEbVTNRTQ+YC37EawtFlsvD3f1h75ja7G2UyD0PVdg5dNe2qJqpuBN7mviAAqge6ffCqSHHwlTa08QoflazFBFrGBiO/kesV1Xm22ZOR9rc+sH2Q226Bv6EEDzcOgrxR0v4forEbJvFldBPtkReZPfuC7rzJaep1AoLyqYMy/7t2TDyQH3EFHBQkTJwkF1n/jOiWX8KRAvjO1NUxsWc5ZhWRGGJCL7ZYcona8Dw2OLfUdF4lvgPWGki0ooswG6D4gqNl1xmZOvIZWajBu7QffOLkn+Ra1JpbAtZzS4YxYmNn9CehSze/nJIwLnvS6DQ5fKQGz9on0Pb13+Xy474UGr20pEOwGTlmTUzXnEk3dtIaRF+VX36yjpKxjCDOMbpMNa7+6K5GlTX+ncJz46Wg2Xn1GPmEWgL3JBHNUCkaFfX3r4G9UorRQ1HiVJ6poNkbxjT8z4uq71ZKspbzVUVzwOqq/vZza6t5seLScVIaEzPPzJicJixPtQaZmzS0/yogpbet8W/FbA='
+      bucket: coveo-public-content
+      local-dir: deploy
+      upload-dir: coveo.analytics.js/$PACKAGE_JSON_MAJOR_MINOR_VERSION
+      acl: public_read
+      on:
+          tags: true
+          condition: '$TRAVIS_TAG = latest'
+          repo: coveo/coveo.analytics.js
 notifications:
-  email:
-    on_success: never
-    on_failure: never
+    email:
+        on_success: never
+        on_failure: never

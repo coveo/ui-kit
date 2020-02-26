@@ -1,5 +1,5 @@
 import * as detector from './detector';
-import { Cookie } from './cookieutils';
+import {Cookie} from './cookieutils';
 
 export let preferredStorage: WebStorage | null = null;
 
@@ -39,7 +39,13 @@ export class CookieStorage implements WebStorage {
 }
 
 export class NullStorage implements WebStorage {
-    getItem(key: string): string | null { return null; }
-    removeItem(key: string) {/**/}
-    setItem(key: string, data: string): void {/**/}
+    getItem(key: string): string | null {
+        return null;
+    }
+    removeItem(key: string) {
+        /**/
+    }
+    setItem(key: string, data: string): void {
+        /**/
+    }
 }
