@@ -5,11 +5,15 @@ declare const global: any;
 
 const promise = (window as any)['Promise'];
 if (!(promise instanceof Function)) {
-    console.error(`This script uses window.Promise which is not supported in your browser. Consider adding a polyfill like "es6-promise".`);
+    console.error(
+        `This script uses window.Promise which is not supported in your browser. Consider adding a polyfill like "es6-promise".`
+    );
 }
 const fetch = (window as any)['fetch'];
 if (!(fetch instanceof Function)) {
-    console.error(`This script uses window.fetch which is not supported in your browser. Consider adding a polyfill like "fetch".`);
+    console.error(
+        `This script uses window.fetch which is not supported in your browser. Consider adding a polyfill like "fetch".`
+    );
 }
 
 // CoveoUAGlobal is the interface for the global function which also has a

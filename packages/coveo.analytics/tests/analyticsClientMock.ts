@@ -1,4 +1,4 @@
-import { AnalyticsClient } from '../src/client/analytics';
+import {AnalyticsClient} from '../src/client/analytics';
 
 export const createAnalyticsClientMock = (): jest.Mocked<AnalyticsClient> => ({
     sendEvent: jest.fn((eventType, payload) => Promise.resolve()),

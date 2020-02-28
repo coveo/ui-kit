@@ -1,6 +1,6 @@
 import * as history from './history';
-import { MAX_NUMBER_OF_HISTORY_ELEMENTS } from './history';
-import { WebStorage } from './storage';
+import {MAX_NUMBER_OF_HISTORY_ELEMENTS} from './history';
+import {WebStorage} from './storage';
 
 describe('history', () => {
     let storageMock: jest.Mocked<WebStorage>;
@@ -11,14 +11,16 @@ describe('history', () => {
         let storageData: any;
         storageMock = {
             getItem: jest.fn((key) => storageData),
-            setItem: jest.fn((key, data) => {storageData = data; }),
+            setItem: jest.fn((key, data) => {
+                storageData = data;
+            }),
             removeItem: jest.fn(),
         };
         historyStore = new history.HistoryStore(storageMock);
         data = {
             name: 'name',
             value: 'value',
-            time: JSON.stringify(new Date())
+            time: JSON.stringify(new Date()),
         };
     });
 
@@ -52,7 +54,7 @@ describe('history', () => {
         expect(setData).toMatch(/"value":"01234[0-9]{70}"/);
     });
 
-    it('should not trim elements over 75 char if it\'s not a query', () => {
+    it("should not trim elements over 75 char if it's not a query", () => {
         data.value = '';
         let newValue = '';
         for (let i = 0; i < 100; i++) {
@@ -86,7 +88,7 @@ describe('history', () => {
                 name: 'name' + i,
                 value: 'value' + i,
                 time: JSON.stringify(new Date()),
-                internalTime: new Date().getTime()
+                internalTime: new Date().getTime(),
             });
         }
 
@@ -112,7 +114,10 @@ describe('history', () => {
 
         historyStore.setHistory(historyElements);
 
-        expect(storageMock.setItem).toHaveBeenCalledWith(history.STORE_KEY, expect.stringContaining(JSON.stringify(historyElements)));
+        expect(storageMock.setItem).toHaveBeenCalledWith(
+            history.STORE_KEY,
+            expect.stringContaining(JSON.stringify(historyElements))
+        );
     });
 
     it('should reject consecutive duplicate values', () => {

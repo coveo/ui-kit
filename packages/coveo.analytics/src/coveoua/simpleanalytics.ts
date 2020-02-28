@@ -1,13 +1,9 @@
-import { AnyEventResponse, SendEventArguments, VariableArgumentsPayload } from '../events';
-import {
-    AnalyticsClient,
-    CoveoAnalyticsClient,
-    Endpoints,
-} from '../client/analytics';
-import { Plugins } from './plugins';
-import { EC } from '../plugins/ec';
+import {AnyEventResponse, SendEventArguments, VariableArgumentsPayload} from '../events';
+import {AnalyticsClient, CoveoAnalyticsClient, Endpoints} from '../client/analytics';
+import {Plugins} from './plugins';
+import {EC} from '../plugins/ec';
 
-export type AvailableActions = keyof(CoveoUA);
+export type AvailableActions = keyof CoveoUA;
 
 // CoveoUA mimics the GoogleAnalytics API.
 export class CoveoUA {
@@ -28,17 +24,17 @@ export class CoveoUA {
             endpoint = endpoint || Endpoints.default;
             this.client = new CoveoAnalyticsClient({
                 token: token,
-                endpoint: endpoint
+                endpoint: endpoint,
             });
         } else if (typeof token === 'object' && typeof token.sendEvent !== 'undefined') {
             this.client = token;
         }
 
         if (this.client) {
-            this.plugins.register('ec', new EC({ client: this.client }));
+            this.plugins.register('ec', new EC({client: this.client}));
             this.client.registerBeforeSendEventHook((eventType, payload) => ({
                 ...payload,
-                ...this.params
+                ...this.params,
             }));
         } else {
             throw new Error(`You must pass either your token or a valid object when you call 'init'`);
@@ -57,7 +53,7 @@ export class CoveoUA {
         }
 
         this.client = new CoveoAnalyticsClient({
-            endpoint: endpoint
+            endpoint: endpoint,
         });
     }
 
@@ -65,7 +61,7 @@ export class CoveoUA {
         if (typeof keyOrObject === 'string') {
             this.params[keyOrObject] = value;
         } else {
-            Object.keys(keyOrObject).map(key => {
+            Object.keys(keyOrObject).map((key) => {
                 this.params[key] = keyOrObject[key];
             });
         }
@@ -80,8 +76,7 @@ export class CoveoUA {
             throw new Error(`You must provide an event type when calling "send".`);
         }
 
-        return this.client.sendEvent(event.toLowerCase(), ...payload as VariableArgumentsPayload);
-
+        return this.client.sendEvent(event.toLowerCase(), ...(payload as VariableArgumentsPayload));
     }
 
     onLoad(callback: Function) {
@@ -106,7 +101,7 @@ export class CoveoUA {
 export const coveoua = new CoveoUA();
 
 export const handleOneAnalyticsEvent = (command: string, ...params: any[]): any => {
-    const [, trackerName, pluginName, fn ] = /^(?:(\w+)\.)?(?:(\w+):)?(\w+)$/.exec(command)!;
+    const [, trackerName, pluginName, fn] = /^(?:(\w+)\.)?(?:(\w+):)?(\w+)$/.exec(command)!;
 
     const actionFunction = (<any>coveoua)[fn];
     if (pluginName && fn) {

@@ -1,4 +1,4 @@
-import { AnyEventResponse, IRequestPayload } from '../events';
+import {AnyEventResponse, IRequestPayload} from '../events';
 
 export interface VisitorIdProvider {
     currentVisitorId: string;

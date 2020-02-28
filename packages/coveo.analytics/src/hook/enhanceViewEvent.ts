@@ -1,18 +1,15 @@
-import { AnalyticsClientSendEventHook } from '../client/analytics';
-import { ViewEventRequest, EventType } from '../events';
-import { HistoryStore } from '../history';
+import {AnalyticsClientSendEventHook} from '../client/analytics';
+import {ViewEventRequest, EventType} from '../events';
+import {HistoryStore} from '../history';
 
-export const enhanceViewEvent: AnalyticsClientSendEventHook = (
-    eventType,
-    payload
-) => {
+export const enhanceViewEvent: AnalyticsClientSendEventHook = (eventType, payload) => {
     if (eventType === EventType.view) {
         addPageViewToHistory(payload.contentIdValue);
         return {
             location: window.location.toString(),
             referrer: document.referrer,
             title: document.title,
-            ...payload
+            ...payload,
         } as ViewEventRequest;
     }
 
