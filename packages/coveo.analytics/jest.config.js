@@ -1,6 +1,7 @@
 module.exports = {
-    roots: ['<rootDir>/src'],
+    roots: ['<rootDir>/src', '<rootDir>/functional'],
     preset: 'ts-jest',
+    setupFiles: ['./tests/setup.js'],
     moduleNameMapper: {
         '@App/(.*)': '<rootDir>/src/$1',
     },
@@ -11,5 +12,5 @@ module.exports = {
     },
     collectCoverageFrom: ['<rootDir>/src/**/*.{ts,tsx}'],
     coveragePathIgnorePatterns: ['.spec.*'],
-    coverageReporters: ['lcov', 'cobertura', 'text-summary']
+    coverageReporters: ['lcov', 'cobertura', 'text-summary'],
 };

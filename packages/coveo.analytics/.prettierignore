@@ -1,0 +1,13 @@
+.vscode
+node_modules
+coverage
+assets
+dist
+dist_test
+*.sh
+.gitignore
+.mailmap
+.npmignore
+.prettierignore
+package-lock.json
+public

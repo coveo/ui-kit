@@ -1,5 +1,5 @@
 import * as detector from './detector';
-import { CookieStorage, getAvailableStorage, WebStorage } from './storage';
+import {CookieStorage, getAvailableStorage, WebStorage} from './storage';
 
 export const STORE_KEY: string = '__coveo.analytics.history';
 export const MAX_NUMBER_OF_HISTORY_ELEMENTS: number = 20;
@@ -54,13 +54,17 @@ export class HistoryStore {
     setHistory(history: HistoryElement[]) {
         try {
             this.store.setItem(STORE_KEY, JSON.stringify(history.slice(0, MAX_NUMBER_OF_HISTORY_ELEMENTS)));
-        } catch (e) { /* refer to this.getHistory() */ }
+        } catch (e) {
+            /* refer to this.getHistory() */
+        }
     }
 
     clear() {
         try {
             this.store.removeItem(STORE_KEY);
-        } catch (e) { /* refer to this.getHistory() */ }
+        } catch (e) {
+            /* refer to this.getHistory() */
+        }
     }
 
     getMostRecentElement(): HistoryElement | null {
@@ -93,8 +97,8 @@ export class HistoryStore {
 
     private stripInternalTime(history: HistoryElement[]): HistoryElement[] {
         return history.map((part) => {
-            const { name, time, value } = part;
-            return { name, time, value };
+            const {name, time, value} = part;
+            return {name, time, value};
         });
     }
 }

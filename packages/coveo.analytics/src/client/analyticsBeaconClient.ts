@@ -1,5 +1,5 @@
-import { AnalyticsRequestClient, VisitorIdProvider } from './analyticsRequestClient';
-import { EventType, IRequestPayload } from '../events';
+import {AnalyticsRequestClient, VisitorIdProvider} from './analyticsRequestClient';
+import {EventType, IRequestPayload} from '../events';
 
 export interface IAnalyticsBeaconClientOptions {
     baseUrl: string;
@@ -8,27 +8,32 @@ export interface IAnalyticsBeaconClientOptions {
 }
 
 export class AnalyticsBeaconClient implements AnalyticsRequestClient {
-    constructor(private opts: IAnalyticsBeaconClientOptions) { }
+    constructor(private opts: IAnalyticsBeaconClientOptions) {}
 
     public async sendEvent(eventType: EventType, payload: IRequestPayload): Promise<void> {
         if (!navigator.sendBeacon) {
-            throw new Error(`navigator.sendBeacon is not supported in this browser. Consider adding a polyfill like "sendbeacon-polyfill".`);
+            throw new Error(
+                `navigator.sendBeacon is not supported in this browser. Consider adding a polyfill like "sendbeacon-polyfill".`
+            );
         }
 
-        const {
-            baseUrl,
-            token,
-            visitorIdProvider
-        } = this.opts;
+        const {baseUrl, token, visitorIdProvider} = this.opts;
 
         const parsedRequestDataKey = this.getParsedRequestDataKey(eventType);
         const parsedRequestData = `${parsedRequestDataKey}=${encodeURIComponent(JSON.stringify(payload))}`;
         const visitorId = visitorIdProvider.currentVisitorId;
-        const paramsFragments = [(token ? `access_token=${token}` : ''), (visitorId ? `visitorId=${visitorId}` : '')].filter(p => !!p).join('&');
+        const paramsFragments = [token ? `access_token=${token}` : '', visitorId ? `visitorId=${visitorId}` : '']
+            .filter((p) => !!p)
+            .join('&');
         const url = `${baseUrl}/analytics/${eventType}?${paramsFragments}`;
         // tslint:disable-next-line: no-console
         console.log(`Sending beacon for "${eventType}" with: `, JSON.stringify(payload));
-        navigator.sendBeacon(url, new Blob([parsedRequestData], { type: 'application/x-www-form-urlencoded' }));
+        navigator.sendBeacon(
+            url,
+            new Blob([parsedRequestData], {
+                type: 'application/x-www-form-urlencoded',
+            })
+        );
         return;
     }
 

@@ -8,6 +8,11 @@ O=o.getElementsByTagName(v)[0];O.parentNode.insertBefore(u,O)
 // Replace YOUR-TOKEN with your real token
 // (eg: an API key which has the rights to write into Coveo UsageAnalytics)
 coveoua('init','YOUR-TOKEN');
-coveoua('ec:addProduct', {wow: "cool"});
-coveoua('send', 'pageview');
+coveoua('ec:addProduct', {name: "wow", id: 'something', brand: 'brand', custom: 'ok'});
+coveoua('ec:setAction', 'detail', {storeid: "amazing"});
+coveoua('send', "pageview", "/firstpage");
+coveoua('ec:setAction', 'purchase', {storeid: "amazing"});
+coveoua('send', "event", "eventCategory", "eventAction", "eventLabel", "eventValue");
+coveoua('send', "pageview", "/secondpage");
+coveoua('send', "event");
 </script>

@@ -11,10 +11,6 @@
         "strict": true,
         "lib": ["es5", "dom", "scripthost", "es6"]
     },
-    "include": [
-        "src/**/*.ts"
-    ],
-    "exclude": [
-        "src/**/*.spec.ts"
-    ]
+    "include": ["src/**/*.ts"],
+    "exclude": ["src/**/*.spec.ts"]
 }

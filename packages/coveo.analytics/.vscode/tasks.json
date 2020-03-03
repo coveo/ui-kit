@@ -8,7 +8,21 @@
             "type": "npm",
             "script": "start",
             "isBackground": true,
-            "problemMatcher": "$ts-webpack-watch"
+            "problemMatcher": [
+                {
+                    "base": "$ts-webpack",
+                    "background": {
+                        "activeOnStart": true,
+                        "beginsPattern": {
+                            "regexp": "^.*Compiling....*$"
+                        },
+                        "endsPattern": {
+                            "regexp": "^.*Compiled successfully.*$"
+                        }
+                    }
+                },
+                "$tslint-webpack-watch"
+            ]
         }
     ]
 }

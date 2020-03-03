@@ -1,4 +1,4 @@
-import { CookieStorage } from './storage';
+import {CookieStorage} from './storage';
 
 describe('CookieStorage', () => {
     const key = 'wow';

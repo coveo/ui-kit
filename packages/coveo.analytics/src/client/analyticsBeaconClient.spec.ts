@@ -1,8 +1,7 @@
-import { AnalyticsBeaconClient } from './analyticsBeaconClient';
-import { EventType } from '../events';
+import {AnalyticsBeaconClient} from './analyticsBeaconClient';
+import {EventType} from '../events';
 
 describe('AnalyticsBeaconClient', () => {
-
     it('can send an event', async () => {
         navigator.sendBeacon = jest.fn();
         const baseUrl = 'https://bloup.com';
@@ -10,18 +9,18 @@ describe('AnalyticsBeaconClient', () => {
         const currentVisitorId = 'hereiam';
         const eventType: EventType = EventType.custom;
 
-        const client = new AnalyticsBeaconClient({ baseUrl,
+        const client = new AnalyticsBeaconClient({
+            baseUrl,
             token,
             visitorIdProvider: {
-                currentVisitorId
-            }
+                currentVisitorId,
+            },
         });
 
         await client.sendEvent(eventType, {
-            'wow': 'ok'
+            wow: 'ok',
         });
 
         expect(navigator.sendBeacon).toHaveBeenCalledTimes(1);
     });
-
 });

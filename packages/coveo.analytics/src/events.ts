@@ -4,13 +4,23 @@ export enum EventType {
     search = 'search',
     click = 'click',
     custom = 'custom',
-    view = 'view'
+    view = 'view',
+    collect = 'collect',
 }
 
 export interface SearchDocument {
     documentUri: string;
     documentUriHash: string;
 }
+
+export type SendEventArguments = [EventType, ...any[]];
+export type VariableArgumentsPayload =
+    | []
+    | [any]
+    | [string, any]
+    | [string, string, any]
+    | [string, string, string, any]
+    | [string, string, string, string, any];
 
 export interface EventBaseRequest {
     language?: string;
@@ -76,10 +86,10 @@ export interface DefaultEventResponse {
     visitorId: string;
 }
 
-export interface SearchEventResponse extends DefaultEventResponse { }
-export interface ClickEventResponse extends DefaultEventResponse { }
-export interface CustomEventResponse extends DefaultEventResponse { }
-export interface ViewEventResponse extends DefaultEventResponse { }
+export interface SearchEventResponse extends DefaultEventResponse {}
+export interface ClickEventResponse extends DefaultEventResponse {}
+export interface CustomEventResponse extends DefaultEventResponse {}
+export interface ViewEventResponse extends DefaultEventResponse {}
 
 export type AnyEventResponse = SearchEventResponse | ClickEventResponse | CustomEventResponse | ViewEventResponse;
 
