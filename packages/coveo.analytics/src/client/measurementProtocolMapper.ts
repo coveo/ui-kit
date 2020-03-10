@@ -136,3 +136,7 @@ const convertImpressionToMeasurementProtocol = (
         };
     }, {});
 };
+
+export const measurementProtocolKeysMappingValues: String[] = Object.keys(measurementProtocolKeysMapping).map(key => Object(measurementProtocolKeysMapping)[key]);
+export const productKeysMappingValues = Object.keys(productKeysMapping).map(key => Object(productKeysMapping)[key]);
+export const impressionKeysMappingValues = Object.keys(impressionKeysMapping).map(key => Object(impressionKeysMapping)[key]);

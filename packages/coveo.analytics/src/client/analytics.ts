@@ -22,7 +22,12 @@ import {hasLocalStorage, hasCookieStorage} from '../detector';
 import {addDefaultValues} from '../hook/addDefaultValues';
 import {enhanceViewEvent} from '../hook/enhanceViewEvent';
 import {uuidv4} from './crypto';
-import {convertKeysToMeasurementProtocol} from './measurementProtocolMapper';
+import {
+    convertKeysToMeasurementProtocol, 
+    measurementProtocolKeysMappingValues,
+    productKeysMappingValues,
+    impressionKeysMappingValues
+} from './measurementProtocolMapper';
 
 export const Version = 'v15';
 
@@ -161,6 +166,8 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
         const validateParams: ProcessPayloadStep = (currentPayload) => this.validateParams(currentPayload);
         const processMeasurementProtocolConversionStep: ProcessPayloadStep = (currentPayload) =>
             usesMeasurementProtocol ? convertKeysToMeasurementProtocol(currentPayload) : currentPayload;
+        const removeUnknownParameters: ProcessPayloadStep = (currentPayload) => 
+            usesMeasurementProtocol ? this.removeUnknownParameters(currentPayload): currentPayload;
 
         const payloadToSend = [
             processVariableArgumentNamesStep,
@@ -169,6 +176,7 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
             cleanPayloadStep,
             validateParams,
             processMeasurementProtocolConversionStep,
+            removeUnknownParameters,
         ].reduce((payload, step) => step(payload), payload);
 
         this.bufferedRequests.push({
@@ -176,7 +184,7 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
             payload: payloadToSend,
             handled: false,
         });
-
+        
         await this.deferExecution();
         return await this.sendFromBufferWithFetch();
     }
@@ -270,15 +278,36 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
             );
     }
 
+    private removeUnknownParameters(payload: IRequestPayload): IRequestPayload {
+        const productSubKeys = productKeysMappingValues.join("|")
+        const impressSubKeys = impressionKeysMappingValues.join("|")
+        const productKeyRegex = new RegExp(`^(pr[0-9]+)(${productSubKeys})$`)
+        const impressionKeyRegex = new RegExp(`^((il[0-9]+pi[0-9]+)(${impressSubKeys}))|(il[0-9]+nm)$`)
+        const newPayload = Object.keys(payload)
+            .filter((key) => { 
+                if (productKeyRegex.test(key) || impressionKeyRegex.test(key) || measurementProtocolKeysMappingValues.indexOf(key) != -1){
+                    return {key: payload[key]}
+                } else {
+                    console.log(key, 'is not processsed by coveoua')
+                }
+             })
+            .reduce(
+                (newPayload, key) => ({
+                    ...newPayload,
+                    [key]: payload[key],
+                }),
+                {}
+            );
+        return newPayload;
+    }
+
     private validateParams(payload: IRequestPayload): IRequestPayload {
         const {anonymizeIp, ...rest} = payload;
-
         if (anonymizeIp !== undefined) {
             if (['0', 'false', 'undefined', 'null', '{}', '[]', ''].indexOf(`${anonymizeIp}`.toLowerCase()) == -1) {
                 rest['anonymizeIp'] = 1;
             }
         }
-
         return rest;
     }
 
