@@ -223,8 +223,8 @@ describe('ec events', () => {
         const [body] = getParsedBody();
 
         expect(body).not.toContain({
-            unknownParam: 'unknown'
-        })
+            unknownParam: 'unknown',
+        });
     });
 
     it('should remove unknown measurment protocol product keys', async () => {
@@ -235,7 +235,7 @@ describe('ec events', () => {
 
         expect(body).not.toContain({
             pr1custom: 'ok',
-        })
+        });
     });
 
     it('should be able to follow the complete addToCart flow', async () => {

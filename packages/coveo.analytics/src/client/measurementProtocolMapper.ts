@@ -137,18 +137,21 @@ const convertImpressionToMeasurementProtocol = (
     }, {});
 };
 
-const measurementProtocolKeysMappingValues = keysOf(measurementProtocolKeysMapping).map(key => Object(measurementProtocolKeysMapping)[key]);
-const productKeysMappingValues = keysOf(productKeysMapping).map(key => Object(productKeysMapping)[key]);
-const impressionKeysMappingValues = keysOf(impressionKeysMapping).map(key => Object(impressionKeysMapping)[key]);
+const measurementProtocolKeysMappingValues = keysOf(measurementProtocolKeysMapping).map(
+    (key) => Object(measurementProtocolKeysMapping)[key]
+);
+const productKeysMappingValues = keysOf(productKeysMapping).map((key) => Object(productKeysMapping)[key]);
+const impressionKeysMappingValues = keysOf(impressionKeysMapping).map((key) => Object(impressionKeysMapping)[key]);
 
-const productSubKeysMatchGroup = productKeysMappingValues.join("|")
-const impressSubKeysMatchGroup = impressionKeysMappingValues.join("|")
-const productKeyRegex = new RegExp(`^(pr[0-9]+)(${productSubKeysMatchGroup})$`)
-const impressionKeyRegex = new RegExp(`^((il[0-9]+pi[0-9]+)(${impressSubKeysMatchGroup}))|(il[0-9]+nm)$`)
+const productSubKeysMatchGroup = productKeysMappingValues.join('|');
+const impressSubKeysMatchGroup = impressionKeysMappingValues.join('|');
+const productKeyRegex = new RegExp(`^(pr[0-9]+)(${productSubKeysMatchGroup})$`);
+const impressionKeyRegex = new RegExp(`^((il[0-9]+pi[0-9]+)(${impressSubKeysMatchGroup}))|(il[0-9]+nm)$`);
 
 export const isMeasurementPrototocolKey = (key: string): boolean => {
-    if (productKeyRegex.test(key) || impressionKeyRegex.test(key) || measurementProtocolKeysMappingValues.indexOf(key) != -1) {
-        return true;
-    }
-    return false;
-}
+    return (
+        productKeyRegex.test(key) ||
+        impressionKeyRegex.test(key) ||
+        measurementProtocolKeysMappingValues.indexOf(key) != -1
+    );
+};
