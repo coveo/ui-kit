@@ -24,9 +24,7 @@ import {enhanceViewEvent} from '../hook/enhanceViewEvent';
 import {uuidv4} from './crypto';
 import {
     convertKeysToMeasurementProtocol, 
-    measurementProtocolKeysMappingValues,
-    productKeysMappingValues,
-    impressionKeysMappingValues
+    isMeasurementPrototocolKey,
 } from './measurementProtocolMapper';
 
 export const Version = 'v15';
@@ -279,14 +277,10 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
     }
 
     private removeUnknownParameters(payload: IRequestPayload): IRequestPayload {
-        const productSubKeys = productKeysMappingValues.join("|")
-        const impressSubKeys = impressionKeysMappingValues.join("|")
-        const productKeyRegex = new RegExp(`^(pr[0-9]+)(${productSubKeys})$`)
-        const impressionKeyRegex = new RegExp(`^((il[0-9]+pi[0-9]+)(${impressSubKeys}))|(il[0-9]+nm)$`)
         const newPayload = Object.keys(payload)
             .filter((key) => { 
-                if (productKeyRegex.test(key) || impressionKeyRegex.test(key) || measurementProtocolKeysMappingValues.indexOf(key) != -1){
-                    return {key: payload[key]}
+                if (isMeasurementPrototocolKey(key)){
+                    return true;
                 } else {
                     console.log(key, 'is not processsed by coveoua')
                 }

@@ -215,25 +215,27 @@ describe('ec events', () => {
             aip: 1,
         });
     });
-    it('should remove unknown values', async () => {
+
+    it('should remove unknown measurment protocol keys', async () => {
         await coveoua('set', 'unknownParam', 'unknown');
+        await coveoua('send', 'pageview');
+
+        const [body] = getParsedBody();
+
+        expect(body).not.toContain({
+            unknownParam: 'unknown'
+        })
+    });
+
+    it('should remove unknown measurment protocol product keys', async () => {
         await coveoua('ec:addProduct', {name: 'wow', id: 'something', brand: 'brand', custom: 'ok'});
         await coveoua('send', 'pageview');
 
         const [body] = getParsedBody();
 
-        expect(body).toEqual({
-            ...defaultContextValues,
-            t: 'pageview',
-            pr1nm: 'wow',
-            pr1id: 'something',
-            pr1br: 'brand',
-        });
         expect(body).not.toContain({
             pr1custom: 'ok',
-            unknownParam: 'unknown'
         })
-
     });
 
     it('should be able to follow the complete addToCart flow', async () => {
