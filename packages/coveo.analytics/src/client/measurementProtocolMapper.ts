@@ -136,3 +136,22 @@ const convertImpressionToMeasurementProtocol = (
         };
     }, {});
 };
+
+const measurementProtocolKeysMappingValues = keysOf(measurementProtocolKeysMapping).map(
+    (key) => measurementProtocolKeysMapping[key]
+);
+const productKeysMappingValues = keysOf(productKeysMapping).map((key) => productKeysMapping[key]);
+const impressionKeysMappingValues = keysOf(impressionKeysMapping).map((key) => impressionKeysMapping[key]);
+
+const productSubKeysMatchGroup = productKeysMappingValues.join('|');
+const impressSubKeysMatchGroup = impressionKeysMappingValues.join('|');
+const productKeyRegex = new RegExp(`^(pr[0-9]+)(${productSubKeysMatchGroup})$`);
+const impressionKeyRegex = new RegExp(`^((il[0-9]+pi[0-9]+)(${impressSubKeysMatchGroup}))|(il[0-9]+nm)$`);
+
+export const isMeasurementProtocolKey = (key: string): boolean => {
+    return (
+        productKeyRegex.test(key) ||
+        impressionKeyRegex.test(key) ||
+        measurementProtocolKeysMappingValues.indexOf(key) != -1
+    );
+};
