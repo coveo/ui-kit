@@ -279,7 +279,7 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
                 if (isMeasurementProtocolKey(key)) {
                     return true;
                 } else {
-                    console.log(key, 'is not processsed by coveoua');
+                    console.log(key, 'is not processed by coveoua');
                 }
             })
             .reduce(
