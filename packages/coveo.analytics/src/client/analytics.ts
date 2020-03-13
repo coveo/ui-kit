@@ -22,10 +22,7 @@ import {hasLocalStorage, hasCookieStorage} from '../detector';
 import {addDefaultValues} from '../hook/addDefaultValues';
 import {enhanceViewEvent} from '../hook/enhanceViewEvent';
 import {uuidv4} from './crypto';
-import {
-    convertKeysToMeasurementProtocol, 
-    isMeasurementPrototocolKey,
-} from './measurementProtocolMapper';
+import {convertKeysToMeasurementProtocol, isMeasurementProtocolKey} from './measurementProtocolMapper';
 
 export const Version = 'v15';
 
@@ -164,8 +161,8 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
         const validateParams: ProcessPayloadStep = (currentPayload) => this.validateParams(currentPayload);
         const processMeasurementProtocolConversionStep: ProcessPayloadStep = (currentPayload) =>
             usesMeasurementProtocol ? convertKeysToMeasurementProtocol(currentPayload) : currentPayload;
-        const removeUnknownParameters: ProcessPayloadStep = (currentPayload) => 
-            usesMeasurementProtocol ? this.removeUnknownParameters(currentPayload): currentPayload;
+        const removeUnknownParameters: ProcessPayloadStep = (currentPayload) =>
+            usesMeasurementProtocol ? this.removeUnknownParameters(currentPayload) : currentPayload;
 
         const payloadToSend = [
             processVariableArgumentNamesStep,
@@ -182,7 +179,7 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
             payload: payloadToSend,
             handled: false,
         });
-        
+
         await this.deferExecution();
         return await this.sendFromBufferWithFetch();
     }
@@ -278,13 +275,13 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
 
     private removeUnknownParameters(payload: IRequestPayload): IRequestPayload {
         const newPayload = Object.keys(payload)
-            .filter((key) => { 
-                if (isMeasurementPrototocolKey(key)){
+            .filter((key) => {
+                if (isMeasurementProtocolKey(key)) {
                     return true;
                 } else {
-                    console.log(key, 'is not processsed by coveoua')
+                    console.log(key, 'is not processsed by coveoua');
                 }
-             })
+            })
             .reduce(
                 (newPayload, key) => ({
                     ...newPayload,
