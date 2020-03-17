@@ -143,6 +143,12 @@ npm run test
 # open pull request
 ```
 
+Two ways to run your code locally: 
+1.  run `npm start` and open your browser on localhost 
+2.  run through the debugger
+
+To test out your changes, add new function calls in `index.html` and check the payload in `Developer Console` of your browser
+
 ### License
 
 MIT license (see [LICENSE](LICENSE)).
