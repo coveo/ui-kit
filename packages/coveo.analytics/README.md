@@ -143,11 +143,11 @@ npm run test
 # open pull request
 ```
 
-Two ways to run your code locally: 
-1.  run `npm start` and open your browser on localhost 
-2.  run through the debugger
+There are two ways to run your code locally: 
+1.  run `npm start` and open your browser on http://localhost:9001
+2.  run through VSCode debugger with the `Debug: Start Debugging` command, using the `Launch Chrome` configuration.
 
-To test out your changes, add new function calls in `index.html` and check the payload in `Developer Console` of your browser
+To test out your changes, add a new function calls in the `public/index.html` file and check the payload in `Developer Console` of your browser
 
 ### License
 
