@@ -1,0 +1,31 @@
+{
+  "name": "ui-kit",
+  "private": true,
+  "scripts": {
+    "setup": "npm i && lerna bootstrap",
+    "dev": "lerna run --parallel dev",
+    "build": "lerna run --stream build",
+    "check": "gts check",
+    "fix": "gts fix"
+  },
+  "devDependencies": {
+    "gts": "^2.0.0-alpha.4",
+    "husky": "^4.2.3",
+    "lerna": "^3.20.2",
+    "lint-staged": "^10.0.8",
+    "typedoc": "https://github.com/coveord/typedoc",
+    "typescript": "^3.8.3",
+    "@types/node": "^10.0.3"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "**/*.ts": [
+      "npm run fix",
+      "git add"
+    ]
+  }
+}

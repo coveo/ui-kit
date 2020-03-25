@@ -1,0 +1,33 @@
+{
+  "name": "coveo-headless-engine",
+  "private": false,
+  "main": "./dist/server/index.js",
+  "browser": "./dist/client/index.js",
+  "types": "./dist/types",
+  "license": "LicenseRef-LICENSE",
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "webpack --watch -d",
+    "build": "webpack -p",
+    "analyze": "webpack -p --env analyze",
+    "test": "jest"
+  },
+  "dependencies": {
+    "coveo.analytics": "^2.0.1",
+    "cross-fetch": "^3.0.4",
+    "redux": "^4.0.5",
+    "redux-devtools-extension": "^2.13.8",
+    "redux-thunk": "^2.3.0"
+  },
+  "devDependencies": {
+    "@types/redux-immutable-state-invariant": "^2.1.1",
+    "clean-webpack-plugin": "^3.0.0",
+    "jest": "^25.1.0",
+    "redux-immutable-state-invariant": "^2.1.0",
+    "ts-loader": "^6.2.1",
+    "webpack": "^4.42.0",
+    "webpack-bundle-analyzer": "^3.6.1",
+    "webpack-cli": "^3.3.11",
+    "webpack-merge": "^4.2.2"
+  }
+}
