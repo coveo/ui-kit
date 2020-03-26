@@ -1,7 +1,9 @@
 import {combineReducers} from 'redux';
-import {resultsSlice} from '../features/results/resultsSlice';
+import resultsSlice from '../features/results/resultsSlice';
+import searchSlice from '../features/search/searchSlice';
 
 export const rootReducer = combineReducers({
+  search: searchSlice,
   results: resultsSlice,
 });
 

@@ -1,7 +1,7 @@
 import {configureStore} from './app/store';
 import {RootState} from './app/rootReducer';
-import {fetchResults} from './features/results/resultsSlice';
 import {Store, bindActionCreators} from 'redux';
+import {performSearch} from './features/search/searchSlice';
 
 class CoveoHeadlessEngine {
   private store: Store<RootState>;
@@ -17,8 +17,8 @@ class CoveoHeadlessEngine {
     return this.store.getState();
   }
 
-  get fetchResults() {
-    return bindActionCreators(fetchResults, this.store.dispatch);
+  get performSearch() {
+    return bindActionCreators(performSearch, this.store.dispatch);
   }
 }
 
