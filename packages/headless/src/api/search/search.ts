@@ -4,10 +4,11 @@ import {RootState} from '../../app/rootReducer';
 import {SearchRequest} from './SearchRequest';
 
 export async function search(state: RootState) {
-  console.log('state!', state);
   const request: SearchRequest = {
-    q: 'test',
-    organizationId: '',
+    q: state.query.expression,
+    organizationId: 'searchuisamples',
+    firstResult: state.results.firstResult,
+    numberOfResults: state.results.numberOfResults,
   };
 
   const response = await fetch(

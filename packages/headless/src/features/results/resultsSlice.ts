@@ -1,12 +1,16 @@
 import {SearchResult} from '../../api/search/SearchResult';
-import {SearchActionTypes, SUCCEED_SEARCH} from '../search/searchSlice';
+import {SUCCEED_SEARCH, SearchActionTypes} from '../search/searchSlice';
 
 export interface ResultsState {
   list: SearchResult[];
+  firstResult: number;
+  numberOfResults: number;
 }
 
 const resultsInitialState: ResultsState = {
   list: [],
+  firstResult: 0,
+  numberOfResults: 10,
 };
 
 export default function resultsSlice(
