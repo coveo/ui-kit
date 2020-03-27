@@ -1,9 +1,9 @@
 {
   "name": "coveo-headless-engine",
   "private": false,
-  "main": "./dist/server/index.js",
-  "browser": "./dist/client/index.js",
-  "types": "./dist/types",
+  "main": "./dist/server/coveo-headless-engine.js",
+  "browser": "./dist/client/coveo-headless-engine.js",
+  "types": "./typings/coveo-headless-engine.d.ts",
   "license": "LicenseRef-LICENSE",
   "version": "0.0.0",
   "scripts": {

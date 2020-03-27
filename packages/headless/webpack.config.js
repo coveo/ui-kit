@@ -12,7 +12,7 @@ if (analyze) {
 
 const commonConfig = {
   entry: {
-    index: './src/index.ts',
+    'coveo-headless-engine': './src/index.ts',
   },
   module: {
     rules: [
