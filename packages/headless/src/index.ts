@@ -1,7 +1,7 @@
 import {configureStore} from './app/store';
 import {RootState} from './app/rootReducer';
 import {Store, bindActionCreators} from 'redux';
-import {performSearch} from './features/search/searchSlice';
+import {performSearch, SearchStatus} from './features/search/searchSlice';
 import {updateQueryExpression} from './features/query/querySlice';
 
 class CoveoHeadlessEngine {
@@ -27,4 +27,4 @@ class CoveoHeadlessEngine {
   }
 }
 
-export {CoveoHeadlessEngine, RootState as CoveoHeadlessState};
+export {CoveoHeadlessEngine, RootState, SearchStatus};
