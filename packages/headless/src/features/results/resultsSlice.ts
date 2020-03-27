@@ -13,7 +13,7 @@ const resultsInitialState: ResultsState = {
   numberOfResults: 10,
 };
 
-export default function resultsSlice(
+export function resultsSlice(
   state = resultsInitialState,
   action: SearchActionTypes
 ): ResultsState {

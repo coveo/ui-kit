@@ -14,7 +14,7 @@ const queryInitialState: QueryState = {
   expression: '',
 };
 
-export default function querySlice(
+export function querySlice(
   state = queryInitialState,
   action: QueryActionTypes
 ): QueryState {

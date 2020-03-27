@@ -43,7 +43,7 @@ const searchInitialState: SearchState = {
   status: SearchStatus.IDLE,
 };
 
-export default function searchSlice(
+export function searchSlice(
   state = searchInitialState,
   action: SearchActionTypes
 ): SearchState {
