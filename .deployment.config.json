@@ -1,0 +1,37 @@
+{
+  "product": "coveo-ui-kit",
+  "team_name": "searchui",
+  "general": {
+    "aws_regions": ["us-east-1"],
+    "environments_order": ["dev"],
+    "gatekeeper": {
+      "notify_if_passes": true,
+      "deploy_next_if_passes": false
+    },
+    "slack_channel": "#searchuibuilds",
+    "team_jenkins": "searchuibuilds"
+  },
+  "ordered_phases": [
+    {
+      "id": "deploy-headless",
+      "s3": {
+        "bucket": "binaries",
+        "add_coveo_bucket_prefix": true,
+        "directory": "proda/StaticCDN/headless/latest",
+        "source": "packages/headless/dist/client",
+        "parameters": {
+          "acl": "public-read"
+        }
+      }
+    }
+  ],
+  "snyk": {
+    "no_dependencies": true,
+    "no_container_images": true
+  },
+  "veracode": {"no_scan": true},
+  "observatory": {"no_endpoint": true},
+  "package_rollout": {
+    "only_consider_changesets_after": "b244fe702d8e96d016a52715e92c8131acfde3ba"
+  }
+}
