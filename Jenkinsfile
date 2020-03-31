@@ -11,7 +11,6 @@ node('linux && docker') {
         sh(script: 'npm run build')
       }
 
-      sh """\$(aws ecr get-login --registry 458176070654 --region us-east-1 --no-include-email)"""
       withDockerContainer(image: '458176070654.dkr.ecr.us-east-1.amazonaws.com/jenkins/deployment_package:stable') {
         sh(
           script: "deployment-package package create"
