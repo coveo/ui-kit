@@ -1,5 +1,5 @@
 {
-  "product": "coveo-ui-kit",
+  "product": "ui-kit",
   "team_name": "searchui",
   "general": {
     "aws_regions": ["us-east-1"],
