@@ -4,7 +4,7 @@
   "scripts": {
     "setup": "npm i && lerna bootstrap",
     "dev": "lerna run --parallel dev",
-    "build": "lerna run --stream build",
+    "build": "lerna run build",
     "check": "gts check",
     "fix": "gts fix"
   },

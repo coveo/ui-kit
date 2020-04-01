@@ -10,8 +10,11 @@ node('linux && docker') {
       stage('Build') {
         sh(script: 'npm run build')
       }
-
       
+    }
+
+    if (env.BRANCH_NAME != "master") {
+      return
     }
 
     withDockerContainer(image: '458176070654.dkr.ecr.us-east-1.amazonaws.com/jenkins/deployment_package:v7') {
