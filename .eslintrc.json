@@ -4,6 +4,5 @@
   ],
   "ignorePatterns": [
     "node_modules"
-  ],
-  "rules": {}
+  ]
 }
