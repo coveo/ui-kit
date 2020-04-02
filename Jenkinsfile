@@ -1,3 +1,6 @@
+#!groovy
+library "deploy_pipeline@master"
+
 node('linux && docker') {
   checkout scm
   withEnv(["npm_config_cache=npm-cache"]){
@@ -10,7 +13,10 @@ node('linux && docker') {
       stage('Build') {
         sh(script: 'npm run build')
       }
-      
+
+      stage("Snyk") {
+        runSnyk(org: "coveo-jsui", projectName: "headless", directory: "packages/headless")
+      }
     }
 
     if (env.BRANCH_NAME != "master") {
