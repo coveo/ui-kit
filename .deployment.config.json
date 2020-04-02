@@ -27,7 +27,8 @@
   ],
   "certifiers": {
     "dev": [
-      { "system_certifier": "snyk" }
+      { "system_certifier": "snyk" },
+      { "system_certifier": "veracode" }
     ]
   },
   "snyk": {

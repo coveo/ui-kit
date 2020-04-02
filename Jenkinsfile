@@ -17,8 +17,9 @@ node('linux && docker') {
       }
 
       stage('Veracode package') {
-        sh(script: 'npm run prepareVeracode')
-        zip dir: 'veracode/headless', glob: '', zipFile: 'veracode/headless.zip'
+        sh(script: 'rm -rf veracode')
+        sh(script: 'mkdir veracode && mkdir veracode/headless')
+        zip dir: 'packages/headless/src', glob: '', zipFile: 'veracode/headless.zip'
       }
     }
 

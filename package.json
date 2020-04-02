@@ -5,7 +5,6 @@
     "setup": "npm i && lerna bootstrap",
     "dev": "lerna run --parallel dev",
     "build": "lerna run build",
-    "prepareVeracode": "rm -rf veracode && lerna run prepareVeracode",
     "check": "gts check",
     "fix": "gts fix"
   },
