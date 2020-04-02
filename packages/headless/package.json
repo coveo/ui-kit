@@ -10,7 +10,8 @@
     "dev": "webpack --watch -d",
     "build": "webpack -p",
     "analyze": "webpack -p --env analyze",
-    "test": "jest"
+    "test": "jest",
+    "veracode": "zip -r ../../veracode/headless.zip ./src/"
   },
   "dependencies": {
     "coveo.analytics": "^2.0.1",

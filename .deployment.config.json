@@ -40,7 +40,10 @@
       }
     ]
   },
-  "veracode": {"no_scan": true},
+  "veracode": {
+    "sandbox_name": "UI Kit (JS UI)",
+    "scan_include_patterns": "./veracode/*"
+  },
   "observatory": {"no_endpoint": true},
   "package_rollout": {
     "only_consider_changesets_after": "b244fe702d8e96d016a52715e92c8131acfde3ba"
