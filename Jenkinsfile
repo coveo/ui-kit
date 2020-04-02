@@ -1,5 +1,7 @@
 node('linux && docker') {
   checkout scm
+  def shouldDeploy = env.BRANCH_NAME == 'master'
+
   withEnv(['npm_config_cache=npm-cache']){
     withDockerContainer(image: 'node:13') {
       stage('Setup') {
@@ -10,13 +12,17 @@ node('linux && docker') {
         sh(script: 'npm run build')
       }
 
-      if (env.BRANCH_NAME != 'master') {
+      if (!shouldDeploy) {
         return
       }
 
       stage('Veracode package') {
         sh(script: 'npm run veracode')
       }
+    }
+
+    if (!shouldDeploy) {
+      return
     }
 
     withDockerContainer(image: '458176070654.dkr.ecr.us-east-1.amazonaws.com/jenkins/deployment_package:v7') {
