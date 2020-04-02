@@ -25,9 +25,20 @@
       }
     }
   ],
+  "certifiers": {
+    "dev": [
+      { "system_certifier": "snyk" }
+    ]
+  },
   "snyk": {
-    "no_dependencies": true,
-    "no_container_images": true
+    "org": "coveo-jsui",
+    "no_container_images": true,
+    "configurations": [
+      {
+        "directory": "packages/headless",
+        "project_name": "headless-engine"
+      }
+    ]
   },
   "veracode": {"no_scan": true},
   "observatory": {"no_endpoint": true},
