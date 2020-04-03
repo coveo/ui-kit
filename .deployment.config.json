@@ -43,7 +43,7 @@
   },
   "veracode": {
     "sandbox_name": "UI Kit (JS UI)",
-    "scan_include_patterns": "*.zip"
+    "scan_include_patterns": "*"
   },
   "observatory": {"no_endpoint": true},
   "package_rollout": {
