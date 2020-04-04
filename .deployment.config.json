@@ -36,8 +36,8 @@
     "no_container_images": true,
     "configurations": [
       {
-        "directory": "packages/headless",
-        "project_name": "headless-engine"
+        "directory": "packages/*",
+        "project_name": "ui-kit"
       }
     ]
   },
