@@ -25,11 +25,26 @@
       }
     }
   ],
-  "snyk": {
-    "no_dependencies": true,
-    "no_container_images": true
+  "certifiers": {
+    "dev": [
+      { "system_certifier": "snyk" },
+      { "system_certifier": "veracode" }
+    ]
   },
-  "veracode": {"no_scan": true},
+  "snyk": {
+    "org": "coveo-jsui",
+    "no_container_images": true,
+    "configurations": [
+      {
+        "directory": "packages/headless",
+        "project_name": "headless-engine"
+      }
+    ]
+  },
+  "veracode": {
+    "sandbox_name": "UI Kit (JS UI)",
+    "scan_include_patterns": "*"
+  },
   "observatory": {"no_endpoint": true},
   "package_rollout": {
     "only_consider_changesets_after": "b244fe702d8e96d016a52715e92c8131acfde3ba"
