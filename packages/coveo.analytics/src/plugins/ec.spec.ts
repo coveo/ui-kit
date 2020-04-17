@@ -80,6 +80,14 @@ describe('EC plugin', () => {
             expect(result).toEqual({...defaultResult, pr1nm: '🧀', pr1pr: 5.99});
         });
 
+        it('should keep custom metadata in the product', () => {
+            ec.addProduct({name: '🧀', price: 5.99, custom: {verycustom: 'value'}});
+
+            const result = executeRegisteredHook(ECPluginEventTypes.event, {});
+
+            expect(result).toEqual({...defaultResult, pr1nm: '🧀', pr1pr: 5.99, pr1custom: {verycustom: 'value'}});
+        });
+
         it('should allow adding multiple products', () => {
             ec.addProduct({name: '🍟', price: 1.99});
             ec.addProduct({name: '🍿', price: 3});
@@ -160,6 +168,19 @@ describe('EC plugin', () => {
                 ...defaultResult,
                 il1pi1nm: '🧀',
                 il1pi1pr: 5.99,
+            });
+        });
+
+        it('should keep custom metadata in the impression', () => {
+            ec.addImpression({name: '🧀', price: 5.99, custom: {verycustom: 'value'}});
+
+            const result = executeRegisteredHook(ECPluginEventTypes.event, {});
+
+            expect(result).toEqual({
+                ...defaultResult,
+                il1pi1nm: '🧀',
+                il1pi1pr: 5.99,
+                il1pi1custom: {verycustom: 'value'},
             });
         });
 

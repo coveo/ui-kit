@@ -44,8 +44,23 @@ describe('ec events', () => {
         coveoua('init', aToken, anEndpoint);
     });
 
+    it('can set custom data at the root level and send a page view event', async () => {
+        await coveoua("set", "custom", {
+            "verycustom": "value"
+        })
+        await coveoua('send', 'pageview');
+
+        const [body] = getParsedBody();
+
+        expect(body).toEqual({
+            ...defaultContextValues,
+            t: 'pageview',
+            verycustom: 'value',
+        });
+    });
+
     it('can send a product detail view event', async () => {
-        coveoua('ec:addProduct', {name: 'wow', id: 'something', brand: 'brand', custom: 'ok'});
+        coveoua('ec:addProduct', {name: 'wow', id: 'something', brand: 'brand', unknown: 'ok'});
         coveoua('ec:setAction', 'detail', {storeid: 'amazing'});
         await coveoua('send', 'pageview');
 
@@ -58,6 +73,24 @@ describe('ec events', () => {
             pr1id: 'something',
             pr1br: 'brand',
             pa: 'detail',
+        });
+    });
+
+    it('can send a product detail view event with custom values', async () => {
+        coveoua('ec:addProduct', {name: 'wow', id: 'something', brand: 'brand'});
+        coveoua('ec:setAction', 'detail', {storeid: 'amazing', custom: { verycustom: "value"}});
+        await coveoua('send', 'pageview');
+
+        const [body] = getParsedBody();
+
+        expect(body).toEqual({
+            ...defaultContextValues,
+            t: 'pageview',
+            pr1nm: 'wow',
+            pr1id: 'something',
+            pr1br: 'brand',
+            pa: 'detail',
+            verycustom: "value",
         });
     });
 
@@ -75,6 +108,27 @@ describe('ec events', () => {
             dp: 'page',
             dt: 'wow',
             dl: 'http://right.here',
+        });
+    });
+
+    it('can send a pageview event with options containing custom values', async () => {
+        await coveoua('send', 'pageview', 'page', {
+            title: 'wow',
+            location: 'http://right.here',
+            custom: {
+                verycustom: "value"
+            }
+        });
+
+        const [body] = getParsedBody();
+
+        expect(body).toEqual({
+            ...defaultContextValues,
+            t: 'pageview',
+            dp: 'page',
+            dt: 'wow',
+            dl: 'http://right.here',
+            verycustom: "value"
         });
     });
 
@@ -216,26 +270,37 @@ describe('ec events', () => {
         });
     });
 
-    it('should remove unknown measurment protocol keys', async () => {
+    it('should remove unknown measurement protocol keys', async () => {
         await coveoua('set', 'unknownParam', 'unknown');
         await coveoua('send', 'pageview');
 
         const [body] = getParsedBody();
 
-        expect(body).not.toContain({
-            unknownParam: 'unknown',
-        });
+        expect(Object.keys(body)).not.toContain("unknownParam");
     });
 
-    it('should remove unknown measurment protocol product keys', async () => {
-        await coveoua('ec:addProduct', {name: 'wow', id: 'something', brand: 'brand', custom: 'ok'});
+    it('should remove unknown measurement protocol product keys', async () => {
+        await coveoua('ec:addProduct', {name: 'wow', id: 'something', brand: 'brand', unknown: 'ok'});
         await coveoua('send', 'pageview');
 
         const [body] = getParsedBody();
 
-        expect(body).not.toContain({
-            pr1custom: 'ok',
-        });
+        expect(Object.keys(body)).not.toContain("pr1unknown");
+    });
+
+    it('should append custom values to product', async () =>{
+        var partialProduct = {name: 'wow', custom: { verycustom: "value" }};
+        await coveoua('ec:addProduct', partialProduct);
+        await coveoua('send', 'pageview');
+
+        const [body] = getParsedBody();
+
+        expect(body).toEqual({
+            ...defaultContextValues,
+            t: 'pageview',
+            pr1nm: partialProduct.name,
+            pr1verycustom: partialProduct.custom.verycustom
+        })
     });
 
     it('should be able to follow the complete addToCart flow', async () => {
