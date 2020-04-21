@@ -1,4 +1,4 @@
-import {combineReducers} from 'redux';
+import {combineReducers} from '@reduxjs/toolkit';
 import {resultsSlice} from '../features/results/resultsSlice';
 import {searchSlice} from '../features/search/searchSlice';
 import {querySlice} from '../features/query/querySlice';
