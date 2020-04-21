@@ -22,7 +22,7 @@ import {hasLocalStorage, hasCookieStorage} from '../detector';
 import {addDefaultValues} from '../hook/addDefaultValues';
 import {enhanceViewEvent} from '../hook/enhanceViewEvent';
 import {uuidv4} from './crypto';
-import {convertKeysToMeasurementProtocol, isMeasurementProtocolKey} from './measurementProtocolMapper';
+import {convertKeysToMeasurementProtocol, isMeasurementProtocolKey, convertCustomMeasurementProtocolKeys} from './measurementProtocolMapper';
 
 export const Version = 'v15';
 
@@ -163,6 +163,8 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
             usesMeasurementProtocol ? convertKeysToMeasurementProtocol(currentPayload) : currentPayload;
         const removeUnknownParameters: ProcessPayloadStep = (currentPayload) =>
             usesMeasurementProtocol ? this.removeUnknownParameters(currentPayload) : currentPayload;
+        const processCustomParameters: ProcessPayloadStep = (currentPayload) =>
+            usesMeasurementProtocol ? this.processCustomParameters(currentPayload) : currentPayload;
 
         const payloadToSend = [
             processVariableArgumentNamesStep,
@@ -172,6 +174,7 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
             validateParams,
             processMeasurementProtocolConversionStep,
             removeUnknownParameters,
+            processCustomParameters,
         ].reduce((payload, step) => step(payload), payload);
 
         this.bufferedRequests.push({
@@ -290,6 +293,17 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
                 {}
             );
         return newPayload;
+    }
+
+    private processCustomParameters(payload: IRequestPayload): IRequestPayload {
+        const {custom, ...rest} = payload;
+
+        const newPayload = convertCustomMeasurementProtocolKeys(rest);
+
+        return {
+            ...(custom || {}),
+            ...newPayload
+        };
     }
 
     private validateParams(payload: IRequestPayload): IRequestPayload {

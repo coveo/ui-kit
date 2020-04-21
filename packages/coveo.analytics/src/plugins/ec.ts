@@ -22,6 +22,10 @@ type RequireAtLeastOne<T, Keys extends keyof T = keyof T> = Pick<T, Exclude<keyo
         [K in Keys]-?: Required<Pick<T, K>> & Partial<Pick<T, Exclude<Keys, K>>>;
     }[Keys];
 
+export type CustomValues = {
+    [key: string]: string | number | boolean;
+};
+
 export interface ProductProperties {
     id?: string;
     name?: string;
@@ -32,6 +36,7 @@ export interface ProductProperties {
     quantity?: number;
     coupon?: string;
     position?: number;
+    custom?: CustomValues;
 }
 
 export type Product = RequireAtLeastOne<ProductProperties, 'id' | 'name'>;
@@ -45,6 +50,7 @@ export interface ImpressionProperties {
     variant?: string;
     position?: number;
     price?: number;
+    custom?: CustomValues;
 }
 
 export type Impression = RequireAtLeastOne<ImpressionProperties, 'id' | 'name'>;
