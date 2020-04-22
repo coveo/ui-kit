@@ -1,5 +1,5 @@
 import {
-  configureStore as configureStoreTool,
+  configureStore as configureStoreToolkit,
   getDefaultMiddleware,
   ThunkAction,
   Action,
@@ -7,11 +7,17 @@ import {
 import {rootReducer, RootState} from './rootReducer';
 
 export function configureStore(preloadedState?: RootState) {
-  const store = configureStoreTool({
+  const store = configureStoreToolkit({
     reducer: rootReducer,
     preloadedState,
     middleware: [...getDefaultMiddleware()],
   });
+
+  if (process.env.NODE_ENV === 'development' && module.hot) {
+    module.hot.accept('./rootReducer', () => {
+      store.replaceReducer(require('./rootReducer').rootReducer);
+    });
+  }
 
   return store;
 }
