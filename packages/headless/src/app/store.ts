@@ -1,10 +1,9 @@
 import {
   configureStore as configureStoreToolkit,
   getDefaultMiddleware,
-  ThunkAction,
-  Action,
 } from '@reduxjs/toolkit';
-import {rootReducer, RootState} from './rootReducer';
+import {rootReducer} from './rootReducer';
+import {RootState} from '@coveo/headless';
 
 export function configureStore(preloadedState?: RootState) {
   const store = configureStoreToolkit({
@@ -21,8 +20,3 @@ export function configureStore(preloadedState?: RootState) {
 
   return store;
 }
-
-export type AppThunk<
-  ActionType extends Action<string>,
-  ReturnType = void
-> = ThunkAction<ReturnType, RootState, unknown, ActionType>;
