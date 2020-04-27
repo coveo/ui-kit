@@ -1,16 +1,22 @@
-import {createStore, applyMiddleware, Action} from 'redux';
-import thunkMiddleware, {ThunkAction} from 'redux-thunk';
-import {rootReducer, RootState} from './rootReducer';
-import {devMiddlewares} from './devMiddlewares';
-import {composeWithDevTools} from 'redux-devtools-extension';
+import {
+  configureStore as configureStoreToolkit,
+  getDefaultMiddleware,
+} from '@reduxjs/toolkit';
+import {rootReducer} from './rootReducer';
+import {RootState} from '@coveo/headless';
 
-export function configureStore() {
-  const middlewares = [...devMiddlewares, thunkMiddleware];
-  const middleWareEnhancer = applyMiddleware(...middlewares);
-  return createStore(rootReducer, composeWithDevTools(middleWareEnhancer));
+export function configureStore(preloadedState?: RootState) {
+  const store = configureStoreToolkit({
+    reducer: rootReducer,
+    preloadedState,
+    middleware: [...getDefaultMiddleware()],
+  });
+
+  if (process.env.NODE_ENV === 'development' && module.hot) {
+    module.hot.accept('./rootReducer', () => {
+      store.replaceReducer(require('./rootReducer').rootReducer);
+    });
+  }
+
+  return store;
 }
-
-export type AppThunk<
-  ActionType extends Action<string>,
-  ReturnType = void
-> = ThunkAction<ReturnType, RootState, unknown, ActionType>;

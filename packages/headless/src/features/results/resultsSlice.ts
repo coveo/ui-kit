@@ -1,5 +1,6 @@
 import {SearchResult} from '../../api/search/SearchResult';
-import {SUCCEED_SEARCH, SearchActionTypes} from '../search/searchSlice';
+import {launchSearch} from '../search/searchSlice';
+import {createReducer} from '@reduxjs/toolkit';
 
 export interface ResultsState {
   list: SearchResult[];
@@ -7,20 +8,14 @@ export interface ResultsState {
   numberOfResults: number;
 }
 
-const resultsInitialState: ResultsState = {
+const initialState: ResultsState = {
   list: [],
   firstResult: 0,
   numberOfResults: 10,
 };
 
-export function resultsSlice(
-  state = resultsInitialState,
-  action: SearchActionTypes
-): ResultsState {
-  switch (action.type) {
-    case SUCCEED_SEARCH:
-      return {...state, list: action.payload.response.results};
-    default:
-      return state;
-  }
-}
+export const resultsReducer = createReducer(initialState, builder =>
+  builder.addCase(launchSearch.fulfilled, (state, action) => {
+    state.list = action.payload.results;
+  })
+);

@@ -1,16 +1,8 @@
 import fetch from 'cross-fetch';
 import {SearchResponse} from './SearchResponse';
-import {RootState} from '../../app/rootReducer';
 import {SearchRequest} from './SearchRequest';
 
-export async function search(state: RootState) {
-  const request: SearchRequest = {
-    q: state.query.expression,
-    organizationId: 'searchuisamples',
-    firstResult: state.results.firstResult,
-    numberOfResults: state.results.numberOfResults,
-  };
-
+export async function search(request: SearchRequest) {
   const response = await fetch(
     'https://platform.cloud.coveo.com/rest/search/v2',
     {

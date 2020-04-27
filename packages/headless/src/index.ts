@@ -1,7 +1,7 @@
 import {configureStore} from './app/store';
-import {RootState} from './app/rootReducer';
-import {Store, bindActionCreators} from 'redux';
-import {performSearch, SearchStatus} from './features/search/searchSlice';
+import {RootState} from '@coveo/headless';
+import {Store, bindActionCreators} from '@reduxjs/toolkit';
+import {launchSearch, SearchStatus} from './features/search/searchSlice';
 import {updateQueryExpression} from './features/query/querySlice';
 
 class CoveoHeadlessEngine {
@@ -23,7 +23,7 @@ class CoveoHeadlessEngine {
   }
 
   get performSearch() {
-    return bindActionCreators(performSearch, this.store.dispatch);
+    return bindActionCreators(launchSearch, this.store.dispatch);
   }
 }
 

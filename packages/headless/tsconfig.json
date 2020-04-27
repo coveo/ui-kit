@@ -4,6 +4,6 @@
     "declaration": false,
   },
   "include": [
-    "src"
+    "src", "typings"
   ]
 }

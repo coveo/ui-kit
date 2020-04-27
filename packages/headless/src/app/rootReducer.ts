@@ -1,12 +1,10 @@
-import {combineReducers} from 'redux';
-import {resultsSlice} from '../features/results/resultsSlice';
-import {searchSlice} from '../features/search/searchSlice';
-import {querySlice} from '../features/query/querySlice';
+import {combineReducers} from '@reduxjs/toolkit';
+import {resultsReducer} from '../features/results/resultsSlice';
+import {searchReducer} from '../features/search/searchSlice';
+import {queryReducer} from '../features/query/querySlice';
 
 export const rootReducer = combineReducers({
-  search: searchSlice,
-  results: resultsSlice,
-  query: querySlice,
+  search: searchReducer,
+  results: resultsReducer,
+  query: queryReducer,
 });
-
-export type RootState = ReturnType<typeof rootReducer>;
