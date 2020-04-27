@@ -1,27 +1,19 @@
-const UPDATE_EXPRESSION = 'query/UDPATE_EXPRESSION';
-export const updateQueryExpression = (expression: string) => ({
-  type: UPDATE_EXPRESSION,
-  payload: {expression},
-});
+import {createAction, createReducer} from '@reduxjs/toolkit';
 
-export type QueryActionTypes = ReturnType<typeof updateQueryExpression>;
+export const updateQueryExpression = createAction<{expression: string}>(
+  'query/UDPATE_EXPRESSION'
+);
 
 export interface QueryState {
   expression: string;
 }
 
-const queryInitialState: QueryState = {
+const initialState: QueryState = {
   expression: '',
 };
 
-export function querySlice(
-  state = queryInitialState,
-  action: QueryActionTypes
-): QueryState {
-  switch (action.type) {
-    case UPDATE_EXPRESSION:
-      return {...state, expression: action.payload.expression};
-    default:
-      return state;
-  }
-}
+export const queryReducer = createReducer(initialState, builder =>
+  builder.addCase(updateQueryExpression, (state, action) => {
+    state.expression = action.payload.expression;
+  })
+);

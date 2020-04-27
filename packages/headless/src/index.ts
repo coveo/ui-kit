@@ -1,6 +1,6 @@
 import {configureStore} from './app/store';
 import {RootState} from './app/rootReducer';
-import {Store, bindActionCreators} from 'redux';
+import {Store, bindActionCreators} from '@reduxjs/toolkit';
 import {performSearch, SearchStatus} from './features/search/searchSlice';
 import {updateQueryExpression} from './features/query/querySlice';
 
