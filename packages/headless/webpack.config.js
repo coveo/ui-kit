@@ -12,7 +12,7 @@ if (analyze) {
 
 const commonConfig = {
   entry: {
-    'coveo-headless-engine': './src/index.ts',
+    '@coveo/headless': './src/index.ts',
   },
   module: {
     rules: [
@@ -28,7 +28,7 @@ const commonConfig = {
   },
   output: {
     filename: '[name].js',
-    library: 'coveo-headless-engine',
+    library: '@coveo/headless',
     libraryTarget: 'umd',
     umdNamedDefine: true,
   },

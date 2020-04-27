@@ -1,11 +1,11 @@
 {
-  "name": "coveo-headless-engine",
+  "name": "@coveo/headless",
   "private": false,
   "main": "./dist/server/coveo-headless-engine.js",
   "browser": "./dist/client/coveo-headless-engine.js",
   "types": "./typings/coveo-headless-engine.d.ts",
-  "license": "LicenseRef-LICENSE",
-  "version": "0.0.0",
+  "license": "Apache-2.0",
+  "version": "0.0.1",
   "scripts": {
     "dev": "webpack --watch -d",
     "build": "webpack -p",
