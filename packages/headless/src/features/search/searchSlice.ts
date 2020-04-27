@@ -20,19 +20,19 @@ const initialState: SearchState = {
 
 export const searchReducer = createReducer(initialState, builder =>
   builder
-    .addCase(performSearch.pending, state => {
+    .addCase(launchSearch.pending, state => {
       state.status = SearchStatus.LOADING;
     })
-    .addCase(performSearch.fulfilled, state => {
+    .addCase(launchSearch.fulfilled, state => {
       state.status = SearchStatus.SUCCESS;
     })
-    .addCase(performSearch.rejected, state => {
+    .addCase(launchSearch.rejected, state => {
       state.status = SearchStatus.FAIL;
     })
 );
 
-export const performSearch = createAsyncThunk(
-  'search',
+export const launchSearch = createAsyncThunk(
+  'search/launch',
   async (_, {getState}) => {
     const state = getState() as RootState;
 

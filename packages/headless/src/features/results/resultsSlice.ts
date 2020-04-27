@@ -1,5 +1,5 @@
 import {SearchResult} from '../../api/search/SearchResult';
-import {performSearch} from '../search/searchSlice';
+import {launchSearch} from '../search/searchSlice';
 import {createReducer} from '@reduxjs/toolkit';
 
 export interface ResultsState {
@@ -15,7 +15,7 @@ const initialState: ResultsState = {
 };
 
 export const resultsReducer = createReducer(initialState, builder =>
-  builder.addCase(performSearch.fulfilled, (state, action) => {
+  builder.addCase(launchSearch.fulfilled, (state, action) => {
     state.list = action.payload.results;
   })
 );
