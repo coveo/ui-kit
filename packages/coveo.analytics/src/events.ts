@@ -50,7 +50,7 @@ export interface SearchEventRequest extends EventBaseRequest {
     userGroups?: string[];
 }
 
-export interface ClickEventRequest extends EventBaseRequest {
+export interface DocumentInformation {
     documentUri: string;
     documentUriHash: string;
     collectionName: string;
@@ -58,12 +58,15 @@ export interface ClickEventRequest extends EventBaseRequest {
     documentPosition: number;
     actionCause: string;
 
-    searchQueryUid?: string;
-    documentTitle?: string;
-    documentUrl?: string;
-    documentAuthor?: string;
-    queryPipeline?: string;
-    rankingModifier?: string;
+    searchQueryUid: string;
+    documentTitle: string;
+    documentUrl: string;
+    documentAuthor: string;
+    queryPipeline: string;
+    rankingModifier: string;
+}
+
+export interface ClickEventRequest extends EventBaseRequest, DocumentInformation {
 }
 
 export interface CustomEventRequest extends EventBaseRequest {

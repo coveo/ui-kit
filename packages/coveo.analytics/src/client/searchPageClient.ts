@@ -1,7 +1,8 @@
 import CoveoAnalyticsClient, { AnalyticsClient, ClientOptions } from "./analytics";
-import { SearchEventRequest, EventBaseRequest, ClickEventRequest, CustomEventRequest } from "../events";
+import { SearchEventRequest, EventBaseRequest, ClickEventRequest, CustomEventRequest, DocumentInformation } from "../events";
+import { keysOf } from "./measurementProtocolMapper";
 
-enum SearchPageEvents {
+export enum SearchPageEvents {
     /**
      * Identifies the search event that gets logged when the initial query is performed as a result of loading a search interface.
      */
@@ -62,9 +63,8 @@ enum SearchPageEvents {
 
 interface SearchPageClientProvider {
     getBaseMetadata: () => Record<string, any>;
-    getSearchEventRequestPayload: () => Omit<SearchEventRequest, 'actionCause'>
-    getClickEventRequestPayload: () => Omit<ClickEventRequest, 'actionCause'>
-    getCustomEventRequestPayload: () => Omit<CustomEventRequest, 'actionCause' | 'eventType' | 'eventValue'>
+    getSearchEventRequestPayload: () => Omit<SearchEventRequest, 'actionCause'| 'searchQueryUid'>
+    getSearchUID: () => string;
 }
 
 export interface FacetMetadata {
@@ -85,6 +85,18 @@ export interface CategoryFacetMetadata {
     categoryFacetField: string;
     categoryFacetPath: string[];
     categoryFacetTitle: string;
+}
+
+export interface OmniboxSuggestionsMetadata {
+    suggestionRanking: number;
+    partialQueries: string;
+    suggestions: string;
+    partialQuery: string;
+}
+
+export interface DocumentIdentifier {
+    contentIDKey: string;
+    contentIDValue: string;
 }
 
 export class CoveoSearchPageClient {
@@ -134,8 +146,20 @@ export class CoveoSearchPageClient {
         return this.logSearchEvent(SearchPageEvents.breadcrumbResetAll)
     }
 
-    public logDocumentQuickview() {
-        return this.log
+    public logDocumentQuickview(info: DocumentInformation, identifier: DocumentIdentifier) {
+        return this.logClickEvent(SearchPageEvents.documentQuickview, info, identifier)
+    }
+
+    public logDocumentOpen(info: DocumentInformation, identifier: DocumentIdentifier) {
+        return this.logClickEvent(SearchPageEvents.documentOpen, info, identifier)
+    }
+
+    public logOmniboxAnalytics(meta: OmniboxSuggestionsMetadata) {
+        return this.logSearchEvent(SearchPageEvents.omniboxAnalytics, meta)
+    }
+
+    public logOmniboxFromLink(meta: OmniboxSuggestionsMetadata) {
+        return this.logSearchEvent(SearchPageEvents.omniboxFromLink, meta)
     }
 
     private logSearchEvent(eventType: SearchPageEvents, metadata?: Record<string, any>) {
@@ -143,6 +167,7 @@ export class CoveoSearchPageClient {
 
         const payload: SearchEventRequest = {
             ...this.provider.getSearchEventRequestPayload(),
+            searchQueryUid: this.provider.getSearchUID(),
             customData: meta,
             actionCause: eventType,
         }
@@ -150,12 +175,19 @@ export class CoveoSearchPageClient {
         return this.coveoAnalyticsClient.sendSearchEvent(payload)
     }
 
-    private logClickEvent(eventType: SearchPageEvents, metadata?: Record<string, any>) {
-        const meta = {...this.provider.getBaseMetadata(), ...metadata}
+    private logClickEvent(eventType: SearchPageEvents, info: DocumentInformation, identifier: DocumentIdentifier, metadata?: Record<string, any>) {
+        const meta = {
+            ...identifier,
+            ...metadata
+        }
 
         const payload: ClickEventRequest = {
-            ...this.provider.getClickEventRequestPayload(),
-            actionCause: eventType
+            ...info,
+            searchQueryUid: this.provider.getSearchUID(),
+            actionCause: eventType,
+            customData: meta,
         }
+
+        return this.coveoAnalyticsClient.sendClickEvent(payload)
     }
 }
