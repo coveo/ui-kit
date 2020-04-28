@@ -2,7 +2,7 @@ import {
   configureStore as configureStoreToolkit,
   getDefaultMiddleware,
 } from '@reduxjs/toolkit';
-import {rootReducer} from './rootReducer';
+import {rootReducer} from './root-reducer';
 import {RootState} from '@coveo/headless';
 
 export function configureStore(preloadedState?: RootState) {
