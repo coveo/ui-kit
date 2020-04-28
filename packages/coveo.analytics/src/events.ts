@@ -25,7 +25,7 @@ export type VariableArgumentsPayload =
 export interface EventBaseRequest {
     language?: string;
     userAgent?: string;
-    customData?: any;
+    customData?: Record<string, any>;
     anonymous?: boolean;
     username?: string;
     userDisplayName?: any;
