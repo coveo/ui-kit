@@ -1,8 +1,8 @@
 import {configureStore} from './app/store';
 import {RootState} from '@coveo/headless';
 import {Store, bindActionCreators} from '@reduxjs/toolkit';
-import {launchSearch, SearchStatus} from './features/search/searchSlice';
-import {updateQueryExpression} from './features/query/querySlice';
+import {launchSearch, SearchStatus} from './features/search/search-slice';
+import {updateQueryExpression} from './features/query/query-slice';
 
 class CoveoHeadlessEngine {
   private store: Store<RootState>;

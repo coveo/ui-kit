@@ -1,6 +1,6 @@
-import {SearchResult} from '../../api/search/SearchResult';
-import {launchSearch} from '../search/searchSlice';
+import {launchSearch} from '../search/search-slice';
 import {createReducer} from '@reduxjs/toolkit';
+import {SearchResult} from '../../api/search/search';
 
 export interface ResultsState {
   list: SearchResult[];

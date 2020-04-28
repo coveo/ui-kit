@@ -1,6 +1,29 @@
 import fetch from 'cross-fetch';
-import {SearchResponse} from './SearchResponse';
-import {SearchRequest} from './SearchRequest';
+
+export interface SearchResult {
+  title: string;
+  uri: string;
+  printableUri: string;
+  clickUri: string;
+  uniqueId: string;
+  excerpt: string;
+  flags: string;
+  summary: string;
+  queryUid?: string;
+  pipeline?: string;
+}
+
+export interface SearchRequest {
+  q: string;
+  organizationId: string;
+  firstResult?: number;
+  numberOfResults?: number;
+  fieldsToInclude?: string[];
+}
+
+export interface SearchResponse {
+  results: SearchResult[];
+}
 
 export async function search(request: SearchRequest) {
   const response = await fetch(

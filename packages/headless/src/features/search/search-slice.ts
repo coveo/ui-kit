@@ -1,6 +1,5 @@
-import {search} from '../../api/search/search';
+import {search, SearchRequest} from '../../api/search/search';
 import {createReducer, createAsyncThunk} from '@reduxjs/toolkit';
-import {SearchRequest} from '../../api/search/SearchRequest';
 import {RootState} from '@coveo/headless';
 
 export enum SearchStatus {
