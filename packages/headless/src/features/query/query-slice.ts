@@ -1,19 +1,17 @@
 import {createAction, createReducer} from '@reduxjs/toolkit';
 
-export const updateQueryExpression = createAction<{expression: string}>(
-  'query/updateExpression'
-);
+export const updateQuery = createAction<{q: string}>('query/updateQuery');
 
 export interface QueryState {
-  expression: string;
+  q: string;
 }
 
-const initialState: QueryState = {
-  expression: '',
-};
+export const getQueryInitialState: () => QueryState = () => ({
+  q: '',
+});
 
-export const queryReducer = createReducer(initialState, builder =>
-  builder.addCase(updateQueryExpression, (state, action) => {
-    state.expression = action.payload.expression;
+export const queryReducer = createReducer(getQueryInitialState(), builder =>
+  builder.addCase(updateQuery, (state, action) => {
+    state.q = action.payload.q;
   })
 );

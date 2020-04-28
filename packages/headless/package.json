@@ -10,7 +10,8 @@
     "dev": "webpack --watch -d",
     "build": "webpack -p",
     "analyze": "webpack -p --env analyze",
-    "test": "jest"
+    "test": "jest",
+    "test:watch": "jest --watch --colors"
   },
   "dependencies": {
     "@reduxjs/toolkit": "^1.3.5",
@@ -20,9 +21,11 @@
     "redux-thunk": "^2.3.0"
   },
   "devDependencies": {
+    "@types/jest": "^25.2.1",
     "@types/webpack-env": "^1.15.1",
     "clean-webpack-plugin": "^3.0.0",
     "jest": "^25.1.0",
+    "ts-jest": "^25.4.0",
     "ts-loader": "^6.2.1",
     "webpack": "^4.42.0",
     "webpack-bundle-analyzer": "^3.6.1",

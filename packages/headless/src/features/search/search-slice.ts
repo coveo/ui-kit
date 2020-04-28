@@ -17,6 +17,22 @@ const initialState: SearchState = {
   status: SearchStatus.IDLE,
 };
 
+export const launchSearch = createAsyncThunk(
+  'search/launch',
+  async (_, {getState}) => {
+    const state = getState() as RootState;
+
+    const request: SearchRequest = {
+      q: state.query.q,
+      organizationId: 'searchuisamples',
+      firstResult: state.results.firstResult,
+      numberOfResults: state.results.numberOfResults,
+    };
+
+    return await search(request);
+  }
+);
+
 export const searchReducer = createReducer(initialState, builder =>
   builder
     .addCase(launchSearch.pending, state => {
@@ -28,20 +44,4 @@ export const searchReducer = createReducer(initialState, builder =>
     .addCase(launchSearch.rejected, state => {
       state.status = SearchStatus.FAIL;
     })
-);
-
-export const launchSearch = createAsyncThunk(
-  'search/launch',
-  async (_, {getState}) => {
-    const state = getState() as RootState;
-
-    const request: SearchRequest = {
-      q: state.query.expression,
-      organizationId: 'searchuisamples',
-      firstResult: state.results.firstResult,
-      numberOfResults: state.results.numberOfResults,
-    };
-
-    return await search(request);
-  }
 );

@@ -3,19 +3,19 @@ import {createReducer} from '@reduxjs/toolkit';
 import {SearchResult} from '../../api/search/search';
 
 export interface ResultsState {
-  list: SearchResult[];
+  results: SearchResult[];
   firstResult: number;
   numberOfResults: number;
 }
 
-const initialState: ResultsState = {
-  list: [],
+export const getResultsInitialState: () => ResultsState = () => ({
+  results: [],
   firstResult: 0,
   numberOfResults: 10,
-};
+});
 
-export const resultsReducer = createReducer(initialState, builder =>
+export const resultsReducer = createReducer(getResultsInitialState(), builder =>
   builder.addCase(launchSearch.fulfilled, (state, action) => {
-    state.list = action.payload.results;
+    state.results = action.payload.results;
   })
 );

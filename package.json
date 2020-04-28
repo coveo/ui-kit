@@ -5,6 +5,8 @@
     "setup": "npm i && lerna bootstrap",
     "dev": "lerna run --parallel dev",
     "build": "lerna run build",
+    "test": "lerna run test",
+    "test:watch": "lerna run --parallel test:watch --no-prefix",
     "check": "gts check",
     "fix": "gts fix"
   },

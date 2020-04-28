@@ -11,6 +11,10 @@ node('linux && docker') {
       stage('Build') {
         sh(script: 'npm run build')
       }
+
+      stage('Test') {
+        sh(script: 'npm test')
+      }
     }
 
     if (!shouldDeploy) {
