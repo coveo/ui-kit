@@ -1,6 +1,5 @@
-import CoveoAnalyticsClient, { AnalyticsClient, ClientOptions } from "./analytics";
-import { SearchEventRequest, EventBaseRequest, ClickEventRequest, CustomEventRequest, DocumentInformation } from "../events";
-import { keysOf } from "./measurementProtocolMapper";
+import CoveoAnalyticsClient, { ClientOptions } from './analytics';
+import { SearchEventRequest, ClickEventRequest, DocumentInformation } from '../events';
 
 export enum SearchPageEvents {
     /**
@@ -63,7 +62,7 @@ export enum SearchPageEvents {
 
 interface SearchPageClientProvider {
     getBaseMetadata: () => Record<string, any>;
-    getSearchEventRequestPayload: () => Omit<SearchEventRequest, 'actionCause'| 'searchQueryUid'>
+    getSearchEventRequestPayload: () => Omit<SearchEventRequest, 'actionCause' | 'searchQueryUid'>
     getSearchUID: () => string;
 }
 
@@ -123,7 +122,7 @@ export class CoveoSearchPageClient {
     }
 
     public logResultsSort(metadata: { resultsSortBy: string }) {
-        return this.logSearchEvent(SearchPageEvents.resultsSort, metadata)
+        return this.logSearchEvent(SearchPageEvents.resultsSort, metadata);
     }
 
     public logSearchboxSubmit() {
@@ -131,15 +130,15 @@ export class CoveoSearchPageClient {
     }
 
     public logSearchboxClear() {
-        return this.logSearchEvent(SearchPageEvents.searchboxClear)
+        return this.logSearchEvent(SearchPageEvents.searchboxClear);
     }
 
     public logSearchboxAsYouType() {
-        return this.logSearchEvent(SearchPageEvents.searchboxAsYouType)
+        return this.logSearchEvent(SearchPageEvents.searchboxAsYouType);
     }
 
     public logBreadcrumbFacet<T extends FacetMetadata | FacetRangeMetadata | CategoryFacetMetadata>(metadata: T) {
-        return this.logSearchEvent(SearchPageEvents.breadcrumbFacet, metadata)
+        return this.logSearchEvent(SearchPageEvents.breadcrumbFacet, metadata);
     }
 
     public logBreadcrumbResetAll() {
@@ -147,19 +146,19 @@ export class CoveoSearchPageClient {
     }
 
     public logDocumentQuickview(info: DocumentInformation, identifier: DocumentIdentifier) {
-        return this.logClickEvent(SearchPageEvents.documentQuickview, info, identifier)
+        return this.logClickEvent(SearchPageEvents.documentQuickview, info, identifier);
     }
 
     public logDocumentOpen(info: DocumentInformation, identifier: DocumentIdentifier) {
-        return this.logClickEvent(SearchPageEvents.documentOpen, info, identifier)
+        return this.logClickEvent(SearchPageEvents.documentOpen, info, identifier);
     }
 
     public logOmniboxAnalytics(meta: OmniboxSuggestionsMetadata) {
-        return this.logSearchEvent(SearchPageEvents.omniboxAnalytics, meta)
+        return this.logSearchEvent(SearchPageEvents.omniboxAnalytics, meta);
     }
 
     public logOmniboxFromLink(meta: OmniboxSuggestionsMetadata) {
-        return this.logSearchEvent(SearchPageEvents.omniboxFromLink, meta)
+        return this.logSearchEvent(SearchPageEvents.omniboxFromLink, meta);
     }
 
     private logSearchEvent(eventType: SearchPageEvents, metadata?: Record<string, any>) {
@@ -186,8 +185,8 @@ export class CoveoSearchPageClient {
             searchQueryUid: this.provider.getSearchUID(),
             actionCause: eventType,
             customData: meta,
-        }
+        };
 
-        return this.coveoAnalyticsClient.sendClickEvent(payload)
+        return this.coveoAnalyticsClient.sendClickEvent(payload);
     }
 }
