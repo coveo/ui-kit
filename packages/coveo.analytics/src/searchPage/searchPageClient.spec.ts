@@ -1,5 +1,6 @@
 import * as fetchMock from 'fetch-mock';
-import { CoveoSearchPageClient, SearchPageEvents } from './searchPageClient'
+import { CoveoSearchPageClient } from './searchPageClient'
+import { SearchPageEvents } from './searchPageEvents'
 
 describe('SearchPageClient', () => {
 
@@ -40,26 +41,22 @@ describe('SearchPageClient', () => {
         });
     }
 
-    describe('it should send proper payload', () => {
-
-        it('for #interfaceLoad', async () => {
-            await client.logInterfaceLoad()
-            expectMatchPayload(SearchPageEvents.interfaceLoad);
-        })
-
-        it('for #interfaceChange', async () => {
-            await client.logInterfaceChange({
-                interfaceChangeTo: 'bob'
-            })
-
-            expectMatchPayload(SearchPageEvents.interfaceChange, { interfaceChangeTo: 'bob' })
-        })
-
-        it('for #didyoumeanAutomatic', async () => {
-            await client.logDidYouMeanAutomatic()
-
-            expectMatchPayload(SearchPageEvents.didyoumeanAutomatic)
-        })
+    it('should send proper payload for #interfaceLoad', async () => {
+        await client.logInterfaceLoad()
+        expectMatchPayload(SearchPageEvents.interfaceLoad);
     })
 
+    it('should send proper payload for #interfaceChange', async () => {
+        await client.logInterfaceChange({
+            interfaceChangeTo: 'bob'
+        })
+
+        expectMatchPayload(SearchPageEvents.interfaceChange, { interfaceChangeTo: 'bob' })
+    })
+
+    it('should send proper payload for #didyoumeanAutomatic', async () => {
+        await client.logDidYouMeanAutomatic()
+
+        expectMatchPayload(SearchPageEvents.didyoumeanAutomatic)
+    })
 })
