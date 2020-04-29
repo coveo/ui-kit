@@ -1,6 +1,6 @@
 import CoveoAnalyticsClient, { ClientOptions } from '../client/analytics';
 import { SearchEventRequest, ClickEventRequest, DocumentInformation } from '../events';
-import { SearchPageEvents, OmniboxSuggestionsMetadata, FacetMetadata, FacetRangeMetadata, CategoryFacetMetadata, DocumentIdentifier } from './searchPageEvents';
+import { SearchPageEvents, OmniboxSuggestionsMetadata, FacetMetadata, FacetRangeMetadata, CategoryFacetMetadata, DocumentIdentifier, InterfaceChangeMetadata, ResultsSortMetadata, PartialDocumentInformation } from './searchPageEvents';
 
 
 export interface SearchPageClientProvider {
@@ -20,7 +20,7 @@ export class CoveoSearchPageClient {
         return this.logSearchEvent(SearchPageEvents.interfaceLoad);
     }
 
-    public logInterfaceChange(metadata: { interfaceChangeTo: string }) {
+    public logInterfaceChange(metadata: InterfaceChangeMetadata) {
         return this.logSearchEvent(SearchPageEvents.interfaceChange, metadata);
     }
 
@@ -32,7 +32,7 @@ export class CoveoSearchPageClient {
         return this.logSearchEvent(SearchPageEvents.didyoumeanClick);
     }
 
-    public logResultsSort(metadata: { resultsSortBy: string }) {
+    public logResultsSort(metadata: ResultsSortMetadata) {
         return this.logSearchEvent(SearchPageEvents.resultsSort, metadata);
     }
 
@@ -48,7 +48,7 @@ export class CoveoSearchPageClient {
         return this.logSearchEvent(SearchPageEvents.searchboxAsYouType);
     }
 
-    public logBreadcrumbFacet<T extends FacetMetadata | FacetRangeMetadata | CategoryFacetMetadata>(metadata: T) {
+    public logBreadcrumbFacet(metadata: FacetMetadata | FacetRangeMetadata | CategoryFacetMetadata) {
         return this.logSearchEvent(SearchPageEvents.breadcrumbFacet, metadata);
     }
 
@@ -56,11 +56,11 @@ export class CoveoSearchPageClient {
         return this.logSearchEvent(SearchPageEvents.breadcrumbResetAll)
     }
 
-    public logDocumentQuickview(info: DocumentInformation, identifier: DocumentIdentifier) {
+    public logDocumentQuickview(info: PartialDocumentInformation, identifier: DocumentIdentifier) {
         return this.logClickEvent(SearchPageEvents.documentQuickview, info, identifier);
     }
 
-    public logDocumentOpen(info: DocumentInformation, identifier: DocumentIdentifier) {
+    public logDocumentOpen(info: PartialDocumentInformation, identifier: DocumentIdentifier) {
         return this.logClickEvent(SearchPageEvents.documentOpen, info, identifier);
     }
 
@@ -72,7 +72,7 @@ export class CoveoSearchPageClient {
         return this.logSearchEvent(SearchPageEvents.omniboxFromLink, meta);
     }
 
-    private logSearchEvent(eventType: SearchPageEvents, metadata?: Record<string, any>) {
+    public  logSearchEvent(eventType: SearchPageEvents, metadata?: Record<string, any>) {
         const meta = { ...this.provider.getBaseMetadata(), ...metadata }
 
         const payload: SearchEventRequest = {
@@ -85,8 +85,9 @@ export class CoveoSearchPageClient {
         return this.coveoAnalyticsClient.sendSearchEvent(payload)
     }
 
-    private logClickEvent(eventType: SearchPageEvents, info: DocumentInformation, identifier: DocumentIdentifier, metadata?: Record<string, any>) {
+    public logClickEvent(eventType: SearchPageEvents, info: PartialDocumentInformation, identifier: DocumentIdentifier, metadata?: Record<string, any>) {
         const meta = {
+            ...this.provider.getBaseMetadata(),
             ...identifier,
             ...metadata
         }

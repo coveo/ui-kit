@@ -1,3 +1,5 @@
+import { DocumentInformation } from "../events";
+
 export enum SearchPageEvents {
     /**
      * Identifies the search event that gets logged when the initial query is performed as a result of loading a search interface.
@@ -88,3 +90,13 @@ export interface DocumentIdentifier {
     contentIDKey: string;
     contentIDValue: string;
 }
+
+export interface InterfaceChangeMetadata {
+    interfaceChangeTo: string
+}
+
+export interface ResultsSortMetadata {
+    resultsSortBy: string;
+}
+
+export type PartialDocumentInformation = Omit<DocumentInformation, 'actionCause' | 'searchQueryUid'>
