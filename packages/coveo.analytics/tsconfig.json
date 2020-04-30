@@ -1,8 +1,8 @@
 {
     "compilerOptions": {
-        "module": "commonjs",
+        "module": "ESNext",
         "target": "es5",
-        "outDir": "definitions",
+        "declarationDir": "./dist/definitions",
         "declaration": true,
         "noImplicitAny": true,
         "removeComments": true,

@@ -5,7 +5,8 @@
         "declaration": false,
         "sourceMap": false,
         "inlineSourceMap": true,
-        "strict": false
+        "strict": false,
+        "module": "commonjs"
     },
     "include": ["src/**/*.spec.ts"],
     "exclude": []

@@ -3,12 +3,13 @@
     "version": "2.0.1",
     "description": "📈 Coveo analytics client (node and browser compatible) ",
     "main": "dist/library.js",
-    "types": "dist/definitions/coveoua/library.d.ts",
+    "module": "dist/library.es.js",
     "browser": "dist/coveoua.js",
+    "types": "dist/definitions/coveoua/library.d.ts",
     "scripts": {
         "lint": "prettier **/*.* --write",
-        "build": "webpack",
-        "start": "webpack-dev-server --port 9001 --mode development --watch --inline --hot",
+        "build": "rollup -c",
+        "start": "rollup -c -w --environment SERVE",
         "test": "jest --clearCache && jest --coverage",
         "clean": "rm -rf dist/* && rm -rf dist_test/* && rm -rf coverage/*"
     },
@@ -37,13 +38,14 @@
         "jest": "^25.1.0",
         "jsdom": "^15.0.0",
         "prettier": "^1.19.1",
+        "rollup": "^2.7.3",
+        "rollup-plugin-serve": "^1.0.1",
+        "rollup-plugin-terser": "^5.3.0",
+        "rollup-plugin-typescript2": "^0.27.0",
+        "rollup-plugin-uglify": "^6.0.4",
         "ts-jest": "^25.2.0",
-        "ts-loader": "^4.5.0",
         "tsjs": "^1.0.3",
-        "typescript": "^3.7.5",
-        "webpack": "^4.41.5",
-        "webpack-cli": "^3.3.10",
-        "webpack-dev-server": "^3.10.2"
+        "typescript": "^3.8.3"
     },
     "files": [
         "dist/**/*.d.ts",
@@ -52,6 +54,5 @@
         "src/**/*.ts",
         "LICENSE"
     ],
-    "dependencies": {},
     "prettier": "tsjs/prettier-config"
 }

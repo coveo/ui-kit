@@ -1,7 +1,7 @@
 import * as analytics from './library';
 import handleOneAnalyticsEvent from './simpleanalytics';
 
-declare const global: any;
+declare const self: any;
 
 const promise = (window as any)['Promise'];
 if (!(promise instanceof Function)) {
@@ -26,12 +26,12 @@ export interface CoveoUAGlobal {
 
 // On load of this script we get the global object `coveoua` (which would be)
 // on `window` in a browser
-const coveoua: CoveoUAGlobal = global.coveoua || handleOneAnalyticsEvent;
+const coveoua: CoveoUAGlobal = self.coveoua || handleOneAnalyticsEvent;
 
 // Replace the quick shim with the real thing.
-global.coveoua = handleOneAnalyticsEvent;
+self.coveoua = handleOneAnalyticsEvent;
 
-global.coveoanalytics = analytics;
+self.coveoanalytics = analytics;
 
 // On normal execution this library should be loaded after the snippet execution
 // so we will execute the actions in the `q` array
