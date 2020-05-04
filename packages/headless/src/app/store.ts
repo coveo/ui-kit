@@ -3,9 +3,9 @@ import {
   getDefaultMiddleware,
 } from '@reduxjs/toolkit';
 import {rootReducer} from './root-reducer';
-import {RootState} from '@coveo/headless';
+import {HeadlessState} from '@coveo/headless';
 
-export function configureStore(preloadedState?: RootState) {
+export function configureStore(preloadedState?: HeadlessState) {
   const store = configureStoreToolkit({
     reducer: rootReducer,
     preloadedState,

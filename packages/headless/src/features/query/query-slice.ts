@@ -1,10 +1,7 @@
 import {createAction, createReducer} from '@reduxjs/toolkit';
+import {QueryState} from '@coveo/headless';
 
 export const updateQuery = createAction<{q: string}>('query/updateQuery');
-
-export interface QueryState {
-  q: string;
-}
 
 export const getQueryInitialState: () => QueryState = () => ({
   q: '',

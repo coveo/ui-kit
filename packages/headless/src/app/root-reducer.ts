@@ -1,10 +1,11 @@
 import {combineReducers} from '@reduxjs/toolkit';
-import {resultsReducer} from '../features/results/results-slice';
-import {searchReducer} from '../features/search/search-slice';
 import {queryReducer} from '../features/query/query-slice';
+import {configurationReducer} from '../features/configuration/configuration-slice';
+import {redirectionReducer} from '../features/redirection/redirection-slice';
+import {HeadlessState} from '@coveo/headless';
 
-export const rootReducer = combineReducers({
-  search: searchReducer,
-  results: resultsReducer,
+export const rootReducer = combineReducers<HeadlessState>({
   query: queryReducer,
+  configuration: configurationReducer,
+  redirection: redirectionReducer,
 });

@@ -1,9 +1,5 @@
-import {
-  queryReducer,
-  updateQuery,
-  getQueryInitialState,
-  QueryState,
-} from './query-slice';
+import {queryReducer, updateQuery, getQueryInitialState} from './query-slice';
+import {QueryState} from '@coveo/headless';
 
 describe('query slice', () => {
   it('should have initial state', () => {
