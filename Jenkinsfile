@@ -3,17 +3,26 @@ node('linux && docker') {
   def shouldDeploy = env.BRANCH_NAME == 'master'
 
   withEnv(['npm_config_cache=npm-cache']){
-    withDockerContainer(image: 'node:13') {
+    withDockerContainer(image: 'node:13', args: '-u=root') {
       stage('Setup') {
-        sh(script: 'npm run setup')
+        sh 'npm run setup'
       }
 
       stage('Build') {
-        sh(script: 'npm run build')
+        sh 'npm run build'
+      }
+
+      stage('Install Chrome') {
+        sh "wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -"
+        sh "echo 'deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main' | tee /etc/apt/sources.list.d/google-chrome.list"
+        sh "apt-get update"
+        
+        sh "apt-get -y -f install google-chrome-stable"
+        sh "google-chrome --version"
       }
 
       stage('Test') {
-        sh(script: 'npm test')
+        sh 'npm test'
       }
     }
 
@@ -23,15 +32,13 @@ node('linux && docker') {
 
     withDockerContainer(image: '458176070654.dkr.ecr.us-east-1.amazonaws.com/jenkins/deployment_package:v7') {
       stage('Veracode package') {
-        sh(script: 'rm -rf veracode && mkdir veracode')
+        sh 'rm -rf veracode && mkdir veracode'
 
-        sh(script: 'mkdir veracode/headless')
-        sh(script: 'cp -R packages/headless/src packages/headless/package.json packages/headless/package-lock.json veracode/headless')
+        sh 'mkdir veracode/headless'
+        sh 'cp -R packages/headless/src packages/headless/package.json packages/headless/package-lock.json veracode/headless'
       }
 
-      sh(
-        script: 'deployment-package package create --with-deploy'
-      )
+      sh 'deployment-package package create --with-deploy'
     }
   }
 }

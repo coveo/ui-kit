@@ -8,6 +8,12 @@ To install all dependencies and link local packages, run:
 npm run setup
 ```
 
+To start all projects in development, run:
+
+```sh
+npm start
+```
+
 To build all projects for production, run:
 
 ```sh

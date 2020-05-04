@@ -2,6 +2,8 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "declaration": false,
+    "module": "ESNext",
+    "moduleResolution": "node"
   },
   "include": [
     "src", "typings"

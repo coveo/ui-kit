@@ -3,7 +3,7 @@
   "private": true,
   "scripts": {
     "setup": "npm i && lerna bootstrap",
-    "dev": "lerna run --parallel dev",
+    "start": "lerna run --parallel start",
     "build": "lerna run build",
     "test": "lerna run test",
     "test:watch": "lerna run --parallel test:watch --no-prefix",
