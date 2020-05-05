@@ -2,7 +2,10 @@ node('linux && docker') {
   checkout scm
   def shouldDeploy = env.BRANCH_NAME == 'master'
 
-  withEnv(['npm_config_cache=npm-cache']){
+  withEnv([
+    'npm_config_cache=npm-cache',
+    'CI=true'
+  ]){
     withDockerContainer(image: 'node:13', args: '-u=root') {
       stage('Setup') {
         sh 'npm run setup'

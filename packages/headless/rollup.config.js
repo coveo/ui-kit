@@ -4,11 +4,22 @@ import typescript from 'rollup-plugin-typescript2';
 import replacePlugin from '@rollup/plugin-replace';
 import { terser } from 'rollup-plugin-terser';
 
+const isCI = process.env.CI === 'true';
 const isProduction = process.env.BUILD === 'production';
 
 function replace() {
   const env = isProduction ? 'production' : 'development';
   return replacePlugin({ 'process.env.NODE_ENV' : JSON.stringify(env) })
+}
+
+function onWarn(warning, warn) {
+  const isCircularDependency = warning.code === 'CIRCULAR_DEPENDENCY';
+  
+  if (isCI && isCircularDependency) {
+    throw new Error(warning.message);
+  }
+  
+  warn(warning);
 }
 
 const nodeConfig = {
@@ -25,7 +36,8 @@ const nodeConfig = {
   ],
   external: [
     'cross-fetch'
-  ]
+  ],
+  onwarn: onWarn
 }
 
 const browserConfig = {

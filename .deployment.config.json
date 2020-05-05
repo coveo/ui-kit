@@ -18,7 +18,7 @@
         "bucket": "binaries",
         "add_coveo_bucket_prefix": true,
         "directory": "proda/StaticCDN/headless/latest",
-        "source": "packages/headless/dist/client",
+        "source": "packages/headless/dist/browser",
         "parameters": {
           "acl": "public-read"
         }
