@@ -1,6 +1,6 @@
 import * as fetchMock from 'fetch-mock';
 import { CoveoSearchPageClient } from './searchPageClient'
-import { SearchPageEvents, PartialDocumentInformation, DocumentIdentifier } from './searchPageEvents'
+import { SearchPageEvents, PartialDocumentInformation, DocumentIdentifier, CustomEventsTypes } from './searchPageEvents'
 
 describe('SearchPageClient', () => {
 
@@ -66,6 +66,17 @@ describe('SearchPageClient', () => {
             actionCause,
             customData,
             ...doc
+        });
+    }
+
+    const expectMatchCustomEventPayload = (actionCause: SearchPageEvents, meta = {}) => {
+        const [, { body }] = fetchMock.lastCall();
+        const customData = { 'foo': 'bar', ...meta };
+        expect(JSON.parse(body.toString())).toMatchObject({
+            eventValue: actionCause,
+            eventType: CustomEventsTypes[actionCause],
+            lastSearchQueryUid: 'my-uid',
+            customData,
         });
     }
 
@@ -146,5 +157,37 @@ describe('SearchPageClient', () => {
         };
         await client.logOmniboxFromLink(meta);
         expectMatchPayload(SearchPageEvents.omniboxFromLink, meta);
+    })
+
+    it('should send proper payload for #logTriggerNotify', async () => {
+        const meta = {
+            notification: 'foo',
+        };
+        await client.logTriggerNotify(meta);
+        expectMatchCustomEventPayload(SearchPageEvents.triggerNotify, meta);
+    })
+
+    it('should send proper payload for #logTriggerExecute', async () => {
+        const meta = {
+            executed: 'foo',
+        };
+        await client.logTriggerExecute(meta);
+        expectMatchCustomEventPayload(SearchPageEvents.triggerExecute, meta);
+    })
+
+    it('should send proper payload for #logTriggerQuery', async () => {
+        const meta = {
+            query: 'queryText',
+        };
+        await client.logTriggerQuery();
+        expectMatchCustomEventPayload(SearchPageEvents.triggerQuery, meta);
+    })
+
+    it('should send proper payload for #logTriggerRedirect', async () => {
+        const meta = {
+            redirectedTo: 'foo',
+        };
+        await client.logTriggerRedirect(meta);
+        expectMatchCustomEventPayload(SearchPageEvents.triggerRedirect, meta);
     })
 })

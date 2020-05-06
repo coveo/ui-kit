@@ -134,6 +134,20 @@ describe('Analytics', () => {
         });
     });
 
+    it('should not remove #queryText for search events even if empty', async () => {
+        mockFetchRequestForEventType(EventType.search);
+        await client.sendEvent(EventType.search, {
+            queryText: "",
+        });
+
+        const [body] = getParsedBodyCalls();
+
+        expect(body).toMatchObject({
+            queryText: "",
+        });
+    });
+
+
     describe('with event type mapping with variable arguments', () => {
         const specialEventType = '🌟special🌟';
         const argumentNames = ['eventCategory', 'eventAction', 'eventLabel', 'eventValue'];

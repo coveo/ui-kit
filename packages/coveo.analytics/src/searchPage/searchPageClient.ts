@@ -1,6 +1,6 @@
 import CoveoAnalyticsClient, { ClientOptions } from '../client/analytics';
-import { SearchEventRequest, ClickEventRequest, DocumentInformation } from '../events';
-import { SearchPageEvents, OmniboxSuggestionsMetadata, FacetMetadata, FacetRangeMetadata, CategoryFacetMetadata, DocumentIdentifier, InterfaceChangeMetadata, ResultsSortMetadata, PartialDocumentInformation } from './searchPageEvents';
+import { SearchEventRequest, ClickEventRequest, DocumentInformation, CustomEventRequest } from '../events';
+import { SearchPageEvents, OmniboxSuggestionsMetadata, FacetMetadata, FacetRangeMetadata, CategoryFacetMetadata, DocumentIdentifier, InterfaceChangeMetadata, ResultsSortMetadata, PartialDocumentInformation, CustomEventsTypes, TriggerNotifyMetadata, TriggerExecuteMetadata, TriggerRedirectMetadata } from './searchPageEvents';
 
 
 export interface SearchPageClientProvider {
@@ -72,21 +72,52 @@ export class CoveoSearchPageClient {
         return this.logSearchEvent(SearchPageEvents.omniboxFromLink, meta);
     }
 
-    public  logSearchEvent(eventType: SearchPageEvents, metadata?: Record<string, any>) {
-        const meta = { ...this.provider.getBaseMetadata(), ...metadata }
+    public logTriggerNotify(meta: TriggerNotifyMetadata) {
+        return this.logCustomEvent(SearchPageEvents.triggerNotify, meta)
+    }
+
+    public logTriggerExecute(meta: TriggerExecuteMetadata) {
+        return this.logCustomEvent(SearchPageEvents.triggerExecute, meta)
+    }
+
+    public logTriggerQuery() {
+        const meta = { query: this.provider.getSearchEventRequestPayload().queryText }
+        return this.logCustomEvent(SearchPageEvents.triggerQuery, meta)
+    }
+
+    public logTriggerRedirect(meta: TriggerRedirectMetadata) {
+        const allMeta = { ...meta, query: this.provider.getSearchEventRequestPayload().queryText }
+        return this.logCustomEvent(SearchPageEvents.triggerRedirect, allMeta)
+    }
+
+    public logCustomEvent(event: SearchPageEvents, metadata?: Record<string, any>) {
+        const customData = { ...this.provider.getBaseMetadata(), ...metadata }
+
+        const payload: CustomEventRequest = {
+            eventType: CustomEventsTypes[event]!,
+            eventValue: event,
+            lastSearchQueryUid: this.provider.getSearchUID(),
+            customData
+        };
+
+        return this.coveoAnalyticsClient.sendCustomEvent(payload)
+    }
+
+    public logSearchEvent(event: SearchPageEvents, metadata?: Record<string, any>) {
+        const customData = { ...this.provider.getBaseMetadata(), ...metadata }
 
         const payload: SearchEventRequest = {
             ...this.provider.getSearchEventRequestPayload(),
             searchQueryUid: this.provider.getSearchUID(),
-            customData: meta,
-            actionCause: eventType,
+            customData,
+            actionCause: event,
         }
 
         return this.coveoAnalyticsClient.sendSearchEvent(payload)
     }
 
-    public logClickEvent(eventType: SearchPageEvents, info: PartialDocumentInformation, identifier: DocumentIdentifier, metadata?: Record<string, any>) {
-        const meta = {
+    public logClickEvent(event: SearchPageEvents, info: PartialDocumentInformation, identifier: DocumentIdentifier, metadata?: Record<string, any>) {
+        const customData = {
             ...this.provider.getBaseMetadata(),
             ...identifier,
             ...metadata
@@ -95,8 +126,8 @@ export class CoveoSearchPageClient {
         const payload: ClickEventRequest = {
             ...info,
             searchQueryUid: this.provider.getSearchUID(),
-            actionCause: eventType,
-            customData: meta,
+            actionCause: event,
+            customData,
         };
 
         return this.coveoAnalyticsClient.sendClickEvent(payload);

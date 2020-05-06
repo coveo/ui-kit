@@ -4,5 +4,6 @@
         ".nyc_output": true,
         "dist": true,
         "dist_test": true
-    }
+    },
+    "typescript.format.insertSpaceAfterOpeningAndBeforeClosingNonemptyBraces": false
 }

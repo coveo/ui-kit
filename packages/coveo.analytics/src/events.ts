@@ -66,8 +66,7 @@ export interface DocumentInformation {
     rankingModifier: string;
 }
 
-export interface ClickEventRequest extends EventBaseRequest, DocumentInformation {
-}
+export interface ClickEventRequest extends EventBaseRequest, DocumentInformation {}
 
 export interface CustomEventRequest extends EventBaseRequest {
     eventType: string;

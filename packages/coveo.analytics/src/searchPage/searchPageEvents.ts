@@ -57,6 +57,29 @@ export enum SearchPageEvents {
      * Identifies the search event that gets logged when a suggested search query is selected from a standalone searchbox.
      */
     omniboxFromLink = 'omniboxFromLink',
+    /**
+     * Identifies the custom event that gets logged when a user action triggers a notification set in the effective query pipeline on the search page.
+     */
+    triggerNotify = 'notify',
+    /**
+     * Identifies the custom event that gets logged when a user action executes a JavaScript function set in the effective query pipeline on the search page.
+     */
+    triggerExecute = 'execute',
+    /**
+     * Identifies the custom event that gets logged when a user action triggers a new query set in the effective query pipeline on the search page.
+     */
+    triggerQuery = 'query',
+    /**
+     * Identifies the custom event that gets logged when a user action redirects them to a URL set in the effective query pipeline on the search page.
+     */
+    triggerRedirect = 'redirect',
+}
+
+export const CustomEventsTypes: Partial<Record<SearchPageEvents, string>> = {
+    [SearchPageEvents.triggerNotify]: 'queryPipelineTriggers',
+    [SearchPageEvents.triggerExecute]: 'queryPipelineTriggers',
+    [SearchPageEvents.triggerQuery]: 'queryPipelineTriggers',
+    [SearchPageEvents.triggerRedirect]: 'queryPipelineTriggers'
 }
 
 export interface FacetMetadata {
@@ -97,6 +120,18 @@ export interface InterfaceChangeMetadata {
 
 export interface ResultsSortMetadata {
     resultsSortBy: string;
+}
+
+export interface TriggerNotifyMetadata {
+    notification: string;
+}
+
+export interface TriggerExecuteMetadata {
+    executed: string;
+}
+
+export interface TriggerRedirectMetadata {
+    redirectedTo: string;
 }
 
 export type PartialDocumentInformation = Omit<DocumentInformation, 'actionCause' | 'searchQueryUid'>

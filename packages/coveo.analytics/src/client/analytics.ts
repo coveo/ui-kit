@@ -157,7 +157,7 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
         });
         const processBeforeSendHooksStep: ProcessPayloadStep = (currentPayload) =>
             this.beforeSendHooks.reduce((newPayload, current) => current(eventType, newPayload), currentPayload);
-        const cleanPayloadStep: ProcessPayloadStep = (currentPayload) => this.removeEmptyPayloadValues(currentPayload);
+        const cleanPayloadStep: ProcessPayloadStep = (currentPayload) => this.removeEmptyPayloadValues(currentPayload, eventType);
         const validateParams: ProcessPayloadStep = (currentPayload) => this.validateParams(currentPayload);
         const processMeasurementProtocolConversionStep: ProcessPayloadStep = (currentPayload) =>
             usesMeasurementProtocol ? convertKeysToMeasurementProtocol(currentPayload) : currentPayload;
@@ -263,10 +263,19 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
         return parsedArguments;
     }
 
-    private removeEmptyPayloadValues(payload: IRequestPayload): IRequestPayload {
+    private isKeyAllowedEmpty(evtType: string, key: string) {
+        const keysThatCanBeEmpty: Record<string, string[]> = {
+            [EventType.search]: ['queryText'],
+        };
+
+        const match = keysThatCanBeEmpty[evtType] || [];
+        return match.indexOf(key) !== -1
+    }
+
+    private removeEmptyPayloadValues(payload: IRequestPayload, eventType: string): IRequestPayload {
         const isNotEmptyValue = (value: any) => typeof value !== 'undefined' && value !== null && value !== '';
         return Object.keys(payload)
-            .filter((key) => isNotEmptyValue(payload[key]))
+            .filter((key) => this.isKeyAllowedEmpty(eventType, key) || isNotEmptyValue(payload[key]))
             .reduce(
                 (newPayload, key) => ({
                     ...newPayload,
