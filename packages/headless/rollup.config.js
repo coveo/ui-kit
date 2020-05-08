@@ -27,6 +27,8 @@ const nodeConfig = {
   output: [
     { file: 'dist/headless.js', format: 'cjs' },
     { file: 'dist/headless.esm.js', format: 'es'},
+    // For development purposes only
+    { file: '../atomic/src/external-builds/headless.esm.js', format: 'es'},
   ],
   plugins: [
     resolve({ preferBuiltins: true }),

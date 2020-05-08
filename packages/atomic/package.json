@@ -21,7 +21,12 @@
     "test.watch": "stencil test --spec --e2e --watchAll",
     "generate": "stencil generate"
   },
+  "dependencies": {
+    "@coveo/headless": "*"
+  },
   "devDependencies": {
+    "cross-fetch": "^3.0.4",
+    "@rollup/plugin-alias": "^3.1.0",
     "@stencil/core": "^1.12.2",
     "@types/jest": "^25.2.1",
     "@types/puppeteer": "2.0.1",
