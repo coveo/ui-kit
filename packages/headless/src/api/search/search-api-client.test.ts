@@ -1,33 +1,38 @@
-import {SearchAPIClient, SearchAPIClientOptions} from './search-api-client';
+import {SearchAPIClient} from './search-api-client';
 import {PlatformClient, PlatformClientCallOptions} from '../platform-client';
 import {PlanRequestParams} from './plan/plan-request';
-jest.mock('../platform-client');
+import {HeadlessState} from '../../state';
 
+jest.mock('../platform-client');
 describe('search api client', () => {
   it(`when calling SearchAPIClient.plan
   should call PlatformClient.call with the right options`, () => {
-    const planOptions: SearchAPIClientOptions<PlanRequestParams> = {
-      accessToken: 'mytoken123',
-      endpoint: 'myenpoint.com/search',
-      requestParams: {
+    const state = {
+      configuration: {
+        accessToken: 'mytoken123',
         organizationId: 'myorg',
-        q: 'a query',
+        search: {
+          endpoint: 'myendpoint.com/rest/search',
+        },
       },
-    };
+      query: {
+        q: 'query',
+      },
+    } as HeadlessState;
 
-    SearchAPIClient.plan(planOptions);
+    SearchAPIClient.plan(state);
 
-    const callOptions: PlatformClientCallOptions<PlanRequestParams> = {
-      accessToken: planOptions.accessToken,
-      contentType: 'application/json',
+    const expectedRequest: PlatformClientCallOptions<PlanRequestParams> = {
+      accessToken: state.configuration.accessToken,
       method: 'POST',
-      url: `${planOptions.endpoint}/plan`,
+      contentType: 'application/json',
+      url: `${state.configuration.search.endpoint}/plan`,
       requestParams: {
-        q: planOptions.requestParams.q,
-        organizationId: planOptions.requestParams.organizationId,
+        organizationId: state.configuration.organizationId,
+        q: state.query.q,
       },
     };
 
-    expect(PlatformClient.call).toHaveBeenCalledWith(callOptions);
+    expect(PlatformClient.call).toHaveBeenCalledWith(expectedRequest);
   });
 });

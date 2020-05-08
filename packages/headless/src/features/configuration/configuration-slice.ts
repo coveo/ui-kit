@@ -1,5 +1,5 @@
 import {createReducer, createAction, createAsyncThunk} from '@reduxjs/toolkit';
-import {ConfigurationState} from '@coveo/headless';
+import {ConfigurationState} from '../../state';
 
 export const updateBasicConfiguration = createAction<{
   accessToken: string;

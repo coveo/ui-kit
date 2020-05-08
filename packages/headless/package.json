@@ -7,7 +7,7 @@
     "./dist/headless.js": "./dist/browser/headless.js",
     "./dist/headless.esm.js": "./dist/browser/headless.esm.js"
   },
-  "types": "./typings/coveo-headless-engine.d.ts",
+  "types": "./dist/index.d.ts",
   "license": "Apache-2.0",
   "version": "0.0.1",
   "scripts": {

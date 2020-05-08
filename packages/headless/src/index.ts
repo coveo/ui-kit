@@ -1,2 +1,2 @@
 // Export modules here
-export {CoveoHeadlessEngine} from './app/headless-engine';
+export {Engine} from './app/headless-engine';

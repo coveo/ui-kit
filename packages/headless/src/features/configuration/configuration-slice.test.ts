@@ -5,7 +5,7 @@ import {
   updateSearchConfiguration,
   renewAccessToken,
 } from './configuration-slice';
-import {ConfigurationState} from '@coveo/headless';
+import {ConfigurationState} from '../../state';
 
 describe('configuration slice', () => {
   const existingState: ConfigurationState = {

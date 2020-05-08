@@ -1,5 +1,5 @@
 import {SearchAPIClient} from '../search-api-client';
-import {HeadlessState} from '@coveo/headless';
+import {HeadlessState} from '../../../state';
 import {isTriggerRedirect} from '../trigger';
 import {PlanResponse} from './plan-response';
 
@@ -37,14 +37,6 @@ export class ExecutionPlan {
 }
 
 export async function getExecutionPlan(state: HeadlessState) {
-  const response = await SearchAPIClient.plan({
-    accessToken: state.configuration.accessToken,
-    endpoint: state.configuration.search.endpoint,
-    requestParams: {
-      organizationId: state.configuration.organizationId,
-      q: state.query.q,
-    },
-  });
-
+  const response = await SearchAPIClient.plan(state);
   return new ExecutionPlan(response);
 }

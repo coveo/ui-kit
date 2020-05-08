@@ -1,5 +1,5 @@
-import {CoveoHeadlessEngine} from './headless-engine';
-import {HeadlessOptions, HeadlessState} from '@coveo/headless';
+import {Engine, HeadlessOptions} from './headless-engine';
+import {HeadlessState} from '../state';
 import {
   updateBasicConfiguration,
   updateSearchConfiguration,
@@ -19,8 +19,8 @@ describe('headless engine', () => {
       .spyOn(storeConfig, 'configureStore')
       .mockReturnValue(store);
 
-    options = {configuration: CoveoHeadlessEngine.getSampleConfiguration()};
-    new CoveoHeadlessEngine(options);
+    options = {configuration: Engine.getSampleConfiguration()};
+    new Engine(options);
   });
 
   it('should call configureStore', () => {
@@ -50,7 +50,7 @@ describe('headless engine', () => {
       },
     };
 
-    new CoveoHeadlessEngine(options);
+    new Engine(options);
     expect(store.dispatch).not.toHaveBeenCalledWith(
       updateSearchConfiguration(options.configuration.search!)
     );

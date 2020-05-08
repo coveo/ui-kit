@@ -1,5 +1,5 @@
 import {createAsyncThunk, createReducer} from '@reduxjs/toolkit';
-import {HeadlessState, RedirectionState} from '@coveo/headless';
+import {HeadlessState, RedirectionState} from '../../state';
 import {getExecutionPlan} from '../../api/search/plan/plan-endpoint';
 
 export const checkForRedirection = createAsyncThunk(

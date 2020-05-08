@@ -1,5 +1,5 @@
 import {createAction, createReducer} from '@reduxjs/toolkit';
-import {QueryState} from '@coveo/headless';
+import {QueryState} from '../../state';
 
 export const updateQuery = createAction<{q: string}>('query/updateQuery');
 

@@ -1,38 +1,6 @@
-import {ExecutionPlan, getExecutionPlan} from './plan-endpoint';
-import {HeadlessState} from '@coveo/headless';
-import {SearchAPIClient, SearchAPIClientOptions} from '../search-api-client';
+import {ExecutionPlan} from './plan-endpoint';
 import {TriggerRedirect} from '../trigger';
 import {PlanResponse} from './plan-response';
-import {PlanRequestParams} from './plan-request';
-
-jest.mock('../search-api-client');
-describe('plan endpoint', () => {
-  const state = {
-    configuration: {
-      accessToken: 'mytoken123',
-      organizationId: 'myorg',
-      search: {
-        endpoint: 'myendpoint.com/rest/search',
-      },
-    },
-    query: {
-      q: 'query',
-    },
-  } as HeadlessState;
-
-  it('should call SearchAPIClient.plan with the right parameters', () => {
-    const expectedRequest: SearchAPIClientOptions<PlanRequestParams> = {
-      accessToken: state.configuration.accessToken,
-      endpoint: state.configuration.search.endpoint,
-      requestParams: {
-        organizationId: state.configuration.organizationId,
-        q: state.query.q,
-      },
-    };
-    getExecutionPlan(state);
-    expect(SearchAPIClient.plan).toHaveBeenCalledWith(expectedRequest);
-  });
-});
 
 describe('execution plan', () => {
   const planResponse: PlanResponse = {

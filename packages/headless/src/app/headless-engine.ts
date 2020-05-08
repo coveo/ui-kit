@@ -1,9 +1,5 @@
 import {configureStore} from './store';
-import {
-  HeadlessState,
-  HeadlessOptions,
-  HeadlessConfiguration,
-} from '@coveo/headless';
+import {HeadlessState} from '../state';
 import {Store, bindActionCreators} from '@reduxjs/toolkit';
 import {
   updateBasicConfiguration,
@@ -12,7 +8,20 @@ import {
 import {updateQuery} from '../features/query/query-slice';
 import {checkForRedirection} from '../features/redirection/redirection-slice';
 
-export class CoveoHeadlessEngine {
+export interface HeadlessOptions {
+  configuration: HeadlessConfiguration;
+}
+
+export interface HeadlessConfiguration {
+  organization: string;
+  accessToken: string;
+  renewAccessToken?: () => Promise<string>;
+  search?: {
+    endpoint?: string;
+  };
+}
+
+export class Engine {
   private reduxStore: Store<HeadlessState>;
 
   constructor(options: HeadlessOptions) {

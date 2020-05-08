@@ -1,10 +1,13 @@
 import fetch from 'cross-fetch';
 
+export type HttpMethods = 'POST' | 'GET' | 'DELETE' | 'PUT';
+export type HTTContentTypes = 'application/json' | 'text/html';
+
 export interface PlatformClientCallOptions<RequestParams> {
   url: string;
   accessToken: string;
-  method: 'POST';
-  contentType: 'application/json';
+  method: HttpMethods;
+  contentType: HTTContentTypes;
   requestParams: RequestParams;
 }
 

@@ -1,4 +1,6 @@
-export interface PlanRequestParams {
+import {OrganizationRequestParams} from '../search-request';
+
+export interface PlanRequestParams extends OrganizationRequestParams {
   /**
    * The basic query expression.
    */

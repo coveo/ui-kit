@@ -3,7 +3,7 @@ import {
   checkForRedirection,
   getRedirectionInitialState,
 } from './redirection-slice';
-import {RedirectionState} from '@coveo/headless';
+import {RedirectionState} from '../../state';
 
 describe('redirection slice', () => {
   it('should have initial state', () => {
