@@ -7,6 +7,7 @@ import {
 } from '../features/configuration/configuration-slice';
 import {updateQuery} from '../features/query/query-slice';
 import {checkForRedirection} from '../features/redirection/redirection-slice';
+import {fetchQuerySuggestions} from '../features/query-suggest/query-suggest-slice';
 
 export interface HeadlessOptions {
   configuration: HeadlessConfiguration;
@@ -54,6 +55,10 @@ export class Engine {
 
   get updateQuery() {
     return bindActionCreators(updateQuery, this.reduxStore.dispatch);
+  }
+
+  get fetchQuerySuggestions() {
+    return bindActionCreators(fetchQuerySuggestions, this.reduxStore.dispatch);
   }
 
   get checkForRedirection() {

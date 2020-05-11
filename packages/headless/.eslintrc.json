@@ -2,6 +2,16 @@
   "ignorePatterns": [
     "dist"
   ],
+  "rules": {
+    "node/no-unpublished-import": [
+      "error",
+      {
+        "allowModules": [
+          "redux-mock-store"
+        ]
+      }
+    ]
+  },
   "overrides": [
     {
       "files": [

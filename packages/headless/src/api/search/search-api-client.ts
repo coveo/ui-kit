@@ -1,7 +1,13 @@
-import {PlatformClient, HttpMethods, HTTContentTypes} from '../platform-client';
-import {PlanRequestParams} from './plan/plan-request';
+import {PlatformClient} from '../platform-client';
+import {planRequestParams, PlanRequestParams} from './plan/plan-request';
 import {PlanResponse} from './plan/plan-response';
 import {HeadlessState} from '../../state';
+import {QuerySuggestResponse} from './query-suggest/query-suggest-response';
+import {
+  querySuggestRequestParams,
+  QuerySuggestRequestParams,
+} from './query-suggest/query-suggest-request';
+import {baseSearchParams} from './search-request';
 
 export interface SearchAPIClientOptions<RequestParams> {
   accessToken: string;
@@ -9,32 +15,21 @@ export interface SearchAPIClientOptions<RequestParams> {
   requestParams: RequestParams;
 }
 
-const accessToken = (state: HeadlessState) => state.configuration.accessToken;
-const endpoint = (state: HeadlessState) => state.configuration.search.endpoint;
-const q = (state: HeadlessState) => state.query.q;
-const organizationId = (state: HeadlessState) =>
-  state.configuration.organizationId;
-
-const baseParams = (
-  state: HeadlessState,
-  method: HttpMethods,
-  contentType: HTTContentTypes,
-  path: string
-) => ({
-  accessToken: accessToken(state),
-  method,
-  contentType,
-  url: `${endpoint(state)}${path}`,
-});
-
 export class SearchAPIClient {
   static async plan(state: HeadlessState) {
     return await PlatformClient.call<PlanRequestParams, PlanResponse>({
-      ...baseParams(state, 'POST', 'application/json', '/plan'),
-      requestParams: {
-        q: q(state),
-        organizationId: organizationId(state),
-      },
+      ...baseSearchParams(state, 'POST', 'application/json', '/plan'),
+      requestParams: planRequestParams(state),
+    });
+  }
+
+  static async querySuggest(state: HeadlessState) {
+    return await PlatformClient.call<
+      QuerySuggestRequestParams,
+      QuerySuggestResponse
+    >({
+      ...baseSearchParams(state, 'POST', 'application/json', '/querySuggest'),
+      requestParams: querySuggestRequestParams(state),
     });
   }
 }

@@ -1,7 +1,10 @@
+import {QuerySuggestCompletion} from './api/search/query-suggest/query-suggest-response';
+
 export interface HeadlessState {
   query: QueryState;
   configuration: ConfigurationState;
   redirection: RedirectionState;
+  querySuggest: QuerySuggestState;
 }
 
 export interface ConfigurationState {
@@ -18,4 +21,9 @@ export interface QueryState {
 
 export interface RedirectionState {
   redirectTo: string | null;
+}
+
+export interface QuerySuggestState {
+  completions: QuerySuggestCompletion[];
+  count: number;
 }

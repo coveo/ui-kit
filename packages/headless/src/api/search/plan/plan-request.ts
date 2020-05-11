@@ -1,12 +1,9 @@
-import {OrganizationRequestParams} from '../search-request';
+import {HeadlessState} from '../../../state';
+import {getQParam, getOrganizationIdParam} from '../search-request';
 
-export interface PlanRequestParams extends OrganizationRequestParams {
-  /**
-   * The basic query expression.
-   */
-  q: string;
-  /**
-   * The unique identifier of the target Coveo Cloud organization.
-   */
-  organizationId: string;
-}
+export const planRequestParams = (state: HeadlessState) => ({
+  ...getQParam(state),
+  ...getOrganizationIdParam(state),
+});
+
+export type PlanRequestParams = ReturnType<typeof planRequestParams>;
