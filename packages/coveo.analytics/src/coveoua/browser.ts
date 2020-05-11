@@ -41,4 +41,4 @@ if (coveoua.q) {
     [...initEvents, ...otherEvents].forEach((args: [string, any[]]) => handleOneAnalyticsEvent.apply(void 0, args));
 }
 
-export default coveoua;
+export default self.coveoua;
