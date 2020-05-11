@@ -11,8 +11,11 @@ coveoua('init','YOUR-TOKEN');
 coveoua('ec:addProduct', {name: "wow", id: 'something', brand: 'brand', custom: { "verycustom": "value" }, unknown: "shouldberemoved"});
 coveoua('ec:setAction', 'detail', {storeid: "amazing"});
 coveoua('send', "pageview", "/firstpage");
-coveoua('ec:setAction', 'purchase', {storeid: "amazing"});
-coveoua('send', "event", "eventCategory", "eventAction", "eventLabel", "eventValue");
-coveoua('send', "pageview", "/secondpage");
-coveoua('send', "event");
+
+setTimeout(function() {
+    coveoua('ec:setAction', 'purchase', {storeid: "amazing"});
+    coveoua('send', "event", "eventCategory", "eventAction", "eventLabel", "eventValue");
+    coveoua('send', "pageview", "/secondpage");
+    coveoua('send', "event");
+}, 1000);
 </script>
