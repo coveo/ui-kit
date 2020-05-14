@@ -1,5 +1,6 @@
 import {queryReducer, updateQuery, getQueryInitialState} from './query-slice';
 import {QueryState} from '../../state';
+import {selectQuerySuggestion} from '../query-suggest/query-suggest-slice';
 
 describe('query slice', () => {
   it('should have initial state', () => {
@@ -8,27 +9,55 @@ describe('query slice', () => {
     );
   });
 
-  it('should handle updateQuery on initial state', () => {
+  describe('updateQuery', () => {
     const expectedState: QueryState = {
       ...getQueryInitialState(),
-      q: 'allo',
+      q: 'some query',
     };
-    expect(queryReducer(undefined, updateQuery({q: 'allo'}))).toEqual(
-      expectedState
-    );
+
+    it('should handle updateQuery on initial state', () => {
+      expect(queryReducer(undefined, updateQuery({q: 'some query'}))).toEqual(
+        expectedState
+      );
+    });
+
+    it('should handle updateQuery on existing state', () => {
+      const existingState: QueryState = {
+        ...getQueryInitialState(),
+        q: 'another query',
+      };
+      expect(
+        queryReducer(existingState, updateQuery({q: 'some query'}))
+      ).toEqual(expectedState);
+    });
   });
 
-  it('should handle updateQuery on existing state', () => {
-    const existingState: QueryState = {
-      ...getQueryInitialState(),
-      q: 'allo',
-    };
+  describe('updateQuery', () => {
     const expectedState: QueryState = {
       ...getQueryInitialState(),
-      q: 'test',
+      q: 'some expression',
     };
-    expect(queryReducer(existingState, updateQuery({q: 'test'}))).toEqual(
-      expectedState
-    );
+
+    it('should handle updateQuery on initial state', () => {
+      expect(
+        queryReducer(
+          undefined,
+          selectQuerySuggestion({expression: 'some expression'})
+        )
+      ).toEqual(expectedState);
+    });
+
+    it('should handle updateQuery on existing state', () => {
+      const existingState: QueryState = {
+        ...getQueryInitialState(),
+        q: 'some query',
+      };
+      expect(
+        queryReducer(
+          existingState,
+          selectQuerySuggestion({expression: 'some expression'})
+        )
+      ).toEqual(expectedState);
+    });
   });
 });

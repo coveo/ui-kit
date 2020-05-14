@@ -1,6 +1,6 @@
-import {configureStore} from './store';
+import {configureStore, Store} from './store';
 import {HeadlessState} from '../state';
-import {Store, bindActionCreators} from '@reduxjs/toolkit';
+import {bindActionCreators} from '@reduxjs/toolkit';
 import {
   updateBasicConfiguration,
   updateSearchConfiguration,
@@ -23,7 +23,7 @@ export interface HeadlessConfiguration {
 }
 
 export class Engine {
-  private reduxStore: Store<HeadlessState>;
+  private reduxStore: Store;
 
   constructor(options: HeadlessOptions) {
     this.reduxStore = configureStore();

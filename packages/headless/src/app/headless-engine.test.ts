@@ -1,16 +1,14 @@
 import {Engine, HeadlessOptions} from './headless-engine';
-import {HeadlessState} from '../state';
 import {
   updateBasicConfiguration,
   updateSearchConfiguration,
 } from '../features/configuration/configuration-slice';
 import * as storeConfig from './store';
-import {Store} from 'redux';
 
 describe('headless engine', () => {
   let options: HeadlessOptions;
   let configureStoreSpy: jest.SpyInstance;
-  let store: Store<HeadlessState>;
+  let store: storeConfig.Store;
 
   beforeEach(() => {
     store = storeConfig.configureStore();

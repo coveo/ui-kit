@@ -16,7 +16,7 @@
     "build:prod": "rollup -c --environment BUILD:production",
     "clean": "rm -f -r dist/*",
     "test": "jest",
-    "test:watch": "jest --watch --colors",
+    "test:watch": "jest --watch --colors --no-cache",
     "report:bundle-size": "node ./benchmark/bundle-size/bundle-size.js"
   },
   "dependencies": {

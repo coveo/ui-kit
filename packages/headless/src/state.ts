@@ -26,4 +26,6 @@ export interface RedirectionState {
 export interface QuerySuggestState {
   completions: QuerySuggestCompletion[];
   count: number;
+  q: string;
+  currentRequestId: string;
 }

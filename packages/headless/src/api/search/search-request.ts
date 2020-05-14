@@ -10,7 +10,7 @@ export const getOrganizationIdParam = (state: HeadlessState) => ({
 
 export const getQParam = (state: HeadlessState) => ({
   /**
-   * The basic query expression for which to get completion.
+   * The basic query expression filter applied to the state.
    */
   q: state.query.q,
 });

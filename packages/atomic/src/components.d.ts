@@ -20,6 +20,8 @@ export namespace Components {
          */
         "middle": string;
     }
+    interface StandaloneSearchbox {
+    }
 }
 declare global {
     interface HTMLMyComponentElement extends Components.MyComponent, HTMLStencilElement {
@@ -28,8 +30,15 @@ declare global {
         prototype: HTMLMyComponentElement;
         new (): HTMLMyComponentElement;
     };
+    interface HTMLStandaloneSearchboxElement extends Components.StandaloneSearchbox, HTMLStencilElement {
+    }
+    var HTMLStandaloneSearchboxElement: {
+        prototype: HTMLStandaloneSearchboxElement;
+        new (): HTMLStandaloneSearchboxElement;
+    };
     interface HTMLElementTagNameMap {
         "my-component": HTMLMyComponentElement;
+        "standalone-searchbox": HTMLStandaloneSearchboxElement;
     }
 }
 declare namespace LocalJSX {
@@ -47,8 +56,11 @@ declare namespace LocalJSX {
          */
         "middle"?: string;
     }
+    interface StandaloneSearchbox {
+    }
     interface IntrinsicElements {
         "my-component": MyComponent;
+        "standalone-searchbox": StandaloneSearchbox;
     }
 }
 export { LocalJSX as JSX };
@@ -56,6 +68,7 @@ declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
             "my-component": LocalJSX.MyComponent & JSXBase.HTMLAttributes<HTMLMyComponentElement>;
+            "standalone-searchbox": LocalJSX.StandaloneSearchbox & JSXBase.HTMLAttributes<HTMLStandaloneSearchboxElement>;
         }
     }
 }

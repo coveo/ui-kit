@@ -51,11 +51,9 @@ describe('search api client', () => {
           endpoint: 'myendpoint.com/rest/search',
         },
       },
-      query: {
-        q: 'query',
-      },
       querySuggest: {
         count: 10,
+        q: 'query',
       },
     } as HeadlessState;
 
@@ -68,7 +66,7 @@ describe('search api client', () => {
       url: `${state.configuration.search.endpoint}/querySuggest`,
       requestParams: {
         organizationId: state.configuration.organizationId,
-        q: state.query.q,
+        q: state.querySuggest.q,
         count: state.querySuggest.count,
       },
     };

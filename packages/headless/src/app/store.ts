@@ -14,3 +14,5 @@ export function configureStore(preloadedState?: HeadlessState) {
 
   return store;
 }
+
+export type Store = ReturnType<typeof configureStore>;
