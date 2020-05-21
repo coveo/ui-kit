@@ -5,7 +5,7 @@ import {selectQuerySuggestion} from '../query-suggest/query-suggest-slice';
 export const updateQuery = createAction<{q: string}>('query/updateQuery');
 
 export const getQueryInitialState: () => QueryState = () => ({
-  q: 'hello',
+  q: '',
 });
 
 export const queryReducer = createReducer(getQueryInitialState(), builder =>

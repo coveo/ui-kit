@@ -1,16 +1,13 @@
 import {configureStore, Store} from './store';
 import {HeadlessState} from '../state';
-import {bindActionCreators} from '@reduxjs/toolkit';
 import {
   updateBasicConfiguration,
   updateSearchConfiguration,
 } from '../features/configuration/configuration-slice';
-import {updateQuery} from '../features/query/query-slice';
-import {checkForRedirection} from '../features/redirection/redirection-slice';
-import {fetchQuerySuggestions} from '../features/query-suggest/query-suggest-slice';
 
 export interface HeadlessOptions {
   configuration: HeadlessConfiguration;
+  preloadedState?: HeadlessState;
 }
 
 export interface HeadlessConfiguration {
@@ -26,7 +23,7 @@ export class Engine {
   private reduxStore: Store;
 
   constructor(options: HeadlessOptions) {
-    this.reduxStore = configureStore();
+    this.reduxStore = configureStore(options.preloadedState);
     this.reduxStore.dispatch(updateBasicConfiguration(options.configuration));
     if (options.configuration.search) {
       this.reduxStore.dispatch(
@@ -51,17 +48,5 @@ export class Engine {
 
   get state(): HeadlessState {
     return this.reduxStore.getState();
-  }
-
-  get updateQuery() {
-    return bindActionCreators(updateQuery, this.reduxStore.dispatch);
-  }
-
-  get fetchQuerySuggestions() {
-    return bindActionCreators(fetchQuerySuggestions, this.reduxStore.dispatch);
-  }
-
-  get checkForRedirection() {
-    return bindActionCreators(checkForRedirection, this.reduxStore.dispatch);
   }
 }

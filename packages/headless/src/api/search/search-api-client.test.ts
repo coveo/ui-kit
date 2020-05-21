@@ -3,6 +3,8 @@ import {PlatformClient, PlatformClientCallOptions} from '../platform-client';
 import {PlanRequestParams} from './plan/plan-request';
 import {HeadlessState} from '../../state';
 import {QuerySuggestRequestParams} from './query-suggest/query-suggest-request';
+import {createMockState} from '../../utils/mock-state';
+import {getQuerySuggestInitialState} from '../../features/query-suggest/query-suggest-slice';
 
 jest.mock('../platform-client');
 describe('search api client', () => {
@@ -43,21 +45,16 @@ describe('search api client', () => {
 
   it(`when calling SearchAPIClient.querySuggest
   should call PlatformClient.call with the right options`, () => {
-    const state = {
-      configuration: {
-        accessToken: 'mytoken123',
-        organizationId: 'myorg',
-        search: {
-          endpoint: 'myendpoint.com/rest/search',
-        },
-      },
-      querySuggest: {
-        count: 10,
-        q: 'query',
-      },
-    } as HeadlessState;
+    const id = 'someid123';
+    const state = createMockState();
+    state.querySuggest[id] = {
+      ...getQuerySuggestInitialState(),
+      id,
+      q: 'some query',
+      count: 11,
+    };
 
-    SearchAPIClient.querySuggest(state);
+    SearchAPIClient.querySuggest(id, state);
 
     const expectedRequest: PlatformClientCallOptions<QuerySuggestRequestParams> = {
       accessToken: state.configuration.accessToken,
@@ -66,8 +63,8 @@ describe('search api client', () => {
       url: `${state.configuration.search.endpoint}/querySuggest`,
       requestParams: {
         organizationId: state.configuration.organizationId,
-        q: state.querySuggest.q,
-        count: state.querySuggest.count,
+        q: state.querySuggest[id]!.q,
+        count: state.querySuggest[id]!.count,
       },
     };
 

@@ -42,7 +42,7 @@ describe('query slice', () => {
       expect(
         queryReducer(
           undefined,
-          selectQuerySuggestion({expression: 'some expression'})
+          selectQuerySuggestion({id: 'id', expression: 'some expression'})
         )
       ).toEqual(expectedState);
     });
@@ -55,7 +55,7 @@ describe('query slice', () => {
       expect(
         queryReducer(
           existingState,
-          selectQuerySuggestion({expression: 'some expression'})
+          selectQuerySuggestion({id: 'id', expression: 'some expression'})
         )
       ).toEqual(expectedState);
     });

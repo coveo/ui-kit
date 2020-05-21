@@ -1,33 +1,45 @@
-import {createAsyncThunk, createReducer, createAction} from '@reduxjs/toolkit';
-import {HeadlessState, QuerySuggestState} from '../../state';
+import {createAsyncThunk, createAction, createReducer} from '@reduxjs/toolkit';
+import {HeadlessState, QuerySuggestState, QuerySuggestSet} from '../../state';
 import {getQuerySuggestions} from '../../api/search/query-suggest/query-suggest-endpoint';
 
-export const registerQuerySuggest = createAction<{q: string; count: number}>(
-  'querySuggest/register'
+export const registerQuerySuggest = createAction<{
+  id: string;
+  q?: string;
+  count?: number;
+}>('querySuggest/register');
+
+export const unregisterQuerySuggest = createAction<{id: string}>(
+  'querySuggest/unregister'
 );
 
-export const updateQuerySuggestQuery = createAction<{q: string}>(
+export const updateQuerySuggestQuery = createAction<{id: string; q: string}>(
   'querySuggest/updateQuery'
 );
 
-export const selectQuerySuggestion = createAction<{expression: string}>(
-  'querySuggest/selectSuggestion'
+export const selectQuerySuggestion = createAction<{
+  id: string;
+  expression: string;
+}>('querySuggest/selectSuggestion');
+
+export const clearQuerySuggest = createAction<{id: string}>(
+  'querySuggest/clear'
 );
 
-export const clearQuerySuggest = createAction('querySuggest/clear');
-
-export const clearQuerySuggestCompletions = createAction(
+export const clearQuerySuggestCompletions = createAction<{id: string}>(
   'querySuggest/clearSuggestions'
 );
 
 export const fetchQuerySuggestions = createAsyncThunk(
   'querySuggest/fetch',
-  async (_, {getState}) => {
-    return await getQuerySuggestions(getState() as HeadlessState);
+  async ({id}: {id: string}, {getState}) => {
+    return await getQuerySuggestions(id, getState() as HeadlessState);
   }
 );
 
-export const getQuerySuggestInitialState: () => QuerySuggestState = () => ({
+export const getQuerySuggestInitialState: () => Omit<
+  QuerySuggestState,
+  'id'
+> = () => ({
   completions: [],
   count: 5,
   q: '',
@@ -35,33 +47,42 @@ export const getQuerySuggestInitialState: () => QuerySuggestState = () => ({
 });
 
 export const querySuggestReducer = createReducer(
-  getQuerySuggestInitialState(),
-  builder =>
+  {} as QuerySuggestSet,
+  (builder) =>
     builder
       .addCase(registerQuerySuggest, (state, action) => {
-        state.count = action.payload.count;
-        state.q = action.payload.q;
+        state[action.payload.id] = {
+          ...getQuerySuggestInitialState(),
+          ...action.payload,
+        };
+      })
+      .addCase(unregisterQuerySuggest, (state, action) => {
+        delete state[action.payload.id];
       })
       .addCase(fetchQuerySuggestions.pending, (state, action) => {
-        state.currentRequestId = action.meta.requestId;
+        state[action.meta.arg.id]!.currentRequestId = action.meta.requestId;
       })
       .addCase(fetchQuerySuggestions.fulfilled, (state, action) => {
-        if (action.meta.requestId === state.currentRequestId) {
-          state.completions = action.payload.completions;
+        const id = action.meta.arg.id;
+        if (action.meta.requestId === state[id]?.currentRequestId) {
+          state[id]!.completions = action.payload.completions;
         }
       })
       .addCase(updateQuerySuggestQuery, (state, action) => {
-        state.q = action.payload.q;
+        const {id, q} = action.payload;
+        state[id]!.q = q;
       })
-      .addCase(clearQuerySuggest, state => {
-        state.q = '';
-        state.completions = [];
+      .addCase(clearQuerySuggest, (state, action) => {
+        const {id} = action.payload;
+        state[id]!.q = '';
+        state[id]!.completions = [];
       })
-      .addCase(clearQuerySuggestCompletions, state => {
-        state.completions = [];
+      .addCase(clearQuerySuggestCompletions, (state, action) => {
+        state[action.payload.id]!.completions = [];
       })
       .addCase(selectQuerySuggestion, (state, action) => {
-        state.q = action.payload.expression;
-        state.completions = [];
+        const {id, expression} = action.payload;
+        state[id]!.q = expression;
+        state[id]!.completions = [];
       })
 );

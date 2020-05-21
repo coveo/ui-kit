@@ -1,17 +1,19 @@
 import {
-  registerQuerySuggest,
   selectQuerySuggestion,
   clearQuerySuggest,
   clearQuerySuggestCompletions,
   updateQuerySuggestQuery,
   querySuggestReducer,
   getQuerySuggestInitialState,
+  registerQuerySuggest,
   fetchQuerySuggestions,
 } from './query-suggest-slice';
-import {QuerySuggestState} from '../../state';
+import {QuerySuggestState, QuerySuggestSet} from '../../state';
 import {QuerySuggestCompletion} from '../../api/search/query-suggest/query-suggest-response';
 
 describe('redirection slice', () => {
+  const id = 'searchbox_1234';
+
   function getCompletions() {
     const completions: QuerySuggestCompletion[] = [];
     for (let index = 0; index < 5; index++) {
@@ -26,171 +28,98 @@ describe('redirection slice', () => {
     return completions;
   }
 
+  function addToDefaultState(
+    querySuggest: Partial<QuerySuggestState>
+  ): QuerySuggestSet {
+    return {
+      [id]: {
+        ...getQuerySuggestInitialState(),
+        id,
+        ...querySuggest,
+      },
+    };
+  }
+
   it('should have initial state', () => {
-    expect(querySuggestReducer(undefined, {type: 'randomAction'})).toEqual(
-      getQuerySuggestInitialState()
+    expect(querySuggestReducer(undefined, {type: 'randomAction'})).toEqual({});
+  });
+
+  it('should handle registerQuerySuggest on initial state', () => {
+    const expectedState = addToDefaultState({q: 'test', count: 10});
+    expect(
+      querySuggestReducer(
+        undefined,
+        registerQuerySuggest({id, q: 'test', count: 10})
+      )
+    ).toEqual(expectedState);
+  });
+
+  it('should handle selectQuerySuggestion on existing state', () => {
+    const expectedState = addToDefaultState({
+      completions: [],
+      q: 'some expression',
+    });
+
+    const existingState = addToDefaultState({
+      completions: getCompletions(),
+      q: 'some previous query',
+    });
+
+    expect(
+      querySuggestReducer(
+        existingState,
+        selectQuerySuggestion({id, expression: 'some expression'})
+      )
+    ).toEqual(expectedState);
+  });
+
+  it('should handle clearQuerySuggest on existing state', () => {
+    const expectedState = addToDefaultState({completions: [], q: ''});
+    const existingState = addToDefaultState({
+      completions: getCompletions(),
+      q: 'some query',
+    });
+    expect(querySuggestReducer(existingState, clearQuerySuggest({id}))).toEqual(
+      expectedState
     );
   });
 
-  describe('registerQuerySuggest', () => {
-    const expectedState: QuerySuggestState = {
-      ...getQuerySuggestInitialState(),
-      q: 'test',
-      count: 10,
-    };
+  it('should handle clearQuerySuggestCompletions on existing state', () => {
+    const expectedState = addToDefaultState({completions: []});
+    const existingState = addToDefaultState({completions: getCompletions()});
 
-    it('should handle registerQuerySuggest on initial state', () => {
-      expect(
-        querySuggestReducer(
-          undefined,
-          registerQuerySuggest({q: 'test', count: 10})
-        )
-      ).toEqual(expectedState);
-    });
-
-    it('should handle registerQuerySuggest on existing state', () => {
-      const existingState: QuerySuggestState = {
-        ...getQuerySuggestInitialState(),
-        q: 'hello',
-      };
-
-      expect(
-        querySuggestReducer(
-          existingState,
-          registerQuerySuggest({q: 'test', count: 10})
-        )
-      ).toEqual(expectedState);
-    });
+    expect(
+      querySuggestReducer(existingState, clearQuerySuggestCompletions({id}))
+    ).toEqual(expectedState);
   });
 
-  describe('selectQuerySuggestion', () => {
-    const expectedState: QuerySuggestState = {
-      ...getQuerySuggestInitialState(),
-      completions: [],
-      q: 'some expression',
-    };
+  it('should handle updateQuerySuggestQuery on existing state', () => {
+    const expectedState = addToDefaultState({q: 'test'});
+    const existingState = addToDefaultState({q: 'hello'});
 
-    it('should handle selectQuerySuggestion on initial state', () => {
-      expect(
-        querySuggestReducer(
-          undefined,
-          selectQuerySuggestion({expression: 'some expression'})
-        )
-      ).toEqual(expectedState);
-    });
-
-    it('should handle selectQuerySuggestion on existing state', () => {
-      const existingState: QuerySuggestState = {
-        ...getQuerySuggestInitialState(),
-        completions: getCompletions(),
-        q: 'some previous query',
-      };
-
-      expect(
-        querySuggestReducer(
-          existingState,
-          selectQuerySuggestion({expression: 'some expression'})
-        )
-      ).toEqual(expectedState);
-    });
-  });
-
-  describe('clearQuerySuggest', () => {
-    const expectedState: QuerySuggestState = {
-      ...getQuerySuggestInitialState(),
-      completions: [],
-      q: '',
-    };
-
-    it('should handle clearQuerySuggest on initial state', () => {
-      expect(querySuggestReducer(undefined, clearQuerySuggest())).toEqual(
-        expectedState
-      );
-    });
-
-    it('should handle clearQuerySuggest on existing state', () => {
-      const existingState: QuerySuggestState = {
-        ...getQuerySuggestInitialState(),
-        completions: getCompletions(),
-        q: 'some query',
-      };
-
-      expect(querySuggestReducer(existingState, clearQuerySuggest())).toEqual(
-        expectedState
-      );
-    });
-  });
-
-  describe('clearQuerySuggestCompletions', () => {
-    const expectedState: QuerySuggestState = {
-      ...getQuerySuggestInitialState(),
-      completions: [],
-    };
-
-    it('should handle clearQuerySuggestCompletions on initial state', () => {
-      expect(
-        querySuggestReducer(undefined, clearQuerySuggestCompletions())
-      ).toEqual(expectedState);
-    });
-
-    it('should handle clearQuerySuggestCompletions on existing state', () => {
-      const existingState: QuerySuggestState = {
-        ...getQuerySuggestInitialState(),
-        completions: getCompletions(),
-      };
-
-      expect(
-        querySuggestReducer(existingState, clearQuerySuggestCompletions())
-      ).toEqual(expectedState);
-    });
-  });
-
-  describe('updateQuerySuggestQuery', () => {
-    const expectedState: QuerySuggestState = {
-      ...getQuerySuggestInitialState(),
-      q: 'test',
-    };
-
-    it('should handle updateQuerySuggestQuery on initial state', () => {
-      expect(
-        querySuggestReducer(undefined, updateQuerySuggestQuery({q: 'test'}))
-      ).toEqual(expectedState);
-    });
-
-    it('should handle updateQuerySuggestQuery on existing state', () => {
-      const existingState: QuerySuggestState = {
-        ...getQuerySuggestInitialState(),
-        q: 'hello',
-      };
-
-      expect(
-        querySuggestReducer(existingState, updateQuerySuggestQuery({q: 'test'}))
-      ).toEqual(expectedState);
-    });
+    expect(
+      querySuggestReducer(
+        existingState,
+        updateQuerySuggestQuery({id, q: 'test'})
+      )
+    ).toEqual(expectedState);
   });
 
   describe('fetchQuerySuggestions', () => {
     describe('fetchQuerySuggestions.pending', () => {
-      const expectedState: QuerySuggestState = {
-        ...getQuerySuggestInitialState(),
+      const expectedState = addToDefaultState({
         currentRequestId: 'the_right_id',
-      };
-
-      const fetchQuerySuggestionsPendingAction = fetchQuerySuggestions.pending(
-        'the_right_id'
-      );
-
-      it('should handle fetchQuerySuggestions.pending on initial state', () => {
-        expect(
-          querySuggestReducer(undefined, fetchQuerySuggestionsPendingAction)
-        ).toEqual(expectedState);
       });
 
+      const fetchQuerySuggestionsPendingAction = fetchQuerySuggestions.pending(
+        'the_right_id',
+        {id}
+      );
+
       it('should handle fetchQuerySuggestions.pending on existing state', () => {
-        const existingState: QuerySuggestState = {
-          ...getQuerySuggestInitialState(),
+        const existingState = addToDefaultState({
           currentRequestId: 'the_wrong_id',
-        };
+        });
 
         expect(
           querySuggestReducer(existingState, fetchQuerySuggestionsPendingAction)
@@ -201,22 +130,21 @@ describe('redirection slice', () => {
       const completions = getCompletions();
       const fetchQuerySuggestionsFulfilledAction = fetchQuerySuggestions.fulfilled(
         {completions},
-        ''
+        '',
+        {id}
       );
       fetchQuerySuggestionsFulfilledAction.meta.requestId = 'the_right_id';
 
       it(`when fetchQuerySuggestions.fulfilled has the right request id
       should update the completions`, () => {
-        const expectedState: QuerySuggestState = {
-          ...getQuerySuggestInitialState(),
+        const expectedState = addToDefaultState({
           currentRequestId: 'the_right_id',
           completions,
-        };
+        });
 
-        const existingState: QuerySuggestState = {
-          ...getQuerySuggestInitialState(),
+        const existingState = addToDefaultState({
           currentRequestId: 'the_right_id',
-        };
+        });
         expect(
           querySuggestReducer(
             existingState,
@@ -227,10 +155,9 @@ describe('redirection slice', () => {
 
       it(`when fetchQuerySuggestions.fulfilled has the wrong request id
       should not update the completions`, () => {
-        const existingState: QuerySuggestState = {
-          ...getQuerySuggestInitialState(),
+        const existingState = addToDefaultState({
           currentRequestId: 'the_wrong_id',
-        };
+        });
 
         expect(
           querySuggestReducer(

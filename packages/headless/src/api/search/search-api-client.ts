@@ -23,13 +23,13 @@ export class SearchAPIClient {
     });
   }
 
-  static async querySuggest(state: HeadlessState) {
+  static async querySuggest(id: string, state: HeadlessState) {
     return await PlatformClient.call<
       QuerySuggestRequestParams,
       QuerySuggestResponse
     >({
       ...baseSearchParams(state, 'POST', 'application/json', '/querySuggest'),
-      requestParams: querySuggestRequestParams(state),
+      requestParams: querySuggestRequestParams(id, state),
     });
   }
 }

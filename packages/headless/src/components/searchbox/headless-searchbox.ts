@@ -6,10 +6,13 @@ import {
   updateQuerySuggestQuery,
   registerQuerySuggest,
   selectQuerySuggestion,
+  unregisterQuerySuggest,
 } from '../../features/query-suggest/query-suggest-slice';
 import {Engine} from '../../app/headless-engine';
+import {randomID} from '../../utils/utils';
 
 export interface SearchOptions {
+  id: string;
   isStandalone: boolean;
   numberOfQuerySuggestions: number;
 }
@@ -22,6 +25,7 @@ export type SearchboxState = Searchbox['state'];
 
 export class Searchbox {
   private options: SearchOptions = {
+    id: randomID('searchbox_'),
     isStandalone: false,
     numberOfQuerySuggestions: 5,
   };
@@ -31,10 +35,15 @@ export class Searchbox {
 
     this.dispatch(
       registerQuerySuggest({
+        id: this.id,
         q: this.engine.state.query.q,
         count: this.options.numberOfQuerySuggestions,
       })
     );
+  }
+
+  public get id() {
+    return this.options.id;
   }
 
   private get dispatch() {
@@ -42,7 +51,7 @@ export class Searchbox {
   }
 
   public updateText(options: UpdateTextOptions) {
-    this.dispatch(updateQuerySuggestQuery({q: options.value}));
+    this.dispatch(updateQuerySuggestQuery({id: this.id, q: options.value}));
 
     if (this.options.numberOfQuerySuggestions) {
       this.showSuggestions();
@@ -50,19 +59,21 @@ export class Searchbox {
   }
 
   public clear() {
-    this.dispatch(clearQuerySuggest());
+    this.dispatch(clearQuerySuggest({id: this.id}));
   }
 
   public hideSuggestions() {
-    this.dispatch(clearQuerySuggestCompletions());
+    this.dispatch(clearQuerySuggestCompletions({id: this.id}));
   }
 
   public showSuggestions() {
-    this.dispatch(fetchQuerySuggestions());
+    this.dispatch(fetchQuerySuggestions({id: this.id}));
   }
 
   public selectSuggestion(options: {value: string}) {
-    this.dispatch(selectQuerySuggestion({expression: options.value}));
+    this.dispatch(
+      selectQuerySuggestion({id: this.id, expression: options.value})
+    );
     this.submit();
   }
 
@@ -77,9 +88,10 @@ export class Searchbox {
 
   public get state() {
     const state = this.engine.state;
+    const querySuggestState = state.querySuggest[this.id]!;
     return {
-      value: state.querySuggest.q,
-      suggestions: state.querySuggest.completions.map(completion => ({
+      value: querySuggestState.q,
+      suggestions: querySuggestState.completions.map((completion) => ({
         value: completion.expression,
       })),
       redirectTo: state.redirection.redirectTo,
@@ -88,5 +100,9 @@ export class Searchbox {
 
   public subscribe(listener: () => void) {
     return this.engine.store.subscribe(listener);
+  }
+
+  public delete() {
+    this.engine.store.dispatch(unregisterQuerySuggest({id: this.id}));
   }
 }

@@ -1,4 +1,3 @@
-import {HeadlessState} from '../../state';
 import {Engine} from '../../app/headless-engine';
 import {createMockStore, MockStore} from '../../utils/mock-store';
 import {Store} from '../../app/store';
@@ -10,20 +9,34 @@ import {
   clearQuerySuggestCompletions,
   fetchQuerySuggestions,
   selectQuerySuggestion,
+  getQuerySuggestInitialState,
 } from '../../features/query-suggest/query-suggest-slice';
 import {checkForRedirection} from '../../features/redirection/redirection-slice';
+import {createMockState} from '../../utils/mock-state';
 
-const fakeState = {
-  querySuggest: {
-    q: 'some value',
-    completions: [
-      {expression: 'some value something'},
-      {expression: 'some value some other thing'},
-    ],
-  },
-  redirection: {redirectTo: 'coveo.com'},
-  query: {q: 'some query'},
-} as HeadlessState;
+const id = 'searchbox_123';
+const fakeState = createMockState();
+fakeState.query.q = 'some query';
+fakeState.redirection.redirectTo = 'coveo.com';
+fakeState.querySuggest[id] = {
+  ...getQuerySuggestInitialState(),
+  id,
+  q: 'some value',
+  completions: [
+    {
+      expression: 'some value something',
+      executableConfidence: 1,
+      score: 1,
+      highlighted: '≤b>some value</b> something',
+    },
+    {
+      expression: 'some value some other thing',
+      executableConfidence: 1,
+      score: 1,
+      highlighted: '≤b>some value</b> some other thing',
+    },
+  ],
+};
 
 describe('headless searchbox', () => {
   let engine: Engine;
@@ -33,6 +46,7 @@ describe('headless searchbox', () => {
 
   beforeEach(() => {
     searchboxOptions = {
+      id,
       isStandalone: true,
       numberOfQuerySuggestions: 10,
     };
@@ -48,19 +62,27 @@ describe('headless searchbox', () => {
     searchbox = new Searchbox(engine, searchboxOptions);
   }
 
+  it('has a default id if not specified', () => {
+    searchbox = new Searchbox(engine);
+    expect(searchbox.id).toBeDefined();
+  });
+
   it('should return the right state', () => {
     expect(searchbox.state).toEqual({
-      value: fakeState.querySuggest.q,
-      suggestions: fakeState.querySuggest.completions.map(completion => ({
-        value: completion.expression,
-      })),
+      value: fakeState.querySuggest[id]!.q,
+      suggestions: fakeState.querySuggest[id]!.completions.map(
+        (completion) => ({
+          value: completion.expression,
+        })
+      ),
       redirectTo: fakeState.redirection.redirectTo,
     });
   });
 
-  it('should dispatch a registerQuerySuggest action at initialization ', () => {
+  it('should dispatch a registerQuerySuggest action at initialization', () => {
     expect(store.getActions()[0]).toEqual(
       registerQuerySuggest({
+        id: searchbox.id,
         q: fakeState.query.q,
         count: searchboxOptions.numberOfQuerySuggestions,
       })
@@ -68,10 +90,11 @@ describe('headless searchbox', () => {
   });
 
   describe('when calling updateText', () => {
-    it(`should dispatch a updateQuerySuggestQuery action`, () => {
+    it('should dispatch a updateQuerySuggestQuery action', () => {
       searchbox.updateText({value: 'how can i fix'});
       expect(store.getActions()[1]).toEqual(
         updateQuerySuggestQuery({
+          id: searchbox.id,
           q: 'how can i fix',
         })
       );
@@ -100,13 +123,17 @@ describe('headless searchbox', () => {
   it(`when calling clear
     should dispatch a clearQuerySuggest action`, () => {
     searchbox.clear();
-    expect(store.getActions()[1]).toEqual(clearQuerySuggest());
+    expect(store.getActions()[1]).toEqual(
+      clearQuerySuggest({id: searchbox.id})
+    );
   });
 
   it(`when calling hideSuggestions
     should dispatch a clearQuerySuggestCompletions action`, () => {
     searchbox.hideSuggestions();
-    expect(store.getActions()[1]).toEqual(clearQuerySuggestCompletions());
+    expect(store.getActions()[1]).toEqual(
+      clearQuerySuggestCompletions({id: searchbox.id})
+    );
   });
 
   it(`when calling showSuggestions
@@ -115,7 +142,7 @@ describe('headless searchbox', () => {
 
     const action = store.getActions()[1];
     expect(action).toEqual(
-      fetchQuerySuggestions.pending(action.meta.requestId)
+      fetchQuerySuggestions.pending(action.meta.requestId, {id: searchbox.id})
     );
   });
 
@@ -124,7 +151,7 @@ describe('headless searchbox', () => {
     const value = 'i like this expression';
     searchbox.selectSuggestion({value});
     expect(store.getActions()[1]).toEqual(
-      selectQuerySuggestion({expression: value})
+      selectQuerySuggestion({id: searchbox.id, expression: value})
     );
   });
 

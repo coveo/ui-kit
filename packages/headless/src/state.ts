@@ -4,7 +4,7 @@ export interface HeadlessState {
   query: QueryState;
   configuration: ConfigurationState;
   redirection: RedirectionState;
-  querySuggest: QuerySuggestState;
+  querySuggest: QuerySuggestSet;
 }
 
 export interface ConfigurationState {
@@ -23,7 +23,10 @@ export interface RedirectionState {
   redirectTo: string | null;
 }
 
+export type QuerySuggestSet = Record<string, QuerySuggestState | undefined>;
+
 export interface QuerySuggestState {
+  id: string;
   completions: QuerySuggestCompletion[];
   count: number;
   q: string;
