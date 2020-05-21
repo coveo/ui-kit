@@ -38,13 +38,17 @@ function buildRows(bundleName, oldSizeMap, newSizeMap) {
     const newSize = newSizeMap[compression];
     const change = (newSize - oldSize) * 100 / oldSize;
 
-    return [fileName, compression, toKb(oldSize), toKb(newSize), change];
+    return [fileName, compression, toKb(oldSize), toKb(newSize), toOneDecimal(change)];
   });
 }
 
 function toKb(num) {
   const kilobytes = num / 1000;
-  return Math.round(kilobytes * 10) / 10;
+  return toOneDecimal(kilobytes);
+}
+
+function toOneDecimal(num) {
+  return Math.round(num * 10) / 10;
 }
 
 function isNumeric(value) {

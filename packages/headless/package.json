@@ -17,7 +17,8 @@
     "clean": "rm -f -r dist/*",
     "test": "jest",
     "test:watch": "jest --watch --colors --no-cache",
-    "report:bundle-size": "node ./benchmark/bundle-size/bundle-size.js"
+    "report:bundle-size": "node ./benchmark/bundle-size/bundle-size.js",
+    "report:bundle-size:time-series": "node ./benchmark/bundle-size/time-series.js"
   },
   "dependencies": {
     "@reduxjs/toolkit": "^1.3.5",
