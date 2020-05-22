@@ -1,4 +1,4 @@
-import {checkForRedirection} from '../../features/redirection/redirection-slice';
+import {checkForRedirection} from '../../features/redirection/redirection-actions';
 import {
   fetchQuerySuggestions,
   clearQuerySuggest,
@@ -7,7 +7,7 @@ import {
   registerQuerySuggest,
   selectQuerySuggestion,
   unregisterQuerySuggest,
-} from '../../features/query-suggest/query-suggest-slice';
+} from '../../features/query-suggest/query-suggest-actions';
 import {Engine} from '../../app/headless-engine';
 import {randomID} from '../../utils/utils';
 

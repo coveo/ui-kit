@@ -17,8 +17,8 @@ export const getQParam = (state: HeadlessState) => ({
 
 const getAccessToken = (state: HeadlessState) =>
   state.configuration.accessToken;
-const getEndpoint = (state: HeadlessState) =>
-  state.configuration.search.endpoint;
+const getSearchApiBaseUrl = (state: HeadlessState) =>
+  state.configuration.search.searchApiBaseUrl;
 
 export const baseSearchParams = (
   state: HeadlessState,
@@ -29,5 +29,5 @@ export const baseSearchParams = (
   accessToken: getAccessToken(state),
   method,
   contentType,
-  url: `${getEndpoint(state)}${path}`,
+  url: `${getSearchApiBaseUrl(state)}${path}`,
 });

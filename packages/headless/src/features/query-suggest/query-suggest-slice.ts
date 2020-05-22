@@ -1,40 +1,14 @@
-import {createAsyncThunk, createAction, createReducer} from '@reduxjs/toolkit';
-import {HeadlessState, QuerySuggestState, QuerySuggestSet} from '../../state';
-import {getQuerySuggestions} from '../../api/search/query-suggest/query-suggest-endpoint';
-
-export const registerQuerySuggest = createAction<{
-  id: string;
-  q?: string;
-  count?: number;
-}>('querySuggest/register');
-
-export const unregisterQuerySuggest = createAction<{id: string}>(
-  'querySuggest/unregister'
-);
-
-export const updateQuerySuggestQuery = createAction<{id: string; q: string}>(
-  'querySuggest/updateQuery'
-);
-
-export const selectQuerySuggestion = createAction<{
-  id: string;
-  expression: string;
-}>('querySuggest/selectSuggestion');
-
-export const clearQuerySuggest = createAction<{id: string}>(
-  'querySuggest/clear'
-);
-
-export const clearQuerySuggestCompletions = createAction<{id: string}>(
-  'querySuggest/clearSuggestions'
-);
-
-export const fetchQuerySuggestions = createAsyncThunk(
-  'querySuggest/fetch',
-  async ({id}: {id: string}, {getState}) => {
-    return await getQuerySuggestions(id, getState() as HeadlessState);
-  }
-);
+import {createReducer} from '@reduxjs/toolkit';
+import {
+  clearQuerySuggest,
+  clearQuerySuggestCompletions,
+  fetchQuerySuggestions,
+  registerQuerySuggest,
+  selectQuerySuggestion,
+  unregisterQuerySuggest,
+  updateQuerySuggestQuery,
+} from './query-suggest-actions';
+import {QuerySuggestState, QuerySuggestSet} from '../../state';
 
 export const getQuerySuggestInitialState: () => Omit<
   QuerySuggestState,

@@ -11,7 +11,7 @@ import {baseSearchParams} from './search-request';
 
 export interface SearchAPIClientOptions<RequestParams> {
   accessToken: string;
-  endpoint: string;
+  searchApiBaseUrl: string;
   requestParams: RequestParams;
 }
 

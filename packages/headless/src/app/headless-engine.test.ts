@@ -2,7 +2,7 @@ import {Engine, HeadlessOptions} from './headless-engine';
 import {
   updateBasicConfiguration,
   updateSearchConfiguration,
-} from '../features/configuration/configuration-slice';
+} from '../features/configuration/configuration-actions';
 import * as storeConfig from './store';
 
 describe('headless engine', () => {
@@ -44,7 +44,7 @@ describe('headless engine', () => {
     options = {
       configuration: {
         accessToken: 'mytoken',
-        organization: 'someorg',
+        organizationId: 'someorg',
       },
     };
 

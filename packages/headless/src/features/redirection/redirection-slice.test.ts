@@ -1,9 +1,9 @@
 import {
   redirectionReducer,
-  checkForRedirection,
   getRedirectionInitialState,
 } from './redirection-slice';
 import {RedirectionState} from '../../state';
+import {checkForRedirection} from './redirection-actions';
 
 describe('redirection slice', () => {
   it('should have initial state', () => {

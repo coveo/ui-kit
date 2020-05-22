@@ -1,6 +1,7 @@
-import {queryReducer, updateQuery, getQueryInitialState} from './query-slice';
+import {queryReducer, getQueryInitialState} from './query-slice';
 import {QueryState} from '../../state';
-import {selectQuerySuggestion} from '../query-suggest/query-suggest-slice';
+import {selectQuerySuggestion} from '../query-suggest/query-suggest-actions';
+import {updateQuery} from './query-actions';
 
 describe('query slice', () => {
   it('should have initial state', () => {

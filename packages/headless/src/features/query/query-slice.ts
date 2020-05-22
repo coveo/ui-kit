@@ -1,14 +1,13 @@
-import {createAction, createReducer} from '@reduxjs/toolkit';
+import {createReducer} from '@reduxjs/toolkit';
 import {QueryState} from '../../state';
-import {selectQuerySuggestion} from '../query-suggest/query-suggest-slice';
-
-export const updateQuery = createAction<{q: string}>('query/updateQuery');
+import {updateQuery} from './query-actions';
+import {selectQuerySuggestion} from '../query-suggest/query-suggest-actions';
 
 export const getQueryInitialState: () => QueryState = () => ({
   q: '',
 });
 
-export const queryReducer = createReducer(getQueryInitialState(), builder =>
+export const queryReducer = createReducer(getQueryInitialState(), (builder) =>
   builder
     .addCase(updateQuery, (state, action) => {
       state.q = action.payload.q;

@@ -1,10 +1,12 @@
 import {
   getConfigurationInitialState,
   configurationReducer,
+} from './configuration-slice';
+import {
+  renewAccessToken,
   updateBasicConfiguration,
   updateSearchConfiguration,
-  renewAccessToken,
-} from './configuration-slice';
+} from './configuration-actions';
 import {ConfigurationState} from '../../state';
 
 describe('configuration slice', () => {
@@ -12,7 +14,7 @@ describe('configuration slice', () => {
     ...getConfigurationInitialState(),
     accessToken: 'mytoken123',
     organizationId: 'myorg',
-    search: {endpoint: 'platformdev.cloud.coveo.com/search'},
+    search: {searchApiBaseUrl: 'platformdev.cloud.coveo.com/search'},
   };
   const fakeRenewToken = async () => await Promise.resolve('');
 
@@ -32,7 +34,7 @@ describe('configuration slice', () => {
       configurationReducer(
         undefined,
         updateBasicConfiguration({
-          organization: 'myorg',
+          organizationId: 'myorg',
           accessToken: 'mytoken123',
         })
       )
@@ -51,7 +53,7 @@ describe('configuration slice', () => {
         existingState,
         updateBasicConfiguration({
           accessToken: 'mynewtoken',
-          organization: 'myotherorg',
+          organizationId: 'myotherorg',
         })
       )
     ).toEqual(expectedState);
@@ -61,7 +63,7 @@ describe('configuration slice', () => {
     const expectedState: ConfigurationState = {
       ...getConfigurationInitialState(),
       search: {
-        endpoint: 'thisismyendpoint.com/search',
+        searchApiBaseUrl: 'test.com/search',
       },
     };
 
@@ -69,7 +71,7 @@ describe('configuration slice', () => {
       configurationReducer(
         undefined,
         updateSearchConfiguration({
-          endpoint: 'thisismyendpoint.com/search',
+          searchApiBaseUrl: 'test.com/search',
         })
       )
     ).toEqual(expectedState);
@@ -79,7 +81,7 @@ describe('configuration slice', () => {
     const expectedState: ConfigurationState = {
       ...existingState,
       search: {
-        endpoint: 'thisismyendpoint.com/search',
+        searchApiBaseUrl: 'test.com/search',
       },
     };
 
@@ -87,7 +89,7 @@ describe('configuration slice', () => {
       configurationReducer(
         existingState,
         updateSearchConfiguration({
-          endpoint: 'thisismyendpoint.com/search',
+          searchApiBaseUrl: 'test.com/search',
         })
       )
     ).toEqual(expectedState);

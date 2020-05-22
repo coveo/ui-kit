@@ -1,6 +1,5 @@
 /**
- * The IQuerySuggestCompletion interface describes a completion suggestion from the Coveo Machine Learning
- * service (see [Coveo Machine Learning](https://docs.coveo.com/en/1727/).
+ * A Coveo ML query suggestion.
  */
 export interface QuerySuggestCompletion {
   /**
@@ -26,8 +25,7 @@ export interface QuerySuggestCompletion {
 }
 
 /**
- * The IQuerySuggestResponse interface describes a response from the Coveo Machine Learning service query
- * suggestions.
+ * A response from the Coveo ML query suggest service.
  */
 export interface QuerySuggestResponse {
   /**

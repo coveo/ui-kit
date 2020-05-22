@@ -9,9 +9,9 @@ import {
   clearQuerySuggestCompletions,
   fetchQuerySuggestions,
   selectQuerySuggestion,
-  getQuerySuggestInitialState,
-} from '../../features/query-suggest/query-suggest-slice';
-import {checkForRedirection} from '../../features/redirection/redirection-slice';
+} from '../../features/query-suggest/query-suggest-actions';
+import {checkForRedirection} from '../../features/redirection/redirection-actions';
+import {getQuerySuggestInitialState} from '../../features/query-suggest/query-suggest-slice';
 import {createMockState} from '../../utils/mock-state';
 
 const id = 'searchbox_123';

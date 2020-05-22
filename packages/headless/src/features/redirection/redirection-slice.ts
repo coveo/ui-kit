@@ -1,18 +1,6 @@
-import {createAsyncThunk, createReducer} from '@reduxjs/toolkit';
-import {HeadlessState, RedirectionState} from '../../state';
-import {getExecutionPlan} from '../../api/search/plan/plan-endpoint';
-
-export const checkForRedirection = createAsyncThunk(
-  'redirection/check',
-  async (_, {getState}) => {
-    const executionPlan = await getExecutionPlan(getState() as HeadlessState);
-    if (executionPlan.redirectionURL) {
-      // Dispatch redirection trigger analytics here
-    }
-
-    return executionPlan.redirectionURL;
-  }
-);
+import {createReducer} from '@reduxjs/toolkit';
+import {RedirectionState} from '../../state';
+import {checkForRedirection} from './redirection-actions';
 
 export const getRedirectionInitialState: () => RedirectionState = () => ({
   redirectTo: null,
@@ -20,7 +8,7 @@ export const getRedirectionInitialState: () => RedirectionState = () => ({
 
 export const redirectionReducer = createReducer(
   getRedirectionInitialState(),
-  builder =>
+  (builder) =>
     builder.addCase(checkForRedirection.fulfilled, (state, action) => {
       state.redirectTo = action.payload;
     })

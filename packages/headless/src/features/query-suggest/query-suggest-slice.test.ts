@@ -1,15 +1,17 @@
 import {
-  selectQuerySuggestion,
-  clearQuerySuggest,
-  clearQuerySuggestCompletions,
-  updateQuerySuggestQuery,
   querySuggestReducer,
   getQuerySuggestInitialState,
-  registerQuerySuggest,
-  fetchQuerySuggestions,
 } from './query-suggest-slice';
 import {QuerySuggestState, QuerySuggestSet} from '../../state';
 import {QuerySuggestCompletion} from '../../api/search/query-suggest/query-suggest-response';
+import {
+  clearQuerySuggest,
+  clearQuerySuggestCompletions,
+  fetchQuerySuggestions,
+  registerQuerySuggest,
+  selectQuerySuggestion,
+  updateQuerySuggestQuery,
+} from './query-suggest-actions';
 
 describe('redirection slice', () => {
   const id = 'searchbox_1234';

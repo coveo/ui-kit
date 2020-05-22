@@ -3,7 +3,7 @@ import {HeadlessState} from '../state';
 import {
   updateBasicConfiguration,
   updateSearchConfiguration,
-} from '../features/configuration/configuration-slice';
+} from '../features/configuration/configuration-actions';
 
 export interface HeadlessOptions {
   configuration: HeadlessConfiguration;
@@ -11,11 +11,11 @@ export interface HeadlessOptions {
 }
 
 export interface HeadlessConfiguration {
-  organization: string;
+  organizationId: string;
   accessToken: string;
   renewAccessToken?: () => Promise<string>;
   search?: {
-    endpoint?: string;
+    searchApiBaseUrl?: string;
   };
 }
 
@@ -34,10 +34,10 @@ export class Engine {
 
   static getSampleConfiguration(): HeadlessConfiguration {
     return {
-      organization: 'searchuisamples',
+      organizationId: 'searchuisamples',
       accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
       search: {
-        endpoint: 'https://platform.cloud.coveo.com/rest/search',
+        searchApiBaseUrl: 'https://platform.cloud.coveo.com/rest/search',
       },
     };
   }

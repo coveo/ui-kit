@@ -19,7 +19,7 @@ describe('search api client', () => {
         accessToken: 'mytoken123',
         organizationId: 'myorg',
         search: {
-          endpoint: 'myendpoint.com/rest/search',
+          searchApiBaseUrl: 'test.com/rest/search',
         },
       },
       query: {
@@ -33,7 +33,7 @@ describe('search api client', () => {
       accessToken: state.configuration.accessToken,
       method: 'POST',
       contentType: 'application/json',
-      url: `${state.configuration.search.endpoint}/plan`,
+      url: `${state.configuration.search.searchApiBaseUrl}/plan`,
       requestParams: {
         organizationId: state.configuration.organizationId,
         q: state.query.q,
@@ -60,7 +60,7 @@ describe('search api client', () => {
       accessToken: state.configuration.accessToken,
       method: 'POST',
       contentType: 'application/json',
-      url: `${state.configuration.search.endpoint}/querySuggest`,
+      url: `${state.configuration.search.searchApiBaseUrl}/querySuggest`,
       requestParams: {
         organizationId: state.configuration.organizationId,
         q: state.querySuggest[id]!.q,

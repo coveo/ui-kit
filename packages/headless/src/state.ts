@@ -1,34 +1,79 @@
 import {QuerySuggestCompletion} from './api/search/query-suggest/query-suggest-response';
 
 export interface HeadlessState {
+  /**
+   * The set of expressions that constitute the current query.
+   */
   query: QueryState;
+  /**
+   * The global headless engine configuration.
+   */
   configuration: ConfigurationState;
+  /**
+   * The URL redirection triggered by the preprocessed query.
+   */
   redirection: RedirectionState;
+  /**
+   * The query suggestions returned by Coveo ML.
+   */
   querySuggest: QuerySuggestSet;
 }
 
 export interface ConfigurationState {
+  /**
+   * The unique identifier of the target Coveo Cloud organization (e.g., `mycoveocloudorganizationg8tp8wu3`)
+   */
   organizationId: string;
+  /**
+   * The access token to use to authenticate requests against the Coveo Cloud endpoints. Typically, this will be an API key or search token that grants the privileges to execute queries and push usage analytics data in the target Coveo Cloud organization.
+   */
   accessToken: string;
+  /**
+   * The global headless engine Search API configuration.
+   */
   search: {
-    endpoint: string;
+    /**
+     * The Search API base URL to use (e.g., https://globalplatform.cloud.coveo.com/rest/search/v2).
+     */
+    searchApiBaseUrl: string;
   };
 }
 
 export interface QueryState {
+  /**
+   * The basic query expression (e.g., `acme tornado seeds`).
+   */
   q: string;
 }
 
 export interface RedirectionState {
+  /**
+   * The URL to redirect the user to.
+   */
   redirectTo: string | null;
 }
 
 export type QuerySuggestSet = Record<string, QuerySuggestState | undefined>;
 
 export interface QuerySuggestState {
+  /**
+   * The unique identifier of the query suggest entity (e.g., `b953ab2e-022b-4de4-903f-68b2c0682942`).
+   */
   id: string;
+  /**
+   * The current list of query suggestions.
+   */
   completions: QuerySuggestCompletion[];
-  count: number;
+  /**
+   * The partial basic query expression for which query suggestions were requested (e.g., `cov`).
+   */
   q: string;
+  /**
+   * The number of query suggestions requested from Coveo ML (e.g., `3`).
+   */
+  count: number;
+  /**
+   * The unique identifier of the current query suggestion request.
+   */
   currentRequestId: string;
 }
