@@ -1,7 +1,7 @@
 import {Engine} from '../../app/headless-engine';
 import {createMockStore, MockStore} from '../../utils/mock-store';
 import {Store} from '../../app/store';
-import {Searchbox, SearchOptions} from './headless-searchbox';
+import {Searchbox, SearchBoxOptions} from './headless-searchbox';
 import {
   registerQuerySuggest,
   updateQuerySuggestQuery,
@@ -42,7 +42,7 @@ describe('headless searchbox', () => {
   let engine: Engine;
   let store: MockStore;
   let searchbox: Searchbox;
-  let searchboxOptions: SearchOptions;
+  let searchboxOptions: SearchBoxOptions;
 
   beforeEach(() => {
     searchboxOptions = {
@@ -70,11 +70,9 @@ describe('headless searchbox', () => {
   it('should return the right state', () => {
     expect(searchbox.state).toEqual({
       value: fakeState.querySuggest[id]!.q,
-      suggestions: fakeState.querySuggest[id]!.completions.map(
-        (completion) => ({
-          value: completion.expression,
-        })
-      ),
+      suggestions: fakeState.querySuggest[id]!.completions.map(completion => ({
+        value: completion.expression,
+      })),
       redirectTo: fakeState.redirection.redirectTo,
     });
   });

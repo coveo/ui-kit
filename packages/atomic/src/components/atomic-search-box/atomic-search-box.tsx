@@ -1,17 +1,23 @@
-import {Component, State, h} from '@stencil/core';
-import {Searchbox, SearchboxState} from '@coveo/headless';
+import { Component, ComponentInterface, h, Prop, State } from '@stencil/core';
+import {Searchbox, SearchboxState, SearchBoxOptions} from '@coveo/headless';
 import {headlessEngine} from '../../engine';
 
 @Component({
-  tag: 'standalone-searchbox',
+  tag: 'atomic-search-box',
+  styleUrl: 'atomic-search-box.css',
   shadow: true,
 })
-export class StandaloneSearchbox {
+export class AtomicSearchBox implements ComponentInterface {
+  @Prop() isStandalone = false;
+
+  @Prop() numberOfQuerySuggestions = 5;
+
   @State() searchboxState!: SearchboxState;
+  
   private searchbox!: Searchbox;
 
   componentWillLoad() {
-    this.searchbox = new Searchbox(headlessEngine, {isStandalone: true});
+    this.searchbox = new Searchbox(headlessEngine, this.options);
 
     this.updateState();
     this.searchbox.subscribe(() => this.updateState());
@@ -26,6 +32,13 @@ export class StandaloneSearchbox {
     if (this.searchboxState.redirectTo) {
       window.location.assign(this.searchboxState.redirectTo);
     }
+  }
+
+  private get options(): Partial<SearchBoxOptions> {
+    return {
+      isStandalone: this.isStandalone,
+      numberOfQuerySuggestions: this.numberOfQuerySuggestions
+    };
   }
 
   private updateState() {

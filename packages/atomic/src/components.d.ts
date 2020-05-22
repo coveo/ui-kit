@@ -6,6 +6,10 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 export namespace Components {
+    interface AtomicSearchBox {
+        "isStandalone": boolean;
+        "numberOfQuerySuggestions": number;
+    }
     interface MyComponent {
         /**
           * The first name
@@ -20,28 +24,30 @@ export namespace Components {
          */
         "middle": string;
     }
-    interface StandaloneSearchbox {
-    }
 }
 declare global {
+    interface HTMLAtomicSearchBoxElement extends Components.AtomicSearchBox, HTMLStencilElement {
+    }
+    var HTMLAtomicSearchBoxElement: {
+        prototype: HTMLAtomicSearchBoxElement;
+        new (): HTMLAtomicSearchBoxElement;
+    };
     interface HTMLMyComponentElement extends Components.MyComponent, HTMLStencilElement {
     }
     var HTMLMyComponentElement: {
         prototype: HTMLMyComponentElement;
         new (): HTMLMyComponentElement;
     };
-    interface HTMLStandaloneSearchboxElement extends Components.StandaloneSearchbox, HTMLStencilElement {
-    }
-    var HTMLStandaloneSearchboxElement: {
-        prototype: HTMLStandaloneSearchboxElement;
-        new (): HTMLStandaloneSearchboxElement;
-    };
     interface HTMLElementTagNameMap {
+        "atomic-search-box": HTMLAtomicSearchBoxElement;
         "my-component": HTMLMyComponentElement;
-        "standalone-searchbox": HTMLStandaloneSearchboxElement;
     }
 }
 declare namespace LocalJSX {
+    interface AtomicSearchBox {
+        "isStandalone"?: boolean;
+        "numberOfQuerySuggestions"?: number;
+    }
     interface MyComponent {
         /**
           * The first name
@@ -56,19 +62,17 @@ declare namespace LocalJSX {
          */
         "middle"?: string;
     }
-    interface StandaloneSearchbox {
-    }
     interface IntrinsicElements {
+        "atomic-search-box": AtomicSearchBox;
         "my-component": MyComponent;
-        "standalone-searchbox": StandaloneSearchbox;
     }
 }
 export { LocalJSX as JSX };
 declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
+            "atomic-search-box": LocalJSX.AtomicSearchBox & JSXBase.HTMLAttributes<HTMLAtomicSearchBoxElement>;
             "my-component": LocalJSX.MyComponent & JSXBase.HTMLAttributes<HTMLMyComponentElement>;
-            "standalone-searchbox": LocalJSX.StandaloneSearchbox & JSXBase.HTMLAttributes<HTMLStandaloneSearchboxElement>;
         }
     }
 }

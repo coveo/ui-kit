@@ -11,7 +11,7 @@ import {
 import {Engine} from '../../app/headless-engine';
 import {randomID} from '../../utils/utils';
 
-export interface SearchOptions {
+export interface SearchBoxOptions {
   id: string;
   isStandalone: boolean;
   numberOfQuerySuggestions: number;
@@ -24,13 +24,13 @@ interface UpdateTextOptions {
 export type SearchboxState = Searchbox['state'];
 
 export class Searchbox {
-  private options: SearchOptions = {
+  private options: SearchBoxOptions = {
     id: randomID('searchbox_'),
     isStandalone: false,
     numberOfQuerySuggestions: 5,
   };
 
-  constructor(private engine: Engine, options?: Partial<SearchOptions>) {
+  constructor(private engine: Engine, options: Partial<SearchBoxOptions> = {}) {
     this.options = {...this.options, ...options};
 
     this.dispatch(
@@ -91,7 +91,7 @@ export class Searchbox {
     const querySuggestState = state.querySuggest[this.id]!;
     return {
       value: querySuggestState.q,
-      suggestions: querySuggestState.completions.map((completion) => ({
+      suggestions: querySuggestState.completions.map(completion => ({
         value: completion.expression,
       })),
       redirectTo: state.redirection.redirectTo,
