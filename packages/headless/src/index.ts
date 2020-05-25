@@ -1,5 +1,5 @@
 export {Engine} from './app/headless-engine';
-export * from './components/searchbox/headless-searchbox';
+export * from './components/search-box/headless-search-box';
 export {HeadlessState} from './state';
 
 export * as queryActions from './features/query/query-actions';

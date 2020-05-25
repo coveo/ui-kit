@@ -14,7 +14,7 @@ import {
 } from './query-suggest-actions';
 
 describe('redirection slice', () => {
-  const id = 'searchbox_1234';
+  const id = 'searchBox_1234';
 
   function getCompletions() {
     const completions: QuerySuggestCompletion[] = [];

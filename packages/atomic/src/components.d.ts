@@ -8,7 +8,7 @@ import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 export namespace Components {
     interface AtomicSearchBox {
         "isStandalone": boolean;
-        "numberOfQuerySuggestions": number;
+        "numberOfSuggestions": number;
     }
     interface MyComponent {
         /**
@@ -46,7 +46,7 @@ declare global {
 declare namespace LocalJSX {
     interface AtomicSearchBox {
         "isStandalone"?: boolean;
-        "numberOfQuerySuggestions"?: number;
+        "numberOfSuggestions"?: number;
     }
     interface MyComponent {
         /**

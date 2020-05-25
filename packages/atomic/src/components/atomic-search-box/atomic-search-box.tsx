@@ -1,5 +1,5 @@
-import { Component, ComponentInterface, h, Prop, State } from '@stencil/core';
-import {Searchbox, SearchboxState, SearchBoxOptions} from '@coveo/headless';
+import {Component, ComponentInterface, h, Prop, State} from '@stencil/core';
+import {SearchBox, SearchBoxState, SearchBoxOptions} from '@coveo/headless';
 import {headlessEngine} from '../../engine';
 
 @Component({
@@ -10,62 +10,62 @@ import {headlessEngine} from '../../engine';
 export class AtomicSearchBox implements ComponentInterface {
   @Prop() isStandalone = false;
 
-  @Prop() numberOfQuerySuggestions = 5;
+  @Prop() numberOfSuggestions = 5;
 
-  @State() searchboxState!: SearchboxState;
-  
-  private searchbox!: Searchbox;
+  @State() searchBoxState!: SearchBoxState;
+
+  private searchBox!: SearchBox;
 
   componentWillLoad() {
-    this.searchbox = new Searchbox(headlessEngine, this.options);
+    this.searchBox = new SearchBox(headlessEngine, this.options);
 
     this.updateState();
-    this.searchbox.subscribe(() => this.updateState());
+    this.searchBox.subscribe(() => this.updateState());
   }
 
-  componentShouldUpdate(newState: SearchboxState, oldState: SearchboxState) {
+  componentShouldUpdate(newState: SearchBoxState, oldState: SearchBoxState) {
     // Stencil re-renders whenever the state is updated, checking for state changes prevent rerenders
     return JSON.stringify(newState) !== JSON.stringify(oldState);
   }
 
   componentDidUpdate() {
-    if (this.searchboxState.redirectTo) {
-      window.location.assign(this.searchboxState.redirectTo);
+    if (this.searchBoxState.redirectTo) {
+      window.location.assign(this.searchBoxState.redirectTo);
     }
   }
 
   private get options(): Partial<SearchBoxOptions> {
     return {
       isStandalone: this.isStandalone,
-      numberOfQuerySuggestions: this.numberOfQuerySuggestions
+      numberOfSuggestions: this.numberOfSuggestions,
     };
   }
 
   private updateState() {
-    this.searchboxState = this.searchbox.state;
+    this.searchBoxState = this.searchBox.state;
   }
 
   private onInputChange(e: KeyboardEvent) {
     const value = (e.target as HTMLInputElement).value;
-    this.searchbox.updateText({value});
+    this.searchBox.updateText({value});
   }
 
   private onInputBlur() {
-    setTimeout(() => this.searchbox.hideSuggestions(), 100)
+    setTimeout(() => this.searchBox.hideSuggestions(), 100);
   }
 
   private clear() {
-    this.searchbox.clear();
+    this.searchBox.clear();
   }
 
   private onClickSuggestion(e: MouseEvent) {
     const value = (e.target as HTMLElement).innerText;
-    this.searchbox.selectSuggestion({value});
+    this.searchBox.selectSuggestion({value});
   }
 
   suggestions() {
-    return this.searchboxState.suggestions.map(suggestion => (
-      <li onClick={e => this.onClickSuggestion(e)}>{suggestion.value}</li>
+    return this.searchBoxState.suggestions.map((suggestion) => (
+      <li onClick={(e) => this.onClickSuggestion(e)}>{suggestion.value}</li>
     ));
   }
 
@@ -73,13 +73,13 @@ export class AtomicSearchBox implements ComponentInterface {
     return (
       <div>
         <input
-          value={this.searchboxState.value}
-          onInput={e => this.onInputChange(e as KeyboardEvent)}
-          onFocus={() => this.searchbox.showSuggestions()}
+          value={this.searchBoxState.value}
+          onInput={(e) => this.onInputChange(e as KeyboardEvent)}
+          onFocus={() => this.searchBox.showSuggestions()}
           onBlur={() => this.onInputBlur()}
         />
         <button onClick={() => this.clear()}>Clear</button>
-        <button onClick={() => this.searchbox.submit()}>Search</button>
+        <button onClick={() => this.searchBox.submit()}>Search</button>
         <ul>{this.suggestions()}</ul>
       </div>
     );
