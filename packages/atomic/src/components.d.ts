@@ -6,6 +6,8 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 export namespace Components {
+    interface AtomicResultList {
+    }
     interface AtomicSearchBox {
         "isStandalone": boolean;
         "numberOfSuggestions": number;
@@ -26,6 +28,12 @@ export namespace Components {
     }
 }
 declare global {
+    interface HTMLAtomicResultListElement extends Components.AtomicResultList, HTMLStencilElement {
+    }
+    var HTMLAtomicResultListElement: {
+        prototype: HTMLAtomicResultListElement;
+        new (): HTMLAtomicResultListElement;
+    };
     interface HTMLAtomicSearchBoxElement extends Components.AtomicSearchBox, HTMLStencilElement {
     }
     var HTMLAtomicSearchBoxElement: {
@@ -39,11 +47,14 @@ declare global {
         new (): HTMLMyComponentElement;
     };
     interface HTMLElementTagNameMap {
+        "atomic-result-list": HTMLAtomicResultListElement;
         "atomic-search-box": HTMLAtomicSearchBoxElement;
         "my-component": HTMLMyComponentElement;
     }
 }
 declare namespace LocalJSX {
+    interface AtomicResultList {
+    }
     interface AtomicSearchBox {
         "isStandalone"?: boolean;
         "numberOfSuggestions"?: number;
@@ -63,6 +74,7 @@ declare namespace LocalJSX {
         "middle"?: string;
     }
     interface IntrinsicElements {
+        "atomic-result-list": AtomicResultList;
         "atomic-search-box": AtomicSearchBox;
         "my-component": MyComponent;
     }
@@ -71,6 +83,7 @@ export { LocalJSX as JSX };
 declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
+            "atomic-result-list": LocalJSX.AtomicResultList & JSXBase.HTMLAttributes<HTMLAtomicResultListElement>;
             "atomic-search-box": LocalJSX.AtomicSearchBox & JSXBase.HTMLAttributes<HTMLAtomicSearchBoxElement>;
             "my-component": LocalJSX.MyComponent & JSXBase.HTMLAttributes<HTMLMyComponentElement>;
         }

@@ -5,6 +5,8 @@ import {
   updateSearchConfiguration,
 } from '../features/configuration/configuration-actions';
 
+export {Unsubscribe} from '@reduxjs/toolkit';
+
 /**
  * The global headless engine options.
  */

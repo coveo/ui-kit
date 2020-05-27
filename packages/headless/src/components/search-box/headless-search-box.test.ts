@@ -12,6 +12,7 @@ import {
 import {checkForRedirection} from '../../features/redirection/redirection-actions';
 import {getQuerySuggestInitialState} from '../../features/query-suggest/query-suggest-slice';
 import {createMockState} from '../../utils/mock-state';
+import {executeSearch} from '../../features/search/search-actions';
 
 const id = 'search-box-123';
 const fakeState = createMockState();
@@ -161,12 +162,13 @@ describe('headless searchBox', () => {
     });
 
     it(`when the isStandalone option is false
-    should not dispatch actions`, () => {
+    it dispatches an executeSearch action`, () => {
       searchBoxOptions.isStandalone = false;
       initComponent();
       searchBox.submit();
 
-      expect(store.getActions().length).toBe(1);
+      const action = store.getActions()[1];
+      expect(action).toEqual(executeSearch.pending(action.meta.requestId));
     });
   });
 });

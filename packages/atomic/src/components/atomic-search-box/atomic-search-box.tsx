@@ -1,5 +1,5 @@
 import {Component, ComponentInterface, h, Prop, State} from '@stencil/core';
-import {SearchBox, SearchBoxState, SearchBoxOptions} from '@coveo/headless';
+import {SearchBox, SearchBoxState, SearchBoxOptions, Unsubscribe} from '@coveo/headless';
 import {headlessEngine} from '../../engine';
 
 @Component({
@@ -15,23 +15,26 @@ export class AtomicSearchBox implements ComponentInterface {
   @State() searchBoxState!: SearchBoxState;
 
   private searchBox!: SearchBox;
+  private unsubscribe: Unsubscribe;
 
-  componentWillLoad() {
+  constructor() {
     this.searchBox = new SearchBox(headlessEngine, this.options);
-
-    this.updateState();
-    this.searchBox.subscribe(() => this.updateState());
+    this.unsubscribe = this.searchBox.subscribe(() => this.updateState());
   }
 
-  componentShouldUpdate(newState: SearchBoxState, oldState: SearchBoxState) {
+  public componentShouldUpdate(newState: SearchBoxState, oldState: SearchBoxState) {
     // Stencil re-renders whenever the state is updated, checking for state changes prevent rerenders
     return JSON.stringify(newState) !== JSON.stringify(oldState);
   }
 
-  componentDidUpdate() {
+  public componentDidUpdate() {
     if (this.searchBoxState.redirectTo) {
       window.location.assign(this.searchBoxState.redirectTo);
     }
+  }
+
+  public disconnectedCallback() {
+    this.unsubscribe();
   }
 
   private get options(): Partial<SearchBoxOptions> {
@@ -63,13 +66,13 @@ export class AtomicSearchBox implements ComponentInterface {
     this.searchBox.selectSuggestion({value});
   }
 
-  suggestions() {
+  private suggestions() {
     return this.searchBoxState.suggestions.map((suggestion) => (
       <li onClick={(e) => this.onClickSuggestion(e)}>{suggestion.value}</li>
     ));
   }
 
-  render() {
+  public render() {
     return (
       <div>
         <input

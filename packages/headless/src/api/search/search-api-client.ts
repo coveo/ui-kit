@@ -8,6 +8,8 @@ import {
   QuerySuggestRequestParams,
 } from './query-suggest/query-suggest-request';
 import {baseSearchParams} from './search-request';
+import {SearchRequest, searchRequestParams} from './search/search-request';
+import {SearchResponse} from './search/search-response';
 
 export interface SearchAPIClientOptions<RequestParams> {
   accessToken: string;
@@ -30,6 +32,13 @@ export class SearchAPIClient {
     >({
       ...baseSearchParams(state, 'POST', 'application/json', '/querySuggest'),
       requestParams: querySuggestRequestParams(id, state),
+    });
+  }
+
+  static async search(state: HeadlessState) {
+    return await PlatformClient.call<SearchRequest, SearchResponse>({
+      ...baseSearchParams(state, 'POST', 'application/json', ''),
+      requestParams: searchRequestParams(state),
     });
   }
 }

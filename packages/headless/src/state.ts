@@ -1,4 +1,5 @@
 import {QuerySuggestCompletion} from './api/search/query-suggest/query-suggest-response';
+import {SearchState} from './api/search/search/search-response';
 
 export interface HeadlessState {
   /**
@@ -17,6 +18,10 @@ export interface HeadlessState {
    * The query suggestions returned by Coveo ML.
    */
   querySuggest: QuerySuggestSet;
+  /**
+   * The information related to the search endpoint.
+   */
+  search: SearchState;
 }
 
 export interface ConfigurationState {

@@ -9,6 +9,7 @@ import {
 } from '../../features/query-suggest/query-suggest-actions';
 import {Engine} from '../../app/headless-engine';
 import {randomID} from '../../utils/utils';
+import {executeSearch} from '../../features/search/search-actions';
 
 export interface SearchBoxOptions {
   /**
@@ -129,11 +130,11 @@ export class SearchBox {
       return;
     }
 
-    // Dispatch search
+    this.dispatch(executeSearch());
   }
 
   /**
-   * @returns A scoped and simplified part of the headless state that is relevant to the `SearchBox` component.
+   * @returns The state of the `SearchBox` component.
    */
   public get state() {
     const state = this.engine.state;
@@ -148,12 +149,14 @@ export class SearchBox {
   }
 
   /**
-   * Adds a change listener. It will be called when an action is dispatched and the component’s state has changed.
+   * Adds a callback that will be called when component state changes.
    *
    * @param listener A callback to be invoked on every component state change.
    * @returns A function to remove this change listener.
    */
   public subscribe(listener: () => void) {
+    listener();
+
     return this.engine.subscribe(() => {
       const nextState = this.state;
       if (JSON.stringify(nextState) === JSON.stringify(this.currentState)) {
