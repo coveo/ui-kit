@@ -3,7 +3,6 @@ import {createMockStore, MockStore} from '../../utils/mock-store';
 import {SearchBox, SearchBoxOptions} from './headless-search-box';
 import {
   registerQuerySuggest,
-  updateQuerySuggestQuery,
   clearQuerySuggest,
   clearQuerySuggestCompletions,
   fetchQuerySuggestions,
@@ -12,12 +11,17 @@ import {
 import {checkForRedirection} from '../../features/redirection/redirection-actions';
 import {getQuerySuggestInitialState} from '../../features/query-suggest/query-suggest-slice';
 import {createMockState} from '../../utils/mock-state';
+import {updateQuery} from '../../features/query/query-actions';
+import {
+  registerQuerySetQuery,
+  updateQuerySetQuery,
+} from '../../features/query-set/query-set-actions';
 import {executeSearch} from '../../features/search/search-actions';
 
 const id = 'search-box-123';
 const fakeState = createMockState();
-fakeState.query.q = 'some query';
 fakeState.redirection.redirectTo = 'coveo.com';
+fakeState.querySet[id] = 'query';
 fakeState.querySuggest[id] = {
   ...getQuerySuggestInitialState(),
   id,
@@ -64,7 +68,7 @@ describe('headless searchBox', () => {
 
   it('should return the right state', () => {
     expect(searchBox.state).toEqual({
-      value: fakeState.querySuggest[id]!.q,
+      value: fakeState.querySet[id],
       suggestions: fakeState.querySuggest[id]!.completions.map(
         (completion) => ({
           value: completion.expression,
@@ -74,8 +78,13 @@ describe('headless searchBox', () => {
     });
   });
 
+  it('should dispatch a registerQuerySetQuery action at initialization', () => {
+    const action = registerQuerySetQuery({id: searchBox.id, query: ''});
+    expect(store.getActions()[0]).toEqual(action);
+  });
+
   it('should dispatch a registerQuerySuggest action at initialization', () => {
-    expect(store.getActions()[0]).toEqual(
+    expect(store.getActions()[1]).toEqual(
       registerQuerySuggest({
         id: searchBox.id,
         q: fakeState.query.q,
@@ -85,20 +94,18 @@ describe('headless searchBox', () => {
   });
 
   describe('when calling updateText', () => {
-    it('should dispatch a updateQuerySuggestQuery action', () => {
-      searchBox.updateText({value: 'how can i fix'});
-      expect(store.getActions()[1]).toEqual(
-        updateQuerySuggestQuery({
-          id: searchBox.id,
-          q: 'how can i fix',
-        })
-      );
+    it('updates the search box query in the querySet', () => {
+      const text = 'query';
+      searchBox.updateText(text);
+
+      const action = updateQuerySetQuery({id: searchBox.id, query: text});
+      expect(store.getActions()[2]).toEqual(action);
     });
 
     it(`when the numberOfQuerySuggestions option is higher than 0
     should call the showSuggestions method`, () => {
       jest.spyOn(searchBox, 'showSuggestions');
-      searchBox.updateText({value: 'how can i fix'});
+      searchBox.updateText('how can i fix');
 
       expect(searchBox.showSuggestions).toHaveBeenCalled();
     });
@@ -109,7 +116,7 @@ describe('headless searchBox', () => {
       initComponent();
 
       jest.spyOn(searchBox, 'showSuggestions');
-      searchBox.updateText({value: 'how can i fix'});
+      searchBox.updateText('how can i fix');
 
       expect(searchBox.showSuggestions).not.toHaveBeenCalled();
     });
@@ -118,7 +125,7 @@ describe('headless searchBox', () => {
   it(`when calling clear
     should dispatch a clearQuerySuggest action`, () => {
     searchBox.clear();
-    expect(store.getActions()[1]).toEqual(
+    expect(store.getActions()[2]).toEqual(
       clearQuerySuggest({id: searchBox.id})
     );
   });
@@ -126,7 +133,7 @@ describe('headless searchBox', () => {
   it(`when calling hideSuggestions
     should dispatch a clearQuerySuggestCompletions action`, () => {
     searchBox.hideSuggestions();
-    expect(store.getActions()[1]).toEqual(
+    expect(store.getActions()[2]).toEqual(
       clearQuerySuggestCompletions({id: searchBox.id})
     );
   });
@@ -135,7 +142,7 @@ describe('headless searchBox', () => {
     should dispatch a fetchQuerySuggestions action`, () => {
     searchBox.showSuggestions();
 
-    const action = store.getActions()[1];
+    const action = store.getActions()[2];
     expect(action).toEqual(
       fetchQuerySuggestions.pending(action.meta.requestId, {id: searchBox.id})
     );
@@ -144,18 +151,27 @@ describe('headless searchBox', () => {
   it(`when calling selectSuggestion
     should dispatch a selectQuerySuggestion action`, () => {
     const value = 'i like this expression';
-    searchBox.selectSuggestion({value});
-    expect(store.getActions()[1]).toEqual(
+    searchBox.selectSuggestion(value);
+    expect(store.getActions()[2]).toEqual(
       selectQuerySuggestion({id: searchBox.id, expression: value})
     );
   });
 
   describe('when calling submit', () => {
+    it('sets the query to the search box value kept in the querySet', () => {
+      const expectedQuery = fakeState.querySet[searchBox.id];
+
+      searchBox.submit();
+
+      const action = store.getActions()[2];
+      expect(action).toEqual(updateQuery({q: expectedQuery}));
+    });
+
     it(`when the isStandalone option is true
     should dispatch a checkForRedirection action`, () => {
       searchBox.submit();
 
-      const action = store.getActions()[1];
+      const action = store.getActions()[3];
       expect(action).toEqual(
         checkForRedirection.pending(action.meta.requestId)
       );
@@ -167,7 +183,7 @@ describe('headless searchBox', () => {
       initComponent();
       searchBox.submit();
 
-      const action = store.getActions()[1];
+      const action = store.getActions()[3];
       expect(action).toEqual(executeSearch.pending(action.meta.requestId));
     });
   });

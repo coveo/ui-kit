@@ -3,6 +3,7 @@ const { buildReport, sendReport } = require('./report');
 const { computeFileSizes } = require('./command');
 const exec = promisify(require('child_process').exec);
 
+const sourceBranch = process.env.BITBUCKET_SOURCE_BRANCH || 'unknown';
 const targetBranch = process.env.BITBUCKET_TARGET_BRANCH || 'master';
 
 async function discardChanges() {
@@ -16,6 +17,7 @@ async function checkoutTargetBranch() {
 }
 
 async function main() {
+  console.log(`on branch: ${sourceBranch}`);
   const newSizes = await computeFileSizes();
 
   await discardChanges();

@@ -1,11 +1,16 @@
 import {QuerySuggestCompletion} from './api/search/query-suggest/query-suggest-response';
-import {SearchState} from './api/search/search/search-response';
+import {QuerySetState} from './features/query-set/query-set-slice';
+import {SearchState} from './features/search/search-slice';
 
 export interface HeadlessState {
   /**
-   * The set of expressions that constitute the current query.
+   * The expressions that constitute the current query.
    */
   query: QueryState;
+  /**
+   * The set of basic query expressions.
+   */
+  querySet: QuerySetState;
   /**
    * The global headless engine configuration.
    */

@@ -23,15 +23,6 @@ export const unregisterQuerySuggest = createAction<{id: string}>(
 );
 
 /**
- * Update the current partial basic query expression for a specific query suggest entity.
- * @param id The unique identifier of the target query suggest entity (e.g., `b953ab2e-022b-4de4-903f-68b2c0682942`).
- * @param q The new partial basic query expression for which to request query suggestions (e.g., `cove`).
- */
-export const updateQuerySuggestQuery = createAction<{id: string; q: string}>(
-  'querySuggest/updateQuery'
-);
-
-/**
  * Select a suggestion provided through a specific query suggest entity.
  * @param id The unique identifier of the target query suggest entity (e.g., `b953ab2e-022b-4de4-903f-68b2c0682942`).
  * @param expression The selected query suggestion (e.g., `coveo`).

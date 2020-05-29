@@ -50,7 +50,7 @@ export class AtomicSearchBox implements ComponentInterface {
 
   private onInputChange(e: KeyboardEvent) {
     const value = (e.target as HTMLInputElement).value;
-    this.searchBox.updateText({value});
+    this.searchBox.updateText(value);
   }
 
   private onInputBlur() {
@@ -63,7 +63,7 @@ export class AtomicSearchBox implements ComponentInterface {
 
   private onClickSuggestion(e: MouseEvent) {
     const value = (e.target as HTMLElement).innerText;
-    this.searchBox.selectSuggestion({value});
+    this.searchBox.selectSuggestion(value);
   }
 
   private suggestions() {

@@ -3,12 +3,16 @@ import {
   fetchQuerySuggestions,
   clearQuerySuggest,
   clearQuerySuggestCompletions,
-  updateQuerySuggestQuery,
   registerQuerySuggest,
   selectQuerySuggestion,
 } from '../../features/query-suggest/query-suggest-actions';
 import {Engine} from '../../app/headless-engine';
 import {randomID} from '../../utils/utils';
+import {updateQuery} from '../../features/query/query-actions';
+import {
+  registerQuerySetQuery,
+  updateQuerySetQuery,
+} from '../../features/query-set/query-set-actions';
 import {executeSearch} from '../../features/search/search-actions';
 
 export interface SearchBoxOptions {
@@ -42,6 +46,7 @@ export type SearchBoxState = SearchBox['state'];
  * The `SearchBox` headless component offers a high-level interface for designing a common search box UI component.
  */
 export class SearchBox {
+  public text = '';
   private currentState: SearchBoxState;
   private options: SearchBoxOptions = {
     id: randomID('searchBox_'),
@@ -52,13 +57,8 @@ export class SearchBox {
   constructor(private engine: Engine, options: Partial<SearchBoxOptions> = {}) {
     this.options = {...this.options, ...options};
 
-    this.dispatch(
-      registerQuerySuggest({
-        id: this.id,
-        q: this.engine.state.query.q,
-        count: this.options.numberOfSuggestions,
-      })
-    );
+    this.registerQuery();
+    this.registerQuerySuggest();
 
     this.currentState = this.state;
   }
@@ -70,17 +70,12 @@ export class SearchBox {
     return this.options.id;
   }
 
-  private get dispatch() {
-    return this.engine.dispatch;
-  }
-
   /**
    * Updates the search box text value and shows the suggestions for that value.
-   * @param options object with the following properties:
-   * - `value`: The string value to update the search box with
+   * @param value  The string value to update the search box with.
    */
-  public updateText(options: {value: string}) {
-    this.dispatch(updateQuerySuggestQuery({id: this.id, q: options.value}));
+  public updateText(value: string) {
+    this.dispatch(updateQuerySetQuery({id: this.id, query: value}));
 
     if (this.options.numberOfSuggestions) {
       this.showSuggestions();
@@ -110,13 +105,10 @@ export class SearchBox {
 
   /**
    * Selects a suggestion and calls `submit`.
-   * @param options object with the following properties:
-   * - `value`: The string value of the suggestion to select
+   * @param value The string value of the suggestion to select
    */
-  public selectSuggestion(options: {value: string}) {
-    this.dispatch(
-      selectQuerySuggestion({id: this.id, expression: options.value})
-    );
+  public selectSuggestion(value: string) {
+    this.dispatch(selectQuerySuggestion({id: this.id, expression: value}));
     this.submit();
   }
 
@@ -125,6 +117,8 @@ export class SearchBox {
    * If the `standalone` option is `false`, triggers a search query.
    */
   public submit() {
+    this.dispatch(updateQuery({q: this.state.value}));
+
     if (this.options.isStandalone) {
       this.dispatch(checkForRedirection());
       return;
@@ -140,7 +134,7 @@ export class SearchBox {
     const state = this.engine.state;
     const querySuggestState = state.querySuggest[this.id]!;
     return {
-      value: querySuggestState.q,
+      value: state.querySet[this.id],
       suggestions: querySuggestState.completions.map((completion) => ({
         value: completion.expression,
       })),
@@ -166,5 +160,24 @@ export class SearchBox {
       this.currentState = nextState;
       listener();
     });
+  }
+
+  private get dispatch() {
+    return this.engine.dispatch;
+  }
+
+  private registerQuery() {
+    const action = registerQuerySetQuery({id: this.id, query: ''});
+    this.dispatch(action);
+  }
+
+  private registerQuerySuggest() {
+    this.dispatch(
+      registerQuerySuggest({
+        id: this.id,
+        q: this.engine.state.query.q,
+        count: this.options.numberOfSuggestions,
+      })
+    );
   }
 }

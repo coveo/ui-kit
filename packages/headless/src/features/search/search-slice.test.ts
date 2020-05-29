@@ -1,6 +1,9 @@
-import {searchReducer, getSearchInitialState} from './search-slice';
+import {
+  searchReducer,
+  getSearchInitialState,
+  SearchState,
+} from './search-slice';
 import {executeSearch} from './search-actions';
-import {SearchState} from '../../api/search/search/search-response';
 import {buildMockSearchResponse} from '../../test/mock-search-response';
 
 describe('search-slice', () => {

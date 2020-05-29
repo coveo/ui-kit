@@ -6,8 +6,8 @@ import {
   registerQuerySuggest,
   selectQuerySuggestion,
   unregisterQuerySuggest,
-  updateQuerySuggestQuery,
 } from './query-suggest-actions';
+import {updateQuerySetQuery} from '../query-set/query-set-actions';
 import {QuerySuggestState, QuerySuggestSet} from '../../state';
 
 export const getQuerySuggestInitialState: () => Omit<
@@ -42,9 +42,12 @@ export const querySuggestReducer = createReducer(
           state[id]!.completions = action.payload.completions;
         }
       })
-      .addCase(updateQuerySuggestQuery, (state, action) => {
-        const {id, q} = action.payload;
-        state[id]!.q = q;
+      .addCase(updateQuerySetQuery, (state, action) => {
+        const {id, query} = action.payload;
+
+        if (id in state) {
+          state[id]!.q = query;
+        }
       })
       .addCase(clearQuerySuggest, (state, action) => {
         const {id} = action.payload;
