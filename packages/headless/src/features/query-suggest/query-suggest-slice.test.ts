@@ -1,7 +1,4 @@
-import {
-  querySuggestReducer,
-  getQuerySuggestInitialState,
-} from './query-suggest-slice';
+import {querySuggestReducer} from './query-suggest-slice';
 import {QuerySuggestState, QuerySuggestSet} from '../../state';
 import {QuerySuggestCompletion} from '../../api/search/query-suggest/query-suggest-response';
 import {
@@ -11,6 +8,7 @@ import {
   registerQuerySuggest,
   selectQuerySuggestion,
 } from './query-suggest-actions';
+import {buildMockQuerySuggest} from '../../test/mock-query-suggest';
 import {updateQuerySetQuery} from '../query-set/query-set-actions';
 
 describe('querySuggest slice', () => {
@@ -33,13 +31,8 @@ describe('querySuggest slice', () => {
   function addToDefaultState(
     querySuggest: Partial<QuerySuggestState>
   ): QuerySuggestSet {
-    return {
-      [id]: {
-        ...getQuerySuggestInitialState(),
-        id,
-        ...querySuggest,
-      },
-    };
+    const qs = buildMockQuerySuggest({id, ...querySuggest});
+    return {[id]: qs};
   }
 
   it('should have initial state', () => {

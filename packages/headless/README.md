@@ -84,7 +84,7 @@ export const engine = new Engine({
 
 To only test out the library's capabilities, you can use our sample configuration. It will give you access to an organization with dummy data.
 ```typescript
-new Engine({ configuration: Engine.getSampleConfiguration() });
+new ReduxEngine({ configuration: ReduxEngine.getSampleConfiguration() });
 ```
 
 On the `Engine` class instance, you have a few properties:

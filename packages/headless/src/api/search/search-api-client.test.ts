@@ -3,8 +3,8 @@ import {PlatformClient, PlatformClientCallOptions} from '../platform-client';
 import {PlanRequestParams} from './plan/plan-request';
 import {HeadlessState} from '../../state';
 import {QuerySuggestRequestParams} from './query-suggest/query-suggest-request';
-import {createMockState} from '../../utils/mock-state';
-import {getQuerySuggestInitialState} from '../../features/query-suggest/query-suggest-slice';
+import {createMockState} from '../../test/mock-state';
+import {buildMockQuerySuggest} from '../../test/mock-query-suggest';
 
 jest.mock('../platform-client');
 describe('search api client', () => {
@@ -46,13 +46,9 @@ describe('search api client', () => {
   it(`when calling SearchAPIClient.querySuggest
   should call PlatformClient.call with the right options`, () => {
     const id = 'someid123';
+    const qs = buildMockQuerySuggest({id, q: 'some query', count: 11});
     const state = createMockState();
-    state.querySuggest[id] = {
-      ...getQuerySuggestInitialState(),
-      id,
-      q: 'some query',
-      count: 11,
-    };
+    state.querySuggest[id] = qs;
 
     SearchAPIClient.querySuggest(id, state);
 

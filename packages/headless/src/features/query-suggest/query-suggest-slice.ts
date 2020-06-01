@@ -10,10 +10,8 @@ import {
 import {updateQuerySetQuery} from '../query-set/query-set-actions';
 import {QuerySuggestState, QuerySuggestSet} from '../../state';
 
-export const getQuerySuggestInitialState: () => Omit<
-  QuerySuggestState,
-  'id'
-> = () => ({
+export const getQuerySuggestInitialState: () => QuerySuggestState = () => ({
+  id: '',
   completions: [],
   count: 5,
   q: '',

@@ -4,6 +4,12 @@ import {
   updateBasicConfiguration,
   updateSearchConfiguration,
 } from '../features/configuration/configuration-actions';
+import {
+  Unsubscribe,
+  ThunkDispatch,
+  AnyAction,
+  Dispatch,
+} from '@reduxjs/toolkit';
 
 export {Unsubscribe} from '@reduxjs/toolkit';
 
@@ -51,12 +57,20 @@ export interface HeadlessConfigurationOptions {
   };
 }
 
+export interface Engine {
+  dispatch: ThunkDispatch<any, null, AnyAction> &
+    ThunkDispatch<any, undefined, AnyAction> &
+    Dispatch<AnyAction>;
+  subscribe: (listener: () => void) => Unsubscribe;
+  state: HeadlessState;
+}
+
 /**
  * The global headless engine.
  * You should instantiate one `Engine` class per application and share it.
  * Every headless component requires an instance of `Engine` as a parameter.
  */
-export class Engine {
+export class ReduxEngine implements Engine {
   private reduxStore: Store;
 
   constructor(options: HeadlessOptions) {

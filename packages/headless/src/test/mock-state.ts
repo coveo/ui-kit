@@ -5,7 +5,9 @@ import {getRedirectionInitialState} from '../features/redirection/redirection-sl
 import {getQuerySetInitialState} from '../features/query-set/query-set-slice';
 import {getSearchInitialState} from '../features/search/search-slice';
 
-export function createMockState(): HeadlessState {
+export function createMockState(
+  config: Partial<HeadlessState> = {}
+): HeadlessState {
   return {
     configuration: getConfigurationInitialState(),
     query: getQueryInitialState(),
@@ -13,5 +15,6 @@ export function createMockState(): HeadlessState {
     querySuggest: {},
     redirection: getRedirectionInitialState(),
     search: getSearchInitialState(),
+    ...config,
   };
 }
