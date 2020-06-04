@@ -6,6 +6,7 @@ import {HeadlessState} from '../state';
 import {querySuggestReducer} from '../features/query-suggest/query-suggest-slice';
 import {querySetReducer} from '../features/query-set/query-set-slice';
 import {searchReducer} from '../features/search/search-slice';
+import {sortCriteriaReducer} from '../features/sort-criterion/sort-criterion-slice';
 
 export const rootReducer = combineReducers<HeadlessState>({
   query: queryReducer,
@@ -14,4 +15,5 @@ export const rootReducer = combineReducers<HeadlessState>({
   redirection: redirectionReducer,
   querySuggest: querySuggestReducer,
   search: searchReducer,
+  sortCriteria: sortCriteriaReducer,
 });

@@ -12,6 +12,8 @@ export namespace Components {
         "isStandalone": boolean;
         "numberOfSuggestions": number;
     }
+    interface AtomicSortDropdown {
+    }
     interface MyComponent {
         /**
           * The first name
@@ -40,6 +42,12 @@ declare global {
         prototype: HTMLAtomicSearchBoxElement;
         new (): HTMLAtomicSearchBoxElement;
     };
+    interface HTMLAtomicSortDropdownElement extends Components.AtomicSortDropdown, HTMLStencilElement {
+    }
+    var HTMLAtomicSortDropdownElement: {
+        prototype: HTMLAtomicSortDropdownElement;
+        new (): HTMLAtomicSortDropdownElement;
+    };
     interface HTMLMyComponentElement extends Components.MyComponent, HTMLStencilElement {
     }
     var HTMLMyComponentElement: {
@@ -49,6 +57,7 @@ declare global {
     interface HTMLElementTagNameMap {
         "atomic-result-list": HTMLAtomicResultListElement;
         "atomic-search-box": HTMLAtomicSearchBoxElement;
+        "atomic-sort-dropdown": HTMLAtomicSortDropdownElement;
         "my-component": HTMLMyComponentElement;
     }
 }
@@ -58,6 +67,8 @@ declare namespace LocalJSX {
     interface AtomicSearchBox {
         "isStandalone"?: boolean;
         "numberOfSuggestions"?: number;
+    }
+    interface AtomicSortDropdown {
     }
     interface MyComponent {
         /**
@@ -76,6 +87,7 @@ declare namespace LocalJSX {
     interface IntrinsicElements {
         "atomic-result-list": AtomicResultList;
         "atomic-search-box": AtomicSearchBox;
+        "atomic-sort-dropdown": AtomicSortDropdown;
         "my-component": MyComponent;
     }
 }
@@ -85,6 +97,7 @@ declare module "@stencil/core" {
         interface IntrinsicElements {
             "atomic-result-list": LocalJSX.AtomicResultList & JSXBase.HTMLAttributes<HTMLAtomicResultListElement>;
             "atomic-search-box": LocalJSX.AtomicSearchBox & JSXBase.HTMLAttributes<HTMLAtomicSearchBoxElement>;
+            "atomic-sort-dropdown": LocalJSX.AtomicSortDropdown & JSXBase.HTMLAttributes<HTMLAtomicSortDropdownElement>;
             "my-component": LocalJSX.MyComponent & JSXBase.HTMLAttributes<HTMLMyComponentElement>;
         }
     }

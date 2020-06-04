@@ -9,7 +9,7 @@ export interface MockEngine extends Engine {
   actions: AnyAction[];
 }
 
-export function buildMockEngine(config: Partial<Engine>): MockEngine {
+export function buildMockEngine(config: Partial<Engine> = {}): MockEngine {
   const store = createMockStore();
 
   return {

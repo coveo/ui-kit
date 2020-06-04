@@ -1,6 +1,7 @@
 import {QuerySuggestCompletion} from './api/search/query-suggest/query-suggest-response';
 import {QuerySetState} from './features/query-set/query-set-slice';
 import {SearchState} from './features/search/search-slice';
+import {SortCriteriaState} from './features/sort-criterion/sort-criterion-slice';
 
 export interface HeadlessState {
   /**
@@ -27,6 +28,10 @@ export interface HeadlessState {
    * The information related to the search endpoint.
    */
   search: SearchState;
+  /**
+   * The sort criteria to use with the search query. For more information, refer to {@link https://docs.coveo.com/en/1461/cloud-v2-developers/query-parameters#RestQueryParameters-sortCriteria}
+   */
+  sortCriteria: SortCriteriaState;
 }
 
 export interface ConfigurationState {

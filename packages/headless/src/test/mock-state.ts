@@ -4,6 +4,7 @@ import {getQueryInitialState} from '../features/query/query-slice';
 import {getRedirectionInitialState} from '../features/redirection/redirection-slice';
 import {getQuerySetInitialState} from '../features/query-set/query-set-slice';
 import {getSearchInitialState} from '../features/search/search-slice';
+import {getSortCriteriaInitialState} from '../features/sort-criterion/sort-criterion-slice';
 
 export function createMockState(
   config: Partial<HeadlessState> = {}
@@ -15,6 +16,7 @@ export function createMockState(
     querySuggest: {},
     redirection: getRedirectionInitialState(),
     search: getSearchInitialState(),
+    sortCriteria: getSortCriteriaInitialState(),
     ...config,
   };
 }
