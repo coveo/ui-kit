@@ -1,19 +1,35 @@
+export function hasWindow(): boolean {
+    return typeof window !== 'undefined';
+}
+
+export function hasNavigator(): boolean {
+    return typeof navigator !== 'undefined';
+}
+
+export function hasDocument(): boolean {
+    return typeof document !== 'undefined';
+}
+
 export function hasLocalStorage(): boolean {
-    try {
-        return 'localStorage' in window && window['localStorage'] !== null;
-    } catch (e) {
-        return false;
-    }
+    return typeof localStorage !== 'undefined';
 }
 
 export function hasSessionStorage(): boolean {
-    try {
-        return 'sessionStorage' in window && window['sessionStorage'] !== null;
-    } catch (e) {
-        return false;
-    }
+    return typeof sessionStorage !== 'undefined';
 }
 
 export function hasCookieStorage(): boolean {
-    return navigator.cookieEnabled;
+    return hasNavigator() && navigator.cookieEnabled;
+}
+
+export function hasCrypto(): boolean {
+    return typeof crypto !== 'undefined';
+}
+
+export function hasCryptoRandomValues(): boolean {
+    return hasCrypto() && typeof crypto.getRandomValues !== 'undefined';
+}
+
+export function hasLocation(): boolean {
+    return typeof location !== 'undefined';
 }

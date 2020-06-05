@@ -41,3 +41,9 @@ export class AnalyticsBeaconClient implements AnalyticsRequestClient {
         return `${eventType}Event`;
     }
 }
+
+export class NoopAnalyticsBeaconClient implements AnalyticsRequestClient {
+    public async sendEvent(_: EventType, __: IRequestPayload): Promise<void> {
+        return Promise.resolve()
+    }
+}

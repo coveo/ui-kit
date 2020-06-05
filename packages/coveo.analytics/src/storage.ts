@@ -38,6 +38,24 @@ export class CookieStorage implements WebStorage {
     }
 }
 
+export class CookieAndLocalStorage implements WebStorage {
+    private cookieStorage = new CookieStorage();
+
+    getItem(key: string): string | null {
+        return localStorage.getItem(key) || this.cookieStorage.getItem(key);
+    }
+
+    removeItem(key: string): void {
+        this.cookieStorage.removeItem(key);
+        localStorage.removeItem(key);
+    }
+
+    setItem(key: string, data: string): void {
+        localStorage.setItem(key, data);
+        this.cookieStorage.setItem(key, data);
+    }
+}
+
 export class NullStorage implements WebStorage {
     getItem(key: string): string | null {
         return null;

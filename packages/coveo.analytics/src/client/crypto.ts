@@ -1,3 +1,5 @@
+import {hasCryptoRandomValues} from "../detector";
+
 export const uuidv4 = (a?: number | string): string => {
     if (!!a) {
         return (Number(a) ^ (getRandomValues(new Uint8Array(1))[0] % 16 >> (Number(a) / 4))).toString(16);
@@ -6,7 +8,7 @@ export const uuidv4 = (a?: number | string): string => {
 };
 
 const getRandomValues = (rnds: Uint8Array) => {
-    if (typeof crypto !== undefined && crypto.getRandomValues) {
+    if (hasCryptoRandomValues()) {
         return crypto.getRandomValues(rnds);
     }
     for (var i = 0, r = 0; i < rnds.length; i++) {

@@ -1,4 +1,4 @@
-import {AnalyticsBeaconClient} from './analyticsBeaconClient';
+import {IAnalyticsBeaconClientOptions} from './analyticsBeaconClient';
 import {AnalyticsFetchClient} from './analyticsFetchClient';
 import {
     AnyEventResponse,
@@ -16,13 +16,13 @@ import {
     IRequestPayload,
     VariableArgumentsPayload,
 } from '../events';
-import {VisitorIdProvider} from './analyticsRequestClient';
-import {WebStorage, CookieStorage} from '../storage';
-import {hasLocalStorage, hasCookieStorage} from '../detector';
+import {VisitorIdProvider, AnalyticsRequestClient} from './analyticsRequestClient';
+import {hasWindow, hasDocument} from '../detector';
 import {addDefaultValues} from '../hook/addDefaultValues';
 import {enhanceViewEvent} from '../hook/enhanceViewEvent';
 import {uuidv4} from './crypto';
 import {convertKeysToMeasurementProtocol, isMeasurementProtocolKey, convertCustomMeasurementProtocolKeys} from './measurementProtocolMapper';
+import {IRuntimeEnvironment, BrowserRuntime, NodeJSRuntime} from './runtimeEnvironment';
 
 export const Version = 'v15';
 
@@ -56,6 +56,7 @@ export interface AnalyticsClient {
     getHealth(): Promise<HealthResponse>;
     registerBeforeSendEventHook(hook: AnalyticsClientSendEventHook): void;
     addEventTypeMapping(eventType: string, eventConfig: EventTypeConfig): void;
+    runtime: IRuntimeEnvironment
 }
 
 interface BufferedRequest {
@@ -73,9 +74,8 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
         };
     }
 
+    public runtime: IRuntimeEnvironment;
     private visitorId: string;
-    private cookieStorage: WebStorage;
-    private analyticsBeaconClient: AnalyticsBeaconClient;
     private analyticsFetchClient: AnalyticsFetchClient;
     private bufferedRequests: BufferedRequest[];
     private beforeSendHooks: AnalyticsClientSendEventHook[];
@@ -92,32 +92,41 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
             ...opts,
         };
 
-        const {token} = this.options;
-
-        this.cookieStorage = new CookieStorage();
         this.visitorId = '';
         this.bufferedRequests = [];
         this.beforeSendHooks = [enhanceViewEvent, addDefaultValues];
         this.eventTypeMapping = {};
-
-        this.initVisitorId();
-
+        
         const clientsOptions = {
             baseUrl: this.baseUrl,
-            token,
+            token: this.options.token,
             visitorIdProvider: this,
         };
-        this.analyticsBeaconClient = new AnalyticsBeaconClient(clientsOptions);
+
+        this.runtime = this.initRuntime(clientsOptions)
         this.analyticsFetchClient = new AnalyticsFetchClient(clientsOptions);
-        window.addEventListener('beforeunload', () => this.flushBufferWithBeacon());
+
+        this.initVisitorId();
+    }
+
+    private initRuntime(clientsOptions: IAnalyticsBeaconClientOptions) {
+        if (hasWindow() && hasDocument()) {
+            return new BrowserRuntime(clientsOptions, () => this.flushBufferWithBeacon())
+        }
+
+        return new NodeJSRuntime()
+    }
+
+    private get analyticsBeaconClient() {
+        return this.runtime.beaconClient
+    }
+
+    private get storage() {
+        return this.runtime.storage
     }
 
     private initVisitorId() {
-        const existingVisitorId =
-            this.visitorId ||
-            (hasCookieStorage() && this.cookieStorage.getItem('visitorId')) ||
-            (hasLocalStorage() && localStorage.getItem('visitorId')) ||
-            '';
+        const existingVisitorId = this.visitorId || this.storage.getItem('visitorId') || '';
         this.currentVisitorId = existingVisitorId || uuidv4();
     }
 
@@ -127,12 +136,7 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
 
     set currentVisitorId(visitorId: string) {
         this.visitorId = visitorId;
-        if (hasCookieStorage()) {
-            this.cookieStorage.setItem('visitorId', visitorId);
-        }
-        if (hasLocalStorage()) {
-            localStorage.setItem('visitorId', visitorId);
-        }
+        this.storage.setItem('visitorId', visitorId);
     }
 
     async sendEvent(

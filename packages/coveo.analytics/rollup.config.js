@@ -14,11 +14,10 @@ const umdConfig = (file) => ({
     sourcemap: true,
 })
 
-const umd = {
+const browser = {
     input: './src/coveoua/browser.ts',
     output: [
         umdConfig('./dist/coveoua.js'),
-        umdConfig('./dist/library.js'),
     ],
     plugins: [
         tsPlugin(),
@@ -31,8 +30,20 @@ const umd = {
     ]
 }
 
+const libUMD = {
+    input: './src/coveoua/library.ts',
+    output: [
+        umdConfig('./dist/library.js'),
+    ],
+    plugins: [
+        tsPlugin(),
+        uglify()
+    ]
+}
 
-const libraryEsm = {
+
+
+const libESM = {
     input: './src/coveoua/library.ts',
     output: {
         file: './dist/library.es.js',
@@ -46,4 +57,4 @@ const libraryEsm = {
 }
 
 
-export default [umd, libraryEsm];
+export default [browser, libUMD, libESM];

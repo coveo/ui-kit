@@ -3,8 +3,13 @@
 // for information on how to use the donottrack
 // gathering data of actions of an user as long as it is not associated to the
 // identity of that user, doNotTrack is not enabled here.
-export const doNotTrack = [true, 'yes', '1'].indexOf(
-    (<any>navigator).doNotTrack || (<any>navigator).msDoNotTrack || (<any>window).doNotTrack
-);
+
+import {hasNavigator} from './detector';
+
+export const doNotTrack = hasNavigator()
+    ? [true, 'yes', '1'].indexOf(
+          (<any>navigator).doNotTrack || (<any>navigator).msDoNotTrack || (<any>window).doNotTrack
+      )
+    : 0;
 
 export default doNotTrack;
