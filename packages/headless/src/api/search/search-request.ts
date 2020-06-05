@@ -15,13 +15,6 @@ export const getQParam = (state: HeadlessState) => ({
   q: state.query.q,
 });
 
-export const getSortCriteriaParam = (state: HeadlessState) => ({
-  /**
-   * The search query sort criteria.
-   */
-  sortCriteria: state.sortCriteria,
-});
-
 const getAccessToken = (state: HeadlessState) =>
   state.configuration.accessToken;
 const getSearchApiBaseUrl = (state: HeadlessState) =>

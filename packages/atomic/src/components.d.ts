@@ -8,6 +8,8 @@ import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 export namespace Components {
     interface AtomicResultList {
     }
+    interface AtomicResultsPerPage {
+    }
     interface AtomicSearchBox {
         "isStandalone": boolean;
         "numberOfSuggestions": number;
@@ -36,6 +38,12 @@ declare global {
         prototype: HTMLAtomicResultListElement;
         new (): HTMLAtomicResultListElement;
     };
+    interface HTMLAtomicResultsPerPageElement extends Components.AtomicResultsPerPage, HTMLStencilElement {
+    }
+    var HTMLAtomicResultsPerPageElement: {
+        prototype: HTMLAtomicResultsPerPageElement;
+        new (): HTMLAtomicResultsPerPageElement;
+    };
     interface HTMLAtomicSearchBoxElement extends Components.AtomicSearchBox, HTMLStencilElement {
     }
     var HTMLAtomicSearchBoxElement: {
@@ -56,6 +64,7 @@ declare global {
     };
     interface HTMLElementTagNameMap {
         "atomic-result-list": HTMLAtomicResultListElement;
+        "atomic-results-per-page": HTMLAtomicResultsPerPageElement;
         "atomic-search-box": HTMLAtomicSearchBoxElement;
         "atomic-sort-dropdown": HTMLAtomicSortDropdownElement;
         "my-component": HTMLMyComponentElement;
@@ -63,6 +72,8 @@ declare global {
 }
 declare namespace LocalJSX {
     interface AtomicResultList {
+    }
+    interface AtomicResultsPerPage {
     }
     interface AtomicSearchBox {
         "isStandalone"?: boolean;
@@ -86,6 +97,7 @@ declare namespace LocalJSX {
     }
     interface IntrinsicElements {
         "atomic-result-list": AtomicResultList;
+        "atomic-results-per-page": AtomicResultsPerPage;
         "atomic-search-box": AtomicSearchBox;
         "atomic-sort-dropdown": AtomicSortDropdown;
         "my-component": MyComponent;
@@ -96,6 +108,7 @@ declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
             "atomic-result-list": LocalJSX.AtomicResultList & JSXBase.HTMLAttributes<HTMLAtomicResultListElement>;
+            "atomic-results-per-page": LocalJSX.AtomicResultsPerPage & JSXBase.HTMLAttributes<HTMLAtomicResultsPerPageElement>;
             "atomic-search-box": LocalJSX.AtomicSearchBox & JSXBase.HTMLAttributes<HTMLAtomicSearchBoxElement>;
             "atomic-sort-dropdown": LocalJSX.AtomicSortDropdown & JSXBase.HTMLAttributes<HTMLAtomicSortDropdownElement>;
             "my-component": LocalJSX.MyComponent & JSXBase.HTMLAttributes<HTMLMyComponentElement>;

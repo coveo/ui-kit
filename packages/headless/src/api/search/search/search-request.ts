@@ -1,8 +1,9 @@
 import {HeadlessState} from '../../../state';
-import {getQParam, getSortCriteriaParam} from '../search-request';
+import {getQParam} from '../search-request';
 
 export interface SearchRequest {
   q: string;
+  numberOfResults: number;
   sortCriteria: string;
 }
 
@@ -10,6 +11,7 @@ export interface SearchRequest {
 export const searchRequestParams = (state: HeadlessState): SearchRequest => {
   return {
     ...getQParam(state),
-    ...getSortCriteriaParam(state),
+    numberOfResults: state.numberOfResults,
+    sortCriteria: state.sortCriteria,
   };
 };
