@@ -1,9 +1,13 @@
 import {Engine} from '../../app/headless-engine';
+import {Component} from '../component/headless-component';
 
+/** The state relevant to the `ResultList` component.*/
 export type ResultListState = ResultList['state'];
 
-export class ResultList {
-  constructor(private engine: Engine) {}
+export class ResultList extends Component {
+  constructor(engine: Engine) {
+    super(engine);
+  }
 
   /**
    * @returns The state of the `ResultList` component.
@@ -14,16 +18,5 @@ export class ResultList {
     return {
       results: state.search.response.results,
     };
-  }
-
-  /**
-   * Adds a callback that will be called when component state changes.
-   *
-   * @param listener A callback to be invoked on every component state change.
-   * @returns A function to remove this change listener.
-   */
-  public subscribe(listener: () => void) {
-    listener();
-    return this.engine.subscribe(listener);
   }
 }

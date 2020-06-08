@@ -8,6 +8,7 @@ import {
   SortCriterion,
   buildEmptySortCriterion,
 } from '../../features/sort-criterion/criteria';
+import {Component} from '../component/headless-component';
 
 export interface SortOptions {
   /** The initial sort criterion to register in state. */
@@ -17,12 +18,13 @@ export interface SortOptions {
 /** The state relevant to the `Sort` component.*/
 export type SortState = Sort['state'];
 
-export class Sort {
+export class Sort extends Component {
   private options: SortOptions = {
     criterion: buildEmptySortCriterion(),
   };
 
-  constructor(private engine: Engine, options: Partial<SortOptions>) {
+  constructor(engine: Engine, options: Partial<SortOptions>) {
+    super(engine);
     this.options = {...this.options, ...options};
     this.register();
   }
@@ -54,17 +56,6 @@ export class Sort {
     };
   }
 
-  /**
-   * Adds a callback that will be called when component state changes.
-   *
-   * @param listener A callback to be invoked on every component state change.
-   * @returns A function to remove this change listener.
-   */
-  public subscribe(listener: () => void) {
-    listener();
-    return this.engine.subscribe(listener);
-  }
-
   private register() {
     const {criterion} = this.options;
     this.dispatch(registerSortCriterion(criterion));
@@ -72,9 +63,5 @@ export class Sort {
 
   private search() {
     this.dispatch(executeSearch());
-  }
-
-  private get dispatch() {
-    return this.engine.dispatch;
   }
 }

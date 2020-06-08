@@ -11,11 +11,12 @@ export interface MockEngine extends Engine {
 
 export function buildMockEngine(config: Partial<Engine> = {}): MockEngine {
   const store = createMockStore();
+  const unsubscribe = () => {};
 
   return {
     store,
     state: createMockState(),
-    subscribe: jest.fn(),
+    subscribe: jest.fn(() => unsubscribe),
     get dispatch() {
       return store.dispatch;
     },

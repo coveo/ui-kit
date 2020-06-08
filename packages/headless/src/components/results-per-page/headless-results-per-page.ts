@@ -4,6 +4,7 @@ import {
   updateNumberOfResults,
 } from '../../features/number-of-results/number-of-results-actions';
 import {executeSearch} from '../../features/search/search-actions';
+import {Component} from '../component/headless-component';
 
 export interface ResultsPerPageOptions {
   numberOfResults: number;
@@ -12,11 +13,12 @@ export interface ResultsPerPageOptions {
 /** The state relevant to the `ResultsPerPage` component.*/
 export type ResultsPerPageState = ResultsPerPage['state'];
 
-export class ResultsPerPage {
+export class ResultsPerPage extends Component {
   constructor(
-    private engine: Engine,
+    engine: Engine,
     private options: Partial<ResultsPerPageOptions> = {}
   ) {
+    super(engine);
     this.register();
   }
 
@@ -44,26 +46,11 @@ export class ResultsPerPage {
     };
   }
 
-  /**
-   * Adds a callback that will be called when component state changes.
-   *
-   * @param listener A callback to be invoked on every component state change.
-   * @returns A function to remove this change listener.
-   */
-  public subscribe(listener: () => void) {
-    listener();
-    return this.engine.subscribe(listener);
-  }
-
   private register() {
     const num = this.options.numberOfResults;
 
     if (num !== undefined) {
       this.dispatch(registerNumberOfResults(num));
     }
-  }
-
-  private get dispatch() {
-    return this.engine.dispatch;
   }
 }

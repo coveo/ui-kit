@@ -14,6 +14,7 @@ import {
   updateQuerySetQuery,
 } from '../../features/query-set/query-set-actions';
 import {executeSearch} from '../../features/search/search-actions';
+import {Component} from '../component/headless-component';
 
 export interface SearchBoxOptions {
   /**
@@ -45,22 +46,20 @@ export type SearchBoxState = SearchBox['state'];
 /**
  * The `SearchBox` headless component offers a high-level interface for designing a common search box UI component.
  */
-export class SearchBox {
+export class SearchBox extends Component {
   public text = '';
-  private currentState: SearchBoxState;
   private options: SearchBoxOptions = {
     id: randomID('searchBox_'),
     isStandalone: false,
     numberOfSuggestions: 5,
   };
 
-  constructor(private engine: Engine, options: Partial<SearchBoxOptions> = {}) {
+  constructor(engine: Engine, options: Partial<SearchBoxOptions> = {}) {
+    super(engine);
     this.options = {...this.options, ...options};
 
     this.registerQuery();
     this.registerQuerySuggest();
-
-    this.currentState = this.state;
   }
 
   /**
@@ -140,30 +139,6 @@ export class SearchBox {
       })),
       redirectTo: state.redirection.redirectTo,
     };
-  }
-
-  /**
-   * Adds a callback that will be called when component state changes.
-   *
-   * @param listener A callback to be invoked on every component state change.
-   * @returns A function to remove this change listener.
-   */
-  public subscribe(listener: () => void) {
-    listener();
-
-    return this.engine.subscribe(() => {
-      const nextState = this.state;
-      if (JSON.stringify(nextState) === JSON.stringify(this.currentState)) {
-        return;
-      }
-
-      this.currentState = nextState;
-      listener();
-    });
-  }
-
-  private get dispatch() {
-    return this.engine.dispatch;
   }
 
   private registerQuery() {
