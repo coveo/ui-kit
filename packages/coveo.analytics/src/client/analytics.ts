@@ -16,7 +16,7 @@ import {
     IRequestPayload,
     VariableArgumentsPayload,
 } from '../events';
-import {VisitorIdProvider, AnalyticsRequestClient} from './analyticsRequestClient';
+import {VisitorIdProvider} from './analyticsRequestClient';
 import {hasWindow, hasDocument} from '../detector';
 import {addDefaultValues} from '../hook/addDefaultValues';
 import {enhanceViewEvent} from '../hook/enhanceViewEvent';
@@ -27,9 +27,9 @@ import {IRuntimeEnvironment, BrowserRuntime, NodeJSRuntime} from './runtimeEnvir
 export const Version = 'v15';
 
 export const Endpoints = {
-    default: 'https://usageanalytics.coveo.com',
-    production: 'https://usageanalytics.coveo.com',
-    hipaa: 'https://usageanalyticshipaa.coveo.com',
+    default: 'https://platform.cloud.coveo.com/rest/ua',
+    production: 'https://platform.cloud.coveo.com/rest/ua',
+    hipaa: 'https://platformhipaa.cloud.coveo.com/rest/ua',
 };
 
 export interface ClientOptions {
@@ -331,7 +331,8 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
 
     private get baseUrl(): string {
         const {version, endpoint} = this.options;
-        return `${endpoint}/rest/${version}`;
+        const endpointIsCoveoProxy = endpoint.indexOf(".cloud.coveo.com") !== -1;
+        return `${endpoint}${endpointIsCoveoProxy ? '' : '/rest'}/${version}`;
     }
 }
 
