@@ -26,8 +26,8 @@ describe('Analytics', () => {
         visitorId: aVisitorId,
     };
 
-    const endpointForEventType = (eventType: EventType) =>
-        `${anEndpoint}/rest/${A_VERSION}/analytics/${eventType}?visitor=${aVisitorId}`;
+    const endpointForEventType = (eventType: EventType, endpoint: string = `${anEndpoint}/rest`) =>
+        `${endpoint}/${A_VERSION}/analytics/${eventType}?visitor=${aVisitorId}`;
     const mockFetchRequestForEventType = (eventType: EventType) => {
         const address = endpointForEventType(eventType);
         fetchMock.post(address, eventResponse);
@@ -221,6 +221,24 @@ describe('Analytics', () => {
             const [body] = getParsedBodyCalls();
 
             expect(body).toHaveProperty('visitorId');
+        });
+    });
+
+    describe('with an endpoint set to the coveo platform proxy', () => {
+        const endpointWithRest = 'http://someendpoint.cloud.coveo.com/rest/ua';
+        beforeEach(() => {
+            client = new CoveoAnalyticsClient({
+                token: aToken,
+                endpoint: endpointWithRest,
+                version: A_VERSION,
+            });
+
+            fetchMock.post(endpointForEventType(EventType.custom, endpointWithRest), eventResponse);
+        });
+
+        it('should properly send the event without appending an extra /rest', async () => {
+            const response = await client.sendEvent(EventType.custom);
+            expect(response).toEqual(eventResponse);
         });
     });
 
