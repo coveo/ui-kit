@@ -14,6 +14,10 @@ import {
   updateQuerySetQuery,
 } from '../../features/query-set/query-set-actions';
 import {executeSearch} from '../../features/search/search-actions';
+import {
+  logTriggerRedirect,
+  logSearchboxSubmit,
+} from '../../features/analytics/analytics-actions';
 import {Component} from '../component/headless-component';
 
 export interface SearchBoxProps {
@@ -111,6 +115,7 @@ export class SearchBox extends Component {
    * @param value The string value of the suggestion to select
    */
   public selectSuggestion(value: string) {
+    // TODO analytics on suggestion select
     this.dispatch(selectQuerySuggestion({id: this.id, expression: value}));
     this.submit();
   }
@@ -123,11 +128,15 @@ export class SearchBox extends Component {
     this.dispatch(updateQuery({q: this.state.value}));
 
     if (this.options.isStandalone) {
-      this.dispatch(checkForRedirection());
+      this.dispatch(checkForRedirection()).then(() =>
+        this.dispatch(logTriggerRedirect())
+      );
       return;
     }
 
-    this.dispatch(executeSearch());
+    this.dispatch(executeSearch()).then(() =>
+      this.dispatch(logSearchboxSubmit())
+    );
   }
 
   /**

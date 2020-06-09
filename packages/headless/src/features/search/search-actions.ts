@@ -8,6 +8,9 @@ import {HeadlessState} from '../../state';
 export const executeSearch = createAsyncThunk(
   'search/execute',
   async (_, {getState}) => {
-    return await SearchAPIClient.search(getState() as HeadlessState);
+    const startedAt = new Date().getTime();
+    const response = await SearchAPIClient.search(getState() as HeadlessState);
+    const duration = new Date().getTime() - startedAt;
+    return {response, duration};
   }
 );

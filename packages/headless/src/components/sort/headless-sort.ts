@@ -4,6 +4,7 @@ import {
   updateSortCriterion,
 } from '../../features/sort-criteria/sort-criteria-actions';
 import {executeSearch} from '../../features/search/search-actions';
+import {logResultsSort} from '../../features/analytics/analytics-actions';
 import {SortCriterion} from '../../features/sort-criteria/criteria';
 import {Component} from '../component/headless-component';
 
@@ -61,6 +62,6 @@ export class Sort extends Component {
   }
 
   private search() {
-    this.dispatch(executeSearch());
+    this.dispatch(executeSearch()).then(() => this.dispatch(logResultsSort()));
   }
 }

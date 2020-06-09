@@ -5,6 +5,7 @@ export function buildMockSearchResponse(
 ): SearchResponse {
   return {
     results: [],
+    searchUid: '',
     ...config,
   };
 }

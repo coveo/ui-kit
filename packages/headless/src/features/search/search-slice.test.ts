@@ -21,9 +21,10 @@ describe('search-slice', () => {
   it('when a executeSearch fulfilled is received, it updates the state to the received payload', () => {
     const response = buildMockSearchResponse();
 
-    const action = executeSearch.fulfilled(response, '');
+    const action = executeSearch.fulfilled({response, duration: 123}, '');
     const finalState = searchReducer(state, action);
 
     expect(finalState.response).toEqual(response);
+    expect(finalState.duration).toEqual(123);
   });
 });

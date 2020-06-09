@@ -9,10 +9,6 @@ export const checkForRedirection = createAsyncThunk(
   'redirection/check',
   async (_, {getState}) => {
     const executionPlan = await getExecutionPlan(getState() as HeadlessState);
-    if (executionPlan.redirectionURL) {
-      // Dispatch redirection trigger analytics here
-    }
-
     return executionPlan.redirectionURL;
   }
 );
