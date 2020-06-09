@@ -1,7 +1,4 @@
-import {
-  ResultsPerPage,
-  ResultsPerPageOptions,
-} from './headless-results-per-page';
+import {ResultsPerPage, ResultsPerPageProps} from './headless-results-per-page';
 import {MockEngine, buildMockEngine} from '../../test/mock-engine';
 import {
   registerNumberOfResults,
@@ -12,23 +9,25 @@ import {createMockState} from '../../test/mock-state';
 
 describe('ResultsPerPage', () => {
   let engine: MockEngine;
-  let options: Partial<ResultsPerPageOptions>;
+  let props: ResultsPerPageProps;
   let resultsPerPage: ResultsPerPage;
 
   function initResultsPerPage() {
-    resultsPerPage = new ResultsPerPage(engine, options);
+    resultsPerPage = new ResultsPerPage(engine, props);
   }
 
   beforeEach(() => {
     engine = buildMockEngine({});
-    options = {};
+    props = {
+      initialState: {},
+    };
 
     initResultsPerPage();
   });
 
   it('when the #numberOfResults option is specified to 10, it dispatches a register action with the value', () => {
     const num = 10;
-    options.numberOfResults = num;
+    props.initialState.numberOfResults = num;
     initResultsPerPage();
 
     expect(engine.actions).toContainEqual(registerNumberOfResults(num));
@@ -36,7 +35,7 @@ describe('ResultsPerPage', () => {
 
   it('when the #numberOfResults option is specified to 0, it dispatches a register action', () => {
     const num = 0;
-    options.numberOfResults = num;
+    props.initialState.numberOfResults = num;
     initResultsPerPage();
 
     expect(engine.actions).toContainEqual(registerNumberOfResults(num));
@@ -48,7 +47,6 @@ describe('ResultsPerPage', () => {
     );
 
     expect(action).toBe(undefined);
-    expect(options.numberOfResults).toBe(undefined);
   });
 
   it('calling #set updates the number of results to the passed value', () => {

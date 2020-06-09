@@ -6,7 +6,11 @@ import {
 import {executeSearch} from '../../features/search/search-actions';
 import {Component} from '../component/headless-component';
 
-export interface ResultsPerPageOptions {
+export interface ResultsPerPageProps {
+  initialState: Partial<ResultsPerPageInitialState>;
+}
+
+export interface ResultsPerPageInitialState {
   numberOfResults: number;
 }
 
@@ -16,7 +20,7 @@ export type ResultsPerPageState = ResultsPerPage['state'];
 export class ResultsPerPage extends Component {
   constructor(
     engine: Engine,
-    private options: Partial<ResultsPerPageOptions> = {}
+    private props: Partial<ResultsPerPageProps> = {}
   ) {
     super(engine);
     this.register();
@@ -47,7 +51,7 @@ export class ResultsPerPage extends Component {
   }
 
   private register() {
-    const num = this.options.numberOfResults;
+    const num = this.props.initialState?.numberOfResults;
 
     if (num !== undefined) {
       this.dispatch(registerNumberOfResults(num));

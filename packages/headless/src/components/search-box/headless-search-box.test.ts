@@ -1,4 +1,8 @@
-import {SearchBox, SearchBoxOptions} from './headless-search-box';
+import {
+  SearchBox,
+  SearchBoxProps,
+  SearchBoxOptions,
+} from './headless-search-box';
 import {
   registerQuerySuggest,
   clearQuerySuggest,
@@ -24,14 +28,16 @@ describe('headless searchBox', () => {
 
   let engine: MockEngine;
   let searchBox: SearchBox;
-  let searchBoxOptions: SearchBoxOptions;
+  let props: SearchBoxProps;
 
   beforeEach(() => {
-    searchBoxOptions = {
+    const options: SearchBoxOptions = {
       id,
       isStandalone: true,
       numberOfSuggestions: 10,
     };
+
+    props = {options};
 
     initState();
     initComponent();
@@ -46,7 +52,7 @@ describe('headless searchBox', () => {
 
   function initComponent() {
     engine = buildMockEngine({state});
-    searchBox = new SearchBox(engine, searchBoxOptions);
+    searchBox = new SearchBox(engine, props);
   }
 
   it('should return the right state', () => {
@@ -69,7 +75,7 @@ describe('headless searchBox', () => {
       registerQuerySuggest({
         id: searchBox.id,
         q: state.query.q,
-        count: searchBoxOptions.numberOfSuggestions,
+        count: props.options.numberOfSuggestions,
       })
     );
   });
@@ -93,7 +99,7 @@ describe('headless searchBox', () => {
 
     it(`when the numberOfQuerySuggestions option is 0
     should not call the showSuggestions method`, () => {
-      searchBoxOptions.numberOfSuggestions = 0;
+      props.options.numberOfSuggestions = 0;
       initComponent();
 
       jest.spyOn(searchBox, 'showSuggestions');
@@ -161,7 +167,7 @@ describe('headless searchBox', () => {
 
     it(`when the isStandalone option is false
     it dispatches an executeSearch action`, () => {
-      searchBoxOptions.isStandalone = false;
+      props.options.isStandalone = false;
       initComponent();
       searchBox.submit();
 

@@ -2,15 +2,16 @@ import {Engine} from '../../app/headless-engine';
 import {
   registerSortCriterion,
   updateSortCriterion,
-} from '../../features/sort-criterion/sort-criterion-actions';
+} from '../../features/sort-criteria/sort-criteria-actions';
 import {executeSearch} from '../../features/search/search-actions';
-import {
-  SortCriterion,
-  buildEmptySortCriterion,
-} from '../../features/sort-criterion/criteria';
+import {SortCriterion} from '../../features/sort-criteria/criteria';
 import {Component} from '../component/headless-component';
 
-export interface SortOptions {
+export interface SortProps {
+  initialState: Partial<SortInitialState>;
+}
+
+export interface SortInitialState {
   /** The initial sort criterion to register in state. */
   criterion: SortCriterion;
 }
@@ -19,13 +20,8 @@ export interface SortOptions {
 export type SortState = Sort['state'];
 
 export class Sort extends Component {
-  private options: SortOptions = {
-    criterion: buildEmptySortCriterion(),
-  };
-
-  constructor(engine: Engine, options: Partial<SortOptions>) {
+  constructor(engine: Engine, private props: Partial<SortProps> = {}) {
     super(engine);
-    this.options = {...this.options, ...options};
     this.register();
   }
 
@@ -57,8 +53,11 @@ export class Sort extends Component {
   }
 
   private register() {
-    const {criterion} = this.options;
-    this.dispatch(registerSortCriterion(criterion));
+    const criterion = this.props.initialState?.criterion;
+
+    if (criterion) {
+      this.dispatch(registerSortCriterion(criterion));
+    }
   }
 
   private search() {

@@ -2,6 +2,7 @@ import {Component, h, State} from '@stencil/core';
 import {
   Sort,
   SortState,
+  SortInitialState,
   buildRelevanceSortCriterion,
   buildDateSortCriterion,
   buildFieldSortCriterion,
@@ -28,7 +29,8 @@ export class AtomicSortDropdown {
   private unsubscribe: Unsubscribe;
 
   constructor() {
-    this.sort = new Sort(headlessEngine, {criterion: this.relevance});
+    const initialState: Partial<SortInitialState> = {criterion: this.relevance};
+    this.sort = new Sort(headlessEngine, {initialState});
     this.unsubscribe = this.sort.subscribe(() => this.updateState());
   }
 

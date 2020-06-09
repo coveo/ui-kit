@@ -36,7 +36,3 @@ export function buildCompositeSortCriterion(
 
   return {expression};
 }
-
-export function buildEmptySortCriterion(): SortCriterion {
-  return {expression: ''};
-}

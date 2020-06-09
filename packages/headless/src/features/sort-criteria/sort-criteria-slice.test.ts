@@ -2,11 +2,11 @@ import {
   sortCriteriaReducer,
   SortCriteriaState,
   getSortCriteriaInitialState,
-} from './sort-criterion-slice';
+} from './sort-criteria-slice';
 import {
   registerSortCriterion,
   updateSortCriterion,
-} from './sort-criterion-actions';
+} from './sort-criteria-actions';
 import {buildFieldSortCriterion, buildRelevanceSortCriterion} from './criteria';
 
 describe('sortCriteria', () => {
@@ -16,29 +16,17 @@ describe('sortCriteria', () => {
     initialState = getSortCriteriaInitialState();
   });
 
-  it('initializes the state to an empty string', () => {
+  it('initializes the state to relevancy', () => {
     const finalState = sortCriteriaReducer(undefined, {type: ''});
-    expect(finalState).toBe('');
+    expect(finalState).toBe('relevancy');
   });
 
-  it(`when the state is an empty string and a registerSortCriterion is received,
-  it updates the state to the passed criterion expression`, () => {
+  it('#registerSortCriterion updates the state to the passed criterion expression', () => {
     const criterion = buildFieldSortCriterion('author', 'ascending');
     const action = registerSortCriterion(criterion);
     const finalState = sortCriteriaReducer(initialState, action);
 
     expect(finalState).toBe(criterion.expression);
-  });
-
-  it(`when the state is not an empty string and a registerSortCriterion is received,
-  it updates the state to the passed expression`, () => {
-    initialState = 'relevancy';
-
-    const criterion = buildFieldSortCriterion('author', 'ascending');
-    const action = registerSortCriterion(criterion);
-    const finalState = sortCriteriaReducer(initialState, action);
-
-    expect(finalState).toBe(initialState);
   });
 
   it('when an updateSortCriterion is received, it updates the state to the passed criterion expression', () => {

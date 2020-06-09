@@ -16,6 +16,10 @@ import {
 import {executeSearch} from '../../features/search/search-actions';
 import {Component} from '../component/headless-component';
 
+export interface SearchBoxProps {
+  options: Partial<SearchBoxOptions>;
+}
+
 export interface SearchBoxOptions {
   /**
    * A unique identifier for the component.
@@ -54,9 +58,9 @@ export class SearchBox extends Component {
     numberOfSuggestions: 5,
   };
 
-  constructor(engine: Engine, options: Partial<SearchBoxOptions> = {}) {
+  constructor(engine: Engine, props: Partial<SearchBoxProps> = {}) {
     super(engine);
-    this.options = {...this.options, ...options};
+    this.options = {...this.options, ...props.options};
 
     this.registerQuery();
     this.registerQuerySuggest();

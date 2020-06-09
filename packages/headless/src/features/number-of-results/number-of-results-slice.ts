@@ -7,17 +7,14 @@ import {
 export type NumberOfResultsState = number;
 
 export function getNumberOfResultsInitialState(): NumberOfResultsState {
-  return -1;
+  return 10;
 }
 
 export const numberOfResultsReducer = createReducer(
   getNumberOfResultsInitialState(),
   (builder) => {
     builder
-      .addCase(registerNumberOfResults, (state, action) => {
-        const wasInitialized = state !== getNumberOfResultsInitialState();
-        return wasInitialized ? state : action.payload;
-      })
+      .addCase(registerNumberOfResults, (_, action) => action.payload)
       .addCase(updateNumberOfResults, (_, action) => action.payload);
   }
 );

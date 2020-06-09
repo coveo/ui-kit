@@ -2,7 +2,7 @@ import {QuerySuggestCompletion} from './api/search/query-suggest/query-suggest-r
 import {QuerySetState} from './features/query-set/query-set-slice';
 import {SearchState} from './features/search/search-slice';
 import {NumberOfResultsState} from './features/number-of-results/number-of-results-slice';
-import {SortCriteriaState} from './features/sort-criterion/sort-criterion-slice';
+import {SortCriteriaState} from './features/sort-criteria/sort-criteria-slice';
 
 export interface HeadlessState {
   /**

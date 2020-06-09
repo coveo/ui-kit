@@ -1,5 +1,10 @@
 import {Component, ComponentInterface, h, Prop, State} from '@stencil/core';
-import {SearchBox, SearchBoxState, SearchBoxOptions, Unsubscribe} from '@coveo/headless';
+import {
+  SearchBox,
+  SearchBoxState,
+  SearchBoxOptions,
+  Unsubscribe,
+} from '@coveo/headless';
 import {headlessEngine} from '../../engine';
 
 @Component({
@@ -18,11 +23,14 @@ export class AtomicSearchBox implements ComponentInterface {
   private unsubscribe: Unsubscribe;
 
   constructor() {
-    this.searchBox = new SearchBox(headlessEngine, this.options);
+    this.searchBox = new SearchBox(headlessEngine, {options: this.options});
     this.unsubscribe = this.searchBox.subscribe(() => this.updateState());
   }
 
-  public componentShouldUpdate(newState: SearchBoxState, oldState: SearchBoxState) {
+  public componentShouldUpdate(
+    newState: SearchBoxState,
+    oldState: SearchBoxState
+  ) {
     // Stencil re-renders whenever the state is updated, checking for state changes prevent rerenders
     return JSON.stringify(newState) !== JSON.stringify(oldState);
   }

@@ -1,46 +1,47 @@
 import {MockEngine, buildMockEngine} from '../../test/mock-engine';
-import {Sort, SortOptions} from './headless-sort';
+import {Sort, SortProps} from './headless-sort';
 import {
   buildRelevanceSortCriterion,
   buildDateSortCriterion,
-  buildEmptySortCriterion,
-} from '../../features/sort-criterion/criteria';
+} from '../../features/sort-criteria/criteria';
 import {
   registerSortCriterion,
   updateSortCriterion,
-} from '../../features/sort-criterion/sort-criterion-actions';
+} from '../../features/sort-criteria/sort-criteria-actions';
 import {executeSearch} from '../../features/search/search-actions';
 import {createMockState} from '../../test/mock-state';
 
 describe('Sort', () => {
   let engine: MockEngine;
-  let options: Partial<SortOptions>;
+  let props: SortProps;
   let sort: Sort;
 
   function initSort() {
-    sort = new Sort(engine, options);
+    sort = new Sort(engine, props);
   }
 
   beforeEach(() => {
     engine = buildMockEngine();
-    options = {};
+    props = {
+      initialState: {},
+    };
 
     initSort();
   });
 
-  it('when the #criterion option is not specified, it dispatches a registration action with an empty criterion', () => {
-    const action = registerSortCriterion(buildEmptySortCriterion());
-
-    expect(engine.actions).toContainEqual(action);
-    expect(options.criterion).toBe(undefined);
+  it('when the #criterion option is not specified, it does not dispatch a registration action', () => {
+    const action = engine.actions.find(
+      (a) => a.type === registerSortCriterion.type
+    );
+    expect(action).toBe(undefined);
   });
 
   it('when the #criterion option is specified, it dispatches a registration action', () => {
-    options.criterion = buildRelevanceSortCriterion();
+    props.initialState.criterion = buildRelevanceSortCriterion();
     initSort();
 
     expect(engine.actions).toContainEqual(
-      registerSortCriterion(options.criterion)
+      registerSortCriterion(props.initialState.criterion)
     );
   });
 

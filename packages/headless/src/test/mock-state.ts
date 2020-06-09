@@ -5,7 +5,7 @@ import {getRedirectionInitialState} from '../features/redirection/redirection-sl
 import {getQuerySetInitialState} from '../features/query-set/query-set-slice';
 import {getSearchInitialState} from '../features/search/search-slice';
 import {getNumberOfResultsInitialState} from '../features/number-of-results/number-of-results-slice';
-import {getSortCriteriaInitialState} from '../features/sort-criterion/sort-criterion-slice';
+import {getSortCriteriaInitialState} from '../features/sort-criteria/sort-criteria-slice';
 
 export function createMockState(
   config: Partial<HeadlessState> = {}

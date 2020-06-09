@@ -15,26 +15,17 @@ describe('numberOfResults slice', () => {
     state = getNumberOfResultsInitialState();
   });
 
-  it('initializes the number of results to -1', () => {
+  it('initializes the number of results to 10', () => {
     const finalState = numberOfResultsReducer(undefined, {type: ''});
-    expect(finalState).toBe(-1);
+    expect(finalState).toBe(10);
   });
 
-  it('when the state is not initialized, #registerNumberOfResults sets the state to the passed value', () => {
+  it('#registerNumberOfResults sets the state to the passed value', () => {
     const action = registerNumberOfResults(state + 1);
     const finalState = numberOfResultsReducer(state, action);
 
     expect(finalState).toBe(action.payload);
     expect(finalState).not.toBe(state);
-  });
-
-  it('when the state is initialized, #registerNumberOfResults does not change the state', () => {
-    state = 20;
-    const action = registerNumberOfResults(state + 1);
-    const finalState = numberOfResultsReducer(state, action);
-
-    expect(finalState).toBe(state);
-    expect(finalState).not.toBe(action.payload);
   });
 
   it('#updateNumberOfResults sets the state to the passed value', () => {
