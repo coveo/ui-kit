@@ -11,15 +11,5 @@
         ]
       }
     ]
-  },
-  "overrides": [
-    {
-      "files": [
-        "webpack.*.js"
-      ],
-      "rules": {
-        "node/no-unpublished-require": "off"
-      }
-    }
-  ]
+  }
 }

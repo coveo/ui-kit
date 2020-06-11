@@ -1,3 +1,10 @@
+import {
+  Schema,
+  SchemaValues,
+  StringValue,
+  NumberValue,
+  BooleanValue,
+} from '@coveo/bueno';
 import {checkForRedirection} from '../../features/redirection/redirection-actions';
 import {
   fetchQuerySuggestions,
@@ -24,12 +31,12 @@ export interface SearchBoxProps {
   options: Partial<SearchBoxOptions>;
 }
 
-export interface SearchBoxOptions {
+const SearchBoxOptionsSchema = new Schema({
   /**
    * A unique identifier for the component.
    * By default, a unique random identifier is generated.
    */
-  id: string;
+  id: new StringValue({default: () => randomID('search_box')}),
   /**
    * The number of query suggestions to request from Coveo ML (e.g., `3`).
    *
@@ -37,14 +44,18 @@ export interface SearchBoxOptions {
    *
    * @default 5
    */
-  numberOfSuggestions: number;
+  numberOfSuggestions: new NumberValue({default: 5, min: 0}),
   /**
    * Whether the search box is standalone.
    *
    * Submitting a query from a standalone search box will redirect the user to another page.
+   *
+   * @default false
    */
-  isStandalone: boolean;
-}
+  isStandalone: new BooleanValue({default: false}),
+});
+
+export type SearchBoxOptions = SchemaValues<typeof SearchBoxOptionsSchema>;
 
 /**
  * A scoped and simplified part of the headless state that is relevant to the `SearchBox` component.
@@ -56,15 +67,13 @@ export type SearchBoxState = SearchBox['state'];
  */
 export class SearchBox extends Component {
   public text = '';
-  private options: SearchBoxOptions = {
-    id: randomID('searchBox_'),
-    isStandalone: false,
-    numberOfSuggestions: 5,
-  };
+  private options: Required<SearchBoxOptions>;
 
   constructor(engine: Engine, props: Partial<SearchBoxProps> = {}) {
     super(engine);
-    this.options = {...this.options, ...props.options};
+    this.options = SearchBoxOptionsSchema.validate(props.options) as Required<
+      SearchBoxOptions
+    >;
 
     this.registerQuery();
     this.registerQuerySuggest();
@@ -82,7 +91,7 @@ export class SearchBox extends Component {
    * @param value  The string value to update the search box with.
    */
   public updateText(value: string) {
-    this.dispatch(updateQuerySetQuery({id: this.id, query: value}));
+    this.dispatch(updateQuerySetQuery({id: this.options.id, query: value}));
 
     if (this.options.numberOfSuggestions) {
       this.showSuggestions();
@@ -93,21 +102,21 @@ export class SearchBox extends Component {
    * Clears the search box text and the suggestions.
    */
   public clear() {
-    this.dispatch(clearQuerySuggest({id: this.id}));
+    this.dispatch(clearQuerySuggest({id: this.options.id}));
   }
 
   /**
    * Clears the suggestions.
    */
   public hideSuggestions() {
-    this.dispatch(clearQuerySuggestCompletions({id: this.id}));
+    this.dispatch(clearQuerySuggestCompletions({id: this.options.id}));
   }
 
   /**
    * Shows the suggestions for the current search box value.
    */
   public showSuggestions() {
-    this.dispatch(fetchQuerySuggestions({id: this.id}));
+    this.dispatch(fetchQuerySuggestions({id: this.options.id}));
   }
 
   /**
@@ -115,8 +124,9 @@ export class SearchBox extends Component {
    * @param value The string value of the suggestion to select
    */
   public selectSuggestion(value: string) {
-    // TODO analytics on suggestion select
-    this.dispatch(selectQuerySuggestion({id: this.id, expression: value}));
+    this.dispatch(
+      selectQuerySuggestion({id: this.options.id, expression: value})
+    );
     this.submit();
   }
 
@@ -144,9 +154,9 @@ export class SearchBox extends Component {
    */
   public get state() {
     const state = this.engine.state;
-    const querySuggestState = state.querySuggest[this.id]!;
+    const querySuggestState = state.querySuggest[this.options.id]!;
     return {
-      value: state.querySet[this.id],
+      value: state.querySet[this.options.id],
       suggestions: querySuggestState.completions.map((completion) => ({
         value: completion.expression,
       })),
@@ -155,14 +165,14 @@ export class SearchBox extends Component {
   }
 
   private registerQuery() {
-    const action = registerQuerySetQuery({id: this.id, query: ''});
+    const action = registerQuerySetQuery({id: this.options.id, query: ''});
     this.dispatch(action);
   }
 
   private registerQuerySuggest() {
     this.dispatch(
       registerQuerySuggest({
-        id: this.id,
+        id: this.options.id,
         q: this.engine.state.query.q,
         count: this.options.numberOfSuggestions,
       })

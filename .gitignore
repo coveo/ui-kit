@@ -5,3 +5,4 @@ npm-debug.log
 .ds_store
 dist
 veracode
+.size-snapshot.json
