@@ -2,7 +2,7 @@ import {Engine} from '../../app/headless-engine';
 import {
   registerNumberOfResults,
   updateNumberOfResults,
-} from '../../features/number-of-results/number-of-results-actions';
+} from '../../features/pagination/pagination-actions';
 import {executeSearch} from '../../features/search/search-actions';
 import {Component} from '../component/headless-component';
 
@@ -46,7 +46,7 @@ export class ResultsPerPage extends Component {
    */
   public get state() {
     return {
-      numberOfResults: this.engine.state.numberOfResults,
+      numberOfResults: this.engine.state.pagination.numberOfResults,
     };
   }
 

@@ -3,9 +3,10 @@ import {MockEngine, buildMockEngine} from '../../test/mock-engine';
 import {
   registerNumberOfResults,
   updateNumberOfResults,
-} from '../../features/number-of-results/number-of-results-actions';
+} from '../../features/pagination/pagination-actions';
 import {executeSearch} from '../../features/search/search-actions';
 import {createMockState} from '../../test/mock-state';
+import {buildMockPagination} from '../../test/mock-pagination';
 
 describe('ResultsPerPage', () => {
   let engine: MockEngine;
@@ -69,7 +70,10 @@ describe('ResultsPerPage', () => {
     const numOfResultsInState = 10;
 
     beforeEach(() => {
-      const state = createMockState({numberOfResults: numOfResultsInState});
+      const pagination = buildMockPagination({
+        numberOfResults: numOfResultsInState,
+      });
+      const state = createMockState({pagination});
       engine = buildMockEngine({state});
       initResultsPerPage();
     });

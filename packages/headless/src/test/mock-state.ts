@@ -4,7 +4,7 @@ import {getQueryInitialState} from '../features/query/query-slice';
 import {getRedirectionInitialState} from '../features/redirection/redirection-slice';
 import {getQuerySetInitialState} from '../features/query-set/query-set-slice';
 import {getSearchInitialState} from '../features/search/search-slice';
-import {getNumberOfResultsInitialState} from '../features/number-of-results/number-of-results-slice';
+import {getPaginationInitialState} from '../features/pagination/pagination-slice';
 import {getSortCriteriaInitialState} from '../features/sort-criteria/sort-criteria-slice';
 
 export function createMockState(
@@ -12,7 +12,7 @@ export function createMockState(
 ): HeadlessState {
   return {
     configuration: getConfigurationInitialState(),
-    numberOfResults: getNumberOfResultsInitialState(),
+    pagination: getPaginationInitialState(),
     query: getQueryInitialState(),
     querySet: getQuerySetInitialState(),
     querySuggest: {},

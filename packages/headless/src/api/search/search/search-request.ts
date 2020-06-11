@@ -11,7 +11,7 @@ export interface SearchRequest {
 export const searchRequestParams = (state: HeadlessState): SearchRequest => {
   return {
     ...getQParam(state),
-    numberOfResults: state.numberOfResults,
+    numberOfResults: state.pagination.numberOfResults,
     sortCriteria: state.sortCriteria,
   };
 };

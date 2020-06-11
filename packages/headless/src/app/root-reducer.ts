@@ -6,14 +6,14 @@ import {HeadlessState} from '../state';
 import {querySuggestReducer} from '../features/query-suggest/query-suggest-slice';
 import {querySetReducer} from '../features/query-set/query-set-slice';
 import {searchReducer} from '../features/search/search-slice';
-import {numberOfResultsReducer} from '../features/number-of-results/number-of-results-slice';
+import {paginationReducer} from '../features/pagination/pagination-slice';
 import {sortCriteriaReducer} from '../features/sort-criteria/sort-criteria-slice';
 
 export const rootReducer = combineReducers<HeadlessState>({
   query: queryReducer,
   querySet: querySetReducer,
   configuration: configurationReducer,
-  numberOfResults: numberOfResultsReducer,
+  pagination: paginationReducer,
   redirection: redirectionReducer,
   querySuggest: querySuggestReducer,
   search: searchReducer,

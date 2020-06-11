@@ -11,5 +11,5 @@ export * as queryActions from './features/query/query-actions';
 export * as configurationActions from './features/configuration/configuration-actions';
 export * as querySuggestActions from './features/query-suggest/query-suggest-actions';
 export * as redirectionActions from './features/redirection/redirection-actions';
-export * as numberOfResultsActions from './features/number-of-results/number-of-results-actions';
+export * as paginationActions from './features/pagination/pagination-actions';
 export * as sortCriterionActions from './features/sort-criteria/sort-criteria-actions';

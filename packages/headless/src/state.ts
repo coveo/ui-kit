@@ -1,7 +1,7 @@
 import {QuerySuggestCompletion} from './api/search/query-suggest/query-suggest-response';
 import {QuerySetState} from './features/query-set/query-set-slice';
 import {SearchState} from './features/search/search-slice';
-import {NumberOfResultsState} from './features/number-of-results/number-of-results-slice';
+import {PaginationState} from './features/pagination/pagination-slice';
 import {SortCriteriaState} from './features/sort-criteria/sort-criteria-slice';
 
 export interface HeadlessState {
@@ -18,9 +18,9 @@ export interface HeadlessState {
    */
   configuration: ConfigurationState;
   /**
-   * The number of results to request.
+   * The properties related to pagination.
    */
-  numberOfResults: NumberOfResultsState;
+  pagination: PaginationState;
   /**
    * The URL redirection triggered by the preprocessed query.
    */
