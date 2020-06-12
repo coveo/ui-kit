@@ -16,9 +16,7 @@
     "build:prod": "rollup -c --environment BUILD:production",
     "clean": "rm -f -r dist/*",
     "test": "jest",
-    "test:watch": "jest --watch --colors --no-cache",
-    "report:bundle-size": "node ./benchmark/bundle-size/bundle-size.js",
-    "report:bundle-size:time-series": "node ./benchmark/bundle-size/time-series.js"
+    "test:watch": "jest --watch --colors --no-cache"
   },
   "dependencies": {
     "@coveo/bueno": "*",

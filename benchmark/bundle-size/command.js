@@ -4,14 +4,14 @@ const { promisify } = require('util');
 const exec = promisify(require('child_process').exec);
 
 async function computeFileSizes() {
-  await installDependencies();
+  await setup();
   await buildFiles();
   return readFileSizes();
 }
 
-async function installDependencies() {
-  console.log('installing dependencies');
-  await exec('npm i');
+async function setup() {
+  console.log('setting up repositories');
+  await exec('npm run setup');
 }
 
 async function buildFiles() {
@@ -21,7 +21,7 @@ async function buildFiles() {
 
 function readFileSizes() {
   console.log('getting file sizes');
-  const path = resolve('.size-snapshot.json')
+  const path = resolve('packages/headless/.size-snapshot.json')
   const buffer = readFileSync(path)
   return JSON.parse(buffer.toString());
 }
