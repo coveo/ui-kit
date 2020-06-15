@@ -44,17 +44,19 @@ const libUMD = {
 
 
 const libESM = {
-    input: './src/coveoua/library.ts',
+    input: './src/coveoua/headless.ts',
     output: {
         file: './dist/library.es.js',
         format: 'es',
         sourcemap: true
     },
     plugins: [
-        tsPlugin(),
+        typescript({
+            useTsconfigDeclarationDir: true,
+            tsconfigOverride: {compilerOptions: {"target": "es6"}}
+        }),
         terser()
     ]
 }
-
 
 export default [browser, libUMD, libESM];

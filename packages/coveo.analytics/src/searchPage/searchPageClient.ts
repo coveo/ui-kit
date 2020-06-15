@@ -1,5 +1,5 @@
 import CoveoAnalyticsClient, { ClientOptions } from '../client/analytics';
-import { SearchEventRequest, ClickEventRequest, DocumentInformation, CustomEventRequest } from '../events';
+import { SearchEventRequest, ClickEventRequest, CustomEventRequest } from '../events';
 import { SearchPageEvents, OmniboxSuggestionsMetadata, FacetMetadata, FacetRangeMetadata, CategoryFacetMetadata, DocumentIdentifier, InterfaceChangeMetadata, ResultsSortMetadata, PartialDocumentInformation, CustomEventsTypes, TriggerNotifyMetadata, TriggerExecuteMetadata, TriggerRedirectMetadata } from './searchPageEvents';
 
 
