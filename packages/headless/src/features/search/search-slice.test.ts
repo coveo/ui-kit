@@ -5,6 +5,7 @@ import {
 } from './search-slice';
 import {executeSearch} from './search-actions';
 import {buildMockSearchResponse} from '../../test/mock-search-response';
+import {buildMockResult} from '../../test/mock-result';
 
 describe('search-slice', () => {
   let state: SearchState;
@@ -19,7 +20,8 @@ describe('search-slice', () => {
   });
 
   it('when a executeSearch fulfilled is received, it updates the state to the received payload', () => {
-    const response = buildMockSearchResponse();
+    const result = buildMockResult();
+    const response = buildMockSearchResponse({results: [result]});
 
     const action = executeSearch.fulfilled({response, duration: 123}, '');
     const finalState = searchReducer(state, action);

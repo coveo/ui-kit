@@ -6,6 +6,8 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 export namespace Components {
+    interface AtomicPager {
+    }
     interface AtomicResultList {
     }
     interface AtomicResultsPerPage {
@@ -32,6 +34,12 @@ export namespace Components {
     }
 }
 declare global {
+    interface HTMLAtomicPagerElement extends Components.AtomicPager, HTMLStencilElement {
+    }
+    var HTMLAtomicPagerElement: {
+        prototype: HTMLAtomicPagerElement;
+        new (): HTMLAtomicPagerElement;
+    };
     interface HTMLAtomicResultListElement extends Components.AtomicResultList, HTMLStencilElement {
     }
     var HTMLAtomicResultListElement: {
@@ -63,6 +71,7 @@ declare global {
         new (): HTMLMyComponentElement;
     };
     interface HTMLElementTagNameMap {
+        "atomic-pager": HTMLAtomicPagerElement;
         "atomic-result-list": HTMLAtomicResultListElement;
         "atomic-results-per-page": HTMLAtomicResultsPerPageElement;
         "atomic-search-box": HTMLAtomicSearchBoxElement;
@@ -71,6 +80,8 @@ declare global {
     }
 }
 declare namespace LocalJSX {
+    interface AtomicPager {
+    }
     interface AtomicResultList {
     }
     interface AtomicResultsPerPage {
@@ -96,6 +107,7 @@ declare namespace LocalJSX {
         "middle"?: string;
     }
     interface IntrinsicElements {
+        "atomic-pager": AtomicPager;
         "atomic-result-list": AtomicResultList;
         "atomic-results-per-page": AtomicResultsPerPage;
         "atomic-search-box": AtomicSearchBox;
@@ -107,6 +119,7 @@ export { LocalJSX as JSX };
 declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
+            "atomic-pager": LocalJSX.AtomicPager & JSXBase.HTMLAttributes<HTMLAtomicPagerElement>;
             "atomic-result-list": LocalJSX.AtomicResultList & JSXBase.HTMLAttributes<HTMLAtomicResultListElement>;
             "atomic-results-per-page": LocalJSX.AtomicResultsPerPage & JSXBase.HTMLAttributes<HTMLAtomicResultsPerPageElement>;
             "atomic-search-box": LocalJSX.AtomicSearchBox & JSXBase.HTMLAttributes<HTMLAtomicSearchBoxElement>;

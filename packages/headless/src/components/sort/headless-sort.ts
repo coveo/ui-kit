@@ -7,6 +7,7 @@ import {executeSearch} from '../../features/search/search-actions';
 import {logResultsSort} from '../../features/analytics/analytics-actions';
 import {SortCriterion} from '../../features/sort-criteria/criteria';
 import {Component} from '../component/headless-component';
+import {updatePage} from '../../features/pagination/pagination-actions';
 
 export interface SortProps {
   initialState: Partial<SortInitialState>;
@@ -32,6 +33,7 @@ export class Sort extends Component {
    */
   public sortBy(criterion: SortCriterion) {
     this.dispatch(updateSortCriterion(criterion));
+    this.dispatch(updatePage(1));
     this.search();
   }
 

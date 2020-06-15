@@ -26,6 +26,7 @@ import {
   logSearchboxSubmit,
 } from '../../features/analytics/analytics-actions';
 import {Component} from '../component/headless-component';
+import {updatePage} from '../../features/pagination/pagination-actions';
 
 export interface SearchBoxProps {
   options: Partial<SearchBoxOptions>;
@@ -136,6 +137,7 @@ export class SearchBox extends Component {
    */
   public submit() {
     this.dispatch(updateQuery({q: this.state.value}));
+    this.dispatch(updatePage(1));
 
     if (this.options.isStandalone) {
       this.dispatch(checkForRedirection()).then(() =>

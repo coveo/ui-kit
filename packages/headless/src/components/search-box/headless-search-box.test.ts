@@ -21,6 +21,7 @@ import {
 import {buildMockQuerySuggest} from '../../test/mock-query-suggest';
 import {buildMockEngine, MockEngine} from '../../test/mock-engine';
 import {HeadlessState} from '../../state';
+import {updatePage} from '../../features/pagination/pagination-actions';
 
 describe('headless searchBox', () => {
   const id = 'search-box-123';
@@ -153,6 +154,11 @@ describe('headless searchBox', () => {
       searchBox.submit();
 
       expect(engine.actions).toContainEqual(updateQuery({q: expectedQuery}));
+    });
+
+    it('updates the page to the first one', () => {
+      searchBox.submit();
+      expect(engine.actions).toContainEqual(updatePage(1));
     });
 
     it(`when the isStandalone option is true

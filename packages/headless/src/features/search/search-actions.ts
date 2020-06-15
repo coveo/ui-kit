@@ -6,7 +6,7 @@ import {HeadlessState} from '../../state';
  * Executes a search query.
  */
 export const executeSearch = createAsyncThunk(
-  'search/execute',
+  'search/executeSearch',
   async (_, {getState}) => {
     const startedAt = new Date().getTime();
     const response = await SearchAPIClient.search(getState() as HeadlessState);

@@ -10,6 +10,7 @@ import {
 } from '../../features/sort-criteria/sort-criteria-actions';
 import {executeSearch} from '../../features/search/search-actions';
 import {createMockState} from '../../test/mock-state';
+import {updatePage} from '../../features/pagination/pagination-actions';
 
 describe('Sort', () => {
   let engine: MockEngine;
@@ -55,6 +56,10 @@ describe('Sort', () => {
     it('dispatches an updateSortCriterion action with the passed criterion', () => {
       const action = updateSortCriterion(criterion);
       expect(engine.actions).toContainEqual(action);
+    });
+
+    it('updates the page to the first one', () => {
+      expect(engine.actions).toContainEqual(updatePage(1));
     });
 
     it('dispatches an executeSearch', () => {
