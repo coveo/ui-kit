@@ -13,6 +13,7 @@ export function getSearchInitialState(): SearchState {
     response: {
       results: [],
       searchUid: '',
+      totalCountFiltered: 0,
     },
     duration: 0,
   };

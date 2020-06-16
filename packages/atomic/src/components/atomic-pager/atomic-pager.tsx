@@ -26,7 +26,7 @@ export class AtomicPager {
   }
 
   private get pages() {
-    const pages = this.pager.state.availablePages;
+    const pages = this.pager.state.currentPages;
     return pages.map((page) => this.buildPage(page));
   }
 

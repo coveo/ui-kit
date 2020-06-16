@@ -6,6 +6,7 @@ export function buildMockSearchResponse(
   return {
     results: [],
     searchUid: '',
+    totalCountFiltered: 0,
     ...config,
   };
 }

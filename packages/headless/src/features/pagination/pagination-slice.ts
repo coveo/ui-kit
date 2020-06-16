@@ -18,12 +18,14 @@ export function getPaginationInitialState(): PaginationState {
   };
 }
 
+export const maximumNumberOfResultsFromIndex = 1000;
+
 export const paginationReducer = createReducer(
   getPaginationInitialState(),
   (builder) => {
     builder
       .addCase(registerNumberOfResults, (state, action) => {
-        const page = calculatePage(state);
+        const page = calculatePage(state.firstResult, state.numberOfResults);
         const newNumberOfResults = action.payload;
 
         state.numberOfResults = newNumberOfResults;
@@ -44,11 +46,10 @@ export const paginationReducer = createReducer(
   }
 );
 
-function calculateFirstResult(page: number, numberOfResults: number) {
+export function calculateFirstResult(page: number, numberOfResults: number) {
   return (page - 1) * numberOfResults;
 }
 
-function calculatePage(state: PaginationState) {
-  const {firstResult, numberOfResults} = state;
+export function calculatePage(firstResult: number, numberOfResults: number) {
   return firstResult / numberOfResults + 1;
 }
