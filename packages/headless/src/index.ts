@@ -1,4 +1,5 @@
 export * from './app/headless-engine';
+export * from './app/reducers';
 export {HeadlessState} from './state';
 
 export * from './components/search-box/headless-search-box';

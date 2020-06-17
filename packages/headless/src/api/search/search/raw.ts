@@ -24,4 +24,4 @@ type BaseRaw = {
   language: string[];
 };
 
-export type Raw = BaseRaw & Record<string, any>;
+export type Raw = BaseRaw & Record<string, unknown>;

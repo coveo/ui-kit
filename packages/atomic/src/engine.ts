@@ -1,5 +1,6 @@
-import {ReduxEngine} from '@coveo/headless';
+import {HeadlessEngine, allReducers} from '@coveo/headless';
 
-export const headlessEngine = new ReduxEngine({
-  configuration: ReduxEngine.getSampleConfiguration(),
+export const headlessEngine = new HeadlessEngine({
+  configuration: HeadlessEngine.getSampleConfiguration(),
+  reducers: allReducers,
 });

@@ -1,13 +1,22 @@
 import {
   configureStore as configureStoreToolkit,
   getDefaultMiddleware,
+  ReducersMapObject,
+  combineReducers,
+  StateFromReducersMapObject,
 } from '@reduxjs/toolkit';
-import {rootReducer} from './root-reducer';
-import {HeadlessState} from '../state';
 
-export function configureStore(preloadedState?: HeadlessState) {
+interface ConfigureStoreOptions<Reducers extends ReducersMapObject> {
+  reducers: Reducers;
+  preloadedState?: StateFromReducersMapObject<Reducers>;
+}
+
+export function configureStore<Reducers extends ReducersMapObject>({
+  reducers,
+  preloadedState,
+}: ConfigureStoreOptions<Reducers>) {
   const store = configureStoreToolkit({
-    reducer: rootReducer,
+    reducer: combineReducers(reducers),
     preloadedState,
     middleware: [...getDefaultMiddleware()],
   });

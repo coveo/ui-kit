@@ -1,22 +1,23 @@
-import {configureStore, Store} from './store';
-import {HeadlessState} from '../state';
-import {
-  updateBasicConfiguration,
-  updateSearchConfiguration,
-} from '../features/configuration/configuration-actions';
 import {
   Unsubscribe,
   ThunkDispatch,
   AnyAction,
   Dispatch,
+  ReducersMapObject,
+  StateFromReducersMapObject,
 } from '@reduxjs/toolkit';
-
 export {Unsubscribe} from '@reduxjs/toolkit';
+import {
+  updateBasicConfiguration,
+  updateSearchConfiguration,
+} from '../features/configuration/configuration-actions';
+import {configureStore, Store} from './store';
+import {HeadlessState} from '../state';
 
 /**
  * The global headless engine options.
  */
-export interface HeadlessOptions {
+export interface HeadlessOptions<Reducers extends ReducersMapObject> {
   /**
    * The global headless engine configuration options.
    */
@@ -27,7 +28,15 @@ export interface HeadlessOptions {
    * from the server in universal apps, or to restore a previously serialized
    * user session.
    */
-  preloadedState?: HeadlessState;
+  preloadedState?: StateFromReducersMapObject<Reducers>;
+  /**
+   * Map object of reducers.
+   * A reducer is a pure function that takes the previous state and an action, and returns the next state.
+   * ```
+   * (previousState, action) => nextState
+   * ```
+   */
+  reducers: Reducers;
 }
 
 /**
@@ -57,12 +66,31 @@ export interface HeadlessConfigurationOptions {
   };
 }
 
-export interface Engine {
-  dispatch: ThunkDispatch<any, null, AnyAction> &
-    ThunkDispatch<any, undefined, AnyAction> &
+export interface Engine<State = HeadlessState> {
+  /**
+   * Dispatches an action directly. This is the only way to trigger a state change.
+   * Each headless component dispatches its own actions.
+   *
+   * @param action An action supported by the headless engine.
+   *
+   * @returns For convenience, the action object that was just dispatched.
+   */
+  dispatch: ThunkDispatch<unknown, null, AnyAction> &
+    ThunkDispatch<unknown, undefined, AnyAction> &
     Dispatch<AnyAction>;
+  /**
+   * Adds a change listener. It will be called any time an action is
+   * dispatched, and some part of the state tree may potentially have changed.
+   * You may then access the new `state`.
+   *
+   * @param listener A callback to be invoked on every dispatch.
+   * @returns A function to remove this change listener.
+   */
   subscribe: (listener: () => void) => Unsubscribe;
-  state: HeadlessState;
+  /**
+   * The complete headless state tree.
+   */
+  state: State;
 }
 
 /**
@@ -70,11 +98,15 @@ export interface Engine {
  * You should instantiate one `Engine` class per application and share it.
  * Every headless component requires an instance of `Engine` as a parameter.
  */
-export class ReduxEngine implements Engine {
+export class HeadlessEngine<Reducers extends ReducersMapObject>
+  implements Engine<StateFromReducersMapObject<Reducers>> {
   private reduxStore: Store;
 
-  constructor(options: HeadlessOptions) {
-    this.reduxStore = configureStore(options.preloadedState);
+  constructor(options: HeadlessOptions<Reducers>) {
+    this.reduxStore = configureStore({
+      preloadedState: options.preloadedState,
+      reducers: options.reducers,
+    });
     this.reduxStore.dispatch(updateBasicConfiguration(options.configuration));
     if (options.configuration.search) {
       this.reduxStore.dispatch(
@@ -96,34 +128,15 @@ export class ReduxEngine implements Engine {
     };
   }
 
-  /**
-   * Dispatches an action directly. This is the only way to trigger a state change.
-   * Each headless component dispatches its own actions.
-   *
-   * @param action An action supported by the headless engine.
-   *
-   * @returns For convenience, the action object that was just dispatched.
-   */
   get dispatch() {
     return this.reduxStore.dispatch;
   }
 
-  /**
-   * Adds a change listener. It will be called any time an action is
-   * dispatched, and some part of the state tree may potentially have changed.
-   * You may then access the new `state`.
-   *
-   * @param listener A callback to be invoked on every dispatch.
-   * @returns A function to remove this change listener.
-   */
   get subscribe() {
     return this.reduxStore.subscribe;
   }
 
-  /**
-   * @returns The complete headless state tree.
-   */
-  get state(): HeadlessState {
-    return this.reduxStore.getState();
+  get state() {
+    return this.reduxStore.getState() as StateFromReducersMapObject<Reducers>;
   }
 }

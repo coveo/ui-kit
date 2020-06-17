@@ -1,24 +1,28 @@
-import {ReduxEngine, HeadlessOptions} from './headless-engine';
+import {HeadlessEngine, HeadlessOptions} from './headless-engine';
 import {
   updateBasicConfiguration,
   updateSearchConfiguration,
 } from '../features/configuration/configuration-actions';
 import * as storeConfig from './store';
+import {allReducers} from './reducers';
 
 describe('headless engine', () => {
-  let options: HeadlessOptions;
+  let options: HeadlessOptions<typeof allReducers>;
   let configureStoreSpy: jest.SpyInstance;
   let store: storeConfig.Store;
 
   beforeEach(() => {
-    store = storeConfig.configureStore();
+    store = storeConfig.configureStore({reducers: allReducers});
     jest.spyOn(store, 'dispatch');
     configureStoreSpy = jest
       .spyOn(storeConfig, 'configureStore')
       .mockReturnValue(store);
 
-    options = {configuration: ReduxEngine.getSampleConfiguration()};
-    new ReduxEngine(options);
+    options = {
+      configuration: HeadlessEngine.getSampleConfiguration(),
+      reducers: allReducers,
+    };
+    new HeadlessEngine(options);
   });
 
   it('should call configureStore', () => {
@@ -46,9 +50,10 @@ describe('headless engine', () => {
         accessToken: 'mytoken',
         organizationId: 'someorg',
       },
+      reducers: allReducers,
     };
 
-    new ReduxEngine(options);
+    new HeadlessEngine(options);
     expect(store.dispatch).not.toHaveBeenCalledWith(
       updateSearchConfiguration(options.configuration.search!)
     );
