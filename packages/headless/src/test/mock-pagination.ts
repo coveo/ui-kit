@@ -6,6 +6,7 @@ export function buildMockPagination(
   return {
     firstResult: 0,
     numberOfResults: 0,
+    totalCountFiltered: 0,
     ...config,
   };
 }

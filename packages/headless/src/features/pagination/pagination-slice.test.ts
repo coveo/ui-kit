@@ -2,16 +2,26 @@ import {
   paginationReducer,
   PaginationState,
   getPaginationInitialState,
+  calculatePage,
 } from './pagination-slice';
 import {
   registerNumberOfResults,
   updateNumberOfResults,
   updatePage,
   registerPage,
+  previousPage,
+  nextPage,
 } from './pagination-actions';
+import {executeSearch} from '../search/search-actions';
+import {buildMockSearch} from '../../test/mock-search';
 
 describe('pagination slice', () => {
   let state: PaginationState;
+
+  function determinePage(state: PaginationState) {
+    const {firstResult, numberOfResults} = state;
+    return calculatePage(firstResult, numberOfResults);
+  }
 
   beforeEach(() => {
     state = getPaginationInitialState();
@@ -19,7 +29,11 @@ describe('pagination slice', () => {
 
   it('initializes the state correctly', () => {
     const finalState = paginationReducer(undefined, {type: ''});
-    expect(finalState).toEqual({numberOfResults: 10, firstResult: 0});
+    expect(finalState).toEqual({
+      numberOfResults: 10,
+      firstResult: 0,
+      totalCountFiltered: 0,
+    });
   });
 
   it('#registerNumberOfResults sets the state #numberOfResults to the passed value', () => {
@@ -67,5 +81,48 @@ describe('pagination slice', () => {
     state.numberOfResults = 10;
     const finalState = paginationReducer(state, updatePage(2));
     expect(finalState.firstResult).toBe(10);
+  });
+
+  it('when on page 2, #previousPage sets the page to 1', () => {
+    state.firstResult = 10;
+    state.numberOfResults = 10;
+    expect(determinePage(state)).toBe(2);
+
+    const finalState = paginationReducer(state, previousPage());
+    expect(determinePage(finalState)).toBe(1);
+  });
+
+  it('when on page 1, #previousPage does nothing', () => {
+    expect(determinePage(state)).toBe(1);
+
+    const finalState = paginationReducer(state, previousPage());
+    expect(determinePage(finalState)).toBe(1);
+  });
+
+  it('when on page 1, #nextPage sets the page to 2', () => {
+    state.totalCountFiltered = 20;
+    expect(determinePage(state)).toBe(1);
+
+    const finalState = paginationReducer(state, nextPage());
+    expect(determinePage(finalState)).toBe(2);
+  });
+
+  it('when on page 1 and the maximum page is 1, #nextPage does nothing', () => {
+    state.totalCountFiltered = 10;
+    expect(determinePage(state)).toBe(1);
+
+    const finalState = paginationReducer(state, nextPage());
+    expect(determinePage(finalState)).toBe(1);
+  });
+
+  it('executeSearch.fulfilled updates totalCountFiltered to the response value', () => {
+    const search = buildMockSearch();
+    search.response.totalCountFiltered = 100;
+    const action = executeSearch.fulfilled(search, '');
+
+    const finalState = paginationReducer(state, action);
+    expect(finalState.totalCountFiltered).toBe(
+      search.response.totalCountFiltered
+    );
   });
 });

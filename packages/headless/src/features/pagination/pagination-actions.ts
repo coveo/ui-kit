@@ -27,3 +27,13 @@ export const registerPage = createAction<number>('pagination/registerPage');
  * @param number The new page number.
  */
 export const updatePage = createAction<number>('pagination/updatePage');
+
+/**
+ * Updates the page to the next page.
+ */
+export const nextPage = createAction('pagination/nextPage');
+
+/**
+ * Updates the page to the previous page.
+ */
+export const previousPage = createAction('pagination/previousPage');

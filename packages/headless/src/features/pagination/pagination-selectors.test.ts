@@ -38,7 +38,7 @@ describe('pagination selectors', () => {
   describe('maxPageSelector', () => {
     it('totalCountFiltered 10, numberOfResults 10, maxPage is 1', () => {
       state.pagination.numberOfResults = 10;
-      state.search.response.totalCountFiltered = 10;
+      state.pagination.totalCountFiltered = 10;
       const maxPage = maxPageSelector(state);
 
       expect(maxPage).toBe(1);
@@ -46,7 +46,7 @@ describe('pagination selectors', () => {
 
     it('totalCountFiltered 11, numberOfResults 10, maxPage is 2', () => {
       state.pagination.numberOfResults = 10;
-      state.search.response.totalCountFiltered = 11;
+      state.pagination.totalCountFiltered = 11;
       const maxPage = maxPageSelector(state);
 
       expect(maxPage).toBe(2);
@@ -54,7 +54,7 @@ describe('pagination selectors', () => {
 
     it(`totalCountFiltered greater than ${maximumNumberOfResultsFromIndex}, numberOfResults 10, maxPage is 100`, () => {
       state.pagination.numberOfResults = 10;
-      state.search.response.totalCountFiltered =
+      state.pagination.totalCountFiltered =
         maximumNumberOfResultsFromIndex + 10;
       const maxPage = maxPageSelector(state);
 
@@ -76,7 +76,7 @@ describe('pagination selectors', () => {
 
     function setMaxPage(page: number) {
       state.pagination.numberOfResults = numberOfResults;
-      state.search.response.totalCountFiltered = page * numberOfResults;
+      state.pagination.totalCountFiltered = page * numberOfResults;
     }
 
     beforeEach(() => setMaxPage(maxPage));

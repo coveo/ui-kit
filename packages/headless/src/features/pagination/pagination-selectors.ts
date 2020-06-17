@@ -1,9 +1,6 @@
 import {HeadlessState} from '../../state';
 import {createSelector} from '@reduxjs/toolkit';
-import {
-  maximumNumberOfResultsFromIndex,
-  calculatePage,
-} from './pagination-slice';
+import {calculatePage, calculateMaxPage, minimumPage} from './pagination-slice';
 
 interface Range {
   start: number;
@@ -19,7 +16,7 @@ function numberOfResultsSelector(state: HeadlessState) {
 }
 
 function totalCountFilteredSelector(state: HeadlessState) {
-  return state.search.response.totalCountFiltered;
+  return state.pagination.totalCountFiltered;
 }
 
 /** Calculates the current page number.
@@ -39,13 +36,7 @@ export const currentPageSelector = createSelector(
 export const maxPageSelector = createSelector(
   totalCountFilteredSelector,
   numberOfResultsSelector,
-  (totalCountFiltered, numberOfResults) => {
-    const totalCount = Math.min(
-      totalCountFiltered,
-      maximumNumberOfResultsFromIndex
-    );
-    return Math.ceil(totalCount / numberOfResults);
-  }
+  calculateMaxPage
 );
 
 /** Calculates the current pages relative to the current page.
@@ -77,8 +68,7 @@ function buildRange(page: number, desiredNumberOfPages: number): Range {
 }
 
 function shiftRightIfNeeded(range: Range) {
-  const minPage = 1;
-  const leftExcess = Math.max(minPage - range.start, 0);
+  const leftExcess = Math.max(minimumPage - range.start, 0);
   const start = range.start + leftExcess;
   const end = range.end + leftExcess;
 
@@ -86,9 +76,8 @@ function shiftRightIfNeeded(range: Range) {
 }
 
 function shiftLeftIfNeeded(range: Range, maxPage: number) {
-  const minPage = 1;
   const rightExcess = Math.max(range.end - maxPage, 0);
-  const start = Math.max(range.start - rightExcess, minPage);
+  const start = Math.max(range.start - rightExcess, minimumPage);
   const end = range.end - rightExcess;
 
   return {start, end};

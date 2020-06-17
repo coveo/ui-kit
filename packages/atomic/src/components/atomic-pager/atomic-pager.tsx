@@ -25,6 +25,24 @@ export class AtomicPager {
     this.state = this.pager.state;
   }
 
+  private get backButton() {
+    if (!this.pager.hasPreviousPage) {
+      return null;
+    }
+
+    const icon = '<';
+    return <button onClick={() => this.pager.previousPage()}>{icon}</button>;
+  }
+
+  private get nextButton() {
+    if (!this.pager.hasNextPage) {
+      return null;
+    }
+
+    const icon = '>';
+    return <button onClick={() => this.pager.nextPage()}>{icon}</button>;
+  }
+
   private get pages() {
     const pages = this.pager.state.currentPages;
     return pages.map((page) => this.buildPage(page));
@@ -42,6 +60,12 @@ export class AtomicPager {
   }
 
   render() {
-    return <span>{this.pages}</span>;
+    return (
+      <span>
+        {this.backButton}
+        {this.pages}
+        {this.nextButton}
+      </span>
+    );
   }
 }

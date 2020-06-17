@@ -4,12 +4,16 @@ import {Component} from '../component/headless-component';
 import {
   updatePage,
   registerPage,
+  nextPage,
+  previousPage,
 } from '../../features/pagination/pagination-actions';
 import {
   currentPageSelector,
   currentPagesSelector,
+  maxPageSelector,
 } from '../../features/pagination/pagination-selectors';
 import {executeSearch} from '../../features/search/search-actions';
+import {minimumPage} from '../../features/pagination/pagination-slice';
 
 export type PagerState = Pager['state'];
 
@@ -58,12 +62,44 @@ export class Pager extends Component {
    */
   public selectPage(page: number) {
     this.dispatch(updatePage(page));
-    this.dispatch(executeSearch());
+    this.search();
+  }
+
+  /**
+   * Updates the results to those on the next page.
+   */
+  public nextPage() {
+    this.dispatch(nextPage());
+    this.search();
+  }
+
+  /**
+   * Updates the results to those on the previous page.
+   */
+  public previousPage() {
+    this.dispatch(previousPage());
+    this.search();
+  }
+
+  /**
+   * Returns `true` when a next page is available, and `false` otherwise.
+   */
+  public get hasNextPage() {
+    const {currentPage, maxPage} = this.state;
+    return currentPage < maxPage;
+  }
+
+  /**
+   * Returns `true` when a previous page is available, and `false` otherwise.
+   */
+  public get hasPreviousPage() {
+    const {currentPage, maxPage} = this.state;
+    return currentPage > minimumPage && maxPage > 0;
   }
 
   /** Returns `true` when the current page is equal to the current page, and `false` otherwise.
    * @param page The page number to check.
-   * @returns boolean
+   * @returns boolean.
    */
   public isCurrentPage(page: number) {
     return page === this.state.currentPage;
@@ -76,6 +112,7 @@ export class Pager extends Component {
     return {
       currentPage: this.currentPage,
       currentPages: this.currentPages,
+      maxPage: this.maxPage,
     };
   }
 
@@ -86,5 +123,13 @@ export class Pager extends Component {
 
   private get currentPage() {
     return currentPageSelector(this.engine.state);
+  }
+
+  private get maxPage() {
+    return maxPageSelector(this.engine.state);
+  }
+
+  private search() {
+    this.dispatch(executeSearch());
   }
 }
