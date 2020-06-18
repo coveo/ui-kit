@@ -12,7 +12,7 @@ import {
   updateSearchConfiguration,
 } from '../features/configuration/configuration-actions';
 import {configureStore, Store} from './store';
-import {HeadlessState} from '../state';
+import {SearchPageState} from '../state';
 
 /**
  * The global headless engine options.
@@ -66,7 +66,7 @@ export interface HeadlessConfigurationOptions {
   };
 }
 
-export interface Engine<State = HeadlessState> {
+export interface Engine<State = SearchPageState> {
   /**
    * Dispatches an action directly. This is the only way to trigger a state change.
    * Each headless component dispatches its own actions.

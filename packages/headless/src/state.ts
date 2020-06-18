@@ -4,7 +4,11 @@ import {SearchState} from './features/search/search-slice';
 import {PaginationState} from './features/pagination/pagination-slice';
 import {SortCriteriaState} from './features/sort-criteria/sort-criteria-slice';
 
-export interface HeadlessState {
+export interface SearchPageState {
+  /**
+   * The global headless engine configuration.
+   */
+  configuration: ConfigurationState;
   /**
    * The expressions that constitute the current query.
    */
@@ -13,10 +17,6 @@ export interface HeadlessState {
    * The set of basic query expressions.
    */
   querySet: QuerySetState;
-  /**
-   * The global headless engine configuration.
-   */
-  configuration: ConfigurationState;
   /**
    * The properties related to pagination.
    */

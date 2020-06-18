@@ -4,14 +4,14 @@ import {
   currentPagesSelector,
 } from './pagination-selectors';
 import {createMockState} from '../../test/mock-state';
-import {HeadlessState} from '../../state';
+import {SearchPageState} from '../../state';
 import {
   maximumNumberOfResultsFromIndex,
   calculateFirstResult,
 } from './pagination-slice';
 
 describe('pagination selectors', () => {
-  let state: HeadlessState;
+  let state: SearchPageState;
 
   beforeEach(() => {
     state = createMockState();

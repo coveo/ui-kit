@@ -1,7 +1,7 @@
 import {SearchAPIClient} from './search-api-client';
 import {PlatformClient, PlatformClientCallOptions} from '../platform-client';
 import {PlanRequestParams} from './plan/plan-request';
-import {HeadlessState} from '../../state';
+import {SearchPageState} from '../../state';
 import {QuerySuggestRequestParams} from './query-suggest/query-suggest-request';
 import {createMockState} from '../../test/mock-state';
 import {buildMockQuerySuggest} from '../../test/mock-query-suggest';
@@ -25,7 +25,7 @@ describe('search api client', () => {
       query: {
         q: 'query',
       },
-    } as HeadlessState;
+    } as SearchPageState;
 
     SearchAPIClient.plan(state);
 

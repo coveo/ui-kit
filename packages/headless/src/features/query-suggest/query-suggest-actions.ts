@@ -1,5 +1,5 @@
-import {createAsyncThunk, createAction} from '@reduxjs/toolkit';
-import {HeadlessState} from '../../state';
+import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
+import {SearchPageState} from '../../state';
 import {getQuerySuggestions} from '../../api/search/query-suggest/query-suggest-endpoint';
 import {validatePayload} from '../../utils/validate-payload';
 import {NumberValue, StringValue, Schema} from '@coveo/bueno';
@@ -79,8 +79,9 @@ export const clearQuerySuggestCompletions = createAction(
  */
 export const fetchQuerySuggestions = createAsyncThunk(
   'querySuggest/fetch',
+
   async (payload: {id: string}, {getState}) => {
-    return await getQuerySuggestions(payload.id, getState() as HeadlessState);
+    return await getQuerySuggestions(payload.id, getState() as SearchPageState);
   },
   {
     condition: (payload: {id: string}) => {

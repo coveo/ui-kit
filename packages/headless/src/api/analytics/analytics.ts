@@ -1,8 +1,8 @@
 import {CoveoSearchPageClient, SearchPageClientProvider} from 'coveo.analytics';
-import {HeadlessState} from '../../state';
+import {SearchPageState} from '../../state';
 
 export class AnalyticsProvider implements SearchPageClientProvider {
-  constructor(private state: HeadlessState) {}
+  constructor(private state: SearchPageState) {}
 
   public getSearchEventRequestPayload() {
     return {
@@ -41,7 +41,7 @@ export class AnalyticsProvider implements SearchPageClientProvider {
   }
 }
 
-export const configureAnalytics = (state: HeadlessState) => {
+export const configureAnalytics = (state: SearchPageState) => {
   const provider = new AnalyticsProvider(state);
   return new CoveoSearchPageClient(
     {token: state.configuration.accessToken},

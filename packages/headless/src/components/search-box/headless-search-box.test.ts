@@ -20,12 +20,12 @@ import {
 } from '../../features/query-set/query-set-actions';
 import {buildMockQuerySuggest} from '../../test/mock-query-suggest';
 import {buildMockEngine, MockEngine} from '../../test/mock-engine';
-import {HeadlessState} from '../../state';
+import {SearchPageState} from '../../state';
 import {updatePage} from '../../features/pagination/pagination-actions';
 
 describe('headless searchBox', () => {
   const id = 'search-box-123';
-  let state: HeadlessState;
+  let state: SearchPageState;
 
   let engine: MockEngine;
   let searchBox: SearchBox;

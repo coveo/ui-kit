@@ -1,9 +1,9 @@
 import {searchRequestParams} from './search-request';
 import {createMockState} from '../../../test/mock-state';
-import {HeadlessState} from '../../../state';
+import {SearchPageState} from '../../../state';
 
 describe('search request', () => {
-  let state: HeadlessState;
+  let state: SearchPageState;
 
   beforeEach(() => {
     state = createMockState();

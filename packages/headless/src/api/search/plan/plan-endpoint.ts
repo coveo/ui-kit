@@ -1,5 +1,5 @@
 import {SearchAPIClient} from '../search-api-client';
-import {HeadlessState} from '../../../state';
+import {SearchPageState} from '../../../state';
 import {isTriggerRedirect} from '../trigger';
 import {PlanResponse} from './plan-response';
 
@@ -36,7 +36,7 @@ export class ExecutionPlan {
   }
 }
 
-export async function getExecutionPlan(state: HeadlessState) {
+export async function getExecutionPlan(state: SearchPageState) {
   const response = await SearchAPIClient.plan(state);
   return new ExecutionPlan(response);
 }

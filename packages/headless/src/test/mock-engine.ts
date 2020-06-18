@@ -2,7 +2,7 @@ import {Engine} from '../app/headless-engine';
 import {createMockState} from './mock-state';
 import createReduxMockStore from 'redux-mock-store';
 import {AnyAction, ThunkDispatch, getDefaultMiddleware} from '@reduxjs/toolkit';
-import {HeadlessState} from '../state';
+import {SearchPageState} from '../state';
 
 export interface MockEngine extends Engine {
   store: MockStore;
@@ -27,8 +27,8 @@ export function buildMockEngine(config: Partial<Engine> = {}): MockEngine {
   };
 }
 
-type DispatchExts = ThunkDispatch<HeadlessState, void, AnyAction>;
-const createMockStore = createReduxMockStore<HeadlessState, DispatchExts>(
+type DispatchExts = ThunkDispatch<SearchPageState, void, AnyAction>;
+const createMockStore = createReduxMockStore<SearchPageState, DispatchExts>(
   getDefaultMiddleware()
 );
 

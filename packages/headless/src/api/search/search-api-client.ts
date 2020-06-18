@@ -1,7 +1,7 @@
 import {PlatformClient} from '../platform-client';
 import {planRequestParams, PlanRequestParams} from './plan/plan-request';
 import {PlanResponse} from './plan/plan-response';
-import {HeadlessState} from '../../state';
+import {SearchPageState} from '../../state';
 import {QuerySuggestResponse} from './query-suggest/query-suggest-response';
 import {
   querySuggestRequestParams,
@@ -18,14 +18,14 @@ export interface SearchAPIClientOptions<RequestParams> {
 }
 
 export class SearchAPIClient {
-  static async plan(state: HeadlessState) {
+  static async plan(state: SearchPageState) {
     return await PlatformClient.call<PlanRequestParams, PlanResponse>({
       ...baseSearchParams(state, 'POST', 'application/json', '/plan'),
       requestParams: planRequestParams(state),
     });
   }
 
-  static async querySuggest(id: string, state: HeadlessState) {
+  static async querySuggest(id: string, state: SearchPageState) {
     return await PlatformClient.call<
       QuerySuggestRequestParams,
       QuerySuggestResponse
@@ -35,7 +35,7 @@ export class SearchAPIClient {
     });
   }
 
-  static async search(state: HeadlessState) {
+  static async search(state: SearchPageState) {
     return await PlatformClient.call<SearchRequest, SearchResponse>({
       ...baseSearchParams(state, 'POST', 'application/json', ''),
       requestParams: searchRequestParams(state),

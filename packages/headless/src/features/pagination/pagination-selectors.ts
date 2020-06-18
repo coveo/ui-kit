@@ -1,4 +1,4 @@
-import {HeadlessState} from '../../state';
+import {SearchPageState} from '../../state';
 import {createSelector} from '@reduxjs/toolkit';
 import {calculatePage, calculateMaxPage, minimumPage} from './pagination-slice';
 
@@ -7,20 +7,20 @@ interface Range {
   end: number;
 }
 
-function firstResultSelector(state: HeadlessState) {
+function firstResultSelector(state: SearchPageState) {
   return state.pagination.firstResult;
 }
 
-function numberOfResultsSelector(state: HeadlessState) {
+function numberOfResultsSelector(state: SearchPageState) {
   return state.pagination.numberOfResults;
 }
 
-function totalCountFilteredSelector(state: HeadlessState) {
+function totalCountFilteredSelector(state: SearchPageState) {
   return state.pagination.totalCountFiltered;
 }
 
 /** Calculates the current page number.
- * @param state HeadlessState.
+ * @param state SearchPageState.
  * @returns the current page number.
  */
 export const currentPageSelector = createSelector(
@@ -30,7 +30,7 @@ export const currentPageSelector = createSelector(
 );
 
 /** Calculates the maximum page number
- * @param state HeadlessState.
+ * @param state SearchPageState.
  * @returns the maximum page number.
  */
 export const maxPageSelector = createSelector(
@@ -40,14 +40,14 @@ export const maxPageSelector = createSelector(
 );
 
 /** Calculates the current pages relative to the current page.
- * @param state HeadlessState.
+ * @param state SearchPageState.
  * @param desiredNumberOfPages the number of pages to return.
  * @returns the current page numbers.
  */
 export const currentPagesSelector = createSelector(
   currentPageSelector,
   maxPageSelector,
-  (_: HeadlessState, desiredNumberOfPages: number) => desiredNumberOfPages,
+  (_: SearchPageState, desiredNumberOfPages: number) => desiredNumberOfPages,
   (page, maxPage, desiredNumberOfPages) => {
     let range = buildRange(page, desiredNumberOfPages);
     range = shiftRightIfNeeded(range);

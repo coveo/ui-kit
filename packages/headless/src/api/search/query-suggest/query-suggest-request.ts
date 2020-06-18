@@ -1,9 +1,9 @@
-import {HeadlessState} from '../../../state';
+import {SearchPageState} from '../../../state';
 import {getOrganizationIdParam} from '../search-request';
 
 export const querySuggestRequestParams = (
   id: string,
-  state: HeadlessState
+  state: SearchPageState
 ) => ({
   ...getOrganizationIdParam(state),
   /**
