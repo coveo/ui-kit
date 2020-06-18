@@ -1,11 +1,29 @@
-import CoveoAnalyticsClient, { ClientOptions } from '../client/analytics';
-import { SearchEventRequest, ClickEventRequest, CustomEventRequest } from '../events';
-import { SearchPageEvents, OmniboxSuggestionsMetadata, FacetMetadata, FacetRangeMetadata, CategoryFacetMetadata, DocumentIdentifier, InterfaceChangeMetadata, ResultsSortMetadata, PartialDocumentInformation, CustomEventsTypes, TriggerNotifyMetadata, TriggerExecuteMetadata, TriggerRedirectMetadata } from './searchPageEvents';
-
+import CoveoAnalyticsClient, {ClientOptions} from '../client/analytics';
+import {SearchEventRequest, ClickEventRequest, CustomEventRequest} from '../events';
+import {
+    SearchPageEvents,
+    OmniboxSuggestionsMetadata,
+    FacetMetadata,
+    FacetRangeMetadata,
+    CategoryFacetMetadata,
+    DocumentIdentifier,
+    InterfaceChangeMetadata,
+    ResultsSortMetadata,
+    PartialDocumentInformation,
+    CustomEventsTypes,
+    TriggerNotifyMetadata,
+    TriggerExecuteMetadata,
+    TriggerRedirectMetadata,
+    PagerResizeMetadata,
+    PagerMetadata,
+    FacetBaseMeta,
+    FacetSortMeta,
+    QueryErrorMeta,
+} from './searchPageEvents';
 
 export interface SearchPageClientProvider {
     getBaseMetadata: () => Record<string, any>;
-    getSearchEventRequestPayload: () => Omit<SearchEventRequest, 'actionCause' | 'searchQueryUid'>
+    getSearchEventRequestPayload: () => Omit<SearchEventRequest, 'actionCause' | 'searchQueryUid'>;
     getSearchUID: () => string;
 }
 
@@ -13,7 +31,7 @@ export class CoveoSearchPageClient {
     public coveoAnalyticsClient: CoveoAnalyticsClient;
 
     constructor(private opts: Partial<ClientOptions>, private provider: SearchPageClientProvider) {
-        this.coveoAnalyticsClient = new CoveoAnalyticsClient(opts)
+        this.coveoAnalyticsClient = new CoveoAnalyticsClient(opts);
     }
 
     public logInterfaceLoad() {
@@ -53,7 +71,7 @@ export class CoveoSearchPageClient {
     }
 
     public logBreadcrumbResetAll() {
-        return this.logSearchEvent(SearchPageEvents.breadcrumbResetAll)
+        return this.logSearchEvent(SearchPageEvents.breadcrumbResetAll);
     }
 
     public logDocumentQuickview(info: PartialDocumentInformation, identifier: DocumentIdentifier) {
@@ -73,55 +91,124 @@ export class CoveoSearchPageClient {
     }
 
     public logTriggerNotify(meta: TriggerNotifyMetadata) {
-        return this.logCustomEvent(SearchPageEvents.triggerNotify, meta)
+        return this.logCustomEvent(SearchPageEvents.triggerNotify, meta);
     }
 
     public logTriggerExecute(meta: TriggerExecuteMetadata) {
-        return this.logCustomEvent(SearchPageEvents.triggerExecute, meta)
+        return this.logCustomEvent(SearchPageEvents.triggerExecute, meta);
     }
 
     public logTriggerQuery() {
-        const meta = { query: this.provider.getSearchEventRequestPayload().queryText }
-        return this.logCustomEvent(SearchPageEvents.triggerQuery, meta)
+        const meta = {query: this.provider.getSearchEventRequestPayload().queryText};
+        return this.logCustomEvent(SearchPageEvents.triggerQuery, meta);
     }
 
     public logTriggerRedirect(meta: TriggerRedirectMetadata) {
-        const allMeta = { ...meta, query: this.provider.getSearchEventRequestPayload().queryText }
-        return this.logCustomEvent(SearchPageEvents.triggerRedirect, allMeta)
+        const allMeta = {...meta, query: this.provider.getSearchEventRequestPayload().queryText};
+        return this.logCustomEvent(SearchPageEvents.triggerRedirect, allMeta);
+    }
+
+    public logPagerResize(meta: PagerResizeMetadata) {
+        return this.logCustomEvent(SearchPageEvents.pagerResize, meta);
+    }
+
+    public logPagerNumber(meta: PagerMetadata) {
+        return this.logCustomEvent(SearchPageEvents.pagerNumber, meta);
+    }
+
+    public logPagerNext(meta: PagerMetadata) {
+        return this.logCustomEvent(SearchPageEvents.pagerNext, meta);
+    }
+
+    public logPagerPrevious(meta: PagerMetadata) {
+        return this.logCustomEvent(SearchPageEvents.pagerPrevious, meta);
+    }
+
+    public logPagerScrolling() {
+        return this.logCustomEvent(SearchPageEvents.pagerScrolling);
+    }
+
+    public logFacetClearAll(meta: FacetBaseMeta) {
+        return this.logSearchEvent(SearchPageEvents.facetClearAll, meta);
+    }
+
+    public logFacetSearch(meta: FacetBaseMeta) {
+        return this.logSearchEvent(SearchPageEvents.facetSearch, meta);
+    }
+
+    public logFacetSelect(meta: FacetMetadata) {
+        return this.logSearchEvent(SearchPageEvents.facetSelect, meta);
+    }
+
+    public logFacetDeselect(meta: FacetMetadata) {
+        return this.logSearchEvent(SearchPageEvents.facetDeselect, meta);
+    }
+
+    public logFacetExclude(meta: FacetMetadata) {
+        return this.logSearchEvent(SearchPageEvents.facetExclude, meta);
+    }
+
+    public logFacetUnexclude(meta: FacetMetadata) {
+        return this.logSearchEvent(SearchPageEvents.facetUnexclude, meta);
+    }
+
+    public logFacetSelectAll(meta: FacetBaseMeta) {
+        return this.logSearchEvent(SearchPageEvents.facetSelectAll, meta);
+    }
+
+    public logFacetUpdateSort(meta: FacetSortMeta) {
+        return this.logSearchEvent(SearchPageEvents.facetUpdateSort, meta);
+    }
+
+    public logFacetShowMore(meta: FacetBaseMeta) {
+        return this.logCustomEvent(SearchPageEvents.facetShowMore, meta);
+    }
+
+    public logFacetShowLess(meta: FacetBaseMeta) {
+        return this.logCustomEvent(SearchPageEvents.facetShowLess, meta);
+    }
+
+    public logQueryError(meta: QueryErrorMeta) {
+        return this.logCustomEvent(SearchPageEvents.queryError, meta);
     }
 
     public logCustomEvent(event: SearchPageEvents, metadata?: Record<string, any>) {
-        const customData = { ...this.provider.getBaseMetadata(), ...metadata }
+        const customData = {...this.provider.getBaseMetadata(), ...metadata};
 
         const payload: CustomEventRequest = {
             eventType: CustomEventsTypes[event]!,
             eventValue: event,
             lastSearchQueryUid: this.provider.getSearchUID(),
-            customData
+            customData,
         };
 
-        return this.coveoAnalyticsClient.sendCustomEvent(payload)
+        return this.coveoAnalyticsClient.sendCustomEvent(payload);
     }
 
     public logSearchEvent(event: SearchPageEvents, metadata?: Record<string, any>) {
-        const customData = { ...this.provider.getBaseMetadata(), ...metadata }
+        const customData = {...this.provider.getBaseMetadata(), ...metadata};
 
         const payload: SearchEventRequest = {
             ...this.provider.getSearchEventRequestPayload(),
             searchQueryUid: this.provider.getSearchUID(),
             customData,
             actionCause: event,
-        }
+        };
 
-        return this.coveoAnalyticsClient.sendSearchEvent(payload)
+        return this.coveoAnalyticsClient.sendSearchEvent(payload);
     }
 
-    public logClickEvent(event: SearchPageEvents, info: PartialDocumentInformation, identifier: DocumentIdentifier, metadata?: Record<string, any>) {
+    public logClickEvent(
+        event: SearchPageEvents,
+        info: PartialDocumentInformation,
+        identifier: DocumentIdentifier,
+        metadata?: Record<string, any>
+    ) {
         const customData = {
             ...this.provider.getBaseMetadata(),
             ...identifier,
-            ...metadata
-        }
+            ...metadata,
+        };
 
         const payload: ClickEventRequest = {
             ...info,

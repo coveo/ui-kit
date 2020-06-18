@@ -1,4 +1,4 @@
-import { DocumentInformation } from "../events";
+import {DocumentInformation} from '../events';
 
 export enum SearchPageEvents {
     /**
@@ -73,14 +73,87 @@ export enum SearchPageEvents {
      * Identifies the custom event that gets logged when a user action redirects them to a URL set in the effective query pipeline on the search page.
      */
     triggerRedirect = 'redirect',
+    /**
+     * Identifies the custom event that gets logged when the Results per page component is selected.
+     */
+    pagerResize = 'pagerResize',
+    /**
+     * Identifies the custom event that gets logged when a page number is selected and more items are loaded.
+     */
+    pagerNumber = 'pagerNumber',
+    /**
+     * Identifies the custom event that gets logged when the Next Page link is selected and more items are loaded.
+     */
+    pagerNext = 'pagerNext',
+    /**
+     * Identifies the custom event that gets logged when the Previous Page link is selected and more items are loaded.
+     */
+    pagerPrevious = 'pagerPrevious',
+    /**
+     * Identifies the custom event that gets logged when the user scrolls to the bottom of the item page and more results are loaded.
+     */
+    pagerScrolling = 'pagerScrolling',
+    /**
+     * Identifies the search event that gets logged when the Clear Facet button is selected.
+     */
+    facetClearAll = 'facetClearAll',
+    /**
+     * Identifies the custom event that gets logged when a query is being typed into the facet search box.
+     */
+    facetSearch = 'facetSearch',
+    /**
+     * Identifies the search event that gets logged when a facet check box is selected and the query is updated.
+     */
+    facetSelect = 'facetSelect',
+    /**
+     * Identifies the search event that gets logged when all filters on a facet are selected.
+     */
+    facetSelectAll = 'facetSelectAll',
+    /**
+     * Identifies the search event that gets logged when a facet check box is deselected and the query is updated.
+     */
+    facetDeselect = 'facetDeselect',
+    /**
+     * Identifies the search event that gets logged when a user clicks a facet value to filter out results containing the facet value.
+     */
+    facetExclude = 'facetExclude',
+    /**
+     * Identifies the search event that gets logged when a user clicks a facet value to not filter out results containing the facet value.
+     */
+    facetUnexclude = 'facetUnexclude',
+    /**
+     * Identifies the search event that gets logged when the sort criteria on a facet is updated.
+     */
+    facetUpdateSort = 'facetUpdateSort',
+    /**
+     * The custom event that gets logged when an end-user expands a facet to see additional values.
+     */
+    facetShowMore = 'showMoreFacetResults',
+    /**
+     * The custom event that gets logged when an end-user collapses a facet to see less values.
+     */
+    facetShowLess = 'showLessFacetResults',
+    /**
+     * Identifies the custom event that gets logged when a user query encounters an error during execution.
+     */
+    queryError = 'query',
 }
 
 export const CustomEventsTypes: Partial<Record<SearchPageEvents, string>> = {
     [SearchPageEvents.triggerNotify]: 'queryPipelineTriggers',
     [SearchPageEvents.triggerExecute]: 'queryPipelineTriggers',
     [SearchPageEvents.triggerQuery]: 'queryPipelineTriggers',
-    [SearchPageEvents.triggerRedirect]: 'queryPipelineTriggers'
-}
+    [SearchPageEvents.triggerRedirect]: 'queryPipelineTriggers',
+    [SearchPageEvents.queryError]: 'errors',
+    [SearchPageEvents.pagerNext]: 'getMoreResults',
+    [SearchPageEvents.pagerPrevious]: 'getMoreResults',
+    [SearchPageEvents.pagerNumber]: 'getMoreResults',
+    [SearchPageEvents.pagerResize]: 'getMoreResults',
+    [SearchPageEvents.pagerScrolling]: 'getMoreResults',
+    [SearchPageEvents.facetSearch]: 'facet',
+    [SearchPageEvents.facetShowLess]: 'facet',
+    [SearchPageEvents.facetShowMore]: 'facet',
+};
 
 export interface FacetMetadata {
     facetId: string;
@@ -115,7 +188,7 @@ export interface DocumentIdentifier {
 }
 
 export interface InterfaceChangeMetadata {
-    interfaceChangeTo: string
+    interfaceChangeTo: string;
 }
 
 export interface ResultsSortMetadata {
@@ -134,4 +207,40 @@ export interface TriggerRedirectMetadata {
     redirectedTo: string;
 }
 
-export type PartialDocumentInformation = Omit<DocumentInformation, 'actionCause' | 'searchQueryUid'>
+export interface PagerResizeMetadata {
+    currentResultsPerPage: number;
+}
+
+export interface PagerMetadata {
+    pagerNumber: number;
+}
+
+export interface FacetBaseMeta {
+    facetId: string;
+    facetField: string;
+    facetTitle: string;
+}
+
+export interface FacetMetadata extends FacetBaseMeta {
+    facetValue: string;
+}
+
+export interface FacetRangeMetadata extends FacetBaseMeta {
+    facetRangeStart: string;
+    facetRangeEnd: string;
+}
+
+export interface FacetSortMeta extends FacetBaseMeta {
+    criteria: string;
+  }
+
+export interface QueryErrorMeta {
+    query: string;
+    aq: string;
+    cq: string;
+    dq: string;
+    errorType: string;
+    errorMessage: string;
+}
+
+export type PartialDocumentInformation = Omit<DocumentInformation, 'actionCause' | 'searchQueryUid'>;
