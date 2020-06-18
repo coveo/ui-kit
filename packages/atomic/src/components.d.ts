@@ -15,6 +15,7 @@ export namespace Components {
     interface AtomicSearchBox {
         "isStandalone": boolean;
         "numberOfSuggestions": number;
+        "superfluousProp": number;
     }
     interface AtomicSortDropdown {
     }
@@ -89,6 +90,7 @@ declare namespace LocalJSX {
     interface AtomicSearchBox {
         "isStandalone"?: boolean;
         "numberOfSuggestions"?: number;
+        "superfluousProp"?: number;
     }
     interface AtomicSortDropdown {
     }

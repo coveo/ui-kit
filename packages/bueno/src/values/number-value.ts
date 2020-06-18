@@ -13,15 +13,24 @@ export class NumberValue implements SchemaValue<number> {
   }
 
   public validate(value: number) {
-    this.value.validate(value);
-
-    if (this.config.min !== undefined && value < this.config.min) {
-      throw new Error(`minimum value of ${this.config.min} not respected.`);
+    const valueValidation = this.value.validate(value);
+    if (valueValidation) {
+      return valueValidation;
     }
 
-    if (this.config.max !== undefined && value > this.config.max) {
-      throw new Error(`maximum value of ${this.config.max} not respected.`);
+    if (value !== undefined && isNaN(value)) {
+      return 'value is not a number.';
     }
+
+    if (value! < this.config.min!) {
+      return `minimum value of ${this.config.min} not respected.`;
+    }
+
+    if (value! > this.config.max!) {
+      return `maximum value of ${this.config.max} not respected.`;
+    }
+
+    return null;
   }
 
   public get default() {

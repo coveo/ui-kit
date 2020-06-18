@@ -10,7 +10,19 @@ export class StringValue implements SchemaValue<string> {
   }
 
   public validate(value: string) {
-    this.value.validate(value);
+    const valueValidation = this.value.validate(value);
+    if (valueValidation) {
+      return valueValidation;
+    }
+
+    if (
+      value !== undefined &&
+      Object.prototype.toString.call(value) !== '[object String]'
+    ) {
+      return 'value is not a string.';
+    }
+
+    return null;
   }
 
   public get default() {

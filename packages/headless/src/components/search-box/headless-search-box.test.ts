@@ -56,6 +56,26 @@ describe('headless searchBox', () => {
     searchBox = new SearchBox(engine, props);
   }
 
+  describe('validating options', () => {
+    it(`when passing an invalid id as option
+    creating the component should throw`, () => {
+      props.options.id = (1 as unknown) as string;
+      expect(() => initComponent()).toThrow();
+    });
+
+    it(`when passing an invalid isStandalone as option
+    creating the component should throw`, () => {
+      props.options.isStandalone = ('hey!' as unknown) as boolean;
+      expect(() => initComponent()).toThrow();
+    });
+
+    it(`when passing an invalid numberOfSuggestions as option
+    creating the component should throw`, () => {
+      props.options.numberOfSuggestions = -2;
+      expect(() => initComponent()).toThrow();
+    });
+  });
+
   it('should return the right state', () => {
     expect(searchBox.state).toEqual({
       value: state.querySet[id],

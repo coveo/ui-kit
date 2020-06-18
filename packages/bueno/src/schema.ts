@@ -1,14 +1,25 @@
 export interface SchemaValue<T> {
-  validate(value: T): void;
+  validate(value: T): string | null;
   default: T | undefined;
 }
 
-type SchemaDefinition<T extends object> = {
+export type SchemaDefinition<T extends object> = {
   [key in keyof T]: SchemaValue<T[key]>;
 };
 
+export class SchemaValidationError extends Error {
+  constructor(errors: string[]) {
+    super(
+      `The following properties are invalid:${errors.map(
+        (error) => `\n${error}`
+      )}`
+    );
+    this.name = 'SchemaValidationError';
+  }
+}
+
 export class Schema<Values extends object> {
-  constructor(private definitions: SchemaDefinition<Values>) {}
+  constructor(private definition: SchemaDefinition<Values>) {}
 
   public validate(values: Partial<Values> = {}) {
     const mergedValues = {
@@ -16,12 +27,15 @@ export class Schema<Values extends object> {
       ...values,
     };
 
-    for (const definition in this.definitions) {
-      try {
-        this.definitions[definition].validate(mergedValues[definition]!);
-      } catch (error) {
-        throw Error(`${error} (${definition})`);
-      }
+    const errors: string[] = [];
+
+    for (const property in this.definition) {
+      const error = this.definition[property].validate(mergedValues[property]!);
+      error && errors.push(`${property}: ${error}`);
+    }
+
+    if (errors.length) {
+      throw new SchemaValidationError(errors);
     }
 
     return mergedValues;
@@ -29,10 +43,10 @@ export class Schema<Values extends object> {
 
   private get default() {
     const defaultValues: Partial<Values> = {};
-    for (const definition in this.definitions) {
-      const defaultValue = this.definitions[definition].default;
+    for (const property in this.definition) {
+      const defaultValue = this.definition[property].default;
       if (defaultValue !== undefined) {
-        defaultValues[definition] = defaultValue;
+        defaultValues[property] = defaultValue;
       }
     }
 

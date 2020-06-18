@@ -10,7 +10,16 @@ export class BooleanValue implements SchemaValue<boolean> {
   }
 
   public validate(value: boolean) {
-    this.value.validate(value);
+    const valueValidation = this.value.validate(value);
+    if (valueValidation) {
+      return valueValidation;
+    }
+
+    if (value !== undefined && typeof value !== 'boolean') {
+      return 'value is not a boolean.';
+    }
+
+    return null;
   }
 
   public get default() {

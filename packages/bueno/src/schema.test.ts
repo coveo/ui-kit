@@ -13,7 +13,7 @@ describe('schema', () => {
       });
     });
 
-    it('should not return the default is a value is defined', () => {
+    it('should not return the default if a value is defined', () => {
       const schema = new Schema({
         valueWithDefault: new Value<unknown>({default: 'default'}),
       });

@@ -10,8 +10,10 @@ export class Value<T> implements SchemaValue<T> {
 
   public validate(value: T) {
     if (this.baseConfig.required && value === undefined) {
-      throw new Error('value is required.');
+      return 'value is required.';
     }
+
+    return null;
   }
 
   public get default() {

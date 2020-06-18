@@ -1,6 +1,12 @@
-import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
+import {createAsyncThunk, createAction} from '@reduxjs/toolkit';
 import {HeadlessState} from '../../state';
 import {getQuerySuggestions} from '../../api/search/query-suggest/query-suggest-endpoint';
+import {validatePayload} from '../../utils/validate-payload';
+import {NumberValue, StringValue, Schema} from '@coveo/bueno';
+
+const idDefinition = {
+  id: new StringValue({required: true}),
+};
 
 /**
  * Register a new query suggest entity to the headless state to enable the Coveo ML query suggestions feature.
@@ -8,18 +14,26 @@ import {getQuerySuggestions} from '../../api/search/query-suggest/query-suggest-
  * @param q The partial basic query expression for which to request query suggestions (e.g., `cov`).
  * @param count The number of query suggestions to request from Coveo ML (e.g., `3`).
  */
-export const registerQuerySuggest = createAction<{
-  id: string;
-  q?: string;
-  count?: number;
-}>('querySuggest/register');
+export const registerQuerySuggest = createAction(
+  'querySuggest/register',
+  (payload: {id: string; q?: string; count?: number}) => {
+    return validatePayload(payload, {
+      ...idDefinition,
+      q: new StringValue(),
+      count: new NumberValue({min: 0}),
+    });
+  }
+);
 
 /**
  * Unregister an existing query suggest entity from the headless state.
  * @param id The unique identifier of the query suggest entity to unregister (e.g., `b953ab2e-022b-4de4-903f-68b2c0682942`).
  */
-export const unregisterQuerySuggest = createAction<{id: string}>(
-  'querySuggest/unregister'
+export const unregisterQuerySuggest = createAction(
+  'querySuggest/unregister',
+  (payload: {id: string}) => {
+    return validatePayload(payload, idDefinition);
+  }
 );
 
 /**
@@ -27,25 +41,36 @@ export const unregisterQuerySuggest = createAction<{id: string}>(
  * @param id The unique identifier of the target query suggest entity (e.g., `b953ab2e-022b-4de4-903f-68b2c0682942`).
  * @param expression The selected query suggestion (e.g., `coveo`).
  */
-export const selectQuerySuggestion = createAction<{
-  id: string;
-  expression: string;
-}>('querySuggest/selectSuggestion');
+export const selectQuerySuggestion = createAction(
+  'querySuggest/selectSuggestion',
+  (payload: {id: string; expression: string}) => {
+    return validatePayload(payload, {
+      ...idDefinition,
+      expression: new StringValue({required: true}),
+    });
+  }
+);
 
 /**
  * Clear the current partial basic query expression and list of query suggestions in a specific query suggest entity.
  * @param id The unique identifier of the target query suggest entity (e.g., `b953ab2e-022b-4de4-903f-68b2c0682942`).
  */
-export const clearQuerySuggest = createAction<{id: string}>(
-  'querySuggest/clear'
+export const clearQuerySuggest = createAction(
+  'querySuggest/clear',
+  (payload: {id: string}) => {
+    return validatePayload(payload, idDefinition);
+  }
 );
 
 /**
  * Clear the list of query suggestions in a specific query suggest entity.
  * @param id The unique identifier of the target query suggest entity (e.g., b953ab2e-022b-4de4-903f-68b2c0682942).
  */
-export const clearQuerySuggestCompletions = createAction<{id: string}>(
-  'querySuggest/clearSuggestions'
+export const clearQuerySuggestCompletions = createAction(
+  'querySuggest/clearSuggestions',
+  (payload: {id: string}) => {
+    return validatePayload(payload, idDefinition);
+  }
 );
 
 /**
@@ -54,7 +79,13 @@ export const clearQuerySuggestCompletions = createAction<{id: string}>(
  */
 export const fetchQuerySuggestions = createAsyncThunk(
   'querySuggest/fetch',
-  async ({id}: {id: string}, {getState}) => {
-    return await getQuerySuggestions(id, getState() as HeadlessState);
+  async (payload: {id: string}, {getState}) => {
+    return await getQuerySuggestions(payload.id, getState() as HeadlessState);
+  },
+  {
+    condition: (payload: {id: string}) => {
+      new Schema(idDefinition).validate(payload);
+      return true;
+    },
   }
 );

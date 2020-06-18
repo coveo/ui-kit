@@ -1,11 +1,7 @@
 import {Component, ComponentInterface, h, Prop, State} from '@stencil/core';
-import {
-  SearchBox,
-  SearchBoxState,
-  SearchBoxOptions,
-  Unsubscribe,
-} from '@coveo/headless';
+import {SearchBox, SearchBoxState, Unsubscribe} from '@coveo/headless';
 import {headlessEngine} from '../../engine';
+import {Schema, NumberValue} from '@coveo/bueno';
 
 @Component({
   tag: 'atomic-search-box',
@@ -17,14 +13,30 @@ export class AtomicSearchBox implements ComponentInterface {
 
   @Prop() numberOfSuggestions = 5;
 
+  @Prop() superfluousProp = 5;
+
   @State() searchBoxState!: SearchBoxState;
 
+  private error?: Error;
   private searchBox!: SearchBox;
-  private unsubscribe: Unsubscribe;
+  private unsubscribe?: Unsubscribe;
 
   constructor() {
-    this.searchBox = new SearchBox(headlessEngine, {options: this.options});
+    try {
+      this.searchBox = new SearchBox(headlessEngine, {options: this.options});
+      this.validateProps();
+    } catch (error) {
+      this.error = error;
+      return;
+    }
+
     this.unsubscribe = this.searchBox.subscribe(() => this.updateState());
+  }
+
+  private validateProps() {
+    new Schema({
+      superfluousProp: new NumberValue({min: 0, max: 10}),
+    }).validate({superfluousProp: this.superfluousProp});
   }
 
   public componentShouldUpdate(
@@ -42,10 +54,10 @@ export class AtomicSearchBox implements ComponentInterface {
   }
 
   public disconnectedCallback() {
-    this.unsubscribe();
+    this.unsubscribe && this.unsubscribe();
   }
 
-  private get options(): Partial<SearchBoxOptions> {
+  private get options() {
     return {
       isStandalone: this.isStandalone,
       numberOfSuggestions: this.numberOfSuggestions,
@@ -81,6 +93,16 @@ export class AtomicSearchBox implements ComponentInterface {
   }
 
   public render() {
+    if (this.error) {
+      return (
+        <p>
+          {this.error.name}
+          <br />
+          {this.error.message}
+        </p>
+      );
+    }
+
     return (
       <div>
         <input

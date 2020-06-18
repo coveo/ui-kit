@@ -5,15 +5,15 @@ describe('value', () => {
 
   describe('calling validate', () => {
     it(`when required is false
-    passing an undefined value will not throw`, () => {
+    passing an undefined value returns null`, () => {
       value = new Value({required: false});
-      expect(() => value.validate(undefined)).not.toThrow();
+      expect(value.validate(undefined)).toBeNull();
     });
 
     it(`when required is true
-    passing an undefined value will throw`, () => {
+    passing an undefined value returns an error description`, () => {
       value = new Value({required: true});
-      expect(() => value.validate(undefined)).toThrow();
+      expect(value.validate(undefined)).not.toBeNull();
     });
   });
 

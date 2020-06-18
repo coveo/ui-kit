@@ -22,6 +22,7 @@
     "generate": "stencil generate"
   },
   "dependencies": {
+    "@coveo/bueno": "*",
     "@coveo/headless": "*"
   },
   "devDependencies": {

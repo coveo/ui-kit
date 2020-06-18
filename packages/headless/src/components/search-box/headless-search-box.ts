@@ -29,7 +29,7 @@ import {Component} from '../component/headless-component';
 import {updatePage} from '../../features/pagination/pagination-actions';
 
 export interface SearchBoxProps {
-  options: Partial<SearchBoxOptions>;
+  options: SearchBoxOptions;
 }
 
 const SearchBoxOptionsSchema = new Schema({
@@ -75,7 +75,6 @@ export class SearchBox extends Component {
     this.options = SearchBoxOptionsSchema.validate(props.options) as Required<
       SearchBoxOptions
     >;
-
     this.registerQuery();
     this.registerQuerySuggest();
   }
