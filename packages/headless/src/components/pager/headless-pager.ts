@@ -14,6 +14,7 @@ import {
 } from '../../features/pagination/pagination-selectors';
 import {executeSearch} from '../../features/search/search-actions';
 import {minimumPage} from '../../features/pagination/pagination-slice';
+import {logPlaceholderSearchEvent} from '../../features/analytics/analytics-actions';
 
 export type PagerState = Pager['state'];
 
@@ -130,6 +131,6 @@ export class Pager extends Component {
   }
 
   private search() {
-    this.dispatch(executeSearch());
+    this.dispatch(executeSearch(logPlaceholderSearchEvent()));
   }
 }

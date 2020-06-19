@@ -64,6 +64,6 @@ export class Sort extends Component {
   }
 
   private search() {
-    this.dispatch(executeSearch()).then(() => this.dispatch(logResultsSort()));
+    this.dispatch(executeSearch(logResultsSort()));
   }
 }

@@ -5,6 +5,7 @@ import {
 } from '../../features/pagination/pagination-actions';
 import {executeSearch} from '../../features/search/search-actions';
 import {Component} from '../component/headless-component';
+import {logPlaceholderSearchEvent} from '../../features/analytics/analytics-actions';
 
 export interface ResultsPerPageProps {
   initialState: Partial<ResultsPerPageInitialState>;
@@ -31,7 +32,7 @@ export class ResultsPerPage extends Component {
    */
   public set(num: number) {
     this.dispatch(updateNumberOfResults(num));
-    this.dispatch(executeSearch());
+    this.dispatch(executeSearch(logPlaceholderSearchEvent()));
   }
 
   /** Returns `true` if the number of results is equal to the passed value, and `false` otherwise.

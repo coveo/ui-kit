@@ -7,6 +7,7 @@ import {executeSearch} from './search-actions';
 import {buildMockSearchResponse} from '../../test/mock-search-response';
 import {buildMockResult} from '../../test/mock-result';
 import {buildMockSearch} from '../../test/mock-search';
+import {logGenericSearchEvent} from '../analytics/analytics-actions';
 
 describe('search-slice', () => {
   let state: SearchState;
@@ -29,7 +30,11 @@ describe('search-slice', () => {
     const response = buildMockSearchResponse({results: [result]});
     const searchState = buildMockSearch({response, duration: 123});
 
-    const action = executeSearch.fulfilled(searchState, '');
+    const action = executeSearch.fulfilled(
+      searchState,
+      '',
+      logGenericSearchEvent({evt: 'foo'})
+    );
     const finalState = searchReducer(state, action);
 
     expect(finalState.response).toEqual(response);

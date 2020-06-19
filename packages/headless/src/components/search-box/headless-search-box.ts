@@ -145,9 +145,7 @@ export class SearchBox extends Component {
       return;
     }
 
-    this.dispatch(executeSearch()).then(() =>
-      this.dispatch(logSearchboxSubmit())
-    );
+    this.dispatch(executeSearch(logSearchboxSubmit()));
   }
 
   /**
