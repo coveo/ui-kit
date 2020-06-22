@@ -3,12 +3,17 @@ import {QuerySetState} from './features/query-set/query-set-slice';
 import {SearchState} from './features/search/search-slice';
 import {PaginationState} from './features/pagination/pagination-slice';
 import {SortCriteriaState} from './features/sort-criteria/sort-criteria-slice';
+import {FacetSetState} from './features/facets/facet-set/facet-set-slice';
 
 export interface SearchPageState {
   /**
    * The global headless engine configuration.
    */
   configuration: ConfigurationState;
+  /**
+   * The set of facets.
+   */
+  facetSet: FacetSetState;
   /**
    * The expressions that constitute the current query.
    */

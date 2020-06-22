@@ -8,12 +8,14 @@ import {querySetReducer} from '../features/query-set/query-set-slice';
 import {searchReducer} from '../features/search/search-slice';
 import {paginationReducer} from '../features/pagination/pagination-slice';
 import {sortCriteriaReducer} from '../features/sort-criteria/sort-criteria-slice';
+import {facetSetReducer} from '../features/facets/facet-set/facet-set-slice';
 
 /**
  * Map of reducers that make up the SearchPageState.
  */
 export const searchPageReducers: ReducersMapObject<SearchPageState> = {
   configuration: configurationReducer,
+  facetSet: facetSetReducer,
   query: queryReducer,
   querySet: querySetReducer,
   pagination: paginationReducer,

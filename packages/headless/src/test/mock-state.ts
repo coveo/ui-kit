@@ -6,12 +6,14 @@ import {getQuerySetInitialState} from '../features/query-set/query-set-slice';
 import {getSearchInitialState} from '../features/search/search-slice';
 import {getPaginationInitialState} from '../features/pagination/pagination-slice';
 import {getSortCriteriaInitialState} from '../features/sort-criteria/sort-criteria-slice';
+import {getFacetSetInitialState} from '../features/facets/facet-set/facet-set-slice';
 
 export function createMockState(
   config: Partial<SearchPageState> = {}
 ): SearchPageState {
   return {
     configuration: getConfigurationInitialState(),
+    facetSet: getFacetSetInitialState(),
     pagination: getPaginationInitialState(),
     query: getQueryInitialState(),
     querySet: getQuerySetInitialState(),

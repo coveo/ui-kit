@@ -6,6 +6,10 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 export namespace Components {
+    interface AtomicFacet {
+        "field": string;
+        "title": string;
+    }
     interface AtomicPager {
     }
     interface AtomicResultList {
@@ -35,6 +39,12 @@ export namespace Components {
     }
 }
 declare global {
+    interface HTMLAtomicFacetElement extends Components.AtomicFacet, HTMLStencilElement {
+    }
+    var HTMLAtomicFacetElement: {
+        prototype: HTMLAtomicFacetElement;
+        new (): HTMLAtomicFacetElement;
+    };
     interface HTMLAtomicPagerElement extends Components.AtomicPager, HTMLStencilElement {
     }
     var HTMLAtomicPagerElement: {
@@ -72,6 +82,7 @@ declare global {
         new (): HTMLMyComponentElement;
     };
     interface HTMLElementTagNameMap {
+        "atomic-facet": HTMLAtomicFacetElement;
         "atomic-pager": HTMLAtomicPagerElement;
         "atomic-result-list": HTMLAtomicResultListElement;
         "atomic-results-per-page": HTMLAtomicResultsPerPageElement;
@@ -81,6 +92,10 @@ declare global {
     }
 }
 declare namespace LocalJSX {
+    interface AtomicFacet {
+        "field"?: string;
+        "title"?: string;
+    }
     interface AtomicPager {
     }
     interface AtomicResultList {
@@ -109,6 +124,7 @@ declare namespace LocalJSX {
         "middle"?: string;
     }
     interface IntrinsicElements {
+        "atomic-facet": AtomicFacet;
         "atomic-pager": AtomicPager;
         "atomic-result-list": AtomicResultList;
         "atomic-results-per-page": AtomicResultsPerPage;
@@ -121,6 +137,7 @@ export { LocalJSX as JSX };
 declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
+            "atomic-facet": LocalJSX.AtomicFacet & JSXBase.HTMLAttributes<HTMLAtomicFacetElement>;
             "atomic-pager": LocalJSX.AtomicPager & JSXBase.HTMLAttributes<HTMLAtomicPagerElement>;
             "atomic-result-list": LocalJSX.AtomicResultList & JSXBase.HTMLAttributes<HTMLAtomicResultListElement>;
             "atomic-results-per-page": LocalJSX.AtomicResultsPerPage & JSXBase.HTMLAttributes<HTMLAtomicResultsPerPageElement>;

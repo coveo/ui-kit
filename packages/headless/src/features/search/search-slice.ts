@@ -14,6 +14,7 @@ export function getSearchInitialState(): SearchState {
       results: [],
       searchUid: '',
       totalCountFiltered: 0,
+      facets: [],
     },
     duration: 0,
   };

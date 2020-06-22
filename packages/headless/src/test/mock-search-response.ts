@@ -7,6 +7,7 @@ export function buildMockSearchResponse(
     results: [],
     searchUid: '',
     totalCountFiltered: 0,
+    facets: [],
     ...config,
   };
 }
