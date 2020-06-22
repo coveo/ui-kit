@@ -1,4 +1,4 @@
-import {ValueConfig, Value} from './value';
+import {ValueConfig, Value, isUndefined} from './value';
 import {SchemaValue} from '../schema';
 
 type BooleanValueConfig = ValueConfig<boolean>;
@@ -15,7 +15,7 @@ export class BooleanValue implements SchemaValue<boolean> {
       return valueValidation;
     }
 
-    if (value !== undefined && typeof value !== 'boolean') {
+    if (!isBooleanOrUndefined(value)) {
       return 'value is not a boolean.';
     }
 
@@ -25,4 +25,18 @@ export class BooleanValue implements SchemaValue<boolean> {
   public get default() {
     return this.value.default;
   }
+
+  public get required() {
+    return this.value.required();
+  }
+}
+
+export function isBooleanOrUndefined(
+  value: unknown
+): value is undefined | boolean {
+  return isUndefined(value) || isBoolean(value);
+}
+
+export function isBoolean(value: unknown): value is boolean {
+  return typeof value === 'boolean';
 }

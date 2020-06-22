@@ -8,7 +8,7 @@ export interface ValueConfig<T> {
 export class Value<T> implements SchemaValue<T> {
   constructor(private baseConfig: ValueConfig<T> = {}) {}
 
-  public validate(value: T) {
+  public validate(value: unknown) {
     if (this.baseConfig.required && value === undefined) {
       return 'value is required.';
     }
@@ -21,4 +21,20 @@ export class Value<T> implements SchemaValue<T> {
       ? this.baseConfig.default()
       : this.baseConfig.default;
   }
+
+  public required() {
+    return this.baseConfig.required === true;
+  }
+}
+
+export function isUndefined(value: unknown): value is undefined {
+  return value === undefined;
+}
+
+export function isNull(value: unknown): value is null {
+  return value === null;
+}
+
+export function isNullOrUndefined(value: unknown): value is null | undefined {
+  return isUndefined(value) || isNull(value);
 }

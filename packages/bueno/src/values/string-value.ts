@@ -1,4 +1,4 @@
-import {ValueConfig, Value} from './value';
+import {ValueConfig, Value, isUndefined} from './value';
 import {SchemaValue} from '../schema';
 
 type StringValueConfig = ValueConfig<string>;
@@ -15,10 +15,7 @@ export class StringValue implements SchemaValue<string> {
       return valueValidation;
     }
 
-    if (
-      value !== undefined &&
-      Object.prototype.toString.call(value) !== '[object String]'
-    ) {
+    if (!isStringOrUndefined(value)) {
       return 'value is not a string.';
     }
 
@@ -28,4 +25,18 @@ export class StringValue implements SchemaValue<string> {
   public get default() {
     return this.value.default;
   }
+
+  public get required() {
+    return this.value.required();
+  }
+}
+
+export function isStringOrUndefined(
+  value: unknown
+): value is undefined | string {
+  return isUndefined(value) || isString(value);
+}
+
+export function isString(value: unknown): value is string {
+  return Object.prototype.toString.call(value) === '[object String]';
 }

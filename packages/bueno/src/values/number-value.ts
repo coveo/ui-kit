@@ -1,4 +1,4 @@
-import {ValueConfig, Value} from './value';
+import {ValueConfig, Value, isUndefined} from './value';
 import {SchemaValue} from '../schema';
 
 interface NumberValueConfig extends ValueConfig<number> {
@@ -18,7 +18,7 @@ export class NumberValue implements SchemaValue<number> {
       return valueValidation;
     }
 
-    if (value !== undefined && isNaN(value)) {
+    if (!isNumberOrUndefined(value)) {
       return 'value is not a number.';
     }
 
@@ -36,4 +36,18 @@ export class NumberValue implements SchemaValue<number> {
   public get default() {
     return this.value.default;
   }
+
+  public get required() {
+    return this.value.required();
+  }
+}
+
+export function isNumberOrUndefined(
+  value: unknown
+): value is number | undefined {
+  return isUndefined(value) || isNumber(value);
+}
+
+export function isNumber(value: unknown): value is number {
+  return typeof value === 'number';
 }
