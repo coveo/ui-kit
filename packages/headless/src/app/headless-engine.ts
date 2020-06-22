@@ -5,8 +5,8 @@ import {
   Dispatch,
   ReducersMapObject,
   StateFromReducersMapObject,
+  Middleware,
 } from '@reduxjs/toolkit';
-export {Unsubscribe} from '@reduxjs/toolkit';
 import {
   updateBasicConfiguration,
   updateSearchConfiguration,
@@ -35,8 +35,20 @@ export interface HeadlessOptions<Reducers extends ReducersMapObject> {
    * ```
    * (previousState, action) => nextState
    * ```
+   * [Redux documentation on reducers.](https://redux.js.org/glossary#reducer)
    */
   reducers: Reducers;
+  /**
+   * List of additional middlewares.
+   * A middleware is a higher-order function that composes a dispatch function to return a new dispatch function.
+   * It is useful for logging actions, performing side effects like routing, or turning an asynchronous API call into a series of synchronous actions.
+   * ```
+   * type MiddlewareAPI = { dispatch: Dispatch, getState: () => State }
+   * type Middleware = (api: MiddlewareAPI) => (next: Dispatch) => Dispatch
+   * ```
+   * [Redux documentation on middlewares.](https://redux.js.org/glossary#middleware)
+   */
+  middlewares?: Middleware<{}, StateFromReducersMapObject<Reducers>>[];
 }
 
 /**
@@ -95,7 +107,7 @@ export interface Engine<State = SearchPageState> {
 
 /**
  * The global headless engine.
- * You should instantiate one `Engine` class per application and share it.
+ * You should instantiate one `HeadlessEngine` class per application and share it.
  * Every headless component requires an instance of `Engine` as a parameter.
  */
 export class HeadlessEngine<Reducers extends ReducersMapObject>
@@ -106,6 +118,7 @@ export class HeadlessEngine<Reducers extends ReducersMapObject>
     this.reduxStore = configureStore({
       preloadedState: options.preloadedState,
       reducers: options.reducers,
+      middlewares: options.middlewares,
     });
     this.reduxStore.dispatch(updateBasicConfiguration(options.configuration));
     if (options.configuration.search) {
