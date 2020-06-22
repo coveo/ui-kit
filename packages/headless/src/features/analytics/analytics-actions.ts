@@ -2,6 +2,7 @@ import {createAsyncThunk, AsyncThunkAction} from '@reduxjs/toolkit';
 import {configureAnalytics} from '../../api/analytics/analytics';
 import {SearchPageEvents} from 'coveo.analytics/dist/definitions/searchPage/searchPageEvents';
 import {SearchPageState} from '../../state';
+import {currentPageSelector} from '../pagination/pagination-selectors';
 
 const searchPageState = (getState: () => unknown) =>
   getState() as SearchPageState;
@@ -77,11 +78,57 @@ export const logSearchboxSubmit = createAsyncThunk(
 );
 
 /**
- * TODO: Remove. Needed while until analytics events are in place.
+ * Log pager resize
  */
-export const logPlaceholderSearchEvent = createAsyncThunk(
-  'analytics/placeholder',
-  async () => {
+export const logPagerResize = createAsyncThunk(
+  'analytics/pager/resize',
+  async (_, {getState}) => {
+    const state = searchPageState(getState);
+    await configureAnalytics(state).logPagerResize({
+      currentResultsPerPage: state.pagination.numberOfResults,
+    });
+    return makeSearchActionType();
+  }
+);
+
+/**
+ * Log page number
+ */
+export const logPageNumber = createAsyncThunk(
+  'analytics/pager/number',
+  async (_, {getState}) => {
+    const state = searchPageState(getState);
+    await configureAnalytics(state).logPagerNumber({
+      pagerNumber: currentPageSelector(state),
+    });
+    return makeSearchActionType();
+  }
+);
+
+/**
+ * Log pager next
+ */
+export const logPageNext = createAsyncThunk(
+  'analytics/pager/next',
+  async (_, {getState}) => {
+    const state = searchPageState(getState);
+    await configureAnalytics(state).logPagerNext({
+      pagerNumber: currentPageSelector(state),
+    });
+    return makeSearchActionType();
+  }
+);
+
+/**
+ * Log pager previous
+ */
+export const logPagePrevious = createAsyncThunk(
+  'analytics/pager/previous',
+  async (_, {getState}) => {
+    const state = searchPageState(getState);
+    await configureAnalytics(state).logPagerPrevious({
+      pagerNumber: currentPageSelector(state),
+    });
     return makeSearchActionType();
   }
 );

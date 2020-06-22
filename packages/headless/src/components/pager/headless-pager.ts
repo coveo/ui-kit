@@ -14,7 +14,11 @@ import {
 } from '../../features/pagination/pagination-selectors';
 import {executeSearch} from '../../features/search/search-actions';
 import {minimumPage} from '../../features/pagination/pagination-slice';
-import {logPlaceholderSearchEvent} from '../../features/analytics/analytics-actions';
+import {
+  logPageNumber,
+  logPageNext,
+  logPagePrevious,
+} from '../../features/analytics/analytics-actions';
 
 export type PagerState = Pager['state'];
 
@@ -63,7 +67,7 @@ export class Pager extends Component {
    */
   public selectPage(page: number) {
     this.dispatch(updatePage(page));
-    this.search();
+    this.dispatch(executeSearch(logPageNumber()));
   }
 
   /**
@@ -71,7 +75,7 @@ export class Pager extends Component {
    */
   public nextPage() {
     this.dispatch(nextPage());
-    this.search();
+    this.dispatch(executeSearch(logPageNext()));
   }
 
   /**
@@ -79,7 +83,7 @@ export class Pager extends Component {
    */
   public previousPage() {
     this.dispatch(previousPage());
-    this.search();
+    this.dispatch(executeSearch(logPagePrevious()));
   }
 
   /**
@@ -128,9 +132,5 @@ export class Pager extends Component {
 
   private get maxPage() {
     return maxPageSelector(this.engine.state);
-  }
-
-  private search() {
-    this.dispatch(executeSearch(logPlaceholderSearchEvent()));
   }
 }
