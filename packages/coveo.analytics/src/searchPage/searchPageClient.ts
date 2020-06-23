@@ -1,4 +1,4 @@
-import CoveoAnalyticsClient, {ClientOptions} from '../client/analytics';
+import CoveoAnalyticsClient, {ClientOptions, AnalyticsClient} from '../client/analytics';
 import {SearchEventRequest, ClickEventRequest, CustomEventRequest} from '../events';
 import {
     SearchPageEvents,
@@ -20,6 +20,7 @@ import {
     FacetSortMeta,
     QueryErrorMeta,
 } from './searchPageEvents';
+import {NoopAnalytics} from '../client/noopAnalytics';
 
 export interface SearchPageClientProvider {
     getBaseMetadata: () => Record<string, any>;
@@ -27,11 +28,27 @@ export interface SearchPageClientProvider {
     getSearchUID: () => string;
 }
 
-export class CoveoSearchPageClient {
-    public coveoAnalyticsClient: CoveoAnalyticsClient;
+export interface SearchPageClientOptions extends ClientOptions {
+    enableAnalytics: boolean;
+}
 
-    constructor(private opts: Partial<ClientOptions>, private provider: SearchPageClientProvider) {
-        this.coveoAnalyticsClient = new CoveoAnalyticsClient(opts);
+export class CoveoSearchPageClient {
+    public coveoAnalyticsClient: AnalyticsClient;
+
+    constructor(private opts: Partial<SearchPageClientOptions>, private provider: SearchPageClientProvider) {
+        this.coveoAnalyticsClient =
+            opts.enableAnalytics === false ? new NoopAnalytics() : new CoveoAnalyticsClient(opts);
+    }
+
+    public disable() {
+        if (this.coveoAnalyticsClient instanceof CoveoAnalyticsClient) {
+            this.coveoAnalyticsClient.clear();
+        }
+        this.coveoAnalyticsClient = new NoopAnalytics();
+    }
+
+    public enable() {
+        this.coveoAnalyticsClient = new CoveoAnalyticsClient(this.opts);
     }
 
     public logInterfaceLoad() {

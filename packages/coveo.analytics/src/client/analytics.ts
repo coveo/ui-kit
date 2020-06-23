@@ -21,8 +21,13 @@ import {hasWindow, hasDocument} from '../detector';
 import {addDefaultValues} from '../hook/addDefaultValues';
 import {enhanceViewEvent} from '../hook/enhanceViewEvent';
 import {uuidv4} from './crypto';
-import {convertKeysToMeasurementProtocol, isMeasurementProtocolKey, convertCustomMeasurementProtocolKeys} from './measurementProtocolMapper';
+import {
+    convertKeysToMeasurementProtocol,
+    isMeasurementProtocolKey,
+    convertCustomMeasurementProtocolKeys,
+} from './measurementProtocolMapper';
 import {IRuntimeEnvironment, BrowserRuntime, NodeJSRuntime} from './runtimeEnvironment';
+import HistoryStore from '../history';
 
 export const Version = 'v15';
 
@@ -56,7 +61,7 @@ export interface AnalyticsClient {
     getHealth(): Promise<HealthResponse>;
     registerBeforeSendEventHook(hook: AnalyticsClientSendEventHook): void;
     addEventTypeMapping(eventType: string, eventConfig: EventTypeConfig): void;
-    runtime: IRuntimeEnvironment
+    runtime: IRuntimeEnvironment;
 }
 
 interface BufferedRequest {
@@ -96,14 +101,14 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
         this.bufferedRequests = [];
         this.beforeSendHooks = [enhanceViewEvent, addDefaultValues];
         this.eventTypeMapping = {};
-        
+
         const clientsOptions = {
             baseUrl: this.baseUrl,
             token: this.options.token,
             visitorIdProvider: this,
         };
 
-        this.runtime = this.initRuntime(clientsOptions)
+        this.runtime = this.initRuntime(clientsOptions);
         this.analyticsFetchClient = new AnalyticsFetchClient(clientsOptions);
 
         this.initVisitorId();
@@ -111,18 +116,18 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
 
     private initRuntime(clientsOptions: IAnalyticsBeaconClientOptions) {
         if (hasWindow() && hasDocument()) {
-            return new BrowserRuntime(clientsOptions, () => this.flushBufferWithBeacon())
+            return new BrowserRuntime(clientsOptions, () => this.flushBufferWithBeacon());
         }
 
-        return new NodeJSRuntime()
+        return new NodeJSRuntime();
     }
 
     private get analyticsBeaconClient() {
-        return this.runtime.beaconClient
+        return this.runtime.beaconClient;
     }
 
     private get storage() {
-        return this.runtime.storage
+        return this.runtime.storage;
     }
 
     private initVisitorId() {
@@ -161,7 +166,8 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
         });
         const processBeforeSendHooksStep: ProcessPayloadStep = (currentPayload) =>
             this.beforeSendHooks.reduce((newPayload, current) => current(eventType, newPayload), currentPayload);
-        const cleanPayloadStep: ProcessPayloadStep = (currentPayload) => this.removeEmptyPayloadValues(currentPayload, eventType);
+        const cleanPayloadStep: ProcessPayloadStep = (currentPayload) =>
+            this.removeEmptyPayloadValues(currentPayload, eventType);
         const validateParams: ProcessPayloadStep = (currentPayload) => this.validateParams(currentPayload);
         const processMeasurementProtocolConversionStep: ProcessPayloadStep = (currentPayload) =>
             usesMeasurementProtocol ? convertKeysToMeasurementProtocol(currentPayload) : currentPayload;
@@ -212,6 +218,12 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
 
     private hasPendingRequests(): boolean {
         return this.bufferedRequests.length > 0;
+    }
+
+    public clear() {
+        this.storage.removeItem('visitorId');
+        const store = new HistoryStore();
+        store.clear();
     }
 
     async sendSearchEvent(request: SearchEventRequest): Promise<SearchEventResponse | void> {
@@ -273,7 +285,7 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
         };
 
         const match = keysThatCanBeEmpty[evtType] || [];
-        return match.indexOf(key) !== -1
+        return match.indexOf(key) !== -1;
     }
 
     private removeEmptyPayloadValues(payload: IRequestPayload, eventType: string): IRequestPayload {
@@ -315,7 +327,7 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
 
         return {
             ...(custom || {}),
-            ...newPayload
+            ...newPayload,
         };
     }
 
@@ -331,7 +343,7 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
 
     private get baseUrl(): string {
         const {version, endpoint} = this.options;
-        const endpointIsCoveoProxy = endpoint.indexOf(".cloud.coveo.com") !== -1;
+        const endpointIsCoveoProxy = endpoint.indexOf('.cloud.coveo.com') !== -1;
         return `${endpoint}${endpointIsCoveoProxy ? '' : '/rest'}/${version}`;
     }
 }

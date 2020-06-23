@@ -1,10 +1,10 @@
-import {WebStorage, CookieStorage, NullStorage, CookieAndLocalStorage} from "../storage";
-import {AnalyticsBeaconClient, IAnalyticsBeaconClientOptions, NoopAnalyticsBeaconClient} from "./analyticsBeaconClient";
-import {hasLocalStorage, hasCookieStorage} from "../detector";
-import {AnalyticsRequestClient} from "./analyticsRequestClient";
+import {WebStorage, NullStorage, CookieAndLocalStorage} from '../storage';
+import {AnalyticsBeaconClient, IAnalyticsBeaconClientOptions, NoopAnalyticsBeaconClient} from './analyticsBeaconClient';
+import {hasLocalStorage, hasCookieStorage} from '../detector';
+import {AnalyticsRequestClient} from './analyticsRequestClient';
 
 export interface IRuntimeEnvironment {
-    storage: WebStorage
+    storage: WebStorage;
     beaconClient: AnalyticsRequestClient;
 }
 
@@ -13,24 +13,26 @@ export class BrowserRuntime implements IRuntimeEnvironment {
     public beaconClient: AnalyticsBeaconClient;
 
     constructor(beaconOptions: IAnalyticsBeaconClientOptions, beforeUnload: () => void) {
-
         if (hasLocalStorage() && hasCookieStorage()) {
-            this.storage = new CookieAndLocalStorage()
+            this.storage = new CookieAndLocalStorage();
         } else if (hasLocalStorage()) {
-            this.storage = localStorage
+            this.storage = localStorage;
         } else {
-            console.warn("BrowserRuntime detected no valid storage available.", this)
-            this.storage = new NullStorage()
+            console.warn('BrowserRuntime detected no valid storage available.', this);
+            this.storage = new NullStorage();
         }
 
-
-        this.beaconClient = new AnalyticsBeaconClient(beaconOptions)
-        window.addEventListener('beforeunload', () => beforeUnload())
+        this.beaconClient = new AnalyticsBeaconClient(beaconOptions);
+        window.addEventListener('beforeunload', () => beforeUnload());
     }
-
 }
 
 export class NodeJSRuntime implements IRuntimeEnvironment {
-    public storage = new NullStorage()
-    public beaconClient = new NoopAnalyticsBeaconClient()
+    public storage = new NullStorage();
+    public beaconClient = new NoopAnalyticsBeaconClient();
+}
+
+export class NoopRuntime implements IRuntimeEnvironment {
+    public storage = new NullStorage();
+    public beaconClient = new NoopAnalyticsBeaconClient();
 }

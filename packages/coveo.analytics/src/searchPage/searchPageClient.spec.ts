@@ -1,6 +1,8 @@
 import * as fetchMock from 'fetch-mock';
 import {CoveoSearchPageClient} from './searchPageClient';
 import {SearchPageEvents, PartialDocumentInformation, DocumentIdentifier, CustomEventsTypes} from './searchPageEvents';
+import CoveoAnalyticsClient from '../client/analytics';
+import {NoopAnalytics} from '../client/noopAnalytics';
 
 describe('SearchPageClient', () => {
     const fakeDocInfo = {
@@ -23,6 +25,15 @@ describe('SearchPageClient', () => {
 
     let client: CoveoSearchPageClient;
 
+    const provider = {
+        getBaseMetadata: () => ({foo: 'bar'}),
+        getSearchEventRequestPayload: () => ({
+            queryText: 'queryText',
+            responseTime: 123,
+        }),
+        getSearchUID: () => 'my-uid',
+    };
+
     beforeEach(() => {
         client = initClient();
         fetchMock.mock(/.*/, {
@@ -36,17 +47,7 @@ describe('SearchPageClient', () => {
     });
 
     const initClient = () => {
-        return new CoveoSearchPageClient(
-            {},
-            {
-                getBaseMetadata: () => ({foo: 'bar'}),
-                getSearchEventRequestPayload: () => ({
-                    queryText: 'queryText',
-                    responseTime: 123,
-                }),
-                getSearchUID: () => 'my-uid',
-            }
-        );
+        return new CoveoSearchPageClient({}, provider);
     };
 
     const expectMatchPayload = (actionCause: SearchPageEvents, meta = {}) => {
@@ -327,9 +328,33 @@ describe('SearchPageClient', () => {
             cq: 'cq',
             dq: 'dq',
             errorMessage: 'boom',
-            errorType: 'a bad one'
-        }
+            errorType: 'a bad one',
+        };
         await client.logQueryError(meta);
         expectMatchCustomEventPayload(SearchPageEvents.queryError, meta);
+    });
+
+    it('should enable analytics tracking by default', () => {
+        const c = new CoveoSearchPageClient({}, provider);
+        expect(c.coveoAnalyticsClient instanceof CoveoAnalyticsClient).toBe(true);
+    });
+
+    it('should allow disabling analytics on initialization', () => {
+        const c = new CoveoSearchPageClient({enableAnalytics: false}, provider);
+        expect(c.coveoAnalyticsClient instanceof NoopAnalytics).toBe(true);
+    });
+
+    it('should allow disabling analytics after initialization', () => {
+        const c = new CoveoSearchPageClient({enableAnalytics: true}, provider);
+        expect(c.coveoAnalyticsClient instanceof CoveoAnalyticsClient).toBe(true);
+        c.disable();
+        expect(c.coveoAnalyticsClient instanceof NoopAnalytics).toBe(true);
+    });
+
+    it('should allow enabling analytics after initialization', () => {
+        const c = new CoveoSearchPageClient({enableAnalytics: false}, provider);
+        expect(c.coveoAnalyticsClient instanceof NoopAnalytics).toBe(true);
+        c.enable();
+        expect(c.coveoAnalyticsClient instanceof CoveoAnalyticsClient).toBe(true);
     });
 });

@@ -1,6 +1,6 @@
 import {AnalyticsClientSendEventHook} from '../client/analytics';
 import {ViewEventRequest, EventType} from '../events';
-import {HistoryStore} from '../history';
+import {HistoryStore, STORE_KEY} from '../history';
 
 export const enhanceViewEvent: AnalyticsClientSendEventHook = (eventType, payload) => {
     if (eventType === EventType.view) {

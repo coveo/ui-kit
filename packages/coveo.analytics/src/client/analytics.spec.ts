@@ -2,6 +2,7 @@ import * as fetchMock from 'fetch-mock';
 import {EventType, ViewEventRequest, DefaultEventResponse} from '../events';
 import {CoveoAnalyticsClient} from './analytics';
 import {CookieStorage} from '../storage';
+import HistoryStore from '../history';
 
 const aVisitorId = '123';
 
@@ -137,16 +138,15 @@ describe('Analytics', () => {
     it('should not remove #queryText for search events even if empty', async () => {
         mockFetchRequestForEventType(EventType.search);
         await client.sendEvent(EventType.search, {
-            queryText: "",
+            queryText: '',
         });
 
         const [body] = getParsedBodyCalls();
 
         expect(body).toMatchObject({
-            queryText: "",
+            queryText: '',
         });
     });
-
 
     describe('with event type mapping with variable arguments', () => {
         const specialEventType = '🌟special🌟';
@@ -240,6 +240,23 @@ describe('Analytics', () => {
             const response = await client.sendEvent(EventType.custom);
             expect(response).toEqual(eventResponse);
         });
+    });
+
+    it('should support clearing cookies for visitorId and historyStore', async () => {
+        const visitorId = 'foo';
+        const history = {name: 'foo', time: '123', value: 'bar'};
+        const storage = new CookieStorage();
+        const historyStore = new HistoryStore();
+
+        client.currentVisitorId = visitorId;
+        historyStore.addElement(history);
+
+        expect(storage.getItem('visitorId')).toBe('foo');
+        expect(historyStore.getMostRecentElement()).toEqual(history);
+
+        client.clear();
+        expect(storage.getItem('visitorId')).toBeNull();
+        expect(historyStore.getMostRecentElement()).toBeUndefined();
     });
 
     const getParsedBodyCalls = (): any[] => {
