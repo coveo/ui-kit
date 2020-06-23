@@ -33,5 +33,33 @@ describe('string value', () => {
       value = new StringValue();
       expect(value.validate((123 as unknown) as string)).not.toBeNull();
     });
+
+    it(`when emptyAllowed is false
+    when passing an empty string value
+    it returns an error description`, () => {
+      value = new StringValue({emptyAllowed: false});
+      expect(value.validate('')).not.toBeNull();
+    });
+
+    it(`when emptyAllowed is true (default)
+    when passing an empty string value
+    it returns null`, () => {
+      value = new StringValue();
+      expect(value.validate('')).toBeNull();
+    });
+
+    it(`when url is true
+    when passing an invalid URL value
+    it returns an error description`, () => {
+      value = new StringValue({url: true});
+      expect(value.validate('hello')).not.toBeNull();
+    });
+
+    it(`when url is true
+    when passing a valid URL value
+    it returns an error description`, () => {
+      value = new StringValue({url: true});
+      expect(value.validate('https://www.coveo.com?test=allo')).toBeNull();
+    });
   });
 });

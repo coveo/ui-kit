@@ -22,11 +22,11 @@ export class NumberValue implements SchemaValue<number> {
       return 'value is not a number.';
     }
 
-    if (value! < this.config.min!) {
+    if (value < this.config.min!) {
       return `minimum value of ${this.config.min} not respected.`;
     }
 
-    if (value! > this.config.max!) {
+    if (value > this.config.max!) {
       return `maximum value of ${this.config.max} not respected.`;
     }
 

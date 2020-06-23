@@ -32,12 +32,15 @@ export interface SearchBoxProps {
   options: SearchBoxOptions;
 }
 
-const SearchBoxOptionsSchema = new Schema({
+const optionsSchema = new Schema({
   /**
    * A unique identifier for the component.
    * By default, a unique random identifier is generated.
    */
-  id: new StringValue({default: () => randomID('search_box')}),
+  id: new StringValue({
+    default: () => randomID('search_box'),
+    emptyAllowed: false,
+  }),
   /**
    * The number of query suggestions to request from Coveo ML (e.g., `3`).
    *
@@ -56,7 +59,7 @@ const SearchBoxOptionsSchema = new Schema({
   isStandalone: new BooleanValue({default: false}),
 });
 
-export type SearchBoxOptions = SchemaValues<typeof SearchBoxOptionsSchema>;
+export type SearchBoxOptions = SchemaValues<typeof optionsSchema>;
 
 /**
  * A scoped and simplified part of the headless state that is relevant to the `SearchBox` component.
@@ -72,7 +75,7 @@ export class SearchBox extends Component {
 
   constructor(engine: Engine, props: Partial<SearchBoxProps> = {}) {
     super(engine);
-    this.options = SearchBoxOptionsSchema.validate(props.options) as Required<
+    this.options = optionsSchema.validate(props.options) as Required<
       SearchBoxOptions
     >;
     this.registerQuery();

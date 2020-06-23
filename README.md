@@ -8,17 +8,19 @@ To install all dependencies and link local packages, run:
 npm run setup
 ```
 
+To build all projects for production, run:
+
+```sh
+npm run build
+```
+
 To start all projects in development, run:
 
 ```sh
 npm start
 ```
 
-To build all projects for production, run:
-
-```sh
-npm run build
-```
+**Note:** You should build all separate projects at least once before running the `npm start` command the first time.
 
 The project uses git hooks with [Husky](https://www.npmjs.com/package/husky). You can make sure hooks are correctly installed using the `npm rebuild` command.
 

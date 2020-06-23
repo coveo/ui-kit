@@ -1,28 +1,27 @@
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 import {SearchPageState} from '../../state';
 import {getQuerySuggestions} from '../../api/search/query-suggest/query-suggest-endpoint';
-import {validatePayload} from '../../utils/validate-payload';
+import {validatePayloadSchema} from '../../utils/validate-payload';
 import {NumberValue, StringValue, Schema} from '@coveo/bueno';
 
 const idDefinition = {
-  id: new StringValue({required: true}),
+  id: new StringValue({required: true, emptyAllowed: false}),
 };
 
 /**
  * Register a new query suggest entity to the headless state to enable the Coveo ML query suggestions feature.
  * @param id A unique identifier for the new query suggest entity (e.g., `b953ab2e-022b-4de4-903f-68b2c0682942`).
  * @param q The partial basic query expression for which to request query suggestions (e.g., `cov`).
- * @param count The number of query suggestions to request from Coveo ML (e.g., `3`).
+ * @param count The number of query suggestions to request from Coveo ML (e.g., `3`). Default: `5`.
  */
 export const registerQuerySuggest = createAction(
   'querySuggest/register',
-  (payload: {id: string; q?: string; count?: number}) => {
-    return validatePayload(payload, {
+  (payload: {id: string; q?: string; count?: number}) =>
+    validatePayloadSchema(payload, {
       ...idDefinition,
       q: new StringValue(),
       count: new NumberValue({min: 0}),
-    });
-  }
+    })
 );
 
 /**
@@ -31,9 +30,7 @@ export const registerQuerySuggest = createAction(
  */
 export const unregisterQuerySuggest = createAction(
   'querySuggest/unregister',
-  (payload: {id: string}) => {
-    return validatePayload(payload, idDefinition);
-  }
+  (payload: {id: string}) => validatePayloadSchema(payload, idDefinition)
 );
 
 /**
@@ -43,12 +40,11 @@ export const unregisterQuerySuggest = createAction(
  */
 export const selectQuerySuggestion = createAction(
   'querySuggest/selectSuggestion',
-  (payload: {id: string; expression: string}) => {
-    return validatePayload(payload, {
+  (payload: {id: string; expression: string}) =>
+    validatePayloadSchema(payload, {
       ...idDefinition,
       expression: new StringValue({required: true}),
-    });
-  }
+    })
 );
 
 /**
@@ -57,9 +53,7 @@ export const selectQuerySuggestion = createAction(
  */
 export const clearQuerySuggest = createAction(
   'querySuggest/clear',
-  (payload: {id: string}) => {
-    return validatePayload(payload, idDefinition);
-  }
+  (payload: {id: string}) => validatePayloadSchema(payload, idDefinition)
 );
 
 /**
@@ -68,9 +62,7 @@ export const clearQuerySuggest = createAction(
  */
 export const clearQuerySuggestCompletions = createAction(
   'querySuggest/clearSuggestions',
-  (payload: {id: string}) => {
-    return validatePayload(payload, idDefinition);
-  }
+  (payload: {id: string}) => validatePayloadSchema(payload, idDefinition)
 );
 
 /**
@@ -80,9 +72,8 @@ export const clearQuerySuggestCompletions = createAction(
 export const fetchQuerySuggestions = createAsyncThunk(
   'querySuggest/fetch',
 
-  async (payload: {id: string}, {getState}) => {
-    return await getQuerySuggestions(payload.id, getState() as SearchPageState);
-  },
+  async (payload: {id: string}, {getState}) =>
+    await getQuerySuggestions(payload.id, getState() as SearchPageState),
   {
     condition: (payload: {id: string}) => {
       new Schema(idDefinition).validate(payload);

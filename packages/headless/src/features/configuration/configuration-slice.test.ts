@@ -14,7 +14,9 @@ describe('configuration slice', () => {
     ...getConfigurationInitialState(),
     accessToken: 'mytoken123',
     organizationId: 'myorg',
-    search: {searchApiBaseUrl: 'platformdev.cloud.coveo.com/search'},
+    search: {
+      searchApiBaseUrl: 'https://platformdev.cloud.coveo.com/rest/search',
+    },
   };
   const fakeRenewToken = async () => await Promise.resolve('');
 
@@ -63,7 +65,7 @@ describe('configuration slice', () => {
     const expectedState: ConfigurationState = {
       ...getConfigurationInitialState(),
       search: {
-        searchApiBaseUrl: 'test.com/search',
+        searchApiBaseUrl: 'http://test.com/search',
       },
     };
 
@@ -71,7 +73,7 @@ describe('configuration slice', () => {
       configurationReducer(
         undefined,
         updateSearchConfiguration({
-          searchApiBaseUrl: 'test.com/search',
+          searchApiBaseUrl: 'http://test.com/search',
         })
       )
     ).toEqual(expectedState);
@@ -81,7 +83,7 @@ describe('configuration slice', () => {
     const expectedState: ConfigurationState = {
       ...existingState,
       search: {
-        searchApiBaseUrl: 'test.com/search',
+        searchApiBaseUrl: 'http://test.com/search',
       },
     };
 
@@ -89,7 +91,7 @@ describe('configuration slice', () => {
       configurationReducer(
         existingState,
         updateSearchConfiguration({
-          searchApiBaseUrl: 'test.com/search',
+          searchApiBaseUrl: 'http://test.com/search',
         })
       )
     ).toEqual(expectedState);
