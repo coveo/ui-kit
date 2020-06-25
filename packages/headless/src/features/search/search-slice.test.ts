@@ -28,7 +28,11 @@ describe('search-slice', () => {
   it('when a executeSearch fulfilled is received, it updates the state to the received payload', () => {
     const result = buildMockResult();
     const response = buildMockSearchResponse({results: [result]});
-    const searchState = buildMockSearch({response, duration: 123});
+    const searchState = buildMockSearch({
+      response,
+      duration: 123,
+      queryExecuted: 'foo',
+    });
 
     const action = executeSearch.fulfilled(
       searchState,
@@ -39,5 +43,6 @@ describe('search-slice', () => {
 
     expect(finalState.response).toEqual(response);
     expect(finalState.duration).toEqual(123);
+    expect(finalState.queryExecuted).toEqual('foo');
   });
 });

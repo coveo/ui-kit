@@ -6,6 +6,7 @@ export interface SearchState {
   /** The search response. For a full description, refer to {@link https://docs.coveo.com/en/13/cloud-v2-api-reference/search-api#operation/searchUsingPost}*/
   response: SearchResponse;
   duration: number;
+  queryExecuted: string;
 }
 
 export function getSearchInitialState(): SearchState {
@@ -17,6 +18,7 @@ export function getSearchInitialState(): SearchState {
       facets: [],
     },
     duration: 0,
+    queryExecuted: '',
   };
 }
 
@@ -25,6 +27,7 @@ export const searchReducer = createReducer(
   (builder) => {
     builder.addCase(executeSearch.fulfilled, (state, action) => {
       state.response = action.payload.response;
+      state.queryExecuted = action.payload.queryExecuted;
       state.duration = action.payload.duration;
     });
   }

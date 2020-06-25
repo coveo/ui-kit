@@ -16,6 +16,7 @@ export * from './components/pager/headless-pager';
 export * from './components/result-list/headless-result-list';
 export * from './components/results-per-page/headless-results-per-page';
 export * from './components/sort/headless-sort';
+export * from './components/query-summary/headless-query-summary';
 
 export * from './features/sort-criteria/criteria';
 export * from './components/facets/facet/headless-facet';

@@ -7,6 +7,7 @@ export function buildMockSearch(
   return {
     response: buildMockSearchResponse(),
     duration: 0,
+    queryExecuted: '',
     ...config,
   };
 }

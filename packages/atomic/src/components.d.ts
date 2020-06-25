@@ -12,6 +12,8 @@ export namespace Components {
     }
     interface AtomicPager {
     }
+    interface AtomicQuerySummary {
+    }
     interface AtomicResultList {
     }
     interface AtomicResultsPerPage {
@@ -53,6 +55,12 @@ declare global {
         prototype: HTMLAtomicPagerElement;
         new (): HTMLAtomicPagerElement;
     };
+    interface HTMLAtomicQuerySummaryElement extends Components.AtomicQuerySummary, HTMLStencilElement {
+    }
+    var HTMLAtomicQuerySummaryElement: {
+        prototype: HTMLAtomicQuerySummaryElement;
+        new (): HTMLAtomicQuerySummaryElement;
+    };
     interface HTMLAtomicResultListElement extends Components.AtomicResultList, HTMLStencilElement {
     }
     var HTMLAtomicResultListElement: {
@@ -92,6 +100,7 @@ declare global {
     interface HTMLElementTagNameMap {
         "atomic-facet": HTMLAtomicFacetElement;
         "atomic-pager": HTMLAtomicPagerElement;
+        "atomic-query-summary": HTMLAtomicQuerySummaryElement;
         "atomic-result-list": HTMLAtomicResultListElement;
         "atomic-results-per-page": HTMLAtomicResultsPerPageElement;
         "atomic-search-box": HTMLAtomicSearchBoxElement;
@@ -106,6 +115,8 @@ declare namespace LocalJSX {
         "title"?: string;
     }
     interface AtomicPager {
+    }
+    interface AtomicQuerySummary {
     }
     interface AtomicResultList {
     }
@@ -137,6 +148,7 @@ declare namespace LocalJSX {
     interface IntrinsicElements {
         "atomic-facet": AtomicFacet;
         "atomic-pager": AtomicPager;
+        "atomic-query-summary": AtomicQuerySummary;
         "atomic-result-list": AtomicResultList;
         "atomic-results-per-page": AtomicResultsPerPage;
         "atomic-search-box": AtomicSearchBox;
@@ -151,6 +163,7 @@ declare module "@stencil/core" {
         interface IntrinsicElements {
             "atomic-facet": LocalJSX.AtomicFacet & JSXBase.HTMLAttributes<HTMLAtomicFacetElement>;
             "atomic-pager": LocalJSX.AtomicPager & JSXBase.HTMLAttributes<HTMLAtomicPagerElement>;
+            "atomic-query-summary": LocalJSX.AtomicQuerySummary & JSXBase.HTMLAttributes<HTMLAtomicQuerySummaryElement>;
             "atomic-result-list": LocalJSX.AtomicResultList & JSXBase.HTMLAttributes<HTMLAtomicResultListElement>;
             "atomic-results-per-page": LocalJSX.AtomicResultsPerPage & JSXBase.HTMLAttributes<HTMLAtomicResultsPerPageElement>;
             "atomic-search-box": LocalJSX.AtomicSearchBox & JSXBase.HTMLAttributes<HTMLAtomicSearchBoxElement>;

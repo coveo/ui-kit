@@ -9,12 +9,12 @@ import {SearchAction} from '../analytics/analytics-actions';
 export const executeSearch = createAsyncThunk(
   'search/executeSearch',
   async (analyticsAction: SearchAction, {getState, dispatch}) => {
+    const state = getState() as SearchPageState;
     const startedAt = new Date().getTime();
-    const response = await SearchAPIClient.search(
-      getState() as SearchPageState
-    );
+    const response = await SearchAPIClient.search(state);
     const duration = new Date().getTime() - startedAt;
+    const queryExecuted = state.query.q;
     dispatch(analyticsAction);
-    return {response, duration};
+    return {response, duration, queryExecuted};
   }
 );
