@@ -10,11 +10,13 @@
     "check": "gts check",
     "fix": "gts fix",
     "report:bundle-size": "node ./benchmark/bundle-size/bundle-size.js",
-    "report:bundle-size:time-series": "node ./benchmark/bundle-size/time-series.js"
+    "report:bundle-size:time-series": "node ./benchmark/bundle-size/time-series.js",
+    "cypress:test": "lerna run cypress:test"
   },
   "devDependencies": {
     "@types/node": "^10.0.3",
     "cross-fetch": "^3.0.4",
+    "eslint-plugin-cypress": "^2.11.1",
     "gts": "^2.0.2",
     "husky": "^4.2.3",
     "lerna": "^3.20.2",

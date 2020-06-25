@@ -34,11 +34,33 @@ npm test
 - Then you can use the element anywhere in your template, JSX, html etc
 
 ### Node Modules
+
 - Run `npm install @coveo/atomic --save`
 - Put a script tag similar to this `<script src='node_modules/@coveo/atomic/dist/mycomponent.js'></script>` in the head of your index.html
 - Then you can use the element anywhere in your template, JSX, html etc
 
 ### In your app
+
 - Run `npm install @coveo/atomic --save`
 - Add an import to the npm packages `import '@coveo/atomic';`
 - Then you can use the element anywhere in your template, JSX, html etc
+
+## Run Cypress for Atomic components
+
+Ref: https://docs.cypress.io/
+
+- All the tests will need to be under folder cypress\integration
+
+### Open
+
+To open cypress, run:
+
+```sh
+npm run cypressopen
+```
+
+To run all the test, run:
+
+```sh
+npm run cypresstest
+```
