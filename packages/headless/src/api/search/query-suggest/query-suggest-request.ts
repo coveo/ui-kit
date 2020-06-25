@@ -14,6 +14,10 @@ export const querySuggestRequestParams = (
    * The basic query expression for which to get completion.
    */
   q: state.querySuggest[id]!.q,
+  /**
+   * Specifies the context that Coveo Machine Learning should leverage to return suggestions.
+   */
+  context: state.context.contextValues,
 });
 
 export type QuerySuggestRequestParams = ReturnType<

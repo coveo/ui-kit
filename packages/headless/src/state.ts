@@ -4,6 +4,7 @@ import {SearchState} from './features/search/search-slice';
 import {PaginationState} from './features/pagination/pagination-slice';
 import {SortCriteriaState} from './features/sort-criteria/sort-criteria-slice';
 import {FacetSetState} from './features/facets/facet-set/facet-set-slice';
+import {ContextState} from './features/context/context-slice';
 
 export interface SearchPageState {
   /**
@@ -42,6 +43,10 @@ export interface SearchPageState {
    * The sort criteria to use with the search query. For more information, refer to {@link https://docs.coveo.com/en/1461/cloud-v2-developers/query-parameters#RestQueryParameters-sortCriteria}
    */
   sortCriteria: SortCriteriaState;
+  /**
+   * The context to use with the search query. For more information, refer to {@link https://docs.coveo.com/en/2081/coveo-machine-learning/understanding-custom-context}
+   */
+  context: ContextState;
 }
 
 export interface ConfigurationState {

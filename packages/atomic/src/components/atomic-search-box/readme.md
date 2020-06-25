@@ -11,6 +11,7 @@
 | --------------------- | ----------------------- | ----------- | --------- | ------- |
 | `isStandalone`        | `is-standalone`         |             | `boolean` | `false` |
 | `numberOfSuggestions` | `number-of-suggestions` |             | `number`  | `5`     |
+| `superfluousProp`     | `superfluous-prop`      |             | `number`  | `5`     |
 
 
 ----------------------------------------------

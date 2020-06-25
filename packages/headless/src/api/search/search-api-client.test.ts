@@ -1,7 +1,6 @@
 import {SearchAPIClient} from './search-api-client';
 import {PlatformClient, PlatformClientCallOptions} from '../platform-client';
 import {PlanRequestParams} from './plan/plan-request';
-import {SearchPageState} from '../../state';
 import {QuerySuggestRequestParams} from './query-suggest/query-suggest-request';
 import {createMockState} from '../../test/mock-state';
 import {buildMockQuerySuggest} from '../../test/mock-query-suggest';
@@ -14,18 +13,7 @@ describe('search api client', () => {
 
   it(`when calling SearchAPIClient.plan
   should call PlatformClient.call with the right options`, () => {
-    const state = {
-      configuration: {
-        accessToken: 'mytoken123',
-        organizationId: 'myorg',
-        search: {
-          searchApiBaseUrl: 'test.com/rest/search',
-        },
-      },
-      query: {
-        q: 'query',
-      },
-    } as SearchPageState;
+    const state = createMockState();
 
     SearchAPIClient.plan(state);
 
@@ -37,6 +25,7 @@ describe('search api client', () => {
       requestParams: {
         organizationId: state.configuration.organizationId,
         q: state.query.q,
+        context: state.context.contextValues,
       },
     };
 
@@ -61,6 +50,7 @@ describe('search api client', () => {
         organizationId: state.configuration.organizationId,
         q: state.querySuggest[id]!.q,
         count: state.querySuggest[id]!.count,
+        context: state.context.contextValues,
       },
     };
 

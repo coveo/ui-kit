@@ -1,5 +1,7 @@
 import {SchemaValue} from '../schema';
 
+export type PrimitivesValues = boolean | number | string | undefined | null;
+
 export interface ValueConfig<T> {
   default?: (() => T) | T;
   required?: boolean;
@@ -9,7 +11,7 @@ export class Value<T> implements SchemaValue<T> {
   constructor(private baseConfig: ValueConfig<T> = {}) {}
 
   public validate(value: unknown) {
-    if (this.baseConfig.required && value === undefined) {
+    if (this.baseConfig.required && isNullOrUndefined(value)) {
       return 'value is required.';
     }
 

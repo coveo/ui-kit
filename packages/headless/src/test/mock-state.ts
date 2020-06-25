@@ -7,6 +7,7 @@ import {getSearchInitialState} from '../features/search/search-slice';
 import {getPaginationInitialState} from '../features/pagination/pagination-slice';
 import {getSortCriteriaInitialState} from '../features/sort-criteria/sort-criteria-slice';
 import {getFacetSetInitialState} from '../features/facets/facet-set/facet-set-slice';
+import {getContextInitialState} from '../features/context/context-slice';
 
 export function createMockState(
   config: Partial<SearchPageState> = {}
@@ -21,6 +22,7 @@ export function createMockState(
     redirection: getRedirectionInitialState(),
     search: getSearchInitialState(),
     sortCriteria: getSortCriteriaInitialState(),
+    context: getContextInitialState(),
     ...config,
   };
 }

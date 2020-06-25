@@ -23,6 +23,8 @@ export namespace Components {
     }
     interface AtomicSortDropdown {
     }
+    interface AtomicTestingContext {
+    }
     interface MyComponent {
         /**
           * The first name
@@ -75,6 +77,12 @@ declare global {
         prototype: HTMLAtomicSortDropdownElement;
         new (): HTMLAtomicSortDropdownElement;
     };
+    interface HTMLAtomicTestingContextElement extends Components.AtomicTestingContext, HTMLStencilElement {
+    }
+    var HTMLAtomicTestingContextElement: {
+        prototype: HTMLAtomicTestingContextElement;
+        new (): HTMLAtomicTestingContextElement;
+    };
     interface HTMLMyComponentElement extends Components.MyComponent, HTMLStencilElement {
     }
     var HTMLMyComponentElement: {
@@ -88,6 +96,7 @@ declare global {
         "atomic-results-per-page": HTMLAtomicResultsPerPageElement;
         "atomic-search-box": HTMLAtomicSearchBoxElement;
         "atomic-sort-dropdown": HTMLAtomicSortDropdownElement;
+        "atomic-testing-context": HTMLAtomicTestingContextElement;
         "my-component": HTMLMyComponentElement;
     }
 }
@@ -108,6 +117,8 @@ declare namespace LocalJSX {
         "superfluousProp"?: number;
     }
     interface AtomicSortDropdown {
+    }
+    interface AtomicTestingContext {
     }
     interface MyComponent {
         /**
@@ -130,6 +141,7 @@ declare namespace LocalJSX {
         "atomic-results-per-page": AtomicResultsPerPage;
         "atomic-search-box": AtomicSearchBox;
         "atomic-sort-dropdown": AtomicSortDropdown;
+        "atomic-testing-context": AtomicTestingContext;
         "my-component": MyComponent;
     }
 }
@@ -143,6 +155,7 @@ declare module "@stencil/core" {
             "atomic-results-per-page": LocalJSX.AtomicResultsPerPage & JSXBase.HTMLAttributes<HTMLAtomicResultsPerPageElement>;
             "atomic-search-box": LocalJSX.AtomicSearchBox & JSXBase.HTMLAttributes<HTMLAtomicSearchBoxElement>;
             "atomic-sort-dropdown": LocalJSX.AtomicSortDropdown & JSXBase.HTMLAttributes<HTMLAtomicSortDropdownElement>;
+            "atomic-testing-context": LocalJSX.AtomicTestingContext & JSXBase.HTMLAttributes<HTMLAtomicTestingContextElement>;
             "my-component": LocalJSX.MyComponent & JSXBase.HTMLAttributes<HTMLMyComponentElement>;
         }
     }

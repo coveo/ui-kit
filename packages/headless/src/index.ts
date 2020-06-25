@@ -19,6 +19,7 @@ export * from './components/sort/headless-sort';
 
 export * from './features/sort-criteria/criteria';
 export * from './components/facets/facet/headless-facet';
+export * from './components/context/headless-context';
 
 export * as queryActions from './features/query/query-actions';
 export * as querySetActions from './features/query-set/query-set-actions';
