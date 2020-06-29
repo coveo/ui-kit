@@ -10,6 +10,8 @@ import {
 import {
   updateBasicConfiguration,
   updateSearchConfiguration,
+  disableAnalytics,
+  enableAnalytics,
 } from '../features/configuration/configuration-actions';
 import {configureStore, Store} from './store';
 import {SearchPageState} from '../state';
@@ -139,6 +141,20 @@ export class HeadlessEngine<Reducers extends ReducersMapObject>
         searchApiBaseUrl: 'https://platform.cloud.coveo.com/rest/search',
       },
     };
+  }
+
+  /**
+   * Enable analytics tracking
+   */
+  public enableAnalytics() {
+    this.dispatch(enableAnalytics());
+  }
+
+  /**
+   * Disable analytics tracking
+   */
+  public disableAnalytics() {
+    this.dispatch(disableAnalytics());
   }
 
   get dispatch() {

@@ -38,3 +38,12 @@ export const renewAccessToken = createAsyncThunk(
     return await renew();
   }
 );
+
+/**
+ * Disable analytics tracking
+ */
+export const disableAnalytics = createAction('configuration/analytics/disable');
+/**
+ * Enable analytics tracking
+ */
+export const enableAnalytics = createAction('configuration/analytics/enable');

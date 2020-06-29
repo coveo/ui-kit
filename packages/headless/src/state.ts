@@ -67,6 +67,10 @@ export interface ConfigurationState {
      */
     searchApiBaseUrl: string;
   };
+  /**
+   * Specifies if analytics tracking should be enabled. By default analytics events are tracked.
+   */
+  analyticsEnabled: boolean;
 }
 
 export interface QueryState {

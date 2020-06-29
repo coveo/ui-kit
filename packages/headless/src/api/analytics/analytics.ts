@@ -43,8 +43,13 @@ export class AnalyticsProvider implements SearchPageClientProvider {
 
 export const configureAnalytics = (state: SearchPageState) => {
   const provider = new AnalyticsProvider(state);
-  return new CoveoSearchPageClient(
+  const client = new CoveoSearchPageClient(
     {token: state.configuration.accessToken},
     provider
   );
+
+  if (state.configuration.analyticsEnabled === false) {
+    client.disable();
+  }
+  return client;
 };

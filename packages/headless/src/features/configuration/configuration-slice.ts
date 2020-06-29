@@ -3,6 +3,8 @@ import {
   renewAccessToken,
   updateBasicConfiguration,
   updateSearchConfiguration,
+  disableAnalytics,
+  enableAnalytics,
 } from './configuration-actions';
 import {ConfigurationState} from '../../state';
 
@@ -12,6 +14,7 @@ export const getConfigurationInitialState: () => ConfigurationState = () => ({
   search: {
     searchApiBaseUrl: 'https://globalplatform.cloud.coveo.com/rest/search',
   },
+  analyticsEnabled: true,
 });
 
 export const configurationReducer = createReducer(
@@ -29,5 +32,11 @@ export const configurationReducer = createReducer(
       })
       .addCase(renewAccessToken.fulfilled, (state, action) => {
         state.accessToken = action.payload;
+      })
+      .addCase(disableAnalytics, (state) => {
+        state.analyticsEnabled = false;
+      })
+      .addCase(enableAnalytics, (state) => {
+        state.analyticsEnabled = true;
       })
 );

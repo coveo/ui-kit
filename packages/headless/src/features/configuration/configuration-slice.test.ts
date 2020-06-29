@@ -6,6 +6,8 @@ import {
   renewAccessToken,
   updateBasicConfiguration,
   updateSearchConfiguration,
+  disableAnalytics,
+  enableAnalytics,
 } from './configuration-actions';
 import {ConfigurationState} from '../../state';
 
@@ -122,5 +124,22 @@ describe('configuration slice', () => {
         renewAccessToken.fulfilled('mynewtoken123', '', fakeRenewToken)
       )
     ).toEqual(expectedState);
+  });
+
+  it('should handle disable analytics', () => {
+    const state = getConfigurationInitialState();
+    state.analyticsEnabled = true;
+
+    expect(
+      configurationReducer(state, disableAnalytics()).analyticsEnabled
+    ).toBe(false);
+  });
+
+  it('should handle enable analytics', () => {
+    const state = getConfigurationInitialState();
+    state.analyticsEnabled = false;
+    expect(
+      configurationReducer(state, enableAnalytics()).analyticsEnabled
+    ).toBe(true);
   });
 });
