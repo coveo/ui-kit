@@ -19,8 +19,7 @@ export class AnalyticsBeaconClient implements AnalyticsRequestClient {
 
         const {baseUrl, token, visitorIdProvider} = this.opts;
 
-        const parsedRequestDataKey = this.getParsedRequestDataKey(eventType);
-        const parsedRequestData = `${parsedRequestDataKey}=${encodeURIComponent(JSON.stringify(payload))}`;
+        const parsedRequestData = this.encodeForEventType(eventType, payload);
         const visitorId = visitorIdProvider.currentVisitorId;
         const paramsFragments = [token ? `access_token=${token}` : '', visitorId ? `visitorId=${visitorId}` : '']
             .filter((p) => !!p)
@@ -37,8 +36,26 @@ export class AnalyticsBeaconClient implements AnalyticsRequestClient {
         return;
     }
 
-    private getParsedRequestDataKey(eventType: EventType): string {
-        return `${eventType}Event`;
+    private encodeForEventType(eventType: EventType, payload: IRequestPayload): string {
+        return  this.isEventTypeLegacy(eventType) ?
+             this.encodeForLegacyType(eventType, payload)
+             : this.encodeForFormUrlEncoded(payload);
+    }
+
+    private isEventTypeLegacy(eventType: EventType) {
+        return [EventType.click, EventType.custom, EventType.search, EventType.view].indexOf(eventType) !== -1;
+    }
+
+    private encodeForLegacyType(eventType: EventType, payload: IRequestPayload): string {
+        return `${eventType}Event=${encodeURIComponent(JSON.stringify(payload))}`;
+    }
+
+    private encodeForFormUrlEncoded(payload: IRequestPayload): string {
+        return Object.keys(payload).map(key => `${encodeURIComponent(key)}=${encodeURIComponent(this.encodeValue(payload[key]))}`).join("&");
+    }
+
+    private encodeValue(value: any) {
+        return typeof value === 'number' || typeof value === 'string' || typeof value === 'boolean' ? value : JSON.stringify(value);
     }
 }
 
