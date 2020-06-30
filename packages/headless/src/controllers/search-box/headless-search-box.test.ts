@@ -41,7 +41,7 @@ describe('headless searchBox', () => {
     props = {options};
 
     initState();
-    initComponent();
+    initController();
   });
 
   function initState() {
@@ -51,28 +51,28 @@ describe('headless searchBox', () => {
     state.querySuggest[id] = buildMockQuerySuggest({id, q: 'some value'});
   }
 
-  function initComponent() {
+  function initController() {
     engine = buildMockEngine({state});
     searchBox = new SearchBox(engine, props);
   }
 
   describe('validating options', () => {
     it(`when passing an invalid id as option
-    creating the component should throw`, () => {
+    creating the controller should throw`, () => {
       props.options.id = (1 as unknown) as string;
-      expect(() => initComponent()).toThrow();
+      expect(() => initController()).toThrow();
     });
 
     it(`when passing an invalid isStandalone as option
-    creating the component should throw`, () => {
+    creating the controller should throw`, () => {
       props.options.isStandalone = ('hey!' as unknown) as boolean;
-      expect(() => initComponent()).toThrow();
+      expect(() => initController()).toThrow();
     });
 
     it(`when passing an invalid numberOfSuggestions as option
-    creating the component should throw`, () => {
+    creating the controller should throw`, () => {
       props.options.numberOfSuggestions = -2;
-      expect(() => initComponent()).toThrow();
+      expect(() => initController()).toThrow();
     });
   });
 
@@ -121,7 +121,7 @@ describe('headless searchBox', () => {
     it(`when the numberOfQuerySuggestions option is 0
     should not call the showSuggestions method`, () => {
       props.options.numberOfSuggestions = 0;
-      initComponent();
+      initController();
 
       jest.spyOn(searchBox, 'showSuggestions');
       searchBox.updateText('how can i fix');
@@ -194,7 +194,7 @@ describe('headless searchBox', () => {
     it(`when the isStandalone option is false
     it dispatches an executeSearch action`, () => {
       props.options.isStandalone = false;
-      initComponent();
+      initController();
       searchBox.submit();
 
       const action = engine.actions.find(

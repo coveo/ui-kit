@@ -4,7 +4,7 @@ import {
   updateNumberOfResults,
 } from '../../features/pagination/pagination-actions';
 import {executeSearch} from '../../features/search/search-actions';
-import {Component} from '../component/headless-component';
+import {Controller} from '../controller/headless-controller';
 import {logPagerResize} from '../../features/analytics/analytics-actions';
 
 export interface ResultsPerPageProps {
@@ -15,10 +15,10 @@ export interface ResultsPerPageInitialState {
   numberOfResults: number;
 }
 
-/** The state relevant to the `ResultsPerPage` component.*/
+/** The state relevant to the `ResultsPerPage` controller.*/
 export type ResultsPerPageState = ResultsPerPage['state'];
 
-export class ResultsPerPage extends Component {
+export class ResultsPerPage extends Controller {
   constructor(
     engine: Engine,
     private props: Partial<ResultsPerPageProps> = {}
@@ -43,7 +43,7 @@ export class ResultsPerPage extends Component {
   }
 
   /**
-   * @returns The state of the `ResultsPerPage` component.
+   * @returns The state of the `ResultsPerPage` controller.
    */
   public get state() {
     return {

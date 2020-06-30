@@ -6,7 +6,7 @@ import {
 import {executeSearch} from '../../features/search/search-actions';
 import {logResultsSort} from '../../features/analytics/analytics-actions';
 import {SortCriterion} from '../../features/sort-criteria/criteria';
-import {Component} from '../component/headless-component';
+import {Controller} from '../controller/headless-controller';
 import {updatePage} from '../../features/pagination/pagination-actions';
 
 export interface SortProps {
@@ -18,10 +18,10 @@ export interface SortInitialState {
   criterion: SortCriterion;
 }
 
-/** The state relevant to the `Sort` component.*/
+/** The state relevant to the `Sort` controller.*/
 export type SortState = Sort['state'];
 
-export class Sort extends Component {
+export class Sort extends Controller {
   constructor(engine: Engine, private props: Partial<SortProps> = {}) {
     super(engine);
     this.register();
@@ -47,7 +47,7 @@ export class Sort extends Component {
   }
 
   /**
-   * @returns The state of the `Sort` component.
+   * @returns The state of the `Sort` controller.
    */
   public get state() {
     return {

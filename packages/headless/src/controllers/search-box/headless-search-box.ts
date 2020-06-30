@@ -25,7 +25,7 @@ import {
   logTriggerRedirect,
   logSearchboxSubmit,
 } from '../../features/analytics/analytics-actions';
-import {Component} from '../component/headless-component';
+import {Controller} from '../controller/headless-controller';
 import {updatePage} from '../../features/pagination/pagination-actions';
 
 export interface SearchBoxProps {
@@ -34,7 +34,7 @@ export interface SearchBoxProps {
 
 const optionsSchema = new Schema({
   /**
-   * A unique identifier for the component.
+   * A unique identifier for the controller.
    * By default, a unique random identifier is generated.
    */
   id: new StringValue({
@@ -62,14 +62,14 @@ const optionsSchema = new Schema({
 export type SearchBoxOptions = SchemaValues<typeof optionsSchema>;
 
 /**
- * A scoped and simplified part of the headless state that is relevant to the `SearchBox` component.
+ * A scoped and simplified part of the headless state that is relevant to the `SearchBox` controller.
  */
 export type SearchBoxState = SearchBox['state'];
 
 /**
- * The `SearchBox` headless component offers a high-level interface for designing a common search box UI component.
+ * The `SearchBox` headless controller offers a high-level interface for designing a common search box UI controller.
  */
-export class SearchBox extends Component {
+export class SearchBox extends Controller {
   public text = '';
   private options: Required<SearchBoxOptions>;
 
@@ -83,7 +83,7 @@ export class SearchBox extends Component {
   }
 
   /**
-   * A unique identifier for the component.
+   * A unique identifier for the controller.
    */
   public get id() {
     return this.options.id;
@@ -152,7 +152,7 @@ export class SearchBox extends Component {
   }
 
   /**
-   * @returns The state of the `SearchBox` component.
+   * @returns The state of the `SearchBox` controller.
    */
   public get state() {
     const state = this.engine.state;

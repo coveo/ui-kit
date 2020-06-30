@@ -1,7 +1,7 @@
 import {Engine} from '../../app/headless-engine';
 import {SearchPageState} from '../../state';
 
-export abstract class Component<State = SearchPageState> {
+export abstract class Controller<State = SearchPageState> {
   constructor(protected engine: Engine<State>) {}
 
   /**

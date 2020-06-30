@@ -83,7 +83,7 @@ export interface HeadlessConfigurationOptions {
 export interface Engine<State = SearchPageState> {
   /**
    * Dispatches an action directly. This is the only way to trigger a state change.
-   * Each headless component dispatches its own actions.
+   * Each headless controller dispatches its own actions.
    *
    * @param action An action supported by the headless engine.
    *
@@ -110,7 +110,7 @@ export interface Engine<State = SearchPageState> {
 /**
  * The global headless engine.
  * You should instantiate one `HeadlessEngine` class per application and share it.
- * Every headless component requires an instance of `Engine` as a parameter.
+ * Every headless controller requires an instance of `Engine` as a parameter.
  */
 export class HeadlessEngine<Reducers extends ReducersMapObject>
   implements Engine<StateFromReducersMapObject<Reducers>> {

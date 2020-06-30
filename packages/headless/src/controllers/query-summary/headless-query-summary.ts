@@ -1,16 +1,16 @@
 import {Engine} from '../../app/headless-engine';
-import {Component} from '../component/headless-component';
+import {Controller} from '../controller/headless-controller';
 
-/** The state relevant to the `QuerySummary` component.*/
+/** The state relevant to the `QuerySummary` controller.*/
 export type QuerySummaryState = QuerySummary['state'];
 
-export class QuerySummary extends Component {
+export class QuerySummary extends Controller {
   constructor(engine: Engine) {
     super(engine);
   }
 
   /**
-   * @returns The state of the `QuerySummary` component.
+   * @returns The state of the `QuerySummary` controller.
    */
   public get state() {
     const state = this.engine.state;

@@ -9,9 +9,9 @@ Contributing:
 Using the headless library:
 
 - [Configuring a headless engine](#configuring-a-headless-engine)
-- [Using headless components](#using-headless-components)
-  - [Instantiating a component](#instantiating-a-component)
-  - [Interacting with a component](#interacting-with-a-component)
+- [Using headless controllers](#using-headless-controllers)
+  - [Instantiating a controller](#instantiating-a-controller)
+  - [Interacting with a controller](#interacting-with-a-controller)
 - [Updating the headless state](#updating-the-headless-state)
   - [Understanding actions](#understanding-actions)
   - [Understanding action creators](#understanding-action-creators)
@@ -19,7 +19,7 @@ Using the headless library:
   - [Subscribing to state changes](#subscribing-to-state-changes)
 - [Extending the headless state](#extending-the-headless-state)
   - [Adding reducers](#adding-reducers)
-  - [Creating headless components](#creating-headless-components)
+  - [Creating headless controllers](#creating-headless-controllers)
 
 ## Contributing
 
@@ -39,13 +39,13 @@ To build the library for production, run:
 npm run build
 ```
 
-To run the unit tests for the components, run:
+To run the unit tests for the controllers, run:
 
 ```bash
 npm test
 ```
 
-To run the unit tests for the components and watch, run:
+To run the unit tests for the controllers and watch, run:
 
 ```bash
 npm run test:watch
@@ -63,7 +63,7 @@ The base of the `/src` folder should only contain exports.
 
 `/features` has folders that each owns the functionalities of a feature, which is a subpart of the redux state. Following the ["ducks pattern"](https://redux.js.org/style-guide/style-guide#structure-files-as-feature-folders-or-ducks), those files contain Redux slices & reducers that [define the state shape](https://redux.js.org/style-guide/style-guide#reducers-should-own-the-state-shape). Each feature folder has a file with actions that can be exported with the project.
 
-`/components` contains all the headless components in folders. Those components are exported and used to provide abstraction from the store's features by being closer to the actual UI components of a customer's application.
+`/controllers` contains all the headless controllers in folders. Those controllers are exported and used to provide abstraction from the store's features by being closer to the actual UI controllers of a customer's application.
 
 `/utils` contains common useful utilities.
 
@@ -107,20 +107,20 @@ On the `HeadlessEngine` class instance, you have a few properties:
 - **dispatch:** a method that dispatches an action directly. It is how modifications to the headless state are made.
 - **subscribe:** a method that lets you add a change listener. It will be called any time an action is dispatched. You may then access the new state.
 
-### Using headless components
+### Using headless controllers
 
-The headless library offers different components. These components wrap the headless engine's state and actions to offer an interface that is simpler and closer to the actual end-user experience.
+The headless library offers different controllers. These controllers wrap the headless engine's state and actions to offer an interface that is simpler and closer to the actual end-user experience.
 
-Using components is the recommended way to interact with the headless engine for most use cases. We will use the `SearchBox` component as example here.
+Using controllers is the recommended way to interact with the headless engine for most use cases. We will use the `SearchBox` controller as example here.
 
-#### Instantiating a component
+#### Instantiating a controller
 
-You can setup a new headless component by instantiating its class. Every component constructor has the following parameters:
+You can setup a new headless controller by instantiating its class. Every controller constructor has the following parameters:
 
 1. The `HeadlessEngine` instance, created previously.
-2. The specific options for that component, sometimes optional.
+2. The specific options for that controller, sometimes optional.
 
-Instantiation of a `SearchBox` headless component:
+Instantiation of a `SearchBox` headless controller:
 
 ```typescript
 import {SearchBox} from '@coveo/headless';
@@ -129,27 +129,27 @@ import {engine} from './engine';
 const searchBox = new SearchBox(engine);
 ```
 
-##### Component options validation.
+##### Controller options validation.
 
-Every component's option is validated at runtime according to their type and value. Details about each option is well documented. If an option is invalid, the instanciation of the component will throw an error describing the issue. Make sure to manage those potential errors.
+Every controller's option is validated at runtime according to their type and value. Details about each option is well documented. If an option is invalid, the instanciation of the controller will throw an error describing the issue. Make sure to manage those potential errors.
 
-#### Interacting with a component
+#### Interacting with a controller
 
-The component will interact with the headless state of the `HeadlessEngine` instance passed as an argument.
+The controller will interact with the headless state of the `HeadlessEngine` instance passed as an argument.
 
-All components have a **state** attribute, which is a scoped part of the headless state that is relevant to the component.
+All controllers have a **state** attribute, which is a scoped part of the headless state that is relevant to the controller.
 
-For the `SearchBox` component, the state returns relevant parts of the headless state to be used or rendered in the UI.
+For the `SearchBox` controller, the state returns relevant parts of the headless state to be used or rendered in the UI.
 
 ```typescript
 console.log(searchBox.state); // {value: "", suggestions: [], redirectTo: null}
 ```
 
-Components will manage the dispatching of necessary actions to the headless engine.
+Controllers will manage the dispatching of necessary actions to the headless engine.
 
-Every component offers a high-level interface to be used by UI component. E.g, the `SearchBox` component offers methods like `updateText`, `submit`, `clear`, `selectSuggestion`, etc.
+Every controller offers a high-level interface to be used by UI controller. E.g, the `SearchBox` controller offers methods like `updateText`, `submit`, `clear`, `selectSuggestion`, etc.
 
-Subscribing to a `SearchBox` component's state and interacting with its methods.
+Subscribing to a `SearchBox` controller's state and interacting with its methods.
 
 ```typescript
 function onSearchBoxUpdate() {
@@ -162,13 +162,13 @@ const unsubscribe = searchBox.subscribe(onSearchBoxUpdate);
 // This will dispatch an action to the engine and update the state
 searchBox.updateText({value: 'hello world'});
 
-// When you don't need to listen to state changes anymore (e.g., when a component is deleted)
+// When you don't need to listen to state changes anymore (e.g., when a controller is deleted)
 unsubscribe();
 ```
 
 ### Updating the headless state
 
-The headless state itself is organized by features (e.g., configuration, query suggestion, redirection). Each of those features reacts to different actions in order to update their respective piece of state. When headless components prove insufficient, you can use these actions directly to get a granular control over the application's state.
+The headless state itself is organized by features (e.g., configuration, query suggestion, redirection). Each of those features reacts to different actions in order to update their respective piece of state. When headless controllers prove insufficient, you can use these actions directly to get a granular control over the application's state.
 
 Let's first explain some basic concepts such as actions and action creators.
 
@@ -244,11 +244,11 @@ function onStateUpdate() {
 
 const unsubscribe = engine.subscribe(onStateUpdate);
 
-// When you don't need to listen to state changes anymore (e.g., when a component is deleted).
+// When you don't need to listen to state changes anymore (e.g., when a controller is deleted).
 unsubscribe();
 ```
 
-**Note:** the listener function is called on **every** action dispatch, so make sure you only perform costly operations, like rendering a UI component, if the state they depend on has changed.
+**Note:** the listener function is called on **every** action dispatch, so make sure you only perform costly operations, like rendering a UI controller, if the state they depend on has changed.
 
 ### Extending the headless state
 
@@ -323,19 +323,19 @@ engine.dispatch(incrementCounterAction);
 console.log(engine.state.counter); // 1
 ```
 
-#### Creating headless components
+#### Creating headless controllers
 
-It is possible to create custom headless components using the abstract `Component` class. When using Typescript, it is necessary to specify the type of the engine and its state.
+It is possible to create custom headless controllers using the abstract `Controller` class. When using Typescript, it is necessary to specify the type of the engine and its state.
 
 ```typescript
-import {Component} from '@coveo/headless';
+import {Controller} from '@coveo/headless';
 import {
   incrementCounterAction,
   decrementCounterAction,
 } from './counter-reducer';
 import {engine} from './engine';
 
-class Counter extends Component<typeof engine.state> {
+class Counter extends Controller<typeof engine.state> {
   constructor(engine: typeof engine) {
     super(engine);
   }

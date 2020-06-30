@@ -1,5 +1,5 @@
 import {Schema, StringValue} from '@coveo/bueno';
-import {Component} from '../../component/headless-component';
+import {Controller} from '../../controller/headless-controller';
 import {Engine} from '../../../app/headless-engine';
 import {registerFacet} from '../../../features/facets/facet-set/facet-set-actions';
 import {randomID} from '../../../utils/utils';
@@ -14,7 +14,7 @@ export type FacetProps = {
 
 const schema = new Schema({
   /**
-   * A unique identifier for the component.
+   * A unique identifier for the controller.
    * By default, a unique random identifier is generated.
    */
   facetId: new StringValue({default: () => randomID('facet')}),
@@ -27,7 +27,7 @@ export type FacetOptions = {
   facetId?: string;
 };
 
-export class Facet extends Component {
+export class Facet extends Controller {
   private options: Required<FacetOptions>;
 
   constructor(engine: Engine, props: FacetProps) {
@@ -38,7 +38,7 @@ export class Facet extends Component {
   }
 
   /**
-   * @returns The state of the `Facet` component.
+   * @returns The state of the `Facet` controller.
    */
   public get state() {
     const response = facetSelector(this.engine.state, this.options.facetId);

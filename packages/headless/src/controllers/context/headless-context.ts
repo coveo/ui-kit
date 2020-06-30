@@ -1,5 +1,5 @@
 import {Engine} from '../../app/headless-engine';
-import {Component} from '../component/headless-component';
+import {Controller} from '../controller/headless-controller';
 import {
   Context as ContextPayload,
   ContextValue,
@@ -10,16 +10,16 @@ import {
   removeContext,
 } from '../../features/context/context-action';
 
-/** The state relevant to the `Context` component.*/
+/** The state relevant to the `Context` controller.*/
 export type ContextState = Context['state'];
 
-export class Context extends Component {
+export class Context extends Controller {
   constructor(engine: Engine) {
     super(engine);
   }
 
   /**
-   * @returns The state of the `Context` component.
+   * @returns The state of the `Context` controller.
    */
   public get state() {
     const state = this.engine.state;

@@ -1,6 +1,6 @@
 import {Schema, SchemaValues, NumberValue} from '@coveo/bueno';
 import {Engine} from '../../app/headless-engine';
-import {Component} from '../component/headless-component';
+import {Controller} from '../controller/headless-controller';
 import {
   updatePage,
   registerPage,
@@ -39,7 +39,7 @@ export type PagerInitialState = {
   page?: number;
 };
 
-export class Pager extends Component {
+export class Pager extends Controller {
   private options!: Required<PagerOptions>;
 
   constructor(engine: Engine, props: PagerProps = {}) {
@@ -111,7 +111,7 @@ export class Pager extends Component {
   }
 
   /**
-   * @returns The state of the `Pager` component.
+   * @returns The state of the `Pager` controller.
    */
   public get state() {
     return {

@@ -1,11 +1,11 @@
-import {Component} from './headless-component';
+import {Controller} from './headless-controller';
 import {buildMockEngine, MockEngine} from '../../test/mock-engine';
 
-class TestComponent extends Component {}
+class TestController extends Controller {}
 
-describe('Component', () => {
+describe('Controller', () => {
   let engine: MockEngine;
-  let cmp: TestComponent;
+  let cmp: TestController;
 
   function registeredListeners() {
     return (engine.subscribe as jest.Mock).mock.calls.map((args) => args[0]);
@@ -13,7 +13,7 @@ describe('Component', () => {
 
   beforeEach(() => {
     engine = buildMockEngine();
-    cmp = new TestComponent(engine);
+    cmp = new TestController(engine);
   });
 
   it('calling #subscribe invokes the passed listener immediately', () => {
