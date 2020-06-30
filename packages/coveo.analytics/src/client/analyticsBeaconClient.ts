@@ -17,13 +17,9 @@ export class AnalyticsBeaconClient implements AnalyticsRequestClient {
             );
         }
 
-        const {baseUrl, token, visitorIdProvider} = this.opts;
-
+        const {baseUrl} = this.opts;
         const parsedRequestData = this.encodeForEventType(eventType, payload);
-        const visitorId = visitorIdProvider.currentVisitorId;
-        const paramsFragments = [token ? `access_token=${token}` : '', visitorId ? `visitorId=${visitorId}` : '']
-            .filter((p) => !!p)
-            .join('&');
+        const paramsFragments = this.getQueryParamsForEventType(eventType);
         const url = `${baseUrl}/analytics/${eventType}?${paramsFragments}`;
         // tslint:disable-next-line: no-console
         console.log(`Sending beacon for "${eventType}" with: `, JSON.stringify(payload));
@@ -37,9 +33,23 @@ export class AnalyticsBeaconClient implements AnalyticsRequestClient {
     }
 
     private encodeForEventType(eventType: EventType, payload: IRequestPayload): string {
-        return  this.isEventTypeLegacy(eventType) ?
-             this.encodeForLegacyType(eventType, payload)
-             : this.encodeForFormUrlEncoded(payload);
+        return this.isEventTypeLegacy(eventType)
+            ? this.encodeForLegacyType(eventType, payload)
+            : this.encodeForFormUrlEncoded({
+                  access_token: this.opts.token,
+                  ...payload,
+              });
+    }
+
+    private getQueryParamsForEventType(eventType: EventType): string {
+        const {token, visitorIdProvider} = this.opts;
+        const visitorId = visitorIdProvider.currentVisitorId;
+        return [
+            token && this.isEventTypeLegacy(eventType) ? `access_token=${token}` : '',
+            visitorId ? `visitorId=${visitorId}` : '',
+        ]
+            .filter((p) => !!p)
+            .join('&');
     }
 
     private isEventTypeLegacy(eventType: EventType) {
@@ -51,16 +61,21 @@ export class AnalyticsBeaconClient implements AnalyticsRequestClient {
     }
 
     private encodeForFormUrlEncoded(payload: IRequestPayload): string {
-        return Object.keys(payload).map(key => `${encodeURIComponent(key)}=${encodeURIComponent(this.encodeValue(payload[key]))}`).join("&");
+        return Object.keys(payload)
+            .filter((key) => !!payload[key])
+            .map((key) => `${encodeURIComponent(key)}=${encodeURIComponent(this.encodeValue(payload[key]))}`)
+            .join('&');
     }
 
     private encodeValue(value: any) {
-        return typeof value === 'number' || typeof value === 'string' || typeof value === 'boolean' ? value : JSON.stringify(value);
+        return typeof value === 'number' || typeof value === 'string' || typeof value === 'boolean'
+            ? value
+            : JSON.stringify(value);
     }
 }
 
 export class NoopAnalyticsBeaconClient implements AnalyticsRequestClient {
     public async sendEvent(_: EventType, __: IRequestPayload): Promise<void> {
-        return Promise.resolve()
+        return Promise.resolve();
     }
 }

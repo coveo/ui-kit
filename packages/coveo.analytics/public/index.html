@@ -1,3 +1,4 @@
+<html>
 <script>
 (function(c,o,v,e,O,u,a){
 a='coveoua';c[a]=c[a]||function(){(c[a].q=c[a].q|| []).push(arguments)};
@@ -18,4 +19,16 @@ setTimeout(function() {
     coveoua('send', "pageview", "/secondpage");
     coveoua('send', "event");
 }, 1000);
+
+function testBeacon() {
+    coveoua('ec:addProduct', {name: "wow", id: 'something', brand: 'brand', custom: { "verycustom": "value" }, unknown: "shouldberemoved"});
+    coveoua('ec:setAction', 'addToCart');
+    coveoua('send', 'event')
+    window.location = "index.html?added=" + new Date().valueOf();
+}
 </script>
+
+<body>
+    <button onclick="testBeacon()">Test beacon</button>
+</body>
+</html>

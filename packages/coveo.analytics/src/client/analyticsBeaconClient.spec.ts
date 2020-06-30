@@ -14,12 +14,11 @@ describe('AnalyticsBeaconClient', () => {
 
     afterAll(() => {
         navigator.sendBeacon = originalSendBeacon;
-    })
+    });
 
     beforeEach(() => {
         jest.clearAllMocks();
-    })
-
+    });
 
     it('can send an event', async () => {
         const eventType: EventType = EventType.custom;
@@ -36,7 +35,10 @@ describe('AnalyticsBeaconClient', () => {
             wow: 'ok',
         });
 
-        expect(sendBeaconMock).toHaveBeenCalledWith(`${baseUrl}/analytics/custom?access_token=👛&visitorId=${currentVisitorId}`, jasmine.anything());
+        expect(sendBeaconMock).toHaveBeenCalledWith(
+            `${baseUrl}/analytics/custom?access_token=👛&visitorId=${currentVisitorId}`,
+            jasmine.anything()
+        );
         expect(await getSendBeaconFirstCallBlobArgument()).toBe(`customEvent=${encodeURIComponent(`{"wow":"ok"}`)}`);
     });
 
@@ -53,11 +55,16 @@ describe('AnalyticsBeaconClient', () => {
 
         await client.sendEvent(eventType, {
             pr1a: 'value',
-            "to encode": "to encode"
+            'to encode': 'to encode',
         });
 
-        expect(sendBeaconMock).toHaveBeenCalledWith(`${baseUrl}/analytics/collect?access_token=👛&visitorId=${currentVisitorId}`, jasmine.anything());
-        expect(await getSendBeaconFirstCallBlobArgument()).toBe("pr1a=value&to%20encode=to%20encode");
+        expect(sendBeaconMock).toHaveBeenCalledWith(
+            `${baseUrl}/analytics/collect?visitorId=${currentVisitorId}`,
+            jasmine.anything()
+        );
+        expect(await getSendBeaconFirstCallBlobArgument()).toBe(
+            'access_token=%F0%9F%91%9B&pr1a=value&to%20encode=to%20encode'
+        );
     });
 
     it('can send a collect event with a more complex payload', async () => {
@@ -73,12 +80,17 @@ describe('AnalyticsBeaconClient', () => {
 
         await client.sendEvent(eventType, {
             value: {
-                subvalue: 'ok'
-            }
+                subvalue: 'ok',
+            },
         });
 
-        expect(sendBeaconMock).toHaveBeenCalledWith(`${baseUrl}/analytics/collect?access_token=👛&visitorId=${currentVisitorId}`, jasmine.anything());
-        expect(await getSendBeaconFirstCallBlobArgument()).toBe(`value=${encodeURIComponent(JSON.stringify({subvalue: 'ok'}))}`);
+        expect(sendBeaconMock).toHaveBeenCalledWith(
+            `${baseUrl}/analytics/collect?visitorId=${currentVisitorId}`,
+            jasmine.anything()
+        );
+        expect(await getSendBeaconFirstCallBlobArgument()).toBe(
+            `access_token=%F0%9F%91%9B&value=${encodeURIComponent(JSON.stringify({subvalue: 'ok'}))}`
+        );
     });
 
     const getSendBeaconFirstCallBlobArgument = async () => {
@@ -91,5 +103,5 @@ describe('AnalyticsBeaconClient', () => {
             });
             reader.readAsText(blobArgument);
         });
-    }
+    };
 });
