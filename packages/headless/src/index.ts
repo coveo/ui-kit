@@ -34,3 +34,7 @@ export * from './features/sort-criteria/criteria';
 
 export * from './features/pagination/pagination-selectors';
 export * from './features/facets/facet-set/facet-set-selectors';
+
+export * from './api/search/search/result';
+export * from './features/result-templates/result-templates-manager';
+export * as resultTemplatesHelpers from './features/result-templates/result-templates-helpers';
