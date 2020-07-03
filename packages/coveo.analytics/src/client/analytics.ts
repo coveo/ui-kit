@@ -28,6 +28,7 @@ import {
 } from './measurementProtocolMapper';
 import {IRuntimeEnvironment, BrowserRuntime, NodeJSRuntime} from './runtimeEnvironment';
 import HistoryStore from '../history';
+import {isApiKey} from './token';
 
 export const Version = 'v15';
 
@@ -164,6 +165,8 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
             visitorId: addVisitorIdParameter ? this.visitorId : '',
             ...currentPayload,
         });
+        const setAnonymousUserStep: ProcessPayloadStep = (currentPayload) =>
+            usesMeasurementProtocol ? this.ensureAnonymousUserWhenUsingApiKey(currentPayload) : currentPayload;
         const processBeforeSendHooksStep: ProcessPayloadStep = (currentPayload) =>
             this.beforeSendHooks.reduce((newPayload, current) => current(eventType, newPayload), currentPayload);
         const cleanPayloadStep: ProcessPayloadStep = (currentPayload) =>
@@ -179,6 +182,7 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
         const payloadToSend = [
             processVariableArgumentNamesStep,
             addVisitorIdStep,
+            setAnonymousUserStep,
             processBeforeSendHooksStep,
             cleanPayloadStep,
             validateParams,
@@ -339,6 +343,16 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
             }
         }
         return rest;
+    }
+
+    private ensureAnonymousUserWhenUsingApiKey(payload: IRequestPayload): IRequestPayload {
+        const {userId, ...rest} = payload;
+        if (isApiKey(this.options.token) && !userId) {
+            rest['userId'] = 'anonymous';
+            return rest;
+        } else {
+            return payload;
+        }
     }
 
     private get baseUrl(): string {

@@ -45,9 +45,9 @@ describe('ec events', () => {
     });
 
     it('can set custom data at the root level and send a page view event', async () => {
-        await coveoua("set", "custom", {
-            "verycustom": "value"
-        })
+        await coveoua('set', 'custom', {
+            verycustom: 'value',
+        });
         await coveoua('send', 'pageview');
 
         const [body] = getParsedBody();
@@ -78,7 +78,7 @@ describe('ec events', () => {
 
     it('can send a product detail view event with custom values', async () => {
         coveoua('ec:addProduct', {name: 'wow', id: 'something', brand: 'brand'});
-        coveoua('ec:setAction', 'detail', {storeid: 'amazing', custom: { verycustom: "value"}});
+        coveoua('ec:setAction', 'detail', {storeid: 'amazing', custom: {verycustom: 'value'}});
         await coveoua('send', 'pageview');
 
         const [body] = getParsedBody();
@@ -90,7 +90,7 @@ describe('ec events', () => {
             pr1id: 'something',
             pr1br: 'brand',
             pa: 'detail',
-            verycustom: "value",
+            verycustom: 'value',
         });
     });
 
@@ -116,8 +116,8 @@ describe('ec events', () => {
             title: 'wow',
             location: 'http://right.here',
             custom: {
-                verycustom: "value"
-            }
+                verycustom: 'value',
+            },
         });
 
         const [body] = getParsedBody();
@@ -128,7 +128,7 @@ describe('ec events', () => {
             dp: 'page',
             dt: 'wow',
             dl: 'http://right.here',
-            verycustom: "value"
+            verycustom: 'value',
         });
     });
 
@@ -207,6 +207,71 @@ describe('ec events', () => {
         });
     });
 
+    describe('with auto-detection of userId', () => {
+        describe('with API key', () => {
+            beforeEach(() => {
+                coveoua('init', 'xxapikey', anEndpoint);
+            });
+
+            it('should set userId to anonymous', async () => {
+                await coveoua('send', 'pageview');
+
+                const [event] = getParsedBody();
+
+                expect(event).toEqual({
+                    ...defaultContextValues,
+                    t: 'pageview',
+                    uid: 'anonymous',
+                });
+            });
+            it('should not overwrite existing userId', async () => {
+                const aUser = '👴';
+                await coveoua('set', 'userId', aUser);
+                await coveoua('send', 'pageview');
+
+                const [event] = getParsedBody();
+
+                expect(event).toEqual({
+                    ...defaultContextValues,
+                    t: 'pageview',
+                    uid: aUser,
+                });
+            });
+        });
+        describe('with Search Token', () => {
+            beforeEach(() => {
+                const searchToken =
+                    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.' +
+                    'eyJ1cmwiOiJodHRwczovL3d3dy55b3V0dWJlLmNvb' +
+                    'S93YXRjaD92PW9IZzVTSllSSEEwIiwidXNlcklkIj' +
+                    'oiUmljayBBc3RsZXkiLCJleHAiOjE1MTYyMzkwMjJ9.' +
+                    'gOxUfMZuwMFw-QK-q0xOKJ-23YgGwFJbncCIHgIxjcc';
+                coveoua('init', searchToken, anEndpoint);
+            });
+
+            it('should not set the user id', async () => {
+                await coveoua('send', 'pageview');
+
+                const [event] = getParsedBody();
+
+                expect(Object.keys(event)).not.toContain('uid');
+            });
+            it('should not overwrite existing userId', async () => {
+                const steveJobs = 'steve@apple.com';
+                await coveoua('set', 'userId', steveJobs);
+                await coveoua('send', 'pageview');
+
+                const [event] = getParsedBody();
+
+                expect(event).toEqual({
+                    ...defaultContextValues,
+                    t: 'pageview',
+                    uid: steveJobs,
+                });
+            });
+        });
+    });
+
     it('should be able to set the anonymizeIp', async () => {
         await coveoua('set', 'anonymizeIp', true);
         await coveoua('send', 'pageview');
@@ -276,7 +341,7 @@ describe('ec events', () => {
 
         const [body] = getParsedBody();
 
-        expect(Object.keys(body)).not.toContain("unknownParam");
+        expect(Object.keys(body)).not.toContain('unknownParam');
     });
 
     it('should remove unknown measurement protocol product keys', async () => {
@@ -285,11 +350,11 @@ describe('ec events', () => {
 
         const [body] = getParsedBody();
 
-        expect(Object.keys(body)).not.toContain("pr1unknown");
+        expect(Object.keys(body)).not.toContain('pr1unknown');
     });
 
-    it('should append custom values to product', async () =>{
-        var partialProduct = {name: 'wow', custom: { verycustom: "value" }};
+    it('should append custom values to product', async () => {
+        var partialProduct = {name: 'wow', custom: {verycustom: 'value'}};
         await coveoua('ec:addProduct', partialProduct);
         await coveoua('send', 'pageview');
 
@@ -299,8 +364,8 @@ describe('ec events', () => {
             ...defaultContextValues,
             t: 'pageview',
             pr1nm: partialProduct.name,
-            pr1verycustom: partialProduct.custom.verycustom
-        })
+            pr1verycustom: partialProduct.custom.verycustom,
+        });
     });
 
     it('should be able to follow the complete addToCart flow', async () => {

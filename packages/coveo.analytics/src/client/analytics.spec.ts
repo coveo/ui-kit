@@ -242,6 +242,88 @@ describe('Analytics', () => {
         });
     });
 
+    describe('with userId auto-detection', () => {
+        const eventType = '🛂';
+
+        const expectUserId = (userId: {[key: string]: string}) => {
+            const [body] = getParsedBodyCalls();
+            expect(body).toMatchObject(userId);
+        };
+
+        describe('for API keys', () => {
+            beforeEach(() => {
+                client = new CoveoAnalyticsClient({
+                    token: 'xxapikey',
+                    endpoint: anEndpoint,
+                    version: A_VERSION,
+                });
+                mockFetchRequestForEventType(EventType.custom);
+            });
+            describe('with measurement protocol', () => {
+                beforeEach(() => {
+                    client.addEventTypeMapping(eventType, {
+                        newEventType: EventType.custom,
+                        usesMeasurementProtocol: true,
+                    });
+                });
+
+                it('should set the absent userId to anonymous', async () => {
+                    await client.sendEvent(eventType);
+                    expectUserId({uid: 'anonymous'});
+                });
+
+                it('should leave existing userIds', async () => {
+                    await client.sendEvent(eventType, {userId: 'bob'});
+                    expectUserId({uid: 'bob'});
+                });
+            });
+
+            describe('without measurement protocol', () => {
+                beforeEach(() => {
+                    client.addEventTypeMapping(eventType, {
+                        newEventType: EventType.custom,
+                        usesMeasurementProtocol: false,
+                    });
+                });
+
+                it('should do nothing with absent userId', async () => {
+                    await client.sendEvent(eventType);
+                    expectUserId({});
+                });
+
+                it('should leave existing userIds', async () => {
+                    await client.sendEvent(eventType, {userId: 'bob'});
+                    expectUserId({userId: 'bob'});
+                });
+            });
+        });
+
+        describe('for OAuth Tokens', () => {
+            beforeEach(() => {
+                client = new CoveoAnalyticsClient({
+                    token: 'xtoken',
+                    endpoint: anEndpoint,
+                    version: A_VERSION,
+                });
+                mockFetchRequestForEventType(EventType.custom);
+                client.addEventTypeMapping(eventType, {
+                    newEventType: EventType.custom,
+                    usesMeasurementProtocol: true,
+                });
+            });
+
+            it('should do nothing with absent userId', async () => {
+                await client.sendEvent(eventType);
+                expectUserId({});
+            });
+
+            it('should leave existing userIds', async () => {
+                await client.sendEvent(eventType, {userId: 'bob'});
+                expectUserId({uid: 'bob'});
+            });
+        });
+    });
+
     it('should support clearing cookies for visitorId and historyStore', async () => {
         const visitorId = 'foo';
         const history = {name: 'foo', time: '123', value: 'bar'};
