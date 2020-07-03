@@ -143,10 +143,10 @@ const measurementProtocolKeysMappingValues = keysOf(measurementProtocolKeysMappi
 const productKeysMappingValues = keysOf(productKeysMapping).map((key) => productKeysMapping[key]);
 const impressionKeysMappingValues = keysOf(impressionKeysMapping).map((key) => impressionKeysMapping[key]);
 
-const productSubKeysMatchGroup = [...productKeysMappingValues, "custom"].join('|');
-const impressionSubKeysMatchGroup = [...impressionKeysMappingValues, "custom"].join('|');
-const productPrefixMatchGroup = "(pr[0-9]+)";
-const impressionPrefixMatchGroup = "(il[0-9]+pi[0-9]+)";
+const productSubKeysMatchGroup = [...productKeysMappingValues, 'custom'].join('|');
+const impressionSubKeysMatchGroup = [...impressionKeysMappingValues, 'custom'].join('|');
+const productPrefixMatchGroup = '(pr[0-9]+)';
+const impressionPrefixMatchGroup = '(il[0-9]+pi[0-9]+)';
 const productKeyRegex = new RegExp(`^${productPrefixMatchGroup}(${productSubKeysMatchGroup})$`);
 const impressionKeyRegex = new RegExp(`^(${impressionPrefixMatchGroup}(${impressionSubKeysMatchGroup}))|(il[0-9]+nm)$`);
 const customProductKeyRegex = new RegExp(`^${productPrefixMatchGroup}custom$`);
@@ -154,39 +154,37 @@ const customImpressionKeyRegex = new RegExp(`^${impressionPrefixMatchGroup}custo
 
 const isProductKey = (key: string) => productKeyRegex.test(key);
 const isImpressionKey = (key: string) => impressionKeyRegex.test(key);
-const isKnownMeasurementProtocolKey = (key: string) => measurementProtocolKeysMappingValues.indexOf(key) !== -1
-const isCustomKey = (key: string) => key === "custom";
+const isKnownMeasurementProtocolKey = (key: string) => measurementProtocolKeysMappingValues.indexOf(key) !== -1;
+const isCustomKey = (key: string) => key === 'custom';
 
 export const isMeasurementProtocolKey = (key: string): boolean => {
-    return [
-        isProductKey,
-        isImpressionKey,
-        isKnownMeasurementProtocolKey,
-        isCustomKey
-    ].some(test => test(key));
+    return [isProductKey, isImpressionKey, isKnownMeasurementProtocolKey, isCustomKey].some((test) => test(key));
 };
 
-export const convertCustomMeasurementProtocolKeys = (data: {[name: string]: string | {[name:string] :string}}) => {
+export const convertCustomMeasurementProtocolKeys = (data: {[name: string]: string | {[name: string]: string}}) => {
     return keysOf(data).reduce((all, current) => {
         const match = customProductKeyRegex.exec(current) || customImpressionKeyRegex.exec(current);
         if (match) {
             const originalKey = match[1];
             return {
                 ...all,
-                ...convertCustomObject(originalKey, data[current] as {[name: string]: string})
-            }
+                ...convertCustomObject(originalKey, data[current] as {[name: string]: string}),
+            };
         } else {
             return {
                 ...all,
-                [current]: data[current]
-            }
+                [current]: data[current],
+            };
         }
     }, {});
-}
+};
 
 const convertCustomObject = (prefix: string, customData: {[name: string]: string}) => {
-    return keysOf(customData).reduce((allCustom, currentCustomKey) => ({
-        ...allCustom,
-        [`${prefix}${currentCustomKey}`]: customData[currentCustomKey]
-    }), {});
-}
+    return keysOf(customData).reduce(
+        (allCustom, currentCustomKey) => ({
+            ...allCustom,
+            [`${prefix}${currentCustomKey}`]: customData[currentCustomKey],
+        }),
+        {}
+    );
+};

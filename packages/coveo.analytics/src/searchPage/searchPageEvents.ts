@@ -232,7 +232,7 @@ export interface FacetRangeMetadata extends FacetBaseMeta {
 
 export interface FacetSortMeta extends FacetBaseMeta {
     criteria: string;
-  }
+}
 
 export interface QueryErrorMeta {
     query: string;

@@ -7,7 +7,7 @@
     "browser": "dist/coveoua.js",
     "types": "dist/definitions/coveoua/library.d.ts",
     "scripts": {
-        "lint": "prettier **/*.* --write",
+        "lint": "prettier */**/*.* --write",
         "build": "rollup -c",
         "start": "rollup -c -w --environment SERVE",
         "test": "jest --clearCache && jest --coverage",

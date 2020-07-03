@@ -165,8 +165,8 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
             visitorId: addVisitorIdParameter ? this.visitorId : '',
             ...currentPayload,
         });
-        const setAnonymousUserStep: ProcessPayloadStep = (currentPayload) => 
-            usesMeasurementProtocol && isApiKey(this.options.token) ? this.setAnonymousUser(currentPayload) : currentPayload;
+        const setAnonymousUserStep: ProcessPayloadStep = (currentPayload) =>
+            usesMeasurementProtocol ? this.ensureAnonymousUserWhenUsingApiKey(currentPayload) : currentPayload;
         const processBeforeSendHooksStep: ProcessPayloadStep = (currentPayload) =>
             this.beforeSendHooks.reduce((newPayload, current) => current(eventType, newPayload), currentPayload);
         const cleanPayloadStep: ProcessPayloadStep = (currentPayload) =>
@@ -345,12 +345,14 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
         return rest;
     }
 
-    private setAnonymousUser(payload: IRequestPayload): IRequestPayload {
+    private ensureAnonymousUserWhenUsingApiKey(payload: IRequestPayload): IRequestPayload {
         const {userId, ...rest} = payload;
-        if (!userId) {
+        if (isApiKey(this.options.token) && !userId) {
             rest['userId'] = 'anonymous';
+            return rest;
+        } else {
+            return payload;
         }
-        return rest;
     }
 
     private get baseUrl(): string {

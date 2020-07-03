@@ -1,4 +1,4 @@
-import {hasCryptoRandomValues} from "../detector";
+import {hasCryptoRandomValues} from '../detector';
 
 export const uuidv4 = (a?: number | string): string => {
     if (!!a) {
