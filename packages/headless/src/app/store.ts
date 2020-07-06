@@ -1,6 +1,5 @@
 import {
   configureStore as configureStoreToolkit,
-  getDefaultMiddleware,
   ReducersMapObject,
   combineReducers,
   StateFromReducersMapObject,
@@ -21,7 +20,8 @@ export function configureStore<Reducers extends ReducersMapObject>({
   const store = configureStoreToolkit({
     reducer: combineReducers(reducers),
     preloadedState,
-    middleware: [...getDefaultMiddleware(), ...middlewares],
+    middleware: (getDefaultMiddleware) =>
+      getDefaultMiddleware().concat(middlewares),
   });
 
   return store;

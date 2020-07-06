@@ -6,6 +6,8 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 export namespace Components {
+    interface AtomicDidYouMean {
+    }
     interface AtomicFacet {
         "field": string;
         "title": string;
@@ -43,6 +45,12 @@ export namespace Components {
     }
 }
 declare global {
+    interface HTMLAtomicDidYouMeanElement extends Components.AtomicDidYouMean, HTMLStencilElement {
+    }
+    var HTMLAtomicDidYouMeanElement: {
+        prototype: HTMLAtomicDidYouMeanElement;
+        new (): HTMLAtomicDidYouMeanElement;
+    };
     interface HTMLAtomicFacetElement extends Components.AtomicFacet, HTMLStencilElement {
     }
     var HTMLAtomicFacetElement: {
@@ -98,6 +106,7 @@ declare global {
         new (): HTMLMyComponentElement;
     };
     interface HTMLElementTagNameMap {
+        "atomic-did-you-mean": HTMLAtomicDidYouMeanElement;
         "atomic-facet": HTMLAtomicFacetElement;
         "atomic-pager": HTMLAtomicPagerElement;
         "atomic-query-summary": HTMLAtomicQuerySummaryElement;
@@ -110,6 +119,8 @@ declare global {
     }
 }
 declare namespace LocalJSX {
+    interface AtomicDidYouMean {
+    }
     interface AtomicFacet {
         "field"?: string;
         "title"?: string;
@@ -146,6 +157,7 @@ declare namespace LocalJSX {
         "middle"?: string;
     }
     interface IntrinsicElements {
+        "atomic-did-you-mean": AtomicDidYouMean;
         "atomic-facet": AtomicFacet;
         "atomic-pager": AtomicPager;
         "atomic-query-summary": AtomicQuerySummary;
@@ -161,6 +173,7 @@ export { LocalJSX as JSX };
 declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
+            "atomic-did-you-mean": LocalJSX.AtomicDidYouMean & JSXBase.HTMLAttributes<HTMLAtomicDidYouMeanElement>;
             "atomic-facet": LocalJSX.AtomicFacet & JSXBase.HTMLAttributes<HTMLAtomicFacetElement>;
             "atomic-pager": LocalJSX.AtomicPager & JSXBase.HTMLAttributes<HTMLAtomicPagerElement>;
             "atomic-query-summary": LocalJSX.AtomicQuerySummary & JSXBase.HTMLAttributes<HTMLAtomicQuerySummaryElement>;

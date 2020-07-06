@@ -18,7 +18,7 @@ import {
   logPageNumber,
   logPageNext,
   logPagePrevious,
-} from '../../features/analytics/analytics-actions';
+} from '../../features/pagination/pagination-analytics-actions';
 
 export type PagerState = Pager['state'];
 

@@ -10,6 +10,7 @@ export interface SearchRequest {
   firstResult: number;
   facets: FacetRequest[];
   context: Context;
+  enableDidYouMean: boolean;
 }
 
 /** The search request parameters. For a full description, refer to {@link https://docs.coveo.com/en/13/cloud-v2-api-reference/search-api#operation/searchUsingPost}*/
@@ -21,6 +22,7 @@ export const searchRequestParams = (state: SearchPageState): SearchRequest => {
     firstResult: state.pagination.firstResult,
     facets: getFacets(state),
     context: state.context.contextValues,
+    enableDidYouMean: state.didYouMean.enableDidYouMean,
   };
 };
 

@@ -7,6 +7,7 @@ export interface SearchState {
   response: SearchResponse;
   duration: number;
   queryExecuted: string;
+  automaticallyCorrected: boolean;
 }
 
 export function getSearchInitialState(): SearchState {
@@ -16,9 +17,11 @@ export function getSearchInitialState(): SearchState {
       searchUid: '',
       totalCountFiltered: 0,
       facets: [],
+      queryCorrections: [],
     },
     duration: 0,
     queryExecuted: '',
+    automaticallyCorrected: false,
   };
 }
 

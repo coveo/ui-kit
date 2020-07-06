@@ -21,12 +21,10 @@ import {
   updateQuerySetQuery,
 } from '../../features/query-set/query-set-actions';
 import {executeSearch} from '../../features/search/search-actions';
-import {
-  logTriggerRedirect,
-  logSearchboxSubmit,
-} from '../../features/analytics/analytics-actions';
 import {Controller} from '../controller/headless-controller';
 import {updatePage} from '../../features/pagination/pagination-actions';
+import {logTriggerRedirect} from '../../features/redirection/redirection-analytics-actions';
+import {logSearchboxSubmit} from '../../features/query/query-analytics-actions';
 
 export interface SearchBoxProps {
   options: SearchBoxOptions;

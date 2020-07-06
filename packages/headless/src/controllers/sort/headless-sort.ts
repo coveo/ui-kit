@@ -4,10 +4,10 @@ import {
   updateSortCriterion,
 } from '../../features/sort-criteria/sort-criteria-actions';
 import {executeSearch} from '../../features/search/search-actions';
-import {logResultsSort} from '../../features/analytics/analytics-actions';
 import {SortCriterion} from '../../features/sort-criteria/criteria';
 import {Controller} from '../controller/headless-controller';
 import {updatePage} from '../../features/pagination/pagination-actions';
+import {logResultsSort} from '../../features/sort-criteria/sort-criteria-analytics-actions';
 
 export interface SortProps {
   initialState: Partial<SortInitialState>;

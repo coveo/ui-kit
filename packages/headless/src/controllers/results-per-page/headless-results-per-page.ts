@@ -3,9 +3,9 @@ import {
   registerNumberOfResults,
   updateNumberOfResults,
 } from '../../features/pagination/pagination-actions';
+import {logPagerResize} from '../../features/pagination/pagination-analytics-actions';
 import {executeSearch} from '../../features/search/search-actions';
 import {Controller} from '../controller/headless-controller';
-import {logPagerResize} from '../../features/analytics/analytics-actions';
 
 export interface ResultsPerPageProps {
   initialState: Partial<ResultsPerPageInitialState>;

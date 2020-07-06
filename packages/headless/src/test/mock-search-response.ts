@@ -1,4 +1,5 @@
 import {SearchResponse} from '../api/search/search/search-response';
+import {emptyCorrection} from '../features/did-you-mean/did-you-mean-slice';
 
 export function buildMockSearchResponse(
   config: Partial<SearchResponse> = {}
@@ -8,6 +9,7 @@ export function buildMockSearchResponse(
     searchUid: '',
     totalCountFiltered: 0,
     facets: [],
+    queryCorrections: [emptyCorrection()],
     ...config,
   };
 }

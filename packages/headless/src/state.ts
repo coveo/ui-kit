@@ -5,6 +5,7 @@ import {PaginationState} from './features/pagination/pagination-slice';
 import {SortCriteriaState} from './features/sort-criteria/sort-criteria-slice';
 import {FacetSetState} from './features/facets/facet-set/facet-set-slice';
 import {ContextState} from './features/context/context-slice';
+import {DidYouMeanState} from './features/did-you-mean/did-you-mean-slice';
 
 export interface SearchPageState {
   /**
@@ -47,6 +48,10 @@ export interface SearchPageState {
    * The context to use with the search query. For more information, refer to {@link https://docs.coveo.com/en/2081/coveo-machine-learning/understanding-custom-context}
    */
   context: ContextState;
+  /**
+   * DidYouMean allows to retrieve query corrections from the index related to end user mispelling.
+   */
+  didYouMean: DidYouMeanState;
 }
 
 export interface ConfigurationState {

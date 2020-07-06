@@ -1,8 +1,9 @@
 import {Engine} from '../app/headless-engine';
 import {createMockState} from './mock-state';
-import createReduxMockStore from 'redux-mock-store';
+import configureStore, {MockStoreEnhanced} from 'redux-mock-store';
 import {AnyAction, ThunkDispatch, getDefaultMiddleware} from '@reduxjs/toolkit';
 import {SearchPageState} from '../state';
+import thunk from 'redux-thunk';
 
 export interface MockEngine extends Engine {
   store: MockStore;
@@ -10,11 +11,12 @@ export interface MockEngine extends Engine {
 }
 
 export function buildMockEngine(config: Partial<Engine> = {}): MockEngine {
-  const store = createMockStore();
+  const storeConfiguration = configureMockStore();
+  const store = storeConfiguration(config.state || createMockState());
   const unsubscribe = () => {};
 
   return {
-    store,
+    store: store,
     state: createMockState(),
     subscribe: jest.fn(() => unsubscribe),
     get dispatch() {
@@ -28,8 +30,9 @@ export function buildMockEngine(config: Partial<Engine> = {}): MockEngine {
 }
 
 type DispatchExts = ThunkDispatch<SearchPageState, void, AnyAction>;
-const createMockStore = createReduxMockStore<SearchPageState, DispatchExts>(
-  getDefaultMiddleware()
-);
-
-type MockStore = ReturnType<typeof createMockStore>;
+const configureMockStore = () => {
+  return configureStore<SearchPageState, DispatchExts>(
+    getDefaultMiddleware().concat(thunk)
+  );
+};
+type MockStore = MockStoreEnhanced<SearchPageState, DispatchExts>;

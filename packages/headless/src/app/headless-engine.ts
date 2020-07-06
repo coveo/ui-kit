@@ -122,6 +122,7 @@ export class HeadlessEngine<Reducers extends ReducersMapObject>
       reducers: options.reducers,
       middlewares: options.middlewares,
     });
+
     this.reduxStore.dispatch(updateBasicConfiguration(options.configuration));
     if (options.configuration.search) {
       this.reduxStore.dispatch(

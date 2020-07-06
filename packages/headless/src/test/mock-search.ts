@@ -8,6 +8,7 @@ export function buildMockSearch(
     response: buildMockSearchResponse(),
     duration: 0,
     queryExecuted: '',
+    automaticallyCorrected: false,
     ...config,
   };
 }

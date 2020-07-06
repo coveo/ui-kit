@@ -4,10 +4,15 @@ import {
   SearchState,
 } from './search-slice';
 import {executeSearch} from './search-actions';
+
 import {buildMockSearchResponse} from '../../test/mock-search-response';
 import {buildMockResult} from '../../test/mock-result';
 import {buildMockSearch} from '../../test/mock-search';
-import {logGenericSearchEvent} from '../analytics/analytics-actions';
+import {logSearchboxSubmit} from '../query/query-analytics-actions';
+import {buildMockEngine, MockEngine} from '../../test/mock-engine';
+import {PlatformClient} from '../../api/platform-client';
+import {createMockState} from '../../test/mock-state';
+jest.mock('../../api/platform-client');
 
 describe('search-slice', () => {
   let state: SearchState;
@@ -37,12 +42,68 @@ describe('search-slice', () => {
     const action = executeSearch.fulfilled(
       searchState,
       '',
-      logGenericSearchEvent({evt: 'foo'})
+      logSearchboxSubmit()
     );
     const finalState = searchReducer(state, action);
 
     expect(finalState.response).toEqual(response);
     expect(finalState.duration).toEqual(123);
     expect(finalState.queryExecuted).toEqual('foo');
+  });
+
+  describe('when did you mean is enabled and a search is executed', () => {
+    let e: MockEngine;
+    beforeEach(() => {
+      const state = createMockState();
+      state.didYouMean.enableDidYouMean = true;
+      e = buildMockEngine({state});
+    });
+
+    it('should retry the query automatically when corrections are available and there is no result', async () => {
+      PlatformClient.call = jest.fn().mockImplementation(() =>
+        Promise.resolve(
+          buildMockSearchResponse({
+            results: [],
+            queryCorrections: [{correctedQuery: 'foo', wordCorrections: []}],
+          })
+        )
+      );
+      await e.dispatch(executeSearch(logSearchboxSubmit()));
+      expect(e.actions).toContainEqual({
+        type: 'didYouMean/correction',
+        payload: 'foo',
+      });
+    });
+
+    it('should not retry the query automatically when corrections are available and results are available', async () => {
+      PlatformClient.call = jest.fn().mockImplementation(() =>
+        Promise.resolve(
+          buildMockSearchResponse({
+            results: [buildMockResult()],
+            queryCorrections: [{correctedQuery: 'foo', wordCorrections: []}],
+          })
+        )
+      );
+      await e.dispatch(executeSearch(logSearchboxSubmit()));
+      expect(e.actions).not.toContainEqual({
+        type: 'didYouMean/correction',
+        payload: 'foo',
+      });
+    });
+
+    it('should not retry the query automatically when no corrections are available and no results are available', async () => {
+      PlatformClient.call = jest.fn().mockImplementation(() =>
+        Promise.resolve(
+          buildMockSearchResponse({
+            results: [],
+            queryCorrections: [],
+          })
+        )
+      );
+      await e.dispatch(executeSearch(logSearchboxSubmit()));
+      expect(e.actions).not.toContainEqual({
+        type: 'didYouMean/correction',
+      });
+    });
   });
 });
