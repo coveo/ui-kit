@@ -11,12 +11,12 @@ async function injectComponent(componentInCode: string) {
   document.body.innerHTML = componentInCode;
 }
 
-export function setUpPage(htmlCode: string, polyfill: {}) {
+export function setUpPage(htmlCode: string) {
   cy.server();
-  cy.route('POST', '**/rest/ua/v15/analytics/search*').as('coveoAnalytics');
+  cy.route('POST', '**/rest/ua/v15/analytics/*').as('coveoAnalytics');
   cy.route('POST', '**/rest/search/querySuggest').as('coveoQuerySuggest');
   cy.route('POST', '**/rest/search').as('coveoSearch');
   // Setup page with new component
-  cy.visit('http://localhost:3333');
+  cy.visit('http://localhost:3333/pages/test.html');
   injectComponent(htmlCode);
 }
