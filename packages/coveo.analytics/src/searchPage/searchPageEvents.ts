@@ -137,6 +137,18 @@ export enum SearchPageEvents {
      * Identifies the custom event that gets logged when a user query encounters an error during execution.
      */
     queryError = 'query',
+    /**
+     * Identifies the search and custom event that gets logged when a user clicks the Go Back link after an error page.
+     */
+    queryErrorBack = 'errorBack',
+    /**
+     * Identifies the search and custom event that gets logged when a user clears the query box after an error page.
+     */
+    queryErrorClear = 'errorClearQuery',
+    /**
+     * Identifies the search and custom event that gets logged when a user clicks the Retry link after an error page.
+     */
+    queryErrorRetry = 'errorRetry',
 }
 
 export const CustomEventsTypes: Partial<Record<SearchPageEvents, string>> = {
@@ -145,6 +157,9 @@ export const CustomEventsTypes: Partial<Record<SearchPageEvents, string>> = {
     [SearchPageEvents.triggerQuery]: 'queryPipelineTriggers',
     [SearchPageEvents.triggerRedirect]: 'queryPipelineTriggers',
     [SearchPageEvents.queryError]: 'errors',
+    [SearchPageEvents.queryErrorBack]: 'errors',
+    [SearchPageEvents.queryErrorClear]: 'errors',
+    [SearchPageEvents.queryErrorRetry]: 'errors',
     [SearchPageEvents.pagerNext]: 'getMoreResults',
     [SearchPageEvents.pagerPrevious]: 'getMoreResults',
     [SearchPageEvents.pagerNumber]: 'getMoreResults',

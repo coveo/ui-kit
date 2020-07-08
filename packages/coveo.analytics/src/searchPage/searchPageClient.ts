@@ -189,6 +189,21 @@ export class CoveoSearchPageClient {
         return this.logCustomEvent(SearchPageEvents.queryError, meta);
     }
 
+    public async logQueryErrorBack() {
+        await this.logCustomEvent(SearchPageEvents.queryErrorBack);
+        return this.logSearchEvent(SearchPageEvents.queryErrorBack);
+    }
+
+    public async logQueryErrorRetry() {
+        await this.logCustomEvent(SearchPageEvents.queryErrorRetry);
+        return this.logSearchEvent(SearchPageEvents.queryErrorRetry);
+    }
+
+    public async logQueryErrorClear() {
+        await this.logCustomEvent(SearchPageEvents.queryErrorClear);
+        return this.logSearchEvent(SearchPageEvents.queryErrorClear);
+    }
+
     public logCustomEvent(event: SearchPageEvents, metadata?: Record<string, any>) {
         const customData = {...this.provider.getBaseMetadata(), ...metadata};
 

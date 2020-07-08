@@ -334,6 +334,21 @@ describe('SearchPageClient', () => {
         expectMatchCustomEventPayload(SearchPageEvents.queryError, meta);
     });
 
+    it('should send proper payload for #logQueryErrorBack', async () => {
+        await client.logQueryErrorBack();
+        expectMatchPayload(SearchPageEvents.queryErrorBack);
+    });
+
+    it('should send proper payload for #logQueryErrorRetry', async () => {
+        await client.logQueryErrorRetry();
+        expectMatchPayload(SearchPageEvents.queryErrorRetry);
+    });
+
+    it('should send proper payload for #logQueryErrorClear', async () => {
+        await client.logQueryErrorClear();
+        expectMatchPayload(SearchPageEvents.queryErrorClear);
+    });
+
     it('should enable analytics tracking by default', () => {
         const c = new CoveoSearchPageClient({}, provider);
         expect(c.coveoAnalyticsClient instanceof CoveoAnalyticsClient).toBe(true);
