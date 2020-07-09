@@ -51,10 +51,19 @@ export class AtomicFacet {
     );
   }
 
+  private get resetButton() {
+    return this.facet.hasActiveValues ? (
+      <button onClick={() => this.facet.deselectAll()}>X</button>
+    ) : null;
+  }
+
   render() {
     return (
       <div>
-        <div>{this.label}</div>
+        <div>
+          <span>{this.label}</span>
+          {this.resetButton}
+        </div>
         <div>{this.values}</div>
       </div>
     );

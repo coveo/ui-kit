@@ -1,5 +1,9 @@
 import {createReducer} from '@reduxjs/toolkit';
-import {registerFacet, toggleSelectFacetValue} from './facet-set-actions';
+import {
+  registerFacet,
+  toggleSelectFacetValue,
+  deselectAllFacetValues,
+} from './facet-set-actions';
 import {
   FacetRequest,
   FacetValue,
@@ -28,12 +32,12 @@ export const facetSetReducer = createReducer(
       })
       .addCase(toggleSelectFacetValue, (state, action) => {
         const {facetId, selection} = action.payload;
+        const facetRequest = state[facetId];
 
-        if (!(facetId in state)) {
+        if (!facetRequest) {
           return;
         }
 
-        const facetRequest = state[facetId];
         const targetValue = facetRequest.currentValues.find(
           (req) => req.value === selection.value
         );
@@ -48,6 +52,19 @@ export const facetSetReducer = createReducer(
         facetRequest.freezeCurrentValues = true;
         facetRequest.preventAutoSelect = true;
       })
+      .addCase(deselectAllFacetValues, (state, action) => {
+        const id = action.payload;
+        const facetRequest = state[id];
+
+        if (!facetRequest) {
+          return;
+        }
+
+        facetRequest.currentValues.forEach(
+          (request) => (request.state = 'idle')
+        );
+        facetRequest.preventAutoSelect = true;
+      })
       .addCase(executeSearch.fulfilled, (state, action) => {
         const facets = action.payload.response.facets;
         facets.forEach((facetResponse) => {
@@ -59,7 +76,7 @@ export const facetSetReducer = createReducer(
           }
 
           facetRequest.currentValues = facetResponse.values.map(
-            buildFacetValueRequest
+            convertFacetValueToRequest
           );
           facetRequest.freezeCurrentValues = false;
           facetRequest.preventAutoSelect = false;
@@ -88,7 +105,7 @@ export function buildFacetRequest(
   };
 }
 
-export function buildFacetValueRequest(
+export function convertFacetValueToRequest(
   facetValue: FacetValue
 ): FacetValueRequest {
   const {value, state} = facetValue;

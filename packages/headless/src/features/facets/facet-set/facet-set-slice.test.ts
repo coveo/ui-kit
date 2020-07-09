@@ -3,12 +3,13 @@ import {
   FacetSetState,
   getFacetSetInitialState,
   buildFacetRequest,
-  buildFacetValueRequest,
+  convertFacetValueToRequest,
 } from './facet-set-slice';
 import {
   registerFacet,
   FacetOptions,
   toggleSelectFacetValue,
+  deselectAllFacetValues,
 } from './facet-set-actions';
 import {buildMockFacetValue} from '../../../test/mock-facet-value';
 import {buildMockSearch} from '../../../test/mock-search';
@@ -16,6 +17,7 @@ import {buildMockFacetResponse} from '../../../test/mock-facet-response';
 import {executeSearch} from '../../search/search-actions';
 import {logGenericSearchEvent} from '../../analytics/analytics-actions';
 import {FacetResponse} from './facet-set-interfaces';
+import {buildMockFacetValueRequest} from '../../../test/mock-facet-value-request';
 
 describe('facet-set slice', () => {
   let state: FacetSetState;
@@ -87,7 +89,7 @@ describe('facet-set slice', () => {
     const id = '1';
 
     const facetValue = buildMockFacetValue({value: 'TED'});
-    const facetValueRequest = buildFacetValueRequest(facetValue);
+    const facetValueRequest = convertFacetValueToRequest(facetValue);
 
     state[id] = buildFacetRequest({currentValues: [facetValueRequest]});
 
@@ -104,7 +106,7 @@ describe('facet-set slice', () => {
     const id = '1';
 
     const facetValue = buildMockFacetValue({value: 'TED', state: 'selected'});
-    const facetValueRequest = buildFacetValueRequest(facetValue);
+    const facetValueRequest = convertFacetValueToRequest(facetValue);
 
     state[id] = buildFacetRequest({currentValues: [facetValueRequest]});
 
@@ -121,7 +123,7 @@ describe('facet-set slice', () => {
     const id = '1';
 
     const facetValue = buildMockFacetValue({value: 'TED'});
-    const facetValueRequest = buildFacetValueRequest(facetValue);
+    const facetValueRequest = convertFacetValueToRequest(facetValue);
 
     state[id] = buildFacetRequest({currentValues: [facetValueRequest]});
 
@@ -135,7 +137,7 @@ describe('facet-set slice', () => {
     const id = '1';
 
     const facetValue = buildMockFacetValue({value: 'TED'});
-    const facetValueRequest = buildFacetValueRequest(facetValue);
+    const facetValueRequest = convertFacetValueToRequest(facetValue);
 
     state[id] = buildFacetRequest({currentValues: [facetValueRequest]});
 
@@ -155,6 +157,33 @@ describe('facet-set slice', () => {
     expect(() => facetSetReducer(state, action)).not.toThrow();
   });
 
+  describe('dispatching #deselectAllFacetValues with a valid id', () => {
+    const id = '1';
+    let finalState: FacetSetState;
+
+    beforeEach(() => {
+      const facetValueRequest = buildMockFacetValueRequest({state: 'selected'});
+      state[id] = buildFacetRequest({currentValues: [facetValueRequest]});
+      finalState = facetSetReducer(state, deselectAllFacetValues(id));
+    });
+
+    it('deselects all facet values on the request', () => {
+      finalState[id].currentValues.forEach((fv) =>
+        expect(fv.state).toBe('idle')
+      );
+    });
+
+    it('sets #preventAutoSelect to true on the request', () => {
+      expect(finalState[id].preventAutoSelect).toBe(true);
+    });
+  });
+
+  it('dispatching #deselectAllFacetValues with an invalid id does not throw', () => {
+    expect(() =>
+      facetSetReducer(state, deselectAllFacetValues('1'))
+    ).not.toThrow();
+  });
+
   it('#executeSearch.fulfilled updates the currentValues of facet requests to the values in the response', () => {
     const id = '1';
     const facetValue = buildMockFacetValue({value: 'TED'});
@@ -165,7 +194,7 @@ describe('facet-set slice', () => {
     const action = buildExecuteSearchActionWithFacets([facet]);
     const finalState = facetSetReducer(state, action);
 
-    const expectedFacetValueRequest = buildFacetValueRequest(facetValue);
+    const expectedFacetValueRequest = convertFacetValueToRequest(facetValue);
     expect(finalState[id].currentValues).toEqual([expectedFacetValueRequest]);
   });
 

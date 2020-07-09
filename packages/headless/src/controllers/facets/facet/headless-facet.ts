@@ -4,6 +4,7 @@ import {Engine} from '../../../app/headless-engine';
 import {
   registerFacet,
   toggleSelectFacetValue,
+  deselectAllFacetValues,
 } from '../../../features/facets/facet-set/facet-set-actions';
 import {randomID} from '../../../utils/utils';
 import {facetSelector} from '../../../features/facets/facet-set/facet-set-selectors';
@@ -13,6 +14,7 @@ import {
   FacetSelectionChangeMetadata,
   logFacetDeselect,
   logFacetSelect,
+  logFacetClearAll,
 } from '../../../features/facets/facet-set/facet-set-analytics-actions';
 
 export type FacetState = Facet['state'];
@@ -61,9 +63,28 @@ export class Facet extends Controller {
   /**
    * Returns `true` is the passed facet value is selected and `false` otherwise.
    * @param facetValue The facet value to check.
+   * @returns boolean.
    */
   public isValueSelected(value: FacetValue) {
     return value.state === 'selected';
+  }
+
+  /** Deselects all facet values.*/
+  public deselectAll() {
+    const id = this.options.facetId;
+
+    this.dispatch(deselectAllFacetValues(id));
+    this.dispatch(executeSearch(logFacetClearAll(id)));
+  }
+
+  /**
+   * Returns `true` is the facet has selected values and `false` otherwise.
+   * @returns boolean.
+   */
+  public get hasActiveValues() {
+    return !!this.state.values.find(
+      (facetValue) => facetValue.state !== 'idle'
+    );
   }
 
   /**

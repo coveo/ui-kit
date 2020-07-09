@@ -13,6 +13,26 @@ export type FacetSelectionChangeMetadata = {
 };
 
 /**
+ * Log a facet clear all event.
+ * @param facetId The unique identifier for the facet.
+ */
+export const logFacetClearAll = createAsyncThunk(
+  'analytics/facet/reset',
+  async (facetId: string, {getState}) => {
+    const state = searchPageState(getState);
+    const facetField = getFacetField(state, facetId);
+    const facetTitle = getFacetTitle(state, facetId);
+
+    await configureAnalytics(state).logFacetClearAll({
+      facetId,
+      facetField,
+      facetTitle,
+    });
+    return makeSearchActionType();
+  }
+);
+
+/**
  * Log the selected facet value.
  */
 export const logFacetSelect = createAsyncThunk(
@@ -46,9 +66,14 @@ function buildFacetSelectionChangeMetadata(
 ) {
   const {facetId, selection} = payload;
 
-  const facetField = state.facetSet[facetId].field;
   const facetValue = selection.value;
-  const facetTitle = `${facetField}_${facetId}`;
+  const facetField = getFacetField(state, facetId);
+  const facetTitle = getFacetTitle(state, facetId);
 
-  return {facetField, facetValue, facetId, facetTitle};
+  return {facetId, facetValue, facetField, facetTitle};
 }
+
+const getFacetField = (state: SearchPageState, facetId: string) =>
+  state.facetSet[facetId].field;
+const getFacetTitle = (state: SearchPageState, facetId: string) =>
+  `${getFacetField(state, facetId)}_${facetId}`;
