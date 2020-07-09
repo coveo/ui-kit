@@ -15,7 +15,7 @@ import {headlessEngine} from '../../engine';
 })
 export class AtomicFacet {
   @Prop() field = '';
-  @Prop() title = 'No title';
+  @Prop() label = 'No label';
   @State() state!: FacetState;
 
   private facet: Facet;
@@ -39,12 +39,14 @@ export class AtomicFacet {
     return this.state.values.map((listItem) => this.buildListItem(listItem));
   }
 
-  private buildListItem(data: FacetValue) {
+  private buildListItem(item: FacetValue) {
+    const isSelected = this.facet.isValueSelected(item);
+
     return (
-      <div>
-        <input type="checkbox"></input>
-        <span>{data.value}</span>
-        <span>{data.numberOfResults}</span>
+      <div onClick={() => this.facet.toggleSelect(item)}>
+        <input type="checkbox" checked={isSelected}></input>
+        <span>{item.value}</span>
+        <span>{item.numberOfResults}</span>
       </div>
     );
   }
@@ -52,7 +54,7 @@ export class AtomicFacet {
   render() {
     return (
       <div>
-        <div>{this.title}</div>
+        <div>{this.label}</div>
         <div>{this.values}</div>
       </div>
     );

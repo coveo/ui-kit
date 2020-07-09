@@ -11,10 +11,9 @@ import {BaseFacetResponse} from '../facet-api/response';
 type FacetValueState = 'idle' | 'selected';
 type FacetSortCriteria = 'score' | 'alphanumeric';
 
-interface FacetValueRequest {
+export interface FacetValueRequest {
   value: string;
   state: FacetValueState;
-  preventAutoSelect: boolean;
 }
 
 export interface FacetValue {

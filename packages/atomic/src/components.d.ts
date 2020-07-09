@@ -10,7 +10,7 @@ export namespace Components {
     }
     interface AtomicFacet {
         "field": string;
-        "title": string;
+        "label": string;
     }
     interface AtomicPager {
     }
@@ -123,7 +123,7 @@ declare namespace LocalJSX {
     }
     interface AtomicFacet {
         "field"?: string;
-        "title"?: string;
+        "label"?: string;
     }
     interface AtomicPager {
     }

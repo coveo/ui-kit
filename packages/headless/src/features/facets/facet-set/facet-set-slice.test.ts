@@ -3,8 +3,19 @@ import {
   FacetSetState,
   getFacetSetInitialState,
   buildFacetRequest,
+  buildFacetValueRequest,
 } from './facet-set-slice';
-import {registerFacet, FacetOptions} from './facet-set-actions';
+import {
+  registerFacet,
+  FacetOptions,
+  toggleSelectFacetValue,
+} from './facet-set-actions';
+import {buildMockFacetValue} from '../../../test/mock-facet-value';
+import {buildMockSearch} from '../../../test/mock-search';
+import {buildMockFacetResponse} from '../../../test/mock-facet-response';
+import {executeSearch} from '../../search/search-actions';
+import {logGenericSearchEvent} from '../../analytics/analytics-actions';
+import {FacetResponse} from './facet-set-interfaces';
 
 describe('facet-set slice', () => {
   let state: FacetSetState;
@@ -15,6 +26,17 @@ describe('facet-set slice', () => {
       field: '',
       ...config,
     };
+  }
+
+  function buildExecuteSearchActionWithFacets(facets: FacetResponse[]) {
+    const search = buildMockSearch();
+    search.response.facets = facets;
+
+    return executeSearch.fulfilled(
+      search,
+      '',
+      logGenericSearchEvent({evt: 'foo'})
+    );
   }
 
   beforeEach(() => {
@@ -59,5 +81,121 @@ describe('facet-set slice', () => {
     const finalState = facetSetReducer(state, action);
 
     expect(finalState[id].field).toBe(state[id].field);
+  });
+
+  it('dispatching #toggleSelectFacetValue with a valid facetId sets the state of an idle value to selected', () => {
+    const id = '1';
+
+    const facetValue = buildMockFacetValue({value: 'TED'});
+    const facetValueRequest = buildFacetValueRequest(facetValue);
+
+    state[id] = buildFacetRequest({currentValues: [facetValueRequest]});
+
+    const action = toggleSelectFacetValue({facetId: id, selection: facetValue});
+    const finalState = facetSetReducer(state, action);
+
+    const targetValue = finalState[id].currentValues.find(
+      (req) => req.value === facetValue.value
+    );
+    expect(targetValue?.state).toBe('selected');
+  });
+
+  it('dispatching #toggleSelectFacetValue with a valid facetId sets the state of a selected value to idle', () => {
+    const id = '1';
+
+    const facetValue = buildMockFacetValue({value: 'TED', state: 'selected'});
+    const facetValueRequest = buildFacetValueRequest(facetValue);
+
+    state[id] = buildFacetRequest({currentValues: [facetValueRequest]});
+
+    const action = toggleSelectFacetValue({facetId: id, selection: facetValue});
+    const finalState = facetSetReducer(state, action);
+
+    const targetValue = finalState[id].currentValues.find(
+      (req) => req.value === facetValue.value
+    );
+    expect(targetValue?.state).toBe('idle');
+  });
+
+  it('dispatching #toggleSelectFacetValue with a valid facetId sets #freezeCurrentValues to true on the request', () => {
+    const id = '1';
+
+    const facetValue = buildMockFacetValue({value: 'TED'});
+    const facetValueRequest = buildFacetValueRequest(facetValue);
+
+    state[id] = buildFacetRequest({currentValues: [facetValueRequest]});
+
+    const action = toggleSelectFacetValue({facetId: id, selection: facetValue});
+    const finalState = facetSetReducer(state, action);
+
+    expect(finalState[id].freezeCurrentValues).toBe(true);
+  });
+
+  it('dispatching #toggleSelectFacetValue with a valid facetId sets #preventAutoSelect to true on the request', () => {
+    const id = '1';
+
+    const facetValue = buildMockFacetValue({value: 'TED'});
+    const facetValueRequest = buildFacetValueRequest(facetValue);
+
+    state[id] = buildFacetRequest({currentValues: [facetValueRequest]});
+
+    const action = toggleSelectFacetValue({facetId: id, selection: facetValue});
+    const finalState = facetSetReducer(state, action);
+
+    expect(finalState[id].preventAutoSelect).toBe(true);
+  });
+
+  it('dispatching #toggleSelectFacetValue with an invalid id does not throw', () => {
+    const facetValue = buildMockFacetValue({value: 'TED'});
+    const action = toggleSelectFacetValue({
+      facetId: '1',
+      selection: facetValue,
+    });
+
+    expect(() => facetSetReducer(state, action)).not.toThrow();
+  });
+
+  it('#executeSearch.fulfilled updates the currentValues of facet requests to the values in the response', () => {
+    const id = '1';
+    const facetValue = buildMockFacetValue({value: 'TED'});
+    const facet = buildMockFacetResponse({facetId: id, values: [facetValue]});
+
+    state[id] = buildFacetRequest({facetId: id});
+
+    const action = buildExecuteSearchActionWithFacets([facet]);
+    const finalState = facetSetReducer(state, action);
+
+    const expectedFacetValueRequest = buildFacetValueRequest(facetValue);
+    expect(finalState[id].currentValues).toEqual([expectedFacetValueRequest]);
+  });
+
+  it('#executeSearch.fulfilled sets #freezeCurrentValues to false', () => {
+    const id = '1';
+    state[id] = buildFacetRequest({freezeCurrentValues: true});
+
+    const facet = buildMockFacetResponse({facetId: id});
+    const action = buildExecuteSearchActionWithFacets([facet]);
+
+    const finalState = facetSetReducer(state, action);
+    expect(finalState[id].freezeCurrentValues).toBe(false);
+  });
+
+  it('#executeSearch.fulfilled sets #preventAutoSelect to false', () => {
+    const id = '1';
+    state[id] = buildFacetRequest({preventAutoSelect: true});
+
+    const facet = buildMockFacetResponse({facetId: id});
+    const action = buildExecuteSearchActionWithFacets([facet]);
+
+    const finalState = facetSetReducer(state, action);
+    expect(finalState[id].preventAutoSelect).toBe(false);
+  });
+
+  it('#executeSearch.fulfilled response containing unregistered facet ids does not throw', () => {
+    const id = '1';
+    const facet = buildMockFacetResponse({facetId: id});
+    const action = buildExecuteSearchActionWithFacets([facet]);
+
+    expect(() => facetSetReducer(state, action)).not.toThrow();
   });
 });

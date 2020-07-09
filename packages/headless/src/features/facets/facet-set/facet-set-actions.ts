@@ -1,4 +1,5 @@
 import {createAction} from '@reduxjs/toolkit';
+import {FacetValue} from './facet-set-interfaces';
 
 export interface FacetOptions {
   facetId: string;
@@ -11,3 +12,11 @@ export interface FacetOptions {
  * @param facetRequest The initial facet request.
  */
 export const registerFacet = createAction<FacetOptions>('facet/register');
+
+/**
+ * Select a facet value.
+ */
+export const toggleSelectFacetValue = createAction<{
+  facetId: string;
+  selection: FacetValue;
+}>('facet/selectValue');

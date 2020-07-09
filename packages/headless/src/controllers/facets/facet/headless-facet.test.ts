@@ -1,10 +1,14 @@
 import {Facet, FacetOptions} from './headless-facet';
 import {MockEngine, buildMockEngine} from '../../../test/mock-engine';
-import {registerFacet} from '../../../features/facets/facet-set/facet-set-actions';
+import {
+  registerFacet,
+  toggleSelectFacetValue,
+} from '../../../features/facets/facet-set/facet-set-actions';
 import {SearchPageState} from '../../../state';
 import {createMockState} from '../../../test/mock-state';
 import {buildMockFacetResponse} from '../../../test/mock-facet-response';
 import {buildMockFacetValue} from '../../../test/mock-facet-value';
+import {executeSearch} from '../../../features/search/search-actions';
 
 describe('facet', () => {
   let options: Required<FacetOptions>;
@@ -65,5 +69,34 @@ describe('facet', () => {
     initFacet();
 
     expect(facet.state.values).toBe(values);
+  });
+
+  it('#toggleSelect dispatches a toggleSelect action with the passed facet value', () => {
+    const facetValue = buildMockFacetValue({value: 'TED'});
+    facet.toggleSelect(facetValue);
+
+    expect(engine.actions).toContainEqual(
+      toggleSelectFacetValue({facetId: options.facetId, selection: facetValue})
+    );
+  });
+
+  it('#toggleSelect dispatches a search', () => {
+    const facetValue = buildMockFacetValue({value: 'TED'});
+    facet.toggleSelect(facetValue);
+
+    const action = engine.actions.find(
+      (a) => a.type === executeSearch.pending.type
+    );
+    expect(action).toBeTruthy();
+  });
+
+  it('#isValueSelected returns true when the passed value is selected', () => {
+    const facetValue = buildMockFacetValue({state: 'selected'});
+    expect(facet.isValueSelected(facetValue)).toBe(true);
+  });
+
+  it('#isValueSelected returns false when the passed value is not selected (e.g. idle)', () => {
+    const facetValue = buildMockFacetValue({state: 'idle'});
+    expect(facet.isValueSelected(facetValue)).toBe(false);
   });
 });
