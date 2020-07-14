@@ -10,7 +10,7 @@
 | Property | Attribute | Description | Type     | Default      |
 | -------- | --------- | ----------- | -------- | ------------ |
 | `field`  | `field`   |             | `string` | `''`         |
-| `title`  | `title`   |             | `string` | `'No title'` |
+| `label`  | `label`   |             | `string` | `'No label'` |
 
 
 ----------------------------------------------

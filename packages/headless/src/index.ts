@@ -19,6 +19,7 @@ export * from './controllers/sort/headless-sort';
 export * from './controllers/query-summary/headless-query-summary';
 export * from './controllers/facets/facet/headless-facet';
 export * from './controllers/context/headless-context';
+export * from './controllers/history/headless-history';
 export * from './controllers/did-you-mean/headless-did-you-mean';
 export * from './controllers/facets/facet/headless-facet';
 
@@ -31,6 +32,7 @@ export * as paginationActions from './features/pagination/pagination-actions';
 export * as sortCriterionActions from './features/sort-criteria/sort-criteria-actions';
 export * as searchActions from './features/search/search-actions';
 export * as facetActions from './features/facets/facet-set/facet-set-actions';
+export * as historyActions from './features/history/history-actions';
 export {FacetValue} from './features/facets/facet-set/facet-set-interfaces';
 
 export * from './features/sort-criteria/criteria';

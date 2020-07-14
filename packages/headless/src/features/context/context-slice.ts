@@ -1,5 +1,6 @@
 import {createReducer} from '@reduxjs/toolkit';
 import {setContext, addContext, removeContext} from './context-action';
+import {change} from '../history/history-actions';
 
 export type ContextValue = string | string[];
 export type Context = Record<string, ContextValue>;
@@ -25,6 +26,9 @@ export const contextReducer = createReducer(
       })
       .addCase(removeContext, (state, action) => {
         delete state.contextValues[action.payload];
+      })
+      .addCase(change.fulfilled, (state, action) => {
+        state.contextValues = action.payload.context.contextValues;
       });
   }
 );

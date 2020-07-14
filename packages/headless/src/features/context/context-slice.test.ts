@@ -4,6 +4,8 @@ import {
   contextReducer,
 } from './context-slice';
 import {setContext, addContext, removeContext} from './context-action';
+import {change} from '../history/history-actions';
+import {getHistoryInitialState} from '../history/history-slice';
 
 describe('context slice', () => {
   let state: ContextState;
@@ -54,6 +56,23 @@ describe('context slice', () => {
     modifiedState = contextReducer(modifiedState, removeContext('foo'));
     expect(modifiedState).toEqual({
       contextValues: {hello: 'world'},
+    });
+  });
+
+  it('allows to restore a context on history change', () => {
+    const state = getContextInitialState();
+    const historyChange = {
+      ...getHistoryInitialState(),
+      context: {contextValues: {foo: 'bar'}},
+    };
+
+    const nextState = contextReducer(
+      state,
+      change.fulfilled(historyChange, '')
+    );
+
+    expect(nextState.contextValues).toEqual({
+      foo: 'bar',
     });
   });
 });

@@ -1,33 +1,14 @@
 import {QuerySuggestCompletion} from './api/search/query-suggest/query-suggest-response';
-import {QuerySetState} from './features/query-set/query-set-slice';
 import {SearchState} from './features/search/search-slice';
-import {PaginationState} from './features/pagination/pagination-slice';
-import {SortCriteriaState} from './features/sort-criteria/sort-criteria-slice';
-import {FacetSetState} from './features/facets/facet-set/facet-set-slice';
-import {ContextState} from './features/context/context-slice';
+import {SearchParametersState} from './search-parameters-state';
+import {StateWithHistory} from 'redux-undo';
 import {DidYouMeanState} from './features/did-you-mean/did-you-mean-slice';
 
-export interface SearchPageState {
+export interface SearchPageState extends SearchParametersState {
   /**
    * The global headless engine configuration.
    */
   configuration: ConfigurationState;
-  /**
-   * The set of facets.
-   */
-  facetSet: FacetSetState;
-  /**
-   * The expressions that constitute the current query.
-   */
-  query: QueryState;
-  /**
-   * The set of basic query expressions.
-   */
-  querySet: QuerySetState;
-  /**
-   * The properties related to pagination.
-   */
-  pagination: PaginationState;
   /**
    * The URL redirection triggered by the preprocessed query.
    */
@@ -41,17 +22,13 @@ export interface SearchPageState {
    */
   search: SearchState;
   /**
-   * The sort criteria to use with the search query. For more information, refer to {@link https://docs.coveo.com/en/1461/cloud-v2-developers/query-parameters#RestQueryParameters-sortCriteria}
-   */
-  sortCriteria: SortCriteriaState;
-  /**
-   * The context to use with the search query. For more information, refer to {@link https://docs.coveo.com/en/2081/coveo-machine-learning/understanding-custom-context}
-   */
-  context: ContextState;
-  /**
    * DidYouMean allows to retrieve query corrections from the index related to end user mispelling.
    */
   didYouMean: DidYouMeanState;
+  /**
+   * The information related to the history navigation.
+   */
+  history: StateWithHistory<SearchParametersState>;
 }
 
 export interface ConfigurationState {

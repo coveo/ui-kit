@@ -10,6 +10,8 @@ import {paginationReducer} from '../features/pagination/pagination-slice';
 import {sortCriteriaReducer} from '../features/sort-criteria/sort-criteria-slice';
 import {facetSetReducer} from '../features/facets/facet-set/facet-set-slice';
 import {contextReducer} from '../features/context/context-slice';
+import undoable from 'redux-undo';
+import {historyReducer} from '../features/history/history-slice';
 import {didYouMeanReducer} from '../features/did-you-mean/did-you-mean-slice';
 
 /**
@@ -26,5 +28,6 @@ export const searchPageReducers: ReducersMapObject<SearchPageState> = {
   search: searchReducer,
   sortCriteria: sortCriteriaReducer,
   context: contextReducer,
+  history: undoable(historyReducer),
   didYouMean: didYouMeanReducer,
 };

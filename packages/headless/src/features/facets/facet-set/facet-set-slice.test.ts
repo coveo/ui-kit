@@ -5,6 +5,8 @@ import {
   buildFacetRequest,
   convertFacetValueToRequest,
 } from './facet-set-slice';
+import {getHistoryInitialState} from '../../history/history-slice';
+import {change} from '../../history/history-actions';
 import {
   registerFacet,
   FacetOptions,
@@ -85,6 +87,23 @@ describe('facet-set slice', () => {
     expect(finalState[id].field).toBe(state[id].field);
   });
 
+  it('allows to restore a facet set on history change', () => {
+    const state = getFacetSetInitialState();
+    const expectedFacetSet = {
+      foo: buildFacetRequest(),
+    };
+    const historyChange = {
+      ...getHistoryInitialState(),
+      facetSet: expectedFacetSet,
+    };
+
+    const nextState = facetSetReducer(
+      state,
+      change.fulfilled(historyChange, '')
+    );
+
+    expect(nextState).toEqual(expectedFacetSet);
+  });
   it('dispatching #toggleSelectFacetValue with a valid facetId sets the state of an idle value to selected', () => {
     const id = '1';
 
@@ -93,7 +112,10 @@ describe('facet-set slice', () => {
 
     state[id] = buildFacetRequest({currentValues: [facetValueRequest]});
 
-    const action = toggleSelectFacetValue({facetId: id, selection: facetValue});
+    const action = toggleSelectFacetValue({
+      facetId: id,
+      selection: facetValue,
+    });
     const finalState = facetSetReducer(state, action);
 
     const targetValue = finalState[id].currentValues.find(
@@ -110,7 +132,10 @@ describe('facet-set slice', () => {
 
     state[id] = buildFacetRequest({currentValues: [facetValueRequest]});
 
-    const action = toggleSelectFacetValue({facetId: id, selection: facetValue});
+    const action = toggleSelectFacetValue({
+      facetId: id,
+      selection: facetValue,
+    });
     const finalState = facetSetReducer(state, action);
 
     const targetValue = finalState[id].currentValues.find(
@@ -127,7 +152,10 @@ describe('facet-set slice', () => {
 
     state[id] = buildFacetRequest({currentValues: [facetValueRequest]});
 
-    const action = toggleSelectFacetValue({facetId: id, selection: facetValue});
+    const action = toggleSelectFacetValue({
+      facetId: id,
+      selection: facetValue,
+    });
     const finalState = facetSetReducer(state, action);
 
     expect(finalState[id].freezeCurrentValues).toBe(true);
@@ -141,7 +169,10 @@ describe('facet-set slice', () => {
 
     state[id] = buildFacetRequest({currentValues: [facetValueRequest]});
 
-    const action = toggleSelectFacetValue({facetId: id, selection: facetValue});
+    const action = toggleSelectFacetValue({
+      facetId: id,
+      selection: facetValue,
+    });
     const finalState = facetSetReducer(state, action);
 
     expect(finalState[id].preventAutoSelect).toBe(true);
@@ -162,7 +193,9 @@ describe('facet-set slice', () => {
     let finalState: FacetSetState;
 
     beforeEach(() => {
-      const facetValueRequest = buildMockFacetValueRequest({state: 'selected'});
+      const facetValueRequest = buildMockFacetValueRequest({
+        state: 'selected',
+      });
       state[id] = buildFacetRequest({currentValues: [facetValueRequest]});
       finalState = facetSetReducer(state, deselectAllFacetValues(id));
     });

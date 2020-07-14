@@ -8,12 +8,13 @@ import {
   nextPage,
 } from './pagination-actions';
 import {executeSearch} from '../search/search-actions';
+import {change} from '../history/history-actions';
 
-export type PaginationState = {
+export interface PaginationState {
   firstResult: number;
   numberOfResults: number;
   totalCountFiltered: number;
-};
+}
 
 export function getPaginationInitialState(): PaginationState {
   return {
@@ -66,6 +67,10 @@ export const paginationReducer = createReducer(
           nextPage,
           state.numberOfResults
         );
+      })
+      .addCase(change.fulfilled, (state, action) => {
+        state.numberOfResults = action.payload.pagination.numberOfResults;
+        state.firstResult = action.payload.pagination.firstResult;
       })
       .addCase(executeSearch.fulfilled, (state, action) => {
         const {response} = action.payload;

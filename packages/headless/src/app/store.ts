@@ -20,6 +20,12 @@ export function configureStore<Reducers extends ReducersMapObject>({
   const store = configureStoreToolkit({
     reducer: combineReducers(reducers),
     preloadedState,
+    devTools: {
+      stateSanitizer: (state) =>
+        (state as {history?: unknown}).history
+          ? {...state, history: '<<OMIT>>'}
+          : state,
+    },
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware().concat(middlewares),
   });

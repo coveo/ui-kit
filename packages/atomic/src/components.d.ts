@@ -12,6 +12,8 @@ export namespace Components {
         "field": string;
         "label": string;
     }
+    interface AtomicHistory {
+    }
     interface AtomicPager {
     }
     interface AtomicQuerySummary {
@@ -56,6 +58,12 @@ declare global {
     var HTMLAtomicFacetElement: {
         prototype: HTMLAtomicFacetElement;
         new (): HTMLAtomicFacetElement;
+    };
+    interface HTMLAtomicHistoryElement extends Components.AtomicHistory, HTMLStencilElement {
+    }
+    var HTMLAtomicHistoryElement: {
+        prototype: HTMLAtomicHistoryElement;
+        new (): HTMLAtomicHistoryElement;
     };
     interface HTMLAtomicPagerElement extends Components.AtomicPager, HTMLStencilElement {
     }
@@ -108,6 +116,7 @@ declare global {
     interface HTMLElementTagNameMap {
         "atomic-did-you-mean": HTMLAtomicDidYouMeanElement;
         "atomic-facet": HTMLAtomicFacetElement;
+        "atomic-history": HTMLAtomicHistoryElement;
         "atomic-pager": HTMLAtomicPagerElement;
         "atomic-query-summary": HTMLAtomicQuerySummaryElement;
         "atomic-result-list": HTMLAtomicResultListElement;
@@ -124,6 +133,8 @@ declare namespace LocalJSX {
     interface AtomicFacet {
         "field"?: string;
         "label"?: string;
+    }
+    interface AtomicHistory {
     }
     interface AtomicPager {
     }
@@ -159,6 +170,7 @@ declare namespace LocalJSX {
     interface IntrinsicElements {
         "atomic-did-you-mean": AtomicDidYouMean;
         "atomic-facet": AtomicFacet;
+        "atomic-history": AtomicHistory;
         "atomic-pager": AtomicPager;
         "atomic-query-summary": AtomicQuerySummary;
         "atomic-result-list": AtomicResultList;
@@ -175,6 +187,7 @@ declare module "@stencil/core" {
         interface IntrinsicElements {
             "atomic-did-you-mean": LocalJSX.AtomicDidYouMean & JSXBase.HTMLAttributes<HTMLAtomicDidYouMeanElement>;
             "atomic-facet": LocalJSX.AtomicFacet & JSXBase.HTMLAttributes<HTMLAtomicFacetElement>;
+            "atomic-history": LocalJSX.AtomicHistory & JSXBase.HTMLAttributes<HTMLAtomicHistoryElement>;
             "atomic-pager": LocalJSX.AtomicPager & JSXBase.HTMLAttributes<HTMLAtomicPagerElement>;
             "atomic-query-summary": LocalJSX.AtomicQuerySummary & JSXBase.HTMLAttributes<HTMLAtomicQuerySummaryElement>;
             "atomic-result-list": LocalJSX.AtomicResultList & JSXBase.HTMLAttributes<HTMLAtomicResultListElement>;

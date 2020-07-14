@@ -5,6 +5,8 @@ import {
 } from './query-set-slice';
 import {registerQuerySetQuery, updateQuerySetQuery} from './query-set-actions';
 import {selectQuerySuggestion} from '../query-suggest/query-suggest-actions';
+import {getHistoryInitialState} from '../history/history-slice';
+import {change} from '../history/history-actions';
 
 describe('querySet slice', () => {
   let state: QuerySetState;
@@ -84,5 +86,23 @@ describe('querySet slice', () => {
     const finalState = querySetReducer(state, action);
 
     expect(finalState[id]).toBe(undefined);
+  });
+
+  it('allows to restore a query set on history change', () => {
+    registerEmptyQueryWithId('foo');
+    registerEmptyQueryWithId('hello');
+
+    const expectedQuerySet = {foo: 'bar', hello: 'world'};
+    const historyChange = {
+      ...getHistoryInitialState(),
+      querySet: expectedQuerySet,
+    };
+
+    const nextState = querySetReducer(
+      state,
+      change.fulfilled(historyChange, '')
+    );
+
+    expect(nextState).toEqual(expectedQuerySet);
   });
 });

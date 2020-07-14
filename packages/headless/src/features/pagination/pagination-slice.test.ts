@@ -15,6 +15,8 @@ import {
 import {executeSearch} from '../search/search-actions';
 import {buildMockSearch} from '../../test/mock-search';
 import {logGenericSearchEvent} from '../analytics/analytics-actions';
+import {getHistoryInitialState} from '../history/history-slice';
+import {change} from '../history/history-actions';
 
 describe('pagination slice', () => {
   let state: PaginationState;
@@ -129,5 +131,26 @@ describe('pagination slice', () => {
     expect(finalState.totalCountFiltered).toBe(
       search.response.totalCountFiltered
     );
+  });
+
+  it('allows to restore pagination state on history change', () => {
+    const state = getPaginationInitialState();
+    const expectedPagination = {
+      firstResult: 123,
+      numberOfResults: 456,
+      totalCountFiltered: 123,
+    };
+    const historyChange = {
+      ...getHistoryInitialState(),
+      pagination: expectedPagination,
+    };
+
+    const nextState = paginationReducer(
+      state,
+      change.fulfilled(historyChange, '')
+    );
+
+    expect(nextState.firstResult).toEqual(123);
+    expect(nextState.numberOfResults).toEqual(456);
   });
 });

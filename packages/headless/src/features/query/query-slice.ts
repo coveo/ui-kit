@@ -2,6 +2,7 @@ import {createReducer} from '@reduxjs/toolkit';
 import {QueryState} from '../../state';
 import {updateQuery} from './query-actions';
 import {selectQuerySuggestion} from '../query-suggest/query-suggest-actions';
+import {change} from '../history/history-actions';
 import {didYouMeanCorrection} from '../did-you-mean/did-you-mean-actions';
 
 export const getQueryInitialState: () => QueryState = () => ({
@@ -18,5 +19,8 @@ export const queryReducer = createReducer(getQueryInitialState(), (builder) =>
     })
     .addCase(selectQuerySuggestion, (state, action) => {
       state.q = action.payload.expression;
+    })
+    .addCase(change.fulfilled, (state, action) => {
+      state.q = action.payload.query.q;
     })
 );

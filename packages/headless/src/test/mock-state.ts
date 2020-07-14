@@ -9,6 +9,8 @@ import {getSortCriteriaInitialState} from '../features/sort-criteria/sort-criter
 import {getFacetSetInitialState} from '../features/facets/facet-set/facet-set-slice';
 import {getContextInitialState} from '../features/context/context-slice';
 import {getDidYouMeanInitialState} from '../features/did-you-mean/did-you-mean-slice';
+import {getHistoryInitialState} from '../features/history/history-slice';
+import {newHistory} from 'redux-undo';
 
 export function createMockState(
   config: Partial<SearchPageState> = {}
@@ -25,6 +27,7 @@ export function createMockState(
     sortCriteria: getSortCriteriaInitialState(),
     context: getContextInitialState(),
     didYouMean: getDidYouMeanInitialState(),
+    history: newHistory([], getHistoryInitialState(), []),
     ...config,
   };
 }

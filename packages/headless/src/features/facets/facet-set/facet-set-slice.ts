@@ -1,4 +1,5 @@
 import {createReducer} from '@reduxjs/toolkit';
+import {change} from '../../history/history-actions';
 import {
   registerFacet,
   toggleSelectFacetValue,
@@ -30,6 +31,7 @@ export const facetSetReducer = createReducer(
 
         state[facetId] = buildFacetRequest(action.payload);
       })
+      .addCase(change.fulfilled, (_, action) => action.payload.facetSet)
       .addCase(toggleSelectFacetValue, (state, action) => {
         const {facetId, selection} = action.payload;
         const facetRequest = state[facetId];
