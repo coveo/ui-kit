@@ -33,7 +33,10 @@ export * as sortCriterionActions from './features/sort-criteria/sort-criteria-ac
 export * as searchActions from './features/search/search-actions';
 export * as facetActions from './features/facets/facet-set/facet-set-actions';
 export * as historyActions from './features/history/history-actions';
-export {FacetValue} from './features/facets/facet-set/facet-set-interfaces';
+export {
+  FacetValue,
+  FacetSortCriterion,
+} from './features/facets/facet-set/facet-set-interfaces';
 
 export * from './features/sort-criteria/criteria';
 

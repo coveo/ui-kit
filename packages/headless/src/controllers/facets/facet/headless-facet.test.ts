@@ -4,12 +4,15 @@ import {
   registerFacet,
   toggleSelectFacetValue,
   deselectAllFacetValues,
+  updateFacetSortCriterion,
 } from '../../../features/facets/facet-set/facet-set-actions';
 import {SearchPageState} from '../../../state';
 import {createMockState} from '../../../test/mock-state';
 import {buildMockFacetResponse} from '../../../test/mock-facet-response';
 import {buildMockFacetValue} from '../../../test/mock-facet-value';
 import {executeSearch} from '../../../features/search/search-actions';
+import {FacetRequest} from '../../../features/facets/facet-set/facet-set-interfaces';
+import {buildFacetRequest} from '../../../features/facets/facet-set/facet-set-slice';
 
 describe('facet', () => {
   let options: Required<FacetOptions>;
@@ -25,13 +28,21 @@ describe('facet', () => {
     facet = new Facet(engine, {options});
   }
 
+  function setFacetRequest(config: Partial<FacetRequest> = {}) {
+    const facetId = options.facetId;
+    const request = buildFacetRequest({facetId, ...config});
+    state.facetSet[facetId] = request;
+  }
+
   beforeEach(() => {
     options = {
       facetId: '',
       field: '',
+      sortCriteria: 'score',
     };
 
     state = createMockState();
+    setFacetRequest();
 
     initEngine();
     initFacet();
@@ -45,6 +56,7 @@ describe('facet', () => {
     options = {
       facetId: '1',
       field: 'author',
+      sortCriteria: 'alphanumeric',
     };
     initFacet();
 
@@ -59,16 +71,13 @@ describe('facet', () => {
   });
 
   it('when the search response has a facet, the facet #state.values contains the same values', () => {
-    const id = '1';
-    options.facetId = id;
-
     const values = [buildMockFacetValue()];
-    const facetResponse = buildMockFacetResponse({facetId: id, values});
+    const facetResponse = buildMockFacetResponse({
+      facetId: options.facetId,
+      values,
+    });
+
     state.search.response.facets = [facetResponse];
-
-    initEngine();
-    initFacet();
-
     expect(facet.state.values).toBe(values);
   });
 
@@ -131,5 +140,39 @@ describe('facet', () => {
     state.search.response.facets = [facetResponse];
 
     expect(facet.hasActiveValues).toBe(false);
+  });
+
+  it('#sortBy dispatches a #updateFacetSortCriterion action with the passed value', () => {
+    const criterion = 'score';
+    facet.sortBy(criterion);
+
+    const action = updateFacetSortCriterion({
+      facetId: options.facetId,
+      criterion,
+    });
+
+    expect(engine.actions).toContainEqual(action);
+  });
+
+  it('#sortBy dispatches a search', () => {
+    facet.sortBy('score');
+    const action = engine.actions.find(
+      (a) => a.type === executeSearch.pending.type
+    );
+
+    expect(engine.actions).toContainEqual(action);
+  });
+
+  it('when the passed criterion matches the active sort criterion, #isSortedBy returns true', () => {
+    const criterion = 'score';
+    setFacetRequest({sortCriteria: criterion});
+
+    expect(facet.isSortedBy(criterion)).toBe(true);
+  });
+
+  it('when the passed criterion does not match the active sort criterion, #isSortedBy returns false', () => {
+    setFacetRequest({sortCriteria: 'alphanumeric'});
+
+    expect(facet.isSortedBy('score')).toBe(false);
   });
 });

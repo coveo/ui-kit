@@ -1,4 +1,4 @@
-import {FacetValue} from './facet-set-interfaces';
+import {FacetValue, FacetSortCriterion} from './facet-set-interfaces';
 import {createAsyncThunk} from '@reduxjs/toolkit';
 import {
   searchPageState,
@@ -7,10 +7,32 @@ import {
 import {configureAnalytics} from '../../../api/analytics/analytics';
 import {SearchPageState} from '../../../state';
 
+export type FacetUpdateSortMetadata = {
+  facetId: string;
+  criterion: FacetSortCriterion;
+};
+
 export type FacetSelectionChangeMetadata = {
   facetId: string;
   selection: FacetValue;
 };
+
+/**
+ * Log a facet sort change.
+ */
+export const logFacetUpdateSort = createAsyncThunk(
+  'analytics/facet/sortChange',
+  async (payload: FacetUpdateSortMetadata, {getState}) => {
+    const {facetId, criterion} = payload;
+    const state = searchPageState(getState);
+
+    const base = buildFacetBaseMetadata(facetId, state);
+    const metadata = {...base, criteria: criterion};
+
+    await configureAnalytics(state).logFacetUpdateSort(metadata);
+    return makeSearchActionType();
+  }
+);
 
 /**
  * Log a facet clear all event.
@@ -20,14 +42,9 @@ export const logFacetClearAll = createAsyncThunk(
   'analytics/facet/reset',
   async (facetId: string, {getState}) => {
     const state = searchPageState(getState);
-    const facetField = getFacetField(state, facetId);
-    const facetTitle = getFacetTitle(state, facetId);
+    const metadata = buildFacetBaseMetadata(facetId, state);
 
-    await configureAnalytics(state).logFacetClearAll({
-      facetId,
-      facetField,
-      facetTitle,
-    });
+    await configureAnalytics(state).logFacetClearAll(metadata);
     return makeSearchActionType();
   }
 );
@@ -65,15 +82,15 @@ function buildFacetSelectionChangeMetadata(
   state: SearchPageState
 ) {
   const {facetId, selection} = payload;
-
   const facetValue = selection.value;
-  const facetField = getFacetField(state, facetId);
-  const facetTitle = getFacetTitle(state, facetId);
+  const base = buildFacetBaseMetadata(facetId, state);
 
-  return {facetId, facetValue, facetField, facetTitle};
+  return {...base, facetValue};
 }
 
-const getFacetField = (state: SearchPageState, facetId: string) =>
-  state.facetSet[facetId].field;
-const getFacetTitle = (state: SearchPageState, facetId: string) =>
-  `${getFacetField(state, facetId)}_${facetId}`;
+function buildFacetBaseMetadata(facetId: string, state: SearchPageState) {
+  const facetField = state.facetSet[facetId].field;
+  const facetTitle = `${facetField}_${facetId}`;
+
+  return {facetId, facetField, facetTitle};
+}

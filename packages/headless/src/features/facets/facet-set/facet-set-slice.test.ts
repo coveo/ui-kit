@@ -9,9 +9,10 @@ import {getHistoryInitialState} from '../../history/history-slice';
 import {change} from '../../history/history-actions';
 import {
   registerFacet,
-  FacetOptions,
+  FacetRegistrationOptions,
   toggleSelectFacetValue,
   deselectAllFacetValues,
+  updateFacetSortCriterion,
 } from './facet-set-actions';
 import {buildMockFacetValue} from '../../../test/mock-facet-value';
 import {buildMockSearch} from '../../../test/mock-search';
@@ -24,7 +25,9 @@ import {buildMockFacetValueRequest} from '../../../test/mock-facet-value-request
 describe('facet-set slice', () => {
   let state: FacetSetState;
 
-  function buildOptions(config: Partial<FacetOptions>): FacetOptions {
+  function buildRegistrationOptions(
+    config: Partial<FacetRegistrationOptions>
+  ): FacetRegistrationOptions {
     return {
       facetId: '',
       field: '',
@@ -54,7 +57,7 @@ describe('facet-set slice', () => {
 
   it('registers a facet request with the passed field and expected default values', () => {
     const facetId = '1';
-    const options = buildOptions({facetId, field: 'author'});
+    const options = buildRegistrationOptions({facetId, field: 'author'});
     const action = registerFacet(options);
     const finalState = facetSetReducer(state, action);
 
@@ -76,11 +79,22 @@ describe('facet-set slice', () => {
     expect(finalState[facetId]).toEqual(expectedFacet);
   });
 
+  it('registers a facet request with the passed optional values', () => {
+    const criterion = 'alphanumeric';
+    const options = buildRegistrationOptions({sortCriteria: criterion});
+
+    const action = registerFacet(options);
+    const finalState = facetSetReducer(state, action);
+    const facetRequest = finalState[options.facetId];
+
+    expect(facetRequest.sortCriteria).toBe(criterion);
+  });
+
   it('if a facet request is already registered for an id, it does not overwrite the request', () => {
     const id = '1';
     state[id] = buildFacetRequest();
 
-    const options = buildOptions({facetId: id, field: 'author'});
+    const options = buildRegistrationOptions({facetId: id, field: 'author'});
     const action = registerFacet(options);
     const finalState = facetSetReducer(state, action);
 
@@ -215,6 +229,27 @@ describe('facet-set slice', () => {
     expect(() =>
       facetSetReducer(state, deselectAllFacetValues('1'))
     ).not.toThrow();
+  });
+
+  it('dispatching #updateFacetSortCriterion with a valid id updates the sort criterion to the passed value', () => {
+    const id = '1';
+    const criterion = 'alphanumeric';
+
+    state[id] = buildFacetRequest();
+
+    const action = updateFacetSortCriterion({facetId: id, criterion});
+    const finalState = facetSetReducer(state, action);
+
+    expect(finalState[id].sortCriteria).toBe(criterion);
+  });
+
+  it('dispatching #updateFacetSortCriterion with an invalid id does not throw', () => {
+    const action = updateFacetSortCriterion({
+      facetId: '1',
+      criterion: 'score',
+    });
+
+    expect(() => facetSetReducer(state, action)).not.toThrow();
   });
 
   it('#executeSearch.fulfilled updates the currentValues of facet requests to the values in the response', () => {

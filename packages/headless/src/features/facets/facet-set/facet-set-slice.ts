@@ -4,6 +4,7 @@ import {
   registerFacet,
   toggleSelectFacetValue,
   deselectAllFacetValues,
+  updateFacetSortCriterion,
 } from './facet-set-actions';
 import {
   FacetRequest,
@@ -66,6 +67,16 @@ export const facetSetReducer = createReducer(
           (request) => (request.state = 'idle')
         );
         facetRequest.preventAutoSelect = true;
+      })
+      .addCase(updateFacetSortCriterion, (state, action) => {
+        const {facetId, criterion} = action.payload;
+        const facetRequest = state[facetId];
+
+        if (!facetRequest) {
+          return;
+        }
+
+        facetRequest.sortCriteria = criterion;
       })
       .addCase(executeSearch.fulfilled, (state, action) => {
         const facets = action.payload.response.facets;

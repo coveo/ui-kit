@@ -5,6 +5,7 @@ import {
   FacetValue,
   Unsubscribe,
   FacetOptions,
+  FacetSortCriterion,
 } from '@coveo/headless';
 import {headlessEngine} from '../../engine';
 
@@ -57,11 +58,37 @@ export class AtomicFacet {
     ) : null;
   }
 
+  private get sortSelector() {
+    return (
+      <select name="facetSort" onChange={(val) => this.onFacetSortChange(val)}>
+        {this.sortOptions}
+      </select>
+    );
+  }
+
+  private get sortOptions() {
+    const criteria: FacetSortCriterion[] = ['score', 'alphanumeric'];
+
+    return criteria.map((criterion) => (
+      <option value={criterion} selected={this.facet.isSortedBy(criterion)}>
+        {criterion}
+      </option>
+    ));
+  }
+
+  private onFacetSortChange(e: Event) {
+    const select = e.composedPath()[0] as HTMLSelectElement;
+    const criterion = select.value as FacetSortCriterion;
+
+    this.facet.sortBy(criterion);
+  }
+
   render() {
     return (
       <div>
         <div>
           <span>{this.label}</span>
+          {this.sortSelector}
           {this.resetButton}
         </div>
         <div>{this.values}</div>

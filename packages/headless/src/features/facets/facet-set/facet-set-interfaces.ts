@@ -9,7 +9,7 @@ import {
 import {BaseFacetResponse} from '../facet-api/response';
 
 type FacetValueState = 'idle' | 'selected';
-type FacetSortCriteria = 'score' | 'alphanumeric';
+export type FacetSortCriterion = 'score' | 'alphanumeric';
 
 export interface FacetValueRequest {
   value: string;
@@ -28,6 +28,6 @@ export interface FacetRequest
     Freezable,
     Delimitable,
     Type<'specific'>,
-    SortCriteria<FacetSortCriteria> {}
+    SortCriteria<FacetSortCriterion> {}
 
 export type FacetResponse = BaseFacetResponse<FacetValue>;

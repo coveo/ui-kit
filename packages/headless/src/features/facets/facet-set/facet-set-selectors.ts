@@ -5,3 +5,7 @@ export const facetSelector = (state: SearchPageState, id: string) => {
     (response) => response.facetId === id
   );
 };
+
+export const facetRequestSelector = (state: SearchPageState, id: string) => {
+  return state.facetSet[id];
+};

@@ -5,16 +5,24 @@ import {
   registerFacet,
   toggleSelectFacetValue,
   deselectAllFacetValues,
+  updateFacetSortCriterion,
 } from '../../../features/facets/facet-set/facet-set-actions';
 import {randomID} from '../../../utils/utils';
-import {facetSelector} from '../../../features/facets/facet-set/facet-set-selectors';
-import {FacetValue} from '../../../features/facets/facet-set/facet-set-interfaces';
+import {
+  facetSelector,
+  facetRequestSelector,
+} from '../../../features/facets/facet-set/facet-set-selectors';
+import {
+  FacetValue,
+  FacetSortCriterion,
+} from '../../../features/facets/facet-set/facet-set-interfaces';
 import {executeSearch} from '../../../features/search/search-actions';
 import {
   FacetSelectionChangeMetadata,
   logFacetDeselect,
   logFacetSelect,
   logFacetClearAll,
+  logFacetUpdateSort,
 } from '../../../features/facets/facet-set/facet-set-analytics-actions';
 
 export type FacetState = Facet['state'];
@@ -36,6 +44,7 @@ const schema = new Schema({
 export type FacetOptions = {
   field: string;
   facetId?: string;
+  sortCriteria?: FacetSortCriterion;
 };
 
 export class Facet extends Controller {
@@ -63,7 +72,7 @@ export class Facet extends Controller {
   /**
    * Returns `true` is the passed facet value is selected and `false` otherwise.
    * @param facetValue The facet value to check.
-   * @returns boolean.
+   * @returns {boolean}.
    */
   public isValueSelected(value: FacetValue) {
     return value.state === 'selected';
@@ -78,8 +87,8 @@ export class Facet extends Controller {
   }
 
   /**
-   * Returns `true` is the facet has selected values and `false` otherwise.
-   * @returns boolean.
+   * Returns `true` if the facet has selected values and `false` otherwise.
+   * @returns {boolean}.
    */
   public get hasActiveValues() {
     return !!this.state.values.find(
@@ -87,15 +96,40 @@ export class Facet extends Controller {
     );
   }
 
+  /** Sorts the facet values according to the passed criterion.
+   * @param {FacetSortCriterion} criterion The criterion to sort values by.
+   */
+  public sortBy(criterion: FacetSortCriterion) {
+    const facetId = this.options.facetId;
+
+    this.dispatch(updateFacetSortCriterion({facetId, criterion}));
+    this.dispatch(executeSearch(logFacetUpdateSort({facetId, criterion})));
+  }
+
+  /**
+   * Returns `true` if the facet values are sorted according to the passed criterion and `false` otherwise.
+   * @param {FacetSortCriterion} criterion The criterion to compare.
+   */
+  public isSortedBy(criterion: FacetSortCriterion) {
+    return this.state.sortCriterion === criterion;
+  }
+
   /**
    * @returns The state of the `Facet` controller.
    */
   public get state() {
-    const response = facetSelector(this.engine.state, this.options.facetId);
+    const id = this.options.facetId;
+    const state = this.engine.state;
+
+    const request = facetRequestSelector(state, id);
+    const response = facetSelector(state, id);
+
+    const sortCriterion = request.sortCriteria;
     const values = response ? response.values : [];
 
     return {
       values,
+      sortCriterion,
     };
   }
 
