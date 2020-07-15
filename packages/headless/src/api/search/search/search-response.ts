@@ -1,11 +1,20 @@
 import {Result} from './result';
 import {FacetResponse} from '../../../features/facets/facet-set/facet-set-interfaces';
+import {
+  SearchAPIErrorWithExceptionInBody,
+  SearchAPIErrorWithStatusCode,
+} from '../search-api-error-response';
 import {QueryCorrection} from './query-corrections';
 
-export interface SearchResponse {
+export interface SearchResponseSuccess {
   results: Result[];
   searchUid: string;
   totalCountFiltered: number;
   facets: FacetResponse[];
   queryCorrections: QueryCorrection[];
 }
+
+export type Search =
+  | SearchResponseSuccess
+  | SearchAPIErrorWithExceptionInBody
+  | SearchAPIErrorWithStatusCode;

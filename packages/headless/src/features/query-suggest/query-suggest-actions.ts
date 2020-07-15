@@ -2,11 +2,18 @@ import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 import {SearchPageState} from '../../state';
 import {getQuerySuggestions} from '../../api/search/query-suggest/query-suggest-endpoint';
 import {validatePayloadSchema} from '../../utils/validate-payload';
-import {NumberValue, StringValue, Schema} from '@coveo/bueno';
+import {NumberValue, StringValue} from '@coveo/bueno';
+import {QuerySuggestSuccessResponse} from '../../api/search/query-suggest/query-suggest-response';
+import {SearchAPIErrorWithStatusCode} from '../../api/search/search-api-error-response';
+import {isErrorResponse} from '../../api/search/search-api-client';
 
 const idDefinition = {
   id: new StringValue({required: true, emptyAllowed: false}),
 };
+
+export interface QuerySuggestionID {
+  id: string;
+}
 
 /**
  * Register a new query suggest entity to the headless state to enable the Coveo ML query suggestions feature.
@@ -69,15 +76,30 @@ export const clearQuerySuggestCompletions = createAction(
  * Fetch a list of query suggestions for a specific query suggest entity according to the current headless state.
  * @param id The unique identifier of the target query suggest entity (e.g., b953ab2e-022b-4de4-903f-68b2c0682942).
  */
-export const fetchQuerySuggestions = createAsyncThunk(
+export const fetchQuerySuggestions = createAsyncThunk<
+  QuerySuggestionID & QuerySuggestSuccessResponse,
+  QuerySuggestionID,
+  {
+    rejectValue: SearchAPIErrorWithStatusCode & QuerySuggestionID;
+  }
+>(
   'querySuggest/fetch',
 
-  async (payload: {id: string}, {getState}) =>
-    await getQuerySuggestions(payload.id, getState() as SearchPageState),
-  {
-    condition: (payload: {id: string}) => {
-      new Schema(idDefinition).validate(payload);
-      return true;
-    },
+  async (payload: {id: string}, {getState, rejectWithValue}) => {
+    validatePayloadSchema(payload, idDefinition);
+    const id = payload.id;
+    const response = await getQuerySuggestions(
+      id,
+      getState() as SearchPageState
+    );
+
+    if (isErrorResponse(response)) {
+      return rejectWithValue({id, ...response.error});
+    }
+
+    return {
+      id,
+      ...response.success,
+    };
   }
 );

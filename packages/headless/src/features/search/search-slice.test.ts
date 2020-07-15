@@ -3,11 +3,10 @@ import {
   getSearchInitialState,
   SearchState,
 } from './search-slice';
-import {executeSearch} from './search-actions';
-
 import {buildMockSearchResponse} from '../../test/mock-search-response';
 import {buildMockResult} from '../../test/mock-result';
 import {buildMockSearch} from '../../test/mock-search';
+import {executeSearch} from './search-actions';
 import {logSearchboxSubmit} from '../query/query-analytics-actions';
 import {buildMockEngine, MockEngine} from '../../test/mock-engine';
 import {PlatformClient} from '../../api/platform-client';
@@ -51,6 +50,39 @@ describe('search-slice', () => {
     expect(finalState.queryExecuted).toEqual('foo');
   });
 
+  it('set the error on rejection', () => {
+    const err = {message: 'message', statusCode: 500, type: 'type'};
+    const action = executeSearch.rejected(
+      {message: 'asd', name: 'asd'},
+      '',
+      logSearchboxSubmit(),
+      err
+    );
+    const finalState = searchReducer(state, action);
+    expect(finalState.error).toEqual(err);
+  });
+
+  it('set the error to null on success', () => {
+    const err = {message: 'message', statusCode: 500, type: 'type'};
+    state.error = err;
+
+    const result = buildMockResult();
+    const response = buildMockSearchResponse({results: [result]});
+    const searchState = buildMockSearch({
+      response,
+      duration: 123,
+      queryExecuted: 'foo',
+    });
+
+    const action = executeSearch.fulfilled(
+      searchState,
+      '',
+      logSearchboxSubmit()
+    );
+    const finalState = searchReducer(state, action);
+    expect(finalState.error).toBeNull();
+  });
+
   describe('when did you mean is enabled and a search is executed', () => {
     let e: MockEngine;
     beforeEach(() => {
@@ -61,12 +93,12 @@ describe('search-slice', () => {
 
     it('should retry the query automatically when corrections are available and there is no result', async () => {
       PlatformClient.call = jest.fn().mockImplementation(() =>
-        Promise.resolve(
-          buildMockSearchResponse({
+        Promise.resolve({
+          body: buildMockSearchResponse({
             results: [],
             queryCorrections: [{correctedQuery: 'foo', wordCorrections: []}],
-          })
-        )
+          }),
+        })
       );
       await e.dispatch(executeSearch(logSearchboxSubmit()));
       expect(e.actions).toContainEqual({
@@ -77,12 +109,12 @@ describe('search-slice', () => {
 
     it('should not retry the query automatically when corrections are available and results are available', async () => {
       PlatformClient.call = jest.fn().mockImplementation(() =>
-        Promise.resolve(
-          buildMockSearchResponse({
+        Promise.resolve({
+          body: buildMockSearchResponse({
             results: [buildMockResult()],
             queryCorrections: [{correctedQuery: 'foo', wordCorrections: []}],
-          })
-        )
+          }),
+        })
       );
       await e.dispatch(executeSearch(logSearchboxSubmit()));
       expect(e.actions).not.toContainEqual({
@@ -93,12 +125,12 @@ describe('search-slice', () => {
 
     it('should not retry the query automatically when no corrections are available and no results are available', async () => {
       PlatformClient.call = jest.fn().mockImplementation(() =>
-        Promise.resolve(
-          buildMockSearchResponse({
+        Promise.resolve({
+          body: buildMockSearchResponse({
             results: [],
             queryCorrections: [],
-          })
-        )
+          }),
+        })
       );
       await e.dispatch(executeSearch(logSearchboxSubmit()));
       expect(e.actions).not.toContainEqual({

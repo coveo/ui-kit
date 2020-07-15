@@ -1,3 +1,8 @@
+import {
+  SearchAPIErrorWithExceptionInBody,
+  SearchAPIErrorWithStatusCode,
+} from '../search-api-error-response';
+
 /**
  * A Coveo ML query suggestion.
  */
@@ -27,9 +32,14 @@ export interface QuerySuggestCompletion {
 /**
  * A response from the Coveo ML query suggest service.
  */
-export interface QuerySuggestResponse {
+export interface QuerySuggestSuccessResponse {
   /**
    * Contains an array of completions.
    */
   completions: QuerySuggestCompletion[];
 }
+
+export type QuerySuggest =
+  | QuerySuggestSuccessResponse
+  | SearchAPIErrorWithExceptionInBody
+  | SearchAPIErrorWithStatusCode;

@@ -11,10 +11,15 @@ export interface PlatformClientCallOptions<RequestParams> {
   requestParams: RequestParams;
 }
 
+export interface PlatformResponse<T> {
+  body: T;
+  response: Response;
+}
+
 export class PlatformClient {
   static async call<RequestParams, ResponseType>(
     options: PlatformClientCallOptions<RequestParams>
-  ) {
+  ): Promise<PlatformResponse<ResponseType>> {
     const response = await fetch(options.url, {
       method: options.method,
       headers: {
@@ -24,10 +29,10 @@ export class PlatformClient {
       body: JSON.stringify(options.requestParams),
     });
 
-    if (response.ok) {
-      return (await response.json()) as ResponseType;
-    }
-
-    throw `Request Error (status: ${response.status} ${response.statusText})`;
+    const body = (await response.json()) as ResponseType;
+    return {
+      response,
+      body,
+    };
   }
 }

@@ -19,6 +19,7 @@ export * from './controllers/sort/headless-sort';
 export * from './controllers/query-summary/headless-query-summary';
 export * from './controllers/facets/facet/headless-facet';
 export * from './controllers/context/headless-context';
+export * from './controllers/query-error/headless-query-error';
 export * from './controllers/history/headless-history';
 export * from './controllers/did-you-mean/headless-did-you-mean';
 export * from './controllers/facets/facet/headless-facet';

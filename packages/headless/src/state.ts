@@ -3,6 +3,7 @@ import {SearchState} from './features/search/search-slice';
 import {SearchParametersState} from './search-parameters-state';
 import {StateWithHistory} from 'redux-undo';
 import {DidYouMeanState} from './features/did-you-mean/did-you-mean-slice';
+import {SearchAPIErrorWithStatusCode} from './api/search/search-api-error-response';
 
 export interface SearchPageState extends SearchParametersState {
   /**
@@ -92,4 +93,5 @@ export interface QuerySuggestState {
    * The unique identifier of the current query suggestion request.
    */
   currentRequestId: string;
+  error: SearchAPIErrorWithStatusCode | null;
 }

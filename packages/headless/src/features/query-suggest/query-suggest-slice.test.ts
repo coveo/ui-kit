@@ -133,7 +133,7 @@ describe('querySuggest slice', () => {
     describe('fetchQuerySuggestions.fulfilled', () => {
       const completions = getCompletions();
       const fetchQuerySuggestionsFulfilledAction = fetchQuerySuggestions.fulfilled(
-        {completions},
+        {completions, id},
         '',
         {id}
       );

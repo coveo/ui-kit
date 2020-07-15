@@ -1,13 +1,13 @@
-import {SearchAPIClient} from '../search-api-client';
+import {SearchAPIClient, isErrorResponse} from '../search-api-client';
 import {SearchPageState} from '../../../state';
 import {isTriggerRedirect} from '../trigger';
-import {PlanResponse} from './plan-response';
+import {PlanResponseSuccess} from './plan-response';
 
 /**
  * The plan of execution of a search request.
  */
 export class ExecutionPlan {
-  constructor(private response: PlanResponse) {}
+  constructor(private response: PlanResponseSuccess) {}
 
   /**
    * Gets the final value of the basic expression (`q`) after the search request has been processed in the query pipeline, but before it is sent to the index.
@@ -38,5 +38,8 @@ export class ExecutionPlan {
 
 export async function getExecutionPlan(state: SearchPageState) {
   const response = await SearchAPIClient.plan(state);
-  return new ExecutionPlan(response);
+  if (isErrorResponse(response)) {
+    throw response.error;
+  }
+  return new ExecutionPlan(response.success);
 }

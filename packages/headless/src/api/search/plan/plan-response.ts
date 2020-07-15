@@ -1,9 +1,13 @@
 import {Trigger} from '../trigger';
+import {
+  SearchAPIErrorWithExceptionInBody,
+  SearchAPIErrorWithStatusCode,
+} from '../search-api-error-response';
 
 /**
  * Describes the plan of execution of a search request.
  */
-export interface PlanResponse {
+export interface PlanResponseSuccess {
   /**
    * The output that would be included by the Search API in the query response
    * once the search request has been fully processed by the query pipeline.
@@ -30,3 +34,8 @@ export interface PlanResponse {
     largeExpression: string;
   };
 }
+
+export type Plan =
+  | PlanResponseSuccess
+  | SearchAPIErrorWithExceptionInBody
+  | SearchAPIErrorWithStatusCode;

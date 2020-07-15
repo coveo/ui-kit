@@ -16,6 +16,7 @@ export const getQuerySuggestInitialState: () => QuerySuggestState = () => ({
   count: 5,
   q: '',
   currentRequestId: '',
+  error: null,
 });
 
 export const querySuggestReducer = createReducer(
@@ -39,6 +40,9 @@ export const querySuggestReducer = createReducer(
         if (action.meta.requestId === state[id]?.currentRequestId) {
           state[id]!.completions = action.payload.completions;
         }
+      })
+      .addCase(fetchQuerySuggestions.rejected, (state, action) => {
+        state[action.payload!.id]!.error = action.payload!;
       })
       .addCase(updateQuerySetQuery, (state, action) => {
         const {id, query} = action.payload;

@@ -1,9 +1,9 @@
 import {ExecutionPlan} from './plan-endpoint';
 import {TriggerRedirect} from '../trigger';
-import {PlanResponse} from './plan-response';
+import {PlanResponseSuccess} from './plan-response';
 
 describe('execution plan', () => {
-  const planResponse: PlanResponse = {
+  const planResponse: PlanResponseSuccess = {
     parsedInput: {
       basicExpression: 'some query',
       largeExpression: '',

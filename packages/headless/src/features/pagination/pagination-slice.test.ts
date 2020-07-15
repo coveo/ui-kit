@@ -12,11 +12,11 @@ import {
   previousPage,
   nextPage,
 } from './pagination-actions';
-import {executeSearch} from '../search/search-actions';
 import {buildMockSearch} from '../../test/mock-search';
-import {logGenericSearchEvent} from '../analytics/analytics-actions';
 import {getHistoryInitialState} from '../history/history-slice';
 import {change} from '../history/history-actions';
+import {executeSearch} from '../search/search-actions';
+import {logSearchboxSubmit} from '../query/query-analytics-actions';
 
 describe('pagination slice', () => {
   let state: PaginationState;
@@ -121,11 +121,7 @@ describe('pagination slice', () => {
   it('executeSearch.fulfilled updates totalCountFiltered to the response value', () => {
     const search = buildMockSearch();
     search.response.totalCountFiltered = 100;
-    const action = executeSearch.fulfilled(
-      search,
-      '',
-      logGenericSearchEvent({evt: 'foo'})
-    );
+    const action = executeSearch.fulfilled(search, '', logSearchboxSubmit());
 
     const finalState = paginationReducer(state, action);
     expect(finalState.totalCountFiltered).toBe(

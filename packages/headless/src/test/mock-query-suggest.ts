@@ -9,6 +9,7 @@ export function buildMockQuerySuggest(
     currentRequestId: '',
     q: '',
     completions: [],
+    error: null,
     ...config,
   };
 }

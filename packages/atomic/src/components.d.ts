@@ -16,6 +16,8 @@ export namespace Components {
     }
     interface AtomicPager {
     }
+    interface AtomicQueryError {
+    }
     interface AtomicQuerySummary {
     }
     interface AtomicResultList {
@@ -71,6 +73,12 @@ declare global {
         prototype: HTMLAtomicPagerElement;
         new (): HTMLAtomicPagerElement;
     };
+    interface HTMLAtomicQueryErrorElement extends Components.AtomicQueryError, HTMLStencilElement {
+    }
+    var HTMLAtomicQueryErrorElement: {
+        prototype: HTMLAtomicQueryErrorElement;
+        new (): HTMLAtomicQueryErrorElement;
+    };
     interface HTMLAtomicQuerySummaryElement extends Components.AtomicQuerySummary, HTMLStencilElement {
     }
     var HTMLAtomicQuerySummaryElement: {
@@ -118,6 +126,7 @@ declare global {
         "atomic-facet": HTMLAtomicFacetElement;
         "atomic-history": HTMLAtomicHistoryElement;
         "atomic-pager": HTMLAtomicPagerElement;
+        "atomic-query-error": HTMLAtomicQueryErrorElement;
         "atomic-query-summary": HTMLAtomicQuerySummaryElement;
         "atomic-result-list": HTMLAtomicResultListElement;
         "atomic-results-per-page": HTMLAtomicResultsPerPageElement;
@@ -137,6 +146,8 @@ declare namespace LocalJSX {
     interface AtomicHistory {
     }
     interface AtomicPager {
+    }
+    interface AtomicQueryError {
     }
     interface AtomicQuerySummary {
     }
@@ -172,6 +183,7 @@ declare namespace LocalJSX {
         "atomic-facet": AtomicFacet;
         "atomic-history": AtomicHistory;
         "atomic-pager": AtomicPager;
+        "atomic-query-error": AtomicQueryError;
         "atomic-query-summary": AtomicQuerySummary;
         "atomic-result-list": AtomicResultList;
         "atomic-results-per-page": AtomicResultsPerPage;
@@ -189,6 +201,7 @@ declare module "@stencil/core" {
             "atomic-facet": LocalJSX.AtomicFacet & JSXBase.HTMLAttributes<HTMLAtomicFacetElement>;
             "atomic-history": LocalJSX.AtomicHistory & JSXBase.HTMLAttributes<HTMLAtomicHistoryElement>;
             "atomic-pager": LocalJSX.AtomicPager & JSXBase.HTMLAttributes<HTMLAtomicPagerElement>;
+            "atomic-query-error": LocalJSX.AtomicQueryError & JSXBase.HTMLAttributes<HTMLAtomicQueryErrorElement>;
             "atomic-query-summary": LocalJSX.AtomicQuerySummary & JSXBase.HTMLAttributes<HTMLAtomicQuerySummaryElement>;
             "atomic-result-list": LocalJSX.AtomicResultList & JSXBase.HTMLAttributes<HTMLAtomicResultListElement>;
             "atomic-results-per-page": LocalJSX.AtomicResultsPerPage & JSXBase.HTMLAttributes<HTMLAtomicResultsPerPageElement>;
