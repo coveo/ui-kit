@@ -7,12 +7,26 @@
 const childProcess = require('child_process');
 const fs = require('fs');
 const os = require('os');
+const lint = require('@commitlint/lint');
+const conventialConfig = require('@commitlint/config-conventional');
+const lernaConfig = require('@commitlint/config-lerna-scopes');
 
 const urlBase = 'https://coveord.atlassian.net/browse/';
 const projectAcronym = 'KIT';
 
-const commitLint = require('@commitlint/cli')
-console.log(commitLint);
+const getLernaPackages = async () => {
+  return await lernaConfig.rules['scope-enum']();
+};
+
+const doLint = async (message) => {
+  const packages = await getLernaPackages();
+  lint
+    .default(message, {
+      ...conventialConfig.rules,
+      'scope-enum': packages,
+    })
+    .then((report) => console.log(report));
+};
 
 let issueNumber;
 const branchName = childProcess
@@ -34,6 +48,10 @@ const commitMessageFilename = '.git/COMMIT_EDITMSG';
 const commitMessage = fs.readFileSync(commitMessageFilename, {
   encoding: 'utf8',
 });
+
+
+
+doLint(commitMessage);
 
 function commitHasIssue(commitMessage) {
   const urlIssueRegex = new RegExp(urlBase + issueRegex.source);
