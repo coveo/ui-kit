@@ -26,6 +26,8 @@ const doLint = async (message) => {
       'scope-enum': packages,
     })
     .then((report) => console.log(report));
+
+    
 };
 
 let issueNumber;
