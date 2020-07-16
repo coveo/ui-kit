@@ -11,6 +11,9 @@ const os = require('os');
 const urlBase = 'https://coveord.atlassian.net/browse/';
 const projectAcronym = 'KIT';
 
+const commitLint = require('@commitlint/cli')
+console.log(commitLint);
+
 let issueNumber;
 const branchName = childProcess
   .execSync('git symbolic-ref --short HEAD', {encoding: 'utf8'})
