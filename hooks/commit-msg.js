@@ -20,14 +20,18 @@ const getLernaPackages = async () => {
 
 const doLint = async (message) => {
   const packages = await getLernaPackages();
-  lint
-    .default(message, {
-      ...conventialConfig.rules,
-      'scope-enum': packages,
-    })
-    .then((report) => console.log(report));
+  const report = await lint.default(message, {
+    ...conventialConfig.rules,
+    'scope-enum': packages,
+  });
 
-    
+  if (!report.valid) {
+    console.log(report.errors);
+    process.exit(1);
+  }
+  if (report.warnings.length !== 0) {
+    console.log(report.warnings);
+  }
 };
 
 let issueNumber;
@@ -51,10 +55,6 @@ const commitMessage = fs.readFileSync(commitMessageFilename, {
   encoding: 'utf8',
 });
 
-
-
-doLint(commitMessage);
-
 function commitHasIssue(commitMessage) {
   const urlIssueRegex = new RegExp(urlBase + issueRegex.source);
   return commitMessage.search(urlIssueRegex) !== -1;
@@ -64,14 +64,16 @@ function commitHasIssueNumber(commitMessage, issueNumber) {
   return commitMessage.indexOf(urlBase + issueNumber) !== -1;
 }
 
-if (commitHasIssueNumber(commitMessage, issueNumber)) {
-  process.exit(0);
-}
+doLint(commitMessage).then(() => {
+  if (commitHasIssueNumber(commitMessage, issueNumber)) {
+    process.exit(0);
+  }
 
-if (commitHasIssue(commitMessage)) {
-  console.log("Oops... Branch name and issue in commit message don't match");
-  process.exit(1);
-}
+  if (commitHasIssue(commitMessage)) {
+    console.log("Oops... Branch name and issue in commit message don't match");
+    process.exit(1);
+  }
 
-fs.appendFileSync(commitMessageFilename, os.EOL + urlBase + issueNumber);
-console.log(`Appended ${urlBase}${issueNumber} to commit message`);
+  fs.appendFileSync(commitMessageFilename, os.EOL + urlBase + issueNumber);
+  console.log(`Appended ${urlBase}${issueNumber} to commit message`);
+});
