@@ -40,16 +40,23 @@ function commitHasIssueNumber(commitMessage, issueNumber) {
   return commitMessage.indexOf(urlBase + issueNumber) !== -1;
 }
 
-lintCommitMessage(commitMessage).then(() => {
-  if (commitHasIssueNumber(commitMessage, issueNumber)) {
-    process.exit(0);
-  }
+lintCommitMessage(commitMessage)
+  .then(() => {
+    if (commitHasIssueNumber(commitMessage, issueNumber)) {
+      process.exit(0);
+    }
 
-  if (commitHasIssue(commitMessage)) {
-    console.log("Oops... Branch name and issue in commit message don't match");
+    if (commitHasIssue(commitMessage)) {
+      console.log(
+        "Oops... Branch name and issue in commit message don't match"
+      );
+      process.exit(1);
+    }
+
+    fs.appendFileSync(commitMessageFilename, os.EOL + urlBase + issueNumber);
+    console.log(`Appended ${urlBase}${issueNumber} to commit message`);
+  })
+  .catch((e) => {
+    console.log(e);
     process.exit(1);
-  }
-
-  fs.appendFileSync(commitMessageFilename, os.EOL + urlBase + issueNumber);
-  console.log(`Appended ${urlBase}${issueNumber} to commit message`);
-});
+  });

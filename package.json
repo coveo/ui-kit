@@ -34,8 +34,8 @@
   },
   "husky": {
     "hooks": {
-      "commit-msg": "",
-      "pre-commit": "lint-staged; node ./hooks/commit-msg.js "
+      "commit-msg": "node ./hooks/commit-msg.js",
+      "pre-commit": "lint-staged"
     }
   },
   "config": {
