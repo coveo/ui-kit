@@ -11,16 +11,23 @@
     "fix": "gts fix",
     "report:bundle-size": "node ./benchmark/bundle-size/bundle-size.js",
     "report:bundle-size:time-series": "node ./benchmark/bundle-size/time-series.js",
-    "cypress:test": "lerna run cypress:test"
+    "cypress:test": "lerna run cypress:test",
+    "commit": "git-cz"
   },
   "devDependencies": {
+    "@commitlint/config-conventional": "^9.1.1",
+    "@commitlint/config-lerna-scopes": "^9.1.1",
+    "@commitlint/lint": "^9.1.1",
     "@types/node": "^10.0.3",
     "cross-fetch": "^3.0.4",
+    "cz-conventional-changelog": "^3.2.0",
     "eslint-plugin-cypress": "^2.11.1",
     "gts": "^2.0.2",
     "husky": "^4.2.3",
     "lerna": "^3.20.2",
+    "lerna-semantic-release": "^9.1.0",
     "lint-staged": "^10.0.8",
+    "standard-version": "^8.0.2",
     "typedoc": "https://github.com/coveord/typedoc",
     "typescript": "^3.9.2"
   },
@@ -30,10 +37,25 @@
       "pre-commit": "lint-staged"
     }
   },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog",
+      "defaultScope": [
+        "bueno",
+        "headless",
+        "atomic"
+      ]
+    }
+  },
   "lint-staged": {
     "**/*.ts?(x)": [
       "npm run fix",
       "git add"
+    ]
+  },
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
     ]
   }
 }

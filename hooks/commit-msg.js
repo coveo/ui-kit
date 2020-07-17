@@ -37,6 +37,9 @@ const doLint = async (message) => {
 
 
 
+
+
+
 let issueNumber;
 const branchName = childProcess
   .execSync('git symbolic-ref --short HEAD', {encoding: 'utf8'})
