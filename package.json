@@ -50,8 +50,7 @@
   },
   "lint-staged": {
     "**/*.ts?(x)": [
-      "npm run fix",
-      "git add"
+      "npm run fix"
     ]
   },
   "commitlint": {

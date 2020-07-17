@@ -23,6 +23,7 @@ const lintCommitMessage = async (message) => {
   }
 };
 
+
 const logLintErrors = (errors) => {
   console.log(errors.reduce((prev, next) => prev + next.message + '\n', '\n'));
 };
