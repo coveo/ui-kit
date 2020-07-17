@@ -18,11 +18,11 @@ const lintCommitMessage = async (message) => {
 
   if (!report.valid) {
     logLintErrors(report.errors);
-    console.log('Use `npm run commit` to build proper commit message.');
-    process.exit(1);
+    throw 'Use `npm run commit` to build proper commit message.';
   }
-};
 
+  console.log('Commit message linted properly');
+};
 
 const logLintErrors = (errors) => {
   console.log(errors.reduce((prev, next) => prev + next.message + '\n', '\n'));

@@ -40,8 +40,9 @@ function commitHasIssueNumber(commitMessage, issueNumber) {
   return commitMessage.indexOf(urlBase + issueNumber) !== -1;
 }
 
-lintCommitMessage(commitMessage)
-  .then(() => {
+async function main() {
+  try {
+    await lintCommitMessage(commitMessage);
     if (commitHasIssueNumber(commitMessage, issueNumber)) {
       process.exit(0);
     }
@@ -55,8 +56,10 @@ lintCommitMessage(commitMessage)
 
     fs.appendFileSync(commitMessageFilename, os.EOL + urlBase + issueNumber);
     console.log(`Appended ${urlBase}${issueNumber} to commit message`);
-  })
-  .catch((e) => {
+  } catch (e) {
     console.log(e);
     process.exit(1);
-  });
+  }
+}
+
+main();
