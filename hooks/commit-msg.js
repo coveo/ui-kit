@@ -1,44 +1,14 @@
 #!/usr/bin/env node
 /* eslint-disable no-process-exit */
 /* eslint-disable node/shebang */
-
 'use strict';
 
 const childProcess = require('child_process');
 const fs = require('fs');
 const os = require('os');
-const lint = require('@commitlint/lint');
-const conventialConfig = require('@commitlint/config-conventional');
-const lernaConfig = require('@commitlint/config-lerna-scopes');
-
 const urlBase = 'https://coveord.atlassian.net/browse/';
 const projectAcronym = 'KIT';
-
-const getLernaPackages = async () => {
-  return await lernaConfig.rules['scope-enum']();
-};
-
-const doLint = async (message) => {
-  const packages = await getLernaPackages();
-  const report = await lint.default(message, {
-    ...conventialConfig.rules,
-    'scope-enum': packages,
-  });
-
-  if (!report.valid) {
-    console.log(report.errors);
-    process.exit(1);
-  }
-  if (report.warnings.length !== 0) {
-    console.log(report.warnings);
-  }
-};
-
-
-
-
-
-
+const {lintCommitMessage} = require('./commit-lint');
 
 let issueNumber;
 const branchName = childProcess
@@ -70,7 +40,7 @@ function commitHasIssueNumber(commitMessage, issueNumber) {
   return commitMessage.indexOf(urlBase + issueNumber) !== -1;
 }
 
-doLint(commitMessage).then(() => {
+lintCommitMessage(commitMessage).then(() => {
   if (commitHasIssueNumber(commitMessage, issueNumber)) {
     process.exit(0);
   }
