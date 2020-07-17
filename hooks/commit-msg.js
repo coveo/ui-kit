@@ -57,9 +57,11 @@ async function main() {
     fs.appendFileSync(commitMessageFilename, os.EOL + urlBase + issueNumber);
     console.log(`Appended ${urlBase}${issueNumber} to commit message`);
   } catch (e) {
+    console.log('!!!');
     console.log(e);
-    process.exit(1);
+    console.log('!!!');
+    throw e;
   }
 }
 
-main();
+main().catch(() => process.exit(1));
