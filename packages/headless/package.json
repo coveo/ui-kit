@@ -9,14 +9,15 @@
   },
   "types": "./dist/index.d.ts",
   "license": "Apache-2.0",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "scripts": {
     "start": "rollup -c -w",
     "build": "npm run clean && npm run build:prod",
     "build:prod": "rollup -c --environment BUILD:production",
     "clean": "rm -f -r dist/*",
     "test": "jest",
-    "test:watch": "jest --watch --colors --no-cache"
+    "test:watch": "jest --watch --colors --no-cache",
+    "release": "standard-version"
   },
   "dependencies": {
     "@coveo/bueno": "*",
@@ -35,12 +36,13 @@
     "@types/jest": "^25.2.1",
     "@types/redux-mock-store": "^1.0.2",
     "jest": "^25.1.0",
+    "jest-fetch-mock": "^3.0.3",
     "redux-mock-store": "^1.5.4",
     "rollup": "^2.18.2",
-    "jest-fetch-mock": "^3.0.3",
     "rollup-plugin-size-snapshot": "^0.11.0",
     "rollup-plugin-terser": "^5.3.0",
     "rollup-plugin-typescript2": "^0.27.0",
+    "standard-version": "^8.0.2",
     "ts-jest": "^25.4.0"
   }
 }
