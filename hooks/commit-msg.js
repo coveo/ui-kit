@@ -44,7 +44,7 @@ async function main() {
   try {
     await lintCommitMessage(commitMessage);
     if (commitHasIssueNumber(commitMessage, issueNumber)) {
-      process.exit(0);
+      return;
     }
 
     if (commitHasIssue(commitMessage)) {
@@ -57,15 +57,9 @@ async function main() {
     fs.appendFileSync(commitMessageFilename, os.EOL + urlBase + issueNumber);
     console.log(`Appended ${urlBase}${issueNumber} to commit message`);
   } catch (e) {
-    console.log('!!!');
     console.log(e);
-    console.log('!!!');
-    throw e;
+    process.exit(1);
   }
 }
 
-main()
-  .then(() => {
-    process.exit(1);
-  })
-  .catch(() => process.exit(1));
+main();
