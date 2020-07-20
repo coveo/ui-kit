@@ -104,6 +104,26 @@ export class AtomicFacet {
     this.facet.sortBy(criterion);
   }
 
+  private get showMoreButton() {
+    if (!this.facet.canShowMoreValues) {
+      return null;
+    }
+
+    return (
+      <button onClick={() => this.facet.showMoreValues()}>show more</button>
+    );
+  }
+
+  private get showLessButton() {
+    if (!this.facet.canShowLessValues) {
+      return null;
+    }
+
+    return (
+      <button onClick={() => this.facet.showLessValues()}>show less</button>
+    );
+  }
+
   render() {
     return (
       <div>
@@ -117,6 +137,10 @@ export class AtomicFacet {
           {this.facetSearchResults}
         </div>
         <div>{this.values}</div>
+        <div>
+          {this.showMoreButton}
+          {this.showLessButton}
+        </div>
       </div>
     );
   }

@@ -13,6 +13,7 @@ import {
   toggleSelectFacetValue,
   deselectAllFacetValues,
   updateFacetSortCriterion,
+  updateFacetNumberOfValues,
 } from './facet-set-actions';
 import {buildMockFacetValue} from '../../../test/mock-facet-value';
 import {buildMockSearch} from '../../../test/mock-search';
@@ -251,6 +252,25 @@ describe('facet-set slice', () => {
       criterion: 'score',
     });
 
+    expect(() => facetSetReducer(state, action)).not.toThrow();
+  });
+
+  it('dispatching #updateFacetNumberOfValues with a registered id updates the number of values', () => {
+    const facetId = '1';
+    state[facetId] = buildFacetRequest();
+    const numberOfValues = 20;
+
+    const action = updateFacetNumberOfValues({facetId, numberOfValues});
+    const finalState = facetSetReducer(state, action);
+
+    expect(finalState[facetId].numberOfValues).toBe(numberOfValues);
+  });
+
+  it('dispatching #updateFacetNumberOfValues with an unregistered id does not throw', () => {
+    const action = updateFacetNumberOfValues({
+      facetId: '1',
+      numberOfValues: 20,
+    });
     expect(() => facetSetReducer(state, action)).not.toThrow();
   });
 

@@ -1,4 +1,4 @@
-import {Schema, StringValue} from '@coveo/bueno';
+import {Schema, StringValue, BooleanValue, NumberValue} from '@coveo/bueno';
 import {Controller} from '../../controller/headless-controller';
 import {Engine} from '../../../app/headless-engine';
 import {
@@ -6,6 +6,8 @@ import {
   toggleSelectFacetValue,
   deselectAllFacetValues,
   updateFacetSortCriterion,
+  FacetRegistrationOptions,
+  updateFacetNumberOfValues,
 } from '../../../features/facets/facet-set/facet-set-actions';
 import {randomID} from '../../../utils/utils';
 import {
@@ -15,6 +17,7 @@ import {
 import {
   FacetValue,
   FacetSortCriterion,
+  FacetRequestOptions,
 } from '../../../features/facets/facet-set/facet-set-interfaces';
 import {executeSearch} from '../../../features/search/search-actions';
 import {
@@ -23,6 +26,8 @@ import {
   logFacetSelect,
   logFacetClearAll,
   logFacetUpdateSort,
+  logFacetShowMore,
+  logFacetShowLess,
 } from '../../../features/facets/facet-set/facet-set-analytics-actions';
 import {
   FacetSearch,
@@ -45,22 +50,29 @@ const schema = new Schema({
   facetId: new StringValue({default: () => randomID('facet')}),
   /** The field whose values you want to display in the facet.*/
   field: new StringValue({required: true}),
+  delimitingCharacter: new StringValue({default: '>'}),
+  filterFacetCount: new BooleanValue({default: true}),
+  injectionDepth: new NumberValue({default: 1000}),
+  numberOfValues: new NumberValue({default: 8, min: 1}),
 });
 
-export type FacetOptions = {
+export type FacetOptions = FacetRequestOptions & {
   field: string;
   facetId?: string;
-  sortCriteria?: FacetSortCriterion;
   facetSearch?: Partial<FacetSearchRequestOptions>;
+};
+
+export type ValidatedFacetOptions = FacetRegistrationOptions & {
+  facetSearch: Partial<FacetSearchRequestOptions>;
 };
 
 export class Facet extends Controller {
   public facetSearch!: FacetSearch;
-  private options: Required<FacetOptions>;
+  private options: ValidatedFacetOptions;
 
   constructor(engine: Engine, props: FacetProps) {
     super(engine);
-    this.options = schema.validate(props.options) as Required<FacetOptions>;
+    this.options = schema.validate(props.options) as ValidatedFacetOptions;
 
     this.register();
     this.initFacetSearch();
@@ -124,14 +136,59 @@ export class Facet extends Controller {
   }
 
   /**
+   * Increases the number of values displayed in the facet.
+   */
+  public showMoreValues() {
+    const facetId = this.options.facetId;
+    const numberInState = this.request.numberOfValues;
+    const configuredNumber = this.options.numberOfValues!;
+    const numberToNextMultipleOfConfigured =
+      configuredNumber - (numberInState % configuredNumber);
+    const numberOfValues = numberInState + numberToNextMultipleOfConfigured;
+
+    this.dispatch(updateFacetNumberOfValues({facetId, numberOfValues}));
+    this.dispatch(
+      updateFacetSortCriterion({facetId, criterion: 'alphanumeric'})
+    );
+    this.dispatch(executeSearch(logFacetShowMore(facetId)));
+  }
+
+  /** Returns `true` if there are more values to display and `false` otherwise.*/
+  public get canShowMoreValues() {
+    const res = this.response;
+    return res ? res.moreValuesAvailable : false;
+  }
+
+  /** Sets the displayed number of values to the originally configured value.*/
+  public showLessValues() {
+    const {facetId, numberOfValues} = this.options;
+    const newNumberOfValues = Math.max(
+      numberOfValues!,
+      this.numberOfActiveValues
+    );
+
+    this.dispatch(
+      updateFacetNumberOfValues({facetId, numberOfValues: newNumberOfValues})
+    );
+    this.dispatch(updateFacetSortCriterion({facetId, criterion: 'score'}));
+    this.dispatch(executeSearch(logFacetShowLess(facetId)));
+  }
+
+  /** Returns `true` if fewer values can be displayed and `false` otherwise.*/
+  public get canShowLessValues() {
+    const {currentValues} = this.request;
+    const configuredNumber = this.options.numberOfValues!;
+    const hasIdleValues = !!currentValues.find((v) => v.state === 'idle');
+
+    return configuredNumber < currentValues.length && hasIdleValues;
+  }
+
+  /**
    * @returns The state of the `Facet` controller.
    */
   public get state() {
-    const id = this.options.facetId;
-    const state = this.engine.state;
-
-    const request = facetRequestSelector(state, id);
-    const response = facetSelector(state, id);
+    const request = this.request;
+    const response = this.response;
 
     const sortCriterion = request.sortCriteria;
     const values = response ? response.values : [];
@@ -140,6 +197,24 @@ export class Facet extends Controller {
       values,
       sortCriterion,
     };
+  }
+
+  private get numberOfActiveValues() {
+    return this.request.currentValues.filter((v) => v.state !== 'idle').length;
+  }
+
+  private get request() {
+    const id = this.options.facetId;
+    const state = this.engine.state;
+
+    return facetRequestSelector(state, id);
+  }
+
+  private get response() {
+    const id = this.options.facetId;
+    const state = this.engine.state;
+
+    return facetSelector(state, id);
   }
 
   private register() {

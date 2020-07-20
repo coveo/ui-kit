@@ -1,11 +1,13 @@
 import {createAction} from '@reduxjs/toolkit';
-import {FacetValue, FacetSortCriterion} from './facet-set-interfaces';
+import {
+  FacetValue,
+  FacetSortCriterion,
+  FacetRequest,
+  FacetRequestOptions,
+} from './facet-set-interfaces';
 
-export interface FacetRegistrationOptions {
-  facetId: string;
-  field: string;
-  sortCriteria?: FacetSortCriterion;
-}
+export type FacetRegistrationOptions = Pick<FacetRequest, 'facetId' | 'field'> &
+  FacetRequestOptions;
 
 /**
  * Register a facet in the facet set.
@@ -36,3 +38,11 @@ export const updateFacetSortCriterion = createAction<{
   facetId: string;
   criterion: FacetSortCriterion;
 }>('facet/updateSortCriterion');
+
+/**
+ * Update the number of values of a facet.
+ */
+export const updateFacetNumberOfValues = createAction<{
+  facetId: string;
+  numberOfValues: number;
+}>('facet/updateNumberOfValues');

@@ -30,4 +30,14 @@ export interface FacetRequest
     Type<'specific'>,
     SortCriteria<FacetSortCriterion> {}
 
+export type FacetRequestOptions = Partial<
+  Pick<
+    FacetRequest,
+    | 'delimitingCharacter'
+    | 'filterFacetCount'
+    | 'injectionDepth'
+    | 'numberOfValues'
+    | 'sortCriteria'
+  >
+>;
 export type FacetResponse = BaseFacetResponse<FacetValue>;

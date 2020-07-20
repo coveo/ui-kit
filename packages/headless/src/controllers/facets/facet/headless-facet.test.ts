@@ -1,10 +1,11 @@
-import {Facet, FacetOptions} from './headless-facet';
+import {Facet, ValidatedFacetOptions} from './headless-facet';
 import {MockEngine, buildMockEngine} from '../../../test/mock-engine';
 import {
   registerFacet,
   toggleSelectFacetValue,
   deselectAllFacetValues,
   updateFacetSortCriterion,
+  updateFacetNumberOfValues,
 } from '../../../features/facets/facet-set/facet-set-actions';
 import {SearchPageState} from '../../../state';
 import {createMockState} from '../../../test/mock-state';
@@ -15,16 +16,13 @@ import {FacetRequest} from '../../../features/facets/facet-set/facet-set-interfa
 import {buildFacetRequest} from '../../../features/facets/facet-set/facet-set-slice';
 
 describe('facet', () => {
-  let options: Required<FacetOptions>;
+  let options: ValidatedFacetOptions;
   let state: SearchPageState;
   let engine: MockEngine;
   let facet: Facet;
 
-  function initEngine() {
-    engine = buildMockEngine({state});
-  }
-
   function initFacet() {
+    engine = buildMockEngine({state});
     facet = new Facet(engine, {options});
   }
 
@@ -45,7 +43,6 @@ describe('facet', () => {
     state = createMockState();
     setFacetRequest();
 
-    initEngine();
     initFacet();
   });
 
@@ -53,7 +50,7 @@ describe('facet', () => {
     expect(facet).toBeTruthy();
   });
 
-  it('registers a facet with the passed id and field', () => {
+  it('registers a facet with the passed options and the default values of unspecified options', () => {
     options = {
       facetId: '1',
       field: 'author',
@@ -62,9 +59,20 @@ describe('facet', () => {
     };
     initFacet();
 
-    const action = registerFacet(options);
+    const action = registerFacet({
+      ...options,
+      delimitingCharacter: '>',
+      filterFacetCount: true,
+      injectionDepth: 1000,
+      numberOfValues: 8,
+    });
 
     expect(engine.actions).toContainEqual(action);
+  });
+
+  it('registering a facet with #numberOfValues less than 1 throws', () => {
+    options.numberOfValues = 0;
+    expect(() => initFacet()).toThrow();
   });
 
   it('when the search response is empty, the facet #state.values is an empty array', () => {
@@ -176,6 +184,188 @@ describe('facet', () => {
     setFacetRequest({sortCriteria: 'alphanumeric'});
 
     expect(facet.isSortedBy('score')).toBe(false);
+  });
+
+  describe('#showMoreValues', () => {
+    it('dispatches increases the number of values on the request by the configured amount', () => {
+      const numberOfValuesInState = 10;
+      const configuredNumberOfValues = 5;
+      options.numberOfValues = configuredNumberOfValues;
+
+      setFacetRequest({numberOfValues: numberOfValuesInState});
+      initFacet();
+
+      facet.showMoreValues();
+
+      const expectedNumber = numberOfValuesInState + configuredNumberOfValues;
+      const action = updateFacetNumberOfValues({
+        facetId: options.facetId,
+        numberOfValues: expectedNumber,
+      });
+
+      expect(engine.actions).toContainEqual(action);
+    });
+
+    it(`when the numberOfValues on the request is not a multiple of the configured number,
+    it increases the number to make it a multiple`, () => {
+      const numberOfValuesInState = 7;
+      const configuredNumberOfValues = 5;
+      options.numberOfValues = configuredNumberOfValues;
+
+      setFacetRequest({numberOfValues: numberOfValuesInState});
+      initFacet();
+
+      facet.showMoreValues();
+
+      const action = updateFacetNumberOfValues({
+        facetId: options.facetId,
+        numberOfValues: 10,
+      });
+
+      expect(engine.actions).toContainEqual(action);
+    });
+
+    it('updates the sortCriteria to alphanumeric', () => {
+      setFacetRequest({sortCriteria: 'score'});
+      initFacet();
+
+      facet.showMoreValues();
+
+      const action = updateFacetSortCriterion({
+        facetId: options.facetId,
+        criterion: 'alphanumeric',
+      });
+
+      expect(engine.actions).toContainEqual(action);
+    });
+
+    it('executes a search', () => {
+      setFacetRequest();
+      initFacet();
+
+      facet.showMoreValues();
+
+      const action = engine.actions.find(
+        (a) => a.type === executeSearch.pending.type
+      );
+      expect(action).toBeTruthy();
+    });
+  });
+
+  describe('#canShowMoreValues', () => {
+    it('when there is no response, it returns false', () => {
+      expect(facet.canShowMoreValues).toBe(false);
+    });
+
+    it('when #moreValuesAvailable on the response is true, it returns true', () => {
+      const facetResponse = buildMockFacetResponse({
+        facetId: options.facetId,
+        moreValuesAvailable: true,
+      });
+
+      state.search.response.facets = [facetResponse];
+      expect(facet.canShowMoreValues).toBe(true);
+    });
+
+    it('when #moreValuesAvailable on the response is false, it returns false', () => {
+      const facetResponse = buildMockFacetResponse({
+        facetId: options.facetId,
+        moreValuesAvailable: false,
+      });
+
+      state.search.response.facets = [facetResponse];
+      expect(facet.canShowMoreValues).toBe(false);
+    });
+  });
+
+  describe('#showLessValues', () => {
+    it('sets the number of values to the origial number', () => {
+      const originalNumberOfValues = 8;
+      options.numberOfValues = originalNumberOfValues;
+
+      setFacetRequest({numberOfValues: 25});
+      initFacet();
+
+      facet.showLessValues();
+
+      const action = updateFacetNumberOfValues({
+        facetId: options.facetId,
+        numberOfValues: originalNumberOfValues,
+      });
+
+      expect(engine.actions).toContainEqual(action);
+    });
+
+    it(`when the number of non-idle values is greater than the original number,
+    it sets the number of values to the non-idle number`, () => {
+      options.numberOfValues = 1;
+      const selectedValue = buildMockFacetValue({state: 'selected'});
+      const currentValues = [selectedValue, selectedValue];
+
+      setFacetRequest({currentValues, numberOfValues: 5});
+      initFacet();
+
+      facet.showLessValues();
+
+      const action = updateFacetNumberOfValues({
+        facetId: options.facetId,
+        numberOfValues: currentValues.length,
+      });
+
+      expect(engine.actions).toContainEqual(action);
+    });
+
+    it('updates the sortCriteria to score', () => {
+      const facetId = options.facetId;
+      setFacetRequest({sortCriteria: 'alphanumeric'});
+      initFacet();
+
+      facet.showLessValues();
+      const action = updateFacetSortCriterion({facetId, criterion: 'score'});
+      expect(engine.actions).toContainEqual(action);
+    });
+
+    it('executes a search', () => {
+      facet.showLessValues();
+      const action = engine.actions.find(
+        (a) => a.type === executeSearch.pending.type
+      );
+      expect(action).toBeTruthy();
+    });
+  });
+
+  describe('#canShowLessValues', () => {
+    it('when the number of currentValues is equal to the configured number, it returns false', () => {
+      options.numberOfValues = 1;
+
+      const currentValues = [buildMockFacetValue()];
+      setFacetRequest({currentValues});
+
+      initFacet();
+
+      expect(facet.canShowLessValues).toBe(false);
+    });
+
+    it('when the number of currentValues is greater than the configured number, it returns true', () => {
+      options.numberOfValues = 1;
+      const value = buildMockFacetValue();
+
+      setFacetRequest({currentValues: [value, value]});
+      initFacet();
+
+      expect(facet.canShowLessValues).toBe(true);
+    });
+
+    it(`when the number of currentValues is greater than the configured number,
+    when there are no idle values, it returns false`, () => {
+      options.numberOfValues = 1;
+      const selectedValue = buildMockFacetValue({state: 'selected'});
+
+      setFacetRequest({currentValues: [selectedValue, selectedValue]});
+      initFacet();
+
+      expect(facet.canShowLessValues).toBe(false);
+    });
   });
 
   it('exposes a #facetSearch property', () => {

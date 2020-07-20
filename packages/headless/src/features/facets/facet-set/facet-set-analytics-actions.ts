@@ -18,6 +18,34 @@ export type FacetSelectionChangeMetadata = {
 };
 
 /**
+ * Log a facet show more.
+ */
+export const logFacetShowMore = createAsyncThunk(
+  'analytics/facet/showMore',
+  async (facetId: string, {getState}) => {
+    const state = searchPageState(getState);
+    const metadata = buildFacetBaseMetadata(facetId, state);
+
+    await configureAnalytics(state).logFacetShowMore(metadata);
+    return makeSearchActionType();
+  }
+);
+
+/**
+ * Log a facet show less.
+ */
+export const logFacetShowLess = createAsyncThunk(
+  'analytics/facet/showLess',
+  async (facetId: string, {getState}) => {
+    const state = searchPageState(getState);
+    const metadata = buildFacetBaseMetadata(facetId, state);
+
+    await configureAnalytics(state).logFacetShowLess(metadata);
+    return makeSearchActionType();
+  }
+);
+
+/**
  * Log a facet search.
  */
 export const logFacetSearch = createAsyncThunk(
