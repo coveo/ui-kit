@@ -1,15 +1,14 @@
 #!/usr/bin/env node
 /* eslint-disable no-process-exit */
 /* eslint-disable node/shebang */
-
 'use strict';
 
 const childProcess = require('child_process');
 const fs = require('fs');
 const os = require('os');
-
 const urlBase = 'https://coveord.atlassian.net/browse/';
 const projectAcronym = 'KIT';
+const {lintCommitMessage} = require('./commit-lint');
 
 let issueNumber;
 const branchName = childProcess
@@ -41,14 +40,26 @@ function commitHasIssueNumber(commitMessage, issueNumber) {
   return commitMessage.indexOf(urlBase + issueNumber) !== -1;
 }
 
-if (commitHasIssueNumber(commitMessage, issueNumber)) {
-  process.exit(0);
+async function main() {
+  try {
+    await lintCommitMessage(commitMessage);
+    if (commitHasIssueNumber(commitMessage, issueNumber)) {
+      return;
+    }
+
+    if (commitHasIssue(commitMessage)) {
+      console.log(
+        "Oops... Branch name and issue in commit message don't match"
+      );
+      process.exit(1);
+    }
+
+    fs.appendFileSync(commitMessageFilename, os.EOL + urlBase + issueNumber);
+    console.log(`Appended ${urlBase}${issueNumber} to commit message`);
+  } catch (e) {
+    console.log(e);
+    process.exit(1);
+  }
 }
 
-if (commitHasIssue(commitMessage)) {
-  console.log("Oops... Branch name and issue in commit message don't match");
-  process.exit(1);
-}
-
-fs.appendFileSync(commitMessageFilename, os.EOL + urlBase + issueNumber);
-console.log(`Appended ${urlBase}${issueNumber} to commit message`);
+main();
