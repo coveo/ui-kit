@@ -40,7 +40,6 @@ function commitHasIssueNumber(commitMessage, issueNumber) {
   return commitMessage.indexOf(urlBase + issueNumber) !== -1;
 }
 
-
 async function main() {
   try {
     await lintCommitMessage(commitMessage);
@@ -65,4 +64,8 @@ async function main() {
   }
 }
 
-main().catch(() => process.exit(1));
+main()
+  .then(() => {
+    process.exit(1);
+  })
+  .catch(() => process.exit(1));
