@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.2.0-alpha.0](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0...v0.2.0-alpha.0) (2020-07-20)
+
+
+### Features
+
+* **bueno:** test commit bueno ([b6580d2](https://bitbucket.org/coveord/ui-kit/commits/b6580d2896af52e91f8040ef4487730677f6f140))
+* **headless:** testing feat bump headless ([44bbe59](https://bitbucket.org/coveord/ui-kit/commits/44bbe59715448d8673e0142969240746a6805407))
+
+
+
+
+
 # 0.1.0 (2020-07-20)
 
 
