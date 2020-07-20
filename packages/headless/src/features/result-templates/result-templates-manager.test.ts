@@ -12,7 +12,7 @@ describe('result template manager', () => {
     it('returns a registered template that matches', () => {
       resultTemplateManager.registerTemplates({
         content: '{{title}}',
-        matches: [() => true, () => true],
+        conditions: [() => true, () => true],
       });
 
       expect(resultTemplateManager.selectTemplate(buildMockResult())).toBe(
@@ -23,7 +23,7 @@ describe('result template manager', () => {
     it('does not return a registered template that doesn not match', () => {
       resultTemplateManager.registerTemplates({
         content: '{{title}}',
-        matches: [() => true, () => false],
+        conditions: [() => true, () => false],
       });
 
       expect(
@@ -36,12 +36,12 @@ describe('result template manager', () => {
       resultTemplateManager.registerTemplates(
         {
           content: '{{title1}}',
-          matches: [() => true],
+          conditions: [() => true],
           priority: 10,
         },
         {
           content: '{{title2}}',
-          matches: [() => true],
+          conditions: [() => true],
           priority: 20,
         }
       );
@@ -56,15 +56,15 @@ describe('result template manager', () => {
       resultTemplateManager.registerTemplates(
         {
           content: '{{title1}}',
-          matches: [() => true],
+          conditions: [() => true],
         },
         {
           content: '{{title2}}',
-          matches: [() => true],
+          conditions: [() => true],
         },
         {
           content: '{{title3}}',
-          matches: [() => true],
+          conditions: [() => true],
         }
       );
 

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html dir="ltr" lang="en">
+
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0">
@@ -7,8 +8,8 @@
 
   <script type="module" src="/build/atomic.esm.js"></script>
   <script nomodule src="/build/atomic.js"></script>
-
 </head>
+
 <body>
   <atomic-search-box></atomic-search-box>
   <atomic-search-box is-standalone="true"></atomic-search-box>
@@ -16,12 +17,21 @@
   <atomic-did-you-mean></atomic-did-you-mean>
   <atomic-facet field="author" label="Authors"></atomic-facet>
   <atomic-sort-dropdown></atomic-sort-dropdown>
-  <atomic-result-list></atomic-result-list>
+  <atomic-result-list>
+    <atomic-result-template id="result-template-1">
+      <h1>Top Stories</h1>
+    </atomic-result-template>
+    <script>
+      document.querySelector('#result-template-1').conditions = [(result) => result.title === 'TOP STORIES'];
+    </script>
+  </atomic-result-list>
   <atomic-pager></atomic-pager>
   <atomic-results-per-page></atomic-results-per-page>
   <atomic-testing-context></atomic-testing-context>
-  <atomic-query-error></atomic-query-error>
-  <atomic-history></atomic-historyt>
-</body>
-</html>
 
+  <atomic-query-error></atomic-query-error>
+  <atomic-history></atomic-history>
+
+</body>
+
+</html>

@@ -1,9 +1,9 @@
 import {Result} from '../../api/search/search/result';
 
-export type ResultTemplateMatch = (result: Result) => boolean;
+export type ResultTemplateCondition = (result: Result) => boolean;
 
 export interface ResultTemplate<Content = unknown> {
   content: Content;
-  matches: ResultTemplateMatch[];
+  conditions: ResultTemplateCondition[];
   priority?: number;
 }

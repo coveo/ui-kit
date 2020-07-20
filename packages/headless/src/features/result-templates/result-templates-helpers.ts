@@ -1,4 +1,4 @@
-import {ResultTemplateMatch} from './result-templates';
+import {ResultTemplateCondition} from './result-templates';
 import {isArray} from '../../utils/utils';
 import {Result} from '../../api/search/search/result';
 
@@ -10,7 +10,7 @@ import {Result} from '../../api/search/search/result';
 export const fieldMustMatch = (
   fieldName: string,
   valuesToMatch: string[]
-): ResultTemplateMatch => {
+): ResultTemplateCondition => {
   return (result: Result) => {
     const fieldValues = getFieldValuesFromResult(fieldName, result);
     return valuesToMatch.some((valueToMatch) =>
@@ -30,7 +30,7 @@ export const fieldMustMatch = (
 export const fieldMustNotMatch = (
   fieldName: string,
   blacklistedValues: string[]
-): ResultTemplateMatch => {
+): ResultTemplateCondition => {
   return (result: Result) => {
     const fieldValues = getFieldValuesFromResult(fieldName, result);
     return blacklistedValues.every((blacklistedValue) =>

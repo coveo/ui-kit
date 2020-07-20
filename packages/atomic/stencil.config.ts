@@ -1,6 +1,7 @@
 import {Config} from '@stencil/core';
 import alias from '@rollup/plugin-alias';
 import path from 'path';
+import html from 'rollup-plugin-html';
 
 const isDevWatch: boolean =
   process.argv &&
@@ -26,6 +27,9 @@ export const config: Config = {
   ],
   testing: {
     browserArgs: ['--no-sandbox'],
+    transform: {
+      '^.+\\.html?$': 'html-loader-jest',
+    },
   },
   devServer: {
     reloadStrategy: 'pageReload',
@@ -44,6 +48,9 @@ export const config: Config = {
             },
           ],
         }),
+      html({
+        include: 'src/templates/**/*.html',
+      }),
     ],
   },
 };

@@ -5,6 +5,8 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
+import { FieldMatch, } from "./components/atomic-result-template/atomic-result-template";
+import { ResultTemplateCondition, } from "@coveo/headless";
 export namespace Components {
     interface AtomicDidYouMean {
     }
@@ -21,6 +23,12 @@ export namespace Components {
     interface AtomicQuerySummary {
     }
     interface AtomicResultList {
+    }
+    interface AtomicResultTemplate {
+        "conditions": ResultTemplateCondition[];
+        "fieldsMustMatch": FieldMatch[];
+        "fieldsMustNotMatch": FieldMatch[];
+        "getConditions": () => Promise<ResultTemplateCondition[]>;
     }
     interface AtomicResultsPerPage {
     }
@@ -91,6 +99,12 @@ declare global {
         prototype: HTMLAtomicResultListElement;
         new (): HTMLAtomicResultListElement;
     };
+    interface HTMLAtomicResultTemplateElement extends Components.AtomicResultTemplate, HTMLStencilElement {
+    }
+    var HTMLAtomicResultTemplateElement: {
+        prototype: HTMLAtomicResultTemplateElement;
+        new (): HTMLAtomicResultTemplateElement;
+    };
     interface HTMLAtomicResultsPerPageElement extends Components.AtomicResultsPerPage, HTMLStencilElement {
     }
     var HTMLAtomicResultsPerPageElement: {
@@ -129,6 +143,7 @@ declare global {
         "atomic-query-error": HTMLAtomicQueryErrorElement;
         "atomic-query-summary": HTMLAtomicQuerySummaryElement;
         "atomic-result-list": HTMLAtomicResultListElement;
+        "atomic-result-template": HTMLAtomicResultTemplateElement;
         "atomic-results-per-page": HTMLAtomicResultsPerPageElement;
         "atomic-search-box": HTMLAtomicSearchBoxElement;
         "atomic-sort-dropdown": HTMLAtomicSortDropdownElement;
@@ -152,6 +167,11 @@ declare namespace LocalJSX {
     interface AtomicQuerySummary {
     }
     interface AtomicResultList {
+    }
+    interface AtomicResultTemplate {
+        "conditions"?: ResultTemplateCondition[];
+        "fieldsMustMatch"?: FieldMatch[];
+        "fieldsMustNotMatch"?: FieldMatch[];
     }
     interface AtomicResultsPerPage {
     }
@@ -186,6 +206,7 @@ declare namespace LocalJSX {
         "atomic-query-error": AtomicQueryError;
         "atomic-query-summary": AtomicQuerySummary;
         "atomic-result-list": AtomicResultList;
+        "atomic-result-template": AtomicResultTemplate;
         "atomic-results-per-page": AtomicResultsPerPage;
         "atomic-search-box": AtomicSearchBox;
         "atomic-sort-dropdown": AtomicSortDropdown;
@@ -204,6 +225,7 @@ declare module "@stencil/core" {
             "atomic-query-error": LocalJSX.AtomicQueryError & JSXBase.HTMLAttributes<HTMLAtomicQueryErrorElement>;
             "atomic-query-summary": LocalJSX.AtomicQuerySummary & JSXBase.HTMLAttributes<HTMLAtomicQuerySummaryElement>;
             "atomic-result-list": LocalJSX.AtomicResultList & JSXBase.HTMLAttributes<HTMLAtomicResultListElement>;
+            "atomic-result-template": LocalJSX.AtomicResultTemplate & JSXBase.HTMLAttributes<HTMLAtomicResultTemplateElement>;
             "atomic-results-per-page": LocalJSX.AtomicResultsPerPage & JSXBase.HTMLAttributes<HTMLAtomicResultsPerPageElement>;
             "atomic-search-box": LocalJSX.AtomicSearchBox & JSXBase.HTMLAttributes<HTMLAtomicSearchBoxElement>;
             "atomic-sort-dropdown": LocalJSX.AtomicSortDropdown & JSXBase.HTMLAttributes<HTMLAtomicSortDropdownElement>;
