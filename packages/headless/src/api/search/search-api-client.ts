@@ -7,6 +7,11 @@ import {
 } from './query-suggest/query-suggest-response';
 import {baseSearchParams} from './search-request';
 import {SearchRequest, searchRequestParams} from './search/search-request';
+import {
+  facetSearchRequestParams,
+  FacetSearchRequest,
+} from './facet-search/facet-search/facet-search-request';
+import {FacetSearchResponse} from './facet-search/api/response';
 import {Search, SearchResponseSuccess} from './search/search-response';
 import {
   SearchAPIErrorWithStatusCode,
@@ -88,6 +93,18 @@ export class SearchAPIClient {
     return {
       error: unwrapError(platformResponse),
     };
+  }
+
+  static async facetSearch(id: string, state: SearchPageState) {
+    const res = await PlatformClient.call<
+      FacetSearchRequest,
+      FacetSearchResponse
+    >({
+      ...baseSearchParams(state, 'POST', 'application/json', '/facet'),
+      requestParams: facetSearchRequestParams(id, state),
+    });
+
+    return res.body;
   }
 }
 

@@ -24,6 +24,12 @@ import {
   logFacetClearAll,
   logFacetUpdateSort,
 } from '../../../features/facets/facet-set/facet-set-analytics-actions';
+import {
+  FacetSearch,
+  facetSearchController,
+} from '../facet-search/headless-facet-search';
+import {FacetSearchRequestOptions} from '../../../features/facets/facet-search-set/facet-search-request-options';
+import {FacetSearchOptions} from '../../../features/facets/facet-search-set/facet-search-actions';
 
 export type FacetState = Facet['state'];
 
@@ -45,9 +51,11 @@ export type FacetOptions = {
   field: string;
   facetId?: string;
   sortCriteria?: FacetSortCriterion;
+  facetSearch?: Partial<FacetSearchRequestOptions>;
 };
 
 export class Facet extends Controller {
+  public facetSearch!: FacetSearch;
   private options: Required<FacetOptions>;
 
   constructor(engine: Engine, props: FacetProps) {
@@ -55,6 +63,7 @@ export class Facet extends Controller {
     this.options = schema.validate(props.options) as Required<FacetOptions>;
 
     this.register();
+    this.initFacetSearch();
   }
 
   /**
@@ -137,10 +146,20 @@ export class Facet extends Controller {
     this.dispatch(registerFacet(this.options));
   }
 
+  private initFacetSearch() {
+    const {facetId, facetSearch} = this.options;
+    const options: FacetSearchOptions = {
+      facetId,
+      ...facetSearch,
+    };
+
+    this.facetSearch = facetSearchController(this.engine, {options});
+  }
+
   private getAnalyticsActionForToggleSelect(selection: FacetValue) {
     const payload: FacetSelectionChangeMetadata = {
       facetId: this.options.facetId,
-      selection,
+      facetValue: selection.value,
     };
 
     return this.isValueSelected(selection)

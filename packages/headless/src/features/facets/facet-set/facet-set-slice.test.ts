@@ -21,6 +21,8 @@ import {executeSearch} from '../../search/search-actions';
 import {logGenericSearchEvent} from '../../analytics/analytics-actions';
 import {FacetResponse} from './facet-set-interfaces';
 import {buildMockFacetValueRequest} from '../../../test/mock-facet-value-request';
+import {selectFacetSearchResult} from '../facet-search-set/facet-search-actions';
+import {buildMockFacetSearchResult} from '../../../test/mock-facet-search-result';
 
 describe('facet-set slice', () => {
   let state: FacetSetState;
@@ -293,6 +295,48 @@ describe('facet-set slice', () => {
     const facet = buildMockFacetResponse({facetId: id});
     const action = buildExecuteSearchActionWithFacets([facet]);
 
+    expect(() => facetSetReducer(state, action)).not.toThrow();
+  });
+
+  describe('when the passed id is registered', () => {
+    const facetId = '1';
+    const rawValue = 'TED';
+
+    function dispatchSelectFacetSearchResult() {
+      const value = buildMockFacetSearchResult({rawValue});
+      const action = selectFacetSearchResult({facetId, value});
+      state = facetSetReducer(state, action);
+    }
+
+    beforeEach(() => {
+      state[facetId] = buildFacetRequest();
+    });
+
+    it('#selectFacetSearchResult adds the #value.rawValue to #currentValues with #state.selected', () => {
+      dispatchSelectFacetSearchResult();
+
+      const expectedValue = buildMockFacetValueRequest({
+        value: rawValue,
+        state: 'selected',
+      });
+
+      expect(state[facetId].currentValues).toContainEqual(expectedValue);
+    });
+
+    it('when the #value.rawValue already exists, #selectFacetSearchResult does not add a duplicate', () => {
+      dispatchSelectFacetSearchResult();
+      dispatchSelectFacetSearchResult();
+
+      const values = state[facetId].currentValues.filter(
+        (v) => v.value === rawValue
+      );
+      expect(values.length).toBe(1);
+    });
+  });
+
+  it('when the passed id is not registered, #selectFacetSearchResult does not throw', () => {
+    const value = buildMockFacetSearchResult({rawValue: 'TED'});
+    const action = selectFacetSearchResult({facetId: '1', value});
     expect(() => facetSetReducer(state, action)).not.toThrow();
   });
 });

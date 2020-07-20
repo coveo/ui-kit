@@ -3,6 +3,7 @@ import {SearchState} from './features/search/search-slice';
 import {SearchParametersState} from './search-parameters-state';
 import {StateWithHistory} from 'redux-undo';
 import {DidYouMeanState} from './features/did-you-mean/did-you-mean-slice';
+import {FacetSearchSetState} from './features/facets/facet-search-set/facet-search-set-slice';
 import {SearchAPIErrorWithStatusCode} from './api/search/search-api-error-response';
 
 export interface SearchPageState extends SearchParametersState {
@@ -10,6 +11,10 @@ export interface SearchPageState extends SearchParametersState {
    * The global headless engine configuration.
    */
   configuration: ConfigurationState;
+  /**
+   * The set of facet searches.
+   */
+  facetSearchSet: FacetSearchSetState;
   /**
    * The URL redirection triggered by the preprocessed query.
    */

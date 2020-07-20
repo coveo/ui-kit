@@ -12,6 +12,7 @@ import {
   FacetValueRequest,
 } from './facet-set-interfaces';
 import {executeSearch} from '../../search/search-actions';
+import {selectFacetSearchResult} from '../facet-search-set/facet-search-actions';
 
 export type FacetSetState = Record<string, FacetRequest>;
 
@@ -94,6 +95,30 @@ export const facetSetReducer = createReducer(
           facetRequest.freezeCurrentValues = false;
           facetRequest.preventAutoSelect = false;
         });
+      })
+      .addCase(selectFacetSearchResult, (state, action) => {
+        const {facetId, value} = action.payload;
+        const facetRequest = state[facetId];
+
+        if (!facetRequest) {
+          return;
+        }
+
+        const {rawValue} = value;
+        const matchingValues = facetRequest.currentValues.filter(
+          (v) => v.value === rawValue
+        );
+
+        if (matchingValues.length) {
+          return;
+        }
+
+        const currentValue: FacetValueRequest = {
+          value: rawValue,
+          state: 'selected',
+        };
+
+        facetRequest.currentValues.push(currentValue);
       });
   }
 );

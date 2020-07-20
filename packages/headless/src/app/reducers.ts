@@ -13,6 +13,7 @@ import {contextReducer} from '../features/context/context-slice';
 import undoable from 'redux-undo';
 import {historyReducer} from '../features/history/history-slice';
 import {didYouMeanReducer} from '../features/did-you-mean/did-you-mean-slice';
+import {facetSearchSetReducer} from '../features/facets/facet-search-set/facet-search-set-slice';
 
 /**
  * Map of reducers that make up the SearchPageState.
@@ -20,6 +21,7 @@ import {didYouMeanReducer} from '../features/did-you-mean/did-you-mean-slice';
 export const searchPageReducers: ReducersMapObject<SearchPageState> = {
   configuration: configurationReducer,
   facetSet: facetSetReducer,
+  facetSearchSet: facetSearchSetReducer,
   query: queryReducer,
   querySet: querySetReducer,
   pagination: paginationReducer,

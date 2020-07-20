@@ -9,6 +9,7 @@ import {getSortCriteriaInitialState} from '../features/sort-criteria/sort-criter
 import {getFacetSetInitialState} from '../features/facets/facet-set/facet-set-slice';
 import {getContextInitialState} from '../features/context/context-slice';
 import {getDidYouMeanInitialState} from '../features/did-you-mean/did-you-mean-slice';
+import {getFacetSearchSetInitialState} from '../features/facets/facet-search-set/facet-search-set-slice';
 import {getHistoryInitialState} from '../features/history/history-slice';
 import {newHistory} from 'redux-undo';
 
@@ -18,6 +19,7 @@ export function createMockState(
   return {
     configuration: getConfigurationInitialState(),
     facetSet: getFacetSetInitialState(),
+    facetSearchSet: getFacetSearchSetInitialState(),
     pagination: getPaginationInitialState(),
     query: getQueryInitialState(),
     querySet: getQuerySetInitialState(),

@@ -39,6 +39,7 @@ describe('facet', () => {
       facetId: '',
       field: '',
       sortCriteria: 'score',
+      facetSearch: {},
     };
 
     state = createMockState();
@@ -57,6 +58,7 @@ describe('facet', () => {
       facetId: '1',
       field: 'author',
       sortCriteria: 'alphanumeric',
+      facetSearch: {},
     };
     initFacet();
 
@@ -174,5 +176,9 @@ describe('facet', () => {
     setFacetRequest({sortCriteria: 'alphanumeric'});
 
     expect(facet.isSortedBy('score')).toBe(false);
+  });
+
+  it('exposes a #facetSearch property', () => {
+    expect(facet.facetSearch).toBeTruthy();
   });
 });

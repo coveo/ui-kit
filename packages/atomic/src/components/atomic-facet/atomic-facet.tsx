@@ -58,6 +58,27 @@ export class AtomicFacet {
     ) : null;
   }
 
+  private get facetSearchInput() {
+    return <input onInput={(e) => this.onFacetSearch(e)} />;
+  }
+
+  private onFacetSearch(e: Event) {
+    const value = (e.target as HTMLInputElement).value;
+    const facetSearch = this.facet.facetSearch;
+
+    facetSearch.updateText(value);
+    facetSearch.search();
+  }
+
+  private get facetSearchResults() {
+    const facetSearch = this.facet.facetSearch;
+    return facetSearch.state.values.map((searchResult) => (
+      <div onClick={() => facetSearch.select(searchResult)}>
+        {searchResult.displayValue} {searchResult.count}
+      </div>
+    ));
+  }
+
   private get sortSelector() {
     return (
       <select name="facetSort" onChange={(val) => this.onFacetSortChange(val)}>
@@ -90,6 +111,10 @@ export class AtomicFacet {
           <span>{this.label}</span>
           {this.sortSelector}
           {this.resetButton}
+        </div>
+        <div>
+          {this.facetSearchInput}
+          {this.facetSearchResults}
         </div>
         <div>{this.values}</div>
       </div>

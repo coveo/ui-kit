@@ -1,4 +1,4 @@
-import {FacetValue, FacetSortCriterion} from './facet-set-interfaces';
+import {FacetSortCriterion} from './facet-set-interfaces';
 import {createAsyncThunk} from '@reduxjs/toolkit';
 import {
   searchPageState,
@@ -14,8 +14,22 @@ export type FacetUpdateSortMetadata = {
 
 export type FacetSelectionChangeMetadata = {
   facetId: string;
-  selection: FacetValue;
+  facetValue: string;
 };
+
+/**
+ * Log a facet search.
+ */
+export const logFacetSearch = createAsyncThunk(
+  'analytics/facet/search',
+  async (facetId: string, {getState}) => {
+    const state = searchPageState(getState);
+    const metadata = buildFacetBaseMetadata(facetId, state);
+
+    await configureAnalytics(state).logFacetSearch(metadata);
+    return makeSearchActionType();
+  }
+);
 
 /**
  * Log a facet sort change.
@@ -81,8 +95,7 @@ function buildFacetSelectionChangeMetadata(
   payload: FacetSelectionChangeMetadata,
   state: SearchPageState
 ) {
-  const {facetId, selection} = payload;
-  const facetValue = selection.value;
+  const {facetId, facetValue} = payload;
   const base = buildFacetBaseMetadata(facetId, state);
 
   return {...base, facetValue};
