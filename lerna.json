@@ -1,8 +1,4 @@
 {
   "packages": ["packages/*"],
-  "version": "0.2.0-alpha.1",
-  "changelogPreset": {
-    "name": "conventionalcommits",
-    "issueUrlFormat": "https://coveord.atlassian.net/browse/{{id}}"
-  }
+  "version": "0.2.0-alpha.1"
 }
