@@ -1,0 +1,3 @@
+{
+  "issueUrlFormat": "https://coveord.atlassian.net/browse/{{id}}"
+}

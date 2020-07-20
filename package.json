@@ -26,9 +26,7 @@
     "gts": "^2.0.2",
     "husky": "^4.2.3",
     "lerna": "^3.20.2",
-    "lerna-semantic-release": "^9.1.0",
     "lint-staged": "^10.0.8",
-    "standard-version": "^8.0.2",
     "typedoc": "https://github.com/coveord/typedoc",
     "typescript": "^3.9.2"
   },

@@ -9,7 +9,7 @@
   },
   "types": "./dist/index.d.ts",
   "license": "Apache-2.0",
-  "version": "0.0.6",
+  "version": "0.0.1",
   "scripts": {
     "start": "rollup -c -w",
     "build": "npm run clean && npm run build:prod",
@@ -17,7 +17,8 @@
     "clean": "rm -f -r dist/*",
     "test": "jest",
     "test:watch": "jest --watch --colors --no-cache",
-    "release": "standard-version"
+    "release": "standard-version",
+    "prerelease": ""
   },
   "dependencies": {
     "@coveo/bueno": "*",
