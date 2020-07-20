@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.2.0-alpha.2](https://bitbucket.org/coveord/ui-kit/compare/v0.2.0-alpha.1...v0.2.0-alpha.2) (2020-07-20)
+
+
+### Bug Fixes
+
+* **headless:** clean ([9ed43a9](https://bitbucket.org/coveord/ui-kit/commits/9ed43a946212bcbe3d5e12f5e249edda05242d63))
+
+
+
+
+
 # [0.2.0-alpha.0](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0...v0.2.0-alpha.0) (2020-07-20)
 
 
