@@ -13,7 +13,8 @@
     "report:bundle-size:time-series": "node ./benchmark/bundle-size/time-series.js",
     "verify:merge": "node ./tools/verify-merge.js",
     "cypress:test": "lerna run cypress:test",
-    "commit": "git-cz"
+    "commit": "git-cz",
+    "release": "standard-version"
   },
   "devDependencies": {
     "@commitlint/config-conventional": "^9.1.1",
@@ -27,6 +28,7 @@
     "husky": "^4.2.3",
     "lerna": "^3.20.2",
     "lint-staged": "^10.0.8",
+    "standard-version": "^8.0.2",
     "typedoc": "https://github.com/coveord/typedoc",
     "typescript": "^3.9.2"
   },
