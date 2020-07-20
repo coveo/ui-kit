@@ -2,5 +2,8 @@
   "packages": [
     "packages/*"
   ],
-  "version": "0.2.0-alpha.1"
+  "version": "0.2.0-alpha.1",
+  "changelogPreset": {
+    "issueUrlFormat": "https://coveord.atlassian.net/browse/{{id}}"
+  }
 }
