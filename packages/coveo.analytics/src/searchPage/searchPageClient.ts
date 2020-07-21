@@ -26,6 +26,7 @@ export interface SearchPageClientProvider {
     getBaseMetadata: () => Record<string, any>;
     getSearchEventRequestPayload: () => Omit<SearchEventRequest, 'actionCause' | 'searchQueryUid'>;
     getSearchUID: () => string;
+    getPipeline: () => string;
 }
 
 export interface SearchPageClientOptions extends ClientOptions {
@@ -223,6 +224,7 @@ export class CoveoSearchPageClient {
         const payload: SearchEventRequest = {
             ...this.provider.getSearchEventRequestPayload(),
             searchQueryUid: this.provider.getSearchUID(),
+            queryPipeline: this.provider.getPipeline(),
             customData,
             actionCause: event,
         };
@@ -245,6 +247,7 @@ export class CoveoSearchPageClient {
         const payload: ClickEventRequest = {
             ...info,
             searchQueryUid: this.provider.getSearchUID(),
+            queryPipeline: this.provider.getPipeline(),
             actionCause: event,
             customData,
         };

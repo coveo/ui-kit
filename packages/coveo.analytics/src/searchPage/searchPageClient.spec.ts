@@ -13,7 +13,7 @@ describe('SearchPageClient', () => {
         documentUri: 'uri',
         documentUriHash: 'hash',
         documentUrl: 'url',
-        queryPipeline: 'pipeline',
+        queryPipeline: 'my-pipeline',
         rankingModifier: 'modifier',
         sourceName: 'source',
     };
@@ -32,6 +32,7 @@ describe('SearchPageClient', () => {
             responseTime: 123,
         }),
         getSearchUID: () => 'my-uid',
+        getPipeline: () => 'my-pipeline',
     };
 
     beforeEach(() => {
@@ -56,6 +57,7 @@ describe('SearchPageClient', () => {
         expect(JSON.parse(body.toString())).toMatchObject({
             queryText: 'queryText',
             responseTime: 123,
+            queryPipeline: 'my-pipeline',
             actionCause,
             customData,
         });
@@ -67,6 +69,7 @@ describe('SearchPageClient', () => {
         expect(JSON.parse(body.toString())).toMatchObject({
             actionCause,
             customData,
+            queryPipeline: 'my-pipeline',
             ...doc,
         });
     };
