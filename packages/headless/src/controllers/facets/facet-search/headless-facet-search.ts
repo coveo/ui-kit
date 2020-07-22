@@ -14,9 +14,9 @@ export interface FacetSearchProps {
   options: FacetSearchOptions;
 }
 
-export type FacetSearch = ReturnType<typeof facetSearchController>;
+export type FacetSearch = ReturnType<typeof buildFacetSearch>;
 
-export function facetSearchController(engine: Engine, props: FacetSearchProps) {
+export function buildFacetSearch(engine: Engine, props: FacetSearchProps) {
   const dispatch = engine.dispatch;
   const facetId = props.options.facetId;
 

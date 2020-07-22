@@ -19,3 +19,12 @@ export abstract class Controller<State = SearchPageState> {
     return this.engine.dispatch;
   }
 }
+
+export function buildController(engine: Engine) {
+  const subscribe = (listener: () => void) => {
+    listener();
+    return engine.subscribe(() => listener());
+  };
+
+  return {subscribe};
+}

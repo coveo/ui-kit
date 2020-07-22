@@ -1,6 +1,7 @@
 import {Component, h, State, Prop} from '@stencil/core';
 import {
   Facet,
+  buildFacet,
   FacetState,
   FacetValue,
   Unsubscribe,
@@ -24,7 +25,7 @@ export class AtomicFacet {
 
   constructor() {
     const options: FacetOptions = {field: this.field};
-    this.facet = new Facet(headlessEngine, {options});
+    this.facet = buildFacet(headlessEngine, {options});
     this.unsubscribe = this.facet.subscribe(() => this.updateState());
   }
 

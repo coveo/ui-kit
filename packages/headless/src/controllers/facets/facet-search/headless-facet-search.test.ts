@@ -1,5 +1,5 @@
 import {
-  facetSearchController,
+  buildFacetSearch,
   FacetSearch,
   FacetSearchProps,
 } from './headless-facet-search';
@@ -11,7 +11,7 @@ import {
   selectFacetSearchResult,
 } from '../../../features/facets/facet-search-set/facet-search-actions';
 import {buildMockFacetSearchResponse} from '../../../test/mock-facet-search-response';
-import {buildFacetSearch} from '../../../features/facets/facet-search-set/facet-search-set-slice';
+import {buildFacetSearchState} from '../../../features/facets/facet-search-set/facet-search-set-slice';
 import {buildMockFacetSearchResult} from '../../../test/mock-facet-search-result';
 import {executeSearch} from '../../../features/search/search-actions';
 
@@ -21,7 +21,7 @@ describe('FacetSearch', () => {
   let controller: FacetSearch;
 
   function initFacetSearch() {
-    controller = facetSearchController(engine, props);
+    controller = buildFacetSearch(engine, props);
   }
 
   function getFacetId() {
@@ -84,7 +84,7 @@ describe('FacetSearch', () => {
     const facetId = getFacetId();
     const response = buildMockFacetSearchResponse();
 
-    engine.state.facetSearchSet[facetId] = buildFacetSearch({response});
+    engine.state.facetSearchSet[facetId] = buildFacetSearchState({response});
     expect(controller.state).toEqual(response);
   });
 });

@@ -1,4 +1,4 @@
-import {Facet, ValidatedFacetOptions} from './headless-facet';
+import {buildFacet, Facet, ValidatedFacetOptions} from './headless-facet';
 import {MockEngine, buildMockEngine} from '../../../test/mock-engine';
 import {
   registerFacet,
@@ -23,7 +23,7 @@ describe('facet', () => {
 
   function initFacet() {
     engine = buildMockEngine({state});
-    facet = new Facet(engine, {options});
+    facet = buildFacet(engine, {options});
   }
 
   function setFacetRequest(config: Partial<FacetRequest> = {}) {

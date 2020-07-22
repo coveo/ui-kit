@@ -8,7 +8,7 @@ import {
   FacetSearchSetState,
   facetSearchSetReducer,
   getFacetSearchSetInitialState,
-  buildFacetSearch,
+  buildFacetSearchState,
   buildFacetSearchOptions,
 } from './facet-search-set-slice';
 import {buildMockFacetSearchResponse} from '../../../test/mock-facet-search-response';
@@ -44,7 +44,7 @@ describe('FacetSearch slice', () => {
 
   it('registering a facet search with an id that already exists does not overwrite the existing facet', () => {
     const facetId = '1';
-    state[facetId] = buildFacetSearch();
+    state[facetId] = buildFacetSearchState();
 
     const options = buildFacetSearchOptions({numberOfValues: 5});
     const finalState = facetSearchSetReducer(
@@ -57,7 +57,7 @@ describe('FacetSearch slice', () => {
 
   it('when passing an id that is registered, #updateFacetSearch updates the options', () => {
     const facetId = '1';
-    state[facetId] = buildFacetSearch();
+    state[facetId] = buildFacetSearchState();
 
     const options = buildFacetSearchOptions();
     const finalState = facetSearchSetReducer(
@@ -81,7 +81,7 @@ describe('FacetSearch slice', () => {
 
   it('on #executeFacetSearch.fulfilled with a registered id, it updates the facetSearch response', () => {
     const facetId = '1';
-    state[facetId] = buildFacetSearch();
+    state[facetId] = buildFacetSearchState();
 
     const values = [buildMockFacetSearchResult()];
     const response = buildMockFacetSearchResponse({values});

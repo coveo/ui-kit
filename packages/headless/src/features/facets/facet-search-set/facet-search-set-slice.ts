@@ -7,12 +7,12 @@ import {
 import {FacetSearchRequestOptions} from './facet-search-request-options';
 import {FacetSearchResponse} from '../../../api/search/facet-search/api/response';
 
-type FacetSearch = {
+type FacetSearchState = {
   options: FacetSearchRequestOptions;
   response: FacetSearchResponse;
 };
 
-export type FacetSearchSetState = Record<string, FacetSearch>;
+export type FacetSearchSetState = Record<string, FacetSearchState>;
 
 export function getFacetSearchSetInitialState(): FacetSearchSetState {
   return {};
@@ -31,7 +31,7 @@ export const facetSearchSetReducer = createReducer(
         }
 
         const options = buildFacetSearchOptions(payload);
-        state[facetId] = buildFacetSearch({options});
+        state[facetId] = buildFacetSearchState({options});
       })
       .addCase(updateFacetSearch, (state, action) => {
         const {facetId, ...rest} = action.payload;
@@ -56,9 +56,9 @@ export const facetSearchSetReducer = createReducer(
   }
 );
 
-export function buildFacetSearch(
-  config: Partial<FacetSearch> = {}
-): FacetSearch {
+export function buildFacetSearchState(
+  config: Partial<FacetSearchState> = {}
+): FacetSearchState {
   return {
     options: buildFacetSearchOptions(),
     response: buildNullFacetSearchResponse(),
