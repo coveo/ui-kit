@@ -5,6 +5,7 @@ import {
   StateFromReducersMapObject,
   Middleware,
 } from '@reduxjs/toolkit';
+import {analyticsMiddleware} from './analytics-middleware';
 
 interface ConfigureStoreOptions<Reducers extends ReducersMapObject> {
   reducers: Reducers;
@@ -26,8 +27,11 @@ export function configureStore<Reducers extends ReducersMapObject>({
           ? {...state, history: '<<OMIT>>'}
           : state,
     },
-    middleware: (getDefaultMiddleware) =>
-      getDefaultMiddleware().concat(middlewares),
+    middleware: (getDefaultMiddleware) => [
+      analyticsMiddleware,
+      ...middlewares,
+      ...getDefaultMiddleware(),
+    ],
   });
 
   return store;

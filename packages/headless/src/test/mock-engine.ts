@@ -4,6 +4,7 @@ import configureStore, {MockStoreEnhanced} from 'redux-mock-store';
 import {AnyAction, ThunkDispatch, getDefaultMiddleware} from '@reduxjs/toolkit';
 import {SearchPageState} from '../state';
 import thunk from 'redux-thunk';
+import {analyticsMiddleware} from '../app/analytics-middleware';
 
 export interface MockEngine extends Engine {
   store: MockStore;
@@ -31,8 +32,10 @@ export function buildMockEngine(config: Partial<Engine> = {}): MockEngine {
 
 type DispatchExts = ThunkDispatch<SearchPageState, void, AnyAction>;
 const configureMockStore = () => {
-  return configureStore<SearchPageState, DispatchExts>(
-    getDefaultMiddleware().concat(thunk)
-  );
+  return configureStore<SearchPageState, DispatchExts>([
+    analyticsMiddleware,
+    thunk,
+    ...getDefaultMiddleware(),
+  ]);
 };
 type MockStore = MockStoreEnhanced<SearchPageState, DispatchExts>;

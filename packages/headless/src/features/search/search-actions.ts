@@ -17,6 +17,7 @@ export interface ExecuteSearchThunkReturn {
   duration: number;
   queryExecuted: string;
   automaticallyCorrected: boolean;
+  analyticsAction: SearchAction;
 }
 
 const fetchFromAPI = async (state: SearchPageState) => {
@@ -44,7 +45,6 @@ export const executeSearch = createAsyncThunk<
   ) => {
     const state = getState() as SearchPageState;
     const fetched = await fetchFromAPI(state);
-    dispatch(analyticsAction);
 
     if (isErrorResponse(fetched.response)) {
       return rejectWithValue(fetched.response.error);
@@ -58,6 +58,7 @@ export const executeSearch = createAsyncThunk<
         ...fetched,
         response: fetched.response.success,
         automaticallyCorrected: false,
+        analyticsAction,
       };
     }
 
@@ -77,6 +78,7 @@ export const executeSearch = createAsyncThunk<
       ...retried,
       response: retried.response.success,
       automaticallyCorrected: true,
+      analyticsAction,
     };
   }
 );
