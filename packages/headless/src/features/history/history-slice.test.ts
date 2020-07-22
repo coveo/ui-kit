@@ -65,6 +65,7 @@ describe('history slice', () => {
       query: {q: 'foo'},
       querySet: {foo: 'bar', hello: 'world'},
       sortCriteria: 'date descending',
+      pipeline: 'my-pipeline',
     };
 
     expect(addSnapshot(expectedSnapshot).present).toEqual(expectedSnapshot);
@@ -99,6 +100,13 @@ describe('history slice', () => {
   });
 
   describe('should consider snapshot entry to be different', () => {
+    it('for #pipeline', () => {
+      expectHistoryToHaveCreatedDifferentSnapshots(
+        getSnapshot({pipeline: 'foo'}),
+        getSnapshot({pipeline: 'bar'})
+      );
+    });
+
     it('for #query', () => {
       expectHistoryToHaveCreatedDifferentSnapshots(
         getSnapshot({query: {q: '1'}}),

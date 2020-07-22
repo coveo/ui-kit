@@ -26,6 +26,7 @@ describe('search api client', () => {
         organizationId: state.configuration.organizationId,
         q: state.query.q,
         context: state.context.contextValues,
+        pipeline: state.pipeline,
       },
     };
 
@@ -51,6 +52,7 @@ describe('search api client', () => {
         q: state.querySuggest[id]!.q,
         count: state.querySuggest[id]!.count,
         context: state.context.contextValues,
+        pipeline: state.pipeline,
       },
     };
 

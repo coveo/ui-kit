@@ -30,4 +30,8 @@ export interface SearchParametersState {
    * The set of basic query expressions.
    */
   querySet: QuerySetState;
+  /**
+   * Specifies the name of the query pipeline to use for the query. If not specified, the default query pipeline will be used.
+   */
+  pipeline: string;
 }

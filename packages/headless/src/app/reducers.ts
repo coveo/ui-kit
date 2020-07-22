@@ -14,6 +14,7 @@ import undoable from 'redux-undo';
 import {historyReducer} from '../features/history/history-slice';
 import {didYouMeanReducer} from '../features/did-you-mean/did-you-mean-slice';
 import {facetSearchSetReducer} from '../features/facets/facet-search-set/facet-search-set-slice';
+import {pipelineReducer} from '../features/pipeline/pipeline-slice';
 
 /**
  * Map of reducers that make up the SearchPageState.
@@ -32,4 +33,5 @@ export const searchPageReducers: ReducersMapObject<SearchPageState> = {
   context: contextReducer,
   history: undoable(historyReducer),
   didYouMean: didYouMeanReducer,
+  pipeline: pipelineReducer,
 };

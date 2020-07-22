@@ -116,4 +116,5 @@ const extractHistory = (state: SearchPageState) => ({
   query: state.query,
   querySet: state.querySet,
   sortCriteria: state.sortCriteria,
+  pipeline: state.pipeline,
 });

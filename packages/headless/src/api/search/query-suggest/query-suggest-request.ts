@@ -18,6 +18,10 @@ export const querySuggestRequestParams = (
    * Specifies the context that Coveo Machine Learning should leverage to return suggestions.
    */
   context: state.context.contextValues,
+  /**
+   * Specifies the name of the query pipeline to use for the query. If not specified, the default query pipeline will be used.
+   */
+  pipeline: state.pipeline,
 });
 
 export type QuerySuggestRequestParams = ReturnType<

@@ -11,6 +11,7 @@ export function buildMockSearchRequest(
     numberOfResults: 10,
     q: '',
     sortCriteria: 'relevancy',
+    pipeline: '',
     ...config,
   };
 }

@@ -21,6 +21,10 @@ export class AnalyticsProvider implements SearchPageClientProvider {
     return this.state.search.response.searchUid;
   }
 
+  public getPipeline() {
+    return this.state.pipeline;
+  }
+
   private mapResultsToAnalyticsDocument() {
     return this.state.search.response.results.map((r) => ({
       documentUri: r.uri,

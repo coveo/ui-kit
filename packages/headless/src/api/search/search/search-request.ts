@@ -11,6 +11,7 @@ export interface SearchRequest {
   facets: FacetRequest[];
   context: Context;
   enableDidYouMean: boolean;
+  pipeline: string;
 }
 
 /** The search request parameters. For a full description, refer to {@link https://docs.coveo.com/en/13/cloud-v2-api-reference/search-api#operation/searchUsingPost}*/
@@ -23,6 +24,7 @@ export const searchRequestParams = (state: SearchPageState): SearchRequest => {
     facets: getFacets(state),
     context: state.context.contextValues,
     enableDidYouMean: state.didYouMean.enableDidYouMean,
+    pipeline: state.pipeline,
   };
 };
 

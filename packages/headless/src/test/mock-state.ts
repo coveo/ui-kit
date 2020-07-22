@@ -12,6 +12,7 @@ import {getDidYouMeanInitialState} from '../features/did-you-mean/did-you-mean-s
 import {getFacetSearchSetInitialState} from '../features/facets/facet-search-set/facet-search-set-slice';
 import {getHistoryInitialState} from '../features/history/history-slice';
 import {newHistory} from 'redux-undo';
+import {getPipelineInitialState} from '../features/pipeline/pipeline-slice';
 
 export function createMockState(
   config: Partial<SearchPageState> = {}
@@ -30,6 +31,7 @@ export function createMockState(
     context: getContextInitialState(),
     didYouMean: getDidYouMeanInitialState(),
     history: newHistory([], getHistoryInitialState(), []),
+    pipeline: getPipelineInitialState(),
     ...config,
   };
 }

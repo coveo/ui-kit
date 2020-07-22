@@ -15,6 +15,7 @@ import {
 } from '../pagination/pagination-slice';
 import {QueryState} from '../../state';
 import {SortState} from '../../controllers/sort/headless-sort';
+import {getPipelineInitialState} from '../pipeline/pipeline-slice';
 
 export const getHistoryInitialState = (): SearchParametersState => ({
   context: getContextInitialState(),
@@ -23,6 +24,7 @@ export const getHistoryInitialState = (): SearchParametersState => ({
   query: getQueryInitialState(),
   sortCriteria: getSortCriteriaInitialState(),
   querySet: getQuerySetInitialState(),
+  pipeline: getPipelineInitialState(),
 });
 
 export const historyReducer = createReducer(
@@ -43,7 +45,8 @@ const isEqual = (
     isFacetsEqual(current.facetSet, next.facetSet) &&
     isPaginationEqual(current.pagination, next.pagination) &&
     isQueryEqual(current.query, next.query) &&
-    isSortEqual(current, next)
+    isSortEqual(current, next) &&
+    isPipelineEqual(current.pipeline, next.pipeline)
   );
 };
 
@@ -62,3 +65,5 @@ const isQueryEqual = (current: QueryState, next: QueryState) =>
 
 const isSortEqual = (current: SortState, next: SortState) =>
   current.sortCriteria === next.sortCriteria;
+
+const isPipelineEqual = (current: string, next: string) => current === next;
