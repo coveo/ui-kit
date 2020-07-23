@@ -14,6 +14,7 @@ import undoable from 'redux-undo';
 import {historyReducer} from '../features/history/history-slice';
 import {didYouMeanReducer} from '../features/did-you-mean/did-you-mean-slice';
 import {facetSearchSetReducer} from '../features/facets/facet-search-set/facet-search-set-slice';
+import {rangeFacetSetReducer} from '../features/facets/range-facet-set/range-facet-set-slice';
 import {pipelineReducer} from '../features/pipeline/pipeline-slice';
 
 /**
@@ -22,6 +23,7 @@ import {pipelineReducer} from '../features/pipeline/pipeline-slice';
 export const searchPageReducers: ReducersMapObject<SearchPageState> = {
   configuration: configurationReducer,
   facetSet: facetSetReducer,
+  rangeFacetSet: rangeFacetSetReducer,
   facetSearchSet: facetSearchSetReducer,
   query: queryReducer,
   querySet: querySetReducer,

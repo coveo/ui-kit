@@ -1,7 +1,7 @@
 import {createMockState} from '../../../test/mock-state';
 import {buildMockFacetResponse} from '../../../test/mock-facet-response';
 import {facetSelector, facetRequestSelector} from './facet-set-selectors';
-import {buildFacetRequest} from './facet-set-slice';
+import {buildMockFacetRequest} from '../../../test/mock-facet-request';
 
 describe('facet-set selectors', () => {
   it('#facetSelector gets the facet response by id', () => {
@@ -21,7 +21,7 @@ describe('facet-set selectors', () => {
   it('#facetRequestSelector gets the facet request by id', () => {
     const facetId = '1';
     const state = createMockState();
-    const facetRequest = buildFacetRequest({facetId});
+    const facetRequest = buildMockFacetRequest({facetId});
     state.facetSet[facetId] = facetRequest;
 
     expect(facetRequestSelector(state, facetId)).toBe(facetRequest);

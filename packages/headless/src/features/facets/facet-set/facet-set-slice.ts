@@ -7,13 +7,11 @@ import {
   updateFacetSortCriterion,
   updateFacetNumberOfValues,
 } from './facet-set-actions';
-import {
-  FacetRequest,
-  FacetValue,
-  FacetValueRequest,
-} from './facet-set-interfaces';
 import {executeSearch} from '../../search/search-actions';
 import {selectFacetSearchResult} from '../facet-search-set/facet-search-actions';
+import {FacetRequest, FacetValueRequest} from './interfaces/request';
+import {FacetValue} from './interfaces/response';
+import {FacetRegistrationOptions} from './interfaces/options';
 
 export type FacetSetState = Record<string, FacetRequest>;
 
@@ -134,15 +132,11 @@ export const facetSetReducer = createReducer(
   }
 );
 
-export function buildFacetRequest(
-  config: Partial<FacetRequest> = {}
-): FacetRequest {
+function buildFacetRequest(config: FacetRegistrationOptions): FacetRequest {
   return {
     type: 'specific',
-    facetId: '',
     currentValues: [],
     delimitingCharacter: '>',
-    field: '',
     filterFacetCount: true,
     freezeCurrentValues: false,
     injectionDepth: 1000,

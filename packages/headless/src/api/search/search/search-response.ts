@@ -1,5 +1,5 @@
 import {Result} from './result';
-import {FacetResponse} from '../../../features/facets/facet-set/facet-set-interfaces';
+import {FacetResponse} from '../../../features/facets/facet-set/interfaces/response';
 import {
   SearchAPIErrorWithExceptionInBody,
   SearchAPIErrorWithStatusCode,

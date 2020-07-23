@@ -1,3 +1,5 @@
+import {FacetValueState} from './value';
+
 export interface BaseFacetRequest {
   facetId: string;
   field: string;
@@ -6,6 +8,10 @@ export interface BaseFacetRequest {
   isFieldExpanded: boolean;
   numberOfValues: number;
   preventAutoSelect: boolean;
+}
+
+export interface BaseFacetValueRequest {
+  state: FacetValueState;
 }
 
 export interface CurrentValues<T> {

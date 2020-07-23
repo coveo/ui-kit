@@ -6,7 +6,6 @@ import {
   toggleSelectFacetValue,
   deselectAllFacetValues,
   updateFacetSortCriterion,
-  FacetRegistrationOptions,
   updateFacetNumberOfValues,
 } from '../../../features/facets/facet-set/facet-set-actions';
 import {randomID} from '../../../utils/utils';
@@ -14,11 +13,7 @@ import {
   facetSelector,
   facetRequestSelector,
 } from '../../../features/facets/facet-set/facet-set-selectors';
-import {
-  FacetValue,
-  FacetSortCriterion,
-  FacetRequestOptions,
-} from '../../../features/facets/facet-set/facet-set-interfaces';
+import {FacetOptionalParameters} from '../../../features/facets/facet-set/interfaces/options';
 import {executeSearch} from '../../../features/search/search-actions';
 import {
   FacetSelectionChangeMetadata,
@@ -32,6 +27,9 @@ import {
 import {buildFacetSearch} from '../facet-search/headless-facet-search';
 import {FacetSearchRequestOptions} from '../../../features/facets/facet-search-set/facet-search-request-options';
 import {FacetSearchOptions} from '../../../features/facets/facet-search-set/facet-search-actions';
+import {FacetRegistrationOptions} from '../../../features/facets/facet-set/interfaces/options';
+import {FacetValue} from '../../../features/facets/facet-set/interfaces/response';
+import {FacetSortCriterion} from '../../../features/facets/facet-set/interfaces/request';
 
 export type Facet = ReturnType<typeof buildFacet>;
 export type FacetState = Facet['state'];
@@ -54,7 +52,7 @@ const schema = new Schema({
   numberOfValues: new NumberValue({default: 8, min: 1}),
 });
 
-export type FacetOptions = FacetRequestOptions & {
+export type FacetOptions = FacetOptionalParameters & {
   field: string;
   facetId?: string;
   facetSearch?: Partial<FacetSearchRequestOptions>;

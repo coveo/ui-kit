@@ -12,8 +12,8 @@ import {createMockState} from '../../../test/mock-state';
 import {buildMockFacetResponse} from '../../../test/mock-facet-response';
 import {buildMockFacetValue} from '../../../test/mock-facet-value';
 import {executeSearch} from '../../../features/search/search-actions';
-import {FacetRequest} from '../../../features/facets/facet-set/facet-set-interfaces';
-import {buildFacetRequest} from '../../../features/facets/facet-set/facet-set-slice';
+import {FacetRequest} from '../../../features/facets/facet-set/interfaces/request';
+import {buildMockFacetRequest} from '../../../test/mock-facet-request';
 
 describe('facet', () => {
   let options: ValidatedFacetOptions;
@@ -28,7 +28,7 @@ describe('facet', () => {
 
   function setFacetRequest(config: Partial<FacetRequest> = {}) {
     const facetId = options.facetId;
-    const request = buildFacetRequest({facetId, ...config});
+    const request = buildMockFacetRequest({facetId, ...config});
     state.facetSet[facetId] = request;
   }
 

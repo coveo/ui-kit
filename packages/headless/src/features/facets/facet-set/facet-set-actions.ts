@@ -1,13 +1,7 @@
 import {createAction} from '@reduxjs/toolkit';
-import {
-  FacetValue,
-  FacetSortCriterion,
-  FacetRequest,
-  FacetRequestOptions,
-} from './facet-set-interfaces';
-
-export type FacetRegistrationOptions = Pick<FacetRequest, 'facetId' | 'field'> &
-  FacetRequestOptions;
+import {FacetRegistrationOptions} from './interfaces/options';
+import {FacetValue} from './interfaces/response';
+import {FacetSortCriterion} from './interfaces/request';
 
 /**
  * Register a facet in the facet set.

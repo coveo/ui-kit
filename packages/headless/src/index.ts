@@ -36,11 +36,8 @@ export * as searchActions from './features/search/search-actions';
 export * as facetActions from './features/facets/facet-set/facet-set-actions';
 export * as historyActions from './features/history/history-actions';
 export * as pipelineActions from './features/pipeline/pipeline-actions';
-export {
-  FacetValue,
-  FacetSortCriterion,
-} from './features/facets/facet-set/facet-set-interfaces';
-
+export {FacetValue} from './features/facets/facet-set/interfaces/response';
+export {FacetSortCriterion} from './features/facets/facet-set/interfaces/request';
 export * from './features/sort-criteria/criteria';
 
 export * from './features/pagination/pagination-selectors';

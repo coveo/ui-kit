@@ -2,14 +2,12 @@ import {
   facetSetReducer,
   FacetSetState,
   getFacetSetInitialState,
-  buildFacetRequest,
   convertFacetValueToRequest,
 } from './facet-set-slice';
 import {getHistoryInitialState} from '../../history/history-slice';
 import {change} from '../../history/history-actions';
 import {
   registerFacet,
-  FacetRegistrationOptions,
   toggleSelectFacetValue,
   deselectAllFacetValues,
   updateFacetSortCriterion,
@@ -20,10 +18,12 @@ import {buildMockSearch} from '../../../test/mock-search';
 import {buildMockFacetResponse} from '../../../test/mock-facet-response';
 import {executeSearch} from '../../search/search-actions';
 import {logGenericSearchEvent} from '../../analytics/analytics-actions';
-import {FacetResponse} from './facet-set-interfaces';
 import {buildMockFacetValueRequest} from '../../../test/mock-facet-value-request';
 import {selectFacetSearchResult} from '../facet-search-set/facet-search-actions';
 import {buildMockFacetSearchResult} from '../../../test/mock-facet-search-result';
+import {FacetRegistrationOptions} from './interfaces/options';
+import {FacetResponse} from './interfaces/response';
+import {buildMockFacetRequest} from '../../../test/mock-facet-request';
 
 describe('facet-set slice', () => {
   let state: FacetSetState;
@@ -95,7 +95,7 @@ describe('facet-set slice', () => {
 
   it('if a facet request is already registered for an id, it does not overwrite the request', () => {
     const id = '1';
-    state[id] = buildFacetRequest();
+    state[id] = buildMockFacetRequest();
 
     const options = buildRegistrationOptions({facetId: id, field: 'author'});
     const action = registerFacet(options);
@@ -107,7 +107,7 @@ describe('facet-set slice', () => {
   it('allows to restore a facet set on history change', () => {
     const state = getFacetSetInitialState();
     const expectedFacetSet = {
-      foo: buildFacetRequest(),
+      foo: buildMockFacetRequest(),
     };
     const historyChange = {
       ...getHistoryInitialState(),
@@ -127,7 +127,7 @@ describe('facet-set slice', () => {
     const facetValue = buildMockFacetValue({value: 'TED'});
     const facetValueRequest = convertFacetValueToRequest(facetValue);
 
-    state[id] = buildFacetRequest({currentValues: [facetValueRequest]});
+    state[id] = buildMockFacetRequest({currentValues: [facetValueRequest]});
 
     const action = toggleSelectFacetValue({
       facetId: id,
@@ -147,7 +147,7 @@ describe('facet-set slice', () => {
     const facetValue = buildMockFacetValue({value: 'TED', state: 'selected'});
     const facetValueRequest = convertFacetValueToRequest(facetValue);
 
-    state[id] = buildFacetRequest({currentValues: [facetValueRequest]});
+    state[id] = buildMockFacetRequest({currentValues: [facetValueRequest]});
 
     const action = toggleSelectFacetValue({
       facetId: id,
@@ -167,7 +167,7 @@ describe('facet-set slice', () => {
     const facetValue = buildMockFacetValue({value: 'TED'});
     const facetValueRequest = convertFacetValueToRequest(facetValue);
 
-    state[id] = buildFacetRequest({currentValues: [facetValueRequest]});
+    state[id] = buildMockFacetRequest({currentValues: [facetValueRequest]});
 
     const action = toggleSelectFacetValue({
       facetId: id,
@@ -184,7 +184,7 @@ describe('facet-set slice', () => {
     const facetValue = buildMockFacetValue({value: 'TED'});
     const facetValueRequest = convertFacetValueToRequest(facetValue);
 
-    state[id] = buildFacetRequest({currentValues: [facetValueRequest]});
+    state[id] = buildMockFacetRequest({currentValues: [facetValueRequest]});
 
     const action = toggleSelectFacetValue({
       facetId: id,
@@ -213,7 +213,7 @@ describe('facet-set slice', () => {
       const facetValueRequest = buildMockFacetValueRequest({
         state: 'selected',
       });
-      state[id] = buildFacetRequest({currentValues: [facetValueRequest]});
+      state[id] = buildMockFacetRequest({currentValues: [facetValueRequest]});
       finalState = facetSetReducer(state, deselectAllFacetValues(id));
     });
 
@@ -238,7 +238,7 @@ describe('facet-set slice', () => {
     const id = '1';
     const criterion = 'alphanumeric';
 
-    state[id] = buildFacetRequest();
+    state[id] = buildMockFacetRequest();
 
     const action = updateFacetSortCriterion({facetId: id, criterion});
     const finalState = facetSetReducer(state, action);
@@ -257,7 +257,7 @@ describe('facet-set slice', () => {
 
   it('dispatching #updateFacetNumberOfValues with a registered id updates the number of values', () => {
     const facetId = '1';
-    state[facetId] = buildFacetRequest();
+    state[facetId] = buildMockFacetRequest();
     const numberOfValues = 20;
 
     const action = updateFacetNumberOfValues({facetId, numberOfValues});
@@ -279,7 +279,7 @@ describe('facet-set slice', () => {
     const facetValue = buildMockFacetValue({value: 'TED'});
     const facet = buildMockFacetResponse({facetId: id, values: [facetValue]});
 
-    state[id] = buildFacetRequest({facetId: id});
+    state[id] = buildMockFacetRequest({facetId: id});
 
     const action = buildExecuteSearchActionWithFacets([facet]);
     const finalState = facetSetReducer(state, action);
@@ -290,7 +290,7 @@ describe('facet-set slice', () => {
 
   it('#executeSearch.fulfilled sets #freezeCurrentValues to false', () => {
     const id = '1';
-    state[id] = buildFacetRequest({freezeCurrentValues: true});
+    state[id] = buildMockFacetRequest({freezeCurrentValues: true});
 
     const facet = buildMockFacetResponse({facetId: id});
     const action = buildExecuteSearchActionWithFacets([facet]);
@@ -301,7 +301,7 @@ describe('facet-set slice', () => {
 
   it('#executeSearch.fulfilled sets #preventAutoSelect to false', () => {
     const id = '1';
-    state[id] = buildFacetRequest({preventAutoSelect: true});
+    state[id] = buildMockFacetRequest({preventAutoSelect: true});
 
     const facet = buildMockFacetResponse({facetId: id});
     const action = buildExecuteSearchActionWithFacets([facet]);
@@ -329,7 +329,7 @@ describe('facet-set slice', () => {
     }
 
     beforeEach(() => {
-      state[facetId] = buildFacetRequest();
+      state[facetId] = buildMockFacetRequest();
     });
 
     it('#selectFacetSearchResult adds the #value.rawValue to #currentValues with #state.selected', () => {

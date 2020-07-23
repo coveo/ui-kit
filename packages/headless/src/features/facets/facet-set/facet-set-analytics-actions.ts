@@ -1,4 +1,4 @@
-import {FacetSortCriterion} from './facet-set-interfaces';
+import {FacetSortCriterion} from './interfaces/request';
 import {createAsyncThunk} from '@reduxjs/toolkit';
 import {
   searchPageState,

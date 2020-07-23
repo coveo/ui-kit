@@ -12,6 +12,7 @@ import {getDidYouMeanInitialState} from '../features/did-you-mean/did-you-mean-s
 import {getFacetSearchSetInitialState} from '../features/facets/facet-search-set/facet-search-set-slice';
 import {getHistoryInitialState} from '../features/history/history-slice';
 import {newHistory} from 'redux-undo';
+import {getRangeFacetSetInitialState} from '../features/facets/range-facet-set/range-facet-set-slice';
 import {getPipelineInitialState} from '../features/pipeline/pipeline-slice';
 
 export function createMockState(
@@ -20,6 +21,7 @@ export function createMockState(
   return {
     configuration: getConfigurationInitialState(),
     facetSet: getFacetSetInitialState(),
+    rangeFacetSet: getRangeFacetSetInitialState(),
     facetSearchSet: getFacetSearchSetInitialState(),
     pagination: getPaginationInitialState(),
     query: getQueryInitialState(),

@@ -1,10 +1,10 @@
 import {createMockState} from '../../../../test/mock-state';
-import {buildFacetRequest} from '../../../../features/facets/facet-set/facet-set-slice';
 import {buildFacetSearchState} from '../../../../features/facets/facet-search-set/facet-search-set-slice';
 import {facetSearchRequestParams} from './facet-search-request';
 import {SearchPageState} from '../../../../state';
 import {buildMockFacetValueRequest} from '../../../../test/mock-facet-value-request';
 import {buildMockSearchRequest} from '../../../../test/mock-search-request';
+import {buildMockFacetRequest} from '../../../../test/mock-facet-request';
 
 describe('facetSearchRequestParams', () => {
   const id = '1';
@@ -12,7 +12,7 @@ describe('facetSearchRequestParams', () => {
 
   function setupState() {
     state = createMockState();
-    state.facetSet[id] = buildFacetRequest();
+    state.facetSet[id] = buildMockFacetRequest();
     state.facetSearchSet[id] = buildFacetSearchState();
   }
 

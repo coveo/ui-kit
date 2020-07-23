@@ -1,14 +1,15 @@
 import {SearchPageState} from '../../../state';
 import {getQParam} from '../search-request';
-import {FacetRequest} from '../../../features/facets/facet-set/facet-set-interfaces';
+import {FacetRequest} from '../../../features/facets/facet-set/interfaces/request';
 import {Context} from '../../../features/context/context-slice';
+import {RangeFacetRequest} from '../../../features/facets/range-facet-set/interfaces/request';
 
 export interface SearchRequest {
   q: string;
   numberOfResults: number;
   sortCriteria: string;
   firstResult: number;
-  facets: FacetRequest[];
+  facets: (FacetRequest | RangeFacetRequest)[];
   context: Context;
   enableDidYouMean: boolean;
   pipeline: string;
@@ -29,10 +30,15 @@ export const searchRequestParams = (state: SearchPageState): SearchRequest => {
 };
 
 function getFacets(state: SearchPageState) {
-  return getFacetRequests(state);
+  return [...getFacetRequests(state), ...getRangeFacetRequests(state)];
 }
 
-function getFacetRequests(state: SearchPageState): FacetRequest[] {
+function getFacetRequests(state: SearchPageState) {
   const requests = state.facetSet;
+  return Object.keys(requests).map((id) => requests[id]);
+}
+
+function getRangeFacetRequests(state: SearchPageState) {
+  const requests = state.rangeFacetSet;
   return Object.keys(requests).map((id) => requests[id]);
 }

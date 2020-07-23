@@ -1,10 +1,11 @@
 import {historyReducer, getHistoryInitialState} from './history-slice';
 import {SearchParametersState} from '../../search-parameters-state';
-import {buildFacetRequest} from '../facets/facet-set/facet-set-slice';
 import {snapshot} from './history-actions';
 import undoable, {newHistory} from 'redux-undo';
 import {StateWithHistory} from 'redux-undo';
 import {Reducer} from 'redux';
+import {buildMockRangeFacetRequest} from '../../test/mock-range-facet-request';
+import {buildMockFacetRequest} from '../../test/mock-facet-request';
 
 describe('history slice', () => {
   let undoableReducer: Reducer<StateWithHistory<SearchParametersState>>;
@@ -56,7 +57,8 @@ describe('history slice', () => {
   it('allows to add a snapshot to the state', () => {
     const expectedSnapshot: SearchParametersState = {
       context: {contextValues: {foo: 'bar'}},
-      facetSet: {foo: buildFacetRequest()},
+      facetSet: {foo: buildMockFacetRequest()},
+      rangeFacetSet: {bar: buildMockRangeFacetRequest()},
       pagination: {
         firstResult: 123,
         numberOfResults: 456,
@@ -130,16 +132,23 @@ describe('history slice', () => {
 
     it('for #facetSet keys', () => {
       expectHistoryToHaveCreatedDifferentSnapshots(
-        getSnapshot({facetSet: {foo: buildFacetRequest()}}),
-        getSnapshot({facetSet: {foo2: buildFacetRequest()}})
+        getSnapshot({facetSet: {foo: buildMockFacetRequest()}}),
+        getSnapshot({facetSet: {foo2: buildMockFacetRequest()}})
+      );
+    });
+
+    it('for #rangeFacetSet keys', () => {
+      expectHistoryToHaveCreatedDifferentSnapshots(
+        getSnapshot({rangeFacetSet: {foo: buildMockRangeFacetRequest()}}),
+        getSnapshot({rangeFacetSet: {foo2: buildMockRangeFacetRequest()}})
       );
     });
 
     it('should consider different snapshot for facet set values', () => {
       expectHistoryToHaveCreatedDifferentSnapshots(
-        getSnapshot({facetSet: {foo: buildFacetRequest()}}),
+        getSnapshot({facetSet: {foo: buildMockFacetRequest()}}),
         getSnapshot({
-          facetSet: {foo: {...buildFacetRequest(), field: '@different'}},
+          facetSet: {foo: buildMockFacetRequest({field: '@different'})},
         })
       );
     });

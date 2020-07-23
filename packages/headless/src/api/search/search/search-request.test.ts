@@ -1,7 +1,8 @@
 import {searchRequestParams} from './search-request';
 import {createMockState} from '../../../test/mock-state';
 import {SearchPageState} from '../../../state';
-import {buildFacetRequest} from '../../../features/facets/facet-set/facet-set-slice';
+import {buildMockFacetRequest} from '../../../test/mock-facet-request';
+import {buildMockRangeFacetRequest} from '../../../test/mock-range-facet-request';
 
 describe('search request', () => {
   let state: SearchPageState;
@@ -39,15 +40,18 @@ describe('search request', () => {
   });
 
   it('#searchRequestParams returns the facets in the state #facetSet', () => {
-    const request1 = buildFacetRequest({field: 'objecttype'});
-    const request2 = buildFacetRequest({field: 'author'});
+    const request = buildMockFacetRequest({field: 'objecttype'});
+    state.facetSet[1] = request;
 
-    state.facetSet[1] = request1;
-    state.facetSet[2] = request2;
+    const {facets} = searchRequestParams(state);
+    expect(facets).toContain(request);
+  });
 
-    const params = searchRequestParams(state);
+  it('#searchRequestParams returns the facets in the state #rangeFacetSet', () => {
+    const request = buildMockRangeFacetRequest({field: 'objecttype'});
+    state.rangeFacetSet[1] = request;
 
-    expect(params.facets).toContain(request1);
-    expect(params.facets).toContain(request2);
+    const {facets} = searchRequestParams(state);
+    expect(facets).toContain(request);
   });
 });

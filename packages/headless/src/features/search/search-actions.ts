@@ -112,6 +112,7 @@ const shouldReExecuteTheQueryWithCorrections = (
 const extractHistory = (state: SearchPageState) => ({
   context: state.context,
   facetSet: state.facetSet,
+  rangeFacetSet: state.rangeFacetSet,
   pagination: state.pagination,
   query: state.query,
   querySet: state.querySet,
