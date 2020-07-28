@@ -35,9 +35,7 @@ const nodeConfig = {
   ],
   plugins: [
     resolve({preferBuiltins: true}),
-    commonjs({
-      exclude: ['redux-undo/**/*'],
-    }),
+    commonjs(),
     typescript(),
     replace(),
   ],
@@ -73,9 +71,7 @@ const browserConfig = {
       ],
     }),
     resolve({browser: true}),
-    commonjs({
-      exclude: ['redux-undo/**/*'],
-    }),
+    commonjs(),
     typescript(),
     replace(),
     sizeSnapshot(),

@@ -32,7 +32,13 @@ export const facetSetReducer = createReducer(
 
         state[facetId] = buildFacetRequest(action.payload);
       })
-      .addCase(change.fulfilled, (_, action) => action.payload.facetSet)
+      .addCase(change.fulfilled, (_, action) => {
+        if (Object.keys(action.payload.facetSet).length === 0) {
+          return;
+        }
+
+        return action.payload.facetSet;
+      })
       .addCase(toggleSelectFacetValue, (state, action) => {
         const {facetId, selection} = action.payload;
         const facetRequest = state[facetId];

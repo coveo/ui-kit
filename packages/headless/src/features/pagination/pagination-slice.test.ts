@@ -13,7 +13,7 @@ import {
   nextPage,
 } from './pagination-actions';
 import {buildMockSearch} from '../../test/mock-search';
-import {getHistoryInitialState} from '../history/history-slice';
+import {getHistoryEmptyState} from '../history/history-slice';
 import {change} from '../history/history-actions';
 import {executeSearch} from '../search/search-actions';
 import {logSearchboxSubmit} from '../query/query-analytics-actions';
@@ -137,7 +137,7 @@ describe('pagination slice', () => {
       totalCountFiltered: 123,
     };
     const historyChange = {
-      ...getHistoryInitialState(),
+      ...getHistoryEmptyState(),
       pagination: expectedPagination,
     };
 

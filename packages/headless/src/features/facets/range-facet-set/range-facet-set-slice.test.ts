@@ -7,7 +7,7 @@ import {registerRangeFacet} from './range-facet-set-actions';
 import {RangeFacetRegistrationOptions} from './interfaces/options';
 import {buildMockRangeFacetRequest} from '../../../test/mock-range-facet-request';
 import {change} from '../../history/history-actions';
-import {getHistoryInitialState} from '../../history/history-slice';
+import {getHistoryEmptyState} from '../../history/history-slice';
 
 describe('range-facet slice', () => {
   let state: RangeFacetSetState;
@@ -67,7 +67,7 @@ describe('range-facet slice', () => {
   it('updates the set on history change', () => {
     const rangeFacetSet = {a: buildMockRangeFacetRequest()};
 
-    const history = {...getHistoryInitialState(), rangeFacetSet};
+    const history = {...getHistoryEmptyState(), rangeFacetSet};
     const action = change.fulfilled(history, '');
     const finalState = rangeFacetSetReducer(state, action);
 

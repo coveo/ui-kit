@@ -1,6 +1,6 @@
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 import {SearchPageState} from '../../state';
-import {ActionCreators} from 'redux-undo';
+import {ActionCreators} from '../../app/undoable';
 import {SearchParametersState} from '../../search-parameters-state';
 import {configureAnalytics} from '../../api/analytics/analytics';
 import {SearchPageEvents} from 'coveo.analytics/dist/definitions/searchPage/searchPageEvents';

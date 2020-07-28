@@ -1,9 +1,8 @@
-import {historyReducer, getHistoryInitialState} from './history-slice';
+import {historyReducer, getHistoryEmptyState} from './history-slice';
 import {SearchParametersState} from '../../search-parameters-state';
 import {snapshot} from './history-actions';
-import undoable, {newHistory} from 'redux-undo';
-import {StateWithHistory} from 'redux-undo';
 import {Reducer} from 'redux';
+import {undoable, StateWithHistory, makeHistory} from '../../app/undoable';
 import {buildMockRangeFacetRequest} from '../../test/mock-range-facet-request';
 import {buildMockFacetRequest} from '../../test/mock-facet-request';
 
@@ -11,23 +10,23 @@ describe('history slice', () => {
   let undoableReducer: Reducer<StateWithHistory<SearchParametersState>>;
 
   beforeEach(() => {
-    undoableReducer = undoable(historyReducer);
+    undoableReducer = undoable(historyReducer, getHistoryEmptyState());
   });
 
   const getSnapshot = (snap: Partial<SearchParametersState>) => ({
-    ...getHistoryInitialState(),
+    ...getHistoryEmptyState(),
     ...snap,
   });
 
   const addSnapshot = (
     snap: Partial<SearchParametersState>,
-    history = newHistory([], getHistoryInitialState(), [])
+    history = makeHistory(getHistoryEmptyState())
   ) => {
     return undoableReducer(history, snapshot(getSnapshot(snap)));
   };
 
   const addSnapshots = (...snaps: Partial<SearchParametersState>[]) => {
-    let previous = newHistory([], getHistoryInitialState(), []);
+    let previous = makeHistory(getHistoryEmptyState());
     snaps.forEach((s) => {
       previous = addSnapshot(s, previous);
     });
@@ -50,7 +49,7 @@ describe('history slice', () => {
   ) => {
     const history = addSnapshots(firstSnap, secondSnap);
     expect(history.past.length).toBe(1);
-    expect(history.past[0]).toEqual(getHistoryInitialState());
+    expect(history.past[0]).toEqual(getHistoryEmptyState());
     expect(history.present).toEqual(firstSnap);
   };
 
@@ -207,7 +206,7 @@ describe('history slice', () => {
     const snap = getSnapshot({query: {q: 'foo'}});
     const history = addSnapshots(snap, snap);
     expect(history.past.length).toBe(1);
-    expect(history.past[0]).toEqual(getHistoryInitialState());
+    expect(history.past[0]).toEqual(getHistoryEmptyState());
     expect(history.present).toEqual(snap);
   });
 });

@@ -5,7 +5,7 @@ import {
 } from './query-set-slice';
 import {registerQuerySetQuery, updateQuerySetQuery} from './query-set-actions';
 import {selectQuerySuggestion} from '../query-suggest/query-suggest-actions';
-import {getHistoryInitialState} from '../history/history-slice';
+import {getHistoryEmptyState} from '../history/history-slice';
 import {change} from '../history/history-actions';
 
 describe('querySet slice', () => {
@@ -94,7 +94,7 @@ describe('querySet slice', () => {
 
     const expectedQuerySet = {foo: 'bar', hello: 'world'};
     const historyChange = {
-      ...getHistoryInitialState(),
+      ...getHistoryEmptyState(),
       querySet: expectedQuerySet,
     };
 

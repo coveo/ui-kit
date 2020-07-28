@@ -1,6 +1,5 @@
 import {SearchParametersState} from '../../search-parameters-state';
 import {createReducer} from '@reduxjs/toolkit';
-import {snapshot} from './history-actions';
 import {getContextInitialState, ContextState} from '../context/context-slice';
 import {
   getFacetSetInitialState,
@@ -15,13 +14,14 @@ import {
 } from '../pagination/pagination-slice';
 import {QueryState} from '../../state';
 import {SortState} from '../../controllers/sort/headless-sort';
+import {snapshot} from './history-actions';
 import {
   getRangeFacetSetInitialState,
   RangeFacetSetState,
 } from '../facets/range-facet-set/range-facet-set-slice';
 import {getPipelineInitialState} from '../pipeline/pipeline-slice';
 
-export const getHistoryInitialState = (): SearchParametersState => ({
+export const getHistoryEmptyState = (): SearchParametersState => ({
   context: getContextInitialState(),
   facetSet: getFacetSetInitialState(),
   rangeFacetSet: getRangeFacetSetInitialState(),
@@ -33,7 +33,7 @@ export const getHistoryInitialState = (): SearchParametersState => ({
 });
 
 export const historyReducer = createReducer(
-  getHistoryInitialState(),
+  getHistoryEmptyState(),
   (builder) => {
     builder.addCase(snapshot, (state, action) =>
       isEqual(state, action.payload) ? undefined : action.payload

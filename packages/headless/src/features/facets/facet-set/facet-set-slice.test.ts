@@ -4,7 +4,7 @@ import {
   getFacetSetInitialState,
   convertFacetValueToRequest,
 } from './facet-set-slice';
-import {getHistoryInitialState} from '../../history/history-slice';
+import {getHistoryEmptyState} from '../../history/history-slice';
 import {change} from '../../history/history-actions';
 import {
   registerFacet,
@@ -110,7 +110,7 @@ describe('facet-set slice', () => {
       foo: buildMockFacetRequest(),
     };
     const historyChange = {
-      ...getHistoryInitialState(),
+      ...getHistoryEmptyState(),
       facetSet: expectedFacetSet,
     };
 
@@ -121,6 +121,23 @@ describe('facet-set slice', () => {
 
     expect(nextState).toEqual(expectedFacetSet);
   });
+
+  it('ignore an empty facet set on history change', () => {
+    const state = {foo: buildMockFacetRequest()};
+    const emptyFacetSet = {};
+    const historyChange = {
+      ...getHistoryEmptyState(),
+      facetSet: emptyFacetSet,
+    };
+
+    const nextState = facetSetReducer(
+      state,
+      change.fulfilled(historyChange, '')
+    );
+
+    expect(nextState).toEqual(state);
+  });
+
   it('dispatching #toggleSelectFacetValue with a valid facetId sets the state of an idle value to selected', () => {
     const id = '1';
 
