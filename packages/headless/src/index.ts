@@ -36,6 +36,7 @@ export * as searchActions from './features/search/search-actions';
 export * as facetActions from './features/facets/facet-set/facet-set-actions';
 export * as historyActions from './features/history/history-actions';
 export * as pipelineActions from './features/pipeline/pipeline-actions';
+export * as analyticsActions from './features/analytics/analytics-actions';
 export {FacetValue} from './features/facets/facet-set/interfaces/response';
 export {FacetSortCriterion} from './features/facets/facet-set/interfaces/request';
 export * from './features/sort-criteria/criteria';
