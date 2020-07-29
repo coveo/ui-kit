@@ -14,6 +14,7 @@ export class AtomicPipeline {
   constructor() {
     this.pipeline = new Pipeline(headlessEngine);
     this.unsubscribe = this.pipeline.subscribe(() => this.updateState());
+    this.pipeline.setPipeline('default');
   }
 
   public disconnectedCallback() {

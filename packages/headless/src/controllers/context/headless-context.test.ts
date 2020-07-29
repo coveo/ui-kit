@@ -1,4 +1,4 @@
-import {Context} from './headless-context';
+import {buildContext, Context} from './headless-context';
 import {buildMockEngine, MockEngine} from '../../test/mock-engine';
 import {Action} from 'redux';
 import {
@@ -13,7 +13,7 @@ describe('Context', () => {
 
   beforeEach(() => {
     engine = buildMockEngine();
-    context = new Context(engine);
+    context = buildContext(engine);
   });
 
   const expectContainAction = (action: Action) => {
@@ -22,21 +22,21 @@ describe('Context', () => {
   };
 
   it('initializes properly', () => {
-    expect(context.state.contextValues).toEqual({});
+    expect(context.state.values).toEqual({});
   });
 
   it('setContext dispatches #setContext', () => {
-    context.setContext({foo: ['bar']});
+    context.set({foo: ['bar']});
     expectContainAction(setContext);
   });
 
   it('addContext dispatches #addContext', () => {
-    context.addContext('foo', ['bar']);
+    context.add('foo', ['bar']);
     expectContainAction(addContext);
   });
 
   it('removeContext dispatches #removeContext', () => {
-    context.removeContext('foo');
+    context.remove('foo');
     expectContainAction(removeContext);
   });
 });

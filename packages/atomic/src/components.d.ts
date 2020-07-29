@@ -44,8 +44,6 @@ export namespace Components {
     }
     interface AtomicSortDropdown {
     }
-    interface AtomicTestingContext {
-    }
 }
 declare global {
     interface HTMLAtomicDidYouMeanElement extends Components.AtomicDidYouMean, HTMLStencilElement {
@@ -126,12 +124,6 @@ declare global {
         prototype: HTMLAtomicSortDropdownElement;
         new (): HTMLAtomicSortDropdownElement;
     };
-    interface HTMLAtomicTestingContextElement extends Components.AtomicTestingContext, HTMLStencilElement {
-    }
-    var HTMLAtomicTestingContextElement: {
-        prototype: HTMLAtomicTestingContextElement;
-        new (): HTMLAtomicTestingContextElement;
-    };
     interface HTMLElementTagNameMap {
         "atomic-did-you-mean": HTMLAtomicDidYouMeanElement;
         "atomic-facet": HTMLAtomicFacetElement;
@@ -146,7 +138,6 @@ declare global {
         "atomic-results-per-page": HTMLAtomicResultsPerPageElement;
         "atomic-search-box": HTMLAtomicSearchBoxElement;
         "atomic-sort-dropdown": HTMLAtomicSortDropdownElement;
-        "atomic-testing-context": HTMLAtomicTestingContextElement;
     }
 }
 declare namespace LocalJSX {
@@ -185,8 +176,6 @@ declare namespace LocalJSX {
     }
     interface AtomicSortDropdown {
     }
-    interface AtomicTestingContext {
-    }
     interface IntrinsicElements {
         "atomic-did-you-mean": AtomicDidYouMean;
         "atomic-facet": AtomicFacet;
@@ -201,7 +190,6 @@ declare namespace LocalJSX {
         "atomic-results-per-page": AtomicResultsPerPage;
         "atomic-search-box": AtomicSearchBox;
         "atomic-sort-dropdown": AtomicSortDropdown;
-        "atomic-testing-context": AtomicTestingContext;
     }
 }
 export { LocalJSX as JSX };
@@ -221,7 +209,6 @@ declare module "@stencil/core" {
             "atomic-results-per-page": LocalJSX.AtomicResultsPerPage & JSXBase.HTMLAttributes<HTMLAtomicResultsPerPageElement>;
             "atomic-search-box": LocalJSX.AtomicSearchBox & JSXBase.HTMLAttributes<HTMLAtomicSearchBoxElement>;
             "atomic-sort-dropdown": LocalJSX.AtomicSortDropdown & JSXBase.HTMLAttributes<HTMLAtomicSortDropdownElement>;
-            "atomic-testing-context": LocalJSX.AtomicTestingContext & JSXBase.HTMLAttributes<HTMLAtomicTestingContextElement>;
         }
     }
 }

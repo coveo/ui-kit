@@ -1,5 +1,5 @@
 import {Engine} from '../../app/headless-engine';
-import {Controller} from '../controller/headless-controller';
+import {buildController} from '../controller/headless-controller';
 import {
   Context as ContextPayload,
   ContextValue,
@@ -10,47 +10,49 @@ import {
   removeContext,
 } from '../../features/context/context-action';
 
-/** The state relevant to the `Context` controller.*/
+/**
+ * The `Context` controller injects custom contextual information into the search requests and usage analytics search events sent from a search interface.
+ *
+ * See [Sending Custom Context Information](https://docs.coveo.com/en/399/).
+ */
+export type Context = ReturnType<typeof buildContext>;
 export type ContextState = Context['state'];
 
-export class Context extends Controller {
-  constructor(engine: Engine) {
-    super(engine);
-  }
+export const buildContext = (engine: Engine) => {
+  const controller = buildController(engine);
+  const {dispatch} = engine;
 
-  /**
-   * @returns The state of the `Context` controller.
-   */
-  public get state() {
-    const state = this.engine.state;
+  return {
+    ...controller,
+    get state() {
+      return {
+        values: engine.state.context.contextValues,
+      };
+    },
 
-    return {
-      contextValues: state.context.contextValues,
-    };
-  }
+    /**
+     * Set the context for the query. Replace any existing context by the new one.
+     *  @param ctx The context to set in the query.
+     */
+    set(ctx: ContextPayload) {
+      dispatch(setContext(ctx));
+    },
 
-  /**
-   * Set the context for the query. Replace any existing context by the new one.
-   * @param ctx The context to set in the query.
-   */
-  public setContext(ctx: ContextPayload) {
-    this.dispatch(setContext(ctx));
-  }
+    /**
+     * Add, or replace if already present, a new context key and value pair.
+     * @param contextKey The context key to add.
+     * @param contextValue The context value to add.
+     */
+    add(contextKey: string, contextValue: ContextValue) {
+      dispatch(addContext({contextKey, contextValue}));
+    },
 
-  /**
-   * Add, or replace if already present, a new context key and value pair.
-   * @param key The context key to add.
-   * @param value The context value to add.
-   */
-  public addContext(key: string, value: ContextValue) {
-    this.dispatch(addContext({contextKey: key, contextValue: value}));
-  }
-
-  /**
-   * Remove a context key from the query.
-   * @param key The context key to remove.
-   */
-  public removeContext(key: string) {
-    this.dispatch(removeContext(key));
-  }
-}
+    /**
+     * Remove a context key from the query.
+     * @param key The context key to remove.
+     */
+    remove(key: string) {
+      dispatch(removeContext(key));
+    },
+  };
+};
