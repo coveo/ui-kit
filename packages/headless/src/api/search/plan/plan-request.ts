@@ -6,6 +6,7 @@ export const planRequestParams = (state: SearchPageState) => ({
   ...getOrganizationIdParam(state),
   context: state.context.contextValues,
   pipeline: state.pipeline,
+  searchHub: state.searchHub,
 });
 
 export type PlanRequestParams = ReturnType<typeof planRequestParams>;

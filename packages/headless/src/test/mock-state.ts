@@ -15,6 +15,7 @@ import {getHistoryEmptyState} from '../features/history/history-slice';
 import {getRangeFacetSetInitialState} from '../features/facets/range-facet-set/range-facet-set-slice';
 import {getPipelineInitialState} from '../features/pipeline/pipeline-slice';
 import {makeHistory} from '../app/undoable';
+import {getSearchHubInitialState} from '../features/search-hub/search-hub-slice';
 
 export function createMockState(
   config: Partial<SearchPageState> = {}
@@ -36,6 +37,7 @@ export function createMockState(
     fields: getFieldsInitialState(),
     history: makeHistory(getHistoryEmptyState()),
     pipeline: getPipelineInitialState(),
+    searchHub: getSearchHubInitialState(),
     ...config,
   };
 }

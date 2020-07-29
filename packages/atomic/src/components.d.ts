@@ -18,8 +18,6 @@ export namespace Components {
     }
     interface AtomicPager {
     }
-    interface AtomicPipeline {
-    }
     interface AtomicQueryError {
     }
     interface AtomicQuerySummary {
@@ -69,12 +67,6 @@ declare global {
     var HTMLAtomicPagerElement: {
         prototype: HTMLAtomicPagerElement;
         new (): HTMLAtomicPagerElement;
-    };
-    interface HTMLAtomicPipelineElement extends Components.AtomicPipeline, HTMLStencilElement {
-    }
-    var HTMLAtomicPipelineElement: {
-        prototype: HTMLAtomicPipelineElement;
-        new (): HTMLAtomicPipelineElement;
     };
     interface HTMLAtomicQueryErrorElement extends Components.AtomicQueryError, HTMLStencilElement {
     }
@@ -129,7 +121,6 @@ declare global {
         "atomic-facet": HTMLAtomicFacetElement;
         "atomic-history": HTMLAtomicHistoryElement;
         "atomic-pager": HTMLAtomicPagerElement;
-        "atomic-pipeline": HTMLAtomicPipelineElement;
         "atomic-query-error": HTMLAtomicQueryErrorElement;
         "atomic-query-summary": HTMLAtomicQuerySummaryElement;
         "atomic-result": HTMLAtomicResultElement;
@@ -150,8 +141,6 @@ declare namespace LocalJSX {
     interface AtomicHistory {
     }
     interface AtomicPager {
-    }
-    interface AtomicPipeline {
     }
     interface AtomicQueryError {
     }
@@ -181,7 +170,6 @@ declare namespace LocalJSX {
         "atomic-facet": AtomicFacet;
         "atomic-history": AtomicHistory;
         "atomic-pager": AtomicPager;
-        "atomic-pipeline": AtomicPipeline;
         "atomic-query-error": AtomicQueryError;
         "atomic-query-summary": AtomicQuerySummary;
         "atomic-result": AtomicResult;
@@ -200,7 +188,6 @@ declare module "@stencil/core" {
             "atomic-facet": LocalJSX.AtomicFacet & JSXBase.HTMLAttributes<HTMLAtomicFacetElement>;
             "atomic-history": LocalJSX.AtomicHistory & JSXBase.HTMLAttributes<HTMLAtomicHistoryElement>;
             "atomic-pager": LocalJSX.AtomicPager & JSXBase.HTMLAttributes<HTMLAtomicPagerElement>;
-            "atomic-pipeline": LocalJSX.AtomicPipeline & JSXBase.HTMLAttributes<HTMLAtomicPipelineElement>;
             "atomic-query-error": LocalJSX.AtomicQueryError & JSXBase.HTMLAttributes<HTMLAtomicQueryErrorElement>;
             "atomic-query-summary": LocalJSX.AtomicQuerySummary & JSXBase.HTMLAttributes<HTMLAtomicQuerySummaryElement>;
             "atomic-result": LocalJSX.AtomicResult & JSXBase.HTMLAttributes<HTMLAtomicResultElement>;

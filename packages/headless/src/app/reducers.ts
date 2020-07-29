@@ -20,6 +20,7 @@ import {facetSearchSetReducer} from '../features/facets/facet-search-set/facet-s
 import {fieldsReducer} from '../features/fields/fields-slice';
 import {rangeFacetSetReducer} from '../features/facets/range-facet-set/range-facet-set-slice';
 import {pipelineReducer} from '../features/pipeline/pipeline-slice';
+import {searchHubReducer} from '../features/search-hub/search-hub-slice';
 
 /**
  * Map of reducers that make up the SearchPageState.
@@ -41,4 +42,5 @@ export const searchPageReducers: ReducersMapObject<SearchPageState> = {
   didYouMean: didYouMeanReducer,
   fields: fieldsReducer,
   pipeline: pipelineReducer,
+  searchHub: searchHubReducer,
 };

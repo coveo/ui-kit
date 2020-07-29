@@ -14,6 +14,7 @@ export function buildMockSearchRequest(
     sortCriteria: 'relevancy',
     fieldsToInclude: getFieldsInitialState().fieldsToInclude,
     pipeline: '',
+    searchHub: '',
     ...config,
   };
 }

@@ -23,7 +23,6 @@ export * from './controllers/query-error/headless-query-error';
 export * from './controllers/history/headless-history';
 export * from './controllers/did-you-mean/headless-did-you-mean';
 export * from './controllers/facets/facet/headless-facet';
-export * from './controllers/pipeline/headless-pipeline';
 
 export * as queryActions from './features/query/query-actions';
 export * as querySetActions from './features/query-set/query-set-actions';
@@ -39,6 +38,7 @@ export * as ResultAnalyticsActions from './features/result/result-analytics-acti
 
 export * as pipelineActions from './features/pipeline/pipeline-actions';
 export * as analyticsActions from './features/analytics/analytics-actions';
+export * as searchHubActions from './features/search-hub/search-hub-actions';
 export {FacetValue} from './features/facets/facet-set/interfaces/response';
 export {FacetSortCriterion} from './features/facets/facet-set/interfaces/request';
 export * from './features/sort-criteria/criteria';

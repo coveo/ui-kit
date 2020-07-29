@@ -20,6 +20,7 @@ import {
   RangeFacetSetState,
 } from '../facets/range-facet-set/range-facet-set-slice';
 import {getPipelineInitialState} from '../pipeline/pipeline-slice';
+import {getSearchHubInitialState} from '../search-hub/search-hub-slice';
 
 export const getHistoryEmptyState = (): SearchParametersState => ({
   context: getContextInitialState(),
@@ -30,6 +31,7 @@ export const getHistoryEmptyState = (): SearchParametersState => ({
   sortCriteria: getSortCriteriaInitialState(),
   querySet: getQuerySetInitialState(),
   pipeline: getPipelineInitialState(),
+  searchHub: getSearchHubInitialState(),
 });
 
 export const historyReducer = createReducer(
@@ -52,7 +54,8 @@ const isEqual = (
     isPaginationEqual(current.pagination, next.pagination) &&
     isQueryEqual(current.query, next.query) &&
     isSortEqual(current, next) &&
-    isPipelineEqual(current.pipeline, next.pipeline)
+    isPipelineEqual(current.pipeline, next.pipeline) &&
+    isSearchHubEqual(current.searchHub, next.searchHub)
   );
 };
 
@@ -78,3 +81,5 @@ const isSortEqual = (current: SortState, next: SortState) =>
   current.sortCriteria === next.sortCriteria;
 
 const isPipelineEqual = (current: string, next: string) => current === next;
+
+const isSearchHubEqual = (current: string, next: string) => current === next;

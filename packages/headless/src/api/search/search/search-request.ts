@@ -14,6 +14,7 @@ export interface SearchRequest {
   enableDidYouMean: boolean;
   fieldsToInclude: string[];
   pipeline: string;
+  searchHub: string;
 }
 
 /** The search request parameters. For a full description, refer to {@link https://docs.coveo.com/en/13/cloud-v2-api-reference/search-api#operation/searchUsingPost}*/
@@ -28,6 +29,7 @@ export const searchRequestParams = (state: SearchPageState): SearchRequest => {
     enableDidYouMean: state.didYouMean.enableDidYouMean,
     fieldsToInclude: state.fields.fieldsToInclude,
     pipeline: state.pipeline,
+    searchHub: state.searchHub,
   };
 };
 

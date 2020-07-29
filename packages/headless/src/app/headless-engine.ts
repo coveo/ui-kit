@@ -77,6 +77,18 @@ export interface HeadlessConfigurationOptions {
      * The Search API base URL to use (e.g., https://globalplatform.cloud.coveo.com/rest/search/v2).
      */
     searchApiBaseUrl?: string;
+    /**
+     * Specifies the name of the query pipeline to use for the query. If not specified, the default query pipeline will be used.
+     */
+    pipeline: string;
+    /**
+     * The first level of origin of the request, typically the identifier of the graphical search interface from which the request originates.
+     * Coveo Machine Learning models use this information to provide contextually relevant output.
+     * Notes:
+     *    This parameter will be overridden if the search request is authenticated by a search token that enforces a specific searchHub.
+     *    When logging a Search usage analytics event for a query, the originLevel1 field of that event should be set to the value of the searchHub search request parameter.
+     */
+    searchHub: string;
   };
 }
 
@@ -140,6 +152,8 @@ export class HeadlessEngine<Reducers extends ReducersMapObject>
       accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
       search: {
         searchApiBaseUrl: 'https://platform.cloud.coveo.com/rest/search',
+        pipeline: 'default',
+        searchHub: 'default',
       },
     };
   }
