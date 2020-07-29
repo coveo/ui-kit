@@ -1,4 +1,9 @@
-import {Pager, PagerOptions, PagerInitialState} from './headless-pager';
+import {
+  Pager,
+  PagerOptions,
+  PagerInitialState,
+  buildPager,
+} from './headless-pager';
 import {buildMockEngine, MockEngine} from '../../test/mock-engine';
 import {
   updatePage,
@@ -25,7 +30,7 @@ describe('Pager', () => {
   }
 
   function initPager() {
-    pager = new Pager(engine, {options, initialState});
+    pager = buildPager(engine, {options, initialState});
   }
 
   beforeEach(() => {

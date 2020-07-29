@@ -1,5 +1,5 @@
 import {Component, h, State} from '@stencil/core';
-import {Pager, PagerState, Unsubscribe} from '@coveo/headless';
+import {Pager, PagerState, Unsubscribe, buildPager} from '@coveo/headless';
 import {headlessEngine} from '../../engine';
 
 @Component({
@@ -13,7 +13,7 @@ export class AtomicPager {
   @State() state!: PagerState;
 
   constructor() {
-    this.pager = new Pager(headlessEngine);
+    this.pager = buildPager(headlessEngine);
     this.unsubscribe = this.pager.subscribe(() => this.updateState());
   }
 
