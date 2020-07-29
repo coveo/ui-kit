@@ -18,7 +18,9 @@ export class AtomicResultList {
   @Element() host!: HTMLDivElement;
   private resultList: ResultList;
   private unsubscribe: Unsubscribe;
-  private resultTemplatesManager = new ResultTemplatesManager<string>();
+  private resultTemplatesManager = new ResultTemplatesManager<string>(
+    headlessEngine
+  );
 
   @State() state!: ResultListState;
 
@@ -61,14 +63,13 @@ export class AtomicResultList {
 
   private get results() {
     return this.state.results.map((result) => (
-      <div
-        class="result"
-        id={result.uniqueId}
+      <atomic-result
+        result={result}
         innerHTML={Mustache.render(
           this.resultTemplatesManager.selectTemplate(result) || '',
           result
         )}
-      ></div>
+      ></atomic-result>
     ));
   }
 

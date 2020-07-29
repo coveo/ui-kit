@@ -1,5 +1,5 @@
 import {SearchPageState} from '../../../state';
-import {getQParam} from '../search-request';
+import {getQParam} from '../search-api-params';
 import {FacetRequest} from '../../../features/facets/facet-set/interfaces/request';
 import {Context} from '../../../features/context/context-slice';
 import {RangeFacetRequest} from '../../../features/facets/range-facet-set/interfaces/request';
@@ -12,6 +12,7 @@ export interface SearchRequest {
   facets: (FacetRequest | RangeFacetRequest)[];
   context: Context;
   enableDidYouMean: boolean;
+  fieldsToInclude: string[];
   pipeline: string;
 }
 
@@ -25,6 +26,7 @@ export const searchRequestParams = (state: SearchPageState): SearchRequest => {
     facets: getFacets(state),
     context: state.context.contextValues,
     enableDidYouMean: state.didYouMean.enableDidYouMean,
+    fieldsToInclude: state.fields.fieldsToInclude,
     pipeline: state.pipeline,
   };
 };

@@ -5,6 +5,7 @@ import {StateWithHistory} from './app/undoable';
 import {DidYouMeanState} from './features/did-you-mean/did-you-mean-slice';
 import {FacetSearchSetState} from './features/facets/facet-search-set/facet-search-set-slice';
 import {SearchAPIErrorWithStatusCode} from './api/search/search-api-error-response';
+import {FieldsState} from './features/fields/fields-slice';
 
 export interface SearchPageState extends SearchParametersState {
   /**
@@ -35,6 +36,10 @@ export interface SearchPageState extends SearchParametersState {
    * The information related to the history navigation.
    */
   history: StateWithHistory<SearchParametersState>;
+  /**
+   * The information related to fields used in the engine.
+   */
+  fields: FieldsState;
 }
 
 export interface ConfigurationState {

@@ -10,6 +10,7 @@ import {getFacetSetInitialState} from '../features/facets/facet-set/facet-set-sl
 import {getContextInitialState} from '../features/context/context-slice';
 import {getDidYouMeanInitialState} from '../features/did-you-mean/did-you-mean-slice';
 import {getFacetSearchSetInitialState} from '../features/facets/facet-search-set/facet-search-set-slice';
+import {getFieldsInitialState} from '../features/fields/fields-slice';
 import {getHistoryEmptyState} from '../features/history/history-slice';
 import {getRangeFacetSetInitialState} from '../features/facets/range-facet-set/range-facet-set-slice';
 import {getPipelineInitialState} from '../features/pipeline/pipeline-slice';
@@ -32,6 +33,7 @@ export function createMockState(
     sortCriteria: getSortCriteriaInitialState(),
     context: getContextInitialState(),
     didYouMean: getDidYouMeanInitialState(),
+    fields: getFieldsInitialState(),
     history: makeHistory(getHistoryEmptyState()),
     pipeline: getPipelineInitialState(),
     ...config,

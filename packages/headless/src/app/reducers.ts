@@ -17,6 +17,7 @@ import {
 } from '../features/history/history-slice';
 import {didYouMeanReducer} from '../features/did-you-mean/did-you-mean-slice';
 import {facetSearchSetReducer} from '../features/facets/facet-search-set/facet-search-set-slice';
+import {fieldsReducer} from '../features/fields/fields-slice';
 import {rangeFacetSetReducer} from '../features/facets/range-facet-set/range-facet-set-slice';
 import {pipelineReducer} from '../features/pipeline/pipeline-slice';
 
@@ -38,5 +39,6 @@ export const searchPageReducers: ReducersMapObject<SearchPageState> = {
   context: contextReducer,
   history: undoable(historyReducer, getHistoryEmptyState()),
   didYouMean: didYouMeanReducer,
+  fields: fieldsReducer,
   pipeline: pipelineReducer,
 };

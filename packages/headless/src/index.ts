@@ -35,6 +35,8 @@ export * as sortCriterionActions from './features/sort-criteria/sort-criteria-ac
 export * as searchActions from './features/search/search-actions';
 export * as facetActions from './features/facets/facet-set/facet-set-actions';
 export * as historyActions from './features/history/history-actions';
+export * as ResultAnalyticsActions from './features/result/result-analytics-actions';
+
 export * as pipelineActions from './features/pipeline/pipeline-actions';
 export * as analyticsActions from './features/analytics/analytics-actions';
 export {FacetValue} from './features/facets/facet-set/interfaces/response';
@@ -48,3 +50,5 @@ export * from './api/search/search/result';
 export * from './features/result-templates/result-templates-manager';
 export * from './features/result-templates/result-templates';
 export * as resultTemplatesHelpers from './features/result-templates/result-templates-helpers';
+
+export * as TestUtils from './test';

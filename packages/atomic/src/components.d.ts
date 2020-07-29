@@ -5,8 +5,8 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
+import { Result, ResultTemplateCondition, } from "@coveo/headless";
 import { FieldMatch, } from "./components/atomic-result-template/atomic-result-template";
-import { ResultTemplateCondition, } from "@coveo/headless";
 export namespace Components {
     interface AtomicDidYouMean {
     }
@@ -23,6 +23,9 @@ export namespace Components {
     interface AtomicQueryError {
     }
     interface AtomicQuerySummary {
+    }
+    interface AtomicResult {
+        "result": Result;
     }
     interface AtomicResultList {
     }
@@ -42,20 +45,6 @@ export namespace Components {
     interface AtomicSortDropdown {
     }
     interface AtomicTestingContext {
-    }
-    interface MyComponent {
-        /**
-          * The first name
-         */
-        "first": string;
-        /**
-          * The last name
-         */
-        "last": string;
-        /**
-          * The middle name
-         */
-        "middle": string;
     }
 }
 declare global {
@@ -101,6 +90,12 @@ declare global {
         prototype: HTMLAtomicQuerySummaryElement;
         new (): HTMLAtomicQuerySummaryElement;
     };
+    interface HTMLAtomicResultElement extends Components.AtomicResult, HTMLStencilElement {
+    }
+    var HTMLAtomicResultElement: {
+        prototype: HTMLAtomicResultElement;
+        new (): HTMLAtomicResultElement;
+    };
     interface HTMLAtomicResultListElement extends Components.AtomicResultList, HTMLStencilElement {
     }
     var HTMLAtomicResultListElement: {
@@ -137,12 +132,6 @@ declare global {
         prototype: HTMLAtomicTestingContextElement;
         new (): HTMLAtomicTestingContextElement;
     };
-    interface HTMLMyComponentElement extends Components.MyComponent, HTMLStencilElement {
-    }
-    var HTMLMyComponentElement: {
-        prototype: HTMLMyComponentElement;
-        new (): HTMLMyComponentElement;
-    };
     interface HTMLElementTagNameMap {
         "atomic-did-you-mean": HTMLAtomicDidYouMeanElement;
         "atomic-facet": HTMLAtomicFacetElement;
@@ -151,13 +140,13 @@ declare global {
         "atomic-pipeline": HTMLAtomicPipelineElement;
         "atomic-query-error": HTMLAtomicQueryErrorElement;
         "atomic-query-summary": HTMLAtomicQuerySummaryElement;
+        "atomic-result": HTMLAtomicResultElement;
         "atomic-result-list": HTMLAtomicResultListElement;
         "atomic-result-template": HTMLAtomicResultTemplateElement;
         "atomic-results-per-page": HTMLAtomicResultsPerPageElement;
         "atomic-search-box": HTMLAtomicSearchBoxElement;
         "atomic-sort-dropdown": HTMLAtomicSortDropdownElement;
         "atomic-testing-context": HTMLAtomicTestingContextElement;
-        "my-component": HTMLMyComponentElement;
     }
 }
 declare namespace LocalJSX {
@@ -177,6 +166,9 @@ declare namespace LocalJSX {
     }
     interface AtomicQuerySummary {
     }
+    interface AtomicResult {
+        "result": Result;
+    }
     interface AtomicResultList {
     }
     interface AtomicResultTemplate {
@@ -195,20 +187,6 @@ declare namespace LocalJSX {
     }
     interface AtomicTestingContext {
     }
-    interface MyComponent {
-        /**
-          * The first name
-         */
-        "first"?: string;
-        /**
-          * The last name
-         */
-        "last"?: string;
-        /**
-          * The middle name
-         */
-        "middle"?: string;
-    }
     interface IntrinsicElements {
         "atomic-did-you-mean": AtomicDidYouMean;
         "atomic-facet": AtomicFacet;
@@ -217,13 +195,13 @@ declare namespace LocalJSX {
         "atomic-pipeline": AtomicPipeline;
         "atomic-query-error": AtomicQueryError;
         "atomic-query-summary": AtomicQuerySummary;
+        "atomic-result": AtomicResult;
         "atomic-result-list": AtomicResultList;
         "atomic-result-template": AtomicResultTemplate;
         "atomic-results-per-page": AtomicResultsPerPage;
         "atomic-search-box": AtomicSearchBox;
         "atomic-sort-dropdown": AtomicSortDropdown;
         "atomic-testing-context": AtomicTestingContext;
-        "my-component": MyComponent;
     }
 }
 export { LocalJSX as JSX };
@@ -237,13 +215,13 @@ declare module "@stencil/core" {
             "atomic-pipeline": LocalJSX.AtomicPipeline & JSXBase.HTMLAttributes<HTMLAtomicPipelineElement>;
             "atomic-query-error": LocalJSX.AtomicQueryError & JSXBase.HTMLAttributes<HTMLAtomicQueryErrorElement>;
             "atomic-query-summary": LocalJSX.AtomicQuerySummary & JSXBase.HTMLAttributes<HTMLAtomicQuerySummaryElement>;
+            "atomic-result": LocalJSX.AtomicResult & JSXBase.HTMLAttributes<HTMLAtomicResultElement>;
             "atomic-result-list": LocalJSX.AtomicResultList & JSXBase.HTMLAttributes<HTMLAtomicResultListElement>;
             "atomic-result-template": LocalJSX.AtomicResultTemplate & JSXBase.HTMLAttributes<HTMLAtomicResultTemplateElement>;
             "atomic-results-per-page": LocalJSX.AtomicResultsPerPage & JSXBase.HTMLAttributes<HTMLAtomicResultsPerPageElement>;
             "atomic-search-box": LocalJSX.AtomicSearchBox & JSXBase.HTMLAttributes<HTMLAtomicSearchBoxElement>;
             "atomic-sort-dropdown": LocalJSX.AtomicSortDropdown & JSXBase.HTMLAttributes<HTMLAtomicSortDropdownElement>;
             "atomic-testing-context": LocalJSX.AtomicTestingContext & JSXBase.HTMLAttributes<HTMLAtomicTestingContextElement>;
-            "my-component": LocalJSX.MyComponent & JSXBase.HTMLAttributes<HTMLMyComponentElement>;
         }
     }
 }

@@ -1,7 +1,12 @@
 import {createAsyncThunk, AsyncThunkAction} from '@reduxjs/toolkit';
 import {configureAnalytics} from '../../api/analytics/analytics';
-import {SearchPageEvents} from 'coveo.analytics/dist/definitions/searchPage/searchPageEvents';
+import {
+  SearchPageEvents,
+  PartialDocumentInformation,
+  DocumentIdentifier,
+} from 'coveo.analytics/dist/definitions/searchPage/searchPageEvents';
 import {SearchPageState} from '../../state';
+import {Result} from '../../api/search/search/result';
 
 export const searchPageState = (getState: () => unknown) =>
   getState() as SearchPageState;
@@ -34,6 +39,10 @@ export const makeSearchActionType = () => ({
   analyticsType: AnalyticsType.Search as AnalyticsType.Search,
 });
 
+export const makeClickActionType = () => ({
+  analyticsType: AnalyticsType.Click as AnalyticsType.Click,
+});
+
 export interface GenericSearchEventPayload {
   evt: SearchPageEvents | string;
   meta?: Record<string, any>;
@@ -55,3 +64,31 @@ export const logGenericSearchEvent = createAsyncThunk(
     return makeSearchActionType();
   }
 );
+
+export const partialDocumentInformation = (
+  result: Result,
+  state: SearchPageState
+): PartialDocumentInformation => {
+  const resultIndex = state.search.response.results.findIndex(
+    ({uniqueId}) => result.uniqueId === uniqueId
+  );
+  return {
+    collectionName: result.raw['collection'] || 'default',
+    documentAuthor: result.raw['author'] as string,
+    documentPosition: resultIndex + 1,
+    documentTitle: result.title,
+    documentUri: result.uri,
+    documentUriHash: result.raw['urihash'],
+    documentUrl: result.clickUri,
+    rankingModifier: result.rankingModifier || '',
+    sourceName: result.raw['source'],
+    queryPipeline: state.pipeline,
+  };
+};
+
+export const documentIdentifier = (result: Result): DocumentIdentifier => {
+  return {
+    contentIDKey: '@permanentid',
+    contentIDValue: result.raw.permanentid,
+  };
+};

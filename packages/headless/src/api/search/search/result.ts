@@ -36,4 +36,5 @@ export type Result = {
   UniqueId: string;
   Excerpt: string;
   FirstSentences: string;
+  rankingModifier?: string;
 };

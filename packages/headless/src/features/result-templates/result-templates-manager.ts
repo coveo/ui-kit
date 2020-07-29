@@ -1,6 +1,9 @@
 import {ResultTemplate} from './result-templates';
 import {Result} from '../../api/search/search/result';
 import {NumberValue, Schema} from '@coveo/bueno';
+import {SearchPageState} from '../../state';
+import {Engine} from '../../app/headless-engine';
+import {registerFieldsToInclude} from '../fields/fields-actions';
 
 const prioritySchema = new Schema({
   priority: new NumberValue({required: false, default: 0, min: 0}),
@@ -9,19 +12,28 @@ const prioritySchema = new Schema({
 /**
  * Manager in which result templates can be registered and selected based on a list of conditions and priority.
  */
-export class ResultTemplatesManager<Content = unknown> {
+export class ResultTemplatesManager<
+  Content = unknown,
+  State = SearchPageState
+> {
   private templates: Required<ResultTemplate<Content>>[] = [];
-  constructor() {}
+  constructor(private engine: Engine<State>) {}
 
   public registerTemplates(...templates: ResultTemplate<Content>[]) {
+    const fields: string[] = [];
     this.validateTemplates(templates);
-    this.templates.push(
-      ...templates.map((template) => ({
+    templates.forEach((template) => {
+      const templatesWithDefault = {
         ...template,
         priority: template.priority || 0,
-      }))
-    );
+        fields: template.fields || [],
+      };
+      this.templates.push(templatesWithDefault);
+      fields.concat(templatesWithDefault.fields);
+    });
     this.templates.sort((a, b) => b.priority - a.priority);
+
+    this.engine.dispatch(registerFieldsToInclude(fields));
   }
 
   private validateTemplates(templates: ResultTemplate<Content>[]) {

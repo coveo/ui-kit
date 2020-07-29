@@ -1,11 +1,12 @@
 import {ResultTemplatesManager} from './result-templates-manager';
 import {buildMockResult} from '../../test/mock-result';
+import {buildMockEngine} from '../../test/mock-engine';
 
 describe('result template manager', () => {
   let resultTemplateManager: ResultTemplatesManager<string>;
 
   beforeEach(() => {
-    resultTemplateManager = new ResultTemplatesManager();
+    resultTemplateManager = new ResultTemplatesManager(buildMockEngine());
   });
 
   describe('registration & selection', () => {

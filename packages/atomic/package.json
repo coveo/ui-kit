@@ -18,7 +18,7 @@
     "build": "stencil build --docs",
     "start": "stencil build --dev --watch --serve",
     "test": "stencil test --spec --e2e",
-    "test.watch": "stencil test --spec --e2e --watchAll",
+    "test:watch": "stencil test --spec --e2e --watchAll",
     "generate": "stencil generate",
     "cypress:test": "npx cypress run",
     "cypress:open": "npx cypress open"

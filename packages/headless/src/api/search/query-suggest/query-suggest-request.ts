@@ -1,5 +1,5 @@
 import {SearchPageState} from '../../../state';
-import {getOrganizationIdParam} from '../search-request';
+import {getOrganizationIdParam} from '../search-api-params';
 
 export const querySuggestRequestParams = (
   id: string,

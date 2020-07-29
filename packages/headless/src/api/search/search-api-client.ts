@@ -5,7 +5,7 @@ import {
   QuerySuggestSuccessResponse,
   QuerySuggest,
 } from './query-suggest/query-suggest-response';
-import {baseSearchParams} from './search-request';
+import {baseSearchParams} from './search-api-params';
 import {SearchRequest, searchRequestParams} from './search/search-request';
 import {
   facetSearchRequestParams,

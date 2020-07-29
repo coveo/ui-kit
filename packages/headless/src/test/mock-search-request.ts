@@ -1,4 +1,5 @@
 import {SearchRequest} from '../api/search/search/search-request';
+import {getFieldsInitialState} from '../features/fields/fields-slice';
 
 export function buildMockSearchRequest(
   config: Partial<SearchRequest> = {}
@@ -11,6 +12,7 @@ export function buildMockSearchRequest(
     numberOfResults: 10,
     q: '',
     sortCriteria: 'relevancy',
+    fieldsToInclude: getFieldsInitialState().fieldsToInclude,
     pipeline: '',
     ...config,
   };

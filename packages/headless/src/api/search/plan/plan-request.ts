@@ -1,5 +1,5 @@
 import {SearchPageState} from '../../../state';
-import {getQParam, getOrganizationIdParam} from '../search-request';
+import {getQParam, getOrganizationIdParam} from '../search-api-params';
 
 export const planRequestParams = (state: SearchPageState) => ({
   ...getQParam(state),
