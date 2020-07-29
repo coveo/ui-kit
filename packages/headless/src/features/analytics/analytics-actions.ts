@@ -65,6 +65,18 @@ export const logGenericSearchEvent = createAsyncThunk(
   }
 );
 
+/**
+ * Log interface load
+ */
+export const logInterfaceLoad = createAsyncThunk(
+  'analytics/interface/load',
+  async (_, {getState}) => {
+    const state = searchPageState(getState);
+    await configureAnalytics(state).logInterfaceLoad();
+    return makeSearchActionType();
+  }
+);
+
 export const partialDocumentInformation = (
   result: Result,
   state: SearchPageState
