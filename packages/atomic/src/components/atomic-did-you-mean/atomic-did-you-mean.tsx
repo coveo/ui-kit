@@ -1,5 +1,10 @@
 import {Component, h, State} from '@stencil/core';
-import {DidYouMean, DidYouMeanState, Unsubscribe} from '@coveo/headless';
+import {
+  DidYouMean,
+  DidYouMeanState,
+  Unsubscribe,
+  buildDidYouMean,
+} from '@coveo/headless';
 import {headlessEngine} from '../../engine';
 
 @Component({
@@ -13,7 +18,7 @@ export class AtomicDidYouMean {
   @State() state!: DidYouMeanState;
 
   constructor() {
-    this.didYouMean = new DidYouMean(headlessEngine);
+    this.didYouMean = buildDidYouMean(headlessEngine);
     this.unsubscribe = this.didYouMean.subscribe(() => this.updateState());
   }
 
