@@ -27,6 +27,9 @@ export interface SearchPageClientProvider {
     getSearchEventRequestPayload: () => Omit<SearchEventRequest, 'actionCause' | 'searchQueryUid'>;
     getSearchUID: () => string;
     getPipeline: () => string;
+    getOriginLevel1: () => string;
+    getOriginLevel2: () => string;
+    getOriginLevel3: () => string;
 }
 
 export interface SearchPageClientOptions extends ClientOptions {
@@ -209,6 +212,7 @@ export class CoveoSearchPageClient {
         const customData = {...this.provider.getBaseMetadata(), ...metadata};
 
         const payload: CustomEventRequest = {
+            ...this.getOrigins(),
             eventType: CustomEventsTypes[event]!,
             eventValue: event,
             lastSearchQueryUid: this.provider.getSearchUID(),
@@ -223,6 +227,7 @@ export class CoveoSearchPageClient {
 
         const payload: SearchEventRequest = {
             ...this.provider.getSearchEventRequestPayload(),
+            ...this.getOrigins(),
             searchQueryUid: this.provider.getSearchUID(),
             queryPipeline: this.provider.getPipeline(),
             customData,
@@ -246,6 +251,7 @@ export class CoveoSearchPageClient {
 
         const payload: ClickEventRequest = {
             ...info,
+            ...this.getOrigins(),
             searchQueryUid: this.provider.getSearchUID(),
             queryPipeline: this.provider.getPipeline(),
             actionCause: event,
@@ -253,5 +259,13 @@ export class CoveoSearchPageClient {
         };
 
         return this.coveoAnalyticsClient.sendClickEvent(payload);
+    }
+
+    private getOrigins() {
+        return {
+            originLevel1: this.provider.getOriginLevel1(),
+            originLevel2: this.provider.getOriginLevel2(),
+            originLevel3: this.provider.getOriginLevel3(),
+        };
     }
 }

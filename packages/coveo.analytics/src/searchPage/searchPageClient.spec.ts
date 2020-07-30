@@ -33,6 +33,9 @@ describe('SearchPageClient', () => {
         }),
         getSearchUID: () => 'my-uid',
         getPipeline: () => 'my-pipeline',
+        getOriginLevel1: () => 'origin-level-1',
+        getOriginLevel2: () => 'origin-level-2',
+        getOriginLevel3: () => 'origin-level-3',
     };
 
     beforeEach(() => {
@@ -51,6 +54,12 @@ describe('SearchPageClient', () => {
         return new CoveoSearchPageClient({}, provider);
     };
 
+    const expectOrigins = () => ({
+        originLevel1: 'origin-level-1',
+        originLevel2: 'origin-level-2',
+        originLevel3: 'origin-level-3',
+    });
+
     const expectMatchPayload = (actionCause: SearchPageEvents, meta = {}) => {
         const [, {body}] = fetchMock.lastCall();
         const customData = {foo: 'bar', ...meta};
@@ -60,6 +69,7 @@ describe('SearchPageClient', () => {
             queryPipeline: 'my-pipeline',
             actionCause,
             customData,
+            ...expectOrigins(),
         });
     };
 
@@ -71,6 +81,7 @@ describe('SearchPageClient', () => {
             customData,
             queryPipeline: 'my-pipeline',
             ...doc,
+            ...expectOrigins(),
         });
     };
 
@@ -82,6 +93,7 @@ describe('SearchPageClient', () => {
             eventType: CustomEventsTypes[actionCause],
             lastSearchQueryUid: 'my-uid',
             customData,
+            ...expectOrigins(),
         });
     };
 
