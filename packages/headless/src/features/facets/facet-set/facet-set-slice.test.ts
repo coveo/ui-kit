@@ -38,17 +38,6 @@ describe('facet-set slice', () => {
     };
   }
 
-  function buildExecuteSearchActionWithFacets(facets: FacetResponse[]) {
-    const search = buildMockSearch();
-    search.response.facets = facets;
-
-    return executeSearch.fulfilled(
-      search,
-      '',
-      logGenericSearchEvent({evt: 'foo'})
-    );
-  }
-
   beforeEach(() => {
     state = getFacetSetInitialState();
   });
@@ -138,78 +127,80 @@ describe('facet-set slice', () => {
     expect(nextState).toEqual(state);
   });
 
-  it('dispatching #toggleSelectFacetValue with a valid facetId sets the state of an idle value to selected', () => {
-    const id = '1';
+  describe('dispatching #toggleSelectFacetValue with a registered facet id', () => {
+    it('sets the state of an idle value to selected', () => {
+      const id = '1';
 
-    const facetValue = buildMockFacetValue({value: 'TED'});
-    const facetValueRequest = convertFacetValueToRequest(facetValue);
+      const facetValue = buildMockFacetValue({value: 'TED'});
+      const facetValueRequest = convertFacetValueToRequest(facetValue);
 
-    state[id] = buildMockFacetRequest({currentValues: [facetValueRequest]});
+      state[id] = buildMockFacetRequest({currentValues: [facetValueRequest]});
 
-    const action = toggleSelectFacetValue({
-      facetId: id,
-      selection: facetValue,
+      const action = toggleSelectFacetValue({
+        facetId: id,
+        selection: facetValue,
+      });
+      const finalState = facetSetReducer(state, action);
+
+      const targetValue = finalState[id].currentValues.find(
+        (req) => req.value === facetValue.value
+      );
+      expect(targetValue?.state).toBe('selected');
     });
-    const finalState = facetSetReducer(state, action);
 
-    const targetValue = finalState[id].currentValues.find(
-      (req) => req.value === facetValue.value
-    );
-    expect(targetValue?.state).toBe('selected');
-  });
+    it('sets the state of a selected value to idle', () => {
+      const id = '1';
 
-  it('dispatching #toggleSelectFacetValue with a valid facetId sets the state of a selected value to idle', () => {
-    const id = '1';
+      const facetValue = buildMockFacetValue({value: 'TED', state: 'selected'});
+      const facetValueRequest = convertFacetValueToRequest(facetValue);
 
-    const facetValue = buildMockFacetValue({value: 'TED', state: 'selected'});
-    const facetValueRequest = convertFacetValueToRequest(facetValue);
+      state[id] = buildMockFacetRequest({currentValues: [facetValueRequest]});
 
-    state[id] = buildMockFacetRequest({currentValues: [facetValueRequest]});
+      const action = toggleSelectFacetValue({
+        facetId: id,
+        selection: facetValue,
+      });
+      const finalState = facetSetReducer(state, action);
 
-    const action = toggleSelectFacetValue({
-      facetId: id,
-      selection: facetValue,
+      const targetValue = finalState[id].currentValues.find(
+        (req) => req.value === facetValue.value
+      );
+      expect(targetValue?.state).toBe('idle');
     });
-    const finalState = facetSetReducer(state, action);
 
-    const targetValue = finalState[id].currentValues.find(
-      (req) => req.value === facetValue.value
-    );
-    expect(targetValue?.state).toBe('idle');
-  });
+    it('sets #freezeCurrentValues to true', () => {
+      const id = '1';
 
-  it('dispatching #toggleSelectFacetValue with a valid facetId sets #freezeCurrentValues to true on the request', () => {
-    const id = '1';
+      const facetValue = buildMockFacetValue({value: 'TED'});
+      const facetValueRequest = convertFacetValueToRequest(facetValue);
 
-    const facetValue = buildMockFacetValue({value: 'TED'});
-    const facetValueRequest = convertFacetValueToRequest(facetValue);
+      state[id] = buildMockFacetRequest({currentValues: [facetValueRequest]});
 
-    state[id] = buildMockFacetRequest({currentValues: [facetValueRequest]});
+      const action = toggleSelectFacetValue({
+        facetId: id,
+        selection: facetValue,
+      });
+      const finalState = facetSetReducer(state, action);
 
-    const action = toggleSelectFacetValue({
-      facetId: id,
-      selection: facetValue,
+      expect(finalState[id].freezeCurrentValues).toBe(true);
     });
-    const finalState = facetSetReducer(state, action);
 
-    expect(finalState[id].freezeCurrentValues).toBe(true);
-  });
+    it('sets #preventAutoSelect to true', () => {
+      const id = '1';
 
-  it('dispatching #toggleSelectFacetValue with a valid facetId sets #preventAutoSelect to true on the request', () => {
-    const id = '1';
+      const facetValue = buildMockFacetValue({value: 'TED'});
+      const facetValueRequest = convertFacetValueToRequest(facetValue);
 
-    const facetValue = buildMockFacetValue({value: 'TED'});
-    const facetValueRequest = convertFacetValueToRequest(facetValue);
+      state[id] = buildMockFacetRequest({currentValues: [facetValueRequest]});
 
-    state[id] = buildMockFacetRequest({currentValues: [facetValueRequest]});
+      const action = toggleSelectFacetValue({
+        facetId: id,
+        selection: facetValue,
+      });
+      const finalState = facetSetReducer(state, action);
 
-    const action = toggleSelectFacetValue({
-      facetId: id,
-      selection: facetValue,
+      expect(finalState[id].preventAutoSelect).toBe(true);
     });
-    const finalState = facetSetReducer(state, action);
-
-    expect(finalState[id].preventAutoSelect).toBe(true);
   });
 
   it('dispatching #toggleSelectFacetValue with an invalid id does not throw', () => {
@@ -291,48 +282,61 @@ describe('facet-set slice', () => {
     expect(() => facetSetReducer(state, action)).not.toThrow();
   });
 
-  it('#executeSearch.fulfilled updates the currentValues of facet requests to the values in the response', () => {
-    const id = '1';
-    const facetValue = buildMockFacetValue({value: 'TED'});
-    const facet = buildMockFacetResponse({facetId: id, values: [facetValue]});
+  describe('#executeSearch.fulfilled', () => {
+    function buildExecuteSearchAction(facets: FacetResponse[]) {
+      const search = buildMockSearch();
+      search.response.facets = facets;
 
-    state[id] = buildMockFacetRequest({facetId: id});
+      return executeSearch.fulfilled(
+        search,
+        '',
+        logGenericSearchEvent({evt: 'foo'})
+      );
+    }
 
-    const action = buildExecuteSearchActionWithFacets([facet]);
-    const finalState = facetSetReducer(state, action);
+    it('updates the currentValues of facet requests to the values in the response', () => {
+      const id = '1';
+      const facetValue = buildMockFacetValue({value: 'TED'});
+      const facet = buildMockFacetResponse({facetId: id, values: [facetValue]});
 
-    const expectedFacetValueRequest = convertFacetValueToRequest(facetValue);
-    expect(finalState[id].currentValues).toEqual([expectedFacetValueRequest]);
-  });
+      state[id] = buildMockFacetRequest({facetId: id});
 
-  it('#executeSearch.fulfilled sets #freezeCurrentValues to false', () => {
-    const id = '1';
-    state[id] = buildMockFacetRequest({freezeCurrentValues: true});
+      const action = buildExecuteSearchAction([facet]);
+      const finalState = facetSetReducer(state, action);
 
-    const facet = buildMockFacetResponse({facetId: id});
-    const action = buildExecuteSearchActionWithFacets([facet]);
+      const expectedFacetValueRequest = convertFacetValueToRequest(facetValue);
+      expect(finalState[id].currentValues).toEqual([expectedFacetValueRequest]);
+    });
 
-    const finalState = facetSetReducer(state, action);
-    expect(finalState[id].freezeCurrentValues).toBe(false);
-  });
+    it('sets #freezeCurrentValues to false', () => {
+      const id = '1';
+      state[id] = buildMockFacetRequest({freezeCurrentValues: true});
 
-  it('#executeSearch.fulfilled sets #preventAutoSelect to false', () => {
-    const id = '1';
-    state[id] = buildMockFacetRequest({preventAutoSelect: true});
+      const facet = buildMockFacetResponse({facetId: id});
+      const action = buildExecuteSearchAction([facet]);
 
-    const facet = buildMockFacetResponse({facetId: id});
-    const action = buildExecuteSearchActionWithFacets([facet]);
+      const finalState = facetSetReducer(state, action);
+      expect(finalState[id].freezeCurrentValues).toBe(false);
+    });
 
-    const finalState = facetSetReducer(state, action);
-    expect(finalState[id].preventAutoSelect).toBe(false);
-  });
+    it('sets #preventAutoSelect to false', () => {
+      const id = '1';
+      state[id] = buildMockFacetRequest({preventAutoSelect: true});
 
-  it('#executeSearch.fulfilled response containing unregistered facet ids does not throw', () => {
-    const id = '1';
-    const facet = buildMockFacetResponse({facetId: id});
-    const action = buildExecuteSearchActionWithFacets([facet]);
+      const facet = buildMockFacetResponse({facetId: id});
+      const action = buildExecuteSearchAction([facet]);
 
-    expect(() => facetSetReducer(state, action)).not.toThrow();
+      const finalState = facetSetReducer(state, action);
+      expect(finalState[id].preventAutoSelect).toBe(false);
+    });
+
+    it('response containing unregistered facet ids does not throw', () => {
+      const id = '1';
+      const facet = buildMockFacetResponse({facetId: id});
+      const action = buildExecuteSearchAction([facet]);
+
+      expect(() => facetSetReducer(state, action)).not.toThrow();
+    });
   });
 
   describe('when the passed id is registered', () => {

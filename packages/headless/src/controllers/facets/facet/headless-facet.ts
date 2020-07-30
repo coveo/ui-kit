@@ -13,7 +13,7 @@ import {
   facetSelector,
   facetRequestSelector,
 } from '../../../features/facets/facet-set/facet-set-selectors';
-import {FacetOptionalParameters} from '../../../features/facets/facet-set/interfaces/options';
+import {FacetRegistrationOptions} from '../../../features/facets/facet-set/interfaces/options';
 import {executeSearch} from '../../../features/search/search-actions';
 import {
   FacetSelectionChangeMetadata,
@@ -27,8 +27,10 @@ import {
 import {buildFacetSearch} from '../facet-search/headless-facet-search';
 import {FacetSearchRequestOptions} from '../../../features/facets/facet-search-set/facet-search-request-options';
 import {FacetSearchOptions} from '../../../features/facets/facet-search-set/facet-search-actions';
-import {FacetRegistrationOptions} from '../../../features/facets/facet-set/interfaces/options';
-import {FacetValue} from '../../../features/facets/facet-set/interfaces/response';
+import {
+  FacetValue,
+  FacetResponse,
+} from '../../../features/facets/facet-set/interfaces/response';
 import {FacetSortCriterion} from '../../../features/facets/facet-set/interfaces/request';
 
 export type Facet = ReturnType<typeof buildFacet>;
@@ -52,8 +54,7 @@ const schema = new Schema({
   numberOfValues: new NumberValue({default: 8, min: 1}),
 });
 
-export type FacetOptions = FacetOptionalParameters & {
-  field: string;
+export type FacetOptions = Omit<FacetRegistrationOptions, 'facetId'> & {
   facetId?: string;
   facetSearch?: Partial<FacetSearchRequestOptions>;
 };
@@ -88,7 +89,7 @@ export function buildFacet(engine: Engine, props: FacetProps) {
     const id = options.facetId;
     const state = engine.state;
 
-    return facetSelector(state, id);
+    return facetSelector(state, id) as FacetResponse | undefined;
   };
 
   const getNumberOfActiveValues = () => {
@@ -126,8 +127,8 @@ export function buildFacet(engine: Engine, props: FacetProps) {
       dispatch(executeSearch(analyticsAction));
     },
     /**
-     * Returns `true` is the passed facet value is selected and `false` otherwise.
-     * @param facetValue The facet value to check.
+     * Returns `true` if the passed facet value is selected and `false` otherwise.
+     * @param {FacetValue} The facet value to check.
      * @returns {boolean}.
      */
     isValueSelected,

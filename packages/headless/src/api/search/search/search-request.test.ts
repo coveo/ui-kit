@@ -2,7 +2,8 @@ import {searchRequestParams} from './search-request';
 import {createMockState} from '../../../test/mock-state';
 import {SearchPageState} from '../../../state';
 import {buildMockFacetRequest} from '../../../test/mock-facet-request';
-import {buildMockRangeFacetRequest} from '../../../test/mock-range-facet-request';
+import {buildMockNumericFacetRequest} from '../../../test/mock-numeric-facet-request';
+import {buildMockDateFacetRequest} from '../../../test/mock-date-facet-request';
 
 describe('search request', () => {
   let state: SearchPageState;
@@ -47,9 +48,17 @@ describe('search request', () => {
     expect(facets).toContain(request);
   });
 
-  it('#searchRequestParams returns the facets in the state #rangeFacetSet', () => {
-    const request = buildMockRangeFacetRequest({field: 'objecttype'});
-    state.rangeFacetSet[1] = request;
+  it('#searchRequestParams returns the facets in the state #numericFacetSet', () => {
+    const request = buildMockNumericFacetRequest({field: 'objecttype'});
+    state.numericFacetSet[1] = request;
+
+    const {facets} = searchRequestParams(state);
+    expect(facets).toContain(request);
+  });
+
+  it('#searchRequestParams returns the facets in the state #dateFacetSet', () => {
+    const request = buildMockDateFacetRequest({field: 'objecttype'});
+    state.dateFacetSet[1] = request;
 
     const {facets} = searchRequestParams(state);
     expect(facets).toContain(request);

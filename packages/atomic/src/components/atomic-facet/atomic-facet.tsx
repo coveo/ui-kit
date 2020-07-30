@@ -47,8 +47,9 @@ export class AtomicFacet {
     return (
       <div onClick={() => this.facet.toggleSelect(item)}>
         <input type="checkbox" checked={isSelected}></input>
-        <span>{item.value}</span>
-        <span>{item.numberOfResults}</span>
+        <span>
+          {item.value} {item.numberOfResults}
+        </span>
       </div>
     );
   }

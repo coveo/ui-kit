@@ -16,6 +16,10 @@ export namespace Components {
     }
     interface AtomicHistory {
     }
+    interface AtomicNumericFacet {
+        "field": string;
+        "label": string;
+    }
     interface AtomicPager {
     }
     interface AtomicQueryError {
@@ -61,6 +65,12 @@ declare global {
     var HTMLAtomicHistoryElement: {
         prototype: HTMLAtomicHistoryElement;
         new (): HTMLAtomicHistoryElement;
+    };
+    interface HTMLAtomicNumericFacetElement extends Components.AtomicNumericFacet, HTMLStencilElement {
+    }
+    var HTMLAtomicNumericFacetElement: {
+        prototype: HTMLAtomicNumericFacetElement;
+        new (): HTMLAtomicNumericFacetElement;
     };
     interface HTMLAtomicPagerElement extends Components.AtomicPager, HTMLStencilElement {
     }
@@ -120,6 +130,7 @@ declare global {
         "atomic-did-you-mean": HTMLAtomicDidYouMeanElement;
         "atomic-facet": HTMLAtomicFacetElement;
         "atomic-history": HTMLAtomicHistoryElement;
+        "atomic-numeric-facet": HTMLAtomicNumericFacetElement;
         "atomic-pager": HTMLAtomicPagerElement;
         "atomic-query-error": HTMLAtomicQueryErrorElement;
         "atomic-query-summary": HTMLAtomicQuerySummaryElement;
@@ -139,6 +150,10 @@ declare namespace LocalJSX {
         "label"?: string;
     }
     interface AtomicHistory {
+    }
+    interface AtomicNumericFacet {
+        "field"?: string;
+        "label"?: string;
     }
     interface AtomicPager {
     }
@@ -169,6 +184,7 @@ declare namespace LocalJSX {
         "atomic-did-you-mean": AtomicDidYouMean;
         "atomic-facet": AtomicFacet;
         "atomic-history": AtomicHistory;
+        "atomic-numeric-facet": AtomicNumericFacet;
         "atomic-pager": AtomicPager;
         "atomic-query-error": AtomicQueryError;
         "atomic-query-summary": AtomicQuerySummary;
@@ -187,6 +203,7 @@ declare module "@stencil/core" {
             "atomic-did-you-mean": LocalJSX.AtomicDidYouMean & JSXBase.HTMLAttributes<HTMLAtomicDidYouMeanElement>;
             "atomic-facet": LocalJSX.AtomicFacet & JSXBase.HTMLAttributes<HTMLAtomicFacetElement>;
             "atomic-history": LocalJSX.AtomicHistory & JSXBase.HTMLAttributes<HTMLAtomicHistoryElement>;
+            "atomic-numeric-facet": LocalJSX.AtomicNumericFacet & JSXBase.HTMLAttributes<HTMLAtomicNumericFacetElement>;
             "atomic-pager": LocalJSX.AtomicPager & JSXBase.HTMLAttributes<HTMLAtomicPagerElement>;
             "atomic-query-error": LocalJSX.AtomicQueryError & JSXBase.HTMLAttributes<HTMLAtomicQueryErrorElement>;
             "atomic-query-summary": LocalJSX.AtomicQuerySummary & JSXBase.HTMLAttributes<HTMLAtomicQuerySummaryElement>;

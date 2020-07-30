@@ -12,7 +12,7 @@ export const registerFacet = createAction<FacetRegistrationOptions>(
 );
 
 /**
- * Select a facet value.
+ * Select (unselect) a facet value if unselected (selected).
  */
 export const toggleSelectFacetValue = createAction<{
   facetId: string;

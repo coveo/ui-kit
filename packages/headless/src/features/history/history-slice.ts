@@ -15,17 +15,22 @@ import {
 import {QueryState} from '../../state';
 import {SortState} from '../../controllers/sort/headless-sort';
 import {snapshot} from './history-actions';
-import {
-  getRangeFacetSetInitialState,
-  RangeFacetSetState,
-} from '../facets/range-facet-set/range-facet-set-slice';
 import {getPipelineInitialState} from '../pipeline/pipeline-slice';
+import {
+  getDateFacetSetInitialState,
+  DateFacetSetState,
+} from '../facets/range-facets/date-facet-set/date-facet-set-slice';
+import {
+  getNumericFacetSetInitialState,
+  NumericFacetSetState,
+} from '../facets/range-facets/numeric-facet-set/numeric-facet-set-slice';
 import {getSearchHubInitialState} from '../search-hub/search-hub-slice';
 
 export const getHistoryEmptyState = (): SearchParametersState => ({
   context: getContextInitialState(),
   facetSet: getFacetSetInitialState(),
-  rangeFacetSet: getRangeFacetSetInitialState(),
+  dateFacetSet: getDateFacetSetInitialState(),
+  numericFacetSet: getNumericFacetSetInitialState(),
   pagination: getPaginationInitialState(),
   query: getQueryInitialState(),
   sortCriteria: getSortCriteriaInitialState(),
@@ -50,7 +55,8 @@ const isEqual = (
   return (
     isContextEqual(current.context, next.context) &&
     isFacetsEqual(current.facetSet, next.facetSet) &&
-    isRangeFacetsEqual(current.rangeFacetSet, next.rangeFacetSet) &&
+    isDateFacetsEqual(current.dateFacetSet, next.dateFacetSet) &&
+    isNumericFacetsEqual(current.numericFacetSet, next.numericFacetSet) &&
     isPaginationEqual(current.pagination, next.pagination) &&
     isQueryEqual(current.query, next.query) &&
     isSortEqual(current, next) &&
@@ -65,9 +71,14 @@ const isContextEqual = (current: ContextState, next: ContextState) =>
 const isFacetsEqual = (current: FacetSetState, next: FacetSetState) =>
   JSON.stringify(current) === JSON.stringify(next);
 
-const isRangeFacetsEqual = (
-  current: RangeFacetSetState,
-  next: RangeFacetSetState
+const isDateFacetsEqual = (
+  current: DateFacetSetState,
+  next: DateFacetSetState
+) => JSON.stringify(current) === JSON.stringify(next);
+
+const isNumericFacetsEqual = (
+  current: NumericFacetSetState,
+  next: NumericFacetSetState
 ) => JSON.stringify(current) === JSON.stringify(next);
 
 const isPaginationEqual = (current: PaginationState, next: PaginationState) =>

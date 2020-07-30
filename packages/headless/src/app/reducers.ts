@@ -18,8 +18,9 @@ import {
 import {didYouMeanReducer} from '../features/did-you-mean/did-you-mean-slice';
 import {facetSearchSetReducer} from '../features/facets/facet-search-set/facet-search-set-slice';
 import {fieldsReducer} from '../features/fields/fields-slice';
-import {rangeFacetSetReducer} from '../features/facets/range-facet-set/range-facet-set-slice';
 import {pipelineReducer} from '../features/pipeline/pipeline-slice';
+import {dateFacetSetReducer} from '../features/facets/range-facets/date-facet-set/date-facet-set-slice';
+import {numericFacetSetReducer} from '../features/facets/range-facets/numeric-facet-set/numeric-facet-set-slice';
 import {searchHubReducer} from '../features/search-hub/search-hub-slice';
 
 /**
@@ -28,7 +29,8 @@ import {searchHubReducer} from '../features/search-hub/search-hub-slice';
 export const searchPageReducers: ReducersMapObject<SearchPageState> = {
   configuration: configurationReducer,
   facetSet: facetSetReducer,
-  rangeFacetSet: rangeFacetSetReducer,
+  dateFacetSet: dateFacetSetReducer,
+  numericFacetSet: numericFacetSetReducer,
   facetSearchSet: facetSearchSetReducer,
   query: queryReducer,
   querySet: querySetReducer,

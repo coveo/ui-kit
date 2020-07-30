@@ -10,9 +10,10 @@ import {getFacetSetInitialState} from '../features/facets/facet-set/facet-set-sl
 import {getContextInitialState} from '../features/context/context-slice';
 import {getDidYouMeanInitialState} from '../features/did-you-mean/did-you-mean-slice';
 import {getFacetSearchSetInitialState} from '../features/facets/facet-search-set/facet-search-set-slice';
+import {getDateFacetSetInitialState} from '../features/facets/range-facets/date-facet-set/date-facet-set-slice';
+import {getNumericFacetSetInitialState} from '../features/facets/range-facets/numeric-facet-set/numeric-facet-set-slice';
 import {getFieldsInitialState} from '../features/fields/fields-slice';
 import {getHistoryEmptyState} from '../features/history/history-slice';
-import {getRangeFacetSetInitialState} from '../features/facets/range-facet-set/range-facet-set-slice';
 import {getPipelineInitialState} from '../features/pipeline/pipeline-slice';
 import {makeHistory} from '../app/undoable';
 import {getSearchHubInitialState} from '../features/search-hub/search-hub-slice';
@@ -23,7 +24,8 @@ export function createMockState(
   return {
     configuration: getConfigurationInitialState(),
     facetSet: getFacetSetInitialState(),
-    rangeFacetSet: getRangeFacetSetInitialState(),
+    dateFacetSet: getDateFacetSetInitialState(),
+    numericFacetSet: getNumericFacetSetInitialState(),
     facetSearchSet: getFacetSearchSetInitialState(),
     pagination: getPaginationInitialState(),
     query: getQueryInitialState(),

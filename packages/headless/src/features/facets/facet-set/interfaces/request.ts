@@ -6,6 +6,7 @@ import {
   Type,
   SortCriteria,
   BaseFacetValueRequest,
+  Expandable,
 } from '../../facet-api/request';
 
 export type FacetSortCriterion = 'score' | 'alphanumeric';
@@ -17,6 +18,7 @@ export interface FacetValueRequest extends BaseFacetValueRequest {
 export interface FacetRequest
   extends BaseFacetRequest,
     CurrentValues<FacetValueRequest>,
+    Expandable,
     Freezable,
     Delimitable,
     Type<'specific'>,

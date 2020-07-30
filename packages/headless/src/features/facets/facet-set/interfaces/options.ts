@@ -1,7 +1,7 @@
 import {FacetRequest} from './request';
 
 type FacetRequiredParameters = Pick<FacetRequest, 'facetId' | 'field'>;
-export type FacetOptionalParameters = Partial<
+type FacetOptionalParameters = Partial<
   Pick<
     FacetRequest,
     | 'delimitingCharacter'

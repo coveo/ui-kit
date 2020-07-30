@@ -3,8 +3,9 @@ import {SearchParametersState} from '../../search-parameters-state';
 import {snapshot} from './history-actions';
 import {Reducer} from 'redux';
 import {undoable, StateWithHistory, makeHistory} from '../../app/undoable';
-import {buildMockRangeFacetRequest} from '../../test/mock-range-facet-request';
 import {buildMockFacetRequest} from '../../test/mock-facet-request';
+import {buildMockNumericFacetRequest} from '../../test/mock-numeric-facet-request';
+import {buildMockDateFacetRequest} from '../../test/mock-date-facet-request';
 
 describe('history slice', () => {
   let undoableReducer: Reducer<StateWithHistory<SearchParametersState>>;
@@ -57,7 +58,8 @@ describe('history slice', () => {
     const expectedSnapshot: SearchParametersState = {
       context: {contextValues: {foo: 'bar'}},
       facetSet: {foo: buildMockFacetRequest()},
-      rangeFacetSet: {bar: buildMockRangeFacetRequest()},
+      numericFacetSet: {bar: buildMockNumericFacetRequest()},
+      dateFacetSet: {foo: buildMockDateFacetRequest()},
       pagination: {
         firstResult: 123,
         numberOfResults: 456,
@@ -144,10 +146,17 @@ describe('history slice', () => {
       );
     });
 
-    it('for #rangeFacetSet keys', () => {
+    it('for #dateFacetSet keys', () => {
       expectHistoryToHaveCreatedDifferentSnapshots(
-        getSnapshot({rangeFacetSet: {foo: buildMockRangeFacetRequest()}}),
-        getSnapshot({rangeFacetSet: {foo2: buildMockRangeFacetRequest()}})
+        getSnapshot({dateFacetSet: {foo: buildMockDateFacetRequest()}}),
+        getSnapshot({dateFacetSet: {foo2: buildMockDateFacetRequest()}})
+      );
+    });
+
+    it('for #numericFacetSet keys', () => {
+      expectHistoryToHaveCreatedDifferentSnapshots(
+        getSnapshot({numericFacetSet: {foo: buildMockNumericFacetRequest()}}),
+        getSnapshot({numericFacetSet: {foo2: buildMockNumericFacetRequest()}})
       );
     });
 

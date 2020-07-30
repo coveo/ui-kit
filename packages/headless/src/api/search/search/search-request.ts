@@ -2,7 +2,7 @@ import {SearchPageState} from '../../../state';
 import {getQParam} from '../search-api-params';
 import {FacetRequest} from '../../../features/facets/facet-set/interfaces/request';
 import {Context} from '../../../features/context/context-slice';
-import {RangeFacetRequest} from '../../../features/facets/range-facet-set/interfaces/request';
+import {RangeFacetRequest} from '../../../features/facets/range-facets/generic/interfaces/range-facet';
 
 export interface SearchRequest {
   q: string;
@@ -34,15 +34,15 @@ export const searchRequestParams = (state: SearchPageState): SearchRequest => {
 };
 
 function getFacets(state: SearchPageState) {
-  return [...getFacetRequests(state), ...getRangeFacetRequests(state)];
+  return [
+    ...getFacetRequests(state.facetSet),
+    ...getFacetRequests(state.numericFacetSet),
+    ...getFacetRequests(state.dateFacetSet),
+  ];
 }
 
-function getFacetRequests(state: SearchPageState) {
-  const requests = state.facetSet;
-  return Object.keys(requests).map((id) => requests[id]);
-}
-
-function getRangeFacetRequests(state: SearchPageState) {
-  const requests = state.rangeFacetSet;
+function getFacetRequests(
+  requests: Record<string, FacetRequest | RangeFacetRequest>
+) {
   return Object.keys(requests).map((id) => requests[id]);
 }

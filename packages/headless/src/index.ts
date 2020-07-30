@@ -23,6 +23,7 @@ export * from './controllers/query-error/headless-query-error';
 export * from './controllers/history/headless-history';
 export * from './controllers/did-you-mean/headless-did-you-mean';
 export * from './controllers/facets/facet/headless-facet';
+export * from './controllers/facets/range-facet/headless-numeric-facet';
 
 export * as queryActions from './features/query/query-actions';
 export * as querySetActions from './features/query-set/query-set-actions';
@@ -33,14 +34,15 @@ export * as paginationActions from './features/pagination/pagination-actions';
 export * as sortCriterionActions from './features/sort-criteria/sort-criteria-actions';
 export * as searchActions from './features/search/search-actions';
 export * as facetActions from './features/facets/facet-set/facet-set-actions';
-export * as historyActions from './features/history/history-actions';
 export * as ResultAnalyticsActions from './features/result/result-analytics-actions';
-
-export * as pipelineActions from './features/pipeline/pipeline-actions';
 export * as analyticsActions from './features/analytics/analytics-actions';
 export * as searchHubActions from './features/search-hub/search-hub-actions';
 export {FacetValue} from './features/facets/facet-set/interfaces/response';
 export {FacetSortCriterion} from './features/facets/facet-set/interfaces/request';
+export * as numericFacetActions from './features/facets/range-facets/numeric-facet-set/numeric-facet-actions';
+export {NumericFacetValue} from './features/facets/range-facets/numeric-facet-set/interfaces/response';
+export * as historyActions from './features/history/history-actions';
+export * as pipelineActions from './features/pipeline/pipeline-actions';
 export * from './features/sort-criteria/criteria';
 
 export * from './features/pagination/pagination-selectors';

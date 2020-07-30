@@ -10,7 +10,7 @@ import {
 import {executeSearch} from '../../search/search-actions';
 import {selectFacetSearchResult} from '../facet-search-set/facet-search-actions';
 import {FacetRequest, FacetValueRequest} from './interfaces/request';
-import {FacetValue} from './interfaces/response';
+import {FacetValue, FacetResponse} from './interfaces/response';
 import {FacetRegistrationOptions} from './interfaces/options';
 
 export type FacetSetState = Record<string, FacetRequest>;
@@ -104,7 +104,7 @@ export const facetSetReducer = createReducer(
             return;
           }
 
-          facetRequest.currentValues = facetResponse.values.map(
+          facetRequest.currentValues = (facetResponse as FacetResponse).values.map(
             convertFacetValueToRequest
           );
           facetRequest.freezeCurrentValues = false;

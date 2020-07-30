@@ -4,7 +4,8 @@ import {PaginationState} from './features/pagination/pagination-slice';
 import {SortCriteriaState} from './features/sort-criteria/sort-criteria-slice';
 import {ContextState} from './features/context/context-slice';
 import {QuerySetState} from './features/query-set/query-set-slice';
-import {RangeFacetSetState} from './features/facets/range-facet-set/range-facet-set-slice';
+import {DateFacetSetState} from './features/facets/range-facets/date-facet-set/date-facet-set-slice';
+import {NumericFacetSetState} from './features/facets/range-facets/numeric-facet-set/numeric-facet-set-slice';
 
 export interface SearchParametersState {
   /**
@@ -12,9 +13,13 @@ export interface SearchParametersState {
    */
   facetSet: FacetSetState;
   /**
-   * The set of range facets.
+   * The set of date facets.
    */
-  rangeFacetSet: RangeFacetSetState;
+  dateFacetSet: DateFacetSetState;
+  /**
+   * The set of numeric facets.
+   */
+  numericFacetSet: NumericFacetSetState;
   /**
    * The expressions that constitute the current query.
    */
