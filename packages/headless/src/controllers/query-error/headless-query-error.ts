@@ -1,23 +1,23 @@
 import {Engine} from '../../app/headless-engine';
-import {Controller} from '../controller/headless-controller';
+import {buildController} from '../controller/headless-controller';
 
-/** The state relevant to the `QueryError` component.*/
+/**
+ * `QueryError` controller allows to retrieve information about the current error returned by the search API, if any.
+ */
+export type QueryError = ReturnType<typeof buildQueryError>;
 export type QueryErrorState = QueryError['state'];
 
-export class QueryError extends Controller {
-  constructor(engine: Engine) {
-    super(engine);
-  }
+export const buildQueryError = (engine: Engine) => {
+  const controller = buildController(engine);
 
-  /**
-   * @returns The state of the `QueryError` component.
-   */
-  public get state() {
-    const state = this.engine.state;
+  return {
+    ...controller,
 
-    return {
-      hasError: state.search.error !== null,
-      error: state.search.error,
-    };
-  }
-}
+    get state() {
+      return {
+        hasError: engine.state.search.error !== null,
+        error: engine.state.search.error,
+      };
+    },
+  };
+};

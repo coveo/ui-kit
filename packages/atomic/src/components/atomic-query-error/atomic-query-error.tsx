@@ -1,5 +1,10 @@
 import {Component, h, State} from '@stencil/core';
-import {QueryError, QueryErrorState, Unsubscribe} from '@coveo/headless';
+import {
+  QueryError,
+  QueryErrorState,
+  Unsubscribe,
+  buildQueryError,
+} from '@coveo/headless';
 import {headlessEngine} from '../../engine';
 
 @Component({
@@ -13,7 +18,7 @@ export class AtomicQueryError {
   @State() state!: QueryErrorState;
 
   constructor() {
-    this.queryError = new QueryError(headlessEngine);
+    this.queryError = buildQueryError(headlessEngine);
     this.unsubscribe = this.queryError.subscribe(() => this.updateState());
   }
 
