@@ -42,6 +42,7 @@ export interface SortCriteria<
     | 'ascending'
     | 'descending'
     | 'occurrences'
+    | 'automatic'
 > {
   sortCriteria: T;
 }

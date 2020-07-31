@@ -90,7 +90,12 @@ export class AtomicFacet {
   }
 
   private get sortOptions() {
-    const criteria: FacetSortCriterion[] = ['score', 'alphanumeric'];
+    const criteria: FacetSortCriterion[] = [
+      'automatic',
+      'occurrences',
+      'score',
+      'alphanumeric',
+    ];
 
     return criteria.map((criterion) => (
       <option value={criterion} selected={this.facet.isSortedBy(criterion)}>

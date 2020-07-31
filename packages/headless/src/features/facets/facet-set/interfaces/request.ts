@@ -9,7 +9,11 @@ import {
   Expandable,
 } from '../../facet-api/request';
 
-export type FacetSortCriterion = 'score' | 'alphanumeric';
+export type FacetSortCriterion =
+  | 'score'
+  | 'alphanumeric'
+  | 'occurrences'
+  | 'automatic';
 
 export interface FacetValueRequest extends BaseFacetValueRequest {
   value: string;

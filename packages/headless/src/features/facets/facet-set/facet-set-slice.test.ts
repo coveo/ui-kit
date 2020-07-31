@@ -12,6 +12,7 @@ import {
   deselectAllFacetValues,
   updateFacetSortCriterion,
   updateFacetNumberOfValues,
+  updateFacetIsFieldExpanded,
 } from './facet-set-actions';
 import {buildMockFacetValue} from '../../../test/mock-facet-value';
 import {buildMockSearch} from '../../../test/mock-search';
@@ -65,7 +66,7 @@ describe('facet-set slice', () => {
       isFieldExpanded: false,
       numberOfValues: 8,
       preventAutoSelect: false,
-      sortCriteria: 'score',
+      sortCriteria: 'automatic',
     };
 
     expect(finalState[facetId]).toEqual(expectedFacet);
@@ -280,6 +281,29 @@ describe('facet-set slice', () => {
       numberOfValues: 20,
     });
     expect(() => facetSetReducer(state, action)).not.toThrow();
+  });
+
+  describe('#updateFacetIsFieldExpanded', () => {
+    it('dispatching with a registered id updates the value', () => {
+      const facetId = '1';
+      const isFieldExpanded = true;
+      state[facetId] = buildMockFacetRequest({
+        isFieldExpanded: !isFieldExpanded,
+      });
+
+      const action = updateFacetIsFieldExpanded({facetId, isFieldExpanded});
+      const finalState = facetSetReducer(state, action);
+
+      expect(finalState[facetId].isFieldExpanded).toBe(isFieldExpanded);
+    });
+
+    it('dispatching with an unregistered id does not throw', () => {
+      const action = updateFacetIsFieldExpanded({
+        facetId: '1',
+        isFieldExpanded: true,
+      });
+      expect(() => facetSetReducer(state, action)).not.toThrow();
+    });
   });
 
   describe('#executeSearch.fulfilled', () => {

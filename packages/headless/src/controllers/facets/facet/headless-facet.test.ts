@@ -6,6 +6,7 @@ import {
   deselectAllFacetValues,
   updateFacetSortCriterion,
   updateFacetNumberOfValues,
+  updateFacetIsFieldExpanded,
 } from '../../../features/facets/facet-set/facet-set-actions';
 import {SearchPageState} from '../../../state';
 import {createMockState} from '../../../test/mock-state';
@@ -54,7 +55,7 @@ describe('facet', () => {
     options = {
       facetId: '1',
       field: 'author',
-      sortCriteria: 'alphanumeric',
+      sortCriteria: 'automatic',
       facetSearch: {},
     };
     initFacet();
@@ -225,24 +226,18 @@ describe('facet', () => {
       expect(engine.actions).toContainEqual(action);
     });
 
-    it('updates the sortCriteria to alphanumeric', () => {
-      setFacetRequest({sortCriteria: 'score'});
-      initFacet();
-
+    it('updates isFieldExpanded to true', () => {
       facet.showMoreValues();
 
-      const action = updateFacetSortCriterion({
+      const action = updateFacetIsFieldExpanded({
         facetId: options.facetId,
-        criterion: 'alphanumeric',
+        isFieldExpanded: true,
       });
 
       expect(engine.actions).toContainEqual(action);
     });
 
     it('executes a search', () => {
-      setFacetRequest();
-      initFacet();
-
       facet.showMoreValues();
 
       const action = engine.actions.find(
@@ -315,13 +310,14 @@ describe('facet', () => {
       expect(engine.actions).toContainEqual(action);
     });
 
-    it('updates the sortCriteria to score', () => {
-      const facetId = options.facetId;
-      setFacetRequest({sortCriteria: 'alphanumeric'});
-      initFacet();
-
+    it('updates isFieldExpanded to false', () => {
       facet.showLessValues();
-      const action = updateFacetSortCriterion({facetId, criterion: 'score'});
+
+      const action = updateFacetIsFieldExpanded({
+        facetId: options.facetId,
+        isFieldExpanded: false,
+      });
+
       expect(engine.actions).toContainEqual(action);
     });
 

@@ -40,3 +40,11 @@ export const updateFacetNumberOfValues = createAction<{
   facetId: string;
   numberOfValues: number;
 }>('facet/updateNumberOfValues');
+
+/**
+ * Update whether the facet is expanded (showing more values than initially configured) or not.
+ */
+export const updateFacetIsFieldExpanded = createAction<{
+  facetId: string;
+  isFieldExpanded: boolean;
+}>('facet/updateIsFieldExpanded');

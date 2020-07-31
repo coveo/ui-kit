@@ -6,6 +6,7 @@ import {
   deselectAllFacetValues,
   updateFacetSortCriterion,
   updateFacetNumberOfValues,
+  updateFacetIsFieldExpanded,
 } from './facet-set-actions';
 import {executeSearch} from '../../search/search-actions';
 import {selectFacetSearchResult} from '../facet-search-set/facet-search-actions';
@@ -94,6 +95,16 @@ export const facetSetReducer = createReducer(
 
         facetRequest.numberOfValues = numberOfValues;
       })
+      .addCase(updateFacetIsFieldExpanded, (state, action) => {
+        const {facetId, isFieldExpanded} = action.payload;
+        const facetRequest = state[facetId];
+
+        if (!facetRequest) {
+          return;
+        }
+
+        facetRequest.isFieldExpanded = isFieldExpanded;
+      })
       .addCase(executeSearch.fulfilled, (state, action) => {
         const facets = action.payload.response.facets;
         facets.forEach((facetResponse) => {
@@ -149,7 +160,7 @@ function buildFacetRequest(config: FacetRegistrationOptions): FacetRequest {
     isFieldExpanded: false,
     numberOfValues: 8,
     preventAutoSelect: false,
-    sortCriteria: 'score',
+    sortCriteria: 'automatic',
     ...config,
   };
 }

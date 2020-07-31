@@ -7,6 +7,7 @@ import {
   deselectAllFacetValues,
   updateFacetSortCriterion,
   updateFacetNumberOfValues,
+  updateFacetIsFieldExpanded,
 } from '../../../features/facets/facet-set/facet-set-actions';
 import {randomID} from '../../../utils/utils';
 import {
@@ -179,7 +180,7 @@ export function buildFacet(engine: Engine, props: FacetProps) {
       const numberOfValues = numberInState + numberToNextMultipleOfConfigured;
 
       dispatch(updateFacetNumberOfValues({facetId, numberOfValues}));
-      dispatch(updateFacetSortCriterion({facetId, criterion: 'alphanumeric'}));
+      dispatch(updateFacetIsFieldExpanded({facetId, isFieldExpanded: true}));
       dispatch(executeSearch(logFacetShowMore(facetId)));
     },
 
@@ -200,7 +201,7 @@ export function buildFacet(engine: Engine, props: FacetProps) {
       dispatch(
         updateFacetNumberOfValues({facetId, numberOfValues: newNumberOfValues})
       );
-      dispatch(updateFacetSortCriterion({facetId, criterion: 'score'}));
+      dispatch(updateFacetIsFieldExpanded({facetId, isFieldExpanded: false}));
       dispatch(executeSearch(logFacetShowLess(facetId)));
     },
 
