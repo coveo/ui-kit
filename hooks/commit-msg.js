@@ -8,7 +8,6 @@ const fs = require('fs');
 const os = require('os');
 const urlBase = 'https://coveord.atlassian.net/browse/';
 const projectAcronym = 'KIT';
-const {lintCommitMessage} = require('./commit-lint');
 
 let issueNumber;
 const branchName = childProcess
@@ -42,7 +41,7 @@ function commitHasIssueNumber(commitMessage, issueNumber) {
 
 async function main() {
   try {
-    await lintCommitMessage(commitMessage);
+    // TODO Re-setup commit-lint when merging to master only
     if (commitHasIssueNumber(commitMessage, issueNumber)) {
       return;
     }
