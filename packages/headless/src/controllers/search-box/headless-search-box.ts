@@ -21,7 +21,7 @@ import {
   updateQuerySetQuery,
 } from '../../features/query-set/query-set-actions';
 import {executeSearch} from '../../features/search/search-actions';
-import {Controller} from '../controller/headless-controller';
+import {buildController} from '../controller/headless-controller';
 import {updatePage} from '../../features/pagination/pagination-actions';
 import {logTriggerRedirect} from '../../features/redirection/redirection-analytics-actions';
 import {logSearchboxSubmit} from '../../features/query/query-analytics-actions';
@@ -63,119 +63,114 @@ export type SearchBoxOptions = SchemaValues<typeof optionsSchema>;
  * A scoped and simplified part of the headless state that is relevant to the `SearchBox` controller.
  */
 export type SearchBoxState = SearchBox['state'];
-
 /**
  * The `SearchBox` headless controller offers a high-level interface for designing a common search box UI controller.
  */
-export class SearchBox extends Controller {
-  public text = '';
-  private options: Required<SearchBoxOptions>;
+export type SearchBox = ReturnType<typeof buildSearchBox>;
 
-  constructor(engine: Engine, props: Partial<SearchBoxProps> = {}) {
-    super(engine);
-    this.options = optionsSchema.validate(props.options) as Required<
-      SearchBoxOptions
-    >;
-    this.registerQuery();
-    this.registerQuerySuggest();
-  }
+export const buildSearchBox = (
+  engine: Engine,
+  props: Partial<SearchBoxProps> = {}
+) => {
+  const controller = buildController(engine);
+  const {dispatch} = engine;
 
-  /**
-   * A unique identifier for the controller.
-   */
-  public get id() {
-    return this.options.id;
-  }
+  const options = optionsSchema.validate(props.options) as Required<
+    SearchBoxOptions
+  >;
 
-  /**
-   * Updates the search box text value and shows the suggestions for that value.
-   * @param value  The string value to update the search box with.
-   */
-  public updateText(value: string) {
-    this.dispatch(updateQuerySetQuery({id: this.options.id, query: value}));
+  dispatch(registerQuerySetQuery({id: options.id, query: ''}));
+  dispatch(
+    registerQuerySuggest({
+      id: options.id,
+      q: engine.state.query.q,
+      count: options.numberOfSuggestions,
+    })
+  );
 
-    if (this.options.numberOfSuggestions) {
-      this.showSuggestions();
-    }
-  }
+  return {
+    ...controller,
 
-  /**
-   * Clears the search box text and the suggestions.
-   */
-  public clear() {
-    this.dispatch(clearQuerySuggest({id: this.options.id}));
-  }
+    /**
+     * A unique identifier for the controller.
+     */
+    get id() {
+      return options.id;
+    },
 
-  /**
-   * Clears the suggestions.
-   */
-  public hideSuggestions() {
-    this.dispatch(clearQuerySuggestCompletions({id: this.options.id}));
-  }
+    /**
+     * Updates the search box text value and shows the suggestions for that value.
+     * @param value  The string value to update the search box with.
+     */
+    updateText(value: string) {
+      dispatch(updateQuerySetQuery({id: options.id, query: value}));
 
-  /**
-   * Shows the suggestions for the current search box value.
-   */
-  public showSuggestions() {
-    this.dispatch(fetchQuerySuggestions({id: this.options.id}));
-  }
+      if (options.numberOfSuggestions) {
+        this.showSuggestions();
+      }
+    },
 
-  /**
-   * Selects a suggestion and calls `submit`.
-   * @param value The string value of the suggestion to select
-   */
-  public selectSuggestion(value: string) {
-    this.dispatch(
-      selectQuerySuggestion({id: this.options.id, expression: value})
-    );
-    this.submit();
-  }
+    /**
+     * Clears the search box text and the suggestions.
+     */
+    clear() {
+      dispatch(clearQuerySuggest({id: options.id}));
+    },
 
-  /**
-   * If the `standalone` option is `true`, gets the redirection URL.
-   * If the `standalone` option is `false`, triggers a search query.
-   */
-  public submit() {
-    this.dispatch(updateQuery({q: this.state.value}));
-    this.dispatch(updatePage(1));
+    /**
+     * Clears the suggestions.
+     */
+    hideSuggestions() {
+      dispatch(clearQuerySuggestCompletions({id: options.id}));
+    },
 
-    if (this.options.isStandalone) {
-      this.dispatch(checkForRedirection()).then(() =>
-        this.dispatch(logTriggerRedirect())
-      );
-      return;
-    }
+    /**
+     * Shows the suggestions for the current search box value.
+     */
+    showSuggestions() {
+      dispatch(fetchQuerySuggestions({id: options.id}));
+    },
 
-    this.dispatch(executeSearch(logSearchboxSubmit()));
-  }
+    /**
+     * Selects a suggestion and calls `submit`.
+     * @param value The string value of the suggestion to select
+     */
+    selectSuggestion(value: string) {
+      dispatch(selectQuerySuggestion({id: options.id, expression: value}));
+      this.submit();
+    },
 
-  /**
-   * @returns The state of the `SearchBox` controller.
-   */
-  public get state() {
-    const state = this.engine.state;
-    const querySuggestState = state.querySuggest[this.options.id]!;
-    return {
-      value: state.querySet[this.options.id],
-      suggestions: querySuggestState.completions.map((completion) => ({
-        value: completion.expression,
-      })),
-      redirectTo: state.redirection.redirectTo,
-    };
-  }
+    /**
+     * If the `standalone` option is `true`, gets the redirection URL.
+     * If the `standalone` option is `false`, triggers a search query.
+     */
+    submit() {
+      dispatch(updateQuery({q: this.state.value}));
+      dispatch(updatePage(1));
 
-  private registerQuery() {
-    const action = registerQuerySetQuery({id: this.options.id, query: ''});
-    this.dispatch(action);
-  }
+      if (options.isStandalone) {
+        dispatch(checkForRedirection()).then(() =>
+          dispatch(logTriggerRedirect())
+        );
+        return;
+      }
 
-  private registerQuerySuggest() {
-    this.dispatch(
-      registerQuerySuggest({
-        id: this.options.id,
-        q: this.engine.state.query.q,
-        count: this.options.numberOfSuggestions,
-      })
-    );
-  }
-}
+      dispatch(executeSearch(logSearchboxSubmit()));
+    },
+
+    /**
+     * @returns The state of the `SearchBox` controller.
+     */
+    get state() {
+      const state = engine.state;
+      const querySuggestState = state.querySuggest[options.id]!;
+      return {
+        value: state.querySet[options.id],
+        suggestions: querySuggestState.completions.map((completion) => ({
+          value: completion.expression,
+        })),
+        redirectTo: state.redirection.redirectTo,
+      };
+    },
+  };
+};

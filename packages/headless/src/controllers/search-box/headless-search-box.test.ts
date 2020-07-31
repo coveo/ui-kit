@@ -2,6 +2,7 @@ import {
   SearchBox,
   SearchBoxProps,
   SearchBoxOptions,
+  buildSearchBox,
 } from './headless-search-box';
 import {
   registerQuerySuggest,
@@ -53,7 +54,7 @@ describe('headless searchBox', () => {
 
   function initController() {
     engine = buildMockEngine({state});
-    searchBox = new SearchBox(engine, props);
+    searchBox = buildSearchBox(engine, props);
   }
 
   describe('validating options', () => {

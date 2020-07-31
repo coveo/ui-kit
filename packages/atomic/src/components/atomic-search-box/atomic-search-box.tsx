@@ -1,5 +1,10 @@
 import {Component, ComponentInterface, h, Prop, State} from '@stencil/core';
-import {SearchBox, SearchBoxState, Unsubscribe} from '@coveo/headless';
+import {
+  SearchBox,
+  SearchBoxState,
+  Unsubscribe,
+  buildSearchBox,
+} from '@coveo/headless';
 import {headlessEngine} from '../../engine';
 import {Schema, NumberValue} from '@coveo/bueno';
 
@@ -23,7 +28,7 @@ export class AtomicSearchBox implements ComponentInterface {
 
   constructor() {
     try {
-      this.searchBox = new SearchBox(headlessEngine, {options: this.options});
+      this.searchBox = buildSearchBox(headlessEngine, {options: this.options});
       this.validateProps();
     } catch (error) {
       this.error = error;
