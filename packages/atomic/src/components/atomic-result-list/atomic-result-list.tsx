@@ -4,6 +4,7 @@ import {
   ResultListState,
   Unsubscribe,
   ResultTemplatesManager,
+  buildResultList,
 } from '@coveo/headless';
 import {headlessEngine} from '../../engine';
 import Mustache from 'mustache';
@@ -25,7 +26,7 @@ export class AtomicResultList {
   @State() state!: ResultListState;
 
   constructor() {
-    this.resultList = new ResultList(headlessEngine);
+    this.resultList = buildResultList(headlessEngine);
     this.unsubscribe = this.resultList.subscribe(() => this.updateState());
     this.registerDefaultResultTemplates();
     this.registerChildrenResultTemplates();

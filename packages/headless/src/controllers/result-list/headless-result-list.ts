@@ -1,22 +1,25 @@
 import {Engine} from '../../app/headless-engine';
-import {Controller} from '../controller/headless-controller';
+import {buildController} from '../controller/headless-controller';
 
 /** The state relevant to the `ResultList` controller.*/
 export type ResultListState = ResultList['state'];
+export type ResultList = ReturnType<typeof buildResultList>;
 
-export class ResultList extends Controller {
-  constructor(engine: Engine) {
-    super(engine);
-  }
+export const buildResultList = (engine: Engine) => {
+  const controller = buildController(engine);
 
-  /**
-   * @returns The state of the `ResultList` controller.
-   */
-  public get state() {
-    const state = this.engine.state;
+  return {
+    ...controller,
 
-    return {
-      results: state.search.response.results,
-    };
-  }
-}
+    /**
+     * @returns The state of the `ResultList` controller.
+     */
+    get state() {
+      const state = engine.state;
+
+      return {
+        results: state.search.response.results,
+      };
+    },
+  };
+};
