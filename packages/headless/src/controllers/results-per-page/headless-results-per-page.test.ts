@@ -1,4 +1,8 @@
-import {ResultsPerPage, ResultsPerPageProps} from './headless-results-per-page';
+import {
+  ResultsPerPage,
+  ResultsPerPageProps,
+  buildResultsPerPage,
+} from './headless-results-per-page';
 import {MockEngine, buildMockEngine} from '../../test/mock-engine';
 import {
   registerNumberOfResults,
@@ -14,7 +18,7 @@ describe('ResultsPerPage', () => {
   let resultsPerPage: ResultsPerPage;
 
   function initResultsPerPage() {
-    resultsPerPage = new ResultsPerPage(engine, props);
+    resultsPerPage = buildResultsPerPage(engine, props);
   }
 
   beforeEach(() => {

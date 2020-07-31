@@ -3,6 +3,7 @@ import {
   ResultsPerPage,
   ResultsPerPageState,
   Unsubscribe,
+  buildResultsPerPage,
 } from '@coveo/headless';
 import {headlessEngine} from '../../engine';
 
@@ -17,7 +18,7 @@ export class AtomicResultsPerPage {
   @State() state!: ResultsPerPageState;
 
   constructor() {
-    this.resultsPerPage = new ResultsPerPage(headlessEngine);
+    this.resultsPerPage = buildResultsPerPage(headlessEngine);
     this.unsubscribe = this.resultsPerPage.subscribe(() => this.updateState());
   }
 
