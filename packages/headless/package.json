@@ -9,7 +9,7 @@
   },
   "types": "./dist/index.d.ts",
   "license": "Apache-2.0",
-  "version": "0.0.2-alpha.0",
+  "version": "0.0.2-alpha.2",
   "scripts": {
     "start": "rollup -c -w",
     "build": "npm run clean && npm run build:prod",
@@ -19,7 +19,7 @@
     "test:watch": "jest --watch --colors --no-cache"
   },
   "dependencies": {
-    "@coveo/bueno": "^0.0.2-alpha.0",
+    "@coveo/bueno": "^0.0.2-alpha.2",
     "@reduxjs/toolkit": "^1.4.0",
     "coveo.analytics": "^2.5.1",
     "cross-fetch": "^3.0.4",
