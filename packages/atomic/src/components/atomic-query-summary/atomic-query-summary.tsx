@@ -1,5 +1,10 @@
 import {Component, h, State} from '@stencil/core';
-import {QuerySummary, QuerySummaryState, Unsubscribe} from '@coveo/headless';
+import {
+  QuerySummary,
+  QuerySummaryState,
+  Unsubscribe,
+  buildQuerySummary,
+} from '@coveo/headless';
 import {headlessEngine} from '../../engine';
 
 @Component({
@@ -13,7 +18,7 @@ export class AtomicQuerySummary {
   @State() state!: QuerySummaryState;
 
   constructor() {
-    this.querySummary = new QuerySummary(headlessEngine);
+    this.querySummary = buildQuerySummary(headlessEngine);
     this.unsubscribe = this.querySummary.subscribe(() => this.updateState());
   }
 
