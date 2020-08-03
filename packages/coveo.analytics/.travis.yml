@@ -1,5 +1,10 @@
 sudo: false
 language: node_js
+env:
+    global:
+        - CLOUDFRONT_DISTRIBUTION_ID=E2VWLFSCSD1GLA
+        - AWS_ACCESS_KEY_ID=AKIAYKDJLZITZZKEN7WY
+        - secure: "TXbZgxleyna4X5sGLlzZIpX8Hb504ZFVHQXwbgkeFzUmytrTTvnge3CuxwoTm0gg1J5ZHmO4iONf2FV6mU79D9KBHmhBLF1unu4aaKocY+/3g5fHSnZtwKIxqzTwJ2YfYeTilL5WaqB8HaxlfUNWHbCBocrgdwklxveSAexdBrqnP4+42bxYLz4jkkmKPUaEFLbpFPrVHwQMxfmFnML8j/0wBLFMhLGajGVRW1zW8Y2GbnRn4d0rdbsm7uYQpxxMLhC2OTCxvQEl4QghPkj2D52CV6T7Z+vvyUmFiFjvGesCv34wrVXi7M6Uy2/sV3Z/RTMRfq5DzaoZzp7zd7ugcINsVe8EM3nfqhS3qFKXFfRX34VcxLzsJSZjsT+4iF0s56/AXLq9o4rG1Q9iSVzMT52YKMv31aUmArdrrHKNzxML5qfSwMoRb3auJJX20WO1Sp6PhreCvD8OlDwqClJyanNPqd0v+gLaBa6Fpv7hbI9sTFdyH2MhhDxPlFsfXYrmRRBlgPrhaSObwSgo5vKnL3XhvAYW9xPMIH+Q0GddKRNfbq36QTKhm6ql33QvZvvRLforDIK4UAP1fvzskAzrHusrE/Z45W0VXyLlrjU0hvCOfHNvlxZL7YudZ8aAtSiWaCoFgcfr9Cr7/LXSilZOp4nX6g+k8w6og0B0OLGn4kI="
 node_js:
     - stable
 before_install:
@@ -7,6 +12,7 @@ before_install:
     - echo $PACKAGE_JSON_MAJOR_MINOR_VERSION
 install:
     - npm install
+    - pip install --user awscli
 script:
     - npm run build
     - npm test
@@ -26,9 +32,9 @@ deploy:
           repo: coveo/coveo.analytics.js
     - provider: s3
       skip_cleanup: true
-      access_key_id: AKIAYKDJLZITS26X53GO
+      access_key_id: $AWS_ACCESS_KEY_ID
       secret_access_key:
-          secure: 'qN1Z9yhBkm+tgD4rxzQUQnqpS+agoODn4gazlJ3Rh0WVGe5D91vuMy2Yo6rso1M3A540GLQsamue5wyDsX08Kvi0qREU0LhEB7XKHHP1kToprY8n1uRlmNMQs3tECiHyoyMWZwifaF+N92fqZkmIyaJ2NNdwPcroMEEbVTNRTQ+YC37EawtFlsvD3f1h75ja7G2UyD0PVdg5dNe2qJqpuBN7mviAAqge6ffCqSHHwlTa08QoflazFBFrGBiO/kesV1Xm22ZOR9rc+sH2Q226Bv6EEDzcOgrxR0v4forEbJvFldBPtkReZPfuC7rzJaep1AoLyqYMy/7t2TDyQH3EFHBQkTJwkF1n/jOiWX8KRAvjO1NUxsWc5ZhWRGGJCL7ZYcona8Dw2OLfUdF4lvgPWGki0ooswG6D4gqNl1xmZOvIZWajBu7QffOLkn+Ra1JpbAtZzS4YxYmNn9CehSze/nJIwLnvS6DQ5fKQGz9on0Pb13+Xy474UGr20pEOwGTlmTUzXnEk3dtIaRF+VX36yjpKxjCDOMbpMNa7+6K5GlTX+ncJz46Wg2Xn1GPmEWgL3JBHNUCkaFfX3r4G9UorRQ1HiVJ6poNkbxjT8z4uq71ZKspbzVUVzwOqq/vZza6t5seLScVIaEzPPzJicJixPtQaZmzS0/yogpbet8W/FbA='
+          secure: "uva0p44J4yYYbejkdGQkoHF2lg2eayN9Z0mzFJiuhmcwoqINOqboDps2S9voHpr8cjZA5tw5bLNOIYWpK66sO/aTGaPQLeY7gDcnZaLeb0iDeuBxAjcBqVBOrNlzdK4ppG9TsvpZFHpwY+CJtbEuryVyNdHc58k73M9uk3qZ01oc2ncUIqWHaLSOCTK+QRqpihvSuCHFhE8VuV7yYi/gl+YAI58HjbAAoE8i6LOX8FfFg/Oae6JRzipUpu4Vi0Kdgeh+CLczcB1vjG2c5WXOJZiIbonBdsLQTnRC5utucSdugess1I1TuqClx6bFz5Lu66WBBmXSRv8hRaTSK3CJ2Lej6Uqav6N7JBp/Q8S3bVX4PieJazGQfD9o0nmkSlq2Qkbqc8rHUi945+uBf7ACZYXYrHL24tVlGN8YUluC051fdfQQ7J7mzbMXq5HMP7qslvCH2r4bo9f6J7m4GD6svROTmyxP7NEPEXjofQG9zrVeQAcl5BtrqAbJcHz0l8wvYW8owjBP01s1Lk8w8CXm5RjTnIC12cq/E5nPQtMLB1UvuXMRw/QqBPaJNtnmL+L9BNw7HEyqCWuNzS9Nojn+1Q/R72E1mjE1SGC3U3GiyQ6WPJe3GVK5Et3ZQtbHA95TqsXWvvbbfq20Hd3iF3MHBXZ0p94bv9oM2yzH/TmXb4g="
       bucket: coveo-public-content
       local-dir: dist
       upload-dir: coveo.analytics.js/$TRAVIS_TAG
@@ -39,9 +45,9 @@ deploy:
           repo: coveo/coveo.analytics.js
     - provider: s3
       skip_cleanup: true
-      access_key_id: AKIAYKDJLZITS26X53GO
+      access_key_id: $AWS_ACCESS_KEY_ID
       secret_access_key:
-          secure: 'qN1Z9yhBkm+tgD4rxzQUQnqpS+agoODn4gazlJ3Rh0WVGe5D91vuMy2Yo6rso1M3A540GLQsamue5wyDsX08Kvi0qREU0LhEB7XKHHP1kToprY8n1uRlmNMQs3tECiHyoyMWZwifaF+N92fqZkmIyaJ2NNdwPcroMEEbVTNRTQ+YC37EawtFlsvD3f1h75ja7G2UyD0PVdg5dNe2qJqpuBN7mviAAqge6ffCqSHHwlTa08QoflazFBFrGBiO/kesV1Xm22ZOR9rc+sH2Q226Bv6EEDzcOgrxR0v4forEbJvFldBPtkReZPfuC7rzJaep1AoLyqYMy/7t2TDyQH3EFHBQkTJwkF1n/jOiWX8KRAvjO1NUxsWc5ZhWRGGJCL7ZYcona8Dw2OLfUdF4lvgPWGki0ooswG6D4gqNl1xmZOvIZWajBu7QffOLkn+Ra1JpbAtZzS4YxYmNn9CehSze/nJIwLnvS6DQ5fKQGz9on0Pb13+Xy474UGr20pEOwGTlmTUzXnEk3dtIaRF+VX36yjpKxjCDOMbpMNa7+6K5GlTX+ncJz46Wg2Xn1GPmEWgL3JBHNUCkaFfX3r4G9UorRQ1HiVJ6poNkbxjT8z4uq71ZKspbzVUVzwOqq/vZza6t5seLScVIaEzPPzJicJixPtQaZmzS0/yogpbet8W/FbA='
+          secure: "uva0p44J4yYYbejkdGQkoHF2lg2eayN9Z0mzFJiuhmcwoqINOqboDps2S9voHpr8cjZA5tw5bLNOIYWpK66sO/aTGaPQLeY7gDcnZaLeb0iDeuBxAjcBqVBOrNlzdK4ppG9TsvpZFHpwY+CJtbEuryVyNdHc58k73M9uk3qZ01oc2ncUIqWHaLSOCTK+QRqpihvSuCHFhE8VuV7yYi/gl+YAI58HjbAAoE8i6LOX8FfFg/Oae6JRzipUpu4Vi0Kdgeh+CLczcB1vjG2c5WXOJZiIbonBdsLQTnRC5utucSdugess1I1TuqClx6bFz5Lu66WBBmXSRv8hRaTSK3CJ2Lej6Uqav6N7JBp/Q8S3bVX4PieJazGQfD9o0nmkSlq2Qkbqc8rHUi945+uBf7ACZYXYrHL24tVlGN8YUluC051fdfQQ7J7mzbMXq5HMP7qslvCH2r4bo9f6J7m4GD6svROTmyxP7NEPEXjofQG9zrVeQAcl5BtrqAbJcHz0l8wvYW8owjBP01s1Lk8w8CXm5RjTnIC12cq/E5nPQtMLB1UvuXMRw/QqBPaJNtnmL+L9BNw7HEyqCWuNzS9Nojn+1Q/R72E1mjE1SGC3U3GiyQ6WPJe3GVK5Et3ZQtbHA95TqsXWvvbbfq20Hd3iF3MHBXZ0p94bv9oM2yzH/TmXb4g="
       bucket: coveo-public-content
       local-dir: deploy
       upload-dir: coveo.analytics.js/$PACKAGE_JSON_MAJOR_MINOR_VERSION
@@ -50,6 +56,8 @@ deploy:
           tags: true
           condition: '$TRAVIS_TAG = latest'
           repo: coveo/coveo.analytics.js
+after_script:
+    - test $TRAVIS_TAG != "latest" && aws cloudfront create-invalidation --distribution-id $CLOUDFRONT_DISTRIBUTION_ID --paths "/coveo.analytics.js/$TRAVIS_TAG/*"
 notifications:
     email:
         on_success: never
