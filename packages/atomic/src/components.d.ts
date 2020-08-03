@@ -8,6 +8,10 @@ import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { Result, ResultTemplateCondition, } from "@coveo/headless";
 import { FieldMatch, } from "./components/atomic-result-template/atomic-result-template";
 export namespace Components {
+    interface AtomicDateFacet {
+        "field": string;
+        "label": string;
+    }
     interface AtomicDidYouMean {
     }
     interface AtomicFacet {
@@ -48,6 +52,12 @@ export namespace Components {
     }
 }
 declare global {
+    interface HTMLAtomicDateFacetElement extends Components.AtomicDateFacet, HTMLStencilElement {
+    }
+    var HTMLAtomicDateFacetElement: {
+        prototype: HTMLAtomicDateFacetElement;
+        new (): HTMLAtomicDateFacetElement;
+    };
     interface HTMLAtomicDidYouMeanElement extends Components.AtomicDidYouMean, HTMLStencilElement {
     }
     var HTMLAtomicDidYouMeanElement: {
@@ -127,6 +137,7 @@ declare global {
         new (): HTMLAtomicSortDropdownElement;
     };
     interface HTMLElementTagNameMap {
+        "atomic-date-facet": HTMLAtomicDateFacetElement;
         "atomic-did-you-mean": HTMLAtomicDidYouMeanElement;
         "atomic-facet": HTMLAtomicFacetElement;
         "atomic-history": HTMLAtomicHistoryElement;
@@ -143,6 +154,10 @@ declare global {
     }
 }
 declare namespace LocalJSX {
+    interface AtomicDateFacet {
+        "field"?: string;
+        "label"?: string;
+    }
     interface AtomicDidYouMean {
     }
     interface AtomicFacet {
@@ -181,6 +196,7 @@ declare namespace LocalJSX {
     interface AtomicSortDropdown {
     }
     interface IntrinsicElements {
+        "atomic-date-facet": AtomicDateFacet;
         "atomic-did-you-mean": AtomicDidYouMean;
         "atomic-facet": AtomicFacet;
         "atomic-history": AtomicHistory;
@@ -200,6 +216,7 @@ export { LocalJSX as JSX };
 declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
+            "atomic-date-facet": LocalJSX.AtomicDateFacet & JSXBase.HTMLAttributes<HTMLAtomicDateFacetElement>;
             "atomic-did-you-mean": LocalJSX.AtomicDidYouMean & JSXBase.HTMLAttributes<HTMLAtomicDidYouMeanElement>;
             "atomic-facet": LocalJSX.AtomicFacet & JSXBase.HTMLAttributes<HTMLAtomicFacetElement>;
             "atomic-history": LocalJSX.AtomicHistory & JSXBase.HTMLAttributes<HTMLAtomicHistoryElement>;

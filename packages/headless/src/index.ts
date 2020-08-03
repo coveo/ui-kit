@@ -23,7 +23,8 @@ export * from './controllers/query-error/headless-query-error';
 export * from './controllers/history/headless-history';
 export * from './controllers/did-you-mean/headless-did-you-mean';
 export * from './controllers/facets/facet/headless-facet';
-export * from './controllers/facets/range-facet/headless-numeric-facet';
+export * from './controllers/facets/range-facet/numeric-facet/headless-numeric-facet';
+export * from './controllers/facets/range-facet/date-facet/headless-date-facet';
 
 export * as queryActions from './features/query/query-actions';
 export * as querySetActions from './features/query-set/query-set-actions';
@@ -41,6 +42,8 @@ export {FacetValue} from './features/facets/facet-set/interfaces/response';
 export {FacetSortCriterion} from './features/facets/facet-set/interfaces/request';
 export * as numericFacetActions from './features/facets/range-facets/numeric-facet-set/numeric-facet-actions';
 export {NumericFacetValue} from './features/facets/range-facets/numeric-facet-set/interfaces/response';
+export * as dateFacetActions from './features/facets/range-facets/date-facet-set/date-facet-actions';
+export {DateFacetValue} from './features/facets/range-facets/date-facet-set/interfaces/response';
 export * as historyActions from './features/history/history-actions';
 export * as pipelineActions from './features/pipeline/pipeline-actions';
 export * from './features/sort-criteria/criteria';
