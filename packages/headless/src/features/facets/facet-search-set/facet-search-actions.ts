@@ -3,7 +3,7 @@ import {FacetSearchRequestOptions} from './facet-search-request-options';
 import {SearchAPIClient} from '../../../api/search/search-api-client';
 import {SearchPageState} from '../../../state';
 import {logFacetSearch} from '../facet-set/facet-set-analytics-actions';
-import {FacetSearchResult} from '../../../api/search/facet-search/api/response';
+import {FacetSearchResult} from '../../../api/search/facet-search/facet-search-response';
 
 export type FacetSearchOptions = {facetId: string} & Partial<
   FacetSearchRequestOptions

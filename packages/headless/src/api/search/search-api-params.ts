@@ -1,12 +1,11 @@
 import {SearchPageState} from '../../state';
 import {HttpMethods, HTTPContentTypes} from '../platform-client';
 
-export const getOrganizationIdParam = (state: SearchPageState) => ({
-  /**
-   * The unique identifier of the target Coveo Cloud organization.
-   */
-  organizationId: state.configuration.organizationId,
-});
+/**
+ * The unique identifier of the target Coveo Cloud organization.
+ */
+export const getOrganizationIdQueryParam = (state: SearchPageState) =>
+  `organizationId=${state.configuration.organizationId}`;
 
 export const getQParam = (state: SearchPageState) => ({
   /**
@@ -29,5 +28,7 @@ export const baseSearchParams = (
   accessToken: getAccessToken(state),
   method,
   contentType,
-  url: `${getSearchApiBaseUrl(state)}${path}`,
+  url: `${getSearchApiBaseUrl(state)}${path}?${getOrganizationIdQueryParam(
+    state
+  )}`,
 });

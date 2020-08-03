@@ -6,7 +6,7 @@ import {
   executeFacetSearch,
   selectFacetSearchResult,
 } from '../../../features/facets/facet-search-set/facet-search-actions';
-import {FacetSearchResult} from '../../../api/search/facet-search/api/response';
+import {FacetSearchResult} from '../../../api/search/facet-search/facet-search-response';
 import {executeSearch} from '../../../features/search/search-actions';
 import {logFacetSelect} from '../../../features/facets/facet-set/facet-set-analytics-actions';
 

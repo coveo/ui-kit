@@ -5,9 +5,9 @@ import {
   executeFacetSearch,
 } from './facet-search-actions';
 import {FacetSearchRequestOptions} from './facet-search-request-options';
-import {FacetSearchResponse} from '../../../api/search/facet-search/api/response';
+import {FacetSearchResponse} from '../../../api/search/facet-search/facet-search-response';
 
-type FacetSearchState = {
+export type FacetSearchState = {
   options: FacetSearchRequestOptions;
   response: FacetSearchResponse;
 };

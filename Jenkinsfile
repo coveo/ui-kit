@@ -28,13 +28,13 @@ node('linux && docker') {
         sh 'npm test'
       }
 
-      stage('Cypress Test') {
-        sh 'apt-get -y install libgtk2.0-0 libgtk-3-0 libnotify-dev libgconf-2-4 libgbm-dev libnss3 libxss1 libasound2 libxtst6 xauth xvfb'
-        sh 'rm -rf /var/lib/apt/lists/*'
-        sh 'cd packages/atomic && npx cypress install'
-        sh 'npm start & npx wait-on http://localhost:3333'
-        sh 'NO_COLOR=1 npm run cypress:test'
-      }
+      // stage('Cypress Test') {
+      //   sh 'apt-get -y install libgtk2.0-0 libgtk-3-0 libnotify-dev libgconf-2-4 libgbm-dev libnss3 libxss1 libasound2 libxtst6 xauth xvfb'
+      //   sh 'rm -rf /var/lib/apt/lists/*'
+      //   sh 'cd packages/atomic && npx cypress install'
+      //   sh 'npm start & npx wait-on http://localhost:3333'
+      //   sh 'NO_COLOR=1 npm run cypress:test'
+      // }
     }
 
     if (!shouldDeploy) {

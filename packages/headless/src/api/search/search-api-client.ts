@@ -6,21 +6,21 @@ import {
   QuerySuggest,
 } from './query-suggest/query-suggest-response';
 import {baseSearchParams} from './search-api-params';
-import {SearchRequest, searchRequestParams} from './search/search-request';
+import {SearchRequest, searchRequest} from './search/search-request';
 import {
-  facetSearchRequestParams,
-  FacetSearchRequest,
-} from './facet-search/facet-search/facet-search-request';
-import {FacetSearchResponse} from './facet-search/api/response';
+  specificFacetSearchRequest,
+  SpecificFacetSearchRequest,
+} from './facet-search/specific-facet-search-request';
+import {FacetSearchResponse} from './facet-search/facet-search-response';
 import {Search, SearchResponseSuccess} from './search/search-response';
 import {
   SearchAPIErrorWithStatusCode,
   SearchAPIErrorWithExceptionInBody,
 } from './search-api-error-response';
-import {PlanRequestParams, planRequestParams} from './plan/plan-request';
+import {PlanRequest, planRequest} from './plan/plan-request';
 import {
-  QuerySuggestRequestParams,
-  querySuggestRequestParams,
+  QuerySuggestRequest,
+  querySuggestRequest,
 } from './query-suggest/query-suggest-request';
 
 export type AllSearchAPIResponse = Plan | Search | QuerySuggest;
@@ -40,11 +40,11 @@ export class SearchAPIClient {
     state: SearchPageState
   ): Promise<SearchAPIClientResponse<PlanResponseSuccess>> {
     const platformResponse = await PlatformClient.call<
-      PlanRequestParams,
+      PlanRequest,
       PlanResponseSuccess
     >({
       ...baseSearchParams(state, 'POST', 'application/json', '/plan'),
-      requestParams: planRequestParams(state),
+      requestParams: planRequest(state),
     });
 
     if (isSuccessPlanResponse(platformResponse)) {
@@ -60,11 +60,11 @@ export class SearchAPIClient {
     state: SearchPageState
   ): Promise<SearchAPIClientResponse<QuerySuggestSuccessResponse>> {
     const platformResponse = await PlatformClient.call<
-      QuerySuggestRequestParams,
+      QuerySuggestRequest,
       QuerySuggestSuccessResponse
     >({
       ...baseSearchParams(state, 'POST', 'application/json', '/querySuggest'),
-      requestParams: querySuggestRequestParams(id, state),
+      requestParams: querySuggestRequest(id, state),
     });
     if (isSuccessQuerySuggestionsResponse(platformResponse)) {
       return {
@@ -81,7 +81,7 @@ export class SearchAPIClient {
   ): Promise<SearchAPIClientResponse<SearchResponseSuccess>> {
     const platformResponse = await PlatformClient.call<SearchRequest, Search>({
       ...baseSearchParams(state, 'POST', 'application/json', ''),
-      requestParams: searchRequestParams(state),
+      requestParams: searchRequest(state),
     });
 
     if (isSuccessSearchResponse(platformResponse)) {
@@ -97,11 +97,11 @@ export class SearchAPIClient {
 
   static async facetSearch(id: string, state: SearchPageState) {
     const res = await PlatformClient.call<
-      FacetSearchRequest,
+      SpecificFacetSearchRequest,
       FacetSearchResponse
     >({
       ...baseSearchParams(state, 'POST', 'application/json', '/facet'),
-      requestParams: facetSearchRequestParams(id, state),
+      requestParams: specificFacetSearchRequest(id, state),
     });
 
     return res.body;

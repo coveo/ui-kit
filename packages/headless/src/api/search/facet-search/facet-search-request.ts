@@ -1,6 +1,6 @@
-import {SearchRequest} from '../../search/search-request';
+import {SearchRequest} from '../search/search-request';
 
-export interface BaseFacetSearchRequest {
+export interface FacetSearchRequest {
   field: string;
   captions: Record<string, string>;
   ignoreValues: string[];
@@ -10,6 +10,6 @@ export interface BaseFacetSearchRequest {
   delimitingCharacter: string;
 }
 
-export interface Type<T extends 'specific' | 'hierarchical'> {
+export interface FacetSearchType<T extends 'specific' | 'hierarchical'> {
   type: T;
 }

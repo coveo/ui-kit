@@ -1,4 +1,4 @@
-import {FacetSearchResult} from '../api/search/facet-search/api/response';
+import {FacetSearchResult} from '../api/search/facet-search/facet-search-response';
 
 export function buildMockFacetSearchResult(
   config: Partial<FacetSearchResult> = {}

@@ -1,11 +1,6 @@
 import {SearchPageState} from '../../../state';
-import {getOrganizationIdParam} from '../search-api-params';
 
-export const querySuggestRequestParams = (
-  id: string,
-  state: SearchPageState
-) => ({
-  ...getOrganizationIdParam(state),
+export const querySuggestRequest = (id: string, state: SearchPageState) => ({
   /**
    * Specifies the number of suggestions that the Coveo Machine Learning service should return.
    */
@@ -32,6 +27,4 @@ export const querySuggestRequestParams = (
   searchHub: state.searchHub,
 });
 
-export type QuerySuggestRequestParams = ReturnType<
-  typeof querySuggestRequestParams
->;
+export type QuerySuggestRequest = ReturnType<typeof querySuggestRequest>;

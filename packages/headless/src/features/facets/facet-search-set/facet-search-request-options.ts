@@ -1,6 +1,6 @@
-import {FacetSearchRequest} from '../../../api/search/facet-search/facet-search/facet-search-request';
+import {SpecificFacetSearchRequest} from '../../../api/search/facet-search/specific-facet-search-request';
 
 export type FacetSearchRequestOptions = Pick<
-  FacetSearchRequest,
+  SpecificFacetSearchRequest,
   'captions' | 'numberOfValues' | 'query'
 >;

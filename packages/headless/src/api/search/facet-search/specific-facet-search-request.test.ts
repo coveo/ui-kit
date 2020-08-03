@@ -1,12 +1,12 @@
-import {createMockState} from '../../../../test/mock-state';
-import {buildFacetSearchState} from '../../../../features/facets/facet-search-set/facet-search-set-slice';
-import {facetSearchRequestParams} from './facet-search-request';
-import {SearchPageState} from '../../../../state';
-import {buildMockFacetValueRequest} from '../../../../test/mock-facet-value-request';
-import {buildMockSearchRequest} from '../../../../test/mock-search-request';
-import {buildMockFacetRequest} from '../../../../test/mock-facet-request';
+import {createMockState} from '../../../test/mock-state';
+import {buildFacetSearchState} from '../../../features/facets/facet-search-set/facet-search-set-slice';
+import {specificFacetSearchRequest} from './specific-facet-search-request';
+import {SearchPageState} from '../../../state';
+import {buildMockFacetValueRequest} from '../../../test/mock-facet-value-request';
+import {buildMockSearchRequest} from '../../../test/mock-search-request';
+import {buildMockFacetRequest} from '../../../test/mock-facet-request';
 
-describe('facetSearchRequestParams', () => {
+describe('facetSearchRequest', () => {
   const id = '1';
   let state: SearchPageState;
 
@@ -17,7 +17,7 @@ describe('facetSearchRequestParams', () => {
   }
 
   function buildParms() {
-    return facetSearchRequestParams(id, state);
+    return specificFacetSearchRequest(id, state);
   }
 
   beforeEach(() => setupState());
