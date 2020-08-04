@@ -136,20 +136,8 @@ export class EC {
             ...(this.actionData || {}),
         };
 
-        const productPayload = this.products.reduce((newPayload, product, index) => {
-            return {
-                ...newPayload,
-                ...convertProductToMeasurementProtocol(product, index),
-            };
-        }, {});
-
-        const impressionsByList = this.getImpressionsByList();
-        const impressionPayload = impressionsByList.reduce((newPayload, impressionList, index) => {
-            return {
-                ...newPayload,
-                ...convertImpressionListToMeasurementProtocol(impressionList, index),
-            };
-        }, {});
+        const productPayload = this.getProductPayload();
+        const impressionPayload = this.getImpressionPayload();
 
         this.clearData();
 
@@ -159,6 +147,57 @@ export class EC {
             ...ecPayload,
             ...payload,
         };
+    }
+
+    private getProductPayload() {
+        return this.products
+            .map((product) => this.assureProductValidity(product))
+            .reduce((newPayload, product, index) => {
+                return {
+                    ...newPayload,
+                    ...convertProductToMeasurementProtocol(product, index),
+                };
+            }, {});
+    }
+
+    private getImpressionPayload() {
+        const impressionsByList = this.getImpressionsByList();
+        return impressionsByList
+            .map(({impressions, ...rest}) => ({
+                ...rest,
+                impressions: impressions
+                    .map((baseImpression) => this.assureBaseImpressionValidity(baseImpression))
+            }) as ImpressionList)
+            .reduce((newPayload, impressionList, index) => {
+                return {
+                    ...newPayload,
+                    ...convertImpressionListToMeasurementProtocol(impressionList, index),
+                };
+            }, {});
+    }
+
+    private assureProductValidity(product: Product) {
+        const {position, ...productRest} = product;
+        if (position !== undefined && position < 1) {
+            console.warn(`The position for product '${product.name || product.id}' must be greater `
+                + `than 0 when provided.`);
+
+            return productRest;
+        }
+
+        return product;
+    }
+
+    private assureBaseImpressionValidity(baseImpression: BaseImpression) {
+        const {position, ...baseImpressionRest} = baseImpression;
+        if (position !== undefined && position < 1) {
+            console.warn(`The position for impression '${baseImpression.name || baseImpression.id}'`
+                + ` must be greater than 0 when provided.`);
+
+            return baseImpressionRest;
+        }
+
+        return baseImpression;
     }
 
     private getImpressionsByList() {

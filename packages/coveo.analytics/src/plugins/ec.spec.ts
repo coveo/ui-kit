@@ -118,6 +118,92 @@ describe('EC plugin', () => {
 
             expect(secondResult).toEqual({...defaultResult});
         });
+
+        describe('when the position is invalid', () => {
+            it('should warn when executing hook on added product', () => {
+                jest.spyOn(console, 'warn').mockImplementation();
+
+                const aProductWithATooSmallPosition = {
+                    name: 'A product with a too small position',
+                    position: 0
+                };
+
+                ec.addProduct(aProductWithATooSmallPosition)
+
+                expect(console.warn).not.toHaveBeenCalled();
+
+                executeRegisteredHook(ECPluginEventTypes.event, {});
+
+                expect(console.warn).toHaveBeenCalledWith(
+                    `The position for product '${aProductWithATooSmallPosition.name}' must be greater than 0 when provided.`
+                );
+                expect(console.warn).toHaveBeenCalledTimes(1);
+            });
+
+            it('should remove the position when executing hook on added product', () => {
+                jest.spyOn(console, 'warn').mockImplementation();
+
+                ec.addProduct({
+                    name: 'A product with a too small position',
+                    position: 0
+                });
+
+                const result = executeRegisteredHook(ECPluginEventTypes.event, {});
+
+                const positionProperty = 'il1pi1ps';
+                expect(result).not.toHaveProperty(positionProperty);
+            });
+
+            it('should warn first using the product name then the id', () => {
+                jest.spyOn(console, 'warn').mockImplementation();
+
+                const aProductWithANameAndId = {
+                    name: 'A product with a name and id',
+                    id: 'A product id',
+                    position: 0,
+                };
+                const aProductWithOnlyAnId = {
+                    id: 'A product id',
+                    position: 0,
+                };
+
+                ec.addProduct(aProductWithANameAndId);
+                ec.addProduct(aProductWithOnlyAnId);
+
+                executeRegisteredHook(ECPluginEventTypes.event, {});
+
+                expect(console.warn).toHaveBeenNthCalledWith(1,
+                    `The position for product '${aProductWithANameAndId.name}' must be greater than 0 when provided.`
+                );
+                expect(console.warn).toHaveBeenNthCalledWith(2,
+                    `The position for product '${aProductWithOnlyAnId.id}' must be greater than 0 when provided.`
+                );
+            });
+
+            it('should tolerate an absent position', () => {
+                jest.spyOn(console, 'warn').mockImplementation();
+
+                ec.addProduct({
+                    name: 'A product with no position',
+                });
+
+                const undefinedPosition = undefined as any;
+                ec.addProduct({
+                    name: 'A product with an undefined position',
+                    position: undefinedPosition
+                });
+
+                const result = executeRegisteredHook(ECPluginEventTypes.event, {});
+
+                expect(console.warn).not.toHaveBeenCalled();
+
+                const firstPositionProperty = 'il1pi1ps';
+                expect(result).not.toHaveProperty(firstPositionProperty);
+
+                const secondPositionProperty = 'il1pi2ps';
+                expect(result).toHaveProperty(secondPositionProperty, undefinedPosition);
+            });
+        });
     });
 
     describe('impressions', () => {
@@ -236,6 +322,92 @@ describe('EC plugin', () => {
             const secondResult = executeRegisteredHook(ECPluginEventTypes.event, {});
 
             expect(secondResult).toEqual({...defaultResult});
+        });
+
+        describe('when the position is invalid', () => {
+            it('should warn when executing hook on added impression', () => {
+                jest.spyOn(console, 'warn').mockImplementation();
+
+                const anImpression = {
+                    name: 'An impression with a too small position',
+                    position: 0
+                };
+
+                ec.addImpression(anImpression)
+
+                expect(console.warn).not.toHaveBeenCalled();
+
+                executeRegisteredHook(ECPluginEventTypes.event, {});
+
+                expect(console.warn).toHaveBeenCalledWith(
+                    `The position for impression '${anImpression.name}' must be greater than 0 when provided.`
+                );
+                expect(console.warn).toHaveBeenCalledTimes(1);
+            });
+
+            it('should remove the position when executing hook on added impression', () => {
+                jest.spyOn(console, 'warn').mockImplementation();
+
+                ec.addImpression({
+                    name: 'An impression with a too small position',
+                    position: 0
+                });
+
+                const result = executeRegisteredHook(ECPluginEventTypes.event, {});
+
+                const positionProperty = 'il1pi1ps';
+                expect(result).not.toHaveProperty(positionProperty);
+            });
+
+            it('should warn first using the impression name then the id', () => {
+                jest.spyOn(console, 'warn').mockImplementation();
+
+                const anImpressionWithANameAndId = {
+                    name: 'An impression with a name and id',
+                    id: 'An id',
+                    position: 0,
+                };
+                const anImpressionWithOnlyAnId = {
+                    id: 'An id',
+                    position: 0,
+                };
+
+                ec.addImpression(anImpressionWithANameAndId);
+                ec.addImpression(anImpressionWithOnlyAnId);
+
+                executeRegisteredHook(ECPluginEventTypes.event, {});
+
+                expect(console.warn).toHaveBeenNthCalledWith(1,
+                    `The position for impression '${anImpressionWithANameAndId.name}' must be greater than 0 when provided.`
+                );
+                expect(console.warn).toHaveBeenNthCalledWith(2,
+                    `The position for impression '${anImpressionWithOnlyAnId.id}' must be greater than 0 when provided.`
+                );
+            });
+
+            it('should tolerate an absent position', () => {
+                jest.spyOn(console, 'warn').mockImplementation();
+
+                ec.addImpression({
+                    name: 'An impression with no position',
+                });
+
+                const undefinedPosition = undefined as any;
+                ec.addImpression({
+                    name: 'An impression with an undefined position',
+                    position: undefinedPosition
+                });
+
+                const result = executeRegisteredHook(ECPluginEventTypes.event, {});
+
+                expect(console.warn).not.toHaveBeenCalled();
+
+                const firstPositionProperty = 'il1pi1ps';
+                expect(result).not.toHaveProperty(firstPositionProperty);
+
+                const secondPositionProperty = 'il1pi2ps';
+                expect(result).toHaveProperty(secondPositionProperty, undefinedPosition);
+            });
         });
     });
 
