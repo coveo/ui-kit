@@ -7,12 +7,13 @@ import {
   enableAnalytics,
 } from './configuration-actions';
 import {ConfigurationState} from '../../state';
+import {platformUrl} from '../../api/platform-client';
 
 export const getConfigurationInitialState: () => ConfigurationState = () => ({
   organizationId: '',
   accessToken: '',
   search: {
-    searchApiBaseUrl: 'https://globalplatform.cloud.coveo.com/rest/search',
+    searchApiBaseUrl: platformUrl(),
   },
   analyticsEnabled: true,
 });

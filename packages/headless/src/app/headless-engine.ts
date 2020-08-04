@@ -151,7 +151,6 @@ export class HeadlessEngine<Reducers extends ReducersMapObject>
       organizationId: 'searchuisamples',
       accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
       search: {
-        searchApiBaseUrl: 'https://platform.cloud.coveo.com/rest/search',
         pipeline: 'default',
         searchHub: 'default',
       },

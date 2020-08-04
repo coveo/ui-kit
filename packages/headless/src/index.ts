@@ -47,6 +47,7 @@ export {DateFacetValue} from './features/facets/range-facets/date-facet-set/inte
 export * as historyActions from './features/history/history-actions';
 export * as pipelineActions from './features/pipeline/pipeline-actions';
 export * from './features/sort-criteria/criteria';
+export {platformUrl} from './api/platform-client';
 
 export * from './features/pagination/pagination-selectors';
 export * from './features/facets/facet-set/facet-set-selectors';
