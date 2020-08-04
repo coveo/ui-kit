@@ -1,0 +1,49 @@
+{
+    "compilerOptions": {
+        "experimentalDecorators": true,
+        "baseUrl": ".",
+        "target": "es2016",
+        "paths": {
+            "c/facet": [
+                "facet/facet.js"
+            ],
+            "c/facetvalue": [
+                "facetvalue/facetvalue.js"
+            ],
+            "c/pager": [
+                "pager/pager.js"
+            ],
+            "c/pagerbutton": [
+                "pagerbutton/pagerbutton.js"
+            ],
+            "c/result": [
+                "result/result.js"
+            ],
+            "c/resultlist": [
+                "resultlist/resultlist.js"
+            ],
+            "c/searchbox": [
+                "searchbox/searchbox.js"
+            ],
+            "c/searchpage": [
+                "searchpage/searchpage.js"
+            ],
+            "c/sort": [
+                "sort/sort.js"
+            ],
+            "c/summary": [
+                "summary/summary.js"
+            ]
+        }
+    },
+    "include": [
+        "**/*",
+        "../../../../.sfdx/typings/lwc/**/*.d.ts",
+        "../../../../coveo.d.ts"
+    ],
+    "typeAcquisition": {
+        "include": [
+            "jest"
+        ]
+    }
+}

@@ -1,0 +1,9 @@
+<template>
+    <div>
+        <template for:each={results} for:item="result">
+            <c-result key={result.uniqueId} result={result}>
+                <p></p>
+            </c-result>
+        </template>
+    </div>
+</template>

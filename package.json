@@ -43,7 +43,8 @@
       "defaultScope": [
         "bueno",
         "headless",
-        "atomic"
+        "atomic",
+        "quantic"
       ]
     }
   },

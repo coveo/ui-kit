@@ -1,0 +1,26 @@
+{
+  "name": "@coveo/quantic",
+  "version": "0.0.2-alpha.0",
+  "description": "A Salesforce Lightning Web Component (LWC) library for building modern UIs interfacing with the Coveo platform",
+  "author": "coveo.com",
+  "homepage": "https://coveo.com",
+  "license": "Apache-2.0",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://olamothe@bitbucket.org/coveord/ui-kit.git"
+  },
+  "scripts": {
+    "test": "echo \"No tests configured\" && exit 0",
+    "copy:staticresources": "node copy-static-resources.js",
+    "build": "echo \"Nothing to build\" && exit 0",
+    "start": "npm run copy:staticresources && sfdx force:lightning:lwc:start"
+  },
+  "dependencies": {
+    "@coveo/headless": "0.0.2-alpha.2",
+    "tributejs": "^5.1.3"
+  },
+  "devDependencies": {
+    "ncp": "^2.0.0"
+  }
+}
