@@ -363,9 +363,13 @@ describe('facet-set slice', () => {
     });
   });
 
-  describe('when the passed id is registered', () => {
+  describe('#selectFacetSearchResult with a registered id', () => {
     const facetId = '1';
     const rawValue = 'TED';
+    const expectedSearchResultValue = buildMockFacetValueRequest({
+      value: rawValue,
+      state: 'selected',
+    });
 
     function dispatchSelectFacetSearchResult() {
       const value = buildMockFacetSearchResult({rawValue});
@@ -373,29 +377,68 @@ describe('facet-set slice', () => {
       state = facetSetReducer(state, action);
     }
 
+    function getFacetRequest() {
+      return state[facetId];
+    }
+
     beforeEach(() => {
       state[facetId] = buildMockFacetRequest();
     });
 
-    it('#selectFacetSearchResult adds the #value.rawValue to #currentValues with #state.selected', () => {
+    it('adds the #value.rawValue to #currentValues with #state.selected', () => {
       dispatchSelectFacetSearchResult();
 
-      const expectedValue = buildMockFacetValueRequest({
-        value: rawValue,
-        state: 'selected',
-      });
-
-      expect(state[facetId].currentValues).toContainEqual(expectedValue);
+      const {currentValues} = getFacetRequest();
+      expect(currentValues).toContainEqual(expectedSearchResultValue);
     });
 
-    it('when the #value.rawValue already exists, #selectFacetSearchResult does not add a duplicate', () => {
+    it('it updates the #numberOfResults to the new number of currentValues', () => {
+      dispatchSelectFacetSearchResult();
+      const {currentValues, numberOfValues} = getFacetRequest();
+      expect(numberOfValues).toBe(currentValues.length);
+    });
+
+    it('when the #value.rawValue already exists and is selected, it does not add a duplicate', () => {
       dispatchSelectFacetSearchResult();
       dispatchSelectFacetSearchResult();
 
-      const values = state[facetId].currentValues.filter(
-        (v) => v.value === rawValue
-      );
-      expect(values.length).toBe(1);
+      const {currentValues} = getFacetRequest();
+      expect(currentValues).toEqual([expectedSearchResultValue]);
+    });
+
+    it('when the #value.rawValue already exists and is idle, it selects the value', () => {
+      state[facetId].currentValues = [
+        buildMockFacetValueRequest({value: rawValue, state: 'idle'}),
+      ];
+      dispatchSelectFacetSearchResult();
+
+      const {currentValues} = getFacetRequest();
+      expect(currentValues).toEqual([expectedSearchResultValue]);
+    });
+
+    it('when there are idle values, the search result replaces the first idle value', () => {
+      // [KIT-107] If the selected result is appended, we will request one extra value than
+      // we need, creating an inconsistent UX. If the numberOfValues is kept the same (e.g. because
+      // we detect at an idle value), then the showLess button will momentarily flicker as the
+      // number of currentValues is greater than the original number of requested values.
+      // Instead, we replace an idle value, keeping the number of values the same.
+      const valueA = buildMockFacetValueRequest({value: 'A'});
+      const valueB = buildMockFacetValueRequest({value: 'B'});
+
+      state[facetId].currentValues = [valueA, valueB];
+      dispatchSelectFacetSearchResult();
+
+      const {currentValues} = getFacetRequest();
+      expect(currentValues).toEqual([expectedSearchResultValue, valueB]);
+    });
+
+    it('when there are only selected values, it adds the search result to the end', () => {
+      const selectedValue = buildMockFacetValueRequest({state: 'selected'});
+      state[facetId].currentValues = [selectedValue];
+      dispatchSelectFacetSearchResult();
+
+      const {currentValues} = getFacetRequest();
+      expect(currentValues).toEqual([selectedValue, expectedSearchResultValue]);
     });
   });
 

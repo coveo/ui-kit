@@ -131,20 +131,34 @@ export const facetSetReducer = createReducer(
         }
 
         const {rawValue} = value;
-        const matchingValues = facetRequest.currentValues.filter(
-          (v) => v.value === rawValue
-        );
+        const {currentValues} = facetRequest;
+        const matchingValue = currentValues.find((v) => v.value === rawValue);
 
-        if (matchingValues.length) {
+        if (matchingValue) {
+          matchingValue.state = 'selected';
           return;
         }
 
-        const currentValue: FacetValueRequest = {
+        const searchResultValue: FacetValueRequest = {
           value: rawValue,
           state: 'selected',
         };
 
-        facetRequest.currentValues.push(currentValue);
+        const firstIdleIndex = currentValues.findIndex(
+          (v) => v.state === 'idle'
+        );
+        const indexToInsertAt =
+          firstIdleIndex === -1 ? currentValues.length : firstIdleIndex;
+
+        const valuesBefore = currentValues.slice(0, indexToInsertAt);
+        const valuesAfter = currentValues.slice(indexToInsertAt + 1);
+
+        facetRequest.currentValues = [
+          ...valuesBefore,
+          searchResultValue,
+          ...valuesAfter,
+        ];
+        facetRequest.numberOfValues = facetRequest.currentValues.length;
       });
   }
 );
