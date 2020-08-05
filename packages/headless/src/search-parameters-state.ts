@@ -6,6 +6,7 @@ import {ContextState} from './features/context/context-slice';
 import {QuerySetState} from './features/query-set/query-set-slice';
 import {DateFacetSetState} from './features/facets/range-facets/date-facet-set/date-facet-set-slice';
 import {NumericFacetSetState} from './features/facets/range-facets/numeric-facet-set/numeric-facet-set-slice';
+import {CategoryFacetSetState} from './features/facets/category-facet-set/category-facet-set-slice';
 
 export interface SearchParametersState {
   /**
@@ -20,6 +21,10 @@ export interface SearchParametersState {
    * The set of numeric facets.
    */
   numericFacetSet: NumericFacetSetState;
+  /**
+   * The set of category facets.
+   */
+  categoryFacetSet: CategoryFacetSetState;
   /**
    * The expressions that constitute the current query.
    */

@@ -114,6 +114,7 @@ const extractHistory = (state: SearchPageState) => ({
   facetSet: state.facetSet,
   numericFacetSet: state.numericFacetSet,
   dateFacetSet: state.dateFacetSet,
+  categoryFacetSet: state.categoryFacetSet,
   pagination: state.pagination,
   query: state.query,
   querySet: state.querySet,

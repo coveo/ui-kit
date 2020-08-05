@@ -3,13 +3,16 @@ import {getQParam} from '../search-api-params';
 import {FacetRequest} from '../../../features/facets/facet-set/interfaces/request';
 import {Context} from '../../../features/context/context-slice';
 import {RangeFacetRequest} from '../../../features/facets/range-facets/generic/interfaces/range-facet';
+import {CategoryFacetRequest} from '../../../features/facets/category-facet-set/interfaces/request';
+
+type AnyFacetRequest = FacetRequest | RangeFacetRequest | CategoryFacetRequest;
 
 export interface SearchRequest {
   q: string;
   numberOfResults: number;
   sortCriteria: string;
   firstResult: number;
-  facets: (FacetRequest | RangeFacetRequest)[];
+  facets: AnyFacetRequest[];
   context: Context;
   enableDidYouMean: boolean;
   fieldsToInclude: string[];
@@ -38,11 +41,10 @@ function getFacets(state: SearchPageState) {
     ...getFacetRequests(state.facetSet),
     ...getFacetRequests(state.numericFacetSet),
     ...getFacetRequests(state.dateFacetSet),
+    ...getFacetRequests(state.categoryFacetSet),
   ];
 }
 
-function getFacetRequests(
-  requests: Record<string, FacetRequest | RangeFacetRequest>
-) {
+function getFacetRequests(requests: Record<string, AnyFacetRequest>) {
   return Object.keys(requests).map((id) => requests[id]);
 }

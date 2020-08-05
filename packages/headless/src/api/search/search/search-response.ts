@@ -6,12 +6,18 @@ import {
 } from '../search-api-error-response';
 import {QueryCorrection} from './query-corrections';
 import {RangeFacetResponse} from '../../../features/facets/range-facets/generic/interfaces/range-facet';
+import {CategoryFacetResponse} from '../../../features/facets/category-facet-set/interfaces/response';
+
+type AnyFacetResponse =
+  | FacetResponse
+  | RangeFacetResponse
+  | CategoryFacetResponse;
 
 export interface SearchResponseSuccess {
   results: Result[];
   searchUid: string;
   totalCountFiltered: number;
-  facets: (FacetResponse | RangeFacetResponse)[];
+  facets: AnyFacetResponse[];
   queryCorrections: QueryCorrection[];
 }
 

@@ -6,6 +6,7 @@ import {undoable, StateWithHistory, makeHistory} from '../../app/undoable';
 import {buildMockFacetRequest} from '../../test/mock-facet-request';
 import {buildMockNumericFacetRequest} from '../../test/mock-numeric-facet-request';
 import {buildMockDateFacetRequest} from '../../test/mock-date-facet-request';
+import {buildMockCategoryFacetRequest} from '../../test/mock-category-facet-request';
 
 describe('history slice', () => {
   let undoableReducer: Reducer<StateWithHistory<SearchParametersState>>;
@@ -60,6 +61,7 @@ describe('history slice', () => {
       facetSet: {foo: buildMockFacetRequest()},
       numericFacetSet: {bar: buildMockNumericFacetRequest()},
       dateFacetSet: {foo: buildMockDateFacetRequest()},
+      categoryFacetSet: {foo: buildMockCategoryFacetRequest()},
       pagination: {
         firstResult: 123,
         numberOfResults: 456,
@@ -157,6 +159,13 @@ describe('history slice', () => {
       expectHistoryToHaveCreatedDifferentSnapshots(
         getSnapshot({numericFacetSet: {foo: buildMockNumericFacetRequest()}}),
         getSnapshot({numericFacetSet: {foo2: buildMockNumericFacetRequest()}})
+      );
+    });
+
+    it('for #categoryFacetSet keys', () => {
+      expectHistoryToHaveCreatedDifferentSnapshots(
+        getSnapshot({categoryFacetSet: {foo: buildMockCategoryFacetRequest()}}),
+        getSnapshot({categoryFacetSet: {foo2: buildMockCategoryFacetRequest()}})
       );
     });
 

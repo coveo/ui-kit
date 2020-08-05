@@ -22,6 +22,7 @@ import {pipelineReducer} from '../features/pipeline/pipeline-slice';
 import {dateFacetSetReducer} from '../features/facets/range-facets/date-facet-set/date-facet-set-slice';
 import {numericFacetSetReducer} from '../features/facets/range-facets/numeric-facet-set/numeric-facet-set-slice';
 import {searchHubReducer} from '../features/search-hub/search-hub-slice';
+import {categoryFacetSetReducer} from '../features/facets/category-facet-set/category-facet-set-slice';
 
 /**
  * Map of reducers that make up the SearchPageState.
@@ -31,6 +32,7 @@ export const searchPageReducers: ReducersMapObject<SearchPageState> = {
   facetSet: facetSetReducer,
   dateFacetSet: dateFacetSetReducer,
   numericFacetSet: numericFacetSetReducer,
+  categoryFacetSet: categoryFacetSetReducer,
   facetSearchSet: facetSearchSetReducer,
   query: queryReducer,
   querySet: querySetReducer,
