@@ -27,7 +27,7 @@ export type AllSearchAPIResponse = Plan | Search | QuerySuggest;
 
 export interface SearchAPIClientOptions<RequestParams> {
   accessToken: string;
-  searchApiBaseUrl: string;
+  apiBaseUrl: string;
   requestParams: RequestParams;
 }
 

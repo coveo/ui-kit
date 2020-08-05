@@ -27,7 +27,7 @@ describe('search api client', () => {
       method: 'POST',
       contentType: 'application/json',
       url: `${
-        state.configuration.search.searchApiBaseUrl
+        state.configuration.search.apiBaseUrl
       }?${getOrganizationIdQueryParam(state)}`,
       requestParams: {
         q: state.query.q,
@@ -57,7 +57,7 @@ describe('search api client', () => {
       method: 'POST',
       contentType: 'application/json',
       url: `${
-        state.configuration.search.searchApiBaseUrl
+        state.configuration.search.apiBaseUrl
       }/plan?${getOrganizationIdQueryParam(state)}`,
       requestParams: {
         q: state.query.q,
@@ -84,7 +84,7 @@ describe('search api client', () => {
       method: 'POST',
       contentType: 'application/json',
       url: `${
-        state.configuration.search.searchApiBaseUrl
+        state.configuration.search.apiBaseUrl
       }/querySuggest?${getOrganizationIdQueryParam(state)}`,
       requestParams: {
         q: state.querySuggest[id]!.q,
@@ -114,7 +114,7 @@ describe('search api client', () => {
       method: 'POST',
       contentType: 'application/json',
       url: `${
-        state.configuration.search.searchApiBaseUrl
+        state.configuration.search.apiBaseUrl
       }/facet?${getOrganizationIdQueryParam(state)}`,
       requestParams: {
         type: 'specific',

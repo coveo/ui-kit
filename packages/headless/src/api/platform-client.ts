@@ -58,5 +58,5 @@ export function platformUrl<E extends PlatformEnvironment = 'prod'>(options?: {
       ? ''
       : `-${options.region}`;
 
-  return `https://platform${urlEnv}${urlRegion}.cloud.coveo.com/rest/search/v2`;
+  return `https://platform${urlEnv}${urlRegion}.cloud.coveo.com`;
 }

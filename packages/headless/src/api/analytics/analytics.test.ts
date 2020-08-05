@@ -13,7 +13,7 @@ describe('analytics', () => {
 
   it('should be enabled if explicitly specified', () => {
     const state = createMockState();
-    state.configuration.analyticsEnabled = true;
+    state.configuration.analytics.enabled = true;
 
     expect(
       configureAnalytics(state).coveoAnalyticsClient instanceof
@@ -23,7 +23,7 @@ describe('analytics', () => {
 
   it('should be disabled if explicitly specified', () => {
     const state = createMockState();
-    state.configuration.analyticsEnabled = false;
+    state.configuration.analytics.enabled = false;
     expect(
       configureAnalytics(state).coveoAnalyticsClient instanceof
         CoveoAnalyticsClient

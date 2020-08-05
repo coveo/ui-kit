@@ -17,7 +17,7 @@ export const getQParam = (state: SearchPageState) => ({
 const getAccessToken = (state: SearchPageState) =>
   state.configuration.accessToken;
 const getSearchApiBaseUrl = (state: SearchPageState) =>
-  state.configuration.search.searchApiBaseUrl;
+  state.configuration.search.apiBaseUrl;
 
 export const baseSearchParams = (
   state: SearchPageState,

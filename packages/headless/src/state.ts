@@ -6,6 +6,7 @@ import {DidYouMeanState} from './features/did-you-mean/did-you-mean-slice';
 import {FacetSearchSetState} from './features/facets/facet-search-set/facet-search-set-slice';
 import {SearchAPIErrorWithStatusCode} from './api/search/search-api-error-response';
 import {FieldsState} from './features/fields/fields-slice';
+import {ConfigurationState} from './features/configuration/configuration-slice';
 
 export interface SearchPageState extends SearchParametersState {
   /**
@@ -40,30 +41,6 @@ export interface SearchPageState extends SearchParametersState {
    * The information related to fields used in the engine.
    */
   fields: FieldsState;
-}
-
-export interface ConfigurationState {
-  /**
-   * The unique identifier of the target Coveo Cloud organization (e.g., `mycoveocloudorganizationg8tp8wu3`)
-   */
-  organizationId: string;
-  /**
-   * The access token to use to authenticate requests against the Coveo Cloud endpoints. Typically, this will be an API key or search token that grants the privileges to execute queries and push usage analytics data in the target Coveo Cloud organization.
-   */
-  accessToken: string;
-  /**
-   * The global headless engine Search API configuration.
-   */
-  search: {
-    /**
-     * The Search API base URL to use (e.g., https://globalplatform.cloud.coveo.com/rest/search/v2).
-     */
-    searchApiBaseUrl: string;
-  };
-  /**
-   * Specifies if analytics tracking should be enabled. By default analytics events are tracked.
-   */
-  analyticsEnabled: boolean;
 }
 
 export interface QueryState {

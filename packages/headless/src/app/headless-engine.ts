@@ -70,13 +70,14 @@ export interface HeadlessConfigurationOptions {
    */
   renewAccessToken?: () => Promise<string>;
   /**
+   * The Plaform URL to use. (e.g., https://platform.cloud.coveo.com)
+   * The platformUrl() helper method can be useful to know what url is available.
+   */
+  platformUrl?: string;
+  /**
    * The global headless engine configuration options specific to the SearchAPI.
    */
   search?: {
-    /**
-     * The Search API base URL to use (e.g., https://globalplatform.cloud.coveo.com/rest/search/v2).
-     */
-    searchApiBaseUrl?: string;
     /**
      * Specifies the name of the query pipeline to use for the query. If not specified, the default query pipeline will be used.
      */
