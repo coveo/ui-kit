@@ -12,6 +12,7 @@ import {
 import {updateRangeFacetSortCriterion} from '../../../features/facets/range-facets/generic/range-facet-actions';
 import {NumericFacetRequest} from '../../../features/facets/range-facets/numeric-facet-set/interfaces/request';
 import {buildMockNumericFacetRequest} from '../../../test/mock-numeric-facet-request';
+import {deselectAllFacetValues} from '../../../features/facets/facet-set/facet-set-actions';
 
 describe('range facet', () => {
   const facetId = '1';
@@ -66,6 +67,41 @@ describe('range facet', () => {
   it('when the value is not selected, #isValueSelected returns `false`', () => {
     const value = buildMockNumericFacetValue({state: 'idle'});
     expect(rangeFacet.isValueSelected(value)).toBe(false);
+  });
+
+  describe('#deselectAll', () => {
+    it('dispatches #deselectAllFacetValues with the facet id', () => {
+      rangeFacet.deselectAll();
+      expect(engine.actions).toContainEqual(deselectAllFacetValues(facetId));
+    });
+
+    it('dispatches a search', () => {
+      rangeFacet.deselectAll();
+
+      const action = engine.actions.find(
+        (a) => a.type === executeSearch.pending.type
+      );
+
+      expect(engine.actions).toContainEqual(action);
+    });
+  });
+
+  describe('#state.hasActiveValues', () => {
+    it('when #state.values has a value with a non-idle state, it returns true', () => {
+      const values = [buildMockNumericFacetValue({state: 'selected'})];
+      const response = buildMockNumericFacetResponse({facetId, values});
+      state.search.response.facets = [response];
+
+      expect(rangeFacet.state.hasActiveValues).toBe(true);
+    });
+
+    it('when #state.values only has idle values, it returns false', () => {
+      const values = [buildMockNumericFacetValue({state: 'idle'})];
+      const response = buildMockNumericFacetResponse({facetId, values});
+      state.search.response.facets = [response];
+
+      expect(rangeFacet.state.hasActiveValues).toBe(false);
+    });
   });
 
   describe('#sortBy', () => {

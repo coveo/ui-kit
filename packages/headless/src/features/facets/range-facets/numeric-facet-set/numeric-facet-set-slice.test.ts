@@ -7,6 +7,7 @@ import {
   registerNumericFacet,
   toggleSelectNumericFacetValue,
   updateNumericFacetSortCriterion,
+  deselectAllNumericFacetValues,
 } from './numeric-facet-actions';
 import {NumericFacetRegistrationOptions} from './interfaces/options';
 import {getHistoryEmptyState} from '../../../history/history-slice';
@@ -85,12 +86,21 @@ describe('numeric-facet-set slice', () => {
     expect(RangeFacetReducers.toggleSelectRangeValue).toHaveBeenCalledTimes(1);
   });
 
+  it('#deselectAllNumericFacetValues calls #handleFacetDeselectAll', () => {
+    jest.spyOn(FacetReducers, 'handleFacetDeselectAll');
+    const action = deselectAllNumericFacetValues('1');
+    numericFacetSetReducer(state, action);
+
+    expect(FacetReducers.handleFacetDeselectAll).toHaveBeenCalledTimes(1);
+  });
+
   it('#updateNumericFacetSortCriterion calls #handleFacetSortCriterionUpdate', () => {
-    const facetId = '1';
-    const criterion = 'descending';
     jest.spyOn(FacetReducers, 'handleFacetSortCriterionUpdate');
 
-    const action = updateNumericFacetSortCriterion({facetId, criterion});
+    const action = updateNumericFacetSortCriterion({
+      facetId: '1',
+      criterion: 'descending',
+    });
     numericFacetSetReducer(state, action);
 
     expect(FacetReducers.handleFacetSortCriterionUpdate).toHaveBeenCalledTimes(

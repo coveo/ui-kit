@@ -1,11 +1,7 @@
 import {SearchPageState} from '../../../state';
 import {getQParam} from '../search-api-params';
-import {FacetRequest} from '../../../features/facets/facet-set/interfaces/request';
 import {Context} from '../../../features/context/context-slice';
-import {RangeFacetRequest} from '../../../features/facets/range-facets/generic/interfaces/range-facet';
-import {CategoryFacetRequest} from '../../../features/facets/category-facet-set/interfaces/request';
-
-type AnyFacetRequest = FacetRequest | RangeFacetRequest | CategoryFacetRequest;
+import {AnyFacetRequest} from '../../../features/facets/generic/interfaces/generic-facet-request';
 
 export interface SearchRequest {
   q: string;

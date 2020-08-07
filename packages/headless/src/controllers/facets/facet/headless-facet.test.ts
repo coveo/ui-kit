@@ -121,36 +121,40 @@ describe('facet', () => {
     expect(facet.isValueSelected(facetValue)).toBe(false);
   });
 
-  it('#deselectAll dispatches a deselectAllFacetValues action with the facet id', () => {
-    facet.deselectAll();
-    expect(engine.actions).toContainEqual(
-      deselectAllFacetValues(options.facetId)
-    );
+  describe('#deselectAll', () => {
+    it('dispatches #deselectAllFacetValues with the facet id', () => {
+      facet.deselectAll();
+      expect(engine.actions).toContainEqual(
+        deselectAllFacetValues(options.facetId)
+      );
+    });
+
+    it('dispatches a search', () => {
+      facet.deselectAll();
+
+      const action = engine.actions.find(
+        (a) => a.type === executeSearch.pending.type
+      );
+      expect(engine.actions).toContainEqual(action);
+    });
   });
 
-  it('#deselectAll dispatches a search', () => {
-    facet.deselectAll();
+  describe('#state.hasActiveValues', () => {
+    it('when #state.values has a value with a non-idle state, it returns true', () => {
+      const facetResponse = buildMockFacetResponse({facetId: options.facetId});
+      facetResponse.values = [buildMockFacetValue({state: 'selected'})];
+      state.search.response.facets = [facetResponse];
 
-    const action = engine.actions.find(
-      (a) => a.type === executeSearch.pending.type
-    );
-    expect(engine.actions).toContainEqual(action);
-  });
+      expect(facet.state.hasActiveValues).toBe(true);
+    });
 
-  it('when #state.values has a value with a non-idle state, #hasActiveValues returns true', () => {
-    const facetResponse = buildMockFacetResponse({facetId: options.facetId});
-    facetResponse.values = [buildMockFacetValue({state: 'selected'})];
-    state.search.response.facets = [facetResponse];
+    it('when #state.values only has idle values, it returns false', () => {
+      const facetResponse = buildMockFacetResponse({facetId: options.facetId});
+      facetResponse.values = [buildMockFacetValue({state: 'idle'})];
+      state.search.response.facets = [facetResponse];
 
-    expect(facet.hasActiveValues).toBe(true);
-  });
-
-  it('when #state.values only has idle values, #hasActiveValues returns false', () => {
-    const facetResponse = buildMockFacetResponse({facetId: options.facetId});
-    facetResponse.values = [buildMockFacetValue({state: 'idle'})];
-    state.search.response.facets = [facetResponse];
-
-    expect(facet.hasActiveValues).toBe(false);
+      expect(facet.state.hasActiveValues).toBe(false);
+    });
   });
 
   it('#sortBy dispatches a #updateFacetSortCriterion action with the passed value', () => {

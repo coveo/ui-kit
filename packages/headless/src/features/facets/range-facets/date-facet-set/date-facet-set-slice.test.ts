@@ -7,6 +7,7 @@ import {
   registerDateFacet,
   toggleSelectDateFacetValue,
   updateDateFacetSortCriterion,
+  deselectAllDateFacetValues,
 } from './date-facet-actions';
 import {DateFacetRegistrationOptions} from './interfaces/options';
 import {getHistoryEmptyState} from '../../../history/history-slice';
@@ -82,12 +83,21 @@ describe('date-facet-set slice', () => {
     expect(RangeFacetReducers.toggleSelectRangeValue).toHaveBeenCalledTimes(1);
   });
 
+  it('#deselectAllDateFacetValues calls #handleFacetDeselectAll', () => {
+    jest.spyOn(FacetReducers, 'handleFacetDeselectAll');
+    const action = deselectAllDateFacetValues('1');
+    dateFacetSetReducer(state, action);
+
+    expect(FacetReducers.handleFacetDeselectAll).toHaveBeenCalledTimes(1);
+  });
+
   it('#updateDateFacetSortCriterion calls #handleFacetSortCriterionUpdate', () => {
-    const facetId = '1';
-    const criterion = 'descending';
     jest.spyOn(FacetReducers, 'handleFacetSortCriterionUpdate');
 
-    const action = updateDateFacetSortCriterion({facetId, criterion});
+    const action = updateDateFacetSortCriterion({
+      facetId: '1',
+      criterion: 'descending',
+    });
     dateFacetSetReducer(state, action);
 
     expect(FacetReducers.handleFacetSortCriterionUpdate).toHaveBeenCalledTimes(

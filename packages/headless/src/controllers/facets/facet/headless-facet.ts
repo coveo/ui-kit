@@ -133,21 +133,13 @@ export function buildFacet(engine: Engine, props: FacetProps) {
      * @returns {boolean}.
      */
     isValueSelected,
+
     /** Deselects all facet values.*/
     deselectAll() {
       const id = options.facetId;
 
       dispatch(deselectAllFacetValues(id));
       dispatch(executeSearch(logFacetClearAll(id)));
-    },
-    /**
-     * Returns `true` if the facet has selected values and `false` otherwise.
-     * @returns {boolean}.
-     */
-    get hasActiveValues(): boolean {
-      return this.state.values.some(
-        (facetValue) => facetValue.state !== 'idle'
-      );
     },
 
     /** Sorts the facet values according to the passed criterion.
@@ -222,10 +214,14 @@ export function buildFacet(engine: Engine, props: FacetProps) {
 
       const sortCriterion = request.sortCriteria;
       const values = response ? response.values : [];
+      const hasActiveValues = values.some(
+        (facetValue) => facetValue.state !== 'idle'
+      );
 
       return {
         values,
         sortCriterion,
+        hasActiveValues,
       };
     },
   };

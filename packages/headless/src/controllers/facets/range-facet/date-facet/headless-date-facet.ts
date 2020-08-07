@@ -69,6 +69,8 @@ export function buildDateFacet(engine: Engine, props: DateFacetProps) {
       dispatch(toggleSelectDateFacetValue({facetId, selection}));
       rangeFacet.toggleSelect(selection);
     },
+
+    /** @returns The state of the `DateFacet` controller.*/
     get state() {
       return rangeFacet.state;
     },

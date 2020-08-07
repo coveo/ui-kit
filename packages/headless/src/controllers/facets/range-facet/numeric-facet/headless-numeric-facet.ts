@@ -71,6 +71,8 @@ export function buildNumericFacet(engine: Engine, props: NumericFacetProps) {
       dispatch(toggleSelectNumericFacetValue({facetId, selection}));
       rangeFacet.toggleSelect(selection);
     },
+
+    /** @returns The state of the `NumericFacet` controller.*/
     get state() {
       return rangeFacet.state;
     },

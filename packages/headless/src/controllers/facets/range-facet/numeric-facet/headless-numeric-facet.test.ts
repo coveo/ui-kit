@@ -66,7 +66,7 @@ describe('numeric facet', () => {
     });
   });
 
-  it('exposes a #state property to retrieve the values', () => {
+  it('exposes a #state getter property to retrieve the values', () => {
     const values = [buildMockNumericFacetValue()];
     state.search.response.facets = [
       buildMockNumericFacetResponse({facetId, values}),

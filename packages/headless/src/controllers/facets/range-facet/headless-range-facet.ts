@@ -9,11 +9,13 @@ import {
   logFacetDeselect,
   logFacetSelect,
   logFacetUpdateSort,
+  logFacetClearAll,
 } from '../../../features/facets/facet-set/facet-set-analytics-actions';
 import {executeSearch} from '../../../features/search/search-actions';
 import {facetSelector} from '../../../features/facets/facet-set/facet-set-selectors';
 import {RangeFacetSortCriterion} from '../../../features/facets/range-facets/generic/interfaces/request';
 import {updateRangeFacetSortCriterion} from '../../../features/facets/range-facets/generic/range-facet-actions';
+import {deselectAllFacetValues} from '../../../features/facets/facet-set/facet-set-actions';
 
 export type RangeFacet = ReturnType<typeof buildRangeFacet>;
 
@@ -59,6 +61,12 @@ export function buildRangeFacet<
      */
     isValueSelected,
 
+    /** Deselects all facet values.*/
+    deselectAll() {
+      dispatch(deselectAllFacetValues(facetId));
+      dispatch(executeSearch(logFacetClearAll(facetId)));
+    },
+
     /** Sorts the facet values according to the passed criterion.
      * @param {RangeFacetSortCriterion} criterion The criterion to sort values by.
      */
@@ -75,15 +83,22 @@ export function buildRangeFacet<
       return this.state.sortCriterion === criterion;
     },
 
-    /** @returns The state of the `Facet` controller.*/
+    /** @returns The state of the `RangeFacet` controller.*/
     get state() {
       const request = getRequest();
       const response = facetSelector(engine.state, facetId) as R | undefined;
 
       const sortCriterion = request.sortCriteria;
       const values: R['values'] = response ? response.values : [];
+      const hasActiveValues = values.some(
+        (facetValue: RangeFacetValue) => facetValue.state !== 'idle'
+      );
 
-      return {values, sortCriterion};
+      return {
+        values,
+        sortCriterion,
+        hasActiveValues,
+      };
     },
   };
 }

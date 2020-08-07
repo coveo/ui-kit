@@ -58,6 +58,12 @@ export class AtomicDateFacet {
     );
   }
 
+  private get resetButton() {
+    return this.state.hasActiveValues ? (
+      <button onClick={() => this.facet.deselectAll()}>X</button>
+    ) : null;
+  }
+
   private get sortSelector() {
     return (
       <select name="facetSort" onChange={(val) => this.onFacetSortChange(val)}>
@@ -89,6 +95,7 @@ export class AtomicDateFacet {
         <div>
           <span>{this.label}</span>
           {this.sortSelector}
+          {this.resetButton}
         </div>
         <div>{this.values}</div>
       </div>

@@ -25,6 +25,7 @@ import {buildMockFacetSearchResult} from '../../../test/mock-facet-search-result
 import {FacetRegistrationOptions} from './interfaces/options';
 import {FacetResponse} from './interfaces/response';
 import {buildMockFacetRequest} from '../../../test/mock-facet-request';
+import * as FacetReducers from '../generic/facet-reducer-helpers';
 
 describe('facet-set slice', () => {
   let state: FacetSetState;
@@ -214,45 +215,24 @@ describe('facet-set slice', () => {
     expect(() => facetSetReducer(state, action)).not.toThrow();
   });
 
-  describe('dispatching #deselectAllFacetValues with a valid id', () => {
-    const id = '1';
-    let finalState: FacetSetState;
+  it('dispatching #deselectAllFacetValues calls #handleFacetDeselectAll', () => {
+    jest.spyOn(FacetReducers, 'handleFacetDeselectAll');
+    facetSetReducer(state, deselectAllFacetValues('1'));
 
-    beforeEach(() => {
-      const facetValueRequest = buildMockFacetValueRequest({
-        state: 'selected',
-      });
-      state[id] = buildMockFacetRequest({currentValues: [facetValueRequest]});
-      finalState = facetSetReducer(state, deselectAllFacetValues(id));
-    });
-
-    it('deselects all facet values on the request', () => {
-      finalState[id].currentValues.forEach((fv) =>
-        expect(fv.state).toBe('idle')
-      );
-    });
-
-    it('sets #preventAutoSelect to true on the request', () => {
-      expect(finalState[id].preventAutoSelect).toBe(true);
-    });
+    expect(FacetReducers.handleFacetDeselectAll).toHaveBeenCalledTimes(1);
   });
 
-  it('dispatching #deselectAllFacetValues with an invalid id does not throw', () => {
-    expect(() =>
-      facetSetReducer(state, deselectAllFacetValues('1'))
-    ).not.toThrow();
-  });
+  it('dispatching #updateFacetSortCriterion calls #handleFacetSortCriterionUpdate', () => {
+    jest.spyOn(FacetReducers, 'handleFacetSortCriterionUpdate');
+    const action = updateFacetSortCriterion({
+      facetId: '1',
+      criterion: 'alphanumeric',
+    });
+    facetSetReducer(state, action);
 
-  it('dispatching #updateFacetSortCriterion with a valid id updates the sort criterion to the passed value', () => {
-    const id = '1';
-    const criterion = 'alphanumeric';
-
-    state[id] = buildMockFacetRequest();
-
-    const action = updateFacetSortCriterion({facetId: id, criterion});
-    const finalState = facetSetReducer(state, action);
-
-    expect(finalState[id].sortCriteria).toBe(criterion);
+    expect(FacetReducers.handleFacetSortCriterionUpdate).toHaveBeenCalledTimes(
+      1
+    );
   });
 
   it('dispatching #updateFacetNumberOfValues with a registered id updates the number of values', () => {

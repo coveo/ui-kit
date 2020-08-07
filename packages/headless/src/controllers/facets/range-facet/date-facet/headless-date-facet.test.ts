@@ -66,7 +66,7 @@ describe('date facet', () => {
     });
   });
 
-  it('exposes a #state property to retrieve the values', () => {
+  it('exposes a #state getter property to retrieve the values', () => {
     const values = [buildMockDateFacetValue()];
     state.search.response.facets = [
       buildMockDateFacetResponse({facetId, values}),

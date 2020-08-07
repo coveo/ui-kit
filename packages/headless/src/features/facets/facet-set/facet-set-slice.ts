@@ -13,7 +13,10 @@ import {selectFacetSearchResult} from '../facet-search-set/facet-search-actions'
 import {FacetRequest, FacetValueRequest} from './interfaces/request';
 import {FacetValue, FacetResponse} from './interfaces/response';
 import {FacetRegistrationOptions} from './interfaces/options';
-import {handleFacetSortCriterionUpdate} from '../generic/facet-reducer-helpers';
+import {
+  handleFacetSortCriterionUpdate,
+  handleFacetDeselectAll,
+} from '../generic/facet-reducer-helpers';
 
 export type FacetSetState = Record<string, FacetRequest>;
 
@@ -64,17 +67,7 @@ export const facetSetReducer = createReducer(
         facetRequest.preventAutoSelect = true;
       })
       .addCase(deselectAllFacetValues, (state, action) => {
-        const id = action.payload;
-        const facetRequest = state[id];
-
-        if (!facetRequest) {
-          return;
-        }
-
-        facetRequest.currentValues.forEach(
-          (request) => (request.state = 'idle')
-        );
-        facetRequest.preventAutoSelect = true;
+        handleFacetDeselectAll<FacetRequest>(state, action.payload);
       })
       .addCase(updateFacetSortCriterion, (state, action) => {
         handleFacetSortCriterionUpdate<FacetRequest>(state, action.payload);
