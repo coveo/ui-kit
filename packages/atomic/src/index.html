@@ -1,37 +1,52 @@
 <!DOCTYPE html>
 <html dir="ltr" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
+    <title>Atomic Components</title>
 
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0">
-  <title>Atomic Components</title>
+    <script type="module" src="/build/atomic.esm.js"></script>
+    <script nomodule src="/build/atomic.js"></script>
+  </head>
 
-  <script type="module" src="/build/atomic.esm.js"></script>
-  <script nomodule src="/build/atomic.js"></script>
-</head>
+  <body>
+    <atomic-search-box></atomic-search-box>
+    <atomic-search-box is-standalone="true"></atomic-search-box>
+    <atomic-query-summary></atomic-query-summary>
+    <atomic-did-you-mean></atomic-did-you-mean>
+    <atomic-facet field="author" label="Authors"></atomic-facet>
+    <atomic-numeric-facet field="size" label="File sizes"></atomic-numeric-facet>
+    <atomic-date-facet field="created" label="Created"></atomic-date-facet>
+    <atomic-sort-dropdown></atomic-sort-dropdown>
+    <atomic-result-list>
+      <atomic-result-template must-match-source="Coveo Samples - GoogleDrive" fields-to-include="testfieldtoinclude">
+        <hr />
+        <h3><a href="{{clickUri}}">{{title}}</a></h3>
+        <p>{{excerpt}}</p>
 
-<body>
-  <atomic-search-box></atomic-search-box>
-  <atomic-search-box is-standalone="true"></atomic-search-box>
-  <atomic-query-summary></atomic-query-summary>
-  <atomic-did-you-mean></atomic-did-you-mean>
-  <atomic-facet field="author" label="Authors"></atomic-facet>
-  <atomic-numeric-facet field="size" label="File sizes"></atomic-numeric-facet>
-  <atomic-date-facet field="created" label="Created"></atomic-date-facet>
-  <atomic-category-facet field="atlgeographicalhierarchy" label="World Atlas"></atomic-category-facet>
-  <atomic-sort-dropdown></atomic-sort-dropdown>
-  <atomic-result-list>
-    <atomic-result-template id="result-template-1">
-      <h1>Top Stories</h1>
-    </atomic-result-template>
-    <script>
-      document.querySelector('#result-template-1').conditions = [(result) => result.title === 'TOP STORIES'];
-    </script>
-  </atomic-result-list>
-  <atomic-pager></atomic-pager>
-  <atomic-results-per-page></atomic-results-per-page>
-  <atomic-query-error></atomic-query-error>
-  <atomic-history></atomic-history>
-</body>
+        <atomic-field-condition if-defined="author" must-match-gdfiletitle="Treasure Island">
+          <atomic-result-value value="author"> </atomic-result-value>
+          <span style="margin-right: 30px;"> the bestselling author!</span>
+        </atomic-field-condition>
 
+        <atomic-field-condition if-defined="gdfilemimetype">
+          <b>Mime type:&nbsp;</b>
+          <atomic-result-value value="gdfilemimetype" style="margin-right: 30px;"> </atomic-result-value>
+        </atomic-field-condition>
+      </atomic-result-template>
+
+      <atomic-result-template id="top-stories-template">
+        <hr />
+        <h1>Don't miss: <a href="{{clickUri}}">{{title}}</a>!!!</h1>
+      </atomic-result-template>
+
+      <script>
+        document.querySelector('#top-stories-template').conditions = [(result) => result.title === 'TOP STORIES'];
+      </script>
+    </atomic-result-list>
+    <atomic-pager></atomic-pager>
+    <atomic-results-per-page></atomic-results-per-page>
+    <atomic-query-error></atomic-query-error>
+    <atomic-history></atomic-history>
+  </body>
 </html>

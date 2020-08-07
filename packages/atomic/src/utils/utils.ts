@@ -11,3 +11,7 @@ export function once<T extends unknown[]>(fn: (...args: T) => unknown) {
     return result;
   };
 }
+
+export function camelToKebab(value: string) {
+  return value.replace(/([a-z0-9]|(?=[A-Z]))([A-Z])/g, '$1-$2').toLowerCase();
+}

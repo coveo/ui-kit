@@ -1,28 +1,56 @@
 <template>
-    <template if:true={hasValues}>
-        <lightning-card  title={title}>
-            <ul class="slds-has-dividers_around-space slds-m-vertical_medium">
-                <template for:each={values} for:item="v">
-                    <c-facetvalue onselectvalue={onSelect} key={v.value} item={v}></c-facetvalue>
-                </template>
-            </ul>
+  <template if:true="{hasValues}">
+    <lightning-card title="{title}">
+      <ul class="slds-has-dividers_around-space slds-m-vertical_medium">
+        <template for:each="{values}" for:item="v">
+          <c-facetvalue onselectvalue="{onSelect}" key="{v.value}" item="{v}"></c-facetvalue>
+        </template>
+      </ul>
 
-            <template if:true={hasFooter}>
-                <div slot="footer">
-                    <lightning-button-group>
-                        <template if:true={canShowMoreAndLess}>
-                            <lightning-button variant="base" label="More" title="Show more" icon-name="utility:arrowdown" class="slds-m-left_x-small" onclick={showMore}></lightning-button>
-                            <lightning-button variant="base" label="Less" title="Show less" icon-name="utility:arrowup" class="slds-m-left_x-small" onclick={showLess}></lightning-button>
-                        </template>
-                        <template if:true={canShowMore}>
-                            <lightning-button variant="base" label="More" title="Show more" icon-name="utility:arrowdown" class="slds-m-left_x-small" onclick={showMore}></lightning-button>
-                        </template>
-                        <template if:true={canShowLess}>
-                            <lightning-button variant="base" label="Less" title="Show less" icon-name="utility:arrowup" class="slds-m-left_x-small" onclick={showLess}></lightning-button>
-                        </template>
-                    </lightning-button-group>
-                </div>
+      <template if:true="{hasFooter}">
+        <div slot="footer">
+          <lightning-button-group>
+            <template if:true="{canShowMoreAndLess}">
+              <lightning-button
+                variant="base"
+                label="More"
+                title="Show more"
+                icon-name="utility:arrowdown"
+                class="slds-m-left_x-small"
+                onclick="{showMore}"
+              ></lightning-button>
+              <lightning-button
+                variant="base"
+                label="Less"
+                title="Show less"
+                icon-name="utility:arrowup"
+                class="slds-m-left_x-small"
+                onclick="{showLess}"
+              ></lightning-button>
             </template>
-        </lightning-card>
-    </template>
+            <template if:true="{canShowMore}">
+              <lightning-button
+                variant="base"
+                label="More"
+                title="Show more"
+                icon-name="utility:arrowdown"
+                class="slds-m-left_x-small"
+                onclick="{showMore}"
+              ></lightning-button>
+            </template>
+            <template if:true="{canShowLess}">
+              <lightning-button
+                variant="base"
+                label="Less"
+                title="Show less"
+                icon-name="utility:arrowup"
+                class="slds-m-left_x-small"
+                onclick="{showLess}"
+              ></lightning-button>
+            </template>
+          </lightning-button-group>
+        </div>
+      </template>
+    </lightning-card>
+  </template>
 </template>

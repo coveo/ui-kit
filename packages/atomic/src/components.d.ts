@@ -6,7 +6,6 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { Result, ResultTemplateCondition, } from "@coveo/headless";
-import { FieldMatch, } from "./components/atomic-result-template/atomic-result-template";
 export namespace Components {
     interface AtomicCategoryFacet {
         "field": string;
@@ -21,6 +20,11 @@ export namespace Components {
     interface AtomicFacet {
         "field": string;
         "label": string;
+    }
+    interface AtomicFieldCondition {
+        "conditions": ResultTemplateCondition[];
+        "getFields": () => Promise<string[]>;
+        "ifDefined"?: string;
     }
     interface AtomicHistory {
     }
@@ -41,9 +45,12 @@ export namespace Components {
     }
     interface AtomicResultTemplate {
         "conditions": ResultTemplateCondition[];
-        "fieldsMustMatch": FieldMatch[];
-        "fieldsMustNotMatch": FieldMatch[];
+        "fieldsToInclude"?: string;
         "getConditions": () => Promise<ResultTemplateCondition[]>;
+        "getFields": () => Promise<string[]>;
+    }
+    interface AtomicResultValue {
+        "value": string;
     }
     interface AtomicResultsPerPage {
     }
@@ -79,6 +86,12 @@ declare global {
     var HTMLAtomicFacetElement: {
         prototype: HTMLAtomicFacetElement;
         new (): HTMLAtomicFacetElement;
+    };
+    interface HTMLAtomicFieldConditionElement extends Components.AtomicFieldCondition, HTMLStencilElement {
+    }
+    var HTMLAtomicFieldConditionElement: {
+        prototype: HTMLAtomicFieldConditionElement;
+        new (): HTMLAtomicFieldConditionElement;
     };
     interface HTMLAtomicHistoryElement extends Components.AtomicHistory, HTMLStencilElement {
     }
@@ -128,6 +141,12 @@ declare global {
         prototype: HTMLAtomicResultTemplateElement;
         new (): HTMLAtomicResultTemplateElement;
     };
+    interface HTMLAtomicResultValueElement extends Components.AtomicResultValue, HTMLStencilElement {
+    }
+    var HTMLAtomicResultValueElement: {
+        prototype: HTMLAtomicResultValueElement;
+        new (): HTMLAtomicResultValueElement;
+    };
     interface HTMLAtomicResultsPerPageElement extends Components.AtomicResultsPerPage, HTMLStencilElement {
     }
     var HTMLAtomicResultsPerPageElement: {
@@ -151,6 +170,7 @@ declare global {
         "atomic-date-facet": HTMLAtomicDateFacetElement;
         "atomic-did-you-mean": HTMLAtomicDidYouMeanElement;
         "atomic-facet": HTMLAtomicFacetElement;
+        "atomic-field-condition": HTMLAtomicFieldConditionElement;
         "atomic-history": HTMLAtomicHistoryElement;
         "atomic-numeric-facet": HTMLAtomicNumericFacetElement;
         "atomic-pager": HTMLAtomicPagerElement;
@@ -159,6 +179,7 @@ declare global {
         "atomic-result": HTMLAtomicResultElement;
         "atomic-result-list": HTMLAtomicResultListElement;
         "atomic-result-template": HTMLAtomicResultTemplateElement;
+        "atomic-result-value": HTMLAtomicResultValueElement;
         "atomic-results-per-page": HTMLAtomicResultsPerPageElement;
         "atomic-search-box": HTMLAtomicSearchBoxElement;
         "atomic-sort-dropdown": HTMLAtomicSortDropdownElement;
@@ -179,6 +200,10 @@ declare namespace LocalJSX {
         "field"?: string;
         "label"?: string;
     }
+    interface AtomicFieldCondition {
+        "conditions"?: ResultTemplateCondition[];
+        "ifDefined"?: string;
+    }
     interface AtomicHistory {
     }
     interface AtomicNumericFacet {
@@ -198,8 +223,10 @@ declare namespace LocalJSX {
     }
     interface AtomicResultTemplate {
         "conditions"?: ResultTemplateCondition[];
-        "fieldsMustMatch"?: FieldMatch[];
-        "fieldsMustNotMatch"?: FieldMatch[];
+        "fieldsToInclude"?: string;
+    }
+    interface AtomicResultValue {
+        "value"?: string;
     }
     interface AtomicResultsPerPage {
     }
@@ -215,6 +242,7 @@ declare namespace LocalJSX {
         "atomic-date-facet": AtomicDateFacet;
         "atomic-did-you-mean": AtomicDidYouMean;
         "atomic-facet": AtomicFacet;
+        "atomic-field-condition": AtomicFieldCondition;
         "atomic-history": AtomicHistory;
         "atomic-numeric-facet": AtomicNumericFacet;
         "atomic-pager": AtomicPager;
@@ -223,6 +251,7 @@ declare namespace LocalJSX {
         "atomic-result": AtomicResult;
         "atomic-result-list": AtomicResultList;
         "atomic-result-template": AtomicResultTemplate;
+        "atomic-result-value": AtomicResultValue;
         "atomic-results-per-page": AtomicResultsPerPage;
         "atomic-search-box": AtomicSearchBox;
         "atomic-sort-dropdown": AtomicSortDropdown;
@@ -236,6 +265,7 @@ declare module "@stencil/core" {
             "atomic-date-facet": LocalJSX.AtomicDateFacet & JSXBase.HTMLAttributes<HTMLAtomicDateFacetElement>;
             "atomic-did-you-mean": LocalJSX.AtomicDidYouMean & JSXBase.HTMLAttributes<HTMLAtomicDidYouMeanElement>;
             "atomic-facet": LocalJSX.AtomicFacet & JSXBase.HTMLAttributes<HTMLAtomicFacetElement>;
+            "atomic-field-condition": LocalJSX.AtomicFieldCondition & JSXBase.HTMLAttributes<HTMLAtomicFieldConditionElement>;
             "atomic-history": LocalJSX.AtomicHistory & JSXBase.HTMLAttributes<HTMLAtomicHistoryElement>;
             "atomic-numeric-facet": LocalJSX.AtomicNumericFacet & JSXBase.HTMLAttributes<HTMLAtomicNumericFacetElement>;
             "atomic-pager": LocalJSX.AtomicPager & JSXBase.HTMLAttributes<HTMLAtomicPagerElement>;
@@ -244,6 +274,7 @@ declare module "@stencil/core" {
             "atomic-result": LocalJSX.AtomicResult & JSXBase.HTMLAttributes<HTMLAtomicResultElement>;
             "atomic-result-list": LocalJSX.AtomicResultList & JSXBase.HTMLAttributes<HTMLAtomicResultListElement>;
             "atomic-result-template": LocalJSX.AtomicResultTemplate & JSXBase.HTMLAttributes<HTMLAtomicResultTemplateElement>;
+            "atomic-result-value": LocalJSX.AtomicResultValue & JSXBase.HTMLAttributes<HTMLAtomicResultValueElement>;
             "atomic-results-per-page": LocalJSX.AtomicResultsPerPage & JSXBase.HTMLAttributes<HTMLAtomicResultsPerPageElement>;
             "atomic-search-box": LocalJSX.AtomicSearchBox & JSXBase.HTMLAttributes<HTMLAtomicSearchBoxElement>;
             "atomic-sort-dropdown": LocalJSX.AtomicSortDropdown & JSXBase.HTMLAttributes<HTMLAtomicSortDropdownElement>;

@@ -1,4 +1,9 @@
-import {fieldMustMatch, fieldMustNotMatch} from './result-templates-helpers';
+import {
+  fieldMustMatch,
+  fieldMustNotMatch,
+  fieldsMustBeDefined,
+  getResultProperty,
+} from './result-templates-helpers';
 import {buildMockResult} from '../../test/mock-result';
 import {buildMockRaw} from '../../test/mock-raw';
 
@@ -8,6 +13,44 @@ describe('result template helpers', () => {
       raw: buildMockRaw({[fieldName]: fiedlValues}),
     });
   }
+
+  describe('getResultProperty', () => {
+    it('should return the result property at the root when it is defined', () => {
+      const result = buildMockResult();
+      result.title = 'my_title';
+      expect(getResultProperty(result, 'title')).toBe('my_title');
+    });
+
+    it('should return the result property from the "raw" object when not defined at the root', () => {
+      const result = buildMockResult();
+      result.raw.new_property = 'my_field_value';
+      expect(getResultProperty(result, 'new_property')).toBe('my_field_value');
+    });
+
+    it('should return null when the property is not defined at all', () => {
+      expect(getResultProperty(buildMockResult(), 'doesnt_exist')).toBeNull();
+    });
+  });
+
+  describe('fieldsMustBeDefined', () => {
+    it(`when sending a list of fields that are all defined in the result
+    should return true`, () => {
+      const match = fieldsMustBeDefined(['language', 'anotherfield']);
+      const result = buildMockResult();
+      result.raw['language'] = ['Test'];
+      result.raw['anotherfield'] = 0;
+      expect(match(result)).toBe(true);
+    });
+
+    it(`when sending a list of fields that are not all defined in the result
+    should return false`, () => {
+      const match = fieldsMustBeDefined(['language', 'anotherfield']);
+      const result = buildMockResult();
+      result.raw['language'] = ['Test'];
+      expect(match(result)).toBe(false);
+    });
+  });
+
   describe('fieldMustMatch', () => {
     it(`when sending a field that contains one of the values to match
     should return true`, () => {

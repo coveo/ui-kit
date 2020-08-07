@@ -28,13 +28,15 @@ export class AtomicResultList {
   constructor() {
     this.resultList = buildResultList(headlessEngine);
     this.unsubscribe = this.resultList.subscribe(() => this.updateState());
+  }
+
+  public componentWillLoad() {
     this.registerDefaultResultTemplates();
     this.registerChildrenResultTemplates();
   }
 
   private registerDefaultResultTemplates() {
-    // Eventually there would be more default templates
-    // They could all be registered here.
+    // TODO: get fields & conditions from default templates
     this.resultTemplatesManager.registerTemplates({
       content: defaultTemplate,
       conditions: [],
@@ -46,9 +48,11 @@ export class AtomicResultList {
       .querySelectorAll('atomic-result-template')
       .forEach(async (resultTemplateElement) => {
         const conditions = await resultTemplateElement.getConditions();
+        const fields = await resultTemplateElement.getFields();
         this.resultTemplatesManager.registerTemplates({
           content: resultTemplateElement.innerHTML,
           conditions,
+          fields,
           priority: 1,
         });
       });

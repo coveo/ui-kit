@@ -1,37 +1,36 @@
 <template>
-    <div class="slds-p-around_medium lgc-bg slds-border_bottom">
-        <lightning-tile label={result.title} href={result.clickUri} type="media">
-            <lightning-icon slot="media" icon-name={icon}></lightning-icon>
-            <p class="slds-text-body_regular">{result.excerpt}</p>
-            <dl class="slds-dl_horizontal">
-                <dt class="slds-dl_horizontal__label">
-                    <p class="slds-truncate" title="Date">Date:</p>
-                </dt>
-                <dd class="slds-dl_horizontal__detail slds-tile__meta">
-                    <p class="slds-truncate" title="Date">
-                        <lightning-formatted-date-time value={result.raw.date}></lightning-formatted-date-time>
-                    </p>
-                </dd>
-                <dt class="slds-dl_horizontal__label">
-                    <p class="slds-truncate" title="Type">Type:</p>
-                </dt>
-                <dd class="slds-dl_horizontal__detail slds-tile__meta">
-                    <p class="slds-truncate" title="Type">{result.raw.objecttype}</p>
-                </dd>
-                 <dt class="slds-dl_horizontal__label">
-                    <p class="slds-truncate" title="Type">File Type:</p>
-                </dt>
-                <dd class="slds-dl_horizontal__detail slds-tile__meta">
-                    <p class="slds-truncate" title="Type">{result.raw.filetype}</p>
-                </dd>
-                <dt class="slds-dl_horizontal__label">
-                    <p class="slds-truncate" title="Lang">Language:</p>
-                </dt>
-                <dd class="slds-dl_horizontal__detail slds-tile__meta">
-                    <p class="slds-truncate" title="Lang">{result.raw.language}</p>
-                </dd>
-            </dl>
-        </lightning-tile>
-    </div>
-
+  <div class="slds-p-around_medium lgc-bg slds-border_bottom">
+    <lightning-tile label="{result.title}" href="{result.clickUri}" type="media">
+      <lightning-icon slot="media" icon-name="{icon}"></lightning-icon>
+      <p class="slds-text-body_regular">{result.excerpt}</p>
+      <dl class="slds-dl_horizontal">
+        <dt class="slds-dl_horizontal__label">
+          <p class="slds-truncate" title="Date">Date:</p>
+        </dt>
+        <dd class="slds-dl_horizontal__detail slds-tile__meta">
+          <p class="slds-truncate" title="Date">
+            <lightning-formatted-date-time value="{result.raw.date}"></lightning-formatted-date-time>
+          </p>
+        </dd>
+        <dt class="slds-dl_horizontal__label">
+          <p class="slds-truncate" title="Type">Type:</p>
+        </dt>
+        <dd class="slds-dl_horizontal__detail slds-tile__meta">
+          <p class="slds-truncate" title="Type">{result.raw.objecttype}</p>
+        </dd>
+        <dt class="slds-dl_horizontal__label">
+          <p class="slds-truncate" title="Type">File Type:</p>
+        </dt>
+        <dd class="slds-dl_horizontal__detail slds-tile__meta">
+          <p class="slds-truncate" title="Type">{result.raw.filetype}</p>
+        </dd>
+        <dt class="slds-dl_horizontal__label">
+          <p class="slds-truncate" title="Lang">Language:</p>
+        </dt>
+        <dd class="slds-dl_horizontal__detail slds-tile__meta">
+          <p class="slds-truncate" title="Lang">{result.raw.language}</p>
+        </dd>
+      </dl>
+    </lightning-tile>
+  </div>
 </template>

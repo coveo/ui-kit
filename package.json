@@ -57,6 +57,10 @@
     "**/*.ts?(x)": [
       "npm run fix",
       "git add"
+    ],
+    "**/*.html": [
+      "prettier --print-width 120 --write",
+      "git add"
     ]
   },
   "engines": {

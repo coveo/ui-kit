@@ -1,2 +1,23 @@
-<a href="{{clickUri}}">{{title}}</a>
-<p>{{excerpt}}</p>
+<hr />
+<h3><a href="{{clickUri}}">{{title}}</a></h3>
+<p><atomic-result-value value="excerpt"> </atomic-result-value></p>
+
+<atomic-field-condition if-defined="author">
+  <b>Author: </b>
+  <atomic-result-value value="author" style="margin-right: 30px;"> </atomic-result-value>
+</atomic-field-condition>
+
+<atomic-field-condition if-defined="source">
+  <b>Source: </b>
+  <atomic-result-value value="source" style="margin-right: 30px;"></atomic-result-value>
+</atomic-field-condition>
+
+<atomic-field-condition if-defined="language">
+  <b>Language: </b>
+  <atomic-result-value value="language" style="margin-right: 30px;"> </atomic-result-value>
+</atomic-field-condition>
+
+<atomic-field-condition if-defined="filetype">
+  <b>Type: </b>
+  <atomic-result-value value="filetype" style="margin-right: 30px;"> </atomic-result-value>
+</atomic-field-condition>

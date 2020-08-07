@@ -22,6 +22,7 @@ export class ResultTemplatesManager<
   public registerTemplates(...templates: ResultTemplate<Content>[]) {
     const fields: string[] = [];
     this.validateTemplates(templates);
+
     templates.forEach((template) => {
       const templatesWithDefault = {
         ...template,
@@ -29,11 +30,12 @@ export class ResultTemplatesManager<
         fields: template.fields || [],
       };
       this.templates.push(templatesWithDefault);
-      fields.concat(templatesWithDefault.fields);
+      fields.push(...templatesWithDefault.fields);
     });
+
     this.templates.sort((a, b) => b.priority - a.priority);
 
-    this.engine.dispatch(registerFieldsToInclude(fields));
+    fields.length && this.engine.dispatch(registerFieldsToInclude(fields));
   }
 
   private validateTemplates(templates: ResultTemplate<Content>[]) {

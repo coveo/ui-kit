@@ -7,11 +7,10 @@
 
 ## Properties
 
-| Property             | Attribute | Description | Type                        | Default |
-| -------------------- | --------- | ----------- | --------------------------- | ------- |
-| `conditions`         | --        |             | `ResultTemplateCondition[]` | `[]`    |
-| `fieldsMustMatch`    | --        |             | `FieldMatch[]`              | `[]`    |
-| `fieldsMustNotMatch` | --        |             | `FieldMatch[]`              | `[]`    |
+| Property          | Attribute           | Description | Type                        | Default     |
+| ----------------- | ------------------- | ----------- | --------------------------- | ----------- |
+| `conditions`      | --                  |             | `ResultTemplateCondition[]` | `[]`        |
+| `fieldsToInclude` | `fields-to-include` |             | `string \| undefined`       | `undefined` |
 
 
 ## Methods
@@ -23,6 +22,16 @@
 #### Returns
 
 Type: `Promise<ResultTemplateCondition[]>`
+
+
+
+### `getFields() => Promise<string[]>`
+
+
+
+#### Returns
+
+Type: `Promise<string[]>`
 
 
 

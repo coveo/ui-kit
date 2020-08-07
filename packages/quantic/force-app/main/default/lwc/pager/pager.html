@@ -1,13 +1,27 @@
 <template>
-    <lightning-button-group>
+  <lightning-button-group>
+    <lightning-button
+      variant="base"
+      disabled="{previousDisabled}"
+      label="Previous"
+      title="Previous"
+      icon-name="utility:left"
+      class="slds-m-left_x-small"
+      onclick="{previous}"
+    ></lightning-button>
 
-        <lightning-button variant="base" disabled={previousDisabled} label="Previous" title="Previous" icon-name="utility:left" class="slds-m-left_x-small" onclick={previous}></lightning-button>
+    <template for:each="{currentPages}" for:item="pageNumber">
+      <c-pagerbutton key="{pageNumber}" number="{pageNumber}" current="{currentPage}" ongoto="{goto}"></c-pagerbutton>
+    </template>
 
-        <template for:each={currentPages} for:item="pageNumber">
-            <c-pagerbutton key={pageNumber} number={pageNumber} current={currentPage} ongoto={goto}></c-pagerbutton>
-        </template>
-
-        <lightning-button disabled={nextDisabled} variant="base" label="Next" title="Next" icon-name="utility:right" class="slds-m-left_x-small" onclick={next}></lightning-button>
-
-    </lightning-button-group>
+    <lightning-button
+      disabled="{nextDisabled}"
+      variant="base"
+      label="Next"
+      title="Next"
+      icon-name="utility:right"
+      class="slds-m-left_x-small"
+      onclick="{next}"
+    ></lightning-button>
+  </lightning-button-group>
 </template>
