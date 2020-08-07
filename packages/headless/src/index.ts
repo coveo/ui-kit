@@ -45,6 +45,7 @@ export * as numericFacetActions from './features/facets/range-facets/numeric-fac
 export {NumericFacetValue} from './features/facets/range-facets/numeric-facet-set/interfaces/response';
 export * as dateFacetActions from './features/facets/range-facets/date-facet-set/date-facet-actions';
 export {DateFacetValue} from './features/facets/range-facets/date-facet-set/interfaces/response';
+export {RangeFacetSortCriterion} from './features/facets/range-facets/generic/interfaces/request';
 export * as categoryFacetActions from './features/facets/category-facet-set/category-facet-set-actions';
 export {CategoryFacetValue} from './features/facets/category-facet-set/interfaces/response';
 export * as historyActions from './features/history/history-actions';

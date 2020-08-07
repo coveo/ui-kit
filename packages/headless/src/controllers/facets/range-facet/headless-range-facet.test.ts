@@ -4,22 +4,35 @@ import {createMockState} from '../../../test/mock-state';
 import {executeSearch} from '../../../features/search/search-actions';
 import {buildMockNumericFacetValue} from '../../../test/mock-numeric-facet-value';
 import {buildMockNumericFacetResponse} from '../../../test/mock-numeric-facet-response';
-import {buildRangeFacet} from './headless-range-facet';
+import {
+  buildRangeFacet,
+  RangeFacet,
+  RangeFacetProps,
+} from './headless-range-facet';
+import {updateRangeFacetSortCriterion} from '../../../features/facets/range-facets/generic/range-facet-actions';
+import {NumericFacetRequest} from '../../../features/facets/range-facets/numeric-facet-set/interfaces/request';
+import {buildMockNumericFacetRequest} from '../../../test/mock-numeric-facet-request';
 
 describe('range facet', () => {
   const facetId = '1';
   let state: SearchPageState;
   let engine: MockEngine;
-  let rangeFacet: ReturnType<typeof buildRangeFacet>;
+  let props: RangeFacetProps<NumericFacetRequest>;
+  let rangeFacet: RangeFacet;
 
-  function initNumericFacet() {
+  function initRangeFacet() {
     engine = buildMockEngine({state});
-    rangeFacet = buildRangeFacet(engine, facetId);
+    rangeFacet = buildRangeFacet(engine, props);
   }
 
   beforeEach(() => {
+    props = {
+      facetId,
+      getRequest: () => buildMockNumericFacetRequest(),
+    };
+
     state = createMockState();
-    initNumericFacet();
+    initRangeFacet();
   });
 
   it('is subscribable', () => {
@@ -30,7 +43,7 @@ describe('range facet', () => {
     const values = [buildMockNumericFacetValue()];
     const facet = buildMockNumericFacetResponse({facetId, values});
     state.search.response.facets = [facet];
-    initNumericFacet();
+    initRangeFacet();
 
     expect(rangeFacet.state.values).toEqual(values);
   });
@@ -53,5 +66,44 @@ describe('range facet', () => {
   it('when the value is not selected, #isValueSelected returns `false`', () => {
     const value = buildMockNumericFacetValue({state: 'idle'});
     expect(rangeFacet.isValueSelected(value)).toBe(false);
+  });
+
+  describe('#sortBy', () => {
+    it('dispatches #updateRangeFacetSortCriterion', () => {
+      const criterion = 'descending';
+      rangeFacet.sortBy(criterion);
+      const action = updateRangeFacetSortCriterion({facetId, criterion});
+
+      expect(engine.actions).toContainEqual(action);
+    });
+
+    it('dispatches a search', () => {
+      rangeFacet.sortBy('descending');
+
+      const action = engine.actions.find(
+        (a) => a.type === executeSearch.pending.type
+      );
+      expect(action).toBeTruthy();
+    });
+  });
+
+  describe('#isSortedBy', () => {
+    it('when the passed criterion matches the active sort criterion, it returns true', () => {
+      const criterion = 'descending';
+      props.getRequest = () =>
+        buildMockNumericFacetRequest({sortCriteria: criterion});
+      initRangeFacet();
+
+      expect(rangeFacet.isSortedBy(criterion)).toBe(true);
+    });
+
+    it('when the passed criterion does not match the active sort criterion, it returns false', () => {
+      const criterion = 'descending';
+      props.getRequest = () =>
+        buildMockNumericFacetRequest({sortCriteria: 'ascending'});
+      initRangeFacet();
+
+      expect(rangeFacet.isSortedBy(criterion)).toBe(false);
+    });
   });
 });

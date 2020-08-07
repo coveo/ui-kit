@@ -6,6 +6,7 @@ import {
 import {
   registerNumericFacet,
   toggleSelectNumericFacetValue,
+  updateNumericFacetSortCriterion,
 } from './numeric-facet-actions';
 import {NumericFacetRegistrationOptions} from './interfaces/options';
 import {getHistoryEmptyState} from '../../../history/history-slice';
@@ -13,6 +14,7 @@ import {buildMockNumericFacetRequest} from '../../../../test/mock-numeric-facet-
 import {change} from '../../../history/history-actions';
 import {buildMockNumericFacetValue} from '../../../../test/mock-numeric-facet-value';
 import * as RangeFacetReducers from '../generic/range-facet-reducers';
+import * as FacetReducers from '../../generic/facet-reducer-helpers';
 import {executeSearch} from '../../../search/search-actions';
 import {buildMockSearch} from '../../../../test/mock-search';
 import {logGenericSearchEvent} from '../../../analytics/analytics-actions';
@@ -81,6 +83,19 @@ describe('numeric-facet-set slice', () => {
     );
 
     expect(RangeFacetReducers.toggleSelectRangeValue).toHaveBeenCalledTimes(1);
+  });
+
+  it('#updateNumericFacetSortCriterion calls #handleFacetSortCriterionUpdate', () => {
+    const facetId = '1';
+    const criterion = 'descending';
+    jest.spyOn(FacetReducers, 'handleFacetSortCriterionUpdate');
+
+    const action = updateNumericFacetSortCriterion({facetId, criterion});
+    numericFacetSetReducer(state, action);
+
+    expect(FacetReducers.handleFacetSortCriterionUpdate).toHaveBeenCalledTimes(
+      1
+    );
   });
 
   it('#executeSearch.fulfilled calls #onRangeFacetRequestFulfilled', () => {

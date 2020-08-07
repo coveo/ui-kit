@@ -255,15 +255,6 @@ describe('facet-set slice', () => {
     expect(finalState[id].sortCriteria).toBe(criterion);
   });
 
-  it('dispatching #updateFacetSortCriterion with an invalid id does not throw', () => {
-    const action = updateFacetSortCriterion({
-      facetId: '1',
-      criterion: 'score',
-    });
-
-    expect(() => facetSetReducer(state, action)).not.toThrow();
-  });
-
   it('dispatching #updateFacetNumberOfValues with a registered id updates the number of values', () => {
     const facetId = '1';
     state[facetId] = buildMockFacetRequest();

@@ -6,12 +6,14 @@ import {
 import {
   registerDateFacet,
   toggleSelectDateFacetValue,
+  updateDateFacetSortCriterion,
 } from './date-facet-actions';
 import {DateFacetRegistrationOptions} from './interfaces/options';
 import {getHistoryEmptyState} from '../../../history/history-slice';
 import {buildMockDateFacetRequest} from '../../../../test/mock-date-facet-request';
 import {change} from '../../../history/history-actions';
 import * as RangeFacetReducers from '../generic/range-facet-reducers';
+import * as FacetReducers from '../../generic/facet-reducer-helpers';
 import {executeSearch} from '../../../search/search-actions';
 import {buildMockSearch} from '../../../../test/mock-search';
 import {logGenericSearchEvent} from '../../../analytics/analytics-actions';
@@ -78,6 +80,19 @@ describe('date-facet-set slice', () => {
     );
 
     expect(RangeFacetReducers.toggleSelectRangeValue).toHaveBeenCalledTimes(1);
+  });
+
+  it('#updateDateFacetSortCriterion calls #handleFacetSortCriterionUpdate', () => {
+    const facetId = '1';
+    const criterion = 'descending';
+    jest.spyOn(FacetReducers, 'handleFacetSortCriterionUpdate');
+
+    const action = updateDateFacetSortCriterion({facetId, criterion});
+    dateFacetSetReducer(state, action);
+
+    expect(FacetReducers.handleFacetSortCriterionUpdate).toHaveBeenCalledTimes(
+      1
+    );
   });
 
   it('#executeSearch.fulfilled calls #onRangeFacetRequestFulfilled', () => {

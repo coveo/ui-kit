@@ -13,6 +13,8 @@ import {
   toggleSelectRangeValue,
   onRangeFacetRequestFulfilled,
 } from '../generic/range-facet-reducers';
+import {handleFacetSortCriterionUpdate} from '../../generic/facet-reducer-helpers';
+import {updateRangeFacetSortCriterion} from '../generic/range-facet-actions';
 
 export type NumericFacetSetState = Record<string, NumericFacetRequest>;
 
@@ -36,6 +38,12 @@ export const numericFacetSetReducer = createReducer(
           state,
           facetId,
           selection
+        );
+      })
+      .addCase(updateRangeFacetSortCriterion, (state, action) => {
+        handleFacetSortCriterionUpdate<NumericFacetRequest>(
+          state,
+          action.payload
         );
       })
       .addCase(executeSearch.fulfilled, (state, action) => {

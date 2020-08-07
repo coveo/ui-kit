@@ -6,10 +6,11 @@ import {
 } from '../../analytics/analytics-actions';
 import {configureAnalytics} from '../../../api/analytics/analytics';
 import {SearchPageState} from '../../../state';
+import {RangeFacetSortCriterion} from '../range-facets/generic/interfaces/request';
 
 export type FacetUpdateSortMetadata = {
   facetId: string;
-  criterion: FacetSortCriterion;
+  criterion: FacetSortCriterion | RangeFacetSortCriterion;
 };
 
 export type FacetSelectionChangeMetadata = {

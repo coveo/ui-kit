@@ -13,6 +13,7 @@ import {selectFacetSearchResult} from '../facet-search-set/facet-search-actions'
 import {FacetRequest, FacetValueRequest} from './interfaces/request';
 import {FacetValue, FacetResponse} from './interfaces/response';
 import {FacetRegistrationOptions} from './interfaces/options';
+import {handleFacetSortCriterionUpdate} from '../generic/facet-reducer-helpers';
 
 export type FacetSetState = Record<string, FacetRequest>;
 
@@ -76,14 +77,7 @@ export const facetSetReducer = createReducer(
         facetRequest.preventAutoSelect = true;
       })
       .addCase(updateFacetSortCriterion, (state, action) => {
-        const {facetId, criterion} = action.payload;
-        const facetRequest = state[facetId];
-
-        if (!facetRequest) {
-          return;
-        }
-
-        facetRequest.sortCriteria = criterion;
+        handleFacetSortCriterionUpdate<FacetRequest>(state, action.payload);
       })
       .addCase(updateFacetNumberOfValues, (state, action) => {
         const {facetId, numberOfValues} = action.payload;

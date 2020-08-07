@@ -48,9 +48,16 @@ export function buildDateFacet(engine: Engine, props: DateFacetProps) {
 
   const facetId = props.options.facetId || randomID('dateFacet');
   const options: DateFacetRegistrationOptions = {facetId, ...props.options};
-  const rangeFacet = buildRangeFacet<DateFacetResponse>(engine, facetId);
 
   dispatch(registerDateFacet(options));
+
+  const rangeFacet = buildRangeFacet<DateFacetRequest, DateFacetResponse>(
+    engine,
+    {
+      facetId,
+      getRequest: () => engine.state.dateFacetSet[facetId],
+    }
+  );
 
   return {
     ...rangeFacet,

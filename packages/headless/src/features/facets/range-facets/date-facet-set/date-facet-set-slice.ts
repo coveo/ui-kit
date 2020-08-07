@@ -13,6 +13,8 @@ import {
   toggleSelectRangeValue,
   onRangeFacetRequestFulfilled,
 } from '../generic/range-facet-reducers';
+import {handleFacetSortCriterionUpdate} from '../../generic/facet-reducer-helpers';
+import {updateRangeFacetSortCriterion} from '../generic/range-facet-actions';
 
 export type DateFacetSetState = Record<string, DateFacetRequest>;
 
@@ -37,6 +39,9 @@ export const dateFacetSetReducer = createReducer(
           facetId,
           selection
         );
+      })
+      .addCase(updateRangeFacetSortCriterion, (state, action) => {
+        handleFacetSortCriterionUpdate<DateFacetRequest>(state, action.payload);
       })
       .addCase(executeSearch.fulfilled, (state, action) => {
         const facets = action.payload.response.facets as DateFacetResponse[];

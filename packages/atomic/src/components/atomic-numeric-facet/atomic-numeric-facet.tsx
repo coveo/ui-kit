@@ -6,6 +6,7 @@ import {
   NumericFacetState,
   NumericFacetOptions,
   NumericFacetValue,
+  RangeFacetSortCriterion,
   Unsubscribe,
 } from '@coveo/headless';
 import {headlessEngine} from '../../engine';
@@ -65,11 +66,37 @@ export class AtomicNumericFacet {
     );
   }
 
+  private get sortSelector() {
+    return (
+      <select name="facetSort" onChange={(val) => this.onFacetSortChange(val)}>
+        {this.sortOptions}
+      </select>
+    );
+  }
+
+  private get sortOptions() {
+    const criteria: RangeFacetSortCriterion[] = ['ascending', 'descending'];
+
+    return criteria.map((criterion) => (
+      <option value={criterion} selected={this.facet.isSortedBy(criterion)}>
+        {criterion}
+      </option>
+    ));
+  }
+
+  private onFacetSortChange(e: Event) {
+    const select = e.composedPath()[0] as HTMLSelectElement;
+    const criterion = select.value as RangeFacetSortCriterion;
+
+    this.facet.sortBy(criterion);
+  }
+
   render() {
     return (
       <div>
         <div>
           <span>{this.label}</span>
+          {this.sortSelector}
         </div>
         <div>{this.values}</div>
       </div>

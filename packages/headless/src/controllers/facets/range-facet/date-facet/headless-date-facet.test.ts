@@ -14,6 +14,7 @@ import {
 } from '../../../../features/facets/range-facets/date-facet-set/date-facet-actions';
 import {buildMockDateFacetValue} from '../../../../test/mock-date-facet-value';
 import {buildMockDateFacetResponse} from '../../../../test/mock-date-facet-response';
+import {buildMockDateFacetRequest} from '../../../../test/mock-date-facet-request';
 
 describe('date facet', () => {
   const facetId = '1';
@@ -35,6 +36,7 @@ describe('date facet', () => {
     };
 
     state = createMockState();
+    state.dateFacetSet[facetId] = buildMockDateFacetRequest();
 
     initDateFacet();
   });

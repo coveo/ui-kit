@@ -14,6 +14,7 @@ import {
 } from '../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions';
 import {buildMockNumericFacetValue} from '../../../../test/mock-numeric-facet-value';
 import {buildMockNumericFacetResponse} from '../../../../test/mock-numeric-facet-response';
+import {buildMockNumericFacetRequest} from '../../../../test/mock-numeric-facet-request';
 
 describe('numeric facet', () => {
   const facetId = '1';
@@ -35,6 +36,7 @@ describe('numeric facet', () => {
     };
 
     state = createMockState();
+    state.numericFacetSet[facetId] = buildMockNumericFacetRequest();
 
     initNumericFacet();
   });
