@@ -10,6 +10,7 @@ export interface SearchState {
   queryExecuted: string;
   error: SearchAPIErrorWithStatusCode | null;
   automaticallyCorrected: boolean;
+  isLoading: boolean;
 }
 
 export function getSearchInitialState(): SearchState {
@@ -25,6 +26,7 @@ export function getSearchInitialState(): SearchState {
     queryExecuted: '',
     error: null,
     automaticallyCorrected: false,
+    isLoading: false,
   };
 }
 
@@ -33,12 +35,17 @@ export const searchReducer = createReducer(
   (builder) => {
     builder.addCase(executeSearch.rejected, (state, action) => {
       state.error = action.payload ? action.payload : null;
+      state.isLoading = false;
     });
     builder.addCase(executeSearch.fulfilled, (state, action) => {
       state.error = null;
       state.response = action.payload.response;
       state.queryExecuted = action.payload.queryExecuted;
       state.duration = action.payload.duration;
+      state.isLoading = false;
+    });
+    builder.addCase(executeSearch.pending, (state) => {
+      state.isLoading = true;
     });
   }
 );

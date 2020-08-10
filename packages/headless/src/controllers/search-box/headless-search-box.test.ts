@@ -84,6 +84,7 @@ describe('headless searchBox', () => {
         value: completion.expression,
       })),
       redirectTo: state.redirection.redirectTo,
+      isLoading: false,
     });
   });
 

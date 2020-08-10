@@ -90,6 +90,7 @@ export function buildRangeFacet<
 
       const sortCriterion = request.sortCriteria;
       const values: R['values'] = response ? response.values : [];
+      const isLoading = engine.state.search.isLoading;
       const hasActiveValues = values.some(
         (facetValue: RangeFacetValue) => facetValue.state !== 'idle'
       );
@@ -98,6 +99,7 @@ export function buildRangeFacet<
         values,
         sortCriterion,
         hasActiveValues,
+        isLoading,
       };
     },
   };

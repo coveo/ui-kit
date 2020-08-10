@@ -29,6 +29,10 @@ describe('search-slice', () => {
     expect(state.response.totalCountFiltered).toBe(0);
   });
 
+  it('the initial isloading state is set to false', () => {
+    expect(state.isLoading).toBe(false);
+  });
+
   it('when a executeSearch fulfilled is received, it updates the state to the received payload', () => {
     const result = buildMockResult();
     const response = buildMockSearchResponse({results: [result]});
@@ -48,6 +52,7 @@ describe('search-slice', () => {
     expect(finalState.response).toEqual(response);
     expect(finalState.duration).toEqual(123);
     expect(finalState.queryExecuted).toEqual('foo');
+    expect(finalState.isLoading).toBe(false);
   });
 
   it('set the error on rejection', () => {
@@ -81,6 +86,12 @@ describe('search-slice', () => {
     );
     const finalState = searchReducer(state, action);
     expect(finalState.error).toBeNull();
+  });
+
+  it('set the isloading state to true during executeSearch.pending', () => {
+    const pendingAction = executeSearch.pending('asd', logSearchboxSubmit());
+    const finalState = searchReducer(state, pendingAction);
+    expect(finalState.isLoading).toBe(true);
   });
 
   describe('when did you mean is enabled and a search is executed', () => {

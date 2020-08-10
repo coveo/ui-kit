@@ -170,6 +170,7 @@ export const buildSearchBox = (
           value: completion.expression,
         })),
         redirectTo: state.redirection.redirectTo,
+        isLoading: state.search.isLoading,
       };
     },
   };

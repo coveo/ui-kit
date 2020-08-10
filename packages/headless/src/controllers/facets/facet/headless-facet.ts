@@ -212,6 +212,7 @@ export function buildFacet(engine: Engine, props: FacetProps) {
       const request = getRequest();
       const response = getResponse();
 
+      const isLoading = engine.state.search.isLoading;
       const sortCriterion = request.sortCriteria;
       const values = response ? response.values : [];
       const hasActiveValues = values.some(
@@ -221,6 +222,7 @@ export function buildFacet(engine: Engine, props: FacetProps) {
       return {
         values,
         sortCriterion,
+        isLoading,
         hasActiveValues,
       };
     },

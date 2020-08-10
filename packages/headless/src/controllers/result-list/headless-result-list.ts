@@ -19,6 +19,7 @@ export const buildResultList = (engine: Engine) => {
 
       return {
         results: state.search.response.results,
+        isLoading: state.search.isLoading,
       };
     },
   };

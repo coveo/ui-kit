@@ -72,7 +72,7 @@ export function buildDateFacet(engine: Engine, props: DateFacetProps) {
 
     /** @returns The state of the `DateFacet` controller.*/
     get state() {
-      return rangeFacet.state;
+      return {...rangeFacet.state, isLoading: engine.state.search.isLoading};
     },
   };
 }

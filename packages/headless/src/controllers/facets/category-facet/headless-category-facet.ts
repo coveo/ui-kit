@@ -34,8 +34,8 @@ export function buildCategoryFacet(engine: Engine, props: CategoryFacetProps) {
         | CategoryFacetResponse
         | undefined;
       const values = response ? response.values : [];
-
-      return {values};
+      const isLoading = engine.state.search.isLoading;
+      return {values, isLoading};
     },
   };
 }
