@@ -1,7 +1,7 @@
 <template>
   <div class="slds-p-around_medium lgc-bg slds-border_bottom">
-    <lightning-tile label="{result.title}" href="{result.clickUri}" type="media">
-      <lightning-icon slot="media" icon-name="{icon}"></lightning-icon>
+    <lightning-tile label={result.title} href={result.clickUri} type="media">
+      <lightning-icon slot="media" icon-name={icon}></lightning-icon>
       <p class="slds-text-body_regular">{result.excerpt}</p>
       <dl class="slds-dl_horizontal">
         <dt class="slds-dl_horizontal__label">
@@ -9,7 +9,7 @@
         </dt>
         <dd class="slds-dl_horizontal__detail slds-tile__meta">
           <p class="slds-truncate" title="Date">
-            <lightning-formatted-date-time value="{result.raw.date}"></lightning-formatted-date-time>
+            <lightning-formatted-date-time value={result.raw.date}></lightning-formatted-date-time>
           </p>
         </dd>
         <dt class="slds-dl_horizontal__label">

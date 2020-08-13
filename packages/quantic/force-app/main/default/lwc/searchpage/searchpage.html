@@ -1,26 +1,22 @@
 <template>
-  <div class="{flexipageRegionWidth}">
+  <div class={flexipageRegionWidth}>
     <div class="slds-grid slds-gutters slds-wrap main">
       <div class="slds-col slds-order_2 slds-large-order_1 slds-size_1-of-1 slds-large-size_3-of-12">
-        <c-facet engine="{engine}" field="objecttype" title="Type"></c-facet>
-        <c-facet engine="{engine}" field="filetype" title="File Type"></c-facet>
+        <c-facet engine={engine} field="objecttype" title="Type"></c-facet>
+        <c-facet engine={engine} field="filetype" title="File Type"></c-facet>
       </div>
       <div class="slds-col slds-order_1 slds-large-order_2 slds-size_1-of-1 slds-large-size_9-of-12">
-        <c-searchbox engine="{engine}"></c-searchbox>
+        <c-searchbox engine={engine}></c-searchbox>
         <div class="slds-grid slds-wrap">
-          <c-summary
-            class="slds-order_2 slds-medium-order_1 slds-size_1-of-1 slds-medium-size_9-of-12"
-            engine="{engine}"
-          ></c-summary>
-          <c-sort
-            class="slds-order_1 slds-medium-order_2 slds-size_1-of-1 slds-medium-size_3-of-12"
-            engine="{engine}"
-          ></c-sort>
+          <c-summary class="slds-order_2 slds-medium-order_1 slds-size_1-of-1 slds-medium-size_9-of-12" engine={engine}>
+          </c-summary>
+          <c-sort class="slds-order_1 slds-medium-order_2 slds-size_1-of-1 slds-medium-size_3-of-12" engine={engine}>
+          </c-sort>
         </div>
 
-        <c-resultlist engine="{engine}"></c-resultlist>
+        <c-resultlist engine={engine}></c-resultlist>
         <div class="slds-m-vertical_medium">
-          <c-pager engine="{engine}"></c-pager>
+          <c-pager engine={engine}></c-pager>
         </div>
       </div>
     </div>

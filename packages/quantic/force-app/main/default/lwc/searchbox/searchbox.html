@@ -11,15 +11,15 @@
           <input
             class="slds-input slds-combobox__input slds-has-focus slds-combobox__input-value"
             placeholder="Search"
-            onfocus="{onFocus}"
+            onfocus={onFocus}
             type="search"
-            onkeyup="{onKeyup}"
-            onchange="{onChange}"
+            onkeyup={onKeyup}
+            onchange={onChange}
             aria-autocomplete="list"
             aria-controls="listbox-id-11"
             role="textbox"
           />
-          <input type="hidden" value="{state.value}" />
+          <input type="hidden" value={state.value} />
         </div>
         <div
           id="listbox-id-11"
