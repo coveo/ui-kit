@@ -6,6 +6,8 @@ import {
   disableAnalytics,
   enableAnalytics,
   updateAnalyticsConfiguration,
+  setOriginLevel2,
+  setOriginLevel3,
 } from './configuration-actions';
 import {platformUrl} from '../../api/platform-client';
 
@@ -46,6 +48,23 @@ export interface ConfigurationState {
      * By default, will append /rest/ua to the platformUrl value.
      */
     apiBaseUrl: string;
+    /**
+     * Origin level 2 is a usage analytics event metadata whose value should typically be the name/identifier of the tab from which the usage analytics event originates.
+     *
+     * When logging a Search usage analytics event, originLevel2 should always be set to the same value as the corresponding tab (parameter) Search API query parameter so Coveo Machine Learning models function properly, and usage analytics reports and dashboards are coherent.
+     *
+     * This value is optional, and will automatically try to resolve itself from the tab search parameter.
+     */
+    originLevel2: string;
+
+    /**
+     * Origin level 3 is a usage analytics event metadata whose value should typically be the URL of the page that linked to the search interface that’s making the request.
+     *
+     * When logging a Search usage analytics event, originLevel3 should always be set to the same value as the corresponding referrer Search API query parameter so usage analytics reports and dashboards are coherent.
+     *
+     * This value is optional, and will automatically try to resolve itself from the referrer search parameter.
+     */
+    originLevel3: string;
   };
 }
 
@@ -62,6 +81,8 @@ export const getConfigurationInitialState: () => ConfigurationState = () => ({
   analytics: {
     enabled: true,
     apiBaseUrl: `${platformUrl()}${analyticsAPIEndpoint}`,
+    originLevel2: 'default',
+    originLevel3: 'default',
   },
 });
 
@@ -84,7 +105,16 @@ export const configurationReducer = createReducer(
         }
       })
       .addCase(updateAnalyticsConfiguration, (state, action) => {
-        if (action.payload.apiBaseUrl) {
+        if (action.payload.enabled !== undefined) {
+          state.analytics.enabled = action.payload.enabled;
+        }
+        if (action.payload.originLevel2 !== undefined) {
+          state.analytics.originLevel2 = action.payload.originLevel2;
+        }
+        if (action.payload.originLevel3 !== undefined) {
+          state.analytics.originLevel3 = action.payload.originLevel3;
+        }
+        if (action.payload.apiBaseUrl !== undefined) {
           state.analytics.apiBaseUrl = action.payload.apiBaseUrl;
         }
       })
@@ -96,5 +126,11 @@ export const configurationReducer = createReducer(
       })
       .addCase(enableAnalytics, (state) => {
         state.analytics.enabled = true;
+      })
+      .addCase(setOriginLevel2, (state, action) => {
+        state.analytics.originLevel2 = action.payload.originLevel2;
+      })
+      .addCase(setOriginLevel3, (state, action) => {
+        state.analytics.originLevel3 = action.payload.originLevel3;
       })
 );

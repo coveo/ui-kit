@@ -10,10 +10,27 @@ import {
   disableAnalytics,
   enableAnalytics,
   updateAnalyticsConfiguration,
+  setOriginLevel3,
+  setOriginLevel2,
 } from './configuration-actions';
 import {platformUrl} from '../../api/platform-client';
 
 describe('configuration slice', () => {
+  const url = platformUrl({environment: 'dev', region: 'eu-west-3'});
+  const existingState: ConfigurationState = {
+    ...getConfigurationInitialState(),
+    accessToken: 'mytoken123',
+    organizationId: 'myorg',
+    search: {
+      apiBaseUrl: `${url}/rest/search/v2`,
+    },
+    analytics: {
+      enabled: true,
+      originLevel2: '2',
+      originLevel3: '3',
+      apiBaseUrl: `${url}/rest/ua`,
+    },
+  };
   const fakeRenewToken = async () => await Promise.resolve('');
 
   it('should have initial state', () => {
@@ -22,83 +39,160 @@ describe('configuration slice', () => {
     );
   });
 
-  it('should handle updateBasicConfiguration', () => {
-    const url = platformUrl({environment: 'dev', region: 'eu-west-3'});
-    const expectedState: ConfigurationState = {
-      ...getConfigurationInitialState(),
-      accessToken: 'mytoken123',
-      organizationId: 'myorg',
-      platformUrl: url,
-      search: {
-        apiBaseUrl: `${url}/rest/search/v2`,
-      },
-      analytics: {
-        enabled: true,
-        apiBaseUrl: `${url}/rest/ua`,
-      },
-    };
-    expect(
-      configurationReducer(
-        undefined,
-        updateBasicConfiguration({
-          organizationId: 'myorg',
-          accessToken: 'mytoken123',
-          platformUrl: url,
-        })
-      )
-    ).toEqual(expectedState);
+  describe('updateBasicConfiguration', () => {
+    it('works on initial state', () => {
+      const expectedState: ConfigurationState = {
+        ...getConfigurationInitialState(),
+        accessToken: 'mytoken123',
+        organizationId: 'myorg',
+      };
+      expect(
+        configurationReducer(
+          undefined,
+          updateBasicConfiguration({
+            organizationId: 'myorg',
+            accessToken: 'mytoken123',
+          })
+        )
+      ).toEqual(expectedState);
+    });
+
+    it('works on an existing state', () => {
+      const expectedState: ConfigurationState = {
+        ...existingState,
+        accessToken: 'mynewtoken',
+        organizationId: 'myotherorg',
+      };
+
+      expect(
+        configurationReducer(
+          existingState,
+          updateBasicConfiguration({
+            accessToken: 'mynewtoken',
+            organizationId: 'myotherorg',
+          })
+        )
+      ).toEqual(expectedState);
+    });
   });
 
-  it('should handle updateSearchConfiguration', () => {
-    const expectedState: ConfigurationState = {
-      ...getConfigurationInitialState(),
-      search: {
-        apiBaseUrl: 'http://test.com/search',
-      },
-    };
-
-    expect(
-      configurationReducer(
-        undefined,
-        updateSearchConfiguration({
-          apiBaseUrl: 'http://test.com/search',
-          pipeline: '',
-          searchHub: '',
-        })
-      )
-    ).toEqual(expectedState);
-  });
-
-  it('should handle updateAnalyticsConfiguration', () => {
-    const expectedState: ConfigurationState = {
-      ...getConfigurationInitialState(),
-      analytics: {
-        apiBaseUrl: 'http://test.com/analytics',
-        enabled: true,
-      },
-    };
-
-    expect(
-      configurationReducer(
-        undefined,
-        updateAnalyticsConfiguration({
+  describe('updateAnalyticsConfiguration', () => {
+    it('works on initial state', () => {
+      const expectedState: ConfigurationState = {
+        ...getConfigurationInitialState(),
+        analytics: {
+          enabled: false,
+          originLevel2: 'bar',
+          originLevel3: 'buzz',
           apiBaseUrl: 'http://test.com/analytics',
-        })
-      )
-    ).toEqual(expectedState);
+        },
+      };
+      expect(
+        configurationReducer(
+          undefined,
+          updateAnalyticsConfiguration({
+            enabled: false,
+            originLevel2: 'bar',
+            originLevel3: 'buzz',
+            apiBaseUrl: 'http://test.com/analytics',
+          })
+        )
+      ).toEqual(expectedState);
+    });
+
+    it('works on an existing state', () => {
+      const expectedState: ConfigurationState = {
+        ...existingState,
+        analytics: {
+          enabled: true,
+          originLevel2: 'bar',
+          originLevel3: 'buzz',
+          apiBaseUrl: 'http://test.com/analytics',
+        },
+      };
+
+      expect(
+        configurationReducer(
+          existingState,
+          updateAnalyticsConfiguration({
+            enabled: true,
+            originLevel2: 'bar',
+            originLevel3: 'buzz',
+            apiBaseUrl: 'http://test.com/analytics',
+          })
+        )
+      ).toEqual(expectedState);
+    });
   });
 
-  it('should handle renewAccessToken.fulfilled', () => {
-    const expectedState: ConfigurationState = {
-      ...getConfigurationInitialState(),
-      accessToken: 'mytoken123',
-    };
-    expect(
-      configurationReducer(
-        undefined,
-        renewAccessToken.fulfilled('mytoken123', '', fakeRenewToken)
-      )
-    ).toEqual(expectedState);
+  describe('updateSearchConfiguration', () => {
+    it('works on initial state', () => {
+      const expectedState: ConfigurationState = {
+        ...getConfigurationInitialState(),
+        search: {
+          apiBaseUrl: 'http://test.com/search',
+        },
+      };
+
+      expect(
+        configurationReducer(
+          undefined,
+          updateSearchConfiguration({
+            apiBaseUrl: 'http://test.com/search',
+            pipeline: '',
+            searchHub: '',
+          })
+        )
+      ).toEqual(expectedState);
+    });
+    it('works on existing state', () => {
+      const expectedState: ConfigurationState = {
+        ...existingState,
+        search: {
+          apiBaseUrl: 'http://test.com/search',
+        },
+      };
+
+      expect(
+        configurationReducer(
+          existingState,
+          updateSearchConfiguration({
+            apiBaseUrl: 'http://test.com/search',
+            pipeline: '',
+            searchHub: '',
+          })
+        )
+      ).toEqual(expectedState);
+    });
+  });
+
+  describe('renewAccessToken', () => {
+    it('works on initial state', () => {
+      const expectedState: ConfigurationState = {
+        ...getConfigurationInitialState(),
+        accessToken: 'mytoken123',
+      };
+      expect(
+        configurationReducer(
+          undefined,
+          renewAccessToken.fulfilled('mytoken123', '', fakeRenewToken)
+        )
+      ).toEqual(expectedState);
+    });
+
+    it('works on an existing state', () => {
+      const expectedState: ConfigurationState = {
+        ...existingState,
+        accessToken: 'mynewtoken123',
+      };
+
+      expect(
+        configurationReducer(
+          existingState,
+          renewAccessToken.fulfilled('mynewtoken123', '', fakeRenewToken)
+        )
+      ).toEqual(expectedState);
+    });
   });
 
   it('should handle disable analytics', () => {
@@ -116,5 +210,25 @@ describe('configuration slice', () => {
     expect(
       configurationReducer(state, enableAnalytics()).analytics.enabled
     ).toBe(true);
+  });
+
+  it('should handle #setOriginLevel2', () => {
+    const originLevel2 = 'bar';
+    const state = getConfigurationInitialState();
+    state.analytics.originLevel2 = 'foo';
+    expect(
+      configurationReducer(state, setOriginLevel2({originLevel2})).analytics
+        .originLevel2
+    ).toBe(originLevel2);
+  });
+
+  it('should handle #setOriginLevel3', () => {
+    const originLevel3 = 'bar';
+    const state = getConfigurationInitialState();
+    state.analytics.originLevel3 = 'foo';
+    expect(
+      configurationReducer(state, setOriginLevel3({originLevel3})).analytics
+        .originLevel3
+    ).toBe(originLevel3);
   });
 });

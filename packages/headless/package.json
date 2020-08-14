@@ -21,7 +21,7 @@
   "dependencies": {
     "@coveo/bueno": "^0.0.2-alpha.2",
     "@reduxjs/toolkit": "^1.4.0",
-    "coveo.analytics": "^2.5.1",
+    "coveo.analytics": "^2.6.0",
     "cross-fetch": "^3.0.4",
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0"

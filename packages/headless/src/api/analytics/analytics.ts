@@ -25,6 +25,27 @@ export class AnalyticsProvider implements SearchPageClientProvider {
     return this.state.pipeline;
   }
 
+  public getOriginLevel1() {
+    return this.state.searchHub;
+  }
+
+  public getOriginLevel2() {
+    // TODO: When tab implemented;
+    // Configurable on headless engine, optionally
+    // Need to use tabs as originLevel2, in priority if they exists/available.
+    // Otherwise, use configured originLevel2 on the engine.
+    // Ultimate fallback should be `default`;
+    return this.state.configuration.analytics.originLevel2 || 'default';
+  }
+
+  public getOriginLevel3() {
+    // TODO: When referrer implemented;
+    // Configurable on headless engine, optionally
+    // If not specified at config time, need to fallback to use current referrer parameter for search API, if any
+    // Otherwise: fallback to `default`;
+    return this.state.configuration.analytics.originLevel3 || 'default';
+  }
+
   private mapResultsToAnalyticsDocument() {
     return this.state.search.response.results.map((r) => ({
       documentUri: r.uri,

@@ -12,6 +12,7 @@ import {
   updateSearchConfiguration,
   disableAnalytics,
   enableAnalytics,
+  updateAnalyticsConfiguration,
 } from '../features/configuration/configuration-actions';
 import {configureStore, Store} from './store';
 import {SearchPageState} from '../state';
@@ -91,6 +92,31 @@ export interface HeadlessConfigurationOptions {
      */
     searchHub: string;
   };
+
+  analytics?: {
+    /**
+     * Specifies if usage analytics tracking should be enabled.
+     *
+     * By default, all analytics events will be logged.
+     */
+    enabled?: boolean;
+    /**
+     * Origin level 2 is a usage analytics event metadata whose value should typically be the name/identifier of the tab from which the usage analytics event originates.
+     *
+     * When logging a Search usage analytics event, originLevel2 should always be set to the same value as the corresponding tab (parameter) Search API query parameter so Coveo Machine Learning models function properly, and usage analytics reports and dashboards are coherent.
+     *
+     * This value is optional, and will automatically try to resolve itself from the tab search parameter.
+     */
+    originLevel2?: string;
+    /**
+     * Origin level 3 is a usage analytics event metadata whose value should typically be the URL of the page that linked to the search interface that’s making the request.
+     *
+     * When logging a Search usage analytics event, originLevel3 should always be set to the same value as the corresponding referrer Search API query parameter so usage analytics reports and dashboards are coherent.
+     *
+     * This value is optional, and will automatically try to resolve itself from the referrer search parameter.
+     */
+    originLevel3?: string;
+  };
 }
 
 export interface Engine<State = SearchPageState> {
@@ -140,6 +166,11 @@ export class HeadlessEngine<Reducers extends ReducersMapObject>
     if (options.configuration.search) {
       this.reduxStore.dispatch(
         updateSearchConfiguration(options.configuration.search)
+      );
+    }
+    if (options.configuration.analytics) {
+      this.reduxStore.dispatch(
+        updateAnalyticsConfiguration(options.configuration.analytics)
       );
     }
   }

@@ -1,6 +1,12 @@
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 import {validatePayloadSchema} from '../../utils/validate-payload';
-import {StringValue} from '@coveo/bueno';
+import {StringValue, BooleanValue} from '@coveo/bueno';
+
+const originSchemaOnConfigUpdate = () =>
+  new StringValue({emptyAllowed: false, required: false});
+
+const originSchemaOnUpdate = () =>
+  new StringValue({emptyAllowed: false, required: true});
 
 /**
  * Update the global headless engine configuration.
@@ -39,6 +45,29 @@ export const updateSearchConfiguration = createAction(
 );
 
 /**
+ * Update the analytics configuration.
+ * @param enabled Specifies if usage analytics tracking should be enabled.
+ * @param originLevel2 Specifies the origin level 2 usage analytics event metadata whose value should typically be the name/identifier of the tab from which the usage analytics event originates.
+ * @param originLevel3 Specifies the origin level 3 usage analytics event metadata whose value should typically be the URL of the page that linked to the search interface that’s making the request.
+ * @param apiBaseUrl The Usage Analytics API base URL to use (e.g., https://platform.cloud.coveo.com/rest/ua).
+ */
+export const updateAnalyticsConfiguration = createAction(
+  'configuration/updateAnalyticsConfiguration',
+  (payload: {
+    enabled?: boolean;
+    originLevel2?: string;
+    originLevel3?: string;
+    apiBaseUrl?: string;
+  }) =>
+    validatePayloadSchema(payload, {
+      enabled: new BooleanValue({default: true}),
+      originLevel2: originSchemaOnConfigUpdate(),
+      originLevel3: originSchemaOnConfigUpdate(),
+      apiBaseUrl: new StringValue({url: true, emptyAllowed: false}),
+    })
+);
+
+/**
  * Renew the accessToken specified in the global headless engine configuration.
  * @param renew A function that fetches a new access token. The function must return a Promise that resolves to a string (the new access token).
  */
@@ -50,18 +79,6 @@ export const renewAccessToken = createAsyncThunk(
 );
 
 /**
- * Update the analytics configuration.
- * @param apiBaseUrl The Usage Analytics API base URL to use (e.g., https://platform.cloud.coveo.com/rest/ua).
- */
-export const updateAnalyticsConfiguration = createAction(
-  'configuration/updateAnalyticsConfiguration',
-  (payload: {apiBaseUrl?: string}) =>
-    validatePayloadSchema(payload, {
-      apiBaseUrl: new StringValue({url: true, emptyAllowed: false}),
-    })
-);
-
-/**
  * Disable analytics tracking
  */
 export const disableAnalytics = createAction('configuration/analytics/disable');
@@ -69,3 +86,21 @@ export const disableAnalytics = createAction('configuration/analytics/disable');
  * Enable analytics tracking
  */
 export const enableAnalytics = createAction('configuration/analytics/enable');
+
+/**
+ * Set originLevel2 for analytics tracking
+ */
+export const setOriginLevel2 = createAction(
+  'configuration/analytics/originlevel2',
+  (payload: {originLevel2: string}) =>
+    validatePayloadSchema(payload, {originLevel2: originSchemaOnUpdate()})
+);
+
+/**
+ * Set originLevel3 for analytics tracking
+ */
+export const setOriginLevel3 = createAction(
+  'configuration/analytics/originlevel3',
+  (payload: {originLevel3: string}) =>
+    validatePayloadSchema(payload, {originLevel3: originSchemaOnUpdate()})
+);
