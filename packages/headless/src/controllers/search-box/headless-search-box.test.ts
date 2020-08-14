@@ -89,14 +89,14 @@ describe('headless searchBox', () => {
   });
 
   it('should dispatch a registerQuerySetQuery action at initialization', () => {
-    const action = registerQuerySetQuery({id: searchBox.id, query: ''});
+    const action = registerQuerySetQuery({id, query: ''});
     expect(engine.actions).toContainEqual(action);
   });
 
   it('should dispatch a registerQuerySuggest action at initialization', () => {
     expect(engine.actions).toContainEqual(
       registerQuerySuggest({
-        id: searchBox.id,
+        id,
         q: state.query.q,
         count: props.options.numberOfSuggestions,
       })
@@ -108,7 +108,7 @@ describe('headless searchBox', () => {
       const text = 'query';
       searchBox.updateText(text);
 
-      const action = updateQuerySetQuery({id: searchBox.id, query: text});
+      const action = updateQuerySetQuery({id, query: text});
       expect(engine.actions).toContainEqual(action);
     });
 
@@ -135,17 +135,13 @@ describe('headless searchBox', () => {
   it(`when calling clear
     should dispatch a clearQuerySuggest action`, () => {
     searchBox.clear();
-    expect(engine.actions).toContainEqual(
-      clearQuerySuggest({id: searchBox.id})
-    );
+    expect(engine.actions).toContainEqual(clearQuerySuggest({id}));
   });
 
   it(`when calling hideSuggestions
     should dispatch a clearQuerySuggestCompletions action`, () => {
     searchBox.hideSuggestions();
-    expect(engine.actions).toContainEqual(
-      clearQuerySuggestCompletions({id: searchBox.id})
-    );
+    expect(engine.actions).toContainEqual(clearQuerySuggestCompletions({id}));
   });
 
   it(`when calling showSuggestions
@@ -156,7 +152,7 @@ describe('headless searchBox', () => {
       (a) => a.type === fetchQuerySuggestions.pending.type
     );
     expect(action).toEqual(
-      fetchQuerySuggestions.pending(action!.meta.requestId, {id: searchBox.id})
+      fetchQuerySuggestions.pending(action!.meta.requestId, {id})
     );
   });
 
@@ -166,13 +162,13 @@ describe('headless searchBox', () => {
     searchBox.selectSuggestion(value);
 
     expect(engine.actions).toContainEqual(
-      selectQuerySuggestion({id: searchBox.id, expression: value})
+      selectQuerySuggestion({id, expression: value})
     );
   });
 
   describe('when calling submit', () => {
     it('sets the query to the search box value kept in the querySet', () => {
-      const expectedQuery = state.querySet[searchBox.id];
+      const expectedQuery = state.querySet[id];
       searchBox.submit();
 
       expect(engine.actions).toContainEqual(updateQuery({q: expectedQuery}));

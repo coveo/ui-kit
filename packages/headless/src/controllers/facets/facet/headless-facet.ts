@@ -98,6 +98,14 @@ export function buildFacet(engine: Engine, props: FacetProps) {
     return currentValues.filter((v) => v.state !== 'idle').length;
   };
 
+  const computeCanShowLessValues = () => {
+    const {currentValues} = getRequest();
+    const configuredNumber = options.numberOfValues!;
+    const hasIdleValues = !!currentValues.find((v) => v.state === 'idle');
+
+    return configuredNumber < currentValues.length && hasIdleValues;
+  };
+
   const isValueSelected = (value: FacetValue) => value.state === 'selected';
 
   const getAnalyticsActionForToggleSelect = (selection: FacetValue) => {
@@ -176,12 +184,6 @@ export function buildFacet(engine: Engine, props: FacetProps) {
       dispatch(executeSearch(logFacetShowMore(facetId)));
     },
 
-    /** Returns `true` if there are more values to display and `false` otherwise.*/
-    get canShowMoreValues() {
-      const res = getResponse();
-      return res ? res.moreValuesAvailable : false;
-    },
-
     /** Sets the displayed number of values to the originally configured value.*/
     showLessValues() {
       const {facetId, numberOfValues} = options;
@@ -197,17 +199,7 @@ export function buildFacet(engine: Engine, props: FacetProps) {
       dispatch(executeSearch(logFacetShowLess(facetId)));
     },
 
-    /** Returns `true` if fewer values can be displayed and `false` otherwise.*/
-    get canShowLessValues() {
-      const {currentValues} = getRequest();
-      const configuredNumber = options.numberOfValues!;
-      const hasIdleValues = !!currentValues.find((v) => v.state === 'idle');
-
-      return configuredNumber < currentValues.length && hasIdleValues;
-    },
-    /**
-     * @returns The state of the `Facet` controller.
-     */
+    /** @returns The state of the `Facet` controller. */
     get state() {
       const request = getRequest();
       const response = getResponse();
@@ -218,12 +210,26 @@ export function buildFacet(engine: Engine, props: FacetProps) {
       const hasActiveValues = values.some(
         (facetValue) => facetValue.state !== 'idle'
       );
+      const canShowMoreValues = response ? response.moreValuesAvailable : false;
 
       return {
+        /** @returns the values of the facet */
         values,
+
+        /** @returns the active sortCriterion of the facet */
         sortCriterion,
+
+        /** @returns `true` if a search is in progress and `false` otherwise. */
         isLoading,
+
+        /** @returns `true` if there is at least one non-idle value and `false` otherwise. */
         hasActiveValues,
+
+        /** @returns `true` if there are more values to display and `false` otherwise.*/
+        canShowMoreValues,
+
+        /** @returns `true` if fewer values can be displayed and `false` otherwise.*/
+        canShowLessValues: computeCanShowLessValues(),
       };
     },
   };

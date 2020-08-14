@@ -251,9 +251,9 @@ describe('facet', () => {
     });
   });
 
-  describe('#canShowMoreValues', () => {
+  describe('#state.canShowMoreValues', () => {
     it('when there is no response, it returns false', () => {
-      expect(facet.canShowMoreValues).toBe(false);
+      expect(facet.state.canShowMoreValues).toBe(false);
     });
 
     it('when #moreValuesAvailable on the response is true, it returns true', () => {
@@ -263,7 +263,7 @@ describe('facet', () => {
       });
 
       state.search.response.facets = [facetResponse];
-      expect(facet.canShowMoreValues).toBe(true);
+      expect(facet.state.canShowMoreValues).toBe(true);
     });
 
     it('when #moreValuesAvailable on the response is false, it returns false', () => {
@@ -273,7 +273,7 @@ describe('facet', () => {
       });
 
       state.search.response.facets = [facetResponse];
-      expect(facet.canShowMoreValues).toBe(false);
+      expect(facet.state.canShowMoreValues).toBe(false);
     });
   });
 
@@ -334,7 +334,7 @@ describe('facet', () => {
     });
   });
 
-  describe('#canShowLessValues', () => {
+  describe('#state.canShowLessValues', () => {
     it('when the number of currentValues is equal to the configured number, it returns false', () => {
       options.numberOfValues = 1;
 
@@ -343,7 +343,7 @@ describe('facet', () => {
 
       initFacet();
 
-      expect(facet.canShowLessValues).toBe(false);
+      expect(facet.state.canShowLessValues).toBe(false);
     });
 
     it('when the number of currentValues is greater than the configured number, it returns true', () => {
@@ -353,7 +353,7 @@ describe('facet', () => {
       setFacetRequest({currentValues: [value, value]});
       initFacet();
 
-      expect(facet.canShowLessValues).toBe(true);
+      expect(facet.state.canShowLessValues).toBe(true);
     });
 
     it(`when the number of currentValues is greater than the configured number,
@@ -364,7 +364,7 @@ describe('facet', () => {
       setFacetRequest({currentValues: [selectedValue, selectedValue]});
       initFacet();
 
-      expect(facet.canShowLessValues).toBe(false);
+      expect(facet.state.canShowLessValues).toBe(false);
     });
   });
 

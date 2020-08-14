@@ -58,68 +58,45 @@ export const buildPager = (engine: Engine, props: PagerProps = {}) => {
     dispatch(registerPage(page));
   }
 
-  const currentPage = () => {
+  const getCurrentPage = () => {
     return currentPageSelector(engine.state);
   };
 
-  const currentPages = () => {
+  const getCurrentPages = () => {
     const {numberOfPages} = options;
     return currentPagesSelector(engine.state, numberOfPages);
   };
 
-  const maxPage = () => {
+  const getMaxPage = () => {
     return maxPageSelector(engine.state);
   };
 
   return {
     ...controller,
 
-    /**
-     * @returns The state of the `Pager` controller.
-     */
+    /** @returns The state of the `Pager` controller. */
     get state() {
+      const currentPage = getCurrentPage();
+      const maxPage = getMaxPage();
+      const hasPreviousPage = currentPage > minimumPage && maxPage > 0;
+      const hasNextPage = currentPage < maxPage;
+
       return {
-        currentPage: currentPage(),
-        currentPages: currentPages(),
-        maxPage: maxPage(),
+        /** @returns the current selected page */
+        currentPage,
+
+        /** @returns the current pages range */
+        currentPages: getCurrentPages(),
+
+        /**  @returns the max available page for this query */
+        maxPage,
+
+        /** @returns `true` when a previous page is available, and `false` otherwise.*/
+        hasPreviousPage,
+
+        /** @returns `true` when a next page is available, and `false` otherwise. */
+        hasNextPage,
       };
-    },
-
-    /**
-     * @returns the current pages range
-     */
-    get currentPages() {
-      return currentPages();
-    },
-
-    /**
-     * @returns the current selected page
-     */
-    get currentPage(): number {
-      return currentPage();
-    },
-
-    /**
-     * @returns the max available page for this query
-     */
-    get maxPage(): number {
-      return maxPage();
-    },
-
-    /**
-     * @returns `true` when a previous page is available, and `false` otherwise.
-     */
-    get hasPreviousPage(): boolean {
-      const {currentPage, maxPage} = this.state;
-      return currentPage > minimumPage && maxPage > 0;
-    },
-
-    /**
-     * @returns `true` when a next page is available, and `false` otherwise.
-     */
-    get hasNextPage(): boolean {
-      const {currentPage, maxPage} = this.state;
-      return currentPage < maxPage;
     },
 
     /**

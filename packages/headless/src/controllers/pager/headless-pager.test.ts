@@ -123,38 +123,38 @@ describe('Pager', () => {
     expect(pager.state.maxPage).toBe(10);
   });
 
-  it('when on page 1 and maxPage is 2, #hasNextPage returns true', () => {
+  it('when on page 1 and maxPage is 2, #state.hasNextPage is true', () => {
     setCurrentPage(1);
     setMaxPage(2);
 
-    expect(pager.hasNextPage).toBe(true);
+    expect(pager.state.hasNextPage).toBe(true);
   });
 
-  it('when on page 2 and maxPage is 2, #hasNextPage returns false', () => {
+  it('when on page 2 and maxPage is 2, #state.hasNextPage returns false', () => {
     setCurrentPage(2);
     setMaxPage(2);
 
-    expect(pager.hasNextPage).toBe(false);
+    expect(pager.state.hasNextPage).toBe(false);
   });
 
-  it('when on page 2 and maxPage is 2, #hasPreviousPage returns true', () => {
+  it('when on page 2 and maxPage is 2, #state.hasPreviousPage returns true', () => {
     setCurrentPage(2);
     setMaxPage(2);
 
-    expect(pager.hasPreviousPage).toBe(true);
+    expect(pager.state.hasPreviousPage).toBe(true);
   });
 
-  it('when on page 1 and maxPage is 2, #hasPreviousPage returns false', () => {
+  it('when on page 1 and maxPage is 2, #state.hasPreviousPage returns false', () => {
     setCurrentPage(1);
     setMaxPage(2);
 
-    expect(pager.hasPreviousPage).toBe(false);
+    expect(pager.state.hasPreviousPage).toBe(false);
   });
 
-  it('when on page 2 and maxPage is 0, #hasPreviousPage returns false', () => {
+  it('when on page 2 and maxPage is 0, #state.hasPreviousPage returns false', () => {
     setCurrentPage(2);
     setMaxPage(0);
 
-    expect(pager.hasPreviousPage).toBe(false);
+    expect(pager.state.hasPreviousPage).toBe(false);
   });
 });

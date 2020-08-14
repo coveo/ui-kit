@@ -112,7 +112,7 @@ export class AtomicFacet {
   }
 
   private get showMoreButton() {
-    if (!this.facet.canShowMoreValues) {
+    if (!this.state.canShowMoreValues) {
       return null;
     }
 
@@ -122,7 +122,7 @@ export class AtomicFacet {
   }
 
   private get showLessButton() {
-    if (!this.facet.canShowLessValues) {
+    if (!this.state.canShowLessValues) {
       return null;
     }
 

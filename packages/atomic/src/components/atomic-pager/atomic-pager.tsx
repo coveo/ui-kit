@@ -26,7 +26,7 @@ export class AtomicPager {
   }
 
   private get backButton() {
-    if (!this.pager.hasPreviousPage) {
+    if (!this.state.hasPreviousPage) {
       return null;
     }
 
@@ -35,7 +35,7 @@ export class AtomicPager {
   }
 
   private get nextButton() {
-    if (!this.pager.hasNextPage) {
+    if (!this.state.hasNextPage) {
       return null;
     }
 
