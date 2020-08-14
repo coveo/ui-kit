@@ -1,5 +1,5 @@
 import {MockEngine, buildMockEngine} from '../../test/mock-engine';
-import {Sort, SortProps} from './headless-sort';
+import {Sort, SortProps, buildSort} from './headless-sort';
 import {
   buildRelevanceSortCriterion,
   buildDateSortCriterion,
@@ -18,7 +18,7 @@ describe('Sort', () => {
   let sort: Sort;
 
   function initSort() {
-    sort = new Sort(engine, props);
+    sort = buildSort(engine, props);
   }
 
   beforeEach(() => {

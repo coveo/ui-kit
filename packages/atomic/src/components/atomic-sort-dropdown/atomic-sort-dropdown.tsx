@@ -7,6 +7,7 @@ import {
   buildDateSortCriterion,
   buildFieldSortCriterion,
   Unsubscribe,
+  buildSort,
 } from '@coveo/headless';
 import {headlessEngine} from '../../engine';
 
@@ -30,7 +31,7 @@ export class AtomicSortDropdown {
 
   constructor() {
     const initialState: Partial<SortInitialState> = {criterion: this.relevance};
-    this.sort = new Sort(headlessEngine, {initialState});
+    this.sort = buildSort(headlessEngine, {initialState});
     this.unsubscribe = this.sort.subscribe(() => this.updateState());
   }
 

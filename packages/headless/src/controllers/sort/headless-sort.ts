@@ -5,7 +5,7 @@ import {
 } from '../../features/sort-criteria/sort-criteria-actions';
 import {executeSearch} from '../../features/search/search-actions';
 import {SortCriterion} from '../../features/sort-criteria/criteria';
-import {Controller} from '../controller/headless-controller';
+import {buildController} from '../controller/headless-controller';
 import {updatePage} from '../../features/pagination/pagination-actions';
 import {logResultsSort} from '../../features/sort-criteria/sort-criteria-analytics-actions';
 
@@ -18,52 +18,49 @@ export interface SortInitialState {
   criterion: SortCriterion;
 }
 
+/** The `Sort` controller allows to changing how the results are sorted.*/
+export type Sort = ReturnType<typeof buildSort>;
+
 /** The state relevant to the `Sort` controller.*/
 export type SortState = Sort['state'];
 
-export class Sort extends Controller {
-  constructor(engine: Engine, private props: Partial<SortProps> = {}) {
-    super(engine);
-    this.register();
+export function buildSort(engine: Engine, props: Partial<SortProps> = {}) {
+  const controller = buildController(engine);
+  const {dispatch} = engine;
+  const criterion = props.initialState?.criterion;
+  const search = () => dispatch(executeSearch(logResultsSort()));
+
+  if (criterion) {
+    dispatch(registerSortCriterion(criterion));
   }
 
-  /**
-   * Updates the sort criterion and executes a new search.
-   * @param criterion The new sort criterion.
-   */
-  public sortBy(criterion: SortCriterion) {
-    this.dispatch(updateSortCriterion(criterion));
-    this.dispatch(updatePage(1));
-    this.search();
-  }
+  return {
+    ...controller,
 
-  /**
-   * Returns `true` if the passed sort criterion matches the value in state, and `false` otherwise.
-   * @param criterion The criterion to compare.
-   * @returns {boolean}
-   */
-  public isSortedBy(criterion: SortCriterion) {
-    return this.engine.state.sortCriteria === criterion.expression;
-  }
+    /**
+     * Updates the sort criterion and executes a new search.
+     * @param criterion The new sort criterion.
+     */
+    sortBy(criterion: SortCriterion) {
+      dispatch(updateSortCriterion(criterion));
+      dispatch(updatePage(1));
+      search();
+    },
 
-  /**
-   * @returns The state of the `Sort` controller.
-   */
-  public get state() {
-    return {
-      sortCriteria: this.engine.state.sortCriteria,
-    };
-  }
+    /**
+     * Returns `true` if the passed sort criterion matches the value in state, and `false` otherwise.
+     * @param criterion The criterion to compare.
+     * @returns {boolean}
+     */
+    isSortedBy(criterion: SortCriterion) {
+      return this.state.sortCriteria === criterion.expression;
+    },
 
-  private register() {
-    const criterion = this.props.initialState?.criterion;
-
-    if (criterion) {
-      this.dispatch(registerSortCriterion(criterion));
-    }
-  }
-
-  private search() {
-    this.dispatch(executeSearch(logResultsSort()));
-  }
+    /**  @returns The state of the `Sort` controller.*/
+    get state() {
+      return {
+        sortCriteria: engine.state.sortCriteria,
+      };
+    },
+  };
 }
