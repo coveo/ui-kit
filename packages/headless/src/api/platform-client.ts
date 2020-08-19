@@ -1,5 +1,4 @@
 import fetch from 'cross-fetch';
-
 export type HttpMethods = 'POST' | 'GET' | 'DELETE' | 'PUT';
 export type HTTPContentTypes = 'application/json' | 'text/html';
 
@@ -30,6 +29,7 @@ export class PlatformClient {
     });
 
     const body = (await response.json()) as ResponseType;
+
     return {
       response,
       body,

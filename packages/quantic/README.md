@@ -22,6 +22,8 @@
 
 [vscode Salesforce Extension Pack](https://marketplace.visualstudio.com/items?itemName=salesforce.salesforcedx-vscode)
 
+**Note** Make sure you open the quantic project at the root (`/packages/quantic/`) in vscode in order for the entension to work properly.
+
 ## Enable Dev Hub in your Salesforce organization
 
 - Connect to your salesforce developer organization [login](http://login.salesforce.com/)

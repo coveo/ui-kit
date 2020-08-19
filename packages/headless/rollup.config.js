@@ -68,6 +68,13 @@ const browserConfig = {
             './node_modules/coveo.analytics/dist/library.es.js'
           ),
         },
+        {
+          find: 'cross-fetch',
+          replacement: pathResolve(
+            __dirname,
+            './fetch-ponyfill.js'
+          ),
+        },
       ],
     }),
     resolve({browser: true}),
