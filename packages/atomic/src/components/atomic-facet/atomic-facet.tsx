@@ -131,6 +131,23 @@ export class AtomicFacet {
     );
   }
 
+  private get showMoreSearchValues() {
+    const facetSearch = this.facet.facetSearch;
+    if (!facetSearch.state.moreValuesAvailable) {
+      return null;
+    }
+
+    return (
+      <button
+        onClick={() => {
+          facetSearch.showMoreResults();
+        }}
+      >
+        show more
+      </button>
+    );
+  }
+
   render() {
     return (
       <div>
@@ -142,6 +159,7 @@ export class AtomicFacet {
         <div>
           {this.facetSearchInput}
           {this.facetSearchResults}
+          {this.showMoreSearchValues}
         </div>
         <div>{this.values}</div>
         <div>

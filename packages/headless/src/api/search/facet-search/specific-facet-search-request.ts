@@ -10,7 +10,7 @@ export const specificFacetSearchRequest = (
   id: string,
   state: SearchPageState
 ): SpecificFacetSearchRequest => {
-  const {captions, numberOfValues, query} = state.facetSearchSet[id].options;
+  const {captions, query, numberOfValues} = state.facetSearchSet[id].options;
   const {field, delimitingCharacter, currentValues} = state.facetSet[id];
   const searchContext = searchRequest(state);
   const ignoreValues = currentValues

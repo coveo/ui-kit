@@ -19,8 +19,13 @@ export type FacetSearch = ReturnType<typeof buildFacetSearch>;
 export function buildFacetSearch(engine: Engine, props: FacetSearchProps) {
   const dispatch = engine.dispatch;
   const facetId = props.options.facetId;
+  const initialNumberOfValues = props.options.numberOfValues || 10;
 
   dispatch(registerFacetSearch(props.options));
+
+  const getFacetSearch = () => {
+    return engine.state.facetSearchSet[facetId];
+  };
 
   return {
     /** Updates the facet search query.
@@ -28,7 +33,26 @@ export function buildFacetSearch(engine: Engine, props: FacetSearchProps) {
      */
     updateText(text: string) {
       const query = `*${text}*`;
-      dispatch(updateFacetSearch({facetId, query}));
+      dispatch(
+        updateFacetSearch({
+          facetId,
+          query,
+          numberOfValues: initialNumberOfValues,
+        })
+      );
+    },
+    /**
+     * Increases number of results returned by numberOfResults
+     */
+    showMoreResults() {
+      const {numberOfValues} = getFacetSearch().options;
+      dispatch(
+        updateFacetSearch({
+          facetId,
+          numberOfValues: numberOfValues + initialNumberOfValues,
+        })
+      );
+      dispatch(executeFacetSearch(facetId));
     },
     /** Executes a facet search to update the values.*/
     search() {
@@ -42,8 +66,10 @@ export function buildFacetSearch(engine: Engine, props: FacetSearchProps) {
       );
     },
     get state() {
-      const facetSearch = engine.state.facetSearchSet[facetId];
-      return {...facetSearch.response};
+      const facetSearch = getFacetSearch();
+      return {
+        ...facetSearch.response,
+      };
     },
   };
 }
