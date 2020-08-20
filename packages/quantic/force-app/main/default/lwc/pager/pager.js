@@ -7,7 +7,7 @@ export default class Pager extends LightningElement {
 
   /** @type {import("coveo").Pager} */
   pager;
-  /** @type {()=> any} */
+  /** @type {()=> void} */
   unsubscribe;
   /** @type {boolean} */
   hasPrevious;
@@ -35,8 +35,8 @@ export default class Pager extends LightningElement {
   }
 
   updateState() {
-    this.hasPrevious = this.pager.hasPreviousPage;
-    this.hasNext = this.pager.hasNextPage;
+    this.hasPrevious = this.pager.state.hasPreviousPage;
+    this.hasNext = this.pager.state.hasNextPage;
     this.currentPages = this.pager.state.currentPages;
     this.currentPage = this.pager.state.currentPage;
   }

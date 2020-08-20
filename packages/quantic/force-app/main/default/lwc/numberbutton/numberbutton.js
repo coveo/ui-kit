@@ -1,6 +1,6 @@
 import { LightningElement, api } from "lwc";
 
-export default class Pagerbutton extends LightningElement {
+export default class Numberbutton extends LightningElement {
   @api number;
   @api current;
 

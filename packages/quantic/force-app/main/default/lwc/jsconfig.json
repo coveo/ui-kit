@@ -13,9 +13,6 @@
             "c/pager": [
                 "pager/pager.js"
             ],
-            "c/pagerbutton": [
-                "pagerbutton/pagerbutton.js"
-            ],
             "c/result": [
                 "result/result.js"
             ],
@@ -33,6 +30,12 @@
             ],
             "c/summary": [
                 "summary/summary.js"
+            ],
+            "c/resultsperpage": [
+                "resultsperpage/resultsperpage.js"
+            ],
+            "c/numberbutton": [
+                "numberbutton/numberbutton.js"
             ]
         }
     },
