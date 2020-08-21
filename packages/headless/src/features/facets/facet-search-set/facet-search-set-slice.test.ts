@@ -15,6 +15,8 @@ import {buildMockFacetSearchResponse} from '../../../test/mock-facet-search-resp
 import {buildMockFacetSearchResult} from '../../../test/mock-facet-search-result';
 
 describe('FacetSearch slice', () => {
+  const facetId = '1';
+
   let state: FacetSearchSetState;
 
   beforeEach(() => {
@@ -26,19 +28,25 @@ describe('FacetSearch slice', () => {
     expect(finalState).toEqual({});
   });
 
-  it('registers a facet search with the passed id and options', () => {
+  describe('registration', () => {
     const facetId = '1';
     const options: FacetSearchOptions = {facetId};
 
-    const finalState = facetSearchSetReducer(
-      state,
-      registerFacetSearch(options)
-    );
-    expect(finalState[facetId].options).toEqual({
-      facetId,
-      captions: {},
-      numberOfValues: 10,
-      query: '',
+    beforeEach(() => {
+      state = facetSearchSetReducer(state, registerFacetSearch(options));
+    });
+
+    it('registers a facet search with the passed id and options', () => {
+      expect(state[facetId].options).toEqual({
+        facetId,
+        captions: {},
+        numberOfValues: 10,
+        query: '',
+      });
+    });
+
+    it('the initial isLoading state is set to false', () => {
+      expect(state[facetId].isLoading).toBe(false);
     });
   });
 
@@ -56,7 +64,6 @@ describe('FacetSearch slice', () => {
   });
 
   it('when passing an id that is registered, #updateFacetSearch updates the options', () => {
-    const facetId = '1';
     state[facetId] = buildFacetSearchState();
 
     const options = buildFacetSearchOptions();
@@ -79,24 +86,79 @@ describe('FacetSearch slice', () => {
     expect(finalState[facetId]).toBe(undefined);
   });
 
-  it('on #executeFacetSearch.fulfilled with a registered id, it updates the facetSearch response', () => {
+  describe('#executeFacetSearch', () => {
     const facetId = '1';
-    state[facetId] = buildFacetSearchState();
 
-    const values = [buildMockFacetSearchResult()];
-    const response = buildMockFacetSearchResponse({values});
-    const action = executeFacetSearch.fulfilled({facetId, response}, '', '');
+    it('on #executeFacetSearch.fulfilled with a registered id, it updates the facetSearch response', () => {
+      state[facetId] = buildFacetSearchState();
 
-    const finalState = facetSearchSetReducer(state, action);
-    expect(finalState[facetId].response).toEqual(response);
-  });
+      const values = [buildMockFacetSearchResult()];
+      const response = buildMockFacetSearchResponse({values});
+      const action = executeFacetSearch.fulfilled({facetId, response}, '', '');
 
-  it('on #executeFacetSearch.fulfilled with an unregistered id, it does nothing', () => {
-    const facetId = '1';
-    const response = buildMockFacetSearchResponse();
-    const action = executeFacetSearch.fulfilled({facetId, response}, '', '');
+      const finalState = facetSearchSetReducer(state, action);
+      expect(finalState[facetId].response).toEqual(response);
+    });
 
-    const finalState = facetSearchSetReducer(state, action);
-    expect(finalState[facetId]).toBe(undefined);
+    it('on #executeFacetSearch.fulfilled with an unregistered id, it does nothing', () => {
+      const response = buildMockFacetSearchResponse();
+      const action = executeFacetSearch.fulfilled({facetId, response}, '', '');
+
+      const finalState = facetSearchSetReducer(state, action);
+      expect(finalState[facetId]).toBe(undefined);
+    });
+
+    it('on #executeFacetSearch.pending with an unregistered id, it does nothing', () => {
+      const pendingAction = executeFacetSearch.pending(facetId, facetId);
+
+      const finalState = facetSearchSetReducer(state, pendingAction);
+      expect(finalState[facetId]).toBe(undefined);
+    });
+
+    it('on #executeFacetSearch.rejected with an unregistered id, it does nothing', () => {
+      const rejectedAction = executeFacetSearch.rejected(
+        {name: 'test', message: 'test'},
+        facetId,
+        facetId
+      );
+
+      const finalState = facetSearchSetReducer(state, rejectedAction);
+      expect(finalState[facetId]).toBe(undefined);
+    });
+
+    it('sets the isLoading state to false during executeSearch.fulfilled', () => {
+      state[facetId] = buildFacetSearchState();
+
+      const fulfiledAction = executeFacetSearch.fulfilled(
+        {
+          facetId,
+          response: buildMockFacetSearchResponse(),
+        },
+        facetId,
+        facetId
+      );
+      const finalState = facetSearchSetReducer(state, fulfiledAction);
+      expect(finalState[facetId].isLoading).toBe(false);
+    });
+
+    it('sets the isLoading state to true during executeSearch.pending', () => {
+      state[facetId] = buildFacetSearchState();
+
+      const pendingAction = executeFacetSearch.pending(facetId, facetId);
+      const finalState = facetSearchSetReducer(state, pendingAction);
+      expect(finalState[facetId].isLoading).toBe(true);
+    });
+
+    it('sets the isLoading state to false during executeSearch.rejected', () => {
+      state[facetId] = buildFacetSearchState();
+
+      const rejectedAction = executeFacetSearch.rejected(
+        {name: 'test', message: 'test'},
+        facetId,
+        facetId
+      );
+      const finalState = facetSearchSetReducer(state, rejectedAction);
+      expect(finalState[facetId].isLoading).toBe(false);
+    });
   });
 });

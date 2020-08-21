@@ -69,6 +69,7 @@ export function buildFacetSearch(engine: Engine, props: FacetSearchProps) {
       const facetSearch = getFacetSearch();
       return {
         ...facetSearch.response,
+        isLoading: facetSearch.isLoading,
       };
     },
   };

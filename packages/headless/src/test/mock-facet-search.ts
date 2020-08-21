@@ -10,6 +10,7 @@ export function buildMockFacetSearch(
       numberOfValues: 5,
       query: '',
     },
+    isLoading: false,
     response: buildMockFacetSearchResponse(),
     ...config,
   };

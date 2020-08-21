@@ -113,9 +113,14 @@ describe('FacetSearch', () => {
 
   it('calling #state returns the response', () => {
     const facetId = getFacetId();
-    const response = buildMockFacetSearchResponse();
+    const facetSearchState = {
+      ...buildMockFacetSearchResponse(),
+      isLoading: false,
+    };
 
-    engine.state.facetSearchSet[facetId] = buildFacetSearchState({response});
-    expect(controller.state).toEqual(response);
+    engine.state.facetSearchSet[facetId] = buildFacetSearchState(
+      facetSearchState
+    );
+    expect(controller.state).toEqual(facetSearchState);
   });
 });

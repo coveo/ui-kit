@@ -9,6 +9,7 @@ import {FacetSearchResponse} from '../../../api/search/facet-search/facet-search
 
 export type FacetSearchState = {
   options: FacetSearchRequestOptions;
+  isLoading: boolean;
   response: FacetSearchResponse;
 };
 
@@ -43,6 +44,26 @@ export const facetSearchSetReducer = createReducer(
 
         search.options = {...search.options, ...rest};
       })
+      .addCase(executeFacetSearch.pending, (state, action) => {
+        const facetId = action.meta.arg;
+        const search = state[facetId];
+
+        if (!search) {
+          return;
+        }
+
+        search.isLoading = true;
+      })
+      .addCase(executeFacetSearch.rejected, (state, action) => {
+        const facetId = action.meta.arg;
+        const search = state[facetId];
+
+        if (!search) {
+          return;
+        }
+
+        search.isLoading = false;
+      })
       .addCase(executeFacetSearch.fulfilled, (state, action) => {
         const {facetId, response} = action.payload;
         const search = state[facetId];
@@ -50,7 +71,7 @@ export const facetSearchSetReducer = createReducer(
         if (!search) {
           return;
         }
-
+        search.isLoading = false;
         search.response = response;
       });
   }
@@ -61,6 +82,7 @@ export function buildFacetSearchState(
 ): FacetSearchState {
   return {
     options: buildFacetSearchOptions(),
+    isLoading: false,
     response: buildNullFacetSearchResponse(),
     ...config,
   };
