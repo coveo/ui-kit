@@ -3,7 +3,7 @@ import {
   getContextInitialState,
   contextReducer,
 } from './context-slice';
-import {setContext, addContext, removeContext} from './context-action';
+import {setContext, addContext, removeContext} from './context-actions';
 import {change} from '../history/history-actions';
 import {getHistoryEmptyState} from '../history/history-slice';
 

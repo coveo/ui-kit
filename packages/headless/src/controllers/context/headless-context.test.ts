@@ -5,7 +5,7 @@ import {
   setContext,
   addContext,
   removeContext,
-} from '../../features/context/context-action';
+} from '../../features/context/context-actions';
 
 describe('Context', () => {
   let context: Context;

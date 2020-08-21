@@ -1,5 +1,5 @@
 import {Component, Element, Prop, Method} from '@stencil/core';
-import {ResultTemplateCondition, resultTemplatesHelpers} from '@coveo/headless';
+import {ResultTemplateCondition, ResultTemplatesHelpers} from '@coveo/headless';
 import {MapProp} from '../../utils/props-utils';
 
 export interface FieldMatch {
@@ -38,14 +38,14 @@ export class AtomicResultTemplate {
 
     for (const field in this.mustMatch) {
       this.matchConditions.push(
-        resultTemplatesHelpers.fieldMustMatch(field, this.mustMatch[field])
+        ResultTemplatesHelpers.fieldMustMatch(field, this.mustMatch[field])
       );
       this.fields.push(field);
     }
 
     for (const field in this.mustNotMatch) {
       this.matchConditions.push(
-        resultTemplatesHelpers.fieldMustNotMatch(
+        ResultTemplatesHelpers.fieldMustNotMatch(
           field,
           this.mustNotMatch[field]
         )

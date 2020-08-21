@@ -2,7 +2,7 @@ import {Component, Prop, h, Method} from '@stencil/core';
 import {
   Result,
   ResultTemplateCondition,
-  resultTemplatesHelpers,
+  ResultTemplatesHelpers,
 } from '@coveo/headless';
 import {
   ResultContext,
@@ -30,20 +30,20 @@ export class AtomicFieldCondition {
       const fieldNames = this.ifDefined.split(',');
       this.fields.push(...fieldNames);
       this.conditions.push(
-        resultTemplatesHelpers.fieldsMustBeDefined(fieldNames)
+        ResultTemplatesHelpers.fieldsMustBeDefined(fieldNames)
       );
     }
 
     for (const field in this.mustMatch) {
       this.conditions.push(
-        resultTemplatesHelpers.fieldMustMatch(field, this.mustMatch[field])
+        ResultTemplatesHelpers.fieldMustMatch(field, this.mustMatch[field])
       );
       this.fields.push(field);
     }
 
     for (const field in this.mustNotMatch) {
       this.conditions.push(
-        resultTemplatesHelpers.fieldMustNotMatch(
+        ResultTemplatesHelpers.fieldMustNotMatch(
           field,
           this.mustNotMatch[field]
         )

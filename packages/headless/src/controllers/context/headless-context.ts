@@ -8,7 +8,7 @@ import {
   setContext,
   addContext,
   removeContext,
-} from '../../features/context/context-action';
+} from '../../features/context/context-actions';
 
 /**
  * The `Context` controller injects custom contextual information into the search requests and usage analytics search events sent from a search interface.

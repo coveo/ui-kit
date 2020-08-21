@@ -1,5 +1,5 @@
 import {Component, Prop, Element} from '@stencil/core';
-import {Result, resultTemplatesHelpers} from '@coveo/headless';
+import {Result, ResultTemplatesHelpers} from '@coveo/headless';
 import {
   ResultContext,
   ResultContextRenderer,
@@ -19,7 +19,7 @@ export class AtomicResultValue {
 
   @ResultContextRenderer
   public render() {
-    const resultValue = resultTemplatesHelpers.getResultProperty(
+    const resultValue = ResultTemplatesHelpers.getResultProperty(
       this.result,
       this.value
     );

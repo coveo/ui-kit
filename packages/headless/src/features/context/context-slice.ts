@@ -1,5 +1,5 @@
 import {createReducer} from '@reduxjs/toolkit';
-import {setContext, addContext, removeContext} from './context-action';
+import {setContext, addContext, removeContext} from './context-actions';
 import {change} from '../history/history-actions';
 
 export type ContextValue = string | string[];
