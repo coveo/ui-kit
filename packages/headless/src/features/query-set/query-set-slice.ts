@@ -2,6 +2,7 @@ import {createReducer} from '@reduxjs/toolkit';
 import {registerQuerySetQuery, updateQuerySetQuery} from './query-set-actions';
 import {selectQuerySuggestion} from '../query-suggest/query-suggest-actions';
 import {change} from '../history/history-actions';
+import {executeSearch} from '../search/search-actions';
 
 export type QuerySetState = Record<string, string>;
 
@@ -29,6 +30,10 @@ export const querySetReducer = createReducer(
       .addCase(selectQuerySuggestion, (state, action) => {
         const {id, expression} = action.payload;
         updateQuery(state, id, expression);
+      })
+      .addCase(executeSearch.fulfilled, (state, action) => {
+        const {queryExecuted} = action.payload;
+        Object.keys(state).forEach((q) => (state[q] = queryExecuted));
       })
       .addCase(change.fulfilled, (state, action) => {
         for (const [id, query] of Object.entries(action.payload.querySet)) {
