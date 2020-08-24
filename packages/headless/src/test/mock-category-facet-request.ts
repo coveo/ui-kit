@@ -10,7 +10,7 @@ export function buildMockCategoryFacetRequest(
     filterFacetCount: false,
     delimitingCharacter: '|',
     injectionDepth: 1000,
-    numberOfValues: 8,
+    numberOfValues: 5,
     preventAutoSelect: false,
     sortCriteria: 'occurrences',
     type: 'hierarchical',

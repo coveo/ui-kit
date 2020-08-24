@@ -16,7 +16,7 @@ export interface CategoryFacetValueRequest extends BaseFacetValueRequest {
   value: string;
   children: CategoryFacetValueRequest[];
   retrieveChildren: boolean;
-  retrieveCount: boolean;
+  retrieveCount: number;
 }
 
 export interface CategoryFacetRequest

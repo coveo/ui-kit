@@ -62,4 +62,4 @@ export const executeFacetSearch = createAsyncThunk<
  */
 export const selectFacetSearchResult = createAction<
   selectFacetSearchResultPayload
->('facetSearch/selectValue');
+>('facetSearch/toggleSelectValue');

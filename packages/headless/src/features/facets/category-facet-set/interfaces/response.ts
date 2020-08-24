@@ -1,16 +1,9 @@
 import {BaseFacetValue, BaseFacetResponse} from '../../facet-api/response';
 
-interface BaseCategoryFacetValue extends BaseFacetValue {
+export interface CategoryFacetValue extends BaseFacetValue {
   value: string;
   path: string[];
-}
-
-interface CategoryFacetLeafValue extends BaseCategoryFacetValue {
-  children: [];
-}
-
-export interface CategoryFacetValue extends BaseCategoryFacetValue {
-  children: (CategoryFacetValue | CategoryFacetLeafValue)[];
+  children: CategoryFacetValue[];
   moreValuesAvailable?: boolean;
 }
 

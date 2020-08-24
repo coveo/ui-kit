@@ -18,7 +18,7 @@ export const registerNumericFacet = createAction<
 export const toggleSelectNumericFacetValue = createAction<{
   facetId: string;
   selection: NumericFacetValue;
-}>('numericFacet/selectValue');
+}>('numericFacet/toggleSelectValue');
 
 /** Updates the sort criterion of a numeric facet.*/
 export const updateNumericFacetSortCriterion = updateRangeFacetSortCriterion;

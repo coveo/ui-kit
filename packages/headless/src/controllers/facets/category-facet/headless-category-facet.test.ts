@@ -5,9 +5,13 @@ import {
 } from './headless-category-facet';
 import {SearchPageState} from '../../../state';
 import {MockEngine, buildMockEngine, createMockState} from '../../../test';
-import {registerCategoryFacet} from '../../../features/facets/category-facet-set/category-facet-set-actions';
+import {
+  registerCategoryFacet,
+  toggleSelectCategoryFacetValue,
+} from '../../../features/facets/category-facet-set/category-facet-set-actions';
 import {buildMockCategoryFacetValue} from '../../../test/mock-category-facet-value';
 import {buildMockCategoryFacetResponse} from '../../../test/mock-category-facet-response';
+import {executeSearch} from '../../../features/search/search-actions';
 
 describe('category facet', () => {
   const facetId = '1';
@@ -41,16 +45,98 @@ describe('category facet', () => {
     expect(categoryFacet.subscribe).toBeDefined();
   });
 
-  it('when the search response is empty, the state #values is an empty array', () => {
-    expect(state.search.response.facets).toEqual([]);
-    expect(categoryFacet.state.values).toEqual([]);
+  describe('when the search response is empty', () => {
+    it('#state.values is an empty array', () => {
+      expect(state.search.response.facets).toEqual([]);
+      expect(categoryFacet.state.values).toEqual([]);
+    });
+
+    it('#state.parents is an empty array', () => {
+      expect(categoryFacet.state.parents).toEqual([]);
+    });
   });
 
-  it('when the search response has a facet, the state #values contains the same values', () => {
+  it(`when the search response has a category facet with a single level of values,
+  #state.values contains the same values`, () => {
     const values = [buildMockCategoryFacetValue()];
     const response = buildMockCategoryFacetResponse({facetId, values});
 
     state.search.response.facets = [response];
     expect(categoryFacet.state.values).toBe(values);
+  });
+
+  describe('when the search response has a category facet with nested values', () => {
+    const innerValues = [
+      buildMockCategoryFacetValue({value: 'C'}),
+      buildMockCategoryFacetValue({value: 'D'}),
+    ];
+    const middleValue = buildMockCategoryFacetValue({
+      value: 'B',
+      children: innerValues,
+    });
+    const outerValue = buildMockCategoryFacetValue({
+      value: 'A',
+      children: [middleValue],
+    });
+
+    beforeEach(() => {
+      const response = buildMockCategoryFacetResponse({
+        facetId,
+        values: [outerValue],
+      });
+      state.search.response.facets = [response];
+    });
+
+    it('#state.parents contains the outer and middle values', () => {
+      expect(categoryFacet.state.parents).toEqual([outerValue, middleValue]);
+    });
+
+    it('#state.values contains the innermost values', () => {
+      expect(categoryFacet.state.values).toBe(innerValues);
+    });
+  });
+
+  describe('when the category facet has a selected leaf value with no children', () => {
+    const selectedValue = buildMockCategoryFacetValue({
+      value: 'A',
+      state: 'selected',
+      children: [],
+    });
+
+    beforeEach(() => {
+      const response = buildMockCategoryFacetResponse({
+        facetId,
+        values: [selectedValue],
+      });
+      state.search.response.facets = [response];
+    });
+
+    it('#state.parents contains the selected leaf value', () => {
+      expect(categoryFacet.state.parents).toEqual([selectedValue]);
+    });
+
+    it('#state.values is an empty array', () => {
+      expect(categoryFacet.state.values).toEqual([]);
+    });
+  });
+
+  describe('#toggleSelect', () => {
+    it('dispatches #toggleCategoryFacetValue with the passed selection', () => {
+      const selection = buildMockCategoryFacetValue({value: 'A'});
+      categoryFacet.toggleSelect(selection);
+
+      const action = toggleSelectCategoryFacetValue({facetId, selection});
+      expect(engine.actions).toContainEqual(action);
+    });
+
+    it('executes a search', () => {
+      const selection = buildMockCategoryFacetValue({value: 'A'});
+      categoryFacet.toggleSelect(selection);
+
+      const action = engine.actions.find(
+        (a) => a.type === executeSearch.pending.type
+      );
+      expect(action).toBeTruthy();
+    });
   });
 });

@@ -17,7 +17,7 @@ export const registerFacet = createAction<FacetRegistrationOptions>(
 export const toggleSelectFacetValue = createAction<{
   facetId: string;
   selection: FacetValue;
-}>('facet/selectValue');
+}>('facet/toggleSelectValue');
 
 /**
  * Deselects all facet values.
