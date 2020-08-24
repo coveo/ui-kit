@@ -123,10 +123,10 @@ You can setup a new headless controller by instantiating its class. Every contro
 Instantiation of a `SearchBox` headless controller:
 
 ```typescript
-import {SearchBox} from '@coveo/headless';
+import {SearchBox, buildSearchBox} from '@coveo/headless';
 import {engine} from './engine';
 
-const searchBox = new SearchBox(engine);
+const searchBox: SearchBox = buildSearchBox(engine);
 ```
 
 ##### Controller options validation.
@@ -325,31 +325,42 @@ console.log(engine.state.counter); // 1
 
 #### Creating headless controllers
 
-It is possible to create custom headless controllers using the abstract `Controller` class. When using Typescript, it is necessary to specify the type of the engine and its state.
+It is possible to create custom headless controllers using the `buildController` function. When using Typescript, it is necessary to specify the type of the engine.
 
 ```typescript
-import {Controller} from '@coveo/headless';
+import {
+  Engine,
+  buildController
+} from '@coveo/headless';
 import {
   incrementCounterAction,
   decrementCounterAction,
 } from './counter-reducer';
 import {engine} from './engine';
 
-class Counter extends Controller<typeof engine.state> {
-  constructor(engine: typeof engine) {
-    super(engine);
-  }
+export type CounterState = Counter['state'];
 
-  public increment() {
-    this.dispatch(incrementCounterAction);
-  }
+export type Counter = ReturnType<typeof buildCounter>;
 
-  public decrement() {
-    this.dispatch(decrementCounterAction);
-  }
+export const buildCounter = (
+  engine: Engine
+) => {
+  const controller = buildController(engine);
 
-  public get state() {
-    return this.engine.state.counter;
-  }
-}
+  return {
+    ...controller,
+
+    increment() {
+      dispatch(incrementCounterAction);
+    },
+
+    decrement() {
+      dispatch(decrementCounterAction);
+    },
+
+    get state() {
+      return engine.state.counter;
+    },
+  };
+};
 ```
