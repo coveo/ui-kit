@@ -17,13 +17,13 @@ const originSchemaOnUpdate = () =>
 export const updateBasicConfiguration = createAction(
   'configuration/updateBasicConfiguration',
   (payload: {
-    accessToken: string;
-    organizationId: string;
+    accessToken?: string;
+    organizationId?: string;
     platformUrl?: string;
   }) =>
     validatePayloadSchema(payload, {
-      accessToken: new StringValue({required: true, emptyAllowed: false}),
-      organizationId: new StringValue({required: true, emptyAllowed: false}),
+      accessToken: new StringValue({emptyAllowed: false}),
+      organizationId: new StringValue({emptyAllowed: false}),
       platformUrl: new StringValue({url: true, emptyAllowed: false}),
     })
 );

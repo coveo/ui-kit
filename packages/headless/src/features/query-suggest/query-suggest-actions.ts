@@ -1,11 +1,13 @@
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 import {SearchPageState} from '../../state';
-import {getQuerySuggestions} from '../../api/search/query-suggest/query-suggest-endpoint';
 import {validatePayloadSchema} from '../../utils/validate-payload';
 import {NumberValue, StringValue} from '@coveo/bueno';
 import {QuerySuggestSuccessResponse} from '../../api/search/query-suggest/query-suggest-response';
 import {SearchAPIErrorWithStatusCode} from '../../api/search/search-api-error-response';
-import {isErrorResponse} from '../../api/search/search-api-client';
+import {
+  isErrorResponse,
+  AsyncThunkSearchOptions,
+} from '../../api/search/search-api-client';
 
 const idDefinition = {
   id: new StringValue({required: true, emptyAllowed: false}),
@@ -79,16 +81,19 @@ export const clearQuerySuggestCompletions = createAction(
 export const fetchQuerySuggestions = createAsyncThunk<
   QuerySuggestionID & QuerySuggestSuccessResponse,
   QuerySuggestionID,
-  {
+  AsyncThunkSearchOptions & {
     rejectValue: SearchAPIErrorWithStatusCode & QuerySuggestionID;
   }
 >(
   'querySuggest/fetch',
 
-  async (payload: {id: string}, {getState, rejectWithValue}) => {
+  async (
+    payload: {id: string},
+    {getState, rejectWithValue, extra: {searchAPIClient}}
+  ) => {
     validatePayloadSchema(payload, idDefinition);
     const id = payload.id;
-    const response = await getQuerySuggestions(
+    const response = await searchAPIClient.querySuggest(
       id,
       getState() as SearchPageState
     );

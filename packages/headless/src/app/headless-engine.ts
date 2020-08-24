@@ -16,6 +16,8 @@ import {
 } from '../features/configuration/configuration-actions';
 import {configureStore, Store} from './store';
 import {SearchPageState} from '../state';
+import {SearchAPIClient} from '../api/search/search-api-client';
+import {debounce} from 'ts-debounce';
 
 /**
  * The global headless engine options.
@@ -128,8 +130,11 @@ export interface Engine<State = SearchPageState> {
    *
    * @returns For convenience, the action object that was just dispatched.
    */
-  dispatch: ThunkDispatch<unknown, null, AnyAction> &
-    ThunkDispatch<unknown, undefined, AnyAction> &
+  dispatch: ThunkDispatch<
+    State,
+    {searchAPIClient: SearchAPIClient},
+    AnyAction
+  > &
     Dispatch<AnyAction>;
   /**
    * Adds a change listener. It will be called any time an action is
@@ -144,6 +149,7 @@ export interface Engine<State = SearchPageState> {
    * The complete headless state tree.
    */
   state: State;
+  renewAccessToken: () => Promise<string>;
 }
 
 /**
@@ -155,14 +161,23 @@ export class HeadlessEngine<Reducers extends ReducersMapObject>
   implements Engine<StateFromReducersMapObject<Reducers>> {
   private reduxStore: Store;
 
-  constructor(options: HeadlessOptions<Reducers>) {
+  constructor(private options: HeadlessOptions<Reducers>) {
     this.reduxStore = configureStore({
       preloadedState: options.preloadedState,
       reducers: options.reducers,
       middlewares: options.middlewares,
+      thunkExtraArguments: {
+        searchAPIClient: new SearchAPIClient(() => this.renewAccessToken()),
+      },
     });
 
-    this.reduxStore.dispatch(updateBasicConfiguration(options.configuration));
+    this.reduxStore.dispatch(
+      updateBasicConfiguration({
+        accessToken: options.configuration.accessToken,
+        platformUrl: options.configuration.platformUrl,
+        organizationId: options.configuration.organizationId,
+      })
+    );
     if (options.configuration.search) {
       this.reduxStore.dispatch(
         updateSearchConfiguration(options.configuration.search)
@@ -213,5 +228,32 @@ export class HeadlessEngine<Reducers extends ReducersMapObject>
 
   get state() {
     return this.reduxStore.getState() as StateFromReducersMapObject<Reducers>;
+  }
+
+  private accessTokenRenewalsAttempts = 0;
+
+  private resetRenewalTriesAfterDelay = debounce(
+    () => (this.accessTokenRenewalsAttempts = 0),
+    500
+  );
+
+  public async renewAccessToken() {
+    if (!this.options.configuration.renewAccessToken) {
+      return '';
+    }
+
+    this.accessTokenRenewalsAttempts++;
+    this.resetRenewalTriesAfterDelay();
+    if (this.accessTokenRenewalsAttempts > 5) {
+      return '';
+    }
+
+    try {
+      const accessToken = await this.options.configuration.renewAccessToken();
+      this.dispatch(updateBasicConfiguration({accessToken}));
+      return accessToken;
+    } catch (error) {
+      return '';
+    }
   }
 }

@@ -91,8 +91,12 @@ export const configurationReducer = createReducer(
   (builder) =>
     builder
       .addCase(updateBasicConfiguration, (state, action) => {
-        state.accessToken = action.payload.accessToken;
-        state.organizationId = action.payload.organizationId;
+        if (action.payload.accessToken) {
+          state.accessToken = action.payload.accessToken;
+        }
+        if (action.payload.organizationId) {
+          state.organizationId = action.payload.organizationId;
+        }
         if (action.payload.platformUrl) {
           state.platformUrl = action.payload.platformUrl;
           state.search.apiBaseUrl = `${action.payload.platformUrl}${searchAPIEndpoint}`;

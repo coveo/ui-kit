@@ -25,6 +25,14 @@ import {
 
 export type AllSearchAPIResponse = Plan | Search | QuerySuggest;
 
+export interface AsyncThunkSearchOptions {
+  state: SearchPageState;
+  rejectValue: SearchAPIErrorWithStatusCode;
+  extra: {
+    searchAPIClient: SearchAPIClient;
+  };
+}
+
 export interface SearchAPIClientOptions<RequestParams> {
   accessToken: string;
   apiBaseUrl: string;
@@ -36,7 +44,8 @@ export type SearchAPIClientResponse<T> =
   | {error: SearchAPIErrorWithStatusCode};
 
 export class SearchAPIClient {
-  static async plan(
+  constructor(private renewAccessToken: () => Promise<string>) {}
+  async plan(
     state: SearchPageState
   ): Promise<SearchAPIClientResponse<PlanResponseSuccess>> {
     const platformResponse = await PlatformClient.call<
@@ -45,6 +54,7 @@ export class SearchAPIClient {
     >({
       ...baseSearchParams(state, 'POST', 'application/json', '/plan'),
       requestParams: planRequest(state),
+      renewAccessToken: this.renewAccessToken,
     });
 
     if (isSuccessPlanResponse(platformResponse)) {
@@ -55,7 +65,7 @@ export class SearchAPIClient {
     };
   }
 
-  static async querySuggest(
+  async querySuggest(
     id: string,
     state: SearchPageState
   ): Promise<SearchAPIClientResponse<QuerySuggestSuccessResponse>> {
@@ -65,6 +75,7 @@ export class SearchAPIClient {
     >({
       ...baseSearchParams(state, 'POST', 'application/json', '/querySuggest'),
       requestParams: querySuggestRequest(id, state),
+      renewAccessToken: this.renewAccessToken,
     });
     if (isSuccessQuerySuggestionsResponse(platformResponse)) {
       return {
@@ -76,12 +87,13 @@ export class SearchAPIClient {
     };
   }
 
-  static async search(
+  async search(
     state: SearchPageState
   ): Promise<SearchAPIClientResponse<SearchResponseSuccess>> {
     const platformResponse = await PlatformClient.call<SearchRequest, Search>({
       ...baseSearchParams(state, 'POST', 'application/json', ''),
       requestParams: searchRequest(state),
+      renewAccessToken: this.renewAccessToken,
     });
 
     if (isSuccessSearchResponse(platformResponse)) {
@@ -95,13 +107,14 @@ export class SearchAPIClient {
     };
   }
 
-  static async facetSearch(id: string, state: SearchPageState) {
+  async facetSearch(id: string, state: SearchPageState) {
     const res = await PlatformClient.call<
       SpecificFacetSearchRequest,
       FacetSearchResponse
     >({
       ...baseSearchParams(state, 'POST', 'application/json', '/facet'),
       requestParams: specificFacetSearchRequest(id, state),
+      renewAccessToken: this.renewAccessToken,
     });
 
     return res.body;

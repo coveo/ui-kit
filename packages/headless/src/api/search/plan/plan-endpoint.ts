@@ -1,5 +1,3 @@
-import {SearchAPIClient, isErrorResponse} from '../search-api-client';
-import {SearchPageState} from '../../../state';
 import {isTriggerRedirect} from '../trigger';
 import {PlanResponseSuccess} from './plan-response';
 
@@ -34,12 +32,4 @@ export class ExecutionPlan {
     );
     return redirects.length ? redirects[0].content : null;
   }
-}
-
-export async function getExecutionPlan(state: SearchPageState) {
-  const response = await SearchAPIClient.plan(state);
-  if (isErrorResponse(response)) {
-    throw response.error;
-  }
-  return new ExecutionPlan(response.success);
 }

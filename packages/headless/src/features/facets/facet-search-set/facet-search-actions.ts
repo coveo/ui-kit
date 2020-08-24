@@ -3,7 +3,10 @@ import {FacetSearchRequestOptions} from './facet-search-request-options';
 import {SearchAPIClient} from '../../../api/search/search-api-client';
 import {SearchPageState} from '../../../state';
 import {logFacetSearch} from '../facet-set/facet-set-analytics-actions';
-import {FacetSearchResult} from '../../../api/search/facet-search/facet-search-response';
+import {
+  FacetSearchResult,
+  FacetSearchResponse,
+} from '../../../api/search/facet-search/facet-search-response';
 
 export type FacetSearchOptions = {facetId: string} & Partial<
   FacetSearchRequestOptions
@@ -34,11 +37,19 @@ export const updateFacetSearch = createAction<FacetSearchOptions>(
  * Executes a facet search.
  * @param {string} facetId The facet id on which to execute the search.
  */
-export const executeFacetSearch = createAsyncThunk(
+export const executeFacetSearch = createAsyncThunk<
+  {facetId: string; response: FacetSearchResponse},
+  string,
+  {
+    extra: {
+      searchAPIClient: SearchAPIClient;
+    };
+  }
+>(
   'facetSearch/executeSearch',
-  async (facetId: string, {dispatch, getState}) => {
+  async (facetId: string, {dispatch, getState, extra: {searchAPIClient}}) => {
     const state = getState() as SearchPageState;
-    const response = await SearchAPIClient.facetSearch(facetId, state);
+    const response = await searchAPIClient.facetSearch(facetId, state);
     dispatch(logFacetSearch(facetId));
 
     return {facetId, response};

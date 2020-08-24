@@ -2,6 +2,7 @@ import {createAsyncThunk, ThunkDispatch, AnyAction} from '@reduxjs/toolkit';
 import {
   SearchAPIClient,
   isErrorResponse,
+  AsyncThunkSearchOptions,
 } from '../../api/search/search-api-client';
 import {SearchPageState} from '../../state';
 import {SearchAction} from '../analytics/analytics-actions';
@@ -10,7 +11,6 @@ import {snapshot} from '../history/history-actions';
 import {logDidYouMeanAutomatic} from '../did-you-mean/did-you-mean-analytics-actions';
 import {didYouMeanCorrection} from '../did-you-mean/did-you-mean-actions';
 import {updateQuery} from '../query/query-actions';
-import {SearchAPIErrorWithStatusCode} from '../../api/search/search-api-error-response';
 
 export interface ExecuteSearchThunkReturn {
   response: SearchResponseSuccess;
@@ -20,9 +20,12 @@ export interface ExecuteSearchThunkReturn {
   analyticsAction: SearchAction;
 }
 
-const fetchFromAPI = async (state: SearchPageState) => {
+const fetchFromAPI = async (
+  client: SearchAPIClient,
+  state: SearchPageState
+) => {
   const startedAt = new Date().getTime();
-  const response = await SearchAPIClient.search(state);
+  const response = await client.search(state);
   const duration = new Date().getTime() - startedAt;
   const queryExecuted = state.query.q;
   return {response, duration, queryExecuted};
@@ -34,17 +37,15 @@ const fetchFromAPI = async (state: SearchPageState) => {
 export const executeSearch = createAsyncThunk<
   ExecuteSearchThunkReturn,
   SearchAction,
-  {
-    rejectValue: SearchAPIErrorWithStatusCode;
-  }
+  AsyncThunkSearchOptions
 >(
   'search/executeSearch',
   async (
     analyticsAction: SearchAction,
-    {getState, dispatch, rejectWithValue}
+    {getState, dispatch, rejectWithValue, extra: {searchAPIClient}}
   ) => {
-    const state = getState() as SearchPageState;
-    const fetched = await fetchFromAPI(state);
+    const state = getState();
+    const fetched = await fetchFromAPI(searchAPIClient, state);
 
     if (isErrorResponse(fetched.response)) {
       return rejectWithValue(fetched.response.error);
@@ -63,12 +64,13 @@ export const executeSearch = createAsyncThunk<
     }
 
     const retried = await automaticallyRetryQueryWithCorrection(
+      searchAPIClient,
       fetched.response.success.queryCorrections[0].correctedQuery,
       getState,
       dispatch
     );
 
-    dispatch(snapshot(extractHistory(getState() as SearchPageState)));
+    dispatch(snapshot(extractHistory(getState())));
 
     if (isErrorResponse(retried.response)) {
       return rejectWithValue(retried.response.error);
@@ -84,12 +86,13 @@ export const executeSearch = createAsyncThunk<
 );
 
 const automaticallyRetryQueryWithCorrection = async (
+  client: SearchAPIClient,
   correction: string,
-  getState: () => unknown,
+  getState: () => SearchPageState,
   dispatch: ThunkDispatch<unknown, unknown, AnyAction>
 ) => {
   dispatch(updateQuery({q: correction}));
-  const fetched = await fetchFromAPI(getState() as SearchPageState);
+  const fetched = await fetchFromAPI(client, getState());
   dispatch(logDidYouMeanAutomatic());
   dispatch(didYouMeanCorrection(correction));
   return fetched;

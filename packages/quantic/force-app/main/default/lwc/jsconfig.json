@@ -31,11 +31,11 @@
             "c/summary": [
                 "summary/summary.js"
             ],
-            "c/resultsperpage": [
-                "resultsperpage/resultsperpage.js"
-            ],
             "c/numberbutton": [
                 "numberbutton/numberbutton.js"
+            ],
+            "c/resultsperpage": [
+                "resultsperpage/resultsperpage.js"
             ]
         }
     },

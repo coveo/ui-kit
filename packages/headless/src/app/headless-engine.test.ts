@@ -1,4 +1,4 @@
-import {HeadlessEngine, HeadlessOptions} from './headless-engine';
+import {HeadlessEngine, HeadlessOptions, Engine} from './headless-engine';
 import {
   updateBasicConfiguration,
   updateSearchConfiguration,
@@ -10,6 +10,7 @@ describe('headless engine', () => {
   let options: HeadlessOptions<typeof searchPageReducers>;
   let configureStoreSpy: jest.SpyInstance;
   let store: storeConfig.Store;
+  let engine: Engine;
 
   beforeEach(() => {
     store = storeConfig.configureStore({reducers: searchPageReducers});
@@ -22,7 +23,7 @@ describe('headless engine', () => {
       configuration: HeadlessEngine.getSampleConfiguration(),
       reducers: searchPageReducers,
     };
-    new HeadlessEngine(options);
+    engine = new HeadlessEngine(options);
   });
 
   it('should call configureStore', () => {
@@ -31,7 +32,11 @@ describe('headless engine', () => {
 
   it('should dispatch updateBasicConfiguration with the right configuration', () => {
     expect(store.dispatch).toHaveBeenCalledWith(
-      updateBasicConfiguration(options.configuration)
+      updateBasicConfiguration({
+        accessToken: options.configuration.accessToken,
+        platformUrl: options.configuration.platformUrl,
+        organizationId: options.configuration.organizationId,
+      })
     );
   });
 
@@ -57,5 +62,46 @@ describe('headless engine', () => {
     expect(store.dispatch).not.toHaveBeenCalledWith(
       updateSearchConfiguration(options.configuration.search!)
     );
+  });
+
+  it(`when renewAccessToken is not defined in the config
+  renewAccessToken should return an empty string`, async (done) => {
+    expect(await engine.renewAccessToken()).toBe('');
+    done();
+  });
+
+  it(`when renewAccessToken is defined in the config
+  renewAccessToken should return a new token`, async (done) => {
+    options.configuration.renewAccessToken = async () => 'newToken';
+    expect(await engine.renewAccessToken()).toBe('newToken');
+    done();
+  });
+
+  it(`after calling renewAccessToken more than 5 times in a row
+  it should return an empty string`, async (done) => {
+    options.configuration.renewAccessToken = async () => 'newToken';
+
+    engine.renewAccessToken();
+    engine.renewAccessToken();
+    engine.renewAccessToken();
+    engine.renewAccessToken();
+    engine.renewAccessToken();
+    expect(await engine.renewAccessToken()).toBe('');
+    done();
+  });
+
+  it(`after calling renewAccessToken more than 5 times in a row then waiting at least 500ms
+  it should return a new token`, async (done) => {
+    jest.useFakeTimers();
+    options.configuration.renewAccessToken = async () => 'newToken';
+
+    engine.renewAccessToken();
+    engine.renewAccessToken();
+    engine.renewAccessToken();
+    engine.renewAccessToken();
+    engine.renewAccessToken();
+    jest.advanceTimersByTime(1000);
+    expect(await engine.renewAccessToken()).toBe('newToken');
+    done();
   });
 });

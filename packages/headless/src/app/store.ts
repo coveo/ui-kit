@@ -11,12 +11,14 @@ interface ConfigureStoreOptions<Reducers extends ReducersMapObject> {
   reducers: Reducers;
   preloadedState?: StateFromReducersMapObject<Reducers>;
   middlewares?: Middleware[];
+  thunkExtraArguments?: unknown;
 }
 
 export function configureStore<Reducers extends ReducersMapObject>({
   reducers,
   preloadedState,
   middlewares = [],
+  thunkExtraArguments,
 }: ConfigureStoreOptions<Reducers>) {
   const store = configureStoreToolkit({
     reducer: combineReducers(reducers),
@@ -27,11 +29,13 @@ export function configureStore<Reducers extends ReducersMapObject>({
           ? {...state, history: '<<OMIT>>'}
           : state,
     },
-    middleware: (getDefaultMiddleware) => [
-      analyticsMiddleware,
-      ...middlewares,
-      ...getDefaultMiddleware(),
-    ],
+    middleware: (getDefaultMiddleware) => {
+      return [
+        analyticsMiddleware,
+        ...middlewares,
+        ...getDefaultMiddleware({thunk: {extraArgument: thunkExtraArguments}}),
+      ];
+    },
   });
 
   return store;

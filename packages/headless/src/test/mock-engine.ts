@@ -5,11 +5,14 @@ import {AnyAction, ThunkDispatch, getDefaultMiddleware} from '@reduxjs/toolkit';
 import {SearchPageState} from '../state';
 import thunk from 'redux-thunk';
 import {analyticsMiddleware} from '../app/analytics-middleware';
+import {SearchAPIClient} from '../api/search/search-api-client';
 
 export interface MockEngine extends Engine {
   store: MockStore;
   actions: AnyAction[];
 }
+
+const mockRenewAccessToken = async () => '';
 
 export function buildMockEngine(config: Partial<Engine> = {}): MockEngine {
   const storeConfiguration = configureMockStore();
@@ -27,6 +30,7 @@ export function buildMockEngine(config: Partial<Engine> = {}): MockEngine {
       return store.getActions();
     },
     ...config,
+    renewAccessToken: mockRenewAccessToken,
   };
 }
 
@@ -34,7 +38,9 @@ type DispatchExts = ThunkDispatch<SearchPageState, void, AnyAction>;
 const configureMockStore = () => {
   return configureStore<SearchPageState, DispatchExts>([
     analyticsMiddleware,
-    thunk,
+    thunk.withExtraArgument({
+      searchAPIClient: new SearchAPIClient(mockRenewAccessToken),
+    }),
     ...getDefaultMiddleware(),
   ]);
 };
