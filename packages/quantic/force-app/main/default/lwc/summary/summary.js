@@ -6,7 +6,7 @@ export default class Summary extends LightningElement {
 
   /** @type {import("coveo").QuerySummary} */
   querySummary;
-  /** @type {() => any} */
+  /** @type {import("coveo").Unsubscribe} */
   unsubscribe;
 
   @api

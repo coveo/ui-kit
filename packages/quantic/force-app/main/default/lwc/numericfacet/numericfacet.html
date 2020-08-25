@@ -1,0 +1,11 @@
+<template>
+  <template if:true={hasValues}>
+    <lightning-card title={label}>
+      <ul class="slds-has-dividers_around-space slds-m-vertical_medium">
+        <template for:each={values} for:item="v">
+          <c-numericfacetvalue onselectvalue={onSelect} key={v.start} item={v}></c-numericfacetvalue>
+        </template>
+      </ul>
+    </lightning-card>
+  </template>
+</template>

@@ -6,7 +6,7 @@ export default class Sort extends LightningElement {
 
   /** @type {import("coveo").Sort} */
   sort;
-  /** @type {() => any} */
+  /** @type {import("coveo").Unsubscribe} */
   unsubscribe;
 
   @api

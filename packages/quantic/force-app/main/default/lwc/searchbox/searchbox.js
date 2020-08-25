@@ -16,7 +16,7 @@ export default class Searchbox extends LightningElement {
 
   /** @type {import("coveo").SearchBox} */
   searchBox;
-  /** @type {() => any} */
+  /** @type {import("coveo").Unsubscribe} */
   unsubscribe;
   tributeLoaded = false;
   /** @type {any} */

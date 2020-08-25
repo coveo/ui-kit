@@ -14,7 +14,7 @@ export default class Coveosearch extends LightningElement {
   initialized;
   /** @type {import("coveo").HeadlessEngine<any>} */
   engine;
-  /** @type {() => any} */
+  /** @type {import("coveo").Unsubscribe} */
   unsubscribe;
 
   connectedCallback() {
@@ -48,8 +48,8 @@ export default class Coveosearch extends LightningElement {
     // TODO: proper child sync
     setTimeout(() => {
       this.engine.dispatch(
-        CoveoHeadless.searchActions.executeSearch(
-          CoveoHeadless.analyticsActions.logGenericSearchEvent({
+        CoveoHeadless.SearchActions.executeSearch(
+          CoveoHeadless.AnalyticsActions.logGenericSearchEvent({
             evt: "interfaceLoad"
           })
         )

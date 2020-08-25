@@ -1,10 +1,9 @@
 // @ts-check
 import {LightningElement, track, api} from 'lwc';
 
-export default class Facet extends LightningElement {
-  /** @type {import("coveo").FacetState} */
+export default class Numericfacet extends LightningElement {
+  /** @type {import("coveo").NumericFacetState} */
   @track state = {
-    sortCriterion: 'score',
     values: [],
   };
   /** @type {string} */
@@ -12,7 +11,7 @@ export default class Facet extends LightningElement {
   /** @type {string} */
   @api label;
 
-  /** @type {import("coveo").Facet}} */
+  /** @type {import("coveo").NumericFacet} */
   facet;
   /** @type {import("coveo").Unsubscribe} */
   unsubscribe;
@@ -24,9 +23,10 @@ export default class Facet extends LightningElement {
     }
 
     this.e = eng;
-    this.facet = CoveoHeadless.buildFacet(this.e, {
+    this.facet = CoveoHeadless.buildNumericFacet(this.e, {
       options: {
         field: this.field,
+        generateAutomaticRanges: true
       },
     });
     this.unsubscribe = this.facet.subscribe(() => this.updateState());
@@ -48,36 +48,14 @@ export default class Facet extends LightningElement {
     return this.state.values || [];
   }
 
-  get canShowMore() {
-    if (!this.facet) {
-      return false;
-    }
-    return this.state.canShowMoreValues;
-  }
-
-  get canShowLess() {
-    if (!this.facet) {
-      return false;
-    }
-    return this.state.canShowLessValues;
-  }
-
   get hasValues() {
     return this.values.length !== 0;
   }
 
   /**
-   * @param {CustomEvent<import("coveo").FacetValue>} evt
+   * @param {CustomEvent<import("coveo").NumericFacetValue>} evt
    */
   onSelect(evt) {
     this.facet.toggleSelect(evt.detail);
-  }
-
-  showMore() {
-    this.facet.showMoreValues();
-  }
-
-  showLess() {
-    this.facet.showLessValues();
   }
 }

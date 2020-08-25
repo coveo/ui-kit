@@ -34,6 +34,18 @@
             "c/numberbutton": [
                 "numberbutton/numberbutton.js"
             ],
+            "c/numericfacetvalue": [
+                "numericfacetvalue/numericfacetvalue.js"
+            ],
+            "c/numericfacet": [
+                "numericfacet/numericfacet.js"
+            ],
+            "c/datefacet": [
+                "datefacet/datefacet.js"
+            ],
+            "c/datefacetvalue": [
+                "datefacetvalue/datefacetvalue.js"
+            ],
             "c/resultsperpage": [
                 "resultsperpage/resultsperpage.js"
             ]
