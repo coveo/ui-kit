@@ -69,7 +69,7 @@ The base of the `/src` folder should only contain exports.
 
 `/api` contains everything regarding api calls.
 
-`/tests` contains test mocks.
+`/test` contains test mocks.
 
 ## Using the headless library
 
@@ -88,6 +88,10 @@ export const engine = new HeadlessEngine({
   configuration: {
     organizationId: 'your_organization',
     accessToken: 'your_access_token',
+    search: {
+      pipeline: 'your_query_pipeline',
+      searchHub: 'your_search_hub',
+    },
   },
   reducers: searchPageReducers,
 });
@@ -194,10 +198,10 @@ Actions can get complex, that's why the headless library offers action creators 
 Example:
 
 ```typescript
-import {configurationActions} from '@coveo/headless';
+import {ConfigurationActions} from '@coveo/headless';
 
 // Calling the following action creator:
-configurationActions.updateSearchConfiguration({
+ConfigurationActions.updateSearchConfiguration({
   endpoint: 'https://platform.cloud.coveo.com/',
 });
 
@@ -215,10 +219,10 @@ configurationActions.updateSearchConfiguration({
 To update the headless state, actions have to be dispatched using the **dispatch** method of the `HeadlessEngine` class instance.
 
 ```typescript
-import {configurationActions} from '@coveo/headless';
+import {ConfigurationActions} from '@coveo/headless';
 import {engine} from './engine';
 
-const action = configurationActions.updateSearchConfiguration({
+const action = ConfigurationActions.updateSearchConfiguration({
   endpoint: 'https://platform.cloud.coveo.com/',
 });
 
@@ -303,8 +307,7 @@ import {counterReducer} from './counter-reducer';
 
 export const engine = new HeadlessEngine({
   configuration: {
-    organizationId: 'your_organization',
-    accessToken: 'your_access_token',
+    ...
   },
   reducers: {
     ...searchPageReducers
