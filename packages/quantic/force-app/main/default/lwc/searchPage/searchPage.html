@@ -4,11 +4,11 @@
       <div class="slds-col slds-order_2 slds-large-order_1 slds-size_1-of-1 slds-large-size_4-of-12">
         <c-facet engine={engine} field="objecttype" label="Type"></c-facet>
         <c-facet engine={engine} field="filetype" label="File Type"></c-facet>
-        <c-numericfacet engine={engine} field="ytlikecount" label="Youtube Likes"></c-numericfacet>
-        <c-datefacet engine={engine} field="date" label="Date"></c-datefacet>
+        <c-numeric-facet engine={engine} field="ytlikecount" label="Youtube Likes"></c-numeric-facet>
+        <c-date-facet engine={engine} field="date" label="Date"></c-date-facet>
       </div>
       <div class="slds-col slds-order_1 slds-large-order_2 slds-size_1-of-1 slds-large-size_8-of-12">
-        <c-searchbox engine={engine}></c-searchbox>
+        <c-search-box engine={engine}></c-search-box>
         <div class="slds-grid slds-wrap">
           <c-summary class="slds-order_2 slds-medium-order_1 slds-size_1-of-1 slds-medium-size_9-of-12" engine={engine}>
           </c-summary>
@@ -16,10 +16,10 @@
           </c-sort>
         </div>
 
-        <c-resultlist engine={engine}></c-resultlist>
+        <c-result-list engine={engine}></c-result-list>
         <div class="slds-m-vertical_medium">
           <c-pager engine={engine}></c-pager>
-          <c-resultsperpage engine={engine}></c-resultsperpage>
+          <c-results-per-page engine={engine}></c-results-per-page>
         </div>
       </div>
     </div>

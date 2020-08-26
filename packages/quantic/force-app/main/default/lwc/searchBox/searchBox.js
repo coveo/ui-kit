@@ -4,7 +4,7 @@ import TributePath from '@salesforce/resourceUrl/tributejs';
 // @ts-ignore
 import {loadScript} from 'lightning/platformResourceLoader';
 
-export default class Searchbox extends LightningElement {
+export default class SearchBox extends LightningElement {
   /** @type {import("coveo").SearchBoxState} */
   @track state = {
     redirectTo: '',

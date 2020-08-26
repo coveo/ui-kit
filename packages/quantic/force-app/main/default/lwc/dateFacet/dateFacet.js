@@ -1,7 +1,7 @@
 // @ts-check
 import {LightningElement, track, api} from 'lwc';
 
-export default class Datefacet extends LightningElement {
+export default class DateFacet extends LightningElement {
   /** @type {import("coveo").DateFacetState} */
   @track state = {
     values: [],

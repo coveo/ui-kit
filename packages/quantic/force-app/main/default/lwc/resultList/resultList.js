@@ -1,7 +1,7 @@
 // @ts-check
 import {LightningElement, api, track} from 'lwc';
 
-export default class Resultlist extends LightningElement {
+export default class ResultList extends LightningElement {
   @track state = {};
 
   /** @type {import("coveo").ResultList} */

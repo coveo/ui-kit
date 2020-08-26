@@ -1,7 +1,7 @@
 // @ts-check
 import {LightningElement, track, api} from 'lwc';
 
-export default class Numericfacet extends LightningElement {
+export default class NumericFacet extends LightningElement {
   /** @type {import("coveo").NumericFacetState} */
   @track state = {
     values: [],

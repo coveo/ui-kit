@@ -4,11 +4,14 @@
         "baseUrl": ".",
         "target": "es2016",
         "paths": {
+            "c/dateFacet": [
+                "dateFacet/dateFacet.js"
+            ],
+            "c/dateFacetValue": [
+                "dateFacetValue/dateFacetValue.js"
+            ],
             "c/facet": [
                 "facet/facet.js"
-            ],
-            "c/facetvalue": [
-                "facetvalue/facetvalue.js"
             ],
             "c/pager": [
                 "pager/pager.js"
@@ -16,14 +19,8 @@
             "c/result": [
                 "result/result.js"
             ],
-            "c/resultlist": [
-                "resultlist/resultlist.js"
-            ],
-            "c/searchbox": [
-                "searchbox/searchbox.js"
-            ],
-            "c/searchpage": [
-                "searchpage/searchpage.js"
+            "c/resultList": [
+                "resultList/resultList.js"
             ],
             "c/sort": [
                 "sort/sort.js"
@@ -31,23 +28,26 @@
             "c/summary": [
                 "summary/summary.js"
             ],
-            "c/numberbutton": [
-                "numberbutton/numberbutton.js"
+            "c/facetValue": [
+                "facetValue/facetValue.js"
             ],
-            "c/numericfacetvalue": [
-                "numericfacetvalue/numericfacetvalue.js"
+            "c/numberButton": [
+                "numberButton/numberButton.js"
             ],
-            "c/numericfacet": [
-                "numericfacet/numericfacet.js"
+            "c/numericFacet": [
+                "numericFacet/numericFacet.js"
             ],
-            "c/datefacet": [
-                "datefacet/datefacet.js"
+            "c/numericFacetValue": [
+                "numericFacetValue/numericFacetValue.js"
             ],
-            "c/datefacetvalue": [
-                "datefacetvalue/datefacetvalue.js"
+            "c/resultsPerPage": [
+                "resultsPerPage/resultsPerPage.js"
             ],
-            "c/resultsperpage": [
-                "resultsperpage/resultsperpage.js"
+            "c/searchBox": [
+                "searchBox/searchBox.js"
+            ],
+            "c/searchPage": [
+                "searchPage/searchPage.js"
             ]
         }
     },

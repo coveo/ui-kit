@@ -4,7 +4,7 @@ import HeadlessPath from "@salesforce/resourceUrl/coveoheadless";
 // @ts-ignore
 import { loadScript } from "lightning/platformResourceLoader";
 
-export default class Coveosearch extends LightningElement {
+export default class SearchPage extends LightningElement {
   /** @type {any} */
   @api flexipageRegionWidth;
   /** @type {boolean} */

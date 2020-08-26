@@ -1,6 +1,6 @@
 import { LightningElement, api } from 'lwc';
 
-export default class Resultsperpage extends LightningElement {
+export default class ResultsPerPage extends LightningElement {
 
   /** @type {import("coveo").ResultsPerPage} */
   resultsPerPage;

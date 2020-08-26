@@ -1,7 +1,7 @@
 // @ts-check
 import { LightningElement, api } from "lwc";
 
-export default class Datefacetvalue extends LightningElement {
+export default class DateFacetValue extends LightningElement {
   /** @type {import("coveo").DateFacetValue} */
   @api item;
 
