@@ -8,11 +8,14 @@ import {buildMockEngine, createMockState, MockEngine} from '../../../test';
 import {
   registerCategoryFacet,
   toggleSelectCategoryFacetValue,
+  deselectAllCategoryFacetValues,
+  updateCategoryFacetNumberOfValues,
   updateCategoryFacetSortCriterion,
 } from '../../../features/facets/category-facet-set/category-facet-set-actions';
 import {buildMockCategoryFacetValue} from '../../../test/mock-category-facet-value';
 import {buildMockCategoryFacetResponse} from '../../../test/mock-category-facet-response';
 import {executeSearch} from '../../../features/search/search-actions';
+import {defaultCategoryFacetOptions} from '../../../features/facets/category-facet-set/category-facet-set-slice';
 import {
   CategoryFacetRequest,
   CategoryFacetSortCriterion,
@@ -49,8 +52,12 @@ describe('category facet', () => {
     initCategoryFacet();
   });
 
-  it('registers a category facet with the passed options', () => {
-    const action = registerCategoryFacet({facetId, ...options});
+  it('registers a category facet with the passed options and default optional parameters', () => {
+    const action = registerCategoryFacet({
+      facetId,
+      ...options,
+      ...defaultCategoryFacetOptions,
+    });
     expect(engine.actions).toContainEqual(action);
   });
 
@@ -154,6 +161,49 @@ describe('category facet', () => {
         (a) => a.type === executeSearch.pending.type
       );
       expect(action).toBeTruthy();
+    });
+  });
+
+  describe('#deselectAll', () => {
+    beforeEach(() => categoryFacet.deselectAll());
+
+    it('dispatches #deselectAllCategoryFacetValues', () => {
+      expect(engine.actions).toContainEqual(
+        deselectAllCategoryFacetValues(facetId)
+      );
+    });
+
+    it('dispatches #updateCategoryFacetNumberOfValues with the initial number of values', () => {
+      const {numberOfValues} = defaultCategoryFacetOptions;
+      const action = updateCategoryFacetNumberOfValues({
+        facetId,
+        numberOfValues,
+      });
+      expect(engine.actions).toContainEqual(action);
+    });
+
+    it('executes a search', () => {
+      const action = engine.actions.find(
+        (a) => a.type === executeSearch.pending.type
+      );
+      expect(action).toBeTruthy();
+    });
+  });
+
+  describe('#state.hasActiveValues', () => {
+    it('when there is a selected value, it is true', () => {
+      const values = [buildMockCategoryFacetValue({state: 'selected'})];
+      const response = buildMockCategoryFacetResponse({facetId, values});
+      state.search.response.facets = [response];
+
+      expect(categoryFacet.state.hasActiveValues).toBe(true);
+    });
+
+    it('when nothing is selected, it is false', () => {
+      const response = buildMockCategoryFacetResponse({facetId});
+      state.search.response.facets = [response];
+
+      expect(categoryFacet.state.hasActiveValues).toBe(false);
     });
   });
 

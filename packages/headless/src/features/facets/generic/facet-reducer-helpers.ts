@@ -1,4 +1,6 @@
 import {AnyFacetRequest} from './interfaces/generic-facet-request';
+import {FacetRequest} from '../facet-set/interfaces/request';
+import {CategoryFacetRequest} from '../category-facet-set/interfaces/request';
 
 export function handleFacetSortCriterionUpdate<T extends AnyFacetRequest>(
   state: Record<string, T>,
@@ -14,18 +16,29 @@ export function handleFacetSortCriterionUpdate<T extends AnyFacetRequest>(
   facetRequest.sortCriteria = criterion;
 }
 
-export function handleFacetDeselectAll<T extends AnyFacetRequest>(
-  state: Record<string, T>,
-  facetId: string
-) {
+export function handleFacetDeselectAll<
+  T extends FacetRequest | CategoryFacetRequest
+>(state: Record<string, T>, facetId: string) {
   const facetRequest = state[facetId];
 
   if (!facetRequest) {
     return;
   }
 
-  facetRequest.currentValues.forEach(
-    (request: T['currentValues'][0]) => (request.state = 'idle')
-  );
+  facetRequest.currentValues = [];
   facetRequest.preventAutoSelect = true;
+}
+
+export function handleFacetUpdateNumberOfValues<T extends AnyFacetRequest>(
+  state: Record<string, T>,
+  payload: {facetId: string; numberOfValues: number}
+) {
+  const {facetId, numberOfValues} = payload;
+  const facetRequest = state[facetId];
+
+  if (!facetRequest) {
+    return;
+  }
+
+  facetRequest.numberOfValues = numberOfValues;
 }

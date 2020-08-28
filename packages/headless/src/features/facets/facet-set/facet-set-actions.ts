@@ -34,7 +34,7 @@ export const updateFacetSortCriterion = createAction<{
 }>('facet/updateSortCriterion');
 
 /**
- * Update the number of values of a facet.
+ * Updates the number of values of a facet.
  */
 export const updateFacetNumberOfValues = createAction<{
   facetId: string;

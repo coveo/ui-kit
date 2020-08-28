@@ -5,6 +5,8 @@ import {CategoryFacetRegistrationOptions} from '../../../features/facets/categor
 import {
   registerCategoryFacet,
   toggleSelectCategoryFacetValue,
+  deselectAllCategoryFacetValues,
+  updateCategoryFacetNumberOfValues,
   updateCategoryFacetSortCriterion,
 } from '../../../features/facets/category-facet-set/category-facet-set-actions';
 import {facetSelector} from '../../../features/facets/facet-set/facet-set-selectors';
@@ -18,7 +20,9 @@ import {
   logFacetDeselect,
   logFacetSelect,
   logFacetUpdateSort,
+  logFacetClearAll,
 } from '../../../features/facets/facet-set/facet-set-analytics-actions';
+import {defaultCategoryFacetOptions} from '../../../features/facets/category-facet-set/category-facet-set-slice';
 import {CategoryFacetSortCriterion} from '../../../features/facets/category-facet-set/interfaces/request';
 import {categoryFacetRequestSelector} from '../../../features/facets/category-facet-set/category-facet-set-selectors';
 
@@ -39,7 +43,11 @@ export function buildCategoryFacet(engine: Engine, props: CategoryFacetProps) {
   const {dispatch} = engine;
 
   const facetId = props.options.facetId || randomID('categoryFacet');
-  const options: CategoryFacetRegistrationOptions = {facetId, ...props.options};
+  const options: CategoryFacetRegistrationOptions = {
+    facetId,
+    ...defaultCategoryFacetOptions,
+    ...props.options,
+  };
 
   const getAnalyticsActionForToggleSelect = (selection: CategoryFacetValue) => {
     const payload: FacetSelectionChangeMetadata = {
@@ -77,6 +85,15 @@ export function buildCategoryFacet(engine: Engine, props: CategoryFacetProps) {
       dispatch(executeSearch(analyticsAction));
     },
 
+    /** Deselects all facet values.*/
+    deselectAll() {
+      const numberOfValues = options.numberOfValues!;
+
+      dispatch(deselectAllCategoryFacetValues(facetId));
+      dispatch(updateCategoryFacetNumberOfValues({facetId, numberOfValues}));
+      dispatch(executeSearch(logFacetClearAll(facetId)));
+    },
+
     /** Sorts the category facet values according to the passed criterion.
      * @param {CategoryFacetSortCriterion} criterion The criterion to sort values by.
      */
@@ -103,8 +120,15 @@ export function buildCategoryFacet(engine: Engine, props: CategoryFacetProps) {
 
       const {parents, values} = partitionIntoParentsAndValues(response);
       const isLoading = engine.state.search.isLoading;
+      const hasActiveValues = parents.length !== 0;
 
-      return {parents, values, isLoading, sortCriteria: request.sortCriteria};
+      return {
+        parents,
+        values,
+        isLoading,
+        hasActiveValues,
+        sortCriteria: request.sortCriteria,
+      };
     },
   };
 }

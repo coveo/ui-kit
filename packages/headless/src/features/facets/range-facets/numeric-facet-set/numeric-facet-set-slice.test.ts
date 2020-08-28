@@ -86,12 +86,14 @@ describe('numeric-facet-set slice', () => {
     expect(RangeFacetReducers.toggleSelectRangeValue).toHaveBeenCalledTimes(1);
   });
 
-  it('#deselectAllNumericFacetValues calls #handleFacetDeselectAll', () => {
-    jest.spyOn(FacetReducers, 'handleFacetDeselectAll');
+  it('#deselectAllNumericFacetValues calls #handleRangeFacetDeselectAll', () => {
+    jest.spyOn(RangeFacetReducers, 'handleRangeFacetDeselectAll');
     const action = deselectAllNumericFacetValues('1');
     numericFacetSetReducer(state, action);
 
-    expect(FacetReducers.handleFacetDeselectAll).toHaveBeenCalledTimes(1);
+    expect(
+      RangeFacetReducers.handleRangeFacetDeselectAll
+    ).toHaveBeenCalledTimes(1);
   });
 
   it('#updateNumericFacetSortCriterion calls #handleFacetSortCriterionUpdate', () => {

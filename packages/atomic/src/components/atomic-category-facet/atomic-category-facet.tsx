@@ -68,6 +68,18 @@ export class AtomicCategoryFacet {
     );
   }
 
+  private get resetButton() {
+    if (!this.state.hasActiveValues) {
+      return null;
+    }
+
+    return (
+      <button onClick={() => this.categoryFacet.deselectAll()}>
+        All Categories
+      </button>
+    );
+  }
+
   private get sortOptions() {
     const criteria: CategoryFacetSortCriterion[] = [
       'occurrences',
@@ -95,10 +107,13 @@ export class AtomicCategoryFacet {
       <div>
         <div>
           <span>{this.label}</span>
+          <select onInput={this.handleSelect}>{this.sortOptions}</select>
         </div>
-        <select onInput={this.handleSelect}>{this.sortOptions}</select>
-        <div>{this.parents}</div>
-        <div>{this.values}</div>
+        <div>
+          <div>{this.resetButton}</div>
+          <div>{this.parents}</div>
+          <div>{this.values}</div>
+        </div>
       </div>
     );
   }

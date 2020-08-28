@@ -14,11 +14,9 @@ import {
   registerRangeFacet,
   toggleSelectRangeValue,
   onRangeFacetRequestFulfilled,
+  handleRangeFacetDeselectAll,
 } from '../generic/range-facet-reducers';
-import {
-  handleFacetSortCriterionUpdate,
-  handleFacetDeselectAll,
-} from '../../generic/facet-reducer-helpers';
+import {handleFacetSortCriterionUpdate} from '../../generic/facet-reducer-helpers';
 
 export type NumericFacetSetState = Record<string, NumericFacetRequest>;
 
@@ -45,7 +43,7 @@ export const numericFacetSetReducer = createReducer(
         );
       })
       .addCase(deselectAllNumericFacetValues, (state, action) => {
-        handleFacetDeselectAll<NumericFacetRequest>(state, action.payload);
+        handleRangeFacetDeselectAll<NumericFacetRequest>(state, action.payload);
       })
       .addCase(updateNumericFacetSortCriterion, (state, action) => {
         handleFacetSortCriterionUpdate<NumericFacetRequest>(

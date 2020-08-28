@@ -16,6 +16,7 @@ import {FacetRegistrationOptions} from './interfaces/options';
 import {
   handleFacetSortCriterionUpdate,
   handleFacetDeselectAll,
+  handleFacetUpdateNumberOfValues,
 } from '../generic/facet-reducer-helpers';
 
 export type FacetSetState = Record<string, FacetRequest>;
@@ -73,14 +74,7 @@ export const facetSetReducer = createReducer(
         handleFacetSortCriterionUpdate<FacetRequest>(state, action.payload);
       })
       .addCase(updateFacetNumberOfValues, (state, action) => {
-        const {facetId, numberOfValues} = action.payload;
-        const facetRequest = state[facetId];
-
-        if (!facetRequest) {
-          return;
-        }
-
-        facetRequest.numberOfValues = numberOfValues;
+        handleFacetUpdateNumberOfValues<FacetRequest>(state, action.payload);
       })
       .addCase(updateFacetIsFieldExpanded, (state, action) => {
         const {facetId, isFieldExpanded} = action.payload;

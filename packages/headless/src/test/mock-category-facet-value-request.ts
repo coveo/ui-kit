@@ -1,7 +1,7 @@
 import {CategoryFacetValueRequest} from '../features/facets/category-facet-set/interfaces/request';
 
 export function buildMockCategoryFacetValueRequest(
-  config: Partial<CategoryFacetValueRequest>
+  config: Partial<CategoryFacetValueRequest> = {}
 ): CategoryFacetValueRequest {
   return {
     value: '',

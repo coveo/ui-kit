@@ -4,18 +4,17 @@ type CategoryFacetRequiredParameters = Pick<
   CategoryFacetRequest,
   'facetId' | 'field'
 >;
-type CategoryFacetOptionalParameters = Partial<
-  Pick<
-    CategoryFacetRequest,
-    | 'delimitingCharacter'
-    | 'filterFacetCount'
-    | 'injectionDepth'
-    | 'numberOfValues'
-    | 'sortCriteria'
-    | 'basePath'
-    | 'filterByBasePath'
-  >
+
+export type CategoryFacetOptionalParameters = Pick<
+  CategoryFacetRequest,
+  | 'delimitingCharacter'
+  | 'filterFacetCount'
+  | 'injectionDepth'
+  | 'numberOfValues'
+  | 'sortCriteria'
+  | 'basePath'
+  | 'filterByBasePath'
 >;
 
 export type CategoryFacetRegistrationOptions = CategoryFacetRequiredParameters &
-  CategoryFacetOptionalParameters;
+  Partial<CategoryFacetOptionalParameters>;

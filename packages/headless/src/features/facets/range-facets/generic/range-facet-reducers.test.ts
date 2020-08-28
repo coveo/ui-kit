@@ -2,6 +2,7 @@ import {
   registerRangeFacet,
   toggleSelectRangeValue,
   onRangeFacetRequestFulfilled,
+  handleRangeFacetDeselectAll,
 } from './range-facet-reducers';
 import {buildMockNumericFacetRequest} from '../../../../test/mock-numeric-facet-request';
 import {NumericFacetRegistrationOptions} from '../numeric-facet-set/interfaces/options';
@@ -137,6 +138,23 @@ describe('range facet reducers', () => {
     expect(() =>
       toggleSelectRangeValue(state, 'unknownId', value)
     ).not.toThrow();
+  });
+
+  describe('#handleRangeFacetDeselectAll', () => {
+    it('when the passed id is registered, it sets the values #state to idle', () => {
+      const id = '1';
+      const value = buildMockNumericFacetValue({state: 'selected'});
+      const state = {
+        [id]: buildMockNumericFacetRequest({currentValues: [value]}),
+      };
+
+      handleRangeFacetDeselectAll(state, id);
+      expect(value.state).toBe('idle');
+    });
+
+    it('when the passed id is not registered, it does not throw', () => {
+      expect(() => handleRangeFacetDeselectAll({}, '1')).not.toThrow();
+    });
   });
 
   describe('#onRangeRequestSearchFulfilled', () => {

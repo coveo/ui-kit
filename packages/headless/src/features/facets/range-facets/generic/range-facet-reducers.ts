@@ -40,6 +40,21 @@ export function toggleSelectRangeValue<
   request.preventAutoSelect = true;
 }
 
+export function handleRangeFacetDeselectAll<T extends RangeFacetRequest>(
+  state: Record<string, T>,
+  facetId: string
+) {
+  const facetRequest = state[facetId];
+
+  if (!facetRequest) {
+    return;
+  }
+
+  facetRequest.currentValues.forEach(
+    (request: T['currentValues'][0]) => (request.state = 'idle')
+  );
+}
+
 export function onRangeFacetRequestFulfilled<
   T extends RangeFacetRequest,
   U extends RangeFacetResponse

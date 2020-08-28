@@ -235,23 +235,19 @@ describe('facet-set slice', () => {
     );
   });
 
-  it('dispatching #updateFacetNumberOfValues with a registered id updates the number of values', () => {
-    const facetId = '1';
-    state[facetId] = buildMockFacetRequest();
-    const numberOfValues = 20;
+  it('dispatching #updateFacetNumberOfValues calls #handleFacetUpdateNumberOfValues', () => {
+    jest.spyOn(FacetReducers, 'handleFacetUpdateNumberOfValues');
+    facetSetReducer(
+      state,
+      updateFacetNumberOfValues({
+        facetId: '1',
+        numberOfValues: 20,
+      })
+    );
 
-    const action = updateFacetNumberOfValues({facetId, numberOfValues});
-    const finalState = facetSetReducer(state, action);
-
-    expect(finalState[facetId].numberOfValues).toBe(numberOfValues);
-  });
-
-  it('dispatching #updateFacetNumberOfValues with an unregistered id does not throw', () => {
-    const action = updateFacetNumberOfValues({
-      facetId: '1',
-      numberOfValues: 20,
-    });
-    expect(() => facetSetReducer(state, action)).not.toThrow();
+    expect(FacetReducers.handleFacetUpdateNumberOfValues).toHaveBeenCalledTimes(
+      1
+    );
   });
 
   describe('#updateFacetIsFieldExpanded', () => {
