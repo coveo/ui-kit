@@ -131,7 +131,12 @@ function buildFacetSelectionChangeMetadata(
 }
 
 function buildFacetBaseMetadata(facetId: string, state: SearchPageState) {
-  const facetField = state.facetSet[facetId].field;
+  const facet =
+    state.facetSet[facetId] ||
+    state.categoryFacetSet[facetId] ||
+    state.dateFacetSet[facetId] ||
+    state.numericFacetSet[facetId];
+  const facetField = facet.field;
   const facetTitle = `${facetField}_${facetId}`;
 
   return {facetId, facetField, facetTitle};

@@ -5,6 +5,7 @@ import {CategoryFacetRegistrationOptions} from '../../../features/facets/categor
 import {
   registerCategoryFacet,
   toggleSelectCategoryFacetValue,
+  updateCategoryFacetSortCriterion,
 } from '../../../features/facets/category-facet-set/category-facet-set-actions';
 import {facetSelector} from '../../../features/facets/facet-set/facet-set-selectors';
 import {
@@ -16,7 +17,10 @@ import {
   FacetSelectionChangeMetadata,
   logFacetDeselect,
   logFacetSelect,
+  logFacetUpdateSort,
 } from '../../../features/facets/facet-set/facet-set-analytics-actions';
+import {CategoryFacetSortCriterion} from '../../../features/facets/category-facet-set/interfaces/request';
+import {categoryFacetRequestSelector} from '../../../features/facets/category-facet-set/category-facet-set-selectors';
 
 export type CategoryFacetProps = {
   options: CategoryFacetOptions;
@@ -47,6 +51,16 @@ export function buildCategoryFacet(engine: Engine, props: CategoryFacetProps) {
     return isSelected ? logFacetDeselect(payload) : logFacetSelect(payload);
   };
 
+  const getRequest = () => {
+    return categoryFacetRequestSelector(engine.state, facetId);
+  };
+
+  const getResponse = () => {
+    return facetSelector(engine.state, facetId) as
+      | CategoryFacetResponse
+      | undefined;
+  };
+
   dispatch(registerCategoryFacet(options));
 
   return {
@@ -63,16 +77,34 @@ export function buildCategoryFacet(engine: Engine, props: CategoryFacetProps) {
       dispatch(executeSearch(analyticsAction));
     },
 
+    /** Sorts the category facet values according to the passed criterion.
+     * @param {CategoryFacetSortCriterion} criterion The criterion to sort values by.
+     */
+    sortBy(criterion: CategoryFacetSortCriterion) {
+      const facetId = options.facetId;
+
+      dispatch(updateCategoryFacetSortCriterion({facetId, criterion}));
+      dispatch(executeSearch(logFacetUpdateSort({facetId, criterion})));
+    },
+
+    /**
+     * Returns `true` if the category facet values are sorted according to the passed criterion and `false` otherwise.
+     * @param {CategoryFacetSortCriterion} criterion The criterion to compare.
+     */
+    isSortedBy(criterion: CategoryFacetSortCriterion) {
+      const request = getRequest();
+      return request.sortCriteria === criterion;
+    },
+
     /**  @returns The state of the `CategoryFacet` controller.*/
     get state() {
-      const response = facetSelector(engine.state, facetId) as
-        | CategoryFacetResponse
-        | undefined;
+      const request = getRequest();
+      const response = getResponse();
 
       const {parents, values} = partitionIntoParentsAndValues(response);
       const isLoading = engine.state.search.isLoading;
 
-      return {parents, values, isLoading};
+      return {parents, values, isLoading, sortCriteria: request.sortCriteria};
     },
   };
 }

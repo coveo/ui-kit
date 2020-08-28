@@ -1,17 +1,23 @@
 import {
-  CategoryFacetOptions,
-  CategoryFacet,
   buildCategoryFacet,
+  CategoryFacet,
+  CategoryFacetOptions,
 } from './headless-category-facet';
 import {SearchPageState} from '../../../state';
-import {MockEngine, buildMockEngine, createMockState} from '../../../test';
+import {buildMockEngine, createMockState, MockEngine} from '../../../test';
 import {
   registerCategoryFacet,
   toggleSelectCategoryFacetValue,
+  updateCategoryFacetSortCriterion,
 } from '../../../features/facets/category-facet-set/category-facet-set-actions';
 import {buildMockCategoryFacetValue} from '../../../test/mock-category-facet-value';
 import {buildMockCategoryFacetResponse} from '../../../test/mock-category-facet-response';
 import {executeSearch} from '../../../features/search/search-actions';
+import {
+  CategoryFacetRequest,
+  CategoryFacetSortCriterion,
+} from '../../../features/facets/category-facet-set/interfaces/request';
+import {buildMockCategoryFacetRequest} from '../../../test/mock-category-facet-request';
 
 describe('category facet', () => {
   const facetId = '1';
@@ -25,6 +31,13 @@ describe('category facet', () => {
     categoryFacet = buildCategoryFacet(engine, {options});
   }
 
+  function setFacetRequest(config: Partial<CategoryFacetRequest> = {}) {
+    state.categoryFacetSet[facetId] = buildMockCategoryFacetRequest({
+      facetId,
+      ...config,
+    });
+  }
+
   beforeEach(() => {
     options = {
       facetId,
@@ -32,7 +45,7 @@ describe('category facet', () => {
     };
 
     state = createMockState();
-
+    setFacetRequest();
     initCategoryFacet();
   });
 
@@ -94,6 +107,10 @@ describe('category facet', () => {
     it('#state.values contains the innermost values', () => {
       expect(categoryFacet.state.values).toBe(innerValues);
     });
+
+    it('#state.parents contains the outer and middle values', () => {
+      expect(categoryFacet.state.parents).toEqual([outerValue, middleValue]);
+    });
   });
 
   describe('when the category facet has a selected leaf value with no children', () => {
@@ -138,5 +155,20 @@ describe('category facet', () => {
       );
       expect(action).toBeTruthy();
     });
+  });
+
+  it('#sortBy dispatches #toggleCategoryFacetValue with the passed selection', () => {
+    const sortCriterion: CategoryFacetSortCriterion = 'alphanumeric';
+    categoryFacet.sortBy(sortCriterion);
+    const action = updateCategoryFacetSortCriterion({
+      facetId,
+      criterion: sortCriterion,
+    });
+    expect(engine.actions).toContainEqual(action);
+  });
+
+  it('#isSortedBy returns correct value', () => {
+    expect(categoryFacet.isSortedBy('alphanumeric')).toBe(false);
+    expect(categoryFacet.isSortedBy('occurrences')).toBe(true);
   });
 });

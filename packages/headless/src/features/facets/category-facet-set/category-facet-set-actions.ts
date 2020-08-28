@@ -1,6 +1,7 @@
 import {createAction} from '@reduxjs/toolkit';
 import {CategoryFacetRegistrationOptions} from './interfaces/options';
 import {CategoryFacetValue} from './interfaces/response';
+import {CategoryFacetSortCriterion} from './interfaces/request';
 
 /**
  * Register a category facet in the category facet set.
@@ -17,3 +18,11 @@ export const toggleSelectCategoryFacetValue = createAction<{
   facetId: string;
   selection: CategoryFacetValue;
 }>('categoryFacet/toggleSelectValue');
+
+/**
+ * Updates the the sort criterion for the category facet
+ */
+export const updateCategoryFacetSortCriterion = createAction<{
+  facetId: string;
+  criterion: CategoryFacetSortCriterion;
+}>('categoryFacet/updateSortCriterion');

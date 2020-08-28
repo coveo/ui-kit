@@ -7,10 +7,7 @@ import {
   BaseFacetValueRequest,
 } from '../../facet-api/request';
 
-export type CategoryFacetSortCriterion =
-  | 'score'
-  | 'alphanumeric'
-  | 'occurrences';
+export type CategoryFacetSortCriterion = 'alphanumeric' | 'occurrences';
 
 export interface CategoryFacetValueRequest extends BaseFacetValueRequest {
   value: string;

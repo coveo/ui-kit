@@ -63,6 +63,7 @@ export * from './features/result-templates/result-templates';
 export * as ResultTemplatesHelpers from './features/result-templates/result-templates-helpers';
 export * as TestUtils from './test';
 export {platformUrl} from './api/platform-client';
+export {CategoryFacetSortCriterion} from './features/facets/category-facet-set/interfaces/request';
 export {CategoryFacetValue} from './features/facets/category-facet-set/interfaces/response';
 export {DateFacetValue} from './features/facets/range-facets/date-facet-set/interfaces/response';
 export {FacetValue} from './features/facets/facet-set/interfaces/response';
