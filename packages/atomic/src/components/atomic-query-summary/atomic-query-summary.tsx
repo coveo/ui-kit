@@ -4,8 +4,10 @@ import {
   QuerySummaryState,
   Unsubscribe,
   buildQuerySummary,
+  Engine,
 } from '@coveo/headless';
-import {headlessEngine} from '../../engine';
+import {EngineProvider, EngineProviderError} from '../../utils/engine-utils';
+import {RenderError} from '../../utils/render-utils';
 
 @Component({
   tag: 'atomic-query-summary',
@@ -13,12 +15,27 @@ import {headlessEngine} from '../../engine';
   shadow: true,
 })
 export class AtomicQuerySummary {
-  private querySummary: QuerySummary;
-  private unsubscribe: Unsubscribe;
   @State() state!: QuerySummaryState;
+  @EngineProvider() engine!: Engine;
+  @RenderError() error?: Error;
 
-  constructor() {
-    this.querySummary = buildQuerySummary(headlessEngine);
+  private querySummary!: QuerySummary;
+  private unsubscribe: Unsubscribe = () => {};
+
+  public componentWillLoad() {
+    try {
+      this.configure();
+    } catch (error) {
+      this.error = error;
+    }
+  }
+
+  private configure() {
+    if (!this.engine) {
+      throw new EngineProviderError('atomic-query-summary');
+    }
+
+    this.querySummary = buildQuerySummary(this.engine);
     this.unsubscribe = this.querySummary.subscribe(() => this.updateState());
   }
 

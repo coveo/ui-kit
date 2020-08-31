@@ -4,8 +4,10 @@ import {
   DidYouMeanState,
   Unsubscribe,
   buildDidYouMean,
+  Engine,
 } from '@coveo/headless';
-import {headlessEngine} from '../../engine';
+import {EngineProviderError, EngineProvider} from '../../utils/engine-utils';
+import {RenderError} from '../../utils/render-utils';
 
 @Component({
   tag: 'atomic-did-you-mean',
@@ -13,12 +15,27 @@ import {headlessEngine} from '../../engine';
   shadow: true,
 })
 export class AtomicDidYouMean {
-  private didYouMean: DidYouMean;
-  private unsubscribe: Unsubscribe;
   @State() state!: DidYouMeanState;
+  @EngineProvider() engine!: Engine;
+  @RenderError() error?: Error;
 
-  constructor() {
-    this.didYouMean = buildDidYouMean(headlessEngine);
+  private didYouMean!: DidYouMean;
+  private unsubscribe: Unsubscribe = () => {};
+
+  public componentWillLoad() {
+    try {
+      this.configure();
+    } catch (error) {
+      this.error = error;
+    }
+  }
+
+  private configure() {
+    if (!this.engine) {
+      throw new EngineProviderError('atomic-did-you-mean');
+    }
+
+    this.didYouMean = buildDidYouMean(this.engine);
     this.unsubscribe = this.didYouMean.subscribe(() => this.updateState());
   }
 

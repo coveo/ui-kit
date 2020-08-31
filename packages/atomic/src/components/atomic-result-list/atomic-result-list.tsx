@@ -5,10 +5,12 @@ import {
   Unsubscribe,
   ResultTemplatesManager,
   buildResultList,
+  Engine,
 } from '@coveo/headless';
-import {headlessEngine} from '../../engine';
 import Mustache from 'mustache';
 import defaultTemplate from '../../templates/default.html';
+import {EngineProvider, EngineProviderError} from '../../utils/engine-utils';
+import {RenderError} from '../../utils/render-utils';
 
 @Component({
   tag: 'atomic-result-list',
@@ -17,22 +19,34 @@ import defaultTemplate from '../../templates/default.html';
 })
 export class AtomicResultList {
   @Element() host!: HTMLDivElement;
-  private resultList: ResultList;
-  private unsubscribe: Unsubscribe;
-  private resultTemplatesManager = new ResultTemplatesManager<string>(
-    headlessEngine
-  );
-
+  @EngineProvider() engine!: Engine;
   @State() state!: ResultListState;
+  @RenderError() error?: Error;
 
-  constructor() {
-    this.resultList = buildResultList(headlessEngine);
-    this.unsubscribe = this.resultList.subscribe(() => this.updateState());
-  }
+  private unsubscribe: Unsubscribe = () => {};
+  private resultList!: ResultList;
+  private resultTemplatesManager!: ResultTemplatesManager<string>;
 
   public componentWillLoad() {
-    this.registerDefaultResultTemplates();
-    this.registerChildrenResultTemplates();
+    try {
+      this.configure();
+      this.registerDefaultResultTemplates();
+      this.registerChildrenResultTemplates();
+    } catch (error) {
+      this.error = error;
+    }
+  }
+
+  private configure() {
+    if (!this.engine) {
+      throw new EngineProviderError('atomic-result-list');
+    }
+
+    this.resultTemplatesManager = new ResultTemplatesManager<string>(
+      this.engine
+    );
+    this.resultList = buildResultList(this.engine);
+    this.unsubscribe = this.resultList.subscribe(() => this.updateState());
   }
 
   private registerDefaultResultTemplates() {
@@ -70,6 +84,7 @@ export class AtomicResultList {
     return this.state.results.map((result) => (
       <atomic-result
         result={result}
+        engine={this.engine}
         innerHTML={Mustache.render(
           this.resultTemplatesManager.selectTemplate(result) || '',
           result

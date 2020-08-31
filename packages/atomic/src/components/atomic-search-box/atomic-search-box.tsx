@@ -7,6 +7,7 @@ import {
   Engine,
 } from '@coveo/headless';
 import {EngineProvider, EngineProviderError} from '../../utils/engine-utils';
+import {RenderError} from '../../utils/render-utils';
 
 @Component({
   tag: 'atomic-search-box',
@@ -14,14 +15,12 @@ import {EngineProvider, EngineProviderError} from '../../utils/engine-utils';
   shadow: true,
 })
 export class AtomicSearchBox implements ComponentInterface {
+  @State() searchBoxState!: SearchBoxState;
   @Prop() isStandalone = false;
-
   @Prop() numberOfSuggestions = 5;
   @EngineProvider() engine!: Engine;
+  @RenderError() error?: Error;
 
-  @State() searchBoxState!: SearchBoxState;
-
-  private error?: Error;
   private searchBox!: SearchBox;
   private unsubscribe?: Unsubscribe;
 
@@ -86,12 +85,6 @@ export class AtomicSearchBox implements ComponentInterface {
   }
 
   public render() {
-    if (this.error) {
-      return (
-        <atomic-component-error error={this.error}></atomic-component-error>
-      );
-    }
-
     return (
       <div>
         <input

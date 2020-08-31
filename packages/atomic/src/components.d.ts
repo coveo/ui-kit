@@ -42,6 +42,7 @@ export namespace Components {
     interface AtomicQuerySummary {
     }
     interface AtomicResult {
+        "engine": Engine;
         "result": Result;
     }
     interface AtomicResultList {
@@ -63,7 +64,7 @@ export namespace Components {
     }
     interface AtomicSearchInterface {
         "accessToken"?: string;
-        "engine": Engine;
+        "engine"?: Engine;
         "organizationId"?: string;
         "renewAccessToken"?: () => Promise<string>;
         "sample": boolean;
@@ -243,6 +244,7 @@ declare namespace LocalJSX {
     interface AtomicQuerySummary {
     }
     interface AtomicResult {
+        "engine": Engine;
         "result": Result;
     }
     interface AtomicResultList {

@@ -4,8 +4,11 @@ import {
   searchPageReducers,
   Engine,
   HeadlessConfigurationOptions,
+  SearchActions,
+  AnalyticsActions,
 } from '@coveo/headless';
 import {Schema, StringValue} from '@coveo/bueno';
+import {RenderError} from '../../utils/render-utils';
 
 @Component({
   tag: 'atomic-search-interface',
@@ -16,10 +19,8 @@ export class AtomicSearchInterface {
   @Prop() organizationId?: string;
   @Prop() accessToken?: string;
   @Prop() renewAccessToken?: () => Promise<string>;
-
   @Prop() engine?: Engine;
-
-  private error?: Error;
+  @RenderError() error?: Error;
 
   constructor() {
     const config = this.configuration;
@@ -67,13 +68,13 @@ export class AtomicSearchInterface {
     };
   }
 
-  render() {
-    if (this.error) {
-      return (
-        <atomic-component-error error={this.error}></atomic-component-error>
-      );
-    }
+  componentDidLoad() {
+    this.engine!.dispatch(
+      SearchActions.executeSearch(AnalyticsActions.logInterfaceLoad())
+    );
+  }
 
+  render() {
     return <slot></slot>;
   }
 }
