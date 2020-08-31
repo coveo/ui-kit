@@ -5,11 +5,14 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { Result, ResultTemplateCondition, } from "@coveo/headless";
+import { Engine, Result, ResultTemplateCondition, } from "@coveo/headless";
 export namespace Components {
     interface AtomicCategoryFacet {
         "field": string;
         "label": string;
+    }
+    interface AtomicComponentError {
+        "error": Error;
     }
     interface AtomicDateFacet {
         "field": string;
@@ -57,7 +60,13 @@ export namespace Components {
     interface AtomicSearchBox {
         "isStandalone": boolean;
         "numberOfSuggestions": number;
-        "superfluousProp": number;
+    }
+    interface AtomicSearchInterface {
+        "accessToken"?: string;
+        "engine": Engine;
+        "organizationId"?: string;
+        "renewAccessToken"?: () => Promise<string>;
+        "sample": boolean;
     }
     interface AtomicSortDropdown {
     }
@@ -68,6 +77,12 @@ declare global {
     var HTMLAtomicCategoryFacetElement: {
         prototype: HTMLAtomicCategoryFacetElement;
         new (): HTMLAtomicCategoryFacetElement;
+    };
+    interface HTMLAtomicComponentErrorElement extends Components.AtomicComponentError, HTMLStencilElement {
+    }
+    var HTMLAtomicComponentErrorElement: {
+        prototype: HTMLAtomicComponentErrorElement;
+        new (): HTMLAtomicComponentErrorElement;
     };
     interface HTMLAtomicDateFacetElement extends Components.AtomicDateFacet, HTMLStencilElement {
     }
@@ -159,6 +174,12 @@ declare global {
         prototype: HTMLAtomicSearchBoxElement;
         new (): HTMLAtomicSearchBoxElement;
     };
+    interface HTMLAtomicSearchInterfaceElement extends Components.AtomicSearchInterface, HTMLStencilElement {
+    }
+    var HTMLAtomicSearchInterfaceElement: {
+        prototype: HTMLAtomicSearchInterfaceElement;
+        new (): HTMLAtomicSearchInterfaceElement;
+    };
     interface HTMLAtomicSortDropdownElement extends Components.AtomicSortDropdown, HTMLStencilElement {
     }
     var HTMLAtomicSortDropdownElement: {
@@ -167,6 +188,7 @@ declare global {
     };
     interface HTMLElementTagNameMap {
         "atomic-category-facet": HTMLAtomicCategoryFacetElement;
+        "atomic-component-error": HTMLAtomicComponentErrorElement;
         "atomic-date-facet": HTMLAtomicDateFacetElement;
         "atomic-did-you-mean": HTMLAtomicDidYouMeanElement;
         "atomic-facet": HTMLAtomicFacetElement;
@@ -182,6 +204,7 @@ declare global {
         "atomic-result-value": HTMLAtomicResultValueElement;
         "atomic-results-per-page": HTMLAtomicResultsPerPageElement;
         "atomic-search-box": HTMLAtomicSearchBoxElement;
+        "atomic-search-interface": HTMLAtomicSearchInterfaceElement;
         "atomic-sort-dropdown": HTMLAtomicSortDropdownElement;
     }
 }
@@ -189,6 +212,9 @@ declare namespace LocalJSX {
     interface AtomicCategoryFacet {
         "field"?: string;
         "label"?: string;
+    }
+    interface AtomicComponentError {
+        "error": Error;
     }
     interface AtomicDateFacet {
         "field"?: string;
@@ -233,12 +259,19 @@ declare namespace LocalJSX {
     interface AtomicSearchBox {
         "isStandalone"?: boolean;
         "numberOfSuggestions"?: number;
-        "superfluousProp"?: number;
+    }
+    interface AtomicSearchInterface {
+        "accessToken"?: string;
+        "engine"?: Engine;
+        "organizationId"?: string;
+        "renewAccessToken"?: () => Promise<string>;
+        "sample"?: boolean;
     }
     interface AtomicSortDropdown {
     }
     interface IntrinsicElements {
         "atomic-category-facet": AtomicCategoryFacet;
+        "atomic-component-error": AtomicComponentError;
         "atomic-date-facet": AtomicDateFacet;
         "atomic-did-you-mean": AtomicDidYouMean;
         "atomic-facet": AtomicFacet;
@@ -254,6 +287,7 @@ declare namespace LocalJSX {
         "atomic-result-value": AtomicResultValue;
         "atomic-results-per-page": AtomicResultsPerPage;
         "atomic-search-box": AtomicSearchBox;
+        "atomic-search-interface": AtomicSearchInterface;
         "atomic-sort-dropdown": AtomicSortDropdown;
     }
 }
@@ -262,6 +296,7 @@ declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
             "atomic-category-facet": LocalJSX.AtomicCategoryFacet & JSXBase.HTMLAttributes<HTMLAtomicCategoryFacetElement>;
+            "atomic-component-error": LocalJSX.AtomicComponentError & JSXBase.HTMLAttributes<HTMLAtomicComponentErrorElement>;
             "atomic-date-facet": LocalJSX.AtomicDateFacet & JSXBase.HTMLAttributes<HTMLAtomicDateFacetElement>;
             "atomic-did-you-mean": LocalJSX.AtomicDidYouMean & JSXBase.HTMLAttributes<HTMLAtomicDidYouMeanElement>;
             "atomic-facet": LocalJSX.AtomicFacet & JSXBase.HTMLAttributes<HTMLAtomicFacetElement>;
@@ -277,6 +312,7 @@ declare module "@stencil/core" {
             "atomic-result-value": LocalJSX.AtomicResultValue & JSXBase.HTMLAttributes<HTMLAtomicResultValueElement>;
             "atomic-results-per-page": LocalJSX.AtomicResultsPerPage & JSXBase.HTMLAttributes<HTMLAtomicResultsPerPageElement>;
             "atomic-search-box": LocalJSX.AtomicSearchBox & JSXBase.HTMLAttributes<HTMLAtomicSearchBoxElement>;
+            "atomic-search-interface": LocalJSX.AtomicSearchInterface & JSXBase.HTMLAttributes<HTMLAtomicSearchInterfaceElement>;
             "atomic-sort-dropdown": LocalJSX.AtomicSortDropdown & JSXBase.HTMLAttributes<HTMLAtomicSortDropdownElement>;
         }
     }

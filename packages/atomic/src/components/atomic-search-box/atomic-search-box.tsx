@@ -4,9 +4,9 @@ import {
   SearchBoxState,
   Unsubscribe,
   buildSearchBox,
+  Engine,
 } from '@coveo/headless';
-import {headlessEngine} from '../../engine';
-import {Schema, NumberValue} from '@coveo/bueno';
+import {EngineProvider, EngineProviderError} from '../../utils/engine-utils';
 
 @Component({
   tag: 'atomic-search-box',
@@ -17,8 +17,7 @@ export class AtomicSearchBox implements ComponentInterface {
   @Prop() isStandalone = false;
 
   @Prop() numberOfSuggestions = 5;
-
-  @Prop() superfluousProp = 5;
+  @EngineProvider() engine!: Engine;
 
   @State() searchBoxState!: SearchBoxState;
 
@@ -26,30 +25,26 @@ export class AtomicSearchBox implements ComponentInterface {
   private searchBox!: SearchBox;
   private unsubscribe?: Unsubscribe;
 
-  constructor() {
+  public componentWillLoad() {
     try {
-      this.searchBox = buildSearchBox(headlessEngine, {options: this.options});
-      this.validateProps();
+      this.configure();
     } catch (error) {
       this.error = error;
-      return;
+    }
+  }
+
+  private configure() {
+    if (!this.engine) {
+      throw new EngineProviderError('atomic-search-box');
     }
 
+    this.searchBox = buildSearchBox(this.engine, {
+      options: {
+        isStandalone: this.isStandalone,
+        numberOfSuggestions: this.numberOfSuggestions,
+      },
+    });
     this.unsubscribe = this.searchBox.subscribe(() => this.updateState());
-  }
-
-  private validateProps() {
-    new Schema({
-      superfluousProp: new NumberValue({min: 0, max: 10}),
-    }).validate({superfluousProp: this.superfluousProp});
-  }
-
-  public componentShouldUpdate(
-    newState: SearchBoxState,
-    oldState: SearchBoxState
-  ) {
-    // Stencil re-renders whenever the state is updated, checking for state changes prevent rerenders
-    return JSON.stringify(newState) !== JSON.stringify(oldState);
   }
 
   public componentDidUpdate() {
@@ -60,13 +55,6 @@ export class AtomicSearchBox implements ComponentInterface {
 
   public disconnectedCallback() {
     this.unsubscribe && this.unsubscribe();
-  }
-
-  private get options() {
-    return {
-      isStandalone: this.isStandalone,
-      numberOfSuggestions: this.numberOfSuggestions,
-    };
   }
 
   private updateState() {
@@ -100,11 +88,7 @@ export class AtomicSearchBox implements ComponentInterface {
   public render() {
     if (this.error) {
       return (
-        <p>
-          {this.error.name}
-          <br />
-          {this.error.message}
-        </p>
+        <atomic-component-error error={this.error}></atomic-component-error>
       );
     }
 
