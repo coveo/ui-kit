@@ -66,6 +66,37 @@ describe('range facet reducers', () => {
 
       expect(state[facetId].field).toEqual('a');
     });
+
+    it(`when #generateAutomaticRanges is false, and the number of hard-coded ranges is not equal to the #numberOfValues,
+    it sets #numberOfValues to the number of hard-coded ranges`, () => {
+      const facetId = '1';
+      const options: NumericFacetRegistrationOptions = {
+        facetId,
+        field: '',
+        generateAutomaticRanges: false,
+        currentValues: [buildMockNumericFacetValue()],
+        numberOfValues: 0,
+      };
+
+      register(options);
+
+      expect(state[facetId].numberOfValues).toBe(options.currentValues.length);
+    });
+
+    it(`when #generateAutomaticRanges is true, and the number of hard-coded ranges is greater than the #numberOfValues,
+    it sets #numberOfValues to the number of hard-coded ranges`, () => {
+      const facetId = '1';
+      const options: NumericFacetRegistrationOptions = {
+        facetId,
+        field: '',
+        generateAutomaticRanges: true,
+        numberOfValues: 0,
+        currentValues: [buildMockNumericFacetValue()],
+      };
+
+      register(options);
+      expect(state[facetId].numberOfValues).toBe(options.currentValues?.length);
+    });
   });
 
   describe('#toggleSelectRangeFacetValue with a registered facet id', () => {

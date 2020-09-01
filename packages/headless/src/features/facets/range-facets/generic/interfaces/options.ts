@@ -6,11 +6,9 @@ type RangeFacetRequiredParameters = Pick<
   'facetId' | 'field'
 >;
 
-type RangeFacetOptionalParameters = Partial<
-  Pick<
-    RangeFacetRequest,
-    'filterFacetCount' | 'injectionDepth' | 'numberOfValues' | 'sortCriteria'
-  >
+export type RangeFacetOptionalParameters = Pick<
+  RangeFacetRequest,
+  'filterFacetCount' | 'injectionDepth' | 'numberOfValues' | 'sortCriteria'
 >;
 
 export type ManualRangeFacetOptions<
@@ -18,11 +16,11 @@ export type ManualRangeFacetOptions<
 > = RangeFacetRequiredParameters &
   Pick<T, 'currentValues'> &
   AutomaticRanges<false> &
-  RangeFacetOptionalParameters;
+  Partial<RangeFacetOptionalParameters>;
 
 export type AutomaticRangeFacetOptions<
   T extends RangeFacetRequest
 > = RangeFacetRequiredParameters &
   Partial<Pick<T, 'currentValues'>> &
   AutomaticRanges<true> &
-  RangeFacetOptionalParameters;
+  Partial<RangeFacetOptionalParameters>;

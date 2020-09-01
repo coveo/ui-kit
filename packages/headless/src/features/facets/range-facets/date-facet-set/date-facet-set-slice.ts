@@ -15,6 +15,7 @@ import {
   toggleSelectRangeValue,
   onRangeFacetRequestFulfilled,
   handleRangeFacetDeselectAll,
+  defaultRangeFacetOptions,
 } from '../generic/range-facet-reducers';
 import {handleFacetSortCriterionUpdate} from '../../generic/facet-reducer-helpers';
 
@@ -63,12 +64,9 @@ function buildDateFacetRequest(
   config: DateFacetRegistrationOptions
 ): DateFacetRequest {
   return {
+    ...defaultRangeFacetOptions,
     currentValues: [],
     preventAutoSelect: false,
-    filterFacetCount: false,
-    injectionDepth: 1000,
-    numberOfValues: 8, // TODO: check value when manual vs. automatic
-    sortCriteria: 'ascending',
     type: 'dateRange',
     ...config,
   };

@@ -4,6 +4,14 @@ import {
   RangeFacetValue,
   RangeValueRequest,
 } from './interfaces/range-facet';
+import {RangeFacetOptionalParameters} from './interfaces/options';
+
+export const defaultRangeFacetOptions: RangeFacetOptionalParameters = {
+  filterFacetCount: false,
+  injectionDepth: 1000,
+  numberOfValues: 8,
+  sortCriteria: 'ascending',
+};
 
 export function registerRangeFacet<T extends RangeFacetRequest>(
   state: Record<string, T>,
@@ -15,7 +23,8 @@ export function registerRangeFacet<T extends RangeFacetRequest>(
     return;
   }
 
-  state[facetId] = request;
+  const numberOfValues = calculateNumberOfValues(request);
+  state[facetId] = {...request, numberOfValues};
 }
 
 export function toggleSelectRangeValue<
@@ -85,4 +94,11 @@ function findRange(values: RangeValueRequest[], value: RangeValueRequest) {
       range.end === end &&
       range.endInclusive === endInclusive
   );
+}
+
+function calculateNumberOfValues(request: RangeFacetRequest) {
+  const {generateAutomaticRanges, currentValues, numberOfValues} = request;
+  return generateAutomaticRanges
+    ? Math.max(numberOfValues, currentValues.length)
+    : currentValues.length;
 }
