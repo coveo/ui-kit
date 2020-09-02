@@ -31,9 +31,6 @@
             "c/facetValue": [
                 "facetValue/facetValue.js"
             ],
-            "c/numberButton": [
-                "numberButton/numberButton.js"
-            ],
             "c/numericFacet": [
                 "numericFacet/numericFacet.js"
             ],
@@ -46,8 +43,14 @@
             "c/searchBox": [
                 "searchBox/searchBox.js"
             ],
-            "c/searchPage": [
-                "searchPage/searchPage.js"
+            "c/searchInterface": [
+                "searchInterface/searchInterface.js"
+            ],
+            "c/numberButton": [
+                "numberButton/numberButton.js"
+            ],
+            "c/initialization": [
+                "c/initialization.js"
             ]
         }
     },
@@ -59,6 +62,11 @@
     "typeAcquisition": {
         "include": [
             "jest"
+        ]
+    },
+    "paths": {
+        "c/*": [
+            "*"
         ]
     }
 }

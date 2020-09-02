@@ -3,6 +3,7 @@ import {LightningElement, api, track} from 'lwc';
 import TributePath from '@salesforce/resourceUrl/tributejs';
 // @ts-ignore
 import {loadScript} from 'lightning/platformResourceLoader';
+import {initializeComponent} from 'c/initialization';
 
 export default class SearchBox extends LightningElement {
   /** @type {import("coveo").SearchBoxState} */
@@ -23,6 +24,8 @@ export default class SearchBox extends LightningElement {
   tribute;
 
   connectedCallback() {
+    initializeComponent(this);
+
     if (this.tributeLoaded) {
       return;
     }
@@ -90,19 +93,13 @@ export default class SearchBox extends LightningElement {
     });
   }
 
+  /**
+   * @param {import("coveo").Engine} engine
+   */
   @api
-  set engine(eng) {
-    if (!eng) {
-      return;
-    }
-
-    this.e = eng;
-    this.searchBox = CoveoHeadless.buildSearchBox(this.e);
+  initialize(engine) {
+    this.searchBox = CoveoHeadless.buildSearchBox(engine);
     this.unsubscribe = this.searchBox.subscribe(() => this.updateState());
-  }
-
-  get engine() {
-    return this.e;
   }
 
   /**

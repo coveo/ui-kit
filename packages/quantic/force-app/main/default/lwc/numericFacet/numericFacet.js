@@ -1,5 +1,6 @@
 // @ts-check
 import {LightningElement, track, api} from 'lwc';
+import { initializeComponent } from 'c/initialization';
 
 export default class NumericFacet extends LightningElement {
   /** @type {import("coveo").NumericFacetState} */
@@ -16,24 +17,22 @@ export default class NumericFacet extends LightningElement {
   /** @type {import("coveo").Unsubscribe} */
   unsubscribe;
 
-  @api
-  set engine(eng) {
-    if (!eng) {
-      return;
-    }
+  connectedCallback() {
+    initializeComponent(this);
+  }
 
-    this.e = eng;
-    this.facet = CoveoHeadless.buildNumericFacet(this.e, {
+  /**
+   * @param {import("coveo").Engine} engine
+   */
+  @api
+  initialize(engine) {
+    this.facet = CoveoHeadless.buildNumericFacet(engine, {
       options: {
         field: this.field,
         generateAutomaticRanges: true
       },
     });
     this.unsubscribe = this.facet.subscribe(() => this.updateState());
-  }
-
-  get engine() {
-    return this.e;
   }
 
   disconnectedCallback() {

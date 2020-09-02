@@ -1,5 +1,6 @@
 // @ts-check
 import {LightningElement, api, track} from 'lwc';
+import { initializeComponent } from 'c/initialization';
 
 export default class ResultList extends LightningElement {
   @track state = {};
@@ -9,19 +10,17 @@ export default class ResultList extends LightningElement {
   /** @type {import("coveo").Unsubscribe} */
   unsubscribe;
 
-  @api
-  set engine(eng) {
-    if (!eng) {
-      return;
-    }
-
-    this.e = eng;
-    this.resultList = CoveoHeadless.buildResultList(this.e);
-    this.unsubscribe = this.resultList.subscribe(() => this.updateState());
+  connectedCallback() {
+    initializeComponent(this);
   }
 
-  get engine() {
-    return this.e;
+  /**
+   * @param {import("coveo").Engine} engine
+   */
+  @api
+  initialize(engine) {
+    this.resultList = CoveoHeadless.buildResultList(engine);
+    this.unsubscribe = this.resultList.subscribe(() => this.updateState());
   }
 
   disconnectedCallback() {

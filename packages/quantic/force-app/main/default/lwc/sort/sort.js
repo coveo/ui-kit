@@ -1,5 +1,6 @@
 // @ts-check
-import { LightningElement, track, api } from "lwc";
+import {LightningElement, track, api} from 'lwc';
+import {initializeComponent} from 'c/initialization';
 
 export default class Sort extends LightningElement {
   @track state = {};
@@ -9,19 +10,17 @@ export default class Sort extends LightningElement {
   /** @type {import("coveo").Unsubscribe} */
   unsubscribe;
 
-  @api
-  set engine(eng) {
-    if (!eng) {
-      return;
-    }
-
-    this.e = eng;
-    this.sort = CoveoHeadless.buildSort(this.e);
-    this.unsubscribe = this.sort.subscribe(() => this.updateState());
+  connectedCallback() {
+    initializeComponent(this);
   }
 
-  get engine() {
-    return this.e;
+  /**
+   * @param {import("coveo").Engine} engine
+   */
+  @api
+  initialize(engine) {
+    this.sort = CoveoHeadless.buildSort(engine);
+    this.unsubscribe = this.sort.subscribe(() => this.updateState());
   }
 
   updateState() {
@@ -35,15 +34,15 @@ export default class Sort extends LightningElement {
     const selected = e.detail.value;
 
     switch (selected) {
-      case "relevancy":
+      case 'relevancy':
         this.sort.sortBy(this.relevance);
         break;
 
-      case "newest":
+      case 'newest':
         this.sort.sortBy(this.dateDescending);
         break;
 
-      case "oldest":
+      case 'oldest':
         this.sort.sortBy(this.dateAscending);
         break;
 
@@ -59,28 +58,28 @@ export default class Sort extends LightningElement {
   }
 
   get dateDescending() {
-    return CoveoHeadless.buildDateSortCriterion("descending");
+    return CoveoHeadless.buildDateSortCriterion('descending');
   }
 
   get dateAscending() {
-    return CoveoHeadless.buildDateSortCriterion("ascending");
+    return CoveoHeadless.buildDateSortCriterion('ascending');
   }
 
   get largest() {
-    return CoveoHeadless.buildFieldSortCriterion("size", "descending");
+    return CoveoHeadless.buildFieldSortCriterion('size', 'descending');
   }
 
   get options() {
     return [
-      { label: "Relevancy", value: "relevancy" },
-      { label: "Newest", value: "newest" },
-      { label: "Oldest", value: "oldest" }
+      {label: 'Relevancy', value: 'relevancy'},
+      {label: 'Newest', value: 'newest'},
+      {label: 'Oldest', value: 'oldest'},
     ];
   }
 
   get value() {
     if (!this.sort) {
-      return "relevancy";
+      return 'relevancy';
     }
     return this.state.sortCriteria.expression;
   }

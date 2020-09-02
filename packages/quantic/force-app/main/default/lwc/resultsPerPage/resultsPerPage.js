@@ -1,4 +1,6 @@
+// @ts-check
 import { LightningElement, api } from 'lwc';
+import { initializeComponent } from 'c/initialization';
 
 export default class ResultsPerPage extends LightningElement {
 
@@ -11,19 +13,17 @@ export default class ResultsPerPage extends LightningElement {
   /** @type {()=> void} */
   unsubscribe;
 
-  @api
-  set engine(eng) {
-    if (!eng) {
-      return;
-    }
-
-    this.e = eng;
-    this.resultsPerPage = CoveoHeadless.buildResultsPerPage(this.e);
-    this.unsubscribe = this.resultsPerPage.subscribe(() => this.updateState());
+  connectedCallback() {
+    initializeComponent(this);
   }
 
-  get engine() {
-    return this.e;
+  /**
+   * @param {import("coveo").Engine} engine
+   */
+  @api
+  initialize(engine) {
+    this.resultsPerPage = CoveoHeadless.buildResultsPerPage(engine);
+    this.unsubscribe = this.resultsPerPage.subscribe(() => this.updateState());
   }
 
   disconnectedCallback() {

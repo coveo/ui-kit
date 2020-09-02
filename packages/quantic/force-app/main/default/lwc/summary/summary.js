@@ -1,5 +1,6 @@
 // @ts-check
 import {LightningElement, track, api} from 'lwc';
+import { initializeComponent } from 'c/initialization';
 
 export default class Summary extends LightningElement {
   @track state = {};
@@ -9,25 +10,22 @@ export default class Summary extends LightningElement {
   /** @type {import("coveo").Unsubscribe} */
   unsubscribe;
 
-  @api
-  set engine(eng) {
-    if (!eng) {
-      return;
-    }
+  connectedCallback() {
+    initializeComponent(this);
+  }
 
-    this.e = eng;
-    this.querySummary = CoveoHeadless.buildQuerySummary(this.e);
+  /**
+   * @param {import("coveo").Engine} engine
+   */
+  @api
+  initialize(engine) {
+    this.querySummary = CoveoHeadless.buildQuerySummary(engine);
     this.unsubscribe = this.querySummary.subscribe(() => this.updateState());
   }
 
   disconnectedCallback() {
     this.unsubscribe && this.unsubscribe();
   }
-
-  get engine() {
-    return this.e;
-  }
-
   updateState() {
     this.state = this.querySummary.state;
   }
