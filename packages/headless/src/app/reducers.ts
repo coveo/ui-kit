@@ -16,13 +16,14 @@ import {
   getHistoryEmptyState,
 } from '../features/history/history-slice';
 import {didYouMeanReducer} from '../features/did-you-mean/did-you-mean-slice';
-import {facetSearchSetReducer} from '../features/facets/facet-search-set/facet-search-set-slice';
+import {specificFacetSearchSetReducer} from '../features/facets/facet-search-set/specific/specific-facet-search-set-slice';
 import {fieldsReducer} from '../features/fields/fields-slice';
 import {pipelineReducer} from '../features/pipeline/pipeline-slice';
 import {dateFacetSetReducer} from '../features/facets/range-facets/date-facet-set/date-facet-set-slice';
 import {numericFacetSetReducer} from '../features/facets/range-facets/numeric-facet-set/numeric-facet-set-slice';
 import {searchHubReducer} from '../features/search-hub/search-hub-slice';
 import {categoryFacetSetReducer} from '../features/facets/category-facet-set/category-facet-set-slice';
+import {categoryFacetSearchSetReducer} from '../features/facets/facet-search-set/category/category-facet-search-set-slice';
 
 /**
  * Map of reducers that make up the SearchPageState.
@@ -33,7 +34,8 @@ export const searchPageReducers: ReducersMapObject<SearchPageState> = {
   dateFacetSet: dateFacetSetReducer,
   numericFacetSet: numericFacetSetReducer,
   categoryFacetSet: categoryFacetSetReducer,
-  facetSearchSet: facetSearchSetReducer,
+  facetSearchSet: specificFacetSearchSetReducer,
+  categoryFacetSearchSet: categoryFacetSearchSetReducer,
   query: queryReducer,
   querySet: querySetReducer,
   pagination: paginationReducer,

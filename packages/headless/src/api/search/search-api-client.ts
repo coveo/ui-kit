@@ -7,11 +7,7 @@ import {
 } from './query-suggest/query-suggest-response';
 import {baseSearchParams} from './search-api-params';
 import {SearchRequest, searchRequest} from './search/search-request';
-import {
-  specificFacetSearchRequest,
-  SpecificFacetSearchRequest,
-} from './facet-search/specific-facet-search-request';
-import {FacetSearchResponse} from './facet-search/facet-search-response';
+import {buildSpecificFacetSearchRequest} from './facet-search/specific-facet-search/specific-facet-search-request';
 import {Search, SearchResponseSuccess} from './search/search-response';
 import {
   SearchAPIErrorWithStatusCode,
@@ -22,6 +18,9 @@ import {
   QuerySuggestRequest,
   querySuggestRequest,
 } from './query-suggest/query-suggest-request';
+import {FacetSearchRequest} from './facet-search/facet-search-request';
+import {FacetSearchResponse} from './facet-search/facet-search-response';
+import {buildCategoryFacetSearchRequest} from './facet-search/category-facet-search/category-facet-search-request';
 
 export type AllSearchAPIResponse = Plan | Search | QuerySuggest;
 
@@ -108,12 +107,18 @@ export class SearchAPIClient {
   }
 
   async facetSearch(id: string, state: SearchPageState) {
+    const isFacetSearch = id in state.facetSearchSet;
+    const buildParams = isFacetSearch
+      ? buildSpecificFacetSearchRequest
+      : buildCategoryFacetSearchRequest;
+    const requestParams = buildParams(id, state);
+
     const res = await PlatformClient.call<
-      SpecificFacetSearchRequest,
+      FacetSearchRequest,
       FacetSearchResponse
     >({
       ...baseSearchParams(state, 'POST', 'application/json', '/facet'),
-      requestParams: specificFacetSearchRequest(id, state),
+      requestParams,
       renewAccessToken: this.renewAccessToken,
     });
 

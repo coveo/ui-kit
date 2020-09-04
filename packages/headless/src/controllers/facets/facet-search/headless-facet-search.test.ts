@@ -4,17 +4,17 @@ import {
   FacetSearchProps,
 } from './headless-facet-search';
 import {buildMockEngine, MockEngine} from '../../../test/mock-engine';
+import {buildMockFacetSearchResponse} from '../../../test/mock-facet-search-response';
+import {buildMockFacetSearch} from '../../../test/mock-facet-search';
+import {buildMockFacetSearchResult} from '../../../test/mock-facet-search-result';
+import {executeSearch} from '../../../features/search/search-actions';
+import {buildMockFacetSearchRequestOptions} from '../../../test/mock-facet-search-request-options';
 import {
   registerFacetSearch,
   updateFacetSearch,
   executeFacetSearch,
   selectFacetSearchResult,
-} from '../../../features/facets/facet-search-set/facet-search-actions';
-import {buildMockFacetSearchResponse} from '../../../test/mock-facet-search-response';
-import {buildMockFacetSearch} from '../../../test/mock-facet-search';
-import {buildFacetSearchState} from '../../../features/facets/facet-search-set/facet-search-set-slice';
-import {buildMockFacetSearchResult} from '../../../test/mock-facet-search-result';
-import {executeSearch} from '../../../features/search/search-actions';
+} from '../../../features/facets/facet-search-set/specific/specific-facet-search-actions';
 
 describe('FacetSearch', () => {
   let props: FacetSearchProps;
@@ -61,7 +61,8 @@ describe('FacetSearch', () => {
   describe('#showMoreResults', () => {
     beforeEach(() => {
       const facetId = getFacetId();
-      engine.state.facetSearchSet[facetId] = buildMockFacetSearch();
+      const options = buildMockFacetSearchRequestOptions({numberOfValues: 5});
+      engine.state.facetSearchSet[facetId] = buildMockFacetSearch({options});
       controller.showMoreResults();
     });
 
@@ -118,7 +119,7 @@ describe('FacetSearch', () => {
       isLoading: false,
     };
 
-    engine.state.facetSearchSet[facetId] = buildFacetSearchState(
+    engine.state.facetSearchSet[facetId] = buildMockFacetSearch(
       facetSearchState
     );
     expect(controller.state).toEqual(facetSearchState);

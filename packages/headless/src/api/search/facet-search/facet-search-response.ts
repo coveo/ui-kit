@@ -1,10 +1,6 @@
-export interface FacetSearchResult {
-  displayValue: string;
-  rawValue: string;
-  count: number;
-}
+import {SpecificFacetSearchResponse} from './specific-facet-search/specific-facet-search-response';
+import {CategoryFacetSearchResponse} from './category-facet-search/category-facet-search-response';
 
-export interface FacetSearchResponse {
-  values: FacetSearchResult[];
-  moreValuesAvailable: boolean;
-}
+export type FacetSearchResponse =
+  | SpecificFacetSearchResponse
+  | CategoryFacetSearchResponse;

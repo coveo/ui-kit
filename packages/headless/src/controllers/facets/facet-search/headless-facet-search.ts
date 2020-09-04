@@ -1,14 +1,14 @@
 import {Engine} from '../../../app/headless-engine';
 import {
-  FacetSearchOptions,
-  registerFacetSearch,
   updateFacetSearch,
   executeFacetSearch,
   selectFacetSearchResult,
-} from '../../../features/facets/facet-search-set/facet-search-actions';
-import {FacetSearchResult} from '../../../api/search/facet-search/facet-search-response';
+} from '../../../features/facets/facet-search-set/specific/specific-facet-search-actions';
+import {SpecificFacetSearchResult} from '../../../api/search/facet-search/specific-facet-search/specific-facet-search-response';
 import {executeSearch} from '../../../features/search/search-actions';
 import {logFacetSelect} from '../../../features/facets/facet-set/facet-set-analytics-actions';
+import {registerFacetSearch} from '../../../features/facets/facet-search-set/specific/specific-facet-search-actions';
+import {FacetSearchOptions} from '../../../features/facets/facet-search-set/facet-search-request-options';
 
 export interface FacetSearchProps {
   options: FacetSearchOptions;
@@ -59,7 +59,7 @@ export function buildFacetSearch(engine: Engine, props: FacetSearchProps) {
       dispatch(executeFacetSearch(facetId));
     },
     /** Selects a search result.*/
-    select(value: FacetSearchResult) {
+    select(value: SpecificFacetSearchResult) {
       dispatch(selectFacetSearchResult({facetId, value}));
       dispatch(
         executeSearch(logFacetSelect({facetId, facetValue: value.rawValue}))

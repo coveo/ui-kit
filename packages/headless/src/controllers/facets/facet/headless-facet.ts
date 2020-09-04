@@ -26,8 +26,10 @@ import {
   logFacetShowLess,
 } from '../../../features/facets/facet-set/facet-set-analytics-actions';
 import {buildFacetSearch} from '../facet-search/headless-facet-search';
-import {FacetSearchRequestOptions} from '../../../features/facets/facet-search-set/facet-search-request-options';
-import {FacetSearchOptions} from '../../../features/facets/facet-search-set/facet-search-actions';
+import {
+  FacetSearchRequestOptions,
+  FacetSearchOptions,
+} from '../../../features/facets/facet-search-set/facet-search-request-options';
 import {
   FacetValue,
   FacetResponse,

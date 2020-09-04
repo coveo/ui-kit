@@ -1,12 +1,17 @@
-import {FacetSearchRequest, FacetSearchType} from './facet-search-request';
-import {SearchPageState} from '../../../state';
-import {searchRequest} from '../search/search-request';
+import {
+  BaseFacetSearchRequest,
+  FacetSearchType,
+} from '../base/base-facet-search-request';
+import {SearchPageState} from '../../../../state';
+import {searchRequest} from '../../search/search-request';
 
 export interface SpecificFacetSearchRequest
-  extends FacetSearchRequest,
-    FacetSearchType<'specific'> {}
+  extends BaseFacetSearchRequest,
+    FacetSearchType<'specific'> {
+  ignoreValues: string[];
+}
 
-export const specificFacetSearchRequest = (
+export const buildSpecificFacetSearchRequest = (
   id: string,
   state: SearchPageState
 ): SpecificFacetSearchRequest => {

@@ -3,10 +3,11 @@ import {SearchState} from './features/search/search-slice';
 import {SearchParametersState} from './search-parameters-state';
 import {StateWithHistory} from './app/undoable';
 import {DidYouMeanState} from './features/did-you-mean/did-you-mean-slice';
-import {FacetSearchSetState} from './features/facets/facet-search-set/facet-search-set-slice';
 import {SearchAPIErrorWithStatusCode} from './api/search/search-api-error-response';
 import {FieldsState} from './features/fields/fields-slice';
 import {ConfigurationState} from './features/configuration/configuration-slice';
+import {SpecificFacetSearchSetState} from './features/facets/facet-search-set/specific/specific-facet-search-set-slice';
+import {CategoryFacetSearchSetState} from './features/facets/facet-search-set/category/category-facet-search-set-slice';
 
 export interface SearchPageState extends SearchParametersState {
   /**
@@ -16,7 +17,11 @@ export interface SearchPageState extends SearchParametersState {
   /**
    * The set of facet searches.
    */
-  facetSearchSet: FacetSearchSetState;
+  facetSearchSet: SpecificFacetSearchSetState;
+  /**
+   * The set of category facet searches.
+   */
+  categoryFacetSearchSet: CategoryFacetSearchSetState;
   /**
    * The URL redirection triggered by the preprocessed query.
    */

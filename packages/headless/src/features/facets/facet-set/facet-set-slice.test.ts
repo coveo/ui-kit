@@ -20,11 +20,11 @@ import {buildMockFacetResponse} from '../../../test/mock-facet-response';
 import {executeSearch} from '../../search/search-actions';
 import {logGenericSearchEvent} from '../../analytics/analytics-actions';
 import {buildMockFacetValueRequest} from '../../../test/mock-facet-value-request';
-import {selectFacetSearchResult} from '../facet-search-set/facet-search-actions';
 import {buildMockFacetSearchResult} from '../../../test/mock-facet-search-result';
 import {FacetRegistrationOptions} from './interfaces/options';
 import {FacetResponse} from './interfaces/response';
 import {buildMockFacetRequest} from '../../../test/mock-facet-request';
+import {selectFacetSearchResult} from '../facet-search-set/specific/specific-facet-search-actions';
 import * as FacetReducers from '../generic/facet-reducer-helpers';
 
 describe('facet-set slice', () => {

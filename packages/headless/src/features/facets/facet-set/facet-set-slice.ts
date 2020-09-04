@@ -9,7 +9,7 @@ import {
   updateFacetIsFieldExpanded,
 } from './facet-set-actions';
 import {executeSearch} from '../../search/search-actions';
-import {selectFacetSearchResult} from '../facet-search-set/facet-search-actions';
+import {selectFacetSearchResult} from '../facet-search-set/specific/specific-facet-search-actions';
 import {FacetRequest, FacetValueRequest} from './interfaces/request';
 import {FacetValue, FacetResponse} from './interfaces/response';
 import {FacetRegistrationOptions} from './interfaces/options';

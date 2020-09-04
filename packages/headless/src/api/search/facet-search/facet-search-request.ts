@@ -1,15 +1,6 @@
-import {SearchRequest} from '../search/search-request';
+import {SpecificFacetSearchRequest} from './specific-facet-search/specific-facet-search-request';
+import {CategoryFacetSearchRequest} from './category-facet-search/category-facet-search-request';
 
-export interface FacetSearchRequest {
-  field: string;
-  captions: Record<string, string>;
-  ignoreValues: string[];
-  numberOfValues: number;
-  query: string;
-  searchContext: SearchRequest;
-  delimitingCharacter: string;
-}
-
-export interface FacetSearchType<T extends 'specific' | 'hierarchical'> {
-  type: T;
-}
+export type FacetSearchRequest =
+  | SpecificFacetSearchRequest
+  | CategoryFacetSearchRequest;

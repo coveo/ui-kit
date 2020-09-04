@@ -1,8 +1,8 @@
-import {FacetSearchResponse} from '../api/search/facet-search/facet-search-response';
+import {SpecificFacetSearchResponse} from '../api/search/facet-search/specific-facet-search/specific-facet-search-response';
 
 export function buildMockFacetSearchResponse(
-  config: Partial<FacetSearchResponse> = {}
-): FacetSearchResponse {
+  config: Partial<SpecificFacetSearchResponse> = {}
+): SpecificFacetSearchResponse {
   return {
     moreValuesAvailable: false,
     values: [],
