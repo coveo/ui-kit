@@ -1,5 +1,8 @@
 {
   "globals": {
     "window": "readonly"
+  },
+  "env": {
+    "browser": true
   }
 }

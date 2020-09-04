@@ -10,8 +10,7 @@ import {
   buildSort,
   Engine,
 } from '@coveo/headless';
-import {EngineProvider, EngineProviderError} from '../../utils/engine-utils';
-import {RenderError} from '../../utils/render-utils';
+import {Initialization} from '../../utils/initialization-utils';
 
 enum SortOption {
   Relevance = 'relevance',
@@ -27,25 +26,13 @@ enum SortOption {
 })
 export class AtomicSortDropdown {
   @State() state!: SortState;
-  @EngineProvider() engine!: Engine;
-  @RenderError() error?: Error;
 
+  private engine!: Engine;
   private sort!: Sort;
   private unsubscribe: Unsubscribe = () => {};
 
-  public componentWillLoad() {
-    try {
-      this.configure();
-    } catch (error) {
-      this.error = error;
-    }
-  }
-
-  private configure() {
-    if (!this.engine) {
-      throw new EngineProviderError('atomic-sort-dropdown');
-    }
-
+  @Initialization()
+  public initialize() {
     const initialState: Partial<SortInitialState> = {criterion: this.relevance};
     this.sort = buildSort(this.engine, {initialState});
     this.unsubscribe = this.sort.subscribe(() => this.updateState());

@@ -11,6 +11,8 @@ export namespace Components {
         "field": string;
         "label": string;
     }
+    interface AtomicChild {
+    }
     interface AtomicComponentError {
         "error": Error;
     }
@@ -64,7 +66,6 @@ export namespace Components {
     }
     interface AtomicSearchInterface {
         "accessToken"?: string;
-        "engine"?: Engine;
         "organizationId"?: string;
         "renewAccessToken"?: () => Promise<string>;
         "sample": boolean;
@@ -78,6 +79,12 @@ declare global {
     var HTMLAtomicCategoryFacetElement: {
         prototype: HTMLAtomicCategoryFacetElement;
         new (): HTMLAtomicCategoryFacetElement;
+    };
+    interface HTMLAtomicChildElement extends Components.AtomicChild, HTMLStencilElement {
+    }
+    var HTMLAtomicChildElement: {
+        prototype: HTMLAtomicChildElement;
+        new (): HTMLAtomicChildElement;
     };
     interface HTMLAtomicComponentErrorElement extends Components.AtomicComponentError, HTMLStencilElement {
     }
@@ -189,6 +196,7 @@ declare global {
     };
     interface HTMLElementTagNameMap {
         "atomic-category-facet": HTMLAtomicCategoryFacetElement;
+        "atomic-child": HTMLAtomicChildElement;
         "atomic-component-error": HTMLAtomicComponentErrorElement;
         "atomic-date-facet": HTMLAtomicDateFacetElement;
         "atomic-did-you-mean": HTMLAtomicDidYouMeanElement;
@@ -213,6 +221,8 @@ declare namespace LocalJSX {
     interface AtomicCategoryFacet {
         "field"?: string;
         "label"?: string;
+    }
+    interface AtomicChild {
     }
     interface AtomicComponentError {
         "error": Error;
@@ -264,7 +274,6 @@ declare namespace LocalJSX {
     }
     interface AtomicSearchInterface {
         "accessToken"?: string;
-        "engine"?: Engine;
         "organizationId"?: string;
         "renewAccessToken"?: () => Promise<string>;
         "sample"?: boolean;
@@ -273,6 +282,7 @@ declare namespace LocalJSX {
     }
     interface IntrinsicElements {
         "atomic-category-facet": AtomicCategoryFacet;
+        "atomic-child": AtomicChild;
         "atomic-component-error": AtomicComponentError;
         "atomic-date-facet": AtomicDateFacet;
         "atomic-did-you-mean": AtomicDidYouMean;
@@ -298,6 +308,7 @@ declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
             "atomic-category-facet": LocalJSX.AtomicCategoryFacet & JSXBase.HTMLAttributes<HTMLAtomicCategoryFacetElement>;
+            "atomic-child": LocalJSX.AtomicChild & JSXBase.HTMLAttributes<HTMLAtomicChildElement>;
             "atomic-component-error": LocalJSX.AtomicComponentError & JSXBase.HTMLAttributes<HTMLAtomicComponentErrorElement>;
             "atomic-date-facet": LocalJSX.AtomicDateFacet & JSXBase.HTMLAttributes<HTMLAtomicDateFacetElement>;
             "atomic-did-you-mean": LocalJSX.AtomicDidYouMean & JSXBase.HTMLAttributes<HTMLAtomicDidYouMeanElement>;

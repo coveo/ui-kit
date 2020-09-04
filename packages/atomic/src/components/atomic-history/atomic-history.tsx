@@ -6,8 +6,7 @@ import {
   buildHistory,
   Engine,
 } from '@coveo/headless';
-import {EngineProviderError, EngineProvider} from '../../utils/engine-utils';
-import {RenderError} from '../../utils/render-utils';
+import {Initialization} from '../../utils/initialization-utils';
 
 @Component({
   tag: 'atomic-history',
@@ -15,25 +14,13 @@ import {RenderError} from '../../utils/render-utils';
 })
 export class AtomicHistory {
   @State() state!: HistoryState;
-  @EngineProvider() engine!: Engine;
-  @RenderError() error?: Error;
 
+  private engine!: Engine;
   private history!: History;
   private unsubscribe: Unsubscribe = () => {};
 
-  public componentWillLoad() {
-    try {
-      this.configure();
-    } catch (error) {
-      this.error = error;
-    }
-  }
-
-  private configure() {
-    if (!this.engine) {
-      throw new EngineProviderError('atomic-history');
-    }
-
+  @Initialization()
+  public initialize() {
     this.history = buildHistory(this.engine);
     this.unsubscribe = this.history.subscribe(() => this.updateState());
   }

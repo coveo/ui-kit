@@ -9,8 +9,7 @@ import {
   Engine,
   CategoryFacetSortCriterion,
 } from '@coveo/headless';
-import {EngineProviderError, EngineProvider} from '../../utils/engine-utils';
-import {RenderError} from '../../utils/render-utils';
+import {Initialization} from '../../utils/initialization-utils';
 
 @Component({
   tag: 'atomic-category-facet',
@@ -21,25 +20,13 @@ export class AtomicCategoryFacet {
   @Prop() field = '';
   @Prop() label = 'No label';
   @State() state!: CategoryFacetState;
-  @EngineProvider() engine!: Engine;
-  @RenderError() error?: Error;
 
+  private engine!: Engine;
   private categoryFacet!: CategoryFacet;
   private unsubscribe: Unsubscribe = () => {};
 
-  public componentWillLoad() {
-    try {
-      this.configure();
-    } catch (error) {
-      this.error = error;
-    }
-  }
-
-  private configure() {
-    if (!this.engine) {
-      throw new EngineProviderError('atomic-category-facet');
-    }
-
+  @Initialization()
+  public initialize() {
     const options: CategoryFacetOptions = {field: this.field};
     this.categoryFacet = buildCategoryFacet(this.engine, {options});
     this.unsubscribe = this.categoryFacet.subscribe(() => this.updateState());

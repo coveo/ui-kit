@@ -6,8 +6,7 @@ import {
   buildPager,
   Engine,
 } from '@coveo/headless';
-import {EngineProviderError, EngineProvider} from '../../utils/engine-utils';
-import {RenderError} from '../../utils/render-utils';
+import {Initialization} from '../../utils/initialization-utils';
 
 @Component({
   tag: 'atomic-pager',
@@ -16,25 +15,13 @@ import {RenderError} from '../../utils/render-utils';
 })
 export class AtomicPager {
   @State() state!: PagerState;
-  @EngineProvider() engine!: Engine;
-  @RenderError() error?: Error;
 
+  private engine!: Engine;
   private pager!: Pager;
   private unsubscribe: Unsubscribe = () => {};
 
-  public componentWillLoad() {
-    try {
-      this.configure();
-    } catch (error) {
-      this.error = error;
-    }
-  }
-
-  private configure() {
-    if (!this.engine) {
-      throw new EngineProviderError('atomic-pager');
-    }
-
+  @Initialization()
+  public initialize() {
     this.pager = buildPager(this.engine);
     this.unsubscribe = this.pager.subscribe(() => this.updateState());
   }

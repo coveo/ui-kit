@@ -6,8 +6,7 @@ import {
   buildSearchBox,
   Engine,
 } from '@coveo/headless';
-import {EngineProvider, EngineProviderError} from '../../utils/engine-utils';
-import {RenderError} from '../../utils/render-utils';
+import {Initialization} from '../../utils/initialization-utils';
 
 @Component({
   tag: 'atomic-search-box',
@@ -18,25 +17,13 @@ export class AtomicSearchBox implements ComponentInterface {
   @State() searchBoxState!: SearchBoxState;
   @Prop() isStandalone = false;
   @Prop() numberOfSuggestions = 5;
-  @EngineProvider() engine!: Engine;
-  @RenderError() error?: Error;
 
+  private engine!: Engine;
   private searchBox!: SearchBox;
-  private unsubscribe?: Unsubscribe;
+  private unsubscribe: Unsubscribe = () => {};
 
-  public componentWillLoad() {
-    try {
-      this.configure();
-    } catch (error) {
-      this.error = error;
-    }
-  }
-
-  private configure() {
-    if (!this.engine) {
-      throw new EngineProviderError('atomic-search-box');
-    }
-
+  @Initialization()
+  public initialize() {
     this.searchBox = buildSearchBox(this.engine, {
       options: {
         isStandalone: this.isStandalone,
@@ -53,7 +40,7 @@ export class AtomicSearchBox implements ComponentInterface {
   }
 
   public disconnectedCallback() {
-    this.unsubscribe && this.unsubscribe();
+    this.unsubscribe();
   }
 
   private updateState() {

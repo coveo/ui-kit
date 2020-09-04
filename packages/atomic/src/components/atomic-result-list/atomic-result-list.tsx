@@ -9,8 +9,7 @@ import {
 } from '@coveo/headless';
 import Mustache from 'mustache';
 import defaultTemplate from '../../templates/default.html';
-import {EngineProvider, EngineProviderError} from '../../utils/engine-utils';
-import {RenderError} from '../../utils/render-utils';
+import {Initialization} from '../../utils/initialization-utils';
 
 @Component({
   tag: 'atomic-result-list',
@@ -19,34 +18,22 @@ import {RenderError} from '../../utils/render-utils';
 })
 export class AtomicResultList {
   @Element() host!: HTMLDivElement;
-  @EngineProvider() engine!: Engine;
   @State() state!: ResultListState;
-  @RenderError() error?: Error;
-
+  private engine!: Engine;
   private unsubscribe: Unsubscribe = () => {};
   private resultList!: ResultList;
   private resultTemplatesManager!: ResultTemplatesManager<string>;
 
-  public componentWillLoad() {
-    try {
-      this.configure();
-      this.registerDefaultResultTemplates();
-      this.registerChildrenResultTemplates();
-    } catch (error) {
-      this.error = error;
-    }
-  }
-
-  private configure() {
-    if (!this.engine) {
-      throw new EngineProviderError('atomic-result-list');
-    }
-
+  @Initialization()
+  public initialize() {
     this.resultTemplatesManager = new ResultTemplatesManager<string>(
       this.engine
     );
     this.resultList = buildResultList(this.engine);
     this.unsubscribe = this.resultList.subscribe(() => this.updateState());
+
+    this.registerDefaultResultTemplates();
+    this.registerChildrenResultTemplates();
   }
 
   private registerDefaultResultTemplates() {

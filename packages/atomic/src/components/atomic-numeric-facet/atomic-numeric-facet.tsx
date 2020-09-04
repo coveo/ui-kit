@@ -10,8 +10,7 @@ import {
   Unsubscribe,
   Engine,
 } from '@coveo/headless';
-import {EngineProvider, EngineProviderError} from '../../utils/engine-utils';
-import {RenderError} from '../../utils/render-utils';
+import {Initialization} from '../../utils/initialization-utils';
 
 @Component({
   tag: 'atomic-numeric-facet',
@@ -22,25 +21,13 @@ export class AtomicNumericFacet {
   @Prop() field = '';
   @Prop() label = 'No label';
   @State() state!: NumericFacetState;
-  @EngineProvider() engine!: Engine;
-  @RenderError() error?: Error;
 
+  private engine!: Engine;
   private unsubscribe: Unsubscribe = () => {};
   private facet!: NumericFacet;
 
-  public componentWillLoad() {
-    try {
-      this.configure();
-    } catch (error) {
-      this.error = error;
-    }
-  }
-
-  private configure() {
-    if (!this.engine) {
-      throw new EngineProviderError('atomic-numeric-facet');
-    }
-
+  @Initialization()
+  public initialize() {
     const options: NumericFacetOptions = {
       field: this.field,
       generateAutomaticRanges: false,

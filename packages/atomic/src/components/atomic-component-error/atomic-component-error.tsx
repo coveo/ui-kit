@@ -5,7 +5,7 @@ import {Component, Prop, h} from '@stencil/core';
   styleUrl: 'atomic-component-error.css',
   shadow: true,
 })
-export class AtomicSearchInterface {
+export class AtomicComponentError {
   @Prop() error!: Error;
 
   render() {
