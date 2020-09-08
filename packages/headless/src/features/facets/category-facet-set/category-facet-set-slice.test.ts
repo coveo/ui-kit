@@ -116,8 +116,9 @@ describe('category facet slice', () => {
     expect(FacetReducers.handleFacetDeselectAll).toHaveBeenCalledTimes(1);
   });
 
-  it('dispatching #updateCategoryFacetNumberOfValues calls #handleFacetUpdateNumberOfValues', () => {
+  it('dispatching #updateCategoryFacetNumberOfValues calls #handleFacetUpdateNumberOfValues if there are no nested children', () => {
     jest.spyOn(FacetReducers, 'handleFacetUpdateNumberOfValues');
+    state[facetId] = buildMockCategoryFacetRequest({facetId});
     categoryFacetSetReducer(
       state,
       updateCategoryFacetNumberOfValues({
@@ -129,6 +130,23 @@ describe('category facet slice', () => {
     expect(FacetReducers.handleFacetUpdateNumberOfValues).toHaveBeenCalledTimes(
       1
     );
+  });
+
+  it('dispatching #updateCategoryFacetNumberOfValues sets correct retrieve count to the appropriate number', () => {
+    state[facetId] = buildMockCategoryFacetRequest({
+      currentValues: [
+        buildMockCategoryFacetValueRequest({
+          value: 'test',
+          state: 'selected',
+          retrieveCount: 5,
+        }),
+      ],
+    });
+    const finalState = categoryFacetSetReducer(
+      state,
+      updateCategoryFacetNumberOfValues({facetId, numberOfValues: 10})
+    );
+    expect(finalState[facetId].currentValues[0].retrieveCount).toBe(10);
   });
 
   describe('#toggleSelectCategoryFacetValue', () => {

@@ -28,6 +28,7 @@ export const deselectAllCategoryFacetValues = deselectAllFacetValues;
 
 /** Updates the number of values of a category facet. */
 export const updateCategoryFacetNumberOfValues = updateFacetNumberOfValues;
+
 /**
  * Updates the the sort criterion for the category facet
  */

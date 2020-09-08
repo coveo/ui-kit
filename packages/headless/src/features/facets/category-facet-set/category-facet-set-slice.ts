@@ -93,10 +93,15 @@ export const categoryFacetSetReducer = createReducer(
         handleFacetDeselectAll<CategoryFacetRequest>(state, action.payload);
       })
       .addCase(updateCategoryFacetNumberOfValues, (state, action) => {
-        handleFacetUpdateNumberOfValues<CategoryFacetRequest>(
-          state,
-          action.payload
-        );
+        const {facetId} = action.payload;
+        const request = state[facetId];
+        if (!request.currentValues.length) {
+          return handleFacetUpdateNumberOfValues<CategoryFacetRequest>(
+            state,
+            action.payload
+          );
+        }
+        handleCategoryFacetNestedNumberOfValuesUpdate(state, action.payload);
       });
   }
 );
@@ -134,4 +139,20 @@ function convertCategoryFacetValueToRequest(
     retrieveChildren: true,
     retrieveCount: 5,
   };
+}
+
+function handleCategoryFacetNestedNumberOfValuesUpdate(
+  state: CategoryFacetSetState,
+  payload: {facetId: string; numberOfValues: number}
+) {
+  const {facetId, numberOfValues} = payload;
+  let selectedValue = state[facetId]?.currentValues[0];
+  if (!selectedValue) {
+    return;
+  }
+
+  while (selectedValue.children.length && selectedValue?.state !== 'selected') {
+    selectedValue = selectedValue.children[0];
+  }
+  selectedValue.retrieveCount = numberOfValues;
 }

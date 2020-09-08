@@ -207,6 +207,120 @@ describe('category facet', () => {
     });
   });
 
+  describe('#state.hasMoreValues', () => {
+    describe('when currentValues is Empty (nothing is selected)', () => {
+      it('if #moreValuesAvailable is true #state.canShowMoreValues is true', () => {
+        const response = buildMockCategoryFacetResponse({
+          facetId,
+          moreValuesAvailable: true,
+        });
+        state.search.response.facets = [response];
+
+        expect(categoryFacet.state.canShowMoreValues).toBe(true);
+      });
+
+      it('if #moreValuesAvailable is false #state.canShowMoreValues is false', () => {
+        const response = buildMockCategoryFacetResponse({
+          facetId,
+          moreValuesAvailable: false,
+        });
+        state.search.response.facets = [response];
+
+        expect(categoryFacet.state.canShowMoreValues).toBe(false);
+      });
+    });
+
+    describe('when a value in currentValue is selected (top level value selected)', () => {
+      it('if #moreValuesAvailable is true, #state.canShowMore is true', () => {
+        const values = [
+          buildMockCategoryFacetValue({
+            numberOfResults: 10,
+            state: 'selected',
+            moreValuesAvailable: true,
+          }),
+        ];
+        const response = buildMockCategoryFacetResponse({
+          facetId,
+          values,
+          moreValuesAvailable: false,
+        });
+
+        state.search.response.facets = [response];
+        expect(categoryFacet.state.canShowMoreValues).toBe(true);
+      });
+
+      it('if #moreValuesAvailable is true, #state.canShowMore is true', () => {
+        const values = [
+          buildMockCategoryFacetValue({
+            numberOfResults: 10,
+            state: 'selected',
+            moreValuesAvailable: false,
+          }),
+        ];
+        const response = buildMockCategoryFacetResponse({
+          facetId,
+          values,
+          moreValuesAvailable: true,
+        });
+
+        state.search.response.facets = [response];
+        expect(categoryFacet.state.canShowMoreValues).toBe(false);
+      });
+    });
+
+    describe('when a nested value (currentValues[n].children[n]) is selected', () => {
+      it('if currentValues has a value with more than 1 child', () => {
+        const nestedChild = buildMockCategoryFacetValue({
+          numberOfResults: 10,
+          state: 'selected',
+          moreValuesAvailable: true,
+        });
+        const values = [
+          buildMockCategoryFacetValue({
+            numberOfResults: 10,
+            moreValuesAvailable: false,
+            children: [nestedChild],
+          }),
+        ];
+        const response = buildMockCategoryFacetResponse({facetId, values});
+
+        state.search.response.facets = [response];
+        expect(categoryFacet.state.canShowMoreValues).toBe(true);
+      });
+    });
+  });
+
+  describe('#showMoreResults', () => {
+    it('dispatches #updateCategoryFacetNumberOfResults is there are no nested values with the correct numberOfValues', () => {
+      categoryFacet.showMoreValues();
+      const action = updateCategoryFacetNumberOfValues({
+        facetId,
+        numberOfValues: 5,
+      });
+      expect(engine.actions).toContainEqual(action);
+    });
+
+    it('dispatches #updateCategoryFacetNumberOfResults is there are nested values with the correct numberOfValues', () => {
+      const nestedChildren = [buildMockCategoryFacetValue()];
+      const values = [
+        buildMockCategoryFacetValue({
+          state: 'selected',
+          children: nestedChildren,
+        }),
+      ];
+      const response = buildMockCategoryFacetResponse({facetId, values});
+      state.search.response.facets = [response];
+      initCategoryFacet();
+
+      const action = updateCategoryFacetNumberOfValues({
+        facetId,
+        numberOfValues: 6,
+      });
+      categoryFacet.showMoreValues();
+      expect(engine.actions).toContainEqual(action);
+    });
+  });
+
   it('#sortBy dispatches #toggleCategoryFacetValue with the passed selection', () => {
     const sortCriterion: CategoryFacetSortCriterion = 'alphanumeric';
     categoryFacet.sortBy(sortCriterion);

@@ -21,6 +21,7 @@ import {
   logFacetSelect,
   logFacetUpdateSort,
   logFacetClearAll,
+  logFacetShowMore,
 } from '../../../features/facets/facet-set/facet-set-analytics-actions';
 import {defaultCategoryFacetOptions} from '../../../features/facets/category-facet-set/category-facet-set-slice';
 import {CategoryFacetSortCriterion} from '../../../features/facets/category-facet-set/interfaces/request';
@@ -43,7 +44,7 @@ export function buildCategoryFacet(engine: Engine, props: CategoryFacetProps) {
   const {dispatch} = engine;
 
   const facetId = props.options.facetId || randomID('categoryFacet');
-  const options: CategoryFacetRegistrationOptions = {
+  const options: Required<CategoryFacetRegistrationOptions> = {
     facetId,
     ...defaultCategoryFacetOptions,
     ...props.options,
@@ -112,7 +113,17 @@ export function buildCategoryFacet(engine: Engine, props: CategoryFacetProps) {
       const request = getRequest();
       return request.sortCriteria === criterion;
     },
+    /**
+     * Displays more values for the current selected category if they exist
+     */
+    showMoreValues() {
+      const {facetId, numberOfValues: increment} = options;
 
+      const {values} = this.state;
+      const numberOfValues = values.length + increment;
+      dispatch(updateCategoryFacetNumberOfValues({facetId, numberOfValues}));
+      dispatch(executeSearch(logFacetShowMore(facetId)));
+    },
     /**  @returns The state of the `CategoryFacet` controller.*/
     get state() {
       const request = getRequest();
@@ -121,12 +132,16 @@ export function buildCategoryFacet(engine: Engine, props: CategoryFacetProps) {
       const {parents, values} = partitionIntoParentsAndValues(response);
       const isLoading = engine.state.search.isLoading;
       const hasActiveValues = parents.length !== 0;
-
+      const canShowMoreValues =
+        parents.length > 0
+          ? parents[parents.length - 1].moreValuesAvailable
+          : response?.moreValuesAvailable || false;
       return {
         parents,
         values,
         isLoading,
         hasActiveValues,
+        canShowMoreValues,
         sortCriteria: request.sortCriteria,
       };
     },
