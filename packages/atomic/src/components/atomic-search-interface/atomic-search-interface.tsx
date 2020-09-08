@@ -1,13 +1,21 @@
-import {Component, Prop, h, Listen} from '@stencil/core';
+import {
+  Component,
+  Prop,
+  h,
+  Listen,
+  Method,
+  Watch,
+  Element,
+} from '@stencil/core';
 import {
   HeadlessEngine,
   searchPageReducers,
   Engine,
-  HeadlessConfigurationOptions,
   SearchActions,
+  HeadlessConfigurationOptions,
   AnalyticsActions,
+  ConfigurationActions,
 } from '@coveo/headless';
-import {Schema, StringValue} from '@coveo/bueno';
 import {RenderError} from '../../utils/render-utils';
 import {InitializeEvent} from '../../utils/initialization-utils';
 
@@ -16,22 +24,78 @@ import {InitializeEvent} from '../../utils/initialization-utils';
   shadow: true,
 })
 export class AtomicSearchInterface {
+  @Element() host!: HTMLDivElement;
   @Prop() sample = false;
-  @Prop() organizationId?: string;
-  @Prop() accessToken?: string;
-  @Prop() renewAccessToken?: () => Promise<string>;
+  @Prop({reflect: true}) pipeline = 'default';
+  @Prop({reflect: true}) searchHub = 'default';
   @RenderError() error?: Error;
 
   private engine?: Engine;
   private hangingComponentsInitialization: InitializeEvent[] = [];
+  private initialized = false;
 
   constructor() {
-    // TODO: Initialize only when accessToken is available
-    this.initialize();
+    if (this.sample) {
+      this.initialize(HeadlessEngine.getSampleConfiguration());
+    }
+  }
+
+  @Method() async initialize(
+    options: Pick<
+      HeadlessConfigurationOptions,
+      'accessToken' | 'organizationId' | 'renewAccessToken' | 'platformUrl'
+    >
+  ) {
+    if (this.initialized) {
+      console.error(
+        'The atomic-search-interface component has already been initialized.',
+        this.host,
+        this
+      );
+      return;
+    }
+
+    this.initEngine({
+      ...options,
+      search: {
+        searchHub: this.searchHub,
+        pipeline: this.pipeline,
+      },
+    });
+
+    this.initialized = true;
+  }
+
+  private initEngine(config: HeadlessConfigurationOptions) {
+    this.engine = new HeadlessEngine({
+      configuration: config,
+      reducers: searchPageReducers,
+    });
+
+    this.hangingComponentsInitialization.forEach((event) =>
+      event.detail(this.engine!)
+    );
+
+    this.hangingComponentsInitialization = [];
+
+    this.engine!.dispatch(
+      SearchActions.executeSearch(AnalyticsActions.logInterfaceLoad())
+    );
+  }
+
+  @Watch('searchHub')
+  @Watch('pipeline')
+  updateSearchConfiguration() {
+    this.engine?.dispatch(
+      ConfigurationActions.updateSearchConfiguration({
+        pipeline: this.pipeline,
+        searchHub: this.searchHub,
+      })
+    );
   }
 
   @Listen('atomic/initializeComponent')
-  handleInitialization(event: InitializeEvent) {
+  public handleInitialization(event: InitializeEvent) {
     event.stopPropagation();
 
     if (this.engine) {
@@ -40,66 +104,6 @@ export class AtomicSearchInterface {
     }
 
     this.hangingComponentsInitialization.push(event);
-  }
-
-  private initialize() {
-    const config = this.configuration;
-    if (!config) {
-      this.error = new Error(
-        'The atomic-search-interface component configuration is faulty, see the console for more details.'
-      );
-      return;
-    }
-
-    this.engine = new HeadlessEngine({
-      configuration: config,
-      reducers: searchPageReducers,
-    });
-
-    this.initializeComponents();
-
-    this.engine!.dispatch(
-      SearchActions.executeSearch(AnalyticsActions.logInterfaceLoad())
-    );
-  }
-
-  private initializeComponents() {
-    this.hangingComponentsInitialization.forEach((event) =>
-      event.detail(this.engine!)
-    );
-
-    this.hangingComponentsInitialization = [];
-  }
-
-  private get configuration(): HeadlessConfigurationOptions | null {
-    if (this.sample) {
-      if (this.organizationId || this.accessToken) {
-        console.warn(
-          'You have a conflicting configuration on the atomic-search-interface component.',
-          'When the sample prop is defined, the access-token and organization-id should not be defined and will be ignored.'
-        );
-      }
-      return HeadlessEngine.getSampleConfiguration();
-    }
-
-    try {
-      new Schema({
-        organizationId: new StringValue({emptyAllowed: false, required: true}),
-        accessToken: new StringValue({emptyAllowed: false, required: true}),
-      }).validate({
-        organizationId: this.organizationId,
-        accessToken: this.accessToken,
-      });
-    } catch (error) {
-      console.error(error);
-      return null;
-    }
-
-    return {
-      accessToken: this.accessToken!,
-      organizationId: this.organizationId!,
-      renewAccessToken: this.renewAccessToken,
-    };
   }
 
   public render() {

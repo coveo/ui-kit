@@ -7,10 +7,20 @@
 
     <script type="module" src="/build/atomic.esm.js"></script>
     <script nomodule src="/build/atomic.js"></script>
+    <!-- Initialization example
+  <script>
+    (async () => {
+      await customElements.whenDefined('atomic-search-interface');
+      document.querySelector('#search').initialize({
+        accessToken: 'my_token',
+        organizationId: 'my_org',
+      });
+    })();
+  </script> -->
   </head>
 
   <body>
-    <atomic-search-interface sample>
+    <atomic-search-interface id="search" sample>
       <atomic-search-box></atomic-search-box>
       <atomic-search-box is-standalone="true"></atomic-search-box>
       <atomic-query-summary></atomic-query-summary>

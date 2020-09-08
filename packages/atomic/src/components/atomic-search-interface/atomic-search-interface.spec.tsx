@@ -8,7 +8,7 @@ describe('atomic-search-interface', () => {
       html: '<atomic-search-interface sample></atomic-search-interface>',
     });
     expect(page.root).toEqualHtml(`
-      <atomic-search-interface sample>
+      <atomic-search-interface pipeline="default" sample="" search-hub="default">
         <mock:shadow-root>
           <slot></slot>
         </mock:shadow-root>

@@ -72,10 +72,10 @@ describe('Initialization decorator', () => {
 
   describe('componentWillLoad method override', () => {
     @Component({
-      tag: 'atomic-child',
+      tag: 'child-component',
       shadow: true,
     })
-    class AtomicChild {
+    class ChildComponent {
       @Prop() error?: Error;
 
       @Initialization()
@@ -86,32 +86,32 @@ describe('Initialization decorator', () => {
       }
     }
 
-    it(`when the atomic-child component is not the child of an atomic-search-interface component
+    it(`when the child-component component is not the child of an atomic-search-interface component
     should set an InitializationError error`, async () => {
       const page = await newSpecPage({
-        components: [AtomicChild],
-        html: '<atomic-child></atomic-child>',
+        components: [ChildComponent],
+        html: '<child-component></child-component>',
       });
-      const component = page.body.querySelector('atomic-child') as any;
+      const component = page.body.querySelector('child-component') as any;
       expect(component.error.name).toBe('InitializationError');
     });
 
-    it(`when the atomic-child component is the child of an atomic-search-interface component
+    it(`when the child-component component is the child of an atomic-search-interface component
     should not set an error`, async () => {
       const page = await newSpecPage({
-        components: [AtomicChild, AtomicSearchInterface],
+        components: [ChildComponent, AtomicSearchInterface],
         html: `<atomic-search-interface>
-        <atomic-child></atomic-child>
+        <child-component></child-component>
         </atomic-search-interface>`,
       });
-      const component = page.body.querySelector('atomic-child') as any;
+      const component = page.body.querySelector('child-component') as any;
       expect(component.error).toBeUndefined();
     });
 
     it(`when child component is loaded
     should dispatch an "atomic/initializeComponent" custom event with the initialize method as detail`, async () => {
       const page = await newSpecPage({
-        components: [AtomicChild, AtomicSearchInterface],
+        components: [ChildComponent, AtomicSearchInterface],
         html: '<atomic-search-interface></atomic-search-interface>',
       });
 
@@ -120,7 +120,7 @@ describe('Initialization decorator', () => {
         .fn()
         .mockImplementation((event) => (eventContent = event));
       page.root!.addEventListener('atomic/initializeComponent', spy);
-      page.root!.innerHTML = '<atomic-child></atomic-child>';
+      page.root!.innerHTML = '<child-component></child-component>';
 
       await page.waitForChanges();
 
@@ -133,10 +133,10 @@ describe('Initialization decorator', () => {
     let initializeSpy: jest.Mock;
 
     @Component({
-      tag: 'atomic-child',
+      tag: 'child-component-1',
       shadow: true,
     })
-    class AtomicChild {
+    class ChildComponent {
       @Prop() engine!: Engine;
 
       @Initialization()
@@ -148,10 +148,10 @@ describe('Initialization decorator', () => {
     }
 
     @Component({
-      tag: 'atomic-child-errored',
+      tag: 'child-component-errored',
       shadow: true,
     })
-    class AtomicChildErrored {
+    class ChildComponentErrored {
       @Prop() engine!: Engine;
       @Prop() error?: Error;
 
@@ -171,14 +171,14 @@ describe('Initialization decorator', () => {
     when the initialize method doesn't throw an error
     should call the initialize method on it's children and set the engine property`, async () => {
       const page = await newSpecPage({
-        components: [AtomicChild, AtomicSearchInterface],
+        components: [ChildComponent, AtomicSearchInterface],
         html: `<atomic-search-interface sample>
-        <atomic-child></atomic-child>
+        <child-component-1></child-component-1>
         </atomic-search-interface>`,
       });
 
       expect(initializeSpy).toHaveBeenCalled();
-      const component = page.body.querySelector('atomic-child') as any;
+      const component = page.body.querySelector('child-component-1') as any;
       expect(component.engine).toBeTruthy();
     });
 
@@ -186,13 +186,15 @@ describe('Initialization decorator', () => {
     when the initialize method throws an error
     should set the error & engine properties`, async () => {
       const page = await newSpecPage({
-        components: [AtomicChildErrored, AtomicSearchInterface],
+        components: [ChildComponentErrored, AtomicSearchInterface],
         html: `<atomic-search-interface sample>
-        <atomic-child-errored></atomic-child-errored>
+        <child-component-errored></child-component-errored>
         </atomic-search-interface>`,
       });
 
-      const component = page.body.querySelector('atomic-child-errored') as any;
+      const component = page.body.querySelector(
+        'child-component-errored'
+      ) as any;
       expect(component.engine).toBeTruthy();
       expect(component.error).toBeTruthy();
     });

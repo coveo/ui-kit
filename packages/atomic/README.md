@@ -33,6 +33,23 @@ npm test
 - Put a script tag similar to this `<script src='https://unpkg.com/my-component@0.0.1/dist/mycomponent.js'></script>` in the head of your index.html
 - Then you can use the element anywhere in your template, JSX, html etc
 
+### Initialization
+
+- To initialize the `atomic-search-interface` component, you have to add a script tag calling `initialize(...)` on it once the custom element is defined:
+```html
+<script>
+  (async () => {
+    await customElements.whenDefined('atomic-search-interface');
+    document.querySelector('atomic-search-interface').initialize({
+      accessToken: 'my_token',
+      organizationId: 'my_org',
+    });
+  })();
+</script>
+```
+- All other components have to be the child of an initialized `atomic-search-interface` to work properly.
+- For testing or demo purposes, adding the `sample` attribute on the `atomic-search-interface` element is sufficient and will bypass initialization.
+
 ### Node Modules
 
 - Run `npm install @coveo/atomic --save`

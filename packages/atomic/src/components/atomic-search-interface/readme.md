@@ -7,12 +7,24 @@
 
 ## Properties
 
-| Property           | Attribute         | Description | Type                                   | Default     |
-| ------------------ | ----------------- | ----------- | -------------------------------------- | ----------- |
-| `accessToken`      | `access-token`    |             | `string \| undefined`                  | `undefined` |
-| `organizationId`   | `organization-id` |             | `string \| undefined`                  | `undefined` |
-| `renewAccessToken` | --                |             | `(() => Promise<string>) \| undefined` | `undefined` |
-| `sample`           | `sample`          |             | `boolean`                              | `false`     |
+| Property    | Attribute    | Description | Type      | Default     |
+| ----------- | ------------ | ----------- | --------- | ----------- |
+| `pipeline`  | `pipeline`   |             | `string`  | `'default'` |
+| `sample`    | `sample`     |             | `boolean` | `false`     |
+| `searchHub` | `search-hub` |             | `string`  | `'default'` |
+
+
+## Methods
+
+### `initialize(options: Pick<HeadlessConfigurationOptions, "accessToken" | "organizationId" | "renewAccessToken" | "platformUrl">) => Promise<void>`
+
+
+
+#### Returns
+
+Type: `Promise<void>`
+
+
 
 
 ## Dependencies
