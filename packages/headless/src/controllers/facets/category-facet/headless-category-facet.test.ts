@@ -34,6 +34,29 @@ describe('category facet', () => {
     categoryFacet = buildCategoryFacet(engine, {options});
   }
 
+  function initNestedCategoryFacet() {
+    const facetChild = buildMockCategoryFacetValue();
+    const nestedChildren = [
+      facetChild,
+      facetChild,
+      facetChild,
+      facetChild,
+      facetChild,
+      facetChild,
+      facetChild,
+      facetChild,
+    ];
+    const values = [
+      buildMockCategoryFacetValue({
+        state: 'selected',
+        children: nestedChildren,
+      }),
+    ];
+    const response = buildMockCategoryFacetResponse({facetId, values});
+    state.search.response.facets = [response];
+    initCategoryFacet();
+  }
+
   function setFacetRequest(config: Partial<CategoryFacetRequest> = {}) {
     state.categoryFacetSet[facetId] = buildMockCategoryFacetRequest({
       facetId,
@@ -290,6 +313,17 @@ describe('category facet', () => {
     });
   });
 
+  describe('#state.canShowLessValues', () => {
+    it('is false when there are 0 values being displayed', () => {
+      expect(categoryFacet.state.canShowLessValues).toBe(false);
+    });
+
+    it('is true when there are more than the initial numberOfValues being shown', () => {
+      initNestedCategoryFacet();
+      expect(categoryFacet.state.canShowLessValues).toBe(true);
+    });
+  });
+
   describe('#showMoreResults', () => {
     it('dispatches #updateCategoryFacetNumberOfResults is there are no nested values with the correct numberOfValues', () => {
       categoryFacet.showMoreValues();
@@ -318,6 +352,50 @@ describe('category facet', () => {
       });
       categoryFacet.showMoreValues();
       expect(engine.actions).toContainEqual(action);
+    });
+
+    it('dispatches #executeSearch', () => {
+      categoryFacet.showMoreValues();
+      const action = engine.actions.find(
+        (a) => a.type === executeSearch.pending.type
+      );
+      expect(action).toBeTruthy();
+    });
+    it('dispatches #executeSearch', () => {
+      categoryFacet.showMoreValues();
+      const action = engine.actions.find(
+        (a) => a.type === executeSearch.pending.type
+      );
+      expect(action).toBeTruthy();
+    });
+  });
+
+  describe('#showLessResults', () => {
+    it('dispatches #updateCategoryFacetNumberOfResults with the correct numberOfValues', () => {
+      categoryFacet.showLessValues();
+      const action = updateCategoryFacetNumberOfValues({
+        facetId,
+        numberOfValues: 5,
+      });
+      expect(engine.actions).toContainEqual(action);
+    });
+
+    it('dispatches #updateCategoryFacetNumberOfResults is there are nested values with the correct numberOfValues', () => {
+      initNestedCategoryFacet();
+      const action = updateCategoryFacetNumberOfValues({
+        facetId,
+        numberOfValues: 5,
+      });
+      categoryFacet.showLessValues();
+      expect(engine.actions).toContainEqual(action);
+    });
+
+    it('dispatches #executeSearch', () => {
+      categoryFacet.showLessValues();
+      const action = engine.actions.find(
+        (a) => a.type === executeSearch.pending.type
+      );
+      expect(action).toBeTruthy();
     });
   });
 

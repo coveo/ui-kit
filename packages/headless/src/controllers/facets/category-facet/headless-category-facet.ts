@@ -22,6 +22,7 @@ import {
   logFacetUpdateSort,
   logFacetClearAll,
   logFacetShowMore,
+  logFacetShowLess,
 } from '../../../features/facets/facet-set/facet-set-analytics-actions';
 import {defaultCategoryFacetOptions} from '../../../features/facets/category-facet-set/category-facet-set-slice';
 import {CategoryFacetSortCriterion} from '../../../features/facets/category-facet-set/interfaces/request';
@@ -124,6 +125,15 @@ export function buildCategoryFacet(engine: Engine, props: CategoryFacetProps) {
       dispatch(updateCategoryFacetNumberOfValues({facetId, numberOfValues}));
       dispatch(executeSearch(logFacetShowMore(facetId)));
     },
+    /**
+     * Resets the number of displayed values to the initially configured value
+     */
+    showLessValues() {
+      const {facetId, numberOfValues} = options;
+
+      dispatch(updateCategoryFacetNumberOfValues({facetId, numberOfValues}));
+      dispatch(executeSearch(logFacetShowLess(facetId)));
+    },
     /**  @returns The state of the `CategoryFacet` controller.*/
     get state() {
       const request = getRequest();
@@ -136,12 +146,15 @@ export function buildCategoryFacet(engine: Engine, props: CategoryFacetProps) {
         parents.length > 0
           ? parents[parents.length - 1].moreValuesAvailable
           : response?.moreValuesAvailable || false;
+      const canShowLessValues = values.length > options.numberOfValues;
+
       return {
         parents,
         values,
         isLoading,
         hasActiveValues,
         canShowMoreValues,
+        canShowLessValues,
         sortCriteria: request.sortCriteria,
       };
     },
