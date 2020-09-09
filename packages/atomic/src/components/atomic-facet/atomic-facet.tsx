@@ -84,6 +84,18 @@ export class AtomicFacet {
     ));
   }
 
+  private get showMoreSearchResults() {
+    const facetSearch = this.facet.facetSearch;
+
+    if (!facetSearch.state.moreValuesAvailable) {
+      return null;
+    }
+
+    return (
+      <button onClick={() => facetSearch.showMoreResults()}>show more</button>
+    );
+  }
+
   private get sortSelector() {
     return (
       <select name="facetSort" onChange={(val) => this.onFacetSortChange(val)}>
@@ -134,23 +146,6 @@ export class AtomicFacet {
     );
   }
 
-  private get showMoreSearchValues() {
-    const facetSearch = this.facet.facetSearch;
-    if (!facetSearch.state.moreValuesAvailable) {
-      return null;
-    }
-
-    return (
-      <button
-        onClick={() => {
-          facetSearch.showMoreResults();
-        }}
-      >
-        show more
-      </button>
-    );
-  }
-
   render() {
     return (
       <div>
@@ -162,7 +157,7 @@ export class AtomicFacet {
         <div>
           {this.facetSearchInput}
           {this.facetSearchResults}
-          {this.showMoreSearchValues}
+          {this.showMoreSearchResults}
         </div>
         <div>{this.values}</div>
         <div>

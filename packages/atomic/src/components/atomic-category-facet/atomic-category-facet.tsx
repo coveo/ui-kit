@@ -71,6 +71,39 @@ export class AtomicCategoryFacet {
     );
   }
 
+  private get facetSearchInput() {
+    return <input onInput={(e) => this.onFacetSearch(e)} />;
+  }
+
+  private onFacetSearch(e: Event) {
+    const value = (e.target as HTMLInputElement).value;
+    const facetSearch = this.categoryFacet.facetSearch;
+
+    facetSearch.updateText(value);
+    facetSearch.search();
+  }
+
+  private get facetSearchResults() {
+    const facetSearch = this.categoryFacet.facetSearch;
+    return facetSearch.state.values.map((searchResult) => (
+      <div>
+        {searchResult.displayValue} {searchResult.count}
+      </div>
+    ));
+  }
+
+  private get showMoreSearchResults() {
+    const facetSearch = this.categoryFacet.facetSearch;
+
+    if (!facetSearch.state.moreValuesAvailable) {
+      return null;
+    }
+
+    return (
+      <button onClick={() => facetSearch.showMoreResults()}>show more</button>
+    );
+  }
+
   private get resetButton() {
     if (!this.state.hasActiveValues) {
       return null;
@@ -133,6 +166,11 @@ export class AtomicCategoryFacet {
         <div>
           <span>{this.label}</span>
           <select onInput={this.handleSelect}>{this.sortOptions}</select>
+        </div>
+        <div>
+          {this.facetSearchInput}
+          {this.facetSearchResults}
+          {this.showMoreSearchResults}
         </div>
         <div>
           <div>{this.resetButton}</div>

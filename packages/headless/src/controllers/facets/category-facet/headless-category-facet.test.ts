@@ -21,6 +21,8 @@ import {
   CategoryFacetSortCriterion,
 } from '../../../features/facets/category-facet-set/interfaces/request';
 import {buildMockCategoryFacetRequest} from '../../../test/mock-category-facet-request';
+import * as CategoryFacetSearch from '../facet-search/category/headless-category-facet-search';
+import {buildMockCategoryFacetSearch} from '../../../test/mock-category-facet-search';
 
 describe('category facet', () => {
   const facetId = '1';
@@ -62,6 +64,7 @@ describe('category facet', () => {
       facetId,
       ...config,
     });
+    state.categoryFacetSearchSet[facetId] = buildMockCategoryFacetSearch();
   }
 
   beforeEach(() => {
@@ -412,5 +415,15 @@ describe('category facet', () => {
   it('#isSortedBy returns correct value', () => {
     expect(categoryFacet.isSortedBy('alphanumeric')).toBe(false);
     expect(categoryFacet.isSortedBy('occurrences')).toBe(true);
+  });
+
+  it('exposes a #facetSearch property', () => {
+    jest.spyOn(CategoryFacetSearch, 'buildCategoryFacetSearch');
+    initCategoryFacet();
+
+    expect(categoryFacet.facetSearch).toBeTruthy();
+    expect(CategoryFacetSearch.buildCategoryFacetSearch).toHaveBeenCalledTimes(
+      1
+    );
   });
 });

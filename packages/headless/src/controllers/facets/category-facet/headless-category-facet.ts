@@ -27,15 +27,23 @@ import {
 import {defaultCategoryFacetOptions} from '../../../features/facets/category-facet-set/category-facet-set-slice';
 import {CategoryFacetSortCriterion} from '../../../features/facets/category-facet-set/interfaces/request';
 import {categoryFacetRequestSelector} from '../../../features/facets/category-facet-set/category-facet-set-selectors';
+import {
+  FacetSearchRequestOptions,
+  FacetSearchOptions,
+} from '../../../features/facets/facet-search-set/facet-search-request-options';
+import {buildCategoryFacetSearch} from '../facet-search/category/headless-category-facet-search';
 
 export type CategoryFacetProps = {
   options: CategoryFacetOptions;
 };
 
-export type CategoryFacetOptions = {facetId?: string} & Omit<
+export type CategoryFacetOptions = Omit<
   CategoryFacetRegistrationOptions,
   'facetId'
->;
+> & {
+  facetId?: string;
+  facetSearch?: Partial<FacetSearchRequestOptions>;
+};
 
 export type CategoryFacet = ReturnType<typeof buildCategoryFacet>;
 export type CategoryFacetState = CategoryFacet['state'];
@@ -49,6 +57,16 @@ export function buildCategoryFacet(engine: Engine, props: CategoryFacetProps) {
     facetId,
     ...defaultCategoryFacetOptions,
     ...props.options,
+  };
+
+  const createFacetSearch = () => {
+    const {facetSearch} = props.options;
+    const facetSearchOptions: FacetSearchOptions = {
+      facetId,
+      ...facetSearch,
+    };
+
+    return buildCategoryFacetSearch(engine, {options: facetSearchOptions});
   };
 
   const getAnalyticsActionForToggleSelect = (selection: CategoryFacetValue) => {
@@ -75,6 +93,7 @@ export function buildCategoryFacet(engine: Engine, props: CategoryFacetProps) {
 
   return {
     ...controller,
+    facetSearch: createFacetSearch(),
 
     /**
      * Selects (deselects) the passed value if unselected (selected).

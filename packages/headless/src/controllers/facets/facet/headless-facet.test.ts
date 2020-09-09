@@ -15,8 +15,11 @@ import {buildMockFacetValue} from '../../../test/mock-facet-value';
 import {executeSearch} from '../../../features/search/search-actions';
 import {FacetRequest} from '../../../features/facets/facet-set/interfaces/request';
 import {buildMockFacetRequest} from '../../../test/mock-facet-request';
+import {buildMockFacetSearch} from '../../../test/mock-facet-search';
+import * as FacetSearch from '../facet-search/specific/headless-facet-search';
 
 describe('facet', () => {
+  const facetId = '1';
   let options: ValidatedFacetOptions;
   let state: SearchPageState;
   let engine: MockEngine;
@@ -28,14 +31,13 @@ describe('facet', () => {
   }
 
   function setFacetRequest(config: Partial<FacetRequest> = {}) {
-    const facetId = options.facetId;
-    const request = buildMockFacetRequest({facetId, ...config});
-    state.facetSet[facetId] = request;
+    state.facetSet[facetId] = buildMockFacetRequest({facetId, ...config});
+    state.facetSearchSet[facetId] = buildMockFacetSearch();
   }
 
   beforeEach(() => {
     options = {
-      facetId: '',
+      facetId,
       field: '',
       sortCriteria: 'score',
       facetSearch: {},
@@ -53,7 +55,7 @@ describe('facet', () => {
 
   it('registers a facet with the passed options and the default values of unspecified options', () => {
     options = {
-      facetId: '1',
+      facetId,
       field: 'author',
       sortCriteria: 'automatic',
       facetSearch: {},
@@ -84,7 +86,7 @@ describe('facet', () => {
   it('when the search response has a facet, the facet #state.values contains the same values', () => {
     const values = [buildMockFacetValue()];
     const facetResponse = buildMockFacetResponse({
-      facetId: options.facetId,
+      facetId,
       values,
     });
 
@@ -97,7 +99,7 @@ describe('facet', () => {
     facet.toggleSelect(facetValue);
 
     expect(engine.actions).toContainEqual(
-      toggleSelectFacetValue({facetId: options.facetId, selection: facetValue})
+      toggleSelectFacetValue({facetId, selection: facetValue})
     );
   });
 
@@ -124,9 +126,7 @@ describe('facet', () => {
   describe('#deselectAll', () => {
     it('dispatches #deselectAllFacetValues with the facet id', () => {
       facet.deselectAll();
-      expect(engine.actions).toContainEqual(
-        deselectAllFacetValues(options.facetId)
-      );
+      expect(engine.actions).toContainEqual(deselectAllFacetValues(facetId));
     });
 
     it('dispatches a search', () => {
@@ -141,7 +141,7 @@ describe('facet', () => {
 
   describe('#state.hasActiveValues', () => {
     it('when #state.values has a value with a non-idle state, it returns true', () => {
-      const facetResponse = buildMockFacetResponse({facetId: options.facetId});
+      const facetResponse = buildMockFacetResponse({facetId});
       facetResponse.values = [buildMockFacetValue({state: 'selected'})];
       state.search.response.facets = [facetResponse];
 
@@ -149,7 +149,7 @@ describe('facet', () => {
     });
 
     it('when #state.values only has idle values, it returns false', () => {
-      const facetResponse = buildMockFacetResponse({facetId: options.facetId});
+      const facetResponse = buildMockFacetResponse({facetId});
       facetResponse.values = [buildMockFacetValue({state: 'idle'})];
       state.search.response.facets = [facetResponse];
 
@@ -162,7 +162,7 @@ describe('facet', () => {
     facet.sortBy(criterion);
 
     const action = updateFacetSortCriterion({
-      facetId: options.facetId,
+      facetId,
       criterion,
     });
 
@@ -204,7 +204,7 @@ describe('facet', () => {
 
       const expectedNumber = numberOfValuesInState + configuredNumberOfValues;
       const action = updateFacetNumberOfValues({
-        facetId: options.facetId,
+        facetId,
         numberOfValues: expectedNumber,
       });
 
@@ -223,7 +223,7 @@ describe('facet', () => {
       facet.showMoreValues();
 
       const action = updateFacetNumberOfValues({
-        facetId: options.facetId,
+        facetId,
         numberOfValues: 10,
       });
 
@@ -234,7 +234,7 @@ describe('facet', () => {
       facet.showMoreValues();
 
       const action = updateFacetIsFieldExpanded({
-        facetId: options.facetId,
+        facetId,
         isFieldExpanded: true,
       });
 
@@ -258,7 +258,7 @@ describe('facet', () => {
 
     it('when #moreValuesAvailable on the response is true, it returns true', () => {
       const facetResponse = buildMockFacetResponse({
-        facetId: options.facetId,
+        facetId,
         moreValuesAvailable: true,
       });
 
@@ -268,7 +268,7 @@ describe('facet', () => {
 
     it('when #moreValuesAvailable on the response is false, it returns false', () => {
       const facetResponse = buildMockFacetResponse({
-        facetId: options.facetId,
+        facetId,
         moreValuesAvailable: false,
       });
 
@@ -288,7 +288,7 @@ describe('facet', () => {
       facet.showLessValues();
 
       const action = updateFacetNumberOfValues({
-        facetId: options.facetId,
+        facetId,
         numberOfValues: originalNumberOfValues,
       });
 
@@ -307,7 +307,7 @@ describe('facet', () => {
       facet.showLessValues();
 
       const action = updateFacetNumberOfValues({
-        facetId: options.facetId,
+        facetId,
         numberOfValues: currentValues.length,
       });
 
@@ -318,7 +318,7 @@ describe('facet', () => {
       facet.showLessValues();
 
       const action = updateFacetIsFieldExpanded({
-        facetId: options.facetId,
+        facetId,
         isFieldExpanded: false,
       });
 
@@ -369,6 +369,10 @@ describe('facet', () => {
   });
 
   it('exposes a #facetSearch property', () => {
+    jest.spyOn(FacetSearch, 'buildFacetSearch');
+    initFacet();
+
     expect(facet.facetSearch).toBeTruthy();
+    expect(FacetSearch.buildFacetSearch).toHaveBeenCalledTimes(1);
   });
 });

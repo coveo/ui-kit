@@ -4,28 +4,31 @@ import {
   executeFacetSearch,
   selectFacetSearchResult,
 } from '../../../features/facets/facet-search-set/specific/specific-facet-search-actions';
-import {SpecificFacetSearchResult} from '../../../api/search/facet-search/specific-facet-search/specific-facet-search-response';
 import {executeSearch} from '../../../features/search/search-actions';
 import {logFacetSelect} from '../../../features/facets/facet-set/facet-set-analytics-actions';
-import {registerFacetSearch} from '../../../features/facets/facet-search-set/specific/specific-facet-search-actions';
+import {SpecificFacetSearchState} from '../../../features/facets/facet-search-set/specific/specific-facet-search-set-slice';
+import {CategoryFacetSearchState} from '../../../features/facets/facet-search-set/category/category-facet-search-set-slice';
+import {SpecificFacetSearchResult} from '../../../api/search/facet-search/specific-facet-search/specific-facet-search-response';
 import {FacetSearchOptions} from '../../../features/facets/facet-search-set/facet-search-request-options';
 
-export interface FacetSearchProps {
+type FacetSearchState = SpecificFacetSearchState | CategoryFacetSearchState;
+
+export interface GenericFacetSearchProps<T extends FacetSearchState> {
   options: FacetSearchOptions;
+  getFacetSearch: () => T;
 }
 
-export type FacetSearch = ReturnType<typeof buildFacetSearch>;
+export type GenericFacetSearch = ReturnType<typeof buildGenericFacetSearch>;
 
-export function buildFacetSearch(engine: Engine, props: FacetSearchProps) {
+export function buildGenericFacetSearch<T extends FacetSearchState>(
+  engine: Engine,
+  props: GenericFacetSearchProps<T>
+) {
   const dispatch = engine.dispatch;
-  const facetId = props.options.facetId;
-  const initialNumberOfValues = props.options.numberOfValues || 10;
+  const {options, getFacetSearch} = props;
 
-  dispatch(registerFacetSearch(props.options));
-
-  const getFacetSearch = () => {
-    return engine.state.facetSearchSet[facetId];
-  };
+  const facetId = options.facetId;
+  const initialNumberOfValues = options.numberOfValues || 10;
 
   return {
     /** Updates the facet search query.
@@ -41,9 +44,8 @@ export function buildFacetSearch(engine: Engine, props: FacetSearchProps) {
         })
       );
     },
-    /**
-     * Increases number of results returned by numberOfResults
-     */
+
+    /** Increases number of results returned by numberOfResults */
     showMoreResults() {
       const {numberOfValues} = getFacetSearch().options;
       dispatch(
@@ -54,10 +56,12 @@ export function buildFacetSearch(engine: Engine, props: FacetSearchProps) {
       );
       dispatch(executeFacetSearch(facetId));
     },
+
     /** Executes a facet search to update the values.*/
     search() {
       dispatch(executeFacetSearch(facetId));
     },
+
     /** Selects a search result.*/
     select(value: SpecificFacetSearchResult) {
       dispatch(selectFacetSearchResult({facetId, value}));
@@ -65,11 +69,12 @@ export function buildFacetSearch(engine: Engine, props: FacetSearchProps) {
         executeSearch(logFacetSelect({facetId, facetValue: value.rawValue}))
       );
     },
+
     get state() {
-      const facetSearch = getFacetSearch();
+      const {response, isLoading} = getFacetSearch();
       return {
-        ...facetSearch.response,
-        isLoading: facetSearch.isLoading,
+        ...response,
+        isLoading,
       };
     },
   };
