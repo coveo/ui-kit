@@ -1,0 +1,6 @@
+.tab {
+  cursor: pointer;
+}
+.tab:hover {
+  text-decoration: underline;
+}

@@ -12,7 +12,7 @@ import {
   PaginationState,
   getPaginationInitialState,
 } from '../pagination/pagination-slice';
-import {QueryState} from '../../state';
+import {ConstantQueryState, QueryState} from '../../state';
 import {SortState} from '../../controllers/sort/headless-sort';
 import {snapshot} from './history-actions';
 import {getPipelineInitialState} from '../pipeline/pipeline-slice';
@@ -29,6 +29,7 @@ import {
   getCategoryFacetSetInitialState,
   CategoryFacetSetState,
 } from '../facets/category-facet-set/category-facet-set-slice';
+import {getInitialConstantQueryState} from '../constant-query/constant-query-slice';
 
 export const getHistoryEmptyState = (): SearchParametersState => ({
   context: getContextInitialState(),
@@ -38,6 +39,7 @@ export const getHistoryEmptyState = (): SearchParametersState => ({
   categoryFacetSet: getCategoryFacetSetInitialState(),
   pagination: getPaginationInitialState(),
   query: getQueryInitialState(),
+  constantQuery: getInitialConstantQueryState(),
   sortCriteria: getSortCriteriaInitialState(),
   querySet: getQuerySetInitialState(),
   pipeline: getPipelineInitialState(),
@@ -59,6 +61,7 @@ const isEqual = (
 ) => {
   return (
     isContextEqual(current.context, next.context) &&
+    isConstantQueryEqual(current.constantQuery, next.constantQuery) &&
     isFacetsEqual(current.facetSet, next.facetSet) &&
     isDateFacetsEqual(current.dateFacetSet, next.dateFacetSet) &&
     isNumericFacetsEqual(current.numericFacetSet, next.numericFacetSet) &&
@@ -98,6 +101,11 @@ const isPaginationEqual = (current: PaginationState, next: PaginationState) =>
 
 const isQueryEqual = (current: QueryState, next: QueryState) =>
   current.q === next.q;
+
+const isConstantQueryEqual = (
+  current: ConstantQueryState,
+  next: ConstantQueryState
+) => JSON.stringify(current) === JSON.stringify(next);
 
 const isSortEqual = (current: SortState, next: SortState) =>
   current.sortCriteria === next.sortCriteria;

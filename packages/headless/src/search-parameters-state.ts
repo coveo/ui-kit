@@ -1,5 +1,5 @@
 import {FacetSetState} from './features/facets/facet-set/facet-set-slice';
-import {QueryState} from './state';
+import {ConstantQueryState, QueryState} from './state';
 import {PaginationState} from './features/pagination/pagination-slice';
 import {SortCriteriaState} from './features/sort-criteria/sort-criteria-slice';
 import {ContextState} from './features/context/context-slice';
@@ -29,6 +29,12 @@ export interface SearchParametersState {
    * The expressions that constitute the current query.
    */
   query: QueryState;
+
+  /**
+   * The current cq
+   */
+  constantQuery: ConstantQueryState;
+
   /**
    * The properties related to pagination.
    */

@@ -74,15 +74,24 @@ export const logInterfaceLoad = createAsyncThunk(
     const state = searchPageState(getState);
     await configureAnalytics(state).logInterfaceLoad();
     return makeSearchActionType();
-  }
+  },
+);
+
+export const logInterfaceChange = createAsyncThunk(
+  'analytics/interface/change',
+  async (_, {getState}) => {
+    const state = searchPageState(getState);
+    await configureAnalytics(state).logInterfaceChange({interfaceChangeTo: state.constantQuery.cq});
+    return makeSearchActionType();
+  },
 );
 
 export const partialDocumentInformation = (
   result: Result,
-  state: SearchPageState
+  state: SearchPageState,
 ): PartialDocumentInformation => {
   const resultIndex = state.search.response.results.findIndex(
-    ({uniqueId}) => result.uniqueId === uniqueId
+    ({uniqueId}) => result.uniqueId === uniqueId,
   );
   return {
     collectionName: result.raw['collection'] || 'default',

@@ -11,6 +11,7 @@ export function buildMockSearchRequest(
     firstResult: 0,
     numberOfResults: 10,
     q: '',
+    cq: '',
     sortCriteria: 'relevancy',
     fieldsToInclude: getFieldsInitialState().fieldsToInclude,
     pipeline: '',

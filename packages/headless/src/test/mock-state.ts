@@ -17,6 +17,7 @@ import {getPipelineInitialState} from '../features/pipeline/pipeline-slice';
 import {makeHistory} from '../app/undoable';
 import {getSearchHubInitialState} from '../features/search-hub/search-hub-slice';
 import {getCategoryFacetSetInitialState} from '../features/facets/category-facet-set/category-facet-set-slice';
+import {getInitialConstantQueryState} from '../features/constant-query/constant-query-slice';
 import {getFacetSearchSetInitialState} from '../features/facets/facet-search-set/specific/specific-facet-search-set-slice';
 import {getCategoryFacetSearchSetInitialState} from '../features/facets/facet-search-set/category/category-facet-search-set-slice';
 
@@ -25,6 +26,7 @@ export function createMockState(
 ): SearchPageState {
   return {
     configuration: getConfigurationInitialState(),
+    constantQuery: getInitialConstantQueryState(),
     facetSet: getFacetSetInitialState(),
     dateFacetSet: getDateFacetSetInitialState(),
     numericFacetSet: getNumericFacetSetInitialState(),

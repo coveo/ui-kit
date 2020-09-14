@@ -7,6 +7,7 @@ import {buildMockFacetRequest} from '../../test/mock-facet-request';
 import {buildMockNumericFacetRequest} from '../../test/mock-numeric-facet-request';
 import {buildMockDateFacetRequest} from '../../test/mock-date-facet-request';
 import {buildMockCategoryFacetRequest} from '../../test/mock-category-facet-request';
+import {buildMockConstantQueryState} from '../../test/mock-constant-query-state';
 
 describe('history slice', () => {
   let undoableReducer: Reducer<StateWithHistory<SearchParametersState>>;
@@ -68,6 +69,7 @@ describe('history slice', () => {
         totalCountFiltered: 789,
       },
       query: {q: 'foo'},
+      constantQuery: {cq: '', isInitialized: false},
       querySet: {foo: 'bar', hello: 'world'},
       sortCriteria: 'date descending',
       pipeline: 'my-pipeline',
@@ -174,6 +176,40 @@ describe('history slice', () => {
         getSnapshot({facetSet: {foo: buildMockFacetRequest()}}),
         getSnapshot({
           facetSet: {foo: buildMockFacetRequest({field: '@different'})},
+        })
+      );
+    });
+
+    it('should consider same snapshots for sane constant query values', () => {
+      expectHistoryNotToHaveCreatedDifferentSnapshots(
+        getSnapshot({
+          constantQuery: buildMockConstantQueryState({
+            isInitialized: true,
+            cq: 'hello',
+          }),
+        }),
+        getSnapshot({
+          constantQuery: buildMockConstantQueryState({
+            isInitialized: true,
+            cq: 'hello',
+          }),
+        })
+      );
+    });
+
+    it('should consider different snapshot for different constant query values', () => {
+      expectHistoryToHaveCreatedDifferentSnapshots(
+        getSnapshot({
+          constantQuery: buildMockConstantQueryState({
+            isInitialized: true,
+            cq: 'hello',
+          }),
+        }),
+        getSnapshot({
+          constantQuery: buildMockConstantQueryState({
+            isInitialized: true,
+            cq: 'world',
+          }),
         })
       );
     });
