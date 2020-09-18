@@ -21,10 +21,13 @@ describe('analytics middleware', () => {
   it('correctly pass through a search action with no analytics payload', () => {
     const e = buildMockEngine();
     const {dispatch, store} = e;
-    const mockSearch = buildMockSearch();
-    delete mockSearch.analyticsAction;
+    const {analyticsAction, ...mockSearchWithoutAnalytics} = buildMockSearch();
 
-    const action = executeSearch.fulfilled(mockSearch, '', null as any);
+    const action = executeSearch.fulfilled(
+      mockSearchWithoutAnalytics as any,
+      '',
+      null as any
+    );
     dispatch(action);
     expect(store.getActions()).toContain(action);
   });

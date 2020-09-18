@@ -30,6 +30,7 @@
  - [atomic-search-box](../atomic-search-box)
  - [atomic-search-interface](../atomic-search-interface)
  - [atomic-sort-dropdown](../atomic-sort-dropdown)
+ - [atomic-tab](../atomic-tab)
 
 ### Graph
 ```mermaid
@@ -48,6 +49,7 @@ graph TD;
   atomic-search-box --> atomic-component-error
   atomic-search-interface --> atomic-component-error
   atomic-sort-dropdown --> atomic-component-error
+  atomic-tab --> atomic-component-error
   style atomic-component-error fill:#f9f,stroke:#333,stroke-width:4px
 ```
 

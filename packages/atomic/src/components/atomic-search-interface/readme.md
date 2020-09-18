@@ -16,7 +16,7 @@
 
 ## Methods
 
-### `initialize(options: Pick<HeadlessConfigurationOptions, "accessToken" | "organizationId" | "renewAccessToken" | "platformUrl">) => Promise<void>`
+### `initialize(options: Pick<HeadlessConfigurationOptions, 'accessToken' | 'organizationId' | 'renewAccessToken' | 'platformUrl'>) => Promise<void>`
 
 
 

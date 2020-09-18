@@ -5,7 +5,7 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { Engine, HeadlessConfigurationOptions, Result, ResultTemplateCondition, } from "@coveo/headless";
+import { Engine, HeadlessConfigurationOptions, Result, ResultTemplateCondition } from "@coveo/headless";
 export namespace Components {
     interface AtomicCategoryFacet {
         "field": string;
@@ -63,7 +63,7 @@ export namespace Components {
         "numberOfSuggestions": number;
     }
     interface AtomicSearchInterface {
-        "initialize": (options: Pick<HeadlessConfigurationOptions, "accessToken" | "organizationId" | "renewAccessToken" | "platformUrl">) => Promise<void>;
+        "initialize": (options: Pick<HeadlessConfigurationOptions, 'accessToken' | 'organizationId' | 'renewAccessToken' | 'platformUrl'>) => Promise<void>;
         "pipeline": string;
         "sample": boolean;
         "searchHub": string;
