@@ -11,22 +11,26 @@ export default class SearchInterface extends LightningElement {
   /** @type {import("coveo").HeadlessEngine<any>} */
   engine;
 
-  /** @type {string} */
-  @api organizationId;
-  /** @type {string} */
-  @api accessToken;
   /** @type {boolean} */
   @api sample = false;
-  /** @type {() => Promise<string>} */
-  @api renewAccessToken;
+
+  /** @type {string} */
+  @api searchHub = 'default';
+
+  /** @type {string} */
+  @api pipeline = 'default';
 
   /** @type {boolean} */
-  initialized = false;
-
+  headlessLoaded = false;
+  
+  /** @type {any[]} */
   hangingComponents = [];
 
+  /** @type {import("coveo").HeadlessConfigurationOptions} */
+  config;
+
   connectedCallback() {
-    if (this.initialized) {
+    if (this.config) {
       return;
     }
 
@@ -34,50 +38,58 @@ export default class SearchInterface extends LightningElement {
      * @param {any} e
      */
     loadScript(this, HeadlessPath + '/browser/headless.js')
-      .then(() => this.initialize())
+      .then(() => this.loadHeadless())
       .catch((e) => {
         console.error(e);
       });
   }
 
-  initialize() {
-    this.initialized = true;
+  loadHeadless() {
+    this.headlessLoaded = true;
+
+    if (this.sample) {
+      this.config = CoveoHeadless.HeadlessEngine.getSampleConfiguration();
+    }
+
+    this.config && this.initEngine();
+  }
+
+  /**
+   * @param {import("coveo").HeadlessConfigurationOptions} options
+   */
+  @api initialize(options) {
+    if (this.config || this.sample) {
+      console.error('The Quantic search interface has already been initialized', this);
+      return;
+    }
+
+    this.config = {
+      ...options,
+      search: {
+        searchHub: this.searchHub,
+        pipeline: this.pipeline,
+      },
+    };
+
+    this.headlessLoaded && this.initEngine();
+  }
+
+  initEngine() {
     this.engine = new CoveoHeadless.HeadlessEngine({
-      configuration: this.configuration,
+      configuration: this.config,
       reducers: CoveoHeadless.searchPageReducers,
     });
-    this.initializeComponents();
+
+    this.hangingComponents.forEach((component) =>
+      component.initialize(this.engine)
+    );
+    this.hangingComponents = [];
 
     this.engine.dispatch(
       CoveoHeadless.SearchActions.executeSearch(
         CoveoHeadless.AnalyticsActions.logInterfaceLoad()
       )
     );
-  }
-
-  get configuration() {
-    if (this.sample) {
-      if (this.organizationId || this.accessToken) {
-        console.warn(
-          'You have a conflicting configuration on the Search Interface component.',
-          'When the sample prop is defined, the access-token and organization-id should not be defined and will be ignored.'
-        );
-      }
-      return CoveoHeadless.HeadlessEngine.getSampleConfiguration();
-    }
-
-    return {
-      accessToken: this.accessToken,
-      organizationId: this.organizationId,
-      renewAccessToken: this.renewAccessToken,
-    };
-  }
-
-  initializeComponents() {
-    this.hangingComponents.forEach((component) =>
-      component.initialize(this.engine)
-    );
-    this.hangingComponents = [];
   }
 
   handleInitialization(event) {
