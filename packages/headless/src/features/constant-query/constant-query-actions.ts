@@ -1,14 +1,14 @@
 import {createAction} from '@reduxjs/toolkit';
 /**
- * Sets cq to the value provided if it is currently empty.
- * @param {string} cq The value for the new constant query.
+ * Sets the cq value if it is currently empty.
+ * @param cq (string) The new constant query value (e.g., `@source=="Products"`).
  */
 export const registerConstantQuery = createAction<string>(
   'constantQuery/register'
 );
 
 /**
- * Sets cq to the value provided.
- * @param {string} cq The value for the new constant query.
+ * Sets the cq value.
+ * @param cq (string) The new constant query value (e.g., `@source=="Products"`).
  */
 export const updateConstantQuery = createAction<string>('constantQuery/update');

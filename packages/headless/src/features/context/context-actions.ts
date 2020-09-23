@@ -20,8 +20,8 @@ const nonEmptyPayload = (contextKey: string, contextValue: ContextValue) => {
 };
 
 /**
- * Set the context of the query.
- * @param Context The new context to use.
+ * Sets the query context.
+ * @param payload (Context) The new context (e.g., {age: "18-35"}).
  */
 export const setContext = createAction('context/set', (payload: Context) => {
   for (const [k, v] of Object.entries(payload)) {
@@ -31,8 +31,8 @@ export const setContext = createAction('context/set', (payload: Context) => {
 });
 
 /**
- * Add a new value context value.
- * @param object The key value pair to add to the context.
+ * Adds a new context value.
+ * @param payload ({contextKey: string; contextValue: ContextValue}) The key-value pair to add to the context (e.g., `{contextKey: "age", contextValue: "18-35"}`).
  */
 export const addContext = createAction(
   'context/add',
@@ -41,8 +41,8 @@ export const addContext = createAction(
 );
 
 /**
- * Add a new value context value.
- * @param object The key value pair to remove from the context.
+ * Removes a context key-value pair.
+ * @param key (string) The key to remove from the context (e.g., `"age"`).
  */
 export const removeContext = createAction('context/remove', (payload: string) =>
   validatePayloadValue(payload, nonEmptyString)
