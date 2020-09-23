@@ -9,13 +9,23 @@ import {
   makeSearchActionType,
 } from '../analytics/analytics-actions';
 
+/**
+ * Creates a snapshot of the current request parameters and adds it to the interface history.
+ * @param (SearchParametersState) The current state of the search parameters.
+ */
 export const snapshot = createAction<SearchParametersState>('history/snapshot');
 
+/**
+ * Moves backward in the interface history.
+ */
 export const back = createAsyncThunk('history/back', async (_, {dispatch}) => {
   await dispatch(ActionCreators.undo());
   await dispatch(change());
 });
 
+/**
+ * Moves forward in the interface history.
+ */
 export const forward = createAsyncThunk(
   'history/forward',
   async (_, {dispatch}) => {
@@ -24,6 +34,9 @@ export const forward = createAsyncThunk(
   }
 );
 
+/**
+ * Updates the interface state as per the current step in the interface history.
+ */
 export const change = createAsyncThunk(
   'history/change',
   async (_, {getState}) => {
@@ -32,6 +45,9 @@ export const change = createAsyncThunk(
   }
 );
 
+/**
+ * Logs an event which represents a move forward in the interface history.
+ */
 export const logNavigateForward = createAsyncThunk(
   'history/analytics/forward',
   async (_, {getState}) => {
@@ -46,6 +62,9 @@ export const logNavigateForward = createAsyncThunk(
   }
 );
 
+/**
+ * Logs an event which represents a move backward in the interface history.
+ */
 export const logNavigateBackward = createAsyncThunk(
   'history/analytics/backward',
   async (_, {getState}) => {

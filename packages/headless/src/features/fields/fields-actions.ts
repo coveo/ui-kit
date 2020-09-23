@@ -8,6 +8,10 @@ const nonEmptyArray = new ArrayValue({
   required: true,
 });
 
+/**
+ * Registers the fields to include in the query response.
+ * @param payload (string[]) The target fields (e.g., `["field1", "field2"]`).
+ */
 export const registerFieldsToInclude = createAction(
   'fields/registerFieldsToInclude',
   (payload: string[]) => validatePayloadValue<string[]>(payload, nonEmptyArray)

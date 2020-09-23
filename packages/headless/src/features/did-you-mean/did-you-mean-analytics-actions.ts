@@ -6,7 +6,7 @@ import {
 import {configureAnalytics} from '../../api/analytics/analytics';
 
 /**
- * Log a did you mean click
+ * Logs a did-you-mean click event, i.e., when a user clicks on a did-you-mean suggestion.
  */
 export const logDidYouMeanClick = createAsyncThunk(
   'analytics/didyoumean',
@@ -18,7 +18,7 @@ export const logDidYouMeanClick = createAsyncThunk(
 );
 
 /**
- * Log a did you mean click
+ * Logs a did-you-mean automatic event, i.e., when the interface automatically selects a did-you-mean suggestion.
  */
 export const logDidYouMeanAutomatic = createAsyncThunk(
   'analytics/didyoumean',
