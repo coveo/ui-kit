@@ -1,12 +1,7 @@
 import {createAsyncThunk, AsyncThunkAction} from '@reduxjs/toolkit';
 import {configureAnalytics} from '../../api/analytics/analytics';
-import {
-  SearchPageEvents,
-  PartialDocumentInformation,
-  DocumentIdentifier,
-} from 'coveo.analytics/dist/definitions/searchPage/searchPageEvents';
+import {SearchPageEvents} from 'coveo.analytics/dist/definitions/searchPage/searchPageEvents';
 import {SearchPageState} from '../../state';
-import {Result} from '../../api/search/search/result';
 
 export const searchPageState = (getState: () => unknown) =>
   getState() as SearchPageState;
@@ -43,13 +38,18 @@ export const makeClickActionType = () => ({
   analyticsType: AnalyticsType.Click as AnalyticsType.Click,
 });
 
+/**
+ * @param evt (SearchPageEvents | string) The identifier of the search action (e.g., `interfaceLoad`).
+ * @param meta (Record<string, any>) The event metadata.
+ */
 export interface GenericSearchEventPayload {
   evt: SearchPageEvents | string;
   meta?: Record<string, any>;
 }
 
 /**
- * Log generic search event
+ * Logs a generic search event.
+ * @param p (GenericSearchEventPayload) The search event payload.
  */
 export const logGenericSearchEvent = createAsyncThunk(
   'analytics/generic/search',
@@ -66,7 +66,7 @@ export const logGenericSearchEvent = createAsyncThunk(
 );
 
 /**
- * Log interface load
+ * Logs an interface load event.
  */
 export const logInterfaceLoad = createAsyncThunk(
   'analytics/interface/load',
@@ -74,42 +74,19 @@ export const logInterfaceLoad = createAsyncThunk(
     const state = searchPageState(getState);
     await configureAnalytics(state).logInterfaceLoad();
     return makeSearchActionType();
-  },
+  }
 );
 
+/**
+ * Logs an interface change event.
+ */
 export const logInterfaceChange = createAsyncThunk(
   'analytics/interface/change',
   async (_, {getState}) => {
     const state = searchPageState(getState);
-    await configureAnalytics(state).logInterfaceChange({interfaceChangeTo: state.constantQuery.cq});
+    await configureAnalytics(state).logInterfaceChange({
+      interfaceChangeTo: state.constantQuery.cq,
+    });
     return makeSearchActionType();
-  },
+  }
 );
-
-export const partialDocumentInformation = (
-  result: Result,
-  state: SearchPageState,
-): PartialDocumentInformation => {
-  const resultIndex = state.search.response.results.findIndex(
-    ({uniqueId}) => result.uniqueId === uniqueId,
-  );
-  return {
-    collectionName: result.raw['collection'] || 'default',
-    documentAuthor: result.raw['author'] as string,
-    documentPosition: resultIndex + 1,
-    documentTitle: result.title,
-    documentUri: result.uri,
-    documentUriHash: result.raw['urihash'],
-    documentUrl: result.clickUri,
-    rankingModifier: result.rankingModifier || '',
-    sourceName: result.raw['source'],
-    queryPipeline: state.pipeline,
-  };
-};
-
-export const documentIdentifier = (result: Result): DocumentIdentifier => {
-  return {
-    contentIDKey: '@permanentid',
-    contentIDValue: result.raw.permanentid,
-  };
-};

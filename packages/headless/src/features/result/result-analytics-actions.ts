@@ -2,9 +2,11 @@ import {createAsyncThunk} from '@reduxjs/toolkit';
 import {
   searchPageState,
   makeClickActionType,
+} from '../analytics/analytics-actions';
+import {
   partialDocumentInformation,
   documentIdentifier,
-} from '../analytics/analytics-actions';
+} from '../analytics/analytics-utils';
 import {configureAnalytics} from '../../api/analytics/analytics';
 import {Result} from '../../api/search/search/result';
 
