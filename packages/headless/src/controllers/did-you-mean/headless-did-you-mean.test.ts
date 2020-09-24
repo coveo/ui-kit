@@ -1,7 +1,7 @@
 import {buildDidYouMean} from './headless-did-you-mean';
 import {buildMockEngine} from '../../test/mock-engine';
 import {
-  didYouMeanCorrection,
+  applyDidYouMeanCorrection,
   enableDidYouMean,
 } from '../../features/did-you-mean/did-you-mean-actions';
 
@@ -18,6 +18,6 @@ describe('did you mean', () => {
     e.state.didYouMean.queryCorrection.correctedQuery = 'bar';
 
     buildDidYouMean(e).applyCorrection();
-    expect(e.actions).toContainEqual(didYouMeanCorrection('bar'));
+    expect(e.actions).toContainEqual(applyDidYouMeanCorrection('bar'));
   });
 });

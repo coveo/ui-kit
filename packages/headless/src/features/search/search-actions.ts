@@ -9,7 +9,7 @@ import {SearchAction} from '../analytics/analytics-actions';
 import {SearchResponseSuccess} from '../../api/search/search/search-response';
 import {snapshot} from '../history/history-actions';
 import {logDidYouMeanAutomatic} from '../did-you-mean/did-you-mean-analytics-actions';
-import {didYouMeanCorrection} from '../did-you-mean/did-you-mean-actions';
+import {applyDidYouMeanCorrection} from '../did-you-mean/did-you-mean-actions';
 import {updateQuery} from '../query/query-actions';
 
 export interface ExecuteSearchThunkReturn {
@@ -94,7 +94,7 @@ const automaticallyRetryQueryWithCorrection = async (
   dispatch(updateQuery({q: correction}));
   const fetched = await fetchFromAPI(client, getState());
   dispatch(logDidYouMeanAutomatic());
-  dispatch(didYouMeanCorrection(correction));
+  dispatch(applyDidYouMeanCorrection(correction));
   return fetched;
 };
 

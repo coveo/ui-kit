@@ -1,7 +1,7 @@
 import {Engine} from '../../app/headless-engine';
 import {buildController} from '../controller/headless-controller';
 import {
-  didYouMeanCorrection,
+  applyDidYouMeanCorrection,
   enableDidYouMean,
 } from '../../features/did-you-mean/did-you-mean-actions';
 import {logDidYouMeanClick} from '../../features/did-you-mean/did-you-mean-analytics-actions';
@@ -42,7 +42,9 @@ export const buildDidYouMean = (engine: Engine) => {
      * Apply query correction using the query correction, if any, currently present in the state.
      */
     applyCorrection() {
-      dispatch(didYouMeanCorrection(this.state.queryCorrection.correctedQuery));
+      dispatch(
+        applyDidYouMeanCorrection(this.state.queryCorrection.correctedQuery)
+      );
       dispatch(executeSearch(logDidYouMeanClick()));
     },
   };

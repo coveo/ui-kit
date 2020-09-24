@@ -4,7 +4,7 @@ import {selectQuerySuggestion} from '../query-suggest/query-suggest-actions';
 import {updateQuery} from './query-actions';
 import {getHistoryEmptyState} from '../history/history-slice';
 import {change} from '../history/history-actions';
-import {didYouMeanCorrection} from '../did-you-mean/did-you-mean-actions';
+import {applyDidYouMeanCorrection} from '../did-you-mean/did-you-mean-actions';
 
 describe('query slice', () => {
   it('should have initial state', () => {
@@ -71,7 +71,8 @@ describe('query slice', () => {
       q: 'some query',
     };
     expect(
-      queryReducer(existingState, didYouMeanCorrection('corrected query')).q
+      queryReducer(existingState, applyDidYouMeanCorrection('corrected query'))
+        .q
     ).toEqual('corrected query');
   });
 

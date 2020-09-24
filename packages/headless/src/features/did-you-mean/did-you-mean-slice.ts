@@ -2,7 +2,7 @@ import {createReducer} from '@reduxjs/toolkit';
 import {
   enableDidYouMean,
   disableDidYouMean,
-  didYouMeanCorrection,
+  applyDidYouMeanCorrection,
 } from './did-you-mean-actions';
 import {executeSearch} from '../search/search-actions';
 import {QueryCorrection} from '../../api/search/search/query-corrections';
@@ -48,7 +48,7 @@ export const didYouMeanReducer = createReducer(
           action.payload.response.queryCorrections[0] || emptyCorrection();
         state.wasAutomaticallyCorrected = action.payload.automaticallyCorrected;
       })
-      .addCase(didYouMeanCorrection, (state, action) => {
+      .addCase(applyDidYouMeanCorrection, (state, action) => {
         state.wasCorrectedTo = action.payload;
       });
   }
