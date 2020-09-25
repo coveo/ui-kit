@@ -95,6 +95,9 @@ export const categoryFacetSetReducer = createReducer(
       .addCase(updateCategoryFacetNumberOfValues, (state, action) => {
         const {facetId} = action.payload;
         const request = state[facetId];
+        if (!request) {
+          return;
+        }
         if (!request.currentValues.length) {
           return handleFacetUpdateNumberOfValues<CategoryFacetRequest>(
             state,
