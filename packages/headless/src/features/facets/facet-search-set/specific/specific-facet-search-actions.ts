@@ -12,24 +12,24 @@ type selectFacetSearchResultPayload = {
 };
 
 /**
- * Register a facet search in the facet search set.
- * @param {FacetSearchOptions} FacetSearchOptions The options to register the facet search with.
+ * Registers a facet search box with the specified options.
+ * @param (FacetSearchOptions) An object specifying the target facet and facet search box options.
  */
 export const registerFacetSearch = createAction<FacetSearchOptions>(
   'facetSearch/register'
 );
 
 /**
- * Updates the options of a facet search.
- * @param {FacetSearchOptions} FacetSearchOptions The options to register the facet search with.
+ * Updates the options of a facet search box.
+ * @param (FacetSearchOptions) An object specifying the target facet and facet search box options.
  */
 export const updateFacetSearch = createAction<FacetSearchOptions>(
   'facetSearch/update'
 );
 
 /**
- * Executes a facet search.
- * @param {string} facetId The facet id on which to execute the search.
+ * Executes a facet search (i.e., a search for facet values in a facet search box).
+ * @param facetId (string) The unique identifier of the facet for which to perform a facet search (e.g., `"1"`).
  */
 export const executeFacetSearch = createAsyncThunk<
   {facetId: string; response: FacetSearchResponse},
@@ -51,8 +51,8 @@ export const executeFacetSearch = createAsyncThunk<
 );
 
 /**
- * Adds a facet search value to the facet.
- * @param {selectFacetSearchResultPayload}.
+ * Selects a facet search result.
+ * @param (selectFacetSearchResultPayload) An object that specifies the target facet and facet search result.
  */
 export const selectFacetSearchResult = createAction<
   selectFacetSearchResultPayload

@@ -19,7 +19,8 @@ export type FacetSelectionChangeMetadata = {
 };
 
 /**
- * Log a facet show more.
+ * Logs a facet show more event.
+ * @param facetId (string) The unique identifier of the facet (e.g., `"1"`).
  */
 export const logFacetShowMore = createAsyncThunk(
   'analytics/facet/showMore',
@@ -33,7 +34,8 @@ export const logFacetShowMore = createAsyncThunk(
 );
 
 /**
- * Log a facet show less.
+ * Logs a facet show less event.
+ * @param facetId (string) The unique identifier of the facet (e.g., `"1"`).
  */
 export const logFacetShowLess = createAsyncThunk(
   'analytics/facet/showLess',
@@ -47,7 +49,8 @@ export const logFacetShowLess = createAsyncThunk(
 );
 
 /**
- * Log a facet search.
+ * Logs a facet search event.
+ * @param facetId (string) The unique identifier of the facet (e.g., `"1"`).
  */
 export const logFacetSearch = createAsyncThunk(
   'analytics/facet/search',
@@ -61,7 +64,8 @@ export const logFacetSearch = createAsyncThunk(
 );
 
 /**
- * Log a facet sort change.
+ * Logs a facet sort event.
+ * @param payload (FacetUpdateSortMetadata) Object specifying the facet and sort criterion.
  */
 export const logFacetUpdateSort = createAsyncThunk(
   'analytics/facet/sortChange',
@@ -78,8 +82,8 @@ export const logFacetUpdateSort = createAsyncThunk(
 );
 
 /**
- * Log a facet clear all event.
- * @param facetId The unique identifier for the facet.
+ * Logs a facet clear all event.
+ * @param facetId (string) The unique identifier of the facet (e.g., `"1"`).
  */
 export const logFacetClearAll = createAsyncThunk(
   'analytics/facet/reset',
@@ -93,7 +97,8 @@ export const logFacetClearAll = createAsyncThunk(
 );
 
 /**
- * Log the selected facet value.
+ * Logs a facet value selection event.
+ * @param payload (FacetSelectionChangeMetadata) Object specifying the target facet and value.
  */
 export const logFacetSelect = createAsyncThunk(
   'analytics/facet/select',
@@ -107,7 +112,8 @@ export const logFacetSelect = createAsyncThunk(
 );
 
 /**
- * Log the deselected facet value.
+ * Logs a facet deselect event.
+ * @param payload (FacetSelectionChangeMetadata) Object specifying the target facet and value.
  */
 export const logFacetDeselect = createAsyncThunk(
   'analytics/facet/deselect',
