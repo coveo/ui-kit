@@ -1,3 +1,4 @@
+import defaultTemplate from './result.html';
 // @ts-check
 import { LightningElement, api } from "lwc";
 
@@ -5,18 +6,21 @@ export default class Result extends LightningElement {
   /** @type {import("coveo").Result} */
   @api result;
 
+  /** @type {import("coveo").ResultTemplatesManager} */
+  @api resultTemplatesManager;
+
   get icon() {
-    if (this.objectType()) {
-      return this.objectType();
+    if (this.objectTypeIcon) {
+      return this.objectTypeIcon;
     }
-    if (this.fileType()) {
-      return this.fileType();
+    if (this.fileTypeIcon) {
+      return this.fileTypeIcon;
     }
 
     return "doctype:unknown";
   }
 
-  objectType() {
+  get objectTypeIcon() {
     const objType = this.result.raw.objecttype;
     if (!objType) {
       return undefined;
@@ -33,7 +37,7 @@ export default class Result extends LightningElement {
     }
   }
 
-  fileType() {
+  get fileTypeIcon() {
     const fileType = this.result.raw.filetype;
     if (!fileType) {
       return undefined;
@@ -50,5 +54,14 @@ export default class Result extends LightningElement {
       return "doctype:excel";
     }
     return `dcotype:${lower}`;
+  }
+
+  render() {
+    const template = this.resultTemplatesManager.selectTemplate(this.result);
+    if (template) {
+      return template;
+    }
+
+    return defaultTemplate;
   }
 }

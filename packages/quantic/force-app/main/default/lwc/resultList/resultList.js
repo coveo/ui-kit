@@ -10,6 +10,9 @@ export default class ResultList extends LightningElement {
   /** @type {import("coveo").Unsubscribe} */
   unsubscribe;
 
+  /** @type {import("coveo").ResultTemplatesManager} */
+  resultTemplatesManager;
+
   connectedCallback() {
     initializeComponent(this);
   }
@@ -20,7 +23,13 @@ export default class ResultList extends LightningElement {
   @api
   initialize(engine) {
     this.resultList = CoveoHeadless.buildResultList(engine);
+    this.resultTemplatesManager = new CoveoHeadless.ResultTemplatesManager(engine);
+    this.registerTemplates();
     this.unsubscribe = this.resultList.subscribe(() => this.updateState());
+  }
+
+  registerTemplates() {
+    this.dispatchEvent(new CustomEvent('registerresulttemplates', {bubbles: true, detail: this.resultTemplatesManager}));
   }
 
   disconnectedCallback() {
