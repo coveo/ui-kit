@@ -39,6 +39,14 @@ describe('Tab', () => {
       const action = registerConstantQuery(expression);
       expect(engine.actions).toContainEqual(action);
     });
+
+    it('does not throw if initialState is undefined', () => {
+      props = {
+        expression,
+      };
+
+      expect(() => buildTab(engine, props)).not.toThrow();
+    });
   });
 
   it('#select calls #updateConstantQuery', () => {
