@@ -4,7 +4,7 @@ import {
 } from '../base/base-facet-search-response';
 
 export interface CategoryFacetSearchResult extends BaseFacetSearchResult {
-  paths: string[];
+  path: string[];
 }
 
 export type CategoryFacetSearchResponse = BaseFacetSearchResponse<

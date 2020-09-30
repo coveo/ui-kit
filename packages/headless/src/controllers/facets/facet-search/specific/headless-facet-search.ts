@@ -1,7 +1,11 @@
 import {Engine} from '../../../../app/headless-engine';
-import {registerFacetSearch} from '../../../../features/facets/facet-search-set/specific/specific-facet-search-actions';
+import {
+  registerFacetSearch,
+  selectFacetSearchResult,
+} from '../../../../features/facets/facet-search-set/specific/specific-facet-search-actions';
 import {buildGenericFacetSearch} from '../facet-search';
 import {FacetSearchOptions} from '../../../../features/facets/facet-search-set/facet-search-request-options';
+import {SpecificFacetSearchResult} from '../../../../api/search/facet-search/specific-facet-search/specific-facet-search-response';
 
 export interface FacetSearchProps {
   options: FacetSearchOptions;
@@ -24,6 +28,15 @@ export function buildFacetSearch(engine: Engine, props: FacetSearchProps) {
 
   return {
     ...genericFacetSearch,
+
+    /**
+     * Selects the provided value if unselected
+     * @param result A single specificFacetSearchResult object
+     */
+    select(value: SpecificFacetSearchResult) {
+      dispatch(selectFacetSearchResult({facetId, value}));
+      genericFacetSearch.select(value);
+    },
 
     get state() {
       return genericFacetSearch.state;

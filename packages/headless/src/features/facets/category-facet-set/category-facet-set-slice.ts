@@ -20,6 +20,7 @@ import {
   handleFacetDeselectAll,
   handleFacetUpdateNumberOfValues,
 } from '../generic/facet-reducer-helpers';
+import {selectCategoryFacetSearchResult} from '../facet-search-set/category/category-facet-search-actions';
 
 export type CategoryFacetSetState = Record<string, CategoryFacetRequest>;
 
@@ -105,6 +106,31 @@ export const categoryFacetSetReducer = createReducer(
           );
         }
         handleCategoryFacetNestedNumberOfValuesUpdate(state, action.payload);
+      })
+      .addCase(selectCategoryFacetSearchResult, (state, action) => {
+        const {facetId, value} = action.payload;
+        const request = state[facetId];
+
+        if (!request) {
+          return;
+        }
+
+        handleFacetDeselectAll(state, facetId);
+
+        const path = [...value.path, value.rawValue];
+        let curr = buildCategoryFacetValueRequest(path[0]);
+        request.currentValues.push(curr);
+
+        for (const segment of path.splice(1)) {
+          const next = buildCategoryFacetValueRequest(segment);
+          curr.children.push(next);
+          curr = next;
+        }
+
+        curr.state = 'selected';
+        curr.retrieveChildren = true;
+
+        request.numberOfValues = 1;
       });
   }
 );
@@ -128,6 +154,18 @@ function buildCategoryFacetRequest(
     preventAutoSelect: false,
     type: 'hierarchical',
     ...config,
+  };
+}
+
+function buildCategoryFacetValueRequest(
+  value: string
+): CategoryFacetValueRequest {
+  return {
+    value,
+    retrieveCount: 5,
+    children: [],
+    state: 'idle',
+    retrieveChildren: false,
   };
 }
 

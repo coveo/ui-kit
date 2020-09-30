@@ -2,7 +2,6 @@ import {buildMockEngine, MockEngine} from '../../../test/mock-engine';
 import {
   updateFacetSearch,
   executeFacetSearch,
-  selectFacetSearchResult,
 } from '../../../features/facets/facet-search-set/specific/specific-facet-search-actions';
 import {buildMockFacetSearchResponse} from '../../../test/mock-facet-search-response';
 import {buildMockFacetSearch} from '../../../test/mock-facet-search';
@@ -86,14 +85,6 @@ describe('FacetSearch', () => {
     );
 
     expect(action).toBeTruthy();
-  });
-
-  it('#select dispatches #selectFacetSearchResult action', () => {
-    const value = buildMockFacetSearchResult();
-    controller.select(value);
-
-    const action = selectFacetSearchResult({facetId, value});
-    expect(engine.actions).toContainEqual(action);
   });
 
   it('#select dispatches #executeSearch', () => {

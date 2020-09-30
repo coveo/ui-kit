@@ -153,6 +153,7 @@ export function buildCategoryFacet(engine: Engine, props: CategoryFacetProps) {
       dispatch(updateCategoryFacetNumberOfValues({facetId, numberOfValues}));
       dispatch(executeSearch(logFacetShowLess(facetId)));
     },
+
     /**  @returns The state of the `CategoryFacet` controller.*/
     get state() {
       const request = getRequest();

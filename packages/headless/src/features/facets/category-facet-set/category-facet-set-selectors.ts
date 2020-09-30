@@ -2,7 +2,7 @@ import {SearchPageState} from '../../../state';
 
 export const categoryFacetRequestSelector = (
   state: SearchPageState,
-  id: string,
+  id: string
 ) => {
   return state.categoryFacetSet[id];
 };

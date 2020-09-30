@@ -86,7 +86,7 @@ export class AtomicCategoryFacet {
   private get facetSearchResults() {
     const facetSearch = this.categoryFacet.facetSearch;
     return facetSearch.state.values.map((searchResult) => (
-      <div>
+      <div onClick={() => this.categoryFacet.facetSearch.select(searchResult)}>
         {searchResult.displayValue} {searchResult.count}
       </div>
     ));
