@@ -11,7 +11,6 @@ import {
   fetchQuerySuggestions,
   selectQuerySuggestion,
 } from '../../features/query-suggest/query-suggest-actions';
-import {checkForRedirection} from '../../features/redirection/redirection-actions';
 import {createMockState} from '../../test/mock-state';
 import {executeSearch} from '../../features/search/search-actions';
 import {updateQuery} from '../../features/query/query-actions';
@@ -35,7 +34,6 @@ describe('headless searchBox', () => {
   beforeEach(() => {
     const options: SearchBoxOptions = {
       id,
-      isStandalone: true,
       numberOfSuggestions: 10,
     };
 
@@ -47,7 +45,6 @@ describe('headless searchBox', () => {
 
   function initState() {
     state = createMockState();
-    state.redirection.redirectTo = 'coveo.com';
     state.querySet[id] = 'query';
     state.querySuggest[id] = buildMockQuerySuggest({id, q: 'some value'});
   }
@@ -64,12 +61,6 @@ describe('headless searchBox', () => {
       expect(() => initController()).toThrow();
     });
 
-    it(`when passing an invalid isStandalone as option
-    creating the controller should throw`, () => {
-      props.options.isStandalone = ('hey!' as unknown) as boolean;
-      expect(() => initController()).toThrow();
-    });
-
     it(`when passing an invalid numberOfSuggestions as option
     creating the controller should throw`, () => {
       props.options.numberOfSuggestions = -2;
@@ -83,7 +74,6 @@ describe('headless searchBox', () => {
       suggestions: state.querySuggest[id]!.completions.map((completion) => ({
         value: completion.expression,
       })),
-      redirectTo: state.redirection.redirectTo,
       isLoading: false,
     });
   });
@@ -179,20 +169,7 @@ describe('headless searchBox', () => {
       expect(engine.actions).toContainEqual(updatePage(1));
     });
 
-    it(`when the isStandalone option is true
-    should dispatch a checkForRedirection action`, () => {
-      searchBox.submit();
-
-      const action = engine.actions.find(
-        (a) => a.type === checkForRedirection.pending.type
-      );
-      expect(action).toBeTruthy();
-    });
-
-    it(`when the isStandalone option is false
-    it dispatches an executeSearch action`, () => {
-      props.options.isStandalone = false;
-      initController();
+    it('it dispatches an executeSearch action', () => {
       searchBox.submit();
 
       const action = engine.actions.find(

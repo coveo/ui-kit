@@ -26,7 +26,7 @@ describe('execution plan', () => {
     expect(plan.largeExpression).toBe(planResponse.parsedInput.largeExpression);
   });
 
-  it('should extract the first redirect trigger for the redirectionURL', () => {
+  it('should extract the first redirect trigger for the redirectionUrl', () => {
     const redirectTriggers: TriggerRedirect[] = [
       {
         type: 'redirect',
@@ -39,7 +39,7 @@ describe('execution plan', () => {
     ];
     planResponse.preprocessingOutput.triggers = redirectTriggers;
 
-    expect(new ExecutionPlan(planResponse).redirectionURL).toBe(
+    expect(new ExecutionPlan(planResponse).redirectionUrl).toBe(
       'thisisaurl.com'
     );
   });

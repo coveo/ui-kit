@@ -26,7 +26,7 @@ export class ExecutionPlan {
    *
    * Returns `null` otherwise.
    */
-  public get redirectionURL() {
+  public get redirectionUrl() {
     const redirects = this.response.preprocessingOutput.triggers.filter(
       isTriggerRedirect
     );

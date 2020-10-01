@@ -1,11 +1,4 @@
-import {
-  Schema,
-  SchemaValues,
-  StringValue,
-  NumberValue,
-  BooleanValue,
-} from '@coveo/bueno';
-import {checkForRedirection} from '../../features/redirection/redirection-actions';
+import {Schema, SchemaValues, StringValue, NumberValue} from '@coveo/bueno';
 import {
   fetchQuerySuggestions,
   clearQuerySuggest,
@@ -23,7 +16,6 @@ import {
 import {executeSearch} from '../../features/search/search-actions';
 import {buildController} from '../controller/headless-controller';
 import {updatePage} from '../../features/pagination/pagination-actions';
-import {logTriggerRedirect} from '../../features/redirection/redirection-analytics-actions';
 import {logSearchboxSubmit} from '../../features/query/query-analytics-actions';
 
 export interface SearchBoxProps {
@@ -47,14 +39,6 @@ const optionsSchema = new Schema({
    * @default 5
    */
   numberOfSuggestions: new NumberValue({default: 5, min: 0}),
-  /**
-   * Whether the search box is standalone.
-   *
-   * Submitting a query from a standalone search box will redirect the user to another page.
-   *
-   * @default false
-   */
-  isStandalone: new BooleanValue({default: false}),
 });
 
 export type SearchBoxOptions = SchemaValues<typeof optionsSchema>;
@@ -134,20 +118,11 @@ export const buildSearchBox = (
     },
 
     /**
-     * If the `standalone` option is `true`, gets the redirection URL.
-     * If the `standalone` option is `false`, triggers a search query.
+     * Triggers a search query.
      */
     submit() {
       dispatch(updateQuery({q: this.state.value}));
       dispatch(updatePage(1));
-
-      if (options.isStandalone) {
-        dispatch(checkForRedirection()).then(() =>
-          dispatch(logTriggerRedirect())
-        );
-        return;
-      }
-
       dispatch(executeSearch(logSearchboxSubmit()));
     },
 
@@ -162,7 +137,6 @@ export const buildSearchBox = (
         suggestions: querySuggestState.completions.map((completion) => ({
           value: completion.expression,
         })),
-        redirectTo: state.redirection.redirectTo,
         isLoading: state.search.isLoading,
       };
     },

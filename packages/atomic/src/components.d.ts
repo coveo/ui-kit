@@ -59,8 +59,8 @@ export namespace Components {
     interface AtomicResultsPerPage {
     }
     interface AtomicSearchBox {
-        "isStandalone": boolean;
         "numberOfSuggestions": number;
+        "redirectionUrl"?: string;
     }
     interface AtomicSearchInterface {
       'initialize': (options: Pick<HeadlessConfigurationOptions, 'accessToken' | 'organizationId' | 'renewAccessToken' | 'platformUrl'>) => Promise<void>;
@@ -300,8 +300,8 @@ declare namespace LocalJSX {
     interface AtomicResultsPerPage {
     }
     interface AtomicSearchBox {
-        "isStandalone"?: boolean;
         "numberOfSuggestions"?: number;
+        "redirectionUrl"?: string;
     }
     interface AtomicSearchInterface {
         "pipeline"?: string;
