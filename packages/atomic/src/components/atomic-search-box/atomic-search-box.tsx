@@ -31,12 +31,6 @@ export class AtomicSearchBox implements ComponentInterface {
     this.unsubscribe = this.searchBox.subscribe(() => this.updateState());
   }
 
-  public componentDidUpdate() {
-    if (this.searchBoxState.redirectTo) {
-      window.location.assign(this.searchBoxState.redirectTo);
-    }
-  }
-
   public disconnectedCallback() {
     this.unsubscribe();
   }
