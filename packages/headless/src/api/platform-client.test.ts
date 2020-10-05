@@ -1,4 +1,5 @@
 import {platformUrl, PlatformClient} from './platform-client';
+import * as BackOff from 'exponential-backoff';
 
 jest.mock('cross-fetch');
 import fetch from 'cross-fetch';
@@ -101,6 +102,34 @@ describe('PlatformClient call', () => {
       method: 'POST',
     });
 
+    done();
+  });
+
+  it('when status is 429 should try exponential backOff', async (done) => {
+    mockFetch
+      .mockReturnValueOnce(
+        Promise.resolve(new Response(JSON.stringify({}), {status: 429}))
+      )
+      .mockReturnValueOnce(
+        Promise.resolve(new Response(JSON.stringify({}), {status: 429}))
+      )
+      .mockReturnValueOnce(
+        Promise.resolve(new Response(JSON.stringify({}), {status: 200}))
+      );
+
+    await platformCall();
+
+    expect(mockFetch).toHaveBeenCalledTimes(3);
+    done();
+  });
+
+  it('should not throw and return a response when backOff returns a rejected promise', async (done) => {
+    const spy = jest.spyOn(BackOff, 'backOff');
+    const mockResponse = new Response(JSON.stringify({}), {status: 429});
+    spy.mockRejectedValue(mockResponse);
+    const response = await platformCall();
+    expect(spy).not.toThrow();
+    expect(response.response).toBe(mockResponse);
     done();
   });
 });

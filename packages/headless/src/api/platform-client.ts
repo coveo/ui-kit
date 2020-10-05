@@ -1,7 +1,11 @@
 import fetch from 'cross-fetch';
 export type HttpMethods = 'POST' | 'GET' | 'DELETE' | 'PUT';
 export type HTTPContentTypes = 'application/json' | 'text/html';
+import {backOff} from 'exponential-backoff';
 
+function isThrottled(status: number): boolean {
+  return status === 429;
+}
 export interface PlatformClientCallOptions<RequestParams> {
   url: string;
   method: HttpMethods;
@@ -20,27 +24,44 @@ export class PlatformClient {
   static async call<RequestParams, ResponseType>(
     options: PlatformClientCallOptions<RequestParams>
   ): Promise<PlatformResponse<ResponseType>> {
-    const response = await fetch(options.url, {
-      method: options.method,
-      headers: {
-        'Content-Type': options.contentType,
-        Authorization: `Bearer ${options.accessToken}`,
-      },
-      body: JSON.stringify(options.requestParams),
-    });
-
-    if (response.status === 419) {
-      const accessToken = await options.renewAccessToken();
-
-      if (accessToken !== '') {
-        return PlatformClient.call({...options, accessToken});
+    const request = async () => {
+      const response = await fetch(options.url, {
+        method: options.method,
+        headers: {
+          'Content-Type': options.contentType,
+          Authorization: `Bearer ${options.accessToken}`,
+        },
+        body: JSON.stringify(options.requestParams),
+      });
+      if (isThrottled(response.status)) {
+        throw response;
       }
-    }
-
-    return {
-      response,
-      body: (await response.json()) as ResponseType,
+      return response;
     };
+
+    try {
+      const response = await backOff(request, {
+        retry: (e: Response) => {
+          return e && isThrottled(e.status);
+        },
+      });
+      if (response.status === 419) {
+        const accessToken = await options.renewAccessToken();
+
+        if (accessToken !== '') {
+          return PlatformClient.call({...options, accessToken});
+        }
+      }
+      return {
+        response,
+        body: (await response.json()) as ResponseType,
+      };
+    } catch (error) {
+      return {
+        response: error,
+        body: (await error.json()) as ResponseType,
+      };
+    }
   }
 }
 

@@ -24,6 +24,7 @@
     "@types/redux-mock-store": "^1.0.2",
     "coveo.analytics": "^2.6.0",
     "cross-fetch": "^3.0.4",
+    "exponential-backoff": "^3.1.0",
     "redux": "^4.0.5",
     "redux-mock-store": "^1.5.4",
     "redux-thunk": "^2.3.0",
