@@ -7,6 +7,7 @@ export default class ResultList extends LightningElement {
 
   /** @type {import("coveo").ResultList} */
   resultList;
+
   /** @type {import("coveo").Unsubscribe} */
   unsubscribe;
 

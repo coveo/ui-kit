@@ -1,6 +1,7 @@
 // @ts-check
 import {LightningElement, api} from 'lwc';
 import HeadlessPath from '@salesforce/resourceUrl/coveoheadless';
+import AtomicPath from '@salesforce/resourceUrl/atomicutils';
 // @ts-ignore
 import {loadScript} from 'lightning/platformResourceLoader';
 
@@ -21,31 +22,33 @@ export default class SearchInterface extends LightningElement {
   @api pipeline = 'default';
 
   /** @type {boolean} */
-  headlessLoaded = false;
-  
+  dependenciesLoaded = false;
+
   /** @type {any[]} */
   hangingComponents = [];
 
   /** @type {import("coveo").HeadlessConfigurationOptions} */
   config;
 
-  connectedCallback() {
-    if (this.config) {
+  async connectedCallback() {
+    if (this.dependenciesLoaded) {
       return;
     }
 
-    /**
-     * @param {any} e
-     */
-    loadScript(this, HeadlessPath + '/browser/headless.js')
-      .then(() => this.loadHeadless())
-      .catch((e) => {
-        console.error(e);
-      });
+    try {
+      await Promise.all([
+        loadScript(this, HeadlessPath + '/browser/headless.js'),
+        loadScript(this, AtomicPath + '/atomic-utils.js'),
+      ]);
+
+      this.loadDependencies();
+    } catch (error) {
+      console.error('Fatal error: unable to initialize interface', error);
+    }
   }
 
-  loadHeadless() {
-    this.headlessLoaded = true;
+  loadDependencies() {
+    this.dependenciesLoaded = true;
 
     if (this.sample) {
       this.config = CoveoHeadless.HeadlessEngine.getSampleConfiguration();
@@ -59,7 +62,10 @@ export default class SearchInterface extends LightningElement {
    */
   @api initialize(options) {
     if (this.config || this.sample) {
-      console.error('The Quantic search interface has already been initialized', this);
+      console.error(
+        'The Quantic search interface has already been initialized',
+        this
+      );
       return;
     }
 
@@ -71,7 +77,7 @@ export default class SearchInterface extends LightningElement {
       },
     };
 
-    this.headlessLoaded && this.initEngine();
+    this.dependenciesLoaded && this.initEngine();
   }
 
   initEngine() {

@@ -17,6 +17,7 @@
     "start": "npm run copy:staticresources && sfdx force:lightning:lwc:start"
   },
   "dependencies": {
+    "@coveo/atomic": "^0.1.0-alpha.4",
     "@coveo/headless": "^0.1.0-alpha.4",
     "tributejs": "^5.1.3"
   },
