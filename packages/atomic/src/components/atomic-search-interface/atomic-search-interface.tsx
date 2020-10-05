@@ -34,7 +34,7 @@ export class AtomicSearchInterface {
   private hangingComponentsInitialization: InitializeEvent[] = [];
   private initialized = false;
 
-  constructor() {
+  componentDidLoad() {
     if (this.sample) {
       this.initialize(HeadlessEngine.getSampleConfiguration());
     }
