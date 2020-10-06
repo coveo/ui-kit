@@ -19,7 +19,9 @@ describe('Tab', () => {
     engine = buildMockEngine();
     engine.state.constantQuery = {cq: '', isInitialized: false};
     props = {
-      expression,
+      options: {
+        expression,
+      },
       initialState: {
         isActive: false,
       },
@@ -29,7 +31,9 @@ describe('Tab', () => {
   describe('initalization', () => {
     it('calls #registerConstantQuery if isActive is true', () => {
       props = {
-        expression,
+        options: {
+          expression,
+        },
         initialState: {
           isActive: true,
         },
@@ -42,7 +46,9 @@ describe('Tab', () => {
 
     it('does not throw if initialState is undefined', () => {
       props = {
-        expression,
+        options: {
+          expression,
+        },
       };
 
       expect(() => buildTab(engine, props)).not.toThrow();
@@ -62,11 +68,11 @@ describe('Tab', () => {
   });
 
   it('#state.isActive is true if the tabs cq matches the active cq', () => {
-    props.expression = 'abc123';
+    props.options.expression = 'abc123';
     initTab();
     engine.state.constantQuery = {
       isInitialized: true,
-      cq: props.expression,
+      cq: props.options.expression,
     };
     expect(tab.state.isActive).toBe(true);
   });

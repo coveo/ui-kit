@@ -1,6 +1,11 @@
 .tab {
   cursor: pointer;
 }
+
 .tab:hover {
   text-decoration: underline;
+}
+
+.tab .active {
+  color: green;
 }

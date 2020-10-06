@@ -26,7 +26,9 @@ export class AtomicTab {
   @Initialization()
   public initialize() {
     const options: TabProps = {
-      expression: this.expression,
+      options: {
+        expression: this.expression,
+      },
       initialState: {
         isActive: this.isActive,
       },
@@ -50,7 +52,7 @@ export class AtomicTab {
   render() {
     return (
       <button class="tab" onClick={() => this.handleClick()}>
-        <span>
+        <span class={this.state.isActive ? 'active' : ''}>
           <slot />
         </span>
       </button>
