@@ -4,6 +4,7 @@ import {
 } from '../base/base-facet-search-request';
 import {SearchPageState} from '../../../../state';
 import {searchRequest} from '../../search/search-request';
+import {CategoryFacetRequest} from '../../../../features/facets/category-facet-set/interfaces/request';
 
 export interface CategoryFacetSearchRequest
   extends BaseFacetSearchRequest,
@@ -22,6 +23,8 @@ export const buildCategoryFacetSearchRequest = (
   const {captions, query, numberOfValues} = options;
   const {field, delimitingCharacter, basePath} = categoryFacet;
   const searchContext = searchRequest(state);
+  const path = getPathToSelectedCategoryFacetItem(categoryFacet);
+  const ignorePaths = path.length ? [path] : [];
 
   return {
     basePath,
@@ -30,8 +33,20 @@ export const buildCategoryFacetSearchRequest = (
     query,
     field,
     delimitingCharacter,
-    ignorePaths: [],
+    ignorePaths,
     searchContext,
     type: 'hierarchical',
   };
+};
+
+const getPathToSelectedCategoryFacetItem = (
+  categoryFacet: CategoryFacetRequest
+): string[] => {
+  const path = [];
+  let selectedValue = categoryFacet.currentValues[0];
+  while (selectedValue) {
+    path.push(selectedValue.value);
+    selectedValue = selectedValue.children[0];
+  }
+  return path;
 };

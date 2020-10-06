@@ -27,7 +27,10 @@ export class AtomicCategoryFacet {
 
   @Initialization()
   public initialize() {
-    const options: CategoryFacetOptions = {field: this.field};
+    const options: CategoryFacetOptions = {
+      field: this.field,
+      delimitingCharacter: ';',
+    };
     this.categoryFacet = buildCategoryFacet(this.engine, {options});
     this.unsubscribe = this.categoryFacet.subscribe(() => this.updateState());
   }
