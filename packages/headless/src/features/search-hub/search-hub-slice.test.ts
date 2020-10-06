@@ -17,10 +17,7 @@ describe('search hub slice', () => {
 
   it('allows to set a search hub through configuration', () => {
     expect(
-      searchHubReducer(
-        'foo',
-        updateSearchConfiguration({pipeline: '', searchHub: 'bar'})
-      )
+      searchHubReducer('foo', updateSearchConfiguration({searchHub: 'bar'}))
     ).toEqual('bar');
   });
 

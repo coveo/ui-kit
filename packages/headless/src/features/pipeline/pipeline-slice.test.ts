@@ -17,10 +17,7 @@ describe('pipeline slice', () => {
 
   it('allows to set a pipeline through configuration', () => {
     expect(
-      pipelineReducer(
-        'foo',
-        updateSearchConfiguration({pipeline: 'bar', searchHub: ''})
-      )
+      pipelineReducer('foo', updateSearchConfiguration({pipeline: 'bar'}))
     ).toEqual('bar');
   });
 

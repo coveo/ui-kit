@@ -3,7 +3,7 @@ import {setPipeline} from './pipeline-actions';
 import {change} from '../history/history-actions';
 import {updateSearchConfiguration} from '../configuration/configuration-actions';
 
-export const getPipelineInitialState = () => '';
+export const getPipelineInitialState = () => 'default';
 
 export const pipelineReducer = createReducer(
   getPipelineInitialState(),

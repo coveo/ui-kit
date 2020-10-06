@@ -3,7 +3,7 @@ import {setSearchHub} from './search-hub-actions';
 import {change} from '../history/history-actions';
 import {updateSearchConfiguration} from '../configuration/configuration-actions';
 
-export const getSearchHubInitialState = () => '';
+export const getSearchHubInitialState = () => 'default';
 
 export const searchHubReducer = createReducer(
   getSearchHubInitialState(),

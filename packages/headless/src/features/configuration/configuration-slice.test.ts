@@ -14,6 +14,7 @@ import {
   setOriginLevel2,
 } from './configuration-actions';
 import {platformUrl} from '../../api/platform-client';
+import {createReducer} from '../..';
 
 describe('configuration slice', () => {
   const url = platformUrl({environment: 'dev', region: 'eu-west-3'});
@@ -139,8 +140,6 @@ describe('configuration slice', () => {
           undefined,
           updateSearchConfiguration({
             apiBaseUrl: 'http://test.com/search',
-            pipeline: '',
-            searchHub: '',
           })
         )
       ).toEqual(expectedState);
@@ -158,11 +157,43 @@ describe('configuration slice', () => {
           existingState,
           updateSearchConfiguration({
             apiBaseUrl: 'http://test.com/search',
-            pipeline: '',
-            searchHub: '',
           })
         )
       ).toEqual(expectedState);
+    });
+
+    it('does not overwrite searchHub value when only pipeline is passed as argument', () => {
+      const search = {
+        pipeline: 'initPipeline',
+        searchHub: 'initSearchHub',
+      };
+      const reducer = createReducer(search, (builder) =>
+        builder.addCase(updateSearchConfiguration, (state, action) => {
+          state.pipeline = action.payload.pipeline!;
+        })
+      );
+      const newState = reducer(
+        search,
+        updateSearchConfiguration({pipeline: 'mockPipeline'})
+      );
+      expect(newState).toEqual({...search, pipeline: 'mockPipeline'});
+    });
+
+    it('does not overwrite pipeline value when only searchhub is passed as argument', () => {
+      const search = {
+        pipeline: 'initPipeline',
+        searchHub: 'initSearchHub',
+      };
+      const reducer = createReducer(search, (builder) =>
+        builder.addCase(updateSearchConfiguration, (state, action) => {
+          state.searchHub = action.payload.searchHub!;
+        })
+      );
+      const newState = reducer(
+        search,
+        updateSearchConfiguration({searchHub: 'mockSearchHub'})
+      );
+      expect(newState).toEqual({...search, searchHub: 'mockSearchHub'});
     });
   });
 

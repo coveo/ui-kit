@@ -14,8 +14,8 @@ export function buildMockSearchRequest(
     cq: '',
     sortCriteria: 'relevancy',
     fieldsToInclude: getFieldsInitialState().fieldsToInclude,
-    pipeline: '',
-    searchHub: '',
+    pipeline: 'default',
+    searchHub: 'default',
     ...config,
   };
 }
