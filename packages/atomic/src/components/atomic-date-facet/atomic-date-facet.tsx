@@ -10,6 +10,7 @@ import {
   Engine,
 } from '@coveo/headless';
 import {Initialization} from '../../utils/initialization-utils';
+import {randomID} from '../../utils/utils';
 
 @Component({
   tag: 'atomic-date-facet',
@@ -17,6 +18,7 @@ import {Initialization} from '../../utils/initialization-utils';
   shadow: true,
 })
 export class AtomicDateFacet {
+  @Prop() facetId = randomID('dateFacet');
   @Prop() field = '';
   @Prop() label = 'No label';
   @State() state!: DateFacetState;
@@ -28,12 +30,21 @@ export class AtomicDateFacet {
   @Initialization()
   public initialize() {
     const options: DateFacetOptions = {
+      facetId: this.facetId,
       field: this.field,
       generateAutomaticRanges: true,
     };
 
     this.facet = buildDateFacet(this.engine, {options});
+    this.subscribe();
+  }
+
+  private subscribe() {
     this.unsubscribe = this.facet.subscribe(() => this.updateState());
+  }
+
+  public connectedCallback() {
+    this.facet && this.subscribe();
   }
 
   public disconnectedCallback() {

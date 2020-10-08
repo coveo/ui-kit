@@ -1,4 +1,4 @@
-import {once, camelToKebab} from './utils';
+import {once, camelToKebab, randomID} from './utils';
 
 describe('once', () => {
   it('should call the function only once', () => {
@@ -21,5 +21,15 @@ describe('camelToKebab', () => {
 
   it('works with an already kebab cased value', () => {
     expect(camelToKebab('fields-to-include')).toBe('fields-to-include');
+  });
+});
+
+describe('randomID', () => {
+  it('when a string to prepend is passed, it places it at the start of the id', () => {
+    expect(randomID('prefix')).toMatch(/^prefix/);
+  });
+
+  it('when called twice, it returns two different ids', () => {
+    expect(randomID()).not.toBe(randomID());
   });
 });

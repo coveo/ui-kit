@@ -8,6 +8,7 @@ import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { Engine, HeadlessConfigurationOptions, Result, ResultTemplateCondition } from "@coveo/headless";
 export namespace Components {
     interface AtomicCategoryFacet {
+        "facetId": string;
         "field": string;
         "label": string;
     }
@@ -15,14 +16,18 @@ export namespace Components {
         "error": Error;
     }
     interface AtomicDateFacet {
+        "facetId": string;
         "field": string;
         "label": string;
     }
     interface AtomicDidYouMean {
     }
     interface AtomicFacet {
+        "facetId": string;
         "field": string;
         "label": string;
+    }
+    interface AtomicFacetManager {
     }
     interface AtomicFieldCondition {
         "conditions": ResultTemplateCondition[];
@@ -32,6 +37,7 @@ export namespace Components {
     interface AtomicHistory {
     }
     interface AtomicNumericFacet {
+        "facetId": string;
         "field": string;
         "label": string;
     }
@@ -104,6 +110,12 @@ declare global {
     var HTMLAtomicFacetElement: {
         prototype: HTMLAtomicFacetElement;
         new (): HTMLAtomicFacetElement;
+    };
+    interface HTMLAtomicFacetManagerElement extends Components.AtomicFacetManager, HTMLStencilElement {
+    }
+    var HTMLAtomicFacetManagerElement: {
+        prototype: HTMLAtomicFacetManagerElement;
+        new (): HTMLAtomicFacetManagerElement;
     };
     interface HTMLAtomicFieldConditionElement extends Components.AtomicFieldCondition, HTMLStencilElement {
     }
@@ -201,6 +213,7 @@ declare global {
         "atomic-date-facet": HTMLAtomicDateFacetElement;
         "atomic-did-you-mean": HTMLAtomicDidYouMeanElement;
         "atomic-facet": HTMLAtomicFacetElement;
+        "atomic-facet-manager": HTMLAtomicFacetManagerElement;
         "atomic-field-condition": HTMLAtomicFieldConditionElement;
         "atomic-history": HTMLAtomicHistoryElement;
         "atomic-numeric-facet": HTMLAtomicNumericFacetElement;
@@ -220,6 +233,7 @@ declare global {
 }
 declare namespace LocalJSX {
     interface AtomicCategoryFacet {
+        "facetId"?: string;
         "field"?: string;
         "label"?: string;
     }
@@ -227,14 +241,18 @@ declare namespace LocalJSX {
         "error": Error;
     }
     interface AtomicDateFacet {
+        "facetId"?: string;
         "field"?: string;
         "label"?: string;
     }
     interface AtomicDidYouMean {
     }
     interface AtomicFacet {
+        "facetId"?: string;
         "field"?: string;
         "label"?: string;
+    }
+    interface AtomicFacetManager {
     }
     interface AtomicFieldCondition {
         "conditions"?: ResultTemplateCondition[];
@@ -243,6 +261,7 @@ declare namespace LocalJSX {
     interface AtomicHistory {
     }
     interface AtomicNumericFacet {
+        "facetId"?: string;
         "field"?: string;
         "label"?: string;
     }
@@ -287,6 +306,7 @@ declare namespace LocalJSX {
         "atomic-date-facet": AtomicDateFacet;
         "atomic-did-you-mean": AtomicDidYouMean;
         "atomic-facet": AtomicFacet;
+        "atomic-facet-manager": AtomicFacetManager;
         "atomic-field-condition": AtomicFieldCondition;
         "atomic-history": AtomicHistory;
         "atomic-numeric-facet": AtomicNumericFacet;
@@ -313,6 +333,7 @@ declare module "@stencil/core" {
             "atomic-date-facet": LocalJSX.AtomicDateFacet & JSXBase.HTMLAttributes<HTMLAtomicDateFacetElement>;
             "atomic-did-you-mean": LocalJSX.AtomicDidYouMean & JSXBase.HTMLAttributes<HTMLAtomicDidYouMeanElement>;
             "atomic-facet": LocalJSX.AtomicFacet & JSXBase.HTMLAttributes<HTMLAtomicFacetElement>;
+            "atomic-facet-manager": LocalJSX.AtomicFacetManager & JSXBase.HTMLAttributes<HTMLAtomicFacetManagerElement>;
             "atomic-field-condition": LocalJSX.AtomicFieldCondition & JSXBase.HTMLAttributes<HTMLAtomicFieldConditionElement>;
             "atomic-history": LocalJSX.AtomicHistory & JSXBase.HTMLAttributes<HTMLAtomicHistoryElement>;
             "atomic-numeric-facet": LocalJSX.AtomicNumericFacet & JSXBase.HTMLAttributes<HTMLAtomicNumericFacetElement>;

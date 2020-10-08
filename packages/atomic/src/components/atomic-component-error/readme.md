@@ -20,6 +20,7 @@
  - [atomic-date-facet](../atomic-date-facet)
  - [atomic-did-you-mean](../atomic-did-you-mean)
  - [atomic-facet](../atomic-facet)
+ - [atomic-facet-manager](../atomic-facet-manager)
  - [atomic-history](../atomic-history)
  - [atomic-numeric-facet](../atomic-numeric-facet)
  - [atomic-pager](../atomic-pager)
@@ -39,6 +40,7 @@ graph TD;
   atomic-date-facet --> atomic-component-error
   atomic-did-you-mean --> atomic-component-error
   atomic-facet --> atomic-component-error
+  atomic-facet-manager --> atomic-component-error
   atomic-history --> atomic-component-error
   atomic-numeric-facet --> atomic-component-error
   atomic-pager --> atomic-component-error

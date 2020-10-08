@@ -29,6 +29,7 @@ export * from './controllers/results-per-page/headless-results-per-page';
 export * from './controllers/search-box/headless-search-box';
 export * from './controllers/sort/headless-sort';
 export * from './controllers/tab/headless-tab';
+export * from './controllers/facet-manager/headless-facet-manager';
 
 // Selectors
 export * from './features/facets/facet-set/facet-set-selectors';

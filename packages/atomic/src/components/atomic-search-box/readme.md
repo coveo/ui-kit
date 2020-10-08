@@ -7,10 +7,9 @@
 
 ## Properties
 
-| Property              | Attribute               | Description | Type      | Default |
-| --------------------- | ----------------------- | ----------- | --------- | ------- |
-| `isStandalone`        | `is-standalone`         |             | `boolean` | `false` |
-| `numberOfSuggestions` | `number-of-suggestions` |             | `number`  | `5`     |
+| Property              | Attribute               | Description | Type     | Default |
+| --------------------- | ----------------------- | ----------- | -------- | ------- |
+| `numberOfSuggestions` | `number-of-suggestions` |             | `number` | `5`     |
 
 
 ## Dependencies

@@ -9,4 +9,12 @@ describe('atomic-facet', () => {
     });
     expect(page.root).toBeTruthy();
   });
+
+  it('initializes the facetId prop to a random value containing the type of facet', () => {
+    const facetId1 = new AtomicFacet().facetId;
+    const facetId2 = new AtomicFacet().facetId;
+
+    expect(facetId1).toContain('facet');
+    expect(facetId1).not.toEqual(facetId2);
+  });
 });

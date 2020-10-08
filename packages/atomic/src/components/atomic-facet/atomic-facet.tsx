@@ -10,6 +10,7 @@ import {
   Engine,
 } from '@coveo/headless';
 import {Initialization} from '../../utils/initialization-utils';
+import {randomID} from '../../utils/utils';
 
 @Component({
   tag: 'atomic-facet',
@@ -17,6 +18,7 @@ import {Initialization} from '../../utils/initialization-utils';
   shadow: true,
 })
 export class AtomicFacet {
+  @Prop() facetId = randomID('facet');
   @Prop() field = '';
   @Prop() label = 'No label';
   @State() state!: FacetState;
@@ -27,9 +29,17 @@ export class AtomicFacet {
 
   @Initialization()
   public initialize() {
-    const options: FacetOptions = {field: this.field};
+    const options: FacetOptions = {facetId: this.facetId, field: this.field};
     this.facet = buildFacet(this.engine, {options});
+    this.subscribe();
+  }
+
+  private subscribe() {
     this.unsubscribe = this.facet.subscribe(() => this.updateState());
+  }
+
+  public connectedCallback() {
+    this.facet && this.subscribe();
   }
 
   public disconnectedCallback() {

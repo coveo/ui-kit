@@ -15,3 +15,12 @@ export function once<T extends unknown[]>(fn: (...args: T) => unknown) {
 export function camelToKebab(value: string) {
   return value.replace(/([a-z0-9]|(?=[A-Z]))([A-Z])/g, '$1-$2').toLowerCase();
 }
+
+export function randomID(prepend?: string, length = 5) {
+  return (
+    prepend +
+    Math.random()
+      .toString(36)
+      .substr(2, 2 + length)
+  );
+}

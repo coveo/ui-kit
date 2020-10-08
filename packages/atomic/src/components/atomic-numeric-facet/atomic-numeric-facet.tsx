@@ -11,6 +11,7 @@ import {
   Engine,
 } from '@coveo/headless';
 import {Initialization} from '../../utils/initialization-utils';
+import {randomID} from '../../utils/utils';
 
 @Component({
   tag: 'atomic-numeric-facet',
@@ -18,6 +19,7 @@ import {Initialization} from '../../utils/initialization-utils';
   shadow: true,
 })
 export class AtomicNumericFacet {
+  @Prop() facetId = randomID('numericFacet');
   @Prop() field = '';
   @Prop() label = 'No label';
   @State() state!: NumericFacetState;
@@ -29,6 +31,7 @@ export class AtomicNumericFacet {
   @Initialization()
   public initialize() {
     const options: NumericFacetOptions = {
+      facetId: this.facetId,
       field: this.field,
       generateAutomaticRanges: false,
       currentValues: [
@@ -41,7 +44,15 @@ export class AtomicNumericFacet {
     };
 
     this.facet = buildNumericFacet(this.engine, {options});
+    this.subscribe();
+  }
+
+  private subscribe() {
     this.unsubscribe = this.facet.subscribe(() => this.updateState());
+  }
+
+  public connectedCallback() {
+    this.facet && this.subscribe();
   }
 
   public disconnectedCallback() {
