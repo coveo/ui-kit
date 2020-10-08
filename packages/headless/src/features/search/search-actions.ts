@@ -13,10 +13,15 @@ import {applyDidYouMeanCorrection} from '../did-you-mean/did-you-mean-actions';
 import {updateQuery} from '../query/query-actions';
 
 export interface ExecuteSearchThunkReturn {
+  /** The successful search response. */
   response: SearchResponseSuccess;
+  /** The number of milliseconds it took to receive the response. */
   duration: number;
+  /** The query that was executed. */
   queryExecuted: string;
+  /** Whether the query was automatically corrected. */
   automaticallyCorrected: boolean;
+  /** The analytics action to log after the query. */
   analyticsAction: SearchAction;
 }
 
@@ -33,6 +38,7 @@ const fetchFromAPI = async (
 
 /**
  * Executes a search query.
+ * @param analyticsAction (SearchAction) The analytics action to log after a successful query.
  */
 export const executeSearch = createAsyncThunk<
   ExecuteSearchThunkReturn,

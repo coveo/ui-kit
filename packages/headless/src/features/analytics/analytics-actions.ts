@@ -38,12 +38,10 @@ export const makeClickActionType = () => ({
   analyticsType: AnalyticsType.Click as AnalyticsType.Click,
 });
 
-/**
- * @param evt (SearchPageEvents | string) The identifier of the search action (e.g., `interfaceLoad`).
- * @param meta (Record<string, any>) The event metadata.
- */
 export interface GenericSearchEventPayload {
+  /** The identifier of the search action (e.g., `interfaceLoad`). */
   evt: SearchPageEvents | string;
+  /** The event metadata. */
   meta?: Record<string, any>;
 }
 
