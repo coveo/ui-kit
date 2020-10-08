@@ -42,6 +42,7 @@ describe('search api client', () => {
       requestParams: {
         q: state.query.q,
         cq: '',
+        aq: '',
         numberOfResults: state.pagination.numberOfResults,
         sortCriteria: state.sortCriteria,
         firstResult: state.pagination.firstResult,

@@ -66,6 +66,13 @@ export interface ConstantQueryState {
   isInitialized: boolean;
 }
 
+export interface AdvancedQueryState {
+  /**
+   * The aq filter (e.g., `((q AND aq) OR dq) AND cq).
+   */
+  aq: string;
+}
+
 export interface RedirectionState {
   /**
    * The URL to redirect the user to.

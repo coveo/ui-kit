@@ -12,7 +12,7 @@ import {
   PaginationState,
   getPaginationInitialState,
 } from '../pagination/pagination-slice';
-import {ConstantQueryState, QueryState} from '../../state';
+import {ConstantQueryState, QueryState, AdvancedQueryState} from '../../state';
 import {SortState} from '../../controllers/sort/headless-sort';
 import {snapshot} from './history-actions';
 import {getPipelineInitialState} from '../pipeline/pipeline-slice';
@@ -30,6 +30,7 @@ import {
   CategoryFacetSetState,
 } from '../facets/category-facet-set/category-facet-set-slice';
 import {getInitialConstantQueryState} from '../constant-query/constant-query-slice';
+import {getInitialAdvancedQueryState} from '../advanced-query/advanced-query-slice';
 
 export const getHistoryEmptyState = (): SearchParametersState => ({
   context: getContextInitialState(),
@@ -40,6 +41,7 @@ export const getHistoryEmptyState = (): SearchParametersState => ({
   pagination: getPaginationInitialState(),
   query: getQueryInitialState(),
   constantQuery: getInitialConstantQueryState(),
+  advancedQuery: getInitialAdvancedQueryState(),
   sortCriteria: getSortCriteriaInitialState(),
   querySet: getQuerySetInitialState(),
   pipeline: getPipelineInitialState(),
@@ -62,6 +64,7 @@ const isEqual = (
   return (
     isContextEqual(current.context, next.context) &&
     isConstantQueryEqual(current.constantQuery, next.constantQuery) &&
+    isAdvancedQueryEqual(current.advancedQuery, next.advancedQuery) &&
     isFacetsEqual(current.facetSet, next.facetSet) &&
     isDateFacetsEqual(current.dateFacetSet, next.dateFacetSet) &&
     isNumericFacetsEqual(current.numericFacetSet, next.numericFacetSet) &&
@@ -105,6 +108,11 @@ const isQueryEqual = (current: QueryState, next: QueryState) =>
 const isConstantQueryEqual = (
   current: ConstantQueryState,
   next: ConstantQueryState
+) => JSON.stringify(current) === JSON.stringify(next);
+
+const isAdvancedQueryEqual = (
+  current: AdvancedQueryState,
+  next: AdvancedQueryState
 ) => JSON.stringify(current) === JSON.stringify(next);
 
 const isSortEqual = (current: SortState, next: SortState) =>

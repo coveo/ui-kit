@@ -12,6 +12,7 @@ export function buildMockSearchRequest(
     numberOfResults: 10,
     q: '',
     cq: '',
+    aq: '',
     sortCriteria: 'relevancy',
     fieldsToInclude: getFieldsInitialState().fieldsToInclude,
     pipeline: 'default',

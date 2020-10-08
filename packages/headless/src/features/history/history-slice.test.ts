@@ -70,6 +70,7 @@ describe('history slice', () => {
       },
       query: {q: 'foo'},
       constantQuery: {cq: '', isInitialized: false},
+      advancedQuery: {aq: ''},
       querySet: {foo: 'bar', hello: 'world'},
       sortCriteria: 'date descending',
       pipeline: 'my-pipeline',
