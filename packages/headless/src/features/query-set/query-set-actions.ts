@@ -7,9 +7,9 @@ const querySetDefinition = {
   query: new StringValue({required: true}),
 };
 /**
- * Register a query in the query set.
- * @param id The unique identifier of the target query.
- * @param query The initial basic query expression.
+ * Registers a query in the query set.
+ * @param id (string) The unique identifier of the target query.
+ * @param query (string) The initial basic query expression.
  */
 export const registerQuerySetQuery = createAction(
   'querySet/register',
@@ -18,9 +18,9 @@ export const registerQuerySetQuery = createAction(
 );
 
 /**
- * Update a query in the query set.
- * @param id The unique identifier of the target query.
- * @param query The updated basic query expression.
+ * Updates a query in the query set.
+ * @param id (string) The unique identifier of the target query.
+ * @param query (string) The new basic query expression.
  */
 export const updateQuerySetQuery = createAction(
   'querySet/update',

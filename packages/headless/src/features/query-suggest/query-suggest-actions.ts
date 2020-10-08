@@ -18,10 +18,10 @@ export interface QuerySuggestionID {
 }
 
 /**
- * Register a new query suggest entity to the headless state to enable the Coveo ML query suggestions feature.
- * @param id A unique identifier for the new query suggest entity (e.g., `b953ab2e-022b-4de4-903f-68b2c0682942`).
- * @param q The partial basic query expression for which to request query suggestions (e.g., `cov`).
- * @param count The number of query suggestions to request from Coveo ML (e.g., `3`). Default: `5`.
+ * Registers a new query suggest entity to the headless state to enable the Coveo ML query suggestions feature.
+ * @param id (string) A unique identifier for the new query suggest entity (e.g., `b953ab2e-022b-4de4-903f-68b2c0682942`).
+ * @param q (string) The partial basic query expression for which to request query suggestions (e.g., `cov`).
+ * @param count (number) The number of query suggestions to request from Coveo ML (e.g., `3`). Default: `5`.
  */
 export const registerQuerySuggest = createAction(
   'querySuggest/register',
@@ -34,8 +34,8 @@ export const registerQuerySuggest = createAction(
 );
 
 /**
- * Unregister an existing query suggest entity from the headless state.
- * @param id The unique identifier of the query suggest entity to unregister (e.g., `b953ab2e-022b-4de4-903f-68b2c0682942`).
+ * Unregisters an existing query suggest entity from the headless state.
+ * @param id (string) The unique identifier of the query suggest entity to unregister (e.g., `b953ab2e-022b-4de4-903f-68b2c0682942`).
  */
 export const unregisterQuerySuggest = createAction(
   'querySuggest/unregister',
@@ -43,9 +43,9 @@ export const unregisterQuerySuggest = createAction(
 );
 
 /**
- * Select a suggestion provided through a specific query suggest entity.
- * @param id The unique identifier of the target query suggest entity (e.g., `b953ab2e-022b-4de4-903f-68b2c0682942`).
- * @param expression The selected query suggestion (e.g., `coveo`).
+ * Selects a suggestion provided through a specific query suggest entity.
+ * @param id (string) The unique identifier of the target query suggest entity (e.g., `b953ab2e-022b-4de4-903f-68b2c0682942`).
+ * @param expression (string) The selected query suggestion (e.g., `coveo`).
  */
 export const selectQuerySuggestion = createAction(
   'querySuggest/selectSuggestion',
@@ -57,8 +57,8 @@ export const selectQuerySuggestion = createAction(
 );
 
 /**
- * Clear the current partial basic query expression and list of query suggestions in a specific query suggest entity.
- * @param id The unique identifier of the target query suggest entity (e.g., `b953ab2e-022b-4de4-903f-68b2c0682942`).
+ * Clears the current partial basic query expression and the list of query suggestions in a specific query suggest entity.
+ * @param id (string) The unique identifier of the target query suggest entity (e.g., `b953ab2e-022b-4de4-903f-68b2c0682942`).
  */
 export const clearQuerySuggest = createAction(
   'querySuggest/clear',
@@ -66,8 +66,8 @@ export const clearQuerySuggest = createAction(
 );
 
 /**
- * Clear the list of query suggestions in a specific query suggest entity.
- * @param id The unique identifier of the target query suggest entity (e.g., b953ab2e-022b-4de4-903f-68b2c0682942).
+ * Clears the list of query suggestions in a specific query suggest entity.
+ * @param id (string) The unique identifier of the target query suggest entity (e.g., `b953ab2e-022b-4de4-903f-68b2c0682942`).
  */
 export const clearQuerySuggestCompletions = createAction(
   'querySuggest/clearSuggestions',
@@ -75,8 +75,8 @@ export const clearQuerySuggestCompletions = createAction(
 );
 
 /**
- * Fetch a list of query suggestions for a specific query suggest entity according to the current headless state.
- * @param id The unique identifier of the target query suggest entity (e.g., b953ab2e-022b-4de4-903f-68b2c0682942).
+ * Fetches a list of query suggestions for a specific query suggest entity according to the current headless state.
+ * @param id (string) The unique identifier of the target query suggest entity (e.g., `b953ab2e-022b-4de4-903f-68b2c0682942`).
  */
 export const fetchQuerySuggestions = createAsyncThunk<
   QuerySuggestionID & QuerySuggestSuccessResponse,
