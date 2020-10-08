@@ -63,6 +63,7 @@ export interface AnalyticsClient {
     registerBeforeSendEventHook(hook: AnalyticsClientSendEventHook): void;
     addEventTypeMapping(eventType: string, eventConfig: EventTypeConfig): void;
     runtime: IRuntimeEnvironment;
+    getVisitorId(): string;
 }
 
 interface BufferedRequest {
@@ -264,6 +265,10 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
 
     addEventTypeMapping(eventType: string, eventConfig: EventTypeConfig): void {
         this.eventTypeMapping[eventType] = eventConfig;
+    } 
+    
+    getVisitorId(){
+        return this.currentVisitorId;
     }
 
     private parseVariableArgumentsPayload(fieldsOrder: string[], payload: VariableArgumentsPayload) {

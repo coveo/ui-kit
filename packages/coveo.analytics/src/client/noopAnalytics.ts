@@ -34,5 +34,6 @@ export class NoopAnalytics implements AnalyticsClient {
     }
     registerBeforeSendEventHook(): void {}
     addEventTypeMapping(): void {}
+    getVisitorId():string {return ''}
     runtime = new NoopRuntime();
 }
