@@ -12,5 +12,5 @@ export const createAnalyticsClientMock = (): jest.Mocked<AnalyticsClient> => ({
     addEventTypeMapping: jest.fn(),
     registerBeforeSendEventHook: jest.fn(),
     runtime: new NodeJSRuntime(),
-    getVisitorId: jest.fn(() => 'mockVisitorId'),
+    currentVisitorId:'',
 });
