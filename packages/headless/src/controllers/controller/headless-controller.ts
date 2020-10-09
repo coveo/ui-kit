@@ -3,9 +3,21 @@ import {Engine} from '../../app/headless-engine';
 export type Controller = ReturnType<typeof buildController>;
 
 export function buildController(engine: Engine) {
-  const subscribe = (listener: () => void) => {
-    listener();
-    return engine.subscribe(() => listener());
+  let prevState = '{}';
+
+  const hasStateChanged = (currentState: Record<string, any>): boolean => {
+    try {
+      const stringifiedState = JSON.stringify(currentState);
+      const hasChanged = prevState !== stringifiedState;
+      prevState = stringifiedState;
+      return hasChanged;
+    } catch (e) {
+      console.warn(
+        'Could not detect if state has changed, check the controller "get state method"',
+        e
+      );
+      return true;
+    }
   };
 
   return {
@@ -15,6 +27,17 @@ export function buildController(engine: Engine) {
      * @param listener A callback to be invoked on state change.
      * @returns An unsubscribe function to remove the listener.
      */
-    subscribe,
+    subscribe(listener: () => void) {
+      listener();
+      return engine.subscribe(() => {
+        if (hasStateChanged(this.state)) {
+          listener();
+        }
+      });
+    },
+
+    get state() {
+      return {};
+    },
   };
 }

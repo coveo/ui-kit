@@ -28,20 +28,30 @@ describe('Controller', () => {
     expect(registeredListeners().length).toBe(1);
   });
 
-  it('invoking the registered #subscribe handler calls the listener', () => {
+  it('the #subscribe method returns a function', () => {
+    const listener = jest.fn();
+    const returnValue = cmp.subscribe(listener);
+
+    expect(typeof returnValue).toBe('function');
+  });
+
+  it('invoking the registered #subscribe handler calls the listener if the state has changed', () => {
+    const listener = jest.fn();
+    cmp.subscribe(listener);
+
+    const [firstListener] = registeredListeners();
+    jest.spyOn(cmp, 'state', 'get').mockReturnValue({foo: 'bar'});
+    firstListener();
+    expect(listener).toHaveBeenCalledTimes(2);
+  });
+
+  it('invoking the registered #subscribe handler does not call the listener if the state has not changed', () => {
     const listener = jest.fn();
     cmp.subscribe(listener);
 
     const [firstListener] = registeredListeners();
     firstListener();
 
-    expect(listener).toHaveBeenCalledTimes(2);
-  });
-
-  it('the #subscribe method returns a function', () => {
-    const listener = jest.fn();
-    const returnValue = cmp.subscribe(listener);
-
-    expect(typeof returnValue).toBe('function');
+    expect(listener).toHaveBeenCalledTimes(1);
   });
 });
