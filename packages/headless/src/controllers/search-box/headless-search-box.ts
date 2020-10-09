@@ -91,6 +91,7 @@ export const buildSearchBox = (
      * Clears the search box text and the suggestions.
      */
     clear() {
+      dispatch(updateQuerySetQuery({id: options.id, query: ''}));
       dispatch(clearQuerySuggest({id: options.id}));
     },
 

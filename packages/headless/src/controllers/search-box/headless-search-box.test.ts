@@ -123,6 +123,14 @@ describe('headless searchBox', () => {
   });
 
   it(`when calling clear
+    should dispatch a updateQuerySetQuery action`, () => {
+    searchBox.clear();
+    expect(engine.actions).toContainEqual(
+      updateQuerySetQuery({id: id, query: ''})
+    );
+  });
+
+  it(`when calling clear
     should dispatch a clearQuerySuggest action`, () => {
     searchBox.clear();
     expect(engine.actions).toContainEqual(clearQuerySuggest({id}));

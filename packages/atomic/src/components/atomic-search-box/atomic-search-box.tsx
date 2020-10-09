@@ -1,4 +1,4 @@
-import {Component, ComponentInterface, h, Prop, State} from '@stencil/core';
+import {Component, h, Prop, State, Element, Host} from '@stencil/core';
 import {
   SearchBox,
   SearchBoxState,
@@ -7,13 +7,19 @@ import {
   Engine,
 } from '@coveo/headless';
 import {Initialization} from '../../utils/initialization-utils';
+import {passControllerAndStateToSlot} from '../../utils/slot-utils';
+
+export interface AtomicSearchBoxOptions {
+  numberOfSuggestions: number;
+}
 
 @Component({
   tag: 'atomic-search-box',
   styleUrl: 'atomic-search-box.css',
   shadow: true,
 })
-export class AtomicSearchBox implements ComponentInterface {
+export class AtomicSearchBox implements AtomicSearchBoxOptions {
+  @Element() host!: HTMLDivElement;
   @State() searchBoxState!: SearchBoxState;
   @Prop() numberOfSuggestions = 5;
 
@@ -39,43 +45,51 @@ export class AtomicSearchBox implements ComponentInterface {
     this.searchBoxState = this.searchBox.state;
   }
 
-  private onInputChange(e: KeyboardEvent) {
-    const value = (e.target as HTMLInputElement).value;
-    this.searchBox.updateText(value);
+  public get options(): AtomicSearchBoxOptions {
+    return {
+      numberOfSuggestions: this.numberOfSuggestions,
+    };
   }
 
-  private onInputBlur() {
-    setTimeout(() => this.searchBox.hideSuggestions(), 100);
-  }
-
-  private clear() {
-    this.searchBox.clear();
-  }
-
-  private onClickSuggestion(e: MouseEvent) {
-    const value = (e.target as HTMLElement).innerText;
-    this.searchBox.selectSuggestion(value);
-  }
-
-  private suggestions() {
-    return this.searchBoxState.suggestions.map((suggestion) => (
-      <li onClick={(e) => this.onClickSuggestion(e)}>{suggestion.value}</li>
-    ));
+  private onSlotchange(e: Event, slotToClear?: string) {
+    passControllerAndStateToSlot(
+      e,
+      this.searchBox,
+      this.searchBoxState,
+      this.options,
+      slotToClear ? [slotToClear] : undefined
+    );
   }
 
   public render() {
     return (
-      <div>
-        <input
-          value={this.searchBoxState.value}
-          onInput={(e) => this.onInputChange(e as KeyboardEvent)}
-          onFocus={() => this.searchBox.showSuggestions()}
-          onBlur={() => this.onInputBlur()}
-        />
-        <button onClick={() => this.clear()}>Clear</button>
-        <button onClick={() => this.searchBox.submit()}>Search</button>
-        <ul>{this.suggestions()}</ul>
-      </div>
+      <Host>
+        <slot
+          name="submit-leading"
+          onSlotchange={(e) => this.onSlotchange(e, 'submit')}
+        ></slot>
+
+        <slot name="input" onSlotchange={(e) => this.onSlotchange(e)}>
+          <atomic-search-box-input
+            controller={this.searchBox}
+            state={this.searchBoxState}
+            options={this.options}
+          ></atomic-search-box-input>
+        </slot>
+
+        <slot name="suggestions" onSlotchange={(e) => this.onSlotchange(e)}>
+          <atomic-search-box-suggestions
+            controller={this.searchBox}
+            state={this.searchBoxState}
+          ></atomic-search-box-suggestions>
+        </slot>
+
+        <slot name="submit" onSlotchange={(e) => this.onSlotchange(e)}>
+          <atomic-search-box-submit
+            controller={this.searchBox}
+          ></atomic-search-box-submit>
+        </slot>
+      </Host>
     );
   }
 }
