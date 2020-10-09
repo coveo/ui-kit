@@ -5,8 +5,8 @@ import {validatePayloadValue} from '../../utils/validate-payload';
 const numberValue = new NumberValue({required: true, min: 0});
 
 /**
- * Initializes the number of results. For more information, refer to {@link https://docs.coveo.com/en/1461/cloud-v2-developers/query-parameters#RestQueryParameters-numberOfResults}
- * @param number The initial number of results.
+ * Initializes the `numberOfResults` query parameter. For more information, refer to [the documentation on query parameters](https://docs.coveo.com/en/1461/cloud-v2-developers/query-parameters#RestQueryParameters-numberOfResults).
+ * @param payload (number) The initial number of results.
  */
 export const registerNumberOfResults = createAction(
   'pagination/registerNumberOfResults',
@@ -14,8 +14,8 @@ export const registerNumberOfResults = createAction(
 );
 
 /**
- * Updates the number of results.
- * @param number The updated number of results.
+ * Updates the `numberOfResults` query parameter. For more information, refer to [the documentation on query parameters](https://docs.coveo.com/en/1461/cloud-v2-developers/query-parameters#RestQueryParameters-numberOfResults).
+ * @param payload (number) The new number of results.
  */
 export const updateNumberOfResults = createAction(
   'pagination/updateNumberOfResults',
@@ -23,8 +23,8 @@ export const updateNumberOfResults = createAction(
 );
 
 /**
- * Sets the initial page by initializing the firstResult property. For more information on firstResult, refer to {@link https://docs.coveo.com/en/1461/cloud-v2-developers/query-parameters#RestQueryParameters-firstResult}
- * @param number The initial page number.
+ * Sets the initial page by initializing the `firstResult` query parameter. For more information, refer to [the documentation on query parameters](https://docs.coveo.com/en/1461/cloud-v2-developers/query-parameters#RestQueryParameters-firstResult).
+ * @param payload (number) The initial page number.
  */
 export const registerPage = createAction(
   'pagination/registerPage',
@@ -32,8 +32,8 @@ export const registerPage = createAction(
 );
 
 /**
- * Updates the page by setting the firstResult property.
- * @param number The new page number.
+ * Updates the page by updating the `firstResult` query parameter. For more information, refer to [the documentation on query parameters](https://docs.coveo.com/en/1461/cloud-v2-developers/query-parameters#RestQueryParameters-firstResult).
+ * @param payload (number) The new page number.
  */
 export const updatePage = createAction(
   'pagination/updatePage',

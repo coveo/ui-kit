@@ -9,7 +9,8 @@ import {StringValue} from '@coveo/bueno';
 import {logTriggerRedirect} from './redirection-analytics-actions';
 
 /**
- * Preprocess the query for the current headless state, and updates the redirection URL if a redirect trigger was fired in the query pipeline.
+ * Preprocesses the query for the current headless state, and updates the redirection URL if a redirect trigger was fired in the query pipeline.
+ * @param defaultRedirectionUrl (string) The default URL to which to redirect the user.
  */
 export const checkForRedirection = createAsyncThunk<
   string,
