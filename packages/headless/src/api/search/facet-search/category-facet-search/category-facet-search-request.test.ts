@@ -68,7 +68,10 @@ describe('#buildCategoryFacetSearchRequest', () => {
     const facet = state.categoryFacetSet[id];
     const request = buildMockSearchRequest({facets: [facet]});
 
-    expect(buildParms().searchContext).toEqual(request);
+    expect(buildParms().searchContext).toEqual({
+      ...request,
+      visitorId: expect.any(String),
+    });
   });
 
   it('#ignorePaths is empty when currentValues is empty', () => {

@@ -72,6 +72,9 @@ describe('#buildSpecificFacetSearchRequest', () => {
     const facet = state.facetSet[id];
     const request = buildMockSearchRequest({facets: [facet]});
 
-    expect(buildParms().searchContext).toEqual(request);
+    expect(buildParms().searchContext).toEqual({
+      ...request,
+      visitorId: expect.any(String),
+    });
   });
 });

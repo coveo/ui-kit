@@ -72,4 +72,14 @@ describe('search request', () => {
     const {facets} = searchRequest(state);
     expect(facets).toContain(request);
   });
+
+  it('should send visitorId if analytics is enable', () => {
+    state.configuration.analytics.enabled = true;
+    expect(searchRequest(state).visitorId).toBeDefined();
+  });
+
+  it('should not send visitorId if analytics is disabled', () => {
+    state.configuration.analytics.enabled = false;
+    expect(searchRequest(state).visitorId).not.toBeDefined();
+  });
 });
