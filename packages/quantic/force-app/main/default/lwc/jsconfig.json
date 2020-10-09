@@ -10,6 +10,12 @@
             "c/dateFacetValue": [
                 "dateFacetValue/dateFacetValue.js"
             ],
+            "c/categoryFacet": [
+                "categoryFacet/categoryFacet.js"
+            ],
+            "c/categoryFacetValue": [
+                "categoryFacetValue/categoryFacetValue.js"
+            ],
             "c/facet": [
                 "facet/facet.js"
             ],
