@@ -4,20 +4,20 @@ export type ResultTemplateCondition = (result: Result) => boolean;
 
 export interface ResultTemplate<Content = unknown> {
   /**
-   * Stored content of the template.
+   * The stored content of the template.
    */
   content: Content;
   /**
-   * List of conditions to fulfill for a condition to be selected.
+   * A list of conditions that must be fulfilled for this template to be selected.
    */
   conditions: ResultTemplateCondition[];
   /**
-   * 0 based value which the manager will fallback to when multiple conditions are fullfiled.
-   * Higher numbers have priority and are evaluated first.
+   * A value which the manager will fallback to when multiple templates' conditions are fulfilled.
+   * Templates with higher priority values will be selected over others. The minimum value is `0`.
    */
   priority?: number;
   /**
-   * List of index fields that are necessary to render the template.
+   * A list of index fields that are necessary to render the template.
    */
   fields?: string[];
 }

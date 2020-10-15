@@ -10,6 +10,10 @@ import {
 import {configureAnalytics} from '../../api/analytics/analytics';
 import {Result} from '../../api/search/search/result';
 
+/**
+ * Logs a click event with an `actionCause` value of `documentOpen`.
+ * @param result (Result) The result that was opened.
+ */
 export const logDocumentOpen = createAsyncThunk(
   'analytics/result/open',
   async (result: Result, {getState}) => {

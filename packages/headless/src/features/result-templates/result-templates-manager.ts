@@ -10,15 +10,24 @@ const prioritySchema = new Schema({
 });
 
 /**
- * Manager in which result templates can be registered and selected based on a list of conditions and priority.
+ * A manager in which result templates can be registered and selected based on a list of conditions and priority.
  */
 export class ResultTemplatesManager<
   Content = unknown,
   State = SearchPageState
 > {
   private templates: Required<ResultTemplate<Content>>[] = [];
+  /**
+   * Creates a new `ResultTemplatesManager` instance.
+   * @param engine (HeadlessEngine) The `HeadlessEngine` instance of your application.
+   * @returns (ResultTemplatesManager<Content, State>) A new result templates manager.
+   */
   constructor(private engine: Engine<State>) {}
 
+  /**
+   * Registers any number of result templates in the manager.
+   * @param templates (...ResultTemplate<Content>) A list of templates to register.
+   */
   public registerTemplates(...templates: ResultTemplate<Content>[]) {
     const fields: string[] = [];
     this.validateTemplates(templates);
@@ -51,6 +60,12 @@ export class ResultTemplatesManager<
     });
   }
 
+  /**
+   * Selects the highest priority template for which the given result satisfies all conditions.
+   * In the case where satisfied templates have equal priority, the template that was registered first is returned.
+   * @param result (Result) The result for which to select a template.
+   * @returns (Content) The selected template's content, or null if no template's conditions are satisfied.
+   */
   public selectTemplate(result: Result) {
     const template = this.templates.find((template) =>
       template.conditions.every((condition) => condition(result))
