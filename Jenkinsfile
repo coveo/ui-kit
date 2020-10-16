@@ -40,17 +40,24 @@ node('linux && docker') {
       return
     }
 
-    stage('Bump version') {
-      withCredentials([
-        usernameColonPassword(credentialsId: 'bitbucket-anti-throttling-03', variable: 'BB_CREDENTIALS')
-      ]) {
-        sh 'npm run bump:version'
-      }
+    stage('Clean working directory') {
+      sh 'git checkout -- .'
+      sh 'git clean -f'
     }
 
-    stage('Npm publish') {
-      withNPM(npmrcConfig:'coveo-organization') {
-        sh 'npm run npm:publish'
+    withDockerContainer(image: 'node:14', args: '-u=root') {
+      stage('Bump version') {
+        withCredentials([
+          usernameColonPassword(credentialsId: 'bitbucket-anti-throttling-03', variable: 'BB_CREDENTIALS')
+        ]) {
+          sh 'npm run bump:version'
+        }
+      }
+
+      stage('Npm publish') {
+        withNPM(npmrcConfig:'coveo-organization') {
+          sh 'npm run npm:publish'
+        }
       }
     }
 

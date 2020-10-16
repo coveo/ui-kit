@@ -1,14 +1,16 @@
 const { promisify } = require('util');
 const exec = promisify(require('child_process').exec);
 
-function authenticateGitClient() {
+async function authenticateGitClient() {
   const credentials = process.env.BB_CREDENTIALS || '';
   
   if (!credentials) {
     return console.log('No bitbucket credentials found. Skipping git client authentication.');
   }
 
-  return exec(`git remote set-url origin https://${credentials}@bitbucket.org/coveord/ui-kit.git`)
+  await exec(`git remote set-url origin https://${credentials}@bitbucket.org/coveord/ui-kit.git`)
+  await exec('git config --global user.email "jenkins-bot@coveo.com"');
+  await exec('git config --global user.name "Jenkins Bot"');
 }
 
 async function getHeadCommitHash() {
