@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 0.1.0-alpha.5 (2020-10-16)
+
+
+### Features
+
+* **atomic:** Initialize engine & components only after access token is available ([1e8317c](https://bitbucket.org/coveord/ui-kit/commits/1e8317ca2bafc83e37fed0d854e2ccd1bcc95a90))
+
+
+
+
+
 # 0.1.0-alpha.4 (2020-08-25)
 
 **Note:** Version bump only for package @coveo/atomic
