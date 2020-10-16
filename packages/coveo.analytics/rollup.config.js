@@ -55,7 +55,6 @@ const libESM = {
             useTsconfigDeclarationDir: true,
             tsconfigOverride: {compilerOptions: {"target": "es6"}}
         }),
-        terser()
     ]
 }
 
