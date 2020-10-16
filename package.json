@@ -9,13 +9,15 @@
     "test:watch": "lerna run --parallel test:watch --no-prefix",
     "check": "gts check",
     "fix": "gts fix",
-    "report:bundle-size": "node ./benchmark/bundle-size/bundle-size.js",
-    "report:bundle-size:time-series": "node ./benchmark/bundle-size/time-series.js",
+    "report:bundle-size": "node ./scripts/bundle-size/bundle-size.js",
+    "report:bundle-size:time-series": "node ./scripts/bundle-size/time-series.js",
     "cypress:test": "lerna run cypress:test",
     "commit": "git-cz",
-    "release": "lerna version --conventional-commits",
-    "release:pre": "lerna version --conventional-commits --conventional-prerelease",
-    "release:graduate": "lerna version --conventional-commits --conventional-graduate"
+    "bump:version": "node ./scripts/deploy/bump-version.js",
+    "version": "lerna version --conventional-commits",
+    "version:pre": "lerna version --conventional-commits --conventional-prerelease",
+    "version:graduate": "lerna version --conventional-commits --conventional-graduate",
+    "npm:publish": "node ./scripts/deploy/npm-publish.js"
   },
   "devDependencies": {
     "@commitlint/config-conventional": "^9.1.1",

@@ -22,7 +22,8 @@
     "test:watch": "stencil test --spec --e2e --watchAll",
     "generate": "stencil generate",
     "cypress:test": "npx cypress run",
-    "cypress:open": "npx cypress open"
+    "cypress:open": "npx cypress open",
+    "npm:publish": "npm publish --access public"
   },
   "dependencies": {
     "@coveo/bueno": "^0.1.0-alpha.4",

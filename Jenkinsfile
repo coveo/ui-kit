@@ -1,6 +1,6 @@
 node('linux && docker') {
   checkout scm
-  def shouldDeploy = env.BRANCH_NAME == 'master'
+  def isMaster = env.BRANCH_NAME == 'master'
 
   withEnv([
     'npm_config_cache=npm-cache',
@@ -36,8 +36,22 @@ node('linux && docker') {
       // }
     }
 
-    if (!shouldDeploy) {
+    if (!isMaster) {
       return
+    }
+
+    stage('Bump version') {
+      withCredentials([
+        usernameColonPassword(credentialsId: 'bitbucket-anti-throttling-03', variable: 'BB_CREDENTIALS')
+      ]) {
+        sh 'npm run bump:version'
+      }
+    }
+
+    stage('Npm publish') {
+      withNPM(npmrcConfig:'coveo-organization') {
+        sh 'npm run npm:publish'
+      }
     }
 
     withDockerContainer(image: '458176070654.dkr.ecr.us-east-1.amazonaws.com/jenkins/deployment_package:v7') {
