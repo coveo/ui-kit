@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.1.0-alpha.6](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.5...v0.1.0-alpha.6) (2020-10-19)
+
+
+### Features
+
+* **headless:** Refactor cq and aq as string in an single object ([7b0010a](https://bitbucket.org/coveord/ui-kit/commits/7b0010a4b75f8e1faef28a9211cc6596cc8f3bd8))
+
+
+
+
+
 # 0.1.0-alpha.5 (2020-10-16)
 
 
