@@ -83,7 +83,7 @@ export const logInterfaceChange = createAsyncThunk(
   async (_, {getState}) => {
     const state = searchPageState(getState);
     await configureAnalytics(state).logInterfaceChange({
-      interfaceChangeTo: state.constantQuery.cq,
+      interfaceChangeTo: state.advancedSearchQueries.cq,
     });
     return makeSearchActionType();
   }

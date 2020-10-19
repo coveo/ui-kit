@@ -36,11 +36,10 @@ export * from './features/facets/facet-set/facet-set-selectors';
 export * from './features/pagination/pagination-selectors';
 
 // Grouped Actions
-export * as AdvancedQueryActions from './features/advanced-query/advanced-query-actions';
+export * as AdvancedSearchQueriesActions from './features/advanced-search-queries/advanced-search-queries-actions';
 export * as AnalyticsActions from './features/analytics/analytics-actions';
 export * as CategoryFacetActions from './features/facets/category-facet-set/category-facet-set-actions';
 export * as ConfigurationActions from './features/configuration/configuration-actions';
-export * as ConstantQueryActions from './features/constant-query/constant-query-actions';
 export * as ContextActions from './features/context/context-actions';
 export * as DateFacetActions from './features/facets/range-facets/date-facet-set/date-facet-actions';
 export * as DidYouMeanActions from './features/did-you-mean/did-you-mean-actions';

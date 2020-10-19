@@ -55,18 +55,12 @@ export interface QueryState {
   q: string;
 }
 
-export interface ConstantQueryState {
+export interface AdvancedSearchQueriesState {
   /**
    * The cq filter (e.g., `((q AND aq) OR dq) AND cq).
    */
   cq: string;
-  /**
-   * Represents whether the query has been updated once yet.
-   */
-  isInitialized: boolean;
-}
 
-export interface AdvancedQueryState {
   /**
    * The aq filter (e.g., `((q AND aq) OR dq) AND cq).
    */

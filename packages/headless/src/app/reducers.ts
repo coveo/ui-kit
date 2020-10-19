@@ -23,9 +23,8 @@ import {dateFacetSetReducer} from '../features/facets/range-facets/date-facet-se
 import {numericFacetSetReducer} from '../features/facets/range-facets/numeric-facet-set/numeric-facet-set-slice';
 import {searchHubReducer} from '../features/search-hub/search-hub-slice';
 import {categoryFacetSetReducer} from '../features/facets/category-facet-set/category-facet-set-slice';
-import {constantQueryReducer} from '../features/constant-query/constant-query-slice';
 import {categoryFacetSearchSetReducer} from '../features/facets/facet-search-set/category/category-facet-search-set-slice';
-import {advancedQueryReducer} from '../features/advanced-query/advanced-query-slice';
+import {advancedSearchQueriesReducer} from '../features/advanced-search-queries/advanced-search-queries-slice';
 
 /**
  * Map of reducers that make up the SearchPageState.
@@ -39,8 +38,7 @@ export const searchPageReducers: ReducersMapObject<SearchPageState> = {
   facetSearchSet: specificFacetSearchSetReducer,
   categoryFacetSearchSet: categoryFacetSearchSetReducer,
   query: queryReducer,
-  constantQuery: constantQueryReducer,
-  advancedQuery: advancedQueryReducer,
+  advancedSearchQueries: advancedSearchQueriesReducer,
   querySet: querySetReducer,
   pagination: paginationReducer,
   redirection: redirectionReducer,

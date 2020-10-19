@@ -6,8 +6,8 @@ import {configureAnalytics} from '../../analytics/analytics';
 
 export interface SearchRequest {
   q: string;
-  cq: string;
   aq: string;
+  cq: string;
   numberOfResults: number;
   sortCriteria: string;
   firstResult: number;
@@ -24,8 +24,8 @@ export interface SearchRequest {
 export const searchRequest = (state: SearchPageState): SearchRequest => {
   return {
     ...getQParam(state),
-    cq: state.constantQuery.cq,
-    aq: state.advancedQuery.aq,
+    aq: state.advancedSearchQueries.aq,
+    cq: state.advancedSearchQueries.cq,
     numberOfResults: state.pagination.numberOfResults,
     sortCriteria: state.sortCriteria,
     firstResult: state.pagination.firstResult,

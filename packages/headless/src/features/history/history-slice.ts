@@ -12,7 +12,7 @@ import {
   PaginationState,
   getPaginationInitialState,
 } from '../pagination/pagination-slice';
-import {ConstantQueryState, QueryState, AdvancedQueryState} from '../../state';
+import {QueryState, AdvancedSearchQueriesState} from '../../state';
 import {SortState} from '../../controllers/sort/headless-sort';
 import {snapshot} from './history-actions';
 import {getPipelineInitialState} from '../pipeline/pipeline-slice';
@@ -29,8 +29,7 @@ import {
   getCategoryFacetSetInitialState,
   CategoryFacetSetState,
 } from '../facets/category-facet-set/category-facet-set-slice';
-import {getInitialConstantQueryState} from '../constant-query/constant-query-slice';
-import {getInitialAdvancedQueryState} from '../advanced-query/advanced-query-slice';
+import {getAdvancedSearchQueriesInitialState} from '../advanced-search-queries/advanced-search-queries-slice';
 
 export const getHistoryEmptyState = (): SearchParametersState => ({
   context: getContextInitialState(),
@@ -40,8 +39,7 @@ export const getHistoryEmptyState = (): SearchParametersState => ({
   categoryFacetSet: getCategoryFacetSetInitialState(),
   pagination: getPaginationInitialState(),
   query: getQueryInitialState(),
-  constantQuery: getInitialConstantQueryState(),
-  advancedQuery: getInitialAdvancedQueryState(),
+  advancedSearchQueries: getAdvancedSearchQueriesInitialState(),
   sortCriteria: getSortCriteriaInitialState(),
   querySet: getQuerySetInitialState(),
   pipeline: getPipelineInitialState(),
@@ -63,8 +61,10 @@ const isEqual = (
 ) => {
   return (
     isContextEqual(current.context, next.context) &&
-    isConstantQueryEqual(current.constantQuery, next.constantQuery) &&
-    isAdvancedQueryEqual(current.advancedQuery, next.advancedQuery) &&
+    isAdvancedSearchQueriesEqual(
+      current.advancedSearchQueries,
+      next.advancedSearchQueries
+    ) &&
     isFacetsEqual(current.facetSet, next.facetSet) &&
     isDateFacetsEqual(current.dateFacetSet, next.dateFacetSet) &&
     isNumericFacetsEqual(current.numericFacetSet, next.numericFacetSet) &&
@@ -105,16 +105,10 @@ const isPaginationEqual = (current: PaginationState, next: PaginationState) =>
 const isQueryEqual = (current: QueryState, next: QueryState) =>
   current.q === next.q;
 
-const isConstantQueryEqual = (
-  current: ConstantQueryState,
-  next: ConstantQueryState
+const isAdvancedSearchQueriesEqual = (
+  current: AdvancedSearchQueriesState,
+  next: AdvancedSearchQueriesState
 ) => JSON.stringify(current) === JSON.stringify(next);
-
-const isAdvancedQueryEqual = (
-  current: AdvancedQueryState,
-  next: AdvancedQueryState
-) => JSON.stringify(current) === JSON.stringify(next);
-
 const isSortEqual = (current: SortState, next: SortState) =>
   current.sortCriteria === next.sortCriteria;
 
