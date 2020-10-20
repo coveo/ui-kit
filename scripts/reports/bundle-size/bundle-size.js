@@ -1,5 +1,5 @@
 const { promisify } = require('util');
-const { buildReport, sendReport } = require('./report');
+const { buildReport } = require('./report');
 const { computeFileSizes } = require('./command');
 const exec = promisify(require('child_process').exec);
 
@@ -21,7 +21,7 @@ async function checkoutTargetBranch() {
   await exec(`git checkout ${targetBranch}`);
 }
 
-async function main() {
+async function buildBundleSizeReport() {
   console.log(`on branch: ${sourceBranch}`);
   const newSizes = await computeFileSizes();
 
@@ -31,8 +31,7 @@ async function main() {
 
   const oldSizes = await computeFileSizes();
 
-  const report = buildReport(oldSizes, newSizes);
-  sendReport(report);
+  return buildReport(oldSizes, newSizes);
 }
 
-main();
+module.exports = { buildBundleSizeReport }

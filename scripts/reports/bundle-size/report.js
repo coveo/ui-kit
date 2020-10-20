@@ -1,5 +1,3 @@
-const { BitbucketClient } = require('./bitbucket-client');
-
 function buildReport(oldSizes, newSizes) {
   const rows = prepareData(oldSizes, newSizes);
   return buildVisualReport(rows);
@@ -63,7 +61,7 @@ function buildVisualReport(rows) {
   const presentableRows = rowsWithColumnsConcatenated.join('\n');
   
   return `
-  **${reportTitle()}**
+  **Bundle Size**
   
   | File | Compression | Old (kb) | New (kb) | Change (%)
   | ---- |:-----------:|:--------:|:--------:|:------:
@@ -71,23 +69,4 @@ function buildVisualReport(rows) {
   `
 }
 
-function reportTitle() {
-  return 'Bundle Size Report'
-}
-
-async function sendReport(report) {
-  console.log('sending report');
-  
-  const client = new BitbucketClient();
-  const comments = await client.getPullRequestComments();
-  const comment = findBundleSizeComment(comments);
-  
-  comment ? client.updateComment(comment.id, report) : client.createComment(report);
-}
-
-function findBundleSizeComment(comments) {
-  const title = reportTitle();
-  return comments.find(comment => comment.content.raw.indexOf(title) !== -1)
-}
-
-module.exports = { buildReport, sendReport }
+module.exports = { buildReport }
