@@ -27,7 +27,7 @@ import {categoryFacetSearchSetReducer} from '../features/facets/facet-search-set
 import {advancedSearchQueriesReducer} from '../features/advanced-search-queries/advanced-search-queries-slice';
 
 /**
- * Map of reducers that make up the SearchPageState.
+ * Map of reducers that make up the SearchAppState.
  */
 export const searchAppReducers: ReducersMapObject<SearchAppState> = {
   configuration: configurationReducer,
