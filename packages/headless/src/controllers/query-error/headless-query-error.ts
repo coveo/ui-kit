@@ -1,4 +1,5 @@
 import {Engine} from '../../app/headless-engine';
+import {SearchSection} from '../../state/state-sections';
 import {buildController} from '../controller/headless-controller';
 
 /**
@@ -7,7 +8,7 @@ import {buildController} from '../controller/headless-controller';
 export type QueryError = ReturnType<typeof buildQueryError>;
 export type QueryErrorState = QueryError['state'];
 
-export const buildQueryError = (engine: Engine) => {
+export const buildQueryError = (engine: Engine<SearchSection>) => {
   const controller = buildController(engine);
 
   return {

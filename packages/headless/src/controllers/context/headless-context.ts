@@ -9,6 +9,7 @@ import {
   addContext,
   removeContext,
 } from '../../features/context/context-actions';
+import {ContextSection} from '../../state/state-sections';
 
 /**
  * The `Context` controller injects custom contextual information into the search requests and usage analytics search events sent from a search interface.
@@ -18,7 +19,7 @@ import {
 export type Context = ReturnType<typeof buildContext>;
 export type ContextState = Context['state'];
 
-export const buildContext = (engine: Engine) => {
+export const buildContext = (engine: Engine<ContextSection>) => {
   const controller = buildController(engine);
   const {dispatch} = engine;
 

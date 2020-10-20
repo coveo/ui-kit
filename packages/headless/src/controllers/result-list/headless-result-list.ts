@@ -1,11 +1,12 @@
 import {Engine} from '../../app/headless-engine';
+import {SearchSection} from '../../state/state-sections';
 import {buildController} from '../controller/headless-controller';
 
 /** The state relevant to the `ResultList` controller.*/
 export type ResultListState = ResultList['state'];
 export type ResultList = ReturnType<typeof buildResultList>;
 
-export const buildResultList = (engine: Engine) => {
+export const buildResultList = (engine: Engine<SearchSection>) => {
   const controller = buildController(engine);
 
   return {

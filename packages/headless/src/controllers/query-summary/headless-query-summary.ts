@@ -1,4 +1,5 @@
 import {Engine} from '../../app/headless-engine';
+import {PaginationSection, SearchSection} from '../../state/state-sections';
 import {buildController} from '../controller/headless-controller';
 
 /**
@@ -11,7 +12,9 @@ export type QuerySummary = ReturnType<typeof buildQuerySummary>;
 /** The state relevant to the `QuerySummary` controller.*/
 export type QuerySummaryState = QuerySummary['state'];
 
-export const buildQuerySummary = (engine: Engine) => {
+export const buildQuerySummary = (
+  engine: Engine<SearchSection & PaginationSection>
+) => {
   const controller = buildController(engine);
 
   const durationInSeconds = () => {
