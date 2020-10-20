@@ -1,7 +1,7 @@
-import {SearchPageState} from '../../../state';
+import {SearchAppState} from '../../../state/search-app-state';
 import {getQParam} from '../search-api-params';
 
-export const planRequest = (state: SearchPageState) => ({
+export const planRequest = (state: SearchAppState) => ({
   ...getQParam(state),
   context: state.context.contextValues,
   pipeline: state.pipeline,

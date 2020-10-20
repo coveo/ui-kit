@@ -1,18 +1,16 @@
-import {SearchParametersState} from '../../search-parameters-state';
 import {createReducer} from '@reduxjs/toolkit';
 import {getContextInitialState, ContextState} from '../context/context-slice';
 import {
   getFacetSetInitialState,
   FacetSetState,
 } from '../facets/facet-set/facet-set-slice';
-import {getQueryInitialState} from '../query/query-slice';
+import {getQueryInitialState, QueryState} from '../query/query-slice';
 import {getSortCriteriaInitialState} from '../sort-criteria/sort-criteria-slice';
 import {getQuerySetInitialState} from '../query-set/query-set-slice';
 import {
   PaginationState,
   getPaginationInitialState,
 } from '../pagination/pagination-slice';
-import {QueryState, AdvancedSearchQueriesState} from '../../state';
 import {SortState} from '../../controllers/sort/headless-sort';
 import {snapshot} from './history-actions';
 import {getPipelineInitialState} from '../pipeline/pipeline-slice';
@@ -29,7 +27,11 @@ import {
   getCategoryFacetSetInitialState,
   CategoryFacetSetState,
 } from '../facets/category-facet-set/category-facet-set-slice';
-import {getAdvancedSearchQueriesInitialState} from '../advanced-search-queries/advanced-search-queries-slice';
+import {
+  AdvancedSearchQueriesState,
+  getAdvancedSearchQueriesInitialState,
+} from '../advanced-search-queries/advanced-search-queries-slice';
+import {SearchParametersState} from '../../state/search-app-state';
 
 export const getHistoryEmptyState = (): SearchParametersState => ({
   context: getContextInitialState(),

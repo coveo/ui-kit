@@ -2,9 +2,9 @@ import {
   BaseFacetSearchRequest,
   FacetSearchType,
 } from '../base/base-facet-search-request';
-import {SearchPageState} from '../../../../state';
 import {searchRequest} from '../../search/search-request';
 import {CategoryFacetRequest} from '../../../../features/facets/category-facet-set/interfaces/request';
+import {SearchAppState} from '../../../../state/search-app-state';
 
 export interface CategoryFacetSearchRequest
   extends BaseFacetSearchRequest,
@@ -15,7 +15,7 @@ export interface CategoryFacetSearchRequest
 
 export const buildCategoryFacetSearchRequest = (
   id: string,
-  state: SearchPageState
+  state: SearchAppState
 ): CategoryFacetSearchRequest => {
   const options = state.categoryFacetSearchSet[id].options;
   const categoryFacet = state.categoryFacetSet[id];

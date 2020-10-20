@@ -9,8 +9,10 @@ export {
 
 // Main App
 export * from './app/headless-engine';
-export * from './app/reducers';
-export {SearchPageState} from './state';
+export * from './app/search-app-reducers';
+
+// State
+export * from './state/search-app-state';
 
 // Controllers
 export * from './controllers/controller/headless-controller';

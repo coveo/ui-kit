@@ -1,8 +1,8 @@
 import {
   getAdvancedSearchQueriesInitialState,
   advancedSearchQueriesReducer,
+  AdvancedSearchQueriesState,
 } from './advanced-search-queries-slice';
-import {AdvancedSearchQueriesState} from '../../state';
 import {updateAdvancedSearchQueries} from './advanced-search-queries-actions';
 import {getHistoryEmptyState} from '../history/history-slice';
 import {change} from '../history/history-actions';

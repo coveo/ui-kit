@@ -1,7 +1,7 @@
-import {SearchPageState} from '../../../state';
+import {SearchAppState} from '../../../state/search-app-state';
 
 export const categoryFacetRequestSelector = (
-  state: SearchPageState,
+  state: SearchAppState,
   id: string
 ) => {
   return state.categoryFacetSet[id];

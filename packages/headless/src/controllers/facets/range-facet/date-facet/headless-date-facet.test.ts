@@ -5,7 +5,6 @@ import {
   buildDateRange,
 } from './headless-date-facet';
 import {MockEngine, buildMockEngine} from '../../../../test/mock-engine';
-import {SearchPageState} from '../../../../state';
 import {createMockState} from '../../../../test/mock-state';
 import {executeSearch} from '../../../../features/search/search-actions';
 import {
@@ -15,11 +14,12 @@ import {
 import {buildMockDateFacetValue} from '../../../../test/mock-date-facet-value';
 import {buildMockDateFacetResponse} from '../../../../test/mock-date-facet-response';
 import {buildMockDateFacetRequest} from '../../../../test/mock-date-facet-request';
+import {SearchAppState} from '../../../../state/search-app-state';
 
 describe('date facet', () => {
   const facetId = '1';
   let options: DateFacetOptions;
-  let state: SearchPageState;
+  let state: SearchAppState;
   let engine: MockEngine;
   let dateFacet: DateFacet;
 

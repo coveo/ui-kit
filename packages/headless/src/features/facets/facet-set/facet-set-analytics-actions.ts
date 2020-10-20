@@ -5,8 +5,8 @@ import {
   makeSearchActionType,
 } from '../../analytics/analytics-actions';
 import {configureAnalytics} from '../../../api/analytics/analytics';
-import {SearchPageState} from '../../../state';
 import {RangeFacetSortCriterion} from '../range-facets/generic/interfaces/request';
+import {SearchAppState} from '../../../state/search-app-state';
 
 export type FacetUpdateSortMetadata = {
   facetId: string;
@@ -128,7 +128,7 @@ export const logFacetDeselect = createAsyncThunk(
 
 function buildFacetSelectionChangeMetadata(
   payload: FacetSelectionChangeMetadata,
-  state: SearchPageState
+  state: SearchAppState
 ) {
   const {facetId, facetValue} = payload;
   const base = buildFacetBaseMetadata(facetId, state);
@@ -136,7 +136,7 @@ function buildFacetSelectionChangeMetadata(
   return {...base, facetValue};
 }
 
-function buildFacetBaseMetadata(facetId: string, state: SearchPageState) {
+function buildFacetBaseMetadata(facetId: string, state: SearchAppState) {
   const facet =
     state.facetSet[facetId] ||
     state.categoryFacetSet[facetId] ||

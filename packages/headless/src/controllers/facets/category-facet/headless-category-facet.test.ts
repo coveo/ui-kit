@@ -3,7 +3,6 @@ import {
   CategoryFacet,
   CategoryFacetOptions,
 } from './headless-category-facet';
-import {SearchPageState} from '../../../state';
 import {buildMockEngine, createMockState, MockEngine} from '../../../test';
 import {
   registerCategoryFacet,
@@ -23,11 +22,12 @@ import {
 import {buildMockCategoryFacetRequest} from '../../../test/mock-category-facet-request';
 import * as CategoryFacetSearch from '../facet-search/category/headless-category-facet-search';
 import {buildMockCategoryFacetSearch} from '../../../test/mock-category-facet-search';
+import {SearchAppState} from '../../../state/search-app-state';
 
 describe('category facet', () => {
   const facetId = '1';
   let options: CategoryFacetOptions;
-  let state: SearchPageState;
+  let state: SearchAppState;
   let engine: MockEngine;
   let categoryFacet: CategoryFacet;
 

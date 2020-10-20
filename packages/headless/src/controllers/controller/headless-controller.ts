@@ -2,7 +2,7 @@ import {Engine} from '../../app/headless-engine';
 
 export type Controller = ReturnType<typeof buildController>;
 
-export function buildController(engine: Engine) {
+export function buildController<T>(engine: Engine<T>) {
   let prevState = '{}';
 
   const hasStateChanged = (currentState: Record<string, any>): boolean => {

@@ -1,13 +1,17 @@
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
-import {SearchPageState} from '../../state';
+
 import {ActionCreators} from '../../app/undoable';
-import {SearchParametersState} from '../../search-parameters-state';
+
 import {configureAnalytics} from '../../api/analytics/analytics';
 import {SearchPageEvents} from 'coveo.analytics/dist/definitions/searchPage/searchPageEvents';
 import {
   searchPageState,
   makeSearchActionType,
 } from '../analytics/analytics-actions';
+import {
+  SearchAppState,
+  SearchParametersState,
+} from '../../state/search-app-state';
 
 /**
  * Creates a snapshot of the current request parameters and adds it to the interface history.
@@ -40,7 +44,7 @@ export const forward = createAsyncThunk(
 export const change = createAsyncThunk(
   'history/change',
   async (_, {getState}) => {
-    const s = getState() as SearchPageState;
+    const s = getState() as SearchAppState;
     return s.history.present;
   }
 );

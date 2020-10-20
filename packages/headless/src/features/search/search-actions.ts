@@ -4,13 +4,13 @@ import {
   isErrorResponse,
   AsyncThunkSearchOptions,
 } from '../../api/search/search-api-client';
-import {SearchPageState} from '../../state';
 import {SearchAction} from '../analytics/analytics-actions';
 import {SearchResponseSuccess} from '../../api/search/search/search-response';
 import {snapshot} from '../history/history-actions';
 import {logDidYouMeanAutomatic} from '../did-you-mean/did-you-mean-analytics-actions';
 import {applyDidYouMeanCorrection} from '../did-you-mean/did-you-mean-actions';
 import {updateQuery} from '../query/query-actions';
+import {SearchAppState} from '../../state/search-app-state';
 
 export interface ExecuteSearchThunkReturn {
   /** The successful search response. */
@@ -25,10 +25,7 @@ export interface ExecuteSearchThunkReturn {
   analyticsAction: SearchAction;
 }
 
-const fetchFromAPI = async (
-  client: SearchAPIClient,
-  state: SearchPageState
-) => {
+const fetchFromAPI = async (client: SearchAPIClient, state: SearchAppState) => {
   const startedAt = new Date().getTime();
   const response = await client.search(state);
   const duration = new Date().getTime() - startedAt;
@@ -94,7 +91,7 @@ export const executeSearch = createAsyncThunk<
 const automaticallyRetryQueryWithCorrection = async (
   client: SearchAPIClient,
   correction: string,
-  getState: () => SearchPageState,
+  getState: () => SearchAppState,
   dispatch: ThunkDispatch<unknown, unknown, AnyAction>
 ) => {
   dispatch(updateQuery({q: correction}));
@@ -105,7 +102,7 @@ const automaticallyRetryQueryWithCorrection = async (
 };
 
 const shouldReExecuteTheQueryWithCorrections = (
-  state: SearchPageState,
+  state: SearchAppState,
   res: SearchResponseSuccess
 ) => {
   if (
@@ -118,7 +115,7 @@ const shouldReExecuteTheQueryWithCorrections = (
   return false;
 };
 
-const extractHistory = (state: SearchPageState) => ({
+const extractHistory = (state: SearchAppState) => ({
   context: state.context,
   facetSet: state.facetSet,
   numericFacetSet: state.numericFacetSet,

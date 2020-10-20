@@ -1,4 +1,3 @@
-import {SearchPageState} from '../state';
 import {getConfigurationInitialState} from '../features/configuration/configuration-slice';
 import {getQueryInitialState} from '../features/query/query-slice';
 import {getRedirectionInitialState} from '../features/redirection/redirection-slice';
@@ -20,10 +19,11 @@ import {getCategoryFacetSetInitialState} from '../features/facets/category-facet
 import {getFacetSearchSetInitialState} from '../features/facets/facet-search-set/specific/specific-facet-search-set-slice';
 import {getCategoryFacetSearchSetInitialState} from '../features/facets/facet-search-set/category/category-facet-search-set-slice';
 import {getAdvancedSearchQueriesInitialState} from '../features/advanced-search-queries/advanced-search-queries-slice';
+import {SearchAppState} from '../state/search-app-state';
 
 export function createMockState(
-  config: Partial<SearchPageState> = {}
-): SearchPageState {
+  config: Partial<SearchAppState> = {}
+): SearchAppState {
   return {
     configuration: getConfigurationInitialState(),
     advancedSearchQueries: getAdvancedSearchQueriesInitialState(),

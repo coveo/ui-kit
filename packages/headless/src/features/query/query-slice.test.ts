@@ -1,5 +1,4 @@
-import {queryReducer, getQueryInitialState} from './query-slice';
-import {QueryState} from '../../state';
+import {queryReducer, getQueryInitialState, QueryState} from './query-slice';
 import {selectQuerySuggestion} from '../query-suggest/query-suggest-actions';
 import {updateQuery} from './query-actions';
 import {getHistoryEmptyState} from '../history/history-slice';

@@ -1,5 +1,4 @@
 import {historyReducer, getHistoryEmptyState} from './history-slice';
-import {SearchParametersState} from '../../search-parameters-state';
 import {snapshot} from './history-actions';
 import {Reducer} from 'redux';
 import {undoable, StateWithHistory, makeHistory} from '../../app/undoable';
@@ -8,6 +7,7 @@ import {buildMockNumericFacetRequest} from '../../test/mock-numeric-facet-reques
 import {buildMockDateFacetRequest} from '../../test/mock-date-facet-request';
 import {buildMockCategoryFacetRequest} from '../../test/mock-category-facet-request';
 import {buildMockAdvancedSearchQueriesState} from '../../test/mock-advanced-search-parameters-state';
+import {SearchParametersState} from '../../state/search-app-state';
 
 describe('history slice', () => {
   let undoableReducer: Reducer<StateWithHistory<SearchParametersState>>;

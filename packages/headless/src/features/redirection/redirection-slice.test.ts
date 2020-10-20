@@ -1,8 +1,8 @@
 import {
   redirectionReducer,
   getRedirectionInitialState,
+  RedirectionState,
 } from './redirection-slice';
-import {RedirectionState} from '../../state';
 import {checkForRedirection} from './redirection-actions';
 import {SearchAPIClient} from '../../api/search/search-api-client';
 import {buildMockEngine, createMockState, MockEngine} from '../../test';

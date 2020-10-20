@@ -4,16 +4,16 @@ import {
   updateSearchConfiguration,
 } from '../features/configuration/configuration-actions';
 import * as storeConfig from './store';
-import {searchPageReducers} from './reducers';
+import {searchAppReducers} from './search-app-reducers';
 
 describe('headless engine', () => {
-  let options: HeadlessOptions<typeof searchPageReducers>;
+  let options: HeadlessOptions<typeof searchAppReducers>;
   let configureStoreSpy: jest.SpyInstance;
   let store: storeConfig.Store;
   let engine: Engine;
 
   beforeEach(() => {
-    store = storeConfig.configureStore({reducers: searchPageReducers});
+    store = storeConfig.configureStore({reducers: searchAppReducers});
     jest.spyOn(store, 'dispatch');
     configureStoreSpy = jest
       .spyOn(storeConfig, 'configureStore')
@@ -21,7 +21,7 @@ describe('headless engine', () => {
 
     options = {
       configuration: HeadlessEngine.getSampleConfiguration(),
-      reducers: searchPageReducers,
+      reducers: searchAppReducers,
     };
     engine = new HeadlessEngine(options);
   });
@@ -55,7 +55,7 @@ describe('headless engine', () => {
         accessToken: 'mytoken',
         organizationId: 'someorg',
       },
-      reducers: searchPageReducers,
+      reducers: searchAppReducers,
     };
 
     new HeadlessEngine(options);

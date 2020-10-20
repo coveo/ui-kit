@@ -15,9 +15,9 @@ import {
   updateAnalyticsConfiguration,
 } from '../features/configuration/configuration-actions';
 import {configureStore, Store} from './store';
-import {SearchPageState} from '../state';
 import {SearchAPIClient} from '../api/search/search-api-client';
 import {debounce} from 'ts-debounce';
+import {SearchAppState} from '../state/search-app-state';
 
 /**
  * The global headless engine options.
@@ -121,7 +121,7 @@ export interface HeadlessConfigurationOptions {
   };
 }
 
-export interface Engine<State = SearchPageState> {
+export interface Engine<State = SearchAppState> {
   /**
    * Dispatches an action directly. This is the only way to trigger a state change.
    * Each headless controller dispatches its own actions.

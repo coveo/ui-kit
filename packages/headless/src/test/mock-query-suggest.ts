@@ -1,4 +1,4 @@
-import {QuerySuggestState} from '../state';
+import {QuerySuggestState} from '../features/query-suggest/query-suggest-slice';
 
 export function buildMockQuerySuggest(
   config: Partial<QuerySuggestState> = {}

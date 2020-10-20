@@ -1,5 +1,4 @@
 import {MockEngine, buildMockEngine} from '../../../test/mock-engine';
-import {SearchPageState} from '../../../state';
 import {createMockState} from '../../../test/mock-state';
 import {executeSearch} from '../../../features/search/search-actions';
 import {buildMockNumericFacetValue} from '../../../test/mock-numeric-facet-value';
@@ -13,10 +12,11 @@ import {updateRangeFacetSortCriterion} from '../../../features/facets/range-face
 import {NumericFacetRequest} from '../../../features/facets/range-facets/numeric-facet-set/interfaces/request';
 import {buildMockNumericFacetRequest} from '../../../test/mock-numeric-facet-request';
 import {deselectAllFacetValues} from '../../../features/facets/facet-set/facet-set-actions';
+import {SearchAppState} from '../../../state/search-app-state';
 
 describe('range facet', () => {
   const facetId = '1';
-  let state: SearchPageState;
+  let state: SearchAppState;
   let engine: MockEngine;
   let props: RangeFacetProps<NumericFacetRequest>;
   let rangeFacet: RangeFacet;

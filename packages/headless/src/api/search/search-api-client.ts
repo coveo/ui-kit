@@ -1,6 +1,5 @@
 import {PlatformClient, PlatformResponse} from '../platform-client';
 import {PlanResponseSuccess, Plan} from './plan/plan-response';
-import {SearchPageState} from '../../state';
 import {
   QuerySuggestSuccessResponse,
   QuerySuggest,
@@ -21,11 +20,12 @@ import {
 import {FacetSearchRequest} from './facet-search/facet-search-request';
 import {FacetSearchResponse} from './facet-search/facet-search-response';
 import {buildCategoryFacetSearchRequest} from './facet-search/category-facet-search/category-facet-search-request';
+import {SearchAppState} from '../../state/search-app-state';
 
 export type AllSearchAPIResponse = Plan | Search | QuerySuggest;
 
 export interface AsyncThunkSearchOptions {
-  state: SearchPageState;
+  state: SearchAppState;
   rejectValue: SearchAPIErrorWithStatusCode;
   extra: {
     searchAPIClient: SearchAPIClient;
@@ -45,7 +45,7 @@ export type SearchAPIClientResponse<T> =
 export class SearchAPIClient {
   constructor(private renewAccessToken: () => Promise<string>) {}
   async plan(
-    state: SearchPageState
+    state: SearchAppState
   ): Promise<SearchAPIClientResponse<PlanResponseSuccess>> {
     const platformResponse = await PlatformClient.call<
       PlanRequest,
@@ -66,7 +66,7 @@ export class SearchAPIClient {
 
   async querySuggest(
     id: string,
-    state: SearchPageState
+    state: SearchAppState
   ): Promise<SearchAPIClientResponse<QuerySuggestSuccessResponse>> {
     const platformResponse = await PlatformClient.call<
       QuerySuggestRequest,
@@ -87,7 +87,7 @@ export class SearchAPIClient {
   }
 
   async search(
-    state: SearchPageState
+    state: SearchAppState
   ): Promise<SearchAPIClientResponse<SearchResponseSuccess>> {
     const platformResponse = await PlatformClient.call<SearchRequest, Search>({
       ...baseSearchParams(state, 'POST', 'application/json', ''),
@@ -106,7 +106,7 @@ export class SearchAPIClient {
     };
   }
 
-  async facetSearch(id: string, state: SearchPageState) {
+  async facetSearch(id: string, state: SearchAppState) {
     const isFacetSearch = id in state.facetSearchSet;
     const buildParams = isFacetSearch
       ? buildSpecificFacetSearchRequest

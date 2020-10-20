@@ -1,6 +1,6 @@
-import {SearchPageState} from '../../../state';
+import {SearchAppState} from '../../../state/search-app-state';
 
-export const querySuggestRequest = (id: string, state: SearchPageState) => ({
+export const querySuggestRequest = (id: string, state: SearchAppState) => ({
   /**
    * Specifies the number of suggestions that the Coveo Machine Learning service should return.
    */

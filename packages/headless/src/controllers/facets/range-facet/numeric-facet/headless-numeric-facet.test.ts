@@ -5,7 +5,6 @@ import {
   buildNumericRange,
 } from './headless-numeric-facet';
 import {MockEngine, buildMockEngine} from '../../../../test/mock-engine';
-import {SearchPageState} from '../../../../state';
 import {createMockState} from '../../../../test/mock-state';
 import {executeSearch} from '../../../../features/search/search-actions';
 import {
@@ -15,11 +14,12 @@ import {
 import {buildMockNumericFacetValue} from '../../../../test/mock-numeric-facet-value';
 import {buildMockNumericFacetResponse} from '../../../../test/mock-numeric-facet-response';
 import {buildMockNumericFacetRequest} from '../../../../test/mock-numeric-facet-request';
+import {SearchAppState} from '../../../../state/search-app-state';
 
 describe('numeric facet', () => {
   const facetId = '1';
   let options: NumericFacetOptions;
-  let state: SearchPageState;
+  let state: SearchAppState;
   let engine: MockEngine;
   let numericFacet: NumericFacet;
 

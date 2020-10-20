@@ -1,4 +1,4 @@
-import {AdvancedSearchQueriesState} from '../state';
+import {AdvancedSearchQueriesState} from '../features/advanced-search-queries/advanced-search-queries-slice';
 
 export function buildMockAdvancedSearchQueriesState(
   config: Partial<AdvancedSearchQueriesState> = {}

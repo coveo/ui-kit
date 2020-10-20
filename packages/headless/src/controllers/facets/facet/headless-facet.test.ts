@@ -8,7 +8,6 @@ import {
   updateFacetNumberOfValues,
   updateFacetIsFieldExpanded,
 } from '../../../features/facets/facet-set/facet-set-actions';
-import {SearchPageState} from '../../../state';
 import {createMockState} from '../../../test/mock-state';
 import {buildMockFacetResponse} from '../../../test/mock-facet-response';
 import {buildMockFacetValue} from '../../../test/mock-facet-value';
@@ -17,11 +16,12 @@ import {FacetRequest} from '../../../features/facets/facet-set/interfaces/reques
 import {buildMockFacetRequest} from '../../../test/mock-facet-request';
 import {buildMockFacetSearch} from '../../../test/mock-facet-search';
 import * as FacetSearch from '../facet-search/specific/headless-facet-search';
+import {SearchAppState} from '../../../state/search-app-state';
 
 describe('facet', () => {
   const facetId = '1';
   let options: ValidatedFacetOptions;
-  let state: SearchPageState;
+  let state: SearchAppState;
   let engine: MockEngine;
   let facet: Facet;
 

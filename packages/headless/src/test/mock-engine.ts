@@ -2,10 +2,10 @@ import {Engine} from '../app/headless-engine';
 import {createMockState} from './mock-state';
 import configureStore, {MockStoreEnhanced} from 'redux-mock-store';
 import {AnyAction, ThunkDispatch, getDefaultMiddleware} from '@reduxjs/toolkit';
-import {SearchPageState} from '../state';
 import thunk from 'redux-thunk';
 import {analyticsMiddleware} from '../app/analytics-middleware';
 import {SearchAPIClient} from '../api/search/search-api-client';
+import {SearchAppState} from '../state/search-app-state';
 
 export interface MockEngine extends Engine {
   store: MockStore;
@@ -34,9 +34,9 @@ export function buildMockEngine(config: Partial<Engine> = {}): MockEngine {
   };
 }
 
-type DispatchExts = ThunkDispatch<SearchPageState, void, AnyAction>;
+type DispatchExts = ThunkDispatch<SearchAppState, void, AnyAction>;
 const configureMockStore = () => {
-  return configureStore<SearchPageState, DispatchExts>([
+  return configureStore<SearchAppState, DispatchExts>([
     analyticsMiddleware,
     thunk.withExtraArgument({
       searchAPIClient: new SearchAPIClient(mockRenewAccessToken),
@@ -44,4 +44,4 @@ const configureMockStore = () => {
     ...getDefaultMiddleware(),
   ]);
 };
-type MockStore = MockStoreEnhanced<SearchPageState, DispatchExts>;
+type MockStore = MockStoreEnhanced<SearchAppState, DispatchExts>;

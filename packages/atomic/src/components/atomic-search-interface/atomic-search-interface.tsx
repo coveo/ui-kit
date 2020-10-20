@@ -9,7 +9,7 @@ import {
 } from '@stencil/core';
 import {
   HeadlessEngine,
-  searchPageReducers,
+  searchAppReducers,
   Engine,
   SearchActions,
   HeadlessConfigurationOptions,
@@ -69,7 +69,7 @@ export class AtomicSearchInterface {
   private initEngine(config: HeadlessConfigurationOptions) {
     this.engine = new HeadlessEngine({
       configuration: config,
-      reducers: searchPageReducers,
+      reducers: searchAppReducers,
     });
 
     this.hangingComponentsInitialization.forEach((event) =>

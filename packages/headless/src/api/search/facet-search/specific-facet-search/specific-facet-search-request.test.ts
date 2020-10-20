@@ -1,14 +1,14 @@
 import {createMockState} from '../../../../test/mock-state';
 import {buildSpecificFacetSearchRequest} from './specific-facet-search-request';
-import {SearchPageState} from '../../../../state';
 import {buildMockFacetValueRequest} from '../../../../test/mock-facet-value-request';
 import {buildMockSearchRequest} from '../../../../test/mock-search-request';
 import {buildMockFacetRequest} from '../../../../test/mock-facet-request';
 import {buildMockFacetSearch} from '../../../../test/mock-facet-search';
+import {SearchAppState} from '../../../../state/search-app-state';
 
 describe('#buildSpecificFacetSearchRequest', () => {
   const id = '1';
-  let state: SearchPageState;
+  let state: SearchAppState;
 
   function setupState() {
     state = createMockState();

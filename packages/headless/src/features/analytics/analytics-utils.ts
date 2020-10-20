@@ -3,11 +3,11 @@ import {
   PartialDocumentInformation,
   DocumentIdentifier,
 } from 'coveo.analytics/dist/definitions/searchPage/searchPageEvents';
-import {SearchPageState} from '../../state';
+import {SearchAppState} from '../../state/search-app-state';
 
 export const partialDocumentInformation = (
   result: Result,
-  state: SearchPageState
+  state: SearchAppState
 ): PartialDocumentInformation => {
   const resultIndex = state.search.response.results.findIndex(
     ({uniqueId}) => result.uniqueId === uniqueId

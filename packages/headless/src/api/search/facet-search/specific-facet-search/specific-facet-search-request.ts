@@ -2,8 +2,8 @@ import {
   BaseFacetSearchRequest,
   FacetSearchType,
 } from '../base/base-facet-search-request';
-import {SearchPageState} from '../../../../state';
 import {searchRequest} from '../../search/search-request';
+import {SearchAppState} from '../../../../state/search-app-state';
 
 export interface SpecificFacetSearchRequest
   extends BaseFacetSearchRequest,
@@ -13,7 +13,7 @@ export interface SpecificFacetSearchRequest
 
 export const buildSpecificFacetSearchRequest = (
   id: string,
-  state: SearchPageState
+  state: SearchAppState
 ): SpecificFacetSearchRequest => {
   const {captions, query, numberOfValues} = state.facetSearchSet[id].options;
   const {field, delimitingCharacter, currentValues} = state.facetSet[id];
