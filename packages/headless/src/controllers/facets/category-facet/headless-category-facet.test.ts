@@ -22,6 +22,7 @@ import {
 import {buildMockCategoryFacetRequest} from '../../../test/mock-category-facet-request';
 import * as CategoryFacetSearch from '../facet-search/category/headless-category-facet-search';
 import {buildMockCategoryFacetSearch} from '../../../test/mock-category-facet-search';
+import {updateFacetOptions} from '../../../features/facet-options/facet-options-actions';
 import {SearchAppState} from '../../../state/search-app-state';
 
 describe('category facet', () => {
@@ -179,6 +180,15 @@ describe('category facet', () => {
       expect(engine.actions).toContainEqual(action);
     });
 
+    it('dispatches #updateFacetOptions with #freezeFacetOrder true', () => {
+      const selection = buildMockCategoryFacetValue({value: 'A'});
+      categoryFacet.toggleSelect(selection);
+
+      expect(engine.actions).toContainEqual(
+        updateFacetOptions({freezeFacetOrder: true})
+      );
+    });
+
     it('executes a search', () => {
       const selection = buildMockCategoryFacetValue({value: 'A'});
       categoryFacet.toggleSelect(selection);
@@ -206,6 +216,12 @@ describe('category facet', () => {
         numberOfValues,
       });
       expect(engine.actions).toContainEqual(action);
+    });
+
+    it('dispatches #updateFacetOptions with #freezeFacetOrder true', () => {
+      expect(engine.actions).toContainEqual(
+        updateFacetOptions({freezeFacetOrder: true})
+      );
     });
 
     it('executes a search', () => {
@@ -328,8 +344,9 @@ describe('category facet', () => {
   });
 
   describe('#showMoreResults', () => {
+    beforeEach(() => categoryFacet.showMoreValues());
+
     it('dispatches #updateCategoryFacetNumberOfResults is there are no nested values with the correct numberOfValues', () => {
-      categoryFacet.showMoreValues();
       const action = updateCategoryFacetNumberOfValues({
         facetId,
         numberOfValues: 5,
@@ -357,15 +374,13 @@ describe('category facet', () => {
       expect(engine.actions).toContainEqual(action);
     });
 
-    it('dispatches #executeSearch', () => {
-      categoryFacet.showMoreValues();
-      const action = engine.actions.find(
-        (a) => a.type === executeSearch.pending.type
+    it('dispatches #updateFacetOptions with #freezeFacetOrder true', () => {
+      expect(engine.actions).toContainEqual(
+        updateFacetOptions({freezeFacetOrder: true})
       );
-      expect(action).toBeTruthy();
     });
+
     it('dispatches #executeSearch', () => {
-      categoryFacet.showMoreValues();
       const action = engine.actions.find(
         (a) => a.type === executeSearch.pending.type
       );
@@ -374,8 +389,9 @@ describe('category facet', () => {
   });
 
   describe('#showLessResults', () => {
+    beforeEach(() => categoryFacet.showLessValues());
+
     it('dispatches #updateCategoryFacetNumberOfResults with the correct numberOfValues', () => {
-      categoryFacet.showLessValues();
       const action = updateCategoryFacetNumberOfValues({
         facetId,
         numberOfValues: 5,
@@ -393,8 +409,13 @@ describe('category facet', () => {
       expect(engine.actions).toContainEqual(action);
     });
 
+    it('dispatches #updateFacetOptions with #freezeFacetOrder true', () => {
+      expect(engine.actions).toContainEqual(
+        updateFacetOptions({freezeFacetOrder: true})
+      );
+    });
+
     it('dispatches #executeSearch', () => {
-      categoryFacet.showLessValues();
       const action = engine.actions.find(
         (a) => a.type === executeSearch.pending.type
       );
@@ -402,14 +423,32 @@ describe('category facet', () => {
     });
   });
 
-  it('#sortBy dispatches #toggleCategoryFacetValue with the passed selection', () => {
-    const sortCriterion: CategoryFacetSortCriterion = 'alphanumeric';
-    categoryFacet.sortBy(sortCriterion);
-    const action = updateCategoryFacetSortCriterion({
-      facetId,
-      criterion: sortCriterion,
+  describe('#sortBy', () => {
+    it('dispatches #toggleCategoryFacetValue with the passed selection', () => {
+      const sortCriterion: CategoryFacetSortCriterion = 'alphanumeric';
+      categoryFacet.sortBy(sortCriterion);
+      const action = updateCategoryFacetSortCriterion({
+        facetId,
+        criterion: sortCriterion,
+      });
+      expect(engine.actions).toContainEqual(action);
     });
-    expect(engine.actions).toContainEqual(action);
+
+    it('dispatches #updateFacetOptions with #freezeFacetOrder true', () => {
+      categoryFacet.sortBy('alphanumeric');
+
+      expect(engine.actions).toContainEqual(
+        updateFacetOptions({freezeFacetOrder: true})
+      );
+    });
+
+    it('dispatches #executeSearch', () => {
+      categoryFacet.sortBy('alphanumeric');
+      const action = engine.actions.find(
+        (a) => a.type === executeSearch.pending.type
+      );
+      expect(action).toBeTruthy();
+    });
   });
 
   it('#isSortedBy returns correct value', () => {

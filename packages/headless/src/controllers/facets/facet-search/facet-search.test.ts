@@ -14,6 +14,7 @@ import {
   GenericFacetSearchProps,
 } from './facet-search';
 import {SpecificFacetSearchState} from '../../../features/facets/facet-search-set/specific/specific-facet-search-set-slice';
+import {updateFacetOptions} from '../../../features/facet-options/facet-options-actions';
 
 describe('FacetSearch', () => {
   const facetId = '1';
@@ -87,14 +88,24 @@ describe('FacetSearch', () => {
     expect(action).toBeTruthy();
   });
 
-  it('#select dispatches #executeSearch', () => {
-    const value = buildMockFacetSearchResult();
-    controller.select(value);
+  describe('#select', () => {
+    beforeEach(() => {
+      const value = buildMockFacetSearchResult();
+      controller.select(value);
+    });
 
-    const action = engine.actions.find(
-      (a) => a.type === executeSearch.pending.type
-    );
-    expect(action).toBeTruthy();
+    it('dispatches #updateFacetOptions with #freezeFacetOrder true', () => {
+      expect(engine.actions).toContainEqual(
+        updateFacetOptions({freezeFacetOrder: true})
+      );
+    });
+
+    it('dispatches #executeSearch', () => {
+      const action = engine.actions.find(
+        (a) => a.type === executeSearch.pending.type
+      );
+      expect(action).toBeTruthy();
+    });
   });
 
   it('calling #state returns the response', () => {

@@ -12,6 +12,7 @@ import {updateRangeFacetSortCriterion} from '../../../features/facets/range-face
 import {NumericFacetRequest} from '../../../features/facets/range-facets/numeric-facet-set/interfaces/request';
 import {buildMockNumericFacetRequest} from '../../../test/mock-numeric-facet-request';
 import {deselectAllFacetValues} from '../../../features/facets/facet-set/facet-set-actions';
+import {updateFacetOptions} from '../../../features/facet-options/facet-options-actions';
 import {SearchAppState} from '../../../state/search-app-state';
 
 describe('range facet', () => {
@@ -49,14 +50,24 @@ describe('range facet', () => {
     expect(rangeFacet.state.values).toEqual(values);
   });
 
-  it('#toggleSelect dispatches a search', () => {
-    const value = buildMockNumericFacetValue();
-    rangeFacet.toggleSelect(value);
+  describe('#toggleSelect', () => {
+    beforeEach(() => {
+      const value = buildMockNumericFacetValue();
+      rangeFacet.toggleSelect(value);
+    });
 
-    const action = engine.actions.find(
-      (a) => a.type === executeSearch.pending.type
-    );
-    expect(action).toBeTruthy();
+    it('dispatches a #updateFacetOptions action with #freezeFacetOrder true', () => {
+      expect(engine.actions).toContainEqual(
+        updateFacetOptions({freezeFacetOrder: true})
+      );
+    });
+
+    it('dispatches a search', () => {
+      const action = engine.actions.find(
+        (a) => a.type === executeSearch.pending.type
+      );
+      expect(action).toBeTruthy();
+    });
   });
 
   it('when the value is selected, #isValueSelected returns `true`', () => {
@@ -70,14 +81,19 @@ describe('range facet', () => {
   });
 
   describe('#deselectAll', () => {
+    beforeEach(() => rangeFacet.deselectAll());
+
     it('dispatches #deselectAllFacetValues with the facet id', () => {
-      rangeFacet.deselectAll();
       expect(engine.actions).toContainEqual(deselectAllFacetValues(facetId));
     });
 
-    it('dispatches a search', () => {
-      rangeFacet.deselectAll();
+    it('dispatches a #updateFacetOptions action with #freezeFacetOrder true', () => {
+      expect(engine.actions).toContainEqual(
+        updateFacetOptions({freezeFacetOrder: true})
+      );
+    });
 
+    it('dispatches a search', () => {
       const action = engine.actions.find(
         (a) => a.type === executeSearch.pending.type
       );
@@ -111,6 +127,14 @@ describe('range facet', () => {
       const action = updateRangeFacetSortCriterion({facetId, criterion});
 
       expect(engine.actions).toContainEqual(action);
+    });
+
+    it('dispatches a #updateFacetOptions action with #freezeFacetOrder true', () => {
+      rangeFacet.sortBy('descending');
+
+      expect(engine.actions).toContainEqual(
+        updateFacetOptions({freezeFacetOrder: true})
+      );
     });
 
     it('dispatches a search', () => {

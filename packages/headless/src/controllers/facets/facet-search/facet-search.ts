@@ -8,6 +8,7 @@ import {logFacetSelect} from '../../../features/facets/facet-set/facet-set-analy
 import {SpecificFacetSearchState} from '../../../features/facets/facet-search-set/specific/specific-facet-search-set-slice';
 import {CategoryFacetSearchState} from '../../../features/facets/facet-search-set/category/category-facet-search-set-slice';
 import {FacetSearchOptions} from '../../../features/facets/facet-search-set/facet-search-request-options';
+import {updateFacetOptions} from '../../../features/facet-options/facet-options-actions';
 
 type FacetSearchState = SpecificFacetSearchState | CategoryFacetSearchState;
 
@@ -63,9 +64,10 @@ export function buildGenericFacetSearch<T extends FacetSearchState>(
 
     /** Selects a search result.*/
     select(value: GenericFacetSearchResult) {
-      dispatch(
-        executeSearch(logFacetSelect({facetId, facetValue: value.rawValue}))
-      );
+      const facetValue = value.rawValue;
+
+      dispatch(updateFacetOptions({freezeFacetOrder: true}));
+      dispatch(executeSearch(logFacetSelect({facetId, facetValue})));
     },
 
     get state() {

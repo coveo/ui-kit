@@ -18,6 +18,7 @@ import {getSearchHubInitialState} from '../features/search-hub/search-hub-slice'
 import {getCategoryFacetSetInitialState} from '../features/facets/category-facet-set/category-facet-set-slice';
 import {getFacetSearchSetInitialState} from '../features/facets/facet-search-set/specific/specific-facet-search-set-slice';
 import {getCategoryFacetSearchSetInitialState} from '../features/facets/facet-search-set/category/category-facet-search-set-slice';
+import {getFacetOptionsInitialState} from '../features/facet-options/facet-options-slice';
 import {getAdvancedSearchQueriesInitialState} from '../features/advanced-search-queries/advanced-search-queries-slice';
 import {SearchAppState} from '../state/search-app-state';
 
@@ -33,6 +34,7 @@ export function createMockState(
     categoryFacetSet: getCategoryFacetSetInitialState(),
     facetSearchSet: getFacetSearchSetInitialState(),
     categoryFacetSearchSet: getCategoryFacetSearchSetInitialState(),
+    facetOptions: getFacetOptionsInitialState(),
     pagination: getPaginationInitialState(),
     query: getQueryInitialState(),
     querySet: getQuerySetInitialState(),

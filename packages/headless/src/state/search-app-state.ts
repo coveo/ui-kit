@@ -20,12 +20,14 @@ import {
   SearchSection,
   SortSection,
   QuerySection,
+  FacetOptionsSection,
 } from './state-sections';
 
 export type SearchParametersState = FacetSection &
   DateFacetSection &
   NumericFacetSection &
   CategoryFacetSection &
+  FacetOptionsSection &
   QuerySection &
   AdvancedSearchQueriesSection &
   PaginationSection &

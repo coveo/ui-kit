@@ -16,6 +16,7 @@ import {FacetRequest} from '../../../features/facets/facet-set/interfaces/reques
 import {buildMockFacetRequest} from '../../../test/mock-facet-request';
 import {buildMockFacetSearch} from '../../../test/mock-facet-search';
 import * as FacetSearch from '../facet-search/specific/headless-facet-search';
+import {updateFacetOptions} from '../../../features/facet-options/facet-options-actions';
 import {SearchAppState} from '../../../state/search-app-state';
 
 describe('facet', () => {
@@ -94,23 +95,34 @@ describe('facet', () => {
     expect(facet.state.values).toBe(values);
   });
 
-  it('#toggleSelect dispatches a toggleSelect action with the passed facet value', () => {
-    const facetValue = buildMockFacetValue({value: 'TED'});
-    facet.toggleSelect(facetValue);
+  describe('#toggleSelect', () => {
+    it('dispatches a #toggleSelect action with the passed facet value', () => {
+      const facetValue = buildMockFacetValue({value: 'TED'});
+      facet.toggleSelect(facetValue);
 
-    expect(engine.actions).toContainEqual(
-      toggleSelectFacetValue({facetId, selection: facetValue})
-    );
-  });
+      expect(engine.actions).toContainEqual(
+        toggleSelectFacetValue({facetId, selection: facetValue})
+      );
+    });
 
-  it('#toggleSelect dispatches a search', () => {
-    const facetValue = buildMockFacetValue({value: 'TED'});
-    facet.toggleSelect(facetValue);
+    it('dispatches #updateFacetOptions with #freezeFacetOrder true', () => {
+      const facetValue = buildMockFacetValue({value: 'TED'});
+      facet.toggleSelect(facetValue);
 
-    const action = engine.actions.find(
-      (a) => a.type === executeSearch.pending.type
-    );
-    expect(action).toBeTruthy();
+      expect(engine.actions).toContainEqual(
+        updateFacetOptions({freezeFacetOrder: true})
+      );
+    });
+
+    it('dispatches a search', () => {
+      const facetValue = buildMockFacetValue({value: 'TED'});
+      facet.toggleSelect(facetValue);
+
+      const action = engine.actions.find(
+        (a) => a.type === executeSearch.pending.type
+      );
+      expect(action).toBeTruthy();
+    });
   });
 
   it('#isValueSelected returns true when the passed value is selected', () => {
@@ -127,6 +139,14 @@ describe('facet', () => {
     it('dispatches #deselectAllFacetValues with the facet id', () => {
       facet.deselectAll();
       expect(engine.actions).toContainEqual(deselectAllFacetValues(facetId));
+    });
+
+    it('dispatches #updateFacetOptions with #freezeFacetOrder true', () => {
+      facet.deselectAll();
+
+      expect(engine.actions).toContainEqual(
+        updateFacetOptions({freezeFacetOrder: true})
+      );
     });
 
     it('dispatches a search', () => {
@@ -157,25 +177,35 @@ describe('facet', () => {
     });
   });
 
-  it('#sortBy dispatches a #updateFacetSortCriterion action with the passed value', () => {
-    const criterion = 'score';
-    facet.sortBy(criterion);
+  describe('#sortBy', () => {
+    it('dispatches a #updateFacetSortCriterion action with the passed value', () => {
+      const criterion = 'score';
+      facet.sortBy(criterion);
 
-    const action = updateFacetSortCriterion({
-      facetId,
-      criterion,
+      const action = updateFacetSortCriterion({
+        facetId,
+        criterion,
+      });
+
+      expect(engine.actions).toContainEqual(action);
     });
 
-    expect(engine.actions).toContainEqual(action);
-  });
+    it('dispatches #updateFacetOptions with #freezeFacetOrder true', () => {
+      facet.sortBy('score');
 
-  it('#sortBy dispatches a search', () => {
-    facet.sortBy('score');
-    const action = engine.actions.find(
-      (a) => a.type === executeSearch.pending.type
-    );
+      expect(engine.actions).toContainEqual(
+        updateFacetOptions({freezeFacetOrder: true})
+      );
+    });
 
-    expect(engine.actions).toContainEqual(action);
+    it('dispatches a search', () => {
+      facet.sortBy('score');
+      const action = engine.actions.find(
+        (a) => a.type === executeSearch.pending.type
+      );
+
+      expect(engine.actions).toContainEqual(action);
+    });
   });
 
   it('when the passed criterion matches the active sort criterion, #isSortedBy returns true', () => {
@@ -239,6 +269,14 @@ describe('facet', () => {
       });
 
       expect(engine.actions).toContainEqual(action);
+    });
+
+    it('dispatches #updateFacetOptions with #freezeFacetOrder true', () => {
+      facet.showMoreValues();
+
+      expect(engine.actions).toContainEqual(
+        updateFacetOptions({freezeFacetOrder: true})
+      );
     });
 
     it('executes a search', () => {
@@ -323,6 +361,14 @@ describe('facet', () => {
       });
 
       expect(engine.actions).toContainEqual(action);
+    });
+
+    it('dispatches #updateFacetOptions with #freezeFacetOrder true', () => {
+      facet.showLessValues();
+
+      expect(engine.actions).toContainEqual(
+        updateFacetOptions({freezeFacetOrder: true})
+      );
     });
 
     it('executes a search', () => {

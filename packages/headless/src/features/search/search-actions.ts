@@ -10,7 +10,10 @@ import {snapshot} from '../history/history-actions';
 import {logDidYouMeanAutomatic} from '../did-you-mean/did-you-mean-analytics-actions';
 import {applyDidYouMeanCorrection} from '../did-you-mean/did-you-mean-actions';
 import {updateQuery} from '../query/query-actions';
-import {SearchAppState} from '../../state/search-app-state';
+import {
+  SearchAppState,
+  SearchParametersState,
+} from '../../state/search-app-state';
 
 export interface ExecuteSearchThunkReturn {
   /** The successful search response. */
@@ -115,12 +118,13 @@ const shouldReExecuteTheQueryWithCorrections = (
   return false;
 };
 
-const extractHistory = (state: SearchAppState) => ({
+const extractHistory = (state: SearchAppState): SearchParametersState => ({
   context: state.context,
   facetSet: state.facetSet,
   numericFacetSet: state.numericFacetSet,
   dateFacetSet: state.dateFacetSet,
   categoryFacetSet: state.categoryFacetSet,
+  facetOptions: state.facetOptions,
   pagination: state.pagination,
   query: state.query,
   advancedSearchQueries: state.advancedSearchQueries,

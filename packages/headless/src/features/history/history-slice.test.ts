@@ -6,6 +6,7 @@ import {buildMockFacetRequest} from '../../test/mock-facet-request';
 import {buildMockNumericFacetRequest} from '../../test/mock-numeric-facet-request';
 import {buildMockDateFacetRequest} from '../../test/mock-date-facet-request';
 import {buildMockCategoryFacetRequest} from '../../test/mock-category-facet-request';
+import {buildMockFacetOptions} from '../../test/mock-facet-options';
 import {buildMockAdvancedSearchQueriesState} from '../../test/mock-advanced-search-parameters-state';
 import {SearchParametersState} from '../../state/search-app-state';
 
@@ -63,6 +64,7 @@ describe('history slice', () => {
       numericFacetSet: {bar: buildMockNumericFacetRequest()},
       dateFacetSet: {foo: buildMockDateFacetRequest()},
       categoryFacetSet: {foo: buildMockCategoryFacetRequest()},
+      facetOptions: {freezeFacetOrder: false},
       pagination: {
         firstResult: 123,
         numberOfResults: 456,
@@ -168,6 +170,17 @@ describe('history slice', () => {
       expectHistoryToHaveCreatedDifferentSnapshots(
         getSnapshot({categoryFacetSet: {foo: buildMockCategoryFacetRequest()}}),
         getSnapshot({categoryFacetSet: {foo2: buildMockCategoryFacetRequest()}})
+      );
+    });
+
+    it('for #facetOptions keys', () => {
+      expectHistoryToHaveCreatedDifferentSnapshots(
+        getSnapshot({
+          facetOptions: buildMockFacetOptions({freezeFacetOrder: true}),
+        }),
+        getSnapshot({
+          facetOptions: buildMockFacetOptions({freezeFacetOrder: false}),
+        })
       );
     });
 

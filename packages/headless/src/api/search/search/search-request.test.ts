@@ -4,6 +4,8 @@ import {buildMockFacetRequest} from '../../../test/mock-facet-request';
 import {buildMockNumericFacetRequest} from '../../../test/mock-numeric-facet-request';
 import {buildMockDateFacetRequest} from '../../../test/mock-date-facet-request';
 import {buildMockCategoryFacetRequest} from '../../../test/mock-category-facet-request';
+import {buildMockFacetOptions} from '../../../test/mock-facet-options';
+import {buildMockFacetResponse} from '../../../test/mock-facet-response';
 import {SearchAppState} from '../../../state/search-app-state';
 
 describe('search request', () => {
@@ -71,6 +73,52 @@ describe('search request', () => {
 
     const {facets} = searchRequest(state);
     expect(facets).toContain(request);
+  });
+
+  it(`when there are facets in the response,
+  #searchRequestParams orders the facets in the same order as the response`, () => {
+    const facetId1 = '1';
+    const facetId2 = '2';
+
+    state.search.response.facets = [
+      buildMockFacetResponse({facetId: facetId2}),
+      buildMockFacetResponse({facetId: facetId1}),
+    ];
+
+    state.facetSet[facetId1] = buildMockFacetRequest({facetId: facetId1});
+    state.facetSet[facetId2] = buildMockFacetRequest({facetId: facetId2});
+
+    const {facets} = searchRequest(state);
+    expect(facets).toEqual([
+      state.facetSet[facetId2],
+      state.facetSet[facetId1],
+    ]);
+  });
+
+  it(`when there is a facet request that is not in the response,
+  #searchRequestParams includes it at the end of the facets array`, () => {
+    const facetId1 = '1';
+    const facetId2 = '2';
+
+    state.search.response.facets = [
+      buildMockFacetResponse({facetId: facetId2}),
+    ];
+
+    state.facetSet[facetId1] = buildMockFacetRequest({facetId: facetId1});
+    state.facetSet[facetId2] = buildMockFacetRequest({facetId: facetId2});
+
+    const {facets} = searchRequest(state);
+    expect(facets).toEqual([
+      state.facetSet[facetId2],
+      state.facetSet[facetId1],
+    ]);
+  });
+
+  it('#searchRequestParams returns the facetOptions in state', () => {
+    state.facetOptions = buildMockFacetOptions({freezeFacetOrder: true});
+
+    const params = searchRequest(state);
+    expect(params.facetOptions).toEqual(state.facetOptions);
   });
 
   it('should send visitorId if analytics is enable', () => {

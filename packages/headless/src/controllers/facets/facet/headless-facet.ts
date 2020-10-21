@@ -35,6 +35,7 @@ import {
   FacetResponse,
 } from '../../../features/facets/facet-set/interfaces/response';
 import {FacetSortCriterion} from '../../../features/facets/facet-set/interfaces/request';
+import {updateFacetOptions} from '../../../features/facet-options/facet-options-actions';
 
 export type Facet = ReturnType<typeof buildFacet>;
 export type FacetState = Facet['state'];
@@ -135,6 +136,7 @@ export function buildFacet(engine: Engine, props: FacetProps) {
       const analyticsAction = getAnalyticsActionForToggleSelect(selection);
 
       dispatch(toggleSelectFacetValue({facetId, selection}));
+      dispatch(updateFacetOptions({freezeFacetOrder: true}));
       dispatch(executeSearch(analyticsAction));
     },
     /**
@@ -149,6 +151,7 @@ export function buildFacet(engine: Engine, props: FacetProps) {
       const id = options.facetId;
 
       dispatch(deselectAllFacetValues(id));
+      dispatch(updateFacetOptions({freezeFacetOrder: true}));
       dispatch(executeSearch(logFacetClearAll(id)));
     },
 
@@ -159,6 +162,7 @@ export function buildFacet(engine: Engine, props: FacetProps) {
       const facetId = options.facetId;
 
       dispatch(updateFacetSortCriterion({facetId, criterion}));
+      dispatch(updateFacetOptions({freezeFacetOrder: true}));
       dispatch(executeSearch(logFacetUpdateSort({facetId, criterion})));
     },
 
@@ -183,6 +187,7 @@ export function buildFacet(engine: Engine, props: FacetProps) {
 
       dispatch(updateFacetNumberOfValues({facetId, numberOfValues}));
       dispatch(updateFacetIsFieldExpanded({facetId, isFieldExpanded: true}));
+      dispatch(updateFacetOptions({freezeFacetOrder: true}));
       dispatch(executeSearch(logFacetShowMore(facetId)));
     },
 
@@ -198,6 +203,7 @@ export function buildFacet(engine: Engine, props: FacetProps) {
         updateFacetNumberOfValues({facetId, numberOfValues: newNumberOfValues})
       );
       dispatch(updateFacetIsFieldExpanded({facetId, isFieldExpanded: false}));
+      dispatch(updateFacetOptions({freezeFacetOrder: true}));
       dispatch(executeSearch(logFacetShowLess(facetId)));
     },
 

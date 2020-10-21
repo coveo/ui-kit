@@ -28,6 +28,10 @@ import {
   CategoryFacetSetState,
 } from '../facets/category-facet-set/category-facet-set-slice';
 import {
+  FacetOptionsState,
+  getFacetOptionsInitialState,
+} from '../facet-options/facet-options-slice';
+import {
   AdvancedSearchQueriesState,
   getAdvancedSearchQueriesInitialState,
 } from '../advanced-search-queries/advanced-search-queries-slice';
@@ -39,6 +43,7 @@ export const getHistoryEmptyState = (): SearchParametersState => ({
   dateFacetSet: getDateFacetSetInitialState(),
   numericFacetSet: getNumericFacetSetInitialState(),
   categoryFacetSet: getCategoryFacetSetInitialState(),
+  facetOptions: getFacetOptionsInitialState(),
   pagination: getPaginationInitialState(),
   query: getQueryInitialState(),
   advancedSearchQueries: getAdvancedSearchQueriesInitialState(),
@@ -71,6 +76,7 @@ const isEqual = (
     isDateFacetsEqual(current.dateFacetSet, next.dateFacetSet) &&
     isNumericFacetsEqual(current.numericFacetSet, next.numericFacetSet) &&
     isCategoryFacetsEqual(current.categoryFacetSet, next.categoryFacetSet) &&
+    isFacetOptionsEqual(current.facetOptions, next.facetOptions) &&
     isPaginationEqual(current.pagination, next.pagination) &&
     isQueryEqual(current.query, next.query) &&
     isSortEqual(current, next) &&
@@ -98,6 +104,11 @@ const isNumericFacetsEqual = (
 const isCategoryFacetsEqual = (
   current: CategoryFacetSetState,
   next: CategoryFacetSetState
+) => JSON.stringify(current) === JSON.stringify(next);
+
+const isFacetOptionsEqual = (
+  current: FacetOptionsState,
+  next: FacetOptionsState
 ) => JSON.stringify(current) === JSON.stringify(next);
 
 const isPaginationEqual = (current: PaginationState, next: PaginationState) =>

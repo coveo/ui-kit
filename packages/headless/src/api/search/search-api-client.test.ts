@@ -47,6 +47,7 @@ describe('search api client', () => {
         sortCriteria: state.sortCriteria,
         firstResult: state.pagination.firstResult,
         facets: [],
+        facetOptions: state.facetOptions,
         context: state.context.contextValues,
         enableDidYouMean: state.didYouMean.enableDidYouMean,
         fieldsToInclude: state.fields.fieldsToInclude,

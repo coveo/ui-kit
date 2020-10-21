@@ -16,6 +16,7 @@ import {facetSelector} from '../../../features/facets/facet-set/facet-set-select
 import {RangeFacetSortCriterion} from '../../../features/facets/range-facets/generic/interfaces/request';
 import {updateRangeFacetSortCriterion} from '../../../features/facets/range-facets/generic/range-facet-actions';
 import {deselectAllFacetValues} from '../../../features/facets/facet-set/facet-set-actions';
+import {updateFacetOptions} from '../../../features/facet-options/facet-options-actions';
 
 export type RangeFacet = ReturnType<typeof buildRangeFacet>;
 
@@ -52,6 +53,8 @@ export function buildRangeFacet<
     /** Logs a deselect (select) value event when the passed value is active (idle), and executes a search.*/
     toggleSelect(selection: RangeFacetValue) {
       const analyticsAction = getAnalyticsActionForToggleSelect(selection);
+
+      dispatch(updateFacetOptions({freezeFacetOrder: true}));
       dispatch(executeSearch(analyticsAction));
     },
 
@@ -64,6 +67,7 @@ export function buildRangeFacet<
     /** Deselects all facet values.*/
     deselectAll() {
       dispatch(deselectAllFacetValues(facetId));
+      dispatch(updateFacetOptions({freezeFacetOrder: true}));
       dispatch(executeSearch(logFacetClearAll(facetId)));
     },
 
@@ -72,6 +76,7 @@ export function buildRangeFacet<
      */
     sortBy(criterion: RangeFacetSortCriterion) {
       dispatch(updateRangeFacetSortCriterion({facetId, criterion}));
+      dispatch(updateFacetOptions({freezeFacetOrder: true}));
       dispatch(executeSearch(logFacetUpdateSort({facetId, criterion})));
     },
 
