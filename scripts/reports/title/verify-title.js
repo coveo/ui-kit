@@ -41,15 +41,11 @@ function buildErrorMessage() {
   return `
   :x: Title should follow the [conventional commit](${specUrl}) spec:
   
-  \`\`\`
-  
   <type>(optional scope): <description>
 
   Example:
   
   feat(headless): add result-list controller
-  
-  \`\`\`
   `
 }
 
