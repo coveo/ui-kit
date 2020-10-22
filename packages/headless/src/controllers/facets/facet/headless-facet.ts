@@ -11,7 +11,7 @@ import {
 } from '../../../features/facets/facet-set/facet-set-actions';
 import {randomID} from '../../../utils/utils';
 import {
-  facetSelector,
+  baseFacetResponseSelector,
   facetRequestSelector,
 } from '../../../features/facets/facet-set/facet-set-selectors';
 import {FacetRegistrationOptions} from '../../../features/facets/facet-set/interfaces/options';
@@ -93,7 +93,7 @@ export function buildFacet(engine: Engine, props: FacetProps) {
     const id = options.facetId;
     const state = engine.state;
 
-    return facetSelector(state, id) as FacetResponse | undefined;
+    return baseFacetResponseSelector(state, id) as FacetResponse | undefined;
   };
 
   const getNumberOfActiveValues = () => {

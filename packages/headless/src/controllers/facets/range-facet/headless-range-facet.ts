@@ -12,7 +12,7 @@ import {
   logFacetClearAll,
 } from '../../../features/facets/facet-set/facet-set-analytics-actions';
 import {executeSearch} from '../../../features/search/search-actions';
-import {facetSelector} from '../../../features/facets/facet-set/facet-set-selectors';
+import {baseFacetResponseSelector} from '../../../features/facets/facet-set/facet-set-selectors';
 import {RangeFacetSortCriterion} from '../../../features/facets/range-facets/generic/interfaces/request';
 import {updateRangeFacetSortCriterion} from '../../../features/facets/range-facets/generic/range-facet-actions';
 import {deselectAllFacetValues} from '../../../features/facets/facet-set/facet-set-actions';
@@ -91,7 +91,9 @@ export function buildRangeFacet<
     /** @returns The state of the `RangeFacet` controller.*/
     get state() {
       const request = getRequest();
-      const response = facetSelector(engine.state, facetId) as R | undefined;
+      const response = baseFacetResponseSelector(engine.state, facetId) as
+        | R
+        | undefined;
 
       const sortCriterion = request.sortCriteria;
       const values: R['values'] = response ? response.values : [];

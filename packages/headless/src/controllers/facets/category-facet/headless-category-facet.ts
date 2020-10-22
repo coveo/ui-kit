@@ -9,11 +9,8 @@ import {
   updateCategoryFacetNumberOfValues,
   updateCategoryFacetSortCriterion,
 } from '../../../features/facets/category-facet-set/category-facet-set-actions';
-import {facetSelector} from '../../../features/facets/facet-set/facet-set-selectors';
-import {
-  CategoryFacetResponse,
-  CategoryFacetValue,
-} from '../../../features/facets/category-facet-set/interfaces/response';
+import {categoryFacetResponseSelector} from '../../../features/facets/category-facet-set/category-facet-set-selectors';
+import {CategoryFacetValue} from '../../../features/facets/category-facet-set/interfaces/response';
 import {executeSearch} from '../../../features/search/search-actions';
 import {
   FacetSelectionChangeMetadata,
@@ -33,6 +30,7 @@ import {
 } from '../../../features/facets/facet-search-set/facet-search-request-options';
 import {buildCategoryFacetSearch} from '../facet-search/category/headless-category-facet-search';
 import {updateFacetOptions} from '../../../features/facet-options/facet-options-actions';
+import {partitionIntoParentsAndValues} from '../../../features/facets/category-facet-set/category-facet-utils';
 
 export type CategoryFacetProps = {
   options: CategoryFacetOptions;
@@ -85,9 +83,7 @@ export function buildCategoryFacet(engine: Engine, props: CategoryFacetProps) {
   };
 
   const getResponse = () => {
-    return facetSelector(engine.state, facetId) as
-      | CategoryFacetResponse
-      | undefined;
+    return categoryFacetResponseSelector(engine.state, facetId);
   };
 
   dispatch(registerCategoryFacet(options));
@@ -185,34 +181,4 @@ export function buildCategoryFacet(engine: Engine, props: CategoryFacetProps) {
       };
     },
   };
-}
-
-type CategoryFacetResponsePartition = {
-  parents: CategoryFacetValue[];
-  values: CategoryFacetValue[];
-};
-
-function partitionIntoParentsAndValues(
-  response: CategoryFacetResponse | undefined
-): CategoryFacetResponsePartition {
-  if (!response) {
-    return {parents: [], values: []};
-  }
-
-  let parents: CategoryFacetValue[] = [];
-  let values = response.values;
-
-  while (values.length && values[0].children.length) {
-    parents = [...parents, ...values];
-    values = values[0].children;
-  }
-
-  const selectedLeafValue = values.find((v) => v.state === 'selected');
-
-  if (selectedLeafValue) {
-    parents = [...parents, selectedLeafValue];
-    values = [];
-  }
-
-  return {parents, values};
 }
