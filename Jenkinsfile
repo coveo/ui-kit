@@ -69,7 +69,9 @@ node('linux && docker') {
         sh 'cp -R packages/headless/src packages/headless/package.json packages/headless/package-lock.json veracode/headless'
       }
 
-      sh 'deployment-package package create --with-deploy'
+      stage('Deployment pipeline upload') {
+        sh 'deployment-package package create --with-deploy || true'
+      }
     }
   }
 }
