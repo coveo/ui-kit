@@ -13,10 +13,7 @@ import {
   SearchAPIErrorWithExceptionInBody,
 } from './search-api-error-response';
 import {PlanRequest} from './plan/plan-request';
-import {
-  QuerySuggestRequest,
-  querySuggestRequest,
-} from './query-suggest/query-suggest-request';
+import {QuerySuggestRequest} from './query-suggest/query-suggest-request';
 import {FacetSearchRequest} from './facet-search/facet-search-request';
 import {FacetSearchResponse} from './facet-search/facet-search-response';
 import {buildCategoryFacetSearchRequest} from './facet-search/category-facet-search/category-facet-search-request';
@@ -66,15 +63,14 @@ export class SearchAPIClient {
   }
 
   async querySuggest(
-    id: string,
-    state: SearchAppState
+    req: QuerySuggestRequest
   ): Promise<SearchAPIClientResponse<QuerySuggestSuccessResponse>> {
     const platformResponse = await PlatformClient.call<
       QuerySuggestRequest,
       QuerySuggestSuccessResponse
     >({
-      ...baseSearchParams(state, 'POST', 'application/json', '/querySuggest'),
-      requestParams: querySuggestRequest(id, state),
+      ...baseSearchRequest(req, 'POST', 'application/json', '/querySuggest'),
+      requestParams: pickNonBaseParams(req) as QuerySuggestRequest, // TODO: This cast won't be needed once all methods have been reworked and we can change types in PlatformClient
       renewAccessToken: this.renewAccessToken,
     });
     if (isSuccessQuerySuggestionsResponse(platformResponse)) {

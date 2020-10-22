@@ -12,6 +12,7 @@ import {buildMockCategoryFacetSearch} from '../../test/mock-category-facet-searc
 import {buildMockCategoryFacetRequest} from '../../test/mock-category-facet-request';
 import {SearchAppState} from '../../state/search-app-state';
 import {buildPlanRequest} from '../../features/redirection/redirection-actions';
+import {buildQuerySuggestRequest} from '../../features/query-suggest/query-suggest-actions';
 
 jest.mock('../platform-client');
 describe('search api client', () => {
@@ -93,9 +94,12 @@ describe('search api client', () => {
     const qs = buildMockQuerySuggest({id, q: 'some query', count: 11});
     state.querySuggest[id] = qs;
 
-    searchAPIClient.querySuggest(id, state);
+    searchAPIClient.querySuggest(buildQuerySuggestRequest(id, state));
 
-    const expectedRequest: PlatformClientCallOptions<QuerySuggestRequest> = {
+    const expectedRequest: PlatformClientCallOptions<Omit<
+      QuerySuggestRequest,
+      'url' | 'accessToken' | 'organizationId'
+    >> = {
       accessToken: state.configuration.accessToken,
       method: 'POST',
       contentType: 'application/json',

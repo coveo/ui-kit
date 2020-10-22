@@ -7,7 +7,19 @@ import {
   isErrorResponse,
   AsyncThunkSearchOptions,
 } from '../../api/search/search-api-client';
-import {SearchAppState} from '../../state/search-app-state';
+
+import {
+  ConfigurationSection,
+  ContextSection,
+  PipelineSection,
+  QuerySuggestionSection,
+  SearchHubSection,
+} from '../../state/state-sections';
+import {QuerySuggestRequest} from '../../api/search/query-suggest/query-suggest-request';
+
+export type StateNeededByQuerySuggest = ConfigurationSection &
+  QuerySuggestionSection &
+  Partial<ContextSection & PipelineSection & SearchHubSection>;
 
 const idDefinition = {
   id: new StringValue({required: true, emptyAllowed: false}),
@@ -81,7 +93,7 @@ export const clearQuerySuggestCompletions = createAction(
 export const fetchQuerySuggestions = createAsyncThunk<
   QuerySuggestionID & QuerySuggestSuccessResponse,
   QuerySuggestionID,
-  AsyncThunkSearchOptions & {
+  AsyncThunkSearchOptions<StateNeededByQuerySuggest> & {
     rejectValue: SearchAPIErrorWithStatusCode & QuerySuggestionID;
   }
 >(
@@ -94,8 +106,7 @@ export const fetchQuerySuggestions = createAsyncThunk<
     validatePayloadSchema(payload, idDefinition);
     const id = payload.id;
     const response = await searchAPIClient.querySuggest(
-      id,
-      getState() as SearchAppState
+      buildQuerySuggestRequest(id, getState())
     );
 
     if (isErrorResponse(response)) {
@@ -108,3 +119,19 @@ export const fetchQuerySuggestions = createAsyncThunk<
     };
   }
 );
+
+export const buildQuerySuggestRequest = (
+  id: string,
+  s: StateNeededByQuerySuggest
+): QuerySuggestRequest => {
+  return {
+    accessToken: s.configuration.accessToken,
+    organizationId: s.configuration.organizationId,
+    url: s.configuration.search.apiBaseUrl,
+    count: s.querySuggest[id]!.count,
+    q: s.querySuggest[id]!.q,
+    ...(s.context && {context: s.context.contextValues}),
+    ...(s.pipeline && {pipeline: s.pipeline}),
+    ...(s.searchHub && {searchHub: s.searchHub}),
+  };
+};
