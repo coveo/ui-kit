@@ -20,6 +20,8 @@
     "clean": "rm -f -r dist/*",
     "test": "jest",
     "test:watch": "jest --watch --colors --no-cache",
+    "test:unit": "jest --testPathIgnorePatterns=src/integration-tests",
+    "test:integration": "jest --testPathPattern=src/integration-tests",
     "npm:publish": "npm publish --access public"
   },
   "dependencies": {

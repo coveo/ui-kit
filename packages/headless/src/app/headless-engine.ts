@@ -121,6 +121,13 @@ export interface HeadlessConfigurationOptions {
   };
 }
 
+type EngineDispatch<State> = ThunkDispatch<
+  State,
+  {searchAPIClient: SearchAPIClient},
+  AnyAction
+> &
+  Dispatch<AnyAction>;
+
 export interface Engine<State = SearchAppState> {
   /**
    * Dispatches an action directly. This is the only way to trigger a state change.
@@ -130,12 +137,7 @@ export interface Engine<State = SearchAppState> {
    *
    * @returns For convenience, the action object that was just dispatched.
    */
-  dispatch: ThunkDispatch<
-    State,
-    {searchAPIClient: SearchAPIClient},
-    AnyAction
-  > &
-    Dispatch<AnyAction>;
+  dispatch: EngineDispatch<State>;
   /**
    * Adds a change listener. It will be called any time an action is
    * dispatched, and some part of the state tree may potentially have changed.
@@ -218,7 +220,7 @@ export class HeadlessEngine<Reducers extends ReducersMapObject>
     this.dispatch(disableAnalytics());
   }
 
-  get dispatch() {
+  get dispatch(): EngineDispatch<StateFromReducersMapObject<Reducers>> {
     return this.reduxStore.dispatch;
   }
 
