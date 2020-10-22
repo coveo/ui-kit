@@ -7,6 +7,18 @@ import {ExecutionPlan} from '../../api/search/plan/plan-endpoint';
 import {validatePayloadSchema} from '../../utils/validate-payload';
 import {StringValue} from '@coveo/bueno';
 import {logTriggerRedirect} from './redirection-analytics-actions';
+import {
+  ConfigurationSection,
+  ContextSection,
+  PipelineSection,
+  QuerySection,
+  SearchHubSection,
+} from '../../state/state-sections';
+import {PlanRequest} from '../../api/search/plan/plan-request';
+
+export type RedirectionState = ConfigurationSection &
+  QuerySection &
+  Partial<ContextSection & SearchHubSection & PipelineSection>;
 
 /**
  * Preprocesses the query for the current headless state, and updates the redirection URL if a redirect trigger was fired in the query pipeline.
@@ -15,7 +27,7 @@ import {logTriggerRedirect} from './redirection-analytics-actions';
 export const checkForRedirection = createAsyncThunk<
   string,
   {defaultRedirectionUrl: string},
-  AsyncThunkSearchOptions
+  AsyncThunkSearchOptions<RedirectionState>
 >(
   'redirection/check',
   async (
@@ -28,7 +40,7 @@ export const checkForRedirection = createAsyncThunk<
         url: true,
       }),
     });
-    const response = await searchAPIClient.plan(getState());
+    const response = await searchAPIClient.plan(buildPlanRequest(getState()));
     if (isErrorResponse(response)) {
       return rejectWithValue(response.error);
     }
@@ -41,3 +53,15 @@ export const checkForRedirection = createAsyncThunk<
     return planRedirection || payload.defaultRedirectionUrl;
   }
 );
+
+export const buildPlanRequest = (state: RedirectionState): PlanRequest => {
+  return {
+    accessToken: state.configuration.accessToken,
+    organizationId: state.configuration.organizationId,
+    url: state.configuration.search.apiBaseUrl,
+    q: state.query.q,
+    ...(state.context && {context: state.context.contextValues}),
+    ...(state.pipeline && {pipeline: state.pipeline}),
+    ...(state.searchHub && {searchHub: state.searchHub}),
+  };
+};

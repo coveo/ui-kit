@@ -12,7 +12,7 @@ import {
   SearchAPIErrorWithStatusCode,
   SearchAPIErrorWithExceptionInBody,
 } from './search-api-error-response';
-import {PlanRequest, planRequest} from './plan/plan-request';
+import {PlanRequest} from './plan/plan-request';
 import {
   QuerySuggestRequest,
   querySuggestRequest,
@@ -21,11 +21,12 @@ import {FacetSearchRequest} from './facet-search/facet-search-request';
 import {FacetSearchResponse} from './facet-search/facet-search-response';
 import {buildCategoryFacetSearchRequest} from './facet-search/category-facet-search/category-facet-search-request';
 import {SearchAppState} from '../../state/search-app-state';
+import {BaseParam, baseSearchRequest} from './search-api-request';
 
 export type AllSearchAPIResponse = Plan | Search | QuerySuggest;
 
-export interface AsyncThunkSearchOptions {
-  state: SearchAppState;
+export interface AsyncThunkSearchOptions<T = SearchAppState> {
+  state: T;
   rejectValue: SearchAPIErrorWithStatusCode;
   extra: {
     searchAPIClient: SearchAPIClient;
@@ -45,14 +46,14 @@ export type SearchAPIClientResponse<T> =
 export class SearchAPIClient {
   constructor(private renewAccessToken: () => Promise<string>) {}
   async plan(
-    state: SearchAppState
+    req: PlanRequest
   ): Promise<SearchAPIClientResponse<PlanResponseSuccess>> {
     const platformResponse = await PlatformClient.call<
       PlanRequest,
       PlanResponseSuccess
     >({
-      ...baseSearchParams(state, 'POST', 'application/json', '/plan'),
-      requestParams: planRequest(state),
+      ...baseSearchRequest(req, 'POST', 'application/json', '/plan'),
+      requestParams: pickNonBaseParams(req) as PlanRequest, // TODO: This cast won't be needed once all methods have been reworked and we can change types in PlatformClient
       renewAccessToken: this.renewAccessToken,
     });
 
@@ -207,4 +208,11 @@ function isException(
     (r as PlatformResponse<SearchAPIErrorWithExceptionInBody>).body
       .exception !== undefined
   );
+}
+
+function pickNonBaseParams<Params extends BaseParam>(req: Params) {
+  // cheap version of _.omit
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const {url, accessToken, organizationId, ...nonBase} = req;
+  return nonBase;
 }
