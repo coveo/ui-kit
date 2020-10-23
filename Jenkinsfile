@@ -55,8 +55,11 @@ node('linux && docker') {
       }
 
       stage('Npm publish') {
-        withNPM(npmrcConfig:'coveo-organization') {
-          sh 'npm run npm:publish'
+        withCredentials([
+          string(credentialsId: 'NPM_TOKEN', variable: 'NPM_TOKEN')
+        ]) {
+          sh "echo //registry.npmjs.org/:_authToken=${NPM_TOKEN} > ~/.npmrc"
+          sh 'npm run npm:publish || true'
         }
       }
     }
