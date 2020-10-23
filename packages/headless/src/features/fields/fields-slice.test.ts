@@ -1,9 +1,6 @@
-import {
-  FieldsState,
-  fieldsReducer,
-  getFieldsInitialState,
-} from './fields-slice';
+import {fieldsReducer} from './fields-slice';
 import {registerFieldsToInclude} from './fields-actions';
+import {FieldsState, getFieldsInitialState} from './fields-state';
 
 describe('fields slice', () => {
   it('should have initial state', () => {

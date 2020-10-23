@@ -18,12 +18,7 @@ import {
   handleFacetDeselectAll,
   handleFacetUpdateNumberOfValues,
 } from '../generic/facet-reducer-helpers';
-
-export type FacetSetState = Record<string, FacetRequest>;
-
-export function getFacetSetInitialState(): FacetSetState {
-  return {};
-}
+import {getFacetSetInitialState} from './facet-set-state';
 
 export const facetSetReducer = createReducer(
   getFacetSetInitialState(),

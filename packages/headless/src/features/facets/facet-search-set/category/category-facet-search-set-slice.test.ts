@@ -1,15 +1,13 @@
 import {registerCategoryFacetSearch} from './category-facet-search-actions';
-import {
-  CategoryFacetSearchSetState,
-  categoryFacetSearchSetReducer,
-  getCategoryFacetSearchSetInitialState,
-} from './category-facet-search-set-slice';
+import {categoryFacetSearchSetReducer} from './category-facet-search-set-slice';
 import * as FacetSearchReducerHelpers from '../facet-search-reducer-helpers';
 import {buildMockFacetSearchResponse} from '../../../../test/mock-facet-search-response';
+import {updateFacetSearch} from '../specific/specific-facet-search-actions';
 import {
-  updateFacetSearch,
-  executeFacetSearch,
-} from '../specific/specific-facet-search-actions';
+  CategoryFacetSearchSetState,
+  getCategoryFacetSearchSetInitialState,
+} from './category-facet-search-set-state';
+import {executeFacetSearch} from '../generic/generic-facet-search-actions';
 
 describe('FacetSearch slice', () => {
   const facetId = '1';

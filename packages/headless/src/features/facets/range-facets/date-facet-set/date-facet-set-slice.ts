@@ -18,12 +18,7 @@ import {
   defaultRangeFacetOptions,
 } from '../generic/range-facet-reducers';
 import {handleFacetSortCriterionUpdate} from '../../generic/facet-reducer-helpers';
-
-export type DateFacetSetState = Record<string, DateFacetRequest>;
-
-export function getDateFacetSetInitialState(): DateFacetSetState {
-  return {};
-}
+import {getDateFacetSetInitialState} from './date-facet-set-state';
 
 export const dateFacetSetReducer = createReducer(
   getDateFacetSetInitialState(),

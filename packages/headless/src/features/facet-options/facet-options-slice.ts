@@ -1,16 +1,8 @@
 import {createReducer} from '@reduxjs/toolkit';
 import {change} from '../history/history-actions';
 import {executeSearch} from '../search/search-actions';
-import {FacetOptions} from './facet-options';
 import {updateFacetOptions} from './facet-options-actions';
-
-export type FacetOptionsState = FacetOptions;
-
-export function getFacetOptionsInitialState(): FacetOptionsState {
-  return {
-    freezeFacetOrder: false,
-  };
-}
+import {getFacetOptionsInitialState} from './facet-options-state';
 
 export const facetOptionsReducer = createReducer(
   getFacetOptionsInitialState(),

@@ -1,4 +1,4 @@
-import {SearchState} from '../features/search/search-slice';
+import {SearchState} from '../features/search/search-state';
 import {buildMockSearchResponse} from './mock-search-response';
 import {logSearchboxSubmit} from '../features/query/query-analytics-actions';
 import {ExecuteSearchThunkReturn} from '../features/search/search-actions';

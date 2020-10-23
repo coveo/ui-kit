@@ -1,10 +1,10 @@
 import {createMockState} from '../../../../test/mock-state';
-import {buildCategoryFacetSearchRequest} from './category-facet-search-request';
 import {buildMockSearchRequest} from '../../../../test/mock-search-request';
 import {buildMockCategoryFacetRequest} from '../../../../test/mock-category-facet-request';
 import {buildMockCategoryFacetSearch} from '../../../../test/mock-category-facet-search';
 import {buildMockCategoryFacetValueRequest} from '../../../../test/mock-category-facet-value-request';
 import {SearchAppState} from '../../../../state/search-app-state';
+import {buildCategoryFacetSearchRequest} from '../../../../features/facets/facet-search-set/category/category-facet-search-request-builder';
 
 describe('#buildCategoryFacetSearchRequest', () => {
   const id = '1';

@@ -1,8 +1,7 @@
 import {
-  numericFacetSetReducer,
   NumericFacetSetState,
   getNumericFacetSetInitialState,
-} from './numeric-facet-set-slice';
+} from './numeric-facet-set-state';
 import {
   registerNumericFacet,
   toggleSelectNumericFacetValue,
@@ -19,6 +18,7 @@ import * as FacetReducers from '../../generic/facet-reducer-helpers';
 import {executeSearch} from '../../../search/search-actions';
 import {buildMockSearch} from '../../../../test/mock-search';
 import {logGenericSearchEvent} from '../../../analytics/analytics-actions';
+import {numericFacetSetReducer} from './numeric-facet-set-slice';
 
 describe('numeric-facet-set slice', () => {
   let state: NumericFacetSetState;

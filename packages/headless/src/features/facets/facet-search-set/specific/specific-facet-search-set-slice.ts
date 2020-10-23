@@ -1,6 +1,4 @@
 import {
-  FacetSearchSetState,
-  FacetSearchState,
   handleFacetSearchRegistration,
   handleFacetSearchUpdate,
   handleFacetSearchPending,
@@ -10,21 +8,9 @@ import {
 import {SpecificFacetSearchResponse} from '../../../../api/search/facet-search/specific-facet-search/specific-facet-search-response';
 import {registerFacetSearch} from './specific-facet-search-actions';
 import {createReducer} from '@reduxjs/toolkit';
-import {
-  updateFacetSearch,
-  executeFacetSearch,
-} from './specific-facet-search-actions';
-
-export type SpecificFacetSearchState = FacetSearchState<
-  SpecificFacetSearchResponse
->;
-export type SpecificFacetSearchSetState = FacetSearchSetState<
-  SpecificFacetSearchResponse
->;
-
-export function getFacetSearchSetInitialState(): SpecificFacetSearchSetState {
-  return {};
-}
+import {updateFacetSearch} from './specific-facet-search-actions';
+import {getFacetSearchSetInitialState} from './specific-facet-search-set-state';
+import {executeFacetSearch} from '../generic/generic-facet-search-actions';
 
 export const specificFacetSearchSetReducer = createReducer(
   getFacetSearchSetInitialState(),

@@ -13,7 +13,7 @@ import {SpecificFacetSearchResponse} from '../../../api/search/facet-search/spec
 import {
   SpecificFacetSearchSetState,
   getFacetSearchSetInitialState,
-} from './specific/specific-facet-search-set-slice';
+} from './specific/specific-facet-search-set-state';
 
 describe('FacetSearch slice', () => {
   const facetId = '1';

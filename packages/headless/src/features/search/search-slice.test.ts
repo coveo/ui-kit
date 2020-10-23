@@ -1,8 +1,4 @@
-import {
-  searchReducer,
-  getSearchInitialState,
-  SearchState,
-} from './search-slice';
+import {searchReducer} from './search-slice';
 import {buildMockSearchResponse} from '../../test/mock-search-response';
 import {buildMockResult} from '../../test/mock-result';
 import {buildMockSearch} from '../../test/mock-search';
@@ -11,6 +7,7 @@ import {logSearchboxSubmit} from '../query/query-analytics-actions';
 import {buildMockEngine, MockEngine} from '../../test/mock-engine';
 import {PlatformClient} from '../../api/platform-client';
 import {createMockState} from '../../test/mock-state';
+import {getSearchInitialState, SearchState} from './search-state';
 jest.mock('../../api/platform-client');
 
 describe('search-slice', () => {

@@ -1,40 +1,40 @@
 import {createReducer} from '@reduxjs/toolkit';
-import {getContextInitialState, ContextState} from '../context/context-slice';
+import {getContextInitialState, ContextState} from '../context/context-state';
 import {
   getFacetSetInitialState,
   FacetSetState,
-} from '../facets/facet-set/facet-set-slice';
-import {getQueryInitialState, QueryState} from '../query/query-slice';
-import {getSortCriteriaInitialState} from '../sort-criteria/sort-criteria-slice';
-import {getQuerySetInitialState} from '../query-set/query-set-slice';
+} from '../facets/facet-set/facet-set-state';
+import {getQueryInitialState, QueryState} from '../query/query-state';
+import {getSortCriteriaInitialState} from '../sort-criteria/sort-criteria-state';
+import {getQuerySetInitialState} from '../query-set/query-set-state';
 import {
   PaginationState,
   getPaginationInitialState,
-} from '../pagination/pagination-slice';
+} from '../pagination/pagination-state';
 import {SortState} from '../../controllers/sort/headless-sort';
 import {snapshot} from './history-actions';
-import {getPipelineInitialState} from '../pipeline/pipeline-slice';
+import {getPipelineInitialState} from '../pipeline/pipeline-state';
 import {
   getDateFacetSetInitialState,
   DateFacetSetState,
-} from '../facets/range-facets/date-facet-set/date-facet-set-slice';
+} from '../facets/range-facets/date-facet-set/date-facet-set-state';
 import {
   getNumericFacetSetInitialState,
   NumericFacetSetState,
-} from '../facets/range-facets/numeric-facet-set/numeric-facet-set-slice';
-import {getSearchHubInitialState} from '../search-hub/search-hub-slice';
+} from '../facets/range-facets/numeric-facet-set/numeric-facet-set-state';
+import {getSearchHubInitialState} from '../search-hub/search-hub-state';
 import {
   getCategoryFacetSetInitialState,
   CategoryFacetSetState,
-} from '../facets/category-facet-set/category-facet-set-slice';
+} from '../facets/category-facet-set/category-facet-set-state';
 import {
   FacetOptionsState,
   getFacetOptionsInitialState,
-} from '../facet-options/facet-options-slice';
+} from '../facet-options/facet-options-state';
 import {
   AdvancedSearchQueriesState,
   getAdvancedSearchQueriesInitialState,
-} from '../advanced-search-queries/advanced-search-queries-slice';
+} from '../advanced-search-queries/advanced-search-queries-state';
 import {SearchParametersState} from '../../state/search-app-state';
 
 export const getHistoryEmptyState = (): SearchParametersState => ({

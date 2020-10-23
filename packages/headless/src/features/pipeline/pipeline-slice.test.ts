@@ -1,8 +1,9 @@
-import {pipelineReducer, getPipelineInitialState} from './pipeline-slice';
+import {pipelineReducer} from './pipeline-slice';
 import {setPipeline} from './pipeline-actions';
 import {change} from '../history/history-actions';
 import {getHistoryEmptyState} from '../history/history-slice';
 import {updateSearchConfiguration} from '../configuration/configuration-actions';
+import {getPipelineInitialState} from './pipeline-state';
 
 describe('pipeline slice', () => {
   it('should have initial state', () => {

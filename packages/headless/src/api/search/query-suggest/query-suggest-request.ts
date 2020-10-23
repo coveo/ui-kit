@@ -4,7 +4,7 @@ import {
   PipelineParam,
   QueryParam,
   SearchHubParam,
-} from '../search-api-request';
+} from '../search-api-params';
 
 export type QuerySuggestRequest = BaseParam &
   QueryParam &

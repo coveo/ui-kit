@@ -1,5 +1,5 @@
 import {createAction} from '@reduxjs/toolkit';
-import {Context, ContextValue} from './context-slice';
+import {Context, ContextValue} from './context-state';
 import {validatePayloadValue} from '../../utils/validate-payload';
 import {StringValue, isString, ArrayValue} from '@coveo/bueno';
 

@@ -1,8 +1,4 @@
-import {
-  getConfigurationInitialState,
-  configurationReducer,
-  ConfigurationState,
-} from './configuration-slice';
+import {configurationReducer} from './configuration-slice';
 import {
   renewAccessToken,
   updateBasicConfiguration,
@@ -15,6 +11,10 @@ import {
 } from './configuration-actions';
 import {platformUrl} from '../../api/platform-client';
 import {createReducer} from '../..';
+import {
+  ConfigurationState,
+  getConfigurationInitialState,
+} from './configuration-state';
 
 describe('configuration slice', () => {
   const url = platformUrl({environment: 'dev', region: 'eu-west-3'});

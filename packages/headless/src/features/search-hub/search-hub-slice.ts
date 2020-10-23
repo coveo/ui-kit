@@ -2,8 +2,7 @@ import {createReducer} from '@reduxjs/toolkit';
 import {setSearchHub} from './search-hub-actions';
 import {change} from '../history/history-actions';
 import {updateSearchConfiguration} from '../configuration/configuration-actions';
-
-export const getSearchHubInitialState = () => 'default';
+import {getSearchHubInitialState} from './search-hub-state';
 
 export const searchHubReducer = createReducer(
   getSearchHubInitialState(),

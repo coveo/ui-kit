@@ -1,10 +1,6 @@
-import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
-import {FacetSearchResponse} from '../../../../api/search/facet-search/facet-search-response';
-import {SearchAPIClient} from '../../../../api/search/search-api-client';
-import {logFacetSearch} from '../../facet-set/facet-set-analytics-actions';
+import {createAction} from '@reduxjs/toolkit';
 import {SpecificFacetSearchResult} from '../../../../api/search/facet-search/specific-facet-search/specific-facet-search-response';
 import {FacetSearchOptions} from '../facet-search-request-options';
-import {SearchAppState} from '../../../../state/search-app-state';
 
 type selectFacetSearchResultPayload = {
   facetId: string;
@@ -25,29 +21,6 @@ export const registerFacetSearch = createAction<FacetSearchOptions>(
  */
 export const updateFacetSearch = createAction<FacetSearchOptions>(
   'facetSearch/update'
-);
-
-/**
- * Executes a facet search (i.e., a search for facet values in a facet search box).
- * @param facetId (string) The unique identifier of the facet for which to perform a facet search (e.g., `"1"`).
- */
-export const executeFacetSearch = createAsyncThunk<
-  {facetId: string; response: FacetSearchResponse},
-  string,
-  {
-    extra: {
-      searchAPIClient: SearchAPIClient;
-    };
-  }
->(
-  'facetSearch/executeSearch',
-  async (facetId: string, {dispatch, getState, extra: {searchAPIClient}}) => {
-    const state = getState() as SearchAppState;
-    const response = await searchAPIClient.facetSearch(facetId, state);
-    dispatch(logFacetSearch(facetId));
-
-    return {facetId, response};
-  }
 );
 
 /**

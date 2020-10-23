@@ -4,9 +4,7 @@ import {
   QuerySuggestSuccessResponse,
   QuerySuggest,
 } from './query-suggest/query-suggest-response';
-import {baseSearchParams} from './search-api-params';
-import {SearchRequest, searchRequest} from './search/search-request';
-import {buildSpecificFacetSearchRequest} from './facet-search/specific-facet-search/specific-facet-search-request';
+import {SearchRequest} from './search/search-request';
 import {Search, SearchResponseSuccess} from './search/search-response';
 import {
   SearchAPIErrorWithStatusCode,
@@ -16,13 +14,13 @@ import {PlanRequest} from './plan/plan-request';
 import {QuerySuggestRequest} from './query-suggest/query-suggest-request';
 import {FacetSearchRequest} from './facet-search/facet-search-request';
 import {FacetSearchResponse} from './facet-search/facet-search-response';
-import {buildCategoryFacetSearchRequest} from './facet-search/category-facet-search/category-facet-search-request';
 import {SearchAppState} from '../../state/search-app-state';
-import {BaseParam, baseSearchRequest} from './search-api-request';
+import {BaseParam, baseSearchRequest} from './search-api-params';
+import {CategoryFacetSearchRequest} from './facet-search/category-facet-search/category-facet-search-request';
 
 export type AllSearchAPIResponse = Plan | Search | QuerySuggest;
 
-export interface AsyncThunkSearchOptions<T = SearchAppState> {
+export interface AsyncThunkSearchOptions<T extends Partial<SearchAppState>> {
   state: T;
   rejectValue: SearchAPIErrorWithStatusCode;
   extra: {
@@ -70,7 +68,7 @@ export class SearchAPIClient {
       QuerySuggestSuccessResponse
     >({
       ...baseSearchRequest(req, 'POST', 'application/json', '/querySuggest'),
-      requestParams: pickNonBaseParams(req) as QuerySuggestRequest, // TODO: This cast won't be needed once all methods have been reworked and we can change types in PlatformClient
+      requestParams: pickNonBaseParams(req),
       renewAccessToken: this.renewAccessToken,
     });
     if (isSuccessQuerySuggestionsResponse(platformResponse)) {
@@ -84,11 +82,11 @@ export class SearchAPIClient {
   }
 
   async search(
-    state: SearchAppState
+    req: SearchRequest
   ): Promise<SearchAPIClientResponse<SearchResponseSuccess>> {
     const platformResponse = await PlatformClient.call<SearchRequest, Search>({
-      ...baseSearchParams(state, 'POST', 'application/json', ''),
-      requestParams: searchRequest(state),
+      ...baseSearchRequest(req, 'POST', 'application/json', ''),
+      requestParams: pickNonBaseParams(req),
       renewAccessToken: this.renewAccessToken,
     });
 
@@ -103,19 +101,13 @@ export class SearchAPIClient {
     };
   }
 
-  async facetSearch(id: string, state: SearchAppState) {
-    const isFacetSearch = id in state.facetSearchSet;
-    const buildParams = isFacetSearch
-      ? buildSpecificFacetSearchRequest
-      : buildCategoryFacetSearchRequest;
-    const requestParams = buildParams(id, state);
-
+  async facetSearch(req: FacetSearchRequest | CategoryFacetSearchRequest) {
     const res = await PlatformClient.call<
       FacetSearchRequest,
       FacetSearchResponse
     >({
-      ...baseSearchParams(state, 'POST', 'application/json', '/facet'),
-      requestParams,
+      ...baseSearchRequest(req, 'POST', 'application/json', '/facet'),
+      requestParams: pickNonBaseParams(req),
       renewAccessToken: this.renewAccessToken,
     });
 

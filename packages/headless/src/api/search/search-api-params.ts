@@ -1,34 +1,80 @@
-import {SearchAppState} from '../../state/search-app-state';
-import {HttpMethods, HTTPContentTypes} from '../platform-client';
+import {FacetOptions} from '../../features/facet-options/facet-options';
+import {AnyFacetRequest} from '../../features/facets/generic/interfaces/generic-facet-request';
+import {HTTPContentTypes, HttpMethods} from '../platform-client';
 
-/**
- * The unique identifier of the target Coveo Cloud organization.
- */
-export const getOrganizationIdQueryParam = (state: SearchAppState) =>
-  `organizationId=${state.configuration.organizationId}`;
+export interface BaseParam {
+  url: string;
+  accessToken: string;
+  organizationId: string;
+}
 
-export const getQParam = (state: SearchAppState) => ({
-  /**
-   * The basic query expression filter applied to the state.
-   */
-  q: state.query.q,
-});
+export interface ContextParam {
+  context?: Record<string, string | string[]>;
+}
 
-const getAccessToken = (state: SearchAppState) =>
-  state.configuration.accessToken;
-const getSearchApiBaseUrl = (state: SearchAppState) =>
-  state.configuration.search.apiBaseUrl;
+export interface QueryParam {
+  q?: string;
+}
 
-export const baseSearchParams = (
-  state: SearchAppState,
+export interface PipelineParam {
+  pipeline?: string;
+}
+
+export interface SearchHubParam {
+  searchHub?: string;
+}
+
+export interface AdvancedQueryParam {
+  aq?: string;
+}
+
+export interface ConstantQueryParam {
+  cq?: string;
+}
+
+export interface NumberOfResultsParam {
+  numberOfResults?: number;
+}
+
+export interface SortCriteriaParam {
+  sortCriteria?: string;
+}
+
+export interface FirstResultParam {
+  firstResult?: number;
+}
+
+export interface FacetsParam {
+  facets?: AnyFacetRequest[];
+}
+
+export interface EnableDidYouMeanParam {
+  enableDidYouMean?: boolean;
+}
+
+export interface FieldsToIncludeParam {
+  fieldsToInclude?: string[];
+}
+
+export interface VisitorIDParam {
+  visitorId?: string;
+}
+
+export interface FacetOptionsParam {
+  facetOptions?: FacetOptions;
+}
+
+export const baseSearchRequest = (
+  req: BaseParam,
   method: HttpMethods,
   contentType: HTTPContentTypes,
   path: string
 ) => ({
-  accessToken: getAccessToken(state),
+  accessToken: req.accessToken,
   method,
   contentType,
-  url: `${getSearchApiBaseUrl(state)}${path}?${getOrganizationIdQueryParam(
-    state
-  )}`,
+  url: `${req.url}${path}?${getOrganizationIdQueryParam(req)}`,
 });
+
+export const getOrganizationIdQueryParam = (req: BaseParam) =>
+  `organizationId=${req.organizationId}`;

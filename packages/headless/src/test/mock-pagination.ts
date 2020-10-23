@@ -1,4 +1,4 @@
-import {PaginationState} from '../features/pagination/pagination-slice';
+import {PaginationState} from '../features/pagination/pagination-state';
 
 export function buildMockPagination(
   config: Partial<PaginationState> = {}

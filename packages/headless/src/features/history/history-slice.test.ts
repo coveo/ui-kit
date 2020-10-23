@@ -6,9 +6,9 @@ import {buildMockFacetRequest} from '../../test/mock-facet-request';
 import {buildMockNumericFacetRequest} from '../../test/mock-numeric-facet-request';
 import {buildMockDateFacetRequest} from '../../test/mock-date-facet-request';
 import {buildMockCategoryFacetRequest} from '../../test/mock-category-facet-request';
-import {buildMockFacetOptions} from '../../test/mock-facet-options';
-import {buildMockAdvancedSearchQueriesState} from '../../test/mock-advanced-search-parameters-state';
+import {buildMockAdvancedSearchQueriesState} from '../../test/mock-advanced-search-queries-state';
 import {SearchParametersState} from '../../state/search-app-state';
+import {buildMockFacetOptions} from '../../test/mock-facet-options';
 
 describe('history slice', () => {
   let undoableReducer: Reducer<StateWithHistory<SearchParametersState>>;

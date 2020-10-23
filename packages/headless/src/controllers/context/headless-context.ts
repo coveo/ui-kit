@@ -3,7 +3,7 @@ import {buildController} from '../controller/headless-controller';
 import {
   Context as ContextPayload,
   ContextValue,
-} from '../../features/context/context-slice';
+} from '../../features/context/context-state';
 import {
   setContext,
   addContext,

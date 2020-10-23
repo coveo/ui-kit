@@ -1,9 +1,4 @@
-import {
-  facetSetReducer,
-  FacetSetState,
-  getFacetSetInitialState,
-  convertFacetValueToRequest,
-} from './facet-set-slice';
+import {facetSetReducer, convertFacetValueToRequest} from './facet-set-slice';
 import {getHistoryEmptyState} from '../../history/history-slice';
 import {change} from '../../history/history-actions';
 import {
@@ -26,6 +21,7 @@ import {FacetResponse} from './interfaces/response';
 import {buildMockFacetRequest} from '../../../test/mock-facet-request';
 import {selectFacetSearchResult} from '../facet-search-set/specific/specific-facet-search-actions';
 import * as FacetReducers from '../generic/facet-reducer-helpers';
+import {FacetSetState, getFacetSetInitialState} from './facet-set-state';
 
 describe('facet-set slice', () => {
   let state: FacetSetState;

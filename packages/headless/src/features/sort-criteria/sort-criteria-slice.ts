@@ -3,14 +3,9 @@ import {
   registerSortCriterion,
   updateSortCriterion,
 } from './sort-criteria-actions';
-import {buildRelevanceSortCriterion} from './criteria';
+
 import {change} from '../history/history-actions';
-
-export type SortCriteriaState = string;
-
-export function getSortCriteriaInitialState(): SortCriteriaState {
-  return buildRelevanceSortCriterion().expression;
-}
+import {getSortCriteriaInitialState} from './sort-criteria-state';
 
 export const sortCriteriaReducer = createReducer(
   getSortCriteriaInitialState(),

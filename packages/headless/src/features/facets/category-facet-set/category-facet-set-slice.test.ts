@@ -1,8 +1,4 @@
-import {
-  CategoryFacetSetState,
-  getCategoryFacetSetInitialState,
-  categoryFacetSetReducer,
-} from './category-facet-set-slice';
+import {categoryFacetSetReducer} from './category-facet-set-slice';
 import {CategoryFacetRegistrationOptions} from './interfaces/options';
 import {
   registerCategoryFacet,
@@ -23,6 +19,10 @@ import {
 } from './interfaces/request';
 import {buildMockCategoryFacetSearchResult} from '../../../test/mock-category-facet-search-result';
 import {selectCategoryFacetSearchResult} from '../facet-search-set/category/category-facet-search-actions';
+import {
+  CategoryFacetSetState,
+  getCategoryFacetSetInitialState,
+} from './category-facet-set-state';
 
 describe('category facet slice', () => {
   const facetId = '1';

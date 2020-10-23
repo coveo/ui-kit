@@ -1,13 +1,13 @@
-import {
-  sortCriteriaReducer,
-  SortCriteriaState,
-  getSortCriteriaInitialState,
-} from './sort-criteria-slice';
+import {sortCriteriaReducer} from './sort-criteria-slice';
 import {
   registerSortCriterion,
   updateSortCriterion,
 } from './sort-criteria-actions';
 import {buildFieldSortCriterion, buildRelevanceSortCriterion} from './criteria';
+import {
+  getSortCriteriaInitialState,
+  SortCriteriaState,
+} from './sort-criteria-state';
 
 describe('sortCriteria', () => {
   let initialState: SortCriteriaState;

@@ -2,7 +2,7 @@ import {SearchAPIClient} from './search-api-client';
 import {PlatformClient, PlatformClientCallOptions} from '../platform-client';
 import {PlanRequest} from './plan/plan-request';
 import {QuerySuggestRequest} from './query-suggest/query-suggest-request';
-import {SearchRequest, searchRequest} from './search/search-request';
+import {SearchRequest} from './search/search-request';
 import {createMockState} from '../../test/mock-state';
 import {buildMockQuerySuggest} from '../../test/mock-query-suggest';
 import {getOrganizationIdQueryParam} from './search-api-params';
@@ -13,6 +13,9 @@ import {buildMockCategoryFacetRequest} from '../../test/mock-category-facet-requ
 import {SearchAppState} from '../../state/search-app-state';
 import {buildPlanRequest} from '../../features/redirection/redirection-actions';
 import {buildQuerySuggestRequest} from '../../features/query-suggest/query-suggest-actions';
+import {buildSearchRequest} from '../../features/search/search-actions';
+import {buildSpecificFacetSearchRequest} from '../../features/facets/facet-search-set/specific/specific-facet-search-request-builder';
+import {buildCategoryFacetSearchRequest} from '../../features/facets/facet-search-set/category/category-facet-search-request-builder';
 
 jest.mock('../platform-client');
 describe('search api client', () => {
@@ -31,7 +34,8 @@ describe('search api client', () => {
 
   it(`when calling SearchAPIClient.search
   should call PlatformClient.call with the right options`, () => {
-    searchAPIClient.search(state);
+    const req = buildSearchRequest(state);
+    searchAPIClient.search(req);
 
     const expectedRequest: PlatformClientCallOptions<SearchRequest> = {
       accessToken: state.configuration.accessToken,
@@ -39,7 +43,7 @@ describe('search api client', () => {
       contentType: 'application/json',
       url: `${
         state.configuration.search.apiBaseUrl
-      }?${getOrganizationIdQueryParam(state)}`,
+      }?${getOrganizationIdQueryParam(req)}`,
       renewAccessToken,
       requestParams: {
         q: state.query.q,
@@ -64,18 +68,16 @@ describe('search api client', () => {
 
   it(`when calling SearchAPIClient.plan
   should call PlatformClient.call with the right options`, () => {
-    searchAPIClient.plan(buildPlanRequest(state));
+    const req = buildPlanRequest(state);
+    searchAPIClient.plan(req);
 
-    const expectedRequest: PlatformClientCallOptions<Omit<
-      PlanRequest,
-      'url' | 'accessToken' | 'organizationId'
-    >> = {
+    const expectedRequest: PlatformClientCallOptions<PlanRequest> = {
       accessToken: state.configuration.accessToken,
       method: 'POST',
       contentType: 'application/json',
       url: `${
         state.configuration.search.apiBaseUrl
-      }/plan?${getOrganizationIdQueryParam(state)}`,
+      }/plan?${getOrganizationIdQueryParam(req)}`,
       renewAccessToken,
       requestParams: {
         q: state.query.q,
@@ -94,18 +96,16 @@ describe('search api client', () => {
     const qs = buildMockQuerySuggest({id, q: 'some query', count: 11});
     state.querySuggest[id] = qs;
 
-    searchAPIClient.querySuggest(buildQuerySuggestRequest(id, state));
+    const req = buildQuerySuggestRequest(id, state);
+    searchAPIClient.querySuggest(req);
 
-    const expectedRequest: PlatformClientCallOptions<Omit<
-      QuerySuggestRequest,
-      'url' | 'accessToken' | 'organizationId'
-    >> = {
+    const expectedRequest: PlatformClientCallOptions<QuerySuggestRequest> = {
       accessToken: state.configuration.accessToken,
       method: 'POST',
       contentType: 'application/json',
       url: `${
         state.configuration.search.apiBaseUrl
-      }/querySuggest?${getOrganizationIdQueryParam(state)}`,
+      }/querySuggest?${getOrganizationIdQueryParam(req)}`,
       renewAccessToken,
       requestParams: {
         q: state.querySuggest[id]!.q,
@@ -128,7 +128,8 @@ describe('search api client', () => {
       state.facetSearchSet[id] = facetSearchState;
       state.facetSet[id] = facetState;
 
-      searchAPIClient.facetSearch(id, state);
+      const req = buildSpecificFacetSearchRequest(id, state);
+      searchAPIClient.facetSearch(req);
 
       const request = (PlatformClient.call as jest.Mock).mock.calls[0][0];
 
@@ -138,7 +139,7 @@ describe('search api client', () => {
         contentType: 'application/json',
         url: `${
           state.configuration.search.apiBaseUrl
-        }/facet?${getOrganizationIdQueryParam(state)}`,
+        }/facet?${getOrganizationIdQueryParam(req)}`,
         renewAccessToken,
       });
     });
@@ -151,8 +152,9 @@ describe('search api client', () => {
 
       state.facetSearchSet[id] = facetSearchState;
       state.facetSet[id] = facetState;
+      const req = buildSpecificFacetSearchRequest(id, state);
 
-      searchAPIClient.facetSearch(id, state);
+      searchAPIClient.facetSearch(req);
 
       const request = (PlatformClient.call as jest.Mock).mock.calls[0][0];
 
@@ -166,7 +168,7 @@ describe('search api client', () => {
           delimitingCharacter: facetState.delimitingCharacter,
           ignoreValues: [],
           searchContext: {
-            ...searchRequest(state),
+            ...buildSearchRequest(state),
             visitorId: expect.any(String),
           },
         },
@@ -182,7 +184,9 @@ describe('search api client', () => {
       state.categoryFacetSearchSet[id] = categoryFacetSearch;
       state.categoryFacetSet[id] = categoryFacet;
 
-      searchAPIClient.facetSearch(id, state);
+      const req = buildCategoryFacetSearchRequest(id, state);
+
+      searchAPIClient.facetSearch(req);
 
       const request = (PlatformClient.call as jest.Mock).mock.calls[0][0];
 
@@ -197,7 +201,7 @@ describe('search api client', () => {
           delimitingCharacter: categoryFacet.delimitingCharacter,
           ignorePaths: [],
           searchContext: {
-            ...searchRequest(state),
+            ...buildSearchRequest(state),
             visitorId: expect.any(String),
           },
         },

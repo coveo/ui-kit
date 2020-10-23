@@ -21,12 +21,10 @@ import {
   handleFacetUpdateNumberOfValues,
 } from '../generic/facet-reducer-helpers';
 import {selectCategoryFacetSearchResult} from '../facet-search-set/category/category-facet-search-actions';
-
-export type CategoryFacetSetState = Record<string, CategoryFacetRequest>;
-
-export function getCategoryFacetSetInitialState(): CategoryFacetSetState {
-  return {};
-}
+import {
+  CategoryFacetSetState,
+  getCategoryFacetSetInitialState,
+} from './category-facet-set-state';
 
 export const categoryFacetSetReducer = createReducer(
   getCategoryFacetSetInitialState(),

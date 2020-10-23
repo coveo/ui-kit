@@ -2,23 +2,7 @@ import {createReducer} from '@reduxjs/toolkit';
 import {change} from '../history/history-actions';
 import {updateAdvancedSearchQueries} from './advanced-search-queries-actions';
 import {isUndefined} from '@coveo/bueno';
-
-export interface AdvancedSearchQueriesState {
-  /**
-   * The cq filter (e.g., `((q AND aq) OR dq) AND cq).
-   */
-  cq: string;
-
-  /**
-   * The aq filter (e.g., `((q AND aq) OR dq) AND cq).
-   */
-  aq: string;
-}
-
-export const getAdvancedSearchQueriesInitialState: () => AdvancedSearchQueriesState = () => ({
-  cq: '',
-  aq: '',
-});
+import {getAdvancedSearchQueriesInitialState} from './advanced-search-queries-state';
 
 export const advancedSearchQueriesReducer = createReducer(
   getAdvancedSearchQueriesInitialState(),

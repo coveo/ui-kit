@@ -2,15 +2,16 @@ import fetch from 'cross-fetch';
 export type HttpMethods = 'POST' | 'GET' | 'DELETE' | 'PUT';
 export type HTTPContentTypes = 'application/json' | 'text/html';
 import {backOff} from 'exponential-backoff';
+import {BaseParam} from './search/search-api-params';
 
 function isThrottled(status: number): boolean {
   return status === 429;
 }
-export interface PlatformClientCallOptions<RequestParams> {
+export interface PlatformClientCallOptions<RequestParams extends BaseParam> {
   url: string;
   method: HttpMethods;
   contentType: HTTPContentTypes;
-  requestParams: RequestParams;
+  requestParams: Omit<RequestParams, 'url' | 'organizationId' | 'accessToken'>;
   accessToken: string;
   renewAccessToken: () => Promise<string>;
 }
@@ -21,7 +22,7 @@ export interface PlatformResponse<T> {
 }
 
 export class PlatformClient {
-  static async call<RequestParams, ResponseType>(
+  static async call<RequestParams extends BaseParam, ResponseType>(
     options: PlatformClientCallOptions<RequestParams>
   ): Promise<PlatformResponse<ResponseType>> {
     const request = async () => {

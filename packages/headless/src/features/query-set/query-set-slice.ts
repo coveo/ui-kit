@@ -3,12 +3,7 @@ import {registerQuerySetQuery, updateQuerySetQuery} from './query-set-actions';
 import {selectQuerySuggestion} from '../query-suggest/query-suggest-actions';
 import {change} from '../history/history-actions';
 import {executeSearch} from '../search/search-actions';
-
-export type QuerySetState = Record<string, string>;
-
-export function getQuerySetInitialState(): QuerySetState {
-  return {};
-}
+import {getQuerySetInitialState, QuerySetState} from './query-set-state';
 
 export const querySetReducer = createReducer(
   getQuerySetInitialState(),

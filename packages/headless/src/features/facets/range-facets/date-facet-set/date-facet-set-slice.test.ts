@@ -1,8 +1,4 @@
-import {
-  dateFacetSetReducer,
-  DateFacetSetState,
-  getDateFacetSetInitialState,
-} from './date-facet-set-slice';
+import {dateFacetSetReducer} from './date-facet-set-slice';
 import {
   registerDateFacet,
   toggleSelectDateFacetValue,
@@ -19,6 +15,10 @@ import {executeSearch} from '../../../search/search-actions';
 import {buildMockSearch} from '../../../../test/mock-search';
 import {logGenericSearchEvent} from '../../../analytics/analytics-actions';
 import {buildMockDateFacetValue} from '../../../../test/mock-date-facet-value';
+import {
+  DateFacetSetState,
+  getDateFacetSetInitialState,
+} from './date-facet-set-state';
 
 describe('date-facet-set slice', () => {
   let state: DateFacetSetState;

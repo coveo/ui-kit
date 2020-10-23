@@ -5,11 +5,11 @@ import {change} from '../history/history-actions';
 import {getHistoryEmptyState} from '../history/history-slice';
 import {executeSearch} from '../search/search-actions';
 import {updateFacetOptions} from './facet-options-actions';
+import {facetOptionsReducer} from './facet-options-slice';
 import {
   FacetOptionsState,
   getFacetOptionsInitialState,
-  facetOptionsReducer,
-} from './facet-options-slice';
+} from './facet-options-state';
 
 describe('facet options slice', () => {
   let state: FacetOptionsState;

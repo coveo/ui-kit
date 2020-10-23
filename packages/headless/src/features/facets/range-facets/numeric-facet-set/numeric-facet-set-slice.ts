@@ -18,12 +18,7 @@ import {
   defaultRangeFacetOptions,
 } from '../generic/range-facet-reducers';
 import {handleFacetSortCriterionUpdate} from '../../generic/facet-reducer-helpers';
-
-export type NumericFacetSetState = Record<string, NumericFacetRequest>;
-
-export function getNumericFacetSetInitialState(): NumericFacetSetState {
-  return {};
-}
+import {getNumericFacetSetInitialState} from './numeric-facet-set-state';
 
 export const numericFacetSetReducer = createReducer(
   getNumericFacetSetInitialState(),

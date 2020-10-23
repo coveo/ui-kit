@@ -2,8 +2,7 @@ import {createReducer} from '@reduxjs/toolkit';
 import {setPipeline} from './pipeline-actions';
 import {change} from '../history/history-actions';
 import {updateSearchConfiguration} from '../configuration/configuration-actions';
-
-export const getPipelineInitialState = () => 'default';
+import {getPipelineInitialState} from './pipeline-state';
 
 export const pipelineReducer = createReducer(
   getPipelineInitialState(),

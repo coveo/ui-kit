@@ -1,4 +1,3 @@
-import {searchRequest} from './search-request';
 import {createMockState} from '../../../test/mock-state';
 import {buildMockFacetRequest} from '../../../test/mock-facet-request';
 import {buildMockNumericFacetRequest} from '../../../test/mock-numeric-facet-request';
@@ -7,6 +6,7 @@ import {buildMockCategoryFacetRequest} from '../../../test/mock-category-facet-r
 import {buildMockFacetOptions} from '../../../test/mock-facet-options';
 import {buildMockFacetResponse} from '../../../test/mock-facet-response';
 import {SearchAppState} from '../../../state/search-app-state';
+import {buildSearchRequest} from '../../../features/search/search-actions';
 
 describe('search request', () => {
   let state: SearchAppState;
@@ -17,28 +17,28 @@ describe('search request', () => {
 
   it('#searchRequest returns the state #query', () => {
     state.query.q = 'hello';
-    const params = searchRequest(state);
+    const params = buildSearchRequest(state);
 
     expect(params.q).toBe(state.query.q);
   });
 
   it('#searchRequest returns the state #sortCriteria', () => {
     state.sortCriteria = 'qre';
-    const params = searchRequest(state);
+    const params = buildSearchRequest(state);
 
     expect(params.sortCriteria).toBe(state.sortCriteria);
   });
 
   it('#searchRequest returns the state #numberOfResults', () => {
     state.pagination.numberOfResults = 10;
-    const params = searchRequest(state);
+    const params = buildSearchRequest(state);
 
     expect(params.numberOfResults).toBe(state.pagination.numberOfResults);
   });
 
   it('#searchRequest returns the state #firstResult', () => {
     state.pagination.firstResult = 10;
-    const params = searchRequest(state);
+    const params = buildSearchRequest(state);
 
     expect(params.firstResult).toBe(state.pagination.firstResult);
   });
@@ -47,7 +47,7 @@ describe('search request', () => {
     const request = buildMockFacetRequest({field: 'objecttype'});
     state.facetSet[1] = request;
 
-    const {facets} = searchRequest(state);
+    const {facets} = buildSearchRequest(state);
     expect(facets).toContain(request);
   });
 
@@ -55,7 +55,7 @@ describe('search request', () => {
     const request = buildMockNumericFacetRequest({field: 'objecttype'});
     state.numericFacetSet[1] = request;
 
-    const {facets} = searchRequest(state);
+    const {facets} = buildSearchRequest(state);
     expect(facets).toContain(request);
   });
 
@@ -63,7 +63,7 @@ describe('search request', () => {
     const request = buildMockDateFacetRequest({field: 'objecttype'});
     state.dateFacetSet[1] = request;
 
-    const {facets} = searchRequest(state);
+    const {facets} = buildSearchRequest(state);
     expect(facets).toContain(request);
   });
 
@@ -71,7 +71,7 @@ describe('search request', () => {
     const request = buildMockCategoryFacetRequest({field: 'objecttype'});
     state.categoryFacetSet[1] = request;
 
-    const {facets} = searchRequest(state);
+    const {facets} = buildSearchRequest(state);
     expect(facets).toContain(request);
   });
 
@@ -88,7 +88,7 @@ describe('search request', () => {
     state.facetSet[facetId1] = buildMockFacetRequest({facetId: facetId1});
     state.facetSet[facetId2] = buildMockFacetRequest({facetId: facetId2});
 
-    const {facets} = searchRequest(state);
+    const {facets} = buildSearchRequest(state);
     expect(facets).toEqual([
       state.facetSet[facetId2],
       state.facetSet[facetId1],
@@ -107,7 +107,7 @@ describe('search request', () => {
     state.facetSet[facetId1] = buildMockFacetRequest({facetId: facetId1});
     state.facetSet[facetId2] = buildMockFacetRequest({facetId: facetId2});
 
-    const {facets} = searchRequest(state);
+    const {facets} = buildSearchRequest(state);
     expect(facets).toEqual([
       state.facetSet[facetId2],
       state.facetSet[facetId1],
@@ -117,17 +117,17 @@ describe('search request', () => {
   it('#searchRequestParams returns the facetOptions in state', () => {
     state.facetOptions = buildMockFacetOptions({freezeFacetOrder: true});
 
-    const params = searchRequest(state);
+    const params = buildSearchRequest(state);
     expect(params.facetOptions).toEqual(state.facetOptions);
   });
 
   it('should send visitorId if analytics is enable', () => {
     state.configuration.analytics.enabled = true;
-    expect(searchRequest(state).visitorId).toBeDefined();
+    expect(buildSearchRequest(state).visitorId).toBeDefined();
   });
 
   it('should not send visitorId if analytics is disabled', () => {
     state.configuration.analytics.enabled = false;
-    expect(searchRequest(state).visitorId).not.toBeDefined();
+    expect(buildSearchRequest(state).visitorId).not.toBeDefined();
   });
 });

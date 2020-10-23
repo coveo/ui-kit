@@ -9,20 +9,7 @@ import {
 } from './pagination-actions';
 import {executeSearch} from '../search/search-actions';
 import {change} from '../history/history-actions';
-
-export interface PaginationState {
-  firstResult: number;
-  numberOfResults: number;
-  totalCountFiltered: number;
-}
-
-export function getPaginationInitialState(): PaginationState {
-  return {
-    firstResult: 0,
-    numberOfResults: 10,
-    totalCountFiltered: 0,
-  };
-}
+import {getPaginationInitialState, PaginationState} from './pagination-state';
 
 export const minimumPage = 1;
 export const maximumNumberOfResultsFromIndex = 1000;

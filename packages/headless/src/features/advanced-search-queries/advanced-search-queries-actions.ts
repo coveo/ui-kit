@@ -1,5 +1,5 @@
 import {createAction} from '@reduxjs/toolkit';
-import {AdvancedSearchQueriesState} from './advanced-search-queries-slice';
+import {AdvancedSearchQueriesState} from './advanced-search-queries-state';
 
 /**
  * Update the values of the advanced search queries.

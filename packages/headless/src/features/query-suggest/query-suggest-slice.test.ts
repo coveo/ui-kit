@@ -1,8 +1,4 @@
-import {
-  querySuggestReducer,
-  QuerySuggestSet,
-  QuerySuggestState,
-} from './query-suggest-slice';
+import {querySuggestReducer} from './query-suggest-slice';
 import {QuerySuggestCompletion} from '../../api/search/query-suggest/query-suggest-response';
 import {
   clearQuerySuggest,
@@ -13,6 +9,7 @@ import {
 } from './query-suggest-actions';
 import {buildMockQuerySuggest} from '../../test/mock-query-suggest';
 import {updateQuerySetQuery} from '../query-set/query-set-actions';
+import {QuerySuggestSet, QuerySuggestState} from './query-suggest-state';
 
 describe('querySuggest slice', () => {
   const id = 'searchBox_1234';

@@ -1,5 +1,5 @@
 import {buildMockFacetSearchRequestOptions} from './mock-facet-search-request-options';
-import {CategoryFacetSearchState} from '../features/facets/facet-search-set/category/category-facet-search-set-slice';
+import {CategoryFacetSearchState} from '../features/facets/facet-search-set/category/category-facet-search-set-state';
 import {buildMockCategoryFacetSearchResponse} from './mock-category-facet-search-response';
 
 export function buildMockCategoryFacetSearch(

@@ -1,5 +1,5 @@
 import {SearchRequest} from '../api/search/search/search-request';
-import {getFieldsInitialState} from '../features/fields/fields-slice';
+import {getFieldsInitialState} from '../features/fields/fields-state';
 import {buildMockFacetOptions} from './mock-facet-options';
 
 export function buildMockSearchRequest(
@@ -19,6 +19,9 @@ export function buildMockSearchRequest(
     fieldsToInclude: getFieldsInitialState().fieldsToInclude,
     pipeline: 'default',
     searchHub: 'default',
+    url: 'https://platform.cloud.coveo.com/rest/search/v2',
+    organizationId: '',
+    accessToken: '',
     ...config,
   };
 }

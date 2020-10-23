@@ -1,16 +1,6 @@
 import {createReducer} from '@reduxjs/toolkit';
 import {checkForRedirection} from './redirection-actions';
-
-export interface RedirectionState {
-  /**
-   * The URL to redirect the user to.
-   */
-  redirectTo: string | null;
-}
-
-export const getRedirectionInitialState: () => RedirectionState = () => ({
-  redirectTo: null,
-});
+import {getRedirectionInitialState} from './redirection-state';
 
 export const redirectionReducer = createReducer(
   getRedirectionInitialState(),
