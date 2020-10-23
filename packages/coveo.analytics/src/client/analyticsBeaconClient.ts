@@ -47,6 +47,7 @@ export class AnalyticsBeaconClient implements AnalyticsRequestClient {
         return [
             token && this.isEventTypeLegacy(eventType) ? `access_token=${token}` : '',
             visitorId ? `visitorId=${visitorId}` : '',
+            'discardVisitInfo=true',
         ]
             .filter((p) => !!p)
             .join('&');
