@@ -5,6 +5,10 @@ import {
 } from '../../features/pagination/pagination-actions';
 import {logPagerResize} from '../../features/pagination/pagination-analytics-actions';
 import {executeSearch} from '../../features/search/search-actions';
+import {
+  ConfigurationSection,
+  PaginationSection,
+} from '../../state/state-sections';
 import {buildController} from '../controller/headless-controller';
 
 export interface ResultsPerPageProps {
@@ -23,7 +27,7 @@ export type ResultsPerPage = ReturnType<typeof buildResultsPerPage>;
 export type ResultsPerPageState = ResultsPerPage['state'];
 
 export const buildResultsPerPage = (
-  engine: Engine,
+  engine: Engine<PaginationSection & ConfigurationSection>,
   props: Partial<ResultsPerPageProps> = {}
 ) => {
   const controller = buildController(engine);

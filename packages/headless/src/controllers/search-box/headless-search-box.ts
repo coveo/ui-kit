@@ -17,6 +17,13 @@ import {executeSearch} from '../../features/search/search-actions';
 import {buildController} from '../controller/headless-controller';
 import {updatePage} from '../../features/pagination/pagination-actions';
 import {logSearchboxSubmit} from '../../features/query/query-analytics-actions';
+import {
+  ConfigurationSection,
+  QuerySection,
+  QuerySetSection,
+  QuerySuggestionSection,
+  SearchSection,
+} from '../../state/state-sections';
 
 export interface SearchBoxProps {
   options: SearchBoxOptions;
@@ -53,7 +60,13 @@ export type SearchBoxState = SearchBox['state'];
 export type SearchBox = ReturnType<typeof buildSearchBox>;
 
 export const buildSearchBox = (
-  engine: Engine,
+  engine: Engine<
+    QuerySection &
+      QuerySuggestionSection &
+      ConfigurationSection &
+      QuerySetSection &
+      SearchSection
+  >,
   props: Partial<SearchBoxProps> = {}
 ) => {
   const controller = buildController(engine);

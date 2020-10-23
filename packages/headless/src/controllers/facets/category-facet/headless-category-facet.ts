@@ -30,6 +30,12 @@ import {
 } from '../../../features/facets/facet-search-set/facet-search-request-options';
 import {buildCategoryFacetSearch} from '../facet-search/category/headless-category-facet-search';
 import {updateFacetOptions} from '../../../features/facet-options/facet-options-actions';
+import {
+  CategoryFacetSearchSection,
+  CategoryFacetSection,
+  ConfigurationSection,
+  SearchSection,
+} from '../../../state/state-sections';
 import {partitionIntoParentsAndValues} from '../../../features/facets/category-facet-set/category-facet-utils';
 
 export type CategoryFacetProps = {
@@ -47,7 +53,15 @@ export type CategoryFacetOptions = Omit<
 export type CategoryFacet = ReturnType<typeof buildCategoryFacet>;
 export type CategoryFacetState = CategoryFacet['state'];
 
-export function buildCategoryFacet(engine: Engine, props: CategoryFacetProps) {
+export function buildCategoryFacet(
+  engine: Engine<
+    CategoryFacetSection &
+      SearchSection &
+      ConfigurationSection &
+      CategoryFacetSearchSection
+  >,
+  props: CategoryFacetProps
+) {
   const controller = buildController(engine);
   const {dispatch} = engine;
 

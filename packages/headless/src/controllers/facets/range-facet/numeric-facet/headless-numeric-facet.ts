@@ -18,6 +18,11 @@ import {
   toggleSelectNumericFacetValue,
 } from '../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions';
 import {buildRangeFacet} from '../headless-range-facet';
+import {
+  ConfigurationSection,
+  NumericFacetSection,
+  SearchSection,
+} from '../../../../state/state-sections';
 
 type NumericRangeOptions = Pick<NumericRangeRequest, 'start' | 'end'> &
   Partial<NumericRangeRequest>;
@@ -45,7 +50,10 @@ export type NumericFacetOptions = {facetId?: string} & (
 export type NumericFacet = ReturnType<typeof buildNumericFacet>;
 export type NumericFacetState = NumericFacet['state'];
 
-export function buildNumericFacet(engine: Engine, props: NumericFacetProps) {
+export function buildNumericFacet(
+  engine: Engine<NumericFacetSection & ConfigurationSection & SearchSection>,
+  props: NumericFacetProps
+) {
   const dispatch = engine.dispatch;
 
   const facetId = props.options.facetId || randomID('numericFacet');

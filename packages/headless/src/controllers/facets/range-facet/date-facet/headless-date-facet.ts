@@ -18,6 +18,11 @@ import {
   toggleSelectDateFacetValue,
 } from '../../../../features/facets/range-facets/date-facet-set/date-facet-actions';
 import {buildRangeFacet} from '../headless-range-facet';
+import {
+  ConfigurationSection,
+  DateFacetSection,
+  SearchSection,
+} from '../../../../state/state-sections';
 
 type DateRangeOptions = Pick<DateRangeRequest, 'start' | 'end'> &
   Partial<DateRangeRequest>;
@@ -43,7 +48,10 @@ export type DateFacetOptions = {facetId?: string} & (
 export type DateFacet = ReturnType<typeof buildDateFacet>;
 export type DateFacetState = DateFacet['state'];
 
-export function buildDateFacet(engine: Engine, props: DateFacetProps) {
+export function buildDateFacet(
+  engine: Engine<ConfigurationSection & SearchSection & DateFacetSection>,
+  props: DateFacetProps
+) {
   const dispatch = engine.dispatch;
 
   const facetId = props.options.facetId || randomID('dateFacet');

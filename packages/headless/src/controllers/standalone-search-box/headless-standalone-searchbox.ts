@@ -3,6 +3,14 @@ import {Engine} from '../../app/headless-engine';
 import {updateQuery} from '../../features/query/query-actions';
 import {checkForRedirection} from '../../features/redirection/redirection-actions';
 import {
+  ConfigurationSection,
+  QuerySection,
+  QuerySetSection,
+  QuerySuggestionSection,
+  RedirectionSection,
+  SearchSection,
+} from '../../state/state-sections';
+import {
   buildSearchBox,
   SearchBoxOptions,
 } from '../search-box/headless-search-box';
@@ -39,7 +47,14 @@ export type StandaloneSearchBoxState = StandaloneSearchBox['state'];
 export type StandaloneSearchBox = ReturnType<typeof buildStandaloneSearchBox>;
 
 export function buildStandaloneSearchBox(
-  engine: Engine,
+  engine: Engine<
+    ConfigurationSection &
+      RedirectionSection &
+      QuerySection &
+      QuerySuggestionSection &
+      QuerySetSection &
+      SearchSection
+  >,
   props: StandaloneSearchBoxProps
 ) {
   const {dispatch} = engine;

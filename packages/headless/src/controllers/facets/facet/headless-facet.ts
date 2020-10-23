@@ -36,6 +36,12 @@ import {
 } from '../../../features/facets/facet-set/interfaces/response';
 import {FacetSortCriterion} from '../../../features/facets/facet-set/interfaces/request';
 import {updateFacetOptions} from '../../../features/facet-options/facet-options-actions';
+import {
+  ConfigurationSection,
+  FacetSearchSection,
+  FacetSection,
+  SearchSection,
+} from '../../../state/state-sections';
 
 export type Facet = ReturnType<typeof buildFacet>;
 export type FacetState = Facet['state'];
@@ -67,7 +73,12 @@ export type ValidatedFacetOptions = FacetRegistrationOptions & {
   facetSearch: Partial<FacetSearchRequestOptions>;
 };
 
-export function buildFacet(engine: Engine, props: FacetProps) {
+export function buildFacet(
+  engine: Engine<
+    FacetSection & ConfigurationSection & FacetSearchSection & SearchSection
+  >,
+  props: FacetProps
+) {
   const controller = buildController(engine);
   const options = schema.validate(props.options) as ValidatedFacetOptions;
   const dispatch = engine.dispatch;

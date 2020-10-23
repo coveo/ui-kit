@@ -8,6 +8,7 @@ import {SortCriterion} from '../../features/sort-criteria/criteria';
 import {buildController} from '../controller/headless-controller';
 import {updatePage} from '../../features/pagination/pagination-actions';
 import {logResultsSort} from '../../features/sort-criteria/sort-criteria-analytics-actions';
+import {ConfigurationSection, SortSection} from '../../state/state-sections';
 
 export interface SortProps {
   initialState: Partial<SortInitialState>;
@@ -24,7 +25,10 @@ export type Sort = ReturnType<typeof buildSort>;
 /** The state relevant to the `Sort` controller.*/
 export type SortState = Sort['state'];
 
-export function buildSort(engine: Engine, props: Partial<SortProps> = {}) {
+export function buildSort(
+  engine: Engine<ConfigurationSection & SortSection>,
+  props: Partial<SortProps> = {}
+) {
   const controller = buildController(engine);
   const {dispatch} = engine;
   const criterion = props.initialState?.criterion;

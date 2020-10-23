@@ -19,6 +19,10 @@ import {
   logPageNext,
   logPagePrevious,
 } from '../../features/pagination/pagination-analytics-actions';
+import {
+  ConfigurationSection,
+  PaginationSection,
+} from '../../state/state-sections';
 
 export interface PagerProps {
   options?: PagerOptions;
@@ -44,7 +48,10 @@ export type Pager = ReturnType<typeof buildPager>;
 
 export type PagerState = Pager['state'];
 
-export const buildPager = (engine: Engine, props: PagerProps = {}) => {
+export const buildPager = (
+  engine: Engine<PaginationSection & ConfigurationSection>,
+  props: PagerProps = {}
+) => {
   const controller = buildController(engine);
   const {dispatch} = engine;
 

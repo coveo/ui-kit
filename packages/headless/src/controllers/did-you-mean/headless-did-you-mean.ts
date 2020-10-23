@@ -6,6 +6,10 @@ import {
 } from '../../features/did-you-mean/did-you-mean-actions';
 import {logDidYouMeanClick} from '../../features/did-you-mean/did-you-mean-analytics-actions';
 import {executeSearch} from '../../features/search/search-actions';
+import {
+  ConfigurationSection,
+  DidYouMeanSection,
+} from '../../state/state-sections';
 
 /**
  * The DidYouMean controller is responsible for handling query corrections.
@@ -15,7 +19,9 @@ import {executeSearch} from '../../features/search/search-actions';
 export type DidYouMean = ReturnType<typeof buildDidYouMean>;
 export type DidYouMeanState = DidYouMean['state'];
 
-export const buildDidYouMean = (engine: Engine) => {
+export const buildDidYouMean = (
+  engine: Engine<ConfigurationSection & DidYouMeanSection>
+) => {
   const controller = buildController(engine);
   const {dispatch} = engine;
 

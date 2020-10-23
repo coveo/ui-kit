@@ -5,7 +5,7 @@ export type Controller = ReturnType<typeof buildController>;
 export function buildController<T>(engine: Engine<T>) {
   let prevState = '{}';
 
-  const hasStateChanged = (currentState: T): boolean => {
+  const hasStateChanged = (currentState: Record<string, any>): boolean => {
     try {
       const stringifiedState = JSON.stringify(currentState);
       const hasChanged = prevState !== stringifiedState;
@@ -37,7 +37,7 @@ export function buildController<T>(engine: Engine<T>) {
     },
 
     get state() {
-      return {} as T;
+      return {};
     },
   };
 }

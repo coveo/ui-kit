@@ -1,5 +1,5 @@
 import {createSelector} from '@reduxjs/toolkit';
-import {SearchAppState} from '../../state/search-app-state';
+import {PaginationSection} from '../../state/state-sections';
 import {calculatePage, calculateMaxPage, minimumPage} from './pagination-slice';
 
 interface Range {
@@ -7,15 +7,15 @@ interface Range {
   end: number;
 }
 
-function firstResultSelector(state: SearchAppState) {
+function firstResultSelector(state: PaginationSection) {
   return state.pagination.firstResult;
 }
 
-function numberOfResultsSelector(state: SearchAppState) {
+function numberOfResultsSelector(state: PaginationSection) {
   return state.pagination.numberOfResults;
 }
 
-function totalCountFilteredSelector(state: SearchAppState) {
+function totalCountFilteredSelector(state: PaginationSection) {
   return state.pagination.totalCountFiltered;
 }
 
@@ -47,7 +47,7 @@ export const maxPageSelector = createSelector(
 export const currentPagesSelector = createSelector(
   currentPageSelector,
   maxPageSelector,
-  (_: SearchAppState, desiredNumberOfPages: number) => desiredNumberOfPages,
+  (_: PaginationSection, desiredNumberOfPages: number) => desiredNumberOfPages,
   (page, maxPage, desiredNumberOfPages) => {
     let range = buildRange(page, desiredNumberOfPages);
     range = shiftRightIfNeeded(range);

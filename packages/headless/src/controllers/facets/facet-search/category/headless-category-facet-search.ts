@@ -6,6 +6,10 @@ import {
 import {buildGenericFacetSearch} from '../facet-search';
 import {FacetSearchOptions} from '../../../../features/facets/facet-search-set/facet-search-request-options';
 import {CategoryFacetSearchResult} from '../../../../api/search/facet-search/category-facet-search/category-facet-search-response';
+import {
+  CategoryFacetSearchSection,
+  ConfigurationSection,
+} from '../../../../state/state-sections';
 
 export interface CategoryFacetSearchProps {
   options: FacetSearchOptions;
@@ -14,7 +18,7 @@ export interface CategoryFacetSearchProps {
 export type CategoryFacetSearch = ReturnType<typeof buildCategoryFacetSearch>;
 
 export function buildCategoryFacetSearch(
-  engine: Engine,
+  engine: Engine<CategoryFacetSearchSection & ConfigurationSection>,
   props: CategoryFacetSearchProps
 ) {
   const {dispatch} = engine;

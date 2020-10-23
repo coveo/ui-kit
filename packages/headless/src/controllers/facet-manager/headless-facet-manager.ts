@@ -1,4 +1,5 @@
 import {Engine} from '../../app/headless-engine';
+import {SearchSection} from '../../state/state-sections';
 import {buildController} from '../controller/headless-controller';
 
 export type FacetManagerPayload<T> = {
@@ -9,7 +10,7 @@ export type FacetManagerPayload<T> = {
 export type FacetManager = ReturnType<typeof buildFacetManager>;
 export type FacetManagerState = FacetManager['state'];
 
-export function buildFacetManager(engine: Engine) {
+export function buildFacetManager(engine: Engine<SearchSection>) {
   const controller = buildController(engine);
 
   return {
