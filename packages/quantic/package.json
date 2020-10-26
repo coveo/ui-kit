@@ -1,6 +1,6 @@
 {
   "name": "@coveo/quantic",
-  "version": "0.1.0-alpha.19",
+  "version": "0.1.0-alpha.20",
   "description": "A Salesforce Lightning Web Component (LWC) library for building modern UIs interfacing with the Coveo platform",
   "author": "coveo.com",
   "homepage": "https://coveo.com",
@@ -22,7 +22,7 @@
     "test:typings": "tsc"
   },
   "dependencies": {
-    "@coveo/atomic": "^0.1.0-alpha.19",
+    "@coveo/atomic": "^0.1.0-alpha.20",
     "@coveo/headless": "^0.1.0-alpha.19",
     "tributejs": "^5.1.3"
   },
