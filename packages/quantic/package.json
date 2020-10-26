@@ -1,6 +1,6 @@
 {
   "name": "@coveo/quantic",
-  "version": "0.1.0-alpha.18",
+  "version": "0.1.0-alpha.19",
   "description": "A Salesforce Lightning Web Component (LWC) library for building modern UIs interfacing with the Coveo platform",
   "author": "coveo.com",
   "homepage": "https://coveo.com",
@@ -21,8 +21,8 @@
     "test:unit:coverage": "lwc-jest --coverage"
   },
   "dependencies": {
-    "@coveo/atomic": "^0.1.0-alpha.18",
-    "@coveo/headless": "^0.1.0-alpha.18",
+    "@coveo/atomic": "^0.1.0-alpha.19",
+    "@coveo/headless": "^0.1.0-alpha.19",
     "tributejs": "^5.1.3"
   },
   "devDependencies": {
