@@ -25,6 +25,7 @@ node('linux && docker') {
 
       stage('Unit Test') {
         sh 'npm test'
+        junit 'packages/*/reports/*.xml'
       }
 
       // stage('Cypress Test') {

@@ -57,6 +57,9 @@
             ],
             "c/initialization": [
                 "c/initialization.js"
+            ],
+            "c/testUtils": [
+                "testUtils/testUtils.js"
             ]
         }
     },
