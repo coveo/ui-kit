@@ -1,4 +1,3 @@
-// @ts-check
 import {LightningElement, api} from 'lwc';
 import HeadlessPath from '@salesforce/resourceUrl/coveoheadless';
 import AtomicPath from '@salesforce/resourceUrl/atomicutils';
@@ -83,7 +82,7 @@ export default class SearchInterface extends LightningElement {
   initEngine() {
     this.engine = new CoveoHeadless.HeadlessEngine({
       configuration: this.config,
-      reducers: CoveoHeadless.searchPageReducers,
+      reducers: CoveoHeadless.searchAppReducers,
     });
 
     this.hangingComponents.forEach((component) =>

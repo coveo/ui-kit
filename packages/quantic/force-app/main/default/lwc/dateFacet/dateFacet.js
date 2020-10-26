@@ -1,9 +1,10 @@
-// @ts-check
+
 import {LightningElement, track, api} from 'lwc';
 import { initializeComponent } from 'c/initialization';
 
 export default class DateFacet extends LightningElement {
   /** @type {import("coveo").DateFacetState} */
+  // @ts-ignore TODO: Check CategoryFacetState typing and integration with LWC/Quantic
   @track state = {
     values: [],
   };

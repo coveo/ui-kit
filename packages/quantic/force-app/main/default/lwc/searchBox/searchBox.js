@@ -1,4 +1,4 @@
-// @ts-check
+
 import {LightningElement, api, track} from 'lwc';
 import TributePath from '@salesforce/resourceUrl/tributejs';
 // @ts-ignore
@@ -8,6 +8,7 @@ import {initializeComponent} from 'c/initialization';
 export default class SearchBox extends LightningElement {
   /** @type {import("coveo").SearchBoxState} */
   @track state = {
+    // @ts-ignore TODO: Check SearchBoxState typing and integration with LWC/Quantic
     redirectTo: '',
     suggestions: [],
     value: '',
@@ -79,7 +80,11 @@ export default class SearchBox extends LightningElement {
     this.tribute = new Tribute(tributeOptions);
     this.tribute.attach(input);
 
-    input.addEventListener('tribute-replaced', (e) => {
+    input.addEventListener('tribute-replaced',
+    /**
+     * @param {CustomEvent} e
+     */
+    (e) => {
       this.searchBox.updateText(e.detail.item.string);
       this.searchBox.submit();
     });

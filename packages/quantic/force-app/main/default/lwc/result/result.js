@@ -1,5 +1,6 @@
+// @ts-ignore
 import defaultTemplate from './result.html';
-// @ts-check
+
 import { LightningElement, api } from "lwc";
 
 export default class Result extends LightningElement {

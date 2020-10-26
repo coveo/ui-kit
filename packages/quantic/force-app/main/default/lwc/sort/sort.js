@@ -1,4 +1,4 @@
-// @ts-check
+
 import {LightningElement, track, api} from 'lwc';
 import {initializeComponent} from 'c/initialization';
 
@@ -49,8 +49,6 @@ export default class Sort extends LightningElement {
       default:
         break;
     }
-
-    this.engine;
   }
 
   get relevance() {

@@ -1,4 +1,4 @@
-// @ts-check
+
 import {LightningElement, api, track} from 'lwc';
 import { initializeComponent } from 'c/initialization';
 

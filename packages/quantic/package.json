@@ -11,14 +11,15 @@
     "url": "git+https://olamothe@bitbucket.org/coveord/ui-kit.git"
   },
   "scripts": {
-    "test": "npm run test:unit",
+    "test": "npm run test:unit && npm run test:typings",
     "copy:staticresources": "node copy-static-resources.js",
-    "build": "echo \"Nothing to build\" && exit 0",
+    "build": "npm run copy:staticresources",
     "start": "npm run copy:staticresources && sfdx force:lightning:lwc:start",
     "test:unit": "lwc-jest",
     "test:unit:debug": "lwc-jest --debug",
     "test:unit:watch": "lwc-jest --watch",
-    "test:unit:coverage": "lwc-jest --coverage"
+    "test:unit:coverage": "lwc-jest --coverage",
+    "test:typings": "tsc"
   },
   "dependencies": {
     "@coveo/atomic": "^0.1.0-alpha.19",
@@ -27,6 +28,7 @@
   },
   "devDependencies": {
     "@salesforce/sfdx-lwc-jest": "^0.10.2",
+    "@types/jest": "^26.0.15",
     "jest-junit": "^12.0.0",
     "ncp": "^2.0.0"
   }

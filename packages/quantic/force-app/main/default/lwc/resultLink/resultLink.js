@@ -19,8 +19,11 @@ export default class ResultLink extends LightningElement {
     this.engine = engine;
   }
 
-
   renderedCallback() {
-    CoveoAtomicUtils.bindLogDocumentOpenOnResult(this.engine, this.result, this.template);
+    CoveoAtomicUtils.bindLogDocumentOpenOnResult(
+      this.engine,
+      this.result,
+      /** @type {any} */ (this.template)
+    );
   }
 }

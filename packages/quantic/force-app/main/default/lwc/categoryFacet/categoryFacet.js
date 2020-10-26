@@ -3,6 +3,7 @@ import { initializeComponent } from 'c/initialization';
 
 export default class CategoryFacet extends LightningElement {
   /** @type {import("coveo").CategoryFacetState} */
+  // @ts-ignore TODO: Check CategoryFacetState typing and integration with LWC/Quantic
   @track state = {
     values: [],
     parents: []

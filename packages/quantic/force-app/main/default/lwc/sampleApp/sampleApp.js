@@ -1,6 +1,8 @@
+// @ts-ignore
 import template1 from './resultTemplates/template1.html';
+// @ts-ignore
 import template2 from './resultTemplates/template2.html';
-// @ts-check
+
 import { LightningElement } from 'lwc';
 
 export default class SampleApp extends LightningElement {

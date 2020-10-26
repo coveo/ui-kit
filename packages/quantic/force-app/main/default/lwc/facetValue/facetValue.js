@@ -1,4 +1,4 @@
-// @ts-check
+
 import { LightningElement, api } from "lwc";
 
 export default class FacetValue extends LightningElement {

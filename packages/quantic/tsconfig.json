@@ -1,10 +1,13 @@
 {
     "compilerOptions": {
         "experimentalDecorators": true,
-        "baseUrl": ".",
+        "skipLibCheck": true,
+        "noEmit": true,
         "checkJs": true,
+        "allowJs": true,
+        "baseUrl": "force-app/main/default/lwc",
         "target": "es2016",
-        "module": "esnext",
+        "module": "ESNext",
         "paths": {
             "c/dateFacet": [
                 "dateFacet/dateFacet.js"
@@ -59,16 +62,16 @@
             ],
             "c/initialization": [
                 "initialization/initialization.js"
-            ],
-            "c/testUtils": [
-                "testUtils/testUtils.js"
             ]
         }
     },
     "include": [
-        "**/*",
-        "../../../../.sfdx/typings/lwc/**/*.d.ts",
-        "../../../../coveo.d.ts"
+        "force-app/main/default/lwc",
+        "typings/lwc/**/*.d.ts",
+        "coveo.d.ts"
+    ],
+    "exclude": [
+        "**/__tests__/**"
     ],
     "typeAcquisition": {
         "include": [
