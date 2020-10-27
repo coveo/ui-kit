@@ -149,6 +149,14 @@ export enum SearchPageEvents {
      * Identifies the search and custom event that gets logged when a user clicks the Retry link after an error page.
      */
     queryErrorRetry = 'errorRetry',
+    /**
+     * Identifies the custom event that gets logged when a user performs a query that returns recommendations in the Recommendations panel.
+     */
+    recommendation = 'recommendation',
+    /**
+     * Identifies the search event that gets logged when a user action (that is not a query) reloads the Recommendations panel with new recommendations.
+     */
+    recommendationInterfaceLoad = 'recommendationInterfaceLoad',
 }
 
 export const CustomEventsTypes: Partial<Record<SearchPageEvents, string>> = {
@@ -168,6 +176,7 @@ export const CustomEventsTypes: Partial<Record<SearchPageEvents, string>> = {
     [SearchPageEvents.facetSearch]: 'facet',
     [SearchPageEvents.facetShowLess]: 'facet',
     [SearchPageEvents.facetShowMore]: 'facet',
+    [SearchPageEvents.recommendation]: 'recommendation',
 };
 
 export interface FacetMetadata {

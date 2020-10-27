@@ -364,6 +364,16 @@ describe('SearchPageClient', () => {
         expectMatchPayload(SearchPageEvents.queryErrorClear);
     });
 
+    it('should send proper payload for #logRecommendationInterfaceLoad', async () => {
+        await client.logRecommendationInterfaceLoad();
+        expectMatchPayload(SearchPageEvents.recommendationInterfaceLoad);
+    });
+
+    it('should send proper payload for #logRecommendation', async () => {
+        await client.logRecommendation();
+        expectMatchCustomEventPayload(SearchPageEvents.recommendation);
+    });
+
     it('should enable analytics tracking by default', () => {
         const c = new CoveoSearchPageClient({}, provider);
         expect(c.coveoAnalyticsClient instanceof CoveoAnalyticsClient).toBe(true);

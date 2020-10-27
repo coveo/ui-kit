@@ -59,6 +59,14 @@ export class CoveoSearchPageClient {
         return this.logSearchEvent(SearchPageEvents.interfaceLoad);
     }
 
+    public logRecommendationInterfaceLoad() {
+        return this.logSearchEvent(SearchPageEvents.recommendationInterfaceLoad);
+    }
+
+    public logRecommendation() {
+        return this.logCustomEvent(SearchPageEvents.recommendation);
+    }
+
     public logInterfaceChange(metadata: InterfaceChangeMetadata) {
         return this.logSearchEvent(SearchPageEvents.interfaceChange, metadata);
     }
