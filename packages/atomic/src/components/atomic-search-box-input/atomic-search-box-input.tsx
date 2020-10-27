@@ -7,6 +7,9 @@ import {
 } from '../../utils/slot-utils';
 import {AtomicSearchBoxOptions} from '../atomic-search-box/atomic-search-box';
 
+/**
+ * @slot - Content is placed inside the clear button element.
+ */
 @Component({
   tag: 'atomic-search-box-input',
   styleUrl: 'atomic-search-box-input.css',

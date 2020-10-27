@@ -15,6 +15,13 @@
 | `state` _(required)_      | --            |             | `{ value: string; suggestions: { value: string; }[]; isLoading: boolean; }`                                                                                                                                                                                                                    | `undefined` |
 
 
+## Slots
+
+| Slot | Description                                       |
+| ---- | ------------------------------------------------- |
+|      | Content is placed inside the clear button element |
+
+
 ## Dependencies
 
 ### Used by

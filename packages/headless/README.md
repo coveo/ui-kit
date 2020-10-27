@@ -101,7 +101,7 @@ To only test out the library's capabilities, you can use our sample configuratio
 
 ```typescript
 new HeadlessEngine({
-  configuration: ReduxEngine.getSampleConfiguration(),
+  configuration: HeadlessEngine.getSampleConfiguration(),
   ...
 ```
 

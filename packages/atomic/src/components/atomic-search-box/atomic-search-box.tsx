@@ -13,6 +13,12 @@ export interface AtomicSearchBoxOptions {
   numberOfSuggestions: number;
 }
 
+/**
+ * @slot submit-leading - Submit button placed before the input.
+ * @slot input - Input that contains the query.
+ * @slot suggestions - List of suggestions placed underneath the input.
+ * @slot submit - Submit button placed after the input.
+ */
 @Component({
   tag: 'atomic-search-box',
   styleUrl: 'atomic-search-box.css',
