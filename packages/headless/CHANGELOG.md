@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.1.0-alpha.22](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.21...v0.1.0-alpha.22) (2020-10-27)
+
+
+### Features
+
+* **atomic:** document slots & add examples ([b8627a5](https://bitbucket.org/coveord/ui-kit/commits/b8627a5ea8e7d508331969a2e41533b3fa7d07c8))
+
+
+
+
+
 # [0.1.0-alpha.21](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.20...v0.1.0-alpha.21) (2020-10-27)
 
 
