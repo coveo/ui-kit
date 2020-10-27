@@ -19,13 +19,12 @@ export interface StateWithHistory<State> {
 }
 
 export const ActionCreators = {
-  undo: () => createAction(ActionTypes.UNDO),
-  redo: () => createAction(ActionTypes.REDO),
+  undo: createAction(ActionTypes.UNDO),
+  redo: createAction(ActionTypes.REDO),
 };
 
 const undo = <State>(state: StateWithHistory<State>) => {
   const {past, present, future} = state;
-
   if (past.length === 0) {
     return state;
   }
@@ -87,7 +86,6 @@ export const undoable = <State, Action extends AnyAction>(
   emptyState: State
 ) => {
   const emptyStateWithHistory = makeHistory(emptyState);
-
   return (state = emptyStateWithHistory, action: Action) => {
     switch (action.type) {
       case ActionTypes.UNDO:
