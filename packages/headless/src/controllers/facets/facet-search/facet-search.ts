@@ -28,7 +28,9 @@ export function buildGenericFacetSearch<T extends FacetSearchState>(
   >,
   props: GenericFacetSearchProps<T>
 ) {
-  type GenericFacetSearchResult = T['response']['values'][0];
+  type GenericFacetSearchResults = T['response']['values'];
+  type GenericFacetSearchResult = GenericFacetSearchResults[0];
+
   const dispatch = engine.dispatch;
   const {options, getFacetSearch} = props;
 
@@ -77,8 +79,11 @@ export function buildGenericFacetSearch<T extends FacetSearchState>(
 
     get state() {
       const {response, isLoading} = getFacetSearch();
+      const values: GenericFacetSearchResults = response.values;
+
       return {
         ...response,
+        values,
         isLoading,
       };
     },
