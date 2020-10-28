@@ -9,6 +9,6 @@ export default class CategoryFacetValue extends LightningElement {
    */
   onSelect(evt) {
     evt.preventDefault();
-    this.dispatchEvent(new CustomEvent("selectvalue", { detail: this.item }));
+    this.dispatchEvent(new CustomEvent('selectvalue', {detail: this.item}));
   }
 }

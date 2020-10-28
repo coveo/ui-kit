@@ -1,6 +1,5 @@
 // @ts-ignore
 import defaultTemplate from './result.html';
-
 import { LightningElement, api } from "lwc";
 
 export default class Result extends LightningElement {
@@ -18,7 +17,7 @@ export default class Result extends LightningElement {
       return this.fileTypeIcon;
     }
 
-    return "doctype:unknown";
+    return 'doctype:unknown';
   }
 
   get objectTypeIcon() {
@@ -27,12 +26,12 @@ export default class Result extends LightningElement {
       return undefined;
     }
     switch (objType.toLowerCase()) {
-      case "faq":
-        return "standard:question_feed";
-      case "message":
-        return "standard:note";
-      case "city":
-        return "standard:household";
+      case 'faq':
+        return 'standard:question_feed';
+      case 'message':
+        return 'standard:note';
+      case 'city':
+        return 'standard:household';
       default:
         return `standard:${objType.toLowerCase()}`;
     }
@@ -45,14 +44,14 @@ export default class Result extends LightningElement {
     }
 
     const lower = fileType.toLowerCase();
-    if (lower.indexOf("youtube") !== -1) {
-      return "doctype:video";
+    if (lower.indexOf('youtube') !== -1) {
+      return 'doctype:video';
     }
-    if (lower.indexOf("doc")) {
-      return "doctype:gdoc";
+    if (lower.indexOf('doc')) {
+      return 'doctype:gdoc';
     }
-    if (lower.indexOf("xls")) {
-      return "doctype:excel";
+    if (lower.indexOf('xls')) {
+      return 'doctype:excel';
     }
     return `dcotype:${lower}`;
   }

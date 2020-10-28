@@ -1,6 +1,5 @@
-
 import {LightningElement, api, track} from 'lwc';
-import { initializeComponent } from 'c/initialization';
+import {initializeComponent} from 'c/initialization';
 
 export default class ResultList extends LightningElement {
   @track state = {};
@@ -24,17 +23,26 @@ export default class ResultList extends LightningElement {
   @api
   initialize(engine) {
     this.resultList = CoveoHeadless.buildResultList(engine);
-    this.resultTemplatesManager = new CoveoHeadless.ResultTemplatesManager(engine);
+    this.resultTemplatesManager = new CoveoHeadless.ResultTemplatesManager(
+      engine
+    );
     this.registerTemplates();
     this.unsubscribe = this.resultList.subscribe(() => this.updateState());
   }
 
   registerTemplates() {
-    this.dispatchEvent(new CustomEvent('registerresulttemplates', {bubbles: true, detail: this.resultTemplatesManager}));
+    this.dispatchEvent(
+      new CustomEvent('registerresulttemplates', {
+        bubbles: true,
+        detail: this.resultTemplatesManager,
+      })
+    );
   }
 
   disconnectedCallback() {
-    this.unsubscribe && this.unsubscribe();
+    if (this.unsubscribe) {
+      this.unsubscribe();
+    }
   }
 
   updateState() {

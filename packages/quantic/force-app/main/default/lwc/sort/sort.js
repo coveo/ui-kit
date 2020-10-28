@@ -1,4 +1,3 @@
-
 import {LightningElement, track, api} from 'lwc';
 import {initializeComponent} from 'c/initialization';
 

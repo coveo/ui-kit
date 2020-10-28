@@ -1,6 +1,5 @@
-
 import {LightningElement, track, api} from 'lwc';
-import { initializeComponent } from 'c/initialization';
+import {initializeComponent} from 'c/initialization';
 
 export default class Summary extends LightningElement {
   @track state = {};
@@ -24,7 +23,9 @@ export default class Summary extends LightningElement {
   }
 
   disconnectedCallback() {
-    this.unsubscribe && this.unsubscribe();
+    if (this.unsubscribe) {
+      this.unsubscribe();
+    }
   }
   updateState() {
     this.state = this.querySummary.state;

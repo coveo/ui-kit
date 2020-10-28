@@ -8,7 +8,7 @@
     "test": "lerna run test",
     "test:watch": "lerna run --parallel test:watch --no-prefix",
     "check": "gts check",
-    "fix": "gts fix",
+    "fix": "gts fix && lerna run --parallel fix",
     "pr:report": "node ./scripts/reports/pr-report.js",
     "report:bundle-size:time-series": "node ./scripts/reports/bundle-size/time-series.js",
     "cypress:test": "lerna run cypress:test",

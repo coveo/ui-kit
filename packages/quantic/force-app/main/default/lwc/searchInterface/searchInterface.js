@@ -53,7 +53,9 @@ export default class SearchInterface extends LightningElement {
       this.config = CoveoHeadless.HeadlessEngine.getSampleConfiguration();
     }
 
-    this.config && this.initEngine();
+    if (this.config) {
+      this.initEngine();
+    }
   }
 
   /**
@@ -76,7 +78,9 @@ export default class SearchInterface extends LightningElement {
       },
     };
 
-    this.dependenciesLoaded && this.initEngine();
+    if (this.dependenciesLoaded) {
+      this.initEngine();
+    }
   }
 
   initEngine() {

@@ -1,9 +1,7 @@
-
-import { LightningElement, api } from 'lwc';
-import { initializeComponent } from 'c/initialization';
+import {LightningElement, api} from 'lwc';
+import {initializeComponent} from 'c/initialization';
 
 export default class ResultsPerPage extends LightningElement {
-
   /** @type {import("coveo").ResultsPerPage} */
   resultsPerPage;
 
@@ -27,18 +25,20 @@ export default class ResultsPerPage extends LightningElement {
   }
 
   disconnectedCallback() {
-    this.unsubscribe && this.unsubscribe();
+    if (this.unsubscribe) {
+      this.unsubscribe();
+    }
   }
 
   updateState() {
     this.currentResultsPerPageValue = this.resultsPerPage.state.numberOfResults;
   }
 
-   /**
+  /**
    * @param {CustomEvent<number>} event
    */
   goto(event) {
-    this.resultsPerPage.set(event.detail)
+    this.resultsPerPage.set(event.detail);
   }
 
   resultsPerPageOptions = [10, 25, 50, 100];

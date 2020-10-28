@@ -1,12 +1,12 @@
 import {api, LightningElement, track} from 'lwc';
-import { initializeComponent } from 'c/initialization';
+import {initializeComponent} from 'c/initialization';
 
 export default class CategoryFacet extends LightningElement {
   /** @type {import("coveo").CategoryFacetState} */
   // @ts-ignore TODO: Check CategoryFacetState typing and integration with LWC/Quantic
   @track state = {
     values: [],
-    parents: []
+    parents: [],
   };
   /** @type {string} */
   @api field;
@@ -30,7 +30,7 @@ export default class CategoryFacet extends LightningElement {
     this.facet = CoveoHeadless.buildCategoryFacet(engine, {
       options: {
         field: this.field,
-        delimitingCharacter: ';'
+        delimitingCharacter: ';',
       },
     });
     this.unsubscribe = this.facet.subscribe(() => this.updateState());
@@ -67,7 +67,7 @@ export default class CategoryFacet extends LightningElement {
   }
 
   get hasValues() {
-    return this.state.values.length !== 0
+    return this.state.values.length !== 0;
   }
 
   get hasParentsOrValues() {

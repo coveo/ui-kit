@@ -1,6 +1,5 @@
-
 import {LightningElement, api, track} from 'lwc';
-import { initializeComponent } from 'c/initialization';
+import {initializeComponent} from 'c/initialization';
 
 export default class Pager extends LightningElement {
   /** @type {number[]} */
@@ -30,7 +29,9 @@ export default class Pager extends LightningElement {
   }
 
   disconnectedCallback() {
-    this.unsubscribe && this.unsubscribe();
+    if (this.unsubscribe) {
+      this.unsubscribe();
+    }
   }
 
   updateState() {

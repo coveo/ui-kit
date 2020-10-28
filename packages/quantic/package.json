@@ -11,7 +11,10 @@
     "url": "git+https://olamothe@bitbucket.org/coveord/ui-kit.git"
   },
   "scripts": {
-    "test": "npm run test:unit && npm run test:typings",
+    "test": "npm run test:lint && npm run test:typings && npm run test:unit",
+    "test:lint": "eslint force-app/main/default/lwc/ --format junit -o reports/eslint.xml",
+    "lint:fix": "eslint force-app/main/default/lwc/ --fix",
+    "fix": "npm run lint:fix",
     "copy:staticresources": "node copy-static-resources.js",
     "build": "npm run copy:staticresources",
     "start": "npm run copy:staticresources && sfdx force:lightning:lwc:start",
@@ -30,6 +33,8 @@
     "@salesforce/sfdx-lwc-jest": "^0.10.2",
     "@types/jest": "^26.0.15",
     "jest-junit": "^12.0.0",
+    "@salesforce/eslint-config-lwc": "^0.7.0",
+    "eslint": "^7.11.0",
     "ncp": "^2.0.0"
   }
 }
