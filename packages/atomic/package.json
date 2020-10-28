@@ -39,7 +39,7 @@
     "@types/jest": "^26.0.14",
     "@types/mustache": "^4.0.1",
     "@types/puppeteer": "2.0.1",
-    "cross-fetch": "^3.0.4",
+    "cross-fetch": "^3.0.6",
     "cypress": "^4.11.0",
     "eslint-plugin-cypress": "^2.11.1",
     "html-loader-jest": "^0.2.1",

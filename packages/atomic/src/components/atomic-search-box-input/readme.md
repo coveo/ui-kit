@@ -17,9 +17,9 @@
 
 ## Slots
 
-| Slot | Description                                       |
-| ---- | ------------------------------------------------- |
-|      | Content is placed inside the clear button element |
+| Slot | Description                                        |
+| ---- | -------------------------------------------------- |
+|      | Content is placed inside the clear button element. |
 
 
 ## Dependencies

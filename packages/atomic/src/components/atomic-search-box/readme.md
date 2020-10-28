@@ -30,12 +30,12 @@
 
 ## Slots
 
-| Slot               | Description                                               |
-| ------------------ | --------------------------------------------------------- |
-| `"input"`          | Input that contains the query.                            |
-| `"submit"`         | Submit button to be placed after the input.               |
-| `"submit-leading"` | Submit button to be placed before the input.              |
-| `"suggestions"`    | List of suggestions that are placed underneath the input. |
+| Slot               | Description                                      |
+| ------------------ | ------------------------------------------------ |
+| `"input"`          | Input that contains the query.                   |
+| `"submit"`         | Submit button placed after the input.            |
+| `"submit-leading"` | Submit button placed before the input.           |
+| `"suggestions"`    | List of suggestions placed underneath the input. |
 
 
 ## Dependencies

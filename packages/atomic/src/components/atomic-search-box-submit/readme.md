@@ -14,9 +14,9 @@
 
 ## Slots
 
-| Slot | Description                                 |
-| ---- | ------------------------------------------- |
-|      | Content is placed inside the button element |
+| Slot | Description                                  |
+| ---- | -------------------------------------------- |
+|      | Content is placed inside the button element. |
 
 
 ## Dependencies
