@@ -4,6 +4,7 @@ import {PlanRequest} from './plan/plan-request';
 import {QuerySuggestRequest} from './query-suggest/query-suggest-request';
 import {SearchRequest} from './search/search-request';
 import {createMockState} from '../../test/mock-state';
+import {createMockRecommendationState} from '../../test/mock-recommendation-state';
 import {buildMockQuerySuggest} from '../../test/mock-query-suggest';
 import {getOrganizationIdQueryParam} from './search-api-params';
 import {buildMockFacetSearch} from '../../test/mock-facet-search';
@@ -16,6 +17,8 @@ import {buildQuerySuggestRequest} from '../../features/query-suggest/query-sugge
 import {buildSearchRequest} from '../../features/search/search-actions';
 import {buildSpecificFacetSearchRequest} from '../../features/facets/facet-search-set/specific/specific-facet-search-request-builder';
 import {buildCategoryFacetSearchRequest} from '../../features/facets/facet-search-set/category/category-facet-search-request-builder';
+import {buildRecommendationRequest} from '../../features/recommendation/recommendation-actions';
+import {RecommendationRequest} from './recommendation/recommendation-request';
 
 jest.mock('../platform-client');
 describe('search api client', () => {
@@ -113,6 +116,7 @@ describe('search api client', () => {
         context: state.context.contextValues,
         pipeline: state.pipeline,
         searchHub: state.searchHub,
+        actionsHistory: expect.any(Array),
       },
     };
 
@@ -206,6 +210,36 @@ describe('search api client', () => {
           },
         },
       });
+    });
+
+    it(`when calling SearchAPIClient.recommendations
+  should call PlatformClient.call with the right options`, () => {
+      const recommendationState = createMockRecommendationState();
+      const req = buildRecommendationRequest(recommendationState);
+
+      searchAPIClient.recommendations(req);
+
+      const expectedRequest: PlatformClientCallOptions<RecommendationRequest> = {
+        accessToken: recommendationState.configuration.accessToken,
+        method: 'POST',
+        contentType: 'application/json',
+        url: `${
+          recommendationState.configuration.search.apiBaseUrl
+        }?${getOrganizationIdQueryParam(req)}`,
+        renewAccessToken,
+        requestParams: {
+          recommendation: recommendationState.recommendation.id,
+          aq: recommendationState.advancedSearchQueries.aq,
+          cq: recommendationState.advancedSearchQueries.cq,
+          fieldsToInclude: recommendationState.fields.fieldsToInclude,
+          context: recommendationState.context.contextValues,
+          pipeline: recommendationState.pipeline,
+          searchHub: recommendationState.searchHub,
+          actionsHistory: expect.any(Array),
+        },
+      };
+
+      expect(PlatformClient.call).toHaveBeenCalledWith(expectedRequest);
     });
   });
 });

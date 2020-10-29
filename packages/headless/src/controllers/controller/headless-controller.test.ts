@@ -1,8 +1,9 @@
 import {buildController, Controller} from './headless-controller';
-import {buildMockEngine, MockEngine} from '../../test/mock-engine';
+import {buildMockSearchAppEngine, MockEngine} from '../../test/mock-engine';
+import {SearchAppState} from '../../state/search-app-state';
 
 describe('Controller', () => {
-  let engine: MockEngine;
+  let engine: MockEngine<SearchAppState>;
   let cmp: Controller;
 
   function registeredListeners() {
@@ -10,7 +11,7 @@ describe('Controller', () => {
   }
 
   beforeEach(() => {
-    engine = buildMockEngine();
+    engine = buildMockSearchAppEngine();
     cmp = buildController(engine);
   });
 

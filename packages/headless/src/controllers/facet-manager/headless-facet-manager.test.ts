@@ -1,4 +1,5 @@
-import {buildMockEngine, MockEngine} from '../../test';
+import {SearchAppState} from '../../state/search-app-state';
+import {buildMockSearchAppEngine, MockEngine} from '../../test';
 import {buildMockFacetResponse} from '../../test/mock-facet-response';
 import {
   buildFacetManager,
@@ -7,11 +8,11 @@ import {
 } from './headless-facet-manager';
 
 describe('facet manager', () => {
-  let engine: MockEngine;
+  let engine: MockEngine<SearchAppState>;
   let facetManager: FacetManager;
 
   beforeEach(() => {
-    engine = buildMockEngine();
+    engine = buildMockSearchAppEngine();
     facetManager = buildFacetManager(engine);
   });
 

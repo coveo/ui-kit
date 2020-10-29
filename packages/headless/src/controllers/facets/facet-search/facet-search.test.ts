@@ -1,4 +1,4 @@
-import {buildMockEngine, MockEngine} from '../../../test/mock-engine';
+import {buildMockSearchAppEngine, MockEngine} from '../../../test/mock-engine';
 import {updateFacetSearch} from '../../../features/facets/facet-search-set/specific/specific-facet-search-actions';
 import {buildMockFacetSearchResponse} from '../../../test/mock-facet-search-response';
 import {buildMockFacetSearch} from '../../../test/mock-facet-search';
@@ -13,11 +13,12 @@ import {
 import {SpecificFacetSearchState} from '../../../features/facets/facet-search-set/specific/specific-facet-search-set-state';
 import {updateFacetOptions} from '../../../features/facet-options/facet-options-actions';
 import {executeFacetSearch} from '../../../features/facets/facet-search-set/generic/generic-facet-search-actions';
+import {SearchAppState} from '../../../state/search-app-state';
 
 describe('FacetSearch', () => {
   const facetId = '1';
   let props: GenericFacetSearchProps<SpecificFacetSearchState>;
-  let engine: MockEngine;
+  let engine: MockEngine<SearchAppState>;
   let controller: GenericFacetSearch;
 
   function initFacetSearch() {
@@ -35,7 +36,7 @@ describe('FacetSearch', () => {
       getFacetSearch,
     };
 
-    engine = buildMockEngine();
+    engine = buildMockSearchAppEngine();
     initFacetSearch();
   });
 

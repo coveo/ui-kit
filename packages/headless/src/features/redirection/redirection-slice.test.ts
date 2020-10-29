@@ -1,13 +1,18 @@
 import {redirectionReducer} from './redirection-slice';
 import {checkForRedirection} from './redirection-actions';
 import {SearchAPIClient} from '../../api/search/search-api-client';
-import {buildMockEngine, createMockState, MockEngine} from '../../test';
 import {Trigger} from '../../api/search/trigger';
 import {logTriggerRedirect} from './redirection-analytics-actions';
 import {
   getRedirectionInitialState,
   RedirectionState,
 } from './redirection-state';
+import {
+  buildMockSearchAppEngine,
+  createMockState,
+  MockEngine,
+} from '../../test';
+import {SearchAppState} from '../../state/search-app-state';
 
 describe('redirection slice', () => {
   it('should have initial state', () => {
@@ -44,7 +49,7 @@ describe('redirection slice', () => {
     expect(redirectionReducer(existingState, action)).toEqual(expectedState);
   });
 
-  let engine: MockEngine;
+  let engine: MockEngine<SearchAppState>;
   async function mockPlan(trigger?: Trigger) {
     const apiClient = new SearchAPIClient(async () => '');
     const triggers = trigger ? [trigger] : [];
@@ -55,7 +60,7 @@ describe('redirection slice', () => {
       },
     });
 
-    engine = buildMockEngine();
+    engine = buildMockSearchAppEngine();
 
     const response = await checkForRedirection({
       defaultRedirectionUrl: 'https://www.test.com',

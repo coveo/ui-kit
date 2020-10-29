@@ -1,18 +1,19 @@
 import {buildContext, Context} from './headless-context';
-import {buildMockEngine, MockEngine} from '../../test/mock-engine';
+import {buildMockSearchAppEngine, MockEngine} from '../../test/mock-engine';
 import {Action} from 'redux';
 import {
   setContext,
   addContext,
   removeContext,
 } from '../../features/context/context-actions';
+import {SearchAppState} from '../../state/search-app-state';
 
 describe('Context', () => {
   let context: Context;
-  let engine: MockEngine;
+  let engine: MockEngine<SearchAppState>;
 
   beforeEach(() => {
-    engine = buildMockEngine();
+    engine = buildMockSearchAppEngine();
     context = buildContext(engine);
   });
 

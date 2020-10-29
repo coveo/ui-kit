@@ -1,10 +1,11 @@
-import {MockEngine, buildMockEngine} from '../../test/mock-engine';
+import {MockEngine, buildMockSearchAppEngine} from '../../test/mock-engine';
 import {TabProps, buildTab, Tab} from './headless-tab';
 import {updateAdvancedSearchQueries} from '../../features/advanced-search-queries/advanced-search-queries-actions';
+import {SearchAppState} from '../../state/search-app-state';
 
 describe('Tab', () => {
   const expression = 'abc123';
-  let engine: MockEngine;
+  let engine: MockEngine<SearchAppState>;
   let props: TabProps;
   let tab: Tab;
 
@@ -13,7 +14,7 @@ describe('Tab', () => {
   }
 
   beforeEach(() => {
-    engine = buildMockEngine();
+    engine = buildMockSearchAppEngine();
     engine.state.advancedSearchQueries = {aq: '', cq: ''};
     props = {
       options: {

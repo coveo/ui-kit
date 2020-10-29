@@ -4,10 +4,11 @@ import {buildMockResult} from '../../test/mock-result';
 import {buildMockSearch} from '../../test/mock-search';
 import {executeSearch} from './search-actions';
 import {logSearchboxSubmit} from '../query/query-analytics-actions';
-import {buildMockEngine, MockEngine} from '../../test/mock-engine';
+import {buildMockSearchAppEngine, MockEngine} from '../../test/mock-engine';
 import {PlatformClient} from '../../api/platform-client';
 import {createMockState} from '../../test/mock-state';
 import {getSearchInitialState, SearchState} from './search-state';
+import {SearchAppState} from '../../state/search-app-state';
 jest.mock('../../api/platform-client');
 
 describe('search-slice', () => {
@@ -92,11 +93,11 @@ describe('search-slice', () => {
   });
 
   describe('when did you mean is enabled and a search is executed', () => {
-    let e: MockEngine;
+    let e: MockEngine<SearchAppState>;
     beforeEach(() => {
       const state = createMockState();
       state.didYouMean.enableDidYouMean = true;
-      e = buildMockEngine({state});
+      e = buildMockSearchAppEngine({state});
     });
 
     it('should retry the query automatically when corrections are available and there is no result', async () => {

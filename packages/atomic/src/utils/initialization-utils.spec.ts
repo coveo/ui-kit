@@ -65,7 +65,7 @@ describe('Initialization decorator', () => {
     should render the content `, () => {
       const component = new WithRenderAndEngine();
       Initialization()(component, 'initialize');
-      component.engine = TestUtils.buildMockEngine();
+      component.engine = TestUtils.buildMockSearchAppEngine();
       expect(component.render()).toBe('content');
     });
   });

@@ -1,4 +1,5 @@
 import {Middleware} from 'redux';
+import {getRecommendations} from '../features/recommendation/recommendation-actions';
 import {executeSearch} from '../features/search/search-actions';
 
 export const analyticsMiddleware: Middleware = (api) => (next) => (action) => {
@@ -17,6 +18,13 @@ export const analyticsMiddleware: Middleware = (api) => (next) => (action) => {
 
   if (action.type === executeSearch.fulfilled.type && analytics === undefined) {
     console.error('No analytics action associated with search:', action);
+  }
+
+  if (action.type === getRecommendations.fulfilled && analytics === undefined) {
+    console.error(
+      'No analytics action associated with recommendation:',
+      action
+    );
   }
 
   if (analytics !== undefined) {

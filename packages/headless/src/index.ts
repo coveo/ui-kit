@@ -10,9 +10,11 @@ export {
 // Main App
 export * from './app/headless-engine';
 export * from './app/search-app-reducers';
+export * from './app/recommendation-app-reducers';
 
 // State
 export * from './state/search-app-state';
+export * from './state/recommendation-app-state';
 
 // Controllers
 export * from './controllers/controller/headless-controller';
@@ -32,6 +34,7 @@ export * from './controllers/search-box/headless-search-box';
 export * from './controllers/sort/headless-sort';
 export * from './controllers/tab/headless-tab';
 export * from './controllers/facet-manager/headless-facet-manager';
+export * from './controllers/recommendation/headless-recommendation';
 
 // Selectors
 export * from './features/facets/facet-set/facet-set-selectors';
@@ -59,6 +62,7 @@ export * as ResultAnalyticsActions from './features/result/result-analytics-acti
 export * as SearchActions from './features/search/search-actions';
 export * as SearchHubActions from './features/search-hub/search-hub-actions';
 export * as SortCriterionActions from './features/sort-criteria/sort-criteria-actions';
+export * as RecommendationActions from './features/recommendation/recommendation-actions';
 
 // Types & Helpers
 export * from './api/search/search/result';

@@ -1,4 +1,8 @@
-import {CoveoSearchPageClient, SearchPageClientProvider} from 'coveo.analytics';
+import {
+  CoveoSearchPageClient,
+  SearchPageClientProvider,
+  history,
+} from 'coveo.analytics';
 import {getPipelineInitialState} from '../../features/pipeline/pipeline-state';
 import {getQueryInitialState} from '../../features/query/query-state';
 import {getSearchHubInitialState} from '../../features/search-hub/search-hub-state';
@@ -100,3 +104,5 @@ export const configureAnalytics = (state: StateNeededByAnalyticsProvider) => {
   }
   return client;
 };
+
+export const historyStore = new history.HistoryStore();

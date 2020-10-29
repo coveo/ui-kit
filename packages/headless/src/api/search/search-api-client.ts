@@ -17,6 +17,7 @@ import {FacetSearchResponse} from './facet-search/facet-search-response';
 import {SearchAppState} from '../../state/search-app-state';
 import {BaseParam, baseSearchRequest} from './search-api-params';
 import {CategoryFacetSearchRequest} from './facet-search/category-facet-search/category-facet-search-request';
+import {RecommendationRequest} from './recommendation/recommendation-request';
 
 export type AllSearchAPIResponse = Plan | Search | QuerySuggest;
 
@@ -112,6 +113,27 @@ export class SearchAPIClient {
     });
 
     return res.body;
+  }
+
+  async recommendations(req: RecommendationRequest) {
+    const platformResponse = await PlatformClient.call<
+      RecommendationRequest,
+      Search
+    >({
+      ...baseSearchRequest(req, 'POST', 'application/json', ''),
+      requestParams: pickNonBaseParams(req),
+      renewAccessToken: this.renewAccessToken,
+    });
+
+    if (isSuccessSearchResponse(platformResponse)) {
+      return {
+        success: platformResponse.body,
+      };
+    }
+
+    return {
+      error: unwrapError(platformResponse),
+    };
   }
 }
 

@@ -1,5 +1,5 @@
 import {createMockState} from '../../test/mock-state';
-import {buildMockEngine} from '../../test/mock-engine';
+import {buildMockSearchAppEngine} from '../../test/mock-engine';
 import {QuerySummary, buildQuerySummary} from './headless-query-summary';
 import {buildMockResult} from '../../test/mock-result';
 import {buildMockSearchResponse} from '../../test/mock-search-response';
@@ -12,7 +12,7 @@ describe('headless query summary', () => {
 
   beforeEach(() => {
     state = createMockState();
-    querySummary = buildQuerySummary(buildMockEngine({state}));
+    querySummary = buildQuerySummary(buildMockSearchAppEngine({state}));
   });
 
   const createResponseState = (results: Result[]) => {

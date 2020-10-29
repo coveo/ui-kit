@@ -1,6 +1,6 @@
 import {executeSearch} from '../features/search/search-actions';
 import {buildMockSearch} from '../test/mock-search';
-import {buildMockEngine} from '../test/mock-engine';
+import {buildMockSearchAppEngine} from '../test/mock-engine';
 import {logSearchboxSubmit} from '../features/query/query-analytics-actions';
 
 describe('analytics middleware', () => {
@@ -10,7 +10,7 @@ describe('analytics middleware', () => {
   });
 
   it('correctly pass through anu action with not analytics payload', () => {
-    const e = buildMockEngine();
+    const e = buildMockSearchAppEngine();
     const {dispatch, store} = e;
 
     const action = {type: 'foo'};
@@ -19,7 +19,7 @@ describe('analytics middleware', () => {
   });
 
   it('correctly pass through a search action with no analytics payload', () => {
-    const e = buildMockEngine();
+    const e = buildMockSearchAppEngine();
     const {dispatch, store} = e;
     const {analyticsAction, ...mockSearchWithoutAnalytics} = buildMockSearch();
 
@@ -33,7 +33,7 @@ describe('analytics middleware', () => {
   });
 
   it('correctly pass through a search action with an analytics payload', () => {
-    const e = buildMockEngine();
+    const e = buildMockSearchAppEngine();
     const {dispatch, store} = e;
     const mockSearch = buildMockSearch();
 
@@ -47,7 +47,7 @@ describe('analytics middleware', () => {
   });
 
   it('correctly queue log analytics after search action', () => {
-    const e = buildMockEngine();
+    const e = buildMockSearchAppEngine();
     const {dispatch, store} = e;
     const mockSearch = buildMockSearch();
 
@@ -62,7 +62,7 @@ describe('analytics middleware', () => {
   });
 
   it('correctly remove analytics payload from action', () => {
-    const e = buildMockEngine();
+    const e = buildMockSearchAppEngine();
     const {dispatch, store} = e;
     const mockSearch = buildMockSearch();
 

@@ -1,5 +1,5 @@
 import {buildDidYouMean} from './headless-did-you-mean';
-import {buildMockEngine} from '../../test/mock-engine';
+import {buildMockSearchAppEngine} from '../../test/mock-engine';
 import {
   applyDidYouMeanCorrection,
   enableDidYouMean,
@@ -7,14 +7,14 @@ import {
 
 describe('did you mean', () => {
   it('should enable did you mean', () => {
-    const e = buildMockEngine();
+    const e = buildMockSearchAppEngine();
 
     buildDidYouMean(e);
     expect(e.actions).toContainEqual(enableDidYouMean());
   });
 
   it('should allow to update query correction', () => {
-    const e = buildMockEngine();
+    const e = buildMockSearchAppEngine();
     e.state.didYouMean.queryCorrection.correctedQuery = 'bar';
 
     buildDidYouMean(e).applyCorrection();

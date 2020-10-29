@@ -16,6 +16,7 @@ import {
   SearchHubSection,
 } from '../../state/state-sections';
 import {QuerySuggestRequest} from '../../api/search/query-suggest/query-suggest-request';
+import {historyStore} from '../../api/analytics/analytics';
 
 export type StateNeededByQuerySuggest = ConfigurationSection &
   QuerySuggestionSection &
@@ -130,6 +131,9 @@ export const buildQuerySuggestRequest = (
     url: s.configuration.search.apiBaseUrl,
     count: s.querySuggest[id]!.count,
     q: s.querySuggest[id]!.q,
+    actionsHistory: s.configuration.analytics.enabled
+      ? historyStore.getHistory()
+      : [],
     ...(s.context && {context: s.context.contextValues}),
     ...(s.pipeline && {pipeline: s.pipeline}),
     ...(s.searchHub && {searchHub: s.searchHub}),

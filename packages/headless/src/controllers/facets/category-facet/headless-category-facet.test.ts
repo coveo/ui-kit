@@ -3,7 +3,11 @@ import {
   CategoryFacet,
   CategoryFacetOptions,
 } from './headless-category-facet';
-import {buildMockEngine, createMockState, MockEngine} from '../../../test';
+import {
+  buildMockSearchAppEngine,
+  createMockState,
+  MockEngine,
+} from '../../../test';
 import {
   registerCategoryFacet,
   toggleSelectCategoryFacetValue,
@@ -29,11 +33,11 @@ describe('category facet', () => {
   const facetId = '1';
   let options: CategoryFacetOptions;
   let state: SearchAppState;
-  let engine: MockEngine;
+  let engine: MockEngine<SearchAppState>;
   let categoryFacet: CategoryFacet;
 
   function initCategoryFacet() {
-    engine = buildMockEngine({state});
+    engine = buildMockSearchAppEngine({state});
     categoryFacet = buildCategoryFacet(engine, {options});
   }
 

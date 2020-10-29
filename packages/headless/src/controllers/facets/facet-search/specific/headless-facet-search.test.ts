@@ -3,7 +3,10 @@ import {
   FacetSearch,
   FacetSearchProps,
 } from './headless-facet-search';
-import {buildMockEngine, MockEngine} from '../../../../test/mock-engine';
+import {
+  buildMockSearchAppEngine,
+  MockEngine,
+} from '../../../../test/mock-engine';
 import {buildMockFacetSearch} from '../../../../test/mock-facet-search';
 import {
   registerFacetSearch,
@@ -11,15 +14,16 @@ import {
 } from '../../../../features/facets/facet-search-set/specific/specific-facet-search-actions';
 import {executeSearch} from '../../../../features/search/search-actions';
 import {buildMockFacetSearchResult} from '../../../../test/mock-facet-search-result';
+import {SearchAppState} from '../../../../state/search-app-state';
 
 describe('FacetSearch', () => {
   const facetId = '1';
   let props: FacetSearchProps;
-  let engine: MockEngine;
+  let engine: MockEngine<SearchAppState>;
   let controller: FacetSearch;
 
   function initEngine() {
-    engine = buildMockEngine();
+    engine = buildMockSearchAppEngine();
     engine.state.facetSearchSet[facetId] = buildMockFacetSearch();
   }
 

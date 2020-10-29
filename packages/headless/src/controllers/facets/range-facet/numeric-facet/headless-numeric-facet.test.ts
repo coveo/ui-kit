@@ -4,7 +4,10 @@ import {
   NumericFacetOptions,
   buildNumericRange,
 } from './headless-numeric-facet';
-import {MockEngine, buildMockEngine} from '../../../../test/mock-engine';
+import {
+  MockEngine,
+  buildMockSearchAppEngine,
+} from '../../../../test/mock-engine';
 import {createMockState} from '../../../../test/mock-state';
 import {executeSearch} from '../../../../features/search/search-actions';
 import {
@@ -20,11 +23,11 @@ describe('numeric facet', () => {
   const facetId = '1';
   let options: NumericFacetOptions;
   let state: SearchAppState;
-  let engine: MockEngine;
+  let engine: MockEngine<SearchAppState>;
   let numericFacet: NumericFacet;
 
   function initNumericFacet() {
-    engine = buildMockEngine({state});
+    engine = buildMockSearchAppEngine({state});
     numericFacet = buildNumericFacet(engine, {options});
   }
 

@@ -1,4 +1,5 @@
 import {
+  ActionsHistoryParam,
   BaseParam,
   ContextParam,
   PipelineParam,
@@ -10,6 +11,7 @@ export type QuerySuggestRequest = BaseParam &
   QueryParam &
   ContextParam &
   PipelineParam &
-  SearchHubParam & {
+  SearchHubParam &
+  ActionsHistoryParam & {
     count: number;
   };

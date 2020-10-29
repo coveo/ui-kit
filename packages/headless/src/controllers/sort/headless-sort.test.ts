@@ -1,4 +1,4 @@
-import {MockEngine, buildMockEngine} from '../../test/mock-engine';
+import {MockEngine, buildMockSearchAppEngine} from '../../test/mock-engine';
 import {Sort, SortProps, buildSort} from './headless-sort';
 import {
   buildRelevanceSortCriterion,
@@ -11,9 +11,10 @@ import {
 import {executeSearch} from '../../features/search/search-actions';
 import {createMockState} from '../../test/mock-state';
 import {updatePage} from '../../features/pagination/pagination-actions';
+import {SearchAppState} from '../../state/search-app-state';
 
 describe('Sort', () => {
-  let engine: MockEngine;
+  let engine: MockEngine<SearchAppState>;
   let props: SortProps;
   let sort: Sort;
 
@@ -22,7 +23,7 @@ describe('Sort', () => {
   }
 
   beforeEach(() => {
-    engine = buildMockEngine();
+    engine = buildMockSearchAppEngine();
     props = {
       initialState: {},
     };
@@ -77,7 +78,7 @@ describe('Sort', () => {
       const state = createMockState({
         sortCriteria: criterionInState.expression,
       });
-      engine = buildMockEngine({state});
+      engine = buildMockSearchAppEngine({state});
       initSort();
     });
 

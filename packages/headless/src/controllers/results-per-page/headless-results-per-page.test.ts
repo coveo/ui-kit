@@ -3,7 +3,7 @@ import {
   ResultsPerPageProps,
   buildResultsPerPage,
 } from './headless-results-per-page';
-import {MockEngine, buildMockEngine} from '../../test/mock-engine';
+import {MockEngine, buildMockSearchAppEngine} from '../../test/mock-engine';
 import {
   registerNumberOfResults,
   updateNumberOfResults,
@@ -11,9 +11,10 @@ import {
 import {executeSearch} from '../../features/search/search-actions';
 import {createMockState} from '../../test/mock-state';
 import {buildMockPagination} from '../../test/mock-pagination';
+import {SearchAppState} from '../../state/search-app-state';
 
 describe('ResultsPerPage', () => {
-  let engine: MockEngine;
+  let engine: MockEngine<SearchAppState>;
   let props: ResultsPerPageProps;
   let resultsPerPage: ResultsPerPage;
 
@@ -22,7 +23,7 @@ describe('ResultsPerPage', () => {
   }
 
   beforeEach(() => {
-    engine = buildMockEngine({});
+    engine = buildMockSearchAppEngine({});
     props = {
       initialState: {},
     };
@@ -78,7 +79,7 @@ describe('ResultsPerPage', () => {
         numberOfResults: numOfResultsInState,
       });
       const state = createMockState({pagination});
-      engine = buildMockEngine({state});
+      engine = buildMockSearchAppEngine({state});
       initResultsPerPage();
     });
 

@@ -29,7 +29,7 @@ import {
   SearchSection,
   SortSection,
 } from '../../state/state-sections';
-import {configureAnalytics} from '../../api/analytics/analytics';
+import {configureAnalytics, historyStore} from '../../api/analytics/analytics';
 import {AnyFacetRequest} from '../facets/generic/interfaces/generic-facet-request';
 import {SearchParametersState} from '../../state/search-app-state';
 import {SearchRequest} from '../../api/search/search/search-request';
@@ -106,6 +106,7 @@ export const executeSearch = createAsyncThunk<
     {getState, dispatch, rejectWithValue, extra: {searchAPIClient}}
   ) => {
     const state = getState();
+    addEntryInActionsHistory(state);
     const fetched = await fetchFromAPI(searchAPIClient, state);
 
     if (isErrorResponse(fetched.response)) {
@@ -295,3 +296,13 @@ function getAllFacets(state: StateNeededByExecuteSearch) {
 function getFacetRequests(requests: Record<string, AnyFacetRequest> = {}) {
   return Object.keys(requests).map((id) => requests[id]);
 }
+
+const addEntryInActionsHistory = (state: StateNeededByExecuteSearch) => {
+  if (state.configuration.analytics.enabled) {
+    historyStore.addElement({
+      name: 'Query',
+      value: state.query?.q || getQueryInitialState().q,
+      time: JSON.stringify(new Date()),
+    });
+  }
+};

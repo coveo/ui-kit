@@ -8,7 +8,7 @@ describe('bindLogDocumentOpenOnResult', () => {
   let result: Result;
   let resultElement: Element;
   beforeEach(async () => {
-    engine = TestUtils.buildMockEngine();
+    engine = TestUtils.buildMockSearchAppEngine();
     result = TestUtils.buildMockResult();
     result.clickUri = 'https://www.coveo.com';
     const page = await newSpecPage({

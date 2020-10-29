@@ -1,3 +1,4 @@
+import {history} from 'coveo.analytics';
 import {FacetOptions} from '../../features/facet-options/facet-options';
 import {AnyFacetRequest} from '../../features/facets/generic/interfaces/generic-facet-request';
 import {HTTPContentTypes, HttpMethods} from '../platform-client';
@@ -62,6 +63,14 @@ export interface VisitorIDParam {
 
 export interface FacetOptionsParam {
   facetOptions?: FacetOptions;
+}
+
+export interface RecommendationParam {
+  recommendation: string;
+}
+
+export interface ActionsHistoryParam {
+  actionsHistory: history.HistoryElement[];
 }
 
 export const baseSearchRequest = (

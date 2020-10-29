@@ -8,14 +8,14 @@ import {checkForRedirection} from '../../features/redirection/redirection-action
 import {createMockState} from '../../test/mock-state';
 import {updateQuery} from '../../features/query/query-actions';
 import {buildMockQuerySuggest} from '../../test/mock-query-suggest';
-import {buildMockEngine, MockEngine} from '../../test/mock-engine';
+import {buildMockSearchAppEngine, MockEngine} from '../../test/mock-engine';
 import {SearchAppState} from '../../state/search-app-state';
 
 describe('headless standalone searchBox', () => {
   const id = 'search-box-123';
   let state: SearchAppState;
 
-  let engine: MockEngine;
+  let engine: MockEngine<SearchAppState>;
   let searchBox: StandaloneSearchBox;
   let props: StandaloneSearchBoxProps;
 
@@ -40,7 +40,7 @@ describe('headless standalone searchBox', () => {
   }
 
   function initController() {
-    engine = buildMockEngine({state});
+    engine = buildMockSearchAppEngine({state});
     searchBox = buildStandaloneSearchBox(engine, props);
   }
 
