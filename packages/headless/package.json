@@ -18,7 +18,7 @@
     "build": "npm run clean && npm run build:prod",
     "build:prod": "rollup -c --environment BUILD:production && npm run typedefinitions",
     "typedefinitions": "tsc -d --emitDeclarationOnly --declarationDir dist",
-    "clean": "rm -f -r dist/*",
+    "clean": "rimraf -f -r dist/*",
     "test": "jest",
     "test:watch": "jest --watch --colors --no-cache",
     "test:unit": "jest --testPathIgnorePatterns=src/integration-tests",
