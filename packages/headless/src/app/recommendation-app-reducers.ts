@@ -11,7 +11,7 @@ import {RecommendationAppState} from '../state/recommendation-app-state';
 /**
  * Map of reducers that make up the RecommendationAppState.
  */
-export const recommendationAppReducer: ReducersMapObject<RecommendationAppState> = {
+export const recommendationAppReducers: ReducersMapObject<RecommendationAppState> = {
   configuration: configurationReducer,
   advancedSearchQueries: advancedSearchQueriesReducer,
   fields: fieldsReducer,
