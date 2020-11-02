@@ -14,4 +14,4 @@ describe('#customDataFromArray', () => {
         const rawData = ["1", longString]
         expect(formattedCustomDataFromArray(rawData)).toEqual(longString);
     });
-;});
+});
