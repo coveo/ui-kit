@@ -28,4 +28,4 @@ export const formatArrayForCoveoCustomData = (rawData: string[]): string => {
     const dataWithoutRepeatedValues = filterConsecutiveRepeatedValues(dataWithoutSemicolons);
 
     return getDataString(dataWithoutRepeatedValues);
-}
+};
