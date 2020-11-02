@@ -1,6 +1,6 @@
 import {formatArrayForCoveoCustomData} from "./format-array-for-coveo-custom-data";
 
-describe('#getDataStringFromArray', () => {
+describe('#formatArrayForCoveoCustomData', () => {
     it("returns an empty string for an empty array", () => {
         expect(formatArrayForCoveoCustomData([])).toEqual("");
     });
