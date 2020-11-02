@@ -21,6 +21,7 @@ import {
     QueryErrorMeta,
 } from './searchPageEvents';
 import {NoopAnalytics} from '../client/noopAnalytics';
+import {formatArrayForCoveoCustomData} from "../formatting/format-array-for-coveo-custom-data";
 
 export interface SearchPageClientProvider {
     getBaseMetadata: () => Record<string, any>;
@@ -112,11 +113,17 @@ export class CoveoSearchPageClient {
     }
 
     public logOmniboxAnalytics(meta: OmniboxSuggestionsMetadata) {
-        return this.logSearchEvent(SearchPageEvents.omniboxAnalytics, meta);
+        const formattedMeta = {...meta,
+            partialQueries: formatArrayForCoveoCustomData(meta.partialQueries),
+            suggestions: formatArrayForCoveoCustomData(meta.suggestions)}
+        return this.logSearchEvent(SearchPageEvents.omniboxAnalytics, formattedMeta);
     }
 
     public logOmniboxFromLink(meta: OmniboxSuggestionsMetadata) {
-        return this.logSearchEvent(SearchPageEvents.omniboxFromLink, meta);
+        const formattedMeta = {...meta,
+            partialQueries: formatArrayForCoveoCustomData(meta.partialQueries),
+            suggestions: formatArrayForCoveoCustomData(meta.suggestions)}
+        return this.logSearchEvent(SearchPageEvents.omniboxFromLink, formattedMeta);
     }
 
     public logTriggerNotify(meta: TriggerNotifyMetadata) {
@@ -129,7 +136,7 @@ export class CoveoSearchPageClient {
 
     public logTriggerQuery() {
         const meta = {query: this.provider.getSearchEventRequestPayload().queryText};
-        return this.logCustomEvent(SearchPageEvents.triggerQuery, meta);
+
     }
 
     public logTriggerRedirect(meta: TriggerRedirectMetadata) {
