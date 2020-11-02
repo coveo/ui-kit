@@ -21,7 +21,6 @@ import {
     QueryErrorMeta,
 } from './searchPageEvents';
 import {NoopAnalytics} from '../client/noopAnalytics';
-import {formatArrayForCoveoCustomData} from "../formatting/format-array-for-coveo-custom-data";
 import {formatOmniboxMetaData} from "../formatting/format-omnibox-metadata";
 
 export interface SearchPageClientProvider {
