@@ -136,7 +136,7 @@ export class CoveoSearchPageClient {
 
     public logTriggerQuery() {
         const meta = {query: this.provider.getSearchEventRequestPayload().queryText};
-
+        return this.logCustomEvent(SearchPageEvents.triggerQuery, meta);
     }
 
     public logTriggerRedirect(meta: TriggerRedirectMetadata) {
