@@ -1,5 +1,6 @@
 import {Initialization} from './initialization-utils';
 import {Component, Prop} from '@stencil/core';
+import type {ComponentInterface} from '@stencil/core';
 import {Engine, TestUtils} from '@coveo/headless';
 import {newSpecPage} from '@stencil/core/testing';
 import {AtomicSearchInterface} from '../components/atomic-search-interface/atomic-search-interface';
@@ -92,7 +93,9 @@ describe('Initialization decorator', () => {
         components: [ChildComponent],
         html: '<child-component></child-component>',
       });
-      const component = page.body.querySelector('child-component') as any;
+      const component = page.body.querySelector(
+        'child-component'
+      ) as ComponentInterface;
       expect(component.error.name).toBe('InitializationError');
     });
 
@@ -104,7 +107,9 @@ describe('Initialization decorator', () => {
         <child-component></child-component>
         </atomic-search-interface>`,
       });
-      const component = page.body.querySelector('child-component') as any;
+      const component = page.body.querySelector(
+        'child-component'
+      ) as ComponentInterface;
       expect(component.error).toBeUndefined();
     });
 
@@ -178,7 +183,9 @@ describe('Initialization decorator', () => {
       });
 
       expect(initializeSpy).toHaveBeenCalled();
-      const component = page.body.querySelector('child-component-1') as any;
+      const component = page.body.querySelector(
+        'child-component-1'
+      ) as ComponentInterface;
       expect(component.engine).toBeTruthy();
     });
 
@@ -194,7 +201,7 @@ describe('Initialization decorator', () => {
 
       const component = page.body.querySelector(
         'child-component-errored'
-      ) as any;
+      ) as ComponentInterface;
       expect(component.engine).toBeTruthy();
       expect(component.error).toBeTruthy();
     });

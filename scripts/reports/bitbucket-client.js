@@ -2,7 +2,6 @@ const { fetch } = require('cross-fetch');
 
 const credentials = process.env.BITBUCKET_CREDENTIALS || '';
 const pullRequestId = process.env.BITBUCKET_PULL_REQUEST_ID || '';
-
 class BitbucketClient {
   async getPullRequestComments() {
     const res = await fetch(this.commentsUrl);

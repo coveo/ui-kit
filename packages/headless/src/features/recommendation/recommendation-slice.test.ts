@@ -1,6 +1,9 @@
 import {buildMockResult} from '../../test';
 import {buildMockRecommendation} from '../../test/mock-recommendation';
-import {getRecommendations, setRecommendationId} from './recommendation-actions';
+import {
+  getRecommendations,
+  setRecommendationId,
+} from './recommendation-actions';
 import {recommendationReducer} from './recommendation-slice';
 import {
   getRecommendationInitialState,

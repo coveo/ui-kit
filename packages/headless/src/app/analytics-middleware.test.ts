@@ -1,4 +1,7 @@
-import {executeSearch} from '../features/search/search-actions';
+import {
+  executeSearch,
+  ExecuteSearchThunkReturn,
+} from '../features/search/search-actions';
 import {buildMockSearch} from '../test/mock-search';
 import {buildMockSearchAppEngine} from '../test/mock-engine';
 import {logSearchboxSubmit} from '../features/query/query-analytics-actions';
@@ -24,9 +27,9 @@ describe('analytics middleware', () => {
     const {analyticsAction, ...mockSearchWithoutAnalytics} = buildMockSearch();
 
     const action = executeSearch.fulfilled(
-      mockSearchWithoutAnalytics as any,
+      mockSearchWithoutAnalytics as ExecuteSearchThunkReturn,
       '',
-      null as any
+      null as never
     );
     dispatch(action);
     expect(store.getActions()).toContain(action);

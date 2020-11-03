@@ -1,15 +1,14 @@
 {
-  "ignorePatterns": [
-    "dist"
-  ],
+  "ignorePatterns": ["dist"],
   "rules": {
     "node/no-unpublished-import": [
       "error",
       {
-        "allowModules": [
-          "redux-mock-store"
-        ]
+        "allowModules": ["redux-mock-store"]
       }
     ]
+  },
+  "globals": {
+    "fetch": true
   }
 }
