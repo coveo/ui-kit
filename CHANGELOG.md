@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.1.0-alpha.31](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.30...v0.1.0-alpha.31) (2020-11-03)
+
+
+### Features
+
+* **atomic:** Add Bootstrap and styling to the Search Box ([85850bc](https://bitbucket.org/coveord/ui-kit/commits/85850bcf2f3a9cc241251fc82eedc5d7c438d833))
+
+
+
+
+
 # [0.1.0-alpha.30](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.29...v0.1.0-alpha.30) (2020-11-03)
 
 **Note:** Version bump only for package ui-kit
