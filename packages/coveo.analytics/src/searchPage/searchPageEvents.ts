@@ -201,8 +201,8 @@ export interface CategoryFacetMetadata {
 
 export interface OmniboxSuggestionsMetadata {
     suggestionRanking: number;
-    partialQueries: string;
-    suggestions: string;
+    partialQueries: string | string[];
+    suggestions: string | string[];
     partialQuery: string;
 }
 
