@@ -7,7 +7,7 @@ export function formatOmniboxMetaData(meta: OmniboxSuggestionsMetadata) {
             ? meta.partialQueries
             : formatArrayForCoveoCustomData(meta.partialQueries);
     const suggestions =
-        typeof meta.suggestions === 'string' ? meta.partialQueries : formatArrayForCoveoCustomData(meta.suggestions);
+        typeof meta.suggestions === 'string' ? meta.suggestions : formatArrayForCoveoCustomData(meta.suggestions);
 
     return {
         ...meta,
