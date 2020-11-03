@@ -17,7 +17,8 @@
     "version": "lerna version --conventional-commits",
     "version:pre": "lerna version --conventional-commits --conventional-prerelease",
     "version:graduate": "lerna version --conventional-commits --conventional-graduate",
-    "npm:publish": "lerna run --no-bail npm:publish"
+    "npm:publish": "lerna run --no-bail npm:publish",
+    "doc": "cd packages/headless ; npm run doc"
   },
   "devDependencies": {
     "@commitlint/config-conventional": "^11.0.0",

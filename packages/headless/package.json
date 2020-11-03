@@ -23,7 +23,8 @@
     "test:watch": "jest --watch --colors --no-cache",
     "test:unit": "jest --testPathIgnorePatterns=src/integration-tests",
     "test:integration": "jest --testPathPattern=src/integration-tests",
-    "npm:publish": "npm publish --access public"
+    "npm:publish": "npm publish --access public",
+    "doc": "typedoc --tsconfig tsconfig.typedoc.json"
   },
   "dependencies": {
     "@coveo/bueno": "^0.1.0-alpha.26",
@@ -35,7 +36,8 @@
     "redux": "^4.0.5",
     "redux-mock-store": "^1.5.4",
     "redux-thunk": "^2.3.0",
-    "ts-debounce": "^2.0.1"
+    "ts-debounce": "^2.0.1",
+    "typedoc": "^0.19.2"
   },
   "devDependencies": {
     "@rollup/plugin-alias": "^3.1.1",

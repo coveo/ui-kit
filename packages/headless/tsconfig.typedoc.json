@@ -1,0 +1,21 @@
+{
+  "extends": "../../tsconfig.json",
+  "include": [
+    "./src/app/*.ts",
+    "./src/controllers/**/*.ts",
+    "./src/features/**/*.ts"
+  ],
+  "exclude": [
+    "./src/**/*.test.ts"
+  ],
+  "typedocOptions": {
+    "json": "./dist/doc.json",
+    "excludePrivate": true,
+    "excludeProtected": true,
+    "ignoreCompilerErrors": true
+  },
+  "compilerOptions": {
+    "experimentalDecorators": true,
+    "jsx": "preserve"
+  }
+}
