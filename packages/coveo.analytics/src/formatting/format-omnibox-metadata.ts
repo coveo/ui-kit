@@ -1,7 +1,7 @@
 import {OmniboxSuggestionsMetadata} from '../searchPage/searchPageEvents';
 import {formatArrayForCoveoCustomData} from './format-array-for-coveo-custom-data';
 
-export function formatOmniboxMetaData(meta: OmniboxSuggestionsMetadata) {
+export function formatOmniboxMetadata(meta: OmniboxSuggestionsMetadata) {
     const partialQueries =
         typeof meta.partialQueries === 'string'
             ? meta.partialQueries

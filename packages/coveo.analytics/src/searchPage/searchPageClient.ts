@@ -21,7 +21,7 @@ import {
     QueryErrorMeta,
 } from './searchPageEvents';
 import {NoopAnalytics} from '../client/noopAnalytics';
-import {formatOmniboxMetaData} from '../formatting/format-omnibox-metadata';
+import {formatOmniboxMetadata} from '../formatting/format-omnibox-metadata';
 
 export interface SearchPageClientProvider {
     getBaseMetadata: () => Record<string, any>;
@@ -113,11 +113,11 @@ export class CoveoSearchPageClient {
     }
 
     public logOmniboxAnalytics(meta: OmniboxSuggestionsMetadata) {
-        return this.logSearchEvent(SearchPageEvents.omniboxAnalytics, formatOmniboxMetaData(meta));
+        return this.logSearchEvent(SearchPageEvents.omniboxAnalytics, formatOmniboxMetadata(meta));
     }
 
     public logOmniboxFromLink(meta: OmniboxSuggestionsMetadata) {
-        return this.logSearchEvent(SearchPageEvents.omniboxFromLink, formatOmniboxMetaData(meta));
+        return this.logSearchEvent(SearchPageEvents.omniboxFromLink, formatOmniboxMetadata(meta));
     }
 
     public logTriggerNotify(meta: TriggerNotifyMetadata) {
