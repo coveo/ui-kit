@@ -11,7 +11,7 @@
 | ------------------------- | ------------- | ----------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
 | `controller` _(required)_ | --            |             | `{ updateText(value: string): void; clear(): void; hideSuggestions(): void; showSuggestions(): void; selectSuggestion(value: string): void; submit(): void; state: { value: string; suggestions: { value: string; }[]; isLoading: boolean; }; subscribe(listener: () => void): Unsubscribe; }` | `undefined` |
 | `options` _(required)_    | --            |             | `AtomicSearchBoxOptions`                                                                                                                                                                                                                                                                       | `undefined` |
-| `placeholder`             | `placeholder` |             | `string`                                                                                                                                                                                                                                                                                       | `'Search'`  |
+| `placeholder`             | `placeholder` |             | `string`                                                                                                                                                                                                                                                                                       | `''`        |
 | `state` _(required)_      | --            |             | `{ value: string; suggestions: { value: string; }[]; isLoading: boolean; }`                                                                                                                                                                                                                    | `undefined` |
 
 
@@ -20,6 +20,14 @@
 | Slot | Description                                        |
 | ---- | -------------------------------------------------- |
 |      | Content is placed inside the clear button element. |
+
+
+## Shadow Parts
+
+| Part          | Description           |
+| ------------- | --------------------- |
+| `"clear-btn"` | Clear button element. |
+| `"input"`     | Text input            |
 
 
 ## Dependencies

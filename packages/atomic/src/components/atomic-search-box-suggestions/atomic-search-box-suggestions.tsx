@@ -2,9 +2,13 @@ import {SearchBox, SearchBoxState} from '@coveo/headless';
 import {Component, h, Prop} from '@stencil/core';
 import {ParentState, ParentController} from '../../utils/slot-utils';
 
+/**
+ * @part suggestion - Suggestion button element
+ * @part suggestions - Suggestions list
+ */
 @Component({
   tag: 'atomic-search-box-suggestions',
-  styleUrl: 'atomic-search-box-suggestions.css',
+  styleUrl: 'atomic-search-box-suggestions.scss',
   shadow: true,
 })
 export class AtomicSearchBoxSuggestions {
@@ -18,11 +22,23 @@ export class AtomicSearchBoxSuggestions {
 
   private suggestions() {
     return this.state.suggestions.map((suggestion) => (
-      <li onClick={(e) => this.onClickSuggestion(e)}>{suggestion.value}</li>
+      <button
+        type="button"
+        tabIndex={-1}
+        class="list-group-item list-group-item-action"
+        onClick={(e) => this.onClickSuggestion(e)}
+        part="suggestion"
+      >
+        {suggestion.value}
+      </button>
     ));
   }
 
   render() {
-    return <ul>{this.suggestions()}</ul>;
+    return (
+      <div part="suggestions" class="list-group">
+        {this.suggestions()}
+      </div>
+    );
   }
 }

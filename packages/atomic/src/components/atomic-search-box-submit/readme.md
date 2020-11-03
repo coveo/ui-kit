@@ -19,6 +19,23 @@
 |      | Content is placed inside the button element. |
 
 
+## Shadow Parts
+
+| Part       | Description   |
+| ---------- | ------------- |
+| `"button"` | Submit button |
+
+
+## CSS Custom Properties
+
+| Name                                        | Description                               |
+| ------------------------------------------- | ----------------------------------------- |
+| `--atomic-search-box-submit-bg-color`       | Background of the button                  |
+| `--atomic-search-box-submit-bg-color-hover` | Background of the button in hover state   |
+| `--atomic-search-box-submit-color`          | Color of the button's text                |
+| `--atomic-search-box-submit-color-hover`    | Color of the button's text in hover state |
+
+
 ## Dependencies
 
 ### Used by

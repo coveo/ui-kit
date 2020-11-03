@@ -1,4 +1,4 @@
-import {Component, h, Prop, State, Element, Host} from '@stencil/core';
+import {Component, h, Prop, State, Element} from '@stencil/core';
 import {
   SearchBox,
   SearchBoxState,
@@ -21,7 +21,7 @@ export interface AtomicSearchBoxOptions {
  */
 @Component({
   tag: 'atomic-search-box',
-  styleUrl: 'atomic-search-box.css',
+  styleUrl: 'atomic-search-box.scss',
   shadow: true,
 })
 export class AtomicSearchBox implements AtomicSearchBoxOptions {
@@ -69,33 +69,36 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
 
   public render() {
     return (
-      <Host>
+      <div class="d-flex">
         <slot
           name="submit-leading"
           onSlotchange={(e) => this.onSlotchange(e, 'submit')}
         ></slot>
 
-        <slot name="input" onSlotchange={(e) => this.onSlotchange(e)}>
-          <atomic-search-box-input
-            controller={this.searchBox}
-            state={this.searchBoxState}
-            options={this.options}
-          ></atomic-search-box-input>
-        </slot>
-
-        <slot name="suggestions" onSlotchange={(e) => this.onSlotchange(e)}>
-          <atomic-search-box-suggestions
-            controller={this.searchBox}
-            state={this.searchBoxState}
-          ></atomic-search-box-suggestions>
-        </slot>
+        <div class="flex-grow-1 position-relative">
+          <slot name="input" onSlotchange={(e) => this.onSlotchange(e)}>
+            <atomic-search-box-input
+              controller={this.searchBox}
+              state={this.searchBoxState}
+              options={this.options}
+            ></atomic-search-box-input>
+          </slot>
+          <div class="position-absolute top-100 left-0 right-0">
+            <slot name="suggestions" onSlotchange={(e) => this.onSlotchange(e)}>
+              <atomic-search-box-suggestions
+                controller={this.searchBox}
+                state={this.searchBoxState}
+              ></atomic-search-box-suggestions>
+            </slot>
+          </div>
+        </div>
 
         <slot name="submit" onSlotchange={(e) => this.onSlotchange(e)}>
           <atomic-search-box-submit
             controller={this.searchBox}
           ></atomic-search-box-submit>
         </slot>
-      </Host>
+      </div>
     );
   }
 }

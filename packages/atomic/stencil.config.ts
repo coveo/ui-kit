@@ -1,4 +1,5 @@
 import {Config} from '@stencil/core';
+import {sass} from '@stencil/sass';
 import alias from '@rollup/plugin-alias';
 import path from 'path';
 import html from 'rollup-plugin-html';
@@ -11,6 +12,7 @@ const isDevWatch: boolean =
 export const config: Config = {
   namespace: 'atomic',
   taskQueue: 'async',
+  globalStyle: 'node_modules/bootstrap/dist/css/bootstrap-grid.css',
   outputTargets: [
     {
       type: 'dist',
@@ -34,6 +36,12 @@ export const config: Config = {
   devServer: {
     reloadStrategy: 'pageReload',
   },
+  plugins: [
+    sass({
+      includePaths: ['src/scss/'],
+      injectGlobalPaths: ['src/scss/_global.scss'],
+    }),
+  ],
   rollupPlugins: {
     before: [
       isDevWatch &&

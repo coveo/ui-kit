@@ -4,10 +4,12 @@ import {ParentController} from '../../utils/slot-utils';
 
 /**
  * @slot - Content is placed inside the button element.
+ *
+ * @part button - Submit button
  */
 @Component({
   tag: 'atomic-search-box-submit',
-  styleUrl: 'atomic-search-box-submit.css',
+  styleUrl: 'atomic-search-box-submit.scss',
   shadow: true,
 })
 export class AtomicSearchBoxSubmit {
@@ -15,7 +17,12 @@ export class AtomicSearchBoxSubmit {
 
   render() {
     return (
-      <button onClick={() => this.controller.submit()}>
+      <button
+        type="button"
+        class="btn rounded-0 rounded-right"
+        onClick={() => this.controller.submit()}
+        part="button"
+      >
         <slot>Search</slot>
       </button>
     );

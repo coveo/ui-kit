@@ -13,6 +13,14 @@
 | `state` _(required)_      | --        |             | `{ value: string; suggestions: { value: string; }[]; isLoading: boolean; }`                                                                                                                                                                                                                    | `undefined` |
 
 
+## Shadow Parts
+
+| Part            | Description               |
+| --------------- | ------------------------- |
+| `"suggestion"`  | Suggestion button element |
+| `"suggestions"` | Suggestions list          |
+
+
 ## Dependencies
 
 ### Used by
