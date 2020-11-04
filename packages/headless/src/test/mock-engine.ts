@@ -8,8 +8,13 @@ import {SearchAPIClient} from '../api/search/search-api-client';
 import {SearchAppState} from '../state/search-app-state';
 import {RecommendationAppState} from '../state/recommendation-app-state';
 import {createMockRecommendationState} from './mock-recommendation-state';
+import {ProductRecommendationsAppState} from '../state/product-recommendations-app-state';
+import {buildMockProductRecommendationsState} from './mock-product-recommendations-state';
 
-export type AppState = SearchAppState | RecommendationAppState;
+export type AppState =
+  | SearchAppState
+  | RecommendationAppState
+  | ProductRecommendationsAppState;
 
 export interface MockEngine<T extends AppState> extends Engine<T> {
   store: MockStore;
@@ -31,6 +36,12 @@ export function buildMockRecommendationAppEngine(
   config: Partial<Engine<RecommendationAppState>> = {}
 ): MockEngine<RecommendationAppState> {
   return buildMockEngine(config, createMockRecommendationState);
+}
+
+export function buildMockProductRecommendationsAppEngine(
+  config: Partial<Engine<ProductRecommendationsAppState>> = {}
+): MockEngine<ProductRecommendationsAppState> {
+  return buildMockEngine(config, buildMockProductRecommendationsState);
 }
 
 function buildMockEngine<T extends AppState>(

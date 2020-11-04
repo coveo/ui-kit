@@ -19,6 +19,9 @@ import {buildSpecificFacetSearchRequest} from '../../features/facets/facet-searc
 import {buildCategoryFacetSearchRequest} from '../../features/facets/facet-search-set/category/category-facet-search-request-builder';
 import {buildRecommendationRequest} from '../../features/recommendation/recommendation-actions';
 import {RecommendationRequest} from './recommendation/recommendation-request';
+import {buildProductRecommendationsRequest} from '../../features/product-recommendations/product-recommendations-actions';
+import {buildMockProductRecommendationsState} from '../../test/mock-product-recommendations-state';
+import {ProductRecommendationsRequest} from './product-recommendations/product-recommendations-request';
 
 jest.mock('../platform-client');
 describe('search api client', () => {
@@ -236,6 +239,42 @@ describe('search api client', () => {
           pipeline: recommendationState.pipeline,
           searchHub: recommendationState.searchHub,
           actionsHistory: expect.any(Array),
+        },
+      };
+
+      expect(PlatformClient.call).toHaveBeenCalledWith(expectedRequest);
+    });
+
+    it(`when calling SearchAPIClient.productRecommendations
+  should call PlatformClient.call with the right options`, () => {
+      const productRecommendationsState = buildMockProductRecommendationsState();
+      const req = buildProductRecommendationsRequest(
+        productRecommendationsState
+      );
+
+      searchAPIClient.productRecommendations(req);
+
+      const expectedRequest: PlatformClientCallOptions<ProductRecommendationsRequest> = {
+        accessToken: productRecommendationsState.configuration.accessToken,
+        method: 'POST',
+        contentType: 'application/json',
+        url: `${
+          productRecommendationsState.configuration.search.apiBaseUrl
+        }?${getOrganizationIdQueryParam(req)}`,
+        renewAccessToken,
+        requestParams: {
+          recommendation: productRecommendationsState.productRecommendations.id,
+          context: productRecommendationsState.context.contextValues,
+          searchHub: productRecommendationsState.searchHub,
+          actionsHistory: expect.any(Array),
+          maximumAge: 0,
+          visitorId: expect.any(String),
+          numberOfResults:
+            productRecommendationsState.productRecommendations
+              .maxNumberOfRecommendations,
+          mlParameters: {
+            itemIds: productRecommendationsState.productRecommendations.skus,
+          },
         },
       };
 

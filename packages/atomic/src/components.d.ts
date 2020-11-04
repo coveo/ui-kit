@@ -35,6 +35,8 @@ export namespace Components {
         "getFields": () => Promise<string[]>;
         "ifDefined"?: string;
     }
+    interface AtomicFrequentlyBoughtTogether {
+    }
     interface AtomicHistory {
     }
     interface AtomicNumericFacet {
@@ -136,6 +138,12 @@ declare global {
     var HTMLAtomicFieldConditionElement: {
         prototype: HTMLAtomicFieldConditionElement;
         new (): HTMLAtomicFieldConditionElement;
+    };
+    interface HTMLAtomicFrequentlyBoughtTogetherElement extends Components.AtomicFrequentlyBoughtTogether, HTMLStencilElement {
+    }
+    var HTMLAtomicFrequentlyBoughtTogetherElement: {
+        prototype: HTMLAtomicFrequentlyBoughtTogetherElement;
+        new (): HTMLAtomicFrequentlyBoughtTogetherElement;
     };
     interface HTMLAtomicHistoryElement extends Components.AtomicHistory, HTMLStencilElement {
     }
@@ -247,6 +255,7 @@ declare global {
         "atomic-facet": HTMLAtomicFacetElement;
         "atomic-facet-manager": HTMLAtomicFacetManagerElement;
         "atomic-field-condition": HTMLAtomicFieldConditionElement;
+        "atomic-frequently-bought-together": HTMLAtomicFrequentlyBoughtTogetherElement;
         "atomic-history": HTMLAtomicHistoryElement;
         "atomic-numeric-facet": HTMLAtomicNumericFacetElement;
         "atomic-pager": HTMLAtomicPagerElement;
@@ -292,6 +301,8 @@ declare namespace LocalJSX {
     interface AtomicFieldCondition {
         "conditions"?: ResultTemplateCondition[];
         "ifDefined"?: string;
+    }
+    interface AtomicFrequentlyBoughtTogether {
     }
     interface AtomicHistory {
     }
@@ -356,6 +367,7 @@ declare namespace LocalJSX {
         "atomic-facet": AtomicFacet;
         "atomic-facet-manager": AtomicFacetManager;
         "atomic-field-condition": AtomicFieldCondition;
+        "atomic-frequently-bought-together": AtomicFrequentlyBoughtTogether;
         "atomic-history": AtomicHistory;
         "atomic-numeric-facet": AtomicNumericFacet;
         "atomic-pager": AtomicPager;
@@ -386,6 +398,7 @@ declare module "@stencil/core" {
             "atomic-facet": LocalJSX.AtomicFacet & JSXBase.HTMLAttributes<HTMLAtomicFacetElement>;
             "atomic-facet-manager": LocalJSX.AtomicFacetManager & JSXBase.HTMLAttributes<HTMLAtomicFacetManagerElement>;
             "atomic-field-condition": LocalJSX.AtomicFieldCondition & JSXBase.HTMLAttributes<HTMLAtomicFieldConditionElement>;
+            "atomic-frequently-bought-together": LocalJSX.AtomicFrequentlyBoughtTogether & JSXBase.HTMLAttributes<HTMLAtomicFrequentlyBoughtTogetherElement>;
             "atomic-history": LocalJSX.AtomicHistory & JSXBase.HTMLAttributes<HTMLAtomicHistoryElement>;
             "atomic-numeric-facet": LocalJSX.AtomicNumericFacet & JSXBase.HTMLAttributes<HTMLAtomicNumericFacetElement>;
             "atomic-pager": LocalJSX.AtomicPager & JSXBase.HTMLAttributes<HTMLAtomicPagerElement>;

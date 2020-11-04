@@ -8,11 +8,13 @@ export {
 } from '@reduxjs/toolkit';
 
 // Main App
+export * from './app/frequently-bought-together-app-reducers';
 export * from './app/headless-engine';
 export * from './app/search-app-reducers';
 export * from './app/recommendation-app-reducers';
 
 // State
+export * from './state/product-recommendations-app-state';
 export * from './state/search-app-state';
 export * from './state/recommendation-app-state';
 
@@ -36,6 +38,7 @@ export * from './controllers/tab/headless-tab';
 export * from './controllers/facet-manager/headless-facet-manager';
 export * from './controllers/recommendation/headless-recommendation';
 export * from './controllers/standalone-search-box/headless-standalone-searchbox';
+export * from './controllers/product-recommendations/headless-frequently-bought-together';
 
 // Selectors
 export * from './features/facets/facet-set/facet-set-selectors';
@@ -64,6 +67,7 @@ export * as SearchActions from './features/search/search-actions';
 export * as SearchHubActions from './features/search-hub/search-hub-actions';
 export * as SortCriterionActions from './features/sort-criteria/sort-criteria-actions';
 export * as RecommendationActions from './features/recommendation/recommendation-actions';
+export * as ProductRecommendationsActions from './features/product-recommendations/product-recommendations-actions';
 
 // Types & Helpers
 export * from './api/search/search/result';
