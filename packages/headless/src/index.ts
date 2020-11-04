@@ -35,6 +35,7 @@ export * from './controllers/sort/headless-sort';
 export * from './controllers/tab/headless-tab';
 export * from './controllers/facet-manager/headless-facet-manager';
 export * from './controllers/recommendation/headless-recommendation';
+export * from './controllers/standalone-search-box/headless-standalone-searchbox';
 
 // Selectors
 export * from './features/facets/facet-set/facet-set-selectors';
