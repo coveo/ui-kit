@@ -9,6 +9,8 @@ export interface SearchState {
   error: SearchAPIErrorWithStatusCode | null;
   automaticallyCorrected: boolean;
   isLoading: boolean;
+  infiniteScrollingEnabled: boolean;
+  pastResponses: SearchResponseSuccess[];
 }
 
 export function getSearchInitialState(): SearchState {
@@ -25,5 +27,7 @@ export function getSearchInitialState(): SearchState {
     error: null,
     automaticallyCorrected: false,
     isLoading: false,
+    infiniteScrollingEnabled: false,
+    pastResponses: [],
   };
 }

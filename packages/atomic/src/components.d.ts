@@ -37,6 +37,8 @@ export namespace Components {
     }
     interface AtomicHistory {
     }
+    interface AtomicInfiniteScrolling {
+    }
     interface AtomicNumericFacet {
         "facetId": string;
         "field": string;
@@ -143,6 +145,12 @@ declare global {
         prototype: HTMLAtomicHistoryElement;
         new (): HTMLAtomicHistoryElement;
     };
+    interface HTMLAtomicInfiniteScrollingElement extends Components.AtomicInfiniteScrolling, HTMLStencilElement {
+    }
+    var HTMLAtomicInfiniteScrollingElement: {
+        prototype: HTMLAtomicInfiniteScrollingElement;
+        new (): HTMLAtomicInfiniteScrollingElement;
+    };
     interface HTMLAtomicNumericFacetElement extends Components.AtomicNumericFacet, HTMLStencilElement {
     }
     var HTMLAtomicNumericFacetElement: {
@@ -248,6 +256,7 @@ declare global {
         "atomic-facet-manager": HTMLAtomicFacetManagerElement;
         "atomic-field-condition": HTMLAtomicFieldConditionElement;
         "atomic-history": HTMLAtomicHistoryElement;
+        "atomic-infinite-scrolling": HTMLAtomicInfiniteScrollingElement;
         "atomic-numeric-facet": HTMLAtomicNumericFacetElement;
         "atomic-pager": HTMLAtomicPagerElement;
         "atomic-query-error": HTMLAtomicQueryErrorElement;
@@ -294,6 +303,8 @@ declare namespace LocalJSX {
         "ifDefined"?: string;
     }
     interface AtomicHistory {
+    }
+    interface AtomicInfiniteScrolling {
     }
     interface AtomicNumericFacet {
         "facetId"?: string;
@@ -357,6 +368,7 @@ declare namespace LocalJSX {
         "atomic-facet-manager": AtomicFacetManager;
         "atomic-field-condition": AtomicFieldCondition;
         "atomic-history": AtomicHistory;
+        "atomic-infinite-scrolling": AtomicInfiniteScrolling;
         "atomic-numeric-facet": AtomicNumericFacet;
         "atomic-pager": AtomicPager;
         "atomic-query-error": AtomicQueryError;
@@ -387,6 +399,7 @@ declare module "@stencil/core" {
             "atomic-facet-manager": LocalJSX.AtomicFacetManager & JSXBase.HTMLAttributes<HTMLAtomicFacetManagerElement>;
             "atomic-field-condition": LocalJSX.AtomicFieldCondition & JSXBase.HTMLAttributes<HTMLAtomicFieldConditionElement>;
             "atomic-history": LocalJSX.AtomicHistory & JSXBase.HTMLAttributes<HTMLAtomicHistoryElement>;
+            "atomic-infinite-scrolling": LocalJSX.AtomicInfiniteScrolling & JSXBase.HTMLAttributes<HTMLAtomicInfiniteScrollingElement>;
             "atomic-numeric-facet": LocalJSX.AtomicNumericFacet & JSXBase.HTMLAttributes<HTMLAtomicNumericFacetElement>;
             "atomic-pager": LocalJSX.AtomicPager & JSXBase.HTMLAttributes<HTMLAtomicPagerElement>;
             "atomic-query-error": LocalJSX.AtomicQueryError & JSXBase.HTMLAttributes<HTMLAtomicQueryErrorElement>;

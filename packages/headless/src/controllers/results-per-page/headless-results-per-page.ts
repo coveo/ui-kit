@@ -8,6 +8,7 @@ import {executeSearch} from '../../features/search/search-actions';
 import {
   ConfigurationSection,
   PaginationSection,
+  SearchSection,
 } from '../../state/state-sections';
 import {buildController} from '../controller/headless-controller';
 
@@ -27,7 +28,7 @@ export type ResultsPerPage = ReturnType<typeof buildResultsPerPage>;
 export type ResultsPerPageState = ResultsPerPage['state'];
 
 export const buildResultsPerPage = (
-  engine: Engine<PaginationSection & ConfigurationSection>,
+  engine: Engine<PaginationSection & ConfigurationSection & SearchSection>,
   props: Partial<ResultsPerPageProps> = {}
 ) => {
   const controller = buildController(engine);
@@ -56,7 +57,9 @@ export const buildResultsPerPage = (
      */
     set(num: number) {
       dispatch(updateNumberOfResults(num));
-      dispatch(executeSearch(logPagerResize()));
+      if (!engine.state.search.infiniteScrollingEnabled) {
+        dispatch(executeSearch(logPagerResize()));
+      }
     },
 
     /** Returns `true` if the number of results is equal to the passed value, and `false` otherwise.

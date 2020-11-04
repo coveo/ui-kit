@@ -193,6 +193,14 @@ const extractHistory = (
   facetOptions: state.facetOptions || getFacetOptionsInitialState(),
 });
 
+const countSearchResults = (state: StateNeededByExecuteSearch) =>
+  state.search
+    ? state.search.pastResponses?.reduce(
+        (count, response) => count + response.results.length,
+        0
+      ) + state.search.response.results.length
+    : 0;
+
 export const buildSearchRequest = (
   state: StateNeededByExecuteSearch
 ): SearchRequest => {
@@ -223,6 +231,9 @@ export const buildSearchRequest = (
     ...(state.pagination && {
       numberOfResults: state.pagination.numberOfResults,
       firstResult: state.pagination.firstResult,
+    }),
+    ...(state.search?.infiniteScrollingEnabled && {
+      firstResult: countSearchResults(state),
     }),
     ...(state.pipeline && {
       pipeline: state.pipeline,
