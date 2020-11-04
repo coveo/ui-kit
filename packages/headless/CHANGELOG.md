@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.1.0-alpha.33](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.32...v0.1.0-alpha.33) (2020-11-04)
+
+
+### Bug Fixes
+
+* **headless:** Fix missing export ([fac1eab](https://bitbucket.org/coveord/ui-kit/commits/fac1eab260ed649301ce0104aac6817195937bde))
+
+
+
+
+
 # [0.1.0-alpha.32](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.31...v0.1.0-alpha.32) (2020-11-03)
 
 **Note:** Version bump only for package @coveo/headless
