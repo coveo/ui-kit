@@ -3,7 +3,7 @@ import {buildMockFacetResponse} from '../../../test/mock-facet-response';
 import {
   baseFacetResponseSelector,
   facetRequestSelector,
-  facetResponseValuesSelector,
+  facetResponseSelectedValuesSelector,
 } from './facet-set-selectors';
 import {SearchAppState} from '../../../state/search-app-state';
 import {buildMockFacetRequest} from '../../../test/mock-facet-request';
@@ -33,7 +33,7 @@ describe('facet-set selectors', () => {
     expect(facetRequestSelector(state, facetId)).toBe(facetRequest);
   });
 
-  describe('#facetSelectedValuesSelector', () => {
+  describe('#facetResponseSelectedValuesSelector', () => {
     const facetId = 'abc123';
     let state: SearchAppState;
 
@@ -42,12 +42,15 @@ describe('facet-set selectors', () => {
       state.facetSet[facetId] = buildMockFacetRequest({facetId});
     });
 
-    it('#facetSelectedValuesSelector returns an empty array if the facet does not exist', () => {
-      const selectedValues = facetResponseValuesSelector(state, facetId);
+    it('#facetResponseSelectedValuesSelector returns an empty array if the facet does not exist', () => {
+      const selectedValues = facetResponseSelectedValuesSelector(
+        state,
+        facetId
+      );
       expect(selectedValues).toEqual([]);
     });
 
-    it('#facetSelectedValuesSelector gets the selected selected value for a generic facet', () => {
+    it('#facetResponseSelectedValuesSelector gets the selected selected value for a generic facet', () => {
       const mockValue = buildMockFacetValue({
         state: 'selected',
       });
@@ -57,11 +60,14 @@ describe('facet-set selectors', () => {
           values: [mockValue],
         }),
       ];
-      const selectedValues = facetResponseValuesSelector(state, facetId);
+      const selectedValues = facetResponseSelectedValuesSelector(
+        state,
+        facetId
+      );
       expect(selectedValues).toEqual([mockValue]);
     });
 
-    it('#facetSelectedValuesSelector gets all the selected values if more than one exists', () => {
+    it('#facetResponseSelectedValuesSelector gets all the selected values if more than one exists', () => {
       const mockValue = buildMockFacetValue({
         value: 'test1',
         state: 'selected',
@@ -76,12 +82,15 @@ describe('facet-set selectors', () => {
           values: [mockValue, mockValue2],
         }),
       ];
-      const selectedValues = facetResponseValuesSelector(state, facetId);
+      const selectedValues = facetResponseSelectedValuesSelector(
+        state,
+        facetId
+      );
       expect(selectedValues).toContain(mockValue);
       expect(selectedValues).toContain(mockValue2);
     });
 
-    it('#facetSelectedValuesSelector only gets the selected values', () => {
+    it('#facetResponseSelectedValuesSelector only gets the selected values', () => {
       const mockValue = buildMockFacetValue({
         value: 'test1',
         state: 'selected',
@@ -96,7 +105,10 @@ describe('facet-set selectors', () => {
           values: [mockValue, mockValue2],
         }),
       ];
-      const selectedValues = facetResponseValuesSelector(state, facetId);
+      const selectedValues = facetResponseSelectedValuesSelector(
+        state,
+        facetId
+      );
       expect(selectedValues).toContain(mockValue);
       expect(selectedValues).not.toContain(mockValue2);
     });

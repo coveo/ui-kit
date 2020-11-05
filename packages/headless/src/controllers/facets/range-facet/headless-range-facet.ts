@@ -5,9 +5,6 @@ import {
   RangeFacetRequest,
 } from '../../../features/facets/range-facets/generic/interfaces/range-facet';
 import {
-  FacetSelectionChangeMetadata,
-  logFacetDeselect,
-  logFacetSelect,
   logFacetUpdateSort,
   logFacetClearAll,
 } from '../../../features/facets/facet-set/facet-set-analytics-actions';
@@ -21,6 +18,8 @@ import {
   ConfigurationSection,
   SearchSection,
 } from '../../../state/state-sections';
+import {isRangeFacetValueSelected} from '../../../features/facets/range-facets/generic/range-facet-utils';
+import {executeToggleRangeFacetSelect} from '../../../features/facets/range-facets/generic/range-facet-controller-actions';
 
 export type RangeFacet = ReturnType<typeof buildRangeFacet>;
 
@@ -41,35 +40,18 @@ export function buildRangeFacet<
   const {facetId, getRequest} = props;
   const controller = buildController(engine);
   const dispatch = engine.dispatch;
-  const isValueSelected = (selection: RangeFacetValue) => {
-    return selection.state === 'selected';
-  };
-
-  const getAnalyticsActionForToggleSelect = (selection: RangeFacetValue) => {
-    const {start, end} = selection;
-    const facetValue = `${start}..${end}`;
-    const payload: FacetSelectionChangeMetadata = {facetId, facetValue};
-
-    return isValueSelected(selection)
-      ? logFacetDeselect(payload)
-      : logFacetSelect(payload);
-  };
 
   return {
     ...controller,
     /** Logs a deselect (select) value event when the passed value is active (idle), and executes a search.*/
-    toggleSelect(selection: RangeFacetValue) {
-      const analyticsAction = getAnalyticsActionForToggleSelect(selection);
-
-      dispatch(updateFacetOptions({freezeFacetOrder: true}));
-      dispatch(executeSearch(analyticsAction));
-    },
+    toggleSelect: (selection: RangeFacetValue) =>
+      dispatch(executeToggleRangeFacetSelect({facetId, selection})),
 
     /** Returns `true` if the passed value is selected, and `false` otherwise.
      * @param facetValue The facet value to check.
      * @returns boolean.
      */
-    isValueSelected,
+    isValueSelected: isRangeFacetValueSelected,
 
     /** Deselects all facet values.*/
     deselectAll() {

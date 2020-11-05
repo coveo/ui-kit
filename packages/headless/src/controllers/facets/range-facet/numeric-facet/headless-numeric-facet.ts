@@ -13,16 +13,14 @@ import {
   NumericFacetResponse,
   NumericFacetValue,
 } from '../../../../features/facets/range-facets/numeric-facet-set/interfaces/response';
-import {
-  registerNumericFacet,
-  toggleSelectNumericFacetValue,
-} from '../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions';
+import {registerNumericFacet} from '../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions';
 import {buildRangeFacet} from '../headless-range-facet';
 import {
   ConfigurationSection,
   NumericFacetSection,
   SearchSection,
 } from '../../../../state/state-sections';
+import {executeToggleNumericFacetSelect} from '../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-controller-actions';
 
 type NumericRangeOptions = Pick<NumericRangeRequest, 'start' | 'end'> &
   Partial<NumericRangeRequest>;
@@ -75,10 +73,8 @@ export function buildNumericFacet(
      * Selects (deselects) the passed value if unselected (selected).
      * @param selection The facet value to select or deselect.
      */
-    toggleSelect(selection: NumericFacetValue) {
-      dispatch(toggleSelectNumericFacetValue({facetId, selection}));
-      rangeFacet.toggleSelect(selection);
-    },
+    toggleSelect: (selection: NumericFacetValue) =>
+      dispatch(executeToggleNumericFacetSelect({facetId, selection})),
 
     /** @returns The state of the `NumericFacet` controller.*/
     get state() {

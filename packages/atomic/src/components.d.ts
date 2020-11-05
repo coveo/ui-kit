@@ -8,6 +8,8 @@ import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { Engine, HeadlessConfigurationOptions, Result, ResultTemplateCondition, SearchBox, SearchBoxState } from "@coveo/headless";
 import { AtomicSearchBoxOptions } from "./components/atomic-search-box/atomic-search-box";
 export namespace Components {
+    interface AtomicBreadcrumbManager {
+    }
     interface AtomicCategoryFacet {
         "facetId": string;
         "field": string;
@@ -95,8 +97,24 @@ export namespace Components {
         "expression": string;
         "isActive": boolean;
     }
+    interface ChildComponent {
+        "error"?: Error;
+    }
+    interface ChildComponent1 {
+        "engine": Engine;
+    }
+    interface ChildComponentErrored {
+        "engine": Engine;
+        "error"?: Error;
+    }
 }
 declare global {
+    interface HTMLAtomicBreadcrumbManagerElement extends Components.AtomicBreadcrumbManager, HTMLStencilElement {
+    }
+    var HTMLAtomicBreadcrumbManagerElement: {
+        prototype: HTMLAtomicBreadcrumbManagerElement;
+        new (): HTMLAtomicBreadcrumbManagerElement;
+    };
     interface HTMLAtomicCategoryFacetElement extends Components.AtomicCategoryFacet, HTMLStencilElement {
     }
     var HTMLAtomicCategoryFacetElement: {
@@ -247,7 +265,26 @@ declare global {
         prototype: HTMLAtomicTabElement;
         new (): HTMLAtomicTabElement;
     };
+    interface HTMLChildComponentElement extends Components.ChildComponent, HTMLStencilElement {
+    }
+    var HTMLChildComponentElement: {
+        prototype: HTMLChildComponentElement;
+        new (): HTMLChildComponentElement;
+    };
+    interface HTMLChildComponent1Element extends Components.ChildComponent1, HTMLStencilElement {
+    }
+    var HTMLChildComponent1Element: {
+        prototype: HTMLChildComponent1Element;
+        new (): HTMLChildComponent1Element;
+    };
+    interface HTMLChildComponentErroredElement extends Components.ChildComponentErrored, HTMLStencilElement {
+    }
+    var HTMLChildComponentErroredElement: {
+        prototype: HTMLChildComponentErroredElement;
+        new (): HTMLChildComponentErroredElement;
+    };
     interface HTMLElementTagNameMap {
+        "atomic-breadcrumb-manager": HTMLAtomicBreadcrumbManagerElement;
         "atomic-category-facet": HTMLAtomicCategoryFacetElement;
         "atomic-component-error": HTMLAtomicComponentErrorElement;
         "atomic-date-facet": HTMLAtomicDateFacetElement;
@@ -273,9 +310,14 @@ declare global {
         "atomic-search-interface": HTMLAtomicSearchInterfaceElement;
         "atomic-sort-dropdown": HTMLAtomicSortDropdownElement;
         "atomic-tab": HTMLAtomicTabElement;
+        "child-component": HTMLChildComponentElement;
+        "child-component-1": HTMLChildComponent1Element;
+        "child-component-errored": HTMLChildComponentErroredElement;
     }
 }
 declare namespace LocalJSX {
+    interface AtomicBreadcrumbManager {
+    }
     interface AtomicCategoryFacet {
         "facetId"?: string;
         "field"?: string;
@@ -359,7 +401,18 @@ declare namespace LocalJSX {
         "expression"?: string;
         "isActive"?: boolean;
     }
+    interface ChildComponent {
+        "error"?: Error;
+    }
+    interface ChildComponent1 {
+        "engine": Engine;
+    }
+    interface ChildComponentErrored {
+        "engine": Engine;
+        "error"?: Error;
+    }
     interface IntrinsicElements {
+        "atomic-breadcrumb-manager": AtomicBreadcrumbManager;
         "atomic-category-facet": AtomicCategoryFacet;
         "atomic-component-error": AtomicComponentError;
         "atomic-date-facet": AtomicDateFacet;
@@ -385,12 +438,16 @@ declare namespace LocalJSX {
         "atomic-search-interface": AtomicSearchInterface;
         "atomic-sort-dropdown": AtomicSortDropdown;
         "atomic-tab": AtomicTab;
+        "child-component": ChildComponent;
+        "child-component-1": ChildComponent1;
+        "child-component-errored": ChildComponentErrored;
     }
 }
 export { LocalJSX as JSX };
 declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
+            "atomic-breadcrumb-manager": LocalJSX.AtomicBreadcrumbManager & JSXBase.HTMLAttributes<HTMLAtomicBreadcrumbManagerElement>;
             "atomic-category-facet": LocalJSX.AtomicCategoryFacet & JSXBase.HTMLAttributes<HTMLAtomicCategoryFacetElement>;
             "atomic-component-error": LocalJSX.AtomicComponentError & JSXBase.HTMLAttributes<HTMLAtomicComponentErrorElement>;
             "atomic-date-facet": LocalJSX.AtomicDateFacet & JSXBase.HTMLAttributes<HTMLAtomicDateFacetElement>;
@@ -416,6 +473,9 @@ declare module "@stencil/core" {
             "atomic-search-interface": LocalJSX.AtomicSearchInterface & JSXBase.HTMLAttributes<HTMLAtomicSearchInterfaceElement>;
             "atomic-sort-dropdown": LocalJSX.AtomicSortDropdown & JSXBase.HTMLAttributes<HTMLAtomicSortDropdownElement>;
             "atomic-tab": LocalJSX.AtomicTab & JSXBase.HTMLAttributes<HTMLAtomicTabElement>;
+            "child-component": LocalJSX.ChildComponent & JSXBase.HTMLAttributes<HTMLChildComponentElement>;
+            "child-component-1": LocalJSX.ChildComponent1 & JSXBase.HTMLAttributes<HTMLChildComponent1Element>;
+            "child-component-errored": LocalJSX.ChildComponentErrored & JSXBase.HTMLAttributes<HTMLChildComponentErroredElement>;
         }
     }
 }
