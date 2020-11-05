@@ -153,9 +153,10 @@ export const buildProductRecommendationsRequest = (
     recommendation: s.productRecommendations.id,
     numberOfResults: s.productRecommendations.maxNumberOfRecommendations,
     mlParameters: {
-      ...(s.productRecommendations.skus && {
-        itemIds: s.productRecommendations.skus,
-      }),
+      ...(s.productRecommendations.skus &&
+        s.productRecommendations.skus.length > 0 && {
+          itemIds: s.productRecommendations.skus,
+        }),
       ...(s.productRecommendations.filter.brand && {
         brandFilter: s.productRecommendations.filter.brand,
       }),

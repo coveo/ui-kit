@@ -18,14 +18,9 @@ import {
   StringValue,
 } from '@coveo/bueno';
 
-const optionsSchema = new Schema({
-  id: new StringValue({
-    required: true,
-    emptyAllowed: false,
-  }),
+export const baseProductRecommendationsOptionsSchema = {
   skus: new ArrayValue<string>({
-    required: true,
-    min: 1,
+    required: false,
     each: new StringValue({emptyAllowed: false}),
   }),
   maxNumberOfRecommendations: new NumberValue({
@@ -33,6 +28,14 @@ const optionsSchema = new Schema({
     max: 50,
     default: 5,
   }),
+};
+
+const optionsSchema = new Schema({
+  id: new StringValue({
+    required: true,
+    emptyAllowed: false,
+  }),
+  ...baseProductRecommendationsOptionsSchema,
 });
 
 export type ProductRecommendationsListOptions = SchemaValues<
@@ -67,11 +70,13 @@ export const buildBaseProductRecommendationsList = (
       number: options.maxNumberOfRecommendations,
     })
   );
-  dispatch(
-    setProductRecommendationsSkus({
-      skus: options.skus!,
-    })
-  );
+  if (options.skus) {
+    dispatch(
+      setProductRecommendationsSkus({
+        skus: options.skus,
+      })
+    );
+  }
   return {
     ...controller,
 

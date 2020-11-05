@@ -3,46 +3,44 @@ import {
   ConfigurationSection,
   ProductRecommendationsSection,
 } from '../../state/state-sections';
-import {Schema, SchemaValues, StringValue} from '@coveo/bueno';
+import {Schema, SchemaValues} from '@coveo/bueno';
 import {
   baseProductRecommendationsOptionsSchema,
   buildBaseProductRecommendationsList,
 } from './headless-base-product-recommendations';
 
 const optionsSchema = new Schema({
-  sku: new StringValue({required: true, emptyAllowed: false}),
   maxNumberOfRecommendations:
     baseProductRecommendationsOptionsSchema.maxNumberOfRecommendations,
 });
 
-export type FrequentlyBoughtTogetherListOptions = SchemaValues<
+export type PopularViewedRecommendationsListOptions = SchemaValues<
   typeof optionsSchema
 >;
 
-export interface FrequentlyBoughtTogetherListProps {
-  options?: FrequentlyBoughtTogetherListOptions;
+export interface PopularViewedRecommendationsListProps {
+  options?: PopularViewedRecommendationsListOptions;
 }
 
-export type FrequentlyBoughtTogetherList = ReturnType<
-  typeof buildFrequentlyBoughtTogetherList
+export type PopularViewedRecommendationsList = ReturnType<
+  typeof buildPopularViewedRecommendationsList
 >;
-export type FrequentlyBoughtTogetherListState = FrequentlyBoughtTogetherList['state'];
+export type PopularViewedRecommendationsListState = PopularViewedRecommendationsList['state'];
 
-export const buildFrequentlyBoughtTogetherList = (
+export const buildPopularViewedRecommendationsList = (
   engine: Engine<ProductRecommendationsSection & ConfigurationSection>,
-  props: FrequentlyBoughtTogetherListProps
+  props: PopularViewedRecommendationsListProps = {}
 ) => {
   const options = optionsSchema.validate(props.options) as Required<
-    FrequentlyBoughtTogetherListOptions
+    PopularViewedRecommendationsListOptions
   >;
   const {setSkus, state, ...controller} = buildBaseProductRecommendationsList(
     engine,
     {
       ...props,
       options: {
-        maxNumberOfRecommendations: options.maxNumberOfRecommendations,
-        skus: [options.sku],
-        id: 'frequentBought',
+        ...options,
+        id: 'popularViewed',
       },
     }
   );
@@ -50,16 +48,11 @@ export const buildFrequentlyBoughtTogetherList = (
   return {
     ...controller,
 
-    setSku(sku: string) {
-      setSkus([sku]);
-    },
-
     get state() {
       const {skus, ...rest} = state;
 
       return {
         ...rest,
-        sku: skus[0],
       };
     },
   };

@@ -24,7 +24,6 @@ describe('headless product-recommendations', () => {
 
   const baseOptions: Partial<ProductRecommendationsListOptions> = {
     id: 'bloup',
-    skus: ['bloup-123'],
   };
 
   beforeEach(() => {
@@ -40,9 +39,14 @@ describe('headless product-recommendations', () => {
     expect(engine.actions).toContainEqual(found);
   };
 
+  const expectDoesNotContainAction = (action: Action) => {
+    const found = engine.actions.find((a) => a.type === action.type);
+    expect(engine.actions).not.toContainEqual(found);
+  };
+
   it('when options.id is set to a non empty value, it dispatches #setProductRecommendationsRecommenderId', () => {
     productRecommendations = buildBaseProductRecommendationsList(engine, {
-      options: baseOptions,
+      options: {...baseOptions, id: 'someid'},
     });
     expectContainAction(setProductRecommendationsRecommenderId);
   });
@@ -77,12 +81,11 @@ describe('headless product-recommendations', () => {
     ).toThrowError();
   });
 
-  it('when options.skus is set to an empty array, it throws a schema validation error', () => {
-    expect(() =>
-      buildBaseProductRecommendationsList(engine, {
-        options: {...baseOptions, skus: []},
-      })
-    ).toThrowError();
+  it('when options.skus is not set, it does not dispatch #setProductRecommendationsSkus', () => {
+    productRecommendations = buildBaseProductRecommendationsList(engine, {
+      options: {...baseOptions},
+    });
+    expectDoesNotContainAction(setProductRecommendationsSkus);
   });
 
   it('setSkus dispatches #setProductRecommendationsSkus', () => {

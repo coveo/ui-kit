@@ -22,6 +22,7 @@ import {RecommendationRequest} from './recommendation/recommendation-request';
 import {buildProductRecommendationsRequest} from '../../features/product-recommendations/product-recommendations-actions';
 import {buildMockProductRecommendationsState} from '../../test/mock-product-recommendations-state';
 import {ProductRecommendationsRequest} from './product-recommendations/product-recommendations-request';
+import {getProductRecommendationsInitialState} from '../../features/product-recommendations/product-recommendations-state';
 
 jest.mock('../platform-client');
 describe('search api client', () => {
@@ -247,7 +248,17 @@ describe('search api client', () => {
 
     it(`when calling SearchAPIClient.productRecommendations
   should call PlatformClient.call with the right options`, () => {
-      const productRecommendationsState = buildMockProductRecommendationsState();
+      const productRecommendationsState = buildMockProductRecommendationsState({
+        productRecommendations: {
+          ...getProductRecommendationsInitialState(),
+          skus: ['one'],
+          maxNumberOfRecommendations: 10,
+          filter: {
+            brand: 'somebrand',
+            category: 'somecategory',
+          },
+        },
+      });
       const req = buildProductRecommendationsRequest(
         productRecommendationsState
       );
@@ -274,6 +285,11 @@ describe('search api client', () => {
               .maxNumberOfRecommendations,
           mlParameters: {
             itemIds: productRecommendationsState.productRecommendations.skus,
+            brandFilter:
+              productRecommendationsState.productRecommendations.filter.brand,
+            categoryFilter:
+              productRecommendationsState.productRecommendations.filter
+                .category,
           },
         },
       };
