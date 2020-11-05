@@ -1,14 +1,17 @@
 import {Engine} from '../../app/headless-engine';
-import {SearchSection} from '../../state/state-sections';
+import {ConfigurationSection, SearchSection} from '../../state/state-sections';
 import {buildController} from '../controller/headless-controller';
-import {flatten} from '../../utils/utils';
+import {fetchMoreResults} from '../../features/search/search-actions';
 
 /** The state relevant to the `ResultList` controller.*/
 export type ResultListState = ResultList['state'];
 export type ResultList = ReturnType<typeof buildResultList>;
 
-export const buildResultList = (engine: Engine<SearchSection>) => {
+export const buildResultList = (
+  engine: Engine<SearchSection & ConfigurationSection>
+) => {
   const controller = buildController(engine);
+  const {dispatch} = engine;
 
   return {
     ...controller,
@@ -20,13 +23,12 @@ export const buildResultList = (engine: Engine<SearchSection>) => {
       const state = engine.state;
 
       return {
-        results: flatten(
-          [...state.search.pastResponses, state.search.response].map(
-            (response) => response.results
-          )
-        ),
+        results: state.search.results,
         isLoading: state.search.isLoading,
       };
+    },
+    async fetchMoreResults() {
+      await dispatch(fetchMoreResults());
     },
   };
 };

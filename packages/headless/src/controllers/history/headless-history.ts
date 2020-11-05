@@ -30,9 +30,7 @@ export const buildHistory = (engine: Engine) => {
      */
     async back() {
       await dispatch(back());
-      if (!engine.state.search.infiniteScrollingEnabled) {
-        dispatch(executeSearch(logNavigateBackward()));
-      }
+      dispatch(executeSearch(logNavigateBackward()));
     },
 
     /**
@@ -40,9 +38,7 @@ export const buildHistory = (engine: Engine) => {
      */
     async forward() {
       await dispatch(forward());
-      if (!engine.state.search.infiniteScrollingEnabled) {
-        dispatch(executeSearch(logNavigateForward()));
-      }
+      dispatch(executeSearch(logNavigateForward()));
     },
   };
 };

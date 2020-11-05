@@ -31,9 +31,15 @@ export class AtomicResultList {
     );
     this.resultList = buildResultList(this.engine);
     this.unsubscribe = this.resultList.subscribe(() => this.updateState());
-
     this.registerDefaultResultTemplates();
     this.registerChildrenResultTemplates();
+  }
+
+  private async fetchMoreResults() {
+    if (this.state.isLoading) {
+      return;
+    }
+    await this.resultList.fetchMoreResults();
   }
 
   private registerDefaultResultTemplates() {
@@ -81,6 +87,11 @@ export class AtomicResultList {
   }
 
   public render() {
-    return this.results;
+    return [
+      ...this.results,
+      <button id="fetch-more-results" onClick={() => this.fetchMoreResults()}>
+        Fetch more results
+      </button>,
+    ];
   }
 }

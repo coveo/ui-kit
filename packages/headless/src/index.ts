@@ -25,7 +25,6 @@ export * from './controllers/facets/facet/headless-facet';
 export * from './controllers/facets/range-facet/date-facet/headless-date-facet';
 export * from './controllers/facets/range-facet/numeric-facet/headless-numeric-facet';
 export * from './controllers/history/headless-history';
-export * from './controllers/infinite-scrolling/headless-infinite-scrolling';
 export * from './controllers/pager/headless-pager';
 export * from './controllers/query-error/headless-query-error';
 export * from './controllers/query-summary/headless-query-summary';
@@ -52,7 +51,6 @@ export * as DidYouMeanActions from './features/did-you-mean/did-you-mean-actions
 export * as FacetActions from './features/facets/facet-set/facet-set-actions';
 export * as FieldsActions from './features/fields/fields-actions';
 export * as HistoryActions from './features/history/history-actions';
-export * as InfiniteScrollingActions from './features/infinite-scrolling/infinite-scrolling-actions';
 export * as NumericFacetActions from './features/facets/range-facets/numeric-facet-set/numeric-facet-actions';
 export * as PaginationActions from './features/pagination/pagination-actions';
 export * as PipelineActions from './features/pipeline/pipeline-actions';

@@ -10,7 +10,6 @@ import {
 import {executeSearch} from '../search/search-actions';
 import {change} from '../history/history-actions';
 import {getPaginationInitialState, PaginationState} from './pagination-state';
-import {enableInfiniteScrolling} from '../infinite-scrolling/infinite-scrolling-actions';
 
 export const minimumPage = 1;
 export const maximumNumberOfResultsFromIndex = 1000;
@@ -55,9 +54,6 @@ export const paginationReducer = createReducer(
           nextPage,
           state.numberOfResults
         );
-      })
-      .addCase(enableInfiniteScrolling, (state) => {
-        state.firstResult = 0;
       })
       .addCase(change.fulfilled, (state, action) => {
         state.numberOfResults = action.payload.pagination.numberOfResults;
