@@ -4,8 +4,6 @@ import {randomID} from '../../../utils/utils';
 import {CategoryFacetRegistrationOptions} from '../../../features/facets/category-facet-set/interfaces/options';
 import {
   registerCategoryFacet,
-  toggleSelectCategoryFacetValue,
-  deselectAllCategoryFacetValues,
   updateCategoryFacetNumberOfValues,
   updateCategoryFacetSortCriterion,
 } from '../../../features/facets/category-facet-set/category-facet-set-actions';
@@ -13,11 +11,7 @@ import {categoryFacetResponseSelector} from '../../../features/facets/category-f
 import {CategoryFacetValue} from '../../../features/facets/category-facet-set/interfaces/response';
 import {executeSearch} from '../../../features/search/search-actions';
 import {
-  FacetSelectionChangeMetadata,
-  logFacetDeselect,
-  logFacetSelect,
   logFacetUpdateSort,
-  logFacetClearAll,
   logFacetShowMore,
   logFacetShowLess,
 } from '../../../features/facets/facet-set/facet-set-analytics-actions';
@@ -37,6 +31,10 @@ import {
   SearchSection,
 } from '../../../state/state-sections';
 import {partitionIntoParentsAndValues} from '../../../features/facets/category-facet-set/category-facet-utils';
+import {
+  executeDeselectAllCategoryFacetValues,
+  executeToggleCategoryFacetSelect,
+} from '../../../features/facets/category-facet-set/category-facet-set-controller-actions';
 
 export type CategoryFacetProps = {
   options: CategoryFacetOptions;
@@ -82,16 +80,6 @@ export function buildCategoryFacet(
     return buildCategoryFacetSearch(engine, {options: facetSearchOptions});
   };
 
-  const getAnalyticsActionForToggleSelect = (selection: CategoryFacetValue) => {
-    const payload: FacetSelectionChangeMetadata = {
-      facetId,
-      facetValue: selection.value,
-    };
-
-    const isSelected = selection.state === 'selected';
-    return isSelected ? logFacetDeselect(payload) : logFacetSelect(payload);
-  };
-
   const getRequest = () => {
     return categoryFacetRequestSelector(engine.state, facetId);
   };
@@ -110,23 +98,17 @@ export function buildCategoryFacet(
      * Selects (deselects) the passed value if unselected (selected).
      * @param selection The category facet value to select or deselect.
      */
-    toggleSelect(selection: CategoryFacetValue) {
-      const analyticsAction = getAnalyticsActionForToggleSelect(selection);
-
-      dispatch(toggleSelectCategoryFacetValue({facetId, selection}));
-      dispatch(updateFacetOptions({freezeFacetOrder: true}));
-      dispatch(executeSearch(analyticsAction));
-    },
+    toggleSelect: (selection: CategoryFacetValue) =>
+      dispatch(executeToggleCategoryFacetSelect({facetId, selection})),
 
     /** Deselects all facet values.*/
-    deselectAll() {
-      const numberOfValues = options.numberOfValues!;
-
-      dispatch(deselectAllCategoryFacetValues(facetId));
-      dispatch(updateCategoryFacetNumberOfValues({facetId, numberOfValues}));
-      dispatch(updateFacetOptions({freezeFacetOrder: true}));
-      dispatch(executeSearch(logFacetClearAll(facetId)));
-    },
+    deselectAll: () =>
+      dispatch(
+        executeDeselectAllCategoryFacetValues({
+          facetId,
+          numberOfValues: options.numberOfValues!,
+        })
+      ),
 
     /** Sorts the category facet values according to the passed criterion.
      * @param {CategoryFacetSortCriterion} criterion The criterion to sort values by.

@@ -7,8 +7,9 @@
     "build": "lerna run build",
     "test": "lerna run test",
     "test:watch": "lerna run --parallel test:watch --no-prefix",
-    "check": "gts check",
-    "fix": "eslint --fix .",
+    "lint:check": "eslint .",
+    "lint:junit": "eslint . --format junit --output-file ./reports/eslint.xml",
+    "lint:fix": "eslint --fix .",
     "pr:report": "node ./scripts/reports/pr-report.js",
     "report:bundle-size:time-series": "node ./scripts/reports/bundle-size/time-series.js",
     "cypress:test": "lerna run cypress:test",
@@ -38,6 +39,7 @@
     "husky": "^4.2.3",
     "lerna": "^3.20.2",
     "lint-staged": "^10.0.8",
+    "prettier": "^2.1.2",
     "rimraf": "^3.0.2",
     "typescript": "^4.0.5"
   },
@@ -65,7 +67,7 @@
   },
   "lint-staged": {
     "**/*.ts?(x)": [
-      "npm run fix",
+      "npm run lint:fix",
       "git add"
     ],
     "**/*.html": [

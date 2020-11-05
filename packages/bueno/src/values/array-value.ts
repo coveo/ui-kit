@@ -4,19 +4,21 @@ import {BooleanValue, isBoolean} from './boolean-value';
 import {NumberValue, isNumber} from './number-value';
 import {StringValue, isString} from './string-value';
 
-interface ArrayValueConfig extends ValueConfig<PrimitivesValues[]> {
+interface ArrayValueConfig<T extends PrimitivesValues = PrimitivesValues>
+  extends ValueConfig<T[]> {
   min?: number;
   max?: number;
   each?: BooleanValue | NumberValue | StringValue;
 }
 
-export class ArrayValue implements SchemaValue<PrimitivesValues[]> {
-  private value: Value<PrimitivesValues[]>;
-  constructor(private config: ArrayValueConfig = {}) {
+export class ArrayValue<T extends PrimitivesValues = PrimitivesValues>
+  implements SchemaValue<T[]> {
+  private value: Value<T[]>;
+  constructor(private config: ArrayValueConfig<T> = {}) {
     this.value = new Value(this.config);
   }
 
-  validate(input: PrimitivesValues[] | undefined | null) {
+  validate(input: T[] | undefined | null) {
     if (!isNullOrUndefined(input) && !Array.isArray(input)) {
       return 'value is not an array';
     }
@@ -57,7 +59,7 @@ export class ArrayValue implements SchemaValue<PrimitivesValues[]> {
   }
 
   private validatePrimitiveValue(
-    v: PrimitivesValues,
+    v: T,
     validator: BooleanValue | StringValue | NumberValue
   ) {
     if (isBoolean(v)) {

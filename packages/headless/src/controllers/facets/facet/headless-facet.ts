@@ -3,7 +3,6 @@ import {buildController} from '../../controller/headless-controller';
 import {Engine} from '../../../app/headless-engine';
 import {
   registerFacet,
-  toggleSelectFacetValue,
   deselectAllFacetValues,
   updateFacetSortCriterion,
   updateFacetNumberOfValues,
@@ -11,15 +10,12 @@ import {
 } from '../../../features/facets/facet-set/facet-set-actions';
 import {randomID} from '../../../utils/utils';
 import {
-  baseFacetResponseSelector,
   facetRequestSelector,
+  facetResponseSelector,
 } from '../../../features/facets/facet-set/facet-set-selectors';
 import {FacetRegistrationOptions} from '../../../features/facets/facet-set/interfaces/options';
 import {executeSearch} from '../../../features/search/search-actions';
 import {
-  FacetSelectionChangeMetadata,
-  logFacetDeselect,
-  logFacetSelect,
   logFacetClearAll,
   logFacetUpdateSort,
   logFacetShowMore,
@@ -30,10 +26,7 @@ import {
   FacetSearchRequestOptions,
   FacetSearchOptions,
 } from '../../../features/facets/facet-search-set/facet-search-request-options';
-import {
-  FacetValue,
-  FacetResponse,
-} from '../../../features/facets/facet-set/interfaces/response';
+import {FacetValue} from '../../../features/facets/facet-set/interfaces/response';
 import {FacetSortCriterion} from '../../../features/facets/facet-set/interfaces/request';
 import {updateFacetOptions} from '../../../features/facet-options/facet-options-actions';
 import {
@@ -42,6 +35,8 @@ import {
   FacetSection,
   SearchSection,
 } from '../../../state/state-sections';
+import {isFacetValueSelected} from '../../../features/facets/facet-set/facet-set-utils';
+import {executeToggleFacetSelect} from '../../../features/facets/facet-set/facet-set-controller-actions';
 
 export type Facet = ReturnType<typeof buildFacet>;
 export type FacetState = Facet['state'];
@@ -104,7 +99,7 @@ export function buildFacet(
     const id = options.facetId;
     const state = engine.state;
 
-    return baseFacetResponseSelector(state, id) as FacetResponse | undefined;
+    return facetResponseSelector(state, id);
   };
 
   const getNumberOfActiveValues = () => {
@@ -120,19 +115,6 @@ export function buildFacet(
     return configuredNumber < currentValues.length && hasIdleValues;
   };
 
-  const isValueSelected = (value: FacetValue) => value.state === 'selected';
-
-  const getAnalyticsActionForToggleSelect = (selection: FacetValue) => {
-    const payload: FacetSelectionChangeMetadata = {
-      facetId: options.facetId,
-      facetValue: selection.value,
-    };
-
-    return isValueSelected(selection)
-      ? logFacetDeselect(payload)
-      : logFacetSelect(payload);
-  };
-
   dispatch(registerFacet(options));
 
   return {
@@ -142,20 +124,14 @@ export function buildFacet(
      * Selects (deselects) the passed value if unselected (selected).
      * @param selection The facet value to select or deselect.
      */
-    toggleSelect(selection: FacetValue) {
-      const facetId = options.facetId;
-      const analyticsAction = getAnalyticsActionForToggleSelect(selection);
-
-      dispatch(toggleSelectFacetValue({facetId, selection}));
-      dispatch(updateFacetOptions({freezeFacetOrder: true}));
-      dispatch(executeSearch(analyticsAction));
-    },
+    toggleSelect: (selection: FacetValue) =>
+      dispatch(executeToggleFacetSelect({facetId: options.facetId, selection})),
     /**
      * Returns `true` if the passed facet value is selected and `false` otherwise.
      * @param {FacetValue} The facet value to check.
      * @returns {boolean}.
      */
-    isValueSelected,
+    isValueSelected: isFacetValueSelected,
 
     /** Deselects all facet values.*/
     deselectAll() {

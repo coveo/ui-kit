@@ -44,10 +44,10 @@
         </div>
         <div class="row justify-content-center my-5">
           <div class="col-8">
-            <atomic-search-box></atomic-search-box>
+            <div class="row"><atomic-search-box></atomic-search-box></div>
+            <div class="row mt-2"><atomic-breadcrumb-manager></atomic-breadcrumb-manager></div>
           </div>
         </div>
-
         <div class="row">
           <div class="col-4">
             <atomic-facet-manager>
@@ -82,12 +82,12 @@
 
                   <atomic-field-condition if-defined="author" must-match-gdfiletitle="Treasure Island">
                     <atomic-result-value value="author"> </atomic-result-value>
-                    <span style="margin-right: 30px;"> the bestselling author!</span>
+                    <span style="margin-right: 30px"> the bestselling author!</span>
                   </atomic-field-condition>
 
                   <atomic-field-condition if-defined="gdfilemimetype">
                     <b>Mime type:&nbsp;</b>
-                    <atomic-result-value value="gdfilemimetype" style="margin-right: 30px;"> </atomic-result-value>
+                    <atomic-result-value value="gdfilemimetype" style="margin-right: 30px"> </atomic-result-value>
                   </atomic-field-condition>
                 </atomic-result-template>
 
@@ -115,7 +115,8 @@
         </div>
         <atomic-history></atomic-history>
       </atomic-search-interface>
-      <atomic-recommendation />
+      <atomic-recommendation></atomic-recommendation>
+      <atomic-frequently-bought-together></atomic-frequently-bought-together>
     </div>
   </body>
 </html>

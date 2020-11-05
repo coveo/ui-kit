@@ -69,6 +69,23 @@ export interface RecommendationParam {
   recommendation: string;
 }
 
+export interface MachineLearningParam {
+  mlParameters: MachineLearningECommerceParameters;
+}
+
+export interface MachineLearningECommerceParameters {
+  itemIds?: string[];
+  categoryFilter?: string;
+  brandFilter?: string;
+  itemIdsToFilterOut?: string[];
+  removeRecentlySeen?: boolean;
+  recentlySeenConsideredMinutes?: number;
+}
+
+export interface MaximumAgeParam {
+  maximumAge: number;
+}
+
 export interface ActionsHistoryParam {
   actionsHistory: history.HistoryElement[];
 }

@@ -24,6 +24,11 @@ node('linux && docker') {
         sh "google-chrome --version"
       }
 
+      stage('Linting') {
+        sh 'npm run lint:junit'
+        junit 'reports/eslint.xml'
+      }
+
       stage('Unit Test') {
         sh 'npm test'
         junit 'packages/*/reports/*.xml'

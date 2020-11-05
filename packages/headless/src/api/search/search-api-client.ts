@@ -18,6 +18,7 @@ import {SearchAppState} from '../../state/search-app-state';
 import {BaseParam, baseSearchRequest} from './search-api-params';
 import {CategoryFacetSearchRequest} from './facet-search/category-facet-search/category-facet-search-request';
 import {RecommendationRequest} from './recommendation/recommendation-request';
+import {ProductRecommendationsRequest} from './product-recommendations/product-recommendations-request';
 
 export type AllSearchAPIResponse = Plan | Search | QuerySuggest;
 
@@ -118,6 +119,27 @@ export class SearchAPIClient {
   async recommendations(req: RecommendationRequest) {
     const platformResponse = await PlatformClient.call<
       RecommendationRequest,
+      Search
+    >({
+      ...baseSearchRequest(req, 'POST', 'application/json', ''),
+      requestParams: pickNonBaseParams(req),
+      renewAccessToken: this.renewAccessToken,
+    });
+
+    if (isSuccessSearchResponse(platformResponse)) {
+      return {
+        success: platformResponse.body,
+      };
+    }
+
+    return {
+      error: unwrapError(platformResponse),
+    };
+  }
+
+  async productRecommendations(req: ProductRecommendationsRequest) {
+    const platformResponse = await PlatformClient.call<
+      ProductRecommendationsRequest,
       Search
     >({
       ...baseSearchRequest(req, 'POST', 'application/json', ''),

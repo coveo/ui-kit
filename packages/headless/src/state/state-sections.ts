@@ -10,6 +10,7 @@ import {FacetSetState} from '../features/facets/facet-set/facet-set-state';
 import {DateFacetSetState} from '../features/facets/range-facets/date-facet-set/date-facet-set-state';
 import {NumericFacetSetState} from '../features/facets/range-facets/numeric-facet-set/numeric-facet-set-state';
 import {FieldsState} from '../features/fields/fields-state';
+import {ProductRecommendationsState} from '../features/product-recommendations/product-recommendations-state';
 import {PaginationState} from '../features/pagination/pagination-state';
 import {QuerySetState} from '../features/query-set/query-set-state';
 import {QuerySuggestSet} from '../features/query-suggest/query-suggest-state';
@@ -173,4 +174,11 @@ export interface RecommendationSection {
    * The information related to the recommendation endpoint.
    */
   recommendation: RecommendationState;
+}
+
+export interface ProductRecommendationsSection {
+  /**
+   * The information related to the product recommendations endpoint.
+   */
+  productRecommendations: ProductRecommendationsState;
 }
