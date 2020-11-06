@@ -1,6 +1,12 @@
 import {SchemaValue} from '../schema';
 
-export type PrimitivesValues = boolean | number | string | undefined | null;
+export type PrimitivesValues =
+  | boolean
+  | number
+  | string
+  | object
+  | undefined
+  | null;
 
 export interface ValueConfig<T> {
   default?: (() => T) | T;
