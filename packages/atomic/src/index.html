@@ -20,17 +20,17 @@
   </script> -->
     <style>
       :root {
+        /**
+        * It will be possible to rename the prefix for CSS varibles in the v5.0.0-alpha3 of Bootstrap 
+        * see PR: https://github.com/twbs/bootstrap/pull/31684
+        */
         --bs-font-sans-serif: 'Lato', 'Helvetica Neue', Helvetica, Arial, sans-serif, sans-serif;
-
-        --atomic-search-box-submit-color: white;
-        --atomic-search-box-submit-bg-color: orange;
-        --atomic-search-box-submit-bg-color-hover: red;
-
-        --atomic-border-radius: 10px;
+        --atomic-border-radius: 0.5em;
       }
 
-      atomic-search-box-submit::part(button) {
-        background-color: red;
+      atomic-search-box::part(submit-button) {
+        background-color: #ed731a;
+        border-color: #ed731a;
       }
     </style>
   </head>
@@ -44,8 +44,9 @@
         </div>
         <div class="row justify-content-center my-5">
           <div class="col-8">
-            <div class="row"><atomic-search-box></atomic-search-box></div>
-            <div class="row mt-2"><atomic-breadcrumb-manager></atomic-breadcrumb-manager></div>
+            <atomic-search-box>
+              <span slot="submit-button">Go!</span>
+            </atomic-search-box>
           </div>
         </div>
         <div class="row">
@@ -59,9 +60,14 @@
           </div>
           <div class="col-8">
             <div class="row">
+              <atomic-breadcrumb-manager></atomic-breadcrumb-manager>
+            </div>
+
+            <div class="row">
               <atomic-did-you-mean></atomic-did-you-mean>
               <atomic-query-error></atomic-query-error>
             </div>
+
             <div class="row">
               <div class="col">
                 <atomic-query-summary></atomic-query-summary>
@@ -70,6 +76,7 @@
                 <atomic-sort-dropdown></atomic-sort-dropdown>
               </div>
             </div>
+
             <div class="row">
               <atomic-result-list>
                 <atomic-result-template
@@ -103,6 +110,7 @@
                 </script>
               </atomic-result-list>
             </div>
+
             <div class="row">
               <div class="col">
                 <atomic-pager></atomic-pager>

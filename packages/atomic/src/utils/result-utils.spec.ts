@@ -1,10 +1,15 @@
 import {bindLogDocumentOpenOnResult} from './result-utils';
 jest.mock('@coveo/headless/dist/api/analytics/analytics');
-import {TestUtils, Result, ResultAnalyticsActions} from '@coveo/headless';
+import {
+  TestUtils,
+  Result,
+  ResultAnalyticsActions,
+  SearchAppState,
+} from '@coveo/headless';
 import {newSpecPage} from '@stencil/core/testing';
 
 describe('bindLogDocumentOpenOnResult', () => {
-  let engine: TestUtils.MockEngine;
+  let engine: TestUtils.MockEngine<SearchAppState>;
   let result: Result;
   let resultElement: Element;
   beforeEach(async () => {

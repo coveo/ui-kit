@@ -12,3 +12,6 @@ $enable-important-utilities: false; // the use of !important would cause issues 
 // Reboots
 @import 'reboot';
 @import '../../node_modules/bootstrap/scss/reboot';
+
+// Helpers
+@import '../../node_modules/bootstrap/scss/helpers';

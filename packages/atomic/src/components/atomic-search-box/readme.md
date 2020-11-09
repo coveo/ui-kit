@@ -13,9 +13,9 @@
 <!-- Default with props -->
 <atomic-search-box number-of-suggestions=10></atomic-search-box>
 
-<!-- Search box with a leading submit button -->
+<!-- Search box with a slot for the submit button's content -->
 <atomic-search-box>
-  <atomic-search-box-submit slot="submit-leading"></atomic-search-box-submit>
+  <span slot="submit-button">Go! 😊</span>
 </atomic-search-box>
 ```
 
@@ -23,36 +23,41 @@
 
 ## Properties
 
-| Property              | Attribute               | Description | Type     | Default |
-| --------------------- | ----------------------- | ----------- | -------- | ------- |
-| `numberOfSuggestions` | `number-of-suggestions` |             | `number` | `5`     |
+| Property              | Attribute               | Description                                               | Type      | Default                                  |
+| --------------------- | ----------------------- | --------------------------------------------------------- | --------- | ---------------------------------------- |
+| `id`                  | `data-id`               |                                                           | `string`  | `randomID(     'atomic-search-box-'   )` |
+| `leadingSubmitButton` | `leading-submit-button` | Wether the submit button should be place before the input | `boolean` | `false`                                  |
+| `numberOfSuggestions` | `number-of-suggestions` | Maximum number of suggestions to display                  | `number`  | `5`                                      |
 
 
 ## Slots
 
-| Slot               | Description                                      |
-| ------------------ | ------------------------------------------------ |
-| `"input"`          | Input that contains the query.                   |
-| `"submit"`         | Submit button placed after the input.            |
-| `"submit-leading"` | Submit button placed before the input.           |
-| `"suggestions"`    | List of suggestions placed underneath the input. |
+| Slot              | Description                         |
+| ----------------- | ----------------------------------- |
+| `"clear-button"`  | Content of the input's clear button |
+| `"submit-button"` | Content of the submitbutton         |
+
+
+## Shadow Parts
+
+| Part              | Description                         |
+| ----------------- | ----------------------------------- |
+| `"clear-button"`  | The search box input's clear button |
+| `"input"`         | The search box input                |
+| `"submit-button"` | The search box submit button        |
+| `"suggestion"`    | The suggestion                      |
+| `"suggestions"`   | The list of suggestions             |
 
 
 ## Dependencies
 
 ### Depends on
 
-- [atomic-search-box-input](../atomic-search-box-input)
-- [atomic-search-box-suggestions](../atomic-search-box-suggestions)
-- [atomic-search-box-submit](../atomic-search-box-submit)
 - [atomic-component-error](../atomic-component-error)
 
 ### Graph
 ```mermaid
 graph TD;
-  atomic-search-box --> atomic-search-box-input
-  atomic-search-box --> atomic-search-box-suggestions
-  atomic-search-box --> atomic-search-box-submit
   atomic-search-box --> atomic-component-error
   style atomic-search-box fill:#f9f,stroke:#333,stroke-width:4px
 ```
