@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.1.0-alpha.39](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.38...v0.1.0-alpha.39) (2020-11-09)
+
+
+### Features
+
+* **bueno:** add context message to #schema.validate, validate ResultsPerPage initialState ([d02dcee](https://bitbucket.org/coveord/ui-kit/commits/d02dceef7f5db7c89396bfdff0d3bb28120d2e72))
+
+
+
+
+
 # [0.1.0-alpha.38](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.37...v0.1.0-alpha.38) (2020-11-06)
 
 

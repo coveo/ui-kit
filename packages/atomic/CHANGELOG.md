@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.1.0-alpha.39](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.38...v0.1.0-alpha.39) (2020-11-09)
+
+
+### Features
+
+* **atomic:** Add Search Box interactivity and remove sub components ([34867ec](https://bitbucket.org/coveord/ui-kit/commits/34867ec9bc6bc8cfdf961de2b5c36b94aa005e70))
+
+
+
+
+
 # [0.1.0-alpha.38](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.37...v0.1.0-alpha.38) (2020-11-06)
 
 **Note:** Version bump only for package @coveo/atomic
