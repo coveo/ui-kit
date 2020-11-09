@@ -7,13 +7,20 @@ export type SchemaDefinition<T extends object> = {
   [key in keyof T]: SchemaValue<T[key]>;
 };
 
+function buildSchemaValidationError(errors: string[], context: string) {
+  const message = `
+  The following properties are invalid:
+
+    ${errors.join('\n\t')}
+  
+  ${context}
+  `;
+
+  return new SchemaValidationError(message);
+}
 export class SchemaValidationError extends Error {
-  constructor(errors: string[]) {
-    super(
-      `The following properties are invalid:${errors.map(
-        (error) => `\n${error}`
-      )}`
-    );
+  constructor(message: string) {
+    super(message);
     this.name = 'SchemaValidationError';
   }
 }
@@ -21,7 +28,7 @@ export class SchemaValidationError extends Error {
 export class Schema<Values extends object> {
   constructor(private definition: SchemaDefinition<Values>) {}
 
-  public validate(values: Partial<Values> = {}) {
+  public validate(values: Partial<Values> = {}, message = '') {
     const mergedValues = {
       ...this.default,
       ...values,
@@ -35,7 +42,7 @@ export class Schema<Values extends object> {
     }
 
     if (errors.length) {
-      throw new SchemaValidationError(errors);
+      throw buildSchemaValidationError(errors, message);
     }
 
     return mergedValues;

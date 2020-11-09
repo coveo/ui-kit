@@ -55,6 +55,14 @@ describe('ResultsPerPage', () => {
     expect(action).toBe(undefined);
   });
 
+  it('when #numberOfResults is set to a string, it throws an error with a context message', () => {
+    props.initialState.numberOfResults = ('1' as unknown) as number;
+
+    expect(() => initResultsPerPage()).toThrow(
+      'Check the initialState of buildResultsPerPage'
+    );
+  });
+
   it('calling #set updates the number of results to the passed value', () => {
     const num = 10;
     resultsPerPage.set(num);

@@ -1,3 +1,4 @@
+import {NumberValue} from '@coveo/bueno';
 import {Engine} from '../../app/headless-engine';
 import {
   registerNumberOfResults,
@@ -9,7 +10,12 @@ import {
   ConfigurationSection,
   PaginationSection,
 } from '../../state/state-sections';
+import {validateInitialState} from '../../utils/validate-payload';
 import {buildController} from '../controller/headless-controller';
+
+const initialStateDefinition = {
+  numberOfResults: new NumberValue({min: 0}),
+};
 
 export interface ResultsPerPageProps {
   initialState: Partial<ResultsPerPageInitialState>;
@@ -26,14 +32,20 @@ export type ResultsPerPage = ReturnType<typeof buildResultsPerPage>;
 /** The state relevant to the `ResultsPerPage` controller.*/
 export type ResultsPerPageState = ResultsPerPage['state'];
 
-export const buildResultsPerPage = (
+export function buildResultsPerPage(
   engine: Engine<PaginationSection & ConfigurationSection>,
   props: Partial<ResultsPerPageProps> = {}
-) => {
+) {
   const controller = buildController(engine);
   const {dispatch} = engine;
 
-  const num = props.initialState?.numberOfResults;
+  const validated = validateInitialState(
+    initialStateDefinition,
+    props.initialState,
+    buildResultsPerPage.name
+  );
+
+  const num = validated.numberOfResults;
 
   if (num !== undefined) {
     dispatch(registerNumberOfResults(num));
@@ -66,4 +78,4 @@ export const buildResultsPerPage = (
       return num === this.state.numberOfResults;
     },
   };
-};
+}
