@@ -44,6 +44,13 @@ describe('headless standalone searchBox', () => {
     searchBox = buildStandaloneSearchBox(engine, props);
   }
 
+  it('when configuring an invalid option, it throws an error', () => {
+    props.options.numberOfSuggestions = ('1' as unknown) as number;
+    expect(() => initController()).toThrow(
+      'Check the options of buildStandaloneSearchBox'
+    );
+  });
+
   it('should return the right state', () => {
     expect(searchBox.state).toEqual({
       value: state.querySet[id],

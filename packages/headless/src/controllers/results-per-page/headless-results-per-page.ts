@@ -1,4 +1,4 @@
-import {NumberValue} from '@coveo/bueno';
+import {NumberValue, Schema} from '@coveo/bueno';
 import {Engine} from '../../app/headless-engine';
 import {
   registerNumberOfResults,
@@ -13,9 +13,9 @@ import {
 import {validateInitialState} from '../../utils/validate-payload';
 import {buildController} from '../controller/headless-controller';
 
-const initialStateDefinition = {
+const initialStateSchema = new Schema({
   numberOfResults: new NumberValue({min: 0}),
-};
+});
 
 export interface ResultsPerPageProps {
   initialState: Partial<ResultsPerPageInitialState>;
@@ -40,7 +40,7 @@ export function buildResultsPerPage(
   const {dispatch} = engine;
 
   const validated = validateInitialState(
-    initialStateDefinition,
+    initialStateSchema,
     props.initialState,
     buildResultsPerPage.name
   );

@@ -18,20 +18,28 @@ export const validatePayloadValue = <P>(
   return {payload: validatedPayload as P};
 };
 
-const validateObject = <T extends object>(
-  definition: SchemaDefinition<T>,
-  obj: T | undefined,
-  message: string
-) => {
-  const schema = new Schema(definition);
-  return schema.validate(obj, message);
-};
-
 export const validateInitialState = <T extends object>(
-  definition: SchemaDefinition<T>,
+  schema: Schema<T>,
   obj: T | undefined,
   functionName: string
 ) => {
   const message = `Check the initialState of ${functionName}`;
-  return validateObject(definition, obj, message);
+  return validateObject(schema, obj, message);
+};
+
+export const validateOptions = <T extends object>(
+  schema: Schema<T>,
+  obj: T | undefined,
+  functionName: string
+) => {
+  const message = `Check the options of ${functionName}`;
+  return validateObject(schema, obj, message);
+};
+
+const validateObject = <T extends object>(
+  schema: Schema<T>,
+  obj: T | undefined,
+  message: string
+) => {
+  return schema.validate(obj, message);
 };
