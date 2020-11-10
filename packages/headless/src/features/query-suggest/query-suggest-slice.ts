@@ -12,6 +12,7 @@ import {
   getQuerySuggestInitialState,
   QuerySuggestSet,
 } from './query-suggest-state';
+import {executeSearch} from '../search/search-actions';
 
 export const querySuggestReducer = createReducer(
   {} as QuerySuggestSet,
@@ -32,6 +33,10 @@ export const querySuggestReducer = createReducer(
       .addCase(fetchQuerySuggestions.fulfilled, (state, action) => {
         const id = action.meta.arg.id;
         if (action.meta.requestId === state[id]?.currentRequestId) {
+          const {q} = state[id]!;
+          if (q) {
+            state[id]!.partialQueries.push(q);
+          }
           state[id]!.completions = action.payload.completions;
         }
       })
@@ -57,5 +62,12 @@ export const querySuggestReducer = createReducer(
         const {id, expression} = action.payload;
         state[id]!.q = expression;
         state[id]!.completions = [];
+      })
+      .addCase(executeSearch.fulfilled, (state) => {
+        for (const value of Object.values(state)) {
+          if (value) {
+            value.partialQueries = [];
+          }
+        }
       })
 );

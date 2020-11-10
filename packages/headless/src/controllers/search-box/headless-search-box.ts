@@ -25,6 +25,7 @@ import {
 } from '../../state/state-sections';
 import {searchBoxOptionDefinitions} from './headless-search-box-options-schema';
 import {validateOptions} from '../../utils/validate-payload';
+import {logQuerySuggestionClick} from '../../features/query-suggest/query-suggest-analytics-actions';
 
 export interface SearchBoxProps {
   options: SearchBoxOptions;
@@ -112,6 +113,7 @@ export function buildSearchBox(
      * @param value The string value of the suggestion to select
      */
     selectSuggestion(value: string) {
+      dispatch(logQuerySuggestionClick({id: options.id, suggestion: value}));
       dispatch(selectQuerySuggestion({id: options.id, expression: value}));
       this.submit();
     },
