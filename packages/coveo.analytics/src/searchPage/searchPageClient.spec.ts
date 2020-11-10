@@ -374,6 +374,11 @@ describe('SearchPageClient', () => {
         expectMatchCustomEventPayload(SearchPageEvents.recommendation);
     });
 
+    it('should send proper payload for #fetchMoreResults', async () => {
+        await client.logFetchMoreResults();
+        expectMatchPayload(SearchPageEvents.fetchMoreResults);
+    });
+
     it('should enable analytics tracking by default', () => {
         const c = new CoveoSearchPageClient({}, provider);
         expect(c.coveoAnalyticsClient instanceof CoveoAnalyticsClient).toBe(true);

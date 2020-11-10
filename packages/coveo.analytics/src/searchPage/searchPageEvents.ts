@@ -157,6 +157,10 @@ export enum SearchPageEvents {
      * Identifies the search event that gets logged when a user action (that is not a query) reloads the Recommendations panel with new recommendations.
      */
     recommendationInterfaceLoad = 'recommendationInterfaceLoad',
+    /**
+     * Identifies the search event that gets logged when a user requests more results to be added to the existing result list.
+     */
+    fetchMoreResults = 'fetchMoreResults'
 }
 
 export const CustomEventsTypes: Partial<Record<SearchPageEvents, string>> = {
