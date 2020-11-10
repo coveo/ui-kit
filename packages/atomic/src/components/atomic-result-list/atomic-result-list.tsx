@@ -35,11 +35,10 @@ export class AtomicResultList {
     this.registerChildrenResultTemplates();
   }
 
-  private async fetchMoreResults() {
+  private fetchMoreResults() {
     if (this.state.isLoading) {
-      return;
+      this.resultList.fetchMoreResults();
     }
-    await this.resultList.fetchMoreResults();
   }
 
   private registerDefaultResultTemplates() {

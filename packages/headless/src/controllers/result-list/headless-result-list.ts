@@ -27,8 +27,8 @@ export const buildResultList = (
         isLoading: state.search.isLoading,
       };
     },
-    async fetchMoreResults() {
-      await dispatch(fetchMoreResults());
+    fetchMoreResults() {
+      dispatch(fetchMoreResults());
     },
   };
 };
