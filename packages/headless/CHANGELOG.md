@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.1.0-alpha.41](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.40...v0.1.0-alpha.41) (2020-11-10)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
 # [0.1.0-alpha.40](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.39...v0.1.0-alpha.40) (2020-11-10)
 
 **Note:** Version bump only for package @coveo/headless

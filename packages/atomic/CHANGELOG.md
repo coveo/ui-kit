@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.1.0-alpha.41](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.40...v0.1.0-alpha.41) (2020-11-10)
+
+
+### Bug Fixes
+
+* **atomic:** replace initialization-utils unit tests ([b2df117](https://bitbucket.org/coveord/ui-kit/commits/b2df1178dd3c42948231831f23a3c20ec2b63743))
+
+
+### Features
+
+* **atomic:** add styling for Pager and Results Per Page ([b1edf27](https://bitbucket.org/coveord/ui-kit/commits/b1edf27076c895b987a44c4f8972124c68d8c95a))
+
+
+
+
+
 # [0.1.0-alpha.40](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.39...v0.1.0-alpha.40) (2020-11-10)
 
 **Note:** Version bump only for package @coveo/atomic
