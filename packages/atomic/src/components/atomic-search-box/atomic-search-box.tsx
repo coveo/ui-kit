@@ -22,7 +22,7 @@ export interface AtomicSearchBoxOptions {
 }
 
 /**
- * @slot submit-button - Content of the submitbutton
+ * @slot submit-button - Content of the submit button
  * @slot clear-button - Content of the input's clear button
  *
  * @part submit-button - The search box submit button

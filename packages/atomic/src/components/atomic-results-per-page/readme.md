@@ -5,6 +5,15 @@
 <!-- Auto Generated Below -->
 
 
+## Shadow Parts
+
+| Part            | Description                  |
+| --------------- | ---------------------------- |
+| `"label"`       | The "Results per page" label |
+| `"list"`        | The list of buttons          |
+| `"page-button"` | The page button              |
+
+
 ## Dependencies
 
 ### Depends on
