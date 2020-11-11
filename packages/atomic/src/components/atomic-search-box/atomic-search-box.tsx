@@ -192,7 +192,7 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
             {this.clearButton}
           </div>
 
-          <div class="position-absolute top-100 left-0 right-0">
+          <div class="position-absolute top-100 left-0 right-0 dropdown">
             <div
               part="suggestions"
               class="list-group"

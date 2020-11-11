@@ -153,6 +153,7 @@ export class Combobox {
   private buildEmptyOptionElement() {
     const div = document.createElement('div');
     div.id = this.emptyOptionId;
+    div.setAttribute('role', 'option');
     return div;
   }
 
@@ -161,19 +162,26 @@ export class Combobox {
     this.setAttributes(this.textboxAttributes, this.textbox);
     this.setAttributes(this.listboxAttributes, this.listbox);
 
-    if (!this.listboxOptions.length) {
-      this.listbox.appendChild(this.buildEmptyOptionElement());
-    } else {
-      const emptyOptionElement = this.listbox.querySelector(
-        `#${this.emptyOptionId}`
-      );
-      emptyOptionElement && emptyOptionElement.remove();
-    }
+    this.removeEmptyOptionElement();
+
     Array.from(this.listboxOptions).forEach((value) => {
       const isActive = value.id === this.activeDescendant;
       value.classList.toggle(this.options.activeClass, isActive);
       this.setAttributes(this.optionAttributes(isActive), value);
     });
+
+    !this.listboxOptions.length && this.addEmptyOptionForAccessibility();
+  }
+
+  private removeEmptyOptionElement() {
+    const emptyOptionElement = this.listbox.querySelector(
+      `#${this.emptyOptionId}`
+    );
+    emptyOptionElement && emptyOptionElement.remove();
+  }
+
+  private addEmptyOptionForAccessibility() {
+    this.listbox.appendChild(this.buildEmptyOptionElement());
   }
 
   private setAttributes(attributes: Record<string, string>, element: Element) {

@@ -4,3 +4,7 @@
 @import '../../../node_modules/bootstrap/scss/list-group';
 
 @import 'utilities';
+
+.dropdown {
+  z-index: $zindex-dropdown;
+}

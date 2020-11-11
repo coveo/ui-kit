@@ -5,6 +5,13 @@
 <!-- Auto Generated Below -->
 
 
+## Shadow Parts
+
+| Part       | Description        |
+| ---------- | ------------------ |
+| `"select"` | The select element |
+
+
 ## Dependencies
 
 ### Depends on
