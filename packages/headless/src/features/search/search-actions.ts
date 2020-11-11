@@ -83,20 +83,26 @@ export interface ExecuteSearchThunkReturn {
   automaticallyCorrected: boolean;
   /** The analytics action to log after the query. */
   analyticsAction: SearchAction;
+  /** The request that was executed */
+  requestExecuted: SearchRequest;
 }
 
 const fetchFromAPI = async (
   client: SearchAPIClient,
   state: StateNeededByExecuteSearch,
-  fetchMore: boolean
+  request: SearchRequest
 ) => {
   const startedAt = new Date().getTime();
-  const response = await client.search(buildSearchRequest(state, fetchMore));
+  const response = await client.search(request);
   const duration = new Date().getTime() - startedAt;
   const queryExecuted = state.query?.q || '';
-  return {response, duration, queryExecuted};
+  return {response, duration, queryExecuted, requestExecuted: request};
 };
 
+/**
+ * Executes a search query.
+ * @param analyticsAction (SearchAction) The analytics action to log after a successful query.
+ */
 /**
  * Executes a search query.
  * @param analyticsAction (SearchAction) The analytics action to log after a successful query.
@@ -111,14 +117,49 @@ export const executeSearch = createAsyncThunk<
     analyticsAction: SearchAction,
     {getState, dispatch, rejectWithValue, extra: {searchAPIClient}}
   ) => {
-    const fetched = await search(searchAPIClient, getState, dispatch, false);
-    return isErrorResponse(fetched.response)
-      ? rejectWithValue(fetched.response.error)
-      : {
-          ...fetched,
-          response: fetched.response.success,
-          analyticsAction,
-        };
+    const state = getState();
+    addEntryInActionsHistory(state);
+    const fetched = await fetchFromAPI(
+      searchAPIClient,
+      state,
+      buildSearchRequest(state)
+    );
+
+    if (isErrorResponse(fetched.response)) {
+      return rejectWithValue(fetched.response.error);
+    }
+
+    if (
+      !shouldReExecuteTheQueryWithCorrections(state, fetched.response.success)
+    ) {
+      dispatch(snapshot(extractHistory(state)));
+      return {
+        ...fetched,
+        response: fetched.response.success,
+        automaticallyCorrected: false,
+        analyticsAction,
+      };
+    }
+
+    const retried = await automaticallyRetryQueryWithCorrection(
+      searchAPIClient,
+      fetched.response.success.queryCorrections[0].correctedQuery,
+      getState,
+      dispatch
+    );
+
+    dispatch(snapshot(extractHistory(getState())));
+
+    if (isErrorResponse(retried.response)) {
+      return rejectWithValue(retried.response.error);
+    }
+
+    return {
+      ...retried,
+      response: retried.response.success,
+      automaticallyCorrected: true,
+      analyticsAction,
+    };
   }
 );
 
@@ -146,60 +187,40 @@ export const fetchMoreResults = createAsyncThunk<
     _,
     {getState, dispatch, rejectWithValue, extra: {searchAPIClient}}
   ) => {
-    const fetched = await search(searchAPIClient, getState, dispatch, true);
-    return isErrorResponse(fetched.response)
-      ? rejectWithValue(fetched.response.error)
-      : {
-          ...fetched,
-          response: fetched.response.success,
-          analyticsAction: logFetchMoreResults(),
-        };
+    const state = getState();
+    addEntryInActionsHistory(state);
+    const fetched = await fetchFromAPI(
+      searchAPIClient,
+      state,
+      buildFetchMoreRequest(state)
+    );
+
+    if (isErrorResponse(fetched.response)) {
+      return rejectWithValue(fetched.response.error);
+    }
+
+    dispatch(snapshot(extractHistory(state)));
+    return {
+      ...fetched,
+      response: fetched.response.success,
+      automaticallyCorrected: false,
+      analyticsAction: logFetchMoreResults(),
+    };
   }
 );
-
-const search = async (
-  searchAPIClient: SearchAPIClient,
-  getState: () => StateNeededByExecuteSearch,
-  dispatch: ThunkDispatch<unknown, unknown, AnyAction>,
-  fetchMore: boolean
-) => {
-  const state = getState();
-  addEntryInActionsHistory(state);
-  const fetched = await fetchFromAPI(searchAPIClient, state, fetchMore);
-
-  if (isErrorResponse(fetched.response)) {
-    return {...fetched, automaticallyCorrected: false};
-  }
-
-  if (
-    !shouldReExecuteTheQueryWithCorrections(state, fetched.response.success)
-  ) {
-    dispatch(snapshot(extractHistory(state)));
-    return {...fetched, automaticallyCorrected: false};
-  }
-
-  const retried = await automaticallyRetryQueryWithCorrection(
-    searchAPIClient,
-    fetched.response.success.queryCorrections[0].correctedQuery,
-    getState,
-    dispatch,
-    fetchMore
-  );
-
-  dispatch(snapshot(extractHistory(getState())));
-
-  return {...retried, automaticallyCorrected: true};
-};
 
 const automaticallyRetryQueryWithCorrection = async (
   client: SearchAPIClient,
   correction: string,
   getState: () => StateNeededByExecuteSearch,
-  dispatch: ThunkDispatch<unknown, unknown, AnyAction>,
-  fetchMore: boolean
+  dispatch: ThunkDispatch<unknown, unknown, AnyAction>
 ) => {
   dispatch(updateQuery({q: correction}));
-  const fetched = await fetchFromAPI(client, getState(), fetchMore);
+  const fetched = await fetchFromAPI(
+    client,
+    getState(),
+    buildSearchRequest(getState())
+  );
   dispatch(logDidYouMeanAutomatic());
   dispatch(applyDidYouMeanCorrection(correction));
   return fetched;
@@ -239,8 +260,7 @@ const extractHistory = (
 });
 
 export const buildSearchRequest = (
-  state: StateNeededByExecuteSearch,
-  fetchMore = false
+  state: StateNeededByExecuteSearch
 ): SearchRequest => {
   return {
     accessToken: state.configuration.accessToken,
@@ -270,11 +290,6 @@ export const buildSearchRequest = (
       numberOfResults: state.pagination.numberOfResults,
       firstResult: state.pagination.firstResult,
     }),
-    ...(fetchMore && {
-      firstResult:
-        (state.pagination?.firstResult ?? 0) +
-        (state.search?.results.length ?? 0),
-    }),
     ...(state.pipeline && {
       pipeline: state.pipeline,
     }),
@@ -290,6 +305,18 @@ export const buildSearchRequest = (
     ...(state.facetOptions && {
       facetOptions: state.facetOptions,
     }),
+  };
+};
+
+const buildFetchMoreRequest = (
+  state: StateNeededByExecuteSearch
+): SearchRequest => {
+  const request = state.search?.lastRequest ?? buildSearchRequest(state);
+  return {
+    ...request,
+    firstResult:
+      (state.pagination?.firstResult ?? 0) +
+      (state.search?.results.length ?? 0),
   };
 };
 

@@ -36,7 +36,7 @@ export class AtomicResultList {
   }
 
   private fetchMoreResults() {
-    if (this.state.isLoading) {
+    if (!this.state.isLoading) {
       this.resultList.fetchMoreResults();
     }
   }

@@ -1,5 +1,6 @@
 import {SearchAPIErrorWithStatusCode} from '../../api/search/search-api-error-response';
 import {Result} from '../../api/search/search/result';
+import {SearchRequest} from '../../api/search/search/search-request';
 import {SearchResponseSuccess} from '../../api/search/search/search-response';
 
 export interface SearchState {
@@ -11,6 +12,7 @@ export interface SearchState {
   automaticallyCorrected: boolean;
   isLoading: boolean;
   results: Result[];
+  lastRequest: SearchRequest | null;
 }
 
 export function getSearchInitialState(): SearchState {
@@ -28,5 +30,6 @@ export function getSearchInitialState(): SearchState {
     automaticallyCorrected: false,
     isLoading: false,
     results: [],
+    lastRequest: null,
   };
 }

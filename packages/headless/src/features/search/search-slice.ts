@@ -22,6 +22,9 @@ export const searchReducer = createReducer(
         state.queryExecuted = action.payload.queryExecuted;
         state.duration = action.payload.duration;
         state.isLoading = false;
+        if (searchAction === executeSearch) {
+          state.lastRequest = action.payload.requestExecuted;
+        }
       });
       builder.addCase(searchAction.pending, (state) => {
         state.isLoading = true;
