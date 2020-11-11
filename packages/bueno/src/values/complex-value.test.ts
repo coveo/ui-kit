@@ -7,7 +7,9 @@ describe('complex value', () => {
     describe('can validate', () => {
       it('boolean value', () => {
         const v = new RecordValue({
-          foo: new BooleanValue({required: true}),
+          values: {
+            foo: new BooleanValue({required: true}),
+          },
         });
 
         expect(v.validate({foo: undefined})).not.toBeNull();
@@ -16,20 +18,26 @@ describe('complex value', () => {
 
       it('number value', () => {
         const v = new RecordValue({
-          foo: new NumberValue({required: true, min: 5}),
+          values: {
+            foo: new NumberValue({required: true, min: 5}),
+          },
         });
         expect(v.validate({foo: 4})).not.toBeNull();
         expect(v.validate({foo: 5})).toBeNull();
         expect(
           new RecordValue({
-            foo: new NumberValue({required: true, min: 5}),
+            values: {
+              foo: new NumberValue({required: true, min: 5}),
+            },
           }).validate({foo: 4})
         ).not.toBeNull();
       });
 
       it('string value', () => {
         const v = new RecordValue({
-          foo: new StringValue({required: true}),
+          values: {
+            foo: new StringValue({required: true}),
+          },
         });
         expect(v.validate({foo: 4})).not.toBeNull();
         expect(v.validate({foo: 'hello'})).toBeNull();
@@ -37,11 +45,17 @@ describe('complex value', () => {
 
       it('record value', () => {
         const v = new RecordValue({
-          foo: new RecordValue({
-            bar: new RecordValue({
-              bazz: new NumberValue({required: true, min: 1, max: 10}),
+          values: {
+            foo: new RecordValue({
+              values: {
+                bar: new RecordValue({
+                  values: {
+                    bazz: new NumberValue({required: true, min: 1, max: 10}),
+                  },
+                }),
+              },
             }),
-          }),
+          },
         });
 
         expect(v.validate({foo: false})).not.toBeNull();
@@ -50,20 +64,52 @@ describe('complex value', () => {
 
       it('array value', () => {
         const v = new RecordValue({
-          foo: new ArrayValue({
-            each: new NumberValue({min: 1, max: 3}),
-            min: 1,
-          }),
-          bar: new StringValue({required: true, emptyAllowed: false}),
+          values: {
+            foo: new ArrayValue({
+              each: new NumberValue({min: 1, max: 3}),
+              min: 1,
+            }),
+            bar: new StringValue({required: true, emptyAllowed: false}),
+          },
         });
 
         expect(v.validate({foo: [1, 2, 3], bar: 'test'})).toBeNull();
         expect(v.validate({foo: [4, 5, 6], bar: 'test'})).not.toBeNull();
       });
 
+      it('required', () => {
+        const v = new RecordValue({
+          options: {required: true},
+          values: {
+            foo: new StringValue({required: false, emptyAllowed: false}),
+            bar: new NumberValue({required: false}),
+          },
+        });
+        expect(v.validate({})).toBeNull();
+        expect(v.validate(undefined)).not.toBeNull();
+        expect(v.validate({foo: 'bar'})).toBeNull();
+        expect(v.validate({foo: 'bar', bar: 10})).toBeNull();
+      });
+
+      it('not required', () => {
+        const v = new RecordValue({
+          options: {required: false},
+          values: {
+            foo: new StringValue({required: true, emptyAllowed: false}),
+            bar: new NumberValue({required: false}),
+          },
+        });
+        expect(v.validate({})).not.toBeNull();
+        expect(v.validate(undefined)).toBeNull();
+        expect(v.validate({foo: 'bar'})).toBeNull();
+        expect(v.validate({foo: 'bar', bar: 10})).toBeNull();
+      });
+
       it('empty record should be accepted if no property is required', () => {
         const v = new RecordValue({
-          foo: new BooleanValue({required: false}),
+          values: {
+            foo: new BooleanValue({required: false}),
+          },
         });
 
         expect(v.validate({})).toBeNull();
@@ -71,7 +117,9 @@ describe('complex value', () => {
 
       it('empty record should not be accepted if a property is required', () => {
         const v = new RecordValue({
-          foo: new BooleanValue({required: true}),
+          values: {
+            foo: new BooleanValue({required: true}),
+          },
         });
 
         expect(v.validate({})).not.toBeNull();
@@ -79,7 +127,9 @@ describe('complex value', () => {
 
       it('not a record', () => {
         const v = new RecordValue({
-          foo: new BooleanValue(),
+          values: {
+            foo: new BooleanValue(),
+          },
         });
 
         expect(v.validate('yo')).not.toBeNull();
@@ -87,8 +137,10 @@ describe('complex value', () => {
 
       it('record with many keys', () => {
         const v = new RecordValue({
-          foo: new BooleanValue(),
-          bar: new StringValue({required: true}),
+          values: {
+            foo: new BooleanValue(),
+            bar: new StringValue({required: true}),
+          },
         });
 
         expect(
@@ -114,8 +166,10 @@ describe('complex value', () => {
 
       it('record with too many keys', () => {
         const v = new RecordValue({
-          foo: new BooleanValue(),
-          bar: new StringValue({required: true}),
+          values: {
+            foo: new BooleanValue(),
+            bar: new StringValue({required: true}),
+          },
         });
 
         expect(
@@ -169,13 +223,15 @@ describe('complex value', () => {
           min: 2,
           max: 4,
           each: new RecordValue({
-            foo: new NumberValue({required: true, min: 1, max: 2}),
-            bar: new ArrayValue({
-              required: true,
-              min: 2,
-              max: 3,
-              each: new StringValue({required: true, emptyAllowed: false}),
-            }),
+            values: {
+              foo: new NumberValue({required: true, min: 1, max: 2}),
+              bar: new ArrayValue({
+                required: true,
+                min: 2,
+                max: 3,
+                each: new StringValue({required: true, emptyAllowed: false}),
+              }),
+            },
           }),
         });
 
