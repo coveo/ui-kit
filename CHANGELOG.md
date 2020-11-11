@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.1.0-alpha.45](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.44...v0.1.0-alpha.45) (2020-11-11)
+
+
+### Features
+
+* **bueno:** added ValueConfig to RecordValue ([9829eca](https://bitbucket.org/coveord/ui-kit/commits/9829ecae1d2f7be5ff06d62273025744b6470687))
+
+
+
+
+
 # [0.1.0-alpha.44](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.43...v0.1.0-alpha.44) (2020-11-11)
 
 
