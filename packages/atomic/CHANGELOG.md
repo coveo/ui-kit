@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.1.0-alpha.42](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.41...v0.1.0-alpha.42) (2020-11-11)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
 # [0.1.0-alpha.41](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.40...v0.1.0-alpha.41) (2020-11-10)
 
 

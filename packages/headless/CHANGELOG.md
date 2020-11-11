@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.1.0-alpha.42](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.41...v0.1.0-alpha.42) (2020-11-11)
+
+
+### Features
+
+* **headless:** make store accessible from HeadlessEngine ([d29969c](https://bitbucket.org/coveord/ui-kit/commits/d29969c6ca6d2612850947d90efb78d75183cee1))
+
+
+
+
+
 # [0.1.0-alpha.41](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.40...v0.1.0-alpha.41) (2020-11-10)
 
 **Note:** Version bump only for package @coveo/headless
