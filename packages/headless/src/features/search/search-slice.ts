@@ -1,34 +1,47 @@
 import {createReducer} from '@reduxjs/toolkit';
 import {executeSearch, fetchMoreResults} from './search-actions';
-import {getSearchInitialState} from './search-state';
+import {getSearchInitialState, SearchState} from './search-state';
 
-const searchActions = [executeSearch, fetchMoreResults];
+type SearchAction = typeof executeSearch | typeof fetchMoreResults;
+
+function handleRejectedSearch(
+  state: SearchState,
+  action: ReturnType<SearchAction['rejected']>
+) {
+  state.error = action.payload ? action.payload : null;
+  state.isLoading = false;
+}
+
+function handleFulfilledSearch(
+  state: SearchState,
+  action: ReturnType<SearchAction['fulfilled']>
+) {
+  state.error = null;
+  state.response = action.payload.response;
+  state.queryExecuted = action.payload.queryExecuted;
+  state.duration = action.payload.duration;
+  state.isLoading = false;
+}
+
+function handlePendingSearch(state: SearchState) {
+  state.isLoading = true;
+}
 
 export const searchReducer = createReducer(
   getSearchInitialState(),
   (builder) => {
-    searchActions.forEach((searchAction) => {
-      builder.addCase(searchAction.rejected, (state, action) => {
-        state.error = action.payload ? action.payload : null;
-        state.isLoading = false;
-      });
-      builder.addCase(searchAction.fulfilled, (state, action) => {
-        state.error = null;
-        state.results =
-          searchAction === fetchMoreResults
-            ? [...state.results, ...action.payload.response.results]
-            : action.payload.response.results;
-        state.response = action.payload.response;
-        state.queryExecuted = action.payload.queryExecuted;
-        state.duration = action.payload.duration;
-        state.isLoading = false;
-        if (searchAction === executeSearch) {
-          state.lastRequest = action.payload.requestExecuted;
-        }
-      });
-      builder.addCase(searchAction.pending, (state) => {
-        state.isLoading = true;
-      });
+    builder.addCase(executeSearch.rejected, handleRejectedSearch);
+    builder.addCase(fetchMoreResults.rejected, handleRejectedSearch);
+    builder.addCase(executeSearch.fulfilled, (state, action) => {
+      handleFulfilledSearch(state, action);
+      state.results = action.payload.response.results;
+      state.lastRequest = action.payload.requestExecuted;
     });
+    builder.addCase(fetchMoreResults.fulfilled, (state, action) => {
+      handleFulfilledSearch(state, action);
+      state.results = [...state.results, ...action.payload.response.results];
+    });
+    builder.addCase(executeSearch.pending, handlePendingSearch);
+    builder.addCase(fetchMoreResults.pending, handlePendingSearch);
   }
 );
