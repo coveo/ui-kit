@@ -57,9 +57,23 @@ describe('string value', () => {
 
     it(`when url is true
     when passing a valid URL value
-    it returns an error description`, () => {
+    it returns null`, () => {
       value = new StringValue({url: true});
       expect(value.validate('https://www.coveo.com?test=allo')).toBeNull();
+    });
+
+    it(`when constraining values are specified,
+    when the value matches one of the values,
+    it returns null`, () => {
+      value = new StringValue({constrainTo: ['A', 'B']});
+      expect(value.validate('B')).toBeNull();
+    });
+
+    it(`when constraining values are specified,
+    when the value does not match any of the values,
+    it returns an error description with the possible values`, () => {
+      value = new StringValue({constrainTo: ['A', 'B']});
+      expect(value.validate('C')).toContain('A, B.');
     });
   });
 });
