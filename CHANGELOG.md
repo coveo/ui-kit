@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.1.0-alpha.44](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.43...v0.1.0-alpha.44) (2020-11-11)
+
+
+### Features
+
+* **atomic:** add styling for Sort & fix combobox issues ([dcd2f81](https://bitbucket.org/coveord/ui-kit/commits/dcd2f81ac91448e9875f315acf9ed05b3a17c9f0))
+
+
+
+
+
 # [0.1.0-alpha.43](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.42...v0.1.0-alpha.43) (2020-11-11)
 
 
