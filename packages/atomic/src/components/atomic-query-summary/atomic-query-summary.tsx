@@ -8,9 +8,17 @@ import {
 } from '@coveo/headless';
 import {Initialization} from '../../utils/initialization-utils';
 
+/**
+ * @part container - The container of the whole summary
+ * @part results - The results container
+ * @part no-result - The container when there are no result
+ * @part query - The query container
+ * @part duration - The duration container
+ * @part highlight - The summary highlights
+ */
 @Component({
   tag: 'atomic-query-summary',
-  styleUrl: 'atomic-query-summary.css',
+  styleUrl: 'atomic-query-summary.scss',
   shadow: true,
 })
 export class AtomicQuerySummary {
@@ -31,11 +39,13 @@ export class AtomicQuerySummary {
   }
 
   public render() {
-    // TODO: This whole render loop will not work with localization
-    if (!this.state.hasResults) {
-      return this.renderNoResults();
-    }
-    return this.renderHasResults();
+    return (
+      <div part="container">
+        {this.state.hasResults
+          ? this.renderHasResults()
+          : this.renderNoResults()}
+      </div>
+    );
   }
 
   private updateState() {
@@ -43,29 +53,36 @@ export class AtomicQuerySummary {
   }
 
   private renderNoResults() {
-    return <span>No results{this.renderQuery()}</span>;
+    return <span part="no-result">No results{this.renderQuery()}</span>;
   }
 
   private renderHasResults() {
+    // TODO: This whole render loop will not work with localization
+    return [this.renderResults(), this.renderQuery(), this.renderDuration()];
+  }
+
+  private renderResults() {
     return (
-      <span>
-        Results{this.renderRange()}
-        {this.renderTotal()}
-        {this.renderQuery()}
-        {this.renderDuration()}
+      <span part="results">
+        Results {this.renderHighlight(this.range)} of{' '}
+        {this.renderHighlight(this.total)}
       </span>
     );
   }
 
-  private renderRange() {
-    return this.renderBold(
-      ` ${this.state.firstResult} - ${this.state.lastResult}`
-    );
+  private get range() {
+    return `${this.state.firstResult.toLocaleString()}-${this.state.lastResult.toLocaleString()}`;
+  }
+
+  private get total() {
+    return this.state.total.toLocaleString();
   }
 
   private renderQuery() {
     if (this.state.hasQuery) {
-      return <span> for {this.renderBold(this.state.query)}</span>;
+      return (
+        <span part="query"> for {this.renderHighlight(this.state.query)}</span>
+      );
     }
 
     return '';
@@ -73,17 +90,22 @@ export class AtomicQuerySummary {
 
   private renderDuration() {
     if (this.state.hasDuration) {
-      return ` in ${this.state.durationInSeconds} seconds`;
+      return (
+        <span part="duration">
+          {' '}
+          in {this.state.durationInSeconds.toLocaleString()} seconds
+        </span>
+      );
     }
 
     return '';
   }
 
-  private renderTotal() {
-    return <span> of {this.renderBold(this.state.total.toString())}</span>;
-  }
-
-  private renderBold(input: string) {
-    return <span class="bold">{input}</span>;
+  private renderHighlight(input: string) {
+    return (
+      <strong part="highlight" class="text-primary">
+        {input}
+      </strong>
+    );
   }
 }
