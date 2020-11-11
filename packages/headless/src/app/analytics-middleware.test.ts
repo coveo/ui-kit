@@ -14,7 +14,7 @@ describe('analytics middleware', () => {
 
   it('correctly pass through anu action with not analytics payload', () => {
     const e = buildMockSearchAppEngine();
-    const {dispatch, store} = e;
+    const {dispatch, mockStore: store} = e;
 
     const action = {type: 'foo'};
     dispatch(action);
@@ -23,7 +23,7 @@ describe('analytics middleware', () => {
 
   it('correctly pass through a search action with no analytics payload', () => {
     const e = buildMockSearchAppEngine();
-    const {dispatch, store} = e;
+    const {dispatch, mockStore: store} = e;
     const {analyticsAction, ...mockSearchWithoutAnalytics} = buildMockSearch();
 
     const action = executeSearch.fulfilled(
@@ -37,7 +37,7 @@ describe('analytics middleware', () => {
 
   it('correctly pass through a search action with an analytics payload', () => {
     const e = buildMockSearchAppEngine();
-    const {dispatch, store} = e;
+    const {dispatch, mockStore: store} = e;
     const mockSearch = buildMockSearch();
 
     const action = executeSearch.fulfilled(
@@ -51,7 +51,7 @@ describe('analytics middleware', () => {
 
   it('correctly queue log analytics after search action', () => {
     const e = buildMockSearchAppEngine();
-    const {dispatch, store} = e;
+    const {dispatch, mockStore: store} = e;
     const mockSearch = buildMockSearch();
 
     const action = executeSearch.fulfilled(
@@ -66,7 +66,7 @@ describe('analytics middleware', () => {
 
   it('correctly remove analytics payload from action', () => {
     const e = buildMockSearchAppEngine();
-    const {dispatch, store} = e;
+    const {dispatch, mockStore: store} = e;
     const mockSearch = buildMockSearch();
 
     const action = executeSearch.fulfilled(

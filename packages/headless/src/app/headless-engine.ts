@@ -151,6 +151,10 @@ export interface Engine<State = SearchAppState> {
    * The complete headless state tree.
    */
   state: State;
+  /**
+   * The redux store.
+   */
+  store: Store;
   renewAccessToken: () => Promise<string>;
 }
 
@@ -218,6 +222,10 @@ export class HeadlessEngine<Reducers extends ReducersMapObject>
    */
   public disableAnalytics() {
     this.dispatch(disableAnalytics());
+  }
+
+  get store() {
+    return this.reduxStore;
   }
 
   get dispatch(): EngineDispatch<StateFromReducersMapObject<Reducers>> {
