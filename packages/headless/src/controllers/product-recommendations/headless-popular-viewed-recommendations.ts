@@ -34,22 +34,21 @@ export const buildPopularViewedRecommendationsList = (
   const options = optionsSchema.validate(props.options) as Required<
     PopularViewedRecommendationsListOptions
   >;
-  const {setSkus, state, ...controller} = buildBaseProductRecommendationsList(
-    engine,
-    {
-      ...props,
-      options: {
-        ...options,
-        id: 'popularViewed',
-      },
-    }
-  );
+  const controller = buildBaseProductRecommendationsList(engine, {
+    ...props,
+    options: {
+      ...options,
+      id: 'popularViewed',
+    },
+  });
+
+  const {setSkus, ...rest} = controller;
 
   return {
-    ...controller,
+    ...rest,
 
     get state() {
-      const {skus, ...rest} = state;
+      const {skus, ...rest} = controller.state;
 
       return {
         ...rest,
