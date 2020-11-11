@@ -69,7 +69,7 @@ export class CoveoSearchPageClient {
     }
 
     public logFetchMoreResults() {
-        return this.logSearchEvent(SearchPageEvents.fetchMoreResults);
+        return this.logSearchEvent(SearchPageEvents.pagerScrolling, { type: 'getMoreResults' });
     }
 
     public logInterfaceChange(metadata: InterfaceChangeMetadata) {
