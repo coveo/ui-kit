@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.1.0-alpha.43](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.42...v0.1.0-alpha.43) (2020-11-11)
+
+
+### Features
+
+* **atomic:** add styling for query summary ([4256e5d](https://bitbucket.org/coveord/ui-kit/commits/4256e5d444ba9188fe01dacf1b82b5e1a5a2d6e6))
+
+
+
+
+
 # [0.1.0-alpha.42](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.41...v0.1.0-alpha.42) (2020-11-11)
 
 
