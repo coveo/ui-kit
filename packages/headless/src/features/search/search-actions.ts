@@ -4,11 +4,7 @@ import {
   isErrorResponse,
   AsyncThunkSearchOptions,
 } from '../../api/search/search-api-client';
-import {
-  makeSearchActionType,
-  SearchAction,
-  searchPageState,
-} from '../analytics/analytics-actions';
+import {SearchAction} from '../analytics/analytics-actions';
 import {SearchResponseSuccess} from '../../api/search/search/search-response';
 import {snapshot} from '../history/history-actions';
 import {logDidYouMeanAutomatic} from '../did-you-mean/did-you-mean-analytics-actions';
@@ -50,7 +46,7 @@ import {getSortCriteriaInitialState} from '../sort-criteria/sort-criteria-state'
 import {getPipelineInitialState} from '../pipeline/pipeline-state';
 import {getSearchHubInitialState} from '../search-hub/search-hub-state';
 import {getFacetOptionsInitialState} from '../facet-options/facet-options-state';
-import {SearchPageEvents} from 'coveo.analytics/dist/definitions/searchPage/searchPageEvents';
+import {logFetchMoreResults} from './search-analytics-actions';
 
 export type StateNeededByExecuteSearch = ConfigurationSection &
   Partial<
@@ -160,20 +156,6 @@ export const executeSearch = createAsyncThunk<
       automaticallyCorrected: true,
       analyticsAction,
     };
-  }
-);
-
-export const logFetchMoreResults = createAsyncThunk(
-  'search/logFetchMoreResults',
-  async (_, {getState}) => {
-    const state = searchPageState(getState);
-    await configureAnalytics(state).logSearchEvent(
-      'pagerScrolling' as SearchPageEvents,
-      {
-        type: 'getMoreResults',
-      }
-    );
-    return makeSearchActionType();
   }
 );
 
