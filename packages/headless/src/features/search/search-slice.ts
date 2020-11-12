@@ -21,7 +21,6 @@ function handleFulfilledSearch(
   state.queryExecuted = action.payload.queryExecuted;
   state.duration = action.payload.duration;
   state.isLoading = false;
-  state.lastRequest = action.payload.requestExecuted;
 }
 
 function handlePendingSearch(state: SearchState) {

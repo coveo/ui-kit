@@ -9,7 +9,6 @@ import {PlatformClient} from '../../api/platform-client';
 import {createMockState} from '../../test/mock-state';
 import {getSearchInitialState, SearchState} from './search-state';
 import {SearchAppState} from '../../state/search-app-state';
-import {buildMockSearchRequest} from '../../test/mock-search-request';
 import {Result} from '../../api/search/search/result';
 jest.mock('../../api/platform-client');
 
@@ -36,15 +35,11 @@ describe('search-slice', () => {
   it('when a executeSearch fulfilled is received, it updates the state to the received payload', () => {
     const result = buildMockResult();
     const response = buildMockSearchResponse({results: [result]});
-    const request = buildMockSearchRequest();
-    const searchState = buildMockSearch(
-      {
-        response,
-        duration: 123,
-        queryExecuted: 'foo',
-      },
-      request
-    );
+    const searchState = buildMockSearch({
+      response,
+      duration: 123,
+      queryExecuted: 'foo',
+    });
 
     const action = executeSearch.fulfilled(
       searchState,
@@ -57,21 +52,16 @@ describe('search-slice', () => {
     expect(finalState.duration).toEqual(123);
     expect(finalState.queryExecuted).toEqual('foo');
     expect(finalState.isLoading).toBe(false);
-    expect(finalState.lastRequest).toEqual(request);
   });
 
   it('when a fetchMoreResults fulfilled is received, it updates the state to the received payload', () => {
     const result = buildMockResult();
     const response = buildMockSearchResponse({results: [result]});
-    const request = buildMockSearchRequest();
-    const searchState = buildMockSearch(
-      {
-        response,
-        duration: 123,
-        queryExecuted: 'foo',
-      },
-      request
-    );
+    const searchState = buildMockSearch({
+      response,
+      duration: 123,
+      queryExecuted: 'foo',
+    });
 
     const action = fetchMoreResults.fulfilled(searchState, '');
     const finalState = searchReducer(state, action);
@@ -80,7 +70,6 @@ describe('search-slice', () => {
     expect(finalState.duration).toEqual(123);
     expect(finalState.queryExecuted).toEqual('foo');
     expect(finalState.isLoading).toBe(false);
-    expect(finalState.lastRequest).toEqual(request);
   });
 
   describe('with an existing result', () => {

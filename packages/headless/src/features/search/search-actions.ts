@@ -79,8 +79,6 @@ export interface ExecuteSearchThunkReturn {
   automaticallyCorrected: boolean;
   /** The analytics action to log after the query. */
   analyticsAction: SearchAction;
-  /** The request that was executed */
-  requestExecuted: SearchRequest;
 }
 
 const fetchFromAPI = async (
@@ -293,7 +291,7 @@ export const buildSearchRequest = (
 const buildFetchMoreRequest = (
   state: StateNeededByExecuteSearch
 ): SearchRequest => {
-  const request = state.search?.lastRequest ?? buildSearchRequest(state);
+  const request = buildSearchRequest(state);
   return {
     ...request,
     firstResult:
