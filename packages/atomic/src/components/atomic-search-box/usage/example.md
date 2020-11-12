@@ -2,8 +2,8 @@
 <!-- Default with props -->
 <atomic-search-box number-of-suggestions=10></atomic-search-box>
 
-<!-- Search box with a leading submit button -->
+<!-- Search box with a slot for the submit button's content -->
 <atomic-search-box>
-  <atomic-search-box-submit slot="submit-leading"></atomic-search-box-submit>
+  <span slot="submit-button">Go! 😊</span>
 </atomic-search-box>
 ```

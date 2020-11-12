@@ -17,7 +17,7 @@ export type AppState =
   | ProductRecommendationsAppState;
 
 export interface MockEngine<T extends AppState> extends Engine<T> {
-  store: MockStore;
+  mockStore: MockStore;
   actions: AnyAction[];
 }
 
@@ -53,7 +53,8 @@ function buildMockEngine<T extends AppState>(
   const unsubscribe = () => {};
 
   return {
-    store: store,
+    mockStore: store,
+    store,
     state: mockState(),
     subscribe: jest.fn(() => unsubscribe),
     get dispatch() {

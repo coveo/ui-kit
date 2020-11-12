@@ -66,6 +66,13 @@ describe('headless searchBox', () => {
       props.options.numberOfSuggestions = -2;
       expect(() => initController()).toThrow();
     });
+
+    it('when passing an invalid option, it throws an error', () => {
+      props.options.id = (1 as unknown) as string;
+      expect(() => initController()).toThrow(
+        'Check the options of buildSearchBox'
+      );
+    });
   });
 
   it('should return the right state', () => {

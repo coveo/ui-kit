@@ -35,27 +35,26 @@ export const buildFrequentlyBoughtTogetherList = (
   const options = optionsSchema.validate(props.options) as Required<
     FrequentlyBoughtTogetherListOptions
   >;
-  const {setSkus, state, ...controller} = buildBaseProductRecommendationsList(
-    engine,
-    {
-      ...props,
-      options: {
-        maxNumberOfRecommendations: options.maxNumberOfRecommendations,
-        skus: [options.sku],
-        id: 'frequentBought',
-      },
-    }
-  );
+  const controller = buildBaseProductRecommendationsList(engine, {
+    ...props,
+    options: {
+      maxNumberOfRecommendations: options.maxNumberOfRecommendations,
+      skus: [options.sku],
+      id: 'frequentBought',
+    },
+  });
+
+  const {setSkus, ...rest} = controller;
 
   return {
-    ...controller,
+    ...rest,
 
     setSku(sku: string) {
       setSkus([sku]);
     },
 
     get state() {
-      const {skus, ...rest} = state;
+      const {skus, ...rest} = controller.state;
 
       return {
         ...rest,

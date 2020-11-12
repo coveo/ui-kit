@@ -22,12 +22,23 @@ describe('schema', () => {
       });
     });
 
-    it('should throw an error when the values are failing validation', () => {
+    describe('when the values fail validation', () => {
       const schema = new Schema({
         requiredValue: new Value<unknown>({required: true}),
       });
 
-      expect(() => schema.validate()).toThrow();
+      it('throws an error with the value that failed validation', () => {
+        expect(() => schema.validate()).toThrow(
+          'requiredValue: value is required'
+        );
+      });
+
+      it('the error contains the passed context message', () => {
+        const contextMessage = 'Check the options passed to buildSearchBox';
+        const fn = () => schema.validate({}, contextMessage);
+
+        expect(fn).toThrow(contextMessage);
+      });
     });
   });
 });

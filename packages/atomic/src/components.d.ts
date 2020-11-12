@@ -5,8 +5,7 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { Engine, HeadlessConfigurationOptions, Result, ResultTemplateCondition, SearchBox, SearchBoxState } from "@coveo/headless";
-import { AtomicSearchBoxOptions } from "./components/atomic-search-box/atomic-search-box";
+import { Engine, HeadlessConfigurationOptions, Result, ResultTemplateCondition } from "@coveo/headless";
 export namespace Components {
     interface AtomicBreadcrumbManager {
     }
@@ -70,20 +69,15 @@ export namespace Components {
     interface AtomicResultsPerPage {
     }
     interface AtomicSearchBox {
+        "_id": string;
+        /**
+          * Wether the submit button should be place before the input
+         */
+        "leadingSubmitButton": boolean;
+        /**
+          * Maximum number of suggestions to display
+         */
         "numberOfSuggestions": number;
-    }
-    interface AtomicSearchBoxInput {
-        "controller": SearchBox;
-        "options": AtomicSearchBoxOptions;
-        "placeholder": string;
-        "state": SearchBoxState;
-    }
-    interface AtomicSearchBoxSubmit {
-        "controller": SearchBox;
-    }
-    interface AtomicSearchBoxSuggestions {
-        "controller": SearchBox;
-        "state": SearchBoxState;
     }
     interface AtomicSearchInterface {
         "initialize": (options: Pick<HeadlessConfigurationOptions, 'accessToken' | 'organizationId' | 'renewAccessToken' | 'platformUrl'>) => Promise<void>;
@@ -96,16 +90,6 @@ export namespace Components {
     interface AtomicTab {
         "expression": string;
         "isActive": boolean;
-    }
-    interface ChildComponent {
-        "error"?: Error;
-    }
-    interface ChildComponent1 {
-        "engine": Engine;
-    }
-    interface ChildComponentErrored {
-        "engine": Engine;
-        "error"?: Error;
     }
 }
 declare global {
@@ -229,24 +213,6 @@ declare global {
         prototype: HTMLAtomicSearchBoxElement;
         new (): HTMLAtomicSearchBoxElement;
     };
-    interface HTMLAtomicSearchBoxInputElement extends Components.AtomicSearchBoxInput, HTMLStencilElement {
-    }
-    var HTMLAtomicSearchBoxInputElement: {
-        prototype: HTMLAtomicSearchBoxInputElement;
-        new (): HTMLAtomicSearchBoxInputElement;
-    };
-    interface HTMLAtomicSearchBoxSubmitElement extends Components.AtomicSearchBoxSubmit, HTMLStencilElement {
-    }
-    var HTMLAtomicSearchBoxSubmitElement: {
-        prototype: HTMLAtomicSearchBoxSubmitElement;
-        new (): HTMLAtomicSearchBoxSubmitElement;
-    };
-    interface HTMLAtomicSearchBoxSuggestionsElement extends Components.AtomicSearchBoxSuggestions, HTMLStencilElement {
-    }
-    var HTMLAtomicSearchBoxSuggestionsElement: {
-        prototype: HTMLAtomicSearchBoxSuggestionsElement;
-        new (): HTMLAtomicSearchBoxSuggestionsElement;
-    };
     interface HTMLAtomicSearchInterfaceElement extends Components.AtomicSearchInterface, HTMLStencilElement {
     }
     var HTMLAtomicSearchInterfaceElement: {
@@ -264,24 +230,6 @@ declare global {
     var HTMLAtomicTabElement: {
         prototype: HTMLAtomicTabElement;
         new (): HTMLAtomicTabElement;
-    };
-    interface HTMLChildComponentElement extends Components.ChildComponent, HTMLStencilElement {
-    }
-    var HTMLChildComponentElement: {
-        prototype: HTMLChildComponentElement;
-        new (): HTMLChildComponentElement;
-    };
-    interface HTMLChildComponent1Element extends Components.ChildComponent1, HTMLStencilElement {
-    }
-    var HTMLChildComponent1Element: {
-        prototype: HTMLChildComponent1Element;
-        new (): HTMLChildComponent1Element;
-    };
-    interface HTMLChildComponentErroredElement extends Components.ChildComponentErrored, HTMLStencilElement {
-    }
-    var HTMLChildComponentErroredElement: {
-        prototype: HTMLChildComponentErroredElement;
-        new (): HTMLChildComponentErroredElement;
     };
     interface HTMLElementTagNameMap {
         "atomic-breadcrumb-manager": HTMLAtomicBreadcrumbManagerElement;
@@ -304,15 +252,9 @@ declare global {
         "atomic-result-value": HTMLAtomicResultValueElement;
         "atomic-results-per-page": HTMLAtomicResultsPerPageElement;
         "atomic-search-box": HTMLAtomicSearchBoxElement;
-        "atomic-search-box-input": HTMLAtomicSearchBoxInputElement;
-        "atomic-search-box-submit": HTMLAtomicSearchBoxSubmitElement;
-        "atomic-search-box-suggestions": HTMLAtomicSearchBoxSuggestionsElement;
         "atomic-search-interface": HTMLAtomicSearchInterfaceElement;
         "atomic-sort-dropdown": HTMLAtomicSortDropdownElement;
         "atomic-tab": HTMLAtomicTabElement;
-        "child-component": HTMLChildComponentElement;
-        "child-component-1": HTMLChildComponent1Element;
-        "child-component-errored": HTMLChildComponentErroredElement;
     }
 }
 declare namespace LocalJSX {
@@ -375,20 +317,15 @@ declare namespace LocalJSX {
     interface AtomicResultsPerPage {
     }
     interface AtomicSearchBox {
+        "_id"?: string;
+        /**
+          * Wether the submit button should be place before the input
+         */
+        "leadingSubmitButton"?: boolean;
+        /**
+          * Maximum number of suggestions to display
+         */
         "numberOfSuggestions"?: number;
-    }
-    interface AtomicSearchBoxInput {
-        "controller": SearchBox;
-        "options": AtomicSearchBoxOptions;
-        "placeholder"?: string;
-        "state": SearchBoxState;
-    }
-    interface AtomicSearchBoxSubmit {
-        "controller": SearchBox;
-    }
-    interface AtomicSearchBoxSuggestions {
-        "controller": SearchBox;
-        "state": SearchBoxState;
     }
     interface AtomicSearchInterface {
         "pipeline"?: string;
@@ -400,16 +337,6 @@ declare namespace LocalJSX {
     interface AtomicTab {
         "expression"?: string;
         "isActive"?: boolean;
-    }
-    interface ChildComponent {
-        "error"?: Error;
-    }
-    interface ChildComponent1 {
-        "engine": Engine;
-    }
-    interface ChildComponentErrored {
-        "engine": Engine;
-        "error"?: Error;
     }
     interface IntrinsicElements {
         "atomic-breadcrumb-manager": AtomicBreadcrumbManager;
@@ -432,15 +359,9 @@ declare namespace LocalJSX {
         "atomic-result-value": AtomicResultValue;
         "atomic-results-per-page": AtomicResultsPerPage;
         "atomic-search-box": AtomicSearchBox;
-        "atomic-search-box-input": AtomicSearchBoxInput;
-        "atomic-search-box-submit": AtomicSearchBoxSubmit;
-        "atomic-search-box-suggestions": AtomicSearchBoxSuggestions;
         "atomic-search-interface": AtomicSearchInterface;
         "atomic-sort-dropdown": AtomicSortDropdown;
         "atomic-tab": AtomicTab;
-        "child-component": ChildComponent;
-        "child-component-1": ChildComponent1;
-        "child-component-errored": ChildComponentErrored;
     }
 }
 export { LocalJSX as JSX };
@@ -467,15 +388,9 @@ declare module "@stencil/core" {
             "atomic-result-value": LocalJSX.AtomicResultValue & JSXBase.HTMLAttributes<HTMLAtomicResultValueElement>;
             "atomic-results-per-page": LocalJSX.AtomicResultsPerPage & JSXBase.HTMLAttributes<HTMLAtomicResultsPerPageElement>;
             "atomic-search-box": LocalJSX.AtomicSearchBox & JSXBase.HTMLAttributes<HTMLAtomicSearchBoxElement>;
-            "atomic-search-box-input": LocalJSX.AtomicSearchBoxInput & JSXBase.HTMLAttributes<HTMLAtomicSearchBoxInputElement>;
-            "atomic-search-box-submit": LocalJSX.AtomicSearchBoxSubmit & JSXBase.HTMLAttributes<HTMLAtomicSearchBoxSubmitElement>;
-            "atomic-search-box-suggestions": LocalJSX.AtomicSearchBoxSuggestions & JSXBase.HTMLAttributes<HTMLAtomicSearchBoxSuggestionsElement>;
             "atomic-search-interface": LocalJSX.AtomicSearchInterface & JSXBase.HTMLAttributes<HTMLAtomicSearchInterfaceElement>;
             "atomic-sort-dropdown": LocalJSX.AtomicSortDropdown & JSXBase.HTMLAttributes<HTMLAtomicSortDropdownElement>;
             "atomic-tab": LocalJSX.AtomicTab & JSXBase.HTMLAttributes<HTMLAtomicTabElement>;
-            "child-component": LocalJSX.ChildComponent & JSXBase.HTMLAttributes<HTMLChildComponentElement>;
-            "child-component-1": LocalJSX.ChildComponent1 & JSXBase.HTMLAttributes<HTMLChildComponent1Element>;
-            "child-component-errored": LocalJSX.ChildComponentErrored & JSXBase.HTMLAttributes<HTMLChildComponentErroredElement>;
         }
     }
 }

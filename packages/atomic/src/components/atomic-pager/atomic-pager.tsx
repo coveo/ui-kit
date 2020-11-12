@@ -8,9 +8,18 @@ import {
 } from '@coveo/headless';
 import {Initialization} from '../../utils/initialization-utils';
 
+/**
+ * @slot back-button - Content of the back button
+ * @slot next-button - Content of the next button
+ *
+ * @part list - The list of buttons
+ * @part back-button - The back button
+ * @part next-button - The next button
+ * @part page-button - The page button
+ */
 @Component({
   tag: 'atomic-pager',
-  styleUrl: 'atomic-pager.css',
+  styleUrl: 'atomic-pager.scss',
   shadow: true,
 })
 export class AtomicPager {
@@ -40,7 +49,20 @@ export class AtomicPager {
     }
 
     const icon = '<';
-    return <button onClick={() => this.pager.previousPage()}>{icon}</button>;
+    return (
+      <li class="page-item">
+        <button
+          part="back-button"
+          class="page-link"
+          aria-label="Previous page"
+          onClick={() => {
+            this.pager.previousPage();
+          }}
+        >
+          <slot name="back-button">{icon}</slot>
+        </button>
+      </li>
+    );
   }
 
   private get nextButton() {
@@ -49,7 +71,20 @@ export class AtomicPager {
     }
 
     const icon = '>';
-    return <button onClick={() => this.pager.nextPage()}>{icon}</button>;
+    return (
+      <li class="page-item">
+        <button
+          part="next-button"
+          class="page-link"
+          aria-label="Next page"
+          onClick={() => {
+            this.pager.nextPage();
+          }}
+        >
+          <slot name="next-button">{icon}</slot>
+        </button>
+      </li>
+    );
   }
 
   private get pages() {
@@ -62,19 +97,30 @@ export class AtomicPager {
     const className = isSelected ? 'active' : '';
 
     return (
-      <button class={className} onClick={() => this.pager.selectPage(page)}>
-        {page}
-      </button>
+      <li class={`page-item ${className}`}>
+        <button
+          part="page-button"
+          class="page-link"
+          aria-label={`Page ${page}`}
+          onClick={() => {
+            this.pager.selectPage(page);
+          }}
+        >
+          {page}
+        </button>
+      </li>
     );
   }
 
   render() {
     return (
-      <span>
-        {this.backButton}
-        {this.pages}
-        {this.nextButton}
-      </span>
+      <nav aria-label="Pager">
+        <ul class="pagination mb-0" part="list">
+          {this.backButton}
+          {this.pages}
+          {this.nextButton}
+        </ul>
+      </nav>
     );
   }
 }

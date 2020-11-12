@@ -10,12 +10,15 @@ import {
   RedirectionSection,
   SearchSection,
 } from '../../state/state-sections';
+import {validateOptions} from '../../utils/validate-payload';
 import {
   buildSearchBox,
   SearchBoxOptions,
 } from '../search-box/headless-search-box';
+import {searchBoxOptionDefinitions} from '../search-box/headless-search-box-options-schema';
 
 const optionsSchema = new Schema({
+  ...searchBoxOptionDefinitions,
   /**
    * The default Url the user should be redirected to, when a query is submitted.
    * If a query pipeline redirect is triggered, it will redirect to that Url instead.
@@ -58,11 +61,13 @@ export function buildStandaloneSearchBox(
   props: StandaloneSearchBoxProps
 ) {
   const {dispatch} = engine;
-  const searchBox = buildSearchBox(engine, props);
+  const options = validateOptions(
+    optionsSchema,
+    props.options,
+    buildStandaloneSearchBox.name
+  ) as Required<StandaloneSearchBoxOptions>;
 
-  const options = optionsSchema.validate(props.options) as Required<
-    StandaloneSearchBoxOptions
-  >;
+  const searchBox = buildSearchBox(engine, props);
 
   return {
     ...searchBox,

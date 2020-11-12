@@ -5,6 +5,24 @@
 <!-- Auto Generated Below -->
 
 
+## Slots
+
+| Slot            | Description                |
+| --------------- | -------------------------- |
+| `"back-button"` | Content of the back button |
+| `"next-button"` | Content of the next button |
+
+
+## Shadow Parts
+
+| Part            | Description         |
+| --------------- | ------------------- |
+| `"back-button"` | The back button     |
+| `"list"`        | The list of buttons |
+| `"next-button"` | The next button     |
+| `"page-button"` | The page button     |
+
+
 ## Dependencies
 
 ### Depends on

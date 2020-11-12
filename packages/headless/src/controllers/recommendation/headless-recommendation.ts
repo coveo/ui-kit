@@ -9,6 +9,7 @@ import {
 } from '../../state/state-sections';
 import {buildController} from '../controller/headless-controller';
 import {Schema, SchemaValues, StringValue} from '@coveo/bueno';
+import {validateOptions} from '../../utils/validate-payload';
 
 const optionsSchema = new Schema({
   /**
@@ -30,15 +31,17 @@ export interface RecommendationListProps {
 export type RecommendationList = ReturnType<typeof buildRecommendationList>;
 export type RecommendationListState = RecommendationList['state'];
 
-export const buildRecommendationList = (
+export function buildRecommendationList(
   engine: Engine<RecommendationSection & ConfigurationSection>,
   props: RecommendationListProps = {}
-) => {
+) {
   const controller = buildController(engine);
   const {dispatch} = engine;
-  const options = optionsSchema.validate(props.options) as Required<
-    RecommendationListOptions
-  >;
+  const options = validateOptions(
+    optionsSchema,
+    props.options,
+    buildRecommendationList.name
+  ) as Required<RecommendationListOptions>;
   if (options.id !== '') {
     dispatch(setRecommendationId({id: options.id}));
   }
@@ -59,4 +62,4 @@ export const buildRecommendationList = (
       };
     },
   };
-};
+}

@@ -23,6 +23,10 @@ import {
   ConfigurationSection,
   PaginationSection,
 } from '../../state/state-sections';
+import {
+  validateInitialState,
+  validateOptions,
+} from '../../utils/validate-payload';
 
 export interface PagerProps {
   options?: PagerOptions;
@@ -34,12 +38,13 @@ const optionsSchema = new Schema({
   numberOfPages: new NumberValue({default: 5, min: 0}),
 });
 
-export type PagerOptions = SchemaValues<typeof optionsSchema>;
-
-export type PagerInitialState = {
+const initialStateSchema = new Schema({
   /** The initial page number */
-  page?: number;
-};
+  page: new NumberValue({min: 1}),
+});
+
+export type PagerOptions = SchemaValues<typeof optionsSchema>;
+export type PagerInitialState = SchemaValues<typeof initialStateSchema>;
 
 /**
  * The `Pager` controller allows to navigate through the different result pages.
@@ -48,18 +53,24 @@ export type Pager = ReturnType<typeof buildPager>;
 
 export type PagerState = Pager['state'];
 
-export const buildPager = (
+export function buildPager(
   engine: Engine<PaginationSection & ConfigurationSection>,
   props: PagerProps = {}
-) => {
+) {
   const controller = buildController(engine);
   const {dispatch} = engine;
 
-  const options = optionsSchema.validate(props.options) as Required<
-    PagerOptions
-  >;
-
-  const page = props.initialState?.page;
+  const options = validateOptions(
+    optionsSchema,
+    props.options,
+    buildPager.name
+  ) as Required<PagerOptions>;
+  const initialState = validateInitialState(
+    initialStateSchema,
+    props.initialState,
+    buildPager.name
+  );
+  const page = initialState.page;
 
   if (page) {
     dispatch(registerPage(page));
@@ -140,4 +151,4 @@ export const buildPager = (
       return page === this.state.currentPage;
     },
   };
-};
+}

@@ -15,6 +15,10 @@ export interface QuerySuggestState {
    */
   q: string;
   /**
+   * A history of the queries for which query suggestions have been received
+   */
+  partialQueries: string[];
+  /**
    * The number of query suggestions requested from Coveo ML (e.g., `3`).
    */
   count: number;
@@ -34,4 +38,5 @@ export const getQuerySuggestInitialState: () => QuerySuggestState = () => ({
   q: '',
   currentRequestId: '',
   error: null,
+  partialQueries: [],
 });

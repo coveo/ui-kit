@@ -45,6 +45,16 @@ describe('Pager', () => {
     expect(pager).toBeTruthy();
   });
 
+  it('when initialState #isActive is an invalid value, it throws an error', () => {
+    initialState.page = ('1' as unknown) as number;
+    expect(() => initPager()).toThrow('Check the initialState of buildPager');
+  });
+
+  it('when options #expression is an invalid value, it throws an error', () => {
+    options.numberOfPages = ('1' as unknown) as number;
+    expect(() => initPager()).toThrow('Check the options of buildPager');
+  });
+
   it('#state.currentPages returns 5 pages by default', () => {
     setMaxPage(10);
     expect(pager.state.currentPages.length).toBe(5);

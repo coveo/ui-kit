@@ -19,9 +19,12 @@ enum SortOption {
   Size = 'size',
 }
 
+/**
+ * @part select - The select element
+ */
 @Component({
   tag: 'atomic-sort-dropdown',
-  styleUrl: 'atomic-sort-dropdown.css',
+  styleUrl: 'atomic-sort-dropdown.scss',
   shadow: true,
 })
 export class AtomicSortDropdown {
@@ -89,7 +92,13 @@ export class AtomicSortDropdown {
 
   render() {
     return (
-      <select name="sorts" onChange={(val) => this.select(val)}>
+      <select
+        class="form-select"
+        aria-label="Sort results by"
+        part="select"
+        name="sorts"
+        onChange={(val) => this.select(val)}
+      >
         <option
           value={SortOption.Relevance}
           selected={this.sort.isSortedBy(this.relevance)}

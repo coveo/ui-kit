@@ -36,6 +36,8 @@ export function Initialization(options?: InitializationOptions) {
     const {
       componentWillLoad,
       render,
+      componentDidRender,
+      componentDidLoad,
       [initializeMethod]: initialize,
     } = component;
     const {
@@ -80,8 +82,12 @@ export function Initialization(options?: InitializationOptions) {
       );
     }
 
+    let hasRendered = false;
+    let hasLoaded = false;
+
     component.render = function () {
       if (this[errorProperty]) {
+        hasRendered = true;
         return (
           <atomic-component-error
             error={this[errorProperty]}
@@ -93,7 +99,23 @@ export function Initialization(options?: InitializationOptions) {
         return;
       }
 
+      hasRendered = true;
       return render && render.call(this);
     };
+
+    component.componentDidRender = function () {
+      if (!hasRendered) {
+        return;
+      }
+
+      componentDidRender && componentDidRender.call(this);
+      if (!hasLoaded) {
+        componentDidLoad && componentDidLoad.call(this);
+        hasLoaded = true;
+      }
+      return;
+    };
+
+    component.componentDidLoad = function () {};
   };
 }

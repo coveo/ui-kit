@@ -70,7 +70,7 @@
       "npm run lint:fix",
       "git add"
     ],
-    "**/*.html": [
+    "**/*.{scss,css,html}": [
       "prettier --print-width 120 --write",
       "git add"
     ]
