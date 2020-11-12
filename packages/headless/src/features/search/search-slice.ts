@@ -21,6 +21,7 @@ function handleFulfilledSearch(
   state.queryExecuted = action.payload.queryExecuted;
   state.duration = action.payload.duration;
   state.isLoading = false;
+  state.lastRequest = action.payload.requestExecuted;
 }
 
 function handlePendingSearch(state: SearchState) {
@@ -35,7 +36,6 @@ export const searchReducer = createReducer(
     builder.addCase(executeSearch.fulfilled, (state, action) => {
       handleFulfilledSearch(state, action);
       state.results = action.payload.response.results;
-      state.lastRequest = action.payload.requestExecuted;
     });
     builder.addCase(fetchMoreResults.fulfilled, (state, action) => {
       handleFulfilledSearch(state, action);
