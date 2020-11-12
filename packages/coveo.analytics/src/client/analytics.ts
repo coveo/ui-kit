@@ -26,7 +26,7 @@ import {
     isMeasurementProtocolKey,
     convertCustomMeasurementProtocolKeys,
 } from './measurementProtocolMapper';
-import {IRuntimeEnvironment, BrowserRuntime, NodeJSRuntime} from './runtimeEnvironment';
+import {IRuntimeEnvironment, BrowserRuntime, NoopRuntime, ReactNativeRuntime} from './runtimeEnvironment';
 import HistoryStore from '../history';
 import {isApiKey} from './token';
 
@@ -42,6 +42,7 @@ export interface ClientOptions {
     token?: string;
     endpoint: string;
     version: string;
+    runtimeEnvironment?: IRuntimeEnvironment;
 }
 
 export type AnalyticsClientSendEventHook = <TResult>(eventType: string, payload: any) => TResult;
@@ -104,24 +105,27 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
         this.beforeSendHooks = [enhanceViewEvent, addDefaultValues];
         this.eventTypeMapping = {};
 
+
         const clientsOptions = {
             baseUrl: this.baseUrl,
             token: this.options.token,
             visitorIdProvider: this,
         };
 
-        this.runtime = this.initRuntime(clientsOptions);
+        this.runtime = this.options.runtimeEnvironment || this.initRuntime(clientsOptions);
         this.analyticsFetchClient = new AnalyticsFetchClient(clientsOptions);
 
-        this.initVisitorId();
+        this.initVisitorId().catch(err => console.error("Could not get a visitor ID, ensure the runtime environment is valid", err));
     }
 
     private initRuntime(clientsOptions: IAnalyticsBeaconClientOptions) {
         if (hasWindow() && hasDocument()) {
             return new BrowserRuntime(clientsOptions, () => this.flushBufferWithBeacon());
-        }
+        } else if (typeof navigator !== 'undefined' && navigator.product == 'ReactNative') {
+            return new ReactNativeRuntime(clientsOptions);
+        }1
 
-        return new NodeJSRuntime();
+        return new NoopRuntime();
     }
 
     private get analyticsBeaconClient() {
@@ -132,8 +136,9 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
         return this.runtime.storage;
     }
 
-    private initVisitorId() {
-        const existingVisitorId = this.visitorId || this.storage.getItem('visitorId') || '';
+    private async initVisitorId() {
+        console.log(this.storage.getItem('visitorId'));
+        const existingVisitorId = this.visitorId || await this.storage.getItem('visitorId') || '';
         this.currentVisitorId = existingVisitorId || uuidv4();
     }
 
@@ -265,7 +270,7 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
 
     addEventTypeMapping(eventType: string, eventConfig: EventTypeConfig): void {
         this.eventTypeMapping[eventType] = eventConfig;
-    } 
+    }
 
     private parseVariableArgumentsPayload(fieldsOrder: string[], payload: VariableArgumentsPayload) {
         const parsedArguments: {[name: string]: any} = {};
