@@ -2,7 +2,7 @@
   display: block;
 }
 
-#fetch-more-results {
+.fetch-more-results {
   display: block;
   margin: 8px 0;
 }
