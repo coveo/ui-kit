@@ -58,7 +58,7 @@ export class StringValue implements SchemaValue<string> {
   }
 
   public get required() {
-    return this.value.required();
+    return this.value.required;
   }
 }
 

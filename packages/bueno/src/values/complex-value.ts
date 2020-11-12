@@ -1,4 +1,4 @@
-import {SchemaValue} from '../schema';
+import {SchemaDefinition, SchemaValue} from '../schema';
 import {
   PrimitivesValues,
   ValueConfig,
@@ -17,28 +17,23 @@ type ComplexRecord = Record<
 >;
 
 type RecordValueConfig = {
-  options?: ValueConfig<ComplexRecord>;
-  values?: Record<
-    string,
-    BooleanValue | StringValue | NumberValue | RecordValue | ArrayValue
-  >;
-};
-
-const defaultConfig: RecordValueConfig = {
-  options: {required: false},
+  options: ValueConfig<ComplexRecord>;
+  values: SchemaDefinition<ComplexRecord>;
 };
 
 export class RecordValue implements SchemaValue<ComplexRecord> {
-  constructor(private config: RecordValueConfig = {}) {
+  private config: RecordValueConfig;
+  constructor(config: Partial<RecordValueConfig> = {}) {
     this.config = {
-      ...defaultConfig,
+      options: {required: false},
+      values: {},
       ...config,
     };
   }
 
   public validate(input: unknown): string | null {
     if (isUndefined(input)) {
-      return this.config.options?.required
+      return this.config.options.required
         ? 'value is required and is currently undefined'
         : null;
     }
@@ -47,11 +42,11 @@ export class RecordValue implements SchemaValue<ComplexRecord> {
       return 'value is not an object';
     }
 
-    if (Object.keys(input).length > Object.keys(this.config.values!).length) {
+    if (Object.keys(input).length > Object.keys(this.config.values).length) {
       return 'value contains unknown keys';
     }
 
-    for (const [k, v] of Object.entries(this.config.values!)) {
+    for (const [k, v] of Object.entries(this.config.values)) {
       if (v.required && isNullOrUndefined(input[k])) {
         return `value does not contain ${k}`;
       }
@@ -60,22 +55,7 @@ export class RecordValue implements SchemaValue<ComplexRecord> {
     let out = '';
 
     for (const [k, v] of Object.entries(input)) {
-      const invalidKey = new StringValue({required: true}).validate(k);
-      if (invalidKey !== null) {
-        return invalidKey;
-      }
-
-      let invalidValue = null;
-
-      if (isBoolean(v)) {
-        invalidValue = (this.config.values![k] as BooleanValue).validate(v);
-      } else if (isString(v)) {
-        invalidValue = (this.config.values![k] as StringValue).validate(v);
-      } else if (isNumber(v)) {
-        invalidValue = (this.config.values![k] as NumberValue).validate(v);
-      } else if (isArray(v)) {
-        invalidValue = (this.config.values![k] as ArrayValue).validate(v);
-      }
+      const invalidValue = this.config.values[k].validate(v);
 
       if (invalidValue !== null) {
         out += ' ' + invalidValue;
@@ -89,8 +69,8 @@ export class RecordValue implements SchemaValue<ComplexRecord> {
     return undefined;
   }
 
-  public required() {
-    return false;
+  public get required() {
+    return !!this.config.options.required;
   }
 }
 
@@ -174,7 +154,7 @@ export class ArrayValue<T extends PrimitivesValues = PrimitivesValues>
   }
 
   public get required() {
-    return this.value.required();
+    return this.value.required;
   }
 }
 
