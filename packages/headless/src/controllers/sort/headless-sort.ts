@@ -4,7 +4,10 @@ import {
   updateSortCriterion,
 } from '../../features/sort-criteria/sort-criteria-actions';
 import {executeSearch} from '../../features/search/search-actions';
-import {SortCriterion} from '../../features/sort-criteria/criteria';
+import {
+  buildCriterionExpression,
+  SortCriterion,
+} from '../../features/sort-criteria/criteria';
 import {buildController} from '../controller/headless-controller';
 import {updatePage} from '../../features/pagination/pagination-actions';
 import {logResultsSort} from '../../features/sort-criteria/sort-criteria-analytics-actions';
@@ -45,7 +48,7 @@ export function buildSort(
      * Updates the sort criterion and executes a new search.
      * @param criterion The new sort criterion.
      */
-    sortBy(criterion: SortCriterion) {
+    sortBy(criterion: SortCriterion | SortCriterion[]) {
       dispatch(updateSortCriterion(criterion));
       dispatch(updatePage(1));
       search();
@@ -56,8 +59,8 @@ export function buildSort(
      * @param criterion The criterion to compare.
      * @returns {boolean}
      */
-    isSortedBy(criterion: SortCriterion) {
-      return this.state.sortCriteria === criterion.expression;
+    isSortedBy(criterion: SortCriterion | SortCriterion[]) {
+      return this.state.sortCriteria === buildCriterionExpression(criterion);
     },
 
     /**  @returns The state of the `Sort` controller.*/

@@ -3,6 +3,8 @@ import {Sort, SortProps, buildSort} from './headless-sort';
 import {
   buildRelevanceSortCriterion,
   buildDateSortCriterion,
+  SortOrder,
+  buildCriterionExpression,
 } from '../../features/sort-criteria/criteria';
 import {
   registerSortCriterion,
@@ -48,7 +50,7 @@ describe('Sort', () => {
   });
 
   describe('when calling #sortBy with a criterion', () => {
-    const criterion = buildDateSortCriterion('descending');
+    const criterion = buildDateSortCriterion(SortOrder.Descending);
 
     beforeEach(() => {
       sort.sortBy(criterion);
@@ -72,18 +74,21 @@ describe('Sort', () => {
   });
 
   describe('when the store #sortCiteria is set', () => {
-    const criterionInState = buildDateSortCriterion('ascending');
+    const criterionInState = buildDateSortCriterion(SortOrder.Descending);
+    const criterionInStateExpression = buildCriterionExpression(
+      criterionInState
+    );
 
     beforeEach(() => {
       const state = createMockState({
-        sortCriteria: criterionInState.expression,
+        sortCriteria: criterionInStateExpression,
       });
       engine = buildMockSearchAppEngine({state});
       initSort();
     });
 
     it('calling #state returns the sortCriteria expression', () => {
-      expect(sort.state).toEqual({sortCriteria: criterionInState.expression});
+      expect(sort.state).toEqual({sortCriteria: criterionInStateExpression});
     });
 
     it('calling #isSortedBy with a criterion equal to the one in state returns true', () => {

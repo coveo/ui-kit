@@ -1,20 +1,18 @@
 import {createAction} from '@reduxjs/toolkit';
-import {SortCriterion} from './criteria';
+import {SortBy, SortCriterion} from './criteria';
 import {validatePayloadSchema} from '../../utils/validate-payload';
-import {StringValue} from '@coveo/bueno';
+import {EnumValue, isArray, SchemaDefinition} from '@coveo/bueno';
 
 const criterionDefinition = {
-  expression: new StringValue({required: true, emptyAllowed: false}),
-};
-
+  by: new EnumValue<SortBy>({enum: SortBy, required: true}),
+} as SchemaDefinition<SortCriterion>;
 /**
  * Initializes the sortCriteria query parameter. For more information, refer to [the documentation on query parameters](https://docs.coveo.com/en/1461/cloud-v2-developers/query-parameters#RestQueryParameters-sortCriteria).
  * @param payload (SortCriterion) The initial sort criterion.
  */
 export const registerSortCriterion = createAction(
   'sortCriteria/register',
-  (payload: SortCriterion) =>
-    validatePayloadSchema(payload, criterionDefinition)
+  (payload: SortCriterion | SortCriterion[]) => validate(payload)
 );
 
 /**
@@ -23,6 +21,13 @@ export const registerSortCriterion = createAction(
  */
 export const updateSortCriterion = createAction(
   'sortCriteria/update',
-  (payload: SortCriterion) =>
-    validatePayloadSchema(payload, criterionDefinition)
+  (payload: SortCriterion | SortCriterion[]) => validate(payload)
 );
+
+const validate = (payload: SortCriterion | SortCriterion[]) => {
+  if (isArray(payload)) {
+    payload.forEach((p) => validatePayloadSchema(p, criterionDefinition));
+    return {payload};
+  }
+  return validatePayloadSchema(payload, criterionDefinition);
+};

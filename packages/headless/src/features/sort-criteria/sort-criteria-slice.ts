@@ -6,13 +6,18 @@ import {
 
 import {change} from '../history/history-actions';
 import {getSortCriteriaInitialState} from './sort-criteria-state';
+import {buildCriterionExpression} from './criteria';
 
 export const sortCriteriaReducer = createReducer(
   getSortCriteriaInitialState(),
   (builder) => {
     builder
-      .addCase(registerSortCriterion, (_, action) => action.payload.expression)
-      .addCase(updateSortCriterion, (_, action) => action.payload.expression)
+      .addCase(registerSortCriterion, (_, action) =>
+        buildCriterionExpression(action.payload)
+      )
+      .addCase(updateSortCriterion, (_, action) =>
+        buildCriterionExpression(action.payload)
+      )
       .addCase(change.fulfilled, (_, action) => action.payload.sortCriteria);
   }
 );

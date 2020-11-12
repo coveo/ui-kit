@@ -3,11 +3,16 @@ import {
   registerSortCriterion,
   updateSortCriterion,
 } from './sort-criteria-actions';
-import {buildFieldSortCriterion, buildRelevanceSortCriterion} from './criteria';
 import {
   getSortCriteriaInitialState,
   SortCriteriaState,
 } from './sort-criteria-state';
+import {
+  buildCriterionExpression,
+  buildFieldSortCriterion,
+  buildRelevanceSortCriterion,
+  SortOrder,
+} from './criteria';
 
 describe('sortCriteria', () => {
   let initialState: SortCriteriaState;
@@ -22,11 +27,11 @@ describe('sortCriteria', () => {
   });
 
   it('#registerSortCriterion updates the state to the passed criterion expression', () => {
-    const criterion = buildFieldSortCriterion('author', 'ascending');
+    const criterion = buildFieldSortCriterion('author', SortOrder.Ascending);
     const action = registerSortCriterion(criterion);
-    const finalState = sortCriteriaReducer(initialState, action);
 
-    expect(finalState).toBe(criterion.expression);
+    const finalState = sortCriteriaReducer(initialState, action);
+    expect(finalState).toBe(buildCriterionExpression(criterion));
   });
 
   it('when an updateSortCriterion is received, it updates the state to the passed criterion expression', () => {
@@ -34,6 +39,6 @@ describe('sortCriteria', () => {
     const action = updateSortCriterion(criterion);
     const finalState = sortCriteriaReducer(initialState, action);
 
-    expect(finalState).toBe(criterion.expression);
+    expect(finalState).toBe(buildCriterionExpression(criterion));
   });
 });
