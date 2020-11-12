@@ -58,6 +58,5 @@
         "src/**/*.ts",
         "LICENSE"
     ],
-    "prettier": "tsjs/prettier-config",
-    "dependencies": {}
+    "prettier": "tsjs/prettier-config"
 }

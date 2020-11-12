@@ -1,11 +1,11 @@
 import * as detector from './detector';
 import {Cookie} from './cookieutils';
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export let preferredStorage: WebStorage | null = null;
 
 export interface WebStorage {
-    getItem(key: string): string | null;
+    getItem(key: string): string | null | Promise<string | null>;
     removeItem(key: string): void;
     setItem(key: string, data: string): void;
 }

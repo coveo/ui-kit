@@ -26,7 +26,11 @@ import {
     isMeasurementProtocolKey,
     convertCustomMeasurementProtocolKeys,
 } from './measurementProtocolMapper';
-import {IRuntimeEnvironment, BrowserRuntime, NoopRuntime, ReactNativeRuntime} from './runtimeEnvironment';
+import {
+    IRuntimeEnvironment,
+    BrowserRuntime,
+    NodeJSRuntime,
+} from './runtimeEnvironment';
 import HistoryStore from '../history';
 import {isApiKey} from './token';
 
@@ -105,7 +109,6 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
         this.beforeSendHooks = [enhanceViewEvent, addDefaultValues];
         this.eventTypeMapping = {};
 
-
         const clientsOptions = {
             baseUrl: this.baseUrl,
             token: this.options.token,
@@ -114,18 +117,13 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
 
         this.runtime = this.options.runtimeEnvironment || this.initRuntime(clientsOptions);
         this.analyticsFetchClient = new AnalyticsFetchClient(clientsOptions);
-
-        this.initVisitorId().catch(err => console.error("Could not get a visitor ID, ensure the runtime environment is valid", err));
     }
 
     private initRuntime(clientsOptions: IAnalyticsBeaconClientOptions) {
         if (hasWindow() && hasDocument()) {
             return new BrowserRuntime(clientsOptions, () => this.flushBufferWithBeacon());
-        } else if (typeof navigator !== 'undefined' && navigator.product == 'ReactNative') {
-            return new ReactNativeRuntime(clientsOptions);
-        }1
-
-        return new NoopRuntime();
+        }
+        return new NodeJSRuntime(clientsOptions);
     }
 
     private get analyticsBeaconClient() {
@@ -136,10 +134,24 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
         return this.runtime.storage;
     }
 
-    private async initVisitorId() {
-        console.log(this.storage.getItem('visitorId'));
-        const existingVisitorId = this.visitorId || await this.storage.getItem('visitorId') || '';
-        this.currentVisitorId = existingVisitorId || uuidv4();
+    async getCurrentVisitorId() {
+        if (!this.currentVisitorId) {
+            try {
+                const existingVisitorId = this.visitorId || (await this.storage.getItem('visitorId')) || null;
+                this.currentVisitorId = existingVisitorId || uuidv4();
+            }  catch (err) {
+                console.log(
+                  'Could not get visitor ID from the current runtime environment storage. Using a random ID instead.',
+                  err
+                );
+                this.currentVisitorId = uuidv4();
+            }
+        }
+        return this.visitorId!;
+    }
+
+    setVisitorId(visitorId: string) {
+        this.currentVisitorId = visitorId;
     }
 
     get currentVisitorId() {

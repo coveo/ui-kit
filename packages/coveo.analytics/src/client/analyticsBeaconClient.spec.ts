@@ -27,7 +27,8 @@ describe('AnalyticsBeaconClient', () => {
             baseUrl,
             token,
             visitorIdProvider: {
-                currentVisitorId,
+                getCurrentVisitorId: () => {return Promise.resolve(currentVisitorId)},
+                setVisitorId: visitorId => {}
             },
         });
 
@@ -49,7 +50,8 @@ describe('AnalyticsBeaconClient', () => {
             baseUrl,
             token,
             visitorIdProvider: {
-                currentVisitorId,
+                getCurrentVisitorId: () => {return Promise.resolve(currentVisitorId)},
+                setVisitorId: visitorId => {}
             },
         });
 
@@ -74,7 +76,8 @@ describe('AnalyticsBeaconClient', () => {
             baseUrl,
             token,
             visitorIdProvider: {
-                currentVisitorId,
+                getCurrentVisitorId: () => {return Promise.resolve(currentVisitorId)},
+                setVisitorId: visitorId => {}
             },
         });
 
