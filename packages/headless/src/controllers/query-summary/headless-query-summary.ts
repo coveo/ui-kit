@@ -38,7 +38,7 @@ export const buildQuerySummary = (
         query: state.search.queryExecuted,
         hasQuery: state.search.queryExecuted !== '',
         hasDuration: state.search.duration !== 0,
-        hasResults: state.search.response.results.length !== 0,
+        hasResults: state.search.results.length !== 0,
         durationInMilliseconds: state.search.duration,
         durationInSeconds: durationInSeconds(),
       };
