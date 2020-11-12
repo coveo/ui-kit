@@ -88,7 +88,11 @@ export class AtomicResultList {
   public render() {
     return [
       ...this.results,
-      <button id="fetch-more-results" onClick={() => this.fetchMoreResults()}>
+      <button
+        id="fetch-more-results"
+        onClick={() => this.fetchMoreResults()}
+        disabled={this.state.isLoading}
+      >
         Fetch more results
       </button>,
     ];
