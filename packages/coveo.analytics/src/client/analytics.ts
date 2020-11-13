@@ -150,7 +150,7 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
         return this.visitorId!;
     }
 
-    setVisitorId(visitorId: string) {
+    setCurrentVisitorId(visitorId: string) {
         this.currentVisitorId = visitorId;
     }
 

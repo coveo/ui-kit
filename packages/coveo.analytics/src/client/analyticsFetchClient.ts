@@ -26,7 +26,7 @@ export class AnalyticsFetchClient implements AnalyticsRequestClient {
             const visit = (await response.json()) as AnyEventResponse;
 
             if (visit.visitorId) {
-                visitorIdProvider.setVisitorId(visit.visitorId)
+                visitorIdProvider.setCurrentVisitorId(visit.visitorId)
             }
 
             return visit;

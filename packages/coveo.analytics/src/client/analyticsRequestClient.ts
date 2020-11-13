@@ -2,7 +2,7 @@ import {AnyEventResponse, IRequestPayload} from '../events';
 
 export interface VisitorIdProvider {
     getCurrentVisitorId: () => Promise<string>;
-    setVisitorId: (visitorId: string) => void;
+    setCurrentVisitorId: (visitorId: string) => void;
 }
 
 export interface AnalyticsRequestClient {
