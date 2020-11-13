@@ -1,0 +1,11 @@
+// Lets users use most of Bootstrap capabilities in their result templates.
+// List subject to changes
+@import '../../../node_modules/bootstrap/scss/containers.scss';
+@import '../../../node_modules/bootstrap/scss/grid.scss';
+@import '../../../node_modules/bootstrap/scss/tables.scss';
+@import '../../../node_modules/bootstrap/scss/buttons.scss';
+@import '../../../node_modules/bootstrap/scss/card.scss';
+@import '../../../node_modules/bootstrap/scss/alert.scss';
+@import '../../../node_modules/bootstrap/scss/badge.scss';
+
+@import 'utilities';

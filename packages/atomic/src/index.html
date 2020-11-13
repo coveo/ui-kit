@@ -19,19 +19,31 @@
     })();
   </script> -->
     <style>
+      * {
+        box-sizing: border-box;
+      }
+
       :root {
-        /**
-        * It will be possible to rename the prefix for CSS varibles in the v5.0.0-alpha3 of Bootstrap 
-        * see PR: https://github.com/twbs/bootstrap/pull/31684
-        */
-        --bs-font-sans-serif: 'Lato', 'Helvetica Neue', Helvetica, Arial, sans-serif, sans-serif;
+        --bs-font-sans-serif: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif,
+          'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
         --atomic-border-radius: 0.5em;
       }
 
-      /* Example on how to customize CSS parts */
+      /* Example on how to customize Atomic component CSS parts */
       atomic-search-box::part(submit-button) {
         background-color: #ed731a;
         border-color: #ed731a;
+      }
+
+      /* Example on how to customize default templates CSS parts */
+      atomic-result-list::part(author)::after {
+        content: ' 😊';
+      }
+
+      /* Example on how to customize custom templates CSS parts */
+      atomic-result-list::part(france-title)::before,
+      atomic-result-list::part(france-title)::after {
+        content: '🇫🇷';
       }
     </style>
   </head>
@@ -59,7 +71,7 @@
               <atomic-category-facet field="geographicalhierarchy" label="World Atlas"></atomic-category-facet>
             </atomic-facet-manager>
           </div>
-          <div class="col-8">
+          <div class="col">
             <div class="row">
               <atomic-breadcrumb-manager></atomic-breadcrumb-manager>
             </div>
@@ -76,34 +88,24 @@
 
             <div class="row">
               <atomic-result-list>
-                <atomic-result-template
-                  must-match-source="Coveo Samples - GoogleDrive"
-                  fields-to-include="testfieldtoinclude"
-                >
+                <atomic-result-template id="france-template">
                   <hr />
-                  <h3><a href="{{clickUri}}">{{title}}</a></h3>
-                  <p>{{excerpt}}</p>
-
-                  <atomic-field-condition if-defined="author" must-match-gdfiletitle="Treasure Island">
-                    <atomic-result-value value="author"> </atomic-result-value>
-                    <span style="margin-right: 30px"> the bestselling author!</span>
-                  </atomic-field-condition>
-
-                  <atomic-field-condition if-defined="gdfilemimetype">
-                    <b>Mime type:&nbsp;</b>
-                    <atomic-result-value value="gdfilemimetype" style="margin-right: 30px"> </atomic-result-value>
-                  </atomic-field-condition>
-                </atomic-result-template>
-
-                <atomic-result-template id="top-stories-template">
-                  <hr />
-                  <h1>Don't miss: <a href="{{clickUri}}">{{title}}</a>!!!</h1>
+                  <div class="card" style="width: 18rem">
+                    <img
+                      src="https://www.cia-france.com/media/1558/parcarou1_720x500.jpg"
+                      class="card-img-top"
+                      alt="Paris"
+                    />
+                    <div class="card-body">
+                      <h5 class="card-title" part="france-title">{{title}}</h5>
+                      <p class="card-text"><atomic-result-value value="excerpt"> </atomic-result-value></p>
+                      <a href="{{clickUri}}" class="btn btn-primary">More info</a>
+                    </div>
+                  </div>
                 </atomic-result-template>
 
                 <script>
-                  document.querySelector('#top-stories-template').conditions = [
-                    (result) => result.title === 'TOP STORIES',
-                  ];
+                  document.querySelector('#france-template').conditions = [(result) => result.title === 'France'];
                 </script>
               </atomic-result-list>
             </div>

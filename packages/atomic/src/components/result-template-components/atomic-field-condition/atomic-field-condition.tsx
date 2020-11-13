@@ -1,4 +1,4 @@
-import {Component, Prop, h, Method} from '@stencil/core';
+import {Component, Prop, h, Method, Element} from '@stencil/core';
 import {
   Result,
   ResultTemplateCondition,
@@ -15,6 +15,7 @@ import {MapProp} from '../../../utils/props-utils';
   shadow: true,
 })
 export class AtomicFieldCondition {
+  @Element() host!: HTMLElement;
   @Prop() ifDefined?: string;
 
   @Prop() conditions: ResultTemplateCondition[] = [];
@@ -22,10 +23,11 @@ export class AtomicFieldCondition {
   @MapProp() mustNotMatch: Record<string, string[]> = {};
 
   private fields: string[] = [];
+  private shouldBeRemoved = false;
 
   @ResultContext() private result!: Result;
 
-  componentWillLoad() {
+  public componentWillLoad() {
     if (this.ifDefined) {
       const fieldNames = this.ifDefined.split(',');
       this.fields.push(...fieldNames);
@@ -55,14 +57,19 @@ export class AtomicFieldCondition {
   @ResultContextRenderer
   public render() {
     if (!this.conditions.every((condition) => condition(this.result))) {
+      this.shouldBeRemoved = true;
       return '';
     }
 
     return <slot />;
   }
 
+  public componentDidLoad() {
+    this.shouldBeRemoved && this.host.remove();
+  }
+
   @Method()
-  async getFields() {
+  public async getFields() {
     return this.fields;
   }
 }

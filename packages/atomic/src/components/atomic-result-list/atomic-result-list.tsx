@@ -13,7 +13,7 @@ import {Initialization} from '../../utils/initialization-utils';
 
 @Component({
   tag: 'atomic-result-list',
-  styleUrl: 'atomic-result-list.css',
+  styleUrl: 'atomic-result-list.scss',
   shadow: true,
 })
 export class AtomicResultList {
