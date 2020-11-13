@@ -53,7 +53,7 @@ const schema = new Schema({
   facetId: new StringValue({default: () => randomID('facet')}),
   /** The field whose values you want to display in the facet.*/
   field: new StringValue({required: true}),
-  delimitingCharacter: new StringValue({default: '>'}),
+  delimitingCharacter: new StringValue<string>({default: '>'}),
   filterFacetCount: new BooleanValue({default: true}),
   injectionDepth: new NumberValue({default: 1000}),
   numberOfValues: new NumberValue({default: 8, min: 1}),
