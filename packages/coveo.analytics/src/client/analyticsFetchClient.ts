@@ -49,7 +49,7 @@ export class AnalyticsFetchClient implements AnalyticsRequestClient {
 
     private async getVisitorIdParam() {
         const {visitorIdProvider} = this.opts;
-        const visitorId = await visitorIdProvider.getCurrentVisitorId;
+        const visitorId = await visitorIdProvider.getCurrentVisitorId();
         return visitorId ? `?visitor=${visitorId}` : '';
     }
 

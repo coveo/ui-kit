@@ -135,29 +135,39 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
     }
 
     async getCurrentVisitorId() {
-        if (!this.currentVisitorId) {
+        if (!this.visitorId) {
             try {
                 const existingVisitorId = this.visitorId || (await this.storage.getItem('visitorId')) || null;
-                this.currentVisitorId = existingVisitorId || uuidv4();
+                this.visitorId = existingVisitorId || uuidv4();
             }  catch (err) {
                 console.log(
                   'Could not get visitor ID from the current runtime environment storage. Using a random ID instead.',
                   err
                 );
-                this.currentVisitorId = uuidv4();
+                this.visitorId = uuidv4();
             }
         }
         return this.visitorId!;
     }
 
     setCurrentVisitorId(visitorId: string) {
-        this.currentVisitorId = visitorId;
+        this.visitorId = visitorId;
+        this.storage.setItem('visitorId', visitorId);
     }
 
+    /**
+     * @deprecated Synchronous method is deprecated, use getCurrentVisitorId instead. This method will NOT work with react-native.
+     */
     get currentVisitorId() {
+        if (!this.visitorId) {
+            this.setCurrentVisitorId(uuidv4())
+        }
         return this.visitorId;
     }
 
+    /**
+     * @deprecated Synchronous method is deprecated, use setCurrentVisitorId instead. This method will NOT work with react-native.
+     */
     set currentVisitorId(visitorId: string) {
         this.visitorId = visitorId;
         this.storage.setItem('visitorId', visitorId);
