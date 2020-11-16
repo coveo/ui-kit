@@ -2,10 +2,6 @@ import {
   DateRangeRequest,
   DateFacetRequest,
 } from '../../../../features/facets/range-facets/date-facet-set/interfaces/request';
-import {
-  AutomaticRangeFacetOptions,
-  ManualRangeFacetOptions,
-} from '../../../../features/facets/range-facets/generic/interfaces/options';
 import {Engine} from '../../../../app/headless-engine';
 import {randomID} from '../../../../utils/utils';
 import {DateFacetRegistrationOptions} from '../../../../features/facets/range-facets/date-facet-set/interfaces/options';
@@ -21,6 +17,11 @@ import {
   SearchSection,
 } from '../../../../state/state-sections';
 import {executeToggleDateFacetSelect} from '../../../../features/facets/range-facets/date-facet-set/date-facet-controller-actions';
+import {validateOptions} from '../../../../utils/validate-payload';
+import {
+  DateFacetOptions,
+  dateFacetOptionsSchema,
+} from './headless-date-facet-options';
 
 type DateRangeOptions = Pick<DateRangeRequest, 'start' | 'end'> &
   Partial<DateRangeRequest>;
@@ -33,14 +34,10 @@ export function buildDateRange(config: DateRangeOptions): DateRangeRequest {
   };
 }
 
+export {DateFacetOptions};
 export type DateFacetProps = {
   options: DateFacetOptions;
 };
-
-export type DateFacetOptions = {facetId?: string} & (
-  | Omit<AutomaticRangeFacetOptions<DateFacetRequest>, 'facetId'>
-  | Omit<ManualRangeFacetOptions<DateFacetRequest>, 'facetId'>
-);
 
 /** The `DateFacet` controller makes it possible to create a facet with date ranges.*/
 export type DateFacet = ReturnType<typeof buildDateFacet>;
@@ -54,6 +51,8 @@ export function buildDateFacet(
 
   const facetId = props.options.facetId || randomID('dateFacet');
   const options: DateFacetRegistrationOptions = {facetId, ...props.options};
+
+  validateOptions(dateFacetOptionsSchema, options, buildDateFacet.name);
 
   dispatch(registerDateFacet(options));
 

@@ -49,6 +49,13 @@ describe('date facet', () => {
     expect(engine.actions).toContainEqual(action);
   });
 
+  it('when an option is invalid, it throws an error', () => {
+    options.numberOfValues = 0;
+    expect(() => initDateFacet()).toThrow(
+      'Check the options of buildDateFacet'
+    );
+  });
+
   describe('#toggleSelect', () => {
     it('dispatches a toggleSelectDateFacetValue with the passed value', () => {
       const value = buildMockDateFacetValue();

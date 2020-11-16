@@ -1,4 +1,3 @@
-import {Schema, StringValue, BooleanValue, NumberValue} from '@coveo/bueno';
 import {buildController} from '../../controller/headless-controller';
 import {Engine} from '../../../app/headless-engine';
 import {
@@ -13,7 +12,6 @@ import {
   facetRequestSelector,
   facetResponseSelector,
 } from '../../../features/facets/facet-set/facet-set-selectors';
-import {FacetRegistrationOptions} from '../../../features/facets/facet-set/interfaces/options';
 import {executeSearch} from '../../../features/search/search-actions';
 import {
   logFacetClearAll,
@@ -22,10 +20,7 @@ import {
   logFacetShowLess,
 } from '../../../features/facets/facet-set/facet-set-analytics-actions';
 import {buildFacetSearch} from '../facet-search/specific/headless-facet-search';
-import {
-  FacetSearchRequestOptions,
-  FacetSearchOptions,
-} from '../../../features/facets/facet-search-set/facet-search-request-options';
+import {FacetSearchOptions} from '../../../features/facets/facet-search-set/facet-search-request-options';
 import {FacetValue} from '../../../features/facets/facet-set/interfaces/response';
 import {FacetSortCriterion} from '../../../features/facets/facet-set/interfaces/request';
 import {updateFacetOptions} from '../../../features/facet-options/facet-options-actions';
@@ -37,36 +32,18 @@ import {
 } from '../../../state/state-sections';
 import {isFacetValueSelected} from '../../../features/facets/facet-set/facet-set-utils';
 import {executeToggleFacetSelect} from '../../../features/facets/facet-set/facet-set-controller-actions';
+import {validateOptions} from '../../../utils/validate-payload';
+import {defaultFacetOptions} from '../../../features/facets/facet-set/facet-set-slice';
+import {defaultFacetSearchOptions} from '../../../features/facets/facet-search-set/facet-search-reducer-helpers';
+import {FacetOptions, facetOptionsSchema} from './headless-facet-options';
 
-export type Facet = ReturnType<typeof buildFacet>;
-export type FacetState = Facet['state'];
-
+export {FacetOptions};
 export type FacetProps = {
   options: FacetOptions;
 };
 
-const schema = new Schema({
-  /**
-   * A unique identifier for the controller.
-   * By default, a unique random identifier is generated.
-   */
-  facetId: new StringValue({default: () => randomID('facet')}),
-  /** The field whose values you want to display in the facet.*/
-  field: new StringValue({required: true}),
-  delimitingCharacter: new StringValue<string>({default: '>'}),
-  filterFacetCount: new BooleanValue({default: true}),
-  injectionDepth: new NumberValue({default: 1000}),
-  numberOfValues: new NumberValue({default: 8, min: 1}),
-});
-
-export type FacetOptions = Omit<FacetRegistrationOptions, 'facetId'> & {
-  facetId?: string;
-  facetSearch?: Partial<FacetSearchRequestOptions>;
-};
-
-export type ValidatedFacetOptions = FacetRegistrationOptions & {
-  facetSearch: Partial<FacetSearchRequestOptions>;
-};
+export type Facet = ReturnType<typeof buildFacet>;
+export type FacetState = Facet['state'];
 
 export function buildFacet(
   engine: Engine<
@@ -74,9 +51,18 @@ export function buildFacet(
   >,
   props: FacetProps
 ) {
+  const {dispatch} = engine;
   const controller = buildController(engine);
-  const options = schema.validate(props.options) as ValidatedFacetOptions;
-  const dispatch = engine.dispatch;
+
+  const facetId = props.options.facetId || randomID('facet');
+  const options: Required<FacetOptions> = {
+    facetId,
+    facetSearch: {...defaultFacetSearchOptions},
+    ...defaultFacetOptions,
+    ...props.options,
+  };
+
+  validateOptions(facetOptionsSchema, options, buildFacet.name);
 
   const createFacetSearch = () => {
     const {facetId, facetSearch} = options;
@@ -88,19 +74,8 @@ export function buildFacet(
     return buildFacetSearch(engine, {options: facetSearchOptions});
   };
 
-  const getRequest = () => {
-    const id = options.facetId;
-    const state = engine.state;
-
-    return facetRequestSelector(state, id);
-  };
-
-  const getResponse = () => {
-    const id = options.facetId;
-    const state = engine.state;
-
-    return facetResponseSelector(state, id);
-  };
+  const getRequest = () => facetRequestSelector(engine.state, facetId);
+  const getResponse = () => facetResponseSelector(engine.state, facetId);
 
   const getNumberOfActiveValues = () => {
     const {currentValues} = getRequest();
@@ -109,10 +84,10 @@ export function buildFacet(
 
   const computeCanShowLessValues = () => {
     const {currentValues} = getRequest();
-    const configuredNumber = options.numberOfValues!;
+    const initialNumberOfValues = options.numberOfValues;
     const hasIdleValues = !!currentValues.find((v) => v.state === 'idle');
 
-    return configuredNumber < currentValues.length && hasIdleValues;
+    return initialNumberOfValues < currentValues.length && hasIdleValues;
   };
 
   dispatch(registerFacet(options));
@@ -135,19 +110,15 @@ export function buildFacet(
 
     /** Deselects all facet values.*/
     deselectAll() {
-      const id = options.facetId;
-
-      dispatch(deselectAllFacetValues(id));
+      dispatch(deselectAllFacetValues(facetId));
       dispatch(updateFacetOptions({freezeFacetOrder: true}));
-      dispatch(executeSearch(logFacetClearAll(id)));
+      dispatch(executeSearch(logFacetClearAll(facetId)));
     },
 
     /** Sorts the facet values according to the passed criterion.
      * @param {FacetSortCriterion} criterion The criterion to sort values by.
      */
     sortBy(criterion: FacetSortCriterion) {
-      const facetId = options.facetId;
-
       dispatch(updateFacetSortCriterion({facetId, criterion}));
       dispatch(updateFacetOptions({freezeFacetOrder: true}));
       dispatch(executeSearch(logFacetUpdateSort({facetId, criterion})));
@@ -165,11 +136,10 @@ export function buildFacet(
      * Increases the number of values displayed in the facet.
      */
     showMoreValues() {
-      const facetId = options.facetId;
       const numberInState = getRequest().numberOfValues;
-      const configuredNumber = options.numberOfValues!;
+      const initialNumberOfValues = options.numberOfValues;
       const numberToNextMultipleOfConfigured =
-        configuredNumber - (numberInState % configuredNumber);
+        initialNumberOfValues - (numberInState % initialNumberOfValues);
       const numberOfValues = numberInState + numberToNextMultipleOfConfigured;
 
       dispatch(updateFacetNumberOfValues({facetId, numberOfValues}));
@@ -180,9 +150,9 @@ export function buildFacet(
 
     /** Sets the displayed number of values to the originally configured value.*/
     showLessValues() {
-      const {facetId, numberOfValues} = options;
+      const initialNumberOfValues = options.numberOfValues;
       const newNumberOfValues = Math.max(
-        numberOfValues!,
+        initialNumberOfValues,
         getNumberOfActiveValues()
       );
 

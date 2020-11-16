@@ -1,10 +1,6 @@
 import {Engine} from '../../../../app/headless-engine';
 import {randomID} from '../../../../utils/utils';
 import {
-  AutomaticRangeFacetOptions,
-  ManualRangeFacetOptions,
-} from '../../../../features/facets/range-facets/generic/interfaces/options';
-import {
   NumericFacetRequest,
   NumericRangeRequest,
 } from '../../../../features/facets/range-facets/numeric-facet-set/interfaces/request';
@@ -21,6 +17,11 @@ import {
   SearchSection,
 } from '../../../../state/state-sections';
 import {executeToggleNumericFacetSelect} from '../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-controller-actions';
+import {validateOptions} from '../../../../utils/validate-payload';
+import {
+  NumericFacetOptions,
+  numericFacetOptionsSchema,
+} from './headless-numeric-facet-options';
 
 type NumericRangeOptions = Pick<NumericRangeRequest, 'start' | 'end'> &
   Partial<NumericRangeRequest>;
@@ -35,14 +36,10 @@ export function buildNumericRange(
   };
 }
 
+export {NumericFacetOptions};
 export type NumericFacetProps = {
   options: NumericFacetOptions;
 };
-
-export type NumericFacetOptions = {facetId?: string} & (
-  | Omit<AutomaticRangeFacetOptions<NumericFacetRequest>, 'facetId'>
-  | Omit<ManualRangeFacetOptions<NumericFacetRequest>, 'facetId'>
-);
 
 /** The `NumericFacet` controller makes it possible to create a facet with numeric ranges.*/
 export type NumericFacet = ReturnType<typeof buildNumericFacet>;
@@ -56,6 +53,8 @@ export function buildNumericFacet(
 
   const facetId = props.options.facetId || randomID('numericFacet');
   const options: NumericFacetRegistrationOptions = {facetId, ...props.options};
+
+  validateOptions(numericFacetOptionsSchema, options, buildNumericFacet.name);
 
   dispatch(registerNumericFacet(options));
 

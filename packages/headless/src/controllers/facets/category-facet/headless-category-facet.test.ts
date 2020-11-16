@@ -92,6 +92,13 @@ describe('category facet', () => {
     expect(engine.actions).toContainEqual(action);
   });
 
+  it('when an option is invalid, it throws', () => {
+    options.numberOfValues = 0;
+    expect(() => initCategoryFacet()).toThrow(
+      'Check the options of buildCategoryFacet'
+    );
+  });
+
   it('is subscribable', () => {
     expect(categoryFacet.subscribe).toBeDefined();
   });
