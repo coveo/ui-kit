@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.1.0-alpha.54](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.53...v0.1.0-alpha.54) (2020-11-17)
+
+
+### Bug Fixes
+
+* **atomic:** register fields before the first query is executed ([0cb8857](https://bitbucket.org/coveord/ui-kit/commits/0cb88575f3889a2e50bbce05057df593210a13df))
+
+
+
+
+
 # [0.1.0-alpha.53](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.52...v0.1.0-alpha.53) (2020-11-17)
 
 **Note:** Version bump only for package @coveo/atomic
