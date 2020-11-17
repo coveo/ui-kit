@@ -2,6 +2,8 @@ import {createAsyncThunk, AsyncThunkAction} from '@reduxjs/toolkit';
 import {configureAnalytics} from '../../api/analytics/analytics';
 import {SearchPageEvents} from 'coveo.analytics/dist/definitions/searchPage/searchPageEvents';
 import {SearchAppState} from '../../state/search-app-state';
+import {validatePayloadSchema} from '../../utils/validate-payload';
+import {StringValue, RecordValue} from '@coveo/bueno';
 
 export const searchPageState = (getState: () => unknown) =>
   getState() as SearchAppState;
@@ -52,7 +54,10 @@ export interface GenericSearchEventPayload<T = unknown> {
 export const logGenericSearchEvent = createAsyncThunk(
   'analytics/generic/search',
   async (p: GenericSearchEventPayload, {getState}) => {
-    //TODO: Validate payload
+    validatePayloadSchema(p, {
+      evt: new StringValue({required: true, emptyAllowed: false}),
+      meta: new RecordValue(),
+    });
     const {evt, meta} = p;
     const state = searchPageState(getState);
     await configureAnalytics(state).logSearchEvent(

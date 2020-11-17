@@ -40,6 +40,15 @@ describe('advanced search parameters', () => {
     expect(state).toEqual(expected);
   });
 
+  it('#updateAdvancedSearchQueries when setting cq, does not modify aq which is not in initial state', () => {
+    const expected = {aq: aq, cq: cq};
+    const action = updateAdvancedSearchQueries({cq: cq});
+    state = {aq: aq, cq: ''};
+    state = advancedSearchQueriesReducer(state, action);
+
+    expect(state).toEqual(expected);
+  });
+
   it('allows a restore query on history change', () => {
     const expectedQuery: AdvancedSearchQueriesState = {
       cq: 'hello',

@@ -80,7 +80,7 @@ describe('range facet reducers', () => {
 
       register(options);
 
-      expect(state[facetId].numberOfValues).toBe(options.currentValues.length);
+      expect(state[facetId].numberOfValues).toBe(options.currentValues?.length);
     });
 
     it(`when #generateAutomaticRanges is true, and the number of hard-coded ranges is greater than the #numberOfValues,
