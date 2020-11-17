@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.1.0-alpha.53](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.52...v0.1.0-alpha.53) (2020-11-17)
+
+
+### Features
+
+* **headless:**  Actions payload validation ([0a38be5](https://bitbucket.org/coveord/ui-kit/commits/0a38be552a86da06dcb7eb5387890f5dbfce4cf6))
+
+
+
+
+
 # [0.1.0-alpha.52](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.51...v0.1.0-alpha.52) (2020-11-16)
 
 
