@@ -265,7 +265,7 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
 
     addEventTypeMapping(eventType: string, eventConfig: EventTypeConfig): void {
         this.eventTypeMapping[eventType] = eventConfig;
-    } 
+    }
 
     private parseVariableArgumentsPayload(fieldsOrder: string[], payload: VariableArgumentsPayload) {
         const parsedArguments: {[name: string]: any} = {};

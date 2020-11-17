@@ -376,7 +376,7 @@ describe('SearchPageClient', () => {
 
     it('should send proper payload for #fetchMoreResults', async () => {
         await client.logFetchMoreResults();
-        expectMatchCustomEventPayload(SearchPageEvents.pagerScrolling, { type: 'getMoreResults' });
+        expectMatchCustomEventPayload(SearchPageEvents.pagerScrolling, {type: 'getMoreResults'});
     });
 
     it('should enable analytics tracking by default', () => {

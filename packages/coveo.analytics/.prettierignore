@@ -1,13 +1,14 @@
-.vscode
+.DS_STORE
+.idea
+
+# Package management
 node_modules
-coverage
-assets
+typings
+npm-debug.log
+
+# Build files
 dist
 dist_test
-*.sh
-.gitignore
-.mailmap
-.npmignore
-.prettierignore
-package-lock.json
-public
+.nyc_output
+node_modules
+coverage
