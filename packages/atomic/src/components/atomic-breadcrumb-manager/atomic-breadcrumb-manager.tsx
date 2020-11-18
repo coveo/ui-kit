@@ -13,9 +13,17 @@ import {
   CategoryFacetValue,
 } from '@coveo/headless';
 
+/**
+ * @part container - The contianer for all breadcrumbs
+ * @part facet-breadcrumb - The container for facet breadcrumbs
+ * @part numeric-breadcrumbs - The container for numeric breadcrumbs
+ * @part date-breadcrumbs - The container for date breadcrumbs
+ * @part category-breadcrumbs - The container for category breadcrumbs
+ */
+
 @Component({
   tag: 'atomic-breadcrumb-manager',
-  styleUrl: 'atomic-breadcrumb-manager.css',
+  styleUrl: 'atomic-breadcrumb-manager.scss',
   shadow: true,
 })
 export class AtomicBreadcrumbManager {
@@ -46,29 +54,84 @@ export class AtomicBreadcrumbManager {
   }
 
   private get facetBreadcrumbs() {
-    return this.state.facetBreadcrumbs.map((breadcrumb: FacetBreadcrumb) => (
-      <button onClick={breadcrumb.deselect}>{breadcrumb.value.value}</button>
-    ));
+    const breadcrumbs = Object.keys(this.state.facetBreadcrumbs).map(
+      (field) => {
+        const fieldBreadcrumbs = this.state.facetBreadcrumbs[field].map(
+          (breadcrumb: FacetBreadcrumb) => (
+            <li class="breadcrumb-item">
+              <button
+                class="btn btn-link btn-sm text-decoration-none text-primary p-0 m-0"
+                onClick={breadcrumb.deselect}
+              >
+                {breadcrumb.value.value}
+              </button>
+            </li>
+          )
+        );
+        return (
+          <ul part="facet-breadcrumb" class="breadcrumb p-0 m-0 bg-transparent">
+            <li>{field} : &nbsp;</li>
+            {fieldBreadcrumbs}
+          </ul>
+        );
+      }
+    );
+    return breadcrumbs;
   }
 
   private get numericFacetBreadcrumbs() {
-    return this.state.numericFacetBreadcrumbs.map(
-      (breadcrumb: NumericFacetBreadcrumb) => (
-        <button onClick={breadcrumb.deselect}>
-          {breadcrumb.value.start} - {breadcrumb.value.end}
-        </button>
-      )
+    const breadcrumbs = Object.keys(this.state.numericFacetBreadcrumbs).map(
+      (field) => {
+        const fieldBreadcrumbs = this.state.numericFacetBreadcrumbs[field].map(
+          (breadcrumb: NumericFacetBreadcrumb) => (
+            <li class="breadcrumb-item">
+              <button
+                class="btn btn-link btn-sm text-decoration-none text-primary p-0 m-0"
+                onClick={breadcrumb.deselect}
+              >
+                {breadcrumb.value.start} - {breadcrumb.value.end}
+              </button>
+            </li>
+          )
+        );
+        return (
+          <ul
+            part="numeric-breadcrumbs"
+            class="breadcrumb p-0 m-0 bg-transparent"
+          >
+            <li>{field} : &nbsp;</li>
+            {fieldBreadcrumbs}
+          </ul>
+        );
+      }
     );
+    return breadcrumbs;
   }
 
   private get dateFacetBreadcrumbs() {
-    return this.state.dateFacetBreadcrumbs.map(
-      (breadcrumb: DateFacetBreadcrumb) => (
-        <button onClick={breadcrumb.deselect}>
-          {breadcrumb.value.start} - {breadcrumb.value.end}
-        </button>
-      )
+    const breadcrumbs = Object.keys(this.state.dateFacetBreadcrumbs).map(
+      (field) => {
+        const fieldBreadcrumbs = this.state.dateFacetBreadcrumbs[field].map(
+          (breadcrumb: DateFacetBreadcrumb) => (
+            <li class="breadcrumb-item">
+              <button
+                class="btn btn-link btn-sm text-decoration-none text-primary p-0 m-0"
+                onClick={breadcrumb.deselect}
+              >
+                {breadcrumb.value.start} - {breadcrumb.value.end}
+              </button>
+            </li>
+          )
+        );
+        return (
+          <ul part="date-breadcrumbs" class="breadcrumb p-0 m-0 bg-transparent">
+            <li>{field} : &nbsp;</li>
+            {fieldBreadcrumbs}
+          </ul>
+        );
+      }
     );
+    return breadcrumbs;
   }
 
   private get categoryFacetBreadcrumbs() {
@@ -84,12 +147,14 @@ export class AtomicBreadcrumbManager {
 
   render() {
     return (
-      <div class="breadcrumb-manager">
-        {this.facetBreadcrumbs}
-        {this.numericFacetBreadcrumbs}
-        {this.dateFacetBreadcrumbs}
-        {this.categoryFacetBreadcrumbs}
-      </div>
+      <nav aria-label="breadcrumb">
+        <div part="container" class="p-0 m-0 bg-transparent">
+          {this.facetBreadcrumbs}
+          {this.numericFacetBreadcrumbs}
+          {this.dateFacetBreadcrumbs}
+          {this.categoryFacetBreadcrumbs}
+        </div>
+      </nav>
     );
   }
 }
