@@ -5,6 +5,8 @@ import {
   buildDateSortCriterion,
   SortOrder,
   buildCriterionExpression,
+  SortCriterion,
+  buildFieldSortCriterion,
 } from '../../features/sort-criteria/criteria';
 import {
   registerSortCriterion,
@@ -40,8 +42,25 @@ describe('Sort', () => {
     expect(action).toBe(undefined);
   });
 
+  it('when #criterion is an invalid value, it throws an error', () => {
+    props.initialState.criterion = ('1' as unknown) as SortCriterion;
+    expect(() => initSort()).toThrow('Check the initialState of buildSort');
+  });
+
   it('when the #criterion option is specified, it dispatches a registration action', () => {
     props.initialState.criterion = buildRelevanceSortCriterion();
+    initSort();
+
+    expect(engine.actions).toContainEqual(
+      registerSortCriterion(props.initialState.criterion)
+    );
+  });
+
+  it('when the #criterion is an array, it dispatches a registration action', () => {
+    props.initialState.criterion = [
+      buildFieldSortCriterion('author', SortOrder.Ascending),
+      buildDateSortCriterion(SortOrder.Descending),
+    ];
     initSort();
 
     expect(engine.actions).toContainEqual(
