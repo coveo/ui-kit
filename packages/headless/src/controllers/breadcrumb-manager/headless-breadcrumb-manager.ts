@@ -99,8 +99,11 @@ export const buildBreadcrumbManager = (
     );
   }
 
-  function getCategoryFacetBreadcrumbs(): CategoryFacetBreadcrumb[] {
-    const breadcrumbs: CategoryFacetBreadcrumb[] = [];
+  function getCategoryFacetBreadcrumbs(): Record<
+    string,
+    CategoryFacetBreadcrumb[]
+  > {
+    const breadcrumbs: Record<string, CategoryFacetBreadcrumb[]> = {};
 
     Object.keys(engine.state.categoryFacetSet).forEach((facetId) => {
       const selectedValues = categoryFacetSelectedValuesSelector(
@@ -108,7 +111,12 @@ export const buildBreadcrumbManager = (
         facetId
       );
       if (selectedValues.length > 0) {
-        breadcrumbs.push({
+        if (
+          isUndefined(breadcrumbs[engine.state.categoryFacetSet[facetId].field])
+        ) {
+          breadcrumbs[engine.state.categoryFacetSet[facetId].field] = [];
+        }
+        breadcrumbs[engine.state.categoryFacetSet[facetId].field].push({
           path: selectedValues,
           deselect: () => {
             dispatch(

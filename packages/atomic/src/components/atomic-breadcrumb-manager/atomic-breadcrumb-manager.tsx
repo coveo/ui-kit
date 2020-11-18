@@ -58,7 +58,7 @@ export class AtomicBreadcrumbManager {
       (field) => {
         const fieldBreadcrumbs = this.state.facetBreadcrumbs[field].map(
           (breadcrumb: FacetBreadcrumb) => (
-            <li class="breadcrumb-item">
+            <li class="breadcrumb-item vertical-bar">
               <button
                 class="btn btn-link btn-sm text-decoration-none text-primary p-0 m-0"
                 onClick={breadcrumb.deselect}
@@ -69,7 +69,7 @@ export class AtomicBreadcrumbManager {
           )
         );
         return (
-          <ul part="facet-breadcrumb" class="breadcrumb p-0 m-0 bg-transparent">
+          <ul part="facet-breadcrumb" class="breadcrumb p-0 bg-transparent">
             <li>{field} : &nbsp;</li>
             {fieldBreadcrumbs}
           </ul>
@@ -84,7 +84,7 @@ export class AtomicBreadcrumbManager {
       (field) => {
         const fieldBreadcrumbs = this.state.numericFacetBreadcrumbs[field].map(
           (breadcrumb: NumericFacetBreadcrumb) => (
-            <li class="breadcrumb-item">
+            <li class="breadcrumb-item vertical-bar">
               <button
                 class="btn btn-link btn-sm text-decoration-none text-primary p-0 m-0"
                 onClick={breadcrumb.deselect}
@@ -113,7 +113,7 @@ export class AtomicBreadcrumbManager {
       (field) => {
         const fieldBreadcrumbs = this.state.dateFacetBreadcrumbs[field].map(
           (breadcrumb: DateFacetBreadcrumb) => (
-            <li class="breadcrumb-item">
+            <li class="breadcrumb-item vertical-bar">
               <button
                 class="btn btn-link btn-sm text-decoration-none text-primary p-0 m-0"
                 onClick={breadcrumb.deselect}
@@ -135,14 +135,38 @@ export class AtomicBreadcrumbManager {
   }
 
   private get categoryFacetBreadcrumbs() {
-    return this.state.categoryFacetBreadcrumbs.map(
-      (breadcrumb: CategoryFacetBreadcrumb) => {
-        const pathString = breadcrumb.path
-          .map((value: CategoryFacetValue) => value.value)
-          .join('/');
-        return <button onClick={breadcrumb.deselect}>{pathString}</button>;
+    const breadcrums = Object.keys(this.state.categoryFacetBreadcrumbs).map(
+      (field) => {
+        const fieldBreadcrumbs = this.state.categoryFacetBreadcrumbs[field].map(
+          (breadcrumb: CategoryFacetBreadcrumb) => {
+            const pathString = breadcrumb.path
+              .map((value: CategoryFacetValue) => value.value)
+              .join('/');
+            return (
+              <li class="breadcrumb-item">
+                <button
+                  class="btn btn-link btn-sm text-decoration-none text-primary p-0 m-0"
+                  onClick={breadcrumb.deselect}
+                >
+                  {pathString}
+                </button>
+              </li>
+            );
+          }
+        );
+        return (
+          <ul
+            part="category-breadcrumbs"
+            class="breadcrumb p-0 m-0 bg-transparent"
+          >
+            <li>{field} : &nbsp;</li>
+            {fieldBreadcrumbs}
+          </ul>
+        );
       }
     );
+
+    return breadcrums;
   }
 
   render() {

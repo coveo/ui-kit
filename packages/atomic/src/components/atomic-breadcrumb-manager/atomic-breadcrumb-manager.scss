@@ -2,6 +2,6 @@
 @import '../../../node_modules/bootstrap/scss/buttons';
 @import 'utilities';
 
-.breadcrumb-item + .breadcrumb-item::before {
+.breadcrumb-item + .vertical-bar::before {
   content: '|';
 }

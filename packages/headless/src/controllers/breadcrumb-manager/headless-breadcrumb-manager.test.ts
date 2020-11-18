@@ -70,6 +70,6 @@ describe('headless breadcrumb manager', () => {
       buildMockCategoryFacetResponse({facetId, values: [mockValue]}),
     ];
     const facetBreadcrumbs = breadcrumbManager.state.categoryFacetBreadcrumbs;
-    expect(facetBreadcrumbs?.[0]?.path).toEqual([mockValue]);
+    expect(facetBreadcrumbs['']?.[0]?.path).toEqual([mockValue]);
   });
 });
