@@ -24,6 +24,7 @@ import {executeDeselectAllCategoryFacetValues} from '../../features/facets/categ
 import {executeToggleFacetSelect} from '../../features/facets/facet-set/facet-set-controller-actions';
 import {executeToggleNumericFacetSelect} from '../../features/facets/range-facets/numeric-facet-set/numeric-facet-controller-actions';
 import {executeToggleDateFacetSelect} from '../../features/facets/range-facets/date-facet-set/date-facet-controller-actions';
+import {isUndefined} from '@coveo/bueno';
 
 export type BreadcrumbManager = ReturnType<typeof buildBreadcrumbManager>;
 export type BreadcrumbManagerState = BreadcrumbManager['state'];
@@ -53,12 +54,15 @@ export const buildBreadcrumbManager = (
       | ((state: SearchSection & NumericFacetSection, facetId: string) => T[])
       | ((state: SearchSection & DateFacetSection, facetId: string) => T[])
   ) {
-    const breadcrumbs: Breadcrumb<T>[] = [];
+    const breadcrumbs: Record<string, Breadcrumb<T>[]> = {};
 
     Object.keys(facetSet).forEach((facetId) => {
       const selectedValues = facetValuesSelector(engine.state, facetId);
       selectedValues.forEach((selection) => {
-        breadcrumbs.push({
+        if (isUndefined(breadcrumbs[facetSet[facetId].field])) {
+          breadcrumbs[facetSet[facetId].field] = [];
+        }
+        breadcrumbs[facetSet[facetId].field].push({
           value: selection,
           deselect: () => dispatch(executeToggleSelect({facetId, selection})),
         });
@@ -68,7 +72,7 @@ export const buildBreadcrumbManager = (
     return breadcrumbs;
   }
 
-  function getFacetBreadcrumbs(): FacetBreadcrumb[] {
+  function getFacetBreadcrumbs(): Record<string, FacetBreadcrumb[]> {
     return getBreadcrumbs<FacetValue>(
       engine.state.facetSet,
       executeToggleFacetSelect,
@@ -76,7 +80,10 @@ export const buildBreadcrumbManager = (
     );
   }
 
-  function getNumericFacetBreadcrumbs(): NumericFacetBreadcrumb[] {
+  function getNumericFacetBreadcrumbs(): Record<
+    string,
+    NumericFacetBreadcrumb[]
+  > {
     return getBreadcrumbs<NumericFacetValue>(
       engine.state.numericFacetSet,
       executeToggleNumericFacetSelect,
@@ -84,7 +91,7 @@ export const buildBreadcrumbManager = (
     );
   }
 
-  function getDateFacetBreadcrumbs(): DateFacetBreadcrumb[] {
+  function getDateFacetBreadcrumbs(): Record<string, DateFacetBreadcrumb[]> {
     return getBreadcrumbs<DateFacetValue>(
       engine.state.dateFacetSet,
       executeToggleDateFacetSelect,

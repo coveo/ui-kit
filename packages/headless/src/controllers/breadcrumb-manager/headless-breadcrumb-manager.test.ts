@@ -40,7 +40,7 @@ describe('headless breadcrumb manager', () => {
       buildMockFacetResponse({facetId, values: [mockValue]}),
     ];
     const facetBreadcrumbs = breadcrumbManager.state.facetBreadcrumbs;
-    expect(facetBreadcrumbs?.[0]?.value).toBe(mockValue);
+    expect(facetBreadcrumbs['']?.[0]?.value).toBe(mockValue);
   });
 
   it('#state gets date facet breadcrumbs correctly', () => {
@@ -50,7 +50,7 @@ describe('headless breadcrumb manager', () => {
       buildMockDateFacetResponse({facetId, values: [mockValue]}),
     ];
     const facetBreadcrumbs = breadcrumbManager.state.dateFacetBreadcrumbs;
-    expect(facetBreadcrumbs?.[0]?.value).toBe(mockValue);
+    expect(facetBreadcrumbs['']?.[0]?.value).toBe(mockValue);
   });
 
   it('#state gets numeric facet breadcrumbs correctly', () => {
@@ -60,7 +60,7 @@ describe('headless breadcrumb manager', () => {
       buildMockNumericFacetResponse({facetId, values: [mockValue]}),
     ];
     const facetBreadcrumbs = breadcrumbManager.state.numericFacetBreadcrumbs;
-    expect(facetBreadcrumbs?.[0]?.value).toBe(mockValue);
+    expect(facetBreadcrumbs['']?.[0]?.value).toBe(mockValue);
   });
 
   it('#state gets category facet breadcrumbs correctly', () => {
