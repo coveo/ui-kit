@@ -70,7 +70,7 @@ export class AtomicBreadcrumbManager {
         );
         return (
           <ul part="facet-breadcrumb" class="breadcrumb p-0 m-0 bg-transparent">
-            <li>{field} : &nbsp;</li>
+            <li class="text-muted">{field} : &nbsp;</li>
             {fieldBreadcrumbs}
           </ul>
         );
@@ -99,7 +99,7 @@ export class AtomicBreadcrumbManager {
             part="numeric-breadcrumbs"
             class="breadcrumb p-0 m-0 bg-transparent"
           >
-            <li>{field} : &nbsp;</li>
+            <li class="text-muted">{field} : &nbsp;</li>
             {fieldBreadcrumbs}
           </ul>
         );
@@ -125,7 +125,7 @@ export class AtomicBreadcrumbManager {
         );
         return (
           <ul part="date-breadcrumbs" class="breadcrumb p-0 m-0 bg-transparent">
-            <li>{field} : &nbsp;</li>
+            <li class="text-muted">{field} : &nbsp;</li>
             {fieldBreadcrumbs}
           </ul>
         );
@@ -159,7 +159,7 @@ export class AtomicBreadcrumbManager {
             part="category-breadcrumbs"
             class="breadcrumb p-0 m-0 bg-transparent"
           >
-            <li>{field} : &nbsp;</li>
+            <li class="text-muted">{field} : &nbsp;</li>
             {fieldBreadcrumbs}
           </ul>
         );
