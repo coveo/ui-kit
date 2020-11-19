@@ -2,6 +2,7 @@ import {
   fieldMustMatch,
   fieldMustNotMatch,
   fieldsMustBeDefined,
+  fieldsMustNotBeDefined,
   getResultProperty,
 } from './result-templates-helpers';
 import {buildMockResult} from '../../test/mock-result';
@@ -47,6 +48,24 @@ describe('result template helpers', () => {
       const match = fieldsMustBeDefined(['language', 'anotherfield']);
       const result = buildMockResult();
       result.raw['language'] = ['Test'];
+      expect(match(result)).toBe(false);
+    });
+  });
+
+  describe('fieldsMustNotBeDefined', () => {
+    it(`when sending a list of fields that are all undefined in the result
+    should return true`, () => {
+      const match = fieldsMustNotBeDefined(['somefield', 'anotherfield']);
+      const result = buildMockResult();
+      result.raw['anotherfield'] = undefined;
+      expect(match(result)).toBe(true);
+    });
+
+    it(`when sending a list of fields that are not undefined in the result
+    should return false`, () => {
+      const match = fieldsMustNotBeDefined(['somefield', 'anotherfield']);
+      const result = buildMockResult();
+      result.raw['anotherfield'] = 0;
       expect(match(result)).toBe(false);
     });
   });

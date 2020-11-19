@@ -1,5 +1,5 @@
 <hr />
-<h3 class="h5"><a class="link-primary" href="{{clickUri}}">{{title}}</a></h3>
+<h3 class="h5"><atomic-result-link class="text-primary"></atomic-result-link></h3>
 <p>
   <atomic-result-value value="excerpt"> </atomic-result-value>
 </p>
@@ -7,28 +7,28 @@
 <div class="row row-cols-2">
   <atomic-field-condition if-defined="author">
     <div class="mt-1">
-      <span class="fs-6 mr-1 badge bg-secondary rounded-pill">Author</span>
+      <span class="fs-6 mr-1 badge bg-secondary">Author</span>
       <atomic-result-value value="author" part="author"> </atomic-result-value>
     </div>
   </atomic-field-condition>
 
   <atomic-field-condition if-defined="source">
     <div class="mt-1">
-      <span class="fs-6 mr-1 badge bg-secondary rounded-pill">Source</span>
+      <span class="fs-6 mr-1 badge bg-secondary">Source</span>
       <atomic-result-value value="source"></atomic-result-value>
     </div>
   </atomic-field-condition>
 
   <atomic-field-condition if-defined="language">
     <div class="mt-1">
-      <span class="fs-6 mr-1 badge bg-secondary rounded-pill">Language</span>
+      <span class="fs-6 mr-1 badge bg-secondary">Language</span>
       <atomic-result-value value="language" class=""> </atomic-result-value>
     </div>
   </atomic-field-condition>
 
   <atomic-field-condition if-defined="filetype">
     <div class="mt-1">
-      <span class="fs-6 mr-1 badge bg-secondary rounded-pill">Type</span>
+      <span class="fs-6 mr-1 badge bg-secondary">Type</span>
       <atomic-result-value value="filetype"> </atomic-result-value>
     </div>
   </atomic-field-condition>

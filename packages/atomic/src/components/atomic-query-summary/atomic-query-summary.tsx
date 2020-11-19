@@ -102,10 +102,6 @@ export class AtomicQuerySummary {
   }
 
   private renderHighlight(input: string) {
-    return (
-      <strong part="highlight" class="text-primary">
-        {input}
-      </strong>
-    );
+    return <strong part="highlight">{input}</strong>;
   }
 }

@@ -17,6 +17,7 @@ import {MapProp} from '../../../utils/props-utils';
 export class AtomicFieldCondition {
   @Element() host!: HTMLElement;
   @Prop() ifDefined?: string;
+  @Prop() ifNotDefined?: string;
 
   @Prop() conditions: ResultTemplateCondition[] = [];
   @MapProp() mustMatch: Record<string, string[]> = {};
@@ -33,6 +34,14 @@ export class AtomicFieldCondition {
       this.fields.push(...fieldNames);
       this.conditions.push(
         ResultTemplatesHelpers.fieldsMustBeDefined(fieldNames)
+      );
+    }
+
+    if (this.ifNotDefined) {
+      const fieldNames = this.ifNotDefined.split(',');
+      this.fields.push(...fieldNames);
+      this.conditions.push(
+        ResultTemplatesHelpers.fieldsMustNotBeDefined(fieldNames)
       );
     }
 
