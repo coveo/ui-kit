@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.1.0-alpha.57](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.56...v0.1.0-alpha.57) (2020-11-19)
+
+
+### Features
+
+* **atomic:** various improvements for the feedback demo (mostly customization) ([e928bf2](https://bitbucket.org/coveord/ui-kit/commits/e928bf26c78e29fb713d1d514b53f7b399097442))
+
+
+
+
+
 # [0.1.0-alpha.56](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.55...v0.1.0-alpha.56) (2020-11-19)
 
 **Note:** Version bump only for package ui-kit
