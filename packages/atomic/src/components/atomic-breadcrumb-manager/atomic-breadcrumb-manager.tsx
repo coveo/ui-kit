@@ -170,17 +170,11 @@ export class AtomicBreadcrumbManager {
   }
 
   render() {
-    return (
-      <nav
-        aria-label="breadcrumb"
-        part="container"
-        class="p-0 m-0 bg-transparent"
-      >
-        {this.facetBreadcrumbs}
-        {this.numericFacetBreadcrumbs}
-        {this.dateFacetBreadcrumbs}
-        {this.categoryFacetBreadcrumbs}
-      </nav>
-    );
+    return [
+      this.facetBreadcrumbs,
+      this.numericFacetBreadcrumbs,
+      this.dateFacetBreadcrumbs,
+      this.categoryFacetBreadcrumbs,
+    ];
   }
 }
