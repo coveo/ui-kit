@@ -24,6 +24,7 @@ describe('headless standalone searchBox', () => {
       id,
       redirectionUrl: 'https://www.coveo.com/en/search',
       numberOfSuggestions: 10,
+      enableQuerySyntax: false,
     };
 
     props = {options};
@@ -63,11 +64,13 @@ describe('headless standalone searchBox', () => {
   });
 
   describe('when calling submit', () => {
-    it('sets the query to the search box value kept in the querySet', () => {
+    it('dispatches updateQuery with the correct parameters', () => {
       const expectedQuery = state.querySet[id];
       searchBox.submit();
 
-      expect(engine.actions).toContainEqual(updateQuery({q: expectedQuery}));
+      expect(engine.actions).toContainEqual(
+        updateQuery({q: expectedQuery, enableQuerySyntax: false})
+      );
     });
 
     it('should dispatch a checkForRedirection action', () => {

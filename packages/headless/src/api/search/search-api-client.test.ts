@@ -63,6 +63,7 @@ describe('search api client', () => {
         facetOptions: state.facetOptions,
         context: state.context.contextValues,
         enableDidYouMean: state.didYouMean.enableDidYouMean,
+        enableQuerySyntax: state.query.enableQuerySyntax,
         fieldsToInclude: state.fields.fieldsToInclude,
         pipeline: state.pipeline,
         searchHub: state.searchHub,

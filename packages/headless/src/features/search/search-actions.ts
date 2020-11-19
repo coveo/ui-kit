@@ -229,6 +229,7 @@ export const buildSearchRequest = (
     }),
     ...(state.query && {
       q: state.query.q,
+      enableQuerySyntax: state.query.enableQuerySyntax,
     }),
     ...(state.searchHub && {
       searchHub: state.searchHub,

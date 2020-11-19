@@ -1,6 +1,7 @@
 import {createAction} from '@reduxjs/toolkit';
 import {validatePayloadSchema} from '../../utils/validate-payload';
-import {StringValue} from '@coveo/bueno';
+import {BooleanValue, StringValue} from '@coveo/bueno';
+import {QueryState} from './query-state';
 
 /**
  * Updates the basic query expression.
@@ -8,8 +9,9 @@ import {StringValue} from '@coveo/bueno';
  */
 export const updateQuery = createAction(
   'query/updateQuery',
-  (payload: {q: string}) =>
+  (payload: Partial<QueryState>) =>
     validatePayloadSchema(payload, {
-      q: new StringValue({required: true}),
+      q: new StringValue(),
+      enableQuerySyntax: new BooleanValue(),
     })
 );

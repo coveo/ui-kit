@@ -53,6 +53,10 @@ export interface EnableDidYouMeanParam {
   enableDidYouMean?: boolean;
 }
 
+export interface EnableQuerySyntaxParam {
+  enableQuerySyntax?: boolean;
+}
+
 export interface FieldsToIncludeParam {
   fieldsToInclude?: string[];
 }
