@@ -70,7 +70,7 @@ export class AtomicBreadcrumbManager {
         );
         return (
           <ul part="facet-breadcrumb" class="breadcrumb p-0 m-0 bg-transparent">
-            <li class="text-muted">{field} : &nbsp;</li>
+            <li class="text-muted">{field}:&nbsp;</li>
             {fieldBreadcrumbs}
           </ul>
         );
@@ -99,7 +99,7 @@ export class AtomicBreadcrumbManager {
             part="numeric-breadcrumbs"
             class="breadcrumb p-0 m-0 bg-transparent"
           >
-            <li class="text-muted">{field} : &nbsp;</li>
+            <li class="text-muted">{field}:&nbsp;</li>
             {fieldBreadcrumbs}
           </ul>
         );
@@ -125,7 +125,7 @@ export class AtomicBreadcrumbManager {
         );
         return (
           <ul part="date-breadcrumbs" class="breadcrumb p-0 m-0 bg-transparent">
-            <li class="text-muted">{field} : &nbsp;</li>
+            <li class="text-muted">{field}:&nbsp;</li>
             {fieldBreadcrumbs}
           </ul>
         );
@@ -135,7 +135,7 @@ export class AtomicBreadcrumbManager {
   }
 
   private get categoryFacetBreadcrumbs() {
-    const breadcrums = Object.keys(this.state.categoryFacetBreadcrumbs).map(
+    const breadcrumbs = Object.keys(this.state.categoryFacetBreadcrumbs).map(
       (field) => {
         const fieldBreadcrumbs = this.state.categoryFacetBreadcrumbs[field].map(
           (breadcrumb: CategoryFacetBreadcrumb) => {
@@ -159,25 +159,27 @@ export class AtomicBreadcrumbManager {
             part="category-breadcrumbs"
             class="breadcrumb p-0 m-0 bg-transparent"
           >
-            <li class="text-muted">{field} : &nbsp;</li>
+            <li class="text-muted">{field}:&nbsp;</li>
             {fieldBreadcrumbs}
           </ul>
         );
       }
     );
 
-    return breadcrums;
+    return breadcrumbs;
   }
 
   render() {
     return (
-      <nav aria-label="breadcrumb">
-        <div part="container" class="p-0 m-0 bg-transparent">
-          {this.facetBreadcrumbs}
-          {this.numericFacetBreadcrumbs}
-          {this.dateFacetBreadcrumbs}
-          {this.categoryFacetBreadcrumbs}
-        </div>
+      <nav
+        aria-label="breadcrumb"
+        part="container"
+        class="p-0 m-0 bg-transparent"
+      >
+        {this.facetBreadcrumbs}
+        {this.numericFacetBreadcrumbs}
+        {this.dateFacetBreadcrumbs}
+        {this.categoryFacetBreadcrumbs}
       </nav>
     );
   }
