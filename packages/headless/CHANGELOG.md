@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.1.0-alpha.58](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.57...v0.1.0-alpha.58) (2020-11-19)
+
+
+### Features
+
+* **headless:** add enableQuerySyntax parameter on SearchBox & Standalone SearchBox ([417a6b3](https://bitbucket.org/coveord/ui-kit/commits/417a6b3835e66af4cf2f859dffe58a8f32262ee8))
+
+
+
+
+
 # [0.1.0-alpha.57](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.56...v0.1.0-alpha.57) (2020-11-19)
 
 
