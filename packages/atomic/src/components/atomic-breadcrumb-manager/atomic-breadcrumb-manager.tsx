@@ -10,8 +10,6 @@ import {
   CategoryFacetValue,
   BreadcrumbValue,
   FacetValue,
-  NumericFacetValue,
-  DateFacetValue,
 } from '@coveo/headless';
 import {RangeFacetValue} from '@coveo/headless/dist/features/facets/range-facets/generic/interfaces/range-facet';
 
