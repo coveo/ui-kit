@@ -8,6 +8,7 @@ import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { Engine, HeadlessConfigurationOptions, Result, ResultTemplateCondition } from "@coveo/headless";
 export namespace Components {
     interface AtomicBreadcrumbManager {
+        "collapseThreshold": number;
     }
     interface AtomicCategoryFacet {
         "facetId": string;
@@ -285,6 +286,7 @@ declare global {
 }
 declare namespace LocalJSX {
     interface AtomicBreadcrumbManager {
+        "collapseThreshold"?: number;
     }
     interface AtomicCategoryFacet {
         "facetId"?: string;
