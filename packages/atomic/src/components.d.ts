@@ -35,6 +35,7 @@ export namespace Components {
         "conditions": ResultTemplateCondition[];
         "getFields": () => Promise<string[]>;
         "ifDefined"?: string;
+        "ifNotDefined"?: string;
     }
     interface AtomicFrequentlyBoughtTogether {
     }
@@ -55,7 +56,17 @@ export namespace Components {
         "engine": Engine;
         "result": Result;
     }
+    interface AtomicResultLink {
+    }
     interface AtomicResultList {
+        /**
+          * Css class for the list wrapper
+         */
+        "listClass": string;
+        /**
+          * Css class for a list element
+         */
+        "listElementClass": string;
     }
     interface AtomicResultTemplate {
         "conditions": ResultTemplateCondition[];
@@ -67,6 +78,14 @@ export namespace Components {
         "value": string;
     }
     interface AtomicResultsPerPage {
+        /**
+          * Initial value of the result per page option
+         */
+        "initialOption": number;
+        /**
+          * List of possible results per page options, separated by commas
+         */
+        "options": string;
     }
     interface AtomicSearchBox {
         "_id": string;
@@ -183,6 +202,12 @@ declare global {
         prototype: HTMLAtomicResultElement;
         new (): HTMLAtomicResultElement;
     };
+    interface HTMLAtomicResultLinkElement extends Components.AtomicResultLink, HTMLStencilElement {
+    }
+    var HTMLAtomicResultLinkElement: {
+        prototype: HTMLAtomicResultLinkElement;
+        new (): HTMLAtomicResultLinkElement;
+    };
     interface HTMLAtomicResultListElement extends Components.AtomicResultList, HTMLStencilElement {
     }
     var HTMLAtomicResultListElement: {
@@ -247,6 +272,7 @@ declare global {
         "atomic-query-error": HTMLAtomicQueryErrorElement;
         "atomic-query-summary": HTMLAtomicQuerySummaryElement;
         "atomic-result": HTMLAtomicResultElement;
+        "atomic-result-link": HTMLAtomicResultLinkElement;
         "atomic-result-list": HTMLAtomicResultListElement;
         "atomic-result-template": HTMLAtomicResultTemplateElement;
         "atomic-result-value": HTMLAtomicResultValueElement;
@@ -285,6 +311,7 @@ declare namespace LocalJSX {
     interface AtomicFieldCondition {
         "conditions"?: ResultTemplateCondition[];
         "ifDefined"?: string;
+        "ifNotDefined"?: string;
     }
     interface AtomicFrequentlyBoughtTogether {
     }
@@ -305,7 +332,17 @@ declare namespace LocalJSX {
         "engine": Engine;
         "result": Result;
     }
+    interface AtomicResultLink {
+    }
     interface AtomicResultList {
+        /**
+          * Css class for the list wrapper
+         */
+        "listClass"?: string;
+        /**
+          * Css class for a list element
+         */
+        "listElementClass"?: string;
     }
     interface AtomicResultTemplate {
         "conditions"?: ResultTemplateCondition[];
@@ -315,6 +352,14 @@ declare namespace LocalJSX {
         "value"?: string;
     }
     interface AtomicResultsPerPage {
+        /**
+          * Initial value of the result per page option
+         */
+        "initialOption"?: number;
+        /**
+          * List of possible results per page options, separated by commas
+         */
+        "options"?: string;
     }
     interface AtomicSearchBox {
         "_id"?: string;
@@ -354,6 +399,7 @@ declare namespace LocalJSX {
         "atomic-query-error": AtomicQueryError;
         "atomic-query-summary": AtomicQuerySummary;
         "atomic-result": AtomicResult;
+        "atomic-result-link": AtomicResultLink;
         "atomic-result-list": AtomicResultList;
         "atomic-result-template": AtomicResultTemplate;
         "atomic-result-value": AtomicResultValue;
@@ -383,6 +429,7 @@ declare module "@stencil/core" {
             "atomic-query-error": LocalJSX.AtomicQueryError & JSXBase.HTMLAttributes<HTMLAtomicQueryErrorElement>;
             "atomic-query-summary": LocalJSX.AtomicQuerySummary & JSXBase.HTMLAttributes<HTMLAtomicQuerySummaryElement>;
             "atomic-result": LocalJSX.AtomicResult & JSXBase.HTMLAttributes<HTMLAtomicResultElement>;
+            "atomic-result-link": LocalJSX.AtomicResultLink & JSXBase.HTMLAttributes<HTMLAtomicResultLinkElement>;
             "atomic-result-list": LocalJSX.AtomicResultList & JSXBase.HTMLAttributes<HTMLAtomicResultListElement>;
             "atomic-result-template": LocalJSX.AtomicResultTemplate & JSXBase.HTMLAttributes<HTMLAtomicResultTemplateElement>;
             "atomic-result-value": LocalJSX.AtomicResultValue & JSXBase.HTMLAttributes<HTMLAtomicResultValueElement>;

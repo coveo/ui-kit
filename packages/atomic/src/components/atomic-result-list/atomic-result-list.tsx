@@ -1,4 +1,4 @@
-import {Component, h, Element, State} from '@stencil/core';
+import {Component, h, Element, State, Prop} from '@stencil/core';
 import {
   ResultList,
   ResultListState,
@@ -11,14 +11,28 @@ import Mustache from 'mustache';
 import defaultTemplate from '../../templates/default.html';
 import {Initialization} from '../../utils/initialization-utils';
 
+/**
+ * @part list - The list wrapper
+ * @part list-element - The list element
+ */
 @Component({
   tag: 'atomic-result-list',
-  styleUrl: 'atomic-result-list.css',
+  styleUrl: 'atomic-result-list.scss',
   shadow: true,
 })
 export class AtomicResultList {
+  /**
+   * Css class for the list wrapper
+   */
+  @Prop() listClass = '';
+  /**
+   * Css class for a list element
+   */
+  @Prop() listElementClass = '';
+
   @Element() host!: HTMLDivElement;
   @State() state!: ResultListState;
+
   private engine!: Engine;
   private unsubscribe: Unsubscribe = () => {};
   private resultList!: ResultList;
@@ -70,6 +84,9 @@ export class AtomicResultList {
   private get results() {
     return this.state.results.map((result) => (
       <atomic-result
+        key={result.uniqueId}
+        part="list-element"
+        class={this.listElementClass}
         result={result}
         engine={this.engine}
         innerHTML={Mustache.render(
@@ -81,6 +98,10 @@ export class AtomicResultList {
   }
 
   public render() {
-    return this.results;
+    return (
+      <div part="list" class={this.listClass}>
+        {this.results}
+      </div>
+    );
   }
 }

@@ -1,12 +1,9 @@
 // Default variables override
 $enable-important-utilities: false; // the use of !important would cause issues with CSS parts, instead we import utilities after component's SCSS files
 
-// Global CSS Variables
-@import 'css_variables';
-
 // Required Bootstrap Globals
 @import '../../node_modules/bootstrap/scss/functions';
-@import '../../node_modules/bootstrap/scss/variables';
+@import 'variables';
 @import '../../node_modules/bootstrap/scss/mixins';
 
 // Reboots
@@ -15,3 +12,4 @@ $enable-important-utilities: false; // the use of !important would cause issues 
 
 // Helpers
 @import '../../node_modules/bootstrap/scss/helpers';
+@import '../../node_modules/bootstrap/scss/type';

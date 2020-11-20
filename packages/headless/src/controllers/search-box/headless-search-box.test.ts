@@ -172,11 +172,16 @@ describe('headless searchBox', () => {
   });
 
   describe('when calling submit', () => {
-    it('sets the query to the search box value kept in the querySet', () => {
+    it('dispatches updateQuery with the correct parameters', () => {
       const expectedQuery = state.querySet[id];
       searchBox.submit();
 
-      expect(engine.actions).toContainEqual(updateQuery({q: expectedQuery}));
+      const action = updateQuery({
+        q: expectedQuery,
+        enableQuerySyntax: false,
+      });
+
+      expect(engine.actions).toContainEqual(action);
     });
 
     it('updates the page to the first one', () => {

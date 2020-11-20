@@ -78,8 +78,13 @@ export class AtomicSearchInterface {
 
     this.hangingComponentsInitialization = [];
 
-    this.engine!.dispatch(
-      SearchActions.executeSearch(AnalyticsActions.logInterfaceLoad())
+    // Waits until the fields are registered asynchronously before triggering a search
+    setTimeout(
+      () =>
+        this.engine!.dispatch(
+          SearchActions.executeSearch(AnalyticsActions.logInterfaceLoad())
+        ),
+      0
     );
   }
 

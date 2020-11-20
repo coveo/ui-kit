@@ -76,7 +76,12 @@ export function buildStandaloneSearchBox(
      * Triggers a redirection.
      */
     submit() {
-      dispatch(updateQuery({q: this.state.value}));
+      dispatch(
+        updateQuery({
+          q: this.state.value,
+          enableQuerySyntax: options.enableQuerySyntax,
+        })
+      );
       dispatch(
         checkForRedirection({defaultRedirectionUrl: options.redirectionUrl})
       );

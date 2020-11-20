@@ -30,7 +30,7 @@ export class Value<T> implements SchemaValue<T> {
       : this.baseConfig.default;
   }
 
-  public required() {
+  public get required() {
     return this.baseConfig.required === true;
   }
 }

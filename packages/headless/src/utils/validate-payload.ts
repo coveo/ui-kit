@@ -29,7 +29,7 @@ export const validateInitialState = <T extends object>(
 
 export const validateOptions = <T extends object>(
   schema: Schema<T>,
-  obj: T | undefined,
+  obj: Partial<T> | undefined,
   functionName: string
 ) => {
   const message = `Check the options of ${functionName}`;

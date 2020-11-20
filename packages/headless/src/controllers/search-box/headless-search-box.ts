@@ -122,7 +122,12 @@ export function buildSearchBox(
      * Triggers a search query.
      */
     submit() {
-      dispatch(updateQuery({q: this.state.value}));
+      dispatch(
+        updateQuery({
+          q: this.state.value,
+          enableQuerySyntax: options.enableQuerySyntax,
+        })
+      );
       dispatch(updatePage(1));
       dispatch(executeSearch(logSearchboxSubmit()));
     },

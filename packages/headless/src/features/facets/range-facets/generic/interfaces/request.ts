@@ -4,7 +4,8 @@ import {
   BaseFacetValueRequest,
 } from '../../../facet-api/request';
 
-export type RangeFacetSortCriterion = 'ascending' | 'descending';
+export const rangeFacetSortCriteria = ['ascending', 'descending'] as const;
+export type RangeFacetSortCriterion = typeof rangeFacetSortCriteria[number];
 
 export interface AutomaticRanges<T extends boolean> {
   generateAutomaticRanges: T;

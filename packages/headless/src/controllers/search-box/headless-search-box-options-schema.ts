@@ -1,4 +1,4 @@
-import {NumberValue, StringValue} from '@coveo/bueno';
+import {BooleanValue, NumberValue, StringValue} from '@coveo/bueno';
 import {randomID} from '../../utils/utils';
 
 export const searchBoxOptionDefinitions = {
@@ -18,4 +18,10 @@ export const searchBoxOptionDefinitions = {
    * @default 5
    */
   numberOfSuggestions: new NumberValue({default: 5, min: 0}),
+  /**
+   * Whether to interpret advanced [Coveo Cloud query syntax](https://docs.coveo.com/en/1814/searching-with-coveo/search-prefixes-and-operators) in the query.
+   *
+   * @default false
+   */
+  enableQuerySyntax: new BooleanValue({default: false}),
 };

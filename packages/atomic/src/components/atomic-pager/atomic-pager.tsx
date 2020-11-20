@@ -16,6 +16,7 @@ import {Initialization} from '../../utils/initialization-utils';
  * @part back-button - The back button
  * @part next-button - The next button
  * @part page-button - The page button
+ * @part active-page-button - The active page button
  */
 @Component({
   tag: 'atomic-pager',
@@ -99,7 +100,7 @@ export class AtomicPager {
     return (
       <li class={`page-item ${className}`}>
         <button
-          part="page-button"
+          part={`page-button ${isSelected && 'active-page-button'}`}
           class="page-link"
           aria-label={`Page ${page}`}
           onClick={() => {

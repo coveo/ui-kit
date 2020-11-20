@@ -1,4 +1,4 @@
-import {buildFacet, Facet, ValidatedFacetOptions} from './headless-facet';
+import {buildFacet, Facet, FacetOptions} from './headless-facet';
 import {MockEngine, buildMockSearchAppEngine} from '../../../test/mock-engine';
 import {
   registerFacet,
@@ -21,7 +21,7 @@ import {SearchAppState} from '../../../state/search-app-state';
 
 describe('facet', () => {
   const facetId = '1';
-  let options: ValidatedFacetOptions;
+  let options: FacetOptions;
   let state: SearchAppState;
   let engine: MockEngine<SearchAppState>;
   let facet: Facet;
@@ -65,6 +65,7 @@ describe('facet', () => {
 
     const action = registerFacet({
       ...options,
+      facetId,
       delimitingCharacter: '>',
       filterFacetCount: true,
       injectionDepth: 1000,
@@ -76,7 +77,7 @@ describe('facet', () => {
 
   it('registering a facet with #numberOfValues less than 1 throws', () => {
     options.numberOfValues = 0;
-    expect(() => initFacet()).toThrow();
+    expect(() => initFacet()).toThrow('Check the options of buildFacet');
   });
 
   it('when the search response is empty, the facet #state.values is an empty array', () => {

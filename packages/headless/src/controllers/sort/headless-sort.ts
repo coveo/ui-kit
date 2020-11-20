@@ -4,11 +4,25 @@ import {
   updateSortCriterion,
 } from '../../features/sort-criteria/sort-criteria-actions';
 import {executeSearch} from '../../features/search/search-actions';
-import {SortCriterion} from '../../features/sort-criteria/criteria';
+import {
+  buildCriterionExpression,
+  SortBy,
+  SortCriterion,
+  SortOrder,
+} from '../../features/sort-criteria/criteria';
 import {buildController} from '../controller/headless-controller';
 import {updatePage} from '../../features/pagination/pagination-actions';
 import {logResultsSort} from '../../features/sort-criteria/sort-criteria-analytics-actions';
 import {ConfigurationSection, SortSection} from '../../state/state-sections';
+import {
+  ArrayValue,
+  EnumValue,
+  isArray,
+  RecordValue,
+  Schema,
+  StringValue,
+} from '@coveo/bueno';
+import {validateInitialState} from '../../utils/validate-payload';
 
 export interface SortProps {
   initialState: Partial<SortInitialState>;
@@ -16,7 +30,39 @@ export interface SortProps {
 
 export interface SortInitialState {
   /** The initial sort criterion to register in state. */
-  criterion: SortCriterion;
+  criterion: SortCriterion | SortCriterion[];
+}
+
+const criterionDefinition = new RecordValue({
+  values: {
+    by: new EnumValue({enum: SortBy, required: true}),
+    order: new EnumValue({enum: SortOrder}),
+    field: new StringValue(),
+  },
+});
+
+function validateSortInitialState(
+  state: Partial<SortInitialState> | undefined
+) {
+  if (!state) {
+    return;
+  }
+
+  const schema = new Schema<SortInitialState>({
+    criterion: new ArrayValue({each: criterionDefinition}) as never,
+  });
+  const criterion = getCriterionAsArray(state);
+  const initialState: SortInitialState = {...state, criterion};
+
+  validateInitialState(schema, initialState, buildSort.name);
+}
+
+function getCriterionAsArray(state: Partial<SortInitialState>) {
+  if (!state.criterion) {
+    return [];
+  }
+
+  return isArray(state.criterion) ? state.criterion : [state.criterion];
 }
 
 /** The `Sort` controller allows to changing how the results are sorted.*/
@@ -31,6 +77,9 @@ export function buildSort(
 ) {
   const controller = buildController(engine);
   const {dispatch} = engine;
+
+  validateSortInitialState(props.initialState);
+
   const criterion = props.initialState?.criterion;
   const search = () => dispatch(executeSearch(logResultsSort()));
 
@@ -45,7 +94,7 @@ export function buildSort(
      * Updates the sort criterion and executes a new search.
      * @param criterion The new sort criterion.
      */
-    sortBy(criterion: SortCriterion) {
+    sortBy(criterion: SortCriterion | SortCriterion[]) {
       dispatch(updateSortCriterion(criterion));
       dispatch(updatePage(1));
       search();
@@ -56,8 +105,8 @@ export function buildSort(
      * @param criterion The criterion to compare.
      * @returns {boolean}
      */
-    isSortedBy(criterion: SortCriterion) {
-      return this.state.sortCriteria === criterion.expression;
+    isSortedBy(criterion: SortCriterion | SortCriterion[]) {
+      return this.state.sortCriteria === buildCriterionExpression(criterion);
     },
 
     /**  @returns The state of the `Sort` controller.*/

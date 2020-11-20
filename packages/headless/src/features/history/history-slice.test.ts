@@ -9,6 +9,7 @@ import {buildMockCategoryFacetRequest} from '../../test/mock-category-facet-requ
 import {buildMockAdvancedSearchQueriesState} from '../../test/mock-advanced-search-queries-state';
 import {SearchParametersState} from '../../state/search-app-state';
 import {buildMockFacetOptions} from '../../test/mock-facet-options';
+import {buildMockQueryState} from '../../test/mock-query-state';
 
 describe('history slice', () => {
   let undoableReducer: Reducer<StateWithHistory<SearchParametersState>>;
@@ -70,7 +71,7 @@ describe('history slice', () => {
         numberOfResults: 456,
         totalCountFiltered: 789,
       },
-      query: {q: 'foo'},
+      query: buildMockQueryState({q: 'foo'}),
       advancedSearchQueries: {aq: '', cq: ''},
       querySet: {foo: 'bar', hello: 'world'},
       sortCriteria: 'date descending',
@@ -83,9 +84,10 @@ describe('history slice', () => {
 
   describe('should not consider snapshot entry to be different', () => {
     it('for #identical snapshot', () => {
+      const query = buildMockQueryState({q: 'foo'});
       expectHistoryNotToHaveCreatedDifferentSnapshots(
-        getSnapshot({query: {q: 'foo'}}),
-        getSnapshot({query: {q: 'foo'}})
+        getSnapshot({query}),
+        getSnapshot({query})
       );
     });
 
@@ -124,10 +126,17 @@ describe('history slice', () => {
       );
     });
 
-    it('for #query', () => {
+    it('for #query.q', () => {
       expectHistoryToHaveCreatedDifferentSnapshots(
-        getSnapshot({query: {q: '1'}}),
-        getSnapshot({query: {q: '2'}})
+        getSnapshot({query: buildMockQueryState({q: '1'})}),
+        getSnapshot({query: buildMockQueryState({q: '2'})})
+      );
+    });
+
+    it('for #query.enableQuerySyntax', () => {
+      expectHistoryToHaveCreatedDifferentSnapshots(
+        getSnapshot({query: buildMockQueryState({enableQuerySyntax: true})}),
+        getSnapshot({query: buildMockQueryState({enableQuerySyntax: false})})
       );
     });
 
@@ -274,7 +283,7 @@ describe('history slice', () => {
   });
 
   it('should not add duplicate snapshot', () => {
-    const snap = getSnapshot({query: {q: 'foo'}});
+    const snap = getSnapshot({query: buildMockQueryState({q: 'foo'})});
     const history = addSnapshots(snap, snap);
     expect(history.past.length).toBe(1);
     expect(history.past[0]).toEqual(getHistoryEmptyState());

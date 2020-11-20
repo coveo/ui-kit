@@ -116,7 +116,7 @@ const isPaginationEqual = (current: PaginationState, next: PaginationState) =>
   current.numberOfResults === next.numberOfResults;
 
 const isQueryEqual = (current: QueryState, next: QueryState) =>
-  current.q === next.q;
+  JSON.stringify(current) === JSON.stringify(next);
 
 const isAdvancedSearchQueriesEqual = (
   current: AdvancedSearchQueriesState,

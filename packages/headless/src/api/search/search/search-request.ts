@@ -4,6 +4,7 @@ import {
   ConstantQueryParam,
   ContextParam,
   EnableDidYouMeanParam,
+  EnableQuerySyntaxParam,
   FacetOptionsParam,
   FacetsParam,
   FieldsToIncludeParam,
@@ -26,6 +27,7 @@ export type SearchRequest = BaseParam &
   FacetsParam &
   ContextParam &
   EnableDidYouMeanParam &
+  EnableQuerySyntaxParam &
   FieldsToIncludeParam &
   PipelineParam &
   SearchHubParam &

@@ -3,12 +3,13 @@ import {
   Sort,
   SortState,
   SortInitialState,
-  buildRelevanceSortCriterion,
-  buildDateSortCriterion,
-  buildFieldSortCriterion,
   Unsubscribe,
   buildSort,
   Engine,
+  buildRelevanceSortCriterion,
+  buildDateSortCriterion,
+  buildFieldSortCriterion,
+  SortOrder,
 } from '@coveo/headless';
 import {Initialization} from '../../utils/initialization-utils';
 
@@ -38,6 +39,7 @@ export class AtomicSortDropdown {
   public initialize() {
     const initialState: Partial<SortInitialState> = {criterion: this.relevance};
     this.sort = buildSort(this.engine, {initialState});
+
     this.unsubscribe = this.sort.subscribe(() => this.updateState());
   }
 
@@ -79,15 +81,15 @@ export class AtomicSortDropdown {
   }
 
   private get dateDescending() {
-    return buildDateSortCriterion('descending');
+    return buildDateSortCriterion(SortOrder.Descending);
   }
 
   private get dateAscending() {
-    return buildDateSortCriterion('ascending');
+    return buildDateSortCriterion(SortOrder.Ascending);
   }
 
   private get largest() {
-    return buildFieldSortCriterion('size', 'descending');
+    return buildFieldSortCriterion('size', SortOrder.Descending);
   }
 
   render() {

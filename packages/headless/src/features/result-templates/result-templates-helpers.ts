@@ -34,6 +34,19 @@ export const fieldsMustBeDefined = (
 };
 
 /**
+ * Creates a condition that verifies if the specified fields are not defined.
+ * @param fieldNames (string[]) A list of fields that must not be defined.
+ * @returns (ResultTemplateCondition) A function that takes a result and checks if every field in the specified list is not defined.
+ */
+export const fieldsMustNotBeDefined = (
+  fieldNames: string[]
+): ResultTemplateCondition => {
+  return (result: Result) => {
+    return fieldNames.every((fieldName) => result.raw[fieldName] === undefined);
+  };
+};
+
+/**
  * Creates a condition that verifies if a field's value contains any of the specified values.
  * @param fieldName (string) The name of the field to check.
  * @param valuesToMatch (string[]) A list of possible values to match.
