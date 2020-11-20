@@ -84,6 +84,7 @@ export class AtomicResultList {
   private get results() {
     return this.state.results.map((result) => (
       <atomic-result
+        key={result.uniqueId}
         part="list-element"
         class={this.listElementClass}
         result={result}

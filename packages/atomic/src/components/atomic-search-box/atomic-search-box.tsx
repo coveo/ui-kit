@@ -169,6 +169,7 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
           tabIndex={-1}
           class="list-group-item list-group-item-action"
           onClick={(e) => this.onClickSuggestion(e)}
+          onMouseDown={(e) => e.preventDefault()}
           part="suggestion"
           id={id}
           value={suggestion.value}
