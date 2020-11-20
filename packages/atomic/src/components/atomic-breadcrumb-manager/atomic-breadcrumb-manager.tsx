@@ -6,12 +6,14 @@ import {
   Engine,
   Unsubscribe,
   buildBreadcrumbManager,
-  FacetBreadcrumb,
-  NumericFacetBreadcrumb,
-  DateFacetBreadcrumb,
   CategoryFacetBreadcrumb,
   CategoryFacetValue,
+  BreadcrumbValue,
+  FacetValue,
+  NumericFacetValue,
+  DateFacetValue,
 } from '@coveo/headless';
+import {RangeFacetValue} from '@coveo/headless/dist/features/facets/range-facets/generic/interfaces/range-facet';
 
 /**
  * @part container - The contianer for all breadcrumbs
@@ -54,118 +56,67 @@ export class AtomicBreadcrumbManager {
   }
 
   private get facetBreadcrumbs() {
-    const breadcrumbs = Object.keys(this.state.facetBreadcrumbs).map(
-      (field) => {
-        const fieldBreadcrumbs = this.state.facetBreadcrumbs[field].map(
-          (breadcrumb: FacetBreadcrumb) => (
-            <li class="breadcrumb-item vertical-bar">
-              <button
-                class="btn btn-link btn-sm text-decoration-none text-primary p-0 m-0"
-                onClick={breadcrumb.deselect}
-              >
-                {breadcrumb.value.value}
-              </button>
-            </li>
-          )
-        );
-        return (
-          <ul part="facet-breadcrumb" class="breadcrumb p-0 m-0 bg-transparent">
-            <li class="text-muted">{field}:&nbsp;</li>
-            {fieldBreadcrumbs}
-          </ul>
-        );
-      }
-    );
+    const breadcrumbs = this.state.facetBreadcrumbs.map((breadcrumb) => {
+      const breadcrumbsValues = this.getBreadrumbValues(breadcrumb.values);
+      return breadcrumbsValues.length > 0 ? (
+        <ul class="breadcrumb p-0 m-0 bg-transparent">
+          <li class="text-muted">{breadcrumb.field}:&nbsp; </li>
+          {breadcrumbsValues}
+        </ul>
+      ) : (
+        ''
+      );
+    });
     return breadcrumbs;
   }
 
   private get numericFacetBreadcrumbs() {
-    const breadcrumbs = Object.keys(this.state.numericFacetBreadcrumbs).map(
-      (field) => {
-        const fieldBreadcrumbs = this.state.numericFacetBreadcrumbs[field].map(
-          (breadcrumb: NumericFacetBreadcrumb) => (
-            <li class="breadcrumb-item vertical-bar">
-              <button
-                class="btn btn-link btn-sm text-decoration-none text-primary p-0 m-0"
-                onClick={breadcrumb.deselect}
-              >
-                {breadcrumb.value.start} - {breadcrumb.value.end}
-              </button>
-            </li>
-          )
-        );
-        return (
-          <ul
-            part="numeric-breadcrumbs"
-            class="breadcrumb p-0 m-0 bg-transparent"
-          >
-            <li class="text-muted">{field}:&nbsp;</li>
-            {fieldBreadcrumbs}
-          </ul>
-        );
-      }
-    );
+    const breadcrumbs = this.state.numericFacetBreadcrumbs.map((breadcrumb) => {
+      const breadcrumbsValues = this.getRangeBreadrumbValues(breadcrumb.values);
+      return breadcrumbsValues.length > 0 ? (
+        <ul class="breadcrumb p-0 m-0 bg-transparent">
+          <span class="text-muted">{breadcrumb.field}:&nbsp; </span>
+          {breadcrumbsValues}
+        </ul>
+      ) : (
+        ''
+      );
+    });
     return breadcrumbs;
   }
 
   private get dateFacetBreadcrumbs() {
-    const breadcrumbs = Object.keys(this.state.dateFacetBreadcrumbs).map(
-      (field) => {
-        const fieldBreadcrumbs = this.state.dateFacetBreadcrumbs[field].map(
-          (breadcrumb: DateFacetBreadcrumb) => (
-            <li class="breadcrumb-item vertical-bar">
-              <button
-                class="btn btn-link btn-sm text-decoration-none text-primary p-0 m-0"
-                onClick={breadcrumb.deselect}
-              >
-                {breadcrumb.value.start} - {breadcrumb.value.end}
-              </button>
-            </li>
-          )
-        );
-        return (
-          <ul part="date-breadcrumbs" class="breadcrumb p-0 m-0 bg-transparent">
-            <li class="text-muted">{field}:&nbsp;</li>
-            {fieldBreadcrumbs}
-          </ul>
-        );
-      }
-    );
+    const breadcrumbs = this.state.dateFacetBreadcrumbs.map((breadcrumb) => {
+      const breadcrumbsValues = this.getRangeBreadrumbValues(breadcrumb.values);
+      return breadcrumbsValues.length > 0 ? (
+        <ul class="breadcrumb p-0 m-0 bg-transparent">
+          <li class="text-muted">{breadcrumb.field}:&nbsp; </li>
+          {breadcrumbsValues}
+        </ul>
+      ) : (
+        ''
+      );
+    });
     return breadcrumbs;
   }
 
   private get categoryFacetBreadcrumbs() {
-    const breadcrumbs = Object.keys(this.state.categoryFacetBreadcrumbs).map(
-      (field) => {
-        const fieldBreadcrumbs = this.state.categoryFacetBreadcrumbs[field].map(
-          (breadcrumb: CategoryFacetBreadcrumb) => {
-            const pathString = breadcrumb.path
-              .map((value: CategoryFacetValue) => value.value)
-              .join('/');
-            return (
-              <li class="breadcrumb-item">
-                <button
-                  class="btn btn-link btn-sm text-decoration-none text-primary p-0 m-0"
-                  onClick={breadcrumb.deselect}
-                >
-                  {pathString}
-                </button>
-              </li>
-            );
-          }
+    const breadcrumbs = this.state.categoryFacetBreadcrumbs.map(
+      (breadcrumb) => {
+        const breadcrumbsValues = this.getCategoryBreadrumbValues(breadcrumb);
+        const showBreadcrumbs = this.state.categoryFacetBreadcrumbs.every(
+          (value: CategoryFacetBreadcrumb) => value.path.length > 0
         );
-        return (
-          <ul
-            part="category-breadcrumbs"
-            class="breadcrumb p-0 m-0 bg-transparent"
-          >
-            <li class="text-muted">{field}:&nbsp;</li>
-            {fieldBreadcrumbs}
+        return showBreadcrumbs ? (
+          <ul class="breadcrumb p-0 m-0 bg-transparent">
+            <li class="text-muted">{breadcrumb.field}:&nbsp; </li>
+            {breadcrumbsValues}
           </ul>
+        ) : (
+          ''
         );
       }
     );
-
     return breadcrumbs;
   }
 
@@ -176,5 +127,47 @@ export class AtomicBreadcrumbManager {
       this.dateFacetBreadcrumbs,
       this.categoryFacetBreadcrumbs,
     ];
+  }
+
+  private getBreadrumbValues(values: BreadcrumbValue<FacetValue>[]) {
+    return values.map((breadcrumbValue) => (
+      <li class="breadcrumb-item vertical-bar">
+        <button
+          class="btn btn-link btn-sm text-decoration-none text-primary p-0 m-0"
+          onClick={breadcrumbValue.deselect}
+        >
+          {breadcrumbValue.value.value}
+        </button>
+      </li>
+    ));
+  }
+
+  private getRangeBreadrumbValues(values: BreadcrumbValue<RangeFacetValue>[]) {
+    return values.map((breadcrumbValue) => (
+      <li class="breadcrumb-item vertical-bar">
+        <button
+          class="btn btn-link btn-sm text-decoration-none text-primary p-0 m-0"
+          onClick={breadcrumbValue.deselect}
+        >
+          {breadcrumbValue.value.start} - {breadcrumbValue.value.end}
+        </button>
+      </li>
+    ));
+  }
+
+  private getCategoryBreadrumbValues(values: CategoryFacetBreadcrumb) {
+    const pathString = values.path
+      .map((value: CategoryFacetValue) => value.value)
+      .join('/');
+    return (
+      <li class="breadcrumb-item">
+        <button
+          class="btn btn-link btn-sm text-decoration-none text-primary p-0 m-0"
+          onClick={values.deselect}
+        >
+          {pathString}
+        </button>
+      </li>
+    );
   }
 }
