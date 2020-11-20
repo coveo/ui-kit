@@ -86,10 +86,7 @@ export function buildSearchBox(
      */
     updateText(value: string) {
       dispatch(updateQuerySetQuery({id, query: value}));
-
-      if (options.numberOfSuggestions) {
-        this.showSuggestions();
-      }
+      this.showSuggestions();
     },
 
     /**
@@ -111,7 +108,9 @@ export function buildSearchBox(
      * Shows the suggestions for the current search box value.
      */
     showSuggestions() {
-      dispatch(fetchQuerySuggestions({id}));
+      if (options.numberOfSuggestions) {
+        dispatch(fetchQuerySuggestions({id}));
+      }
     },
 
     /**
