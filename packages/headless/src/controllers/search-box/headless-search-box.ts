@@ -1,4 +1,3 @@
-import {Schema, SchemaValues} from '@coveo/bueno';
 import {
   fetchQuerySuggestions,
   clearQuerySuggest,
@@ -23,16 +22,20 @@ import {
   QuerySuggestionSection,
   SearchSection,
 } from '../../state/state-sections';
-import {searchBoxOptionDefinitions} from './headless-search-box-options-schema';
+import {
+  SearchBoxOptions,
+  defaultSearchBoxOptions,
+  searchBoxOptionsSchema,
+} from './headless-search-box-options';
 import {validateOptions} from '../../utils/validate-payload';
 import {logQuerySuggestionClick} from '../../features/query-suggest/query-suggest-analytics-actions';
+import {randomID} from '../../utils/utils';
+import {QuerySuggestState} from '../../features/query-suggest/query-suggest-state';
 
+export {SearchBoxOptions};
 export interface SearchBoxProps {
   options: SearchBoxOptions;
 }
-
-const optionsSchema = new Schema(searchBoxOptionDefinitions);
-export type SearchBoxOptions = SchemaValues<typeof optionsSchema>;
 
 /**
  * A scoped and simplified part of the headless state that is relevant to the `SearchBox` controller.
@@ -56,16 +59,19 @@ export function buildSearchBox(
   const controller = buildController(engine);
   const {dispatch} = engine;
 
-  const options = validateOptions(
-    optionsSchema,
-    props.options,
-    buildSearchBox.name
-  ) as Required<SearchBoxOptions>;
+  const id = props.options?.id || randomID('search_box');
+  const options: Required<SearchBoxOptions> = {
+    id,
+    ...defaultSearchBoxOptions,
+    ...props.options,
+  };
 
-  dispatch(registerQuerySetQuery({id: options.id, query: ''}));
+  validateOptions(searchBoxOptionsSchema, options, buildSearchBox.name);
+
+  dispatch(registerQuerySetQuery({id, query: ''}));
   dispatch(
     registerQuerySuggest({
-      id: options.id,
+      id,
       q: engine.state.query.q,
       count: options.numberOfSuggestions,
     })
@@ -79,7 +85,7 @@ export function buildSearchBox(
      * @param value  The string value to update the search box with.
      */
     updateText(value: string) {
-      dispatch(updateQuerySetQuery({id: options.id, query: value}));
+      dispatch(updateQuerySetQuery({id, query: value}));
 
       if (options.numberOfSuggestions) {
         this.showSuggestions();
@@ -90,22 +96,22 @@ export function buildSearchBox(
      * Clears the search box text and the suggestions.
      */
     clear() {
-      dispatch(updateQuerySetQuery({id: options.id, query: ''}));
-      dispatch(clearQuerySuggest({id: options.id}));
+      dispatch(updateQuerySetQuery({id, query: ''}));
+      dispatch(clearQuerySuggest({id}));
     },
 
     /**
      * Clears the suggestions.
      */
     hideSuggestions() {
-      dispatch(clearQuerySuggestCompletions({id: options.id}));
+      dispatch(clearQuerySuggestCompletions({id}));
     },
 
     /**
      * Shows the suggestions for the current search box value.
      */
     showSuggestions() {
-      dispatch(fetchQuerySuggestions({id: options.id}));
+      dispatch(fetchQuerySuggestions({id}));
     },
 
     /**
@@ -113,8 +119,8 @@ export function buildSearchBox(
      * @param value The string value of the suggestion to select
      */
     selectSuggestion(value: string) {
-      dispatch(logQuerySuggestionClick({id: options.id, suggestion: value}));
-      dispatch(selectQuerySuggestion({id: options.id, expression: value}));
+      dispatch(logQuerySuggestionClick({id, suggestion: value}));
+      dispatch(selectQuerySuggestion({id, expression: value}));
       this.submit();
     },
 
@@ -137,14 +143,24 @@ export function buildSearchBox(
      */
     get state() {
       const state = engine.state;
-      const querySuggestState = state.querySuggest[options.id]!;
+      const querySuggestState = state.querySuggest[options.id];
+      const suggestions = getSuggestions(querySuggestState);
+
       return {
         value: state.querySet[options.id],
-        suggestions: querySuggestState.completions.map((completion) => ({
-          value: completion.expression,
-        })),
+        suggestions,
         isLoading: state.search.isLoading,
       };
     },
   };
+}
+
+function getSuggestions(state: QuerySuggestState | undefined) {
+  if (!state) {
+    return [];
+  }
+
+  return state.completions.map((completion) => ({
+    value: completion.expression,
+  }));
 }

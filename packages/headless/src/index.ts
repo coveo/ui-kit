@@ -38,7 +38,7 @@ export * from './controllers/tab/headless-tab';
 export * from './controllers/facet-manager/headless-facet-manager';
 export * from './controllers/breadcrumb-manager/headless-breadcrumb-manager';
 export * from './controllers/recommendation/headless-recommendation';
-export * from './controllers/standalone-search-box/headless-standalone-searchbox';
+export * from './controllers/standalone-search-box/headless-standalone-search-box';
 export * from './controllers/product-recommendations/headless-frequently-bought-together';
 export * from './controllers/product-recommendations/headless-cart-recommendations';
 export * from './controllers/product-recommendations/headless-frequently-bought-together';
