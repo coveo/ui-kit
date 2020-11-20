@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.1.0-alpha.61](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.60...v0.1.0-alpha.61) (2020-11-20)
+
+
+### Bug Fixes
+
+* **headless:** move numberOfSuggestions condition to #showSuggestions ([618d69b](https://bitbucket.org/coveord/ui-kit/commits/618d69b4fdabe7a38dbfeab218ad63d58cf57a9f))
+
+
+
+
+
 # [0.1.0-alpha.60](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.59...v0.1.0-alpha.60) (2020-11-20)
 
 
