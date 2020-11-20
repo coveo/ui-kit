@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.1.0-alpha.60](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.59...v0.1.0-alpha.60) (2020-11-20)
+
+
+### Bug Fixes
+
+* **headless:** make standalone search-box options optional ([1c7e4cd](https://bitbucket.org/coveord/ui-kit/commits/1c7e4cdecbc5a533a8f910d19cba1516a516235e))
+
+
+
+
+
 # [0.1.0-alpha.59](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.58...v0.1.0-alpha.59) (2020-11-20)
 
 
