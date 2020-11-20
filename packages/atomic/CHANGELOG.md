@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.1.0-alpha.59](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.58...v0.1.0-alpha.59) (2020-11-20)
+
+
+### Bug Fixes
+
+* **atomic:** fix query suggest click, add key attr to results, add small styling fixes ([4180053](https://bitbucket.org/coveord/ui-kit/commits/4180053761e11a3a5e6e30119081ee5d8199ee7c))
+
+
+
+
+
 # [0.1.0-alpha.58](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.57...v0.1.0-alpha.58) (2020-11-19)
 
 **Note:** Version bump only for package @coveo/atomic
