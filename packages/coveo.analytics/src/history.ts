@@ -5,10 +5,6 @@ export const MAX_NUMBER_OF_HISTORY_ELEMENTS: number = 20;
 export const MIN_THRESHOLD_FOR_DUPLICATE_VALUE: number = 1000 * 60;
 export const MAX_VALUE_SIZE = 75;
 
-function isString(possibleString: Promise<any> | string): possibleString is string {
-    return typeof possibleString === "string";
-}
-
 export class HistoryStore {
     private store: WebStorage;
     constructor(store?: WebStorage) {
@@ -60,7 +56,7 @@ export class HistoryStore {
     private getHistoryWithInternalTime(): HistoryElement[] {
         try {
             const elements = this.store.getItem(STORE_KEY);
-            if (elements && isString(elements)) {
+            if (elements && typeof elements === "string") {
                 return JSON.parse(elements) as HistoryElement[];
             } else {
                 return [];
