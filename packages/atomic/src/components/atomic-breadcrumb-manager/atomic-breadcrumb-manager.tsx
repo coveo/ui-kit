@@ -196,7 +196,7 @@ export class AtomicBreadcrumbManager {
       values
     );
     const renderedBreadcrumbs = breadcrumbsToShow.map((breadcrumbValue) => (
-      <li part="breadcrumb-value" class="breadcrumb-item p-0 border-0">
+      <li part="breadcrumb-value" class="breadcrumb-item pr-1">
         <button
           part="breadcrumb-button"
           class="btn btn-link btn-sm text-decoration-none text-primary p-0 m-0"
@@ -271,5 +271,27 @@ export class AtomicBreadcrumbManager {
       }
     }
     return {breadcrumbsToShow, moreButton};
+  }
+
+  private clearAllFilters() {
+    this.state.facetBreadcrumbs.forEach((facetBreadcrumbs) => {
+      facetBreadcrumbs.values.forEach((breadcrumb) => {
+        breadcrumb.deselect();
+      });
+    });
+    this.state.numericFacetBreadcrumbs.forEach((facetBreadcrumbs) => {
+      facetBreadcrumbs.values.forEach((breadcrumb) => {
+        breadcrumb.deselect();
+      });
+    });
+    this.state.dateFacetBreadcrumbs.forEach((facetBreadcrumbs) => {
+      facetBreadcrumbs.values.forEach((breadcrumb) => {
+        breadcrumb.deselect();
+      });
+    });
+    this.state.categoryFacetBreadcrumbs.forEach((facetBreadcrumbs) => {
+      facetBreadcrumbs.deselect();
+    });
+    this.state = {...this.state};
   }
 }
