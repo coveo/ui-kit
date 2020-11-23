@@ -237,7 +237,7 @@ export class AtomicBreadcrumbManager {
   }
 
   private updateCollapsePreferences(field: string) {
-    this.collapseBreadcrumbMap[field] = true;
+    this.collapseBreadcrumbMap = {...this.collapseBreadcrumbMap, [field]: true};
   }
 
   private isEmpty(array: any[]) {
