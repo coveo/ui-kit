@@ -1,6 +1,7 @@
 export interface SchemaValue<T> {
   validate(value: T): string | null;
   default: T | undefined;
+  required: boolean;
 }
 
 export type SchemaDefinition<T extends object> = {

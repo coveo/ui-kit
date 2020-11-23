@@ -1,19 +1,20 @@
 import {ValueConfig, Value, isUndefined} from './value';
 import {SchemaValue} from '../schema';
 
-interface StringValueConfig extends ValueConfig<string> {
+interface StringValueConfig<T extends string> extends ValueConfig<T> {
   emptyAllowed?: boolean;
   url?: boolean;
-  constrainTo?: string[];
+  constrainTo?: readonly T[];
 }
 
 // Source: https://github.com/jquery-validation/jquery-validation/blob/c1db10a34c0847c28a5bd30e3ee1117e137ca834/src/core.js#L1349
 const urlRegex = /^(?:(?:(?:https?|ftp):)?\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})).?)(?::\d{2,5})?(?:[/?#]\S*)?$/i;
 
-export class StringValue implements SchemaValue<string> {
-  private value: Value<string>;
-  private config: StringValueConfig;
-  constructor(config: StringValueConfig = {}) {
+export class StringValue<T extends string = string>
+  implements SchemaValue<string> {
+  private value: Value<T>;
+  private config: StringValueConfig<T>;
+  constructor(config: StringValueConfig<T> = {}) {
     this.config = {
       emptyAllowed: true,
       url: false,
@@ -22,7 +23,7 @@ export class StringValue implements SchemaValue<string> {
     this.value = new Value(this.config);
   }
 
-  public validate(value: string) {
+  public validate(value: T) {
     const {emptyAllowed, url, constrainTo} = this.config;
     const valueValidation = this.value.validate(value);
     if (valueValidation) {
@@ -58,7 +59,7 @@ export class StringValue implements SchemaValue<string> {
   }
 
   public get required() {
-    return this.value.required();
+    return this.value.required;
   }
 }
 

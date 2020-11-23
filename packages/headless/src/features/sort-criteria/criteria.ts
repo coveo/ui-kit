@@ -1,38 +1,73 @@
-type SortOrder = 'ascending' | 'descending';
+import {isArray} from '@coveo/bueno';
 
-export interface SortCriterion {
-  expression: string;
+export enum SortOrder {
+  Ascending = 'ascending',
+  Descending = 'descending',
 }
 
-export function buildRelevanceSortCriterion(): SortCriterion {
-  return {expression: 'relevancy'};
+export enum SortBy {
+  Relevancy = 'relevancy',
+  QRE = 'qre',
+  Date = 'date',
+  Field = 'field',
+  NoSort = 'nosort',
 }
 
-export function buildQueryRankingExpressionSortCriterion(): SortCriterion {
-  return {expression: 'qre'};
-}
+export type SortByRelevancy = {by: SortBy.Relevancy};
+export type SortByQRE = {by: SortBy.QRE};
+export type SortByDate = {by: SortBy.Date; order: SortOrder};
+export type SortByField = {by: SortBy.Field; field: string; order: SortOrder};
+export type SortByNoSort = {by: SortBy.NoSort};
 
-export function buildNoSortCriterion(): SortCriterion {
-  return {expression: 'nosort'};
-}
+export type SortCriterion =
+  | SortByRelevancy
+  | SortByQRE
+  | SortByDate
+  | SortByField
+  | SortByNoSort;
 
-export function buildDateSortCriterion(order: SortOrder): SortCriterion {
-  return {expression: `date ${order}`};
-}
+export const buildCriterionExpression = (
+  criterion: SortCriterion | SortCriterion[]
+): string => {
+  if (isArray(criterion)) {
+    return criterion.map((c) => buildCriterionExpression(c)).join(',');
+  }
 
-export function buildFieldSortCriterion(
+  switch (criterion.by) {
+    case SortBy.Relevancy:
+    case SortBy.QRE:
+    case SortBy.NoSort:
+      return criterion.by;
+    case SortBy.Date:
+      return `date ${criterion.order}`;
+    case SortBy.Field:
+      return `@${criterion.field} ${criterion.order}`;
+    default:
+      console.error(`Unknown criterion: ${criterion}`);
+      return '';
+  }
+};
+
+export const buildRelevanceSortCriterion = (): SortByRelevancy => ({
+  by: SortBy.Relevancy,
+});
+
+export const buildDateSortCriterion = (order: SortOrder): SortByDate => ({
+  by: SortBy.Date,
+  order,
+});
+
+export const buildFieldSortCriterion = (
   field: string,
   order: SortOrder
-): SortCriterion {
-  return {expression: `@${field} ${order}`};
-}
+): SortByField => ({
+  by: SortBy.Field,
+  order,
+  field,
+});
 
-export function buildCompositeSortCriterion(
-  criteria: SortCriterion[]
-): SortCriterion {
-  const expression = criteria
-    .map((criterion) => criterion.expression)
-    .join(',');
+export const buildQueryRankingExpressionSortCriterion = (): SortByQRE => ({
+  by: SortBy.QRE,
+});
 
-  return {expression};
-}
+export const buildNoSortCriterion = (): SortByNoSort => ({by: SortBy.NoSort});

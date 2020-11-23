@@ -12,7 +12,10 @@ import {executeSearch} from '../../search/search-actions';
 import {selectFacetSearchResult} from '../facet-search-set/specific/specific-facet-search-actions';
 import {FacetRequest, FacetValueRequest} from './interfaces/request';
 import {FacetValue, FacetResponse} from './interfaces/response';
-import {FacetRegistrationOptions} from './interfaces/options';
+import {
+  FacetOptionalParameters,
+  FacetRegistrationOptions,
+} from './interfaces/options';
 import {
   handleFacetSortCriterionUpdate,
   handleFacetDeselectAll,
@@ -139,18 +142,22 @@ export const facetSetReducer = createReducer(
   }
 );
 
+export const defaultFacetOptions: FacetOptionalParameters = {
+  delimitingCharacter: '>',
+  filterFacetCount: true,
+  injectionDepth: 1000,
+  numberOfValues: 8,
+  sortCriteria: 'automatic',
+};
+
 function buildFacetRequest(config: FacetRegistrationOptions): FacetRequest {
   return {
+    ...defaultFacetOptions,
     type: 'specific',
     currentValues: [],
-    delimitingCharacter: '>',
-    filterFacetCount: true,
     freezeCurrentValues: false,
-    injectionDepth: 1000,
     isFieldExpanded: false,
-    numberOfValues: 8,
     preventAutoSelect: false,
-    sortCriteria: 'automatic',
     ...config,
   };
 }

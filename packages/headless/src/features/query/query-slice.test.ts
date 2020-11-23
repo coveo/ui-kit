@@ -7,10 +7,17 @@ import {applyDidYouMeanCorrection} from '../did-you-mean/did-you-mean-actions';
 import {getQueryInitialState, QueryState} from './query-state';
 
 describe('query slice', () => {
+  let state: QueryState;
+
+  beforeEach(() => {
+    state = getQueryInitialState();
+  });
+
   it('should have initial state', () => {
-    expect(queryReducer(undefined, {type: 'randomAction'})).toEqual(
-      getQueryInitialState()
-    );
+    expect(queryReducer(undefined, {type: 'randomAction'})).toEqual({
+      q: '',
+      enableQuerySyntax: false,
+    });
   });
 
   describe('updateQuery', () => {
@@ -20,23 +27,31 @@ describe('query slice', () => {
     };
 
     it('should handle updateQuery on initial state', () => {
-      expect(queryReducer(undefined, updateQuery({q: 'some query'}))).toEqual(
+      expect(queryReducer(state, updateQuery({q: 'some query'}))).toEqual(
         expectedState
       );
     });
 
+    it('should be able to update enableQuerySyntax', () => {
+      const enableQuerySyntax = !state.enableQuerySyntax;
+      const action = updateQuery({enableQuerySyntax});
+
+      expect(queryReducer(state, action)).toEqual({
+        ...state,
+        enableQuerySyntax,
+      });
+    });
+
     it('should handle updateQuery on existing state', () => {
-      const existingState: QueryState = {
-        ...getQueryInitialState(),
-        q: 'another query',
-      };
-      expect(
-        queryReducer(existingState, updateQuery({q: 'some query'}))
-      ).toEqual(expectedState);
+      state.q = 'another query';
+
+      expect(queryReducer(state, updateQuery({q: 'some query'}))).toEqual(
+        expectedState
+      );
     });
   });
 
-  describe('updateQuery', () => {
+  describe('selectQuerySuggestion', () => {
     const expectedState: QueryState = {
       ...getQueryInitialState(),
       q: 'some expression',
@@ -52,13 +67,11 @@ describe('query slice', () => {
     });
 
     it('should handle updateQuery on existing state', () => {
-      const existingState: QueryState = {
-        ...getQueryInitialState(),
-        q: 'some query',
-      };
+      state.q = 'some query';
+
       expect(
         queryReducer(
-          existingState,
+          state,
           selectQuerySuggestion({id: 'id', expression: 'some expression'})
         )
       ).toEqual(expectedState);
@@ -66,19 +79,16 @@ describe('query slice', () => {
   });
 
   it('updates query on query correction', () => {
-    const existingState: QueryState = {
-      ...getQueryInitialState(),
-      q: 'some query',
-    };
+    state.q = 'some query';
+
     expect(
-      queryReducer(existingState, applyDidYouMeanCorrection('corrected query'))
-        .q
+      queryReducer(state, applyDidYouMeanCorrection('corrected query')).q
     ).toEqual('corrected query');
   });
 
   it('allows to restore a query on history change', () => {
-    const state = getQueryInitialState();
-    const expectedQuery = {q: 'foo'};
+    const expectedQuery = {q: 'foo', enableQuerySyntax: false};
+
     const historyChange = {
       ...getHistoryEmptyState(),
       query: expectedQuery,

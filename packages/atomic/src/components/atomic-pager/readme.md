@@ -15,12 +15,21 @@
 
 ## Shadow Parts
 
-| Part            | Description         |
-| --------------- | ------------------- |
-| `"back-button"` | The back button     |
-| `"list"`        | The list of buttons |
-| `"next-button"` | The next button     |
-| `"page-button"` | The page button     |
+| Part                   | Description            |
+| ---------------------- | ---------------------- |
+| `"active-page-button"` | The active page button |
+| `"back-button"`        | The back button        |
+| `"list"`               | The list of buttons    |
+| `"next-button"`        | The next button        |
+| `"page-button"`        | The page button        |
+
+
+## CSS Custom Properties
+
+| Name                               | Description             |
+| ---------------------------------- | ----------------------- |
+| `--atomic-pagination-active-color` | Pagination active color |
+| `--atomic-pagination-border-color` | Pagination border color |
 
 
 ## Dependencies

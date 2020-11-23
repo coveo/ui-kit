@@ -1,6 +1,10 @@
-import {buildRelevanceSortCriterion} from './criteria';
+import {
+  buildCriterionExpression,
+  buildRelevanceSortCriterion,
+} from './criteria';
+
 export type SortCriteriaState = string;
 
 export function getSortCriteriaInitialState(): SortCriteriaState {
-  return buildRelevanceSortCriterion().expression;
+  return buildCriterionExpression(buildRelevanceSortCriterion());
 }

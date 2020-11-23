@@ -7,6 +7,15 @@ import {
 import {configureAnalytics} from '../../../api/analytics/analytics';
 import {RangeFacetSortCriterion} from '../range-facets/generic/interfaces/request';
 import {SearchAppState} from '../../../state/search-app-state';
+import {
+  validatePayloadValue,
+  validatePayloadSchema,
+} from '../../../utils/validate-payload';
+import {Value} from '@coveo/bueno';
+import {
+  facetIdDefinition,
+  requiredNonEmptyString,
+} from '../generic/facet-actions-validation';
 
 export type FacetUpdateSortMetadata = {
   facetId: string;
@@ -25,6 +34,7 @@ export type FacetSelectionChangeMetadata = {
 export const logFacetShowMore = createAsyncThunk(
   'analytics/facet/showMore',
   async (facetId: string, {getState}) => {
+    validatePayloadValue(facetId, facetIdDefinition);
     const state = searchPageState(getState);
     const metadata = buildFacetBaseMetadata(facetId, state);
 
@@ -40,6 +50,7 @@ export const logFacetShowMore = createAsyncThunk(
 export const logFacetShowLess = createAsyncThunk(
   'analytics/facet/showLess',
   async (facetId: string, {getState}) => {
+    validatePayloadValue(facetId, facetIdDefinition);
     const state = searchPageState(getState);
     const metadata = buildFacetBaseMetadata(facetId, state);
 
@@ -55,6 +66,7 @@ export const logFacetShowLess = createAsyncThunk(
 export const logFacetSearch = createAsyncThunk(
   'analytics/facet/search',
   async (facetId: string, {getState}) => {
+    validatePayloadValue(facetId, facetIdDefinition);
     const state = searchPageState(getState);
     const metadata = buildFacetBaseMetadata(facetId, state);
 
@@ -70,6 +82,12 @@ export const logFacetSearch = createAsyncThunk(
 export const logFacetUpdateSort = createAsyncThunk(
   'analytics/facet/sortChange',
   async (payload: FacetUpdateSortMetadata, {getState}) => {
+    validatePayloadSchema(payload, {
+      facetId: facetIdDefinition,
+      criterion: new Value<FacetSortCriterion | RangeFacetSortCriterion>({
+        required: true,
+      }),
+    });
     const {facetId, criterion} = payload;
     const state = searchPageState(getState);
 
@@ -88,6 +106,7 @@ export const logFacetUpdateSort = createAsyncThunk(
 export const logFacetClearAll = createAsyncThunk(
   'analytics/facet/reset',
   async (facetId: string, {getState}) => {
+    validatePayloadValue(facetId, facetIdDefinition);
     const state = searchPageState(getState);
     const metadata = buildFacetBaseMetadata(facetId, state);
 
@@ -103,6 +122,10 @@ export const logFacetClearAll = createAsyncThunk(
 export const logFacetSelect = createAsyncThunk(
   'analytics/facet/select',
   async (payload: FacetSelectionChangeMetadata, {getState}) => {
+    validatePayloadSchema(payload, {
+      facetId: facetIdDefinition,
+      facetValue: requiredNonEmptyString,
+    });
     const state = searchPageState(getState);
     const metadata = buildFacetSelectionChangeMetadata(payload, state);
 
@@ -118,6 +141,10 @@ export const logFacetSelect = createAsyncThunk(
 export const logFacetDeselect = createAsyncThunk(
   'analytics/facet/deselect',
   async (payload: FacetSelectionChangeMetadata, {getState}) => {
+    validatePayloadSchema(payload, {
+      facetId: facetIdDefinition,
+      facetValue: requiredNonEmptyString,
+    });
     const state = searchPageState(getState);
     const metadata = buildFacetSelectionChangeMetadata(payload, state);
 

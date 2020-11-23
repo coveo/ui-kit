@@ -7,9 +7,7 @@ import {getQueryInitialState} from './query-state';
 
 export const queryReducer = createReducer(getQueryInitialState(), (builder) =>
   builder
-    .addCase(updateQuery, (state, action) => {
-      state.q = action.payload.q;
-    })
+    .addCase(updateQuery, (state, action) => ({...state, ...action.payload}))
     .addCase(applyDidYouMeanCorrection, (state, action) => {
       state.q = action.payload;
     })

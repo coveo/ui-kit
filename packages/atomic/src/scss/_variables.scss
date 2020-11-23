@@ -1,0 +1,6 @@
+// Redefining base colors don't work because or variant methods (e.g. shade-color)
+
+// Core CSS Variables
+$border-radius: var(--atomic-border-radius, 0.25rem);
+
+@import '../../node_modules/bootstrap/scss/variables';

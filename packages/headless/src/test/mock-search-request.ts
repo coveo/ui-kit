@@ -4,10 +4,11 @@ import {buildMockFacetOptions} from './mock-facet-options';
 
 export function buildMockSearchRequest(
   config: Partial<SearchRequest> = {}
-): SearchRequest {
+): Required<SearchRequest> {
   return {
     context: {},
     enableDidYouMean: false,
+    enableQuerySyntax: false,
     facets: [],
     facetOptions: buildMockFacetOptions(),
     firstResult: 0,
@@ -22,6 +23,7 @@ export function buildMockSearchRequest(
     url: 'https://platform.cloud.coveo.com/rest/search/v2',
     organizationId: '',
     accessToken: '',
+    visitorId: '',
     ...config,
   };
 }

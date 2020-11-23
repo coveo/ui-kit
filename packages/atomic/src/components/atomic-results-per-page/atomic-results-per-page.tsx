@@ -1,4 +1,4 @@
-import {Component, h, State} from '@stencil/core';
+import {Component, h, Prop, State} from '@stencil/core';
 import {
   ResultsPerPage,
   ResultsPerPageState,
@@ -11,6 +11,7 @@ import {Initialization} from '../../utils/initialization-utils';
 /**
  * @part list - The list of buttons
  * @part page-button - The page button
+ * @part active-page-button - The active page button
  * @part label - The "Results per page" label
  */
 @Component({
@@ -25,9 +26,21 @@ export class AtomicResultsPerPage {
   private resultsPerPage!: ResultsPerPage;
   private unsubscribe: Unsubscribe = () => {};
 
+  // TODO: validate props
+  /**
+   * List of possible results per page options, separated by commas
+   */
+  @Prop() options = '10,25,50,100';
+  /**
+   * Initial value of the result per page option
+   */
+  @Prop() initialOption = 10;
+
   @Initialization()
   public initialize() {
-    this.resultsPerPage = buildResultsPerPage(this.engine);
+    this.resultsPerPage = buildResultsPerPage(this.engine, {
+      initialState: {numberOfResults: this.initialOption},
+    });
     this.unsubscribe = this.resultsPerPage.subscribe(() => this.updateState());
   }
 
@@ -39,14 +52,15 @@ export class AtomicResultsPerPage {
     this.state = this.resultsPerPage.state;
   }
 
-  private get options() {
-    return [10, 25, 50, 100].map((num) => {
+  private get optionsList() {
+    return this.options.split(',').map((value) => {
+      const num = parseInt(value);
       const isSelected = this.resultsPerPage.isSetTo(num);
       const className = isSelected ? 'active' : '';
       return (
         <li class={`page-item ${className}`}>
           <button
-            part="page-button"
+            part={`page-button ${isSelected && 'active-page-button'}`}
             class="page-link"
             onClick={() => this.resultsPerPage.set(num)}
           >
@@ -64,7 +78,7 @@ export class AtomicResultsPerPage {
           Results per page
         </span>
         <ul class="pagination mb-0" part="list">
-          {this.options}
+          {this.optionsList}
         </ul>
       </nav>
     );

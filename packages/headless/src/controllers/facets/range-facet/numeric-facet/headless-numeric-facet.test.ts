@@ -49,6 +49,13 @@ describe('numeric facet', () => {
     expect(engine.actions).toContainEqual(action);
   });
 
+  it('when an option is invalid, it throws an error', () => {
+    options.numberOfValues = 0;
+    expect(() => initNumericFacet()).toThrow(
+      'Check the options of buildNumericFacet'
+    );
+  });
+
   describe('#toggleSelect', () => {
     it('dispatches a toggleSelectNumericFacetValue with the passed value', () => {
       const value = buildMockNumericFacetValue();

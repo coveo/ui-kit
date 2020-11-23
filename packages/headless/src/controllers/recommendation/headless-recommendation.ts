@@ -16,7 +16,11 @@ const optionsSchema = new Schema({
    * The Recommendation identifier used by the Coveo platform to retrieve recommended documents.
    * If not provided, will use default value of `Recommendation`.
    */
-  id: new StringValue({emptyAllowed: true, required: false, default: ''}),
+  id: new StringValue<string>({
+    emptyAllowed: true,
+    required: false,
+    default: '',
+  }),
 });
 
 export type RecommendationListOptions = SchemaValues<typeof optionsSchema>;

@@ -30,6 +30,7 @@ export interface AtomicSearchBoxOptions {
  * @part clear-button - The search box input's clear button
  * @part suggestions - The list of suggestions
  * @part suggestion - The suggestion
+ * @part active-suggestion - The currently active suggestion
  */
 @Component({
   tag: 'atomic-search-box',
@@ -73,6 +74,7 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
         setTimeout(() => this.searchBox.hideSuggestions(), 100);
       },
       activeClass: 'active',
+      activePartName: 'active-suggestion',
     });
   }
 
@@ -125,7 +127,7 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
     const rounded = this.leadingSubmitButton ? '' : 'rounded-0';
     return (
       <button
-        class={`btn btn-outline-primary ${rounded}`}
+        class={`btn btn-outline-secondary ${rounded}`}
         type="button"
         part="clear-button"
         onClick={() => {
@@ -167,6 +169,7 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
           tabIndex={-1}
           class="list-group-item list-group-item-action"
           onClick={(e) => this.onClickSuggestion(e)}
+          onMouseDown={(e) => e.preventDefault()}
           part="suggestion"
           id={id}
           value={suggestion.value}

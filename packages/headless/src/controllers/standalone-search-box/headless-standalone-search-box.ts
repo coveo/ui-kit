@@ -1,4 +1,3 @@
-import {Schema, SchemaValues, StringValue} from '@coveo/bueno';
 import {Engine} from '../../app/headless-engine';
 import {updateQuery} from '../../features/query/query-actions';
 import {checkForRedirection} from '../../features/redirection/redirection-actions';
@@ -10,31 +9,16 @@ import {
   RedirectionSection,
   SearchSection,
 } from '../../state/state-sections';
+import {randomID} from '../../utils/utils';
 import {validateOptions} from '../../utils/validate-payload';
+import {buildSearchBox} from '../search-box/headless-search-box';
+import {defaultSearchBoxOptions} from '../search-box/headless-search-box-options';
 import {
-  buildSearchBox,
-  SearchBoxOptions,
-} from '../search-box/headless-search-box';
-import {searchBoxOptionDefinitions} from '../search-box/headless-search-box-options-schema';
+  StandaloneSearchBoxOptions,
+  standaloneSearchBoxSchema,
+} from './headless-standalone-search-box-options';
 
-const optionsSchema = new Schema({
-  ...searchBoxOptionDefinitions,
-  /**
-   * The default Url the user should be redirected to, when a query is submitted.
-   * If a query pipeline redirect is triggered, it will redirect to that Url instead.
-   */
-  redirectionUrl: new StringValue({
-    required: true,
-    emptyAllowed: false,
-    url: true,
-  }),
-});
-
-export type StandaloneSearchBoxOptions = Required<
-  SchemaValues<typeof optionsSchema>
-> &
-  SearchBoxOptions;
-
+export {StandaloneSearchBoxOptions};
 export interface StandaloneSearchBoxProps {
   options: StandaloneSearchBoxOptions;
 }
@@ -61,13 +45,20 @@ export function buildStandaloneSearchBox(
   props: StandaloneSearchBoxProps
 ) {
   const {dispatch} = engine;
-  const options = validateOptions(
-    optionsSchema,
-    props.options,
-    buildStandaloneSearchBox.name
-  ) as Required<StandaloneSearchBoxOptions>;
+  const id = props.options.id || randomID('standalone_search_box');
+  const options: Required<StandaloneSearchBoxOptions> = {
+    id,
+    ...defaultSearchBoxOptions,
+    ...props.options,
+  };
 
-  const searchBox = buildSearchBox(engine, props);
+  validateOptions(
+    standaloneSearchBoxSchema,
+    options,
+    buildStandaloneSearchBox.name
+  );
+
+  const searchBox = buildSearchBox(engine, {options});
 
   return {
     ...searchBox,
@@ -76,7 +67,12 @@ export function buildStandaloneSearchBox(
      * Triggers a redirection.
      */
     submit() {
-      dispatch(updateQuery({q: this.state.value}));
+      dispatch(
+        updateQuery({
+          q: this.state.value,
+          enableQuerySyntax: options.enableQuerySyntax,
+        })
+      );
       dispatch(
         checkForRedirection({defaultRedirectionUrl: options.redirectionUrl})
       );

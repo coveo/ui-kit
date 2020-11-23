@@ -1,6 +1,0 @@
-/**
-* Redefining colors don't work because or variant methods (e.g. darken)
-* Those variant methods will be replaced in the v5.0.0-alpha3 of Bootstrap
-* See PR: https://github.com/twbs/bootstrap/pull/30622
-*/
-$border-radius: var(--atomic-border-radius, 0.25rem);
