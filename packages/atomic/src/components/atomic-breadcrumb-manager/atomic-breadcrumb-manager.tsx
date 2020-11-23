@@ -196,13 +196,14 @@ export class AtomicBreadcrumbManager {
       values
     );
     const renderedBreadcrumbs = breadcrumbsToShow.map((breadcrumbValue) => (
-      <li part="breadcrumb-value" class="breadcrumb-item p-0">
+      <li part="breadcrumb-value" class="breadcrumb-item p-0 border-0">
         <button
           part="breadcrumb-button"
           class="btn btn-link btn-sm text-decoration-none text-primary p-0 m-0"
           onClick={breadcrumbValue.deselect}
         >
           {breadcrumbValue.value.start} - {breadcrumbValue.value.end}
+          <span class="pl-1" innerHTML={mainclear}></span>
         </button>
       </li>
     ));
