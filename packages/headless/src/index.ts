@@ -46,6 +46,7 @@ export * from './controllers/product-recommendations/headless-frequently-viewed-
 export * from './controllers/product-recommendations/headless-popular-bought-recommendations';
 export * from './controllers/product-recommendations/headless-popular-viewed-recommendations';
 export * from './controllers/product-recommendations/headless-user-interest-recommendations';
+export * from './controllers/state-manager/headless-state-manager';
 
 // Selectors
 export * from './features/facets/facet-set/facet-set-selectors';
@@ -95,3 +96,4 @@ export {FacetValue} from './features/facets/facet-set/interfaces/response';
 export {FacetSortCriterion} from './features/facets/facet-set/interfaces/request';
 export {NumericFacetValue} from './features/facets/range-facets/numeric-facet-set/interfaces/response';
 export {RangeFacetSortCriterion} from './features/facets/range-facets/generic/interfaces/request';
+export * from './features/state-manager/url-encoder';
