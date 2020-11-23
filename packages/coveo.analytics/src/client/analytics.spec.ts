@@ -341,6 +341,19 @@ describe('Analytics', () => {
         expect(historyStore.getMostRecentElement()).toBeUndefined();
     });
 
+    it('should execute before send hooks passed as option', async () => {
+        mockFetchRequestForEventType(EventType.search);
+        const spy = jest.fn((_, p) => p);
+        const searchEventPayload = {queryText: 'potato'};
+        await new CoveoAnalyticsClient({
+            token: aToken,
+            endpoint: anEndpoint,
+            version: A_VERSION,
+            beforeSendHooks: [spy],
+        }).sendEvent(EventType.search, searchEventPayload);
+        expect(spy).toHaveBeenLastCalledWith(EventType.search, expect.objectContaining(searchEventPayload));
+    });
+
     const getParsedBodyCalls = (): any[] => {
         return fetchMock.calls().map(([, {body}]) => {
             return JSON.parse(body.toString());

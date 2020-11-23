@@ -42,6 +42,7 @@ export interface ClientOptions {
     token?: string;
     endpoint: string;
     version: string;
+    beforeSendHooks: AnalyticsClientSendEventHook[];
 }
 
 export type AnalyticsClientSendEventHook = <TResult>(eventType: string, payload: any) => TResult;
@@ -78,6 +79,7 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
             endpoint: Endpoints.default,
             token: '',
             version: Version,
+            beforeSendHooks: [],
         };
     }
 
@@ -101,7 +103,7 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
 
         this.visitorId = '';
         this.bufferedRequests = [];
-        this.beforeSendHooks = [enhanceViewEvent, addDefaultValues];
+        this.beforeSendHooks = [enhanceViewEvent, addDefaultValues].concat(this.options.beforeSendHooks);
         this.eventTypeMapping = {};
 
         const clientsOptions = {
