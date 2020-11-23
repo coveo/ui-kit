@@ -174,19 +174,14 @@ export class AtomicBreadcrumbManager {
       breadcrumb
     );
     const renderedBreadcrumbs = breadcrumbsToShow.map((breadcrumbValue) => (
-      <li part="breadcrumb-value" class="breadcrumb-item">
+      <li part="breadcrumb-value" class="breadcrumb-item pr-1">
         <button
           part="breadcrumb-button"
           class="btn btn-link btn-sm text-decoration-none text-primary p-0 m-0"
           onClick={breadcrumbValue.deselect}
         >
           {breadcrumbValue.value.value}
-          {/* <svg type="image/svg+xml">{mainclear}</svg> */}
-          {/* {mainclear} */}
-          {/* <object data={mainclear} type="image/svg+xml"></object> */}
-          {/* <img src={mainclear}></img> */}
-          {/* <span class="pl-1 close">&times;</span> */}
-          {/* <span class="pl-1 close">&#10006;</span> */}
+          <span class="pl-1" innerHTML={mainclear}></span>
         </button>
       </li>
     ));
@@ -201,7 +196,7 @@ export class AtomicBreadcrumbManager {
       values
     );
     const renderedBreadcrumbs = breadcrumbsToShow.map((breadcrumbValue) => (
-      <li part="breadcrumb-value" class="breadcrumb-item">
+      <li part="breadcrumb-value" class="breadcrumb-item p-0">
         <button
           part="breadcrumb-button"
           class="btn btn-link btn-sm text-decoration-none text-primary p-0 m-0"

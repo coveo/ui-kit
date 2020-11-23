@@ -5,15 +5,22 @@
 <!-- Auto Generated Below -->
 
 
+## Properties
+
+| Property            | Attribute            | Description | Type     | Default |
+| ------------------- | -------------------- | ----------- | -------- | ------- |
+| `collapseThreshold` | `collapse-threshold` |             | `number` | `5`     |
+
+
 ## Shadow Parts
 
-| Part                     | Description                            |
-| ------------------------ | -------------------------------------- |
-| `"category-breadcrumbs"` | The container for category breadcrumbs |
-| `"container"`            | The contianer for all breadcrumbs      |
-| `"date-breadcrumbs"`     | The container for date breadcrumbs     |
-| `"facet-breadcrumb"`     | The container for facet breadcrumbs    |
-| `"numeric-breadcrumbs"`  | The container for numeric breadcrumbs  |
+| Part                          | Description                                          |
+| ----------------------------- | ---------------------------------------------------- |
+| `"breadcrumb-button"`         | Button element for all types of breadcrumb           |
+| `"breadcrumb-label"`          | Label for the breadcrumb's title                     |
+| `"breadcrumb-value"`          | Breadcrumb list element for all types of breadcrumbs |
+| `"breadcrumbs"`               | Container for all types of breadcrumbs               |
+| `"category-breadcrumb-value"` | Breadcrumb list element for category breadcrumbs     |
 
 
 ## Dependencies
