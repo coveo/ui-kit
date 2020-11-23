@@ -16,6 +16,7 @@ import {
 } from '@coveo/headless';
 import {RangeFacetValue} from '@coveo/headless/dist/features/facets/range-facets/generic/interfaces/range-facet';
 import {BaseFacetValue} from '@coveo/headless/dist/features/facets/facet-api/response';
+import mainclear from '../../images/main-clear.svg';
 
 /**
  * @part breadcrumbs - Container for all types of breadcrumbs
@@ -173,13 +174,19 @@ export class AtomicBreadcrumbManager {
       breadcrumb
     );
     const renderedBreadcrumbs = breadcrumbsToShow.map((breadcrumbValue) => (
-      <li part="breadcrumb-value" class="breadcrumb-item vertical-bar">
+      <li part="breadcrumb-value" class="breadcrumb-item">
         <button
           part="breadcrumb-button"
           class="btn btn-link btn-sm text-decoration-none text-primary p-0 m-0"
           onClick={breadcrumbValue.deselect}
         >
           {breadcrumbValue.value.value}
+          {/* <svg type="image/svg+xml">{mainclear}</svg> */}
+          {/* {mainclear} */}
+          {/* <object data={mainclear} type="image/svg+xml"></object> */}
+          {/* <img src={mainclear}></img> */}
+          {/* <span class="pl-1 close">&times;</span> */}
+          {/* <span class="pl-1 close">&#10006;</span> */}
         </button>
       </li>
     ));
@@ -194,7 +201,7 @@ export class AtomicBreadcrumbManager {
       values
     );
     const renderedBreadcrumbs = breadcrumbsToShow.map((breadcrumbValue) => (
-      <li part="breadcrumb-value" class="breadcrumb-item vertical-bar">
+      <li part="breadcrumb-value" class="breadcrumb-item">
         <button
           part="breadcrumb-button"
           class="btn btn-link btn-sm text-decoration-none text-primary p-0 m-0"

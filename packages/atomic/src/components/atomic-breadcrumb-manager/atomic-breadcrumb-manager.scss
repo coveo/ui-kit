@@ -1,7 +1,5 @@
+$breadcrumb-divider: '';
+
 @import '../../../node_modules/bootstrap/scss/breadcrumb';
 @import '../../../node_modules/bootstrap/scss/buttons';
 @import 'utilities';
-
-.breadcrumb-item + .vertical-bar::before {
-  content: '|';
-}
