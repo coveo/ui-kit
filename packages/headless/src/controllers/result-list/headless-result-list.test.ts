@@ -1,6 +1,6 @@
 import {buildResultList} from './headless-result-list';
 import {buildMockSearchAppEngine, MockEngine} from '../../test/mock-engine';
-import {SearchAppState} from '../..';
+import {SearchAppState} from '../../state/search-app-state';
 import {registerFieldsToInclude} from '../../features/fields/fields-actions';
 
 describe('ResultList', () => {
