@@ -38,12 +38,14 @@ export const buildResultList = (
 ) => {
   const controller = buildController(engine);
   const {dispatch} = engine;
+
   const options = validateOptions(
     optionsSchema,
     props?.options,
     buildResultList.name
   ) as Required<ResultListOptions>;
-  if (props?.options?.fieldsToInclude) {
+
+  if (options.fieldsToInclude) {
     dispatch(registerFieldsToInclude(options.fieldsToInclude));
   }
 
