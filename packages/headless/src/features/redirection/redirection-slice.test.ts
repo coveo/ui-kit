@@ -64,7 +64,10 @@ describe('redirection slice', () => {
 
     const response = await checkForRedirection({
       defaultRedirectionUrl: 'https://www.test.com',
-    })(engine.dispatch, () => createMockState(), {searchAPIClient: apiClient});
+    })(engine.dispatch, () => createMockState(), {
+      searchAPIClient: apiClient,
+      analyticsClientMiddleware: (_, p) => p,
+    });
 
     return response;
   }

@@ -19,6 +19,7 @@ import {BaseParam, baseSearchRequest} from './search-api-params';
 import {CategoryFacetSearchRequest} from './facet-search/category-facet-search/category-facet-search-request';
 import {RecommendationRequest} from './recommendation/recommendation-request';
 import {ProductRecommendationsRequest} from './product-recommendations/product-recommendations-request';
+import {AnalyticsClientSendEventHook} from 'coveo.analytics/dist/definitions/client/analytics';
 
 export type AllSearchAPIResponse = Plan | Search | QuerySuggest;
 
@@ -27,6 +28,7 @@ export interface AsyncThunkSearchOptions<T extends Partial<SearchAppState>> {
   rejectValue: SearchAPIErrorWithStatusCode;
   extra: {
     searchAPIClient: SearchAPIClient;
+    analyticsClientMiddleware: AnalyticsClientSendEventHook;
   };
 }
 

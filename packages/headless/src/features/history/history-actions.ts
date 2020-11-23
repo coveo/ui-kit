@@ -1,12 +1,10 @@
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 
 import {ActionCreators} from '../../app/undoable';
-
-import {configureAnalytics} from '../../api/analytics/analytics';
 import {SearchPageEvents} from 'coveo.analytics/dist/definitions/searchPage/searchPageEvents';
 import {
-  searchPageState,
-  makeSearchActionType,
+  AnalyticsType,
+  makeAnalyticsAction,
 } from '../analytics/analytics-actions';
 import {
   SearchAppState,
@@ -52,33 +50,17 @@ export const change = createAsyncThunk(
 /**
  * Logs an event which represents a move forward in the interface history.
  */
-export const logNavigateForward = createAsyncThunk(
+export const logNavigateForward = makeAnalyticsAction(
   'history/analytics/forward',
-  async (_, {getState}) => {
-    // TODO: This is not exactly what happens in JSUI as of today. In JSUI, we currently try to map the state change to an "actual" analytics event.
-    // But, it is still probably acceptable to log this in this format, and much simpler for headless in the end.
-    // TBD if this is a problem. We'll adjust accordingly if it's the case.
-    const state = searchPageState(getState);
-    await configureAnalytics(state).logSearchEvent(
-      'historyForward' as SearchPageEvents
-    );
-    return makeSearchActionType();
-  }
+  AnalyticsType.Search,
+  (client) => client.logSearchEvent('historyForward' as SearchPageEvents) // TODO: Need to create this event natively in coveo.analytics to remove cast
 );
 
 /**
  * Logs an event which represents a move backward in the interface history.
  */
-export const logNavigateBackward = createAsyncThunk(
+export const logNavigateBackward = makeAnalyticsAction(
   'history/analytics/backward',
-  async (_, {getState}) => {
-    // TODO: This is not exactly what happens in JSUI as of today. In JSUI, we currently try to map the state change to an "actual" analytics event.
-    // But, it is still probably acceptable to log this in this format, and much simpler for headless in the end.
-    // TBD if this is a problem. We'll adjust accordingly if it's the case.
-    const state = searchPageState(getState);
-    await configureAnalytics(state).logSearchEvent(
-      'historyBackward' as SearchPageEvents
-    );
-    return makeSearchActionType();
-  }
+  AnalyticsType.Search,
+  (client) => client.logSearchEvent('historyBackward' as SearchPageEvents) // TODO: Need to create this event natively in coveo.analytics to remove cast
 );

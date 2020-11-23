@@ -10,21 +10,14 @@ import {
   ProductRecommendationsSection,
   ContextSection,
 } from '../../state/state-sections';
-import {
-  makeSearchActionType,
-  SearchAction,
-} from '../analytics/analytics-actions';
+import {SearchAction} from '../analytics/analytics-actions';
 import {validatePayloadSchema} from '../../utils/validate-payload';
 import {ArrayValue, NumberValue, StringValue} from '@coveo/bueno';
-import {
-  configureAnalytics,
-  historyStore,
-  StateNeededByAnalyticsProvider,
-} from '../../api/analytics/analytics';
+import {getVisitorID, historyStore} from '../../api/analytics/analytics';
 import {ProductRecommendationsRequest} from '../../api/search/product-recommendations/product-recommendations-request';
 import {ProductRecommendation} from '../../api/search/search/product';
 import {Result} from '../../api/search/search/result';
-import {ProductRecommendationAnalyticsProvider} from '../../api/analytics/product-recommendations-analytics';
+import {logProductRecommendations} from './product-recommendations-analytics.actions';
 
 export type StateNeededByGetProductRecommendations = ConfigurationSection &
   ProductRecommendationsSection &
@@ -81,21 +74,6 @@ export const setProductRecommendationsMaxNumberOfRecommendations = createAction(
     })
 );
 
-/**
- * Logs a search event with an `actionCause` value of `recommendationInterfaceLoad`.
- */
-export const logProductRecommendations = createAsyncThunk(
-  'analytics/productrecommendations/load',
-  async (_, {getState}) => {
-    const state = getState() as StateNeededByAnalyticsProvider;
-    await configureAnalytics(
-      state,
-      new ProductRecommendationAnalyticsProvider(state)
-    ).logRecommendationInterfaceLoad();
-    return makeSearchActionType();
-  }
-);
-
 export const getProductRecommendations = createAsyncThunk<
   GetProductRecommendationsThunkReturn,
   void,
@@ -146,7 +124,7 @@ export const buildProductRecommendationsRequest = (
     organizationId: s.configuration.organizationId,
     url: s.configuration.search.apiBaseUrl,
     ...(s.configuration.analytics.enabled && {
-      visitorId: configureAnalytics(s).coveoAnalyticsClient.currentVisitorId,
+      visitorId: getVisitorID(),
     }),
     // TODO: Remove this workaround, see https://coveord.atlassian.net/browse/COM-696 for details.
     maximumAge: 0,

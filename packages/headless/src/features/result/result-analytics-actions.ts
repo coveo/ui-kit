@@ -1,13 +1,11 @@
-import {createAsyncThunk} from '@reduxjs/toolkit';
 import {
-  searchPageState,
-  makeClickActionType,
+  makeAnalyticsAction,
+  AnalyticsType,
 } from '../analytics/analytics-actions';
 import {
   partialDocumentInformation,
   documentIdentifier,
 } from '../analytics/analytics-utils';
-import {configureAnalytics} from '../../api/analytics/analytics';
 import {Result} from '../../api/search/search/result';
 import {StringValue, RecordValue, Schema} from '@coveo/bueno';
 import {Raw} from '../../api/search/search/raw';
@@ -53,16 +51,17 @@ function partialResultPayload(result: Result): Partial<Result> {
  * Logs a click event with an `actionCause` value of `documentOpen`.
  * @param result (Result) The result that was opened.
  */
-export const logDocumentOpen = createAsyncThunk(
-  'analytics/result/open',
-  async (result: Result, {getState}) => {
-    const state = searchPageState(getState);
-    new Schema(resultPartialDefinition).validate(partialResultPayload(result));
-    await configureAnalytics(state).logDocumentOpen(
-      partialDocumentInformation(result, state),
-      documentIdentifier(result)
-    );
-
-    return makeClickActionType();
-  }
-);
+export const logDocumentOpen = (result: Result) =>
+  makeAnalyticsAction(
+    'analytics/result/open',
+    AnalyticsType.Click,
+    (client, state) => {
+      new Schema(resultPartialDefinition).validate(
+        partialResultPayload(result)
+      );
+      return client.logDocumentOpen(
+        partialDocumentInformation(result, state),
+        documentIdentifier(result)
+      );
+    }
+  )();

@@ -1,9 +1,26 @@
 import {createAsyncThunk, AsyncThunkAction} from '@reduxjs/toolkit';
-import {configureAnalytics} from '../../api/analytics/analytics';
+import {
+  AnalyticsProvider,
+  configureAnalytics,
+  StateNeededByAnalyticsProvider,
+} from '../../api/analytics/analytics';
 import {SearchPageEvents} from 'coveo.analytics/dist/definitions/searchPage/searchPageEvents';
 import {SearchAppState} from '../../state/search-app-state';
 import {validatePayloadSchema} from '../../utils/validate-payload';
 import {StringValue, RecordValue} from '@coveo/bueno';
+import {AnalyticsClientSendEventHook} from 'coveo.analytics/dist/definitions/client/analytics';
+import {CoveoSearchPageClient, SearchPageClientProvider} from 'coveo.analytics';
+import {SearchEventResponse} from 'coveo.analytics/dist/definitions/events';
+import {getAdvancedSearchQueriesInitialState} from '../advanced-search-queries/advanced-search-queries-state';
+
+export interface AsyncThunkAnalyticsOptions<
+  T extends Partial<StateNeededByAnalyticsProvider>
+> {
+  state: T;
+  extra: {
+    analyticsClientMiddleware: AnalyticsClientSendEventHook;
+  };
+}
 
 export const searchPageState = (getState: () => unknown) =>
   getState() as SearchAppState;
@@ -17,7 +34,7 @@ export enum AnalyticsType {
 export type SearchAction = AsyncThunkAction<
   {analyticsType: AnalyticsType.Search},
   void | {},
-  {}
+  AsyncThunkAnalyticsOptions<StateNeededByAnalyticsProvider>
 >;
 
 export type CustomAction = AsyncThunkAction<
@@ -32,13 +49,32 @@ export type ClickAction = AsyncThunkAction<
   {}
 >;
 
-export const makeSearchActionType = () => ({
-  analyticsType: AnalyticsType.Search as AnalyticsType.Search,
-});
-
-export const makeClickActionType = () => ({
-  analyticsType: AnalyticsType.Click as AnalyticsType.Click,
-});
+export const makeAnalyticsAction = <T extends AnalyticsType>(
+  prefix: string,
+  analyticsType: T,
+  log: (
+    client: CoveoSearchPageClient,
+    state: Partial<SearchAppState>
+  ) => Promise<void | SearchEventResponse> | void,
+  provider: (state: Partial<SearchAppState>) => SearchPageClientProvider = (
+    s
+  ) => new AnalyticsProvider(s as StateNeededByAnalyticsProvider)
+) => {
+  return createAsyncThunk<
+    {analyticsType: T},
+    void,
+    AsyncThunkAnalyticsOptions<StateNeededByAnalyticsProvider>
+  >(prefix, async (_, {getState, extra: {analyticsClientMiddleware}}) => {
+    const state = searchPageState(getState);
+    const client = configureAnalytics(
+      state,
+      analyticsClientMiddleware,
+      provider(state)
+    );
+    await log(client, state);
+    return {analyticsType};
+  });
+};
 
 export interface GenericSearchEventPayload<T = unknown> {
   /** The identifier of the search action (e.g., `interfaceLoad`). */
@@ -51,45 +87,39 @@ export interface GenericSearchEventPayload<T = unknown> {
  * Logs a generic search event.
  * @param p (GenericSearchEventPayload) The search event payload.
  */
-export const logGenericSearchEvent = createAsyncThunk(
-  'analytics/generic/search',
-  async (p: GenericSearchEventPayload, {getState}) => {
-    validatePayloadSchema(p, {
-      evt: new StringValue({required: true, emptyAllowed: false}),
-      meta: new RecordValue(),
-    });
-    const {evt, meta} = p;
-    const state = searchPageState(getState);
-    await configureAnalytics(state).logSearchEvent(
-      evt as SearchPageEvents,
-      meta
-    );
-    return makeSearchActionType();
-  }
-);
+export const logGenericSearchEvent = (p: GenericSearchEventPayload) =>
+  makeAnalyticsAction(
+    'analytics/generic/search',
+    AnalyticsType.Search,
+    (client) => {
+      validatePayloadSchema(p, {
+        evt: new StringValue({required: true, emptyAllowed: false}),
+        meta: new RecordValue(),
+      });
+      const {evt, meta} = p;
+      return client.logSearchEvent(evt as SearchPageEvents, meta);
+    }
+  )();
 
 /**
  * Logs an interface load event.
  */
-export const logInterfaceLoad = createAsyncThunk(
+export const logInterfaceLoad = makeAnalyticsAction(
   'analytics/interface/load',
-  async (_, {getState}) => {
-    const state = searchPageState(getState);
-    await configureAnalytics(state).logInterfaceLoad();
-    return makeSearchActionType();
-  }
+  AnalyticsType.Search,
+  (client) => client.logInterfaceLoad()
 );
 
 /**
  * Logs an interface change event.
  */
-export const logInterfaceChange = createAsyncThunk(
+export const logInterfaceChange = makeAnalyticsAction(
   'analytics/interface/change',
-  async (_, {getState}) => {
-    const state = searchPageState(getState);
-    await configureAnalytics(state).logInterfaceChange({
-      interfaceChangeTo: state.advancedSearchQueries.cq,
-    });
-    return makeSearchActionType();
-  }
+  AnalyticsType.Search,
+  (client, state) =>
+    client.logInterfaceChange({
+      interfaceChangeTo:
+        state.advancedSearchQueries?.cq ||
+        getAdvancedSearchQueriesInitialState().cq,
+    })
 );

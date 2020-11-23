@@ -1,63 +1,57 @@
-import {createAsyncThunk} from '@reduxjs/toolkit';
+import {PaginationSection} from '../../state/state-sections';
 import {
-  searchPageState,
-  makeSearchActionType,
+  makeAnalyticsAction,
+  AnalyticsType,
 } from '../analytics/analytics-actions';
-import {configureAnalytics} from '../../api/analytics/analytics';
 import {currentPageSelector} from './pagination-selectors';
+import {getPaginationInitialState} from './pagination-state';
 
 /**
  * Log pager resize
  */
-export const logPagerResize = createAsyncThunk(
+export const logPagerResize = makeAnalyticsAction(
   'analytics/pager/resize',
-  async (_, {getState}) => {
-    const state = searchPageState(getState);
-    await configureAnalytics(state).logPagerResize({
-      currentResultsPerPage: state.pagination.numberOfResults,
-    });
-    return makeSearchActionType();
-  }
+  AnalyticsType.Search,
+  (client, state) =>
+    client.logPagerResize({
+      currentResultsPerPage:
+        state.pagination?.numberOfResults ||
+        getPaginationInitialState().numberOfResults,
+    })
 );
 
 /**
  * Log page number
  */
-export const logPageNumber = createAsyncThunk(
+export const logPageNumber = makeAnalyticsAction(
   'analytics/pager/number',
-  async (_, {getState}) => {
-    const state = searchPageState(getState);
-    await configureAnalytics(state).logPagerNumber({
-      pagerNumber: currentPageSelector(state),
-    });
-    return makeSearchActionType();
-  }
+  AnalyticsType.Search,
+  (client, state) =>
+    client.logPagerNumber({
+      pagerNumber: currentPageSelector(state as PaginationSection),
+    })
 );
 
 /**
  * Log pager next
  */
-export const logPageNext = createAsyncThunk(
+export const logPageNext = makeAnalyticsAction(
   'analytics/pager/next',
-  async (_, {getState}) => {
-    const state = searchPageState(getState);
-    await configureAnalytics(state).logPagerNext({
-      pagerNumber: currentPageSelector(state),
-    });
-    return makeSearchActionType();
-  }
+  AnalyticsType.Search,
+  (client, state) =>
+    client.logPagerNext({
+      pagerNumber: currentPageSelector(state as PaginationSection),
+    })
 );
 
 /**
  * Log pager previous
  */
-export const logPagePrevious = createAsyncThunk(
+export const logPagePrevious = makeAnalyticsAction(
   'analytics/pager/previous',
-  async (_, {getState}) => {
-    const state = searchPageState(getState);
-    await configureAnalytics(state).logPagerPrevious({
-      pagerNumber: currentPageSelector(state),
-    });
-    return makeSearchActionType();
-  }
+  AnalyticsType.Search,
+  (client, state) =>
+    client.logPagerPrevious({
+      pagerNumber: currentPageSelector(state as PaginationSection),
+    })
 );
