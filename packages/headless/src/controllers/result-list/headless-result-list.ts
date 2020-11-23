@@ -2,6 +2,23 @@ import {Engine} from '../../app/headless-engine';
 import {SearchSection} from '../../state/state-sections';
 import {buildController} from '../controller/headless-controller';
 import {registerFieldsToInclude} from '../../features/fields/fields-actions';
+import {Schema, ArrayValue, StringValue} from '@coveo/bueno';
+import {validateOptions} from '../../utils/validate-payload';
+
+const optionsSchema = new Schema({
+  /**
+   * A list of indexed fields to include in the objects returned by the result list.
+   * These results are included in addition to the default fields.
+   * If this is left empty only the default fields are included.
+   */
+  fieldsToInclude: new ArrayValue({
+    required: false,
+    each: new StringValue<string>({
+      required: true,
+      emptyAllowed: false,
+    }),
+  }),
+});
 
 type ResultListOptions = {
   fieldsToInclude?: string[];
@@ -21,8 +38,13 @@ export const buildResultList = (
 ) => {
   const controller = buildController(engine);
   const {dispatch} = engine;
+  const options = validateOptions(
+    optionsSchema,
+    props?.options,
+    buildResultList.name
+  ) as Required<ResultListOptions>;
   if (props?.options?.fieldsToInclude) {
-    dispatch(registerFieldsToInclude(props.options.fieldsToInclude));
+    dispatch(registerFieldsToInclude(options.fieldsToInclude));
   }
 
   return {

@@ -12,7 +12,10 @@ describe('ResultList', () => {
 
   it('initializes correctly with no fields to include', () => {
     expect(buildResultList(engine)).toBeTruthy();
-    expect(engine.actions).not.toContainEqual(registerFieldsToInclude([]));
+    const action = engine.actions.find(
+      (a) => a.type === registerFieldsToInclude.type
+    );
+    expect(action).toBeUndefined();
   });
 
   it('initializes correctly with fields to include', () => {
