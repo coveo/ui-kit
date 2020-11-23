@@ -125,10 +125,10 @@ describe('EC plugin', () => {
 
                 const aProductWithATooSmallPosition = {
                     name: 'A product with a too small position',
-                    position: 0
+                    position: 0,
                 };
 
-                ec.addProduct(aProductWithATooSmallPosition)
+                ec.addProduct(aProductWithATooSmallPosition);
 
                 expect(console.warn).not.toHaveBeenCalled();
 
@@ -145,7 +145,7 @@ describe('EC plugin', () => {
 
                 ec.addProduct({
                     name: 'A product with a too small position',
-                    position: 0
+                    position: 0,
                 });
 
                 const result = executeRegisteredHook(ECPluginEventTypes.event, {});
@@ -172,10 +172,12 @@ describe('EC plugin', () => {
 
                 executeRegisteredHook(ECPluginEventTypes.event, {});
 
-                expect(console.warn).toHaveBeenNthCalledWith(1,
+                expect(console.warn).toHaveBeenNthCalledWith(
+                    1,
                     `The position for product '${aProductWithANameAndId.name}' must be greater than 0 when provided.`
                 );
-                expect(console.warn).toHaveBeenNthCalledWith(2,
+                expect(console.warn).toHaveBeenNthCalledWith(
+                    2,
                     `The position for product '${aProductWithOnlyAnId.id}' must be greater than 0 when provided.`
                 );
             });
@@ -190,7 +192,7 @@ describe('EC plugin', () => {
                 const undefinedPosition = undefined as any;
                 ec.addProduct({
                     name: 'A product with an undefined position',
-                    position: undefinedPosition
+                    position: undefinedPosition,
                 });
 
                 const result = executeRegisteredHook(ECPluginEventTypes.event, {});
@@ -330,10 +332,10 @@ describe('EC plugin', () => {
 
                 const anImpression = {
                     name: 'An impression with a too small position',
-                    position: 0
+                    position: 0,
                 };
 
-                ec.addImpression(anImpression)
+                ec.addImpression(anImpression);
 
                 expect(console.warn).not.toHaveBeenCalled();
 
@@ -350,7 +352,7 @@ describe('EC plugin', () => {
 
                 ec.addImpression({
                     name: 'An impression with a too small position',
-                    position: 0
+                    position: 0,
                 });
 
                 const result = executeRegisteredHook(ECPluginEventTypes.event, {});
@@ -377,10 +379,12 @@ describe('EC plugin', () => {
 
                 executeRegisteredHook(ECPluginEventTypes.event, {});
 
-                expect(console.warn).toHaveBeenNthCalledWith(1,
+                expect(console.warn).toHaveBeenNthCalledWith(
+                    1,
                     `The position for impression '${anImpressionWithANameAndId.name}' must be greater than 0 when provided.`
                 );
-                expect(console.warn).toHaveBeenNthCalledWith(2,
+                expect(console.warn).toHaveBeenNthCalledWith(
+                    2,
                     `The position for impression '${anImpressionWithOnlyAnId.id}' must be greater than 0 when provided.`
                 );
             });
@@ -395,7 +399,7 @@ describe('EC plugin', () => {
                 const undefinedPosition = undefined as any;
                 ec.addImpression({
                     name: 'An impression with an undefined position',
-                    position: undefinedPosition
+                    position: undefinedPosition,
                 });
 
                 const result = executeRegisteredHook(ECPluginEventTypes.event, {});

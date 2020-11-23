@@ -163,11 +163,15 @@ export class EC {
     private getImpressionPayload() {
         const impressionsByList = this.getImpressionsByList();
         return impressionsByList
-            .map(({impressions, ...rest}) => ({
-                ...rest,
-                impressions: impressions
-                    .map((baseImpression) => this.assureBaseImpressionValidity(baseImpression))
-            }) as ImpressionList)
+            .map(
+                ({impressions, ...rest}) =>
+                    ({
+                        ...rest,
+                        impressions: impressions.map((baseImpression) =>
+                            this.assureBaseImpressionValidity(baseImpression)
+                        ),
+                    } as ImpressionList)
+            )
             .reduce((newPayload, impressionList, index) => {
                 return {
                     ...newPayload,
@@ -179,8 +183,9 @@ export class EC {
     private assureProductValidity(product: Product) {
         const {position, ...productRest} = product;
         if (position !== undefined && position < 1) {
-            console.warn(`The position for product '${product.name || product.id}' must be greater `
-                + `than 0 when provided.`);
+            console.warn(
+                `The position for product '${product.name || product.id}' must be greater ` + `than 0 when provided.`
+            );
 
             return productRest;
         }
@@ -191,8 +196,10 @@ export class EC {
     private assureBaseImpressionValidity(baseImpression: BaseImpression) {
         const {position, ...baseImpressionRest} = baseImpression;
         if (position !== undefined && position < 1) {
-            console.warn(`The position for impression '${baseImpression.name || baseImpression.id}'`
-                + ` must be greater than 0 when provided.`);
+            console.warn(
+                `The position for impression '${baseImpression.name || baseImpression.id}'` +
+                    ` must be greater than 0 when provided.`
+            );
 
             return baseImpressionRest;
         }
@@ -221,11 +228,7 @@ export class EC {
 
         if (!!payload.page) {
             const removeStartingSlash = (page: string) => page.replace(/^\/?(.*)$/, '/$1');
-            const extractHostnamePart = (location: string) =>
-                location
-                    .split('/')
-                    .slice(0, 3)
-                    .join('/');
+            const extractHostnamePart = (location: string) => location.split('/').slice(0, 3).join('/');
             this.lastLocation = `${extractHostnamePart(this.lastLocation)}${removeStartingSlash(payload.page)}`;
         } else {
             this.lastLocation = getFormattedLocation(window.location);

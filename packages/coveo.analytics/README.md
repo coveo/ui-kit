@@ -10,8 +10,8 @@
 
 This project provides 2 ways to interact with the Coveo Usage Analytics service.
 
-- A JavaScript browser client
-- A code snippet to add in website pages
+-   A JavaScript browser client
+-   A code snippet to add in website pages
 
 ## Usage (Web analytics)
 
@@ -41,9 +41,9 @@ On top of `pageview` events, generic and commerce events can also be tracked. Se
         a='coveoua';c[a]=c[a]||function(){(c[a].q=c[a].q|| []).push(arguments)};
         c[a].t=Date.now();u=o.createElement(v);u.async=1;u.src=e;
         O=o.getElementsByTagName(v)[0];O.parentNode.insertBefore(u,O)
-        })(window,document,'script','https://static.cloud.coveo.com/coveo.analytics.js/2/coveoua.js') 
+        })(window,document,'script','https://static.cloud.coveo.com/coveo.analytics.js/2/coveoua.js')
         // Replace "2" in the script url with the latest release
-    
+
         coveoua('init', <COVEO_API_KEY>); // Replace <COVEO_API_KEY> with your real key
         coveoua('send', 'view', {
             contentIdKey: '@permanentid',
@@ -53,6 +53,7 @@ On top of `pageview` events, generic and commerce events can also be tracked. Se
         });
     </script>
     ```
+
     The code snippet must contain `contentIdKey` and `contentIdValue` in order to identify items in the Coveo index. When you want to recommend specific types of content, you also need to add a `contentType` parameter value.
 
     | Key            | Value                                                               |
@@ -77,12 +78,12 @@ Add the code snippet to all your website pages.
 
 ```html
 <script>
-(function(c,o,v,e,O,u,a){
-a='coveoua';c[a]=c[a]||function(){(c[a].q=c[a].q|| []).push(arguments)};
-c[a].t=Date.now();u=o.createElement(v);u.async=1;u.src=e;
-O=o.getElementsByTagName(v)[0];O.parentNode.insertBefore(u,O)
-})(window,document,'script','https://static.cloud.coveo.com/coveo.analytics.js/2/coveoua.js') // Replace "2" in the script url with the latest release
-coveoua('init', <COVEO_API_KEY>); // Replace <COVEO_API_KEY> with your real key
+    (function(c,o,v,e,O,u,a){
+    a='coveoua';c[a]=c[a]||function(){(c[a].q=c[a].q|| []).push(arguments)};
+    c[a].t=Date.now();u=o.createElement(v);u.async=1;u.src=e;
+    O=o.getElementsByTagName(v)[0];O.parentNode.insertBefore(u,O)
+    })(window,document,'script','https://static.cloud.coveo.com/coveo.analytics.js/2/coveoua.js') // Replace "2" in the script url with the latest release
+    coveoua('init', <COVEO_API_KEY>); // Replace <COVEO_API_KEY> with your real key
 </script>
 ```
 
@@ -100,12 +101,12 @@ Add the code snippet to all your website pages.
 
 ```html
 <script>
-(function(c,o,v,e,O,u,a){
-a='coveoua';c[a]=c[a]||function(){(c[a].q=c[a].q|| []).push(arguments)};
-c[a].t=Date.now();u=o.createElement(v);u.async=1;u.src=e;
-O=o.getElementsByTagName(v)[0];O.parentNode.insertBefore(u,O)
-})(window,document,'script','https://static.cloud.coveo.com/coveo.analytics.js/2/coveoua.js') // Replace "2" in the script url with the latest release
-coveoua('init', <COVEO_API_KEY>); // Replace <COVEO_API_KEY> with your real key
+    (function(c,o,v,e,O,u,a){
+    a='coveoua';c[a]=c[a]||function(){(c[a].q=c[a].q|| []).push(arguments)};
+    c[a].t=Date.now();u=o.createElement(v);u.async=1;u.src=e;
+    O=o.getElementsByTagName(v)[0];O.parentNode.insertBefore(u,O)
+    })(window,document,'script','https://static.cloud.coveo.com/coveo.analytics.js/2/coveoua.js') // Replace "2" in the script url with the latest release
+    coveoua('init', <COVEO_API_KEY>); // Replace <COVEO_API_KEY> with your real key
 </script>
 ```
 
@@ -117,7 +118,7 @@ To send commerce events, call `coveoua` with the event name. Here is how an [add
     ```
 2. Then use the `ec:setAction` command to specify that the action done on this data is an addition to the cart:
     ```js
-    coveoua('ec:setAction', 'add');   
+    coveoua('ec:setAction', 'add');
     ```
 3. Finally, use the `send` command to send the event to Coveo Usage Analytics.
     ```js
@@ -153,11 +154,11 @@ client.sendCustomEvent({
 
 There are 3 available storage types you can use to store view events client side.
 
-- Cookie storage, which supports top level domain storage. This means that events from a.foo.com will be available from b.foo.com. Cookies have the limitation of not being able to store a lot of data, especially if your stored page views are long.
+-   Cookie storage, which supports top level domain storage. This means that events from a.foo.com will be available from b.foo.com. Cookies have the limitation of not being able to store a lot of data, especially if your stored page views are long.
 
-- Local storage, which allows to store much more information client side, but has the drawback of not being able to access data across multiple top level domains.
+-   Local storage, which allows to store much more information client side, but has the drawback of not being able to access data across multiple top level domains.
 
-- Session storage, which has roughly the same limitation and capability as Local storage, except that it is cleared when the web browser tab is closed.
+-   Session storage, which has roughly the same limitation and capability as Local storage, except that it is cleared when the web browser tab is closed.
 
 By default, the local storage option will automatically be chosen as the default storage, unless manually specified.
 
