@@ -6,6 +6,7 @@ import {terser} from 'rollup-plugin-terser';
 import {sizeSnapshot} from 'rollup-plugin-size-snapshot';
 import alias from '@rollup/plugin-alias';
 import {resolve as pathResolve} from 'path';
+import json from '@rollup/plugin-json';
 
 const isCI = process.env.CI === 'true';
 const isProduction = process.env.BUILD === 'production';
@@ -30,14 +31,16 @@ const nodeConfig = {
   output: [
     {file: 'dist/headless.js', format: 'cjs'},
     {file: 'dist/headless.esm.js', format: 'es'},
-    // For development purposes only
-    {file: '../atomic/src/external-builds/headless.esm.js', format: 'es'},
   ],
   plugins: [
     resolve({preferBuiltins: true}),
-    commonjs(),
+    commonjs({
+      // https://github.com/pinojs/pino/issues/688
+      ignore: ['pino-pretty'],
+    }),
     typescript(),
     replace(),
+    json(),
   ],
   external: ['cross-fetch'],
   onwarn: onWarn,
@@ -57,6 +60,8 @@ const browserConfig = {
       format: 'es',
       sourcemap: true,
     },
+    // For Atomic's development purposes only
+    {file: '../atomic/src/external-builds/headless.esm.js', format: 'es'},
   ],
   plugins: [
     alias({
@@ -70,10 +75,7 @@ const browserConfig = {
         },
         {
           find: 'cross-fetch',
-          replacement: pathResolve(
-            __dirname,
-            './fetch-ponyfill.js'
-          ),
+          replacement: pathResolve(__dirname, './fetch-ponyfill.js'),
         },
       ],
     }),
@@ -86,6 +88,4 @@ const browserConfig = {
   ],
 };
 
-const config = isProduction ? [nodeConfig, browserConfig] : [nodeConfig];
-
-export default config;
+export default [nodeConfig, browserConfig];
