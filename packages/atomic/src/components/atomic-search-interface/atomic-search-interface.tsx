@@ -16,8 +16,8 @@ import {
   AnalyticsActions,
   ConfigurationActions,
   buildStateManager,
-  encodeToUrlFragment,
-  decodeUrlFragment,
+  encodeStateParameters,
+  decodeStateParameters,
   Unsubscribe,
 } from '@coveo/headless';
 import {RenderError} from '../../utils/render-utils';
@@ -99,14 +99,14 @@ export class AtomicSearchInterface {
 
   private initUrlStateManager() {
     const stateWithoutHashSign = window.location.hash.slice(1);
-    const params = decodeUrlFragment(stateWithoutHashSign);
+    const params = decodeStateParameters(stateWithoutHashSign);
 
     const manager = buildStateManager(this.engine!, {
       initialState: {parameters: params},
     });
 
     this.unsubscribe = manager.subscribe(() => {
-      window.location.hash = encodeToUrlFragment(manager.state.parameters);
+      window.location.hash = encodeStateParameters(manager.state.parameters);
     });
   }
 

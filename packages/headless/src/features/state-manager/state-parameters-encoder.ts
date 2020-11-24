@@ -1,6 +1,6 @@
 import {StateParameters} from './state-manager-actions';
 
-export function encodeToUrlFragment(obj: StateParameters) {
+export function encodeStateParameters(obj: StateParameters) {
   const fragment = Object.entries(obj)
     .map(([key, val]) => `${key}=${val}`)
     .join('&');
@@ -8,7 +8,9 @@ export function encodeToUrlFragment(obj: StateParameters) {
   return fragment;
 }
 
-export function decodeUrlFragment(fragment: string): Record<string, string> {
+export function decodeStateParameters(
+  fragment: string
+): Record<string, string> {
   const parts = fragment.split('&').filter((part) => part.length);
   const keyValuePairs = parts.map((part) => part.split('='));
 
