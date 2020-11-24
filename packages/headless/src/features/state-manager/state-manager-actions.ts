@@ -1,10 +1,17 @@
+import {StringValue} from '@coveo/bueno';
 import {createAction} from '@reduxjs/toolkit';
 import {QueryParam} from '../../api/search/search-api-params';
+import {validatePayloadSchema} from '../../utils/validate-payload';
 
 export type StateParameters = QueryParam;
 
-/** Restores state parameters (e.g. from a url)*/
+const restoreStateDefinition = {
+  q: new StringValue(),
+};
+
+/** Restores state parameters from e.g. a url*/
 export const restoreState = createAction(
   'stateManager/restore',
-  (parameters: StateParameters) => ({payload: parameters})
+  (payload: StateParameters) =>
+    validatePayloadSchema(payload, restoreStateDefinition)
 );
