@@ -35,6 +35,7 @@ export class AtomicBreadcrumbManager {
   @State() state!: BreadcrumbManagerState;
   @State() collapsedBreadcrumbsState: Record<string, boolean> = {};
   @Prop() collapseThreshold = 5;
+  @Prop() categoryFacetDivider = '/';
 
   private engine!: Engine;
   private breadcrumbManager!: BreadcrumbManager;
@@ -104,6 +105,28 @@ export class AtomicBreadcrumbManager {
     return breadcrumbs;
   }
 
+  private getBreadrumbValues(breadcrumb: Breadcrumb<FacetValue>) {
+    const {breadcrumbsToShow, moreButton} = this.collapsedBreadcrumbsHandler(
+      breadcrumb
+    );
+    const renderedBreadcrumbs = breadcrumbsToShow.map((breadcrumbValue) => (
+      <li part="breadcrumb-value" class="breadcrumb-item pr-1">
+        <button
+          part="breadcrumb-button"
+          class="btn btn-link btn-sm text-decoration-none p-0 m-0"
+          onClick={breadcrumbValue.deselect}
+        >
+          {breadcrumbValue.value.value}
+          <span class="pl-1" innerHTML={mainclear}></span>
+        </button>
+      </li>
+    ));
+
+    return moreButton
+      ? [...renderedBreadcrumbs, moreButton]
+      : renderedBreadcrumbs;
+  }
+
   private get numericFacetBreadcrumbs() {
     const breadcrumbs = this.state.numericFacetBreadcrumbs.map((breadcrumb) => {
       const breadcrumbsValues = this.getRangeBreadrumbValues(breadcrumb);
@@ -138,6 +161,27 @@ export class AtomicBreadcrumbManager {
     return breadcrumbs;
   }
 
+  private getRangeBreadrumbValues(values: Breadcrumb<RangeFacetValue>) {
+    const {breadcrumbsToShow, moreButton} = this.collapsedBreadcrumbsHandler(
+      values
+    );
+    const renderedBreadcrumbs = breadcrumbsToShow.map((breadcrumbValue) => (
+      <li part="breadcrumb-value" class="breadcrumb-item pr-1">
+        <button
+          part="breadcrumb-button"
+          class="btn btn-link btn-sm text-decoration-none p-0 m-0"
+          onClick={breadcrumbValue.deselect}
+        >
+          {breadcrumbValue.value.start} - {breadcrumbValue.value.end}
+          <span class="pl-1" innerHTML={mainclear}></span>
+        </button>
+      </li>
+    ));
+    return moreButton
+      ? [...renderedBreadcrumbs, moreButton]
+      : renderedBreadcrumbs;
+  }
+
   private get categoryFacetBreadcrumbs() {
     const breadcrumbs = this.state.categoryFacetBreadcrumbs.map(
       (breadcrumb) => {
@@ -160,6 +204,26 @@ export class AtomicBreadcrumbManager {
     return breadcrumbs;
   }
 
+  private getCategoryBreadrumbValues(values: CategoryFacetBreadcrumb) {
+    const pathString = values.path
+      .map((value: CategoryFacetValue) => value.value)
+      .join(this.categoryFacetDivider);
+    return (
+      <li
+        part="breadcrumb-value category-breadcrumb-value"
+        class="breadcrumb-item align-bottom"
+      >
+        <button
+          part="breadcrumb-button"
+          class="btn btn-link btn-sm text-decoration-none p-0 m-0"
+          onClick={values.deselect}
+        >
+          {pathString}
+        </button>
+      </li>
+    );
+  }
+
   render() {
     if (this.hasActiveBreadcrumbs()) {
       return (
@@ -178,66 +242,15 @@ export class AtomicBreadcrumbManager {
     }
   }
 
-  private getBreadrumbValues(breadcrumb: Breadcrumb<FacetValue>) {
-    const {breadcrumbsToShow, moreButton} = this.collapsedBreadcrumbsHandler(
-      breadcrumb
-    );
-    const renderedBreadcrumbs = breadcrumbsToShow.map((breadcrumbValue) => (
-      <li part="breadcrumb-value" class="breadcrumb-item pr-1">
-        <button
-          part="breadcrumb-button"
-          class="btn btn-link btn-sm text-decoration-none p-0 m-0"
-          onClick={breadcrumbValue.deselect}
-        >
-          {breadcrumbValue.value.value}
-          <span class="pl-1" innerHTML={mainclear}></span>
-        </button>
-      </li>
-    ));
-
-    return moreButton
-      ? [...renderedBreadcrumbs, moreButton]
-      : renderedBreadcrumbs;
-  }
-
-  private getRangeBreadrumbValues(values: Breadcrumb<RangeFacetValue>) {
-    const {breadcrumbsToShow, moreButton} = this.collapsedBreadcrumbsHandler(
-      values
-    );
-    const renderedBreadcrumbs = breadcrumbsToShow.map((breadcrumbValue) => (
-      <li part="breadcrumb-value" class="breadcrumb-item pr-1">
-        <button
-          part="breadcrumb-button"
-          class="btn btn-link btn-sm text-decoration-none p-0 m-0"
-          onClick={breadcrumbValue.deselect}
-        >
-          {breadcrumbValue.value.start} - {breadcrumbValue.value.end}
-          <span class="pl-1" innerHTML={mainclear}></span>
-        </button>
-      </li>
-    ));
-    return moreButton
-      ? [...renderedBreadcrumbs, moreButton]
-      : renderedBreadcrumbs;
-  }
-
-  private getCategoryBreadrumbValues(values: CategoryFacetBreadcrumb) {
-    const pathString = values.path
-      .map((value: CategoryFacetValue) => value.value)
-      .join('/');
+  private getClearAllFiltersButton() {
     return (
-      <li
-        part="breadcrumb-value category-breadcrumb-value"
-        class="breadcrumb-item align-bottom"
+      <button
+        part="breadcrumb-button"
+        class="btn btn-link btn-sm text-decoration-none  p-0 m-0"
+        // onClick={() => this.breadcrumbManager.deselectAll()} TODO
       >
-        <button
-          part="breadcrumb-button"
-          class="btn btn-link btn-sm text-decoration-none p-0 m-0"
-          onClick={values.deselect}
-        >
-          {pathString}
-        </button>
-      </li>
+        Clear All Filters
+      </button>
     );
   }
 
@@ -246,10 +259,6 @@ export class AtomicBreadcrumbManager {
       ...this.collapsedBreadcrumbsState,
       [field]: true,
     };
-  }
-
-  private isEmpty(array: any[]) {
-    return array.length === 0;
   }
 
   private collapsedBreadcrumbsHandler<T extends BaseFacetValue>(
@@ -304,15 +313,7 @@ export class AtomicBreadcrumbManager {
     ]);
   }
 
-  private getClearAllFiltersButton() {
-    return (
-      <button
-        part="breadcrumb-button"
-        class="btn btn-link btn-sm text-decoration-none  p-0 m-0"
-        // onClick={() => this.breadcrumbManager.deselectAll()} TODO
-      >
-        Clear All Filters
-      </button>
-    );
+  private isEmpty(array: any[]) {
+    return array.length === 0;
   }
 }
