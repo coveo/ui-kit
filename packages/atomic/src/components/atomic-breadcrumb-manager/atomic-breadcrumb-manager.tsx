@@ -161,12 +161,23 @@ export class AtomicBreadcrumbManager {
   }
 
   render() {
-    return [
-      this.facetBreadcrumbs,
-      this.numericFacetBreadcrumbs,
-      this.dateFacetBreadcrumbs,
-      this.categoryFacetBreadcrumbs,
-    ];
+    let clearAllFiltersButton = '';
+    if (this.hasActiveBreadcrumbs()) {
+      clearAllFiltersButton = (
+        <span class="col-3 text-right">{this.getClearAllFiltersButton()}</span>
+      );
+    }
+    return (
+      <div class="container row">
+        <span class=" col-9">
+          {this.facetBreadcrumbs}
+          {this.numericFacetBreadcrumbs}
+          {this.dateFacetBreadcrumbs}
+          {this.categoryFacetBreadcrumbs}
+        </span>
+        {clearAllFiltersButton}
+      </div>
+    );
   }
 
   private getBreadrumbValues(breadcrumb: Breadcrumb<FacetValue>) {
@@ -177,7 +188,7 @@ export class AtomicBreadcrumbManager {
       <li part="breadcrumb-value" class="breadcrumb-item pr-1">
         <button
           part="breadcrumb-button"
-          class="btn btn-link btn-sm text-decoration-none text-primary p-0 m-0"
+          class="btn btn-link btn-sm text-decoration-none p-0 m-0"
           onClick={breadcrumbValue.deselect}
         >
           {breadcrumbValue.value.value}
@@ -199,7 +210,7 @@ export class AtomicBreadcrumbManager {
       <li part="breadcrumb-value" class="breadcrumb-item pr-1">
         <button
           part="breadcrumb-button"
-          class="btn btn-link btn-sm text-decoration-none text-primary p-0 m-0"
+          class="btn btn-link btn-sm text-decoration-none p-0 m-0"
           onClick={breadcrumbValue.deselect}
         >
           {breadcrumbValue.value.start} - {breadcrumbValue.value.end}
@@ -219,11 +230,11 @@ export class AtomicBreadcrumbManager {
     return (
       <li
         part="breadcrumb-value category-breadcrumb-value"
-        class="breadcrumb-item"
+        class="breadcrumb-item align-bottom"
       >
         <button
           part="breadcrumb-button"
-          class="btn btn-link btn-sm text-decoration-none text-primary p-0 m-0"
+          class="btn btn-link btn-sm text-decoration-none p-0 m-0"
           onClick={values.deselect}
         >
           {pathString}
@@ -273,25 +284,32 @@ export class AtomicBreadcrumbManager {
     return {breadcrumbsToShow, moreButton};
   }
 
-  private clearAllFilters() {
-    this.state.facetBreadcrumbs.forEach((facetBreadcrumbs) => {
-      facetBreadcrumbs.values.forEach((breadcrumb) => {
-        breadcrumb.deselect();
-      });
-    });
-    this.state.numericFacetBreadcrumbs.forEach((facetBreadcrumbs) => {
-      facetBreadcrumbs.values.forEach((breadcrumb) => {
-        breadcrumb.deselect();
-      });
-    });
-    this.state.dateFacetBreadcrumbs.forEach((facetBreadcrumbs) => {
-      facetBreadcrumbs.values.forEach((breadcrumb) => {
-        breadcrumb.deselect();
-      });
-    });
-    this.state.categoryFacetBreadcrumbs.forEach((facetBreadcrumbs) => {
-      facetBreadcrumbs.deselect();
-    });
-    this.state = {...this.state};
+  private hasActiveBreadcrumbs() {
+    return !this.isEmpty([
+      ...this.state.facetBreadcrumbs.filter(
+        (breadcrumb) => !this.isEmpty(breadcrumb.values)
+      ),
+      ...this.state.numericFacetBreadcrumbs.filter(
+        (breadcrumb) => !this.isEmpty(breadcrumb.values)
+      ),
+      ...this.state.dateFacetBreadcrumbs.filter(
+        (breadcrumb) => !this.isEmpty(breadcrumb.values)
+      ),
+      ...this.state.categoryFacetBreadcrumbs.filter(
+        (breadcrumb) => !this.isEmpty(breadcrumb.path)
+      ),
+    ]);
+  }
+
+  private getClearAllFiltersButton() {
+    return (
+      <button
+        part="breadcrumb-button"
+        class="btn btn-link btn-sm text-decoration-none  p-0 m-0"
+        // onClick={() => this.breadcrumbManager.deselectAll()} TODO
+      >
+        Clear All Filters
+      </button>
+    );
   }
 }
