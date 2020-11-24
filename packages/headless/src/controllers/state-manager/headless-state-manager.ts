@@ -1,7 +1,7 @@
 import {Engine} from '../../app/headless-engine';
 import {getQueryInitialState} from '../../features/query/query-state';
 import {
-  restoreStateAsync,
+  restoreState,
   StateParameters,
 } from '../../features/state-manager/state-manager-actions';
 import {SearchAppState} from '../../state/search-app-state';
@@ -28,7 +28,7 @@ export function buildStateManager(
   const {dispatch} = engine;
   const controller = buildController(engine);
 
-  dispatch(restoreStateAsync(props.initialState.parameters));
+  dispatch(restoreState(props.initialState.parameters));
 
   return {
     ...controller,

@@ -1,9 +1,8 @@
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
+import {QueryParam} from '../../api/search/search-api-params';
 import {updateQuery} from '../query/query-actions';
 
-export interface StateParameters {
-  q?: string;
-}
+export type StateParameters = QueryParam;
 
 /** Restores state parameters (e.g. from a url)*/
 export const restoreState = createAction(

@@ -1,4 +1,4 @@
-import {restoreStateAsync} from '../../features/state-manager/state-manager-actions';
+import {restoreState} from '../../features/state-manager/state-manager-actions';
 import {SearchAppState} from '../../state/search-app-state';
 import {buildMockSearchAppEngine, MockEngine} from '../../test';
 import {
@@ -36,10 +36,8 @@ describe('state manager', () => {
   });
 
   it('dispatches a #restoreState action on registration', () => {
-    const action = engine.actions.find(
-      (a) => a.type === restoreStateAsync.pending.type
-    );
-    expect(action).toBeTruthy();
+    const action = restoreState(props.initialState.parameters);
+    expect(engine.actions).toContainEqual(action);
   });
 
   describe('#state.parameters.q', () => {
