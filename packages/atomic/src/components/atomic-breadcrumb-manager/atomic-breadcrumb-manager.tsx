@@ -33,7 +33,7 @@ import mainclear from '../../images/main-clear.svg';
 })
 export class AtomicBreadcrumbManager {
   @State() state!: BreadcrumbManagerState;
-  @State() collapseBreadcrumbMap: Record<string, boolean> = {};
+  @State() collapsedBreadcrumbsState: Record<string, boolean> = {};
   @Prop() collapseThreshold = 5;
 
   private engine!: Engine;
@@ -67,22 +67,22 @@ export class AtomicBreadcrumbManager {
   private initializeCollapseBreadcrumbMap() {
     this.breadcrumbManager.state.facetBreadcrumbs.forEach(
       (facet: FacetBreadcrumb) => {
-        this.collapseBreadcrumbMap[facet.field] = false;
+        this.collapsedBreadcrumbsState[facet.field] = false;
       }
     );
     this.breadcrumbManager.state.numericFacetBreadcrumbs.forEach(
       (facet: NumericFacetBreadcrumb) => {
-        this.collapseBreadcrumbMap[facet.field] = false;
+        this.collapsedBreadcrumbsState[facet.field] = false;
       }
     );
     this.breadcrumbManager.state.dateFacetBreadcrumbs.forEach(
       (facet: DateFacetBreadcrumb) => {
-        this.collapseBreadcrumbMap[facet.field] = false;
+        this.collapsedBreadcrumbsState[facet.field] = false;
       }
     );
     this.breadcrumbManager.state.categoryFacetBreadcrumbs.forEach(
       (facet: CategoryFacetBreadcrumb) => {
-        this.collapseBreadcrumbMap[facet.field] = false;
+        this.collapsedBreadcrumbsState[facet.field] = false;
       }
     );
   }
@@ -93,7 +93,7 @@ export class AtomicBreadcrumbManager {
       return !this.isEmpty(breadcrumbsValues) ? (
         <ul part="breadcrumbs" class="breadcrumb p-0 m-0 bg-transparent">
           <li part="breadcrumb-label" class="text-muted">
-            {breadcrumb.field}:&nbsp;{' '}
+            {breadcrumb.field}:&nbsp;
           </li>
           {breadcrumbsValues}
         </ul>
@@ -110,7 +110,7 @@ export class AtomicBreadcrumbManager {
       return !this.isEmpty(breadcrumbsValues) ? (
         <ul part="breadcrumbs" class="breadcrumb p-0 m-0 bg-transparent">
           <li part="breadcrumb-label" class="text-muted">
-            {breadcrumb.field}:&nbsp;{' '}
+            {breadcrumb.field}:&nbsp;
           </li>
           {breadcrumbsValues}
         </ul>
@@ -126,8 +126,8 @@ export class AtomicBreadcrumbManager {
       const breadcrumbsValues = this.getRangeBreadrumbValues(breadcrumb);
       return !this.isEmpty(breadcrumbsValues) ? (
         <ul part="breadcrumbs" class="breadcrumb p-0 m-0 bg-transparent">
-          <li part="breadcrumb-label" class="text-muted">
-            {breadcrumb.field}:&nbsp;{' '}
+          <li part="breadcrumb-label" class="text-muted align-text-top">
+            {breadcrumb.field}:&nbsp;
           </li>
           {breadcrumbsValues}
         </ul>
@@ -148,7 +148,7 @@ export class AtomicBreadcrumbManager {
         return renderedBreadcrumbs ? (
           <ul part="breadcrumbs" class="breadcrumb p-0 m-0 bg-transparent">
             <li part="breadcrumb-label" class="text-muted">
-              {breadcrumb.field}:&nbsp;{' '}
+              {breadcrumb.field}:&nbsp;
             </li>
             {breadcrumbsValues}
           </ul>
@@ -161,27 +161,25 @@ export class AtomicBreadcrumbManager {
   }
 
   render() {
-    let clearAllFiltersButton = '';
     if (this.hasActiveBreadcrumbs()) {
-      clearAllFiltersButton = (
-        <span class="col-3 text-right">{this.getClearAllFiltersButton()}</span>
+      return (
+        <div class="container row">
+          <span class=" col-9">
+            {this.facetBreadcrumbs}
+            {this.numericFacetBreadcrumbs}
+            {this.dateFacetBreadcrumbs}
+            {this.categoryFacetBreadcrumbs}
+          </span>
+          <span class="col-3 text-right">
+            {this.getClearAllFiltersButton()}
+          </span>
+        </div>
       );
     }
-    return (
-      <div class="container row">
-        <span class=" col-9">
-          {this.facetBreadcrumbs}
-          {this.numericFacetBreadcrumbs}
-          {this.dateFacetBreadcrumbs}
-          {this.categoryFacetBreadcrumbs}
-        </span>
-        {clearAllFiltersButton}
-      </div>
-    );
   }
 
   private getBreadrumbValues(breadcrumb: Breadcrumb<FacetValue>) {
-    const {breadcrumbsToShow, moreButton} = this.manageCollapsedBreadcrumb(
+    const {breadcrumbsToShow, moreButton} = this.collapsedBreadcrumbsHandler(
       breadcrumb
     );
     const renderedBreadcrumbs = breadcrumbsToShow.map((breadcrumbValue) => (
@@ -203,7 +201,7 @@ export class AtomicBreadcrumbManager {
   }
 
   private getRangeBreadrumbValues(values: Breadcrumb<RangeFacetValue>) {
-    const {breadcrumbsToShow, moreButton} = this.manageCollapsedBreadcrumb(
+    const {breadcrumbsToShow, moreButton} = this.collapsedBreadcrumbsHandler(
       values
     );
     const renderedBreadcrumbs = breadcrumbsToShow.map((breadcrumbValue) => (
@@ -243,24 +241,27 @@ export class AtomicBreadcrumbManager {
     );
   }
 
-  private updateCollapsePreferences(field: string) {
-    this.collapseBreadcrumbMap = {...this.collapseBreadcrumbMap, [field]: true};
+  private showFacetCollapsedBreadcrumbs(field: string) {
+    this.collapsedBreadcrumbsState = {
+      ...this.collapsedBreadcrumbsState,
+      [field]: true,
+    };
   }
 
   private isEmpty(array: any[]) {
     return array.length === 0;
   }
 
-  private manageCollapsedBreadcrumb<T extends BaseFacetValue>(
+  private collapsedBreadcrumbsHandler<T extends BaseFacetValue>(
     breadcrumb: Breadcrumb<T>
   ) {
     let breadcrumbsToShow = [];
     let moreButton = undefined;
 
-    if (this.collapseBreadcrumbMap[breadcrumb.field]) {
+    if (this.collapsedBreadcrumbsState[breadcrumb.field]) {
       breadcrumbsToShow = breadcrumb.values;
       breadcrumbsToShow.length <= this.collapseThreshold
-        ? (this.collapseBreadcrumbMap[breadcrumb.field] = false)
+        ? (this.collapsedBreadcrumbsState[breadcrumb.field] = false)
         : null;
     } else {
       breadcrumbsToShow = breadcrumb.values.slice(0, this.collapseThreshold);
@@ -273,7 +274,9 @@ export class AtomicBreadcrumbManager {
             <button
               part="breadcrumb-button"
               class="btn btn-link btn-sm text-decoration-none text-primary p-0 m-0"
-              onClick={() => this.updateCollapsePreferences(breadcrumb.field)}
+              onClick={() =>
+                this.showFacetCollapsedBreadcrumbs(breadcrumb.field)
+              }
             >
               {collapsedBreadcrumbNumber} more...
             </button>
