@@ -8,48 +8,38 @@ export {
 } from '@reduxjs/toolkit';
 
 // Main App
-export * from './app/frequently-bought-together-app-reducers';
-export * from './app/headless-engine';
-export * from './app/search-app-reducers';
-export * from './app/recommendation-app-reducers';
+export {productRecommendationsAppReducers} from './app/frequently-bought-together-app-reducers';
+export {
+  HeadlessOptions,
+  HeadlessConfigurationOptions,
+  Engine,
+  HeadlessEngine,
+} from './app/headless-engine';
+export {searchAppReducers} from './app/search-app-reducers';
+export {recommendationAppReducers} from './app/recommendation-app-reducers';
 
 // State
-export * from './state/product-recommendations-app-state';
-export * from './state/search-app-state';
-export * from './state/recommendation-app-state';
+export {ProductRecommendationsAppState} from './state/product-recommendations-app-state';
+export {SearchParametersState, SearchAppState} from './state/search-app-state';
+export {RecommendationAppState} from './state/recommendation-app-state';
 
 // Controllers
-export * from './controllers/controller/headless-controller';
-export * from './controllers/context/headless-context';
-export * from './controllers/did-you-mean/headless-did-you-mean';
-export * from './controllers/facets/category-facet/headless-category-facet';
-export * from './controllers/facets/facet/headless-facet';
-export * from './controllers/facets/range-facet/date-facet/headless-date-facet';
-export * from './controllers/facets/range-facet/numeric-facet/headless-numeric-facet';
-export * from './controllers/history/headless-history';
-export * from './controllers/pager/headless-pager';
-export * from './controllers/query-error/headless-query-error';
-export * from './controllers/query-summary/headless-query-summary';
-export * from './controllers/result-list/headless-result-list';
-export * from './controllers/results-per-page/headless-results-per-page';
-export * from './controllers/search-box/headless-search-box';
-export * from './controllers/sort/headless-sort';
-export * from './controllers/tab/headless-tab';
-export * from './controllers/facet-manager/headless-facet-manager';
-export * from './controllers/breadcrumb-manager/headless-breadcrumb-manager';
-export * from './controllers/recommendation/headless-recommendation';
-export * from './controllers/standalone-search-box/headless-standalone-search-box';
-export * from './controllers/product-recommendations/headless-frequently-bought-together';
-export * from './controllers/product-recommendations/headless-cart-recommendations';
-export * from './controllers/product-recommendations/headless-frequently-bought-together';
-export * from './controllers/product-recommendations/headless-frequently-viewed-together';
-export * from './controllers/product-recommendations/headless-popular-bought-recommendations';
-export * from './controllers/product-recommendations/headless-popular-viewed-recommendations';
-export * from './controllers/product-recommendations/headless-user-interest-recommendations';
+export * from './controllers';
 
 // Selectors
-export * from './features/facets/facet-set/facet-set-selectors';
-export * from './features/pagination/pagination-selectors';
+// do these need to be imported
+export {
+  baseFacetResponseSelector,
+  facetRequestSelector,
+  facetResponseSelector,
+  facetResponseSelectedValuesSelector,
+} from './features/facets/facet-set/facet-set-selectors';
+
+export {
+  currentPageSelector,
+  maxPageSelector,
+  currentPagesSelector,
+} from './features/pagination/pagination-selectors';
 
 // Grouped Actions
 export * as AdvancedSearchQueriesActions from './features/advanced-search-queries/advanced-search-queries-actions';
