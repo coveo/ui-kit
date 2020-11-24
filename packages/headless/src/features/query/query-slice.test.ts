@@ -101,17 +101,15 @@ describe('query slice', () => {
   });
 
   describe('#restoreState', () => {
-    it('when #parameters contains a #q key, it updates the query to the key value', () => {
+    it('when the object contains a #q key, it updates the query to the key value', () => {
       state.q = 'a';
       const finalState = queryReducer(state, restoreState({q: ''}));
-
       expect(finalState.q).toEqual('');
     });
 
-    it('when #parameters does not contain a #q key, it does not update the query', () => {
+    it('when the object does not contain a #q key, it does not update the query', () => {
       state.q = 'a';
       const finalState = queryReducer(state, restoreState({}));
-
       expect(finalState.q).toEqual(state.q);
     });
   });
