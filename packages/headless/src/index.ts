@@ -27,7 +27,6 @@ export {RecommendationAppState} from './state/recommendation-app-state';
 export * from './controllers';
 
 // Selectors
-// do these need to be imported
 export {
   baseFacetResponseSelector,
   facetRequestSelector,
@@ -68,7 +67,6 @@ export {
   ResultTemplateCondition,
 } from './features/result-templates/result-templates';
 export * as ResultTemplatesHelpers from './features/result-templates/result-templates-helpers';
-export * as TestUtils from './test'; // why is this exported
 export {platformUrl} from './api/platform-client';
 export {CategoryFacetSortCriterion} from './features/facets/category-facet-set/interfaces/request';
 export {CategoryFacetValue} from './features/facets/category-facet-set/interfaces/response';

@@ -1,7 +1,4 @@
-export {
-  Controller,
-  buildController, // probably should be deleted
-} from './controller/headless-controller';
+export {Controller} from './controller/headless-controller';
 
 export {Context, ContextState, buildContext} from './context/headless-context';
 
