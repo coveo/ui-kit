@@ -1,16 +1,17 @@
-export function encodeToUrlFragment(obj: Record<string, unknown>) {
+export function encodeToUrlFragment(obj: Record<string, string>) {
   const fragment = Object.entries(obj)
     .map(([key, val]) => `${key}=${val}`)
-    .reduce((acc, current) => acc + current, '');
+    .join('&');
 
   return fragment;
 }
 
-export function decodeUrlFragment(fragment: string) {
-  const parts = fragment.split('=');
-  if (parts.length !== 2) {
-    return {};
-  }
-  const [key, val] = parts;
-  return {[key]: val};
+export function decodeUrlFragment(fragment: string): Record<string, string> {
+  const parts = fragment.split('&');
+  const keyValuePairs = parts.map((part) => part.split('='));
+
+  return keyValuePairs.reduce((acc, pair) => {
+    const [key, val] = pair;
+    return {...acc, [key]: val};
+  }, {});
 }
