@@ -42,41 +42,33 @@ export {
 } from './features/pagination/pagination-selectors';
 
 // Grouped Actions
-export * as AdvancedSearchQueriesActions from './features/advanced-search-queries/advanced-search-queries-actions';
-export * as AnalyticsActions from './features/analytics/analytics-actions';
-export * as CategoryFacetActions from './features/facets/category-facet-set/category-facet-set-actions';
-export * as CategoryFacetControllerActions from './features/facets/category-facet-set/category-facet-set-controller-actions';
-export * as ConfigurationActions from './features/configuration/configuration-actions';
-export * as ContextActions from './features/context/context-actions';
-export * as DateFacetActions from './features/facets/range-facets/date-facet-set/date-facet-actions';
-export * as DateFacetControllerActions from './features/facets/range-facets/date-facet-set/date-facet-controller-actions';
-export * as DidYouMeanActions from './features/did-you-mean/did-you-mean-actions';
-export * as FacetActions from './features/facets/facet-set/facet-set-actions';
-export * as FacetControllerActions from './features/facets/facet-set/facet-set-controller-actions';
-export * as FieldsActions from './features/fields/fields-actions';
-export * as HistoryActions from './features/history/history-actions';
-export * as NumericFacetActions from './features/facets/range-facets/numeric-facet-set/numeric-facet-actions';
-export * as NumericFacetControllerActions from './features/facets/range-facets/numeric-facet-set/numeric-facet-controller-actions';
-export * as PaginationActions from './features/pagination/pagination-actions';
-export * as PipelineActions from './features/pipeline/pipeline-actions';
-export * as QueryActions from './features/query/query-actions';
-export * as QuerySetActions from './features/query-set/query-set-actions';
-export * as QuerySuggestActions from './features/query-suggest/query-suggest-actions';
-export * as RedirectionActions from './features/redirection/redirection-actions';
-export * as ResultAnalyticsActions from './features/result/result-analytics-actions';
-export * as SearchActions from './features/search/search-actions';
-export * as SearchHubActions from './features/search-hub/search-hub-actions';
-export * as SortCriterionActions from './features/sort-criteria/sort-criteria-actions';
-export * as RecommendationActions from './features/recommendation/recommendation-actions';
-export * as ProductRecommendationsActions from './features/product-recommendations/product-recommendations-actions';
+export * from './features';
 
 // Types & Helpers
-export * from './api/search/search/result';
-export * from './features/sort-criteria/criteria';
-export * from './features/result-templates/result-templates-manager';
-export * from './features/result-templates/result-templates';
+export {Result} from './api/search/search/result';
+export {
+  SortCriterion,
+  buildDateSortCriterion,
+  buildCriterionExpression,
+  buildFieldSortCriterion,
+  buildNoSortCriterion,
+  buildQueryRankingExpressionSortCriterion,
+  buildRelevanceSortCriterion,
+  SortBy,
+  SortByDate,
+  SortByField,
+  SortByNoSort,
+  SortByQRE,
+  SortByRelevancy,
+  SortOrder,
+} from './features/sort-criteria/criteria';
+export {ResultTemplatesManager} from './features/result-templates/result-templates-manager';
+export {
+  ResultTemplate,
+  ResultTemplateCondition,
+} from './features/result-templates/result-templates';
 export * as ResultTemplatesHelpers from './features/result-templates/result-templates-helpers';
-export * as TestUtils from './test';
+export * as TestUtils from './test'; // why is this exported
 export {platformUrl} from './api/platform-client';
 export {CategoryFacetSortCriterion} from './features/facets/category-facet-set/interfaces/request';
 export {CategoryFacetValue} from './features/facets/category-facet-set/interfaces/response';
