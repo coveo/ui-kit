@@ -44,8 +44,8 @@ export class AtomicHistory {
   public render() {
     return (
       <div>
-        <button onClick={() => this.back()}>BACK</button>
-        <button onClick={() => this.forward()}>FORWARD</button>
+        <button onClick={() => this.back()}>GO BACK</button>
+        <button onClick={() => this.forward()}>GO FORWARD</button>
       </div>
     );
   }
