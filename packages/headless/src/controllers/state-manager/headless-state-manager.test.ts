@@ -35,18 +35,25 @@ describe('state manager', () => {
     expect(manager.state.parameters).toBeTruthy();
   });
 
-  it('dispatches a #restoreState action on registration', () => {
+  it('dispatches #restoreState on registration', () => {
     const action = restoreState(props.initialState.parameters);
     expect(engine.actions).toContainEqual(action);
   });
 
+  it('when #parameters is not an object, it throws an error', () => {
+    props.initialState.parameters = true as never;
+    expect(() => initStateManager()).toThrow(
+      'Check the initialState of buildStateManager'
+    );
+  });
+
   describe('#state.parameters.q', () => {
-    it('when #q does not match the default values, the parameter is included', () => {
+    it('when #q does not equal the default value, the parameter is included', () => {
       engine.state.query.q = 'a';
       expect(manager.state.parameters.q).toBe('a');
     });
 
-    it('when #q equals the default value, the parameter is not included', () => {
+    it('when #q is equal to the default value, the parameter is not included', () => {
       expect('q' in manager.state.parameters).toBe(false);
     });
   });

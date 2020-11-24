@@ -1,10 +1,13 @@
+import {RecordValue, Schema} from '@coveo/bueno';
 import {Engine} from '../../app/headless-engine';
 import {getQueryInitialState} from '../../features/query/query-state';
 import {
   restoreState,
   StateParameters,
 } from '../../features/state-manager/state-manager-actions';
+import {stateParametersDefinition} from '../../features/state-manager/state-parameters-schema';
 import {SearchAppState} from '../../state/search-app-state';
+import {validateInitialState} from '../../utils/validate-payload';
 import {buildController} from '../controller/headless-controller';
 
 export interface StateManagerProps {
@@ -14,6 +17,13 @@ export interface StateManagerProps {
 interface StateManagerInitialState {
   parameters: StateParameters;
 }
+
+const initialStateSchema = new Schema<Required<StateManagerInitialState>>({
+  parameters: new RecordValue({
+    options: {required: true},
+    values: stateParametersDefinition,
+  }),
+});
 
 /** The `StateManger` controller allows changing parameters that affect the results.*/
 export type StateManager = ReturnType<typeof buildStateManager>;
@@ -28,6 +38,11 @@ export function buildStateManager(
   const {dispatch} = engine;
   const controller = buildController(engine);
 
+  validateInitialState(
+    initialStateSchema,
+    props.initialState,
+    buildStateManager.name
+  );
   dispatch(restoreState(props.initialState.parameters));
 
   return {
@@ -35,7 +50,7 @@ export function buildStateManager(
 
     get state() {
       const state = engine.state;
-      const parameters = {
+      const parameters: StateParameters = {
         ...getQ(state),
       };
 
