@@ -53,12 +53,12 @@ const browserConfig = {
       file: 'dist/browser/headless.js',
       format: 'umd',
       name: 'CoveoHeadless',
-      sourcemap: true,
+      sourcemap: isProduction,
     },
     {
       file: 'dist/browser/headless.esm.js',
       format: 'es',
-      sourcemap: true,
+      sourcemap: isProduction,
     },
     // For Atomic's development purposes only
     {file: '../atomic/src/external-builds/headless.esm.js', format: 'es'},
@@ -83,8 +83,8 @@ const browserConfig = {
     commonjs(),
     typescript(),
     replace(),
-    sizeSnapshot(),
-    terser(),
+    isProduction && sizeSnapshot(),
+    isProduction && terser(),
   ],
 };
 
