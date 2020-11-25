@@ -83,12 +83,6 @@ export interface GenericSearchEventPayload<T = unknown> {
   meta?: Record<string, T>;
 }
 
-export const logNoopSearchEvent = makeAnalyticsAction(
-  'analytics/search/noop',
-  AnalyticsType.Search,
-  () => {}
-);
-
 /**
  * Logs a generic search event.
  * @param p (GenericSearchEventPayload) The search event payload.

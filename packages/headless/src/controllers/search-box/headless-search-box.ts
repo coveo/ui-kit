@@ -31,10 +31,7 @@ import {validateOptions} from '../../utils/validate-payload';
 import {logQuerySuggestionClick} from '../../features/query-suggest/query-suggest-analytics-actions';
 import {randomID} from '../../utils/utils';
 import {QuerySuggestState} from '../../features/query-suggest/query-suggest-state';
-import {
-  logNoopSearchEvent,
-  SearchAction,
-} from '../../features/analytics/analytics-actions';
+import {SearchAction} from '../../features/analytics/analytics-actions';
 
 export {SearchBoxOptions};
 export interface SearchBoxProps {
@@ -132,9 +129,8 @@ export function buildSearchBox(
      * @param value The string value of the suggestion to select
      */
     selectSuggestion(value: string) {
-      dispatch(logQuerySuggestionClick({id, suggestion: value}));
       dispatch(selectQuerySuggestion({id, expression: value}));
-      submit(logNoopSearchEvent());
+      submit(logQuerySuggestionClick({id, suggestion: value}));
     },
 
     /**
