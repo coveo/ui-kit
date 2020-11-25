@@ -1,5 +1,5 @@
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
-import {configureAnalytics, historyStore} from '../../api/analytics/analytics';
+import {historyStore} from '../../api/analytics/analytics';
 import {RecommendationRequest} from '../../api/search/recommendation/recommendation-request';
 import {
   AsyncThunkSearchOptions,
@@ -15,13 +15,10 @@ import {
   RecommendationSection,
   SearchHubSection,
 } from '../../state/state-sections';
-import {
-  makeSearchActionType,
-  SearchAction,
-} from '../analytics/analytics-actions';
-import {StateNeededByAnalyticsProvider} from '../../api/analytics/analytics';
+import {SearchAction} from '../analytics/analytics-actions';
 import {validatePayloadSchema} from '../../utils/validate-payload';
 import {StringValue} from '@coveo/bueno';
+import {logRecommendationUpdate} from './recommendation-analytics-actions';
 
 export type StateNeededByGetRecommendations = ConfigurationSection &
   RecommendationSection &
@@ -48,18 +45,6 @@ export const setRecommendationId = createAction(
     validatePayloadSchema(payload, {
       id: new StringValue({required: true, emptyAllowed: false}),
     })
-);
-
-/**
- * Logs a search event with an `actionCause` value of `recommendationInterfaceLoad`.
- */
-export const logRecommendationUpdate = createAsyncThunk(
-  'analytics/recommnendation/uppdate',
-  async (_, {getState}) => {
-    const state = getState() as StateNeededByAnalyticsProvider;
-    await configureAnalytics(state).logRecommendationInterfaceLoad();
-    return makeSearchActionType();
-  }
 );
 
 /**

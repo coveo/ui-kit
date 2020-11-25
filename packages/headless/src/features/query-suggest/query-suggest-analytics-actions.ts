@@ -1,32 +1,35 @@
-import {configureAnalytics} from '../../api/analytics/analytics';
-import {createAsyncThunk} from '@reduxjs/toolkit';
 import {
-  makeSearchActionType,
-  searchPageState,
+  AnalyticsType,
+  makeAnalyticsAction,
 } from '../analytics/analytics-actions';
 import {OmniboxSuggestionsMetadata} from 'coveo.analytics/src/searchPage/searchPageEvents';
 
-export const logQuerySuggestionClick = createAsyncThunk(
-  'analytics/querySuggest',
-  async ({id, suggestion}: {id: string; suggestion: string}, {getState}) => {
-    const state = searchPageState(getState);
-    const querySuggest = state.querySuggest[id];
+export const logQuerySuggestionClick = ({
+  id,
+  suggestion,
+}: {
+  id: string;
+  suggestion: string;
+}) =>
+  makeAnalyticsAction(
+    'analytics/querySuggest',
+    AnalyticsType.Search,
+    (client, state) => {
+      const querySuggest = state.querySuggest && state.querySuggest[id];
+      if (querySuggest !== null && querySuggest !== undefined) {
+        const suggestions = querySuggest.completions.map(
+          (completion) => completion.expression
+        );
 
-    if (!querySuggest) {
-      return null;
+        const payload: OmniboxSuggestionsMetadata = {
+          suggestionRanking: suggestions.indexOf(suggestion),
+          partialQuery: querySuggest.q,
+          partialQueries: querySuggest.partialQueries,
+          suggestions,
+        };
+        return client.logOmniboxAnalytics(payload);
+      }
+
+      return;
     }
-    const suggestions = querySuggest.completions.map(
-      (completion) => completion.expression
-    );
-
-    const payload: OmniboxSuggestionsMetadata = {
-      suggestionRanking: suggestions.indexOf(suggestion),
-      partialQuery: state.querySuggest[id]!.q,
-      partialQueries: state.querySuggest[id]!.partialQueries,
-      suggestions,
-    };
-
-    await configureAnalytics(state).logOmniboxAnalytics(payload);
-    return makeSearchActionType();
-  }
-);
+  );

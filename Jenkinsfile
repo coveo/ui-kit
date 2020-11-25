@@ -55,7 +55,7 @@ node('linux && docker') {
     withDockerContainer(image: 'node:14', args: '-u=root') {
       stage('Bump version') {
         withCredentials([
-          usernameColonPassword(credentialsId: 'bitbucket-anti-throttling-03', variable: 'BB_CREDENTIALS')
+          usernameColonPassword(credentialsId: 'github-commit-token', variable: 'GH_CREDENTIALS')
         ]) {
           sh 'npm run bump:version'
         }

@@ -4,14 +4,16 @@ import {
   DocumentIdentifier,
 } from 'coveo.analytics/dist/definitions/searchPage/searchPageEvents';
 import {SearchAppState} from '../../state/search-app-state';
+import {getPipelineInitialState} from '../pipeline/pipeline-state';
 
 export const partialDocumentInformation = (
   result: Result,
-  state: SearchAppState
+  state: Partial<SearchAppState>
 ): PartialDocumentInformation => {
-  const resultIndex = state.search.response.results.findIndex(
-    ({uniqueId}) => result.uniqueId === uniqueId
-  );
+  const resultIndex =
+    state.search?.response.results.findIndex(
+      ({uniqueId}) => result.uniqueId === uniqueId
+    ) || 0;
   return {
     collectionName: result.raw['collection'] || 'default',
     documentAuthor: result.raw['author'] as string,
@@ -22,7 +24,7 @@ export const partialDocumentInformation = (
     documentUrl: result.clickUri,
     rankingModifier: result.rankingModifier || '',
     sourceName: result.raw['source'],
-    queryPipeline: state.pipeline,
+    queryPipeline: state.pipeline || getPipelineInitialState(),
   };
 };
 
