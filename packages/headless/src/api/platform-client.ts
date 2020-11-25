@@ -7,10 +7,16 @@ import {BaseParam} from './search/search-api-params';
 function isThrottled(status: number): boolean {
   return status === 429;
 }
-export interface PlatformClientCallOptions<RequestParams extends BaseParam> {
+
+export interface BasePlatformClientOptions {
   url: string;
   method: HttpMethods;
   contentType: HTTPContentTypes;
+  customHeaders?: Record<string, string>;
+}
+
+export interface PlatformClientCallOptions<RequestParams extends BaseParam>
+  extends BasePlatformClientOptions {
   requestParams: Omit<RequestParams, 'url' | 'organizationId' | 'accessToken'>;
   accessToken: string;
   renewAccessToken: () => Promise<string>;
@@ -21,18 +27,27 @@ export interface PlatformResponse<T> {
   response: Response;
 }
 
+export type PreprocessRequestMiddleware = (
+  request: BasePlatformClientOptions
+) => BasePlatformClientOptions | Promise<BasePlatformClientOptions>;
+
 export class PlatformClient {
   static async call<RequestParams extends BaseParam, ResponseType>(
-    options: PlatformClientCallOptions<RequestParams>
+    options: PlatformClientCallOptions<RequestParams>,
+    preprocessRequestMiddleware?: PreprocessRequestMiddleware
   ): Promise<PlatformResponse<ResponseType>> {
+    const processedOptions = preprocessRequestMiddleware
+      ? {...options, ...(await preprocessRequestMiddleware(options))}
+      : options;
     const request = async () => {
-      const response = await fetch(options.url, {
-        method: options.method,
+      const response = await fetch(processedOptions.url, {
+        method: processedOptions.method,
         headers: {
-          'Content-Type': options.contentType,
-          Authorization: `Bearer ${options.accessToken}`,
+          'Content-Type': processedOptions.contentType,
+          Authorization: `Bearer ${processedOptions.accessToken}`,
+          ...processedOptions.customHeaders,
         },
-        body: JSON.stringify(options.requestParams),
+        body: JSON.stringify(processedOptions.requestParams),
       });
       if (isThrottled(response.status)) {
         throw response;
@@ -47,10 +62,10 @@ export class PlatformClient {
         },
       });
       if (response.status === 419) {
-        const accessToken = await options.renewAccessToken();
+        const accessToken = await processedOptions.renewAccessToken();
 
         if (accessToken !== '') {
-          return PlatformClient.call({...options, accessToken});
+          return PlatformClient.call({...processedOptions, accessToken});
         }
       }
       return {

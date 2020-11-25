@@ -1,4 +1,8 @@
-import {PlatformClient, PlatformResponse} from '../platform-client';
+import {
+  PlatformClient,
+  PlatformResponse,
+  PreprocessRequestMiddleware,
+} from '../platform-client';
 import {PlanResponseSuccess, Plan} from './plan/plan-response';
 import {
   QuerySuggestSuccessResponse,
@@ -43,7 +47,10 @@ export type SearchAPIClientResponse<T> =
   | {error: SearchAPIErrorWithStatusCode};
 
 export class SearchAPIClient {
-  constructor(private renewAccessToken: () => Promise<string>) {}
+  constructor(
+    private renewAccessToken: () => Promise<string>,
+    private preprocessRequestMiddleware?: PreprocessRequestMiddleware
+  ) {}
   async plan(
     req: PlanRequest
   ): Promise<SearchAPIClientResponse<PlanResponseSuccess>> {
@@ -88,11 +95,14 @@ export class SearchAPIClient {
   async search(
     req: SearchRequest
   ): Promise<SearchAPIClientResponse<SearchResponseSuccess>> {
-    const platformResponse = await PlatformClient.call<SearchRequest, Search>({
-      ...baseSearchRequest(req, 'POST', 'application/json', ''),
-      requestParams: pickNonBaseParams(req),
-      renewAccessToken: this.renewAccessToken,
-    });
+    const platformResponse = await PlatformClient.call<SearchRequest, Search>(
+      {
+        ...baseSearchRequest(req, 'POST', 'application/json', ''),
+        requestParams: pickNonBaseParams(req),
+        renewAccessToken: this.renewAccessToken,
+      },
+      this.preprocessRequestMiddleware
+    );
 
     if (isSuccessSearchResponse(platformResponse)) {
       return {

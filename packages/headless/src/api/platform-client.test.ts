@@ -1,4 +1,8 @@
-import {platformUrl, PlatformClient} from './platform-client';
+import {
+  platformUrl,
+  PlatformClient,
+  PreprocessRequestMiddleware,
+} from './platform-client';
 import * as BackOff from 'exponential-backoff';
 
 jest.mock('cross-fetch');
@@ -41,17 +45,20 @@ describe('platformUrl helper', () => {
 });
 
 describe('PlatformClient call', () => {
-  function platformCall() {
-    return PlatformClient.call({
-      accessToken: 'accessToken1',
-      contentType: 'application/json',
-      method: 'POST',
-      requestParams: {
-        test: 123,
+  function platformCall(middleware?: PreprocessRequestMiddleware) {
+    return PlatformClient.call(
+      {
+        accessToken: 'accessToken1',
+        contentType: 'application/json',
+        method: 'POST',
+        requestParams: {
+          test: 123,
+        },
+        url: platformUrl(),
+        renewAccessToken: async () => 'accessToken2',
       },
-      url: platformUrl(),
-      renewAccessToken: async () => 'accessToken2',
-    });
+      middleware
+    );
   }
 
   beforeEach(() => {
@@ -131,5 +138,32 @@ describe('PlatformClient call', () => {
     expect(spy).not.toThrow();
     expect(response.response).toBe(mockResponse);
     done();
+  });
+
+  it('should preprocess the request if a middleware is provided', async () => {
+    mockFetch.mockReturnValue(
+      Promise.resolve(new Response(JSON.stringify({})))
+    );
+
+    await platformCall((request) => {
+      return {
+        ...request,
+        customHeaders: {
+          test: 'header',
+        },
+      };
+    });
+
+    expect(mockFetch).toHaveBeenCalledWith(platformUrl(), {
+      body: JSON.stringify({
+        test: 123,
+      }),
+      headers: {
+        Authorization: 'Bearer accessToken1',
+        'Content-Type': 'application/json',
+        test: 'header',
+      },
+      method: 'POST',
+    });
   });
 });
