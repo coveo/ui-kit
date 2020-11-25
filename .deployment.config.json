@@ -24,8 +24,7 @@
         {
             "id": "deploy-headless",
             "s3": {
-                "bucket": "binaries",
-                "add_coveo_bucket_prefix": true,
+                "bucket": "{terraform.infra.infra.bucket_binaries}",
                 "directory": "proda/StaticCDN/headless/latest",
                 "source": "packages/headless/dist/browser",
                 "parameters": {

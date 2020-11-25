@@ -2,14 +2,14 @@ import {
   buildStandaloneSearchBox,
   StandaloneSearchBox,
   StandaloneSearchBoxOptions,
-  StandaloneSearchBoxProps,
-} from './headless-standalone-searchbox';
+} from './headless-standalone-search-box';
 import {checkForRedirection} from '../../features/redirection/redirection-actions';
 import {createMockState} from '../../test/mock-state';
 import {updateQuery} from '../../features/query/query-actions';
 import {buildMockQuerySuggest} from '../../test/mock-query-suggest';
 import {buildMockSearchAppEngine, MockEngine} from '../../test/mock-engine';
 import {SearchAppState} from '../../state/search-app-state';
+import {registerQuerySetQuery} from '../../features/query-set/query-set-actions';
 
 describe('headless standalone searchBox', () => {
   const id = 'search-box-123';
@@ -17,17 +17,13 @@ describe('headless standalone searchBox', () => {
 
   let engine: MockEngine<SearchAppState>;
   let searchBox: StandaloneSearchBox;
-  let props: StandaloneSearchBoxProps;
+  let options: StandaloneSearchBoxOptions;
 
   beforeEach(() => {
-    const options: StandaloneSearchBoxOptions = {
+    options = {
       id,
       redirectionUrl: 'https://www.coveo.com/en/search',
-      numberOfSuggestions: 10,
-      enableQuerySyntax: false,
     };
-
-    props = {options};
 
     initState();
     initController();
@@ -42,11 +38,26 @@ describe('headless standalone searchBox', () => {
 
   function initController() {
     engine = buildMockSearchAppEngine({state});
-    searchBox = buildStandaloneSearchBox(engine, props);
+    searchBox = buildStandaloneSearchBox(engine, {options});
   }
 
+  it('when no id is passed, it creates an id prefixed with standalone_search_box', () => {
+    options = {redirectionUrl: 'https://www.coveo.com/en/search'};
+    initController();
+
+    const action = engine.actions.find(
+      (a) => a.type === registerQuerySetQuery.type
+    );
+
+    const payload = expect.objectContaining({
+      id: expect.stringContaining('standalone_search_box'),
+    });
+
+    expect(action).toEqual(expect.objectContaining({payload}));
+  });
+
   it('when configuring an invalid option, it throws an error', () => {
-    props.options.numberOfSuggestions = ('1' as unknown) as number;
+    options.numberOfSuggestions = ('1' as unknown) as number;
     expect(() => initController()).toThrow(
       'Check the options of buildStandaloneSearchBox'
     );

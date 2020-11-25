@@ -18,6 +18,7 @@ import {configureStore, Store} from './store';
 import {SearchAPIClient} from '../api/search/search-api-client';
 import {debounce} from 'ts-debounce';
 import {SearchAppState} from '../state/search-app-state';
+import {AnalyticsClientSendEventHook} from 'coveo.analytics/dist/definitions/client/analytics';
 
 /**
  * The global headless engine options.
@@ -118,12 +119,19 @@ export interface HeadlessConfigurationOptions {
      * This value is optional, and will automatically try to resolve itself from the referrer search parameter.
      */
     originLevel3?: string;
+    /**
+     * analyticsClientMiddleware allows to hook into the analytics request before it is sent to the Coveo platform.
+     */
+    analyticsClientMiddleware?: AnalyticsClientSendEventHook;
   };
 }
 
 type EngineDispatch<State> = ThunkDispatch<
   State,
-  {searchAPIClient: SearchAPIClient},
+  {
+    searchAPIClient: SearchAPIClient;
+    analyticsClientMiddleware: AnalyticsClientSendEventHook;
+  },
   AnyAction
 > &
   Dispatch<AnyAction>;
@@ -174,6 +182,7 @@ export class HeadlessEngine<Reducers extends ReducersMapObject>
       middlewares: options.middlewares,
       thunkExtraArguments: {
         searchAPIClient: new SearchAPIClient(() => this.renewAccessToken()),
+        analyticsClientMiddleware: this.analyticsClientMiddleware(options),
       },
     });
 
@@ -190,9 +199,11 @@ export class HeadlessEngine<Reducers extends ReducersMapObject>
       );
     }
     if (options.configuration.analytics) {
-      this.reduxStore.dispatch(
-        updateAnalyticsConfiguration(options.configuration.analytics)
-      );
+      const {
+        analyticsClientMiddleware,
+        ...rest
+      } = options.configuration.analytics;
+      this.reduxStore.dispatch(updateAnalyticsConfiguration(rest));
     }
   }
 
@@ -265,5 +276,14 @@ export class HeadlessEngine<Reducers extends ReducersMapObject>
     } catch (error) {
       return '';
     }
+  }
+
+  private analyticsClientMiddleware(
+    options: HeadlessOptions<Reducers>
+  ): AnalyticsClientSendEventHook {
+    return (
+      options.configuration.analytics?.analyticsClientMiddleware ||
+      ((_, p) => p)
+    );
   }
 }

@@ -29,7 +29,7 @@ import {
   SearchSection,
   SortSection,
 } from '../../state/state-sections';
-import {configureAnalytics, historyStore} from '../../api/analytics/analytics';
+import {getVisitorID, historyStore} from '../../api/analytics/analytics';
 import {AnyFacetRequest} from '../facets/generic/interfaces/generic-facet-request';
 import {SearchParametersState} from '../../state/search-app-state';
 import {SearchRequest} from '../../api/search/search/search-request';
@@ -151,7 +151,7 @@ const automaticallyRetryQueryWithCorrection = async (
   client: SearchAPIClient,
   correction: string,
   getState: () => StateNeededByExecuteSearch,
-  dispatch: ThunkDispatch<unknown, unknown, AnyAction>
+  dispatch: ThunkDispatch<never, never, AnyAction>
 ) => {
   dispatch(updateQuery({q: correction}));
   const fetched = await fetchFromAPI(client, getState());
@@ -201,8 +201,7 @@ export const buildSearchRequest = (
     organizationId: state.configuration.organizationId,
     url: state.configuration.search.apiBaseUrl,
     ...(state.configuration.analytics.enabled && {
-      visitorId: configureAnalytics(state).coveoAnalyticsClient
-        .currentVisitorId,
+      visitorId: getVisitorID(),
     }),
     ...(state.advancedSearchQueries && {
       aq: state.advancedSearchQueries.aq,

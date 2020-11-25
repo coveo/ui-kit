@@ -109,23 +109,11 @@ describe('headless searchBox', () => {
       expect(engine.actions).toContainEqual(action);
     });
 
-    it(`when the numberOfQuerySuggestions option is higher than 0
-    should call the showSuggestions method`, () => {
+    it('should call the showSuggestions method', () => {
       jest.spyOn(searchBox, 'showSuggestions');
       searchBox.updateText('how can i fix');
 
       expect(searchBox.showSuggestions).toHaveBeenCalled();
-    });
-
-    it(`when the numberOfQuerySuggestions option is 0
-    should not call the showSuggestions method`, () => {
-      props.options.numberOfSuggestions = 0;
-      initController();
-
-      jest.spyOn(searchBox, 'showSuggestions');
-      searchBox.updateText('how can i fix');
-
-      expect(searchBox.showSuggestions).not.toHaveBeenCalled();
     });
   });
 
@@ -149,16 +137,32 @@ describe('headless searchBox', () => {
     expect(engine.actions).toContainEqual(clearQuerySuggestCompletions({id}));
   });
 
-  it(`when calling showSuggestions
-    should dispatch a fetchQuerySuggestions action`, async () => {
-    searchBox.showSuggestions();
+  describe('#showSuggestions', () => {
+    it(`when numberOfQuerySuggestions is greater than 0,
+    it dispatches fetchQuerySuggestions`, async () => {
+      searchBox.showSuggestions();
 
-    const action = engine.actions.find(
-      (a) => a.type === fetchQuerySuggestions.pending.type
-    );
-    expect(action).toEqual(
-      fetchQuerySuggestions.pending(action!.meta.requestId, {id})
-    );
+      const action = engine.actions.find(
+        (a) => a.type === fetchQuerySuggestions.pending.type
+      );
+      expect(action).toEqual(
+        fetchQuerySuggestions.pending(action!.meta.requestId, {id})
+      );
+    });
+
+    it(`when numberOfQuerySuggestions is 0,
+    it does not dispatch fetchQuerySuggestions`, () => {
+      props.options.numberOfSuggestions = 0;
+      initController();
+
+      searchBox.showSuggestions();
+
+      const action = engine.actions.find(
+        (a) => a.type === fetchQuerySuggestions.pending.type
+      );
+
+      expect(action).toBe(undefined);
+    });
   });
 
   it(`when calling selectSuggestion
