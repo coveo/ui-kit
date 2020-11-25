@@ -1,4 +1,6 @@
 import {EC, Product, ImpressionList, BaseImpression} from '../plugins/ec';
+import {isTicketKey, svcActionsKeysMapping} from './coveoServiceMeasurementProtocolMapper';
+import {keysOf} from './utils';
 
 const globalParamKeysMapping: {[name: string]: string} = {
     anonymizeIp: 'aip',
@@ -79,11 +81,8 @@ const measurementProtocolKeysMapping: {[name: string]: string} = {
     ...transactionActionsKeysMapping,
     ...contextInformationMapping,
     ...globalParamKeysMapping,
+    ...svcActionsKeysMapping,
 };
-
-// Object.keys returns `string[]` this adds types
-// see https://github.com/microsoft/TypeScript/pull/12253#issuecomment-393954723
-export const keysOf = Object.keys as <T>(o: T) => Extract<keyof T, string>[];
 
 export const convertKeysToMeasurementProtocol = (params: any) => {
     return keysOf(params).reduce((mappedKeys, key) => {
@@ -105,12 +104,16 @@ export const convertProductToMeasurementProtocol = (product: Product, index: num
     }, {});
 };
 
-export const convertImpressionListToMeasurementProtocol = (impressionList: ImpressionList, listIndex: number) => {
+export const convertImpressionListToMeasurementProtocol = (
+    impressionList: ImpressionList,
+    listIndex: number,
+    prefix: string
+) => {
     const payload: {[name: string]: any} = impressionList.impressions.reduce(
         (mappedImpressions, impression, productIndex) => {
             return {
                 ...mappedImpressions,
-                ...convertImpressionToMeasurementProtocol(impression, listIndex, productIndex),
+                ...convertImpressionToMeasurementProtocol(impression, listIndex, productIndex, prefix),
             };
         },
         {}
@@ -126,10 +129,11 @@ export const convertImpressionListToMeasurementProtocol = (impressionList: Impre
 const convertImpressionToMeasurementProtocol = (
     impression: BaseImpression,
     listIndex: number,
-    productIndex: number
+    productIndex: number,
+    prefix: string
 ) => {
     return keysOf(impression).reduce((mappedImpression, key) => {
-        const newKey = `il${listIndex + 1}pi${productIndex + 1}${impressionKeysMapping[key] || key}`;
+        const newKey = `il${listIndex + 1}${prefix}${productIndex + 1}${impressionKeysMapping[key] || key}`;
         return {
             ...mappedImpression,
             [newKey]: impression[key],
@@ -158,7 +162,9 @@ const isKnownMeasurementProtocolKey = (key: string) => measurementProtocolKeysMa
 const isCustomKey = (key: string) => key === 'custom';
 
 export const isMeasurementProtocolKey = (key: string): boolean => {
-    return [isProductKey, isImpressionKey, isKnownMeasurementProtocolKey, isCustomKey].some((test) => test(key));
+    return [isProductKey, isTicketKey, isImpressionKey, isKnownMeasurementProtocolKey, isCustomKey].some((test) =>
+        test(key)
+    );
 };
 
 export const convertCustomMeasurementProtocolKeys = (data: {[name: string]: string | {[name: string]: string}}) => {

@@ -175,7 +175,7 @@ export class EC {
             .reduce((newPayload, impressionList, index) => {
                 return {
                     ...newPayload,
-                    ...convertImpressionListToMeasurementProtocol(impressionList, index),
+                    ...convertImpressionListToMeasurementProtocol(impressionList, index, 'pi'),
                 };
             }, {});
     }
