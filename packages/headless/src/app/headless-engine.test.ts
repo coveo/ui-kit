@@ -22,6 +22,7 @@ describe('headless engine', () => {
     options = {
       configuration: HeadlessEngine.getSampleConfiguration(),
       reducers: searchAppReducers,
+      loggerOptions: {level: 'silent'},
     };
     engine = new HeadlessEngine(options);
   });

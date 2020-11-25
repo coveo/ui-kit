@@ -23,15 +23,20 @@ import {buildProductRecommendationsRequest} from '../../features/product-recomme
 import {buildMockProductRecommendationsState} from '../../test/mock-product-recommendations-state';
 import {ProductRecommendationsRequest} from './product-recommendations/product-recommendations-request';
 import {getProductRecommendationsInitialState} from '../../features/product-recommendations/product-recommendations-state';
+import pino from 'pino';
 
 jest.mock('../platform-client');
 describe('search api client', () => {
   const renewAccessToken = async () => 'newToken';
+  const logger = pino({level: 'silent'});
   let searchAPIClient: SearchAPIClient;
   let state: SearchAppState;
 
   beforeEach(() => {
-    searchAPIClient = new SearchAPIClient(renewAccessToken);
+    searchAPIClient = new SearchAPIClient({
+      logger,
+      renewAccessToken,
+    });
     state = createMockState();
   });
 
@@ -52,6 +57,7 @@ describe('search api client', () => {
         state.configuration.search.apiBaseUrl
       }?${getOrganizationIdQueryParam(req)}`,
       renewAccessToken,
+      logger,
       requestParams: {
         q: state.query.q,
         cq: '',
@@ -87,6 +93,7 @@ describe('search api client', () => {
         state.configuration.search.apiBaseUrl
       }/plan?${getOrganizationIdQueryParam(req)}`,
       renewAccessToken,
+      logger,
       requestParams: {
         q: state.query.q,
         context: state.context.contextValues,
@@ -115,6 +122,7 @@ describe('search api client', () => {
         state.configuration.search.apiBaseUrl
       }/querySuggest?${getOrganizationIdQueryParam(req)}`,
       renewAccessToken,
+      logger,
       requestParams: {
         q: state.querySuggest[id]!.q,
         count: state.querySuggest[id]!.count,
@@ -232,6 +240,7 @@ describe('search api client', () => {
           recommendationState.configuration.search.apiBaseUrl
         }?${getOrganizationIdQueryParam(req)}`,
         renewAccessToken,
+        logger,
         requestParams: {
           recommendation: recommendationState.recommendation.id,
           aq: recommendationState.advancedSearchQueries.aq,
@@ -274,6 +283,7 @@ describe('search api client', () => {
           productRecommendationsState.configuration.search.apiBaseUrl
         }?${getOrganizationIdQueryParam(req)}`,
         renewAccessToken,
+        logger,
         requestParams: {
           recommendation: productRecommendationsState.productRecommendations.id,
           context: productRecommendationsState.context.contextValues,
