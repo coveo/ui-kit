@@ -152,3 +152,11 @@ export interface CategoryFacetBreadcrumb {
   path: CategoryFacetValue[];
   deselect: () => void;
 }
+
+export type BreadcrumbField = Pick<
+  | FacetBreadcrumb
+  | NumericFacetBreadcrumb
+  | DateFacetBreadcrumb
+  | CategoryFacetBreadcrumb,
+  'field'
+>;

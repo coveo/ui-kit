@@ -7,12 +7,9 @@ import {
   Unsubscribe,
   buildBreadcrumbManager,
   CategoryFacetBreadcrumb,
-  CategoryFacetValue,
   FacetValue,
-  FacetBreadcrumb,
-  NumericFacetBreadcrumb,
-  DateFacetBreadcrumb,
   Breadcrumb,
+  BreadcrumbField,
 } from '@coveo/headless';
 import {RangeFacetValue} from '@coveo/headless/dist/features/facets/range-facets/generic/interfaces/range-facet';
 import {BaseFacetValue} from '@coveo/headless/dist/features/facets/facet-api/response';
@@ -48,7 +45,7 @@ export class AtomicBreadcrumbManager {
   }
 
   componentDidLoad() {
-    this.initializeCollapseBreadcrumbMap();
+    this.initCollapsedBreadcrumbsState();
   }
 
   private subscribe() {
@@ -65,34 +62,19 @@ export class AtomicBreadcrumbManager {
     this.unsubscribe();
   }
 
-  private initializeCollapseBreadcrumbMap() {
-    this.breadcrumbManager.state.facetBreadcrumbs.forEach(
-      (facet: FacetBreadcrumb) => {
-        this.collapsedBreadcrumbsState[facet.field] = false;
-      }
-    );
-    this.breadcrumbManager.state.numericFacetBreadcrumbs.forEach(
-      (facet: NumericFacetBreadcrumb) => {
-        this.collapsedBreadcrumbsState[facet.field] = false;
-      }
-    );
-    this.breadcrumbManager.state.dateFacetBreadcrumbs.forEach(
-      (facet: DateFacetBreadcrumb) => {
-        this.collapsedBreadcrumbsState[facet.field] = false;
-      }
-    );
-    this.breadcrumbManager.state.categoryFacetBreadcrumbs.forEach(
-      (facet: CategoryFacetBreadcrumb) => {
-        this.collapsedBreadcrumbsState[facet.field] = false;
-      }
-    );
+  private initCollapsedBreadcrumbsState() {
+    Object.values(this.state).forEach((facet) => {
+      facet.forEach((facetValue: BreadcrumbField) => {
+        this.collapsedBreadcrumbsState[facetValue.field] = true;
+      });
+    });
   }
 
   private get facetBreadcrumbs() {
     const breadcrumbs = this.state.facetBreadcrumbs.map((breadcrumb) => {
       const breadcrumbsValues = this.getBreadrumbValues(breadcrumb);
       return !this.isEmpty(breadcrumbsValues) ? (
-        <ul part="breadcrumbs" class="breadcrumb p-0 m-0 bg-transparent">
+        <ul part="breadcrumbs" class="breadcrumb p-0 m-0">
           <li part="breadcrumb-label" class="text-muted">
             {breadcrumb.field}:&nbsp;
           </li>
@@ -110,14 +92,14 @@ export class AtomicBreadcrumbManager {
       breadcrumb
     );
     const renderedBreadcrumbs = breadcrumbsToShow.map((breadcrumbValue) => (
-      <li part="breadcrumb-value" class="breadcrumb-item pr-1">
+      <li part="breadcrumb-value" class="breadcrumb-item pr-3">
         <button
           part="breadcrumb-button"
-          class="btn btn-link btn-sm text-decoration-none p-0 m-0"
+          class={this.buttonClasses}
           onClick={breadcrumbValue.deselect}
         >
           {breadcrumbValue.value.value}
-          <span class="pl-1" innerHTML={mainclear}></span>
+          {this.mainClear}
         </button>
       </li>
     ));
@@ -131,7 +113,7 @@ export class AtomicBreadcrumbManager {
     const breadcrumbs = this.state.numericFacetBreadcrumbs.map((breadcrumb) => {
       const breadcrumbsValues = this.getRangeBreadrumbValues(breadcrumb);
       return !this.isEmpty(breadcrumbsValues) ? (
-        <ul part="breadcrumbs" class="breadcrumb p-0 m-0 bg-transparent">
+        <ul part="breadcrumbs" class="breadcrumb p-0 m-0">
           <li part="breadcrumb-label" class="text-muted">
             {breadcrumb.field}:&nbsp;
           </li>
@@ -148,8 +130,8 @@ export class AtomicBreadcrumbManager {
     const breadcrumbs = this.state.dateFacetBreadcrumbs.map((breadcrumb) => {
       const breadcrumbsValues = this.getRangeBreadrumbValues(breadcrumb);
       return !this.isEmpty(breadcrumbsValues) ? (
-        <ul part="breadcrumbs" class="breadcrumb p-0 m-0 bg-transparent">
-          <li part="breadcrumb-label" class="text-muted align-text-top">
+        <ul part="breadcrumbs" class="breadcrumb p-0 m-0">
+          <li part="breadcrumb-label" class="text-muted">
             {breadcrumb.field}:&nbsp;
           </li>
           {breadcrumbsValues}
@@ -166,14 +148,14 @@ export class AtomicBreadcrumbManager {
       values
     );
     const renderedBreadcrumbs = breadcrumbsToShow.map((breadcrumbValue) => (
-      <li part="breadcrumb-value" class="breadcrumb-item pr-1">
+      <li part="breadcrumb-value" class="breadcrumb-item pr-3">
         <button
           part="breadcrumb-button"
-          class="btn btn-link btn-sm text-decoration-none p-0 m-0"
+          class={this.buttonClasses}
           onClick={breadcrumbValue.deselect}
         >
           {breadcrumbValue.value.start} - {breadcrumbValue.value.end}
-          <span class="pl-1" innerHTML={mainclear}></span>
+          {this.mainClear}
         </button>
       </li>
     ));
@@ -190,7 +172,7 @@ export class AtomicBreadcrumbManager {
           (value: CategoryFacetBreadcrumb) => value.path.length > 0
         );
         return renderedBreadcrumbs ? (
-          <ul part="breadcrumbs" class="breadcrumb p-0 m-0 bg-transparent">
+          <ul part="breadcrumbs" class="breadcrumb p-0 m-0">
             <li part="breadcrumb-label" class="text-muted">
               {breadcrumb.field}:&nbsp;
             </li>
@@ -205,20 +187,22 @@ export class AtomicBreadcrumbManager {
   }
 
   private getCategoryBreadrumbValues(values: CategoryFacetBreadcrumb) {
-    const pathString = values.path
-      .map((value: CategoryFacetValue) => value.value)
-      .join(this.categoryFacetDivider);
+    const breadcrumbsToShow = this.categoryCollapsedBreadcrumbsHandler(values);
+    const renderedBreadcrumbs = breadcrumbsToShow.join(
+      ` ${this.categoryFacetDivider} `
+    );
     return (
       <li
         part="breadcrumb-value category-breadcrumb-value"
-        class="breadcrumb-item align-bottom"
+        class="breadcrumb-item"
       >
         <button
           part="breadcrumb-button"
-          class="btn btn-link btn-sm text-decoration-none p-0 m-0"
+          class={this.buttonClasses}
           onClick={values.deselect}
         >
-          {pathString}
+          {renderedBreadcrumbs}
+          {this.mainClear}
         </button>
       </li>
     );
@@ -227,7 +211,7 @@ export class AtomicBreadcrumbManager {
   render() {
     if (this.hasActiveBreadcrumbs()) {
       return (
-        <div class="container row">
+        <div class="row">
           <span class=" col-9">
             {this.facetBreadcrumbs}
             {this.numericFacetBreadcrumbs}
@@ -246,8 +230,8 @@ export class AtomicBreadcrumbManager {
     return (
       <button
         part="breadcrumb-button"
-        class="btn btn-link btn-sm text-decoration-none  p-0 m-0"
-        // onClick={() => this.breadcrumbManager.deselectAll()} TODO
+        class={this.buttonClasses}
+        onClick={() => {}} //TODO https://coveord.atlassian.net/browse/KIT-269
       >
         Clear All Filters
       </button>
@@ -257,7 +241,7 @@ export class AtomicBreadcrumbManager {
   private showFacetCollapsedBreadcrumbs(field: string) {
     this.collapsedBreadcrumbsState = {
       ...this.collapsedBreadcrumbsState,
-      [field]: true,
+      [field]: false,
     };
   }
 
@@ -267,10 +251,10 @@ export class AtomicBreadcrumbManager {
     let breadcrumbsToShow = [];
     let moreButton = undefined;
 
-    if (this.collapsedBreadcrumbsState[breadcrumb.field]) {
+    if (!this.collapsedBreadcrumbsState[breadcrumb.field]) {
       breadcrumbsToShow = breadcrumb.values;
       breadcrumbsToShow.length <= this.collapseThreshold
-        ? (this.collapsedBreadcrumbsState[breadcrumb.field] = false)
+        ? (this.collapsedBreadcrumbsState[breadcrumb.field] = true)
         : null;
     } else {
       breadcrumbsToShow = breadcrumb.values.slice(0, this.collapseThreshold);
@@ -315,5 +299,28 @@ export class AtomicBreadcrumbManager {
 
   private isEmpty(array: any[]) {
     return array.length === 0;
+  }
+
+  private categoryCollapsedBreadcrumbsHandler(
+    breadcrumb: CategoryFacetBreadcrumb
+  ) {
+    if (breadcrumb.path.length <= 3) {
+      return breadcrumb.path.map((breadcrumb) => breadcrumb.value);
+    } else {
+      const collapsed = '...';
+      const firstBreadcrumbValue = breadcrumb.path[0].value;
+      const lastTwoBreadcrumbsValues = breadcrumb.path
+        .slice(-2)
+        .map((breadcrumb) => breadcrumb.value);
+      return [firstBreadcrumbValue, collapsed, ...lastTwoBreadcrumbsValues];
+    }
+  }
+
+  private get mainClear() {
+    return <span class="pl-1" innerHTML={mainclear}></span>;
+  }
+
+  private get buttonClasses() {
+    return 'btn btn-link btn-sm text-decoration-none p-0';
   }
 }
