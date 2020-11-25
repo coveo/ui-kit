@@ -32,7 +32,6 @@ export class AtomicBreadcrumbManager {
   @State() state!: BreadcrumbManagerState;
   @State() collapsedBreadcrumbsState: Record<string, boolean> = {};
   @Prop() collapseThreshold = 5;
-  @Prop() categoryFacetDivider = '/';
 
   private engine!: Engine;
   private breadcrumbManager!: BreadcrumbManager;
@@ -92,7 +91,7 @@ export class AtomicBreadcrumbManager {
       breadcrumb
     );
     const renderedBreadcrumbs = breadcrumbsToShow.map((breadcrumbValue) => (
-      <li part="breadcrumb-value" class="breadcrumb-item pr-3">
+      <li part="breadcrumb-value" class="pr-3">
         <button
           part="breadcrumb-button"
           class={this.buttonClasses}
@@ -148,7 +147,7 @@ export class AtomicBreadcrumbManager {
       values
     );
     const renderedBreadcrumbs = breadcrumbsToShow.map((breadcrumbValue) => (
-      <li part="breadcrumb-value" class="breadcrumb-item pr-3">
+      <li part="breadcrumb-value" class="pr-3">
         <button
           part="breadcrumb-button"
           class={this.buttonClasses}
@@ -188,10 +187,7 @@ export class AtomicBreadcrumbManager {
 
   private getCategoryBreadrumbValues(values: CategoryFacetBreadcrumb) {
     const breadcrumbsToShow = this.categoryCollapsedBreadcrumbsHandler(values);
-    const renderedBreadcrumbs = breadcrumbsToShow.join(
-      ` ${this.categoryFacetDivider} `
-    );
-    return (
+    const renderedBreadcrumbs = breadcrumbsToShow.map((breadcrumbValue) => (
       <li
         part="breadcrumb-value category-breadcrumb-value"
         class="breadcrumb-item"
@@ -201,11 +197,11 @@ export class AtomicBreadcrumbManager {
           class={this.buttonClasses}
           onClick={values.deselect}
         >
-          {renderedBreadcrumbs}
-          {this.mainClear}
+          {breadcrumbValue}
         </button>
       </li>
-    );
+    ));
+    return [...renderedBreadcrumbs, this.mainClear];
   }
 
   render() {
@@ -263,10 +259,10 @@ export class AtomicBreadcrumbManager {
 
       if (collapsedBreadcrumbNumber > 0) {
         moreButton = (
-          <li part="breadcrumb-value" class="breadcrumb-item vertical-bar">
+          <li part="breadcrumb-value">
             <button
               part="breadcrumb-button"
-              class="btn btn-link btn-sm text-decoration-none text-primary p-0 m-0"
+              class={this.buttonClasses}
               onClick={() =>
                 this.showFacetCollapsedBreadcrumbs(breadcrumb.field)
               }
@@ -317,10 +313,15 @@ export class AtomicBreadcrumbManager {
   }
 
   private get mainClear() {
-    return <span class="pl-1" innerHTML={mainclear}></span>;
+    return (
+      <span
+        class="pl-1 text-primary align-baseline"
+        innerHTML={mainclear}
+      ></span>
+    );
   }
 
   private get buttonClasses() {
-    return 'btn btn-link btn-sm text-decoration-none p-0';
+    return 'btn btn-link btn-sm text-decoration-none p-0  align-baseline ';
   }
 }

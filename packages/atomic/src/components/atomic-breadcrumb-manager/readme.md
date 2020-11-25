@@ -7,10 +7,9 @@
 
 ## Properties
 
-| Property               | Attribute                | Description | Type     | Default |
-| ---------------------- | ------------------------ | ----------- | -------- | ------- |
-| `categoryFacetDivider` | `category-facet-divider` |             | `string` | `'/'`   |
-| `collapseThreshold`    | `collapse-threshold`     |             | `number` | `5`     |
+| Property            | Attribute            | Description | Type     | Default |
+| ------------------- | -------------------- | ----------- | -------- | ------- |
+| `collapseThreshold` | `collapse-threshold` |             | `number` | `5`     |
 
 
 ## Shadow Parts
