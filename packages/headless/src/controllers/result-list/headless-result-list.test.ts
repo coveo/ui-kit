@@ -2,6 +2,7 @@ import {buildResultList} from './headless-result-list';
 import {buildMockSearchAppEngine, MockEngine} from '../../test/mock-engine';
 import {SearchAppState} from '../../state/search-app-state';
 import {registerFieldsToInclude} from '../../features/fields/fields-actions';
+import {SchemaValidationError} from '@coveo/bueno';
 
 describe('ResultList', () => {
   let engine: MockEngine<SearchAppState>;
@@ -25,5 +26,13 @@ describe('ResultList', () => {
       })
     ).toBeTruthy();
     expect(engine.actions).toContainEqual(registerFieldsToInclude(['test']));
+  });
+
+  it('throws the correct error if the validation is not correct', () => {
+    expect(() =>
+      buildResultList(engine, {
+        options: {fieldsToInclude: [(1 as unknown) as string]},
+      })
+    ).toThrowError(SchemaValidationError);
   });
 });

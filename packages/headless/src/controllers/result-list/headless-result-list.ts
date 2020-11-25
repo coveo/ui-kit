@@ -5,7 +5,7 @@ import {registerFieldsToInclude} from '../../features/fields/fields-actions';
 import {Schema, ArrayValue, StringValue} from '@coveo/bueno';
 import {validateOptions} from '../../utils/validate-payload';
 
-const optionsSchema = new Schema({
+const optionsSchema = new Schema<ResultListOptions>({
   /**
    * A list of indexed fields to include in the objects returned by the result list.
    * These results are included in addition to the default fields.
@@ -32,10 +32,10 @@ type ResultListProps = {
 export type ResultListState = ResultList['state'];
 export type ResultList = ReturnType<typeof buildResultList>;
 
-export const buildResultList = (
+export function buildResultList(
   engine: Engine<SearchSection>,
   props?: ResultListProps
-) => {
+) {
   const controller = buildController(engine);
   const {dispatch} = engine;
 
@@ -43,7 +43,7 @@ export const buildResultList = (
     optionsSchema,
     props?.options,
     buildResultList.name
-  ) as Required<ResultListOptions>;
+  );
 
   if (options.fieldsToInclude) {
     dispatch(registerFieldsToInclude(options.fieldsToInclude));
@@ -64,4 +64,4 @@ export const buildResultList = (
       };
     },
   };
-};
+}
