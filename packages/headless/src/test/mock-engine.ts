@@ -1,7 +1,12 @@
 import {Engine} from '../app/headless-engine';
 import {createMockState} from './mock-state';
 import configureStore, {MockStoreEnhanced} from 'redux-mock-store';
-import {AnyAction, ThunkDispatch, getDefaultMiddleware} from '@reduxjs/toolkit';
+import {
+  AnyAction,
+  ThunkDispatch,
+  getDefaultMiddleware,
+  ActionCreatorWithPreparedPayload,
+} from '@reduxjs/toolkit';
 import thunk from 'redux-thunk';
 import {analyticsMiddleware} from '../app/analytics-middleware';
 import {SearchAPIClient} from '../api/search/search-api-client';
@@ -11,6 +16,14 @@ import {createMockRecommendationState} from './mock-recommendation-state';
 import {ProductRecommendationsAppState} from '../state/product-recommendations-app-state';
 import {buildMockProductRecommendationsState} from './mock-product-recommendations-state';
 
+type AsyncActionCreator<ThunkArg> = ActionCreatorWithPreparedPayload<
+  [string, ThunkArg],
+  undefined,
+  string,
+  never,
+  {arg: ThunkArg; requestId: string}
+>;
+
 export type AppState =
   | SearchAppState
   | RecommendationAppState
@@ -19,6 +32,9 @@ export type AppState =
 export interface MockEngine<T extends AppState> extends Engine<T> {
   mockStore: MockStore;
   actions: AnyAction[];
+  findAsyncAction: <ThunkArg>(
+    action: AsyncActionCreator<ThunkArg>
+  ) => ReturnType<AsyncActionCreator<ThunkArg>> | undefined;
 }
 
 type MockStore = MockStoreEnhanced<AppState, DispatchExts>;
@@ -62,6 +78,11 @@ function buildMockEngine<T extends AppState>(
     },
     get actions() {
       return store.getActions();
+    },
+    findAsyncAction<ThunkArg>(actionCreator: AsyncActionCreator<ThunkArg>) {
+      return this.actions.find((a) => a.type === actionCreator.type) as
+        | ReturnType<AsyncActionCreator<ThunkArg>>
+        | undefined;
     },
     ...config,
     renewAccessToken: mockRenewAccessToken,
