@@ -6,7 +6,6 @@ import {terser} from 'rollup-plugin-terser';
 import {sizeSnapshot} from 'rollup-plugin-size-snapshot';
 import alias from '@rollup/plugin-alias';
 import {resolve as pathResolve} from 'path';
-import json from '@rollup/plugin-json';
 
 const isCI = process.env.CI === 'true';
 const isProduction = process.env.BUILD === 'production';
@@ -33,14 +32,13 @@ const nodeConfig = {
     {file: 'dist/headless.esm.js', format: 'es'},
   ],
   plugins: [
-    resolve({preferBuiltins: true}),
+    resolve({modulesOnly: true}),
     commonjs({
       // https://github.com/pinojs/pino/issues/688
       ignore: ['pino-pretty'],
     }),
     typescript(),
     replace(),
-    json(),
   ],
   external: ['cross-fetch'],
   onwarn: onWarn,
