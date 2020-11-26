@@ -110,6 +110,7 @@ export interface HeadlessConfigurationOptions {
      *    When logging a Search usage analytics event for a query, the originLevel1 field of that event should be set to the value of the searchHub search request parameter.
      */
     searchHub?: string;
+    enableDebug?: boolean;
   };
 
   analytics?: {

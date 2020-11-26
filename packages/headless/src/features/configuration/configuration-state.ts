@@ -23,6 +23,7 @@ export interface ConfigurationState {
      * By default, will append /rest/search/v2 to the platformUrl value.
      */
     apiBaseUrl: string;
+    enableDebug: boolean;
   };
   /**
    * The global headless engine Usage Analytics API configuration.
@@ -66,6 +67,7 @@ export const getConfigurationInitialState: () => ConfigurationState = () => ({
   platformUrl: platformUrl(),
   search: {
     apiBaseUrl: `${platformUrl()}${searchAPIEndpoint}`,
+    enableDebug: false,
   },
   analytics: {
     enabled: true,

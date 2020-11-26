@@ -99,6 +99,7 @@ export namespace Components {
         "numberOfSuggestions": number;
     }
     interface AtomicSearchInterface {
+        "enableDebug": boolean;
         "initialize": (options: Pick<HeadlessConfigurationOptions, 'accessToken' | 'organizationId' | 'renewAccessToken' | 'platformUrl'>) => Promise<void>;
         "pipeline": string;
         "sample": boolean;
@@ -373,6 +374,7 @@ declare namespace LocalJSX {
         "numberOfSuggestions"?: number;
     }
     interface AtomicSearchInterface {
+        "enableDebug"?: boolean;
         "pipeline"?: string;
         "sample"?: boolean;
         "searchHub"?: string;

@@ -200,6 +200,7 @@ export const buildSearchRequest = (
     accessToken: state.configuration.accessToken,
     organizationId: state.configuration.organizationId,
     url: state.configuration.search.apiBaseUrl,
+    debug: state.configuration.search.enableDebug,
     ...(state.configuration.analytics.enabled && {
       visitorId: getVisitorID(),
     }),
