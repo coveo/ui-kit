@@ -80,8 +80,9 @@ describe('headless standalone searchBox', () => {
       const expression = 'a';
       searchBox.selectSuggestion(expression);
 
-      const action = selectQuerySuggestion({id, expression});
-      expect(engine.actions).toContainEqual(action);
+      expect(engine.actions).toContainEqual(
+        selectQuerySuggestion({id, expression})
+      );
     });
 
     it('calls #submit', () => {
