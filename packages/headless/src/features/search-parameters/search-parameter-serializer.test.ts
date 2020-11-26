@@ -24,7 +24,7 @@ describe('buildSearchParameterSerializer', () => {
       expect('' in result).toBe(false);
     });
 
-    it('decodes a string with a single key and primitive value', () => {
+    it('deserializes a string with a single key and string value', () => {
       const result = deserialize('q=a');
       expect(result).toEqual({q: 'a'});
     });
@@ -34,12 +34,12 @@ describe('buildSearchParameterSerializer', () => {
       expect(result).toEqual({});
     });
 
-    it('decodes a string with a key and a boolean value', () => {
+    it('deserializes a string with a key and a boolean value', () => {
       const result = deserialize('enableQuerySyntax=true');
       expect(result).toEqual({enableQuerySyntax: true});
     });
 
-    it('decodes a string with multiple key-value pairs', () => {
+    it('deserializes a string with multiple key-value pairs', () => {
       const result = deserialize('q=a&enableQuerySyntax=true');
       expect(result).toEqual({q: 'a', enableQuerySyntax: true});
     });
