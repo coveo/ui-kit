@@ -5,15 +5,29 @@ import {
 } from '../features/configuration/configuration-actions';
 import * as storeConfig from './store';
 import {searchAppReducers} from './search-app-reducers';
+import {SearchAPIClient} from '../api/search/search-api-client';
+import {AnalyticsClientSendEventHook} from 'coveo.analytics/dist/definitions/client/analytics';
+import pino from 'pino';
 
 describe('headless engine', () => {
   let options: HeadlessOptions<typeof searchAppReducers>;
   let configureStoreSpy: jest.SpyInstance;
   let store: storeConfig.Store;
   let engine: Engine;
+  const logger = pino({level: 'silent'});
 
   beforeEach(() => {
-    store = storeConfig.configureStore({reducers: searchAppReducers});
+    store = storeConfig.configureStore({
+      reducers: searchAppReducers,
+      thunkExtraArguments: {
+        searchAPIClient: new SearchAPIClient({
+          logger,
+          renewAccessToken: async () => '',
+        }),
+        analyticsClientMiddleware: {} as AnalyticsClientSendEventHook,
+        logger: logger,
+      },
+    });
     jest.spyOn(store, 'dispatch');
     configureStoreSpy = jest
       .spyOn(storeConfig, 'configureStore')
@@ -22,6 +36,7 @@ describe('headless engine', () => {
     options = {
       configuration: HeadlessEngine.getSampleConfiguration(),
       reducers: searchAppReducers,
+      loggerOptions: {level: 'silent'},
     };
     engine = new HeadlessEngine(options);
   });
