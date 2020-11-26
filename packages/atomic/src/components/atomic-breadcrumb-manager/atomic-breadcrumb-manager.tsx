@@ -94,6 +94,7 @@ export class AtomicBreadcrumbManager {
       <li part="breadcrumb-value" class="pr-3">
         <button
           part="breadcrumb-button"
+          aria-label={`Remove inclusion filter on ${breadcrumbValue.value.value}`}
           class={this.buttonClasses}
           onClick={breadcrumbValue.deselect}
         >
@@ -150,6 +151,7 @@ export class AtomicBreadcrumbManager {
       <li part="breadcrumb-value" class="pr-3">
         <button
           part="breadcrumb-button"
+          aria-label={`Remove inclusion filter on ${breadcrumbValue.value.start} to ${breadcrumbValue.value.end}`}
           class={this.buttonClasses}
           onClick={breadcrumbValue.deselect}
         >
@@ -187,6 +189,7 @@ export class AtomicBreadcrumbManager {
 
   private getCategoryBreadrumbValues(values: CategoryFacetBreadcrumb) {
     const breadcrumbsToShow = this.categoryCollapsedBreadcrumbsHandler(values);
+    const breadcrumbAriaLabel = breadcrumbsToShow.join('/');
     const renderedBreadcrumbs = breadcrumbsToShow.map((breadcrumbValue) => (
       <li
         part="breadcrumb-value category-breadcrumb-value"
@@ -194,6 +197,7 @@ export class AtomicBreadcrumbManager {
       >
         <button
           part="breadcrumb-button"
+          aria-label={`Remove inclusion filter on ${breadcrumbAriaLabel}`}
           class={this.buttonClasses}
           onClick={values.deselect}
         >
@@ -207,7 +211,7 @@ export class AtomicBreadcrumbManager {
   render() {
     if (this.hasActiveBreadcrumbs()) {
       return (
-        <div class="row">
+        <div class="row" aria-label="Active filters">
           <span class=" col-9">
             {this.facetBreadcrumbs}
             {this.numericFacetBreadcrumbs}
@@ -316,6 +320,7 @@ export class AtomicBreadcrumbManager {
     return (
       <span
         class="pl-1 text-primary align-baseline"
+        aria-label="Clear All Filters"
         innerHTML={mainclear}
       ></span>
     );
