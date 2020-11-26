@@ -10,6 +10,7 @@ import {RecommendationAppState} from '../state/recommendation-app-state';
 import {createMockRecommendationState} from './mock-recommendation-state';
 import {ProductRecommendationsAppState} from '../state/product-recommendations-app-state';
 import {buildMockProductRecommendationsState} from './mock-product-recommendations-state';
+import {NoopPreprocessRequestMiddleware} from '../api/platform-client';
 
 export type AppState =
   | SearchAppState
@@ -72,7 +73,10 @@ const configureMockStore = () => {
   return configureStore<AppState, DispatchExts>([
     analyticsMiddleware,
     thunk.withExtraArgument({
-      searchAPIClient: new SearchAPIClient(mockRenewAccessToken),
+      searchAPIClient: new SearchAPIClient(
+        mockRenewAccessToken,
+        NoopPreprocessRequestMiddleware
+      ),
     }),
     ...getDefaultMiddleware(),
   ]);

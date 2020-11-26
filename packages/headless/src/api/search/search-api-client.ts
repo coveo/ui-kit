@@ -1,5 +1,6 @@
 import {
   PlatformClient,
+  PlatformClientCallOptions,
   PlatformResponse,
   PreprocessRequestMiddleware,
 } from '../platform-client';
@@ -49,12 +50,22 @@ export type SearchAPIClientResponse<T> =
 export class SearchAPIClient {
   constructor(
     private renewAccessToken: () => Promise<string>,
-    private preprocessRequestMiddleware?: PreprocessRequestMiddleware
+    private preprocessRequest: PreprocessRequestMiddleware
   ) {}
+
+  private platformClientCall<RequestParams extends BaseParam, ResponseType>(
+    options: Omit<PlatformClientCallOptions<RequestParams>, 'preprocessRequest'>
+  ) {
+    return PlatformClient.call<RequestParams, ResponseType>({
+      ...options,
+      preprocessRequest: this.preprocessRequest,
+    });
+  }
+
   async plan(
     req: PlanRequest
   ): Promise<SearchAPIClientResponse<PlanResponseSuccess>> {
-    const platformResponse = await PlatformClient.call<
+    const platformResponse = await this.platformClientCall<
       PlanRequest,
       PlanResponseSuccess
     >({
@@ -74,7 +85,7 @@ export class SearchAPIClient {
   async querySuggest(
     req: QuerySuggestRequest
   ): Promise<SearchAPIClientResponse<QuerySuggestSuccessResponse>> {
-    const platformResponse = await PlatformClient.call<
+    const platformResponse = await this.platformClientCall<
       QuerySuggestRequest,
       QuerySuggestSuccessResponse
     >({
@@ -95,14 +106,14 @@ export class SearchAPIClient {
   async search(
     req: SearchRequest
   ): Promise<SearchAPIClientResponse<SearchResponseSuccess>> {
-    const platformResponse = await PlatformClient.call<SearchRequest, Search>(
-      {
-        ...baseSearchRequest(req, 'POST', 'application/json', ''),
-        requestParams: pickNonBaseParams(req),
-        renewAccessToken: this.renewAccessToken,
-      },
-      this.preprocessRequestMiddleware
-    );
+    const platformResponse = await this.platformClientCall<
+      SearchRequest,
+      Search
+    >({
+      ...baseSearchRequest(req, 'POST', 'application/json', ''),
+      requestParams: pickNonBaseParams(req),
+      renewAccessToken: this.renewAccessToken,
+    });
 
     if (isSuccessSearchResponse(platformResponse)) {
       return {
@@ -116,7 +127,7 @@ export class SearchAPIClient {
   }
 
   async facetSearch(req: FacetSearchRequest | CategoryFacetSearchRequest) {
-    const res = await PlatformClient.call<
+    const res = await this.platformClientCall<
       FacetSearchRequest,
       FacetSearchResponse
     >({
@@ -129,7 +140,7 @@ export class SearchAPIClient {
   }
 
   async recommendations(req: RecommendationRequest) {
-    const platformResponse = await PlatformClient.call<
+    const platformResponse = await this.platformClientCall<
       RecommendationRequest,
       Search
     >({
@@ -150,7 +161,7 @@ export class SearchAPIClient {
   }
 
   async productRecommendations(req: ProductRecommendationsRequest) {
-    const platformResponse = await PlatformClient.call<
+    const platformResponse = await this.platformClientCall<
       ProductRecommendationsRequest,
       Search
     >({

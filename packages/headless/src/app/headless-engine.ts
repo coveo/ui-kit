@@ -19,7 +19,10 @@ import {SearchAPIClient} from '../api/search/search-api-client';
 import {debounce} from 'ts-debounce';
 import {SearchAppState} from '../state/search-app-state';
 import {AnalyticsClientSendEventHook} from 'coveo.analytics/dist/definitions/client/analytics';
-import {PreprocessRequestMiddleware} from '../api/platform-client';
+import {
+  NoopPreprocessRequestMiddleware,
+  PreprocessRequestMiddleware,
+} from '../api/platform-client';
 
 /**
  * The global headless engine options.
@@ -185,7 +188,8 @@ export class HeadlessEngine<Reducers extends ReducersMapObject>
       thunkExtraArguments: {
         searchAPIClient: new SearchAPIClient(
           () => this.renewAccessToken(),
-          options.configuration.search?.preprocessRequestMiddleware
+          options.configuration.search?.preprocessRequestMiddleware ||
+            NoopPreprocessRequestMiddleware
         ),
         analyticsClientMiddleware: this.analyticsClientMiddleware(options),
       },

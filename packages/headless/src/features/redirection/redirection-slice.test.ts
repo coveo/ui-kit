@@ -13,6 +13,7 @@ import {
   MockEngine,
 } from '../../test';
 import {SearchAppState} from '../../state/search-app-state';
+import {NoopPreprocessRequestMiddleware} from '../../api/platform-client';
 
 describe('redirection slice', () => {
   it('should have initial state', () => {
@@ -51,7 +52,10 @@ describe('redirection slice', () => {
 
   let engine: MockEngine<SearchAppState>;
   async function mockPlan(trigger?: Trigger) {
-    const apiClient = new SearchAPIClient(async () => '');
+    const apiClient = new SearchAPIClient(
+      async () => '',
+      NoopPreprocessRequestMiddleware
+    );
     const triggers = trigger ? [trigger] : [];
     jest.spyOn(apiClient, 'plan').mockResolvedValue({
       success: {

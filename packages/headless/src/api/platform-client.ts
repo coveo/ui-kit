@@ -12,7 +12,7 @@ export interface BasePlatformClientOptions {
   url: string;
   method: HttpMethods;
   contentType: HTTPContentTypes;
-  customHeaders?: Record<string, string>;
+  headers?: Record<string, string>;
 }
 
 export interface PlatformClientCallOptions<RequestParams extends BaseParam>
@@ -20,6 +20,7 @@ export interface PlatformClientCallOptions<RequestParams extends BaseParam>
   requestParams: Omit<RequestParams, 'url' | 'organizationId' | 'accessToken'>;
   accessToken: string;
   renewAccessToken: () => Promise<string>;
+  preprocessRequest: PreprocessRequestMiddleware;
 }
 
 export interface PlatformResponse<T> {
@@ -31,21 +32,25 @@ export type PreprocessRequestMiddleware = (
   request: BasePlatformClientOptions
 ) => BasePlatformClientOptions | Promise<BasePlatformClientOptions>;
 
+export const NoopPreprocessRequestMiddleware: PreprocessRequestMiddleware = (
+  request
+) => request;
+
 export class PlatformClient {
   static async call<RequestParams extends BaseParam, ResponseType>(
-    options: PlatformClientCallOptions<RequestParams>,
-    preprocessRequestMiddleware?: PreprocessRequestMiddleware
+    options: PlatformClientCallOptions<RequestParams>
   ): Promise<PlatformResponse<ResponseType>> {
-    const processedOptions = preprocessRequestMiddleware
-      ? {...options, ...(await preprocessRequestMiddleware(options))}
-      : options;
+    const processedOptions = {
+      ...options,
+      ...(await options.preprocessRequest(options)),
+    };
     const request = async () => {
       const response = await fetch(processedOptions.url, {
         method: processedOptions.method,
         headers: {
           'Content-Type': processedOptions.contentType,
           Authorization: `Bearer ${processedOptions.accessToken}`,
-          ...processedOptions.customHeaders,
+          ...processedOptions.headers,
         },
         body: JSON.stringify(processedOptions.requestParams),
       });

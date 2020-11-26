@@ -1,5 +1,9 @@
 import {SearchAPIClient} from './search-api-client';
-import {PlatformClient, PlatformClientCallOptions} from '../platform-client';
+import {
+  NoopPreprocessRequestMiddleware,
+  PlatformClient,
+  PlatformClientCallOptions,
+} from '../platform-client';
 import {PlanRequest} from './plan/plan-request';
 import {QuerySuggestRequest} from './query-suggest/query-suggest-request';
 import {SearchRequest} from './search/search-request';
@@ -31,7 +35,10 @@ describe('search api client', () => {
   let state: SearchAppState;
 
   beforeEach(() => {
-    searchAPIClient = new SearchAPIClient(renewAccessToken);
+    searchAPIClient = new SearchAPIClient(
+      renewAccessToken,
+      NoopPreprocessRequestMiddleware
+    );
     state = createMockState();
   });
 
@@ -69,6 +76,7 @@ describe('search api client', () => {
         searchHub: state.searchHub,
         visitorId: expect.any(String),
       },
+      preprocessRequest: NoopPreprocessRequestMiddleware,
     };
 
     expect(PlatformClient.call).toHaveBeenCalledWith(expectedRequest);
@@ -93,6 +101,7 @@ describe('search api client', () => {
         pipeline: state.pipeline,
         searchHub: state.searchHub,
       },
+      preprocessRequest: NoopPreprocessRequestMiddleware,
     };
 
     expect(PlatformClient.call).toHaveBeenCalledWith(expectedRequest);
@@ -123,6 +132,7 @@ describe('search api client', () => {
         searchHub: state.searchHub,
         actionsHistory: expect.any(Array),
       },
+      preprocessRequest: NoopPreprocessRequestMiddleware,
     };
 
     expect(PlatformClient.call).toHaveBeenCalledWith(expectedRequest);
@@ -242,6 +252,7 @@ describe('search api client', () => {
           searchHub: recommendationState.searchHub,
           actionsHistory: expect.any(Array),
         },
+        preprocessRequest: NoopPreprocessRequestMiddleware,
       };
 
       expect(PlatformClient.call).toHaveBeenCalledWith(expectedRequest);
@@ -293,6 +304,7 @@ describe('search api client', () => {
                 .category,
           },
         },
+        preprocessRequest: NoopPreprocessRequestMiddleware,
       };
 
       expect(PlatformClient.call).toHaveBeenCalledWith(expectedRequest);
