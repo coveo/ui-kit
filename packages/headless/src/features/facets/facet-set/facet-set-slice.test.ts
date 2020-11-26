@@ -22,6 +22,7 @@ import {buildMockFacetRequest} from '../../../test/mock-facet-request';
 import {selectFacetSearchResult} from '../facet-search-set/specific/specific-facet-search-actions';
 import * as FacetReducers from '../generic/facet-reducer-helpers';
 import {FacetSetState, getFacetSetInitialState} from './facet-set-state';
+import {clearAllFacetValues} from '../generic/facet-actions';
 
 describe('facet-set slice', () => {
   let state: FacetSetState;
@@ -216,6 +217,17 @@ describe('facet-set slice', () => {
     facetSetReducer(state, deselectAllFacetValues('1'));
 
     expect(FacetReducers.handleFacetDeselectAll).toHaveBeenCalledTimes(1);
+  });
+
+  it('dispatching #clearAllFacetValues calls #handleFacetDeselectAll for every facet', () => {
+    jest.spyOn(FacetReducers, 'handleFacetDeselectAll');
+
+    state['1'] = buildMockFacetRequest();
+    state['2'] = buildMockFacetRequest();
+    state['3'] = buildMockFacetRequest();
+    facetSetReducer(state, clearAllFacetValues());
+
+    expect(FacetReducers.handleFacetDeselectAll).toHaveBeenCalledTimes(4);
   });
 
   it('dispatching #updateFacetSortCriterion calls #handleFacetSortCriterionUpdate', () => {
