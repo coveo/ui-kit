@@ -15,9 +15,7 @@ export const queryReducer = createReducer(getQueryInitialState(), (builder) =>
     .addCase(selectQuerySuggestion, (state, action) => {
       state.q = action.payload.expression;
     })
-    .addCase(change.fulfilled, (state, action) => {
-      state.q = action.payload.query.q;
-    })
+    .addCase(change.fulfilled, (_, action) => action.payload.query)
     .addCase(restoreSearchParameters, (state, action) => {
       state.q = action.payload.q ?? state.q;
     })

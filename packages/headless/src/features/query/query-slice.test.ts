@@ -88,7 +88,7 @@ describe('query slice', () => {
   });
 
   it('allows to restore a query on history change', () => {
-    const expectedQuery = {q: 'foo', enableQuerySyntax: false};
+    const expectedQuery = {q: 'foo', enableQuerySyntax: true};
 
     const historyChange = {
       ...getHistoryEmptyState(),
