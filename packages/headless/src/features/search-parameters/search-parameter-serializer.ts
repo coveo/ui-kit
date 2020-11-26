@@ -1,6 +1,6 @@
 import {SearchParameters} from './search-parameter-actions';
 
-export function encodeStateParameters(obj: SearchParameters) {
+export function serializeSearchParameters(obj: SearchParameters) {
   const fragment = Object.entries(obj)
     .map(([key, val]) => `${key}=${val}`)
     .join('&');
@@ -8,7 +8,7 @@ export function encodeStateParameters(obj: SearchParameters) {
   return fragment;
 }
 
-export function decodeStateParameters(
+export function deserializeSearchParameters(
   fragment: string
 ): Record<string, string> {
   const parts = fragment.split('&').filter((part) => part.length);

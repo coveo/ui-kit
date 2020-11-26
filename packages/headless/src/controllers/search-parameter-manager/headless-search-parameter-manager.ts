@@ -5,7 +5,7 @@ import {
   restoreSearchParameters,
   SearchParameters,
 } from '../../features/search-parameters/search-parameter-actions';
-import {stateParametersDefinition} from '../../features/search-parameters/state-parameters-schema';
+import {searchParametersDefinition} from '../../features/search-parameters/search-parameter-schema';
 import {SearchParametersState} from '../../state/search-app-state';
 import {validateInitialState} from '../../utils/validate-payload';
 import {buildController} from '../controller/headless-controller';
@@ -23,7 +23,7 @@ const initialStateSchema = new Schema<
 >({
   parameters: new RecordValue({
     options: {required: true},
-    values: stateParametersDefinition,
+    values: searchParametersDefinition,
   }),
 });
 

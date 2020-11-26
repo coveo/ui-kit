@@ -1,7 +1,7 @@
 import {createAction} from '@reduxjs/toolkit';
 import {QueryParam} from '../../api/search/search-api-params';
 import {validatePayloadSchema} from '../../utils/validate-payload';
-import {stateParametersDefinition} from './state-parameters-schema';
+import {searchParametersDefinition} from './search-parameter-schema';
 
 export type SearchParameters = QueryParam;
 
@@ -9,5 +9,5 @@ export type SearchParameters = QueryParam;
 export const restoreSearchParameters = createAction(
   'searchParameters/restore',
   (payload: SearchParameters) =>
-    validatePayloadSchema(payload, stateParametersDefinition)
+    validatePayloadSchema(payload, searchParametersDefinition)
 );

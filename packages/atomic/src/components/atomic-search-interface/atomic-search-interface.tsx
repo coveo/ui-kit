@@ -16,8 +16,8 @@ import {
   AnalyticsActions,
   ConfigurationActions,
   buildSearchParameterManager,
-  encodeStateParameters,
-  decodeStateParameters,
+  serializeSearchParameters,
+  deserializeSearchParameters,
   Unsubscribe,
 } from '@coveo/headless';
 import {RenderError} from '../../utils/render-utils';
@@ -99,14 +99,16 @@ export class AtomicSearchInterface {
 
   private initSearchParameterManager() {
     const stateWithoutHashSign = window.location.hash.slice(1);
-    const params = decodeStateParameters(stateWithoutHashSign);
+    const params = deserializeSearchParameters(stateWithoutHashSign);
 
     const manager = buildSearchParameterManager(this.engine!, {
       initialState: {parameters: params},
     });
 
     this.unsubscribe = manager.subscribe(() => {
-      window.location.hash = encodeStateParameters(manager.state.parameters);
+      window.location.hash = serializeSearchParameters(
+        manager.state.parameters
+      );
     });
   }
 

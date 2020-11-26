@@ -1,5 +1,5 @@
 import {StringValue} from '@coveo/bueno';
 
-export const stateParametersDefinition = {
+export const searchParametersDefinition = {
   q: new StringValue(),
 };
