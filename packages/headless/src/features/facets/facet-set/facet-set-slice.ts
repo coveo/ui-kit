@@ -22,6 +22,7 @@ import {
   handleFacetUpdateNumberOfValues,
 } from '../generic/facet-reducer-helpers';
 import {getFacetSetInitialState} from './facet-set-state';
+import {clearAllFacetValues} from '../generic/facet-actions';
 
 export const facetSetReducer = createReducer(
   getFacetSetInitialState(),
@@ -67,6 +68,11 @@ export const facetSetReducer = createReducer(
       })
       .addCase(deselectAllFacetValues, (state, action) => {
         handleFacetDeselectAll<FacetRequest>(state, action.payload);
+      })
+      .addCase(clearAllFacetValues, (state, _) => {
+        Object.keys(state).forEach((facetId) => {
+          handleFacetDeselectAll<FacetRequest>(state, facetId);
+        });
       })
       .addCase(updateFacetSortCriterion, (state, action) => {
         handleFacetSortCriterionUpdate<FacetRequest>(state, action.payload);

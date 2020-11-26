@@ -24,6 +24,12 @@ import {executeDeselectAllCategoryFacetValues} from '../../features/facets/categ
 import {executeToggleFacetSelect} from '../../features/facets/facet-set/facet-set-controller-actions';
 import {executeToggleNumericFacetSelect} from '../../features/facets/range-facets/numeric-facet-set/numeric-facet-controller-actions';
 import {executeToggleDateFacetSelect} from '../../features/facets/range-facets/date-facet-set/date-facet-controller-actions';
+import {executeSearch} from '../../features/search/search-actions';
+import {
+  makeAnalyticsAction,
+  AnalyticsType,
+} from '../../features/analytics/analytics-actions';
+import {clearAllFacetValues} from '../../features/facets/generic/facet-actions';
 
 export type BreadcrumbManager = ReturnType<typeof buildBreadcrumbManager>;
 export type BreadcrumbManagerState = BreadcrumbManager['state'];
@@ -128,6 +134,10 @@ export const buildBreadcrumbManager = (
         dateFacetBreadcrumbs: getDateFacetBreadcrumbs(),
       };
     },
+    deselectAll: () => {
+      dispatch(clearAllFacetValues());
+      dispatch(executeSearch(logClearBreadcrumbs()));
+    },
   };
 };
 
@@ -144,3 +154,12 @@ export interface CategoryFacetBreadcrumb {
   path: CategoryFacetValue[];
   deselect: () => void;
 }
+
+const logClearBreadcrumbs = () =>
+  makeAnalyticsAction(
+    'analytics/facet/clearAllValues',
+    AnalyticsType.Search,
+    (client, _) => {
+      return client.logBreadcrumbResetAll();
+    }
+  )();
