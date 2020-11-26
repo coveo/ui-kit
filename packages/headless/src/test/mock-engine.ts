@@ -80,9 +80,8 @@ function buildMockEngine<T extends AppState>(
       return store.getActions();
     },
     findAsyncAction<ThunkArg>(actionCreator: AsyncActionCreator<ThunkArg>) {
-      return this.actions.find((a) => a.type === actionCreator.type) as
-        | ReturnType<AsyncActionCreator<ThunkArg>>
-        | undefined;
+      const action = this.actions.find((a) => a.type === actionCreator.type);
+      return isAsyncAction<ThunkArg>(action) ? action : undefined;
     },
     ...config,
     renewAccessToken: mockRenewAccessToken,
@@ -98,3 +97,9 @@ const configureMockStore = () => {
     ...getDefaultMiddleware(),
   ]);
 };
+
+function isAsyncAction<ThunkArg>(
+  action: AnyAction | undefined
+): action is ReturnType<AsyncActionCreator<ThunkArg>> {
+  return action ? 'meta' in action : false;
+}
