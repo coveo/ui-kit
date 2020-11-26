@@ -1,9 +1,12 @@
 import {createAction} from '@reduxjs/toolkit';
-import {QueryParam} from '../../api/search/search-api-params';
+import {
+  EnableQuerySyntaxParam,
+  QueryParam,
+} from '../../api/search/search-api-params';
 import {validatePayloadSchema} from '../../utils/validate-payload';
 import {searchParametersDefinition} from './search-parameter-schema';
 
-export type SearchParameters = QueryParam;
+export type SearchParameters = QueryParam & EnableQuerySyntaxParam;
 
 /** Restores search parameters from e.g. a url*/
 export const restoreSearchParameters = createAction(

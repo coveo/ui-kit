@@ -9,10 +9,10 @@ describe('buildSearchParameterSerializer', () => {
       expect(result).toBe('q=a');
     });
 
-    // it('encodes a record with a multiple keys and string values', () => {
-    //   const result = serialize({q: 'a', aq: 'b'});
-    //   expect(result).toBe('q=a&aq=b');
-    // });
+    it('encodes a record with a multiple keys and string values', () => {
+      const result = serialize({q: 'a', enableQuerySyntax: true});
+      expect(result).toBe('q=a&enableQuerySyntax=true');
+    });
   });
 
   describe('#deserialize', () => {

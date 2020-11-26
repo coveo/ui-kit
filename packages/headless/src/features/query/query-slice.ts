@@ -18,5 +18,7 @@ export const queryReducer = createReducer(getQueryInitialState(), (builder) =>
     .addCase(change.fulfilled, (_, action) => action.payload.query)
     .addCase(restoreSearchParameters, (state, action) => {
       state.q = action.payload.q ?? state.q;
+      state.enableQuerySyntax =
+        action.payload.enableQuerySyntax ?? state.enableQuerySyntax;
     })
 );
