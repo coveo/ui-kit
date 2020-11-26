@@ -86,4 +86,6 @@ const browserConfig = {
   ],
 };
 
-export default [nodeConfig, browserConfig];
+const config = isProduction ? [nodeConfig, browserConfig] : [browserConfig];
+
+export default config;
