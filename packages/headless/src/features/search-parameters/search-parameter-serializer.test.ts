@@ -29,9 +29,19 @@ describe('buildSearchParameterSerializer', () => {
       expect(result).toEqual({q: 'a'});
     });
 
-    it('decodes a string with a multiple keys and string values', () => {
-      const result = deserialize('q=a&aq=b');
-      expect(result).toEqual({q: 'a', aq: 'b'});
+    it('removes keys that are invalid', () => {
+      const result = deserialize('invalid=b');
+      expect(result).toEqual({});
+    });
+
+    it('decodes a string with a key and a boolean value', () => {
+      const result = deserialize('enableQuerySyntax=true');
+      expect(result).toEqual({enableQuerySyntax: true});
+    });
+
+    it('decodes a string with multiple key-value pairs', () => {
+      const result = deserialize('q=a&enableQuerySyntax=true');
+      expect(result).toEqual({q: 'a', enableQuerySyntax: true});
     });
   });
 });
