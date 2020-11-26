@@ -37,10 +37,7 @@ export class PlatformClient {
       body: options.requestParams,
     };
 
-    options.logger.info(
-      requestInfo,
-      `@coveo/headless platform request: ${requestInfo.url}`
-    );
+    options.logger.info(requestInfo, `Platform request: ${requestInfo.url}`);
 
     const request = async () => {
       const response = await fetch(requestInfo.url, {
@@ -58,13 +55,12 @@ export class PlatformClient {
       const response = await backOff(request, {
         retry: (e: Response) => {
           const shouldRetry = e && isThrottled(e.status);
-          shouldRetry &&
-            options.logger.info('@coveo/headless platform retrying request');
+          shouldRetry && options.logger.info('Platform retrying request');
           return shouldRetry;
         },
       });
       if (response.status === 419) {
-        options.logger.info('@coveo/headless platform renewing token');
+        options.logger.info('Platform renewing token');
         const accessToken = await options.renewAccessToken();
 
         if (accessToken !== '') {
@@ -76,7 +72,7 @@ export class PlatformClient {
 
       options.logger.info(
         {response, body},
-        `@coveo/headless platform response: ${requestInfo.url}`
+        `Platform response: ${requestInfo.url}`
       );
 
       return {
@@ -84,10 +80,7 @@ export class PlatformClient {
         body,
       };
     } catch (error) {
-      options.logger.error(
-        error,
-        `@coveo/headless platform error: ${requestInfo.url}`
-      );
+      options.logger.error(error, `Platform error: ${requestInfo.url}`);
 
       return {
         response: error,

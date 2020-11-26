@@ -51,7 +51,7 @@ export function configureStore<Reducers extends ReducersMapObject>({
               action,
               nextState: api.getState(),
             },
-            `@coveo/headless action dispatched: ${action.type}`
+            `Action dispatched: ${action.type}`
           );
 
           return result;
