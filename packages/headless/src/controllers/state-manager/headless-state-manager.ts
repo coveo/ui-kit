@@ -25,10 +25,10 @@ const initialStateSchema = new Schema<Required<StateManagerInitialState>>({
   }),
 });
 
-/** The `StateManger` controller allows changing parameters that affect the results.*/
+/** The `StateManager` controller allows restoring parameters that affect the results from e.g. a url.*/
 export type StateManager = ReturnType<typeof buildStateManager>;
 
-/** The state relevant to the `StateManger` controller.*/
+/** The state relevant to the `StateManager` controller.*/
 export type StateManagerState = StateManager['state'];
 
 export function buildStateManager(
