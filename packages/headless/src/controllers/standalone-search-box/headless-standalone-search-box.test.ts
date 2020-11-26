@@ -10,6 +10,7 @@ import {buildMockQuerySuggest} from '../../test/mock-query-suggest';
 import {buildMockSearchAppEngine, MockEngine} from '../../test/mock-engine';
 import {SearchAppState} from '../../state/search-app-state';
 import {registerQuerySetQuery} from '../../features/query-set/query-set-actions';
+import {selectQuerySuggestion} from '../../features/query-suggest/query-suggest-actions';
 
 describe('headless standalone searchBox', () => {
   const id = 'search-box-123';
@@ -71,6 +72,23 @@ describe('headless standalone searchBox', () => {
       })),
       redirectTo: state.redirection.redirectTo,
       isLoading: false,
+    });
+  });
+
+  describe('#selectSuggestion', () => {
+    it('updates the query', () => {
+      const expression = 'a';
+      searchBox.selectSuggestion(expression);
+
+      const action = selectQuerySuggestion({id, expression});
+      expect(engine.actions).toContainEqual(action);
+    });
+
+    it('calls #submit', () => {
+      jest.spyOn(searchBox, 'submit');
+      searchBox.selectSuggestion('a');
+
+      expect(searchBox.submit).toHaveBeenCalledTimes(1);
     });
   });
 
