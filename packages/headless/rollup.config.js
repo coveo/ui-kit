@@ -30,12 +30,13 @@ const nodeConfig = {
   output: [
     {file: 'dist/headless.js', format: 'cjs'},
     {file: 'dist/headless.esm.js', format: 'es'},
-    // For development purposes only
-    {file: '../atomic/src/external-builds/headless.esm.js', format: 'es'},
   ],
   plugins: [
-    resolve({preferBuiltins: true}),
-    commonjs(),
+    resolve({modulesOnly: true}),
+    commonjs({
+      // https://github.com/pinojs/pino/issues/688
+      ignore: ['pino-pretty'],
+    }),
     typescript(),
     replace(),
   ],
@@ -50,13 +51,15 @@ const browserConfig = {
       file: 'dist/browser/headless.js',
       format: 'umd',
       name: 'CoveoHeadless',
-      sourcemap: true,
+      sourcemap: isProduction,
     },
     {
       file: 'dist/browser/headless.esm.js',
       format: 'es',
-      sourcemap: true,
+      sourcemap: isProduction,
     },
+    // For Atomic's development purposes only
+    {file: '../atomic/src/external-builds/headless.esm.js', format: 'es'},
   ],
   plugins: [
     alias({
@@ -70,10 +73,7 @@ const browserConfig = {
         },
         {
           find: 'cross-fetch',
-          replacement: pathResolve(
-            __dirname,
-            './fetch-ponyfill.js'
-          ),
+          replacement: pathResolve(__dirname, './fetch-ponyfill.js'),
         },
       ],
     }),
@@ -81,11 +81,11 @@ const browserConfig = {
     commonjs(),
     typescript(),
     replace(),
-    sizeSnapshot(),
-    terser(),
+    isProduction && sizeSnapshot(),
+    isProduction && terser(),
   ],
 };
 
-const config = isProduction ? [nodeConfig, browserConfig] : [nodeConfig];
+const config = isProduction ? [nodeConfig, browserConfig] : [browserConfig];
 
 export default config;

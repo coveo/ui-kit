@@ -1,30 +1,22 @@
-import {createAsyncThunk} from '@reduxjs/toolkit';
 import {
-  searchPageState,
-  makeSearchActionType,
+  makeAnalyticsAction,
+  AnalyticsType,
 } from '../analytics/analytics-actions';
-import {configureAnalytics} from '../../api/analytics/analytics';
 
 /**
  * Logs a did-you-mean click event, i.e., when a user clicks on a did-you-mean suggestion.
  */
-export const logDidYouMeanClick = createAsyncThunk(
-  'analytics/didyoumean',
-  async (_, {getState}) => {
-    const state = searchPageState(getState);
-    await configureAnalytics(state).logDidYouMeanClick();
-    return makeSearchActionType();
-  }
+export const logDidYouMeanClick = makeAnalyticsAction(
+  'analytics/didyoumean/click',
+  AnalyticsType.Search,
+  (client) => client.logDidYouMeanClick()
 );
 
 /**
  * Logs a did-you-mean automatic event, i.e., when the interface automatically selects a did-you-mean suggestion.
  */
-export const logDidYouMeanAutomatic = createAsyncThunk(
-  'analytics/didyoumean',
-  async (_, {getState}) => {
-    const state = searchPageState(getState);
-    await configureAnalytics(state).logDidYouMeanAutomatic();
-    return makeSearchActionType();
-  }
+export const logDidYouMeanAutomatic = makeAnalyticsAction(
+  'analytics/didyoumean/automatic',
+  AnalyticsType.Search,
+  (client) => client.logDidYouMeanAutomatic()
 );

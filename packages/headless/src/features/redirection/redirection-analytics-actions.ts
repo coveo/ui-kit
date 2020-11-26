@@ -1,22 +1,20 @@
-import {createAsyncThunk} from '@reduxjs/toolkit';
 import {
-  searchPageState,
-  makeSearchActionType,
+  makeAnalyticsAction,
+  AnalyticsType,
 } from '../analytics/analytics-actions';
-import {configureAnalytics} from '../../api/analytics/analytics';
 
 /**
  * Log trigger redirection
  */
-export const logTriggerRedirect = createAsyncThunk(
+export const logTriggerRedirect = makeAnalyticsAction(
   'analytics/trigger/redirection',
-  async (_, {getState}) => {
-    const state = searchPageState(getState);
-    if (state.redirection.redirectTo !== null) {
-      await configureAnalytics(state).logTriggerRedirect({
+  AnalyticsType.Search,
+  (client, state) => {
+    if (state.redirection && state.redirection.redirectTo !== null) {
+      return client.logTriggerRedirect({
         redirectedTo: state.redirection.redirectTo,
       });
     }
-    return makeSearchActionType();
+    return;
   }
 );

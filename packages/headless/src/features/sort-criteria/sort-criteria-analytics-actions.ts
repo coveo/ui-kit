@@ -1,21 +1,17 @@
-import {createAsyncThunk} from '@reduxjs/toolkit';
 import {
-  searchPageState,
-  makeSearchActionType,
+  makeAnalyticsAction,
+  AnalyticsType,
 } from '../analytics/analytics-actions';
-import {configureAnalytics} from '../../api/analytics/analytics';
+import {getSortCriteriaInitialState} from './sort-criteria-state';
 
 /**
  * Log results sort
  */
-export const logResultsSort = createAsyncThunk(
+export const logResultsSort = makeAnalyticsAction(
   'analytics/sort/results',
-  async (_, {getState}) => {
-    const state = searchPageState(getState);
-    await configureAnalytics(state).logResultsSort({
-      resultsSortBy: state.sortCriteria,
-    });
-
-    return makeSearchActionType();
-  }
+  AnalyticsType.Search,
+  (client, state) =>
+    client.logResultsSort({
+      resultsSortBy: state.sortCriteria || getSortCriteriaInitialState(),
+    })
 );
