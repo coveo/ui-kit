@@ -48,13 +48,24 @@ describe('state manager', () => {
   });
 
   describe('#state.parameters.q', () => {
-    it('when #q does not equal the default value, the parameter is included', () => {
+    it('when the parameter does not equal the default value, it is included', () => {
       engine.state.query.q = 'a';
       expect(manager.state.parameters.q).toBe('a');
     });
 
-    it('when #q is equal to the default value, the parameter is not included', () => {
+    it('when the parameter is equal to the default value, it is not included', () => {
       expect('q' in manager.state.parameters).toBe(false);
+    });
+  });
+
+  describe('#state.parameters.enableQuerySyntax', () => {
+    it('when the parameter does not equal the default value, it is included', () => {
+      engine.state.query.enableQuerySyntax = true;
+      expect(manager.state.parameters.enableQuerySyntax).toBe(true);
+    });
+
+    it('when the parameter is equal to the default value, it is not included', () => {
+      expect('enableQuerySyntax' in manager.state.parameters).toBe(false);
     });
   });
 });

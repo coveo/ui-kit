@@ -56,6 +56,7 @@ export function buildSearchParameterManager(
       const state = engine.state;
       const parameters: SearchParameters = {
         ...getQ(state),
+        ...getEnableQuerySyntax(state),
       };
 
       return {parameters};
@@ -68,6 +69,18 @@ function getQ(state: Partial<SearchParametersState>) {
     return {};
   }
 
-  const shouldIncludeQ = state.query.q !== getQueryInitialState().q;
-  return shouldIncludeQ ? {q: state.query.q} : {};
+  const q = state.query.q;
+  const shouldInclude = q !== getQueryInitialState().q;
+  return shouldInclude ? {q} : {};
+}
+
+function getEnableQuerySyntax(state: Partial<SearchParametersState>) {
+  if (state.query === undefined) {
+    return {};
+  }
+
+  const enableQuerySyntax = state.query.enableQuerySyntax;
+  const shouldInclude =
+    enableQuerySyntax !== getQueryInitialState().enableQuerySyntax;
+  return shouldInclude ? {enableQuerySyntax} : {};
 }
