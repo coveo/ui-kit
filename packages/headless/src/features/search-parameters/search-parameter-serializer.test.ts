@@ -1,34 +1,37 @@
-import {
-  serializeSearchParameters,
-  deserializeSearchParameters,
-} from './search-parameter-serializer';
+import {buildSearchParameterSerializer} from './search-parameter-serializer';
 
-describe('search parameter serializer', () => {
-  it('encodes a record with a single key and string value', () => {
-    const result = serializeSearchParameters({q: 'a'});
-    expect(result).toBe('q=a');
+describe('buildSearchParameterSerializer', () => {
+  describe('#serialize', () => {
+    const {serialize} = buildSearchParameterSerializer();
+
+    it('encodes a record with a single key and string value', () => {
+      const result = serialize({q: 'a'});
+      expect(result).toBe('q=a');
+    });
+
+    // it('encodes a record with a multiple keys and string values', () => {
+    //   const result = serialize({q: 'a', aq: 'b'});
+    //   expect(result).toBe('q=a&aq=b');
+    // });
   });
 
-  // it('encodes a record with a multiple keys and string values', () => {
-  //   const result = serializeSearchParameters({q: 'a', aq: 'b'});
-  //   expect(result).toBe('q=a&aq=b');
-  // });
-});
+  describe('#deserialize', () => {
+    const {deserialize} = buildSearchParameterSerializer();
 
-describe('search parameter deserializer', () => {
-  it('passing an empty string returns an empty object', () => {
-    const result = deserializeSearchParameters('');
-    expect(result).toEqual({});
-    expect('' in result).toBe(false);
-  });
+    it('passing an empty string returns an empty object', () => {
+      const result = deserialize('');
+      expect(result).toEqual({});
+      expect('' in result).toBe(false);
+    });
 
-  it('decodes a string with a single key and primitive value', () => {
-    const result = deserializeSearchParameters('q=a');
-    expect(result).toEqual({q: 'a'});
-  });
+    it('decodes a string with a single key and primitive value', () => {
+      const result = deserialize('q=a');
+      expect(result).toEqual({q: 'a'});
+    });
 
-  it('decodes a string with a multiple keys and string values', () => {
-    const result = deserializeSearchParameters('q=a&aq=b');
-    expect(result).toEqual({q: 'a', aq: 'b'});
+    it('decodes a string with a multiple keys and string values', () => {
+      const result = deserialize('q=a&aq=b');
+      expect(result).toEqual({q: 'a', aq: 'b'});
+    });
   });
 });

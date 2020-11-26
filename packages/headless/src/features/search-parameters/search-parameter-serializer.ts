@@ -1,6 +1,10 @@
 import {SearchParameters} from './search-parameter-actions';
 
-export function serializeSearchParameters(obj: SearchParameters) {
+export function buildSearchParameterSerializer() {
+  return {serialize, deserialize};
+}
+
+function serialize(obj: SearchParameters) {
   const fragment = Object.entries(obj)
     .map(([key, val]) => `${key}=${val}`)
     .join('&');
@@ -8,9 +12,7 @@ export function serializeSearchParameters(obj: SearchParameters) {
   return fragment;
 }
 
-export function deserializeSearchParameters(
-  fragment: string
-): Record<string, string> {
+function deserialize(fragment: string): Record<string, string> {
   const parts = fragment.split('&').filter((part) => part.length);
   const keyValuePairs = parts.map((part) => part.split('='));
 
