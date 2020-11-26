@@ -58,7 +58,7 @@ export interface HeadlessOptions<Reducers extends ReducersMapObject> {
   middlewares?: Middleware<{}, StateFromReducersMapObject<Reducers>>[];
   loggerOptions?: {
     /**
-     * By default, is set to `info`.
+     * By default, is set to `warn`.
      */
     level?: LevelWithSilent;
     /**
@@ -200,7 +200,7 @@ export class HeadlessEngine<Reducers extends ReducersMapObject>
   constructor(private options: HeadlessOptions<Reducers>) {
     this.logger = pino({
       name: '@coveo/headless',
-      level: this.options.loggerOptions?.level || 'info',
+      level: this.options.loggerOptions?.level || 'warn',
       mixin: this.options.loggerOptions?.mixin,
       formatters: {
         log: this.options.loggerOptions?.logFormatter,
