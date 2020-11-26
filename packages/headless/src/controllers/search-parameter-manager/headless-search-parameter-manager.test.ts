@@ -1,19 +1,19 @@
-import {restoreState} from '../../features/state-manager/state-manager-actions';
+import {restoreSearchParameters} from '../../features/search-parameters/search-parameter-actions';
 import {SearchAppState} from '../../state/search-app-state';
 import {buildMockSearchAppEngine, MockEngine} from '../../test';
 import {
-  buildStateManager,
-  StateManager,
-  StateManagerProps,
-} from './headless-state-manager';
+  buildSearchParameterManager,
+  SearchParameterManager,
+  SearchParameterManagerProps,
+} from './headless-search-parameter-manager';
 
 describe('state manager', () => {
   let engine: MockEngine<SearchAppState>;
-  let props: StateManagerProps;
-  let manager: StateManager;
+  let props: SearchParameterManagerProps;
+  let manager: SearchParameterManager;
 
-  function initStateManager() {
-    manager = buildStateManager(engine, props);
+  function initSearchParameterManager() {
+    manager = buildSearchParameterManager(engine, props);
   }
 
   beforeEach(() => {
@@ -24,7 +24,7 @@ describe('state manager', () => {
       },
     };
 
-    initStateManager();
+    initSearchParameterManager();
   });
 
   it('exposes a #subscribe method', () => {
@@ -35,15 +35,15 @@ describe('state manager', () => {
     expect(manager.state.parameters).toBeTruthy();
   });
 
-  it('dispatches #restoreState on registration', () => {
-    const action = restoreState(props.initialState.parameters);
+  it('dispatches #restoreSearchParameters on registration', () => {
+    const action = restoreSearchParameters(props.initialState.parameters);
     expect(engine.actions).toContainEqual(action);
   });
 
   it('when #parameters is not an object, it throws an error', () => {
     props.initialState.parameters = true as never;
-    expect(() => initStateManager()).toThrow(
-      'Check the initialState of buildStateManager'
+    expect(() => initSearchParameterManager()).toThrow(
+      'Check the initialState of buildSearchParameterManager'
     );
   });
 

@@ -15,7 +15,7 @@ import {
   HeadlessConfigurationOptions,
   AnalyticsActions,
   ConfigurationActions,
-  buildStateManager,
+  buildSearchParameterManager,
   encodeStateParameters,
   decodeStateParameters,
   Unsubscribe,
@@ -89,7 +89,7 @@ export class AtomicSearchInterface {
 
     // Waits until the fields are registered asynchronously before triggering a search
     setTimeout(() => {
-      this.initUrlStateManager();
+      this.initSearchParameterManager();
 
       this.engine!.dispatch(
         SearchActions.executeSearch(AnalyticsActions.logInterfaceLoad())
@@ -97,11 +97,11 @@ export class AtomicSearchInterface {
     }, 0);
   }
 
-  private initUrlStateManager() {
+  private initSearchParameterManager() {
     const stateWithoutHashSign = window.location.hash.slice(1);
     const params = decodeStateParameters(stateWithoutHashSign);
 
-    const manager = buildStateManager(this.engine!, {
+    const manager = buildSearchParameterManager(this.engine!, {
       initialState: {parameters: params},
     });
 

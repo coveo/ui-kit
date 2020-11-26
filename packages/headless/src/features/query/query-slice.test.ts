@@ -5,7 +5,7 @@ import {getHistoryEmptyState} from '../history/history-slice';
 import {change} from '../history/history-actions';
 import {applyDidYouMeanCorrection} from '../did-you-mean/did-you-mean-actions';
 import {getQueryInitialState, QueryState} from './query-state';
-import {restoreState} from '../state-manager/state-manager-actions';
+import {restoreSearchParameters} from '../search-parameters/search-parameter-actions';
 
 describe('query slice', () => {
   let state: QueryState;
@@ -100,16 +100,16 @@ describe('query slice', () => {
     expect(nextState).toEqual(expectedQuery);
   });
 
-  describe('#restoreState', () => {
+  describe('#restoreSearchParameters', () => {
     it('when the object contains a #q key, it updates the query to the key value', () => {
       state.q = 'a';
-      const finalState = queryReducer(state, restoreState({q: ''}));
+      const finalState = queryReducer(state, restoreSearchParameters({q: ''}));
       expect(finalState.q).toEqual('');
     });
 
     it('when the object does not contain a #q key, it does not update the query', () => {
       state.q = 'a';
-      const finalState = queryReducer(state, restoreState({}));
+      const finalState = queryReducer(state, restoreSearchParameters({}));
       expect(finalState.q).toEqual(state.q);
     });
   });

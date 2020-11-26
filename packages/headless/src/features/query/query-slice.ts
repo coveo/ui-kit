@@ -4,7 +4,7 @@ import {selectQuerySuggestion} from '../query-suggest/query-suggest-actions';
 import {change} from '../history/history-actions';
 import {applyDidYouMeanCorrection} from '../did-you-mean/did-you-mean-actions';
 import {getQueryInitialState} from './query-state';
-import {restoreState} from '../state-manager/state-manager-actions';
+import {restoreSearchParameters} from '../search-parameters/search-parameter-actions';
 
 export const queryReducer = createReducer(getQueryInitialState(), (builder) =>
   builder
@@ -18,7 +18,7 @@ export const queryReducer = createReducer(getQueryInitialState(), (builder) =>
     .addCase(change.fulfilled, (state, action) => {
       state.q = action.payload.query.q;
     })
-    .addCase(restoreState, (state, action) => {
+    .addCase(restoreSearchParameters, (state, action) => {
       state.q = action.payload.q ?? state.q;
     })
 );

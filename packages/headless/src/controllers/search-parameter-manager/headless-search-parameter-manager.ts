@@ -2,38 +2,42 @@ import {RecordValue, Schema} from '@coveo/bueno';
 import {Engine} from '../../app/headless-engine';
 import {getQueryInitialState} from '../../features/query/query-state';
 import {
-  restoreState,
-  StateParameters,
-} from '../../features/state-manager/state-manager-actions';
-import {stateParametersDefinition} from '../../features/state-manager/state-parameters-schema';
+  restoreSearchParameters,
+  SearchParameters,
+} from '../../features/search-parameters/search-parameter-actions';
+import {stateParametersDefinition} from '../../features/search-parameters/state-parameters-schema';
 import {SearchParametersState} from '../../state/search-app-state';
 import {validateInitialState} from '../../utils/validate-payload';
 import {buildController} from '../controller/headless-controller';
 
-export interface StateManagerProps {
-  initialState: StateManagerInitialState;
+export interface SearchParameterManagerProps {
+  initialState: SearchParameterManagerInitialState;
 }
 
-interface StateManagerInitialState {
-  parameters: StateParameters;
+interface SearchParameterManagerInitialState {
+  parameters: SearchParameters;
 }
 
-const initialStateSchema = new Schema<Required<StateManagerInitialState>>({
+const initialStateSchema = new Schema<
+  Required<SearchParameterManagerInitialState>
+>({
   parameters: new RecordValue({
     options: {required: true},
     values: stateParametersDefinition,
   }),
 });
 
-/** The `StateManager` controller allows restoring parameters that affect the results from e.g. a url.*/
-export type StateManager = ReturnType<typeof buildStateManager>;
+/** The `SearchParameterManager` controller allows restoring parameters that affect the results from e.g. a url.*/
+export type SearchParameterManager = ReturnType<
+  typeof buildSearchParameterManager
+>;
 
-/** The state relevant to the `StateManager` controller.*/
-export type StateManagerState = StateManager['state'];
+/** The state relevant to the `SearchParameterManager` controller.*/
+export type SearchParameterManagerState = SearchParameterManager['state'];
 
-export function buildStateManager(
+export function buildSearchParameterManager(
   engine: Engine<Partial<SearchParametersState>>,
-  props: StateManagerProps
+  props: SearchParameterManagerProps
 ) {
   const {dispatch} = engine;
   const controller = buildController(engine);
@@ -41,16 +45,16 @@ export function buildStateManager(
   validateInitialState(
     initialStateSchema,
     props.initialState,
-    buildStateManager.name
+    buildSearchParameterManager.name
   );
-  dispatch(restoreState(props.initialState.parameters));
+  dispatch(restoreSearchParameters(props.initialState.parameters));
 
   return {
     ...controller,
 
     get state() {
       const state = engine.state;
-      const parameters: StateParameters = {
+      const parameters: SearchParameters = {
         ...getQ(state),
       };
 

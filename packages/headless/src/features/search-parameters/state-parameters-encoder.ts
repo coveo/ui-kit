@@ -1,6 +1,6 @@
-import {StateParameters} from './state-manager-actions';
+import {SearchParameters} from './search-parameter-actions';
 
-export function encodeStateParameters(obj: StateParameters) {
+export function encodeStateParameters(obj: SearchParameters) {
   const fragment = Object.entries(obj)
     .map(([key, val]) => `${key}=${val}`)
     .join('&');

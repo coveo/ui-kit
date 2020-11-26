@@ -3,11 +3,11 @@ import {QueryParam} from '../../api/search/search-api-params';
 import {validatePayloadSchema} from '../../utils/validate-payload';
 import {stateParametersDefinition} from './state-parameters-schema';
 
-export type StateParameters = QueryParam;
+export type SearchParameters = QueryParam;
 
-/** Restores state parameters from e.g. a url*/
-export const restoreState = createAction(
-  'stateManager/restore',
-  (payload: StateParameters) =>
+/** Restores search parameters from e.g. a url*/
+export const restoreSearchParameters = createAction(
+  'searchParameters/restore',
+  (payload: SearchParameters) =>
     validatePayloadSchema(payload, stateParametersDefinition)
 );
