@@ -26,14 +26,10 @@ import {
     isMeasurementProtocolKey,
     convertCustomMeasurementProtocolKeys,
 } from './measurementProtocolMapper';
-import {
-    IRuntimeEnvironment,
-    BrowserRuntime,
-    NodeJSRuntime, ReactNativeRuntime,
-} from './runtimeEnvironment';
+import {IRuntimeEnvironment, BrowserRuntime, NodeJSRuntime, ReactNativeRuntime} from './runtimeEnvironment';
 import HistoryStore from '../history';
 import {isApiKey} from './token';
-import {isString} from "util";
+import {isString} from 'util';
 
 export const Version = 'v15';
 
@@ -51,7 +47,7 @@ export interface ClientOptions {
     beforeSendHooks: AnalyticsClientSendEventHook[];
 }
 
-export type AnalyticsClientSendEventHook = <TResult>(eventType: string, payload: any) => TResult;
+export type AnalyticsClientSendEventHook = <TResult>(eventType: string, payload: any) => TResult | Promise<TResult>;
 export type EventTypeConfig = {
     newEventType: EventType;
     variableLengthArgumentsNames?: string[];
@@ -142,22 +138,26 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
     async getCurrentVisitorId() {
         if (!this.visitorId) {
             try {
-                const existingVisitorId = this.visitorId || (await this.storage.getItem('visitorId')) || null;
-                this.visitorId = existingVisitorId || uuidv4();
-            }  catch (err) {
+                const existingVisitorId = await this.storage.getItem('visitorId');
+                if (!existingVisitorId) {
+                    await this.setCurrentVisitorId(uuidv4());
+                } else {
+                    this.visitorId = existingVisitorId;
+                }
+            } catch (err) {
                 console.log(
-                  'Could not get visitor ID from the current runtime environment storage. Using a random ID instead.',
-                  err
+                    'Could not get visitor ID from the current runtime environment storage. Using a random ID instead.',
+                    err
                 );
                 this.visitorId = uuidv4();
             }
         }
-        return this.visitorId!;
+        return this.visitorId;
     }
 
-    setCurrentVisitorId(visitorId: string) {
+    async setCurrentVisitorId(visitorId: string) {
         this.visitorId = visitorId;
-        this.storage.setItem('visitorId', visitorId);
+        await this.storage.setItem('visitorId', visitorId);
     }
 
     /**
@@ -195,14 +195,8 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
             variableLengthArgumentsNames.length > 0
                 ? this.parseVariableArgumentsPayload(variableLengthArgumentsNames, currentPayload)
                 : currentPayload[0];
-        const addVisitorIdStep: ProcessPayloadStep = (currentPayload) => ({
-            visitorId: addVisitorIdParameter ? this.visitorId : '',
-            ...currentPayload,
-        });
         const setAnonymousUserStep: ProcessPayloadStep = (currentPayload) =>
             usesMeasurementProtocol ? this.ensureAnonymousUserWhenUsingApiKey(currentPayload) : currentPayload;
-        const processBeforeSendHooksStep: ProcessPayloadStep = (currentPayload) =>
-            this.beforeSendHooks.reduce((newPayload, current) => current(eventType, newPayload), currentPayload);
         const cleanPayloadStep: ProcessPayloadStep = (currentPayload) =>
             this.removeEmptyPayloadValues(currentPayload, eventType);
         const validateParams: ProcessPayloadStep = (currentPayload) => this.validateParams(currentPayload);
@@ -213,7 +207,18 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
         const processCustomParameters: ProcessPayloadStep = (currentPayload) =>
             usesMeasurementProtocol ? this.processCustomParameters(currentPayload) : currentPayload;
 
-        const payloadToSend = [
+        type AsyncProcessPayloadStep = (currentPayload: any) => Promise<any>;
+        const addVisitorIdStep: AsyncProcessPayloadStep = async (currentPayload) => ({
+            visitorId: addVisitorIdParameter ? await this.getCurrentVisitorId() : '',
+            ...currentPayload,
+        });
+        const processBeforeSendHooksStep: AsyncProcessPayloadStep = (currentPayload) =>
+            this.beforeSendHooks.reduce(async (promisePayload, current) => {
+                const payload = await promisePayload;
+                return await current(eventType, payload);
+            }, currentPayload);
+
+        const payloadToSend = await [
             processVariableArgumentNamesStep,
             addVisitorIdStep,
             setAnonymousUserStep,
@@ -223,7 +228,10 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
             processMeasurementProtocolConversionStep,
             removeUnknownParameters,
             processCustomParameters,
-        ].reduce((payload, step) => step(payload), payload);
+        ].reduce(async (payloadPromise, step) => {
+            const payload = await payloadPromise;
+            return await step(payload);
+        }, Promise.resolve(payload));
 
         this.bufferedRequests.push({
             eventType: eventTypeToSend,

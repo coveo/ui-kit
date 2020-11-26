@@ -11,6 +11,9 @@ export class HistoryStore {
         this.store = store || getAvailableStorage();
     }
 
+    /**
+     * @deprecated Synchronous method is deprecated, use addElementAsync instead. This method will NOT work with react-native.
+     */
     addElement(elem: HistoryElement) {
         elem.internalTime = new Date().getTime();
         this.cropQueryElement(elem);
@@ -24,9 +27,6 @@ export class HistoryStore {
         }
     }
 
-    /**
-     * @deprecated Synchronous method is deprecated, use addElementAsync instead. This method will NOT work with react-native.
-     */
     async addElementAsync(elem: HistoryElement) {
         elem.internalTime = new Date().getTime();
         this.cropQueryElement(elem);
@@ -56,7 +56,7 @@ export class HistoryStore {
     private getHistoryWithInternalTime(): HistoryElement[] {
         try {
             const elements = this.store.getItem(STORE_KEY);
-            if (elements && typeof elements === "string") {
+            if (elements && typeof elements === 'string') {
                 return JSON.parse(elements) as HistoryElement[];
             } else {
                 return [];

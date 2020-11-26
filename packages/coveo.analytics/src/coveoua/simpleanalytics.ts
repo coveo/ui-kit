@@ -100,7 +100,7 @@ export class CoveoUA {
 
 export const coveoua = new CoveoUA();
 
-export const handleOneAnalyticsEvent = (command: string, ...params: any[]): any => {
+export const handleOneAnalyticsEvent = (command: string, ...params: any[]) => {
     const [, trackerName, pluginName, fn] = /^(?:(\w+)\.)?(?:(\w+):)?(\w+)$/.exec(command)!;
 
     const actionFunction = (<any>coveoua)[fn];

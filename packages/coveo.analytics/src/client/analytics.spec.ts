@@ -330,8 +330,8 @@ describe('Analytics', () => {
         const storage = new CookieStorage();
         const historyStore = new HistoryStore();
 
-        client.currentVisitorId = visitorId;
-        historyStore.addElement(history);
+        await client.setCurrentVisitorId(visitorId);
+        await historyStore.addElementAsync(history);
 
         expect(storage.getItem('visitorId')).toBe('foo');
         expect(historyStore.getMostRecentElement()).toEqual(history);

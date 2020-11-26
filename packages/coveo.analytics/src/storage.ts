@@ -7,7 +7,7 @@ export let preferredStorage: WebStorage | null = null;
 export interface WebStorage {
     getItem(key: string): string | null | Promise<string | null>;
     removeItem(key: string): void;
-    setItem(key: string, data: string): void;
+    setItem(key: string, data: string): void | Promise<void>;
 }
 
 export function getAvailableStorage(): WebStorage {
@@ -59,13 +59,13 @@ export class CookieAndLocalStorage implements WebStorage {
 
 export class ReactNativeStorage implements WebStorage {
     getItem(key: string) {
-        return AsyncStorage.getItem(key)
+        return AsyncStorage.getItem(key);
     }
-    setItem (key: string, data: string) {
-        AsyncStorage.setItem(key, data)
+    setItem(key: string, data: string) {
+        AsyncStorage.setItem(key, data);
     }
     removeItem(key: string) {
-        AsyncStorage.removeItem(key)
+        AsyncStorage.removeItem(key);
     }
 }
 

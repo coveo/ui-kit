@@ -24,8 +24,8 @@ describe('history', () => {
         };
     });
 
-    it('should return the same an element after adding it to the history', () => {
-        historyStore.addElement(data);
+    it('should return the same an element after adding it to the history', async () => {
+        await historyStore.addElementAsync(data);
 
         expect(storageMock.setItem).toHaveBeenCalledTimes(1);
         const [setKey, setData] = storageMock.setItem.mock.calls[0];
@@ -36,7 +36,7 @@ describe('history', () => {
         expect(setData).toMatch(/"internalTime"/);
     });
 
-    it('should trim query over > 75 char', () => {
+    it('should trim query over > 75 char', async () => {
         data.value = '';
         let newValue = '';
         for (let i = 0; i < 100; i++) {
@@ -45,7 +45,7 @@ describe('history', () => {
         data.name = 'Query';
         data.value = newValue;
 
-        historyStore.addElement(data);
+        await historyStore.addElementAsync(data);
 
         expect(storageMock.setItem).toHaveBeenCalledTimes(1);
         const [setKey, setData] = storageMock.setItem.mock.calls[0];
@@ -54,7 +54,7 @@ describe('history', () => {
         expect(setData).toMatch(/"value":"01234[0-9]{70}"/);
     });
 
-    it("should not trim elements over 75 char if it's not a query", () => {
+    it("should not trim elements over 75 char if it's not a query", async () => {
         data.value = '';
         let newValue = '';
         for (let i = 0; i < 100; i++) {
@@ -63,7 +63,7 @@ describe('history', () => {
         data.name = 'Not A Query';
         data.value = newValue;
 
-        historyStore.addElement(data);
+        await historyStore.addElementAsync(data);
 
         expect(storageMock.setItem).toHaveBeenCalledTimes(1);
         const [setKey, setData] = storageMock.setItem.mock.calls[0];
@@ -72,13 +72,13 @@ describe('history', () => {
         expect(setData).toMatch(/"value":"01234[0-9]{185}"/);
     });
 
-    it('should not keep more then MAX_ELEMENTS', () => {
+    it('should not keep more then MAX_ELEMENTS', async () => {
         for (let i = 0; i < MAX_NUMBER_OF_HISTORY_ELEMENTS + 5; i++) {
             data.value = i.toString();
-            historyStore.addElement(data);
+            await historyStore.addElementAsync(data);
         }
-
-        expect(historyStore.getHistory().length).toBe(MAX_NUMBER_OF_HISTORY_ELEMENTS);
+        const history = await historyStore.getHistoryAsync();
+        expect(history.length).toBe(MAX_NUMBER_OF_HISTORY_ELEMENTS);
     });
 
     it('should be able to remove all internalTime', () => {
@@ -120,17 +120,17 @@ describe('history', () => {
         );
     });
 
-    it('should reject consecutive duplicate values', () => {
-        historyStore.addElement(data);
-        historyStore.addElement(data);
+    it('should reject consecutive duplicate values', async () => {
+        await historyStore.addElementAsync(data);
+        await historyStore.addElementAsync(data);
 
         expect(storageMock.setItem).toHaveBeenCalledTimes(1);
     });
 
-    it('should accept consecutive values which are not duplicates', () => {
-        historyStore.addElement(data);
+    it('should accept consecutive values which are not duplicates', async () => {
+        await historyStore.addElementAsync(data);
         data.value = 'something else';
-        historyStore.addElement(data);
+        await historyStore.addElementAsync(data);
 
         expect(storageMock.setItem).toHaveBeenCalledTimes(2);
     });
