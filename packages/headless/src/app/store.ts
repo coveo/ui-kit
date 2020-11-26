@@ -20,8 +20,24 @@ interface ConfigureStoreOptions<Reducers extends ReducersMapObject> {
   reducers: Reducers;
   preloadedState?: StateFromReducersMapObject<Reducers>;
   middlewares?: Middleware[];
-  thunkExtraArguments?: ThunkExtraArguments;
+  thunkExtraArguments: ThunkExtraArguments;
 }
+
+const actionLogger: (logger: Logger) => Middleware = (logger) => (api) => (
+  next
+) => (action) => {
+  const result = next(action);
+
+  logger.debug(
+    {
+      action,
+      nextState: api.getState(),
+    },
+    `Action dispatched: ${action.type}`
+  );
+
+  return result;
+};
 
 export function configureStore<Reducers extends ReducersMapObject>({
   reducers,
@@ -43,19 +59,7 @@ export function configureStore<Reducers extends ReducersMapObject>({
         analyticsMiddleware,
         ...middlewares,
         ...getDefaultMiddleware({thunk: {extraArgument: thunkExtraArguments}}),
-        (api) => (next) => (action) => {
-          const result = next(action);
-
-          thunkExtraArguments?.logger.debug(
-            {
-              action,
-              nextState: api.getState(),
-            },
-            `Action dispatched: ${action.type}`
-          );
-
-          return result;
-        },
+        actionLogger(thunkExtraArguments.logger),
       ];
     },
   });
