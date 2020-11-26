@@ -53,8 +53,7 @@ export class SearchAPIClient {
     >({
       ...baseSearchRequest(req, 'POST', 'application/json', '/plan'),
       requestParams: pickNonBaseParams(req) as PlanRequest, // TODO: This cast won't be needed once all methods have been reworked and we can change types in PlatformClient
-      renewAccessToken: this.options.renewAccessToken,
-      logger: this.options.logger,
+      ...this.options,
     });
 
     if (isSuccessPlanResponse(platformResponse)) {
@@ -74,8 +73,7 @@ export class SearchAPIClient {
     >({
       ...baseSearchRequest(req, 'POST', 'application/json', '/querySuggest'),
       requestParams: pickNonBaseParams(req),
-      renewAccessToken: this.options.renewAccessToken,
-      logger: this.options.logger,
+      ...this.options,
     });
     if (isSuccessQuerySuggestionsResponse(platformResponse)) {
       return {
@@ -93,8 +91,7 @@ export class SearchAPIClient {
     const platformResponse = await PlatformClient.call<SearchRequest, Search>({
       ...baseSearchRequest(req, 'POST', 'application/json', ''),
       requestParams: pickNonBaseParams(req),
-      renewAccessToken: this.options.renewAccessToken,
-      logger: this.options.logger,
+      ...this.options,
     });
 
     if (isSuccessSearchResponse(platformResponse)) {
@@ -115,8 +112,7 @@ export class SearchAPIClient {
     >({
       ...baseSearchRequest(req, 'POST', 'application/json', '/facet'),
       requestParams: pickNonBaseParams(req),
-      renewAccessToken: this.options.renewAccessToken,
-      logger: this.options.logger,
+      ...this.options,
     });
 
     return platformResponse.body;
@@ -129,8 +125,7 @@ export class SearchAPIClient {
     >({
       ...baseSearchRequest(req, 'POST', 'application/json', ''),
       requestParams: pickNonBaseParams(req),
-      renewAccessToken: this.options.renewAccessToken,
-      logger: this.options.logger,
+      ...this.options,
     });
 
     if (isSuccessSearchResponse(platformResponse)) {
@@ -151,8 +146,7 @@ export class SearchAPIClient {
     >({
       ...baseSearchRequest(req, 'POST', 'application/json', ''),
       requestParams: pickNonBaseParams(req),
-      renewAccessToken: this.options.renewAccessToken,
-      logger: this.options.logger,
+      ...this.options,
     });
 
     if (isSuccessSearchResponse(platformResponse)) {
