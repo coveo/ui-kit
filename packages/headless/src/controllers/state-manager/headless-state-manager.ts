@@ -6,7 +6,7 @@ import {
   StateParameters,
 } from '../../features/state-manager/state-manager-actions';
 import {stateParametersDefinition} from '../../features/state-manager/state-parameters-schema';
-import {SearchAppState} from '../../state/search-app-state';
+import {SearchParametersState} from '../../state/search-app-state';
 import {validateInitialState} from '../../utils/validate-payload';
 import {buildController} from '../controller/headless-controller';
 
@@ -32,7 +32,7 @@ export type StateManager = ReturnType<typeof buildStateManager>;
 export type StateManagerState = StateManager['state'];
 
 export function buildStateManager(
-  engine: Engine<Partial<SearchAppState>>,
+  engine: Engine<Partial<SearchParametersState>>,
   props: StateManagerProps
 ) {
   const {dispatch} = engine;
@@ -59,7 +59,7 @@ export function buildStateManager(
   };
 }
 
-function getQ(state: Partial<SearchAppState>) {
+function getQ(state: Partial<SearchParametersState>) {
   if (state.query === undefined) {
     return {};
   }
