@@ -15,6 +15,7 @@ import {
   HeadlessConfigurationOptions,
   AnalyticsActions,
   ConfigurationActions,
+  LogLevel,
 } from '@coveo/headless';
 import {RenderError} from '../../utils/render-utils';
 import {InitializeEvent} from '../../utils/initialization-utils';
@@ -28,7 +29,8 @@ export class AtomicSearchInterface {
   @Prop() sample = false;
   @Prop({reflect: true}) pipeline = 'default';
   @Prop({reflect: true}) searchHub = 'default';
-  @Prop({reflect: true}) enableDebug = false;
+  @Prop() enableDebug = false;
+  @Prop() logLevel?: LogLevel;
   @RenderError() error?: Error;
 
   private engine?: Engine;
@@ -72,6 +74,9 @@ export class AtomicSearchInterface {
     this.engine = new HeadlessEngine({
       configuration: config,
       reducers: searchAppReducers,
+      loggerOptions: {
+        level: this.logLevel,
+      },
     });
 
     this.hangingComponentsInitialization.forEach((event) =>

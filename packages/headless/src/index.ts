@@ -46,6 +46,7 @@ export * from './controllers/product-recommendations/headless-frequently-viewed-
 export * from './controllers/product-recommendations/headless-popular-bought-recommendations';
 export * from './controllers/product-recommendations/headless-popular-viewed-recommendations';
 export * from './controllers/product-recommendations/headless-user-interest-recommendations';
+export * from './controllers/debug/headless-debug';
 
 // Selectors
 export * from './features/facets/facet-set/facet-set-selectors';
