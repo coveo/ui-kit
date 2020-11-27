@@ -1,4 +1,9 @@
-import {platformUrl, PlatformClient} from './platform-client';
+import {
+  platformUrl,
+  PlatformClient,
+  PreprocessRequestMiddleware,
+  NoopPreprocessRequestMiddleware,
+} from './platform-client';
 import * as BackOff from 'exponential-backoff';
 import pino from 'pino';
 
@@ -42,7 +47,7 @@ describe('platformUrl helper', () => {
 });
 
 describe('PlatformClient call', () => {
-  function platformCall() {
+  function platformCall(middleware?: PreprocessRequestMiddleware) {
     return PlatformClient.call({
       accessToken: 'accessToken1',
       contentType: 'application/json',
@@ -52,6 +57,7 @@ describe('PlatformClient call', () => {
       },
       url: platformUrl(),
       renewAccessToken: async () => 'accessToken2',
+      preprocessRequest: middleware || NoopPreprocessRequestMiddleware,
       logger: pino({level: 'silent'}),
     });
   }
@@ -79,6 +85,33 @@ describe('PlatformClient call', () => {
     });
 
     done();
+  });
+
+  it('should preprocess the request if a middleware is provided', async () => {
+    mockFetch.mockReturnValue(
+      Promise.resolve(new Response(JSON.stringify({})))
+    );
+
+    await platformCall((request) => {
+      return {
+        ...request,
+        headers: {
+          test: 'header',
+        },
+      };
+    });
+
+    expect(mockFetch).toHaveBeenCalledWith(platformUrl(), {
+      body: JSON.stringify({
+        test: 123,
+      }),
+      headers: {
+        Authorization: 'Bearer accessToken1',
+        'Content-Type': 'application/json',
+        test: 'header',
+      },
+      method: 'POST',
+    });
   });
 
   it(`when status is 419
