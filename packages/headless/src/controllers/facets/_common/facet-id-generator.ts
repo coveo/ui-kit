@@ -1,5 +1,5 @@
-import {FacetType} from '../facet-api/request';
-import {AnyFacetSetState} from './interfaces/generic-facet-state';
+import {FacetType} from '../../../features/facets/facet-api/request';
+import {AnyFacetSetState} from '../../../features/facets/generic/interfaces/generic-facet-state';
 
 export interface FacetIdConfig {
   type: FacetType;

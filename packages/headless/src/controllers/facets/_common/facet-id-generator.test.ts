@@ -1,5 +1,5 @@
 import {buildMockFacetRequest} from '../../../test/mock-facet-request';
-import {determineFacetId, FacetIdConfig} from './facet-selectors';
+import {determineFacetId, FacetIdConfig} from './facet-id-generator';
 
 describe('facet selectors', () => {
   describe('#determineFacetId', () => {
