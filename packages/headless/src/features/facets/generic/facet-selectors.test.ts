@@ -3,7 +3,7 @@ import {determineFacetId, FacetIdConfig} from './facet-selectors';
 
 describe('facet selectors', () => {
   describe('#determineFacetId', () => {
-    let config: FacetIdConfig;
+    let config: Required<FacetIdConfig>;
     let prefix: string;
 
     function getPrefixForField(field: string) {
@@ -15,15 +15,22 @@ describe('facet selectors', () => {
         type: 'specific',
         field: 'author',
         state: {},
+        logger: {warn: jest.fn()},
       };
 
       prefix = getPrefixForField(config.field);
     });
 
-    it(`when the state does not contain a facet with the field,
-    it generates an id ending with 0`, () => {
-      const id = determineFacetId(config);
-      expect(id).toBe(`${prefix}0`);
+    describe('when the state does not contain a facet with the field', () => {
+      it('generates an id ending with 0', () => {
+        const id = determineFacetId(config);
+        expect(id).toBe(`${prefix}0`);
+      });
+
+      it('does not log a warning', () => {
+        determineFacetId(config);
+        expect(config.logger.warn).not.toHaveBeenCalled();
+      });
     });
 
     describe('when the state contains a facet id with the same field', () => {
@@ -31,17 +38,15 @@ describe('facet selectors', () => {
         config.state = {[`${prefix}0`]: buildMockFacetRequest()};
       });
 
-      it(`when the state contains a facet id with the same field,
-      it appends a number incremented by 1`, () => {
+      it('it appends a number incremented by 1', () => {
         const id = determineFacetId(config);
         expect(id).toBe(`${prefix}1`);
       });
 
-      // it(`when the state contains a facet id with the same field,
-      // it logs a warning`, () => {
-      //   determineFacetId(config);
-      //   expect(config.logger.warn).toHaveBeenCalledWith()
-      // })
+      it('logs a warning', () => {
+        determineFacetId(config);
+        expect(config.logger.warn).toHaveBeenCalledTimes(1);
+      });
     });
 
     it(`when the state contains multiple facet ids with the same field,
