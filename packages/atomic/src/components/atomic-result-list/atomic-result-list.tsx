@@ -29,7 +29,7 @@ export class AtomicResultList {
    * Css class for a list element
    */
   @Prop() listElementClass = '';
-  @Prop() fieldsToInclude: string[] = [];
+  @Prop() fieldsToInclude = '';
   @Element() host!: HTMLDivElement;
   @State() state!: ResultListState;
 
@@ -44,7 +44,7 @@ export class AtomicResultList {
       this.engine
     );
     this.resultList = buildResultList(this.engine, {
-      options: {fieldsToInclude: this.fieldsToInclude},
+      options: {fieldsToInclude: this.fieldsToInclude.split(',')},
     });
     this.unsubscribe = this.resultList.subscribe(() => this.updateState());
 
