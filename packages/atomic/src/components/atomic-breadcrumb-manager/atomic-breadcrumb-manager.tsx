@@ -255,23 +255,6 @@ export class AtomicBreadcrumbManager {
     return {breadcrumbsToShow, moreButton};
   }
 
-  private hasActiveBreadcrumbs() {
-    return !this.isEmpty([
-      ...this.state.facetBreadcrumbs.filter(
-        (breadcrumb) => !this.isEmpty(breadcrumb.values)
-      ),
-      ...this.state.numericFacetBreadcrumbs.filter(
-        (breadcrumb) => !this.isEmpty(breadcrumb.values)
-      ),
-      ...this.state.dateFacetBreadcrumbs.filter(
-        (breadcrumb) => !this.isEmpty(breadcrumb.values)
-      ),
-      ...this.state.categoryFacetBreadcrumbs.filter(
-        (breadcrumb) => !this.isEmpty(breadcrumb.path)
-      ),
-    ]);
-  }
-
   private isEmpty(array: any[]) {
     return array.length === 0;
   }
@@ -305,7 +288,7 @@ export class AtomicBreadcrumbManager {
   }
 
   render() {
-    if (!this.hasActiveBreadcrumbs()) {
+    if (!this.breadcrumbManager.hasBreadcrumbs()) {
       return;
     }
     return (
