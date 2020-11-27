@@ -5,6 +5,7 @@ import {
   NoopPreprocessRequestMiddleware,
 } from './platform-client';
 import * as BackOff from 'exponential-backoff';
+import pino from 'pino';
 
 jest.mock('cross-fetch');
 import fetch from 'cross-fetch';
@@ -57,6 +58,7 @@ describe('PlatformClient call', () => {
       url: platformUrl(),
       renewAccessToken: async () => 'accessToken2',
       preprocessRequest: middleware || NoopPreprocessRequestMiddleware,
+      logger: pino({level: 'silent'}),
     });
   }
 

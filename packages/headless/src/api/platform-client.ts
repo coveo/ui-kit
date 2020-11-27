@@ -3,6 +3,7 @@ export type HttpMethods = 'POST' | 'GET' | 'DELETE' | 'PUT';
 export type HTTPContentTypes = 'application/json' | 'text/html';
 import {backOff} from 'exponential-backoff';
 import {BaseParam} from './search/search-api-params';
+import {Logger} from 'pino';
 
 function isThrottled(status: number): boolean {
   return status === 429;
@@ -21,6 +22,7 @@ export interface PlatformClientCallOptions<RequestParams extends BaseParam>
   accessToken: string;
   renewAccessToken: () => Promise<string>;
   preprocessRequest: PreprocessRequestMiddleware;
+  logger: Logger;
 }
 
 export interface PlatformResponse<T> {
@@ -44,6 +46,23 @@ export class PlatformClient {
       ...options,
       ...(await options.preprocessRequest(options)),
     };
+
+    const requestInfo = {
+      url: processedOptions.url,
+      method: processedOptions.method,
+      headers: {
+        'Content-Type': processedOptions.contentType,
+        Authorization: `Bearer ${processedOptions.accessToken}`,
+        ...processedOptions.headers,
+      },
+      body: processedOptions.requestParams,
+    };
+
+    processedOptions.logger.info(
+      requestInfo,
+      `Platform request: ${requestInfo.url}`
+    );
+
     const request = async () => {
       const response = await fetch(processedOptions.url, {
         method: processedOptions.method,
@@ -63,21 +82,34 @@ export class PlatformClient {
     try {
       const response = await backOff(request, {
         retry: (e: Response) => {
-          return e && isThrottled(e.status);
+          const shouldRetry = e && isThrottled(e.status);
+          shouldRetry && options.logger.info('Platform retrying request');
+          return shouldRetry;
         },
       });
       if (response.status === 419) {
+        processedOptions.logger.info('Platform renewing token');
         const accessToken = await processedOptions.renewAccessToken();
 
         if (accessToken !== '') {
           return PlatformClient.call({...processedOptions, accessToken});
         }
       }
+
+      const body = (await response.json()) as ResponseType;
+
+      options.logger.info(
+        {response, body},
+        `Platform response: ${requestInfo.url}`
+      );
+
       return {
         response,
-        body: (await response.json()) as ResponseType,
+        body,
       };
     } catch (error) {
+      options.logger.error(error, `Platform error: ${requestInfo.url}`);
+
       return {
         response: error,
         body: (await error.json()) as ResponseType,

@@ -19,6 +19,7 @@ import {SearchAPIClient} from '../api/search/search-api-client';
 import {debounce} from 'ts-debounce';
 import {SearchAppState} from '../state/search-app-state';
 import {AnalyticsClientSendEventHook} from 'coveo.analytics/dist/definitions/client/analytics';
+import pino, {Logger, LogEvent, LevelWithSilent} from 'pino';
 import {
   NoopPreprocessRequestMiddleware,
   PreprocessRequestMiddleware,
@@ -59,6 +60,21 @@ export interface HeadlessOptions<Reducers extends ReducersMapObject> {
    * [Redux documentation on middlewares.](https://redux.js.org/glossary#middleware)
    */
   middlewares?: Middleware<{}, StateFromReducersMapObject<Reducers>>[];
+  loggerOptions?: {
+    /**
+     * By default, is set to `warn`.
+     */
+    level?: LevelWithSilent;
+    /**
+     * Changes the shape of the log object. This function will be called every time one of the log methods (such as `.info`) is called.
+     * All arguments passed to the log method, except the message, will be pass to this function. By default it does not change the shape of the log object.
+     */
+    logFormatter?: (object: object) => object;
+    /**
+     * Function which will be called after writing the log message in the browser.
+     */
+    browserPostLogHook?: (level: LevelWithSilent, logEvent: LogEvent) => void;
+  };
 }
 
 /**
@@ -178,9 +194,13 @@ export interface Engine<State = SearchAppState> {
  */
 export class HeadlessEngine<Reducers extends ReducersMapObject>
   implements Engine<StateFromReducersMapObject<Reducers>> {
-  private reduxStore: Store;
+  private reduxStore!: Store;
+  public logger!: Logger;
 
   constructor(private options: HeadlessOptions<Reducers>) {
+    this.initLogger();
+    this.initStore();
+
     this.reduxStore = configureStore({
       preloadedState: options.preloadedState,
       reducers: options.reducers,
@@ -214,6 +234,37 @@ export class HeadlessEngine<Reducers extends ReducersMapObject>
       } = options.configuration.analytics;
       this.reduxStore.dispatch(updateAnalyticsConfiguration(rest));
     }
+  }
+
+  private initLogger() {
+    this.logger = pino({
+      name: '@coveo/headless',
+      level: this.options.loggerOptions?.level || 'warn',
+      formatters: {
+        log: this.options.loggerOptions?.logFormatter,
+      },
+      browser: {
+        transmit: {
+          send: this.options.loggerOptions?.browserPostLogHook || (() => {}),
+        },
+      },
+    });
+  }
+
+  private initStore() {
+    this.reduxStore = configureStore({
+      preloadedState: this.options.preloadedState,
+      reducers: this.options.reducers,
+      middlewares: this.options.middlewares,
+      thunkExtraArguments: {
+        searchAPIClient: new SearchAPIClient({
+          logger: this.logger,
+          renewAccessToken: () => this.renewAccessToken(),
+        }),
+        analyticsClientMiddleware: this.analyticsClientMiddleware(this.options),
+        logger: this.logger,
+      },
+    });
   }
 
   /**
