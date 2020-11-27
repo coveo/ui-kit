@@ -1,6 +1,16 @@
+import {buildMockSearchParameters} from '../../test/mock-search-parameters';
 import {buildSearchParameterSerializer} from './search-parameter-serializer';
 
 describe('buildSearchParameterSerializer', () => {
+  it('can serialize and deserialize all search parameters', () => {
+    const {serialize, deserialize} = buildSearchParameterSerializer();
+    const parameters = buildMockSearchParameters();
+    const serialized = serialize(parameters);
+    const deserialized = deserialize(serialized);
+
+    expect(deserialized).toEqual(parameters);
+  });
+
   describe('#serialize', () => {
     const {serialize} = buildSearchParameterSerializer();
 
