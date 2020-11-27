@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.1.0-alpha.65](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.64...v0.1.0-alpha.65) (2020-11-27)
+
+
+### Features
+
+* **headless:** added middleware to allow for request preprocessing  ([#285](https://github.com/coveo/ui-kit/issues/285)) ([0037051](https://github.com/coveo/ui-kit/commit/00370516c575848bbfe3e811395a10f0bf035e25))
+
+
+
+
+
 # [0.1.0-alpha.64](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.63...v0.1.0-alpha.64) (2020-11-26)
 
 
