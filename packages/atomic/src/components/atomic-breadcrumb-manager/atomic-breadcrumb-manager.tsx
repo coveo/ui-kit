@@ -233,24 +233,10 @@ export class AtomicBreadcrumbManager {
         : null;
     } else {
       breadcrumbsToShow = breadcrumb.values.slice(0, this.collapseThreshold);
-      const collapsedBreadcrumbNumber =
-        breadcrumb.values.length - this.collapseThreshold;
-
-      if (collapsedBreadcrumbNumber > 0) {
-        moreButton = (
-          <li part="breadcrumb-value">
-            <button
-              part="breadcrumb-button"
-              class={this.buttonClasses}
-              onClick={() =>
-                this.showFacetCollapsedBreadcrumbs(breadcrumb.field)
-              }
-            >
-              {collapsedBreadcrumbNumber} more...
-            </button>
-          </li>
-        );
-      }
+      moreButton = this.getMoreButton(
+        breadcrumb.values.length - this.collapseThreshold,
+        breadcrumb.field
+      );
     }
     return {breadcrumbsToShow, moreButton};
   }
@@ -272,6 +258,20 @@ export class AtomicBreadcrumbManager {
       .slice(-2)
       .map((breadcrumb) => breadcrumb.value);
     return [firstBreadcrumbValue, collapsed, ...lastTwoBreadcrumbsValues];
+  }
+
+  private getMoreButton(collapsedBreadcrumbNumber: number, field: string) {
+    return collapsedBreadcrumbNumber > 0 ? (
+      <li part="breadcrumb-value">
+        <button
+          part="breadcrumb-button"
+          class={this.buttonClasses}
+          onClick={() => this.showFacetCollapsedBreadcrumbs(field)}
+        >
+          {collapsedBreadcrumbNumber} more...
+        </button>
+      </li>
+    ) : undefined;
   }
 
   private get mainClear() {
