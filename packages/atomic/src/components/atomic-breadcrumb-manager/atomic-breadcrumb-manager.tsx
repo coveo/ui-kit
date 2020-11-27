@@ -164,25 +164,22 @@ export class AtomicBreadcrumbManager {
   }
 
   private get categoryFacetBreadcrumbs() {
-    const breadcrumbs = this.state.categoryFacetBreadcrumbs.map(
-      (breadcrumb) => {
-        const breadcrumbsValues = this.getCategoryBreadrumbValues(breadcrumb);
-        const renderedBreadcrumbs = this.state.categoryFacetBreadcrumbs.every(
-          (value: CategoryFacetBreadcrumb) => value.path.length > 0
-        );
-        return renderedBreadcrumbs ? (
-          <ul part="breadcrumbs" class="breadcrumb p-0 m-0">
-            <li part="breadcrumb-label" class="text-muted">
-              {breadcrumb.field}:&nbsp;
-            </li>
-            {breadcrumbsValues}
-          </ul>
-        ) : (
-          ''
-        );
-      }
-    );
-    return breadcrumbs;
+    return this.state.categoryFacetBreadcrumbs.map((breadcrumb) => {
+      const breadcrumbsValues = this.getCategoryBreadrumbValues(breadcrumb);
+      const renderedBreadcrumbs = this.state.categoryFacetBreadcrumbs.every(
+        (value: CategoryFacetBreadcrumb) => value.path.length > 0
+      );
+      return renderedBreadcrumbs ? (
+        <ul part="breadcrumbs" class="breadcrumb p-0 m-0">
+          <li part="breadcrumb-label" class="text-muted">
+            {breadcrumb.field}:&nbsp;
+          </li>
+          {breadcrumbsValues}
+        </ul>
+      ) : (
+        ''
+      );
+    });
   }
 
   private getCategoryBreadrumbValues(values: CategoryFacetBreadcrumb) {
@@ -202,24 +199,6 @@ export class AtomicBreadcrumbManager {
       </li>
     ));
     return [...renderedBreadcrumbs, this.mainClear];
-  }
-
-  render() {
-    if (this.hasActiveBreadcrumbs()) {
-      return (
-        <div class="row">
-          <span class=" col-9">
-            {this.facetBreadcrumbs}
-            {this.numericFacetBreadcrumbs}
-            {this.dateFacetBreadcrumbs}
-            {this.categoryFacetBreadcrumbs}
-          </span>
-          <span class="col-3 text-right">
-            {this.getClearAllFiltersButton()}
-          </span>
-        </div>
-      );
-    }
   }
 
   private getClearAllFiltersButton() {
@@ -302,14 +281,14 @@ export class AtomicBreadcrumbManager {
   ) {
     if (breadcrumb.path.length <= 3) {
       return breadcrumb.path.map((breadcrumb) => breadcrumb.value);
-    } else {
-      const collapsed = '...';
-      const firstBreadcrumbValue = breadcrumb.path[0].value;
-      const lastTwoBreadcrumbsValues = breadcrumb.path
-        .slice(-2)
-        .map((breadcrumb) => breadcrumb.value);
-      return [firstBreadcrumbValue, collapsed, ...lastTwoBreadcrumbsValues];
     }
+
+    const collapsed = '...';
+    const firstBreadcrumbValue = breadcrumb.path[0].value;
+    const lastTwoBreadcrumbsValues = breadcrumb.path
+      .slice(-2)
+      .map((breadcrumb) => breadcrumb.value);
+    return [firstBreadcrumbValue, collapsed, ...lastTwoBreadcrumbsValues];
   }
 
   private get mainClear() {
@@ -323,5 +302,22 @@ export class AtomicBreadcrumbManager {
 
   private get buttonClasses() {
     return 'btn btn-link btn-sm text-decoration-none p-0  align-baseline ';
+  }
+
+  render() {
+    if (!this.hasActiveBreadcrumbs()) {
+      return;
+    }
+    return (
+      <div class="row">
+        <span class=" col-9">
+          {this.facetBreadcrumbs}
+          {this.numericFacetBreadcrumbs}
+          {this.dateFacetBreadcrumbs}
+          {this.categoryFacetBreadcrumbs}
+        </span>
+        <span class="col-3 text-right">{this.getClearAllFiltersButton()}</span>
+      </div>
+    );
   }
 }
