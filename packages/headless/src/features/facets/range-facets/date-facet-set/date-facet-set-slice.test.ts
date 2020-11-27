@@ -98,8 +98,6 @@ describe('date-facet-set slice', () => {
     jest.spyOn(RangeFacetReducers, 'handleRangeDeselectAllFacets');
 
     state['1'] = buildMockDateFacetRequest();
-    state['2'] = buildMockDateFacetRequest();
-    state['3'] = buildMockDateFacetRequest();
     dateFacetSetReducer(state, deselectAllFacets);
 
     expect(

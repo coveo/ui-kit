@@ -126,8 +126,6 @@ describe('category facet slice', () => {
     jest.spyOn(FacetReducers, 'handleDeselectAllFacets');
 
     state['1'] = buildMockCategoryFacetRequest();
-    state['2'] = buildMockCategoryFacetRequest();
-    state['3'] = buildMockCategoryFacetRequest();
     categoryFacetSetReducer(state, deselectAllFacets());
 
     expect(FacetReducers.handleDeselectAllFacets).toHaveBeenCalledTimes(1);

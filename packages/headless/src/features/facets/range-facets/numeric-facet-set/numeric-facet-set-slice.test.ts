@@ -101,8 +101,6 @@ describe('numeric-facet-set slice', () => {
     jest.spyOn(RangeFacetReducers, 'handleRangeDeselectAllFacets');
 
     state['1'] = buildMockNumericFacetRequest();
-    state['2'] = buildMockNumericFacetRequest();
-    state['3'] = buildMockNumericFacetRequest();
     numericFacetSetReducer(state, deselectAllFacets);
 
     expect(
