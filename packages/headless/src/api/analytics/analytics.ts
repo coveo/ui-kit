@@ -2,6 +2,8 @@ import {
   CoveoSearchPageClient,
   SearchPageClientProvider,
   history,
+  CoveoAnalyticsClient,
+  AnalyticsClientSendEventHook,
 } from 'coveo.analytics';
 import {getPipelineInitialState} from '../../features/pipeline/pipeline-state';
 import {getQueryInitialState} from '../../features/query/query-state';
@@ -91,12 +93,14 @@ export class AnalyticsProvider implements SearchPageClientProvider {
 
 export const configureAnalytics = (
   state: StateNeededByAnalyticsProvider,
+  analyticsClientMiddleware: AnalyticsClientSendEventHook = (_, p) => p,
   provider: SearchPageClientProvider = new AnalyticsProvider(state)
 ) => {
   const client = new CoveoSearchPageClient(
     {
       token: state.configuration.accessToken,
       endpoint: state.configuration.analytics.apiBaseUrl,
+      beforeSendHooks: [analyticsClientMiddleware],
     },
     provider
   );
@@ -106,5 +110,7 @@ export const configureAnalytics = (
   }
   return client;
 };
+
+export const getVisitorID = () => new CoveoAnalyticsClient({}).currentVisitorId;
 
 export const historyStore = new history.HistoryStore();

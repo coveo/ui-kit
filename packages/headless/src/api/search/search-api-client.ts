@@ -1,4 +1,8 @@
-import {PlatformClient, PlatformResponse} from '../platform-client';
+import {
+  PlatformClient,
+  PlatformResponse,
+  PreprocessRequestMiddleware,
+} from '../platform-client';
 import {PlanResponseSuccess, Plan} from './plan/plan-response';
 import {
   QuerySuggestSuccessResponse,
@@ -19,6 +23,8 @@ import {BaseParam, baseSearchRequest} from './search-api-params';
 import {CategoryFacetSearchRequest} from './facet-search/category-facet-search/category-facet-search-request';
 import {RecommendationRequest} from './recommendation/recommendation-request';
 import {ProductRecommendationsRequest} from './product-recommendations/product-recommendations-request';
+import {AnalyticsClientSendEventHook} from 'coveo.analytics/dist/definitions/client/analytics';
+import {Logger} from 'pino';
 
 export type AllSearchAPIResponse = Plan | Search | QuerySuggest;
 
@@ -27,13 +33,14 @@ export interface AsyncThunkSearchOptions<T extends Partial<SearchAppState>> {
   rejectValue: SearchAPIErrorWithStatusCode;
   extra: {
     searchAPIClient: SearchAPIClient;
+    analyticsClientMiddleware: AnalyticsClientSendEventHook;
   };
 }
 
-export interface SearchAPIClientOptions<RequestParams> {
-  accessToken: string;
-  apiBaseUrl: string;
-  requestParams: RequestParams;
+export interface SearchAPIClientOptions {
+  renewAccessToken: () => Promise<string>;
+  logger: Logger;
+  preprocessRequest: PreprocessRequestMiddleware;
 }
 
 export type SearchAPIClientResponse<T> =
@@ -41,7 +48,8 @@ export type SearchAPIClientResponse<T> =
   | {error: SearchAPIErrorWithStatusCode};
 
 export class SearchAPIClient {
-  constructor(private renewAccessToken: () => Promise<string>) {}
+  constructor(private options: SearchAPIClientOptions) {}
+
   async plan(
     req: PlanRequest
   ): Promise<SearchAPIClientResponse<PlanResponseSuccess>> {
@@ -51,7 +59,7 @@ export class SearchAPIClient {
     >({
       ...baseSearchRequest(req, 'POST', 'application/json', '/plan'),
       requestParams: pickNonBaseParams(req) as PlanRequest, // TODO: This cast won't be needed once all methods have been reworked and we can change types in PlatformClient
-      renewAccessToken: this.renewAccessToken,
+      ...this.options,
     });
 
     if (isSuccessPlanResponse(platformResponse)) {
@@ -71,7 +79,7 @@ export class SearchAPIClient {
     >({
       ...baseSearchRequest(req, 'POST', 'application/json', '/querySuggest'),
       requestParams: pickNonBaseParams(req),
-      renewAccessToken: this.renewAccessToken,
+      ...this.options,
     });
     if (isSuccessQuerySuggestionsResponse(platformResponse)) {
       return {
@@ -89,7 +97,7 @@ export class SearchAPIClient {
     const platformResponse = await PlatformClient.call<SearchRequest, Search>({
       ...baseSearchRequest(req, 'POST', 'application/json', ''),
       requestParams: pickNonBaseParams(req),
-      renewAccessToken: this.renewAccessToken,
+      ...this.options,
     });
 
     if (isSuccessSearchResponse(platformResponse)) {
@@ -104,16 +112,16 @@ export class SearchAPIClient {
   }
 
   async facetSearch(req: FacetSearchRequest | CategoryFacetSearchRequest) {
-    const res = await PlatformClient.call<
+    const platformResponse = await PlatformClient.call<
       FacetSearchRequest,
       FacetSearchResponse
     >({
       ...baseSearchRequest(req, 'POST', 'application/json', '/facet'),
       requestParams: pickNonBaseParams(req),
-      renewAccessToken: this.renewAccessToken,
+      ...this.options,
     });
 
-    return res.body;
+    return platformResponse.body;
   }
 
   async recommendations(req: RecommendationRequest) {
@@ -123,7 +131,7 @@ export class SearchAPIClient {
     >({
       ...baseSearchRequest(req, 'POST', 'application/json', ''),
       requestParams: pickNonBaseParams(req),
-      renewAccessToken: this.renewAccessToken,
+      ...this.options,
     });
 
     if (isSuccessSearchResponse(platformResponse)) {
@@ -144,7 +152,7 @@ export class SearchAPIClient {
     >({
       ...baseSearchRequest(req, 'POST', 'application/json', ''),
       requestParams: pickNonBaseParams(req),
-      renewAccessToken: this.renewAccessToken,
+      ...this.options,
     });
 
     if (isSuccessSearchResponse(platformResponse)) {

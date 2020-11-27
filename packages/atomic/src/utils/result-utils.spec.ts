@@ -1,11 +1,6 @@
 import {bindLogDocumentOpenOnResult} from './result-utils';
 jest.mock('@coveo/headless/dist/api/analytics/analytics');
-import {
-  TestUtils,
-  Result,
-  ResultAnalyticsActions,
-  SearchAppState,
-} from '@coveo/headless';
+import {TestUtils, Result, SearchAppState} from '@coveo/headless';
 import {newSpecPage} from '@stencil/core/testing';
 
 describe('bindLogDocumentOpenOnResult', () => {
@@ -26,14 +21,9 @@ describe('bindLogDocumentOpenOnResult', () => {
   describe('events listeners', () => {
     function testLogDocumentOpenAction() {
       const action = engine.actions.find(
-        (a) => a.type === ResultAnalyticsActions.logDocumentOpen.pending.type
+        (a) => a.type === 'analytics/result/open/pending'
       );
-      expect(engine.actions[0]).toEqual(
-        ResultAnalyticsActions.logDocumentOpen.pending(
-          action!.meta.requestId,
-          result
-        )
-      );
+      expect(engine.actions[0]).toEqual(action);
     }
 
     let linkElement: HTMLElement;
