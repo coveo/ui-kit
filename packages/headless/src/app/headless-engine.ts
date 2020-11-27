@@ -20,6 +20,10 @@ import {debounce} from 'ts-debounce';
 import {SearchAppState} from '../state/search-app-state';
 import {AnalyticsClientSendEventHook} from 'coveo.analytics/dist/definitions/client/analytics';
 import pino, {Logger, LogEvent, LevelWithSilent} from 'pino';
+import {
+  NoopPreprocessRequestMiddleware,
+  PreprocessRequestMiddleware,
+} from '../api/platform-client';
 
 /**
  * The global headless engine options.
@@ -110,6 +114,7 @@ export interface HeadlessConfigurationOptions {
      *    When logging a Search usage analytics event for a query, the originLevel1 field of that event should be set to the value of the searchHub search request parameter.
      */
     searchHub?: string;
+    preprocessRequestMiddleware?: PreprocessRequestMiddleware;
   };
 
   analytics?: {
@@ -241,6 +246,9 @@ export class HeadlessEngine<Reducers extends ReducersMapObject>
         searchAPIClient: new SearchAPIClient({
           logger: this.logger,
           renewAccessToken: () => this.renewAccessToken(),
+          preprocessRequest:
+            this.options.configuration.search?.preprocessRequestMiddleware ||
+            NoopPreprocessRequestMiddleware,
         }),
         analyticsClientMiddleware: this.analyticsClientMiddleware(this.options),
         logger: this.logger,

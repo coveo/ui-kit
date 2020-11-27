@@ -8,13 +8,20 @@ import {Logger} from 'pino';
 function isThrottled(status: number): boolean {
   return status === 429;
 }
-export interface PlatformClientCallOptions<RequestParams extends BaseParam> {
+
+export interface BasePlatformClientOptions {
   url: string;
   method: HttpMethods;
   contentType: HTTPContentTypes;
+  headers?: Record<string, string>;
+}
+
+export interface PlatformClientCallOptions<RequestParams extends BaseParam>
+  extends BasePlatformClientOptions {
   requestParams: Omit<RequestParams, 'url' | 'organizationId' | 'accessToken'>;
   accessToken: string;
   renewAccessToken: () => Promise<string>;
+  preprocessRequest: PreprocessRequestMiddleware;
   logger: Logger;
 }
 
@@ -23,27 +30,48 @@ export interface PlatformResponse<T> {
   response: Response;
 }
 
+export type PreprocessRequestMiddleware = (
+  request: BasePlatformClientOptions
+) => BasePlatformClientOptions | Promise<BasePlatformClientOptions>;
+
+export const NoopPreprocessRequestMiddleware: PreprocessRequestMiddleware = (
+  request
+) => request;
+
 export class PlatformClient {
   static async call<RequestParams extends BaseParam, ResponseType>(
     options: PlatformClientCallOptions<RequestParams>
   ): Promise<PlatformResponse<ResponseType>> {
-    const requestInfo = {
-      url: options.url,
-      method: options.method,
-      headers: {
-        'Content-Type': options.contentType,
-        Authorization: `Bearer ${options.accessToken}`,
-      },
-      body: options.requestParams,
+    const processedOptions = {
+      ...options,
+      ...(await options.preprocessRequest(options)),
     };
 
-    options.logger.info(requestInfo, `Platform request: ${requestInfo.url}`);
+    const requestInfo = {
+      url: processedOptions.url,
+      method: processedOptions.method,
+      headers: {
+        'Content-Type': processedOptions.contentType,
+        Authorization: `Bearer ${processedOptions.accessToken}`,
+        ...processedOptions.headers,
+      },
+      body: processedOptions.requestParams,
+    };
+
+    processedOptions.logger.info(
+      requestInfo,
+      `Platform request: ${requestInfo.url}`
+    );
 
     const request = async () => {
-      const response = await fetch(requestInfo.url, {
-        method: requestInfo.method,
-        headers: requestInfo.headers,
-        body: JSON.stringify(requestInfo.body),
+      const response = await fetch(processedOptions.url, {
+        method: processedOptions.method,
+        headers: {
+          'Content-Type': processedOptions.contentType,
+          Authorization: `Bearer ${processedOptions.accessToken}`,
+          ...processedOptions.headers,
+        },
+        body: JSON.stringify(processedOptions.requestParams),
       });
       if (isThrottled(response.status)) {
         throw response;
@@ -60,11 +88,11 @@ export class PlatformClient {
         },
       });
       if (response.status === 419) {
-        options.logger.info('Platform renewing token');
-        const accessToken = await options.renewAccessToken();
+        processedOptions.logger.info('Platform renewing token');
+        const accessToken = await processedOptions.renewAccessToken();
 
         if (accessToken !== '') {
-          return PlatformClient.call({...options, accessToken});
+          return PlatformClient.call({...processedOptions, accessToken});
         }
       }
 
