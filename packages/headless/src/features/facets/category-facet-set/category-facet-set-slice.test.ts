@@ -23,7 +23,7 @@ import {
   CategoryFacetSetState,
   getCategoryFacetSetInitialState,
 } from './category-facet-set-state';
-import {clearAllFacetValues} from '../generic/facet-actions';
+import {deselectAllFacets} from '../generic/facet-actions';
 
 describe('category facet slice', () => {
   const facetId = '1';
@@ -122,15 +122,15 @@ describe('category facet slice', () => {
     expect(FacetReducers.handleFacetDeselectAll).toHaveBeenCalledTimes(1);
   });
 
-  it('dispatching #clearAllFacetValues calls #handleFacetDeselectAll for every category facet', () => {
-    jest.spyOn(FacetReducers, 'handleFacetDeselectAll');
+  it('dispatching #deselectAllFacets calls #handlDeselectAlleFacets', () => {
+    jest.spyOn(FacetReducers, 'handleDeselectAllFacets');
 
     state['1'] = buildMockCategoryFacetRequest();
     state['2'] = buildMockCategoryFacetRequest();
     state['3'] = buildMockCategoryFacetRequest();
-    categoryFacetSetReducer(state, clearAllFacetValues());
+    categoryFacetSetReducer(state, deselectAllFacets());
 
-    expect(FacetReducers.handleFacetDeselectAll).toHaveBeenCalledTimes(4);
+    expect(FacetReducers.handleDeselectAllFacets).toHaveBeenCalledTimes(1);
   });
 
   it('dispatching #updateCategoryFacetNumberOfValues calls #handleFacetUpdateNumberOfValues if there are no nested children', () => {

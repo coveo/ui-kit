@@ -8,7 +8,7 @@ import {
  */
 export const logClearBreadcrumbs = () =>
   makeAnalyticsAction(
-    'analytics/facet/clearAllValues',
+    'analytics/facet/deselectAllFacets',
     AnalyticsType.Search,
     (client) => {
       return client.logBreadcrumbResetAll();

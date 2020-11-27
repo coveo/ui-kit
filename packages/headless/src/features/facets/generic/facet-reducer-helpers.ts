@@ -42,3 +42,11 @@ export function handleFacetUpdateNumberOfValues<T extends AnyFacetRequest>(
 
   facetRequest.numberOfValues = numberOfValues;
 }
+
+export function handleDeselectAllFacets<
+  T extends FacetRequest | CategoryFacetRequest
+>(state: Record<string, T>) {
+  Object.keys(state).forEach((facetId) => {
+    handleFacetDeselectAll<T>(state, facetId);
+  });
+}

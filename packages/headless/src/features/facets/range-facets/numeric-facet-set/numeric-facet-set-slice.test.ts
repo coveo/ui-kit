@@ -19,7 +19,7 @@ import {executeSearch} from '../../../search/search-actions';
 import {buildMockSearch} from '../../../../test/mock-search';
 import {logGenericSearchEvent} from '../../../analytics/analytics-actions';
 import {numericFacetSetReducer} from './numeric-facet-set-slice';
-import {clearAllFacetValues} from '../../generic/facet-actions';
+import {deselectAllFacets} from '../../generic/facet-actions';
 
 describe('numeric-facet-set slice', () => {
   let state: NumericFacetSetState;
@@ -97,17 +97,17 @@ describe('numeric-facet-set slice', () => {
     ).toHaveBeenCalledTimes(1);
   });
 
-  it('dispatching #clearAllFacetValues calls #handleFacetDeselectAll for every numeric facet', () => {
-    jest.spyOn(RangeFacetReducers, 'handleRangeFacetDeselectAll');
+  it('dispatching #deselectAllFacets calls #handleRangeDeselectAllFacets', () => {
+    jest.spyOn(RangeFacetReducers, 'handleRangeDeselectAllFacets');
 
     state['1'] = buildMockNumericFacetRequest();
     state['2'] = buildMockNumericFacetRequest();
     state['3'] = buildMockNumericFacetRequest();
-    numericFacetSetReducer(state, clearAllFacetValues);
+    numericFacetSetReducer(state, deselectAllFacets);
 
     expect(
-      RangeFacetReducers.handleRangeFacetDeselectAll
-    ).toHaveBeenCalledTimes(4);
+      RangeFacetReducers.handleRangeDeselectAllFacets
+    ).toHaveBeenCalledTimes(1);
   });
 
   it('#updateNumericFacetSortCriterion calls #handleFacetSortCriterionUpdate', () => {

@@ -19,7 +19,7 @@ import {
   DateFacetSetState,
   getDateFacetSetInitialState,
 } from './date-facet-set-state';
-import {clearAllFacetValues} from '../../generic/facet-actions';
+import {deselectAllFacets} from '../../generic/facet-actions';
 
 describe('date-facet-set slice', () => {
   let state: DateFacetSetState;
@@ -94,17 +94,17 @@ describe('date-facet-set slice', () => {
     ).toHaveBeenCalledTimes(1);
   });
 
-  it('dispatching #clearAllFacetValues calls #handleFacetDeselectAll for every date facet', () => {
-    jest.spyOn(RangeFacetReducers, 'handleRangeFacetDeselectAll');
+  it('dispatching #deselectAllFacets calls #handleRangeDeselectAllFacets', () => {
+    jest.spyOn(RangeFacetReducers, 'handleRangeDeselectAllFacets');
 
     state['1'] = buildMockDateFacetRequest();
     state['2'] = buildMockDateFacetRequest();
     state['3'] = buildMockDateFacetRequest();
-    dateFacetSetReducer(state, clearAllFacetValues);
+    dateFacetSetReducer(state, deselectAllFacets);
 
     expect(
-      RangeFacetReducers.handleRangeFacetDeselectAll
-    ).toHaveBeenCalledTimes(4);
+      RangeFacetReducers.handleRangeDeselectAllFacets
+    ).toHaveBeenCalledTimes(1);
   });
 
   it('#updateDateFacetSortCriterion calls #handleFacetSortCriterionUpdate', () => {

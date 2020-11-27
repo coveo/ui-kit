@@ -16,10 +16,11 @@ import {
   onRangeFacetRequestFulfilled,
   handleRangeFacetDeselectAll,
   defaultRangeFacetOptions,
+  handleRangeDeselectAllFacets,
 } from '../generic/range-facet-reducers';
 import {handleFacetSortCriterionUpdate} from '../../generic/facet-reducer-helpers';
 import {getNumericFacetSetInitialState} from './numeric-facet-set-state';
-import {clearAllFacetValues} from '../../generic/facet-actions';
+import {deselectAllFacets} from '../../generic/facet-actions';
 
 export const numericFacetSetReducer = createReducer(
   getNumericFacetSetInitialState(),
@@ -42,10 +43,8 @@ export const numericFacetSetReducer = createReducer(
       .addCase(deselectAllNumericFacetValues, (state, action) => {
         handleRangeFacetDeselectAll<NumericFacetRequest>(state, action.payload);
       })
-      .addCase(clearAllFacetValues, (state, _) => {
-        Object.keys(state).forEach((facetId) => {
-          handleRangeFacetDeselectAll(state, facetId);
-        });
+      .addCase(deselectAllFacets, (state, _) => {
+        handleRangeDeselectAllFacets<NumericFacetRequest>(state);
       })
       .addCase(updateNumericFacetSortCriterion, (state, action) => {
         handleFacetSortCriterionUpdate<NumericFacetRequest>(

@@ -1,3 +1,3 @@
 import {createAction} from '@reduxjs/toolkit';
 
-export const clearAllFacetValues = createAction('facet/clearAllValues');
+export const deselectAllFacets = createAction('facet/deselectAllFacets');

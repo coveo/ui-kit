@@ -102,3 +102,11 @@ function calculateNumberOfValues(request: RangeFacetRequest) {
     ? Math.max(numberOfValues, currentValues.length)
     : currentValues.length;
 }
+
+export function handleRangeDeselectAllFacets<T extends RangeFacetRequest>(
+  state: Record<string, T>
+) {
+  Object.keys(state).forEach((facetId) => {
+    handleRangeFacetDeselectAll<T>(state, facetId);
+  });
+}

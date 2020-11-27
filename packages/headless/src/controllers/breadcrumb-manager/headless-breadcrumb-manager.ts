@@ -25,7 +25,7 @@ import {executeToggleFacetSelect} from '../../features/facets/facet-set/facet-se
 import {executeToggleNumericFacetSelect} from '../../features/facets/range-facets/numeric-facet-set/numeric-facet-controller-actions';
 import {executeToggleDateFacetSelect} from '../../features/facets/range-facets/date-facet-set/date-facet-controller-actions';
 import {executeSearch} from '../../features/search/search-actions';
-import {clearAllFacetValues} from '../../features/facets/generic/facet-actions';
+import {deselectAllFacets} from '../../features/facets/generic/facet-actions';
 import {logClearBreadcrumbs} from '../../features/facets/generic/facet-generic-analytics-actions';
 
 export type BreadcrumbManager = ReturnType<typeof buildBreadcrumbManager>;
@@ -132,7 +132,7 @@ export const buildBreadcrumbManager = (
       };
     },
     deselectAll: () => {
-      dispatch(clearAllFacetValues());
+      dispatch(deselectAllFacets());
       dispatch(executeSearch(logClearBreadcrumbs()));
     },
   };
