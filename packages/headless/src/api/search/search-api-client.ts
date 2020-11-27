@@ -1,6 +1,5 @@
 import {
   PlatformClient,
-  PlatformClientCallOptions,
   PlatformResponse,
   PreprocessRequestMiddleware,
 } from '../platform-client';

@@ -201,20 +201,6 @@ export class HeadlessEngine<Reducers extends ReducersMapObject>
     this.initLogger();
     this.initStore();
 
-    this.reduxStore = configureStore({
-      preloadedState: options.preloadedState,
-      reducers: options.reducers,
-      middlewares: options.middlewares,
-      thunkExtraArguments: {
-        searchAPIClient: new SearchAPIClient(
-          () => this.renewAccessToken(),
-          options.configuration.search?.preprocessRequestMiddleware ||
-            NoopPreprocessRequestMiddleware
-        ),
-        analyticsClientMiddleware: this.analyticsClientMiddleware(options),
-      },
-    });
-
     this.reduxStore.dispatch(
       updateBasicConfiguration({
         accessToken: options.configuration.accessToken,
@@ -260,6 +246,9 @@ export class HeadlessEngine<Reducers extends ReducersMapObject>
         searchAPIClient: new SearchAPIClient({
           logger: this.logger,
           renewAccessToken: () => this.renewAccessToken(),
+          preprocessRequest:
+            this.options.configuration.search?.preprocessRequestMiddleware ||
+            NoopPreprocessRequestMiddleware,
         }),
         analyticsClientMiddleware: this.analyticsClientMiddleware(this.options),
         logger: this.logger,
