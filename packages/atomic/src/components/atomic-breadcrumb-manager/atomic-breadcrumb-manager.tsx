@@ -223,21 +223,21 @@ export class AtomicBreadcrumbManager {
   private collapsedBreadcrumbsHandler<T extends BaseFacetValue>(
     breadcrumb: Breadcrumb<T>
   ) {
-    let breadcrumbsToShow = [];
-    let moreButton = undefined;
-
     if (!this.collapsedBreadcrumbsState[breadcrumb.field]) {
-      breadcrumbsToShow = breadcrumb.values;
+      const breadcrumbsToShow = breadcrumb.values;
       breadcrumbsToShow.length <= this.collapseThreshold
         ? (this.collapsedBreadcrumbsState[breadcrumb.field] = true)
         : null;
-    } else {
-      breadcrumbsToShow = breadcrumb.values.slice(0, this.collapseThreshold);
-      moreButton = this.getMoreButton(
-        breadcrumb.values.length - this.collapseThreshold,
-        breadcrumb.field
-      );
+      return {breadcrumbsToShow, undefined};
     }
+    const breadcrumbsToShow = breadcrumb.values.slice(
+      0,
+      this.collapseThreshold
+    );
+    const moreButton = this.getMoreButton(
+      breadcrumb.values.length - this.collapseThreshold,
+      breadcrumb.field
+    );
     return {breadcrumbsToShow, moreButton};
   }
 
