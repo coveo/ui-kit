@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.1.0-alpha.67](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.66...v0.1.0-alpha.67) (2020-11-27)
+
+
+### Bug Fixes
+
+* **atomic:** fix empty string for results to include ([#290](https://github.com/coveo/ui-kit/issues/290)) ([91b3f1d](https://github.com/coveo/ui-kit/commit/91b3f1dbe0bb324ac8f4adab505bc2c6386091c7))
+
+
+
+
+
+# [0.1.0-alpha.66](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.65...v0.1.0-alpha.66) (2020-11-27)
+
+
+### Features
+
+* **headless:** add fieldsToInclude on headless result list controller ([#272](https://github.com/coveo/ui-kit/issues/272)) ([697034e](https://github.com/coveo/ui-kit/commit/697034e1aa55af533c488fa2b72503507beac4d6))
+
+
+
+
+
 # [0.1.0-alpha.65](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.64...v0.1.0-alpha.65) (2020-11-27)
 
 
