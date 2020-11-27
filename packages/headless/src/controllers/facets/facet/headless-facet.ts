@@ -7,7 +7,6 @@ import {
   updateFacetNumberOfValues,
   updateFacetIsFieldExpanded,
 } from '../../../features/facets/facet-set/facet-set-actions';
-import {randomID} from '../../../utils/utils';
 import {
   facetRequestSelector,
   facetResponseSelector,
@@ -36,6 +35,7 @@ import {validateOptions} from '../../../utils/validate-payload';
 import {defaultFacetOptions} from '../../../features/facets/facet-set/facet-set-slice';
 import {defaultFacetSearchOptions} from '../../../features/facets/facet-search-set/facet-search-reducer-helpers';
 import {FacetOptions, facetOptionsSchema} from './headless-facet-options';
+import {determineFacetId} from '../_common/facet-id-generator';
 
 export {FacetOptions};
 export type FacetProps = {
@@ -54,7 +54,14 @@ export function buildFacet(
   const {dispatch} = engine;
   const controller = buildController(engine);
 
-  const facetId = props.options.facetId || randomID('facet');
+  const facetId =
+    props.options.facetId ||
+    determineFacetId({
+      type: 'specific',
+      field: props.options.field,
+      state: engine.state.facetSet,
+    });
+
   const options: Required<FacetOptions> = {
     facetId,
     facetSearch: {...defaultFacetSearchOptions},

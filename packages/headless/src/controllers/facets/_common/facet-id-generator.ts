@@ -43,8 +43,7 @@ function logWarningMessageIfNeeded(id: number, config: FacetIdConfig) {
   const {field} = config;
   const logger = config.logger || console;
 
-  const message = `
-  A facet with field "${field}" already exists.
+  const message = `A facet with field "${field}" already exists.
   To avoid unexpected behaviour, configure the #id option on the facet controller.`;
 
   logger.warn(message);

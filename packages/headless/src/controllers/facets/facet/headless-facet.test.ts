@@ -14,10 +14,12 @@ import {buildMockFacetValue} from '../../../test/mock-facet-value';
 import {executeSearch} from '../../../features/search/search-actions';
 import {FacetRequest} from '../../../features/facets/facet-set/interfaces/request';
 import {buildMockFacetRequest} from '../../../test/mock-facet-request';
-import {buildMockFacetSearch} from '../../../test/mock-facet-search';
 import * as FacetSearch from '../facet-search/specific/headless-facet-search';
 import {updateFacetOptions} from '../../../features/facet-options/facet-options-actions';
 import {SearchAppState} from '../../../state/search-app-state';
+import * as FacetIdGenerator from '../_common/facet-id-generator';
+import {buildMockFacetSearch} from '../../../test/mock-facet-search';
+import {buildMockFacetIdConfig} from '../../../test/mock-facet-id-config';
 
 describe('facet', () => {
   const facetId = '1';
@@ -33,10 +35,11 @@ describe('facet', () => {
 
   function setFacetRequest(config: Partial<FacetRequest> = {}) {
     state.facetSet[facetId] = buildMockFacetRequest({facetId, ...config});
-    state.facetSearchSet[facetId] = buildMockFacetSearch();
   }
 
   beforeEach(() => {
+    (FacetSearch as any).buildFacetSearch = jest.fn(buildMockFacetSearch);
+
     options = {
       facetId,
       field: '',
@@ -73,6 +76,22 @@ describe('facet', () => {
     });
 
     expect(engine.actions).toContainEqual(action);
+  });
+
+  it('when an id is not specified, it calls determineFacetId with the correct params', () => {
+    jest.spyOn(FacetIdGenerator, 'determineFacetId');
+
+    state.facetSet = {a: buildMockFacetRequest()};
+    options = {field: 'author'};
+    initFacet();
+
+    const expected = buildMockFacetIdConfig({
+      type: 'specific',
+      field: 'author',
+      state: state.facetSet,
+    });
+
+    expect(FacetIdGenerator.determineFacetId).toHaveBeenCalledWith(expected);
   });
 
   it('registering a facet with #numberOfValues less than 1 throws', () => {
@@ -416,9 +435,6 @@ describe('facet', () => {
   });
 
   it('exposes a #facetSearch property', () => {
-    jest.spyOn(FacetSearch, 'buildFacetSearch');
-    initFacet();
-
     expect(facet.facetSearch).toBeTruthy();
     expect(FacetSearch.buildFacetSearch).toHaveBeenCalledTimes(1);
   });

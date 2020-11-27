@@ -27,6 +27,11 @@ describe('facet selectors', () => {
         expect(id).toBe(`${prefix}0`);
       });
 
+      it('the id meets the searchapi regex check', () => {
+        const id = determineFacetId(config);
+        expect(id).toMatch(/[A-Za-z0-9-_]{1,60}/);
+      });
+
       it('does not log a warning', () => {
         determineFacetId(config);
         expect(config.logger.warn).not.toHaveBeenCalled();
