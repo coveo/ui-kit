@@ -78,8 +78,8 @@ describe('facet', () => {
     expect(engine.actions).toContainEqual(action);
   });
 
-  it('when an id is not specified, it calls determineFacetId with the correct params', () => {
-    jest.spyOn(FacetIdGenerator, 'determineFacetId');
+  it('when an id is not specified, it calls generateFacetId with the correct params', () => {
+    jest.spyOn(FacetIdGenerator, 'generateFacetId');
 
     state.facetSet = {a: buildMockFacetRequest()};
     options = {field: 'author'};
@@ -91,7 +91,7 @@ describe('facet', () => {
       state: state.facetSet,
     });
 
-    expect(FacetIdGenerator.determineFacetId).toHaveBeenCalledWith(expected);
+    expect(FacetIdGenerator.generateFacetId).toHaveBeenCalledWith(expected);
   });
 
   it('registering a facet with #numberOfValues less than 1 throws', () => {

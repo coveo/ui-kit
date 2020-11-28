@@ -35,7 +35,7 @@ import {validateOptions} from '../../../utils/validate-payload';
 import {defaultFacetOptions} from '../../../features/facets/facet-set/facet-set-slice';
 import {defaultFacetSearchOptions} from '../../../features/facets/facet-search-set/facet-search-reducer-helpers';
 import {FacetOptions, facetOptionsSchema} from './headless-facet-options';
-import {determineFacetId} from '../_common/facet-id-generator';
+import {generateFacetId} from '../_common/facet-id-generator';
 
 export {FacetOptions};
 export type FacetProps = {
@@ -56,7 +56,7 @@ export function buildFacet(
 
   const facetId =
     props.options.facetId ||
-    determineFacetId({
+    generateFacetId({
       type: 'specific',
       field: props.options.field,
       state: engine.state.facetSet,

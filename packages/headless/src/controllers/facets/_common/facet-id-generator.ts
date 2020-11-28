@@ -11,7 +11,7 @@ export interface FacetIdConfig {
   state: AnyFacetSetState;
 }
 
-export function determineFacetId(
+export function generateFacetId(
   config: FacetIdConfig,
   logger: Logger = console
 ) {

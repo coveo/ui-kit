@@ -1,8 +1,8 @@
 import {buildMockFacetRequest} from '../../../test/mock-facet-request';
-import {determineFacetId, FacetIdConfig, Logger} from './facet-id-generator';
+import {generateFacetId, FacetIdConfig, Logger} from './facet-id-generator';
 
 describe('facet selectors', () => {
-  describe('#determineFacetId', () => {
+  describe('#generateFacetId', () => {
     let config: FacetIdConfig;
     let logger: Logger;
     let prefix: string;
@@ -12,7 +12,7 @@ describe('facet selectors', () => {
     }
 
     function getFacetId() {
-      return determineFacetId(config, logger);
+      return generateFacetId(config, logger);
     }
 
     beforeEach(() => {
