@@ -1,20 +1,26 @@
 import {FacetType} from '../../../features/facets/facet-api/request';
 import {AnyFacetSetState} from '../../../features/facets/generic/interfaces/generic-facet-state';
 
+export interface Logger {
+  warn: (message: string) => void;
+}
+
 export interface FacetIdConfig {
   type: FacetType;
   field: string;
   state: AnyFacetSetState;
-  logger?: {warn: (message: string) => void};
 }
 
-export function determineFacetId(config: FacetIdConfig) {
+export function determineFacetId(
+  config: FacetIdConfig,
+  logger: Logger = console
+) {
   const {type, field, state} = config;
 
   const prefix = `${type}_${field}_`;
   const id = calculateId(prefix, state);
 
-  logWarningMessageIfNeeded(id, config);
+  logWarningMessageIfNeeded(id, field, logger);
 
   return `${prefix}${id}`;
 }
@@ -35,13 +41,10 @@ function findMaxId(keys: string[], prefix: string) {
   return lastNumber ?? -1;
 }
 
-function logWarningMessageIfNeeded(id: number, config: FacetIdConfig) {
+function logWarningMessageIfNeeded(id: number, field: string, logger: Logger) {
   if (id === 0) {
     return;
   }
-
-  const {field} = config;
-  const logger = config.logger || console;
 
   const message = `A facet with field "${field}" already exists.
   To avoid unexpected behaviour, configure the #id option on the facet controller.`;
