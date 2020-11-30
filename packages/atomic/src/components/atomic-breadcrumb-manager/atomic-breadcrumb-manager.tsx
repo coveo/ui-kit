@@ -60,15 +60,14 @@ export class AtomicBreadcrumbManager {
   private get facetBreadcrumbs() {
     const breadcrumbs = this.state.facetBreadcrumbs.map((breadcrumb) => {
       const breadcrumbsValues = this.getBreadrumbValues(breadcrumb);
-      return !this.isEmpty(breadcrumbsValues) ? (
+      if (this.isEmpty(breadcrumbsValues)) return null;
+      return (
         <ul part="breadcrumbs" class="breadcrumb p-0 m-0">
           <li part="breadcrumb-label" class="text-muted">
             {breadcrumb.field}:&nbsp;
           </li>
           {breadcrumbsValues}
         </ul>
-      ) : (
-        ''
       );
     });
     return breadcrumbs;
@@ -99,15 +98,14 @@ export class AtomicBreadcrumbManager {
   private get numericFacetBreadcrumbs() {
     const breadcrumbs = this.state.numericFacetBreadcrumbs.map((breadcrumb) => {
       const breadcrumbsValues = this.getRangeBreadrumbValues(breadcrumb);
-      return !this.isEmpty(breadcrumbsValues) ? (
+      if (this.isEmpty(breadcrumbsValues)) return null;
+      return (
         <ul part="breadcrumbs" class="breadcrumb p-0 m-0">
           <li part="breadcrumb-label" class="text-muted">
             {breadcrumb.field}:&nbsp;
           </li>
           {breadcrumbsValues}
         </ul>
-      ) : (
-        ''
       );
     });
     return breadcrumbs;
@@ -116,15 +114,14 @@ export class AtomicBreadcrumbManager {
   private get dateFacetBreadcrumbs() {
     const breadcrumbs = this.state.dateFacetBreadcrumbs.map((breadcrumb) => {
       const breadcrumbsValues = this.getRangeBreadrumbValues(breadcrumb);
-      return !this.isEmpty(breadcrumbsValues) ? (
+      if (this.isEmpty(breadcrumbsValues)) return null;
+      return (
         <ul part="breadcrumbs" class="breadcrumb p-0 m-0">
           <li part="breadcrumb-label" class="text-muted">
             {breadcrumb.field}:&nbsp;
           </li>
           {breadcrumbsValues}
         </ul>
-      ) : (
-        ''
       );
     });
     return breadcrumbs;
@@ -157,15 +154,14 @@ export class AtomicBreadcrumbManager {
       const renderedBreadcrumbs = this.state.categoryFacetBreadcrumbs.every(
         (value: CategoryFacetBreadcrumb) => value.path.length > 0
       );
-      return renderedBreadcrumbs ? (
+      if (!renderedBreadcrumbs) return null;
+      return (
         <ul part="breadcrumbs" class="breadcrumb p-0 m-0">
           <li part="breadcrumb-label" class="text-muted">
             {breadcrumb.field}:&nbsp;
           </li>
           {breadcrumbsValues}
         </ul>
-      ) : (
-        ''
       );
     });
   }
