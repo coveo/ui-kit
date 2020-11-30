@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.1.0-alpha.69](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.68...v0.1.0-alpha.69) (2020-11-30)
+
+
+### Features
+
+* **headless:** add search-parameter-manager controller ([#283](https://github.com/coveo/ui-kit/issues/283)) ([4b3b7ed](https://github.com/coveo/ui-kit/commit/4b3b7ed58e68355eaeaa595689748ba3b28963e1))
+
+
+
+
+
+# [0.1.0-alpha.68](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.67...v0.1.0-alpha.68) (2020-11-30)
+
+
+### Bug Fixes
+
+* **headless:** prevent logging search box sumbit when clicking a query suggestion. ([#286](https://github.com/coveo/ui-kit/issues/286)) ([79ef4a5](https://github.com/coveo/ui-kit/commit/79ef4a5e2a91ab315c5ff0a5a77ad5382bfd7566))
+
+
+
+
+
 # [0.1.0-alpha.67](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.66...v0.1.0-alpha.67) (2020-11-27)
 
 

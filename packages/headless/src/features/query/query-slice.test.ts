@@ -5,6 +5,7 @@ import {getHistoryEmptyState} from '../history/history-slice';
 import {change} from '../history/history-actions';
 import {applyDidYouMeanCorrection} from '../did-you-mean/did-you-mean-actions';
 import {getQueryInitialState, QueryState} from './query-state';
+import {restoreSearchParameters} from '../search-parameters/search-parameter-actions';
 
 describe('query slice', () => {
   let state: QueryState;
@@ -87,7 +88,7 @@ describe('query slice', () => {
   });
 
   it('allows to restore a query on history change', () => {
-    const expectedQuery = {q: 'foo', enableQuerySyntax: false};
+    const expectedQuery = {q: 'foo', enableQuerySyntax: true};
 
     const historyChange = {
       ...getHistoryEmptyState(),
@@ -97,5 +98,34 @@ describe('query slice', () => {
     const nextState = queryReducer(state, change.fulfilled(historyChange, ''));
 
     expect(nextState).toEqual(expectedQuery);
+  });
+
+  describe('#restoreSearchParameters', () => {
+    it('when the object contains a #q key, it sets the value in state', () => {
+      state.q = 'a';
+      const finalState = queryReducer(state, restoreSearchParameters({q: ''}));
+      expect(finalState.q).toEqual('');
+    });
+
+    it('when the object does not contain a #q key, it does not update the query', () => {
+      state.q = 'a';
+      const finalState = queryReducer(state, restoreSearchParameters({}));
+      expect(finalState.q).toEqual(state.q);
+    });
+
+    it('when the object contains an #enableQuerySyntax key, it sets the value in state', () => {
+      state.enableQuerySyntax = true;
+      const finalState = queryReducer(
+        state,
+        restoreSearchParameters({enableQuerySyntax: false})
+      );
+      expect(finalState.enableQuerySyntax).toEqual(false);
+    });
+
+    it('when the object does not contain an #enableQuerySyntax key, it does not update the state', () => {
+      state.enableQuerySyntax = true;
+      const finalState = queryReducer(state, restoreSearchParameters({}));
+      expect(finalState.enableQuerySyntax).toEqual(state.enableQuerySyntax);
+    });
   });
 });
