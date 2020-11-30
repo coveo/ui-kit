@@ -1,3 +1,4 @@
+import {buildMockSearchParameters} from '../../test/mock-search-parameters';
 import {buildSearchParameterSerializer} from './search-parameter-serializer';
 
 describe('buildSearchParameterSerializer', () => {
@@ -24,14 +25,33 @@ describe('buildSearchParameterSerializer', () => {
       expect('' in result).toBe(false);
     });
 
-    it('decodes a string with a single key and primitive value', () => {
+    it('deserializes a string with a single key and string value', () => {
       const result = deserialize('q=a');
       expect(result).toEqual({q: 'a'});
     });
 
-    it('decodes a string with a multiple keys and string values', () => {
-      const result = deserialize('q=a&aq=b');
-      expect(result).toEqual({q: 'a', aq: 'b'});
+    it('removes keys that are invalid', () => {
+      const result = deserialize('invalid=b');
+      expect(result).toEqual({});
     });
+
+    it('deserializes a string with a key and a boolean value', () => {
+      const result = deserialize('enableQuerySyntax=true');
+      expect(result).toEqual({enableQuerySyntax: true});
+    });
+
+    it('deserializes a string with multiple key-value pairs', () => {
+      const result = deserialize('q=a&enableQuerySyntax=true');
+      expect(result).toEqual({q: 'a', enableQuerySyntax: true});
+    });
+  });
+
+  it('can serialize and deserialize all search parameters', () => {
+    const {serialize, deserialize} = buildSearchParameterSerializer();
+    const parameters = buildMockSearchParameters();
+    const serialized = serialize(parameters);
+    const deserialized = deserialize(serialized);
+
+    expect(deserialized).toEqual(parameters);
   });
 });
