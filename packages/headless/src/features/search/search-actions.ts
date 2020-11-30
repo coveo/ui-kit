@@ -4,7 +4,6 @@ import {
   isErrorResponse,
   AsyncThunkSearchOptions,
 } from '../../api/search/search-api-client';
-import {SearchAction} from '../analytics/analytics-actions';
 import {SearchResponseSuccess} from '../../api/search/search/search-response';
 import {snapshot} from '../history/history-actions';
 import {logDidYouMeanAutomatic} from '../did-you-mean/did-you-mean-analytics-actions';
@@ -46,6 +45,7 @@ import {getSortCriteriaInitialState} from '../sort-criteria/sort-criteria-state'
 import {getPipelineInitialState} from '../pipeline/pipeline-state';
 import {getSearchHubInitialState} from '../search-hub/search-hub-state';
 import {getFacetOptionsInitialState} from '../facet-options/facet-options-state';
+import {SearchAction} from '../analytics/analytics-utils';
 
 export type StateNeededByExecuteSearch = ConfigurationSection &
   Partial<

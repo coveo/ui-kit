@@ -1,8 +1,5 @@
-import {
-  AnalyticsType,
-  makeAnalyticsAction,
-} from '../analytics/analytics-actions';
 import {OmniboxSuggestionsMetadata} from 'coveo.analytics/src/searchPage/searchPageEvents';
+import {AnalyticsType, makeAnalyticsAction} from '../analytics/analytics-utils';
 
 export const logQuerySuggestionClick = ({
   id,

@@ -15,10 +15,10 @@ import {
   RecommendationSection,
   SearchHubSection,
 } from '../../state/state-sections';
-import {SearchAction} from '../analytics/analytics-actions';
 import {validatePayloadSchema} from '../../utils/validate-payload';
 import {StringValue} from '@coveo/bueno';
 import {logRecommendationUpdate} from './recommendation-analytics-actions';
+import {SearchAction} from '../analytics/analytics-utils';
 
 export type StateNeededByGetRecommendations = ConfigurationSection &
   RecommendationSection &
