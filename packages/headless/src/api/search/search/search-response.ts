@@ -7,6 +7,7 @@ import {QueryCorrection} from './query-corrections';
 import {AnyFacetResponse} from '../../../features/facets/generic/interfaces/generic-facet-response';
 import {RankingExpression} from './ranking-expression';
 import {UserIdentity} from './user-identity';
+import {ExecutionReport} from './execution-report';
 
 export interface SearchResponseSuccess {
   results: Result[];
@@ -18,7 +19,7 @@ export interface SearchResponseSuccess {
    * A detailed execution report sent by the Search API
    * Only sent if debug is true
    */
-  executionReport?: unknown;
+  executionReport?: ExecutionReport;
   /**
    * The basic expression that was executed
    * Only sent if debug is true

@@ -5,7 +5,7 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { Engine, HeadlessConfigurationOptions, Result, ResultTemplateCondition } from "@coveo/headless";
+import { Engine, HeadlessConfigurationOptions, LogLevel, Result, ResultTemplateCondition } from "@coveo/headless";
 export namespace Components {
     interface AtomicBreadcrumbManager {
     }
@@ -21,6 +21,9 @@ export namespace Components {
         "facetId": string;
         "field": string;
         "label": string;
+    }
+    interface AtomicDebug {
+        "enabled": boolean;
     }
     interface AtomicDidYouMean {
     }
@@ -59,6 +62,7 @@ export namespace Components {
     interface AtomicResultLink {
     }
     interface AtomicResultList {
+        "fieldsToInclude": string;
         /**
           * Css class for the list wrapper
          */
@@ -99,8 +103,8 @@ export namespace Components {
         "numberOfSuggestions": number;
     }
     interface AtomicSearchInterface {
-        "enableDebug": boolean;
         "initialize": (options: Pick<HeadlessConfigurationOptions, 'accessToken' | 'organizationId' | 'renewAccessToken' | 'platformUrl'>) => Promise<void>;
+        "logLevel"?: LogLevel;
         "pipeline": string;
         "sample": boolean;
         "searchHub": string;
@@ -136,6 +140,12 @@ declare global {
     var HTMLAtomicDateFacetElement: {
         prototype: HTMLAtomicDateFacetElement;
         new (): HTMLAtomicDateFacetElement;
+    };
+    interface HTMLAtomicDebugElement extends Components.AtomicDebug, HTMLStencilElement {
+    }
+    var HTMLAtomicDebugElement: {
+        prototype: HTMLAtomicDebugElement;
+        new (): HTMLAtomicDebugElement;
     };
     interface HTMLAtomicDidYouMeanElement extends Components.AtomicDidYouMean, HTMLStencilElement {
     }
@@ -262,6 +272,7 @@ declare global {
         "atomic-category-facet": HTMLAtomicCategoryFacetElement;
         "atomic-component-error": HTMLAtomicComponentErrorElement;
         "atomic-date-facet": HTMLAtomicDateFacetElement;
+        "atomic-debug": HTMLAtomicDebugElement;
         "atomic-did-you-mean": HTMLAtomicDidYouMeanElement;
         "atomic-facet": HTMLAtomicFacetElement;
         "atomic-facet-manager": HTMLAtomicFacetManagerElement;
@@ -300,6 +311,9 @@ declare namespace LocalJSX {
         "field"?: string;
         "label"?: string;
     }
+    interface AtomicDebug {
+        "enabled"?: boolean;
+    }
     interface AtomicDidYouMean {
     }
     interface AtomicFacet {
@@ -336,6 +350,7 @@ declare namespace LocalJSX {
     interface AtomicResultLink {
     }
     interface AtomicResultList {
+        "fieldsToInclude"?: string;
         /**
           * Css class for the list wrapper
          */
@@ -374,7 +389,7 @@ declare namespace LocalJSX {
         "numberOfSuggestions"?: number;
     }
     interface AtomicSearchInterface {
-        "enableDebug"?: boolean;
+        "logLevel"?: LogLevel;
         "pipeline"?: string;
         "sample"?: boolean;
         "searchHub"?: string;
@@ -390,6 +405,7 @@ declare namespace LocalJSX {
         "atomic-category-facet": AtomicCategoryFacet;
         "atomic-component-error": AtomicComponentError;
         "atomic-date-facet": AtomicDateFacet;
+        "atomic-debug": AtomicDebug;
         "atomic-did-you-mean": AtomicDidYouMean;
         "atomic-facet": AtomicFacet;
         "atomic-facet-manager": AtomicFacetManager;
@@ -420,6 +436,7 @@ declare module "@stencil/core" {
             "atomic-category-facet": LocalJSX.AtomicCategoryFacet & JSXBase.HTMLAttributes<HTMLAtomicCategoryFacetElement>;
             "atomic-component-error": LocalJSX.AtomicComponentError & JSXBase.HTMLAttributes<HTMLAtomicComponentErrorElement>;
             "atomic-date-facet": LocalJSX.AtomicDateFacet & JSXBase.HTMLAttributes<HTMLAtomicDateFacetElement>;
+            "atomic-debug": LocalJSX.AtomicDebug & JSXBase.HTMLAttributes<HTMLAtomicDebugElement>;
             "atomic-did-you-mean": LocalJSX.AtomicDidYouMean & JSXBase.HTMLAttributes<HTMLAtomicDidYouMeanElement>;
             "atomic-facet": LocalJSX.AtomicFacet & JSXBase.HTMLAttributes<HTMLAtomicFacetElement>;
             "atomic-facet-manager": LocalJSX.AtomicFacetManager & JSXBase.HTMLAttributes<HTMLAtomicFacetManagerElement>;

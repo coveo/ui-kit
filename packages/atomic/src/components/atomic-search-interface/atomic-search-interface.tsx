@@ -29,8 +29,7 @@ export class AtomicSearchInterface {
   @Prop() sample = false;
   @Prop({reflect: true}) pipeline = 'default';
   @Prop({reflect: true}) searchHub = 'default';
-  @Prop() enableDebug = false;
-  @Prop() logLevel?: LogLevel;
+  @Prop() logLevel?: LogLevel = 'debug';
   @RenderError() error?: Error;
 
   private engine?: Engine;
@@ -63,7 +62,6 @@ export class AtomicSearchInterface {
       search: {
         searchHub: this.searchHub,
         pipeline: this.pipeline,
-        enableDebug: this.enableDebug,
       },
     });
 
@@ -103,7 +101,6 @@ export class AtomicSearchInterface {
       ConfigurationActions.updateSearchConfiguration({
         pipeline: this.pipeline,
         searchHub: this.searchHub,
-        enableDebug: this.enableDebug,
       })
     );
   }
