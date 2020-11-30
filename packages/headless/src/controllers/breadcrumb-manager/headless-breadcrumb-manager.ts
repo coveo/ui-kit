@@ -64,10 +64,12 @@ export const buildBreadcrumbManager = (
           deselect: () => dispatch(executeToggleSelect({facetId, selection})),
         });
       });
-      breadcrumbs.push({
-        field: facetSet[facetId].field,
-        values: values,
-      });
+      if (values.length) {
+        breadcrumbs.push({
+          field: facetSet[facetId].field,
+          values: values,
+        });
+      }
     });
 
     return breadcrumbs;
@@ -105,36 +107,30 @@ export const buildBreadcrumbManager = (
         engine.state,
         facetId
       );
-      breadcrumbs.push({
-        field: engine.state.categoryFacetSet[facetId].field,
-        path: selectedValues,
-        deselect: () => {
-          dispatch(
-            executeDeselectAllCategoryFacetValues({
-              facetId,
-              numberOfValues: 5,
-            })
-          );
-        },
-      });
+      if (selectedValues.length) {
+        breadcrumbs.push({
+          field: engine.state.categoryFacetSet[facetId].field,
+          path: selectedValues,
+          deselect: () => {
+            dispatch(
+              executeDeselectAllCategoryFacetValues({
+                facetId,
+                numberOfValues: 5,
+              })
+            );
+          },
+        });
+      }
     });
     return breadcrumbs;
   }
 
   function hasBreadcrumbs() {
     return !![
-      ...getFacetBreadcrumbs().filter(
-        (breadcrumb) => !!breadcrumb.values.length
-      ),
-      ...getNumericFacetBreadcrumbs().filter(
-        (breadcrumb) => !!breadcrumb.values.length
-      ),
-      ...getDateFacetBreadcrumbs().filter(
-        (breadcrumb) => !!breadcrumb.values.length
-      ),
-      ...getCategoryFacetBreadcrumbs().filter(
-        (breadcrumb) => !!breadcrumb.path.length
-      ),
+      ...getFacetBreadcrumbs(),
+      ...getNumericFacetBreadcrumbs(),
+      ...getDateFacetBreadcrumbs(),
+      ...getCategoryFacetBreadcrumbs(),
     ].length;
   }
   return {
