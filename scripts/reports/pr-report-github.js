@@ -2,7 +2,8 @@ const {newClient} = require('./github-client');
 
 async function main() {
   const c = newClient();
-  console.log(c);
+  const issues = await c.issues.listForRepo({repo : 'ui-kit', owner: 'coveo', state: 'open'})
+  console.log(issues)
 }
 
 main();
