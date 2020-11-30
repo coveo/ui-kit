@@ -99,7 +99,7 @@ export class AtomicBreadcrumbManager {
 
   private get numericFacetBreadcrumbs() {
     const breadcrumbs = this.state.numericFacetBreadcrumbs.map((breadcrumb) => {
-      const breadcrumbsValues = this.getRangeBreadrumbValues(breadcrumb);
+      const breadcrumbsValues = this.getRangeBreadrumbValues(breadcrumb, false);
       return !this.isEmpty(breadcrumbsValues) ? (
         <ul part="breadcrumbs" class="breadcrumb p-0 m-0">
           <li part="breadcrumb-label" class="text-muted">
@@ -116,7 +116,7 @@ export class AtomicBreadcrumbManager {
 
   private get dateFacetBreadcrumbs() {
     const breadcrumbs = this.state.dateFacetBreadcrumbs.map((breadcrumb) => {
-      const breadcrumbsValues = this.getRangeBreadrumbValues(breadcrumb);
+      const breadcrumbsValues = this.getRangeBreadrumbValues(breadcrumb, true);
       return !this.isEmpty(breadcrumbsValues) ? (
         <ul part="breadcrumbs" class="breadcrumb p-0 m-0">
           <li part="breadcrumb-label" class="text-muted">
@@ -131,23 +131,36 @@ export class AtomicBreadcrumbManager {
     return breadcrumbs;
   }
 
-  private getRangeBreadrumbValues(values: Breadcrumb<RangeFacetValue>) {
+  private getRangeBreadrumbValues(
+    values: Breadcrumb<RangeFacetValue>,
+    needDateFormatting: boolean
+  ) {
     const {breadcrumbsToShow, moreButton} = this.collapsedBreadcrumbsHandler(
       values
     );
-    const renderedBreadcrumbs = breadcrumbsToShow.map((breadcrumbValue) => (
-      <li part="breadcrumb-value" class="pr-3">
-        <button
-          part="breadcrumb-button"
-          aria-label={`Remove inclusion filter on ${breadcrumbValue.value.start} to ${breadcrumbValue.value.end}`}
-          class={this.buttonClasses}
-          onClick={breadcrumbValue.deselect}
-        >
-          {breadcrumbValue.value.start} - {breadcrumbValue.value.end}
-          {this.mainClear}
-        </button>
-      </li>
-    ));
+    const renderedBreadcrumbs = breadcrumbsToShow.map((breadcrumbValue) => {
+      let ariaLabel: string;
+      if (needDateFormatting) {
+        const dateStart = new Date(breadcrumbValue.value.start);
+        const dateEnd = new Date(breadcrumbValue.value.end);
+        ariaLabel = `Remove inclusion filter on ${dateStart.toLocaleString()} to ${dateEnd.toLocaleString()}`;
+      } else {
+        ariaLabel = `Remove inclusion filter on ${breadcrumbValue.value.start} to ${breadcrumbValue.value.end}`;
+      }
+      return (
+        <li part="breadcrumb-value" class="pr-3">
+          <button
+            part="breadcrumb-button"
+            aria-label={ariaLabel}
+            class={this.buttonClasses}
+            onClick={breadcrumbValue.deselect}
+          >
+            {breadcrumbValue.value.start} - {breadcrumbValue.value.end}
+            {this.mainClear}
+          </button>
+        </li>
+      );
+    });
     return moreButton
       ? [...renderedBreadcrumbs, moreButton]
       : renderedBreadcrumbs;
