@@ -9,7 +9,7 @@ import {
   CategoryFacetBreadcrumb,
   FacetValue,
   Breadcrumb,
-  BreadcrumbField,
+  BreadcrumbValue,
 } from '@coveo/headless';
 import {RangeFacetValue} from '@coveo/headless/dist/features/facets/range-facets/generic/interfaces/range-facet';
 import {BaseFacetValue} from '@coveo/headless/dist/features/facets/facet-api/response';
@@ -30,7 +30,7 @@ import mainclear from '../../images/main-clear.svg';
 })
 export class AtomicBreadcrumbManager {
   @State() state!: BreadcrumbManagerState;
-  @State() collapsedBreadcrumbsState: Record<string, boolean> = {};
+  @State() collapsedBreadcrumbsState: string[] = [];
   @Prop() collapseThreshold = 5;
 
   private engine!: Engine;
@@ -41,10 +41,6 @@ export class AtomicBreadcrumbManager {
   public initialize() {
     this.breadcrumbManager = buildBreadcrumbManager(this.engine);
     this.subscribe();
-  }
-
-  componentDidLoad() {
-    this.initCollapsedBreadcrumbsState();
   }
 
   private subscribe() {
@@ -59,14 +55,6 @@ export class AtomicBreadcrumbManager {
 
   public disconnectedCallback() {
     this.unsubscribe();
-  }
-
-  private initCollapsedBreadcrumbsState() {
-    Object.values(this.state).forEach((facet) => {
-      facet.forEach((facetValue: BreadcrumbField) => {
-        this.collapsedBreadcrumbsState[facetValue.field] = true;
-      });
-    });
   }
 
   private get facetBreadcrumbs() {
@@ -214,34 +202,32 @@ export class AtomicBreadcrumbManager {
   }
 
   private showFacetCollapsedBreadcrumbs(field: string) {
-    this.collapsedBreadcrumbsState = {
-      ...this.collapsedBreadcrumbsState,
-      [field]: false,
-    };
+    this.collapsedBreadcrumbsState.push(field);
+    this.collapsedBreadcrumbsState = [...this.collapsedBreadcrumbsState];
   }
 
   private collapsedBreadcrumbsHandler<T extends BaseFacetValue>(
     breadcrumb: Breadcrumb<T>
-  ) {
-    if (!this.collapsedBreadcrumbsState[breadcrumb.field]) {
+  ): {breadcrumbsToShow: BreadcrumbValue<T>[]; moreButton: string | undefined} {
+    if (this.collapsedBreadcrumbsState.indexOf(breadcrumb.field) !== -1) {
       const breadcrumbsToShow = breadcrumb.values;
-      breadcrumbsToShow.length <= this.collapseThreshold
-        ? (this.collapsedBreadcrumbsState[breadcrumb.field] = true)
-        : null;
-      return {breadcrumbsToShow, undefined};
+      this.resetCollapsedBreadcrumbs(
+        breadcrumbsToShow.length,
+        breadcrumb.field
+      );
+      return {breadcrumbsToShow, moreButton: undefined};
     }
-    const breadcrumbsToShow = breadcrumb.values.slice(
-      0,
-      this.collapseThreshold
-    );
-    const moreButton = this.getMoreButton(
-      breadcrumb.values.length - this.collapseThreshold,
-      breadcrumb.field
-    );
-    return {breadcrumbsToShow, moreButton};
+
+    return {
+      breadcrumbsToShow: breadcrumb.values.slice(0, this.collapseThreshold),
+      moreButton: this.getMoreButton(
+        breadcrumb.values.length - this.collapseThreshold,
+        breadcrumb.field
+      ),
+    };
   }
 
-  private isEmpty(array: any[]) {
+  private isEmpty(array: unknown[]) {
     return array.length === 0;
   }
 
@@ -285,6 +271,15 @@ export class AtomicBreadcrumbManager {
 
   private get buttonClasses() {
     return 'btn btn-link btn-sm text-decoration-none p-0  align-baseline ';
+  }
+
+  private resetCollapsedBreadcrumbs(length: number, field: string) {
+    length <= this.collapseThreshold
+      ? this.collapsedBreadcrumbsState.splice(
+          this.collapsedBreadcrumbsState.indexOf(field),
+          1
+        )
+      : null;
   }
 
   render() {
