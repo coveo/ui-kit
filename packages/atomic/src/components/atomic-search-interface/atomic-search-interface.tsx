@@ -117,7 +117,6 @@ export class AtomicSearchInterface {
 
   @Watch('searchHub')
   @Watch('pipeline')
-  @Watch('enableDebug')
   updateSearchConfiguration() {
     this.engine?.dispatch(
       ConfigurationActions.updateSearchConfiguration({
