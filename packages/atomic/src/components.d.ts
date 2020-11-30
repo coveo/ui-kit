@@ -59,6 +59,7 @@ export namespace Components {
     interface AtomicResultLink {
     }
     interface AtomicResultList {
+        "fieldsToInclude": string;
         /**
           * Css class for the list wrapper
          */
@@ -335,6 +336,7 @@ declare namespace LocalJSX {
     interface AtomicResultLink {
     }
     interface AtomicResultList {
+        "fieldsToInclude"?: string;
         /**
           * Css class for the list wrapper
          */
