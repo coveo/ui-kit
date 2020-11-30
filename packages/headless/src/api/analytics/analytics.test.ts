@@ -8,7 +8,7 @@ describe('analytics', () => {
   it('should be enabled by default', () => {
     const state = createMockState();
     expect(
-      configureAnalytics(state, logger).coveoAnalyticsClient instanceof
+      configureAnalytics({state, logger}).coveoAnalyticsClient instanceof
         CoveoAnalyticsClient
     ).toBe(true);
   });
@@ -18,7 +18,7 @@ describe('analytics', () => {
     state.configuration.analytics.enabled = true;
 
     expect(
-      configureAnalytics(state, logger).coveoAnalyticsClient instanceof
+      configureAnalytics({state, logger}).coveoAnalyticsClient instanceof
         CoveoAnalyticsClient
     ).toBe(true);
   });
@@ -27,7 +27,7 @@ describe('analytics', () => {
     const state = createMockState();
     state.configuration.analytics.enabled = false;
     expect(
-      configureAnalytics(state, logger).coveoAnalyticsClient instanceof
+      configureAnalytics({state, logger}).coveoAnalyticsClient instanceof
         CoveoAnalyticsClient
     ).toBe(false);
   });

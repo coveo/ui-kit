@@ -66,12 +66,12 @@ export const makeAnalyticsAction = <T extends AnalyticsType>(
     prefix,
     async (_, {getState, extra: {analyticsClientMiddleware, logger}}) => {
       const state = searchPageState(getState);
-      const client = configureAnalytics(
+      const client = configureAnalytics({
         state,
         logger,
         analyticsClientMiddleware,
-        provider(state)
-      );
+        provider: provider(state),
+      });
       const response = await log(client, state);
       logger.info(
         {client: client.coveoAnalyticsClient, response},

@@ -92,12 +92,19 @@ export class AnalyticsProvider implements SearchPageClientProvider {
   }
 }
 
-export const configureAnalytics = (
-  state: StateNeededByAnalyticsProvider,
-  logger: Logger,
-  analyticsClientMiddleware: AnalyticsClientSendEventHook = (_, p) => p,
-  provider: SearchPageClientProvider = new AnalyticsProvider(state)
-) => {
+interface ConfigureAnalyticsOptions {
+  state: StateNeededByAnalyticsProvider;
+  logger: Logger;
+  analyticsClientMiddleware?: AnalyticsClientSendEventHook;
+  provider?: SearchPageClientProvider;
+}
+
+export const configureAnalytics = ({
+  logger,
+  state,
+  analyticsClientMiddleware = (_, p) => p,
+  provider = new AnalyticsProvider(state),
+}: ConfigureAnalyticsOptions) => {
   const token = state.configuration.accessToken;
   const endpoint = state.configuration.analytics.apiBaseUrl;
   const client = new CoveoSearchPageClient(
