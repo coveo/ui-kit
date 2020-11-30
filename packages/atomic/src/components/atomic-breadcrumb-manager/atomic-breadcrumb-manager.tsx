@@ -256,6 +256,9 @@ export class AtomicBreadcrumbManager {
         <button
           part="breadcrumb-button"
           class={this.buttonClasses}
+          aria-label={`Show ${collapsedBreadcrumbNumber} more ${
+            collapsedBreadcrumbNumber > 1 ? 'filters' : 'filter'
+          }`}
           onClick={() => this.showFacetCollapsedBreadcrumbs(field)}
         >
           {collapsedBreadcrumbNumber} more...
@@ -268,7 +271,7 @@ export class AtomicBreadcrumbManager {
     return (
       <span
         class="pl-1 text-primary align-baseline"
-        aria-label="Clear All Filters"
+        role="button"
         innerHTML={mainclear}
       ></span>
     );
