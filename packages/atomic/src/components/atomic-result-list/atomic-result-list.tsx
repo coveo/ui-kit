@@ -38,13 +38,18 @@ export class AtomicResultList {
   private resultList!: ResultList;
   private resultTemplatesManager!: ResultTemplatesManager<string>;
 
+  private get fields() {
+    if (this.fieldsToInclude.trim() === '') return;
+    return this.fieldsToInclude.split(',').map((field) => field.trim());
+  }
+
   @Initialization()
   public initialize() {
     this.resultTemplatesManager = new ResultTemplatesManager<string>(
       this.engine
     );
     this.resultList = buildResultList(this.engine, {
-      options: {fieldsToInclude: this.fieldsToInclude.split(',')},
+      options: {fieldsToInclude: this.fields},
     });
     this.unsubscribe = this.resultList.subscribe(() => this.updateState());
 

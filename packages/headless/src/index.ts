@@ -20,6 +20,7 @@ export * from './state/recommendation-app-state';
 
 // Controllers
 export * from './controllers/controller/headless-controller';
+export * from './controllers/debug/headless-debug';
 export * from './controllers/context/headless-context';
 export * from './controllers/did-you-mean/headless-did-you-mean';
 export * from './controllers/facets/category-facet/headless-category-facet';
@@ -46,7 +47,7 @@ export * from './controllers/product-recommendations/headless-frequently-viewed-
 export * from './controllers/product-recommendations/headless-popular-bought-recommendations';
 export * from './controllers/product-recommendations/headless-popular-viewed-recommendations';
 export * from './controllers/product-recommendations/headless-user-interest-recommendations';
-export * from './controllers/debug/headless-debug';
+export * from './controllers/search-parameter-manager/headless-search-parameter-manager';
 
 // Selectors
 export * from './features/facets/facet-set/facet-set-selectors';
@@ -96,3 +97,4 @@ export {FacetValue} from './features/facets/facet-set/interfaces/response';
 export {FacetSortCriterion} from './features/facets/facet-set/interfaces/request';
 export {NumericFacetValue} from './features/facets/range-facets/numeric-facet-set/interfaces/response';
 export {RangeFacetSortCriterion} from './features/facets/range-facets/generic/interfaces/request';
+export * from './features/search-parameters/search-parameter-serializer';

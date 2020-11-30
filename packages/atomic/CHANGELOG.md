@@ -3,6 +3,36 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.1.0-alpha.69](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.68...v0.1.0-alpha.69) (2020-11-30)
+
+
+### Features
+
+* **headless:** add search-parameter-manager controller ([#283](https://github.com/coveo/ui-kit/issues/283)) ([4b3b7ed](https://github.com/coveo/ui-kit/commit/4b3b7ed58e68355eaeaa595689748ba3b28963e1))
+
+
+
+
+
+# [0.1.0-alpha.68](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.67...v0.1.0-alpha.68) (2020-11-30)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [0.1.0-alpha.67](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.66...v0.1.0-alpha.67) (2020-11-27)
+
+
+### Bug Fixes
+
+* **atomic:** fix empty string for results to include ([#290](https://github.com/coveo/ui-kit/issues/290)) ([91b3f1d](https://github.com/coveo/ui-kit/commit/91b3f1dbe0bb324ac8f4adab505bc2c6386091c7))
+
+
+
+
+
 # [0.1.0-alpha.66](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.65...v0.1.0-alpha.66) (2020-11-27)
 
 
