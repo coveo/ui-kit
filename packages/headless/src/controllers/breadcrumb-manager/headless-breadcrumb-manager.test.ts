@@ -81,4 +81,17 @@ describe('headless breadcrumb manager', () => {
     expect(facetBreadcrumbs?.[0].path).toEqual([mockValue]);
     expect(facetBreadcrumbs?.[1].path).toEqual([mockValue]);
   });
+
+  it('hasBreadcrumbs returns true when a facet value is selected', () => {
+    state.numericFacetSet[facetId] = buildMockNumericFacetRequest({facetId});
+    const mockValue = buildMockNumericFacetValue({state: 'selected'});
+    state.search.response.facets = [
+      buildMockNumericFacetResponse({facetId, values: [mockValue]}),
+    ];
+    expect(breadcrumbManager.hasBreadcrumbs()).toBe(true);
+  });
+
+  it('hasBreadcrumbs returns false when no facet value is selected', () => {
+    expect(breadcrumbManager.hasBreadcrumbs()).toBe(false);
+  });
 });
