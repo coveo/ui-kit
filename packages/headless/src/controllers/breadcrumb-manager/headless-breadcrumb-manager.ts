@@ -120,6 +120,23 @@ export const buildBreadcrumbManager = (
     });
     return breadcrumbs;
   }
+
+  function hasBreadcrumbs() {
+    return !![
+      ...getFacetBreadcrumbs().filter(
+        (breadcrumb) => !!breadcrumb.values.length
+      ),
+      ...getNumericFacetBreadcrumbs().filter(
+        (breadcrumb) => !!breadcrumb.values.length
+      ),
+      ...getDateFacetBreadcrumbs().filter(
+        (breadcrumb) => !!breadcrumb.values.length
+      ),
+      ...getCategoryFacetBreadcrumbs().filter(
+        (breadcrumb) => !!breadcrumb.path.length
+      ),
+    ].length;
+  }
   return {
     ...controller,
 
@@ -131,6 +148,7 @@ export const buildBreadcrumbManager = (
         dateFacetBreadcrumbs: getDateFacetBreadcrumbs(),
       };
     },
+    hasBreadcrumbs,
   };
 };
 

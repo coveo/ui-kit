@@ -9,7 +9,7 @@ import {
   CategoryFacetBreadcrumb,
   FacetValue,
   Breadcrumb,
-  BreadcrumbField,
+  BreadcrumbValue,
 } from '@coveo/headless';
 import {RangeFacetValue} from '@coveo/headless/dist/features/facets/range-facets/generic/interfaces/range-facet';
 import {BaseFacetValue} from '@coveo/headless/dist/features/facets/facet-api/response';
@@ -30,7 +30,7 @@ import mainclear from '../../images/main-clear.svg';
 })
 export class AtomicBreadcrumbManager {
   @State() state!: BreadcrumbManagerState;
-  @State() collapsedBreadcrumbsState: Record<string, boolean> = {};
+  @State() collapsedBreadcrumbsState: string[] = [];
   @Prop() collapseThreshold = 5;
 
   private engine!: Engine;
@@ -41,10 +41,6 @@ export class AtomicBreadcrumbManager {
   public initialize() {
     this.breadcrumbManager = buildBreadcrumbManager(this.engine);
     this.subscribe();
-  }
-
-  componentDidLoad() {
-    this.initCollapsedBreadcrumbsState();
   }
 
   private subscribe() {
@@ -59,14 +55,6 @@ export class AtomicBreadcrumbManager {
 
   public disconnectedCallback() {
     this.unsubscribe();
-  }
-
-  private initCollapsedBreadcrumbsState() {
-    Object.values(this.state).forEach((facet) => {
-      facet.forEach((facetValue: BreadcrumbField) => {
-        this.collapsedBreadcrumbsState[facetValue.field] = true;
-      });
-    });
   }
 
   private get facetBreadcrumbs() {
@@ -166,25 +154,22 @@ export class AtomicBreadcrumbManager {
   }
 
   private get categoryFacetBreadcrumbs() {
-    const breadcrumbs = this.state.categoryFacetBreadcrumbs.map(
-      (breadcrumb) => {
-        const breadcrumbsValues = this.getCategoryBreadrumbValues(breadcrumb);
-        const renderedBreadcrumbs = this.state.categoryFacetBreadcrumbs.every(
-          (value: CategoryFacetBreadcrumb) => value.path.length > 0
-        );
-        return renderedBreadcrumbs ? (
-          <ul part="breadcrumbs" class="breadcrumb p-0 m-0">
-            <li part="breadcrumb-label" class="text-muted">
-              {breadcrumb.field}:&nbsp;
-            </li>
-            {breadcrumbsValues}
-          </ul>
-        ) : (
-          ''
-        );
-      }
-    );
-    return breadcrumbs;
+    return this.state.categoryFacetBreadcrumbs.map((breadcrumb) => {
+      const breadcrumbsValues = this.getCategoryBreadrumbValues(breadcrumb);
+      const renderedBreadcrumbs = this.state.categoryFacetBreadcrumbs.every(
+        (value: CategoryFacetBreadcrumb) => value.path.length > 0
+      );
+      return renderedBreadcrumbs ? (
+        <ul part="breadcrumbs" class="breadcrumb p-0 m-0">
+          <li part="breadcrumb-label" class="text-muted">
+            {breadcrumb.field}:&nbsp;
+          </li>
+          {breadcrumbsValues}
+        </ul>
+      ) : (
+        ''
+      );
+    });
   }
 
   private getCategoryBreadrumbValues(values: CategoryFacetBreadcrumb) {
@@ -208,24 +193,6 @@ export class AtomicBreadcrumbManager {
     return [...renderedBreadcrumbs, this.mainClear];
   }
 
-  render() {
-    if (this.hasActiveBreadcrumbs()) {
-      return (
-        <div class="row" aria-label="Active filters">
-          <span class=" col-9">
-            {this.facetBreadcrumbs}
-            {this.numericFacetBreadcrumbs}
-            {this.dateFacetBreadcrumbs}
-            {this.categoryFacetBreadcrumbs}
-          </span>
-          <span class="col-3 text-right">
-            {this.getClearAllFiltersButton()}
-          </span>
-        </div>
-      );
-    }
-  }
-
   private getClearAllFiltersButton() {
     return (
       <button
@@ -239,65 +206,32 @@ export class AtomicBreadcrumbManager {
   }
 
   private showFacetCollapsedBreadcrumbs(field: string) {
-    this.collapsedBreadcrumbsState = {
-      ...this.collapsedBreadcrumbsState,
-      [field]: false,
-    };
+    this.collapsedBreadcrumbsState.push(field);
+    this.collapsedBreadcrumbsState = [...this.collapsedBreadcrumbsState];
   }
 
   private collapsedBreadcrumbsHandler<T extends BaseFacetValue>(
     breadcrumb: Breadcrumb<T>
-  ) {
-    let breadcrumbsToShow = [];
-    let moreButton = undefined;
-
-    if (!this.collapsedBreadcrumbsState[breadcrumb.field]) {
-      breadcrumbsToShow = breadcrumb.values;
-      breadcrumbsToShow.length <= this.collapseThreshold
-        ? (this.collapsedBreadcrumbsState[breadcrumb.field] = true)
-        : null;
-    } else {
-      breadcrumbsToShow = breadcrumb.values.slice(0, this.collapseThreshold);
-      const collapsedBreadcrumbNumber =
-        breadcrumb.values.length - this.collapseThreshold;
-
-      if (collapsedBreadcrumbNumber > 0) {
-        moreButton = (
-          <li part="breadcrumb-value">
-            <button
-              part="breadcrumb-button"
-              class={this.buttonClasses}
-              onClick={() =>
-                this.showFacetCollapsedBreadcrumbs(breadcrumb.field)
-              }
-            >
-              {collapsedBreadcrumbNumber} more...
-            </button>
-          </li>
-        );
-      }
+  ): {breadcrumbsToShow: BreadcrumbValue<T>[]; moreButton: string | undefined} {
+    if (this.collapsedBreadcrumbsState.indexOf(breadcrumb.field) !== -1) {
+      const breadcrumbsToShow = breadcrumb.values;
+      this.resetCollapsedBreadcrumbs(
+        breadcrumbsToShow.length,
+        breadcrumb.field
+      );
+      return {breadcrumbsToShow, moreButton: undefined};
     }
-    return {breadcrumbsToShow, moreButton};
+
+    return {
+      breadcrumbsToShow: breadcrumb.values.slice(0, this.collapseThreshold),
+      moreButton: this.getMoreButton(
+        breadcrumb.values.length - this.collapseThreshold,
+        breadcrumb.field
+      ),
+    };
   }
 
-  private hasActiveBreadcrumbs() {
-    return !this.isEmpty([
-      ...this.state.facetBreadcrumbs.filter(
-        (breadcrumb) => !this.isEmpty(breadcrumb.values)
-      ),
-      ...this.state.numericFacetBreadcrumbs.filter(
-        (breadcrumb) => !this.isEmpty(breadcrumb.values)
-      ),
-      ...this.state.dateFacetBreadcrumbs.filter(
-        (breadcrumb) => !this.isEmpty(breadcrumb.values)
-      ),
-      ...this.state.categoryFacetBreadcrumbs.filter(
-        (breadcrumb) => !this.isEmpty(breadcrumb.path)
-      ),
-    ]);
-  }
-
-  private isEmpty(array: any[]) {
+  private isEmpty(array: unknown[]) {
     return array.length === 0;
   }
 
@@ -306,14 +240,28 @@ export class AtomicBreadcrumbManager {
   ) {
     if (breadcrumb.path.length <= 3) {
       return breadcrumb.path.map((breadcrumb) => breadcrumb.value);
-    } else {
-      const collapsed = '...';
-      const firstBreadcrumbValue = breadcrumb.path[0].value;
-      const lastTwoBreadcrumbsValues = breadcrumb.path
-        .slice(-2)
-        .map((breadcrumb) => breadcrumb.value);
-      return [firstBreadcrumbValue, collapsed, ...lastTwoBreadcrumbsValues];
     }
+
+    const collapsed = '...';
+    const firstBreadcrumbValue = breadcrumb.path[0].value;
+    const lastTwoBreadcrumbsValues = breadcrumb.path
+      .slice(-2)
+      .map((breadcrumb) => breadcrumb.value);
+    return [firstBreadcrumbValue, collapsed, ...lastTwoBreadcrumbsValues];
+  }
+
+  private getMoreButton(collapsedBreadcrumbNumber: number, field: string) {
+    return collapsedBreadcrumbNumber > 0 ? (
+      <li part="breadcrumb-value">
+        <button
+          part="breadcrumb-button"
+          class={this.buttonClasses}
+          onClick={() => this.showFacetCollapsedBreadcrumbs(field)}
+        >
+          {collapsedBreadcrumbNumber} more...
+        </button>
+      </li>
+    ) : undefined;
   }
 
   private get mainClear() {
@@ -328,5 +276,31 @@ export class AtomicBreadcrumbManager {
 
   private get buttonClasses() {
     return 'btn btn-link btn-sm text-decoration-none p-0  align-baseline ';
+  }
+
+  private resetCollapsedBreadcrumbs(length: number, field: string) {
+    length <= this.collapseThreshold
+      ? this.collapsedBreadcrumbsState.splice(
+          this.collapsedBreadcrumbsState.indexOf(field),
+          1
+        )
+      : null;
+  }
+
+  render() {
+    if (!this.breadcrumbManager.hasBreadcrumbs()) {
+      return;
+    }
+    return (
+      <div class="row">
+        <span class=" col-9">
+          {this.facetBreadcrumbs}
+          {this.numericFacetBreadcrumbs}
+          {this.dateFacetBreadcrumbs}
+          {this.categoryFacetBreadcrumbs}
+        </span>
+        <span class="col-3 text-right">{this.getClearAllFiltersButton()}</span>
+      </div>
+    );
   }
 }
