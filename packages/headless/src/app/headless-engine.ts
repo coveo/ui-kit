@@ -24,6 +24,13 @@ import {
   NoopPreprocessRequestMiddleware,
   PreprocessRequestMiddleware,
 } from '../api/platform-client';
+import {
+  ArrayValue,
+  RecordValue,
+  Schema,
+  StringValue,
+  Value,
+} from '@coveo/bueno';
 
 /**
  * The global headless engine options.
@@ -194,10 +201,12 @@ export interface Engine<State = SearchAppState> {
  */
 export class HeadlessEngine<Reducers extends ReducersMapObject>
   implements Engine<StateFromReducersMapObject<Reducers>> {
+  private options: HeadlessOptions<Reducers>;
   private reduxStore!: Store;
   public logger!: Logger;
 
-  constructor(private options: HeadlessOptions<Reducers>) {
+  constructor(options: HeadlessOptions<Reducers>) {
+    this.validateConfiguration(options);
     this.initLogger();
     this.initStore();
 
@@ -220,6 +229,40 @@ export class HeadlessEngine<Reducers extends ReducersMapObject>
       } = options.configuration.analytics;
       this.reduxStore.dispatch(updateAnalyticsConfiguration(rest));
     }
+  }
+
+  private validateConfiguration(options: HeadlessOptions<Reducers>) {
+    const configurationSchema = new Schema<HeadlessConfigurationOptions>({
+      organizationId: new StringValue({
+        required: true,
+        emptyAllowed: false,
+      }),
+      accessToken: new StringValue({
+        required: true,
+        emptyAllowed: false,
+      }),
+      platformUrl: new StringValue({
+        required: false,
+        emptyAllowed: false,
+      }),
+      search: new RecordValue({
+        options: {
+          required: false,
+        },
+        values: {
+          pipeline: new StringValue({
+            required: false,
+            emptyAllowed: false,
+          }),
+          searchHub: new StringValue({
+            required: false,
+            emptyAllowed: false,
+          }),
+        },
+      }),
+    });
+    1;
+    return configurationSchema.validate(options.configuration);
   }
 
   private initLogger() {
