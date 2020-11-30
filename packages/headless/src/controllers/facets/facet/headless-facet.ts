@@ -56,11 +56,14 @@ export function buildFacet(
 
   const facetId =
     props.options.facetId ||
-    generateFacetId({
-      type: 'specific',
-      field: props.options.field,
-      state: engine.state.facetSet,
-    });
+    generateFacetId(
+      {
+        type: 'specific',
+        field: props.options.field,
+        state: engine.state.facetSet,
+      },
+      engine.logger
+    );
 
   const options: Required<FacetOptions> = {
     facetId,

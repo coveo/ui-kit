@@ -11,10 +11,7 @@ export interface FacetIdConfig {
   state: AnyFacetSetState;
 }
 
-export function generateFacetId(
-  config: FacetIdConfig,
-  logger: Logger = console
-) {
+export function generateFacetId(config: FacetIdConfig, logger: Logger) {
   const {type, field, state} = config;
 
   const prefix = `${type}_${field}_`;
