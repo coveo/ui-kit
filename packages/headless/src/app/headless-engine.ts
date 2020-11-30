@@ -24,13 +24,8 @@ import {
   NoopPreprocessRequestMiddleware,
   PreprocessRequestMiddleware,
 } from '../api/platform-client';
-import {
-  ArrayValue,
-  RecordValue,
-  Schema,
-  StringValue,
-  Value,
-} from '@coveo/bueno';
+import {RecordValue, Schema, StringValue} from '@coveo/bueno';
+import {validateOptions} from '../utils/validate-payload';
 
 /**
  * The global headless engine options.
@@ -201,11 +196,10 @@ export interface Engine<State = SearchAppState> {
  */
 export class HeadlessEngine<Reducers extends ReducersMapObject>
   implements Engine<StateFromReducersMapObject<Reducers>> {
-  private options: HeadlessOptions<Reducers>;
   private reduxStore!: Store;
   public logger!: Logger;
 
-  constructor(options: HeadlessOptions<Reducers>) {
+  constructor(private options: HeadlessOptions<Reducers>) {
     this.validateConfiguration(options);
     this.initLogger();
     this.initStore();
@@ -261,8 +255,11 @@ export class HeadlessEngine<Reducers extends ReducersMapObject>
         },
       }),
     });
-    1;
-    return configurationSchema.validate(options.configuration);
+    validateOptions(
+      configurationSchema,
+      options.configuration,
+      HeadlessEngine.name
+    );
   }
 
   private initLogger() {
