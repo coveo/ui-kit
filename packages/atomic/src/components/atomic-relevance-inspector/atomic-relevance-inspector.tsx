@@ -9,10 +9,10 @@ import {
 import {Initialization} from '../../utils/initialization-utils';
 
 @Component({
-  tag: 'atomic-debug',
+  tag: 'atomic-relevance-inspector',
   shadow: true,
 })
-export class AtomicDebug {
+export class AtomicRelevanceInspector {
   @State() state!: DebugState;
   @Prop() enabled = true;
 
