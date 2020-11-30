@@ -6,14 +6,9 @@ jobs:
   run-script:
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        node-version: [12.x]
-
     steps:
     - uses: actions/checkout@v2
     - uses: actions/setup-node@v1
       with:
           node-version: '12'
     - run: npm run pr:report:github
-    - run: node ./build/heroku.deploy.js branch
