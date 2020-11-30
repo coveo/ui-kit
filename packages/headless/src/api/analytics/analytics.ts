@@ -5,6 +5,7 @@ import {
   CoveoAnalyticsClient,
   AnalyticsClientSendEventHook,
 } from 'coveo.analytics';
+import {Logger} from 'pino';
 import {getPipelineInitialState} from '../../features/pipeline/pipeline-state';
 import {getQueryInitialState} from '../../features/query/query-state';
 import {getSearchHubInitialState} from '../../features/search-hub/search-hub-state';
@@ -93,14 +94,31 @@ export class AnalyticsProvider implements SearchPageClientProvider {
 
 export const configureAnalytics = (
   state: StateNeededByAnalyticsProvider,
+  logger: Logger,
   analyticsClientMiddleware: AnalyticsClientSendEventHook = (_, p) => p,
   provider: SearchPageClientProvider = new AnalyticsProvider(state)
 ) => {
+  const token = state.configuration.accessToken;
+  const endpoint = state.configuration.analytics.apiBaseUrl;
   const client = new CoveoSearchPageClient(
     {
-      token: state.configuration.accessToken,
-      endpoint: state.configuration.analytics.apiBaseUrl,
-      beforeSendHooks: [analyticsClientMiddleware],
+      token,
+      endpoint,
+      beforeSendHooks: [
+        analyticsClientMiddleware,
+        (type, payload) => {
+          logger.info(
+            {
+              ...payload,
+              type,
+              endpoint,
+              token,
+            },
+            'Analytics request'
+          );
+          return payload;
+        },
+      ],
     },
     provider
   );
