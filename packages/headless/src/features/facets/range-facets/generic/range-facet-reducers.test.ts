@@ -188,16 +188,16 @@ describe('range facet reducers', () => {
     });
   });
 
-  // it('#handleRangeDeselectAllFacets calls #handleRangeFacetDeselectAll for every range facet', () => {
-  //   jest.spyOn(RangeFacetReducers, 'handleRangeFacetDeselectAll');
-  //   state['1'] = buildMockNumericFacetRequest();
-  //   state['2'] = buildMockNumericFacetRequest();
-  //   state['3'] = buildMockNumericFacetRequest();
-  //   RangeFacetReducers.handleRangeDeselectAllFacets(state);
-  //   expect(
-  //     RangeFacetReducers.handleRangeFacetDeselectAll
-  //   ).toHaveBeenCalledTimes(3);
-  // });
+  it('#handleRangeDeselectAllFacets calls #handleRangeFacetDeselectAll for every range facet', () => {
+    jest.spyOn(RangeFacetReducers, 'handleRangeFacetDeselectAll');
+    state['1'] = buildMockNumericFacetRequest();
+    state['2'] = buildMockNumericFacetRequest();
+    state['3'] = buildMockNumericFacetRequest();
+    RangeFacetReducers.handleRangeDeselectAllFacets(state);
+    expect(
+      RangeFacetReducers.handleRangeFacetDeselectAll
+    ).toHaveBeenCalledTimes(3);
+  });
 
   describe('#onRangeRequestSearchFulfilled', () => {
     function convertToRangeValueRequests(

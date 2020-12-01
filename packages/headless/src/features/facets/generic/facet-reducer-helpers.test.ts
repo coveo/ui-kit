@@ -56,17 +56,15 @@ describe('generic facet reducers', () => {
     });
   });
 
-  // it('#handleDeselectAllFacets calls #handleFacetDeselectAll for every facet', () => {
-  //   let state :Record<string, FacetRequest> = {}
-  //   jest.spyOn(FacetReducers, 'handleFacetDeselectAll');
-  //   state['1'] = buildMockFacetRequest();
-  //   state['2'] = buildMockFacetRequest();
-  //   state['3'] = buildMockFacetRequest();
-  //   FacetReducers.handleDeselectAllFacets(state);
-  //   expect(
-  //     FacetReducers.handleFacetDeselectAll
-  //   ).toHaveBeenCalledTimes(3);
-  // });
+  it('#handleDeselectAllFacets calls #handleFacetDeselectAll for every facet', () => {
+    const state: Record<string, FacetRequest> = {};
+    jest.spyOn(FacetReducers, 'handleFacetDeselectAll');
+    state['1'] = buildMockFacetRequest();
+    state['2'] = buildMockFacetRequest();
+    state['3'] = buildMockFacetRequest();
+    FacetReducers.handleDeselectAllFacets(state);
+    expect(FacetReducers.handleFacetDeselectAll).toHaveBeenCalledTimes(3);
+  });
 
   describe('#handleFacetUpdateNumberOfValues', () => {
     it('when the id is registered, it updates the number of values', () => {
