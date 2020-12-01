@@ -6,3 +6,4 @@ npm-debug.log
 dist
 veracode
 .size-snapshot.json
+reports/*.xml
