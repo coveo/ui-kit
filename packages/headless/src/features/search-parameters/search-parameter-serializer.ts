@@ -34,7 +34,20 @@ function isValidPair<K extends keyof SearchParameters>(
 }
 
 function isValidKey(key: string): key is keyof SearchParameters {
-  const validKeys: (keyof SearchParameters)[] = ['q', 'enableQuerySyntax'];
+  const supportedParameters: Record<
+    keyof Required<SearchParameters>,
+    boolean
+  > = {
+    q: true,
+    aq: true,
+    cq: true,
+    enableQuerySyntax: true,
+    firstResult: true,
+    numberOfResults: true,
+    sortCriteria: true,
+  };
+
+  const validKeys = Object.keys(supportedParameters);
   return validKeys.some((validKey) => validKey === key);
 }
 
@@ -43,12 +56,16 @@ function cast<K extends keyof SearchParameters>(
 ): [K, unknown] {
   const [key, value] = pair;
 
-  if (key === 'q') {
-    return [key, value];
-  }
-
   if (key === 'enableQuerySyntax') {
     return [key, value === 'true'];
+  }
+
+  if (key === 'firstResult') {
+    return [key, parseInt(value)];
+  }
+
+  if (key === 'numberOfResults') {
+    return [key, parseInt(value)];
   }
 
   return pair;
