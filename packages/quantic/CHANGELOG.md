@@ -3,6 +3,81 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.1.0-alpha.71](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.70...v0.1.0-alpha.71) (2020-12-01)
+
+
+### Features
+
+* **headless:** add Bueno Validation to HeadlessEngine ([#297](https://bitbucket.org/coveord/ui-kit/issues/297)) ([72f9bac](https://bitbucket.org/coveord/ui-kit/commits/72f9bacb1d792a96e582da71321421ef8ce7d309))
+
+
+
+
+
+# [0.1.0-alpha.70](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.69...v0.1.0-alpha.70) (2020-11-30)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+# [0.1.0-alpha.69](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.68...v0.1.0-alpha.69) (2020-11-30)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+# [0.1.0-alpha.68](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.67...v0.1.0-alpha.68) (2020-11-30)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+# [0.1.0-alpha.67](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.66...v0.1.0-alpha.67) (2020-11-27)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+# [0.1.0-alpha.66](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.65...v0.1.0-alpha.66) (2020-11-27)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+# [0.1.0-alpha.65](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.64...v0.1.0-alpha.65) (2020-11-27)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+# [0.1.0-alpha.64](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.63...v0.1.0-alpha.64) (2020-11-26)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+# [0.1.0-alpha.63](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.62...v0.1.0-alpha.63) (2020-11-26)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
 # [0.1.0-alpha.62](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.61...v0.1.0-alpha.62) (2020-11-23)
 
 **Note:** Version bump only for package @coveo/quantic
