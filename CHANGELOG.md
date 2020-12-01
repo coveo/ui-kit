@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.1.0-alpha.73](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.72...v0.1.0-alpha.73) (2020-12-01)
+
+
+### Features
+
+* **headless:** log analytics requests/responses ([2611d43](https://github.com/coveo/ui-kit/commit/2611d43057413b25e0caa1dc1cb3a3410a299cd7))
+
+
+
+
+
 # [0.1.0-alpha.72](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.71...v0.1.0-alpha.72) (2020-12-01)
 
 
