@@ -21,8 +21,8 @@ export class AtomicRelevanceInspector {
   constructor() {
     this.relevanceInspector = buildRelevanceInspector(this.engine, {
       initialState: {
-        // TODO: enable/disable debug mechanism
-        enabled: true,
+        // TODO: add enable/disable mechanism
+        enabled: false,
       },
     });
     this.unsubscribe = this.relevanceInspector.subscribe(() =>
