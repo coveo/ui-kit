@@ -43,6 +43,19 @@ describe('headless engine', () => {
     engine = new HeadlessEngine(options);
   });
 
+  it('should thrown an error if the engine is constructed with invalid options', () => {
+    const invalidOptions: HeadlessOptions<typeof searchAppReducers> = {
+      ...options,
+      configuration: {
+        ...options.configuration,
+        organizationId: (123 as unknown) as string,
+      },
+    };
+    expect(() => new HeadlessEngine(invalidOptions)).toThrow(
+      `Check the options of ${HeadlessEngine.name}`
+    );
+  });
+
   it('should call configureStore', () => {
     expect(configureStoreSpy).toHaveBeenCalled();
   });
