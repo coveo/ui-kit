@@ -1,10 +1,39 @@
-const {Octokit} = require('@octokit/rest');
-const credentials =
-  process.env.GITHUB_CREDENTIALS || '82ecb83d237039ee70cfbad6d77b2666cd52aed9';
+const github = require('@actions/github');
+const octokit = github.getOctokit(process.env.GITHUB_CREDENTIALS);
+const owner = 'coveo';
+const repo = 'ui-kit';
 
-const newClient = () =>
-  new Octokit({
-    auth: credentials,
-  });
+const getPullRequestTitle = async () => {
+  const pull_number = getPullRequestNumber();
+  return (await octokit.pulls.get({owner, repo, pull_number})).data.title;
+};
 
-module.exports = {newClient};
+const getPullRequestNumber = () => {
+  return (
+    (github.context.payload.pull_request &&
+      github.context.payload.pull_request.number) ||
+    301
+  );
+};
+
+const getPullRequestComments = () => {
+  const issue_number = getPullRequestNumber();
+  return octokit.issues.listComments({repo, owner, issue_number});
+};
+
+const createPullRequestComment = (body) => {
+  const issue_number = getPullRequestNumber();
+  return octokit.issues.createComment({repo, owner, issue_number, body});
+};
+
+const updatePullRequestComment = (comment_id, body) => {
+  return octokit.issues.updateComment({repo, owner, body, comment_id});
+};
+
+module.exports = {
+  getPullRequestTitle,
+  getPullRequestNumber,
+  getPullRequestComments,
+  createPullRequestComment,
+  updatePullRequestComment,
+};
