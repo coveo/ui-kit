@@ -25,6 +25,11 @@ import {RecommendationRequest} from './recommendation/recommendation-request';
 import {ProductRecommendationsRequest} from './product-recommendations/product-recommendations-request';
 import {AnalyticsClientSendEventHook} from 'coveo.analytics/dist/definitions/client/analytics';
 import {Logger} from 'pino';
+import {
+  PreprocessFacetSearchResponseMiddleware,
+  PreprocessQuerySuggestResponseMiddleware,
+  PreprocessSearchResponseMiddleware,
+} from './search-api-client-middleware';
 
 export type AllSearchAPIResponse = Plan | Search | QuerySuggest;
 
@@ -41,6 +46,9 @@ export interface SearchAPIClientOptions {
   renewAccessToken: () => Promise<string>;
   logger: Logger;
   preprocessRequest: PreprocessRequestMiddleware;
+  preprocessSearchResponseMiddleware: PreprocessSearchResponseMiddleware;
+  preprocessQuerySuggestResponseMiddleware: PreprocessQuerySuggestResponseMiddleware;
+  preprocessFacetSearchResponseMiddleware: PreprocessFacetSearchResponseMiddleware;
 }
 
 export type SearchAPIClientResponse<T> =
@@ -82,8 +90,11 @@ export class SearchAPIClient {
       ...this.options,
     });
     if (isSuccessQuerySuggestionsResponse(platformResponse)) {
+      const processedResponse = this.options.preprocessQuerySuggestResponseMiddleware(
+        platformResponse
+      );
       return {
-        success: platformResponse.body,
+        success: processedResponse.body,
       };
     }
     return {
@@ -101,8 +112,11 @@ export class SearchAPIClient {
     });
 
     if (isSuccessSearchResponse(platformResponse)) {
+      const processedResponse = this.options.preprocessSearchResponseMiddleware(
+        platformResponse
+      );
       return {
-        success: platformResponse.body,
+        success: processedResponse.body,
       };
     }
 
@@ -120,8 +134,11 @@ export class SearchAPIClient {
       requestParams: pickNonBaseParams(req),
       ...this.options,
     });
+    const processedResponse = this.options.preprocessFacetSearchResponseMiddleware(
+      platformResponse
+    );
 
-    return platformResponse.body;
+    return processedResponse.body;
   }
 
   async recommendations(req: RecommendationRequest) {

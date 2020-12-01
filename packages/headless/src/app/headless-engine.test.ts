@@ -9,6 +9,11 @@ import {SearchAPIClient} from '../api/search/search-api-client';
 import {AnalyticsClientSendEventHook} from 'coveo.analytics/dist/definitions/client/analytics';
 import pino from 'pino';
 import {NoopPreprocessRequestMiddleware} from '../api/platform-client';
+import {
+  NoopPreprocessFacetSearchResponseMiddleware,
+  NoopPreprocessQuerySuggestResponseMiddleware,
+  NoopPreprocessSearchResponseMiddleware,
+} from '../api/search/search-api-client-middleware';
 
 describe('headless engine', () => {
   let options: HeadlessOptions<typeof searchAppReducers>;
@@ -25,6 +30,9 @@ describe('headless engine', () => {
           logger,
           renewAccessToken: async () => '',
           preprocessRequest: NoopPreprocessRequestMiddleware,
+          preprocessSearchResponseMiddleware: NoopPreprocessSearchResponseMiddleware,
+          preprocessQuerySuggestResponseMiddleware: NoopPreprocessQuerySuggestResponseMiddleware,
+          preprocessFacetSearchResponseMiddleware: NoopPreprocessFacetSearchResponseMiddleware,
         }),
         analyticsClientMiddleware: {} as AnalyticsClientSendEventHook,
         logger: logger,

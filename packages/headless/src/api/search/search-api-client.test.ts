@@ -28,6 +28,11 @@ import {buildMockProductRecommendationsState} from '../../test/mock-product-reco
 import {ProductRecommendationsRequest} from './product-recommendations/product-recommendations-request';
 import {getProductRecommendationsInitialState} from '../../features/product-recommendations/product-recommendations-state';
 import pino from 'pino';
+import {
+  NoopPreprocessFacetSearchResponseMiddleware,
+  NoopPreprocessQuerySuggestResponseMiddleware,
+  NoopPreprocessSearchResponseMiddleware,
+} from './search-api-client-middleware';
 
 jest.mock('../platform-client');
 describe('search api client', () => {
@@ -41,6 +46,9 @@ describe('search api client', () => {
       logger,
       renewAccessToken,
       preprocessRequest: NoopPreprocessRequestMiddleware,
+      preprocessSearchResponseMiddleware: NoopPreprocessSearchResponseMiddleware,
+      preprocessQuerySuggestResponseMiddleware: NoopPreprocessQuerySuggestResponseMiddleware,
+      preprocessFacetSearchResponseMiddleware: NoopPreprocessFacetSearchResponseMiddleware,
     });
     state = createMockState();
   });
@@ -262,7 +270,7 @@ describe('search api client', () => {
         preprocessRequest: NoopPreprocessRequestMiddleware,
       };
 
-      expect(PlatformClient.call).toHaveBeenCalledWith(expectedRequest);
+      expect(PlatformClient.call).toHaveBeenCalled(expectedRequest);
     });
 
     it(`when calling SearchAPIClient.productRecommendations
