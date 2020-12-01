@@ -42,7 +42,7 @@ export const numericFacetSetReducer = createReducer(
       .addCase(deselectAllNumericFacetValues, (state, action) => {
         handleRangeFacetDeselectAll<NumericFacetRequest>(state, action.payload);
       })
-      .addCase(deselectAllFacets, (state, _) => {
+      .addCase(deselectAllFacets, (state) => {
         Object.keys(state).forEach((facetId) => {
           handleRangeFacetDeselectAll(state, facetId);
         });

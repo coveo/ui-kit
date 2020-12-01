@@ -92,7 +92,7 @@ export const categoryFacetSetReducer = createReducer(
       .addCase(deselectAllCategoryFacetValues, (state, action) => {
         handleFacetDeselectAll<CategoryFacetRequest>(state, action.payload);
       })
-      .addCase(deselectAllFacets, (state, _) => {
+      .addCase(deselectAllFacets, (state) => {
         Object.keys(state).forEach((facetId) => {
           handleFacetDeselectAll<CategoryFacetRequest>(state, facetId);
         });

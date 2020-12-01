@@ -42,7 +42,7 @@ export const dateFacetSetReducer = createReducer(
       .addCase(deselectAllDateFacetValues, (state, action) => {
         handleRangeFacetDeselectAll<DateFacetRequest>(state, action.payload);
       })
-      .addCase(deselectAllFacets, (state, _) => {
+      .addCase(deselectAllFacets, (state) => {
         Object.keys(state).forEach((facetId) => {
           handleRangeFacetDeselectAll<DateFacetRequest>(state, facetId);
         });
