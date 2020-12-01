@@ -53,7 +53,7 @@ export class AtomicTab {
   }
 
   render() {
-    const activeClass = this.state.isActive ? 'active' : '';
+    const activeClass = this.state.isActive ? 'active' : 'btn-outline-primary';
     return (
       <nav class="nav nav-pills">
         <button
