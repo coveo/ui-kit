@@ -219,13 +219,15 @@ describe('facet-set slice', () => {
     expect(FacetReducers.handleFacetDeselectAll).toHaveBeenCalledTimes(1);
   });
 
-  it('dispatching #deselectAllFacets calls #handlDeselectAlleFacets', () => {
-    jest.spyOn(FacetReducers, 'handleDeselectAllFacets');
+  it('dispatching #deselectAllFacets calls #handleFacetDeselectAll for every facet', () => {
+    jest.spyOn(FacetReducers, 'handleFacetDeselectAll');
 
     state['1'] = buildMockFacetRequest();
+    state['2'] = buildMockFacetRequest();
+    state['3'] = buildMockFacetRequest();
     facetSetReducer(state, deselectAllFacets());
 
-    expect(FacetReducers.handleDeselectAllFacets).toHaveBeenCalledTimes(1);
+    expect(FacetReducers.handleFacetDeselectAll).toHaveBeenCalledTimes(4);
   });
 
   it('dispatching #updateFacetSortCriterion calls #handleFacetSortCriterionUpdate', () => {

@@ -20,7 +20,6 @@ import {
   handleFacetSortCriterionUpdate,
   handleFacetDeselectAll,
   handleFacetUpdateNumberOfValues,
-  handleDeselectAllFacets,
 } from '../generic/facet-reducer-helpers';
 import {getFacetSetInitialState} from './facet-set-state';
 import {deselectAllFacets} from '../generic/facet-actions';
@@ -71,7 +70,9 @@ export const facetSetReducer = createReducer(
         handleFacetDeselectAll<FacetRequest>(state, action.payload);
       })
       .addCase(deselectAllFacets, (state, _) => {
-        handleDeselectAllFacets<FacetRequest>(state);
+        Object.keys(state).forEach((facetId) => {
+          handleFacetDeselectAll<FacetRequest>(state, facetId);
+        });
       })
       .addCase(updateFacetSortCriterion, (state, action) => {
         handleFacetSortCriterionUpdate<FacetRequest>(state, action.payload);

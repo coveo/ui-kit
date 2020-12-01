@@ -5,7 +5,6 @@ import {
   RangeValueRequest,
 } from './interfaces/range-facet';
 import {RangeFacetOptionalParameters} from './interfaces/options';
-import * as RangeFacetReducers from './range-facet-reducers';
 
 export const defaultRangeFacetOptions: RangeFacetOptionalParameters = {
   filterFacetCount: false,
@@ -102,12 +101,4 @@ function calculateNumberOfValues(request: RangeFacetRequest) {
   return generateAutomaticRanges
     ? Math.max(numberOfValues, currentValues.length)
     : currentValues.length;
-}
-
-export function handleRangeDeselectAllFacets<T extends RangeFacetRequest>(
-  state: Record<string, T>
-) {
-  Object.keys(state).forEach((facetId) => {
-    RangeFacetReducers.handleRangeFacetDeselectAll<T>(state, facetId);
-  });
 }

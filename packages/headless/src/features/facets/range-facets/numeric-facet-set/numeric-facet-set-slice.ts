@@ -16,7 +16,6 @@ import {
   onRangeFacetRequestFulfilled,
   handleRangeFacetDeselectAll,
   defaultRangeFacetOptions,
-  handleRangeDeselectAllFacets,
 } from '../generic/range-facet-reducers';
 import {handleFacetSortCriterionUpdate} from '../../generic/facet-reducer-helpers';
 import {getNumericFacetSetInitialState} from './numeric-facet-set-state';
@@ -44,7 +43,9 @@ export const numericFacetSetReducer = createReducer(
         handleRangeFacetDeselectAll<NumericFacetRequest>(state, action.payload);
       })
       .addCase(deselectAllFacets, (state, _) => {
-        handleRangeDeselectAllFacets<NumericFacetRequest>(state);
+        Object.keys(state).forEach((facetId) => {
+          handleRangeFacetDeselectAll(state, facetId);
+        });
       })
       .addCase(updateNumericFacetSortCriterion, (state, action) => {
         handleFacetSortCriterionUpdate<NumericFacetRequest>(

@@ -16,7 +16,6 @@ import {
   onRangeFacetRequestFulfilled,
   handleRangeFacetDeselectAll,
   defaultRangeFacetOptions,
-  handleRangeDeselectAllFacets,
 } from '../generic/range-facet-reducers';
 import {handleFacetSortCriterionUpdate} from '../../generic/facet-reducer-helpers';
 import {getDateFacetSetInitialState} from './date-facet-set-state';
@@ -44,7 +43,9 @@ export const dateFacetSetReducer = createReducer(
         handleRangeFacetDeselectAll<DateFacetRequest>(state, action.payload);
       })
       .addCase(deselectAllFacets, (state, _) => {
-        handleRangeDeselectAllFacets<DateFacetRequest>(state);
+        Object.keys(state).forEach((facetId) => {
+          handleRangeFacetDeselectAll<DateFacetRequest>(state, facetId);
+        });
       })
       .addCase(updateDateFacetSortCriterion, (state, action) => {
         handleFacetSortCriterionUpdate<DateFacetRequest>(state, action.payload);

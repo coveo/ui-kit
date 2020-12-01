@@ -122,13 +122,15 @@ describe('category facet slice', () => {
     expect(FacetReducers.handleFacetDeselectAll).toHaveBeenCalledTimes(1);
   });
 
-  it('dispatching #deselectAllFacets calls #handlDeselectAlleFacets', () => {
-    jest.spyOn(FacetReducers, 'handleDeselectAllFacets');
+  it('dispatching #deselectAllFacets calls #handleFacetDeselectAll for every category facet', () => {
+    jest.spyOn(FacetReducers, 'handleFacetDeselectAll');
 
     state['1'] = buildMockCategoryFacetRequest();
+    state['2'] = buildMockCategoryFacetRequest();
+    state['3'] = buildMockCategoryFacetRequest();
     categoryFacetSetReducer(state, deselectAllFacets());
 
-    expect(FacetReducers.handleDeselectAllFacets).toHaveBeenCalledTimes(1);
+    expect(FacetReducers.handleFacetDeselectAll).toHaveBeenCalledTimes(4);
   });
 
   it('dispatching #updateCategoryFacetNumberOfValues calls #handleFacetUpdateNumberOfValues if there are no nested children', () => {

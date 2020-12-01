@@ -19,7 +19,6 @@ import {CategoryFacetValue} from './interfaces/response';
 import {
   handleFacetDeselectAll,
   handleFacetUpdateNumberOfValues,
-  handleDeselectAllFacets,
 } from '../generic/facet-reducer-helpers';
 import {selectCategoryFacetSearchResult} from '../facet-search-set/category/category-facet-search-actions';
 import {
@@ -94,7 +93,9 @@ export const categoryFacetSetReducer = createReducer(
         handleFacetDeselectAll<CategoryFacetRequest>(state, action.payload);
       })
       .addCase(deselectAllFacets, (state, _) => {
-        handleDeselectAllFacets<CategoryFacetRequest>(state);
+        Object.keys(state).forEach((facetId) => {
+          handleFacetDeselectAll<CategoryFacetRequest>(state, facetId);
+        });
       })
       .addCase(updateCategoryFacetNumberOfValues, (state, action) => {
         const {facetId} = action.payload;

@@ -97,15 +97,17 @@ describe('numeric-facet-set slice', () => {
     ).toHaveBeenCalledTimes(1);
   });
 
-  it('dispatching #deselectAllFacets calls #handleRangeDeselectAllFacets', () => {
-    jest.spyOn(RangeFacetReducers, 'handleRangeDeselectAllFacets');
+  it('dispatching #deselectAllFacets calls #handleFacetDeselectAll for every numeric facet', () => {
+    jest.spyOn(RangeFacetReducers, 'handleRangeFacetDeselectAll');
 
     state['1'] = buildMockNumericFacetRequest();
+    state['2'] = buildMockNumericFacetRequest();
+    state['3'] = buildMockNumericFacetRequest();
     numericFacetSetReducer(state, deselectAllFacets);
 
     expect(
-      RangeFacetReducers.handleRangeDeselectAllFacets
-    ).toHaveBeenCalledTimes(1);
+      RangeFacetReducers.handleRangeFacetDeselectAll
+    ).toHaveBeenCalledTimes(4);
   });
 
   it('#updateNumericFacetSortCriterion calls #handleFacetSortCriterionUpdate', () => {

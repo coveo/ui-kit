@@ -94,15 +94,17 @@ describe('date-facet-set slice', () => {
     ).toHaveBeenCalledTimes(1);
   });
 
-  it('dispatching #deselectAllFacets calls #handleRangeDeselectAllFacets', () => {
-    jest.spyOn(RangeFacetReducers, 'handleRangeDeselectAllFacets');
+  it('dispatching #deselectAllFacets calls #handleFacetDeselectAll for every date facet', () => {
+    jest.spyOn(RangeFacetReducers, 'handleRangeFacetDeselectAll');
 
     state['1'] = buildMockDateFacetRequest();
+    state['2'] = buildMockDateFacetRequest();
+    state['3'] = buildMockDateFacetRequest();
     dateFacetSetReducer(state, deselectAllFacets);
 
     expect(
-      RangeFacetReducers.handleRangeDeselectAllFacets
-    ).toHaveBeenCalledTimes(1);
+      RangeFacetReducers.handleRangeFacetDeselectAll
+    ).toHaveBeenCalledTimes(4);
   });
 
   it('#updateDateFacetSortCriterion calls #handleFacetSortCriterionUpdate', () => {
