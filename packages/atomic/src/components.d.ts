@@ -6,7 +6,6 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { Engine, HeadlessConfigurationOptions, LogLevel, Result, ResultTemplateCondition } from "@coveo/headless";
-import { InitializeEventHandler } from "./utils/initialization-utils";
 export namespace Components {
     interface AtomicBreadcrumbManager {
     }
@@ -54,6 +53,7 @@ export namespace Components {
     interface AtomicQuerySummary {
     }
     interface AtomicRelevanceInspector {
+        "engine": Engine;
     }
     interface AtomicResult {
         "engine": Engine;
@@ -341,7 +341,7 @@ declare namespace LocalJSX {
     interface AtomicQuerySummary {
     }
     interface AtomicRelevanceInspector {
-        "onAtomic/initializeComponent"?: (event: CustomEvent<InitializeEventHandler>) => void;
+        "engine": Engine;
     }
     interface AtomicResult {
         "engine": Engine;

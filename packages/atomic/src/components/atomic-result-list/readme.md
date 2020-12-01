@@ -9,6 +9,7 @@
 
 | Property           | Attribute            | Description                    | Type     | Default |
 | ------------------ | -------------------- | ------------------------------ | -------- | ------- |
+| `fieldsToInclude`  | `fields-to-include`  |                                | `string` | `''`    |
 | `listClass`        | `list-class`         | Css class for the list wrapper | `string` | `''`    |
 | `listElementClass` | `list-element-class` | Css class for a list element   | `string` | `''`    |
 
