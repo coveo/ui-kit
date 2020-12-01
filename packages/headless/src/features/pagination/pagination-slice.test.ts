@@ -13,6 +13,7 @@ import {change} from '../history/history-actions';
 import {executeSearch} from '../search/search-actions';
 import {logSearchboxSubmit} from '../query/query-analytics-actions';
 import {getPaginationInitialState, PaginationState} from './pagination-state';
+import {restoreSearchParameters} from '../search-parameters/search-parameter-actions';
 
 describe('pagination slice', () => {
   let state: PaginationState;
@@ -144,5 +145,37 @@ describe('pagination slice', () => {
 
     expect(nextState.firstResult).toEqual(123);
     expect(nextState.numberOfResults).toEqual(456);
+  });
+
+  describe('#restoreSearchParameters', () => {
+    it('when the object contains a #firstResult key, it sets the value in state', () => {
+      state.firstResult = 1;
+      const finalState = paginationReducer(
+        state,
+        restoreSearchParameters({firstResult: 0})
+      );
+      expect(finalState.firstResult).toEqual(0);
+    });
+
+    it('when the object does not contain a #firstResult key, it does not update the property in state', () => {
+      state.firstResult = 1;
+      const finalState = paginationReducer(state, restoreSearchParameters({}));
+      expect(finalState.firstResult).toEqual(state.firstResult);
+    });
+
+    it('when the object contains a #numberOfResults key, it sets the value in state', () => {
+      state.numberOfResults = 1;
+      const finalState = paginationReducer(
+        state,
+        restoreSearchParameters({numberOfResults: 0})
+      );
+      expect(finalState.numberOfResults).toEqual(0);
+    });
+
+    it('when the object does not contain a #numberOfResults key, it does not update the property in state', () => {
+      state.numberOfResults = 1;
+      const finalState = paginationReducer(state, restoreSearchParameters({}));
+      expect(finalState.numberOfResults).toEqual(state.numberOfResults);
+    });
   });
 });
