@@ -1,6 +1,6 @@
-name: pr-robot
+name: PR Robot
 on:
-  workflow_dispatch
+- pull_request
 
 jobs:
   run-script:
@@ -11,4 +11,6 @@ jobs:
     - uses: actions/setup-node@v1
       with:
           node-version: '12'
+      env:
+          GITHUB_CREDENTIALS: ${{ secrets.GITHUB_TOKEN }}
     - run: npm run pr:report:github
