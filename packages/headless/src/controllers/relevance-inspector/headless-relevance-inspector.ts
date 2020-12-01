@@ -6,42 +6,41 @@ import {ConfigurationSection, SearchSection} from '../../state/state-sections';
 import {validateOptions} from '../../utils/validate-payload';
 import {buildController} from '../controller/headless-controller';
 
+export interface RelevanceInspectorProps {
+  initialState?: RelevanceInspectorInitialState;
+}
+
+const initialStateSchema = new Schema({
+  /**  If debug mode should be enabled */
+  enabled: new BooleanValue({default: false}),
+});
+
+export type RelevanceInspectorInitialState = SchemaValues<
+  typeof initialStateSchema
+>;
+
+export type RelevanceInspectorState = RelevanceInspector['state'];
+
 /**
  * The `RelevanceInspector` controller is in charge of allowing displaying various debug information.
  */
 export type RelevanceInspector = ReturnType<typeof buildRelevanceInspector>;
-/** The state relevant to the `RelevanceInspector` controller.*/
-export type RelevanceInspectorState = RelevanceInspector['state'];
 
-const optionsSchema = new Schema({
-  /** If debug mode should be enabled when initialized. */
-  enabled: new BooleanValue({default: false}),
-});
-
-export interface RelevanceInspectorProps {
-  options?: RelevanceInspectorOptions;
-}
-
-export type RelevanceInspectorOptions = SchemaValues<typeof optionsSchema>;
-
-/**
- * The `RelevanceInspector` controller is in charge of allowing displaying various debug information.
- */
-export const buildRelevanceInspector = (
+export function buildRelevanceInspector(
   engine: Engine<ConfigurationSection & SearchSection>,
   props: RelevanceInspectorProps = {}
-) => {
+) {
   const controller = buildController(engine);
-  const options = validateOptions(
-    optionsSchema,
-    props.options,
+  const initialState = validateOptions(
+    initialStateSchema,
+    props.initialState,
     buildRelevanceInspector.name
   );
 
   const toggleDebug = (enableDebug: boolean) =>
     engine.dispatch(updateSearchConfiguration({enableDebug}));
 
-  if (options.enabled) {
+  if (initialState.enabled) {
     toggleDebug(true);
   }
 
@@ -88,4 +87,4 @@ export const buildRelevanceInspector = (
       toggleDebug(false);
     },
   };
-};
+}
