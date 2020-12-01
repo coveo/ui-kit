@@ -115,7 +115,7 @@ export class AtomicResultList {
         {this.results}
       </div>,
       <button
-        class="fetch-more-results"
+        class="fetch-more-results btn btn-secondary"
         onClick={() => this.fetchMoreResults()}
         disabled={this.state.isLoading}
       >

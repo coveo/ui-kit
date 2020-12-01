@@ -180,6 +180,7 @@ export const fetchMoreResults = createAsyncThunk<
     }
 
     dispatch(snapshot(extractHistory(state)));
+
     return {
       ...fetched,
       response: fetched.response.success,
