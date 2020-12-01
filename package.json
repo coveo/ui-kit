@@ -11,7 +11,6 @@
     "lint:junit": "eslint . --format junit --output-file ./reports/eslint.xml",
     "lint:fix": "eslint --fix .",
     "pr:report": "node ./scripts/reports/pr-report.js",
-    "pr:report:github": "node ./scripts/reports/pr-report-github.js",
     "report:bundle-size:time-series": "node ./scripts/reports/bundle-size/time-series.js",
     "cypress:test": "lerna run cypress:test",
     "commit": "git-cz",
