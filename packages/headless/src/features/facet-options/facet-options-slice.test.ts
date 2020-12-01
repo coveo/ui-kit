@@ -1,6 +1,6 @@
 import {buildMockFacetOptions} from '../../test/mock-facet-options';
 import {buildMockSearch} from '../../test/mock-search';
-import {logGenericSearchEvent} from '../analytics/analytics-actions';
+import {logSearchEvent} from '../analytics/analytics-actions';
 import {change} from '../history/history-actions';
 import {getHistoryEmptyState} from '../history/history-slice';
 import {executeSearch} from '../search/search-actions';
@@ -47,7 +47,7 @@ describe('facet options slice', () => {
     const search = buildMockSearch();
     state = facetOptionsReducer(
       state,
-      executeSearch.fulfilled(search, '', logGenericSearchEvent({evt: ''}))
+      executeSearch.fulfilled(search, '', logSearchEvent({evt: ''}))
     );
 
     expect(state.freezeFacetOrder).toBe(false);
@@ -61,7 +61,7 @@ describe('facet options slice', () => {
       executeSearch.rejected(
         {message: '', name: ''},
         '',
-        logGenericSearchEvent({evt: ''})
+        logSearchEvent({evt: ''})
       )
     );
 

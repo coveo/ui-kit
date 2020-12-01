@@ -1,109 +1,86 @@
-import {createAsyncThunk, AsyncThunkAction} from '@reduxjs/toolkit';
-import {
-  AnalyticsProvider,
-  configureAnalytics,
-  StateNeededByAnalyticsProvider,
-} from '../../api/analytics/analytics';
 import {SearchPageEvents} from 'coveo.analytics/dist/definitions/searchPage/searchPageEvents';
-import {SearchAppState} from '../../state/search-app-state';
 import {validatePayloadSchema} from '../../utils/validate-payload';
-import {StringValue, RecordValue} from '@coveo/bueno';
-import {CoveoSearchPageClient, SearchPageClientProvider} from 'coveo.analytics';
-import {SearchEventResponse} from 'coveo.analytics/dist/definitions/events';
+import {StringValue} from '@coveo/bueno';
 import {getAdvancedSearchQueriesInitialState} from '../advanced-search-queries/advanced-search-queries-state';
-import {ThunkExtraArguments} from '../../app/store';
+import {Result} from '../../api/search/search/result';
+import {
+  AnalyticsType,
+  documentIdentifier,
+  makeAnalyticsAction,
+  partialDocumentInformation,
+  validateResultPayload,
+} from './analytics-utils';
 
-export interface AsyncThunkAnalyticsOptions<
-  T extends Partial<StateNeededByAnalyticsProvider>
-> {
-  state: T;
-  extra: ThunkExtraArguments;
-}
-
-export const searchPageState = (getState: () => unknown) =>
-  getState() as SearchAppState;
-
-export enum AnalyticsType {
-  Search,
-  Custom,
-  Click,
-}
-
-export type SearchAction = AsyncThunkAction<
-  {analyticsType: AnalyticsType.Search},
-  void | {},
-  AsyncThunkAnalyticsOptions<StateNeededByAnalyticsProvider>
->;
-
-export type CustomAction = AsyncThunkAction<
-  {analyticsType: AnalyticsType.Custom},
-  {},
-  {}
->;
-
-export type ClickAction = AsyncThunkAction<
-  {analyticsType: AnalyticsType.Click},
-  {},
-  {}
->;
-
-export const makeAnalyticsAction = <T extends AnalyticsType>(
-  prefix: string,
-  analyticsType: T,
-  log: (
-    client: CoveoSearchPageClient,
-    state: Partial<SearchAppState>
-  ) => Promise<void | SearchEventResponse> | void,
-  provider: (state: Partial<SearchAppState>) => SearchPageClientProvider = (
-    s
-  ) => new AnalyticsProvider(s as StateNeededByAnalyticsProvider)
-) => {
-  return createAsyncThunk<
-    {analyticsType: T},
-    void,
-    AsyncThunkAnalyticsOptions<StateNeededByAnalyticsProvider>
-  >(
-    prefix,
-    async (_, {getState, extra: {analyticsClientMiddleware, logger}}) => {
-      const state = searchPageState(getState);
-      const client = configureAnalytics({
-        state,
-        logger,
-        analyticsClientMiddleware,
-        provider: provider(state),
-      });
-      const response = await log(client, state);
-      logger.info(
-        {client: client.coveoAnalyticsClient, response},
-        'Analytics response'
-      );
-      return {analyticsType};
-    }
-  );
-};
-
-export interface GenericSearchEventPayload<T = unknown> {
+export interface SearchEventPayload {
   /** The identifier of the search action (e.g., `interfaceLoad`). */
   evt: SearchPageEvents | string;
   /** The event metadata. */
-  meta?: Record<string, T>;
+  meta?: Record<string, unknown>;
 }
 
+export interface ClickEventPayload {
+  evt: SearchPageEvents | string;
+  result: Result;
+}
+
+export interface CustomEventPayload {
+  /** The identifier of the custom action (e.g., `myComponent`). */
+  evt: SearchPageEvents | string;
+  /** The event metadata. */
+  meta?: Record<string, unknown>;
+}
+
+const validateEvent = (p: {evt: string}) =>
+  validatePayloadSchema(p, {
+    evt: new StringValue({required: true, emptyAllowed: false}),
+  });
+
 /**
- * Logs a generic search event.
- * @param p (GenericSearchEventPayload) The search event payload.
+ * Logs a search event.
+ * @param p (SearchEventPayload) The search event payload.
  */
-export const logGenericSearchEvent = (p: GenericSearchEventPayload) =>
+export const logSearchEvent = (p: SearchEventPayload) =>
   makeAnalyticsAction(
     'analytics/generic/search',
     AnalyticsType.Search,
     (client) => {
-      validatePayloadSchema(p, {
-        evt: new StringValue({required: true, emptyAllowed: false}),
-        meta: new RecordValue(),
-      });
+      validateEvent(p);
       const {evt, meta} = p;
       return client.logSearchEvent(evt as SearchPageEvents, meta);
+    }
+  )();
+
+/**
+ * Logs a click event.
+ * @param p (ClickEventPayload) The click event payload.
+ */
+export const logClickEvent = (p: ClickEventPayload) =>
+  makeAnalyticsAction(
+    'analytics/generic/click',
+    AnalyticsType.Click,
+    (client, state) => {
+      validateResultPayload(p.result);
+      validateEvent(p);
+
+      return client.logClickEvent(
+        p.evt as SearchPageEvents,
+        partialDocumentInformation(p.result, state),
+        documentIdentifier(p.result)
+      );
+    }
+  )();
+
+/**
+ * Logs a custom event.
+ * @param p (CustomEventPayload) The custom event payload.
+ */
+export const logCustomEvent = (p: CustomEventPayload) =>
+  makeAnalyticsAction(
+    'analytics/generic/custom',
+    AnalyticsType.Custom,
+    (client) => {
+      validateEvent(p);
+      return client.logCustomEvent(p.evt as SearchPageEvents, p.meta);
     }
   )();
 

@@ -3,7 +3,7 @@ import {enableDidYouMean, disableDidYouMean} from './did-you-mean-actions';
 import {executeSearch} from '../search/search-actions';
 import {buildMockSearchResponse} from '../../test/mock-search-response';
 import {buildMockSearch} from '../../test/mock-search';
-import {logGenericSearchEvent} from '../analytics/analytics-actions';
+import {logSearchEvent} from '../analytics/analytics-actions';
 import {getDidYouMeanInitialState, DidYouMeanState} from './did-you-mean-state';
 
 describe('did you mean slice', () => {
@@ -53,7 +53,7 @@ describe('did you mean slice', () => {
         }),
       }),
       '',
-      logGenericSearchEvent({evt: 'foo'})
+      logSearchEvent({evt: 'foo'})
     );
 
     expect(
@@ -69,7 +69,7 @@ describe('did you mean slice', () => {
         }),
       }),
       '',
-      logGenericSearchEvent({evt: 'foo'})
+      logSearchEvent({evt: 'foo'})
     );
 
     expect(
