@@ -8,7 +8,10 @@ import {
   Unsubscribe,
 } from '@coveo/headless';
 import {Initialization} from '../../utils/initialization-utils';
-
+/**
+ * @part tab-button - The tab button
+ * @part active-tab - The active tab
+ */
 @Component({
   tag: 'atomic-tab',
   styleUrl: 'atomic-tab.scss',
@@ -52,10 +55,13 @@ export class AtomicTab {
   render() {
     const activeClass = this.state.isActive ? 'active' : '';
     return (
-      <nav class="nav nav-pills nav-item nav-justified">
-        <a class={`nav-link ${activeClass}`} onClick={() => this.handleClick()}>
+      <nav class="nav nav-pills">
+        <button
+          class={`nav-link btn btn-link  ${activeClass}`}
+          onClick={() => this.handleClick()}
+        >
           <slot />
-        </a>
+        </button>
       </nav>
     );
   }
