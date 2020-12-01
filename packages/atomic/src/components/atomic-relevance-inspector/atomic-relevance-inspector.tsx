@@ -1,4 +1,4 @@
-import {Component, h, State, Event, EventEmitter} from '@stencil/core';
+import {Component, h, State, Prop} from '@stencil/core';
 import {
   Debug,
   DebugState,
@@ -6,7 +6,6 @@ import {
   buildDebug,
   Engine,
 } from '@coveo/headless';
-import {InitializeEventHandler} from '../../utils/initialization-utils';
 
 @Component({
   tag: 'atomic-relevance-inspector',
@@ -14,20 +13,14 @@ import {InitializeEventHandler} from '../../utils/initialization-utils';
 })
 export class AtomicRelevanceInspector {
   @State() state!: DebugState;
-  @Event({eventName: 'atomic/initializeComponent'}) initialize!: EventEmitter<
-    InitializeEventHandler
-  >;
+  @Prop() engine!: Engine;
 
-  private engine!: Engine;
   private debug!: Debug;
   private unsubscribe: Unsubscribe = () => {};
 
-  public connectedCallback() {
-    this.initialize.emit((engine) => {
-      this.engine = engine;
-      this.debug = buildDebug(this.engine);
-      this.unsubscribe = this.debug.subscribe(() => this.updateState());
-    });
+  constructor() {
+    this.debug = buildDebug(this.engine);
+    this.unsubscribe = this.debug.subscribe(() => this.updateState());
   }
 
   public disconnectedCallback() {
@@ -38,12 +31,12 @@ export class AtomicRelevanceInspector {
     this.state = this.debug.state;
   }
 
-  render() {
-    if (!this.engine || !this.state.isEnabled) {
+  public render() {
+    if (!this.state.isEnabled) {
       return;
     }
 
-    // Display data in a cleaner manner
+    // TODO: Display data in a cleaner manner
     return <div>{JSON.stringify(this.debug.state)}</div>;
   }
 }
