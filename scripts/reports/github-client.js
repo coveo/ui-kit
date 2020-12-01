@@ -16,6 +16,16 @@ const getPullRequestNumber = () => {
   );
 };
 
+const getHeadBranchName = async () => {
+  const pull_number = getPullRequestNumber();
+  return (await octokit.pulls.get({owner, repo, pull_number})).data.head.ref;
+};
+
+const getBaseBranchName = async () => {
+  const pull_number = getPullRequestNumber();
+  return (await octokit.pulls.get({owner, repo, pull_number})).data.base.ref;
+};
+
 const getPullRequestComments = () => {
   const issue_number = getPullRequestNumber();
   return octokit.issues.listComments({repo, owner, issue_number});
@@ -36,4 +46,6 @@ module.exports = {
   getPullRequestComments,
   createPullRequestComment,
   updatePullRequestComment,
+  getHeadBranchName,
+  getBaseBranchName,
 };

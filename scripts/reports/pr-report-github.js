@@ -1,3 +1,4 @@
+const {buildBundleSizeReport} = require('./bundle-size/bundle-size');
 const {
   getPullRequestComments,
   updatePullRequestComment,
@@ -14,7 +15,7 @@ async function main() {
 
 async function buildReport() {
   const titleFormatReport = await buildTitleReport();
-  const bundleSizeReport = ''; // await buildBundleSizeReport();
+  const bundleSizeReport = await buildBundleSizeReport();
 
   return `
   **${reportTitle}**
@@ -36,9 +37,7 @@ async function sendReport(report) {
 }
 
 function findBundleSizeComment(comments) {
-  return comments.find(
-    (comment) => comment.body.indexOf(reportTitle) !== -1
-  );
+  return comments.find((comment) => comment.body.indexOf(reportTitle) !== -1);
 }
 
 main();
