@@ -1,4 +1,4 @@
-import {Component, h, Prop, State} from '@stencil/core';
+import {Component, h, State, Event, EventEmitter} from '@stencil/core';
 import {
   Debug,
   DebugState,
@@ -6,7 +6,7 @@ import {
   buildDebug,
   Engine,
 } from '@coveo/headless';
-import {Initialization} from '../../utils/initialization-utils';
+import {InitializeEventHandler} from '../../utils/initialization-utils';
 
 @Component({
   tag: 'atomic-relevance-inspector',
@@ -14,16 +14,20 @@ import {Initialization} from '../../utils/initialization-utils';
 })
 export class AtomicRelevanceInspector {
   @State() state!: DebugState;
-  @Prop() enabled = true;
+  @Event({eventName: 'atomic/initializeComponent'}) initialize!: EventEmitter<
+    InitializeEventHandler
+  >;
 
   private engine!: Engine;
   private debug!: Debug;
   private unsubscribe: Unsubscribe = () => {};
 
-  @Initialization()
-  public initialize() {
-    this.debug = buildDebug(this.engine, {options: {enabled: this.enabled}});
-    this.unsubscribe = this.debug.subscribe(() => this.updateState());
+  public connectedCallback() {
+    this.initialize.emit((engine) => {
+      this.engine = engine;
+      this.debug = buildDebug(this.engine);
+      this.unsubscribe = this.debug.subscribe(() => this.updateState());
+    });
   }
 
   public disconnectedCallback() {
@@ -35,7 +39,7 @@ export class AtomicRelevanceInspector {
   }
 
   render() {
-    if (!this.state.isEnabled) {
+    if (!this.engine || !this.state.isEnabled) {
       return;
     }
 

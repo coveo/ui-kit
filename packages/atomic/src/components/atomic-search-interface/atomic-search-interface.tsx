@@ -32,7 +32,7 @@ export class AtomicSearchInterface {
   @Prop() sample = false;
   @Prop({reflect: true}) pipeline = 'default';
   @Prop({reflect: true}) searchHub = 'default';
-  @Prop() logLevel?: LogLevel = 'debug';
+  @Prop() logLevel?: LogLevel = 'warn';
   @RenderError() error?: Error;
 
   private engine?: Engine;
@@ -139,6 +139,9 @@ export class AtomicSearchInterface {
   }
 
   public render() {
-    return <slot></slot>;
+    return [
+      <atomic-relevance-inspector></atomic-relevance-inspector>,
+      <slot></slot>,
+    ];
   }
 }
