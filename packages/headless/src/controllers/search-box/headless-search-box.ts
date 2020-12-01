@@ -31,6 +31,7 @@ import {validateOptions} from '../../utils/validate-payload';
 import {logQuerySuggestionClick} from '../../features/query-suggest/query-suggest-analytics-actions';
 import {randomID} from '../../utils/utils';
 import {QuerySuggestState} from '../../features/query-suggest/query-suggest-state';
+import {SearchAction} from '../../features/analytics/analytics-utils';
 
 export {SearchBoxOptions};
 export interface SearchBoxProps {
@@ -77,6 +78,16 @@ export function buildSearchBox(
     })
   );
 
+  const getValue = () => engine.state.querySet[options.id];
+
+  const performSearch = (analytics: SearchAction) => {
+    const {enableQuerySyntax} = options;
+
+    dispatch(updateQuery({q: getValue(), enableQuerySyntax}));
+    dispatch(updatePage(1));
+    dispatch(executeSearch(analytics));
+  };
+
   return {
     ...controller,
 
@@ -118,23 +129,15 @@ export function buildSearchBox(
      * @param value The string value of the suggestion to select
      */
     selectSuggestion(value: string) {
-      dispatch(logQuerySuggestionClick({id, suggestion: value}));
       dispatch(selectQuerySuggestion({id, expression: value}));
-      this.submit();
+      performSearch(logQuerySuggestionClick({id, suggestion: value}));
     },
 
     /**
      * Triggers a search query.
      */
     submit() {
-      dispatch(
-        updateQuery({
-          q: this.state.value,
-          enableQuerySyntax: options.enableQuerySyntax,
-        })
-      );
-      dispatch(updatePage(1));
-      dispatch(executeSearch(logSearchboxSubmit()));
+      performSearch(logSearchboxSubmit());
     },
 
     /**
@@ -146,7 +149,7 @@ export function buildSearchBox(
       const suggestions = getSuggestions(querySuggestState);
 
       return {
-        value: state.querySet[options.id],
+        value: getValue(),
         suggestions,
         isLoading: state.search.isLoading,
       };

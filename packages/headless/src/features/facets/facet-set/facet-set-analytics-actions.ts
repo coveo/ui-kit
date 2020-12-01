@@ -1,8 +1,4 @@
 import {FacetSortCriterion} from './interfaces/request';
-import {
-  makeAnalyticsAction,
-  AnalyticsType,
-} from '../../analytics/analytics-actions';
 import {RangeFacetSortCriterion} from '../range-facets/generic/interfaces/request';
 import {
   validatePayloadValue,
@@ -12,32 +8,21 @@ import {
   facetIdDefinition,
   requiredNonEmptyString,
 } from '../generic/facet-actions-validation';
-import {
-  CategoryFacetSection,
-  DateFacetSection,
-  FacetSection,
-  NumericFacetSection,
-} from '../../../state/state-sections';
 import {SearchAppState} from '../../../state/search-app-state';
 import {getFacetSetInitialState} from './facet-set-state';
 import {getDateFacetSetInitialState} from '../range-facets/date-facet-set/date-facet-set-state';
 import {getNumericFacetSetInitialState} from '../range-facets/numeric-facet-set/numeric-facet-set-state';
 import {getCategoryFacetSetInitialState} from '../category-facet-set/category-facet-set-state';
 import {Value} from '@coveo/bueno';
-type SectionNeededForFacetMetadata = FacetSection &
-  CategoryFacetSection &
-  DateFacetSection &
-  NumericFacetSection;
-
-export type FacetUpdateSortMetadata = {
-  facetId: string;
-  criterion: FacetSortCriterion | RangeFacetSortCriterion;
-};
-
-export type FacetSelectionChangeMetadata = {
-  facetId: string;
-  facetValue: string;
-};
+import {
+  AnalyticsType,
+  makeAnalyticsAction,
+} from '../../analytics/analytics-utils';
+import {
+  FacetSelectionChangeMetadata,
+  FacetUpdateSortMetadata,
+  SectionNeededForFacetMetadata,
+} from './facet-set-analytics-actions-utils';
 
 /**
  * Logs a facet show more event.

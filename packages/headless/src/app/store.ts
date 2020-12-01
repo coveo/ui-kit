@@ -5,14 +5,39 @@ import {
   StateFromReducersMapObject,
   Middleware,
 } from '@reduxjs/toolkit';
+import {AnalyticsClientSendEventHook} from 'coveo.analytics';
+import {SearchAPIClient} from '../api/search/search-api-client';
 import {analyticsMiddleware} from './analytics-middleware';
+import {Logger} from 'pino';
+
+export interface ThunkExtraArguments {
+  searchAPIClient: SearchAPIClient;
+  analyticsClientMiddleware: AnalyticsClientSendEventHook;
+  logger: Logger;
+}
 
 interface ConfigureStoreOptions<Reducers extends ReducersMapObject> {
   reducers: Reducers;
   preloadedState?: StateFromReducersMapObject<Reducers>;
   middlewares?: Middleware[];
-  thunkExtraArguments?: unknown;
+  thunkExtraArguments: ThunkExtraArguments;
 }
+
+const actionLogger: (logger: Logger) => Middleware = (logger) => (api) => (
+  next
+) => (action) => {
+  const result = next(action);
+
+  logger.debug(
+    {
+      action,
+      nextState: api.getState(),
+    },
+    `Action dispatched: ${action.type}`
+  );
+
+  return result;
+};
 
 export function configureStore<Reducers extends ReducersMapObject>({
   reducers,
@@ -34,6 +59,7 @@ export function configureStore<Reducers extends ReducersMapObject>({
         analyticsMiddleware,
         ...middlewares,
         ...getDefaultMiddleware({thunk: {extraArgument: thunkExtraArguments}}),
+        actionLogger(thunkExtraArguments.logger),
       ];
     },
   });

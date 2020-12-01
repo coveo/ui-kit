@@ -1,7 +1,4 @@
-import {
-  makeAnalyticsAction,
-  AnalyticsType,
-} from '../analytics/analytics-actions';
+import {AnalyticsType, makeAnalyticsAction} from '../analytics/analytics-utils';
 import {getSortCriteriaInitialState} from './sort-criteria-state';
 
 /**

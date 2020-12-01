@@ -24,6 +24,7 @@ const sleep = (seconds: number) =>
 const engine = new HeadlessEngine({
   configuration: HeadlessEngine.getSampleConfiguration(),
   reducers: searchAppReducers,
+  loggerOptions: {level: 'silent'},
 });
 
 const searchBox = buildSearchBox(engine);
