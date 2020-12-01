@@ -3,6 +3,33 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.1.0-alpha.72](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.71...v0.1.0-alpha.72) (2020-12-01)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [0.1.0-alpha.71](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.70...v0.1.0-alpha.71) (2020-12-01)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [0.1.0-alpha.70](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.69...v0.1.0-alpha.70) (2020-11-30)
+
+
+### Bug Fixes
+
+* **atomic:** dependabot stencil/sass upgrade ([0ca590e](https://github.com/coveo/ui-kit/commit/0ca590ebd0354c798396b54af303e13096ad9d2d))
+
+
+
+
+
 # [0.1.0-alpha.69](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.68...v0.1.0-alpha.69) (2020-11-30)
 
 

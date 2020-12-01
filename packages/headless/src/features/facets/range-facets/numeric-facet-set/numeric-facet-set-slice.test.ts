@@ -19,6 +19,7 @@ import {executeSearch} from '../../../search/search-actions';
 import {buildMockSearch} from '../../../../test/mock-search';
 import {logGenericSearchEvent} from '../../../analytics/analytics-actions';
 import {numericFacetSetReducer} from './numeric-facet-set-slice';
+import {deselectAllFacets} from '../../generic/facet-actions';
 
 describe('numeric-facet-set slice', () => {
   let state: NumericFacetSetState;
@@ -94,6 +95,19 @@ describe('numeric-facet-set slice', () => {
     expect(
       RangeFacetReducers.handleRangeFacetDeselectAll
     ).toHaveBeenCalledTimes(1);
+  });
+
+  it('dispatching #deselectAllFacets calls #handleFacetDeselectAll for every numeric facet', () => {
+    jest.spyOn(RangeFacetReducers, 'handleRangeFacetDeselectAll');
+
+    state['1'] = buildMockNumericFacetRequest();
+    state['2'] = buildMockNumericFacetRequest();
+    state['3'] = buildMockNumericFacetRequest();
+    numericFacetSetReducer(state, deselectAllFacets);
+
+    expect(
+      RangeFacetReducers.handleRangeFacetDeselectAll
+    ).toHaveBeenCalledTimes(4);
   });
 
   it('#updateNumericFacetSortCriterion calls #handleFacetSortCriterionUpdate', () => {
