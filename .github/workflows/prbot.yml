@@ -13,4 +13,5 @@ jobs:
           node-version: '12'
       env:
           GITHUB_CREDENTIALS: ${{ secrets.GITHUB_TOKEN }}
+    - run: npm i
     - run: npm run pr:report:github
