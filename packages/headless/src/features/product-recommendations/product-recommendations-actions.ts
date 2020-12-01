@@ -10,7 +10,6 @@ import {
   ProductRecommendationsSection,
   ContextSection,
 } from '../../state/state-sections';
-import {SearchAction} from '../analytics/analytics-actions';
 import {validatePayloadSchema} from '../../utils/validate-payload';
 import {ArrayValue, NumberValue, StringValue} from '@coveo/bueno';
 import {getVisitorID, historyStore} from '../../api/analytics/analytics';
@@ -18,6 +17,7 @@ import {ProductRecommendationsRequest} from '../../api/search/product-recommenda
 import {ProductRecommendation} from '../../api/search/search/product';
 import {Result} from '../../api/search/search/result';
 import {logProductRecommendations} from './product-recommendations-analytics.actions';
+import {SearchAction} from '../analytics/analytics-utils';
 
 export type StateNeededByGetProductRecommendations = ConfigurationSection &
   ProductRecommendationsSection &

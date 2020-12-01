@@ -25,6 +25,7 @@ import {
   CategoryFacetSetState,
   getCategoryFacetSetInitialState,
 } from './category-facet-set-state';
+import {deselectAllFacets} from '../generic/facet-actions';
 
 export const categoryFacetSetReducer = createReducer(
   getCategoryFacetSetInitialState(),
@@ -90,6 +91,11 @@ export const categoryFacetSetReducer = createReducer(
       })
       .addCase(deselectAllCategoryFacetValues, (state, action) => {
         handleFacetDeselectAll<CategoryFacetRequest>(state, action.payload);
+      })
+      .addCase(deselectAllFacets, (state) => {
+        Object.keys(state).forEach((facetId) => {
+          handleFacetDeselectAll<CategoryFacetRequest>(state, facetId);
+        });
       })
       .addCase(updateCategoryFacetNumberOfValues, (state, action) => {
         const {facetId} = action.payload;

@@ -1,9 +1,9 @@
 import {CategoryFacetResponse, CategoryFacetValue} from './interfaces/response';
 import {
-  FacetSelectionChangeMetadata,
   logFacetDeselect,
   logFacetSelect,
 } from '../facet-set/facet-set-analytics-actions';
+import {FacetSelectionChangeMetadata} from '../facet-set/facet-set-analytics-actions-utils';
 
 type CategoryFacetResponsePartition = {
   parents: CategoryFacetValue[];

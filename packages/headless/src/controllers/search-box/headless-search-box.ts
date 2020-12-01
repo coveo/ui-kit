@@ -31,7 +31,7 @@ import {validateOptions} from '../../utils/validate-payload';
 import {logQuerySuggestionClick} from '../../features/query-suggest/query-suggest-analytics-actions';
 import {randomID} from '../../utils/utils';
 import {QuerySuggestState} from '../../features/query-suggest/query-suggest-state';
-import {SearchAction} from '../../features/analytics/analytics-actions';
+import {SearchAction} from '../../features/analytics/analytics-utils';
 
 export {SearchBoxOptions};
 export interface SearchBoxProps {
