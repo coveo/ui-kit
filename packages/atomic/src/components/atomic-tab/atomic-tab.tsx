@@ -57,7 +57,7 @@ export class AtomicTab {
     return (
       <nav class="nav nav-pills">
         <button
-          class={`nav-link btn btn-link  ${activeClass}`}
+          class={`nav-link btn  ${activeClass}`}
           onClick={() => this.handleClick()}
         >
           <slot />
