@@ -11,7 +11,7 @@ import {Initialization} from '../../utils/initialization-utils';
 
 @Component({
   tag: 'atomic-tab',
-  styleUrl: 'atomic-tab.css',
+  styleUrl: 'atomic-tab.scss',
   shadow: true,
 })
 export class AtomicTab {
@@ -50,12 +50,13 @@ export class AtomicTab {
   }
 
   render() {
+    const activeClass = this.state.isActive ? 'active' : '';
     return (
-      <button class="tab" onClick={() => this.handleClick()}>
-        <span class={this.state.isActive ? 'active' : ''}>
+      <nav class="nav nav-pills nav-item nav-justified">
+        <a class={`nav-link ${activeClass}`} onClick={() => this.handleClick()}>
           <slot />
-        </span>
-      </button>
+        </a>
+      </nav>
     );
   }
 }
