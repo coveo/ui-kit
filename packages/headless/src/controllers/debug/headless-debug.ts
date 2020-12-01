@@ -15,7 +15,7 @@ export type DebugState = Debug['state'];
 
 const optionsSchema = new Schema({
   /** If debug mode should be enabled when initialized. */
-  enabled: new BooleanValue({default: true}),
+  enabled: new BooleanValue({default: false}),
 });
 
 export interface DebugProps {
@@ -50,11 +50,26 @@ export const buildDebug = (
 
     /** @returns The state of the `Debug` controller. */
     get state() {
+      const {
+        executionReport,
+        basicExpression,
+        advancedExpression,
+        constantExpression,
+        userIdentities,
+        rankingExpressions,
+      } = engine.state.search.response;
+
       return {
         isEnabled: engine.state.configuration.search.enableDebug,
-        executionReport: engine.state.search.response.executionReport,
         rankingInformation: rankingInformationSelector(engine.state),
-        rankingExpressions: engine.state.search.response.rankingExpressions,
+        executionReport,
+        expressions: {
+          basicExpression,
+          advancedExpression,
+          constantExpression,
+        },
+        userIdentities,
+        rankingExpressions,
         // fields: [], TODO: allow to fetch fields from the API
       };
     },
