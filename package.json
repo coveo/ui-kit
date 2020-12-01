@@ -26,7 +26,6 @@
     "@commitlint/config-conventional": "^11.0.0",
     "@commitlint/config-lerna-scopes": "^10.0.0",
     "@commitlint/lint": "^9.1.1",
-    "@octokit/rest": "^18.0.9",
     "@rollup/plugin-typescript": "^6.0.0",
     "@types/node": "^10.0.3",
     "@typescript-eslint/eslint-plugin": "^4.6.1",

@@ -12,7 +12,7 @@ const getPullRequestNumber = () => {
   return (
     (github.context.payload.pull_request &&
       github.context.payload.pull_request.number) ||
-    301
+    0
   );
 };
 
