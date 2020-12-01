@@ -34,6 +34,8 @@ import {
   PreprocessQuerySuggestResponseMiddleware,
   PreprocessSearchResponseMiddleware,
 } from '../api/search/search-api-client-middleware';
+import {RecordValue, Schema, StringValue} from '@coveo/bueno';
+import {validateOptions} from '../utils/validate-payload';
 
 /**
  * The global headless engine options.
