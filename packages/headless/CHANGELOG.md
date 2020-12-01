@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.1.0-alpha.74](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.73...v0.1.0-alpha.74) (2020-12-01)
+
+
+### Features
+
+* **headless:** export analytics actions for all features ([#298](https://github.com/coveo/ui-kit/issues/298)) ([fe5ffc0](https://github.com/coveo/ui-kit/commit/fe5ffc0e0033d1795afac7eee6829486febfac2e))
+
+
+
+
+
 # [0.1.0-alpha.73](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.72...v0.1.0-alpha.73) (2020-12-01)
 
 
