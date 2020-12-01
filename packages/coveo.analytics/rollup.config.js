@@ -26,6 +26,9 @@ const browser = {
                   contentBase: ['dist', 'public'],
                   port: 9001,
                   open: true,
+                  headers: {
+                      'Access-Control-Allow-Origin': 'http://localhost:9001',
+                  },
               })
             : null,
     ],
