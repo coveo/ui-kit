@@ -15,7 +15,7 @@ function serialize(obj: SearchParameters) {
 function deserialize(fragment: string): SearchParameters {
   const parts = fragment.split('&').filter((part) => part.length);
   const keyValuePairs = parts
-    .map((part) => part.split('='))
+    .map((part) => splitOnFirstDelimiter(part))
     .filter(isValidPair)
     .map(cast);
 
@@ -23,6 +23,14 @@ function deserialize(fragment: string): SearchParameters {
     const [key, val] = pair;
     return {...acc, [key]: val};
   }, {});
+}
+
+function splitOnFirstDelimiter(str: string) {
+  const delimiter = '=';
+  const [first, ...rest] = str.split(delimiter);
+  const second = rest.join(delimiter);
+
+  return [first, second];
 }
 
 function isValidPair<K extends keyof SearchParameters>(
@@ -47,8 +55,7 @@ function isValidKey(key: string): key is keyof SearchParameters {
     sortCriteria: true,
   };
 
-  const validKeys = Object.keys(supportedParameters);
-  return validKeys.some((validKey) => validKey === key);
+  return key in supportedParameters;
 }
 
 function cast<K extends keyof SearchParameters>(
