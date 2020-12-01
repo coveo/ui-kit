@@ -49,7 +49,17 @@ describe('Tab', () => {
         },
       };
 
-      expect(() => buildTab(engine, props)).not.toThrow();
+      expect(() => initTab()).not.toThrow();
+    });
+
+    it('when initialState #isActive is an invalid value, it throws an error', () => {
+      props.initialState = {isActive: ('' as unknown) as boolean};
+      expect(() => initTab()).toThrow('Check the initialState of buildTab');
+    });
+
+    it('when options #expression is an invalid value, it throws an error', () => {
+      props.options = {expression: (1 as unknown) as string};
+      expect(() => initTab()).toThrow('Check the options of buildTab');
     });
   });
 

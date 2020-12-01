@@ -87,13 +87,17 @@ export function handleFacetSearchFulfilled<T extends FacetSearchResponse>(
   search.response = response;
 }
 
+export const defaultFacetSearchOptions: FacetSearchRequestOptions = {
+  captions: {},
+  numberOfValues: 10,
+  query: '',
+};
+
 function buildFacetSearchOptions(
   config: Partial<FacetSearchRequestOptions> = {}
 ): FacetSearchRequestOptions {
   return {
-    captions: {},
-    numberOfValues: 10,
-    query: '',
+    ...defaultFacetSearchOptions,
     ...config,
   };
 }

@@ -22,6 +22,13 @@ describe('search request', () => {
     expect(params.q).toBe(state.query.q);
   });
 
+  it('#searchRequest returns the state #enableQuerySyntax', () => {
+    state.query.enableQuerySyntax = true;
+    const params = buildSearchRequest(state);
+
+    expect(params.enableQuerySyntax).toBe(state.query.enableQuerySyntax);
+  });
+
   it('#searchRequest returns the state #sortCriteria', () => {
     state.sortCriteria = 'qre';
     const params = buildSearchRequest(state);

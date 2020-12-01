@@ -10,6 +10,7 @@ export function buildMockQuerySuggest(
     q: '',
     completions: [],
     error: null,
+    partialQueries: [],
     ...config,
   };
 }

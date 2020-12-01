@@ -9,13 +9,18 @@ import {
 } from '../../state/state-sections';
 import {buildController} from '../controller/headless-controller';
 import {Schema, SchemaValues, StringValue} from '@coveo/bueno';
+import {validateOptions} from '../../utils/validate-payload';
 
 const optionsSchema = new Schema({
   /**
    * The Recommendation identifier used by the Coveo platform to retrieve recommended documents.
    * If not provided, will use default value of `Recommendation`.
    */
-  id: new StringValue({emptyAllowed: true, required: false, default: ''}),
+  id: new StringValue<string>({
+    emptyAllowed: true,
+    required: false,
+    default: '',
+  }),
 });
 
 export type RecommendationListOptions = SchemaValues<typeof optionsSchema>;
@@ -30,15 +35,17 @@ export interface RecommendationListProps {
 export type RecommendationList = ReturnType<typeof buildRecommendationList>;
 export type RecommendationListState = RecommendationList['state'];
 
-export const buildRecommendationList = (
+export function buildRecommendationList(
   engine: Engine<RecommendationSection & ConfigurationSection>,
   props: RecommendationListProps = {}
-) => {
+) {
   const controller = buildController(engine);
   const {dispatch} = engine;
-  const options = optionsSchema.validate(props.options) as Required<
-    RecommendationListOptions
-  >;
+  const options = validateOptions(
+    optionsSchema,
+    props.options,
+    buildRecommendationList.name
+  ) as Required<RecommendationListOptions>;
   if (options.id !== '') {
     dispatch(setRecommendationId({id: options.id}));
   }
@@ -59,4 +66,4 @@ export const buildRecommendationList = (
       };
     },
   };
-};
+}

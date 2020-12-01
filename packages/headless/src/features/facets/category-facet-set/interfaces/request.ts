@@ -7,7 +7,11 @@ import {
   BaseFacetValueRequest,
 } from '../../facet-api/request';
 
-export type CategoryFacetSortCriterion = 'alphanumeric' | 'occurrences';
+export const categoryFacetSortCriteria = [
+  'alphanumeric',
+  'occurrences',
+] as const;
+export type CategoryFacetSortCriterion = typeof categoryFacetSortCriteria[number];
 
 export interface CategoryFacetValueRequest extends BaseFacetValueRequest {
   value: string;

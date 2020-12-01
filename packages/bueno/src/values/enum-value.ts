@@ -37,4 +37,8 @@ export class EnumValue<T> implements SchemaValue<T> {
   public get default() {
     return this.value.default;
   }
+
+  public get required() {
+    return this.value.required;
+  }
 }

@@ -38,7 +38,7 @@ export class NumberValue implements SchemaValue<number> {
   }
 
   public get required() {
-    return this.value.required();
+    return this.value.required;
   }
 }
 

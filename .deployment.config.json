@@ -1,52 +1,67 @@
 {
-  "product": "ui-kit",
-  "team_name": "searchui",
-  "general": {
-    "aws_regions": ["us-east-1"],
-    "environments_order": ["dev"],
-    "gatekeeper": {
-      "notify_if_passes": true,
-      "deploy_next_if_passes": false
-    },
-    "slack_channel": "#searchuibuilds",
-    "team_jenkins": "searchuibuilds"
-  },
-  "ordered_phases": [
-    {
-      "id": "deploy-headless",
-      "s3": {
-        "bucket": "binaries",
-        "add_coveo_bucket_prefix": true,
-        "directory": "proda/StaticCDN/headless/latest",
-        "source": "packages/headless/dist/browser",
-        "parameters": {
-          "acl": "public-read"
+    "product": "ui-kit",
+    "team_name": "searchui",
+    "general": {
+        "aws_regions": {
+            "sequential": [
+                "us-east-1"
+            ]
+        },
+        "environments_order": {
+            "sequential": [
+                "dev"
+            ]
+        },
+        "team_jenkins": "searchuibuilds",
+        "start_environment_automatically": false,
+        "notifications": {
+            "slack_channels": [
+                "#searchuibuilds"
+            ]
         }
-      }
-    }
-  ],
-  "certifiers": {
-    "dev": [
-      { "system_certifier": "snyk" },
-      { "system_certifier": "veracode" }
-    ]
-  },
-  "snyk": {
-    "org": "coveo-jsui",
-    "no_container_images": true,
-    "configurations": [
-      {
-        "directory": "packages/headless",
-        "project_name": "headless-engine"
-      }
-    ]
-  },
-  "veracode": {
-    "sandbox_name": "UI Kit (JS UI)",
-    "scan_include_patterns": "*"
-  },
-  "observatory": {"no_endpoint": true},
-  "package_rollout": {
-    "only_consider_changesets_after": "b244fe702d8e96d016a52715e92c8131acfde3ba"
-  }
+    },
+    "ordered_phases": [
+        {
+            "id": "deploy-headless",
+            "s3": {
+                "bucket": "{terraform.infra.infra.bucket_binaries}",
+                "directory": "proda/StaticCDN/headless/latest",
+                "source": "packages/headless/dist/browser",
+                "parameters": {
+                    "acl": "public-read"
+                }
+            }
+        }
+    ],
+    "certifiers": {
+        "dev": [
+            {
+                "system_certifier": "snyk"
+            },
+            {
+                "system_certifier": "veracode"
+            }
+        ]
+    },
+    "snyk": {
+        "org": "coveo-jsui",
+        "no_container_images": true,
+        "configurations": [
+            {
+                "directory": "packages/headless",
+                "project_name": "headless-engine"
+            }
+        ]
+    },
+    "veracode": {
+        "sandbox_name": "UI Kit (JS UI)",
+        "scan_include_patterns": "*"
+    },
+    "observatory": {
+        "no_endpoint": true
+    },
+    "package_rollout": {
+        "only_consider_changesets_after": "b244fe702d8e96d016a52715e92c8131acfde3ba"
+    },
+    "deployment_config_version": 1
 }

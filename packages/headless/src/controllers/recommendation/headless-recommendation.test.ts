@@ -35,14 +35,20 @@ describe('headless recommendation', () => {
     expect(engine.actions).not.toContainEqual(found);
   };
 
-  it('when options.id is set to a non empty value, it dispatches #setRecommendationId', () => {
+  it('when #options.id is set to a non empty value, it dispatches #setRecommendationId', () => {
     recommendation = buildRecommendationList(engine, {options: {id: 'foo'}});
     expectContainAction(setRecommendationId);
   });
 
-  it('when options.id is set to an empty value, it does not dispatches #setRecommendationId', () => {
+  it('when #options.id is set to an empty value, it does not dispatches #setRecommendationId', () => {
     recommendation = buildRecommendationList(engine, {options: {id: ''}});
     expectDoesNotContainAction(setRecommendationId);
+  });
+
+  it('when #options.id is set to an invalid value, it throws an error', () => {
+    const options = {id: (1 as unknown) as string};
+    const fn = () => buildRecommendationList(engine, {options});
+    expect(fn).toThrow('Check the options of buildRecommendationList');
   });
 
   it('getRecommendations dispatches #getRecommendations', () => {

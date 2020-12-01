@@ -55,15 +55,15 @@ export default class Sort extends LightningElement {
   }
 
   get dateDescending() {
-    return CoveoHeadless.buildDateSortCriterion('descending');
+    return CoveoHeadless.buildDateSortCriterion(CoveoHeadless.SortOrder.Descending)
   }
-
+  
   get dateAscending() {
-    return CoveoHeadless.buildDateSortCriterion('ascending');
+    return CoveoHeadless.buildDateSortCriterion(CoveoHeadless.SortOrder.Ascending)
   }
 
   get largest() {
-    return CoveoHeadless.buildFieldSortCriterion('size', 'descending');
+    return CoveoHeadless.buildFieldSortCriterion('size', CoveoHeadless.SortOrder.Descending)
   }
 
   get options() {

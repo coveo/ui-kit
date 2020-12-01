@@ -3,12 +3,13 @@ import {
   Sort,
   SortState,
   SortInitialState,
-  buildRelevanceSortCriterion,
-  buildDateSortCriterion,
-  buildFieldSortCriterion,
   Unsubscribe,
   buildSort,
   Engine,
+  buildRelevanceSortCriterion,
+  buildDateSortCriterion,
+  buildFieldSortCriterion,
+  SortOrder,
 } from '@coveo/headless';
 import {Initialization} from '../../utils/initialization-utils';
 
@@ -19,9 +20,12 @@ enum SortOption {
   Size = 'size',
 }
 
+/**
+ * @part select - The select element
+ */
 @Component({
   tag: 'atomic-sort-dropdown',
-  styleUrl: 'atomic-sort-dropdown.css',
+  styleUrl: 'atomic-sort-dropdown.scss',
   shadow: true,
 })
 export class AtomicSortDropdown {
@@ -35,6 +39,7 @@ export class AtomicSortDropdown {
   public initialize() {
     const initialState: Partial<SortInitialState> = {criterion: this.relevance};
     this.sort = buildSort(this.engine, {initialState});
+
     this.unsubscribe = this.sort.subscribe(() => this.updateState());
   }
 
@@ -76,20 +81,26 @@ export class AtomicSortDropdown {
   }
 
   private get dateDescending() {
-    return buildDateSortCriterion('descending');
+    return buildDateSortCriterion(SortOrder.Descending);
   }
 
   private get dateAscending() {
-    return buildDateSortCriterion('ascending');
+    return buildDateSortCriterion(SortOrder.Ascending);
   }
 
   private get largest() {
-    return buildFieldSortCriterion('size', 'descending');
+    return buildFieldSortCriterion('size', SortOrder.Descending);
   }
 
   render() {
     return (
-      <select name="sorts" onChange={(val) => this.select(val)}>
+      <select
+        class="form-select"
+        aria-label="Sort results by"
+        part="select"
+        name="sorts"
+        onChange={(val) => this.select(val)}
+      >
         <option
           value={SortOption.Relevance}
           selected={this.sort.isSortedBy(this.relevance)}

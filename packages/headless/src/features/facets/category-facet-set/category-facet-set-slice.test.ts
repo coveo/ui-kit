@@ -159,7 +159,7 @@ describe('category facet slice', () => {
       categoryFacetSetReducer(
         state,
         updateCategoryFacetNumberOfValues({
-          facetId: '',
+          facetId: 'notRegistred',
           numberOfValues: 20,
         })
       )
@@ -347,6 +347,25 @@ describe('category facet slice', () => {
           expect(parent.state).toBe('selected');
         });
       });
+    });
+
+    it('should throw when selection is invalid', () => {
+      const selection = buildMockCategoryFacetValue({
+        value: 'A',
+        children: [
+          buildMockCategoryFacetValue({value: 'B'}),
+          buildMockCategoryFacetValue({
+            value: 'C',
+            children: [
+              buildMockCategoryFacetValue({value: 'D', numberOfResults: -1}),
+            ],
+          }),
+        ],
+      });
+
+      expect(() =>
+        toggleSelectCategoryFacetValue({facetId, selection})
+      ).toThrow();
     });
   });
 

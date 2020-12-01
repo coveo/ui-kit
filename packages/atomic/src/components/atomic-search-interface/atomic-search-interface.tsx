@@ -15,6 +15,9 @@ import {
   HeadlessConfigurationOptions,
   AnalyticsActions,
   ConfigurationActions,
+  buildSearchParameterManager,
+  buildSearchParameterSerializer,
+  Unsubscribe,
 } from '@coveo/headless';
 import {RenderError} from '../../utils/render-utils';
 import {InitializeEvent} from '../../utils/initialization-utils';
@@ -31,6 +34,7 @@ export class AtomicSearchInterface {
   @RenderError() error?: Error;
 
   private engine?: Engine;
+  private unsubscribe: Unsubscribe = () => {};
   private hangingComponentsInitialization: InitializeEvent[] = [];
   private initialized = false;
 
@@ -38,6 +42,10 @@ export class AtomicSearchInterface {
     if (this.sample) {
       this.initialize(HeadlessEngine.getSampleConfiguration());
     }
+  }
+
+  disconnectedCallback() {
+    this.unsubscribe();
   }
 
   @Method() async initialize(
@@ -78,9 +86,28 @@ export class AtomicSearchInterface {
 
     this.hangingComponentsInitialization = [];
 
-    this.engine!.dispatch(
-      SearchActions.executeSearch(AnalyticsActions.logInterfaceLoad())
-    );
+    // Waits until the fields are registered asynchronously before triggering a search
+    setTimeout(() => {
+      this.initSearchParameterManager();
+
+      this.engine!.dispatch(
+        SearchActions.executeSearch(AnalyticsActions.logInterfaceLoad())
+      );
+    }, 0);
+  }
+
+  private initSearchParameterManager() {
+    const stateWithoutHashSign = window.location.hash.slice(1);
+    const {serialize, deserialize} = buildSearchParameterSerializer();
+    const params = deserialize(stateWithoutHashSign);
+
+    const manager = buildSearchParameterManager(this.engine!, {
+      initialState: {parameters: params},
+    });
+
+    this.unsubscribe = manager.subscribe(() => {
+      window.location.hash = serialize(manager.state.parameters);
+    });
   }
 
   @Watch('searchHub')

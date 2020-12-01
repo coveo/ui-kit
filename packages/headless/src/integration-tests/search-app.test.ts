@@ -1,4 +1,9 @@
 import {
+  buildDateSortCriterion,
+  buildRelevanceSortCriterion,
+  SortOrder,
+} from '../features/sort-criteria/criteria';
+import {
   HeadlessEngine,
   searchAppReducers,
   buildSearchBox,
@@ -9,8 +14,6 @@ import {
   SearchActions,
   AnalyticsActions,
   Result,
-  buildRelevanceSortCriterion,
-  buildDateSortCriterion,
   CategoryFacetValue,
   FacetValue,
 } from '../index';
@@ -21,6 +24,7 @@ const sleep = (seconds: number) =>
 const engine = new HeadlessEngine({
   configuration: HeadlessEngine.getSampleConfiguration(),
   reducers: searchAppReducers,
+  loggerOptions: {level: 'silent'},
 });
 
 const searchBox = buildSearchBox(engine);
@@ -87,7 +91,7 @@ describe('search app', () => {
 
     beforeAll(async () => {
       initialResults = resultList.state.results;
-      sort.sortBy(buildDateSortCriterion('descending'));
+      sort.sortBy(buildDateSortCriterion(SortOrder.Descending));
 
       await sleep(2);
     });

@@ -1,7 +1,12 @@
 import {Engine} from '../app/headless-engine';
 import {createMockState} from './mock-state';
 import configureStore, {MockStoreEnhanced} from 'redux-mock-store';
-import {AnyAction, ThunkDispatch, getDefaultMiddleware} from '@reduxjs/toolkit';
+import {
+  AnyAction,
+  ThunkDispatch,
+  getDefaultMiddleware,
+  ActionCreatorWithPreparedPayload,
+} from '@reduxjs/toolkit';
 import thunk from 'redux-thunk';
 import {analyticsMiddleware} from '../app/analytics-middleware';
 import {SearchAPIClient} from '../api/search/search-api-client';
@@ -10,6 +15,16 @@ import {RecommendationAppState} from '../state/recommendation-app-state';
 import {createMockRecommendationState} from './mock-recommendation-state';
 import {ProductRecommendationsAppState} from '../state/product-recommendations-app-state';
 import {buildMockProductRecommendationsState} from './mock-product-recommendations-state';
+import {NoopPreprocessRequestMiddleware} from '../api/platform-client';
+import pino from 'pino';
+
+type AsyncActionCreator<ThunkArg> = ActionCreatorWithPreparedPayload<
+  [string, ThunkArg],
+  undefined,
+  string,
+  never,
+  {arg: ThunkArg; requestId: string}
+>;
 
 export type AppState =
   | SearchAppState
@@ -17,8 +32,11 @@ export type AppState =
   | ProductRecommendationsAppState;
 
 export interface MockEngine<T extends AppState> extends Engine<T> {
-  store: MockStore;
+  mockStore: MockStore;
   actions: AnyAction[];
+  findAsyncAction: <ThunkArg>(
+    action: AsyncActionCreator<ThunkArg>
+  ) => ReturnType<AsyncActionCreator<ThunkArg>> | undefined;
 }
 
 type MockStore = MockStoreEnhanced<AppState, DispatchExts>;
@@ -53,7 +71,8 @@ function buildMockEngine<T extends AppState>(
   const unsubscribe = () => {};
 
   return {
-    store: store,
+    mockStore: store,
+    store,
     state: mockState(),
     subscribe: jest.fn(() => unsubscribe),
     get dispatch() {
@@ -61,6 +80,10 @@ function buildMockEngine<T extends AppState>(
     },
     get actions() {
       return store.getActions();
+    },
+    findAsyncAction<ThunkArg>(actionCreator: AsyncActionCreator<ThunkArg>) {
+      const action = this.actions.find((a) => a.type === actionCreator.type);
+      return isAsyncAction<ThunkArg>(action) ? action : undefined;
     },
     ...config,
     renewAccessToken: mockRenewAccessToken,
@@ -71,8 +94,18 @@ const configureMockStore = () => {
   return configureStore<AppState, DispatchExts>([
     analyticsMiddleware,
     thunk.withExtraArgument({
-      searchAPIClient: new SearchAPIClient(mockRenewAccessToken),
+      searchAPIClient: new SearchAPIClient({
+        logger: pino({level: 'silent'}),
+        renewAccessToken: mockRenewAccessToken,
+        preprocessRequest: NoopPreprocessRequestMiddleware,
+      }),
     }),
     ...getDefaultMiddleware(),
   ]);
 };
+
+function isAsyncAction<ThunkArg>(
+  action: AnyAction | undefined
+): action is ReturnType<AsyncActionCreator<ThunkArg>> {
+  return action ? 'meta' in action : false;
+}

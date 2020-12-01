@@ -1,4 +1,3 @@
-import {Schema, SchemaValues, StringValue, NumberValue} from '@coveo/bueno';
 import {
   fetchQuerySuggestions,
   clearQuerySuggest,
@@ -7,7 +6,6 @@ import {
   selectQuerySuggestion,
 } from '../../features/query-suggest/query-suggest-actions';
 import {Engine} from '../../app/headless-engine';
-import {randomID} from '../../utils/utils';
 import {updateQuery} from '../../features/query/query-actions';
 import {
   registerQuerySetQuery,
@@ -24,31 +22,21 @@ import {
   QuerySuggestionSection,
   SearchSection,
 } from '../../state/state-sections';
+import {
+  SearchBoxOptions,
+  defaultSearchBoxOptions,
+  searchBoxOptionsSchema,
+} from './headless-search-box-options';
+import {validateOptions} from '../../utils/validate-payload';
+import {logQuerySuggestionClick} from '../../features/query-suggest/query-suggest-analytics-actions';
+import {randomID} from '../../utils/utils';
+import {QuerySuggestState} from '../../features/query-suggest/query-suggest-state';
+import {SearchAction} from '../../features/analytics/analytics-actions';
 
+export {SearchBoxOptions};
 export interface SearchBoxProps {
   options: SearchBoxOptions;
 }
-
-const optionsSchema = new Schema({
-  /**
-   * A unique identifier for the controller.
-   * By default, a unique random identifier is generated.
-   */
-  id: new StringValue({
-    default: () => randomID('search_box'),
-    emptyAllowed: false,
-  }),
-  /**
-   * The number of query suggestions to request from Coveo ML (e.g., `3`).
-   *
-   * Using the value `0` disables the query suggest feature.
-   *
-   * @default 5
-   */
-  numberOfSuggestions: new NumberValue({default: 5, min: 0}),
-});
-
-export type SearchBoxOptions = SchemaValues<typeof optionsSchema>;
 
 /**
  * A scoped and simplified part of the headless state that is relevant to the `SearchBox` controller.
@@ -59,7 +47,7 @@ export type SearchBoxState = SearchBox['state'];
  */
 export type SearchBox = ReturnType<typeof buildSearchBox>;
 
-export const buildSearchBox = (
+export function buildSearchBox(
   engine: Engine<
     QuerySection &
       QuerySuggestionSection &
@@ -68,22 +56,37 @@ export const buildSearchBox = (
       SearchSection
   >,
   props: Partial<SearchBoxProps> = {}
-) => {
+) {
   const controller = buildController(engine);
   const {dispatch} = engine;
 
-  const options = optionsSchema.validate(props.options) as Required<
-    SearchBoxOptions
-  >;
+  const id = props.options?.id || randomID('search_box');
+  const options: Required<SearchBoxOptions> = {
+    id,
+    ...defaultSearchBoxOptions,
+    ...props.options,
+  };
 
-  dispatch(registerQuerySetQuery({id: options.id, query: ''}));
+  validateOptions(searchBoxOptionsSchema, options, buildSearchBox.name);
+
+  dispatch(registerQuerySetQuery({id, query: ''}));
   dispatch(
     registerQuerySuggest({
-      id: options.id,
+      id,
       q: engine.state.query.q,
       count: options.numberOfSuggestions,
     })
   );
+
+  const getValue = () => engine.state.querySet[options.id];
+
+  const performSearch = (analytics: SearchAction) => {
+    const {enableQuerySyntax} = options;
+
+    dispatch(updateQuery({q: getValue(), enableQuerySyntax}));
+    dispatch(updatePage(1));
+    dispatch(executeSearch(analytics));
+  };
 
   return {
     ...controller,
@@ -93,33 +96,32 @@ export const buildSearchBox = (
      * @param value  The string value to update the search box with.
      */
     updateText(value: string) {
-      dispatch(updateQuerySetQuery({id: options.id, query: value}));
-
-      if (options.numberOfSuggestions) {
-        this.showSuggestions();
-      }
+      dispatch(updateQuerySetQuery({id, query: value}));
+      this.showSuggestions();
     },
 
     /**
      * Clears the search box text and the suggestions.
      */
     clear() {
-      dispatch(updateQuerySetQuery({id: options.id, query: ''}));
-      dispatch(clearQuerySuggest({id: options.id}));
+      dispatch(updateQuerySetQuery({id, query: ''}));
+      dispatch(clearQuerySuggest({id}));
     },
 
     /**
      * Clears the suggestions.
      */
     hideSuggestions() {
-      dispatch(clearQuerySuggestCompletions({id: options.id}));
+      dispatch(clearQuerySuggestCompletions({id}));
     },
 
     /**
      * Shows the suggestions for the current search box value.
      */
     showSuggestions() {
-      dispatch(fetchQuerySuggestions({id: options.id}));
+      if (options.numberOfSuggestions) {
+        dispatch(fetchQuerySuggestions({id}));
+      }
     },
 
     /**
@@ -127,17 +129,15 @@ export const buildSearchBox = (
      * @param value The string value of the suggestion to select
      */
     selectSuggestion(value: string) {
-      dispatch(selectQuerySuggestion({id: options.id, expression: value}));
-      this.submit();
+      dispatch(selectQuerySuggestion({id, expression: value}));
+      performSearch(logQuerySuggestionClick({id, suggestion: value}));
     },
 
     /**
      * Triggers a search query.
      */
     submit() {
-      dispatch(updateQuery({q: this.state.value}));
-      dispatch(updatePage(1));
-      dispatch(executeSearch(logSearchboxSubmit()));
+      performSearch(logSearchboxSubmit());
     },
 
     /**
@@ -145,14 +145,24 @@ export const buildSearchBox = (
      */
     get state() {
       const state = engine.state;
-      const querySuggestState = state.querySuggest[options.id]!;
+      const querySuggestState = state.querySuggest[options.id];
+      const suggestions = getSuggestions(querySuggestState);
+
       return {
-        value: state.querySet[options.id],
-        suggestions: querySuggestState.completions.map((completion) => ({
-          value: completion.expression,
-        })),
+        value: getValue(),
+        suggestions,
         isLoading: state.search.isLoading,
       };
     },
   };
-};
+}
+
+function getSuggestions(state: QuerySuggestState | undefined) {
+  if (!state) {
+    return [];
+  }
+
+  return state.completions.map((completion) => ({
+    value: completion.expression,
+  }));
+}

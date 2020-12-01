@@ -18,6 +18,14 @@ import {configureStore, Store} from './store';
 import {SearchAPIClient} from '../api/search/search-api-client';
 import {debounce} from 'ts-debounce';
 import {SearchAppState} from '../state/search-app-state';
+import {AnalyticsClientSendEventHook} from 'coveo.analytics/dist/definitions/client/analytics';
+import pino, {Logger, LogEvent, LevelWithSilent} from 'pino';
+import {
+  NoopPreprocessRequestMiddleware,
+  PreprocessRequestMiddleware,
+} from '../api/platform-client';
+import {RecordValue, Schema, StringValue} from '@coveo/bueno';
+import {validateOptions} from '../utils/validate-payload';
 
 /**
  * The global headless engine options.
@@ -54,6 +62,21 @@ export interface HeadlessOptions<Reducers extends ReducersMapObject> {
    * [Redux documentation on middlewares.](https://redux.js.org/glossary#middleware)
    */
   middlewares?: Middleware<{}, StateFromReducersMapObject<Reducers>>[];
+  loggerOptions?: {
+    /**
+     * By default, is set to `warn`.
+     */
+    level?: LevelWithSilent;
+    /**
+     * Changes the shape of the log object. This function will be called every time one of the log methods (such as `.info`) is called.
+     * All arguments passed to the log method, except the message, will be pass to this function. By default it does not change the shape of the log object.
+     */
+    logFormatter?: (object: object) => object;
+    /**
+     * Function which will be called after writing the log message in the browser.
+     */
+    browserPostLogHook?: (level: LevelWithSilent, logEvent: LogEvent) => void;
+  };
 }
 
 /**
@@ -93,6 +116,7 @@ export interface HeadlessConfigurationOptions {
      *    When logging a Search usage analytics event for a query, the originLevel1 field of that event should be set to the value of the searchHub search request parameter.
      */
     searchHub?: string;
+    preprocessRequestMiddleware?: PreprocessRequestMiddleware;
   };
 
   analytics?: {
@@ -118,12 +142,19 @@ export interface HeadlessConfigurationOptions {
      * This value is optional, and will automatically try to resolve itself from the referrer search parameter.
      */
     originLevel3?: string;
+    /**
+     * analyticsClientMiddleware allows to hook into the analytics request before it is sent to the Coveo platform.
+     */
+    analyticsClientMiddleware?: AnalyticsClientSendEventHook;
   };
 }
 
 type EngineDispatch<State> = ThunkDispatch<
   State,
-  {searchAPIClient: SearchAPIClient},
+  {
+    searchAPIClient: SearchAPIClient;
+    analyticsClientMiddleware: AnalyticsClientSendEventHook;
+  },
   AnyAction
 > &
   Dispatch<AnyAction>;
@@ -151,6 +182,10 @@ export interface Engine<State = SearchAppState> {
    * The complete headless state tree.
    */
   state: State;
+  /**
+   * The redux store.
+   */
+  store: Store;
   renewAccessToken: () => Promise<string>;
 }
 
@@ -161,17 +196,13 @@ export interface Engine<State = SearchAppState> {
  */
 export class HeadlessEngine<Reducers extends ReducersMapObject>
   implements Engine<StateFromReducersMapObject<Reducers>> {
-  private reduxStore: Store;
+  private reduxStore!: Store;
+  public logger!: Logger;
 
   constructor(private options: HeadlessOptions<Reducers>) {
-    this.reduxStore = configureStore({
-      preloadedState: options.preloadedState,
-      reducers: options.reducers,
-      middlewares: options.middlewares,
-      thunkExtraArguments: {
-        searchAPIClient: new SearchAPIClient(() => this.renewAccessToken()),
-      },
-    });
+    this.validateConfiguration(options);
+    this.initLogger();
+    this.initStore();
 
     this.reduxStore.dispatch(
       updateBasicConfiguration({
@@ -186,10 +217,83 @@ export class HeadlessEngine<Reducers extends ReducersMapObject>
       );
     }
     if (options.configuration.analytics) {
-      this.reduxStore.dispatch(
-        updateAnalyticsConfiguration(options.configuration.analytics)
-      );
+      const {
+        analyticsClientMiddleware,
+        ...rest
+      } = options.configuration.analytics;
+      this.reduxStore.dispatch(updateAnalyticsConfiguration(rest));
     }
+  }
+
+  private validateConfiguration(options: HeadlessOptions<Reducers>) {
+    const configurationSchema = new Schema<HeadlessConfigurationOptions>({
+      organizationId: new StringValue({
+        required: true,
+        emptyAllowed: false,
+      }),
+      accessToken: new StringValue({
+        required: true,
+        emptyAllowed: false,
+      }),
+      platformUrl: new StringValue({
+        required: false,
+        emptyAllowed: false,
+      }),
+      search: new RecordValue({
+        options: {
+          required: false,
+        },
+        values: {
+          pipeline: new StringValue({
+            required: false,
+            emptyAllowed: false,
+          }),
+          searchHub: new StringValue({
+            required: false,
+            emptyAllowed: false,
+          }),
+        },
+      }),
+    });
+    validateOptions(
+      configurationSchema,
+      options.configuration,
+      HeadlessEngine.name
+    );
+  }
+
+  private initLogger() {
+    this.logger = pino({
+      name: '@coveo/headless',
+      level: this.options.loggerOptions?.level || 'warn',
+      formatters: {
+        log: this.options.loggerOptions?.logFormatter,
+      },
+      browser: {
+        transmit: {
+          send: this.options.loggerOptions?.browserPostLogHook || (() => {}),
+        },
+      },
+    });
+  }
+
+  private initStore() {
+    this.reduxStore = configureStore({
+      preloadedState: this.options.preloadedState,
+      reducers: this.options.reducers,
+      middlewares: this.options.middlewares,
+      thunkExtraArguments: {
+        searchAPIClient: new SearchAPIClient({
+          logger: this.logger,
+          renewAccessToken: () => this.renewAccessToken(),
+          preprocessRequest:
+            this.options.configuration.search?.preprocessRequestMiddleware ||
+            NoopPreprocessRequestMiddleware,
+        }),
+        analyticsClientMiddleware: this.analyticsClientMiddleware(this.options),
+        logger: this.logger,
+      },
+    });
   }
 
   /**
@@ -218,6 +322,10 @@ export class HeadlessEngine<Reducers extends ReducersMapObject>
    */
   public disableAnalytics() {
     this.dispatch(disableAnalytics());
+  }
+
+  get store() {
+    return this.reduxStore;
   }
 
   get dispatch(): EngineDispatch<StateFromReducersMapObject<Reducers>> {
@@ -257,5 +365,14 @@ export class HeadlessEngine<Reducers extends ReducersMapObject>
     } catch (error) {
       return '';
     }
+  }
+
+  private analyticsClientMiddleware(
+    options: HeadlessOptions<Reducers>
+  ): AnalyticsClientSendEventHook {
+    return (
+      options.configuration.analytics?.analyticsClientMiddleware ||
+      ((_, p) => p)
+    );
   }
 }

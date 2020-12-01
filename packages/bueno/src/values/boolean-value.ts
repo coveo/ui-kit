@@ -27,7 +27,7 @@ export class BooleanValue implements SchemaValue<boolean> {
   }
 
   public get required() {
-    return this.value.required();
+    return this.value.required;
   }
 }
 

@@ -22,6 +22,7 @@ import {buildMockQuerySuggest} from '../../test/mock-query-suggest';
 import {buildMockSearchAppEngine, MockEngine} from '../../test/mock-engine';
 import {updatePage} from '../../features/pagination/pagination-actions';
 import {SearchAppState} from '../../state/search-app-state';
+import {logQuerySuggestionClick} from '../../features/query-suggest/query-suggest-analytics-actions';
 
 describe('headless searchBox', () => {
   const id = 'search-box-123';
@@ -66,6 +67,13 @@ describe('headless searchBox', () => {
       props.options.numberOfSuggestions = -2;
       expect(() => initController()).toThrow();
     });
+
+    it('when passing an invalid option, it throws an error', () => {
+      props.options.id = (1 as unknown) as string;
+      expect(() => initController()).toThrow(
+        'Check the options of buildSearchBox'
+      );
+    });
   });
 
   it('should return the right state', () => {
@@ -102,23 +110,11 @@ describe('headless searchBox', () => {
       expect(engine.actions).toContainEqual(action);
     });
 
-    it(`when the numberOfQuerySuggestions option is higher than 0
-    should call the showSuggestions method`, () => {
+    it('should call the showSuggestions method', () => {
       jest.spyOn(searchBox, 'showSuggestions');
       searchBox.updateText('how can i fix');
 
       expect(searchBox.showSuggestions).toHaveBeenCalled();
-    });
-
-    it(`when the numberOfQuerySuggestions option is 0
-    should not call the showSuggestions method`, () => {
-      props.options.numberOfSuggestions = 0;
-      initController();
-
-      jest.spyOn(searchBox, 'showSuggestions');
-      searchBox.updateText('how can i fix');
-
-      expect(searchBox.showSuggestions).not.toHaveBeenCalled();
     });
   });
 
@@ -142,34 +138,66 @@ describe('headless searchBox', () => {
     expect(engine.actions).toContainEqual(clearQuerySuggestCompletions({id}));
   });
 
-  it(`when calling showSuggestions
-    should dispatch a fetchQuerySuggestions action`, async () => {
-    searchBox.showSuggestions();
+  describe('#showSuggestions', () => {
+    it(`when numberOfQuerySuggestions is greater than 0,
+    it dispatches fetchQuerySuggestions`, async () => {
+      searchBox.showSuggestions();
 
-    const action = engine.actions.find(
-      (a) => a.type === fetchQuerySuggestions.pending.type
-    );
-    expect(action).toEqual(
-      fetchQuerySuggestions.pending(action!.meta.requestId, {id})
-    );
+      const action = engine.actions.find(
+        (a) => a.type === fetchQuerySuggestions.pending.type
+      );
+      expect(action).toEqual(
+        fetchQuerySuggestions.pending(action!.meta.requestId, {id})
+      );
+    });
+
+    it(`when numberOfQuerySuggestions is 0,
+    it does not dispatch fetchQuerySuggestions`, () => {
+      props.options.numberOfSuggestions = 0;
+      initController();
+
+      searchBox.showSuggestions();
+
+      const action = engine.actions.find(
+        (a) => a.type === fetchQuerySuggestions.pending.type
+      );
+
+      expect(action).toBe(undefined);
+    });
   });
 
-  it(`when calling selectSuggestion
-    should dispatch a selectQuerySuggestion action`, () => {
-    const value = 'i like this expression';
-    searchBox.selectSuggestion(value);
+  describe('#selectSuggestion', () => {
+    it('dispatches a selectQuerySuggestion action', () => {
+      const value = 'i like this expression';
+      searchBox.selectSuggestion(value);
 
-    expect(engine.actions).toContainEqual(
-      selectQuerySuggestion({id, expression: value})
-    );
+      expect(engine.actions).toContainEqual(
+        selectQuerySuggestion({id, expression: value})
+      );
+    });
+
+    it('dispatches executeSearch with a logQuerySuggestionClick search event', () => {
+      const suggestion = 'a';
+      searchBox.selectSuggestion(suggestion);
+
+      const action = engine.findAsyncAction(executeSearch.pending);
+      expect(action!.meta.arg.toString()).toBe(
+        logQuerySuggestionClick({id, suggestion}).toString()
+      );
+    });
   });
 
   describe('when calling submit', () => {
-    it('sets the query to the search box value kept in the querySet', () => {
+    it('dispatches updateQuery with the correct parameters', () => {
       const expectedQuery = state.querySet[id];
       searchBox.submit();
 
-      expect(engine.actions).toContainEqual(updateQuery({q: expectedQuery}));
+      const action = updateQuery({
+        q: expectedQuery,
+        enableQuerySyntax: false,
+      });
+
+      expect(engine.actions).toContainEqual(action);
     });
 
     it('updates the page to the first one', () => {

@@ -9,6 +9,10 @@ import {getAnalyticsActionForToggleFacetSelect} from './facet-set-utils';
 import {updateFacetOptions} from '../../facet-options/facet-options-actions';
 import {executeSearch} from '../../search/search-actions';
 import {toggleSelectFacetValue} from './facet-set-actions';
+import {validatePayloadSchema} from '../../../utils/validate-payload';
+import {facetIdDefinition} from '../generic/facet-actions-validation';
+import {RecordValue} from '@coveo/bueno';
+import {facetValueDefinition} from './facet-set-validate-payload';
 
 /**
  * Toggles the facet value and then executes a search with the appropriate analytics tag.
@@ -27,7 +31,13 @@ export const executeToggleFacetSelect = createAsyncThunk<
     facetId,
     selection
   );
-
+  validatePayloadSchema(
+    {facetId, selection},
+    {
+      facetId: facetIdDefinition,
+      selection: new RecordValue({values: facetValueDefinition}),
+    }
+  );
   dispatch(toggleSelectFacetValue({facetId, selection}));
   dispatch(updateFacetOptions({freezeFacetOrder: true}));
   dispatch(executeSearch(analyticsAction));

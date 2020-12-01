@@ -5,6 +5,25 @@
 <!-- Auto Generated Below -->
 
 
+## Shadow Parts
+
+| Part          | Description                            |
+| ------------- | -------------------------------------- |
+| `"container"` | The container of the whole summary     |
+| `"duration"`  | The duration container                 |
+| `"highlight"` | The summary highlights                 |
+| `"no-result"` | The container when there are no result |
+| `"query"`     | The query container                    |
+| `"results"`   | The results container                  |
+
+
+## CSS Custom Properties
+
+| Name                                     | Description            |
+| ---------------------------------------- | ---------------------- |
+| `--atomic-query-summary-highlight-color` | Color of the highlight |
+
+
 ## Dependencies
 
 ### Depends on

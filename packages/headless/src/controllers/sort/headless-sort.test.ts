@@ -3,6 +3,10 @@ import {Sort, SortProps, buildSort} from './headless-sort';
 import {
   buildRelevanceSortCriterion,
   buildDateSortCriterion,
+  SortOrder,
+  buildCriterionExpression,
+  SortCriterion,
+  buildFieldSortCriterion,
 } from '../../features/sort-criteria/criteria';
 import {
   registerSortCriterion,
@@ -38,6 +42,11 @@ describe('Sort', () => {
     expect(action).toBe(undefined);
   });
 
+  it('when #criterion is an invalid value, it throws an error', () => {
+    props.initialState.criterion = ('1' as unknown) as SortCriterion;
+    expect(() => initSort()).toThrow('Check the initialState of buildSort');
+  });
+
   it('when the #criterion option is specified, it dispatches a registration action', () => {
     props.initialState.criterion = buildRelevanceSortCriterion();
     initSort();
@@ -47,8 +56,20 @@ describe('Sort', () => {
     );
   });
 
+  it('when the #criterion is an array, it dispatches a registration action', () => {
+    props.initialState.criterion = [
+      buildFieldSortCriterion('author', SortOrder.Ascending),
+      buildDateSortCriterion(SortOrder.Descending),
+    ];
+    initSort();
+
+    expect(engine.actions).toContainEqual(
+      registerSortCriterion(props.initialState.criterion)
+    );
+  });
+
   describe('when calling #sortBy with a criterion', () => {
-    const criterion = buildDateSortCriterion('descending');
+    const criterion = buildDateSortCriterion(SortOrder.Descending);
 
     beforeEach(() => {
       sort.sortBy(criterion);
@@ -72,18 +93,21 @@ describe('Sort', () => {
   });
 
   describe('when the store #sortCiteria is set', () => {
-    const criterionInState = buildDateSortCriterion('ascending');
+    const criterionInState = buildDateSortCriterion(SortOrder.Descending);
+    const criterionInStateExpression = buildCriterionExpression(
+      criterionInState
+    );
 
     beforeEach(() => {
       const state = createMockState({
-        sortCriteria: criterionInState.expression,
+        sortCriteria: criterionInStateExpression,
       });
       engine = buildMockSearchAppEngine({state});
       initSort();
     });
 
     it('calling #state returns the sortCriteria expression', () => {
-      expect(sort.state).toEqual({sortCriteria: criterionInState.expression});
+      expect(sort.state).toEqual({sortCriteria: criterionInStateExpression});
     });
 
     it('calling #isSortedBy with a criterion equal to the one in state returns true', () => {
