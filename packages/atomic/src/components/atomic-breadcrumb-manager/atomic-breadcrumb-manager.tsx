@@ -180,7 +180,7 @@ export class AtomicBreadcrumbManager {
       <button
         part="breadcrumb-button"
         class={this.buttonClasses}
-        onClick={() => {}} //TODO https://coveord.atlassian.net/browse/KIT-269
+        onClick={() => this.breadcrumbManager.deselectAll()}
       >
         Clear All Filters
       </button>
