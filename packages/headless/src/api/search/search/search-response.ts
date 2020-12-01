@@ -15,35 +15,11 @@ export interface SearchResponseSuccess {
   totalCountFiltered: number;
   facets: AnyFacetResponse[];
   queryCorrections: QueryCorrection[];
-  /**
-   * A detailed execution report sent by the Search API
-   * Only sent if debug is true
-   */
   executionReport?: ExecutionReport;
-  /**
-   * The basic expression that was executed
-   * Only sent if debug is true
-   */
   basicExpression?: string;
-  /**
-   * The advanced expression that was executed
-   * Only sent if debug is true
-   */
   advancedExpression?: string;
-  /**
-   * The constant expression that was executed.<br/>
-   * Only sent if debug is true
-   */
   constantExpression?: string;
-  /**
-   * A list of user identities that were used to perform this query
-   * Only sent if debug is true
-   */
   userIdentities?: UserIdentity[];
-  /**
-   * A list of ranking expression that were used to tweak the relevance
-   * Only sent if debug is true
-   */
   rankingExpressions?: RankingExpression[];
 }
 
