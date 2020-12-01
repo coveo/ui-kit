@@ -7,35 +7,35 @@ import {validateOptions} from '../../utils/validate-payload';
 import {buildController} from '../controller/headless-controller';
 
 /**
- * The `Debug` controller is in charge of allowing displaying debug information.
+ * The `RelevanceInspector` controller is in charge of allowing displaying various debug information.
  */
-export type Debug = ReturnType<typeof buildDebug>;
-/** The state relevant to the `Debug` controller.*/
-export type DebugState = Debug['state'];
+export type RelevanceInspector = ReturnType<typeof buildRelevanceInspector>;
+/** The state relevant to the `RelevanceInspector` controller.*/
+export type RelevanceInspectorState = RelevanceInspector['state'];
 
 const optionsSchema = new Schema({
   /** If debug mode should be enabled when initialized. */
   enabled: new BooleanValue({default: false}),
 });
 
-export interface DebugProps {
-  options?: DebugOptions;
+export interface RelevanceInspectorProps {
+  options?: RelevanceInspectorOptions;
 }
 
-export type DebugOptions = SchemaValues<typeof optionsSchema>;
+export type RelevanceInspectorOptions = SchemaValues<typeof optionsSchema>;
 
 /**
- * The `Debug` controller allows to retrieve debug information.
+ * The `RelevanceInspector` controller is in charge of allowing displaying various debug information.
  */
-export const buildDebug = (
+export const buildRelevanceInspector = (
   engine: Engine<ConfigurationSection & SearchSection>,
-  props: DebugProps = {}
+  props: RelevanceInspectorProps = {}
 ) => {
   const controller = buildController(engine);
   const options = validateOptions(
     optionsSchema,
     props.options,
-    buildDebug.name
+    buildRelevanceInspector.name
   );
 
   const toggleDebug = (enableDebug: boolean) =>
@@ -48,7 +48,7 @@ export const buildDebug = (
   return {
     ...controller,
 
-    /** @returns The state of the `Debug` controller. */
+    /** @returns The state of the `RelevanceInspector` controller. */
     get state() {
       const {
         executionReport,

@@ -1,9 +1,9 @@
 import {Component, h, State, Prop} from '@stencil/core';
 import {
-  Debug,
-  DebugState,
+  RelevanceInspector,
+  RelevanceInspectorState,
   Unsubscribe,
-  buildDebug,
+  buildRelevanceInspector,
   Engine,
 } from '@coveo/headless';
 
@@ -12,15 +12,17 @@ import {
   shadow: true,
 })
 export class AtomicRelevanceInspector {
-  @State() state!: DebugState;
+  @State() state!: RelevanceInspectorState;
   @Prop() engine!: Engine;
 
-  private debug!: Debug;
+  private relevanceInspector!: RelevanceInspector;
   private unsubscribe: Unsubscribe = () => {};
 
   constructor() {
-    this.debug = buildDebug(this.engine);
-    this.unsubscribe = this.debug.subscribe(() => this.updateState());
+    this.relevanceInspector = buildRelevanceInspector(this.engine);
+    this.unsubscribe = this.relevanceInspector.subscribe(() =>
+      this.updateState()
+    );
   }
 
   public disconnectedCallback() {
@@ -28,7 +30,7 @@ export class AtomicRelevanceInspector {
   }
 
   private updateState() {
-    this.state = this.debug.state;
+    this.state = this.relevanceInspector.state;
   }
 
   public render() {
@@ -37,6 +39,6 @@ export class AtomicRelevanceInspector {
     }
 
     // TODO: Display data in a cleaner manner
-    return <div>{JSON.stringify(this.debug.state)}</div>;
+    return <div>{JSON.stringify(this.relevanceInspector.state)}</div>;
   }
 }

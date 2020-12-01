@@ -20,7 +20,7 @@ export * from './state/recommendation-app-state';
 
 // Controllers
 export * from './controllers/controller/headless-controller';
-export * from './controllers/debug/headless-debug';
+export * from './controllers/relevance-inspector/headless-relevance-inspector';
 export * from './controllers/context/headless-context';
 export * from './controllers/did-you-mean/headless-did-you-mean';
 export * from './controllers/facets/category-facet/headless-category-facet';
