@@ -1,7 +1,7 @@
 import {
-  makeAnalyticsAction,
   AnalyticsType,
-} from '../../analytics/analytics-actions';
+  makeAnalyticsAction,
+} from '../../analytics/analytics-utils';
 
 /**
  * Logs clear all breadcrumbs event e.g. when a user click to remove all filters at once

@@ -12,13 +12,10 @@ import {
   configureAnalytics,
   StateNeededByAnalyticsProvider,
 } from '../../api/analytics/analytics';
-import {
-  AnalyticsClientSendEventHook,
-  CoveoSearchPageClient,
-  SearchPageClientProvider,
-} from 'coveo.analytics';
+import {CoveoSearchPageClient, SearchPageClientProvider} from 'coveo.analytics';
 import {SearchEventResponse} from 'coveo.analytics/dist/definitions/events';
 import {AsyncThunkAction, createAsyncThunk} from '@reduxjs/toolkit';
+import {ThunkExtraArguments} from '../../app/store';
 
 export enum AnalyticsType {
   Search,
@@ -51,9 +48,7 @@ export interface AsyncThunkAnalyticsOptions<
   T extends Partial<StateNeededByAnalyticsProvider>
 > {
   state: T;
-  extra: {
-    analyticsClientMiddleware: AnalyticsClientSendEventHook;
-  };
+  extra: ThunkExtraArguments;
 }
 
 export const makeAnalyticsAction = <T extends AnalyticsType>(

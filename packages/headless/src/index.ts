@@ -83,6 +83,7 @@ export * as ProductRecommendationsActions from './features/product-recommendatio
 export * as AnalyticsActions from './features/analytics/analytics-actions';
 export * as DidYouMeanAnalyticsActions from './features/did-you-mean/did-you-mean-analytics-actions';
 export * as FacetAnalyticsActions from './features/facets/facet-set/facet-set-analytics-actions';
+export * as FacetGenericAnalyticsActions from './features/facets/generic/facet-generic-analytics-actions';
 export * as HistoryAnalyticsActions from './features/history/history-analytics-actions';
 export * as PaginationAnalyticsActions from './features/pagination/pagination-analytics-actions';
 export * as ProductRecommendationAnalyticsActions from './features/product-recommendations/product-recommendations-analytics.actions';
