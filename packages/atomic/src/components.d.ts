@@ -6,6 +6,7 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { Engine, HeadlessConfigurationOptions, LogLevel, Result, ResultTemplateCondition } from "@coveo/headless";
+import { InitializeEventHandler } from "./utils/initialization-utils";
 export namespace Components {
     interface AtomicBreadcrumbManager {
     }
@@ -21,9 +22,6 @@ export namespace Components {
         "facetId": string;
         "field": string;
         "label": string;
-    }
-    interface AtomicDebug {
-        "enabled": boolean;
     }
     interface AtomicDidYouMean {
     }
@@ -54,6 +52,8 @@ export namespace Components {
     interface AtomicQueryError {
     }
     interface AtomicQuerySummary {
+    }
+    interface AtomicRelevanceInspector {
     }
     interface AtomicResult {
         "engine": Engine;
@@ -141,12 +141,6 @@ declare global {
         prototype: HTMLAtomicDateFacetElement;
         new (): HTMLAtomicDateFacetElement;
     };
-    interface HTMLAtomicDebugElement extends Components.AtomicDebug, HTMLStencilElement {
-    }
-    var HTMLAtomicDebugElement: {
-        prototype: HTMLAtomicDebugElement;
-        new (): HTMLAtomicDebugElement;
-    };
     interface HTMLAtomicDidYouMeanElement extends Components.AtomicDidYouMean, HTMLStencilElement {
     }
     var HTMLAtomicDidYouMeanElement: {
@@ -206,6 +200,12 @@ declare global {
     var HTMLAtomicQuerySummaryElement: {
         prototype: HTMLAtomicQuerySummaryElement;
         new (): HTMLAtomicQuerySummaryElement;
+    };
+    interface HTMLAtomicRelevanceInspectorElement extends Components.AtomicRelevanceInspector, HTMLStencilElement {
+    }
+    var HTMLAtomicRelevanceInspectorElement: {
+        prototype: HTMLAtomicRelevanceInspectorElement;
+        new (): HTMLAtomicRelevanceInspectorElement;
     };
     interface HTMLAtomicResultElement extends Components.AtomicResult, HTMLStencilElement {
     }
@@ -272,7 +272,6 @@ declare global {
         "atomic-category-facet": HTMLAtomicCategoryFacetElement;
         "atomic-component-error": HTMLAtomicComponentErrorElement;
         "atomic-date-facet": HTMLAtomicDateFacetElement;
-        "atomic-debug": HTMLAtomicDebugElement;
         "atomic-did-you-mean": HTMLAtomicDidYouMeanElement;
         "atomic-facet": HTMLAtomicFacetElement;
         "atomic-facet-manager": HTMLAtomicFacetManagerElement;
@@ -283,6 +282,7 @@ declare global {
         "atomic-pager": HTMLAtomicPagerElement;
         "atomic-query-error": HTMLAtomicQueryErrorElement;
         "atomic-query-summary": HTMLAtomicQuerySummaryElement;
+        "atomic-relevance-inspector": HTMLAtomicRelevanceInspectorElement;
         "atomic-result": HTMLAtomicResultElement;
         "atomic-result-link": HTMLAtomicResultLinkElement;
         "atomic-result-list": HTMLAtomicResultListElement;
@@ -310,9 +310,6 @@ declare namespace LocalJSX {
         "facetId"?: string;
         "field"?: string;
         "label"?: string;
-    }
-    interface AtomicDebug {
-        "enabled"?: boolean;
     }
     interface AtomicDidYouMean {
     }
@@ -342,6 +339,9 @@ declare namespace LocalJSX {
     interface AtomicQueryError {
     }
     interface AtomicQuerySummary {
+    }
+    interface AtomicRelevanceInspector {
+        "onAtomic/initializeComponent"?: (event: CustomEvent<InitializeEventHandler>) => void;
     }
     interface AtomicResult {
         "engine": Engine;
@@ -405,7 +405,6 @@ declare namespace LocalJSX {
         "atomic-category-facet": AtomicCategoryFacet;
         "atomic-component-error": AtomicComponentError;
         "atomic-date-facet": AtomicDateFacet;
-        "atomic-debug": AtomicDebug;
         "atomic-did-you-mean": AtomicDidYouMean;
         "atomic-facet": AtomicFacet;
         "atomic-facet-manager": AtomicFacetManager;
@@ -416,6 +415,7 @@ declare namespace LocalJSX {
         "atomic-pager": AtomicPager;
         "atomic-query-error": AtomicQueryError;
         "atomic-query-summary": AtomicQuerySummary;
+        "atomic-relevance-inspector": AtomicRelevanceInspector;
         "atomic-result": AtomicResult;
         "atomic-result-link": AtomicResultLink;
         "atomic-result-list": AtomicResultList;
@@ -436,7 +436,6 @@ declare module "@stencil/core" {
             "atomic-category-facet": LocalJSX.AtomicCategoryFacet & JSXBase.HTMLAttributes<HTMLAtomicCategoryFacetElement>;
             "atomic-component-error": LocalJSX.AtomicComponentError & JSXBase.HTMLAttributes<HTMLAtomicComponentErrorElement>;
             "atomic-date-facet": LocalJSX.AtomicDateFacet & JSXBase.HTMLAttributes<HTMLAtomicDateFacetElement>;
-            "atomic-debug": LocalJSX.AtomicDebug & JSXBase.HTMLAttributes<HTMLAtomicDebugElement>;
             "atomic-did-you-mean": LocalJSX.AtomicDidYouMean & JSXBase.HTMLAttributes<HTMLAtomicDidYouMeanElement>;
             "atomic-facet": LocalJSX.AtomicFacet & JSXBase.HTMLAttributes<HTMLAtomicFacetElement>;
             "atomic-facet-manager": LocalJSX.AtomicFacetManager & JSXBase.HTMLAttributes<HTMLAtomicFacetManagerElement>;
@@ -447,6 +446,7 @@ declare module "@stencil/core" {
             "atomic-pager": LocalJSX.AtomicPager & JSXBase.HTMLAttributes<HTMLAtomicPagerElement>;
             "atomic-query-error": LocalJSX.AtomicQueryError & JSXBase.HTMLAttributes<HTMLAtomicQueryErrorElement>;
             "atomic-query-summary": LocalJSX.AtomicQuerySummary & JSXBase.HTMLAttributes<HTMLAtomicQuerySummaryElement>;
+            "atomic-relevance-inspector": LocalJSX.AtomicRelevanceInspector & JSXBase.HTMLAttributes<HTMLAtomicRelevanceInspectorElement>;
             "atomic-result": LocalJSX.AtomicResult & JSXBase.HTMLAttributes<HTMLAtomicResultElement>;
             "atomic-result-link": LocalJSX.AtomicResultLink & JSXBase.HTMLAttributes<HTMLAtomicResultLinkElement>;
             "atomic-result-list": LocalJSX.AtomicResultList & JSXBase.HTMLAttributes<HTMLAtomicResultListElement>;
