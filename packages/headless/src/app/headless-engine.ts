@@ -117,7 +117,6 @@ export interface HeadlessConfigurationOptions {
      */
     searchHub?: string;
     preprocessRequestMiddleware?: PreprocessRequestMiddleware;
-    enableDebug?: boolean;
   };
 
   analytics?: {
