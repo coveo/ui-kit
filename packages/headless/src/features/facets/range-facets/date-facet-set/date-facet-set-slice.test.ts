@@ -19,6 +19,7 @@ import {
   DateFacetSetState,
   getDateFacetSetInitialState,
 } from './date-facet-set-state';
+import {deselectAllFacets} from '../../generic/facet-actions';
 
 describe('date-facet-set slice', () => {
   let state: DateFacetSetState;
@@ -91,6 +92,19 @@ describe('date-facet-set slice', () => {
     expect(
       RangeFacetReducers.handleRangeFacetDeselectAll
     ).toHaveBeenCalledTimes(1);
+  });
+
+  it('dispatching #deselectAllFacets calls #handleFacetDeselectAll for every date facet', () => {
+    jest.spyOn(RangeFacetReducers, 'handleRangeFacetDeselectAll');
+
+    state['1'] = buildMockDateFacetRequest();
+    state['2'] = buildMockDateFacetRequest();
+    state['3'] = buildMockDateFacetRequest();
+    dateFacetSetReducer(state, deselectAllFacets);
+
+    expect(
+      RangeFacetReducers.handleRangeFacetDeselectAll
+    ).toHaveBeenCalledTimes(4);
   });
 
   it('#updateDateFacetSortCriterion calls #handleFacetSortCriterionUpdate', () => {

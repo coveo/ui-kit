@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.1.0-alpha.72](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.71...v0.1.0-alpha.72) (2020-12-01)
+
+
+### Features
+
+* **headless:**  deselectAllFacets action ([#287](https://github.com/coveo/ui-kit/issues/287)) ([6b42111](https://github.com/coveo/ui-kit/commit/6b421117992ae7666250af25e39eb0823fb6dc8e))
+
+
+
+
+
 # [0.1.0-alpha.71](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.70...v0.1.0-alpha.71) (2020-12-01)
 
 

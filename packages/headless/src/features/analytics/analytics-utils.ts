@@ -71,16 +71,24 @@ export const makeAnalyticsAction = <T extends AnalyticsType>(
     {analyticsType: T},
     void,
     AsyncThunkAnalyticsOptions<StateNeededByAnalyticsProvider>
-  >(prefix, async (_, {getState, extra: {analyticsClientMiddleware}}) => {
-    const state = searchPageState(getState);
-    const client = configureAnalytics(
-      state,
-      analyticsClientMiddleware,
-      provider(state)
-    );
-    await log(client, state);
-    return {analyticsType};
-  });
+  >(
+    prefix,
+    async (_, {getState, extra: {analyticsClientMiddleware, logger}}) => {
+      const state = searchPageState(getState);
+      const client = configureAnalytics({
+        state,
+        logger,
+        analyticsClientMiddleware,
+        provider: provider(state),
+      });
+      const response = await log(client, state);
+      logger.info(
+        {client: client.coveoAnalyticsClient, response},
+        'Analytics response'
+      );
+      return {analyticsType};
+    }
+  );
 };
 
 export const partialDocumentInformation = (
