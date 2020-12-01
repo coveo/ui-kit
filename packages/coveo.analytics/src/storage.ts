@@ -1,6 +1,5 @@
 import * as detector from './detector';
 import {Cookie} from './cookieutils';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export let preferredStorage: WebStorage | null = null;
 
@@ -54,18 +53,6 @@ export class CookieAndLocalStorage implements WebStorage {
     setItem(key: string, data: string): void {
         localStorage.setItem(key, data);
         this.cookieStorage.setItem(key, data);
-    }
-}
-
-export class ReactNativeStorage implements WebStorage {
-    getItem(key: string) {
-        return AsyncStorage.getItem(key);
-    }
-    setItem(key: string, data: string) {
-        AsyncStorage.setItem(key, data);
-    }
-    removeItem(key: string) {
-        AsyncStorage.removeItem(key);
     }
 }
 

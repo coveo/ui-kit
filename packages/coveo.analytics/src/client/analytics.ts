@@ -17,7 +17,7 @@ import {
     VariableArgumentsPayload,
 } from '../events';
 import {VisitorIdProvider} from './analyticsRequestClient';
-import {hasWindow, hasDocument, isReactNative} from '../detector';
+import {hasWindow, hasDocument} from '../detector';
 import {addDefaultValues} from '../hook/addDefaultValues';
 import {enhanceViewEvent} from '../hook/enhanceViewEvent';
 import {uuidv4} from './crypto';
@@ -26,10 +26,9 @@ import {
     isMeasurementProtocolKey,
     convertCustomMeasurementProtocolKeys,
 } from './measurementProtocolMapper';
-import {IRuntimeEnvironment, BrowserRuntime, NodeJSRuntime, ReactNativeRuntime} from './runtimeEnvironment';
+import {IRuntimeEnvironment, BrowserRuntime, NodeJSRuntime} from './runtimeEnvironment';
 import HistoryStore from '../history';
 import {isApiKey} from './token';
-import {isString} from 'util';
 
 export const Version = 'v15';
 
@@ -121,8 +120,6 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
     private initRuntime(clientsOptions: IAnalyticsBeaconClientOptions) {
         if (hasWindow() && hasDocument()) {
             return new BrowserRuntime(clientsOptions, () => this.flushBufferWithBeacon());
-        } else if (isReactNative()) {
-            return new ReactNativeRuntime(clientsOptions);
         }
         return new NodeJSRuntime(clientsOptions);
     }

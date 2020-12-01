@@ -33,7 +33,3 @@ export function hasCryptoRandomValues(): boolean {
 export function hasLocation(): boolean {
     return typeof location !== 'undefined';
 }
-
-export function isReactNative(): boolean {
-    return typeof navigator !== 'undefined' && navigator.product == 'ReactNative';
-}

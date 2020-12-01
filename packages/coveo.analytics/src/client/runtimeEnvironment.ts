@@ -1,6 +1,6 @@
-import {WebStorage, NullStorage, CookieAndLocalStorage, ReactNativeStorage} from '../storage';
+import {WebStorage, NullStorage, CookieAndLocalStorage} from '../storage';
 import {AnalyticsBeaconClient, IAnalyticsBeaconClientOptions, NoopAnalyticsBeaconClient} from './analyticsBeaconClient';
-import {hasLocalStorage, hasCookieStorage, isReactNative} from '../detector';
+import {hasLocalStorage, hasCookieStorage} from '../detector';
 import {AnalyticsRequestClient} from './analyticsRequestClient';
 import {AnalyticsFetchClient, IAnalyticsFetchClientOptions} from './analyticsFetchClient';
 
@@ -38,16 +38,6 @@ export class NodeJSRuntime implements IRuntimeEnvironment {
         } else {
             this.storage = new NullStorage();
         }
-        this.beaconClient = new AnalyticsFetchClient(beaconOptions);
-    }
-}
-
-export class ReactNativeRuntime implements IRuntimeEnvironment {
-    public storage: WebStorage;
-    public beaconClient: AnalyticsFetchClient;
-
-    constructor(beaconOptions: IAnalyticsFetchClientOptions) {
-        this.storage = new ReactNativeStorage();
         this.beaconClient = new AnalyticsFetchClient(beaconOptions);
     }
 }
