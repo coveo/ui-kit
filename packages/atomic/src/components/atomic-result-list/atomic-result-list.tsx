@@ -52,9 +52,14 @@ export class AtomicResultList {
       options: {fieldsToInclude: this.fields},
     });
     this.unsubscribe = this.resultList.subscribe(() => this.updateState());
-
     this.registerDefaultResultTemplates();
     this.registerChildrenResultTemplates();
+  }
+
+  private fetchMoreResults() {
+    if (!this.state.isLoading) {
+      this.resultList.fetchMoreResults();
+    }
   }
 
   private registerDefaultResultTemplates() {
@@ -105,10 +110,17 @@ export class AtomicResultList {
   }
 
   public render() {
-    return (
+    return [
       <div part="list" class={this.listClass}>
         {this.results}
-      </div>
-    );
+      </div>,
+      <button
+        class="fetch-more-results btn btn-secondary"
+        onClick={() => this.fetchMoreResults()}
+        disabled={this.state.isLoading}
+      >
+        Fetch more results
+      </button>,
+    ];
   }
 }

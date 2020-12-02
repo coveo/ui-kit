@@ -3,6 +3,7 @@ import {buildMockSearchAppEngine, MockEngine} from '../../test/mock-engine';
 import {SearchAppState} from '../../state/search-app-state';
 import {registerFieldsToInclude} from '../../features/fields/fields-actions';
 import {SchemaValidationError} from '@coveo/bueno';
+import {fetchMoreResults} from '../../features/search/search-actions';
 
 describe('ResultList', () => {
   let engine: MockEngine<SearchAppState>;
@@ -34,5 +35,14 @@ describe('ResultList', () => {
         options: {fieldsToInclude: [(1 as unknown) as string]},
       })
     ).toThrowError(SchemaValidationError);
+  });
+
+  it('fetchMoreResults should dispatch a fetchMoreResults action', () => {
+    buildResultList(engine).fetchMoreResults();
+    expect(
+      engine.actions.find(
+        (action) => action.type === fetchMoreResults.pending.type
+      )
+    ).toBeTruthy();
   });
 });

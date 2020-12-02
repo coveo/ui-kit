@@ -10,7 +10,7 @@ import {SearchAPIClient} from '../api/search/search-api-client';
 import {analyticsMiddleware} from './analytics-middleware';
 import {Logger} from 'pino';
 
-interface ThunkExtraArguments {
+export interface ThunkExtraArguments {
   searchAPIClient: SearchAPIClient;
   analyticsClientMiddleware: AnalyticsClientSendEventHook;
   logger: Logger;

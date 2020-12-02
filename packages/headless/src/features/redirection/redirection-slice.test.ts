@@ -22,6 +22,8 @@ import {
 } from '../../api/search/search-api-client-middleware';
 
 describe('redirection slice', () => {
+  const logger = pino({level: 'silent'});
+
   it('should have initial state', () => {
     expect(redirectionReducer(undefined, {type: 'randomAction'})).toEqual(
       getRedirectionInitialState()
@@ -60,7 +62,7 @@ describe('redirection slice', () => {
   async function mockPlan(trigger?: Trigger) {
     const apiClient = new SearchAPIClient({
       renewAccessToken: async () => '',
-      logger: pino({level: 'silent'}),
+      logger,
       preprocessRequest: NoopPreprocessRequestMiddleware,
       postprocessSearchResponseMiddleware: NoopPostprocessSearchResponseMiddleware,
       postprocessFacetSearchResponseMiddleware: NoopPostprocessFacetSearchResponseMiddleware,
@@ -81,6 +83,7 @@ describe('redirection slice', () => {
     })(engine.dispatch, () => createMockState(), {
       searchAPIClient: apiClient,
       analyticsClientMiddleware: (_, p) => p,
+      logger,
     });
 
     return response;
