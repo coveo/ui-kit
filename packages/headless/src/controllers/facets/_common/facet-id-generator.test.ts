@@ -27,14 +27,9 @@ describe('facet selectors', () => {
     });
 
     describe('when the state does not contain a facet with the field', () => {
-      it('the id is the field', () => {
+      it('generates an id equal to the field', () => {
         const id = getFacetId();
         expect(id).toBe(config.field);
-      });
-
-      it('the id meets the searchapi regex check', () => {
-        const id = getFacetId();
-        expect(id).toMatch(/[A-Za-z0-9-_]{1,60}/);
       });
 
       it('does not log a warning', () => {
@@ -43,14 +38,19 @@ describe('facet selectors', () => {
       });
     });
 
-    describe('when the state contains a facet id with the same field', () => {
+    describe('when the state contains a facet id using the same field', () => {
       beforeEach(() => {
         config.state = {[config.field]: buildMockFacetRequest()};
       });
 
-      it('it appends 1 to the field', () => {
+      it('it generates an id with 1 appended to the field', () => {
         const id = getFacetId();
         expect(id).toBe(`${prefix}1`);
+      });
+
+      it('the id meets the searchapi regex check', () => {
+        const id = getFacetId();
+        expect(id).toMatch(/[A-Za-z0-9-_]{1,60}/);
       });
 
       it('logs a warning', () => {
@@ -60,7 +60,7 @@ describe('facet selectors', () => {
     });
 
     it(`when the state contains multiple facet ids with the same field,
-    it appends a number one greater than the largest number`, () => {
+    it generates an id with a suffix one greater than the largest number`, () => {
       config.state = {
         [config.field]: buildMockFacetRequest(),
         [`${prefix}10`]: buildMockFacetRequest(),
@@ -71,9 +71,9 @@ describe('facet selectors', () => {
     });
 
     it(`when the state contains a facet id with a different field,
-    it id is the field`, () => {
+    it generates an id equal to the field`, () => {
       config.state = {
-        [`${getPrefixForField('filetype')}1`]: buildMockFacetRequest(),
+        [getPrefixForField('filetype')]: buildMockFacetRequest(),
       };
 
       const id = getFacetId();
@@ -81,7 +81,7 @@ describe('facet selectors', () => {
     });
 
     it(`when the state contains a facet id with the same field but ending with a letter,
-    the id is the field`, () => {
+    it generates an id equal to the field`, () => {
       config.state = {[`${prefix}a`]: buildMockFacetRequest()};
 
       const id = getFacetId();
