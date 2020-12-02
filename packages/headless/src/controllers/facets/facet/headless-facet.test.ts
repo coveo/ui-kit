@@ -81,7 +81,6 @@ describe('facet', () => {
   it('when an id is not specified, it calls generateFacetId with the correct params', () => {
     jest.spyOn(FacetIdGenerator, 'generateFacetId');
 
-    state.facetSet = {a: buildMockFacetRequest()};
     options = {field: 'author'};
     initFacet();
 

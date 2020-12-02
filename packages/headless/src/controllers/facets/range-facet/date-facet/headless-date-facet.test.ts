@@ -16,9 +16,11 @@ import {
 } from '../../../../features/facets/range-facets/date-facet-set/date-facet-actions';
 import {buildMockDateFacetValue} from '../../../../test/mock-date-facet-value';
 import {buildMockDateFacetResponse} from '../../../../test/mock-date-facet-response';
-import {buildMockDateFacetRequest} from '../../../../test/mock-date-facet-request';
 import {SearchAppState} from '../../../../state/search-app-state';
 import {DateRangeRequest} from '../../../../features/facets/range-facets/date-facet-set/interfaces/request';
+import * as FacetIdGenerator from '../../_common/facet-id-generator';
+import * as RangeFacet from '../headless-range-facet';
+import {buildMockFacetIdConfig} from '../../../../test/mock-facet-id-config';
 
 describe('date facet', () => {
   const facetId = '1';
@@ -33,6 +35,8 @@ describe('date facet', () => {
   }
 
   beforeEach(() => {
+    (RangeFacet as any).buildRangeFacet = () => ({state: {}});
+
     options = {
       facetId,
       field: 'created',
@@ -40,8 +44,6 @@ describe('date facet', () => {
     };
 
     state = createMockState();
-    state.dateFacetSet[facetId] = buildMockDateFacetRequest();
-
     initDateFacet();
   });
 
@@ -54,6 +56,23 @@ describe('date facet', () => {
     options.numberOfValues = 0;
     expect(() => initDateFacet()).toThrow(
       'Check the options of buildDateFacet'
+    );
+  });
+
+  it('when an id is not specified, it calls generateFacetId with the correct params', () => {
+    jest.spyOn(FacetIdGenerator, 'generateFacetId');
+
+    options = {field: 'created', generateAutomaticRanges: true};
+    initDateFacet();
+
+    const config = buildMockFacetIdConfig({
+      field: 'created',
+      state: engine.state,
+    });
+
+    expect(FacetIdGenerator.generateFacetId).toHaveBeenCalledWith(
+      config,
+      engine.logger
     );
   });
 
