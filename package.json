@@ -22,6 +22,7 @@
     "doc": "cd packages/headless ; npm run doc"
   },
   "devDependencies": {
+    "@actions/github": "^4.0.0",
     "@commitlint/config-conventional": "^11.0.0",
     "@commitlint/config-lerna-scopes": "^10.0.0",
     "@commitlint/lint": "^9.1.1",
