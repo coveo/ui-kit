@@ -168,7 +168,6 @@ export const fetchMoreResults = createAsyncThunk<
     {getState, dispatch, rejectWithValue, extra: {searchAPIClient}}
   ) => {
     const state = getState();
-    addEntryInActionsHistory(state);
     const fetched = await fetchFromAPI(
       searchAPIClient,
       state,

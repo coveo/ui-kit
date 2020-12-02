@@ -64,6 +64,9 @@ export function buildResultList(
         isLoading: state.search.isLoading,
       };
     },
+    /**
+     * Using the same parameters as the last successful query, fetch another batch of results. Particularly useful for infinite scrolling, for example.
+     */
     fetchMoreResults() {
       dispatch(fetchMoreResults());
     },
