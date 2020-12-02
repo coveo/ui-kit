@@ -19,12 +19,12 @@ export interface SearchResponseSuccess {
 
 export interface SearchResponseSuccessWithDebugInfo
   extends SearchResponseSuccess {
-  executionReport?: ExecutionReport;
-  basicExpression?: string;
-  advancedExpression?: string;
-  constantExpression?: string;
-  userIdentities?: UserIdentity[];
-  rankingExpressions?: RankingExpression[];
+  executionReport: ExecutionReport;
+  basicExpression: string;
+  advancedExpression: string;
+  constantExpression: string;
+  userIdentities: UserIdentity[];
+  rankingExpressions: RankingExpression[];
 }
 
 export type Search =

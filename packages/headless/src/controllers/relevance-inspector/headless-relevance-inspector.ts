@@ -48,6 +48,11 @@ export function buildRelevanceInspector(
 
     /** @returns The state of the `RelevanceInspector` controller. */
     get state() {
+      const isEnabled = engine.state.debug;
+      if (!engine.state.debug) {
+        return {isEnabled};
+      }
+
       const {
         executionReport,
         basicExpression,
@@ -58,7 +63,7 @@ export function buildRelevanceInspector(
       } = engine.state.search.response as SearchResponseSuccessWithDebugInfo;
 
       return {
-        isEnabled: engine.state.debug,
+        isEnabled,
         rankingInformation: rankingInformationSelector(engine.state),
         executionReport,
         expressions: {
