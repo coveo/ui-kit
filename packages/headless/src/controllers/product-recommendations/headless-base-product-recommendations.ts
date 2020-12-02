@@ -26,6 +26,7 @@ export const baseProductRecommendationsOptionsSchema = {
   maxNumberOfRecommendations: new NumberValue({
     required: false,
     max: 50,
+    min: 1,
     default: 5,
   }),
 };
