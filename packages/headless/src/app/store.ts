@@ -9,7 +9,10 @@ import {AnalyticsClientSendEventHook} from 'coveo.analytics';
 import {SearchAPIClient} from '../api/search/search-api-client';
 import {analyticsMiddleware} from './analytics-middleware';
 import {Logger} from 'pino';
-import {SchemaValidationError} from '@coveo/bueno';
+import {
+  logActionErrorMiddleware,
+  logActionMiddleware,
+} from './logger-middlewares';
 
 export interface ThunkExtraArguments {
   searchAPIClient: SearchAPIClient;
@@ -23,34 +26,6 @@ interface ConfigureStoreOptions<Reducers extends ReducersMapObject> {
   middlewares?: Middleware[];
   thunkExtraArguments: ThunkExtraArguments;
 }
-
-const errorLogger: (logger: Logger) => Middleware = (logger) => () => (
-  next
-) => (action) => {
-  if (!action.error) {
-    return next(action);
-  }
-
-  const error =
-    typeof action.error === typeof SchemaValidationError
-      ? action.error
-      : action.error.message;
-  logger.error(error, `Action dispatch error ${action.type}`, action);
-};
-
-const actionLogger: (logger: Logger) => Middleware = (logger) => (api) => (
-  next
-) => (action) => {
-  logger.debug(
-    {
-      action,
-      nextState: api.getState(),
-    },
-    `Action dispatched: ${action.type}`
-  );
-
-  return next(action);
-};
 
 export function configureStore<Reducers extends ReducersMapObject>({
   reducers,
@@ -68,11 +43,11 @@ export function configureStore<Reducers extends ReducersMapObject>({
           : state,
     },
     middleware: (getDefaultMiddleware) => [
-      errorLogger(thunkExtraArguments.logger),
+      logActionErrorMiddleware(thunkExtraArguments.logger),
       analyticsMiddleware,
       ...middlewares,
       ...getDefaultMiddleware({thunk: {extraArgument: thunkExtraArguments}}),
-      actionLogger(thunkExtraArguments.logger),
+      logActionMiddleware(thunkExtraArguments.logger),
     ],
   });
 }

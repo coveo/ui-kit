@@ -184,6 +184,7 @@ export interface Engine<State = SearchAppState> {
    */
   store: Store;
   renewAccessToken: () => Promise<string>;
+  logger: Logger;
 }
 
 /**
