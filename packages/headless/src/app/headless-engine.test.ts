@@ -10,9 +10,9 @@ import {AnalyticsClientSendEventHook} from 'coveo.analytics/dist/definitions/cli
 import pino from 'pino';
 import {NoopPreprocessRequestMiddleware} from '../api/platform-client';
 import {
-  NoopPreprocessFacetSearchResponseMiddleware,
-  NoopPreprocessQuerySuggestResponseMiddleware,
-  NoopPreprocessSearchResponseMiddleware,
+  NoopPostprocessFacetSearchResponseMiddleware,
+  NoopPostprocessQuerySuggestResponseMiddleware,
+  NoopPostprocessSearchResponseMiddleware,
 } from '../api/search/search-api-client-middleware';
 
 describe('headless engine', () => {
@@ -30,9 +30,9 @@ describe('headless engine', () => {
           logger,
           renewAccessToken: async () => '',
           preprocessRequest: NoopPreprocessRequestMiddleware,
-          preprocessSearchResponseMiddleware: NoopPreprocessSearchResponseMiddleware,
-          preprocessQuerySuggestResponseMiddleware: NoopPreprocessQuerySuggestResponseMiddleware,
-          preprocessFacetSearchResponseMiddleware: NoopPreprocessFacetSearchResponseMiddleware,
+          postprocessSearchResponseMiddleware: NoopPostprocessSearchResponseMiddleware,
+          postprocessQuerySuggestResponseMiddleware: NoopPostprocessQuerySuggestResponseMiddleware,
+          postprocessFacetSearchResponseMiddleware: NoopPostprocessFacetSearchResponseMiddleware,
         }),
         analyticsClientMiddleware: {} as AnalyticsClientSendEventHook,
         logger: logger,

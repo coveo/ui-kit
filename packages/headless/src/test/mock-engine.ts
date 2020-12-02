@@ -18,9 +18,9 @@ import {buildMockProductRecommendationsState} from './mock-product-recommendatio
 import {NoopPreprocessRequestMiddleware} from '../api/platform-client';
 import pino from 'pino';
 import {
-  NoopPreprocessFacetSearchResponseMiddleware,
-  NoopPreprocessQuerySuggestResponseMiddleware,
-  NoopPreprocessSearchResponseMiddleware,
+  NoopPostprocessFacetSearchResponseMiddleware,
+  NoopPostprocessQuerySuggestResponseMiddleware,
+  NoopPostprocessSearchResponseMiddleware,
 } from '../api/search/search-api-client-middleware';
 
 type AsyncActionCreator<ThunkArg> = ActionCreatorWithPreparedPayload<
@@ -103,9 +103,9 @@ const configureMockStore = () => {
         logger: pino({level: 'silent'}),
         renewAccessToken: mockRenewAccessToken,
         preprocessRequest: NoopPreprocessRequestMiddleware,
-        preprocessSearchResponseMiddleware: NoopPreprocessSearchResponseMiddleware,
-        preprocessQuerySuggestResponseMiddleware: NoopPreprocessQuerySuggestResponseMiddleware,
-        preprocessFacetSearchResponseMiddleware: NoopPreprocessFacetSearchResponseMiddleware,
+        postprocessSearchResponseMiddleware: NoopPostprocessSearchResponseMiddleware,
+        postprocessQuerySuggestResponseMiddleware: NoopPostprocessQuerySuggestResponseMiddleware,
+        postprocessFacetSearchResponseMiddleware: NoopPostprocessFacetSearchResponseMiddleware,
       }),
     }),
     ...getDefaultMiddleware(),

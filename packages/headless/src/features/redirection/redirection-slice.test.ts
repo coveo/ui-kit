@@ -15,6 +15,11 @@ import {
 import {SearchAppState} from '../../state/search-app-state';
 import {NoopPreprocessRequestMiddleware} from '../../api/platform-client';
 import pino from 'pino';
+import {
+  NoopPostprocessFacetSearchResponseMiddleware,
+  NoopPostprocessQuerySuggestResponseMiddleware,
+  NoopPostprocessSearchResponseMiddleware,
+} from '../../api/search/search-api-client-middleware';
 
 describe('redirection slice', () => {
   it('should have initial state', () => {
@@ -57,6 +62,9 @@ describe('redirection slice', () => {
       renewAccessToken: async () => '',
       logger: pino({level: 'silent'}),
       preprocessRequest: NoopPreprocessRequestMiddleware,
+      postprocessSearchResponseMiddleware: NoopPostprocessSearchResponseMiddleware,
+      postprocessFacetSearchResponseMiddleware: NoopPostprocessFacetSearchResponseMiddleware,
+      postprocessQuerySuggestResponseMiddleware: NoopPostprocessQuerySuggestResponseMiddleware,
     });
     const triggers = trigger ? [trigger] : [];
     jest.spyOn(apiClient, 'plan').mockResolvedValue({

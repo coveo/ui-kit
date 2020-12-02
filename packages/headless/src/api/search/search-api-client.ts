@@ -26,9 +26,9 @@ import {ProductRecommendationsRequest} from './product-recommendations/product-r
 import {AnalyticsClientSendEventHook} from 'coveo.analytics/dist/definitions/client/analytics';
 import {Logger} from 'pino';
 import {
-  PreprocessFacetSearchResponseMiddleware,
-  PreprocessQuerySuggestResponseMiddleware,
-  PreprocessSearchResponseMiddleware,
+  PostprocessFacetSearchResponseMiddleware,
+  PostprocessQuerySuggestResponseMiddleware,
+  PostprocessSearchResponseMiddleware,
 } from './search-api-client-middleware';
 
 export type AllSearchAPIResponse = Plan | Search | QuerySuggest;
@@ -46,9 +46,9 @@ export interface SearchAPIClientOptions {
   renewAccessToken: () => Promise<string>;
   logger: Logger;
   preprocessRequest: PreprocessRequestMiddleware;
-  preprocessSearchResponseMiddleware: PreprocessSearchResponseMiddleware;
-  preprocessQuerySuggestResponseMiddleware: PreprocessQuerySuggestResponseMiddleware;
-  preprocessFacetSearchResponseMiddleware: PreprocessFacetSearchResponseMiddleware;
+  postprocessSearchResponseMiddleware: PostprocessSearchResponseMiddleware;
+  postprocessQuerySuggestResponseMiddleware: PostprocessQuerySuggestResponseMiddleware;
+  postprocessFacetSearchResponseMiddleware: PostprocessFacetSearchResponseMiddleware;
 }
 
 export type SearchAPIClientResponse<T> =
@@ -90,7 +90,7 @@ export class SearchAPIClient {
       ...this.options,
     });
     if (isSuccessQuerySuggestionsResponse(platformResponse)) {
-      const processedResponse = this.options.preprocessQuerySuggestResponseMiddleware(
+      const processedResponse = await this.options.postprocessQuerySuggestResponseMiddleware(
         platformResponse
       );
       return {
@@ -110,9 +110,8 @@ export class SearchAPIClient {
       requestParams: pickNonBaseParams(req),
       ...this.options,
     });
-
     if (isSuccessSearchResponse(platformResponse)) {
-      const processedResponse = this.options.preprocessSearchResponseMiddleware(
+      const processedResponse = await this.options.postprocessSearchResponseMiddleware(
         platformResponse
       );
       return {
@@ -134,7 +133,7 @@ export class SearchAPIClient {
       requestParams: pickNonBaseParams(req),
       ...this.options,
     });
-    const processedResponse = this.options.preprocessFacetSearchResponseMiddleware(
+    const processedResponse = await this.options.postprocessFacetSearchResponseMiddleware(
       platformResponse
     );
 

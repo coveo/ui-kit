@@ -27,15 +27,13 @@ import {
 import {RecordValue, Schema, StringValue} from '@coveo/bueno';
 import {validateOptions} from '../utils/validate-payload';
 import {
-  NoopPreprocessFacetSearchResponseMiddleware,
-  NoopPreprocessQuerySuggestResponseMiddleware,
-  NoopPreprocessSearchResponseMiddleware,
-  PreprocessFacetSearchResponseMiddleware,
-  PreprocessQuerySuggestResponseMiddleware,
-  PreprocessSearchResponseMiddleware,
+  NoopPostprocessFacetSearchResponseMiddleware,
+  NoopPostprocessQuerySuggestResponseMiddleware,
+  NoopPostprocessSearchResponseMiddleware,
+  PostprocessFacetSearchResponseMiddleware,
+  PostprocessQuerySuggestResponseMiddleware,
+  PostprocessSearchResponseMiddleware,
 } from '../api/search/search-api-client-middleware';
-import {RecordValue, Schema, StringValue} from '@coveo/bueno';
-import {validateOptions} from '../utils/validate-payload';
 
 /**
  * The global headless engine options.
@@ -133,15 +131,15 @@ export interface HeadlessConfigurationOptions {
     /**
      * Allows for augmenting a search response before the state is updated.
      */
-    preprocessSearchResponseMiddleware?: PreprocessSearchResponseMiddleware;
+    preprocessSearchResponseMiddleware?: PostprocessSearchResponseMiddleware;
     /**
      * Allows for augmenting a facet-search response before the state is updated.
      */
-    preprocessFacetSearchResponseMiddleware?: PreprocessFacetSearchResponseMiddleware;
+    preprocessFacetSearchResponseMiddleware?: PostprocessFacetSearchResponseMiddleware;
     /**
      * Allows for augmenting a query-suggest response before the state is updated.
      */
-    preprocessQuerySuggestResponseMiddleware?: PreprocessQuerySuggestResponseMiddleware;
+    preprocessQuerySuggestResponseMiddleware?: PostprocessQuerySuggestResponseMiddleware;
   };
 
   analytics?: {
@@ -315,15 +313,15 @@ export class HeadlessEngine<Reducers extends ReducersMapObject>
           preprocessRequest:
             search?.preprocessRequestMiddleware ||
             NoopPreprocessRequestMiddleware,
-          preprocessSearchResponseMiddleware:
+          postprocessSearchResponseMiddleware:
             search?.preprocessSearchResponseMiddleware ||
-            NoopPreprocessSearchResponseMiddleware,
-          preprocessFacetSearchResponseMiddleware:
+            NoopPostprocessSearchResponseMiddleware,
+          postprocessFacetSearchResponseMiddleware:
             search?.preprocessFacetSearchResponseMiddleware ||
-            NoopPreprocessFacetSearchResponseMiddleware,
-          preprocessQuerySuggestResponseMiddleware:
+            NoopPostprocessFacetSearchResponseMiddleware,
+          postprocessQuerySuggestResponseMiddleware:
             search?.preprocessQuerySuggestResponseMiddleware ||
-            NoopPreprocessQuerySuggestResponseMiddleware,
+            NoopPostprocessQuerySuggestResponseMiddleware,
         }),
         analyticsClientMiddleware: this.analyticsClientMiddleware(this.options),
         logger: this.logger,

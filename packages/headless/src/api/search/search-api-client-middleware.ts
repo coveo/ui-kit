@@ -3,26 +3,32 @@ import {FacetSearchResponse} from './facet-search/facet-search-response';
 import {SearchResponseSuccess} from './search/search-response';
 import {PlatformResponse} from '../platform-client';
 
-export type PreprocessSearchResponseMiddleware = (
+export type PostprocessSearchResponseMiddleware = (
   response: PlatformResponse<SearchResponseSuccess>
-) => PlatformResponse<SearchResponseSuccess>;
+) =>
+  | PlatformResponse<SearchResponseSuccess>
+  | Promise<PlatformResponse<SearchResponseSuccess>>;
 
-export type PreprocessFacetSearchResponseMiddleware = (
+export type PostprocessFacetSearchResponseMiddleware = (
   response: PlatformResponse<FacetSearchResponse>
-) => PlatformResponse<FacetSearchResponse>;
+) =>
+  | PlatformResponse<FacetSearchResponse>
+  | Promise<PlatformResponse<FacetSearchResponse>>;
 
-export type PreprocessQuerySuggestResponseMiddleware = (
+export type PostprocessQuerySuggestResponseMiddleware = (
   response: PlatformResponse<QuerySuggestSuccessResponse>
-) => PlatformResponse<QuerySuggestSuccessResponse>;
+) =>
+  | PlatformResponse<QuerySuggestSuccessResponse>
+  | Promise<PlatformResponse<QuerySuggestSuccessResponse>>;
 
-export const NoopPreprocessSearchResponseMiddleware: PreprocessSearchResponseMiddleware = (
+export const NoopPostprocessSearchResponseMiddleware: PostprocessSearchResponseMiddleware = (
   response
 ) => response;
 
-export const NoopPreprocessFacetSearchResponseMiddleware: PreprocessFacetSearchResponseMiddleware = (
+export const NoopPostprocessFacetSearchResponseMiddleware: PostprocessFacetSearchResponseMiddleware = (
   response
 ) => response;
 
-export const NoopPreprocessQuerySuggestResponseMiddleware: PreprocessQuerySuggestResponseMiddleware = (
+export const NoopPostprocessQuerySuggestResponseMiddleware: PostprocessQuerySuggestResponseMiddleware = (
   response
 ) => response;
