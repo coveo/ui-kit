@@ -33,13 +33,12 @@ export const buildQuerySummary = (
       const state = engine.state;
       return {
         firstResult: state.pagination.firstResult + 1,
-        lastResult:
-          state.pagination.firstResult + state.search.response.results.length,
+        lastResult: state.pagination.firstResult + state.search.results.length,
         total: state.pagination.totalCountFiltered,
         query: state.search.queryExecuted,
         hasQuery: state.search.queryExecuted !== '',
         hasDuration: state.search.duration !== 0,
-        hasResults: state.search.response.results.length !== 0,
+        hasResults: state.search.results.length !== 0,
         durationInMilliseconds: state.search.duration,
         durationInSeconds: durationInSeconds(),
       };

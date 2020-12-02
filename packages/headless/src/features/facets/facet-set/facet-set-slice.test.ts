@@ -13,7 +13,7 @@ import {buildMockFacetValue} from '../../../test/mock-facet-value';
 import {buildMockSearch} from '../../../test/mock-search';
 import {buildMockFacetResponse} from '../../../test/mock-facet-response';
 import {executeSearch} from '../../search/search-actions';
-import {logGenericSearchEvent} from '../../analytics/analytics-actions';
+import {logSearchEvent} from '../../analytics/analytics-actions';
 import {buildMockFacetValueRequest} from '../../../test/mock-facet-value-request';
 import {buildMockFacetSearchResult} from '../../../test/mock-facet-search-result';
 import {FacetRegistrationOptions} from './interfaces/options';
@@ -22,6 +22,7 @@ import {buildMockFacetRequest} from '../../../test/mock-facet-request';
 import {selectFacetSearchResult} from '../facet-search-set/specific/specific-facet-search-actions';
 import * as FacetReducers from '../generic/facet-reducer-helpers';
 import {FacetSetState, getFacetSetInitialState} from './facet-set-state';
+import {deselectAllFacets} from '../generic/facet-actions';
 
 describe('facet-set slice', () => {
   let state: FacetSetState;
@@ -218,6 +219,17 @@ describe('facet-set slice', () => {
     expect(FacetReducers.handleFacetDeselectAll).toHaveBeenCalledTimes(1);
   });
 
+  it('dispatching #deselectAllFacets calls #handleFacetDeselectAll for every facet', () => {
+    jest.spyOn(FacetReducers, 'handleFacetDeselectAll');
+
+    state['1'] = buildMockFacetRequest();
+    state['2'] = buildMockFacetRequest();
+    state['3'] = buildMockFacetRequest();
+    facetSetReducer(state, deselectAllFacets());
+
+    expect(FacetReducers.handleFacetDeselectAll).toHaveBeenCalledTimes(4);
+  });
+
   it('dispatching #updateFacetSortCriterion calls #handleFacetSortCriterionUpdate', () => {
     jest.spyOn(FacetReducers, 'handleFacetSortCriterionUpdate');
     const action = updateFacetSortCriterion({
@@ -274,11 +286,7 @@ describe('facet-set slice', () => {
       const search = buildMockSearch();
       search.response.facets = facets;
 
-      return executeSearch.fulfilled(
-        search,
-        '',
-        logGenericSearchEvent({evt: 'foo'})
-      );
+      return executeSearch.fulfilled(search, '', logSearchEvent({evt: 'foo'}));
     }
 
     it('updates the currentValues of facet requests to the values in the response', () => {
