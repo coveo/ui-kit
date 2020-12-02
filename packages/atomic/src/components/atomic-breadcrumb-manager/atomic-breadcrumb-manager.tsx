@@ -32,6 +32,7 @@ export class AtomicBreadcrumbManager {
   @State() state!: BreadcrumbManagerState;
   @State() collapsedBreadcrumbsState: string[] = [];
   @Prop() collapseThreshold = 5;
+  @Prop() categoryDivider = '/';
 
   private engine!: Engine;
   private breadcrumbManager!: BreadcrumbManager;
@@ -173,23 +174,26 @@ export class AtomicBreadcrumbManager {
 
   private getCategoryBreadrumbValues(values: CategoryFacetBreadcrumb) {
     const breadcrumbsToShow = this.categoryCollapsedBreadcrumbsHandler(values);
-    const breadcrumbAriaLabel = breadcrumbsToShow.join('/');
-    const renderedBreadcrumbs = breadcrumbsToShow.map((breadcrumbValue) => (
+    const ariaLabel = breadcrumbsToShow.join('/');
+    const joinedBreadcrumbs = breadcrumbsToShow.join(
+      ` ${this.categoryDivider} `
+    );
+    return (
       <li
         part="breadcrumb-value category-breadcrumb-value"
         class="breadcrumb-item"
       >
         <button
           part="breadcrumb-button"
-          aria-label={`Remove inclusion filter on ${breadcrumbAriaLabel}`}
+          aria-label={`Remove inclusion filter on ${ariaLabel}`}
           class={this.buttonClasses}
           onClick={values.deselect}
         >
-          {breadcrumbValue}
+          {joinedBreadcrumbs}
+          {this.mainClear}
         </button>
       </li>
-    ));
-    return [...renderedBreadcrumbs, this.mainClear];
+    );
   }
 
   private getClearAllFiltersButton() {
