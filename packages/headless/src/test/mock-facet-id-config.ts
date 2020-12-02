@@ -4,7 +4,6 @@ export function buildMockFacetIdConfig(
   config: Partial<FacetIdConfig>
 ): FacetIdConfig {
   return {
-    type: 'specific',
     field: '',
     state: {},
     ...config,

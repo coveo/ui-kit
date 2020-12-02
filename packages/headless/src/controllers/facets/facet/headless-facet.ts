@@ -59,7 +59,7 @@ export function buildFacet(
     generateFacetId(
       {
         field: props.options.field,
-        state: engine.state.facetSet,
+        state: engine.state,
       },
       engine.logger
     );

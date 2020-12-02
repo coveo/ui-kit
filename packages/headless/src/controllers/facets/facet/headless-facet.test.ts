@@ -87,10 +87,13 @@ describe('facet', () => {
 
     const expected = buildMockFacetIdConfig({
       field: 'author',
-      state: state.facetSet,
+      state: engine.state,
     });
 
-    expect(FacetIdGenerator.generateFacetId).toHaveBeenCalledWith(expected);
+    expect(FacetIdGenerator.generateFacetId).toHaveBeenCalledWith(
+      expected,
+      engine.logger
+    );
   });
 
   it('registering a facet with #numberOfValues less than 1 throws', () => {
