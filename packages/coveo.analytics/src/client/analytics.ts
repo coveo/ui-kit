@@ -29,6 +29,7 @@ import {
 import {IRuntimeEnvironment, BrowserRuntime, NodeJSRuntime} from './runtimeEnvironment';
 import HistoryStore from '../history';
 import {isApiKey} from './token';
+import {isReactNative} from '../../dist/definitions/detector';
 
 export const Version = 'v15';
 
@@ -120,6 +121,18 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
     private initRuntime(clientsOptions: IAnalyticsBeaconClientOptions) {
         if (hasWindow() && hasDocument()) {
             return new BrowserRuntime(clientsOptions, () => this.flushBufferWithBeacon());
+        } else if (isReactNative()) {
+            console.warn(`
+                We've detected you're using React Native, for an optimal experience please install
+                @react-native-async-storage/async-storage and instantiate your analytics client as follows
+                
+                import {ReactNativeRuntime} from 'coveo.analytics/react-native';
+                
+                const analytics = new CoveoAnalytics({
+                    ...your options,
+                    runtimeEnvironment: new ReactNativeRuntime();
+                })
+            `);
         }
         return new NodeJSRuntime(clientsOptions);
     }
