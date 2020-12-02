@@ -163,9 +163,11 @@ export const fetchMoreResults = createAsyncThunk<
   AsyncThunkSearchOptions<StateNeededByExecuteSearch>
 >(
   'search/fetchMoreResults',
-  async (_, {getState, rejectWithValue, extra: {searchAPIClient}}) => {
+  async (
+    _,
+    {getState, dispatch, rejectWithValue, extra: {searchAPIClient}}
+  ) => {
     const state = getState();
-    addEntryInActionsHistory(state);
     const fetched = await fetchFromAPI(
       searchAPIClient,
       state,
@@ -175,6 +177,8 @@ export const fetchMoreResults = createAsyncThunk<
     if (isErrorResponse(fetched.response)) {
       return rejectWithValue(fetched.response.error);
     }
+
+    dispatch(snapshot(extractHistory(state)));
 
     return {
       ...fetched,
