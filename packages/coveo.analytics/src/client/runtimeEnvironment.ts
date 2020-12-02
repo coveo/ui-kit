@@ -33,11 +33,7 @@ export class NodeJSRuntime implements IRuntimeEnvironment {
     public beaconClient: AnalyticsFetchClient;
 
     constructor(beaconOptions: IAnalyticsFetchClientOptions, storage?: WebStorage) {
-        if (storage) {
-            this.storage = storage;
-        } else {
-            this.storage = new NullStorage();
-        }
+        this.storage = storage || new NullStorage();
         this.beaconClient = new AnalyticsFetchClient(beaconOptions);
     }
 }

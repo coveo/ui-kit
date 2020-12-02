@@ -24,6 +24,18 @@ describe('history', () => {
         };
     });
 
+    it('should return the same an element after adding it to the history', () => {
+        historyStore.addElement(data);
+
+        expect(storageMock.setItem).toHaveBeenCalledTimes(1);
+        const [setKey, setData] = storageMock.setItem.mock.calls[0];
+
+        expect(setKey).toBe(history.STORE_KEY);
+        expect(setData).toMatch(/"value":"value"/);
+        expect(setData).toMatch(/"time"/);
+        expect(setData).toMatch(/"internalTime"/);
+    });
+
     it('should return the same an element after adding it to the history', async () => {
         await historyStore.addElementAsync(data);
 

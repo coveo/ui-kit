@@ -324,7 +324,24 @@ describe('Analytics', () => {
         });
     });
 
-    it('should support clearing cookies for visitorId and historyStore', async () => {
+    it('should support clearing cookies for visitorId and historyStore', () => {
+        const visitorId = 'foo';
+        const history = {name: 'foo', time: '123', value: 'bar'};
+        const storage = new CookieStorage();
+        const historyStore = new HistoryStore();
+
+        client.currentVisitorId = visitorId;
+        historyStore.addElement(history);
+
+        expect(storage.getItem('visitorId')).toBe('foo');
+        expect(historyStore.getMostRecentElement()).toEqual(history);
+
+        client.clear();
+        expect(storage.getItem('visitorId')).toBeNull();
+        expect(historyStore.getMostRecentElement()).toBeUndefined();
+    });
+
+    it('should support clearing cookies for visitorId and historyStore async', async () => {
         const visitorId = 'foo';
         const history = {name: 'foo', time: '123', value: 'bar'};
         const storage = new CookieStorage();
@@ -333,7 +350,7 @@ describe('Analytics', () => {
         await client.setCurrentVisitorId(visitorId);
         await historyStore.addElementAsync(history);
 
-        expect(storage.getItem('visitorId')).toBe('foo');
+        expect(await storage.getItem('visitorId')).toBe('foo');
         expect(historyStore.getMostRecentElement()).toEqual(history);
 
         client.clear();

@@ -29,7 +29,7 @@ import {
 import {IRuntimeEnvironment, BrowserRuntime, NodeJSRuntime} from './runtimeEnvironment';
 import HistoryStore from '../history';
 import {isApiKey} from './token';
-import {isReactNative} from '../../dist/definitions/detector';
+import {isReactNative, ReactNativeRuntimeWarning} from '../react-native/react-native-utils';
 
 export const Version = 'v15';
 
@@ -122,17 +122,7 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
         if (hasWindow() && hasDocument()) {
             return new BrowserRuntime(clientsOptions, () => this.flushBufferWithBeacon());
         } else if (isReactNative()) {
-            console.warn(`
-                We've detected you're using React Native, for an optimal experience please install
-                @react-native-async-storage/async-storage and instantiate your analytics client as follows
-                
-                import {ReactNativeRuntime} from 'coveo.analytics/react-native';
-                
-                const analytics = new CoveoAnalytics({
-                    ...your options,
-                    runtimeEnvironment: new ReactNativeRuntime();
-                })
-            `);
+            console.warn(ReactNativeRuntimeWarning);
         }
         return new NodeJSRuntime(clientsOptions);
     }
@@ -201,12 +191,22 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
         } = this.eventTypeMapping[eventType] || {};
 
         type ProcessPayloadStep = (currentPayload: any) => any;
+        type AsyncProcessPayloadStep = (currentPayload: any) => Promise<any>;
         const processVariableArgumentNamesStep: ProcessPayloadStep = (currentPayload) =>
             variableLengthArgumentsNames.length > 0
                 ? this.parseVariableArgumentsPayload(variableLengthArgumentsNames, currentPayload)
                 : currentPayload[0];
+        const addVisitorIdStep: AsyncProcessPayloadStep = async (currentPayload) => ({
+            visitorId: addVisitorIdParameter ? await this.getCurrentVisitorId() : '',
+            ...currentPayload,
+        });
         const setAnonymousUserStep: ProcessPayloadStep = (currentPayload) =>
             usesMeasurementProtocol ? this.ensureAnonymousUserWhenUsingApiKey(currentPayload) : currentPayload;
+        const processBeforeSendHooksStep: AsyncProcessPayloadStep = (currentPayload) =>
+            this.beforeSendHooks.reduce(async (promisePayload, current) => {
+                const payload = await promisePayload;
+                return await current(eventType, payload);
+            }, currentPayload);
         const cleanPayloadStep: ProcessPayloadStep = (currentPayload) =>
             this.removeEmptyPayloadValues(currentPayload, eventType);
         const validateParams: ProcessPayloadStep = (currentPayload) => this.validateParams(currentPayload);
@@ -216,17 +216,6 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
             usesMeasurementProtocol ? this.removeUnknownParameters(currentPayload) : currentPayload;
         const processCustomParameters: ProcessPayloadStep = (currentPayload) =>
             usesMeasurementProtocol ? this.processCustomParameters(currentPayload) : currentPayload;
-
-        type AsyncProcessPayloadStep = (currentPayload: any) => Promise<any>;
-        const addVisitorIdStep: AsyncProcessPayloadStep = async (currentPayload) => ({
-            visitorId: addVisitorIdParameter ? await this.getCurrentVisitorId() : '',
-            ...currentPayload,
-        });
-        const processBeforeSendHooksStep: AsyncProcessPayloadStep = (currentPayload) =>
-            this.beforeSendHooks.reduce(async (promisePayload, current) => {
-                const payload = await promisePayload;
-                return await current(eventType, payload);
-            }, currentPayload);
 
         const payloadToSend = await [
             processVariableArgumentNamesStep,
