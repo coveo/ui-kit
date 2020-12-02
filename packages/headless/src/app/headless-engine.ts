@@ -14,7 +14,7 @@ import {
   enableAnalytics,
   updateAnalyticsConfiguration,
 } from '../features/configuration/configuration-actions';
-import {configureStore, Store} from './store';
+import {configureStore, Store, ThunkExtraArguments} from './store';
 import {SearchAPIClient} from '../api/search/search-api-client';
 import {debounce} from 'ts-debounce';
 import {SearchAppState} from '../state/search-app-state';
@@ -24,6 +24,8 @@ import {
   NoopPreprocessRequestMiddleware,
   PreprocessRequestMiddleware,
 } from '../api/platform-client';
+import {RecordValue, Schema, StringValue} from '@coveo/bueno';
+import {validateOptions} from '../utils/validate-payload';
 
 /**
  * The global headless engine options.
@@ -149,10 +151,7 @@ export interface HeadlessConfigurationOptions {
 
 type EngineDispatch<State> = ThunkDispatch<
   State,
-  {
-    searchAPIClient: SearchAPIClient;
-    analyticsClientMiddleware: AnalyticsClientSendEventHook;
-  },
+  ThunkExtraArguments,
   AnyAction
 > &
   Dispatch<AnyAction>;
@@ -200,6 +199,7 @@ export class HeadlessEngine<Reducers extends ReducersMapObject>
   public logger!: Logger;
 
   constructor(private options: HeadlessOptions<Reducers>) {
+    this.validateConfiguration(options);
     this.initLogger();
     this.initStore();
 
@@ -222,6 +222,43 @@ export class HeadlessEngine<Reducers extends ReducersMapObject>
       } = options.configuration.analytics;
       this.reduxStore.dispatch(updateAnalyticsConfiguration(rest));
     }
+  }
+
+  private validateConfiguration(options: HeadlessOptions<Reducers>) {
+    const configurationSchema = new Schema<HeadlessConfigurationOptions>({
+      organizationId: new StringValue({
+        required: true,
+        emptyAllowed: false,
+      }),
+      accessToken: new StringValue({
+        required: true,
+        emptyAllowed: false,
+      }),
+      platformUrl: new StringValue({
+        required: false,
+        emptyAllowed: false,
+      }),
+      search: new RecordValue({
+        options: {
+          required: false,
+        },
+        values: {
+          pipeline: new StringValue({
+            required: false,
+            emptyAllowed: false,
+          }),
+          searchHub: new StringValue({
+            required: false,
+            emptyAllowed: false,
+          }),
+        },
+      }),
+    });
+    validateOptions(
+      configurationSchema,
+      options.configuration,
+      HeadlessEngine.name
+    );
   }
 
   private initLogger() {

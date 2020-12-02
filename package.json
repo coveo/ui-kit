@@ -23,7 +23,7 @@
   },
   "devDependencies": {
     "@commitlint/config-conventional": "^11.0.0",
-    "@commitlint/config-lerna-scopes": "^9.1.1",
+    "@commitlint/config-lerna-scopes": "^10.0.0",
     "@commitlint/lint": "^9.1.1",
     "@rollup/plugin-typescript": "^6.0.0",
     "@types/node": "^10.0.3",

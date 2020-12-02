@@ -1,7 +1,4 @@
-import {
-  makeAnalyticsAction,
-  AnalyticsType,
-} from '../analytics/analytics-actions';
+import {AnalyticsType, makeAnalyticsAction} from '../analytics/analytics-utils';
 
 /**
  * Logs a did-you-mean click event, i.e., when a user clicks on a did-you-mean suggestion.

@@ -3,6 +3,68 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.1.0-alpha.75](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.74...v0.1.0-alpha.75) (2020-12-02)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+# [0.1.0-alpha.74](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.73...v0.1.0-alpha.74) (2020-12-01)
+
+
+### Features
+
+* **headless:** export analytics actions for all features ([#298](https://bitbucket.org/coveord/ui-kit/issues/298)) ([fe5ffc0](https://bitbucket.org/coveord/ui-kit/commits/fe5ffc0e0033d1795afac7eee6829486febfac2e))
+
+
+
+
+
+# [0.1.0-alpha.73](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.72...v0.1.0-alpha.73) (2020-12-01)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+# [0.1.0-alpha.72](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.71...v0.1.0-alpha.72) (2020-12-01)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+# [0.1.0-alpha.71](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.70...v0.1.0-alpha.71) (2020-12-01)
+
+
+### Features
+
+* **headless:** add Bueno Validation to HeadlessEngine ([#297](https://bitbucket.org/coveord/ui-kit/issues/297)) ([72f9bac](https://bitbucket.org/coveord/ui-kit/commits/72f9bacb1d792a96e582da71321421ef8ce7d309))
+
+
+
+
+
+# [0.1.0-alpha.70](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.69...v0.1.0-alpha.70) (2020-11-30)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+# [0.1.0-alpha.69](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.68...v0.1.0-alpha.69) (2020-11-30)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
 # [0.1.0-alpha.68](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.67...v0.1.0-alpha.68) (2020-11-30)
 
 **Note:** Version bump only for package @coveo/quantic

@@ -3,6 +3,83 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.1.0-alpha.75](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.74...v0.1.0-alpha.75) (2020-12-02)
+
+
+### Features
+
+* **headless,atomic:** add infinite scrolling ([#305](https://github.com/coveo/ui-kit/issues/305)) ([ea1f55b](https://github.com/coveo/ui-kit/commit/ea1f55b347d0f70454e84bb54961b3c1d3d939a8))
+
+
+
+
+
+# [0.1.0-alpha.74](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.73...v0.1.0-alpha.74) (2020-12-01)
+
+
+### Features
+
+* **headless:** export analytics actions for all features ([#298](https://github.com/coveo/ui-kit/issues/298)) ([fe5ffc0](https://github.com/coveo/ui-kit/commit/fe5ffc0e0033d1795afac7eee6829486febfac2e))
+
+
+
+
+
+# [0.1.0-alpha.73](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.72...v0.1.0-alpha.73) (2020-12-01)
+
+
+### Features
+
+* **headless:** log analytics requests/responses ([2611d43](https://github.com/coveo/ui-kit/commit/2611d43057413b25e0caa1dc1cb3a3410a299cd7))
+
+
+
+
+
+# [0.1.0-alpha.72](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.71...v0.1.0-alpha.72) (2020-12-01)
+
+
+### Features
+
+* **headless:**  deselectAllFacets action ([#287](https://github.com/coveo/ui-kit/issues/287)) ([6b42111](https://github.com/coveo/ui-kit/commit/6b421117992ae7666250af25e39eb0823fb6dc8e))
+
+
+
+
+
+# [0.1.0-alpha.71](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.70...v0.1.0-alpha.71) (2020-12-01)
+
+
+### Features
+
+* **headless:** add Bueno Validation to HeadlessEngine ([#297](https://github.com/coveo/ui-kit/issues/297)) ([72f9bac](https://github.com/coveo/ui-kit/commit/72f9bacb1d792a96e582da71321421ef8ce7d309))
+
+
+
+
+
+# [0.1.0-alpha.70](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.69...v0.1.0-alpha.70) (2020-11-30)
+
+
+### Bug Fixes
+
+* **atomic:** dependabot stencil/sass upgrade ([0ca590e](https://github.com/coveo/ui-kit/commit/0ca590ebd0354c798396b54af303e13096ad9d2d))
+
+
+
+
+
+# [0.1.0-alpha.69](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.68...v0.1.0-alpha.69) (2020-11-30)
+
+
+### Features
+
+* **headless:** add search-parameter-manager controller ([#283](https://github.com/coveo/ui-kit/issues/283)) ([4b3b7ed](https://github.com/coveo/ui-kit/commit/4b3b7ed58e68355eaeaa595689748ba3b28963e1))
+
+
+
+
+
 # [0.1.0-alpha.68](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.67...v0.1.0-alpha.68) (2020-11-30)
 
 
