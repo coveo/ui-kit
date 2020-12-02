@@ -12,6 +12,8 @@ import {facetIdDefinition} from '../../generic/facet-actions-validation';
 import {RecordValue} from '@coveo/bueno';
 import {numericFacetValueDefinition} from '../generic/range-facet-validate-payload';
 
+const executeToggleNumericFacetSelectType = 'numericFacet/executeToggleSelect';
+
 /**
  * Toggles the numeric facet value and then executes a search with the appropriate analytics tag.
  * @param facetId (string) The unique identifier of the facet (e.g., `"1"`).
@@ -24,14 +26,15 @@ export const executeToggleNumericFacetSelect = createAsyncThunk<
     selection: NumericFacetValue;
   },
   AsyncThunkSearchOptions<ConfigurationSection & NumericFacetSection>
->('numericFacet/executeToggleSelect', ({facetId, selection}, {dispatch}) => {
-  validatePayloadSchema(
-    {facetId, selection},
-    {
-      facetId: facetIdDefinition,
-      selection: new RecordValue({values: numericFacetValueDefinition}),
-    }
-  );
-  dispatch(toggleSelectNumericFacetValue({facetId, selection}));
-  dispatch(executeToggleRangeFacetSelect({facetId, selection}));
+>(executeToggleNumericFacetSelectType, (payload, {dispatch}) => {
+  const {error} = validatePayloadSchema(payload, {
+    facetId: facetIdDefinition,
+    selection: new RecordValue({values: numericFacetValueDefinition}),
+  });
+  if (error) {
+    dispatch({type: executeToggleNumericFacetSelectType, error, payload});
+    return;
+  }
+  dispatch(toggleSelectNumericFacetValue(payload));
+  dispatch(executeToggleRangeFacetSelect(payload));
 });
