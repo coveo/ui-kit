@@ -54,7 +54,6 @@ export * from './features/pagination/pagination-selectors';
 
 // Grouped Actions
 export * as AdvancedSearchQueriesActions from './features/advanced-search-queries/advanced-search-queries-actions';
-export * as AnalyticsActions from './features/analytics/analytics-actions';
 export * as CategoryFacetActions from './features/facets/category-facet-set/category-facet-set-actions';
 export * as CategoryFacetControllerActions from './features/facets/category-facet-set/category-facet-set-controller-actions';
 export * as ConfigurationActions from './features/configuration/configuration-actions';
@@ -74,12 +73,26 @@ export * as QueryActions from './features/query/query-actions';
 export * as QuerySetActions from './features/query-set/query-set-actions';
 export * as QuerySuggestActions from './features/query-suggest/query-suggest-actions';
 export * as RedirectionActions from './features/redirection/redirection-actions';
-export * as ResultAnalyticsActions from './features/result/result-analytics-actions';
 export * as SearchActions from './features/search/search-actions';
 export * as SearchHubActions from './features/search-hub/search-hub-actions';
 export * as SortCriterionActions from './features/sort-criteria/sort-criteria-actions';
 export * as RecommendationActions from './features/recommendation/recommendation-actions';
 export * as ProductRecommendationsActions from './features/product-recommendations/product-recommendations-actions';
+
+// Analytics Actions
+export * as AnalyticsActions from './features/analytics/analytics-actions';
+export * as DidYouMeanAnalyticsActions from './features/did-you-mean/did-you-mean-analytics-actions';
+export * as FacetAnalyticsActions from './features/facets/facet-set/facet-set-analytics-actions';
+export * as FacetGenericAnalyticsActions from './features/facets/generic/facet-generic-analytics-actions';
+export * as HistoryAnalyticsActions from './features/history/history-analytics-actions';
+export * as PaginationAnalyticsActions from './features/pagination/pagination-analytics-actions';
+export * as ProductRecommendationAnalyticsActions from './features/product-recommendations/product-recommendations-analytics.actions';
+export * as QueryAnalyticsActions from './features/query/query-analytics-actions';
+export * as QuerySuggestAnalyticsActions from './features/query-suggest/query-suggest-analytics-actions';
+export * as RecommendationAnalyticsActions from './features/recommendation/recommendation-analytics-actions';
+export * as RedirectionAnalyticsActions from './features/redirection/redirection-analytics-actions';
+export * as ResultAnalyticsActions from './features/result/result-analytics-actions';
+export * as SortCriterionAnalyticsActions from './features/sort-criteria/sort-criteria-analytics-actions';
 
 // Types & Helpers
 export * from './api/search/search/result';

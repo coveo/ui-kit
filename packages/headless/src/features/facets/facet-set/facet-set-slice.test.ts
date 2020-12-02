@@ -13,7 +13,7 @@ import {buildMockFacetValue} from '../../../test/mock-facet-value';
 import {buildMockSearch} from '../../../test/mock-search';
 import {buildMockFacetResponse} from '../../../test/mock-facet-response';
 import {executeSearch} from '../../search/search-actions';
-import {logGenericSearchEvent} from '../../analytics/analytics-actions';
+import {logSearchEvent} from '../../analytics/analytics-actions';
 import {buildMockFacetValueRequest} from '../../../test/mock-facet-value-request';
 import {buildMockFacetSearchResult} from '../../../test/mock-facet-search-result';
 import {FacetRegistrationOptions} from './interfaces/options';
@@ -286,11 +286,7 @@ describe('facet-set slice', () => {
       const search = buildMockSearch();
       search.response.facets = facets;
 
-      return executeSearch.fulfilled(
-        search,
-        '',
-        logGenericSearchEvent({evt: 'foo'})
-      );
+      return executeSearch.fulfilled(search, '', logSearchEvent({evt: 'foo'}));
     }
 
     it('updates the currentValues of facet requests to the values in the response', () => {

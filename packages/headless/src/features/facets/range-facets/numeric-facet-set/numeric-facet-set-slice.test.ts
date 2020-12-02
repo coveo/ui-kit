@@ -17,7 +17,7 @@ import * as RangeFacetReducers from '../generic/range-facet-reducers';
 import * as FacetReducers from '../../generic/facet-reducer-helpers';
 import {executeSearch} from '../../../search/search-actions';
 import {buildMockSearch} from '../../../../test/mock-search';
-import {logGenericSearchEvent} from '../../../analytics/analytics-actions';
+import {logSearchEvent} from '../../../analytics/analytics-actions';
 import {numericFacetSetReducer} from './numeric-facet-set-slice';
 import {deselectAllFacets} from '../../generic/facet-actions';
 
@@ -130,7 +130,7 @@ describe('numeric-facet-set slice', () => {
     const search = buildMockSearch();
     numericFacetSetReducer(
       state,
-      executeSearch.fulfilled(search, '', logGenericSearchEvent({evt: 'foo'}))
+      executeSearch.fulfilled(search, '', logSearchEvent({evt: 'foo'}))
     );
 
     expect(
