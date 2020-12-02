@@ -42,7 +42,6 @@ const updatePullRequestComment = (comment_id, body) => {
 
 module.exports = {
   getPullRequestTitle,
-  getPullRequestNumber,
   getPullRequestComments,
   createPullRequestComment,
   updatePullRequestComment,
