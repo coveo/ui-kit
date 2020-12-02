@@ -53,7 +53,7 @@ export function configureStore<Reducers extends ReducersMapObject>({
   middlewares = [],
   thunkExtraArguments,
 }: ConfigureStoreOptions<Reducers>) {
-  const store = configureStoreToolkit({
+  return configureStoreToolkit({
     reducer: combineReducers(reducers),
     preloadedState,
     devTools: {
@@ -62,18 +62,14 @@ export function configureStore<Reducers extends ReducersMapObject>({
           ? {...state, history: '<<OMIT>>'}
           : state,
     },
-    middleware: (getDefaultMiddleware) => {
-      return getDefaultMiddleware({thunk: {extraArgument: thunkExtraArguments}})
-        .prepend(
-          errorLogger(thunkExtraArguments.logger),
-          analyticsMiddleware,
-          ...middlewares
-        )
-        .concat(actionLogger(thunkExtraArguments.logger));
-    },
+    middleware: (getDefaultMiddleware) => [
+      errorLogger(thunkExtraArguments.logger),
+      analyticsMiddleware,
+      ...middlewares,
+      ...getDefaultMiddleware({thunk: {extraArgument: thunkExtraArguments}}),
+      actionLogger(thunkExtraArguments.logger),
+    ],
   });
-
-  return {...store};
 }
 
 export type Store = ReturnType<typeof configureStore>;
