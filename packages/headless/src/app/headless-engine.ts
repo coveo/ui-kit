@@ -184,6 +184,7 @@ export interface Engine<State = SearchAppState> {
    */
   store: Store;
   renewAccessToken: () => Promise<string>;
+  /** The logging instance used by headless */
   logger: Logger;
 }
 
