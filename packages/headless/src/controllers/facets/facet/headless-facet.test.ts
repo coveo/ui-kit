@@ -85,13 +85,13 @@ describe('facet', () => {
     options = {field: 'author'};
     initFacet();
 
-    const expected = buildMockFacetIdConfig({
+    const config = buildMockFacetIdConfig({
       field: 'author',
       state: engine.state,
     });
 
     expect(FacetIdGenerator.generateFacetId).toHaveBeenCalledWith(
-      expected,
+      config,
       engine.logger
     );
   });
