@@ -27,14 +27,14 @@ export const executeToggleNumericFacetSelect = createAsyncThunk<
   },
   AsyncThunkSearchOptions<ConfigurationSection & NumericFacetSection>
 >(executeToggleNumericFacetSelectType, (payload, {dispatch}) => {
-  const {error} = validatePayloadSchema(payload, {
-    facetId: facetIdDefinition,
-    selection: new RecordValue({values: numericFacetValueDefinition}),
-  });
-  if (error) {
-    dispatch({type: executeToggleNumericFacetSelectType, error, payload});
-    return;
-  }
+  validatePayloadSchema(
+    payload,
+    {
+      facetId: facetIdDefinition,
+      selection: new RecordValue({values: numericFacetValueDefinition}),
+    },
+    true
+  );
   dispatch(toggleSelectNumericFacetValue(payload));
   dispatch(executeToggleRangeFacetSelect(payload));
 });

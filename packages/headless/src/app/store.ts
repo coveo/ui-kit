@@ -9,6 +9,7 @@ import {AnalyticsClientSendEventHook} from 'coveo.analytics';
 import {SearchAPIClient} from '../api/search/search-api-client';
 import {analyticsMiddleware} from './analytics-middleware';
 import {Logger} from 'pino';
+import {SchemaValidationError} from '@coveo/bueno';
 
 export interface ThunkExtraArguments {
   searchAPIClient: SearchAPIClient;
@@ -30,7 +31,11 @@ const errorLogger: (logger: Logger) => Middleware = (logger) => () => (
     return next(action);
   }
 
-  logger.error(action.error, `Action dispatch error ${action.type}`, action);
+  const error =
+    typeof action.error === typeof SchemaValidationError
+      ? action.error
+      : action.error.message;
+  logger.error(error, `Action dispatch error ${action.type}`, action);
 };
 
 const actionLogger: (logger: Logger) => Middleware = (logger) => (api) => (
