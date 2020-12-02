@@ -104,7 +104,7 @@ export const fetchQuerySuggestions = createAsyncThunk<
     payload: {id: string},
     {getState, rejectWithValue, extra: {searchAPIClient}}
   ) => {
-    validatePayloadSchema(payload, idDefinition);
+    validatePayloadSchema(payload, idDefinition, true);
     const id = payload.id;
     const response = await searchAPIClient.querySuggest(
       buildQuerySuggestRequest(id, getState())

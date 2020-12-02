@@ -29,7 +29,8 @@ export const executeFacetSearch = createAsyncThunk<
     let req: SpecificFacetSearchRequest | CategoryFacetSearchRequest;
     validatePayloadValue(
       facetId,
-      new StringValue({required: true, emptyAllowed: false})
+      new StringValue({required: true, emptyAllowed: false}),
+      true
     );
     if (isSpecificFacetSearchState(state)) {
       req = buildSpecificFacetSearchRequest(facetId, state);

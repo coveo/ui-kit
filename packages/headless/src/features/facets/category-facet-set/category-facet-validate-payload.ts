@@ -30,6 +30,7 @@ export function validateCategoryFacetValue(payload: CategoryFacetValue) {
       path: payload.path,
       moreValuesAvailable: payload.moreValuesAvailable,
     },
-    categoryFacetValueDefinition
+    categoryFacetValueDefinition,
+    true
   );
 }

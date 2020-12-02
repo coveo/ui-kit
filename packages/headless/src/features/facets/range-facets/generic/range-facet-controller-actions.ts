@@ -28,7 +28,8 @@ export const executeToggleRangeFacetSelect = createAsyncThunk<
 >('rangeFacet/executeToggleSelect', ({facetId, selection}, {dispatch}) => {
   validatePayloadSchema(
     {facetId, selection},
-    {facetId: facetIdDefinition, selection: getSelectionDefinition(selection)}
+    {facetId: facetIdDefinition, selection: getSelectionDefinition(selection)},
+    true
   );
 
   const analyticsAction = getAnalyticsActionForToggleRangeFacetSelect(

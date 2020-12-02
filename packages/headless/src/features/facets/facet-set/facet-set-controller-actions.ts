@@ -36,7 +36,8 @@ export const executeToggleFacetSelect = createAsyncThunk<
     {
       facetId: facetIdDefinition,
       selection: new RecordValue({values: facetValueDefinition}),
-    }
+    },
+    true
   );
   dispatch(toggleSelectFacetValue({facetId, selection}));
   dispatch(updateFacetOptions({freezeFacetOrder: true}));

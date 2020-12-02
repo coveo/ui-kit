@@ -30,7 +30,8 @@ export const executeToggleDateFacetSelect = createAsyncThunk<
     {
       facetId: facetIdDefinition,
       selection: new RecordValue({values: dateFacetValueDefinition}),
-    }
+    },
+    true
   );
   dispatch(toggleSelectDateFacetValue({facetId, selection}));
   dispatch(executeToggleRangeFacetSelect({facetId, selection}));

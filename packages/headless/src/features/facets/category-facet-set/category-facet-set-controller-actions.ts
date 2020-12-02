@@ -40,7 +40,7 @@ export const executeToggleCategoryFacetSelect = createAsyncThunk<
 >(
   'categoryFacetController/executeToggleSelect',
   ({facetId, selection}, {dispatch}) => {
-    validatePayloadValue(facetId, requiredNonEmptyString);
+    validatePayloadValue(facetId, requiredNonEmptyString, true);
     validateCategoryFacetValue(selection);
 
     const analyticsAction = getAnalyticsActionForCategoryFacetToggleSelect(
@@ -72,7 +72,8 @@ export const executeDeselectAllCategoryFacetValues = createAsyncThunk<
       {
         facetId: facetIdDefinition,
         numberOfValues: new NumberValue({required: true}),
-      }
+      },
+      true
     );
     dispatch(deselectAllCategoryFacetValues(facetId));
     dispatch(updateCategoryFacetNumberOfValues({facetId, numberOfValues}));

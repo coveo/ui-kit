@@ -20,6 +20,7 @@ import {
   ArrayValue,
   StringValue,
   NumberValue,
+  SchemaValidationError,
 } from '@coveo/bueno';
 import {validateCategoryFacetValue} from './category-facet-validate-payload';
 
@@ -53,10 +54,13 @@ export const registerCategoryFacet = createAction(
 export const toggleSelectCategoryFacetValue = createAction(
   'categoryFacet/toggleSelectValue',
   (payload: {facetId: string; selection: CategoryFacetValue}) => {
-    validatePayloadValue(payload.facetId, requiredNonEmptyString);
-    validateCategoryFacetValue(payload.selection);
-
-    return {payload: payload};
+    try {
+      validatePayloadValue(payload.facetId, requiredNonEmptyString, true);
+      validateCategoryFacetValue(payload.selection);
+      return {payload, error: null};
+    } catch (error) {
+      return {payload, error: error as SchemaValidationError};
+    }
   }
 );
 
