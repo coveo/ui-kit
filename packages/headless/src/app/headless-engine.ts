@@ -14,7 +14,7 @@ import {
   enableAnalytics,
   updateAnalyticsConfiguration,
 } from '../features/configuration/configuration-actions';
-import {configureStore, Store} from './store';
+import {configureStore, Store, ThunkExtraArguments} from './store';
 import {SearchAPIClient} from '../api/search/search-api-client';
 import {debounce} from 'ts-debounce';
 import {SearchAppState} from '../state/search-app-state';
@@ -153,10 +153,7 @@ export interface HeadlessConfigurationOptions {
 
 type EngineDispatch<State> = ThunkDispatch<
   State,
-  {
-    searchAPIClient: SearchAPIClient;
-    analyticsClientMiddleware: AnalyticsClientSendEventHook;
-  },
+  ThunkExtraArguments,
   AnyAction
 > &
   Dispatch<AnyAction>;

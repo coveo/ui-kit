@@ -1,0 +1,18 @@
+name: PR Robot
+on:
+- pull_request
+
+jobs:
+  run-script:
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_CREDENTIALS: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+    - uses: actions/checkout@v2
+      with:
+          fetch-depth: 0
+    - uses: actions/setup-node@v1
+      with:
+          node-version: '14'
+    - run: npm i
+    - run: npm run pr:report

@@ -58,10 +58,7 @@ export class PlatformClient {
       body: processedOptions.requestParams,
     };
 
-    processedOptions.logger.info(
-      requestInfo,
-      `Platform request: ${requestInfo.url}`
-    );
+    processedOptions.logger.info(requestInfo, 'Platform request');
 
     const request = async () => {
       const response = await fetch(processedOptions.url, {
@@ -98,17 +95,14 @@ export class PlatformClient {
 
       const body = (await response.json()) as ResponseType;
 
-      options.logger.info(
-        {response, body},
-        `Platform response: ${requestInfo.url}`
-      );
+      options.logger.info({response, body, requestInfo}, 'Platform response');
 
       return {
         response,
         body,
       };
     } catch (error) {
-      options.logger.error(error, `Platform error: ${requestInfo.url}`);
+      options.logger.error({error, requestInfo}, 'Platform error');
 
       return {
         response: error,

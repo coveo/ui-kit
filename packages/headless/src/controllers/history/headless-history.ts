@@ -1,12 +1,11 @@
 import {Engine} from '../../app/headless-engine';
 import {buildController} from '../controller/headless-controller';
+import {back, forward} from '../../features/history/history-actions';
+import {executeSearch} from '../../features/search/search-actions';
 import {
-  back,
-  forward,
   logNavigateBackward,
   logNavigateForward,
-} from '../../features/history/history-actions';
-import {executeSearch} from '../../features/search/search-actions';
+} from '../../features/history/history-analytics-actions';
 
 /**
  * The `History` controller is in charge of allowing navigating back and forward in the search interface history.

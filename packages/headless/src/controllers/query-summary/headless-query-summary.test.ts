@@ -2,8 +2,6 @@ import {createMockState} from '../../test/mock-state';
 import {buildMockSearchAppEngine} from '../../test/mock-engine';
 import {QuerySummary, buildQuerySummary} from './headless-query-summary';
 import {buildMockResult} from '../../test/mock-result';
-import {buildMockSearchResponse} from '../../test/mock-search-response';
-import {Result} from '../../api/search/search/result';
 import {SearchAppState} from '../../state/search-app-state';
 
 describe('headless query summary', () => {
@@ -14,12 +12,6 @@ describe('headless query summary', () => {
     state = createMockState();
     querySummary = buildQuerySummary(buildMockSearchAppEngine({state}));
   });
-
-  const createResponseState = (results: Result[]) => {
-    const s = buildMockSearchResponse();
-    s.results = results;
-    return s;
-  };
 
   it('should return the executed query and not the query being executed', () => {
     state.query.q = 'foo';
@@ -37,10 +29,7 @@ describe('headless query summary', () => {
   it('should return #lastResult', () => {
     state.pagination.firstResult = 1;
     state.pagination.numberOfResults = 999;
-    state.search.response = createResponseState([
-      buildMockResult(),
-      buildMockResult(),
-    ]);
+    state.search.results = [buildMockResult(), buildMockResult()];
     expect(querySummary.state.lastResult).toBe(3);
   });
 
@@ -64,9 +53,9 @@ describe('headless query summary', () => {
   });
 
   it('should return #hasResults', () => {
-    state.search.response = createResponseState([buildMockResult()]);
+    state.search.results = [buildMockResult()];
     expect(querySummary.state.hasResults).toBe(true);
-    state.search.response = createResponseState([]);
+    state.search.results = [];
     expect(querySummary.state.hasResults).toBe(false);
   });
 
