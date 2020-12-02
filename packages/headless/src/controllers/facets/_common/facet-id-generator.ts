@@ -1,4 +1,3 @@
-import {FacetType} from '../../../features/facets/facet-api/request';
 import {AnyFacetSetState} from '../../../features/facets/generic/interfaces/generic-facet-state';
 
 export interface Logger {
@@ -6,20 +5,19 @@ export interface Logger {
 }
 
 export interface FacetIdConfig {
-  type: FacetType;
   field: string;
   state: AnyFacetSetState;
 }
 
 export function generateFacetId(config: FacetIdConfig, logger: Logger) {
-  const {type, field, state} = config;
+  const {field, state} = config;
 
-  const prefix = `${type}_${field}_`;
+  const prefix = `${field}_`;
   const id = calculateId(prefix, state);
 
   logWarningMessageIfNeeded(id, field, logger);
 
-  return `${prefix}${id}`;
+  return id === 0 ? field : `${prefix}${id}`;
 }
 
 function calculateId(prefix: string, state: AnyFacetSetState) {

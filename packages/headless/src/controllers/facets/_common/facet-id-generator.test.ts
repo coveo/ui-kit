@@ -8,7 +8,7 @@ describe('facet selectors', () => {
     let prefix: string;
 
     function getPrefixForField(field: string) {
-      return `${config.type}_${field}_`;
+      return `${field}_`;
     }
 
     function getFacetId() {
@@ -17,7 +17,6 @@ describe('facet selectors', () => {
 
     beforeEach(() => {
       config = {
-        type: 'specific',
         field: 'author',
         state: {},
       };
@@ -28,9 +27,9 @@ describe('facet selectors', () => {
     });
 
     describe('when the state does not contain a facet with the field', () => {
-      it('generates an id ending with 0', () => {
+      it('the id is the field', () => {
         const id = getFacetId();
-        expect(id).toBe(`${prefix}0`);
+        expect(id).toBe(config.field);
       });
 
       it('the id meets the searchapi regex check', () => {
@@ -72,21 +71,21 @@ describe('facet selectors', () => {
     });
 
     it(`when the state contains a facet id with a different field,
-    it generates an id ending with 0`, () => {
+    it id is the field`, () => {
       config.state = {
         [`${getPrefixForField('filetype')}0`]: buildMockFacetRequest(),
       };
 
       const id = getFacetId();
-      expect(id).toBe(`${prefix}0`);
+      expect(id).toBe(config.field);
     });
 
     it(`when the state contains a facet id with the same field but ending with a letter,
-    it generates an id ending with 0`, () => {
+    the id is the field`, () => {
       config.state = {[`${prefix}a`]: buildMockFacetRequest()};
 
       const id = getFacetId();
-      expect(id).toBe(`${prefix}0`);
+      expect(id).toBe(config.field);
     });
   });
 });
