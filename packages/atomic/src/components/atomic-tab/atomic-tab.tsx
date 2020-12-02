@@ -53,10 +53,16 @@ export class AtomicTab {
   }
 
   render() {
-    const activeClass = this.state.isActive ? 'active' : 'btn-outline-primary';
+    let activeClass = 'btn-outline-primary';
+    let activePart = {};
+    if (this.state.isActive) {
+      activeClass = 'active';
+      activePart = {part: 'active-tab'};
+    }
     return (
-      <nav class="nav nav-pills">
+      <nav class="nav nav-pills" {...activePart}>
         <button
+          part="tab-button"
           class={`nav-link btn  ${activeClass}`}
           onClick={() => this.handleClick()}
         >
