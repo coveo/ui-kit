@@ -58,20 +58,17 @@ export class AtomicBreadcrumbManager {
   }
 
   private get facetBreadcrumbs() {
-    const breadcrumbs = this.state.facetBreadcrumbs.map((breadcrumb) => {
+    return this.state.facetBreadcrumbs.map((breadcrumb) => {
       const breadcrumbsValues = this.getBreadrumbValues(breadcrumb);
-      return !this.isEmpty(breadcrumbsValues) ? (
+      return (
         <ul part="breadcrumbs" class="breadcrumb p-0 m-0">
           <li part="breadcrumb-label" class="text-muted">
             {breadcrumb.field}:&nbsp;
           </li>
           {breadcrumbsValues}
         </ul>
-      ) : (
-        ''
       );
     });
-    return breadcrumbs;
   }
 
   private getBreadrumbValues(breadcrumb: Breadcrumb<FacetValue>) {
@@ -98,37 +95,31 @@ export class AtomicBreadcrumbManager {
   }
 
   private get numericFacetBreadcrumbs() {
-    const breadcrumbs = this.state.numericFacetBreadcrumbs.map((breadcrumb) => {
+    return this.state.numericFacetBreadcrumbs.map((breadcrumb) => {
       const breadcrumbsValues = this.getRangeBreadrumbValues(breadcrumb, false);
-      return !this.isEmpty(breadcrumbsValues) ? (
+      return (
         <ul part="breadcrumbs" class="breadcrumb p-0 m-0">
           <li part="breadcrumb-label" class="text-muted">
             {breadcrumb.field}:&nbsp;
           </li>
           {breadcrumbsValues}
         </ul>
-      ) : (
-        ''
       );
     });
-    return breadcrumbs;
   }
 
   private get dateFacetBreadcrumbs() {
-    const breadcrumbs = this.state.dateFacetBreadcrumbs.map((breadcrumb) => {
+    return this.state.dateFacetBreadcrumbs.map((breadcrumb) => {
       const breadcrumbsValues = this.getRangeBreadrumbValues(breadcrumb, true);
-      return !this.isEmpty(breadcrumbsValues) ? (
+      return (
         <ul part="breadcrumbs" class="breadcrumb p-0 m-0">
           <li part="breadcrumb-label" class="text-muted">
             {breadcrumb.field}:&nbsp;
           </li>
           {breadcrumbsValues}
         </ul>
-      ) : (
-        ''
       );
     });
-    return breadcrumbs;
   }
 
   private getRangeBreadrumbValues(
@@ -169,18 +160,13 @@ export class AtomicBreadcrumbManager {
   private get categoryFacetBreadcrumbs() {
     return this.state.categoryFacetBreadcrumbs.map((breadcrumb) => {
       const breadcrumbsValues = this.getCategoryBreadrumbValues(breadcrumb);
-      const renderedBreadcrumbs = this.state.categoryFacetBreadcrumbs.every(
-        (value: CategoryFacetBreadcrumb) => value.path.length > 0
-      );
-      return renderedBreadcrumbs ? (
+      return (
         <ul part="breadcrumbs" class="breadcrumb p-0 m-0">
           <li part="breadcrumb-label" class="text-muted">
             {breadcrumb.field}:&nbsp;
           </li>
           {breadcrumbsValues}
         </ul>
-      ) : (
-        ''
       );
     });
   }
@@ -211,7 +197,7 @@ export class AtomicBreadcrumbManager {
       <button
         part="breadcrumb-button"
         class={this.buttonClasses}
-        onClick={() => {}} //TODO https://coveord.atlassian.net/browse/KIT-269
+        onClick={() => this.breadcrumbManager.deselectAll()}
       >
         Clear All Filters
       </button>
@@ -244,10 +230,6 @@ export class AtomicBreadcrumbManager {
     };
   }
 
-  private isEmpty(array: unknown[]) {
-    return array.length === 0;
-  }
-
   private categoryCollapsedBreadcrumbsHandler(
     breadcrumb: CategoryFacetBreadcrumb
   ) {
@@ -264,7 +246,8 @@ export class AtomicBreadcrumbManager {
   }
 
   private getMoreButton(collapsedBreadcrumbNumber: number, field: string) {
-    return collapsedBreadcrumbNumber > 0 ? (
+    if (collapsedBreadcrumbNumber <= 0) return undefined;
+    return (
       <li part="breadcrumb-value">
         <button
           part="breadcrumb-button"
@@ -277,7 +260,7 @@ export class AtomicBreadcrumbManager {
           {collapsedBreadcrumbNumber} more...
         </button>
       </li>
-    ) : undefined;
+    );
   }
 
   private get mainClear() {

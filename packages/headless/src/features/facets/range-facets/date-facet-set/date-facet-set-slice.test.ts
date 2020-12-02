@@ -13,12 +13,13 @@ import * as RangeFacetReducers from '../generic/range-facet-reducers';
 import * as FacetReducers from '../../generic/facet-reducer-helpers';
 import {executeSearch} from '../../../search/search-actions';
 import {buildMockSearch} from '../../../../test/mock-search';
-import {logGenericSearchEvent} from '../../../analytics/analytics-actions';
+import {logSearchEvent} from '../../../analytics/analytics-actions';
 import {buildMockDateFacetValue} from '../../../../test/mock-date-facet-value';
 import {
   DateFacetSetState,
   getDateFacetSetInitialState,
 } from './date-facet-set-state';
+import {deselectAllFacets} from '../../generic/facet-actions';
 
 describe('date-facet-set slice', () => {
   let state: DateFacetSetState;
@@ -93,6 +94,19 @@ describe('date-facet-set slice', () => {
     ).toHaveBeenCalledTimes(1);
   });
 
+  it('dispatching #deselectAllFacets calls #handleFacetDeselectAll for every date facet', () => {
+    jest.spyOn(RangeFacetReducers, 'handleRangeFacetDeselectAll');
+
+    state['1'] = buildMockDateFacetRequest();
+    state['2'] = buildMockDateFacetRequest();
+    state['3'] = buildMockDateFacetRequest();
+    dateFacetSetReducer(state, deselectAllFacets);
+
+    expect(
+      RangeFacetReducers.handleRangeFacetDeselectAll
+    ).toHaveBeenCalledTimes(4);
+  });
+
   it('#updateDateFacetSortCriterion calls #handleFacetSortCriterionUpdate', () => {
     jest.spyOn(FacetReducers, 'handleFacetSortCriterionUpdate');
 
@@ -113,7 +127,7 @@ describe('date-facet-set slice', () => {
     const search = buildMockSearch();
     dateFacetSetReducer(
       state,
-      executeSearch.fulfilled(search, '', logGenericSearchEvent({evt: 'foo'}))
+      executeSearch.fulfilled(search, '', logSearchEvent({evt: 'foo'}))
     );
 
     expect(

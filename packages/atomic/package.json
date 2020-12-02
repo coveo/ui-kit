@@ -1,6 +1,6 @@
 {
   "name": "@coveo/atomic",
-  "version": "0.1.0-alpha.62",
+  "version": "0.1.0-alpha.74",
   "description": "A web-component library for building modern UIs interfacing with the Coveo platform",
   "main": "dist/index.cjs.js",
   "module": "dist/index.js",
@@ -26,8 +26,8 @@
     "npm:publish": "npm publish --access public"
   },
   "dependencies": {
-    "@coveo/bueno": "^0.1.0-alpha.50",
-    "@coveo/headless": "^0.1.0-alpha.62",
+    "@coveo/bueno": "^0.1.0-alpha.63",
+    "@coveo/headless": "^0.1.0-alpha.74",
     "bootstrap": "^5.0.0-alpha3",
     "mustache": "^4.0.1",
     "stencil-inline-svg": "^1.0.1"
@@ -38,10 +38,10 @@
     "@rollup/plugin-node-resolve": "^7.1.3",
     "@rollup/plugin-replace": "^2.3.2",
     "@stencil/core": "^2.0.3",
-    "@stencil/sass": "^1.3.2",
+    "@stencil/sass": "^1.4.0",
     "@types/jest": "^26.0.14",
     "@types/mustache": "^4.0.1",
-    "@types/puppeteer": "2.0.1",
+    "@types/puppeteer": "5.4.0",
     "cross-fetch": "^3.0.6",
     "cypress": "^4.11.0",
     "eslint-plugin-cypress": "^2.11.1",

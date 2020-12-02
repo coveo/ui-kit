@@ -1,5 +1,9 @@
 import {SearchAPIClient} from './search-api-client';
-import {PlatformClient, PlatformClientCallOptions} from '../platform-client';
+import {
+  NoopPreprocessRequestMiddleware,
+  PlatformClient,
+  PlatformClientCallOptions,
+} from '../platform-client';
 import {PlanRequest} from './plan/plan-request';
 import {QuerySuggestRequest} from './query-suggest/query-suggest-request';
 import {SearchRequest} from './search/search-request';
@@ -23,15 +27,21 @@ import {buildProductRecommendationsRequest} from '../../features/product-recomme
 import {buildMockProductRecommendationsState} from '../../test/mock-product-recommendations-state';
 import {ProductRecommendationsRequest} from './product-recommendations/product-recommendations-request';
 import {getProductRecommendationsInitialState} from '../../features/product-recommendations/product-recommendations-state';
+import pino from 'pino';
 
 jest.mock('../platform-client');
 describe('search api client', () => {
   const renewAccessToken = async () => 'newToken';
+  const logger = pino({level: 'silent'});
   let searchAPIClient: SearchAPIClient;
   let state: SearchAppState;
 
   beforeEach(() => {
-    searchAPIClient = new SearchAPIClient(renewAccessToken);
+    searchAPIClient = new SearchAPIClient({
+      logger,
+      renewAccessToken,
+      preprocessRequest: NoopPreprocessRequestMiddleware,
+    });
     state = createMockState();
   });
 
@@ -52,6 +62,7 @@ describe('search api client', () => {
         state.configuration.search.apiBaseUrl
       }?${getOrganizationIdQueryParam(req)}`,
       renewAccessToken,
+      logger,
       requestParams: {
         q: state.query.q,
         cq: '',
@@ -69,6 +80,7 @@ describe('search api client', () => {
         searchHub: state.searchHub,
         visitorId: expect.any(String),
       },
+      preprocessRequest: NoopPreprocessRequestMiddleware,
     };
 
     expect(PlatformClient.call).toHaveBeenCalledWith(expectedRequest);
@@ -87,12 +99,14 @@ describe('search api client', () => {
         state.configuration.search.apiBaseUrl
       }/plan?${getOrganizationIdQueryParam(req)}`,
       renewAccessToken,
+      logger,
       requestParams: {
         q: state.query.q,
         context: state.context.contextValues,
         pipeline: state.pipeline,
         searchHub: state.searchHub,
       },
+      preprocessRequest: NoopPreprocessRequestMiddleware,
     };
 
     expect(PlatformClient.call).toHaveBeenCalledWith(expectedRequest);
@@ -115,6 +129,7 @@ describe('search api client', () => {
         state.configuration.search.apiBaseUrl
       }/querySuggest?${getOrganizationIdQueryParam(req)}`,
       renewAccessToken,
+      logger,
       requestParams: {
         q: state.querySuggest[id]!.q,
         count: state.querySuggest[id]!.count,
@@ -123,6 +138,7 @@ describe('search api client', () => {
         searchHub: state.searchHub,
         actionsHistory: expect.any(Array),
       },
+      preprocessRequest: NoopPreprocessRequestMiddleware,
     };
 
     expect(PlatformClient.call).toHaveBeenCalledWith(expectedRequest);
@@ -232,6 +248,7 @@ describe('search api client', () => {
           recommendationState.configuration.search.apiBaseUrl
         }?${getOrganizationIdQueryParam(req)}`,
         renewAccessToken,
+        logger,
         requestParams: {
           recommendation: recommendationState.recommendation.id,
           aq: recommendationState.advancedSearchQueries.aq,
@@ -242,6 +259,7 @@ describe('search api client', () => {
           searchHub: recommendationState.searchHub,
           actionsHistory: expect.any(Array),
         },
+        preprocessRequest: NoopPreprocessRequestMiddleware,
       };
 
       expect(PlatformClient.call).toHaveBeenCalledWith(expectedRequest);
@@ -274,6 +292,7 @@ describe('search api client', () => {
           productRecommendationsState.configuration.search.apiBaseUrl
         }?${getOrganizationIdQueryParam(req)}`,
         renewAccessToken,
+        logger,
         requestParams: {
           recommendation: productRecommendationsState.productRecommendations.id,
           context: productRecommendationsState.context.contextValues,
@@ -293,6 +312,7 @@ describe('search api client', () => {
                 .category,
           },
         },
+        preprocessRequest: NoopPreprocessRequestMiddleware,
       };
 
       expect(PlatformClient.call).toHaveBeenCalledWith(expectedRequest);
