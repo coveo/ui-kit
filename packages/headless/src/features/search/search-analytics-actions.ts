@@ -1,7 +1,4 @@
-import {
-  AnalyticsType,
-  makeAnalyticsAction,
-} from '../analytics/analytics-actions';
+import {makeAnalyticsAction, AnalyticsType} from '../analytics/analytics-utils';
 
 export const logFetchMoreResults = makeAnalyticsAction(
   'search/logFetchMoreResults',
