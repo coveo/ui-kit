@@ -1,8 +1,5 @@
+import {Logger} from 'pino';
 import {AllFacetSections} from '../../../features/facets/generic/interfaces/generic-facet-section';
-
-export interface Logger {
-  warn: (message: string) => void;
-}
 
 export interface FacetIdConfig {
   field: string;

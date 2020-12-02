@@ -1,8 +1,9 @@
+import pino, {Logger} from 'pino';
 import {buildMockCategoryFacetRequest} from '../../../test/mock-category-facet-request';
 import {buildMockDateFacetRequest} from '../../../test/mock-date-facet-request';
 import {buildMockFacetRequest} from '../../../test/mock-facet-request';
 import {buildMockNumericFacetRequest} from '../../../test/mock-numeric-facet-request';
-import {generateFacetId, FacetIdConfig, Logger} from './facet-id-generator';
+import {generateFacetId, FacetIdConfig} from './facet-id-generator';
 
 describe('facet selectors', () => {
   describe('#generateFacetId', () => {
@@ -18,13 +19,18 @@ describe('facet selectors', () => {
       return generateFacetId(config, logger);
     }
 
+    function initLogger() {
+      logger = pino({level: 'silent'});
+      logger.warn = jest.fn();
+    }
+
     beforeEach(() => {
       config = {
         field: 'author',
         state: {},
       };
 
-      logger = {warn: jest.fn()};
+      initLogger();
 
       prefix = getPrefixForField(config.field);
     });
