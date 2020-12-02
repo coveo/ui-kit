@@ -131,14 +131,10 @@ export class AtomicBreadcrumbManager {
       values
     );
     const renderedBreadcrumbs = breadcrumbsToShow.map((breadcrumbValue) => {
-      let ariaLabel: string;
-      if (needDateFormatting) {
-        const dateStart = new Date(breadcrumbValue.value.start);
-        const dateEnd = new Date(breadcrumbValue.value.end);
-        ariaLabel = `Remove inclusion filter on ${dateStart.toLocaleString()} to ${dateEnd.toLocaleString()}`;
-      } else {
-        ariaLabel = `Remove inclusion filter on ${breadcrumbValue.value.start} to ${breadcrumbValue.value.end}`;
-      }
+      const ariaLabel = this.getRangeAriaLabel(
+        needDateFormatting,
+        breadcrumbValue.value
+      );
       return (
         <li part="breadcrumb-value" class="pr-3">
           <button
@@ -288,6 +284,17 @@ export class AtomicBreadcrumbManager {
           1
         )
       : null;
+  }
+  private getRangeAriaLabel(
+    needDateFormatting: boolean,
+    breadcrumbValue: RangeFacetValue
+  ) {
+    if (needDateFormatting) {
+      const dateStart = new Date(breadcrumbValue.start);
+      const dateEnd = new Date(breadcrumbValue.end);
+      return `Remove inclusion filter on ${dateStart.toLocaleString()} to ${dateEnd.toLocaleString()}`;
+    }
+    return `Remove inclusion filter on ${breadcrumbValue.start} to ${breadcrumbValue.end}`;
   }
 
   render() {
