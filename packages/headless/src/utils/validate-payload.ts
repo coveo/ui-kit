@@ -49,6 +49,5 @@ const validateObject = <T extends object>(
   obj: T | undefined,
   message: string
 ) => {
-  // TODO: check where it is called
   return schema.validate(obj, message);
 };
