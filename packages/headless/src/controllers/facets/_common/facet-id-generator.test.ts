@@ -45,10 +45,10 @@ describe('facet selectors', () => {
 
     describe('when the state contains a facet id with the same field', () => {
       beforeEach(() => {
-        config.state = {[`${prefix}0`]: buildMockFacetRequest()};
+        config.state = {[config.field]: buildMockFacetRequest()};
       });
 
-      it('it appends a number incremented by 1', () => {
+      it('it appends 1 to the field', () => {
         const id = getFacetId();
         expect(id).toBe(`${prefix}1`);
       });
@@ -62,7 +62,7 @@ describe('facet selectors', () => {
     it(`when the state contains multiple facet ids with the same field,
     it appends a number one greater than the largest number`, () => {
       config.state = {
-        [`${prefix}0`]: buildMockFacetRequest(),
+        [config.field]: buildMockFacetRequest(),
         [`${prefix}10`]: buildMockFacetRequest(),
       };
 
@@ -73,7 +73,7 @@ describe('facet selectors', () => {
     it(`when the state contains a facet id with a different field,
     it id is the field`, () => {
       config.state = {
-        [`${getPrefixForField('filetype')}0`]: buildMockFacetRequest(),
+        [`${getPrefixForField('filetype')}1`]: buildMockFacetRequest(),
       };
 
       const id = getFacetId();

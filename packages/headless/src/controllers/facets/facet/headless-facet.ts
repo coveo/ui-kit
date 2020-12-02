@@ -58,7 +58,6 @@ export function buildFacet(
     props.options.facetId ||
     generateFacetId(
       {
-        type: 'specific',
         field: props.options.field,
         state: engine.state.facetSet,
       },

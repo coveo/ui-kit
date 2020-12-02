@@ -86,7 +86,6 @@ describe('facet', () => {
     initFacet();
 
     const expected = buildMockFacetIdConfig({
-      type: 'specific',
       field: 'author',
       state: state.facetSet,
     });

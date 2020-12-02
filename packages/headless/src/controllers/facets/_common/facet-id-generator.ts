@@ -11,13 +11,18 @@ export interface FacetIdConfig {
 
 export function generateFacetId(config: FacetIdConfig, logger: Logger) {
   const {field, state} = config;
+  const fieldIsBeingUsed = field in state;
+
+  if (!fieldIsBeingUsed) {
+    return field;
+  }
 
   const prefix = `${field}_`;
   const id = calculateId(prefix, state);
 
-  logWarningMessageIfNeeded(id, field, logger);
+  logWarningMessage(field, logger);
 
-  return id === 0 ? field : `${prefix}${id}`;
+  return `${prefix}${id}`;
 }
 
 function calculateId(prefix: string, state: AnyFacetSetState) {
@@ -26,21 +31,18 @@ function calculateId(prefix: string, state: AnyFacetSetState) {
 }
 
 function findMaxId(keys: string[], prefix: string) {
+  const defaultId = 0;
   const ids = keys.map((key) => {
     const stringId = key.split(prefix)[1];
     const id = parseInt(stringId, 10);
-    return Number.isNaN(id) ? -1 : id;
+    return Number.isNaN(id) ? defaultId : id;
   });
 
   const lastNumber = ids.sort().pop();
-  return lastNumber ?? -1;
+  return lastNumber ?? defaultId;
 }
 
-function logWarningMessageIfNeeded(id: number, field: string, logger: Logger) {
-  if (id === 0) {
-    return;
-  }
-
+function logWarningMessage(field: string, logger: Logger) {
   const message = `A facet with field "${field}" already exists.
   To avoid unexpected behaviour, configure the #id option on the facet controller.`;
 
