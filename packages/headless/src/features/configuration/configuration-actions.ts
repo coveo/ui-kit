@@ -36,17 +36,11 @@ export const updateBasicConfiguration = createAction(
  */
 export const updateSearchConfiguration = createAction(
   'configuration/updateSearchConfiguration',
-  (payload: {
-    apiBaseUrl?: string;
-    pipeline?: string;
-    searchHub?: string;
-    enableDebug?: boolean;
-  }) =>
+  (payload: {apiBaseUrl?: string; pipeline?: string; searchHub?: string}) =>
     validatePayloadSchema(payload, {
       apiBaseUrl: new StringValue({url: true, emptyAllowed: false}),
       pipeline: new StringValue({emptyAllowed: false}),
       searchHub: new StringValue({emptyAllowed: false}),
-      enableDebug: new BooleanValue(),
     })
 );
 

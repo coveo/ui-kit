@@ -36,9 +36,6 @@ export const configurationReducer = createReducer(
         if (action.payload.apiBaseUrl) {
           state.search.apiBaseUrl = action.payload.apiBaseUrl;
         }
-        if (action.payload.enableDebug !== undefined) {
-          state.search.enableDebug = action.payload.enableDebug;
-        }
       })
       .addCase(updateAnalyticsConfiguration, (state, action) => {
         if (action.payload.enabled !== undefined) {

@@ -24,7 +24,6 @@ describe('configuration slice', () => {
     organizationId: 'myorg',
     search: {
       apiBaseUrl: `${url}/rest/search/v2`,
-      enableDebug: false,
     },
     analytics: {
       enabled: true,
@@ -133,7 +132,6 @@ describe('configuration slice', () => {
         ...getConfigurationInitialState(),
         search: {
           apiBaseUrl: 'http://test.com/search',
-          enableDebug: false,
         },
       };
 
@@ -151,7 +149,6 @@ describe('configuration slice', () => {
         ...existingState,
         search: {
           apiBaseUrl: 'http://test.com/search',
-          enableDebug: false,
         },
       };
 

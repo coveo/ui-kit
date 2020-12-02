@@ -15,6 +15,7 @@ import {
   ConfigurationSection,
   ContextSection,
   DateFacetSection,
+  DebugSection,
   DidYouMeanSection,
   FacetOptionsSection,
   FacetSection,
@@ -65,6 +66,7 @@ export type StateNeededByExecuteSearch = ConfigurationSection &
       SearchHubSection &
       QuerySetSection &
       FacetOptionsSection &
+      DebugSection &
       SearchSection
   >;
 
@@ -246,7 +248,7 @@ export const buildSearchRequest = (
     accessToken: state.configuration.accessToken,
     organizationId: state.configuration.organizationId,
     url: state.configuration.search.apiBaseUrl,
-    debug: state.configuration.search.enableDebug,
+    debug: state.debug,
     ...(state.configuration.analytics.enabled && {
       visitorId: getVisitorID(),
     }),

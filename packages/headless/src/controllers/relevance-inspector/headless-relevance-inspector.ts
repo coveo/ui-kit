@@ -1,9 +1,9 @@
 import {BooleanValue, Schema, SchemaValues} from '@coveo/bueno';
 import {SearchResponseSuccessWithDebugInfo} from '../../api/search/search/search-response';
 import {Engine} from '../../app/headless-engine';
-import {updateSearchConfiguration} from '../../features/configuration/configuration-actions';
+import {enableDebug, disableDebug} from '../../features/debug/debug-actions';
 import {rankingInformationSelector} from '../../features/debug/debug-selectors';
-import {ConfigurationSection, SearchSection} from '../../state/state-sections';
+import {DebugSection, SearchSection} from '../../state/state-sections';
 import {validateOptions} from '../../utils/validate-payload';
 import {buildController} from '../controller/headless-controller';
 
@@ -28,21 +28,19 @@ export type RelevanceInspectorState = RelevanceInspector['state'];
 export type RelevanceInspector = ReturnType<typeof buildRelevanceInspector>;
 
 export function buildRelevanceInspector(
-  engine: Engine<ConfigurationSection & SearchSection>,
+  engine: Engine<DebugSection & SearchSection>,
   props: RelevanceInspectorProps = {}
 ) {
   const controller = buildController(engine);
+  const {dispatch} = engine;
   const initialState = validateOptions(
     initialStateSchema,
     props.initialState,
     buildRelevanceInspector.name
   );
 
-  const toggleDebug = (enableDebug: boolean) =>
-    engine.dispatch(updateSearchConfiguration({enableDebug}));
-
   if (initialState.enabled) {
-    toggleDebug(true);
+    dispatch(enableDebug());
   }
 
   return {
@@ -60,7 +58,7 @@ export function buildRelevanceInspector(
       } = engine.state.search.response as SearchResponseSuccessWithDebugInfo;
 
       return {
-        isEnabled: engine.state.configuration.search.enableDebug,
+        isEnabled: engine.state.debug,
         rankingInformation: rankingInformationSelector(engine.state),
         executionReport,
         expressions: {
@@ -78,14 +76,14 @@ export function buildRelevanceInspector(
      * Enables debug.
      */
     enable() {
-      toggleDebug(true);
+      dispatch(enableDebug());
     },
 
     /**
      * Disables debug.
      */
     disable() {
-      toggleDebug(false);
+      dispatch(disableDebug());
     },
   };
 }
