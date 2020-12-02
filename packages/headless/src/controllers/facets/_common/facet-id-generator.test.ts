@@ -1,4 +1,7 @@
+import {buildMockCategoryFacetRequest} from '../../../test/mock-category-facet-request';
+import {buildMockDateFacetRequest} from '../../../test/mock-date-facet-request';
 import {buildMockFacetRequest} from '../../../test/mock-facet-request';
+import {buildMockNumericFacetRequest} from '../../../test/mock-numeric-facet-request';
 import {generateFacetId, FacetIdConfig, Logger} from './facet-id-generator';
 
 describe('facet selectors', () => {
@@ -26,7 +29,7 @@ describe('facet selectors', () => {
       prefix = getPrefixForField(config.field);
     });
 
-    describe('when the state does not contain a facet with the field', () => {
+    describe('when no facet set is used the field as an id', () => {
       it('generates an id equal to the field', () => {
         const id = getFacetId();
         expect(id).toBe(config.field);
@@ -38,7 +41,7 @@ describe('facet selectors', () => {
       });
     });
 
-    describe('when the state contains a facet id using the same field', () => {
+    describe('when the field is used as an id in the facetSet', () => {
       beforeEach(() => {
         const facetSet = {[config.field]: buildMockFacetRequest()};
         config.state = {facetSet};
@@ -60,7 +63,7 @@ describe('facet selectors', () => {
       });
     });
 
-    it(`when the state contains multiple facet ids with the same field,
+    it(`when a facet set contains multiple ids using the same field,
     it generates an id with a suffix one greater than the largest number`, () => {
       const facetSet = {
         [config.field]: buildMockFacetRequest(),
@@ -72,14 +75,27 @@ describe('facet selectors', () => {
       expect(id).toBe(`${prefix}11`);
     });
 
-    // it(`when the field is used in other facet sets,
-    // it generates an id with a suffix one greater than the largest number`, () => {
-    //   config.state = {
-    //     facetSet: {}
-    //   }
-    // })
+    it(`when the field is used in all facet sets,
+    it generates an id with a suffix one greater than the largest number`, () => {
+      const facetSet = {[config.field]: buildMockFacetRequest()};
+      const numericFacetSet = {[`${prefix}1`]: buildMockNumericFacetRequest()};
+      const dateFacetSet = {[`${prefix}2`]: buildMockDateFacetRequest()};
+      const categoryFacetSet = {
+        [`${prefix}3`]: buildMockCategoryFacetRequest(),
+      };
 
-    it(`when the state contains a facet id with a different field,
+      config.state = {
+        facetSet,
+        numericFacetSet,
+        dateFacetSet,
+        categoryFacetSet,
+      };
+
+      const id = getFacetId();
+      expect(id).toBe(`${prefix}4`);
+    });
+
+    it(`when the state contains an id based on a different field,
     it generates an id equal to the field`, () => {
       const facetSet = {
         [getPrefixForField('filetype')]: buildMockFacetRequest(),
@@ -90,7 +106,7 @@ describe('facet selectors', () => {
       expect(id).toBe(config.field);
     });
 
-    it(`when the state contains a facet id with the same field but ending with a letter,
+    it(`when the state contains an id with the same field but ending with a letter,
     it generates an id equal to the field`, () => {
       const facetSet = {[`${prefix}a`]: buildMockFacetRequest()};
       config.state = {facetSet};

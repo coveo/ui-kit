@@ -12,7 +12,7 @@ export interface FacetIdConfig {
 export function generateFacetId(config: FacetIdConfig, logger: Logger) {
   const {field, state} = config;
 
-  if (!isFieldBeingUsed(config)) {
+  if (!isFieldUsedAsFacetId(config)) {
     return field;
   }
 
@@ -24,17 +24,25 @@ export function generateFacetId(config: FacetIdConfig, logger: Logger) {
   return `${prefix}${id}`;
 }
 
-function isFieldBeingUsed(config: FacetIdConfig) {
+function isFieldUsedAsFacetId(config: FacetIdConfig) {
   const {field, state} = config;
-  const {facetSet} = state;
+  const sets = extractFacetSets(state);
 
-  const isInFacetSet = facetSet && field in facetSet;
-  return isInFacetSet;
+  return sets.some((set) => set && field in set);
 }
 
 function calculateId(prefix: string, state: Partial<AllFacetSections>) {
-  const keys = Object.keys(state.facetSet || {});
+  const sets = extractFacetSets(state);
+  const keys = sets
+    .map((set) => Object.keys(set || {}))
+    .reduce((all, current) => all.concat(current), []);
+
   return findMaxId(keys, prefix) + 1;
+}
+
+function extractFacetSets(state: Partial<AllFacetSections>) {
+  const {facetSet, numericFacetSet, dateFacetSet, categoryFacetSet} = state;
+  return [facetSet, numericFacetSet, dateFacetSet, categoryFacetSet];
 }
 
 function findMaxId(keys: string[], prefix: string) {
