@@ -40,7 +40,8 @@ describe('facet selectors', () => {
 
     describe('when the state contains a facet id using the same field', () => {
       beforeEach(() => {
-        config.state = {[config.field]: buildMockFacetRequest()};
+        const facetSet = {[config.field]: buildMockFacetRequest()};
+        config.state = {facetSet};
       });
 
       it('it generates an id with 1 appended to the field', () => {
@@ -61,20 +62,29 @@ describe('facet selectors', () => {
 
     it(`when the state contains multiple facet ids with the same field,
     it generates an id with a suffix one greater than the largest number`, () => {
-      config.state = {
+      const facetSet = {
         [config.field]: buildMockFacetRequest(),
         [`${prefix}10`]: buildMockFacetRequest(),
       };
+      config.state = {facetSet};
 
       const id = getFacetId();
       expect(id).toBe(`${prefix}11`);
     });
 
+    // it(`when the field is used in other facet sets,
+    // it generates an id with a suffix one greater than the largest number`, () => {
+    //   config.state = {
+    //     facetSet: {}
+    //   }
+    // })
+
     it(`when the state contains a facet id with a different field,
     it generates an id equal to the field`, () => {
-      config.state = {
+      const facetSet = {
         [getPrefixForField('filetype')]: buildMockFacetRequest(),
       };
+      config.state = {facetSet};
 
       const id = getFacetId();
       expect(id).toBe(config.field);
@@ -82,7 +92,8 @@ describe('facet selectors', () => {
 
     it(`when the state contains a facet id with the same field but ending with a letter,
     it generates an id equal to the field`, () => {
-      config.state = {[`${prefix}a`]: buildMockFacetRequest()};
+      const facetSet = {[`${prefix}a`]: buildMockFacetRequest()};
+      config.state = {facetSet};
 
       const id = getFacetId();
       expect(id).toBe(config.field);

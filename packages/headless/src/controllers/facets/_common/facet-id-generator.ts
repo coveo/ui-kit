@@ -1,4 +1,4 @@
-import {AnyFacetSetState} from '../../../features/facets/generic/interfaces/generic-facet-state';
+import {AllFacetSections} from '../../../features/facets/generic/interfaces/generic-facet-section';
 
 export interface Logger {
   warn: (message: string) => void;
@@ -6,14 +6,13 @@ export interface Logger {
 
 export interface FacetIdConfig {
   field: string;
-  state: AnyFacetSetState;
+  state: Partial<AllFacetSections>;
 }
 
 export function generateFacetId(config: FacetIdConfig, logger: Logger) {
   const {field, state} = config;
-  const fieldIsBeingUsed = field in state;
 
-  if (!fieldIsBeingUsed) {
+  if (!isFieldBeingUsed(config)) {
     return field;
   }
 
@@ -25,8 +24,16 @@ export function generateFacetId(config: FacetIdConfig, logger: Logger) {
   return `${prefix}${id}`;
 }
 
-function calculateId(prefix: string, state: AnyFacetSetState) {
-  const keys = Object.keys(state);
+function isFieldBeingUsed(config: FacetIdConfig) {
+  const {field, state} = config;
+  const {facetSet} = state;
+
+  const isInFacetSet = facetSet && field in facetSet;
+  return isInFacetSet;
+}
+
+function calculateId(prefix: string, state: Partial<AllFacetSections>) {
+  const keys = Object.keys(state.facetSet || {});
   return findMaxId(keys, prefix) + 1;
 }
 
