@@ -1,4 +1,9 @@
-import {SchemaDefinition, SchemaValue, Schema} from '@coveo/bueno';
+import {
+  SchemaDefinition,
+  SchemaValue,
+  Schema,
+  SchemaValidationError,
+} from '@coveo/bueno';
 
 export const validatePayloadSchema = <P>(
   payload: P,
@@ -9,7 +14,7 @@ export const validatePayloadSchema = <P>(
     const validatedPayload = schema.validate(payload);
     return {payload: validatedPayload as P};
   } catch (error) {
-    return {payload, error};
+    return {payload, error: error as SchemaValidationError};
   }
 };
 
@@ -22,7 +27,7 @@ export const validatePayloadValue = <P>(
     const validatedPayload = schema.validate({value: payload}).value;
     return {payload: validatedPayload as P};
   } catch (error) {
-    return {payload, error};
+    return {payload, error: error as SchemaValidationError};
   }
 };
 
