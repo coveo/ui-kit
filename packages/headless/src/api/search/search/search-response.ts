@@ -15,6 +15,10 @@ export interface SearchResponseSuccess {
   totalCountFiltered: number;
   facets: AnyFacetResponse[];
   queryCorrections: QueryCorrection[];
+}
+
+export interface SearchResponseSuccessWithDebugInfo
+  extends SearchResponseSuccess {
   executionReport?: ExecutionReport;
   basicExpression?: string;
   advancedExpression?: string;

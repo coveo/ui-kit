@@ -1,4 +1,5 @@
 import {BooleanValue, Schema, SchemaValues} from '@coveo/bueno';
+import {SearchResponseSuccessWithDebugInfo} from '../../api/search/search/search-response';
 import {Engine} from '../../app/headless-engine';
 import {updateSearchConfiguration} from '../../features/configuration/configuration-actions';
 import {rankingInformationSelector} from '../../features/debug/debug-selectors';
@@ -56,7 +57,7 @@ export function buildRelevanceInspector(
         constantExpression,
         userIdentities,
         rankingExpressions,
-      } = engine.state.search.response;
+      } = engine.state.search.response as SearchResponseSuccessWithDebugInfo;
 
       return {
         isEnabled: engine.state.configuration.search.enableDebug,
