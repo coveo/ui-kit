@@ -5,8 +5,12 @@ export const validatePayloadSchema = <P>(
   schemaDefinition: SchemaDefinition<Required<P>>
 ) => {
   const schema = new Schema(schemaDefinition);
-  const validatedPayload = schema.validate(payload);
-  return {payload: validatedPayload as P};
+  try {
+    const validatedPayload = schema.validate(payload);
+    return {payload: validatedPayload as P};
+  } catch (error) {
+    return {payload, error};
+  }
 };
 
 export const validatePayloadValue = <P>(
@@ -14,8 +18,12 @@ export const validatePayloadValue = <P>(
   schemaValue: SchemaValue<P>
 ) => {
   const schema = new Schema({value: schemaValue});
-  const validatedPayload = schema.validate({value: payload}).value;
-  return {payload: validatedPayload as P};
+  try {
+    const validatedPayload = schema.validate({value: payload}).value;
+    return {payload: validatedPayload as P};
+  } catch (error) {
+    return {payload, error};
+  }
 };
 
 export const validateInitialState = <T extends object>(
@@ -41,5 +49,6 @@ const validateObject = <T extends object>(
   obj: T | undefined,
   message: string
 ) => {
+  // TODO: check where it is called
   return schema.validate(obj, message);
 };

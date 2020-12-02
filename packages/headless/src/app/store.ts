@@ -23,11 +23,19 @@ interface ConfigureStoreOptions<Reducers extends ReducersMapObject> {
   thunkExtraArguments: ThunkExtraArguments;
 }
 
+const errorLogger: (logger: Logger) => Middleware = (logger) => () => (
+  next
+) => (action) => {
+  if (!action.error) {
+    return next(action);
+  }
+
+  logger.error(action.error, `Action dispatch error ${action.type}`, action);
+};
+
 const actionLogger: (logger: Logger) => Middleware = (logger) => (api) => (
   next
 ) => (action) => {
-  const result = next(action);
-
   logger.debug(
     {
       action,
@@ -36,7 +44,7 @@ const actionLogger: (logger: Logger) => Middleware = (logger) => (api) => (
     `Action dispatched: ${action.type}`
   );
 
-  return result;
+  return next(action);
 };
 
 export function configureStore<Reducers extends ReducersMapObject>({
@@ -45,7 +53,7 @@ export function configureStore<Reducers extends ReducersMapObject>({
   middlewares = [],
   thunkExtraArguments,
 }: ConfigureStoreOptions<Reducers>) {
-  return configureStoreToolkit({
+  const store = configureStoreToolkit({
     reducer: combineReducers(reducers),
     preloadedState,
     devTools: {
@@ -56,10 +64,16 @@ export function configureStore<Reducers extends ReducersMapObject>({
     },
     middleware: (getDefaultMiddleware) => {
       return getDefaultMiddleware({thunk: {extraArgument: thunkExtraArguments}})
-        .prepend(analyticsMiddleware, ...middlewares)
+        .prepend(
+          errorLogger(thunkExtraArguments.logger),
+          analyticsMiddleware,
+          ...middlewares
+        )
         .concat(actionLogger(thunkExtraArguments.logger));
     },
   });
+
+  return {...store};
 }
 
 export type Store = ReturnType<typeof configureStore>;
