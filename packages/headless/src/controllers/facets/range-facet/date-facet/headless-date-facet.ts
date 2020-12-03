@@ -80,7 +80,7 @@ export function buildDateFacet(
   const facetId = props.options.facetId || randomID('dateFacet');
   const options: DateFacetRegistrationOptions = {facetId, ...props.options};
 
-  validateOptions(dateFacetOptionsSchema, options, buildDateFacet.name);
+  validateOptions(engine, dateFacetOptionsSchema, options, buildDateFacet.name);
 
   dispatch(registerDateFacet(options));
 

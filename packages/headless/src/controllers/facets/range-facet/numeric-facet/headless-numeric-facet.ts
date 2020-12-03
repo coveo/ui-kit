@@ -54,7 +54,7 @@ export function buildNumericFacet(
   const facetId = props.options.facetId || randomID('numericFacet');
   const options: NumericFacetRegistrationOptions = {facetId, ...props.options};
 
-  validateOptions(numericFacetOptionsSchema, options, buildNumericFacet.name);
+  validateOptions(engine, numericFacetOptionsSchema, options, buildNumericFacet.name);
 
   dispatch(registerNumericFacet(options));
 

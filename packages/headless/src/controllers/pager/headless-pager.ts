@@ -60,12 +60,12 @@ export function buildPager(
   const controller = buildController(engine);
   const {dispatch} = engine;
 
-  const options = validateOptions(
+  const options = validateOptions(engine, 
     optionsSchema,
     props.options,
     buildPager.name
   ) as Required<PagerOptions>;
-  const initialState = validateInitialState(
+  const initialState = validateInitialState(engine, 
     initialStateSchema,
     props.initialState,
     buildPager.name

@@ -39,7 +39,7 @@ export function buildResultsPerPage(
   const controller = buildController(engine);
   const {dispatch} = engine;
 
-  const validated = validateInitialState(
+  const validated = validateInitialState(engine, 
     initialStateSchema,
     props.initialState,
     buildResultsPerPage.name

@@ -53,7 +53,7 @@ export function buildStandaloneSearchBox(
     ...props.options,
   };
 
-  validateOptions(
+  validateOptions(engine, 
     standaloneSearchBoxSchema,
     options,
     buildStandaloneSearchBox.name

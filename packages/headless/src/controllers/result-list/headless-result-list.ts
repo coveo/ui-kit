@@ -40,7 +40,7 @@ export function buildResultList(
   const controller = buildController(engine);
   const {dispatch} = engine;
 
-  const options = validateOptions(
+  const options = validateOptions(engine, 
     optionsSchema,
     props?.options,
     buildResultList.name

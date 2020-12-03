@@ -64,7 +64,7 @@ export function buildCategoryFacet(
     ...props.options,
   };
 
-  validateOptions(categoryFacetOptionsSchema, options, buildCategoryFacet.name);
+  validateOptions(engine, categoryFacetOptionsSchema, options, buildCategoryFacet.name);
 
   const createFacetSearch = () => {
     const {facetSearch} = props.options;
