@@ -59,9 +59,9 @@ export function buildCategoryFacet(
 
   const facetId = determineFacetId(engine, props.options);
   const options: Required<CategoryFacetRegistrationOptions> = {
-    facetId,
     ...defaultCategoryFacetOptions,
     ...props.options,
+    facetId,
   };
 
   validateOptions(categoryFacetOptionsSchema, options, buildCategoryFacet.name);

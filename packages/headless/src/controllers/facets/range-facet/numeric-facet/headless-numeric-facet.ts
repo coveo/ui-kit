@@ -52,7 +52,7 @@ export function buildNumericFacet(
   const dispatch = engine.dispatch;
 
   const facetId = determineFacetId(engine, props.options);
-  const options: NumericFacetRegistrationOptions = {facetId, ...props.options};
+  const options: NumericFacetRegistrationOptions = {...props.options, facetId};
 
   validateOptions(numericFacetOptionsSchema, options, buildNumericFacet.name);
 

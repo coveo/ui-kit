@@ -56,10 +56,10 @@ export function buildFacet(
 
   const facetId = determineFacetId(engine, props.options);
   const options: Required<FacetOptions> = {
-    facetId,
     facetSearch: {...defaultFacetSearchOptions},
     ...defaultFacetOptions,
     ...props.options,
+    facetId,
   };
 
   validateOptions(facetOptionsSchema, options, buildFacet.name);
