@@ -3,6 +3,7 @@ import {change} from '../history/history-actions';
 import {updateAdvancedSearchQueries} from './advanced-search-queries-actions';
 import {isUndefined} from '@coveo/bueno';
 import {getAdvancedSearchQueriesInitialState} from './advanced-search-queries-state';
+import {restoreSearchParameters} from '../search-parameters/search-parameter-actions';
 
 export const advancedSearchQueriesReducer = createReducer(
   getAdvancedSearchQueriesInitialState(),
@@ -19,6 +20,10 @@ export const advancedSearchQueriesReducer = createReducer(
       .addCase(
         change.fulfilled,
         (_, action) => action.payload.advancedSearchQueries
-      );
+      )
+      .addCase(restoreSearchParameters, (state, action) => {
+        state.aq = action.payload.aq ?? state.aq;
+        state.cq = action.payload.cq ?? state.cq;
+      });
   }
 );

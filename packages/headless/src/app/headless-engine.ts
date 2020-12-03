@@ -207,6 +207,10 @@ export interface Engine<State = SearchAppState> {
    */
   store: Store;
   renewAccessToken: () => Promise<string>;
+  /**
+   * The logger instance used by headless.
+   * */
+  logger: Logger;
 }
 
 /**
