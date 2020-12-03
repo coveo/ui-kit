@@ -1,5 +1,4 @@
 import {Engine} from '../../../../app/headless-engine';
-import {randomID} from '../../../../utils/utils';
 import {
   NumericFacetRequest,
   NumericRangeRequest,
@@ -22,6 +21,7 @@ import {
   NumericFacetOptions,
   numericFacetOptionsSchema,
 } from './headless-numeric-facet-options';
+import {determineFacetId} from '../../_common/facet-id-determinor';
 
 type NumericRangeOptions = Pick<NumericRangeRequest, 'start' | 'end'> &
   Partial<NumericRangeRequest>;
@@ -51,8 +51,8 @@ export function buildNumericFacet(
 ) {
   const dispatch = engine.dispatch;
 
-  const facetId = props.options.facetId || randomID('numericFacet');
-  const options: NumericFacetRegistrationOptions = {facetId, ...props.options};
+  const facetId = determineFacetId(engine, props.options);
+  const options: NumericFacetRegistrationOptions = {...props.options, facetId};
 
   validateOptions(engine, numericFacetOptionsSchema, options, buildNumericFacet.name);
 

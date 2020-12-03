@@ -7,7 +7,6 @@ import {
   DateFacetRequest,
 } from '../../../../features/facets/range-facets/date-facet-set/interfaces/request';
 import {Engine} from '../../../../app/headless-engine';
-import {randomID} from '../../../../utils/utils';
 import {DateFacetRegistrationOptions} from '../../../../features/facets/range-facets/date-facet-set/interfaces/options';
 import {
   DateFacetResponse,
@@ -26,6 +25,7 @@ import {
   DateFacetOptions,
   dateFacetOptionsSchema,
 } from './headless-date-facet-options';
+import {determineFacetId} from '../../_common/facet-id-determinor';
 
 dayjs.extend(utc);
 dayjs.extend(customParseFormat);
@@ -77,8 +77,8 @@ export function buildDateFacet(
 ) {
   const dispatch = engine.dispatch;
 
-  const facetId = props.options.facetId || randomID('dateFacet');
-  const options: DateFacetRegistrationOptions = {facetId, ...props.options};
+  const facetId = determineFacetId(engine, props.options);
+  const options: DateFacetRegistrationOptions = {...props.options, facetId};
 
   validateOptions(engine, dateFacetOptionsSchema, options, buildDateFacet.name);
 

@@ -1,6 +1,5 @@
 import {Engine} from '../../../app/headless-engine';
 import {buildController} from '../../controller/headless-controller';
-import {randomID} from '../../../utils/utils';
 import {CategoryFacetRegistrationOptions} from '../../../features/facets/category-facet-set/interfaces/options';
 import {
   registerCategoryFacet,
@@ -37,6 +36,7 @@ import {
   CategoryFacetOptions,
   categoryFacetOptionsSchema,
 } from './headless-category-facet-options';
+import {determineFacetId} from '../_common/facet-id-determinor';
 
 export {CategoryFacetOptions};
 export type CategoryFacetProps = {
@@ -57,11 +57,11 @@ export function buildCategoryFacet(
   const controller = buildController(engine);
   const {dispatch} = engine;
 
-  const facetId = props.options.facetId || randomID('categoryFacet');
+  const facetId = determineFacetId(engine, props.options);
   const options: Required<CategoryFacetRegistrationOptions> = {
-    facetId,
     ...defaultCategoryFacetOptions,
     ...props.options,
+    facetId,
   };
 
   validateOptions(engine, categoryFacetOptionsSchema, options, buildCategoryFacet.name);
