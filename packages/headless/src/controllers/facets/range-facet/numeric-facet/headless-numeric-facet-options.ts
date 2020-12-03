@@ -47,8 +47,15 @@ export const numericFacetOptionsSchema = new Schema<
   filterFacetCount,
   injectionDepth,
   numberOfValues,
+  /**
+   * Array of numeric facet values that must be provided if generateAutomaticRanges is set to false
+   */
   currentValues: new ArrayValue({
     each: new RecordValue({values: numericRangeRequestDefinition}),
   }),
+  /**
+   * The sortCriterion of the facet
+   * @default 'ascending'
+   */
   sortCriteria: new StringValue({constrainTo: rangeFacetSortCriteria}),
 });

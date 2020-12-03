@@ -44,8 +44,15 @@ export const dateFacetOptionsSchema = new Schema<Required<DateFacetOptions>>({
   filterFacetCount,
   injectionDepth,
   numberOfValues,
+  /**
+   * Array of date facet values that must be provided if generateAutomaticRanges is set to false
+   */
   currentValues: new ArrayValue({
     each: new RecordValue({values: dateRangeRequestDefinition}),
   }),
+  /**
+   * The sortCriterion of the facet
+   * @default 'ascending'
+   */
   sortCriteria: new StringValue({constrainTo: rangeFacetSortCriteria}),
 });
