@@ -1,5 +1,5 @@
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
-import {validateActionPayload} from '../../utils/validate-payload';
+import {validatePayload} from '../../utils/validate-payload';
 import {StringValue, BooleanValue} from '@coveo/bueno';
 
 const originSchemaOnConfigUpdate = () =>
@@ -21,7 +21,7 @@ export const updateBasicConfiguration = createAction(
     organizationId?: string;
     platformUrl?: string;
   }) =>
-    validateActionPayload(payload, {
+    validatePayload(payload, {
       accessToken: new StringValue({emptyAllowed: false}),
       organizationId: new StringValue({emptyAllowed: false}),
       platformUrl: new StringValue({url: true, emptyAllowed: false}),
@@ -37,7 +37,7 @@ export const updateBasicConfiguration = createAction(
 export const updateSearchConfiguration = createAction(
   'configuration/updateSearchConfiguration',
   (payload: {apiBaseUrl?: string; pipeline?: string; searchHub?: string}) =>
-    validateActionPayload(payload, {
+    validatePayload(payload, {
       apiBaseUrl: new StringValue({url: true, emptyAllowed: false}),
       pipeline: new StringValue({emptyAllowed: false}),
       searchHub: new StringValue({emptyAllowed: false}),
@@ -59,7 +59,7 @@ export const updateAnalyticsConfiguration = createAction(
     originLevel3?: string;
     apiBaseUrl?: string;
   }) =>
-    validateActionPayload(payload, {
+    validatePayload(payload, {
       enabled: new BooleanValue({default: true}),
       originLevel2: originSchemaOnConfigUpdate(),
       originLevel3: originSchemaOnConfigUpdate(),
@@ -94,7 +94,7 @@ export const enableAnalytics = createAction('configuration/analytics/enable');
 export const setOriginLevel2 = createAction(
   'configuration/analytics/originlevel2',
   (payload: {originLevel2: string}) =>
-    validateActionPayload(payload, {originLevel2: originSchemaOnUpdate()})
+    validatePayload(payload, {originLevel2: originSchemaOnUpdate()})
 );
 
 /**
@@ -104,5 +104,5 @@ export const setOriginLevel2 = createAction(
 export const setOriginLevel3 = createAction(
   'configuration/analytics/originlevel3',
   (payload: {originLevel3: string}) =>
-    validateActionPayload(payload, {originLevel3: originSchemaOnUpdate()})
+    validatePayload(payload, {originLevel3: originSchemaOnUpdate()})
 );

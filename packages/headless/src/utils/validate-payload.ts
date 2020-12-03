@@ -5,7 +5,12 @@ import {
   SchemaValidationError,
 } from '@coveo/bueno';
 
-export const validateActionPayloadAndThrow = <P>(
+/**
+ * Validates an action payload and throws an error if invalid
+ * @param payload the action payload
+ * @param definition Either a Bueno SchemaDefinition or a SchemaValue
+ */
+export const validatePayloadAndThrow = <P>(
   payload: P,
   definition: SchemaDefinition<Required<P>> | SchemaValue<P>
 ) => {
@@ -25,12 +30,17 @@ export const validateActionPayloadAndThrow = <P>(
   };
 };
 
-export const validateActionPayload = <P>(
+/**
+ * Validates an action payload and return an `error` alongside the payload if it's invalid
+ * @param payload the action payload
+ * @param definition Either a Bueno SchemaDefinition or a SchemaValue
+ */
+export const validatePayload = <P>(
   payload: P,
   definition: SchemaDefinition<Required<P>> | SchemaValue<P>
 ) => {
   try {
-    return validateActionPayloadAndThrow(payload, definition);
+    return validatePayloadAndThrow(payload, definition);
   } catch (error) {
     return {payload, error: error as SchemaValidationError};
   }

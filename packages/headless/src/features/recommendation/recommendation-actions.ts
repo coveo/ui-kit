@@ -15,7 +15,7 @@ import {
   RecommendationSection,
   SearchHubSection,
 } from '../../state/state-sections';
-import {validateActionPayload} from '../../utils/validate-payload';
+import {validatePayload} from '../../utils/validate-payload';
 import {StringValue} from '@coveo/bueno';
 import {logRecommendationUpdate} from './recommendation-analytics-actions';
 import {SearchAction} from '../analytics/analytics-utils';
@@ -42,7 +42,7 @@ export interface GetRecommendationsThunkReturn {
 export const setRecommendationId = createAction(
   'recommendation/set',
   (payload: {id: string}) =>
-    validateActionPayload(payload, {
+    validatePayload(payload, {
       id: new StringValue({required: true, emptyAllowed: false}),
     })
 );

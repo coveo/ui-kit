@@ -10,7 +10,7 @@ import {
   ProductRecommendationsSection,
   ContextSection,
 } from '../../state/state-sections';
-import {validateActionPayload} from '../../utils/validate-payload';
+import {validatePayload} from '../../utils/validate-payload';
 import {ArrayValue, NumberValue, StringValue} from '@coveo/bueno';
 import {getVisitorID, historyStore} from '../../api/analytics/analytics';
 import {ProductRecommendationsRequest} from '../../api/search/product-recommendations/product-recommendations-request';
@@ -33,7 +33,7 @@ export interface GetProductRecommendationsThunkReturn {
 export const setProductRecommendationsRecommenderId = createAction(
   'productrecommendations/setId',
   (payload: {id: string}) =>
-    validateActionPayload(payload, {
+    validatePayload(payload, {
       id: new StringValue({required: true, emptyAllowed: false}),
     })
 );
@@ -41,7 +41,7 @@ export const setProductRecommendationsRecommenderId = createAction(
 export const setProductRecommendationsSkus = createAction(
   'productrecommendations/setSku',
   (payload: {skus: string[]}) =>
-    validateActionPayload(payload, {
+    validatePayload(payload, {
       skus: new ArrayValue({
         required: true,
         min: 1,
@@ -53,7 +53,7 @@ export const setProductRecommendationsSkus = createAction(
 export const setProductRecommendationsBrandFilter = createAction(
   'productrecommendations/setBrand',
   (payload: {brand: string}) =>
-    validateActionPayload(payload, {
+    validatePayload(payload, {
       brand: new StringValue({required: true, emptyAllowed: true}),
     })
 );
@@ -61,7 +61,7 @@ export const setProductRecommendationsBrandFilter = createAction(
 export const setProductRecommendationsCategoryFilter = createAction(
   'productrecommendations/setCategory',
   (payload: {category: string}) =>
-    validateActionPayload(payload, {
+    validatePayload(payload, {
       category: new StringValue({required: true, emptyAllowed: true}),
     })
 );
@@ -69,7 +69,7 @@ export const setProductRecommendationsCategoryFilter = createAction(
 export const setProductRecommendationsMaxNumberOfRecommendations = createAction(
   'productrecommendations/setMaxNumberOfRecommendations',
   (payload: {number: number}) =>
-    validateActionPayload(payload, {
+    validatePayload(payload, {
       number: new NumberValue({required: true, max: 50, min: 1}),
     })
 );

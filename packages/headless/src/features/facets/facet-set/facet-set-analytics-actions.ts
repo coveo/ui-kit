@@ -1,6 +1,6 @@
 import {FacetSortCriterion} from './interfaces/request';
 import {RangeFacetSortCriterion} from '../range-facets/generic/interfaces/request';
-import {validateActionPayload} from '../../../utils/validate-payload';
+import {validatePayload} from '../../../utils/validate-payload';
 import {
   facetIdDefinition,
   requiredNonEmptyString,
@@ -30,7 +30,7 @@ export const logFacetShowMore = (facetId: string) =>
     'analytics/facet/showMore',
     AnalyticsType.Search,
     (client, state) => {
-      validateActionPayload(facetId, facetIdDefinition);
+      validatePayload(facetId, facetIdDefinition);
       const metadata = buildFacetBaseMetadata(
         facetId,
         getStateNeededForFacetMetadata(state)
@@ -47,7 +47,7 @@ export const logFacetShowLess = (facetId: string) =>
     'analytics/facet/showLess',
     AnalyticsType.Search,
     (client, state) => {
-      validateActionPayload(facetId, facetIdDefinition);
+      validatePayload(facetId, facetIdDefinition);
       const metadata = buildFacetBaseMetadata(
         facetId,
         getStateNeededForFacetMetadata(state)
@@ -66,7 +66,7 @@ export const logFacetSearch = (facetId: string) =>
     'analytics/facet/search',
     AnalyticsType.Search,
     (client, state) => {
-      validateActionPayload(facetId, facetIdDefinition);
+      validatePayload(facetId, facetIdDefinition);
       const metadata = buildFacetBaseMetadata(
         facetId,
         getStateNeededForFacetMetadata(state)
@@ -83,7 +83,7 @@ export const logFacetUpdateSort = (payload: FacetUpdateSortMetadata) =>
     'analytics/facet/sortChange',
     AnalyticsType.Search,
     (client, state) => {
-      validateActionPayload(payload, {
+      validatePayload(payload, {
         facetId: facetIdDefinition,
         criterion: new Value<FacetSortCriterion | RangeFacetSortCriterion>({
           required: true,
@@ -110,7 +110,7 @@ export const logFacetClearAll = (facetId: string) =>
     'analytics/facet/reset',
     AnalyticsType.Search,
     (client, state) => {
-      validateActionPayload(facetId, facetIdDefinition);
+      validatePayload(facetId, facetIdDefinition);
       const metadata = buildFacetBaseMetadata(
         facetId,
         getStateNeededForFacetMetadata(state)
@@ -128,7 +128,7 @@ export const logFacetSelect = (payload: FacetSelectionChangeMetadata) =>
     'analytics/facet/select',
     AnalyticsType.Search,
     (client, state) => {
-      validateActionPayload(payload, {
+      validatePayload(payload, {
         facetId: facetIdDefinition,
         facetValue: requiredNonEmptyString,
       });
@@ -151,7 +151,7 @@ export const logFacetDeselect = (payload: FacetSelectionChangeMetadata) =>
     'analytics/facet/deselect',
     AnalyticsType.Search,
     (client, state) => {
-      validateActionPayload(payload, {
+      validatePayload(payload, {
         facetId: facetIdDefinition,
         facetValue: requiredNonEmptyString,
       });

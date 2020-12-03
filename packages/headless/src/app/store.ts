@@ -13,13 +13,13 @@ import {
   logActionErrorMiddleware,
   logActionMiddleware,
 } from './logger-middlewares';
-import {validateActionPayloadAndThrow} from '../utils/validate-payload';
+import {validatePayloadAndThrow} from '../utils/validate-payload';
 
 export interface ThunkExtraArguments {
   searchAPIClient: SearchAPIClient;
   analyticsClientMiddleware: AnalyticsClientSendEventHook;
   logger: Logger;
-  validatePayload: typeof validateActionPayloadAndThrow;
+  validatePayload: typeof validatePayloadAndThrow;
 }
 
 interface ConfigureStoreOptions<Reducers extends ReducersMapObject> {

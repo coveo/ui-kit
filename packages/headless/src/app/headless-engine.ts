@@ -26,7 +26,7 @@ import {
 } from '../api/platform-client';
 import {RecordValue, Schema, StringValue} from '@coveo/bueno';
 import {
-  validateActionPayloadAndThrow,
+  validatePayloadAndThrow,
   validateOptions,
 } from '../utils/validate-payload';
 
@@ -296,7 +296,7 @@ export class HeadlessEngine<Reducers extends ReducersMapObject>
         }),
         analyticsClientMiddleware: this.analyticsClientMiddleware(this.options),
         logger: this.logger,
-        validatePayload: validateActionPayloadAndThrow,
+        validatePayload: validatePayloadAndThrow,
       },
     });
   }

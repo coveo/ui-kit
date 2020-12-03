@@ -1,5 +1,5 @@
 import {createAction} from '@reduxjs/toolkit';
-import {validateActionPayload} from '../../utils/validate-payload';
+import {validatePayload} from '../../utils/validate-payload';
 import {StringValue} from '@coveo/bueno';
 
 const querySetDefinition = {
@@ -14,7 +14,7 @@ const querySetDefinition = {
 export const registerQuerySetQuery = createAction(
   'querySet/register',
   (payload: {id: string; query: string}) =>
-    validateActionPayload(payload, querySetDefinition)
+    validatePayload(payload, querySetDefinition)
 );
 
 /**
@@ -25,5 +25,5 @@ export const registerQuerySetQuery = createAction(
 export const updateQuerySetQuery = createAction(
   'querySet/update',
   (payload: {id: string; query: string}) =>
-    validateActionPayload(payload, querySetDefinition)
+    validatePayload(payload, querySetDefinition)
 );

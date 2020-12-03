@@ -3,7 +3,7 @@ import {DateFacetRegistrationOptions} from './interfaces/options';
 import {DateFacetValue} from './interfaces/response';
 import {updateRangeFacetSortCriterion} from '../generic/range-facet-actions';
 import {deselectAllFacetValues} from '../../facet-set/facet-set-actions';
-import {validateActionPayload} from '../../../../utils/validate-payload';
+import {validatePayload} from '../../../../utils/validate-payload';
 import {
   NumberValue,
   BooleanValue,
@@ -46,7 +46,7 @@ const dateFacetRegistrationOptionsDefinition = {
 export const registerDateFacet = createAction(
   'dateFacet/register',
   (payload: DateFacetRegistrationOptions) =>
-    validateActionPayload(payload, dateFacetRegistrationOptionsDefinition)
+    validatePayload(payload, dateFacetRegistrationOptionsDefinition)
 );
 
 /**
@@ -57,7 +57,7 @@ export const registerDateFacet = createAction(
 export const toggleSelectDateFacetValue = createAction(
   'dateFacet/toggleSelectValue',
   (payload: {facetId: string; selection: DateFacetValue}) =>
-    validateActionPayload(payload, {
+    validatePayload(payload, {
       facetId: facetIdDefinition,
       selection: new RecordValue({values: dateFacetValueDefinition}),
     })

@@ -1,6 +1,6 @@
 import {createAction} from '@reduxjs/toolkit';
 import {SortBy, SortCriterion} from './criteria';
-import {validateActionPayload} from '../../utils/validate-payload';
+import {validatePayload} from '../../utils/validate-payload';
 import {EnumValue, isArray, SchemaDefinition} from '@coveo/bueno';
 
 const criterionDefinition = {
@@ -26,8 +26,8 @@ export const updateSortCriterion = createAction(
 
 const validate = (payload: SortCriterion | SortCriterion[]) => {
   if (isArray(payload)) {
-    payload.forEach((p) => validateActionPayload(p, criterionDefinition));
+    payload.forEach((p) => validatePayload(p, criterionDefinition));
     return {payload};
   }
-  return validateActionPayload(payload, criterionDefinition);
+  return validatePayload(payload, criterionDefinition);
 };

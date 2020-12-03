@@ -1,5 +1,5 @@
 import {createAction} from '@reduxjs/toolkit';
-import {validateActionPayload} from '../../utils/validate-payload';
+import {validatePayload} from '../../utils/validate-payload';
 import {BooleanValue, StringValue} from '@coveo/bueno';
 import {QueryState} from './query-state';
 
@@ -10,7 +10,7 @@ import {QueryState} from './query-state';
 export const updateQuery = createAction(
   'query/updateQuery',
   (payload: Partial<QueryState>) =>
-    validateActionPayload(payload, {
+    validatePayload(payload, {
       q: new StringValue(),
       enableQuerySyntax: new BooleanValue(),
     })

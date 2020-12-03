@@ -6,7 +6,7 @@ import {
   facetIdDefinition,
   requiredNonEmptyString,
 } from '../../generic/facet-actions-validation';
-import {validateActionPayload} from '../../../../utils/validate-payload';
+import {validatePayload} from '../../../../utils/validate-payload';
 import {facetSearchOptionsDefinition} from '../generic/generic-facet-search-validate-payload';
 
 const selectFacetSearchResultPayloadDefinition = {
@@ -32,7 +32,7 @@ type selectFacetSearchResultPayload = {
 export const registerFacetSearch = createAction(
   'facetSearch/register',
   (payload: FacetSearchOptions) =>
-    validateActionPayload(payload, facetSearchOptionsDefinition)
+    validatePayload(payload, facetSearchOptionsDefinition)
 );
 
 /**
@@ -42,7 +42,7 @@ export const registerFacetSearch = createAction(
 export const updateFacetSearch = createAction(
   'facetSearch/update',
   (payload: FacetSearchOptions) =>
-    validateActionPayload(payload, facetSearchOptionsDefinition)
+    validatePayload(payload, facetSearchOptionsDefinition)
 );
 
 /**
@@ -52,5 +52,5 @@ export const updateFacetSearch = createAction(
 export const selectFacetSearchResult = createAction(
   'facetSearch/toggleSelectValue',
   (payload: selectFacetSearchResultPayload) =>
-    validateActionPayload(payload, selectFacetSearchResultPayloadDefinition)
+    validatePayload(payload, selectFacetSearchResultPayloadDefinition)
 );

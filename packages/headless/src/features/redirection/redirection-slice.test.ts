@@ -15,7 +15,7 @@ import {
 import {SearchAppState} from '../../state/search-app-state';
 import {NoopPreprocessRequestMiddleware} from '../../api/platform-client';
 import pino from 'pino';
-import {validateActionPayloadAndThrow} from '../../utils/validate-payload';
+import {validatePayloadAndThrow} from '../../utils/validate-payload';
 
 describe('redirection slice', () => {
   const logger = pino({level: 'silent'});
@@ -77,7 +77,7 @@ describe('redirection slice', () => {
       searchAPIClient: apiClient,
       analyticsClientMiddleware: (_, p) => p,
       logger,
-      validatePayload: validateActionPayloadAndThrow,
+      validatePayload: validatePayloadAndThrow,
     });
 
     return response;

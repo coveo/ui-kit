@@ -1,5 +1,5 @@
 import {createAction} from '@reduxjs/toolkit';
-import {validateActionPayload} from '../../utils/validate-payload';
+import {validatePayload} from '../../utils/validate-payload';
 import {StringValue} from '@coveo/bueno';
 
 /**
@@ -18,7 +18,7 @@ export const disableDidYouMean = createAction('didYouMean/disable');
 export const applyDidYouMeanCorrection = createAction(
   'didYouMean/correction',
   (payload: string) =>
-    validateActionPayload(
+    validatePayload(
       payload,
       new StringValue({required: true, emptyAllowed: false})
     )
