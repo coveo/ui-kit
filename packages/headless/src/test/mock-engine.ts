@@ -21,6 +21,7 @@ import {
   logActionErrorMiddleware,
   logActionMiddleware,
 } from '../app/logger-middlewares';
+import {validatePayloadAndThrow} from '../utils/validate-payload';
 
 type AsyncActionCreator<ThunkArg> = ActionCreatorWithPreparedPayload<
   [string, ThunkArg],
@@ -106,6 +107,8 @@ const configureMockStore = (logger: Logger) => {
         renewAccessToken: mockRenewAccessToken,
         preprocessRequest: NoopPreprocessRequestMiddleware,
       }),
+      validatePayload: validatePayloadAndThrow,
+      logger,
     }),
     ...getDefaultMiddleware(),
     logActionMiddleware(logger),
