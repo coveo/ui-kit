@@ -1,10 +1,12 @@
+const { getPullRequestTitle } = require('../github-client');
+
 const load = require('@commitlint/load').default;
 const lint = require('@commitlint/lint').default;
 
 const specUrl = 'https://www.conventionalcommits.org/en/v1.0.0/#summary';
 
 async function buildTitleReport() {
-  const prTitle = process.env.BITBUCKET_PULL_REQUEST_TITLE || '';
+  const prTitle = await getPullRequestTitle() || '';
   const {valid} = await analyze(prTitle);
   const isTitleValid = prTitle && valid;
 

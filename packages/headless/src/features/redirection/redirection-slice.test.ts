@@ -17,6 +17,8 @@ import {NoopPreprocessRequestMiddleware} from '../../api/platform-client';
 import pino from 'pino';
 
 describe('redirection slice', () => {
+  const logger = pino({level: 'silent'});
+
   it('should have initial state', () => {
     expect(redirectionReducer(undefined, {type: 'randomAction'})).toEqual(
       getRedirectionInitialState()
@@ -55,7 +57,7 @@ describe('redirection slice', () => {
   async function mockPlan(trigger?: Trigger) {
     const apiClient = new SearchAPIClient({
       renewAccessToken: async () => '',
-      logger: pino({level: 'silent'}),
+      logger,
       preprocessRequest: NoopPreprocessRequestMiddleware,
     });
     const triggers = trigger ? [trigger] : [];
@@ -73,6 +75,7 @@ describe('redirection slice', () => {
     })(engine.dispatch, () => createMockState(), {
       searchAPIClient: apiClient,
       analyticsClientMiddleware: (_, p) => p,
+      logger,
     });
 
     return response;
