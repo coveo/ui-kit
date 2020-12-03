@@ -78,7 +78,7 @@ describe('facet', () => {
     expect(engine.actions).toContainEqual(action);
   });
 
-  it('when an id is not specified, it calls generateFacetId with the correct params', () => {
+  it('when an id is not specified, it calls #generateFacetId with the correct params', () => {
     jest.spyOn(FacetIdGenerator, 'generateFacetId');
 
     options = {field: 'author'};

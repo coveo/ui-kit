@@ -60,7 +60,7 @@ describe('date facet', () => {
     );
   });
 
-  it('when an id is not specified, it calls generateFacetId with the correct params', () => {
+  it('when an id is not specified, it calls #generateFacetId with the correct params', () => {
     const original = RangeFacet.buildRangeFacet;
     (RangeFacet as any).buildRangeFacet = () => ({state: {}});
 
