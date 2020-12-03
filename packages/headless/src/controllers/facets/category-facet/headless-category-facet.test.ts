@@ -366,10 +366,10 @@ describe('category facet', () => {
     });
   });
 
-  describe('#showMoreResults', () => {
-    beforeEach(() => categoryFacet.showMoreValues());
+  describe('#showMoreValues', () => {
+    it('with no values, it dispatches #updateCategoryFacetNumberOfResults with the correct number of values', () => {
+      categoryFacet.showMoreValues();
 
-    it('dispatches #updateCategoryFacetNumberOfResults is there are no nested values with the correct numberOfValues', () => {
       const action = updateCategoryFacetNumberOfValues({
         facetId,
         numberOfValues: 5,
@@ -377,16 +377,11 @@ describe('category facet', () => {
       expect(engine.actions).toContainEqual(action);
     });
 
-    it('dispatches #updateCategoryFacetNumberOfResults is there are nested values with the correct numberOfValues', () => {
-      const nestedChildren = [buildMockCategoryFacetValue()];
-      const values = [
-        buildMockCategoryFacetValue({
-          state: 'selected',
-          children: nestedChildren,
-        }),
-      ];
+    it('with a value, it dispatches #updateCategoryFacetNumberOfResults with the correct number of values', () => {
+      const values = [buildMockCategoryFacetValue()];
       const response = buildMockCategoryFacetResponse({facetId, values});
       state.search.response.facets = [response];
+
       initCategoryFacet();
 
       const action = updateCategoryFacetNumberOfValues({
@@ -398,20 +393,22 @@ describe('category facet', () => {
     });
 
     it('dispatches #updateFacetOptions with #freezeFacetOrder true', () => {
+      categoryFacet.showMoreValues();
+
       expect(engine.actions).toContainEqual(
         updateFacetOptions({freezeFacetOrder: true})
       );
     });
 
     it('dispatches #executeSearch', () => {
-      const action = engine.actions.find(
-        (a) => a.type === executeSearch.pending.type
-      );
+      categoryFacet.showMoreValues();
+
+      const action = engine.findAsyncAction(executeSearch.pending);
       expect(action).toBeTruthy();
     });
   });
 
-  describe('#showLessResults', () => {
+  describe('#showLessValues', () => {
     beforeEach(() => categoryFacet.showLessValues());
 
     it('dispatches #updateCategoryFacetNumberOfResults with the correct numberOfValues', () => {
@@ -419,16 +416,6 @@ describe('category facet', () => {
         facetId,
         numberOfValues: 5,
       });
-      expect(engine.actions).toContainEqual(action);
-    });
-
-    it('dispatches #updateCategoryFacetNumberOfResults is there are nested values with the correct numberOfValues', () => {
-      initNestedCategoryFacet();
-      const action = updateCategoryFacetNumberOfValues({
-        facetId,
-        numberOfValues: 5,
-      });
-      categoryFacet.showLessValues();
       expect(engine.actions).toContainEqual(action);
     });
 
