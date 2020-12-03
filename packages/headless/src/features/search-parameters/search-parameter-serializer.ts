@@ -5,11 +5,23 @@ export function buildSearchParameterSerializer() {
 }
 
 function serialize(obj: SearchParameters) {
-  const fragment = Object.entries(obj)
-    .map(([key, val]) => `${key}=${val}`)
-    .join('&');
+  const fragment = Object.entries(obj).map(serializePair).join('&');
 
   return fragment;
+}
+
+function serializePair(pair: [string, unknown]) {
+  const [key, val] = pair;
+
+  if (!isValidKey(key)) {
+    return '';
+  }
+
+  if (key === 'f') {
+    return `${key}=`;
+  }
+
+  return `${key}=${val}`;
 }
 
 function deserialize(fragment: string): SearchParameters {
@@ -53,6 +65,7 @@ function isValidKey(key: string): key is keyof SearchParameters {
     firstResult: true,
     numberOfResults: true,
     sortCriteria: true,
+    f: true,
   };
 
   return key in supportedParameters;
@@ -73,6 +86,10 @@ function cast<K extends keyof SearchParameters>(
 
   if (key === 'numberOfResults') {
     return [key, parseInt(value)];
+  }
+
+  if (key === 'f') {
+    return [key, {}];
   }
 
   return pair;

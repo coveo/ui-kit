@@ -11,6 +11,7 @@ export function buildMockSearchParameters(
     firstResult: 0,
     numberOfResults: 0,
     sortCriteria: '',
+    f: {},
     ...config,
   };
 }
