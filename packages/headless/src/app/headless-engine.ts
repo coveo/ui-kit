@@ -186,6 +186,8 @@ export interface Engine<State = SearchAppState> {
    */
   store: Store;
   renewAccessToken: () => Promise<string>;
+  /** The logging instance used by headless */
+  logger: Logger;
 }
 
 /**
@@ -264,7 +266,7 @@ export class HeadlessEngine<Reducers extends ReducersMapObject>
   private initLogger() {
     this.logger = pino({
       name: '@coveo/headless',
-      level: this.options.loggerOptions?.level || 'warn',
+      level: 'info',
       formatters: {
         log: this.options.loggerOptions?.logFormatter,
       },
