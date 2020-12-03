@@ -28,6 +28,7 @@ import * as CategoryFacetSearch from '../facet-search/category/headless-category
 import {buildMockCategoryFacetSearch} from '../../../test/mock-category-facet-search';
 import {updateFacetOptions} from '../../../features/facet-options/facet-options-actions';
 import {SearchAppState} from '../../../state/search-app-state';
+import * as FacetIdDeterminor from '../_common/facet-id-determinor';
 
 describe('category facet', () => {
   const facetId = '1';
@@ -39,29 +40,6 @@ describe('category facet', () => {
   function initCategoryFacet() {
     engine = buildMockSearchAppEngine({state});
     categoryFacet = buildCategoryFacet(engine, {options});
-  }
-
-  function initNestedCategoryFacet() {
-    const facetChild = buildMockCategoryFacetValue();
-    const nestedChildren = [
-      facetChild,
-      facetChild,
-      facetChild,
-      facetChild,
-      facetChild,
-      facetChild,
-      facetChild,
-      facetChild,
-    ];
-    const values = [
-      buildMockCategoryFacetValue({
-        state: 'selected',
-        children: nestedChildren,
-      }),
-    ];
-    const response = buildMockCategoryFacetResponse({facetId, values});
-    state.search.response.facets = [response];
-    initCategoryFacet();
   }
 
   function setFacetRequest(config: Partial<CategoryFacetRequest> = {}) {
@@ -81,6 +59,17 @@ describe('category facet', () => {
     state = createMockState();
     setFacetRequest();
     initCategoryFacet();
+  });
+
+  it('it calls #determineFacetId with the correct params', () => {
+    jest.spyOn(FacetIdDeterminor, 'determineFacetId');
+
+    initCategoryFacet();
+
+    expect(FacetIdDeterminor.determineFacetId).toHaveBeenCalledWith(
+      engine,
+      options
+    );
   });
 
   it('registers a category facet with the passed options and default optional parameters', () => {
@@ -349,15 +338,22 @@ describe('category facet', () => {
     });
 
     it('is true when there are more than the initial numberOfValues being shown', () => {
-      initNestedCategoryFacet();
+      options.numberOfValues = 1;
+      initCategoryFacet();
+
+      const value = buildMockCategoryFacetValue();
+      const values = [value, value];
+      const response = buildMockCategoryFacetResponse({facetId, values});
+      state.search.response.facets = [response];
+
       expect(categoryFacet.state.canShowLessValues).toBe(true);
     });
   });
 
-  describe('#showMoreResults', () => {
-    beforeEach(() => categoryFacet.showMoreValues());
+  describe('#showMoreValues', () => {
+    it('with no values, it dispatches #updateCategoryFacetNumberOfResults with the correct number of values', () => {
+      categoryFacet.showMoreValues();
 
-    it('dispatches #updateCategoryFacetNumberOfResults is there are no nested values with the correct numberOfValues', () => {
       const action = updateCategoryFacetNumberOfValues({
         facetId,
         numberOfValues: 5,
@@ -365,16 +361,11 @@ describe('category facet', () => {
       expect(engine.actions).toContainEqual(action);
     });
 
-    it('dispatches #updateCategoryFacetNumberOfResults is there are nested values with the correct numberOfValues', () => {
-      const nestedChildren = [buildMockCategoryFacetValue()];
-      const values = [
-        buildMockCategoryFacetValue({
-          state: 'selected',
-          children: nestedChildren,
-        }),
-      ];
+    it('with a value, it dispatches #updateCategoryFacetNumberOfResults with the correct number of values', () => {
+      const values = [buildMockCategoryFacetValue()];
       const response = buildMockCategoryFacetResponse({facetId, values});
       state.search.response.facets = [response];
+
       initCategoryFacet();
 
       const action = updateCategoryFacetNumberOfValues({
@@ -386,20 +377,22 @@ describe('category facet', () => {
     });
 
     it('dispatches #updateFacetOptions with #freezeFacetOrder true', () => {
+      categoryFacet.showMoreValues();
+
       expect(engine.actions).toContainEqual(
         updateFacetOptions({freezeFacetOrder: true})
       );
     });
 
     it('dispatches #executeSearch', () => {
-      const action = engine.actions.find(
-        (a) => a.type === executeSearch.pending.type
-      );
+      categoryFacet.showMoreValues();
+
+      const action = engine.findAsyncAction(executeSearch.pending);
       expect(action).toBeTruthy();
     });
   });
 
-  describe('#showLessResults', () => {
+  describe('#showLessValues', () => {
     beforeEach(() => categoryFacet.showLessValues());
 
     it('dispatches #updateCategoryFacetNumberOfResults with the correct numberOfValues', () => {
@@ -407,16 +400,6 @@ describe('category facet', () => {
         facetId,
         numberOfValues: 5,
       });
-      expect(engine.actions).toContainEqual(action);
-    });
-
-    it('dispatches #updateCategoryFacetNumberOfResults is there are nested values with the correct numberOfValues', () => {
-      initNestedCategoryFacet();
-      const action = updateCategoryFacetNumberOfValues({
-        facetId,
-        numberOfValues: 5,
-      });
-      categoryFacet.showLessValues();
       expect(engine.actions).toContainEqual(action);
     });
 

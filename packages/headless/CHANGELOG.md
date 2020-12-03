@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.1.0-alpha.77](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.76...v0.1.0-alpha.77) (2020-12-03)
+
+
+### Bug Fixes
+
+* **headless:** generate facet ids deterministically ([#303](https://github.com/coveo/ui-kit/issues/303)) ([892ddcb](https://github.com/coveo/ui-kit/commit/892ddcb4847a8bb254d9e479c5ff5a9a23197626))
+
+
+
+
+
 # [0.1.0-alpha.75](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.74...v0.1.0-alpha.75) (2020-12-02)
 
 
