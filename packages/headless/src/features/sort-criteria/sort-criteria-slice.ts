@@ -7,6 +7,7 @@ import {
 import {change} from '../history/history-actions';
 import {getSortCriteriaInitialState} from './sort-criteria-state';
 import {buildCriterionExpression} from './criteria';
+import {restoreSearchParameters} from '../search-parameters/search-parameter-actions';
 
 export const sortCriteriaReducer = createReducer(
   getSortCriteriaInitialState(),
@@ -18,6 +19,9 @@ export const sortCriteriaReducer = createReducer(
       .addCase(updateSortCriterion, (_, action) =>
         buildCriterionExpression(action.payload)
       )
-      .addCase(change.fulfilled, (_, action) => action.payload.sortCriteria);
+      .addCase(change.fulfilled, (_, action) => action.payload.sortCriteria)
+      .addCase(restoreSearchParameters, (state, action) => {
+        return action.payload.sortCriteria ?? state;
+      });
   }
 );
