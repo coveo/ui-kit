@@ -22,7 +22,7 @@ export class AtomicRelevanceInspector {
     this.relevanceInspector = buildRelevanceInspector(this.engine, {
       initialState: {
         // TODO: add enable/disable mechanism
-        enabled: true,
+        enabled: false,
       },
     });
     this.unsubscribe = this.relevanceInspector.subscribe(() =>

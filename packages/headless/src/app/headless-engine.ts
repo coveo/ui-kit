@@ -266,7 +266,7 @@ export class HeadlessEngine<Reducers extends ReducersMapObject>
   private initLogger() {
     this.logger = pino({
       name: '@coveo/headless',
-      level: 'info',
+      level: this.options.loggerOptions?.level || 'warn',
       formatters: {
         log: this.options.loggerOptions?.logFormatter,
       },
