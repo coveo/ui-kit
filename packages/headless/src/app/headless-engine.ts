@@ -25,7 +25,10 @@ import {
   PreprocessRequestMiddleware,
 } from '../api/platform-client';
 import {RecordValue, Schema, StringValue} from '@coveo/bueno';
-import {validateOptions} from '../utils/validate-payload';
+import {
+  validateActionPayloadAndThrow,
+  validateOptions,
+} from '../utils/validate-payload';
 
 /**
  * The global headless engine options.
@@ -293,6 +296,7 @@ export class HeadlessEngine<Reducers extends ReducersMapObject>
         }),
         analyticsClientMiddleware: this.analyticsClientMiddleware(this.options),
         logger: this.logger,
+        validatePayload: validateActionPayloadAndThrow,
       },
     });
   }

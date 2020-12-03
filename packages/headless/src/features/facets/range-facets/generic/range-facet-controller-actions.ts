@@ -5,7 +5,6 @@ import {ConfigurationSection} from '../../../../state/state-sections';
 import {getAnalyticsActionForToggleRangeFacetSelect} from './range-facet-utils';
 import {updateFacetOptions} from '../../../facet-options/facet-options-actions';
 import {executeSearch} from '../../../search/search-actions';
-import {validateThunkActionPayload} from '../../../../utils/validate-payload';
 import {RecordValue} from '@coveo/bueno';
 import {facetIdDefinition} from '../../generic/facet-actions-validation';
 import {
@@ -25,20 +24,23 @@ export const executeToggleRangeFacetSelect = createAsyncThunk<
     selection: RangeFacetValue;
   },
   AsyncThunkSearchOptions<ConfigurationSection>
->('rangeFacet/executeToggleSelect', ({facetId, selection}, {dispatch}) => {
-  validateThunkActionPayload(
-    {facetId, selection},
-    {facetId: facetIdDefinition, selection: getSelectionDefinition(selection)}
-  );
+>(
+  'rangeFacet/executeToggleSelect',
+  ({facetId, selection}, {dispatch, extra: {validatePayload}}) => {
+    validatePayload(
+      {facetId, selection},
+      {facetId: facetIdDefinition, selection: getSelectionDefinition(selection)}
+    );
 
-  const analyticsAction = getAnalyticsActionForToggleRangeFacetSelect(
-    facetId,
-    selection
-  );
+    const analyticsAction = getAnalyticsActionForToggleRangeFacetSelect(
+      facetId,
+      selection
+    );
 
-  dispatch(updateFacetOptions({freezeFacetOrder: true}));
-  dispatch(executeSearch(analyticsAction));
-});
+    dispatch(updateFacetOptions({freezeFacetOrder: true}));
+    dispatch(executeSearch(analyticsAction));
+  }
+);
 
 const getSelectionDefinition = (selection: RangeFacetValue) => {
   if (typeof selection.start === 'string') {

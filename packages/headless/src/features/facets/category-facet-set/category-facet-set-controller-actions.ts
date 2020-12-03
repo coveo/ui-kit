@@ -14,7 +14,6 @@ import {
   toggleSelectCategoryFacetValue,
   updateCategoryFacetNumberOfValues,
 } from './category-facet-set-actions';
-import {validateThunkActionPayload} from '../../../utils/validate-payload';
 import {
   requiredNonEmptyString,
   facetIdDefinition,
@@ -36,8 +35,8 @@ export const executeToggleCategoryFacetSelect = createAsyncThunk<
   AsyncThunkSearchOptions<CategoryFacetSection & ConfigurationSection>
 >(
   'categoryFacetController/executeToggleSelect',
-  ({facetId, selection}, {dispatch}) => {
-    validateThunkActionPayload(facetId, requiredNonEmptyString);
+  ({facetId, selection}, {dispatch, extra: {validatePayload}}) => {
+    validatePayload(facetId, requiredNonEmptyString);
     validateCategoryFacetValue(selection);
 
     const analyticsAction = getAnalyticsActionForCategoryFacetToggleSelect(
@@ -63,8 +62,8 @@ export const executeDeselectAllCategoryFacetValues = createAsyncThunk<
   AsyncThunkSearchOptions<CategoryFacetSection & ConfigurationSection>
 >(
   'categoryFacetController/executeDeselectAll',
-  ({facetId, numberOfValues}, {dispatch}) => {
-    validateThunkActionPayload(
+  ({facetId, numberOfValues}, {dispatch, extra: {validatePayload}}) => {
+    validatePayload(
       {facetId, numberOfValues},
       {
         facetId: facetIdDefinition,

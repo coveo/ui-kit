@@ -8,7 +8,7 @@ import {
 import {CategoryFacetSortCriterion} from './interfaces/request';
 import {
   validateActionPayload,
-  validateThunkActionPayload,
+  validateActionPayloadAndThrow,
 } from '../../../utils/validate-payload';
 import {
   facetIdDefinition,
@@ -55,7 +55,7 @@ export const toggleSelectCategoryFacetValue = createAction(
   'categoryFacet/toggleSelectValue',
   (payload: {facetId: string; selection: CategoryFacetValue}) => {
     try {
-      validateThunkActionPayload(payload.facetId, requiredNonEmptyString);
+      validateActionPayloadAndThrow(payload.facetId, requiredNonEmptyString);
       validateCategoryFacetValue(payload.selection);
       return {payload, error: null};
     } catch (error) {

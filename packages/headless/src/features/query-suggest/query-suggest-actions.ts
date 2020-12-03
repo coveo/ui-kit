@@ -1,5 +1,5 @@
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
-import {validateActionPayload, validateThunkActionPayload} from '../../utils/validate-payload';
+import {validateActionPayload} from '../../utils/validate-payload';
 import {NumberValue, StringValue} from '@coveo/bueno';
 import {QuerySuggestSuccessResponse} from '../../api/search/query-suggest/query-suggest-response';
 import {SearchAPIErrorWithStatusCode} from '../../api/search/search-api-error-response';
@@ -102,9 +102,9 @@ export const fetchQuerySuggestions = createAsyncThunk<
 
   async (
     payload: {id: string},
-    {getState, rejectWithValue, extra: {searchAPIClient}}
+    {getState, rejectWithValue, extra: {searchAPIClient, validatePayload}}
   ) => {
-    validateThunkActionPayload(payload, idDefinition);
+    validatePayload(payload, idDefinition);
     const id = payload.id;
     const response = await searchAPIClient.querySuggest(
       buildQuerySuggestRequest(id, getState())

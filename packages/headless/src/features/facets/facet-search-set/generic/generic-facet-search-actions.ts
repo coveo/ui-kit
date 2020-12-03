@@ -11,7 +11,6 @@ import {
   StateNeededForFacetSearch,
   StateNeededForSpecificFacetSearch,
 } from './generic-facet-search-state';
-import {validateThunkActionPayload} from '../../../../utils/validate-payload';
 import {StringValue} from '@coveo/bueno';
 
 /**
@@ -24,10 +23,13 @@ export const executeFacetSearch = createAsyncThunk<
   AsyncThunkSearchOptions<StateNeededForFacetSearch>
 >(
   'facetSearch/executeSearch',
-  async (facetId: string, {dispatch, getState, extra: {searchAPIClient}}) => {
+  async (
+    facetId: string,
+    {dispatch, getState, extra: {searchAPIClient, validatePayload}}
+  ) => {
     const state = getState();
     let req: SpecificFacetSearchRequest | CategoryFacetSearchRequest;
-    validateThunkActionPayload(
+    validatePayload(
       facetId,
       new StringValue({required: true, emptyAllowed: false})
     );
