@@ -21,6 +21,7 @@ import {DateRangeRequest} from '../../../../features/facets/range-facets/date-fa
 import * as FacetIdGenerator from '../../_common/facet-id-generator';
 import * as RangeFacet from '../headless-range-facet';
 import {buildMockFacetIdConfig} from '../../../../test/mock-facet-id-config';
+import {buildMockDateFacetRequest} from '../../../../test/mock-date-facet-request';
 
 describe('date facet', () => {
   const facetId = '1';
@@ -35,8 +36,6 @@ describe('date facet', () => {
   }
 
   beforeEach(() => {
-    (RangeFacet as any).buildRangeFacet = () => ({state: {}});
-
     options = {
       facetId,
       field: 'created',
@@ -44,6 +43,8 @@ describe('date facet', () => {
     };
 
     state = createMockState();
+    state.dateFacetSet[facetId] = buildMockDateFacetRequest();
+
     initDateFacet();
   });
 
@@ -60,6 +61,9 @@ describe('date facet', () => {
   });
 
   it('when an id is not specified, it calls generateFacetId with the correct params', () => {
+    const original = RangeFacet.buildRangeFacet;
+    (RangeFacet as any).buildRangeFacet = () => ({state: {}});
+
     jest.spyOn(FacetIdGenerator, 'generateFacetId');
 
     options = {field: 'created', generateAutomaticRanges: true};
@@ -74,6 +78,8 @@ describe('date facet', () => {
       config,
       engine.logger
     );
+
+    (RangeFacet as any).buildRangeFacet = original;
   });
 
   describe('#toggleSelect', () => {
