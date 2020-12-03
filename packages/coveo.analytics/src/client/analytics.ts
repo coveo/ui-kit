@@ -330,12 +330,26 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
     private processCustomParameters(payload: IRequestPayload): IRequestPayload {
         const {custom, ...rest} = payload;
 
+        const lowercasedCustom = this.lowercaseKeys(custom);
+
         const newPayload = convertCustomMeasurementProtocolKeys(rest);
 
         return {
-            ...(custom || {}),
+            ...lowercasedCustom,
             ...newPayload,
         };
+    }
+
+    private lowercaseKeys(custom: any) {
+        const keys = Object.keys(custom || {});
+
+        return keys.reduce(
+            (all, key) => ({
+                ...all,
+                [key.toLowerCase()]: custom[key],
+            }),
+            {}
+        );
     }
 
     private validateParams(payload: IRequestPayload): IRequestPayload {

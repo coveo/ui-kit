@@ -59,6 +59,27 @@ describe('ec events', () => {
         });
     });
 
+    it('should lowercase the properties of custom objects', async () => {
+        await coveoua('set', 'custom', {
+            camelCase: 'camel',
+            snake_case: 'snake',
+            PascalCase: 'pascal',
+            UPPER_CASE_SNAKE: 'upper snake',
+        });
+        await coveoua('send', 'pageview');
+
+        const [body] = getParsedBody();
+
+        expect(body).toEqual({
+            ...defaultContextValues,
+            t: 'pageview',
+            camelcase: 'camel',
+            snake_case: 'snake',
+            pascalcase: 'pascal',
+            upper_case_snake: 'upper snake',
+        });
+    });
+
     it('can send a product detail view event', async () => {
         coveoua('ec:addProduct', {name: 'wow', id: 'something', brand: 'brand', unknown: 'ok'});
         coveoua('ec:setAction', 'detail', {storeid: 'amazing'});
