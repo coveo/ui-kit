@@ -64,7 +64,12 @@ export function buildCategoryFacet(
     facetId,
   };
 
-  validateOptions(engine, categoryFacetOptionsSchema, options, buildCategoryFacet.name);
+  validateOptions(
+    engine,
+    categoryFacetOptionsSchema,
+    options,
+    buildCategoryFacet.name
+  );
 
   const createFacetSearch = () => {
     const {facetSearch} = props.options;

@@ -42,8 +42,14 @@ export function buildTab(
   const controller = buildController(engine);
   const {dispatch} = engine;
 
-  const options = validateOptions(engine, optionsSchema, props.options, buildTab.name);
-  const initialState = validateInitialState(engine, 
+  const options = validateOptions(
+    engine,
+    optionsSchema,
+    props.options,
+    buildTab.name
+  );
+  const initialState = validateInitialState(
+    engine,
     initialStateSchema,
     props.initialState,
     buildTab.name

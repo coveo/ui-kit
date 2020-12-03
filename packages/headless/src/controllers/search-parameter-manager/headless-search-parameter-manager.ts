@@ -42,7 +42,8 @@ export function buildSearchParameterManager(
   const {dispatch} = engine;
   const controller = buildController(engine);
 
-  validateInitialState(engine, 
+  validateInitialState(
+    engine,
     initialStateSchema,
     props.initialState,
     buildSearchParameterManager.name
