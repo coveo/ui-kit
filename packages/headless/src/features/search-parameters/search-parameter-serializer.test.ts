@@ -14,6 +14,13 @@ describe('buildSearchParameterSerializer', () => {
       const result = serialize({q: 'a', enableQuerySyntax: true});
       expect(result).toBe('q=a&enableQuerySyntax=true');
     });
+
+    it('does not include invalid keys', () => {
+      const invalidKeys = {invalid: 'b'};
+      const result = serialize({q: 'a', ...invalidKeys});
+
+      expect(result).toBe('q=a');
+    });
   });
 
   describe('#deserialize', () => {

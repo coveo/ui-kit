@@ -5,9 +5,10 @@ export function buildSearchParameterSerializer() {
 }
 
 function serialize(obj: SearchParameters) {
-  const fragment = Object.entries(obj).map(serializePair).join('&');
-
-  return fragment;
+  return Object.entries(obj)
+    .map(serializePair)
+    .filter((str) => str !== '')
+    .join('&');
 }
 
 function serializePair(pair: [string, unknown]) {
