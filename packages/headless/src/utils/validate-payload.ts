@@ -19,7 +19,7 @@ export const validatePayloadAndThrow = <P>(
     return {
       payload: new Schema({
         value: definition as SchemaValue<P>,
-      }).validate(payload) as P,
+      }).validate({value: payload}).value as P,
     };
   }
 
@@ -38,7 +38,7 @@ export const validatePayloadAndThrow = <P>(
 export const validatePayload = <P>(
   payload: P,
   definition: SchemaDefinition<Required<P>> | SchemaValue<P>
-) => {
+): {payload: P; error?: SchemaValidationError} => {
   try {
     return validatePayloadAndThrow(payload, definition);
   } catch (error) {
