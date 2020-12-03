@@ -87,6 +87,7 @@ function buildMockEngine<T extends AppState>(
     },
     ...config,
     renewAccessToken: mockRenewAccessToken,
+    logger: pino({level: 'silent'}),
   };
 }
 
