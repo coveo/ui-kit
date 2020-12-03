@@ -59,7 +59,7 @@ describe('ec events', () => {
         });
     });
 
-    it('should fix the cashing on custom objects', async () => {
+    it('should lowercase the properties of custom objects', async () => {
         await coveoua('set', 'custom', {
             camelCase: 'camel',
             snake_case: 'snake',
