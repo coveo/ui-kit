@@ -32,6 +32,7 @@ export const config: Config = {
     browserArgs: ['--no-sandbox'],
     transform: {
       '^.+\\.html?$': 'html-loader-jest',
+      '^.+\\.svg$': './svg.transform.js',
     },
   },
   devServer: {
