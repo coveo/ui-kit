@@ -5,6 +5,44 @@ import {
   SchemaValidationError,
 } from '@coveo/bueno';
 
+export const validatePayload = <P>(
+  payload: P,
+  definition: SchemaDefinition<Required<P>> | SchemaValue<P>
+) => {
+  const isSchemaValue = 'required' in definition;
+  if (isSchemaValue) {
+    return {
+      payload: new Schema({
+        value: definition as SchemaValue<P>,
+      }).validate(payload) as P,
+    };
+  }
+
+  return {
+    payload: new Schema(definition as SchemaDefinition<Required<P>>).validate(
+      payload
+    ) as P,
+  };
+};
+
+export const validateActionPayload = <P>(
+  payload: P,
+  definition: SchemaDefinition<Required<P>> | SchemaValue<P>
+) => {
+  try {
+    return validatePayload(payload, definition);
+  } catch (error) {
+    return {payload, error: error as SchemaValidationError};
+  }
+};
+
+export const validateThunkActionPayload = <P>(
+  payload: P,
+  definition: SchemaDefinition<Required<P>> | SchemaValue<P>
+) => {
+  return validatePayload(payload, definition);
+};
+
 export const validatePayloadSchema = <P>(
   payload: P,
   schemaDefinition: SchemaDefinition<Required<P>>,
