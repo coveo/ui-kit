@@ -42,29 +42,6 @@ describe('category facet', () => {
     categoryFacet = buildCategoryFacet(engine, {options});
   }
 
-  function initNestedCategoryFacet() {
-    const facetChild = buildMockCategoryFacetValue();
-    const nestedChildren = [
-      facetChild,
-      facetChild,
-      facetChild,
-      facetChild,
-      facetChild,
-      facetChild,
-      facetChild,
-      facetChild,
-    ];
-    const values = [
-      buildMockCategoryFacetValue({
-        state: 'selected',
-        children: nestedChildren,
-      }),
-    ];
-    const response = buildMockCategoryFacetResponse({facetId, values});
-    state.search.response.facets = [response];
-    initCategoryFacet();
-  }
-
   function setFacetRequest(config: Partial<CategoryFacetRequest> = {}) {
     state.categoryFacetSet[facetId] = buildMockCategoryFacetRequest({
       facetId,
@@ -361,7 +338,14 @@ describe('category facet', () => {
     });
 
     it('is true when there are more than the initial numberOfValues being shown', () => {
-      initNestedCategoryFacet();
+      options.numberOfValues = 1;
+      initCategoryFacet();
+
+      const value = buildMockCategoryFacetValue();
+      const values = [value, value];
+      const response = buildMockCategoryFacetResponse({facetId, values});
+      state.search.response.facets = [response];
+
       expect(categoryFacet.state.canShowLessValues).toBe(true);
     });
   });
