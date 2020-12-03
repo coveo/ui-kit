@@ -25,7 +25,7 @@ import {
   DateFacetOptions,
   dateFacetOptionsSchema,
 } from './headless-date-facet-options';
-import {generateFacetId} from '../../_common/facet-id-generator';
+import {determineFacetId} from '../../_common/facet-id-determinor';
 
 dayjs.extend(utc);
 dayjs.extend(customParseFormat);
@@ -77,15 +77,7 @@ export function buildDateFacet(
 ) {
   const dispatch = engine.dispatch;
 
-  const facetId =
-    props.options.facetId ||
-    generateFacetId(
-      {
-        field: props.options.field,
-        state: engine.state,
-      },
-      engine.logger
-    );
+  const facetId = determineFacetId(engine, props.options);
   const options: DateFacetRegistrationOptions = {facetId, ...props.options};
 
   validateOptions(dateFacetOptionsSchema, options, buildDateFacet.name);

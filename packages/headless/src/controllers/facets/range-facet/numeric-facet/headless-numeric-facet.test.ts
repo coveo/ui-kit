@@ -18,9 +18,7 @@ import {buildMockNumericFacetValue} from '../../../../test/mock-numeric-facet-va
 import {buildMockNumericFacetResponse} from '../../../../test/mock-numeric-facet-response';
 import {buildMockNumericFacetRequest} from '../../../../test/mock-numeric-facet-request';
 import {SearchAppState} from '../../../../state/search-app-state';
-import * as FacetIdGenerator from '../../_common/facet-id-generator';
-import * as RangeFacet from '../headless-range-facet';
-import {buildMockFacetIdConfig} from '../../../../test/mock-facet-id-config';
+import * as FacetIdDeterminor from '../../_common/facet-id-determinor';
 
 describe('numeric facet', () => {
   const facetId = '1';
@@ -47,6 +45,17 @@ describe('numeric facet', () => {
     initNumericFacet();
   });
 
+  it('calls #determineFacetId with the correct params', () => {
+    jest.spyOn(FacetIdDeterminor, 'determineFacetId');
+
+    initNumericFacet();
+
+    expect(FacetIdDeterminor.determineFacetId).toHaveBeenCalledWith(
+      engine,
+      options
+    );
+  });
+
   it('registers a numeric facet with the passed options', () => {
     const action = registerNumericFacet({facetId, ...options});
     expect(engine.actions).toContainEqual(action);
@@ -57,28 +66,6 @@ describe('numeric facet', () => {
     expect(() => initNumericFacet()).toThrow(
       'Check the options of buildNumericFacet'
     );
-  });
-
-  it('when an id is not specified, it calls #generateFacetId with the correct params', () => {
-    const original = RangeFacet.buildRangeFacet;
-    (RangeFacet as any).buildRangeFacet = () => ({state: {}});
-
-    jest.spyOn(FacetIdGenerator, 'generateFacetId');
-
-    options = {field: 'size', generateAutomaticRanges: true};
-    initNumericFacet();
-
-    const config = buildMockFacetIdConfig({
-      field: 'size',
-      state: engine.state,
-    });
-
-    expect(FacetIdGenerator.generateFacetId).toHaveBeenCalledWith(
-      config,
-      engine.logger
-    );
-
-    (RangeFacet as any).buildRangeFacet = original;
   });
 
   describe('#toggleSelect', () => {

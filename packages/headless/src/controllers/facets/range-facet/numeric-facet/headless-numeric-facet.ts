@@ -21,7 +21,7 @@ import {
   NumericFacetOptions,
   numericFacetOptionsSchema,
 } from './headless-numeric-facet-options';
-import {generateFacetId} from '../../_common/facet-id-generator';
+import {determineFacetId} from '../../_common/facet-id-determinor';
 
 type NumericRangeOptions = Pick<NumericRangeRequest, 'start' | 'end'> &
   Partial<NumericRangeRequest>;
@@ -51,15 +51,7 @@ export function buildNumericFacet(
 ) {
   const dispatch = engine.dispatch;
 
-  const facetId =
-    props.options.facetId ||
-    generateFacetId(
-      {
-        field: props.options.field,
-        state: engine.state,
-      },
-      engine.logger
-    );
+  const facetId = determineFacetId(engine, props.options);
   const options: NumericFacetRegistrationOptions = {facetId, ...props.options};
 
   validateOptions(numericFacetOptionsSchema, options, buildNumericFacet.name);

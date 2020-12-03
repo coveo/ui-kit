@@ -18,9 +18,7 @@ import {buildMockDateFacetValue} from '../../../../test/mock-date-facet-value';
 import {buildMockDateFacetResponse} from '../../../../test/mock-date-facet-response';
 import {SearchAppState} from '../../../../state/search-app-state';
 import {DateRangeRequest} from '../../../../features/facets/range-facets/date-facet-set/interfaces/request';
-import * as FacetIdGenerator from '../../_common/facet-id-generator';
-import * as RangeFacet from '../headless-range-facet';
-import {buildMockFacetIdConfig} from '../../../../test/mock-facet-id-config';
+import * as FacetIdDeterminor from '../../_common/facet-id-determinor';
 import {buildMockDateFacetRequest} from '../../../../test/mock-date-facet-request';
 
 describe('date facet', () => {
@@ -48,6 +46,17 @@ describe('date facet', () => {
     initDateFacet();
   });
 
+  it('calls #determineFacetId with the correct params', () => {
+    jest.spyOn(FacetIdDeterminor, 'determineFacetId');
+
+    initDateFacet();
+
+    expect(FacetIdDeterminor.determineFacetId).toHaveBeenCalledWith(
+      engine,
+      options
+    );
+  });
+
   it('registers a date facet with the passed options', () => {
     const action = registerDateFacet({facetId, ...options});
     expect(engine.actions).toContainEqual(action);
@@ -58,28 +67,6 @@ describe('date facet', () => {
     expect(() => initDateFacet()).toThrow(
       'Check the options of buildDateFacet'
     );
-  });
-
-  it('when an id is not specified, it calls #generateFacetId with the correct params', () => {
-    const original = RangeFacet.buildRangeFacet;
-    (RangeFacet as any).buildRangeFacet = () => ({state: {}});
-
-    jest.spyOn(FacetIdGenerator, 'generateFacetId');
-
-    options = {field: 'created', generateAutomaticRanges: true};
-    initDateFacet();
-
-    const config = buildMockFacetIdConfig({
-      field: 'created',
-      state: engine.state,
-    });
-
-    expect(FacetIdGenerator.generateFacetId).toHaveBeenCalledWith(
-      config,
-      engine.logger
-    );
-
-    (RangeFacet as any).buildRangeFacet = original;
   });
 
   describe('#toggleSelect', () => {
