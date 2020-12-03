@@ -18,7 +18,10 @@ import * as FacetSearch from '../facet-search/specific/headless-facet-search';
 import {updateFacetOptions} from '../../../features/facet-options/facet-options-actions';
 import {SearchAppState} from '../../../state/search-app-state';
 import * as FacetIdDeterminor from '../_common/facet-id-determinor';
-import {buildMockFacetSearch} from '../../../test/mock-facet-search';
+
+jest.mock('../facet-search/specific/headless-facet-search', () => ({
+  buildFacetSearch: jest.fn(() => ({})),
+}));
 
 describe('facet', () => {
   const facetId = '1';
@@ -37,8 +40,6 @@ describe('facet', () => {
   }
 
   beforeEach(() => {
-    (FacetSearch as any).buildFacetSearch = jest.fn(buildMockFacetSearch);
-
     options = {
       facetId,
       field: '',
@@ -430,6 +431,6 @@ describe('facet', () => {
 
   it('exposes a #facetSearch property', () => {
     expect(facet.facetSearch).toBeTruthy();
-    expect(FacetSearch.buildFacetSearch).toHaveBeenCalledTimes(1);
+    expect(FacetSearch.buildFacetSearch).toHaveBeenCalled();
   });
 });
