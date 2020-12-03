@@ -35,7 +35,7 @@ import {validateOptions} from '../../../utils/validate-payload';
 import {defaultFacetOptions} from '../../../features/facets/facet-set/facet-set-slice';
 import {defaultFacetSearchOptions} from '../../../features/facets/facet-search-set/facet-search-reducer-helpers';
 import {FacetOptions, facetOptionsSchema} from './headless-facet-options';
-import {generateFacetId} from '../_common/facet-id-generator';
+import {determineFacetId} from '../_common/facet-id-determinor';
 
 export {FacetOptions};
 export type FacetProps = {
@@ -54,16 +54,7 @@ export function buildFacet(
   const {dispatch} = engine;
   const controller = buildController(engine);
 
-  const facetId =
-    props.options.facetId ||
-    generateFacetId(
-      {
-        field: props.options.field,
-        state: engine.state,
-      },
-      engine.logger
-    );
-
+  const facetId = determineFacetId(engine, props.options);
   const options: Required<FacetOptions> = {
     facetId,
     facetSearch: {...defaultFacetSearchOptions},

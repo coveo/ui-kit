@@ -17,9 +17,8 @@ import {buildMockFacetRequest} from '../../../test/mock-facet-request';
 import * as FacetSearch from '../facet-search/specific/headless-facet-search';
 import {updateFacetOptions} from '../../../features/facet-options/facet-options-actions';
 import {SearchAppState} from '../../../state/search-app-state';
-import * as FacetIdGenerator from '../_common/facet-id-generator';
+import * as FacetIdDeterminor from '../_common/facet-id-determinor';
 import {buildMockFacetSearch} from '../../../test/mock-facet-search';
-import {buildMockFacetIdConfig} from '../../../test/mock-facet-id-config';
 
 describe('facet', () => {
   const facetId = '1';
@@ -57,6 +56,17 @@ describe('facet', () => {
     expect(facet).toBeTruthy();
   });
 
+  it('it calls #determineFacetId with the correct params', () => {
+    jest.spyOn(FacetIdDeterminor, 'determineFacetId');
+
+    initFacet();
+
+    expect(FacetIdDeterminor.determineFacetId).toHaveBeenCalledWith(
+      engine,
+      options
+    );
+  });
+
   it('registers a facet with the passed options and the default values of unspecified options', () => {
     options = {
       facetId,
@@ -76,23 +86,6 @@ describe('facet', () => {
     });
 
     expect(engine.actions).toContainEqual(action);
-  });
-
-  it('when an id is not specified, it calls #generateFacetId with the correct params', () => {
-    jest.spyOn(FacetIdGenerator, 'generateFacetId');
-
-    options = {field: 'author'};
-    initFacet();
-
-    const config = buildMockFacetIdConfig({
-      field: 'author',
-      state: engine.state,
-    });
-
-    expect(FacetIdGenerator.generateFacetId).toHaveBeenCalledWith(
-      config,
-      engine.logger
-    );
   });
 
   it('registering a facet with #numberOfValues less than 1 throws', () => {
