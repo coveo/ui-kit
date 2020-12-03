@@ -1,7 +1,10 @@
-const { buildBundleSizeReport } = require("./bundle-size/bundle-size");
-const { buildTitleReport } = require("./title/verify-title");
-const { BitbucketClient } = require('./bitbucket-client');
-
+const {buildBundleSizeReport} = require('./bundle-size/bundle-size');
+const {
+  getPullRequestComments,
+  updatePullRequestComment,
+  createPullRequestComment,
+} = require('./github-client');
+const {buildTitleReport} = require('./title/verify-title');
 
 const reportTitle = 'Pull Request Report';
 
@@ -20,21 +23,21 @@ async function buildReport() {
   ${titleFormatReport}
 
   ${bundleSizeReport}
-  `
+  `;
 }
 
 async function sendReport(report) {
   console.log('sending report');
-  
-  const client = new BitbucketClient();
-  const comments = await client.getPullRequestComments();
-  const comment = findBundleSizeComment(comments);
-  
-  comment ? client.updateComment(comment.id, report) : client.createComment(report);
+  const comments = await getPullRequestComments();
+  const comment = findBundleSizeComment(comments.data);
+
+  comment
+    ? updatePullRequestComment(comment.id, report)
+    : createPullRequestComment(report);
 }
 
 function findBundleSizeComment(comments) {
-  return comments.find(comment => comment.content.raw.indexOf(reportTitle) !== -1)
+  return comments.find((comment) => comment.body.indexOf(reportTitle) !== -1);
 }
 
 main();
