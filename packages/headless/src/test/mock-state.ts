@@ -21,7 +21,7 @@ import {getCategoryFacetSearchSetInitialState} from '../features/facets/facet-se
 import {getAdvancedSearchQueriesInitialState} from '../features/advanced-search-queries/advanced-search-queries-state';
 import {SearchAppState} from '../state/search-app-state';
 import {getFacetOptionsInitialState} from '../features/facet-options/facet-options-state';
-import { getDebugInitialState } from '../features/debug/debug-state';
+import {getDebugInitialState} from '../features/debug/debug-state';
 
 export function createMockState(
   config: Partial<SearchAppState> = {}
