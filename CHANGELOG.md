@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.1.0-alpha.78](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.77...v0.1.0-alpha.78) (2020-12-03)
+
+
+### Features
+
+* **atomic:** tab styling ([#307](https://github.com/coveo/ui-kit/issues/307)) ([19a46ef](https://github.com/coveo/ui-kit/commit/19a46ef40f11280dddcb91fc4fe0c6f235578b3f))
+
+
+
+
+
 # [0.1.0-alpha.77](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.76...v0.1.0-alpha.77) (2020-12-03)
 
 
