@@ -60,7 +60,7 @@ export class AtomicTab {
       activePart = {part: 'active-tab'};
     }
     return (
-      <nav class="nav nav-pills" {...activePart}>
+      <span class="nav nav-pills" {...activePart}>
         <button
           part="tab-button"
           class={`nav-link btn  ${activeClass}`}
@@ -68,7 +68,7 @@ export class AtomicTab {
         >
           <slot />
         </button>
-      </nav>
+      </span>
     );
   }
 }
