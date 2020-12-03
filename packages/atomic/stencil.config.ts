@@ -40,7 +40,7 @@ export const config: Config = {
   plugins: [
     sass({
       includePaths: ['src/scss/'],
-      injectGlobalPaths: [['src/scss/_global.scss', '*']],
+      injectGlobalPaths: ['src/scss/_global.scss'],
     }),
     inlineSvg(),
   ],

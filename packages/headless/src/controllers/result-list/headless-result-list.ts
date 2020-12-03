@@ -1,6 +1,7 @@
 import {Engine} from '../../app/headless-engine';
-import {SearchSection} from '../../state/state-sections';
+import {ConfigurationSection, SearchSection} from '../../state/state-sections';
 import {buildController} from '../controller/headless-controller';
+import {fetchMoreResults} from '../../features/search/search-actions';
 import {registerFieldsToInclude} from '../../features/fields/fields-actions';
 import {Schema, ArrayValue, StringValue} from '@coveo/bueno';
 import {validateOptions} from '../../utils/validate-payload';
@@ -33,7 +34,7 @@ export type ResultListState = ResultList['state'];
 export type ResultList = ReturnType<typeof buildResultList>;
 
 export function buildResultList(
-  engine: Engine<SearchSection>,
+  engine: Engine<SearchSection & ConfigurationSection>,
   props?: ResultListProps
 ) {
   const controller = buildController(engine);
@@ -59,9 +60,15 @@ export function buildResultList(
       const state = engine.state;
 
       return {
-        results: state.search.response.results,
+        results: state.search.results,
         isLoading: state.search.isLoading,
       };
+    },
+    /**
+     * Using the same parameters as the last successful query, fetch another batch of results. Particularly useful for infinite scrolling, for example.
+     */
+    fetchMoreResults() {
+      dispatch(fetchMoreResults());
     },
   };
 }
