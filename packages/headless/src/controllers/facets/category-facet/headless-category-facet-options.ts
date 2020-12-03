@@ -36,6 +36,10 @@ export const categoryFacetOptionsSchema = new Schema<
   filterFacetCount,
   injectionDepth,
   numberOfValues,
+  /**
+   * The sortCriterion of the facet
+   * @default 'occurences'
+   */
   sortCriteria: new StringValue<CategoryFacetSortCriterion>({
     constrainTo: categoryFacetSortCriteria,
   }),
