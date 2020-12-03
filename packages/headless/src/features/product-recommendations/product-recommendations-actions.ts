@@ -10,7 +10,7 @@ import {
   ProductRecommendationsSection,
   ContextSection,
 } from '../../state/state-sections';
-import {validatePayloadSchema} from '../../utils/validate-payload';
+import {validateActionPayload} from '../../utils/validate-payload';
 import {ArrayValue, NumberValue, StringValue} from '@coveo/bueno';
 import {getVisitorID, historyStore} from '../../api/analytics/analytics';
 import {ProductRecommendationsRequest} from '../../api/search/product-recommendations/product-recommendations-request';
@@ -33,7 +33,7 @@ export interface GetProductRecommendationsThunkReturn {
 export const setProductRecommendationsRecommenderId = createAction(
   'productrecommendations/setId',
   (payload: {id: string}) =>
-    validatePayloadSchema(payload, {
+    validateActionPayload(payload, {
       id: new StringValue({required: true, emptyAllowed: false}),
     })
 );
@@ -41,7 +41,7 @@ export const setProductRecommendationsRecommenderId = createAction(
 export const setProductRecommendationsSkus = createAction(
   'productrecommendations/setSku',
   (payload: {skus: string[]}) =>
-    validatePayloadSchema(payload, {
+    validateActionPayload(payload, {
       skus: new ArrayValue({
         required: true,
         min: 1,
@@ -53,7 +53,7 @@ export const setProductRecommendationsSkus = createAction(
 export const setProductRecommendationsBrandFilter = createAction(
   'productrecommendations/setBrand',
   (payload: {brand: string}) =>
-    validatePayloadSchema(payload, {
+    validateActionPayload(payload, {
       brand: new StringValue({required: true, emptyAllowed: true}),
     })
 );
@@ -61,7 +61,7 @@ export const setProductRecommendationsBrandFilter = createAction(
 export const setProductRecommendationsCategoryFilter = createAction(
   'productrecommendations/setCategory',
   (payload: {category: string}) =>
-    validatePayloadSchema(payload, {
+    validateActionPayload(payload, {
       category: new StringValue({required: true, emptyAllowed: true}),
     })
 );
@@ -69,7 +69,7 @@ export const setProductRecommendationsCategoryFilter = createAction(
 export const setProductRecommendationsMaxNumberOfRecommendations = createAction(
   'productrecommendations/setMaxNumberOfRecommendations',
   (payload: {number: number}) =>
-    validatePayloadSchema(payload, {
+    validateActionPayload(payload, {
       number: new NumberValue({required: true, max: 50, min: 1}),
     })
 );

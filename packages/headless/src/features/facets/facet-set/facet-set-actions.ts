@@ -1,10 +1,7 @@
 import {createAction} from '@reduxjs/toolkit';
 import {FacetRegistrationOptions} from './interfaces/options';
 import {FacetSortCriterion} from './interfaces/request';
-import {
-  validatePayloadValue,
-  validatePayloadSchema,
-} from '../../../utils/validate-payload';
+import {validateActionPayload} from '../../../utils/validate-payload';
 import {
   StringValue,
   NumberValue,
@@ -32,7 +29,7 @@ const facetRegistrationOptionsDefinition = {
 export const registerFacet = createAction(
   'facet/register',
   (payload: FacetRegistrationOptions) =>
-    validatePayloadSchema(payload, facetRegistrationOptionsDefinition)
+    validateActionPayload(payload, facetRegistrationOptionsDefinition)
 );
 
 /**
@@ -43,7 +40,7 @@ export const registerFacet = createAction(
 export const toggleSelectFacetValue = createAction(
   'facet/toggleSelectValue',
   (payload: {facetId: string; selection: FacetValue}) =>
-    validatePayloadSchema(payload, {
+    validateActionPayload(payload, {
       facetId: facetIdDefinition,
       selection: new RecordValue({values: facetValueDefinition}),
     })
@@ -55,7 +52,7 @@ export const toggleSelectFacetValue = createAction(
  */
 export const deselectAllFacetValues = createAction(
   'facet/deselectAll',
-  (payload: string) => validatePayloadValue(payload, facetIdDefinition)
+  (payload: string) => validateActionPayload(payload, facetIdDefinition)
 );
 
 /**
@@ -66,7 +63,7 @@ export const deselectAllFacetValues = createAction(
 export const updateFacetSortCriterion = createAction(
   'facet/updateSortCriterion',
   (payload: {facetId: string; criterion: FacetSortCriterion}) =>
-    validatePayloadSchema(payload, {
+    validateActionPayload(payload, {
       facetId: facetIdDefinition,
       criterion: new Value<FacetSortCriterion>({required: true}),
     })
@@ -80,7 +77,7 @@ export const updateFacetSortCriterion = createAction(
 export const updateFacetNumberOfValues = createAction(
   'facet/updateNumberOfValues',
   (payload: {facetId: string; numberOfValues: number}) =>
-    validatePayloadSchema(payload, {
+    validateActionPayload(payload, {
       facetId: facetIdDefinition,
       numberOfValues: new NumberValue({required: true, min: 1}),
     })
@@ -94,7 +91,7 @@ export const updateFacetNumberOfValues = createAction(
 export const updateFacetIsFieldExpanded = createAction(
   'facet/updateIsFieldExpanded',
   (payload: {facetId: string; isFieldExpanded: boolean}) =>
-    validatePayloadSchema(payload, {
+    validateActionPayload(payload, {
       facetId: facetIdDefinition,
       isFieldExpanded: new BooleanValue({required: true}),
     })

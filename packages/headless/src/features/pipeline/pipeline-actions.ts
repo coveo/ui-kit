@@ -1,5 +1,5 @@
 import {createAction} from '@reduxjs/toolkit';
-import {validatePayloadValue} from '../../utils/validate-payload';
+import {validateActionPayload} from '../../utils/validate-payload';
 import {StringValue} from '@coveo/bueno';
 
 /**
@@ -7,7 +7,7 @@ import {StringValue} from '@coveo/bueno';
  * @param payload (string) The query pipeline to set (may be empty).
  */
 export const setPipeline = createAction('pipeline/set', (payload: string) =>
-  validatePayloadValue(
+  validateActionPayload(
     payload,
     new StringValue({required: true, emptyAllowed: true})
   )

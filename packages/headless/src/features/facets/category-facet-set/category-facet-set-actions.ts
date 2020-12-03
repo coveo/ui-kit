@@ -7,8 +7,8 @@ import {
 } from '../facet-set/facet-set-actions';
 import {CategoryFacetSortCriterion} from './interfaces/request';
 import {
-  validatePayloadSchema,
-  validatePayloadValue,
+  validateActionPayload,
+  validateThunkActionPayload,
 } from '../../../utils/validate-payload';
 import {
   facetIdDefinition,
@@ -43,7 +43,7 @@ const categoryFacetRegistrationOptionsDefinition = {
 export const registerCategoryFacet = createAction(
   'categoryFacet/register',
   (payload: CategoryFacetRegistrationOptions) =>
-    validatePayloadSchema(payload, categoryFacetRegistrationOptionsDefinition)
+    validateActionPayload(payload, categoryFacetRegistrationOptionsDefinition)
 );
 
 /**
@@ -55,7 +55,7 @@ export const toggleSelectCategoryFacetValue = createAction(
   'categoryFacet/toggleSelectValue',
   (payload: {facetId: string; selection: CategoryFacetValue}) => {
     try {
-      validatePayloadValue(payload.facetId, requiredNonEmptyString, true);
+      validateThunkActionPayload(payload.facetId, requiredNonEmptyString);
       validateCategoryFacetValue(payload.selection);
       return {payload, error: null};
     } catch (error) {
@@ -83,7 +83,7 @@ export const updateCategoryFacetNumberOfValues = updateFacetNumberOfValues;
 export const updateCategoryFacetSortCriterion = createAction(
   'categoryFacet/updateSortCriterion',
   (payload: {facetId: string; criterion: CategoryFacetSortCriterion}) =>
-    validatePayloadSchema(payload, {
+    validateActionPayload(payload, {
       facetId: facetIdDefinition,
       criterion: new Value<CategoryFacetSortCriterion>(),
     })

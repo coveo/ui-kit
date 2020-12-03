@@ -5,7 +5,7 @@ import {
   SchemaValidationError,
 } from '@coveo/bueno';
 
-export const validatePayload = <P>(
+const validatePayload = <P>(
   payload: P,
   definition: SchemaDefinition<Required<P>> | SchemaValue<P>
 ) => {
@@ -41,40 +41,6 @@ export const validateThunkActionPayload = <P>(
   definition: SchemaDefinition<Required<P>> | SchemaValue<P>
 ) => {
   return validatePayload(payload, definition);
-};
-
-export const validatePayloadSchema = <P>(
-  payload: P,
-  schemaDefinition: SchemaDefinition<Required<P>>,
-  shouldThrowWhenInvalidated = false
-) => {
-  const schema = new Schema(schemaDefinition);
-  try {
-    const validatedPayload = schema.validate(payload);
-    return {payload: validatedPayload as P};
-  } catch (error) {
-    if (shouldThrowWhenInvalidated) {
-      throw error;
-    }
-    return {payload, error: error as SchemaValidationError};
-  }
-};
-
-export const validatePayloadValue = <P>(
-  payload: P,
-  schemaValue: SchemaValue<P>,
-  shouldThrowWhenInvalidated = false
-) => {
-  const schema = new Schema({value: schemaValue});
-  try {
-    const validatedPayload = schema.validate({value: payload}).value;
-    return {payload: validatedPayload as P};
-  } catch (error) {
-    if (shouldThrowWhenInvalidated) {
-      throw error;
-    }
-    return {payload, error: error as SchemaValidationError};
-  }
 };
 
 export const validateInitialState = <T extends object>(

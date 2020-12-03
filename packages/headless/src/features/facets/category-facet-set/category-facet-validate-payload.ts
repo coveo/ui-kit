@@ -7,7 +7,7 @@ import {
   BooleanValue,
 } from '@coveo/bueno';
 import {requiredNonEmptyString} from '../generic/facet-actions-validation';
-import {validatePayloadSchema} from '../../../utils/validate-payload';
+import {validateThunkActionPayload} from '../../../utils/validate-payload';
 import {CategoryFacetValue} from './interfaces/response';
 
 export const categoryFacetValueDefinition = {
@@ -22,7 +22,7 @@ export function validateCategoryFacetValue(payload: CategoryFacetValue) {
   payload.children.forEach((child) => {
     validateCategoryFacetValue(child);
   });
-  validatePayloadSchema(
+  validateThunkActionPayload(
     {
       state: payload.state,
       numberOfResults: payload.numberOfResults,
@@ -30,7 +30,6 @@ export function validateCategoryFacetValue(payload: CategoryFacetValue) {
       path: payload.path,
       moreValuesAvailable: payload.moreValuesAvailable,
     },
-    categoryFacetValueDefinition,
-    true
+    categoryFacetValueDefinition
   );
 }

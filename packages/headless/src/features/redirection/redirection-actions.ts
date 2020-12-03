@@ -4,7 +4,7 @@ import {
   isErrorResponse,
 } from '../../api/search/search-api-client';
 import {ExecutionPlan} from '../../api/search/plan/plan-endpoint';
-import {validatePayloadSchema} from '../../utils/validate-payload';
+import {validateThunkActionPayload} from '../../utils/validate-payload';
 import {StringValue} from '@coveo/bueno';
 import {logTriggerRedirect} from './redirection-analytics-actions';
 import {
@@ -34,16 +34,12 @@ export const checkForRedirection = createAsyncThunk<
     payload,
     {dispatch, getState, rejectWithValue, extra: {searchAPIClient}}
   ) => {
-    validatePayloadSchema(
-      payload,
-      {
-        defaultRedirectionUrl: new StringValue({
-          emptyAllowed: false,
-          url: true,
-        }),
-      },
-      true
-    );
+    validateThunkActionPayload(payload, {
+      defaultRedirectionUrl: new StringValue({
+        emptyAllowed: false,
+        url: true,
+      }),
+    });
     const response = await searchAPIClient.plan(buildPlanRequest(getState()));
     if (isErrorResponse(response)) {
       return rejectWithValue(response.error);

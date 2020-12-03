@@ -5,7 +5,7 @@ import {ConfigurationSection} from '../../../../state/state-sections';
 import {getAnalyticsActionForToggleRangeFacetSelect} from './range-facet-utils';
 import {updateFacetOptions} from '../../../facet-options/facet-options-actions';
 import {executeSearch} from '../../../search/search-actions';
-import {validatePayloadSchema} from '../../../../utils/validate-payload';
+import {validateThunkActionPayload} from '../../../../utils/validate-payload';
 import {RecordValue} from '@coveo/bueno';
 import {facetIdDefinition} from '../../generic/facet-actions-validation';
 import {
@@ -26,10 +26,9 @@ export const executeToggleRangeFacetSelect = createAsyncThunk<
   },
   AsyncThunkSearchOptions<ConfigurationSection>
 >('rangeFacet/executeToggleSelect', ({facetId, selection}, {dispatch}) => {
-  validatePayloadSchema(
+  validateThunkActionPayload(
     {facetId, selection},
-    {facetId: facetIdDefinition, selection: getSelectionDefinition(selection)},
-    true
+    {facetId: facetIdDefinition, selection: getSelectionDefinition(selection)}
   );
 
   const analyticsAction = getAnalyticsActionForToggleRangeFacetSelect(

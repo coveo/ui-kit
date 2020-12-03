@@ -1,7 +1,7 @@
 import {createAction} from '@reduxjs/toolkit';
 import {FacetSearchOptions} from '../facet-search-request-options';
 import {CategoryFacetSearchResult} from '../../../../api/search/facet-search/category-facet-search/category-facet-search-response';
-import {validatePayloadSchema} from '../../../../utils/validate-payload';
+import {validateActionPayload} from '../../../../utils/validate-payload';
 import {
   facetIdDefinition,
   requiredNonEmptyString,
@@ -24,7 +24,7 @@ const categoryFacetSearchResultDefinition = {
 export const selectCategoryFacetSearchResult = createAction(
   'categoryFacet/selectSearchResult',
   (payload: {facetId: string; value: CategoryFacetSearchResult}) =>
-    validatePayloadSchema(payload, {
+    validateActionPayload(payload, {
       facetId: facetIdDefinition,
       value: new RecordValue({values: categoryFacetSearchResultDefinition}),
     })
@@ -37,5 +37,5 @@ export const selectCategoryFacetSearchResult = createAction(
 export const registerCategoryFacetSearch = createAction(
   'categoryFacetSearch/register',
   (payload: FacetSearchOptions) =>
-    validatePayloadSchema(payload, facetSearchOptionsDefinition)
+    validateActionPayload(payload, facetSearchOptionsDefinition)
 );

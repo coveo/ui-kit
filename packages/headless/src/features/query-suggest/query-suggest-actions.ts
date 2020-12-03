@@ -1,5 +1,5 @@
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
-import {validatePayloadSchema} from '../../utils/validate-payload';
+import {validateActionPayload, validateThunkActionPayload} from '../../utils/validate-payload';
 import {NumberValue, StringValue} from '@coveo/bueno';
 import {QuerySuggestSuccessResponse} from '../../api/search/query-suggest/query-suggest-response';
 import {SearchAPIErrorWithStatusCode} from '../../api/search/search-api-error-response';
@@ -39,7 +39,7 @@ export interface QuerySuggestionID {
 export const registerQuerySuggest = createAction(
   'querySuggest/register',
   (payload: {id: string; q?: string; count?: number}) =>
-    validatePayloadSchema(payload, {
+    validateActionPayload(payload, {
       ...idDefinition,
       q: new StringValue(),
       count: new NumberValue({min: 0}),
@@ -52,7 +52,7 @@ export const registerQuerySuggest = createAction(
  */
 export const unregisterQuerySuggest = createAction(
   'querySuggest/unregister',
-  (payload: {id: string}) => validatePayloadSchema(payload, idDefinition)
+  (payload: {id: string}) => validateActionPayload(payload, idDefinition)
 );
 
 /**
@@ -63,7 +63,7 @@ export const unregisterQuerySuggest = createAction(
 export const selectQuerySuggestion = createAction(
   'querySuggest/selectSuggestion',
   (payload: {id: string; expression: string}) =>
-    validatePayloadSchema(payload, {
+    validateActionPayload(payload, {
       ...idDefinition,
       expression: new StringValue({required: true}),
     })
@@ -75,7 +75,7 @@ export const selectQuerySuggestion = createAction(
  */
 export const clearQuerySuggest = createAction(
   'querySuggest/clear',
-  (payload: {id: string}) => validatePayloadSchema(payload, idDefinition)
+  (payload: {id: string}) => validateActionPayload(payload, idDefinition)
 );
 
 /**
@@ -84,7 +84,7 @@ export const clearQuerySuggest = createAction(
  */
 export const clearQuerySuggestCompletions = createAction(
   'querySuggest/clearSuggestions',
-  (payload: {id: string}) => validatePayloadSchema(payload, idDefinition)
+  (payload: {id: string}) => validateActionPayload(payload, idDefinition)
 );
 
 /**
@@ -104,7 +104,7 @@ export const fetchQuerySuggestions = createAsyncThunk<
     payload: {id: string},
     {getState, rejectWithValue, extra: {searchAPIClient}}
   ) => {
-    validatePayloadSchema(payload, idDefinition, true);
+    validateThunkActionPayload(payload, idDefinition);
     const id = payload.id;
     const response = await searchAPIClient.querySuggest(
       buildQuerySuggestRequest(id, getState())
