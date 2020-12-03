@@ -28,6 +28,7 @@ import * as CategoryFacetSearch from '../facet-search/category/headless-category
 import {buildMockCategoryFacetSearch} from '../../../test/mock-category-facet-search';
 import {updateFacetOptions} from '../../../features/facet-options/facet-options-actions';
 import {SearchAppState} from '../../../state/search-app-state';
+import * as FacetIdDeterminor from '../_common/facet-id-determinor';
 
 describe('category facet', () => {
   const facetId = '1';
@@ -81,6 +82,17 @@ describe('category facet', () => {
     state = createMockState();
     setFacetRequest();
     initCategoryFacet();
+  });
+
+  it('it calls #determineFacetId with the correct params', () => {
+    jest.spyOn(FacetIdDeterminor, 'determineFacetId');
+
+    initCategoryFacet();
+
+    expect(FacetIdDeterminor.determineFacetId).toHaveBeenCalledWith(
+      engine,
+      options
+    );
   });
 
   it('registers a category facet with the passed options and default optional parameters', () => {
