@@ -1,9 +1,18 @@
 import {BooleanValue, Schema, SchemaValues} from '@coveo/bueno';
 import {SearchResponseSuccessWithDebugInfo} from '../../api/search/search/search-response';
 import {Engine} from '../../app/headless-engine';
+import {
+  AnalyticsType,
+  makeNoopAnalyticsAction,
+} from '../../features/analytics/analytics-utils';
 import {enableDebug, disableDebug} from '../../features/debug/debug-actions';
 import {rankingInformationSelector} from '../../features/debug/debug-selectors';
-import {DebugSection, SearchSection} from '../../state/state-sections';
+import {executeSearch} from '../../features/search/search-actions';
+import {
+  ConfigurationSection,
+  DebugSection,
+  SearchSection,
+} from '../../state/state-sections';
 import {
   validateInitialState,
   validateOptions,
@@ -39,7 +48,7 @@ export type RelevanceInspectorState = RelevanceInspector['state'];
 export type RelevanceInspector = ReturnType<typeof buildRelevanceInspector>;
 
 export function buildRelevanceInspector(
-  engine: Engine<DebugSection & SearchSection>,
+  engine: Engine<DebugSection & SearchSection & ConfigurationSection>,
   props: RelevanceInspectorProps = {}
 ) {
   let prevSearchUid = '';
@@ -61,6 +70,8 @@ export function buildRelevanceInspector(
     prevSearchUid = currentSearchUid;
     return hasChanged;
   };
+
+  let logOnNextResponse = false;
 
   if (initialState.enabled) {
     dispatch(enableDebug());
@@ -118,24 +129,31 @@ export function buildRelevanceInspector(
      * Logs information to the console.
      */
     logInformation() {
-      if (!this.state.isEnabled) {
-        engine.logger.warn(
-          'The relevance inspector has to be enabled in order to log information.'
+      if (this.state.isEnabled) {
+        engine.logger.info(
+          this.state,
+          'Relevance inspector information for new query'
         );
         return;
       }
 
-      engine.logger.info(
-        this.state,
-        'Relevance inspector information for new query'
+      engine.logger.warn(
+        'Relevance inspector "logInformation" has been called without debug being enabled. Enabling debug and triggering a query'
       );
+      logOnNextResponse = true;
+      this.enable();
+      dispatch(executeSearch(makeNoopAnalyticsAction(AnalyticsType.Search)()));
     },
 
     subscribe(listener: () => void) {
       listener();
       return engine.subscribe(() => {
         if (hasNewResponse(engine.state.search.response.searchUid)) {
-          if (this.state.isEnabled && options.automaticallyLogInformation) {
+          if (
+            this.state.isEnabled &&
+            (options.automaticallyLogInformation || logOnNextResponse)
+          ) {
+            logOnNextResponse = false;
             this.logInformation();
           }
           listener();
