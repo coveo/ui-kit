@@ -31,7 +31,7 @@ export const executeFacetSearch = createAsyncThunk<
       facetId,
       new StringValue({required: true, emptyAllowed: false})
     );
-    if (isSpecificFacetSearchState(state)) {
+    if (isSpecificFacetSearchState(state, facetId)) {
       req = buildSpecificFacetSearchRequest(facetId, state);
     } else {
       req = buildCategoryFacetSearchRequest(
@@ -48,7 +48,12 @@ export const executeFacetSearch = createAsyncThunk<
 );
 
 const isSpecificFacetSearchState = (
-  s: StateNeededForFacetSearch
+  s: StateNeededForFacetSearch,
+  facetId: string
 ): s is StateNeededForSpecificFacetSearch => {
-  return s.facetSearchSet !== undefined && s.facetSet !== undefined;
+  return (
+    s.facetSearchSet !== undefined &&
+    s.facetSet !== undefined &&
+    s.facetSet[facetId] !== undefined
+  );
 };
