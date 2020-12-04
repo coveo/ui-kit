@@ -1,5 +1,8 @@
 import {SearchParameters} from './search-parameter-actions';
 
+const delimiter = '&';
+const equal = '=';
+
 export function buildSearchParameterSerializer() {
   return {serialize, deserialize};
 }
@@ -7,8 +10,8 @@ export function buildSearchParameterSerializer() {
 function serialize(obj: SearchParameters) {
   return Object.entries(obj)
     .map(serializePair)
-    .filter((str) => str !== '')
-    .join('&');
+    .filter((str) => str)
+    .join(delimiter);
 }
 
 function serializePair(pair: [string, unknown]) {
@@ -19,16 +22,23 @@ function serializePair(pair: [string, unknown]) {
   }
 
   if (key === 'f') {
-    return `${key}=`;
+    const value = val as Required<SearchParameters>['f'];
+    return serializeFacets(key, value);
   }
 
-  return `${key}=${val}`;
+  return `${key}${equal}${val}`;
+}
+
+function serializeFacets(key: string, facets: Record<string, string[]>) {
+  return Object.entries(facets)
+    .map(([facetId, values]) => `${key}[${facetId}]${equal}${values.join(',')}`)
+    .join(delimiter);
 }
 
 function deserialize(fragment: string): SearchParameters {
-  const parts = fragment.split('&').filter((part) => part.length);
+  const parts = fragment.split(delimiter).filter((part) => part.length);
   const keyValuePairs = parts
-    .map((part) => splitOnFirstDelimiter(part))
+    .map((part) => splitOnFirstEqual(part))
     .filter(isValidPair)
     .map(cast);
 
@@ -38,10 +48,9 @@ function deserialize(fragment: string): SearchParameters {
   }, {});
 }
 
-function splitOnFirstDelimiter(str: string) {
-  const delimiter = '=';
-  const [first, ...rest] = str.split(delimiter);
-  const second = rest.join(delimiter);
+function splitOnFirstEqual(str: string) {
+  const [first, ...rest] = str.split(equal);
+  const second = rest.join(equal);
 
   return [first, second];
 }

@@ -5,12 +5,12 @@ describe('buildSearchParameterSerializer', () => {
   describe('#serialize', () => {
     const {serialize} = buildSearchParameterSerializer();
 
-    it('encodes a record with a single key and string value', () => {
+    it('serializes a record with a single key and string value', () => {
       const result = serialize({q: 'a'});
       expect(result).toBe('q=a');
     });
 
-    it('encodes a record with a multiple keys and string values', () => {
+    it('serializes a record with a multiple keys and string values', () => {
       const result = serialize({q: 'a', enableQuerySyntax: true});
       expect(result).toBe('q=a&enableQuerySyntax=true');
     });
@@ -20,6 +20,12 @@ describe('buildSearchParameterSerializer', () => {
       const result = serialize({q: 'a', ...invalidKeys});
 
       expect(result).toBe('q=a');
+    });
+
+    it('serializes the #f parameter correctly', () => {
+      const f = {author: ['a', 'b'], filetype: ['c', 'd']};
+      const result = serialize({f});
+      expect(result).toEqual('f[author]=a,b&f[filetype]=c,d');
     });
   });
 
