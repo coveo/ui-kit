@@ -178,7 +178,7 @@ describe('complex value', () => {
             bar: 'hello',
             whatIsThis: 123,
           })
-        ).not.toBeNull();
+        ).toBeNull();
       });
     });
   });
