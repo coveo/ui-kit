@@ -143,8 +143,8 @@ describe('history slice', () => {
 
     it('for #debug', () => {
       expectHistoryToHaveCreatedDifferentSnapshots(
-        getSnapshot({debug: false}),
-        getSnapshot({debug: true})
+        getSnapshot({debug: true}),
+        getSnapshot({debug: false})
       );
     });
 
