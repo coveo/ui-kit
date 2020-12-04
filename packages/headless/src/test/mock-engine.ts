@@ -17,7 +17,6 @@ import {ProductRecommendationsAppState} from '../state/product-recommendations-a
 import {buildMockProductRecommendationsState} from './mock-product-recommendations-state';
 import {NoopPreprocessRequestMiddleware} from '../api/platform-client';
 import pino, {Logger} from 'pino';
-import pino from 'pino';
 import {
   NoopPostprocessFacetSearchResponseMiddleware,
   NoopPostprocessQuerySuggestResponseMiddleware,
