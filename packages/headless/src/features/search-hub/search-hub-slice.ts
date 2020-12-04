@@ -12,7 +12,7 @@ export const searchHubReducer = createReducer(
       .addCase(change.fulfilled, (_, action) => action.payload.searchHub)
       .addCase(
         updateSearchConfiguration,
-        (_, action) => action.payload.searchHub
+        (state, action) => action.payload.searchHub || state
       );
   }
 );

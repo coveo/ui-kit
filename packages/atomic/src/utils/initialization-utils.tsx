@@ -2,8 +2,8 @@ import {Engine} from '@coveo/headless';
 import {ComponentInterface, getElement, h} from '@stencil/core';
 import {Schema, StringValue, SchemaValues} from '@coveo/bueno';
 
-type InitializeComponent = (engine: Engine) => void;
-export type InitializeEvent = CustomEvent<InitializeComponent>;
+export type InitializeEventHandler = (engine: Engine) => void;
+export type InitializeEvent = CustomEvent<InitializeEventHandler>;
 
 const engineProviders = ['atomic-search-interface'];
 
