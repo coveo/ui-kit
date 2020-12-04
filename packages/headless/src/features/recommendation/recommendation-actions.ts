@@ -10,6 +10,7 @@ import {
   AdvancedSearchQueriesSection,
   ConfigurationSection,
   ContextSection,
+  DebugSection,
   FieldsSection,
   PipelineSection,
   RecommendationSection,
@@ -26,6 +27,7 @@ export type StateNeededByGetRecommendations = ConfigurationSection &
     SearchHubSection &
       PipelineSection &
       AdvancedSearchQueriesSection &
+      DebugSection &
       ContextSection &
       FieldsSection
   >;

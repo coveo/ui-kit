@@ -26,6 +26,7 @@ import {categoryFacetSetReducer} from '../features/facets/category-facet-set/cat
 import {categoryFacetSearchSetReducer} from '../features/facets/facet-search-set/category/category-facet-search-set-slice';
 import {facetOptionsReducer} from '../features/facet-options/facet-options-slice';
 import {advancedSearchQueriesReducer} from '../features/advanced-search-queries/advanced-search-queries-slice';
+import {debugReducer} from '../features/debug/debug-slice';
 
 /**
  * Map of reducers that make up the SearchAppState.
@@ -53,4 +54,5 @@ export const searchAppReducers: ReducersMapObject<SearchAppState> = {
   fields: fieldsReducer,
   pipeline: pipelineReducer,
   searchHub: searchHubReducer,
+  debug: debugReducer,
 };

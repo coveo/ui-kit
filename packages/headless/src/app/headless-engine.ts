@@ -30,6 +30,8 @@ import {
   validateOptions,
 } from '../utils/validate-payload';
 
+export type LogLevel = LevelWithSilent;
+
 /**
  * The global headless engine options.
  */
@@ -69,7 +71,7 @@ export interface HeadlessOptions<Reducers extends ReducersMapObject> {
     /**
      * By default, is set to `warn`.
      */
-    level?: LevelWithSilent;
+    level?: LogLevel;
     /**
      * Changes the shape of the log object. This function will be called every time one of the log methods (such as `.info`) is called.
      * All arguments passed to the log method, except the message, will be pass to this function. By default it does not change the shape of the log object.
@@ -78,7 +80,7 @@ export interface HeadlessOptions<Reducers extends ReducersMapObject> {
     /**
      * Function which will be called after writing the log message in the browser.
      */
-    browserPostLogHook?: (level: LevelWithSilent, logEvent: LogEvent) => void;
+    browserPostLogHook?: (level: LogLevel, logEvent: LogEvent) => void;
   };
 }
 
