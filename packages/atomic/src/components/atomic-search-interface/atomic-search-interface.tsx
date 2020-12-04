@@ -103,9 +103,10 @@ export class AtomicSearchInterface {
   }
 
   private initSearchParameterManager() {
-    const stateWithoutHashSign = window.location.hash.slice(1);
+    const stateWithoutHash = window.location.hash.slice(1);
+    const decodedState = decodeURIComponent(stateWithoutHash);
     const {serialize, deserialize} = buildSearchParameterSerializer();
-    const params = deserialize(stateWithoutHashSign);
+    const params = deserialize(decodedState);
 
     const manager = buildSearchParameterManager(this.engine!, {
       initialState: {parameters: params},

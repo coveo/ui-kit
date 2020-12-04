@@ -18,6 +18,7 @@ import {buildMockNumericFacetValue} from '../../../../test/mock-numeric-facet-va
 import {buildMockNumericFacetResponse} from '../../../../test/mock-numeric-facet-response';
 import {buildMockNumericFacetRequest} from '../../../../test/mock-numeric-facet-request';
 import {SearchAppState} from '../../../../state/search-app-state';
+import * as FacetIdDeterminor from '../../_common/facet-id-determinor';
 
 describe('numeric facet', () => {
   const facetId = '1';
@@ -42,6 +43,17 @@ describe('numeric facet', () => {
     state.numericFacetSet[facetId] = buildMockNumericFacetRequest();
 
     initNumericFacet();
+  });
+
+  it('calls #determineFacetId with the correct params', () => {
+    jest.spyOn(FacetIdDeterminor, 'determineFacetId');
+
+    initNumericFacet();
+
+    expect(FacetIdDeterminor.determineFacetId).toHaveBeenCalledWith(
+      engine,
+      options
+    );
   });
 
   it('registers a numeric facet with the passed options', () => {
