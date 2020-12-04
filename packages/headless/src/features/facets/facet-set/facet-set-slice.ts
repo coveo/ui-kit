@@ -51,14 +51,9 @@ export const facetSetReducer = createReducer(
 
         facetIds.forEach((id) => {
           const request = state[id];
-
-          if (!(id in f)) {
-            request.currentValues = [];
-            return;
-          }
-
-          const values = f[id].map(buildSelectedFacetValueRequest);
-          request.currentValues = values;
+          request.currentValues =
+            id in f ? f[id].map(buildSelectedFacetValueRequest) : [];
+          request.preventAutoSelect = true;
         });
       })
       .addCase(toggleSelectFacetValue, (state, action) => {

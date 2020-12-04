@@ -439,5 +439,18 @@ describe('facet-set slice', () => {
       const finalState = facetSetReducer(state, restoreSearchParameters({}));
       expect(finalState['author'].currentValues).toEqual([]);
     });
+
+    it('sets #preventAutoSelect to true on all facets', () => {
+      const a = 'a';
+      const b = 'b';
+
+      state[a] = buildMockFacetRequest({preventAutoSelect: false});
+      state[b] = buildMockFacetRequest({preventAutoSelect: false});
+      const f = {[b]: []};
+
+      const finalState = facetSetReducer(state, restoreSearchParameters({f}));
+      expect(finalState[a].preventAutoSelect).toBe(true);
+      expect(finalState[b].preventAutoSelect).toBe(true);
+    });
   });
 });
