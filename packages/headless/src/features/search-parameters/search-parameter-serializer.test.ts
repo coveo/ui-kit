@@ -62,11 +62,23 @@ describe('buildSearchParameterSerializer', () => {
       const result = deserialize('aq=@author==alice');
       expect(result).toEqual({aq: '@author==alice'});
     });
+
+    it('deserializes two facets correctly', () => {
+      const result = deserialize('f[author]=a,b&f[filetype]=c,d');
+      expect(result).toEqual({
+        f: {
+          author: ['a', 'b'],
+          filetype: ['c', 'd'],
+        },
+      });
+    });
   });
 
   it('can serialize and deserialize all search parameters', () => {
+    const f = {author: ['a', 'b']};
+    const parameters = buildMockSearchParameters({f});
+
     const {serialize, deserialize} = buildSearchParameterSerializer();
-    const parameters = buildMockSearchParameters();
     const serialized = serialize(parameters);
     const deserialized = deserialize(serialized);
 

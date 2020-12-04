@@ -36,14 +36,21 @@ function serializeFacets(key: string, facets: Record<string, string[]>) {
 }
 
 function deserialize(fragment: string): SearchParameters {
-  const parts = fragment.split(delimiter).filter((part) => part.length);
+  const parts = fragment.split(delimiter);
   const keyValuePairs = parts
     .map((part) => splitOnFirstEqual(part))
+    .map(preprocessFacetPairs)
     .filter(isValidPair)
     .map(cast);
 
-  return keyValuePairs.reduce((acc, pair) => {
+  return keyValuePairs.reduce((acc: SearchParameters, pair) => {
     const [key, val] = pair;
+
+    if (key === 'f' && typeof val === 'object') {
+      const mergedValues = {...acc[key], ...val};
+      return {...acc, [key]: mergedValues};
+    }
+
     return {...acc, [key]: val};
   }, {});
 }
@@ -53,6 +60,23 @@ function splitOnFirstEqual(str: string) {
   const second = rest.join(equal);
 
   return [first, second];
+}
+
+function preprocessFacetPairs(pair: string[]) {
+  const [key, val] = pair;
+  const facetKey = /^(f)\[(.+)\]$/;
+  const result = facetKey.exec(key);
+
+  if (!result) {
+    return pair;
+  }
+
+  const paramKey = result[1];
+  const facetId = result[2];
+  const values = val.split(',');
+  const obj = {[facetId]: values};
+
+  return [paramKey, JSON.stringify(obj)];
 }
 
 function isValidPair<K extends keyof SearchParameters>(
@@ -99,7 +123,7 @@ function cast<K extends keyof SearchParameters>(
   }
 
   if (key === 'f') {
-    return [key, {}];
+    return [key, JSON.parse(value)];
   }
 
   return pair;
