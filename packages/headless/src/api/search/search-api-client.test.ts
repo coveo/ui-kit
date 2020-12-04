@@ -7,6 +7,7 @@ import {
   NoopPreprocessRequestMiddleware,
   PlatformClient,
   PlatformClientCallOptions,
+  PlatformResponse,
 } from '../platform-client';
 import {PlanRequest} from './plan/plan-request';
 import {QuerySuggestRequest} from './query-suggest/query-suggest-request';
@@ -40,6 +41,8 @@ import {
 import {buildMockSearchResponse} from '../../test/mock-search-response';
 import {buildMockQuerySuggestCompletion} from '../../test/mock-query-suggest-completion';
 import {buildMockFacetSearchResponse} from '../../test/mock-facet-search-response';
+import {SearchResponseSuccess} from './search/search-response';
+import {QuerySuggestSuccessResponse} from './query-suggest/query-suggest-response';
 
 jest.mock('../platform-client');
 describe('search api client', () => {
@@ -69,7 +72,11 @@ describe('search api client', () => {
   });
 
   describe('middleware', () => {
-    function mockPlatformCall(returnValue: any) {
+    function mockPlatformCall(
+      returnValue:
+        | PlatformResponse<SearchResponseSuccess | QuerySuggestSuccessResponse>
+        | {}
+    ) {
       const mockPlatformCall = jest.fn();
 
       mockPlatformCall.mockReturnValue(returnValue);
