@@ -44,6 +44,11 @@ export class AtomicRelevanceInspector {
     }
 
     // TODO: Display data in a cleaner manner
-    return <div>{JSON.stringify(this.relevanceInspector.state)}</div>;
+    return (
+      <p>
+        Debug mode is enabled. Look at the developper console to see additional
+        information.
+      </p>
+    );
   }
 }

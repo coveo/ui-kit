@@ -33,7 +33,7 @@ export class AtomicSearchInterface {
   @Prop() sample = false;
   @Prop({reflect: true}) pipeline = 'default';
   @Prop({reflect: true}) searchHub = 'default';
-  @Prop() logLevel?: LogLevel = 'warn';
+  @Prop() logLevel?: LogLevel = 'info';
   @RenderError() error?: Error;
   @State() engine?: Engine;
 
