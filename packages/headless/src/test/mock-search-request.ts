@@ -24,6 +24,7 @@ export function buildMockSearchRequest(
     organizationId: '',
     accessToken: '',
     visitorId: '',
+    debug: false,
     ...config,
   };
 }

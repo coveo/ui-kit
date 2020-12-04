@@ -16,6 +16,7 @@ import {createMockRecommendationState} from './mock-recommendation-state';
 import {ProductRecommendationsAppState} from '../state/product-recommendations-app-state';
 import {buildMockProductRecommendationsState} from './mock-product-recommendations-state';
 import {NoopPreprocessRequestMiddleware} from '../api/platform-client';
+import pino, {Logger} from 'pino';
 import pino from 'pino';
 import {
   NoopPostprocessFacetSearchResponseMiddleware,
@@ -71,7 +72,8 @@ function buildMockEngine<T extends AppState>(
   config: Partial<Engine<T>> = {},
   mockState: () => T
 ): MockEngine<T> {
-  const storeConfiguration = configureMockStore();
+  const logger = pino({level: 'silent'});
+  const storeConfiguration = configureMockStore(logger);
   const store = storeConfiguration(config.state || mockState());
   const unsubscribe = () => {};
 
@@ -92,16 +94,16 @@ function buildMockEngine<T extends AppState>(
     },
     ...config,
     renewAccessToken: mockRenewAccessToken,
-    logger: pino({level: 'silent'}),
+    logger,
   };
 }
 
-const configureMockStore = () => {
+const configureMockStore = (logger: Logger) => {
   return configureStore<AppState, DispatchExts>([
     analyticsMiddleware,
     thunk.withExtraArgument({
       searchAPIClient: new SearchAPIClient({
-        logger: pino({level: 'silent'}),
+        logger,
         renewAccessToken: mockRenewAccessToken,
         preprocessRequest: NoopPreprocessRequestMiddleware,
         postprocessSearchResponseMiddleware: NoopPostprocessSearchResponseMiddleware,
