@@ -36,6 +36,7 @@ import {
   getAdvancedSearchQueriesInitialState,
 } from '../advanced-search-queries/advanced-search-queries-state';
 import {SearchParametersState} from '../../state/search-app-state';
+import {getDebugInitialState} from '../debug/debug-state';
 
 export const getHistoryEmptyState = (): SearchParametersState => ({
   context: getContextInitialState(),
@@ -51,6 +52,7 @@ export const getHistoryEmptyState = (): SearchParametersState => ({
   querySet: getQuerySetInitialState(),
   pipeline: getPipelineInitialState(),
   searchHub: getSearchHubInitialState(),
+  debug: getDebugInitialState(),
 });
 
 export const historyReducer = createReducer(
