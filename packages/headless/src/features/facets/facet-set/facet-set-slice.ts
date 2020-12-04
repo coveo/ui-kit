@@ -23,6 +23,7 @@ import {
 } from '../generic/facet-reducer-helpers';
 import {getFacetSetInitialState} from './facet-set-state';
 import {deselectAllFacets} from '../generic/facet-actions';
+import {restoreSearchParameters} from '../../search-parameters/search-parameter-actions';
 
 export const facetSetReducer = createReducer(
   getFacetSetInitialState(),
@@ -43,6 +44,22 @@ export const facetSetReducer = createReducer(
         }
 
         return action.payload.facetSet;
+      })
+      .addCase(restoreSearchParameters, (state, action) => {
+        const f = action.payload.f || {};
+        const facetIds = Object.keys(state);
+
+        facetIds.forEach((id) => {
+          const request = state[id];
+
+          if (!(id in f)) {
+            request.currentValues = [];
+            return;
+          }
+
+          const values = f[id].map(buildSelectedFacetValueRequest);
+          request.currentValues = values;
+        });
       })
       .addCase(toggleSelectFacetValue, (state, action) => {
         const {facetId, selection} = action.payload;
@@ -124,11 +141,7 @@ export const facetSetReducer = createReducer(
           return;
         }
 
-        const searchResultValue: FacetValueRequest = {
-          value: rawValue,
-          state: 'selected',
-        };
-
+        const searchResultValue = buildSelectedFacetValueRequest(rawValue);
         const firstIdleIndex = currentValues.findIndex(
           (v) => v.state === 'idle'
         );
@@ -174,4 +187,8 @@ export function convertFacetValueToRequest(
   const {value, state} = facetValue;
 
   return {value, state};
+}
+
+function buildSelectedFacetValueRequest(value: string): FacetValueRequest {
+  return {value, state: 'selected'};
 }

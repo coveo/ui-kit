@@ -23,6 +23,7 @@ import {selectFacetSearchResult} from '../facet-search-set/specific/specific-fac
 import * as FacetReducers from '../generic/facet-reducer-helpers';
 import {FacetSetState, getFacetSetInitialState} from './facet-set-state';
 import {deselectAllFacets} from '../generic/facet-actions';
+import {restoreSearchParameters} from '../../search-parameters/search-parameter-actions';
 
 describe('facet-set slice', () => {
   let state: FacetSetState;
@@ -417,5 +418,26 @@ describe('facet-set slice', () => {
     const value = buildMockFacetSearchResult({rawValue: 'TED'});
     const action = selectFacetSearchResult({facetId: '1', value});
     expect(() => facetSetReducer(state, action)).not.toThrow();
+  });
+
+  describe('#restoreSearchParameters', () => {
+    it("sets matching facets' #currentValues to the selected values in the payload", () => {
+      const facetId = 'author';
+      state[facetId] = buildMockFacetRequest();
+
+      const f = {[facetId]: ['a']};
+      const finalState = facetSetReducer(state, restoreSearchParameters({f}));
+
+      const value = buildMockFacetValueRequest({value: 'a', state: 'selected'});
+      expect(finalState[facetId].currentValues).toEqual([value]);
+    });
+
+    it("deselects non-match facets' values by setting #currentValues to an empty array", () => {
+      const currentValues = [buildMockFacetValueRequest({state: 'selected'})];
+      state['author'] = buildMockFacetRequest({currentValues});
+
+      const finalState = facetSetReducer(state, restoreSearchParameters({}));
+      expect(finalState['author'].currentValues).toEqual([]);
+    });
   });
 });
