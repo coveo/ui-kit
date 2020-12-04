@@ -72,3 +72,28 @@ export function highlightString(params: HighlightParams): string {
   }
   return highlighted;
 }
+
+export function highlightSuggestion(
+  suggestion: string,
+  openingMatchDelimiter: string,
+  closingMatchDelimiter: string,
+  openingCorrectedDelimiter: string,
+  closingCorrectedDelimiter: string
+) {
+  return suggestion.replace(
+    /\[(.*?)\]|\{(.*?)\}|\((.*?)\)/g,
+    (_, notMatched, matched, corrected) => {
+      if (notMatched) {
+        return notMatched;
+      }
+      if (matched) {
+        return openingMatchDelimiter + matched + closingMatchDelimiter;
+      }
+      if (corrected) {
+        return (
+          openingCorrectedDelimiter + corrected + closingCorrectedDelimiter
+        );
+      }
+    }
+  );
+}

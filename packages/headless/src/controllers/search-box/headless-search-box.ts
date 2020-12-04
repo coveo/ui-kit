@@ -32,6 +32,7 @@ import {logQuerySuggestionClick} from '../../features/query-suggest/query-sugges
 import {randomID} from '../../utils/utils';
 import {QuerySuggestState} from '../../features/query-suggest/query-suggest-state';
 import {SearchAction} from '../../features/analytics/analytics-utils';
+import {highlightSuggestion} from '../../utils/highlight';
 
 export {SearchBoxOptions};
 export interface SearchBoxProps {
@@ -141,6 +142,31 @@ export function buildSearchBox(
     },
 
     /**
+     * Formats a suggestion
+     * @param suggestion The suggestion to highlight
+     * @param openingMatchDelimiter The opening delimiter for a match in  the suggestion string (e.g. '<strong>')
+     * @param closingMatchDelimiter The closing delimiter for a match in  the suggestion string (e.g. '</strong>')
+     * @param openingCorrectedDelimiter The opening delimiter for a correction in the suggestion string (e.g. '<i>')
+     * @param closingCorrectedDelimiter The closing delimiter for a correction in the suggestion string (e.g. '</i>')
+     */
+
+    highlightSuggestion(
+      suggestion: string,
+      openingMatchDelimiter: string,
+      closingMatchDelimiter: string,
+      openingCorrectedDelimiter: string,
+      closingCorrectedDelimiter: string
+    ) {
+      return highlightSuggestion(
+        suggestion,
+        openingMatchDelimiter,
+        closingMatchDelimiter,
+        openingCorrectedDelimiter,
+        closingCorrectedDelimiter
+      );
+    },
+
+    /**
      * @returns The state of the `SearchBox` controller.
      */
     get state() {
@@ -164,5 +190,6 @@ function getSuggestions(state: QuerySuggestState | undefined) {
 
   return state.completions.map((completion) => ({
     value: completion.expression,
+    highlighted: completion.highlighted,
   }));
 }
