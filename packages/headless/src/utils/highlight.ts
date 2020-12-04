@@ -73,14 +73,32 @@ export function highlightString(params: HighlightParams): string {
   return highlighted;
 }
 
-export function highlightSuggestion(
-  suggestion: string,
+/**
+ * Add delimiters to a highlighted suggestion.
+ *
+ * @param highlightedSuggestion The highlighted suggestion
+ * @param openingMatchDelimiter The opening delimiter for a match in the suggestion string (e.g. '<strong>')
+ * @param closingMatchDelimiter The closing delimiter for a match in the suggestion string (e.g. '</strong>')
+ * @param openingCorrectedDelimiter The opening delimiter for a correction in the suggestion string (e.g. '<i>')
+ * @param closingCorrectedDelimiter The closing delimiter for a correction in the suggestion string (e.g. '</i>')
+ */
+
+export function formatHighlightedSuggestion(
+  highlightedSuggestion: string,
   openingMatchDelimiter: string,
   closingMatchDelimiter: string,
   openingCorrectedDelimiter: string,
   closingCorrectedDelimiter: string
 ) {
-  return suggestion.replace(
+  if (
+    isEmptyString(openingMatchDelimiter) ||
+    isEmptyString(closingMatchDelimiter) ||
+    isEmptyString(openingCorrectedDelimiter) ||
+    isEmptyString(closingCorrectedDelimiter)
+  ) {
+    throw Error('delimiters should be a non-empty string');
+  }
+  return highlightedSuggestion.replace(
     /\[(.*?)\]|\{(.*?)\}|\((.*?)\)/g,
     (_, notMatched, matched, corrected) => {
       if (notMatched) {

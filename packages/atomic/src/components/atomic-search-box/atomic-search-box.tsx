@@ -162,7 +162,7 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
   private get suggestions() {
     return this.searchBoxState.suggestions.map((suggestion, index) => {
       const id = `${this._id}-suggestion-${index}`;
-      const highlightedSuggestion = this.searchBox.highlightedSuggestion(
+      const highlightedSuggestion = this.searchBox.formatHighlightedSuggestion(
         suggestion.highlighted,
         '<strong>',
         '</strong>',
