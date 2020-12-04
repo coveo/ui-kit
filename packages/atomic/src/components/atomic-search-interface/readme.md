@@ -9,7 +9,7 @@
 
 | Property    | Attribute    | Description | Type                                                                                    | Default     |
 | ----------- | ------------ | ----------- | --------------------------------------------------------------------------------------- | ----------- |
-| `logLevel`  | `log-level`  |             | `"debug" \| "error" \| "fatal" \| "info" \| "silent" \| "trace" \| "warn" \| undefined` | `'warn'`    |
+| `logLevel`  | `log-level`  |             | `"debug" \| "error" \| "fatal" \| "info" \| "silent" \| "trace" \| "warn" \| undefined` | `'info'`    |
 | `pipeline`  | `pipeline`   |             | `string`                                                                                | `'default'` |
 | `sample`    | `sample`     |             | `boolean`                                                                               | `false`     |
 | `searchHub` | `search-hub` |             | `string`                                                                                | `'default'` |
