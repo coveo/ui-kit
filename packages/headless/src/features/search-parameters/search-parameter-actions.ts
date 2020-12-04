@@ -16,6 +16,7 @@ export type SearchParameters = Omit<
   | 'searchHub'
   | 'pipeline'
   | 'context'
+  | 'debug'
 >;
 
 /** Restores search parameters from e.g. a url*/

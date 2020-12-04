@@ -14,7 +14,7 @@ export type Result = {
   hasMobileHtmlVersion: boolean;
   score: number;
   percentScore: number;
-  rankingInfo: null;
+  rankingInfo: string | null;
   rating: number;
   isTopResult: boolean;
   isRecommendation: boolean;
