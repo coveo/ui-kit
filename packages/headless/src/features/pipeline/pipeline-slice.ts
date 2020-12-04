@@ -12,7 +12,7 @@ export const pipelineReducer = createReducer(
       .addCase(change.fulfilled, (_, action) => action.payload.pipeline)
       .addCase(
         updateSearchConfiguration,
-        (_, action) => action.payload.pipeline
+        (state, action) => action.payload.pipeline || state
       );
   }
 );

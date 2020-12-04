@@ -2,6 +2,7 @@ import {
   AdvancedSearchQueriesSection,
   ConfigurationSection,
   ContextSection,
+  DebugSection,
   FieldsSection,
   PipelineSection,
   RecommendationSection,
@@ -14,4 +15,5 @@ export type RecommendationAppState = ConfigurationSection &
   ContextSection &
   PipelineSection &
   SearchHubSection &
+  DebugSection &
   RecommendationSection;

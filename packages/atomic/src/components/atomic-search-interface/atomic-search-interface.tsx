@@ -6,6 +6,7 @@ import {
   Method,
   Watch,
   Element,
+  State,
 } from '@stencil/core';
 import {
   HeadlessEngine,
@@ -15,6 +16,7 @@ import {
   HeadlessConfigurationOptions,
   AnalyticsActions,
   ConfigurationActions,
+  LogLevel,
   buildSearchParameterManager,
   buildSearchParameterSerializer,
   Unsubscribe,
@@ -31,14 +33,15 @@ export class AtomicSearchInterface {
   @Prop() sample = false;
   @Prop({reflect: true}) pipeline = 'default';
   @Prop({reflect: true}) searchHub = 'default';
+  @Prop() logLevel?: LogLevel = 'info';
   @RenderError() error?: Error;
+  @State() engine?: Engine;
 
-  private engine?: Engine;
   private unsubscribe: Unsubscribe = () => {};
   private hangingComponentsInitialization: InitializeEvent[] = [];
   private initialized = false;
 
-  componentDidLoad() {
+  componentWillLoad() {
     if (this.sample) {
       this.initialize(HeadlessEngine.getSampleConfiguration());
     }
@@ -78,6 +81,9 @@ export class AtomicSearchInterface {
     this.engine = new HeadlessEngine({
       configuration: config,
       reducers: searchAppReducers,
+      loggerOptions: {
+        level: this.logLevel,
+      },
     });
 
     this.hangingComponentsInitialization.forEach((event) =>
@@ -135,6 +141,15 @@ export class AtomicSearchInterface {
   }
 
   public render() {
-    return <slot></slot>;
+    if (!this.engine) {
+      return;
+    }
+
+    return [
+      <atomic-relevance-inspector
+        engine={this.engine}
+      ></atomic-relevance-inspector>,
+      <slot></slot>,
+    ];
   }
 }
