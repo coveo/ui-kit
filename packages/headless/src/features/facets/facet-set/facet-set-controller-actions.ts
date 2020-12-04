@@ -9,7 +9,6 @@ import {getAnalyticsActionForToggleFacetSelect} from './facet-set-utils';
 import {updateFacetOptions} from '../../facet-options/facet-options-actions';
 import {executeSearch} from '../../search/search-actions';
 import {toggleSelectFacetValue} from './facet-set-actions';
-import {validatePayloadSchema} from '../../../utils/validate-payload';
 import {facetIdDefinition} from '../generic/facet-actions-validation';
 import {RecordValue} from '@coveo/bueno';
 import {facetValueDefinition} from './facet-set-validate-payload';
@@ -26,20 +25,22 @@ export const executeToggleFacetSelect = createAsyncThunk<
     selection: FacetValue;
   },
   AsyncThunkSearchOptions<FacetSection & ConfigurationSection>
->('facet/executeToggleSelect', ({facetId, selection}, {dispatch}) => {
-  const analyticsAction = getAnalyticsActionForToggleFacetSelect(
-    facetId,
-    selection
-  );
-  validatePayloadSchema(
-    {facetId, selection},
-    {
-      facetId: facetIdDefinition,
-      selection: new RecordValue({values: facetValueDefinition}),
-    },
-    true
-  );
-  dispatch(toggleSelectFacetValue({facetId, selection}));
-  dispatch(updateFacetOptions({freezeFacetOrder: true}));
-  dispatch(executeSearch(analyticsAction));
-});
+>(
+  'facet/executeToggleSelect',
+  ({facetId, selection}, {dispatch, extra: {validatePayload}}) => {
+    const analyticsAction = getAnalyticsActionForToggleFacetSelect(
+      facetId,
+      selection
+    );
+    validatePayload(
+      {facetId, selection},
+      {
+        facetId: facetIdDefinition,
+        selection: new RecordValue({values: facetValueDefinition}),
+      }
+    );
+    dispatch(toggleSelectFacetValue({facetId, selection}));
+    dispatch(updateFacetOptions({freezeFacetOrder: true}));
+    dispatch(executeSearch(analyticsAction));
+  }
+);

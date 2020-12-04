@@ -7,7 +7,6 @@ import {
 } from '../../../../state/state-sections';
 import {executeToggleRangeFacetSelect} from '../generic/range-facet-controller-actions';
 import {toggleSelectNumericFacetValue} from './numeric-facet-actions';
-import {validatePayloadSchema} from '../../../../utils/validate-payload';
 import {facetIdDefinition} from '../../generic/facet-actions-validation';
 import {RecordValue} from '@coveo/bueno';
 import {numericFacetValueDefinition} from '../generic/range-facet-validate-payload';
@@ -26,15 +25,14 @@ export const executeToggleNumericFacetSelect = createAsyncThunk<
     selection: NumericFacetValue;
   },
   AsyncThunkSearchOptions<ConfigurationSection & NumericFacetSection>
->(executeToggleNumericFacetSelectType, (payload, {dispatch}) => {
-  validatePayloadSchema(
-    payload,
-    {
+>(
+  executeToggleNumericFacetSelectType,
+  (payload, {dispatch, extra: {validatePayload}}) => {
+    validatePayload(payload, {
       facetId: facetIdDefinition,
       selection: new RecordValue({values: numericFacetValueDefinition}),
-    },
-    true
-  );
-  dispatch(toggleSelectNumericFacetValue(payload));
-  dispatch(executeToggleRangeFacetSelect(payload));
-});
+    });
+    dispatch(toggleSelectNumericFacetValue(payload));
+    dispatch(executeToggleRangeFacetSelect(payload));
+  }
+);

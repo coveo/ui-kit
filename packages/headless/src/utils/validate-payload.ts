@@ -6,36 +6,43 @@ import {
 } from '@coveo/bueno';
 import {Engine} from '../app/headless-engine';
 
-export const validatePayloadSchema = <P>(
+/**
+ * Validates an action payload and throws an error if invalid
+ * @param payload the action payload
+ * @param definition Either a Bueno SchemaDefinition or a SchemaValue
+ */
+export const validatePayloadAndThrow = <P>(
   payload: P,
-  schemaDefinition: SchemaDefinition<Required<P>>,
-  shouldThrowWhenInvalidated = false
+  definition: SchemaDefinition<Required<P>> | SchemaValue<P>
 ) => {
-  const schema = new Schema(schemaDefinition);
-  try {
-    const validatedPayload = schema.validate(payload);
-    return {payload: validatedPayload as P};
-  } catch (error) {
-    if (shouldThrowWhenInvalidated) {
-      throw error;
-    }
-    return {payload, error: error as SchemaValidationError};
+  const isSchemaValue = 'required' in definition;
+  if (isSchemaValue) {
+    return {
+      payload: new Schema({
+        value: definition as SchemaValue<P>,
+      }).validate({value: payload}).value as P,
+    };
   }
+
+  return {
+    payload: new Schema(definition as SchemaDefinition<Required<P>>).validate(
+      payload
+    ) as P,
+  };
 };
 
-export const validatePayloadValue = <P>(
+/**
+ * Validates an action payload and return an `error` alongside the payload if it's invalid
+ * @param payload the action payload
+ * @param definition Either a Bueno SchemaDefinition or a SchemaValue
+ */
+export const validatePayload = <P>(
   payload: P,
-  schemaValue: SchemaValue<P>,
-  shouldThrowWhenInvalidated = false
-) => {
-  const schema = new Schema({value: schemaValue});
+  definition: SchemaDefinition<Required<P>> | SchemaValue<P>
+): {payload: P; error?: SchemaValidationError} => {
   try {
-    const validatedPayload = schema.validate({value: payload}).value;
-    return {payload: validatedPayload as P};
+    return validatePayloadAndThrow(payload, definition);
   } catch (error) {
-    if (shouldThrowWhenInvalidated) {
-      throw error;
-    }
     return {payload, error: error as SchemaValidationError};
   }
 };

@@ -15,10 +15,6 @@ import {
   updateCategoryFacetNumberOfValues,
 } from './category-facet-set-actions';
 import {
-  validatePayloadValue,
-  validatePayloadSchema,
-} from '../../../utils/validate-payload';
-import {
   requiredNonEmptyString,
   facetIdDefinition,
 } from '../generic/facet-actions-validation';
@@ -39,8 +35,8 @@ export const executeToggleCategoryFacetSelect = createAsyncThunk<
   AsyncThunkSearchOptions<CategoryFacetSection & ConfigurationSection>
 >(
   'categoryFacetController/executeToggleSelect',
-  ({facetId, selection}, {dispatch}) => {
-    validatePayloadValue(facetId, requiredNonEmptyString, true);
+  ({facetId, selection}, {dispatch, extra: {validatePayload}}) => {
+    validatePayload(facetId, requiredNonEmptyString);
     validateCategoryFacetValue(selection);
 
     const analyticsAction = getAnalyticsActionForCategoryFacetToggleSelect(
@@ -66,14 +62,13 @@ export const executeDeselectAllCategoryFacetValues = createAsyncThunk<
   AsyncThunkSearchOptions<CategoryFacetSection & ConfigurationSection>
 >(
   'categoryFacetController/executeDeselectAll',
-  ({facetId, numberOfValues}, {dispatch}) => {
-    validatePayloadSchema(
+  ({facetId, numberOfValues}, {dispatch, extra: {validatePayload}}) => {
+    validatePayload(
       {facetId, numberOfValues},
       {
         facetId: facetIdDefinition,
         numberOfValues: new NumberValue({required: true}),
-      },
-      true
+      }
     );
     dispatch(deselectAllCategoryFacetValues(facetId));
     dispatch(updateCategoryFacetNumberOfValues({facetId, numberOfValues}));

@@ -1,5 +1,5 @@
 import {createAction} from '@reduxjs/toolkit';
-import {validatePayloadValue} from '../../utils/validate-payload';
+import {validatePayload} from '../../utils/validate-payload';
 import {StringValue} from '@coveo/bueno';
 
 /**
@@ -7,7 +7,7 @@ import {StringValue} from '@coveo/bueno';
  * @param payload (string) The new search hub (may be empty).
  */
 export const setSearchHub = createAction('searchHub/set', (payload: string) =>
-  validatePayloadValue(
+  validatePayload(
     payload,
     new StringValue({required: true, emptyAllowed: true})
   )
