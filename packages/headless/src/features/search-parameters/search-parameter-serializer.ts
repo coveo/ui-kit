@@ -22,11 +22,25 @@ function serializePair(pair: [string, unknown]) {
   }
 
   if (key === 'f') {
-    const value = val as Required<SearchParameters>['f'];
-    return serializeFacets(key, value);
+    return isFacetObject(val) ? serializeFacets(key, val) : '';
   }
 
   return `${key}${equal}${val}`;
+}
+
+function isFacetObject(obj: unknown): obj is Record<string, string[]> {
+  if (obj && typeof obj === 'object') {
+    const invalidEntries = Object.entries(obj).filter(([key, value]) => {
+      const validKey = typeof key === 'string';
+      const validValue =
+        Array.isArray(value) && value.every((v) => typeof v === 'string');
+      const isValid = validKey && validValue;
+      return !isValid;
+    });
+
+    return invalidEntries.length === 0;
+  }
+  return false;
 }
 
 function serializeFacets(key: string, facets: Record<string, string[]>) {

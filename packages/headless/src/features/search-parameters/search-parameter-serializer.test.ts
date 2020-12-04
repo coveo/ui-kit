@@ -27,6 +27,12 @@ describe('buildSearchParameterSerializer', () => {
       const result = serialize({f});
       expect(result).toEqual('f[author]=a,b&f[filetype]=c,d');
     });
+
+    it('when the #f parameter contains invalid values, it does not include it', () => {
+      const f = {author: [1]} as never;
+      const result = serialize({f});
+      expect(result).toEqual('');
+    });
   });
 
   describe('#deserialize', () => {

@@ -432,7 +432,7 @@ describe('facet-set slice', () => {
       expect(finalState[facetId].currentValues).toEqual([value]);
     });
 
-    it("deselects non-match facets' values by setting #currentValues to an empty array", () => {
+    it("deselects non-matching facets' by setting #currentValues to an empty array", () => {
       const currentValues = [buildMockFacetValueRequest({state: 'selected'})];
       state['author'] = buildMockFacetRequest({currentValues});
 
