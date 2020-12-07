@@ -1,6 +1,7 @@
 import {RecordValue, Schema} from '@coveo/bueno';
 import {Engine} from '../../app/headless-engine';
 import {getAdvancedSearchQueriesInitialState} from '../../features/advanced-search-queries/advanced-search-queries-state';
+import {partitionIntoParentsAndValues} from '../../features/facets/category-facet-set/category-facet-utils';
 import {FacetValueRequest} from '../../features/facets/facet-set/interfaces/request';
 import {getPaginationInitialState} from '../../features/pagination/pagination-state';
 import {getQueryInitialState} from '../../features/query/query-state';
@@ -67,6 +68,7 @@ export function buildSearchParameterManager(
         ...getNumberOfResults(state),
         ...getSortCriteria(state),
         ...getFacets(state),
+        ...getCategoryFacets(state),
       };
 
       return {parameters};
@@ -163,4 +165,21 @@ function getFacets(state: Partial<SearchParametersState>) {
 
 function getSelectedValues(values: FacetValueRequest[]) {
   return values.filter((fv) => fv.state === 'selected').map((fv) => fv.value);
+}
+
+function getCategoryFacets(state: Partial<SearchParametersState>) {
+  if (state.categoryFacetSet === undefined) {
+    return {};
+  }
+
+  const cf = Object.entries(state.categoryFacetSet)
+    .map(([facetId, request]) => {
+      const {parents} = partitionIntoParentsAndValues(request.currentValues);
+      const selectedValues = parents.map((p) => p.value);
+
+      return selectedValues.length ? {[facetId]: selectedValues} : {};
+    })
+    .reduce((acc, obj) => ({...acc, ...obj}), {});
+
+  return Object.keys(cf).length ? {cf} : {};
 }
