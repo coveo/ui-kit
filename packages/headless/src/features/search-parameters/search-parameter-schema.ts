@@ -18,4 +18,5 @@ export const searchParametersDefinition: SchemaDefinition<Required<
   numberOfResults: new NumberValue({min: 0}),
   sortCriteria: new StringValue(),
   f: new RecordValue(),
+  cf: new RecordValue(),
 };

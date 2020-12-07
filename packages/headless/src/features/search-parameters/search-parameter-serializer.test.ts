@@ -82,7 +82,8 @@ describe('buildSearchParameterSerializer', () => {
 
   it('can serialize and deserialize all search parameters', () => {
     const f = {author: ['a', 'b']};
-    const parameters = buildMockSearchParameters({f});
+    const cf = {geography: ['a', 'b']};
+    const parameters = buildMockSearchParameters({f, cf});
 
     const {serialize, deserialize} = buildSearchParameterSerializer();
     const serialized = serialize(parameters);
