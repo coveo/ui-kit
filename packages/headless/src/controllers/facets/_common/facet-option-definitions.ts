@@ -19,10 +19,26 @@ export const basePath = new ArrayValue({
   each: new StringValue(),
 });
 
+/**
+ * The character that specifies the hierarchical dependency.
+ */
 export const delimitingCharacter = new StringValue();
 export const filterByBasePath = new BooleanValue();
+/**
+ * Whether to exclude folded result parents when estimating result counts for facet values.
+ */
 export const filterFacetCount = new BooleanValue();
+/**
+ * The number of items to scan for facet values.
+ * Setting this option to a higher value may enhance the accuracy of facet value counts at the cost of slower query performance.
+ * @minimum 0
+ */
 export const injectionDepth = new NumberValue({min: 0});
+/**
+ * The number of values to request for this facet.
+ * Also determines the number of additional values to request each time this facet is expanded, and the number of values to display when this facet is collapsed.
+ * @minimum 1
+ */
 export const numberOfValues = new NumberValue({min: 1});
 export const generateAutomaticRanges = new BooleanValue({
   required: true,

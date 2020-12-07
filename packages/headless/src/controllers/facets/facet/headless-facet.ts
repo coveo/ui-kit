@@ -96,15 +96,15 @@ export function buildFacet(
     ...controller,
     facetSearch: createFacetSearch(),
     /**
-     * Selects (deselects) the passed value if unselected (selected).
-     * @param selection The facet value to select or deselect.
+     * Toggles the passed value.
+     * @param selection (FacetValue) The facet value to select or deselect.
      */
     toggleSelect: (selection: FacetValue) =>
       dispatch(executeToggleFacetSelect({facetId: options.facetId, selection})),
     /**
      * Returns `true` if the passed facet value is selected and `false` otherwise.
-     * @param {FacetValue} The facet value to check.
-     * @returns {boolean}.
+     * @param value (FacetValue) The facet value to check.
+     * @returns Whether the passed facet value is selected.
      */
     isValueSelected: isFacetValueSelected,
 
@@ -116,7 +116,7 @@ export function buildFacet(
     },
 
     /** Sorts the facet values according to the passed criterion.
-     * @param {FacetSortCriterion} criterion The criterion to sort values by.
+     * @param criterion (FacetSortCriterion) The criterion to sort values by.
      */
     sortBy(criterion: FacetSortCriterion) {
       dispatch(updateFacetSortCriterion({facetId, criterion}));
@@ -126,14 +126,15 @@ export function buildFacet(
 
     /**
      * Returns `true` if the facet values are sorted according to the passed criterion and `false` otherwise.
-     * @param {FacetSortCriterion} criterion The criterion to compare.
+     * @param criterion (FacetSortCriterion) The criterion to compare.
+     * @returns Whether the facet values are sorted according to the passed criterion.
      */
     isSortedBy(criterion: FacetSortCriterion) {
       return this.state.sortCriterion === criterion;
     },
 
     /**
-     * Increases the number of values displayed in the facet.
+     * Increases the number of values displayed in the facet to the next multiple of the originally configured value.
      */
     showMoreValues() {
       const numberInState = getRequest().numberOfValues;
