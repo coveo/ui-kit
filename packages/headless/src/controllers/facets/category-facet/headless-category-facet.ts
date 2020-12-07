@@ -91,9 +91,12 @@ export function buildCategoryFacet(
 
   dispatch(registerCategoryFacet(options));
 
+  const facetSearch = createFacetSearch();
+  const {state, ...restOfFacetSearch} = facetSearch;
+
   return {
     ...controller,
-    facetSearch: createFacetSearch(),
+    facetSearch: restOfFacetSearch,
 
     /**
      * Selects (deselects) the passed value if unselected (selected).
@@ -175,6 +178,7 @@ export function buildCategoryFacet(
         canShowMoreValues,
         canShowLessValues,
         sortCriteria: request.sortCriteria,
+        facetSearch: facetSearch.state,
       };
     },
   };
