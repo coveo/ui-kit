@@ -3,6 +3,36 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.1.0-alpha.82](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.81...v0.1.0-alpha.82) (2020-12-07)
+
+**Note:** Version bump only for package ui-kit
+
+
+
+
+
+# [0.1.0-alpha.81](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.80...v0.1.0-alpha.81) (2020-12-07)
+
+
+### Bug Fixes
+
+* **headless:** throw an error from Bueno when facet id is invalid ([#314](https://github.com/coveo/ui-kit/issues/314)) ([6deacb2](https://github.com/coveo/ui-kit/commit/6deacb2e48c8ad08115e716d1cfebe47c3b41ea1))
+
+
+
+
+
+# [0.1.0-alpha.80](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.79...v0.1.0-alpha.80) (2020-12-04)
+
+
+### Features
+
+* **headless,atomic:** add basic debug mode ([#296](https://github.com/coveo/ui-kit/issues/296)) ([c1af0a5](https://github.com/coveo/ui-kit/commit/c1af0a55fcc8130f54999a4fbc382edb8695f270))
+
+
+
+
+
 # [0.1.0-alpha.79](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.78...v0.1.0-alpha.79) (2020-12-03)
 
 
