@@ -16,4 +16,5 @@ export const searchParametersDefinition: SchemaDefinition<Required<
   firstResult: new NumberValue({min: 0}),
   numberOfResults: new NumberValue({min: 0}),
   sortCriteria: new StringValue(),
+  debug: new BooleanValue(),
 };
