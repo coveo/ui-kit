@@ -9,6 +9,7 @@ import {SearchAPIClient} from '../api/search/search-api-client';
 import {AnalyticsClientSendEventHook} from 'coveo.analytics/dist/definitions/client/analytics';
 import pino from 'pino';
 import {NoopPreprocessRequestMiddleware} from '../api/platform-client';
+import {validatePayloadAndThrow} from '../utils/validate-payload';
 import {
   NoopPostprocessFacetSearchResponseMiddleware,
   NoopPostprocessQuerySuggestResponseMiddleware,
@@ -36,6 +37,7 @@ describe('headless engine', () => {
         }),
         analyticsClientMiddleware: {} as AnalyticsClientSendEventHook,
         logger: logger,
+        validatePayload: validatePayloadAndThrow,
       },
     });
     jest.spyOn(store, 'dispatch');

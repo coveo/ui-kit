@@ -15,6 +15,7 @@ import {
 import {SearchAppState} from '../../state/search-app-state';
 import {NoopPreprocessRequestMiddleware} from '../../api/platform-client';
 import pino from 'pino';
+import {validatePayloadAndThrow} from '../../utils/validate-payload';
 import {
   NoopPostprocessFacetSearchResponseMiddleware,
   NoopPostprocessQuerySuggestResponseMiddleware,
@@ -84,6 +85,7 @@ describe('redirection slice', () => {
       searchAPIClient: apiClient,
       analyticsClientMiddleware: (_, p) => p,
       logger,
+      validatePayload: validatePayloadAndThrow,
     });
 
     return response;

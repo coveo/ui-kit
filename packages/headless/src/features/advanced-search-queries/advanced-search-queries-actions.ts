@@ -1,5 +1,5 @@
 import {createAction} from '@reduxjs/toolkit';
-import {validatePayloadSchema} from '../../utils/validate-payload';
+import {validatePayload} from '../../utils/validate-payload';
 import {StringValue} from '@coveo/bueno';
 
 /**
@@ -9,7 +9,7 @@ import {StringValue} from '@coveo/bueno';
 export const updateAdvancedSearchQueries = createAction(
   'advancedSearchQueries/update',
   (payload: {aq?: string; cq?: string}) =>
-    validatePayloadSchema(payload, {
+    validatePayload(payload, {
       aq: new StringValue({required: false, emptyAllowed: true}),
       cq: new StringValue({required: false, emptyAllowed: true}),
     })

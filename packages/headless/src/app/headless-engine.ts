@@ -25,7 +25,10 @@ import {
   PreprocessRequestMiddleware,
 } from '../api/platform-client';
 import {RecordValue, Schema, StringValue} from '@coveo/bueno';
-import {validateOptions} from '../utils/validate-payload';
+import {
+  validatePayloadAndThrow,
+  validateOptions,
+} from '../utils/validate-payload';
 import {
   NoopPostprocessFacetSearchResponseMiddleware,
   NoopPostprocessQuerySuggestResponseMiddleware,
@@ -226,8 +229,8 @@ export class HeadlessEngine<Reducers extends ReducersMapObject>
   public logger!: Logger;
 
   constructor(private options: HeadlessOptions<Reducers>) {
-    this.validateConfiguration(options);
     this.initLogger();
+    this.validateConfiguration(options);
     this.initStore();
 
     this.reduxStore.dispatch(
@@ -282,6 +285,7 @@ export class HeadlessEngine<Reducers extends ReducersMapObject>
       }),
     });
     validateOptions(
+      this,
       configurationSchema,
       options.configuration,
       HeadlessEngine.name
@@ -328,6 +332,7 @@ export class HeadlessEngine<Reducers extends ReducersMapObject>
         }),
         analyticsClientMiddleware: this.analyticsClientMiddleware(this.options),
         logger: this.logger,
+        validatePayload: validatePayloadAndThrow,
       },
     });
   }

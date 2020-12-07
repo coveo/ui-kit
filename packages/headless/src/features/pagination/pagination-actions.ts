@@ -1,6 +1,6 @@
 import {createAction} from '@reduxjs/toolkit';
 import {NumberValue} from '@coveo/bueno';
-import {validatePayloadValue} from '../../utils/validate-payload';
+import {validatePayload} from '../../utils/validate-payload';
 
 const numberValue = new NumberValue({required: true, min: 0});
 
@@ -10,7 +10,7 @@ const numberValue = new NumberValue({required: true, min: 0});
  */
 export const registerNumberOfResults = createAction(
   'pagination/registerNumberOfResults',
-  (payload: number) => validatePayloadValue(payload, numberValue)
+  (payload: number) => validatePayload(payload, numberValue)
 );
 
 /**
@@ -19,7 +19,7 @@ export const registerNumberOfResults = createAction(
  */
 export const updateNumberOfResults = createAction(
   'pagination/updateNumberOfResults',
-  (payload: number) => validatePayloadValue(payload, numberValue)
+  (payload: number) => validatePayload(payload, numberValue)
 );
 
 /**
@@ -28,7 +28,7 @@ export const updateNumberOfResults = createAction(
  */
 export const registerPage = createAction(
   'pagination/registerPage',
-  (payload: number) => validatePayloadValue(payload, numberValue)
+  (payload: number) => validatePayload(payload, numberValue)
 );
 
 /**
@@ -37,7 +37,7 @@ export const registerPage = createAction(
  */
 export const updatePage = createAction(
   'pagination/updatePage',
-  (payload: number) => validatePayloadValue(payload, numberValue)
+  (payload: number) => validatePayload(payload, numberValue)
 );
 
 /**
