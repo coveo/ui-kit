@@ -22,6 +22,11 @@ import {
   logActionMiddleware,
 } from '../app/logger-middlewares';
 import {validatePayloadAndThrow} from '../utils/validate-payload';
+import {
+  NoopPostprocessFacetSearchResponseMiddleware,
+  NoopPostprocessQuerySuggestResponseMiddleware,
+  NoopPostprocessSearchResponseMiddleware,
+} from '../api/search/search-api-client-middleware';
 
 type AsyncActionCreator<ThunkArg> = ActionCreatorWithPreparedPayload<
   [string, ThunkArg],
@@ -106,6 +111,9 @@ const configureMockStore = (logger: Logger) => {
         logger,
         renewAccessToken: mockRenewAccessToken,
         preprocessRequest: NoopPreprocessRequestMiddleware,
+        postprocessSearchResponseMiddleware: NoopPostprocessSearchResponseMiddleware,
+        postprocessQuerySuggestResponseMiddleware: NoopPostprocessQuerySuggestResponseMiddleware,
+        postprocessFacetSearchResponseMiddleware: NoopPostprocessFacetSearchResponseMiddleware,
       }),
       validatePayload: validatePayloadAndThrow,
       logger,
