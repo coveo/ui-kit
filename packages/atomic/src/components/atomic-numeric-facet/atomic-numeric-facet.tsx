@@ -18,7 +18,7 @@ import {Initialization} from '../../utils/initialization-utils';
   shadow: true,
 })
 export class AtomicNumericFacet {
-  @Prop() facetId = '';
+  @Prop({mutable: true}) facetId = '';
   @Prop() field = '';
   @Prop() label = 'No label';
   @State() state!: NumericFacetState;

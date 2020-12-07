@@ -17,7 +17,7 @@ import {Initialization} from '../../utils/initialization-utils';
   shadow: true,
 })
 export class AtomicDateFacet {
-  @Prop() facetId = '';
+  @Prop({mutable: true}) facetId = '';
   @Prop() field = '';
   @Prop() label = 'No label';
   @State() state!: DateFacetState;
