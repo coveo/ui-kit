@@ -10,7 +10,6 @@ import {
   Engine,
 } from '@coveo/headless';
 import {Initialization} from '../../utils/initialization-utils';
-import {randomID} from '../../utils/utils';
 
 @Component({
   tag: 'atomic-date-facet',
@@ -18,7 +17,7 @@ import {randomID} from '../../utils/utils';
   shadow: true,
 })
 export class AtomicDateFacet {
-  @Prop() facetId = randomID('dateFacet');
+  @Prop() facetId = '';
   @Prop() field = '';
   @Prop() label = 'No label';
   @State() state!: DateFacetState;

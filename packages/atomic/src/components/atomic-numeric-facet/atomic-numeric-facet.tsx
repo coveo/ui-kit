@@ -11,7 +11,6 @@ import {
   Engine,
 } from '@coveo/headless';
 import {Initialization} from '../../utils/initialization-utils';
-import {randomID} from '../../utils/utils';
 
 @Component({
   tag: 'atomic-numeric-facet',
@@ -19,7 +18,7 @@ import {randomID} from '../../utils/utils';
   shadow: true,
 })
 export class AtomicNumericFacet {
-  @Prop() facetId = randomID('numericFacet');
+  @Prop() facetId = '';
   @Prop() field = '';
   @Prop() label = 'No label';
   @State() state!: NumericFacetState;
