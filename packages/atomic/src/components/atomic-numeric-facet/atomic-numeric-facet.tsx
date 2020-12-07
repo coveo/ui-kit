@@ -43,6 +43,7 @@ export class AtomicNumericFacet {
     };
 
     this.facet = buildNumericFacet(this.engine, {options});
+    this.facetId = this.facet.state.facetId;
     this.subscribe();
   }
 

@@ -34,6 +34,7 @@ export class AtomicCategoryFacet {
       delimitingCharacter: ';',
     };
     this.categoryFacet = buildCategoryFacet(this.engine, {options});
+    this.facetId = this.categoryFacet.state.facetId;
     this.subscribe();
   }
 

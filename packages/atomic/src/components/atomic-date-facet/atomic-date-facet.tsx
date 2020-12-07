@@ -35,6 +35,7 @@ export class AtomicDateFacet {
     };
 
     this.facet = buildDateFacet(this.engine, {options});
+    this.facetId = this.facet.state.facetId;
     this.subscribe();
   }
 

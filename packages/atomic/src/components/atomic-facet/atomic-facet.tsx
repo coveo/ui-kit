@@ -30,6 +30,7 @@ export class AtomicFacet {
   public initialize() {
     const options: FacetOptions = {facetId: this.facetId, field: this.field};
     this.facet = buildFacet(this.engine, {options});
+    this.facetId = this.facet.state.facetId;
     this.subscribe();
   }
 
