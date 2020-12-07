@@ -62,7 +62,7 @@ export function buildFacet(
     facetId,
   };
 
-  validateOptions(facetOptionsSchema, options, buildFacet.name);
+  validateOptions(engine, facetOptionsSchema, options, buildFacet.name);
 
   const createFacetSearch = () => {
     const {facetId, facetSearch} = options;

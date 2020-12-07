@@ -42,6 +42,7 @@ const criterionDefinition = new RecordValue({
 });
 
 function validateSortInitialState(
+  engine: Engine<ConfigurationSection & SortSection>,
   state: Partial<SortInitialState> | undefined
 ) {
   if (!state) {
@@ -54,7 +55,7 @@ function validateSortInitialState(
   const criterion = getCriterionAsArray(state);
   const initialState: SortInitialState = {...state, criterion};
 
-  validateInitialState(schema, initialState, buildSort.name);
+  validateInitialState(engine, schema, initialState, buildSort.name);
 }
 
 function getCriterionAsArray(state: Partial<SortInitialState>) {
@@ -78,7 +79,7 @@ export function buildSort(
   const controller = buildController(engine);
   const {dispatch} = engine;
 
-  validateSortInitialState(props.initialState);
+  validateSortInitialState(engine, props.initialState);
 
   const criterion = props.initialState?.criterion;
   const search = () => dispatch(executeSearch(logResultsSort()));

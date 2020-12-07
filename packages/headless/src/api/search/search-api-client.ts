@@ -25,6 +25,11 @@ import {RecommendationRequest} from './recommendation/recommendation-request';
 import {ProductRecommendationsRequest} from './product-recommendations/product-recommendations-request';
 import {Logger} from 'pino';
 import {ThunkExtraArguments} from '../../app/store';
+import {
+  PostprocessFacetSearchResponseMiddleware,
+  PostprocessQuerySuggestResponseMiddleware,
+  PostprocessSearchResponseMiddleware,
+} from './search-api-client-middleware';
 
 export type AllSearchAPIResponse = Plan | Search | QuerySuggest;
 
@@ -38,6 +43,9 @@ export interface SearchAPIClientOptions {
   renewAccessToken: () => Promise<string>;
   logger: Logger;
   preprocessRequest: PreprocessRequestMiddleware;
+  postprocessSearchResponseMiddleware: PostprocessSearchResponseMiddleware;
+  postprocessQuerySuggestResponseMiddleware: PostprocessQuerySuggestResponseMiddleware;
+  postprocessFacetSearchResponseMiddleware: PostprocessFacetSearchResponseMiddleware;
 }
 
 export type SearchAPIClientResponse<T> =
@@ -79,8 +87,11 @@ export class SearchAPIClient {
       ...this.options,
     });
     if (isSuccessQuerySuggestionsResponse(platformResponse)) {
+      const processedResponse = await this.options.postprocessQuerySuggestResponseMiddleware(
+        platformResponse
+      );
       return {
-        success: platformResponse.body,
+        success: processedResponse.body,
       };
     }
     return {
@@ -96,10 +107,12 @@ export class SearchAPIClient {
       requestParams: pickNonBaseParams(req),
       ...this.options,
     });
-
     if (isSuccessSearchResponse(platformResponse)) {
+      const processedResponse = await this.options.postprocessSearchResponseMiddleware(
+        platformResponse
+      );
       return {
-        success: platformResponse.body,
+        success: processedResponse.body,
       };
     }
 
@@ -117,8 +130,11 @@ export class SearchAPIClient {
       requestParams: pickNonBaseParams(req),
       ...this.options,
     });
+    const processedResponse = await this.options.postprocessFacetSearchResponseMiddleware(
+      platformResponse
+    );
 
-    return platformResponse.body;
+    return processedResponse.body;
   }
 
   async recommendations(req: RecommendationRequest) {

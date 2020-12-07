@@ -17,6 +17,7 @@ import {
   SchemaValues,
   StringValue,
 } from '@coveo/bueno';
+import {validateOptions} from '../../utils/validate-payload';
 
 export const baseProductRecommendationsOptionsSchema = {
   skus: new ArrayValue<string>({
@@ -26,6 +27,7 @@ export const baseProductRecommendationsOptionsSchema = {
   maxNumberOfRecommendations: new NumberValue({
     required: false,
     max: 50,
+    min: 1,
     default: 5,
   }),
 };
@@ -57,9 +59,12 @@ export const buildBaseProductRecommendationsList = (
 ) => {
   const controller = buildController(engine);
   const {dispatch} = engine;
-  const options = optionsSchema.validate(props.options) as Required<
-    ProductRecommendationsListOptions
-  >;
+  const options = validateOptions(
+    engine,
+    optionsSchema,
+    props.options,
+    buildBaseProductRecommendationsList.name
+  ) as Required<ProductRecommendationsListOptions>;
   dispatch(
     setProductRecommendationsRecommenderId({
       id: options.id,
