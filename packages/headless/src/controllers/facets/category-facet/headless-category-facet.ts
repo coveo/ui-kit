@@ -153,7 +153,7 @@ export function buildCategoryFacet(
       const request = getRequest();
       const response = getResponse();
 
-      const {parents, values} = partitionIntoParentsAndValues(response);
+      const {parents, values} = partitionIntoParentsAndValues(response?.values);
       const isLoading = engine.state.search.isLoading;
       const hasActiveValues = parents.length !== 0;
       const canShowMoreValues =
