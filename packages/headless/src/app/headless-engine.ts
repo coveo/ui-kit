@@ -206,8 +206,8 @@ export class HeadlessEngine<Reducers extends ReducersMapObject>
   public logger!: Logger;
 
   constructor(private options: HeadlessOptions<Reducers>) {
-    this.validateConfiguration(options);
     this.initLogger();
+    this.validateConfiguration(options);
     this.initStore();
 
     this.reduxStore.dispatch(
@@ -262,6 +262,7 @@ export class HeadlessEngine<Reducers extends ReducersMapObject>
       }),
     });
     validateOptions(
+      this,
       configurationSchema,
       options.configuration,
       HeadlessEngine.name

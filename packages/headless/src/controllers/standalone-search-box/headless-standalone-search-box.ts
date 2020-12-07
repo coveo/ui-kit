@@ -54,6 +54,7 @@ export function buildStandaloneSearchBox(
   };
 
   validateOptions(
+    engine,
     standaloneSearchBoxSchema,
     options,
     buildStandaloneSearchBox.name

@@ -8,6 +8,7 @@ import {
   baseProductRecommendationsOptionsSchema,
   buildBaseProductRecommendationsList,
 } from './headless-base-product-recommendations';
+import {validateOptions} from '../../utils/validate-payload';
 
 const optionsSchema = new Schema({
   ...baseProductRecommendationsOptionsSchema,
@@ -28,9 +29,12 @@ export const buildCartRecommendationsList = (
   engine: Engine<ProductRecommendationsSection & ConfigurationSection>,
   props: CartRecommendationsListProps
 ) => {
-  const options = optionsSchema.validate(props.options) as Required<
-    CartRecommendationsListOptions
-  >;
+  const options = validateOptions(
+    engine,
+    optionsSchema,
+    props.options,
+    buildCartRecommendationsList.name
+  ) as Required<CartRecommendationsListOptions>;
   return buildBaseProductRecommendationsList(engine, {
     ...props,
     options: {
