@@ -98,7 +98,6 @@ export class AtomicCategoryFacet {
   }
 
   private get facetSearchResults() {
-    console.log(this.state.facetSearch.values);
     return this.state.facetSearch.values.map((searchResult) => (
       <div onClick={() => this.categoryFacet.facetSearch.select(searchResult)}>
         {searchResult.displayValue} {searchResult.count}

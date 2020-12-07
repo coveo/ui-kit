@@ -14,14 +14,12 @@ import {buildMockFacetValue} from '../../../test/mock-facet-value';
 import {executeSearch} from '../../../features/search/search-actions';
 import {FacetRequest} from '../../../features/facets/facet-set/interfaces/request';
 import {buildMockFacetRequest} from '../../../test/mock-facet-request';
-import * as FacetSearch from '../facet-search/specific/headless-facet-search';
+
 import {updateFacetOptions} from '../../../features/facet-options/facet-options-actions';
 import {SearchAppState} from '../../../state/search-app-state';
 import * as FacetIdDeterminor from '../_common/facet-id-determinor';
-
-jest.mock('../facet-search/specific/headless-facet-search', () => ({
-  buildFacetSearch: jest.fn(() => ({})),
-}));
+import {buildMockFacetSearch} from '../../../test/mock-facet-search';
+import * as FacetSearch from '../facet-search/specific/headless-facet-search';
 
 describe('facet', () => {
   const facetId = '1';
@@ -37,6 +35,7 @@ describe('facet', () => {
 
   function setFacetRequest(config: Partial<FacetRequest> = {}) {
     state.facetSet[facetId] = buildMockFacetRequest({facetId, ...config});
+    state.facetSearchSet[facetId] = buildMockFacetSearch();
   }
 
   beforeEach(() => {
@@ -430,7 +429,23 @@ describe('facet', () => {
   });
 
   it('exposes a #facetSearch property', () => {
+    jest.spyOn(FacetSearch, 'buildFacetSearch');
+    initFacet();
     expect(facet.facetSearch).toBeTruthy();
     expect(FacetSearch.buildFacetSearch).toHaveBeenCalled();
+  });
+
+  it('exposes a #facetSearch state', () => {
+    expect(facet.state.facetSearch).toBeTruthy();
+    expect(facet.state.facetSearch.values).toEqual([]);
+
+    const fakeResponseValue = {
+      count: 123,
+      displayValue: 'foo',
+      rawValue: 'foo',
+    };
+    engine.state.facetSearchSet[facetId].response.values = [fakeResponseValue];
+
+    expect(facet.state.facetSearch.values[0]).toMatchObject(fakeResponseValue);
   });
 });
