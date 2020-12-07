@@ -92,6 +92,7 @@ export function buildRangeFacet<
       );
 
       return {
+        facetId,
         values,
         sortCriterion,
         hasActiveValues,

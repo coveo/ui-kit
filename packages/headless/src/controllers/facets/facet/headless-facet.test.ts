@@ -99,6 +99,10 @@ describe('facet', () => {
     expect(() => initFacet()).toThrow('Check the options of buildFacet');
   });
 
+  it('#state.facetId exposes the facet id', () => {
+    expect(facet.state.facetId).toBe(facetId);
+  });
+
   it('when the search response is empty, the facet #state.values is an empty array', () => {
     expect(state.search.response.facets).toEqual([]);
     expect(facet.state.values).toEqual([]);

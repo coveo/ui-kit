@@ -72,6 +72,10 @@ describe('category facet', () => {
     );
   });
 
+  it('#state.facetId exposes the facet id', () => {
+    expect(categoryFacet.state.facetId).toBe(facetId);
+  });
+
   it('registers a category facet with the passed options and default optional parameters', () => {
     const action = registerCategoryFacet({
       facetId,
