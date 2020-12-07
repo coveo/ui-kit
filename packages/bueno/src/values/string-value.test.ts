@@ -75,5 +75,19 @@ describe('string value', () => {
       value = new StringValue({constrainTo: ['A', 'B']});
       expect(value.validate('C')).toContain('A, B.');
     });
+
+    it(`when a regex is specified,
+    if the value matches the regex,
+    it returns null`, () => {
+      value = new StringValue({regex: /ab/});
+      expect(value.validate('ab')).toBeNull();
+    });
+
+    it(`when a regex is specified,
+     if the value does not match the regex,
+     it returns an error description with the regex`, () => {
+      value = new StringValue({regex: /ab/});
+      expect(value.validate('cd')).toContain('ab');
+    });
   });
 });

@@ -94,6 +94,11 @@ describe('facet', () => {
     expect(() => initFacet()).toThrow('Check the options of buildFacet');
   });
 
+  it('registering a facet with a space in the id throws', () => {
+    options.facetId = 'bad id';
+    expect(() => initFacet()).toThrow('Check the options of buildFacet');
+  });
+
   it('when the search response is empty, the facet #state.values is an empty array', () => {
     expect(state.search.response.facets).toEqual([]);
     expect(facet.state.values).toEqual([]);

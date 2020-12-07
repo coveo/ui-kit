@@ -4,6 +4,7 @@ import {SchemaValue} from '../schema';
 interface StringValueConfig<T extends string> extends ValueConfig<T> {
   emptyAllowed?: boolean;
   url?: boolean;
+  regex?: RegExp;
   constrainTo?: readonly T[];
 }
 
@@ -24,7 +25,7 @@ export class StringValue<T extends string = string>
   }
 
   public validate(value: T) {
-    const {emptyAllowed, url, constrainTo} = this.config;
+    const {emptyAllowed, url, regex, constrainTo} = this.config;
     const valueValidation = this.value.validate(value);
     if (valueValidation) {
       return valueValidation;
@@ -44,6 +45,10 @@ export class StringValue<T extends string = string>
 
     if (url && !urlRegex.test(value)) {
       return 'value is not a valid URL.';
+    }
+
+    if (regex && !regex.test(value)) {
+      return `value did not match provided regex ${regex}`;
     }
 
     if (constrainTo && !constrainTo.includes(value)) {
