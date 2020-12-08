@@ -188,6 +188,10 @@ function getCategoryFacets(state: Partial<SearchParametersState>) {
 }
 
 function getDebug(state: Partial<SearchParametersState>) {
+  if (state.debug === undefined) {
+    return {};
+  }
+
   const debug = state.debug;
   const shouldInclude = debug !== getDebugInitialState();
   return shouldInclude ? {debug} : {};

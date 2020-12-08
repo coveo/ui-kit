@@ -190,7 +190,12 @@ describe('state manager', () => {
     });
 
     it('when the parameter is equal to the default value, it is not included', () => {
-      expect('numberOfResults' in manager.state.parameters).toBe(false);
+      expect('sortCriteria' in manager.state.parameters).toBe(false);
+    });
+
+    it('when the parameter is undefined, it is not included', () => {
+      engine.state.sortCriteria = undefined as never;
+      expect('sortCriteria' in manager.state.parameters).toBe(false);
     });
   });
 
@@ -201,6 +206,11 @@ describe('state manager', () => {
     });
 
     it('when the parameter is equal to the default value, it is not included', () => {
+      expect('debug' in manager.state.parameters).toBe(false);
+    });
+
+    it('when the parameter is undefined, it is not included', () => {
+      engine.state.debug = undefined as never;
       expect('debug' in manager.state.parameters).toBe(false);
     });
   });
