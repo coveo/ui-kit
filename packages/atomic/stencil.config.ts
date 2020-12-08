@@ -32,6 +32,7 @@ export const config: Config = {
     browserArgs: ['--no-sandbox'],
     transform: {
       '^.+\\.html?$': 'html-loader-jest',
+      '^.+\\.svg$': './svg.transform.js',
     },
   },
   devServer: {
@@ -40,7 +41,7 @@ export const config: Config = {
   plugins: [
     sass({
       includePaths: ['src/scss/'],
-      injectGlobalPaths: [['src/scss/_global.scss', '*']],
+      injectGlobalPaths: ['src/scss/_global.scss'],
     }),
     inlineSvg(),
   ],

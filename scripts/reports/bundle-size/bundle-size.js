@@ -1,10 +1,8 @@
 const { promisify } = require('util');
 const { buildReport } = require('./report');
 const { computeFileSizes } = require('./command');
+const { getHeadBranchName, getBaseBranchName } = require('../github-client');
 const exec = promisify(require('child_process').exec);
-
-const sourceBranch = process.env.BITBUCKET_SOURCE_BRANCH || 'unknown';
-const targetBranch = process.env.BITBUCKET_TARGET_BRANCH || 'master';
 
 async function deleteNodeModules() {
   console.log('deleting node_modules');
@@ -17,11 +15,13 @@ async function discardChanges() {
 }
 
 async function checkoutTargetBranch() {
+  const targetBranch = await getBaseBranchName();
   console.log(`checking out branch: ${targetBranch}`);
   await exec(`git checkout ${targetBranch}`);
 }
 
 async function buildBundleSizeReport() {
+  const sourceBranch = await getHeadBranchName()
   console.log(`on branch: ${sourceBranch}`);
   const newSizes = await computeFileSizes();
 
