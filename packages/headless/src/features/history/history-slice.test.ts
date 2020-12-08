@@ -77,6 +77,7 @@ describe('history slice', () => {
       sortCriteria: 'date descending',
       pipeline: 'my-pipeline',
       searchHub: 'my-search-hub',
+      debug: false,
     };
 
     expect(addSnapshot(expectedSnapshot).present).toEqual(expectedSnapshot);
@@ -137,6 +138,13 @@ describe('history slice', () => {
       expectHistoryToHaveCreatedDifferentSnapshots(
         getSnapshot({query: buildMockQueryState({enableQuerySyntax: true})}),
         getSnapshot({query: buildMockQueryState({enableQuerySyntax: false})})
+      );
+    });
+
+    it('for #debug', () => {
+      expectHistoryToHaveCreatedDifferentSnapshots(
+        getSnapshot({debug: true}),
+        getSnapshot({debug: false})
       );
     });
 

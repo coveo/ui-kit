@@ -1,6 +1,7 @@
 import {RecordValue, Schema} from '@coveo/bueno';
 import {Engine} from '../../app/headless-engine';
 import {getAdvancedSearchQueriesInitialState} from '../../features/advanced-search-queries/advanced-search-queries-state';
+import {getDebugInitialState} from '../../features/debug/debug-state';
 import {getPaginationInitialState} from '../../features/pagination/pagination-state';
 import {getQueryInitialState} from '../../features/query/query-state';
 import {
@@ -46,6 +47,7 @@ export function buildSearchParameterManager(
   const controller = buildController(engine);
 
   validateInitialState(
+    engine,
     initialStateSchema,
     props.initialState,
     buildSearchParameterManager.name
@@ -65,6 +67,7 @@ export function buildSearchParameterManager(
         ...getFirstResult(state),
         ...getNumberOfResults(state),
         ...getSortCriteria(state),
+        ...getDebug(state),
       };
 
       return {parameters};
@@ -142,4 +145,10 @@ function getSortCriteria(state: Partial<SearchParametersState>) {
   const sortCriteria = state.sortCriteria;
   const shouldInclude = sortCriteria !== getSortCriteriaInitialState();
   return shouldInclude ? {sortCriteria} : {};
+}
+
+function getDebug(state: Partial<SearchParametersState>) {
+  const debug = state.debug;
+  const shouldInclude = debug !== getDebugInitialState();
+  return shouldInclude ? {debug} : {};
 }

@@ -98,8 +98,7 @@ export class AtomicCategoryFacet {
   }
 
   private get facetSearchResults() {
-    const facetSearch = this.categoryFacet.facetSearch;
-    return facetSearch.state.values.map((searchResult) => (
+    return this.state.facetSearch.values.map((searchResult) => (
       <div onClick={() => this.categoryFacet.facetSearch.select(searchResult)}>
         {searchResult.displayValue} {searchResult.count}
       </div>
@@ -107,14 +106,14 @@ export class AtomicCategoryFacet {
   }
 
   private get showMoreSearchResults() {
-    const facetSearch = this.categoryFacet.facetSearch;
-
-    if (!facetSearch.state.moreValuesAvailable) {
+    if (!this.state.facetSearch.moreValuesAvailable) {
       return null;
     }
 
     return (
-      <button onClick={() => facetSearch.showMoreResults()}>show more</button>
+      <button onClick={() => this.categoryFacet.facetSearch.showMoreResults()}>
+        show more
+      </button>
     );
   }
 

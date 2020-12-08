@@ -62,7 +62,7 @@ export function buildFacet(
     facetId,
   };
 
-  validateOptions(facetOptionsSchema, options, buildFacet.name);
+  validateOptions(engine, facetOptionsSchema, options, buildFacet.name);
 
   const createFacetSearch = () => {
     const {facetId, facetSearch} = options;
@@ -91,10 +91,11 @@ export function buildFacet(
   };
 
   dispatch(registerFacet(options));
-
+  const facetSearch = createFacetSearch();
+  const {state, ...restOfFacetSearch} = facetSearch;
   return {
     ...controller,
-    facetSearch: createFacetSearch(),
+    facetSearch: restOfFacetSearch,
     /**
      * Selects (deselects) the passed value if unselected (selected).
      * @param selection The facet value to select or deselect.
@@ -195,6 +196,7 @@ export function buildFacet(
 
         /** @returns `true` if fewer values can be displayed and `false` otherwise.*/
         canShowLessValues: computeCanShowLessValues(),
+        facetSearch: facetSearch.state,
       };
     },
   };

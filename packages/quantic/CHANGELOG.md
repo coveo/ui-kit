@@ -3,6 +3,41 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.1.0-alpha.85](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.84...v0.1.0-alpha.85) (2020-12-07)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+# [0.1.0-alpha.84](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.83...v0.1.0-alpha.84) (2020-12-07)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+# [0.1.0-alpha.83](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.82...v0.1.0-alpha.83) (2020-12-07)
+
+
+### Features
+
+* **headless:** added middleware to preprocess responses ([#304](https://bitbucket.org/coveord/ui-kit/issues/304)) ([20a834d](https://bitbucket.org/coveord/ui-kit/commits/20a834d214b6690740c00df3f9c448370bf1e136))
+
+
+
+
+
+# [0.1.0-alpha.82](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.81...v0.1.0-alpha.82) (2020-12-07)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
 # [0.1.0-alpha.81](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.80...v0.1.0-alpha.81) (2020-12-07)
 
 **Note:** Version bump only for package @coveo/quantic
