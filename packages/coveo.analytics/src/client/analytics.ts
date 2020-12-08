@@ -135,22 +135,22 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
         return this.runtime.storage;
     }
 
+    private async determineVisitorId() {
+        try {
+            return (await this.storage.getItem('visitorId')) || uuidv4();
+        } catch (err) {
+            console.log(
+                'Could not get visitor ID from the current runtime environment storage. Using a random ID instead.',
+                err
+            );
+            return uuidv4();
+        }
+    }
+
     async getCurrentVisitorId() {
         if (!this.visitorId) {
-            try {
-                const existingVisitorId = await this.storage.getItem('visitorId');
-                if (!existingVisitorId) {
-                    await this.setCurrentVisitorId(uuidv4());
-                } else {
-                    this.visitorId = existingVisitorId;
-                }
-            } catch (err) {
-                console.log(
-                    'Could not get visitor ID from the current runtime environment storage. Using a random ID instead.',
-                    err
-                );
-                this.visitorId = uuidv4();
-            }
+            const id = await this.determineVisitorId();
+            await this.setCurrentVisitorId(id);
         }
         return this.visitorId;
     }
