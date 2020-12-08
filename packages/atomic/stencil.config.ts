@@ -3,6 +3,7 @@ import {sass} from '@stencil/sass';
 import alias from '@rollup/plugin-alias';
 import path from 'path';
 import html from 'rollup-plugin-html';
+import {inlineSvg} from 'stencil-inline-svg';
 
 const isDevWatch: boolean =
   process.argv &&
@@ -31,6 +32,7 @@ export const config: Config = {
     browserArgs: ['--no-sandbox'],
     transform: {
       '^.+\\.html?$': 'html-loader-jest',
+      '^.+\\.svg$': './svg.transform.js',
     },
   },
   devServer: {
@@ -41,6 +43,7 @@ export const config: Config = {
       includePaths: ['src/scss/'],
       injectGlobalPaths: ['src/scss/_global.scss'],
     }),
+    inlineSvg(),
   ],
   rollupPlugins: {
     before: [

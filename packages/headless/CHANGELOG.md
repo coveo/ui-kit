@@ -3,6 +3,34 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.1.0-alpha.87](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.86...v0.1.0-alpha.87) (2020-12-08)
+
+
+### Features
+
+* **atomic:** breadcrumbs styling ([#264](https://github.com/coveo/ui-kit/issues/264)) ([d9dbcc4](https://github.com/coveo/ui-kit/commit/d9dbcc422c7e244209c94135b6e2e56775d995c8))
+
+
+
+
+
+# [0.1.0-alpha.86](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.85...v0.1.0-alpha.86) (2020-12-08)
+
+
+### Bug Fixes
+
+* **headless:** fix facet search for headless controllers facet controllers ([#325](https://github.com/coveo/ui-kit/issues/325)) ([d104f1e](https://github.com/coveo/ui-kit/commit/d104f1e9a7cfe8bd6d98deb181ca46cac69cf4eb))
+* **headless:** fix log custom event with new ua version ([#327](https://github.com/coveo/ui-kit/issues/327)) ([c41bbb6](https://github.com/coveo/ui-kit/commit/c41bbb6ffe82e96f6362bd3a357e30020eb31de2))
+
+
+### Features
+
+* **headless:** add debug search parameter to be serializable/deserializable ([#317](https://github.com/coveo/ui-kit/issues/317)) ([c6a8383](https://github.com/coveo/ui-kit/commit/c6a838336a724a6416120977ffb5b1b15c4cc663))
+
+
+
+
+
 # [0.1.0-alpha.85](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.84...v0.1.0-alpha.85) (2020-12-07)
 
 
