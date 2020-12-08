@@ -9,6 +9,7 @@
 
 | Property            | Attribute            | Description | Type     | Default |
 | ------------------- | -------------------- | ----------- | -------- | ------- |
+| `categoryDivider`   | `category-divider`   |             | `string` | `'/'`   |
 | `collapseThreshold` | `collapse-threshold` |             | `number` | `5`     |
 
 

@@ -32,6 +32,7 @@ export class AtomicBreadcrumbManager {
   @State() state!: BreadcrumbManagerState;
   @State() collapsedBreadcrumbsState: string[] = [];
   @Prop() collapseThreshold = 5;
+  @Prop() categoryDivider = '/';
 
   private engine!: Engine;
   private breadcrumbManager!: BreadcrumbManager;
@@ -79,6 +80,7 @@ export class AtomicBreadcrumbManager {
       <li part="breadcrumb-value" class="pr-3">
         <button
           part="breadcrumb-button"
+          aria-label={`Remove inclusion filter on ${breadcrumbValue.value.value}`}
           class={this.buttonClasses}
           onClick={breadcrumbValue.deselect}
         >
@@ -95,7 +97,7 @@ export class AtomicBreadcrumbManager {
 
   private get numericFacetBreadcrumbs() {
     return this.state.numericFacetBreadcrumbs.map((breadcrumb) => {
-      const breadcrumbsValues = this.getRangeBreadrumbValues(breadcrumb);
+      const breadcrumbsValues = this.getRangeBreadrumbValues(breadcrumb, false);
       return (
         <ul part="breadcrumbs" class="breadcrumb p-0 m-0">
           <li part="breadcrumb-label" class="text-muted">
@@ -109,7 +111,7 @@ export class AtomicBreadcrumbManager {
 
   private get dateFacetBreadcrumbs() {
     return this.state.dateFacetBreadcrumbs.map((breadcrumb) => {
-      const breadcrumbsValues = this.getRangeBreadrumbValues(breadcrumb);
+      const breadcrumbsValues = this.getRangeBreadrumbValues(breadcrumb, true);
       return (
         <ul part="breadcrumbs" class="breadcrumb p-0 m-0">
           <li part="breadcrumb-label" class="text-muted">
@@ -121,22 +123,32 @@ export class AtomicBreadcrumbManager {
     });
   }
 
-  private getRangeBreadrumbValues(values: Breadcrumb<RangeFacetValue>) {
+  private getRangeBreadrumbValues(
+    values: Breadcrumb<RangeFacetValue>,
+    needDateFormatting: boolean
+  ) {
     const {breadcrumbsToShow, moreButton} = this.collapsedBreadcrumbsHandler(
       values
     );
-    const renderedBreadcrumbs = breadcrumbsToShow.map((breadcrumbValue) => (
-      <li part="breadcrumb-value" class="pr-3">
-        <button
-          part="breadcrumb-button"
-          class={this.buttonClasses}
-          onClick={breadcrumbValue.deselect}
-        >
-          {breadcrumbValue.value.start} - {breadcrumbValue.value.end}
-          {this.mainClear}
-        </button>
-      </li>
-    ));
+    const renderedBreadcrumbs = breadcrumbsToShow.map((breadcrumbValue) => {
+      const ariaLabel = this.getRangeAriaLabel(
+        needDateFormatting,
+        breadcrumbValue.value
+      );
+      return (
+        <li part="breadcrumb-value" class="pr-3">
+          <button
+            part="breadcrumb-button"
+            aria-label={ariaLabel}
+            class={this.buttonClasses}
+            onClick={breadcrumbValue.deselect}
+          >
+            {breadcrumbValue.value.start} - {breadcrumbValue.value.end}
+            {this.mainClear}
+          </button>
+        </li>
+      );
+    });
     return moreButton
       ? [...renderedBreadcrumbs, moreButton]
       : renderedBreadcrumbs;
@@ -158,21 +170,26 @@ export class AtomicBreadcrumbManager {
 
   private getCategoryBreadrumbValues(values: CategoryFacetBreadcrumb) {
     const breadcrumbsToShow = this.categoryCollapsedBreadcrumbsHandler(values);
-    const renderedBreadcrumbs = breadcrumbsToShow.map((breadcrumbValue) => (
+    const ariaLabel = breadcrumbsToShow.join('/');
+    const joinedBreadcrumbs = breadcrumbsToShow.join(
+      ` ${this.categoryDivider} `
+    );
+    return (
       <li
         part="breadcrumb-value category-breadcrumb-value"
         class="breadcrumb-item"
       >
         <button
           part="breadcrumb-button"
+          aria-label={`Remove inclusion filter on ${ariaLabel}`}
           class={this.buttonClasses}
           onClick={values.deselect}
         >
-          {breadcrumbValue}
+          {joinedBreadcrumbs}
+          {this.mainClear}
         </button>
       </li>
-    ));
-    return [...renderedBreadcrumbs, this.mainClear];
+    );
   }
 
   private getClearAllFiltersButton() {
@@ -235,6 +252,9 @@ export class AtomicBreadcrumbManager {
         <button
           part="breadcrumb-button"
           class={this.buttonClasses}
+          aria-label={`Show ${collapsedBreadcrumbNumber} more ${
+            collapsedBreadcrumbNumber > 1 ? 'filters' : 'filter'
+          }`}
           onClick={() => this.showFacetCollapsedBreadcrumbs(field)}
         >
           {collapsedBreadcrumbNumber} more...
@@ -247,6 +267,7 @@ export class AtomicBreadcrumbManager {
     return (
       <span
         class="pl-1 text-primary align-baseline"
+        role="button"
         innerHTML={mainclear}
       ></span>
     );
@@ -263,6 +284,17 @@ export class AtomicBreadcrumbManager {
           1
         )
       : null;
+  }
+  private getRangeAriaLabel(
+    needDateFormatting: boolean,
+    breadcrumbValue: RangeFacetValue
+  ) {
+    if (needDateFormatting) {
+      const dateStart = new Date(breadcrumbValue.start);
+      const dateEnd = new Date(breadcrumbValue.end);
+      return `Remove inclusion filter on ${dateStart.toLocaleString()} to ${dateEnd.toLocaleString()}`;
+    }
+    return `Remove inclusion filter on ${breadcrumbValue.start} to ${breadcrumbValue.end}`;
   }
 
   render() {
