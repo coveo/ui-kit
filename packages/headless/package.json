@@ -34,6 +34,7 @@
     "cross-fetch": "^3.0.6",
     "dayjs": "^1.9.6",
     "exponential-backoff": "^3.1.0",
+    "node-abort-controller": "^1.1.0",
     "pino": "^6.7.0",
     "redux": "^4.0.5",
     "redux-mock-store": "^1.5.4",
