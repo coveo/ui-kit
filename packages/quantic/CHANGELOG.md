@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.1.0-alpha.86](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.85...v0.1.0-alpha.86) (2020-12-08)
+
+
+### Bug Fixes
+
+* **headless:** fix log custom event with new ua version ([#327](https://bitbucket.org/coveord/ui-kit/issues/327)) ([c41bbb6](https://bitbucket.org/coveord/ui-kit/commits/c41bbb6ffe82e96f6362bd3a357e30020eb31de2))
+
+
+
+
+
 # [0.1.0-alpha.85](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.84...v0.1.0-alpha.85) (2020-12-07)
 
 **Note:** Version bump only for package @coveo/quantic
