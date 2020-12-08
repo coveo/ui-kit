@@ -78,30 +78,41 @@ export class PlatformClient {
       return response;
     };
 
-    const response = await backOff(request, {
-      retry: (e: Response) => {
-        const shouldRetry = e && isThrottled(e.status);
-        shouldRetry && options.logger.info('Platform retrying request');
-        return shouldRetry;
-      },
-    });
-    if (response.status === 419) {
-      processedOptions.logger.info('Platform renewing token');
-      const accessToken = await processedOptions.renewAccessToken();
+    try {
+      const response = await backOff(request, {
+        retry: (e: Response) => {
+          const shouldRetry = e && isThrottled(e.status);
+          shouldRetry && options.logger.info('Platform retrying request');
+          return shouldRetry;
+        },
+      });
+      if (response.status === 419) {
+        processedOptions.logger.info('Platform renewing token');
+        const accessToken = await processedOptions.renewAccessToken();
 
-      if (accessToken !== '') {
-        return PlatformClient.call({...processedOptions, accessToken});
+        if (accessToken !== '') {
+          return PlatformClient.call({...processedOptions, accessToken});
+        }
       }
+
+      const body = (await response.json()) as ResponseType;
+
+      options.logger.info({response, body, requestInfo}, 'Platform response');
+
+      return {
+        response,
+        body,
+      };
+    } catch (error) {
+      if (error.body) {
+        return {
+          response: error,
+          body: await error.json(),
+        };
+      }
+
+      throw error;
     }
-
-    const body = (await response.json()) as ResponseType;
-
-    options.logger.info({response, body, requestInfo}, 'Platform response');
-
-    return {
-      response,
-      body,
-    };
   }
 }
 
