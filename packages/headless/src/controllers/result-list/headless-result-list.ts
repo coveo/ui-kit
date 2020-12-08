@@ -37,6 +37,8 @@ export function buildResultList(
   engine: Engine<SearchSection & ConfigurationSection>,
   props?: ResultListProps
 ) {
+  let consecutiveFetches = 0;
+  const maxConsecutiveFetches = 5;
   const controller = buildController(engine);
   const {dispatch} = engine;
 
@@ -50,6 +52,22 @@ export function buildResultList(
   if (options.fieldsToInclude) {
     dispatch(registerFieldsToInclude(options.fieldsToInclude));
   }
+
+  const triggerFetchMore = (shouldKeepFetchingResults?: () => boolean) => {
+    dispatch(fetchMoreResults()).then(() => {
+      if (
+        shouldKeepFetchingResults?.() &&
+        consecutiveFetches < maxConsecutiveFetches
+      ) {
+        consecutiveFetches++;
+        triggerFetchMore(shouldKeepFetchingResults);
+      }
+
+      engine.logger
+        .warn(`Result list has triggered ${maxConsecutiveFetches} consecutive queries.
+      Please investigate the condition contained in the "shouldKeepFetchingResults" argument function.`);
+    });
+  };
 
   return {
     ...controller,
@@ -66,16 +84,15 @@ export function buildResultList(
       };
     },
     /**
-     * Using the same parameters as the last successful query, fetch another batch of results. Particularly useful for infinite scrolling, for example.
+     * Using the same parameters as the last successful query, fetch another batch of results.
+     * @param shouldKeepFetchingResults A callback that verifies if the controller should send another request once it's successful. Particularly useful for infinite scrolling, for example.
      */
-    fetchMoreResults() {
+    fetchMoreResults(shouldKeepFetchingResults?: () => boolean) {
       if (this.state.isLoading) {
-        engine.logger.warn(
-          'Ignoring request to display more results since query is pending.'
-        );
         return;
       }
-      dispatch(fetchMoreResults());
+      consecutiveFetches = 0;
+      triggerFetchMore(shouldKeepFetchingResults);
     },
   };
 }
