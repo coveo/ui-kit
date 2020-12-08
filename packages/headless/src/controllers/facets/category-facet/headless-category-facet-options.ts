@@ -1,10 +1,8 @@
 import {Schema, StringValue} from '@coveo/bueno';
-import {CategoryFacetRegistrationOptions} from '../../../features/facets/category-facet-set/interfaces/options';
 import {
   categoryFacetSortCriteria,
   CategoryFacetSortCriterion,
 } from '../../../features/facets/category-facet-set/interfaces/request';
-import {FacetSearchRequestOptions} from '../../../features/facets/facet-search-set/facet-search-request-options';
 import {
   facetId,
   field,
@@ -17,12 +15,23 @@ import {
   facetSearch,
 } from '../_common/facet-option-definitions';
 
-export type CategoryFacetOptions = Omit<
-  CategoryFacetRegistrationOptions,
-  'facetId'
-> & {
+export type CategoryFacetOptions = {
+  field: string;
   facetId?: string;
-  facetSearch?: Partial<FacetSearchRequestOptions>;
+  basePath?: string[];
+  delimitingCharacter?: string;
+  filterByBasePath?: boolean;
+  filterFacetCount?: boolean;
+  injectionDepth?: number;
+  numberOfValues?: number;
+  sortCriteria?: CategoryFacetSortCriterion;
+  facetSearch?: CategoryFacetSearchOptions;
+};
+
+type CategoryFacetSearchOptions = {
+  captions?: Record<string, string>;
+  numberOfValues?: number;
+  query?: string;
 };
 
 export const categoryFacetOptionsSchema = new Schema<

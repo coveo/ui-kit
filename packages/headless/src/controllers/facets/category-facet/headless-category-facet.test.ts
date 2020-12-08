@@ -29,6 +29,8 @@ import {buildMockCategoryFacetSearch} from '../../../test/mock-category-facet-se
 import {updateFacetOptions} from '../../../features/facet-options/facet-options-actions';
 import {SearchAppState} from '../../../state/search-app-state';
 import * as FacetIdDeterminor from '../_common/facet-id-determinor';
+import {CategoryFacetRegistrationOptions} from '../../../features/facets/category-facet-set/interfaces/options';
+import {FacetSearchRequestOptions} from '../../../features/facets/facet-search-set/facet-search-request-options';
 
 describe('category facet', () => {
   const facetId = '1';
@@ -59,6 +61,27 @@ describe('category facet', () => {
     state = createMockState();
     setFacetRequest();
     initCategoryFacet();
+  });
+
+  it('the #CategoryFacetOptions type is valid', () => {
+    type Equal<A, B extends A> = ['pass', B];
+
+    type ExpectedOptions = CategoryFacetRegistrationOptions & {
+      facetSearch: Partial<FacetSearchRequestOptions>;
+    };
+
+    type AllCategoryFacetOptions = Required<CategoryFacetOptions>;
+    type TestCategoryFacetOptions = Equal<
+      ExpectedOptions,
+      AllCategoryFacetOptions
+    >;
+    type TestCategoryFacetSearchOptions = Equal<
+      FacetSearchRequestOptions,
+      Required<AllCategoryFacetOptions['facetSearch']>
+    >;
+
+    type Tests = TestCategoryFacetOptions | TestCategoryFacetSearchOptions;
+    expect((true as unknown) as Tests).toBe(true);
   });
 
   it('it calls #determineFacetId with the correct params', () => {

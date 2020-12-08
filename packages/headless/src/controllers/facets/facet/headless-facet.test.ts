@@ -20,6 +20,8 @@ import {SearchAppState} from '../../../state/search-app-state';
 import * as FacetIdDeterminor from '../_common/facet-id-determinor';
 import {buildMockFacetSearch} from '../../../test/mock-facet-search';
 import * as FacetSearch from '../facet-search/specific/headless-facet-search';
+import {FacetRegistrationOptions} from '../../../features/facets/facet-set/interfaces/options';
+import {FacetSearchRequestOptions} from '../../../features/facets/facet-search-set/facet-search-request-options';
 
 describe('facet', () => {
   const facetId = '1';
@@ -50,6 +52,24 @@ describe('facet', () => {
     setFacetRequest();
 
     initFacet();
+  });
+
+  it('the #FacetOptions type is valid', () => {
+    type Equal<A, B extends A> = ['pass', B];
+
+    type ExpectedOptions = FacetRegistrationOptions & {
+      facetSearch: Partial<FacetSearchRequestOptions>;
+    };
+
+    type AllFacetOptions = Required<FacetOptions>;
+    type TestFacetOptions = Equal<ExpectedOptions, AllFacetOptions>;
+    type TestFacetSearchOptions = Equal<
+      FacetSearchRequestOptions,
+      Required<AllFacetOptions['facetSearch']>
+    >;
+
+    type Tests = TestFacetOptions | TestFacetSearchOptions;
+    expect((true as unknown) as Tests).toBe(true);
   });
 
   it('renders', () => {
