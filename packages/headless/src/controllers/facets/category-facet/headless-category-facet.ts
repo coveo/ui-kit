@@ -171,6 +171,7 @@ export function buildCategoryFacet(
       const canShowLessValues = values.length > options.numberOfValues;
 
       return {
+        facetId,
         parents,
         values,
         isLoading,
