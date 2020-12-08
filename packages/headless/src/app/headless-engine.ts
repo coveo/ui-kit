@@ -284,7 +284,7 @@ export class HeadlessEngine<Reducers extends ReducersMapObject>
     try {
       configurationSchema.validate(options.configuration);
     } catch (error) {
-      this.logger.error(error, 'Engine configuration error');
+      this.logger.error(error, 'Headless engine configuration error');
       throw error;
     }
   }
