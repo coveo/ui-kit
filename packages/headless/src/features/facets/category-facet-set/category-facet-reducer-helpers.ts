@@ -5,7 +5,7 @@ import {
 
 export function selectPath(request: CategoryFacetRequest, path: string[]) {
   request.currentValues = buildCurrentValuesFromPath(path);
-  request.numberOfValues = 1;
+  request.numberOfValues = path.length ? 1 : request.numberOfValues;
   request.preventAutoSelect = true;
 }
 
