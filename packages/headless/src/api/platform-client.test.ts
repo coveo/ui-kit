@@ -4,7 +4,6 @@ import {
   PreprocessRequestMiddleware,
   NoopPreprocessRequestMiddleware,
 } from './platform-client';
-import * as BackOff from 'exponential-backoff';
 import pino from 'pino';
 
 jest.mock('cross-fetch');
@@ -66,7 +65,7 @@ describe('PlatformClient call', () => {
     mockFetch.mockClear();
   });
 
-  it('should call fetch with the right parameters', async (done) => {
+  it('should call fetch with the right parameters', async () => {
     mockFetch.mockReturnValue(
       Promise.resolve(new Response(JSON.stringify({})))
     );
@@ -83,8 +82,6 @@ describe('PlatformClient call', () => {
       },
       method: 'POST',
     });
-
-    done();
   });
 
   it('should preprocess the request if a middleware is provided', async () => {
@@ -115,7 +112,7 @@ describe('PlatformClient call', () => {
   });
 
   it(`when status is 419
-  should renewToken and retry call with new token`, async (done) => {
+  should renewToken and retry call with new token`, async () => {
     mockFetch
       .mockReturnValueOnce(
         Promise.resolve(new Response(JSON.stringify({}), {status: 419}))
@@ -136,11 +133,9 @@ describe('PlatformClient call', () => {
       },
       method: 'POST',
     });
-
-    done();
   });
 
-  it('when status is 429 should try exponential backOff', async (done) => {
+  it('when status is 429 should try exponential backOff', async () => {
     mockFetch
       .mockReturnValueOnce(
         Promise.resolve(new Response(JSON.stringify({}), {status: 429}))
@@ -155,16 +150,15 @@ describe('PlatformClient call', () => {
     await platformCall();
 
     expect(mockFetch).toHaveBeenCalledTimes(3);
-    done();
   });
 
-  it('should not throw and return a response when backOff returns a rejected promise', async (done) => {
-    const spy = jest.spyOn(BackOff, 'backOff');
-    const mockResponse = new Response(JSON.stringify({}), {status: 429});
-    spy.mockRejectedValue(mockResponse);
-    const response = await platformCall();
-    expect(spy).not.toThrow();
-    expect(response.response).toBe(mockResponse);
-    done();
+  it('should throw when fetch throws an error', async () => {
+    const error = new Error('Test');
+    try {
+      mockFetch.mockRejectedValue(error);
+      expect(await platformCall()).toThrow();
+    } catch (error) {
+      expect(error).toEqual(error);
+    }
   });
 });
