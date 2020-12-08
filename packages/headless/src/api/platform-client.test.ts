@@ -65,7 +65,7 @@ describe('PlatformClient call', () => {
     mockFetch.mockClear();
   });
 
-  it('should call fetch with the right parameters', async () => {
+  it('should call fetch with the right parameters', async (done) => {
     mockFetch.mockReturnValue(
       Promise.resolve(new Response(JSON.stringify({})))
     );
@@ -82,9 +82,10 @@ describe('PlatformClient call', () => {
       },
       method: 'POST',
     });
+    done();
   });
 
-  it('should preprocess the request if a middleware is provided', async () => {
+  it('should preprocess the request if a middleware is provided', async (done) => {
     mockFetch.mockReturnValue(
       Promise.resolve(new Response(JSON.stringify({})))
     );
@@ -109,10 +110,11 @@ describe('PlatformClient call', () => {
       },
       method: 'POST',
     });
+    done();
   });
 
   it(`when status is 419
-  should renewToken and retry call with new token`, async () => {
+  should renewToken and retry call with new token`, async (done) => {
     mockFetch
       .mockReturnValueOnce(
         Promise.resolve(new Response(JSON.stringify({}), {status: 419}))
@@ -133,9 +135,10 @@ describe('PlatformClient call', () => {
       },
       method: 'POST',
     });
+    done();
   });
 
-  it('when status is 429 should try exponential backOff', async () => {
+  it('when status is 429 should try exponential backOff', async (done) => {
     mockFetch
       .mockReturnValueOnce(
         Promise.resolve(new Response(JSON.stringify({}), {status: 429}))
@@ -150,15 +153,17 @@ describe('PlatformClient call', () => {
     await platformCall();
 
     expect(mockFetch).toHaveBeenCalledTimes(3);
+    done();
   });
 
-  it('should throw when fetch throws an error', async () => {
+  it('should throw when fetch throws an error', async (done) => {
     const testError = new Error('Test');
     try {
       mockFetch.mockRejectedValue(testError);
-      expect(await platformCall()).toThrow();
+      await platformCall();
     } catch (error) {
-      expect(error).toEqual(testError);
+      expect(error).toBe(testError);
+      done();
     }
   });
 });
