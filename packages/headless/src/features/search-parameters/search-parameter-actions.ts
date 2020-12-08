@@ -1,6 +1,6 @@
 import {createAction} from '@reduxjs/toolkit';
 import {SearchRequest} from '../../api/search/search/search-request';
-import {validatePayloadSchema} from '../../utils/validate-payload';
+import {validatePayload} from '../../utils/validate-payload';
 import {searchParametersDefinition} from './search-parameter-schema';
 
 type FacetParameters = {
@@ -21,7 +21,6 @@ export type SearchParameters = Omit<
   | 'searchHub'
   | 'pipeline'
   | 'context'
-  | 'debug'
 > &
   Partial<FacetParameters>;
 
@@ -29,5 +28,5 @@ export type SearchParameters = Omit<
 export const restoreSearchParameters = createAction(
   'searchParameters/restore',
   (payload: SearchParameters) =>
-    validatePayloadSchema(payload, searchParametersDefinition)
+    validatePayload(payload, searchParametersDefinition)
 );

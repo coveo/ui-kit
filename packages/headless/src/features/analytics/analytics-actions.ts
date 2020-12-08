@@ -1,5 +1,5 @@
 import {SearchPageEvents} from 'coveo.analytics/dist/definitions/searchPage/searchPageEvents';
-import {validatePayloadSchema} from '../../utils/validate-payload';
+import {validatePayload} from '../../utils/validate-payload';
 import {StringValue} from '@coveo/bueno';
 import {getAdvancedSearchQueriesInitialState} from '../advanced-search-queries/advanced-search-queries-state';
 import {Result} from '../../api/search/search/result';
@@ -24,15 +24,22 @@ export interface ClickEventPayload {
 }
 
 export interface CustomEventPayload {
-  /** The identifier of the custom action (e.g., `myComponent`). */
+  /**
+   * The event cause identifier of the custom action
+   */
   evt: SearchPageEvents | string;
+  /**
+   * The event type identifier of the custom action
+   */
+  type: string;
   /** The event metadata. */
   meta?: Record<string, unknown>;
 }
 
-const validateEvent = (p: {evt: string}) =>
-  validatePayloadSchema(p, {
+const validateEvent = (p: {evt: string; type?: string}) =>
+  validatePayload(p, {
     evt: new StringValue({required: true, emptyAllowed: false}),
+    type: new StringValue({required: false, emptyAllowed: false}),
   });
 
 /**
@@ -80,7 +87,7 @@ export const logCustomEvent = (p: CustomEventPayload) =>
     AnalyticsType.Custom,
     (client) => {
       validateEvent(p);
-      return client.logCustomEvent(p.evt as SearchPageEvents, p.meta);
+      return client.logCustomEventWithType(p.evt, p.type, p.meta);
     }
   )();
 

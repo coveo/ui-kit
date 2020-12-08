@@ -55,11 +55,13 @@ export function buildRelevanceInspector(
   const controller = buildController(engine);
   const {dispatch} = engine;
   const initialState = validateInitialState(
+    engine,
     initialStateSchema,
     props.initialState,
     buildRelevanceInspector.name
   );
   const options = validateOptions(
+    engine,
     optionsSchema,
     props.options,
     buildRelevanceInspector.name

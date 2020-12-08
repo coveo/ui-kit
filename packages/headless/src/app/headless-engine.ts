@@ -25,7 +25,18 @@ import {
   PreprocessRequestMiddleware,
 } from '../api/platform-client';
 import {RecordValue, Schema, StringValue} from '@coveo/bueno';
-import {validateOptions} from '../utils/validate-payload';
+import {
+  validatePayloadAndThrow,
+  validateOptions,
+} from '../utils/validate-payload';
+import {
+  NoopPostprocessFacetSearchResponseMiddleware,
+  NoopPostprocessQuerySuggestResponseMiddleware,
+  NoopPostprocessSearchResponseMiddleware,
+  PostprocessFacetSearchResponseMiddleware,
+  PostprocessQuerySuggestResponseMiddleware,
+  PostprocessSearchResponseMiddleware,
+} from '../api/search/search-api-client-middleware';
 
 export type LogLevel = LevelWithSilent;
 
@@ -118,7 +129,22 @@ export interface HeadlessConfigurationOptions {
      *    When logging a Search usage analytics event for a query, the originLevel1 field of that event should be set to the value of the searchHub search request parameter.
      */
     searchHub?: string;
+    /**
+     * Allows for augmenting request before any (search, facet-search, query-suggest) a request is sent.
+     */
     preprocessRequestMiddleware?: PreprocessRequestMiddleware;
+    /**
+     * Allows for augmenting a search response before the state is updated.
+     */
+    preprocessSearchResponseMiddleware?: PostprocessSearchResponseMiddleware;
+    /**
+     * Allows for augmenting a facet-search response before the state is updated.
+     */
+    preprocessFacetSearchResponseMiddleware?: PostprocessFacetSearchResponseMiddleware;
+    /**
+     * Allows for augmenting a query-suggest response before the state is updated.
+     */
+    preprocessQuerySuggestResponseMiddleware?: PostprocessQuerySuggestResponseMiddleware;
   };
 
   analytics?: {
@@ -203,8 +229,8 @@ export class HeadlessEngine<Reducers extends ReducersMapObject>
   public logger!: Logger;
 
   constructor(private options: HeadlessOptions<Reducers>) {
-    this.validateConfiguration(options);
     this.initLogger();
+    this.validateConfiguration(options);
     this.initStore();
 
     this.reduxStore.dispatch(
@@ -259,6 +285,7 @@ export class HeadlessEngine<Reducers extends ReducersMapObject>
       }),
     });
     validateOptions(
+      this,
       configurationSchema,
       options.configuration,
       HeadlessEngine.name
@@ -281,6 +308,7 @@ export class HeadlessEngine<Reducers extends ReducersMapObject>
   }
 
   private initStore() {
+    const {search} = this.options.configuration;
     this.reduxStore = configureStore({
       preloadedState: this.options.preloadedState,
       reducers: this.options.reducers,
@@ -290,11 +318,21 @@ export class HeadlessEngine<Reducers extends ReducersMapObject>
           logger: this.logger,
           renewAccessToken: () => this.renewAccessToken(),
           preprocessRequest:
-            this.options.configuration.search?.preprocessRequestMiddleware ||
+            search?.preprocessRequestMiddleware ||
             NoopPreprocessRequestMiddleware,
+          postprocessSearchResponseMiddleware:
+            search?.preprocessSearchResponseMiddleware ||
+            NoopPostprocessSearchResponseMiddleware,
+          postprocessFacetSearchResponseMiddleware:
+            search?.preprocessFacetSearchResponseMiddleware ||
+            NoopPostprocessFacetSearchResponseMiddleware,
+          postprocessQuerySuggestResponseMiddleware:
+            search?.preprocessQuerySuggestResponseMiddleware ||
+            NoopPostprocessQuerySuggestResponseMiddleware,
         }),
         analyticsClientMiddleware: this.analyticsClientMiddleware(this.options),
         logger: this.logger,
+        validatePayload: validatePayloadAndThrow,
       },
     });
   }

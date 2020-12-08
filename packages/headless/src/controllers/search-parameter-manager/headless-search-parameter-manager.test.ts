@@ -194,6 +194,17 @@ describe('state manager', () => {
     });
   });
 
+  describe('#state.parameters.debug', () => {
+    it('when the parameter does not equal the default value, it is included', () => {
+      engine.state.debug = true;
+      expect(manager.state.parameters.debug).toBe(true);
+    });
+
+    it('when the parameter is equal to the default value, it is not included', () => {
+      expect('debug' in manager.state.parameters).toBe(false);
+    });
+  });
+
   it(`given a certain initial state,
   it is possible to access every search parameter using #state.parameters`, () => {
     const facetValues = [buildMockFacetValueRequest({state: 'selected'})];
@@ -217,6 +228,7 @@ describe('state manager', () => {
     engine.state.pagination.firstResult = 1;
     engine.state.pagination.numberOfResults = 1;
     engine.state.sortCriteria = 'qre';
+    engine.state.debug = true;
 
     const stateParams = manager.state.parameters;
     const allKeys = Object.keys(buildMockSearchParameters());

@@ -402,7 +402,8 @@ describe('category facet slice', () => {
       });
     });
 
-    it('should throw when selection is invalid', () => {
+    it(`when selection is invalid
+      should dispatch an action containing an error`, () => {
       const selection = buildMockCategoryFacetValue({
         value: 'A',
         children: [
@@ -416,9 +417,8 @@ describe('category facet slice', () => {
         ],
       });
 
-      expect(() =>
-        toggleSelectCategoryFacetValue({facetId, selection})
-      ).toThrow();
+      const action = toggleSelectCategoryFacetValue({facetId, selection});
+      expect(action.error).toBeDefined();
     });
   });
 

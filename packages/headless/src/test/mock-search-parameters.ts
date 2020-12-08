@@ -13,6 +13,7 @@ export function buildMockSearchParameters(
     sortCriteria: '',
     f: {},
     cf: {},
+    debug: false,
     ...config,
   };
 }

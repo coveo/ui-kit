@@ -164,7 +164,7 @@ describe('complex value', () => {
         ).toBeNull();
       });
 
-      it('record with too many keys', () => {
+      it('record with unknown keys, it ignores the unknown keys', () => {
         const v = new RecordValue({
           values: {
             foo: new BooleanValue(),

@@ -9,11 +9,17 @@ import {AnalyticsClientSendEventHook} from 'coveo.analytics';
 import {SearchAPIClient} from '../api/search/search-api-client';
 import {analyticsMiddleware} from './analytics-middleware';
 import {Logger} from 'pino';
+import {
+  logActionErrorMiddleware,
+  logActionMiddleware,
+} from './logger-middlewares';
+import {validatePayloadAndThrow} from '../utils/validate-payload';
 
 export interface ThunkExtraArguments {
   searchAPIClient: SearchAPIClient;
   analyticsClientMiddleware: AnalyticsClientSendEventHook;
   logger: Logger;
+  validatePayload: typeof validatePayloadAndThrow;
 }
 
 interface ConfigureStoreOptions<Reducers extends ReducersMapObject> {
@@ -23,29 +29,13 @@ interface ConfigureStoreOptions<Reducers extends ReducersMapObject> {
   thunkExtraArguments: ThunkExtraArguments;
 }
 
-const actionLogger: (logger: Logger) => Middleware = (logger) => (api) => (
-  next
-) => (action) => {
-  const result = next(action);
-
-  logger.debug(
-    {
-      action,
-      nextState: api.getState(),
-    },
-    `Action dispatched: ${action.type}`
-  );
-
-  return result;
-};
-
 export function configureStore<Reducers extends ReducersMapObject>({
   reducers,
   preloadedState,
   middlewares = [],
   thunkExtraArguments,
 }: ConfigureStoreOptions<Reducers>) {
-  const store = configureStoreToolkit({
+  return configureStoreToolkit({
     reducer: combineReducers(reducers),
     preloadedState,
     devTools: {
@@ -54,17 +44,14 @@ export function configureStore<Reducers extends ReducersMapObject>({
           ? {...state, history: '<<OMIT>>'}
           : state,
     },
-    middleware: (getDefaultMiddleware) => {
-      return [
-        analyticsMiddleware,
-        ...middlewares,
-        ...getDefaultMiddleware({thunk: {extraArgument: thunkExtraArguments}}),
-        actionLogger(thunkExtraArguments.logger),
-      ];
-    },
+    middleware: (getDefaultMiddleware) => [
+      logActionErrorMiddleware(thunkExtraArguments.logger),
+      analyticsMiddleware,
+      ...middlewares,
+      ...getDefaultMiddleware({thunk: {extraArgument: thunkExtraArguments}}),
+      logActionMiddleware(thunkExtraArguments.logger),
+    ],
   });
-
-  return store;
 }
 
 export type Store = ReturnType<typeof configureStore>;

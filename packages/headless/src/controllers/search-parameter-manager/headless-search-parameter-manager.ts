@@ -3,6 +3,7 @@ import {Engine} from '../../app/headless-engine';
 import {getAdvancedSearchQueriesInitialState} from '../../features/advanced-search-queries/advanced-search-queries-state';
 import {partitionIntoParentsAndValues} from '../../features/facets/category-facet-set/category-facet-utils';
 import {FacetValueRequest} from '../../features/facets/facet-set/interfaces/request';
+import {getDebugInitialState} from '../../features/debug/debug-state';
 import {getPaginationInitialState} from '../../features/pagination/pagination-state';
 import {getQueryInitialState} from '../../features/query/query-state';
 import {
@@ -48,6 +49,7 @@ export function buildSearchParameterManager(
   const controller = buildController(engine);
 
   validateInitialState(
+    engine,
     initialStateSchema,
     props.initialState,
     buildSearchParameterManager.name
@@ -69,6 +71,7 @@ export function buildSearchParameterManager(
         ...getSortCriteria(state),
         ...getFacets(state),
         ...getCategoryFacets(state),
+        ...getDebug(state),
       };
 
       return {parameters};
@@ -182,4 +185,10 @@ function getCategoryFacets(state: Partial<SearchParametersState>) {
     .reduce((acc, obj) => ({...acc, ...obj}), {});
 
   return Object.keys(cf).length ? {cf} : {};
+}
+
+function getDebug(state: Partial<SearchParametersState>) {
+  const debug = state.debug;
+  const shouldInclude = debug !== getDebugInitialState();
+  return shouldInclude ? {debug} : {};
 }

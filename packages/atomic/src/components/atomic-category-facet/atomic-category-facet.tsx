@@ -10,7 +10,6 @@ import {
   CategoryFacetSortCriterion,
 } from '@coveo/headless';
 import {Initialization} from '../../utils/initialization-utils';
-import {randomID} from '../../utils/utils';
 
 @Component({
   tag: 'atomic-category-facet',
@@ -18,7 +17,7 @@ import {randomID} from '../../utils/utils';
   shadow: true,
 })
 export class AtomicCategoryFacet {
-  @Prop() facetId = randomID('categoryFacet');
+  @Prop({mutable: true}) facetId = '';
   @Prop() field = '';
   @Prop() label = 'No label';
   @State() state!: CategoryFacetState;
@@ -35,6 +34,7 @@ export class AtomicCategoryFacet {
       delimitingCharacter: ';',
     };
     this.categoryFacet = buildCategoryFacet(this.engine, {options});
+    this.facetId = this.categoryFacet.state.facetId;
     this.subscribe();
   }
 
@@ -98,8 +98,7 @@ export class AtomicCategoryFacet {
   }
 
   private get facetSearchResults() {
-    const facetSearch = this.categoryFacet.facetSearch;
-    return facetSearch.state.values.map((searchResult) => (
+    return this.state.facetSearch.values.map((searchResult) => (
       <div onClick={() => this.categoryFacet.facetSearch.select(searchResult)}>
         {searchResult.displayValue} {searchResult.count}
       </div>
@@ -107,14 +106,14 @@ export class AtomicCategoryFacet {
   }
 
   private get showMoreSearchResults() {
-    const facetSearch = this.categoryFacet.facetSearch;
-
-    if (!facetSearch.state.moreValuesAvailable) {
+    if (!this.state.facetSearch.moreValuesAvailable) {
       return null;
     }
 
     return (
-      <button onClick={() => facetSearch.showMoreResults()}>show more</button>
+      <button onClick={() => this.categoryFacet.facetSearch.showMoreResults()}>
+        show more
+      </button>
     );
   }
 

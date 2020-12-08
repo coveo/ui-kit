@@ -41,6 +41,7 @@ export function buildResultList(
   const {dispatch} = engine;
 
   const options = validateOptions(
+    engine,
     optionsSchema,
     props?.options,
     buildResultList.name
