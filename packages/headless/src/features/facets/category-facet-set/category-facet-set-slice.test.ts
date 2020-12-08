@@ -24,6 +24,8 @@ import {
   getCategoryFacetSetInitialState,
 } from './category-facet-set-state';
 import {deselectAllFacets} from '../generic/facet-actions';
+import {restoreSearchParameters} from '../../search-parameters/search-parameter-actions';
+import * as CategoryFacetReducerHelpers from './category-facet-reducer-helpers';
 
 describe('category facet slice', () => {
   const facetId = '1';
@@ -112,6 +114,48 @@ describe('category facet slice', () => {
     );
 
     expect(finalState).toEqual(categoryFacetSet);
+  });
+
+  describe('#restoreSearchParameters', () => {
+    it('when a facet is found in the #cf payload, it sets #currentValues to a value built from the path', () => {
+      const spy = jest.spyOn(CategoryFacetReducerHelpers, 'selectPath');
+
+      const path = ['a'];
+      const request = buildMockCategoryFacetRequest();
+
+      const cf = {geography: path};
+      state['geography'] = request;
+
+      const finalState = categoryFacetSetReducer(
+        state,
+        restoreSearchParameters({cf})
+      );
+      const a = buildMockCategoryFacetValueRequest({
+        value: 'a',
+        state: 'selected',
+        retrieveChildren: true,
+        retrieveCount: 5,
+      });
+
+      expect(finalState['geography'].currentValues).toEqual([a]);
+      expect(spy).toHaveBeenCalled();
+    });
+
+    it('when a facet is not found in the #cf payload, it sets #currentValues to an empty array', () => {
+      const spy = jest.spyOn(CategoryFacetReducerHelpers, 'selectPath');
+
+      const cf = {};
+      const request = buildMockCategoryFacetRequest();
+      state['geography'] = request;
+
+      const finalState = categoryFacetSetReducer(
+        state,
+        restoreSearchParameters({cf})
+      );
+
+      expect(finalState['geography'].currentValues).toEqual([]);
+      expect(spy).toHaveBeenCalled();
+    });
   });
 
   it('#deselectAllCategoryFacetValues calls #handleFacetDeselectAll', () => {
@@ -396,7 +440,7 @@ describe('category facet slice', () => {
       expect(() => categoryFacetSetReducer(state, action)).not.toThrow();
     });
 
-    it('when the result is at the base path currentValues only contains the selected value', () => {
+    it('when the result is at the base path, currentValues only contains the selected value', () => {
       const value = buildMockCategoryFacetSearchResult();
       const expectedRequest: CategoryFacetValueRequest = buildMockCategoryFacetValueRequest(
         {
@@ -414,7 +458,7 @@ describe('category facet slice', () => {
       expect(nextState[facetId].currentValues).toContainEqual(expectedRequest);
     });
 
-    it('when the result is at a nested path currentValues contains the correct tree', () => {
+    it('when the result is at a nested path, currentValues contains the correct tree', () => {
       const value = buildMockCategoryFacetSearchResult({
         path: ['level1'],
       });

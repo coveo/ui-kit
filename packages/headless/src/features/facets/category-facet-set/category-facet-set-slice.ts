@@ -26,6 +26,8 @@ import {
   getCategoryFacetSetInitialState,
 } from './category-facet-set-state';
 import {deselectAllFacets} from '../generic/facet-actions';
+import {restoreSearchParameters} from '../../search-parameters/search-parameter-actions';
+import {selectPath} from './category-facet-reducer-helpers';
 
 export const categoryFacetSetReducer = createReducer(
   getCategoryFacetSetInitialState(),
@@ -42,6 +44,16 @@ export const categoryFacetSetReducer = createReducer(
         state[facetId] = buildCategoryFacetRequest(options);
       })
       .addCase(change.fulfilled, (_, action) => action.payload.categoryFacetSet)
+      .addCase(restoreSearchParameters, (state, action) => {
+        const cf = action.payload.cf || {};
+        const facetIds = Object.keys(state);
+
+        facetIds.forEach((id) => {
+          const request = state[id];
+          const path = cf[id] || [];
+          selectPath(request, path);
+        });
+      })
       .addCase(updateCategoryFacetSortCriterion, (state, action) => {
         const {facetId, criterion} = action.payload;
         const request = state[facetId];
@@ -119,22 +131,8 @@ export const categoryFacetSetReducer = createReducer(
           return;
         }
 
-        handleFacetDeselectAll(state, facetId);
-
         const path = [...value.path, value.rawValue];
-        let curr = buildCategoryFacetValueRequest(path[0]);
-        request.currentValues.push(curr);
-
-        for (const segment of path.splice(1)) {
-          const next = buildCategoryFacetValueRequest(segment);
-          curr.children.push(next);
-          curr = next;
-        }
-
-        curr.state = 'selected';
-        curr.retrieveChildren = true;
-
-        request.numberOfValues = 1;
+        selectPath(request, path);
       });
   }
 );
@@ -158,18 +156,6 @@ function buildCategoryFacetRequest(
     preventAutoSelect: false,
     type: 'hierarchical',
     ...config,
-  };
-}
-
-function buildCategoryFacetValueRequest(
-  value: string
-): CategoryFacetValueRequest {
-  return {
-    value,
-    retrieveCount: 5,
-    children: [],
-    state: 'idle',
-    retrieveChildren: false,
   };
 }
 
