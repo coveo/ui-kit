@@ -23,6 +23,7 @@ export interface PlatformClientCallOptions<RequestParams extends BaseParam>
   renewAccessToken: () => Promise<string>;
   preprocessRequest: PreprocessRequestMiddleware;
   logger: Logger;
+  signal?: AbortSignal;
 }
 
 export interface PlatformResponse<T> {
@@ -69,6 +70,7 @@ export class PlatformClient {
           ...processedOptions.headers,
         },
         body: JSON.stringify(processedOptions.requestParams),
+        signal: options.signal,
       });
       if (isThrottled(response.status)) {
         throw response;
@@ -76,39 +78,30 @@ export class PlatformClient {
       return response;
     };
 
-    try {
-      const response = await backOff(request, {
-        retry: (e: Response) => {
-          const shouldRetry = e && isThrottled(e.status);
-          shouldRetry && options.logger.info('Platform retrying request');
-          return shouldRetry;
-        },
-      });
-      if (response.status === 419) {
-        processedOptions.logger.info('Platform renewing token');
-        const accessToken = await processedOptions.renewAccessToken();
+    const response = await backOff(request, {
+      retry: (e: Response) => {
+        const shouldRetry = e && isThrottled(e.status);
+        shouldRetry && options.logger.info('Platform retrying request');
+        return shouldRetry;
+      },
+    });
+    if (response.status === 419) {
+      processedOptions.logger.info('Platform renewing token');
+      const accessToken = await processedOptions.renewAccessToken();
 
-        if (accessToken !== '') {
-          return PlatformClient.call({...processedOptions, accessToken});
-        }
+      if (accessToken !== '') {
+        return PlatformClient.call({...processedOptions, accessToken});
       }
-
-      const body = (await response.json()) as ResponseType;
-
-      options.logger.info({response, body, requestInfo}, 'Platform response');
-
-      return {
-        response,
-        body,
-      };
-    } catch (error) {
-      options.logger.error({error, requestInfo}, 'Platform error');
-
-      return {
-        response: error,
-        body: (await error.json()) as ResponseType,
-      };
     }
+
+    const body = (await response.json()) as ResponseType;
+
+    options.logger.info({response, body, requestInfo}, 'Platform response');
+
+    return {
+      response,
+      body,
+    };
   }
 }
 
