@@ -3,7 +3,7 @@ import {NumericFacetRegistrationOptions} from './interfaces/options';
 import {NumericFacetValue} from './interfaces/response';
 import {updateRangeFacetSortCriterion} from '../generic/range-facet-actions';
 import {deselectAllFacetValues} from '../../facet-set/facet-set-actions';
-import {validatePayloadSchema} from '../../../../utils/validate-payload';
+import {validatePayload} from '../../../../utils/validate-payload';
 import {
   facetIdDefinition,
   requiredNonEmptyString,
@@ -45,7 +45,7 @@ const numericFacetRegistrationOptionsDefinition = {
 export const registerNumericFacet = createAction(
   'numericFacet/register',
   (payload: NumericFacetRegistrationOptions) =>
-    validatePayloadSchema(payload, numericFacetRegistrationOptionsDefinition)
+    validatePayload(payload, numericFacetRegistrationOptionsDefinition)
 );
 
 /**
@@ -56,7 +56,7 @@ export const registerNumericFacet = createAction(
 export const toggleSelectNumericFacetValue = createAction(
   'numericFacet/toggleSelectValue',
   (payload: {facetId: string; selection: NumericFacetValue}) =>
-    validatePayloadSchema(payload, {
+    validatePayload(payload, {
       facetId: facetIdDefinition,
       selection: new RecordValue({values: numericFacetValueDefinition}),
     })

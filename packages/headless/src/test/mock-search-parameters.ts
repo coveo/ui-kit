@@ -6,6 +6,12 @@ export function buildMockSearchParameters(
   return {
     q: '',
     enableQuerySyntax: false,
+    aq: '',
+    cq: '',
+    firstResult: 0,
+    numberOfResults: 0,
+    sortCriteria: '',
+    debug: false,
     ...config,
   };
 }

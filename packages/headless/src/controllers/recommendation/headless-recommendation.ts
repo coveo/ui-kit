@@ -42,6 +42,7 @@ export function buildRecommendationList(
   const controller = buildController(engine);
   const {dispatch} = engine;
   const options = validateOptions(
+    engine,
     optionsSchema,
     props.options,
     buildRecommendationList.name

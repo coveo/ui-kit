@@ -3,6 +3,105 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.1.0-alpha.86](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.85...v0.1.0-alpha.86) (2020-12-08)
+
+
+### Bug Fixes
+
+* **headless:** fix facet search for headless controllers facet controllers ([#325](https://github.com/coveo/ui-kit/issues/325)) ([d104f1e](https://github.com/coveo/ui-kit/commit/d104f1e9a7cfe8bd6d98deb181ca46cac69cf4eb))
+* **headless:** fix log custom event with new ua version ([#327](https://github.com/coveo/ui-kit/issues/327)) ([c41bbb6](https://github.com/coveo/ui-kit/commit/c41bbb6ffe82e96f6362bd3a357e30020eb31de2))
+
+
+
+
+
+# [0.1.0-alpha.85](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.84...v0.1.0-alpha.85) (2020-12-07)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [0.1.0-alpha.84](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.83...v0.1.0-alpha.84) (2020-12-07)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [0.1.0-alpha.83](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.82...v0.1.0-alpha.83) (2020-12-07)
+
+
+### Features
+
+* **headless:** added middleware to preprocess responses ([#304](https://github.com/coveo/ui-kit/issues/304)) ([20a834d](https://github.com/coveo/ui-kit/commit/20a834d214b6690740c00df3f9c448370bf1e136))
+
+
+
+
+
+# [0.1.0-alpha.82](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.81...v0.1.0-alpha.82) (2020-12-07)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [0.1.0-alpha.81](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.80...v0.1.0-alpha.81) (2020-12-07)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [0.1.0-alpha.80](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.79...v0.1.0-alpha.80) (2020-12-04)
+
+
+### Features
+
+* **headless,atomic:** add basic debug mode ([#296](https://github.com/coveo/ui-kit/issues/296)) ([c1af0a5](https://github.com/coveo/ui-kit/commit/c1af0a55fcc8130f54999a4fbc382edb8695f270))
+
+
+
+
+
+# [0.1.0-alpha.79](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.78...v0.1.0-alpha.79) (2020-12-03)
+
+
+### Features
+
+* **headless:** support more search parameters in url ([#308](https://github.com/coveo/ui-kit/issues/308)) ([d78b31f](https://github.com/coveo/ui-kit/commit/d78b31f383d15a2aca4c67ac9e2f7430fc985c8b))
+
+
+
+
+
+# [0.1.0-alpha.78](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.77...v0.1.0-alpha.78) (2020-12-03)
+
+
+### Features
+
+* **atomic:** tab styling ([#307](https://github.com/coveo/ui-kit/issues/307)) ([19a46ef](https://github.com/coveo/ui-kit/commit/19a46ef40f11280dddcb91fc4fe0c6f235578b3f))
+
+
+
+
+
+# [0.1.0-alpha.77](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.76...v0.1.0-alpha.77) (2020-12-03)
+
+
+### Bug Fixes
+
+* **headless:** generate facet ids deterministically ([#303](https://github.com/coveo/ui-kit/issues/303)) ([892ddcb](https://github.com/coveo/ui-kit/commit/892ddcb4847a8bb254d9e479c5ff5a9a23197626))
+
+
+
+
+
 # [0.1.0-alpha.76](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.75...v0.1.0-alpha.76) (2020-12-02)
 
 **Note:** Version bump only for package @coveo/atomic

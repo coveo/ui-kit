@@ -86,23 +86,22 @@ export class AtomicFacet {
   }
 
   private get facetSearchResults() {
-    const facetSearch = this.facet.facetSearch;
-    return facetSearch.state.values.map((searchResult) => (
-      <div onClick={() => facetSearch.select(searchResult)}>
+    return this.state.facetSearch.values.map((searchResult) => (
+      <div onClick={() => this.facet.facetSearch.select(searchResult)}>
         {searchResult.displayValue} {searchResult.count}
       </div>
     ));
   }
 
   private get showMoreSearchResults() {
-    const facetSearch = this.facet.facetSearch;
-
-    if (!facetSearch.state.moreValuesAvailable) {
+    if (!this.state.facetSearch.moreValuesAvailable) {
       return null;
     }
 
     return (
-      <button onClick={() => facetSearch.showMoreResults()}>show more</button>
+      <button onClick={() => this.facet.facetSearch.showMoreResults()}>
+        show more
+      </button>
     );
   }
 

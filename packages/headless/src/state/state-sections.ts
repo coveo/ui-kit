@@ -102,6 +102,13 @@ export interface PipelineSection {
   pipeline: string;
 }
 
+export interface DebugSection {
+  /**
+   * Specifies if debug information should be fetched.
+   */
+  debug: boolean;
+}
+
 export interface SearchHubSection {
   /**
    * The first level of origin of the request, typically the identifier of the graphical search interface from which the request originates.

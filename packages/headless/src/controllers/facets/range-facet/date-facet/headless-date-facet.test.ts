@@ -16,9 +16,10 @@ import {
 } from '../../../../features/facets/range-facets/date-facet-set/date-facet-actions';
 import {buildMockDateFacetValue} from '../../../../test/mock-date-facet-value';
 import {buildMockDateFacetResponse} from '../../../../test/mock-date-facet-response';
-import {buildMockDateFacetRequest} from '../../../../test/mock-date-facet-request';
 import {SearchAppState} from '../../../../state/search-app-state';
 import {DateRangeRequest} from '../../../../features/facets/range-facets/date-facet-set/interfaces/request';
+import * as FacetIdDeterminor from '../../_common/facet-id-determinor';
+import {buildMockDateFacetRequest} from '../../../../test/mock-date-facet-request';
 
 describe('date facet', () => {
   const facetId = '1';
@@ -43,6 +44,17 @@ describe('date facet', () => {
     state.dateFacetSet[facetId] = buildMockDateFacetRequest();
 
     initDateFacet();
+  });
+
+  it('calls #determineFacetId with the correct params', () => {
+    jest.spyOn(FacetIdDeterminor, 'determineFacetId');
+
+    initDateFacet();
+
+    expect(FacetIdDeterminor.determineFacetId).toHaveBeenCalledWith(
+      engine,
+      options
+    );
   });
 
   it('registers a date facet with the passed options', () => {

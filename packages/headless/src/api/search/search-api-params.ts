@@ -77,6 +77,10 @@ export interface MachineLearningParam {
   mlParameters: MachineLearningECommerceParameters;
 }
 
+export interface DebugParam {
+  debug?: boolean;
+}
+
 export interface MachineLearningECommerceParameters {
   itemIds?: string[];
   categoryFilter?: string;

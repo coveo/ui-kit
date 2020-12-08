@@ -44,6 +44,11 @@ describe('buildSearchParameterSerializer', () => {
       const result = deserialize('q=a&enableQuerySyntax=true');
       expect(result).toEqual({q: 'a', enableQuerySyntax: true});
     });
+
+    it('deserializes a string where the value contains an equals sign (e.g. aq)', () => {
+      const result = deserialize('aq=@author==alice');
+      expect(result).toEqual({aq: '@author==alice'});
+    });
   });
 
   it('can serialize and deserialize all search parameters', () => {

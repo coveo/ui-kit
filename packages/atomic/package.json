@@ -1,6 +1,6 @@
 {
   "name": "@coveo/atomic",
-  "version": "0.1.0-alpha.76",
+  "version": "0.1.0-alpha.86",
   "description": "A web-component library for building modern UIs interfacing with the Coveo platform",
   "main": "dist/index.cjs.js",
   "module": "dist/index.js",
@@ -26,8 +26,8 @@
     "npm:publish": "npm publish --access public"
   },
   "dependencies": {
-    "@coveo/bueno": "^0.1.0-alpha.63",
-    "@coveo/headless": "^0.1.0-alpha.75",
+    "@coveo/bueno": "^0.1.0-alpha.81",
+    "@coveo/headless": "^0.1.0-alpha.86",
     "bootstrap": "^5.0.0-alpha3",
     "mustache": "^4.0.1",
     "stencil-inline-svg": "^1.0.1"
@@ -43,12 +43,12 @@
     "@types/mustache": "^4.0.1",
     "@types/puppeteer": "5.4.0",
     "cross-fetch": "^3.0.6",
-    "cypress": "^4.11.0",
+    "cypress": "^6.1.0",
     "eslint-plugin-cypress": "^2.11.1",
     "html-loader-jest": "^0.2.1",
     "jest": "^26.4.2",
     "jest-cli": "^26.4.2",
-    "puppeteer": "2.1.1",
+    "puppeteer": "5.5.0",
     "rollup": "^2.18.2",
     "rollup-plugin-html": "^0.2.1",
     "rollup-plugin-typescript2": "^0.27.0"

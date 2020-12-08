@@ -1,6 +1,7 @@
 import {restoreSearchParameters} from '../../features/search-parameters/search-parameter-actions';
 import {SearchAppState} from '../../state/search-app-state';
 import {buildMockSearchAppEngine, MockEngine} from '../../test';
+import {buildMockSearchParameters} from '../../test/mock-search-parameters';
 import {
   buildSearchParameterManager,
   SearchParameterManager,
@@ -67,5 +68,89 @@ describe('state manager', () => {
     it('when the parameter is equal to the default value, it is not included', () => {
       expect('enableQuerySyntax' in manager.state.parameters).toBe(false);
     });
+  });
+
+  describe('#state.parameters.aq', () => {
+    it('when the parameter does not equal the default value, it is included', () => {
+      engine.state.advancedSearchQueries.aq = 'a';
+      expect(manager.state.parameters.aq).toBe('a');
+    });
+
+    it('when the parameter is equal to the default value, it is not included', () => {
+      expect('aq' in manager.state.parameters).toBe(false);
+    });
+  });
+
+  describe('#state.parameters.cq', () => {
+    it('when the parameter does not equal the default value, it is included', () => {
+      engine.state.advancedSearchQueries.cq = 'a';
+      expect(manager.state.parameters.cq).toBe('a');
+    });
+
+    it('when the parameter is equal to the default value, it is not included', () => {
+      expect('cq' in manager.state.parameters).toBe(false);
+    });
+  });
+
+  describe('#state.parameters.firstResult', () => {
+    it('when the parameter does not equal the default value, it is included', () => {
+      engine.state.pagination.firstResult = 1;
+      expect(manager.state.parameters.firstResult).toBe(1);
+    });
+
+    it('when the parameter is equal to the default value, it is not included', () => {
+      expect('firstResult' in manager.state.parameters).toBe(false);
+    });
+  });
+
+  describe('#state.parameters.numberOfResults', () => {
+    it('when the parameter does not equal the default value, it is included', () => {
+      engine.state.pagination.numberOfResults = 1;
+      expect(manager.state.parameters.numberOfResults).toBe(1);
+    });
+
+    it('when the parameter is equal to the default value, it is not included', () => {
+      expect('numberOfResults' in manager.state.parameters).toBe(false);
+    });
+  });
+
+  describe('#state.parameters.sortCriteria', () => {
+    it('when the parameter does not equal the default value, it is included', () => {
+      engine.state.sortCriteria = 'qre';
+      expect(manager.state.parameters.sortCriteria).toBe('qre');
+    });
+
+    it('when the parameter is equal to the default value, it is not included', () => {
+      expect('numberOfResults' in manager.state.parameters).toBe(false);
+    });
+  });
+
+  describe('#state.parameters.debug', () => {
+    it('when the parameter does not equal the default value, it is included', () => {
+      engine.state.debug = true;
+      expect(manager.state.parameters.debug).toBe(true);
+    });
+
+    it('when the parameter is equal to the default value, it is not included', () => {
+      expect('debug' in manager.state.parameters).toBe(false);
+    });
+  });
+
+  it(`given a certain initial state,
+  it is possible to access every search parameter using #state.parameters`, () => {
+    engine.state.query.q = 'a';
+    engine.state.query.enableQuerySyntax = true;
+    engine.state.advancedSearchQueries.aq = 'a';
+    engine.state.advancedSearchQueries.cq = 'a';
+    engine.state.pagination.firstResult = 1;
+    engine.state.pagination.numberOfResults = 1;
+    engine.state.sortCriteria = 'qre';
+    engine.state.debug = true;
+
+    const stateParams = manager.state.parameters;
+    const allKeys = Object.keys(buildMockSearchParameters());
+    const unavailableKeys = allKeys.filter((key) => !(key in stateParams));
+
+    expect(unavailableKeys).toEqual([]);
   });
 });

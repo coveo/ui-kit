@@ -1,6 +1,5 @@
 import {Engine} from '../../../app/headless-engine';
 import {buildController} from '../../controller/headless-controller';
-import {randomID} from '../../../utils/utils';
 import {CategoryFacetRegistrationOptions} from '../../../features/facets/category-facet-set/interfaces/options';
 import {
   registerCategoryFacet,
@@ -37,6 +36,7 @@ import {
   CategoryFacetOptions,
   categoryFacetOptionsSchema,
 } from './headless-category-facet-options';
+import {determineFacetId} from '../_common/facet-id-determinor';
 
 export {CategoryFacetOptions};
 export type CategoryFacetProps = {
@@ -57,14 +57,19 @@ export function buildCategoryFacet(
   const controller = buildController(engine);
   const {dispatch} = engine;
 
-  const facetId = props.options.facetId || randomID('categoryFacet');
+  const facetId = determineFacetId(engine, props.options);
   const options: Required<CategoryFacetRegistrationOptions> = {
-    facetId,
     ...defaultCategoryFacetOptions,
     ...props.options,
+    facetId,
   };
 
-  validateOptions(categoryFacetOptionsSchema, options, buildCategoryFacet.name);
+  validateOptions(
+    engine,
+    categoryFacetOptionsSchema,
+    options,
+    buildCategoryFacet.name
+  );
 
   const createFacetSearch = () => {
     const {facetSearch} = props.options;
@@ -86,9 +91,12 @@ export function buildCategoryFacet(
 
   dispatch(registerCategoryFacet(options));
 
+  const facetSearch = createFacetSearch();
+  const {state, ...restOfFacetSearch} = facetSearch;
+
   return {
     ...controller,
-    facetSearch: createFacetSearch(),
+    facetSearch: restOfFacetSearch,
 
     /**
      * Selects (deselects) the passed value if unselected (selected).
@@ -170,6 +178,7 @@ export function buildCategoryFacet(
         canShowMoreValues,
         canShowLessValues,
         sortCriteria: request.sortCriteria,
+        facetSearch: facetSearch.state,
       };
     },
   };
