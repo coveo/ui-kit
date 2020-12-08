@@ -13,7 +13,7 @@ import {
   validateOptions,
 } from '../../utils/validate-payload';
 
-type TabOptions = {
+export type TabOptions = {
   expression: string;
 };
 
