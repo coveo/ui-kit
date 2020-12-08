@@ -51,8 +51,8 @@ describe('highlight', () => {
     it('should highlight only not match', () => {
       const options: SuggestionHighlightingOptions = {
         notMatchDelimiters: {
-          opening: '<i>',
-          closing: '</i>',
+          open: '<i>',
+          close: '</i>',
         },
       };
       const formatted = getHighlightedSuggestions(suggestion, options);
@@ -63,8 +63,8 @@ describe('highlight', () => {
     it('should highlight only exact match', () => {
       const options: SuggestionHighlightingOptions = {
         exactMatchDelimiters: {
-          opening: '<i>',
-          closing: '</i>',
+          open: '<i>',
+          close: '</i>',
         },
       };
       const formatted = getHighlightedSuggestions(suggestion, options);
@@ -75,8 +75,8 @@ describe('highlight', () => {
     it('should highlight only correction', () => {
       const options: SuggestionHighlightingOptions = {
         correctionDelimiters: {
-          opening: '<i>',
-          closing: '</i>',
+          open: '<i>',
+          close: '</i>',
         },
       };
       const formatted = getHighlightedSuggestions(suggestion, options);
@@ -87,16 +87,16 @@ describe('highlight', () => {
     it('should highlight correctly', () => {
       const options: SuggestionHighlightingOptions = {
         notMatchDelimiters: {
-          opening: 'open',
-          closing: 'close',
+          open: 'open',
+          close: 'close',
         },
         exactMatchDelimiters: {
-          opening: '<strong>',
-          closing: '</strong>',
+          open: '<strong>',
+          close: '</strong>',
         },
         correctionDelimiters: {
-          opening: '<i>',
-          closing: '</i>',
+          open: '<i>',
+          close: '</i>',
         },
       };
       const formatted = getHighlightedSuggestions(suggestion, options);

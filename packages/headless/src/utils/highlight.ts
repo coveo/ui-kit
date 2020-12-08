@@ -34,12 +34,12 @@ interface OpenCloseDelimiters {
   /**
    * Opening delimiter
    */
-  opening: string;
+  open: string;
 
   /**
    * Closing delimiter
    */
-  closing: string;
+  close: string;
 }
 
 export interface SuggestionHighlightingOptions {
@@ -137,7 +137,7 @@ function suggestionWithDelimiters(
   delimiters: OpenCloseDelimiters | undefined
 ) {
   if (delimiters) {
-    return delimiters.opening + suggestion + delimiters.closing;
+    return delimiters.open + suggestion + delimiters.close;
   }
   return suggestion;
 }

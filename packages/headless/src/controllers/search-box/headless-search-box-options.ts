@@ -23,8 +23,8 @@ export const defaultSearchBoxOptions: Required<DefaultSearchBoxOptions> = {
 };
 
 const openCloseDelimitersDefinition = {
-  opening: new StringValue(),
-  closing: new StringValue(),
+  open: new StringValue(),
+  close: new StringValue(),
 };
 
 export const searchBoxOptionDefinitions = {
@@ -70,8 +70,8 @@ export const searchBoxOptionsSchema = new Schema<Required<SearchBoxOptions>>(
 );
 
 const defaultOpenClose = {
-  opening: '',
-  closing: '',
+  open: '',
+  close: '',
 };
 
 export const defaultSuggestionHighlightingOptions: SuggestionHighlightingOptions = {
