@@ -2,7 +2,8 @@ import {
   HighlightKeyword,
   highlightString,
   HighlightParams,
-  formatHighlightedSuggestion,
+  getHighlightedSuggestions,
+  SuggestionHighlightingOptions,
 } from './highlight';
 
 describe('highlight', () => {
@@ -42,60 +43,66 @@ describe('highlight', () => {
   });
 
   describe('formatHighlightedSuggestion', () => {
-    let highlightedSuggestion: string;
+    let suggestion: string;
     beforeEach(() => {
-      highlightedSuggestion = '[thi]{s} [i]{s} (high)[light]{ed}';
+      suggestion = '[thi]{s} [i]{s} (high)[light]{ed}';
     });
-    it('should format a highlighted string correctly', () => {
-      const formatted = formatHighlightedSuggestion(
-        highlightedSuggestion,
-        '<strong>',
-        '</strong>',
-        '<i>',
-        '</i>'
-      );
-      const expected =
-        'thi<strong>s</strong> i<strong>s</strong> <i>high</i>light<strong>ed</strong>';
+
+    it('should highlight only not match', () => {
+      const options: SuggestionHighlightingOptions = {
+        notMatchDelimiters: {
+          opening: '<i>',
+          closing: '</i>',
+        },
+      };
+      const formatted = getHighlightedSuggestions(suggestion, options);
+      const expected = '<i>thi</i>s <i>i</i>s high<i>light</i>ed';
       expect(formatted).toEqual(expected);
     });
 
-    it('should throw if any delimiter is an empty string', () => {
-      expect(() =>
-        formatHighlightedSuggestion(
-          highlightedSuggestion,
-          '',
-          '</strong>',
-          '<i>',
-          '</i>'
-        )
-      ).toThrow('delimiters should be a non-empty string');
-      expect(() =>
-        formatHighlightedSuggestion(
-          highlightedSuggestion,
-          '<strong>',
-          '',
-          '<i>',
-          '</i>'
-        )
-      ).toThrow('delimiters should be a non-empty string');
-      expect(() =>
-        formatHighlightedSuggestion(
-          highlightedSuggestion,
-          '<strong>',
-          '</strong>',
-          '',
-          '</i>'
-        )
-      ).toThrow('delimiters should be a non-empty string');
-      expect(() =>
-        formatHighlightedSuggestion(
-          highlightedSuggestion,
-          '<strong>',
-          '</strong>',
-          '<i>',
-          ''
-        )
-      ).toThrow('delimiters should be a non-empty string');
+    it('should highlight only exact match', () => {
+      const options: SuggestionHighlightingOptions = {
+        exactMatchDelimiters: {
+          opening: '<i>',
+          closing: '</i>',
+        },
+      };
+      const formatted = getHighlightedSuggestions(suggestion, options);
+      const expected = 'thi<i>s</i> i<i>s</i> highlight<i>ed</i>';
+      expect(formatted).toEqual(expected);
+    });
+
+    it('should highlight only correction', () => {
+      const options: SuggestionHighlightingOptions = {
+        correctionDelimiters: {
+          opening: '<i>',
+          closing: '</i>',
+        },
+      };
+      const formatted = getHighlightedSuggestions(suggestion, options);
+      const expected = 'this is <i>high</i>lighted';
+      expect(formatted).toEqual(expected);
+    });
+
+    it('should highlight correctly', () => {
+      const options: SuggestionHighlightingOptions = {
+        notMatchDelimiters: {
+          opening: 'open',
+          closing: 'close',
+        },
+        exactMatchDelimiters: {
+          opening: '<strong>',
+          closing: '</strong>',
+        },
+        correctionDelimiters: {
+          opening: '<i>',
+          closing: '</i>',
+        },
+      };
+      const formatted = getHighlightedSuggestions(suggestion, options);
+      const expected =
+        'openthiclose<strong>s</strong> openiclose<strong>s</strong> <i>high</i>openlightclose<strong>ed</strong>';
+      expect(formatted).toEqual(expected);
     });
   });
 });

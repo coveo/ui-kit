@@ -83,6 +83,16 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
     this.searchBox = buildSearchBox(this.engine, {
       options: {
         numberOfSuggestions: this.numberOfSuggestions,
+        highlightOptions: {
+          notMatchDelimiters: {
+            open: '<strong>',
+            close: '</strong>',
+          },
+          correctionDelimiters: {
+            open: '<i>',
+            close: '</i>',
+          },
+        },
       },
     });
     this.unsubscribe = this.searchBox.subscribe(() => this.updateState());
@@ -162,13 +172,6 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
   private get suggestions() {
     return this.searchBoxState.suggestions.map((suggestion, index) => {
       const id = `${this._id}-suggestion-${index}`;
-      const highlightedSuggestion = this.searchBox.formatHighlightedSuggestion(
-        suggestion.highlighted,
-        '<strong>',
-        '</strong>',
-        '<i>',
-        '</i>'
-      );
       return (
         <button
           type="button"
@@ -179,7 +182,7 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
           part="suggestion"
           id={id}
           value={suggestion.value}
-          innerHTML={highlightedSuggestion}
+          innerHTML={suggestion.value}
         ></button>
       );
     });

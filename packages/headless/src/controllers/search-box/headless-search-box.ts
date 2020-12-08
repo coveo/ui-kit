@@ -26,13 +26,17 @@ import {
   SearchBoxOptions,
   defaultSearchBoxOptions,
   searchBoxOptionsSchema,
+  defaultSuggestionHighlightingOptions,
 } from './headless-search-box-options';
 import {validateOptions} from '../../utils/validate-payload';
 import {logQuerySuggestionClick} from '../../features/query-suggest/query-suggest-analytics-actions';
 import {randomID} from '../../utils/utils';
 import {QuerySuggestState} from '../../features/query-suggest/query-suggest-state';
 import {SearchAction} from '../../features/analytics/analytics-utils';
-import {formatHighlightedSuggestion} from '../../utils/highlight';
+import {
+  getHighlightedSuggestions,
+  SuggestionHighlightingOptions,
+} from '../../utils/highlight';
 
 export {SearchBoxOptions};
 export interface SearchBoxProps {
@@ -62,8 +66,13 @@ export function buildSearchBox(
   const {dispatch} = engine;
 
   const id = props.options?.id || randomID('search_box');
+  const highlightOptions = {
+    ...defaultSuggestionHighlightingOptions,
+    ...props.options?.highlightOptions,
+  };
   const options: Required<SearchBoxOptions> = {
     id,
+    highlightOptions,
     ...defaultSearchBoxOptions,
     ...props.options,
   };
@@ -142,38 +151,12 @@ export function buildSearchBox(
     },
 
     /**
-     * Add delimiters to a highlighted suggestion.
-     *
-     * @param highlightedSuggestion The highlighted suggestion.
-     * @param openingMatchDelimiter The opening delimiter for a match in the suggestion string (e.g. '<strong>')
-     * @param closingMatchDelimiter The closing delimiter for a match in the suggestion string (e.g. '</strong>')
-     * @param openingCorrectedDelimiter The opening delimiter for a correction in the suggestion string (e.g. '<i>')
-     * @param closingCorrectedDelimiter The closing delimiter for a correction in the suggestion string (e.g. '</i>')
-     */
-
-    formatHighlightedSuggestion(
-      highlightedSuggestion: string,
-      openingMatchDelimiter: string,
-      closingMatchDelimiter: string,
-      openingCorrectedDelimiter: string,
-      closingCorrectedDelimiter: string
-    ) {
-      return formatHighlightedSuggestion(
-        highlightedSuggestion,
-        openingMatchDelimiter,
-        closingMatchDelimiter,
-        openingCorrectedDelimiter,
-        closingCorrectedDelimiter
-      );
-    },
-
-    /**
      * @returns The state of the `SearchBox` controller.
      */
     get state() {
       const state = engine.state;
       const querySuggestState = state.querySuggest[options.id];
-      const suggestions = getSuggestions(querySuggestState);
+      const suggestions = getSuggestions(querySuggestState, highlightOptions);
 
       return {
         value: getValue(),
@@ -184,13 +167,15 @@ export function buildSearchBox(
   };
 }
 
-function getSuggestions(state: QuerySuggestState | undefined) {
+function getSuggestions(
+  state: QuerySuggestState | undefined,
+  highlightOptions: SuggestionHighlightingOptions
+) {
   if (!state) {
     return [];
   }
 
   return state.completions.map((completion) => ({
-    value: completion.expression,
-    highlighted: completion.highlighted,
+    value: getHighlightedSuggestions(completion.highlighted, highlightOptions),
   }));
 }

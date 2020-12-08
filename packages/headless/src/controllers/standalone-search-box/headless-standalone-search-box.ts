@@ -13,7 +13,10 @@ import {
 import {randomID} from '../../utils/utils';
 import {validateOptions} from '../../utils/validate-payload';
 import {buildSearchBox} from '../search-box/headless-search-box';
-import {defaultSearchBoxOptions} from '../search-box/headless-search-box-options';
+import {
+  defaultSearchBoxOptions,
+  defaultSuggestionHighlightingOptions,
+} from '../search-box/headless-search-box-options';
 import {
   StandaloneSearchBoxOptions,
   standaloneSearchBoxSchema,
@@ -47,8 +50,13 @@ export function buildStandaloneSearchBox(
 ) {
   const {dispatch} = engine;
   const id = props.options.id || randomID('standalone_search_box');
+  const highlightOptions = {
+    ...defaultSuggestionHighlightingOptions,
+    ...props.options.highlightOptions,
+  };
   const options: Required<StandaloneSearchBoxOptions> = {
     id,
+    highlightOptions,
     ...defaultSearchBoxOptions,
     ...props.options,
   };

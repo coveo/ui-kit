@@ -30,6 +30,35 @@ export interface HighlightParams {
   closingDelimiter: string;
 }
 
+interface OpenCloseDelimiters {
+  /**
+   * Opening delimiter
+   */
+  opening: string;
+
+  /**
+   * Closing delimiter
+   */
+  closing: string;
+}
+
+export interface SuggestionHighlightingOptions {
+  /**
+   * Delimiters for substrings that do not match the input
+   */
+  notMatchDelimiters?: OpenCloseDelimiters;
+
+  /**
+   * Delimiters for substrings that are exact match of the input
+   */
+  exactMatchDelimiters?: OpenCloseDelimiters;
+
+  /**
+   * Delimiters for substrings that are correction of the input
+   */
+  correctionDelimiters?: OpenCloseDelimiters;
+}
+
 function isEmptyString(str: string) {
   return str === '';
 }
@@ -74,44 +103,41 @@ export function highlightString(params: HighlightParams): string {
 }
 
 /**
- * Add delimiters to a highlighted suggestion.
- *
- * @param highlightedSuggestion The highlighted suggestion
- * @param openingMatchDelimiter The opening delimiter for a match in the suggestion string (e.g. '<strong>')
- * @param closingMatchDelimiter The closing delimiter for a match in the suggestion string (e.g. '</strong>')
- * @param openingCorrectedDelimiter The opening delimiter for a correction in the suggestion string (e.g. '<i>')
- * @param closingCorrectedDelimiter The closing delimiter for a correction in the suggestion string (e.g. '</i>')
+ * Highlight a suggestion with the given delimiters.
+ * @param suggestion The suggestion to highlight
+ * @param options The object contaning the delimiters used
  */
-
-export function formatHighlightedSuggestion(
-  highlightedSuggestion: string,
-  openingMatchDelimiter: string,
-  closingMatchDelimiter: string,
-  openingCorrectedDelimiter: string,
-  closingCorrectedDelimiter: string
+export function getHighlightedSuggestions(
+  suggestion: string,
+  options: SuggestionHighlightingOptions
 ) {
-  if (
-    isEmptyString(openingMatchDelimiter) ||
-    isEmptyString(closingMatchDelimiter) ||
-    isEmptyString(openingCorrectedDelimiter) ||
-    isEmptyString(closingCorrectedDelimiter)
-  ) {
-    throw Error('delimiters should be a non-empty string');
-  }
-  return highlightedSuggestion.replace(
+  return suggestion.replace(
     /\[(.*?)\]|\{(.*?)\}|\((.*?)\)/g,
-    (_, notMatched, matched, corrected) => {
+    (part, notMatched, matched, corrected) => {
       if (notMatched) {
-        return notMatched;
+        return suggestionWithDelimiters(notMatched, options.notMatchDelimiters);
       }
       if (matched) {
-        return openingMatchDelimiter + matched + closingMatchDelimiter;
+        return suggestionWithDelimiters(matched, options.exactMatchDelimiters);
       }
       if (corrected) {
-        return (
-          openingCorrectedDelimiter + corrected + closingCorrectedDelimiter
+        return suggestionWithDelimiters(
+          corrected,
+          options.correctionDelimiters
         );
       }
+
+      return part;
     }
   );
+}
+
+function suggestionWithDelimiters(
+  suggestion: string,
+  delimiters: OpenCloseDelimiters | undefined
+) {
+  if (delimiters) {
+    return delimiters.opening + suggestion + delimiters.closing;
+  }
+  return suggestion;
 }
