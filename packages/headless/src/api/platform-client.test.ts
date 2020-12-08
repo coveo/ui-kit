@@ -5,6 +5,7 @@ import {
   NoopPreprocessRequestMiddleware,
 } from './platform-client';
 import pino from 'pino';
+import * as BackOff from 'exponential-backoff';
 
 jest.mock('cross-fetch');
 import fetch from 'cross-fetch';
@@ -153,6 +154,18 @@ describe('PlatformClient call', () => {
     await platformCall();
 
     expect(mockFetch).toHaveBeenCalledTimes(3);
+    done();
+  });
+
+  it('should not throw when backOff rejects with a response', async (done) => {
+    const spy = jest.spyOn(BackOff, 'backOff');
+    const expectedResponse = new Response(JSON.stringify({hoho: 'oups'}), {
+      status: 429,
+    });
+    spy.mockRejectedValueOnce(expectedResponse);
+
+    const response = await platformCall();
+    expect(response.response).toBe(expectedResponse);
     done();
   });
 
