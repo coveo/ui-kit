@@ -29,7 +29,8 @@
     "@coveo/bueno": "^0.1.0-alpha.81",
     "@coveo/headless": "^0.1.0-alpha.86",
     "bootstrap": "^5.0.0-alpha3",
-    "mustache": "^4.0.1"
+    "mustache": "^4.0.1",
+    "stencil-inline-svg": "^1.0.1"
   },
   "devDependencies": {
     "@rollup/plugin-alias": "^3.1.1",
