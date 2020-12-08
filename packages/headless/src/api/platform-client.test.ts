@@ -153,12 +153,12 @@ describe('PlatformClient call', () => {
   });
 
   it('should throw when fetch throws an error', async () => {
-    const error = new Error('Test');
+    const testError = new Error('Test');
     try {
-      mockFetch.mockRejectedValue(error);
+      mockFetch.mockRejectedValue(testError);
       expect(await platformCall()).toThrow();
     } catch (error) {
-      expect(error).toEqual(error);
+      expect(error).toEqual(testError);
     }
   });
 });
