@@ -64,7 +64,12 @@ export function buildCategoryFacet(
     facetId,
   };
 
-  validateOptions(categoryFacetOptionsSchema, options, buildCategoryFacet.name);
+  validateOptions(
+    engine,
+    categoryFacetOptionsSchema,
+    options,
+    buildCategoryFacet.name
+  );
 
   const createFacetSearch = () => {
     const {facetSearch} = props.options;
@@ -86,9 +91,12 @@ export function buildCategoryFacet(
 
   dispatch(registerCategoryFacet(options));
 
+  const facetSearch = createFacetSearch();
+  const {state, ...restOfFacetSearch} = facetSearch;
+
   return {
     ...controller,
-    facetSearch: createFacetSearch(),
+    facetSearch: restOfFacetSearch,
 
     /**
      * Selects (deselects) the passed value if unselected (selected).
@@ -163,6 +171,7 @@ export function buildCategoryFacet(
       const canShowLessValues = values.length > options.numberOfValues;
 
       return {
+        facetId,
         parents,
         values,
         isLoading,
@@ -170,6 +179,7 @@ export function buildCategoryFacet(
         canShowMoreValues,
         canShowLessValues,
         sortCriteria: request.sortCriteria,
+        facetSearch: facetSearch.state,
       };
     },
   };

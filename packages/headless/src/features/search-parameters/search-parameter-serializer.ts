@@ -114,6 +114,7 @@ function isValidKey(key: string): key is keyof SearchParameters {
     numberOfResults: true,
     sortCriteria: true,
     f: true,
+    debug: true,
   };
 
   return key in supportedParameters;
@@ -125,6 +126,10 @@ function cast<K extends keyof SearchParameters>(
   const [key, value] = pair;
 
   if (key === 'enableQuerySyntax') {
+    return [key, value === 'true'];
+  }
+
+  if (key === 'debug') {
     return [key, value === 'true'];
   }
 

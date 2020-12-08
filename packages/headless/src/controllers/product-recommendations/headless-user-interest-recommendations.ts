@@ -8,6 +8,7 @@ import {
   baseProductRecommendationsOptionsSchema,
   buildBaseProductRecommendationsList,
 } from './headless-base-product-recommendations';
+import {validateOptions} from '../../utils/validate-payload';
 
 const optionsSchema = new Schema({
   maxNumberOfRecommendations:
@@ -27,13 +28,16 @@ export type UserInterestRecommendationsList = ReturnType<
 >;
 export type UserInterestRecommendationsListState = UserInterestRecommendationsList['state'];
 
-export const buildUserInterestRecommendationsList = (
+export function buildUserInterestRecommendationsList(
   engine: Engine<ProductRecommendationsSection & ConfigurationSection>,
   props: UserInterestRecommendationsListProps
-) => {
-  const options = optionsSchema.validate(props.options) as Required<
-    UserInterestRecommendationsListOptions
-  >;
+) {
+  const options = validateOptions(
+    engine,
+    optionsSchema,
+    props.options,
+    buildUserInterestRecommendationsList.name
+  ) as Required<UserInterestRecommendationsListOptions>;
   const controller = buildBaseProductRecommendationsList(engine, {
     ...props,
     options: {
@@ -55,4 +59,4 @@ export const buildUserInterestRecommendationsList = (
       };
     },
   };
-};
+}

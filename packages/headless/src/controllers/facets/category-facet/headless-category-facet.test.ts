@@ -72,6 +72,10 @@ describe('category facet', () => {
     );
   });
 
+  it('#state.facetId exposes the facet id', () => {
+    expect(categoryFacet.state.facetId).toBe(facetId);
+  });
+
   it('registers a category facet with the passed options and default optional parameters', () => {
     const action = registerCategoryFacet({
       facetId,
@@ -457,6 +461,26 @@ describe('category facet', () => {
     expect(categoryFacet.facetSearch).toBeTruthy();
     expect(CategoryFacetSearch.buildCategoryFacetSearch).toHaveBeenCalledTimes(
       1
+    );
+  });
+
+  it('exposes a #facetSearch state', () => {
+    expect(categoryFacet.state.facetSearch).toBeTruthy();
+    expect(categoryFacet.state.facetSearch.values).toEqual([]);
+
+    const fakeResponseValue = {
+      count: 123,
+      displayValue: 'foo',
+      rawValue: 'foo',
+      path: ['bar', 'bazz'],
+    };
+
+    engine.state.categoryFacetSearchSet[facetId].response.values = [
+      fakeResponseValue,
+    ];
+
+    expect(categoryFacet.state.facetSearch.values[0]).toMatchObject(
+      fakeResponseValue
     );
   });
 });

@@ -13,5 +13,5 @@ export function determineFacetId(
 ) {
   const {state, logger} = engine;
   const {field, facetId} = config;
-  return facetId ?? generateFacetId({field, state}, logger);
+  return facetId || generateFacetId({field, state}, logger);
 }

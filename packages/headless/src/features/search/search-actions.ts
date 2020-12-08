@@ -48,6 +48,7 @@ import {getSearchHubInitialState} from '../search-hub/search-hub-state';
 import {getFacetOptionsInitialState} from '../facet-options/facet-options-state';
 import {logFetchMoreResults} from './search-analytics-actions';
 import {SearchAction} from '../analytics/analytics-utils';
+import {getDebugInitialState} from '../debug/debug-state';
 
 export type StateNeededByExecuteSearch = ConfigurationSection &
   Partial<
@@ -239,6 +240,7 @@ const extractHistory = (
   pipeline: state.pipeline || getPipelineInitialState(),
   searchHub: state.searchHub || getSearchHubInitialState(),
   facetOptions: state.facetOptions || getFacetOptionsInitialState(),
+  debug: state.debug ?? getDebugInitialState(),
 });
 
 export const buildSearchRequest = (

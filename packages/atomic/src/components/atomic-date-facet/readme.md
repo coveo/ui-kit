@@ -7,11 +7,11 @@
 
 ## Properties
 
-| Property  | Attribute  | Description | Type     | Default                 |
-| --------- | ---------- | ----------- | -------- | ----------------------- |
-| `facetId` | `facet-id` |             | `string` | `randomID('dateFacet')` |
-| `field`   | `field`    |             | `string` | `''`                    |
-| `label`   | `label`    |             | `string` | `'No label'`            |
+| Property  | Attribute  | Description | Type     | Default      |
+| --------- | ---------- | ----------- | -------- | ------------ |
+| `facetId` | `facet-id` |             | `string` | `''`         |
+| `field`   | `field`    |             | `string` | `''`         |
+| `label`   | `label`    |             | `string` | `'No label'` |
 
 
 ## Dependencies

@@ -36,7 +36,8 @@ export type SearchParametersState = FacetSection &
   ContextSection &
   QuerySetSection &
   PipelineSection &
-  SearchHubSection;
+  SearchHubSection &
+  DebugSection;
 
 export type SearchAppState = SearchParametersState &
   ConfigurationSection &
@@ -46,5 +47,4 @@ export type SearchAppState = SearchParametersState &
   QuerySuggestionSection &
   SearchSection &
   DidYouMeanSection &
-  DebugSection &
   FieldsSection & {history: StateWithHistory<SearchParametersState>};
