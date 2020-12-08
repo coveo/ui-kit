@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.1.0-alpha.87](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.86...v0.1.0-alpha.87) (2020-12-08)
+
+
+### Features
+
+* **atomic:** breadcrumbs styling ([#264](https://github.com/coveo/ui-kit/issues/264)) ([d9dbcc4](https://github.com/coveo/ui-kit/commit/d9dbcc422c7e244209c94135b6e2e56775d995c8))
+
+
+
+
+
 # [0.1.0-alpha.86](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.85...v0.1.0-alpha.86) (2020-12-08)
 
 
