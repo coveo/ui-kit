@@ -69,13 +69,13 @@ export const searchBoxOptionsSchema = new Schema<Required<SearchBoxOptions>>(
   searchBoxOptionDefinitions
 );
 
-const defaultOpenClose = {
+const defaultOpenCloseDelimiters = {
   open: '',
   close: '',
 };
 
 export const defaultSuggestionHighlightingOptions: SuggestionHighlightingOptions = {
-  notMatchDelimiters: defaultOpenClose,
-  exactMatchDelimiters: defaultOpenClose,
-  correctionDelimiters: defaultOpenClose,
+  notMatchDelimiters: defaultOpenCloseDelimiters,
+  exactMatchDelimiters: defaultOpenCloseDelimiters,
+  correctionDelimiters: defaultOpenCloseDelimiters,
 };
