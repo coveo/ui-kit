@@ -181,7 +181,7 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
           onMouseDown={(e) => e.preventDefault()}
           part="suggestion"
           id={id}
-          value={suggestion.value}
+          value={suggestion.rawValue}
           innerHTML={suggestion.value}
         ></button>
       );

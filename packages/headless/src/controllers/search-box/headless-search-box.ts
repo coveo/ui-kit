@@ -177,5 +177,6 @@ function getSuggestions(
 
   return state.completions.map((completion) => ({
     value: getHighlightedSuggestions(completion.highlighted, highlightOptions),
+    rawValue: completion.expression,
   }));
 }
