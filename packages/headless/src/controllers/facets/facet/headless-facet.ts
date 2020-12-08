@@ -179,6 +179,9 @@ export function buildFacet(
       const canShowMoreValues = response ? response.moreValuesAvailable : false;
 
       return {
+        /** @returns the facet id */
+        facetId,
+
         /** @returns the values of the facet */
         values,
 

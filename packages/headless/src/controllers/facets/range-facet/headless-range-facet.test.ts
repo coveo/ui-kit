@@ -41,6 +41,10 @@ describe('range facet', () => {
     expect(rangeFacet.subscribe).toBeDefined();
   });
 
+  it('#state.facetId exposes the facet id', () => {
+    expect(rangeFacet.state.facetId).toBe(facetId);
+  });
+
   it('#state.values holds the response values', () => {
     const values = [buildMockNumericFacetValue()];
     const facet = buildMockNumericFacetResponse({facetId, values});
