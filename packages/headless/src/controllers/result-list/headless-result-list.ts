@@ -5,6 +5,7 @@ import {fetchMoreResults} from '../../features/search/search-actions';
 import {registerFieldsToInclude} from '../../features/fields/fields-actions';
 import {Schema, ArrayValue, StringValue} from '@coveo/bueno';
 import {validateOptions} from '../../utils/validate-payload';
+import {debounce} from 'ts-debounce';
 
 const optionsSchema = new Schema<ResultListOptions>({
   /**
@@ -37,8 +38,6 @@ export function buildResultList(
   engine: Engine<SearchSection & ConfigurationSection>,
   props?: ResultListProps
 ) {
-  let consecutiveFetches = 0;
-  const maxConsecutiveFetches = 5;
   const controller = buildController(engine);
   const {dispatch} = engine;
 
@@ -53,21 +52,17 @@ export function buildResultList(
     dispatch(registerFieldsToInclude(options.fieldsToInclude));
   }
 
-  const triggerFetchMore = (shouldKeepFetchingResults?: () => boolean) => {
-    dispatch(fetchMoreResults()).then(() => {
-      if (
-        shouldKeepFetchingResults?.() &&
-        consecutiveFetches < maxConsecutiveFetches
-      ) {
-        consecutiveFetches++;
-        triggerFetchMore(shouldKeepFetchingResults);
-      }
-
-      engine.logger
-        .warn(`Result list has triggered ${maxConsecutiveFetches} consecutive queries.
-      Please investigate the condition contained in the "shouldKeepFetchingResults" argument function.`);
-    });
-  };
+  let consecutiveFetches = 0;
+  let fetchMoreResultBlocked = false;
+  const maxConsecutiveFetches = 5;
+  const resetConsecutiveFetchesAfterDelay = debounce(
+    () => (consecutiveFetches = 0),
+    500
+  );
+  const unblockFetchMoreResultAfterDelay = debounce(
+    () => (fetchMoreResultBlocked = false),
+    1000
+  );
 
   return {
     ...controller,
@@ -87,12 +82,25 @@ export function buildResultList(
      * Using the same parameters as the last successful query, fetch another batch of results.
      * @param shouldKeepFetchingResults A callback that verifies if the controller should send another request once it's successful. Particularly useful for infinite scrolling, for example.
      */
-    fetchMoreResults(shouldKeepFetchingResults?: () => boolean) {
-      if (this.state.isLoading) {
+    fetchMoreResults() {
+      if (this.state.isLoading || fetchMoreResultBlocked) {
         return;
       }
-      consecutiveFetches = 0;
-      triggerFetchMore(shouldKeepFetchingResults);
+
+      dispatch(fetchMoreResults()).then(() => {
+        if (consecutiveFetches < maxConsecutiveFetches) {
+          consecutiveFetches++;
+          console.log('consecutiveFetches', consecutiveFetches);
+          resetConsecutiveFetchesAfterDelay();
+          return;
+        }
+
+        engine.logger.error(
+          `The result list method "fetchMoreResults" has been triggered ${maxConsecutiveFetches} consecutively, and is throttled.`
+        );
+        fetchMoreResultBlocked = true;
+        unblockFetchMoreResultAfterDelay();
+      });
     },
   };
 }
