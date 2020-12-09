@@ -421,7 +421,8 @@ describe('facet-set slice', () => {
   });
 
   describe('#restoreSearchParameters', () => {
-    it("sets matching facets' #currentValues to the selected values in the payload", () => {
+    it(`when a facet is found in the #f payload,
+    it sets #currentValues to the selected values in the payload`, () => {
       const facetId = 'author';
       state[facetId] = buildMockFacetRequest();
 
@@ -432,7 +433,30 @@ describe('facet-set slice', () => {
       expect(finalState[facetId].currentValues).toEqual([value]);
     });
 
-    it("deselects non-matching facets' by setting #currentValues to an empty array", () => {
+    it(`when the number of values in the payload is greater than the number of values on the request,
+    it sets the request #numberOfValues to the length of the payload`, () => {
+      const facetId = 'author';
+      state[facetId] = buildMockFacetRequest({numberOfValues: 1});
+
+      const f = {[facetId]: ['a', 'b']};
+      const finalState = facetSetReducer(state, restoreSearchParameters({f}));
+
+      expect(finalState[facetId].numberOfValues).toBe(2);
+    });
+
+    it(`when the number of values in the payload is less than the number of values on the request,
+    it does not change the request #numberOfValues`, () => {
+      const facetId = 'author';
+      state[facetId] = buildMockFacetRequest({numberOfValues: 8});
+
+      const f = {[facetId]: ['a']};
+      const finalState = facetSetReducer(state, restoreSearchParameters({f}));
+
+      expect(finalState[facetId].numberOfValues).toBe(8);
+    });
+
+    it(`when a facet is not found in the #f payload,
+    it deselects all values by setting #currentValues to an empty array`, () => {
       const currentValues = [buildMockFacetValueRequest({state: 'selected'})];
       state['author'] = buildMockFacetRequest({currentValues});
 

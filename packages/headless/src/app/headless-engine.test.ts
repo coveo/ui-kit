@@ -61,9 +61,7 @@ describe('headless engine', () => {
         organizationId: (123 as unknown) as string,
       },
     };
-    expect(() => new HeadlessEngine(invalidOptions)).toThrow(
-      `Check the options of ${HeadlessEngine.name}`
-    );
+    expect(() => new HeadlessEngine(invalidOptions)).toThrow();
   });
 
   it('should call configureStore', () => {

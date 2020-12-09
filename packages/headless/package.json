@@ -9,7 +9,7 @@
   },
   "types": "./dist/index.d.ts",
   "license": "Apache-2.0",
-  "version": "0.1.0-alpha.87",
+  "version": "0.1.0-alpha.92",
   "files": [
     "dist/"
   ],
@@ -27,13 +27,14 @@
     "doc": "typedoc --tsconfig tsconfig.typedoc.json"
   },
   "dependencies": {
-    "@coveo/bueno": "^0.1.0-alpha.81",
+    "@coveo/bueno": "^0.1.0-alpha.91",
     "@reduxjs/toolkit": "^1.4.0",
     "@types/redux-mock-store": "^1.0.2",
     "coveo.analytics": "^2.14.0",
     "cross-fetch": "^3.0.6",
     "dayjs": "^1.9.6",
     "exponential-backoff": "^3.1.0",
+    "node-abort-controller": "^1.1.0",
     "pino": "^6.7.0",
     "redux": "^4.0.5",
     "redux-mock-store": "^1.5.4",

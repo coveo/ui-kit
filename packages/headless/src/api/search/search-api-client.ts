@@ -1,3 +1,4 @@
+import AbortController from 'node-abort-controller';
 import {
   PlatformClient,
   PlatformResponse,
@@ -99,14 +100,26 @@ export class SearchAPIClient {
     };
   }
 
+  private searchAbortController: AbortController | null = null;
+
   async search(
     req: SearchRequest
   ): Promise<SearchAPIClientResponse<SearchResponseSuccess>> {
+    if (this.searchAbortController) {
+      this.options.logger.warn('Cancelling current pending search query');
+      this.searchAbortController.abort();
+    }
+    this.searchAbortController = new AbortController();
+
     const platformResponse = await PlatformClient.call<SearchRequest, Search>({
       ...baseSearchRequest(req, 'POST', 'application/json', ''),
       requestParams: pickNonBaseParams(req),
       ...this.options,
+      signal: this.searchAbortController.signal,
     });
+
+    this.searchAbortController = null;
+
     if (isSuccessSearchResponse(platformResponse)) {
       const processedResponse = await this.options.postprocessSearchResponseMiddleware(
         platformResponse
