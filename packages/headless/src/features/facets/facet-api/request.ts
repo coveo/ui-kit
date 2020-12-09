@@ -27,6 +27,9 @@ export interface BaseFacetRequest {
 }
 
 export interface BaseFacetValueRequest {
+  /** The current facet value state.
+   * @default "idle"
+   */
   state: FacetValueState;
 }
 

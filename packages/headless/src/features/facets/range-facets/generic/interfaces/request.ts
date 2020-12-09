@@ -17,8 +17,13 @@ export interface AutomaticRanges<T extends boolean> {
 
 export interface RangeRequest<T extends string | number>
   extends BaseFacetValueRequest {
+  /** The start value of the range.*/
   start: T;
+  /** The end value of the range.*/
   end: T;
+  /** Whether to include the `end` value in the range.
+   * @default false
+   */
   endInclusive: boolean;
 }
 
