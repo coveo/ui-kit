@@ -5,7 +5,6 @@ import {fetchMoreResults} from '../../features/search/search-actions';
 import {registerFieldsToInclude} from '../../features/fields/fields-actions';
 import {Schema, ArrayValue, StringValue} from '@coveo/bueno';
 import {validateOptions} from '../../utils/validate-payload';
-// import {debounce} from 'ts-debounce';
 
 const optionsSchema = new Schema<ResultListOptions>({
   /**
