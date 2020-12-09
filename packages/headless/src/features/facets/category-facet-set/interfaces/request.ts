@@ -26,6 +26,10 @@ export interface CategoryFacetRequest
     Delimitable,
     Type<'hierarchical'>,
     SortCriteria<CategoryFacetSortCriterion> {
+  /** @default 5 */
+  numberOfValues: number;
+  /** @default ; */
+  delimitingCharacter: string;
   basePath: string[];
   filterByBasePath: boolean;
 }
