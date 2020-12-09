@@ -23,6 +23,7 @@ export interface PlatformClientCallOptions<RequestParams extends BaseParam>
   renewAccessToken: () => Promise<string>;
   preprocessRequest: PreprocessRequestMiddleware;
   logger: Logger;
+  signal?: AbortSignal;
 }
 
 export interface PlatformResponse<T> {
@@ -69,6 +70,7 @@ export class PlatformClient {
           ...processedOptions.headers,
         },
         body: JSON.stringify(processedOptions.requestParams),
+        signal: options.signal,
       });
       if (isThrottled(response.status)) {
         throw response;
@@ -102,12 +104,14 @@ export class PlatformClient {
         body,
       };
     } catch (error) {
-      options.logger.error({error, requestInfo}, 'Platform error');
+      if (error.body) {
+        return {
+          response: error,
+          body: await error.json(),
+        };
+      }
 
-      return {
-        response: error,
-        body: (await error.json()) as ResponseType,
-      };
+      throw error;
     }
   }
 }
