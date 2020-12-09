@@ -56,12 +56,6 @@ export class AtomicResultList {
     this.registerChildrenResultTemplates();
   }
 
-  private fetchMoreResults() {
-    if (!this.state.isLoading) {
-      this.resultList.fetchMoreResults();
-    }
-  }
-
   private registerDefaultResultTemplates() {
     // TODO: get fields & conditions from default templates
     this.resultTemplatesManager.registerTemplates({
@@ -116,7 +110,7 @@ export class AtomicResultList {
       </div>,
       <button
         class="fetch-more-results btn btn-secondary"
-        onClick={() => this.fetchMoreResults()}
+        onClick={() => this.resultList.fetchMoreResults()}
         disabled={this.state.isLoading}
       >
         Fetch more results
