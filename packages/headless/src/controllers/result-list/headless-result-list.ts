@@ -53,7 +53,7 @@ export function buildResultList(
 
   let lastFetchCompleted = 0;
   let consecutiveFetches = 0;
-  const maxConsecutiveFetches = 3;
+  const maxConsecutiveFetches = 5;
   const maxDelayBetweenFetches = 200;
 
   const triggerFetchMoreResult = () => {
