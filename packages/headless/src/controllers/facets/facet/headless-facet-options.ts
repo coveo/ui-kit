@@ -14,8 +14,8 @@ import {
 
 type OptionalFacetId = Partial<Pick<FacetRegistrationOptions, 'facetId'>>;
 
-export type FacetOptions = Omit<FacetRegistrationOptions, 'facetId'> &
-  OptionalFacetId & {
+export type FacetOptions = OptionalFacetId &
+  Omit<FacetRegistrationOptions, 'facetId'> & {
     facetSearch?: Partial<FacetSearchRequestOptions>;
   };
 

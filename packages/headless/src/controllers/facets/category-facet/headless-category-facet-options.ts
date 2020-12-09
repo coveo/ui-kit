@@ -21,11 +21,8 @@ type OptionalFacetId = Partial<
   Pick<CategoryFacetRegistrationOptions, 'facetId'>
 >;
 
-export type CategoryFacetOptions = Omit<
-  CategoryFacetRegistrationOptions,
-  'facetId'
-> &
-  OptionalFacetId & {
+export type CategoryFacetOptions = OptionalFacetId &
+  Omit<CategoryFacetRegistrationOptions, 'facetId'> & {
     facetSearch?: Partial<FacetSearchRequestOptions>;
   };
 
