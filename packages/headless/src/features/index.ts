@@ -1,12 +1,20 @@
 export {updateAdvancedSearchQueries} from './advanced-search-queries/advanced-search-queries-actions';
 
-export {
-  registerCategoryFacet,
-  toggleSelectCategoryFacetValue,
-  deselectAllCategoryFacetValues,
-  updateCategoryFacetNumberOfValues,
-  updateCategoryFacetSortCriterion,
+import {
+  registerCategoryFacet as registerCategoryFacetAlias,
+  toggleSelectCategoryFacetValue as toggleSelectCategoryFacetValueAlias,
+  deselectAllCategoryFacetValues as deselectAllCategoryFacetValuesAlias,
+  updateCategoryFacetNumberOfValues as updateCategoryFacetNumberOfValuesAlias,
+  updateCategoryFacetSortCriterion as updateCategoryFacetSortCriterionAlias,
 } from './facets/category-facet-set/category-facet-set-actions';
+
+export namespace CategoryFacetSetActions {
+  export const registerCategoryFacet = registerCategoryFacetAlias;
+  export const toggleSelectCategoryFacetValue = toggleSelectCategoryFacetValueAlias;
+  export const deselectAllCategoryFacetValues = deselectAllCategoryFacetValuesAlias;
+  export const updateCategoryFacetNumberOfValues = updateCategoryFacetNumberOfValuesAlias;
+  export const updateCategoryFacetSortCriterion = updateCategoryFacetSortCriterionAlias;
+}
 
 export {
   updateBasicConfiguration,
