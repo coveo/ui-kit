@@ -12,10 +12,12 @@ import {
   facetSearch,
 } from '../_common/facet-option-definitions';
 
-export type FacetOptions = Omit<FacetRegistrationOptions, 'facetId'> & {
-  facetId?: string;
-  facetSearch?: Partial<FacetSearchRequestOptions>;
-};
+type OptionalFacetId = Partial<Pick<FacetRegistrationOptions, 'facetId'>>;
+
+export type FacetOptions = Omit<FacetRegistrationOptions, 'facetId'> &
+  OptionalFacetId & {
+    facetSearch?: Partial<FacetSearchRequestOptions>;
+  };
 
 export const facetOptionsSchema = new Schema<Required<FacetOptions>>({
   facetId,
