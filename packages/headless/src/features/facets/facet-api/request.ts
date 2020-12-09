@@ -31,7 +31,9 @@ export interface BaseFacetValueRequest {
 }
 
 export interface CurrentValues<T> {
-  /** The values displayed by the facet in the search interface at the moment of the request. */
+  /** The values displayed by the facet in the search interface at the moment of the request.
+   * @default []
+   */
   currentValues: T[];
 }
 

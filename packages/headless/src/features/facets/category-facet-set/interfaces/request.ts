@@ -28,8 +28,16 @@ export interface CategoryFacetRequest
     SortCriteria<CategoryFacetSortCriterion> {
   /** @default 5 */
   numberOfValues: number;
-  /** @default ; */
+  /** @default ";" */
   delimitingCharacter: string;
+  /** @default "occurrences" */
+  sortCriteria: CategoryFacetSortCriterion;
+  /** The base path shared by all values for the facet.
+   * @default []
+   */
   basePath: string[];
+  /** Whether to use basePath as a filter for the results.
+   * @default true
+   */
   filterByBasePath: boolean;
 }
