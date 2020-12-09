@@ -235,6 +235,19 @@ export class CoveoSearchPageClient {
         return this.coveoAnalyticsClient.sendCustomEvent(payload);
     }
 
+    public logCustomEventWithType(eventValue: string, eventType: string, metadata?: Record<string, any>) {
+        const customData = {...this.provider.getBaseMetadata(), ...metadata};
+
+        const payload: CustomEventRequest = {
+            ...this.getOrigins(),
+            eventType,
+            eventValue,
+            lastSearchQueryUid: this.provider.getSearchUID(),
+            customData,
+        };
+        return this.coveoAnalyticsClient.sendCustomEvent(payload);
+    }
+
     public logSearchEvent(event: SearchPageEvents, metadata?: Record<string, any>) {
         const customData = {...this.provider.getBaseMetadata(), ...metadata};
 

@@ -97,6 +97,18 @@ describe('SearchPageClient', () => {
         });
     };
 
+    const expectMatchCustomEventWithTypePayload = (eventValue: string, eventType: string, meta = {}) => {
+        const [, {body}] = fetchMock.lastCall();
+        const customData = {foo: 'bar', ...meta};
+        expect(JSON.parse(body.toString())).toMatchObject({
+            eventValue,
+            eventType,
+            lastSearchQueryUid: 'my-uid',
+            customData,
+            ...expectOrigins(),
+        });
+    };
+
     it('should send proper payload for #interfaceLoad', async () => {
         await client.logInterfaceLoad();
         expectMatchPayload(SearchPageEvents.interfaceLoad);
@@ -377,6 +389,11 @@ describe('SearchPageClient', () => {
     it('should send proper payload for #fetchMoreResults', async () => {
         await client.logFetchMoreResults();
         expectMatchCustomEventPayload(SearchPageEvents.pagerScrolling, {type: 'getMoreResults'});
+    });
+
+    it('should send proper payload for #logCustomEventWithType', async () => {
+        await client.logCustomEventWithType('foo', 'bar', {buzz: 'bazz'});
+        expectMatchCustomEventWithTypePayload('foo', 'bar', {buzz: 'bazz'});
     });
 
     it('should enable analytics tracking by default', () => {
