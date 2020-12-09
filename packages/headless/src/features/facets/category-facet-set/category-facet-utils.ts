@@ -3,7 +3,6 @@ import {
   logFacetDeselect,
   logFacetSelect,
 } from '../facet-set/facet-set-analytics-actions';
-import {FacetSelectionChangeMetadata} from '../facet-set/facet-set-analytics-actions-utils';
 
 type CategoryFacetResponsePartition = {
   parents: CategoryFacetValue[];
@@ -39,7 +38,7 @@ export const getAnalyticsActionForCategoryFacetToggleSelect = (
   facetId: string,
   selection: CategoryFacetValue
 ) => {
-  const payload: FacetSelectionChangeMetadata = {
+  const payload = {
     facetId,
     facetValue: selection.value,
   };
