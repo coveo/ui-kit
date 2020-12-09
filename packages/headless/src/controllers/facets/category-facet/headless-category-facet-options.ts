@@ -17,13 +17,17 @@ import {
   facetSearch,
 } from '../_common/facet-option-definitions';
 
+type OptionalFacetId = Partial<
+  Pick<CategoryFacetRegistrationOptions, 'facetId'>
+>;
+
 export type CategoryFacetOptions = Omit<
   CategoryFacetRegistrationOptions,
   'facetId'
-> & {
-  facetId?: string;
-  facetSearch?: Partial<FacetSearchRequestOptions>;
-};
+> &
+  OptionalFacetId & {
+    facetSearch?: Partial<FacetSearchRequestOptions>;
+  };
 
 export const categoryFacetOptionsSchema = new Schema<
   Required<CategoryFacetOptions>
