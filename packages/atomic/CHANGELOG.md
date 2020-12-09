@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.1.0-alpha.89](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.88...v0.1.0-alpha.89) (2020-12-09)
+
+
+### Features
+
+* **atomic,headless:** improve engine error handling ([#331](https://github.com/coveo/ui-kit/issues/331)) ([bc8082f](https://github.com/coveo/ui-kit/commit/bc8082f151bf81d606efc6b398bb757de08f3fc1))
+
+
+
+
+
 # [0.1.0-alpha.88](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.87...v0.1.0-alpha.88) (2020-12-08)
 
 
