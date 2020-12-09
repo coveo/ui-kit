@@ -2,7 +2,6 @@ import typescript from 'rollup-plugin-typescript2';
 import {uglify} from 'rollup-plugin-uglify';
 import {terser} from 'rollup-plugin-terser';
 import serve from 'rollup-plugin-serve';
-import bundleSize from 'rollup-plugin-bundle-size';
 
 const tsPlugin = () =>
     typescript({
@@ -22,7 +21,6 @@ const browser = {
     plugins: [
         tsPlugin(),
         uglify(),
-        bundleSize(),
         process.env.SERVE
             ? serve({
                   contentBase: ['dist', 'public'],
@@ -39,7 +37,7 @@ const browser = {
 const libUMD = {
     input: './src/coveoua/library.ts',
     output: [umdConfig('./dist/library.js')],
-    plugins: [tsPlugin(), uglify(), bundleSize()],
+    plugins: [tsPlugin(), uglify()],
 };
 
 const libESM = {
