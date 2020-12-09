@@ -72,3 +72,17 @@ export function highlightString(params: HighlightParams): string {
   }
   return highlighted;
 }
+
+export function highlightKeywordString(
+  highlightKeywords: string[]
+): HighlightKeyword[] {
+  return highlightKeywords.map(
+    (keyword): HighlightKeyword => {
+      const highlightKeywordObj: HighlightKeyword = (keyword as unknown) as HighlightKeyword;
+      return {
+        length: highlightKeywordObj.length,
+        offset: highlightKeywordObj.offset,
+      };
+    }
+  );
+}

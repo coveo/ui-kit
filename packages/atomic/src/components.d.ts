@@ -61,6 +61,8 @@ export namespace Components {
         "engine": Engine;
         "result": Result;
     }
+    interface AtomicResultExcerpt {
+    }
     interface AtomicResultLink {
     }
     interface AtomicResultList {
@@ -215,6 +217,12 @@ declare global {
         prototype: HTMLAtomicResultElement;
         new (): HTMLAtomicResultElement;
     };
+    interface HTMLAtomicResultExcerptElement extends Components.AtomicResultExcerpt, HTMLStencilElement {
+    }
+    var HTMLAtomicResultExcerptElement: {
+        prototype: HTMLAtomicResultExcerptElement;
+        new (): HTMLAtomicResultExcerptElement;
+    };
     interface HTMLAtomicResultLinkElement extends Components.AtomicResultLink, HTMLStencilElement {
     }
     var HTMLAtomicResultLinkElement: {
@@ -286,6 +294,7 @@ declare global {
         "atomic-query-summary": HTMLAtomicQuerySummaryElement;
         "atomic-relevance-inspector": HTMLAtomicRelevanceInspectorElement;
         "atomic-result": HTMLAtomicResultElement;
+        "atomic-result-excerpt": HTMLAtomicResultExcerptElement;
         "atomic-result-link": HTMLAtomicResultLinkElement;
         "atomic-result-list": HTMLAtomicResultListElement;
         "atomic-result-template": HTMLAtomicResultTemplateElement;
@@ -350,6 +359,8 @@ declare namespace LocalJSX {
     interface AtomicResult {
         "engine": Engine;
         "result": Result;
+    }
+    interface AtomicResultExcerpt {
     }
     interface AtomicResultLink {
     }
@@ -421,6 +432,7 @@ declare namespace LocalJSX {
         "atomic-query-summary": AtomicQuerySummary;
         "atomic-relevance-inspector": AtomicRelevanceInspector;
         "atomic-result": AtomicResult;
+        "atomic-result-excerpt": AtomicResultExcerpt;
         "atomic-result-link": AtomicResultLink;
         "atomic-result-list": AtomicResultList;
         "atomic-result-template": AtomicResultTemplate;
@@ -452,6 +464,7 @@ declare module "@stencil/core" {
             "atomic-query-summary": LocalJSX.AtomicQuerySummary & JSXBase.HTMLAttributes<HTMLAtomicQuerySummaryElement>;
             "atomic-relevance-inspector": LocalJSX.AtomicRelevanceInspector & JSXBase.HTMLAttributes<HTMLAtomicRelevanceInspectorElement>;
             "atomic-result": LocalJSX.AtomicResult & JSXBase.HTMLAttributes<HTMLAtomicResultElement>;
+            "atomic-result-excerpt": LocalJSX.AtomicResultExcerpt & JSXBase.HTMLAttributes<HTMLAtomicResultExcerptElement>;
             "atomic-result-link": LocalJSX.AtomicResultLink & JSXBase.HTMLAttributes<HTMLAtomicResultLinkElement>;
             "atomic-result-list": LocalJSX.AtomicResultList & JSXBase.HTMLAttributes<HTMLAtomicResultListElement>;
             "atomic-result-template": LocalJSX.AtomicResultTemplate & JSXBase.HTMLAttributes<HTMLAtomicResultTemplateElement>;
