@@ -1,4 +1,4 @@
-import {DocumentInformation} from '../events';
+import {DocumentInformation, FacetStateRequest} from '../events';
 
 export enum SearchPageEvents {
     /**
@@ -186,6 +186,7 @@ export interface FacetMetadata {
     facetTitle: string;
 }
 
+export type FacetStateMetadata = FacetStateRequest;
 export interface FacetRangeMetadata extends Omit<FacetMetadata, 'facetValue'> {
     facetRangeStart: string;
     facetRangeEnd: string;
