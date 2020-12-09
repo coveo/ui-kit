@@ -91,8 +91,7 @@ export function buildResultList(
       };
     },
     /**
-     * Using the same parameters as the last successful query, fetch another batch of results.
-     * @param shouldKeepFetchingResults A callback that verifies if the controller should send another request once it's successful. Particularly useful for infinite scrolling, for example.
+     * Using the same parameters as the last successful query, fetch another batch of results. Particularly useful for infinite scrolling, for example.
      */
     fetchMoreResults: triggerFetchMoreResult,
   };
