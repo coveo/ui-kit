@@ -26,7 +26,6 @@ import {
   SearchBoxOptions,
   defaultSearchBoxOptions,
   searchBoxOptionsSchema,
-  defaultSuggestionHighlightingOptions,
 } from './headless-search-box-options';
 import {validateOptions} from '../../utils/validate-payload';
 import {logQuerySuggestionClick} from '../../features/query-suggest/query-suggest-analytics-actions';
@@ -66,13 +65,9 @@ export function buildSearchBox(
   const {dispatch} = engine;
 
   const id = props.options?.id || randomID('search_box');
-  const highlightOptions = {
-    ...defaultSuggestionHighlightingOptions,
-    ...props.options?.highlightOptions,
-  };
   const options: Required<SearchBoxOptions> = {
     id,
-    highlightOptions,
+    highlightOptions: {...props.options?.highlightOptions},
     ...defaultSearchBoxOptions,
     ...props.options,
   };
@@ -156,7 +151,10 @@ export function buildSearchBox(
     get state() {
       const state = engine.state;
       const querySuggestState = state.querySuggest[options.id];
-      const suggestions = getSuggestions(querySuggestState, highlightOptions);
+      const suggestions = getSuggestions(
+        querySuggestState,
+        options.highlightOptions
+      );
 
       return {
         value: getValue(),
