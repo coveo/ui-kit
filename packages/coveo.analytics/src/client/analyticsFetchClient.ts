@@ -13,7 +13,7 @@ export class AnalyticsFetchClient implements AnalyticsRequestClient {
     public async sendEvent(eventType: EventType, payload: IRequestPayload): Promise<AnyEventResponse> {
         const {baseUrl, visitorIdProvider} = this.opts;
 
-        const visitorIdParam = this.shouldAppendVisitorId(eventType) ? this.visitorIdParam : '';
+        const visitorIdParam = this.shouldAppendVisitorId(eventType) ? await this.getVisitorIdParam() : '';
 
         const response = await fetch(`${baseUrl}/analytics/${eventType}${visitorIdParam}`, {
             method: 'POST',
@@ -26,7 +26,7 @@ export class AnalyticsFetchClient implements AnalyticsRequestClient {
             const visit = (await response.json()) as AnyEventResponse;
 
             if (visit.visitorId) {
-                visitorIdProvider.currentVisitorId = visit.visitorId;
+                visitorIdProvider.setCurrentVisitorId(visit.visitorId);
             }
 
             return visit;
@@ -47,9 +47,9 @@ export class AnalyticsFetchClient implements AnalyticsRequestClient {
         return [EventType.click, EventType.custom, EventType.search, EventType.view].indexOf(eventType) !== -1;
     }
 
-    private get visitorIdParam() {
+    private async getVisitorIdParam() {
         const {visitorIdProvider} = this.opts;
-        const visitorId = visitorIdProvider.currentVisitorId;
+        const visitorId = await visitorIdProvider.getCurrentVisitorId();
         return visitorId ? `?visitor=${visitorId}` : '';
     }
 

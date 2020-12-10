@@ -1,5 +1,5 @@
 import {AnalyticsClient} from '../src/client/analytics';
-import {NodeJSRuntime} from '../src/client/runtimeEnvironment';
+import {NoopRuntime} from '../src/client/runtimeEnvironment';
 
 export const createAnalyticsClientMock = (): jest.Mocked<AnalyticsClient> => ({
     sendEvent: jest.fn((eventType, payload) => Promise.resolve()),
@@ -11,6 +11,6 @@ export const createAnalyticsClientMock = (): jest.Mocked<AnalyticsClient> => ({
     getVisit: jest.fn(() => Promise.resolve({id: 'a', visitorId: 'ok'})),
     addEventTypeMapping: jest.fn(),
     registerBeforeSendEventHook: jest.fn(),
-    runtime: new NodeJSRuntime(),
+    runtime: new NoopRuntime(),
     currentVisitorId: '',
 });

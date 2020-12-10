@@ -19,6 +19,7 @@ import {
     FacetBaseMeta,
     FacetSortMeta,
     QueryErrorMeta,
+    FacetStateMetadata,
 } from './searchPageEvents';
 import {NoopAnalytics} from '../client/noopAnalytics';
 import {formatOmniboxMetadata} from '../formatting/format-omnibox-metadata';
@@ -100,8 +101,11 @@ export class CoveoSearchPageClient {
         return this.logSearchEvent(SearchPageEvents.searchboxAsYouType);
     }
 
-    public logBreadcrumbFacet(metadata: FacetMetadata | FacetRangeMetadata | CategoryFacetMetadata) {
-        return this.logSearchEvent(SearchPageEvents.breadcrumbFacet, metadata);
+    public logBreadcrumbFacet(
+        metadata: FacetMetadata | FacetRangeMetadata | CategoryFacetMetadata,
+        facetState: FacetStateMetadata[]
+    ) {
+        return this.logFacetSearchEvent(SearchPageEvents.breadcrumbFacet, metadata, facetState);
     }
 
     public logBreadcrumbResetAll() {
@@ -162,36 +166,36 @@ export class CoveoSearchPageClient {
         return this.logCustomEvent(SearchPageEvents.pagerScrolling);
     }
 
-    public logFacetClearAll(meta: FacetBaseMeta) {
-        return this.logSearchEvent(SearchPageEvents.facetClearAll, meta);
+    public logFacetClearAll(meta: FacetBaseMeta, facetState: FacetStateMetadata[]) {
+        return this.logFacetSearchEvent(SearchPageEvents.facetClearAll, meta, facetState);
     }
 
-    public logFacetSearch(meta: FacetBaseMeta) {
-        return this.logSearchEvent(SearchPageEvents.facetSearch, meta);
+    public logFacetSearch(meta: FacetBaseMeta, facetState: FacetStateMetadata[]) {
+        return this.logFacetSearchEvent(SearchPageEvents.facetSearch, meta, facetState);
     }
 
-    public logFacetSelect(meta: FacetMetadata) {
-        return this.logSearchEvent(SearchPageEvents.facetSelect, meta);
+    public logFacetSelect(meta: FacetMetadata, facetState: FacetStateMetadata[]) {
+        return this.logFacetSearchEvent(SearchPageEvents.facetSelect, meta, facetState);
     }
 
-    public logFacetDeselect(meta: FacetMetadata) {
-        return this.logSearchEvent(SearchPageEvents.facetDeselect, meta);
+    public logFacetDeselect(meta: FacetMetadata, facetState: FacetStateMetadata[]) {
+        return this.logFacetSearchEvent(SearchPageEvents.facetDeselect, meta, facetState);
     }
 
-    public logFacetExclude(meta: FacetMetadata) {
-        return this.logSearchEvent(SearchPageEvents.facetExclude, meta);
+    public logFacetExclude(meta: FacetMetadata, facetState: FacetStateMetadata[]) {
+        return this.logFacetSearchEvent(SearchPageEvents.facetExclude, meta, facetState);
     }
 
-    public logFacetUnexclude(meta: FacetMetadata) {
-        return this.logSearchEvent(SearchPageEvents.facetUnexclude, meta);
+    public logFacetUnexclude(meta: FacetMetadata, facetState: FacetStateMetadata[]) {
+        return this.logFacetSearchEvent(SearchPageEvents.facetUnexclude, meta, facetState);
     }
 
-    public logFacetSelectAll(meta: FacetBaseMeta) {
-        return this.logSearchEvent(SearchPageEvents.facetSelectAll, meta);
+    public logFacetSelectAll(meta: FacetBaseMeta, facetState: FacetStateMetadata[]) {
+        return this.logFacetSearchEvent(SearchPageEvents.facetSelectAll, meta, facetState);
     }
 
-    public logFacetUpdateSort(meta: FacetSortMeta) {
-        return this.logSearchEvent(SearchPageEvents.facetUpdateSort, meta);
+    public logFacetUpdateSort(meta: FacetSortMeta, facetState: FacetStateMetadata[]) {
+        return this.logFacetSearchEvent(SearchPageEvents.facetUpdateSort, meta, facetState);
     }
 
     public logFacetShowMore(meta: FacetBaseMeta) {
@@ -249,18 +253,7 @@ export class CoveoSearchPageClient {
     }
 
     public logSearchEvent(event: SearchPageEvents, metadata?: Record<string, any>) {
-        const customData = {...this.provider.getBaseMetadata(), ...metadata};
-
-        const payload: SearchEventRequest = {
-            ...this.provider.getSearchEventRequestPayload(),
-            ...this.getOrigins(),
-            searchQueryUid: this.provider.getSearchUID(),
-            queryPipeline: this.provider.getPipeline(),
-            customData,
-            actionCause: event,
-        };
-
-        return this.coveoAnalyticsClient.sendSearchEvent(payload);
+        return this.coveoAnalyticsClient.sendSearchEvent(this.getBaseSearchEventRequest(event, metadata));
     }
 
     public logClickEvent(
@@ -285,6 +278,32 @@ export class CoveoSearchPageClient {
         };
 
         return this.coveoAnalyticsClient.sendClickEvent(payload);
+    }
+
+    public logFacetSearchEvent(
+        event: SearchPageEvents,
+        metadata: Record<string, any>,
+        facetState: FacetStateMetadata[]
+    ) {
+        const payload = {
+            ...this.getBaseSearchEventRequest(event, metadata),
+            facetState,
+        };
+
+        return this.coveoAnalyticsClient.sendSearchEvent(payload);
+    }
+
+    private getBaseSearchEventRequest(event: SearchPageEvents, metadata?: Record<string, any>): SearchEventRequest {
+        const customData = {...this.provider.getBaseMetadata(), ...metadata};
+
+        return {
+            ...this.provider.getSearchEventRequestPayload(),
+            ...this.getOrigins(),
+            searchQueryUid: this.provider.getSearchUID(),
+            queryPipeline: this.provider.getPipeline(),
+            customData,
+            actionCause: event,
+        };
     }
 
     private getOrigins() {
