@@ -27,6 +27,7 @@ import {deselectAllFacets} from '../generic/facet-actions';
 
 describe('category facet slice', () => {
   const facetId = '1';
+  const retrieveCount = 5;
   let state: CategoryFacetSetState;
 
   beforeEach(() => {
@@ -181,7 +182,11 @@ describe('category facet slice', () => {
   describe('#toggleSelectCategoryFacetValue', () => {
     it('when the passed id is not registered, it does not throw', () => {
       const selection = buildMockCategoryFacetValue({value: 'A'});
-      const action = toggleSelectCategoryFacetValue({facetId, selection});
+      const action = toggleSelectCategoryFacetValue({
+        facetId,
+        selection,
+        retrieveCount,
+      });
 
       expect(() => categoryFacetSetReducer(state, action)).not.toThrow();
     });
@@ -199,7 +204,11 @@ describe('category facet slice', () => {
           value: 'A',
           path: ['A'],
         });
-        const action = toggleSelectCategoryFacetValue({facetId, selection});
+        const action = toggleSelectCategoryFacetValue({
+          facetId,
+          selection,
+          retrieveCount,
+        });
         const finalState = categoryFacetSetReducer(state, action);
         const currentValues = finalState[facetId].currentValues;
 
@@ -219,7 +228,11 @@ describe('category facet slice', () => {
           value: 'A',
           path: ['A'],
         });
-        const action = toggleSelectCategoryFacetValue({facetId, selection});
+        const action = toggleSelectCategoryFacetValue({
+          facetId,
+          selection,
+          retrieveCount,
+        });
         const finalState = categoryFacetSetReducer(state, action);
 
         expect(finalState[facetId].numberOfValues).toBe(1);
@@ -243,7 +256,11 @@ describe('category facet slice', () => {
           value: 'B',
           path: ['A', 'B'],
         });
-        const action = toggleSelectCategoryFacetValue({facetId, selection});
+        const action = toggleSelectCategoryFacetValue({
+          facetId,
+          selection,
+          retrieveCount,
+        });
 
         it("adds the selection to the parent's children array", () => {
           const finalState = categoryFacetSetReducer(state, action);
@@ -276,7 +293,11 @@ describe('category facet slice', () => {
           value: 'B',
           path: ['C', 'B'],
         });
-        const action = toggleSelectCategoryFacetValue({facetId, selection});
+        const action = toggleSelectCategoryFacetValue({
+          facetId,
+          selection,
+          retrieveCount,
+        });
 
         it("does not add the selection to the parent's children array", () => {
           const finalState = categoryFacetSetReducer(state, action);
@@ -316,7 +337,11 @@ describe('category facet slice', () => {
           value: 'C',
           path: ['A', 'B', 'C'],
         });
-        const action = toggleSelectCategoryFacetValue({facetId, selection});
+        const action = toggleSelectCategoryFacetValue({
+          facetId,
+          selection,
+          retrieveCount,
+        });
         const finalState = categoryFacetSetReducer(state, action);
 
         const expected = buildMockCategoryFacetValueRequest({
@@ -336,7 +361,11 @@ describe('category facet slice', () => {
           value: 'A',
           path: ['A'],
         });
-        const action = toggleSelectCategoryFacetValue({facetId, selection});
+        const action = toggleSelectCategoryFacetValue({
+          facetId,
+          selection,
+          retrieveCount,
+        });
 
         it('clears the children array of that parent', () => {
           const finalState = categoryFacetSetReducer(state, action);
@@ -376,7 +405,11 @@ describe('category facet slice', () => {
         ],
       });
 
-      const action = toggleSelectCategoryFacetValue({facetId, selection});
+      const action = toggleSelectCategoryFacetValue({
+        facetId,
+        selection,
+        retrieveCount,
+      });
       expect(action.error).toBeDefined();
     });
   });
@@ -391,6 +424,7 @@ describe('category facet slice', () => {
       const action = selectCategoryFacetSearchResult({
         facetId: 'notExistant',
         value,
+        retrieveCount,
       });
 
       expect(() => categoryFacetSetReducer(state, action)).not.toThrow();
@@ -408,6 +442,7 @@ describe('category facet slice', () => {
       const action = selectCategoryFacetSearchResult({
         facetId,
         value,
+        retrieveCount,
       });
       const nextState = categoryFacetSetReducer(state, action);
       expect(nextState[facetId].currentValues.length).toEqual(1);
@@ -436,6 +471,7 @@ describe('category facet slice', () => {
       const action = selectCategoryFacetSearchResult({
         facetId,
         value,
+        retrieveCount,
       });
       const nextState = categoryFacetSetReducer(state, action);
       expect(nextState[facetId].currentValues.length).toEqual(1);

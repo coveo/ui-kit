@@ -72,11 +72,15 @@ describe('category facet', () => {
     );
   });
 
+  it('#state.facetId exposes the facet id', () => {
+    expect(categoryFacet.state.facetId).toBe(facetId);
+  });
+
   it('registers a category facet with the passed options and default optional parameters', () => {
     const action = registerCategoryFacet({
       facetId,
-      ...options,
       ...defaultCategoryFacetOptions,
+      ...options,
     });
     expect(engine.actions).toContainEqual(action);
   });
@@ -176,7 +180,25 @@ describe('category facet', () => {
       const selection = buildMockCategoryFacetValue({value: 'A'});
       categoryFacet.toggleSelect(selection);
 
-      const action = toggleSelectCategoryFacetValue({facetId, selection});
+      const action = toggleSelectCategoryFacetValue({
+        facetId,
+        selection,
+        retrieveCount: defaultCategoryFacetOptions.numberOfValues,
+      });
+      expect(engine.actions).toContainEqual(action);
+    });
+
+    it('if the numberOfValues is set it dispatches #toggleCategoryFacetValue with the correct retireveCount', () => {
+      options.numberOfValues = 10;
+      initCategoryFacet();
+      const selection = buildMockCategoryFacetValue({value: 'A'});
+      categoryFacet.toggleSelect(selection);
+
+      const action = toggleSelectCategoryFacetValue({
+        facetId,
+        selection,
+        retrieveCount: 10,
+      });
       expect(engine.actions).toContainEqual(action);
     });
 
@@ -210,10 +232,9 @@ describe('category facet', () => {
     });
 
     it('dispatches #updateCategoryFacetNumberOfValues with the initial number of values', () => {
-      const {numberOfValues} = defaultCategoryFacetOptions;
       const action = updateCategoryFacetNumberOfValues({
         facetId,
-        numberOfValues,
+        numberOfValues: defaultCategoryFacetOptions.numberOfValues,
       });
       expect(engine.actions).toContainEqual(action);
     });
@@ -356,7 +377,7 @@ describe('category facet', () => {
 
       const action = updateCategoryFacetNumberOfValues({
         facetId,
-        numberOfValues: 5,
+        numberOfValues: defaultCategoryFacetOptions.numberOfValues,
       });
       expect(engine.actions).toContainEqual(action);
     });
