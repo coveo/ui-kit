@@ -2,7 +2,7 @@ import {
   HighlightKeyword,
   highlightString,
   HighlightParams,
-  getHighlightedSuggestions,
+  getHighlightedSuggestion,
   SuggestionHighlightingOptions,
 } from './highlight';
 
@@ -42,7 +42,7 @@ describe('highlight', () => {
     });
   });
 
-  describe('formatHighlightedSuggestion', () => {
+  describe('getHighlightedSuggestion', () => {
     let suggestion: string;
     beforeEach(() => {
       suggestion = '[thi]{s} [i]{s} (high)[light]{ed}';
@@ -55,7 +55,7 @@ describe('highlight', () => {
           close: '</i>',
         },
       };
-      const formatted = getHighlightedSuggestions(suggestion, options);
+      const formatted = getHighlightedSuggestion(suggestion, options);
       const expected = '<i>thi</i>s <i>i</i>s high<i>light</i>ed';
       expect(formatted).toEqual(expected);
     });
@@ -67,7 +67,7 @@ describe('highlight', () => {
           close: '</i>',
         },
       };
-      const formatted = getHighlightedSuggestions(suggestion, options);
+      const formatted = getHighlightedSuggestion(suggestion, options);
       const expected = 'thi<i>s</i> i<i>s</i> highlight<i>ed</i>';
       expect(formatted).toEqual(expected);
     });
@@ -79,7 +79,7 @@ describe('highlight', () => {
           close: '</i>',
         },
       };
-      const formatted = getHighlightedSuggestions(suggestion, options);
+      const formatted = getHighlightedSuggestion(suggestion, options);
       const expected = 'this is <i>high</i>lighted';
       expect(formatted).toEqual(expected);
     });
@@ -99,9 +99,15 @@ describe('highlight', () => {
           close: '</i>',
         },
       };
-      const formatted = getHighlightedSuggestions(suggestion, options);
+      const formatted = getHighlightedSuggestion(suggestion, options);
       const expected =
         'openthiclose<strong>s</strong> openiclose<strong>s</strong> <i>high</i>openlightclose<strong>ed</strong>';
+      expect(formatted).toEqual(expected);
+    });
+
+    it('should not highlight if the delimiters object is empty', () => {
+      const formatted = getHighlightedSuggestion(suggestion, {});
+      const expected = 'this is highlighted';
       expect(formatted).toEqual(expected);
     });
   });

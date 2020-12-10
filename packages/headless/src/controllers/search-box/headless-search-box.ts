@@ -34,7 +34,7 @@ import {randomID} from '../../utils/utils';
 import {QuerySuggestState} from '../../features/query-suggest/query-suggest-state';
 import {SearchAction} from '../../features/analytics/analytics-utils';
 import {
-  getHighlightedSuggestions,
+  getHighlightedSuggestion,
   SuggestionHighlightingOptions,
 } from '../../utils/highlight';
 
@@ -176,7 +176,7 @@ function getSuggestions(
   }
 
   return state.completions.map((completion) => ({
-    value: getHighlightedSuggestions(completion.highlighted, highlightOptions),
+    value: getHighlightedSuggestion(completion.highlighted, highlightOptions),
     rawValue: completion.expression,
   }));
 }

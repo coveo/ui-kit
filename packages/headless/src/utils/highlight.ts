@@ -30,7 +30,7 @@ export interface HighlightParams {
   closingDelimiter: string;
 }
 
-interface OpenCloseDelimiters {
+interface Delimiters {
   /**
    * Opening delimiter
    */
@@ -46,17 +46,17 @@ export interface SuggestionHighlightingOptions {
   /**
    * Delimiters for substrings that do not match the input
    */
-  notMatchDelimiters?: OpenCloseDelimiters;
+  notMatchDelimiters?: Delimiters;
 
   /**
    * Delimiters for substrings that are exact match of the input
    */
-  exactMatchDelimiters?: OpenCloseDelimiters;
+  exactMatchDelimiters?: Delimiters;
 
   /**
    * Delimiters for substrings that are correction of the input
    */
-  correctionDelimiters?: OpenCloseDelimiters;
+  correctionDelimiters?: Delimiters;
 }
 
 function isEmptyString(str: string) {
@@ -107,7 +107,7 @@ export function highlightString(params: HighlightParams): string {
  * @param suggestion The suggestion to highlight
  * @param options The object contaning the delimiters used
  */
-export function getHighlightedSuggestions(
+export function getHighlightedSuggestion(
   suggestion: string,
   options: SuggestionHighlightingOptions
 ) {
@@ -134,7 +134,7 @@ export function getHighlightedSuggestions(
 
 function suggestionWithDelimiters(
   suggestion: string,
-  delimiters: OpenCloseDelimiters | undefined
+  delimiters: Delimiters | undefined
 ) {
   if (delimiters) {
     return delimiters.open + suggestion + delimiters.close;

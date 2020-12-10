@@ -36,6 +36,16 @@ describe('headless searchBox', () => {
     const options: SearchBoxOptions = {
       id,
       numberOfSuggestions: 10,
+      highlightOptions: {
+        notMatchDelimiters: {
+          open: '<a>',
+          close: '<a>',
+        },
+        correctionDelimiters: {
+          open: '<i>',
+          close: '<i>',
+        },
+      },
     };
 
     props = {options};
@@ -47,7 +57,18 @@ describe('headless searchBox', () => {
   function initState() {
     state = createMockState();
     state.querySet[id] = 'query';
-    state.querySuggest[id] = buildMockQuerySuggest({id, q: 'some value'});
+    state.querySuggest[id] = buildMockQuerySuggest({
+      id,
+      q: 'some value',
+      completions: [
+        {
+          expression: 'a',
+          score: 0,
+          executableConfidence: 0,
+          highlighted: '[hi]{light}(ed)',
+        },
+      ],
+    });
   }
 
   function initController() {
@@ -68,6 +89,17 @@ describe('headless searchBox', () => {
       expect(() => initController()).toThrow();
     });
 
+    it(`when passing an invalid highlightOptions as option
+    creating the controller should throw`, () => {
+      props.options.highlightOptions = {
+        notMatchDelimiters: {
+          open: (1 as unknown) as string,
+          close: (2 as unknown) as string,
+        },
+      };
+      expect(() => initController()).toThrow();
+    });
+
     it('when passing an invalid option, it throws an error', () => {
       props.options.id = (1 as unknown) as string;
       expect(() => initController()).toThrow(
@@ -80,7 +112,8 @@ describe('headless searchBox', () => {
     expect(searchBox.state).toEqual({
       value: state.querySet[id],
       suggestions: state.querySuggest[id]!.completions.map((completion) => ({
-        value: completion.expression,
+        value: '<a>hi<a>light<i>ed<i>',
+        rawValue: completion.expression,
       })),
       isLoading: false,
     });
