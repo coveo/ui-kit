@@ -188,6 +188,20 @@ describe('category facet', () => {
       expect(engine.actions).toContainEqual(action);
     });
 
+    it('if the numberOfValues is set it dispatches #toggleCategoryFacetValue with the correct retireveCount', () => {
+      options.numberOfValues = 10;
+      initCategoryFacet();
+      const selection = buildMockCategoryFacetValue({value: 'A'});
+      categoryFacet.toggleSelect(selection);
+
+      const action = toggleSelectCategoryFacetValue({
+        facetId,
+        selection,
+        retrieveCount: 10,
+      });
+      expect(engine.actions).toContainEqual(action);
+    });
+
     it('dispatches #updateFacetOptions with #freezeFacetOrder true', () => {
       const selection = buildMockCategoryFacetValue({value: 'A'});
       categoryFacet.toggleSelect(selection);

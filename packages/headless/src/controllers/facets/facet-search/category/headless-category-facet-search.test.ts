@@ -39,7 +39,6 @@ describe('CategoryFacetSearch', () => {
       options: {
         ...defaultFacetSearchOptions,
         facetId,
-        numberOfValues: 3,
       },
     };
 
@@ -69,7 +68,18 @@ describe('CategoryFacetSearch', () => {
       const action = selectCategoryFacetSearchResult({
         facetId,
         value,
-        retrieveCount: 3,
+        retrieveCount: defaultFacetSearchOptions.numberOfValues,
+      });
+      expect(engine.actions).toContainEqual(action);
+    });
+
+    it('if numberOfValues is set it dispatches #selectCategoryFacetSearchResult with the correct retrieveCount', () => {
+      props.options.numberOfValues = 3;
+      initFacetSearch();
+      const action = selectCategoryFacetSearchResult({
+        facetId,
+        value,
+        retrieveCount: defaultFacetSearchOptions.numberOfValues,
       });
       expect(engine.actions).toContainEqual(action);
     });
