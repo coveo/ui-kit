@@ -1,6 +1,8 @@
 import {restoreSearchParameters} from '../../features/search-parameters/search-parameter-actions';
 import {SearchAppState} from '../../state/search-app-state';
 import {buildMockSearchAppEngine, MockEngine} from '../../test';
+import {buildMockFacetRequest} from '../../test/mock-facet-request';
+import {buildMockFacetValueRequest} from '../../test/mock-facet-value-request';
 import {buildMockSearchParameters} from '../../test/mock-search-parameters';
 import {
   buildSearchParameterManager,
@@ -114,6 +116,26 @@ describe('state manager', () => {
     });
   });
 
+  describe('#state.parameters.f', () => {
+    it('when a facet has selected values, only selected values are included', () => {
+      const selected = buildMockFacetValueRequest({
+        value: 'a',
+        state: 'selected',
+      });
+      const idle = buildMockFacetValueRequest({value: 'b', state: 'idle'});
+
+      const currentValues = [selected, idle];
+      engine.state.facetSet = {author: buildMockFacetRequest({currentValues})};
+
+      expect(manager.state.parameters.f).toEqual({author: ['a']});
+    });
+
+    it('when there are no facets with selected values, the #f paramater is not included', () => {
+      engine.state.facetSet = {author: buildMockFacetRequest()};
+      expect('f' in manager.state.parameters).toBe(false);
+    });
+  });
+
   describe('#state.parameters.sortCriteria', () => {
     it('when the parameter does not equal the default value, it is included', () => {
       engine.state.sortCriteria = 'qre';
@@ -138,6 +160,9 @@ describe('state manager', () => {
 
   it(`given a certain initial state,
   it is possible to access every search parameter using #state.parameters`, () => {
+    const currentValues = [buildMockFacetValueRequest({state: 'selected'})];
+
+    engine.state.facetSet = {author: buildMockFacetRequest({currentValues})};
     engine.state.query.q = 'a';
     engine.state.query.enableQuerySyntax = true;
     engine.state.advancedSearchQueries.aq = 'a';
