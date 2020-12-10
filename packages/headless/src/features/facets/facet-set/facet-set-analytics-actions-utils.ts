@@ -8,24 +8,23 @@ import {
   SearchSection,
 } from '../../../state/state-sections';
 import {getSearchInitialState} from '../../search/search-state';
-import {categoryFacetResponseSelector} from '../category-facet-set/category-facet-set-selectors';
 import {getCategoryFacetSetInitialState} from '../category-facet-set/category-facet-set-state';
+import {CategoryFacetRequest} from '../category-facet-set/interfaces/request';
 import {CategoryFacetValue} from '../category-facet-set/interfaces/response';
-import {AvailableType} from '../facet-api/request';
+import {FacetType} from '../facet-api/request';
 import {
   AnyFacetResponse,
   AnyFacetValue,
 } from '../generic/interfaces/generic-facet-response';
-import {dateFacetResponseSelector} from '../range-facets/date-facet-set/date-facet-selectors';
 import {getDateFacetSetInitialState} from '../range-facets/date-facet-set/date-facet-set-state';
+import {DateFacetRequest} from '../range-facets/date-facet-set/interfaces/request';
 import {DateFacetValue} from '../range-facets/date-facet-set/interfaces/response';
 import {RangeFacetSortCriterion} from '../range-facets/generic/interfaces/request';
+import {NumericFacetRequest} from '../range-facets/numeric-facet-set/interfaces/request';
 import {NumericFacetValue} from '../range-facets/numeric-facet-set/interfaces/response';
-import {numericFacetResponseSelector} from '../range-facets/numeric-facet-set/numeric-facet-selectors';
 import {getNumericFacetSetInitialState} from '../range-facets/numeric-facet-set/numeric-facet-set-state';
-import {facetResponseSelector} from './facet-set-selectors';
 import {getFacetSetInitialState} from './facet-set-state';
-import {FacetSortCriterion} from './interfaces/request';
+import {FacetRequest, FacetSortCriterion} from './interfaces/request';
 import {FacetValue} from './interfaces/response';
 
 export type SectionNeededForFacetMetadata = FacetSection &
@@ -48,11 +47,7 @@ export const buildFacetBaseMetadata = (
   facetId: string,
   state: SectionNeededForFacetMetadata
 ) => {
-  const facet =
-    state.facetSet[facetId] ||
-    state.categoryFacetSet[facetId] ||
-    state.dateFacetSet[facetId] ||
-    state.numericFacetSet[facetId];
+  const facet = getFacet(state, facetId);
 
   const facetField = facet.field;
   const facetTitle = `${facetField}_${facetId}`;
@@ -129,7 +124,7 @@ export const buildFacetStateMetadata = (
 const mapFacetValueToAnalytics = (
   facetValue: AnyFacetValue,
   valuePosition: number,
-  facetType: AvailableType
+  facetType: FacetType
 ) => {
   return {
     state: facetValue.state,
@@ -171,30 +166,26 @@ const mapFacetResponseToAnalytics = (
   };
 };
 
-const getFacetType = (
-  state: SearchSection &
-    FacetSection &
-    CategoryFacetSection &
-    DateFacetSection &
-    NumericFacetSection,
-  id: string
-): AvailableType => {
-  const facetResponse = facetResponseSelector(state, id);
-  if (facetResponse) {
-    return 'specific';
-  }
-  const categoryFacetResponse = categoryFacetResponseSelector(state, id);
-  if (categoryFacetResponse) {
-    return 'hierarchical';
-  }
-  const dateFacetResponse = dateFacetResponseSelector(state, id);
-  if (dateFacetResponse) {
-    return 'dateRange';
-  }
-  const numericFacetResponse = numericFacetResponseSelector(state, id);
-  if (numericFacetResponse) {
-    return 'numericalRange';
-  }
+const getFacet = (
+  state: SectionNeededForFacetMetadata,
+  facetId: string
+):
+  | FacetRequest
+  | CategoryFacetRequest
+  | DateFacetRequest
+  | NumericFacetRequest => {
+  return (
+    state.facetSet[facetId] ||
+    state.categoryFacetSet[facetId] ||
+    state.dateFacetSet[facetId] ||
+    state.numericFacetSet[facetId]
+  );
+};
 
-  return 'specific';
+const getFacetType = (
+  state: SectionNeededForFacetMetadata,
+  facetId: string
+) => {
+  const facet = getFacet(state, facetId);
+  return facet ? facet.type : 'specific';
 };

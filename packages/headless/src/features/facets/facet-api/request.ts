@@ -29,11 +29,11 @@ export interface Expandable {
   isFieldExpanded: boolean;
 }
 
-export interface Type<T extends AvailableType> {
+export interface Type<T extends FacetType> {
   type: T;
 }
 
-export type AvailableType =
+export type FacetType =
   | 'specific'
   | 'dateRange'
   | 'numericalRange'
