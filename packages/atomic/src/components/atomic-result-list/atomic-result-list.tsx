@@ -6,6 +6,7 @@ import {
   ResultTemplatesManager,
   buildResultList,
   Engine,
+  buildResultTemplatesManager,
 } from '@coveo/headless';
 import Mustache from 'mustache';
 import defaultTemplate from '../../templates/default.html';
@@ -45,9 +46,7 @@ export class AtomicResultList {
 
   @Initialization()
   public initialize() {
-    this.resultTemplatesManager = new ResultTemplatesManager<string>(
-      this.engine
-    );
+    this.resultTemplatesManager = buildResultTemplatesManager(this.engine);
     this.resultList = buildResultList(this.engine, {
       options: {fieldsToInclude: this.fields},
     });
