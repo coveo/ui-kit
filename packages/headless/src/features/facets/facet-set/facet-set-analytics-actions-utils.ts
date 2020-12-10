@@ -84,7 +84,7 @@ export const buildFacetStateMetadata = (
 
   state.search.response.facets.forEach((facetResponse, facetPosition) => {
     (facetResponse.values as Array<AnyFacetValue>).forEach(
-      (facetValue, facetValuePositition) => {
+      (facetValue, facetValuePosition) => {
         if (facetValue.state === 'selected') {
           const facetType = getFacetType(state, facetResponse.facetId);
 
@@ -95,7 +95,7 @@ export const buildFacetStateMetadata = (
 
           const facetValueAnalytics = mapFacetValueToAnalytics(
             facetValue,
-            facetValuePositition + 1,
+            facetValuePosition + 1,
             facetType
           );
 
