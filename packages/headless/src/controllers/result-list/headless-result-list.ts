@@ -53,8 +53,9 @@ export function buildResultList(
 
   let lastFetchCompleted = 0;
   let consecutiveFetches = 0;
-  const maxConsecutiveFetches = 5;
+  const minConsecutiveFetches = 5;
   const maxDelayBetweenFetches = 200;
+  let errorLogged = false;
 
   const triggerFetchMoreResult = () => {
     if (engine.state.search.isLoading) {
@@ -64,15 +65,20 @@ export function buildResultList(
     const delayBetweenFetches = Date.now() - lastFetchCompleted;
     if (delayBetweenFetches < maxDelayBetweenFetches) {
       consecutiveFetches++;
-      if (consecutiveFetches >= maxConsecutiveFetches) {
-        return engine.logger.error(
-          `The result list method "fetchMoreResults" execution prevented because it has been triggered consecutively ${maxConsecutiveFetches} times, with little delay. Please verify the conditions under which the function is called.`
-        );
+      if (consecutiveFetches >= minConsecutiveFetches) {
+        lastFetchCompleted = Date.now();
+        !errorLogged &&
+          engine.logger.error(
+            `The result list method "fetchMoreResults" execution prevented because it has been triggered consecutively ${minConsecutiveFetches} times, with little delay. Please verify the conditions under which the function is called.`
+          );
+        errorLogged = true;
+        return;
       }
     } else {
       consecutiveFetches = 0;
     }
 
+    errorLogged = false;
     dispatch(fetchMoreResults()).then(() => (lastFetchCompleted = Date.now()));
   };
 
