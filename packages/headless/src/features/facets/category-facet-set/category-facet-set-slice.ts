@@ -53,7 +53,7 @@ export const categoryFacetSetReducer = createReducer(
         request.sortCriteria = criterion;
       })
       .addCase(toggleSelectCategoryFacetValue, (state, action) => {
-        const {facetId, selection} = action.payload;
+        const {facetId, selection, numberOfValues} = action.payload;
         const request = state[facetId];
 
         if (!request) {
@@ -85,7 +85,10 @@ export const categoryFacetSetReducer = createReducer(
           return;
         }
 
-        const valueRequest = convertCategoryFacetValueToRequest(selection);
+        const valueRequest = convertCategoryFacetValueToRequest(
+          selection,
+          numberOfValues
+        );
         activeLevel.push(valueRequest);
         request.numberOfValues = 1;
       })
@@ -112,7 +115,7 @@ export const categoryFacetSetReducer = createReducer(
         handleCategoryFacetNestedNumberOfValuesUpdate(state, action.payload);
       })
       .addCase(selectCategoryFacetSearchResult, (state, action) => {
-        const {facetId, value} = action.payload;
+        const {facetId, value, numberOfValues} = action.payload;
         const request = state[facetId];
 
         if (!request) {
@@ -122,11 +125,11 @@ export const categoryFacetSetReducer = createReducer(
         handleFacetDeselectAll(state, facetId);
 
         const path = [...value.path, value.rawValue];
-        let curr = buildCategoryFacetValueRequest(path[0]);
+        let curr = buildCategoryFacetValueRequest(path[0], numberOfValues);
         request.currentValues.push(curr);
 
         for (const segment of path.splice(1)) {
-          const next = buildCategoryFacetValueRequest(segment);
+          const next = buildCategoryFacetValueRequest(segment, numberOfValues);
           curr.children.push(next);
           curr = next;
         }
@@ -162,11 +165,12 @@ function buildCategoryFacetRequest(
 }
 
 function buildCategoryFacetValueRequest(
-  value: string
+  value: string,
+  numberOfValues: number
 ): CategoryFacetValueRequest {
   return {
     value,
-    retrieveCount: 5,
+    retrieveCount: numberOfValues,
     children: [],
     state: 'idle',
     retrieveChildren: false,
@@ -174,7 +178,8 @@ function buildCategoryFacetValueRequest(
 }
 
 function convertCategoryFacetValueToRequest(
-  categoryFacetValue: CategoryFacetValue
+  categoryFacetValue: CategoryFacetValue,
+  numberOfValues: number
 ): CategoryFacetValueRequest {
   const {value} = categoryFacetValue;
   return {
@@ -182,7 +187,7 @@ function convertCategoryFacetValueToRequest(
     state: 'selected',
     children: [],
     retrieveChildren: true,
-    retrieveCount: 5,
+    retrieveCount: numberOfValues,
   };
 }
 

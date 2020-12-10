@@ -24,6 +24,7 @@ export function buildCategoryFacetSearch(
   const {dispatch} = engine;
   const {options} = props;
   const {facetId} = options;
+  const numberOfValues = options.numberOfValues || 10;
   const getFacetSearch = () => engine.state.categoryFacetSearchSet[facetId];
 
   dispatch(registerCategoryFacetSearch(options));
@@ -37,7 +38,9 @@ export function buildCategoryFacetSearch(
     ...genericFacetSearch,
 
     select(value: CategoryFacetSearchResult) {
-      dispatch(selectCategoryFacetSearchResult({facetId, value}));
+      dispatch(
+        selectCategoryFacetSearchResult({facetId, value, numberOfValues})
+      );
       genericFacetSearch.select(value);
     },
 

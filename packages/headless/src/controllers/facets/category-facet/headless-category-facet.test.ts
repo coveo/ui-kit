@@ -54,6 +54,7 @@ describe('category facet', () => {
     options = {
       facetId,
       field: 'geography',
+      numberOfValues: 3,
     };
 
     state = createMockState();
@@ -180,7 +181,11 @@ describe('category facet', () => {
       const selection = buildMockCategoryFacetValue({value: 'A'});
       categoryFacet.toggleSelect(selection);
 
-      const action = toggleSelectCategoryFacetValue({facetId, selection});
+      const action = toggleSelectCategoryFacetValue({
+        facetId,
+        selection,
+        numberOfValues: options.numberOfValues!,
+      });
       expect(engine.actions).toContainEqual(action);
     });
 
@@ -360,7 +365,7 @@ describe('category facet', () => {
 
       const action = updateCategoryFacetNumberOfValues({
         facetId,
-        numberOfValues: 5,
+        numberOfValues: options.numberOfValues!,
       });
       expect(engine.actions).toContainEqual(action);
     });
@@ -402,7 +407,7 @@ describe('category facet', () => {
     it('dispatches #updateCategoryFacetNumberOfResults with the correct numberOfValues', () => {
       const action = updateCategoryFacetNumberOfValues({
         facetId,
-        numberOfValues: 5,
+        numberOfValues: options.numberOfValues!,
       });
       expect(engine.actions).toContainEqual(action);
     });

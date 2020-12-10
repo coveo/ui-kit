@@ -35,7 +35,7 @@ describe('CategoryFacetSearch', () => {
 
   beforeEach(() => {
     props = {
-      options: {facetId},
+      options: {facetId, numberOfValues: 3},
     };
 
     initEngine();
@@ -64,6 +64,7 @@ describe('CategoryFacetSearch', () => {
       const action = selectCategoryFacetSearchResult({
         facetId,
         value,
+        numberOfValues: 3,
       });
       expect(engine.actions).toContainEqual(action);
     });

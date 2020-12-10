@@ -101,9 +101,16 @@ export function buildCategoryFacet(
     /**
      * Selects (deselects) the passed value if unselected (selected).
      * @param selection The category facet value to select or deselect.
+     * @param numberOfValues The number of selection's children to be shown
      */
     toggleSelect: (selection: CategoryFacetValue) =>
-      dispatch(executeToggleCategoryFacetSelect({facetId, selection})),
+      dispatch(
+        executeToggleCategoryFacetSelect({
+          facetId,
+          selection,
+          numberOfValues: options.numberOfValues!,
+        })
+      ),
 
     /** Deselects all facet values.*/
     deselectAll: () =>

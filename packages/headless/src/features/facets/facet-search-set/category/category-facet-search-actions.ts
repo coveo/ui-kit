@@ -23,10 +23,17 @@ const categoryFacetSearchResultDefinition = {
  * category facet search result */
 export const selectCategoryFacetSearchResult = createAction(
   'categoryFacet/selectSearchResult',
-  (payload: {facetId: string; value: CategoryFacetSearchResult}) =>
+  (payload: {
+    facetId: string;
+    value: CategoryFacetSearchResult;
+    numberOfValues: number;
+  }) =>
     validatePayload(payload, {
       facetId: facetIdDefinition,
       value: new RecordValue({values: categoryFacetSearchResultDefinition}),
+      numberOfValues: new NumberValue({
+        min: 0,
+      }),
     })
 );
 
