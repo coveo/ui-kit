@@ -174,7 +174,10 @@ function getSuggestions(
   }
 
   return state.completions.map((completion) => ({
-    value: getHighlightedSuggestion(completion.highlighted, highlightOptions),
+    highlightedValue: getHighlightedSuggestion(
+      completion.highlighted,
+      highlightOptions
+    ),
     rawValue: completion.expression,
   }));
 }

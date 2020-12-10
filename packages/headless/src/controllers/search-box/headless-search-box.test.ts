@@ -112,7 +112,7 @@ describe('headless searchBox', () => {
     expect(searchBox.state).toEqual({
       value: state.querySet[id],
       suggestions: state.querySuggest[id]!.completions.map((completion) => ({
-        value: '<a>hi<a>light<i>ed<i>',
+        highlightedValue: '<a>hi<a>light<i>ed<i>',
         rawValue: completion.expression,
       })),
       isLoading: false,

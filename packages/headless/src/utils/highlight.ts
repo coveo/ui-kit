@@ -111,6 +111,7 @@ export function getHighlightedSuggestion(
   suggestion: string,
   options: SuggestionHighlightingOptions
 ) {
+  suggestion = escape(suggestion);
   return suggestion.replace(
     /\[(.*?)\]|\{(.*?)\}|\((.*?)\)/g,
     (part, notMatched, matched, corrected) => {
@@ -140,4 +141,20 @@ function suggestionWithDelimiters(
     return delimiters.open + suggestion + delimiters.close;
   }
   return suggestion;
+}
+
+/**
+ * Escapes a string. For more information, refer to {@link https://underscorejs.org/#escape}
+ *
+ * @param str The string to escape
+ */
+
+export function escape(str: string) {
+  return str
+    .replace(/&/g, '&amp')
+    .replace(/</g, '&lt')
+    .replace(/>/g, '&gt')
+    .replace(/"/g, '&quot')
+    .replace(/`/g, '&#96')
+    .replace(/'/g, '&#x27');
 }

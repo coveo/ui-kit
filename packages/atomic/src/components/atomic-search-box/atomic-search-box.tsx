@@ -182,7 +182,7 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
           part="suggestion"
           id={id}
           value={suggestion.rawValue}
-          innerHTML={suggestion.value}
+          innerHTML={suggestion.highlightedValue}
         ></button>
       );
     });

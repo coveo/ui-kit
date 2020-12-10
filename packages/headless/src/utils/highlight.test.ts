@@ -4,6 +4,7 @@ import {
   HighlightParams,
   getHighlightedSuggestion,
   SuggestionHighlightingOptions,
+  escape,
 } from './highlight';
 
 describe('highlight', () => {
@@ -109,6 +110,13 @@ describe('highlight', () => {
       const formatted = getHighlightedSuggestion(suggestion, {});
       const expected = 'this is highlighted';
       expect(formatted).toEqual(expected);
+    });
+  });
+
+  describe('escape', () => {
+    it('should replace special characters', () => {
+      const str = "''&<&>`\"`";
+      expect(escape(str)).toBe('&#x27&#x27&amp&lt&amp&gt&#96&quot&#96');
     });
   });
 });
