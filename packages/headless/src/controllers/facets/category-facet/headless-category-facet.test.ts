@@ -54,7 +54,6 @@ describe('category facet', () => {
     options = {
       facetId,
       field: 'geography',
-      numberOfValues: 3,
     };
 
     state = createMockState();
@@ -80,8 +79,8 @@ describe('category facet', () => {
   it('registers a category facet with the passed options and default optional parameters', () => {
     const action = registerCategoryFacet({
       facetId,
-      ...options,
       ...defaultCategoryFacetOptions,
+      ...options,
     });
     expect(engine.actions).toContainEqual(action);
   });
@@ -184,7 +183,7 @@ describe('category facet', () => {
       const action = toggleSelectCategoryFacetValue({
         facetId,
         selection,
-        numberOfValues: options.numberOfValues!,
+        retrieveCount: defaultCategoryFacetOptions.numberOfValues,
       });
       expect(engine.actions).toContainEqual(action);
     });
@@ -219,10 +218,9 @@ describe('category facet', () => {
     });
 
     it('dispatches #updateCategoryFacetNumberOfValues with the initial number of values', () => {
-      const {numberOfValues} = defaultCategoryFacetOptions;
       const action = updateCategoryFacetNumberOfValues({
         facetId,
-        numberOfValues,
+        numberOfValues: defaultCategoryFacetOptions.numberOfValues,
       });
       expect(engine.actions).toContainEqual(action);
     });
@@ -365,7 +363,7 @@ describe('category facet', () => {
 
       const action = updateCategoryFacetNumberOfValues({
         facetId,
-        numberOfValues: options.numberOfValues!,
+        numberOfValues: defaultCategoryFacetOptions.numberOfValues,
       });
       expect(engine.actions).toContainEqual(action);
     });
@@ -407,7 +405,7 @@ describe('category facet', () => {
     it('dispatches #updateCategoryFacetNumberOfResults with the correct numberOfValues', () => {
       const action = updateCategoryFacetNumberOfValues({
         facetId,
-        numberOfValues: options.numberOfValues!,
+        numberOfValues: 5,
       });
       expect(engine.actions).toContainEqual(action);
     });

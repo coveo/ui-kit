@@ -10,6 +10,7 @@ import {
   CategoryFacetSearchSection,
   ConfigurationSection,
 } from '../../../../state/state-sections';
+import {defaultFacetSearchOptions} from '../../../../features/facets/facet-search-set/facet-search-reducer-helpers';
 
 export interface CategoryFacetSearchProps {
   options: FacetSearchOptions;
@@ -22,9 +23,8 @@ export function buildCategoryFacetSearch(
   props: CategoryFacetSearchProps
 ) {
   const {dispatch} = engine;
-  const {options} = props;
+  const options = {...defaultFacetSearchOptions, ...props.options};
   const {facetId} = options;
-  const numberOfValues = options.numberOfValues || 10;
   const getFacetSearch = () => engine.state.categoryFacetSearchSet[facetId];
 
   dispatch(registerCategoryFacetSearch(options));
@@ -39,7 +39,11 @@ export function buildCategoryFacetSearch(
 
     select(value: CategoryFacetSearchResult) {
       dispatch(
-        selectCategoryFacetSearchResult({facetId, value, numberOfValues})
+        selectCategoryFacetSearchResult({
+          facetId,
+          value,
+          retrieveCount: options.numberOfValues,
+        })
       );
       genericFacetSearch.select(value);
     },

@@ -108,7 +108,7 @@ export function buildCategoryFacet(
         executeToggleCategoryFacetSelect({
           facetId,
           selection,
-          numberOfValues: options.numberOfValues!,
+          retrieveCount: options.numberOfValues,
         })
       ),
 
@@ -117,7 +117,7 @@ export function buildCategoryFacet(
       dispatch(
         executeDeselectAllCategoryFacetValues({
           facetId,
-          numberOfValues: options.numberOfValues!,
+          numberOfValues: options.numberOfValues,
         })
       ),
 

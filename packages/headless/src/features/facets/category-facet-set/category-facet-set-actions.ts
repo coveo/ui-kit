@@ -56,7 +56,7 @@ export const toggleSelectCategoryFacetValue = createAction(
   (payload: {
     facetId: string;
     selection: CategoryFacetValue;
-    numberOfValues: number;
+    retrieveCount: number;
   }) => {
     try {
       validatePayloadAndThrow(payload.facetId, requiredNonEmptyString);
