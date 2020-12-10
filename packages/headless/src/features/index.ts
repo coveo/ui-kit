@@ -27,7 +27,7 @@ export {
   setOriginLevel3,
 } from './configuration/configuration-actions';
 
-export {setContext, addContext, removeContext} from './context/context-actions';
+export {ContextActions} from './context/context-actions';
 
 export {
   registerDateFacet,

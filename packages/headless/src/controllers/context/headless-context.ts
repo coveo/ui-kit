@@ -5,9 +5,7 @@ import {
   ContextValue,
 } from '../../features/context/context-state';
 import {
-  setContext,
-  addContext,
-  removeContext,
+  ContextActions,
 } from '../../features/context/context-actions';
 import {ContextSection} from '../../state/state-sections';
 
@@ -36,7 +34,7 @@ export const buildContext = (engine: Engine<ContextSection>) => {
      *  @param ctx The context to set in the query.
      */
     set(ctx: ContextPayload) {
-      dispatch(setContext(ctx));
+      dispatch(ContextActions.setContext(ctx));
     },
 
     /**
@@ -45,7 +43,7 @@ export const buildContext = (engine: Engine<ContextSection>) => {
      * @param contextValue The context value to add.
      */
     add(contextKey: string, contextValue: ContextValue) {
-      dispatch(addContext({contextKey, contextValue}));
+      dispatch(ContextActions.addContext({contextKey, contextValue}));
     },
 
     /**
@@ -53,7 +51,7 @@ export const buildContext = (engine: Engine<ContextSection>) => {
      * @param key The context key to remove.
      */
     remove(key: string) {
-      dispatch(removeContext(key));
+      dispatch(ContextActions.removeContext(key));
     },
   };
 };
