@@ -3,6 +3,10 @@ import {SearchRequest} from '../../api/search/search/search-request';
 import {validatePayload} from '../../utils/validate-payload';
 import {searchParametersDefinition} from './search-parameter-schema';
 
+type FacetParameters = {
+  f: Record<string, string[]>;
+};
+
 export type SearchParameters = Omit<
   SearchRequest,
   | 'organizationId'
@@ -16,7 +20,8 @@ export type SearchParameters = Omit<
   | 'searchHub'
   | 'pipeline'
   | 'context'
->;
+> &
+  Partial<FacetParameters>;
 
 /** Restores search parameters from e.g. a url*/
 export const restoreSearchParameters = createAction(

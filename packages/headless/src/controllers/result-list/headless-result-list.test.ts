@@ -45,4 +45,14 @@ describe('ResultList', () => {
       )
     ).toBeTruthy();
   });
+
+  it('fetchMoreResults should not dispatch a fetchMoreResults action if search state is loading', () => {
+    engine.state.search.isLoading = true;
+    buildResultList(engine).fetchMoreResults();
+    expect(
+      engine.actions.find(
+        (action) => action.type === fetchMoreResults.pending.type
+      )
+    ).toBeFalsy();
+  });
 });

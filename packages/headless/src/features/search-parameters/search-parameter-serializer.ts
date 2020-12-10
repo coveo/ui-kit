@@ -1,36 +1,96 @@
 import {SearchParameters} from './search-parameter-actions';
 
+const delimiter = '&';
+const equal = '=';
+
 export function buildSearchParameterSerializer() {
   return {serialize, deserialize};
 }
 
 function serialize(obj: SearchParameters) {
-  const fragment = Object.entries(obj)
-    .map(([key, val]) => `${key}=${val}`)
-    .join('&');
+  return Object.entries(obj)
+    .map(serializePair)
+    .filter((str) => str)
+    .join(delimiter);
+}
 
-  return fragment;
+function serializePair(pair: [string, unknown]) {
+  const [key, val] = pair;
+
+  if (!isValidKey(key)) {
+    return '';
+  }
+
+  if (key === 'f') {
+    return isFacetObject(val) ? serializeFacets(key, val) : '';
+  }
+
+  return `${key}${equal}${val}`;
+}
+
+function isFacetObject(obj: unknown): obj is Record<string, string[]> {
+  if (obj && typeof obj === 'object') {
+    const invalidEntries = Object.entries(obj).filter(([key, value]) => {
+      const validKey = typeof key === 'string';
+      const validValue =
+        Array.isArray(value) && value.every((v) => typeof v === 'string');
+      const isValid = validKey && validValue;
+      return !isValid;
+    });
+
+    return invalidEntries.length === 0;
+  }
+  return false;
+}
+
+function serializeFacets(key: string, facets: Record<string, string[]>) {
+  return Object.entries(facets)
+    .map(([facetId, values]) => `${key}[${facetId}]${equal}${values.join(',')}`)
+    .join(delimiter);
 }
 
 function deserialize(fragment: string): SearchParameters {
-  const parts = fragment.split('&').filter((part) => part.length);
+  const parts = fragment.split(delimiter);
   const keyValuePairs = parts
-    .map((part) => splitOnFirstDelimiter(part))
+    .map((part) => splitOnFirstEqual(part))
+    .map(preprocessFacetPairs)
     .filter(isValidPair)
     .map(cast);
 
-  return keyValuePairs.reduce((acc, pair) => {
+  return keyValuePairs.reduce((acc: SearchParameters, pair) => {
     const [key, val] = pair;
+
+    if (key === 'f' && typeof val === 'object') {
+      const mergedValues = {...acc[key], ...val};
+      return {...acc, [key]: mergedValues};
+    }
+
     return {...acc, [key]: val};
   }, {});
 }
 
-function splitOnFirstDelimiter(str: string) {
-  const delimiter = '=';
-  const [first, ...rest] = str.split(delimiter);
-  const second = rest.join(delimiter);
+function splitOnFirstEqual(str: string) {
+  const [first, ...rest] = str.split(equal);
+  const second = rest.join(equal);
 
   return [first, second];
+}
+
+function preprocessFacetPairs(pair: string[]) {
+  const [key, val] = pair;
+  const facetKey = /^(f)\[(.+)\]$/;
+  const result = facetKey.exec(key);
+
+  if (!result) {
+    return pair;
+  }
+
+  const paramKey = result[1];
+  const facetId = result[2];
+  const values = val.split(',');
+  const obj = {[facetId]: values};
+
+  return [paramKey, JSON.stringify(obj)];
 }
 
 function isValidPair<K extends keyof SearchParameters>(
@@ -53,6 +113,7 @@ function isValidKey(key: string): key is keyof SearchParameters {
     firstResult: true,
     numberOfResults: true,
     sortCriteria: true,
+    f: true,
     debug: true,
   };
 
@@ -78,6 +139,10 @@ function cast<K extends keyof SearchParameters>(
 
   if (key === 'numberOfResults') {
     return [key, parseInt(value)];
+  }
+
+  if (key === 'f') {
+    return [key, JSON.parse(value)];
   }
 
   return pair;
