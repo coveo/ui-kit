@@ -41,6 +41,7 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
   @Element() host!: HTMLDivElement;
   @State() searchBoxState!: SearchBoxState;
   @Prop() numberOfSuggestions = 5;
+  @Prop() enableQuerySyntax = false;
   @Prop() leadingSubmitButton = false;
   @Prop({reflect: true, attribute: 'data-id'}) _id = randomID(
     'atomic-search-box-'
@@ -83,6 +84,7 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
     this.searchBox = buildSearchBox(this.engine, {
       options: {
         numberOfSuggestions: this.numberOfSuggestions,
+        enableQuerySyntax: this.enableQuerySyntax,
       },
     });
     this.unsubscribe = this.searchBox.subscribe(() => this.updateState());
