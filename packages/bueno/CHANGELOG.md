@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.1.0-alpha.93](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.92...v0.1.0-alpha.93) (2020-12-10)
+
+
+### Features
+
+* **headless:** add #f url parameter ([#326](https://github.com/coveo/ui-kit/issues/326)) ([239af65](https://github.com/coveo/ui-kit/commit/239af658f60d678f25400cbb0d27dc1d63064a3a))
+
+
+
+
+
 # [0.1.0-alpha.91](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.90...v0.1.0-alpha.91) (2020-12-09)
 
 **Note:** Version bump only for package @coveo/bueno

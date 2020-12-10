@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.1.0-alpha.93](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.92...v0.1.0-alpha.93) (2020-12-10)
+
+
+### Bug Fixes
+
+* **headlesss:** fixed number of values for Category facet ([#350](https://bitbucket.org/coveord/ui-kit/issues/350)) ([a75636d](https://bitbucket.org/coveord/ui-kit/commits/a75636d2a46f840d0e4678972c0eb833f09f52e3))
+
+
+
+
+
 # [0.1.0-alpha.92](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.91...v0.1.0-alpha.92) (2020-12-09)
 
 **Note:** Version bump only for package @coveo/quantic
