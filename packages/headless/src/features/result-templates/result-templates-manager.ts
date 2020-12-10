@@ -58,7 +58,9 @@ export function buildResultTemplatesManager<
       );
 
       if (!areConditionsValid) {
-        throw new SchemaValidationError('Conditions are invalid');
+        throw new SchemaValidationError(
+          'Each result template conditions should be a function that takes a result as an argument and returns a boolean'
+        );
       }
     });
   };
