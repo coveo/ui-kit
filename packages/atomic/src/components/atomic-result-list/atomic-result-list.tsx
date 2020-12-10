@@ -108,6 +108,7 @@ export class AtomicResultList {
     ));
   }
 
+  // TODO: improve rudimentary infinite scroll, add scroll container option
   @Listen('scroll', {target: 'window'})
   handleInfiniteScroll() {
     if (!this.enableInfiniteScroll) {
