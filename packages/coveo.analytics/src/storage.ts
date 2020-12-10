@@ -4,9 +4,9 @@ import {Cookie} from './cookieutils';
 export let preferredStorage: WebStorage | null = null;
 
 export interface WebStorage {
-    getItem(key: string): string | null;
+    getItem(key: string): string | null | Promise<string | null>;
     removeItem(key: string): void;
-    setItem(key: string, data: string): void;
+    setItem(key: string, data: string): void | Promise<void>;
 }
 
 export function getAvailableStorage(): WebStorage {

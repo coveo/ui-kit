@@ -29,6 +29,7 @@ import {
 import {IRuntimeEnvironment, BrowserRuntime, NodeJSRuntime} from './runtimeEnvironment';
 import HistoryStore from '../history';
 import {isApiKey} from './token';
+import {isReactNative, ReactNativeRuntimeWarning} from '../react-native/react-native-utils';
 
 export const Version = 'v15';
 
@@ -42,10 +43,11 @@ export interface ClientOptions {
     token?: string;
     endpoint: string;
     version: string;
+    runtimeEnvironment?: IRuntimeEnvironment;
     beforeSendHooks: AnalyticsClientSendEventHook[];
 }
 
-export type AnalyticsClientSendEventHook = <TResult>(eventType: string, payload: any) => TResult;
+export type AnalyticsClientSendEventHook = <TResult>(eventType: string, payload: any) => TResult | Promise<TResult>;
 export type EventTypeConfig = {
     newEventType: EventType;
     variableLengthArgumentsNames?: string[];
@@ -112,18 +114,17 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
             visitorIdProvider: this,
         };
 
-        this.runtime = this.initRuntime(clientsOptions);
+        this.runtime = this.options.runtimeEnvironment || this.initRuntime(clientsOptions);
         this.analyticsFetchClient = new AnalyticsFetchClient(clientsOptions);
-
-        this.initVisitorId();
     }
 
     private initRuntime(clientsOptions: IAnalyticsBeaconClientOptions) {
         if (hasWindow() && hasDocument()) {
             return new BrowserRuntime(clientsOptions, () => this.flushBufferWithBeacon());
+        } else if (isReactNative()) {
+            console.warn(ReactNativeRuntimeWarning);
         }
-
-        return new NodeJSRuntime();
+        return new NodeJSRuntime(clientsOptions);
     }
 
     private get analyticsBeaconClient() {
@@ -134,15 +135,45 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
         return this.runtime.storage;
     }
 
-    private initVisitorId() {
-        const existingVisitorId = this.visitorId || this.storage.getItem('visitorId') || '';
-        this.currentVisitorId = existingVisitorId || uuidv4();
+    private async determineVisitorId() {
+        try {
+            return (await this.storage.getItem('visitorId')) || uuidv4();
+        } catch (err) {
+            console.log(
+                'Could not get visitor ID from the current runtime environment storage. Using a random ID instead.',
+                err
+            );
+            return uuidv4();
+        }
     }
 
-    get currentVisitorId() {
+    async getCurrentVisitorId() {
+        if (!this.visitorId) {
+            const id = await this.determineVisitorId();
+            await this.setCurrentVisitorId(id);
+        }
         return this.visitorId;
     }
 
+    async setCurrentVisitorId(visitorId: string) {
+        this.visitorId = visitorId;
+        await this.storage.setItem('visitorId', visitorId);
+    }
+
+    /**
+     * @deprecated Synchronous method is deprecated, use getCurrentVisitorId instead. This method will NOT work with react-native.
+     */
+    get currentVisitorId() {
+        const visitorId = this.visitorId || this.storage.getItem('visitorId');
+        if (typeof visitorId !== 'string') {
+            this.setCurrentVisitorId(uuidv4());
+        }
+        return this.visitorId;
+    }
+
+    /**
+     * @deprecated Synchronous method is deprecated, use setCurrentVisitorId instead. This method will NOT work with react-native.
+     */
     set currentVisitorId(visitorId: string) {
         this.visitorId = visitorId;
         this.storage.setItem('visitorId', visitorId);
@@ -160,18 +191,22 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
         } = this.eventTypeMapping[eventType] || {};
 
         type ProcessPayloadStep = (currentPayload: any) => any;
+        type AsyncProcessPayloadStep = (currentPayload: any) => Promise<any>;
         const processVariableArgumentNamesStep: ProcessPayloadStep = (currentPayload) =>
             variableLengthArgumentsNames.length > 0
                 ? this.parseVariableArgumentsPayload(variableLengthArgumentsNames, currentPayload)
                 : currentPayload[0];
-        const addVisitorIdStep: ProcessPayloadStep = (currentPayload) => ({
-            visitorId: addVisitorIdParameter ? this.visitorId : '',
+        const addVisitorIdStep: AsyncProcessPayloadStep = async (currentPayload) => ({
+            visitorId: addVisitorIdParameter ? await this.getCurrentVisitorId() : '',
             ...currentPayload,
         });
         const setAnonymousUserStep: ProcessPayloadStep = (currentPayload) =>
             usesMeasurementProtocol ? this.ensureAnonymousUserWhenUsingApiKey(currentPayload) : currentPayload;
-        const processBeforeSendHooksStep: ProcessPayloadStep = (currentPayload) =>
-            this.beforeSendHooks.reduce((newPayload, current) => current(eventType, newPayload), currentPayload);
+        const processBeforeSendHooksStep: AsyncProcessPayloadStep = (currentPayload) =>
+            this.beforeSendHooks.reduce(async (promisePayload, current) => {
+                const payload = await promisePayload;
+                return await current(eventType, payload);
+            }, currentPayload);
         const cleanPayloadStep: ProcessPayloadStep = (currentPayload) =>
             this.removeEmptyPayloadValues(currentPayload, eventType);
         const validateParams: ProcessPayloadStep = (currentPayload) => this.validateParams(currentPayload);
@@ -182,7 +217,7 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
         const processCustomParameters: ProcessPayloadStep = (currentPayload) =>
             usesMeasurementProtocol ? this.processCustomParameters(currentPayload) : currentPayload;
 
-        const payloadToSend = [
+        const payloadToSend = await [
             processVariableArgumentNamesStep,
             addVisitorIdStep,
             setAnonymousUserStep,
@@ -192,7 +227,10 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
             processMeasurementProtocolConversionStep,
             removeUnknownParameters,
             processCustomParameters,
-        ].reduce((payload, step) => step(payload), payload);
+        ].reduce(async (payloadPromise, step) => {
+            const payload = await payloadPromise;
+            return await step(payload);
+        }, Promise.resolve(payload));
 
         this.bufferedRequests.push({
             eventType: eventTypeToSend,

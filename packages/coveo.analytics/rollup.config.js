@@ -55,4 +55,19 @@ const libESM = {
     ],
 };
 
-export default [browser, libUMD, libESM];
+const libRN = {
+    input: './src/react-native/index.ts',
+    output: {
+        file: './dist/react-native.es.js',
+        format: 'es',
+        sourcemap: true,
+    },
+    plugins: [
+        typescript({
+            useTsconfigDeclarationDir: true,
+            tsconfigOverride: {compilerOptions: {target: 'es6'}},
+        }),
+    ],
+};
+
+export default [browser, libUMD, libESM, libRN];
