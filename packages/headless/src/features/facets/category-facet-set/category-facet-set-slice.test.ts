@@ -23,6 +23,11 @@ import {
 import {deselectAllFacets} from '../generic/facet-actions';
 import {restoreSearchParameters} from '../../search-parameters/search-parameter-actions';
 import * as CategoryFacetReducerHelpers from './category-facet-reducer-helpers';
+import {executeSearch} from '../../search/search-actions';
+import {FacetResponse} from '../facet-set/interfaces/response';
+import {buildMockSearch} from '../../../test/mock-search';
+import {logSearchEvent} from '../../analytics/analytics-actions';
+import {buildMockCategoryFacetResponse} from '../../../test/mock-category-facet-response';
 
 describe('category facet slice', () => {
   const facetId = '1';
@@ -453,6 +458,68 @@ describe('category facet slice', () => {
       expect(nextState[facetId].currentValues.length).toEqual(1);
       expect(nextState[facetId].currentValues).toContainEqual(expectedRequest);
       expect(spy).toHaveBeenCalled();
+    });
+  });
+
+  describe('#executeSearch.fulfilled', () => {
+    function buildExecuteSearchAction(facets: FacetResponse[]) {
+      const search = buildMockSearch();
+      search.response.facets = facets;
+
+      return executeSearch.fulfilled(search, '', logSearchEvent({evt: 'foo'}));
+    }
+
+    it('when an invalid path is requested, it sets the request #currentValues to an empty array', () => {
+      const currentValues = [
+        buildMockCategoryFacetValueRequest({
+          value: 'invalid',
+          state: 'selected',
+        }),
+      ];
+      state[facetId] = buildMockCategoryFacetRequest({currentValues});
+
+      const facet = buildMockCategoryFacetResponse({facetId, values: []});
+      const action = buildExecuteSearchAction([facet]);
+      const finalState = categoryFacetSetReducer(state, action);
+
+      expect(finalState[facetId].currentValues).toEqual([]);
+    });
+
+    it('when an valid path is requested, it does not adjust the #currentValues of the request', () => {
+      const valid = buildMockCategoryFacetValueRequest({
+        value: 'valid',
+        state: 'selected',
+      });
+      const currentValues = [valid];
+      state[facetId] = buildMockCategoryFacetRequest({currentValues});
+
+      const root = buildMockCategoryFacetValue({
+        value: 'valid',
+        state: 'selected',
+      });
+      const facet = buildMockCategoryFacetResponse({facetId, values: [root]});
+
+      const action = buildExecuteSearchAction([facet]);
+      const finalState = categoryFacetSetReducer(state, action);
+
+      expect(finalState[facetId].currentValues).toEqual(currentValues);
+    });
+
+    it('sets #preventAutoSelect to false', () => {
+      state[facetId] = buildMockCategoryFacetRequest({preventAutoSelect: true});
+
+      const facet = buildMockCategoryFacetResponse({facetId});
+      const action = buildExecuteSearchAction([facet]);
+      const finalState = categoryFacetSetReducer(state, action);
+
+      expect(finalState[facetId].preventAutoSelect).toBe(false);
+    });
+
+    it('when the facet response #id does not exist in state, it does not throw', () => {
+      const facet = buildMockCategoryFacetResponse({facetId});
+      const action = buildExecuteSearchAction([facet]);
+
+      expect(() => categoryFacetSetReducer(state, action)).not.toThrow();
     });
   });
 });

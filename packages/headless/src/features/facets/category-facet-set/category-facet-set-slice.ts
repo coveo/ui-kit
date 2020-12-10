@@ -15,7 +15,7 @@ import {
   CategoryFacetOptionalParameters,
 } from './interfaces/options';
 import {change} from '../../history/history-actions';
-import {CategoryFacetValue} from './interfaces/response';
+import {CategoryFacetResponse, CategoryFacetValue} from './interfaces/response';
 import {
   handleFacetDeselectAll,
   handleFacetUpdateNumberOfValues,
@@ -28,6 +28,9 @@ import {
 import {deselectAllFacets} from '../generic/facet-actions';
 import {restoreSearchParameters} from '../../search-parameters/search-parameter-actions';
 import {selectPath} from './category-facet-reducer-helpers';
+import {executeSearch} from '../../search/search-actions';
+import {partitionIntoParentsAndValues} from './category-facet-utils';
+import {AnyFacetResponse} from '../generic/interfaces/generic-facet-response';
 
 export const categoryFacetSetReducer = createReducer(
   getCategoryFacetSetInitialState(),
@@ -133,6 +136,24 @@ export const categoryFacetSetReducer = createReducer(
 
         const path = [...value.path, value.rawValue];
         selectPath(request, path);
+      })
+      .addCase(executeSearch.fulfilled, (state, action) => {
+        const {facets} = action.payload.response;
+
+        facets.forEach((response) => {
+          if (!isCategoryFacetResponse(state, response)) {
+            return;
+          }
+
+          const id = response.facetId;
+          const request = state[id];
+          const requestWasInvalid = isRequestInvalid(request, response);
+
+          request.currentValues = requestWasInvalid
+            ? []
+            : request.currentValues;
+          request.preventAutoSelect = false;
+        });
       });
   }
 );
@@ -186,4 +207,23 @@ function handleCategoryFacetNestedNumberOfValuesUpdate(
     selectedValue = selectedValue.children[0];
   }
   selectedValue.retrieveCount = numberOfValues;
+}
+
+function isCategoryFacetResponse(
+  state: CategoryFacetSetState,
+  response: AnyFacetResponse
+): response is CategoryFacetResponse {
+  const id = response.facetId;
+  return id in state;
+}
+
+function isRequestInvalid(
+  request: CategoryFacetRequest,
+  response: CategoryFacetResponse
+) {
+  const requestParents = partitionIntoParentsAndValues(request.currentValues)
+    .parents;
+  const responseParents = partitionIntoParentsAndValues(response.values)
+    .parents;
+  return requestParents.length !== responseParents.length;
 }
