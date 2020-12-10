@@ -4,18 +4,20 @@ import {selectPath} from './category-facet-reducer-helpers';
 
 describe('category facet reducer helpers', () => {
   describe('#selectPath', () => {
+    const retrieveCount = 10;
+
     describe('when the path is populated array', () => {
       it('sets #currentValues to the expected nested value', () => {
         const request = buildMockCategoryFacetRequest();
         const path = ['a', 'b'];
 
-        selectPath(request, path);
+        selectPath(request, path, retrieveCount);
 
         const b = buildMockCategoryFacetValueRequest({
           value: 'b',
           state: 'selected',
           retrieveChildren: true,
-          retrieveCount: 5,
+          retrieveCount,
         });
 
         const a = buildMockCategoryFacetValueRequest({
@@ -23,7 +25,7 @@ describe('category facet reducer helpers', () => {
           children: [b],
           retrieveChildren: false,
           state: 'idle',
-          retrieveCount: 5,
+          retrieveCount,
         });
 
         expect(request.currentValues).toEqual([a]);
@@ -31,7 +33,7 @@ describe('category facet reducer helpers', () => {
 
       it('sets #numberOfValues to 1', () => {
         const request = buildMockCategoryFacetRequest();
-        selectPath(request, ['a']);
+        selectPath(request, ['a'], retrieveCount);
 
         expect(request.numberOfValues).toBe(1);
       });
@@ -44,7 +46,7 @@ describe('category facet reducer helpers', () => {
         ];
         const request = buildMockCategoryFacetRequest({currentValues});
 
-        selectPath(request, []);
+        selectPath(request, [], retrieveCount);
 
         expect(request.currentValues).toEqual([]);
       });
@@ -52,7 +54,7 @@ describe('category facet reducer helpers', () => {
       it('does not adjust the #numberOfValues of the request', () => {
         const numberOfValues = 5;
         const request = buildMockCategoryFacetRequest({numberOfValues});
-        selectPath(request, []);
+        selectPath(request, [], retrieveCount);
 
         expect(request.numberOfValues).toBe(numberOfValues);
       });
@@ -60,7 +62,7 @@ describe('category facet reducer helpers', () => {
 
     it('sets the request #preventAutoSelect to true', () => {
       const request = buildMockCategoryFacetRequest({preventAutoSelect: false});
-      selectPath(request, []);
+      selectPath(request, [], retrieveCount);
 
       expect(request.preventAutoSelect).toBe(true);
     });

@@ -54,7 +54,7 @@ export const categoryFacetSetReducer = createReducer(
         facetIds.forEach((id) => {
           const request = state[id];
           const path = cf[id] || [];
-          selectPath(request, path);
+          selectPath(request, path, request.numberOfValues);
         });
       })
       .addCase(updateCategoryFacetSortCriterion, (state, action) => {
@@ -68,7 +68,7 @@ export const categoryFacetSetReducer = createReducer(
         request.sortCriteria = criterion;
       })
       .addCase(toggleSelectCategoryFacetValue, (state, action) => {
-        const {facetId, selection} = action.payload;
+        const {facetId, selection, retrieveCount} = action.payload;
         const request = state[facetId];
 
         if (!request) {
@@ -100,7 +100,10 @@ export const categoryFacetSetReducer = createReducer(
           return;
         }
 
-        const valueRequest = convertCategoryFacetValueToRequest(selection);
+        const valueRequest = convertCategoryFacetValueToRequest(
+          selection,
+          retrieveCount
+        );
         activeLevel.push(valueRequest);
         request.numberOfValues = 1;
       })
@@ -127,7 +130,7 @@ export const categoryFacetSetReducer = createReducer(
         handleCategoryFacetNestedNumberOfValuesUpdate(state, action.payload);
       })
       .addCase(selectCategoryFacetSearchResult, (state, action) => {
-        const {facetId, value} = action.payload;
+        const {facetId, value, retrieveCount} = action.payload;
         const request = state[facetId];
 
         if (!request) {
@@ -135,7 +138,7 @@ export const categoryFacetSetReducer = createReducer(
         }
 
         const path = [...value.path, value.rawValue];
-        selectPath(request, path);
+        selectPath(request, path, retrieveCount);
       })
       .addCase(executeSearch.fulfilled, (state, action) => {
         const {facets} = action.payload.response;
@@ -181,7 +184,8 @@ function buildCategoryFacetRequest(
 }
 
 function convertCategoryFacetValueToRequest(
-  categoryFacetValue: CategoryFacetValue
+  categoryFacetValue: CategoryFacetValue,
+  retrieveCount: number
 ): CategoryFacetValueRequest {
   const {value} = categoryFacetValue;
   return {
@@ -189,7 +193,7 @@ function convertCategoryFacetValueToRequest(
     state: 'selected',
     children: [],
     retrieveChildren: true,
-    retrieveCount: 5,
+    retrieveCount,
   };
 }
 

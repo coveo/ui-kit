@@ -3,22 +3,26 @@ import {
   CategoryFacetValueRequest,
 } from './interfaces/request';
 
-export function selectPath(request: CategoryFacetRequest, path: string[]) {
-  request.currentValues = buildCurrentValuesFromPath(path);
+export function selectPath(
+  request: CategoryFacetRequest,
+  path: string[],
+  retrieveCount: number
+) {
+  request.currentValues = buildCurrentValuesFromPath(path, retrieveCount);
   request.numberOfValues = path.length ? 1 : request.numberOfValues;
   request.preventAutoSelect = true;
 }
 
-function buildCurrentValuesFromPath(path: string[]) {
+function buildCurrentValuesFromPath(path: string[], retrieveCount: number) {
   if (!path.length) {
     return [];
   }
 
-  const root = buildCategoryFacetValueRequest(path[0]);
+  const root = buildCategoryFacetValueRequest(path[0], retrieveCount);
   let curr = root;
 
   for (const segment of path.splice(1)) {
-    const next = buildCategoryFacetValueRequest(segment);
+    const next = buildCategoryFacetValueRequest(segment, retrieveCount);
     curr.children.push(next);
     curr = next;
   }
@@ -30,11 +34,12 @@ function buildCurrentValuesFromPath(path: string[]) {
 }
 
 function buildCategoryFacetValueRequest(
-  value: string
+  value: string,
+  retrieveCount: number
 ): CategoryFacetValueRequest {
   return {
     value,
-    retrieveCount: 5,
+    retrieveCount,
     children: [],
     state: 'idle',
     retrieveChildren: false,

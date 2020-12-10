@@ -53,7 +53,11 @@ export const registerCategoryFacet = createAction(
  */
 export const toggleSelectCategoryFacetValue = createAction(
   'categoryFacet/toggleSelectValue',
-  (payload: {facetId: string; selection: CategoryFacetValue}) => {
+  (payload: {
+    facetId: string;
+    selection: CategoryFacetValue;
+    retrieveCount: number;
+  }) => {
     try {
       validatePayloadAndThrow(payload.facetId, requiredNonEmptyString);
       validateCategoryFacetValue(payload.selection);
