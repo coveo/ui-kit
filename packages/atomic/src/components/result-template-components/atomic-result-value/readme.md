@@ -7,10 +7,24 @@
 
 ## Properties
 
-| Property | Attribute | Description | Type     | Default |
-| -------- | --------- | ----------- | -------- | ------- |
-| `value`  | `value`   |             | `string` | `''`    |
+| Property              | Attribute               | Description | Type     | Default |
+| --------------------- | ----------------------- | ----------- | -------- | ------- |
+| `shouldHighlightWith` | `should-highlight-with` |             | `string` | `''`    |
+| `value`               | `value`                 |             | `string` | `''`    |
 
+
+## Dependencies
+
+### Used by
+
+ - [atomic-result-excerpt](../atomic-result-excerpt)
+
+### Graph
+```mermaid
+graph TD;
+  atomic-result-excerpt --> atomic-result-value
+  style atomic-result-value fill:#f9f,stroke:#333,stroke-width:4px
+```
 
 ----------------------------------------------
 
