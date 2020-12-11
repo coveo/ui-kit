@@ -126,8 +126,6 @@ export const buildProductRecommendationsRequest = (
     ...(s.configuration.analytics.enabled && {
       visitorId: getVisitorID(),
     }),
-    // TODO: Remove this workaround, see https://coveord.atlassian.net/browse/COM-696 for details.
-    maximumAge: 0,
     recommendation: s.productRecommendations.id,
     numberOfResults: s.productRecommendations.maxNumberOfRecommendations,
     mlParameters: {
