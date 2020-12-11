@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.1.0-alpha.96](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.95...v0.1.0-alpha.96) (2020-12-11)
+
+
+### Bug Fixes
+
+* **headless:** logActionErrorMiddleware should only stop on SchemaValidationError ([#353](https://github.com/coveo/ui-kit/issues/353)) ([ddd72ec](https://github.com/coveo/ui-kit/commit/ddd72ec9728ac548a1203e6325ed86cefb1bf37f))
+
+
+
+
+
 # [0.1.0-alpha.95](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.94...v0.1.0-alpha.95) (2020-12-11)
 
 
