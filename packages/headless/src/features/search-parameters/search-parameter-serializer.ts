@@ -21,7 +21,7 @@ function serializePair(pair: [string, unknown]) {
     return '';
   }
 
-  if (key === 'f') {
+  if (key === 'f' || key === 'cf') {
     return isFacetObject(val) ? serializeFacets(key, val) : '';
   }
 
@@ -78,7 +78,7 @@ function splitOnFirstEqual(str: string) {
 
 function preprocessFacetPairs(pair: string[]) {
   const [key, val] = pair;
-  const facetKey = /^(f)\[(.+)\]$/;
+  const facetKey = /^(f|cf)\[(.+)\]$/;
   const result = facetKey.exec(key);
 
   if (!result) {
@@ -114,6 +114,7 @@ function isValidKey(key: string): key is keyof SearchParameters {
     numberOfResults: true,
     sortCriteria: true,
     f: true,
+    cf: true,
     debug: true,
   };
 
@@ -141,7 +142,7 @@ function cast<K extends keyof SearchParameters>(
     return [key, parseInt(value)];
   }
 
-  if (key === 'f') {
+  if (key === 'f' || key === 'cf') {
     return [key, JSON.parse(value)];
   }
 

@@ -38,9 +38,6 @@ export const categoryFacetSelectedValuesSelector = (
   facetId: string
 ) => {
   const facetResponse = categoryFacetResponseSelector(state, facetId);
-  if (!facetResponse) {
-    return [];
-  }
-  const parentsAndValues = partitionIntoParentsAndValues(facetResponse);
+  const parentsAndValues = partitionIntoParentsAndValues(facetResponse?.values);
   return parentsAndValues.parents;
 };
