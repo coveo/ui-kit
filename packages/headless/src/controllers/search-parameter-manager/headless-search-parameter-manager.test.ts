@@ -5,7 +5,9 @@ import {buildMockCategoryFacetRequest} from '../../test/mock-category-facet-requ
 import {buildMockCategoryFacetValueRequest} from '../../test/mock-category-facet-value-request';
 import {buildMockFacetRequest} from '../../test/mock-facet-request';
 import {buildMockFacetValueRequest} from '../../test/mock-facet-value-request';
+import {buildMockNumericFacetRequest} from '../../test/mock-numeric-facet-request';
 import {buildMockSearchParameters} from '../../test/mock-search-parameters';
+import {buildNumericRange} from '../facets/range-facet/numeric-facet/headless-numeric-facet';
 import {
   buildSearchParameterManager,
   SearchParameterManager,
@@ -183,6 +185,29 @@ describe('state manager', () => {
     });
   });
 
+  describe('#state.parameters.nf', () => {
+    it('when a numeric facet has selected values, only selected values are included', () => {
+      const selected = buildNumericRange({
+        start: 0,
+        end: 10,
+        state: 'selected',
+      });
+      const idle = buildNumericRange({start: 10, end: 20, state: 'idle'});
+
+      const currentValues = [selected, idle];
+      engine.state.numericFacetSet = {
+        size: buildMockNumericFacetRequest({currentValues}),
+      };
+
+      expect(manager.state.parameters.nf).toEqual({size: [selected]});
+    });
+
+    it('when there are no numeric facets with selected values, the #nf parameter is not included', () => {
+      engine.state.numericFacetSet = {author: buildMockNumericFacetRequest()};
+      expect('nf' in manager.state.parameters).toBe(false);
+    });
+  });
+
   describe('#state.parameters.sortCriteria', () => {
     it('when the parameter does not equal the default value, it is included', () => {
       engine.state.sortCriteria = 'qre';
@@ -229,6 +254,13 @@ describe('state manager', () => {
       author: buildMockCategoryFacetRequest({
         currentValues: categoryFacetValues,
       }),
+    };
+
+    const numericRanges = [
+      buildNumericRange({start: 0, end: 10, state: 'selected'}),
+    ];
+    engine.state.numericFacetSet = {
+      size: buildMockNumericFacetRequest({currentValues: numericRanges}),
     };
 
     engine.state.query.q = 'a';

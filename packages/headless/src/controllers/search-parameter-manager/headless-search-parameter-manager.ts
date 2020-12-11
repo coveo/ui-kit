@@ -15,6 +15,7 @@ import {getSortCriteriaInitialState} from '../../features/sort-criteria/sort-cri
 import {SearchParametersState} from '../../state/search-app-state';
 import {validateInitialState} from '../../utils/validate-payload';
 import {buildController} from '../controller/headless-controller';
+import {NumericRangeRequest} from '../../features/facets/range-facets/numeric-facet-set/interfaces/request';
 
 export interface SearchParameterManagerProps {
   initialState: SearchParameterManagerInitialState;
@@ -71,6 +72,7 @@ export function buildSearchParameterManager(
         ...getSortCriteria(state),
         ...getFacets(state),
         ...getCategoryFacets(state),
+        ...getNumericFacets(state),
         ...getDebug(state),
       };
 
@@ -185,6 +187,25 @@ function getCategoryFacets(state: Partial<SearchParametersState>) {
     .reduce((acc, obj) => ({...acc, ...obj}), {});
 
   return Object.keys(cf).length ? {cf} : {};
+}
+
+function getNumericFacets(state: Partial<SearchParametersState>) {
+  if (state.numericFacetSet === undefined) {
+    return {};
+  }
+
+  const nf = Object.entries(state.numericFacetSet)
+    .map(([facetId, request]) => {
+      const selectedRanges = getSelectedRanges(request.currentValues);
+      return selectedRanges.length ? {[facetId]: selectedRanges} : {};
+    })
+    .reduce((acc, obj) => ({...acc, ...obj}), {});
+
+  return Object.keys(nf).length ? {nf} : {};
+}
+
+function getSelectedRanges(ranges: NumericRangeRequest[]) {
+  return ranges.filter((range) => range.state === 'selected');
 }
 
 function getDebug(state: Partial<SearchParametersState>) {
