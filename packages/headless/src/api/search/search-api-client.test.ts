@@ -445,7 +445,6 @@ describe('search api client', () => {
             context: productRecommendationsState.context.contextValues,
             searchHub: productRecommendationsState.searchHub,
             actionsHistory: expect.any(Array),
-            maximumAge: 0,
             visitorId: expect.any(String),
             numberOfResults:
               productRecommendationsState.productRecommendations

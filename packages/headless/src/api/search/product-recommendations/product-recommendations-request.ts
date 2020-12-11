@@ -3,7 +3,6 @@ import {
   BaseParam,
   ContextParam,
   MachineLearningParam,
-  MaximumAgeParam,
   NumberOfResultsParam,
   RecommendationParam,
   SearchHubParam,
@@ -16,6 +15,5 @@ export type ProductRecommendationsRequest = BaseParam &
   RecommendationParam &
   ContextParam &
   SearchHubParam &
-  MaximumAgeParam &
   ActionsHistoryParam &
   VisitorIDParam;
