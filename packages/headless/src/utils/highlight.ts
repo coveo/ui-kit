@@ -13,6 +13,13 @@ export interface HighlightKeyword {
 
 type HighlightKeywordOrString = HighlightKeyword | string;
 
+export type ResultHighlights =
+  | 'titleHighlights'
+  | 'firstSentencesHighlights'
+  | 'excerptHighlights'
+  | 'printableUriHighlights'
+  | 'summaryHighlights';
+
 export interface HighlightParams {
   /**
    * The string to highlight items in.

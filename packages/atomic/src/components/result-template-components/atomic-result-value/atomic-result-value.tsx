@@ -1,5 +1,10 @@
 import {Component, Prop, Element, h} from '@stencil/core';
-import {Result, ResultTemplatesHelpers, highlightString} from '@coveo/headless';
+import {
+  Result,
+  ResultTemplatesHelpers,
+  highlightString,
+  ResultHighlights,
+} from '@coveo/headless';
 import {
   ResultContext,
   ResultContextRenderer,
@@ -12,19 +17,9 @@ import {
 export class AtomicResultValue {
   @Element() host!: HTMLDivElement;
   @Prop() value = '';
-  @Prop() shouldHighlightWith = '';
+  @Prop() shouldHighlightWith: ResultHighlights | undefined;
 
   @ResultContext() private result!: Result;
-
-  /**
-   * Returns the value of 'shouldHighlightWith' prop from the Result
-   */
-  private getHighlightsFromResult() {
-    const highlightsKeywords = Object.entries(this.result).find(
-      (keyValue) => keyValue[0] === this.shouldHighlightWith
-    );
-    return highlightsKeywords![1] as string[];
-  }
 
   @ResultContextRenderer
   render() {
@@ -34,12 +29,15 @@ export class AtomicResultValue {
     );
 
     if (resultValue !== null) {
-      if (this.shouldHighlightWith && this.shouldHighlightWith in this.result) {
+      if (this.shouldHighlightWith) {
         resultValue = highlightString({
           content: resultValue as string,
           openingDelimiter: '<strong>',
           closingDelimiter: '</strong>',
-          highlights: this.getHighlightsFromResult(),
+          highlights: ResultTemplatesHelpers.getResultProperty(
+            this.result,
+            this.shouldHighlightWith
+          ) as string[],
         });
         return <span innerHTML={resultValue as string}></span>;
       }

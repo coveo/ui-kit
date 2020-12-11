@@ -7,10 +7,10 @@
 
 ## Properties
 
-| Property              | Attribute               | Description | Type     | Default |
-| --------------------- | ----------------------- | ----------- | -------- | ------- |
-| `shouldHighlightWith` | `should-highlight-with` |             | `string` | `''`    |
-| `value`               | `value`                 |             | `string` | `''`    |
+| Property              | Attribute               | Description | Type                                                                                                                                     | Default     |
+| --------------------- | ----------------------- | ----------- | ---------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| `shouldHighlightWith` | `should-highlight-with` |             | `"excerptHighlights" \| "firstSentencesHighlights" \| "printableUriHighlights" \| "summaryHighlights" \| "titleHighlights" \| undefined` | `undefined` |
+| `value`               | `value`                 |             | `string`                                                                                                                                 | `''`        |
 
 
 ## Dependencies

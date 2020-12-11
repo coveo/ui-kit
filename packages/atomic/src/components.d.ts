@@ -5,7 +5,7 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { Engine, HeadlessConfigurationOptions, LogLevel, Result, ResultTemplateCondition } from "@coveo/headless";
+import { Engine, HeadlessConfigurationOptions, LogLevel, Result, ResultHighlights, ResultTemplateCondition } from "@coveo/headless";
 export namespace Components {
     interface AtomicBreadcrumbManager {
         "categoryDivider": string;
@@ -83,7 +83,7 @@ export namespace Components {
         "getFields": () => Promise<string[]>;
     }
     interface AtomicResultValue {
-        "shouldHighlightWith": string;
+        "shouldHighlightWith": ResultHighlights | undefined;
         "value": string;
     }
     interface AtomicResultsPerPage {
@@ -382,7 +382,7 @@ declare namespace LocalJSX {
         "fieldsToInclude"?: string;
     }
     interface AtomicResultValue {
-        "shouldHighlightWith"?: string;
+        "shouldHighlightWith"?: ResultHighlights | undefined;
         "value"?: string;
     }
     interface AtomicResultsPerPage {
