@@ -1,3 +1,4 @@
+import AbortController from 'node-abort-controller';
 import {
   PlatformClient,
   PlatformResponse,
@@ -25,6 +26,11 @@ import {RecommendationRequest} from './recommendation/recommendation-request';
 import {ProductRecommendationsRequest} from './product-recommendations/product-recommendations-request';
 import {Logger} from 'pino';
 import {ThunkExtraArguments} from '../../app/store';
+import {
+  PostprocessFacetSearchResponseMiddleware,
+  PostprocessQuerySuggestResponseMiddleware,
+  PostprocessSearchResponseMiddleware,
+} from './search-api-client-middleware';
 
 export type AllSearchAPIResponse = Plan | Search | QuerySuggest;
 
@@ -38,6 +44,9 @@ export interface SearchAPIClientOptions {
   renewAccessToken: () => Promise<string>;
   logger: Logger;
   preprocessRequest: PreprocessRequestMiddleware;
+  postprocessSearchResponseMiddleware: PostprocessSearchResponseMiddleware;
+  postprocessQuerySuggestResponseMiddleware: PostprocessQuerySuggestResponseMiddleware;
+  postprocessFacetSearchResponseMiddleware: PostprocessFacetSearchResponseMiddleware;
 }
 
 export type SearchAPIClientResponse<T> =
@@ -79,8 +88,11 @@ export class SearchAPIClient {
       ...this.options,
     });
     if (isSuccessQuerySuggestionsResponse(platformResponse)) {
+      const processedResponse = await this.options.postprocessQuerySuggestResponseMiddleware(
+        platformResponse
+      );
       return {
-        success: platformResponse.body,
+        success: processedResponse.body,
       };
     }
     return {
@@ -88,18 +100,32 @@ export class SearchAPIClient {
     };
   }
 
+  private searchAbortController: AbortController | null = null;
+
   async search(
     req: SearchRequest
   ): Promise<SearchAPIClientResponse<SearchResponseSuccess>> {
+    if (this.searchAbortController) {
+      this.options.logger.warn('Cancelling current pending search query');
+      this.searchAbortController.abort();
+    }
+    this.searchAbortController = new AbortController();
+
     const platformResponse = await PlatformClient.call<SearchRequest, Search>({
       ...baseSearchRequest(req, 'POST', 'application/json', ''),
       requestParams: pickNonBaseParams(req),
       ...this.options,
+      signal: this.searchAbortController.signal,
     });
 
+    this.searchAbortController = null;
+
     if (isSuccessSearchResponse(platformResponse)) {
+      const processedResponse = await this.options.postprocessSearchResponseMiddleware(
+        platformResponse
+      );
       return {
-        success: platformResponse.body,
+        success: processedResponse.body,
       };
     }
 
@@ -117,8 +143,11 @@ export class SearchAPIClient {
       requestParams: pickNonBaseParams(req),
       ...this.options,
     });
+    const processedResponse = await this.options.postprocessFacetSearchResponseMiddleware(
+      platformResponse
+    );
 
-    return platformResponse.body;
+    return processedResponse.body;
   }
 
   async recommendations(req: RecommendationRequest) {

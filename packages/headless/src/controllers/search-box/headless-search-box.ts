@@ -72,7 +72,7 @@ export function buildSearchBox(
     ...props.options,
   };
 
-  validateOptions(searchBoxOptionsSchema, options, buildSearchBox.name);
+  validateOptions(engine, searchBoxOptionsSchema, options, buildSearchBox.name);
 
   dispatch(registerQuerySetQuery({id, query: ''}));
   dispatch(

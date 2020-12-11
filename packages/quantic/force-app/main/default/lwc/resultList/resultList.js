@@ -23,7 +23,7 @@ export default class ResultList extends LightningElement {
   @api
   initialize(engine) {
     this.resultList = CoveoHeadless.buildResultList(engine);
-    this.resultTemplatesManager = new CoveoHeadless.ResultTemplatesManager(
+    this.resultTemplatesManager = CoveoHeadless.buildResultTemplatesManager(
       engine
     );
     this.registerTemplates();

@@ -6,6 +6,7 @@ import {
   Method,
   Watch,
   Element,
+  State,
 } from '@stencil/core';
 import {
   HeadlessEngine,
@@ -15,11 +16,11 @@ import {
   HeadlessConfigurationOptions,
   AnalyticsActions,
   ConfigurationActions,
+  LogLevel,
   buildSearchParameterManager,
   buildSearchParameterSerializer,
   Unsubscribe,
 } from '@coveo/headless';
-import {RenderError} from '../../utils/render-utils';
 import {InitializeEvent} from '../../utils/initialization-utils';
 
 @Component({
@@ -31,14 +32,15 @@ export class AtomicSearchInterface {
   @Prop() sample = false;
   @Prop({reflect: true}) pipeline = 'default';
   @Prop({reflect: true}) searchHub = 'default';
-  @RenderError() error?: Error;
+  @Prop() logLevel?: LogLevel = 'info';
+  @State() error?: Error;
+  @State() engine?: Engine;
 
-  private engine?: Engine;
   private unsubscribe: Unsubscribe = () => {};
   private hangingComponentsInitialization: InitializeEvent[] = [];
   private initialized = false;
 
-  componentDidLoad() {
+  componentWillLoad() {
     if (this.sample) {
       this.initialize(HeadlessEngine.getSampleConfiguration());
     }
@@ -75,10 +77,18 @@ export class AtomicSearchInterface {
   }
 
   private initEngine(config: HeadlessConfigurationOptions) {
-    this.engine = new HeadlessEngine({
-      configuration: config,
-      reducers: searchAppReducers,
-    });
+    try {
+      this.engine = new HeadlessEngine({
+        configuration: config,
+        reducers: searchAppReducers,
+        loggerOptions: {
+          level: this.logLevel,
+        },
+      });
+    } catch (error) {
+      this.error = error;
+      return;
+    }
 
     this.hangingComponentsInitialization.forEach((event) =>
       event.detail(this.engine!)
@@ -135,6 +145,21 @@ export class AtomicSearchInterface {
   }
 
   public render() {
-    return <slot></slot>;
+    if (this.error) {
+      return (
+        <atomic-component-error error={this.error}></atomic-component-error>
+      );
+    }
+
+    if (!this.engine) {
+      return;
+    }
+
+    return [
+      <atomic-relevance-inspector
+        engine={this.engine}
+      ></atomic-relevance-inspector>,
+      <slot></slot>,
+    ];
   }
 }

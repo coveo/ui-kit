@@ -5,9 +5,11 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { Engine, HeadlessConfigurationOptions, Result, ResultTemplateCondition } from "@coveo/headless";
+import { Engine, HeadlessConfigurationOptions, LogLevel, Result, ResultTemplateCondition } from "@coveo/headless";
 export namespace Components {
     interface AtomicBreadcrumbManager {
+        "categoryDivider": string;
+        "collapseThreshold": number;
     }
     interface AtomicCategoryFacet {
         "facetId": string;
@@ -52,6 +54,9 @@ export namespace Components {
     }
     interface AtomicQuerySummary {
     }
+    interface AtomicRelevanceInspector {
+        "engine": Engine;
+    }
     interface AtomicResult {
         "engine": Engine;
         "result": Result;
@@ -90,6 +95,7 @@ export namespace Components {
     }
     interface AtomicSearchBox {
         "_id": string;
+        "enableQuerySyntax": boolean;
         /**
           * Wether the submit button should be place before the input
          */
@@ -101,6 +107,7 @@ export namespace Components {
     }
     interface AtomicSearchInterface {
         "initialize": (options: Pick<HeadlessConfigurationOptions, 'accessToken' | 'organizationId' | 'renewAccessToken' | 'platformUrl'>) => Promise<void>;
+        "logLevel"?: LogLevel;
         "pipeline": string;
         "sample": boolean;
         "searchHub": string;
@@ -197,6 +204,12 @@ declare global {
         prototype: HTMLAtomicQuerySummaryElement;
         new (): HTMLAtomicQuerySummaryElement;
     };
+    interface HTMLAtomicRelevanceInspectorElement extends Components.AtomicRelevanceInspector, HTMLStencilElement {
+    }
+    var HTMLAtomicRelevanceInspectorElement: {
+        prototype: HTMLAtomicRelevanceInspectorElement;
+        new (): HTMLAtomicRelevanceInspectorElement;
+    };
     interface HTMLAtomicResultElement extends Components.AtomicResult, HTMLStencilElement {
     }
     var HTMLAtomicResultElement: {
@@ -272,6 +285,7 @@ declare global {
         "atomic-pager": HTMLAtomicPagerElement;
         "atomic-query-error": HTMLAtomicQueryErrorElement;
         "atomic-query-summary": HTMLAtomicQuerySummaryElement;
+        "atomic-relevance-inspector": HTMLAtomicRelevanceInspectorElement;
         "atomic-result": HTMLAtomicResultElement;
         "atomic-result-link": HTMLAtomicResultLinkElement;
         "atomic-result-list": HTMLAtomicResultListElement;
@@ -286,6 +300,8 @@ declare global {
 }
 declare namespace LocalJSX {
     interface AtomicBreadcrumbManager {
+        "categoryDivider"?: string;
+        "collapseThreshold"?: number;
     }
     interface AtomicCategoryFacet {
         "facetId"?: string;
@@ -329,6 +345,9 @@ declare namespace LocalJSX {
     }
     interface AtomicQuerySummary {
     }
+    interface AtomicRelevanceInspector {
+        "engine": Engine;
+    }
     interface AtomicResult {
         "engine": Engine;
         "result": Result;
@@ -365,6 +384,7 @@ declare namespace LocalJSX {
     }
     interface AtomicSearchBox {
         "_id"?: string;
+        "enableQuerySyntax"?: boolean;
         /**
           * Wether the submit button should be place before the input
          */
@@ -375,6 +395,7 @@ declare namespace LocalJSX {
         "numberOfSuggestions"?: number;
     }
     interface AtomicSearchInterface {
+        "logLevel"?: LogLevel;
         "pipeline"?: string;
         "sample"?: boolean;
         "searchHub"?: string;
@@ -400,6 +421,7 @@ declare namespace LocalJSX {
         "atomic-pager": AtomicPager;
         "atomic-query-error": AtomicQueryError;
         "atomic-query-summary": AtomicQuerySummary;
+        "atomic-relevance-inspector": AtomicRelevanceInspector;
         "atomic-result": AtomicResult;
         "atomic-result-link": AtomicResultLink;
         "atomic-result-list": AtomicResultList;
@@ -430,6 +452,7 @@ declare module "@stencil/core" {
             "atomic-pager": LocalJSX.AtomicPager & JSXBase.HTMLAttributes<HTMLAtomicPagerElement>;
             "atomic-query-error": LocalJSX.AtomicQueryError & JSXBase.HTMLAttributes<HTMLAtomicQueryErrorElement>;
             "atomic-query-summary": LocalJSX.AtomicQuerySummary & JSXBase.HTMLAttributes<HTMLAtomicQuerySummaryElement>;
+            "atomic-relevance-inspector": LocalJSX.AtomicRelevanceInspector & JSXBase.HTMLAttributes<HTMLAtomicRelevanceInspectorElement>;
             "atomic-result": LocalJSX.AtomicResult & JSXBase.HTMLAttributes<HTMLAtomicResultElement>;
             "atomic-result-link": LocalJSX.AtomicResultLink & JSXBase.HTMLAttributes<HTMLAtomicResultLinkElement>;
             "atomic-result-list": LocalJSX.AtomicResultList & JSXBase.HTMLAttributes<HTMLAtomicResultListElement>;

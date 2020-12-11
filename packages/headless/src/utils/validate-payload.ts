@@ -1,45 +1,105 @@
-import {SchemaDefinition, SchemaValue, Schema} from '@coveo/bueno';
+import {
+  SchemaDefinition,
+  SchemaValue,
+  Schema,
+  SchemaValidationError,
+} from '@coveo/bueno';
+import {SerializedError} from '@reduxjs/toolkit';
+import {Engine} from '../app/headless-engine';
 
-export const validatePayloadSchema = <P>(
+export const serializeSchemaValidationError = ({
+  message,
+  name,
+  stack,
+}: SchemaValidationError): SerializedError => ({message, name, stack});
+
+/**
+ * Validates an action payload and throws an error if invalid
+ * @param payload the action payload
+ * @param definition Either a Bueno SchemaDefinition or a SchemaValue
+ */
+export const validatePayloadAndThrow = <P>(
   payload: P,
-  schemaDefinition: SchemaDefinition<Required<P>>
+  definition: SchemaDefinition<Required<P>> | SchemaValue<P>
 ) => {
-  const schema = new Schema(schemaDefinition);
-  const validatedPayload = schema.validate(payload);
-  return {payload: validatedPayload as P};
+  const isSchemaValue = 'required' in definition;
+  if (isSchemaValue) {
+    return {
+      payload: new Schema({
+        value: definition as SchemaValue<P>,
+      }).validate({value: payload}).value as P,
+    };
+  }
+
+  return {
+    payload: new Schema(definition as SchemaDefinition<Required<P>>).validate(
+      payload
+    ) as P,
+  };
 };
 
-export const validatePayloadValue = <P>(
+/**
+ * Validates an action payload and return an `error` alongside the payload if it's invalid
+ * @param payload the action payload
+ * @param definition Either a Bueno SchemaDefinition or a SchemaValue
+ */
+export const validatePayload = <P>(
   payload: P,
-  schemaValue: SchemaValue<P>
-) => {
-  const schema = new Schema({value: schemaValue});
-  const validatedPayload = schema.validate({value: payload}).value;
-  return {payload: validatedPayload as P};
+  definition: SchemaDefinition<Required<P>> | SchemaValue<P>
+): {payload: P; error?: SerializedError} => {
+  try {
+    return validatePayloadAndThrow(payload, definition);
+  } catch (error) {
+    return {
+      payload,
+      error: serializeSchemaValidationError(error),
+    };
+  }
 };
 
 export const validateInitialState = <T extends object>(
+  engine: Engine<unknown>,
   schema: Schema<T>,
   obj: T | undefined,
   functionName: string
 ) => {
   const message = `Check the initialState of ${functionName}`;
-  return validateObject(schema, obj, message);
+  return validateObject(
+    engine,
+    schema,
+    obj,
+    message,
+    'Controller initialization error'
+  );
 };
 
 export const validateOptions = <T extends object>(
+  engine: Engine<unknown>,
   schema: Schema<T>,
   obj: Partial<T> | undefined,
   functionName: string
 ) => {
   const message = `Check the options of ${functionName}`;
-  return validateObject(schema, obj, message);
+  return validateObject(
+    engine,
+    schema,
+    obj,
+    message,
+    'Controller initialization error'
+  );
 };
 
 const validateObject = <T extends object>(
+  engine: Engine<unknown>,
   schema: Schema<T>,
   obj: T | undefined,
-  message: string
+  validationMessage: string,
+  errorMessage: string
 ) => {
-  return schema.validate(obj, message);
+  try {
+    return schema.validate(obj, validationMessage);
+  } catch (error) {
+    engine.logger.error(error, errorMessage);
+    throw error;
+  }
 };

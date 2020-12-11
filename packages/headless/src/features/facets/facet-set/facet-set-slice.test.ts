@@ -23,6 +23,7 @@ import {selectFacetSearchResult} from '../facet-search-set/specific/specific-fac
 import * as FacetReducers from '../generic/facet-reducer-helpers';
 import {FacetSetState, getFacetSetInitialState} from './facet-set-state';
 import {deselectAllFacets} from '../generic/facet-actions';
+import {restoreSearchParameters} from '../../search-parameters/search-parameter-actions';
 
 describe('facet-set slice', () => {
   let state: FacetSetState;
@@ -417,5 +418,63 @@ describe('facet-set slice', () => {
     const value = buildMockFacetSearchResult({rawValue: 'TED'});
     const action = selectFacetSearchResult({facetId: '1', value});
     expect(() => facetSetReducer(state, action)).not.toThrow();
+  });
+
+  describe('#restoreSearchParameters', () => {
+    it(`when a facet is found in the #f payload,
+    it sets #currentValues to the selected values in the payload`, () => {
+      const facetId = 'author';
+      state[facetId] = buildMockFacetRequest();
+
+      const f = {[facetId]: ['a']};
+      const finalState = facetSetReducer(state, restoreSearchParameters({f}));
+
+      const value = buildMockFacetValueRequest({value: 'a', state: 'selected'});
+      expect(finalState[facetId].currentValues).toEqual([value]);
+    });
+
+    it(`when the number of values in the payload is greater than the number of values on the request,
+    it sets the request #numberOfValues to the length of the payload`, () => {
+      const facetId = 'author';
+      state[facetId] = buildMockFacetRequest({numberOfValues: 1});
+
+      const f = {[facetId]: ['a', 'b']};
+      const finalState = facetSetReducer(state, restoreSearchParameters({f}));
+
+      expect(finalState[facetId].numberOfValues).toBe(2);
+    });
+
+    it(`when the number of values in the payload is less than the number of values on the request,
+    it does not change the request #numberOfValues`, () => {
+      const facetId = 'author';
+      state[facetId] = buildMockFacetRequest({numberOfValues: 8});
+
+      const f = {[facetId]: ['a']};
+      const finalState = facetSetReducer(state, restoreSearchParameters({f}));
+
+      expect(finalState[facetId].numberOfValues).toBe(8);
+    });
+
+    it(`when a facet is not found in the #f payload,
+    it deselects all values by setting #currentValues to an empty array`, () => {
+      const currentValues = [buildMockFacetValueRequest({state: 'selected'})];
+      state['author'] = buildMockFacetRequest({currentValues});
+
+      const finalState = facetSetReducer(state, restoreSearchParameters({}));
+      expect(finalState['author'].currentValues).toEqual([]);
+    });
+
+    it('sets #preventAutoSelect to true on all facets', () => {
+      const a = 'a';
+      const b = 'b';
+
+      state[a] = buildMockFacetRequest({preventAutoSelect: false});
+      state[b] = buildMockFacetRequest({preventAutoSelect: false});
+      const f = {[b]: []};
+
+      const finalState = facetSetReducer(state, restoreSearchParameters({f}));
+      expect(finalState[a].preventAutoSelect).toBe(true);
+      expect(finalState[b].preventAutoSelect).toBe(true);
+    });
   });
 });

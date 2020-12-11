@@ -1,6 +1,10 @@
 import {restoreSearchParameters} from '../../features/search-parameters/search-parameter-actions';
 import {SearchAppState} from '../../state/search-app-state';
 import {buildMockSearchAppEngine, MockEngine} from '../../test';
+import {buildMockCategoryFacetRequest} from '../../test/mock-category-facet-request';
+import {buildMockCategoryFacetValueRequest} from '../../test/mock-category-facet-value-request';
+import {buildMockFacetRequest} from '../../test/mock-facet-request';
+import {buildMockFacetValueRequest} from '../../test/mock-facet-value-request';
 import {buildMockSearchParameters} from '../../test/mock-search-parameters';
 import {
   buildSearchParameterManager,
@@ -114,6 +118,71 @@ describe('state manager', () => {
     });
   });
 
+  describe('#state.parameters.f', () => {
+    it('when a facet has selected values, only selected values are included', () => {
+      const selected = buildMockFacetValueRequest({
+        value: 'a',
+        state: 'selected',
+      });
+      const idle = buildMockFacetValueRequest({value: 'b', state: 'idle'});
+
+      const currentValues = [selected, idle];
+      engine.state.facetSet = {author: buildMockFacetRequest({currentValues})};
+
+      expect(manager.state.parameters.f).toEqual({author: ['a']});
+    });
+
+    it('when there are no facets with selected values, the #f parameter is not included', () => {
+      engine.state.facetSet = {author: buildMockFacetRequest()};
+      expect('f' in manager.state.parameters).toBe(false);
+    });
+  });
+
+  describe('#state.parameters.cf', () => {
+    it('when a category facet has selected values, only selected values are included', () => {
+      const selected = buildMockCategoryFacetValueRequest({
+        value: 'a',
+        state: 'selected',
+      });
+
+      const idle = buildMockCategoryFacetValueRequest({
+        value: 'b',
+        state: 'idle',
+      });
+
+      engine.state.categoryFacetSet = {
+        author: buildMockCategoryFacetRequest({
+          currentValues: [selected, idle],
+        }),
+      };
+
+      expect(manager.state.parameters.cf).toEqual({author: ['a']});
+    });
+
+    it('when a category facet has a nested selection, the full path is included', () => {
+      const child = buildMockCategoryFacetValueRequest({
+        value: 'b',
+        state: 'selected',
+      });
+
+      const parent = buildMockCategoryFacetValueRequest({
+        value: 'a',
+        children: [child],
+      });
+
+      engine.state.categoryFacetSet = {
+        author: buildMockCategoryFacetRequest({currentValues: [parent]}),
+      };
+
+      expect(manager.state.parameters.cf).toEqual({author: ['a', 'b']});
+    });
+
+    it('when there are no category facets with selected values, the #cf parameter is not included', () => {
+      engine.state.categoryFacetSet = {author: buildMockCategoryFacetRequest()};
+      expect('cf' in manager.state.parameters).toBe(false);
+    });
+  });
+
   describe('#state.parameters.sortCriteria', () => {
     it('when the parameter does not equal the default value, it is included', () => {
       engine.state.sortCriteria = 'qre';
@@ -121,12 +190,47 @@ describe('state manager', () => {
     });
 
     it('when the parameter is equal to the default value, it is not included', () => {
-      expect('numberOfResults' in manager.state.parameters).toBe(false);
+      expect('sortCriteria' in manager.state.parameters).toBe(false);
+    });
+
+    it('when the parameter is undefined, it is not included', () => {
+      engine.state.sortCriteria = undefined as never;
+      expect('sortCriteria' in manager.state.parameters).toBe(false);
+    });
+  });
+
+  describe('#state.parameters.debug', () => {
+    it('when the parameter does not equal the default value, it is included', () => {
+      engine.state.debug = true;
+      expect(manager.state.parameters.debug).toBe(true);
+    });
+
+    it('when the parameter is equal to the default value, it is not included', () => {
+      expect('debug' in manager.state.parameters).toBe(false);
+    });
+
+    it('when the parameter is undefined, it is not included', () => {
+      engine.state.debug = undefined as never;
+      expect('debug' in manager.state.parameters).toBe(false);
     });
   });
 
   it(`given a certain initial state,
   it is possible to access every search parameter using #state.parameters`, () => {
+    const facetValues = [buildMockFacetValueRequest({state: 'selected'})];
+    engine.state.facetSet = {
+      author: buildMockFacetRequest({currentValues: facetValues}),
+    };
+
+    const categoryFacetValues = [
+      buildMockCategoryFacetValueRequest({state: 'selected'}),
+    ];
+    engine.state.categoryFacetSet = {
+      author: buildMockCategoryFacetRequest({
+        currentValues: categoryFacetValues,
+      }),
+    };
+
     engine.state.query.q = 'a';
     engine.state.query.enableQuerySyntax = true;
     engine.state.advancedSearchQueries.aq = 'a';
@@ -134,6 +238,7 @@ describe('state manager', () => {
     engine.state.pagination.firstResult = 1;
     engine.state.pagination.numberOfResults = 1;
     engine.state.sortCriteria = 'qre';
+    engine.state.debug = true;
 
     const stateParams = manager.state.parameters;
     const allKeys = Object.keys(buildMockSearchParameters());

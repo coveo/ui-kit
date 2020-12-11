@@ -8,6 +8,7 @@ import {
   baseProductRecommendationsOptionsSchema,
   buildBaseProductRecommendationsList,
 } from './headless-base-product-recommendations';
+import {validateOptions} from '../../utils/validate-payload';
 
 const optionsSchema = new Schema({
   maxNumberOfRecommendations:
@@ -31,9 +32,12 @@ export const buildPopularBoughtRecommendationsList = (
   engine: Engine<ProductRecommendationsSection & ConfigurationSection>,
   props: PopularBoughtRecommendationsListProps = {}
 ) => {
-  const options = optionsSchema.validate(props.options) as Required<
-    PopularBoughtRecommendationsListOptions
-  >;
+  const options = validateOptions(
+    engine,
+    optionsSchema,
+    props.options,
+    buildPopularBoughtRecommendationsList.name
+  ) as Required<PopularBoughtRecommendationsListOptions>;
   const controller = buildBaseProductRecommendationsList(engine, {
     ...props,
     options: {

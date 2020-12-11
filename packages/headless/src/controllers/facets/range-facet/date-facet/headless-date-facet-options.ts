@@ -25,10 +25,15 @@ import {
   numberOfValues,
 } from '../../_common/facet-option-definitions';
 
-export type DateFacetOptions = {facetId?: string} & (
-  | Omit<AutomaticRangeFacetOptions<DateFacetRequest>, 'facetId'>
-  | Omit<ManualRangeFacetOptions<DateFacetRequest>, 'facetId'>
-);
+type OptionalFacetId = Partial<
+  Pick<AutomaticRangeFacetOptions<DateFacetRequest>, 'facetId'>
+>;
+
+export type DateFacetOptions = OptionalFacetId &
+  (
+    | Omit<AutomaticRangeFacetOptions<DateFacetRequest>, 'facetId'>
+    | Omit<ManualRangeFacetOptions<DateFacetRequest>, 'facetId'>
+  );
 
 const dateRangeRequestDefinition: SchemaDefinition<DateRangeRequest> = {
   start: new StringValue(),

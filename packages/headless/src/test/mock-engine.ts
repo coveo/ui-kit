@@ -16,7 +16,17 @@ import {createMockRecommendationState} from './mock-recommendation-state';
 import {ProductRecommendationsAppState} from '../state/product-recommendations-app-state';
 import {buildMockProductRecommendationsState} from './mock-product-recommendations-state';
 import {NoopPreprocessRequestMiddleware} from '../api/platform-client';
-import pino from 'pino';
+import pino, {Logger} from 'pino';
+import {
+  logActionErrorMiddleware,
+  logActionMiddleware,
+} from '../app/logger-middlewares';
+import {validatePayloadAndThrow} from '../utils/validate-payload';
+import {
+  NoopPostprocessFacetSearchResponseMiddleware,
+  NoopPostprocessQuerySuggestResponseMiddleware,
+  NoopPostprocessSearchResponseMiddleware,
+} from '../api/search/search-api-client-middleware';
 
 type AsyncActionCreator<ThunkArg> = ActionCreatorWithPreparedPayload<
   [string, ThunkArg],
@@ -66,7 +76,8 @@ function buildMockEngine<T extends AppState>(
   config: Partial<Engine<T>> = {},
   mockState: () => T
 ): MockEngine<T> {
-  const storeConfiguration = configureMockStore();
+  const logger = pino({level: 'silent'});
+  const storeConfiguration = configureMockStore(logger);
   const store = storeConfiguration(config.state || mockState());
   const unsubscribe = () => {};
 
@@ -87,21 +98,28 @@ function buildMockEngine<T extends AppState>(
     },
     ...config,
     renewAccessToken: mockRenewAccessToken,
-    logger: pino({level: 'silent'}),
+    logger,
   };
 }
 
-const configureMockStore = () => {
+const configureMockStore = (logger: Logger) => {
   return configureStore<AppState, DispatchExts>([
+    logActionErrorMiddleware(logger),
     analyticsMiddleware,
     thunk.withExtraArgument({
       searchAPIClient: new SearchAPIClient({
-        logger: pino({level: 'silent'}),
+        logger,
         renewAccessToken: mockRenewAccessToken,
         preprocessRequest: NoopPreprocessRequestMiddleware,
+        postprocessSearchResponseMiddleware: NoopPostprocessSearchResponseMiddleware,
+        postprocessQuerySuggestResponseMiddleware: NoopPostprocessQuerySuggestResponseMiddleware,
+        postprocessFacetSearchResponseMiddleware: NoopPostprocessFacetSearchResponseMiddleware,
       }),
+      validatePayload: validatePayloadAndThrow,
+      logger,
     }),
     ...getDefaultMiddleware(),
+    logActionMiddleware(logger),
   ]);
 };
 

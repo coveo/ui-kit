@@ -41,6 +41,7 @@ export function buildResultList(
   const {dispatch} = engine;
 
   const options = validateOptions(
+    engine,
     optionsSchema,
     props?.options,
     buildResultList.name
@@ -68,6 +69,12 @@ export function buildResultList(
      * Using the same parameters as the last successful query, fetch another batch of results. Particularly useful for infinite scrolling, for example.
      */
     fetchMoreResults() {
+      if (this.state.isLoading) {
+        engine.logger.warn(
+          'Ignoring request to display more results since query is pending.'
+        );
+        return;
+      }
       dispatch(fetchMoreResults());
     },
   };

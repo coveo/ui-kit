@@ -3,6 +3,7 @@ import {
   StringValue,
   SchemaDefinition,
   NumberValue,
+  RecordValue,
 } from '@coveo/bueno';
 import {SearchParameters} from './search-parameter-actions';
 
@@ -16,4 +17,7 @@ export const searchParametersDefinition: SchemaDefinition<Required<
   firstResult: new NumberValue({min: 0}),
   numberOfResults: new NumberValue({min: 0}),
   sortCriteria: new StringValue(),
+  f: new RecordValue(),
+  cf: new RecordValue(),
+  debug: new BooleanValue(),
 };

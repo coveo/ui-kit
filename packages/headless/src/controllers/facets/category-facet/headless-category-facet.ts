@@ -64,7 +64,12 @@ export function buildCategoryFacet(
     facetId,
   };
 
-  validateOptions(categoryFacetOptionsSchema, options, buildCategoryFacet.name);
+  validateOptions(
+    engine,
+    categoryFacetOptionsSchema,
+    options,
+    buildCategoryFacet.name
+  );
 
   const createFacetSearch = () => {
     const {facetSearch} = props.options;
@@ -86,23 +91,33 @@ export function buildCategoryFacet(
 
   dispatch(registerCategoryFacet(options));
 
+  const facetSearch = createFacetSearch();
+  const {state, ...restOfFacetSearch} = facetSearch;
+
   return {
     ...controller,
-    facetSearch: createFacetSearch(),
+    facetSearch: restOfFacetSearch,
 
     /**
      * Selects (deselects) the passed value if unselected (selected).
      * @param selection The category facet value to select or deselect.
+     * @param numberOfValues The number of selection's children to be shown
      */
     toggleSelect: (selection: CategoryFacetValue) =>
-      dispatch(executeToggleCategoryFacetSelect({facetId, selection})),
+      dispatch(
+        executeToggleCategoryFacetSelect({
+          facetId,
+          selection,
+          retrieveCount: options.numberOfValues,
+        })
+      ),
 
     /** Deselects all facet values.*/
     deselectAll: () =>
       dispatch(
         executeDeselectAllCategoryFacetValues({
           facetId,
-          numberOfValues: options.numberOfValues!,
+          numberOfValues: options.numberOfValues,
         })
       ),
 
@@ -153,7 +168,7 @@ export function buildCategoryFacet(
       const request = getRequest();
       const response = getResponse();
 
-      const {parents, values} = partitionIntoParentsAndValues(response);
+      const {parents, values} = partitionIntoParentsAndValues(response?.values);
       const isLoading = engine.state.search.isLoading;
       const hasActiveValues = parents.length !== 0;
       const canShowMoreValues =
@@ -163,6 +178,7 @@ export function buildCategoryFacet(
       const canShowLessValues = values.length > options.numberOfValues;
 
       return {
+        facetId,
         parents,
         values,
         isLoading,
@@ -170,6 +186,7 @@ export function buildCategoryFacet(
         canShowMoreValues,
         canShowLessValues,
         sortCriteria: request.sortCriteria,
+        facetSearch: facetSearch.state,
       };
     },
   };

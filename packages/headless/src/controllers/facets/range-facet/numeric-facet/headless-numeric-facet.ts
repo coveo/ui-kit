@@ -54,7 +54,12 @@ export function buildNumericFacet(
   const facetId = determineFacetId(engine, props.options);
   const options: NumericFacetRegistrationOptions = {...props.options, facetId};
 
-  validateOptions(numericFacetOptionsSchema, options, buildNumericFacet.name);
+  validateOptions(
+    engine,
+    numericFacetOptionsSchema,
+    options,
+    buildNumericFacet.name
+  );
 
   dispatch(registerNumericFacet(options));
 
