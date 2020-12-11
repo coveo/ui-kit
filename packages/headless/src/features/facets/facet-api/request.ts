@@ -12,11 +12,12 @@ export interface BaseFacetRequest {
    * @default true
    */
   filterFacetCount: boolean;
-  /** The maximum number of items to scan for facet values.
+  /** The maximum number of results to scan in the index to ensure that the facet lists all potential facet values.
    *
    * Note: A high injectionDepth may negatively impact the facet request performance.
    *
    * @default 1000
+   * @minimum 0
    */
   injectionDepth: number;
   /**
