@@ -11,6 +11,8 @@ export interface HighlightKeyword {
   length: number;
 }
 
+type HighlightKeywordOrString = HighlightKeyword | string;
+
 export interface HighlightParams {
   /**
    * The string to highlight items in.
@@ -19,7 +21,7 @@ export interface HighlightParams {
   /**
    * The highlighted positions to highlight in the string.
    */
-  highlights: HighlightKeyword[];
+  highlights: HighlightKeywordOrString[];
   /**
    * The opening delimiter used when starting to highlight.
    */
@@ -48,11 +50,19 @@ export function highlightString(params: HighlightParams): string {
   if (isNullOrUndefined(params.content) || isEmptyString(params.content)) {
     return params.content;
   }
+  if (
+    params.highlights.every(
+      (highlighKeyword: HighlightKeywordOrString) =>
+        typeof highlighKeyword === 'string'
+    )
+  ) {
+    params.highlights = highlightKeywordString(params.highlights as string[]);
+  }
   const maxIndex = params.content.length;
   let highlighted = '';
   let last = 0;
   for (let i = 0; i < params.highlights.length; i++) {
-    const highlight = params.highlights[i];
+    const highlight = params.highlights[i] as HighlightKeyword;
     const start: number = highlight.offset;
     const end: number = start + highlight.length;
 
@@ -73,16 +83,16 @@ export function highlightString(params: HighlightParams): string {
   return highlighted;
 }
 
+/**
+ * Cast the parameter to an array of HighlightKeywords to be used in the 'highlightString' function.
+ * @param highlightKeywords The highlights keywords as an array of string. This should be was is returned by the API
+ */
 export function highlightKeywordString(
   highlightKeywords: string[]
 ): HighlightKeyword[] {
   return highlightKeywords.map(
     (keyword): HighlightKeyword => {
-      const highlightKeywordObj: HighlightKeyword = (keyword as unknown) as HighlightKeyword;
-      return {
-        length: highlightKeywordObj.length,
-        offset: highlightKeywordObj.offset,
-      };
+      return (keyword as unknown) as HighlightKeyword;
     }
   );
 }
