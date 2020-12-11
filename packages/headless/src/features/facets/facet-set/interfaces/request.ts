@@ -28,4 +28,7 @@ export interface FacetRequest
     Freezable,
     Delimitable,
     Type<'specific'>,
-    SortCriteria<FacetSortCriterion> {}
+    SortCriteria<FacetSortCriterion> {
+  /** @default "automatic" */
+  sortCriteria: FacetSortCriterion;
+}

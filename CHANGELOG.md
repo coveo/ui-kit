@@ -3,6 +3,33 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.1.0-alpha.94](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.93...v0.1.0-alpha.94) (2020-12-10)
+
+
+### Features
+
+* **headless:** change ResultTemplateManager to a method and log error on validation ([#349](https://github.com/coveo/ui-kit/issues/349)) ([8f6b2d8](https://github.com/coveo/ui-kit/commit/8f6b2d87ae76ffbad011ba5bdce64fb7c5ab0758))
+
+
+
+
+
+# [0.1.0-alpha.93](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.92...v0.1.0-alpha.93) (2020-12-10)
+
+
+### Bug Fixes
+
+* **headlesss:** fixed number of values for Category facet ([#350](https://github.com/coveo/ui-kit/issues/350)) ([a75636d](https://github.com/coveo/ui-kit/commit/a75636d2a46f840d0e4678972c0eb833f09f52e3))
+
+
+### Features
+
+* **headless:** add #f url parameter ([#326](https://github.com/coveo/ui-kit/issues/326)) ([239af65](https://github.com/coveo/ui-kit/commit/239af658f60d678f25400cbb0d27dc1d63064a3a))
+
+
+
+
+
 # [0.1.0-alpha.92](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.91...v0.1.0-alpha.92) (2020-12-09)
 
 
