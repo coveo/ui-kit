@@ -1,28 +1,31 @@
-import {CategoryFacetResponse, CategoryFacetValue} from './interfaces/response';
+import {CategoryFacetValueRequest} from './interfaces/request';
+import {CategoryFacetValue} from './interfaces/response';
 import {
-  FacetSelectionChangeMetadata,
   logFacetDeselect,
   logFacetSelect,
 } from '../facet-set/facet-set-analytics-actions';
+import {FacetSelectionChangeMetadata} from '../facet-set/facet-set-analytics-actions-utils';
 
-type CategoryFacetResponsePartition = {
-  parents: CategoryFacetValue[];
-  values: CategoryFacetValue[];
+type GenericCategoryFacetValue = CategoryFacetValueRequest | CategoryFacetValue;
+
+type CategoryFacetValuePartition<T extends GenericCategoryFacetValue> = {
+  parents: T[];
+  values: T[];
 };
 
-export function partitionIntoParentsAndValues(
-  response: CategoryFacetResponse | undefined
-): CategoryFacetResponsePartition {
-  if (!response) {
+export function partitionIntoParentsAndValues<
+  T extends GenericCategoryFacetValue
+>(nestedValues: T[] | undefined): CategoryFacetValuePartition<T> {
+  if (!nestedValues) {
     return {parents: [], values: []};
   }
 
-  let parents: CategoryFacetValue[] = [];
-  let values = response.values;
+  let parents: T[] = [];
+  let values = nestedValues;
 
   while (values.length && values[0].children.length) {
     parents = [...parents, ...values];
-    values = values[0].children;
+    values = values[0].children as T[];
   }
 
   const selectedLeafValue = values.find((v) => v.state === 'selected');

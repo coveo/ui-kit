@@ -1,4 +1,7 @@
-import {ResultTemplatesManager} from './result-templates-manager';
+import {
+  ResultTemplatesManager,
+  buildResultTemplatesManager,
+} from './result-templates-manager';
 import {buildMockResult} from '../../test/mock-result';
 import {buildMockSearchAppEngine} from '../../test/mock-engine';
 
@@ -6,7 +9,7 @@ describe('result template manager', () => {
   let resultTemplateManager: ResultTemplatesManager<string>;
 
   beforeEach(() => {
-    resultTemplateManager = new ResultTemplatesManager(
+    resultTemplateManager = buildResultTemplatesManager(
       buildMockSearchAppEngine()
     );
   });

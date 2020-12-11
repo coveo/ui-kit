@@ -24,6 +24,9 @@ import {executeDeselectAllCategoryFacetValues} from '../../features/facets/categ
 import {executeToggleFacetSelect} from '../../features/facets/facet-set/facet-set-controller-actions';
 import {executeToggleNumericFacetSelect} from '../../features/facets/range-facets/numeric-facet-set/numeric-facet-controller-actions';
 import {executeToggleDateFacetSelect} from '../../features/facets/range-facets/date-facet-set/date-facet-controller-actions';
+import {executeSearch} from '../../features/search/search-actions';
+import {deselectAllFacets} from '../../features/facets/generic/facet-actions';
+import {logClearBreadcrumbs} from '../../features/facets/generic/facet-generic-analytics-actions';
 
 export type BreadcrumbManager = ReturnType<typeof buildBreadcrumbManager>;
 export type BreadcrumbManagerState = BreadcrumbManager['state'];
@@ -53,19 +56,21 @@ export const buildBreadcrumbManager = (
       | ((state: SearchSection & NumericFacetSection, facetId: string) => T[])
       | ((state: SearchSection & DateFacetSection, facetId: string) => T[])
   ) {
-    const breadcrumbs: Breadcrumb<T>[] = [];
+    return Object.keys(facetSet)
+      .map((facetId) => {
+        const values = facetValuesSelector(engine.state, facetId).map(
+          (selection) => ({
+            value: selection,
+            deselect: () => dispatch(executeToggleSelect({facetId, selection})),
+          })
+        );
 
-    Object.keys(facetSet).forEach((facetId) => {
-      const selectedValues = facetValuesSelector(engine.state, facetId);
-      selectedValues.forEach((selection) => {
-        breadcrumbs.push({
-          value: selection,
-          deselect: () => dispatch(executeToggleSelect({facetId, selection})),
-        });
-      });
-    });
-
-    return breadcrumbs;
+        return {
+          field: facetSet[facetId].field,
+          values,
+        };
+      })
+      .filter((breadcrumb) => breadcrumb.values.length);
   }
 
   function getFacetBreadcrumbs(): FacetBreadcrumb[] {
@@ -93,16 +98,11 @@ export const buildBreadcrumbManager = (
   }
 
   function getCategoryFacetBreadcrumbs(): CategoryFacetBreadcrumb[] {
-    const breadcrumbs: CategoryFacetBreadcrumb[] = [];
-
-    Object.keys(engine.state.categoryFacetSet).forEach((facetId) => {
-      const selectedValues = categoryFacetSelectedValuesSelector(
-        engine.state,
-        facetId
-      );
-      if (selectedValues.length > 0) {
-        breadcrumbs.push({
-          path: selectedValues,
+    return Object.keys(engine.state.categoryFacetSet)
+      .map((facetId) => {
+        return {
+          field: engine.state.categoryFacetSet[facetId].field,
+          path: categoryFacetSelectedValuesSelector(engine.state, facetId),
           deselect: () => {
             dispatch(
               executeDeselectAllCategoryFacetValues({
@@ -111,12 +111,19 @@ export const buildBreadcrumbManager = (
               })
             );
           },
-        });
-      }
-    });
-    return breadcrumbs;
+        };
+      })
+      .filter((breadcrumb) => breadcrumb.path.length);
   }
 
+  function hasBreadcrumbs() {
+    return !![
+      ...getFacetBreadcrumbs(),
+      ...getNumericFacetBreadcrumbs(),
+      ...getDateFacetBreadcrumbs(),
+      ...getCategoryFacetBreadcrumbs(),
+    ].length;
+  }
   return {
     ...controller,
 
@@ -128,10 +135,20 @@ export const buildBreadcrumbManager = (
         dateFacetBreadcrumbs: getDateFacetBreadcrumbs(),
       };
     },
+    hasBreadcrumbs,
+    deselectAll: () => {
+      dispatch(deselectAllFacets());
+      dispatch(executeSearch(logClearBreadcrumbs()));
+    },
   };
 };
 
-export type Breadcrumb<T extends BaseFacetValue> = {
+export interface Breadcrumb<T extends BaseFacetValue> {
+  field: string;
+  values: BreadcrumbValue<T>[];
+}
+
+export type BreadcrumbValue<T extends BaseFacetValue> = {
   value: T;
   deselect: () => void;
 };
@@ -139,8 +156,16 @@ export type Breadcrumb<T extends BaseFacetValue> = {
 export type FacetBreadcrumb = Breadcrumb<FacetValue>;
 export type NumericFacetBreadcrumb = Breadcrumb<NumericFacetValue>;
 export type DateFacetBreadcrumb = Breadcrumb<DateFacetValue>;
-
 export interface CategoryFacetBreadcrumb {
+  field: string;
   path: CategoryFacetValue[];
   deselect: () => void;
 }
+
+export type BreadcrumbField = Pick<
+  | FacetBreadcrumb
+  | NumericFacetBreadcrumb
+  | DateFacetBreadcrumb
+  | CategoryFacetBreadcrumb,
+  'field'
+>;

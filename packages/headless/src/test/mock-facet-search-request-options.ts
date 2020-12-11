@@ -1,4 +1,4 @@
-import {FacetSearchRequestOptions} from '../features/facets/facet-search-set/facet-search-request-options';
+import {FacetSearchRequestOptions} from '../api/search/facet-search/base/base-facet-search-request';
 
 export function buildMockFacetSearchRequestOptions(
   config: Partial<FacetSearchRequestOptions> = {}

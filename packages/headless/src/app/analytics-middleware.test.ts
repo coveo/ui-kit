@@ -12,7 +12,7 @@ describe('analytics middleware', () => {
     console.error = jest.fn();
   });
 
-  it('correctly pass through anu action with not analytics payload', () => {
+  it('correctly pass through any action with no analytics payload', () => {
     const e = buildMockSearchAppEngine();
     const {dispatch, mockStore: store} = e;
 

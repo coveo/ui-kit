@@ -10,6 +10,7 @@ import {
 import {executeSearch} from '../search/search-actions';
 import {change} from '../history/history-actions';
 import {getPaginationInitialState, PaginationState} from './pagination-state';
+import {restoreSearchParameters} from '../search-parameters/search-parameter-actions';
 
 export const minimumPage = 1;
 export const maximumNumberOfResultsFromIndex = 1000;
@@ -58,6 +59,11 @@ export const paginationReducer = createReducer(
       .addCase(change.fulfilled, (state, action) => {
         state.numberOfResults = action.payload.pagination.numberOfResults;
         state.firstResult = action.payload.pagination.firstResult;
+      })
+      .addCase(restoreSearchParameters, (state, action) => {
+        state.firstResult = action.payload.firstResult ?? state.firstResult;
+        state.numberOfResults =
+          action.payload.numberOfResults ?? state.numberOfResults;
       })
       .addCase(executeSearch.fulfilled, (state, action) => {
         const {response} = action.payload;

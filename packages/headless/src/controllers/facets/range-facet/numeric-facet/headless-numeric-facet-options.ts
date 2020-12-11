@@ -26,10 +26,15 @@ import {
   numberOfValues,
 } from '../../_common/facet-option-definitions';
 
-export type NumericFacetOptions = {facetId?: string} & (
-  | Omit<AutomaticRangeFacetOptions<NumericFacetRequest>, 'facetId'>
-  | Omit<ManualRangeFacetOptions<NumericFacetRequest>, 'facetId'>
-);
+type OptionalFacetId = Partial<
+  Pick<AutomaticRangeFacetOptions<NumericFacetRequest>, 'facetId'>
+>;
+
+export type NumericFacetOptions = OptionalFacetId &
+  (
+    | Omit<AutomaticRangeFacetOptions<NumericFacetRequest>, 'facetId'>
+    | Omit<ManualRangeFacetOptions<NumericFacetRequest>, 'facetId'>
+  );
 
 const numericRangeRequestDefinition: SchemaDefinition<NumericRangeRequest> = {
   start: new NumberValue(),

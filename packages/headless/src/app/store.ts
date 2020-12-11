@@ -5,13 +5,28 @@ import {
   StateFromReducersMapObject,
   Middleware,
 } from '@reduxjs/toolkit';
+import {AnalyticsClientSendEventHook} from 'coveo.analytics';
+import {SearchAPIClient} from '../api/search/search-api-client';
 import {analyticsMiddleware} from './analytics-middleware';
+import {Logger} from 'pino';
+import {
+  logActionErrorMiddleware,
+  logActionMiddleware,
+} from './logger-middlewares';
+import {validatePayloadAndThrow} from '../utils/validate-payload';
+
+export interface ThunkExtraArguments {
+  searchAPIClient: SearchAPIClient;
+  analyticsClientMiddleware: AnalyticsClientSendEventHook;
+  logger: Logger;
+  validatePayload: typeof validatePayloadAndThrow;
+}
 
 interface ConfigureStoreOptions<Reducers extends ReducersMapObject> {
   reducers: Reducers;
   preloadedState?: StateFromReducersMapObject<Reducers>;
   middlewares?: Middleware[];
-  thunkExtraArguments?: unknown;
+  thunkExtraArguments: ThunkExtraArguments;
 }
 
 export function configureStore<Reducers extends ReducersMapObject>({
@@ -20,7 +35,7 @@ export function configureStore<Reducers extends ReducersMapObject>({
   middlewares = [],
   thunkExtraArguments,
 }: ConfigureStoreOptions<Reducers>) {
-  const store = configureStoreToolkit({
+  return configureStoreToolkit({
     reducer: combineReducers(reducers),
     preloadedState,
     devTools: {
@@ -29,16 +44,14 @@ export function configureStore<Reducers extends ReducersMapObject>({
           ? {...state, history: '<<OMIT>>'}
           : state,
     },
-    middleware: (getDefaultMiddleware) => {
-      return [
-        analyticsMiddleware,
-        ...middlewares,
-        ...getDefaultMiddleware({thunk: {extraArgument: thunkExtraArguments}}),
-      ];
-    },
+    middleware: (getDefaultMiddleware) => [
+      logActionErrorMiddleware(thunkExtraArguments.logger),
+      analyticsMiddleware,
+      ...middlewares,
+      ...getDefaultMiddleware({thunk: {extraArgument: thunkExtraArguments}}),
+      logActionMiddleware(thunkExtraArguments.logger),
+    ],
   });
-
-  return store;
 }
 
 export type Store = ReturnType<typeof configureStore>;

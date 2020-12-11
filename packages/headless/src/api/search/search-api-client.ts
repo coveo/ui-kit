@@ -1,4 +1,9 @@
-import {PlatformClient, PlatformResponse} from '../platform-client';
+import AbortController from 'node-abort-controller';
+import {
+  PlatformClient,
+  PlatformResponse,
+  PreprocessRequestMiddleware,
+} from '../platform-client';
 import {PlanResponseSuccess, Plan} from './plan/plan-response';
 import {
   QuerySuggestSuccessResponse,
@@ -19,23 +24,29 @@ import {BaseParam, baseSearchRequest} from './search-api-params';
 import {CategoryFacetSearchRequest} from './facet-search/category-facet-search/category-facet-search-request';
 import {RecommendationRequest} from './recommendation/recommendation-request';
 import {ProductRecommendationsRequest} from './product-recommendations/product-recommendations-request';
-import {AnalyticsClientSendEventHook} from 'coveo.analytics/dist/definitions/client/analytics';
+import {Logger} from 'pino';
+import {ThunkExtraArguments} from '../../app/store';
+import {
+  PostprocessFacetSearchResponseMiddleware,
+  PostprocessQuerySuggestResponseMiddleware,
+  PostprocessSearchResponseMiddleware,
+} from './search-api-client-middleware';
 
 export type AllSearchAPIResponse = Plan | Search | QuerySuggest;
 
 export interface AsyncThunkSearchOptions<T extends Partial<SearchAppState>> {
   state: T;
   rejectValue: SearchAPIErrorWithStatusCode;
-  extra: {
-    searchAPIClient: SearchAPIClient;
-    analyticsClientMiddleware: AnalyticsClientSendEventHook;
-  };
+  extra: ThunkExtraArguments;
 }
 
-export interface SearchAPIClientOptions<RequestParams> {
-  accessToken: string;
-  apiBaseUrl: string;
-  requestParams: RequestParams;
+export interface SearchAPIClientOptions {
+  renewAccessToken: () => Promise<string>;
+  logger: Logger;
+  preprocessRequest: PreprocessRequestMiddleware;
+  postprocessSearchResponseMiddleware: PostprocessSearchResponseMiddleware;
+  postprocessQuerySuggestResponseMiddleware: PostprocessQuerySuggestResponseMiddleware;
+  postprocessFacetSearchResponseMiddleware: PostprocessFacetSearchResponseMiddleware;
 }
 
 export type SearchAPIClientResponse<T> =
@@ -43,7 +54,8 @@ export type SearchAPIClientResponse<T> =
   | {error: SearchAPIErrorWithStatusCode};
 
 export class SearchAPIClient {
-  constructor(private renewAccessToken: () => Promise<string>) {}
+  constructor(private options: SearchAPIClientOptions) {}
+
   async plan(
     req: PlanRequest
   ): Promise<SearchAPIClientResponse<PlanResponseSuccess>> {
@@ -53,7 +65,7 @@ export class SearchAPIClient {
     >({
       ...baseSearchRequest(req, 'POST', 'application/json', '/plan'),
       requestParams: pickNonBaseParams(req) as PlanRequest, // TODO: This cast won't be needed once all methods have been reworked and we can change types in PlatformClient
-      renewAccessToken: this.renewAccessToken,
+      ...this.options,
     });
 
     if (isSuccessPlanResponse(platformResponse)) {
@@ -73,11 +85,14 @@ export class SearchAPIClient {
     >({
       ...baseSearchRequest(req, 'POST', 'application/json', '/querySuggest'),
       requestParams: pickNonBaseParams(req),
-      renewAccessToken: this.renewAccessToken,
+      ...this.options,
     });
     if (isSuccessQuerySuggestionsResponse(platformResponse)) {
+      const processedResponse = await this.options.postprocessQuerySuggestResponseMiddleware(
+        platformResponse
+      );
       return {
-        success: platformResponse.body,
+        success: processedResponse.body,
       };
     }
     return {
@@ -85,18 +100,32 @@ export class SearchAPIClient {
     };
   }
 
+  private searchAbortController: AbortController | null = null;
+
   async search(
     req: SearchRequest
   ): Promise<SearchAPIClientResponse<SearchResponseSuccess>> {
+    if (this.searchAbortController) {
+      this.options.logger.warn('Cancelling current pending search query');
+      this.searchAbortController.abort();
+    }
+    this.searchAbortController = new AbortController();
+
     const platformResponse = await PlatformClient.call<SearchRequest, Search>({
       ...baseSearchRequest(req, 'POST', 'application/json', ''),
       requestParams: pickNonBaseParams(req),
-      renewAccessToken: this.renewAccessToken,
+      ...this.options,
+      signal: this.searchAbortController.signal,
     });
 
+    this.searchAbortController = null;
+
     if (isSuccessSearchResponse(platformResponse)) {
+      const processedResponse = await this.options.postprocessSearchResponseMiddleware(
+        platformResponse
+      );
       return {
-        success: platformResponse.body,
+        success: processedResponse.body,
       };
     }
 
@@ -106,16 +135,19 @@ export class SearchAPIClient {
   }
 
   async facetSearch(req: FacetSearchRequest | CategoryFacetSearchRequest) {
-    const res = await PlatformClient.call<
+    const platformResponse = await PlatformClient.call<
       FacetSearchRequest,
       FacetSearchResponse
     >({
       ...baseSearchRequest(req, 'POST', 'application/json', '/facet'),
       requestParams: pickNonBaseParams(req),
-      renewAccessToken: this.renewAccessToken,
+      ...this.options,
     });
+    const processedResponse = await this.options.postprocessFacetSearchResponseMiddleware(
+      platformResponse
+    );
 
-    return res.body;
+    return processedResponse.body;
   }
 
   async recommendations(req: RecommendationRequest) {
@@ -125,7 +157,7 @@ export class SearchAPIClient {
     >({
       ...baseSearchRequest(req, 'POST', 'application/json', ''),
       requestParams: pickNonBaseParams(req),
-      renewAccessToken: this.renewAccessToken,
+      ...this.options,
     });
 
     if (isSuccessSearchResponse(platformResponse)) {
@@ -146,7 +178,7 @@ export class SearchAPIClient {
     >({
       ...baseSearchRequest(req, 'POST', 'application/json', ''),
       requestParams: pickNonBaseParams(req),
-      renewAccessToken: this.renewAccessToken,
+      ...this.options,
     });
 
     if (isSuccessSearchResponse(platformResponse)) {

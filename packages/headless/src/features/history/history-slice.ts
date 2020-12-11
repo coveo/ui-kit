@@ -36,6 +36,7 @@ import {
   getAdvancedSearchQueriesInitialState,
 } from '../advanced-search-queries/advanced-search-queries-state';
 import {SearchParametersState} from '../../state/search-app-state';
+import {getDebugInitialState} from '../debug/debug-state';
 
 export const getHistoryEmptyState = (): SearchParametersState => ({
   context: getContextInitialState(),
@@ -51,6 +52,7 @@ export const getHistoryEmptyState = (): SearchParametersState => ({
   querySet: getQuerySetInitialState(),
   pipeline: getPipelineInitialState(),
   searchHub: getSearchHubInitialState(),
+  debug: getDebugInitialState(),
 });
 
 export const historyReducer = createReducer(
@@ -81,7 +83,8 @@ const isEqual = (
     isQueryEqual(current.query, next.query) &&
     isSortEqual(current, next) &&
     isPipelineEqual(current.pipeline, next.pipeline) &&
-    isSearchHubEqual(current.searchHub, next.searchHub)
+    isSearchHubEqual(current.searchHub, next.searchHub) &&
+    isDebugEqual(current.debug, next.debug)
   );
 };
 
@@ -128,3 +131,5 @@ const isSortEqual = (current: SortState, next: SortState) =>
 const isPipelineEqual = (current: string, next: string) => current === next;
 
 const isSearchHubEqual = (current: string, next: string) => current === next;
+
+const isDebugEqual = (current: boolean, next: boolean) => current === next;

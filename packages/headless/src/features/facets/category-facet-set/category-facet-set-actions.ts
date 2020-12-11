@@ -7,8 +7,8 @@ import {
 } from '../facet-set/facet-set-actions';
 import {CategoryFacetSortCriterion} from './interfaces/request';
 import {
-  validatePayloadSchema,
-  validatePayloadValue,
+  validatePayload,
+  validatePayloadAndThrow,
 } from '../../../utils/validate-payload';
 import {
   facetIdDefinition,
@@ -20,6 +20,7 @@ import {
   ArrayValue,
   StringValue,
   NumberValue,
+  SchemaValidationError,
 } from '@coveo/bueno';
 import {validateCategoryFacetValue} from './category-facet-validate-payload';
 
@@ -42,7 +43,7 @@ const categoryFacetRegistrationOptionsDefinition = {
 export const registerCategoryFacet = createAction(
   'categoryFacet/register',
   (payload: CategoryFacetRegistrationOptions) =>
-    validatePayloadSchema(payload, categoryFacetRegistrationOptionsDefinition)
+    validatePayload(payload, categoryFacetRegistrationOptionsDefinition)
 );
 
 /**
@@ -52,11 +53,18 @@ export const registerCategoryFacet = createAction(
  */
 export const toggleSelectCategoryFacetValue = createAction(
   'categoryFacet/toggleSelectValue',
-  (payload: {facetId: string; selection: CategoryFacetValue}) => {
-    validatePayloadValue(payload.facetId, requiredNonEmptyString);
-    validateCategoryFacetValue(payload.selection);
-
-    return {payload: payload};
+  (payload: {
+    facetId: string;
+    selection: CategoryFacetValue;
+    retrieveCount: number;
+  }) => {
+    try {
+      validatePayloadAndThrow(payload.facetId, requiredNonEmptyString);
+      validateCategoryFacetValue(payload.selection);
+      return {payload, error: null};
+    } catch (error) {
+      return {payload, error: error as SchemaValidationError};
+    }
   }
 );
 
@@ -79,7 +87,7 @@ export const updateCategoryFacetNumberOfValues = updateFacetNumberOfValues;
 export const updateCategoryFacetSortCriterion = createAction(
   'categoryFacet/updateSortCriterion',
   (payload: {facetId: string; criterion: CategoryFacetSortCriterion}) =>
-    validatePayloadSchema(payload, {
+    validatePayload(payload, {
       facetId: facetIdDefinition,
       criterion: new Value<CategoryFacetSortCriterion>(),
     })

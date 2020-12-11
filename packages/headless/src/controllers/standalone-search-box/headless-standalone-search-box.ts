@@ -1,4 +1,5 @@
 import {Engine} from '../../app/headless-engine';
+import {selectQuerySuggestion} from '../../features/query-suggest/query-suggest-actions';
 import {updateQuery} from '../../features/query/query-actions';
 import {checkForRedirection} from '../../features/redirection/redirection-actions';
 import {
@@ -53,6 +54,7 @@ export function buildStandaloneSearchBox(
   };
 
   validateOptions(
+    engine,
     standaloneSearchBoxSchema,
     options,
     buildStandaloneSearchBox.name
@@ -62,6 +64,15 @@ export function buildStandaloneSearchBox(
 
   return {
     ...searchBox,
+
+    /**
+     * Selects a suggestion and calls `submit`.
+     * @param value The string value of the suggestion to select
+     */
+    selectSuggestion(value: string) {
+      dispatch(selectQuerySuggestion({id, expression: value}));
+      this.submit();
+    },
 
     /**
      * Triggers a redirection.

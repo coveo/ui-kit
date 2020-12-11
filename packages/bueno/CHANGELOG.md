@@ -3,6 +3,52 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.1.0-alpha.93](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.92...v0.1.0-alpha.93) (2020-12-10)
+
+
+### Features
+
+* **headless:** add #f url parameter ([#326](https://github.com/coveo/ui-kit/issues/326)) ([239af65](https://github.com/coveo/ui-kit/commit/239af658f60d678f25400cbb0d27dc1d63064a3a))
+
+
+
+
+
+# [0.1.0-alpha.91](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.90...v0.1.0-alpha.91) (2020-12-09)
+
+**Note:** Version bump only for package @coveo/bueno
+
+
+
+
+
+# [0.1.0-alpha.90](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.89...v0.1.0-alpha.90) (2020-12-09)
+
+**Note:** Version bump only for package @coveo/bueno
+
+
+
+
+
+# [0.1.0-alpha.81](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.80...v0.1.0-alpha.81) (2020-12-07)
+
+
+### Bug Fixes
+
+* **headless:** throw an error from Bueno when facet id is invalid ([#314](https://github.com/coveo/ui-kit/issues/314)) ([6deacb2](https://github.com/coveo/ui-kit/commit/6deacb2e48c8ad08115e716d1cfebe47c3b41ea1))
+
+
+
+
+
+# [0.1.0-alpha.63](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.62...v0.1.0-alpha.63) (2020-11-26)
+
+**Note:** Version bump only for package @coveo/bueno
+
+
+
+
+
 # [0.1.0-alpha.50](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.49...v0.1.0-alpha.50) (2020-11-13)
 
 **Note:** Version bump only for package @coveo/bueno

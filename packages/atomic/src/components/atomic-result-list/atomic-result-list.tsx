@@ -6,6 +6,7 @@ import {
   ResultTemplatesManager,
   buildResultList,
   Engine,
+  buildResultTemplatesManager,
 } from '@coveo/headless';
 import Mustache from 'mustache';
 import defaultTemplate from '../../templates/default.html';
@@ -29,7 +30,7 @@ export class AtomicResultList {
    * Css class for a list element
    */
   @Prop() listElementClass = '';
-
+  @Prop() fieldsToInclude = '';
   @Element() host!: HTMLDivElement;
   @State() state!: ResultListState;
 
@@ -38,14 +39,18 @@ export class AtomicResultList {
   private resultList!: ResultList;
   private resultTemplatesManager!: ResultTemplatesManager<string>;
 
+  private get fields() {
+    if (this.fieldsToInclude.trim() === '') return;
+    return this.fieldsToInclude.split(',').map((field) => field.trim());
+  }
+
   @Initialization()
   public initialize() {
-    this.resultTemplatesManager = new ResultTemplatesManager<string>(
-      this.engine
-    );
-    this.resultList = buildResultList(this.engine);
+    this.resultTemplatesManager = buildResultTemplatesManager(this.engine);
+    this.resultList = buildResultList(this.engine, {
+      options: {fieldsToInclude: this.fields},
+    });
     this.unsubscribe = this.resultList.subscribe(() => this.updateState());
-
     this.registerDefaultResultTemplates();
     this.registerChildrenResultTemplates();
   }
@@ -98,10 +103,17 @@ export class AtomicResultList {
   }
 
   public render() {
-    return (
+    return [
       <div part="list" class={this.listClass}>
         {this.results}
-      </div>
-    );
+      </div>,
+      <button
+        class="fetch-more-results btn btn-secondary"
+        onClick={() => this.resultList.fetchMoreResults()}
+        disabled={this.state.isLoading}
+      >
+        Fetch more results
+      </button>,
+    ];
   }
 }

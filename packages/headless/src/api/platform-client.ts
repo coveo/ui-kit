@@ -3,17 +3,27 @@ export type HttpMethods = 'POST' | 'GET' | 'DELETE' | 'PUT';
 export type HTTPContentTypes = 'application/json' | 'text/html';
 import {backOff} from 'exponential-backoff';
 import {BaseParam} from './search/search-api-params';
+import {Logger} from 'pino';
 
 function isThrottled(status: number): boolean {
   return status === 429;
 }
-export interface PlatformClientCallOptions<RequestParams extends BaseParam> {
+
+export interface BasePlatformClientOptions {
   url: string;
   method: HttpMethods;
   contentType: HTTPContentTypes;
+  headers?: Record<string, string>;
+}
+
+export interface PlatformClientCallOptions<RequestParams extends BaseParam>
+  extends BasePlatformClientOptions {
   requestParams: Omit<RequestParams, 'url' | 'organizationId' | 'accessToken'>;
   accessToken: string;
   renewAccessToken: () => Promise<string>;
+  preprocessRequest: PreprocessRequestMiddleware;
+  logger: Logger;
+  signal?: AbortSignal;
 }
 
 export interface PlatformResponse<T> {
@@ -21,18 +31,46 @@ export interface PlatformResponse<T> {
   response: Response;
 }
 
+export type PreprocessRequestMiddleware = (
+  request: BasePlatformClientOptions
+) => BasePlatformClientOptions | Promise<BasePlatformClientOptions>;
+
+export const NoopPreprocessRequestMiddleware: PreprocessRequestMiddleware = (
+  request
+) => request;
+
 export class PlatformClient {
   static async call<RequestParams extends BaseParam, ResponseType>(
     options: PlatformClientCallOptions<RequestParams>
   ): Promise<PlatformResponse<ResponseType>> {
+    const processedOptions = {
+      ...options,
+      ...(await options.preprocessRequest(options)),
+    };
+
+    const requestInfo = {
+      url: processedOptions.url,
+      method: processedOptions.method,
+      headers: {
+        'Content-Type': processedOptions.contentType,
+        Authorization: `Bearer ${processedOptions.accessToken}`,
+        ...processedOptions.headers,
+      },
+      body: processedOptions.requestParams,
+    };
+
+    processedOptions.logger.info(requestInfo, 'Platform request');
+
     const request = async () => {
-      const response = await fetch(options.url, {
-        method: options.method,
+      const response = await fetch(processedOptions.url, {
+        method: processedOptions.method,
         headers: {
-          'Content-Type': options.contentType,
-          Authorization: `Bearer ${options.accessToken}`,
+          'Content-Type': processedOptions.contentType,
+          Authorization: `Bearer ${processedOptions.accessToken}`,
+          ...processedOptions.headers,
         },
-        body: JSON.stringify(options.requestParams),
+        body: JSON.stringify(processedOptions.requestParams),
+        signal: options.signal,
       });
       if (isThrottled(response.status)) {
         throw response;
@@ -43,25 +81,37 @@ export class PlatformClient {
     try {
       const response = await backOff(request, {
         retry: (e: Response) => {
-          return e && isThrottled(e.status);
+          const shouldRetry = e && isThrottled(e.status);
+          shouldRetry && options.logger.info('Platform retrying request');
+          return shouldRetry;
         },
       });
       if (response.status === 419) {
-        const accessToken = await options.renewAccessToken();
+        processedOptions.logger.info('Platform renewing token');
+        const accessToken = await processedOptions.renewAccessToken();
 
         if (accessToken !== '') {
-          return PlatformClient.call({...options, accessToken});
+          return PlatformClient.call({...processedOptions, accessToken});
         }
       }
+
+      const body = (await response.json()) as ResponseType;
+
+      options.logger.info({response, body, requestInfo}, 'Platform response');
+
       return {
         response,
-        body: (await response.json()) as ResponseType,
+        body,
       };
     } catch (error) {
-      return {
-        response: error,
-        body: (await error.json()) as ResponseType,
-      };
+      if (error.body) {
+        return {
+          response: error,
+          body: await error.json(),
+        };
+      }
+
+      throw error;
     }
   }
 }

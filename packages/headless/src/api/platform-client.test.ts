@@ -1,4 +1,10 @@
-import {platformUrl, PlatformClient} from './platform-client';
+import {
+  platformUrl,
+  PlatformClient,
+  PreprocessRequestMiddleware,
+  NoopPreprocessRequestMiddleware,
+} from './platform-client';
+import pino from 'pino';
 import * as BackOff from 'exponential-backoff';
 
 jest.mock('cross-fetch');
@@ -41,7 +47,7 @@ describe('platformUrl helper', () => {
 });
 
 describe('PlatformClient call', () => {
-  function platformCall() {
+  function platformCall(middleware?: PreprocessRequestMiddleware) {
     return PlatformClient.call({
       accessToken: 'accessToken1',
       contentType: 'application/json',
@@ -51,6 +57,8 @@ describe('PlatformClient call', () => {
       },
       url: platformUrl(),
       renewAccessToken: async () => 'accessToken2',
+      preprocessRequest: middleware || NoopPreprocessRequestMiddleware,
+      logger: pino({level: 'silent'}),
     });
   }
 
@@ -75,7 +83,34 @@ describe('PlatformClient call', () => {
       },
       method: 'POST',
     });
+    done();
+  });
 
+  it('should preprocess the request if a middleware is provided', async (done) => {
+    mockFetch.mockReturnValue(
+      Promise.resolve(new Response(JSON.stringify({})))
+    );
+
+    await platformCall((request) => {
+      return {
+        ...request,
+        headers: {
+          test: 'header',
+        },
+      };
+    });
+
+    expect(mockFetch).toHaveBeenCalledWith(platformUrl(), {
+      body: JSON.stringify({
+        test: 123,
+      }),
+      headers: {
+        Authorization: 'Bearer accessToken1',
+        'Content-Type': 'application/json',
+        test: 'header',
+      },
+      method: 'POST',
+    });
     done();
   });
 
@@ -101,7 +136,6 @@ describe('PlatformClient call', () => {
       },
       method: 'POST',
     });
-
     done();
   });
 
@@ -123,13 +157,26 @@ describe('PlatformClient call', () => {
     done();
   });
 
-  it('should not throw and return a response when backOff returns a rejected promise', async (done) => {
+  it('should not throw when backOff rejects with a response', async (done) => {
     const spy = jest.spyOn(BackOff, 'backOff');
-    const mockResponse = new Response(JSON.stringify({}), {status: 429});
-    spy.mockRejectedValue(mockResponse);
+    const expectedResponse = new Response(JSON.stringify({hoho: 'oups'}), {
+      status: 429,
+    });
+    spy.mockRejectedValueOnce(expectedResponse);
+
     const response = await platformCall();
-    expect(spy).not.toThrow();
-    expect(response.response).toBe(mockResponse);
+    expect(response.response).toBe(expectedResponse);
     done();
+  });
+
+  it('should throw when fetch throws an error', async (done) => {
+    const testError = new Error('Test');
+    try {
+      mockFetch.mockRejectedValue(testError);
+      await platformCall();
+    } catch (error) {
+      expect(error).toBe(testError);
+      done();
+    }
   });
 });

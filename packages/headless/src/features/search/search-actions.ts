@@ -4,7 +4,6 @@ import {
   isErrorResponse,
   AsyncThunkSearchOptions,
 } from '../../api/search/search-api-client';
-import {SearchAction} from '../analytics/analytics-actions';
 import {SearchResponseSuccess} from '../../api/search/search/search-response';
 import {snapshot} from '../history/history-actions';
 import {logDidYouMeanAutomatic} from '../did-you-mean/did-you-mean-analytics-actions';
@@ -16,6 +15,7 @@ import {
   ConfigurationSection,
   ContextSection,
   DateFacetSection,
+  DebugSection,
   DidYouMeanSection,
   FacetOptionsSection,
   FacetSection,
@@ -46,6 +46,9 @@ import {getSortCriteriaInitialState} from '../sort-criteria/sort-criteria-state'
 import {getPipelineInitialState} from '../pipeline/pipeline-state';
 import {getSearchHubInitialState} from '../search-hub/search-hub-state';
 import {getFacetOptionsInitialState} from '../facet-options/facet-options-state';
+import {logFetchMoreResults} from './search-analytics-actions';
+import {SearchAction} from '../analytics/analytics-utils';
+import {getDebugInitialState} from '../debug/debug-state';
 
 export type StateNeededByExecuteSearch = ConfigurationSection &
   Partial<
@@ -64,6 +67,7 @@ export type StateNeededByExecuteSearch = ConfigurationSection &
       SearchHubSection &
       QuerySetSection &
       FacetOptionsSection &
+      DebugSection &
       SearchSection
   >;
 
@@ -82,15 +86,20 @@ export interface ExecuteSearchThunkReturn {
 
 const fetchFromAPI = async (
   client: SearchAPIClient,
-  state: StateNeededByExecuteSearch
+  state: StateNeededByExecuteSearch,
+  request: SearchRequest
 ) => {
   const startedAt = new Date().getTime();
-  const response = await client.search(buildSearchRequest(state));
+  const response = await client.search(request);
   const duration = new Date().getTime() - startedAt;
   const queryExecuted = state.query?.q || '';
-  return {response, duration, queryExecuted};
+  return {response, duration, queryExecuted, requestExecuted: request};
 };
 
+/**
+ * Executes a search query.
+ * @param analyticsAction (SearchAction) The analytics action to log after a successful query.
+ */
 /**
  * Executes a search query.
  * @param analyticsAction (SearchAction) The analytics action to log after a successful query.
@@ -107,7 +116,11 @@ export const executeSearch = createAsyncThunk<
   ) => {
     const state = getState();
     addEntryInActionsHistory(state);
-    const fetched = await fetchFromAPI(searchAPIClient, state);
+    const fetched = await fetchFromAPI(
+      searchAPIClient,
+      state,
+      buildSearchRequest(state)
+    );
 
     if (isErrorResponse(fetched.response)) {
       return rejectWithValue(fetched.response.error);
@@ -147,6 +160,38 @@ export const executeSearch = createAsyncThunk<
   }
 );
 
+export const fetchMoreResults = createAsyncThunk<
+  ExecuteSearchThunkReturn,
+  void,
+  AsyncThunkSearchOptions<StateNeededByExecuteSearch>
+>(
+  'search/fetchMoreResults',
+  async (
+    _,
+    {getState, dispatch, rejectWithValue, extra: {searchAPIClient}}
+  ) => {
+    const state = getState();
+    const fetched = await fetchFromAPI(
+      searchAPIClient,
+      state,
+      buildFetchMoreRequest(state)
+    );
+
+    if (isErrorResponse(fetched.response)) {
+      return rejectWithValue(fetched.response.error);
+    }
+
+    dispatch(snapshot(extractHistory(state)));
+
+    return {
+      ...fetched,
+      response: fetched.response.success,
+      automaticallyCorrected: false,
+      analyticsAction: logFetchMoreResults(),
+    };
+  }
+);
+
 const automaticallyRetryQueryWithCorrection = async (
   client: SearchAPIClient,
   correction: string,
@@ -154,7 +199,11 @@ const automaticallyRetryQueryWithCorrection = async (
   dispatch: ThunkDispatch<never, never, AnyAction>
 ) => {
   dispatch(updateQuery({q: correction}));
-  const fetched = await fetchFromAPI(client, getState());
+  const fetched = await fetchFromAPI(
+    client,
+    getState(),
+    buildSearchRequest(getState())
+  );
   dispatch(logDidYouMeanAutomatic());
   dispatch(applyDidYouMeanCorrection(correction));
   return fetched;
@@ -191,6 +240,7 @@ const extractHistory = (
   pipeline: state.pipeline || getPipelineInitialState(),
   searchHub: state.searchHub || getSearchHubInitialState(),
   facetOptions: state.facetOptions || getFacetOptionsInitialState(),
+  debug: state.debug ?? getDebugInitialState(),
 });
 
 export const buildSearchRequest = (
@@ -200,6 +250,7 @@ export const buildSearchRequest = (
     accessToken: state.configuration.accessToken,
     organizationId: state.configuration.organizationId,
     url: state.configuration.search.apiBaseUrl,
+    debug: state.debug,
     ...(state.configuration.analytics.enabled && {
       visitorId: getVisitorID(),
     }),
@@ -239,6 +290,18 @@ export const buildSearchRequest = (
     ...(state.facetOptions && {
       facetOptions: state.facetOptions,
     }),
+  };
+};
+
+const buildFetchMoreRequest = (
+  state: StateNeededByExecuteSearch
+): SearchRequest => {
+  const request = buildSearchRequest(state);
+  return {
+    ...request,
+    firstResult:
+      (state.pagination?.firstResult ?? 0) +
+      (state.search?.results.length ?? 0),
   };
 };
 

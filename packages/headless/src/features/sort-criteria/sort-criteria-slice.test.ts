@@ -13,12 +13,13 @@ import {
   buildRelevanceSortCriterion,
   SortOrder,
 } from './criteria';
+import {restoreSearchParameters} from '../search-parameters/search-parameter-actions';
 
 describe('sortCriteria', () => {
-  let initialState: SortCriteriaState;
+  let state: SortCriteriaState;
 
   beforeEach(() => {
-    initialState = getSortCriteriaInitialState();
+    state = getSortCriteriaInitialState();
   });
 
   it('initializes the state to relevancy', () => {
@@ -30,15 +31,35 @@ describe('sortCriteria', () => {
     const criterion = buildFieldSortCriterion('author', SortOrder.Ascending);
     const action = registerSortCriterion(criterion);
 
-    const finalState = sortCriteriaReducer(initialState, action);
+    const finalState = sortCriteriaReducer(state, action);
     expect(finalState).toBe(buildCriterionExpression(criterion));
   });
 
   it('when an updateSortCriterion is received, it updates the state to the passed criterion expression', () => {
     const criterion = buildRelevanceSortCriterion();
     const action = updateSortCriterion(criterion);
-    const finalState = sortCriteriaReducer(initialState, action);
+    const finalState = sortCriteriaReducer(state, action);
 
     expect(finalState).toBe(buildCriterionExpression(criterion));
+  });
+
+  describe('#restoreSearchParameters', () => {
+    it('when the object contains a #sortCriteria key, it sets the value in state', () => {
+      state = 'qre';
+
+      const action = restoreSearchParameters({sortCriteria: ''});
+      const finalState = sortCriteriaReducer(state, action);
+
+      expect(finalState).toEqual('');
+    });
+
+    it('when the object does not contain a #sortCriteria key, it does not update the state', () => {
+      state = 'qre';
+
+      const action = restoreSearchParameters({});
+      const finalState = sortCriteriaReducer(state, action);
+
+      expect(finalState).toEqual(state);
+    });
   });
 });

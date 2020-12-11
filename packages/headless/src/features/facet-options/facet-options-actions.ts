@@ -1,5 +1,5 @@
 import {createAction} from '@reduxjs/toolkit';
-import {validatePayloadSchema} from '../../utils/validate-payload';
+import {validatePayload} from '../../utils/validate-payload';
 import {BooleanValue} from '@coveo/bueno';
 
 /**
@@ -9,7 +9,7 @@ import {BooleanValue} from '@coveo/bueno';
 export const updateFacetOptions = createAction(
   'facetOptions/update',
   (payload: {freezeFacetOrder?: boolean}) =>
-    validatePayloadSchema(payload, {
+    validatePayload(payload, {
       freezeFacetOrder: new BooleanValue({required: false}),
     })
 );

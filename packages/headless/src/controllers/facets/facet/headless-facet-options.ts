@@ -1,5 +1,5 @@
 import {Schema, StringValue} from '@coveo/bueno';
-import {FacetSearchRequestOptions} from '../../../features/facets/facet-search-set/facet-search-request-options';
+import {FacetSearchRequestOptions} from '../../../api/search/facet-search/base/base-facet-search-request';
 import {FacetRegistrationOptions} from '../../../features/facets/facet-set/interfaces/options';
 import {facetSortCriteria} from '../../../features/facets/facet-set/interfaces/request';
 import {
@@ -12,10 +12,12 @@ import {
   facetSearch,
 } from '../_common/facet-option-definitions';
 
-export type FacetOptions = Omit<FacetRegistrationOptions, 'facetId'> & {
-  facetId?: string;
-  facetSearch?: Partial<FacetSearchRequestOptions>;
-};
+type OptionalFacetId = Partial<Pick<FacetRegistrationOptions, 'facetId'>>;
+
+export type FacetOptions = OptionalFacetId &
+  Omit<FacetRegistrationOptions, 'facetId'> & {
+    facetSearch?: Partial<FacetSearchRequestOptions>;
+  };
 
 export const facetOptionsSchema = new Schema<Required<FacetOptions>>({
   facetId,

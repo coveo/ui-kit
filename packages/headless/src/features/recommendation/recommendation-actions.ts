@@ -10,15 +10,16 @@ import {
   AdvancedSearchQueriesSection,
   ConfigurationSection,
   ContextSection,
+  DebugSection,
   FieldsSection,
   PipelineSection,
   RecommendationSection,
   SearchHubSection,
 } from '../../state/state-sections';
-import {SearchAction} from '../analytics/analytics-actions';
-import {validatePayloadSchema} from '../../utils/validate-payload';
+import {validatePayload} from '../../utils/validate-payload';
 import {StringValue} from '@coveo/bueno';
 import {logRecommendationUpdate} from './recommendation-analytics-actions';
+import {SearchAction} from '../analytics/analytics-utils';
 
 export type StateNeededByGetRecommendations = ConfigurationSection &
   RecommendationSection &
@@ -26,6 +27,7 @@ export type StateNeededByGetRecommendations = ConfigurationSection &
     SearchHubSection &
       PipelineSection &
       AdvancedSearchQueriesSection &
+      DebugSection &
       ContextSection &
       FieldsSection
   >;
@@ -42,7 +44,7 @@ export interface GetRecommendationsThunkReturn {
 export const setRecommendationId = createAction(
   'recommendation/set',
   (payload: {id: string}) =>
-    validatePayloadSchema(payload, {
+    validatePayload(payload, {
       id: new StringValue({required: true, emptyAllowed: false}),
     })
 );

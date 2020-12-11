@@ -6,6 +6,7 @@ import {getAdvancedSearchQueriesInitialState} from '../features/advanced-search-
 import {RecommendationAppState} from '../state/recommendation-app-state';
 import {getPipelineInitialState} from '../features/pipeline/pipeline-state';
 import {getRecommendationInitialState} from '../features/recommendation/recommendation-state';
+import {getDebugInitialState} from '../features/debug/debug-state';
 
 export function createMockRecommendationState(
   config: Partial<RecommendationAppState> = {}
@@ -18,6 +19,7 @@ export function createMockRecommendationState(
     searchHub: getSearchHubInitialState(),
     pipeline: getPipelineInitialState(),
     recommendation: getRecommendationInitialState(),
+    debug: getDebugInitialState(),
     ...config,
   };
 }
