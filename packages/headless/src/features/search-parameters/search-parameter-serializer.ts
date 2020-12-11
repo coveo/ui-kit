@@ -64,9 +64,10 @@ function allEntriesAreValid(
   obj: object,
   isValidValue: (v: unknown) => boolean
 ) {
-  const invalidEntries = Object.entries(obj).filter(
-    ([_, values]) => !Array.isArray(values) || !values.every(isValidValue)
-  );
+  const invalidEntries = Object.entries(obj).filter((entry) => {
+    const values = entry[1];
+    return !Array.isArray(values) || !values.every(isValidValue);
+  });
 
   return invalidEntries.length === 0;
 }
