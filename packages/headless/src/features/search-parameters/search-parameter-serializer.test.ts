@@ -47,6 +47,20 @@ describe('buildSearchParameterSerializer', () => {
       const result = serialize({nf});
       expect(result).toEqual('nf[size]=0..10,10..20&nf[amount]=100..200');
     });
+
+    describe('when the #nf parameter contains facetIds with invalid values', () => {
+      it('if a range does not have a #start key, it does not include it', () => {
+        const nf = {size: [{}]} as never;
+        const result = serialize({nf});
+        expect(result).toEqual('');
+      });
+
+      it('if a range does not have an #end key, it does not include it', () => {
+        const nf = {size: [{start: 10}]} as never;
+        const result = serialize({nf});
+        expect(result).toEqual('');
+      });
+    });
   });
 
   describe('#deserialize', () => {

@@ -36,24 +36,39 @@ function serializePair(pair: [string, unknown]) {
 }
 
 function isFacetObject(obj: unknown): obj is Record<string, string[]> {
-  if (obj && typeof obj === 'object') {
-    const invalidEntries = Object.entries(obj).filter(([key, value]) => {
-      const validKey = typeof key === 'string';
-      const validValue =
-        Array.isArray(value) && value.every((v) => typeof v === 'string');
-      const isValid = validKey && validValue;
-      return !isValid;
-    });
-
-    return invalidEntries.length === 0;
+  if (!isObject(obj)) {
+    return false;
   }
-  return false;
+
+  const isValidValue = (v: unknown) => typeof v === 'string';
+  return allEntriesAreValid(obj, isValidValue);
 }
 
 function isNumericRangeFacetObject(
   obj: unknown
 ): obj is Record<string, NumericRangeRequest[]> {
-  return typeof obj === 'object';
+  if (!isObject(obj)) {
+    return false;
+  }
+
+  const isValidValue = (v: unknown) =>
+    isObject(v) && 'start' in v && 'end' in v;
+  return allEntriesAreValid(obj, isValidValue);
+}
+
+function isObject(obj: unknown): obj is object {
+  return obj && typeof obj === 'object' ? true : false;
+}
+
+function allEntriesAreValid(
+  obj: object,
+  isValidValue: (v: unknown) => boolean
+) {
+  const invalidEntries = Object.entries(obj).filter(
+    ([_, values]) => !Array.isArray(values) || !values.every(isValidValue)
+  );
+
+  return invalidEntries.length === 0;
 }
 
 function serializeFacets(key: string, facets: Record<string, string[]>) {
