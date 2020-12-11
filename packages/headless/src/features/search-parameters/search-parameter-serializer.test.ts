@@ -1,3 +1,4 @@
+import {buildNumericRange} from '../../controllers/facets/range-facet/numeric-facet/headless-numeric-facet';
 import {buildMockSearchParameters} from '../../test/mock-search-parameters';
 import {buildSearchParameterSerializer} from './search-parameter-serializer';
 
@@ -32,6 +33,19 @@ describe('buildSearchParameterSerializer', () => {
       const f = {author: [1]} as never;
       const result = serialize({f});
       expect(result).toEqual('');
+    });
+
+    it('serializes the #nf parameter correctly', () => {
+      const nf = {
+        size: [
+          buildNumericRange({start: 0, end: 10}),
+          buildNumericRange({start: 10, end: 20}),
+        ],
+        amount: [buildNumericRange({start: 100, end: 200})],
+      };
+
+      const result = serialize({nf});
+      expect(result).toEqual('nf[size]=0..10,10..20&nf[amount]=100..200');
     });
   });
 
@@ -75,6 +89,38 @@ describe('buildSearchParameterSerializer', () => {
         f: {
           author: ['a', 'b'],
           filetype: ['c', 'd'],
+        },
+      });
+    });
+
+    it('deserializes two category facets correctly', () => {
+      const result = deserialize('cf[author]=a,b&cf[filetype]=c,d');
+      expect(result).toEqual({
+        cf: {
+          author: ['a', 'b'],
+          filetype: ['c', 'd'],
+        },
+      });
+    });
+
+    it('deserializes a numeric facet with multiple selections', () => {
+      const result = deserialize('nf[size]=0..10,10..20');
+      expect(result).toEqual({
+        nf: {
+          size: [
+            buildNumericRange({start: 0, end: 10}),
+            buildNumericRange({start: 10, end: 20}),
+          ],
+        },
+      });
+    });
+
+    it('deserializes multiple numeric facets with selected values', () => {
+      const result = deserialize('nf[size]=0..10&nf[amount]=100..200');
+      expect(result).toEqual({
+        nf: {
+          size: [buildNumericRange({start: 0, end: 10})],
+          amount: [buildNumericRange({start: 100, end: 200})],
         },
       });
     });

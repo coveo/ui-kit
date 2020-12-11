@@ -1,7 +1,10 @@
+import {buildNumericRange} from '../../controllers/facets/range-facet/numeric-facet/headless-numeric-facet';
+import {NumericRangeRequest} from '../facets/range-facets/numeric-facet-set/interfaces/request';
 import {SearchParameters} from './search-parameter-actions';
 
 const delimiter = '&';
 const equal = '=';
+const rangeDelimiter = '..';
 
 export function buildSearchParameterSerializer() {
   return {serialize, deserialize};
@@ -25,6 +28,10 @@ function serializePair(pair: [string, unknown]) {
     return isFacetObject(val) ? serializeFacets(key, val) : '';
   }
 
+  if (key === 'nf') {
+    return isNumericRangeFacetObject(val) ? serializeRangeFacets(key, val) : '';
+  }
+
   return `${key}${equal}${val}`;
 }
 
@@ -43,9 +50,29 @@ function isFacetObject(obj: unknown): obj is Record<string, string[]> {
   return false;
 }
 
+function isNumericRangeFacetObject(
+  obj: unknown
+): obj is Record<string, NumericRangeRequest[]> {
+  return typeof obj === 'object';
+}
+
 function serializeFacets(key: string, facets: Record<string, string[]>) {
   return Object.entries(facets)
     .map(([facetId, values]) => `${key}[${facetId}]${equal}${values.join(',')}`)
+    .join(delimiter);
+}
+
+function serializeRangeFacets(
+  key: string,
+  facets: Record<string, NumericRangeRequest[]>
+) {
+  return Object.entries(facets)
+    .map(([facetId, ranges]) => {
+      const value = ranges
+        .map(({start, end}) => `${start}${rangeDelimiter}${end}`)
+        .join(',');
+      return `${key}[${facetId}]${equal}${value}`;
+    })
     .join(delimiter);
 }
 
@@ -60,8 +87,8 @@ function deserialize(fragment: string): SearchParameters {
   return keyValuePairs.reduce((acc: SearchParameters, pair) => {
     const [key, val] = pair;
 
-    if (key === 'f' && typeof val === 'object') {
-      const mergedValues = {...acc[key], ...val};
+    if (key === 'f' || key === 'cf' || key === 'nf') {
+      const mergedValues = {...acc[key], ...(val as object)};
       return {...acc, [key]: mergedValues};
     }
 
@@ -78,7 +105,7 @@ function splitOnFirstEqual(str: string) {
 
 function preprocessFacetPairs(pair: string[]) {
   const [key, val] = pair;
-  const facetKey = /^(f|cf)\[(.+)\]$/;
+  const facetKey = /^(f|cf|nf)\[(.+)\]$/;
   const result = facetKey.exec(key);
 
   if (!result) {
@@ -88,9 +115,27 @@ function preprocessFacetPairs(pair: string[]) {
   const paramKey = result[1];
   const facetId = result[2];
   const values = val.split(',');
-  const obj = {[facetId]: values};
+  const processedValues = processFacetValues(paramKey, values);
+  const obj = {[facetId]: processedValues};
 
   return [paramKey, JSON.stringify(obj)];
+}
+
+function processFacetValues(key: string, values: string[]) {
+  if (key === 'nf') {
+    return buildNumericRanges(values);
+  }
+
+  return values;
+}
+
+function buildNumericRanges(ranges: string[]) {
+  return ranges.map((range) => {
+    const [start, end] = range
+      .split(rangeDelimiter)
+      .map((num) => parseInt(num, 10));
+    return buildNumericRange({start, end});
+  });
 }
 
 function isValidPair<K extends keyof SearchParameters>(
@@ -115,6 +160,7 @@ function isValidKey(key: string): key is keyof SearchParameters {
     sortCriteria: true,
     f: true,
     cf: true,
+    nf: true,
     debug: true,
   };
 
@@ -142,7 +188,7 @@ function cast<K extends keyof SearchParameters>(
     return [key, parseInt(value)];
   }
 
-  if (key === 'f' || key === 'cf') {
+  if (key === 'f' || key === 'cf' || key === 'nf') {
     return [key, JSON.parse(value)];
   }
 
