@@ -5,6 +5,7 @@ import {searchParametersDefinition} from './search-parameter-schema';
 
 type FacetParameters = {
   f: Record<string, string[]>;
+  cf: Record<string, string[]>;
 };
 
 export type SearchParameters = Omit<

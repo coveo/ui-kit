@@ -15,7 +15,7 @@ import {
   CategoryFacetOptionalParameters,
 } from './interfaces/options';
 import {change} from '../../history/history-actions';
-import {CategoryFacetValue} from './interfaces/response';
+import {CategoryFacetResponse, CategoryFacetValue} from './interfaces/response';
 import {
   handleFacetDeselectAll,
   handleFacetUpdateNumberOfValues,
@@ -26,6 +26,11 @@ import {
   getCategoryFacetSetInitialState,
 } from './category-facet-set-state';
 import {deselectAllFacets} from '../generic/facet-actions';
+import {restoreSearchParameters} from '../../search-parameters/search-parameter-actions';
+import {selectPath} from './category-facet-reducer-helpers';
+import {executeSearch} from '../../search/search-actions';
+import {partitionIntoParentsAndValues} from './category-facet-utils';
+import {AnyFacetResponse} from '../generic/interfaces/generic-facet-response';
 
 export const categoryFacetSetReducer = createReducer(
   getCategoryFacetSetInitialState(),
@@ -42,6 +47,16 @@ export const categoryFacetSetReducer = createReducer(
         state[facetId] = buildCategoryFacetRequest(options);
       })
       .addCase(change.fulfilled, (_, action) => action.payload.categoryFacetSet)
+      .addCase(restoreSearchParameters, (state, action) => {
+        const cf = action.payload.cf || {};
+        const facetIds = Object.keys(state);
+
+        facetIds.forEach((id) => {
+          const request = state[id];
+          const path = cf[id] || [];
+          selectPath(request, path, request.numberOfValues);
+        });
+      })
       .addCase(updateCategoryFacetSortCriterion, (state, action) => {
         const {facetId, criterion} = action.payload;
         const request = state[facetId];
@@ -122,22 +137,26 @@ export const categoryFacetSetReducer = createReducer(
           return;
         }
 
-        handleFacetDeselectAll(state, facetId);
-
         const path = [...value.path, value.rawValue];
-        let curr = buildCategoryFacetValueRequest(path[0], retrieveCount);
-        request.currentValues.push(curr);
+        selectPath(request, path, retrieveCount);
+      })
+      .addCase(executeSearch.fulfilled, (state, action) => {
+        const {facets} = action.payload.response;
 
-        for (const segment of path.splice(1)) {
-          const next = buildCategoryFacetValueRequest(segment, retrieveCount);
-          curr.children.push(next);
-          curr = next;
-        }
+        facets.forEach((response) => {
+          if (!isCategoryFacetResponse(state, response)) {
+            return;
+          }
 
-        curr.state = 'selected';
-        curr.retrieveChildren = true;
+          const id = response.facetId;
+          const request = state[id];
+          const requestWasInvalid = isRequestInvalid(request, response);
 
-        request.numberOfValues = 1;
+          request.currentValues = requestWasInvalid
+            ? []
+            : request.currentValues;
+          request.preventAutoSelect = false;
+        });
       });
   }
 );
@@ -161,19 +180,6 @@ function buildCategoryFacetRequest(
     preventAutoSelect: false,
     type: 'hierarchical',
     ...config,
-  };
-}
-
-function buildCategoryFacetValueRequest(
-  value: string,
-  retrieveCount: number
-): CategoryFacetValueRequest {
-  return {
-    value,
-    retrieveCount,
-    children: [],
-    state: 'idle',
-    retrieveChildren: false,
   };
 }
 
@@ -205,4 +211,23 @@ function handleCategoryFacetNestedNumberOfValuesUpdate(
     selectedValue = selectedValue.children[0];
   }
   selectedValue.retrieveCount = numberOfValues;
+}
+
+function isCategoryFacetResponse(
+  state: CategoryFacetSetState,
+  response: AnyFacetResponse
+): response is CategoryFacetResponse {
+  const id = response.facetId;
+  return id in state;
+}
+
+function isRequestInvalid(
+  request: CategoryFacetRequest,
+  response: CategoryFacetResponse
+) {
+  const requestParents = partitionIntoParentsAndValues(request.currentValues)
+    .parents;
+  const responseParents = partitionIntoParentsAndValues(response.values)
+    .parents;
+  return requestParents.length !== responseParents.length;
 }
