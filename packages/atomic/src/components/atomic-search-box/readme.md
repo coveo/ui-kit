@@ -26,6 +26,7 @@
 | Property              | Attribute               | Description                                               | Type      | Default                                  |
 | --------------------- | ----------------------- | --------------------------------------------------------- | --------- | ---------------------------------------- |
 | `_id`                 | `data-id`               |                                                           | `string`  | `randomID(     'atomic-search-box-'   )` |
+| `enableQuerySyntax`   | `enable-query-syntax`   |                                                           | `boolean` | `false`                                  |
 | `leadingSubmitButton` | `leading-submit-button` | Wether the submit button should be place before the input | `boolean` | `false`                                  |
 | `numberOfSuggestions` | `number-of-suggestions` | Maximum number of suggestions to display                  | `number`  | `5`                                      |
 

@@ -31,11 +31,15 @@ export const executeToggleCategoryFacetSelect = createAsyncThunk<
   {
     facetId: string;
     selection: CategoryFacetValue;
+    retrieveCount: number;
   },
   AsyncThunkSearchOptions<CategoryFacetSection & ConfigurationSection>
 >(
   'categoryFacetController/executeToggleSelect',
-  ({facetId, selection}, {dispatch, extra: {validatePayload}}) => {
+  (
+    {facetId, selection, retrieveCount},
+    {dispatch, extra: {validatePayload}}
+  ) => {
     validatePayload(facetId, requiredNonEmptyString);
     validateCategoryFacetValue(selection);
 
@@ -44,7 +48,9 @@ export const executeToggleCategoryFacetSelect = createAsyncThunk<
       selection
     );
 
-    dispatch(toggleSelectCategoryFacetValue({facetId, selection}));
+    dispatch(
+      toggleSelectCategoryFacetValue({facetId, selection, retrieveCount})
+    );
     dispatch(updateFacetOptions({freezeFacetOrder: true}));
     dispatch(executeSearch(analyticsAction));
   }

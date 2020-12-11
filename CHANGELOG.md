@@ -3,6 +3,94 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.1.0-alpha.96](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.95...v0.1.0-alpha.96) (2020-12-11)
+
+
+### Bug Fixes
+
+* **headless:** logActionErrorMiddleware should only stop on SchemaValidationError ([#353](https://github.com/coveo/ui-kit/issues/353)) ([ddd72ec](https://github.com/coveo/ui-kit/commit/ddd72ec9728ac548a1203e6325ed86cefb1bf37f))
+
+
+
+
+
+# [0.1.0-alpha.95](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.94...v0.1.0-alpha.95) (2020-12-11)
+
+
+### Features
+
+* **headless:** support category facets in url ([#336](https://github.com/coveo/ui-kit/issues/336)) ([eb2f7b9](https://github.com/coveo/ui-kit/commit/eb2f7b97648071059b88fdf2ef45b33525a8da63))
+
+
+
+
+
+# [0.1.0-alpha.94](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.93...v0.1.0-alpha.94) (2020-12-10)
+
+
+### Features
+
+* **headless:** change ResultTemplateManager to a method and log error on validation ([#349](https://github.com/coveo/ui-kit/issues/349)) ([8f6b2d8](https://github.com/coveo/ui-kit/commit/8f6b2d87ae76ffbad011ba5bdce64fb7c5ab0758))
+
+
+
+
+
+# [0.1.0-alpha.93](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.92...v0.1.0-alpha.93) (2020-12-10)
+
+
+### Bug Fixes
+
+* **headlesss:** fixed number of values for Category facet ([#350](https://github.com/coveo/ui-kit/issues/350)) ([a75636d](https://github.com/coveo/ui-kit/commit/a75636d2a46f840d0e4678972c0eb833f09f52e3))
+
+
+### Features
+
+* **headless:** add #f url parameter ([#326](https://github.com/coveo/ui-kit/issues/326)) ([239af65](https://github.com/coveo/ui-kit/commit/239af658f60d678f25400cbb0d27dc1d63064a3a))
+
+
+
+
+
+# [0.1.0-alpha.92](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.91...v0.1.0-alpha.92) (2020-12-09)
+
+
+### Features
+
+* **headless:** prevent calling fetchMoreResults multiple times ([#342](https://github.com/coveo/ui-kit/issues/342)) ([d34e9c1](https://github.com/coveo/ui-kit/commit/d34e9c177d1d7a0c89c716f864778e1c743cf912))
+
+
+
+
+
+# [0.1.0-alpha.91](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.90...v0.1.0-alpha.91) (2020-12-09)
+
+**Note:** Version bump only for package ui-kit
+
+
+
+
+
+# [0.1.0-alpha.90](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.89...v0.1.0-alpha.90) (2020-12-09)
+
+**Note:** Version bump only for package ui-kit
+
+
+
+
+
+# [0.1.0-alpha.89](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.88...v0.1.0-alpha.89) (2020-12-09)
+
+
+### Features
+
+* **atomic,headless:** improve engine error handling ([#331](https://github.com/coveo/ui-kit/issues/331)) ([bc8082f](https://github.com/coveo/ui-kit/commit/bc8082f151bf81d606efc6b398bb757de08f3fc1))
+* **headless:** cancel successive search requests ([#332](https://github.com/coveo/ui-kit/issues/332)) ([8116b8f](https://github.com/coveo/ui-kit/commit/8116b8fb8f5e1dcf2ca9924cbfe34bba1c2a6a12))
+
+
+
+
+
 # [0.1.0-alpha.88](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.87...v0.1.0-alpha.88) (2020-12-08)
 
 

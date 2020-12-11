@@ -1,8 +1,6 @@
-import {
-  FacetSearchRequestOptions,
-  FacetSearchOptions,
-} from './facet-search-request-options';
+import {FacetSearchOptions} from './facet-search-request-options';
 import {FacetSearchResponse} from '../../../api/search/facet-search/facet-search-response';
+import {FacetSearchRequestOptions} from '../../../api/search/facet-search/base/base-facet-search-request';
 
 export type FacetSearchState<T extends FacetSearchResponse> = {
   options: FacetSearchRequestOptions;
