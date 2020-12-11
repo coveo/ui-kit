@@ -26,7 +26,6 @@ export const facetOptionsSchema = new Schema<Required<FacetOptions>>({
   filterFacetCount,
   injectionDepth,
   numberOfValues,
-  /** The sort criterion to use for this facet. */
   sortCriteria: new StringValue({constrainTo: facetSortCriteria}),
   facetSearch,
 });

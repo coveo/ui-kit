@@ -39,10 +39,17 @@ import {determineFacetId} from '../_common/facet-id-determinor';
 
 export {FacetOptions};
 export type FacetProps = {
+  /** The options for the `Facet` controller. */
   options: FacetOptions;
 };
 
+/**
+ * The `Facet` headless controller offers a high-level interface for designing a common facet UI controller.
+ */
 export type Facet = ReturnType<typeof buildFacet>;
+/**
+ * A scoped and simplified part of the headless state that is relevant to the `Facet` controller.
+ */
 export type FacetState = Facet['state'];
 
 export function buildFacet(
@@ -97,15 +104,15 @@ export function buildFacet(
     ...controller,
     facetSearch: restOfFacetSearch,
     /**
-     * Toggles the passed value.
-     * @param selection (FacetValue) The facet value to select or deselect.
+     * Toggles the specified facet value.
+     * @param selection (FacetValue) The facet value to toggle.
      */
     toggleSelect: (selection: FacetValue) =>
       dispatch(executeToggleFacetSelect({facetId: options.facetId, selection})),
     /**
-     * Returns `true` if the passed facet value is selected and `false` otherwise.
+     * Checks whether the specified facet value is selected.
      * @param value (FacetValue) The facet value to check.
-     * @returns Whether the passed facet value is selected.
+     * @returns (boolean) Whether the specified facet value is selected.
      */
     isValueSelected: isFacetValueSelected,
 
@@ -116,7 +123,7 @@ export function buildFacet(
       dispatch(executeSearch(logFacetClearAll(facetId)));
     },
 
-    /** Sorts the facet values according to the passed criterion.
+    /** Sorts the facet values according to the specified criterion.
      * @param criterion (FacetSortCriterion) The criterion to sort values by.
      */
     sortBy(criterion: FacetSortCriterion) {
@@ -126,9 +133,9 @@ export function buildFacet(
     },
 
     /**
-     * Returns `true` if the facet values are sorted according to the passed criterion and `false` otherwise.
+     * Checks whether the facet values are sorted according to the specified criterion.
      * @param criterion (FacetSortCriterion) The criterion to compare.
-     * @returns Whether the facet values are sorted according to the passed criterion.
+     * @returns (boolean) Whether the facet values are sorted according to the specified criterion.
      */
     isSortedBy(criterion: FacetSortCriterion) {
       return this.state.sortCriterion === criterion;
@@ -166,7 +173,7 @@ export function buildFacet(
       dispatch(executeSearch(logFacetShowLess(facetId)));
     },
 
-    /** @returns The state of the `Facet` controller. */
+    /** @returns (FacetState) The state of the `Facet` controller. */
     get state() {
       const request = getRequest();
       const response = getResponse();
