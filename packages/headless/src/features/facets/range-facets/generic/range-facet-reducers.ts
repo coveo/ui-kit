@@ -7,7 +7,7 @@ import {
 import {RangeFacetOptionalParameters} from './interfaces/options';
 
 export const defaultRangeFacetOptions: RangeFacetOptionalParameters = {
-  filterFacetCount: false,
+  filterFacetCount: true,
   injectionDepth: 1000,
   numberOfValues: 8,
   sortCriteria: 'ascending',
