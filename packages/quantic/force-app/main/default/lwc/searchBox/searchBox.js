@@ -130,14 +130,14 @@ export default class SearchBox extends LightningElement {
   updateState() {
     this.state = this.searchBox.state;
 
-    this.suggestions = this.state.suggestions.map((s) => s.value);
+    this.suggestions = this.state.suggestions.map((s) => s.rawValue);
     if (!this.tribute) {
       return;
     }
 
     this.tribute.append(
       0,
-      this.state.suggestions.map((s) => ({key: s.value, value: s.value})),
+      this.state.suggestions.map((s) => ({key: s.rawValue, value: s.rawValue})),
       true
     );
   }
