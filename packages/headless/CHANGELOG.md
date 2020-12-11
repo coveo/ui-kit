@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.1.0-alpha.95](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.94...v0.1.0-alpha.95) (2020-12-11)
+
+
+### Features
+
+* **headless:** support category facets in url ([#336](https://github.com/coveo/ui-kit/issues/336)) ([eb2f7b9](https://github.com/coveo/ui-kit/commit/eb2f7b97648071059b88fdf2ef45b33525a8da63))
+
+
+
+
+
 # [0.1.0-alpha.94](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.93...v0.1.0-alpha.94) (2020-12-10)
 
 

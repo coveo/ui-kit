@@ -162,8 +162,8 @@ export const categoryFacetSetReducer = createReducer(
 );
 
 export const defaultCategoryFacetOptions: CategoryFacetOptionalParameters = {
-  delimitingCharacter: '|',
-  filterFacetCount: false,
+  delimitingCharacter: ';',
+  filterFacetCount: true,
   injectionDepth: 1000,
   numberOfValues: 5,
   sortCriteria: 'occurrences',
