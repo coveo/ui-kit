@@ -124,6 +124,34 @@ describe('buildSearchParameterSerializer', () => {
         },
       });
     });
+
+    it('deserializes a numeric facet with a float range', () => {
+      const result = deserialize('nf[size]=7.5..8.5,8.5..9.5');
+      expect(result).toEqual({
+        nf: {
+          size: [
+            buildNumericRange({start: 7.5, end: 8.5}),
+            buildNumericRange({start: 8.5, end: 9.5}),
+          ],
+        },
+      });
+    });
+
+    it(`when a numeric facet range contains a non-numeric value,
+    the deserializer sets the values for the facetId to an empty array`, () => {
+      const result = deserialize('nf[size]=0..a');
+      expect(result).toEqual({
+        nf: {size: []},
+      });
+    });
+
+    it(`when a numeric facet range contains one number,
+    the deserializer sets the values for the facetId to an empty array`, () => {
+      const result = deserialize('nf[size]=0');
+      expect(result).toEqual({
+        nf: {size: []},
+      });
+    });
   });
 
   it('can serialize and deserialize all search parameters', () => {

@@ -130,12 +130,10 @@ function processFacetValues(key: string, values: string[]) {
 }
 
 function buildNumericRanges(ranges: string[]) {
-  return ranges.map((range) => {
-    const [start, end] = range
-      .split(rangeDelimiter)
-      .map((num) => parseInt(num, 10));
-    return buildNumericRange({start, end});
-  });
+  return ranges
+    .map((str) => str.split(rangeDelimiter).map(parseFloat))
+    .filter((range) => range.length === 2 && range.every(Number.isFinite))
+    .map(([start, end]) => buildNumericRange({start, end}));
 }
 
 function isValidPair<K extends keyof SearchParameters>(
