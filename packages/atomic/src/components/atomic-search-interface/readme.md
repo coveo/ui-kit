@@ -32,14 +32,14 @@ Type: `Promise<void>`
 
 ### Depends on
 
-- [atomic-relevance-inspector](../atomic-relevance-inspector)
 - [atomic-component-error](../atomic-component-error)
+- [atomic-relevance-inspector](../atomic-relevance-inspector)
 
 ### Graph
 ```mermaid
 graph TD;
-  atomic-search-interface --> atomic-relevance-inspector
   atomic-search-interface --> atomic-component-error
+  atomic-search-interface --> atomic-relevance-inspector
   style atomic-search-interface fill:#f9f,stroke:#333,stroke-width:4px
 ```
 
