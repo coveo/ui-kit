@@ -1,53 +1,110 @@
-export {
-  SearchEventPayload,
-  CustomEventPayload,
-  ClickEventPayload,
-  logInterfaceLoad,
-  logInterfaceChange,
-  logClickEvent,
-  logCustomEvent,
-  logSearchEvent,
-} from './/analytics-actions';
+import {
+  SearchEventPayload as SearchEventPayloadAlias,
+  CustomEventPayload as CustomEventPayloadAlias,
+  ClickEventPayload as ClickEventPayloadAlias,
+  logInterfaceLoad as logInterfaceLoadAlias,
+  logInterfaceChange as logInterfaceChangeAlias,
+  logClickEvent as logClickEventAlias,
+  logCustomEvent as logCustomEventAlias,
+  logSearchEvent as logSearchEventAlias,
+} from './analytics-actions';
+export namespace AnalyticsActions {
+  export type SearchEventPayload = SearchEventPayloadAlias;
+  export type CustomEventPayload = CustomEventPayloadAlias;
+  export type ClickEventPayload = ClickEventPayloadAlias;
+  export const logInterfaceLoad = logInterfaceLoadAlias;
+  export const logInterfaceChange = logInterfaceChangeAlias;
+  export const logClickEvent = logClickEventAlias;
+  export const logCustomEvent = logCustomEventAlias;
+  export const logSearchEvent = logSearchEventAlias;
+}
 
-export {
-  logDidYouMeanClick,
-  logDidYouMeanAutomatic,
+import {
+  logDidYouMeanClick as logDidYouMeanClickAlias,
+  logDidYouMeanAutomatic as logDidYouMeanAutomaticAlias,
 } from '../did-you-mean/did-you-mean-analytics-actions';
+export namespace DidYouMeanAnalyticsActions {
+  export const logDidYouMeanClick = logDidYouMeanClickAlias;
+  export const logDidYouMeanAutomatic = logDidYouMeanAutomaticAlias;
+}
 
-export {
-  logFacetShowMore,
-  logFacetShowLess,
-  logFacetSelect,
-  logFacetDeselect,
-  logFacetClearAll,
-  logFacetSearch,
-  logFacetUpdateSort,
+import {
+  logFacetShowMore as logFacetShowMoreAlias,
+  logFacetShowLess as logFacetShowLessAlias,
+  logFacetSelect as logFacetSelectAlias,
+  logFacetDeselect as logFacetDeselectAlias,
+  logFacetClearAll as logFacetClearAllAlias,
+  logFacetSearch as logFacetSearchAlias,
+  logFacetUpdateSort as logFacetUpdateSortAlias,
 } from '../facets/facet-set/facet-set-analytics-actions';
+export namespace FacetAnalyticsActions {
+  export const logFacetShowMore = logFacetShowMoreAlias;
+  export const logFacetShowLess = logFacetShowLessAlias;
+  export const logFacetSelect = logFacetSelectAlias;
+  export const logFacetDeselect = logFacetDeselectAlias;
+  export const logFacetClearAll = logFacetClearAllAlias;
+  export const logFacetSearch = logFacetSearchAlias;
+  export const logFacetUpdateSort = logFacetUpdateSortAlias;
+}
 
-export {logClearBreadcrumbs} from '../facets/generic/facet-generic-analytics-actions';
+import {logClearBreadcrumbs as logClearBreadcrumbsAlias} from '../facets/generic/facet-generic-analytics-actions';
+export namespace FacetGenericAnalyticsActions {
+  export const logClearBreadcrumbs = logClearBreadcrumbsAlias;
+}
 
-export {
-  logNavigateForward,
-  logNavigateBackward,
+import {
+  logNavigateForward as logNavigateForwardAlias,
+  logNavigateBackward as logNavigateBackwardAlias,
 } from '../history/history-analytics-actions';
+export namespace HistoryAnalyticsActions{
+  export const logNavigateForward = logNavigateForwardAlias;
+  export const logNavigateBackward = logNavigateBackwardAlias;
+}
 
-export {
-  logPageNext,
-  logPagePrevious,
-  logPageNumber,
-  logPagerResize,
+import {
+  logPageNext as logPageNextAlias,
+  logPagePrevious as logPagePreviousAlias,
+  logPageNumber as logPageNumberAlias,
+  logPagerResize as logPagerResizeAlias,
 } from '../pagination/pagination-analytics-actions';
+export namespace PaginationAnalyticsActions {
+  export const logPageNext = logPageNextAlias;
+  export const logPagePrevious = logPagePreviousAlias;
+  export const logPageNumber = logPageNumberAlias;
+  export const logPagerResize = logPagerResizeAlias;
+}
 
-export {logProductRecommendations} from '../product-recommendations/product-recommendations-analytics.actions';
+import {logProductRecommendations as logProductRecommendationsAlias} from '../product-recommendations/product-recommendations-analytics.actions';
+export namespace ProductRecommendationAnalyticsActions{
+  export const logProductRecommendations = logProductRecommendationsAlias;
+}
 
-export {logSearchboxSubmit} from '../query/query-analytics-actions';
+import {logSearchboxSubmit as logSearchboxSubmitAlias} from '../query/query-analytics-actions';
+export namespace QueryAnalyticsActions {
+  export logSearchboxSubmit = logSearchboxSubmitAlias;
+}
 
-export {logQuerySuggestionClick} from '../query-suggest/query-suggest-analytics-actions';
+import {logQuerySuggestionClick as logQuerySuggestionClickAlias} from '../query-suggest/query-suggest-analytics-actions';
+export namespace QuerySuggestAnalyticsActions {
+  export const logQuerySuggestionClick = logQuerySuggestionClickAlias;
+}
 
-export {logRecommendationUpdate} from '../recommendation/recommendation-analytics-actions';
+import {logRecommendationUpdate as logRecommendationUpdateAlias} from '../recommendation/recommendation-analytics-actions';
+export namespace RecommendationAnalyticsActions {
+  export const logRecommendationUpdate = logRecommendationUpdateAlias;
+}
 
-export {logTriggerRedirect} from '../redirection/redirection-analytics-actions';
+import {logTriggerRedirect as logTriggerRedirectAlias} from '../redirection/redirection-analytics-actions';
+export namespace RedirectionAnalyticsActions{
+  export const logTriggerRedirect = logTriggerRedirectAlias;
+}
 
-export {logDocumentOpen} from '../result/result-analytics-actions';
+import {logDocumentOpen as logDocumentOpenAlias} from '../result/result-analytics-actions';
+export namespace ResultAnalyticsActions {
+  export const logDocumentOpen = logDocumentOpenAlias;
+}
 
-export {logResultsSort} from '../sort-criteria/sort-criteria-analytics-actions';
+import {logResultsSort as logResultsSortAlias} from '../sort-criteria/sort-criteria-analytics-actions';
+export namespace SortCriterionAnalyticsActions {
+  export const logResultsSort = logResultsSortAlias;
+}

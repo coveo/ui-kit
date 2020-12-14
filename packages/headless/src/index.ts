@@ -44,7 +44,7 @@ export {
 export * from './features';
 
 // Analytics Actions
-export * as AnalyticsActions from './features/analytics';
+export * from './features/analytics';
 
 // Types & Helpers
 export {Result} from './api/search/search/result';

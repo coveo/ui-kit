@@ -1,5 +1,5 @@
 import {createReducer} from '@reduxjs/toolkit';
-import {ContextActions} from './context-actions';
+import {setContext, addContext, removeContext} from './context-actions';
 import {change} from '../history/history-actions';
 import {getContextInitialState} from './context-state';
 
@@ -7,14 +7,14 @@ export const contextReducer = createReducer(
   getContextInitialState(),
   (builder) => {
     builder
-      .addCase(ContextActions.setContext, (state, action) => {
+      .addCase(setContext, (state, action) => {
         state.contextValues = action.payload;
       })
-      .addCase(ContextActions.addContext, (state, action) => {
+      .addCase(addContext, (state, action) => {
         state.contextValues[action.payload.contextKey] =
           action.payload.contextValue;
       })
-      .addCase(ContextActions.removeContext, (state, action) => {
+      .addCase(removeContext, (state, action) => {
         delete state.contextValues[action.payload];
       })
       .addCase(change.fulfilled, (state, action) => {
