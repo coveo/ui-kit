@@ -175,6 +175,7 @@ function isValidKey(key: string): key is keyof SearchParameters {
     f: true,
     cf: true,
     nf: true,
+    df: true,
     debug: true,
   };
 
