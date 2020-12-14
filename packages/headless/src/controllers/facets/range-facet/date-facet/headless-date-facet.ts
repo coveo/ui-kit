@@ -53,12 +53,15 @@ export function buildDateRange(config: DateRangeOptions): DateRangeRequest {
        `
     );
   }
+
+  const endInclusive = config.endInclusive ?? false;
+  const state = config.state ?? 'idle';
+
   return {
-    endInclusive: false,
-    state: 'idle',
-    ...config,
     start,
     end,
+    endInclusive,
+    state,
   };
 }
 

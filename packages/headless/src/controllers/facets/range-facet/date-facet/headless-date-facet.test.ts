@@ -111,7 +111,7 @@ describe('date facet', () => {
       state: 'idle',
     };
 
-    expect(dateRange).toMatchObject(expectedValues);
+    expect(dateRange).toEqual(expectedValues);
   });
 
   it('#buildDateRange generates the correct value for a js date input', () => {
@@ -127,7 +127,7 @@ describe('date facet', () => {
       state: 'idle',
     };
 
-    expect(dateRange).toMatchObject(expectedValues);
+    expect(dateRange).toEqual(expectedValues);
   });
 
   it('#buildDateRange generates the correct value for an iso 8601 string input', () => {
@@ -143,7 +143,7 @@ describe('date facet', () => {
       state: 'idle',
     };
 
-    expect(dateRange).toMatchObject(expectedValues);
+    expect(dateRange).toEqual(expectedValues);
   });
 
   it('#buildDateRange throws if the date can not be parsed', () => {
@@ -174,6 +174,6 @@ describe('date facet', () => {
       endInclusive: false,
       state: 'idle',
     };
-    expect(dateRange).toMatchObject(expectedValues);
+    expect(dateRange).toEqual(expectedValues);
   });
 });
