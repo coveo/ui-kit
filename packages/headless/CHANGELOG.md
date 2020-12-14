@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.1.0-alpha.98](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.97...v0.1.0-alpha.98) (2020-12-14)
+
+
+### Features
+
+* **atomic,headless:** add infinite scroll with preventative measures for consecutive queries ([#347](https://github.com/coveo/ui-kit/issues/347)) ([bc49c12](https://github.com/coveo/ui-kit/commit/bc49c120e49e654b2f82d07a3f0fd7c60ef4e2cd))
+
+
+
+
+
 # [0.1.0-alpha.97](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.96...v0.1.0-alpha.97) (2020-12-11)
 
 
