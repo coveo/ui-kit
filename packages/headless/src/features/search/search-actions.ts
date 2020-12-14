@@ -46,7 +46,7 @@ import {getSortCriteriaInitialState} from '../sort-criteria/sort-criteria-state'
 import {getPipelineInitialState} from '../pipeline/pipeline-state';
 import {getSearchHubInitialState} from '../search-hub/search-hub-state';
 import {getFacetOptionsInitialState} from '../facet-options/facet-options-state';
-import {logFetchMoreResults} from './search-analytics-actions';
+import {logFetchMoreResults, logQueryError} from './search-analytics-actions';
 import {SearchAction} from '../analytics/analytics-utils';
 import {getDebugInitialState} from '../debug/debug-state';
 
@@ -123,6 +123,7 @@ export const executeSearch = createAsyncThunk<
     );
 
     if (isErrorResponse(fetched.response)) {
+      dispatch(logQueryError(fetched.response.error));
       return rejectWithValue(fetched.response.error);
     }
 
@@ -148,6 +149,7 @@ export const executeSearch = createAsyncThunk<
     dispatch(snapshot(extractHistory(getState())));
 
     if (isErrorResponse(retried.response)) {
+      dispatch(logQueryError(retried.response.error));
       return rejectWithValue(retried.response.error);
     }
 
@@ -178,6 +180,7 @@ export const fetchMoreResults = createAsyncThunk<
     );
 
     if (isErrorResponse(fetched.response)) {
+      dispatch(logQueryError(fetched.response.error));
       return rejectWithValue(fetched.response.error);
     }
 
