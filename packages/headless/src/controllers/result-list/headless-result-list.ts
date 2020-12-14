@@ -53,8 +53,8 @@ export function buildResultList(
 
   let lastFetchCompleted = 0;
   let consecutiveFetches = 0;
-  const minConsecutiveFetches = 5;
-  const maxDelayBetweenFetches = 200;
+  const maxConsecutiveFetches = 5;
+  const minDelayBetweenFetches = 200;
   let errorLogged = false;
 
   const triggerFetchMoreResult = () => {
@@ -63,13 +63,13 @@ export function buildResultList(
     }
 
     const delayBetweenFetches = Date.now() - lastFetchCompleted;
-    if (delayBetweenFetches < maxDelayBetweenFetches) {
+    if (delayBetweenFetches < minDelayBetweenFetches) {
       consecutiveFetches++;
-      if (consecutiveFetches >= minConsecutiveFetches) {
+      if (consecutiveFetches >= maxConsecutiveFetches) {
         lastFetchCompleted = Date.now();
         !errorLogged &&
           engine.logger.error(
-            `The result list method "fetchMoreResults" execution prevented because it has been triggered consecutively ${minConsecutiveFetches} times, with little delay. Please verify the conditions under which the function is called.`
+            `The result list method "fetchMoreResults" execution prevented because it has been triggered consecutively ${maxConsecutiveFetches} times, with little delay. Please verify the conditions under which the function is called.`
           );
         errorLogged = true;
         return;
