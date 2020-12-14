@@ -93,6 +93,7 @@ export * as QuerySuggestAnalyticsActions from './features/query-suggest/query-su
 export * as RecommendationAnalyticsActions from './features/recommendation/recommendation-analytics-actions';
 export * as RedirectionAnalyticsActions from './features/redirection/redirection-analytics-actions';
 export * as ResultAnalyticsActions from './features/result/result-analytics-actions';
+export * as SearchAnalyticsActions from './features/search/search-analytics-actions';
 export * as SortCriterionAnalyticsActions from './features/sort-criteria/sort-criteria-analytics-actions';
 
 // Types & Helpers

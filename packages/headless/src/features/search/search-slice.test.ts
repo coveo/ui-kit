@@ -156,6 +156,36 @@ describe('search-slice', () => {
     expect(finalState.error).toBeNull();
   });
 
+  describe('should dispatch a logQueryError action', () => {
+    let e: MockEngine<SearchAppState>;
+    beforeEach(() => {
+      e = buildMockSearchAppEngine({state: createMockState()});
+      PlatformClient.call = jest.fn().mockImplementation(() =>
+        Promise.resolve({
+          body: {message: 'message', statusCode: 500, type: 'type'},
+        })
+      );
+    });
+
+    it('on a executeSearch error', async () => {
+      await e.dispatch(executeSearch(logSearchboxSubmit()));
+      expect(e.actions).toContainEqual(
+        expect.objectContaining({
+          type: 'search/queryError/pending',
+        })
+      );
+    });
+
+    it('on a fetchMoreResults error', async () => {
+      await e.dispatch(fetchMoreResults());
+      expect(e.actions).toContainEqual(
+        expect.objectContaining({
+          type: 'search/queryError/pending',
+        })
+      );
+    });
+  });
+
   it('when a fetchMoreResults fulfilled is received, set the error to null', () => {
     const err = {message: 'message', statusCode: 500, type: 'type'};
     state.error = err;
