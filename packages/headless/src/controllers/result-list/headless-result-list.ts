@@ -51,6 +51,37 @@ export function buildResultList(
     dispatch(registerFieldsToInclude(options.fieldsToInclude));
   }
 
+  let lastFetchCompleted = 0;
+  let consecutiveFetches = 0;
+  const maxConsecutiveFetches = 5;
+  const minDelayBetweenFetches = 200;
+  let errorLogged = false;
+
+  const triggerFetchMoreResult = () => {
+    if (engine.state.search.isLoading) {
+      return;
+    }
+
+    const delayBetweenFetches = Date.now() - lastFetchCompleted;
+    if (delayBetweenFetches < minDelayBetweenFetches) {
+      consecutiveFetches++;
+      if (consecutiveFetches >= maxConsecutiveFetches) {
+        lastFetchCompleted = Date.now();
+        !errorLogged &&
+          engine.logger.error(
+            `The result list method "fetchMoreResults" execution prevented because it has been triggered consecutively ${maxConsecutiveFetches} times, with little delay. Please verify the conditions under which the function is called.`
+          );
+        errorLogged = true;
+        return;
+      }
+    } else {
+      consecutiveFetches = 0;
+    }
+
+    errorLogged = false;
+    dispatch(fetchMoreResults()).then(() => (lastFetchCompleted = Date.now()));
+  };
+
   return {
     ...controller,
 
@@ -68,14 +99,6 @@ export function buildResultList(
     /**
      * Using the same parameters as the last successful query, fetch another batch of results. Particularly useful for infinite scrolling, for example.
      */
-    fetchMoreResults() {
-      if (this.state.isLoading) {
-        engine.logger.warn(
-          'Ignoring request to display more results since query is pending.'
-        );
-        return;
-      }
-      dispatch(fetchMoreResults());
-    },
+    fetchMoreResults: triggerFetchMoreResult,
   };
 }
