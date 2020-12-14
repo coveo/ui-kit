@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.1.0-alpha.99](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.98...v0.1.0-alpha.99) (2020-12-14)
+
+
+### Features
+
+* **headless:** logQueryError when there is a query error ([#357](https://github.com/coveo/ui-kit/issues/357)) ([c01bf2c](https://github.com/coveo/ui-kit/commit/c01bf2c33df7dd8ccbdd143c8a6666c96e5c70cd))
+
+
+
+
+
 # [0.1.0-alpha.98](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.97...v0.1.0-alpha.98) (2020-12-14)
 
 
