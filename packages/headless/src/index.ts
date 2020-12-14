@@ -112,3 +112,4 @@ export {FacetSortCriterion} from './features/facets/facet-set/interfaces/request
 export {NumericFacetValue} from './features/facets/range-facets/numeric-facet-set/interfaces/response';
 export {RangeFacetSortCriterion} from './features/facets/range-facets/generic/interfaces/request';
 export * from './features/search-parameters/search-parameter-serializer';
+export * as HighlightUtils from './utils/highlight';

@@ -32,6 +32,10 @@ import {logQuerySuggestionClick} from '../../features/query-suggest/query-sugges
 import {randomID} from '../../utils/utils';
 import {QuerySuggestState} from '../../features/query-suggest/query-suggest-state';
 import {SearchAction} from '../../features/analytics/analytics-utils';
+import {
+  getHighlightedSuggestion,
+  SuggestionHighlightingOptions,
+} from '../../utils/highlight';
 
 export {SearchBoxOptions};
 export interface SearchBoxProps {
@@ -63,6 +67,7 @@ export function buildSearchBox(
   const id = props.options?.id || randomID('search_box');
   const options: Required<SearchBoxOptions> = {
     id,
+    highlightOptions: {...props.options?.highlightOptions},
     ...defaultSearchBoxOptions,
     ...props.options,
   };
@@ -146,7 +151,10 @@ export function buildSearchBox(
     get state() {
       const state = engine.state;
       const querySuggestState = state.querySuggest[options.id];
-      const suggestions = getSuggestions(querySuggestState);
+      const suggestions = getSuggestions(
+        querySuggestState,
+        options.highlightOptions
+      );
 
       return {
         value: getValue(),
@@ -157,12 +165,19 @@ export function buildSearchBox(
   };
 }
 
-function getSuggestions(state: QuerySuggestState | undefined) {
+function getSuggestions(
+  state: QuerySuggestState | undefined,
+  highlightOptions: SuggestionHighlightingOptions
+) {
   if (!state) {
     return [];
   }
 
   return state.completions.map((completion) => ({
-    value: completion.expression,
+    highlightedValue: getHighlightedSuggestion(
+      completion.highlighted,
+      highlightOptions
+    ),
+    rawValue: completion.expression,
   }));
 }
