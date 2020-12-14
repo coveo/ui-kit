@@ -1,7 +1,15 @@
-import {BooleanValue, NumberValue, Schema, StringValue} from '@coveo/bueno';
+import {
+  BooleanValue,
+  NumberValue,
+  Schema,
+  StringValue,
+  RecordValue,
+} from '@coveo/bueno';
+import {SuggestionHighlightingOptions} from '../../utils/highlight';
 
 export interface SearchBoxOptions extends DefaultSearchBoxOptions {
   id?: string;
+  highlightOptions?: SuggestionHighlightingOptions;
 }
 
 interface DefaultSearchBoxOptions {
@@ -12,6 +20,11 @@ interface DefaultSearchBoxOptions {
 export const defaultSearchBoxOptions: Required<DefaultSearchBoxOptions> = {
   enableQuerySyntax: false,
   numberOfSuggestions: 5,
+};
+
+const openCloseDelimitersDefinition = {
+  open: new StringValue(),
+  close: new StringValue(),
 };
 
 export const searchBoxOptionDefinitions = {
@@ -34,6 +47,22 @@ export const searchBoxOptionDefinitions = {
    * @default false
    */
   enableQuerySyntax: new BooleanValue(),
+
+  highlightOptions: new RecordValue({
+    values: {
+      notMatchDelimiters: new RecordValue({
+        values: openCloseDelimitersDefinition,
+      }),
+
+      exactMatchDelimiters: new RecordValue({
+        values: openCloseDelimitersDefinition,
+      }),
+
+      correctionDelimiters: new RecordValue({
+        values: openCloseDelimitersDefinition,
+      }),
+    },
+  }),
 };
 
 export const searchBoxOptionsSchema = new Schema<Required<SearchBoxOptions>>(

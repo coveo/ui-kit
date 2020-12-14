@@ -3,6 +3,39 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.1.0-alpha.97](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.96...v0.1.0-alpha.97) (2020-12-11)
+
+
+### Bug Fixes
+
+* **recommendations:** remove maximum age from product recommendations ([#354](https://github.com/coveo/ui-kit/issues/354)) ([61a0b08](https://github.com/coveo/ui-kit/commit/61a0b0878541b3fe4257658054a8f86cc1c2d19b))
+
+
+
+
+
+# [0.1.0-alpha.96](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.95...v0.1.0-alpha.96) (2020-12-11)
+
+
+### Bug Fixes
+
+* **headless:** logActionErrorMiddleware should only stop on SchemaValidationError ([#353](https://github.com/coveo/ui-kit/issues/353)) ([ddd72ec](https://github.com/coveo/ui-kit/commit/ddd72ec9728ac548a1203e6325ed86cefb1bf37f))
+
+
+
+
+
+# [0.1.0-alpha.95](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.94...v0.1.0-alpha.95) (2020-12-11)
+
+
+### Features
+
+* **headless:** support category facets in url ([#336](https://github.com/coveo/ui-kit/issues/336)) ([eb2f7b9](https://github.com/coveo/ui-kit/commit/eb2f7b97648071059b88fdf2ef45b33525a8da63))
+
+
+
+
+
 # [0.1.0-alpha.94](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.93...v0.1.0-alpha.94) (2020-12-10)
 
 
