@@ -6,6 +6,7 @@ import {
   ResultTemplatesManager,
   buildResultList,
   Engine,
+  buildResultTemplatesManager,
 } from '@coveo/headless';
 import Mustache from 'mustache';
 import defaultTemplate from '../../templates/default.html';
@@ -45,21 +46,13 @@ export class AtomicResultList {
 
   @Initialization()
   public initialize() {
-    this.resultTemplatesManager = new ResultTemplatesManager<string>(
-      this.engine
-    );
+    this.resultTemplatesManager = buildResultTemplatesManager(this.engine);
     this.resultList = buildResultList(this.engine, {
       options: {fieldsToInclude: this.fields},
     });
     this.unsubscribe = this.resultList.subscribe(() => this.updateState());
     this.registerDefaultResultTemplates();
     this.registerChildrenResultTemplates();
-  }
-
-  private fetchMoreResults() {
-    if (!this.state.isLoading) {
-      this.resultList.fetchMoreResults();
-    }
   }
 
   private registerDefaultResultTemplates() {
@@ -116,7 +109,7 @@ export class AtomicResultList {
       </div>,
       <button
         class="fetch-more-results btn btn-secondary"
-        onClick={() => this.fetchMoreResults()}
+        onClick={() => this.resultList.fetchMoreResults()}
         disabled={this.state.isLoading}
       >
         Fetch more results

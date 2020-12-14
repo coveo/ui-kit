@@ -56,7 +56,7 @@ import {
   logNavigateForward as logNavigateForwardAlias,
   logNavigateBackward as logNavigateBackwardAlias,
 } from '../history/history-analytics-actions';
-export namespace HistoryAnalyticsActions{
+export namespace HistoryAnalyticsActions {
   export const logNavigateForward = logNavigateForwardAlias;
   export const logNavigateBackward = logNavigateBackwardAlias;
 }
@@ -75,13 +75,13 @@ export namespace PaginationAnalyticsActions {
 }
 
 import {logProductRecommendations as logProductRecommendationsAlias} from '../product-recommendations/product-recommendations-analytics.actions';
-export namespace ProductRecommendationAnalyticsActions{
+export namespace ProductRecommendationAnalyticsActions {
   export const logProductRecommendations = logProductRecommendationsAlias;
 }
 
 import {logSearchboxSubmit as logSearchboxSubmitAlias} from '../query/query-analytics-actions';
 export namespace QueryAnalyticsActions {
-  export logSearchboxSubmit = logSearchboxSubmitAlias;
+  export const logSearchboxSubmit = logSearchboxSubmitAlias;
 }
 
 import {logQuerySuggestionClick as logQuerySuggestionClickAlias} from '../query-suggest/query-suggest-analytics-actions';
@@ -95,7 +95,7 @@ export namespace RecommendationAnalyticsActions {
 }
 
 import {logTriggerRedirect as logTriggerRedirectAlias} from '../redirection/redirection-analytics-actions';
-export namespace RedirectionAnalyticsActions{
+export namespace RedirectionAnalyticsActions {
   export const logTriggerRedirect = logTriggerRedirectAlias;
 }
 

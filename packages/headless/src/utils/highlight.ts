@@ -30,6 +30,35 @@ export interface HighlightParams {
   closingDelimiter: string;
 }
 
+interface Delimiters {
+  /**
+   * Opening delimiter
+   */
+  open: string;
+
+  /**
+   * Closing delimiter
+   */
+  close: string;
+}
+
+export interface SuggestionHighlightingOptions {
+  /**
+   * Delimiters for substrings that do not match the input
+   */
+  notMatchDelimiters?: Delimiters;
+
+  /**
+   * Delimiters for substrings that are exact match of the input
+   */
+  exactMatchDelimiters?: Delimiters;
+
+  /**
+   * Delimiters for substrings that are correction of the input
+   */
+  correctionDelimiters?: Delimiters;
+}
+
 function isEmptyString(str: string) {
   return str === '';
 }
@@ -71,4 +100,61 @@ export function highlightString(params: HighlightParams): string {
     highlighted += params.content.slice(last);
   }
   return highlighted;
+}
+
+/**
+ * Highlight a suggestion with the given delimiters.
+ * @param suggestion The suggestion to highlight
+ * @param options The object contaning the delimiters used
+ */
+export function getHighlightedSuggestion(
+  suggestion: string,
+  options: SuggestionHighlightingOptions
+) {
+  suggestion = escape(suggestion);
+  return suggestion.replace(
+    /\[(.*?)\]|\{(.*?)\}|\((.*?)\)/g,
+    (part, notMatched, matched, corrected) => {
+      if (notMatched) {
+        return suggestionWithDelimiters(notMatched, options.notMatchDelimiters);
+      }
+      if (matched) {
+        return suggestionWithDelimiters(matched, options.exactMatchDelimiters);
+      }
+      if (corrected) {
+        return suggestionWithDelimiters(
+          corrected,
+          options.correctionDelimiters
+        );
+      }
+
+      return part;
+    }
+  );
+}
+
+function suggestionWithDelimiters(
+  suggestion: string,
+  delimiters: Delimiters | undefined
+) {
+  if (delimiters) {
+    return delimiters.open + suggestion + delimiters.close;
+  }
+  return suggestion;
+}
+
+/**
+ * Escapes a string. For more information, refer to {@link https://underscorejs.org/#escape}
+ *
+ * @param str The string to escape
+ */
+
+export function escape(str: string) {
+  return str
+    .replace(/&/g, '&amp')
+    .replace(/</g, '&lt')
+    .replace(/>/g, '&gt')
+    .replace(/"/g, '&quot')
+    .replace(/`/g, '&#96')
+    .replace(/'/g, '&#x27');
 }

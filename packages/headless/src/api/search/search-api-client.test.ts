@@ -212,6 +212,20 @@ describe('search api client', () => {
       expect(request).toMatchObject(expectedRequest);
     });
 
+    it(`when calling SearchAPIClient.search multiple times
+    should abort the previous pending requests`, () => {
+      const req = buildSearchRequest(state);
+      searchAPIClient.search(req);
+      searchAPIClient.search(req);
+      searchAPIClient.search(req);
+      const firstRequest = (PlatformClient.call as jest.Mock).mock.calls[0][0];
+      const secondRequest = (PlatformClient.call as jest.Mock).mock.calls[1][0];
+      const thirdRequest = (PlatformClient.call as jest.Mock).mock.calls[2][0];
+      expect(firstRequest.signal.aborted).toBe(true);
+      expect(secondRequest.signal.aborted).toBe(true);
+      expect(thirdRequest.signal.aborted).toBe(false);
+    });
+
     it(`when calling SearchAPIClient.plan
   should call PlatformClient.call with the right options`, () => {
       const req = buildPlanRequest(state);
@@ -431,7 +445,6 @@ describe('search api client', () => {
             context: productRecommendationsState.context.contextValues,
             searchHub: productRecommendationsState.searchHub,
             actionsHistory: expect.any(Array),
-            maximumAge: 0,
             visitorId: expect.any(String),
             numberOfResults:
               productRecommendationsState.productRecommendations

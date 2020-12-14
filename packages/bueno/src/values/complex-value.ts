@@ -42,10 +42,6 @@ export class RecordValue implements SchemaValue<ComplexRecord> {
       return 'value is not an object';
     }
 
-    if (Object.keys(input).length > Object.keys(this.config.values).length) {
-      return 'value contains unknown keys';
-    }
-
     for (const [k, v] of Object.entries(this.config.values)) {
       if (v.required && isNullOrUndefined(input[k])) {
         return `value does not contain ${k}`;
@@ -54,8 +50,9 @@ export class RecordValue implements SchemaValue<ComplexRecord> {
 
     let out = '';
 
-    for (const [k, v] of Object.entries(input)) {
-      const invalidValue = this.config.values[k].validate(v);
+    for (const [key, validator] of Object.entries(this.config.values)) {
+      const value = input[key];
+      const invalidValue = validator.validate(value);
 
       if (invalidValue !== null) {
         out += ' ' + invalidValue;

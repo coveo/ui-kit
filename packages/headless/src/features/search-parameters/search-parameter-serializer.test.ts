@@ -5,14 +5,33 @@ describe('buildSearchParameterSerializer', () => {
   describe('#serialize', () => {
     const {serialize} = buildSearchParameterSerializer();
 
-    it('encodes a record with a single key and string value', () => {
+    it('serializes a record with a single key and string value', () => {
       const result = serialize({q: 'a'});
       expect(result).toBe('q=a');
     });
 
-    it('encodes a record with a multiple keys and string values', () => {
+    it('serializes a record with a multiple keys and string values', () => {
       const result = serialize({q: 'a', enableQuerySyntax: true});
       expect(result).toBe('q=a&enableQuerySyntax=true');
+    });
+
+    it('does not include invalid keys', () => {
+      const invalidKeys = {invalid: 'b'};
+      const result = serialize({q: 'a', ...invalidKeys});
+
+      expect(result).toBe('q=a');
+    });
+
+    it('serializes the #f parameter correctly', () => {
+      const f = {author: ['a', 'b'], filetype: ['c', 'd']};
+      const result = serialize({f});
+      expect(result).toEqual('f[author]=a,b&f[filetype]=c,d');
+    });
+
+    it('when the #f parameter contains invalid values, it does not include it', () => {
+      const f = {author: [1]} as never;
+      const result = serialize({f});
+      expect(result).toEqual('');
     });
   });
 
@@ -49,11 +68,24 @@ describe('buildSearchParameterSerializer', () => {
       const result = deserialize('aq=@author==alice');
       expect(result).toEqual({aq: '@author==alice'});
     });
+
+    it('deserializes two facets correctly', () => {
+      const result = deserialize('f[author]=a,b&f[filetype]=c,d');
+      expect(result).toEqual({
+        f: {
+          author: ['a', 'b'],
+          filetype: ['c', 'd'],
+        },
+      });
+    });
   });
 
   it('can serialize and deserialize all search parameters', () => {
+    const f = {author: ['a', 'b']};
+    const cf = {geography: ['a', 'b']};
+    const parameters = buildMockSearchParameters({f, cf});
+
     const {serialize, deserialize} = buildSearchParameterSerializer();
-    const parameters = buildMockSearchParameters();
     const serialized = serialize(parameters);
     const deserialized = deserialize(serialized);
 

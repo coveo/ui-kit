@@ -8,6 +8,8 @@ import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { Engine, HeadlessConfigurationOptions, LogLevel, Result, ResultTemplateCondition } from "@coveo/headless";
 export namespace Components {
     interface AtomicBreadcrumbManager {
+        "categoryDivider": string;
+        "collapseThreshold": number;
     }
     interface AtomicCategoryFacet {
         "facetId": string;
@@ -93,6 +95,7 @@ export namespace Components {
     }
     interface AtomicSearchBox {
         "_id": string;
+        "enableQuerySyntax": boolean;
         /**
           * Wether the submit button should be place before the input
          */
@@ -297,6 +300,8 @@ declare global {
 }
 declare namespace LocalJSX {
     interface AtomicBreadcrumbManager {
+        "categoryDivider"?: string;
+        "collapseThreshold"?: number;
     }
     interface AtomicCategoryFacet {
         "facetId"?: string;
@@ -379,6 +384,7 @@ declare namespace LocalJSX {
     }
     interface AtomicSearchBox {
         "_id"?: string;
+        "enableQuerySyntax"?: boolean;
         /**
           * Wether the submit button should be place before the input
          */

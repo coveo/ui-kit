@@ -41,6 +41,7 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
   @Element() host!: HTMLDivElement;
   @State() searchBoxState!: SearchBoxState;
   @Prop() numberOfSuggestions = 5;
+  @Prop() enableQuerySyntax = false;
   @Prop() leadingSubmitButton = false;
   @Prop({reflect: true, attribute: 'data-id'}) _id = randomID(
     'atomic-search-box-'
@@ -83,6 +84,17 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
     this.searchBox = buildSearchBox(this.engine, {
       options: {
         numberOfSuggestions: this.numberOfSuggestions,
+        highlightOptions: {
+          notMatchDelimiters: {
+            open: '<strong>',
+            close: '</strong>',
+          },
+          correctionDelimiters: {
+            open: '<i>',
+            close: '</i>',
+          },
+        },
+        enableQuerySyntax: this.enableQuerySyntax,
       },
     });
     this.unsubscribe = this.searchBox.subscribe(() => this.updateState());
@@ -162,7 +174,6 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
   private get suggestions() {
     return this.searchBoxState.suggestions.map((suggestion, index) => {
       const id = `${this._id}-suggestion-${index}`;
-
       return (
         <button
           type="button"
@@ -172,11 +183,9 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
           onMouseDown={(e) => e.preventDefault()}
           part="suggestion"
           id={id}
-          value={suggestion.value}
-        >
-          {/* Add highlighting */}
-          {suggestion.value}
-        </button>
+          value={suggestion.rawValue}
+          innerHTML={suggestion.highlightedValue}
+        ></button>
       );
     });
   }

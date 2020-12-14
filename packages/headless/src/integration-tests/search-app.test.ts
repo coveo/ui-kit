@@ -6,21 +6,17 @@ import {
 import {
   HeadlessEngine,
   searchAppReducers,
-  Controllers,
-  Actions,
-  AnalyticsActions,
-  Result,
-  CategoryFacetValue,
-  FacetValue,
-} from '../index';
-
-const {
   buildSearchBox,
   buildResultList,
   buildFacet,
   buildSort,
   buildCategoryFacet,
-} = Controllers;
+  SearchActions,
+  AnalyticsActions,
+  Result,
+  CategoryFacetValue,
+  FacetValue,
+} from '../index';
 
 const sleep = (seconds: number) =>
   new Promise((resolve) => setTimeout(resolve, seconds * 1000));
@@ -42,7 +38,7 @@ const sort = buildSort(engine);
 describe('search app', () => {
   beforeAll(async () => {
     const analytics = AnalyticsActions.logInterfaceLoad();
-    const action = Actions.executeSearch(analytics);
+    const action = SearchActions.executeSearch(analytics);
     engine.dispatch(action);
 
     await sleep(2);

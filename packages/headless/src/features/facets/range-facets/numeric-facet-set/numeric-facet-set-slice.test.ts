@@ -49,7 +49,7 @@ describe('numeric-facet-set slice', () => {
     expect(finalState[facetId]).toEqual({
       ...options,
       currentValues: [],
-      filterFacetCount: false,
+      filterFacetCount: true,
       generateAutomaticRanges: true,
       injectionDepth: 1000,
       numberOfValues: 8,

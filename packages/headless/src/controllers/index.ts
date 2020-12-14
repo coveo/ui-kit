@@ -6,6 +6,7 @@ export {
   RelevanceInspectorProps,
   RelevanceInspectorState,
   RelevanceInspector,
+  buildRelevanceInspector,
 } from './relevance-inspector/headless-relevance-inspector';
 
 export {Context, ContextState, buildContext} from './context/headless-context';
@@ -125,6 +126,7 @@ export {
   DateFacetBreadcrumb,
   CategoryFacetBreadcrumb,
   Breadcrumb,
+  BreadcrumbValue,
   BreadcrumbManagerState,
   BreadcrumbManager,
   buildBreadcrumbManager,

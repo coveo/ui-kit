@@ -77,7 +77,12 @@ import {registerFieldsToInclude as registerFieldsToIncludeAlias} from './fields/
 export namespace FieldActions {
   export const registerFieldsToInclude = registerFieldsToIncludeAlias;
 }
-import {snapshot as snapshotAlias, back as backAlias, change as changeAlias, forward as forwardAlias} from './history/history-actions';
+import {
+  snapshot as snapshotAlias,
+  back as backAlias,
+  change as changeAlias,
+  forward as forwardAlias,
+} from './history/history-actions';
 export namespace HistoryActions {
   export const snapshot = snapshotAlias;
   export const back = backAlias;
@@ -96,6 +101,11 @@ export namespace NumericFacetActions {
   export const toggleSelectNumericFacetValue = toggleSelectNumericFacetValueAlias;
   export const updateNumericFacetSortCriterion = updateNumericFacetSortCriterionAlias;
 }
+
+export {
+  ResultTemplatesManager,
+  buildResultTemplatesManager,
+} from './result-templates/result-templates-manager';
 
 import {
   registerNumberOfResults as registerNumberOfResultsAlias,
@@ -232,4 +242,19 @@ export namespace ProductRecommendationsActions {
   export const setProductRecommendationsRecommenderId = setProductRecommendationsRecommenderIdAlias;
   export const setProductRecommendationsSkus = setProductRecommendationsSkusAlias;
   export type StateNeededByGetProductRecommendations = StateNeededByGetProductRecommendationsAlias;
+}
+
+import {
+  getResultProperty as getResultPropertyAlias,
+  fieldsMustBeDefined as fieldsMustBeDefinedAlias,
+  fieldsMustNotBeDefined as fieldsMustNotBeDefinedAlias,
+  fieldMustMatch as fieldMustMatchAlias,
+  fieldMustNotMatch as fieldMustNotMatchAlias,
+} from './result-templates/result-templates-helpers';
+export namespace ResultTemplatesHelpers {
+  export const getResultProperty = getResultPropertyAlias;
+  export const fieldsMustBeDefined = fieldsMustBeDefinedAlias;
+  export const fieldsMustNotBeDefined = fieldsMustNotBeDefinedAlias;
+  export const fieldMustMatch = fieldMustMatchAlias;
+  export const fieldMustNotMatch = fieldMustNotMatchAlias;
 }

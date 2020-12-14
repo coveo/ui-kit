@@ -40,7 +40,7 @@ describe('headless breadcrumb manager', () => {
       buildMockFacetResponse({facetId, values: [mockValue]}),
     ];
     const facetBreadcrumbs = breadcrumbManager.state.facetBreadcrumbs;
-    expect(facetBreadcrumbs?.[0]?.value).toBe(mockValue);
+    expect(facetBreadcrumbs?.[0]?.values[0].value).toBe(mockValue);
   });
 
   it('#state gets date facet breadcrumbs correctly', () => {
@@ -50,7 +50,7 @@ describe('headless breadcrumb manager', () => {
       buildMockDateFacetResponse({facetId, values: [mockValue]}),
     ];
     const facetBreadcrumbs = breadcrumbManager.state.dateFacetBreadcrumbs;
-    expect(facetBreadcrumbs?.[0]?.value).toBe(mockValue);
+    expect(facetBreadcrumbs?.[0]?.values[0].value).toBe(mockValue);
   });
 
   it('#state gets numeric facet breadcrumbs correctly', () => {
@@ -60,16 +60,38 @@ describe('headless breadcrumb manager', () => {
       buildMockNumericFacetResponse({facetId, values: [mockValue]}),
     ];
     const facetBreadcrumbs = breadcrumbManager.state.numericFacetBreadcrumbs;
-    expect(facetBreadcrumbs?.[0]?.value).toBe(mockValue);
+    expect(facetBreadcrumbs?.[0]?.values[0].value).toBe(mockValue);
   });
 
   it('#state gets category facet breadcrumbs correctly', () => {
+    const otherFacetId = 'def456';
     state.categoryFacetSet[facetId] = buildMockCategoryFacetRequest({facetId});
+    state.categoryFacetSet[otherFacetId] = buildMockCategoryFacetRequest({
+      facetId: otherFacetId,
+    });
     const mockValue = buildMockCategoryFacetValue({state: 'selected'});
     state.search.response.facets = [
       buildMockCategoryFacetResponse({facetId, values: [mockValue]}),
+      buildMockCategoryFacetResponse({
+        facetId: otherFacetId,
+        values: [mockValue],
+      }),
     ];
     const facetBreadcrumbs = breadcrumbManager.state.categoryFacetBreadcrumbs;
-    expect(facetBreadcrumbs?.[0]?.path).toEqual([mockValue]);
+    expect(facetBreadcrumbs?.[0].path).toEqual([mockValue]);
+    expect(facetBreadcrumbs?.[1].path).toEqual([mockValue]);
+  });
+
+  it('hasBreadcrumbs returns true when a facet value is selected', () => {
+    state.numericFacetSet[facetId] = buildMockNumericFacetRequest({facetId});
+    const mockValue = buildMockNumericFacetValue({state: 'selected'});
+    state.search.response.facets = [
+      buildMockNumericFacetResponse({facetId, values: [mockValue]}),
+    ];
+    expect(breadcrumbManager.hasBreadcrumbs()).toBe(true);
+  });
+
+  it('hasBreadcrumbs returns false when no facet value is selected', () => {
+    expect(breadcrumbManager.hasBreadcrumbs()).toBe(false);
   });
 });

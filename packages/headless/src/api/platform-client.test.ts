@@ -4,8 +4,8 @@ import {
   PreprocessRequestMiddleware,
   NoopPreprocessRequestMiddleware,
 } from './platform-client';
-import * as BackOff from 'exponential-backoff';
 import pino from 'pino';
+import * as BackOff from 'exponential-backoff';
 
 jest.mock('cross-fetch');
 import fetch from 'cross-fetch';
@@ -83,11 +83,10 @@ describe('PlatformClient call', () => {
       },
       method: 'POST',
     });
-
     done();
   });
 
-  it('should preprocess the request if a middleware is provided', async () => {
+  it('should preprocess the request if a middleware is provided', async (done) => {
     mockFetch.mockReturnValue(
       Promise.resolve(new Response(JSON.stringify({})))
     );
@@ -112,6 +111,7 @@ describe('PlatformClient call', () => {
       },
       method: 'POST',
     });
+    done();
   });
 
   it(`when status is 419
@@ -136,7 +136,6 @@ describe('PlatformClient call', () => {
       },
       method: 'POST',
     });
-
     done();
   });
 
@@ -158,13 +157,26 @@ describe('PlatformClient call', () => {
     done();
   });
 
-  it('should not throw and return a response when backOff returns a rejected promise', async (done) => {
+  it('should not throw when backOff rejects with a response', async (done) => {
     const spy = jest.spyOn(BackOff, 'backOff');
-    const mockResponse = new Response(JSON.stringify({}), {status: 429});
-    spy.mockRejectedValue(mockResponse);
+    const expectedResponse = new Response(JSON.stringify({hoho: 'oups'}), {
+      status: 429,
+    });
+    spy.mockRejectedValueOnce(expectedResponse);
+
     const response = await platformCall();
-    expect(spy).not.toThrow();
-    expect(response.response).toBe(mockResponse);
+    expect(response.response).toBe(expectedResponse);
     done();
+  });
+
+  it('should throw when fetch throws an error', async (done) => {
+    const testError = new Error('Test');
+    try {
+      mockFetch.mockRejectedValue(testError);
+      await platformCall();
+    } catch (error) {
+      expect(error).toBe(testError);
+      done();
+    }
   });
 });

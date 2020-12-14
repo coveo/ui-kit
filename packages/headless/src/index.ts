@@ -14,6 +14,7 @@ export {
   HeadlessConfigurationOptions,
   Engine,
   HeadlessEngine,
+  LogLevel,
 } from './app/headless-engine';
 export {searchAppReducers} from './app/search-app-reducers';
 export {recommendationAppReducers} from './app/recommendation-app-reducers';
@@ -69,13 +70,6 @@ export {
   ResultTemplate,
   ResultTemplateCondition,
 } from './features/result-templates/result-templates';
-export {
-  getResultProperty,
-  fieldMustMatch,
-  fieldMustNotMatch,
-  fieldsMustBeDefined,
-  fieldsMustNotBeDefined,
-} from './features/result-templates/result-templates-helpers';
 export * as TestUtils from './test';
 export {platformUrl} from './api/platform-client';
 export {CategoryFacetSortCriterion} from './features/facets/category-facet-set/interfaces/request';
@@ -86,3 +80,4 @@ export {FacetSortCriterion} from './features/facets/facet-set/interfaces/request
 export {NumericFacetValue} from './features/facets/range-facets/numeric-facet-set/interfaces/response';
 export {RangeFacetSortCriterion} from './features/facets/range-facets/generic/interfaces/request';
 export {buildSearchParameterSerializer} from './features/search-parameters/search-parameter-serializer';
+export * as HighlightUtils from './utils/highlight';

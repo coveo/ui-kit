@@ -4,7 +4,14 @@ import {
   Schema,
   SchemaValidationError,
 } from '@coveo/bueno';
+import {SerializedError} from '@reduxjs/toolkit';
 import {Engine} from '../app/headless-engine';
+
+export const serializeSchemaValidationError = ({
+  message,
+  name,
+  stack,
+}: SchemaValidationError): SerializedError => ({message, name, stack});
 
 /**
  * Validates an action payload and throws an error if invalid
@@ -39,11 +46,14 @@ export const validatePayloadAndThrow = <P>(
 export const validatePayload = <P>(
   payload: P,
   definition: SchemaDefinition<Required<P>> | SchemaValue<P>
-): {payload: P; error?: SchemaValidationError} => {
+): {payload: P; error?: SerializedError} => {
   try {
     return validatePayloadAndThrow(payload, definition);
   } catch (error) {
-    return {payload, error: error as SchemaValidationError};
+    return {
+      payload,
+      error: serializeSchemaValidationError(error),
+    };
   }
 };
 
