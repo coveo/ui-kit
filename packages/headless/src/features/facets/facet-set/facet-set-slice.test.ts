@@ -8,6 +8,7 @@ import {
   updateFacetSortCriterion,
   updateFacetNumberOfValues,
   updateFacetIsFieldExpanded,
+  facetBreadcrumb,
 } from './facet-set-actions';
 import {buildMockFacetValue} from '../../../test/mock-facet-value';
 import {buildMockSearch} from '../../../test/mock-search';
@@ -206,6 +207,55 @@ describe('facet-set slice', () => {
   it('dispatching #toggleSelectFacetValue with an invalid id does not throw', () => {
     const facetValue = buildMockFacetValue({value: 'TED'});
     const action = toggleSelectFacetValue({
+      facetId: '1',
+      selection: facetValue,
+    });
+
+    expect(() => facetSetReducer(state, action)).not.toThrow();
+  });
+
+  describe('dispatching #facetBreadcrumb with a registered facet id', () => {
+    it('sets the state of a selected value to idle', () => {
+      const id = '1';
+
+      const facetValue = buildMockFacetValue({value: 'TED', state: 'selected'});
+      const facetValueRequest = convertFacetValueToRequest(facetValue);
+
+      state[id] = buildMockFacetRequest({currentValues: [facetValueRequest]});
+
+      const action = facetBreadcrumb({
+        facetId: id,
+        selection: facetValue,
+      });
+      const finalState = facetSetReducer(state, action);
+
+      const targetValue = finalState[id].currentValues.find(
+        (req) => req.value === facetValue.value
+      );
+      expect(targetValue?.state).toBe('idle');
+    });
+
+    it('sets #preventAutoSelect to true', () => {
+      const id = '1';
+
+      const facetValue = buildMockFacetValue({value: 'TED'});
+      const facetValueRequest = convertFacetValueToRequest(facetValue);
+
+      state[id] = buildMockFacetRequest({currentValues: [facetValueRequest]});
+
+      const action = facetBreadcrumb({
+        facetId: id,
+        selection: facetValue,
+      });
+      const finalState = facetSetReducer(state, action);
+
+      expect(finalState[id].preventAutoSelect).toBe(true);
+    });
+  });
+
+  it('dispatching #facetBreadcrumb with an invalid id does not throw', () => {
+    const facetValue = buildMockFacetValue({value: 'TED'});
+    const action = facetBreadcrumb({
       facetId: '1',
       selection: facetValue,
     });
