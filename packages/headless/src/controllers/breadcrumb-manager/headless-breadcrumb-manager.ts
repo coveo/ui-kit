@@ -31,7 +31,7 @@ import {logClearBreadcrumbs} from '../../features/facets/generic/facet-generic-a
 export type BreadcrumbManager = ReturnType<typeof buildBreadcrumbManager>;
 
 /**
- * A scoped and simplified part of the headless state that is relevant to the `Tab` controller.
+ * A scoped and simplified part of the headless state that is relevant to the `BreadcrumbManager` controller.
  */
 export type BreadcrumbManagerState = BreadcrumbManager['state'];
 
