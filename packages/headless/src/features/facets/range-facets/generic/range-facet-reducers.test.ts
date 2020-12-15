@@ -219,68 +219,44 @@ describe('range facet reducers', () => {
       expect(value.state).toBe('idle');
     });
 
-    it(`when #generateAutomaticRanges is false,
-    when a range in the payload is not found, it ignores it`, () => {
+    it('when a range in the payload is not found, it adds it to #currentValues', () => {
       const id = 'size';
-      const request = buildMockNumericFacetRequest({
-        generateAutomaticRanges: false,
-        currentValues: [],
-      });
-
+      const request = buildMockNumericFacetRequest({currentValues: []});
       state = {[id]: request};
 
       const value = buildMockNumericFacetValue();
       const nf = {[id]: [value]};
 
       handleRangeFacetSearchParameterRestoration(state, nf);
-      expect(request.currentValues).toEqual([]);
+      expect(request.currentValues).toContain(value);
     });
 
-    describe('when #generateAutomaticRanges is true', () => {
-      it('when a range in the payload is not found, it adds it to #currentValues', () => {
-        const id = 'size';
-        const request = buildMockNumericFacetRequest({
-          generateAutomaticRanges: true,
-          currentValues: [],
-        });
-        state = {[id]: request};
-
-        const value = buildMockNumericFacetValue();
-        const nf = {[id]: [value]};
-
-        handleRangeFacetSearchParameterRestoration(state, nf);
-        expect(request.currentValues).toContain(value);
+    it(`when the length of #currentValues is less than the requested #numberOfValues,
+    it does not change the number of values`, () => {
+      const id = 'size';
+      const request = buildMockNumericFacetRequest({
+        currentValues: [],
+        numberOfValues: 8,
       });
+      state = {[id]: request};
+      const nf = {[id]: [buildMockNumericFacetValue()]};
 
-      it(`when the length of #currentValues is less than the requested #numberOfValues,
-      it does not change the number of values`, () => {
-        const id = 'size';
-        const request = buildMockNumericFacetRequest({
-          generateAutomaticRanges: true,
-          currentValues: [],
-          numberOfValues: 8,
-        });
-        state = {[id]: request};
-        const nf = {[id]: [buildMockNumericFacetValue()]};
+      handleRangeFacetSearchParameterRestoration(state, nf);
+      expect(request.numberOfValues).toEqual(8);
+    });
 
-        handleRangeFacetSearchParameterRestoration(state, nf);
-        expect(request.numberOfValues).toEqual(8);
+    it(`when the length of #currentValues is greater than the requested #numberOfValues,
+    it sets the number of values to the length of #currentValues`, () => {
+      const id = 'size';
+      const request = buildMockNumericFacetRequest({
+        currentValues: [],
+        numberOfValues: 0,
       });
+      state = {[id]: request};
+      const nf = {[id]: [buildMockNumericFacetValue()]};
 
-      it(`when the length of #currentValues is greater than the requested #numberOfValues,
-      it sets the number of values to the length of #currentValues`, () => {
-        const id = 'size';
-        const request = buildMockNumericFacetRequest({
-          generateAutomaticRanges: true,
-          currentValues: [],
-          numberOfValues: 0,
-        });
-        state = {[id]: request};
-        const nf = {[id]: [buildMockNumericFacetValue()]};
-
-        handleRangeFacetSearchParameterRestoration(state, nf);
-        expect(request.numberOfValues).toEqual(1);
-      });
+      handleRangeFacetSearchParameterRestoration(state, nf);
+      expect(request.numberOfValues).toEqual(1);
     });
   });
 

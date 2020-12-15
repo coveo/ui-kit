@@ -79,9 +79,7 @@ describe('date-facet-set slice', () => {
     );
 
     const facetId = '1';
-    state[facetId] = buildMockDateFacetRequest({
-      generateAutomaticRanges: true,
-    });
+    state[facetId] = buildMockDateFacetRequest();
 
     const value = buildMockDateFacetValue();
     const df = {[facetId]: [value]};
