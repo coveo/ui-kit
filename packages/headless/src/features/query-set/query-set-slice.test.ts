@@ -2,11 +2,11 @@ import {querySetReducer} from './query-set-slice';
 import {registerQuerySetQuery, updateQuerySetQuery} from './query-set-actions';
 import {selectQuerySuggestion} from '../query-suggest/query-suggest-actions';
 import {logSearchboxSubmit} from '../query/query-analytics-actions';
-import {getHistoryEmptyState} from '../history/history-slice';
 import {change} from '../history/history-actions';
 import {executeSearch} from '../search/search-actions';
 import {buildMockSearch} from '../../test/mock-search';
 import {getQuerySetInitialState, QuerySetState} from './query-set-state';
+import {getHistoryInitialState} from '../history/history-state';
 
 describe('querySet slice', () => {
   let state: QuerySetState;
@@ -107,7 +107,7 @@ describe('querySet slice', () => {
 
     const expectedQuerySet = {foo: 'bar', hello: 'world'};
     const historyChange = {
-      ...getHistoryEmptyState(),
+      ...getHistoryInitialState(),
       querySet: expectedQuerySet,
     };
 

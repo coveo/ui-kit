@@ -11,10 +11,7 @@ import {sortCriteriaReducer} from '../features/sort-criteria/sort-criteria-slice
 import {facetSetReducer} from '../features/facets/facet-set/facet-set-slice';
 import {contextReducer} from '../features/context/context-slice';
 import {undoable} from './undoable';
-import {
-  historyReducer,
-  getHistoryEmptyState,
-} from '../features/history/history-slice';
+import {historyReducer} from '../features/history/history-slice';
 import {didYouMeanReducer} from '../features/did-you-mean/did-you-mean-slice';
 import {specificFacetSearchSetReducer} from '../features/facets/facet-search-set/specific/specific-facet-search-set-slice';
 import {fieldsReducer} from '../features/fields/fields-slice';
@@ -26,6 +23,7 @@ import {categoryFacetSetReducer} from '../features/facets/category-facet-set/cat
 import {categoryFacetSearchSetReducer} from '../features/facets/facet-search-set/category/category-facet-search-set-slice';
 import {facetOptionsReducer} from '../features/facet-options/facet-options-slice';
 import {advancedSearchQueriesReducer} from '../features/advanced-search-queries/advanced-search-queries-slice';
+import {getHistoryInitialState} from '../features/history/history-state';
 
 /**
  * Map of reducers that make up the SearchAppState.
@@ -48,7 +46,7 @@ export const searchAppReducers: ReducersMapObject<SearchAppState> = {
   search: searchReducer,
   sortCriteria: sortCriteriaReducer,
   context: contextReducer,
-  history: undoable(historyReducer, getHistoryEmptyState()),
+  history: undoable(historyReducer, getHistoryInitialState()),
   didYouMean: didYouMeanReducer,
   fields: fieldsReducer,
   pipeline: pipelineReducer,

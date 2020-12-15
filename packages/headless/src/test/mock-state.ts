@@ -11,7 +11,6 @@ import {getDidYouMeanInitialState} from '../features/did-you-mean/did-you-mean-s
 import {getDateFacetSetInitialState} from '../features/facets/range-facets/date-facet-set/date-facet-set-state';
 import {getNumericFacetSetInitialState} from '../features/facets/range-facets/numeric-facet-set/numeric-facet-set-state';
 import {getFieldsInitialState} from '../features/fields/fields-state';
-import {getHistoryEmptyState} from '../features/history/history-slice';
 import {getPipelineInitialState} from '../features/pipeline/pipeline-state';
 import {makeHistory} from '../app/undoable';
 import {getSearchHubInitialState} from '../features/search-hub/search-hub-state';
@@ -21,6 +20,7 @@ import {getCategoryFacetSearchSetInitialState} from '../features/facets/facet-se
 import {getAdvancedSearchQueriesInitialState} from '../features/advanced-search-queries/advanced-search-queries-state';
 import {SearchAppState} from '../state/search-app-state';
 import {getFacetOptionsInitialState} from '../features/facet-options/facet-options-state';
+import {getHistoryInitialState} from '../features/history/history-state';
 
 export function createMockState(
   config: Partial<SearchAppState> = {}
@@ -45,7 +45,7 @@ export function createMockState(
     context: getContextInitialState(),
     didYouMean: getDidYouMeanInitialState(),
     fields: getFieldsInitialState(),
-    history: makeHistory(getHistoryEmptyState()),
+    history: makeHistory(getHistoryInitialState()),
     pipeline: getPipelineInitialState(),
     searchHub: getSearchHubInitialState(),
     ...config,

@@ -1,11 +1,11 @@
 import {advancedSearchQueriesReducer} from './advanced-search-queries-slice';
 import {updateAdvancedSearchQueries} from './advanced-search-queries-actions';
-import {getHistoryEmptyState} from '../history/history-slice';
 import {change} from '../history/history-actions';
 import {
   AdvancedSearchQueriesState,
   getAdvancedSearchQueriesInitialState,
 } from './advanced-search-queries-state';
+import {getHistoryInitialState} from '../history/history-state';
 
 describe('advanced search parameters', () => {
   const cq = 'mock-cq';
@@ -55,7 +55,7 @@ describe('advanced search parameters', () => {
       aq: 'hola',
     };
     const historyChange = {
-      ...getHistoryEmptyState(),
+      ...getHistoryInitialState(),
       advancedSearchQueries: expectedQuery,
     };
 

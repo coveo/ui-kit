@@ -1,60 +1,20 @@
 import {createReducer} from '@reduxjs/toolkit';
-import {getContextInitialState, ContextState} from '../context/context-state';
-import {
-  getFacetSetInitialState,
-  FacetSetState,
-} from '../facets/facet-set/facet-set-state';
-import {getQueryInitialState, QueryState} from '../query/query-state';
-import {getSortCriteriaInitialState} from '../sort-criteria/sort-criteria-state';
-import {getQuerySetInitialState} from '../query-set/query-set-state';
-import {
-  PaginationState,
-  getPaginationInitialState,
-} from '../pagination/pagination-state';
+import {ContextState} from '../context/context-state';
+import {FacetSetState} from '../facets/facet-set/facet-set-state';
+import {QueryState} from '../query/query-state';
+import {PaginationState} from '../pagination/pagination-state';
 import {SortState} from '../../controllers/sort/headless-sort';
 import {snapshot} from './history-actions';
-import {getPipelineInitialState} from '../pipeline/pipeline-state';
-import {
-  getDateFacetSetInitialState,
-  DateFacetSetState,
-} from '../facets/range-facets/date-facet-set/date-facet-set-state';
-import {
-  getNumericFacetSetInitialState,
-  NumericFacetSetState,
-} from '../facets/range-facets/numeric-facet-set/numeric-facet-set-state';
-import {getSearchHubInitialState} from '../search-hub/search-hub-state';
-import {
-  getCategoryFacetSetInitialState,
-  CategoryFacetSetState,
-} from '../facets/category-facet-set/category-facet-set-state';
-import {
-  FacetOptionsState,
-  getFacetOptionsInitialState,
-} from '../facet-options/facet-options-state';
-import {
-  AdvancedSearchQueriesState,
-  getAdvancedSearchQueriesInitialState,
-} from '../advanced-search-queries/advanced-search-queries-state';
-import {SearchParametersState} from '../../state/search-app-state';
-
-export const getHistoryEmptyState = (): SearchParametersState => ({
-  context: getContextInitialState(),
-  facetSet: getFacetSetInitialState(),
-  dateFacetSet: getDateFacetSetInitialState(),
-  numericFacetSet: getNumericFacetSetInitialState(),
-  categoryFacetSet: getCategoryFacetSetInitialState(),
-  facetOptions: getFacetOptionsInitialState(),
-  pagination: getPaginationInitialState(),
-  query: getQueryInitialState(),
-  advancedSearchQueries: getAdvancedSearchQueriesInitialState(),
-  sortCriteria: getSortCriteriaInitialState(),
-  querySet: getQuerySetInitialState(),
-  pipeline: getPipelineInitialState(),
-  searchHub: getSearchHubInitialState(),
-});
+import {DateFacetSetState} from '../facets/range-facets/date-facet-set/date-facet-set-state';
+import {NumericFacetSetState} from '../facets/range-facets/numeric-facet-set/numeric-facet-set-state';
+import {CategoryFacetSetState} from '../facets/category-facet-set/category-facet-set-state';
+import {FacetOptionsState} from '../facet-options/facet-options-state';
+import {AdvancedSearchQueriesState} from '../advanced-search-queries/advanced-search-queries-state';
+import {getHistoryInitialState, HistoryState} from './history-state';
+import {arrayEquals} from '../../utils/utils';
 
 export const historyReducer = createReducer(
-  getHistoryEmptyState(),
+  getHistoryInitialState(),
   (builder) => {
     builder.addCase(snapshot, (state, action) =>
       isEqual(state, action.payload) ? undefined : action.payload
@@ -62,10 +22,7 @@ export const historyReducer = createReducer(
   }
 );
 
-const isEqual = (
-  current: SearchParametersState,
-  next: SearchParametersState
-) => {
+const isEqual = (current: HistoryState, next: HistoryState) => {
   return (
     isContextEqual(current.context, next.context) &&
     isAdvancedSearchQueriesEqual(
@@ -81,7 +38,8 @@ const isEqual = (
     isQueryEqual(current.query, next.query) &&
     isSortEqual(current, next) &&
     isPipelineEqual(current.pipeline, next.pipeline) &&
-    isSearchHubEqual(current.searchHub, next.searchHub)
+    isSearchHubEqual(current.searchHub, next.searchHub) &&
+    isFacetOrderEqual(current.facetOrder, next.facetOrder)
   );
 };
 
@@ -128,3 +86,6 @@ const isSortEqual = (current: SortState, next: SortState) =>
 const isPipelineEqual = (current: string, next: string) => current === next;
 
 const isSearchHubEqual = (current: string, next: string) => current === next;
+
+const isFacetOrderEqual = (current: string[] | null, next: string[] | null) =>
+  current === next || (current && next && arrayEquals(current, next));

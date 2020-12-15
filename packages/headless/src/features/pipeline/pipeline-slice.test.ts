@@ -1,9 +1,9 @@
 import {pipelineReducer} from './pipeline-slice';
 import {setPipeline} from './pipeline-actions';
 import {change} from '../history/history-actions';
-import {getHistoryEmptyState} from '../history/history-slice';
 import {updateSearchConfiguration} from '../configuration/configuration-actions';
 import {getPipelineInitialState} from './pipeline-state';
+import {getHistoryInitialState} from '../history/history-state';
 
 describe('pipeline slice', () => {
   it('should have initial state', () => {
@@ -25,7 +25,7 @@ describe('pipeline slice', () => {
   it('allows to restore a pipeline on history change', () => {
     const state = 'foo';
     const historyChange = {
-      ...getHistoryEmptyState(),
+      ...getHistoryInitialState(),
       pipeline: 'bar',
     };
 
