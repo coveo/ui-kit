@@ -108,7 +108,6 @@ export function buildPager(
   return {
     ...controller,
     /**
-     * Returns the state of the `Pager` controller.
      * @returns {PagerState} The state of the `Pager` controller.
      */
     get state() {
