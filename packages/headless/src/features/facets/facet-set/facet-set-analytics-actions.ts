@@ -179,10 +179,13 @@ export const logFacetBreadcrumb = (payload: FacetSelectionChangeMetadata) =>
         facetId: facetIdDefinition,
         facetValue: requiredNonEmptyString,
       });
+      const stateForAnalytics = getStateNeededForFacetMetadata(state);
       const metadata = buildFacetSelectionChangeMetadata(
         payload,
         getStateNeededForFacetMetadata(state)
       );
-      return client.logBreadcrumbFacet(metadata);
+      const facetState = buildFacetStateMetadata(stateForAnalytics);
+
+      return client.logBreadcrumbFacet(metadata, facetState);
     }
   )();
