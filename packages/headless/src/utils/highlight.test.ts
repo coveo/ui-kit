@@ -19,8 +19,10 @@ describe('highlight', () => {
       content:
         'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut',
       highlights: highlights,
-      openingDelimiter: '<span>',
-      closingDelimiter: '</span>',
+      delimiters: {
+        open: '<span>',
+        close: '</span>',
+      },
     };
 
     it('should wrap the passed highlights with tags using the specified class name', () => {
@@ -38,7 +40,10 @@ describe('highlight', () => {
 
     it('should throw if "tag" is an empty string', () => {
       expect(() =>
-        highlightString({...highlightParams, openingDelimiter: ''})
+        highlightString({
+          ...highlightParams,
+          delimiters: {open: '', close: highlightParams.delimiters.close},
+        })
       ).toThrow('delimiters should be a non-empty string');
     });
 

@@ -30,11 +30,7 @@ export interface HighlightParams {
   /**
    * The opening delimiter used when starting to highlight.
    */
-  openingDelimiter: string;
-  /**
-   * The closing delimiter used to close highlighted section.
-   */
-  closingDelimiter: string;
+  delimiters: Delimiters;
 }
 
 interface Delimiters {
@@ -66,18 +62,18 @@ export interface SuggestionHighlightingOptions {
   correctionDelimiters?: Delimiters;
 }
 
+function haveEmptyDelimiters(delimiters: Delimiters) {
+  return delimiters.close === '' || delimiters.open === '';
+}
+
 function isEmptyString(str: string) {
   return str === '';
 }
-
 /**
  * Highlight the passed string using specified highlights.
  */
 export function highlightString(params: HighlightParams): string {
-  if (
-    isEmptyString(params.openingDelimiter) ||
-    isEmptyString(params.closingDelimiter)
-  ) {
+  if (haveEmptyDelimiters(params.delimiters)) {
     throw Error('delimiters should be a non-empty string');
   }
 
@@ -96,9 +92,9 @@ export function highlightString(params: HighlightParams): string {
       break;
     }
     highlighted += escape(params.content.slice(last, start));
-    highlighted += params.openingDelimiter;
+    highlighted += params.delimiters.open;
     highlighted += escape(params.content.slice(start, end));
-    highlighted += params.closingDelimiter;
+    highlighted += params.delimiters.close;
 
     last = end;
   }

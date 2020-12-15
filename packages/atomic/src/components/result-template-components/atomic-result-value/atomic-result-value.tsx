@@ -27,8 +27,10 @@ export class AtomicResultValue {
       if (this.shouldHighlightWith) {
         resultValue = HighlightUtils.highlightString({
           content: resultValue as string,
-          openingDelimiter: '<strong>',
-          closingDelimiter: '</strong>',
+          delimiters: {
+            open: '<strong>',
+            close: '</strong>',
+          },
           highlights: ResultTemplatesHelpers.getResultProperty(
             this.result,
             this.shouldHighlightWith
