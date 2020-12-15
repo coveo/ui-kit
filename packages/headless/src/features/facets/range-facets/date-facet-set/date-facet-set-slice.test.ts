@@ -20,6 +20,7 @@ import {
   getDateFacetSetInitialState,
 } from './date-facet-set-state';
 import {deselectAllFacets} from '../../generic/facet-actions';
+import {restoreSearchParameters} from '../../../search-parameters/search-parameter-actions';
 
 describe('date-facet-set slice', () => {
   let state: DateFacetSetState;
@@ -69,6 +70,27 @@ describe('date-facet-set slice', () => {
     );
 
     expect(finalState).toEqual(dateFacetSet);
+  });
+
+  it('#restoreSearchParameters restores the #nf payload correctly', () => {
+    const spy = jest.spyOn(
+      RangeFacetReducers,
+      'handleRangeFacetSearchParameterRestoration'
+    );
+
+    const facetId = '1';
+    state[facetId] = buildMockDateFacetRequest({
+      generateAutomaticRanges: true,
+    });
+
+    const value = buildMockDateFacetValue();
+    const df = {[facetId]: [value]};
+
+    const action = restoreSearchParameters({df});
+    const finalState = dateFacetSetReducer(state, action);
+
+    expect(finalState[facetId].currentValues).toContainEqual(value);
+    expect(spy).toHaveBeenCalledTimes(1);
   });
 
   it('#toggleSelectDateFacetValue calls #toggleSelectRangeValue', () => {
