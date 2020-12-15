@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.1.0-alpha.101](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.100...v0.1.0-alpha.101) (2020-12-15)
+
+
+### Features
+
+* **headless:** dispatch analyticsAction before retrying query with correction ([079fbdd](https://github.com/coveo/ui-kit/commit/079fbdd32af45cf47b5df3550567d7da267d4cba))
+
+
+
+
+
 # [0.1.0-alpha.100](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.99...v0.1.0-alpha.100) (2020-12-15)
 
 
