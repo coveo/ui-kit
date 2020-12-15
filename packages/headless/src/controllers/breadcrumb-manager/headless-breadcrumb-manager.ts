@@ -139,9 +139,21 @@ export const buildBreadcrumbManager = (
      */
     get state() {
       return {
+        /**
+         * @returns {FacetBreadcrumb[]} The list of specific facet breadcrumbs.
+         */
         facetBreadcrumbs: getFacetBreadcrumbs(),
+        /**
+         * @return {CategoryFacetBreadcrumb[]} The list of category facet breadcrumbs.
+         */
         categoryFacetBreadcrumbs: getCategoryFacetBreadcrumbs(),
+        /**
+         * @returns {NumericFacetBreadcrumb[]} The list of numeric facet breadcrumbs.
+         */
         numericFacetBreadcrumbs: getNumericFacetBreadcrumbs(),
+        /**
+         * @returns {DateFacetBreadcrumb[]} The list of date facet breadcrumbs.
+         */
         dateFacetBreadcrumbs: getDateFacetBreadcrumbs(),
       };
     },
