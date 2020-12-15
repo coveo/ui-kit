@@ -25,7 +25,7 @@ export {SearchParametersState, SearchAppState} from './state/search-app-state';
 export {RecommendationAppState} from './state/recommendation-app-state';
 
 // Controllers
-export * from './controllers';
+export * from './controllers/index';
 
 // Selectors
 export {
@@ -42,10 +42,10 @@ export {
 } from './features/pagination/pagination-selectors';
 
 // Grouped Actions
-export * from './features';
+export * from './features/index';
 
 // Analytics Actions
-export * from './features/analytics';
+export * from './features/analytics/index';
 
 // Types & Helpers
 export {Result} from './api/search/search/result';
