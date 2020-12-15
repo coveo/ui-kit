@@ -108,3 +108,11 @@ import {logResultsSort as logResultsSortAlias} from '../sort-criteria/sort-crite
 export namespace SortCriterionAnalyticsActions {
   export const logResultsSort = logResultsSortAlias;
 }
+import {
+  logFetchMoreResults as logFetchMoreResultsAlias,
+  logQueryError as logQueryErrorAlias,
+} from '../search/search-analytics-actions';
+export namespace SearchAnalyticsActions {
+  export const logFetchMoreResults = logFetchMoreResultsAlias;
+  export const logQueryError = logQueryErrorAlias;
+}
