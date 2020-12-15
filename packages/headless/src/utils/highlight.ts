@@ -95,10 +95,9 @@ export function highlightString(params: HighlightParams): string {
     if (end > maxIndex) {
       break;
     }
-
-    highlighted += params.content.slice(last, start);
+    highlighted += escape(params.content.slice(last, start));
     highlighted += params.openingDelimiter;
-    highlighted += params.content.slice(start, end);
+    highlighted += escape(params.content.slice(start, end));
     highlighted += params.closingDelimiter;
 
     last = end;
