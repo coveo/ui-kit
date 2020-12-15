@@ -46,6 +46,7 @@ export * from './features';
 
 // Analytics Actions
 export * from './features/analytics';
+export * as SearchAnalyticsActions from './features/search/search-analytics-actions';
 
 // Types & Helpers
 export {Result} from './api/search/search/result';

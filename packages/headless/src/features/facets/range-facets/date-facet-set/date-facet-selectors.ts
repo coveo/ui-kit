@@ -13,7 +13,7 @@ function isDateFacetResponse(
   return !!response && response.facetId in state.dateFacetSet;
 }
 
-export const dataFacetResponseSelector = (
+export const dateFacetResponseSelector = (
   state: SearchSection & DateFacetSection,
   facetId: string
 ) => {
@@ -29,7 +29,7 @@ export const dateFacetSelectedValuesSelector = (
   state: SearchSection & DateFacetSection,
   facetId: string
 ): DateFacetValue[] => {
-  const facetResponse = dataFacetResponseSelector(state, facetId);
+  const facetResponse = dateFacetResponseSelector(state, facetId);
   if (!facetResponse) {
     return [];
   }
