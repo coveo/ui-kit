@@ -51,7 +51,7 @@ export const updateSearchConfiguration = createAction(
  * @param originLevel2 (string) The origin level 2 usage analytics event metadata whose value should typically be the identifier of the tab from which the usage analytics event originates (e.g., `All`).
  * @param originLevel3 (string) The origin level 3 usage analytics event metadata whose value should typically be the URL of the page that linked to the search interface that’s making the request (e.g., `https://connect.coveo.com/s/`).
  * @param apiBaseUrl (string) The Usage Analytics API base URL to use (e.g., `https://platform.cloud.coveo.com/rest/ua`).
- * @param runtimeEnvironment (IRuntimeEnvironment) The Coveo analytics runtime to use
+ * @param runtimeEnvironment (IRuntimeEnvironment) The Coveo analytics runtime to use, see https://github.com/coveo/coveo.analytics.js for more info.
  */
 export const updateAnalyticsConfiguration = createAction(
   'configuration/updateAnalyticsConfiguration',

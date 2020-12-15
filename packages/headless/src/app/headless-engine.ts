@@ -174,7 +174,7 @@ export interface HeadlessConfigurationOptions {
     analyticsClientMiddleware?: AnalyticsClientSendEventHook;
     /**
      * Optional analytics runtime environment, this is needed for analytics to work correctly if you're running outside of a browser.
-     * See coveo.analytics package for more details.
+     * See https://github.com/coveo/coveo.analytics.js for more info.
      */
     runtimeEnvironment?: IRuntimeEnvironment;
   };
