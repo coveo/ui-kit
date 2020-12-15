@@ -1,6 +1,6 @@
 import {SearchAppState} from '../../../../state/search-app-state';
 import {
-  dataFacetResponseSelector,
+  dateFacetResponseSelector,
   dateFacetSelectedValuesSelector,
 } from './date-facet-selectors';
 import {createMockState} from '../../../../test';
@@ -19,7 +19,7 @@ describe('date facet selectors', () => {
   });
 
   it('#dateFacetResponseSelector returns undefined if the response does not exist', () => {
-    const response = dataFacetResponseSelector(state, facetId);
+    const response = dateFacetResponseSelector(state, facetId);
     expect(response).toBeUndefined();
   });
 
@@ -28,7 +28,7 @@ describe('date facet selectors', () => {
     const mockResponse = buildMockDateFacetResponse({facetId});
     state.search.response.facets = [mockResponse];
 
-    const response = dataFacetResponseSelector(state, facetId);
+    const response = dateFacetResponseSelector(state, facetId);
     expect(response).toEqual(mockResponse);
   });
 
@@ -37,7 +37,7 @@ describe('date facet selectors', () => {
     const mockResponse = buildMockFacetResponse({facetId});
     state.search.response.facets = [mockResponse];
 
-    const response = dataFacetResponseSelector(state, facetId);
+    const response = dateFacetResponseSelector(state, facetId);
     expect(response).toBeUndefined();
   });
 
