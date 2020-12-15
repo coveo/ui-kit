@@ -155,14 +155,16 @@ function buildNumericRanges(ranges: string[]) {
   return ranges
     .map((str) => str.split(rangeDelimiter).map(parseFloat))
     .filter((range) => range.length === 2 && range.every(Number.isFinite))
-    .map(([start, end]) => buildNumericRange({start, end}));
+    .map(([start, end]) => buildNumericRange({start, end, state: 'selected'}));
 }
 
 function buildDateRanges(ranges: string[]) {
   return ranges
     .map((str) => str.split(rangeDelimiter))
     .filter((range) => range.length === 2 && range.every(isSearchApiDate))
-    .map(([start, end]) => buildDateRange({start, end, useLocalTime: true}));
+    .map(([start, end]) =>
+      buildDateRange({start, end, useLocalTime: true, state: 'selected'})
+    );
 }
 
 function isValidPair<K extends keyof SearchParameters>(

@@ -161,8 +161,8 @@ describe('buildSearchParameterSerializer', () => {
       expect(result).toEqual({
         nf: {
           size: [
-            buildNumericRange({start: 0, end: 10}),
-            buildNumericRange({start: 10, end: 20}),
+            buildNumericRange({start: 0, end: 10, state: 'selected'}),
+            buildNumericRange({start: 10, end: 20, state: 'selected'}),
           ],
         },
       });
@@ -172,8 +172,10 @@ describe('buildSearchParameterSerializer', () => {
       const result = deserialize('nf[size]=0..10&nf[amount]=100..200');
       expect(result).toEqual({
         nf: {
-          size: [buildNumericRange({start: 0, end: 10})],
-          amount: [buildNumericRange({start: 100, end: 200})],
+          size: [buildNumericRange({start: 0, end: 10, state: 'selected'})],
+          amount: [
+            buildNumericRange({start: 100, end: 200, state: 'selected'}),
+          ],
         },
       });
     });
@@ -183,8 +185,8 @@ describe('buildSearchParameterSerializer', () => {
       expect(result).toEqual({
         nf: {
           size: [
-            buildNumericRange({start: 7.5, end: 8.5}),
-            buildNumericRange({start: 8.5, end: 9.5}),
+            buildNumericRange({start: 7.5, end: 8.5, state: 'selected'}),
+            buildNumericRange({start: 8.5, end: 9.5, state: 'selected'}),
           ],
         },
       });
@@ -219,8 +221,18 @@ describe('buildSearchParameterSerializer', () => {
       expect(result).toEqual({
         df: {
           date: [
-            buildDateRange({start: date1, end: date2, useLocalTime: true}),
-            buildDateRange({start: date2, end: date3, useLocalTime: true}),
+            buildDateRange({
+              start: date1,
+              end: date2,
+              useLocalTime: true,
+              state: 'selected',
+            }),
+            buildDateRange({
+              start: date2,
+              end: date3,
+              useLocalTime: true,
+              state: 'selected',
+            }),
           ],
         },
       });
@@ -236,6 +248,7 @@ describe('buildSearchParameterSerializer', () => {
         start: date1,
         end: date2,
         useLocalTime: true,
+        state: 'selected',
       });
 
       expect(result).toEqual({
@@ -266,12 +279,15 @@ describe('buildSearchParameterSerializer', () => {
   it('can serialize and deserialize all search parameters', () => {
     const f = {author: ['a', 'b']};
     const cf = {geography: ['a', 'b']};
-    const nf = {size: [buildNumericRange({start: 0, end: 10})]};
+    const nf = {
+      size: [buildNumericRange({start: 0, end: 10, state: 'selected'})],
+    };
     const df = {
       created: [
         buildDateRange({
           start: '2010/01/01@05:00:00',
           end: '2011/01/01@05:00:00',
+          state: 'selected',
         }),
       ],
     };
