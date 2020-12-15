@@ -15,6 +15,7 @@ import {buildMockCategoryFacetSearch} from '../../../../test/mock-category-facet
 import {buildMockCategoryFacetSearchResult} from '../../../../test/mock-category-facet-search-result';
 import {executeSearch} from '../../../../features/search/search-actions';
 import {SearchAppState} from '../../../../state/search-app-state';
+import {defaultFacetSearchOptions} from '../../../../features/facets/facet-search-set/facet-search-reducer-helpers';
 
 describe('CategoryFacetSearch', () => {
   const facetId = '1';
@@ -35,7 +36,10 @@ describe('CategoryFacetSearch', () => {
 
   beforeEach(() => {
     props = {
-      options: {facetId},
+      options: {
+        ...defaultFacetSearchOptions,
+        facetId,
+      },
     };
 
     initEngine();
@@ -64,6 +68,18 @@ describe('CategoryFacetSearch', () => {
       const action = selectCategoryFacetSearchResult({
         facetId,
         value,
+        retrieveCount: defaultFacetSearchOptions.numberOfValues,
+      });
+      expect(engine.actions).toContainEqual(action);
+    });
+
+    it('if numberOfValues is set it dispatches #selectCategoryFacetSearchResult with the correct retrieveCount', () => {
+      props.options.numberOfValues = 3;
+      initFacetSearch();
+      const action = selectCategoryFacetSearchResult({
+        facetId,
+        value,
+        retrieveCount: defaultFacetSearchOptions.numberOfValues,
       });
       expect(engine.actions).toContainEqual(action);
     });

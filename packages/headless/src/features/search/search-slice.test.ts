@@ -10,6 +10,8 @@ import {createMockState} from '../../test/mock-state';
 import {getSearchInitialState, SearchState} from './search-state';
 import {SearchAppState} from '../../state/search-app-state';
 import {Result} from '../../api/search/search/result';
+import {applyDidYouMeanCorrection} from '../did-you-mean/did-you-mean-actions';
+import {AnalyticsType, makeAnalyticsAction} from '../analytics/analytics-utils';
 jest.mock('../../api/platform-client');
 
 describe('search-slice', () => {
@@ -156,6 +158,36 @@ describe('search-slice', () => {
     expect(finalState.error).toBeNull();
   });
 
+  describe('should dispatch a logQueryError action', () => {
+    let e: MockEngine<SearchAppState>;
+    beforeEach(() => {
+      e = buildMockSearchAppEngine({state: createMockState()});
+      PlatformClient.call = jest.fn().mockImplementation(() =>
+        Promise.resolve({
+          body: {message: 'message', statusCode: 500, type: 'type'},
+        })
+      );
+    });
+
+    it('on a executeSearch error', async () => {
+      await e.dispatch(executeSearch(logSearchboxSubmit()));
+      expect(e.actions).toContainEqual(
+        expect.objectContaining({
+          type: 'search/queryError/pending',
+        })
+      );
+    });
+
+    it('on a fetchMoreResults error', async () => {
+      await e.dispatch(fetchMoreResults());
+      expect(e.actions).toContainEqual(
+        expect.objectContaining({
+          type: 'search/queryError/pending',
+        })
+      );
+    });
+  });
+
   it('when a fetchMoreResults fulfilled is received, set the error to null', () => {
     const err = {message: 'message', statusCode: 500, type: 'type'};
     state.error = err;
@@ -187,9 +219,11 @@ describe('search-slice', () => {
 
   describe('when did you mean is enabled and a search is executed', () => {
     let e: MockEngine<SearchAppState>;
+
     beforeEach(() => {
       const state = createMockState();
       state.didYouMean.enableDidYouMean = true;
+      state.query.q = 'boo';
       e = buildMockSearchAppEngine({state});
     });
 
@@ -204,9 +238,31 @@ describe('search-slice', () => {
       );
       await e.dispatch(executeSearch(logSearchboxSubmit()));
       expect(e.actions).toContainEqual({
-        type: 'didYouMean/correction',
+        type: applyDidYouMeanCorrection.type,
         payload: 'foo',
       });
+    });
+
+    it(`when retrying query automatically
+    should log the original query to the executeSearch analytics action`, async () => {
+      const analyticsStateQuerySpy = jest.fn();
+      const mockLogSubmit = makeAnalyticsAction(
+        'analytics/test',
+        AnalyticsType.Search,
+        (_, state) => analyticsStateQuerySpy(state.query?.q)
+      );
+
+      PlatformClient.call = jest.fn().mockImplementation(() =>
+        Promise.resolve({
+          body: buildMockSearchResponse({
+            results: [],
+            queryCorrections: [{correctedQuery: 'foo', wordCorrections: []}],
+          }),
+        })
+      );
+      await e.dispatch(executeSearch(mockLogSubmit()));
+
+      expect(analyticsStateQuerySpy).toHaveBeenCalledWith('boo');
     });
 
     it('should not retry the query automatically when corrections are available and results are available', async () => {
@@ -220,7 +276,7 @@ describe('search-slice', () => {
       );
       await e.dispatch(executeSearch(logSearchboxSubmit()));
       expect(e.actions).not.toContainEqual({
-        type: 'didYouMean/correction',
+        type: applyDidYouMeanCorrection.type,
         payload: 'foo',
       });
     });
@@ -236,7 +292,7 @@ describe('search-slice', () => {
       );
       await e.dispatch(executeSearch(logSearchboxSubmit()));
       expect(e.actions).not.toContainEqual({
-        type: 'didYouMean/correction',
+        type: applyDidYouMeanCorrection.type,
       });
     });
   });

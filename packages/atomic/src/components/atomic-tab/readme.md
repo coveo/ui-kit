@@ -13,6 +13,14 @@
 | `isActive`   | `is-active`  |             | `boolean` | `false` |
 
 
+## Shadow Parts
+
+| Part           | Description    |
+| -------------- | -------------- |
+| `"active-tab"` | The active tab |
+| `"tab-button"` | The tab button |
+
+
 ## Dependencies
 
 ### Depends on

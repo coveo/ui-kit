@@ -5,6 +5,9 @@ import {
 } from '../search-api-error-response';
 import {QueryCorrection} from './query-corrections';
 import {AnyFacetResponse} from '../../../features/facets/generic/interfaces/generic-facet-response';
+import {RankingExpression} from './ranking-expression';
+import {UserIdentity} from './user-identity';
+import {ExecutionReport} from './execution-report';
 
 export interface SearchResponseSuccess {
   results: Result[];
@@ -12,6 +15,16 @@ export interface SearchResponseSuccess {
   totalCountFiltered: number;
   facets: AnyFacetResponse[];
   queryCorrections: QueryCorrection[];
+}
+
+export interface SearchResponseSuccessWithDebugInfo
+  extends SearchResponseSuccess {
+  executionReport: ExecutionReport;
+  basicExpression: string;
+  advancedExpression: string;
+  constantExpression: string;
+  userIdentities: UserIdentity[];
+  rankingExpressions: RankingExpression[];
 }
 
 export type Search =

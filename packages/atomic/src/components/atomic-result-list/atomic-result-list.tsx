@@ -1,4 +1,4 @@
-import {Component, h, Element, State, Prop} from '@stencil/core';
+import {Component, h, Element, State, Prop, Listen} from '@stencil/core';
 import {
   ResultList,
   ResultListState,
@@ -6,6 +6,7 @@ import {
   ResultTemplatesManager,
   buildResultList,
   Engine,
+  buildResultTemplatesManager,
 } from '@coveo/headless';
 import Mustache from 'mustache';
 import defaultTemplate from '../../templates/default.html';
@@ -21,6 +22,11 @@ import {Initialization} from '../../utils/initialization-utils';
   shadow: true,
 })
 export class AtomicResultList {
+  /**
+   * Whether to automatically retrieve an additional page of results and append it to the
+   * current results when the user scrolls down to the bottom of element
+   */
+  @Prop() enableInfiniteScroll = false;
   /**
    * Css class for the list wrapper
    */
@@ -45,21 +51,13 @@ export class AtomicResultList {
 
   @Initialization()
   public initialize() {
-    this.resultTemplatesManager = new ResultTemplatesManager<string>(
-      this.engine
-    );
+    this.resultTemplatesManager = buildResultTemplatesManager(this.engine);
     this.resultList = buildResultList(this.engine, {
       options: {fieldsToInclude: this.fields},
     });
     this.unsubscribe = this.resultList.subscribe(() => this.updateState());
     this.registerDefaultResultTemplates();
     this.registerChildrenResultTemplates();
-  }
-
-  private fetchMoreResults() {
-    if (!this.state.isLoading) {
-      this.resultList.fetchMoreResults();
-    }
   }
 
   private registerDefaultResultTemplates() {
@@ -109,18 +107,26 @@ export class AtomicResultList {
     ));
   }
 
+  // TODO: improve rudimentary infinite scroll, add scroll container option
+  @Listen('scroll', {target: 'window'})
+  handleInfiniteScroll() {
+    if (!this.enableInfiniteScroll) {
+      return;
+    }
+
+    const hasReachedEndOfElement =
+      window.innerHeight + window.scrollY >= this.host.offsetHeight;
+
+    if (hasReachedEndOfElement) {
+      this.resultList.fetchMoreResults();
+    }
+  }
+
   public render() {
-    return [
+    return (
       <div part="list" class={this.listClass}>
         {this.results}
-      </div>,
-      <button
-        class="fetch-more-results btn btn-secondary"
-        onClick={() => this.fetchMoreResults()}
-        disabled={this.state.isLoading}
-      >
-        Fetch more results
-      </button>,
-    ];
+      </div>
+    );
   }
 }

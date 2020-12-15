@@ -10,7 +10,6 @@ import {
   Engine,
 } from '@coveo/headless';
 import {Initialization} from '../../utils/initialization-utils';
-import {randomID} from '../../utils/utils';
 
 @Component({
   tag: 'atomic-facet',
@@ -18,7 +17,7 @@ import {randomID} from '../../utils/utils';
   shadow: true,
 })
 export class AtomicFacet {
-  @Prop() facetId = randomID('facet');
+  @Prop({mutable: true}) facetId = '';
   @Prop() field = '';
   @Prop() label = 'No label';
   @State() state!: FacetState;
@@ -31,6 +30,7 @@ export class AtomicFacet {
   public initialize() {
     const options: FacetOptions = {facetId: this.facetId, field: this.field};
     this.facet = buildFacet(this.engine, {options});
+    this.facetId = this.facet.state.facetId;
     this.subscribe();
   }
 
@@ -86,23 +86,22 @@ export class AtomicFacet {
   }
 
   private get facetSearchResults() {
-    const facetSearch = this.facet.facetSearch;
-    return facetSearch.state.values.map((searchResult) => (
-      <div onClick={() => facetSearch.select(searchResult)}>
+    return this.state.facetSearch.values.map((searchResult) => (
+      <div onClick={() => this.facet.facetSearch.select(searchResult)}>
         {searchResult.displayValue} {searchResult.count}
       </div>
     ));
   }
 
   private get showMoreSearchResults() {
-    const facetSearch = this.facet.facetSearch;
-
-    if (!facetSearch.state.moreValuesAvailable) {
+    if (!this.state.facetSearch.moreValuesAvailable) {
       return null;
     }
 
     return (
-      <button onClick={() => facetSearch.showMoreResults()}>show more</button>
+      <button onClick={() => this.facet.facetSearch.showMoreResults()}>
+        show more
+      </button>
     );
   }
 

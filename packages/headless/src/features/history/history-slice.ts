@@ -39,7 +39,8 @@ const isEqual = (current: HistoryState, next: HistoryState) => {
     isSortEqual(current, next) &&
     isPipelineEqual(current.pipeline, next.pipeline) &&
     isSearchHubEqual(current.searchHub, next.searchHub) &&
-    isFacetOrderEqual(current.facetOrder, next.facetOrder)
+    isFacetOrderEqual(current.facetOrder, next.facetOrder) &&
+    isDebugEqual(current.debug, next.debug)
   );
 };
 
@@ -89,3 +90,5 @@ const isSearchHubEqual = (current: string, next: string) => current === next;
 
 const isFacetOrderEqual = (current: string[] | null, next: string[] | null) =>
   current === next || (current && next && arrayEquals(current, next));
+
+const isDebugEqual = (current: boolean, next: boolean) => current === next;

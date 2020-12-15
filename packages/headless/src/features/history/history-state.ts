@@ -1,6 +1,7 @@
 import {SearchParametersState} from '../../state/search-app-state';
 import {getAdvancedSearchQueriesInitialState} from '../advanced-search-queries/advanced-search-queries-state';
 import {getContextInitialState} from '../context/context-state';
+import {getDebugInitialState} from '../debug/debug-state';
 import {getFacetOptionsInitialState} from '../facet-options/facet-options-state';
 import {getCategoryFacetSetInitialState} from '../facets/category-facet-set/category-facet-set-state';
 import {getFacetSetInitialState} from '../facets/facet-set/facet-set-state';
@@ -32,6 +33,7 @@ export function getHistoryInitialState(): HistoryState {
     querySet: getQuerySetInitialState(),
     pipeline: getPipelineInitialState(),
     searchHub: getSearchHubInitialState(),
+    debug: getDebugInitialState(),
     facetOrder: null,
   };
 }

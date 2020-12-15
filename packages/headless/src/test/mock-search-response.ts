@@ -1,4 +1,7 @@
-import {SearchResponseSuccess} from '../api/search/search/search-response';
+import {
+  SearchResponseSuccess,
+  SearchResponseSuccessWithDebugInfo,
+} from '../api/search/search/search-response';
 import {emptyCorrection} from '../features/did-you-mean/did-you-mean-state';
 
 export function buildMockSearchResponse(
@@ -10,6 +13,24 @@ export function buildMockSearchResponse(
     totalCountFiltered: 0,
     facets: [],
     queryCorrections: [emptyCorrection()],
+    ...config,
+  };
+}
+
+export function buildMockSearchResponseWithDebugInfo(
+  config: Partial<SearchResponseSuccessWithDebugInfo> = {}
+): SearchResponseSuccessWithDebugInfo {
+  return {
+    ...buildMockSearchResponse(),
+    basicExpression: '',
+    advancedExpression: '',
+    constantExpression: '',
+    userIdentities: [],
+    rankingExpressions: [],
+    executionReport: {
+      children: [],
+      duration: 0,
+    },
     ...config,
   };
 }

@@ -15,6 +15,7 @@ import {
   ConfigurationSection,
   ContextSection,
   DateFacetSection,
+  DebugSection,
   DidYouMeanSection,
   FacetOptionsSection,
   FacetSection,
@@ -44,11 +45,12 @@ import {getSortCriteriaInitialState} from '../sort-criteria/sort-criteria-state'
 import {getPipelineInitialState} from '../pipeline/pipeline-state';
 import {getSearchHubInitialState} from '../search-hub/search-hub-state';
 import {getFacetOptionsInitialState} from '../facet-options/facet-options-state';
-import {logFetchMoreResults} from './search-analytics-actions';
+import {logFetchMoreResults, logQueryError} from './search-analytics-actions';
 import {SearchAction} from '../analytics/analytics-utils';
 import {HistoryState} from '../history/history-state';
 import {sortFacets} from '../../utils/facet-utils';
 import {mapOrExclude} from '../../utils/utils';
+import {getDebugInitialState} from '../debug/debug-state';
 
 export type StateNeededByExecuteSearch = ConfigurationSection &
   Partial<
@@ -67,6 +69,7 @@ export type StateNeededByExecuteSearch = ConfigurationSection &
       SearchHubSection &
       QuerySetSection &
       FacetOptionsSection &
+      DebugSection &
       SearchSection
   >;
 
@@ -122,6 +125,7 @@ export const executeSearch = createAsyncThunk<
     );
 
     if (isErrorResponse(fetched.response)) {
+      dispatch(logQueryError(fetched.response.error));
       return rejectWithValue(fetched.response.error);
     }
 
@@ -137,6 +141,8 @@ export const executeSearch = createAsyncThunk<
       };
     }
 
+    dispatch(analyticsAction);
+
     const retried = await automaticallyRetryQueryWithCorrection(
       searchAPIClient,
       fetched.response.success.queryCorrections[0].correctedQuery,
@@ -144,17 +150,18 @@ export const executeSearch = createAsyncThunk<
       dispatch
     );
 
-    dispatch(snapshot(extractHistory(getState())));
-
     if (isErrorResponse(retried.response)) {
+      dispatch(logQueryError(retried.response.error));
       return rejectWithValue(retried.response.error);
     }
+
+    dispatch(snapshot(extractHistory(getState())));
 
     return {
       ...retried,
       response: retried.response.success,
       automaticallyCorrected: true,
-      analyticsAction,
+      analyticsAction: logDidYouMeanAutomatic(),
     };
   }
 );
@@ -177,6 +184,7 @@ export const fetchMoreResults = createAsyncThunk<
     );
 
     if (isErrorResponse(fetched.response)) {
+      dispatch(logQueryError(fetched.response.error));
       return rejectWithValue(fetched.response.error);
     }
 
@@ -203,7 +211,6 @@ const automaticallyRetryQueryWithCorrection = async (
     getState(),
     buildSearchRequest(getState())
   );
-  dispatch(logDidYouMeanAutomatic());
   dispatch(applyDidYouMeanCorrection(correction));
   return fetched;
 };
@@ -238,6 +245,7 @@ const extractHistory = (state: StateNeededByExecuteSearch): HistoryState => ({
   searchHub: state.searchHub || getSearchHubInitialState(),
   facetOptions: state.facetOptions || getFacetOptionsInitialState(),
   facetOrder: state.search?.facetOrder ?? null,
+  debug: state.debug ?? getDebugInitialState(),
 });
 
 export const buildSearchRequest = (
@@ -247,6 +255,7 @@ export const buildSearchRequest = (
     accessToken: state.configuration.accessToken,
     organizationId: state.configuration.organizationId,
     url: state.configuration.search.apiBaseUrl,
+    debug: state.debug,
     ...(state.configuration.analytics.enabled && {
       visitorId: getVisitorID(),
     }),

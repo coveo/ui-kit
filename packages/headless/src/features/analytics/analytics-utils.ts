@@ -86,6 +86,18 @@ export const makeAnalyticsAction = <T extends AnalyticsType>(
   );
 };
 
+export const makeNoopAnalyticsAction = <T extends AnalyticsType>(
+  analyticsType: T
+) => {
+  return createAsyncThunk<
+    {analyticsType: T},
+    void,
+    AsyncThunkAnalyticsOptions<StateNeededByAnalyticsProvider>
+  >('analytics/noop', async () => {
+    return {analyticsType};
+  });
+};
+
 export const partialDocumentInformation = (
   result: Result,
   state: Partial<SearchAppState>

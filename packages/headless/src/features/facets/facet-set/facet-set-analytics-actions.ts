@@ -1,27 +1,22 @@
 import {FacetSortCriterion} from './interfaces/request';
 import {RangeFacetSortCriterion} from '../range-facets/generic/interfaces/request';
-import {
-  validatePayloadValue,
-  validatePayloadSchema,
-} from '../../../utils/validate-payload';
+import {validatePayload} from '../../../utils/validate-payload';
 import {
   facetIdDefinition,
   requiredNonEmptyString,
 } from '../generic/facet-actions-validation';
-import {SearchAppState} from '../../../state/search-app-state';
-import {getFacetSetInitialState} from './facet-set-state';
-import {getDateFacetSetInitialState} from '../range-facets/date-facet-set/date-facet-set-state';
-import {getNumericFacetSetInitialState} from '../range-facets/numeric-facet-set/numeric-facet-set-state';
-import {getCategoryFacetSetInitialState} from '../category-facet-set/category-facet-set-state';
 import {Value} from '@coveo/bueno';
 import {
   AnalyticsType,
   makeAnalyticsAction,
 } from '../../analytics/analytics-utils';
 import {
+  buildFacetBaseMetadata,
   FacetSelectionChangeMetadata,
   FacetUpdateSortMetadata,
-  SectionNeededForFacetMetadata,
+  buildFacetStateMetadata,
+  getStateNeededForFacetMetadata,
+  buildFacetSelectionChangeMetadata,
 } from './facet-set-analytics-actions-utils';
 
 /**
@@ -33,7 +28,7 @@ export const logFacetShowMore = (facetId: string) =>
     'analytics/facet/showMore',
     AnalyticsType.Search,
     (client, state) => {
-      validatePayloadValue(facetId, facetIdDefinition);
+      validatePayload(facetId, facetIdDefinition);
       const metadata = buildFacetBaseMetadata(
         facetId,
         getStateNeededForFacetMetadata(state)
@@ -50,7 +45,7 @@ export const logFacetShowLess = (facetId: string) =>
     'analytics/facet/showLess',
     AnalyticsType.Search,
     (client, state) => {
-      validatePayloadValue(facetId, facetIdDefinition);
+      validatePayload(facetId, facetIdDefinition);
       const metadata = buildFacetBaseMetadata(
         facetId,
         getStateNeededForFacetMetadata(state)
@@ -69,12 +64,11 @@ export const logFacetSearch = (facetId: string) =>
     'analytics/facet/search',
     AnalyticsType.Search,
     (client, state) => {
-      validatePayloadValue(facetId, facetIdDefinition);
-      const metadata = buildFacetBaseMetadata(
-        facetId,
-        getStateNeededForFacetMetadata(state)
-      );
-      return client.logFacetSearch(metadata);
+      validatePayload(facetId, facetIdDefinition);
+      const stateForAnalytics = getStateNeededForFacetMetadata(state);
+      const metadata = buildFacetBaseMetadata(facetId, stateForAnalytics);
+      const facetState = buildFacetStateMetadata(stateForAnalytics);
+      return client.logFacetSearch(metadata, facetState);
     }
   )();
 /**
@@ -86,21 +80,21 @@ export const logFacetUpdateSort = (payload: FacetUpdateSortMetadata) =>
     'analytics/facet/sortChange',
     AnalyticsType.Search,
     (client, state) => {
-      validatePayloadSchema(payload, {
+      validatePayload(payload, {
         facetId: facetIdDefinition,
         criterion: new Value<FacetSortCriterion | RangeFacetSortCriterion>({
           required: true,
         }),
       });
+
       const {facetId, criterion} = payload;
+      const stateForAnalytics = getStateNeededForFacetMetadata(state);
 
-      const base = buildFacetBaseMetadata(
-        facetId,
-        getStateNeededForFacetMetadata(state)
-      );
+      const base = buildFacetBaseMetadata(facetId, stateForAnalytics);
       const metadata = {...base, criteria: criterion};
+      const facetState = buildFacetStateMetadata(stateForAnalytics);
 
-      return client.logFacetUpdateSort(metadata);
+      return client.logFacetUpdateSort(metadata, facetState);
     }
   )();
 
@@ -113,12 +107,13 @@ export const logFacetClearAll = (facetId: string) =>
     'analytics/facet/reset',
     AnalyticsType.Search,
     (client, state) => {
-      validatePayloadValue(facetId, facetIdDefinition);
-      const metadata = buildFacetBaseMetadata(
-        facetId,
-        getStateNeededForFacetMetadata(state)
-      );
-      return client.logFacetClearAll(metadata);
+      validatePayload(facetId, facetIdDefinition);
+
+      const stateForAnalytics = getStateNeededForFacetMetadata(state);
+      const metadata = buildFacetBaseMetadata(facetId, stateForAnalytics);
+      const facetState = buildFacetStateMetadata(stateForAnalytics);
+
+      return client.logFacetClearAll(metadata, facetState);
     }
   )();
 
@@ -131,17 +126,19 @@ export const logFacetSelect = (payload: FacetSelectionChangeMetadata) =>
     'analytics/facet/select',
     AnalyticsType.Search,
     (client, state) => {
-      validatePayloadSchema(payload, {
+      validatePayload(payload, {
         facetId: facetIdDefinition,
         facetValue: requiredNonEmptyString,
       });
 
+      const stateForAnalytics = getStateNeededForFacetMetadata(state);
       const metadata = buildFacetSelectionChangeMetadata(
         payload,
-        getStateNeededForFacetMetadata(state)
+        stateForAnalytics
       );
+      const facetState = buildFacetStateMetadata(stateForAnalytics);
 
-      return client.logFacetSelect(metadata);
+      return client.logFacetSelect(metadata, facetState);
     }
   )();
 
@@ -154,51 +151,17 @@ export const logFacetDeselect = (payload: FacetSelectionChangeMetadata) =>
     'analytics/facet/deselect',
     AnalyticsType.Search,
     (client, state) => {
-      validatePayloadSchema(payload, {
+      validatePayload(payload, {
         facetId: facetIdDefinition,
         facetValue: requiredNonEmptyString,
       });
+      const stateForAnalytics = getStateNeededForFacetMetadata(state);
       const metadata = buildFacetSelectionChangeMetadata(
         payload,
-        getStateNeededForFacetMetadata(state)
+        stateForAnalytics
       );
-      return client.logFacetDeselect(metadata);
+      const facetState = buildFacetStateMetadata(stateForAnalytics);
+
+      return client.logFacetDeselect(metadata, facetState);
     }
   )();
-
-function buildFacetSelectionChangeMetadata(
-  payload: FacetSelectionChangeMetadata,
-  state: SectionNeededForFacetMetadata
-) {
-  const {facetId, facetValue} = payload;
-  const base = buildFacetBaseMetadata(facetId, state);
-
-  return {...base, facetValue};
-}
-
-function getStateNeededForFacetMetadata(
-  s: Partial<SearchAppState>
-): SectionNeededForFacetMetadata {
-  return {
-    facetSet: s.facetSet || getFacetSetInitialState(),
-    categoryFacetSet: s.categoryFacetSet || getCategoryFacetSetInitialState(),
-    dateFacetSet: s.dateFacetSet || getDateFacetSetInitialState(),
-    numericFacetSet: s.numericFacetSet || getNumericFacetSetInitialState(),
-  };
-}
-
-function buildFacetBaseMetadata(
-  facetId: string,
-  state: SectionNeededForFacetMetadata
-) {
-  const facet =
-    state.facetSet[facetId] ||
-    state.categoryFacetSet[facetId] ||
-    state.dateFacetSet[facetId] ||
-    state.numericFacetSet[facetId];
-
-  const facetField = facet.field;
-  const facetTitle = `${facetField}_${facetId}`;
-
-  return {facetId, facetField, facetTitle};
-}

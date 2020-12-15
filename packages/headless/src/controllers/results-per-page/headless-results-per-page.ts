@@ -40,6 +40,7 @@ export function buildResultsPerPage(
   const {dispatch} = engine;
 
   const validated = validateInitialState(
+    engine,
     initialStateSchema,
     props.initialState,
     buildResultsPerPage.name

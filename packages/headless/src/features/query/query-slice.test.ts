@@ -107,7 +107,7 @@ describe('query slice', () => {
       expect(finalState.q).toEqual('');
     });
 
-    it('when the object does not contain a #q key, it does not update the query', () => {
+    it('when the object does not contain a #q key, it does not update the property in state', () => {
       state.q = 'a';
       const finalState = queryReducer(state, restoreSearchParameters({}));
       expect(finalState.q).toEqual(state.q);
@@ -122,7 +122,7 @@ describe('query slice', () => {
       expect(finalState.enableQuerySyntax).toEqual(false);
     });
 
-    it('when the object does not contain an #enableQuerySyntax key, it does not update the state', () => {
+    it('when the object does not contain an #enableQuerySyntax key, it does not update the property in state', () => {
       state.enableQuerySyntax = true;
       const finalState = queryReducer(state, restoreSearchParameters({}));
       expect(finalState.enableQuerySyntax).toEqual(state.enableQuerySyntax);

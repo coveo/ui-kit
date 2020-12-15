@@ -22,6 +22,7 @@ import {
   SortSection,
   QuerySection,
   FacetOptionsSection,
+  DebugSection,
 } from './state-sections';
 
 export type SearchParametersState = FacetSection &
@@ -36,7 +37,8 @@ export type SearchParametersState = FacetSection &
   ContextSection &
   QuerySetSection &
   PipelineSection &
-  SearchHubSection;
+  SearchHubSection &
+  DebugSection;
 
 export type SearchAppState = SearchParametersState &
   ConfigurationSection &
