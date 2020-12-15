@@ -139,6 +139,8 @@ export const executeSearch = createAsyncThunk<
       };
     }
 
+    dispatch(analyticsAction);
+
     const retried = await automaticallyRetryQueryWithCorrection(
       searchAPIClient,
       fetched.response.success.queryCorrections[0].correctedQuery,
@@ -146,18 +148,18 @@ export const executeSearch = createAsyncThunk<
       dispatch
     );
 
-    dispatch(snapshot(extractHistory(getState())));
-
     if (isErrorResponse(retried.response)) {
       dispatch(logQueryError(retried.response.error));
       return rejectWithValue(retried.response.error);
     }
 
+    dispatch(snapshot(extractHistory(getState())));
+
     return {
       ...retried,
       response: retried.response.success,
       automaticallyCorrected: true,
-      analyticsAction,
+      analyticsAction: logDidYouMeanAutomatic(),
     };
   }
 );
@@ -207,7 +209,6 @@ const automaticallyRetryQueryWithCorrection = async (
     getState(),
     buildSearchRequest(getState())
   );
-  dispatch(logDidYouMeanAutomatic());
   dispatch(applyDidYouMeanCorrection(correction));
   return fetched;
 };
