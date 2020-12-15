@@ -1,4 +1,5 @@
 import {platformUrl} from '../../api/platform-client';
+import {IRuntimeEnvironment} from 'coveo.analytics';
 
 export interface ConfigurationState {
   /**
@@ -54,6 +55,11 @@ export interface ConfigurationState {
      * This value is optional, and will automatically try to resolve itself from the referrer search parameter.
      */
     originLevel3: string;
+    /**
+     * Optional analytics runtime environment, this is needed for analytics to work correctly if you're running outside of a browser.
+     * See coveo.analytics package for more details.
+     */
+    runtimeEnvironment?: IRuntimeEnvironment;
   };
 }
 

@@ -71,7 +71,7 @@ export const logFacetSearch = (facetId: string) =>
         facetId,
         getStateNeededForFacetMetadata(state)
       );
-      return client.logFacetSearch(metadata);
+      return client.logFacetSearch(metadata, []);
     }
   )();
 /**
@@ -97,7 +97,7 @@ export const logFacetUpdateSort = (payload: FacetUpdateSortMetadata) =>
       );
       const metadata = {...base, criteria: criterion};
 
-      return client.logFacetUpdateSort(metadata);
+      return client.logFacetUpdateSort(metadata, []);
     }
   )();
 
@@ -115,7 +115,7 @@ export const logFacetClearAll = (facetId: string) =>
         facetId,
         getStateNeededForFacetMetadata(state)
       );
-      return client.logFacetClearAll(metadata);
+      return client.logFacetClearAll(metadata, []);
     }
   )();
 
@@ -138,7 +138,7 @@ export const logFacetSelect = (payload: FacetSelectionChangeMetadata) =>
         getStateNeededForFacetMetadata(state)
       );
 
-      return client.logFacetSelect(metadata);
+      return client.logFacetSelect(metadata, []);
     }
   )();
 
@@ -159,7 +159,7 @@ export const logFacetDeselect = (payload: FacetSelectionChangeMetadata) =>
         payload,
         getStateNeededForFacetMetadata(state)
       );
-      return client.logFacetDeselect(metadata);
+      return client.logFacetDeselect(metadata, []);
     }
   )();
 

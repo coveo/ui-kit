@@ -34,6 +34,7 @@ import {
   PostprocessQuerySuggestResponseMiddleware,
   PostprocessSearchResponseMiddleware,
 } from '../api/search/search-api-client-middleware';
+import {IRuntimeEnvironment} from 'coveo.analytics';
 
 export type LogLevel = LevelWithSilent;
 
@@ -171,6 +172,11 @@ export interface HeadlessConfigurationOptions {
      * analyticsClientMiddleware allows to hook into the analytics request before it is sent to the Coveo platform.
      */
     analyticsClientMiddleware?: AnalyticsClientSendEventHook;
+    /**
+     * Optional analytics runtime environment, this is needed for analytics to work correctly if you're running outside of a browser.
+     * See coveo.analytics package for more details.
+     */
+    runtimeEnvironment?: IRuntimeEnvironment;
   };
 }
 
