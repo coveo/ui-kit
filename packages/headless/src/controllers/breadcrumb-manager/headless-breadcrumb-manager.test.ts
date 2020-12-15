@@ -20,6 +20,8 @@ import {buildMockNumericFacetResponse} from '../../test/mock-numeric-facet-respo
 import {buildMockCategoryFacetRequest} from '../../test/mock-category-facet-request';
 import {buildMockCategoryFacetValue} from '../../test/mock-category-facet-value';
 import {buildMockCategoryFacetResponse} from '../../test/mock-category-facet-response';
+import {deselectAllFacets} from '../../features/facets/generic/facet-actions';
+import {executeSearch} from '../../features/search/search-actions';
 
 describe('headless breadcrumb manager', () => {
   const facetId = 'abc123';
@@ -92,6 +94,17 @@ describe('headless breadcrumb manager', () => {
   });
 
   it('hasBreadcrumbs returns false when no facet value is selected', () => {
+    state.search.response.facets = [];
     expect(breadcrumbManager.hasBreadcrumbs()).toBe(false);
+  });
+
+  it('when calling deselectAll it dispatches the deselectAllFacets action', () => {
+    breadcrumbManager.deselectAll();
+    expect(engine.actions).toContainEqual(deselectAllFacets());
+  });
+
+  it('when calling deselectAll it dispatches the executeSearch action', () => {
+    breadcrumbManager.deselectAll();
+    expect(engine.findAsyncAction(executeSearch.pending)).toBeTruthy();
   });
 });
