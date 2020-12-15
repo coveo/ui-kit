@@ -49,6 +49,7 @@ export function buildStandaloneSearchBox(
   const id = props.options.id || randomID('standalone_search_box');
   const options: Required<StandaloneSearchBoxOptions> = {
     id,
+    highlightOptions: {...props.options.highlightOptions},
     ...defaultSearchBoxOptions,
     ...props.options,
   };
