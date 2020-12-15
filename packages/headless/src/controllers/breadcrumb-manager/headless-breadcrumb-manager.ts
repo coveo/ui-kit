@@ -107,7 +107,9 @@ export const buildBreadcrumbManager = (
             dispatch(
               executeDeselectAllCategoryFacetValues({
                 facetId,
-                numberOfValues: 5,
+                numberOfValues:
+                  engine.state.categoryFacetSet[facetId].currentValues[0]
+                    .retrieveCount,
               })
             );
           },
