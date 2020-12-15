@@ -1,9 +1,7 @@
 import {isSearchApiDate} from '../../controllers/facets/range-facet/date-facet/date-range';
 import {buildDateRange} from '../../controllers/facets/range-facet/date-facet/headless-date-facet';
 import {buildNumericRange} from '../../controllers/facets/range-facet/numeric-facet/headless-numeric-facet';
-import {DateRangeRequest} from '../facets/range-facets/date-facet-set/interfaces/request';
 import {RangeValueRequest} from '../facets/range-facets/generic/interfaces/range-facet';
-import {NumericRangeRequest} from '../facets/range-facets/numeric-facet-set/interfaces/request';
 import {SearchParameters} from './search-parameter-actions';
 
 const delimiter = '&';
@@ -32,12 +30,8 @@ function serializePair(pair: [string, unknown]) {
     return isFacetObject(val) ? serializeFacets(key, val) : '';
   }
 
-  if (key === 'nf') {
-    return isNumericRangeFacetObject(val) ? serializeRangeFacets(key, val) : '';
-  }
-
-  if (key === 'df') {
-    return isDateRangeFacetObject(val) ? serializeRangeFacets(key, val) : '';
+  if (key === 'nf' || key === 'df') {
+    return isRangeFacetObject(val) ? serializeRangeFacets(key, val) : '';
   }
 
   return `${key}${equal}${val}`;
@@ -52,32 +46,20 @@ function isFacetObject(obj: unknown): obj is Record<string, string[]> {
   return allEntriesAreValid(obj, isValidValue);
 }
 
-function isNumericRangeFacetObject(
+function isRangeFacetObject(
   obj: unknown
-): obj is Record<string, NumericRangeRequest[]> {
+): obj is Record<string, RangeValueRequest[]> {
   if (!isObject(obj)) {
     return false;
   }
 
-  return allEntriesAreValid(obj, isRangeValue);
-}
-
-function isDateRangeFacetObject(
-  obj: unknown
-): obj is Record<string, DateRangeRequest[]> {
-  if (!isObject(obj)) {
-    return false;
-  }
-
+  const isRangeValue = (v: unknown) =>
+    isObject(v) && 'start' in v && 'end' in v;
   return allEntriesAreValid(obj, isRangeValue);
 }
 
 function isObject(obj: unknown): obj is object {
   return obj && typeof obj === 'object' ? true : false;
-}
-
-function isRangeValue(v: unknown) {
-  return isObject(v) && 'start' in v && 'end' in v;
 }
 
 function allEntriesAreValid(
