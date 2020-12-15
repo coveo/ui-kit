@@ -6,21 +6,26 @@ import {DateRangeRequest} from '../../../../features/facets/range-facets/date-fa
 dayjs.extend(utc);
 dayjs.extend(customParseFormat);
 
-type DateRangeOptions = Partial<Omit<DateRangeRequest, 'start' | 'end'>> & {
-  start: string | number | Date;
-  end: string | number | Date;
+type DateType = string | number | Date;
+
+type DateOptions = {
   useLocalTime?: boolean;
   dateFormat?: string;
 };
 
+type DateRangeOptions = Partial<Omit<DateRangeRequest, 'start' | 'end'>> &
+  DateOptions & {
+    start: DateType;
+    end: DateType;
+  };
+
+export function isSearchApiDate(date: string) {
+  return formatForSearchApi(dayjs(date)) === date;
+}
+
 export function buildDateRange(config: DateRangeOptions): DateRangeRequest {
-  const DATE_FORMAT = 'YYYY/MM/DD@HH:mm:ss';
-  const start = config.useLocalTime
-    ? dayjs(config.start, config.dateFormat).format(DATE_FORMAT)
-    : dayjs(config.start, config.dateFormat).utc().format(DATE_FORMAT);
-  const end = config.useLocalTime
-    ? dayjs(config.end, config.dateFormat).format(DATE_FORMAT)
-    : dayjs(config.end, config.dateFormat).utc().format(DATE_FORMAT);
+  const start = buildDate(config.start, config);
+  const end = buildDate(config.end, config);
 
   if (start === 'Invalid Date' || end === 'Invalid Date') {
     throw new Error(
@@ -39,4 +44,16 @@ export function buildDateRange(config: DateRangeOptions): DateRangeRequest {
     endInclusive,
     state,
   };
+}
+
+function buildDate(rawDate: DateType, options: DateOptions) {
+  const {dateFormat, useLocalTime} = options;
+  const date = dayjs(rawDate, dateFormat);
+  const adjusted = useLocalTime ? date : date.utc();
+  return formatForSearchApi(adjusted);
+}
+
+function formatForSearchApi(date: dayjs.Dayjs) {
+  const DATE_FORMAT = 'YYYY/MM/DD@HH:mm:ss';
+  return date.format(DATE_FORMAT);
 }
