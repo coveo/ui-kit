@@ -58,7 +58,7 @@ export type Tab = ReturnType<typeof buildTab>;
 export type TabState = Tab['state'];
 
 /**
- * The `Tab` headless controller offers a high-level interface that allows the end user to select a specific search interface.
+ * The `Tab` headless controller allows the end user to view a subset of results.
  * It is in charge of adding a constant expression to the outgoing query in order to refine the results.
  */
 export function buildTab(
@@ -88,7 +88,7 @@ export function buildTab(
   return {
     ...controller,
     /**
-     * Select and make this tab the currently active one.
+     * Activates the tab.
      */
     select() {
       dispatch(updateAdvancedSearchQueries({cq: options.expression}));
