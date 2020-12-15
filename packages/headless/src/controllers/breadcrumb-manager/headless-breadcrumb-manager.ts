@@ -29,8 +29,15 @@ import {deselectAllFacets} from '../../features/facets/generic/facet-actions';
 import {logClearBreadcrumbs} from '../../features/facets/generic/facet-generic-analytics-actions';
 
 export type BreadcrumbManager = ReturnType<typeof buildBreadcrumbManager>;
+
+/**
+ * A scoped and simplified part of the headless state that is relevant to the `Tab` controller.
+ */
 export type BreadcrumbManagerState = BreadcrumbManager['state'];
 
+/**
+ * The `BreadcrumbManager` headless controller allows to manage a summary of the currently active facets filters.
+ */
 export const buildBreadcrumbManager = (
   engine: Engine<
     ConfigurationSection &
@@ -127,6 +134,9 @@ export const buildBreadcrumbManager = (
   return {
     ...controller,
 
+    /**
+     * @returns {BreadcrumbManagerState} The state of the `BreadcrumbManager` controller.
+     */
     get state() {
       return {
         facetBreadcrumbs: getFacetBreadcrumbs(),
@@ -135,7 +145,13 @@ export const buildBreadcrumbManager = (
         dateFacetBreadcrumbs: getDateFacetBreadcrumbs(),
       };
     },
+    /**
+     * Determines if there's any available breadcrumbs, or active facets.
+     */
     hasBreadcrumbs,
+    /**
+     * Allows to deselect and clear all facet filters.
+     */
     deselectAll: () => {
       dispatch(deselectAllFacets());
       dispatch(executeSearch(logClearBreadcrumbs()));
@@ -143,29 +159,62 @@ export const buildBreadcrumbManager = (
   };
 };
 
+/**
+ * Represent a generic Breadcrumb type.
+ */
 export interface Breadcrumb<T extends BaseFacetValue> {
+  /**
+   * The field on which the underlying facet is configured.
+   */
   field: string;
+  /**
+   * The list of facet values currently active and selected.
+   */
   values: BreadcrumbValue<T>[];
 }
 
+/**
+ * Represent a generic Breadcrumb value type.
+ *
+ * Can either be a @type {FacetBreadcrumb}, @type {NumericFacetBreadcrumb}, @type {DateFacetBreadcrumb}, @type {CategoryFacetBreadcrumb}
+ */
 export type BreadcrumbValue<T extends BaseFacetValue> = {
+  /**
+   * The underlying facet value linked to this breadcrumb.
+   */
   value: T;
+  /**
+   * Allow to deselect and clear the corresponding facet filter.
+   */
   deselect: () => void;
 };
 
+/**
+ * Represent a Breadcrumb for specific facet.
+ */
 export type FacetBreadcrumb = Breadcrumb<FacetValue>;
+/**
+ * Represent a Breadcrumb for a numerical facet.
+ */
 export type NumericFacetBreadcrumb = Breadcrumb<NumericFacetValue>;
+/**
+ * Represent a Breadcrumb for a date facet.
+ */
 export type DateFacetBreadcrumb = Breadcrumb<DateFacetValue>;
+/**
+ * Represent a breadcrumb for a category facet.
+ */
 export interface CategoryFacetBreadcrumb {
+  /**
+   * The field on which the underlying facet is configured.
+   */
   field: string;
+  /**
+   * The complete path of the underlying category facet value.
+   */
   path: CategoryFacetValue[];
+  /**
+   * Allow to deselect and clear the corresponding facet filter.
+   */
   deselect: () => void;
 }
-
-export type BreadcrumbField = Pick<
-  | FacetBreadcrumb
-  | NumericFacetBreadcrumb
-  | DateFacetBreadcrumb
-  | CategoryFacetBreadcrumb,
-  'field'
->;
