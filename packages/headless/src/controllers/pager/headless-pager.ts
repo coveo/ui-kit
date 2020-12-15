@@ -65,7 +65,7 @@ export type Pager = ReturnType<typeof buildPager>;
 export type PagerState = Pager['state'];
 
 /**
- * The `Pager` controller offers a high-level interface that allows to navigate through the different result pages.
+ * The `Pager` controller allows to navigate through the different result pages.
  */
 export function buildPager(
   engine: Engine<PaginationSection & ConfigurationSection>,
