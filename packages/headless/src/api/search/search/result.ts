@@ -1,4 +1,5 @@
 import {Raw} from './raw';
+import {HighlightKeyword} from '../../../utils/highlight';
 
 export type Result = {
   title: string;
@@ -19,11 +20,11 @@ export type Result = {
   isTopResult: boolean;
   isRecommendation: boolean;
   isUserActionView: boolean;
-  titleHighlights: string[];
-  firstSentencesHighlights: string[];
-  excerptHighlights: string[];
-  printableUriHighlights: string[];
-  summaryHighlights: string[];
+  titleHighlights: HighlightKeyword[];
+  firstSentencesHighlights: HighlightKeyword[];
+  excerptHighlights: HighlightKeyword[];
+  printableUriHighlights: HighlightKeyword[];
+  summaryHighlights: HighlightKeyword[];
   parentResult: null;
   childResults: Result[];
   totalNumberOfChildResults: number;

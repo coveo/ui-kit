@@ -11,8 +11,6 @@ export interface HighlightKeyword {
   length: number;
 }
 
-type HighlightKeywordOrString = HighlightKeyword | string;
-
 export type ResultHighlights =
   | 'titleHighlights'
   | 'firstSentencesHighlights'
@@ -28,7 +26,7 @@ export interface HighlightParams {
   /**
    * The highlighted positions to highlight in the string.
    */
-  highlights: HighlightKeywordOrString[];
+  highlights: HighlightKeyword[];
   /**
    * The opening delimiter used when starting to highlight.
    */
@@ -57,19 +55,11 @@ export function highlightString(params: HighlightParams): string {
   if (isNullOrUndefined(params.content) || isEmptyString(params.content)) {
     return params.content;
   }
-  if (
-    params.highlights.every(
-      (highlighKeyword: HighlightKeywordOrString) =>
-        typeof highlighKeyword === 'string'
-    )
-  ) {
-    params.highlights = highlightKeywordString(params.highlights as string[]);
-  }
   const maxIndex = params.content.length;
   let highlighted = '';
   let last = 0;
   for (let i = 0; i < params.highlights.length; i++) {
-    const highlight = params.highlights[i] as HighlightKeyword;
+    const highlight = params.highlights[i];
     const start: number = highlight.offset;
     const end: number = start + highlight.length;
 
@@ -88,18 +78,4 @@ export function highlightString(params: HighlightParams): string {
     highlighted += params.content.slice(last);
   }
   return highlighted;
-}
-
-/**
- * Cast the parameter to an array of HighlightKeywords to be used in the 'highlightString' function.
- * @param highlightKeywords The highlights keywords as an array of string. This should be was is returned by the API
- */
-export function highlightKeywordString(
-  highlightKeywords: string[]
-): HighlightKeyword[] {
-  return highlightKeywords.map(
-    (keyword): HighlightKeyword => {
-      return (keyword as unknown) as HighlightKeyword;
-    }
-  );
 }

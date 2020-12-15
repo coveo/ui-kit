@@ -4,6 +4,7 @@ import {
   ResultTemplatesHelpers,
   highlightString,
   ResultHighlights,
+  HighlightKeyword,
 } from '@coveo/headless';
 import {
   ResultContext,
@@ -37,7 +38,7 @@ export class AtomicResultValue {
           highlights: ResultTemplatesHelpers.getResultProperty(
             this.result,
             this.shouldHighlightWith
-          ) as string[],
+          ) as HighlightKeyword[],
         });
         return <span innerHTML={resultValue as string}></span>;
       }
