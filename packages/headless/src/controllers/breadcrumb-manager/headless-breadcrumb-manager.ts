@@ -22,8 +22,8 @@ import {AsyncThunk} from '@reduxjs/toolkit';
 import {AsyncThunkSearchOptions} from '../../api/search/search-api-client';
 import {executeDeselectAllCategoryFacetValues} from '../../features/facets/category-facet-set/category-facet-set-controller-actions';
 import {executeFacetBreadcrumb} from '../../features/facets/facet-set/facet-set-controller-actions';
-import {executeToggleNumericFacetSelect} from '../../features/facets/range-facets/numeric-facet-set/numeric-facet-controller-actions';
-import {executeToggleDateFacetSelect} from '../../features/facets/range-facets/date-facet-set/date-facet-controller-actions';
+import {executeNumericFacetBreadcrumb} from '../../features/facets/range-facets/numeric-facet-set/numeric-facet-controller-actions';
+import {executeDateFacetBreadcrumb} from '../../features/facets/range-facets/date-facet-set/date-facet-controller-actions';
 import {executeSearch} from '../../features/search/search-actions';
 import {deselectAllFacets} from '../../features/facets/generic/facet-actions';
 import {logClearBreadcrumbs} from '../../features/facets/generic/facet-generic-analytics-actions';
@@ -84,7 +84,7 @@ export const buildBreadcrumbManager = (
   function getNumericFacetBreadcrumbs(): NumericFacetBreadcrumb[] {
     return getBreadcrumbs<NumericFacetValue>(
       engine.state.numericFacetSet,
-      executeToggleNumericFacetSelect,
+      executeNumericFacetBreadcrumb,
       numericFacetSelectedValuesSelector
     );
   }
@@ -92,7 +92,7 @@ export const buildBreadcrumbManager = (
   function getDateFacetBreadcrumbs(): DateFacetBreadcrumb[] {
     return getBreadcrumbs<DateFacetValue>(
       engine.state.dateFacetSet,
-      executeToggleDateFacetSelect,
+      executeDateFacetBreadcrumb,
       dateFacetSelectedValuesSelector
     );
   }

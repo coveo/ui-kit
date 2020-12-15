@@ -9,12 +9,14 @@ export const isRangeFacetValueSelected = (selection: RangeFacetValue) => {
   return selection.state === 'selected';
 };
 
+export const getAnalyticsRangeValue = ({start, end}: RangeFacetValue) =>
+  `${start}..${end}`;
+
 export const getAnalyticsActionForToggleRangeFacetSelect = (
   facetId: string,
   selection: RangeFacetValue
 ) => {
-  const {start, end} = selection;
-  const facetValue = `${start}..${end}`;
+  const facetValue = getAnalyticsRangeValue(selection);
   const payload: FacetSelectionChangeMetadata = {facetId, facetValue};
 
   return isRangeFacetValueSelected(selection)
