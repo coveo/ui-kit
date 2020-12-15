@@ -1,4 +1,4 @@
-import {Schema, SchemaValues, NumberValue} from '@coveo/bueno';
+import {Schema, NumberValue} from '@coveo/bueno';
 import {Engine} from '../../app/headless-engine';
 import {buildController} from '../controller/headless-controller';
 import {
@@ -28,31 +28,45 @@ import {
   validateOptions,
 } from '../../utils/validate-payload';
 
+export type PagerInitialState = {
+  /** The initial page number */
+  page?: number;
+};
+
+export type PagerOptions = {
+  /** The number of pages to display in the pager. */
+  numberOfPages?: number;
+};
+
 export interface PagerProps {
+  /**
+   * The options for the `Pager` controller.
+   */
   options?: PagerOptions;
+  /**
+   * The initial state that should be applied to the `Pager` controller.
+   */
   initialState?: PagerInitialState;
 }
 
 const optionsSchema = new Schema({
-  /** The number of pages to display in the pager. */
   numberOfPages: new NumberValue({default: 5, min: 0}),
 });
 
 const initialStateSchema = new Schema({
-  /** The initial page number */
   page: new NumberValue({min: 1}),
 });
 
-export type PagerOptions = SchemaValues<typeof optionsSchema>;
-export type PagerInitialState = SchemaValues<typeof initialStateSchema>;
-
-/**
- * The `Pager` controller allows to navigate through the different result pages.
- */
 export type Pager = ReturnType<typeof buildPager>;
 
+/**
+ * A scoped and simplified part of the headless state that is relevant to the `Pager` controller.
+ */
 export type PagerState = Pager['state'];
 
+/**
+ * The `Pager` controller offers a high-level interface that allows to navigate through the different result pages.
+ */
 export function buildPager(
   engine: Engine<PaginationSection & ConfigurationSection>,
   props: PagerProps = {}
@@ -93,8 +107,10 @@ export function buildPager(
 
   return {
     ...controller,
-
-    /** @returns The state of the `Pager` controller. */
+    /**
+     * Returns the state of the `Pager` controller.
+     * @returns {PagerState} The state of the `Pager` controller.
+     */
     get state() {
       const currentPage = getCurrentPage();
       const maxPage = getMaxPage();
