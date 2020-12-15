@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.1.0-alpha.100](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.99...v0.1.0-alpha.100) (2020-12-15)
+
+
+### Bug Fixes
+
+* **headless:** fix facet state analytics ([#346](https://github.com/coveo/ui-kit/issues/346)) ([592233f](https://github.com/coveo/ui-kit/commit/592233f8521f0798b6ccfb590bef38291e561495))
+
+
+
+
+
 # [0.1.0-alpha.99](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.98...v0.1.0-alpha.99) (2020-12-14)
 
 
