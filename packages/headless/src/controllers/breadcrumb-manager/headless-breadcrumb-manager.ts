@@ -21,7 +21,7 @@ import {BaseFacetRequest} from '../../features/facets/facet-api/request';
 import {AsyncThunk} from '@reduxjs/toolkit';
 import {AsyncThunkSearchOptions} from '../../api/search/search-api-client';
 import {executeDeselectAllCategoryFacetValues} from '../../features/facets/category-facet-set/category-facet-set-controller-actions';
-import {executeToggleFacetSelect} from '../../features/facets/facet-set/facet-set-controller-actions';
+import {executeFacetBreadcrumb} from '../../features/facets/facet-set/facet-set-controller-actions';
 import {executeToggleNumericFacetSelect} from '../../features/facets/range-facets/numeric-facet-set/numeric-facet-controller-actions';
 import {executeToggleDateFacetSelect} from '../../features/facets/range-facets/date-facet-set/date-facet-controller-actions';
 import {executeSearch} from '../../features/search/search-actions';
@@ -76,7 +76,7 @@ export const buildBreadcrumbManager = (
   function getFacetBreadcrumbs(): FacetBreadcrumb[] {
     return getBreadcrumbs<FacetValue>(
       engine.state.facetSet,
-      executeToggleFacetSelect,
+      executeFacetBreadcrumb,
       facetResponseSelectedValuesSelector
     );
   }

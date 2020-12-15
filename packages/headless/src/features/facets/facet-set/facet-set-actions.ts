@@ -47,6 +47,20 @@ export const toggleSelectFacetValue = createAction(
 );
 
 /**
+ * Deselects the facet value related to the breadcrumb.
+ * @param facetId (string) The unique identifier of the facet (e.g., `"1"`).
+ * @param selection (FacetValue) The target facet value.
+ */
+export const facetBreadcrumb = createAction(
+  'facet/breadcrumb',
+  (payload: {facetId: string; selection: FacetValue}) =>
+    validatePayload(payload, {
+      facetId: facetIdDefinition,
+      selection: new RecordValue({values: facetValueDefinition}),
+    })
+);
+
+/**
  * Deselects all values of a facet.
  * @param facetId (string) The unique identifier of the facet (e.g., `"1"`).
  */
