@@ -94,9 +94,9 @@ export function buildTab(
       dispatch(updateAdvancedSearchQueries({cq: options.expression}));
       dispatch(executeSearch(logInterfaceChange()));
     },
-
     /**
-     * @returns (TabState) The state of the `Tab` controller.
+     * Returns the scoped and simplified part of the headless state that is relevant to the `Tab` controller.
+     * @returns {TabState} The state of the `Tab` controller.
      */
     get state() {
       const isActive =
