@@ -31,11 +31,12 @@ describe('category facet reducer helpers', () => {
         expect(request.currentValues).toEqual([a]);
       });
 
-      it('sets #numberOfValues to 1', () => {
-        const request = buildMockCategoryFacetRequest();
+      it('does not adjust the #numberOfValues', () => {
+        const numberOfValues = 5;
+        const request = buildMockCategoryFacetRequest({numberOfValues});
         selectPath(request, ['a'], retrieveCount);
 
-        expect(request.numberOfValues).toBe(1);
+        expect(request.numberOfValues).toBe(numberOfValues);
       });
     });
 
@@ -51,7 +52,7 @@ describe('category facet reducer helpers', () => {
         expect(request.currentValues).toEqual([]);
       });
 
-      it('does not adjust the #numberOfValues of the request', () => {
+      it('does not adjust the #numberOfValues', () => {
         const numberOfValues = 5;
         const request = buildMockCategoryFacetRequest({numberOfValues});
         selectPath(request, [], retrieveCount);
