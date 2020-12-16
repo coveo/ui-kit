@@ -26,7 +26,7 @@ import {validateInitialState} from '../../utils/validate-payload';
 
 export interface SortProps {
   /**
-   * The initial state that should be apploed to this `Sort` controller.
+   * The initial state that should be applied to this `Sort` controller.
    */
   initialState: Partial<SortInitialState>;
 }
@@ -74,7 +74,7 @@ export type Sort = ReturnType<typeof buildSort>;
 /** The state relevant to the `Sort` controller.*/
 export type SortState = Sort['state'];
 
-/** The `Sort` controller allows to changing how the results are sorted.*/
+/** The `Sort` controller allows changing how the results are sorted.*/
 export function buildSort(
   engine: Engine<ConfigurationSection & SortSection>,
   props: Partial<SortProps> = {}
