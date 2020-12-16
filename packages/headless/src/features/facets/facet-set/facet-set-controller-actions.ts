@@ -50,7 +50,7 @@ export const executeToggleFacetSelect = createAsyncThunk<
  * @param facetId (string) The unique identifier of the facet (e.g., `"1"`).
  * @param selection (FacetValue) The target facet value.
  */
-export const executeFacetBreadcrumb = createAsyncThunk<
+export const executeSelectFacetBreadcrumb = createAsyncThunk<
   void,
   {
     facetId: string;
@@ -58,7 +58,7 @@ export const executeFacetBreadcrumb = createAsyncThunk<
   },
   AsyncThunkSearchOptions<FacetSection & ConfigurationSection>
 >(
-  'facet/executeFacetBreadcrumb',
+  'facet/executeSelectFacetBreadcrumb',
   ({facetId, selection}, {dispatch, extra: {validatePayload}}) => {
     const analyticsAction = logFacetBreadcrumb({
       facetId: facetId,

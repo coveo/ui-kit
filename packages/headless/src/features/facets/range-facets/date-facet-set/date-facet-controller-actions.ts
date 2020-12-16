@@ -45,7 +45,7 @@ export const executeToggleDateFacetSelect = createAsyncThunk<
  * @param facetId (string) The unique identifier of the facet (e.g., `"1"`).
  * @param selection (DateFacetValue) The target date facet value.
  */
-export const executeDateFacetBreadcrumb = createAsyncThunk<
+export const executeSelectDateFacetBreadcrumb = createAsyncThunk<
   void,
   {
     facetId: string;
@@ -53,7 +53,7 @@ export const executeDateFacetBreadcrumb = createAsyncThunk<
   },
   AsyncThunkSearchOptions<ConfigurationSection & DateFacetSection>
 >(
-  'dateFacet/executeDateFacetBreadcrumb',
+  'dateFacet/executeSelectDateFacetBreadcrumb',
   (payload, {dispatch, extra: {validatePayload}}) => {
     validatePayload(payload, definition);
     dispatch(toggleSelectDateFacetValue(payload));

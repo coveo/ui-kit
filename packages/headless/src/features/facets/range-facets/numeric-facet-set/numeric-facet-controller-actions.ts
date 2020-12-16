@@ -47,7 +47,7 @@ export const executeToggleNumericFacetSelect = createAsyncThunk<
  * @param facetId (string) The unique identifier of the facet (e.g., `"1"`).
  * @param selection (NumericFacetValue) The target numeric facet value.
  */
-export const executeNumericFacetBreadcrumb = createAsyncThunk<
+export const executeSelectNumericFacetBreadcrumb = createAsyncThunk<
   void,
   {
     facetId: string;
@@ -55,7 +55,7 @@ export const executeNumericFacetBreadcrumb = createAsyncThunk<
   },
   AsyncThunkSearchOptions<ConfigurationSection & NumericFacetSection>
 >(
-  'numericFacet/executeNumericFacetBreadcrumb',
+  'numericFacet/executeSelectNumericFacetBreadcrumb',
   (payload, {dispatch, extra: {validatePayload}}) => {
     validatePayload(payload, definition);
     dispatch(toggleSelectNumericFacetValue(payload));
