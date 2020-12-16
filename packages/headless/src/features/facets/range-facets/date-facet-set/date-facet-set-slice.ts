@@ -16,10 +16,12 @@ import {
   onRangeFacetRequestFulfilled,
   handleRangeFacetDeselectAll,
   defaultRangeFacetOptions,
+  handleRangeFacetSearchParameterRestoration,
 } from '../generic/range-facet-reducers';
 import {handleFacetSortCriterionUpdate} from '../../generic/facet-reducer-helpers';
 import {getDateFacetSetInitialState} from './date-facet-set-state';
 import {deselectAllFacets} from '../../generic/facet-actions';
+import {restoreSearchParameters} from '../../../search-parameters/search-parameter-actions';
 
 export const dateFacetSetReducer = createReducer(
   getDateFacetSetInitialState(),
@@ -31,6 +33,10 @@ export const dateFacetSetReducer = createReducer(
         registerRangeFacet<DateFacetRequest>(state, request);
       })
       .addCase(change.fulfilled, (_, action) => action.payload.dateFacetSet)
+      .addCase(restoreSearchParameters, (state, action) => {
+        const df = action.payload.df || {};
+        handleRangeFacetSearchParameterRestoration(state, df);
+      })
       .addCase(toggleSelectDateFacetValue, (state, action) => {
         const {facetId, selection} = action.payload;
         toggleSelectRangeValue<DateFacetRequest, DateFacetValue>(
