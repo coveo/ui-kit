@@ -26,7 +26,7 @@ type TabOptions = {
 
 type TabInitialState = {
   /**
-   * Specifies if the tab is currently active, or selected.
+   * Specifies if the tab is currently active or selected.
    * Note that there can be only one active tab for a given headless engine.
    */
   isActive: boolean;
