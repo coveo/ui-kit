@@ -107,23 +107,26 @@ export const categoryFacetSetReducer = createReducer(
         activeLevel.push(valueRequest);
       })
       .addCase(deselectAllCategoryFacetValues, (state, action) => {
-        handleFacetDeselectAll<CategoryFacetRequest>(state, action.payload);
+        const facetId = action.payload;
+        const request = state[facetId]?.request;
+        handleFacetDeselectAll<CategoryFacetRequest>(request);
       })
       .addCase(deselectAllFacets, (state) => {
         Object.keys(state).forEach((facetId) => {
-          handleFacetDeselectAll<CategoryFacetRequest>(state, facetId);
+          const request = state[facetId]?.request;
+          handleFacetDeselectAll<CategoryFacetRequest>(request);
         });
       })
       .addCase(updateCategoryFacetNumberOfValues, (state, action) => {
-        const {facetId} = action.payload;
-        const request = state[facetId];
+        const {facetId, numberOfValues} = action.payload;
+        const request = state[facetId]?.request;
         if (!request) {
           return;
         }
         if (!request.currentValues.length) {
           return handleFacetUpdateNumberOfValues<CategoryFacetRequest>(
-            state,
-            action.payload
+            request,
+            numberOfValues
           );
         }
         handleCategoryFacetNestedNumberOfValuesUpdate(state, action.payload);

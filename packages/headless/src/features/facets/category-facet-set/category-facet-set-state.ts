@@ -1,6 +1,13 @@
 import {CategoryFacetRequest} from './interfaces/request';
 
-export type CategoryFacetSetState = Record<string, CategoryFacetRequest>;
+type CategoryFacetState = {
+  request: CategoryFacetRequest;
+};
+
+export type CategoryFacetSetState = Record<
+  string,
+  CategoryFacetState | undefined
+>;
 
 export function getCategoryFacetSetInitialState(): CategoryFacetSetState {
   return {};
