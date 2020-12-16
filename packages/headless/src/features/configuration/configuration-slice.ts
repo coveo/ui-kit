@@ -50,6 +50,10 @@ export const configurationReducer = createReducer(
         if (action.payload.apiBaseUrl !== undefined) {
           state.analytics.apiBaseUrl = action.payload.apiBaseUrl;
         }
+        if (action.payload.runtimeEnvironment !== undefined) {
+          state.analytics.runtimeEnvironment =
+            action.payload.runtimeEnvironment;
+        }
       })
       .addCase(renewAccessToken.fulfilled, (state, action) => {
         state.accessToken = action.payload;
