@@ -1,5 +1,6 @@
 import {getVisitorID} from '../../api/analytics/analytics';
 import {SearchRequest} from '../../api/search/search/search-request';
+import {CategoryFacetSetState} from '../facets/category-facet-set/category-facet-set-state';
 import {AnyFacetRequest} from '../facets/generic/interfaces/generic-facet-request';
 import {StateNeededByExecuteSearch} from './search-actions';
 
@@ -100,10 +101,21 @@ function getAllFacets(state: StateNeededByExecuteSearch) {
     ...getFacetRequests(state.facetSet),
     ...getFacetRequests(state.numericFacetSet),
     ...getFacetRequests(state.dateFacetSet),
-    ...getFacetRequests(state.categoryFacetSet),
+    ...getCategoryFacetRequests(state.categoryFacetSet),
   ];
 }
 
-function getFacetRequests(requests: Record<string, AnyFacetRequest> = {}) {
+function getCategoryFacetRequests(requests: CategoryFacetSetState | undefined) {
+  return getFacetRequests(requests).map((facet) => {
+    const numberOfValues = facet.currentValues.length
+      ? 1
+      : facet.numberOfValues;
+    return {...facet, numberOfValues};
+  });
+}
+
+function getFacetRequests<T extends AnyFacetRequest>(
+  requests: Record<string, T> = {}
+) {
   return Object.keys(requests).map((id) => requests[id]);
 }
