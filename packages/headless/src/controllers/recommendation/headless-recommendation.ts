@@ -22,7 +22,9 @@ const optionsSchema = new Schema({
     default: '',
   }),
 });
-
+/**
+ * The `RecommendationListOptions` headless controller offers a high-level interface for retrieving recommended documents.
+ */
 export type RecommendationListOptions = SchemaValues<typeof optionsSchema>;
 
 export interface RecommendationListProps {
@@ -30,9 +32,10 @@ export interface RecommendationListProps {
 }
 
 /**
- * `Recommendation` controller allows to retrieve information about the current recommendations by the search API, if any.
+ * `Recommendation` controller allows users to retrieve information about the current recommendations by the search API, if any.
  */
 export type RecommendationList = ReturnType<typeof buildRecommendationList>;
+/** The state relevant to the `RecommendationList` controller.*/
 export type RecommendationListState = RecommendationList['state'];
 
 export function buildRecommendationList(
@@ -56,7 +59,9 @@ export function buildRecommendationList(
     refresh() {
       dispatch(getRecommendations());
     },
-
+    /**
+     * @returns The state of the `Recommendation` controller.
+     */
     get state() {
       const state = engine.state;
 
