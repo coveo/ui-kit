@@ -43,8 +43,9 @@ function buildDate(rawDate: DateType, options: DateOptions) {
 
   if (!date.isValid()) {
     throw new Error(
-      `Could not parse the provided date: ${rawDate}. Please provide a dateFormat string in the configuration options.\n
-       See https://day.js.org/docs/en/parse/string-format for more information.
+      `Could not parse the provided date "${rawDate}".
+      Please provide a dateFormat string in the configuration options.
+      See https://day.js.org/docs/en/parse/string-format for more information.
        `
     );
   }
