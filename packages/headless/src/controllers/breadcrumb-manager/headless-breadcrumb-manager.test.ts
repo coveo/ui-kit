@@ -34,7 +34,7 @@ import {executeSelectDateFacetBreadcrumb} from '../../features/facets/range-face
 import {NumericFacetValue} from '../../features/facets/range-facets/numeric-facet-set/interfaces/response';
 import {executeSelectNumericFacetBreadcrumb} from '../../features/facets/range-facets/numeric-facet-set/numeric-facet-controller-actions';
 import {CategoryFacetValue} from '../../features/facets/category-facet-set/interfaces/response';
-import {executeDeselectAllCategoryFacetValues} from '../../features/facets/category-facet-set/category-facet-set-controller-actions';
+import {executeSelectCategoryFacetBreadcrumb} from '../../features/facets/category-facet-set/category-facet-set-controller-actions';
 
 describe('headless breadcrumb manager', () => {
   const facetId = 'abc123';
@@ -207,10 +207,10 @@ describe('headless breadcrumb manager', () => {
       expect(facetBreadcrumbs[1].path).toEqual([mockValue]);
     });
 
-    it('dispatches an executeDeselectAllCategoryFacetValues action on deselection', () => {
+    it('dispatches an executeSelectCategoryFacetBreadcrumb action on deselection', () => {
       facetBreadcrumbs[0].deselect();
       expect(
-        engine.findAsyncAction(executeDeselectAllCategoryFacetValues.pending)
+        engine.findAsyncAction(executeSelectCategoryFacetBreadcrumb.pending)
       ).toBeTruthy();
     });
   });
