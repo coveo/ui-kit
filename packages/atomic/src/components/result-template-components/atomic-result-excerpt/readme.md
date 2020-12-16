@@ -15,6 +15,7 @@
 ```mermaid
 graph TD;
   atomic-result-excerpt --> atomic-result-value
+  atomic-result-value --> atomic-component-error
   style atomic-result-excerpt fill:#f9f,stroke:#333,stroke-width:4px
 ```
 

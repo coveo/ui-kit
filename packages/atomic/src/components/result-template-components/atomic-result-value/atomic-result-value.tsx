@@ -25,18 +25,24 @@ export class AtomicResultValue {
 
     if (resultValue !== null) {
       if (this.shouldHighlightWith) {
-        resultValue = HighlightUtils.highlightString({
-          content: resultValue as string,
-          delimiters: {
-            open: '<strong>',
-            close: '</strong>',
-          },
-          highlights: ResultTemplatesHelpers.getResultProperty(
-            this.result,
-            this.shouldHighlightWith
-          ) as HighlightUtils.HighlightKeyword[],
-        });
-        return <span innerHTML={resultValue as string}></span>;
+        try {
+          resultValue = HighlightUtils.highlightString({
+            content: resultValue as string,
+            delimiters: {
+              open: '<strong>',
+              close: '</strong>',
+            },
+            highlights: ResultTemplatesHelpers.getResultProperty(
+              this.result,
+              this.shouldHighlightWith
+            ) as HighlightUtils.HighlightKeyword[],
+          });
+          return <span innerHTML={resultValue as string}></span>;
+        } catch (error) {
+          return (
+            <atomic-component-error error={error}></atomic-component-error>
+          );
+        }
       }
       return <span>{resultValue}</span>;
     }

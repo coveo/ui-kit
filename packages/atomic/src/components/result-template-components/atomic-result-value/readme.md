@@ -19,9 +19,14 @@
 
  - [atomic-result-excerpt](../atomic-result-excerpt)
 
+### Depends on
+
+- [atomic-component-error](../../atomic-component-error)
+
 ### Graph
 ```mermaid
 graph TD;
+  atomic-result-value --> atomic-component-error
   atomic-result-excerpt --> atomic-result-value
   style atomic-result-value fill:#f9f,stroke:#333,stroke-width:4px
 ```
