@@ -12,7 +12,7 @@ import {
 import {
   RangeFacetSelectionPayload,
   rangeFacetSelectionPayloadDefinition,
-} from './range-facet-controller-actions';
+} from './range-facet-validate-payload';
 
 const getRangeFacetMetadata = (
   state: Partial<SearchAppState>,

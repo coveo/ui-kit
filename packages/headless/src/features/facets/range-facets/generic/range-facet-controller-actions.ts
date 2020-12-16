@@ -1,32 +1,14 @@
 import {createAsyncThunk} from '@reduxjs/toolkit';
-import {RangeFacetValue} from './interfaces/range-facet';
 import {AsyncThunkSearchOptions} from '../../../../api/search/search-api-client';
 import {ConfigurationSection} from '../../../../state/state-sections';
 import {getAnalyticsActionForToggleRangeFacetSelect} from './range-facet-utils';
 import {updateFacetOptions} from '../../../facet-options/facet-options-actions';
 import {executeSearch} from '../../../search/search-actions';
-import {RecordValue} from '@coveo/bueno';
-import {facetIdDefinition} from '../../generic/facet-actions-validation';
-import {
-  numericFacetValueDefinition,
-  dateFacetValueDefinition,
-} from './range-facet-validate-payload';
 import {logRangeFacetBreadcrumb} from './range-facet-analytics-actions';
-
-export const rangeFacetSelectionPayloadDefinition = (
-  selection: RangeFacetValue
-) => ({
-  facetId: facetIdDefinition,
-  selection:
-    typeof selection.start === 'string'
-      ? new RecordValue({values: dateFacetValueDefinition})
-      : new RecordValue({values: numericFacetValueDefinition}),
-});
-
-export interface RangeFacetSelectionPayload {
-  facetId: string;
-  selection: RangeFacetValue;
-}
+import {
+  RangeFacetSelectionPayload,
+  rangeFacetSelectionPayloadDefinition,
+} from './range-facet-validate-payload';
 
 /**
  * Executes a search with the appropriate analytics for a toggle range facet value

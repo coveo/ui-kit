@@ -1,5 +1,9 @@
-import {requiredNonEmptyString} from '../../generic/facet-actions-validation';
-import {NumberValue, BooleanValue} from '@coveo/bueno';
+import {
+  facetIdDefinition,
+  requiredNonEmptyString,
+} from '../../generic/facet-actions-validation';
+import {NumberValue, BooleanValue, RecordValue} from '@coveo/bueno';
+import {RangeFacetValue} from './interfaces/range-facet';
 
 export const numericFacetValueDefinition = {
   state: requiredNonEmptyString,
@@ -16,3 +20,18 @@ export const dateFacetValueDefinition = {
   state: requiredNonEmptyString,
   numberOfResults: new NumberValue({required: true, min: 0}),
 };
+
+export const rangeFacetSelectionPayloadDefinition = (
+  selection: RangeFacetValue
+) => ({
+  facetId: facetIdDefinition,
+  selection:
+    typeof selection.start === 'string'
+      ? new RecordValue({values: dateFacetValueDefinition})
+      : new RecordValue({values: numericFacetValueDefinition}),
+});
+
+export interface RangeFacetSelectionPayload {
+  facetId: string;
+  selection: RangeFacetValue;
+}
