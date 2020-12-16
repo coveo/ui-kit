@@ -18,15 +18,19 @@ import {
   SearchSection,
 } from '../../state/state-sections';
 import {BaseFacetRequest} from '../../features/facets/facet-api/request';
-import {AsyncThunk} from '@reduxjs/toolkit';
-import {AsyncThunkSearchOptions} from '../../api/search/search-api-client';
-import {executeSelectCategoryFacetBreadcrumb} from '../../features/facets/category-facet-set/category-facet-set-controller-actions';
-import {executeSelectFacetBreadcrumb} from '../../features/facets/facet-set/facet-set-controller-actions';
-import {executeSelectNumericFacetBreadcrumb} from '../../features/facets/range-facets/numeric-facet-set/numeric-facet-controller-actions';
-import {executeSelectDateFacetBreadcrumb} from '../../features/facets/range-facets/date-facet-set/date-facet-controller-actions';
 import {executeSearch} from '../../features/search/search-actions';
 import {deselectAllFacets} from '../../features/facets/generic/facet-actions';
 import {logClearBreadcrumbs} from '../../features/facets/generic/facet-generic-analytics-actions';
+import {logFacetBreadcrumb} from '../../features/facets/facet-set/facet-set-analytics-actions';
+import {selectFacetBreadcrumb} from '../../features/facets/facet-set/facet-set-actions';
+import {executeRangeFacetBreadcrumb} from '../../features/facets/range-facets/generic/range-facet-controller-actions';
+import {toggleSelectNumericFacetValue} from '../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions';
+import {toggleSelectDateFacetValue} from '../../features/facets/range-facets/date-facet-set/date-facet-actions';
+import {
+  deselectAllCategoryFacetValues,
+  updateCategoryFacetNumberOfValues,
+} from '../../features/facets/category-facet-set/category-facet-set-actions';
+import {logCategoryFacetBreadcrumb} from '../../features/facets/category-facet-set/category-facet-set-analytics-actions';
 
 export type BreadcrumbManager = ReturnType<typeof buildBreadcrumbManager>;
 export type BreadcrumbManagerState = BreadcrumbManager['state'];
@@ -46,11 +50,7 @@ export const buildBreadcrumbManager = (
 
   function getBreadcrumbs<T extends BaseFacetValue>(
     facetSet: Record<string, BaseFacetRequest>,
-    executeToggleSelect: AsyncThunk<
-      void,
-      {facetId: string; selection: T},
-      AsyncThunkSearchOptions<ConfigurationSection>
-    >,
+    executeToggleSelect: (payload: {facetId: string; selection: T}) => void,
     facetValuesSelector:
       | ((state: SearchSection & FacetSection, facetId: string) => T[])
       | ((state: SearchSection & NumericFacetSection, facetId: string) => T[])
@@ -61,7 +61,7 @@ export const buildBreadcrumbManager = (
         const values = facetValuesSelector(engine.state, facetId).map(
           (selection) => ({
             value: selection,
-            deselect: () => dispatch(executeToggleSelect({facetId, selection})),
+            deselect: () => executeToggleSelect({facetId, selection}),
           })
         );
 
@@ -76,7 +76,14 @@ export const buildBreadcrumbManager = (
   function getFacetBreadcrumbs(): FacetBreadcrumb[] {
     return getBreadcrumbs<FacetValue>(
       engine.state.facetSet,
-      executeSelectFacetBreadcrumb,
+      ({facetId, selection}) => {
+        const analyticsAction = logFacetBreadcrumb({
+          facetId: facetId,
+          facetValue: selection.value,
+        });
+        dispatch(selectFacetBreadcrumb({facetId, selection}));
+        dispatch(executeSearch(analyticsAction));
+      },
       facetResponseSelectedValuesSelector
     );
   }
@@ -84,7 +91,10 @@ export const buildBreadcrumbManager = (
   function getNumericFacetBreadcrumbs(): NumericFacetBreadcrumb[] {
     return getBreadcrumbs<NumericFacetValue>(
       engine.state.numericFacetSet,
-      executeSelectNumericFacetBreadcrumb,
+      (payload) => {
+        dispatch(toggleSelectNumericFacetValue(payload));
+        dispatch(executeRangeFacetBreadcrumb(payload));
+      },
       numericFacetSelectedValuesSelector
     );
   }
@@ -92,31 +102,41 @@ export const buildBreadcrumbManager = (
   function getDateFacetBreadcrumbs(): DateFacetBreadcrumb[] {
     return getBreadcrumbs<DateFacetValue>(
       engine.state.dateFacetSet,
-      executeSelectDateFacetBreadcrumb,
+      (payload) => {
+        dispatch(toggleSelectDateFacetValue(payload));
+        dispatch(executeRangeFacetBreadcrumb(payload));
+      },
       dateFacetSelectedValuesSelector
     );
   }
 
+  function buildCategoryFacetBreadcrumb(facetId: string) {
+    const path = categoryFacetSelectedValuesSelector(engine.state, facetId);
+    return {
+      field: engine.state.categoryFacetSet[facetId].field,
+      path,
+      deselect: () => {
+        dispatch(deselectAllCategoryFacetValues(facetId));
+        dispatch(
+          updateCategoryFacetNumberOfValues({facetId, numberOfValues: 5})
+        );
+        dispatch(
+          executeSearch(
+            logCategoryFacetBreadcrumb({
+              categoryFacetPath: path.map(
+                (categoryFacetValue) => categoryFacetValue.value
+              ),
+              categoryFacetId: facetId,
+            })
+          )
+        );
+      },
+    };
+  }
+
   function getCategoryFacetBreadcrumbs(): CategoryFacetBreadcrumb[] {
     return Object.keys(engine.state.categoryFacetSet)
-      .map((facetId) => {
-        const path = categoryFacetSelectedValuesSelector(engine.state, facetId);
-        return {
-          field: engine.state.categoryFacetSet[facetId].field,
-          path,
-          deselect: () => {
-            dispatch(
-              executeSelectCategoryFacetBreadcrumb({
-                facetId,
-                numberOfValues: 5,
-                path: path.map(
-                  (categoryFacetValue) => categoryFacetValue.value
-                ),
-              })
-            );
-          },
-        };
-      })
+      .map(buildCategoryFacetBreadcrumb)
       .filter((breadcrumb) => breadcrumb.path.length);
   }
 

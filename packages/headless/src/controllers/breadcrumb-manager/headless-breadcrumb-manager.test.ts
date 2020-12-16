@@ -28,13 +28,10 @@ import {deselectAllFacets} from '../../features/facets/generic/facet-actions';
 import {executeSearch} from '../../features/search/search-actions';
 import {FacetValue} from '../../features/facets/facet-set/interfaces/response';
 import {getSearchInitialState} from '../../features/search/search-state';
-import {executeSelectFacetBreadcrumb} from '../../features/facets/facet-set/facet-set-controller-actions';
 import {DateFacetValue} from '../../features/facets/range-facets/date-facet-set/interfaces/response';
-import {executeSelectDateFacetBreadcrumb} from '../../features/facets/range-facets/date-facet-set/date-facet-controller-actions';
 import {NumericFacetValue} from '../../features/facets/range-facets/numeric-facet-set/interfaces/response';
-import {executeSelectNumericFacetBreadcrumb} from '../../features/facets/range-facets/numeric-facet-set/numeric-facet-controller-actions';
 import {CategoryFacetValue} from '../../features/facets/category-facet-set/interfaces/response';
-import {executeSelectCategoryFacetBreadcrumb} from '../../features/facets/category-facet-set/category-facet-set-controller-actions';
+import {executeRangeFacetBreadcrumb} from '../../features/facets/range-facets/generic/range-facet-controller-actions';
 
 describe('headless breadcrumb manager', () => {
   const facetId = 'abc123';
@@ -81,11 +78,9 @@ describe('headless breadcrumb manager', () => {
       expect(facetBreadcrumbs[0].values[0].value).toBe(mockValue);
     });
 
-    it('dispatches an executeSelectFacetBreadcrumb action on deselection', () => {
+    it('dispatches an executeSearch action on selection', () => {
       facetBreadcrumbs[0].values[0].deselect();
-      expect(
-        engine.findAsyncAction(executeSelectFacetBreadcrumb.pending)
-      ).toBeTruthy();
+      expect(engine.findAsyncAction(executeSearch.pending)).toBeTruthy();
     });
   });
 
@@ -120,10 +115,10 @@ describe('headless breadcrumb manager', () => {
       expect(facetBreadcrumbs[0].values[0].value).toBe(mockValue);
     });
 
-    it('dispatches an executeSelectDateFacetBreadcrumb action on deselection', () => {
+    it('dispatches an executeRangeFacetBreadcrumb action on selection', () => {
       facetBreadcrumbs[0].values[0].deselect();
       expect(
-        engine.findAsyncAction(executeSelectDateFacetBreadcrumb.pending)
+        engine.findAsyncAction(executeRangeFacetBreadcrumb.pending)
       ).toBeTruthy();
     });
   });
@@ -159,10 +154,10 @@ describe('headless breadcrumb manager', () => {
       expect(facetBreadcrumbs[0].values[0].value).toBe(mockValue);
     });
 
-    it('dispatches an executeSelectNumericFacetBreadcrumb action on deselection', () => {
+    it('dispatches an executeRangeFacetBreadcrumb action on selection', () => {
       facetBreadcrumbs[0].values[0].deselect();
       expect(
-        engine.findAsyncAction(executeSelectNumericFacetBreadcrumb.pending)
+        engine.findAsyncAction(executeRangeFacetBreadcrumb.pending)
       ).toBeTruthy();
     });
   });
@@ -207,11 +202,9 @@ describe('headless breadcrumb manager', () => {
       expect(facetBreadcrumbs[1].path).toEqual([mockValue]);
     });
 
-    it('dispatches an executeSelectCategoryFacetBreadcrumb action on deselection', () => {
+    it('dispatches an executeSearch action on selection', () => {
       facetBreadcrumbs[0].deselect();
-      expect(
-        engine.findAsyncAction(executeSelectCategoryFacetBreadcrumb.pending)
-      ).toBeTruthy();
+      expect(engine.findAsyncAction(executeSearch.pending)).toBeTruthy();
     });
   });
 

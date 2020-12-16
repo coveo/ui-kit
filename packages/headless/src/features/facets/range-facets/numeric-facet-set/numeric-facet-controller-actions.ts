@@ -5,10 +5,7 @@ import {
   ConfigurationSection,
   NumericFacetSection,
 } from '../../../../state/state-sections';
-import {
-  executeToggleRangeFacetSelect,
-  executeRangeFacetBreadcrumb,
-} from '../generic/range-facet-controller-actions';
+import {executeToggleRangeFacetSelect} from '../generic/range-facet-controller-actions';
 import {toggleSelectNumericFacetValue} from './numeric-facet-actions';
 import {facetIdDefinition} from '../../generic/facet-actions-validation';
 import {RecordValue} from '@coveo/bueno';
@@ -39,26 +36,5 @@ export const executeToggleNumericFacetSelect = createAsyncThunk<
     validatePayload(payload, definition);
     dispatch(toggleSelectNumericFacetValue(payload));
     dispatch(executeToggleRangeFacetSelect(payload));
-  }
-);
-
-/**
- * Selects the breadcrumb numeric facet value and then executes a search with the appropriate analytics tag.
- * @param facetId (string) The unique identifier of the facet (e.g., `"1"`).
- * @param selection (NumericFacetValue) The target numeric facet value.
- */
-export const executeSelectNumericFacetBreadcrumb = createAsyncThunk<
-  void,
-  {
-    facetId: string;
-    selection: NumericFacetValue;
-  },
-  AsyncThunkSearchOptions<ConfigurationSection & NumericFacetSection>
->(
-  'numericFacet/executeSelectNumericFacetBreadcrumb',
-  (payload, {dispatch, extra: {validatePayload}}) => {
-    validatePayload(payload, definition);
-    dispatch(toggleSelectNumericFacetValue(payload));
-    dispatch(executeRangeFacetBreadcrumb(payload));
   }
 );

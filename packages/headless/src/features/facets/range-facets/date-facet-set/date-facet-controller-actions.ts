@@ -5,10 +5,7 @@ import {
   ConfigurationSection,
   DateFacetSection,
 } from '../../../../state/state-sections';
-import {
-  executeRangeFacetBreadcrumb,
-  executeToggleRangeFacetSelect,
-} from '../generic/range-facet-controller-actions';
+import {executeToggleRangeFacetSelect} from '../generic/range-facet-controller-actions';
 import {toggleSelectDateFacetValue} from './date-facet-actions';
 import {facetIdDefinition} from '../../generic/facet-actions-validation';
 import {RecordValue} from '@coveo/bueno';
@@ -37,26 +34,5 @@ export const executeToggleDateFacetSelect = createAsyncThunk<
     validatePayload(payload, definition);
     dispatch(toggleSelectDateFacetValue(payload));
     dispatch(executeToggleRangeFacetSelect(payload));
-  }
-);
-
-/**
- * Selects the breadcrumb date facet value and then executes a search with the appropriate analytics tag.
- * @param facetId (string) The unique identifier of the facet (e.g., `"1"`).
- * @param selection (DateFacetValue) The target date facet value.
- */
-export const executeSelectDateFacetBreadcrumb = createAsyncThunk<
-  void,
-  {
-    facetId: string;
-    selection: DateFacetValue;
-  },
-  AsyncThunkSearchOptions<ConfigurationSection & DateFacetSection>
->(
-  'dateFacet/executeSelectDateFacetBreadcrumb',
-  (payload, {dispatch, extra: {validatePayload}}) => {
-    validatePayload(payload, definition);
-    dispatch(toggleSelectDateFacetValue(payload));
-    dispatch(executeRangeFacetBreadcrumb(payload));
   }
 );
