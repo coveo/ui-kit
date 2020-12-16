@@ -1,22 +1,29 @@
 import {FacetValueState} from './value';
 
 export interface BaseFacetRequest {
-  /** The unique identifier of the facet (e.g., `"1"`).*/
+  /**
+   * A unique identifier for the controller.
+   * By default, a unique random identifier is generated.
+   */
   facetId: string;
-  /** The name of the field on which to base the facet.*/
+  /** The field whose values you want to display in the facet.*/
   field: string;
-  /** Whether to exclude folded result parents when estimating the result count for each facet value
+  /** Whether to exclude folded result parents when estimating the result count for each facet value.
    * @default true
    */
   filterFacetCount: boolean;
-  /** The maximum number of items to scan for facet values.
+  /** The maximum number of results to scan in the index to ensure that the facet lists all potential facet values.
    *
    * Note: A high injectionDepth may negatively impact the facet request performance.
    *
    * @default 1000
+   * @minimum 0
    */
   injectionDepth: number;
-  /** The maximum number of facet values to fetch.
+  /**
+   * The number of values to request for this facet.
+   * Also determines the number of additional values to request each time this facet is expanded, and the number of values to display when this facet is collapsed.
+   * @minimum 1
    * @default 8
    */
   numberOfValues: number;
@@ -41,14 +48,14 @@ export interface CurrentValues<T> {
 }
 
 export interface Freezable {
-  /** Setting this to true is useful to ensure that the facet does not move around while the end-user is interacting with it in the search interface.
+  /** Setting this to true is ensures that the facet does not move around while the end-user is interacting with it in the search interface.
    * @default false
    */
   freezeCurrentValues: boolean;
 }
 
 export interface Delimitable {
-  /** The character seperating the values.
+  /** The character that specifies the hierarchical dependency.
    * @default ">"
    */
   delimitingCharacter: string;
