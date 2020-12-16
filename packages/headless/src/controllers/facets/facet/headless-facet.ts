@@ -173,7 +173,7 @@ export function buildFacet(
       dispatch(executeSearch(logFacetShowLess(facetId)));
     },
 
-    /** @returns (FacetState) The state of the `Facet` controller. */
+    /** The state of the `Facet` controller. */
     get state() {
       const request = getRequest();
       const response = getResponse();
@@ -187,26 +187,28 @@ export function buildFacet(
       const canShowMoreValues = response ? response.moreValuesAvailable : false;
 
       return {
-        /** @returns the facet id */
+        /** The facet id. */
         facetId,
 
-        /** @returns the values of the facet */
+        /** The values of the facet. */
         values,
 
-        /** @returns the active sortCriterion of the facet */
+        /** The active sortCriterion of the facet. */
         sortCriterion,
 
-        /** @returns `true` if a search is in progress and `false` otherwise. */
+        /** `true` if a search is in progress and `false` otherwise. */
         isLoading,
 
-        /** @returns `true` if there is at least one non-idle value and `false` otherwise. */
+        /** `true` if there is at least one non-idle value and `false` otherwise. */
         hasActiveValues,
 
-        /** @returns `true` if there are more values to display and `false` otherwise.*/
+        /** `true` if there are more values to display and `false` otherwise. */
         canShowMoreValues,
 
-        /** @returns `true` if fewer values can be displayed and `false` otherwise.*/
+        /** `true` if fewer values can be displayed and `false` otherwise. */
         canShowLessValues: computeCanShowLessValues(),
+
+        /** The state of the facet's searchbox. */
         facetSearch: facetSearch.state,
       };
     },
