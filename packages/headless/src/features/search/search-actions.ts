@@ -49,8 +49,8 @@ import {logFetchMoreResults, logQueryError} from './search-analytics-actions';
 import {SearchAction} from '../analytics/analytics-utils';
 import {HistoryState} from '../history/history-state';
 import {sortFacets} from '../../utils/facet-utils';
-import {mapOrExclude} from '../../utils/utils';
 import {getDebugInitialState} from '../debug/debug-state';
+import {isNullOrUndefined} from '@coveo/bueno';
 
 export type StateNeededByExecuteSearch = ConfigurationSection &
   Partial<
@@ -311,36 +311,21 @@ const buildFetchMoreRequest = (
 };
 
 function getFacets(state: StateNeededByExecuteSearch) {
-  return [...getFacetsInOrder(state), ...getFacetsNotInResponse(state)];
+  return [...getFacetsInOrder(state), ...getRemainingUnorderedFacets(state)];
 }
 
 function getFacetsInOrder(state: StateNeededByExecuteSearch) {
   return state?.search?.facetOrder
-    ? mapOrExclude(
-        sortFacets(state.search.response.facets, state.search.facetOrder),
-        (facet) => findFacetRequest(state, facet.facetId)
-      )
+    ? sortFacets(getAllFacets(state), state.search.facetOrder)
     : [];
 }
 
-function findFacetRequest(state: StateNeededByExecuteSearch, facetId: string) {
-  const sets = [
-    state.facetSet,
-    state.numericFacetSet,
-    state.dateFacetSet,
-    state.categoryFacetSet,
-  ];
-
-  const targetSet = sets.find((set) => set && set[facetId]);
-  return targetSet ? targetSet[facetId] : undefined;
-}
-
-function getFacetsNotInResponse(state: StateNeededByExecuteSearch) {
-  const excludedFacetIds = new Set<string>();
-  const responseFacets = state.search?.response.facets;
-  responseFacets?.forEach((f) => excludedFacetIds.add(f.facetId));
-
-  return getAllFacets(state).filter((f) => !excludedFacetIds.has(f.facetId));
+function getRemainingUnorderedFacets(state: StateNeededByExecuteSearch) {
+  return isNullOrUndefined(state.search?.facetOrder)
+    ? getAllFacets(state)
+    : getAllFacets(state).filter(
+        (f) => state.search!.facetOrder!.indexOf(f.facetId) === -1
+      );
 }
 
 function getAllFacets(state: StateNeededByExecuteSearch) {
