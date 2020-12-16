@@ -37,6 +37,10 @@ type DateRangeOptions = Partial<Omit<DateRangeRequest, 'start' | 'end'>> & {
   dateFormat?: string;
 };
 
+/** Creates a `DateRangeRequest`.
+ * @param config The options with which to create a `DateRangeRequest`.
+ * @returns A new `DateRangeRequest`.
+ */
 export function buildDateRange(config: DateRangeOptions): DateRangeRequest {
   const DATE_FORMAT = 'YYYY/MM/DD@HH:mm:ss';
   const start = config.useLocalTime
@@ -64,11 +68,15 @@ export function buildDateRange(config: DateRangeOptions): DateRangeRequest {
 
 export {DateFacetOptions};
 export type DateFacetProps = {
+  /** The options for the `DateFacet` controller. */
   options: DateFacetOptions;
 };
 
-/** The `DateFacet` controller makes it possible to create a facet with date ranges.*/
+/** The `DateFacet` controller makes it possible to create a facet with date ranges. */
 export type DateFacet = ReturnType<typeof buildDateFacet>;
+/**
+ * A scoped and simplified part of the headless state that is relevant to the `DateFacet` controller.
+ */
 export type DateFacetState = DateFacet['state'];
 
 export function buildDateFacet(
@@ -95,15 +103,19 @@ export function buildDateFacet(
   return {
     ...rangeFacet,
     /**
-     * Selects (deselects) the passed value if unselected (selected).
-     * @param selection The facet value to select or deselect.
+     * Toggles the specified facet value.
+     * @param selection The facet value to toggle.
      */
     toggleSelect: (selection: DateFacetValue) =>
       dispatch(executeToggleDateFacetSelect({facetId, selection})),
 
-    /** @returns The state of the `DateFacet` controller.*/
+    /** The state of the `DateFacet` controller.*/
     get state() {
-      return {...rangeFacet.state, isLoading: engine.state.search.isLoading};
+      return {
+        ...rangeFacet.state,
+        /** `true` if a search is in progress and `false` otherwise. */
+        isLoading: engine.state.search.isLoading,
+      };
     },
   };
 }
