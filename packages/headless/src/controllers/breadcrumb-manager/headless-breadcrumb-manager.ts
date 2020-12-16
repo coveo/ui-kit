@@ -172,7 +172,7 @@ export const buildBreadcrumbManager = (
 };
 
 /**
- * Represent a generic Breadcrumb type.
+ * Represents a generic breadcrumb type.
  */
 export interface Breadcrumb<T extends BaseFacetValue> {
   /**
@@ -186,7 +186,7 @@ export interface Breadcrumb<T extends BaseFacetValue> {
 }
 
 /**
- * Represent a generic Breadcrumb value type.
+ * Represents a generic breadcrumb value type.
  *
  * Can either be a @type {FacetBreadcrumb}, @type {NumericFacetBreadcrumb}, @type {DateFacetBreadcrumb}, @type {CategoryFacetBreadcrumb}
  */
@@ -202,19 +202,19 @@ export type BreadcrumbValue<T extends BaseFacetValue> = {
 };
 
 /**
- * Represent a Breadcrumb for specific facet.
+ * Represents a breadcrumb for specific facet.
  */
 export type FacetBreadcrumb = Breadcrumb<FacetValue>;
 /**
- * Represent a Breadcrumb for a numerical facet.
+ * Represents a breadcrumb for a numerical facet.
  */
 export type NumericFacetBreadcrumb = Breadcrumb<NumericFacetValue>;
 /**
- * Represent a Breadcrumb for a date facet.
+ * Represents a breadcrumb for a date facet.
  */
 export type DateFacetBreadcrumb = Breadcrumb<DateFacetValue>;
 /**
- * Represent a breadcrumb for a category facet.
+ * Represents a breadcrumb for a category facet.
  */
 export interface CategoryFacetBreadcrumb {
   /**
