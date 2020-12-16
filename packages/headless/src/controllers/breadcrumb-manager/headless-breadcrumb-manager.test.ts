@@ -32,6 +32,13 @@ import {DateFacetValue} from '../../features/facets/range-facets/date-facet-set/
 import {NumericFacetValue} from '../../features/facets/range-facets/numeric-facet-set/interfaces/response';
 import {CategoryFacetValue} from '../../features/facets/category-facet-set/interfaces/response';
 import {executeRangeFacetBreadcrumb} from '../../features/facets/range-facets/generic/range-facet-controller-actions';
+import {selectFacetBreadcrumb} from '../../features/facets/facet-set/facet-set-actions';
+import {toggleSelectDateFacetValue} from '../../features/facets/range-facets/date-facet-set/date-facet-actions';
+import {toggleSelectNumericFacetValue} from '../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions';
+import {
+  deselectAllCategoryFacetValues,
+  updateCategoryFacetNumberOfValues,
+} from '../../features/facets/category-facet-set/category-facet-set-actions';
 
 describe('headless breadcrumb manager', () => {
   const facetId = 'abc123';
@@ -39,13 +46,13 @@ describe('headless breadcrumb manager', () => {
   let state: SearchAppState;
   let breadcrumbManager: BreadcrumbManager;
 
-  function initController(mockState: SearchAppState = createMockState()) {
-    state = mockState;
+  function initController() {
     engine = buildMockSearchAppEngine({state});
     breadcrumbManager = buildBreadcrumbManager(engine);
   }
 
   beforeEach(() => {
+    state = createMockState();
     initController();
   });
 
@@ -54,22 +61,23 @@ describe('headless breadcrumb manager', () => {
     let facetBreadcrumbs: FacetBreadcrumb[];
 
     beforeEach(() => {
-      mockValue = buildMockFacetValue({state: 'selected'});
+      mockValue = buildMockFacetValue({
+        state: 'selected',
+      });
 
-      initController(
-        createMockState({
-          search: {
-            ...getSearchInitialState(),
-            response: {
-              ...getSearchInitialState().response,
-              facets: [buildMockFacetResponse({facetId, values: [mockValue]})],
-            },
+      state = createMockState({
+        search: {
+          ...getSearchInitialState(),
+          response: {
+            ...getSearchInitialState().response,
+            facets: [buildMockFacetResponse({facetId, values: [mockValue]})],
           },
-          facetSet: {
-            [facetId]: buildMockFacetRequest({facetId}),
-          },
-        })
-      );
+        },
+        facetSet: {
+          [facetId]: buildMockFacetRequest({facetId}),
+        },
+      });
+      initController();
 
       facetBreadcrumbs = breadcrumbManager.state.facetBreadcrumbs;
     });
@@ -82,6 +90,16 @@ describe('headless breadcrumb manager', () => {
       facetBreadcrumbs[0].values[0].deselect();
       expect(engine.findAsyncAction(executeSearch.pending)).toBeTruthy();
     });
+
+    it('dispatches an selectFacetBreadcrumb action on selection', () => {
+      facetBreadcrumbs[0].values[0].deselect();
+      expect(engine.actions).toContainEqual(
+        selectFacetBreadcrumb({
+          facetId,
+          selection: mockValue,
+        })
+      );
+    });
   });
 
   describe('date facet breadcrumbs', () => {
@@ -91,22 +109,21 @@ describe('headless breadcrumb manager', () => {
     beforeEach(() => {
       mockValue = buildMockDateFacetValue({state: 'selected'});
 
-      initController(
-        createMockState({
-          search: {
-            ...getSearchInitialState(),
-            response: {
-              ...getSearchInitialState().response,
-              facets: [
-                buildMockDateFacetResponse({facetId, values: [mockValue]}),
-              ],
-            },
+      state = createMockState({
+        search: {
+          ...getSearchInitialState(),
+          response: {
+            ...getSearchInitialState().response,
+            facets: [
+              buildMockDateFacetResponse({facetId, values: [mockValue]}),
+            ],
           },
-          dateFacetSet: {
-            [facetId]: buildMockDateFacetRequest({facetId}),
-          },
-        })
-      );
+        },
+        dateFacetSet: {
+          [facetId]: buildMockDateFacetRequest({facetId}),
+        },
+      });
+      initController();
 
       facetBreadcrumbs = breadcrumbManager.state.dateFacetBreadcrumbs;
     });
@@ -121,6 +138,16 @@ describe('headless breadcrumb manager', () => {
         engine.findAsyncAction(executeRangeFacetBreadcrumb.pending)
       ).toBeTruthy();
     });
+
+    it('dispatches a toggleSelectDateFacetValue action on selection', () => {
+      facetBreadcrumbs[0].values[0].deselect();
+      expect(engine.actions).toContainEqual(
+        toggleSelectDateFacetValue({
+          facetId,
+          selection: mockValue,
+        })
+      );
+    });
   });
 
   describe('numeric facet breadcrumbs', () => {
@@ -130,22 +157,21 @@ describe('headless breadcrumb manager', () => {
     beforeEach(() => {
       mockValue = buildMockNumericFacetValue({state: 'selected'});
 
-      initController(
-        createMockState({
-          search: {
-            ...getSearchInitialState(),
-            response: {
-              ...getSearchInitialState().response,
-              facets: [
-                buildMockNumericFacetResponse({facetId, values: [mockValue]}),
-              ],
-            },
+      state = createMockState({
+        search: {
+          ...getSearchInitialState(),
+          response: {
+            ...getSearchInitialState().response,
+            facets: [
+              buildMockNumericFacetResponse({facetId, values: [mockValue]}),
+            ],
           },
-          numericFacetSet: {
-            [facetId]: buildMockNumericFacetRequest({facetId}),
-          },
-        })
-      );
+        },
+        numericFacetSet: {
+          [facetId]: buildMockNumericFacetRequest({facetId}),
+        },
+      });
+      initController();
 
       facetBreadcrumbs = breadcrumbManager.state.numericFacetBreadcrumbs;
     });
@@ -160,6 +186,16 @@ describe('headless breadcrumb manager', () => {
         engine.findAsyncAction(executeRangeFacetBreadcrumb.pending)
       ).toBeTruthy();
     });
+
+    it('dispatches a toggleSelectNumericFacetValue action on selection', () => {
+      facetBreadcrumbs[0].values[0].deselect();
+      expect(engine.actions).toContainEqual(
+        toggleSelectNumericFacetValue({
+          facetId,
+          selection: mockValue,
+        })
+      );
+    });
   });
 
   describe('category facet breadcrumbs', () => {
@@ -170,29 +206,28 @@ describe('headless breadcrumb manager', () => {
     beforeEach(() => {
       mockValue = buildMockCategoryFacetValue({state: 'selected'});
 
-      initController(
-        createMockState({
-          search: {
-            ...getSearchInitialState(),
-            response: {
-              ...getSearchInitialState().response,
-              facets: [
-                buildMockCategoryFacetResponse({facetId, values: [mockValue]}),
-                buildMockCategoryFacetResponse({
-                  facetId: otherFacetId,
-                  values: [mockValue],
-                }),
-              ],
-            },
+      state = createMockState({
+        search: {
+          ...getSearchInitialState(),
+          response: {
+            ...getSearchInitialState().response,
+            facets: [
+              buildMockCategoryFacetResponse({facetId, values: [mockValue]}),
+              buildMockCategoryFacetResponse({
+                facetId: otherFacetId,
+                values: [mockValue],
+              }),
+            ],
           },
-          categoryFacetSet: {
-            [facetId]: buildMockCategoryFacetRequest({facetId}),
-            [otherFacetId]: buildMockCategoryFacetRequest({
-              facetId: otherFacetId,
-            }),
-          },
-        })
-      );
+        },
+        categoryFacetSet: {
+          [facetId]: buildMockCategoryFacetRequest({facetId}),
+          [otherFacetId]: buildMockCategoryFacetRequest({
+            facetId: otherFacetId,
+          }),
+        },
+      });
+      initController();
 
       facetBreadcrumbs = breadcrumbManager.state.categoryFacetBreadcrumbs;
     });
@@ -205,6 +240,20 @@ describe('headless breadcrumb manager', () => {
     it('dispatches an executeSearch action on selection', () => {
       facetBreadcrumbs[0].deselect();
       expect(engine.findAsyncAction(executeSearch.pending)).toBeTruthy();
+    });
+
+    it('dispatches a deselectAllCategoryFacetValues action on selection', () => {
+      facetBreadcrumbs[0].deselect();
+      expect(engine.actions).toContainEqual(
+        deselectAllCategoryFacetValues(facetId)
+      );
+    });
+
+    it('dispatches a updateCategoryFacetNumberOfValues action on selection', () => {
+      facetBreadcrumbs[0].deselect();
+      expect(engine.actions).toContainEqual(
+        updateCategoryFacetNumberOfValues({facetId, numberOfValues: 5})
+      );
     });
   });
 
