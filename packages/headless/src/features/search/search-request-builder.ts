@@ -1,6 +1,7 @@
 import {getVisitorID} from '../../api/analytics/analytics';
 import {SearchRequest} from '../../api/search/search/search-request';
 import {CategoryFacetSetState} from '../facets/category-facet-set/category-facet-set-state';
+import {CategoryFacetRequest} from '../facets/category-facet-set/interfaces/request';
 import {AnyFacetRequest} from '../facets/generic/interfaces/generic-facet-request';
 import {StateNeededByExecuteSearch} from './search-actions';
 
@@ -81,11 +82,19 @@ function findFacetRequest(state: StateNeededByExecuteSearch, facetId: string) {
     state.facetSet,
     state.numericFacetSet,
     state.dateFacetSet,
-    state.categoryFacetSet,
+    getCategoryFacetRequestMap(state.categoryFacetSet),
   ];
 
   const targetSet = sets.find((set) => set && set[facetId]);
   return targetSet ? targetSet[facetId] : undefined;
+}
+
+function getCategoryFacetRequestMap(
+  state: CategoryFacetSetState | undefined
+): Record<string, CategoryFacetRequest> {
+  return Object.entries(state || {})
+    .map(([facetId, slice]) => ({[facetId]: slice!.request}))
+    .reduce((all, current) => ({...all, ...current}), {});
 }
 
 function getFacetsNotInResponse(state: StateNeededByExecuteSearch) {
@@ -105,12 +114,13 @@ function getAllFacets(state: StateNeededByExecuteSearch) {
   ];
 }
 
-function getCategoryFacetRequests(requests: CategoryFacetSetState | undefined) {
-  return getFacetRequests(requests).map((facet) => {
-    const numberOfValues = facet.currentValues.length
+function getCategoryFacetRequests(state: CategoryFacetSetState | undefined) {
+  return Object.values(state || {}).map((slice) => {
+    const request = slice!.request;
+    const numberOfValues = request.currentValues.length
       ? 1
-      : facet.numberOfValues;
-    return {...facet, numberOfValues};
+      : request.numberOfValues;
+    return {...request, numberOfValues};
   });
 }
 
