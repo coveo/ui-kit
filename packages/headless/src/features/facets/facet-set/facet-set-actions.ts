@@ -47,20 +47,6 @@ export const toggleSelectFacetValue = createAction(
 );
 
 /**
- * Selects a facet breadcrumb value.
- * @param facetId (string) The unique identifier of the facet (e.g., `"1"`).
- * @param selection (FacetValue) The target facet value.
- */
-export const selectFacetBreadcrumb = createAction(
-  'facet/selectBreadcrumb',
-  (payload: {facetId: string; selection: FacetValue}) =>
-    validatePayload(payload, {
-      facetId: facetIdDefinition,
-      selection: new RecordValue({values: facetValueDefinition}),
-    })
-);
-
-/**
  * Deselects all values of a facet.
  * @param facetId (string) The unique identifier of the facet (e.g., `"1"`).
  */
@@ -108,5 +94,19 @@ export const updateFacetIsFieldExpanded = createAction(
     validatePayload(payload, {
       facetId: facetIdDefinition,
       isFieldExpanded: new BooleanValue({required: true}),
+    })
+);
+
+/**
+ * Updates the updateFreezeCurrentValues flag of a facet.
+ * @param facetId (string) The unique identifier of the facet (e.g., `"1"`).
+ * @param freezeCurrentValues (boolean) Wether the values should be frozen in the next request.
+ */
+export const updateFreezeCurrentValues = createAction(
+  'facet/updateFreezeCurrentValues',
+  (payload: {facetId: string; freezeCurrentValues: boolean}) =>
+    validatePayload(payload, {
+      facetId: facetIdDefinition,
+      freezeCurrentValues: new BooleanValue({required: true}),
     })
 );

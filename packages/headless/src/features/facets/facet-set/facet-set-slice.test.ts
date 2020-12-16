@@ -8,7 +8,7 @@ import {
   updateFacetSortCriterion,
   updateFacetNumberOfValues,
   updateFacetIsFieldExpanded,
-  selectFacetBreadcrumb,
+  updateFreezeCurrentValues,
 } from './facet-set-actions';
 import {buildMockFacetValue} from '../../../test/mock-facet-value';
 import {buildMockSearch} from '../../../test/mock-search';
@@ -214,50 +214,24 @@ describe('facet-set slice', () => {
     expect(() => facetSetReducer(state, action)).not.toThrow();
   });
 
-  describe('dispatching #facetBreadcrumb with a registered facet id', () => {
-    it('sets the state of a selected value to idle', () => {
-      const id = '1';
+  it(`dispatching #updateFreezeCurrentValues with a registered facet id
+  sets the state updateFreezeCurrentValues to the value`, () => {
+    const id = '1';
 
-      const facetValue = buildMockFacetValue({value: 'TED', state: 'selected'});
-      const facetValueRequest = convertFacetValueToRequest(facetValue);
+    state[id] = buildMockFacetRequest();
 
-      state[id] = buildMockFacetRequest({currentValues: [facetValueRequest]});
-
-      const action = selectFacetBreadcrumb({
-        facetId: id,
-        selection: facetValue,
-      });
-      const finalState = facetSetReducer(state, action);
-
-      const targetValue = finalState[id].currentValues.find(
-        (req) => req.value === facetValue.value
-      );
-      expect(targetValue?.state).toBe('idle');
+    const action = updateFreezeCurrentValues({
+      facetId: id,
+      freezeCurrentValues: true,
     });
-
-    it('sets #preventAutoSelect to true', () => {
-      const id = '1';
-
-      const facetValue = buildMockFacetValue({value: 'TED'});
-      const facetValueRequest = convertFacetValueToRequest(facetValue);
-
-      state[id] = buildMockFacetRequest({currentValues: [facetValueRequest]});
-
-      const action = selectFacetBreadcrumb({
-        facetId: id,
-        selection: facetValue,
-      });
-      const finalState = facetSetReducer(state, action);
-
-      expect(finalState[id].preventAutoSelect).toBe(true);
-    });
+    const finalState = facetSetReducer(state, action);
+    expect(finalState[id].freezeCurrentValues).toBe(true);
   });
 
-  it('dispatching #facetBreadcrumb with an invalid id does not throw', () => {
-    const facetValue = buildMockFacetValue({value: 'TED'});
-    const action = selectFacetBreadcrumb({
+  it('dispatching #updateFreezeCurrentValues with an invalid id does not throw', () => {
+    const action = updateFreezeCurrentValues({
       facetId: '1',
-      selection: facetValue,
+      freezeCurrentValues: true,
     });
 
     expect(() => facetSetReducer(state, action)).not.toThrow();

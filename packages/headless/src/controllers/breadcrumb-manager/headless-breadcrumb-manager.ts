@@ -22,7 +22,10 @@ import {executeSearch} from '../../features/search/search-actions';
 import {deselectAllFacets} from '../../features/facets/generic/facet-actions';
 import {logClearBreadcrumbs} from '../../features/facets/generic/facet-generic-analytics-actions';
 import {logFacetBreadcrumb} from '../../features/facets/facet-set/facet-set-analytics-actions';
-import {selectFacetBreadcrumb} from '../../features/facets/facet-set/facet-set-actions';
+import {
+  toggleSelectFacetValue,
+  updateFreezeCurrentValues,
+} from '../../features/facets/facet-set/facet-set-actions';
 import {executeRangeFacetBreadcrumb} from '../../features/facets/range-facets/generic/range-facet-controller-actions';
 import {toggleSelectNumericFacetValue} from '../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions';
 import {toggleSelectDateFacetValue} from '../../features/facets/range-facets/date-facet-set/date-facet-actions';
@@ -88,7 +91,10 @@ export const buildBreadcrumbManager = (
           facetId: facetId,
           facetValue: selection.value,
         });
-        dispatch(selectFacetBreadcrumb({facetId, selection}));
+        dispatch(toggleSelectFacetValue({facetId, selection}));
+        dispatch(
+          updateFreezeCurrentValues({facetId, freezeCurrentValues: false})
+        );
         dispatch(executeSearch(analyticsAction));
       },
       facetResponseSelectedValuesSelector

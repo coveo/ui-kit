@@ -32,7 +32,10 @@ import {DateFacetValue} from '../../features/facets/range-facets/date-facet-set/
 import {NumericFacetValue} from '../../features/facets/range-facets/numeric-facet-set/interfaces/response';
 import {CategoryFacetValue} from '../../features/facets/category-facet-set/interfaces/response';
 import {executeRangeFacetBreadcrumb} from '../../features/facets/range-facets/generic/range-facet-controller-actions';
-import {selectFacetBreadcrumb} from '../../features/facets/facet-set/facet-set-actions';
+import {
+  toggleSelectFacetValue,
+  updateFreezeCurrentValues,
+} from '../../features/facets/facet-set/facet-set-actions';
 import {toggleSelectDateFacetValue} from '../../features/facets/range-facets/date-facet-set/date-facet-actions';
 import {toggleSelectNumericFacetValue} from '../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions';
 import {
@@ -91,12 +94,22 @@ describe('headless breadcrumb manager', () => {
       expect(engine.findAsyncAction(executeSearch.pending)).toBeTruthy();
     });
 
-    it('dispatches an selectFacetBreadcrumb action on selection', () => {
+    it('dispatches an toggleSelectFacetValue action on selection', () => {
       facetBreadcrumbs[0].values[0].deselect();
       expect(engine.actions).toContainEqual(
-        selectFacetBreadcrumb({
+        toggleSelectFacetValue({
           facetId,
           selection: mockValue,
+        })
+      );
+    });
+
+    it('dispatches an updateFreezeCurrentValues action on selection', () => {
+      facetBreadcrumbs[0].values[0].deselect();
+      expect(engine.actions).toContainEqual(
+        updateFreezeCurrentValues({
+          facetId,
+          freezeCurrentValues: false,
         })
       );
     });
