@@ -1,11 +1,4 @@
-import dayjs from 'dayjs';
-import utc from 'dayjs/plugin/utc';
-import customParseFormat from 'dayjs/plugin/customParseFormat';
-
-import {
-  DateRangeRequest,
-  DateFacetRequest,
-} from '../../../../features/facets/range-facets/date-facet-set/interfaces/request';
+import {DateFacetRequest} from '../../../../features/facets/range-facets/date-facet-set/interfaces/request';
 import {Engine} from '../../../../app/headless-engine';
 import {DateFacetRegistrationOptions} from '../../../../features/facets/range-facets/date-facet-set/interfaces/options';
 import {
@@ -26,46 +19,9 @@ import {
   dateFacetOptionsSchema,
 } from './headless-date-facet-options';
 import {determineFacetId} from '../../_common/facet-id-determinor';
+import {buildDateRange} from './date-range';
 
-dayjs.extend(utc);
-dayjs.extend(customParseFormat);
-
-type DateRangeOptions = Partial<Omit<DateRangeRequest, 'start' | 'end'>> & {
-  start: string | number | Date;
-  end: string | number | Date;
-  useLocalTime?: boolean;
-  dateFormat?: string;
-};
-
-/** Creates a `DateRangeRequest`.
- * @param config The options with which to create a `DateRangeRequest`.
- * @returns A new `DateRangeRequest`.
- */
-export function buildDateRange(config: DateRangeOptions): DateRangeRequest {
-  const DATE_FORMAT = 'YYYY/MM/DD@HH:mm:ss';
-  const start = config.useLocalTime
-    ? dayjs(config.start, config.dateFormat).format(DATE_FORMAT)
-    : dayjs(config.start, config.dateFormat).utc().format(DATE_FORMAT);
-  const end = config.useLocalTime
-    ? dayjs(config.end, config.dateFormat).format(DATE_FORMAT)
-    : dayjs(config.end, config.dateFormat).utc().format(DATE_FORMAT);
-
-  if (start === 'Invalid Date' || end === 'Invalid Date') {
-    throw new Error(
-      `Could not parse the provided date, please provide a dateFormat string in the configuration options.\n
-       See https://day.js.org/docs/en/parse/string-format for more information.
-       `
-    );
-  }
-  return {
-    endInclusive: false,
-    state: 'idle',
-    ...config,
-    start,
-    end,
-  };
-}
-
+export {buildDateRange};
 export {DateFacetOptions};
 export type DateFacetProps = {
   /** The options for the `DateFacet` controller. */

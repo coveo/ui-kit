@@ -64,6 +64,32 @@ export function handleRangeFacetDeselectAll<T extends RangeFacetRequest>(
   );
 }
 
+export function handleRangeFacetSearchParameterRestoration<
+  T extends RangeFacetRequest
+>(state: Record<string, T>, rangeFacets: Record<string, T['currentValues']>) {
+  Object.entries(state).forEach(([facetId, request]) => {
+    type Range = T['currentValues'][0];
+    const rangesToSelect: Range[] = rangeFacets[facetId] || [];
+
+    request.currentValues.forEach((range: Range) => {
+      const found = !!findRange(rangesToSelect, range);
+      range.state = found ? 'selected' : 'idle';
+      return range;
+    });
+
+    const missingRanges = rangesToSelect.filter(
+      (range) => !findRange(request.currentValues, range)
+    );
+    const currentValues: Range[] = request.currentValues;
+    currentValues.push(...missingRanges);
+
+    request.numberOfValues = Math.max(
+      request.numberOfValues,
+      currentValues.length
+    );
+  });
+}
+
 export function onRangeFacetRequestFulfilled<
   T extends RangeFacetRequest,
   U extends RangeFacetResponse
@@ -87,13 +113,8 @@ export function onRangeFacetRequestFulfilled<
 }
 
 function findRange(values: RangeValueRequest[], value: RangeValueRequest) {
-  const {start, end, endInclusive} = value;
-  return values.find(
-    (range) =>
-      range.start === start &&
-      range.end === end &&
-      range.endInclusive === endInclusive
-  );
+  const {start, end} = value;
+  return values.find((range) => range.start === start && range.end === end);
 }
 
 function calculateNumberOfValues(request: RangeFacetRequest) {

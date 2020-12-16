@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.1.0-alpha.106](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.105...v0.1.0-alpha.106) (2020-12-16)
+
+
+### Features
+
+* **headless:** support numeric and date facets in url ([#356](https://github.com/coveo/ui-kit/issues/356)) ([e975aa9](https://github.com/coveo/ui-kit/commit/e975aa9450d15efe29aa0f73c41931647c816c20))
+
+
+
+
+
 # [0.1.0-alpha.105](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.104...v0.1.0-alpha.105) (2020-12-16)
 
 
