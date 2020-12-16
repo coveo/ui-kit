@@ -45,7 +45,7 @@ export const buildQuerySummary = (
          */
         total: state.pagination.totalCountFiltered,
         /**
-         * The query that was last executed (eg: the content of the searchbox) .
+         * The query that was last executed (the content of the searchbox).
          */
         query: state.search.queryExecuted,
         /**
@@ -57,7 +57,7 @@ export const buildQuerySummary = (
          */
         hasDuration: state.search.duration !== 0,
         /**
-         * Determines if there are results available for the last execute query.
+         * Determines if there are results available for the last executed query.
          */
         hasResults: state.search.results.length !== 0,
         /**
