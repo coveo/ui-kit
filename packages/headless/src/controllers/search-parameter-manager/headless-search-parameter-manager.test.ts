@@ -3,11 +3,13 @@ import {SearchAppState} from '../../state/search-app-state';
 import {buildMockSearchAppEngine, MockEngine} from '../../test';
 import {buildMockCategoryFacetRequest} from '../../test/mock-category-facet-request';
 import {buildMockCategoryFacetValueRequest} from '../../test/mock-category-facet-value-request';
+import {buildMockDateFacetRequest} from '../../test/mock-date-facet-request';
+import {buildMockDateFacetValue} from '../../test/mock-date-facet-value';
 import {buildMockFacetRequest} from '../../test/mock-facet-request';
 import {buildMockFacetValueRequest} from '../../test/mock-facet-value-request';
 import {buildMockNumericFacetRequest} from '../../test/mock-numeric-facet-request';
+import {buildMockNumericFacetValue} from '../../test/mock-numeric-facet-value';
 import {buildMockSearchParameters} from '../../test/mock-search-parameters';
-import {buildNumericRange} from '../facets/range-facet/numeric-facet/headless-numeric-facet';
 import {
   buildSearchParameterManager,
   SearchParameterManager,
@@ -187,12 +189,16 @@ describe('state manager', () => {
 
   describe('#state.parameters.nf', () => {
     it('when a numeric facet has selected values, only selected values are included', () => {
-      const selected = buildNumericRange({
+      const selected = buildMockNumericFacetValue({
         start: 0,
         end: 10,
         state: 'selected',
       });
-      const idle = buildNumericRange({start: 10, end: 20, state: 'idle'});
+      const idle = buildMockNumericFacetValue({
+        start: 10,
+        end: 20,
+        state: 'idle',
+      });
 
       const currentValues = [selected, idle];
       engine.state.numericFacetSet = {
@@ -205,6 +211,33 @@ describe('state manager', () => {
     it('when there are no numeric facets with selected values, the #nf parameter is not included', () => {
       engine.state.numericFacetSet = {author: buildMockNumericFacetRequest()};
       expect('nf' in manager.state.parameters).toBe(false);
+    });
+  });
+
+  describe('#state.parameters.df', () => {
+    it('when a date facet has selected values, only selected values are included', () => {
+      const selected = buildMockDateFacetValue({
+        start: '2020/10/01',
+        end: '2020/11/01',
+        state: 'selected',
+      });
+      const idle = buildMockDateFacetValue({
+        start: '2020/11/01',
+        end: '2020/12/01',
+        state: 'idle',
+      });
+
+      const currentValues = [selected, idle];
+      engine.state.dateFacetSet = {
+        created: buildMockDateFacetRequest({currentValues}),
+      };
+
+      expect(manager.state.parameters.df).toEqual({created: [selected]});
+    });
+
+    it('when there are no date facets with selected values, the #df parameter is not included', () => {
+      engine.state.dateFacetSet = {created: buildMockDateFacetRequest()};
+      expect('df' in manager.state.parameters).toBe(false);
     });
   });
 
@@ -256,11 +289,14 @@ describe('state manager', () => {
       }),
     };
 
-    const numericRanges = [
-      buildNumericRange({start: 0, end: 10, state: 'selected'}),
-    ];
+    const numericRanges = [buildMockNumericFacetValue({state: 'selected'})];
     engine.state.numericFacetSet = {
       size: buildMockNumericFacetRequest({currentValues: numericRanges}),
+    };
+
+    const dateRanges = [buildMockDateFacetValue({state: 'selected'})];
+    engine.state.dateFacetSet = {
+      created: buildMockDateFacetRequest({currentValues: dateRanges}),
     };
 
     engine.state.query.q = 'a';

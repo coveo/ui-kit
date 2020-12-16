@@ -1,5 +1,7 @@
+import {isSearchApiDate} from '../../controllers/facets/range-facet/date-facet/date-range';
+import {buildDateRange} from '../../controllers/facets/range-facet/date-facet/headless-date-facet';
 import {buildNumericRange} from '../../controllers/facets/range-facet/numeric-facet/headless-numeric-facet';
-import {NumericRangeRequest} from '../facets/range-facets/numeric-facet-set/interfaces/request';
+import {RangeValueRequest} from '../facets/range-facets/generic/interfaces/range-facet';
 import {SearchParameters} from './search-parameter-actions';
 
 const delimiter = '&';
@@ -28,8 +30,8 @@ function serializePair(pair: [string, unknown]) {
     return isFacetObject(val) ? serializeFacets(key, val) : '';
   }
 
-  if (key === 'nf') {
-    return isNumericRangeFacetObject(val) ? serializeRangeFacets(key, val) : '';
+  if (key === 'nf' || key === 'df') {
+    return isRangeFacetObject(val) ? serializeRangeFacets(key, val) : '';
   }
 
   return `${key}${equal}${val}`;
@@ -44,16 +46,16 @@ function isFacetObject(obj: unknown): obj is Record<string, string[]> {
   return allEntriesAreValid(obj, isValidValue);
 }
 
-function isNumericRangeFacetObject(
+function isRangeFacetObject(
   obj: unknown
-): obj is Record<string, NumericRangeRequest[]> {
+): obj is Record<string, RangeValueRequest[]> {
   if (!isObject(obj)) {
     return false;
   }
 
-  const isValidValue = (v: unknown) =>
+  const isRangeValue = (v: unknown) =>
     isObject(v) && 'start' in v && 'end' in v;
-  return allEntriesAreValid(obj, isValidValue);
+  return allEntriesAreValid(obj, isRangeValue);
 }
 
 function isObject(obj: unknown): obj is object {
@@ -80,7 +82,7 @@ function serializeFacets(key: string, facets: Record<string, string[]>) {
 
 function serializeRangeFacets(
   key: string,
-  facets: Record<string, NumericRangeRequest[]>
+  facets: Record<string, RangeValueRequest[]>
 ) {
   return Object.entries(facets)
     .map(([facetId, ranges]) => {
@@ -103,7 +105,7 @@ function deserialize(fragment: string): SearchParameters {
   return keyValuePairs.reduce((acc: SearchParameters, pair) => {
     const [key, val] = pair;
 
-    if (key === 'f' || key === 'cf' || key === 'nf') {
+    if (key === 'f' || key === 'cf' || key === 'nf' || key === 'df') {
       const mergedValues = {...acc[key], ...(val as object)};
       return {...acc, [key]: mergedValues};
     }
@@ -121,7 +123,7 @@ function splitOnFirstEqual(str: string) {
 
 function preprocessFacetPairs(pair: string[]) {
   const [key, val] = pair;
-  const facetKey = /^(f|cf|nf)\[(.+)\]$/;
+  const facetKey = /^(f|cf|nf|df)\[(.+)\]$/;
   const result = facetKey.exec(key);
 
   if (!result) {
@@ -142,6 +144,10 @@ function processFacetValues(key: string, values: string[]) {
     return buildNumericRanges(values);
   }
 
+  if (key === 'df') {
+    return buildDateRanges(values);
+  }
+
   return values;
 }
 
@@ -149,7 +155,16 @@ function buildNumericRanges(ranges: string[]) {
   return ranges
     .map((str) => str.split(rangeDelimiter).map(parseFloat))
     .filter((range) => range.length === 2 && range.every(Number.isFinite))
-    .map(([start, end]) => buildNumericRange({start, end}));
+    .map(([start, end]) => buildNumericRange({start, end, state: 'selected'}));
+}
+
+function buildDateRanges(ranges: string[]) {
+  return ranges
+    .map((str) => str.split(rangeDelimiter))
+    .filter((range) => range.length === 2 && range.every(isSearchApiDate))
+    .map(([start, end]) =>
+      buildDateRange({start, end, useLocalTime: true, state: 'selected'})
+    );
 }
 
 function isValidPair<K extends keyof SearchParameters>(
@@ -175,6 +190,7 @@ function isValidKey(key: string): key is keyof SearchParameters {
     f: true,
     cf: true,
     nf: true,
+    df: true,
     debug: true,
   };
 
@@ -202,7 +218,7 @@ function cast<K extends keyof SearchParameters>(
     return [key, parseInt(value)];
   }
 
-  if (key === 'f' || key === 'cf' || key === 'nf') {
+  if (key === 'f' || key === 'cf' || key === 'nf' || key === 'df') {
     return [key, JSON.parse(value)];
   }
 

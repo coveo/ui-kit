@@ -77,17 +77,16 @@ export function handleRangeFacetSearchParameterRestoration<
       return range;
     });
 
-    if (!request.generateAutomaticRanges) {
-      return;
-    }
-
     const missingRanges = rangesToSelect.filter(
       (range) => !findRange(request.currentValues, range)
     );
     const currentValues: Range[] = request.currentValues;
     currentValues.push(...missingRanges);
 
-    request.numberOfValues = calculateNumberOfValues(request);
+    request.numberOfValues = Math.max(
+      request.numberOfValues,
+      currentValues.length
+    );
   });
 }
 

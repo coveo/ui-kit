@@ -1,3 +1,4 @@
+import {buildDateRange} from '../../controllers/facets/range-facet/date-facet/headless-date-facet';
 import {buildNumericRange} from '../../controllers/facets/range-facet/numeric-facet/headless-numeric-facet';
 import {buildMockSearchParameters} from '../../test/mock-search-parameters';
 import {buildSearchParameterSerializer} from './search-parameter-serializer';
@@ -58,6 +59,44 @@ describe('buildSearchParameterSerializer', () => {
       it('if a range does not have an #end key, it does not include it', () => {
         const nf = {size: [{start: 10}]} as never;
         const result = serialize({nf});
+        expect(result).toEqual('');
+      });
+    });
+
+    it('serializes the #df parameter correctly', () => {
+      const date1 = '2010/01/01@05:00:00';
+      const date2 = '2011/01/01@05:00:00';
+      const date3 = '2012/01/01@05:00:00';
+
+      const df = {
+        date: [
+          buildDateRange({start: date1, end: date2, useLocalTime: true}),
+          buildDateRange({start: date2, end: date3, useLocalTime: true}),
+        ],
+        created: [
+          buildDateRange({start: date1, end: date2, useLocalTime: true}),
+        ],
+      };
+
+      const result = serialize({df});
+      const range1 = `${date1}..${date2}`;
+      const range2 = `${date2}..${date3}`;
+
+      expect(result).toEqual(
+        `df[date]=${range1},${range2}&df[created]=${range1}`
+      );
+    });
+
+    describe('when the #df parameter contains facetIds with invalid values', () => {
+      it('if a range does not have a #start key, it does not include it', () => {
+        const df = {created: [{}]} as never;
+        const result = serialize({df});
+        expect(result).toEqual('');
+      });
+
+      it('if a range does not have an #end key, it does not include it', () => {
+        const df = {size: [{start: '2010/01/01@05:00:00'}]} as never;
+        const result = serialize({df});
         expect(result).toEqual('');
       });
     });
@@ -122,8 +161,8 @@ describe('buildSearchParameterSerializer', () => {
       expect(result).toEqual({
         nf: {
           size: [
-            buildNumericRange({start: 0, end: 10}),
-            buildNumericRange({start: 10, end: 20}),
+            buildNumericRange({start: 0, end: 10, state: 'selected'}),
+            buildNumericRange({start: 10, end: 20, state: 'selected'}),
           ],
         },
       });
@@ -133,8 +172,10 @@ describe('buildSearchParameterSerializer', () => {
       const result = deserialize('nf[size]=0..10&nf[amount]=100..200');
       expect(result).toEqual({
         nf: {
-          size: [buildNumericRange({start: 0, end: 10})],
-          amount: [buildNumericRange({start: 100, end: 200})],
+          size: [buildNumericRange({start: 0, end: 10, state: 'selected'})],
+          amount: [
+            buildNumericRange({start: 100, end: 200, state: 'selected'}),
+          ],
         },
       });
     });
@@ -144,8 +185,8 @@ describe('buildSearchParameterSerializer', () => {
       expect(result).toEqual({
         nf: {
           size: [
-            buildNumericRange({start: 7.5, end: 8.5}),
-            buildNumericRange({start: 8.5, end: 9.5}),
+            buildNumericRange({start: 7.5, end: 8.5, state: 'selected'}),
+            buildNumericRange({start: 8.5, end: 9.5, state: 'selected'}),
           ],
         },
       });
@@ -166,13 +207,91 @@ describe('buildSearchParameterSerializer', () => {
         nf: {size: []},
       });
     });
+
+    it('deserializes a date facet with multiple selections', () => {
+      const date1 = '2010/01/01@05:00:00';
+      const date2 = '2011/01/01@05:00:00';
+      const date3 = '2012/01/01@05:00:00';
+
+      const rangeA = `${date1}..${date2}`;
+      const rangeB = `${date2}..${date3}`;
+
+      const result = deserialize(`df[date]=${rangeA},${rangeB}`);
+
+      expect(result).toEqual({
+        df: {
+          date: [
+            buildDateRange({
+              start: date1,
+              end: date2,
+              useLocalTime: true,
+              state: 'selected',
+            }),
+            buildDateRange({
+              start: date2,
+              end: date3,
+              useLocalTime: true,
+              state: 'selected',
+            }),
+          ],
+        },
+      });
+    });
+
+    it('deserializes multiple date facets with selected values', () => {
+      const date1 = '2010/01/01@05:00:00';
+      const date2 = '2011/01/01@05:00:00';
+      const range = `${date1}..${date2}`;
+
+      const result = deserialize(`df[date]=${range}&df[created]=${range}`);
+      const expected = buildDateRange({
+        start: date1,
+        end: date2,
+        useLocalTime: true,
+        state: 'selected',
+      });
+
+      expect(result).toEqual({
+        df: {
+          date: [expected],
+          created: [expected],
+        },
+      });
+    });
+
+    it(`when a date facet range contains a invalid format,
+    the deserializer sets the values for the facetId to an empty array`, () => {
+      const result = deserialize('df[date]=2010/01/01@05:00:00..a');
+      expect(result).toEqual({
+        df: {date: []},
+      });
+    });
+
+    it(`when a numeric facet range contains one number,
+    the deserializer sets the values for the facetId to an empty array`, () => {
+      const result = deserialize('df[date]=2010/01/01@05:00:00');
+      expect(result).toEqual({
+        df: {date: []},
+      });
+    });
   });
 
   it('can serialize and deserialize all search parameters', () => {
     const f = {author: ['a', 'b']};
     const cf = {geography: ['a', 'b']};
-    const nf = {size: [buildNumericRange({start: 0, end: 10})]};
-    const parameters = buildMockSearchParameters({f, cf, nf});
+    const nf = {
+      size: [buildNumericRange({start: 0, end: 10, state: 'selected'})],
+    };
+    const df = {
+      created: [
+        buildDateRange({
+          start: '2010/01/01@05:00:00',
+          end: '2011/01/01@05:00:00',
+          state: 'selected',
+        }),
+      ],
+    };
+    const parameters = buildMockSearchParameters({f, cf, nf, df});
 
     const {serialize, deserialize} = buildSearchParameterSerializer();
     const serialized = serialize(parameters);

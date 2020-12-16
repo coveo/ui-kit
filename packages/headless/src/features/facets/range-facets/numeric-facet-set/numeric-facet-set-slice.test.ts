@@ -82,9 +82,7 @@ describe('numeric-facet-set slice', () => {
     );
 
     const facetId = '1';
-    state[facetId] = buildMockNumericFacetRequest({
-      generateAutomaticRanges: true,
-    });
+    state[facetId] = buildMockNumericFacetRequest();
 
     const value = buildMockNumericFacetValue();
     const nf = {[facetId]: [value]};
