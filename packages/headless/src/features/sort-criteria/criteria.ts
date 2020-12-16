@@ -13,29 +13,29 @@ export enum SortOrder {
  */
 export enum SortBy {
   /**
-   * Use standard index ranking factors (adjacency, TDIDF) and custom ranking expressions (QREs and QRFs) to compute a ranking score for each query result item, and sort the query results by descending score value
+   * Uses standard index ranking factors (adjacency, TDIDF) and custom ranking expressions (QREs and QRFs) to compute a ranking score for each query result item, and sort the query results by descending score value.
    */
   Relevancy = 'relevancy',
   /**
-   * Use only custom ranking expressions (QREs and QRFs) to compute a ranking score for each query result item, and sort the query results by descending score value.
+   * Uses only custom ranking expressions (QREs and QRFs) to compute a ranking score for each query result item, and sort the query results by descending score value.
    */
   QRE = 'qre',
   /**
-   * date ascending/date descending: Use the date field to sort the query results. This field typically contains the last modification date of each item.
+   * date ascending/date descending: Uses the date field to sort the query results. This field typically contains the last modification date of each item.
    */
   Date = 'date',
   /**
-   * @[field] ascending/@[field] descending: Sort using the value of a specific sortable field (replace [field] by the target field name).
+   * @[field] ascending/@[field] descending: Sorts using the value of a specific sortable field (replace [field] by the target field name).
    */
   Field = 'field',
   /**
-   * Do not sort the query results; the index will return result items in an essentially random order.
+   * Does not sort the query results; the index will return result items in an essentially random order.
    */
   NoSort = 'nosort',
 }
 
 /**
- * Use standard index ranking factors (adjacency, TDIDF) and custom ranking expressions (QREs and QRFs) to compute a ranking score for each query result item, and sort the query results by descending score value
+ * Use standard index ranking factors (adjacency, TDIDF) and custom ranking expressions (QREs and QRFs) to compute a ranking score for each query result item, and sort the query results by descending score value.
  */
 export type SortByRelevancy = {by: SortBy.Relevancy};
 /**
@@ -98,7 +98,7 @@ export const buildRelevanceSortCriterion = (): SortByRelevancy => ({
 
 /**
  * Utility function that builds a valid sort by date criterion.
- * @param {SortOrder} order The order (descending/descending) on which to sort.
+ * @param {SortOrder} order The order (ascending/descending) on which to sort.
  * @returns {SortByDate} The sort by date criterion.
  */
 export const buildDateSortCriterion = (order: SortOrder): SortByDate => ({
@@ -131,6 +131,6 @@ export const buildQueryRankingExpressionSortCriterion = (): SortByQRE => ({
 
 /**
  * Utility function that builds a valid no sort criterion.
- * @returns {SortByNoSort} The sort by no sort criterion.
+ * @returns {SortByNoSort} The sort by "no sort" criterion.
  */
 export const buildNoSortCriterion = (): SortByNoSort => ({by: SortBy.NoSort});
