@@ -41,7 +41,7 @@ export const executeToggleDateFacetSelect = createAsyncThunk<
 );
 
 /**
- * Toggles the date facet value and then executes a search with the appropriate analytics tag.
+ * Selects the breadcrumb date facet value and then executes a search with the appropriate analytics tag.
  * @param facetId (string) The unique identifier of the facet (e.g., `"1"`).
  * @param selection (DateFacetValue) The target date facet value.
  */

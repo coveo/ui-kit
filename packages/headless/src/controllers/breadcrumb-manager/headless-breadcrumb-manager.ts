@@ -20,7 +20,7 @@ import {
 import {BaseFacetRequest} from '../../features/facets/facet-api/request';
 import {AsyncThunk} from '@reduxjs/toolkit';
 import {AsyncThunkSearchOptions} from '../../api/search/search-api-client';
-import {executeDeselectAllCategoryFacetValues} from '../../features/facets/category-facet-set/category-facet-set-controller-actions';
+import {executeSelectCategoryFacetBreadcrumb} from '../../features/facets/category-facet-set/category-facet-set-controller-actions';
 import {executeSelectFacetBreadcrumb} from '../../features/facets/facet-set/facet-set-controller-actions';
 import {executeSelectNumericFacetBreadcrumb} from '../../features/facets/range-facets/numeric-facet-set/numeric-facet-controller-actions';
 import {executeSelectDateFacetBreadcrumb} from '../../features/facets/range-facets/date-facet-set/date-facet-controller-actions';
@@ -100,14 +100,18 @@ export const buildBreadcrumbManager = (
   function getCategoryFacetBreadcrumbs(): CategoryFacetBreadcrumb[] {
     return Object.keys(engine.state.categoryFacetSet)
       .map((facetId) => {
+        const path = categoryFacetSelectedValuesSelector(engine.state, facetId);
         return {
           field: engine.state.categoryFacetSet[facetId].field,
-          path: categoryFacetSelectedValuesSelector(engine.state, facetId),
+          path,
           deselect: () => {
             dispatch(
-              executeDeselectAllCategoryFacetValues({
+              executeSelectCategoryFacetBreadcrumb({
                 facetId,
                 numberOfValues: 5,
+                path: path.map(
+                  (categoryFacetValue) => categoryFacetValue.value
+                ),
               })
             );
           },

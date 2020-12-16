@@ -8,7 +8,10 @@ import {
 import {getAnalyticsActionForToggleFacetSelect} from './facet-set-utils';
 import {updateFacetOptions} from '../../facet-options/facet-options-actions';
 import {executeSearch} from '../../search/search-actions';
-import {toggleSelectFacetValue, facetBreadcrumb} from './facet-set-actions';
+import {
+  toggleSelectFacetValue,
+  selectFacetBreadcrumb,
+} from './facet-set-actions';
 import {facetIdDefinition} from '../generic/facet-actions-validation';
 import {RecordValue} from '@coveo/bueno';
 import {facetValueDefinition} from './facet-set-validate-payload';
@@ -46,7 +49,7 @@ export const executeToggleFacetSelect = createAsyncThunk<
 );
 
 /**
- * Deselects the breadcrumb facet value and then executes a search with the appropriate analytics tag.
+ * Selects the breadcrumb facet value and then executes a search with the appropriate analytics tag.
  * @param facetId (string) The unique identifier of the facet (e.g., `"1"`).
  * @param selection (FacetValue) The target facet value.
  */
@@ -65,7 +68,7 @@ export const executeSelectFacetBreadcrumb = createAsyncThunk<
       facetValue: selection.value,
     });
     validatePayload({facetId, selection}, definition);
-    dispatch(facetBreadcrumb({facetId, selection}));
+    dispatch(selectFacetBreadcrumb({facetId, selection}));
     dispatch(executeSearch(analyticsAction));
   }
 );

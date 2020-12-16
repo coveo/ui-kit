@@ -43,7 +43,7 @@ export const executeToggleNumericFacetSelect = createAsyncThunk<
 );
 
 /**
- * Deselects the breadcrumb numeric facet value and then executes a search with the appropriate analytics tag.
+ * Selects the breadcrumb numeric facet value and then executes a search with the appropriate analytics tag.
  * @param facetId (string) The unique identifier of the facet (e.g., `"1"`).
  * @param selection (NumericFacetValue) The target numeric facet value.
  */

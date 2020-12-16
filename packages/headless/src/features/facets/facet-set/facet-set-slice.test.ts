@@ -8,7 +8,7 @@ import {
   updateFacetSortCriterion,
   updateFacetNumberOfValues,
   updateFacetIsFieldExpanded,
-  facetBreadcrumb,
+  selectFacetBreadcrumb,
 } from './facet-set-actions';
 import {buildMockFacetValue} from '../../../test/mock-facet-value';
 import {buildMockSearch} from '../../../test/mock-search';
@@ -223,7 +223,7 @@ describe('facet-set slice', () => {
 
       state[id] = buildMockFacetRequest({currentValues: [facetValueRequest]});
 
-      const action = facetBreadcrumb({
+      const action = selectFacetBreadcrumb({
         facetId: id,
         selection: facetValue,
       });
@@ -243,7 +243,7 @@ describe('facet-set slice', () => {
 
       state[id] = buildMockFacetRequest({currentValues: [facetValueRequest]});
 
-      const action = facetBreadcrumb({
+      const action = selectFacetBreadcrumb({
         facetId: id,
         selection: facetValue,
       });
@@ -255,7 +255,7 @@ describe('facet-set slice', () => {
 
   it('dispatching #facetBreadcrumb with an invalid id does not throw', () => {
     const facetValue = buildMockFacetValue({value: 'TED'});
-    const action = facetBreadcrumb({
+    const action = selectFacetBreadcrumb({
       facetId: '1',
       selection: facetValue,
     });

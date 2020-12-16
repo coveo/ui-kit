@@ -19,7 +19,8 @@ import {
   facetIdDefinition,
 } from '../generic/facet-actions-validation';
 import {validateCategoryFacetValue} from './category-facet-validate-payload';
-import {NumberValue} from '@coveo/bueno';
+import {ArrayValue, NumberValue} from '@coveo/bueno';
+import {logCategoryFacetBreadcrumb} from './category-facet-set-analytics-actions';
 
 /**
  * Toggles the facet value and then executes a search with the appropriate analytics tag.
@@ -57,7 +58,7 @@ export const executeToggleCategoryFacetSelect = createAsyncThunk<
 );
 
 /**
- * Deselects the all values on the path to the currently selected category facet value and executes
+ * Deselects all values on the path to the currently selected category facet value and executes
  * a search with the appropriate analytics
  * @param facetId (string) The unique identifier of the facet (e.g., `"1"`).
  * @param numberOfValues (number) The number of category facet values to show after deselecting.
@@ -80,5 +81,39 @@ export const executeDeselectAllCategoryFacetValues = createAsyncThunk<
     dispatch(updateCategoryFacetNumberOfValues({facetId, numberOfValues}));
     dispatch(updateFacetOptions({freezeFacetOrder: true}));
     dispatch(executeSearch(logFacetClearAll(facetId)));
+  }
+);
+
+/**
+ * Selects the breadcrumb category facet value and then executes a search with the appropriate analytics tag.
+ * @param facetId (string) The unique identifier of the facet (e.g., `"1"`).
+ * @param numberOfValues (number) The number of category facet values to show after deselecting.
+ * @param path (string[]) The currently selected path.
+ */
+export const executeSelectCategoryFacetBreadcrumb = createAsyncThunk<
+  void,
+  {facetId: string; numberOfValues: number; path: string[]},
+  AsyncThunkSearchOptions<ConfigurationSection & CategoryFacetSection>
+>(
+  'dateFacet/executeSelectCategoryFacetBreadcrumb',
+  ({facetId, numberOfValues, path}, {dispatch, extra: {validatePayload}}) => {
+    validatePayload(
+      {facetId, numberOfValues, path},
+      {
+        facetId: facetIdDefinition,
+        numberOfValues: new NumberValue({required: true}),
+        path: new ArrayValue({required: true, each: requiredNonEmptyString}),
+      }
+    );
+    dispatch(deselectAllCategoryFacetValues(facetId));
+    dispatch(updateCategoryFacetNumberOfValues({facetId, numberOfValues}));
+    dispatch(
+      executeSearch(
+        logCategoryFacetBreadcrumb({
+          categoryFacetPath: path,
+          categoryFacetId: facetId,
+        })
+      )
+    );
   }
 );

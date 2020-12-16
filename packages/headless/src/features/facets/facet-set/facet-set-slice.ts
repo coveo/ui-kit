@@ -7,7 +7,7 @@ import {
   updateFacetSortCriterion,
   updateFacetNumberOfValues,
   updateFacetIsFieldExpanded,
-  facetBreadcrumb,
+  selectFacetBreadcrumb,
 } from './facet-set-actions';
 import {executeSearch} from '../../search/search-actions';
 import {selectFacetSearchResult} from '../facet-search-set/specific/specific-facet-search-actions';
@@ -84,7 +84,7 @@ export const facetSetReducer = createReducer(
         facetRequest.freezeCurrentValues = true;
         facetRequest.preventAutoSelect = true;
       })
-      .addCase(facetBreadcrumb, (state, action) => {
+      .addCase(selectFacetBreadcrumb, (state, action) => {
         const {facetId, selection} = action.payload;
         const facetRequest = state[facetId];
 
