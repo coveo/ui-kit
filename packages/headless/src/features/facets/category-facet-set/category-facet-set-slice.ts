@@ -105,7 +105,6 @@ export const categoryFacetSetReducer = createReducer(
           retrieveCount
         );
         activeLevel.push(valueRequest);
-        request.numberOfValues = 1;
       })
       .addCase(deselectAllCategoryFacetValues, (state, action) => {
         handleFacetDeselectAll<CategoryFacetRequest>(state, action.payload);

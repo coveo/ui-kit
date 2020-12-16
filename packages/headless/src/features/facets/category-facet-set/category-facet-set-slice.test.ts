@@ -269,7 +269,7 @@ describe('category facet slice', () => {
         ]);
       });
 
-      it('sets the numberOfValues to request to 1', () => {
+      it('does not change the numberOfValues', () => {
         const selection = buildMockCategoryFacetValue({
           value: 'A',
           path: ['A'],
@@ -279,9 +279,11 @@ describe('category facet slice', () => {
           selection,
           retrieveCount,
         });
+
+        const initialNumberOfValues = state[facetId].numberOfValues;
         const finalState = categoryFacetSetReducer(state, action);
 
-        expect(finalState[facetId].numberOfValues).toBe(1);
+        expect(finalState[facetId].numberOfValues).toBe(initialNumberOfValues);
       });
     });
 
