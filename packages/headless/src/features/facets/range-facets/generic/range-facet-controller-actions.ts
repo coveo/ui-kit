@@ -2,10 +2,7 @@ import {createAsyncThunk} from '@reduxjs/toolkit';
 import {RangeFacetValue} from './interfaces/range-facet';
 import {AsyncThunkSearchOptions} from '../../../../api/search/search-api-client';
 import {ConfigurationSection} from '../../../../state/state-sections';
-import {
-  getAnalyticsActionForToggleRangeFacetSelect,
-  getAnalyticsRangeValue,
-} from './range-facet-utils';
+import {getAnalyticsActionForToggleRangeFacetSelect} from './range-facet-utils';
 import {updateFacetOptions} from '../../../facet-options/facet-options-actions';
 import {executeSearch} from '../../../search/search-actions';
 import {RecordValue} from '@coveo/bueno';
@@ -14,9 +11,11 @@ import {
   numericFacetValueDefinition,
   dateFacetValueDefinition,
 } from './range-facet-validate-payload';
-import {logFacetBreadcrumb} from '../../facet-set/facet-set-analytics-actions';
+import {logRangeFacetBreadcrumb} from './range-facet-analytics-actions';
 
-const definition = (selection: RangeFacetValue) => ({
+export const rangeFacetSelectionPayloadDefinition = (
+  selection: RangeFacetValue
+) => ({
   facetId: facetIdDefinition,
   selection:
     typeof selection.start === 'string'
@@ -24,22 +23,26 @@ const definition = (selection: RangeFacetValue) => ({
       : new RecordValue({values: numericFacetValueDefinition}),
 });
 
+export interface RangeFacetSelectionPayload {
+  facetId: string;
+  selection: RangeFacetValue;
+}
+
 /**
  * Executes a search with the appropriate analytics for a toggle range facet value
- * @param facetId (string) The unique identifier of the facet (e.g., `"1"`).
- * @param selection (RangeFacetValue) The target range facet value.
+ * @param payload (RangeFacetSelectionPayload) Object specifying the target facet and selection.
  */
 export const executeToggleRangeFacetSelect = createAsyncThunk<
   void,
-  {
-    facetId: string;
-    selection: RangeFacetValue;
-  },
+  RangeFacetSelectionPayload,
   AsyncThunkSearchOptions<ConfigurationSection>
 >(
   'rangeFacet/executeToggleSelect',
   ({facetId, selection}, {dispatch, extra: {validatePayload}}) => {
-    validatePayload({facetId, selection}, definition(selection));
+    validatePayload(
+      {facetId, selection},
+      rangeFacetSelectionPayloadDefinition(selection)
+    );
 
     const analyticsAction = getAnalyticsActionForToggleRangeFacetSelect(
       facetId,
@@ -53,24 +56,23 @@ export const executeToggleRangeFacetSelect = createAsyncThunk<
 
 /**
  * Executes a search with the appropriate analytics for a range facet breadcrumb
- * @param facetId (string) The unique identifier of the facet (e.g., `"1"`).
- * @param selection (RangeFacetValue) The target range facet value.
+ * @param payload (RangeFacetSelectionPayload) Object specifying the target facet and selection.
  */
 export const executeRangeFacetBreadcrumb = createAsyncThunk<
   void,
-  {
-    facetId: string;
-    selection: RangeFacetValue;
-  },
+  RangeFacetSelectionPayload,
   AsyncThunkSearchOptions<ConfigurationSection>
 >(
   'rangeFacet/executeRangeFacetBreadcrumb',
   ({facetId, selection}, {dispatch, extra: {validatePayload}}) => {
-    validatePayload({facetId, selection}, definition(selection));
+    validatePayload(
+      {facetId, selection},
+      rangeFacetSelectionPayloadDefinition(selection)
+    );
 
-    const analyticsAction = logFacetBreadcrumb({
+    const analyticsAction = logRangeFacetBreadcrumb({
       facetId,
-      facetValue: getAnalyticsRangeValue(selection),
+      selection,
     });
     dispatch(executeSearch(analyticsAction));
   }
