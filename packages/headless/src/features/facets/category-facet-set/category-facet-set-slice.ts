@@ -44,7 +44,9 @@ export const categoryFacetSetReducer = createReducer(
           return;
         }
 
-        state[facetId] = buildCategoryFacetRequest(options);
+        state[facetId] = {
+          request: buildCategoryFacetRequest(options),
+        };
       })
       .addCase(change.fulfilled, (_, action) => action.payload.categoryFacetSet)
       .addCase(restoreSearchParameters, (state, action) => {
@@ -52,14 +54,19 @@ export const categoryFacetSetReducer = createReducer(
         const facetIds = Object.keys(state);
 
         facetIds.forEach((id) => {
-          const request = state[id];
+          const request = state[id]?.request;
+
+          if (!request) {
+            return;
+          }
+
           const path = cf[id] || [];
           selectPath(request, path, request.numberOfValues);
         });
       })
       .addCase(updateCategoryFacetSortCriterion, (state, action) => {
         const {facetId, criterion} = action.payload;
-        const request = state[facetId];
+        const request = state[facetId]?.request;
 
         if (!request) {
           return;
@@ -69,7 +76,7 @@ export const categoryFacetSetReducer = createReducer(
       })
       .addCase(toggleSelectCategoryFacetValue, (state, action) => {
         const {facetId, selection, retrieveCount} = action.payload;
-        const request = state[facetId];
+        const request = state[facetId]?.request;
 
         if (!request) {
           return;
@@ -133,7 +140,7 @@ export const categoryFacetSetReducer = createReducer(
       })
       .addCase(selectCategoryFacetSearchResult, (state, action) => {
         const {facetId, value, retrieveCount} = action.payload;
-        const request = state[facetId];
+        const request = state[facetId]?.request;
 
         if (!request) {
           return;
@@ -151,7 +158,12 @@ export const categoryFacetSetReducer = createReducer(
           }
 
           const id = response.facetId;
-          const request = state[id];
+          const request = state[id]?.request;
+
+          if (!request) {
+            return;
+          }
+
           const requestWasInvalid = isRequestInvalid(request, response);
 
           request.currentValues = requestWasInvalid
@@ -204,7 +216,7 @@ function handleCategoryFacetNestedNumberOfValuesUpdate(
   payload: {facetId: string; numberOfValues: number}
 ) {
   const {facetId, numberOfValues} = payload;
-  let selectedValue = state[facetId]?.currentValues[0];
+  let selectedValue = state[facetId]?.request.currentValues[0];
   if (!selectedValue) {
     return;
   }

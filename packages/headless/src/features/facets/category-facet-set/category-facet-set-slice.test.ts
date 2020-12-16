@@ -28,6 +28,7 @@ import {FacetResponse} from '../facet-set/interfaces/response';
 import {buildMockSearch} from '../../../test/mock-search';
 import {logSearchEvent} from '../../analytics/analytics-actions';
 import {buildMockCategoryFacetResponse} from '../../../test/mock-category-facet-response';
+import {buildMockCategoryFacetSlice} from '../../../test/mock-category-facet-slice';
 
 describe('category facet slice', () => {
   const facetId = '1';
@@ -71,12 +72,14 @@ describe('category facet slice', () => {
 
   it('#updateCategoryFacetSortCriterion sets the correct sort criterion', () => {
     const sortCriterion: CategoryFacetSortCriterion = 'alphanumeric';
-    state[facetId] = buildMockCategoryFacetRequest({facetId, field: 'a'});
+    const request = buildMockCategoryFacetRequest({facetId, field: 'a'});
+    state[facetId] = buildMockCategoryFacetSlice({request});
+
     const finalState = categoryFacetSetReducer(
       state,
       updateCategoryFacetSortCriterion({facetId, criterion: sortCriterion})
     );
-    expect(finalState[facetId].sortCriteria).toBe(sortCriterion);
+    expect(finalState[facetId]?.request.sortCriteria).toBe(sortCriterion);
   });
 
   it('#updateCategoryFacetSortCriterion does nothing when the facetID is not registered', () => {
@@ -96,12 +99,14 @@ describe('category facet slice', () => {
       field: 'b',
     };
 
-    state[facetId] = buildMockCategoryFacetRequest({facetId, field: 'a'});
+    const request = buildMockCategoryFacetRequest({facetId, field: 'a'});
+    state[facetId] = buildMockCategoryFacetSlice({request});
+
     const finalState = categoryFacetSetReducer(
       state,
       registerCategoryFacet(options)
     );
-    expect(finalState[facetId].field).toBe('a');
+    expect(finalState[facetId]?.request.field).toBe('a');
   });
 
   it('it restores the categoryFacetSet on history change', () => {
@@ -127,7 +132,7 @@ describe('category facet slice', () => {
       const request = buildMockCategoryFacetRequest();
 
       const cf = {geography: path};
-      state['geography'] = request;
+      state['geography'] = buildMockCategoryFacetSlice({request});
 
       const finalState = categoryFacetSetReducer(
         state,
@@ -140,7 +145,7 @@ describe('category facet slice', () => {
         retrieveCount: 5,
       });
 
-      expect(finalState['geography'].currentValues).toEqual([a]);
+      expect(finalState['geography']?.request.currentValues).toEqual([a]);
       expect(spy).toHaveBeenCalled();
     });
 
@@ -149,14 +154,14 @@ describe('category facet slice', () => {
 
       const cf = {};
       const request = buildMockCategoryFacetRequest();
-      state['geography'] = request;
+      state['geography'] = buildMockCategoryFacetSlice({request});
 
       const finalState = categoryFacetSetReducer(
         state,
         restoreSearchParameters({cf})
       );
 
-      expect(finalState['geography'].currentValues).toEqual([]);
+      expect(finalState['geography']?.request.currentValues).toEqual([]);
       expect(spy).toHaveBeenCalled();
     });
   });
@@ -171,10 +176,12 @@ describe('category facet slice', () => {
 
   it('dispatching #deselectAllFacets calls #handleFacetDeselectAll for every category facet', () => {
     jest.spyOn(FacetReducers, 'handleFacetDeselectAll');
+    const request = buildMockCategoryFacetRequest();
+    const slice = buildMockCategoryFacetSlice({request});
 
-    state['1'] = buildMockCategoryFacetRequest();
-    state['2'] = buildMockCategoryFacetRequest();
-    state['3'] = buildMockCategoryFacetRequest();
+    state['1'] = {...slice};
+    state['2'] = {...slice};
+    state['3'] = {...slice};
     categoryFacetSetReducer(state, deselectAllFacets());
 
     expect(FacetReducers.handleFacetDeselectAll).toHaveBeenCalledTimes(4);
@@ -182,7 +189,9 @@ describe('category facet slice', () => {
 
   it('dispatching #updateCategoryFacetNumberOfValues calls #handleFacetUpdateNumberOfValues if there are no nested children', () => {
     jest.spyOn(FacetReducers, 'handleFacetUpdateNumberOfValues');
-    state[facetId] = buildMockCategoryFacetRequest({facetId});
+    const request = buildMockCategoryFacetRequest({facetId});
+    state[facetId] = buildMockCategoryFacetSlice({request});
+
     categoryFacetSetReducer(
       state,
       updateCategoryFacetNumberOfValues({
@@ -197,7 +206,7 @@ describe('category facet slice', () => {
   });
 
   it('dispatching #updateCategoryFacetNumberOfValues sets correct retrieve count to the appropriate number', () => {
-    state[facetId] = buildMockCategoryFacetRequest({
+    const request = buildMockCategoryFacetRequest({
       currentValues: [
         buildMockCategoryFacetValueRequest({
           value: 'test',
@@ -206,11 +215,15 @@ describe('category facet slice', () => {
         }),
       ],
     });
+
+    state[facetId] = buildMockCategoryFacetSlice({request});
     const finalState = categoryFacetSetReducer(
       state,
       updateCategoryFacetNumberOfValues({facetId, numberOfValues: 10})
     );
-    expect(finalState[facetId].currentValues[0].retrieveCount).toBe(10);
+    expect(finalState[facetId]?.request.currentValues[0].retrieveCount).toBe(
+      10
+    );
   });
 
   it('dispatching #updateCategoryFacetNumberOfValues should not throw when facetId does not exist', () => {
@@ -239,10 +252,12 @@ describe('category facet slice', () => {
 
     describe('when currentValues is empty', () => {
       beforeEach(() => {
-        state[facetId] = buildMockCategoryFacetRequest({
+        const request = buildMockCategoryFacetRequest({
           currentValues: [],
           numberOfValues: 5,
         });
+
+        state[facetId] = buildMockCategoryFacetSlice({request});
       });
 
       it('builds a request from the selection and adds it to currentValues', () => {
@@ -256,7 +271,7 @@ describe('category facet slice', () => {
           retrieveCount,
         });
         const finalState = categoryFacetSetReducer(state, action);
-        const currentValues = finalState[facetId].currentValues;
+        const currentValues = finalState[facetId]?.request.currentValues;
 
         expect(currentValues).toEqual([
           {
@@ -280,10 +295,12 @@ describe('category facet slice', () => {
           retrieveCount,
         });
 
-        const initialNumberOfValues = state[facetId].numberOfValues;
+        const initialNumberOfValues = state[facetId]?.request.numberOfValues;
         const finalState = categoryFacetSetReducer(state, action);
 
-        expect(finalState[facetId].numberOfValues).toBe(initialNumberOfValues);
+        expect(finalState[facetId]?.request.numberOfValues).toBe(
+          initialNumberOfValues
+        );
       });
     });
 
@@ -294,9 +311,11 @@ describe('category facet slice', () => {
           state: 'selected',
           retrieveChildren: true,
         });
-        state[facetId] = buildMockCategoryFacetRequest({
+        const request = buildMockCategoryFacetRequest({
           currentValues: [parent],
         });
+
+        state[facetId] = buildMockCategoryFacetSlice({request});
       });
 
       describe('when the selected value path contains the parent', () => {
@@ -319,20 +338,23 @@ describe('category facet slice', () => {
             state: 'selected',
           });
 
-          const children = finalState[facetId].currentValues[0].children;
+          const children =
+            finalState[facetId]?.request.currentValues[0].children;
           expect(children).toEqual([expected]);
         });
 
         it('sets the parent state to idle', () => {
           const finalState = categoryFacetSetReducer(state, action);
-          expect(finalState[facetId].currentValues[0].state).toBe('idle');
+          expect(finalState[facetId]?.request.currentValues[0].state).toBe(
+            'idle'
+          );
         });
 
         it('sets the parent retrieveChildren to false', () => {
           const finalState = categoryFacetSetReducer(state, action);
-          expect(finalState[facetId].currentValues[0].retrieveChildren).toBe(
-            false
-          );
+          expect(
+            finalState[facetId]?.request.currentValues[0].retrieveChildren
+          ).toBe(false);
         });
       });
 
@@ -349,19 +371,23 @@ describe('category facet slice', () => {
 
         it("does not add the selection to the parent's children array", () => {
           const finalState = categoryFacetSetReducer(state, action);
-          expect(finalState[facetId].currentValues[0].children).toEqual([]);
+          expect(
+            finalState[facetId]?.request.currentValues[0].children
+          ).toEqual([]);
         });
 
         it('keeps the parent #state to selected', () => {
           const finalState = categoryFacetSetReducer(state, action);
-          expect(finalState[facetId].currentValues[0].state).toBe('selected');
+          expect(finalState[facetId]?.request.currentValues[0].state).toBe(
+            'selected'
+          );
         });
 
         it('keeps the parent #retrieveChildren to true', () => {
           const finalState = categoryFacetSetReducer(state, action);
-          expect(finalState[facetId].currentValues[0].retrieveChildren).toBe(
-            true
-          );
+          expect(
+            finalState[facetId]?.request.currentValues[0].retrieveChildren
+          ).toBe(true);
         });
       });
     });
@@ -374,9 +400,10 @@ describe('category facet slice', () => {
           children: [parentB],
         });
 
-        state[facetId] = buildMockCategoryFacetRequest({
+        const request = buildMockCategoryFacetRequest({
           currentValues: [parentA],
         });
+        state[facetId] = buildMockCategoryFacetSlice({request});
       });
 
       it(`when the selected value path contains the two parents,
@@ -400,7 +427,7 @@ describe('category facet slice', () => {
         });
 
         expect(
-          finalState[facetId].currentValues[0].children[0].children
+          finalState[facetId]?.request.currentValues[0].children[0].children
         ).toEqual([expected]);
       });
 
@@ -417,23 +444,23 @@ describe('category facet slice', () => {
 
         it('clears the children array of that parent', () => {
           const finalState = categoryFacetSetReducer(state, action);
-          const parent = finalState[facetId].currentValues[0];
+          const parent = finalState[facetId]?.request.currentValues[0];
 
-          expect(parent.children).toEqual([]);
+          expect(parent?.children).toEqual([]);
         });
 
         it('sets parent #retrieveChildren to true', () => {
           const finalState = categoryFacetSetReducer(state, action);
-          const parent = finalState[facetId].currentValues[0];
+          const parent = finalState[facetId]?.request.currentValues[0];
 
-          expect(parent.retrieveChildren).toBe(true);
+          expect(parent?.retrieveChildren).toBe(true);
         });
 
         it('sets parent #state to selected', () => {
           const finalState = categoryFacetSetReducer(state, action);
-          const parent = finalState[facetId].currentValues[0];
+          const parent = finalState[facetId]?.request.currentValues[0];
 
-          expect(parent.state).toBe('selected');
+          expect(parent?.state).toBe('selected');
         });
       });
     });
@@ -464,7 +491,8 @@ describe('category facet slice', () => {
 
   describe('#selectCategoryFacetSearchResult', () => {
     beforeEach(() => {
-      state[facetId] = buildMockCategoryFacetRequest();
+      const request = buildMockCategoryFacetRequest();
+      state[facetId] = buildMockCategoryFacetSlice({request});
     });
 
     it('when the passed id is not registered, it does not throw', () => {
@@ -495,8 +523,10 @@ describe('category facet slice', () => {
         retrieveCount,
       });
 
-      expect(nextState[facetId].currentValues.length).toEqual(1);
-      expect(nextState[facetId].currentValues).toContainEqual(expectedRequest);
+      expect(nextState[facetId]?.request.currentValues.length).toEqual(1);
+      expect(nextState[facetId]?.request.currentValues).toContainEqual(
+        expectedRequest
+      );
       expect(spy).toHaveBeenCalled();
     });
   });
@@ -516,13 +546,14 @@ describe('category facet slice', () => {
           state: 'selected',
         }),
       ];
-      state[facetId] = buildMockCategoryFacetRequest({currentValues});
+      const request = buildMockCategoryFacetRequest({currentValues});
+      state[facetId] = buildMockCategoryFacetSlice({request});
 
       const facet = buildMockCategoryFacetResponse({facetId, values: []});
       const action = buildExecuteSearchAction([facet]);
       const finalState = categoryFacetSetReducer(state, action);
 
-      expect(finalState[facetId].currentValues).toEqual([]);
+      expect(finalState[facetId]?.request.currentValues).toEqual([]);
     });
 
     it('when an valid path is requested, it does not adjust the #currentValues of the request', () => {
@@ -531,7 +562,8 @@ describe('category facet slice', () => {
         state: 'selected',
       });
       const currentValues = [valid];
-      state[facetId] = buildMockCategoryFacetRequest({currentValues});
+      const request = buildMockCategoryFacetRequest({currentValues});
+      state[facetId] = buildMockCategoryFacetSlice({request});
 
       const root = buildMockCategoryFacetValue({
         value: 'valid',
@@ -542,17 +574,18 @@ describe('category facet slice', () => {
       const action = buildExecuteSearchAction([facet]);
       const finalState = categoryFacetSetReducer(state, action);
 
-      expect(finalState[facetId].currentValues).toEqual(currentValues);
+      expect(finalState[facetId]?.request.currentValues).toEqual(currentValues);
     });
 
     it('sets #preventAutoSelect to false', () => {
-      state[facetId] = buildMockCategoryFacetRequest({preventAutoSelect: true});
+      const request = buildMockCategoryFacetRequest({preventAutoSelect: true});
+      state[facetId] = buildMockCategoryFacetSlice({request});
 
       const facet = buildMockCategoryFacetResponse({facetId});
       const action = buildExecuteSearchAction([facet]);
       const finalState = categoryFacetSetReducer(state, action);
 
-      expect(finalState[facetId].preventAutoSelect).toBe(false);
+      expect(finalState[facetId]?.request.preventAutoSelect).toBe(false);
     });
 
     it('when the facet response #id does not exist in state, it does not throw', () => {
