@@ -107,10 +107,12 @@ export const configureAnalytics = ({
 }: ConfigureAnalyticsOptions) => {
   const token = state.configuration.accessToken;
   const endpoint = state.configuration.analytics.apiBaseUrl;
+  const runtimeEnvironment = state.configuration.analytics.runtimeEnvironment;
   const client = new CoveoSearchPageClient(
     {
       token,
       endpoint,
+      runtimeEnvironment,
       beforeSendHooks: [
         analyticsClientMiddleware,
         (type, payload) => {
