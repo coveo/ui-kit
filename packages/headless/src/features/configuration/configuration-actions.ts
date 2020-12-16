@@ -1,6 +1,7 @@
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 import {validatePayload} from '../../utils/validate-payload';
-import {StringValue, BooleanValue} from '@coveo/bueno';
+import {StringValue, BooleanValue, Value} from '@coveo/bueno';
+import {IRuntimeEnvironment} from 'coveo.analytics';
 
 const originSchemaOnConfigUpdate = () =>
   new StringValue({emptyAllowed: false, required: false});
@@ -50,6 +51,7 @@ export const updateSearchConfiguration = createAction(
  * @param originLevel2 (string) The origin level 2 usage analytics event metadata whose value should typically be the identifier of the tab from which the usage analytics event originates (e.g., `All`).
  * @param originLevel3 (string) The origin level 3 usage analytics event metadata whose value should typically be the URL of the page that linked to the search interface that’s making the request (e.g., `https://connect.coveo.com/s/`).
  * @param apiBaseUrl (string) The Usage Analytics API base URL to use (e.g., `https://platform.cloud.coveo.com/rest/ua`).
+ * @param runtimeEnvironment (IRuntimeEnvironment) The Coveo analytics runtime to use, see https://github.com/coveo/coveo.analytics.js for more info.
  */
 export const updateAnalyticsConfiguration = createAction(
   'configuration/updateAnalyticsConfiguration',
@@ -58,12 +60,14 @@ export const updateAnalyticsConfiguration = createAction(
     originLevel2?: string;
     originLevel3?: string;
     apiBaseUrl?: string;
+    runtimeEnvironment?: IRuntimeEnvironment;
   }) =>
     validatePayload(payload, {
       enabled: new BooleanValue({default: true}),
       originLevel2: originSchemaOnConfigUpdate(),
       originLevel3: originSchemaOnConfigUpdate(),
       apiBaseUrl: new StringValue({url: true, emptyAllowed: false}),
+      runtimeEnvironment: new Value(),
     })
 );
 
