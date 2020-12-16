@@ -26,7 +26,7 @@ type TabOptions = {
 
 type TabInitialState = {
   /**
-   * Specifies if the tab is currently active or selected.
+   * Specifies if the tab is currently selected.
    * Note that there can be only one active tab for a given headless engine.
    */
   isActive: boolean;
@@ -50,17 +50,16 @@ export interface TabProps {
    */
   initialState?: TabInitialState;
 }
-
+/**
+ * The `Tab` headless controller allows the end user to view a subset of results.
+ * It is in charge of adding a constant expression to the outgoing query in order to refine the results.
+ */
 export type Tab = ReturnType<typeof buildTab>;
 /**
  * A scoped and simplified part of the headless state that is relevant to the `Tab` controller.
  */
 export type TabState = Tab['state'];
 
-/**
- * The `Tab` headless controller allows the end user to view a subset of results.
- * It is in charge of adding a constant expression to the outgoing query in order to refine the results.
- */
 export function buildTab(
   engine: Engine<ConfigurationSection & AdvancedSearchQueriesSection>,
   props: TabProps
@@ -95,13 +94,15 @@ export function buildTab(
       dispatch(executeSearch(logInterfaceChange()));
     },
     /**
-     * Returns the scoped and simplified part of the headless state that is relevant to the `Tab` controller.
-     * @returns {TabState} The state of the `Tab` controller.
+     * The state of the `Tab` controller.
      */
     get state() {
       const isActive =
         engine.state.advancedSearchQueries.cq === options.expression;
-      return {isActive};
+      return {
+        /** `true` if tab is selected; `false` otherwise. */
+        isActive
+      };
     },
   };
 }
