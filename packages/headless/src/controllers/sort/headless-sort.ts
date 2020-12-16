@@ -66,7 +66,7 @@ function getCriterionAsArray(state: Partial<SortInitialState>) {
   return isArray(state.criterion) ? state.criterion : [state.criterion];
 }
 
-/** The `Sort` controller allows to changing how the results are sorted.*/
+/** The `Sort` controller allows changing how the results are sorted.*/
 export type Sort = ReturnType<typeof buildSort>;
 
 /** The state relevant to the `Sort` controller.*/
