@@ -9,7 +9,7 @@
   },
   "types": "./dist/index.d.ts",
   "license": "Apache-2.0",
-  "version": "0.1.0-alpha.95",
+  "version": "0.1.0-alpha.103",
   "files": [
     "dist/"
   ],
@@ -30,7 +30,7 @@
     "@coveo/bueno": "^0.1.0-alpha.93",
     "@reduxjs/toolkit": "^1.4.0",
     "@types/redux-mock-store": "^1.0.2",
-    "coveo.analytics": "^2.14.0",
+    "coveo.analytics": "^2.15.0",
     "cross-fetch": "^3.0.6",
     "dayjs": "^1.9.6",
     "exponential-backoff": "^3.1.0",

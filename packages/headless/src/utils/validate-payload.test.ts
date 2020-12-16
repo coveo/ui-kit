@@ -1,4 +1,4 @@
-import {NumberValue, Schema} from '@coveo/bueno';
+import {NumberValue, Schema, SchemaValidationError} from '@coveo/bueno';
 import {Engine} from '../app/headless-engine';
 import {buildMockSearchAppEngine} from '../test';
 import {
@@ -6,6 +6,7 @@ import {
   validatePayloadAndThrow,
   validateOptions,
   validateInitialState,
+  serializeSchemaValidationError,
 } from './validate-payload';
 
 const definition = {
@@ -110,5 +111,16 @@ describe('validateInitialState', () => {
     expect(() =>
       validateInitialState(engine, schema, {id: 11}, 'someFunction')
     ).toThrow();
+  });
+});
+
+describe('serializeSchemaValidationError', () => {
+  it('should serialize error correctly', () => {
+    const error = new SchemaValidationError('Hello');
+    expect(serializeSchemaValidationError(error)).toEqual({
+      message: error.message,
+      name: error.name,
+      stack: error.stack,
+    });
   });
 });

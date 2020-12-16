@@ -3,6 +3,76 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.1.0-alpha.103](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.102...v0.1.0-alpha.103) (2020-12-15)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [0.1.0-alpha.102](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.101...v0.1.0-alpha.102) (2020-12-15)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [0.1.0-alpha.101](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.100...v0.1.0-alpha.101) (2020-12-15)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [0.1.0-alpha.100](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.99...v0.1.0-alpha.100) (2020-12-15)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [0.1.0-alpha.99](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.98...v0.1.0-alpha.99) (2020-12-14)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [0.1.0-alpha.98](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.97...v0.1.0-alpha.98) (2020-12-14)
+
+
+### Features
+
+* **atomic,headless:** add infinite scroll with preventative measures for consecutive queries ([#347](https://github.com/coveo/ui-kit/issues/347)) ([bc49c12](https://github.com/coveo/ui-kit/commit/bc49c120e49e654b2f82d07a3f0fd7c60ef4e2cd))
+
+
+
+
+
+# [0.1.0-alpha.97](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.96...v0.1.0-alpha.97) (2020-12-11)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [0.1.0-alpha.96](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.95...v0.1.0-alpha.96) (2020-12-11)
+
+
+### Bug Fixes
+
+* **headless:** logActionErrorMiddleware should only stop on SchemaValidationError ([#353](https://github.com/coveo/ui-kit/issues/353)) ([ddd72ec](https://github.com/coveo/ui-kit/commit/ddd72ec9728ac548a1203e6325ed86cefb1bf37f))
+
+
+
+
+
 # [0.1.0-alpha.95](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.94...v0.1.0-alpha.95) (2020-12-11)
 
 **Note:** Version bump only for package @coveo/atomic

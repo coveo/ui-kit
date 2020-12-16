@@ -7,11 +7,12 @@
 
 ## Properties
 
-| Property           | Attribute            | Description                    | Type     | Default |
-| ------------------ | -------------------- | ------------------------------ | -------- | ------- |
-| `fieldsToInclude`  | `fields-to-include`  |                                | `string` | `''`    |
-| `listClass`        | `list-class`         | Css class for the list wrapper | `string` | `''`    |
-| `listElementClass` | `list-element-class` | Css class for a list element   | `string` | `''`    |
+| Property               | Attribute                | Description                                                                                                                                              | Type      | Default |
+| ---------------------- | ------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- | ------- |
+| `enableInfiniteScroll` | `enable-infinite-scroll` | Whether to automatically retrieve an additional page of results and append it to the current results when the user scrolls down to the bottom of element | `boolean` | `false` |
+| `fieldsToInclude`      | `fields-to-include`      |                                                                                                                                                          | `string`  | `''`    |
+| `listClass`            | `list-class`             | Css class for the list wrapper                                                                                                                           | `string`  | `''`    |
+| `listElementClass`     | `list-element-class`     | Css class for a list element                                                                                                                             | `string`  | `''`    |
 
 
 ## Shadow Parts

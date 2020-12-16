@@ -64,6 +64,10 @@ export namespace Components {
     interface AtomicResultLink {
     }
     interface AtomicResultList {
+        /**
+          * Whether to automatically retrieve an additional page of results and append it to the current results when the user scrolls down to the bottom of element
+         */
+        "enableInfiniteScroll": boolean;
         "fieldsToInclude": string;
         /**
           * Css class for the list wrapper
@@ -95,6 +99,7 @@ export namespace Components {
     }
     interface AtomicSearchBox {
         "_id": string;
+        "enableQuerySyntax": boolean;
         /**
           * Wether the submit button should be place before the input
          */
@@ -354,6 +359,10 @@ declare namespace LocalJSX {
     interface AtomicResultLink {
     }
     interface AtomicResultList {
+        /**
+          * Whether to automatically retrieve an additional page of results and append it to the current results when the user scrolls down to the bottom of element
+         */
+        "enableInfiniteScroll"?: boolean;
         "fieldsToInclude"?: string;
         /**
           * Css class for the list wrapper
@@ -383,6 +392,7 @@ declare namespace LocalJSX {
     }
     interface AtomicSearchBox {
         "_id"?: string;
+        "enableQuerySyntax"?: boolean;
         /**
           * Wether the submit button should be place before the input
          */

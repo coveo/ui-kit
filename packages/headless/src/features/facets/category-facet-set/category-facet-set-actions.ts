@@ -7,6 +7,7 @@ import {
 } from '../facet-set/facet-set-actions';
 import {CategoryFacetSortCriterion} from './interfaces/request';
 import {
+  serializeSchemaValidationError,
   validatePayload,
   validatePayloadAndThrow,
 } from '../../../utils/validate-payload';
@@ -20,7 +21,6 @@ import {
   ArrayValue,
   StringValue,
   NumberValue,
-  SchemaValidationError,
 } from '@coveo/bueno';
 import {validateCategoryFacetValue} from './category-facet-validate-payload';
 
@@ -63,7 +63,7 @@ export const toggleSelectCategoryFacetValue = createAction(
       validateCategoryFacetValue(payload.selection);
       return {payload, error: null};
     } catch (error) {
-      return {payload, error: error as SchemaValidationError};
+      return {payload, error: serializeSchemaValidationError(error)};
     }
   }
 );
