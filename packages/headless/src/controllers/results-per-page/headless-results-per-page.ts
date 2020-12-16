@@ -18,18 +18,24 @@ const initialStateSchema = new Schema({
 });
 
 export interface ResultsPerPageProps {
+  /**
+   * The initial state that should be applied to this `ResultsPerPage` controller.
+   */
   initialState: Partial<ResultsPerPageInitialState>;
 }
 
 export interface ResultsPerPageInitialState {
+  /**
+   * The initial number of results to register in state.
+   */
   numberOfResults: number;
 }
 
 /**
- * The ResultsPerPage component allows the end user to choose how many results to display per page.
+ * The `ResultsPerPage` controller allows the end user to choose how many results to display per page.
  */
 export type ResultsPerPage = ReturnType<typeof buildResultsPerPage>;
-/** The state relevant to the `ResultsPerPage` controller.*/
+/** A scoped and simplified part of the headless state that is relevant to the `ResultsPerPage` controller. */
 export type ResultsPerPageState = ResultsPerPage['state'];
 
 export function buildResultsPerPage(
@@ -56,24 +62,26 @@ export function buildResultsPerPage(
     ...controller,
 
     /**
-     * @returns The state of the `ResultsPerPage` controller.
+     * The state of the `ResultsPerPage` controller.
      */
     get state() {
       return {
+        /** The number of results per page. */
         numberOfResults: engine.state.pagination.numberOfResults,
       };
     },
 
-    /** Updates the number of results to request
-     * @param number The number of results.
+    /** Updates the number of results to request per page.
+     * @param num (number) The number of results.
      */
     set(num: number) {
       dispatch(updateNumberOfResults(num));
       dispatch(executeSearch(logPagerResize()));
     },
 
-    /** Returns `true` if the number of results is equal to the passed value, and `false` otherwise.
-     * @returns boolean
+    /** Checks whether the number of results per page is equal to the specified number.
+     * @param num (number) The number of results.
+     * @returns (boolean) Is `true` if the number of results is equal to the passed value, and `false` otherwise.
      */
     isSetTo(num: number) {
       return num === this.state.numberOfResults;
