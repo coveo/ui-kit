@@ -33,6 +33,11 @@
             }
         }
     ],
+    "environment_post_hooks": {
+        "prd": {
+            "job_name": ""
+        }
+    },
     "snyk": {
         "org": "coveo-jsui",
         "no_container_images": true,
