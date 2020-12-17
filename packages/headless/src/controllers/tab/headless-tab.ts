@@ -101,7 +101,7 @@ export function buildTab(
         engine.state.advancedSearchQueries.cq === options.expression;
       return {
         /** `true` if tab is selected; `false` otherwise. */
-        isActive
+        isActive,
       };
     },
   };
