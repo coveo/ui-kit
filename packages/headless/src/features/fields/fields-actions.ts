@@ -5,9 +5,8 @@ import {
 } from '../../utils/validate-payload';
 import {ArrayValue} from '@coveo/bueno';
 
-const nonEmptyString = requiredNonEmptyString;
 const nonEmptyArray = new ArrayValue({
-  each: nonEmptyString,
+  each: requiredNonEmptyString,
   required: true,
 });
 
