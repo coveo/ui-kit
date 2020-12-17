@@ -66,7 +66,7 @@ node('linux && docker') {
     //      sh 'npm run npm:publish || true'
     //    }
     //  }
-    }
+    //}
 
     withDockerContainer(image: '458176070654.dkr.ecr.us-east-1.amazonaws.com/jenkins/deployment_package:v7') {
       stage('Veracode package') {
