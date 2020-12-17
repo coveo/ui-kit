@@ -9,6 +9,7 @@ export function selectPath(
   retrieveCount: number
 ) {
   request.currentValues = buildCurrentValuesFromPath(path, retrieveCount);
+  request.numberOfValues = path.length ? 1 : request.numberOfValues;
   request.preventAutoSelect = true;
 }
 
