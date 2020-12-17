@@ -20,8 +20,9 @@ export function determineFacetId(
   }
 
   if (isBeingUsedAsFacetId(state, facetId)) {
-    const message = `Generating a facet id because the passed facet id "${facetId}" is already being used.
-    Please ensure facet ids are unique.`;
+    const message = `
+    Generating a facet id because the passed id "${facetId}" is already being used.
+    Please ensure that manually specified facet ids are unique.`;
 
     engine.logger.warn(message);
     return generateId();
