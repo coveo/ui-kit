@@ -26,6 +26,9 @@ export interface SearchState {
    * `true` if the search request is currently being executed against the Coveo platform, `false` otherwise.
    */
   isLoading: boolean;
+  /**
+   * The list of results.
+   */
   results: Result[];
 }
 

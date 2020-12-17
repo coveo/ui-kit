@@ -20,7 +20,7 @@ export interface RecommendationState {
    */
   recommendations: Result[];
   /**
-   * The execute time for the recommendation request, in milliseconds.
+   * The time it took to complete the recommendation request, in milliseconds.
    */
   duration: number;
   /**

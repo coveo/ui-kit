@@ -8,8 +8,7 @@ export type ContextValue = string | string[];
 export type Context = Record<string, ContextValue>;
 export type ContextState = {
   /**
-   * Hold the contextual information that can be leveraged by the Coveo platform to provide relevant results.
-   * {@link https://docs.coveo.com/en/2081/coveo-machine-learning/understanding-custom-context}
+   * Hold the contextual information that can be [leveraged by the Coveo platform to provide relevant results](https://docs.coveo.com/en/2081/coveo-machine-learning/understanding-custom-context).ƒ
    */
   contextValues: Context;
 };
