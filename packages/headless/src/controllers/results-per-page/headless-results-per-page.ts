@@ -81,7 +81,7 @@ export function buildResultsPerPage(
 
     /** Checks whether the number of results per page is equal to the specified number.
      * @param num The number of results.
-     * @returns Is `true` if the number of results is equal to the passed value, and `false` otherwise.
+     * @returns `true` if the number of results is equal to the passed value, and `false` otherwise.
      */
     isSetTo(num: number) {
       return num === this.state.numberOfResults;
