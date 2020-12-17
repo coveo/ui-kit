@@ -44,9 +44,9 @@ export const categoryFacetSetReducer = createReducer(
           return;
         }
 
-        state[facetId] = {
-          request: buildCategoryFacetRequest(options),
-        };
+        const request = buildCategoryFacetRequest(options);
+        const initialNumberOfValues = request.numberOfValues;
+        state[facetId] = {request, initialNumberOfValues};
       })
       .addCase(change.fulfilled, (_, action) => action.payload.categoryFacetSet)
       .addCase(restoreSearchParameters, (state, action) => {

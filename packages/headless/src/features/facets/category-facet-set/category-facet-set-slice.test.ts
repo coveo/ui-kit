@@ -68,6 +68,7 @@ describe('category facet slice', () => {
       basePath: [],
       filterByBasePath: true,
     });
+    expect(finalState[facetId]?.initialNumberOfValues).toBe(5);
   });
 
   it('#updateCategoryFacetSortCriterion sets the correct sort criterion', () => {
