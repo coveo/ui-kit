@@ -11,7 +11,6 @@ export interface SearchState {
   automaticallyCorrected: boolean;
   isLoading: boolean;
   results: Result[];
-  facetOrder: string[];
 }
 
 export function getSearchInitialState(): SearchState {
@@ -29,6 +28,5 @@ export function getSearchInitialState(): SearchState {
     automaticallyCorrected: false,
     isLoading: false,
     results: [],
-    facetOrder: [],
   };
 }

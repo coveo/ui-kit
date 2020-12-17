@@ -1,5 +1,4 @@
 import {createReducer} from '@reduxjs/toolkit';
-import {change} from '../history/history-actions';
 import {executeSearch, fetchMoreResults} from './search-actions';
 import {getSearchInitialState, SearchState} from './search-state';
 
@@ -36,9 +35,6 @@ export const searchReducer = createReducer(
     builder.addCase(executeSearch.fulfilled, (state, action) => {
       handleFulfilledSearch(state, action);
       state.results = action.payload.response.results;
-      state.facetOrder = action.payload.response.facets.map(
-        (facet) => facet.facetId
-      );
     });
     builder.addCase(fetchMoreResults.fulfilled, (state, action) => {
       handleFulfilledSearch(state, action);
@@ -46,8 +42,5 @@ export const searchReducer = createReducer(
     });
     builder.addCase(executeSearch.pending, handlePendingSearch);
     builder.addCase(fetchMoreResults.pending, handlePendingSearch);
-    builder.addCase(change.fulfilled, (state, action) => {
-      state.facetOrder = action.payload.facetOrder;
-    });
   }
 );

@@ -25,6 +25,7 @@ import {facetOptionsReducer} from '../features/facet-options/facet-options-slice
 import {advancedSearchQueriesReducer} from '../features/advanced-search-queries/advanced-search-queries-slice';
 import {getHistoryInitialState} from '../features/history/history-state';
 import {debugReducer} from '../features/debug/debug-slice';
+import {facetOrderReducer} from '../features/facets/facet-order/facet-order-slice';
 
 /**
  * Map of reducers that make up the SearchAppState.
@@ -33,6 +34,7 @@ export const searchAppReducers: ReducersMapObject<SearchAppState> = {
   configuration: configurationReducer,
   facetSet: facetSetReducer,
   dateFacetSet: dateFacetSetReducer,
+  facetOrder: facetOrderReducer,
   numericFacetSet: numericFacetSetReducer,
   categoryFacetSet: categoryFacetSetReducer,
   facetSearchSet: specificFacetSearchSetReducer,

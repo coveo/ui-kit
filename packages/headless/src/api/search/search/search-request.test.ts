@@ -86,7 +86,7 @@ describe('search request', () => {
     const facetId1 = '1';
     const facetId2 = '2';
 
-    state.search.facetOrder = [facetId2, facetId1];
+    state.facetOrder = [facetId2, facetId1];
 
     state.facetSet[facetId1] = buildMockFacetRequest({facetId: facetId1});
     state.facetSet[facetId2] = buildMockFacetRequest({facetId: facetId2});
@@ -103,7 +103,7 @@ describe('search request', () => {
     const facetId1 = '1';
     const facetId2 = '2';
 
-    state.search.facetOrder = [facetId2];
+    state.facetOrder = [facetId2];
 
     state.facetSet[facetId1] = buildMockFacetRequest({facetId: facetId1});
     state.facetSet[facetId2] = buildMockFacetRequest({facetId: facetId2});

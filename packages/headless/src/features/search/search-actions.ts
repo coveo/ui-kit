@@ -18,6 +18,7 @@ import {
   DebugSection,
   DidYouMeanSection,
   FacetOptionsSection,
+  FacetOrderSection,
   FacetSection,
   FieldsSection,
   NumericFacetSection,
@@ -50,6 +51,7 @@ import {SearchAction} from '../analytics/analytics-utils';
 import {HistoryState} from '../history/history-state';
 import {sortFacets} from '../../utils/facet-utils';
 import {getDebugInitialState} from '../debug/debug-state';
+import {getFacetOrderInitialState} from '../facets/facet-order/facet-order-state';
 
 export type StateNeededByExecuteSearch = ConfigurationSection &
   Partial<
@@ -68,6 +70,7 @@ export type StateNeededByExecuteSearch = ConfigurationSection &
       SearchHubSection &
       QuerySetSection &
       FacetOptionsSection &
+      FacetOrderSection &
       DebugSection &
       SearchSection
   >;
@@ -243,7 +246,7 @@ const extractHistory = (state: StateNeededByExecuteSearch): HistoryState => ({
   pipeline: state.pipeline || getPipelineInitialState(),
   searchHub: state.searchHub || getSearchHubInitialState(),
   facetOptions: state.facetOptions || getFacetOptionsInitialState(),
-  facetOrder: state.search?.facetOrder ?? [],
+  facetOrder: state.facetOrder ?? getFacetOrderInitialState(),
   debug: state.debug ?? getDebugInitialState(),
 });
 
@@ -314,13 +317,11 @@ function getFacets(state: StateNeededByExecuteSearch) {
 }
 
 function getFacetsInOrder(state: StateNeededByExecuteSearch) {
-  return state?.search?.facetOrder
-    ? sortFacets(getAllFacets(state), state.search.facetOrder)
-    : [];
+  return sortFacets(getAllFacets(state), state.facetOrder ?? []);
 }
 
 function getRemainingUnorderedFacets(state: StateNeededByExecuteSearch) {
-  const facetOrder = state.search?.facetOrder ?? [];
+  const facetOrder = state.facetOrder ?? [];
   return getAllFacets(state).filter(
     (f) => facetOrder.indexOf(f.facetId) === -1
   );

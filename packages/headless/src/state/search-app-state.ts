@@ -23,6 +23,7 @@ import {
   QuerySection,
   FacetOptionsSection,
   DebugSection,
+  FacetOrderSection,
 } from './state-sections';
 
 export type SearchParametersState = FacetSection &
@@ -48,4 +49,5 @@ export type SearchAppState = SearchParametersState &
   QuerySuggestionSection &
   SearchSection &
   DidYouMeanSection &
-  FieldsSection & {history: StateWithHistory<HistoryState>};
+  FieldsSection &
+  FacetOrderSection & {history: StateWithHistory<HistoryState>};

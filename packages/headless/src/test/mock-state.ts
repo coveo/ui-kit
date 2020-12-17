@@ -22,6 +22,7 @@ import {SearchAppState} from '../state/search-app-state';
 import {getFacetOptionsInitialState} from '../features/facet-options/facet-options-state';
 import {getHistoryInitialState} from '../features/history/history-state';
 import {getDebugInitialState} from '../features/debug/debug-state';
+import {getFacetOrderInitialState} from '../features/facets/facet-order/facet-order-state';
 
 export function createMockState(
   config: Partial<SearchAppState> = {}
@@ -48,6 +49,7 @@ export function createMockState(
     fields: getFieldsInitialState(),
     history: makeHistory(getHistoryInitialState()),
     pipeline: getPipelineInitialState(),
+    facetOrder: getFacetOrderInitialState(),
     searchHub: getSearchHubInitialState(),
     debug: getDebugInitialState(),
     ...config,
