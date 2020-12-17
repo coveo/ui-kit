@@ -243,26 +243,51 @@ describe('search-slice', () => {
       });
     });
 
-    it(`when retrying query automatically
-    should log the original query to the executeSearch analytics action`, async () => {
-      const analyticsStateQuerySpy = jest.fn();
-      const mockLogSubmit = makeAnalyticsAction(
-        'analytics/test',
-        AnalyticsType.Search,
-        (_, state) => analyticsStateQuerySpy(state.query?.q)
-      );
+    describe('when retrying query automatically', () => {
+      let analyticsStateQuerySpy: jest.Mock;
+      const queryCorrections = [{correctedQuery: 'foo', wordCorrections: []}];
+      beforeEach(async () => {
+        analyticsStateQuerySpy = jest.fn();
+        const mockLogSubmit = makeAnalyticsAction(
+          'analytics/test',
+          AnalyticsType.Search,
+          (_, state) => analyticsStateQuerySpy(state.query?.q)
+        );
 
-      PlatformClient.call = jest.fn().mockImplementation(() =>
-        Promise.resolve({
-          body: buildMockSearchResponse({
-            results: [],
-            queryCorrections: [{correctedQuery: 'foo', wordCorrections: []}],
-          }),
-        })
-      );
-      await e.dispatch(executeSearch(mockLogSubmit()));
+        const fetched = () =>
+          Promise.resolve({
+            body: buildMockSearchResponse({
+              results: [],
+              queryCorrections,
+            }),
+          });
+        const retried = () =>
+          Promise.resolve({
+            body: buildMockSearchResponse({
+              results: [],
+              queryCorrections: [],
+            }),
+          });
 
-      expect(analyticsStateQuerySpy).toHaveBeenCalledWith('boo');
+        PlatformClient.call = jest
+          .fn()
+          .mockImplementationOnce(fetched)
+          .mockImplementationOnce(retried);
+        await e.dispatch(executeSearch(mockLogSubmit()));
+      });
+
+      it('should log the original query to the executeSearch analytics action', () => {
+        expect(analyticsStateQuerySpy).toHaveBeenCalledWith('boo');
+      });
+
+      it('should return the queryCorrections from the original fetched response', () => {
+        const fulfilledSearchAction = e.actions.find(
+          (action) => action.type === executeSearch.fulfilled.type
+        );
+        expect(
+          fulfilledSearchAction!.payload.response.queryCorrections
+        ).toEqual(queryCorrections);
+      });
     });
 
     it('should not retry the query automatically when corrections are available and results are available', async () => {
