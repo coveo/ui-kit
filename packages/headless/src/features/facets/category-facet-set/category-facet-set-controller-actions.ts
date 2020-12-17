@@ -12,14 +12,12 @@ import {logFacetClearAll} from '../facet-set/facet-set-analytics-actions';
 import {
   deselectAllCategoryFacetValues,
   toggleSelectCategoryFacetValue,
-  updateCategoryFacetNumberOfValues,
 } from './category-facet-set-actions';
 import {
   requiredNonEmptyString,
   facetIdDefinition,
 } from '../generic/facet-actions-validation';
 import {validateCategoryFacetValue} from './category-facet-validate-payload';
-import {NumberValue} from '@coveo/bueno';
 
 /**
  * Toggles the facet value and then executes a search with the appropriate analytics tag.
@@ -64,20 +62,14 @@ export const executeToggleCategoryFacetSelect = createAsyncThunk<
  */
 export const executeDeselectAllCategoryFacetValues = createAsyncThunk<
   void,
-  {facetId: string; numberOfValues: number},
+  {facetId: string},
   AsyncThunkSearchOptions<CategoryFacetSection & ConfigurationSection>
 >(
   'categoryFacetController/executeDeselectAll',
-  ({facetId, numberOfValues}, {dispatch, extra: {validatePayload}}) => {
-    validatePayload(
-      {facetId, numberOfValues},
-      {
-        facetId: facetIdDefinition,
-        numberOfValues: new NumberValue({required: true}),
-      }
-    );
+  ({facetId}, {dispatch, extra: {validatePayload}}) => {
+    validatePayload({facetId}, {facetId: facetIdDefinition});
+
     dispatch(deselectAllCategoryFacetValues(facetId));
-    dispatch(updateCategoryFacetNumberOfValues({facetId, numberOfValues}));
     dispatch(updateFacetOptions({freezeFacetOrder: true}));
     dispatch(executeSearch(logFacetClearAll(facetId)));
   }

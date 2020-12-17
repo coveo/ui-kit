@@ -116,14 +116,12 @@ export const categoryFacetSetReducer = createReducer(
       })
       .addCase(deselectAllCategoryFacetValues, (state, action) => {
         const facetId = action.payload;
-        const request = state[facetId]?.request;
-        handleFacetDeselectAll<CategoryFacetRequest>(request);
+        handleCategoryFacetDeselectAll(state, facetId);
       })
       .addCase(deselectAllFacets, (state) => {
-        Object.keys(state).forEach((facetId) => {
-          const request = state[facetId]?.request;
-          handleFacetDeselectAll<CategoryFacetRequest>(request);
-        });
+        Object.keys(state).forEach((facetId) =>
+          handleCategoryFacetDeselectAll(state, facetId)
+        );
       })
       .addCase(updateCategoryFacetNumberOfValues, (state, action) => {
         const {facetId, numberOfValues} = action.payload;
@@ -245,4 +243,18 @@ function isRequestInvalid(
   const responseParents = partitionIntoParentsAndValues(response.values)
     .parents;
   return requestParents.length !== responseParents.length;
+}
+
+function handleCategoryFacetDeselectAll(
+  state: CategoryFacetSetState,
+  facetId: string
+) {
+  const slice = state[facetId];
+
+  if (!slice) {
+    return;
+  }
+
+  slice.request.numberOfValues = slice.initialNumberOfValues;
+  handleFacetDeselectAll<CategoryFacetRequest>(slice.request);
 }
