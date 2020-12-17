@@ -36,19 +36,22 @@ export class AtomicDidYouMean {
     }
 
     if (this.state.wasAutomaticallyCorrected) {
-      return (
-        <div>
-          Query was automatically corrected to {this.state.wasCorrectedTo}
-        </div>
-      );
+      return [
+        <p>
+          No results for{' '}
+          <b>{this.state.queryCorrection.wordCorrections[0].originalWord}</b>
+        </p>,
+        <p>
+          Query was automatically corrected to{' '}
+          <b>{this.state.wasCorrectedTo}</b>
+        </p>,
+      ];
     }
 
     return (
-      <div>
-        <button onClick={() => this.applyCorrection()}>
-          Did you mean: {this.state.queryCorrection.correctedQuery} ?
-        </button>
-      </div>
+      <button onClick={() => this.applyCorrection()}>
+        Did you mean: {this.state.queryCorrection.correctedQuery} ?
+      </button>
     );
   }
 

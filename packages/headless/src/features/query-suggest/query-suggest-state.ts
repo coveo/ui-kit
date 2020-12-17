@@ -26,6 +26,9 @@ export interface QuerySuggestState {
    * The unique identifier of the current query suggestion request.
    */
   currentRequestId: string;
+  /**
+   * The error returned by the Coveo platform while executing the query suggestion request, if any. `null` otherwise.
+   */
   error: SearchAPIErrorWithStatusCode | null;
 }
 

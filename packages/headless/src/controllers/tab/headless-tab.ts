@@ -13,7 +13,7 @@ import {
   validateOptions,
 } from '../../utils/validate-payload';
 
-type TabOptions = {
+export type TabOptions = {
   /**
    * A constant query expression or filter that the Tab should add to any outgoing query.
    *
@@ -24,7 +24,7 @@ type TabOptions = {
   expression: string;
 };
 
-type TabInitialState = {
+export type TabInitialState = {
   /**
    * Specifies if the tab is currently active, or selected.
    * Note that there can be only one active tab for a given headless engine.
