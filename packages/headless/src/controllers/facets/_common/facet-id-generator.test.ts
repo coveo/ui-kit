@@ -1,9 +1,14 @@
 import pino, {Logger} from 'pino';
+import {createMockState} from '../../../test';
 import {buildMockCategoryFacetRequest} from '../../../test/mock-category-facet-request';
 import {buildMockDateFacetRequest} from '../../../test/mock-date-facet-request';
 import {buildMockFacetRequest} from '../../../test/mock-facet-request';
 import {buildMockNumericFacetRequest} from '../../../test/mock-numeric-facet-request';
-import {generateFacetId, FacetIdConfig} from './facet-id-generator';
+import {
+  generateFacetId,
+  FacetIdConfig,
+  isBeingUsedAsFacetId,
+} from './facet-id-generator';
 
 describe('#generateFacetId', () => {
   let config: FacetIdConfig;
@@ -118,5 +123,19 @@ describe('#generateFacetId', () => {
 
     const id = getFacetId();
     expect(id).toBe(config.field);
+  });
+});
+
+describe('#isBeingUsedAsFacetId', () => {
+  it('when the facetId is not used, it returns false', () => {
+    const state = createMockState();
+    expect(isBeingUsedAsFacetId(state, 'a')).toBe(false);
+  });
+
+  it('when the facetId is used, it returns true', () => {
+    const state = createMockState();
+    state.facetSet = {a: buildMockFacetRequest()};
+
+    expect(isBeingUsedAsFacetId(state, 'a')).toBe(true);
   });
 });

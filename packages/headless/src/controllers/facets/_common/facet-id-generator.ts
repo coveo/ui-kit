@@ -9,7 +9,7 @@ export interface FacetIdConfig {
 export function generateFacetId(config: FacetIdConfig, logger: Logger) {
   const {field, state} = config;
 
-  if (!isFieldUsedAsFacetId(config)) {
+  if (!isBeingUsedAsFacetId(state, field)) {
     return field;
   }
 
@@ -21,11 +21,12 @@ export function generateFacetId(config: FacetIdConfig, logger: Logger) {
   return `${prefix}${id}`;
 }
 
-function isFieldUsedAsFacetId(config: FacetIdConfig) {
-  const {field, state} = config;
+export function isBeingUsedAsFacetId(
+  state: Partial<AllFacetSections>,
+  key: string
+) {
   const sets = extractFacetSets(state);
-
-  return sets.some((set) => set && field in set);
+  return sets.some((set) => set && key in set);
 }
 
 function calculateId(prefix: string, state: Partial<AllFacetSections>) {
