@@ -1,5 +1,5 @@
-import {buildMockCategoryFacetRequest} from '../../../test/mock-category-facet-request';
 import {buildMockCategoryFacetResponse} from '../../../test/mock-category-facet-response';
+import {buildMockCategoryFacetSlice} from '../../../test/mock-category-facet-slice';
 import {buildMockCategoryFacetValue} from '../../../test/mock-category-facet-value';
 import {buildMockDateFacetRequest} from '../../../test/mock-date-facet-request';
 import {buildMockDateFacetResponse} from '../../../test/mock-date-facet-response';
@@ -79,7 +79,7 @@ describe('facet-set-analytics-action-utils', () => {
         });
         state.search.response.facets = [facetResponse];
         state.categoryFacetSet = {
-          [facetResponse.facetId]: buildMockCategoryFacetRequest(),
+          [facetResponse.facetId]: buildMockCategoryFacetSlice(),
         };
         return {state, facetResponse};
       };

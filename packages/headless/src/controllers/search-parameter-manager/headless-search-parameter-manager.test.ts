@@ -2,6 +2,7 @@ import {restoreSearchParameters} from '../../features/search-parameters/search-p
 import {SearchAppState} from '../../state/search-app-state';
 import {buildMockSearchAppEngine, MockEngine} from '../../test';
 import {buildMockCategoryFacetRequest} from '../../test/mock-category-facet-request';
+import {buildMockCategoryFacetSlice} from '../../test/mock-category-facet-slice';
 import {buildMockCategoryFacetValueRequest} from '../../test/mock-category-facet-value-request';
 import {buildMockFacetRequest} from '../../test/mock-facet-request';
 import {buildMockFacetValueRequest} from '../../test/mock-facet-value-request';
@@ -150,10 +151,12 @@ describe('state manager', () => {
         state: 'idle',
       });
 
+      const request = buildMockCategoryFacetRequest({
+        currentValues: [selected, idle],
+      });
+
       engine.state.categoryFacetSet = {
-        author: buildMockCategoryFacetRequest({
-          currentValues: [selected, idle],
-        }),
+        author: buildMockCategoryFacetSlice({request}),
       };
 
       expect(manager.state.parameters.cf).toEqual({author: ['a']});
@@ -170,15 +173,16 @@ describe('state manager', () => {
         children: [child],
       });
 
+      const request = buildMockCategoryFacetRequest({currentValues: [parent]});
       engine.state.categoryFacetSet = {
-        author: buildMockCategoryFacetRequest({currentValues: [parent]}),
+        author: buildMockCategoryFacetSlice({request}),
       };
 
       expect(manager.state.parameters.cf).toEqual({author: ['a', 'b']});
     });
 
     it('when there are no category facets with selected values, the #cf parameter is not included', () => {
-      engine.state.categoryFacetSet = {author: buildMockCategoryFacetRequest()};
+      engine.state.categoryFacetSet = {author: buildMockCategoryFacetSlice()};
       expect('cf' in manager.state.parameters).toBe(false);
     });
   });
@@ -222,13 +226,11 @@ describe('state manager', () => {
       author: buildMockFacetRequest({currentValues: facetValues}),
     };
 
-    const categoryFacetValues = [
-      buildMockCategoryFacetValueRequest({state: 'selected'}),
-    ];
+    const request = buildMockCategoryFacetRequest({
+      currentValues: [buildMockCategoryFacetValueRequest({state: 'selected'})],
+    });
     engine.state.categoryFacetSet = {
-      author: buildMockCategoryFacetRequest({
-        currentValues: categoryFacetValues,
-      }),
+      author: buildMockCategoryFacetSlice({request}),
     };
 
     engine.state.query.q = 'a';

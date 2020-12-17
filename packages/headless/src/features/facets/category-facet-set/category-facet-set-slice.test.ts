@@ -55,7 +55,7 @@ describe('category facet slice', () => {
       registerCategoryFacet(options)
     );
 
-    expect(finalState[facetId]).toEqual({
+    expect(finalState[facetId]?.request).toEqual({
       ...options,
       currentValues: [],
       filterFacetCount: true,
@@ -110,7 +110,7 @@ describe('category facet slice', () => {
   });
 
   it('it restores the categoryFacetSet on history change', () => {
-    const categoryFacetSet = {'1': buildMockCategoryFacetRequest()};
+    const categoryFacetSet = {'1': buildMockCategoryFacetSlice()};
     const payload = {
       ...getHistoryEmptyState(),
       categoryFacetSet,

@@ -2,7 +2,7 @@ import {CategoryFacetSlice} from '../features/facets/category-facet-set/category
 import {buildMockCategoryFacetRequest} from './mock-category-facet-request';
 
 export function buildMockCategoryFacetSlice(
-  config: Partial<CategoryFacetSlice>
+  config: Partial<CategoryFacetSlice> = {}
 ): CategoryFacetSlice {
   return {
     request: buildMockCategoryFacetRequest(),
