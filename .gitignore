@@ -1,9 +1,11 @@
 .idea
 node_modules
 npm-debug.log
-.vscode/
+.vscode/*
 .ds_store
 dist
 veracode
 .size-snapshot.json
 reports/*.xml
+
+!.vscode/extensions.json
