@@ -69,6 +69,9 @@ export interface Expandable {
 }
 
 export interface Type<T extends FacetType> {
+  /**
+   * The type of facet.
+   */
   type: T;
 }
 
