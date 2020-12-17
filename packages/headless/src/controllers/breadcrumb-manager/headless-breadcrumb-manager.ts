@@ -131,7 +131,7 @@ export const buildBreadcrumbManager = (
       deselect: () => {
         dispatch(deselectAllCategoryFacetValues(facetId));
         dispatch(
-          updateCategoryFacetNumberOfValues({facetId, numberOfValues: 5}) // TODO: get original numberOfValues
+          updateCategoryFacetNumberOfValues({facetId, numberOfValues: 5}) // TODO: KIT-336
         );
         dispatch(
           executeSearch(
