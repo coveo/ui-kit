@@ -1,9 +1,9 @@
 import {searchHubReducer} from './search-hub-slice';
 import {setSearchHub} from './search-hub-actions';
 import {change} from '../history/history-actions';
-import {getHistoryEmptyState} from '../history/history-slice';
 import {updateSearchConfiguration} from '../configuration/configuration-actions';
 import {getSearchHubInitialState} from './search-hub-state';
+import {getHistoryInitialState} from '../history/history-state';
 
 describe('search hub slice', () => {
   it('should have initial state', () => {
@@ -25,7 +25,7 @@ describe('search hub slice', () => {
   it('allows to restore a search hub on history change', () => {
     const state = 'foo';
     const historyChange = {
-      ...getHistoryEmptyState(),
+      ...getHistoryInitialState(),
       searchHub: 'bar',
     };
 

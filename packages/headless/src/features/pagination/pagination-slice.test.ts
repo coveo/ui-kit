@@ -8,11 +8,11 @@ import {
   nextPage,
 } from './pagination-actions';
 import {buildMockSearch} from '../../test/mock-search';
-import {getHistoryEmptyState} from '../history/history-slice';
 import {change} from '../history/history-actions';
 import {executeSearch} from '../search/search-actions';
 import {logSearchboxSubmit} from '../query/query-analytics-actions';
 import {getPaginationInitialState, PaginationState} from './pagination-state';
+import {getHistoryInitialState} from '../history/history-state';
 import {restoreSearchParameters} from '../search-parameters/search-parameter-actions';
 
 describe('pagination slice', () => {
@@ -134,7 +134,7 @@ describe('pagination slice', () => {
       totalCountFiltered: 123,
     };
     const historyChange = {
-      ...getHistoryEmptyState(),
+      ...getHistoryInitialState(),
       pagination: expectedPagination,
     };
 

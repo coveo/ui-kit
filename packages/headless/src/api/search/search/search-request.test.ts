@@ -4,7 +4,6 @@ import {buildMockNumericFacetRequest} from '../../../test/mock-numeric-facet-req
 import {buildMockDateFacetRequest} from '../../../test/mock-date-facet-request';
 import {buildMockCategoryFacetRequest} from '../../../test/mock-category-facet-request';
 import {buildMockFacetOptions} from '../../../test/mock-facet-options';
-import {buildMockFacetResponse} from '../../../test/mock-facet-response';
 import {SearchAppState} from '../../../state/search-app-state';
 import {buildSearchRequest} from '../../../features/search/search-actions';
 
@@ -82,15 +81,12 @@ describe('search request', () => {
     expect(facets).toContain(request);
   });
 
-  it(`when there are facets in the response,
+  it(`when there are facets ids in the same order as the facetOrder array,
   #searchRequestParams orders the facets in the same order as the response`, () => {
     const facetId1 = '1';
     const facetId2 = '2';
 
-    state.search.response.facets = [
-      buildMockFacetResponse({facetId: facetId2}),
-      buildMockFacetResponse({facetId: facetId1}),
-    ];
+    state.facetOrder = [facetId2, facetId1];
 
     state.facetSet[facetId1] = buildMockFacetRequest({facetId: facetId1});
     state.facetSet[facetId2] = buildMockFacetRequest({facetId: facetId2});
@@ -102,14 +98,12 @@ describe('search request', () => {
     ]);
   });
 
-  it(`when there is a facet request that is not in the response,
+  it(`when there is a facet id that is not in the facetOrder array,
   #searchRequestParams includes it at the end of the facets array`, () => {
     const facetId1 = '1';
     const facetId2 = '2';
 
-    state.search.response.facets = [
-      buildMockFacetResponse({facetId: facetId2}),
-    ];
+    state.facetOrder = [facetId2];
 
     state.facetSet[facetId1] = buildMockFacetRequest({facetId: facetId1});
     state.facetSet[facetId2] = buildMockFacetRequest({facetId: facetId2});
