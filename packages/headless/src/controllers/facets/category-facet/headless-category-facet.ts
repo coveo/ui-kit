@@ -107,7 +107,7 @@ export function buildCategoryFacet(
 
     /**
      * Toggles the specified facet value.
-     * @param selection (CategoryFacetValue) The facet value to toggle.
+     * @param selection The facet value to toggle.
      */
     toggleSelect: (selection: CategoryFacetValue) =>
       dispatch(
@@ -128,7 +128,7 @@ export function buildCategoryFacet(
       ),
 
     /** Sorts the facet values according to the specified criterion.
-     * @param criterion (CategoryFacetSortCriterion) The criterion to sort values by.
+     * @param criterion The criterion to sort values by.
      */
     sortBy(criterion: CategoryFacetSortCriterion) {
       const facetId = options.facetId;
@@ -140,8 +140,8 @@ export function buildCategoryFacet(
 
     /**
      * Checks whether the facet values are sorted according to the specified criterion.
-     * @param criterion (CategoryFacetSortCriterion) The criterion to compare.
-     * @returns (boolean) Whether the facet values are sorted according to the specified criterion.
+     * @param criterion The criterion to compare.
+     * @returns Whether the facet values are sorted according to the specified criterion.
      */
     isSortedBy(criterion: CategoryFacetSortCriterion) {
       const request = getRequest();
