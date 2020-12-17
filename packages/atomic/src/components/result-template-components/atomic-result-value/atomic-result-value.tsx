@@ -26,16 +26,18 @@ export class AtomicResultValue {
     if (resultValue !== null) {
       if (this.shouldHighlightWith) {
         try {
+          const highlights = ResultTemplatesHelpers.getResultProperty(
+            this.result,
+            this.shouldHighlightWith
+          ) as HighlightUtils.HighlightKeyword[];
+
           resultValue = HighlightUtils.highlightString({
             content: resultValue as string,
             delimiters: {
               open: '<strong>',
               close: '</strong>',
             },
-            highlights: ResultTemplatesHelpers.getResultProperty(
-              this.result,
-              this.shouldHighlightWith
-            ) as HighlightUtils.HighlightKeyword[],
+            highlights,
           });
           return <span innerHTML={resultValue as string}></span>;
         } catch (error) {
