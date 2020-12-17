@@ -1,8 +1,11 @@
 import {createAction} from '@reduxjs/toolkit';
-import {validatePayload} from '../../utils/validate-payload';
-import {ArrayValue, StringValue} from '@coveo/bueno';
+import {
+  validatePayload,
+  requiredNonEmptyString,
+} from '../../utils/validate-payload';
+import {ArrayValue} from '@coveo/bueno';
 
-const nonEmptyString = new StringValue({required: true, emptyAllowed: false});
+const nonEmptyString = requiredNonEmptyString;
 const nonEmptyArray = new ArrayValue({
   each: nonEmptyString,
   required: true,

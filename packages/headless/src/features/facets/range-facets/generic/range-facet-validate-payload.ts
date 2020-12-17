@@ -1,5 +1,5 @@
-import {requiredNonEmptyString} from '../../generic/facet-actions-validation';
 import {NumberValue, BooleanValue} from '@coveo/bueno';
+import {requiredNonEmptyString} from '../../../../utils/validate-payload';
 
 export const numericFacetValueDefinition = {
   state: requiredNonEmptyString,

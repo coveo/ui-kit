@@ -6,6 +6,7 @@ import {
   RecordValue,
 } from '@coveo/bueno';
 import {SuggestionHighlightingOptions} from '../../utils/highlight';
+import {requiredNonEmptyString} from '../../utils/validate-payload';
 
 export interface SearchBoxOptions extends DefaultSearchBoxOptions {
   id?: string;
@@ -32,7 +33,7 @@ export const searchBoxOptionDefinitions = {
    * A unique identifier for the controller.
    * By default, a unique random identifier is generated.
    */
-  id: new StringValue({required: true, emptyAllowed: false}),
+  id: requiredNonEmptyString,
   /**
    * The number of query suggestions to request from Coveo ML (e.g., `3`).
    *
