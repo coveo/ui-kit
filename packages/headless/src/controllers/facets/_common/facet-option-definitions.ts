@@ -8,14 +8,9 @@ import {
 } from '@coveo/bueno';
 import {FacetSearchRequestOptions} from '../../../api/search/facet-search/base/base-facet-search-request';
 
-/**
- * A unique identifier for the controller.
- * By default, a unique random identifier is generated.
- */
 export const facetId = new StringValue({
   regex: /^[a-zA-Z0-9-_]+$/,
 });
-/** The field whose values you want to display in the facet.*/
 export const field = new StringValue({required: true});
 export const basePath = new ArrayValue({
   each: new StringValue(),
