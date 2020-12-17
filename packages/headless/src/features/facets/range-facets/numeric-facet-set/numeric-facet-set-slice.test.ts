@@ -20,6 +20,7 @@ import {logSearchEvent} from '../../../analytics/analytics-actions';
 import {numericFacetSetReducer} from './numeric-facet-set-slice';
 import {deselectAllFacets} from '../../generic/facet-actions';
 import {getHistoryInitialState} from '../../../history/history-state';
+import {restoreSearchParameters} from '../../../search-parameters/search-parameter-actions';
 
 describe('numeric-facet-set slice', () => {
   let state: NumericFacetSetState;
@@ -72,6 +73,25 @@ describe('numeric-facet-set slice', () => {
     );
 
     expect(finalState).toEqual(numericFacetSet);
+  });
+
+  it('#restoreSearchParameters restores the #nf payload correctly', () => {
+    const spy = jest.spyOn(
+      RangeFacetReducers,
+      'handleRangeFacetSearchParameterRestoration'
+    );
+
+    const facetId = '1';
+    state[facetId] = buildMockNumericFacetRequest();
+
+    const value = buildMockNumericFacetValue();
+    const nf = {[facetId]: [value]};
+
+    const action = restoreSearchParameters({nf});
+    const finalState = numericFacetSetReducer(state, action);
+
+    expect(finalState[facetId].currentValues).toContainEqual(value);
+    expect(spy).toHaveBeenCalledTimes(1);
   });
 
   it('#toggleSelectNumericFacetValue calls #toggleSelectRangeValue', () => {

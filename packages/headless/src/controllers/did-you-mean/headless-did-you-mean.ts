@@ -11,14 +11,14 @@ import {
   DidYouMeanSection,
 } from '../../state/state-sections';
 
+export type DidYouMean = ReturnType<typeof buildDidYouMean>;
+export type DidYouMeanState = DidYouMean['state'];
+
 /**
  * The DidYouMean controller is responsible for handling query corrections.
  * When a query returns no result but finds a possible query correction, the controller either suggests the correction or
  * automatically triggers a new query with the suggested term.
  */
-export type DidYouMean = ReturnType<typeof buildDidYouMean>;
-export type DidYouMeanState = DidYouMean['state'];
-
 export const buildDidYouMean = (
   engine: Engine<ConfigurationSection & DidYouMeanSection>
 ) => {
@@ -37,7 +37,23 @@ export const buildDidYouMean = (
       const state = engine.state;
 
       return {
-        ...state.didYouMean,
+        /**
+         * The correction that was applied to the query. If no correction was applied, will default to an empty string.
+         */
+        wasCorrectedTo: state.didYouMean.wasCorrectedTo,
+        /**
+         * Specifies if the query was automatically corrected by Headless.
+         *
+         * This happens when there is no result returned by the API for a particular mispelling.
+         */
+        wasAutomaticallyCorrected: state.didYouMean.wasAutomaticallyCorrected,
+        /**
+         * The query correction that is currently applied by the "did you mean" module.
+         */
+        queryCorrection: state.didYouMean.queryCorrection,
+        /**
+         * Specifies if there is a query correction to apply.
+         */
         hasQueryCorrection:
           state.didYouMean.queryCorrection.correctedQuery !== '' ||
           state.didYouMean.wasCorrectedTo !== '',

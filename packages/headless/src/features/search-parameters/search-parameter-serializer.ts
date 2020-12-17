@@ -1,7 +1,12 @@
+import {isSearchApiDate} from '../../controllers/facets/range-facet/date-facet/date-range';
+import {buildDateRange} from '../../controllers/facets/range-facet/date-facet/headless-date-facet';
+import {buildNumericRange} from '../../controllers/facets/range-facet/numeric-facet/headless-numeric-facet';
+import {RangeValueRequest} from '../facets/range-facets/generic/interfaces/range-facet';
 import {SearchParameters} from './search-parameter-actions';
 
 const delimiter = '&';
 const equal = '=';
+const rangeDelimiter = '..';
 
 export function buildSearchParameterSerializer() {
   return {serialize, deserialize};
@@ -25,27 +30,67 @@ function serializePair(pair: [string, unknown]) {
     return isFacetObject(val) ? serializeFacets(key, val) : '';
   }
 
+  if (key === 'nf' || key === 'df') {
+    return isRangeFacetObject(val) ? serializeRangeFacets(key, val) : '';
+  }
+
   return `${key}${equal}${val}`;
 }
 
 function isFacetObject(obj: unknown): obj is Record<string, string[]> {
-  if (obj && typeof obj === 'object') {
-    const invalidEntries = Object.entries(obj).filter(([key, value]) => {
-      const validKey = typeof key === 'string';
-      const validValue =
-        Array.isArray(value) && value.every((v) => typeof v === 'string');
-      const isValid = validKey && validValue;
-      return !isValid;
-    });
-
-    return invalidEntries.length === 0;
+  if (!isObject(obj)) {
+    return false;
   }
-  return false;
+
+  const isValidValue = (v: unknown) => typeof v === 'string';
+  return allEntriesAreValid(obj, isValidValue);
+}
+
+function isRangeFacetObject(
+  obj: unknown
+): obj is Record<string, RangeValueRequest[]> {
+  if (!isObject(obj)) {
+    return false;
+  }
+
+  const isRangeValue = (v: unknown) =>
+    isObject(v) && 'start' in v && 'end' in v;
+  return allEntriesAreValid(obj, isRangeValue);
+}
+
+function isObject(obj: unknown): obj is object {
+  return obj && typeof obj === 'object' ? true : false;
+}
+
+function allEntriesAreValid(
+  obj: object,
+  isValidValue: (v: unknown) => boolean
+) {
+  const invalidEntries = Object.entries(obj).filter((entry) => {
+    const values = entry[1];
+    return !Array.isArray(values) || !values.every(isValidValue);
+  });
+
+  return invalidEntries.length === 0;
 }
 
 function serializeFacets(key: string, facets: Record<string, string[]>) {
   return Object.entries(facets)
     .map(([facetId, values]) => `${key}[${facetId}]${equal}${values.join(',')}`)
+    .join(delimiter);
+}
+
+function serializeRangeFacets(
+  key: string,
+  facets: Record<string, RangeValueRequest[]>
+) {
+  return Object.entries(facets)
+    .map(([facetId, ranges]) => {
+      const value = ranges
+        .map(({start, end}) => `${start}${rangeDelimiter}${end}`)
+        .join(',');
+      return `${key}[${facetId}]${equal}${value}`;
+    })
     .join(delimiter);
 }
 
@@ -60,8 +105,8 @@ function deserialize(fragment: string): SearchParameters {
   return keyValuePairs.reduce((acc: SearchParameters, pair) => {
     const [key, val] = pair;
 
-    if (key === 'f' && typeof val === 'object') {
-      const mergedValues = {...acc[key], ...val};
+    if (key === 'f' || key === 'cf' || key === 'nf' || key === 'df') {
+      const mergedValues = {...acc[key], ...(val as object)};
       return {...acc, [key]: mergedValues};
     }
 
@@ -78,7 +123,7 @@ function splitOnFirstEqual(str: string) {
 
 function preprocessFacetPairs(pair: string[]) {
   const [key, val] = pair;
-  const facetKey = /^(f|cf)\[(.+)\]$/;
+  const facetKey = /^(f|cf|nf|df)\[(.+)\]$/;
   const result = facetKey.exec(key);
 
   if (!result) {
@@ -88,9 +133,38 @@ function preprocessFacetPairs(pair: string[]) {
   const paramKey = result[1];
   const facetId = result[2];
   const values = val.split(',');
-  const obj = {[facetId]: values};
+  const processedValues = processFacetValues(paramKey, values);
+  const obj = {[facetId]: processedValues};
 
   return [paramKey, JSON.stringify(obj)];
+}
+
+function processFacetValues(key: string, values: string[]) {
+  if (key === 'nf') {
+    return buildNumericRanges(values);
+  }
+
+  if (key === 'df') {
+    return buildDateRanges(values);
+  }
+
+  return values;
+}
+
+function buildNumericRanges(ranges: string[]) {
+  return ranges
+    .map((str) => str.split(rangeDelimiter).map(parseFloat))
+    .filter((range) => range.length === 2 && range.every(Number.isFinite))
+    .map(([start, end]) => buildNumericRange({start, end, state: 'selected'}));
+}
+
+function buildDateRanges(ranges: string[]) {
+  return ranges
+    .map((str) => str.split(rangeDelimiter))
+    .filter((range) => range.length === 2 && range.every(isSearchApiDate))
+    .map(([start, end]) =>
+      buildDateRange({start, end, useLocalTime: true, state: 'selected'})
+    );
 }
 
 function isValidPair<K extends keyof SearchParameters>(
@@ -115,6 +189,8 @@ function isValidKey(key: string): key is keyof SearchParameters {
     sortCriteria: true,
     f: true,
     cf: true,
+    nf: true,
+    df: true,
     debug: true,
   };
 
@@ -142,7 +218,7 @@ function cast<K extends keyof SearchParameters>(
     return [key, parseInt(value)];
   }
 
-  if (key === 'f' || key === 'cf') {
+  if (key === 'f' || key === 'cf' || key === 'nf' || key === 'df') {
     return [key, JSON.parse(value)];
   }
 
