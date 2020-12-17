@@ -81,7 +81,7 @@ describe('search request', () => {
     expect(facets).toContain(request);
   });
 
-  it(`when there are facets ids in the facet order,
+  it(`when there are facets ids in the same order as the facetOrder array,
   #searchRequestParams orders the facets in the same order as the response`, () => {
     const facetId1 = '1';
     const facetId2 = '2';
@@ -98,7 +98,7 @@ describe('search request', () => {
     ]);
   });
 
-  it(`when there is a facet id that is not in the facet order,
+  it(`when there is a facet id that is not in the facetOrder array,
   #searchRequestParams includes it at the end of the facets array`, () => {
     const facetId1 = '1';
     const facetId2 = '2';

@@ -88,7 +88,7 @@ const isPipelineEqual = (current: string, next: string) => current === next;
 
 const isSearchHubEqual = (current: string, next: string) => current === next;
 
-const isFacetOrderEqual = (current: string[] | null, next: string[] | null) =>
-  current === next || (current && next && arrayEquals(current, next));
+const isFacetOrderEqual = (current: string[], next: string[]) =>
+  arrayEquals(current, next);
 
 const isDebugEqual = (current: boolean, next: boolean) => current === next;

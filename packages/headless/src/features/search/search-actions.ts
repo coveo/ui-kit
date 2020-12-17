@@ -50,7 +50,6 @@ import {SearchAction} from '../analytics/analytics-utils';
 import {HistoryState} from '../history/history-state';
 import {sortFacets} from '../../utils/facet-utils';
 import {getDebugInitialState} from '../debug/debug-state';
-import {isNullOrUndefined} from '@coveo/bueno';
 
 export type StateNeededByExecuteSearch = ConfigurationSection &
   Partial<
@@ -244,7 +243,7 @@ const extractHistory = (state: StateNeededByExecuteSearch): HistoryState => ({
   pipeline: state.pipeline || getPipelineInitialState(),
   searchHub: state.searchHub || getSearchHubInitialState(),
   facetOptions: state.facetOptions || getFacetOptionsInitialState(),
-  facetOrder: state.search?.facetOrder ?? null,
+  facetOrder: state.search?.facetOrder ?? [],
   debug: state.debug ?? getDebugInitialState(),
 });
 
@@ -321,11 +320,10 @@ function getFacetsInOrder(state: StateNeededByExecuteSearch) {
 }
 
 function getRemainingUnorderedFacets(state: StateNeededByExecuteSearch) {
-  return isNullOrUndefined(state.search?.facetOrder)
-    ? getAllFacets(state)
-    : getAllFacets(state).filter(
-        (f) => state.search!.facetOrder!.indexOf(f.facetId) === -1
-      );
+  const facetOrder = state.search?.facetOrder ?? [];
+  return getAllFacets(state).filter(
+    (f) => facetOrder.indexOf(f.facetId) === -1
+  );
 }
 
 function getAllFacets(state: StateNeededByExecuteSearch) {

@@ -77,7 +77,7 @@ describe('history slice', () => {
       sortCriteria: 'date descending',
       pipeline: 'my-pipeline',
       searchHub: 'my-search-hub',
-      facetOrder: null,
+      facetOrder: [],
       debug: false,
     };
 

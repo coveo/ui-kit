@@ -15,10 +15,10 @@ import {getSearchHubInitialState} from '../search-hub/search-hub-state';
 import {getSortCriteriaInitialState} from '../sort-criteria/sort-criteria-state';
 
 export interface HistoryState extends SearchParametersState {
-  facetOrder: string[] | null;
+  facetOrder: string[];
 }
 
-export function getHistoryInitialState(): HistoryState {
+function getSearchParametersInitialState(): SearchParametersState {
   return {
     context: getContextInitialState(),
     facetSet: getFacetSetInitialState(),
@@ -34,6 +34,12 @@ export function getHistoryInitialState(): HistoryState {
     pipeline: getPipelineInitialState(),
     searchHub: getSearchHubInitialState(),
     debug: getDebugInitialState(),
-    facetOrder: null,
+  };
+}
+
+export function getHistoryInitialState(): HistoryState {
+  return {
+    ...getSearchParametersInitialState(),
+    facetOrder: [],
   };
 }
