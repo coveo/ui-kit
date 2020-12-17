@@ -6,7 +6,7 @@
       "sequential": ["us-east-1"]
     },
     "environments_order": {
-      "sequential": ["dev"]
+      "sequential": ["dev", "qa", "prd"]
     },
     "team_jenkins": "searchuibuilds",
     "start_environment_automatically": false,
@@ -16,7 +16,7 @@
   },
   "ordered_phases": [
     {
-      "id": "deploy-headless-to-s3",
+      "id": "deploy-headless-to-s3-latest",
       "s3": {
         "bucket": "{terraform.infra.infra.bucket_binaries}",
         "directory": "proda/StaticCDN/headless/latest",
@@ -27,12 +27,23 @@
       }
     },
     {
+        "id": "deploy-headless-to-s3-version",
+        "s3": {
+          "bucket": "{terraform.infra.infra.bucket_binaries}",
+          "directory": "proda/StaticCDN/headless/v$[VERSION]",
+          "source": "packages/headless/dist/browser",
+          "parameters": {
+            "acl": "public-read"
+          }
+        }
+      },
+    {
       "id": "graduate-release",
       "team_jenkins": {
         "disabled": true,
         "job_name": "test-deploy-npm",
         "extra_parameters": {"commit_hash": "$[COMMIT_HASH]"},
-        "rd": {
+        "qa": {
           "disabled": false
         }
       }
