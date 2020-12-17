@@ -30,7 +30,7 @@ export interface RecommendationListProps {
 }
 
 /**
- * The `RecommendationList` controller allows users to retrieve information about the current recommendations by the search API, if there are any.
+ * The `RecommendationList` controller retrieves information about the current recommendations by the search API, if there are any.
  */
 export type RecommendationList = ReturnType<typeof buildRecommendationList>;
 /** The state relevant to the `RecommendationList` controller.*/
