@@ -33,16 +33,6 @@
             }
         }
     ],
-    "certifiers": {
-        "dev": [
-            {
-                "system_certifier": "snyk"
-            },
-            {
-                "system_certifier": "veracode"
-            }
-        ]
-    },
     "snyk": {
         "org": "coveo-jsui",
         "no_container_images": true,
