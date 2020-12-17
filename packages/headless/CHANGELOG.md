@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.1.0-alpha.111](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.110...v0.1.0-alpha.111) (2020-12-17)
+
+
+### Bug Fixes
+
+* **headless:** save facet order in the history state ([#372](https://github.com/coveo/ui-kit/issues/372)) ([aefb3d3](https://github.com/coveo/ui-kit/commit/aefb3d383a4497985a58fff362c1cfcf34ffc434))
+
+
+
+
+
 # [0.1.0-alpha.110](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.109...v0.1.0-alpha.110) (2020-12-17)
 
 
