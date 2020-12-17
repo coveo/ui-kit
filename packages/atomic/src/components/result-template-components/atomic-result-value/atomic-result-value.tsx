@@ -17,7 +17,7 @@ export class AtomicResultValue {
   @ResultContext() private result!: Result;
 
   @ResultContextRenderer
-  render() {
+  public render() {
     let resultValue = ResultTemplatesHelpers.getResultProperty(
       this.result,
       this.value
