@@ -1,11 +1,9 @@
 node('linux && docker') {
   checkout scm
   def isMaster = env.BRANCH_NAME == 'master'
+  def commitHash = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
 
-  withEnv([
-    'npm_config_cache=npm-cache',
-    'CI=true'
-  ]){
+  withEnv(['npm_config_cache=npm-cache', 'CI=true']) {
     withDockerContainer(image: 'node:14', args: '-u=root') {
       stage('Setup') {
         sh 'npm run setup'
@@ -55,16 +53,14 @@ node('linux && docker') {
     withDockerContainer(image: 'node:14', args: '-u=root') {
       stage('Bump version') {
         withCredentials([
-          usernameColonPassword(credentialsId: 'github-commit-token', variable: 'GH_CREDENTIALS')
-        ]) {
+        usernameColonPassword(credentialsId: 'github-commit-token', variable: 'GH_CREDENTIALS')]) {
           sh 'npm run bump:version'
         }
       }
 
       stage('Npm publish') {
         withCredentials([
-          string(credentialsId: 'NPM_TOKEN', variable: 'NPM_TOKEN')
-        ]) {
+        string(credentialsId: 'NPM_TOKEN', variable: 'NPM_TOKEN')]) {
           sh "echo //registry.npmjs.org/:_authToken=${NPM_TOKEN} > ~/.npmrc"
           sh 'npm run npm:publish || true'
         }
@@ -80,7 +76,7 @@ node('linux && docker') {
       }
 
       stage('Deployment pipeline upload') {
-        sh 'deployment-package package create --with-deploy || true'
+        sh 'deployment-package package create --with-deploy --resolve COMMIT_HASH=${commitHash}  || true'
       }
     }
   }
