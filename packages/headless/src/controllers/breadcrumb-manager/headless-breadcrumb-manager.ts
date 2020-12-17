@@ -155,12 +155,12 @@ export const buildBreadcrumbManager = (
          * The list of date facet breadcrumbs.
          */
         dateFacetBreadcrumbs: getDateFacetBreadcrumbs(),
+        /**
+         * `true` if there are any available breadcrumbs (i.e., if there are any active facet values), and `false` otherwise.
+         */
+        hasBreadcrumbs: hasBreadcrumbs(),
       };
     },
-    /**
-     * Determines if there are any available breadcrumbs (i.e., if there are any active facets).
-     */
-    hasBreadcrumbs,
     /**
      * Deselects all facet values.
      */
