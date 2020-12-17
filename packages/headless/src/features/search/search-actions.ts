@@ -29,14 +29,17 @@ import {
   SearchSection,
   SortSection,
 } from '../../state/state-sections';
-import {historyStore} from '../../api/analytics/analytics';
+import {getVisitorID, historyStore} from '../../api/analytics/analytics';
 import {SearchParametersState} from '../../state/search-app-state';
 import {SearchRequest} from '../../api/search/search/search-request';
 import {getContextInitialState} from '../context/context-state';
 import {getFacetSetInitialState} from '../facets/facet-set/facet-set-state';
 import {getNumericFacetSetInitialState} from '../facets/range-facets/numeric-facet-set/numeric-facet-set-state';
 import {getDateFacetSetInitialState} from '../facets/range-facets/date-facet-set/date-facet-set-state';
-import {getCategoryFacetSetInitialState} from '../facets/category-facet-set/category-facet-set-state';
+import {
+  CategoryFacetSetState,
+  getCategoryFacetSetInitialState,
+} from '../facets/category-facet-set/category-facet-set-state';
 import {getPaginationInitialState} from '../pagination/pagination-state';
 import {getQueryInitialState} from '../query/query-state';
 import {getAdvancedSearchQueriesInitialState} from '../advanced-search-queries/advanced-search-queries-state';
@@ -48,7 +51,7 @@ import {getFacetOptionsInitialState} from '../facet-options/facet-options-state'
 import {logFetchMoreResults, logQueryError} from './search-analytics-actions';
 import {SearchAction} from '../analytics/analytics-utils';
 import {getDebugInitialState} from '../debug/debug-state';
-import {buildSearchRequest} from './search-request-builder';
+import {AnyFacetRequest} from '../facets/generic/interfaces/generic-facet-request';
 
 export type StateNeededByExecuteSearch = ConfigurationSection &
   Partial<
@@ -247,6 +250,56 @@ const extractHistory = (
   debug: state.debug ?? getDebugInitialState(),
 });
 
+export const buildSearchRequest = (
+  state: StateNeededByExecuteSearch
+): SearchRequest => {
+  return {
+    accessToken: state.configuration.accessToken,
+    organizationId: state.configuration.organizationId,
+    url: state.configuration.search.apiBaseUrl,
+    debug: state.debug,
+    ...(state.configuration.analytics.enabled && {
+      visitorId: getVisitorID(),
+    }),
+    ...(state.advancedSearchQueries && {
+      aq: state.advancedSearchQueries.aq,
+      cq: state.advancedSearchQueries.cq,
+    }),
+    ...(state.context && {
+      context: state.context.contextValues,
+    }),
+    ...(state.didYouMean && {
+      enableDidYouMean: state.didYouMean.enableDidYouMean,
+    }),
+    ...(state.facetSet && {
+      facets: getFacets(state),
+    }),
+    ...(state.fields && {
+      fieldsToInclude: state.fields.fieldsToInclude,
+    }),
+    ...(state.pagination && {
+      numberOfResults: state.pagination.numberOfResults,
+      firstResult: state.pagination.firstResult,
+    }),
+    ...(state.pipeline && {
+      pipeline: state.pipeline,
+    }),
+    ...(state.query && {
+      q: state.query.q,
+      enableQuerySyntax: state.query.enableQuerySyntax,
+    }),
+    ...(state.searchHub && {
+      searchHub: state.searchHub,
+    }),
+    ...(state.sortCriteria && {
+      sortCriteria: state.sortCriteria,
+    }),
+    ...(state.facetOptions && {
+      facetOptions: state.facetOptions,
+    }),
+  };
+};
+
 const buildFetchMoreRequest = (
   state: StateNeededByExecuteSearch
 ): SearchRequest => {
@@ -258,6 +311,73 @@ const buildFetchMoreRequest = (
       (state.search?.results.length ?? 0),
   };
 };
+
+function getFacets(state: StateNeededByExecuteSearch) {
+  return [
+    ...getFacetsInSameOrderAsResponse(state),
+    ...getFacetsNotInResponse(state),
+  ];
+}
+
+function getFacetsInSameOrderAsResponse(state: StateNeededByExecuteSearch) {
+  const requests: AnyFacetRequest[] = [];
+  if (!state.search) {
+    return requests;
+  }
+  const responseFacets = state.search.response.facets;
+
+  responseFacets.forEach((f) => {
+    const request = findFacetRequest(state, f.facetId);
+    request && requests.push(request);
+  });
+
+  return requests;
+}
+
+function findFacetRequest(state: StateNeededByExecuteSearch, facetId: string) {
+  const sets = [
+    state.facetSet,
+    state.numericFacetSet,
+    state.dateFacetSet,
+    getCategoryFacetRequestMap(state.categoryFacetSet),
+  ];
+
+  const targetSet = sets.find((set) => set && set[facetId]);
+  return targetSet ? targetSet[facetId] : undefined;
+}
+
+function getCategoryFacetRequestMap(state: CategoryFacetSetState | undefined) {
+  return Object.entries(state || {})
+    .map(([facetId, slice]) => ({[facetId]: slice!.request}))
+    .reduce((all, current) => ({...all, ...current}), {});
+}
+
+function getFacetsNotInResponse(state: StateNeededByExecuteSearch) {
+  const excludedFacetIds = new Set<string>();
+  const responseFacets = state.search?.response.facets;
+  responseFacets?.forEach((f) => excludedFacetIds.add(f.facetId));
+
+  return getAllFacets(state).filter((f) => !excludedFacetIds.has(f.facetId));
+}
+
+function getAllFacets(state: StateNeededByExecuteSearch) {
+  return [
+    ...getFacetRequests(state.facetSet),
+    ...getFacetRequests(state.numericFacetSet),
+    ...getFacetRequests(state.dateFacetSet),
+    ...getCategoryFacetRequests(state.categoryFacetSet),
+  ];
+}
+
+function getCategoryFacetRequests(state: CategoryFacetSetState | undefined) {
+  return Object.values(state || {}).map((slice) => slice!.request);
+}
+
+function getFacetRequests<T extends AnyFacetRequest>(
+  requests: Record<string, T> = {}
+) {
+  return Object.keys(requests).map((id) => requests[id]);
+}
 
 const addEntryInActionsHistory = (state: StateNeededByExecuteSearch) => {
   if (state.configuration.analytics.enabled) {

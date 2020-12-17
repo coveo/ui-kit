@@ -42,8 +42,8 @@ import {buildMockQuerySuggestCompletion} from '../../test/mock-query-suggest-com
 import {buildMockFacetSearchResponse} from '../../test/mock-facet-search-response';
 import {SearchResponseSuccess} from './search/search-response';
 import {QuerySuggestSuccessResponse} from './query-suggest/query-suggest-response';
-import {buildSearchRequest} from '../../features/search/search-request-builder';
 import {buildMockCategoryFacetSlice} from '../../test/mock-category-facet-slice';
+import {buildSearchRequest} from '../../features/search/search-actions';
 
 jest.mock('../platform-client');
 describe('search api client', () => {

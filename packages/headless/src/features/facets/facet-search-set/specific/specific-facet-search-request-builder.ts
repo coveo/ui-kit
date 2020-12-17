@@ -1,6 +1,7 @@
 import {SpecificFacetSearchRequest} from '../../../../api/search/facet-search/specific-facet-search/specific-facet-search-request';
-import {buildSearchRequest} from '../../../search/search-request-builder';
+import {buildSearchRequest} from '../../../search/search-actions';
 import {StateNeededForSpecificFacetSearch} from '../generic/generic-facet-search-state';
+
 export const buildSpecificFacetSearchRequest = (
   id: string,
   state: StateNeededForSpecificFacetSearch

@@ -1,13 +1,13 @@
-import {createMockState} from '../../test/mock-state';
-import {buildMockFacetRequest} from '../../test/mock-facet-request';
-import {buildMockNumericFacetRequest} from '../../test/mock-numeric-facet-request';
-import {buildMockDateFacetRequest} from '../../test/mock-date-facet-request';
-import {buildMockCategoryFacetRequest} from '../../test/mock-category-facet-request';
-import {buildMockFacetOptions} from '../../test/mock-facet-options';
-import {buildMockFacetResponse} from '../../test/mock-facet-response';
-import {SearchAppState} from '../../state/search-app-state';
-import {buildSearchRequest} from './search-request-builder';
-import {buildMockCategoryFacetSlice} from '../../test/mock-category-facet-slice';
+import {createMockState} from '../../../test/mock-state';
+import {buildMockFacetRequest} from '../../../test/mock-facet-request';
+import {buildMockNumericFacetRequest} from '../../../test/mock-numeric-facet-request';
+import {buildMockDateFacetRequest} from '../../../test/mock-date-facet-request';
+import {buildMockCategoryFacetRequest} from '../../../test/mock-category-facet-request';
+import {buildMockFacetOptions} from '../../../test/mock-facet-options';
+import {buildMockFacetResponse} from '../../../test/mock-facet-response';
+import {SearchAppState} from '../../../state/search-app-state';
+import {buildMockCategoryFacetSlice} from '../../../test/mock-category-facet-slice';
+import {buildSearchRequest} from '../../../features/search/search-actions';
 
 describe('search request', () => {
   let state: SearchAppState;

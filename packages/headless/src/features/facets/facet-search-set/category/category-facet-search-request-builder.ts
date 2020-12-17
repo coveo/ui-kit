@@ -1,5 +1,5 @@
 import {CategoryFacetSearchRequest} from '../../../../api/search/facet-search/category-facet-search/category-facet-search-request';
-import {buildSearchRequest} from '../../../search/search-request-builder';
+import {buildSearchRequest} from '../../../search/search-actions';
 import {CategoryFacetRequest} from '../../category-facet-set/interfaces/request';
 import {StateNeededForCategoryFacetSearch} from '../generic/generic-facet-search-state';
 
