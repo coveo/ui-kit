@@ -157,7 +157,10 @@ export const executeSearch = createAsyncThunk<
 
     return {
       ...retried,
-      response: retried.response.success,
+      response: {
+        ...retried.response.success,
+        queryCorrections: fetched.response.success.queryCorrections,
+      },
       automaticallyCorrected: true,
       analyticsAction: logDidYouMeanAutomatic(),
     };
