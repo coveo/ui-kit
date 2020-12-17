@@ -7,7 +7,6 @@ import {buildMockFacetOptions} from '../../test/mock-facet-options';
 import {buildMockFacetResponse} from '../../test/mock-facet-response';
 import {SearchAppState} from '../../state/search-app-state';
 import {buildSearchRequest} from './search-request-builder';
-import {buildMockCategoryFacetValueRequest} from '../../test/mock-category-facet-value-request';
 import {buildMockCategoryFacetSlice} from '../../test/mock-category-facet-slice';
 
 describe('search request', () => {
@@ -76,27 +75,12 @@ describe('search request', () => {
     expect(facets).toContain(request);
   });
 
-  it(`when a category facet has no #currentValues,
-  #searchRequestParams returns the facets in the #categoryFacetSet as they are`, () => {
+  it('#searchRequestParams returns the facets in the #categoryFacetSet', () => {
     const request = buildMockCategoryFacetRequest({field: 'objecttype'});
     state.categoryFacetSet[1] = buildMockCategoryFacetSlice({request});
 
     const {facets} = buildSearchRequest(state);
     expect(facets).toContainEqual(request);
-  });
-
-  it(`when a category facet request has #currentValues,
-  #searchRequestParams returns the facets with #numberOfValues set to 1`, () => {
-    const currentValues = [buildMockCategoryFacetValueRequest()];
-    const request = buildMockCategoryFacetRequest({
-      field: 'objecttype',
-      numberOfValues: 5,
-      currentValues,
-    });
-    state.categoryFacetSet[1] = buildMockCategoryFacetSlice({request});
-
-    const {facets} = buildSearchRequest(state);
-    expect(facets![0].numberOfValues).toBe(1);
   });
 
   it(`when there are facets in the response,

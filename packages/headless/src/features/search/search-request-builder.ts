@@ -115,13 +115,7 @@ function getAllFacets(state: StateNeededByExecuteSearch) {
 }
 
 function getCategoryFacetRequests(state: CategoryFacetSetState | undefined) {
-  return Object.values(state || {}).map((slice) => {
-    const request = slice!.request;
-    const numberOfValues = request.currentValues.length
-      ? 1
-      : request.numberOfValues;
-    return {...request, numberOfValues};
-  });
+  return Object.values(state || {}).map((slice) => slice!.request);
 }
 
 function getFacetRequests<T extends AnyFacetRequest>(
