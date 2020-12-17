@@ -138,7 +138,7 @@ export function buildCategoryFacet(
      */
     isSortedBy(criterion: CategoryFacetSortCriterion) {
       const request = getRequest();
-      return request.sortCriteria === criterion;
+      return request!.sortCriteria === criterion;
     },
     /**
      * Displays more values for the current selected category if they exist
@@ -185,7 +185,7 @@ export function buildCategoryFacet(
         hasActiveValues,
         canShowMoreValues,
         canShowLessValues,
-        sortCriteria: request.sortCriteria,
+        sortCriteria: request!.sortCriteria,
         facetSearch: facetSearch.state,
       };
     },
