@@ -69,7 +69,7 @@ function getCriterionAsArray(state: Partial<SortInitialState>) {
   return isArray(state.criterion) ? state.criterion : [state.criterion];
 }
 
-/** The `Sort` controller manages how the results are sorted.*/
+/** The `Sort` controller manages how the results are sorted. */
 export type Sort = ReturnType<typeof buildSort>;
 
 /** A scoped and simplified part of the headless state that is relevant to the `Sort` controller. */
@@ -113,7 +113,7 @@ export function buildSort(
       return this.state.sortCriteria === buildCriterionExpression(criterion);
     },
 
-    /** The state of the `Sort` controller.*/
+    /** The state of the `Sort` controller. */
     get state() {
       return {
         /**
