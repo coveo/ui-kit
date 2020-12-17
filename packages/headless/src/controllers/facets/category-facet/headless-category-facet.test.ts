@@ -230,14 +230,6 @@ describe('category facet', () => {
       );
     });
 
-    it('dispatches #updateCategoryFacetNumberOfValues with the initial number of values', () => {
-      const action = updateCategoryFacetNumberOfValues({
-        facetId,
-        numberOfValues: defaultCategoryFacetOptions.numberOfValues,
-      });
-      expect(engine.actions).toContainEqual(action);
-    });
-
     it('dispatches #updateFacetOptions with #freezeFacetOrder true', () => {
       expect(engine.actions).toContainEqual(
         updateFacetOptions({freezeFacetOrder: true})
