@@ -127,6 +127,11 @@ export const documentIdentifier = (result: Result): DocumentIdentifier => {
   };
 };
 
+const nonEmptyString = new StringValue({
+  required: false,
+  emptyAllowed: false,
+});
+
 const requiredNonEmptyString = new StringValue({
   required: true,
   emptyAllowed: false,
@@ -134,7 +139,7 @@ const requiredNonEmptyString = new StringValue({
 
 const rawPartialDefinition = {
   collection: requiredNonEmptyString,
-  author: requiredNonEmptyString,
+  author: nonEmptyString,
   urihash: requiredNonEmptyString,
   source: requiredNonEmptyString,
   permanentid: requiredNonEmptyString,
@@ -144,8 +149,8 @@ const resultPartialDefinition = {
   uniqueId: requiredNonEmptyString,
   raw: new RecordValue({values: rawPartialDefinition}),
   title: requiredNonEmptyString,
-  uri: new StringValue({required: true, emptyAllowed: false, url: true}),
-  clickUri: new StringValue({required: true, emptyAllowed: false, url: true}),
+  uri: requiredNonEmptyString,
+  clickUri: requiredNonEmptyString,
   rankingModifier: new StringValue({required: false, emptyAllowed: true}),
 };
 
