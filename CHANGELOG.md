@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.1.0-alpha.113](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.112...v0.1.0-alpha.113) (2020-12-18)
+
+
+### Bug Fixes
+
+* **headless:**  make validateResultPayload less strict  ([#388](https://github.com/coveo/ui-kit/issues/388)) ([197da05](https://github.com/coveo/ui-kit/commit/197da05c0051b2fdeeb992b7ca5ff9f22d1d0832))
+
+
+
+
+
 # [0.1.0-alpha.112](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.111...v0.1.0-alpha.112) (2020-12-18)
 
 **Note:** Version bump only for package ui-kit
