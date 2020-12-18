@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.2.0-alpha.2](https://github.com/coveo/ui-kit/compare/v0.1.0...v0.2.0-alpha.2) (2020-12-18)
+
+
+### Features
+
+* **headless:** send context info inside analytics event payload ([#389](https://github.com/coveo/ui-kit/issues/389)) ([f97f9e4](https://github.com/coveo/ui-kit/commit/f97f9e4a416ad3b7f58451035ded5b28f31eda5a))
+
+
+
+
+
 # [0.2.0-alpha.1](https://github.com/coveo/ui-kit/compare/v0.1.0...v0.2.0-alpha.1) (2020-12-18)
 
 
