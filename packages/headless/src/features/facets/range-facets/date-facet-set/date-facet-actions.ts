@@ -3,7 +3,10 @@ import {DateFacetRegistrationOptions} from './interfaces/options';
 import {DateFacetValue} from './interfaces/response';
 import {updateRangeFacetSortCriterion} from '../generic/range-facet-actions';
 import {deselectAllFacetValues} from '../../facet-set/facet-set-actions';
-import {validatePayload} from '../../../../utils/validate-payload';
+import {
+  validatePayload,
+  requiredNonEmptyString,
+} from '../../../../utils/validate-payload';
 import {
   NumberValue,
   BooleanValue,
@@ -11,10 +14,7 @@ import {
   Value,
   ArrayValue,
 } from '@coveo/bueno';
-import {
-  facetIdDefinition,
-  requiredNonEmptyString,
-} from '../../generic/facet-actions-validation';
+import {facetIdDefinition} from '../../generic/facet-actions-validation';
 import {RangeFacetSortCriterion} from '../generic/interfaces/request';
 import {dateFacetValueDefinition} from '../generic/range-facet-validate-payload';
 
