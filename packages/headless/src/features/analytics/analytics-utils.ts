@@ -127,22 +127,17 @@ export const documentIdentifier = (result: Result): DocumentIdentifier => {
   };
 };
 
-const nonEmptyString = new StringValue({
-  required: false,
-  emptyAllowed: false,
-});
-
 const requiredNonEmptyString = new StringValue({
   required: true,
   emptyAllowed: false,
 });
 
 const rawPartialDefinition = {
-  collection: requiredNonEmptyString,
-  author: nonEmptyString,
-  urihash: requiredNonEmptyString,
-  source: requiredNonEmptyString,
-  permanentid: requiredNonEmptyString,
+  collection: new StringValue(),
+  author: new StringValue(),
+  urihash: new StringValue(),
+  source: new StringValue(),
+  permanentid: new StringValue(),
 };
 
 const resultPartialDefinition = {
