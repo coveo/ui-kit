@@ -4,7 +4,7 @@ import {Initialization} from '../../utils/initialization-utils';
 
 @Component({
   tag: 'atomic-context-provider',
-  shadow: false,
+  shadow: true,
 })
 export class AtomicContextProvider {
   @Prop() context = '{}';
