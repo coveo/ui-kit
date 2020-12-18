@@ -7,12 +7,12 @@ const {
 } = require('./git-client');
 const exec = promisify(require('child_process').exec);
 
-async function graduateRelease() {
+async function preRelease() {
   try {
-    await exec('npm run version:graduate -- --yes');
+    await exec('npm run version:pre -- --yes');
   } catch (e) {
     console.error(
-      'Failed to graduate version. Exiting to not publish local changes.',
+      'Failed to bump version. Exiting to not publish local changes.',
       e
     );
     process.exit(1);
@@ -41,7 +41,7 @@ async function main() {
       return;
     }
 
-    await graduateRelease();
+    await preRelease();
   } catch (e) {
     console.error(e);
   }
