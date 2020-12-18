@@ -12,14 +12,22 @@ import {getSearchHubInitialState} from '../../features/search-hub/search-hub-sta
 import {getSearchInitialState} from '../../features/search/search-state';
 import {
   ConfigurationSection,
+  ContextSection,
   PipelineSection,
   QuerySection,
   SearchHubSection,
   SearchSection,
 } from '../../state/state-sections';
+import {Context} from '../../features/context/context-state';
 
 export type StateNeededByAnalyticsProvider = ConfigurationSection &
-  Partial<SearchHubSection & SearchSection & PipelineSection & QuerySection>;
+  Partial<
+    SearchHubSection &
+      SearchSection &
+      PipelineSection &
+      QuerySection &
+      ContextSection
+  >;
 
 export class AnalyticsProvider implements SearchPageClientProvider {
   constructor(private state: StateNeededByAnalyticsProvider) {}
@@ -30,11 +38,19 @@ export class AnalyticsProvider implements SearchPageClientProvider {
       responseTime: this.responseTime,
       results: this.mapResultsToAnalyticsDocument(),
       numberOfResults: this.numberOfResults,
+      getBaseMetadata: this.getBaseMetadata(),
     };
   }
 
   public getBaseMetadata() {
-    return {};
+    const {context} = this.state;
+    const contextValues = context?.contextValues || {};
+    const formattedObject: Context = {};
+    for (const [key, value] of Object.entries(contextValues)) {
+      const formattedKey = `context_${key}`;
+      formattedObject[formattedKey] = value;
+    }
+    return formattedObject;
   }
 
   public getSearchUID() {
