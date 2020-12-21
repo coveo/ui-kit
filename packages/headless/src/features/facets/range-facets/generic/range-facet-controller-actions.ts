@@ -4,7 +4,6 @@ import {ConfigurationSection} from '../../../../state/state-sections';
 import {getAnalyticsActionForToggleRangeFacetSelect} from './range-facet-utils';
 import {updateFacetOptions} from '../../../facet-options/facet-options-actions';
 import {executeSearch} from '../../../search/search-actions';
-import {logRangeFacetBreadcrumb} from './range-facet-analytics-actions';
 import {
   RangeFacetSelectionPayload,
   rangeFacetSelectionPayloadDefinition,

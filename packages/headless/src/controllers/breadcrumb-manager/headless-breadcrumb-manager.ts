@@ -33,7 +33,8 @@ import {
   updateCategoryFacetNumberOfValues,
 } from '../../features/facets/category-facet-set/category-facet-set-actions';
 import {logCategoryFacetBreadcrumb} from '../../features/facets/category-facet-set/category-facet-set-analytics-actions';
-import {logRangeFacetBreadcrumb} from '../../features/facets/range-facets/generic/range-facet-analytics-actions';
+import {logNumericFacetBreadcrumb} from '../../features/facets/range-facets/numeric-facet-set/numeric-facet-analytics-actions';
+import {logDateFacetBreadcrumb} from '../../features/facets/range-facets/date-facet-set/date-facet-analytics-actions';
 
 export type BreadcrumbManager = ReturnType<typeof buildBreadcrumbManager>;
 
@@ -106,7 +107,7 @@ export const buildBreadcrumbManager = (
       engine.state.numericFacetSet,
       (payload) => {
         dispatch(toggleSelectNumericFacetValue(payload));
-        dispatch(executeSearch(logRangeFacetBreadcrumb(payload)));
+        dispatch(executeSearch(logNumericFacetBreadcrumb(payload)));
       },
       numericFacetSelectedValuesSelector
     );
@@ -117,7 +118,7 @@ export const buildBreadcrumbManager = (
       engine.state.dateFacetSet,
       (payload) => {
         dispatch(toggleSelectDateFacetValue(payload));
-        dispatch(executeSearch(logRangeFacetBreadcrumb(payload)));
+        dispatch(executeSearch(logDateFacetBreadcrumb(payload)));
       },
       dateFacetSelectedValuesSelector
     );
