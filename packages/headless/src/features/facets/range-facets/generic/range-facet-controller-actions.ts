@@ -35,27 +35,3 @@ export const executeToggleRangeFacetSelect = createAsyncThunk<
     dispatch(executeSearch(analyticsAction));
   }
 );
-
-/**
- * Executes a search with the appropriate analytics for a range facet breadcrumb
- * @param payload (RangeFacetSelectionPayload) Object specifying the target facet and selection.
- */
-export const selectRangeFacetBreadcrumb = createAsyncThunk<
-  void,
-  RangeFacetSelectionPayload,
-  AsyncThunkSearchOptions<ConfigurationSection>
->(
-  'rangeFacet/selectRangeFacetBreadcrumb',
-  ({facetId, selection}, {dispatch, extra: {validatePayload}}) => {
-    validatePayload(
-      {facetId, selection},
-      rangeFacetSelectionPayloadDefinition(selection)
-    );
-
-    const analyticsAction = logRangeFacetBreadcrumb({
-      facetId,
-      selection,
-    });
-    dispatch(executeSearch(analyticsAction));
-  }
-);

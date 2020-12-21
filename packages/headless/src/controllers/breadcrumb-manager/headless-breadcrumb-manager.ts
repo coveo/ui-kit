@@ -26,7 +26,6 @@ import {
   toggleSelectFacetValue,
   updateFreezeCurrentValues,
 } from '../../features/facets/facet-set/facet-set-actions';
-import {selectRangeFacetBreadcrumb} from '../../features/facets/range-facets/generic/range-facet-controller-actions';
 import {toggleSelectNumericFacetValue} from '../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions';
 import {toggleSelectDateFacetValue} from '../../features/facets/range-facets/date-facet-set/date-facet-actions';
 import {
@@ -34,6 +33,7 @@ import {
   updateCategoryFacetNumberOfValues,
 } from '../../features/facets/category-facet-set/category-facet-set-actions';
 import {logCategoryFacetBreadcrumb} from '../../features/facets/category-facet-set/category-facet-set-analytics-actions';
+import {logRangeFacetBreadcrumb} from '../../features/facets/range-facets/generic/range-facet-analytics-actions';
 
 export type BreadcrumbManager = ReturnType<typeof buildBreadcrumbManager>;
 
@@ -106,7 +106,7 @@ export const buildBreadcrumbManager = (
       engine.state.numericFacetSet,
       (payload) => {
         dispatch(toggleSelectNumericFacetValue(payload));
-        dispatch(selectRangeFacetBreadcrumb(payload));
+        dispatch(executeSearch(logRangeFacetBreadcrumb(payload)));
       },
       numericFacetSelectedValuesSelector
     );
@@ -117,7 +117,7 @@ export const buildBreadcrumbManager = (
       engine.state.dateFacetSet,
       (payload) => {
         dispatch(toggleSelectDateFacetValue(payload));
-        dispatch(selectRangeFacetBreadcrumb(payload));
+        dispatch(executeSearch(logRangeFacetBreadcrumb(payload)));
       },
       dateFacetSelectedValuesSelector
     );
