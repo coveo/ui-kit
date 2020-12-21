@@ -120,12 +120,7 @@ export function buildCategoryFacet(
 
     /** Deselects all facet values.*/
     deselectAll: () =>
-      dispatch(
-        executeDeselectAllCategoryFacetValues({
-          facetId,
-          numberOfValues: options.numberOfValues,
-        })
-      ),
+      dispatch(executeDeselectAllCategoryFacetValues({facetId})),
 
     /** Sorts the facet values according to the specified criterion.
      * @param criterion The criterion to sort values by.

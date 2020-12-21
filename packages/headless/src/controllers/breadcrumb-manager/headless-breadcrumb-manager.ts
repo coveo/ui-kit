@@ -110,14 +110,8 @@ export const buildBreadcrumbManager = (
         return {
           field: engine.state.categoryFacetSet[facetId]!.request.field,
           path: categoryFacetSelectedValuesSelector(engine.state, facetId),
-          deselect: () => {
-            dispatch(
-              executeDeselectAllCategoryFacetValues({
-                facetId,
-                numberOfValues: 5,
-              })
-            );
-          },
+          deselect: () =>
+            dispatch(executeDeselectAllCategoryFacetValues({facetId})),
         };
       })
       .filter((breadcrumb) => breadcrumb.path.length);

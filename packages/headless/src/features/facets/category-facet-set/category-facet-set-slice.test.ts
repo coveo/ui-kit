@@ -68,6 +68,7 @@ describe('category facet slice', () => {
       basePath: [],
       filterByBasePath: true,
     });
+    expect(finalState[facetId]?.initialNumberOfValues).toBe(5);
   });
 
   it('#updateCategoryFacetSortCriterion sets the correct sort criterion', () => {
@@ -166,16 +167,40 @@ describe('category facet slice', () => {
     });
   });
 
-  it('#deselectAllCategoryFacetValues calls #handleFacetDeselectAll', () => {
-    jest.spyOn(FacetReducers, 'handleFacetDeselectAll');
-    const action = deselectAllCategoryFacetValues('1');
-    categoryFacetSetReducer(state, action);
+  describe('#deselectAllCategoryFacetValues', () => {
+    it('calls #handleFacetDeselectAll', () => {
+      const spy = jest.spyOn(FacetReducers, 'handleFacetDeselectAll');
+      state[facetId] = buildMockCategoryFacetSlice();
+      const action = deselectAllCategoryFacetValues(facetId);
+      categoryFacetSetReducer(state, action);
 
-    expect(FacetReducers.handleFacetDeselectAll).toHaveBeenCalledTimes(1);
+      expect(spy).toHaveBeenCalledTimes(1);
+    });
+
+    it('sets the request #numberOfValues to the initial number', () => {
+      const initialNumberOfValues = 5;
+      const request = buildMockCategoryFacetRequest({
+        numberOfValues: initialNumberOfValues + 1,
+      });
+
+      state[facetId] = buildMockCategoryFacetSlice({
+        request,
+        initialNumberOfValues,
+      });
+
+      const action = deselectAllCategoryFacetValues(facetId);
+      const finalState = categoryFacetSetReducer(state, action);
+
+      expect(finalState[facetId]?.request.numberOfValues).toBe(
+        initialNumberOfValues
+      );
+    });
   });
 
   it('dispatching #deselectAllFacets calls #handleFacetDeselectAll for every category facet', () => {
-    jest.spyOn(FacetReducers, 'handleFacetDeselectAll');
+    const spy = jest.spyOn(FacetReducers, 'handleFacetDeselectAll');
+    spy.mockReset();
+
     const request = buildMockCategoryFacetRequest();
     const slice = buildMockCategoryFacetSlice({request});
 
@@ -184,7 +209,7 @@ describe('category facet slice', () => {
     state['3'] = {...slice};
     categoryFacetSetReducer(state, deselectAllFacets());
 
-    expect(FacetReducers.handleFacetDeselectAll).toHaveBeenCalledTimes(4);
+    expect(spy).toHaveBeenCalledTimes(3);
   });
 
   it('dispatching #updateCategoryFacetNumberOfValues calls #handleFacetUpdateNumberOfValues if there are no nested children', () => {

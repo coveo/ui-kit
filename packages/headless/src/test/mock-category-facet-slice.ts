@@ -6,6 +6,7 @@ export function buildMockCategoryFacetSlice(
 ): CategoryFacetSlice {
   return {
     request: buildMockCategoryFacetRequest(),
+    initialNumberOfValues: 0,
     ...config,
   };
 }
