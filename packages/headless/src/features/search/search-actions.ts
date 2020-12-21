@@ -18,6 +18,7 @@ import {
   DebugSection,
   DidYouMeanSection,
   FacetOptionsSection,
+  FacetOrderSection,
   FacetSection,
   FieldsSection,
   NumericFacetSection,
@@ -30,7 +31,7 @@ import {
   SortSection,
 } from '../../state/state-sections';
 import {getVisitorID, historyStore} from '../../api/analytics/analytics';
-import {SearchParametersState} from '../../state/search-app-state';
+import {AnyFacetRequest} from '../facets/generic/interfaces/generic-facet-request';
 import {SearchRequest} from '../../api/search/search/search-request';
 import {getContextInitialState} from '../context/context-state';
 import {getFacetSetInitialState} from '../facets/facet-set/facet-set-state';
@@ -50,8 +51,10 @@ import {getSearchHubInitialState} from '../search-hub/search-hub-state';
 import {getFacetOptionsInitialState} from '../facet-options/facet-options-state';
 import {logFetchMoreResults, logQueryError} from './search-analytics-actions';
 import {SearchAction} from '../analytics/analytics-utils';
+import {HistoryState} from '../history/history-state';
+import {sortFacets} from '../../utils/facet-utils';
 import {getDebugInitialState} from '../debug/debug-state';
-import {AnyFacetRequest} from '../facets/generic/interfaces/generic-facet-request';
+import {getFacetOrderInitialState} from '../facets/facet-order/facet-order-state';
 
 export type StateNeededByExecuteSearch = ConfigurationSection &
   Partial<
@@ -70,6 +73,7 @@ export type StateNeededByExecuteSearch = ConfigurationSection &
       SearchHubSection &
       QuerySetSection &
       FacetOptionsSection &
+      FacetOrderSection &
       DebugSection &
       SearchSection
   >;
@@ -160,7 +164,10 @@ export const executeSearch = createAsyncThunk<
 
     return {
       ...retried,
-      response: retried.response.success,
+      response: {
+        ...retried.response.success,
+        queryCorrections: fetched.response.success.queryCorrections,
+      },
       automaticallyCorrected: true,
       analyticsAction: logDidYouMeanAutomatic(),
     };
@@ -230,9 +237,7 @@ const shouldReExecuteTheQueryWithCorrections = (
   return false;
 };
 
-const extractHistory = (
-  state: StateNeededByExecuteSearch
-): SearchParametersState => ({
+const extractHistory = (state: StateNeededByExecuteSearch): HistoryState => ({
   context: state.context || getContextInitialState(),
   facetSet: state.facetSet || getFacetSetInitialState(),
   numericFacetSet: state.numericFacetSet || getNumericFacetSetInitialState(),
@@ -247,6 +252,7 @@ const extractHistory = (
   pipeline: state.pipeline || getPipelineInitialState(),
   searchHub: state.searchHub || getSearchHubInitialState(),
   facetOptions: state.facetOptions || getFacetOptionsInitialState(),
+  facetOrder: state.facetOrder ?? getFacetOrderInitialState(),
   debug: state.debug ?? getDebugInitialState(),
 });
 
@@ -313,51 +319,18 @@ const buildFetchMoreRequest = (
 };
 
 function getFacets(state: StateNeededByExecuteSearch) {
-  return [
-    ...getFacetsInSameOrderAsResponse(state),
-    ...getFacetsNotInResponse(state),
-  ];
+  return [...getFacetsInOrder(state), ...getRemainingUnorderedFacets(state)];
 }
 
-function getFacetsInSameOrderAsResponse(state: StateNeededByExecuteSearch) {
-  const requests: AnyFacetRequest[] = [];
-  if (!state.search) {
-    return requests;
-  }
-  const responseFacets = state.search.response.facets;
-
-  responseFacets.forEach((f) => {
-    const request = findFacetRequest(state, f.facetId);
-    request && requests.push(request);
-  });
-
-  return requests;
+function getFacetsInOrder(state: StateNeededByExecuteSearch) {
+  return sortFacets(getAllFacets(state), state.facetOrder ?? []);
 }
 
-function findFacetRequest(state: StateNeededByExecuteSearch, facetId: string) {
-  const sets = [
-    state.facetSet,
-    state.numericFacetSet,
-    state.dateFacetSet,
-    getCategoryFacetRequestMap(state.categoryFacetSet),
-  ];
-
-  const targetSet = sets.find((set) => set && set[facetId]);
-  return targetSet ? targetSet[facetId] : undefined;
-}
-
-function getCategoryFacetRequestMap(state: CategoryFacetSetState | undefined) {
-  return Object.entries(state || {})
-    .map(([facetId, slice]) => ({[facetId]: slice!.request}))
-    .reduce((all, current) => ({...all, ...current}), {});
-}
-
-function getFacetsNotInResponse(state: StateNeededByExecuteSearch) {
-  const excludedFacetIds = new Set<string>();
-  const responseFacets = state.search?.response.facets;
-  responseFacets?.forEach((f) => excludedFacetIds.add(f.facetId));
-
-  return getAllFacets(state).filter((f) => !excludedFacetIds.has(f.facetId));
+function getRemainingUnorderedFacets(state: StateNeededByExecuteSearch) {
+  const facetOrder = state.facetOrder ?? [];
+  return getAllFacets(state).filter(
+    (f) => facetOrder.indexOf(f.facetId) === -1
+  );
 }
 
 function getAllFacets(state: StateNeededByExecuteSearch) {

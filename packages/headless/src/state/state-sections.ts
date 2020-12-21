@@ -19,6 +19,7 @@ import {RecommendationState} from '../features/recommendation/recommendation-sta
 import {RedirectionState} from '../features/redirection/redirection-state';
 import {SearchState} from '../features/search/search-state';
 import {SortCriteriaState} from '../features/sort-criteria/sort-criteria-state';
+import {FacetOrderState} from '../features/facets/facet-order/facet-order-state';
 
 export interface QuerySection {
   /**
@@ -174,6 +175,13 @@ export interface FieldsSection {
    * The information related to fields used in the engine.
    */
   fields: FieldsState;
+}
+
+export interface FacetOrderSection {
+  /**
+   * The order of facets.
+   */
+  facetOrder: FacetOrderState;
 }
 
 export interface RecommendationSection {

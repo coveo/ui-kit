@@ -1,5 +1,4 @@
 import {facetSetReducer, convertFacetValueToRequest} from './facet-set-slice';
-import {getHistoryEmptyState} from '../../history/history-slice';
 import {change} from '../../history/history-actions';
 import {
   registerFacet,
@@ -23,6 +22,7 @@ import {selectFacetSearchResult} from '../facet-search-set/specific/specific-fac
 import * as FacetReducers from '../generic/facet-reducer-helpers';
 import {FacetSetState, getFacetSetInitialState} from './facet-set-state';
 import {deselectAllFacets} from '../generic/facet-actions';
+import {getHistoryInitialState} from '../../history/history-state';
 import {restoreSearchParameters} from '../../search-parameters/search-parameter-actions';
 
 describe('facet-set slice', () => {
@@ -99,7 +99,7 @@ describe('facet-set slice', () => {
       foo: buildMockFacetRequest(),
     };
     const historyChange = {
-      ...getHistoryEmptyState(),
+      ...getHistoryInitialState(),
       facetSet: expectedFacetSet,
     };
 
@@ -115,7 +115,7 @@ describe('facet-set slice', () => {
     const state = {foo: buildMockFacetRequest()};
     const emptyFacetSet = {};
     const historyChange = {
-      ...getHistoryEmptyState(),
+      ...getHistoryInitialState(),
       facetSet: emptyFacetSet,
     };
 

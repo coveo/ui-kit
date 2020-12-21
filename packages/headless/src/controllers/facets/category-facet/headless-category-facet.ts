@@ -40,9 +40,16 @@ import {determineFacetId} from '../_common/facet-id-determinor';
 
 export {CategoryFacetOptions};
 export type CategoryFacetProps = {
+  /** The options for the `CategoryFacet` controller. */
   options: CategoryFacetOptions;
 };
+/**
+ * The `CategoryFacet` headless controller offers a high-level interface for designing a facet UI controller that renders values in a hierarchical fashion.
+ */
 export type CategoryFacet = ReturnType<typeof buildCategoryFacet>;
+/**
+ * A scoped and simplified part of the headless state that is relevant to the `CategoryFacet` controller.
+ */
 export type CategoryFacetState = CategoryFacet['state'];
 
 export function buildCategoryFacet(
@@ -99,9 +106,8 @@ export function buildCategoryFacet(
     facetSearch: restOfFacetSearch,
 
     /**
-     * Selects (deselects) the passed value if unselected (selected).
-     * @param selection The category facet value to select or deselect.
-     * @param numberOfValues The number of selection's children to be shown
+     * Toggles the specified facet value.
+     * @param selection The facet value to toggle.
      */
     toggleSelect: (selection: CategoryFacetValue) =>
       dispatch(
@@ -121,8 +127,8 @@ export function buildCategoryFacet(
         })
       ),
 
-    /** Sorts the category facet values according to the passed criterion.
-     * @param {CategoryFacetSortCriterion} criterion The criterion to sort values by.
+    /** Sorts the facet values according to the specified criterion.
+     * @param criterion The criterion to sort values by.
      */
     sortBy(criterion: CategoryFacetSortCriterion) {
       const facetId = options.facetId;
@@ -133,15 +139,16 @@ export function buildCategoryFacet(
     },
 
     /**
-     * Returns `true` if the category facet values are sorted according to the passed criterion and `false` otherwise.
-     * @param {CategoryFacetSortCriterion} criterion The criterion to compare.
+     * Checks whether the facet values are sorted according to the specified criterion.
+     * @param criterion The criterion to compare.
+     * @returns Whether the facet values are sorted according to the specified criterion.
      */
     isSortedBy(criterion: CategoryFacetSortCriterion) {
       const request = getRequest();
       return request!.sortCriteria === criterion;
     },
     /**
-     * Displays more values for the current selected category if they exist
+     * Increases the number of values displayed in the facet to the next multiple of the originally configured value.
      */
     showMoreValues() {
       const {facetId, numberOfValues: increment} = options;
@@ -152,9 +159,8 @@ export function buildCategoryFacet(
       dispatch(updateFacetOptions({freezeFacetOrder: true}));
       dispatch(executeSearch(logFacetShowMore(facetId)));
     },
-    /**
-     * Resets the number of displayed values to the initially configured value
-     */
+
+    /** Sets the displayed number of values to the originally configured value. */
     showLessValues() {
       const {facetId, numberOfValues} = options;
 
@@ -163,7 +169,7 @@ export function buildCategoryFacet(
       dispatch(executeSearch(logFacetShowLess(facetId)));
     },
 
-    /**  @returns The state of the `CategoryFacet` controller.*/
+    /** The state of the `CategoryFacet` controller. */
     get state() {
       const request = getRequest();
       const response = getResponse();
@@ -178,14 +184,23 @@ export function buildCategoryFacet(
       const canShowLessValues = values.length > options.numberOfValues;
 
       return {
+        /** The facet id. */
         facetId,
+        /** The parent values of the facet. */
         parents,
+        /** The values of the facet. */
         values,
+        /** `true` if a search is in progress and `false` otherwise. */
         isLoading,
+        /** `true` if there is at least one non-idle value and `false` otherwise. */
         hasActiveValues,
+        /** `true` if there are more values to display and `false` otherwise. */
         canShowMoreValues,
+        /** `true` if fewer values can be displayed and `false` otherwise. */
         canShowLessValues,
+        /** The active sortCriterion of the facet. */
         sortCriteria: request!.sortCriteria,
+        /** The state of the facet's searchbox. */
         facetSearch: facetSearch.state,
       };
     },

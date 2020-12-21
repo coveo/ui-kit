@@ -14,12 +14,10 @@ import {
   toggleSelectCategoryFacetValue,
   updateCategoryFacetNumberOfValues,
 } from './category-facet-set-actions';
-import {
-  requiredNonEmptyString,
-  facetIdDefinition,
-} from '../generic/facet-actions-validation';
+import {facetIdDefinition} from '../generic/facet-actions-validation';
 import {validateCategoryFacetValue} from './category-facet-validate-payload';
 import {NumberValue} from '@coveo/bueno';
+import {requiredNonEmptyString} from '../../../utils/validate-payload';
 
 /**
  * Toggles the facet value and then executes a search with the appropriate analytics tag.

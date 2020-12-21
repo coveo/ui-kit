@@ -105,14 +105,14 @@ export function buildFacet(
     facetSearch: restOfFacetSearch,
     /**
      * Toggles the specified facet value.
-     * @param selection (FacetValue) The facet value to toggle.
+     * @param selection The facet value to toggle.
      */
     toggleSelect: (selection: FacetValue) =>
       dispatch(executeToggleFacetSelect({facetId: options.facetId, selection})),
     /**
      * Checks whether the specified facet value is selected.
-     * @param value (FacetValue) The facet value to check.
-     * @returns (boolean) Whether the specified facet value is selected.
+     * @param value The facet value to check.
+     * @returns Whether the specified facet value is selected.
      */
     isValueSelected: isFacetValueSelected,
 
@@ -124,7 +124,7 @@ export function buildFacet(
     },
 
     /** Sorts the facet values according to the specified criterion.
-     * @param criterion (FacetSortCriterion) The criterion to sort values by.
+     * @param criterion The criterion to sort values by.
      */
     sortBy(criterion: FacetSortCriterion) {
       dispatch(updateFacetSortCriterion({facetId, criterion}));
@@ -134,8 +134,8 @@ export function buildFacet(
 
     /**
      * Checks whether the facet values are sorted according to the specified criterion.
-     * @param criterion (FacetSortCriterion) The criterion to compare.
-     * @returns (boolean) Whether the facet values are sorted according to the specified criterion.
+     * @param criterion The criterion to compare.
+     * @returns Whether the facet values are sorted according to the specified criterion.
      */
     isSortedBy(criterion: FacetSortCriterion) {
       return this.state.sortCriterion === criterion;

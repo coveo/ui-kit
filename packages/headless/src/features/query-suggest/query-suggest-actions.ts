@@ -1,5 +1,9 @@
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
-import {validatePayload} from '../../utils/validate-payload';
+import {
+  validatePayload,
+  requiredNonEmptyString,
+  requiredEmptyAllowedString,
+} from '../../utils/validate-payload';
 import {NumberValue, StringValue} from '@coveo/bueno';
 import {QuerySuggestSuccessResponse} from '../../api/search/query-suggest/query-suggest-response';
 import {SearchAPIErrorWithStatusCode} from '../../api/search/search-api-error-response';
@@ -23,7 +27,7 @@ export type StateNeededByQuerySuggest = ConfigurationSection &
   Partial<ContextSection & PipelineSection & SearchHubSection>;
 
 const idDefinition = {
-  id: new StringValue({required: true, emptyAllowed: false}),
+  id: requiredNonEmptyString,
 };
 
 export interface QuerySuggestionID {
@@ -65,7 +69,7 @@ export const selectQuerySuggestion = createAction(
   (payload: {id: string; expression: string}) =>
     validatePayload(payload, {
       ...idDefinition,
-      expression: new StringValue({required: true}),
+      expression: requiredEmptyAllowedString,
     })
 );
 

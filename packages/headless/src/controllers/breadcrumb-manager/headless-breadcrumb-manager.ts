@@ -28,6 +28,9 @@ import {executeSearch} from '../../features/search/search-actions';
 import {deselectAllFacets} from '../../features/facets/generic/facet-actions';
 import {logClearBreadcrumbs} from '../../features/facets/generic/facet-generic-analytics-actions';
 
+/**
+ * The `BreadcrumbManager` headless controller manages a summary of the currently active facet filters.
+ */
 export type BreadcrumbManager = ReturnType<typeof buildBreadcrumbManager>;
 
 /**
@@ -35,9 +38,6 @@ export type BreadcrumbManager = ReturnType<typeof buildBreadcrumbManager>;
  */
 export type BreadcrumbManagerState = BreadcrumbManager['state'];
 
-/**
- * The `BreadcrumbManager` headless controller allows to manage a summary of the currently active facets filters.
- */
 export const buildBreadcrumbManager = (
   engine: Engine<
     ConfigurationSection &
@@ -135,34 +135,34 @@ export const buildBreadcrumbManager = (
     ...controller,
 
     /**
-     * @returns {BreadcrumbManagerState} The state of the `BreadcrumbManager` controller.
+     * The state of the `BreadcrumbManager` controller.
      */
     get state() {
       return {
         /**
-         * @returns {FacetBreadcrumb[]} The list of specific facet breadcrumbs.
+         * The list of specific facet breadcrumbs.
          */
         facetBreadcrumbs: getFacetBreadcrumbs(),
         /**
-         * @return {CategoryFacetBreadcrumb[]} The list of category facet breadcrumbs.
+         * The list of category facet breadcrumbs.
          */
         categoryFacetBreadcrumbs: getCategoryFacetBreadcrumbs(),
         /**
-         * @returns {NumericFacetBreadcrumb[]} The list of numeric facet breadcrumbs.
+         * The list of numeric facet breadcrumbs.
          */
         numericFacetBreadcrumbs: getNumericFacetBreadcrumbs(),
         /**
-         * @returns {DateFacetBreadcrumb[]} The list of date facet breadcrumbs.
+         * The list of date facet breadcrumbs.
          */
         dateFacetBreadcrumbs: getDateFacetBreadcrumbs(),
+        /**
+         * `true` if there are any available breadcrumbs (i.e., if there are any active facet values), and `false` otherwise.
+         */
+        hasBreadcrumbs: hasBreadcrumbs(),
       };
     },
     /**
-     * Determines if there's any available breadcrumbs, or active facets.
-     */
-    hasBreadcrumbs,
-    /**
-     * Allows to deselect and clear all facet filters.
+     * Deselects all facet values.
      */
     deselectAll: () => {
       dispatch(deselectAllFacets());
@@ -173,6 +173,8 @@ export const buildBreadcrumbManager = (
 
 /**
  * Represents a generic breadcrumb type.
+ *
+ * Can either be a `FacetBreadcrumb`, `NumericFacetBreadcrumb`, `DateFacetBreadcrumb`, or `CategoryFacetBreadcrumb`.
  */
 export interface Breadcrumb<T extends BaseFacetValue> {
   /**
@@ -180,15 +182,13 @@ export interface Breadcrumb<T extends BaseFacetValue> {
    */
   field: string;
   /**
-   * The list of facet values currently active and selected.
+   * The list of facet values currently selected.
    */
   values: BreadcrumbValue<T>[];
 }
 
 /**
  * Represents a generic breadcrumb value type.
- *
- * Can either be a @type {FacetBreadcrumb}, @type {NumericFacetBreadcrumb}, @type {DateFacetBreadcrumb}, @type {CategoryFacetBreadcrumb}
  */
 export type BreadcrumbValue<T extends BaseFacetValue> = {
   /**
@@ -196,7 +196,7 @@ export type BreadcrumbValue<T extends BaseFacetValue> = {
    */
   value: T;
   /**
-   * Allow to deselect and clear the corresponding facet filter.
+   * Deselects the corresponding facet value.
    */
   deselect: () => void;
 };
@@ -226,7 +226,7 @@ export interface CategoryFacetBreadcrumb {
    */
   path: CategoryFacetValue[];
   /**
-   * Allow to deselect and clear the corresponding facet filter.
+   * Deselects the corresponding facet value.
    */
   deselect: () => void;
 }

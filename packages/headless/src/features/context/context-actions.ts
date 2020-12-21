@@ -1,18 +1,20 @@
 import {createAction} from '@reduxjs/toolkit';
 import {Context, ContextValue} from './context-state';
-import {validatePayload} from '../../utils/validate-payload';
-import {StringValue, isString, ArrayValue} from '@coveo/bueno';
+import {
+  validatePayload,
+  requiredNonEmptyString,
+} from '../../utils/validate-payload';
+import {isString, ArrayValue} from '@coveo/bueno';
 
-const nonEmptyString = new StringValue({required: true, emptyAllowed: false});
 const nonEmptyArray = new ArrayValue({
-  each: nonEmptyString,
+  each: requiredNonEmptyString,
   required: true,
 });
 
 const nonEmptyPayload = (contextKey: string, contextValue: ContextValue) => {
-  validatePayload(contextKey, nonEmptyString);
+  validatePayload(contextKey, requiredNonEmptyString);
   if (isString(contextValue)) {
-    validatePayload(contextValue, nonEmptyString);
+    validatePayload(contextValue, requiredNonEmptyString);
   } else {
     validatePayload(contextValue, nonEmptyArray);
   }
@@ -45,5 +47,5 @@ export const addContext = createAction(
  * @param key (string) The key to remove from the context (e.g., `"age"`).
  */
 export const removeContext = createAction('context/remove', (payload: string) =>
-  validatePayload(payload, nonEmptyString)
+  validatePayload(payload, requiredNonEmptyString)
 );
