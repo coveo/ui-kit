@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.2.0-alpha.3](https://github.com/coveo/ui-kit/compare/v0.1.0...v0.2.0-alpha.3) (2020-12-21)
+
+
+### Bug Fixes
+
+* **headless:** on category facet breadcrumb click, reset numberOfValues to initial value ([#380](https://github.com/coveo/ui-kit/issues/380)) ([74e159f](https://github.com/coveo/ui-kit/commit/74e159ff48ac637b1fcf0ccd44b46e233409d699))
+
+
+### Features
+
+* **headless:** send context info inside analytics event payload ([#389](https://github.com/coveo/ui-kit/issues/389)) ([f97f9e4](https://github.com/coveo/ui-kit/commit/f97f9e4a416ad3b7f58451035ded5b28f31eda5a))
+
+
+
+
+
 # [0.2.0-alpha.2](https://github.com/coveo/ui-kit/compare/v0.1.0...v0.2.0-alpha.2) (2020-12-18)
 
 
