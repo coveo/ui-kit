@@ -51,7 +51,7 @@ export const logCategoryFacetBreadcrumb = (
   payload: CategoryFacetBreadcrumbPayload
 ) =>
   makeAnalyticsAction(
-    'analytics/facet/breadcrumb',
+    'analytics/categoryFacet/breadcrumb',
     AnalyticsType.Search,
     (client, state) => {
       validatePayload(payload, categoryFacetBreadcrumbPayloadDefinition);

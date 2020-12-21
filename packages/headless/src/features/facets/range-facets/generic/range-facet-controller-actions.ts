@@ -40,12 +40,12 @@ export const executeToggleRangeFacetSelect = createAsyncThunk<
  * Executes a search with the appropriate analytics for a range facet breadcrumb
  * @param payload (RangeFacetSelectionPayload) Object specifying the target facet and selection.
  */
-export const executeRangeFacetBreadcrumb = createAsyncThunk<
+export const selectRangeFacetBreadcrumb = createAsyncThunk<
   void,
   RangeFacetSelectionPayload,
   AsyncThunkSearchOptions<ConfigurationSection>
 >(
-  'rangeFacet/executeRangeFacetBreadcrumb',
+  'rangeFacet/selectRangeFacetBreadcrumb',
   ({facetId, selection}, {dispatch, extra: {validatePayload}}) => {
     validatePayload(
       {facetId, selection},

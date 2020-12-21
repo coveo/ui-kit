@@ -31,7 +31,7 @@ import {getSearchInitialState} from '../../features/search/search-state';
 import {DateFacetValue} from '../../features/facets/range-facets/date-facet-set/interfaces/response';
 import {NumericFacetValue} from '../../features/facets/range-facets/numeric-facet-set/interfaces/response';
 import {CategoryFacetValue} from '../../features/facets/category-facet-set/interfaces/response';
-import {executeRangeFacetBreadcrumb} from '../../features/facets/range-facets/generic/range-facet-controller-actions';
+import {selectRangeFacetBreadcrumb} from '../../features/facets/range-facets/generic/range-facet-controller-actions';
 import {
   toggleSelectFacetValue,
   updateFreezeCurrentValues,
@@ -145,10 +145,10 @@ describe('headless breadcrumb manager', () => {
       expect(facetBreadcrumbs[0].values[0].value).toBe(mockValue);
     });
 
-    it('dispatches an executeRangeFacetBreadcrumb action on selection', () => {
+    it('dispatches an selectRangeFacetBreadcrumb action on selection', () => {
       facetBreadcrumbs[0].values[0].deselect();
       expect(
-        engine.findAsyncAction(executeRangeFacetBreadcrumb.pending)
+        engine.findAsyncAction(selectRangeFacetBreadcrumb.pending)
       ).toBeTruthy();
     });
 
@@ -193,10 +193,10 @@ describe('headless breadcrumb manager', () => {
       expect(facetBreadcrumbs[0].values[0].value).toBe(mockValue);
     });
 
-    it('dispatches an executeRangeFacetBreadcrumb action on selection', () => {
+    it('dispatches an selectRangeFacetBreadcrumb action on selection', () => {
       facetBreadcrumbs[0].values[0].deselect();
       expect(
-        engine.findAsyncAction(executeRangeFacetBreadcrumb.pending)
+        engine.findAsyncAction(selectRangeFacetBreadcrumb.pending)
       ).toBeTruthy();
     });
 

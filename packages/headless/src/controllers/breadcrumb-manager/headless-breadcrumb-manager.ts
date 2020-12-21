@@ -26,7 +26,7 @@ import {
   toggleSelectFacetValue,
   updateFreezeCurrentValues,
 } from '../../features/facets/facet-set/facet-set-actions';
-import {executeRangeFacetBreadcrumb} from '../../features/facets/range-facets/generic/range-facet-controller-actions';
+import {selectRangeFacetBreadcrumb} from '../../features/facets/range-facets/generic/range-facet-controller-actions';
 import {toggleSelectNumericFacetValue} from '../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions';
 import {toggleSelectDateFacetValue} from '../../features/facets/range-facets/date-facet-set/date-facet-actions';
 import {
@@ -106,7 +106,7 @@ export const buildBreadcrumbManager = (
       engine.state.numericFacetSet,
       (payload) => {
         dispatch(toggleSelectNumericFacetValue(payload));
-        dispatch(executeRangeFacetBreadcrumb(payload));
+        dispatch(selectRangeFacetBreadcrumb(payload));
       },
       numericFacetSelectedValuesSelector
     );
@@ -117,7 +117,7 @@ export const buildBreadcrumbManager = (
       engine.state.dateFacetSet,
       (payload) => {
         dispatch(toggleSelectDateFacetValue(payload));
-        dispatch(executeRangeFacetBreadcrumb(payload));
+        dispatch(selectRangeFacetBreadcrumb(payload));
       },
       dateFacetSelectedValuesSelector
     );

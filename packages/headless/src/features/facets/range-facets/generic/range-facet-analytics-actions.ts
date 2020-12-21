@@ -37,7 +37,7 @@ const getRangeFacetMetadata = (
  */
 export const logRangeFacetBreadcrumb = (payload: RangeFacetSelectionPayload) =>
   makeAnalyticsAction(
-    'analytics/facet/breadcrumb',
+    'analytics/rangeFacet/breadcrumb',
     AnalyticsType.Search,
     (client, state) => {
       validatePayload(
