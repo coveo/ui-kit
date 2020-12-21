@@ -10,11 +10,9 @@ import {
   serializeSchemaValidationError,
   validatePayload,
   validatePayloadAndThrow,
-} from '../../../utils/validate-payload';
-import {
-  facetIdDefinition,
   requiredNonEmptyString,
-} from '../generic/facet-actions-validation';
+} from '../../../utils/validate-payload';
+import {facetIdDefinition} from '../generic/facet-actions-validation';
 import {
   Value,
   BooleanValue,

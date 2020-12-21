@@ -6,7 +6,8 @@
       {
         "allowModules": ["redux-mock-store"]
       }
-    ]
+    ],
+    "@typescript-eslint/no-namespace": "off"
   },
   "globals": {
     "fetch": true

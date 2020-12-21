@@ -11,7 +11,7 @@ import {
   StateNeededForFacetSearch,
   StateNeededForSpecificFacetSearch,
 } from './generic-facet-search-state';
-import {StringValue} from '@coveo/bueno';
+import {requiredNonEmptyString} from '../../../../utils/validate-payload';
 
 /**
  * Executes a facet search (i.e., a search for facet values in a facet search box).
@@ -29,10 +29,7 @@ export const executeFacetSearch = createAsyncThunk<
   ) => {
     const state = getState();
     let req: SpecificFacetSearchRequest | CategoryFacetSearchRequest;
-    validatePayload(
-      facetId,
-      new StringValue({required: true, emptyAllowed: false})
-    );
+    validatePayload(facetId, requiredNonEmptyString);
     if (isSpecificFacetSearchState(state, facetId)) {
       req = buildSpecificFacetSearchRequest(facetId, state);
     } else {

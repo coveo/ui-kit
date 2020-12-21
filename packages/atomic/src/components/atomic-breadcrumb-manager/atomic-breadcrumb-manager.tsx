@@ -298,7 +298,7 @@ export class AtomicBreadcrumbManager {
   }
 
   render() {
-    if (!this.breadcrumbManager.hasBreadcrumbs()) {
+    if (!this.breadcrumbManager.state.hasBreadcrumbs) {
       return;
     }
     return (

@@ -1,11 +1,11 @@
 import {advancedSearchQueriesReducer} from './advanced-search-queries-slice';
 import {updateAdvancedSearchQueries} from './advanced-search-queries-actions';
-import {getHistoryEmptyState} from '../history/history-slice';
 import {change} from '../history/history-actions';
 import {
   AdvancedSearchQueriesState,
   getAdvancedSearchQueriesInitialState,
 } from './advanced-search-queries-state';
+import {getHistoryInitialState} from '../history/history-state';
 import {restoreSearchParameters} from '../search-parameters/search-parameter-actions';
 
 describe('advanced search parameters', () => {
@@ -56,7 +56,7 @@ describe('advanced search parameters', () => {
       aq: 'hola',
     };
     const historyChange = {
-      ...getHistoryEmptyState(),
+      ...getHistoryInitialState(),
       advancedSearchQueries: expectedQuery,
     };
 

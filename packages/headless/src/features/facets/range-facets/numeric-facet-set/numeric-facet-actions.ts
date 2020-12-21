@@ -3,11 +3,11 @@ import {NumericFacetRegistrationOptions} from './interfaces/options';
 import {NumericFacetValue} from './interfaces/response';
 import {updateRangeFacetSortCriterion} from '../generic/range-facet-actions';
 import {deselectAllFacetValues} from '../../facet-set/facet-set-actions';
-import {validatePayload} from '../../../../utils/validate-payload';
 import {
-  facetIdDefinition,
+  validatePayload,
   requiredNonEmptyString,
-} from '../../generic/facet-actions-validation';
+} from '../../../../utils/validate-payload';
+import {facetIdDefinition} from '../../generic/facet-actions-validation';
 import {
   RecordValue,
   NumberValue,

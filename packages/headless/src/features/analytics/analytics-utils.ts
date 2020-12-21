@@ -133,19 +133,19 @@ const requiredNonEmptyString = new StringValue({
 });
 
 const rawPartialDefinition = {
-  collection: requiredNonEmptyString,
-  author: requiredNonEmptyString,
-  urihash: requiredNonEmptyString,
-  source: requiredNonEmptyString,
-  permanentid: requiredNonEmptyString,
+  collection: new StringValue(),
+  author: new StringValue(),
+  urihash: new StringValue(),
+  source: new StringValue(),
+  permanentid: new StringValue(),
 };
 
 const resultPartialDefinition = {
   uniqueId: requiredNonEmptyString,
   raw: new RecordValue({values: rawPartialDefinition}),
   title: requiredNonEmptyString,
-  uri: new StringValue({required: true, emptyAllowed: false, url: true}),
-  clickUri: new StringValue({required: true, emptyAllowed: false, url: true}),
+  uri: requiredNonEmptyString,
+  clickUri: requiredNonEmptyString,
   rankingModifier: new StringValue({required: false, emptyAllowed: true}),
 };
 

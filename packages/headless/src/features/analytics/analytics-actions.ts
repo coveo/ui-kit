@@ -1,5 +1,8 @@
 import {SearchPageEvents} from 'coveo.analytics/dist/definitions/searchPage/searchPageEvents';
-import {validatePayload} from '../../utils/validate-payload';
+import {
+  validatePayload,
+  requiredNonEmptyString,
+} from '../../utils/validate-payload';
 import {StringValue} from '@coveo/bueno';
 import {getAdvancedSearchQueriesInitialState} from '../advanced-search-queries/advanced-search-queries-state';
 import {Result} from '../../api/search/search/result';
@@ -38,7 +41,7 @@ export interface CustomEventPayload {
 
 const validateEvent = (p: {evt: string; type?: string}) =>
   validatePayload(p, {
-    evt: new StringValue({required: true, emptyAllowed: false}),
+    evt: requiredNonEmptyString,
     type: new StringValue({required: false, emptyAllowed: false}),
   });
 

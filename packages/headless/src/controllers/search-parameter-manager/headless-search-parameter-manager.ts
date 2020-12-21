@@ -15,6 +15,7 @@ import {getSortCriteriaInitialState} from '../../features/sort-criteria/sort-cri
 import {SearchParametersState} from '../../state/search-app-state';
 import {validateInitialState} from '../../utils/validate-payload';
 import {buildController} from '../controller/headless-controller';
+import {RangeValueRequest} from '../../features/facets/range-facets/generic/interfaces/range-facet';
 
 export interface SearchParameterManagerProps {
   initialState: SearchParameterManagerInitialState;
@@ -71,6 +72,8 @@ export function buildSearchParameterManager(
         ...getSortCriteria(state),
         ...getFacets(state),
         ...getCategoryFacets(state),
+        ...getNumericFacets(state),
+        ...getDateFacets(state),
         ...getDebug(state),
       };
 
@@ -178,7 +181,7 @@ function getCategoryFacets(state: Partial<SearchParametersState>) {
   const cf = Object.entries(state.categoryFacetSet)
     .map(([facetId, slice]) => {
       const {parents} = partitionIntoParentsAndValues(
-        slice?.request.currentValues
+        slice!.request.currentValues
       );
       const selectedValues = parents.map((p) => p.value);
 
@@ -187,6 +190,40 @@ function getCategoryFacets(state: Partial<SearchParametersState>) {
     .reduce((acc, obj) => ({...acc, ...obj}), {});
 
   return Object.keys(cf).length ? {cf} : {};
+}
+
+function getNumericFacets(state: Partial<SearchParametersState>) {
+  if (state.numericFacetSet === undefined) {
+    return {};
+  }
+
+  const nf = Object.entries(state.numericFacetSet)
+    .map(([facetId, request]) => {
+      const selectedRanges = getSelectedRanges(request.currentValues);
+      return selectedRanges.length ? {[facetId]: selectedRanges} : {};
+    })
+    .reduce((acc, obj) => ({...acc, ...obj}), {});
+
+  return Object.keys(nf).length ? {nf} : {};
+}
+
+function getDateFacets(state: Partial<SearchParametersState>) {
+  if (state.dateFacetSet === undefined) {
+    return {};
+  }
+
+  const df = Object.entries(state.dateFacetSet)
+    .map(([facetId, request]) => {
+      const selectedRanges = getSelectedRanges(request.currentValues);
+      return selectedRanges.length ? {[facetId]: selectedRanges} : {};
+    })
+    .reduce((acc, obj) => ({...acc, ...obj}), {});
+
+  return Object.keys(df).length ? {df} : {};
+}
+
+function getSelectedRanges<T extends RangeValueRequest>(ranges: T[]) {
+  return ranges.filter((range) => range.state === 'selected');
 }
 
 function getDebug(state: Partial<SearchParametersState>) {

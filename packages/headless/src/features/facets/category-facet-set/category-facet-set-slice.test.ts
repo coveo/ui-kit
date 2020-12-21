@@ -8,7 +8,6 @@ import {
   updateCategoryFacetSortCriterion,
 } from './category-facet-set-actions';
 import {buildMockCategoryFacetRequest} from '../../../test/mock-category-facet-request';
-import {getHistoryEmptyState} from '../../history/history-slice';
 import {change} from '../../history/history-actions';
 import {buildMockCategoryFacetValue} from '../../../test/mock-category-facet-value';
 import {buildMockCategoryFacetValueRequest} from '../../../test/mock-category-facet-value-request';
@@ -21,6 +20,7 @@ import {
   getCategoryFacetSetInitialState,
 } from './category-facet-set-state';
 import {deselectAllFacets} from '../generic/facet-actions';
+import {getHistoryInitialState} from '../../history/history-state';
 import {restoreSearchParameters} from '../../search-parameters/search-parameter-actions';
 import * as CategoryFacetReducerHelpers from './category-facet-reducer-helpers';
 import {executeSearch} from '../../search/search-actions';
@@ -113,7 +113,7 @@ describe('category facet slice', () => {
   it('it restores the categoryFacetSet on history change', () => {
     const categoryFacetSet = {'1': buildMockCategoryFacetSlice()};
     const payload = {
-      ...getHistoryEmptyState(),
+      ...getHistoryInitialState(),
       categoryFacetSet,
     };
 

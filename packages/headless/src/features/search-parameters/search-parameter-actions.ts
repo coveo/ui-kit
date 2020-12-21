@@ -1,11 +1,15 @@
 import {createAction} from '@reduxjs/toolkit';
 import {SearchRequest} from '../../api/search/search/search-request';
 import {validatePayload} from '../../utils/validate-payload';
+import {DateRangeRequest} from '../facets/range-facets/date-facet-set/interfaces/request';
+import {NumericRangeRequest} from '../facets/range-facets/numeric-facet-set/interfaces/request';
 import {searchParametersDefinition} from './search-parameter-schema';
 
 type FacetParameters = {
   f: Record<string, string[]>;
   cf: Record<string, string[]>;
+  nf: Record<string, NumericRangeRequest[]>;
+  df: Record<string, DateRangeRequest[]>;
 };
 
 export type SearchParameters = Omit<
