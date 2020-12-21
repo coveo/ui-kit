@@ -108,7 +108,7 @@ export const buildBreadcrumbManager = (
     return Object.keys(engine.state.categoryFacetSet)
       .map((facetId) => {
         return {
-          field: engine.state.categoryFacetSet[facetId]?.request.field || '',
+          field: engine.state.categoryFacetSet[facetId]!.request.field,
           path: categoryFacetSelectedValuesSelector(engine.state, facetId),
           deselect: () => {
             dispatch(

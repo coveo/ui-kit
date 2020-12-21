@@ -51,15 +51,9 @@ export const categoryFacetSetReducer = createReducer(
       .addCase(change.fulfilled, (_, action) => action.payload.categoryFacetSet)
       .addCase(restoreSearchParameters, (state, action) => {
         const cf = action.payload.cf || {};
-        const facetIds = Object.keys(state);
 
-        facetIds.forEach((id) => {
-          const request = state[id]?.request;
-
-          if (!request) {
-            return;
-          }
-
+        Object.keys(state).forEach((id) => {
+          const request = state[id]!.request;
           const path = cf[id] || [];
           selectPath(request, path, request.numberOfValues);
         });

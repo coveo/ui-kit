@@ -178,7 +178,7 @@ function getCategoryFacets(state: Partial<SearchParametersState>) {
   const cf = Object.entries(state.categoryFacetSet)
     .map(([facetId, slice]) => {
       const {parents} = partitionIntoParentsAndValues(
-        slice?.request.currentValues
+        slice!.request.currentValues
       );
       const selectedValues = parents.map((p) => p.value);
 
