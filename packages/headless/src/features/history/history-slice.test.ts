@@ -5,10 +5,10 @@ import {undoable, StateWithHistory, makeHistory} from '../../app/undoable';
 import {buildMockFacetRequest} from '../../test/mock-facet-request';
 import {buildMockNumericFacetRequest} from '../../test/mock-numeric-facet-request';
 import {buildMockDateFacetRequest} from '../../test/mock-date-facet-request';
-import {buildMockCategoryFacetRequest} from '../../test/mock-category-facet-request';
 import {buildMockAdvancedSearchQueriesState} from '../../test/mock-advanced-search-queries-state';
 import {buildMockFacetOptions} from '../../test/mock-facet-options';
 import {buildMockQueryState} from '../../test/mock-query-state';
+import {buildMockCategoryFacetSlice} from '../../test/mock-category-facet-slice';
 import {getHistoryInitialState, HistoryState} from './history-state';
 
 describe('history slice', () => {
@@ -64,7 +64,7 @@ describe('history slice', () => {
       facetSet: {foo: buildMockFacetRequest()},
       numericFacetSet: {bar: buildMockNumericFacetRequest()},
       dateFacetSet: {foo: buildMockDateFacetRequest()},
-      categoryFacetSet: {foo: buildMockCategoryFacetRequest()},
+      categoryFacetSet: {foo: buildMockCategoryFacetSlice()},
       facetOptions: {freezeFacetOrder: false},
       pagination: {
         firstResult: 123,
@@ -186,8 +186,8 @@ describe('history slice', () => {
 
     it('for #categoryFacetSet keys', () => {
       expectHistoryToHaveCreatedDifferentSnapshots(
-        getSnapshot({categoryFacetSet: {foo: buildMockCategoryFacetRequest()}}),
-        getSnapshot({categoryFacetSet: {foo2: buildMockCategoryFacetRequest()}})
+        getSnapshot({categoryFacetSet: {foo: buildMockCategoryFacetSlice()}}),
+        getSnapshot({categoryFacetSet: {foo2: buildMockCategoryFacetSlice()}})
       );
     });
 

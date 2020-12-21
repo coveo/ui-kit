@@ -120,12 +120,7 @@ export function buildCategoryFacet(
 
     /** Deselects all facet values.*/
     deselectAll: () =>
-      dispatch(
-        executeDeselectAllCategoryFacetValues({
-          facetId,
-          numberOfValues: options.numberOfValues,
-        })
-      ),
+      dispatch(executeDeselectAllCategoryFacetValues({facetId})),
 
     /** Sorts the facet values according to the specified criterion.
      * @param criterion The criterion to sort values by.
@@ -145,7 +140,7 @@ export function buildCategoryFacet(
      */
     isSortedBy(criterion: CategoryFacetSortCriterion) {
       const request = getRequest();
-      return request.sortCriteria === criterion;
+      return request!.sortCriteria === criterion;
     },
     /**
      * Increases the number of values displayed in the facet to the next multiple of the originally configured value.
@@ -199,7 +194,7 @@ export function buildCategoryFacet(
         /** `true` if fewer values can be displayed and `false` otherwise. */
         canShowLessValues,
         /** The active sortCriterion of the facet. */
-        sortCriteria: request.sortCriteria,
+        sortCriteria: request!.sortCriteria,
         /** The state of the facet's searchbox. */
         facetSearch: facetSearch.state,
       };

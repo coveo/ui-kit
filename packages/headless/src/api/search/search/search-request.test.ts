@@ -5,6 +5,7 @@ import {buildMockDateFacetRequest} from '../../../test/mock-date-facet-request';
 import {buildMockCategoryFacetRequest} from '../../../test/mock-category-facet-request';
 import {buildMockFacetOptions} from '../../../test/mock-facet-options';
 import {SearchAppState} from '../../../state/search-app-state';
+import {buildMockCategoryFacetSlice} from '../../../test/mock-category-facet-slice';
 import {buildSearchRequest} from '../../../features/search/search-actions';
 
 describe('search request', () => {
@@ -75,10 +76,10 @@ describe('search request', () => {
 
   it('#searchRequestParams returns the facets in the #categoryFacetSet', () => {
     const request = buildMockCategoryFacetRequest({field: 'objecttype'});
-    state.categoryFacetSet[1] = request;
+    state.categoryFacetSet[1] = buildMockCategoryFacetSlice({request});
 
     const {facets} = buildSearchRequest(state);
-    expect(facets).toContain(request);
+    expect(facets).toContainEqual(request);
   });
 
   it(`when there are facets ids in the same order as the facetOrder array,

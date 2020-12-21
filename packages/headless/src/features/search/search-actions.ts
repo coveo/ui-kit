@@ -37,7 +37,10 @@ import {getContextInitialState} from '../context/context-state';
 import {getFacetSetInitialState} from '../facets/facet-set/facet-set-state';
 import {getNumericFacetSetInitialState} from '../facets/range-facets/numeric-facet-set/numeric-facet-set-state';
 import {getDateFacetSetInitialState} from '../facets/range-facets/date-facet-set/date-facet-set-state';
-import {getCategoryFacetSetInitialState} from '../facets/category-facet-set/category-facet-set-state';
+import {
+  CategoryFacetSetState,
+  getCategoryFacetSetInitialState,
+} from '../facets/category-facet-set/category-facet-set-state';
 import {getPaginationInitialState} from '../pagination/pagination-state';
 import {getQueryInitialState} from '../query/query-state';
 import {getAdvancedSearchQueriesInitialState} from '../advanced-search-queries/advanced-search-queries-state';
@@ -335,11 +338,17 @@ function getAllFacets(state: StateNeededByExecuteSearch) {
     ...getFacetRequests(state.facetSet),
     ...getFacetRequests(state.numericFacetSet),
     ...getFacetRequests(state.dateFacetSet),
-    ...getFacetRequests(state.categoryFacetSet),
+    ...getCategoryFacetRequests(state.categoryFacetSet),
   ];
 }
 
-function getFacetRequests(requests: Record<string, AnyFacetRequest> = {}) {
+function getCategoryFacetRequests(state: CategoryFacetSetState | undefined) {
+  return Object.values(state || {}).map((slice) => slice!.request);
+}
+
+function getFacetRequests<T extends AnyFacetRequest>(
+  requests: Record<string, T> = {}
+) {
   return Object.keys(requests).map((id) => requests[id]);
 }
 

@@ -49,7 +49,7 @@ export const buildFacetBaseMetadata = (
 ) => {
   const facet = getFacet(state, facetId);
 
-  const facetField = facet.field;
+  const facetField = facet ? facet.field : '';
   const facetTitle = `${facetField}_${facetId}`;
 
   return {facetId, facetField, facetTitle};
@@ -173,10 +173,11 @@ const getFacet = (
   | FacetRequest
   | CategoryFacetRequest
   | DateFacetRequest
-  | NumericFacetRequest => {
+  | NumericFacetRequest
+  | undefined => {
   return (
     state.facetSet[facetId] ||
-    state.categoryFacetSet[facetId] ||
+    state.categoryFacetSet[facetId]?.request ||
     state.dateFacetSet[facetId] ||
     state.numericFacetSet[facetId]
   );

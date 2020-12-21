@@ -23,7 +23,6 @@ import {buildMockCategoryFacetRequest} from '../../test/mock-category-facet-requ
 import {SearchAppState} from '../../state/search-app-state';
 import {buildPlanRequest} from '../../features/redirection/redirection-actions';
 import {buildQuerySuggestRequest} from '../../features/query-suggest/query-suggest-actions';
-import {buildSearchRequest} from '../../features/search/search-actions';
 import {buildSpecificFacetSearchRequest} from '../../features/facets/facet-search-set/specific/specific-facet-search-request-builder';
 import {buildCategoryFacetSearchRequest} from '../../features/facets/facet-search-set/category/category-facet-search-request-builder';
 import {buildRecommendationRequest} from '../../features/recommendation/recommendation-actions';
@@ -43,6 +42,8 @@ import {buildMockQuerySuggestCompletion} from '../../test/mock-query-suggest-com
 import {buildMockFacetSearchResponse} from '../../test/mock-facet-search-response';
 import {SearchResponseSuccess} from './search/search-response';
 import {QuerySuggestSuccessResponse} from './query-suggest/query-suggest-response';
+import {buildMockCategoryFacetSlice} from '../../test/mock-category-facet-slice';
+import {buildSearchRequest} from '../../features/search/search-actions';
 
 jest.mock('../platform-client');
 describe('search api client', () => {
@@ -349,7 +350,9 @@ describe('search api client', () => {
         const categoryFacet = buildMockCategoryFacetRequest();
 
         state.categoryFacetSearchSet[id] = categoryFacetSearch;
-        state.categoryFacetSet[id] = categoryFacet;
+        state.categoryFacetSet[id] = buildMockCategoryFacetSlice({
+          request: categoryFacet,
+        });
 
         const req = buildCategoryFacetSearchRequest(id, state);
 

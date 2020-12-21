@@ -29,6 +29,7 @@ import {buildMockCategoryFacetSearch} from '../../../test/mock-category-facet-se
 import {updateFacetOptions} from '../../../features/facet-options/facet-options-actions';
 import {SearchAppState} from '../../../state/search-app-state';
 import * as FacetIdDeterminor from '../_common/facet-id-determinor';
+import {buildMockCategoryFacetSlice} from '../../../test/mock-category-facet-slice';
 
 describe('category facet', () => {
   const facetId = '1';
@@ -43,10 +44,8 @@ describe('category facet', () => {
   }
 
   function setFacetRequest(config: Partial<CategoryFacetRequest> = {}) {
-    state.categoryFacetSet[facetId] = buildMockCategoryFacetRequest({
-      facetId,
-      ...config,
-    });
+    const request = buildMockCategoryFacetRequest({facetId, ...config});
+    state.categoryFacetSet[facetId] = buildMockCategoryFacetSlice({request});
     state.categoryFacetSearchSet[facetId] = buildMockCategoryFacetSearch();
   }
 
@@ -229,14 +228,6 @@ describe('category facet', () => {
       expect(engine.actions).toContainEqual(
         deselectAllCategoryFacetValues(facetId)
       );
-    });
-
-    it('dispatches #updateCategoryFacetNumberOfValues with the initial number of values', () => {
-      const action = updateCategoryFacetNumberOfValues({
-        facetId,
-        numberOfValues: defaultCategoryFacetOptions.numberOfValues,
-      });
-      expect(engine.actions).toContainEqual(action);
     });
 
     it('dispatches #updateFacetOptions with #freezeFacetOrder true', () => {

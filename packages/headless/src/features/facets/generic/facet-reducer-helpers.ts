@@ -18,9 +18,7 @@ export function handleFacetSortCriterionUpdate<T extends AnyFacetRequest>(
 
 export function handleFacetDeselectAll<
   T extends FacetRequest | CategoryFacetRequest
->(state: Record<string, T>, facetId: string) {
-  const facetRequest = state[facetId];
-
+>(facetRequest: T | undefined) {
   if (!facetRequest) {
     return;
   }
@@ -30,12 +28,9 @@ export function handleFacetDeselectAll<
 }
 
 export function handleFacetUpdateNumberOfValues<T extends AnyFacetRequest>(
-  state: Record<string, T>,
-  payload: {facetId: string; numberOfValues: number}
+  facetRequest: T | undefined,
+  numberOfValues: number
 ) {
-  const {facetId, numberOfValues} = payload;
-  const facetRequest = state[facetId];
-
   if (!facetRequest) {
     return;
   }

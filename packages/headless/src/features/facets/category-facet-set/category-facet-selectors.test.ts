@@ -9,6 +9,7 @@ import {buildMockCategoryFacetValue} from '../../../test/mock-category-facet-val
 import {buildMockCategoryFacetRequest} from '../../../test/mock-category-facet-request';
 import {buildMockFacetRequest} from '../../../test/mock-facet-request';
 import {buildMockFacetResponse} from '../../../test/mock-facet-response';
+import {buildMockCategoryFacetSlice} from '../../../test/mock-category-facet-slice';
 
 describe('category facet selectors', () => {
   const facetId = 'abc123';
@@ -24,7 +25,8 @@ describe('category facet selectors', () => {
   });
 
   it('#categoryFacetResponseSelector gets a valid date category response', () => {
-    state.categoryFacetSet[facetId] = buildMockCategoryFacetRequest({facetId});
+    const request = buildMockCategoryFacetRequest({facetId});
+    state.categoryFacetSet[facetId] = buildMockCategoryFacetSlice({request});
     const mockResponse = buildMockCategoryFacetResponse({facetId});
     state.search.response.facets = [mockResponse];
 
@@ -43,9 +45,8 @@ describe('category facet selectors', () => {
 
   describe('#categoryFacetSelectedValuesSelector', () => {
     beforeEach(() => {
-      state.categoryFacetSet[facetId] = buildMockCategoryFacetRequest({
-        facetId,
-      });
+      const request = buildMockCategoryFacetRequest({facetId});
+      state.categoryFacetSet[facetId] = buildMockCategoryFacetSlice({request});
     });
 
     it('#categoryFacetSelectedValuesSelector returns an empty array if the facet does not exist', () => {

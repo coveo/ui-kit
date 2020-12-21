@@ -20,6 +20,7 @@ import {buildMockNumericFacetResponse} from '../../test/mock-numeric-facet-respo
 import {buildMockCategoryFacetRequest} from '../../test/mock-category-facet-request';
 import {buildMockCategoryFacetValue} from '../../test/mock-category-facet-value';
 import {buildMockCategoryFacetResponse} from '../../test/mock-category-facet-response';
+import {buildMockCategoryFacetSlice} from '../../test/mock-category-facet-slice';
 
 describe('headless breadcrumb manager', () => {
   const facetId = 'abc123';
@@ -65,10 +66,14 @@ describe('headless breadcrumb manager', () => {
 
   it('#state gets category facet breadcrumbs correctly', () => {
     const otherFacetId = 'def456';
-    state.categoryFacetSet[facetId] = buildMockCategoryFacetRequest({facetId});
-    state.categoryFacetSet[otherFacetId] = buildMockCategoryFacetRequest({
-      facetId: otherFacetId,
-    });
+    const request1 = buildMockCategoryFacetRequest({facetId});
+    const request2 = buildMockCategoryFacetRequest({facetId: otherFacetId});
+
+    state.categoryFacetSet = {
+      [facetId]: buildMockCategoryFacetSlice({request: request1}),
+      [otherFacetId]: buildMockCategoryFacetSlice({request: request2}),
+    };
+
     const mockValue = buildMockCategoryFacetValue({state: 'selected'});
     state.search.response.facets = [
       buildMockCategoryFacetResponse({facetId, values: [mockValue]}),
