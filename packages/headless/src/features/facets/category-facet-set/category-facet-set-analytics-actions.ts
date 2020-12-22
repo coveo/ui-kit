@@ -15,7 +15,7 @@ import {
 } from '../facet-set/facet-set-analytics-actions-utils';
 import {facetIdDefinition} from '../generic/facet-actions-validation';
 
-interface CategoryFacetBreadcrumbPayload {
+export interface CategoryFacetBreadcrumbPayload {
   categoryFacetId: string;
   categoryFacetPath: string[];
 }
