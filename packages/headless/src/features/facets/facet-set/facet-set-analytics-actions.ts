@@ -165,3 +165,27 @@ export const logFacetDeselect = (payload: FacetSelectionChangeMetadata) =>
       return client.logFacetDeselect(metadata, facetState);
     }
   )();
+
+/**
+ * Logs a facet breadcrumb event.
+ * @param payload (FacetSelectionChangeMetadata) Object specifying the target facet and value.
+ */
+export const logFacetBreadcrumb = (payload: FacetSelectionChangeMetadata) =>
+  makeAnalyticsAction(
+    'analytics/facet/breadcrumb',
+    AnalyticsType.Search,
+    (client, state) => {
+      validatePayload(payload, {
+        facetId: facetIdDefinition,
+        facetValue: requiredNonEmptyString,
+      });
+      const stateForAnalytics = getStateNeededForFacetMetadata(state);
+      const metadata = buildFacetSelectionChangeMetadata(
+        payload,
+        getStateNeededForFacetMetadata(state)
+      );
+      const facetState = buildFacetStateMetadata(stateForAnalytics);
+
+      return client.logBreadcrumbFacet(metadata, facetState);
+    }
+  )();

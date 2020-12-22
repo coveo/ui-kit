@@ -7,6 +7,7 @@ import {
   updateFacetSortCriterion,
   updateFacetNumberOfValues,
   updateFacetIsFieldExpanded,
+  updateFreezeCurrentValues,
 } from './facet-set-actions';
 import {executeSearch} from '../../search/search-actions';
 import {selectFacetSearchResult} from '../facet-search-set/specific/specific-facet-search-actions';
@@ -82,6 +83,16 @@ export const facetSetReducer = createReducer(
 
         facetRequest.freezeCurrentValues = true;
         facetRequest.preventAutoSelect = true;
+      })
+      .addCase(updateFreezeCurrentValues, (state, action) => {
+        const {facetId, freezeCurrentValues} = action.payload;
+        const facetRequest = state[facetId];
+
+        if (!facetRequest) {
+          return;
+        }
+
+        facetRequest.freezeCurrentValues = freezeCurrentValues;
       })
       .addCase(deselectAllFacetValues, (state, action) => {
         const request = state[action.payload];

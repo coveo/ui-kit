@@ -53,7 +53,7 @@ export const executeToggleCategoryFacetSelect = createAsyncThunk<
 );
 
 /**
- * Deselects the all values on the path to the currently selected category facet value and executes
+ * Deselects all values on the path to the currently selected category facet value and executes
  * a search with the appropriate analytics
  * @param facetId (string) The unique identifier of the facet (e.g., `"1"`).
  * @param numberOfValues (number) The number of category facet values to show after deselecting.

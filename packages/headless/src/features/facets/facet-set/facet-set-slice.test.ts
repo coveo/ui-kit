@@ -7,6 +7,7 @@ import {
   updateFacetSortCriterion,
   updateFacetNumberOfValues,
   updateFacetIsFieldExpanded,
+  updateFreezeCurrentValues,
 } from './facet-set-actions';
 import {buildMockFacetValue} from '../../../test/mock-facet-value';
 import {buildMockSearch} from '../../../test/mock-search';
@@ -208,6 +209,29 @@ describe('facet-set slice', () => {
     const action = toggleSelectFacetValue({
       facetId: '1',
       selection: facetValue,
+    });
+
+    expect(() => facetSetReducer(state, action)).not.toThrow();
+  });
+
+  it(`dispatching #updateFreezeCurrentValues with a registered facet id
+  sets the state updateFreezeCurrentValues to the value`, () => {
+    const id = '1';
+
+    state[id] = buildMockFacetRequest();
+
+    const action = updateFreezeCurrentValues({
+      facetId: id,
+      freezeCurrentValues: true,
+    });
+    const finalState = facetSetReducer(state, action);
+    expect(finalState[id].freezeCurrentValues).toBe(true);
+  });
+
+  it('dispatching #updateFreezeCurrentValues with an invalid id does not throw', () => {
+    const action = updateFreezeCurrentValues({
+      facetId: '1',
+      freezeCurrentValues: true,
     });
 
     expect(() => facetSetReducer(state, action)).not.toThrow();
