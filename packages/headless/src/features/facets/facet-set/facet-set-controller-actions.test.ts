@@ -12,12 +12,12 @@ describe('facet set controller actions', () => {
   });
 
   it('#executeToggleFacetSelect dispatches the correct actions', () => {
-    const selection = buildMockFacetValue();
+    const selection = buildMockFacetValue({value: 'test'});
     engine.dispatch(executeToggleFacetSelect({facetId, selection}));
 
     expect(engine.actions).toEqual([
       expect.objectContaining({
-        type: 'facet/executeToggleSelect',
+        type: 'facet/executeToggleSelect/pending',
       }),
       expect.objectContaining({
         type: 'facet/toggleSelectValue',
