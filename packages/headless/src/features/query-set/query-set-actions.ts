@@ -1,10 +1,13 @@
 import {createAction} from '@reduxjs/toolkit';
-import {validatePayload} from '../../utils/validate-payload';
-import {StringValue} from '@coveo/bueno';
+import {
+  validatePayload,
+  requiredNonEmptyString,
+  requiredEmptyAllowedString,
+} from '../../utils/validate-payload';
 
 const querySetDefinition = {
-  id: new StringValue({required: true, emptyAllowed: false}),
-  query: new StringValue({required: true}),
+  id: requiredNonEmptyString,
+  query: requiredEmptyAllowedString,
 };
 /**
  * Registers a query in the query set.

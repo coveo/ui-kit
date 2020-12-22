@@ -1,10 +1,10 @@
 import {FacetSortCriterion} from './interfaces/request';
 import {RangeFacetSortCriterion} from '../range-facets/generic/interfaces/request';
-import {validatePayload} from '../../../utils/validate-payload';
 import {
-  facetIdDefinition,
+  validatePayload,
   requiredNonEmptyString,
-} from '../generic/facet-actions-validation';
+} from '../../../utils/validate-payload';
+import {facetIdDefinition} from '../generic/facet-actions-validation';
 import {Value} from '@coveo/bueno';
 import {
   AnalyticsType,

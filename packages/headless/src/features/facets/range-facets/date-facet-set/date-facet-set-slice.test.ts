@@ -6,7 +6,6 @@ import {
   deselectAllDateFacetValues,
 } from './date-facet-actions';
 import {DateFacetRegistrationOptions} from './interfaces/options';
-import {getHistoryEmptyState} from '../../../history/history-slice';
 import {buildMockDateFacetRequest} from '../../../../test/mock-date-facet-request';
 import {change} from '../../../history/history-actions';
 import * as RangeFacetReducers from '../generic/range-facet-reducers';
@@ -20,6 +19,7 @@ import {
   getDateFacetSetInitialState,
 } from './date-facet-set-state';
 import {deselectAllFacets} from '../../generic/facet-actions';
+import {getHistoryInitialState} from '../../../history/history-state';
 import {restoreSearchParameters} from '../../../search-parameters/search-parameter-actions';
 
 describe('date-facet-set slice', () => {
@@ -60,7 +60,7 @@ describe('date-facet-set slice', () => {
   it('it restores the dateFacetSet on history change', () => {
     const dateFacetSet = {'1': buildMockDateFacetRequest()};
     const payload = {
-      ...getHistoryEmptyState(),
+      ...getHistoryInitialState(),
       dateFacetSet,
     };
 

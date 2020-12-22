@@ -95,18 +95,24 @@ export const facetSetReducer = createReducer(
         facetRequest.freezeCurrentValues = freezeCurrentValues;
       })
       .addCase(deselectAllFacetValues, (state, action) => {
-        handleFacetDeselectAll<FacetRequest>(state, action.payload);
+        const request = state[action.payload];
+        handleFacetDeselectAll<FacetRequest>(request);
       })
       .addCase(deselectAllFacets, (state) => {
         Object.keys(state).forEach((facetId) => {
-          handleFacetDeselectAll<FacetRequest>(state, facetId);
+          const request = state[facetId];
+          handleFacetDeselectAll<FacetRequest>(request);
         });
       })
       .addCase(updateFacetSortCriterion, (state, action) => {
         handleFacetSortCriterionUpdate<FacetRequest>(state, action.payload);
       })
       .addCase(updateFacetNumberOfValues, (state, action) => {
-        handleFacetUpdateNumberOfValues<FacetRequest>(state, action.payload);
+        const {facetId, numberOfValues} = action.payload;
+        handleFacetUpdateNumberOfValues<FacetRequest>(
+          state[facetId],
+          numberOfValues
+        );
       })
       .addCase(updateFacetIsFieldExpanded, (state, action) => {
         const {facetId, isFieldExpanded} = action.payload;

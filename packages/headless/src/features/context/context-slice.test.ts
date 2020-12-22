@@ -1,8 +1,8 @@
 import {contextReducer} from './context-slice';
 import {setContext, addContext, removeContext} from './context-actions';
 import {change} from '../history/history-actions';
-import {getHistoryEmptyState} from '../history/history-slice';
 import {ContextState, getContextInitialState} from './context-state';
+import {getHistoryInitialState} from '../history/history-state';
 
 describe('context slice', () => {
   let state: ContextState;
@@ -59,7 +59,7 @@ describe('context slice', () => {
   it('allows to restore a context on history change', () => {
     const state = getContextInitialState();
     const historyChange = {
-      ...getHistoryEmptyState(),
+      ...getHistoryInitialState(),
       context: {contextValues: {foo: 'bar'}},
     };
 

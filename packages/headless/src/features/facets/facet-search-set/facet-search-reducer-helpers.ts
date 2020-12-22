@@ -3,8 +3,17 @@ import {FacetSearchResponse} from '../../../api/search/facet-search/facet-search
 import {FacetSearchRequestOptions} from '../../../api/search/facet-search/base/base-facet-search-request';
 
 export type FacetSearchState<T extends FacetSearchResponse> = {
+  /**
+   * The options used to perform a facet search request.
+   */
   options: FacetSearchRequestOptions;
+  /**
+   * `true` if the facet search request is currently being executed against the Coveo platform, `false` otherwise.
+   */
   isLoading: boolean;
+  /**
+   * The facet search response.
+   */
   response: T;
 };
 

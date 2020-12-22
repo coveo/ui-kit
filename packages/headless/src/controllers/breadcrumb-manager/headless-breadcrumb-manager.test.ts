@@ -271,12 +271,12 @@ describe('headless breadcrumb manager', () => {
     state.search.response.facets = [
       buildMockNumericFacetResponse({facetId, values: [mockValue]}),
     ];
-    expect(breadcrumbManager.hasBreadcrumbs()).toBe(true);
+    expect(breadcrumbManager.state.hasBreadcrumbs).toBe(true);
   });
 
   it('hasBreadcrumbs returns false when no facet value is selected', () => {
     state.search.response.facets = [];
-    expect(breadcrumbManager.hasBreadcrumbs()).toBe(false);
+    expect(breadcrumbManager.state.hasBreadcrumbs).toBe(false);
   });
 
   it('when calling deselectAll it dispatches the deselectAllFacets action', () => {

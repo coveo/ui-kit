@@ -19,6 +19,7 @@
     "version:pre": "lerna version --conventional-commits --conventional-prerelease",
     "version:graduate": "lerna version --conventional-commits --conventional-graduate",
     "npm:publish": "lerna run --no-bail npm:publish",
+    "npm:publish:alpha": "npm run npm:publish -- -- -- --tag alpha",
     "doc": "cd packages/headless ; npm run doc"
   },
   "devDependencies": {

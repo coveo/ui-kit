@@ -6,8 +6,10 @@ import {
   ArrayValue,
   BooleanValue,
 } from '@coveo/bueno';
-import {requiredNonEmptyString} from '../generic/facet-actions-validation';
-import {validatePayloadAndThrow} from '../../../utils/validate-payload';
+import {
+  validatePayloadAndThrow,
+  requiredNonEmptyString,
+} from '../../../utils/validate-payload';
 import {CategoryFacetValue} from './interfaces/response';
 
 export const categoryFacetValueDefinition = {

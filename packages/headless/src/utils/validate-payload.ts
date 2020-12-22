@@ -3,9 +3,20 @@ import {
   SchemaValue,
   Schema,
   SchemaValidationError,
+  StringValue,
 } from '@coveo/bueno';
 import {SerializedError} from '@reduxjs/toolkit';
 import {Engine} from '../app/headless-engine';
+
+export const requiredNonEmptyString = new StringValue({
+  required: true,
+  emptyAllowed: false,
+});
+
+export const requiredEmptyAllowedString = new StringValue({
+  required: true,
+  emptyAllowed: true,
+});
 
 export const serializeSchemaValidationError = ({
   message,
