@@ -15,7 +15,7 @@ describe('category facet controller actions', () => {
   });
 
   it('#executeToggleCategoryFacetSelect dispatches the correct actions', () => {
-    const selection = buildMockCategoryFacetValue();
+    const selection = buildMockCategoryFacetValue({value: 'test'});
     engine.dispatch(
       executeToggleCategoryFacetSelect({
         facetId,
@@ -41,6 +41,7 @@ describe('category facet controller actions', () => {
       }),
     ]);
   });
+
   it('#executeDeselectAllCategoryFacetValues dispatches the correct actions', () => {
     engine.dispatch(executeDeselectAllCategoryFacetValues({facetId}));
 
@@ -51,10 +52,6 @@ describe('category facet controller actions', () => {
       expect.objectContaining({
         type: 'facet/deselectAll',
         payload: facetId,
-      }),
-      expect.objectContaining({
-        type: 'facet/updateNumberOfValues',
-        payload: {facetId},
       }),
       expect.objectContaining({
         type: 'facetOptions/update',
