@@ -229,10 +229,16 @@ describe('headless breadcrumb manager', () => {
           },
         },
         categoryFacetSet: {
-          [facetId]: buildMockCategoryFacetRequest({facetId}),
-          [otherFacetId]: buildMockCategoryFacetRequest({
-            facetId: otherFacetId,
-          }),
+          [facetId]: {
+            initialNumberOfValues: 10,
+            request: buildMockCategoryFacetRequest({facetId}),
+          },
+          [otherFacetId]: {
+            initialNumberOfValues: 10,
+            request: buildMockCategoryFacetRequest({
+              facetId: otherFacetId,
+            }),
+          },
         },
       });
       initController();
@@ -254,13 +260,6 @@ describe('headless breadcrumb manager', () => {
       facetBreadcrumbs[0].deselect();
       expect(engine.actions).toContainEqual(
         deselectAllCategoryFacetValues(facetId)
-      );
-    });
-
-    it('dispatches a updateCategoryFacetNumberOfValues action on selection', () => {
-      facetBreadcrumbs[0].deselect();
-      expect(engine.actions).toContainEqual(
-        updateCategoryFacetNumberOfValues({facetId, numberOfValues: 5})
       );
     });
   });

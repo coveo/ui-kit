@@ -28,10 +28,7 @@ import {
 } from '../../features/facets/facet-set/facet-set-actions';
 import {toggleSelectNumericFacetValue} from '../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions';
 import {toggleSelectDateFacetValue} from '../../features/facets/range-facets/date-facet-set/date-facet-actions';
-import {
-  deselectAllCategoryFacetValues,
-  updateCategoryFacetNumberOfValues,
-} from '../../features/facets/category-facet-set/category-facet-set-actions';
+import {deselectAllCategoryFacetValues} from '../../features/facets/category-facet-set/category-facet-set-actions';
 import {logCategoryFacetBreadcrumb} from '../../features/facets/category-facet-set/category-facet-set-analytics-actions';
 import {logNumericFacetBreadcrumb} from '../../features/facets/range-facets/numeric-facet-set/numeric-facet-analytics-actions';
 import {logDateFacetBreadcrumb} from '../../features/facets/range-facets/date-facet-set/date-facet-analytics-actions';
@@ -131,9 +128,6 @@ export const buildBreadcrumbManager = (
       path,
       deselect: () => {
         dispatch(deselectAllCategoryFacetValues(facetId));
-        dispatch(
-          updateCategoryFacetNumberOfValues({facetId, numberOfValues: 5}) // TODO: KIT-317
-        );
         dispatch(
           executeSearch(
             logCategoryFacetBreadcrumb({

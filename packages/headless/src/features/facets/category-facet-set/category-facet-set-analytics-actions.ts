@@ -1,7 +1,10 @@
 import {ArrayValue} from '@coveo/bueno';
 import {CategoryFacetMetadata} from 'coveo.analytics/src/searchPage/searchPageEvents';
 import {SearchAppState} from '../../../state/search-app-state';
-import {validatePayload} from '../../../utils/validate-payload';
+import {
+  requiredNonEmptyString,
+  validatePayload,
+} from '../../../utils/validate-payload';
 import {
   AnalyticsType,
   makeAnalyticsAction,
@@ -10,10 +13,7 @@ import {
   buildFacetStateMetadata,
   getStateNeededForFacetMetadata,
 } from '../facet-set/facet-set-analytics-actions-utils';
-import {
-  facetIdDefinition,
-  requiredNonEmptyString,
-} from '../generic/facet-actions-validation';
+import {facetIdDefinition} from '../generic/facet-actions-validation';
 
 interface CategoryFacetBreadcrumbPayload {
   categoryFacetId: string;
@@ -33,7 +33,7 @@ const getCategoryFacetMetadata = (
   {categoryFacetId, categoryFacetPath}: CategoryFacetBreadcrumbPayload
 ): CategoryFacetMetadata => {
   const facet = state.categoryFacetSet![categoryFacetId]!;
-  const categoryFacetField = facet?.field;
+  const categoryFacetField = facet?.request.field;
   const categoryFacetTitle = `${categoryFacetField}_${categoryFacetId}`;
   return {
     categoryFacetId,
