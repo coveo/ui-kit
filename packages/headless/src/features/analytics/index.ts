@@ -52,6 +52,16 @@ export namespace FacetGenericAnalyticsActions {
   export const logClearBreadcrumbs = logClearBreadcrumbsAlias;
 }
 
+import {logDateFacetBreadcrumb as logDateFacetBreadcrumbAlias} from '../facets/range-facets/date-facet-set/date-facet-analytics-actions';
+export namespace DateFacetAnalyticsActions {
+  export const logDateFacetBreadcrumb = logDateFacetBreadcrumbAlias;
+}
+
+import {logNumericFacetBreadcrumb as logNumericFacetBreadcrumbAlias} from '../facets/range-facets/numeric-facet-set/numeric-facet-analytics-actions';
+export namespace NumericFacetAnalyticsActions {
+  export const logNumericFacetBreadcrumb = logNumericFacetBreadcrumbAlias;
+}
+
 import {
   logNavigateForward as logNavigateForwardAlias,
   logNavigateBackward as logNavigateBackwardAlias,
