@@ -37,10 +37,7 @@ import {
 } from '../../features/facets/facet-set/facet-set-actions';
 import {toggleSelectDateFacetValue} from '../../features/facets/range-facets/date-facet-set/date-facet-actions';
 import {toggleSelectNumericFacetValue} from '../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions';
-import {
-  deselectAllCategoryFacetValues,
-  updateCategoryFacetNumberOfValues,
-} from '../../features/facets/category-facet-set/category-facet-set-actions';
+import {deselectAllCategoryFacetValues} from '../../features/facets/category-facet-set/category-facet-set-actions';
 
 describe('headless breadcrumb manager', () => {
   const facetId = 'abc123';
