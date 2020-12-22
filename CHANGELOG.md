@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.2.0-alpha.4](https://github.com/coveo/ui-kit/compare/v0.2.0-alpha.3...v0.2.0-alpha.4) (2020-12-22)
+
+
+### Bug Fixes
+
+* **headless:** add breadcrumbs actions and log breadcrumb analytics ([#362](https://github.com/coveo/ui-kit/issues/362)) ([33a3fb7](https://github.com/coveo/ui-kit/commit/33a3fb71049f564fa87771d6070f9471dd559630))
+
+
+
+
+
 # [0.2.0-alpha.3](https://github.com/coveo/ui-kit/compare/v0.1.0...v0.2.0-alpha.3) (2020-12-21)
 
 
