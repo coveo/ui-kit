@@ -8,7 +8,7 @@ export type InitializeEvent = CustomEvent<InitializeEventHandler>;
 export class InitializationError extends Error {
   constructor(elementName: string) {
     super(
-      `The ${elementName} element must be the child of a configured atomic-search-interface element.`
+      `The ${elementName} element must be the child of a configured atomic-search-interface element or have a "search-interface-id" attribute referencing a atomic-search-interface element.`
     );
     this.name = 'InitializationError';
   }
@@ -41,6 +41,16 @@ export function Initialization(options?: InitializationOptions) {
 
     component.componentWillLoad = function () {
       const element = getElement(this);
+      const externalSearchInterfaceId = element.getAttribute(
+        'search-interface-id'
+      );
+      const searchInterfaceElement = externalSearchInterfaceId
+        ? document.querySelector(
+            `atomic-search-interface#${externalSearchInterfaceId}`
+          )
+        : null;
+      const dispatchElement = searchInterfaceElement ?? element;
+
       const event = new CustomEvent('atomic/initializeComponent', {
         detail: (engine: Engine) => {
           this[engineProperty] = engine;
@@ -53,7 +63,8 @@ export function Initialization(options?: InitializationOptions) {
         bubbles: true,
         cancelable: true,
       });
-      const canceled = element.dispatchEvent(event);
+
+      const canceled = dispatchElement.dispatchEvent(event);
       if (canceled) {
         this[errorProperty] = new InitializationError(
           element.nodeName.toLowerCase()
