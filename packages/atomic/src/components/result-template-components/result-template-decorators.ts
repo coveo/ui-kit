@@ -3,12 +3,6 @@ import {ComponentInterface, getElement} from '@stencil/core';
 export function ResultContext() {
   return (component: ComponentInterface, resultVariable: string) => {
     const {render} = component;
-    if (!render) {
-      console.error(
-        'The "render" lifecycle method has to be defined for the ResultTemplateComponent decorator to work.'
-      );
-      return;
-    }
 
     component.render = function () {
       const element = getElement(this);
@@ -19,7 +13,7 @@ export function ResultContext() {
         );
       }
       component[resultVariable] = parentResultComponent.result;
-      return render.call(this);
+      return render && render.call(this);
     };
   };
 }

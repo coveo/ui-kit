@@ -75,12 +75,6 @@ export function Initialization(options?: InitializationOptions) {
       return componentWillLoad && componentWillLoad.call(this);
     };
 
-    if (!render) {
-      console.error(
-        'The "render" lifecycle method has to be defined for the InitializeComponent decorator to work.'
-      );
-    }
-
     let hasRendered = false;
     let hasLoaded = false;
 

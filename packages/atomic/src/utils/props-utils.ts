@@ -7,12 +7,6 @@ interface MapPropOptions {
 export function MapProp(opts?: MapPropOptions) {
   return (component: ComponentInterface, variableName: string) => {
     const {componentWillLoad} = component;
-    if (!componentWillLoad) {
-      console.error(
-        'The "componentWillLoad" lifecycle method has to be defined for the MapProp decorator to work.'
-      );
-      return;
-    }
 
     component.componentWillLoad = function () {
       const prefix = (opts && opts.attributePrefix) || variableName;
@@ -31,7 +25,7 @@ export function MapProp(opts?: MapPropOptions) {
         ] = `${attribute.value}`.split(',');
       }
 
-      componentWillLoad.call(this);
+      componentWillLoad && componentWillLoad.call(this);
     };
   };
 }
