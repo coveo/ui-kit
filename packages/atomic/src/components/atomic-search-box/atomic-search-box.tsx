@@ -48,6 +48,7 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
   );
 
   private engine!: Engine;
+  private error?: Error;
   private searchBox!: SearchBox;
   private unsubscribe: Unsubscribe = () => {};
   private inputRef!: HTMLInputElement;
@@ -221,6 +222,6 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
   }
 
   public componentDidRender() {
-    this.combobox.updateAccessibilityAttributes();
+    !this.error && this.combobox.updateAccessibilityAttributes();
   }
 }

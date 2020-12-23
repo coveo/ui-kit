@@ -134,6 +134,7 @@ export class AtomicSearchInterface {
 
   @Listen('atomic/initializeComponent')
   public handleInitialization(event: InitializeEvent) {
+    event.preventDefault();
     event.stopPropagation();
 
     if (this.engine) {

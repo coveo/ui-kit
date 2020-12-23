@@ -5,18 +5,10 @@ import {Schema, StringValue, SchemaValues} from '@coveo/bueno';
 export type InitializeEventHandler = (engine: Engine) => void;
 export type InitializeEvent = CustomEvent<InitializeEventHandler>;
 
-const engineProviders = ['atomic-search-interface'];
-
-interface EngineProviderElement extends Element {
-  engine: Engine;
-}
-
 export class InitializationError extends Error {
   constructor(elementName: string) {
     super(
-      `The ${elementName} element must be the child of a configured ${engineProviders.join(
-        ' or '
-      )} element.`
+      `The ${elementName} element must be the child of a configured atomic-search-interface element.`
     );
     this.name = 'InitializationError';
   }
@@ -49,17 +41,6 @@ export function Initialization(options?: InitializationOptions) {
 
     component.componentWillLoad = function () {
       const element = getElement(this);
-      const parentEngineProvider: EngineProviderElement | null = element.closest(
-        engineProviders.join()
-      );
-
-      if (!parentEngineProvider) {
-        this[errorProperty] = new InitializationError(
-          element.nodeName.toLowerCase()
-        );
-        return;
-      }
-
       const event = new CustomEvent('atomic/initializeComponent', {
         detail: (engine: Engine) => {
           this[engineProperty] = engine;
@@ -70,8 +51,15 @@ export function Initialization(options?: InitializationOptions) {
           }
         },
         bubbles: true,
+        cancelable: true,
       });
-      element.dispatchEvent(event);
+      const canceled = element.dispatchEvent(event);
+      if (canceled) {
+        this[errorProperty] = new InitializationError(
+          element.nodeName.toLowerCase()
+        );
+        return;
+      }
 
       return componentWillLoad && componentWillLoad.call(this);
     };
