@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.2.0-alpha.5](https://github.com/coveo/ui-kit/compare/v0.2.0-alpha.4...v0.2.0-alpha.5) (2020-12-29)
+
+
+### Features
+
+* **headless:** add unit tests to controller action thunks ([#394](https://github.com/coveo/ui-kit/issues/394)) ([337ed6d](https://github.com/coveo/ui-kit/commit/337ed6d6a9fcfd3b9265224d00a2f3c14d06fe72))
+
+
+
+
+
 # [0.2.0-alpha.4](https://github.com/coveo/ui-kit/compare/v0.2.0-alpha.3...v0.2.0-alpha.4) (2020-12-22)
 
 
