@@ -17,12 +17,12 @@ import {Initialization} from '../../utils/initialization-utils';
   shadow: true,
 })
 export class AtomicCategoryFacet {
+  @Prop({mutable: true}) engine!: Engine;
   @Prop({mutable: true}) facetId = '';
   @Prop() field = '';
   @Prop() label = 'No label';
   @State() state!: CategoryFacetState;
 
-  private engine!: Engine;
   private categoryFacet!: CategoryFacet;
   private unsubscribe: Unsubscribe = () => {};
 

@@ -1,4 +1,4 @@
-import {Component, h, State} from '@stencil/core';
+import {Component, h, Prop, State} from '@stencil/core';
 import {
   DidYouMean,
   DidYouMeanState,
@@ -14,9 +14,9 @@ import {Initialization} from '../../utils/initialization-utils';
   shadow: true,
 })
 export class AtomicDidYouMean {
+  @Prop({mutable: true}) engine!: Engine;
   @State() state!: DidYouMeanState;
 
-  private engine!: Engine;
   private didYouMean!: DidYouMean;
   private unsubscribe: Unsubscribe = () => {};
 

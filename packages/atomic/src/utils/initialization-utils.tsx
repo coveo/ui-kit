@@ -40,6 +40,12 @@ export function Initialization(options?: InitializationOptions) {
     >;
 
     component.componentWillLoad = function () {
+      const engine = this[engineProperty];
+      if (engine) {
+        initialize.call(this);
+        return componentWillLoad && componentWillLoad.call(this);
+      }
+
       const element = getElement(this);
       const externalSearchInterfaceId = element.getAttribute(
         'search-interface-id'

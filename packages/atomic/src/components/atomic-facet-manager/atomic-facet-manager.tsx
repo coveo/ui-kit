@@ -1,4 +1,4 @@
-import {Component, h, Element, State} from '@stencil/core';
+import {Component, h, Element, State, Prop} from '@stencil/core';
 import {
   FacetManager,
   buildFacetManager,
@@ -18,9 +18,9 @@ interface FacetElement extends HTMLElement {
   shadow: true,
 })
 export class AtomicFacetManager {
+  @Prop({mutable: true}) engine!: Engine;
   @State() state!: FacetManagerState;
   @Element() host!: HTMLDivElement;
-  private engine!: Engine;
   private unsubscribe: Unsubscribe = () => {};
   private facetManager!: FacetManager;
 

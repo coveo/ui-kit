@@ -17,11 +17,11 @@ import {Initialization} from '../../utils/initialization-utils';
   shadow: true,
 })
 export class AtomicFacet {
+  @Prop({mutable: true}) engine!: Engine;
   @Prop({mutable: true}) facetId = '';
   @Prop() field = '';
   @Prop() label = 'No label';
   @State() state!: FacetState;
-  private engine!: Engine;
 
   private unsubscribe: Unsubscribe = () => {};
   private facet!: Facet;

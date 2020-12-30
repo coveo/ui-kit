@@ -1,4 +1,4 @@
-import {Component, h, State} from '@stencil/core';
+import {Component, h, Prop, State} from '@stencil/core';
 import {
   QueryError,
   QueryErrorState,
@@ -14,9 +14,9 @@ import {Initialization} from '../../utils/initialization-utils';
   shadow: true,
 })
 export class AtomicQueryError {
+  @Prop({mutable: true}) engine!: Engine;
   @State() state!: QueryErrorState;
 
-  private engine!: Engine;
   private queryError!: QueryError;
   private unsubscribe: Unsubscribe = () => {};
 

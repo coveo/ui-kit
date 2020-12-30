@@ -7,8 +7,8 @@ import {Initialization} from '../../utils/initialization-utils';
   shadow: true,
 })
 export class AtomicContextProvider {
+  @Prop({mutable: true}) engine!: Engine;
   @Prop() context = '{}';
-  private engine!: Engine;
 
   @Initialization()
   public initialize() {

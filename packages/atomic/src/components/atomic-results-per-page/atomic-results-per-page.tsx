@@ -20,9 +20,9 @@ import {Initialization} from '../../utils/initialization-utils';
   shadow: true,
 })
 export class AtomicResultsPerPage {
+  @Prop({mutable: true}) engine!: Engine;
   @State() state!: ResultsPerPageState;
 
-  private engine!: Engine;
   private resultsPerPage!: ResultsPerPage;
   private unsubscribe: Unsubscribe = () => {};
 

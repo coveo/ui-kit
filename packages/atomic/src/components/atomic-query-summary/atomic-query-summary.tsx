@@ -1,4 +1,4 @@
-import {Component, h, State} from '@stencil/core';
+import {Component, h, Prop, State} from '@stencil/core';
 import {
   QuerySummary,
   QuerySummaryState,
@@ -22,9 +22,9 @@ import {Initialization} from '../../utils/initialization-utils';
   shadow: true,
 })
 export class AtomicQuerySummary {
+  @Prop({mutable: true}) engine!: Engine;
   @State() state!: QuerySummaryState;
 
-  private engine!: Engine;
   private querySummary!: QuerySummary;
   private unsubscribe: Unsubscribe = () => {};
 
