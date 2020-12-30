@@ -24,7 +24,7 @@ import {Initialization} from '../../utils/initialization-utils';
   shadow: true,
 })
 export class AtomicPager {
-  @Prop({mutable: true}) engine!: Engine;
+  @Prop({mutable: true}) engine?: Engine;
   @State() state!: PagerState;
 
   private pager!: Pager;
@@ -32,7 +32,7 @@ export class AtomicPager {
 
   @Initialization()
   public initialize() {
-    this.pager = buildPager(this.engine);
+    this.pager = buildPager(this.engine!);
     this.unsubscribe = this.pager.subscribe(() => this.updateState());
   }
 

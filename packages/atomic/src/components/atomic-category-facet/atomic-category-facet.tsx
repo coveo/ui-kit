@@ -17,7 +17,7 @@ import {Initialization} from '../../utils/initialization-utils';
   shadow: true,
 })
 export class AtomicCategoryFacet {
-  @Prop({mutable: true}) engine!: Engine;
+  @Prop({mutable: true}) engine?: Engine;
   @Prop({mutable: true}) facetId = '';
   @Prop() field = '';
   @Prop() label = 'No label';
@@ -33,7 +33,7 @@ export class AtomicCategoryFacet {
       field: this.field,
       delimitingCharacter: ';',
     };
-    this.categoryFacet = buildCategoryFacet(this.engine, {options});
+    this.categoryFacet = buildCategoryFacet(this.engine!, {options});
     this.facetId = this.categoryFacet.state.facetId;
     this.subscribe();
   }

@@ -29,7 +29,7 @@ import mainclear from '../../images/main-clear.svg';
   shadow: true,
 })
 export class AtomicBreadcrumbManager {
-  @Prop({mutable: true}) engine!: Engine;
+  @Prop({mutable: true}) engine?: Engine;
   @Prop() collapseThreshold = 5;
   @Prop() categoryDivider = '/';
   @State() state!: BreadcrumbManagerState;
@@ -40,7 +40,7 @@ export class AtomicBreadcrumbManager {
 
   @Initialization()
   public initialize() {
-    this.breadcrumbManager = buildBreadcrumbManager(this.engine);
+    this.breadcrumbManager = buildBreadcrumbManager(this.engine!);
     this.subscribe();
   }
 

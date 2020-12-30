@@ -17,7 +17,7 @@ import {Initialization} from '../../utils/initialization-utils';
   shadow: true,
 })
 export class AtomicDateFacet {
-  @Prop({mutable: true}) engine!: Engine;
+  @Prop({mutable: true}) engine?: Engine;
   @Prop({mutable: true}) facetId = '';
   @Prop() field = '';
   @Prop() label = 'No label';
@@ -34,7 +34,7 @@ export class AtomicDateFacet {
       generateAutomaticRanges: true,
     };
 
-    this.facet = buildDateFacet(this.engine, {options});
+    this.facet = buildDateFacet(this.engine!, {options});
     this.facetId = this.facet.state.facetId;
     this.subscribe();
   }

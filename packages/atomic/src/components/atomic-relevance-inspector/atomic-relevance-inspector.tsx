@@ -19,7 +19,7 @@ export class AtomicRelevanceInspector {
   private unsubscribe: Unsubscribe = () => {};
 
   constructor() {
-    this.relevanceInspector = buildRelevanceInspector(this.engine, {
+    this.relevanceInspector = buildRelevanceInspector(this.engine!, {
       initialState: {
         // TODO: add enable/disable mechanism
         enabled: false,

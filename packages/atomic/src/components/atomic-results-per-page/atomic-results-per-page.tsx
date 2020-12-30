@@ -20,7 +20,7 @@ import {Initialization} from '../../utils/initialization-utils';
   shadow: true,
 })
 export class AtomicResultsPerPage {
-  @Prop({mutable: true}) engine!: Engine;
+  @Prop({mutable: true}) engine?: Engine;
   @State() state!: ResultsPerPageState;
 
   private resultsPerPage!: ResultsPerPage;
@@ -38,7 +38,7 @@ export class AtomicResultsPerPage {
 
   @Initialization()
   public initialize() {
-    this.resultsPerPage = buildResultsPerPage(this.engine, {
+    this.resultsPerPage = buildResultsPerPage(this.engine!, {
       initialState: {numberOfResults: this.initialOption},
     });
     this.unsubscribe = this.resultsPerPage.subscribe(() => this.updateState());

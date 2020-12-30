@@ -23,12 +23,13 @@
 
 ## Properties
 
-| Property              | Attribute               | Description                                               | Type      | Default                                  |
-| --------------------- | ----------------------- | --------------------------------------------------------- | --------- | ---------------------------------------- |
-| `_id`                 | `data-id`               |                                                           | `string`  | `randomID(     'atomic-search-box-'   )` |
-| `enableQuerySyntax`   | `enable-query-syntax`   |                                                           | `boolean` | `false`                                  |
-| `leadingSubmitButton` | `leading-submit-button` | Wether the submit button should be place before the input | `boolean` | `false`                                  |
-| `numberOfSuggestions` | `number-of-suggestions` | Maximum number of suggestions to display                  | `number`  | `5`                                      |
+| Property              | Attribute               | Description                                               | Type                                  | Default                                  |
+| --------------------- | ----------------------- | --------------------------------------------------------- | ------------------------------------- | ---------------------------------------- |
+| `_id`                 | `data-id`               |                                                           | `string`                              | `randomID(     'atomic-search-box-'   )` |
+| `enableQuerySyntax`   | `enable-query-syntax`   |                                                           | `boolean`                             | `false`                                  |
+| `engine`              | --                      |                                                           | `Engine<SearchAppState> \| undefined` | `undefined`                              |
+| `leadingSubmitButton` | `leading-submit-button` | Wether the submit button should be place before the input | `boolean`                             | `false`                                  |
+| `numberOfSuggestions` | `number-of-suggestions` | Maximum number of suggestions to display                  | `number`                              | `5`                                      |
 
 
 ## Slots
@@ -53,6 +54,10 @@
 
 ## Dependencies
 
+### Used by
+
+ - [random-customer-component](../random-customer-component)
+
 ### Depends on
 
 - [atomic-component-error](../atomic-component-error)
@@ -61,6 +66,7 @@
 ```mermaid
 graph TD;
   atomic-search-box --> atomic-component-error
+  random-customer-component --> atomic-search-box
   style atomic-search-box fill:#f9f,stroke:#333,stroke-width:4px
 ```
 

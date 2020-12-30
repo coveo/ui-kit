@@ -138,7 +138,7 @@ export class AtomicSearchInterface {
     event.stopPropagation();
 
     if (this.engine) {
-      event.detail(this.engine);
+      event.detail(this.engine!);
       return;
     }
 

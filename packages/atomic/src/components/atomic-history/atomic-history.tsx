@@ -13,7 +13,7 @@ import {Initialization} from '../../utils/initialization-utils';
   shadow: true,
 })
 export class AtomicHistory {
-  @Prop({mutable: true}) engine!: Engine;
+  @Prop({mutable: true}) engine?: Engine;
   @State() state!: HistoryState;
 
   private history!: History;
@@ -21,7 +21,7 @@ export class AtomicHistory {
 
   @Initialization()
   public initialize() {
-    this.history = buildHistory(this.engine);
+    this.history = buildHistory(this.engine!);
     this.unsubscribe = this.history.subscribe(() => this.updateState());
   }
 

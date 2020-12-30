@@ -7,9 +7,10 @@
 
 ## Properties
 
-| Property  | Attribute | Description | Type     | Default |
-| --------- | --------- | ----------- | -------- | ------- |
-| `context` | `context` |             | `string` | `'{}'`  |
+| Property  | Attribute | Description | Type                                  | Default     |
+| --------- | --------- | ----------- | ------------------------------------- | ----------- |
+| `context` | `context` |             | `string`                              | `'{}'`      |
+| `engine`  | --        |             | `Engine<SearchAppState> \| undefined` | `undefined` |
 
 
 ## Dependencies

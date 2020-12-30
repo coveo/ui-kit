@@ -5,6 +5,13 @@
 <!-- Auto Generated Below -->
 
 
+## Properties
+
+| Property | Attribute | Description | Type                                  | Default     |
+| -------- | --------- | ----------- | ------------------------------------- | ----------- |
+| `engine` | --        |             | `Engine<SearchAppState> \| undefined` | `undefined` |
+
+
 ## Shadow Parts
 
 | Part          | Description                            |

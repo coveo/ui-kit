@@ -18,7 +18,7 @@ import {Initialization} from '../../utils/initialization-utils';
   shadow: true,
 })
 export class AtomicNumericFacet {
-  @Prop({mutable: true}) engine!: Engine;
+  @Prop({mutable: true}) engine?: Engine;
   @Prop({mutable: true}) facetId = '';
   @Prop() field = '';
   @Prop() label = 'No label';
@@ -42,7 +42,7 @@ export class AtomicNumericFacet {
       ],
     };
 
-    this.facet = buildNumericFacet(this.engine, {options});
+    this.facet = buildNumericFacet(this.engine!, {options});
     this.facetId = this.facet.state.facetId;
     this.subscribe();
   }
