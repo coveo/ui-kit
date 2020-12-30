@@ -1,4 +1,4 @@
-import {Component, h, State} from '@stencil/core';
+import {Component, h, Prop, State} from '@stencil/core';
 import {
   Pager,
   PagerState,
@@ -24,9 +24,9 @@ import {Initialization} from '../../utils/initialization-utils';
   shadow: true,
 })
 export class AtomicPager {
+  @Prop({mutable: true}) engine!: Engine;
   @State() state!: PagerState;
 
-  private engine!: Engine;
   private pager!: Pager;
   private unsubscribe: Unsubscribe = () => {};
 

@@ -29,12 +29,12 @@ import mainclear from '../../images/main-clear.svg';
   shadow: true,
 })
 export class AtomicBreadcrumbManager {
-  @State() state!: BreadcrumbManagerState;
-  @State() collapsedBreadcrumbsState: string[] = [];
+  @Prop({mutable: true}) engine!: Engine;
   @Prop() collapseThreshold = 5;
   @Prop() categoryDivider = '/';
+  @State() state!: BreadcrumbManagerState;
+  @State() collapsedBreadcrumbsState: string[] = [];
 
-  private engine!: Engine;
   private breadcrumbManager!: BreadcrumbManager;
   private unsubscribe: Unsubscribe = () => {};
 

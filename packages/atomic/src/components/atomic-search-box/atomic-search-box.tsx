@@ -38,16 +38,16 @@ export interface AtomicSearchBoxOptions {
   shadow: true,
 })
 export class AtomicSearchBox implements AtomicSearchBoxOptions {
-  @Element() host!: HTMLDivElement;
-  @State() searchBoxState!: SearchBoxState;
+  @Prop({mutable: true}) engine!: Engine;
   @Prop() numberOfSuggestions = 5;
   @Prop() enableQuerySyntax = false;
   @Prop() leadingSubmitButton = false;
   @Prop({reflect: true, attribute: 'data-id'}) _id = randomID(
     'atomic-search-box-'
   );
+  @Element() host!: HTMLDivElement;
+  @State() searchBoxState!: SearchBoxState;
 
-  private engine!: Engine;
   private error?: Error;
   private searchBox!: SearchBox;
   private unsubscribe: Unsubscribe = () => {};

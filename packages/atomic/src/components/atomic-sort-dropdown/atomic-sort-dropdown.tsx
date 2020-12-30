@@ -1,4 +1,4 @@
-import {Component, h, State} from '@stencil/core';
+import {Component, h, Prop, State} from '@stencil/core';
 import {
   Sort,
   SortState,
@@ -30,8 +30,8 @@ enum SortOption {
 })
 export class AtomicSortDropdown {
   @State() state!: SortState;
+  @Prop({mutable: true}) engine!: Engine;
 
-  private engine!: Engine;
   private sort!: Sort;
   private unsubscribe: Unsubscribe = () => {};
 

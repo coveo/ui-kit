@@ -1,4 +1,4 @@
-import {Component, h, State} from '@stencil/core';
+import {Component, h, Prop, State} from '@stencil/core';
 import {
   History,
   HistoryState,
@@ -13,9 +13,9 @@ import {Initialization} from '../../utils/initialization-utils';
   shadow: true,
 })
 export class AtomicHistory {
+  @Prop({mutable: true}) engine!: Engine;
   @State() state!: HistoryState;
 
-  private engine!: Engine;
   private history!: History;
   private unsubscribe: Unsubscribe = () => {};
 

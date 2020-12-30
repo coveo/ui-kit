@@ -22,6 +22,7 @@ import {Initialization} from '../../utils/initialization-utils';
   shadow: true,
 })
 export class AtomicResultList {
+  @Prop({mutable: true}) engine!: Engine;
   /**
    * Whether to automatically retrieve an additional page of results and append it to the
    * current results when the user scrolls down to the bottom of element
@@ -39,7 +40,6 @@ export class AtomicResultList {
   @Element() host!: HTMLDivElement;
   @State() state!: ResultListState;
 
-  private engine!: Engine;
   private unsubscribe: Unsubscribe = () => {};
   private resultList!: ResultList;
   private resultTemplatesManager!: ResultTemplatesManager<string>;

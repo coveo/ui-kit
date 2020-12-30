@@ -18,11 +18,11 @@ import {Initialization} from '../../utils/initialization-utils';
   shadow: true,
 })
 export class AtomicTab {
+  @Prop({mutable: true}) engine!: Engine;
   @Prop() expression = '';
   @Prop() isActive = false;
   @State() state!: TabState;
 
-  private engine!: Engine;
   private tab!: Tab;
   private unsubscribe: Unsubscribe = () => {};
 
