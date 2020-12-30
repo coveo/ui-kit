@@ -37,7 +37,20 @@ class App extends React.Component {
 
         {/* Sample Search interface */}
         <atomic-search-interface id="search" sample>
-          <atomic-result-list></atomic-result-list>
+          <atomic-result-list>
+            <atomic-result-template>
+              <hr />
+              <h5>
+                {`{{title}}`}
+              </h5>
+              <p>
+                <atomic-result-value value="excerpt"> </atomic-result-value>
+              </p>
+              <a href="{{clickUri}}">
+                More info
+              </a>
+            </atomic-result-template>
+          </atomic-result-list>
         </atomic-search-interface>
       </div>
     );
