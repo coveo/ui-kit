@@ -22,7 +22,7 @@ import {Initialization} from '../../utils/initialization-utils';
   shadow: true,
 })
 export class AtomicResultList {
-  @Prop({mutable: true}) engine!: Engine;
+  @Prop({mutable: true}) engine?: Engine;
   /**
    * Whether to automatically retrieve an additional page of results and append it to the
    * current results when the user scrolls down to the bottom of element
@@ -51,8 +51,8 @@ export class AtomicResultList {
 
   @Initialization()
   public initialize() {
-    this.resultTemplatesManager = buildResultTemplatesManager(this.engine);
-    this.resultList = buildResultList(this.engine, {
+    this.resultTemplatesManager = buildResultTemplatesManager(this.engine!);
+    this.resultList = buildResultList(this.engine!, {
       options: {fieldsToInclude: this.fields},
     });
     this.unsubscribe = this.resultList.subscribe(() => this.updateState());
@@ -98,7 +98,7 @@ export class AtomicResultList {
         part="list-element"
         class={this.listElementClass}
         result={result}
-        engine={this.engine}
+        engine={this.engine!}
         innerHTML={Mustache.render(
           this.resultTemplatesManager.selectTemplate(result) || '',
           result

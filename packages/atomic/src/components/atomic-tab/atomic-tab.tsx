@@ -18,7 +18,7 @@ import {Initialization} from '../../utils/initialization-utils';
   shadow: true,
 })
 export class AtomicTab {
-  @Prop({mutable: true}) engine!: Engine;
+  @Prop({mutable: true}) engine?: Engine;
   @Prop() expression = '';
   @Prop() isActive = false;
   @State() state!: TabState;
@@ -36,7 +36,7 @@ export class AtomicTab {
         isActive: this.isActive,
       },
     };
-    this.tab = buildTab(this.engine, options);
+    this.tab = buildTab(this.engine!, options);
     this.unsubscribe = this.tab.subscribe(() => this.updateState());
   }
 

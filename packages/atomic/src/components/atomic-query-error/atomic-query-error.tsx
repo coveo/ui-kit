@@ -14,7 +14,7 @@ import {Initialization} from '../../utils/initialization-utils';
   shadow: true,
 })
 export class AtomicQueryError {
-  @Prop({mutable: true}) engine!: Engine;
+  @Prop({mutable: true}) engine?: Engine;
   @State() state!: QueryErrorState;
 
   private queryError!: QueryError;
@@ -22,7 +22,7 @@ export class AtomicQueryError {
 
   @Initialization()
   public initialize() {
-    this.queryError = buildQueryError(this.engine);
+    this.queryError = buildQueryError(this.engine!);
     this.unsubscribe = this.queryError.subscribe(() => this.updateState());
   }
 

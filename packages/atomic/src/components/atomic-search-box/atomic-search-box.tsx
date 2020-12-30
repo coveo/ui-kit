@@ -38,7 +38,7 @@ export interface AtomicSearchBoxOptions {
   shadow: true,
 })
 export class AtomicSearchBox implements AtomicSearchBoxOptions {
-  @Prop({mutable: true}) engine!: Engine;
+  @Prop({mutable: true}) engine?: Engine;
   @Prop() numberOfSuggestions = 5;
   @Prop() enableQuerySyntax = false;
   @Prop() leadingSubmitButton = false;
@@ -82,7 +82,7 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
 
   @Initialization()
   public initialize() {
-    this.searchBox = buildSearchBox(this.engine, {
+    this.searchBox = buildSearchBox(this.engine!, {
       options: {
         numberOfSuggestions: this.numberOfSuggestions,
         highlightOptions: {

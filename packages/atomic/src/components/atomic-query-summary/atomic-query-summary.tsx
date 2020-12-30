@@ -22,7 +22,7 @@ import {Initialization} from '../../utils/initialization-utils';
   shadow: true,
 })
 export class AtomicQuerySummary {
-  @Prop({mutable: true}) engine!: Engine;
+  @Prop({mutable: true}) engine?: Engine;
   @State() state!: QuerySummaryState;
 
   private querySummary!: QuerySummary;
@@ -30,7 +30,7 @@ export class AtomicQuerySummary {
 
   @Initialization()
   public initialize() {
-    this.querySummary = buildQuerySummary(this.engine);
+    this.querySummary = buildQuerySummary(this.engine!);
     this.unsubscribe = this.querySummary.subscribe(() => this.updateState());
   }
 

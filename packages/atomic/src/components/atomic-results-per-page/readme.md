@@ -7,10 +7,11 @@
 
 ## Properties
 
-| Property        | Attribute        | Description                                                    | Type     | Default          |
-| --------------- | ---------------- | -------------------------------------------------------------- | -------- | ---------------- |
-| `initialOption` | `initial-option` | Initial value of the result per page option                    | `number` | `10`             |
-| `options`       | `options`        | List of possible results per page options, separated by commas | `string` | `'10,25,50,100'` |
+| Property        | Attribute        | Description                                                    | Type                                  | Default          |
+| --------------- | ---------------- | -------------------------------------------------------------- | ------------------------------------- | ---------------- |
+| `engine`        | --               |                                                                | `Engine<SearchAppState> \| undefined` | `undefined`      |
+| `initialOption` | `initial-option` | Initial value of the result per page option                    | `number`                              | `10`             |
+| `options`       | `options`        | List of possible results per page options, separated by commas | `string`                              | `'10,25,50,100'` |
 
 
 ## Shadow Parts

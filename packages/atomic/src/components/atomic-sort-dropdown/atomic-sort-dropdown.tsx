@@ -30,7 +30,7 @@ enum SortOption {
 })
 export class AtomicSortDropdown {
   @State() state!: SortState;
-  @Prop({mutable: true}) engine!: Engine;
+  @Prop({mutable: true}) engine?: Engine;
 
   private sort!: Sort;
   private unsubscribe: Unsubscribe = () => {};
@@ -38,7 +38,7 @@ export class AtomicSortDropdown {
   @Initialization()
   public initialize() {
     const initialState: Partial<SortInitialState> = {criterion: this.relevance};
-    this.sort = buildSort(this.engine, {initialState});
+    this.sort = buildSort(this.engine!, {initialState});
 
     this.unsubscribe = this.sort.subscribe(() => this.updateState());
   }

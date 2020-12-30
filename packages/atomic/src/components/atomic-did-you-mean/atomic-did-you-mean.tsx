@@ -14,7 +14,7 @@ import {Initialization} from '../../utils/initialization-utils';
   shadow: true,
 })
 export class AtomicDidYouMean {
-  @Prop({mutable: true}) engine!: Engine;
+  @Prop({mutable: true}) engine?: Engine;
   @State() state!: DidYouMeanState;
 
   private didYouMean!: DidYouMean;
@@ -22,7 +22,7 @@ export class AtomicDidYouMean {
 
   @Initialization()
   public initialize() {
-    this.didYouMean = buildDidYouMean(this.engine);
+    this.didYouMean = buildDidYouMean(this.engine!);
     this.unsubscribe = this.didYouMean.subscribe(() => this.updateState());
   }
 

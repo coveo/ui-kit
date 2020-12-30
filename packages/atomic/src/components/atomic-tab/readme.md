@@ -7,10 +7,11 @@
 
 ## Properties
 
-| Property     | Attribute    | Description | Type      | Default |
-| ------------ | ------------ | ----------- | --------- | ------- |
-| `expression` | `expression` |             | `string`  | `''`    |
-| `isActive`   | `is-active`  |             | `boolean` | `false` |
+| Property     | Attribute    | Description | Type                                  | Default     |
+| ------------ | ------------ | ----------- | ------------------------------------- | ----------- |
+| `engine`     | --           |             | `Engine<SearchAppState> \| undefined` | `undefined` |
+| `expression` | `expression` |             | `string`                              | `''`        |
+| `isActive`   | `is-active`  |             | `boolean`                             | `false`     |
 
 
 ## Shadow Parts

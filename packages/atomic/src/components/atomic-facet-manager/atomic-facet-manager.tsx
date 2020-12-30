@@ -18,7 +18,7 @@ interface FacetElement extends HTMLElement {
   shadow: true,
 })
 export class AtomicFacetManager {
-  @Prop({mutable: true}) engine!: Engine;
+  @Prop({mutable: true}) engine?: Engine;
   @State() state!: FacetManagerState;
   @Element() host!: HTMLDivElement;
   private unsubscribe: Unsubscribe = () => {};
@@ -26,7 +26,7 @@ export class AtomicFacetManager {
 
   @Initialization()
   public initialize() {
-    this.facetManager = buildFacetManager(this.engine);
+    this.facetManager = buildFacetManager(this.engine!);
 
     this.unsubscribe = this.facetManager.subscribe(() => {
       this.updateStateToTriggerRender();

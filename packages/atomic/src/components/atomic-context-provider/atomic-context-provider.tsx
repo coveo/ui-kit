@@ -7,12 +7,12 @@ import {Initialization} from '../../utils/initialization-utils';
   shadow: true,
 })
 export class AtomicContextProvider {
-  @Prop({mutable: true}) engine!: Engine;
+  @Prop({mutable: true}) engine?: Engine;
   @Prop() context = '{}';
 
   @Initialization()
   public initialize() {
-    const context = buildContext(this.engine);
+    const context = buildContext(this.engine!);
     const contextObject = JSON.parse(this.context);
     context.set(contextObject);
   }

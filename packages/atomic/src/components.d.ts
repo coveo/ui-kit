@@ -10,10 +10,10 @@ export namespace Components {
     interface AtomicBreadcrumbManager {
         "categoryDivider": string;
         "collapseThreshold": number;
-        "engine": Engine;
+        "engine"?: Engine;
     }
     interface AtomicCategoryFacet {
-        "engine": Engine;
+        "engine"?: Engine;
         "facetId": string;
         "field": string;
         "label": string;
@@ -23,25 +23,25 @@ export namespace Components {
     }
     interface AtomicContextProvider {
         "context": string;
-        "engine": Engine;
+        "engine"?: Engine;
     }
     interface AtomicDateFacet {
-        "engine": Engine;
+        "engine"?: Engine;
         "facetId": string;
         "field": string;
         "label": string;
     }
     interface AtomicDidYouMean {
-        "engine": Engine;
+        "engine"?: Engine;
     }
     interface AtomicFacet {
-        "engine": Engine;
+        "engine"?: Engine;
         "facetId": string;
         "field": string;
         "label": string;
     }
     interface AtomicFacetManager {
-        "engine": Engine;
+        "engine"?: Engine;
     }
     interface AtomicFieldCondition {
         "conditions": ResultTemplateCondition[];
@@ -52,22 +52,22 @@ export namespace Components {
     interface AtomicFrequentlyBoughtTogether {
     }
     interface AtomicHistory {
-        "engine": Engine;
+        "engine"?: Engine;
     }
     interface AtomicNumericFacet {
-        "engine": Engine;
+        "engine"?: Engine;
         "facetId": string;
         "field": string;
         "label": string;
     }
     interface AtomicPager {
-        "engine": Engine;
+        "engine"?: Engine;
     }
     interface AtomicQueryError {
-        "engine": Engine;
+        "engine"?: Engine;
     }
     interface AtomicQuerySummary {
-        "engine": Engine;
+        "engine"?: Engine;
     }
     interface AtomicRelevanceInspector {
         "engine": Engine;
@@ -83,7 +83,7 @@ export namespace Components {
           * Whether to automatically retrieve an additional page of results and append it to the current results when the user scrolls down to the bottom of element
          */
         "enableInfiniteScroll": boolean;
-        "engine": Engine;
+        "engine"?: Engine;
         "fieldsToInclude": string;
         /**
           * Css class for the list wrapper
@@ -104,7 +104,7 @@ export namespace Components {
         "value": string;
     }
     interface AtomicResultsPerPage {
-        "engine": Engine;
+        "engine"?: Engine;
         /**
           * Initial value of the result per page option
          */
@@ -117,7 +117,7 @@ export namespace Components {
     interface AtomicSearchBox {
         "_id": string;
         "enableQuerySyntax": boolean;
-        "engine": Engine;
+        "engine"?: Engine;
         /**
           * Wether the submit button should be place before the input
          */
@@ -135,10 +135,10 @@ export namespace Components {
         "searchHub": string;
     }
     interface AtomicSortDropdown {
-        "engine": Engine;
+        "engine"?: Engine;
     }
     interface AtomicTab {
-        "engine": Engine;
+        "engine"?: Engine;
         "expression": string;
         "isActive": boolean;
     }
@@ -342,10 +342,10 @@ declare namespace LocalJSX {
     interface AtomicBreadcrumbManager {
         "categoryDivider"?: string;
         "collapseThreshold"?: number;
-        "engine": Engine;
+        "engine"?: Engine;
     }
     interface AtomicCategoryFacet {
-        "engine": Engine;
+        "engine"?: Engine;
         "facetId"?: string;
         "field"?: string;
         "label"?: string;
@@ -355,25 +355,25 @@ declare namespace LocalJSX {
     }
     interface AtomicContextProvider {
         "context"?: string;
-        "engine": Engine;
+        "engine"?: Engine;
     }
     interface AtomicDateFacet {
-        "engine": Engine;
+        "engine"?: Engine;
         "facetId"?: string;
         "field"?: string;
         "label"?: string;
     }
     interface AtomicDidYouMean {
-        "engine": Engine;
+        "engine"?: Engine;
     }
     interface AtomicFacet {
-        "engine": Engine;
+        "engine"?: Engine;
         "facetId"?: string;
         "field"?: string;
         "label"?: string;
     }
     interface AtomicFacetManager {
-        "engine": Engine;
+        "engine"?: Engine;
     }
     interface AtomicFieldCondition {
         "conditions"?: ResultTemplateCondition[];
@@ -383,22 +383,22 @@ declare namespace LocalJSX {
     interface AtomicFrequentlyBoughtTogether {
     }
     interface AtomicHistory {
-        "engine": Engine;
+        "engine"?: Engine;
     }
     interface AtomicNumericFacet {
-        "engine": Engine;
+        "engine"?: Engine;
         "facetId"?: string;
         "field"?: string;
         "label"?: string;
     }
     interface AtomicPager {
-        "engine": Engine;
+        "engine"?: Engine;
     }
     interface AtomicQueryError {
-        "engine": Engine;
+        "engine"?: Engine;
     }
     interface AtomicQuerySummary {
-        "engine": Engine;
+        "engine"?: Engine;
     }
     interface AtomicRelevanceInspector {
         "engine": Engine;
@@ -414,7 +414,7 @@ declare namespace LocalJSX {
           * Whether to automatically retrieve an additional page of results and append it to the current results when the user scrolls down to the bottom of element
          */
         "enableInfiniteScroll"?: boolean;
-        "engine": Engine;
+        "engine"?: Engine;
         "fieldsToInclude"?: string;
         /**
           * Css class for the list wrapper
@@ -433,7 +433,7 @@ declare namespace LocalJSX {
         "value"?: string;
     }
     interface AtomicResultsPerPage {
-        "engine": Engine;
+        "engine"?: Engine;
         /**
           * Initial value of the result per page option
          */
@@ -446,7 +446,7 @@ declare namespace LocalJSX {
     interface AtomicSearchBox {
         "_id"?: string;
         "enableQuerySyntax"?: boolean;
-        "engine": Engine;
+        "engine"?: Engine;
         /**
           * Wether the submit button should be place before the input
          */
@@ -463,10 +463,10 @@ declare namespace LocalJSX {
         "searchHub"?: string;
     }
     interface AtomicSortDropdown {
-        "engine": Engine;
+        "engine"?: Engine;
     }
     interface AtomicTab {
-        "engine": Engine;
+        "engine"?: Engine;
         "expression"?: string;
         "isActive"?: boolean;
     }

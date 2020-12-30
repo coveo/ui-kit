@@ -7,10 +7,11 @@
 
 ## Properties
 
-| Property            | Attribute            | Description | Type     | Default |
-| ------------------- | -------------------- | ----------- | -------- | ------- |
-| `categoryDivider`   | `category-divider`   |             | `string` | `'/'`   |
-| `collapseThreshold` | `collapse-threshold` |             | `number` | `5`     |
+| Property            | Attribute            | Description | Type                                  | Default     |
+| ------------------- | -------------------- | ----------- | ------------------------------------- | ----------- |
+| `categoryDivider`   | `category-divider`   |             | `string`                              | `'/'`       |
+| `collapseThreshold` | `collapse-threshold` |             | `number`                              | `5`         |
+| `engine`            | --                   |             | `Engine<SearchAppState> \| undefined` | `undefined` |
 
 
 ## Shadow Parts
