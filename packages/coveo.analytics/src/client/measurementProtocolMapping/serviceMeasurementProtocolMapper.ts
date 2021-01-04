@@ -1,5 +1,5 @@
-import {Ticket} from '../plugins/svc';
-import {keysOf} from './utils';
+import {Ticket} from '../../plugins/svc';
+import {keysOf} from '../utils';
 
 const ticketKeysMapping: {[key in keyof Ticket]: string} = {
     id: 'svc_ticket_id',
@@ -13,7 +13,7 @@ const ticketKeysMappingValues = keysOf(ticketKeysMapping).map((key) => ticketKey
 const ticketSubKeysMatchGroup = [...ticketKeysMappingValues].join('|');
 const ticketKeyRegex = new RegExp(`^(${ticketSubKeysMatchGroup}$)`);
 
-export const svcActionsKeysMapping: {[name: string]: string} = {
+export const serviceActionsKeysMapping: {[name: string]: string} = {
     svcAction: 'svc_action',
     svcActionData: 'svc_action_data',
 };
@@ -30,4 +30,6 @@ export const convertTicketToMeasurementProtocol = (ticket: Ticket) => {
         }, {});
 };
 
-export const isTicketKey = (key: string) => ticketKeyRegex.test(key);
+const isTicketKey = (key: string) => ticketKeyRegex.test(key);
+
+export const isServiceKey = [isTicketKey];

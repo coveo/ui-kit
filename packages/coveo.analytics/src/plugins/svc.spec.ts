@@ -137,7 +137,6 @@ describe('SVC plugin', () => {
 
     it('should be able to clear all the data', () => {
         svc.setTicket({subject: '🍨', description: 'Some desc'});
-        svc.addImpression({id: '🍦', name: 'impression'});
         svc.clearData();
 
         const result = executeRegisteredHook(SVCPluginEventTypes.event, {});
