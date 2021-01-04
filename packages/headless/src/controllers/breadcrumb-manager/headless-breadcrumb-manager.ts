@@ -156,8 +156,15 @@ export const buildBreadcrumbManager = (
       ...getCategoryFacetBreadcrumbs(),
     ].length;
   }
+
   return {
     ...controller,
+
+    deselectBreadcrumb(
+      value: BreadcrumbValue<BaseFacetValue> | CategoryFacetBreadcrumb
+    ) {
+      value.deselect();
+    },
 
     /**
      * The state of the `BreadcrumbManager` controller.
@@ -238,6 +245,7 @@ export type NumericFacetBreadcrumb = Breadcrumb<NumericFacetValue>;
  * Represents a breadcrumb for a date facet.
  */
 export type DateFacetBreadcrumb = Breadcrumb<DateFacetValue>;
+
 /**
  * Represents a breadcrumb for a category facet.
  */

@@ -82,7 +82,9 @@ export class AtomicBreadcrumbManager {
           part="breadcrumb-button"
           aria-label={`Remove inclusion filter on ${breadcrumbValue.value.value}`}
           class={this.buttonClasses}
-          onClick={breadcrumbValue.deselect}
+          onClick={() =>
+            this.breadcrumbManager.deselectBreadcrumb(breadcrumbValue)
+          }
         >
           {breadcrumbValue.value.value}
           {this.mainClear}
@@ -141,7 +143,9 @@ export class AtomicBreadcrumbManager {
             part="breadcrumb-button"
             aria-label={ariaLabel}
             class={this.buttonClasses}
-            onClick={breadcrumbValue.deselect}
+            onClick={() =>
+              this.breadcrumbManager.deselectBreadcrumb(breadcrumbValue)
+            }
           >
             {breadcrumbValue.value.start} - {breadcrumbValue.value.end}
             {this.mainClear}
@@ -183,7 +187,7 @@ export class AtomicBreadcrumbManager {
           part="breadcrumb-button"
           aria-label={`Remove inclusion filter on ${ariaLabel}`}
           class={this.buttonClasses}
-          onClick={values.deselect}
+          onClick={() => this.breadcrumbManager.deselectBreadcrumb(values)}
         >
           {joinedBreadcrumbs}
           {this.mainClear}

@@ -84,7 +84,7 @@ export namespace Components {
     interface AtomicResultTemplate {
         "conditions": ResultTemplateCondition[];
         "fieldsToInclude"?: string;
-        "getConditions": () => Promise<ResultTemplateCondition[]>;
+        "getConditions": () => Promise<any[]>;
         "getFields": () => Promise<string[]>;
     }
     interface AtomicResultValue {
