@@ -24,11 +24,11 @@
     "test:unit": "jest --testPathIgnorePatterns=src/integration-tests",
     "test:integration": "jest --testPathPattern=src/integration-tests",
     "npm:publish": "npm publish --access public",
-    "doc": "typedoc --tsconfig tsconfig.typedoc.json"
+    "doc": "typedoc --tsconfig tsconfig.typedoc.json"K
   },
   "dependencies": {
     "@coveo/bueno": "^0.1.0",
-    "@reduxjs/toolkit": "^1.4.0",
+    "@reduxjs/toolkit": "^1.4.0",K
     "@types/redux-mock-store": "^1.0.2",
     "coveo.analytics": "^2.16.0",
     "cross-fetch": "^3.0.6",

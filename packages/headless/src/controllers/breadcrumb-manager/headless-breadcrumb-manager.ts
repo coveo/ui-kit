@@ -160,12 +160,6 @@ export const buildBreadcrumbManager = (
   return {
     ...controller,
 
-    deselectBreadcrumb(
-      value: BreadcrumbValue<BaseFacetValue> | CategoryFacetBreadcrumb
-    ) {
-      value.deselect();
-    },
-
     /**
      * The state of the `BreadcrumbManager` controller.
      */
@@ -199,6 +193,16 @@ export const buildBreadcrumbManager = (
     deselectAll: () => {
       dispatch(deselectAllFacets());
       dispatch(executeSearch(logClearBreadcrumbs()));
+    },
+
+    /**
+     * Deselects the provided value
+     * @param value a Breadcrumb Value or a Category Facet Breadcrumb
+     */
+    deselectBreadcrumb(
+        value: BreadcrumbValue<BaseFacetValue> | CategoryFacetBreadcrumb
+    ) {
+      value.deselect();
     },
   };
 };
