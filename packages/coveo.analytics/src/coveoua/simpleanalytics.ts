@@ -2,6 +2,7 @@ import {AnyEventResponse, SendEventArguments, VariableArgumentsPayload} from '..
 import {AnalyticsClient, CoveoAnalyticsClient, Endpoints} from '../client/analytics';
 import {Plugins} from './plugins';
 import {EC} from '../plugins/ec';
+import {SVC} from '../plugins/svc';
 
 export type AvailableActions = keyof CoveoUA;
 
@@ -32,6 +33,7 @@ export class CoveoUA {
 
         if (this.client) {
             this.plugins.register('ec', new EC({client: this.client}));
+            this.plugins.register('svc', new SVC({client: this.client}));
             this.client.registerBeforeSendEventHook((eventType, payload) => ({
                 ...payload,
                 ...this.params,
@@ -100,7 +102,7 @@ export class CoveoUA {
 
 export const coveoua = new CoveoUA();
 
-export const handleOneAnalyticsEvent = (command: string, ...params: any[]): any => {
+export const handleOneAnalyticsEvent = (command: string, ...params: any[]) => {
     const [, trackerName, pluginName, fn] = /^(?:(\w+)\.)?(?:(\w+):)?(\w+)$/.exec(command)!;
 
     const actionFunction = (<any>coveoua)[fn];

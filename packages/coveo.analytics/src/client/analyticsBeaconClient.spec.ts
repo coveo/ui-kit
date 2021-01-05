@@ -27,7 +27,8 @@ describe('AnalyticsBeaconClient', () => {
             baseUrl,
             token,
             visitorIdProvider: {
-                currentVisitorId,
+                getCurrentVisitorId: () => Promise.resolve(currentVisitorId),
+                setCurrentVisitorId: (visitorId) => {},
             },
         });
 
@@ -36,7 +37,7 @@ describe('AnalyticsBeaconClient', () => {
         });
 
         expect(sendBeaconMock).toHaveBeenCalledWith(
-            `${baseUrl}/analytics/custom?access_token=👛&visitorId=${currentVisitorId}`,
+            `${baseUrl}/analytics/custom?access_token=👛&visitorId=${currentVisitorId}&discardVisitInfo=true`,
             jasmine.anything()
         );
         expect(await getSendBeaconFirstCallBlobArgument()).toBe(`customEvent=${encodeURIComponent(`{"wow":"ok"}`)}`);
@@ -49,7 +50,8 @@ describe('AnalyticsBeaconClient', () => {
             baseUrl,
             token,
             visitorIdProvider: {
-                currentVisitorId,
+                getCurrentVisitorId: () => Promise.resolve(currentVisitorId),
+                setCurrentVisitorId: (visitorId) => {},
             },
         });
 
@@ -59,7 +61,7 @@ describe('AnalyticsBeaconClient', () => {
         });
 
         expect(sendBeaconMock).toHaveBeenCalledWith(
-            `${baseUrl}/analytics/collect?visitorId=${currentVisitorId}`,
+            `${baseUrl}/analytics/collect?visitorId=${currentVisitorId}&discardVisitInfo=true`,
             jasmine.anything()
         );
         expect(await getSendBeaconFirstCallBlobArgument()).toBe(
@@ -74,7 +76,10 @@ describe('AnalyticsBeaconClient', () => {
             baseUrl,
             token,
             visitorIdProvider: {
-                currentVisitorId,
+                getCurrentVisitorId: () => {
+                    return Promise.resolve(currentVisitorId);
+                },
+                setCurrentVisitorId: (visitorId) => {},
             },
         });
 
@@ -85,7 +90,7 @@ describe('AnalyticsBeaconClient', () => {
         });
 
         expect(sendBeaconMock).toHaveBeenCalledWith(
-            `${baseUrl}/analytics/collect?visitorId=${currentVisitorId}`,
+            `${baseUrl}/analytics/collect?visitorId=${currentVisitorId}&discardVisitInfo=true`,
             jasmine.anything()
         );
         expect(await getSendBeaconFirstCallBlobArgument()).toBe(

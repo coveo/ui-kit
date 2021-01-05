@@ -2,9 +2,9 @@ import {AnalyticsClientSendEventHook} from '../client/analytics';
 import {ViewEventRequest, EventType} from '../events';
 import {HistoryStore, STORE_KEY} from '../history';
 
-export const enhanceViewEvent: AnalyticsClientSendEventHook = (eventType, payload) => {
+export const enhanceViewEvent: AnalyticsClientSendEventHook = async (eventType, payload) => {
     if (eventType === EventType.view) {
-        addPageViewToHistory(payload.contentIdValue);
+        await addPageViewToHistory(payload.contentIdValue);
         return {
             location: window.location.toString(),
             referrer: document.referrer,
@@ -16,12 +16,12 @@ export const enhanceViewEvent: AnalyticsClientSendEventHook = (eventType, payloa
     return payload;
 };
 
-const addPageViewToHistory = (pageViewValue: string) => {
+const addPageViewToHistory = async (pageViewValue: string) => {
     const store = new HistoryStore();
     const historyElement = {
         name: 'PageView',
         value: pageViewValue,
         time: JSON.stringify(new Date()),
     };
-    store.addElement(historyElement);
+    await store.addElementAsync(historyElement);
 };

@@ -1,15 +1,14 @@
 import {AnalyticsClient} from '../client/analytics';
 import {EventType} from '../events';
 import {uuidv4} from '../client/crypto';
-import {getFormattedLocation} from '../client/location';
 import {
     convertProductToMeasurementProtocol,
     convertImpressionListToMeasurementProtocol,
-} from '../client/measurementProtocolMapper';
+} from '../client/measurementProtocolMapping/commerceMeasurementProtocolMapper';
+import {BasePlugin, BasePluginEventTypes} from './BasePlugin';
 
 export const ECPluginEventTypes = {
-    pageview: 'pageview',
-    event: 'event',
+    ...BasePluginEventTypes,
 };
 
 const allECEventTypes = Object.keys(ECPluginEventTypes).map(
@@ -60,25 +59,15 @@ export interface ImpressionList {
     impressions: BaseImpression[];
 }
 
-export class EC {
-    private client: AnalyticsClient;
-    private uuidGenerator: typeof uuidv4;
+export class EC extends BasePlugin {
     private products: Product[] = [];
     private impressions: Impression[] = [];
-    private action?: string;
-    private actionData: {[name: string]: string} = {};
-    private pageViewId: string;
-    private hasSentFirstPageView?: boolean;
-    private lastLocation: string;
-    private lastReferrer: string;
 
     constructor({client, uuidGenerator = uuidv4}: {client: AnalyticsClient; uuidGenerator?: typeof uuidv4}) {
-        this.client = client;
-        this.uuidGenerator = uuidGenerator;
-        this.pageViewId = uuidGenerator();
-        this.lastLocation = getFormattedLocation(window.location);
-        this.lastReferrer = document.referrer;
+        super({client, uuidGenerator});
+    }
 
+    protected addHooks(): void {
         this.addHooksForPageView();
         this.addHooksForEvent();
         this.addHooksForECEvents();
@@ -92,16 +81,9 @@ export class EC {
         this.impressions.push(impression);
     }
 
-    setAction(action: string, options?: any) {
-        this.action = action;
-        this.actionData = options;
-    }
-
-    clearData() {
+    protected clearPluginData() {
         this.products = [];
         this.impressions = [];
-        this.action = undefined;
-        this.actionData = {};
     }
 
     private addHooksForECEvents() {
@@ -163,15 +145,19 @@ export class EC {
     private getImpressionPayload() {
         const impressionsByList = this.getImpressionsByList();
         return impressionsByList
-            .map(({impressions, ...rest}) => ({
-                ...rest,
-                impressions: impressions
-                    .map((baseImpression) => this.assureBaseImpressionValidity(baseImpression))
-            }) as ImpressionList)
+            .map(
+                ({impressions, ...rest}) =>
+                    ({
+                        ...rest,
+                        impressions: impressions.map((baseImpression) =>
+                            this.assureBaseImpressionValidity(baseImpression)
+                        ),
+                    } as ImpressionList)
+            )
             .reduce((newPayload, impressionList, index) => {
                 return {
                     ...newPayload,
-                    ...convertImpressionListToMeasurementProtocol(impressionList, index),
+                    ...convertImpressionListToMeasurementProtocol(impressionList, index, 'pi'),
                 };
             }, {});
     }
@@ -179,8 +165,9 @@ export class EC {
     private assureProductValidity(product: Product) {
         const {position, ...productRest} = product;
         if (position !== undefined && position < 1) {
-            console.warn(`The position for product '${product.name || product.id}' must be greater `
-                + `than 0 when provided.`);
+            console.warn(
+                `The position for product '${product.name || product.id}' must be greater ` + `than 0 when provided.`
+            );
 
             return productRest;
         }
@@ -191,8 +178,10 @@ export class EC {
     private assureBaseImpressionValidity(baseImpression: BaseImpression) {
         const {position, ...baseImpressionRest} = baseImpression;
         if (position !== undefined && position < 1) {
-            console.warn(`The position for impression '${baseImpression.name || baseImpression.id}'`
-                + ` must be greater than 0 when provided.`);
+            console.warn(
+                `The position for impression '${baseImpression.name || baseImpression.id}'` +
+                    ` must be greater than 0 when provided.`
+            );
 
             return baseImpressionRest;
         }
@@ -211,64 +200,5 @@ export class EC {
             }
             return lists;
         }, [] as ImpressionList[]);
-    }
-
-    private updateStateForNewPageView(payload: any) {
-        if (this.hasSentFirstPageView) {
-            this.pageViewId = this.uuidGenerator();
-            this.lastReferrer = this.lastLocation;
-        }
-
-        if (!!payload.page) {
-            const removeStartingSlash = (page: string) => page.replace(/^\/?(.*)$/, '/$1');
-            const extractHostnamePart = (location: string) =>
-                location
-                    .split('/')
-                    .slice(0, 3)
-                    .join('/');
-            this.lastLocation = `${extractHostnamePart(this.lastLocation)}${removeStartingSlash(payload.page)}`;
-        } else {
-            this.lastLocation = getFormattedLocation(window.location);
-        }
-
-        this.hasSentFirstPageView = true;
-    }
-
-    getLocationInformation(eventType: string, payload: any) {
-        eventType === ECPluginEventTypes.pageview && this.updateStateForNewPageView(payload);
-        return {
-            referrer: this.lastReferrer,
-            location: this.lastLocation,
-        };
-    }
-
-    getDefaultContextInformation(eventType: string) {
-        const pageContext = {
-            hitType: eventType,
-            pageViewId: this.pageViewId,
-        };
-        const documentContext = {
-            title: document.title,
-            encoding: document.characterSet,
-        };
-        const screenContext = {
-            screenResolution: `${screen.width}x${screen.height}`,
-            screenColor: `${screen.colorDepth}-bit`,
-        };
-        const navigatorContext = {
-            language: navigator.language,
-            userAgent: navigator.userAgent,
-        };
-        const eventContext = {
-            time: Date.now().toString(),
-            eventId: this.uuidGenerator(),
-        };
-        return {
-            ...pageContext,
-            ...eventContext,
-            ...screenContext,
-            ...navigatorContext,
-            ...documentContext,
-        };
     }
 }

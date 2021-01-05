@@ -19,7 +19,7 @@ export class AnalyticsBeaconClient implements AnalyticsRequestClient {
 
         const {baseUrl} = this.opts;
         const parsedRequestData = this.encodeForEventType(eventType, payload);
-        const paramsFragments = this.getQueryParamsForEventType(eventType);
+        const paramsFragments = await this.getQueryParamsForEventType(eventType);
         const url = `${baseUrl}/analytics/${eventType}?${paramsFragments}`;
         // tslint:disable-next-line: no-console
         console.log(`Sending beacon for "${eventType}" with: `, JSON.stringify(payload));
@@ -41,12 +41,13 @@ export class AnalyticsBeaconClient implements AnalyticsRequestClient {
               });
     }
 
-    private getQueryParamsForEventType(eventType: EventType): string {
+    private async getQueryParamsForEventType(eventType: EventType): Promise<string> {
         const {token, visitorIdProvider} = this.opts;
-        const visitorId = visitorIdProvider.currentVisitorId;
+        const visitorId = await visitorIdProvider.getCurrentVisitorId();
         return [
             token && this.isEventTypeLegacy(eventType) ? `access_token=${token}` : '',
             visitorId ? `visitorId=${visitorId}` : '',
+            'discardVisitInfo=true',
         ]
             .filter((p) => !!p)
             .join('&');
