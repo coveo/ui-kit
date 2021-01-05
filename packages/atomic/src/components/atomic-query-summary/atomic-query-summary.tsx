@@ -18,7 +18,7 @@ import {Initialization} from '../../utils/initialization-utils';
  */
 @Component({
   tag: 'atomic-query-summary',
-  styleUrl: 'atomic-query-summary.scss',
+  styleUrl: 'atomic-query-summary.css',
   shadow: true,
 })
 export class AtomicQuerySummary {

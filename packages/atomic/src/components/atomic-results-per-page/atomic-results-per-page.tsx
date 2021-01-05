@@ -16,7 +16,7 @@ import {Initialization} from '../../utils/initialization-utils';
  */
 @Component({
   tag: 'atomic-results-per-page',
-  styleUrl: 'atomic-results-per-page.scss',
+  styleUrl: 'atomic-results-per-page.css',
   shadow: true,
 })
 export class AtomicResultsPerPage {
@@ -58,10 +58,9 @@ export class AtomicResultsPerPage {
       const isSelected = this.resultsPerPage.isSetTo(num);
       const className = isSelected ? 'active' : '';
       return (
-        <li class={`page-item ${className}`}>
+        <li class={className}>
           <button
             part={`page-button ${isSelected && 'active-page-button'}`}
-            class="page-link"
             onClick={() => this.resultsPerPage.set(num)}
           >
             {num}
@@ -73,13 +72,9 @@ export class AtomicResultsPerPage {
 
   public render() {
     return (
-      <nav aria-label="Results per page" class="d-flex align-items-center">
-        <span class="mr-3" part="label">
-          Results per page
-        </span>
-        <ul class="pagination mb-0" part="list">
-          {this.optionsList}
-        </ul>
+      <nav aria-label="Results per page">
+        <span part="label">Results per page</span>
+        <ul part="list">{this.optionsList}</ul>
       </nav>
     );
   }
