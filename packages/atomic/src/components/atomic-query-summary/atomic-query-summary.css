@@ -1,7 +1,6 @@
-@import 'utilities';
 /**
  * @prop --atomic-query-summary-highlight-color: Color of the highlight
  */
 strong {
-  color: var(--atomic-query-summary-highlight-color, $primary);
+  color: var(--atomic-query-summary-highlight-color, black);
 }
