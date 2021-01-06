@@ -25,7 +25,7 @@ async function main() {
     const buildCommitHash = await getHeadCommitHash();
     await checkoutLatestMaster();
     const masterCommitHash = await getHeadCommitHash();
-
+    
     if (buildCommitHash !== masterCommitHash) {
       console.log(
         'Build commit does not match latest master commit. Skipping graduate.'

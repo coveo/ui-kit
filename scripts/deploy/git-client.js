@@ -31,7 +31,3 @@ export async function checkoutLatestMaster() {
   await exec('git checkout master');
   await exec('git pull origin master');
 }
-
-export async function createBranch(branchName) {
-  await exec(`git checkout -b ${branchName}`)
-}

@@ -40,7 +40,7 @@
     {
       "id": "graduate-release",
       "team_jenkins": {
-        "disabled": false,
+        "disabled": true,
         "job_name": "test-deploy-npm",
         "extra_parameters": {"COMMIT_HASH": "$[COMMIT_HASH]", "VERSION": "$[VERSION]"},
         "qa": {
