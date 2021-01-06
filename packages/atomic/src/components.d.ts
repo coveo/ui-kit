@@ -113,6 +113,7 @@ export namespace Components {
         "numberOfSuggestions": number;
     }
     interface AtomicSearchInterface {
+        "afterInitialization": (callback: (engine: Engine) => void) => Promise<void>;
         "initialize": (options: Pick<HeadlessConfigurationOptions, 'accessToken' | 'organizationId' | 'renewAccessToken' | 'platformUrl'>) => Promise<void>;
         "logLevel"?: LogLevel;
         "pipeline": string;

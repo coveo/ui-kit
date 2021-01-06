@@ -39,11 +39,20 @@ export class AtomicSearchInterface {
   private unsubscribe: Unsubscribe = () => {};
   private hangingComponentsInitialization: InitializeEvent[] = [];
   private initialized = false;
+  private afterInitializationCallback: (engine: Engine) => void = () => {};
 
   componentWillLoad() {
     if (this.sample) {
       this.initialize(HeadlessEngine.getSampleConfiguration());
     }
+  }
+
+  @Method() async afterInitialization(callback: (engine: Engine) => void) {
+    if (this.initialized) {
+      callback(this.engine!);
+      return;
+    }
+    this.afterInitializationCallback = callback;
   }
 
   disconnectedCallback() {
@@ -74,6 +83,7 @@ export class AtomicSearchInterface {
     });
 
     this.initialized = true;
+    this.afterInitializationCallback(this.engine!);
   }
 
   private initEngine(config: HeadlessConfigurationOptions) {
