@@ -1,6 +1,10 @@
 node('linux && docker') {
   checkout scm
 
+  parameters {
+    string(name: 'VERSION')
+  }
+
   withEnv(['npm_config_cache=npm-cache', 'CI=true']) {
     withDockerContainer(image: 'node:14', args: '-u=root') {
       stage('Setup') {
@@ -9,7 +13,7 @@ node('linux && docker') {
 
       withDockerContainer(image: 'node:14', args: '-u=root') {
         stage('Graduate') {
-         print "GRADUATE SCRIPT"
+         print "GRADUATE SCRIPT VERSION = ${params.VERSION}"
         }
 
         stage('Npm publish') {

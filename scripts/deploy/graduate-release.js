@@ -3,7 +3,6 @@ const {
   authenticateGitClient,
   getHeadCommitHash,
   checkoutLatestMaster,
-  getHeadCommitTag,
 } = require('./git-client');
 const exec = promisify(require('child_process').exec);
 
@@ -29,15 +28,8 @@ async function main() {
 
     if (buildCommitHash !== masterCommitHash) {
       console.log(
-        'Build commit does not match latest master commit. Skipping version bump.'
+        'Build commit does not match latest master commit. Skipping graduate.'
       );
-      return;
-    }
-
-    const headCommitTag = await getHeadCommitTag();
-
-    if (headCommitTag) {
-      console.log('Build commit is tagged. Skipping version bump.');
       return;
     }
 
