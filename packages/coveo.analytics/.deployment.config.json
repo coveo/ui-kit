@@ -1,0 +1,102 @@
+{
+    "product": "coveo-analytics-js",
+    "team_name": "commerce",
+    "general": {
+        "environments_order": {
+            "sequential": ["dev", "prd"]
+        },
+        "notifications": {
+            "slack_channels": ["commerceteambuilds"]
+        },
+        "team_jenkins": "commerceteambuilds",
+        "start_environment_automatically": true
+    },
+    "package_rollout": {
+        "only_consider_changesets_after": "688b6873442721d61e2a0ac492b9da808ddb0ef0"
+    },
+    "veracode": {
+        "no_scan": true
+    },
+    "observatory": {
+        "no_endpoint": true
+    },
+    "snyk": {
+        "org": "coveo-commerce",
+        "no_container_images": true,
+        "no_dependencies": true,
+        "configurations": [
+            {
+                "project_name": "coveo.analytics.js"
+            }
+        ]
+    },
+    "ordered_phases": [
+        {
+            "id": "deploy-major-minor-patch",
+            "s3": {
+                "bucket": "coveo-ndev-coveoanalytics",
+                "directory": "coveo.analytics.js/$[PACKAGE_JSON_MAJOR_MINOR_PATCH_VERSION]",
+                "parameters": {
+                    "include": ".*",
+                    "metadata": "X-Frame-Options=deny,X-Content-Type-Options=nosniff",
+                    "content-encoding": "gzip"
+                },
+                "source": "deploy",
+                "prd": {
+                    "bucket": "coveo-public-content",
+                    "parameters": {
+                        "include": ".*",
+                        "metadata": "X-Frame-Options=deny,X-Content-Type-Options=nosniff",
+                        "content-encoding": "gzip",
+                        "acl": "public_read"
+                    }
+                }
+            }
+        },
+        {
+            "id": "deploy-major-minor",
+            "s3": {
+                "bucket": "coveo-ndev-coveoanalytics",
+                "directory": "coveo.analytics.js/$[PACKAGE_JSON_MAJOR_MINOR_VERSION]",
+                "parameters": {
+                    "include": ".*",
+                    "metadata": "X-Frame-Options=deny,X-Content-Type-Options=nosniff",
+                    "content-encoding": "gzip"
+                },
+                "source": "deploy",
+                "prd": {
+                    "bucket": "coveo-public-content",
+                    "parameters": {
+                        "include": ".*",
+                        "metadata": "X-Frame-Options=deny,X-Content-Type-Options=nosniff",
+                        "content-encoding": "gzip",
+                        "acl": "public_read"
+                    }
+                }
+            }
+        },
+        {
+            "id": "deploy-major",
+            "s3": {
+                "bucket": "coveo-ndev-coveoanalytics",
+                "directory": "coveo.analytics.js/$[PACKAGE_JSON_MAJOR_VERSION]",
+                "parameters": {
+                    "include": ".*",
+                    "metadata": "X-Frame-Options=deny,X-Content-Type-Options=nosniff",
+                    "content-encoding": "gzip"
+                },
+                "source": "deploy",
+                "prd": {
+                    "bucket": "coveo-public-content",
+                    "parameters": {
+                        "include": ".*",
+                        "metadata": "X-Frame-Options=deny,X-Content-Type-Options=nosniff",
+                        "content-encoding": "gzip",
+                        "acl": "public_read"
+                    }
+                }
+            }
+        }
+    ],
+    "deployment_config_version": 1
+}

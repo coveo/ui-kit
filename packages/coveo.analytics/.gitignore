@@ -12,3 +12,4 @@ dist_test
 .nyc_output
 node_modules
 coverage
+deploy

@@ -12,9 +12,10 @@
         "build": "rollup -c",
         "start": "rollup -c -w --environment SERVE",
         "test": "jest --clearCache && jest --coverage",
+        "prepare-deploy": "mkdir -p deploy && cp dist/coveoua.js dist/coveoua.js.map deploy",
         "clean": "rimraf -rf dist dist_test coverage"
     },
-    "author": "Pierre-Alexandre St-Jean <pastjean@coveo.com>",
+    "author": "Coveo",
     "repository": {
         "type": "git",
         "url": "https://github.com/coveo/coveo.analytics.js.git"
