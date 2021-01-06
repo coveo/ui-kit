@@ -11,16 +11,14 @@ node('linux && docker') {
         sh 'npm run setup'
       }
 
-      withDockerContainer(image: 'node:14', args: '-u=root') {
-        stage('Graduate') {
-         print "GRADUATE SCRIPT VERSION = ${params.VERSION}"
-        }
+      stage('Graduate') {
+        print "GRADUATE SCRIPT VERSION = ${params.VERSION}"
+      }
 
-        stage('Npm publish') {
-          withCredentials([
-          string(credentialsId: 'NPM_TOKEN', variable: 'NPM_TOKEN')]) {
-            print "PUBLISH"
-          }
+      stage('Npm publish') {
+        withCredentials([
+        string(credentialsId: 'NPM_TOKEN', variable: 'NPM_TOKEN')]) {
+          print "PUBLISH"
         }
       }
     }
