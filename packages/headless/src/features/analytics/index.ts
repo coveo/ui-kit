@@ -36,6 +36,7 @@ import {
   logFacetClearAll as logFacetClearAllAlias,
   logFacetSearch as logFacetSearchAlias,
   logFacetUpdateSort as logFacetUpdateSortAlias,
+  logFacetBreadcrumb as logFacetBreadcrumbAlias,
 } from '../facets/facet-set/facet-set-analytics-actions';
 export namespace FacetAnalyticsActions {
   export const logFacetShowMore = logFacetShowMoreAlias;
@@ -45,11 +46,27 @@ export namespace FacetAnalyticsActions {
   export const logFacetClearAll = logFacetClearAllAlias;
   export const logFacetSearch = logFacetSearchAlias;
   export const logFacetUpdateSort = logFacetUpdateSortAlias;
+  export const logFacetBreadcrumb = logFacetBreadcrumbAlias;
 }
 
 import {logClearBreadcrumbs as logClearBreadcrumbsAlias} from '../facets/generic/facet-generic-analytics-actions';
 export namespace FacetGenericAnalyticsActions {
   export const logClearBreadcrumbs = logClearBreadcrumbsAlias;
+}
+
+import {logDateFacetBreadcrumb as logDateFacetBreadcrumbAlias} from '../facets/range-facets/date-facet-set/date-facet-analytics-actions';
+export namespace DateFacetAnalyticsActions {
+  export const logDateFacetBreadcrumb = logDateFacetBreadcrumbAlias;
+}
+
+import {logNumericFacetBreadcrumb as logNumericFacetBreadcrumbAlias} from '../facets/range-facets/numeric-facet-set/numeric-facet-analytics-actions';
+export namespace NumericFacetAnalyticsActions {
+  export const logNumericFacetBreadcrumb = logNumericFacetBreadcrumbAlias;
+}
+
+import {logCategoryFacetBreadcrumb as logCategoryFacetBreadcrumbAlias} from '../facets/category-facet-set/category-facet-set-analytics-actions';
+export namespace CategoryFacetAnalyticsActions {
+  export const logCategoryFacetBreadcrumb = logCategoryFacetBreadcrumbAlias;
 }
 
 import {

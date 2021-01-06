@@ -2,19 +2,19 @@ import {createAction} from '@reduxjs/toolkit';
 import {SpecificFacetSearchResult} from '../../../../api/search/facet-search/specific-facet-search/specific-facet-search-response';
 import {FacetSearchOptions} from '../facet-search-request-options';
 import {RecordValue, NumberValue} from '@coveo/bueno';
+import {facetIdDefinition} from '../../generic/facet-actions-validation';
 import {
-  facetIdDefinition,
-  requiredNonEmptyString,
-} from '../../generic/facet-actions-validation';
-import {validatePayload} from '../../../../utils/validate-payload';
+  validatePayload,
+  requiredEmptyAllowedString,
+} from '../../../../utils/validate-payload';
 import {facetSearchOptionsDefinition} from '../generic/generic-facet-search-validate-payload';
 
 const selectFacetSearchResultPayloadDefinition = {
   facetId: facetIdDefinition,
   value: new RecordValue({
     values: {
-      displayValue: requiredNonEmptyString,
-      rawValue: requiredNonEmptyString,
+      displayValue: requiredEmptyAllowedString,
+      rawValue: requiredEmptyAllowedString,
       count: new NumberValue({required: true, min: 0}),
     },
   }),

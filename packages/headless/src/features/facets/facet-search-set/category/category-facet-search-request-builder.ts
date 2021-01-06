@@ -8,7 +8,7 @@ export const buildCategoryFacetSearchRequest = (
   state: StateNeededForCategoryFacetSearch
 ): CategoryFacetSearchRequest => {
   const options = state.categoryFacetSearchSet[id].options;
-  const categoryFacet = state.categoryFacetSet[id];
+  const categoryFacet = state.categoryFacetSet[id]!.request;
 
   const {captions, query, numberOfValues} = options;
   const {field, delimitingCharacter, basePath} = categoryFacet;

@@ -63,7 +63,7 @@ node('linux && docker') {
     //    withCredentials([
     //    string(credentialsId: 'NPM_TOKEN', variable: 'NPM_TOKEN')]) {
     //      sh "echo //registry.npmjs.org/:_authToken=${NPM_TOKEN} > ~/.npmrc"
-    //      sh 'npm run npm:publish || true'
+    //      sh 'npm run npm:publish:alpha || true'
     //    }
     //  }
     //}

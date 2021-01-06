@@ -43,25 +43,29 @@ export function buildRangeFacet<
 
   return {
     ...controller,
-    /** Logs a deselect (select) value event when the passed value is active (idle), and executes a search.*/
+    /**
+     * Toggles the specified facet value.
+     * @param selection The facet value to toggle.
+     */
     toggleSelect: (selection: RangeFacetValue) =>
       dispatch(executeToggleRangeFacetSelect({facetId, selection})),
 
-    /** Returns `true` if the passed value is selected, and `false` otherwise.
-     * @param facetValue The facet value to check.
-     * @returns boolean.
+    /**
+     * Checks whether the specified facet value is selected.
+     * @param selection The facet value to check.
+     * @returns Whether the specified facet value is selected.
      */
     isValueSelected: isRangeFacetValueSelected,
 
-    /** Deselects all facet values.*/
+    /** Deselects all facet values. */
     deselectAll() {
       dispatch(deselectAllFacetValues(facetId));
       dispatch(updateFacetOptions({freezeFacetOrder: true}));
       dispatch(executeSearch(logFacetClearAll(facetId)));
     },
 
-    /** Sorts the facet values according to the passed criterion.
-     * @param {RangeFacetSortCriterion} criterion The criterion to sort values by.
+    /** Sorts the facet values according to the specified criterion.
+     * @param criterion The criterion to sort values by.
      */
     sortBy(criterion: RangeFacetSortCriterion) {
       dispatch(updateRangeFacetSortCriterion({facetId, criterion}));
@@ -70,14 +74,15 @@ export function buildRangeFacet<
     },
 
     /**
-     * Returns `true` if the facet values are sorted according to the passed criterion and `false` otherwise.
-     * @param {FacetSortCriterion} criterion The criterion to compare.
+     * Checks whether the facet values are sorted according to the specified criterion.
+     * @param criterion The criterion to compare.
+     * @returns Whether the facet values are sorted according to the specified criterion.
      */
     isSortedBy(criterion: RangeFacetSortCriterion) {
       return this.state.sortCriterion === criterion;
     },
 
-    /** @returns The state of the `RangeFacet` controller.*/
+    /** The state of the `RangeFacet` controller.*/
     get state() {
       const request = getRequest();
       const response = baseFacetResponseSelector(engine.state, facetId) as
@@ -92,10 +97,15 @@ export function buildRangeFacet<
       );
 
       return {
+        /** The facet id. */
         facetId,
+        /** The values of the facet. */
         values,
+        /** The active sortCriterion of the facet. */
         sortCriterion,
+        /** `true` if there is at least one non-idle value and `false` otherwise. */
         hasActiveValues,
+        /** `true` if a search is in progress and `false` otherwise. */
         isLoading,
       };
     },

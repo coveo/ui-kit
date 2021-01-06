@@ -1,5 +1,5 @@
 import pino, {Logger} from 'pino';
-import {buildMockCategoryFacetRequest} from '../../../test/mock-category-facet-request';
+import {buildMockCategoryFacetSlice} from '../../../test/mock-category-facet-slice';
 import {buildMockDateFacetRequest} from '../../../test/mock-date-facet-request';
 import {buildMockFacetRequest} from '../../../test/mock-facet-request';
 import {buildMockNumericFacetRequest} from '../../../test/mock-numeric-facet-request';
@@ -86,7 +86,7 @@ describe('#generateFacetId', () => {
     const numericFacetSet = {[`${prefix}1`]: buildMockNumericFacetRequest()};
     const dateFacetSet = {[`${prefix}2`]: buildMockDateFacetRequest()};
     const categoryFacetSet = {
-      [`${prefix}3`]: buildMockCategoryFacetRequest(),
+      [`${prefix}3`]: buildMockCategoryFacetSlice(),
     };
 
     config.state = {

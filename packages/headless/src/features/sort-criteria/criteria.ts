@@ -1,7 +1,7 @@
 import {isArray} from '@coveo/bueno';
 
 /**
- * The available sort order
+ * The available sort orders.
  */
 export enum SortOrder {
   Ascending = 'ascending',
@@ -9,23 +9,23 @@ export enum SortOrder {
 }
 
 /**
- * The available criteria that can be used to sort query results
+ * The available criteria that can be used to sort query results.
  */
 export enum SortBy {
   /**
-   * Uses standard index ranking factors (adjacency, TDIDF) and custom ranking expressions (QREs and QRFs) to compute a ranking score for each query result item, and sort the query results by descending score value.
+   * Uses standard index ranking factors (adjacency, TDIDF) and custom ranking expressions (QREs and QRFs) to compute a ranking score for each query result item, and sorts the query results by descending score value.
    */
   Relevancy = 'relevancy',
   /**
-   * Uses only custom ranking expressions (QREs and QRFs) to compute a ranking score for each query result item, and sort the query results by descending score value.
+   * Uses only custom ranking expressions (QREs and QRFs) to compute a ranking score for each query result item, and sorts the query results by descending score value.
    */
   QRE = 'qre',
   /**
-   * date ascending/date descending: Uses the date field to sort the query results. This field typically contains the last modification date of each item.
+   * Uses the date field to sort the query results. This field typically contains the last modification date of each item. May be in ascending or descending order.
    */
   Date = 'date',
   /**
-   * @[field] ascending/@[field] descending: Sorts using the value of a specific sortable field (replace [field] by the target field name).
+   * Uses the value of a specific sortable field to sort the query results. May be in ascending or descending order.
    */
   Field = 'field',
   /**
@@ -35,26 +35,27 @@ export enum SortBy {
 }
 
 /**
- * Use standard index ranking factors (adjacency, TDIDF) and custom ranking expressions (QREs and QRFs) to compute a ranking score for each query result item, and sort the query results by descending score value.
+ * Uses standard index ranking factors (adjacency, TDIDF) and custom ranking expressions (QREs and QRFs) to compute a ranking score for each query result item, and sorts the query results by descending score value.
  */
 export type SortByRelevancy = {by: SortBy.Relevancy};
 /**
- * Use only custom ranking expressions (QREs and QRFs) to compute a ranking score for each query result item, and sort the query results by descending score value.
+ * Uses only custom ranking expressions (QREs and QRFs) to compute a ranking score for each query result item, and sorts the query results by descending score value.
  */
 export type SortByQRE = {by: SortBy.QRE};
 /**
- * date ascending/date descending: Use the date field to sort the query results. This field typically contains the last modification date of each item.
+ * Uses the date field to sort the query results. This field typically contains the last modification date of each item. May be in ascending or descending order.
  */
 export type SortByDate = {by: SortBy.Date; order: SortOrder};
 /**
- * @[field] ascending/@[field] descending: Sort using the value of a specific sortable field (replace [field] by the target field name).
+ * Uses the value of a specific sortable field to sort the query results. May be in ascending or descending order.
  */
 export type SortByField = {by: SortBy.Field; field: string; order: SortOrder};
 /**
- * Do not sort the query results; the index will return result items in an essentially random order.
+ * Does not sort the query results; the index will return result items in an essentially random order.
  */
 export type SortByNoSort = {by: SortBy.NoSort};
 
+/** Represents a criterion that can be used to sort query results. */
 export type SortCriterion =
   | SortByRelevancy
   | SortByQRE
@@ -63,8 +64,8 @@ export type SortCriterion =
   | SortByNoSort;
 
 /**
- * Allows to build a sort expression that can be understood and executed by the Coveo platform.
- * @param {SortCriterion} criterion The criterion to translate to a valid sort query expression.
+ * Builds a sort expression that can be understood and executed by the Coveo Platform.
+ * @param criterion The criterion to translate to a valid sort query expression.
  */
 export const buildCriterionExpression = (
   criterion: SortCriterion | SortCriterion[]
@@ -89,17 +90,17 @@ export const buildCriterionExpression = (
 };
 
 /**
- * Utility function that builds a valid sort by relevancy criterion.
- * @returns {SortByRelevancy} The sort by relevancy criterion.
+ * Utility function that builds a valid `SortByRelevancy` criterion.
+ * @returns A `SortByRelevancy` criterion.
  */
 export const buildRelevanceSortCriterion = (): SortByRelevancy => ({
   by: SortBy.Relevancy,
 });
 
 /**
- * Utility function that builds a valid sort by date criterion.
- * @param {SortOrder} order The order (ascending/descending) on which to sort.
- * @returns {SortByDate} The sort by date criterion.
+ * Utility function that builds a valid `SortByDate` criterion.
+ * @param order The order (ascending/descending) on which to sort.
+ * @returns A `SortByDate` criterion.
  */
 export const buildDateSortCriterion = (order: SortOrder): SortByDate => ({
   by: SortBy.Date,
@@ -107,10 +108,10 @@ export const buildDateSortCriterion = (order: SortOrder): SortByDate => ({
 });
 
 /**
- * Utility function that builds a valid sort by field criterion.
- * @param {string} field The sortable field on which to sort.
- * @param {SortOrder} order The order (descending/descending) on which to sort.
- * @returns {SortByField} The sort by field criterion.
+ * Utility function that builds a valid `SortByField` criterion.
+ * @param field The sortable field on which to sort.
+ * @param order The order (ascending/descending) on which to sort.
+ * @returns A `SortByField` criterion.
  */
 export const buildFieldSortCriterion = (
   field: string,
@@ -122,15 +123,15 @@ export const buildFieldSortCriterion = (
 });
 
 /**
- * Utility function that builds a valid sort by QRE criterion.
- * @returns {SortByQRE} The sort by QRE criterion.
+ * Utility function that builds a valid `SortByQRE` criterion.
+ * @returns A `SortByQRE` criterion.
  */
 export const buildQueryRankingExpressionSortCriterion = (): SortByQRE => ({
   by: SortBy.QRE,
 });
 
 /**
- * Utility function that builds a valid no sort criterion.
- * @returns {SortByNoSort} The sort by "no sort" criterion.
+ * Utility function that builds a valid `SortByNoSort` criterion.
+ * @returns A `SortByNoSort` criterion.
  */
 export const buildNoSortCriterion = (): SortByNoSort => ({by: SortBy.NoSort});

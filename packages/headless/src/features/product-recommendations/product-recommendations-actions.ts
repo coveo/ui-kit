@@ -10,7 +10,10 @@ import {
   ProductRecommendationsSection,
   ContextSection,
 } from '../../state/state-sections';
-import {validatePayload} from '../../utils/validate-payload';
+import {
+  validatePayload,
+  requiredNonEmptyString,
+} from '../../utils/validate-payload';
 import {ArrayValue, NumberValue, StringValue} from '@coveo/bueno';
 import {getVisitorID, historyStore} from '../../api/analytics/analytics';
 import {ProductRecommendationsRequest} from '../../api/search/product-recommendations/product-recommendations-request';
@@ -34,7 +37,7 @@ export const setProductRecommendationsRecommenderId = createAction(
   'productrecommendations/setId',
   (payload: {id: string}) =>
     validatePayload(payload, {
-      id: new StringValue({required: true, emptyAllowed: false}),
+      id: requiredNonEmptyString,
     })
 );
 

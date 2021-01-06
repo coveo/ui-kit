@@ -18,6 +18,7 @@
 
  - [atomic-breadcrumb-manager](../atomic-breadcrumb-manager)
  - [atomic-category-facet](../atomic-category-facet)
+ - [atomic-context-provider](../atomic-context-provider)
  - [atomic-date-facet](../atomic-date-facet)
  - [atomic-did-you-mean](../atomic-did-you-mean)
  - [atomic-facet](../atomic-facet)
@@ -39,6 +40,7 @@
 graph TD;
   atomic-breadcrumb-manager --> atomic-component-error
   atomic-category-facet --> atomic-component-error
+  atomic-context-provider --> atomic-component-error
   atomic-date-facet --> atomic-component-error
   atomic-did-you-mean --> atomic-component-error
   atomic-facet --> atomic-component-error

@@ -23,6 +23,10 @@ export function isSearchApiDate(date: string) {
   return formatForSearchApi(dayjs(date)) === date;
 }
 
+/** Creates a `DateRangeRequest`.
+ * @param config The options with which to create a `DateRangeRequest`.
+ * @returns A new `DateRangeRequest`.
+ */
 export function buildDateRange(config: DateRangeOptions): DateRangeRequest {
   const start = buildDate(config.start, config);
   const end = buildDate(config.end, config);
