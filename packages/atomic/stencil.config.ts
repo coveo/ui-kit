@@ -4,6 +4,12 @@ import path from 'path';
 import html from 'rollup-plugin-html';
 import {inlineSvg} from 'stencil-inline-svg';
 
+import {postcss} from '@stencil/postcss';
+import tailwind from 'tailwindcss';
+import autoprefixer from 'autoprefixer';
+import nano from 'cssnano';
+import atImport from 'postcss-import';
+
 const isDevWatch: boolean =
   process.argv &&
   process.argv.indexOf('--dev') > -1 &&
@@ -12,6 +18,7 @@ const isDevWatch: boolean =
 export const config: Config = {
   namespace: 'atomic',
   taskQueue: 'async',
+  globalStyle: 'src/globals/tailwind.pcss',
   outputTargets: [
     {
       type: 'dist',
@@ -36,7 +43,17 @@ export const config: Config = {
   devServer: {
     reloadStrategy: 'pageReload',
   },
-  plugins: [inlineSvg()],
+  plugins: [
+    inlineSvg(),
+    postcss({
+      plugins: [
+        tailwind({config: 'tailwind.config.js'}),
+        autoprefixer(),
+        nano(),
+      ],
+      injectGlobalPaths: ['src/globals/tailwind.pcss'],
+    }),
+  ],
   rollupPlugins: {
     before: [
       isDevWatch &&

@@ -25,7 +25,7 @@ enum SortOption {
  */
 @Component({
   tag: 'atomic-sort-dropdown',
-  styleUrl: 'atomic-sort-dropdown.css',
+  styleUrl: 'atomic-sort-dropdown.pcss',
   shadow: true,
 })
 export class AtomicSortDropdown {

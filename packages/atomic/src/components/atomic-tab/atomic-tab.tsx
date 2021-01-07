@@ -14,7 +14,7 @@ import {Initialization} from '../../utils/initialization-utils';
  */
 @Component({
   tag: 'atomic-tab',
-  styleUrl: 'atomic-tab.css',
+  styleUrl: 'atomic-tab.pcss',
   shadow: true,
 })
 export class AtomicTab {
@@ -63,7 +63,7 @@ export class AtomicTab {
       <span {...activePart}>
         <button
           part="tab-button"
-          class={activeClass}
+          class={'bg-yellow-500 rounded w-1/2' + activeClass}
           onClick={() => this.handleClick()}
         >
           <slot />
