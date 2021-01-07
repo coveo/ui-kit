@@ -1,5 +1,7 @@
 .DS_STORE
 .idea
+.gitignore
+.prettierignore
 
 # Package management
 node_modules
@@ -12,3 +14,6 @@ dist_test
 .nyc_output
 node_modules
 coverage
+deploy
+Jenkinsfile
+*.sh
