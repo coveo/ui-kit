@@ -200,7 +200,7 @@ export const buildBreadcrumbManager = (
      * @param value a Breadcrumb Value or a Category Facet Breadcrumb
      */
     deselectBreadcrumb(
-        value: BreadcrumbValue<BaseFacetValue> | CategoryFacetBreadcrumb
+      value: BreadcrumbValue<BaseFacetValue> | CategoryFacetBreadcrumb
     ) {
       value.deselect();
     },
