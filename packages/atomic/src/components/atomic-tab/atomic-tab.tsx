@@ -63,7 +63,7 @@ export class AtomicTab {
       <span {...activePart}>
         <button
           part="tab-button"
-          class={activeClass}
+          class={'p-2 bg-primary border-none h-1/2' + activeClass}
           onClick={() => this.handleClick()}
         >
           <slot />

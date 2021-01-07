@@ -3,6 +3,8 @@ import alias from '@rollup/plugin-alias';
 import path from 'path';
 import html from 'rollup-plugin-html';
 import {inlineSvg} from 'stencil-inline-svg';
+import stencilTailwind from 'stencil-tailwind';
+import tailwind from 'tailwindcss';
 
 const isDevWatch: boolean =
   process.argv &&
@@ -12,6 +14,7 @@ const isDevWatch: boolean =
 export const config: Config = {
   namespace: 'atomic',
   taskQueue: 'async',
+  globalStyle: './src/globals/theme.css',
   outputTargets: [
     {
       type: 'dist',
@@ -36,7 +39,12 @@ export const config: Config = {
   devServer: {
     reloadStrategy: 'pageReload',
   },
-  plugins: [inlineSvg()],
+  plugins: [
+    inlineSvg(),
+    stencilTailwind({
+      tailwind: tailwind('./tailwind.config.js'),
+    }),
+  ],
   rollupPlugins: {
     before: [
       isDevWatch &&

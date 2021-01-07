@@ -49,7 +49,10 @@
     "puppeteer": "5.5.0",
     "rollup": "^2.18.2",
     "rollup-plugin-html": "^0.2.1",
-    "rollup-plugin-typescript2": "^0.27.0"
+    "rollup-plugin-typescript2": "^0.27.0",
+    "stencil-tailwind": "^0.0.6",
+    "tailwindcss": "^2.0.2",
+    "postcss-import": "^14.0.0"
   },
   "license": "Apache-2.0"
 }
