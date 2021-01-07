@@ -23,9 +23,6 @@ export interface AtomicSearchBoxOptions {
 }
 
 /**
- * @slot submit-button - Content of the submit button
- * @slot clear-button - Content of the input's clear button
- *
  * @part submit-button - The search box submit button
  * @part input - The search box input
  * @part clear-button - The search box input's clear button
@@ -126,7 +123,7 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
         part="submit-button"
         onClick={() => this.searchBox.submit()}
       >
-        <slot name="submit-button">{this.i18n.t('search')}</slot>
+        {this.i18n.t('search')}
       </button>
     );
   }
@@ -145,7 +142,7 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
           this.inputRef.focus();
         }}
       >
-        <slot name="clear-button">Clear</slot>
+        {this.i18n.t('clear')}
       </button>
     );
   }
