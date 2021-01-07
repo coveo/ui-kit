@@ -6,6 +6,7 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { Engine, HeadlessConfigurationOptions, LogLevel, Result, ResultTemplateCondition } from "@coveo/headless";
+import { i18n } from "i18next";
 export namespace Components {
     interface AtomicBreadcrumbManager {
         "categoryDivider": string;
@@ -113,7 +114,9 @@ export namespace Components {
         "numberOfSuggestions": number;
     }
     interface AtomicSearchInterface {
-        "afterInitialization": (callback: (engine: Engine) => void) => Promise<void>;
+        "afterInitialization": (callback: () => void) => Promise<void>;
+        "engine"?: Engine;
+        "i18n": i18n;
         "initialize": (options: Pick<HeadlessConfigurationOptions, 'accessToken' | 'organizationId' | 'renewAccessToken' | 'platformUrl'>) => Promise<void>;
         "logLevel"?: LogLevel;
         "pipeline": string;
@@ -417,6 +420,8 @@ declare namespace LocalJSX {
         "numberOfSuggestions"?: number;
     }
     interface AtomicSearchInterface {
+        "engine"?: Engine;
+        "i18n"?: i18n;
         "logLevel"?: LogLevel;
         "pipeline"?: string;
         "sample"?: boolean;

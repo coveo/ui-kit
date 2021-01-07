@@ -7,6 +7,7 @@ import {
   Watch,
   Element,
   State,
+  getAssetPath,
 } from '@stencil/core';
 import {
   HeadlessEngine,
@@ -22,41 +23,60 @@ import {
   Unsubscribe,
 } from '@coveo/headless';
 import {InitializeEvent} from '../../utils/initialization-utils';
+import i18next, {i18n} from 'i18next';
+import Backend, {BackendOptions} from 'i18next-http-backend';
+import LanguageDetector, {
+  DetectorOptions,
+} from 'i18next-browser-languagedetector';
 
 @Component({
   tag: 'atomic-search-interface',
   shadow: true,
+  assetsDirs: ['assets'],
 })
 export class AtomicSearchInterface {
   @Element() host!: HTMLDivElement;
   @Prop() sample = false;
   @Prop({reflect: true}) pipeline = 'default';
   @Prop({reflect: true}) searchHub = 'default';
-  @Prop() logLevel?: LogLevel = 'info';
+  @Prop() logLevel?: LogLevel = 'silent';
+  @Prop() i18n: i18n = i18next.createInstance();
+  @Prop({mutable: true}) engine?: Engine;
   @State() error?: Error;
-  @State() engine?: Engine;
 
   private unsubscribe: Unsubscribe = () => {};
   private hangingComponentsInitialization: InitializeEvent[] = [];
   private initialized = false;
-  private afterInitializationCallback: (engine: Engine) => void = () => {};
+  private afterInitializationCallbacks: (() => void)[] = [];
 
   componentWillLoad() {
     if (this.sample) {
       this.initialize(HeadlessEngine.getSampleConfiguration());
     }
-  }
 
-  @Method() async afterInitialization(callback: (engine: Engine) => void) {
-    if (this.initialized) {
-      callback(this.engine!);
-      return;
-    }
-    this.afterInitializationCallback = callback;
+    this.i18n
+      .use(LanguageDetector)
+      .use(Backend)
+      .init({
+        debug: this.logLevel === 'debug',
+        fallbackLng: ['en'],
+        backend: {
+          loadPath: `${getAssetPath('./assets/')}{{lng}}.json`,
+        } as BackendOptions,
+        detection: {} as DetectorOptions,
+      });
   }
 
   disconnectedCallback() {
     this.unsubscribe();
+  }
+
+  @Method() async afterInitialization(callback: () => void) {
+    if (this.initialized) {
+      callback();
+      return;
+    }
+    this.afterInitializationCallbacks.push(callback);
   }
 
   @Method() async initialize(
@@ -83,7 +103,7 @@ export class AtomicSearchInterface {
     });
 
     this.initialized = true;
-    this.afterInitializationCallback(this.engine!);
+    this.afterInitializationCallbacks.forEach((cb) => cb());
   }
 
   private initEngine(config: HeadlessConfigurationOptions) {
@@ -101,7 +121,7 @@ export class AtomicSearchInterface {
     }
 
     this.hangingComponentsInitialization.forEach((event) =>
-      event.detail(this.engine!)
+      event.detail(this.engine!, this.i18n)
     );
 
     this.hangingComponentsInitialization = [];
@@ -147,7 +167,7 @@ export class AtomicSearchInterface {
     event.stopPropagation();
 
     if (this.engine) {
-      event.detail(this.engine);
+      event.detail(this.engine!, this.i18n);
       return;
     }
 

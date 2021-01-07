@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html dir="ltr" lang="en">
+<html dir="ltr" lang="fr">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
@@ -7,17 +7,27 @@
 
     <script type="module" src="/build/atomic.esm.js"></script>
     <script nomodule src="/build/atomic.js"></script>
-    <link rel="stylesheet" href="/build/atomic.css" />
-    <!-- Initialization example
-  <script>
-    (async () => {
-      await customElements.whenDefined('atomic-search-interface');
-      document.querySelector('#search').initialize({
-        accessToken: 'my_token',
-        organizationId: 'my_org',
-      });
-    })();
-  </script> -->
+    <script>
+      (async () => {
+        await customElements.whenDefined('atomic-search-interface');
+        const searchInterface = document.querySelector('#search');
+
+        // Initialization
+        /* searchInterface.initialize({
+          accessToken: 'my_token',
+          organizationId: 'my_org',
+        }); */
+
+        searchInterface.afterInitialization(() => {
+          // Add/modify a translation
+          // searchInterface.i18n.addResource('en', 'translation', 'search', 'Make me feel lucky!');
+          // Change the language of the interface dynamically
+          // searchInterface.i18n.changeLanguage('fr');
+          // Interact with the engine
+          // searchInterface.engine.dispatch(...);
+        });
+      })();
+    </script>
     <style>
       /* Example on how to customize Atomic component CSS parts */
       atomic-search-box::part(submit-button) {
@@ -40,9 +50,7 @@
         <atomic-tab expression='@author *= "BBC News"'>BBC News</atomic-tab>
       </div>
       <atomic-context-provider context='{"test":"value","test2":"value2"}'></atomic-context-provider>
-      <atomic-search-box>
-        <span slot="submit-button">Go!</span>
-      </atomic-search-box>
+      <atomic-search-box></atomic-search-box>
       <div style="display: flex">
         <atomic-facet-manager>
           <atomic-facet field="author" label="Authors"></atomic-facet>

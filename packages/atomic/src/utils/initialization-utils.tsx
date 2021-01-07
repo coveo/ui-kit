@@ -1,8 +1,9 @@
 import {Engine} from '@coveo/headless';
 import {ComponentInterface, getElement, h} from '@stencil/core';
 import {Schema, StringValue, SchemaValues} from '@coveo/bueno';
+import {i18n} from 'i18next';
 
-export type InitializeEventHandler = (engine: Engine) => void;
+export type InitializeEventHandler = (engine: Engine, i18n: i18n) => void;
 export type InitializeEvent = CustomEvent<InitializeEventHandler>;
 
 const engineProviders = ['atomic-search-interface'];
@@ -25,6 +26,7 @@ export class InitializationError extends Error {
 const initializationOptionsSchema = new Schema({
   errorProperty: new StringValue({default: 'error'}),
   engineProperty: new StringValue({default: 'engine'}),
+  i18nProperty: new StringValue({default: 'i18n'}),
 });
 
 export type InitializationOptions = SchemaValues<
@@ -43,6 +45,7 @@ export function Initialization(options?: InitializationOptions) {
     const {
       errorProperty,
       engineProperty,
+      i18nProperty,
     } = initializationOptionsSchema.validate(options) as Required<
       InitializationOptions
     >;
@@ -61,8 +64,9 @@ export function Initialization(options?: InitializationOptions) {
       }
 
       const event = new CustomEvent('atomic/initializeComponent', {
-        detail: (engine: Engine) => {
+        detail: (engine: Engine, i18n: i18n) => {
           this[engineProperty] = engine;
+          this[i18nProperty] = i18n;
           try {
             initialize.call(this);
           } catch (error) {
