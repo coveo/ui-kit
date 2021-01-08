@@ -18,6 +18,7 @@ pipeline {
     NPM_TOKEN = credentials("npmjs_com_token")
     GIT = credentials('github-coveobot')
     GH_TOKEN = credentials('github-coveobot_token')
+    SNYK_TOKEN = credentials("snyk_token")
   }
 
   options {
@@ -89,6 +90,11 @@ pipeline {
       when { expression { !skipRemainingStages }}
       steps {
         script {
+          sh "npx snyk auth $SNYK_TOKEN"
+          sh "npx snyk test --org=coveo-commerce --file=package-lock.json --strict-out-of-sync=false --json > snyk-result.json || true"
+          sh "npx snyk monitor --org=coveo-admin-ui --file=package-lock.json --strict-out-of-sync=false --json > snyk-monitor-result.json || true"
+          archiveArtifacts artifacts: 'snyk-result.json,snyk-monitor-result.json'
+
           sh 'npm run prepare-deploy'
           env.PACKAGE_JSON_MAJOR_MINOR_PATCH_VERSION = sh(script: './read.version.sh patch', returnStdout: true).trim()
           env.PACKAGE_JSON_MAJOR_MINOR_VERSION = sh(script: './read.version.sh minor', returnStdout: true).trim()
