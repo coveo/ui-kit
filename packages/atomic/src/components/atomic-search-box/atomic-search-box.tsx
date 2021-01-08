@@ -9,7 +9,6 @@ import {
 import {Initialization} from '../../utils/initialization-utils';
 import {randomID} from '../../utils/utils';
 import {Combobox} from '../../utils/combobox';
-import {i18n} from 'i18next';
 
 export interface AtomicSearchBoxOptions {
   /**
@@ -46,7 +45,6 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
   );
 
   private engine!: Engine;
-  private i18n!: i18n;
   private searchBox!: SearchBox;
   private unsubscribe: Unsubscribe = () => {};
   private inputRef!: HTMLInputElement;
@@ -123,7 +121,7 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
         part="submit-button"
         onClick={() => this.searchBox.submit()}
       >
-        {this.i18n.t('search')}
+        Search
       </button>
     );
   }
@@ -142,7 +140,7 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
           this.inputRef.focus();
         }}
       >
-        {this.i18n.t('clear')}
+        Clear
       </button>
     );
   }

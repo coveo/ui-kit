@@ -25,14 +25,11 @@ import {
 import {InitializeEvent} from '../../utils/initialization-utils';
 import i18next, {i18n} from 'i18next';
 import Backend, {BackendOptions} from 'i18next-http-backend';
-import LanguageDetector, {
-  DetectorOptions,
-} from 'i18next-browser-languagedetector';
 
 @Component({
   tag: 'atomic-search-interface',
   shadow: true,
-  assetsDirs: ['assets'],
+  assetsDirs: ['lang'],
 })
 export class AtomicSearchInterface {
   @Element() host!: HTMLDivElement;
@@ -54,17 +51,14 @@ export class AtomicSearchInterface {
       this.initialize(HeadlessEngine.getSampleConfiguration());
     }
 
-    this.i18n
-      .use(LanguageDetector)
-      .use(Backend)
-      .init({
-        debug: this.logLevel === 'debug',
-        fallbackLng: ['en'],
-        backend: {
-          loadPath: `${getAssetPath('./assets/')}{{lng}}.json`,
-        } as BackendOptions,
-        detection: {} as DetectorOptions,
-      });
+    this.i18n.use(Backend).init({
+      debug: this.logLevel === 'debug',
+      lng: 'en', // TODO: add watchable "lang" prop
+      fallbackLng: ['en'],
+      backend: {
+        loadPath: `${getAssetPath('./lang/')}{{lng}}.json`,
+      } as BackendOptions,
+    });
   }
 
   disconnectedCallback() {
@@ -121,7 +115,7 @@ export class AtomicSearchInterface {
     }
 
     this.hangingComponentsInitialization.forEach((event) =>
-      event.detail(this.engine!, this.i18n)
+      event.detail(this.engine!)
     );
 
     this.hangingComponentsInitialization = [];
@@ -167,7 +161,7 @@ export class AtomicSearchInterface {
     event.stopPropagation();
 
     if (this.engine) {
-      event.detail(this.engine!, this.i18n);
+      event.detail(this.engine!);
       return;
     }
 
