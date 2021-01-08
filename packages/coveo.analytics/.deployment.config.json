@@ -49,46 +49,6 @@
                     }
                 }
             }
-        },
-        {
-            "id": "deploy-major-minor",
-            "s3": {
-                "bucket": "coveo-ndev-coveoanalytics",
-                "directory": "coveo.analytics.js/$[PACKAGE_JSON_MAJOR_MINOR_VERSION]",
-                "parameters": {
-                    "include": ".*",
-                    "metadata": "X-Frame-Options=deny,X-Content-Type-Options=nosniff"
-                },
-                "source": "deploy",
-                "prd": {
-                    "bucket": "coveo-public-content",
-                    "parameters": {
-                        "include": ".*",
-                        "metadata": "X-Frame-Options=deny,X-Content-Type-Options=nosniff",
-                        "acl": "public-read"
-                    }
-                }
-            }
-        },
-        {
-            "id": "deploy-major",
-            "s3": {
-                "bucket": "coveo-ndev-coveoanalytics",
-                "directory": "coveo.analytics.js/$[PACKAGE_JSON_MAJOR_VERSION]",
-                "parameters": {
-                    "include": ".*",
-                    "metadata": "X-Frame-Options=deny,X-Content-Type-Options=nosniff"
-                },
-                "source": "deploy",
-                "prd": {
-                    "bucket": "coveo-public-content",
-                    "parameters": {
-                        "include": ".*",
-                        "metadata": "X-Frame-Options=deny,X-Content-Type-Options=nosniff",
-                        "acl": "public-read"
-                    }
-                }
-            }
         }
     ],
     "deployment_config_version": 1
