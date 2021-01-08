@@ -61,7 +61,6 @@ export function Initialization() {
 
     component.render = function () {
       if (this[errorProperty]) {
-        hasRendered = true;
         return (
           <atomic-component-error
             error={this[errorProperty]}
