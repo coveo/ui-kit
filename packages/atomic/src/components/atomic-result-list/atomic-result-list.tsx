@@ -54,7 +54,7 @@ export class AtomicResultList {
   @Initialization()
   public initialize() {
     this.resultTemplatesManager = buildResultTemplatesManager(
-      this.context.engine!
+      this.context.engine
     );
     this.resultList = buildResultList(this.context.engine, {
       options: {fieldsToInclude: this.fields},
@@ -102,7 +102,7 @@ export class AtomicResultList {
         part="list-element"
         class={this.listElementClass}
         result={result}
-        engine={this.context.engine!}
+        engine={this.context.engine}
         innerHTML={Mustache.render(
           this.resultTemplatesManager.selectTemplate(result) || '',
           result
