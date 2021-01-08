@@ -22,7 +22,6 @@
     "snyk": {
         "org": "coveo-commerce",
         "no_container_images": true,
-        "no_dependencies": true,
         "configurations": [
             {
                 "project_name": "coveo.analytics.js"
