@@ -9,7 +9,10 @@ import {
 } from '@coveo/headless';
 import Mustache from 'mustache';
 import defaultTemplate from '../../templates/default.html';
-import {Initialization, AtomicContext} from '../../utils/initialization-utils';
+import {
+  Initialization,
+  InterfaceContext,
+} from '../../utils/initialization-utils';
 
 /**
  * @part list - The list wrapper
@@ -38,7 +41,7 @@ export class AtomicResultList {
   @Element() host!: HTMLDivElement;
   @State() state!: ResultListState;
 
-  private context!: AtomicContext;
+  private context!: InterfaceContext;
   private unsubscribe: Unsubscribe = () => {};
   private resultList!: ResultList;
   private resultTemplatesManager!: ResultTemplatesManager<string>;

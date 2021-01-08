@@ -5,7 +5,10 @@ import {
   Unsubscribe,
   buildQueryError,
 } from '@coveo/headless';
-import {Initialization, AtomicContext} from '../../utils/initialization-utils';
+import {
+  Initialization,
+  InterfaceContext,
+} from '../../utils/initialization-utils';
 
 @Component({
   tag: 'atomic-query-error',
@@ -15,7 +18,7 @@ import {Initialization, AtomicContext} from '../../utils/initialization-utils';
 export class AtomicQueryError {
   @State() state!: QueryErrorState;
 
-  private context!: AtomicContext;
+  private context!: InterfaceContext;
   private queryError!: QueryError;
   private unsubscribe: Unsubscribe = () => {};
 

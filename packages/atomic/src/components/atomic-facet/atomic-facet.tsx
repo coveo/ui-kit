@@ -8,7 +8,10 @@ import {
   FacetOptions,
   FacetSortCriterion,
 } from '@coveo/headless';
-import {Initialization, AtomicContext} from '../../utils/initialization-utils';
+import {
+  Initialization,
+  InterfaceContext,
+} from '../../utils/initialization-utils';
 
 @Component({
   tag: 'atomic-facet',
@@ -20,7 +23,7 @@ export class AtomicFacet {
   @Prop() field = '';
   @Prop() label = 'No label';
   @State() state!: FacetState;
-  private context!: AtomicContext;
+  private context!: InterfaceContext;
 
   private unsubscribe: Unsubscribe = () => {};
   private facet!: Facet;

@@ -8,7 +8,10 @@ import {
   RangeFacetSortCriterion,
   Unsubscribe,
 } from '@coveo/headless';
-import {Initialization, AtomicContext} from '../../utils/initialization-utils';
+import {
+  Initialization,
+  InterfaceContext,
+} from '../../utils/initialization-utils';
 
 @Component({
   tag: 'atomic-date-facet',
@@ -20,7 +23,7 @@ export class AtomicDateFacet {
   @Prop() field = '';
   @Prop() label = 'No label';
   @State() state!: DateFacetState;
-  private context!: AtomicContext;
+  private context!: InterfaceContext;
 
   private facet!: DateFacet;
   private unsubscribe: Unsubscribe = () => {};

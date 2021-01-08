@@ -10,7 +10,10 @@ import {
   buildFieldSortCriterion,
   SortOrder,
 } from '@coveo/headless';
-import {Initialization, AtomicContext} from '../../utils/initialization-utils';
+import {
+  Initialization,
+  InterfaceContext,
+} from '../../utils/initialization-utils';
 
 enum SortOption {
   Relevance = 'relevance',
@@ -30,7 +33,7 @@ enum SortOption {
 export class AtomicSortDropdown {
   @State() state!: SortState;
 
-  private context!: AtomicContext;
+  private context!: InterfaceContext;
   private sort!: Sort;
   private unsubscribe: Unsubscribe = () => {};
 

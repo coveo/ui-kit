@@ -1,6 +1,9 @@
 import {Component, Prop} from '@stencil/core';
 import {buildContext} from '@coveo/headless';
-import {Initialization, AtomicContext} from '../../utils/initialization-utils';
+import {
+  Initialization,
+  InterfaceContext,
+} from '../../utils/initialization-utils';
 
 @Component({
   tag: 'atomic-context-provider',
@@ -8,7 +11,7 @@ import {Initialization, AtomicContext} from '../../utils/initialization-utils';
 })
 export class AtomicContextProvider {
   @Prop() contextValue = '{}';
-  private context!: AtomicContext;
+  private context!: InterfaceContext;
 
   @Initialization()
   public initialize() {

@@ -5,7 +5,10 @@ import {
   Unsubscribe,
   buildResultsPerPage,
 } from '@coveo/headless';
-import {Initialization, AtomicContext} from '../../utils/initialization-utils';
+import {
+  Initialization,
+  InterfaceContext,
+} from '../../utils/initialization-utils';
 
 /**
  * @part list - The list of buttons
@@ -21,7 +24,7 @@ import {Initialization, AtomicContext} from '../../utils/initialization-utils';
 export class AtomicResultsPerPage {
   @State() state!: ResultsPerPageState;
 
-  private context!: AtomicContext;
+  private context!: InterfaceContext;
   private resultsPerPage!: ResultsPerPage;
   private unsubscribe: Unsubscribe = () => {};
 

@@ -9,7 +9,10 @@ import {
   RangeFacetSortCriterion,
   Unsubscribe,
 } from '@coveo/headless';
-import {Initialization, AtomicContext} from '../../utils/initialization-utils';
+import {
+  Initialization,
+  InterfaceContext,
+} from '../../utils/initialization-utils';
 
 @Component({
   tag: 'atomic-numeric-facet',
@@ -22,7 +25,7 @@ export class AtomicNumericFacet {
   @Prop() label = 'No label';
   @State() state!: NumericFacetState;
 
-  private context!: AtomicContext;
+  private context!: InterfaceContext;
   private unsubscribe: Unsubscribe = () => {};
   private facet!: NumericFacet;
 

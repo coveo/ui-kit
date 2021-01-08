@@ -5,7 +5,10 @@ import {
   Unsubscribe,
   buildSearchBox,
 } from '@coveo/headless';
-import {Initialization, AtomicContext} from '../../utils/initialization-utils';
+import {
+  Initialization,
+  InterfaceContext,
+} from '../../utils/initialization-utils';
 import {randomID} from '../../utils/utils';
 import {Combobox} from '../../utils/combobox';
 
@@ -43,7 +46,7 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
     'atomic-search-box-'
   );
 
-  private context!: AtomicContext;
+  private context!: InterfaceContext;
   private searchBox!: SearchBox;
   private unsubscribe: Unsubscribe = () => {};
   private inputRef!: HTMLInputElement;

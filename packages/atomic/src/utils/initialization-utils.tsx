@@ -2,12 +2,12 @@ import {Engine} from '@coveo/headless';
 import {ComponentInterface, getElement, h} from '@stencil/core';
 import {i18n} from 'i18next';
 
-export interface AtomicContext {
+export interface InterfaceContext {
   engine: Engine;
   i18n: i18n;
 }
 
-export type InitializeEventHandler = (context: AtomicContext) => void;
+export type InitializeEventHandler = (context: InterfaceContext) => void;
 export type InitializeEvent = CustomEvent<InitializeEventHandler>;
 
 export class InitializationError extends Error {
@@ -34,7 +34,7 @@ export function Initialization() {
     component.componentWillLoad = function () {
       const element = getElement(this);
       const event = new CustomEvent('atomic/initializeComponent', {
-        detail: (context: AtomicContext) => {
+        detail: (context: InterfaceContext) => {
           this[contextProperty] = context;
           try {
             initialize.call(this);

@@ -22,7 +22,10 @@ import {
   buildSearchParameterSerializer,
   Unsubscribe,
 } from '@coveo/headless';
-import {AtomicContext, InitializeEvent} from '../../utils/initialization-utils';
+import {
+  InterfaceContext,
+  InitializeEvent,
+} from '../../utils/initialization-utils';
 import i18next, {i18n} from 'i18next';
 import Backend, {BackendOptions} from 'i18next-http-backend';
 
@@ -100,7 +103,7 @@ export class AtomicSearchInterface {
     this.afterInitializationCallbacks.forEach((cb) => cb());
   }
 
-  private get context(): AtomicContext {
+  private get context(): InterfaceContext {
     return {engine: this.engine!, i18n: this.i18n};
   }
 

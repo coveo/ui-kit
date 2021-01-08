@@ -5,7 +5,10 @@ import {
   Unsubscribe,
   buildQuerySummary,
 } from '@coveo/headless';
-import {Initialization, AtomicContext} from '../../utils/initialization-utils';
+import {
+  Initialization,
+  InterfaceContext,
+} from '../../utils/initialization-utils';
 
 /**
  * @part container - The container of the whole summary
@@ -23,7 +26,7 @@ import {Initialization, AtomicContext} from '../../utils/initialization-utils';
 export class AtomicQuerySummary {
   @State() state!: QuerySummaryState;
 
-  private context!: AtomicContext;
+  private context!: InterfaceContext;
   private querySummary!: QuerySummary;
   private unsubscribe: Unsubscribe = () => {};
 

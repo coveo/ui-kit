@@ -1,6 +1,9 @@
 import {Component, h, Prop, State} from '@stencil/core';
 import {buildTab, Tab, TabProps, TabState, Unsubscribe} from '@coveo/headless';
-import {Initialization, AtomicContext} from '../../utils/initialization-utils';
+import {
+  Initialization,
+  InterfaceContext,
+} from '../../utils/initialization-utils';
 /**
  * @part tab-button - The tab button
  * @part active-tab - The active tab
@@ -15,7 +18,7 @@ export class AtomicTab {
   @Prop() isActive = false;
   @State() state!: TabState;
 
-  private context!: AtomicContext;
+  private context!: InterfaceContext;
   private tab!: Tab;
   private unsubscribe: Unsubscribe = () => {};
 

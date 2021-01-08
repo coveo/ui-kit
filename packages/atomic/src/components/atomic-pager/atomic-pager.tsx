@@ -1,6 +1,9 @@
 import {Component, h, State} from '@stencil/core';
 import {Pager, PagerState, Unsubscribe, buildPager} from '@coveo/headless';
-import {Initialization, AtomicContext} from '../../utils/initialization-utils';
+import {
+  Initialization,
+  InterfaceContext,
+} from '../../utils/initialization-utils';
 
 /**
  * @slot back-button - Content of the back button
@@ -20,7 +23,7 @@ import {Initialization, AtomicContext} from '../../utils/initialization-utils';
 export class AtomicPager {
   @State() state!: PagerState;
 
-  private context!: AtomicContext;
+  private context!: InterfaceContext;
   private pager!: Pager;
   private unsubscribe: Unsubscribe = () => {};
 
