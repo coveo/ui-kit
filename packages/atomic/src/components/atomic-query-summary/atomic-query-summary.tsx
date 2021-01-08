@@ -4,9 +4,8 @@ import {
   QuerySummaryState,
   Unsubscribe,
   buildQuerySummary,
-  Engine,
 } from '@coveo/headless';
-import {Initialization} from '../../utils/initialization-utils';
+import {Initialization, AtomicContext} from '../../utils/initialization-utils';
 
 /**
  * @part container - The container of the whole summary
@@ -24,13 +23,13 @@ import {Initialization} from '../../utils/initialization-utils';
 export class AtomicQuerySummary {
   @State() state!: QuerySummaryState;
 
-  private engine!: Engine;
+  private context!: AtomicContext;
   private querySummary!: QuerySummary;
   private unsubscribe: Unsubscribe = () => {};
 
   @Initialization()
   public initialize() {
-    this.querySummary = buildQuerySummary(this.engine);
+    this.querySummary = buildQuerySummary(this.context.engine);
     this.unsubscribe = this.querySummary.subscribe(() => this.updateState());
   }
 

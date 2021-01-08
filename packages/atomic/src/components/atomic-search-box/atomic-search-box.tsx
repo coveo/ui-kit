@@ -4,9 +4,8 @@ import {
   SearchBoxState,
   Unsubscribe,
   buildSearchBox,
-  Engine,
 } from '@coveo/headless';
-import {Initialization} from '../../utils/initialization-utils';
+import {Initialization, AtomicContext} from '../../utils/initialization-utils';
 import {randomID} from '../../utils/utils';
 import {Combobox} from '../../utils/combobox';
 
@@ -44,7 +43,7 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
     'atomic-search-box-'
   );
 
-  private engine!: Engine;
+  private context!: AtomicContext;
   private searchBox!: SearchBox;
   private unsubscribe: Unsubscribe = () => {};
   private inputRef!: HTMLInputElement;
@@ -78,7 +77,7 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
 
   @Initialization()
   public initialize() {
-    this.searchBox = buildSearchBox(this.engine, {
+    this.searchBox = buildSearchBox(this.context.engine, {
       options: {
         numberOfSuggestions: this.numberOfSuggestions,
         highlightOptions: {
@@ -121,7 +120,7 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
         part="submit-button"
         onClick={() => this.searchBox.submit()}
       >
-        Search
+        {this.context.i18n.t('search')}
       </button>
     );
   }
@@ -140,7 +139,7 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
           this.inputRef.focus();
         }}
       >
-        Clear
+        {this.context.i18n.t('clear')}
       </button>
     );
   }

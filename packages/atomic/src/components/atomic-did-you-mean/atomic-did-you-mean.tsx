@@ -4,9 +4,8 @@ import {
   DidYouMeanState,
   Unsubscribe,
   buildDidYouMean,
-  Engine,
 } from '@coveo/headless';
-import {Initialization} from '../../utils/initialization-utils';
+import {Initialization, AtomicContext} from '../../utils/initialization-utils';
 
 @Component({
   tag: 'atomic-did-you-mean',
@@ -16,13 +15,13 @@ import {Initialization} from '../../utils/initialization-utils';
 export class AtomicDidYouMean {
   @State() state!: DidYouMeanState;
 
-  private engine!: Engine;
+  private context!: AtomicContext;
   private didYouMean!: DidYouMean;
   private unsubscribe: Unsubscribe = () => {};
 
   @Initialization()
   public initialize() {
-    this.didYouMean = buildDidYouMean(this.engine);
+    this.didYouMean = buildDidYouMean(this.context.engine);
     this.unsubscribe = this.didYouMean.subscribe(() => this.updateState());
   }
 

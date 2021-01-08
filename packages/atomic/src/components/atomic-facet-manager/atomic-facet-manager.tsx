@@ -2,11 +2,10 @@ import {Component, h, Element, State} from '@stencil/core';
 import {
   FacetManager,
   buildFacetManager,
-  Engine,
   Unsubscribe,
   FacetManagerState,
 } from '@coveo/headless';
-import {Initialization} from '../../utils/initialization-utils';
+import {Initialization, AtomicContext} from '../../utils/initialization-utils';
 
 interface FacetElement extends HTMLElement {
   facetId: string;
@@ -20,13 +19,13 @@ interface FacetElement extends HTMLElement {
 export class AtomicFacetManager {
   @State() state!: FacetManagerState;
   @Element() host!: HTMLDivElement;
-  private engine!: Engine;
+  private context!: AtomicContext;
   private unsubscribe: Unsubscribe = () => {};
   private facetManager!: FacetManager;
 
   @Initialization()
   public initialize() {
-    this.facetManager = buildFacetManager(this.engine);
+    this.facetManager = buildFacetManager(this.context.engine);
 
     this.unsubscribe = this.facetManager.subscribe(() => {
       this.updateStateToTriggerRender();

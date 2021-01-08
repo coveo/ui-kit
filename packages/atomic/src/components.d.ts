@@ -21,7 +21,7 @@ export namespace Components {
         "error": Error;
     }
     interface AtomicContextProvider {
-        "context": string;
+        "contextValue": string;
     }
     interface AtomicDateFacet {
         "facetId": string;
@@ -330,7 +330,7 @@ declare namespace LocalJSX {
         "error": Error;
     }
     interface AtomicContextProvider {
-        "context"?: string;
+        "contextValue"?: string;
     }
     interface AtomicDateFacet {
         "facetId"?: string;

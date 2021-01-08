@@ -4,9 +4,8 @@ import {
   HistoryState,
   Unsubscribe,
   buildHistory,
-  Engine,
 } from '@coveo/headless';
-import {Initialization} from '../../utils/initialization-utils';
+import {Initialization, AtomicContext} from '../../utils/initialization-utils';
 
 @Component({
   tag: 'atomic-history',
@@ -15,13 +14,13 @@ import {Initialization} from '../../utils/initialization-utils';
 export class AtomicHistory {
   @State() state!: HistoryState;
 
-  private engine!: Engine;
+  private context!: AtomicContext;
   private history!: History;
   private unsubscribe: Unsubscribe = () => {};
 
   @Initialization()
   public initialize() {
-    this.history = buildHistory(this.engine);
+    this.history = buildHistory(this.context.engine);
     this.unsubscribe = this.history.subscribe(() => this.updateState());
   }
 

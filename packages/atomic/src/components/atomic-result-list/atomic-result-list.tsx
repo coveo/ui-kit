@@ -5,12 +5,11 @@ import {
   Unsubscribe,
   ResultTemplatesManager,
   buildResultList,
-  Engine,
   buildResultTemplatesManager,
 } from '@coveo/headless';
 import Mustache from 'mustache';
 import defaultTemplate from '../../templates/default.html';
-import {Initialization} from '../../utils/initialization-utils';
+import {Initialization, AtomicContext} from '../../utils/initialization-utils';
 
 /**
  * @part list - The list wrapper
@@ -39,7 +38,7 @@ export class AtomicResultList {
   @Element() host!: HTMLDivElement;
   @State() state!: ResultListState;
 
-  private engine!: Engine;
+  private context!: AtomicContext;
   private unsubscribe: Unsubscribe = () => {};
   private resultList!: ResultList;
   private resultTemplatesManager!: ResultTemplatesManager<string>;
@@ -51,8 +50,10 @@ export class AtomicResultList {
 
   @Initialization()
   public initialize() {
-    this.resultTemplatesManager = buildResultTemplatesManager(this.engine);
-    this.resultList = buildResultList(this.engine, {
+    this.resultTemplatesManager = buildResultTemplatesManager(
+      this.context.engine!
+    );
+    this.resultList = buildResultList(this.context.engine, {
       options: {fieldsToInclude: this.fields},
     });
     this.unsubscribe = this.resultList.subscribe(() => this.updateState());
@@ -98,7 +99,7 @@ export class AtomicResultList {
         part="list-element"
         class={this.listElementClass}
         result={result}
-        engine={this.engine}
+        engine={this.context.engine!}
         innerHTML={Mustache.render(
           this.resultTemplatesManager.selectTemplate(result) || '',
           result
