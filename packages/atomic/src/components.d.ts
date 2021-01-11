@@ -118,6 +118,7 @@ export namespace Components {
         "engine"?: Engine;
         "i18n": i18n;
         "initialize": (options: Pick<HeadlessConfigurationOptions, 'accessToken' | 'organizationId' | 'renewAccessToken' | 'platformUrl'>) => Promise<void>;
+        "lang": string;
         "logLevel"?: LogLevel;
         "pipeline": string;
         "sample": boolean;
@@ -422,6 +423,7 @@ declare namespace LocalJSX {
     interface AtomicSearchInterface {
         "engine"?: Engine;
         "i18n"?: i18n;
+        "lang"?: string;
         "logLevel"?: LogLevel;
         "pipeline"?: string;
         "sample"?: boolean;

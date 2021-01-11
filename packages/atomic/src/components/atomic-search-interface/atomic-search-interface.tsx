@@ -41,6 +41,7 @@ export class AtomicSearchInterface {
   @Prop({reflect: true}) searchHub = 'default';
   @Prop() logLevel?: LogLevel = 'silent';
   @Prop() i18n: i18n = i18next.createInstance();
+  @Prop({reflect: true}) lang = 'en'; // TODO: make watchable and update i18next language on change
   @Prop({mutable: true}) engine?: Engine;
   @State() error?: Error;
 
@@ -56,7 +57,7 @@ export class AtomicSearchInterface {
 
     this.i18n.use(Backend).init({
       debug: this.logLevel === 'debug',
-      lng: 'en', // TODO: add watchable "lang" prop
+      lng: this.lang,
       fallbackLng: ['en'],
       backend: {
         loadPath: `${getAssetPath('./lang/')}{{lng}}.json`,
