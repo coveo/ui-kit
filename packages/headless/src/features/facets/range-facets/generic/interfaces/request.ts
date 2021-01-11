@@ -5,6 +5,9 @@ import {
 } from '../../../facet-api/request';
 
 export const rangeFacetSortCriteria = ['ascending', 'descending'] as const;
+/**
+ * @docsection Types
+ */
 export type RangeFacetSortCriterion = typeof rangeFacetSortCriteria[number];
 
 export interface AutomaticRanges<T extends boolean> {

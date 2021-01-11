@@ -1,5 +1,8 @@
 import {BaseFacetValue, BaseFacetResponse} from '../../facet-api/response';
 
+/**
+ * @docsection Interfaces
+ */
 export interface CategoryFacetValue extends BaseFacetValue {
   value: string;
   path: string[];

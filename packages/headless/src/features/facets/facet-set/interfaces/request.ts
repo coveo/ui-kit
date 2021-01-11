@@ -15,6 +15,9 @@ export const facetSortCriteria = [
   'occurrences',
   'automatic',
 ] as const;
+/**
+ * @docsection Types
+ */
 export type FacetSortCriterion = typeof facetSortCriteria[number];
 
 export interface FacetValueRequest extends BaseFacetValueRequest {

@@ -2,6 +2,7 @@ import {isArray} from '@coveo/bueno';
 
 /**
  * The available sort orders.
+ * @docsection Enums
  */
 export enum SortOrder {
   Ascending = 'ascending',
@@ -10,6 +11,7 @@ export enum SortOrder {
 
 /**
  * The available criteria that can be used to sort query results.
+ * @docsection Enums
  */
 export enum SortBy {
   /**
@@ -36,26 +38,34 @@ export enum SortBy {
 
 /**
  * Uses standard index ranking factors (adjacency, TDIDF) and custom ranking expressions (QREs and QRFs) to compute a ranking score for each query result item, and sorts the query results by descending score value.
+ * @docsection Types
  */
 export type SortByRelevancy = {by: SortBy.Relevancy};
 /**
  * Uses only custom ranking expressions (QREs and QRFs) to compute a ranking score for each query result item, and sorts the query results by descending score value.
+ * @docsection Types
  */
 export type SortByQRE = {by: SortBy.QRE};
 /**
  * Uses the date field to sort the query results. This field typically contains the last modification date of each item. May be in ascending or descending order.
+ * @docsection Types
  */
 export type SortByDate = {by: SortBy.Date; order: SortOrder};
 /**
  * Uses the value of a specific sortable field to sort the query results. May be in ascending or descending order.
+ * @docsection Types
  */
 export type SortByField = {by: SortBy.Field; field: string; order: SortOrder};
 /**
  * Does not sort the query results; the index will return result items in an essentially random order.
+ * @docsection Types
  */
 export type SortByNoSort = {by: SortBy.NoSort};
 
-/** Represents a criterion that can be used to sort query results. */
+/**
+ * Represents a criterion that can be used to sort query results.
+ * @docsection Types
+ */
 export type SortCriterion =
   | SortByRelevancy
   | SortByQRE
@@ -66,6 +76,7 @@ export type SortCriterion =
 /**
  * Builds a sort expression that can be understood and executed by the Coveo Platform.
  * @param criterion The criterion to translate to a valid sort query expression.
+ * @docsection Functions
  */
 export const buildCriterionExpression = (
   criterion: SortCriterion | SortCriterion[]
@@ -92,6 +103,7 @@ export const buildCriterionExpression = (
 /**
  * Utility function that builds a valid `SortByRelevancy` criterion.
  * @returns A `SortByRelevancy` criterion.
+ * @docsection Functions
  */
 export const buildRelevanceSortCriterion = (): SortByRelevancy => ({
   by: SortBy.Relevancy,
@@ -101,6 +113,7 @@ export const buildRelevanceSortCriterion = (): SortByRelevancy => ({
  * Utility function that builds a valid `SortByDate` criterion.
  * @param order The order (ascending/descending) on which to sort.
  * @returns A `SortByDate` criterion.
+ * @docsection Functions
  */
 export const buildDateSortCriterion = (order: SortOrder): SortByDate => ({
   by: SortBy.Date,
@@ -112,6 +125,7 @@ export const buildDateSortCriterion = (order: SortOrder): SortByDate => ({
  * @param field The sortable field on which to sort.
  * @param order The order (ascending/descending) on which to sort.
  * @returns A `SortByField` criterion.
+ * @docsection Functions
  */
 export const buildFieldSortCriterion = (
   field: string,
@@ -125,6 +139,7 @@ export const buildFieldSortCriterion = (
 /**
  * Utility function that builds a valid `SortByQRE` criterion.
  * @returns A `SortByQRE` criterion.
+ * @docsection Functions
  */
 export const buildQueryRankingExpressionSortCriterion = (): SortByQRE => ({
   by: SortBy.QRE,
@@ -133,5 +148,6 @@ export const buildQueryRankingExpressionSortCriterion = (): SortByQRE => ({
 /**
  * Utility function that builds a valid `SortByNoSort` criterion.
  * @returns A `SortByNoSort` criterion.
+ * @docsection Functions
  */
 export const buildNoSortCriterion = (): SortByNoSort => ({by: SortBy.NoSort});

@@ -11,6 +11,9 @@ export const categoryFacetSortCriteria = [
   'alphanumeric',
   'occurrences',
 ] as const;
+/**
+ * @docsection Types
+ */
 export type CategoryFacetSortCriterion = typeof categoryFacetSortCriteria[number];
 
 export interface CategoryFacetValueRequest extends BaseFacetValueRequest {

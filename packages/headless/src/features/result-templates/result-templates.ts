@@ -1,7 +1,13 @@
 import {Result} from '../../api/search/search/result';
 
+/**
+ * @docsection Result Templates Types and Interfaces
+ */
 export type ResultTemplateCondition = (result: Result) => boolean;
 
+/**
+ * @docsection Result Templates Types and Interfaces
+ */
 export interface ResultTemplate<Content = unknown> {
   /**
    * The stored content of the template.

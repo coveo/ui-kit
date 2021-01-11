@@ -8,6 +8,9 @@ const delimiter = '&';
 const equal = '=';
 const rangeDelimiter = '..';
 
+/**
+ * @docsection Functions
+ */
 export function buildSearchParameterSerializer() {
   return {serialize, deserialize};
 }

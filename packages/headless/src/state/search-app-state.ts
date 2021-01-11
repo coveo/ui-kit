@@ -26,6 +26,9 @@ import {
   FacetOrderSection,
 } from './state-sections';
 
+/**
+ * @docsection Types
+ */
 export type SearchParametersState = FacetSection &
   DateFacetSection &
   NumericFacetSection &
@@ -41,6 +44,9 @@ export type SearchParametersState = FacetSection &
   SearchHubSection &
   DebugSection;
 
+/**
+ * @docsection Types
+ */
 export type SearchAppState = SearchParametersState &
   ConfigurationSection &
   FacetSearchSection &

@@ -124,6 +124,11 @@ type PlatformCombination =
 
 type PlatformEnvironment = PlatformCombination['env'];
 
+/**
+ *
+ * @param options
+ * @docsection Functions
+ */
 export function platformUrl<E extends PlatformEnvironment = 'prod'>(options?: {
   environment?: E;
   region?: Extract<PlatformCombination, {env: E}>['region'];

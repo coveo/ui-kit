@@ -4,9 +4,10 @@ import {Result} from '../../api/search/search/result';
 
 /**
  * Extracts a property from a result object.
- * @param result (Result) The target result.
- * @param property (string) The property to extract.
- * @returns (unknown) The value of the specified property in the specified result, or null if the property does not exist.
+ * @param result The target result.
+ * @param property The property to extract.
+ * @returns The value of the specified property in the specified result, or null if the property does not exist.
+ * @docsection Result Templates Helpers
  */
 export const getResultProperty = (result: Result, property: string) => {
   if (property in result) {
@@ -22,8 +23,9 @@ export const getResultProperty = (result: Result, property: string) => {
 
 /**
  * Creates a condition that verifies if the specified fields are defined.
- * @param fieldNames (string[]) A list of fields that must be defined.
- * @returns (ResultTemplateCondition) A function that takes a result and checks if every field in the specified list is defined.
+ * @param fieldNames A list of fields that must be defined.
+ * @returns A function that takes a result and checks if every field in the specified list is defined.
+ * @docsection Result Templates Helpers
  */
 export const fieldsMustBeDefined = (
   fieldNames: string[]
@@ -35,8 +37,9 @@ export const fieldsMustBeDefined = (
 
 /**
  * Creates a condition that verifies if the specified fields are not defined.
- * @param fieldNames (string[]) A list of fields that must not be defined.
- * @returns (ResultTemplateCondition) A function that takes a result and checks if every field in the specified list is not defined.
+ * @param fieldNames A list of fields that must not be defined.
+ * @returns A function that takes a result and checks if every field in the specified list is not defined.
+ * @docsection Result Templates Helpers
  */
 export const fieldsMustNotBeDefined = (
   fieldNames: string[]
@@ -48,9 +51,10 @@ export const fieldsMustNotBeDefined = (
 
 /**
  * Creates a condition that verifies if a field's value contains any of the specified values.
- * @param fieldName (string) The name of the field to check.
- * @param valuesToMatch (string[]) A list of possible values to match.
- * @returns (ResultTemplateCondition) A function that takes a result and checks if the value for the specified field matches any value in the specified list.
+ * @param fieldName The name of the field to check.
+ * @param valuesToMatch A list of possible values to match.
+ * @returns A function that takes a result and checks if the value for the specified field matches any value in the specified list.
+ * @docsection Result Templates Helpers
  */
 export const fieldMustMatch = (
   fieldName: string,
@@ -69,9 +73,10 @@ export const fieldMustMatch = (
 
 /**
  * Creates a condition that verifies that a field's value does not contain any of the specified values.
- * @param fieldName (string) The name of the field to check.
- * @param blacklistedValues (string[]) A list of all disallowed values.
- * @returns (ResultTemplateCondition) A function that takes a result and checks that the value for the specified field does not match any value in the given list.
+ * @param fieldName The name of the field to check.
+ * @param blacklistedValues A list of all disallowed values.
+ * @returns A function that takes a result and checks that the value for the specified field does not match any value in the given list.
+ * @docsection Result Templates Helpers
  */
 export const fieldMustNotMatch = (
   fieldName: string,

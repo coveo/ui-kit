@@ -9,6 +9,9 @@ import {
   SearchHubSection,
 } from './state-sections';
 
+/**
+ * @docsection Types
+ */
 export type RecommendationAppState = ConfigurationSection &
   FieldsSection &
   AdvancedSearchQueriesSection &

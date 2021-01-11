@@ -22,6 +22,7 @@ function totalCountFilteredSelector(state: PaginationSection) {
 /** Calculates the current page number.
  * @param state SearchPageState.
  * @returns the current page number.
+ * @docsection Functions
  */
 export const currentPageSelector = createSelector(
   firstResultSelector,
@@ -32,6 +33,7 @@ export const currentPageSelector = createSelector(
 /** Calculates the maximum page number
  * @param state SearchPageState.
  * @returns the maximum page number.
+ * @docsection Functions
  */
 export const maxPageSelector = createSelector(
   totalCountFilteredSelector,
@@ -43,6 +45,7 @@ export const maxPageSelector = createSelector(
  * @param state SearchPageState.
  * @param desiredNumberOfPages the number of pages to return.
  * @returns the current page numbers.
+ * @docsection Functions
  */
 export const currentPagesSelector = createSelector(
   currentPageSelector,
