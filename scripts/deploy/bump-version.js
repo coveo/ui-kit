@@ -62,7 +62,7 @@ async function main() {
 
     const headCommitTag = await getHeadCommitTag();
 
-    if (headCommitTag) {
+    if (headCommitTag && !doGraduate) {
       console.log('Build commit is tagged. Skipping version bump.');
       return;
     }
