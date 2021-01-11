@@ -114,11 +114,10 @@ export namespace Components {
         "numberOfSuggestions": number;
     }
     interface AtomicSearchInterface {
-        "afterInitialization": (callback: () => void) => Promise<void>;
         "engine"?: Engine;
         "i18n": i18n;
         "initialize": (options: Pick<HeadlessConfigurationOptions, 'accessToken' | 'organizationId' | 'renewAccessToken' | 'platformUrl'>) => Promise<void>;
-        "lang": string;
+        "language": string;
         "logLevel"?: LogLevel;
         "pipeline": string;
         "sample": boolean;
@@ -423,8 +422,9 @@ declare namespace LocalJSX {
     interface AtomicSearchInterface {
         "engine"?: Engine;
         "i18n"?: i18n;
-        "lang"?: string;
+        "language"?: string;
         "logLevel"?: LogLevel;
+        "onReady"?: (event: CustomEvent<any>) => void;
         "pipeline"?: string;
         "sample"?: boolean;
         "searchHub"?: string;

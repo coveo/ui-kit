@@ -15,19 +15,20 @@
 
         // Initialization
         /* searchInterface.initialize({
-          accessToken: 'my_token',
-          organizationId: 'my_org',
+          accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
+          organizationId: 'searchuisamples',
         }); */
 
-        searchInterface.afterInitialization(() => {
+        // Event emitted once the search interface is initialized correctly
+        searchInterface.addEventListener('ready', () => {
           // Add/modify a translation
           // searchInterface.i18n.addResource('en', 'translation', 'search', 'Make me feel lucky!');
           // Change the language of the interface dynamically
-          // searchInterface.i18n.changeLanguage('fr');
+          // searchInterface.i18n.changeLanguage('es');
           // Interact with the engine
           // searchInterface.engine.dispatch(...);
           // Get all strings for a language/namespace
-          // searchInterface.i18n.getResourceBundle('en', 'translation');
+          // const allStrings = searchInterface.i18n.getResourceBundle('en', 'translation');
         });
       })();
     </script>
@@ -94,7 +95,7 @@
       </div>
       <atomic-history></atomic-history>
     </atomic-search-interface>
-    <!-- <atomic-recommendation></atomic-recommendation>
-    <atomic-frequently-bought-together></atomic-frequently-bought-together> -->
+    <atomic-recommendation></atomic-recommendation>
+    <atomic-frequently-bought-together></atomic-frequently-bought-together>
   </body>
 </html>

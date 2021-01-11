@@ -8,6 +8,8 @@ import {
   Element,
   State,
   getAssetPath,
+  Event,
+  EventEmitter,
 } from '@stencil/core';
 import {
   HeadlessEngine,
@@ -29,6 +31,8 @@ import {
 import i18next, {i18n} from 'i18next';
 import Backend, {BackendOptions} from 'i18next-http-backend';
 
+type SystemToInitialize = keyof AtomicSearchInterface['systemsToInitialize'];
+
 @Component({
   tag: 'atomic-search-interface',
   shadow: true,
@@ -39,42 +43,60 @@ export class AtomicSearchInterface {
   @Prop() sample = false;
   @Prop({reflect: true}) pipeline = 'default';
   @Prop({reflect: true}) searchHub = 'default';
-  @Prop() logLevel?: LogLevel = 'silent';
+  @Prop() logLevel?: LogLevel;
   @Prop() i18n: i18n = i18next.createInstance();
-  @Prop({reflect: true}) lang = 'en'; // TODO: make watchable and update i18next language on change
+  @Prop({reflect: true}) language = 'en'; // TODO: make watchable and update i18next language on change
   @Prop({mutable: true}) engine?: Engine;
   @State() error?: Error;
+  @Event() ready!: EventEmitter;
 
   private unsubscribe: Unsubscribe = () => {};
   private hangingComponentsInitialization: InitializeEvent[] = [];
-  private initialized = false;
-  private afterInitializationCallbacks: (() => void)[] = [];
+  private systemsToInitialize = {
+    i18next: false,
+    headless: false,
+  };
 
-  componentWillLoad() {
-    if (this.sample) {
-      this.initialize(HeadlessEngine.getSampleConfiguration());
-    }
-
-    this.i18n.use(Backend).init({
+  async componentWillLoad() {
+    await this.i18n.use(Backend).init({
       debug: this.logLevel === 'debug',
-      lng: this.lang,
+      lng: this.language,
       fallbackLng: ['en'],
       backend: {
         loadPath: `${getAssetPath('./lang/')}{{lng}}.json`,
       } as BackendOptions,
     });
+
+    this.systemInitialized('i18next');
+  }
+
+  componentDidLoad() {
+    this.sample && this.initialize(HeadlessEngine.getSampleConfiguration());
   }
 
   disconnectedCallback() {
     this.unsubscribe();
   }
 
-  @Method() async afterInitialization(callback: () => void) {
-    if (this.initialized) {
-      callback();
+  private systemInitialized(system: SystemToInitialize) {
+    this.systemsToInitialize[system] = true;
+    const allSystemsInitialized = Object.keys(this.systemsToInitialize).every(
+      (system) => this.systemsToInitialize[system as SystemToInitialize]
+    );
+
+    if (!allSystemsInitialized) {
       return;
     }
-    this.afterInitializationCallbacks.push(callback);
+
+    this.hangingComponentsInitialization.forEach((event) =>
+      event.detail(this.context)
+    );
+
+    this.initSearchParameterManager();
+    this.ready.emit();
+    this.engine!.dispatch(
+      SearchActions.executeSearch(AnalyticsActions.logInterfaceLoad())
+    );
   }
 
   @Method() async initialize(
@@ -83,8 +105,8 @@ export class AtomicSearchInterface {
       'accessToken' | 'organizationId' | 'renewAccessToken' | 'platformUrl'
     >
   ) {
-    if (this.initialized) {
-      console.error(
+    if (this.engine) {
+      this.engine.logger.warn(
         'The atomic-search-interface component has already been initialized.',
         this.host,
         this
@@ -92,26 +114,15 @@ export class AtomicSearchInterface {
       return;
     }
 
-    this.initEngine({
-      ...options,
-      search: {
-        searchHub: this.searchHub,
-        pipeline: this.pipeline,
-      },
-    });
-
-    this.initialized = true;
-    this.afterInitializationCallbacks.forEach((cb) => cb());
-  }
-
-  private get context(): InterfaceContext {
-    return {engine: this.engine!, i18n: this.i18n};
-  }
-
-  private initEngine(config: HeadlessConfigurationOptions) {
     try {
       this.engine = new HeadlessEngine({
-        configuration: config,
+        configuration: {
+          ...options,
+          search: {
+            searchHub: this.searchHub,
+            pipeline: this.pipeline,
+          },
+        },
         reducers: searchAppReducers,
         loggerOptions: {
           level: this.logLevel,
@@ -122,20 +133,11 @@ export class AtomicSearchInterface {
       return;
     }
 
-    this.hangingComponentsInitialization.forEach((event) =>
-      event.detail(this.context)
-    );
+    this.systemInitialized('headless');
+  }
 
-    this.hangingComponentsInitialization = [];
-
-    // Waits until the fields are registered asynchronously before triggering a search
-    setTimeout(() => {
-      this.initSearchParameterManager();
-
-      this.engine!.dispatch(
-        SearchActions.executeSearch(AnalyticsActions.logInterfaceLoad())
-      );
-    }, 0);
+  private get context(): InterfaceContext {
+    return {engine: this.engine!, i18n: this.i18n};
   }
 
   private initSearchParameterManager() {

@@ -11,23 +11,21 @@
 | ----------- | ------------ | ----------- | --------------------------------------------------------------------------------------- | -------------------------- |
 | `engine`    | --           |             | `Engine<SearchAppState> \| undefined`                                                   | `undefined`                |
 | `i18n`      | --           |             | `i18n`                                                                                  | `i18next.createInstance()` |
-| `logLevel`  | `log-level`  |             | `"debug" \| "error" \| "fatal" \| "info" \| "silent" \| "trace" \| "warn" \| undefined` | `'silent'`                 |
+| `language`  | `language`   |             | `string`                                                                                | `'en'`                     |
+| `logLevel`  | `log-level`  |             | `"debug" \| "error" \| "fatal" \| "info" \| "silent" \| "trace" \| "warn" \| undefined` | `undefined`                |
 | `pipeline`  | `pipeline`   |             | `string`                                                                                | `'default'`                |
 | `sample`    | `sample`     |             | `boolean`                                                                               | `false`                    |
 | `searchHub` | `search-hub` |             | `string`                                                                                | `'default'`                |
 
 
+## Events
+
+| Event   | Description | Type               |
+| ------- | ----------- | ------------------ |
+| `ready` |             | `CustomEvent<any>` |
+
+
 ## Methods
-
-### `afterInitialization(callback: () => void) => Promise<void>`
-
-
-
-#### Returns
-
-Type: `Promise<void>`
-
-
 
 ### `initialize(options: Pick<HeadlessConfigurationOptions, 'accessToken' | 'organizationId' | 'renewAccessToken' | 'platformUrl'>) => Promise<void>`
 
