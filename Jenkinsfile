@@ -2,7 +2,6 @@ node('linux && docker') {
   checkout scm
   def isMaster = env.BRANCH_NAME == 'master'
   def commitHash = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
-  def version = 
 
   withEnv(['npm_config_cache=npm-cache', 'CI=true']) {
     withDockerContainer(image: 'node:14', args: '-u=root') {
@@ -24,8 +23,7 @@ node('linux && docker') {
       }
 
       stage('Linting') {
-        sh 'npm run lint:junit'
-        junit 'reports/eslint.xml'
+        sh 'npm run lint:check'
       }
 
       stage('Unit Test') {

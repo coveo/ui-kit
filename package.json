@@ -8,7 +8,6 @@
     "test": "lerna run test",
     "test:watch": "lerna run --parallel test:watch --no-prefix",
     "lint:check": "eslint .",
-    "lint:junit": "eslint . --format junit --output-file ./reports/eslint.xml",
     "lint:fix": "eslint --fix .",
     "pr:report": "node ./scripts/reports/pr-report.js",
     "report:bundle-size:time-series": "node ./scripts/reports/bundle-size/time-series.js",
