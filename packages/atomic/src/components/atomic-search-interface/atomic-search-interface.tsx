@@ -183,14 +183,12 @@ export class AtomicSearchInterface {
       );
     }
 
-    if (!this.engine) {
-      return;
-    }
-
     return [
-      <atomic-relevance-inspector
-        engine={this.engine}
-      ></atomic-relevance-inspector>,
+      this.engine && (
+        <atomic-relevance-inspector
+          engine={this.engine}
+        ></atomic-relevance-inspector>
+      ),
       <slot></slot>,
     ];
   }
