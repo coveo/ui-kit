@@ -15,7 +15,7 @@ pipeline {
   }
 
   environment {
-    NPM_TOKEN = credentials("npmjs_com_token")
+    NPM_TOKEN = credentials("npm_corp_token")
     GIT = credentials('github-coveobot')
     GH_TOKEN = credentials('github-coveobot_token')
     SNYK_TOKEN = credentials("snyk_token")
@@ -66,7 +66,7 @@ pipeline {
         script {
           gitUtils.withCredentialHelper() {
             sh "git checkout master"
-            sh "npm version -m \"Bump version to %s [version bump]\""
+            sh "npm version patch -m \"Bump version to %s [version bump]\""
           }
         }
       }
