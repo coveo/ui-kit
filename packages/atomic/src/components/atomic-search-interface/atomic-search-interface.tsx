@@ -57,21 +57,25 @@ export class AtomicSearchInterface {
     headless: false,
   };
 
-  async componentWillLoad() {
-    await this.i18n.use(Backend).init({
-      debug: this.logLevel === 'debug',
-      lng: this.language,
-      fallbackLng: ['en'],
-      backend: {
-        loadPath: `${getAssetPath('./lang/')}{{lng}}.json`,
-      } as BackendOptions,
-    });
+  componentWillLoad() {
+    this.i18n
+      .use(Backend)
+      .init({
+        debug: this.logLevel === 'debug',
+        lng: this.language,
+        fallbackLng: ['en'],
+        backend: {
+          loadPath: `${getAssetPath('./lang/')}{{lng}}.json`,
+        } as BackendOptions,
+      })
+      .then(() => this.systemInitialized('i18next'));
 
-    this.systemInitialized('i18next');
-  }
-
-  componentDidLoad() {
-    this.sample && this.initialize(HeadlessEngine.getSampleConfiguration());
+    if (this.sample) {
+      // Mimics calling the async "initialize" method from the DOM
+      setTimeout(() => {
+        this.initialize(HeadlessEngine.getSampleConfiguration());
+      }, 0);
+    }
   }
 
   disconnectedCallback() {
