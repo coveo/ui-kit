@@ -1,37 +1,25 @@
 import {Engine} from '@coveo/headless';
 import {ComponentInterface, getElement, h} from '@stencil/core';
-import {Schema, StringValue, SchemaValues} from '@coveo/bueno';
+import {i18n} from 'i18next';
 
-export type InitializeEventHandler = (engine: Engine) => void;
-export type InitializeEvent = CustomEvent<InitializeEventHandler>;
-
-const engineProviders = ['atomic-search-interface'];
-
-interface EngineProviderElement extends Element {
+export interface InterfaceContext {
   engine: Engine;
+  i18n: i18n;
 }
+
+export type InitializeEventHandler = (context: InterfaceContext) => void;
+export type InitializeEvent = CustomEvent<InitializeEventHandler>;
 
 export class InitializationError extends Error {
   constructor(elementName: string) {
     super(
-      `The ${elementName} element must be the child of a configured ${engineProviders.join(
-        ' or '
-      )} element.`
+      `The "${elementName}" element must be the child of a configured "atomic-search-interface" element.`
     );
     this.name = 'InitializationError';
   }
 }
 
-const initializationOptionsSchema = new Schema({
-  errorProperty: new StringValue({default: 'error'}),
-  engineProperty: new StringValue({default: 'engine'}),
-});
-
-export type InitializationOptions = SchemaValues<
-  typeof initializationOptionsSchema
->;
-
-export function Initialization(options?: InitializationOptions) {
+export function Initialization() {
   return (component: ComponentInterface, initializeMethod: string) => {
     const {
       componentWillLoad,
@@ -40,29 +28,14 @@ export function Initialization(options?: InitializationOptions) {
       componentDidLoad,
       [initializeMethod]: initialize,
     } = component;
-    const {
-      errorProperty,
-      engineProperty,
-    } = initializationOptionsSchema.validate(options) as Required<
-      InitializationOptions
-    >;
+    const errorProperty = 'error';
+    const contextProperty = 'context';
 
     component.componentWillLoad = function () {
       const element = getElement(this);
-      const parentEngineProvider: EngineProviderElement | null = element.closest(
-        engineProviders.join()
-      );
-
-      if (!parentEngineProvider) {
-        this[errorProperty] = new InitializationError(
-          element.nodeName.toLowerCase()
-        );
-        return;
-      }
-
       const event = new CustomEvent('atomic/initializeComponent', {
-        detail: (engine: Engine) => {
-          this[engineProperty] = engine;
+        detail: (context: InterfaceContext) => {
+          this[contextProperty] = context;
           try {
             initialize.call(this);
           } catch (error) {
@@ -70,8 +43,15 @@ export function Initialization(options?: InitializationOptions) {
           }
         },
         bubbles: true,
+        cancelable: true,
       });
-      element.dispatchEvent(event);
+      const canceled = element.dispatchEvent(event);
+      if (canceled) {
+        this[errorProperty] = new InitializationError(
+          element.nodeName.toLowerCase()
+        );
+        return;
+      }
 
       return componentWillLoad && componentWillLoad.call(this);
     };
@@ -81,7 +61,6 @@ export function Initialization(options?: InitializationOptions) {
 
     component.render = function () {
       if (this[errorProperty]) {
-        hasRendered = true;
         return (
           <atomic-component-error
             error={this[errorProperty]}
@@ -89,7 +68,7 @@ export function Initialization(options?: InitializationOptions) {
         );
       }
 
-      if (!this[engineProperty]) {
+      if (!this[contextProperty]) {
         return;
       }
 

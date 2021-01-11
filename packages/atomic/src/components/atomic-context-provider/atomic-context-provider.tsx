@@ -1,19 +1,22 @@
 import {Component, Prop} from '@stencil/core';
-import {buildContext, Engine} from '@coveo/headless';
-import {Initialization} from '../../utils/initialization-utils';
+import {buildContext} from '@coveo/headless';
+import {
+  Initialization,
+  InterfaceContext,
+} from '../../utils/initialization-utils';
 
 @Component({
   tag: 'atomic-context-provider',
   shadow: true,
 })
 export class AtomicContextProvider {
-  @Prop() context = '{}';
-  private engine!: Engine;
+  @Prop() contextValue = '{}';
+  private context!: InterfaceContext;
 
   @Initialization()
   public initialize() {
-    const context = buildContext(this.engine);
-    const contextObject = JSON.parse(this.context);
+    const context = buildContext(this.context.engine);
+    const contextObject = JSON.parse(this.contextValue);
     context.set(contextObject);
   }
 }

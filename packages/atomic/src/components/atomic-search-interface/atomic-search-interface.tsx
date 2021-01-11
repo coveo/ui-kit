@@ -22,7 +22,10 @@ import {
   buildSearchParameterSerializer,
   Unsubscribe,
 } from '@coveo/headless';
-import {InitializeEvent} from '../../utils/initialization-utils';
+import {
+  InterfaceContext,
+  InitializeEvent,
+} from '../../utils/initialization-utils';
 import i18next, {i18n} from 'i18next';
 import Backend, {BackendOptions} from 'i18next-http-backend';
 
@@ -100,6 +103,10 @@ export class AtomicSearchInterface {
     this.afterInitializationCallbacks.forEach((cb) => cb());
   }
 
+  private get context(): InterfaceContext {
+    return {engine: this.engine!, i18n: this.i18n};
+  }
+
   private initEngine(config: HeadlessConfigurationOptions) {
     try {
       this.engine = new HeadlessEngine({
@@ -115,7 +122,7 @@ export class AtomicSearchInterface {
     }
 
     this.hangingComponentsInitialization.forEach((event) =>
-      event.detail(this.engine!)
+      event.detail(this.context)
     );
 
     this.hangingComponentsInitialization = [];
@@ -158,10 +165,11 @@ export class AtomicSearchInterface {
 
   @Listen('atomic/initializeComponent')
   public handleInitialization(event: InitializeEvent) {
+    event.preventDefault();
     event.stopPropagation();
 
     if (this.engine) {
-      event.detail(this.engine!);
+      event.detail(this.context);
       return;
     }
 
