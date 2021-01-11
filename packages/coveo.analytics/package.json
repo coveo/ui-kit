@@ -21,10 +21,12 @@
         "url": "https://github.com/coveo/coveo.analytics.js.git"
     },
     "license": "MIT",
+    "dependencies": {
+        "@react-native-async-storage/async-storage": "^1.13.2"
+    },
     "devDependencies": {
         "react": "^17.0.1",
         "react-native": "^0.63.3",
-        "@react-native-async-storage/async-storage": "^1.13.2",
         "@types/express": "^4.17.2",
         "@types/fetch-mock": "^7.3.2",
         "@types/jest": "^25.1.1",
