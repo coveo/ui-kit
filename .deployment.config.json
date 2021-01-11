@@ -30,20 +30,22 @@
         "id": "deploy-headless-to-s3-version",
         "s3": {
           "bucket": "{terraform.infra.infra.bucket_binaries}",
-          "directory": "proda/StaticCDN/headless/v$[VERSION]",
+          "directory": "proda/StaticCDN/headless/v$[PRERELEASE]",
           "source": "packages/headless/dist/browser",
           "parameters": {
             "acl": "public-read"
+          },
+          "prd": {
+            "directory": "proda/StaticCDN/headless/v$[VERSION]"
           }
         }
       },
     {
-      "id": "graduate-release",
+      "id": "production-release",
       "team_jenkins": {
         "disabled": true,
-        "job_name": "test-deploy-npm",
-        "extra_parameters": {"COMMIT_HASH": "$[COMMIT_HASH]", "VERSION": "$[VERSION]"},
-        "qa": {
+        "job_name": "ui-kit-production-release",
+        "prd": {
           "disabled": false
         }
       }
