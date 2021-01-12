@@ -1,36 +1,38 @@
 <hr />
-<h3 class="h5">
-  <atomic-result-link class="text-primary"></atomic-result-link>
+<h3>
+  <!-- TODO: use result link when https://coveord.atlassian.net/browse/KIT-98 is resolved -->
+  <!-- <atomic-result-link></atomic-result-link> -->
+  <a href="{{clickUri}}"><h3>{{title}}</h3></a>
 </h3>
 <p>
   <atomic-result-value value="excerpt"> </atomic-result-value>
 </p>
 
-<div class="row row-cols-2">
+<div>
   <atomic-field-condition if-defined="author">
-    <div class="mt-1">
-      <span class="fs-6 mr-1 badge bg-secondary">Author</span>
+    <div>
+      <span>Author</span>
       <atomic-result-value value="author"></atomic-result-value>
     </div>
   </atomic-field-condition>
 
   <atomic-field-condition if-defined="source">
-    <div class="mt-1">
-      <span class="fs-6 mr-1 badge bg-secondary">Source</span>
+    <div>
+      <span>Source</span>
       <atomic-result-value value="source"></atomic-result-value>
     </div>
   </atomic-field-condition>
 
   <atomic-field-condition if-defined="language">
-    <div class="mt-1">
-      <span class="fs-6 mr-1 badge bg-secondary">Language</span>
+    <div>
+      <span>Language</span>
       <atomic-result-value value="language"></atomic-result-value>
     </div>
   </atomic-field-condition>
 
   <atomic-field-condition if-defined="filetype">
-    <div class="mt-1">
-      <span class="fs-6 mr-1 badge bg-secondary">Type</span>
+    <div>
+      <span>Type</span>
       <atomic-result-value value="filetype"> </atomic-result-value>
     </div>
   </atomic-field-condition>

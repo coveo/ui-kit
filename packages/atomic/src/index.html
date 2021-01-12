@@ -19,16 +19,6 @@
     })();
   </script> -->
     <style>
-      * {
-        box-sizing: border-box;
-      }
-
-      :root {
-        --bs-font-sans-serif: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif,
-          'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
-        --atomic-border-radius: 0.5em;
-      }
-
       /* Example on how to customize Atomic component CSS parts */
       atomic-search-box::part(submit-button) {
         background-color: #ed731a;
@@ -44,77 +34,56 @@
   </head>
 
   <body>
-    <div class="container-xl">
-      <atomic-search-interface id="search" sample>
-        <div class="row justify-content-center">
-          <atomic-tab class="col-auto" expression="">All Files</atomic-tab>
-          <atomic-tab class="col-auto" expression='@author *= "BBC News"'>BBC News</atomic-tab>
-        </div>
-        <div class="row justify-content-center my-5">
-          <div class="col-8">
-            <atomic-search-box>
-              <span slot="submit-button">Go!</span>
-            </atomic-search-box>
+    <atomic-search-interface id="search" sample>
+      <div style="display: flex">
+        <atomic-tab expression="">All Files</atomic-tab>
+        <atomic-tab expression='@author *= "BBC News"'>BBC News</atomic-tab>
+      </div>
+      <atomic-context-provider context='{"test":"value","test2":"value2"}'></atomic-context-provider>
+      <atomic-search-box>
+        <span slot="submit-button">Go!</span>
+      </atomic-search-box>
+      <div style="display: flex">
+        <atomic-facet-manager>
+          <atomic-facet field="author" label="Authors"></atomic-facet>
+          <atomic-numeric-facet field="size" label="File sizes"></atomic-numeric-facet>
+          <atomic-date-facet field="created" label="Created"></atomic-date-facet>
+          <atomic-category-facet field="geographicalhierarchy" label="World Atlas"></atomic-category-facet>
+        </atomic-facet-manager>
+        <div>
+          <atomic-breadcrumb-manager></atomic-breadcrumb-manager>
+          <atomic-did-you-mean></atomic-did-you-mean>
+          <atomic-query-error></atomic-query-error>
+          <div style="display: flex">
+            <atomic-query-summary></atomic-query-summary>
+            <atomic-sort-dropdown></atomic-sort-dropdown>
+          </div>
+
+          <atomic-result-list>
+            <atomic-result-template id="france-template">
+              <hr />
+              <img src="https://www.cia-france.com/media/1558/parcarou1_720x500.jpg" alt="Paris" />
+              <h5 part="france-title">{{title}}</h5>
+              <p>
+                <atomic-result-value value="excerpt"> </atomic-result-value>
+              </p>
+              <a href="{{clickUri}}">More info</a>
+            </atomic-result-template>
+
+            <script>
+              document.querySelector('#france-template').conditions = [(result) => result.title === 'France'];
+            </script>
+          </atomic-result-list>
+
+          <div style="display: flex">
+            <atomic-pager></atomic-pager>
+            <atomic-results-per-page></atomic-results-per-page>
           </div>
         </div>
-        <div class="row">
-          <div class="col-4">
-            <atomic-facet-manager>
-              <atomic-facet field="author" label="Authors"></atomic-facet>
-              <atomic-numeric-facet field="size" label="File sizes"></atomic-numeric-facet>
-              <atomic-date-facet field="created" label="Created"></atomic-date-facet>
-              <atomic-category-facet field="geographicalhierarchy" label="World Atlas"></atomic-category-facet>
-            </atomic-facet-manager>
-          </div>
-          <div class="col">
-            <div class="row">
-              <atomic-breadcrumb-manager></atomic-breadcrumb-manager>
-            </div>
-
-            <div class="row">
-              <atomic-did-you-mean></atomic-did-you-mean>
-              <atomic-query-error></atomic-query-error>
-            </div>
-
-            <div class="d-flex justify-content-between align-items-center">
-              <atomic-query-summary></atomic-query-summary>
-              <atomic-sort-dropdown></atomic-sort-dropdown>
-            </div>
-
-            <div class="row">
-              <atomic-result-list>
-                <atomic-result-template id="france-template">
-                  <hr />
-                  <div class="card" style="width: 18rem">
-                    <img
-                      src="https://www.cia-france.com/media/1558/parcarou1_720x500.jpg"
-                      class="card-img-top"
-                      alt="Paris"
-                    />
-                    <div class="card-body">
-                      <h5 class="card-title" part="france-title">{{title}}</h5>
-                      <p class="card-text"><atomic-result-value value="excerpt"> </atomic-result-value></p>
-                      <a href="{{clickUri}}" class="btn btn-primary">More info</a>
-                    </div>
-                  </div>
-                </atomic-result-template>
-
-                <script>
-                  document.querySelector('#france-template').conditions = [(result) => result.title === 'France'];
-                </script>
-              </atomic-result-list>
-            </div>
-
-            <div class="d-flex justify-content-between my-4">
-              <atomic-pager></atomic-pager>
-              <atomic-results-per-page></atomic-results-per-page>
-            </div>
-          </div>
-        </div>
-        <atomic-history></atomic-history>
-      </atomic-search-interface>
-      <atomic-recommendation></atomic-recommendation>
-      <atomic-frequently-bought-together></atomic-frequently-bought-together>
-    </div>
+      </div>
+      <atomic-history></atomic-history>
+    </atomic-search-interface>
+    <atomic-recommendation></atomic-recommendation>
+    <atomic-frequently-bought-together></atomic-frequently-bought-together>
   </body>
 </html>

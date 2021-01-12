@@ -90,13 +90,15 @@ export function buildResultList(
     ...controller,
 
     /**
-     * @returns (ResultListState) The state of the `ResultList` controller.
+     * The state of the `ResultList` controller.
      */
     get state() {
       const state = engine.state;
 
       return {
+        /** The results of the last executed search. */
         results: state.search.results,
+        /** `true` if a search is in progress and `false` otherwise. */
         isLoading: state.search.isLoading,
       };
     },

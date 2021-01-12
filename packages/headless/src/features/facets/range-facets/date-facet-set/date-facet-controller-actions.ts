@@ -11,6 +11,11 @@ import {facetIdDefinition} from '../../generic/facet-actions-validation';
 import {RecordValue} from '@coveo/bueno';
 import {dateFacetValueDefinition} from '../generic/range-facet-validate-payload';
 
+const definition = {
+  facetId: facetIdDefinition,
+  selection: new RecordValue({values: dateFacetValueDefinition}),
+};
+
 /**
  * Toggles the date facet value and then executes a search with the appropriate analytics tag.
  * @param facetId (string) The unique identifier of the facet (e.g., `"1"`).
@@ -25,15 +30,9 @@ export const executeToggleDateFacetSelect = createAsyncThunk<
   AsyncThunkSearchOptions<ConfigurationSection & DateFacetSection>
 >(
   'dateFacet/executeToggleSelect',
-  ({facetId, selection}, {dispatch, extra: {validatePayload}}) => {
-    validatePayload(
-      {facetId, selection},
-      {
-        facetId: facetIdDefinition,
-        selection: new RecordValue({values: dateFacetValueDefinition}),
-      }
-    );
-    dispatch(toggleSelectDateFacetValue({facetId, selection}));
-    dispatch(executeToggleRangeFacetSelect({facetId, selection}));
+  (payload, {dispatch, extra: {validatePayload}}) => {
+    validatePayload(payload, definition);
+    dispatch(toggleSelectDateFacetValue(payload));
+    dispatch(executeToggleRangeFacetSelect(payload));
   }
 );

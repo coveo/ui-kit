@@ -25,7 +25,7 @@ import mainclear from '../../images/main-clear.svg';
 
 @Component({
   tag: 'atomic-breadcrumb-manager',
-  styleUrl: 'atomic-breadcrumb-manager.scss',
+  styleUrl: 'atomic-breadcrumb-manager.css',
   shadow: true,
 })
 export class AtomicBreadcrumbManager {
@@ -62,10 +62,8 @@ export class AtomicBreadcrumbManager {
     return this.state.facetBreadcrumbs.map((breadcrumb) => {
       const breadcrumbsValues = this.getBreadrumbValues(breadcrumb);
       return (
-        <ul part="breadcrumbs" class="breadcrumb p-0 m-0">
-          <li part="breadcrumb-label" class="text-muted">
-            {breadcrumb.field}:&nbsp;
-          </li>
+        <ul part="breadcrumbs">
+          <li part="breadcrumb-label">{breadcrumb.field}:&nbsp;</li>
           {breadcrumbsValues}
         </ul>
       );
@@ -77,11 +75,10 @@ export class AtomicBreadcrumbManager {
       breadcrumb
     );
     const renderedBreadcrumbs = breadcrumbsToShow.map((breadcrumbValue) => (
-      <li part="breadcrumb-value" class="pr-3">
+      <li part="breadcrumb-value">
         <button
           part="breadcrumb-button"
           aria-label={`Remove inclusion filter on ${breadcrumbValue.value.value}`}
-          class={this.buttonClasses}
           onClick={breadcrumbValue.deselect}
         >
           {breadcrumbValue.value.value}
@@ -99,10 +96,8 @@ export class AtomicBreadcrumbManager {
     return this.state.numericFacetBreadcrumbs.map((breadcrumb) => {
       const breadcrumbsValues = this.getRangeBreadrumbValues(breadcrumb, false);
       return (
-        <ul part="breadcrumbs" class="breadcrumb p-0 m-0">
-          <li part="breadcrumb-label" class="text-muted">
-            {breadcrumb.field}:&nbsp;
-          </li>
+        <ul part="breadcrumbs">
+          <li part="breadcrumb-label">{breadcrumb.field}:&nbsp;</li>
           {breadcrumbsValues}
         </ul>
       );
@@ -113,10 +108,8 @@ export class AtomicBreadcrumbManager {
     return this.state.dateFacetBreadcrumbs.map((breadcrumb) => {
       const breadcrumbsValues = this.getRangeBreadrumbValues(breadcrumb, true);
       return (
-        <ul part="breadcrumbs" class="breadcrumb p-0 m-0">
-          <li part="breadcrumb-label" class="text-muted">
-            {breadcrumb.field}:&nbsp;
-          </li>
+        <ul part="breadcrumbs">
+          <li part="breadcrumb-label">{breadcrumb.field}:&nbsp;</li>
           {breadcrumbsValues}
         </ul>
       );
@@ -136,11 +129,10 @@ export class AtomicBreadcrumbManager {
         breadcrumbValue.value
       );
       return (
-        <li part="breadcrumb-value" class="pr-3">
+        <li part="breadcrumb-value">
           <button
             part="breadcrumb-button"
             aria-label={ariaLabel}
-            class={this.buttonClasses}
             onClick={breadcrumbValue.deselect}
           >
             {breadcrumbValue.value.start} - {breadcrumbValue.value.end}
@@ -158,10 +150,8 @@ export class AtomicBreadcrumbManager {
     return this.state.categoryFacetBreadcrumbs.map((breadcrumb) => {
       const breadcrumbsValues = this.getCategoryBreadrumbValues(breadcrumb);
       return (
-        <ul part="breadcrumbs" class="breadcrumb p-0 m-0">
-          <li part="breadcrumb-label" class="text-muted">
-            {breadcrumb.field}:&nbsp;
-          </li>
+        <ul part="breadcrumbs">
+          <li part="breadcrumb-label">{breadcrumb.field}:&nbsp;</li>
           {breadcrumbsValues}
         </ul>
       );
@@ -175,14 +165,10 @@ export class AtomicBreadcrumbManager {
       ` ${this.categoryDivider} `
     );
     return (
-      <li
-        part="breadcrumb-value category-breadcrumb-value"
-        class="breadcrumb-item"
-      >
+      <li part="breadcrumb-value category-breadcrumb-value">
         <button
           part="breadcrumb-button"
           aria-label={`Remove inclusion filter on ${ariaLabel}`}
-          class={this.buttonClasses}
           onClick={values.deselect}
         >
           {joinedBreadcrumbs}
@@ -196,7 +182,6 @@ export class AtomicBreadcrumbManager {
     return (
       <button
         part="breadcrumb-button"
-        class={this.buttonClasses}
         onClick={() => this.breadcrumbManager.deselectAll()}
       >
         Clear All Filters
@@ -251,7 +236,6 @@ export class AtomicBreadcrumbManager {
       <li part="breadcrumb-value">
         <button
           part="breadcrumb-button"
-          class={this.buttonClasses}
           aria-label={`Show ${collapsedBreadcrumbNumber} more ${
             collapsedBreadcrumbNumber > 1 ? 'filters' : 'filter'
           }`}
@@ -264,17 +248,7 @@ export class AtomicBreadcrumbManager {
   }
 
   private get mainClear() {
-    return (
-      <span
-        class="pl-1 text-primary align-baseline"
-        role="button"
-        innerHTML={mainclear}
-      ></span>
-    );
-  }
-
-  private get buttonClasses() {
-    return 'btn btn-link btn-sm text-decoration-none p-0  align-baseline ';
+    return <span role="button" innerHTML={mainclear}></span>;
   }
 
   private resetCollapsedBreadcrumbs(length: number, field: string) {
@@ -298,18 +272,18 @@ export class AtomicBreadcrumbManager {
   }
 
   render() {
-    if (!this.breadcrumbManager.hasBreadcrumbs()) {
+    if (!this.breadcrumbManager.state.hasBreadcrumbs) {
       return;
     }
     return (
-      <div class="row">
-        <span class=" col-9">
+      <div>
+        <span>
           {this.facetBreadcrumbs}
           {this.numericFacetBreadcrumbs}
           {this.dateFacetBreadcrumbs}
           {this.categoryFacetBreadcrumbs}
         </span>
-        <span class="col-3 text-right">{this.getClearAllFiltersButton()}</span>
+        <span>{this.getClearAllFiltersButton()}</span>
       </div>
     );
   }

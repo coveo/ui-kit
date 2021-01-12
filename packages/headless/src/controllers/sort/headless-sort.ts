@@ -25,6 +25,9 @@ import {
 import {validateInitialState} from '../../utils/validate-payload';
 
 export interface SortProps {
+  /**
+   * The initial state that should be applied to this `Sort` controller.
+   */
   initialState: Partial<SortInitialState>;
 }
 
@@ -66,10 +69,10 @@ function getCriterionAsArray(state: Partial<SortInitialState>) {
   return isArray(state.criterion) ? state.criterion : [state.criterion];
 }
 
-/** The `Sort` controller allows changing how the results are sorted.*/
+/** The `Sort` controller manages how the results are sorted. */
 export type Sort = ReturnType<typeof buildSort>;
 
-/** The state relevant to the `Sort` controller.*/
+/** A scoped and simplified part of the headless state that is relevant to the `Sort` controller. */
 export type SortState = Sort['state'];
 
 export function buildSort(
@@ -102,17 +105,20 @@ export function buildSort(
     },
 
     /**
-     * Returns `true` if the passed sort criterion matches the value in state, and `false` otherwise.
+     * Checks whether the specified sort criterion matches the value in state.
      * @param criterion The criterion to compare.
-     * @returns {boolean}
+     * @returns `true` if the passed sort criterion matches the value in state, and `false` otherwise.
      */
     isSortedBy(criterion: SortCriterion | SortCriterion[]) {
       return this.state.sortCriteria === buildCriterionExpression(criterion);
     },
 
-    /**  @returns The state of the `Sort` controller.*/
+    /** The state of the `Sort` controller. */
     get state() {
       return {
+        /**
+         * The sort criteria associated with this `Sort` controller.
+         */
         sortCriteria: engine.state.sortCriteria,
       };
     },

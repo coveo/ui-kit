@@ -96,3 +96,17 @@ export const updateFacetIsFieldExpanded = createAction(
       isFieldExpanded: new BooleanValue({required: true}),
     })
 );
+
+/**
+ * Updates the updateFreezeCurrentValues flag of a facet.
+ * @param facetId (string) The unique identifier of the facet (e.g., `"1"`).
+ * @param freezeCurrentValues (boolean) Wether the values should be frozen in the next request.
+ */
+export const updateFreezeCurrentValues = createAction(
+  'facet/updateFreezeCurrentValues',
+  (payload: {facetId: string; freezeCurrentValues: boolean}) =>
+    validatePayload(payload, {
+      facetId: facetIdDefinition,
+      freezeCurrentValues: new BooleanValue({required: true}),
+    })
+);

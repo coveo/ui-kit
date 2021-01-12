@@ -20,7 +20,7 @@ import {Initialization} from '../../utils/initialization-utils';
  */
 @Component({
   tag: 'atomic-pager',
-  styleUrl: 'atomic-pager.scss',
+  styleUrl: 'atomic-pager.css',
   shadow: true,
 })
 export class AtomicPager {
@@ -51,10 +51,9 @@ export class AtomicPager {
 
     const icon = '<';
     return (
-      <li class="page-item">
+      <li>
         <button
           part="back-button"
-          class="page-link"
           aria-label="Previous page"
           onClick={() => {
             this.pager.previousPage();
@@ -73,10 +72,9 @@ export class AtomicPager {
 
     const icon = '>';
     return (
-      <li class="page-item">
+      <li>
         <button
           part="next-button"
-          class="page-link"
           aria-label="Next page"
           onClick={() => {
             this.pager.nextPage();
@@ -98,10 +96,9 @@ export class AtomicPager {
     const className = isSelected ? 'active' : '';
 
     return (
-      <li class={`page-item ${className}`}>
+      <li class={className}>
         <button
           part={`page-button ${isSelected && 'active-page-button'}`}
-          class="page-link"
           aria-label={`Page ${page}`}
           onClick={() => {
             this.pager.selectPage(page);
@@ -116,7 +113,7 @@ export class AtomicPager {
   render() {
     return (
       <nav aria-label="Pager">
-        <ul class="pagination mb-0" part="list">
+        <ul part="list">
           {this.backButton}
           {this.pages}
           {this.nextButton}

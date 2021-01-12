@@ -1,16 +1,14 @@
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 
 import {ActionCreators} from '../../app/undoable';
-import {
-  SearchAppState,
-  SearchParametersState,
-} from '../../state/search-app-state';
+import {SearchAppState} from '../../state/search-app-state';
+import {HistoryState} from './history-state';
 
 /**
  * Creates a snapshot of the current request parameters and adds it to the interface history.
  * @param (SearchParametersState) The current state of the search parameters.
  */
-export const snapshot = createAction<SearchParametersState>('history/snapshot');
+export const snapshot = createAction<HistoryState>('history/snapshot');
 
 /**
  * Moves backward in the interface history.

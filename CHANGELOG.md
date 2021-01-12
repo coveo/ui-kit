@@ -3,6 +3,196 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.2.0-alpha.8](https://github.com/coveo/ui-kit/compare/v0.2.0-alpha.7...v0.2.0-alpha.8) (2021-01-07)
+
+**Note:** Version bump only for package ui-kit
+
+
+
+
+
+# [0.2.0-alpha.7](https://github.com/coveo/ui-kit/compare/v0.2.0-alpha.6...v0.2.0-alpha.7) (2021-01-07)
+
+**Note:** Version bump only for package ui-kit
+
+
+
+
+
+# [0.2.0-alpha.6](https://github.com/coveo/ui-kit/compare/v0.2.0-alpha.5...v0.2.0-alpha.6) (2021-01-05)
+
+**Note:** Version bump only for package ui-kit
+
+
+
+
+
+# [0.2.0-alpha.5](https://github.com/coveo/ui-kit/compare/v0.2.0-alpha.4...v0.2.0-alpha.5) (2020-12-29)
+
+
+### Features
+
+* **headless:** add unit tests to controller action thunks ([#394](https://github.com/coveo/ui-kit/issues/394)) ([337ed6d](https://github.com/coveo/ui-kit/commit/337ed6d6a9fcfd3b9265224d00a2f3c14d06fe72))
+
+
+
+
+
+# [0.2.0-alpha.4](https://github.com/coveo/ui-kit/compare/v0.2.0-alpha.3...v0.2.0-alpha.4) (2020-12-22)
+
+
+### Bug Fixes
+
+* **headless:** add breadcrumbs actions and log breadcrumb analytics ([#362](https://github.com/coveo/ui-kit/issues/362)) ([33a3fb7](https://github.com/coveo/ui-kit/commit/33a3fb71049f564fa87771d6070f9471dd559630))
+
+
+
+
+
+# [0.2.0-alpha.3](https://github.com/coveo/ui-kit/compare/v0.1.0...v0.2.0-alpha.3) (2020-12-21)
+
+
+### Bug Fixes
+
+* **headless:** on category facet breadcrumb click, reset numberOfValues to initial value ([#380](https://github.com/coveo/ui-kit/issues/380)) ([74e159f](https://github.com/coveo/ui-kit/commit/74e159ff48ac637b1fcf0ccd44b46e233409d699))
+
+
+### Features
+
+* **headless:** send context info inside analytics event payload ([#389](https://github.com/coveo/ui-kit/issues/389)) ([f97f9e4](https://github.com/coveo/ui-kit/commit/f97f9e4a416ad3b7f58451035ded5b28f31eda5a))
+
+
+
+
+
+# [0.2.0-alpha.2](https://github.com/coveo/ui-kit/compare/v0.1.0...v0.2.0-alpha.2) (2020-12-18)
+
+
+### Features
+
+* **headless:** send context info inside analytics event payload ([#389](https://github.com/coveo/ui-kit/issues/389)) ([f97f9e4](https://github.com/coveo/ui-kit/commit/f97f9e4a416ad3b7f58451035ded5b28f31eda5a))
+
+
+
+
+
+# [0.2.0-alpha.1](https://github.com/coveo/ui-kit/compare/v0.1.0...v0.2.0-alpha.1) (2020-12-18)
+
+
+### Features
+
+* **headless:** send context info inside analytics event payload ([#389](https://github.com/coveo/ui-kit/issues/389)) ([f97f9e4](https://github.com/coveo/ui-kit/commit/f97f9e4a416ad3b7f58451035ded5b28f31eda5a))
+
+
+
+
+
+# [0.2.0-alpha.0](https://github.com/coveo/ui-kit/compare/v0.1.0...v0.2.0-alpha.0) (2020-12-18)
+
+
+### Features
+
+* **headless:** send context info inside analytics event payload ([#389](https://github.com/coveo/ui-kit/issues/389)) ([f97f9e4](https://github.com/coveo/ui-kit/commit/f97f9e4a416ad3b7f58451035ded5b28f31eda5a))
+
+
+
+
+
+# [0.1.0](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.113...v0.1.0) (2020-12-18)
+
+**Note:** Version bump only for package ui-kit
+
+
+
+
+
+# [0.1.0-alpha.113](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.112...v0.1.0-alpha.113) (2020-12-18)
+
+
+### Bug Fixes
+
+* **headless:**  make validateResultPayload less strict  ([#388](https://github.com/coveo/ui-kit/issues/388)) ([197da05](https://github.com/coveo/ui-kit/commit/197da05c0051b2fdeeb992b7ca5ff9f22d1d0832))
+
+
+
+
+
+# [0.1.0-alpha.112](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.111...v0.1.0-alpha.112) (2020-12-18)
+
+**Note:** Version bump only for package ui-kit
+
+
+
+
+
+# [0.1.0-alpha.111](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.110...v0.1.0-alpha.111) (2020-12-17)
+
+
+### Bug Fixes
+
+* **headless:** save facet order in the history state ([#372](https://github.com/coveo/ui-kit/issues/372)) ([aefb3d3](https://github.com/coveo/ui-kit/commit/aefb3d383a4497985a58fff362c1cfcf34ffc434))
+
+
+
+
+
+# [0.1.0-alpha.110](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.109...v0.1.0-alpha.110) (2020-12-17)
+
+
+### Bug Fixes
+
+* **headless:** get queryCorrections from fetched response instead of retried response ([#377](https://github.com/coveo/ui-kit/issues/377)) ([3a00391](https://github.com/coveo/ui-kit/commit/3a00391d0a43a16b4ef7f1cfe1e0d1f232f0d42f))
+
+
+
+
+
+# [0.1.0-alpha.109](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.108...v0.1.0-alpha.109) (2020-12-17)
+
+**Note:** Version bump only for package ui-kit
+
+
+
+
+
+# [0.1.0-alpha.108](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.107...v0.1.0-alpha.108) (2020-12-17)
+
+**Note:** Version bump only for package ui-kit
+
+
+
+
+
+# [0.1.0-alpha.107](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.106...v0.1.0-alpha.107) (2020-12-16)
+
+**Note:** Version bump only for package ui-kit
+
+
+
+
+
+# [0.1.0-alpha.106](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.105...v0.1.0-alpha.106) (2020-12-16)
+
+
+### Features
+
+* **headless:** support numeric and date facets in url ([#356](https://github.com/coveo/ui-kit/issues/356)) ([e975aa9](https://github.com/coveo/ui-kit/commit/e975aa9450d15efe29aa0f73c41931647c816c20))
+
+
+
+
+
+# [0.1.0-alpha.105](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.104...v0.1.0-alpha.105) (2020-12-16)
+
+
+### Features
+
+* **headless:** add support for coveo analytics runtimes ([#360](https://github.com/coveo/ui-kit/issues/360)) ([ce9cf6e](https://github.com/coveo/ui-kit/commit/ce9cf6ee6f38ee78d059092f1a64a89033ab999e))
+
+
+
+
+
 # [0.1.0-alpha.104](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.103...v0.1.0-alpha.104) (2020-12-16)
 
 **Note:** Version bump only for package ui-kit

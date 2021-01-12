@@ -34,7 +34,7 @@ export interface AtomicSearchBoxOptions {
  */
 @Component({
   tag: 'atomic-search-box',
-  styleUrl: 'atomic-search-box.scss',
+  styleUrl: 'atomic-search-box.css',
   shadow: true,
 })
 export class AtomicSearchBox implements AtomicSearchBoxOptions {
@@ -118,10 +118,8 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
   }
 
   private get submitButton() {
-    const rounded = this.leadingSubmitButton ? 'rounded-left' : 'rounded-right';
     return (
       <button
-        class={`btn btn-primary rounded-0 ${rounded}`}
         type="button"
         part="submit-button"
         onClick={() => this.searchBox.submit()}
@@ -136,10 +134,8 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
       return;
     }
 
-    const rounded = this.leadingSubmitButton ? '' : 'rounded-0';
     return (
       <button
-        class={`btn btn-outline-secondary ${rounded}`}
         type="button"
         part="clear-button"
         onClick={() => {
@@ -153,7 +149,6 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
   }
 
   private get input() {
-    const rounded = this.leadingSubmitButton ? 'rounded-right' : 'rounded-left';
     return (
       <input
         part="input"
@@ -164,7 +159,6 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
         onKeyUp={(e) => this.combobox.onInputKeyup(e)}
         onKeyDown={(e) => this.combobox.onInputKeydown(e)}
         type="text"
-        class={`form-control rounded-0 ${rounded}`}
         placeholder=""
         value={this.searchBoxState.value}
       />
@@ -178,7 +172,6 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
         <button
           type="button"
           tabIndex={-1}
-          class="list-group-item list-group-item-action"
           onClick={(e) => this.onClickSuggestion(e)}
           onMouseDown={(e) => e.preventDefault()}
           part="suggestion"
@@ -192,22 +185,18 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
 
   public render() {
     return (
-      <div class="d-flex">
+      <div>
         {this.leadingSubmitButton && this.submitButton}
 
-        <div class="flex-grow-1 position-relative">
-          <div
-            class="input-group"
-            ref={(el) => (this.containerRef = el as HTMLElement)}
-          >
+        <div>
+          <div ref={(el) => (this.containerRef = el as HTMLElement)}>
             {this.input}
             {this.clearButton}
           </div>
 
-          <div class="position-absolute top-100 left-0 right-0 dropdown">
+          <div>
             <div
               part="suggestions"
-              class="list-group"
               ref={(el) => (this.valuesRef = el as HTMLElement)}
             >
               {this.suggestions}
