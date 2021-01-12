@@ -5,8 +5,9 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { Engine, HeadlessConfigurationOptions, LogLevel, Result, ResultTemplateCondition } from "@coveo/headless";
+import { Engine, LogLevel, Result, ResultTemplateCondition } from "@coveo/headless";
 import { i18n } from "i18next";
+import { InitializeOptions } from "./components/atomic-search-interface/atomic-search-interface";
 export namespace Components {
     interface AtomicBreadcrumbManager {
         "categoryDivider": string;
@@ -115,12 +116,12 @@ export namespace Components {
     }
     interface AtomicSearchInterface {
         "engine"?: Engine;
+        "executeFirstSearch": () => Promise<void>;
         "i18n": i18n;
-        "initialize": (options: Pick<HeadlessConfigurationOptions, 'accessToken' | 'organizationId' | 'renewAccessToken' | 'platformUrl'>) => Promise<void>;
+        "initialize": (options: InitializeOptions) => Promise<void>;
         "language": string;
         "logLevel"?: LogLevel;
         "pipeline": string;
-        "sample": boolean;
         "searchHub": string;
     }
     interface AtomicSortDropdown {
@@ -426,7 +427,6 @@ declare namespace LocalJSX {
         "logLevel"?: LogLevel;
         "onReady"?: (event: CustomEvent<any>) => void;
         "pipeline"?: string;
-        "sample"?: boolean;
         "searchHub"?: string;
     }
     interface AtomicSortDropdown {

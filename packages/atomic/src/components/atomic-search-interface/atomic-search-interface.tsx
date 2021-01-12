@@ -31,7 +31,10 @@ import {
 import i18next, {i18n} from 'i18next';
 import Backend, {BackendOptions} from 'i18next-http-backend';
 
-type SystemToInitialize = keyof AtomicSearchInterface['systemsToInitialize'];
+export type InitializeOptions = Pick<
+  HeadlessConfigurationOptions,
+  'accessToken' | 'organizationId' | 'renewAccessToken' | 'platformUrl'
+>;
 
 @Component({
   tag: 'atomic-search-interface',
@@ -40,7 +43,6 @@ type SystemToInitialize = keyof AtomicSearchInterface['systemsToInitialize'];
 })
 export class AtomicSearchInterface {
   @Element() host!: HTMLDivElement;
-  @Prop() sample = false;
   @Prop({reflect: true}) pipeline = 'default';
   @Prop({reflect: true}) searchHub = 'default';
   @Prop() logLevel?: LogLevel;
@@ -52,72 +54,51 @@ export class AtomicSearchInterface {
 
   private unsubscribe: Unsubscribe = () => {};
   private hangingComponentsInitialization: InitializeEvent[] = [];
-  private systemsToInitialize = {
-    i18next: false,
-    headless: false,
-  };
+  private initialized = false;
 
-  componentWillLoad() {
-    this.i18n
-      .use(Backend)
-      .init({
-        debug: this.logLevel === 'debug',
-        lng: this.language,
-        fallbackLng: ['en'],
-        backend: {
-          loadPath: `${getAssetPath('./lang/')}{{lng}}.json`,
-        } as BackendOptions,
-      })
-      .then(() => this.systemInitialized('i18next'));
-
-    if (this.sample) {
-      // Mimics calling the async "initialize" method from the DOM
-      setTimeout(() => {
-        this.initialize(HeadlessEngine.getSampleConfiguration());
-      }, 0);
-    }
+  private get context(): InterfaceContext {
+    return {engine: this.engine!, i18n: this.i18n};
   }
 
-  disconnectedCallback() {
-    this.unsubscribe();
-  }
-
-  private systemInitialized(system: SystemToInitialize) {
-    this.systemsToInitialize[system] = true;
-    const allSystemsInitialized = Object.keys(this.systemsToInitialize).every(
-      (system) => this.systemsToInitialize[system as SystemToInitialize]
-    );
-
-    if (!allSystemsInitialized) {
-      return;
-    }
-
-    this.hangingComponentsInitialization.forEach((event) =>
-      event.detail(this.context)
-    );
-
-    this.initSearchParameterManager();
-    this.ready.emit();
-    this.engine!.dispatch(
-      SearchActions.executeSearch(AnalyticsActions.logInterfaceLoad())
-    );
-  }
-
-  @Method() async initialize(
-    options: Pick<
-      HeadlessConfigurationOptions,
-      'accessToken' | 'organizationId' | 'renewAccessToken' | 'platformUrl'
-    >
-  ) {
+  @Method() public async initialize(options: InitializeOptions) {
     if (this.engine) {
       this.engine.logger.warn(
-        'The atomic-search-interface component has already been initialized.',
-        this.host,
-        this
+        'The atomic-search-interface component "initialize" has already been called.',
+        this.host
       );
       return;
     }
 
+    this.initEngine(options);
+    await this.initI18n();
+    this.initComponents();
+    this.initSearchParameterManager();
+    this.initialized = true;
+  }
+
+  @Method() public async executeFirstSearch() {
+    if (!this.engine) {
+      console.error(
+        'You have to call "initialize" on the atomic-search-interface component before executing a search.',
+        this.host
+      );
+      return;
+    }
+
+    if (!this.initialized) {
+      console.error(
+        'You have to wait until the "initialize" promise is fulfilled before executing a search.',
+        this.host
+      );
+      return;
+    }
+
+    this.engine.dispatch(
+      SearchActions.executeSearch(AnalyticsActions.logInterfaceLoad())
+    );
+  }
+
+  private initEngine(options: InitializeOptions) {
     try {
       this.engine = new HeadlessEngine({
         configuration: {
@@ -134,14 +115,25 @@ export class AtomicSearchInterface {
       });
     } catch (error) {
       this.error = error;
-      return;
+      throw error;
     }
-
-    this.systemInitialized('headless');
   }
 
-  private get context(): InterfaceContext {
-    return {engine: this.engine!, i18n: this.i18n};
+  private initI18n() {
+    return this.i18n.use(Backend).init({
+      debug: this.logLevel === 'debug',
+      lng: this.language,
+      fallbackLng: ['en'],
+      backend: {
+        loadPath: `${getAssetPath('./lang/')}{{lng}}.json`,
+      } as BackendOptions,
+    });
+  }
+
+  private initComponents() {
+    this.hangingComponentsInitialization.forEach((event) =>
+      event.detail(this.context)
+    );
   }
 
   private initSearchParameterManager() {
@@ -161,7 +153,7 @@ export class AtomicSearchInterface {
 
   @Watch('searchHub')
   @Watch('pipeline')
-  updateSearchConfiguration() {
+  public updateSearchConfiguration() {
     this.engine?.dispatch(
       ConfigurationActions.updateSearchConfiguration({
         pipeline: this.pipeline,
@@ -181,6 +173,10 @@ export class AtomicSearchInterface {
     }
 
     this.hangingComponentsInitialization.push(event);
+  }
+
+  public disconnectedCallback() {
+    this.unsubscribe();
   }
 
   public render() {

@@ -14,7 +14,6 @@
 | `language`  | `language`   |             | `string`                                                                                | `'en'`                     |
 | `logLevel`  | `log-level`  |             | `"debug" \| "error" \| "fatal" \| "info" \| "silent" \| "trace" \| "warn" \| undefined` | `undefined`                |
 | `pipeline`  | `pipeline`   |             | `string`                                                                                | `'default'`                |
-| `sample`    | `sample`     |             | `boolean`                                                                               | `false`                    |
 | `searchHub` | `search-hub` |             | `string`                                                                                | `'default'`                |
 
 
@@ -27,7 +26,17 @@
 
 ## Methods
 
-### `initialize(options: Pick<HeadlessConfigurationOptions, 'accessToken' | 'organizationId' | 'renewAccessToken' | 'platformUrl'>) => Promise<void>`
+### `executeFirstSearch() => Promise<void>`
+
+
+
+#### Returns
+
+Type: `Promise<void>`
+
+
+
+### `initialize(options: InitializeOptions) => Promise<void>`
 
 
 
