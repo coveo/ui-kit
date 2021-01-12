@@ -79,7 +79,9 @@ export class AtomicBreadcrumbManager {
         <button
           part="breadcrumb-button"
           aria-label={`Remove inclusion filter on ${breadcrumbValue.value.value}`}
-          onClick={breadcrumbValue.deselect}
+          onClick={() =>
+            this.breadcrumbManager.deselectBreadcrumb(breadcrumbValue)
+          }
         >
           {breadcrumbValue.value.value}
           {this.mainClear}
@@ -133,7 +135,9 @@ export class AtomicBreadcrumbManager {
           <button
             part="breadcrumb-button"
             aria-label={ariaLabel}
-            onClick={breadcrumbValue.deselect}
+            onClick={() =>
+              this.breadcrumbManager.deselectBreadcrumb(breadcrumbValue)
+            }
           >
             {breadcrumbValue.value.start} - {breadcrumbValue.value.end}
             {this.mainClear}
@@ -169,7 +173,7 @@ export class AtomicBreadcrumbManager {
         <button
           part="breadcrumb-button"
           aria-label={`Remove inclusion filter on ${ariaLabel}`}
-          onClick={values.deselect}
+          onClick={() => this.breadcrumbManager.deselectBreadcrumb(values)}
         >
           {joinedBreadcrumbs}
           {this.mainClear}
