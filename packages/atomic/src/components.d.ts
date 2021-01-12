@@ -425,7 +425,6 @@ declare namespace LocalJSX {
         "i18n"?: i18n;
         "language"?: string;
         "logLevel"?: LogLevel;
-        "onReady"?: (event: CustomEvent<any>) => void;
         "pipeline"?: string;
         "searchHub"?: string;
     }
