@@ -31,7 +31,7 @@ describe('Initialization decorator', () => {
     should render nothing `, () => {
       const component = new AtomicPager();
       Initialization()(component, 'initialize');
-      expect(component.render()).toBeUndefined();
+      expect(component.render()).toBe('atomic-pager_loading');
     });
 
     it(`when "engine" is defined
