@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.2.0-alpha.9](https://github.com/coveo/ui-kit/compare/v0.2.0-alpha.8...v0.2.0-alpha.9) (2021-01-12)
+
+
+### Features
+
+* **headless:** add support for deselecting breadcrumb directly from the manager ([#406](https://github.com/coveo/ui-kit/issues/406)) ([ae7ecaf](https://github.com/coveo/ui-kit/commit/ae7ecaf859ec02374ee06d3599fd546d6312995a))
+
+
+
+
+
 # [0.2.0-alpha.8](https://github.com/coveo/ui-kit/compare/v0.2.0-alpha.7...v0.2.0-alpha.8) (2021-01-07)
 
 **Note:** Version bump only for package ui-kit
