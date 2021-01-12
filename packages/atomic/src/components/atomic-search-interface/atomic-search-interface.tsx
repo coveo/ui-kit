@@ -8,8 +8,6 @@ import {
   Element,
   State,
   getAssetPath,
-  Event,
-  EventEmitter,
 } from '@stencil/core';
 import {
   HeadlessEngine,
@@ -50,7 +48,6 @@ export class AtomicSearchInterface {
   @Prop({reflect: true}) language = 'en'; // TODO: make watchable and update i18next language on change
   @Prop({mutable: true}) engine?: Engine;
   @State() error?: Error;
-  @Event() ready!: EventEmitter;
 
   private unsubscribe: Unsubscribe = () => {};
   private hangingComponentsInitialization: InitializeEvent[] = [];
