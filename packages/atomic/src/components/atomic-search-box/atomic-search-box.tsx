@@ -159,7 +159,8 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
         onKeyUp={(e) => this.combobox.onInputKeyup(e)}
         onKeyDown={(e) => this.combobox.onInputKeydown(e)}
         type="text"
-        placeholder=""
+        class="input box-border pl-2 w-80 h-9 text-base placeholder-gray-400 border border-solid rounded border-gray-400 outline-none focus:rounded-b-0 "
+        placeholder="Search for something"
         value={this.searchBoxState.value}
       />
     );
@@ -176,6 +177,7 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
           onMouseDown={(e) => e.preventDefault()}
           part="suggestion"
           id={id}
+          class="h-7 cursor-pointer text-left text-sm bg-transparent border-none shadow-none hover:bg-gray-200"
           value={suggestion.rawValue}
           innerHTML={suggestion.highlightedValue}
         ></button>
@@ -185,7 +187,7 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
 
   public render() {
     return (
-      <div>
+      <div class="m-3">
         {this.leadingSubmitButton && this.submitButton}
 
         <div>
@@ -194,13 +196,12 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
             {this.clearButton}
           </div>
 
-          <div>
-            <div
-              part="suggestions"
-              ref={(el) => (this.valuesRef = el as HTMLElement)}
-            >
-              {this.suggestions}
-            </div>
+          <div
+            part="suggestions"
+            class="flex suggestions box-border w-80 flex-col border border-t-0 border-solid border-gray-400 rounded-b"
+            ref={(el) => (this.valuesRef = el as HTMLElement)}
+          >
+            {this.suggestions}
           </div>
         </div>
 
