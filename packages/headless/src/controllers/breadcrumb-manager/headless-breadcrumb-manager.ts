@@ -196,8 +196,8 @@ export const buildBreadcrumbManager = (
     },
 
     /**
-     * Deselects the provided value
-     * @param value a Breadcrumb Value or a Category Facet Breadcrumb
+     * Deselects a facet breadcrumb value or category facet breadcrumb.
+     * @param value The facet breadcrumb value or a category facet breadcrumb to deselect.
      */
     deselectBreadcrumb(
       value: BreadcrumbValue<BaseFacetValue> | CategoryFacetBreadcrumb
