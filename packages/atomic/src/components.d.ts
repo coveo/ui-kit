@@ -7,7 +7,7 @@
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { Engine, LogLevel, Result, ResultTemplateCondition } from "@coveo/headless";
 import { i18n } from "i18next";
-import { InitializeOptions } from "./components/atomic-search-interface/atomic-search-interface";
+import { InitializationOptions } from "./components/atomic-search-interface/atomic-search-interface";
 export namespace Components {
     interface AtomicBreadcrumbManager {
         "categoryDivider": string;
@@ -118,7 +118,7 @@ export namespace Components {
         "engine"?: Engine;
         "executeFirstSearch": () => Promise<void>;
         "i18n": i18n;
-        "initialize": (options: InitializeOptions) => Promise<void>;
+        "initialize": (options: InitializationOptions) => Promise<void>;
         "language": string;
         "logLevel"?: LogLevel;
         "pipeline": string;

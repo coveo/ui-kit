@@ -29,7 +29,7 @@ import {
 import i18next, {i18n} from 'i18next';
 import Backend, {BackendOptions} from 'i18next-http-backend';
 
-export type InitializeOptions = Pick<
+export type InitializationOptions = Pick<
   HeadlessConfigurationOptions,
   'accessToken' | 'organizationId' | 'renewAccessToken' | 'platformUrl'
 >;
@@ -57,7 +57,7 @@ export class AtomicSearchInterface {
     return {engine: this.engine!, i18n: this.i18n};
   }
 
-  @Method() public async initialize(options: InitializeOptions) {
+  @Method() public async initialize(options: InitializationOptions) {
     if (this.engine) {
       this.engine.logger.warn(
         'The atomic-search-interface component "initialize" has already been called.',
@@ -95,7 +95,7 @@ export class AtomicSearchInterface {
     );
   }
 
-  private initEngine(options: InitializeOptions) {
+  private initEngine(options: InitializationOptions) {
     try {
       this.engine = new HeadlessEngine({
         configuration: {
