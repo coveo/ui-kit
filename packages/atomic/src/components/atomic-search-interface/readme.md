@@ -17,13 +17,6 @@
 | `searchHub` | `search-hub` |             | `string`                                                                                | `'default'`                |
 
 
-## Events
-
-| Event   | Description | Type               |
-| ------- | ----------- | ------------------ |
-| `ready` |             | `CustomEvent<any>` |
-
-
 ## Methods
 
 ### `executeFirstSearch() => Promise<void>`
@@ -36,7 +29,7 @@ Type: `Promise<void>`
 
 
 
-### `initialize(options: InitializeOptions) => Promise<void>`
+### `initialize(options: InitializationOptions) => Promise<void>`
 
 
 
