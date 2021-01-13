@@ -12,6 +12,7 @@ const isDevWatch: boolean =
 export const config: Config = {
   namespace: 'atomic',
   taskQueue: 'async',
+  globalStyle: 'src/global.css',
   outputTargets: [
     {
       type: 'dist',

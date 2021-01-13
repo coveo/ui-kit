@@ -69,7 +69,8 @@ export function Initialization() {
       }
 
       if (!this[contextProperty]) {
-        return;
+        // TODO: add optional renderLoad() method to render placeholders
+        return `${getElement(this).nodeName.toLowerCase()}_loading`;
       }
 
       hasRendered = true;

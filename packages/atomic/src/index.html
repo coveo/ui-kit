@@ -7,27 +7,29 @@
 
     <script type="module" src="/build/atomic.esm.js"></script>
     <script nomodule src="/build/atomic.js"></script>
+    <link rel="stylesheet" href="/build/atomic.css" />
     <script>
       (async () => {
         await customElements.whenDefined('atomic-search-interface');
         const searchInterface = document.querySelector('#search');
 
         // Initialization
-        /* searchInterface.initialize({
-          accessToken: 'my_token',
-          organizationId: 'my_org',
-        }); */
-
-        searchInterface.afterInitialization(() => {
-          // Add/modify a translation
-          // searchInterface.i18n.addResource('en', 'translation', 'search', 'Make me feel lucky!');
-          // Change the language of the interface dynamically
-          // searchInterface.i18n.changeLanguage('fr');
-          // Interact with the engine
-          // searchInterface.engine.dispatch(...);
-          // Get all strings for a language/namespace
-          // searchInterface.i18n.getResourceBundle('en', 'translation');
+        await searchInterface.initialize({
+          accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
+          organizationId: 'searchuisamples',
         });
+
+        // Trigger a first search
+        searchInterface.executeFirstSearch();
+
+        // Add/modify a translation
+        // searchInterface.i18n.addResource('en', 'translation', 'search', 'Make me feel lucky!');
+        // Change the language of the interface dynamically
+        // searchInterface.i18n.changeLanguage('fr');
+        // Interact with the engine
+        // searchInterface.engine.dispatch(...);
+        // Get all strings for a language/namespace
+        // const allStrings = searchInterface.i18n.getResourceBundle('en', 'translation');
       })();
     </script>
     <style>
