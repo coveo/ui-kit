@@ -41,6 +41,16 @@
         }
       },
     {
+        "id": "qa-release",
+        "team_jenkins": {
+          "disabled": true,
+          "job_name": "ui-kit-qa-release",
+          "qa": {
+            "disabled": false
+          }
+        }
+    },
+    {
       "id": "production-release",
       "team_jenkins": {
         "disabled": true,
