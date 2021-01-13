@@ -1,0 +1,100 @@
+{
+  "engine": {
+    "source": "src/app/headless-engine"
+  },
+  "actions": {
+    "sources": [
+
+    ]
+  },
+  "controllers": [
+    {
+      "name": "BreadcrumbManager",
+      "source": "src/controllers/breadcrumb-manager/"
+    },
+    {
+      "name": "Context",
+      "source": "src/controllers/context/"
+    },
+    {
+      "name": "DidYouMean",
+      "source": "src/controllers/did-you-mean/"
+    },
+    {
+      "name": "FacetManager",
+      "source": "src/controllers/facet-manager/"
+    },
+    {
+      "name": "CategoryFacet",
+      "source": "src/controllers/facets/category-facet/"
+    },
+    {
+      "name": "Facet",
+      "source": "src/controllers/facets/facet/"
+    },
+    {
+      "name": "FacetSearch",
+      "source": "src/controllers/facets/facet-search/specific/"
+    },
+    {
+      "name": "CategoryFacetSearch",
+      "source": "src/controllers/facets/facet-search/category/"
+    },
+    {
+      "name": "DateFacet",
+      "source": "src/controllers/facets/range-facet/date-facet/"
+    },
+    {
+      "name": "NumericFacet",
+      "source": "src/controllers/facets/range-facet/numeric-facet/"
+    },
+    {
+      "name": "History",
+      "source": "src/controllers/history/"
+    },
+    {
+      "name": "Pager",
+      "source": "src/controllers/pager/"
+    },
+    {
+      "name": "QueryError",
+      "source": "src/controllers/query-error/"
+    },
+    {
+      "name": "QuerySummary",
+      "source": "src/controllers/query-summary/"
+    },
+    {
+      "name": "RelevanceInspector",
+      "source": "src/controllers/relevance-inspector/"
+    },
+    {
+      "name": "ResultList",
+      "source": "src/controllers/result-list/"
+    },
+    {
+      "name": "ResultsPerPage",
+      "source": "src/controllers/results-per-page/"
+    },
+    {
+      "name": "SearchBox",
+      "source": "src/controllers/search-box/"
+    },
+    {
+      "name": "SearchParameterManager",
+      "source": "src/controllers/search-parameter-manager/"
+    },
+    {
+      "name": "Sort",
+      "source": "src/controllers/sort/"
+    },
+    {
+      "name": "StandaloneSearchBox",
+      "source": "src/controllers/standalone-search-box/"
+    },
+    {
+      "name": "Tab",
+      "source": "src/controllers/tab/"
+    }
+  ]
+}

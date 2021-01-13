@@ -12,6 +12,7 @@
     "json": "./dist/doc.json",
     "excludePrivate": true,
     "excludeProtected": true,
+    "excludeNotExported": true,
     "ignoreCompilerErrors": true
   },
   "compilerOptions": {
