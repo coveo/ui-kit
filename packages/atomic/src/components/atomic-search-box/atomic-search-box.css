@@ -5,7 +5,10 @@
   @apply rounded-t rounded-b-none
 }
 
+.suggestion[aria-selected="true"] {
+  @apply bg-gray-300
+}
 
-.suggestions:empty {
+#suggestions-list:empty {
   border: none;
 }

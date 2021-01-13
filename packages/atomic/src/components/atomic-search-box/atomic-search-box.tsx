@@ -159,7 +159,9 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
         onKeyUp={(e) => this.combobox.onInputKeyup(e)}
         onKeyDown={(e) => this.combobox.onInputKeydown(e)}
         type="text"
-        class="input box-border pl-2 w-80 h-9 text-base placeholder-gray-400 border border-solid rounded border-gray-400 outline-none focus:rounded-b-0 "
+        aria-autocomplete="list"
+        aria-controls="suggestions-list"
+        class="input box-border pl-2 w-72 h-9 text-base placeholder-gray-400 border border-solid rounded border-gray-400 outline-none focus:rounded-b-0 "
         placeholder="Search for something"
         value={this.searchBoxState.value}
       />
@@ -170,17 +172,17 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
     return this.searchBoxState.suggestions.map((suggestion, index) => {
       const id = `${this._id}-suggestion-${index}`;
       return (
-        <button
-          type="button"
+        <li
+          role="result"
           tabIndex={-1}
           onClick={(e) => this.onClickSuggestion(e)}
           onMouseDown={(e) => e.preventDefault()}
           part="suggestion"
           id={id}
-          class="h-7 cursor-pointer text-left text-sm bg-transparent border-none shadow-none hover:bg-gray-200"
+          class="suggestion h-7 p-2 cursor-pointer text-gray-700 text-left text-sm bg-transparent border-none shadow-none hover:bg-gray-200 flex flex-row align-items-center"
           value={suggestion.rawValue}
           innerHTML={suggestion.highlightedValue}
-        ></button>
+        ></li>
       );
     });
   }
@@ -191,18 +193,25 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
         {this.leadingSubmitButton && this.submitButton}
 
         <div>
-          <div ref={(el) => (this.containerRef = el as HTMLElement)}>
+          <div
+            role="combobox"
+            aria-expanded="true"
+            aria-owns="suggestions-list"
+            aria-haspopup="listbox"
+            ref={(el) => (this.containerRef = el as HTMLElement)}
+          >
             {this.input}
             {this.clearButton}
           </div>
-
-          <div
+          <ul
+            id="suggestions-list"
             part="suggestions"
-            class="flex suggestions box-border w-80 flex-col border border-t-0 border-solid border-gray-400 rounded-b"
+            class="w-72 p-0 my-0 flex box-border flex-col border border-t-0 border-solid border-gray-400 rounded-b list-none"
+            role="listbox"
             ref={(el) => (this.valuesRef = el as HTMLElement)}
           >
             {this.suggestions}
-          </div>
+          </ul>
         </div>
 
         {!this.leadingSubmitButton && this.submitButton}
