@@ -8,12 +8,13 @@ node('linux && docker') {
 
     stage('Setup') {
       sh 'npm run setup'
+      sh 'npm run doc'
     }
 
     stage('Build') {
       sh 'npm run build'
     }
-    
+
     stage('Npm publish') {
       withCredentials([
       string(credentialsId: 'NPM_TOKEN', variable: 'NPM_TOKEN')]) {
