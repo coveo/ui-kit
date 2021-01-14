@@ -62,12 +62,17 @@ async function main() {
 
     const headCommitTag = await getHeadCommitTag();
 
-    if (headCommitTag && !doGraduate) {
-      console.log('Build commit is tagged. Skipping version bump.');
-      return;
+    if (doGraduate) {
+      return await bumpVersionAndPush('graduate');
+    }
+    if (!headCommitTag) {
+      return await bumpVersionAndPush('pret');
     }
 
-    await bumpVersionAndPush(doGraduate ? 'graduate' : 'pre');
+    console.log('Build commit is tagged and not being graduated. Skipping version bump.');
+    return;
+
+    
   } catch (e) {
     console.error(e);
   }
