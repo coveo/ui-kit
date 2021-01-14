@@ -272,6 +272,27 @@ class DocJsonParser
     functions_expanded
   end
 
+  def expand_actions(actions)
+    actions.map do |action|
+      {
+        'name' => action['name'],
+        'text' => get_desc(action['comment']),
+        'parameters' => get_action_parameters(action)
+      }
+    end
+  end
+
+  def get_action_parameters(action)
+    return [] if action['comment'].nil? || action['comment']['tags'].nil?
+
+    action['comment']['tags'].map do |param|
+      {
+        'name' => param['param'],
+        'text' => get_desc(param)
+      }
+    end
+  end
+
   # Engine
 
   def parse_engine
@@ -300,7 +321,8 @@ class DocJsonParser
     @config['controllers'].map do |controller_config|
       controller_modules = get_modules(controller_config['source'])
       {
-        'initializer' => expand_functions([get_entity_from_modules_by_name(controller_modules, "build#{controller_config['name']}")]),
+        'name' => controller_config['name'],
+        'initializer' => expand_functions([get_entity_from_modules_by_name(controller_modules, "build#{controller_config['name']}")]).first,
         'types' => expand_types(get_entities_from_modules_by_kind_string(controller_modules, 'Type alias')),
         'interfaces' => expand_interfaces(get_entities_from_modules_by_kind_string(controller_modules, 'Interface')),
         'functions' => expand_functions(get_entities_from_modules_by_kind_string(controller_modules, 'Function').reject { |function| function['name'] == "build#{controller_config['name']}"}),
@@ -312,7 +334,19 @@ class DocJsonParser
   # Actions
 
   def parse_actions
-    {}
+    @config['actions']['sections'].map do |section|
+      section_modules = []
+      section['sources'].each { |source| section_modules.concat(get_modules(source)) }
+      actions = get_entities_from_modules_by_kind_string(section_modules, 'Variable')
+      actions.concat(get_entities_from_modules_by_kind_string(section_modules, 'Function'))
+      actions.select! do |action|
+        action['flags'].key?('isExported') && action['flags']['isExported']
+      end
+      {
+        'section' => section['name'],
+        'actions' => expand_actions(actions)
+      }
+    end
   end
 end
 

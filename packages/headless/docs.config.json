@@ -3,8 +3,19 @@
     "source": "src/app/headless-engine"
   },
   "actions": {
-    "sources": [
-
+    "sections": [
+      {
+        "name": "Configuration",
+        "sources": [
+          "src/features/configuration/configuration-actions"
+        ]
+      },
+      {
+        "name": "Did-You-Mean",
+        "sources": [
+          "src/features/did-you-mean/did-you-mean-actions"
+        ]
+      }
     ]
   },
   "controllers": [
