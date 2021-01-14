@@ -182,7 +182,7 @@ class DocJsonParser
   end
 
   def expand_constructor(function)
-    expand_any_functions([function], 'Constructor signature', 'signatures')
+    expand_any_functions([function], 'Constructor signature', 'signatures').first
   end
 
   def expand_types(types)
