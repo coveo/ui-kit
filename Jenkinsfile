@@ -1,11 +1,9 @@
 node('linux && docker') {
   checkout scm
   def isMaster = env.BRANCH_NAME == 'master'
+  def commitHash = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
 
-  withEnv([
-    'npm_config_cache=npm-cache',
-    'CI=true'
-  ]){
+  withEnv(['npm_config_cache=npm-cache', 'CI=true']) {
     withDockerContainer(image: 'node:14', args: '-u=root') {
       stage('Setup') {
         sh 'npm run setup'
@@ -25,8 +23,7 @@ node('linux && docker') {
       }
 
       stage('Linting') {
-        sh 'npm run lint:junit'
-        junit 'reports/eslint.xml'
+        sh 'npm run lint:check'
       }
 
       stage('Unit Test') {
@@ -34,13 +31,13 @@ node('linux && docker') {
         junit 'packages/*/reports/*.xml'
       }
 
-      // stage('Cypress Test') {
-      //   sh 'apt-get -y install libgtk2.0-0 libgtk-3-0 libnotify-dev libgconf-2-4 libgbm-dev libnss3 libasound2 xauth xvfb'
-      //   sh 'rm -rf /var/lib/apt/lists/*'
-      //   sh 'cd packages/atomic && npx cypress install'
-      //   sh 'npm start & npx wait-on http://localhost:3333'
-      //   sh 'NO_COLOR=1 npm run cypress:test'
-      // }
+      //stage('Cypress Test') {
+      //  sh 'apt-get -y install libgtk2.0-0 libgtk-3-0 libnotify-dev libgconf-2-4 libgbm-dev libnss3 libasound2 xauth xvfb'
+      //  sh 'rm -rf /var/lib/apt/lists/*'
+      //  sh 'cd packages/atomic && npx cypress install'
+      //  sh 'npm start & npx wait-on http://localhost:3333'
+      //  sh 'NO_COLOR=1 npm run cypress:test'
+      //}
     }
 
     if (!isMaster) {
@@ -55,16 +52,14 @@ node('linux && docker') {
     withDockerContainer(image: 'node:14', args: '-u=root') {
       stage('Bump version') {
         withCredentials([
-          usernameColonPassword(credentialsId: 'github-commit-token', variable: 'GH_CREDENTIALS')
-        ]) {
-          sh 'npm run bump:version'
+        usernameColonPassword(credentialsId: 'github-commit-token', variable: 'GH_CREDENTIALS')]) {
+          sh 'npm run bump:version:pre'
         }
-      }
+     }
 
       stage('Npm publish') {
         withCredentials([
-          string(credentialsId: 'NPM_TOKEN', variable: 'NPM_TOKEN')
-        ]) {
+        string(credentialsId: 'NPM_TOKEN', variable: 'NPM_TOKEN')]) {
           sh "echo //registry.npmjs.org/:_authToken=${NPM_TOKEN} > ~/.npmrc"
           sh 'npm run npm:publish:alpha || true'
         }
@@ -80,7 +75,10 @@ node('linux && docker') {
       }
 
       stage('Deployment pipeline upload') {
-        sh 'deployment-package package create --with-deploy || true'
+        lerna = readJSON file: 'lerna.json'
+        prereleaseVersion = lerna.version
+        version = prereleaseVersion.split('-alpha')[0]
+        sh "deployment-package package create --with-deploy --resolve COMMIT_HASH=${commitHash} --resolve VERSION=${version} --resolve PRERELEASE=${prereleaseVersion}  || true"
       }
     }
   }
