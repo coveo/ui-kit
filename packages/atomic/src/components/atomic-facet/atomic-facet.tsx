@@ -7,9 +7,11 @@ import {
   Unsubscribe,
   FacetOptions,
   FacetSortCriterion,
-  Engine,
 } from '@coveo/headless';
-import {Initialization} from '../../utils/initialization-utils';
+import {
+  Initialization,
+  InterfaceContext,
+} from '../../utils/initialization-utils';
 
 @Component({
   tag: 'atomic-facet',
@@ -21,7 +23,7 @@ export class AtomicFacet {
   @Prop() field = '';
   @Prop() label = 'No label';
   @State() state!: FacetState;
-  private engine!: Engine;
+  private context!: InterfaceContext;
 
   private unsubscribe: Unsubscribe = () => {};
   private facet!: Facet;
@@ -29,7 +31,7 @@ export class AtomicFacet {
   @Initialization()
   public initialize() {
     const options: FacetOptions = {facetId: this.facetId, field: this.field};
-    this.facet = buildFacet(this.engine, {options});
+    this.facet = buildFacet(this.context.engine, {options});
     this.facetId = this.facet.state.facetId;
     this.subscribe();
   }

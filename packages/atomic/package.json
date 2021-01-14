@@ -28,6 +28,8 @@
   "dependencies": {
     "@coveo/bueno": "^0.2.0-alpha.7",
     "@coveo/headless": "^0.2.0-alpha.10",
+    "i18next": "^19.8.4",
+    "i18next-http-backend": "^1.0.21",
     "mustache": "^4.0.1",
     "stencil-inline-svg": "^1.0.1"
   },

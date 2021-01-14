@@ -7,9 +7,9 @@
 
 ## Properties
 
-| Property  | Attribute | Description | Type     | Default |
-| --------- | --------- | ----------- | -------- | ------- |
-| `context` | `context` |             | `string` | `'{}'`  |
+| Property       | Attribute       | Description | Type     | Default |
+| -------------- | --------------- | ----------- | -------- | ------- |
+| `contextValue` | `context-value` |             | `string` | `'{}'`  |
 
 
 ## Dependencies

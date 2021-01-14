@@ -5,7 +5,9 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { Engine, HeadlessConfigurationOptions, LogLevel, Result, ResultTemplateCondition } from "@coveo/headless";
+import { Engine, LogLevel, Result, ResultTemplateCondition } from "@coveo/headless";
+import { i18n } from "i18next";
+import { InitializationOptions } from "./components/atomic-search-interface/atomic-search-interface";
 export namespace Components {
     interface AtomicBreadcrumbManager {
         "categoryDivider": string;
@@ -20,7 +22,7 @@ export namespace Components {
         "error": Error;
     }
     interface AtomicContextProvider {
-        "context": string;
+        "contextValue": string;
     }
     interface AtomicDateFacet {
         "facetId": string;
@@ -113,10 +115,13 @@ export namespace Components {
         "numberOfSuggestions": number;
     }
     interface AtomicSearchInterface {
-        "initialize": (options: Pick<HeadlessConfigurationOptions, 'accessToken' | 'organizationId' | 'renewAccessToken' | 'platformUrl'>) => Promise<void>;
+        "engine"?: Engine;
+        "executeFirstSearch": () => Promise<void>;
+        "i18n": i18n;
+        "initialize": (options: InitializationOptions) => Promise<void>;
+        "language": string;
         "logLevel"?: LogLevel;
         "pipeline": string;
-        "sample": boolean;
         "searchHub": string;
     }
     interface AtomicSortDropdown {
@@ -326,7 +331,7 @@ declare namespace LocalJSX {
         "error": Error;
     }
     interface AtomicContextProvider {
-        "context"?: string;
+        "contextValue"?: string;
     }
     interface AtomicDateFacet {
         "facetId"?: string;
@@ -416,9 +421,11 @@ declare namespace LocalJSX {
         "numberOfSuggestions"?: number;
     }
     interface AtomicSearchInterface {
+        "engine"?: Engine;
+        "i18n"?: i18n;
+        "language"?: string;
         "logLevel"?: LogLevel;
         "pipeline"?: string;
-        "sample"?: boolean;
         "searchHub"?: string;
     }
     interface AtomicSortDropdown {
