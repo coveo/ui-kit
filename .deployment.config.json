@@ -27,28 +27,28 @@
       }
     },
     {
-        "id": "deploy-headless-to-s3-version",
-        "s3": {
-          "bucket": "{terraform.infra.infra.bucket_binaries}",
-          "directory": "proda/StaticCDN/headless/v$[PRERELEASE]",
-          "source": "packages/headless/dist/browser",
-          "parameters": {
-            "acl": "public-read"
-          },
-          "prd": {
-            "directory": "proda/StaticCDN/headless/v$[VERSION]"
-          }
+      "id": "deploy-headless-to-s3-version",
+      "s3": {
+        "bucket": "{terraform.infra.infra.bucket_binaries}",
+        "directory": "proda/StaticCDN/headless/v$[PRERELEASE]",
+        "source": "packages/headless/dist/browser",
+        "parameters": {
+          "acl": "public-read"
+        },
+        "prd": {
+          "directory": "proda/StaticCDN/headless/v$[VERSION]"
         }
-      },
+      }
+    },
     {
-        "id": "qa-release",
-        "team_jenkins": {
-          "disabled": true,
-          "job_name": "ui-kit-qa-release",
-          "qa": {
-            "disabled": false
-          }
+      "id": "qa-release",
+      "team_jenkins": {
+        "disabled": true,
+        "job_name": "ui-kit-qa-release",
+        "qa": {
+          "disabled": false
         }
+      }
     },
     {
       "id": "production-release",
@@ -80,5 +80,5 @@
   "package_rollout": {
     "only_consider_changesets_after": "b244fe702d8e96d016a52715e92c8131acfde3ba"
   },
-  "deployment_config_version": 1
+  "deployment_config_version": 2
 }
