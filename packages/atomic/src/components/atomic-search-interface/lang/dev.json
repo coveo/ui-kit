@@ -1,4 +1,4 @@
 {
-  "search": "_search_",
-  "clear": "_clear_"
+  "search": "search",
+  "clear": "clear"
 }
