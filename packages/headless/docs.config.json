@@ -1,6 +1,8 @@
 {
   "engine": {
-    "source": "src/app/headless-engine"
+    "sources": [
+      "src/app/headless-engine"
+    ]
   },
   "actions": {
     "sections": [
@@ -21,91 +23,97 @@
   "controllers": [
     {
       "name": "BreadcrumbManager",
-      "source": "src/controllers/breadcrumb-manager/"
+      "sources": ["src/controllers/breadcrumb-manager/"]
     },
     {
       "name": "Context",
-      "source": "src/controllers/context/"
+      "sources": ["src/controllers/context/"]
     },
     {
       "name": "DidYouMean",
-      "source": "src/controllers/did-you-mean/"
+      "sources": ["src/controllers/did-you-mean/"]
     },
     {
       "name": "FacetManager",
-      "source": "src/controllers/facet-manager/"
+      "sources": ["src/controllers/facet-manager/"]
     },
     {
       "name": "CategoryFacet",
-      "source": "src/controllers/facets/category-facet/"
+      "sources": ["src/controllers/facets/category-facet/"]
     },
     {
       "name": "Facet",
-      "source": "src/controllers/facets/facet/"
+      "sources": ["src/controllers/facets/facet/"]
     },
     {
       "name": "FacetSearch",
-      "source": "src/controllers/facets/facet-search/specific/"
+      "sources": ["src/controllers/facets/facet-search/specific/"]
     },
     {
       "name": "CategoryFacetSearch",
-      "source": "src/controllers/facets/facet-search/category/"
+      "sources": ["src/controllers/facets/facet-search/category/"]
     },
     {
       "name": "DateFacet",
-      "source": "src/controllers/facets/range-facet/date-facet/"
+      "sources": ["src/controllers/facets/range-facet/date-facet/"]
     },
     {
       "name": "NumericFacet",
-      "source": "src/controllers/facets/range-facet/numeric-facet/"
+      "sources": ["src/controllers/facets/range-facet/numeric-facet/"]
     },
     {
       "name": "History",
-      "source": "src/controllers/history/"
+      "sources": ["src/controllers/history/"]
     },
     {
       "name": "Pager",
-      "source": "src/controllers/pager/"
+      "sources": ["src/controllers/pager/"]
     },
     {
       "name": "QueryError",
-      "source": "src/controllers/query-error/"
+      "sources": ["src/controllers/query-error/"]
     },
     {
       "name": "QuerySummary",
-      "source": "src/controllers/query-summary/"
+      "sources": ["src/controllers/query-summary/"]
     },
     {
       "name": "RelevanceInspector",
-      "source": "src/controllers/relevance-inspector/"
+      "sources": ["src/controllers/relevance-inspector/"]
     },
     {
       "name": "ResultList",
-      "source": "src/controllers/result-list/"
+      "sources": [
+        "src/controllers/result-list/",
+        "src/features/result-templates"
+      ]
     },
     {
       "name": "ResultsPerPage",
-      "source": "src/controllers/results-per-page/"
+      "sources": ["src/controllers/results-per-page/"]
     },
     {
       "name": "SearchBox",
-      "source": "src/controllers/search-box/"
+      "sources": ["src/controllers/search-box/"]
     },
     {
       "name": "SearchParameterManager",
-      "source": "src/controllers/search-parameter-manager/"
+      "sources": ["src/controllers/search-parameter-manager/"]
     },
     {
       "name": "Sort",
-      "source": "src/controllers/sort/"
+      "sources": [
+        "src/controllers/sort/",
+        "src/features/sort-criteria/criteria"
+      ]
     },
     {
       "name": "StandaloneSearchBox",
-      "source": "src/controllers/standalone-search-box/"
+      "sources": ["src/controllers/standalone-search-box/"]
     },
     {
       "name": "Tab",
-      "source": "src/controllers/tab/"
+      "sources": ["src/controllers/tab/"]
     }
   ]
 }

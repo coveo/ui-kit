@@ -72,97 +72,126 @@ class DocJsonParser
     comment.key?('returns') ? comment['returns'] : ''
   end
 
-  # ----------------------Type Extractor-----------------------
-  def get_type(object)
-    type_object = object['type'].instance_of?(String) ? object : object['type']
-    return '' if type_object.nil?
-    return type_object['name'] if intrinsic_type?(type_object)
-    return get_reference_type(type_object) if reference_type?(type_object)
-    return "#{type_object['elementType']['name']}[]" if array_type?(type_object)
-    return get_union_type(type_object, object) if union_type?(type_object)
-    return get_intersection_type(type_object) if intersection_type?(type_object)
-    return 'object' if reflection_type?(type_object)
+  # ----------------------Type Resolver-----------------------
 
-    'Type Placeholder'
+  def get_type(type_object, section)
+    return {} if type_object.nil?
+    return process_string_literal(type_object) if is_type?(type_object, 'stringLiteral')
+    return process_intrinsic_type(type_object) if is_type?(type_object, 'intrinsic') || is_type?(type_object, 'unknown')
+    return process_array_type(type_object) if is_type?(type_object, 'array')
+    return process_union_type(type_object, section) if is_type?(type_object, 'union')
+    return process_intersection_type(type_object) if is_type?(type_object, 'intersection')
+    return process_reference_type(type_object, section) if is_type?(type_object, 'reference')
+    return process_type_parameter_type(type_object) if is_type?(type_object, 'typeParameter')
+    return process_reflection_type(type_object) if is_type?(type_object, 'reflection')
+
+    {}
   end
 
-  def intrinsic_type?(type_object)
-    type_object['type'] == 'intrinsic'
+  def is_type?(type_object, target_type)
+    type_object['type'] == target_type
   end
 
-  def array_type?(type_object)
-    type_object['type'] == 'array'
-  end
-
-  def reference_type?(type_object)
-    type_object['type'] == 'reference'
-  end
-
-  def union_type?(type_object)
-    type_object['type'] == 'union'
-  end
-
-  def reflection_type?(type_object)
-    type_object['type'] == 'reflection'
-  end
-
-  def intersection_type?(type_object)
-    type_object['type'] == 'intersection'
-  end
-
-  def optional_union_type?(type_object, object)
-    object['kindString'] == 'Interface' && type_object['types'].include?({
-      'type' => 'intrinsic',
-      'name' => 'undefined'
-    })
-  end
-
-  def get_reference_type(type_object)
-    reference_type = type_object['name']
-    unless type_object['typeArguments'].nil?
-      types = type_object['typeArguments'].map { |argument| get_type(argument) }
-    end
-    reference_type += "<#{types.join(', ')}>" unless types.nil?
-    reference_type
-  end
-
-  def get_union_type(type_object, object)
-    members = optional_union_type?(type_object, object) ? get_optional_union_members(type_object) : type_object['types']
-    union_type = members.map do |member|
-      get_type(member)
-    end.join(' | ')
-    union_type += ', optional' if optional_union_type?(type_object, object)
-    union_type
-  end
-
-  def get_optional_union_members(type_object)
-    members = type_object['types'].reject do |type|
-      type == {
-        'type' => 'intrinsic',
-        'name' => 'undefined'
-      }
-    end
-    members
-  end
-
-  def get_intersection_type(type_object)
-    type_object['types'].map do |member|
-      get_type(member)
-    end.join(' & ')
-  end
-
-  def expand_reflection_type(type_object)
-    return {} unless type_object.key?('declaration') && type_object['declaration'].key?('children')
-
+  def process_string_literal(type_object)
     {
-      'properties' => type_object['declaration']['children'].map do |child|
-        {
-          'name' => child['name'],
-          'type' => get_type(child['type']),
-          'text' => (child.key?('comment') ? get_desc(child['comment']) : '')
-        }
+      'type' => type_object['type'],
+      'value' => type_object['value']
+    }
+  end
+
+  def process_intrinsic_type(type_object)
+    {
+      'type' => type_object['type'],
+      'name' => type_object['name']
+    }
+  end
+
+  def process_array_type(type_object)
+    {
+      'type' => 'array',
+      'arrayOf' => get_type(type_object['elementType'], 'array')
+    }
+  end
+
+  def process_union_type(type_object, section)
+    processed_type = {
+      'type' => 'union',
+      'unionOf' => type_object['types'].map do |type|
+        get_type(type, 'union')
       end
     }
+    if section == 'interface' && processed_type['unionOf'].include?({'type' => 'intrinsic', 'name' => 'undefined'})
+      processed_type['optional'] = 'true'
+      processed_type['unionOf'].reject! { |type| type == {'type' => 'intrinsic', 'name' => 'undefined'}}
+    end
+    processed_type
+  end
+
+  def process_intersection_type(type_object)
+    processed_type = {
+      'type' => 'intersection',
+      'intersectionOf' => type_object['types'].map do |member|
+        get_type(member, 'intersection')
+      end
+    }
+  end
+
+  def process_reference_type(type_object, section)
+    processed_type = {
+      'type' => 'reference',
+      'name' => type_object['name']
+    }
+    if type_object.key?('typeArguments')
+      processed_type['type_parameters'] = type_object['typeArguments'].map do |type_arg|
+        get_type(type_arg, section)
+      end
+    end
+    processed_type
+  end
+
+  def process_type_parameter_type(type_object)
+    processed_type = {
+      'type' => 'type_parameter',
+      'name' => type_object['name']
+    }
+    if type_object.key?('constraint')
+      processed_type['extends'] = get_type(type_object['constraint'], 'generic')
+    end
+    if type_object.key?('default')
+      processed_type['default'] = get_type(type_object['default'], 'generic')
+    end
+    processed_type
+  end
+
+  def process_reflection_type(type_object)
+    if type_object['declaration'].key?('children')
+      {
+        'type' => 'object',
+        'properties' => type_object['declaration']['children'].map do |property|
+          {
+            'name' => property['name'],
+            'type' => get_type(property['type'], 'object')
+          }
+        end
+      }
+    elsif type_object['declaration'].key?('signatures')
+      processed_type = {
+        'type' => 'function',
+        'parameters' => [],
+        'returns' => get_type(type_object['declaration']['signatures'].first['type'], 'function')
+      }
+      if type_object['declaration']['signatures'].first.key?('parameters')
+        type_object['declaration']['signatures'].first['parameters'].each do |param|
+          processed_type['parameters'].push({
+            'name' => param['name'],
+            'type' => get_type(param['type'], 'parameter')
+          })
+        end
+      end
+      processed_type
+    else
+      {}
+    end
   end
 
   # Expand the various entities
@@ -189,10 +218,10 @@ class DocJsonParser
     types_expanded = types.map do |type|
       type_object = {
         'name' => type['name'],
-        'type' => get_type(type),
+        'type' => get_type(type['type'], 'type'),
         'text' => get_desc(type['comment'])
       }
-      type_object['reflection'] = expand_reflection_type(type['type']) if type_object['type'] == 'object'
+      type_object['type_parameters'] = expand_type_parameters(type['typeParameter']) if type.key?('typeParameter')
       type_object
     end
     alphabetize(types_expanded)
@@ -207,12 +236,14 @@ class DocJsonParser
         'text' => get_desc(interface['comment']),
         'properties' => []
       }
+      interface_object['type_parameters'] = expand_type_parameters(interface['typeParameter']) if interface.key?('typeParameter')
       interface['children'].each do |property|
         property_object = {
           'name' => property['name'],
-          'type' => get_type(property),
+          'type' => get_type(property['type'], 'interface'),
           'text' => get_desc(property['comment'])
         }
+        property_object['optional'] = 'true' if property['flags'].key?('isOptional')
         interface_object['properties'].push(property_object)
       end
       alphabetize(interface_object['properties'])
@@ -252,14 +283,15 @@ class DocJsonParser
         'name' => function['name'],
         'text' => get_desc(function_signature['comment']),
         'parameters' => [],
-        'returns' => get_type(function_signature),
+        'returns' => get_type(function_signature['type'], 'function'),
         'returns text' => get_returns(function_signature['comment'])
       }
+      function_object['type_parameters'] = expand_type_parameters(function_signature['typeParameter']) if function_signature.key?('typeParameter')
       unless function_signature['parameters'].nil?
         function_signature['parameters'].each do |parameter|
           parameter_object = {
             'name' => parameter['name'],
-            'type' => get_type(parameter),
+            'type' => get_type(parameter['type'], 'parameter'),
             'text' => get_desc(parameter['comment'])
           }
           function_object['parameters'].push(parameter_object)
@@ -270,6 +302,43 @@ class DocJsonParser
     end
     alphabetize(functions_expanded)
     functions_expanded
+  end
+
+  def expand_initializer(function)
+    function_signature = function['signatures'].find { |sig| sig['kindString'] == 'Call signature' }
+    function_object = {
+      'name' => function['name'],
+      'text' => get_desc(function_signature['comment']),
+      'parameters' => [],
+      'returns' => get_controller_methods(function_signature['type']),
+      'returns text' => get_returns(function_signature['comment'])
+    }
+    function_object['type_parameters'] = expand_type_parameters(function_signature['typeParameter']) if function_signature.key?('typeParameter')
+    unless function_signature['parameters'].nil?
+      function_signature['parameters'].each do |parameter|
+        parameter_object = {
+          'name' => parameter['name'],
+          'type' => get_type(parameter['type'], 'parameter'),
+          'text' => get_desc(parameter['comment'])
+        }
+        function_object['parameters'].push(parameter_object)
+      end
+    end
+    alphabetize(function_object['parameters'])
+    function_object
+  end
+
+  def get_controller_methods(type_object)
+    functions = []
+    accessors = []
+    type_object['declaration']['children'].each do |method|
+      functions.push(method) if method['kindString'] == 'Function'
+      accessors.push(method) if method['kindString'] == 'Accessor'
+    end
+    {
+      'methods' => expand_functions(functions),
+      'accessors' => expand_accessors(accessors)
+    }
   end
 
   def expand_actions(actions)
@@ -293,10 +362,21 @@ class DocJsonParser
     end
   end
 
+  def expand_type_parameters(type_parameters)
+    type_parameters.map do |param|
+      obj = {
+        'name' => param['name']
+      }
+      obj['extends'] = get_type(param['type'], 'generic')
+      obj
+    end
+  end
+
   # Engine
 
   def parse_engine
-    engine_modules = get_modules(@config['engine']['source'])
+    engine_modules = []
+    @config['engine']['sources'].each { |source| engine_modules.concat(get_modules(source)) }
     {
       'headless_engine' => get_headless_engine(engine_modules),
       'types' => expand_types(get_entities_from_modules_by_kind_string(engine_modules, 'Type alias')),
@@ -319,10 +399,11 @@ class DocJsonParser
 
   def parse_controllers
     @config['controllers'].map do |controller_config|
-      controller_modules = get_modules(controller_config['source'])
+      controller_modules = []
+      controller_config['sources'].each { |source| controller_modules.concat(get_modules(source)) }
       {
         'name' => controller_config['name'],
-        'initializer' => expand_functions([get_entity_from_modules_by_name(controller_modules, "build#{controller_config['name']}")]).first,
+        'initializer' => expand_initializer(get_entity_from_modules_by_name(controller_modules, "build#{controller_config['name']}")),
         'types' => expand_types(get_entities_from_modules_by_kind_string(controller_modules, 'Type alias')),
         'interfaces' => expand_interfaces(get_entities_from_modules_by_kind_string(controller_modules, 'Interface')),
         'functions' => expand_functions(get_entities_from_modules_by_kind_string(controller_modules, 'Function').reject { |function| function['name'] == "build#{controller_config['name']}"}),
