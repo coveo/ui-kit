@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.2.0-alpha.11](https://github.com/coveo/ui-kit/compare/v0.2.0-alpha.10...v0.2.0-alpha.11) (2021-01-15)
+
+
+### Features
+
+* **atomic:** add initial localization with i18next ([#416](https://github.com/coveo/ui-kit/issues/416)) ([176f9da](https://github.com/coveo/ui-kit/commit/176f9da1b889491fb3998ef24cdfc0fc101a0a54))
+
+
+
+
+
 # [0.2.0-alpha.10](https://github.com/coveo/ui-kit/compare/v0.2.0-alpha.9...v0.2.0-alpha.10) (2021-01-12)
 
 **Note:** Version bump only for package ui-kit
