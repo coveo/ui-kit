@@ -66,7 +66,7 @@ async function main() {
       return await bumpVersionAndPush('graduate');
     }
     if (!headCommitTag) {
-      return await bumpVersionAndPush('pret');
+      return await bumpVersionAndPush('pre');
     }
 
     console.log('Build commit is tagged and not being graduated. Skipping version bump.');
