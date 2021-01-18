@@ -20,12 +20,6 @@
     })();
   </script> -->
     <style>
-      /* Example on how to customize Atomic component CSS parts */
-      atomic-search-box::part(submit-button) {
-        background-color: #ed731a;
-        border-color: #ed731a;
-      }
-
       /* Example on how to customize custom templates CSS parts */
       atomic-result-list::part(france-title)::before,
       atomic-result-list::part(france-title)::after {
@@ -41,8 +35,7 @@
         <atomic-tab expression='@author *= "BBC News"'>BBC News</atomic-tab>
       </div>
       <atomic-context-provider context='{"test":"value","test2":"value2"}'></atomic-context-provider>
-      <atomic-search-box>
-        <span slot="submit-button">Go!</span>
+      <atomic-search-box class="m-3">
       </atomic-search-box>
       <div style="display: flex">
         <atomic-facet-manager>

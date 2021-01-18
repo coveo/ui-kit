@@ -9,6 +9,8 @@ import {
 import {Initialization} from '../../utils/initialization-utils';
 import {randomID} from '../../utils/utils';
 import {Combobox} from '../../utils/combobox';
+import ClearIcon from './icons/clear.svg';
+import SearchIcon from './icons/search.svg';
 
 export interface AtomicSearchBoxOptions {
   /**
@@ -69,7 +71,10 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
         this.searchBox.hideSuggestions();
       },
       onSelectValue: (element) => {
-        this.searchBox.selectSuggestion((element as HTMLButtonElement).value);
+        this.searchBox.selectSuggestion(
+          this.searchBoxState.suggestions[(element as HTMLLIElement).value]
+            .rawValue
+        );
       },
       onBlur: () => {
         setTimeout(() => this.searchBox.hideSuggestions(), 100);
@@ -113,8 +118,11 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
   }
 
   private onClickSuggestion(e: MouseEvent) {
-    const value = (e.target as HTMLButtonElement).value;
-    this.searchBox.selectSuggestion(value);
+    const value = (e.target as HTMLLIElement).value;
+    console.log(value);
+    this.searchBox.selectSuggestion(
+      this.searchBoxState.suggestions[value].rawValue
+    );
   }
 
   private get submitButton() {
@@ -122,9 +130,19 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
       <button
         type="button"
         part="submit-button"
+        class={
+          'mx-1 w-10 bg-transparent border-0 outline-none border-gray-400 border-solid p-0 ' +
+          (this.leadingSubmitButton ? 'border-r' : 'border-l')
+        }
+        aria-label="submit"
         onClick={() => this.searchBox.submit()}
       >
-        <slot name="submit-button">Search</slot>
+        <slot name="submit-button">
+          <div
+            innerHTML={SearchIcon}
+            class="search mx-auto pl-1 w-3.5 text-gray-500 fill-current"
+          />
+        </slot>
       </button>
     );
   }
@@ -138,12 +156,16 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
       <button
         type="button"
         part="clear-button"
+        class="bg-transparent border-none outline-none mr-1"
+        aria-label="clear"
         onClick={() => {
           this.searchBox.clear();
           this.inputRef.focus();
         }}
       >
-        <slot name="clear-button">Clear</slot>
+        <slot name="clear-button">
+          <div innerHTML={ClearIcon} class="w-2.5 text-gray-500 fill-current" />
+        </slot>
       </button>
     );
   }
@@ -161,7 +183,7 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
         type="text"
         aria-autocomplete="list"
         aria-controls="suggestions-list"
-        class="input box-border pl-2 w-72 h-9 text-base placeholder-gray-400 border border-solid rounded border-gray-400 outline-none focus:rounded-b-0 "
+        class="mx-1 my-0 input text-base placeholder-gray-400 border-none outline-none flex flex-grow flex-row align-items-center"
         placeholder="Search for something"
         value={this.searchBoxState.value}
       />
@@ -179,9 +201,9 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
           onMouseDown={(e) => e.preventDefault()}
           part="suggestion"
           id={id}
-          class="suggestion h-7 p-2 cursor-pointer text-gray-700 text-left text-sm bg-transparent border-none shadow-none hover:bg-gray-200 flex flex-row align-items-center"
-          value={suggestion.rawValue}
+          class="suggestion h-7 p-2 cursor-pointer text-left text-sm bg-transparent border-none shadow-none hover:bg-gray-200 flex flex-row align-items-center"
           innerHTML={suggestion.highlightedValue}
+          value={index}
         ></li>
       );
     });
@@ -189,32 +211,28 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
 
   public render() {
     return (
-      <div class="m-3">
-        {this.leadingSubmitButton && this.submitButton}
-
-        <div>
-          <div
-            role="combobox"
-            aria-expanded="true"
-            aria-owns="suggestions-list"
-            aria-haspopup="listbox"
-            ref={(el) => (this.containerRef = el as HTMLElement)}
-          >
-            {this.input}
-            {this.clearButton}
-          </div>
-          <ul
-            id="suggestions-list"
-            part="suggestions"
-            class="w-72 p-0 my-0 flex box-border flex-col border border-t-0 border-solid border-gray-400 rounded-b list-none"
-            role="listbox"
-            ref={(el) => (this.valuesRef = el as HTMLElement)}
-          >
-            {this.suggestions}
-          </ul>
+      <div>
+        <div
+          class="box-border h-9 w-80 border border-solid rounded border-gray-400 flex flex-row align-items-center focus:rounded-b-0"
+          role="combobox"
+          aria-owns={this.valuesRef?.id || ''}
+          aria-haspopup="true"
+          ref={(el) => (this.containerRef = el as HTMLElement)}
+        >
+          {this.leadingSubmitButton && this.submitButton}
+          {this.input}
+          {this.clearButton}
+          {!this.leadingSubmitButton && this.submitButton}
         </div>
-
-        {!this.leadingSubmitButton && this.submitButton}
+        <ul
+          id="suggestions"
+          part="suggestions"
+          class="suggestions w-80 p-0 my-0 flex box-border flex-col border border-t-0 border-solid border-gray-400 rounded-b list-none"
+          role="listbox"
+          ref={(el) => (this.valuesRef = el as HTMLElement)}
+        >
+          {this.suggestions}
+        </ul>
       </div>
     );
   }
