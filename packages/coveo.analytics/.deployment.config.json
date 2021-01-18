@@ -16,7 +16,8 @@
     "veracode": {
         "app_name": "Commerce",
         "sandbox_name": "coveo-analytics-js",
-        "source": "deploy"
+        "source": "deploy",
+        "scan_include_patterns": "*.js,*.js.map"
     },
     "observatory": {
         "no_endpoint": true
