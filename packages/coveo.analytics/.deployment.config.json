@@ -14,7 +14,9 @@
         "only_consider_changesets_after": "688b6873442721d61e2a0ac492b9da808ddb0ef0"
     },
     "veracode": {
-        "no_scan": true
+        "app_name": "Commerce",
+        "sandbox_name": "coveo-analytics-js",
+        "source": "deploy"
     },
     "observatory": {
         "no_endpoint": true

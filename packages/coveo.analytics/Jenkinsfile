@@ -15,7 +15,7 @@ pipeline {
   }
 
   environment {
-    NPM_TOKEN = credentials("npm_corp_token")
+    NPM_TOKEN = credentials("coveo-analytics-js-npm-deployment-token")
     GIT = credentials('github-coveobot')
     GH_TOKEN = credentials('github-coveobot_token')
     SNYK_TOKEN = credentials("snyk_token")
@@ -30,7 +30,6 @@ pipeline {
 
   stages {
     stage('Skip') {
-      when { expression { !skipRemainingStages } }
       steps {
         script {
           commitMessage = sh(returnStdout: true, script: 'git log -1 --pretty=%B').trim()
@@ -65,8 +64,9 @@ pipeline {
       steps {
         script {
           gitUtils.withCredentialHelper() {
+            gitUtils.setUser()
             sh "git checkout master"
-            sh "npm version patch -m \"Bump version to %s [version bump]\""
+            sh "npm version patch -m \"[version bump] Automated release to v%s\""
           }
         }
       }
@@ -120,9 +120,9 @@ pipeline {
       }
       steps {
         script {
-          gitUtils.push()
-          sh "npm config set \"//registry.npmjs.org/:_authToken=$NPM_TOKEN\""
+          sh "npm config set //registry.npmjs.org/:_authToken=${env.NPM_TOKEN}"
           sh "npm publish"
+          gitUtils.push()
         }
       }
     }
