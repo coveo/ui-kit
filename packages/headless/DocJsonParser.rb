@@ -388,6 +388,7 @@ class DocJsonParser
   def get_headless_engine(engine_modules)
     headless_engine = get_entity_from_modules_by_name(engine_modules, 'HeadlessEngine')
     {
+      'text' => get_desc(headless_engine['comment']),
       'constructor' => expand_constructor(get_entity_from_module_by_name(headless_engine, 'constructor')),
       'properties' => expand_types(get_entities_from_module_by_kind_string(headless_engine, 'Property')),
       'methods' => expand_functions(get_entities_from_module_by_kind_string(headless_engine, 'Method')),
