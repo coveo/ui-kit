@@ -50,6 +50,7 @@ pipeline {
         script {
           def nodeHome = tool name: 'NodeJS Latest', type: 'nodejs'
           env.PATH = "${nodeHome}/bin:${env.PATH}"
+          sh "npm config set //registry.npmjs.org/:_authToken=${env.NPM_TOKEN}"
         }
       }
     }
@@ -65,6 +66,7 @@ pipeline {
         script {
           gitUtils.withCredentialHelper() {
             gitUtils.setUser()
+            sh "git pull"
             sh "git checkout master"
             sh "npm version patch -m \"[version bump] Automated release to v%s\""
           }
@@ -93,6 +95,7 @@ pipeline {
         script {
           runSnyk(org: "coveo-commerce", projectName: "coveo.analytics.js", directory: ".", archiveArtifacts: true)
 
+          sh "npm publish --dry-run"
           sh 'npm run prepare-deploy'
           env.PACKAGE_JSON_MAJOR_MINOR_PATCH_VERSION = sh(script: './read.version.sh patch', returnStdout: true).trim()
           env.PACKAGE_JSON_MAJOR_MINOR_VERSION = sh(script: './read.version.sh minor', returnStdout: true).trim()
@@ -120,7 +123,6 @@ pipeline {
       }
       steps {
         script {
-          sh "npm config set //registry.npmjs.org/:_authToken=${env.NPM_TOKEN}"
           sh "npm publish"
           gitUtils.push()
         }
