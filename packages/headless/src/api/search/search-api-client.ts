@@ -192,10 +192,10 @@ export class SearchAPIClient {
   }
 
   private getAbortControllerInstanceIfAvailable(): AbortController | null {
-    // For nodejs environments only, we want to load the implement of AbortController
+    // For nodejs environments only, we want to load the implementation of AbortController from node-abort-controller package.
     // For browser environments, we need to make sure that we don't use AbortController as it might not be available (Locker Service in Salesforce)
-    // And since this cannot be polyfilled in a meaningful manner (this is a low level browser API after all, only JS code cannot cancel network requests)
-    // It is better to simply do nothing.
+    // This is not something that can be polyfilled in a meaningful manner.
+    // This is a low level browser API after all, and only JS code inside a polyfill cannot actually cancel network requests done by the browser.
 
     if (typeof window === 'undefined') {
       // eslint-disable-next-line @typescript-eslint/no-var-requires
