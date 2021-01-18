@@ -17,7 +17,7 @@
         "app_name": "Commerce",
         "sandbox_name": "coveo-analytics-js",
         "source": "deploy",
-        "scan_include_patterns": "*.js,*.js.map"
+        "scan_include_patterns": "*"
     },
     "observatory": {
         "no_endpoint": true
