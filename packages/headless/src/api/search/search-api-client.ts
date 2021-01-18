@@ -1,4 +1,3 @@
-import AbortController from 'node-abort-controller';
 import {
   PlatformClient,
   PlatformResponse,
@@ -109,13 +108,13 @@ export class SearchAPIClient {
       this.options.logger.warn('Cancelling current pending search query');
       this.searchAbortController.abort();
     }
-    this.searchAbortController = new AbortController();
+    this.searchAbortController = this.getAbortControllerInstanceIfAvailable();
 
     const platformResponse = await PlatformClient.call<SearchRequest, Search>({
       ...baseSearchRequest(req, 'POST', 'application/json', ''),
       requestParams: pickNonBaseParams(req),
       ...this.options,
-      signal: this.searchAbortController.signal,
+      signal: this.searchAbortController?.signal,
     });
 
     this.searchAbortController = null;
@@ -190,6 +189,22 @@ export class SearchAPIClient {
     return {
       error: unwrapError(platformResponse),
     };
+  }
+
+  private getAbortControllerInstanceIfAvailable(): AbortController | null {
+    // For nodejs environments only, we want to load the implement of AbortController
+    // For browser environments, we need to make sure that we don't use AbortController as it might not be available (Locker Service in Salesforce)
+    // And since this cannot be polyfilled in a meaningful manner (this is a low level browser API after all, only JS code cannot cancel network requests)
+    // It is better to simply do nothing.
+
+    if (typeof window === 'undefined') {
+      // eslint-disable-next-line @typescript-eslint/no-var-requires
+      const nodeAbort = require('node-abort-controller');
+      return new nodeAbort() as AbortController;
+    }
+    return typeof AbortController === 'undefined'
+      ? null
+      : new AbortController();
   }
 }
 
