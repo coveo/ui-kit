@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.1-alpha.0](https://github.com/coveo/ui-kit/compare/v0.2.0...v0.2.1-alpha.0) (2021-01-19)
+
+
+### Bug Fixes
+
+* **headless:** make AbortController usable in locker service ([#420](https://github.com/coveo/ui-kit/issues/420)) ([ac1cc8b](https://github.com/coveo/ui-kit/commit/ac1cc8bd6ea689d9324c604ce05db7f263bbc0da))
+
+
+
+
+
 # [0.2.0](https://github.com/coveo/ui-kit/compare/v0.2.0-alpha.11...v0.2.0) (2021-01-15)
 
 **Note:** Version bump only for package ui-kit
