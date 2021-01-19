@@ -5,10 +5,7 @@ import {
   Unsubscribe,
   buildDidYouMean,
 } from '@coveo/headless';
-import {
-  Initialization,
-  InterfaceContext,
-} from '../../utils/initialization-utils';
+import {Initialization, Bindings} from '../../utils/initialization-utils';
 
 @Component({
   tag: 'atomic-did-you-mean',
@@ -18,13 +15,13 @@ import {
 export class AtomicDidYouMean {
   @State() state!: DidYouMeanState;
 
-  public context!: InterfaceContext;
+  public bindings!: Bindings;
   private didYouMean!: DidYouMean;
   private unsubscribe: Unsubscribe = () => {};
 
   @Initialization()
   public initialize() {
-    this.didYouMean = buildDidYouMean(this.context.engine);
+    this.didYouMean = buildDidYouMean(this.bindings.engine);
     this.unsubscribe = this.didYouMean.subscribe(() => this.updateState());
   }
 

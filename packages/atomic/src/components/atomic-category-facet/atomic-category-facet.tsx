@@ -8,10 +8,7 @@ import {
   Unsubscribe,
   CategoryFacetSortCriterion,
 } from '@coveo/headless';
-import {
-  Initialization,
-  InterfaceContext,
-} from '../../utils/initialization-utils';
+import {Initialization, Bindings} from '../../utils/initialization-utils';
 
 @Component({
   tag: 'atomic-category-facet',
@@ -24,7 +21,7 @@ export class AtomicCategoryFacet {
   @Prop() label = 'No label';
   @State() state!: CategoryFacetState;
 
-  public context!: InterfaceContext;
+  public bindings!: Bindings;
   private categoryFacet!: CategoryFacet;
   private unsubscribe: Unsubscribe = () => {};
 
@@ -35,7 +32,7 @@ export class AtomicCategoryFacet {
       field: this.field,
       delimitingCharacter: ';',
     };
-    this.categoryFacet = buildCategoryFacet(this.context.engine, {options});
+    this.categoryFacet = buildCategoryFacet(this.bindings.engine, {options});
     this.facetId = this.categoryFacet.state.facetId;
     this.subscribe();
   }

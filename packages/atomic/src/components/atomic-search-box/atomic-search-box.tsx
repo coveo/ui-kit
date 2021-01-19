@@ -5,10 +5,7 @@ import {
   Unsubscribe,
   buildSearchBox,
 } from '@coveo/headless';
-import {
-  Initialization,
-  InterfaceContext,
-} from '../../utils/initialization-utils';
+import {Initialization, Bindings} from '../../utils/initialization-utils';
 import {randomID} from '../../utils/utils';
 import {Combobox} from '../../utils/combobox';
 
@@ -46,7 +43,7 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
     'atomic-search-box-'
   );
 
-  public context!: InterfaceContext;
+  public bindings!: Bindings;
   private searchBox!: SearchBox;
   private unsubscribe: Unsubscribe = () => {};
   private inputRef!: HTMLInputElement;
@@ -85,7 +82,7 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
 
   @Initialization()
   public initialize() {
-    this.searchBox = buildSearchBox(this.context.engine, {
+    this.searchBox = buildSearchBox(this.bindings.engine, {
       options: {
         numberOfSuggestions: this.numberOfSuggestions,
         highlightOptions: {
@@ -106,8 +103,8 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
 
   public updateLocaleStrings() {
     this.strings = {
-      search: this.context.i18n.t('search'),
-      clear: this.context.i18n.t('clear'),
+      search: this.bindings.i18n.t('search'),
+      clear: this.bindings.i18n.t('clear'),
     };
   }
 
@@ -154,7 +151,7 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
           this.inputRef.focus();
         }}
       >
-        {this.context.i18n.t('clear')}
+        {this.bindings.i18n.t('clear')}
       </button>
     );
   }

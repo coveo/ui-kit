@@ -1,8 +1,5 @@
 import {Component, h, State, Prop} from '@stencil/core';
-import {
-  Initialization,
-  InterfaceContext,
-} from '../../utils/initialization-utils';
+import {Initialization, Bindings} from '../../utils/initialization-utils';
 import {
   BreadcrumbManagerState,
   BreadcrumbManager,
@@ -36,13 +33,13 @@ export class AtomicBreadcrumbManager {
   @Prop() collapseThreshold = 5;
   @Prop() categoryDivider = '/';
 
-  public context!: InterfaceContext;
+  public bindings!: Bindings;
   private breadcrumbManager!: BreadcrumbManager;
   private unsubscribe: Unsubscribe = () => {};
 
   @Initialization()
   public initialize() {
-    this.breadcrumbManager = buildBreadcrumbManager(this.context.engine);
+    this.breadcrumbManager = buildBreadcrumbManager(this.bindings.engine);
     this.subscribe();
   }
 

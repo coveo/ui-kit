@@ -37,7 +37,7 @@ describe('Initialization decorator', () => {
     it(`when "engine" is defined
     should render the content `, () => {
       const component = new AtomicPager();
-      component['context'] = {
+      component['bindings'] = {
         engine: TestUtils.buildMockSearchAppEngine({
           state: TestUtils.createMockState(),
         }),

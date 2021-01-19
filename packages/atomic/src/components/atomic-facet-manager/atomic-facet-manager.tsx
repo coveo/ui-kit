@@ -5,10 +5,7 @@ import {
   Unsubscribe,
   FacetManagerState,
 } from '@coveo/headless';
-import {
-  Initialization,
-  InterfaceContext,
-} from '../../utils/initialization-utils';
+import {Initialization, Bindings} from '../../utils/initialization-utils';
 
 interface FacetElement extends HTMLElement {
   facetId: string;
@@ -22,13 +19,13 @@ interface FacetElement extends HTMLElement {
 export class AtomicFacetManager {
   @State() state!: FacetManagerState;
   @Element() host!: HTMLDivElement;
-  public context!: InterfaceContext;
+  public bindings!: Bindings;
   private unsubscribe: Unsubscribe = () => {};
   private facetManager!: FacetManager;
 
   @Initialization()
   public initialize() {
-    this.facetManager = buildFacetManager(this.context.engine);
+    this.facetManager = buildFacetManager(this.bindings.engine);
 
     this.unsubscribe = this.facetManager.subscribe(() => {
       this.updateStateToTriggerRender();

@@ -5,10 +5,7 @@ import {
   Unsubscribe,
   buildHistory,
 } from '@coveo/headless';
-import {
-  Initialization,
-  InterfaceContext,
-} from '../../utils/initialization-utils';
+import {Initialization, Bindings} from '../../utils/initialization-utils';
 
 @Component({
   tag: 'atomic-history',
@@ -17,13 +14,13 @@ import {
 export class AtomicHistory {
   @State() state!: HistoryState;
 
-  public context!: InterfaceContext;
+  public bindings!: Bindings;
   private history!: History;
   private unsubscribe: Unsubscribe = () => {};
 
   @Initialization()
   public initialize() {
-    this.history = buildHistory(this.context.engine);
+    this.history = buildHistory(this.bindings.engine);
     this.unsubscribe = this.history.subscribe(() => this.updateState());
   }
 

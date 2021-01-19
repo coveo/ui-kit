@@ -5,10 +5,7 @@ import {
   Unsubscribe,
   buildQuerySummary,
 } from '@coveo/headless';
-import {
-  Initialization,
-  InterfaceContext,
-} from '../../utils/initialization-utils';
+import {Initialization, Bindings} from '../../utils/initialization-utils';
 
 /**
  * @part container - The container of the whole summary
@@ -26,13 +23,13 @@ import {
 export class AtomicQuerySummary {
   @State() state!: QuerySummaryState;
 
-  public context!: InterfaceContext;
+  public bindings!: Bindings;
   private querySummary!: QuerySummary;
   private unsubscribe: Unsubscribe = () => {};
 
   @Initialization()
   public initialize() {
-    this.querySummary = buildQuerySummary(this.context.engine);
+    this.querySummary = buildQuerySummary(this.bindings.engine);
     this.unsubscribe = this.querySummary.subscribe(() => this.updateState());
   }
 

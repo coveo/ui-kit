@@ -5,10 +5,7 @@ import {
   Unsubscribe,
   buildResultsPerPage,
 } from '@coveo/headless';
-import {
-  Initialization,
-  InterfaceContext,
-} from '../../utils/initialization-utils';
+import {Initialization, Bindings} from '../../utils/initialization-utils';
 
 /**
  * @part list - The list of buttons
@@ -24,7 +21,7 @@ import {
 export class AtomicResultsPerPage {
   @State() state!: ResultsPerPageState;
 
-  public context!: InterfaceContext;
+  public bindings!: Bindings;
   private resultsPerPage!: ResultsPerPage;
   private unsubscribe: Unsubscribe = () => {};
 
@@ -40,7 +37,7 @@ export class AtomicResultsPerPage {
 
   @Initialization()
   public initialize() {
-    this.resultsPerPage = buildResultsPerPage(this.context.engine, {
+    this.resultsPerPage = buildResultsPerPage(this.bindings.engine, {
       initialState: {numberOfResults: this.initialOption},
     });
     this.unsubscribe = this.resultsPerPage.subscribe(() => this.updateState());

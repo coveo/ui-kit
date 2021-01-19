@@ -2,12 +2,12 @@ import {Engine} from '@coveo/headless';
 import {ComponentInterface, getElement, h} from '@stencil/core';
 import {i18n} from 'i18next';
 
-export interface InterfaceContext {
+export interface Bindings {
   engine: Engine;
   i18n: i18n;
 }
 
-export type InitializeEventHandler = (context: InterfaceContext) => void;
+export type InitializeEventHandler = (bindings: Bindings) => void;
 export type InitializeEvent = CustomEvent<InitializeEventHandler>;
 
 export class InitializationError extends Error {
@@ -20,7 +20,7 @@ export class InitializationError extends Error {
 }
 
 export interface AtomicComponentInterface extends ComponentInterface {
-  context: InterfaceContext;
+  bindings: Bindings;
   error?: Error;
   updateLocaleStrings?: () => void;
 }
@@ -39,11 +39,11 @@ export function Initialization() {
     component.componentWillLoad = function () {
       const element = getElement(this);
       const event = new CustomEvent('atomic/initializeComponent', {
-        detail: (context: InterfaceContext) => {
-          this.context = context;
+        detail: (bindings: Bindings) => {
+          this.bindings = bindings;
           if (updateLocaleStrings) {
             updateLocaleStrings.call(this);
-            this.context.i18n.on('languageChanged', () =>
+            this.bindings.i18n.on('languageChanged', () =>
               updateLocaleStrings.call(this)
             );
           }
@@ -77,7 +77,7 @@ export function Initialization() {
         );
       }
 
-      if (!this.context) {
+      if (!this.bindings) {
         // TODO: add optional renderLoad() method to render placeholders
         return `${getElement(this).nodeName.toLowerCase()}_loading`;
       }
