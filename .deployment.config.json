@@ -1,67 +1,84 @@
 {
-    "product": "ui-kit",
-    "team_name": "searchui",
-    "general": {
-        "aws_regions": {
-            "sequential": [
-                "us-east-1"
-            ]
-        },
-        "environments_order": {
-            "sequential": [
-                "dev"
-            ]
-        },
-        "team_jenkins": "searchuibuilds",
-        "start_environment_automatically": false,
-        "notifications": {
-            "slack_channels": [
-                "#searchuibuilds"
-            ]
+  "product": "ui-kit",
+  "team_name": "searchui",
+  "general": {
+    "aws_regions": {
+      "sequential": ["us-east-1"]
+    },
+    "environments_order": {
+      "sequential": ["dev", "qa", "prd"]
+    },
+    "team_jenkins": "searchuibuilds",
+    "start_environment_automatically": false,
+    "notifications": {
+      "slack_channels": ["#searchuibuilds"]
+    }
+  },
+  "ordered_phases": [
+    {
+      "id": "deploy-headless-to-s3-latest",
+      "s3": {
+        "bucket": "{terraform.infra.infra.bucket_binaries}",
+        "directory": "proda/StaticCDN/headless/latest",
+        "source": "packages/headless/dist/browser",
+        "parameters": {
+          "acl": "public-read"
         }
+      }
     },
-    "ordered_phases": [
-        {
-            "id": "deploy-headless",
-            "s3": {
-                "bucket": "{terraform.infra.infra.bucket_binaries}",
-                "directory": "proda/StaticCDN/headless/latest",
-                "source": "packages/headless/dist/browser",
-                "parameters": {
-                    "acl": "public-read"
-                }
-            }
+    {
+      "id": "deploy-headless-to-s3-version",
+      "s3": {
+        "bucket": "{terraform.infra.infra.bucket_binaries}",
+        "directory": "proda/StaticCDN/headless/v$[PRERELEASE]",
+        "source": "packages/headless/dist/browser",
+        "parameters": {
+          "acl": "public-read"
+        },
+        "prd": {
+          "directory": "proda/StaticCDN/headless/v$[VERSION]"
         }
-    ],
-    "certifiers": {
-        "dev": [
-            {
-                "system_certifier": "snyk"
-            },
-            {
-                "system_certifier": "veracode"
-            }
-        ]
+      }
     },
-    "snyk": {
-        "org": "coveo-jsui",
-        "no_container_images": true,
-        "configurations": [
-            {
-                "directory": "packages/headless",
-                "project_name": "headless-engine"
-            }
-        ]
+    {
+      "id": "qa-release",
+      "team_jenkins": {
+        "disabled": true,
+        "job_name": "ui-kit-qa-release",
+        "qa": {
+          "disabled": false
+        }
+      }
     },
-    "veracode": {
-        "sandbox_name": "UI Kit (JS UI)",
-        "scan_include_patterns": "*"
-    },
-    "observatory": {
-        "no_endpoint": true
-    },
-    "package_rollout": {
-        "only_consider_changesets_after": "b244fe702d8e96d016a52715e92c8131acfde3ba"
-    },
-    "deployment_config_version": 1
+    {
+      "id": "production-release",
+      "team_jenkins": {
+        "disabled": true,
+        "job_name": "ui-kit-production-release",
+        "prd": {
+          "disabled": false
+        }
+      }
+    }
+  ],
+  "snyk": {
+    "org": "coveo-jsui",
+    "no_container_images": true,
+    "configurations": [
+      {
+        "directory": "packages/headless",
+        "project_name": "headless-engine"
+      }
+    ]
+  },
+  "veracode": {
+    "no_scan": true
+  },
+  "observatory": {
+    "no_endpoint": true
+  },
+  "package_rollout": {
+    "only_consider_changesets_after": "b244fe702d8e96d016a52715e92c8131acfde3ba"
+  },
+  "deployment_config_version": 2
 }
