@@ -1,9 +1,11 @@
 import {Component, h, State, Prop} from '@stencil/core';
-import {Initialization} from '../../utils/initialization-utils';
+import {
+  Initialization,
+  InterfaceContext,
+} from '../../utils/initialization-utils';
 import {
   BreadcrumbManagerState,
   BreadcrumbManager,
-  Engine,
   Unsubscribe,
   buildBreadcrumbManager,
   CategoryFacetBreadcrumb,
@@ -34,13 +36,13 @@ export class AtomicBreadcrumbManager {
   @Prop() collapseThreshold = 5;
   @Prop() categoryDivider = '/';
 
-  private engine!: Engine;
+  private context!: InterfaceContext;
   private breadcrumbManager!: BreadcrumbManager;
   private unsubscribe: Unsubscribe = () => {};
 
   @Initialization()
   public initialize() {
-    this.breadcrumbManager = buildBreadcrumbManager(this.engine);
+    this.breadcrumbManager = buildBreadcrumbManager(this.context.engine);
     this.subscribe();
   }
 
@@ -79,7 +81,9 @@ export class AtomicBreadcrumbManager {
         <button
           part="breadcrumb-button"
           aria-label={`Remove inclusion filter on ${breadcrumbValue.value.value}`}
-          onClick={breadcrumbValue.deselect}
+          onClick={() =>
+            this.breadcrumbManager.deselectBreadcrumb(breadcrumbValue)
+          }
         >
           {breadcrumbValue.value.value}
           {this.mainClear}
@@ -133,7 +137,9 @@ export class AtomicBreadcrumbManager {
           <button
             part="breadcrumb-button"
             aria-label={ariaLabel}
-            onClick={breadcrumbValue.deselect}
+            onClick={() =>
+              this.breadcrumbManager.deselectBreadcrumb(breadcrumbValue)
+            }
           >
             {breadcrumbValue.value.start} - {breadcrumbValue.value.end}
             {this.mainClear}
@@ -169,7 +175,7 @@ export class AtomicBreadcrumbManager {
         <button
           part="breadcrumb-button"
           aria-label={`Remove inclusion filter on ${ariaLabel}`}
-          onClick={values.deselect}
+          onClick={() => this.breadcrumbManager.deselectBreadcrumb(values)}
         >
           {joinedBreadcrumbs}
           {this.mainClear}

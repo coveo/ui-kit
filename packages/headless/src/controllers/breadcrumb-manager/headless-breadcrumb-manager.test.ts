@@ -109,6 +109,16 @@ describe('headless breadcrumb manager', () => {
         })
       );
     });
+
+    it('dispatches a toggleSelectFacetValue action when #deselectBreadcrumb is called', () => {
+      breadcrumbManager.deselectBreadcrumb(facetBreadcrumbs[0].values[0]);
+      expect(engine.actions).toContainEqual(
+        toggleSelectFacetValue({
+          facetId,
+          selection: mockValue,
+        })
+      );
+    });
   });
 
   describe('date facet breadcrumbs', () => {
@@ -155,6 +165,16 @@ describe('headless breadcrumb manager', () => {
         })
       );
     });
+
+    it('dispatches a toggleSelectDateFacetValue action when #deselectBreadcrumb is called', () => {
+      breadcrumbManager.deselectBreadcrumb(facetBreadcrumbs[0].values[0]);
+      expect(engine.actions).toContainEqual(
+        toggleSelectDateFacetValue({
+          facetId,
+          selection: mockValue,
+        })
+      );
+    });
   });
 
   describe('numeric facet breadcrumbs', () => {
@@ -194,6 +214,16 @@ describe('headless breadcrumb manager', () => {
 
     it('dispatches a toggleSelectNumericFacetValue action on selection', () => {
       facetBreadcrumbs[0].values[0].deselect();
+      expect(engine.actions).toContainEqual(
+        toggleSelectNumericFacetValue({
+          facetId,
+          selection: mockValue,
+        })
+      );
+    });
+
+    it('dispatches a toggleSelectNumericFacetValue action when #deselectBreadcrumb is called', () => {
+      breadcrumbManager.deselectBreadcrumb(facetBreadcrumbs[0].values[0]);
       expect(engine.actions).toContainEqual(
         toggleSelectNumericFacetValue({
           facetId,
@@ -255,6 +285,13 @@ describe('headless breadcrumb manager', () => {
 
     it('dispatches a deselectAllCategoryFacetValues action on selection', () => {
       facetBreadcrumbs[0].deselect();
+      expect(engine.actions).toContainEqual(
+        deselectAllCategoryFacetValues(facetId)
+      );
+    });
+
+    it('dispatches a deselectAllCategoryFacetValues action when #deselectBreadcrumb is called', () => {
+      breadcrumbManager.deselectBreadcrumb(facetBreadcrumbs[0]);
       expect(engine.actions).toContainEqual(
         deselectAllCategoryFacetValues(facetId)
       );

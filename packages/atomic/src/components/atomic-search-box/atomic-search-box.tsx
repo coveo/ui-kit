@@ -4,9 +4,11 @@ import {
   SearchBoxState,
   Unsubscribe,
   buildSearchBox,
-  Engine,
 } from '@coveo/headless';
-import {Initialization} from '../../utils/initialization-utils';
+import {
+  Initialization,
+  InterfaceContext,
+} from '../../utils/initialization-utils';
 import {randomID} from '../../utils/utils';
 import {Combobox} from '../../utils/combobox';
 import ClearIcon from './icons/clear.svg';
@@ -24,9 +26,6 @@ export interface AtomicSearchBoxOptions {
 }
 
 /**
- * @slot submit-button - Content of the submit button
- * @slot clear-button - Content of the input's clear button
- *
  * @part submit-button - The search box submit button
  * @part input - The search box input
  * @part clear-button - The search box input's clear button
@@ -49,7 +48,7 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
     'atomic-search-box-'
   );
 
-  private engine!: Engine;
+  private context!: InterfaceContext;
   private searchBox!: SearchBox;
   private unsubscribe: Unsubscribe = () => {};
   private inputRef!: HTMLInputElement;
@@ -86,7 +85,7 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
 
   @Initialization()
   public initialize() {
-    this.searchBox = buildSearchBox(this.engine, {
+    this.searchBox = buildSearchBox(this.context.engine, {
       options: {
         numberOfSuggestions: this.numberOfSuggestions,
         highlightOptions: {
@@ -119,7 +118,6 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
 
   private onClickSuggestion(e: MouseEvent) {
     const value = (e.target as HTMLLIElement).value;
-    console.log(value);
     this.searchBox.selectSuggestion(
       this.searchBoxState.suggestions[value].rawValue
     );
@@ -134,7 +132,7 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
           'mx-1 w-10 bg-transparent border-0 outline-none border-gray-400 border-solid p-0 ' +
           (this.leadingSubmitButton ? 'border-r' : 'border-l')
         }
-        aria-label="submit"
+        aria-label={this.context.i18n.t('search')}
         onClick={() => this.searchBox.submit()}
       >
         <slot name="submit-button">
@@ -157,7 +155,7 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
         type="button"
         part="clear-button"
         class="bg-transparent border-none outline-none mr-1"
-        aria-label="clear"
+        aria-label={this.context.i18n.t('clear')}
         onClick={() => {
           this.searchBox.clear();
           this.inputRef.focus();
