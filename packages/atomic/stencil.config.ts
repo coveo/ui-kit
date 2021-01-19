@@ -1,10 +1,13 @@
 import {Config} from '@stencil/core';
+import {postcss } from '@stencil/postcss';
 import alias from '@rollup/plugin-alias';
 import path from 'path';
 import html from 'rollup-plugin-html';
 import {inlineSvg} from 'stencil-inline-svg';
-import stencilTailwind from 'stencil-tailwind';
+
 import tailwind from 'tailwindcss';
+import atImport from 'postcss-import';
+import purgecss from '@fullhuman/postcss-purgecss';
 
 const isDevWatch: boolean =
   process.argv &&
@@ -14,7 +17,7 @@ const isDevWatch: boolean =
 export const config: Config = {
   namespace: 'atomic',
   taskQueue: 'async',
-  globalStyle: 'src/global.css',
+  globalStyle: 'src/global.pcss',
   outputTargets: [
     {
       type: 'dist',
@@ -41,8 +44,17 @@ export const config: Config = {
   },
   plugins: [
     inlineSvg(),
-    stencilTailwind({
-      tailwind: tailwind('./tailwind.config.js'),
+    postcss({
+      plugins: [
+        atImport(),
+        tailwind(),
+        nano(),https://cssnano.co/
+        purgecss({
+          content: ['./src/**/*.tsx', './src/index.html', './src/**/*.pcss'],
+          defaultExtractor: content => content.match(/[A-Za-z0-9-_:/]+/g) || []
+        }),
+      ],
+      injectGlobalPaths: ['src/global.pcss'],
     }),
   ],
   rollupPlugins: {

@@ -1,3 +1,7 @@
+/**
+Atomic Tab
+ */
+
 .active {
   @apply border-black border-solid;
 }
