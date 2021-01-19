@@ -19,37 +19,48 @@ export class InitializationError extends Error {
   }
 }
 
+export interface AtomicComponentInterface extends ComponentInterface {
+  context: InterfaceContext;
+  error?: Error;
+  updateLocaleStrings?: () => void;
+}
+
 export function Initialization() {
-  return (component: ComponentInterface, initializeMethod: string) => {
+  return (component: AtomicComponentInterface, initializeMethod: string) => {
     const {
       componentWillLoad,
       render,
       componentDidRender,
       componentDidLoad,
-      [initializeMethod]: initialize,
+      updateLocaleStrings,
     } = component;
-    const errorProperty = 'error';
-    const contextProperty = 'context';
+    const initialize: () => void = component[initializeMethod];
 
     component.componentWillLoad = function () {
       const element = getElement(this);
       const event = new CustomEvent('atomic/initializeComponent', {
         detail: (context: InterfaceContext) => {
-          this[contextProperty] = context;
+          this.context = context;
+          if (updateLocaleStrings) {
+            updateLocaleStrings.call(this);
+            this.context.i18n.on('languageChanged', () =>
+              updateLocaleStrings.call(this)
+            );
+          }
+
           try {
             initialize.call(this);
           } catch (error) {
-            this[errorProperty] = error;
+            this.error = error;
           }
         },
         bubbles: true,
         cancelable: true,
       });
+
       const canceled = element.dispatchEvent(event);
       if (canceled) {
-        this[errorProperty] = new InitializationError(
-          element.nodeName.toLowerCase()
-        );
+        this.error = new InitializationError(element.nodeName.toLowerCase());
         return;
       }
 
@@ -60,15 +71,13 @@ export function Initialization() {
     let hasLoaded = false;
 
     component.render = function () {
-      if (this[errorProperty]) {
+      if (this.error) {
         return (
-          <atomic-component-error
-            error={this[errorProperty]}
-          ></atomic-component-error>
+          <atomic-component-error error={this.error}></atomic-component-error>
         );
       }
 
-      if (!this[contextProperty]) {
+      if (!this.context) {
         // TODO: add optional renderLoad() method to render placeholders
         return `${getElement(this).nodeName.toLowerCase()}_loading`;
       }

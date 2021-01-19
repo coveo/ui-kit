@@ -36,7 +36,7 @@ export class AtomicBreadcrumbManager {
   @Prop() collapseThreshold = 5;
   @Prop() categoryDivider = '/';
 
-  private context!: InterfaceContext;
+  public context!: InterfaceContext;
   private breadcrumbManager!: BreadcrumbManager;
   private unsubscribe: Unsubscribe = () => {};
 

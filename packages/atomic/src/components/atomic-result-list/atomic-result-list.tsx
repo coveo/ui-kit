@@ -41,7 +41,7 @@ export class AtomicResultList {
   @Element() host!: HTMLDivElement;
   @State() state!: ResultListState;
 
-  private context!: InterfaceContext;
+  public context!: InterfaceContext;
   private unsubscribe: Unsubscribe = () => {};
   private resultList!: ResultList;
   private resultTemplatesManager!: ResultTemplatesManager<string>;

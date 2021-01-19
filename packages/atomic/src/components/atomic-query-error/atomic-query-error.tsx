@@ -18,7 +18,7 @@ import {
 export class AtomicQueryError {
   @State() state!: QueryErrorState;
 
-  private context!: InterfaceContext;
+  public context!: InterfaceContext;
   private queryError!: QueryError;
   private unsubscribe: Unsubscribe = () => {};
 

@@ -33,7 +33,7 @@ enum SortOption {
 export class AtomicSortDropdown {
   @State() state!: SortState;
 
-  private context!: InterfaceContext;
+  public context!: InterfaceContext;
   private sort!: Sort;
   private unsubscribe: Unsubscribe = () => {};
 

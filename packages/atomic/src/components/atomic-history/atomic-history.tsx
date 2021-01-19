@@ -17,7 +17,7 @@ import {
 export class AtomicHistory {
   @State() state!: HistoryState;
 
-  private context!: InterfaceContext;
+  public context!: InterfaceContext;
   private history!: History;
   private unsubscribe: Unsubscribe = () => {};
 

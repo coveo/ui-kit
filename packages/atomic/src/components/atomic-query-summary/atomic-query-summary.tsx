@@ -26,7 +26,7 @@ import {
 export class AtomicQuerySummary {
   @State() state!: QuerySummaryState;
 
-  private context!: InterfaceContext;
+  public context!: InterfaceContext;
   private querySummary!: QuerySummary;
   private unsubscribe: Unsubscribe = () => {};
 

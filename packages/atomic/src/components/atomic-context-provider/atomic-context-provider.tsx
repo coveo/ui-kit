@@ -11,7 +11,7 @@ import {
 })
 export class AtomicContextProvider {
   @Prop() contextValue = '{}';
-  private context!: InterfaceContext;
+  public context!: InterfaceContext;
 
   @Initialization()
   public initialize() {

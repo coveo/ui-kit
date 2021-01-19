@@ -24,7 +24,7 @@ import {
 export class AtomicResultsPerPage {
   @State() state!: ResultsPerPageState;
 
-  private context!: InterfaceContext;
+  public context!: InterfaceContext;
   private resultsPerPage!: ResultsPerPage;
   private unsubscribe: Unsubscribe = () => {};
 

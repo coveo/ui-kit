@@ -23,7 +23,7 @@ export class AtomicDateFacet {
   @Prop() field = '';
   @Prop() label = 'No label';
   @State() state!: DateFacetState;
-  private context!: InterfaceContext;
+  public context!: InterfaceContext;
 
   private facet!: DateFacet;
   private unsubscribe: Unsubscribe = () => {};

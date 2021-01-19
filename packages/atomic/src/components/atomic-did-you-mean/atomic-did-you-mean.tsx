@@ -18,7 +18,7 @@ import {
 export class AtomicDidYouMean {
   @State() state!: DidYouMeanState;
 
-  private context!: InterfaceContext;
+  public context!: InterfaceContext;
   private didYouMean!: DidYouMean;
   private unsubscribe: Unsubscribe = () => {};
 

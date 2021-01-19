@@ -25,7 +25,7 @@ export class AtomicNumericFacet {
   @Prop() label = 'No label';
   @State() state!: NumericFacetState;
 
-  private context!: InterfaceContext;
+  public context!: InterfaceContext;
   private unsubscribe: Unsubscribe = () => {};
   private facet!: NumericFacet;
 

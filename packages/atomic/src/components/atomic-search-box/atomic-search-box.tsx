@@ -46,13 +46,18 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
     'atomic-search-box-'
   );
 
-  private context!: InterfaceContext;
+  public context!: InterfaceContext;
   private searchBox!: SearchBox;
   private unsubscribe: Unsubscribe = () => {};
   private inputRef!: HTMLInputElement;
   private valuesRef!: HTMLElement;
   private containerRef!: HTMLElement;
   private combobox!: Combobox;
+
+  @State() strings = {
+    search: '',
+    clear: '',
+  };
 
   constructor() {
     this.combobox = new Combobox({
@@ -99,6 +104,13 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
     this.unsubscribe = this.searchBox.subscribe(() => this.updateState());
   }
 
+  public updateLocaleStrings() {
+    this.strings = {
+      search: this.context.i18n.t('search'),
+      clear: this.context.i18n.t('clear'),
+    };
+  }
+
   public disconnectedCallback() {
     this.unsubscribe();
   }
@@ -123,7 +135,7 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
         part="submit-button"
         onClick={() => this.searchBox.submit()}
       >
-        {this.context.i18n.t('search')}
+        {this.strings.search}
       </button>
     );
   }

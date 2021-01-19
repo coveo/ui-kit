@@ -23,7 +23,7 @@ export class AtomicFacet {
   @Prop() field = '';
   @Prop() label = 'No label';
   @State() state!: FacetState;
-  private context!: InterfaceContext;
+  public context!: InterfaceContext;
 
   private unsubscribe: Unsubscribe = () => {};
   private facet!: Facet;

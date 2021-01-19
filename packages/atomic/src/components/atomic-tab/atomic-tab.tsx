@@ -18,7 +18,7 @@ export class AtomicTab {
   @Prop() isActive = false;
   @State() state!: TabState;
 
-  private context!: InterfaceContext;
+  public context!: InterfaceContext;
   private tab!: Tab;
   private unsubscribe: Unsubscribe = () => {};
 

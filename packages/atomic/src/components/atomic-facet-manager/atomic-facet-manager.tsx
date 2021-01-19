@@ -22,7 +22,7 @@ interface FacetElement extends HTMLElement {
 export class AtomicFacetManager {
   @State() state!: FacetManagerState;
   @Element() host!: HTMLDivElement;
-  private context!: InterfaceContext;
+  public context!: InterfaceContext;
   private unsubscribe: Unsubscribe = () => {};
   private facetManager!: FacetManager;
 

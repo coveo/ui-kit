@@ -24,7 +24,7 @@ export class AtomicCategoryFacet {
   @Prop() label = 'No label';
   @State() state!: CategoryFacetState;
 
-  private context!: InterfaceContext;
+  public context!: InterfaceContext;
   private categoryFacet!: CategoryFacet;
   private unsubscribe: Unsubscribe = () => {};
 

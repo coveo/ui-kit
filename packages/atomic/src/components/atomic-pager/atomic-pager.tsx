@@ -23,7 +23,7 @@ import {
 export class AtomicPager {
   @State() state!: PagerState;
 
-  private context!: InterfaceContext;
+  public context!: InterfaceContext;
   private pager!: Pager;
   private unsubscribe: Unsubscribe = () => {};
 
