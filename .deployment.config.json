@@ -57,6 +57,9 @@
         "job_name": "ui-kit-production-release",
         "prd": {
           "disabled": false
+        },
+        "extra_parameters": {
+          "COMMIT_HASH": "$[COMMIT_HASH]"
         }
       }
     }
