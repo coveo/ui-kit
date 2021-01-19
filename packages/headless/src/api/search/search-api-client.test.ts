@@ -9,9 +9,6 @@ import {
   PlatformClientCallOptions,
   PlatformResponse,
 } from '../platform-client';
-import {PlanRequest} from './plan/plan-request';
-import {QuerySuggestRequest} from './query-suggest/query-suggest-request';
-import {SearchRequest} from './search/search-request';
 import {createMockState} from '../../test/mock-state';
 import {createMockRecommendationState} from '../../test/mock-recommendation-state';
 import {buildMockQuerySuggest} from '../../test/mock-query-suggest';
@@ -26,10 +23,8 @@ import {buildQuerySuggestRequest} from '../../features/query-suggest/query-sugge
 import {buildSpecificFacetSearchRequest} from '../../features/facets/facet-search-set/specific/specific-facet-search-request-builder';
 import {buildCategoryFacetSearchRequest} from '../../features/facets/facet-search-set/category/category-facet-search-request-builder';
 import {buildRecommendationRequest} from '../../features/recommendation/recommendation-actions';
-import {RecommendationRequest} from './recommendation/recommendation-request';
 import {buildProductRecommendationsRequest} from '../../features/product-recommendations/product-recommendations-actions';
 import {buildMockProductRecommendationsState} from '../../test/mock-product-recommendations-state';
-import {ProductRecommendationsRequest} from './product-recommendations/product-recommendations-request';
 import {getProductRecommendationsInitialState} from '../../features/product-recommendations/product-recommendations-state';
 import pino from 'pino';
 import {
@@ -180,7 +175,7 @@ describe('search api client', () => {
       searchAPIClient.search(req);
       const request = (PlatformClient.call as jest.Mock).mock.calls[0][0];
 
-      const expectedRequest: PlatformClientCallOptions<SearchRequest> = {
+      const expectedRequest: PlatformClientCallOptions = {
         accessToken: state.configuration.accessToken,
         method: 'POST',
         contentType: 'application/json',
@@ -233,7 +228,7 @@ describe('search api client', () => {
       searchAPIClient.plan(req);
       const request = (PlatformClient.call as jest.Mock).mock.calls[0][0];
 
-      const expectedRequest: PlatformClientCallOptions<PlanRequest> = {
+      const expectedRequest: PlatformClientCallOptions = {
         accessToken: state.configuration.accessToken,
         method: 'POST',
         contentType: 'application/json',
@@ -264,7 +259,7 @@ describe('search api client', () => {
       searchAPIClient.querySuggest(req);
       const request = (PlatformClient.call as jest.Mock).mock.calls[0][0];
 
-      const expectedRequest: PlatformClientCallOptions<QuerySuggestRequest> = {
+      const expectedRequest: PlatformClientCallOptions = {
         accessToken: state.configuration.accessToken,
         method: 'POST',
         contentType: 'application/json',
@@ -385,7 +380,7 @@ describe('search api client', () => {
 
         searchAPIClient.recommendations(req);
 
-        const expectedRequest: PlatformClientCallOptions<RecommendationRequest> = {
+        const expectedRequest: PlatformClientCallOptions = {
           accessToken: recommendationState.configuration.accessToken,
           method: 'POST',
           contentType: 'application/json',
@@ -433,7 +428,7 @@ describe('search api client', () => {
         searchAPIClient.productRecommendations(req);
         const request = (PlatformClient.call as jest.Mock).mock.calls[0][0];
 
-        const expectedRequest: PlatformClientCallOptions<ProductRecommendationsRequest> = {
+        const expectedRequest: PlatformClientCallOptions = {
           accessToken: productRecommendationsState.configuration.accessToken,
           method: 'POST',
           contentType: 'application/json',

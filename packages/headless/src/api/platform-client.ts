@@ -2,23 +2,18 @@ import fetch from 'cross-fetch';
 export type HttpMethods = 'POST' | 'GET' | 'DELETE' | 'PUT';
 export type HTTPContentTypes = 'application/json' | 'text/html';
 import {backOff} from 'exponential-backoff';
-import {BaseParam} from './search/search-api-params';
 import {Logger} from 'pino';
 
 function isThrottled(status: number): boolean {
   return status === 429;
 }
 
-export interface BasePlatformClientOptions {
+export interface PlatformClientCallOptions {
   url: string;
   method: HttpMethods;
   contentType: HTTPContentTypes;
   headers?: Record<string, string>;
-}
-
-export interface PlatformClientCallOptions<RequestParams extends BaseParam>
-  extends BasePlatformClientOptions {
-  requestParams: Omit<RequestParams, 'url' | 'organizationId' | 'accessToken'>;
+  requestParams: unknown;
   accessToken: string;
   renewAccessToken: () => Promise<string>;
   preprocessRequest: PreprocessRequestMiddleware;
@@ -32,16 +27,16 @@ export interface PlatformResponse<T> {
 }
 
 export type PreprocessRequestMiddleware = (
-  request: BasePlatformClientOptions
-) => BasePlatformClientOptions | Promise<BasePlatformClientOptions>;
+  request: PlatformClientCallOptions
+) => PlatformClientCallOptions | Promise<PlatformClientCallOptions>;
 
 export const NoopPreprocessRequestMiddleware: PreprocessRequestMiddleware = (
   request
 ) => request;
 
 export class PlatformClient {
-  static async call<RequestParams extends BaseParam, ResponseType>(
-    options: PlatformClientCallOptions<RequestParams>
+  static async call<ResponseType>(
+    options: PlatformClientCallOptions
   ): Promise<PlatformResponse<ResponseType>> {
     const processedOptions = {
       ...options,
