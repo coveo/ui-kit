@@ -26,3 +26,5 @@ UserInterfaceState.xcuserstate
 .env
 
 src/external-builds
+
+cypress/screenshots

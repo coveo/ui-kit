@@ -6,19 +6,16 @@ import {
 } from '../selectors/search-box-selectors';
 import {
   ResultListSelectors,
-  generateAliasForResultList,
 } from '../selectors/result-list-selectors';
 
 const queryText = 'test';
-const htmlCode =
-  '<atomic-search-box></atomic-search-box><atomic-result-list></atomic-result-list>';
+const htmlCode = '<atomic-search-box></atomic-search-box><atomic-result-list></atomic-result-list>';
 
 describe('SearchBox Test Suites', () => {
   beforeEach(() => {
     setUpPage(htmlCode);
-    cy.wait(500);
+    cy.wait(1500);
     generateAliasForSearchBox();
-    generateAliasForResultList();
   });
 
   it('Searchbox should load', () => {
@@ -41,21 +38,18 @@ describe('SearchBox Test Suites', () => {
 
   it('Searchbox should execute a query on button click', async () => {
     cy.get('@searchInput').type(queryText, {force: true});
-    cy.get('@searchBtn').click();
-    cy.get(ResultListSelectors.component).should('be.visible');
+    cy.get('@searchBtn').click().debug();
 
     // Search section make sure number of items displays should be same as what returns from api call
     const jsonResponse = await getApiResponseBody('@coveoSearch');
-
-    cy.get('@resultList')
-      .children()
-      .should('have.length', jsonResponse.results.length);
+    expect(jsonResponse).to.have.property('results');
+    expect(jsonResponse.results?.length).to.be.greaterThan(0);
   });
 
   it('Searchbox should log UA when excute a query', async () => {
+    cy.wait('@coveoAnalytics');
     cy.get('@searchInput').type(queryText, {force: true});
     cy.get('@searchBtn').click();
-    cy.get(ResultListSelectors.component).should('be.visible');
 
     // UA section make sure that the information sent should contains some context
     const searchUA = {
@@ -70,5 +64,14 @@ describe('SearchBox Test Suites', () => {
       'actionCause',
       searchUA['actionCause']
     );
+  });
+
+  it('passes automated accessibility tests', () => {
+    cy.checkA11y(SearchBoxSelectors.component, {
+      runOnly: {
+        type: 'tag',
+        values: ['wcag2a']
+      }
+    });
   });
 });

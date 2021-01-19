@@ -117,6 +117,7 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
   }
 
   private onClickSuggestion(e: MouseEvent) {
+    e.preventDefault();
     const value = (e.target as HTMLLIElement).value;
     this.searchBox.selectSuggestion(
       this.searchBoxState.suggestions[value].rawValue
@@ -129,7 +130,7 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
         type="button"
         part="submit-button"
         class={
-          'mx-1 w-10 bg-transparent border-0 outline-none border-gray-400 border-solid p-0 ' +
+          'submit mx-1 w-10 bg-transparent border-0 outline-none border-gray-400 border-solid p-0 ' +
           (this.leadingSubmitButton ? 'border-r' : 'border-l')
         }
         aria-label={this.context.i18n.t('search')}

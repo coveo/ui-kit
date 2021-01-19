@@ -1,18 +1,14 @@
 export function getApiResponseBody(selector: string) {
   return new Promise((resolve) => {
-    cy.wait(selector)
-      .its('responseBody')
-      .then(async (xhr) => {
-        const response = await new Response(xhr as Blob).text();
-        const jsonResponse = JSON.parse(response);
-        resolve(jsonResponse);
+    cy.wait(selector).then(interception => {
+        resolve(interception.response.body);
       });
   });
 }
 
 export function getUAFetch(selector: string) {
   return new Promise((resolve) => {
-    cy.wait(selector).then((xhr) => {
+    cy.wait(selector).debug().then((xhr) => {
       resolve(xhr);
     });
   });
