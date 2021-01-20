@@ -1,14 +1,9 @@
-import {Initialization} from './initialization-utils';
+import {AtomicComponentInterface, Initialization} from './initialization-utils';
 import {AtomicPager} from '../components/atomic-pager/atomic-pager';
-import type {ComponentInterface} from '@stencil/core';
 import {TestUtils} from '@coveo/headless';
 import {newSpecPage, SpecPage} from '@stencil/core/testing';
 import {AtomicSearchInterface} from '../components/atomic-search-interface/atomic-search-interface';
 import i18next from 'i18next';
-
-interface AtomicComponent extends ComponentInterface {
-  error?: Error;
-}
 
 describe('Initialization decorator', () => {
   describe('render method override', () => {
@@ -18,7 +13,7 @@ describe('Initialization decorator', () => {
 
     it(`when "error" is defined
     should render an atomic-component-error component`, () => {
-      const component: AtomicComponent = new AtomicPager();
+      const component: AtomicComponentInterface = new AtomicPager();
       Initialization()(component, 'initialize');
       component.error = new Error('oups');
 
