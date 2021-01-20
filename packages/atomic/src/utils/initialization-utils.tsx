@@ -22,7 +22,7 @@ export class InitializationError extends Error {
 export interface AtomicComponentInterface extends ComponentInterface {
   bindings: Bindings;
   error?: Error;
-  updateLocaleStrings?: () => void;
+  strings?: Record<string, () => string>;
 }
 
 export function Initialization() {
@@ -32,7 +32,6 @@ export function Initialization() {
       render,
       componentDidRender,
       componentDidLoad,
-      updateLocaleStrings,
     } = component;
     const initialize: () => void = component[initializeMethod];
 
@@ -41,10 +40,10 @@ export function Initialization() {
       const event = new CustomEvent('atomic/initializeComponent', {
         detail: (bindings: Bindings) => {
           this.bindings = bindings;
-          if (updateLocaleStrings) {
-            updateLocaleStrings.call(this);
-            this.bindings.i18n.on('languageChanged', () =>
-              updateLocaleStrings.call(this)
+          if (this.strings) {
+            this.bindings.i18n.on(
+              'languageChanged',
+              () => (this.strings = {...this.strings})
             );
           }
 
