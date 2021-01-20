@@ -59,6 +59,7 @@ export const config: Config = {
             content.match(/[A-Za-z0-9-_:/]+/g) || [],
         }),
       ],
+      injectGlobalPaths: ['src/global.pcss'],
     }),
   ],
   rollupPlugins: {
