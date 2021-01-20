@@ -7,7 +7,6 @@ import {inlineSvg} from 'stencil-inline-svg';
 
 import tailwind from 'tailwindcss';
 import atImport from 'postcss-import';
-import purgecss from '@fullhuman/postcss-purgecss';
 
 const isDevWatch: boolean =
   process.argv &&
@@ -40,26 +39,12 @@ export const config: Config = {
     },
   },
   devServer: {
-    reloadStrategy: 'pageReload',
+    reloadStrategy: 'hmr',
   },
   plugins: [
     inlineSvg(),
     postcss({
-      plugins: [
-        atImport(),
-        tailwind(),
-        purgecss({
-          content: [
-            './src/**/*.tsx',
-            './src/index.html',
-            './src/**/*.pcss',
-            './src/**/*.css',
-          ],
-          defaultExtractor: (content) =>
-            content.match(/[A-Za-z0-9-_:/]+/g) || [],
-        }),
-      ],
-      injectGlobalPaths: ['src/global.pcss'],
+      plugins: [atImport(), tailwind()],
     }),
   ],
   rollupPlugins: {
