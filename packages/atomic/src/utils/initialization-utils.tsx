@@ -25,6 +25,11 @@ export interface AtomicComponentInterface extends ComponentInterface {
   strings?: Record<string, () => string>;
 }
 
+/**
+ * Utility that automatically fetches the `bindings` from the parent `atomic-search-interface` component. This decorator should be applied to the `initialize` method directly.
+ *
+ * In order for a component using this decorator to render properly, it should have an internal state property using data from the `bindings`. For more information, view the "Utilities" section of the readme.
+ */
 export function Initialization() {
   return (component: AtomicComponentInterface, initializeMethod: string) => {
     const {
@@ -40,7 +45,10 @@ export function Initialization() {
       const event = new CustomEvent('atomic/initializeComponent', {
         detail: (bindings: Bindings) => {
           this.bindings = bindings;
+
+          // Ensures re-render of localized strings
           if (this.strings) {
+            this.strings = {...this.strings};
             this.bindings.i18n.on(
               'languageChanged',
               () => (this.strings = {...this.strings})

@@ -81,3 +81,62 @@ To run all the test, run:
 ```sh
 npm run cypresstest
 ```
+
+## Utilities
+
+### The Initialization decorator
+
+Utility that automatically fetches the `bindings` from the parent `atomic-search-interface` component. This decorator should be applied to the `initialize` method directly. 
+
+*Important* In order for a component using this decorator to render properly, it should have an internal state property using data from the `bindings`. Here are a few examples:
+
+#### Render a localized string using the `i18n` binding
+
+`strings` is a typed, predefined `@State()` property which is automatically updated on initialization and on language change.
+
+```typescript
+@Component({
+  tag: 'atomic-component',
+  shadow: true,
+})
+export class AtomicComponent {
+  public @State() strings = {
+    value: () => this.bindings.i18n.t('value', { /* options */ }),
+  };
+  public bindings!: Bindings;
+
+  @Initialization()
+  public initialize() {}
+
+  render() {
+    return this.strings.value();
+  }
+}
+```
+
+#### Render a Headless Controller's state using the `engine` binding
+
+```typescript
+@Component({
+  tag: 'atomic-component',
+  shadow: true,
+})
+export class AtomicComponent {
+  public @State() state!: ControllerState;
+  public bindings!: Bindings;
+  private controller!: Controller;
+  private unsubscribe: Unsubscribe = () => {};
+
+  @Initialization()
+  public initialize() {
+    this.controller = buildController(this.bindings.engine);
+    this.unsubscribe = this.controller.subscribe(() => {
+      this.state = this.controller.state;
+    });
+  }
+
+  render() {
+    return this.state.someValue;
+  }
+}
+```
