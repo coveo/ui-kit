@@ -1,10 +1,5 @@
 import {Component, h, Prop, State, Element} from '@stencil/core';
-import {
-  SearchBox,
-  SearchBoxState,
-  Unsubscribe,
-  buildSearchBox,
-} from '@coveo/headless';
+import {SearchBox, SearchBoxState, buildSearchBox} from '@coveo/headless';
 import {Initialization, Bindings} from '../../utils/initialization-utils';
 import {randomID} from '../../utils/utils';
 import {Combobox} from '../../utils/combobox';
@@ -35,7 +30,7 @@ export interface AtomicSearchBoxOptions {
 })
 export class AtomicSearchBox implements AtomicSearchBoxOptions {
   @Element() host!: HTMLDivElement;
-  @State() searchBoxState!: SearchBoxState;
+  @State() controllerState!: SearchBoxState;
   @State() strings = {
     search: () => this.bindings.i18n.t('search'),
     clear: () => this.bindings.i18n.t('clear'),
@@ -48,8 +43,7 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
   );
 
   public bindings!: Bindings;
-  private searchBox!: SearchBox;
-  private unsubscribe: Unsubscribe = () => {};
+  public controller!: SearchBox;
   private inputRef!: HTMLInputElement;
   private valuesRef!: HTMLElement;
   private containerRef!: HTMLElement;
@@ -62,17 +56,17 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
       inputRef: () => this.inputRef,
       valuesRef: () => this.valuesRef,
       onChange: (value) => {
-        this.searchBox.updateText(value);
+        this.controller.updateText(value);
       },
       onSubmit: () => {
-        this.searchBox.submit();
-        this.searchBox.hideSuggestions();
+        this.controller.submit();
+        this.controller.hideSuggestions();
       },
       onSelectValue: (element) => {
-        this.searchBox.selectSuggestion((element as HTMLButtonElement).value);
+        this.controller.selectSuggestion((element as HTMLButtonElement).value);
       },
       onBlur: () => {
-        setTimeout(() => this.searchBox.hideSuggestions(), 100);
+        setTimeout(() => this.controller.hideSuggestions(), 100);
       },
       activeClass: 'active',
       activePartName: 'active-suggestion',
@@ -81,7 +75,7 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
 
   @Initialization()
   public initialize() {
-    this.searchBox = buildSearchBox(this.bindings.engine, {
+    this.controller = buildSearchBox(this.bindings.engine, {
       options: {
         numberOfSuggestions: this.numberOfSuggestions,
         highlightOptions: {
@@ -97,24 +91,15 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
         enableQuerySyntax: this.enableQuerySyntax,
       },
     });
-    this.unsubscribe = this.searchBox.subscribe(() => this.updateState());
-  }
-
-  public disconnectedCallback() {
-    this.unsubscribe();
-  }
-
-  private updateState() {
-    this.searchBoxState = this.searchBox.state;
   }
 
   private onInputFocus() {
-    this.searchBox.showSuggestions();
+    this.controller.showSuggestions();
   }
 
   private onClickSuggestion(e: MouseEvent) {
     const value = (e.target as HTMLButtonElement).value;
-    this.searchBox.selectSuggestion(value);
+    this.controller.selectSuggestion(value);
   }
 
   private get submitButton() {
@@ -122,7 +107,7 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
       <button
         type="button"
         part="submit-button"
-        onClick={() => this.searchBox.submit()}
+        onClick={() => this.controller.submit()}
       >
         {this.strings.search()}
       </button>
@@ -130,7 +115,7 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
   }
 
   private get clearButton() {
-    if (this.searchBoxState.value === '') {
+    if (this.controllerState.value === '') {
       return;
     }
 
@@ -139,7 +124,7 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
         type="button"
         part="clear-button"
         onClick={() => {
-          this.searchBox.clear();
+          this.controller.clear();
           this.inputRef.focus();
         }}
       >
@@ -160,13 +145,13 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
         onKeyDown={(e) => this.combobox.onInputKeydown(e)}
         type="text"
         placeholder=""
-        value={this.searchBoxState.value}
+        value={this.controllerState.value}
       />
     );
   }
 
   private get suggestions() {
-    return this.searchBoxState.suggestions.map((suggestion, index) => {
+    return this.controllerState.suggestions.map((suggestion, index) => {
       const id = `${this._id}-suggestion-${index}`;
       return (
         <button

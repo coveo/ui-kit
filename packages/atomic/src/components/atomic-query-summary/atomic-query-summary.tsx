@@ -2,10 +2,13 @@ import {Component, h, State} from '@stencil/core';
 import {
   QuerySummary,
   QuerySummaryState,
-  Unsubscribe,
   buildQuerySummary,
 } from '@coveo/headless';
-import {Initialization, Bindings} from '../../utils/initialization-utils';
+import {
+  Initialization,
+  Bindings,
+  AtomicComponentInterface,
+} from '../../utils/initialization-utils';
 
 /**
  * @part container - The container of the whole summary
@@ -20,35 +23,25 @@ import {Initialization, Bindings} from '../../utils/initialization-utils';
   styleUrl: 'atomic-query-summary.css',
   shadow: true,
 })
-export class AtomicQuerySummary {
-  @State() state!: QuerySummaryState;
+export class AtomicQuerySummary implements AtomicComponentInterface {
+  @State() controllerState!: QuerySummaryState;
 
   public bindings!: Bindings;
-  private querySummary!: QuerySummary;
-  private unsubscribe: Unsubscribe = () => {};
+  public controller!: QuerySummary;
 
   @Initialization()
   public initialize() {
-    this.querySummary = buildQuerySummary(this.bindings.engine);
-    this.unsubscribe = this.querySummary.subscribe(() => this.updateState());
-  }
-
-  public disconnectedCallback() {
-    this.unsubscribe();
+    this.controller = buildQuerySummary(this.bindings.engine);
   }
 
   public render() {
     return (
       <div part="container">
-        {this.state.hasResults
+        {this.controllerState.hasResults
           ? this.renderHasResults()
           : this.renderNoResults()}
       </div>
     );
-  }
-
-  private updateState() {
-    this.state = this.querySummary.state;
   }
 
   private renderNoResults() {
@@ -70,17 +63,20 @@ export class AtomicQuerySummary {
   }
 
   private get range() {
-    return `${this.state.firstResult.toLocaleString()}-${this.state.lastResult.toLocaleString()}`;
+    return `${this.controllerState.firstResult.toLocaleString()}-${this.controllerState.lastResult.toLocaleString()}`;
   }
 
   private get total() {
-    return this.state.total.toLocaleString();
+    return this.controllerState.total.toLocaleString();
   }
 
   private renderQuery() {
-    if (this.state.hasQuery) {
+    if (this.controllerState.hasQuery) {
       return (
-        <span part="query"> for {this.renderHighlight(this.state.query)}</span>
+        <span part="query">
+          {' '}
+          for {this.renderHighlight(this.controllerState.query)}
+        </span>
       );
     }
 
@@ -88,11 +84,11 @@ export class AtomicQuerySummary {
   }
 
   private renderDuration() {
-    if (this.state.hasDuration) {
+    if (this.controllerState.hasDuration) {
       return (
         <span part="duration">
           {' '}
-          in {this.state.durationInSeconds.toLocaleString()} seconds
+          in {this.controllerState.durationInSeconds.toLocaleString()} seconds
         </span>
       );
     }

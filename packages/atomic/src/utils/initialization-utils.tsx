@@ -48,6 +48,10 @@ export interface AtomicComponentInterface extends ComponentInterface {
    * Headless Controller's state.
    */
   controllerState?: unknown;
+  /**
+   * Callback for when the subscribe method is called and the controller's state is updated.
+   */
+  onControllerStateUpdate?: () => void;
 }
 
 /**
@@ -55,14 +59,18 @@ export interface AtomicComponentInterface extends ComponentInterface {
  *
  * In order for a component using this decorator to render properly, it should have an internal state property using data from the `bindings`. For more information, view the "Utilities" section of the readme.
  */
-export function Initialization() {
+export function Initialization(options?: {
+  resubscribeControllerOnConnectedCallback?: boolean;
+}) {
   return (component: AtomicComponentInterface, initializeMethod: string) => {
     const {
+      connectedCallback,
       componentWillLoad,
       render,
       componentDidRender,
       componentDidLoad,
       disconnectedCallback,
+      onControllerStateUpdate,
     } = component;
     const initialize: () => void = component[initializeMethod];
 
@@ -70,6 +78,19 @@ export function Initialization() {
     let unsubscribeController = () => {};
 
     let error: Error;
+
+    component.connectedCallback = function () {
+      if (
+        this.controller &&
+        options?.resubscribeControllerOnConnectedCallback
+      ) {
+        unsubscribeController();
+        unsubscribeController = this.controller.subscribe(() => {
+          this.controllerState = this.controller!.state;
+        });
+      }
+      connectedCallback && connectedCallback.call(this);
+    };
 
     component.componentWillLoad = function () {
       const element = getElement(this);
@@ -83,6 +104,7 @@ export function Initialization() {
             if (this.controller) {
               unsubscribeController = this.controller.subscribe(() => {
                 this.controllerState = this.controller!.state;
+                onControllerStateUpdate && onControllerStateUpdate.call(this);
               });
             }
 

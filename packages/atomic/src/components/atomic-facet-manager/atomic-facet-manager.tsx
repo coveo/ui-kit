@@ -2,10 +2,13 @@ import {Component, h, Element, State} from '@stencil/core';
 import {
   FacetManager,
   buildFacetManager,
-  Unsubscribe,
   FacetManagerState,
 } from '@coveo/headless';
-import {Initialization, Bindings} from '../../utils/initialization-utils';
+import {
+  Initialization,
+  Bindings,
+  AtomicComponentInterface,
+} from '../../utils/initialization-utils';
 
 interface FacetElement extends HTMLElement {
   facetId: string;
@@ -16,34 +19,24 @@ interface FacetElement extends HTMLElement {
   styleUrl: 'atomic-facet-manager.css',
   shadow: true,
 })
-export class AtomicFacetManager {
-  @State() state!: FacetManagerState;
+export class AtomicFacetManager implements AtomicComponentInterface {
+  @State() controllerState!: FacetManagerState;
   @Element() host!: HTMLDivElement;
   public bindings!: Bindings;
-  private unsubscribe: Unsubscribe = () => {};
-  private facetManager!: FacetManager;
+  public controller!: FacetManager;
 
   @Initialization()
   public initialize() {
-    this.facetManager = buildFacetManager(this.bindings.engine);
-
-    this.unsubscribe = this.facetManager.subscribe(() => {
-      this.updateStateToTriggerRender();
-      this.sortFacets();
-    });
+    this.controller = buildFacetManager(this.bindings.engine);
   }
 
-  public disconnectedCallback() {
-    this.unsubscribe();
-  }
-
-  private updateStateToTriggerRender() {
-    this.state = this.facetManager.state;
+  public onControllerStateUpdate() {
+    this.sortFacets();
   }
 
   private sortFacets() {
     const payload = this.facets.map((f) => ({facetId: f.facetId, payload: f}));
-    const sortedFacets = this.facetManager.sort(payload).map((f) => f.payload);
+    const sortedFacets = this.controller.sort(payload).map((f) => f.payload);
 
     this.host.append(...sortedFacets);
   }

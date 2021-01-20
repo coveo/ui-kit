@@ -183,7 +183,7 @@ export class AtomicSearchInterface {
     return [
       this.engine && (
         <atomic-relevance-inspector
-          engine={this.engine}
+          bindings={{engine: this.engine, i18n: this.i18n}}
         ></atomic-relevance-inspector>
       ),
       <slot></slot>,

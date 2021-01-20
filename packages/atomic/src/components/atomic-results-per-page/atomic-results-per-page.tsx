@@ -2,10 +2,13 @@ import {Component, h, Prop, State} from '@stencil/core';
 import {
   ResultsPerPage,
   ResultsPerPageState,
-  Unsubscribe,
   buildResultsPerPage,
 } from '@coveo/headless';
-import {Initialization, Bindings} from '../../utils/initialization-utils';
+import {
+  Initialization,
+  Bindings,
+  AtomicComponentInterface,
+} from '../../utils/initialization-utils';
 
 /**
  * @part list - The list of buttons
@@ -18,12 +21,11 @@ import {Initialization, Bindings} from '../../utils/initialization-utils';
   styleUrl: 'atomic-results-per-page.css',
   shadow: true,
 })
-export class AtomicResultsPerPage {
-  @State() state!: ResultsPerPageState;
+export class AtomicResultsPerPage implements AtomicComponentInterface {
+  @State() controllerState!: ResultsPerPageState;
 
   public bindings!: Bindings;
-  private resultsPerPage!: ResultsPerPage;
-  private unsubscribe: Unsubscribe = () => {};
+  public controller!: ResultsPerPage;
 
   // TODO: validate props
   /**
@@ -37,30 +39,21 @@ export class AtomicResultsPerPage {
 
   @Initialization()
   public initialize() {
-    this.resultsPerPage = buildResultsPerPage(this.bindings.engine, {
+    this.controller = buildResultsPerPage(this.bindings.engine, {
       initialState: {numberOfResults: this.initialOption},
     });
-    this.unsubscribe = this.resultsPerPage.subscribe(() => this.updateState());
-  }
-
-  public disconnectedCallback() {
-    this.unsubscribe();
-  }
-
-  private updateState() {
-    this.state = this.resultsPerPage.state;
   }
 
   private get optionsList() {
     return this.options.split(',').map((value) => {
       const num = parseInt(value);
-      const isSelected = this.resultsPerPage.isSetTo(num);
+      const isSelected = this.controller.isSetTo(num);
       const className = isSelected ? 'active' : '';
       return (
         <li class={className}>
           <button
             part={`page-button ${isSelected && 'active-page-button'}`}
-            onClick={() => this.resultsPerPage.set(num)}
+            onClick={() => this.controller.set(num)}
           >
             {num}
           </button>

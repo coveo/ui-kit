@@ -1,6 +1,10 @@
 import {Component, h, State} from '@stencil/core';
-import {Pager, PagerState, Unsubscribe, buildPager} from '@coveo/headless';
-import {Initialization, Bindings} from '../../utils/initialization-utils';
+import {Pager, PagerState, buildPager} from '@coveo/headless';
+import {
+  Initialization,
+  Bindings,
+  AtomicComponentInterface,
+} from '../../utils/initialization-utils';
 
 /**
  * @slot back-button - Content of the back button
@@ -17,29 +21,19 @@ import {Initialization, Bindings} from '../../utils/initialization-utils';
   styleUrl: 'atomic-pager.css',
   shadow: true,
 })
-export class AtomicPager {
-  @State() state!: PagerState;
+export class AtomicPager implements AtomicComponentInterface {
+  @State() controllerState!: PagerState;
 
   public bindings!: Bindings;
-  private pager!: Pager;
-  private unsubscribe: Unsubscribe = () => {};
+  public controller!: Pager;
 
   @Initialization()
   public initialize() {
-    this.pager = buildPager(this.bindings.engine);
-    this.unsubscribe = this.pager.subscribe(() => this.updateState());
-  }
-
-  public disconnectedCallback() {
-    this.unsubscribe();
-  }
-
-  private updateState() {
-    this.state = this.pager.state;
+    this.controller = buildPager(this.bindings.engine);
   }
 
   private get backButton() {
-    if (!this.state.hasPreviousPage) {
+    if (!this.controllerState.hasPreviousPage) {
       return null;
     }
 
@@ -50,7 +44,7 @@ export class AtomicPager {
           part="back-button"
           aria-label="Previous page"
           onClick={() => {
-            this.pager.previousPage();
+            this.controller.previousPage();
           }}
         >
           <slot name="back-button">{icon}</slot>
@@ -60,7 +54,7 @@ export class AtomicPager {
   }
 
   private get nextButton() {
-    if (!this.state.hasNextPage) {
+    if (!this.controllerState.hasNextPage) {
       return null;
     }
 
@@ -71,7 +65,7 @@ export class AtomicPager {
           part="next-button"
           aria-label="Next page"
           onClick={() => {
-            this.pager.nextPage();
+            this.controller.nextPage();
           }}
         >
           <slot name="next-button">{icon}</slot>
@@ -81,12 +75,12 @@ export class AtomicPager {
   }
 
   private get pages() {
-    const pages = this.pager.state.currentPages;
+    const pages = this.controller.state.currentPages;
     return pages.map((page) => this.buildPage(page));
   }
 
   private buildPage(page: number) {
-    const isSelected = this.pager.isCurrentPage(page);
+    const isSelected = this.controller.isCurrentPage(page);
     const className = isSelected ? 'active' : '';
 
     return (
@@ -95,7 +89,7 @@ export class AtomicPager {
           part={`page-button ${isSelected && 'active-page-button'}`}
           aria-label={`Page ${page}`}
           onClick={() => {
-            this.pager.selectPage(page);
+            this.controller.selectPage(page);
           }}
         >
           {page}

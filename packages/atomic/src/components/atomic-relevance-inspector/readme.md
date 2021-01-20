@@ -7,9 +7,9 @@
 
 ## Properties
 
-| Property              | Attribute | Description | Type                     | Default     |
-| --------------------- | --------- | ----------- | ------------------------ | ----------- |
-| `engine` _(required)_ | --        |             | `Engine<SearchAppState>` | `undefined` |
+| Property                | Attribute | Description                                                                  | Type       | Default     |
+| ----------------------- | --------- | ---------------------------------------------------------------------------- | ---------- | ----------- |
+| `bindings` _(required)_ | --        | Bindings passed from the `AtomicSearchInterface` to its children components. | `Bindings` | `undefined` |
 
 
 ## Dependencies

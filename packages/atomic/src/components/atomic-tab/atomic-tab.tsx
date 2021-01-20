@@ -1,6 +1,10 @@
 import {Component, h, Prop, State} from '@stencil/core';
-import {buildTab, Tab, TabProps, TabState, Unsubscribe} from '@coveo/headless';
-import {Initialization, Bindings} from '../../utils/initialization-utils';
+import {buildTab, Tab, TabProps, TabState} from '@coveo/headless';
+import {
+  Initialization,
+  Bindings,
+  AtomicComponentInterface,
+} from '../../utils/initialization-utils';
 /**
  * @part tab-button - The tab button
  * @part active-tab - The active tab
@@ -10,14 +14,13 @@ import {Initialization, Bindings} from '../../utils/initialization-utils';
   styleUrl: 'atomic-tab.css',
   shadow: true,
 })
-export class AtomicTab {
+export class AtomicTab implements AtomicComponentInterface {
   @Prop() expression = '';
   @Prop() isActive = false;
-  @State() state!: TabState;
+  @State() controllerState!: TabState;
 
   public bindings!: Bindings;
-  private tab!: Tab;
-  private unsubscribe: Unsubscribe = () => {};
+  public controller!: Tab;
 
   @Initialization()
   public initialize() {
@@ -29,26 +32,17 @@ export class AtomicTab {
         isActive: this.isActive,
       },
     };
-    this.tab = buildTab(this.bindings.engine, options);
-    this.unsubscribe = this.tab.subscribe(() => this.updateState());
-  }
-
-  public disconnectedCallback() {
-    this.unsubscribe();
-  }
-
-  private updateState() {
-    this.state = this.tab.state;
+    this.controller = buildTab(this.bindings.engine, options);
   }
 
   public handleClick() {
-    this.tab.select();
+    this.controller.select();
   }
 
   render() {
     let activeClass = 'btn-outline-primary';
     let activePart = {};
-    if (this.state.isActive) {
+    if (this.controllerState.isActive) {
       activeClass = 'active';
       activePart = {part: 'active-tab'};
     }

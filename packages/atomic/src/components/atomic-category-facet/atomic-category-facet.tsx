@@ -5,56 +5,41 @@ import {
   buildCategoryFacet,
   CategoryFacetOptions,
   CategoryFacetValue,
-  Unsubscribe,
   CategoryFacetSortCriterion,
 } from '@coveo/headless';
-import {Initialization, Bindings} from '../../utils/initialization-utils';
+import {
+  Initialization,
+  Bindings,
+  AtomicComponentInterface,
+} from '../../utils/initialization-utils';
 
 @Component({
   tag: 'atomic-category-facet',
   styleUrl: 'atomic-category-facet.css',
   shadow: true,
 })
-export class AtomicCategoryFacet {
+export class AtomicCategoryFacet implements AtomicComponentInterface {
   @Prop({mutable: true}) facetId = '';
   @Prop() field = '';
   @Prop() label = 'No label';
-  @State() state!: CategoryFacetState;
+  @State() controllerState!: CategoryFacetState;
 
   public bindings!: Bindings;
-  private categoryFacet!: CategoryFacet;
-  private unsubscribe: Unsubscribe = () => {};
+  public controller!: CategoryFacet;
 
-  @Initialization()
+  @Initialization({resubscribeControllerOnConnectedCallback: true})
   public initialize() {
     const options: CategoryFacetOptions = {
       facetId: this.facetId,
       field: this.field,
       delimitingCharacter: ';',
     };
-    this.categoryFacet = buildCategoryFacet(this.bindings.engine, {options});
-    this.facetId = this.categoryFacet.state.facetId;
-    this.subscribe();
-  }
-
-  private subscribe() {
-    this.unsubscribe = this.categoryFacet.subscribe(() => this.updateState());
-  }
-
-  public connectedCallback() {
-    this.categoryFacet && this.subscribe();
-  }
-
-  public disconnectedCallback() {
-    this.unsubscribe();
-  }
-
-  private updateState() {
-    this.state = this.categoryFacet.state;
+    this.controller = buildCategoryFacet(this.bindings.engine, {options});
+    this.facetId = this.controller.state.facetId;
   }
 
   private get parents() {
-    const parents = this.state.parents;
+    const parents = this.controllerState.parents;
 
     return parents.map((parent, i) => {
       const isLast = i === parents.length - 1;
@@ -64,19 +49,19 @@ export class AtomicCategoryFacet {
 
   private buildParent(parent: CategoryFacetValue, isLast: boolean) {
     return (
-      <div onClick={() => !isLast && this.categoryFacet.toggleSelect(parent)}>
+      <div onClick={() => !isLast && this.controller.toggleSelect(parent)}>
         <b>{parent.value}</b>
       </div>
     );
   }
 
   private get values() {
-    return this.state.values.map((value) => this.buildValue(value));
+    return this.controllerState.values.map((value) => this.buildValue(value));
   }
 
   private buildValue(item: CategoryFacetValue) {
     return (
-      <div onClick={() => this.categoryFacet.toggleSelect(item)}>
+      <div onClick={() => this.controller.toggleSelect(item)}>
         <span>
           {item.value} {item.numberOfResults}
         </span>
@@ -90,39 +75,39 @@ export class AtomicCategoryFacet {
 
   private onFacetSearch(e: Event) {
     const value = (e.target as HTMLInputElement).value;
-    const facetSearch = this.categoryFacet.facetSearch;
+    const facetSearch = this.controller.facetSearch;
 
     facetSearch.updateText(value);
     facetSearch.search();
   }
 
   private get facetSearchResults() {
-    return this.state.facetSearch.values.map((searchResult) => (
-      <div onClick={() => this.categoryFacet.facetSearch.select(searchResult)}>
+    return this.controllerState.facetSearch.values.map((searchResult) => (
+      <div onClick={() => this.controller.facetSearch.select(searchResult)}>
         {searchResult.displayValue} {searchResult.count}
       </div>
     ));
   }
 
   private get showMoreSearchResults() {
-    if (!this.state.facetSearch.moreValuesAvailable) {
+    if (!this.controllerState.facetSearch.moreValuesAvailable) {
       return null;
     }
 
     return (
-      <button onClick={() => this.categoryFacet.facetSearch.showMoreResults()}>
+      <button onClick={() => this.controller.facetSearch.showMoreResults()}>
         show more
       </button>
     );
   }
 
   private get resetButton() {
-    if (!this.state.hasActiveValues) {
+    if (!this.controllerState.hasActiveValues) {
       return null;
     }
 
     return (
-      <button onClick={() => this.categoryFacet.deselectAll()}>
+      <button onClick={() => this.controller.deselectAll()}>
         All Categories
       </button>
     );
@@ -137,7 +122,7 @@ export class AtomicCategoryFacet {
     return criteria.map((criterion) => (
       <option
         value={criterion}
-        selected={this.categoryFacet.isSortedBy(criterion)}
+        selected={this.controller.isSortedBy(criterion)}
       >
         {criterion}
       </option>
@@ -147,26 +132,26 @@ export class AtomicCategoryFacet {
   private handleSelect = (event: Event) => {
     const target = event.target as HTMLSelectElement;
     const criterion = target.value as CategoryFacetSortCriterion;
-    this.categoryFacet.sortBy(criterion);
+    this.controller.sortBy(criterion);
   };
 
   private get showMore() {
-    if (!this.state.canShowMoreValues) {
+    if (!this.controllerState.canShowMoreValues) {
       return null;
     }
     return (
-      <button onClick={() => this.categoryFacet.showMoreValues()}>
+      <button onClick={() => this.controller.showMoreValues()}>
         Show More
       </button>
     );
   }
 
   private get showLess() {
-    if (!this.state.canShowLessValues) {
+    if (!this.controllerState.canShowLessValues) {
       return null;
     }
     return (
-      <button onClick={() => this.categoryFacet.showLessValues()}>
+      <button onClick={() => this.controller.showLessValues()}>
         Show Less
       </button>
     );

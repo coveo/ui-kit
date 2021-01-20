@@ -3,14 +3,17 @@ import {
   Sort,
   SortState,
   SortInitialState,
-  Unsubscribe,
   buildSort,
   buildRelevanceSortCriterion,
   buildDateSortCriterion,
   buildFieldSortCriterion,
   SortOrder,
 } from '@coveo/headless';
-import {Initialization, Bindings} from '../../utils/initialization-utils';
+import {
+  Initialization,
+  Bindings,
+  AtomicComponentInterface,
+} from '../../utils/initialization-utils';
 
 enum SortOption {
   Relevance = 'relevance',
@@ -27,27 +30,16 @@ enum SortOption {
   styleUrl: 'atomic-sort-dropdown.css',
   shadow: true,
 })
-export class AtomicSortDropdown {
-  @State() state!: SortState;
+export class AtomicSortDropdown implements AtomicComponentInterface {
+  @State() controllerState!: SortState;
 
   public bindings!: Bindings;
-  private sort!: Sort;
-  private unsubscribe: Unsubscribe = () => {};
+  public controller!: Sort;
 
   @Initialization()
   public initialize() {
     const initialState: Partial<SortInitialState> = {criterion: this.relevance};
-    this.sort = buildSort(this.bindings.engine, {initialState});
-
-    this.unsubscribe = this.sort.subscribe(() => this.updateState());
-  }
-
-  public disconnectedCallback() {
-    this.unsubscribe();
-  }
-
-  private updateState() {
-    this.state = this.sort.state;
+    this.controller = buildSort(this.bindings.engine, {initialState});
   }
 
   private select(e: Event) {
@@ -55,19 +47,19 @@ export class AtomicSortDropdown {
 
     switch (select.value) {
       case SortOption.Relevance:
-        this.sort.sortBy(this.relevance);
+        this.controller.sortBy(this.relevance);
         break;
 
       case SortOption.Newest:
-        this.sort.sortBy(this.dateDescending);
+        this.controller.sortBy(this.dateDescending);
         break;
 
       case SortOption.Oldest:
-        this.sort.sortBy(this.dateAscending);
+        this.controller.sortBy(this.dateAscending);
         break;
 
       case SortOption.Size:
-        this.sort.sortBy(this.largest);
+        this.controller.sortBy(this.largest);
         break;
 
       default:
@@ -102,25 +94,25 @@ export class AtomicSortDropdown {
       >
         <option
           value={SortOption.Relevance}
-          selected={this.sort.isSortedBy(this.relevance)}
+          selected={this.controller.isSortedBy(this.relevance)}
         >
           Relevance
         </option>
         <option
           value={SortOption.Newest}
-          selected={this.sort.isSortedBy(this.dateDescending)}
+          selected={this.controller.isSortedBy(this.dateDescending)}
         >
           Newest
         </option>
         <option
           value={SortOption.Oldest}
-          selected={this.sort.isSortedBy(this.dateAscending)}
+          selected={this.controller.isSortedBy(this.dateAscending)}
         >
           Oldest
         </option>
         <option
           value={SortOption.Size}
-          selected={this.sort.isSortedBy(this.largest)}
+          selected={this.controller.isSortedBy(this.largest)}
         >
           Largest Size
         </option>

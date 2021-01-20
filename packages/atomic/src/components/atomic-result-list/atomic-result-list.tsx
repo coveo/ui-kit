@@ -2,14 +2,17 @@ import {Component, h, Element, State, Prop, Listen} from '@stencil/core';
 import {
   ResultList,
   ResultListState,
-  Unsubscribe,
   ResultTemplatesManager,
   buildResultList,
   buildResultTemplatesManager,
 } from '@coveo/headless';
 import Mustache from 'mustache';
 import defaultTemplate from '../../templates/default.html';
-import {Initialization, Bindings} from '../../utils/initialization-utils';
+import {
+  Initialization,
+  Bindings,
+  AtomicComponentInterface,
+} from '../../utils/initialization-utils';
 
 /**
  * @part list - The list wrapper
@@ -20,7 +23,7 @@ import {Initialization, Bindings} from '../../utils/initialization-utils';
   styleUrl: 'atomic-result-list.css',
   shadow: true,
 })
-export class AtomicResultList {
+export class AtomicResultList implements AtomicComponentInterface {
   /**
    * Whether to automatically retrieve an additional page of results and append it to the
    * current results when the user scrolls down to the bottom of element
@@ -36,11 +39,10 @@ export class AtomicResultList {
   @Prop() listElementClass = '';
   @Prop() fieldsToInclude = '';
   @Element() host!: HTMLDivElement;
-  @State() state!: ResultListState;
+  @State() controllerState!: ResultListState;
 
   public bindings!: Bindings;
-  private unsubscribe: Unsubscribe = () => {};
-  private resultList!: ResultList;
+  public controller!: ResultList;
   private resultTemplatesManager!: ResultTemplatesManager<string>;
 
   private get fields() {
@@ -53,10 +55,9 @@ export class AtomicResultList {
     this.resultTemplatesManager = buildResultTemplatesManager(
       this.bindings.engine
     );
-    this.resultList = buildResultList(this.bindings.engine, {
+    this.controller = buildResultList(this.bindings.engine, {
       options: {fieldsToInclude: this.fields},
     });
-    this.unsubscribe = this.resultList.subscribe(() => this.updateState());
     this.registerDefaultResultTemplates();
     this.registerChildrenResultTemplates();
   }
@@ -84,16 +85,8 @@ export class AtomicResultList {
       });
   }
 
-  public disconnectedCallback() {
-    this.unsubscribe();
-  }
-
-  private updateState() {
-    this.state = this.resultList.state;
-  }
-
   private get results() {
-    return this.state.results.map((result) => (
+    return this.controllerState.results.map((result) => (
       <atomic-result
         key={result.uniqueId}
         part="list-element"
@@ -119,7 +112,7 @@ export class AtomicResultList {
       window.innerHeight + window.scrollY >= this.host.offsetHeight;
 
     if (hasReachedEndOfElement) {
-      this.resultList.fetchMoreResults();
+      this.controller.fetchMoreResults();
     }
   }
 

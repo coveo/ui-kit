@@ -6,6 +6,7 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { Engine, LogLevel, Result, ResultTemplateCondition } from "@coveo/headless";
+import { Bindings } from "./utils/initialization-utils";
 import { i18n } from "i18next";
 import { InitializationOptions } from "./components/atomic-search-interface/atomic-search-interface";
 export namespace Components {
@@ -57,7 +58,10 @@ export namespace Components {
     interface AtomicQuerySummary {
     }
     interface AtomicRelevanceInspector {
-        "engine": Engine;
+        /**
+          * Bindings passed from the `AtomicSearchInterface` to its children components.
+         */
+        "bindings": Bindings;
     }
     interface AtomicResult {
         "engine": Engine;
@@ -355,7 +359,10 @@ declare namespace LocalJSX {
     interface AtomicQuerySummary {
     }
     interface AtomicRelevanceInspector {
-        "engine": Engine;
+        /**
+          * Bindings passed from the `AtomicSearchInterface` to its children components.
+         */
+        "bindings": Bindings;
     }
     interface AtomicResult {
         "engine": Engine;
