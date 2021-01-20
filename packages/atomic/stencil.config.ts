@@ -1,5 +1,5 @@
 import {Config} from '@stencil/core';
-import { postcss } from '@stencil/postcss';
+import {postcss} from '@stencil/postcss';
 import alias from '@rollup/plugin-alias';
 import path from 'path';
 import html from 'rollup-plugin-html';
@@ -49,11 +49,16 @@ export const config: Config = {
         atImport(),
         tailwind(),
         purgecss({
-          content: ['./src/**/*.tsx', './src/index.html', './src/**/*.pcss'],
-          defaultExtractor: content => content.match(/[A-Za-z0-9-_:/]+/g) || []
+          content: [
+            './src/**/*.tsx',
+            './src/index.html',
+            './src/**/*.pcss',
+            './src/**/*.css',
+          ],
+          defaultExtractor: (content) =>
+            content.match(/[A-Za-z0-9-_:/]+/g) || [],
         }),
       ],
-      injectGlobalPaths: ['src/global.pcss'],
     }),
   ],
   rollupPlugins: {
