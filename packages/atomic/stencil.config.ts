@@ -7,7 +7,6 @@ import {inlineSvg} from 'stencil-inline-svg';
 
 import tailwind from 'tailwindcss';
 import atImport from 'postcss-import';
-import purgecss from '@fullhuman/postcss-purgecss';
 
 const isDevWatch: boolean =
   process.argv &&
@@ -40,7 +39,7 @@ export const config: Config = {
     },
   },
   devServer: {
-    reloadStrategy: 'pageReload',
+    reloadStrategy: 'hmr',
   },
   plugins: [
     inlineSvg(),
