@@ -37,8 +37,11 @@ export function Initialization() {
       render,
       componentDidRender,
       componentDidLoad,
+      disconnectedCallback,
     } = component;
     const initialize: () => void = component[initializeMethod];
+
+    let updateStrings = () => {};
 
     component.componentWillLoad = function () {
       const element = getElement(this);
@@ -46,17 +49,15 @@ export function Initialization() {
         detail: (bindings: Bindings) => {
           this.bindings = bindings;
 
-          // Ensures re-render of localized strings
-          if (this.strings) {
-            this.strings = {...this.strings};
-            this.bindings.i18n.on(
-              'languageChanged',
-              () => (this.strings = {...this.strings})
-            );
-          }
-
           try {
             initialize.call(this);
+
+            // Ensures re-render of localized strings
+            if (this.strings) {
+              updateStrings = () => (this.strings = {...this.strings});
+              updateStrings();
+              this.bindings.i18n.on('languageChanged', updateStrings);
+            }
           } catch (error) {
             this.error = error;
           }
@@ -107,5 +108,13 @@ export function Initialization() {
     };
 
     component.componentDidLoad = function () {};
+
+    component.disconnectedCallback = function () {
+      if (this.strings) {
+        this.bindings.i18n.off('languageChanged', updateStrings);
+      }
+
+      disconnectedCallback && disconnectedCallback.call(this);
+    };
   };
 }
