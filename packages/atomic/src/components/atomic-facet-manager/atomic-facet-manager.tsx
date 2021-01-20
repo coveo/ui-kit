@@ -16,7 +16,7 @@ interface FacetElement extends HTMLElement {
 
 @Component({
   tag: 'atomic-facet-manager',
-  styleUrl: 'atomic-facet-manager.css',
+  styleUrl: 'atomic-facet-manager.pcss',
   shadow: true,
 })
 export class AtomicFacetManager {

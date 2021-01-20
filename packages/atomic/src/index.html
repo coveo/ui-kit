@@ -8,6 +8,16 @@
     <script type="module" src="/build/atomic.esm.js"></script>
     <script nomodule src="/build/atomic.js"></script>
     <link rel="stylesheet" href="/build/atomic.css" />
+    <!-- Initialization example
+  <script>
+    (async () => {
+      await customElements.whenDefined('atomic-search-interface');
+      document.querySelector('#search').initialize({
+        accessToken: 'my_token',
+        organizationId: 'my_org',
+      });
+    })();
+  </script> -->
     <script>
       (async () => {
         await customElements.whenDefined('atomic-search-interface');
@@ -49,8 +59,8 @@
 
   <body>
     <atomic-search-interface id="search" sample>
-      <div style="display: flex">
-        <atomic-tab expression="">All Files</atomic-tab>
+      <div style="display: flex" class="mx-auto my-2 justify-center">
+        <atomic-tab expression="" class="mr-2">All Files</atomic-tab>
         <atomic-tab expression='@author *= "BBC News"'>BBC News</atomic-tab>
       </div>
       <atomic-search-box></atomic-search-box>

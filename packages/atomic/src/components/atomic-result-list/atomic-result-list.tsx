@@ -20,7 +20,7 @@ import {
  */
 @Component({
   tag: 'atomic-result-list',
-  styleUrl: 'atomic-result-list.css',
+  styleUrl: 'atomic-result-list.pcss',
   shadow: true,
 })
 export class AtomicResultList {
