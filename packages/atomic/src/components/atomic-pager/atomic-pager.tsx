@@ -17,7 +17,7 @@ import {
  */
 @Component({
   tag: 'atomic-pager',
-  styleUrl: 'atomic-pager.css',
+  styleUrl: 'atomic-pager.pcss',
   shadow: true,
 })
 export class AtomicPager {

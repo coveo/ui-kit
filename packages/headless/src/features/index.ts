@@ -19,6 +19,25 @@ export namespace CategoryFacetSetActions {
 }
 
 import {
+  registerFacet as registerFacetAlias,
+  toggleSelectFacetValue as toggleSelectFacetValueAlias,
+  updateFacetIsFieldExpanded as updateFacetIsFieldExpandedAlias,
+  updateFacetNumberOfValues as updateFacetNumberOfValuesAlias,
+  updateFacetSortCriterion as updateFacetSortCriterionAlias,
+  updateFreezeCurrentValues as updateFreezeCurrentValuesAlias,
+  deselectAllFacetValues as deselectAllFacetValuesAlias,
+} from './facets/facet-set/facet-set-actions';
+export namespace FacetActions {
+  export const registerFacet = registerFacetAlias;
+  export const toggleSelectFacetValue = toggleSelectFacetValueAlias;
+  export const updateFacetIsFieldExpanded = updateFacetIsFieldExpandedAlias;
+  export const updateFacetNumberOfValues = updateFacetNumberOfValuesAlias;
+  export const updateFacetSortCriterion = updateFacetSortCriterionAlias;
+  export const updateFreezeCurrentValues = updateFreezeCurrentValuesAlias;
+  export const deselectAllFacetValues = deselectAllFacetValuesAlias;
+}
+
+import {
   updateBasicConfiguration as updateBasicConfigurationAlias,
   updateSearchConfiguration as updateSearchConfigurationAlias,
   updateAnalyticsConfiguration as updateAnalyticsConfigurationAlias,
@@ -242,6 +261,11 @@ export namespace ProductRecommendationsActions {
   export const setProductRecommendationsRecommenderId = setProductRecommendationsRecommenderIdAlias;
   export const setProductRecommendationsSkus = setProductRecommendationsSkusAlias;
   export type StateNeededByGetProductRecommendations = StateNeededByGetProductRecommendationsAlias;
+}
+
+import {deselectAllFacets as deselectAllFacetsAlias} from './facets/generic/facet-actions';
+export namespace BreadcrumbActions {
+  export const deselectAllFacets = deselectAllFacetsAlias;
 }
 
 import {

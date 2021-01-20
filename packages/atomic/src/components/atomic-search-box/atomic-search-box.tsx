@@ -35,7 +35,7 @@ export interface AtomicSearchBoxOptions {
  */
 @Component({
   tag: 'atomic-search-box',
-  styleUrl: 'atomic-search-box.css',
+  styleUrl: 'atomic-search-box.pcss',
   shadow: true,
 })
 export class AtomicSearchBox implements AtomicSearchBoxOptions {

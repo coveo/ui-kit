@@ -10,7 +10,7 @@ import {
  */
 @Component({
   tag: 'atomic-tab',
-  styleUrl: 'atomic-tab.css',
+  styleUrl: 'atomic-tab.pcss',
   shadow: true,
 })
 export class AtomicTab {
