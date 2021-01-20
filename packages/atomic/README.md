@@ -100,13 +100,13 @@ Utility that automatically fetches the `bindings` from the parent `atomic-search
   shadow: true,
 })
 export class AtomicComponent {
-  public @State() strings = {
+  @State() strings = {
     value: () => this.bindings.i18n.t('value', { /* options */ }),
   };
-  public bindings!: Bindings;
+  bindings!: Bindings;
 
   @Initialization()
-  public initialize() {}
+  initialize() {}
 
   render() {
     return this.strings.value();
@@ -122,17 +122,13 @@ export class AtomicComponent {
   shadow: true,
 })
 export class AtomicComponent {
-  public @State() state!: ControllerState;
-  public bindings!: Bindings;
-  private controller!: Controller;
-  private unsubscribe: Unsubscribe = () => {};
+  @State() controllerState!: ControllerState;
+  bindings!: Bindings;
+  controller!: Controller;
 
   @Initialization()
-  public initialize() {
+  initialize() {
     this.controller = buildController(this.bindings.engine);
-    this.unsubscribe = this.controller.subscribe(() => {
-      this.state = this.controller.state;
-    });
   }
 
   render() {

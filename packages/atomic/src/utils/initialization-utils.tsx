@@ -1,9 +1,18 @@
-import {Engine} from '@coveo/headless';
+import {Controller, Engine} from '@coveo/headless';
 import {ComponentInterface, getElement, h} from '@stencil/core';
 import {i18n} from 'i18next';
 
+/**
+ * Bindings passed from the `AtomicSearchInterface` to its children components.
+ */
 export interface Bindings {
+  /**
+   * Headless Engine instance.
+   */
   engine: Engine;
+  /**
+   * i18n instance, for localization.
+   */
   i18n: i18n;
 }
 
@@ -19,10 +28,26 @@ export class InitializationError extends Error {
   }
 }
 
+/**
+ * Necessary interface an Atomic Component must have to initialize itself correctly.
+ */
 export interface AtomicComponentInterface extends ComponentInterface {
+  /**
+   * Bindings passed from the `AtomicSearchInterface` to its children components.
+   */
   bindings: Bindings;
-  error?: Error;
+  /**
+   * Record of methods earch returning an i18n localized string.
+   */
   strings?: Record<string, () => string>;
+  /**
+   * Headless Controller instance associated with the Atomic Component.
+   */
+  controller?: Controller;
+  /**
+   * Headless Controller's state.
+   */
+  controllerState?: unknown;
 }
 
 /**
@@ -41,7 +66,10 @@ export function Initialization() {
     } = component;
     const initialize: () => void = component[initializeMethod];
 
-    let updateStrings = () => {};
+    let unsubscribeStrings = () => {};
+    let unsubscribeController = () => {};
+
+    let error: Error;
 
     component.componentWillLoad = function () {
       const element = getElement(this);
@@ -52,14 +80,21 @@ export function Initialization() {
           try {
             initialize.call(this);
 
-            // Ensures re-render of localized strings
-            if (this.strings) {
-              updateStrings = () => (this.strings = {...this.strings});
-              updateStrings();
-              this.bindings.i18n.on('languageChanged', updateStrings);
+            if (this.controller) {
+              unsubscribeController = this.controller.subscribe(() => {
+                this.controllerState = this.controller!.state;
+              });
             }
-          } catch (error) {
-            this.error = error;
+
+            if (this.strings) {
+              const updateStrings = () => (this.strings = {...this.strings});
+              updateStrings(); // Ensures re-render of localized strings on initialization
+              this.bindings.i18n.on('languageChanged', updateStrings);
+              unsubscribeStrings = () =>
+                this.bindings.i18n.off('languageChanged', updateStrings);
+            }
+          } catch (e) {
+            error = e;
           }
         },
         bubbles: true,
@@ -68,7 +103,7 @@ export function Initialization() {
 
       const canceled = element.dispatchEvent(event);
       if (canceled) {
-        this.error = new InitializationError(element.nodeName.toLowerCase());
+        error = new InitializationError(element.nodeName.toLowerCase());
         return;
       }
 
@@ -79,10 +114,8 @@ export function Initialization() {
     let hasLoaded = false;
 
     component.render = function () {
-      if (this.error) {
-        return (
-          <atomic-component-error error={this.error}></atomic-component-error>
-        );
+      if (error) {
+        return <atomic-component-error error={error}></atomic-component-error>;
       }
 
       if (!this.bindings) {
@@ -110,10 +143,8 @@ export function Initialization() {
     component.componentDidLoad = function () {};
 
     component.disconnectedCallback = function () {
-      if (this.strings) {
-        this.bindings.i18n.off('languageChanged', updateStrings);
-      }
-
+      unsubscribeStrings();
+      unsubscribeController();
       disconnectedCallback && disconnectedCallback.call(this);
     };
   };
