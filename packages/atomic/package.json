@@ -15,8 +15,9 @@
     "loader/"
   ],
   "scripts": {
-    "build": "stencil build --docs && npm run build:utils",
+    "build": "stencil build --docs && npm run build:utils && build:locales",
     "build:utils": "rollup -c --environment BUILD:production",
+    "build:locales": "node ./scripts/split-locales.js",
     "start": "stencil build --dev --watch --serve",
     "test": "stencil test --spec --e2e",
     "test:watch": "stencil test --spec --e2e --watchAll",
