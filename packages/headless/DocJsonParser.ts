@@ -153,10 +153,7 @@ class DocJsonParser {
         this.getFromModulesByKindString(sectionModules, 'Function')
       );
       actions = actions.filter((action) => {
-        return (
-          typeof action.flags.isExported !== undefined &&
-          action.flags.isExported === true
-        );
+        return action.flags.isExported;
       });
       return {
         section: section.name,
@@ -213,9 +210,11 @@ class DocJsonParser {
     modules: Module[] | Entity[],
     kindString: string
   ) {
-    const entities: Entity[] = [];
+    let entities: Entity[] = [];
     for (const mod of modules) {
-      entities.concat(this.getFromModuleByKindString(mod, kindString));
+      entities = entities.concat(
+        this.getFromModuleByKindString(mod, kindString)
+      );
     }
     return entities;
   }
@@ -405,7 +404,7 @@ class DocJsonParser {
   private getActionParameters(action: Entity) {
     if (!action.comment || !action.comment.tags) return [];
 
-    return action.comment.tags.map(function (param) {
+    return action.comment.tags.map((param) => {
       return {
         name: param.param,
         text: this.getDesc(param),
@@ -481,11 +480,13 @@ class DocJsonParser {
     };
     if (
       section === 'interface' &&
-      processedType.unionOf.includes({type: 'intrinsic', name: 'undefined'})
+      processedType.unionOf.find((type) => {
+        return type['type'] === 'intrinsic' && type['name'] === 'undefined';
+      })
     ) {
       processedType.optional = true;
       processedType.unionOf = processedType.unionOf.filter((type) => {
-        return type !== {type: 'intrinsic', name: 'undefined'};
+        return !(type['type'] === 'intrinsic' && type['name'] === 'undefined');
       });
     }
     return processedType;
