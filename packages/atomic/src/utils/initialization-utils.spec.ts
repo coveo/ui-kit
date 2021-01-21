@@ -55,7 +55,7 @@ describe('Initialization decorator', () => {
     }
 
     it(`when the child-component component is not the child of an atomic-search-interface component
-    should set an InitializationError error`, async () => {
+    should set an error`, async () => {
       page = await newSpecPage({
         components: [AtomicPager],
         html: '<atomic-pager></atomic-pager>',

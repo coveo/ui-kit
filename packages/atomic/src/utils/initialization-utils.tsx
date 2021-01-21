@@ -19,12 +19,11 @@ export interface Bindings {
 export type InitializeEventHandler = (bindings: Bindings) => void;
 export type InitializeEvent = CustomEvent<InitializeEventHandler>;
 
-export class InitializationError extends Error {
+export class MissingInterfaceParentError extends Error {
   constructor(elementName: string) {
     super(
       `The "${elementName}" element must be the child of a configured "atomic-search-interface" element.`
     );
-    this.name = 'InitializationError';
   }
 }
 
@@ -52,6 +51,10 @@ export interface AtomicComponentInterface extends ComponentInterface {
    * Callback for when the subscribe method is called and the controller's state is updated.
    */
   onControllerStateUpdate?: () => void;
+  /**
+   * Error that, when defined, will be rendered inside an `atomic-component-error` component.
+   */
+  error?: Error;
 }
 
 /**
@@ -76,8 +79,6 @@ export function Initialization(options?: {
 
     let unsubscribeStrings = () => {};
     let unsubscribeController = () => {};
-
-    let error: Error;
 
     component.connectedCallback = function () {
       if (
@@ -116,7 +117,7 @@ export function Initialization(options?: {
                 this.bindings.i18n.off('languageChanged', updateStrings);
             }
           } catch (e) {
-            error = e;
+            this.error = e;
           }
         },
         bubbles: true,
@@ -125,7 +126,9 @@ export function Initialization(options?: {
 
       const canceled = element.dispatchEvent(event);
       if (canceled) {
-        error = new InitializationError(element.nodeName.toLowerCase());
+        this.error = new MissingInterfaceParentError(
+          element.nodeName.toLowerCase()
+        );
         return;
       }
 
@@ -136,8 +139,10 @@ export function Initialization(options?: {
     let hasLoaded = false;
 
     component.render = function () {
-      if (error) {
-        return <atomic-component-error error={error}></atomic-component-error>;
+      if (this.error) {
+        return (
+          <atomic-component-error error={this.error}></atomic-component-error>
+        );
       }
 
       if (!this.bindings) {
