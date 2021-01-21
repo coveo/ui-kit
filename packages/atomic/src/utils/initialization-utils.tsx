@@ -122,6 +122,7 @@ export function Initialization(options?: {
         },
         bubbles: true,
         cancelable: true,
+        composed: true,
       });
 
       const canceled = element.dispatchEvent(event);
