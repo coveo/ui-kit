@@ -8,7 +8,7 @@ import {
 
 @Component({
   tag: 'atomic-query-error',
-  styleUrl: 'atomic-query-error.css',
+  styleUrl: 'atomic-query-error.pcss',
   shadow: true,
 })
 export class AtomicQueryError implements AtomicComponentInterface {

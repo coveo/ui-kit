@@ -15,7 +15,7 @@ import {
 
 @Component({
   tag: 'atomic-category-facet',
-  styleUrl: 'atomic-category-facet.css',
+  styleUrl: 'atomic-category-facet.pcss',
   shadow: true,
 })
 export class AtomicCategoryFacet implements AtomicComponentInterface {

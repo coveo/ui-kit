@@ -8,7 +8,7 @@ import {
 
 @Component({
   tag: 'atomic-did-you-mean',
-  styleUrl: 'atomic-did-you-mean.css',
+  styleUrl: 'atomic-did-you-mean.pcss',
   shadow: true,
 })
 export class AtomicDidYouMean implements AtomicComponentInterface {

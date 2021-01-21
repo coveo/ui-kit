@@ -20,7 +20,7 @@ import {
  */
 @Component({
   tag: 'atomic-query-summary',
-  styleUrl: 'atomic-query-summary.css',
+  styleUrl: 'atomic-query-summary.pcss',
   shadow: true,
 })
 export class AtomicQuerySummary implements AtomicComponentInterface {

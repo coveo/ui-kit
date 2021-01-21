@@ -15,7 +15,7 @@ import {
 
 @Component({
   tag: 'atomic-date-facet',
-  styleUrl: 'atomic-date-facet.css',
+  styleUrl: 'atomic-date-facet.pcss',
   shadow: true,
 })
 export class AtomicDateFacet implements AtomicComponentInterface {

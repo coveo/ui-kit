@@ -11,7 +11,7 @@ import {
  */
 @Component({
   tag: 'atomic-tab',
-  styleUrl: 'atomic-tab.css',
+  styleUrl: 'atomic-tab.pcss',
   shadow: true,
 })
 export class AtomicTab implements AtomicComponentInterface {
@@ -50,7 +50,7 @@ export class AtomicTab implements AtomicComponentInterface {
       <span {...activePart}>
         <button
           part="tab-button"
-          class={activeClass}
+          class={'p-2 bg-primary border-none h-10 ' + activeClass}
           onClick={() => this.handleClick()}
         >
           <slot />
