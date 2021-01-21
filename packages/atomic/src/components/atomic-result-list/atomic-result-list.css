@@ -2,3 +2,13 @@
   display: block;
   margin-top: 18px;
 }
+
+/* TODO: Improve loading styling with Tailwind */
+.loading {
+  width: 500px;
+}
+
+.loading p {
+  background-color: rgb(206, 206, 206);
+  height: 100px;
+}

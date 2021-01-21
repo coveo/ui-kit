@@ -157,7 +157,22 @@ export class AtomicCategoryFacet implements AtomicComponentInterface {
     );
   }
 
+  // TODO: improve loading style
+  public renderLoading() {
+    return (
+      <div class="loading">
+        {Array.from(Array(10)).map(() => (
+          <p></p>
+        ))}
+      </div>
+    );
+  }
+
   render() {
+    if (this.controllerState.isLoading) {
+      return this.renderLoading();
+    }
+
     return (
       <div>
         <div>

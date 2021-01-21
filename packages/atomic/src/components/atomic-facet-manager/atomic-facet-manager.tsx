@@ -56,6 +56,10 @@ export class AtomicFacetManager implements AtomicComponentInterface {
     return 'facetId' in el;
   }
 
+  public renderLoading() {
+    return <slot />;
+  }
+
   public render() {
     return <slot />;
   }

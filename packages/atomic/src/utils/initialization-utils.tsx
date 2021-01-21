@@ -70,6 +70,7 @@ export function Initialization(options?: {
       connectedCallback,
       componentWillLoad,
       render,
+      renderLoading,
       componentDidRender,
       componentDidLoad,
       disconnectedCallback,
@@ -146,8 +147,7 @@ export function Initialization(options?: {
       }
 
       if (!this.bindings) {
-        // TODO: add optional renderLoad() method to render placeholders
-        return `${getElement(this).nodeName.toLowerCase()}_loading`;
+        return;
       }
 
       hasRendered = true;

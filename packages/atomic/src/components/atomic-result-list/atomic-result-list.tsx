@@ -116,7 +116,22 @@ export class AtomicResultList implements AtomicComponentInterface {
     }
   }
 
+  // TODO: improve loading
+  public renderLoading() {
+    return (
+      <div class="loading">
+        {Array.from(Array(10)).map(() => (
+          <p></p>
+        ))}
+      </div>
+    );
+  }
+
   public render() {
+    if (this.controllerState.isLoading) {
+      return this.renderLoading();
+    }
+
     return (
       <div part="list" class={this.listClass}>
         {this.results}
