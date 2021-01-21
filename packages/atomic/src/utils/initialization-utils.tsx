@@ -70,7 +70,6 @@ export function Initialization(options?: {
       connectedCallback,
       componentWillLoad,
       render,
-      renderLoading,
       componentDidRender,
       componentDidLoad,
       disconnectedCallback,
