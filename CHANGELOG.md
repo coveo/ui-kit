@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.3.0-alpha.4](https://github.com/coveo/ui-kit/compare/v0.3.0-alpha.3...v0.3.0-alpha.4) (2021-01-22)
+
+
+### Bug Fixes
+
+* **headless:** pass searchUid for recommendation analytics events ([#430](https://github.com/coveo/ui-kit/issues/430)) ([03ef3c1](https://github.com/coveo/ui-kit/commit/03ef3c139bf4344f613152cc133b391b7e4595f0))
+
+
+
+
+
 # [0.3.0-alpha.3](https://github.com/coveo/ui-kit/compare/v0.3.0-alpha.2...v0.3.0-alpha.3) (2021-01-22)
 
 
