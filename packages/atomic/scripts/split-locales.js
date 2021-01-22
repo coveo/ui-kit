@@ -1,35 +1,42 @@
+const util = require('util');
 const fs = require('fs');
-const localesJSONData = fs.readFileSync('src/locales.json');
+const mkdir = util.promisify(fs.mkdir);
+const rmdir = util.promisify(fs.rmdir);
+const readFile = util.promisify(fs.readFile);
+const writeFile = util.promisify(fs.writeFile);
 
-// Map of string keys composed of different locales and their values.
-const localesData = JSON.parse(localesJSONData);
+async function splitLocales() {
+  const localesJSONData = await readFile('src/locales.json');
+  // Map of string keys composed of different locales and their values.
+  const localesData = JSON.parse(localesJSONData);
 
-// Map of locales composed by different string keys and their values.
-const localesMap = {
-  // Troubleshooting locale used to identify string keys
-  dev: {},
-};
+  // Map of locales composed by different string keys and their values.
+  const localesMap = {
+    // Troubleshooting locale used to identify string keys
+    dev: {},
+  };
 
-for (const [stringKey, stringValues] of Object.entries(localesData)) {
-  for (const [localeKey, localeStringValue] of Object.entries(stringValues)) {
-    if (!localesMap[localeKey]) {
-      localesMap[localeKey] = {};
+  for (const [stringKey, stringValues] of Object.entries(localesData)) {
+    for (const [localeKey, localeStringValue] of Object.entries(stringValues)) {
+      if (!localesMap[localeKey]) {
+        localesMap[localeKey] = {};
+      }
+      localesMap[localeKey][stringKey] = localeStringValue;
+      localesMap.dev[stringKey] = stringKey;
     }
-    localesMap[localeKey][stringKey] = localeStringValue;
-    localesMap.dev[stringKey] = stringKey;
   }
+
+  const langFolderPath = 'src/components/atomic-search-interface/lang/';
+
+  await rmdir(langFolderPath, {recursive: true});
+  await mkdir(langFolderPath, {recursive: true});
+
+  Object.entries(localesMap).forEach(async ([localeKey, localeData]) => {
+    await writeFile(
+      `${langFolderPath}${localeKey}.json`,
+      JSON.stringify(localeData)
+    );
+  });
 }
 
-fs.mkdir(
-  'src/components/atomic-search-interface/lang/',
-  {recursive: true},
-  (err) => {
-    if (err) throw err;
-    Object.entries(localesMap).forEach(([localeKey, localeData]) => {
-      fs.writeFileSync(
-        `src/components/atomic-search-interface/lang/${localeKey}.json`,
-        JSON.stringify(localeData)
-      );
-    });
-  }
-);
+splitLocales();
