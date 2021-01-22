@@ -129,7 +129,7 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
         type="button"
         part="submit-button"
         class={
-          'px-1 w-10 bg-transparent border-0 focus:outline-none border-gray-400 border-solid p-0 ' +
+          'px-1 w-10 bg-transparent border-0 focus:outline-none border-medium-grey border-solid p-0 ' +
           (this.leadingSubmitButton ? 'border-r' : 'border-l')
         }
         aria-label={this.context.i18n.t('search')}
@@ -138,7 +138,7 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
         <slot name="submit-button">
           <div
             innerHTML={SearchIcon}
-            class="search mx-auto w-3.5 text-gray-500 fill-current"
+            class="search mx-auto w-3.5 text-dark-medium-grey fill-current"
           />
         </slot>
       </button>
@@ -162,7 +162,10 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
         }}
       >
         <slot name="clear-button">
-          <div innerHTML={ClearIcon} class="w-2.5 text-gray-500 fill-current" />
+          <div
+            innerHTML={ClearIcon}
+            class="w-2.5 text-light-grey fill-current"
+          />
         </slot>
       </button>
     );
@@ -199,7 +202,7 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
           onMouseDown={(e) => e.preventDefault()}
           part="suggestion"
           id={id}
-          class="suggestion h-7 px-2 cursor-pointer text-left text-sm bg-transparent border-none shadow-none hover:bg-gray-200 flex flex-row items-center"
+          class="suggestion h-7 px-2 cursor-pointer text-left text-sm bg-transparent border-none shadow-none hover:bg-light-grey flex flex-row items-center"
           innerHTML={suggestion.highlightedValue}
           value={index}
         ></li>
@@ -211,7 +214,7 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
     return (
       <div>
         <div
-          class="box-border w-full lg:w-80 h-9 border border-solid rounded border-gray-400 flex flex-row align-items-center focus:rounded-b-0"
+          class="box-border w-full lg:w-80 h-input border border-solid rounded border-medium-grey flex flex-row align-items-center focus:rounded-b-0"
           role="combobox"
           aria-owns={this.valuesRef?.id}
           aria-haspopup="listbox"
@@ -225,7 +228,7 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
         <ul
           id="suggestions"
           part="suggestions"
-          class="suggestions w-full lg:w-80 p-0 my-0 flex box-border flex-col border border-t-0 border-solid border-gray-400 rounded-b list-none"
+          class="suggestions box-border w-full lg:w-80 p-0 my-0 flex flex-col border border-t-0 border-solid border-medium-grey rounded-b list-none"
           role="listbox"
           ref={(el) => (this.valuesRef = el as HTMLElement)}
         >
