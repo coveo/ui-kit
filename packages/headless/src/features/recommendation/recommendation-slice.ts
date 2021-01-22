@@ -22,6 +22,7 @@ export const recommendationReducer = createReducer(
         state.recommendations = action.payload.recommendations;
         state.duration = action.payload.duration;
         state.isLoading = false;
+        state.searchUid = action.payload.searchUid;
       })
       .addCase(getRecommendations.pending, (state) => {
         state.isLoading = true;

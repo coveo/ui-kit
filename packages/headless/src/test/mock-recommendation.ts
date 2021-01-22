@@ -10,6 +10,7 @@ export function buildMockRecommendation(
     duration: 0,
     error: null,
     analyticsAction: logInterfaceLoad(),
+    searchUid: '123',
     ...config,
   };
 }
