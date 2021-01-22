@@ -18,16 +18,11 @@ export class AtomicText implements AtomicComponentInterface {
    * Count value used for plurals
    */
   @Prop() count?: number;
-  /**
-   *  Used for contexts (eg. male/female)
-   */
-  @Prop() context?: string;
 
   @State() public strings = {
     value: () =>
       this.bindings.i18n.t(this.value, {
         count: this.count,
-        context: this.context,
       }),
   };
 
