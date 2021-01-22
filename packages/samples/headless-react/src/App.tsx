@@ -1,6 +1,6 @@
-import React from 'react';
 import logo from './logo.svg';
 import './App.css';
+import { SearchBox } from './components/search-box/search-box.class';
 
 function App() {
   return (
@@ -18,6 +18,8 @@ function App() {
         >
           Learn React
         </a>
+
+        <SearchBox/>
       </header>
     </div>
   );
