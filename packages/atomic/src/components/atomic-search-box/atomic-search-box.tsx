@@ -31,10 +31,6 @@ export interface AtomicSearchBoxOptions {
 export class AtomicSearchBox implements AtomicSearchBoxOptions {
   @Element() host!: HTMLDivElement;
   @State() controllerState!: SearchBoxState;
-  @State() strings = {
-    search: () => this.bindings.i18n.t('search'),
-    clear: () => this.bindings.i18n.t('clear'),
-  };
   @Prop() numberOfSuggestions = 5;
   @Prop() enableQuerySyntax = false;
   @Prop() leadingSubmitButton = false;
@@ -109,7 +105,7 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
         part="submit-button"
         onClick={() => this.controller.submit()}
       >
-        {this.strings.search()}
+        <atomic-text value="search"></atomic-text>
       </button>
     );
   }
@@ -128,7 +124,7 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
           this.inputRef.focus();
         }}
       >
-        {this.strings.clear()}
+        <atomic-text value="clear"></atomic-text>
       </button>
     );
   }

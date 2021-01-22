@@ -131,6 +131,20 @@ export namespace Components {
         "expression": string;
         "isActive": boolean;
     }
+    interface AtomicText {
+        /**
+          * Used for contexts (eg. male/female)
+         */
+        "context"?: string;
+        /**
+          * Count value used for plurals
+         */
+        "count"?: number;
+        /**
+          * String key value
+         */
+        "value": string;
+    }
 }
 declare global {
     interface HTMLAtomicBreadcrumbManagerElement extends Components.AtomicBreadcrumbManager, HTMLStencilElement {
@@ -283,6 +297,12 @@ declare global {
         prototype: HTMLAtomicTabElement;
         new (): HTMLAtomicTabElement;
     };
+    interface HTMLAtomicTextElement extends Components.AtomicText, HTMLStencilElement {
+    }
+    var HTMLAtomicTextElement: {
+        prototype: HTMLAtomicTextElement;
+        new (): HTMLAtomicTextElement;
+    };
     interface HTMLElementTagNameMap {
         "atomic-breadcrumb-manager": HTMLAtomicBreadcrumbManagerElement;
         "atomic-category-facet": HTMLAtomicCategoryFacetElement;
@@ -309,6 +329,7 @@ declare global {
         "atomic-search-interface": HTMLAtomicSearchInterfaceElement;
         "atomic-sort-dropdown": HTMLAtomicSortDropdownElement;
         "atomic-tab": HTMLAtomicTabElement;
+        "atomic-text": HTMLAtomicTextElement;
     }
 }
 declare namespace LocalJSX {
@@ -428,6 +449,20 @@ declare namespace LocalJSX {
         "expression"?: string;
         "isActive"?: boolean;
     }
+    interface AtomicText {
+        /**
+          * Used for contexts (eg. male/female)
+         */
+        "context"?: string;
+        /**
+          * Count value used for plurals
+         */
+        "count"?: number;
+        /**
+          * String key value
+         */
+        "value": string;
+    }
     interface IntrinsicElements {
         "atomic-breadcrumb-manager": AtomicBreadcrumbManager;
         "atomic-category-facet": AtomicCategoryFacet;
@@ -454,6 +489,7 @@ declare namespace LocalJSX {
         "atomic-search-interface": AtomicSearchInterface;
         "atomic-sort-dropdown": AtomicSortDropdown;
         "atomic-tab": AtomicTab;
+        "atomic-text": AtomicText;
     }
 }
 export { LocalJSX as JSX };
@@ -485,6 +521,7 @@ declare module "@stencil/core" {
             "atomic-search-interface": LocalJSX.AtomicSearchInterface & JSXBase.HTMLAttributes<HTMLAtomicSearchInterfaceElement>;
             "atomic-sort-dropdown": LocalJSX.AtomicSortDropdown & JSXBase.HTMLAttributes<HTMLAtomicSortDropdownElement>;
             "atomic-tab": LocalJSX.AtomicTab & JSXBase.HTMLAttributes<HTMLAtomicTabElement>;
+            "atomic-text": LocalJSX.AtomicText & JSXBase.HTMLAttributes<HTMLAtomicTextElement>;
         }
     }
 }
