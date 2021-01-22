@@ -185,7 +185,7 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
         type="text"
         aria-autocomplete="list"
         aria-controls={this.valuesRef?.id}
-        class="mx-2 my-0 input text-base placeholder-medium-gray border-none outline-none flex flex-grow flex-row align-items-center"
+        class="mx-2 my-0 input text-base placeholder-medium-grey border-none outline-none flex flex-grow flex-row align-items-center"
         placeholder="Search for something"
         value={this.searchBoxState.value}
       />
