@@ -39,7 +39,7 @@ export const config: Config = {
     },
   },
   devServer: {
-    reloadStrategy: 'pageReload',
+    reloadStrategy: 'hmr',
   },
   plugins: [
     inlineSvg(),

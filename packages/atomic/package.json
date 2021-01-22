@@ -28,6 +28,7 @@
   "dependencies": {
     "@coveo/bueno": "^0.2.0",
     "@coveo/headless": "^0.3.0-alpha.0",
+    "coveo-styleguide": "^9.26.0",
     "i18next": "^19.8.4",
     "i18next-http-backend": "^1.0.21",
     "mustache": "^4.0.1",

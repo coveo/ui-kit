@@ -1,70 +1,94 @@
 <!DOCTYPE html>
 <html dir="ltr" lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
-    <title>Atomic Components</title>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
+  <title>Atomic Components</title>
 
-    <script type="module" src="/build/atomic.esm.js"></script>
-    <script nomodule src="/build/atomic.js"></script>
-    <link rel="stylesheet" href="/build/atomic.css" />
-    <style>
-      /* Example on how to customize custom templates CSS parts */
-      atomic-result-list::part(france-title)::before,
-      atomic-result-list::part(france-title)::after {
-        content: '🇫🇷';
-      }
-    </style>
-  </head>
+  <script type="module" src="/build/atomic.esm.js"></script>
+  <script nomodule src="/build/atomic.js"></script>
+  <link rel="stylesheet" href="/build/atomic.css" />
+  <script>
+    (async () => {
+      await customElements.whenDefined('atomic-search-interface');
+      const searchInterface = document.querySelector('#search');
 
-  <body>
-    <atomic-search-interface id="search" sample>
-      <div style="display: flex" class="mx-auto my-2 justify-center">
-        <atomic-tab expression="" class="mr-2">All Files</atomic-tab>
-        <atomic-tab expression='@author *= "BBC News"'>BBC News</atomic-tab>
-      </div>
-      <atomic-search-box class="m-3"></atomic-search-box>
+      // Initialization
+      await searchInterface.initialize({
+        accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
+        organizationId: 'searchuisamples',
+      });
+
+      // Trigger a first search
+      searchInterface.executeFirstSearch();
+
+      // Add/modify a translation
+      // searchInterface.i18n.addResource('en', 'translation', 'search', 'Make me feel lucky!');
+      // Change the language of the interface dynamically
+      // searchInterface.i18n.changeLanguage('fr');
+      // Interact with the engine
+      // searchInterface.engine.dispatch(...);
+      // Get all strings for a language/namespace
+      // const allStrings = searchInterface.i18n.getResourceBundle('en', 'translation');
+    })();
+  </script>
+  <style>
+    /* Example on how to customize custom templates CSS parts */
+    atomic-result-list::part(france-title)::before,
+    atomic-result-list::part(france-title)::after {
+      content: '🇫🇷';
+    }
+  </style>
+</head>
+
+<body>
+<atomic-search-interface id="search" sample>
+  <div style="display: flex" class="mx-auto my-2 justify-center">
+    <atomic-tab expression="" class="mr-2">All Files</atomic-tab>
+    <atomic-tab expression='@author *= "BBC News"'>BBC News</atomic-tab>
+  </div>
+  <atomic-search-box class="m-3 block" number-of-suggestions="10"></atomic-search-box>
+  <div style="display: flex">
+    <atomic-facet-manager>
+      <atomic-facet field="author" label="Authors"></atomic-facet>
+      <atomic-numeric-facet field="size" label="File sizes"></atomic-numeric-facet>
+      <atomic-date-facet field="created" label="Created"></atomic-date-facet>
+      <atomic-category-facet field="geographicalhierarchy" label="World Atlas"></atomic-category-facet>
+    </atomic-facet-manager>
+    <div>
+      <atomic-breadcrumb-manager></atomic-breadcrumb-manager>
+      <atomic-did-you-mean></atomic-did-you-mean>
+      <atomic-query-error></atomic-query-error>
       <div style="display: flex">
-        <atomic-facet-manager>
-          <atomic-facet field="author" label="Authors"></atomic-facet>
-          <atomic-numeric-facet field="size" label="File sizes"></atomic-numeric-facet>
-          <atomic-date-facet field="created" label="Created"></atomic-date-facet>
-          <atomic-category-facet field="geographicalhierarchy" label="World Atlas"></atomic-category-facet>
-        </atomic-facet-manager>
-        <div>
-          <atomic-breadcrumb-manager></atomic-breadcrumb-manager>
-          <atomic-did-you-mean></atomic-did-you-mean>
-          <atomic-query-error></atomic-query-error>
-          <div style="display: flex">
-            <atomic-query-summary></atomic-query-summary>
-            <atomic-sort-dropdown></atomic-sort-dropdown>
-          </div>
-
-          <atomic-result-list>
-            <atomic-result-template id="france-template">
-              <hr />
-              <img src="https://www.cia-france.com/media/1558/parcarou1_720x500.jpg" alt="Paris" />
-              <h5 part="france-title">{{title}}</h5>
-              <p>
-                <atomic-result-value value="excerpt"> </atomic-result-value>
-              </p>
-              <a href="{{clickUri}}">More info</a>
-            </atomic-result-template>
-
-            <script>
-              document.querySelector('#france-template').conditions = [(result) => result.title === 'France'];
-            </script>
-          </atomic-result-list>
-
-          <div style="display: flex">
-            <atomic-pager></atomic-pager>
-            <atomic-results-per-page></atomic-results-per-page>
-          </div>
-        </div>
+        <atomic-query-summary></atomic-query-summary>
+        <atomic-sort-dropdown></atomic-sort-dropdown>
       </div>
-      <atomic-history></atomic-history>
-    </atomic-search-interface>
-    <atomic-recommendation></atomic-recommendation>
-    <atomic-frequently-bought-together></atomic-frequently-bought-together>
-  </body>
+
+      <atomic-result-list>
+        <atomic-result-template id="france-template">
+          <hr />
+          <img src="https://www.cia-france.com/media/1558/parcarou1_720x500.jpg" alt="Paris" />
+          <h5 part="france-title">{{title}}</h5>
+          <p>
+            <atomic-result-value value="excerpt"> </atomic-result-value>
+          </p>
+          <a href="{{clickUri}}">More info</a>
+        </atomic-result-template>
+
+        <script>
+          document.querySelector('#france-template').conditions = [(result) => result.title === 'France'];
+        </script>
+      </atomic-result-list>
+
+      <div style="display: flex">
+        <atomic-pager></atomic-pager>
+        <atomic-results-per-page></atomic-results-per-page>
+      </div>
+    </div>
+  </div>
+  <atomic-history></atomic-history>
+</atomic-search-interface>
+<atomic-recommendation></atomic-recommendation>
+<atomic-frequently-bought-together></atomic-frequently-bought-together>
+</body>
 </html>
