@@ -1,5 +1,5 @@
 {
-  "ignorePatterns": ["node_modules"],
+  "ignorePatterns": ["node_modules", "veracode"],
   "env": {
     "jest": true
   },
