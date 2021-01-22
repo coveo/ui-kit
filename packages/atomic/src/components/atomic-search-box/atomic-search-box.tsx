@@ -129,7 +129,7 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
         type="button"
         part="submit-button"
         class={
-          'px-1 w-10 bg-transparent border-0 focus:outline-none border-medium-grey border-solid p-0 ' +
+          'w-10 bg-transparent border-0 focus:outline-none border-medium-grey border-solid p-0 ' +
           (this.leadingSubmitButton ? 'border-r' : 'border-l')
         }
         aria-label={this.context.i18n.t('search')}
@@ -202,7 +202,7 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
           onMouseDown={(e) => e.preventDefault()}
           part="suggestion"
           id={id}
-          class="suggestion h-7 px-2 cursor-pointer text-left text-sm bg-transparent border-none shadow-none hover:bg-light-grey flex flex-row items-center"
+          class="suggestion h-input px-2 cursor-pointer text-left text-sm bg-transparent border-none shadow-none hover:bg-light-grey flex flex-row items-center"
           innerHTML={suggestion.highlightedValue}
           value={index}
         ></li>
