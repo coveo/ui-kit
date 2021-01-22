@@ -161,8 +161,6 @@ export class Combobox {
     Array.from(this.listboxOptions).forEach((value) =>
       this.updateOption(value)
     );
-
-    // !this.listboxOptions.length && this.addEmptyOptionForAccessibility();
   }
 
   private updateOption(value: Element) {
