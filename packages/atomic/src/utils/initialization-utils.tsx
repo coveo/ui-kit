@@ -36,17 +36,19 @@ export interface InitializableComponent extends ComponentInterface {
    */
   bindings: Bindings;
   /**
-   * Initialization method.
+   * Method called right after the `bindings` property is defined. This is the method where Headless Framework controllers should be initialized.
    */
   initialize?: () => void;
 }
 
 /**
- * Utility that automatically fetches the `bindings` from the parent `atomic-search-interface` component.
- *
- * In order for a component using this decorator to render properly once it uses Bindings, it should have an internal state property using data from the `bindings`. For more information, view the "Utilities" section of the readme.
- *
+ * Utility that automatically fetches the `Bindings` from the parent `AtomicSearchInterface` component.
  * Once a component is bound, the `initialize` method is called, if defined.
+ *
+ * In order for a component using this decorator to render properly, it should have an internal state bound to one of the property from `bindings`.
+ * This is possible by using either the `BindStateToController` or the `BindStateToI18n` decorator.
+ *
+ * For more information and examples, view the "Utilities" section of the readme.
  */
 export function InitializeBindings() {
   return (component: InitializableComponent, bindingsProperty: string) => {
@@ -59,7 +61,7 @@ export function InitializeBindings() {
 
     if (bindingsProperty !== 'bindings') {
       return console.error(
-        `The Bindings decorator should be used on a property called "bindings", and not "${bindingsProperty}"`,
+        `The InitializeBindings decorator should be used on a property called "bindings", and not "${bindingsProperty}"`,
         component
       );
     }
@@ -130,8 +132,8 @@ export function InitializeBindings() {
 }
 
 /**
- * Decorator to be used on a property... TODO: document
- * @param controllerProperty
+ * Decorator to be used on a property decorator with Stencil's `State` that will be subscribed automatically to a Headless Framework controller.
+ * @param controllerProperty The controller property to subscribe to. The controller has to be defined inside the `initialize` method.
  * @param options
  */
 export function BindStateToController(
@@ -207,7 +209,8 @@ export function BindStateToController(
 export type I18nState = Record<string, () => string>;
 
 /**
- * TODO: document
+ * Decorator to be used on a property decorator with Stencil's `State` that will be subscribed automatically to the i18next language change.
+ * The state should be of the `I18nState` format and use the `i18n` binding to retrieve strings.
  */
 export function BindStateToI18n() {
   return (component: InitializableComponent, stateProperty: string) => {
