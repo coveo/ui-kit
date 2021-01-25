@@ -8,7 +8,7 @@ import {newSpecPage, SpecPage} from '@stencil/core/testing';
 import {AtomicSearchInterface} from '../components/atomic-search-interface/atomic-search-interface';
 import i18next from 'i18next';
 
-describe('Initialization decorator', () => {
+describe('InitializeBindings decorator', () => {
   describe('render method override', () => {
     beforeEach(() => {
       console.error = jest.fn();
@@ -17,7 +17,7 @@ describe('Initialization decorator', () => {
     it(`when "error" is defined
     should render an atomic-component-error component`, () => {
       const component: InitializableComponent = new AtomicPager();
-      InitializeBindings()(component, 'initialize');
+      InitializeBindings()(component, 'bidings');
       component.error = new Error('oups');
 
       expect(component.render!()).toMatchObject({
@@ -28,8 +28,8 @@ describe('Initialization decorator', () => {
     it(`when "engine" is not defined
     should render nothing `, () => {
       const component = new AtomicPager();
-      InitializeBindings()(component, 'initialize');
-      expect(component.render()).toBe('atomic-pager_loading');
+      InitializeBindings()(component, 'bidings');
+      expect(component.render()).toBeUndefined();
     });
 
     it(`when "engine" is defined
@@ -41,7 +41,7 @@ describe('Initialization decorator', () => {
         }),
         i18n: i18next,
       };
-      InitializeBindings()(component, 'initialize');
+      InitializeBindings()(component, 'bidings');
       component.initialize();
 
       expect(component.render()).toBeTruthy();
