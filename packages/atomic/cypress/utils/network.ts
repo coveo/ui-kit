@@ -8,7 +8,7 @@ export function getApiResponseBody(selector: string) {
 
 export function getUAFetch(selector: string) {
   return new Promise((resolve) => {
-    cy.wait(selector).debug().then((xhr) => {
+    cy.wait(selector).then((xhr) => {
       resolve(xhr);
     });
   });

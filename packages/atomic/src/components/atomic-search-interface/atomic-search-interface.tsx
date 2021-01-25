@@ -69,7 +69,7 @@ export class AtomicSearchInterface {
     this.initEngine(options);
     await this.initI18n();
     this.initComponents();
-    this.initSearchParameterManager();
+    // this.initSearchParameterManager();
     this.initialized = true;
   }
 

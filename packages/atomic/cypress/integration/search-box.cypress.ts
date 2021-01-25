@@ -4,17 +4,14 @@ import {
   SearchBoxSelectors,
   generateAliasForSearchBox,
 } from '../selectors/search-box-selectors';
-import {
-  ResultListSelectors,
-} from '../selectors/result-list-selectors';
 
 const queryText = 'test';
-const htmlCode = '<atomic-search-box></atomic-search-box><atomic-result-list></atomic-result-list>';
+const htmlCode = '<atomic-search-box></atomic-search-box>';
 
 describe('SearchBox Test Suites', () => {
   beforeEach(() => {
     setUpPage(htmlCode);
-    cy.wait(1500);
+    cy.wait(500);
     generateAliasForSearchBox();
   });
 
@@ -37,9 +34,8 @@ describe('SearchBox Test Suites', () => {
   });
 
   it('Searchbox should execute a query on button click', async () => {
-    cy.get('@searchInput').type(queryText, {force: true});
-    cy.get('@searchBtn').click().debug();
-
+    cy.get('@searchInput').type(queryText);
+    cy.get('@searchBtn').click();
     // Search section make sure number of items displays should be same as what returns from api call
     const jsonResponse = await getApiResponseBody('@coveoSearch');
     expect(jsonResponse).to.have.property('results');
@@ -47,7 +43,6 @@ describe('SearchBox Test Suites', () => {
   });
 
   it('Searchbox should log UA when excute a query', async () => {
-    cy.wait('@coveoAnalytics');
     cy.get('@searchInput').type(queryText, {force: true});
     cy.get('@searchBtn').click();
 

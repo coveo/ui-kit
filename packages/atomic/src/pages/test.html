@@ -10,13 +10,14 @@
     <link rel="stylesheet" href="/build/atomic.css" />
     <script>
       (async () => {
+        console.log("loading")
+
         await customElements.whenDefined('atomic-search-interface');
         const searchInterface = document.querySelector('#search');
         await searchInterface.initialize({
           accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
           organizationId: 'searchuisamples',
         });
-        searchInterface.executeFirstSearch();
       })();
     </script>
   </head>

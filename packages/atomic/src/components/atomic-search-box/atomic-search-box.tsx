@@ -36,7 +36,7 @@ export interface AtomicSearchBoxOptions {
 @Component({
   tag: 'atomic-search-box',
   styleUrl: 'atomic-search-box.pcss',
-  shadow: true,
+  shadow: false,
 })
 export class AtomicSearchBox implements AtomicSearchBoxOptions {
   @Element() host!: HTMLDivElement;
@@ -121,7 +121,7 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
         type="button"
         part="submit-button"
         class={
-          'w-10 bg-transparent border-0 focus:outline-none border-on-background border-solid p-0 ' +
+          'search w-10 bg-transparent border-0 focus:outline-none border-on-background border-solid p-0 ' +
           (this.leadingSubmitButton ? 'border-r' : 'border-l')
         }
         aria-label={this.context.i18n.t('search')}

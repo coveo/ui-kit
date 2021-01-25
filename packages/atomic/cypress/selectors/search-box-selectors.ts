@@ -11,14 +11,13 @@ export const ButtonText = {
 
 export function generateAliasForSearchBox() {
   cy.get(SearchBoxSelectors.component)
-    .shadow()
     .find('div')
     .first()
     .as('searchBoxFirstDiv');
   cy.get('@searchBoxFirstDiv')
     .find(SearchBoxSelectors.inputBox)
     .as('searchInput');
-  cy.get('@searchBoxFirstDiv').find('.submit').first().as('searchBtn');
+  cy.get('button').find('.search').as('searchBtn');
   cy.get('@searchBoxFirstDiv')
     .find(SearchBoxSelectors.querySuggestionList)
     .as('querySuggestList');
