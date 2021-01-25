@@ -122,8 +122,6 @@ export namespace Components {
         "pipeline": string;
         "searchHub": string;
     }
-    interface AtomicSearchParameterSerializer {
-    }
     interface AtomicSortDropdown {
     }
     interface AtomicTab {
@@ -270,12 +268,6 @@ declare global {
         prototype: HTMLAtomicSearchInterfaceElement;
         new (): HTMLAtomicSearchInterfaceElement;
     };
-    interface HTMLAtomicSearchParameterSerializerElement extends Components.AtomicSearchParameterSerializer, HTMLStencilElement {
-    }
-    var HTMLAtomicSearchParameterSerializerElement: {
-        prototype: HTMLAtomicSearchParameterSerializerElement;
-        new (): HTMLAtomicSearchParameterSerializerElement;
-    };
     interface HTMLAtomicSortDropdownElement extends Components.AtomicSortDropdown, HTMLStencilElement {
     }
     var HTMLAtomicSortDropdownElement: {
@@ -312,7 +304,6 @@ declare global {
         "atomic-results-per-page": HTMLAtomicResultsPerPageElement;
         "atomic-search-box": HTMLAtomicSearchBoxElement;
         "atomic-search-interface": HTMLAtomicSearchInterfaceElement;
-        "atomic-search-parameter-serializer": HTMLAtomicSearchParameterSerializerElement;
         "atomic-sort-dropdown": HTMLAtomicSortDropdownElement;
         "atomic-tab": HTMLAtomicTabElement;
     }
@@ -426,8 +417,6 @@ declare namespace LocalJSX {
         "pipeline"?: string;
         "searchHub"?: string;
     }
-    interface AtomicSearchParameterSerializer {
-    }
     interface AtomicSortDropdown {
     }
     interface AtomicTab {
@@ -458,7 +447,6 @@ declare namespace LocalJSX {
         "atomic-results-per-page": AtomicResultsPerPage;
         "atomic-search-box": AtomicSearchBox;
         "atomic-search-interface": AtomicSearchInterface;
-        "atomic-search-parameter-serializer": AtomicSearchParameterSerializer;
         "atomic-sort-dropdown": AtomicSortDropdown;
         "atomic-tab": AtomicTab;
     }
@@ -490,7 +478,6 @@ declare module "@stencil/core" {
             "atomic-results-per-page": LocalJSX.AtomicResultsPerPage & JSXBase.HTMLAttributes<HTMLAtomicResultsPerPageElement>;
             "atomic-search-box": LocalJSX.AtomicSearchBox & JSXBase.HTMLAttributes<HTMLAtomicSearchBoxElement>;
             "atomic-search-interface": LocalJSX.AtomicSearchInterface & JSXBase.HTMLAttributes<HTMLAtomicSearchInterfaceElement>;
-            "atomic-search-parameter-serializer": LocalJSX.AtomicSearchParameterSerializer & JSXBase.HTMLAttributes<HTMLAtomicSearchParameterSerializerElement>;
             "atomic-sort-dropdown": LocalJSX.AtomicSortDropdown & JSXBase.HTMLAttributes<HTMLAtomicSortDropdownElement>;
             "atomic-tab": LocalJSX.AtomicTab & JSXBase.HTMLAttributes<HTMLAtomicTabElement>;
         }
