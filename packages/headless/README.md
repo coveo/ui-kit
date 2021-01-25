@@ -75,14 +75,14 @@ The base of the `/src` folder should only contain exports.
 
 ### Configuring a headless engine
 
-You can setup a new headless engine by instantiating the `HeadlessEngine` class, which implements the `Engine` interface. The `HeadlessEngine` class requires some basic configuration, notably your Coveo organization and your access token. Reducers are also required for the `HeadlessEngine` to work. They are what build and manage the state of the headless engine. All reducers needed for a search page are already exported as `searchPageReducers`, to add your own custom reducers in order to extend the state, see the [Extending the headless state](#extending-the-headless-state) section.
+You can setup a new headless engine by instantiating the `HeadlessEngine` class, which implements the `Engine` interface. The `HeadlessEngine` class requires some basic configuration, notably your Coveo organization and your access token. Reducers are also required for the `HeadlessEngine` to work. They are what build and manage the state of the headless engine. All reducers needed for a search page are already exported as `searchAppReducers`, to add your own custom reducers in order to extend the state, see the [Extending the headless state](#extending-the-headless-state) section.
 
 Then, make sure to export the instance so it's shared throughout your application.
 
 Instantiation of a new headless `HeadlessEngine` instance:
 
 ```typescript
-import {HeadlessEngine, searchPageReducers} from '@coveo/headless';
+import {HeadlessEngine, searchAppReducers} from '@coveo/headless';
 
 export const engine = new HeadlessEngine({
   configuration: {
@@ -93,7 +93,7 @@ export const engine = new HeadlessEngine({
       searchHub: 'your_search_hub',
     },
   },
-  reducers: searchPageReducers,
+  reducers: searchAppReducers,
 });
 ```
 
@@ -299,10 +299,10 @@ The headless library exports some of [Redux Toolkit](https://redux-toolkit.js.or
 We strongly recommend using those utilitary functions and reading their respective documentation. If you are using TypeScript, we strongly recommend looking up the [Usage With TypeScript
 ](https://redux-toolkit.js.org/usage/usage-with-typescript) section as well.
 
-We also offer out-of-the-box reducers map that contain a group of features, like the `searchPageReducers` which offer all the necessary functionalities to build a search page. The reducer map is defined during initialization:
+We also offer out-of-the-box reducers map that contain a group of features, like the `searchAppReducers` which offer all the necessary functionalities to build a search page. The reducer map is defined during initialization:
 
 ```typescript
-import {HeadlessEngine, searchPageReducers} from '@coveo/headless';
+import {HeadlessEngine, searchAppReducers} from '@coveo/headless';
 import {counterReducer} from './counter-reducer';
 
 export const engine = new HeadlessEngine({
@@ -310,7 +310,7 @@ export const engine = new HeadlessEngine({
     ...
   },
   reducers: {
-    ...searchPageReducers
+    ...searchAppReducers
     counter: counterReducer,
   },
 });
