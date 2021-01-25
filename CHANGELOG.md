@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.3.0-alpha.4](https://github.com/coveo/ui-kit/compare/v0.3.0-alpha.3...v0.3.0-alpha.4) (2021-01-22)
+
+
+### Bug Fixes
+
+* **headless:** pass searchUid for recommendation analytics events ([#430](https://github.com/coveo/ui-kit/issues/430)) ([03ef3c1](https://github.com/coveo/ui-kit/commit/03ef3c139bf4344f613152cc133b391b7e4595f0))
+
+
+
+
+
+# [0.3.0-alpha.3](https://github.com/coveo/ui-kit/compare/v0.3.0-alpha.2...v0.3.0-alpha.3) (2021-01-22)
+
+
+### Features
+
+* **atomic:** add build step which splits a main locales JSON file into 1 JSON file per locale ([#431](https://github.com/coveo/ui-kit/issues/431)) ([0804e21](https://github.com/coveo/ui-kit/commit/0804e21c3dfd2312e2fee86ef44312170dd564e5))
+
+
+
+
+
 # [0.3.0-alpha.2](https://github.com/coveo/ui-kit/compare/v0.3.0-alpha.1...v0.3.0-alpha.2) (2021-01-21)
 
 **Note:** Version bump only for package ui-kit
