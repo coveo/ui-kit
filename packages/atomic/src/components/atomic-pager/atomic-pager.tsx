@@ -1,9 +1,10 @@
 import {Component, h, State} from '@stencil/core';
 import {Pager, PagerState, buildPager} from '@coveo/headless';
 import {
-  Initialization,
   Bindings,
-  AtomicComponentInterface,
+  BindStateToController,
+  InitializableComponent,
+  InitializeBindings,
 } from '../../utils/initialization-utils';
 
 /**
@@ -21,19 +22,20 @@ import {
   styleUrl: 'atomic-pager.pcss',
   shadow: true,
 })
-export class AtomicPager implements AtomicComponentInterface {
-  @State() controllerState!: PagerState;
+export class AtomicPager implements InitializableComponent {
+  @InitializeBindings() public bindings!: Bindings;
+  private pager!: Pager;
 
-  public bindings!: Bindings;
-  public controller!: Pager;
+  @BindStateToController('pager')
+  @State()
+  private pagerState!: PagerState;
 
-  @Initialization()
   public initialize() {
-    this.controller = buildPager(this.bindings.engine);
+    this.pager = buildPager(this.bindings.engine);
   }
 
   private get backButton() {
-    if (!this.controllerState.hasPreviousPage) {
+    if (!this.pagerState.hasPreviousPage) {
       return null;
     }
 
@@ -44,7 +46,7 @@ export class AtomicPager implements AtomicComponentInterface {
           part="back-button"
           aria-label="Previous page"
           onClick={() => {
-            this.controller.previousPage();
+            this.pager.previousPage();
           }}
         >
           <slot name="back-button">{icon}</slot>
@@ -54,7 +56,7 @@ export class AtomicPager implements AtomicComponentInterface {
   }
 
   private get nextButton() {
-    if (!this.controllerState.hasNextPage) {
+    if (!this.pagerState.hasNextPage) {
       return null;
     }
 
@@ -65,7 +67,7 @@ export class AtomicPager implements AtomicComponentInterface {
           part="next-button"
           aria-label="Next page"
           onClick={() => {
-            this.controller.nextPage();
+            this.pager.nextPage();
           }}
         >
           <slot name="next-button">{icon}</slot>
@@ -75,12 +77,12 @@ export class AtomicPager implements AtomicComponentInterface {
   }
 
   private get pages() {
-    const pages = this.controller.state.currentPages;
+    const pages = this.pager.state.currentPages;
     return pages.map((page) => this.buildPage(page));
   }
 
   private buildPage(page: number) {
-    const isSelected = this.controller.isCurrentPage(page);
+    const isSelected = this.pager.isCurrentPage(page);
     const className = isSelected ? 'active' : '';
 
     return (
@@ -89,7 +91,7 @@ export class AtomicPager implements AtomicComponentInterface {
           part={`page-button ${isSelected && 'active-page-button'}`}
           aria-label={`Page ${page}`}
           onClick={() => {
-            this.controller.selectPage(page);
+            this.pager.selectPage(page);
           }}
         >
           {page}
@@ -98,7 +100,7 @@ export class AtomicPager implements AtomicComponentInterface {
     );
   }
 
-  render() {
+  public render() {
     return (
       <nav aria-label="Pager">
         <ul part="list">

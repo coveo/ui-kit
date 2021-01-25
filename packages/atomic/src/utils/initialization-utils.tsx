@@ -1,4 +1,4 @@
-import {Controller, Engine} from '@coveo/headless';
+import {Engine} from '@coveo/headless';
 import {ComponentInterface, getElement, h} from '@stencil/core';
 import {i18n} from 'i18next';
 
@@ -30,68 +30,39 @@ export class MissingInterfaceParentError extends Error {
 /**
  * Necessary interface an Atomic Component must have to initialize itself correctly.
  */
-export interface AtomicComponentInterface extends ComponentInterface {
+export interface InitializableComponent extends ComponentInterface {
   /**
    * Bindings passed from the `AtomicSearchInterface` to its children components.
    */
   bindings: Bindings;
   /**
-   * Record of methods earch returning an i18n localized string.
+   * Initialization method.
    */
-  strings?: Record<string, () => string>;
-  /**
-   * Headless Controller instance associated with the Atomic Component.
-   */
-  controller?: Controller;
-  /**
-   * Headless Controller's state.
-   */
-  controllerState?: unknown;
-  /**
-   * Callback for when the subscribe method is called and the controller's state is updated.
-   */
-  onControllerStateUpdate?: () => void;
-  /**
-   * Error that, when defined, will be rendered inside an `atomic-component-error` component.
-   */
-  error?: Error;
+  initialize?: () => void;
 }
 
 /**
- * Utility that automatically fetches the `bindings` from the parent `atomic-search-interface` component. This decorator should be applied to the `initialize` method directly.
+ * Utility that automatically fetches the `bindings` from the parent `atomic-search-interface` component.
  *
- * In order for a component using this decorator to render properly, it should have an internal state property using data from the `bindings`. For more information, view the "Utilities" section of the readme.
+ * In order for a component using this decorator to render properly once it uses Bindings, it should have an internal state property using data from the `bindings`. For more information, view the "Utilities" section of the readme.
+ *
+ * Once a component is bound, the `initialize` method is called, if defined.
  */
-export function Initialization(options?: {
-  resubscribeControllerOnConnectedCallback?: boolean;
-}) {
-  return (component: AtomicComponentInterface, initializeMethod: string) => {
+export function InitializeBindings() {
+  return (component: InitializableComponent, bindingsProperty: string) => {
     const {
-      connectedCallback,
       componentWillLoad,
       render,
       componentDidRender,
       componentDidLoad,
-      disconnectedCallback,
-      onControllerStateUpdate,
     } = component;
-    const initialize: () => void = component[initializeMethod];
 
-    let unsubscribeStrings = () => {};
-    let unsubscribeController = () => {};
-
-    component.connectedCallback = function () {
-      if (
-        this.controller &&
-        options?.resubscribeControllerOnConnectedCallback
-      ) {
-        unsubscribeController();
-        unsubscribeController = this.controller.subscribe(() => {
-          this.controllerState = this.controller!.state;
-        });
-      }
-      connectedCallback && connectedCallback.call(this);
-    };
+    if (bindingsProperty !== 'bindings') {
+      return console.error(
+        `The Bindings decorator should be used on a property called "bindings", and not "${bindingsProperty}"`,
+        component
+      );
+    }
 
     component.componentWillLoad = function () {
       const element = getElement(this);
@@ -100,22 +71,7 @@ export function Initialization(options?: {
           this.bindings = bindings;
 
           try {
-            initialize.call(this);
-
-            if (this.controller) {
-              unsubscribeController = this.controller.subscribe(() => {
-                this.controllerState = this.controller!.state;
-                onControllerStateUpdate && onControllerStateUpdate.call(this);
-              });
-            }
-
-            if (this.strings) {
-              const updateStrings = () => (this.strings = {...this.strings});
-              updateStrings(); // Ensures re-render of localized strings on initialization
-              this.bindings.i18n.on('languageChanged', updateStrings);
-              unsubscribeStrings = () =>
-                this.bindings.i18n.off('languageChanged', updateStrings);
-            }
+            this.initialize && this.initialize();
           } catch (e) {
             this.error = e;
           }
@@ -150,8 +106,7 @@ export function Initialization(options?: {
       }
 
       if (!this.bindings) {
-        // TODO: add optional renderLoad() method to render placeholders
-        return `${getElement(this).nodeName.toLowerCase()}_loading`;
+        return;
       }
 
       hasRendered = true;
@@ -168,14 +123,111 @@ export function Initialization(options?: {
         componentDidLoad && componentDidLoad.call(this);
         hasLoaded = true;
       }
-      return;
     };
 
     component.componentDidLoad = function () {};
+  };
+}
+
+/**
+ * Decorator to be used on a property... TODO: document
+ * @param controllerProperty
+ * @param options
+ */
+export function BindStateToController(
+  controllerProperty: string,
+  options?: {
+    /**
+     * Wether the component should resubscribe when disconnected and reconnected from the DOM
+     */
+    subscribeOnConnectedCallback?: boolean;
+    /**
+     * Component's method to be called when state is updated.
+     */
+    onUpdateCallbackMethod?: string;
+  }
+) {
+  return (component: InitializableComponent, stateProperty: string) => {
+    const {connectedCallback, disconnectedCallback, initialize} = component;
+    let unsubscribe = () => {};
+
+    component.connectedCallback = function () {
+      if (options?.subscribeOnConnectedCallback && this[controllerProperty]) {
+        unsubscribe = this[controllerProperty].subscribe(() => {
+          this[stateProperty] = this[controllerProperty].state;
+          options?.onUpdateCallbackMethod &&
+            this[options.onUpdateCallbackMethod] &&
+            this[options.onUpdateCallbackMethod]();
+        });
+      }
+      connectedCallback && connectedCallback.call(this);
+    };
+
+    component.initialize = function () {
+      initialize && initialize.call(this);
+
+      if (!this.initialize) {
+        return console.error(
+          `ControllerState: The "initialize" method has to be defined and instanciate a controller for the property ${controllerProperty}`,
+          component
+        );
+      }
+
+      if (!this[controllerProperty]) {
+        return console.error(
+          `ControllerState: The controller property "${controllerProperty}" is not defined`,
+          component
+        );
+      }
+
+      if (
+        options?.onUpdateCallbackMethod &&
+        !this[options.onUpdateCallbackMethod]
+      ) {
+        return console.error(
+          `ControllerState: The onUpdateCallbackMethod property "${options.onUpdateCallbackMethod}" is not defined`,
+          component
+        );
+      }
+
+      unsubscribe = this[controllerProperty].subscribe(() => {
+        this[stateProperty] = this[controllerProperty].state;
+        options?.onUpdateCallbackMethod &&
+          this[options.onUpdateCallbackMethod]();
+      });
+    };
 
     component.disconnectedCallback = function () {
-      unsubscribeStrings();
-      unsubscribeController();
+      unsubscribe();
+      disconnectedCallback && disconnectedCallback.call(this);
+    };
+  };
+}
+
+export type I18nState = Record<string, () => string>;
+
+/**
+ * TODO: document
+ */
+export function BindStateToI18n() {
+  return (component: InitializableComponent, stateProperty: string) => {
+    const {disconnectedCallback, initialize} = component;
+    let unsubscribe = () => {};
+
+    component.initialize = function () {
+      const updateStrings = () => {
+        this[stateProperty] = {...this[stateProperty]};
+      };
+      updateStrings(); // Ensures re-render of localized strings on initialization
+      this.bindings.i18n.on('languageChanged', updateStrings);
+      unsubscribe = () =>
+        this.bindings.i18n.off('languageChanged', updateStrings);
+
+      initialize && initialize.call(this);
+    };
+
+    component.disconnectedCallback = function () {
+      unsubscribe();
       disconnectedCallback && disconnectedCallback.call(this);
     };
   };

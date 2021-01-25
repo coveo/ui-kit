@@ -8,9 +8,10 @@ import {
   FacetSortCriterion,
 } from '@coveo/headless';
 import {
-  Initialization,
   Bindings,
-  AtomicComponentInterface,
+  BindStateToController,
+  InitializableComponent,
+  InitializeBindings,
 } from '../../utils/initialization-utils';
 
 @Component({
@@ -18,33 +19,35 @@ import {
   styleUrl: 'atomic-facet.pcss',
   shadow: true,
 })
-export class AtomicFacet implements AtomicComponentInterface {
-  @Prop({mutable: true}) facetId = '';
-  @Prop() field = '';
-  @Prop() label = 'No label';
-  @State() controllerState!: FacetState;
-  public bindings!: Bindings;
+export class AtomicFacet implements InitializableComponent {
+  @InitializeBindings() public bindings!: Bindings;
+  private facet!: Facet;
 
-  public controller!: Facet;
+  @BindStateToController('facet', {subscribeOnConnectedCallback: true})
+  @State()
+  private facetState!: FacetState;
 
-  @Initialization({resubscribeControllerOnConnectedCallback: true})
+  @Prop({mutable: true, reflect: true}) public facetId = '';
+  @Prop() public field = '';
+  @Prop() public label = 'No label';
+
   public initialize() {
     const options: FacetOptions = {facetId: this.facetId, field: this.field};
-    this.controller = buildFacet(this.bindings.engine, {options});
-    this.facetId = this.controller.state.facetId;
+    this.facet = buildFacet(this.bindings.engine, {options});
+    this.facetId = this.facet.state.facetId;
   }
 
   private get values() {
-    return this.controllerState.values.map((listItem) =>
+    return this.facetState.values.map((listItem) =>
       this.buildListItem(listItem)
     );
   }
 
   private buildListItem(item: FacetValue) {
-    const isSelected = this.controller.isValueSelected(item);
+    const isSelected = this.facet.isValueSelected(item);
 
     return (
-      <div onClick={() => this.controller.toggleSelect(item)}>
+      <div onClick={() => this.facet.toggleSelect(item)}>
         <input type="checkbox" checked={isSelected}></input>
         <span>
           {item.value} {item.numberOfResults}
@@ -54,8 +57,8 @@ export class AtomicFacet implements AtomicComponentInterface {
   }
 
   private get resetButton() {
-    return this.controllerState.hasActiveValues ? (
-      <button onClick={() => this.controller.deselectAll()}>X</button>
+    return this.facetState.hasActiveValues ? (
+      <button onClick={() => this.facet.deselectAll()}>X</button>
     ) : null;
   }
 
@@ -65,27 +68,27 @@ export class AtomicFacet implements AtomicComponentInterface {
 
   private onFacetSearch(e: Event) {
     const value = (e.target as HTMLInputElement).value;
-    const facetSearch = this.controller.facetSearch;
+    const facetSearch = this.facet.facetSearch;
 
     facetSearch.updateText(value);
     facetSearch.search();
   }
 
   private get facetSearchResults() {
-    return this.controllerState.facetSearch.values.map((searchResult) => (
-      <div onClick={() => this.controller.facetSearch.select(searchResult)}>
+    return this.facetState.facetSearch.values.map((searchResult) => (
+      <div onClick={() => this.facet.facetSearch.select(searchResult)}>
         {searchResult.displayValue} {searchResult.count}
       </div>
     ));
   }
 
   private get showMoreSearchResults() {
-    if (!this.controllerState.facetSearch.moreValuesAvailable) {
+    if (!this.facetState.facetSearch.moreValuesAvailable) {
       return null;
     }
 
     return (
-      <button onClick={() => this.controller.facetSearch.showMoreResults()}>
+      <button onClick={() => this.facet.facetSearch.showMoreResults()}>
         show more
       </button>
     );
@@ -108,10 +111,7 @@ export class AtomicFacet implements AtomicComponentInterface {
     ];
 
     return criteria.map((criterion) => (
-      <option
-        value={criterion}
-        selected={this.controller.isSortedBy(criterion)}
-      >
+      <option value={criterion} selected={this.facet.isSortedBy(criterion)}>
         {criterion}
       </option>
     ));
@@ -121,34 +121,30 @@ export class AtomicFacet implements AtomicComponentInterface {
     const select = e.composedPath()[0] as HTMLSelectElement;
     const criterion = select.value as FacetSortCriterion;
 
-    this.controller.sortBy(criterion);
+    this.facet.sortBy(criterion);
   }
 
   private get showMoreButton() {
-    if (!this.controllerState.canShowMoreValues) {
+    if (!this.facetState.canShowMoreValues) {
       return null;
     }
 
     return (
-      <button onClick={() => this.controller.showMoreValues()}>
-        show more
-      </button>
+      <button onClick={() => this.facet.showMoreValues()}>show more</button>
     );
   }
 
   private get showLessButton() {
-    if (!this.controllerState.canShowLessValues) {
+    if (!this.facetState.canShowLessValues) {
       return null;
     }
 
     return (
-      <button onClick={() => this.controller.showLessValues()}>
-        show less
-      </button>
+      <button onClick={() => this.facet.showLessValues()}>show less</button>
     );
   }
 
-  render() {
+  public render() {
     return (
       <div>
         <div>

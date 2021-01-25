@@ -12,14 +12,15 @@ export interface FieldMatch {
   shadow: true,
 })
 export class AtomicResultTemplate {
+  private fields: string[] = [];
+  private matchConditions: ResultTemplateCondition[] = [];
+
   @Element() host!: HTMLDivElement;
+
   @Prop() conditions: ResultTemplateCondition[] = [];
   @Prop() fieldsToInclude?: string;
   @MapProp() mustMatch: Record<string, string[]> = {};
   @MapProp() mustNotMatch: Record<string, string[]> = {};
-
-  private fields: string[] = [];
-  private matchConditions: ResultTemplateCondition[] = [];
 
   constructor() {
     const isParentResultList =
@@ -32,7 +33,7 @@ export class AtomicResultTemplate {
     }
   }
 
-  componentWillLoad() {
+  public componentWillLoad() {
     this.fieldsToInclude &&
       this.fields.push(...this.fieldsToInclude.split(','));
 
@@ -55,12 +56,12 @@ export class AtomicResultTemplate {
   }
 
   @Method()
-  async getConditions() {
+  public async getConditions() {
     return this.conditions.concat(this.matchConditions);
   }
 
   @Method()
-  async getFields() {
+  public async getFields() {
     const fieldValues: string[] = [];
     this.host
       .querySelectorAll('atomic-result-value')

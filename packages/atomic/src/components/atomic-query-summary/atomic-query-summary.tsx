@@ -5,9 +5,10 @@ import {
   buildQuerySummary,
 } from '@coveo/headless';
 import {
-  Initialization,
   Bindings,
-  AtomicComponentInterface,
+  BindStateToController,
+  InitializableComponent,
+  InitializeBindings,
 } from '../../utils/initialization-utils';
 
 /**
@@ -23,25 +24,16 @@ import {
   styleUrl: 'atomic-query-summary.pcss',
   shadow: true,
 })
-export class AtomicQuerySummary implements AtomicComponentInterface {
-  @State() controllerState!: QuerySummaryState;
+export class AtomicQuerySummary implements InitializableComponent {
+  @InitializeBindings() public bindings!: Bindings;
+  public querySummary!: QuerySummary;
 
-  public bindings!: Bindings;
-  public controller!: QuerySummary;
+  @BindStateToController('querySummary')
+  @State()
+  private querySummaryState!: QuerySummaryState;
 
-  @Initialization()
   public initialize() {
-    this.controller = buildQuerySummary(this.bindings.engine);
-  }
-
-  public render() {
-    return (
-      <div part="container">
-        {this.controllerState.hasResults
-          ? this.renderHasResults()
-          : this.renderNoResults()}
-      </div>
-    );
+    this.querySummary = buildQuerySummary(this.bindings.engine);
   }
 
   private renderNoResults() {
@@ -63,19 +55,19 @@ export class AtomicQuerySummary implements AtomicComponentInterface {
   }
 
   private get range() {
-    return `${this.controllerState.firstResult.toLocaleString()}-${this.controllerState.lastResult.toLocaleString()}`;
+    return `${this.querySummaryState.firstResult.toLocaleString()}-${this.querySummaryState.lastResult.toLocaleString()}`;
   }
 
   private get total() {
-    return this.controllerState.total.toLocaleString();
+    return this.querySummaryState.total.toLocaleString();
   }
 
   private renderQuery() {
-    if (this.controllerState.hasQuery) {
+    if (this.querySummaryState.hasQuery) {
       return (
         <span part="query">
           {' '}
-          for {this.renderHighlight(this.controllerState.query)}
+          for {this.renderHighlight(this.querySummaryState.query)}
         </span>
       );
     }
@@ -84,11 +76,11 @@ export class AtomicQuerySummary implements AtomicComponentInterface {
   }
 
   private renderDuration() {
-    if (this.controllerState.hasDuration) {
+    if (this.querySummaryState.hasDuration) {
       return (
         <span part="duration">
           {' '}
-          in {this.controllerState.durationInSeconds.toLocaleString()} seconds
+          in {this.querySummaryState.durationInSeconds.toLocaleString()} seconds
         </span>
       );
     }
@@ -98,5 +90,15 @@ export class AtomicQuerySummary implements AtomicComponentInterface {
 
   private renderHighlight(input: string) {
     return <strong part="highlight">{input}</strong>;
+  }
+
+  public render() {
+    return (
+      <div part="container">
+        {this.querySummaryState.hasResults
+          ? this.renderHasResults()
+          : this.renderNoResults()}
+      </div>
+    );
   }
 }

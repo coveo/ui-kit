@@ -5,9 +5,10 @@ import {
   FacetManagerState,
 } from '@coveo/headless';
 import {
-  Initialization,
   Bindings,
-  AtomicComponentInterface,
+  BindStateToController,
+  InitializableComponent,
+  InitializeBindings,
 } from '../../utils/initialization-utils';
 
 interface FacetElement extends HTMLElement {
@@ -19,24 +20,29 @@ interface FacetElement extends HTMLElement {
   styleUrl: 'atomic-facet-manager.pcss',
   shadow: true,
 })
-export class AtomicFacetManager implements AtomicComponentInterface {
-  @State() controllerState!: FacetManagerState;
-  @Element() host!: HTMLDivElement;
-  public bindings!: Bindings;
-  public controller!: FacetManager;
+export class AtomicFacetManager implements InitializableComponent {
+  @InitializeBindings() public bindings!: Bindings;
+  private facetManager!: FacetManager;
 
-  @Initialization()
+  @Element() private host!: HTMLDivElement;
+
+  @BindStateToController('facetManager', {
+    onUpdateCallbackMethod: 'onFacetManagerUpdate',
+  })
+  @State()
+  public facetManagerState!: FacetManagerState;
+
   public initialize() {
-    this.controller = buildFacetManager(this.bindings.engine);
+    this.facetManager = buildFacetManager(this.bindings.engine);
   }
 
-  public onControllerStateUpdate() {
+  public onFacetManagerUpdate() {
     this.sortFacets();
   }
 
   private sortFacets() {
     const payload = this.facets.map((f) => ({facetId: f.facetId, payload: f}));
-    const sortedFacets = this.controller.sort(payload).map((f) => f.payload);
+    const sortedFacets = this.facetManager.sort(payload).map((f) => f.payload);
 
     this.host.append(...sortedFacets);
   }

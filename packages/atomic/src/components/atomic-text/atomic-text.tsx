@@ -1,44 +1,42 @@
 import {Component, Prop, State} from '@stencil/core';
 import {
-  AtomicComponentInterface,
+  InitializableComponent,
   Bindings,
-  Initialization,
+  InitializeBindings,
+  BindStateToI18n,
 } from '../../utils/initialization-utils';
 
 @Component({
   tag: 'atomic-text',
   shadow: true,
 })
-export class AtomicText implements AtomicComponentInterface {
-  /**
-   * String key value
-   */
-  @Prop() value!: string;
-  /**
-   * Count value used for plurals
-   */
-  @Prop() count?: number;
+export class AtomicText implements InitializableComponent {
+  @InitializeBindings() public bindings!: Bindings;
+  public error?: Error;
 
-  @State() public strings = {
+  @BindStateToI18n() @State() private strings = {
     value: () =>
       this.bindings.i18n.t(this.value, {
         count: this.count,
       }),
   };
 
-  public bindings!: Bindings;
-  public error?: Error;
+  /**
+   * String key value
+   */
+  @Prop() public value!: string;
+  /**
+   * Count value used for plurals
+   */
+  @Prop() public count?: number;
 
-  connectedCallback() {
+  public connectedCallback() {
     if (!this.value) {
       this.error = new Error('The "value" attribute must be defined.');
     }
   }
 
-  @Initialization()
-  public initialize() {}
-
-  render() {
+  public render() {
     return this.strings.value();
   }
 }
