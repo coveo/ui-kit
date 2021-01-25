@@ -1,13 +1,9 @@
-import {Component, h, Prop, State, Element} from '@stencil/core';
+import {Component, h, Prop, State} from '@stencil/core';
+import {SearchBox, SearchBoxState, buildSearchBox} from '@coveo/headless';
 import {
-  SearchBox,
-  SearchBoxState,
-  Unsubscribe,
-  buildSearchBox,
-} from '@coveo/headless';
-import {
-  Initialization,
-  InterfaceContext,
+  Bindings,
+  BindStateToController,
+  InitializeBindings,
 } from '../../utils/initialization-utils';
 import {randomID} from '../../utils/utils';
 import {Combobox} from '../../utils/combobox';
@@ -37,22 +33,23 @@ export interface AtomicSearchBoxOptions {
   shadow: true,
 })
 export class AtomicSearchBox implements AtomicSearchBoxOptions {
-  @Element() host!: HTMLDivElement;
-  @State() searchBoxState!: SearchBoxState;
-  @Prop() numberOfSuggestions = 5;
-  @Prop() enableQuerySyntax = false;
-  @Prop() leadingSubmitButton = false;
-  @Prop({reflect: true, attribute: 'data-id'}) _id = randomID(
-    'atomic-search-box-'
-  );
-
-  private context!: InterfaceContext;
+  @InitializeBindings() public bindings!: Bindings;
   private searchBox!: SearchBox;
-  private unsubscribe: Unsubscribe = () => {};
   private inputRef!: HTMLInputElement;
   private valuesRef!: HTMLElement;
   private containerRef!: HTMLElement;
   private combobox!: Combobox;
+
+  @BindStateToController('searchBox')
+  @State()
+  private searchBoxState!: SearchBoxState;
+
+  @Prop() public numberOfSuggestions = 5;
+  @Prop() public enableQuerySyntax = false;
+  @Prop() public leadingSubmitButton = false;
+  @Prop({reflect: true, attribute: 'data-id'}) public _id = randomID(
+    'atomic-search-box-'
+  );
 
   constructor() {
     this.combobox = new Combobox({
@@ -78,9 +75,12 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
     });
   }
 
-  @Initialization()
+  public componentDidRender() {
+    this.combobox.updateAccessibilityAttributes();
+  }
+
   public initialize() {
-    this.searchBox = buildSearchBox(this.context.engine, {
+    this.searchBox = buildSearchBox(this.bindings.engine, {
       options: {
         numberOfSuggestions: this.numberOfSuggestions,
         highlightOptions: {
@@ -96,15 +96,6 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
         enableQuerySyntax: this.enableQuerySyntax,
       },
     });
-    this.unsubscribe = this.searchBox.subscribe(() => this.updateState());
-  }
-
-  public disconnectedCallback() {
-    this.unsubscribe();
-  }
-
-  private updateState() {
-    this.searchBoxState = this.searchBox.state;
   }
 
   private onInputFocus() {
@@ -123,7 +114,7 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
         part="submit-button"
         onClick={() => this.searchBox.submit()}
       >
-        {this.context.i18n.t('search')}
+        <atomic-text value="search"></atomic-text>
       </button>
     );
   }
@@ -142,7 +133,7 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
           this.inputRef.focus();
         }}
       >
-        {this.context.i18n.t('clear')}
+        <atomic-text value="clear"></atomic-text>
       </button>
     );
   }
@@ -206,9 +197,5 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
         {!this.leadingSubmitButton && this.submitButton}
       </div>
     );
-  }
-
-  public componentDidRender() {
-    this.combobox.updateAccessibilityAttributes();
   }
 }

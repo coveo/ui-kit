@@ -6,11 +6,12 @@ import {
   DateFacetOptions,
   DateFacetValue,
   RangeFacetSortCriterion,
-  Unsubscribe,
 } from '@coveo/headless';
 import {
-  Initialization,
-  InterfaceContext,
+  Bindings,
+  BindStateToController,
+  InitializableComponent,
+  InitializeBindings,
 } from '../../utils/initialization-utils';
 
 @Component({
@@ -18,17 +19,18 @@ import {
   styleUrl: 'atomic-date-facet.pcss',
   shadow: true,
 })
-export class AtomicDateFacet {
-  @Prop({mutable: true}) facetId = '';
-  @Prop() field = '';
-  @Prop() label = 'No label';
-  @State() state!: DateFacetState;
-  private context!: InterfaceContext;
-
+export class AtomicDateFacet implements InitializableComponent {
+  @InitializeBindings() public bindings!: Bindings;
   private facet!: DateFacet;
-  private unsubscribe: Unsubscribe = () => {};
 
-  @Initialization()
+  @BindStateToController('facet', {subscribeOnConnectedCallback: true})
+  @State()
+  private facetState!: DateFacetState;
+
+  @Prop({mutable: true, reflect: true}) public facetId = '';
+  @Prop() public field = '';
+  @Prop() public label = 'No label';
+
   public initialize() {
     const options: DateFacetOptions = {
       facetId: this.facetId,
@@ -36,29 +38,14 @@ export class AtomicDateFacet {
       generateAutomaticRanges: true,
     };
 
-    this.facet = buildDateFacet(this.context.engine, {options});
+    this.facet = buildDateFacet(this.bindings.engine, {options});
     this.facetId = this.facet.state.facetId;
-    this.subscribe();
-  }
-
-  private subscribe() {
-    this.unsubscribe = this.facet.subscribe(() => this.updateState());
-  }
-
-  public connectedCallback() {
-    this.facet && this.subscribe();
-  }
-
-  public disconnectedCallback() {
-    this.unsubscribe();
-  }
-
-  private updateState() {
-    this.state = this.facet.state;
   }
 
   private get values() {
-    return this.state.values.map((listItem) => this.buildListItem(listItem));
+    return this.facetState.values.map((listItem) =>
+      this.buildListItem(listItem)
+    );
   }
 
   private buildListItem(item: DateFacetValue) {
@@ -75,7 +62,7 @@ export class AtomicDateFacet {
   }
 
   private get resetButton() {
-    return this.state.hasActiveValues ? (
+    return this.facetState.hasActiveValues ? (
       <button onClick={() => this.facet.deselectAll()}>X</button>
     ) : null;
   }
@@ -105,7 +92,7 @@ export class AtomicDateFacet {
     this.facet.sortBy(criterion);
   }
 
-  render() {
+  public render() {
     return (
       <div>
         <div>
