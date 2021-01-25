@@ -101,7 +101,6 @@ export namespace Components {
     }
     interface AtomicSearchBox {
         "_id": string;
-        "enableQuerySyntax": boolean;
         /**
           * Wether the submit button should be place before the input
          */
@@ -110,6 +109,7 @@ export namespace Components {
           * Maximum number of suggestions to display
          */
         "numberOfSuggestions": number;
+        "placeholder": string;
     }
     interface AtomicSearchInterface {
         "engine"?: Engine;
@@ -397,7 +397,6 @@ declare namespace LocalJSX {
     }
     interface AtomicSearchBox {
         "_id"?: string;
-        "enableQuerySyntax"?: boolean;
         /**
           * Wether the submit button should be place before the input
          */
@@ -406,6 +405,7 @@ declare namespace LocalJSX {
           * Maximum number of suggestions to display
          */
         "numberOfSuggestions"?: number;
+        "placeholder"?: string;
     }
     interface AtomicSearchInterface {
         "engine"?: Engine;

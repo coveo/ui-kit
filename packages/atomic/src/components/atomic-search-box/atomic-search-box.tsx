@@ -42,7 +42,7 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
   @Element() host!: HTMLDivElement;
   @State() searchBoxState!: SearchBoxState;
   @Prop() numberOfSuggestions = 5;
-  @Prop() enableQuerySyntax = false;
+  @Prop() placeholder = '';
   @Prop() leadingSubmitButton = false;
   @Prop({reflect: true, attribute: 'data-id'}) _id = randomID(
     'atomic-search-box-'
@@ -98,7 +98,6 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
             close: '</i>',
           },
         },
-        enableQuerySyntax: this.enableQuerySyntax,
       },
     });
     this.unsubscribe = this.searchBox.subscribe(() => this.updateState());
@@ -116,20 +115,13 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
     this.searchBox.showSuggestions();
   }
 
-  private onClickSuggestion(e: MouseEvent) {
-    const value = (e.currentTarget as HTMLLIElement).value;
-    this.searchBox.selectSuggestion(
-      this.searchBoxState.suggestions[value].rawValue
-    );
-  }
-
   private get submitButton() {
     return (
       <button
         type="button"
         part="submit-button"
         class={
-          'w-10 bg-transparent border-0 focus:outline-none border-medium-grey border-solid p-0 ' +
+          'w-10 bg-transparent border-0 focus:outline-none border-on-background border-solid p-0 ' +
           (this.leadingSubmitButton ? 'border-r' : 'border-l')
         }
         aria-label={this.context.i18n.t('search')}
@@ -138,7 +130,7 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
         <slot name="submit-button">
           <div
             innerHTML={SearchIcon}
-            class="search mx-auto w-3.5 text-medium-grey fill-current"
+            class="search mx-auto w-3.5 text-on-background fill-current"
           />
         </slot>
       </button>
@@ -164,7 +156,7 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
         <slot name="clear-button">
           <div
             innerHTML={ClearIcon}
-            class="w-2.5 text-medium-grey fill-current"
+            class="w-2.5 text-on-background fill-current"
           />
         </slot>
       </button>
@@ -181,12 +173,12 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
         onInput={(e) => this.combobox.onInputChange(e)}
         onKeyUp={(e) => this.combobox.onInputKeyup(e)}
         onKeyDown={(e) => this.combobox.onInputKeydown(e)}
-        tabindex="0"
         type="text"
+        autocomplete="false"
         aria-autocomplete="list"
         aria-controls={this.valuesRef?.id}
-        class="mx-2 my-0 input text-base placeholder-medium-grey border-none outline-none flex flex-grow flex-row align-items-center"
-        placeholder="Search for something"
+        class="mx-2 my-0 input text-base placeholder-on-background border-none outline-none flex flex-grow flex-row align-items-center"
+        placeholder={this.placeholder}
         value={this.searchBoxState.value}
       />
     );
@@ -198,11 +190,13 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
       return (
         <li
           role="option"
-          onClick={(e) => this.onClickSuggestion(e)}
+          onClick={() => {
+            this.searchBox.selectSuggestion(suggestion.rawValue);
+          }}
           onMouseDown={(e) => e.preventDefault()}
           part="suggestion"
           id={id}
-          class="suggestion h-input px-2 cursor-pointer text-left text-sm bg-transparent border-none shadow-none hover:bg-light-grey flex flex-row items-center"
+          class="suggestion h-9 px-2 cursor-pointer text-left text-sm bg-transparent border-none shadow-none hover:bg-gray-200 flex flex-row items-center"
           innerHTML={suggestion.highlightedValue}
           value={index}
         ></li>
@@ -214,7 +208,7 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
     return (
       <div>
         <div
-          class="box-border w-full lg:w-80 h-input border border-solid rounded border-medium-grey flex flex-row align-items-center focus:rounded-b-0"
+          class="box-border w-full lg:w-80 h-9 border border-solid rounded border-on-background flex flex-row align-items-center focus-within:rounded-b-none"
           role="combobox"
           aria-owns={this.valuesRef?.id}
           aria-haspopup="listbox"
@@ -228,7 +222,7 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
         <ul
           id="suggestions"
           part="suggestions"
-          class="suggestions box-border w-full lg:w-80 p-0 my-0 flex flex-col border border-t-0 border-solid border-medium-grey rounded-b list-none"
+          class="suggestions box-border w-full lg:w-80 p-0 my-0 flex flex-col border border-t-0 border-solid border-on-background rounded-b list-none"
           role="listbox"
           ref={(el) => (this.valuesRef = el as HTMLElement)}
         >
