@@ -1,5 +1,5 @@
 import {Component} from 'react';
-import {buildSearchBox, SearchBox as HeadlessSearchBox, SearchBoxState, Unsubscribe} from '@coveo/headless';
+import {buildSearchBox, SearchBox as HeadlessSearchBox, SearchBoxOptions, SearchBoxState, Unsubscribe} from '@coveo/headless';
 import { engine } from '../../engine';
 
 export class SearchBox extends Component {
@@ -10,7 +10,7 @@ export class SearchBox extends Component {
   constructor(props: {}) {
     super(props);
 
-    const options = {numberOfSuggestions: 8};
+    const options: SearchBoxOptions = {numberOfSuggestions: 8};
     this.searchBox = buildSearchBox(engine, {options});
     this.state = this.searchBox.state;
   }
@@ -32,18 +32,20 @@ export class SearchBox extends Component {
   }
 
   render() {
-    return <div>
-      <input
-      value={this.state.value}
-      onChange={(e) => this.searchBox.updateText(e.target.value)}
-      onKeyDown={(e) => this.isEnterKey(e) && this.searchBox.submit()}
-      />
-      <ul>
-        {this.state.suggestions.map((suggestion, index) => {
-          const value = suggestion.rawValue;
-          return <li key={index} onClick={() => this.searchBox.selectSuggestion(value)}>{value}</li>
-        })}
-      </ul>
-    </div>;
+    return (
+      <div>
+        <input
+        value={this.state.value}
+        onChange={(e) => this.searchBox.updateText(e.target.value)}
+        onKeyDown={(e) => this.isEnterKey(e) && this.searchBox.submit()}
+        />
+        <ul>
+          {this.state.suggestions.map((suggestion, index) => {
+            const value = suggestion.rawValue;
+            return <li key={index} onClick={() => this.searchBox.selectSuggestion(value)}>{value}</li>
+          })}
+        </ul>
+      </div>
+    );
   }
 }

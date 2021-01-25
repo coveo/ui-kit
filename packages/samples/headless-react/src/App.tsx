@@ -1,6 +1,6 @@
 import logo from './logo.svg';
 import './App.css';
-import { SearchBox } from './components/search-box/search-box.class';
+import { SearchBox } from './components/search-box/search-box.function';
 
 function App() {
   return (
