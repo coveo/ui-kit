@@ -84,15 +84,13 @@ npm run cypresstest
 
 ## Utilities
 
-### The Initialization decorator
+### The InitializeBindings, BindStateToController & BindStateToI18n decorators
 
-Utility that automatically fetches the `bindings` from the parent `atomic-search-interface` component. This decorator should be applied to the `initialize` method directly. 
+Utility that automatically fetches the `bindings` from the parent `atomic-search-interface` component. This decorator should be applied to the `bindings` property directly.
 
-*Important* In order for a component using this decorator to render properly, it should have an internal state property using data from the `bindings`. Here are a few examples:
+*Important* In order for a component using this decorator to render properly, it should have an internal state bound to one of the property from `bindings`. This is possible by using either the `BindStateToController` or the `BindStateToI18n` decorator.
 
-#### Render a localized string using the `i18n` binding
-
-`strings` is a typed, predefined `@State()` property which is automatically updated on initialization and on language change.
+Here is a complete example using all these decorators:
 
 ```typescript
 @Component({
@@ -100,39 +98,31 @@ Utility that automatically fetches the `bindings` from the parent `atomic-search
   shadow: true,
 })
 export class AtomicComponent {
-  @State() strings = {
+  public bindings!: Bindings;
+  private controller!: Controller;
+  
+  // Will automatically subscribe the `controllerState` to state of the `controller`
+  @BindStateToController('controller') 
+  @State()
+  private controllerState!: ControllerState;
+
+  // Will automically update the strings on initialization and when the locale changes
+  @BindStateToI18n()
+  @State()
+  private strings = {
     value: () => this.bindings.i18n.t('value', { /* options */ }),
   };
-  bindings!: Bindings;
 
-  @Initialization()
-  initialize() {}
-
-  render() {
-    return this.strings.value();
-  }
-}
-```
-
-#### Render a Headless Controller's state using the `engine` binding
-
-```typescript
-@Component({
-  tag: 'atomic-component',
-  shadow: true,
-})
-export class AtomicComponent {
-  @State() controllerState!: ControllerState;
-  bindings!: Bindings;
-  controller!: Controller;
-
-  @Initialization()
-  initialize() {
+  // Method called after bindings are defined, where controllers should be initialized
+  public initialize() {
     this.controller = buildController(this.bindings.engine);
   }
 
   render() {
-    return this.state.someValue;
+    return [
+      this.strings.value(),
+      this.controllerState.value,
+    ];
   }
 }
 ```
