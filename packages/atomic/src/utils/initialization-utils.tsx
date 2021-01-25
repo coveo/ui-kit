@@ -168,7 +168,7 @@ export function BindStateToController(
     component.initialize = function () {
       initialize && initialize.call(this);
 
-      if (!this.initialize) {
+      if (!initialize) {
         return console.error(
           `ControllerState: The "initialize" method has to be defined and instanciate a controller for the property ${controllerProperty}`,
           component

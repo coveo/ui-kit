@@ -1,22 +1,21 @@
 import {
+  BindStateToController,
   InitializableComponent,
   InitializeBindings,
 } from './initialization-utils';
 import {AtomicPager} from '../components/atomic-pager/atomic-pager';
-import {TestUtils} from '@coveo/headless';
+import {buildPager, Controller, TestUtils} from '@coveo/headless';
 import {newSpecPage, SpecPage} from '@stencil/core/testing';
 import {AtomicSearchInterface} from '../components/atomic-search-interface/atomic-search-interface';
 import i18next from 'i18next';
 
 describe('InitializeBindings decorator', () => {
-  beforeEach(() => {
-    console.error = jest.fn();
-  });
-
   it(`when using the decorator with a property other than bindings 
   should log an error`, () => {
+    console.error = jest.fn();
     const component: InitializableComponent = new AtomicPager();
     InitializeBindings()(component, 'anything');
+
     expect(console.error).toHaveBeenCalledWith(
       'The InitializeBindings decorator should be used on a property called "bindings", and not "anything"',
       component
@@ -38,6 +37,7 @@ describe('InitializeBindings decorator', () => {
         components: [AtomicPager],
         html: '<atomic-pager></atomic-pager>',
       });
+
       expect(getErrorComponent()).toBeTruthy();
     });
 
@@ -54,6 +54,7 @@ describe('InitializeBindings decorator', () => {
       page.root!.addEventListener('atomic/initializeComponent', spy);
       page.root!.innerHTML = '<atomic-pager></atomic-pager>';
       await page.waitForChanges();
+
       expect(spy).toHaveBeenCalled();
       expect(typeof eventContent.detail).toBe('function');
     });
@@ -94,6 +95,110 @@ describe('InitializeBindings decorator', () => {
       component.initialize!();
 
       expect(component.render!()).toBeTruthy();
+    });
+  });
+});
+
+describe('BindStateToController decorator', () => {
+  let component: InitializableComponent;
+
+  beforeEach(() => {
+    console.error = jest.fn();
+    component = {
+      bindings: {
+        engine: TestUtils.buildMockSearchAppEngine({
+          state: TestUtils.createMockState(),
+        }),
+        i18n: i18next,
+      },
+    };
+  });
+
+  it(`when the "initialize" method is not defined
+  it should log a error to the console`, () => {
+    BindStateToController('controller')(component, 'controllerState');
+    component.initialize!();
+
+    expect(console.error).toHaveBeenCalledWith(
+      'ControllerState: The "initialize" method has to be defined and instanciate a controller for the property controller',
+      component
+    );
+  });
+
+  it(`when the "controller" property is not defined
+  it should log a error to the console`, () => {
+    component.initialize = () => {};
+    BindStateToController('controller')(component, 'controllerState');
+    component.initialize!();
+
+    expect(console.error).toHaveBeenCalledWith(
+      'ControllerState: The controller property "controller" is not defined',
+      component
+    );
+  });
+
+  describe('when controller is initialized', () => {
+    let controller: Controller;
+    beforeEach(() => {
+      controller = buildPager(component.bindings.engine);
+      component.initialize = () => {
+        component.controller = controller;
+      };
+    });
+
+    it(`when the "initialize" method and the "controller" property are defined
+    it should not log an error to the console`, () => {
+      BindStateToController('controller')(component, 'controllerState');
+      component.initialize!();
+
+      expect(console.error).not.toHaveBeenCalled();
+    });
+
+    it(`when the onUpdateCallbackMethod option defined a non-existant method
+    it should log an error to the console`, () => {
+      BindStateToController('controller', {onUpdateCallbackMethod: 'onUpdate'})(
+        component,
+        'controllerState'
+      );
+      component.initialize!();
+
+      expect(console.error).toHaveBeenCalledWith(
+        'ControllerState: The onUpdateCallbackMethod property "onUpdate" is not defined',
+        component
+      );
+    });
+
+    it(`when the onUpdateCallbackMethod option defined an existant method
+    it should not log an error to the console`, () => {
+      component.onUpdate = () => {};
+      BindStateToController('controller', {onUpdateCallbackMethod: 'onUpdate'})(
+        component,
+        'controllerState'
+      );
+      component.initialize!();
+
+      expect(console.error).not.toHaveBeenCalled();
+    });
+
+    it('should subscribe to the controller', () => {
+      spyOn(controller, 'subscribe');
+      BindStateToController('controller')(component, 'controllerState');
+      component.initialize!();
+
+      expect(controller.subscribe).toHaveBeenCalledTimes(1);
+    });
+
+    it(`when "subscribeOnConnectedCallback" is true
+    should resubscribe to the controller`, () => {
+      spyOn(controller, 'subscribe');
+      BindStateToController('controller', {subscribeOnConnectedCallback: true})(
+        component,
+        'controllerState'
+      );
+      component.initialize!();
+      component.connectedCallback!();
+
+      expect(controller.subscribe).toHaveBeenCalledTimes(2);
     });
   });
 });
