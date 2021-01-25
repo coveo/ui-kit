@@ -1,8 +1,9 @@
 import {Component, h, State, Prop} from '@stencil/core';
 import {
-  Initialization,
   Bindings,
-  AtomicComponentInterface,
+  InitializableComponent,
+  BindStateToController,
+  InitializeBindings,
 } from '../../utils/initialization-utils';
 import {
   BreadcrumbManagerState,
@@ -30,22 +31,24 @@ import mainclear from '../../images/main-clear.svg';
   styleUrl: 'atomic-breadcrumb-manager.css',
   shadow: true,
 })
-export class AtomicBreadcrumbManager implements AtomicComponentInterface {
-  @State() controllerState!: BreadcrumbManagerState;
-  @State() collapsedBreadcrumbsState: string[] = [];
-  @Prop() collapseThreshold = 5;
-  @Prop() categoryDivider = '/';
+export class AtomicBreadcrumbManager implements InitializableComponent {
+  @InitializeBindings() public bindings!: Bindings;
+  private breadcrumbManager!: BreadcrumbManager;
 
-  public bindings!: Bindings;
-  public controller!: BreadcrumbManager;
+  @BindStateToController('breadcrumbManager')
+  @State()
+  private breadcrumbManagerState!: BreadcrumbManagerState;
+  @State() private collapsedBreadcrumbsState: string[] = [];
 
-  @Initialization()
+  @Prop() public collapseThreshold = 5;
+  @Prop() public categoryDivider = '/';
+
   public initialize() {
-    this.controller = buildBreadcrumbManager(this.bindings.engine);
+    this.breadcrumbManager = buildBreadcrumbManager(this.bindings.engine);
   }
 
   private get facetBreadcrumbs() {
-    return this.controllerState.facetBreadcrumbs.map((breadcrumb) => {
+    return this.breadcrumbManagerState.facetBreadcrumbs.map((breadcrumb) => {
       const breadcrumbsValues = this.getBreadrumbValues(breadcrumb);
       return (
         <ul part="breadcrumbs">
@@ -65,7 +68,9 @@ export class AtomicBreadcrumbManager implements AtomicComponentInterface {
         <button
           part="breadcrumb-button"
           aria-label={`Remove inclusion filter on ${breadcrumbValue.value.value}`}
-          onClick={() => this.controller.deselectBreadcrumb(breadcrumbValue)}
+          onClick={() =>
+            this.breadcrumbManager.deselectBreadcrumb(breadcrumbValue)
+          }
         >
           {breadcrumbValue.value.value}
           {this.mainClear}
@@ -79,27 +84,37 @@ export class AtomicBreadcrumbManager implements AtomicComponentInterface {
   }
 
   private get numericFacetBreadcrumbs() {
-    return this.controllerState.numericFacetBreadcrumbs.map((breadcrumb) => {
-      const breadcrumbsValues = this.getRangeBreadrumbValues(breadcrumb, false);
-      return (
-        <ul part="breadcrumbs">
-          <li part="breadcrumb-label">{breadcrumb.field}:&nbsp;</li>
-          {breadcrumbsValues}
-        </ul>
-      );
-    });
+    return this.breadcrumbManagerState.numericFacetBreadcrumbs.map(
+      (breadcrumb) => {
+        const breadcrumbsValues = this.getRangeBreadrumbValues(
+          breadcrumb,
+          false
+        );
+        return (
+          <ul part="breadcrumbs">
+            <li part="breadcrumb-label">{breadcrumb.field}:&nbsp;</li>
+            {breadcrumbsValues}
+          </ul>
+        );
+      }
+    );
   }
 
   private get dateFacetBreadcrumbs() {
-    return this.controllerState.dateFacetBreadcrumbs.map((breadcrumb) => {
-      const breadcrumbsValues = this.getRangeBreadrumbValues(breadcrumb, true);
-      return (
-        <ul part="breadcrumbs">
-          <li part="breadcrumb-label">{breadcrumb.field}:&nbsp;</li>
-          {breadcrumbsValues}
-        </ul>
-      );
-    });
+    return this.breadcrumbManagerState.dateFacetBreadcrumbs.map(
+      (breadcrumb) => {
+        const breadcrumbsValues = this.getRangeBreadrumbValues(
+          breadcrumb,
+          true
+        );
+        return (
+          <ul part="breadcrumbs">
+            <li part="breadcrumb-label">{breadcrumb.field}:&nbsp;</li>
+            {breadcrumbsValues}
+          </ul>
+        );
+      }
+    );
   }
 
   private getRangeBreadrumbValues(
@@ -119,7 +134,9 @@ export class AtomicBreadcrumbManager implements AtomicComponentInterface {
           <button
             part="breadcrumb-button"
             aria-label={ariaLabel}
-            onClick={() => this.controller.deselectBreadcrumb(breadcrumbValue)}
+            onClick={() =>
+              this.breadcrumbManager.deselectBreadcrumb(breadcrumbValue)
+            }
           >
             {breadcrumbValue.value.start} - {breadcrumbValue.value.end}
             {this.mainClear}
@@ -133,15 +150,17 @@ export class AtomicBreadcrumbManager implements AtomicComponentInterface {
   }
 
   private get categoryFacetBreadcrumbs() {
-    return this.controllerState.categoryFacetBreadcrumbs.map((breadcrumb) => {
-      const breadcrumbsValues = this.getCategoryBreadrumbValues(breadcrumb);
-      return (
-        <ul part="breadcrumbs">
-          <li part="breadcrumb-label">{breadcrumb.field}:&nbsp;</li>
-          {breadcrumbsValues}
-        </ul>
-      );
-    });
+    return this.breadcrumbManagerState.categoryFacetBreadcrumbs.map(
+      (breadcrumb) => {
+        const breadcrumbsValues = this.getCategoryBreadrumbValues(breadcrumb);
+        return (
+          <ul part="breadcrumbs">
+            <li part="breadcrumb-label">{breadcrumb.field}:&nbsp;</li>
+            {breadcrumbsValues}
+          </ul>
+        );
+      }
+    );
   }
 
   private getCategoryBreadrumbValues(values: CategoryFacetBreadcrumb) {
@@ -155,7 +174,7 @@ export class AtomicBreadcrumbManager implements AtomicComponentInterface {
         <button
           part="breadcrumb-button"
           aria-label={`Remove inclusion filter on ${ariaLabel}`}
-          onClick={() => this.controller.deselectBreadcrumb(values)}
+          onClick={() => this.breadcrumbManager.deselectBreadcrumb(values)}
         >
           {joinedBreadcrumbs}
           {this.mainClear}
@@ -168,7 +187,7 @@ export class AtomicBreadcrumbManager implements AtomicComponentInterface {
     return (
       <button
         part="breadcrumb-button"
-        onClick={() => this.controller.deselectAll()}
+        onClick={() => this.breadcrumbManager.deselectAll()}
       >
         Clear All Filters
       </button>
@@ -257,8 +276,8 @@ export class AtomicBreadcrumbManager implements AtomicComponentInterface {
     return `Remove inclusion filter on ${breadcrumbValue.start} to ${breadcrumbValue.end}`;
   }
 
-  render() {
-    if (!this.controller.state.hasBreadcrumbs) {
+  public render() {
+    if (!this.breadcrumbManager.state.hasBreadcrumbs) {
       return;
     }
     return (

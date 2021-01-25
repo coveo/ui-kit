@@ -1,6 +1,10 @@
-import {Component, h, Prop, State, Element} from '@stencil/core';
+import {Component, h, Prop, State} from '@stencil/core';
 import {SearchBox, SearchBoxState, buildSearchBox} from '@coveo/headless';
-import {Initialization, Bindings} from '../../utils/initialization-utils';
+import {
+  Bindings,
+  BindStateToController,
+  InitializeBindings,
+} from '../../utils/initialization-utils';
 import {randomID} from '../../utils/utils';
 import {Combobox} from '../../utils/combobox';
 
@@ -29,21 +33,23 @@ export interface AtomicSearchBoxOptions {
   shadow: true,
 })
 export class AtomicSearchBox implements AtomicSearchBoxOptions {
-  @Element() host!: HTMLDivElement;
-  @State() controllerState!: SearchBoxState;
-  @Prop() numberOfSuggestions = 5;
-  @Prop() enableQuerySyntax = false;
-  @Prop() leadingSubmitButton = false;
-  @Prop({reflect: true, attribute: 'data-id'}) _id = randomID(
-    'atomic-search-box-'
-  );
-
-  public bindings!: Bindings;
-  public controller!: SearchBox;
+  @InitializeBindings() public bindings!: Bindings;
+  private searchBox!: SearchBox;
   private inputRef!: HTMLInputElement;
   private valuesRef!: HTMLElement;
   private containerRef!: HTMLElement;
   private combobox!: Combobox;
+
+  @BindStateToController('searchBox')
+  @State()
+  private searchBoxState!: SearchBoxState;
+
+  @Prop() public numberOfSuggestions = 5;
+  @Prop() public enableQuerySyntax = false;
+  @Prop() public leadingSubmitButton = false;
+  @Prop({reflect: true, attribute: 'data-id'}) public _id = randomID(
+    'atomic-search-box-'
+  );
 
   constructor() {
     this.combobox = new Combobox({
@@ -52,26 +58,29 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
       inputRef: () => this.inputRef,
       valuesRef: () => this.valuesRef,
       onChange: (value) => {
-        this.controller.updateText(value);
+        this.searchBox.updateText(value);
       },
       onSubmit: () => {
-        this.controller.submit();
-        this.controller.hideSuggestions();
+        this.searchBox.submit();
+        this.searchBox.hideSuggestions();
       },
       onSelectValue: (element) => {
-        this.controller.selectSuggestion((element as HTMLButtonElement).value);
+        this.searchBox.selectSuggestion((element as HTMLButtonElement).value);
       },
       onBlur: () => {
-        setTimeout(() => this.controller.hideSuggestions(), 100);
+        setTimeout(() => this.searchBox.hideSuggestions(), 100);
       },
       activeClass: 'active',
       activePartName: 'active-suggestion',
     });
   }
 
-  @Initialization()
+  public componentDidRender() {
+    this.combobox.updateAccessibilityAttributes();
+  }
+
   public initialize() {
-    this.controller = buildSearchBox(this.bindings.engine, {
+    this.searchBox = buildSearchBox(this.bindings.engine, {
       options: {
         numberOfSuggestions: this.numberOfSuggestions,
         highlightOptions: {
@@ -90,12 +99,12 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
   }
 
   private onInputFocus() {
-    this.controller.showSuggestions();
+    this.searchBox.showSuggestions();
   }
 
   private onClickSuggestion(e: MouseEvent) {
     const value = (e.target as HTMLButtonElement).value;
-    this.controller.selectSuggestion(value);
+    this.searchBox.selectSuggestion(value);
   }
 
   private get submitButton() {
@@ -103,7 +112,7 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
       <button
         type="button"
         part="submit-button"
-        onClick={() => this.controller.submit()}
+        onClick={() => this.searchBox.submit()}
       >
         <atomic-text value="search"></atomic-text>
       </button>
@@ -111,7 +120,7 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
   }
 
   private get clearButton() {
-    if (this.controllerState.value === '') {
+    if (this.searchBoxState.value === '') {
       return;
     }
 
@@ -120,7 +129,7 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
         type="button"
         part="clear-button"
         onClick={() => {
-          this.controller.clear();
+          this.searchBox.clear();
           this.inputRef.focus();
         }}
       >
@@ -141,13 +150,13 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
         onKeyDown={(e) => this.combobox.onInputKeydown(e)}
         type="text"
         placeholder=""
-        value={this.controllerState.value}
+        value={this.searchBoxState.value}
       />
     );
   }
 
   private get suggestions() {
-    return this.controllerState.suggestions.map((suggestion, index) => {
+    return this.searchBoxState.suggestions.map((suggestion, index) => {
       const id = `${this._id}-suggestion-${index}`;
       return (
         <button
@@ -188,9 +197,5 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
         {!this.leadingSubmitButton && this.submitButton}
       </div>
     );
-  }
-
-  public componentDidRender() {
-    this.combobox.updateAccessibilityAttributes();
   }
 }

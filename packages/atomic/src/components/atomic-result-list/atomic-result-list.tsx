@@ -9,9 +9,10 @@ import {
 import Mustache from 'mustache';
 import defaultTemplate from '../../templates/default.html';
 import {
-  Initialization,
   Bindings,
-  AtomicComponentInterface,
+  BindStateToController,
+  InitializableComponent,
+  InitializeBindings,
 } from '../../utils/initialization-utils';
 
 /**
@@ -23,39 +24,42 @@ import {
   styleUrl: 'atomic-result-list.pcss',
   shadow: true,
 })
-export class AtomicResultList implements AtomicComponentInterface {
+export class AtomicResultList implements InitializableComponent {
+  @InitializeBindings() public bindings!: Bindings;
+  private resultList!: ResultList;
+  private resultTemplatesManager!: ResultTemplatesManager<string>;
+
+  @Element() private host!: HTMLDivElement;
+
+  @BindStateToController('resultList')
+  @State()
+  private resultListState!: ResultListState;
+
   /**
    * Whether to automatically retrieve an additional page of results and append it to the
    * current results when the user scrolls down to the bottom of element
    */
-  @Prop() enableInfiniteScroll = false;
+  @Prop() public enableInfiniteScroll = false;
   /**
    * Css class for the list wrapper
    */
-  @Prop() listClass = '';
+  @Prop() public listClass = '';
   /**
    * Css class for a list element
    */
-  @Prop() listElementClass = '';
-  @Prop() fieldsToInclude = '';
-  @Element() host!: HTMLDivElement;
-  @State() controllerState!: ResultListState;
-
-  public bindings!: Bindings;
-  public controller!: ResultList;
-  private resultTemplatesManager!: ResultTemplatesManager<string>;
+  @Prop() public listElementClass = '';
+  @Prop() public fieldsToInclude = '';
 
   private get fields() {
     if (this.fieldsToInclude.trim() === '') return;
     return this.fieldsToInclude.split(',').map((field) => field.trim());
   }
 
-  @Initialization()
   public initialize() {
     this.resultTemplatesManager = buildResultTemplatesManager(
       this.bindings.engine
     );
-    this.controller = buildResultList(this.bindings.engine, {
+    this.resultList = buildResultList(this.bindings.engine, {
       options: {fieldsToInclude: this.fields},
     });
     this.registerDefaultResultTemplates();
@@ -86,7 +90,7 @@ export class AtomicResultList implements AtomicComponentInterface {
   }
 
   private get results() {
-    return this.controllerState.results.map((result) => (
+    return this.resultListState.results.map((result) => (
       <atomic-result
         key={result.uniqueId}
         part="list-element"
@@ -112,7 +116,7 @@ export class AtomicResultList implements AtomicComponentInterface {
       window.innerHeight + window.scrollY >= this.host.offsetHeight;
 
     if (hasReachedEndOfElement) {
-      this.controller.fetchMoreResults();
+      this.resultList.fetchMoreResults();
     }
   }
 

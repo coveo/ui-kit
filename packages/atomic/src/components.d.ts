@@ -58,9 +58,6 @@ export namespace Components {
     interface AtomicQuerySummary {
     }
     interface AtomicRelevanceInspector {
-        /**
-          * Bindings passed from the `AtomicSearchInterface` to its children components.
-         */
         "bindings": Bindings;
     }
     interface AtomicResult {
@@ -132,10 +129,6 @@ export namespace Components {
         "isActive": boolean;
     }
     interface AtomicText {
-        /**
-          * Used for contexts (eg. male/female)
-         */
-        "context"?: string;
         /**
           * Count value used for plurals
          */
@@ -380,9 +373,6 @@ declare namespace LocalJSX {
     interface AtomicQuerySummary {
     }
     interface AtomicRelevanceInspector {
-        /**
-          * Bindings passed from the `AtomicSearchInterface` to its children components.
-         */
         "bindings": Bindings;
     }
     interface AtomicResult {
@@ -450,10 +440,6 @@ declare namespace LocalJSX {
         "isActive"?: boolean;
     }
     interface AtomicText {
-        /**
-          * Used for contexts (eg. male/female)
-         */
-        "context"?: string;
         /**
           * Count value used for plurals
          */

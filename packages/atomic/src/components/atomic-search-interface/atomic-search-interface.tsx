@@ -37,21 +37,47 @@ export type InitializationOptions = Pick<
   assetsDirs: ['lang'],
 })
 export class AtomicSearchInterface {
-  @Element() host!: HTMLDivElement;
-  @Prop({reflect: true}) pipeline = 'default';
-  @Prop({reflect: true}) searchHub = 'default';
-  @Prop() logLevel?: LogLevel;
-  @Prop() i18n: i18n = i18next.createInstance();
-  @Prop({reflect: true}) language = 'en'; // TODO: make watchable and update i18next language on change
-  @Prop({mutable: true}) engine?: Engine;
-  @State() error?: Error;
-
   private unsubscribe: Unsubscribe = () => {};
   private hangingComponentsInitialization: InitializeEvent[] = [];
   private initialized = false;
 
-  private get bindings(): Bindings {
-    return {engine: this.engine!, i18n: this.i18n};
+  @Element() private host!: HTMLDivElement;
+
+  @State() private error?: Error;
+
+  @Prop({reflect: true}) public pipeline = 'default';
+  @Prop({reflect: true}) public searchHub = 'default';
+  @Prop() public logLevel?: LogLevel;
+  @Prop() public i18n: i18n = i18next.createInstance();
+  @Prop({reflect: true}) public language = 'en'; // TODO: make watchable and update i18next language on change
+  @Prop({mutable: true}) public engine?: Engine;
+
+  @Watch('searchHub')
+  @Watch('pipeline')
+  public updateSearchConfiguration() {
+    this.engine?.dispatch(
+      ConfigurationActions.updateSearchConfiguration({
+        pipeline: this.pipeline,
+        searchHub: this.searchHub,
+      })
+    );
+  }
+
+  public disconnectedCallback() {
+    this.unsubscribe();
+  }
+
+  @Listen('atomic/initializeComponent')
+  public handleInitialization(event: InitializeEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+
+    if (this.engine) {
+      event.detail(this.bindings);
+      return;
+    }
+
+    this.hangingComponentsInitialization.push(event);
   }
 
   @Method() public async initialize(options: InitializationOptions) {
@@ -124,6 +150,10 @@ export class AtomicSearchInterface {
     });
   }
 
+  private get bindings(): Bindings {
+    return {engine: this.engine!, i18n: this.i18n};
+  }
+
   private initComponents() {
     this.hangingComponentsInitialization.forEach((event) =>
       event.detail(this.bindings)
@@ -143,34 +173,6 @@ export class AtomicSearchInterface {
     this.unsubscribe = manager.subscribe(() => {
       window.location.hash = serialize(manager.state.parameters);
     });
-  }
-
-  @Watch('searchHub')
-  @Watch('pipeline')
-  public updateSearchConfiguration() {
-    this.engine?.dispatch(
-      ConfigurationActions.updateSearchConfiguration({
-        pipeline: this.pipeline,
-        searchHub: this.searchHub,
-      })
-    );
-  }
-
-  @Listen('atomic/initializeComponent')
-  public handleInitialization(event: InitializeEvent) {
-    event.preventDefault();
-    event.stopPropagation();
-
-    if (this.engine) {
-      event.detail(this.bindings);
-      return;
-    }
-
-    this.hangingComponentsInitialization.push(event);
-  }
-
-  public disconnectedCallback() {
-    this.unsubscribe();
   }
 
   public render() {

@@ -1,13 +1,14 @@
 import {Component, h, Prop, State} from '@stencil/core';
 import {
   ResultsPerPage,
-  ResultsPerPageState,
   buildResultsPerPage,
+  ResultsPerPageState,
 } from '@coveo/headless';
 import {
-  Initialization,
   Bindings,
-  AtomicComponentInterface,
+  BindStateToController,
+  InitializableComponent,
+  InitializeBindings,
 } from '../../utils/initialization-utils';
 
 /**
@@ -21,11 +22,13 @@ import {
   styleUrl: 'atomic-results-per-page.pcss',
   shadow: true,
 })
-export class AtomicResultsPerPage implements AtomicComponentInterface {
-  @State() controllerState!: ResultsPerPageState;
+export class AtomicResultsPerPage implements InitializableComponent {
+  @InitializeBindings() public bindings!: Bindings;
+  private resultPerPage!: ResultsPerPage;
 
-  public bindings!: Bindings;
-  public controller!: ResultsPerPage;
+  @State()
+  @BindStateToController('resultPerPage')
+  public resultPerPageState!: ResultsPerPageState;
 
   // TODO: validate props
   /**
@@ -37,9 +40,8 @@ export class AtomicResultsPerPage implements AtomicComponentInterface {
    */
   @Prop() initialOption = 10;
 
-  @Initialization()
   public initialize() {
-    this.controller = buildResultsPerPage(this.bindings.engine, {
+    this.resultPerPage = buildResultsPerPage(this.bindings.engine, {
       initialState: {numberOfResults: this.initialOption},
     });
   }
@@ -47,13 +49,13 @@ export class AtomicResultsPerPage implements AtomicComponentInterface {
   private get optionsList() {
     return this.options.split(',').map((value) => {
       const num = parseInt(value);
-      const isSelected = this.controller.isSetTo(num);
+      const isSelected = this.resultPerPage.isSetTo(num);
       const className = isSelected ? 'active' : '';
       return (
         <li class={className}>
           <button
             part={`page-button ${isSelected && 'active-page-button'}`}
-            onClick={() => this.controller.set(num)}
+            onClick={() => this.resultPerPage.set(num)}
           >
             {num}
           </button>

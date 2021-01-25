@@ -1,9 +1,10 @@
 import {Component, h, State} from '@stencil/core';
 import {DidYouMean, DidYouMeanState, buildDidYouMean} from '@coveo/headless';
 import {
-  Initialization,
   Bindings,
-  AtomicComponentInterface,
+  BindStateToController,
+  InitializableComponent,
+  InitializeBindings,
 } from '../../utils/initialization-utils';
 
 @Component({
@@ -11,48 +12,49 @@ import {
   styleUrl: 'atomic-did-you-mean.pcss',
   shadow: true,
 })
-export class AtomicDidYouMean implements AtomicComponentInterface {
-  @State() controllerState!: DidYouMeanState;
+export class AtomicDidYouMean implements InitializableComponent {
+  @InitializeBindings() public bindings!: Bindings;
+  private didYouMean!: DidYouMean;
 
-  public bindings!: Bindings;
-  public controller!: DidYouMean;
+  @BindStateToController('didYouMean')
+  @State()
+  private didYouMeanState!: DidYouMeanState;
 
-  @Initialization()
   public initialize() {
-    this.controller = buildDidYouMean(this.bindings.engine);
+    this.didYouMean = buildDidYouMean(this.bindings.engine);
+  }
+
+  private applyCorrection() {
+    this.didYouMean.applyCorrection();
   }
 
   public render() {
-    if (!this.controllerState.hasQueryCorrection) {
+    if (!this.didYouMeanState.hasQueryCorrection) {
       return '';
     }
 
-    if (this.controllerState.wasAutomaticallyCorrected) {
+    if (this.didYouMeanState.wasAutomaticallyCorrected) {
       return [
         <p>
           No results for{' '}
           <b>
             {
-              this.controllerState.queryCorrection.wordCorrections[0]
+              this.didYouMeanState.queryCorrection.wordCorrections[0]
                 .originalWord
             }
           </b>
         </p>,
         <p>
           Query was automatically corrected to{' '}
-          <b>{this.controllerState.wasCorrectedTo}</b>
+          <b>{this.didYouMeanState.wasCorrectedTo}</b>
         </p>,
       ];
     }
 
     return (
       <button onClick={() => this.applyCorrection()}>
-        Did you mean: {this.controllerState.queryCorrection.correctedQuery} ?
+        Did you mean: {this.didYouMeanState.queryCorrection.correctedQuery} ?
       </button>
     );
-  }
-
-  private applyCorrection() {
-    this.controller.applyCorrection();
   }
 }

@@ -9,9 +9,10 @@ import {
   RangeFacetSortCriterion,
 } from '@coveo/headless';
 import {
-  Initialization,
   Bindings,
-  AtomicComponentInterface,
+  BindStateToController,
+  InitializableComponent,
+  InitializeBindings,
 } from '../../utils/initialization-utils';
 
 @Component({
@@ -19,16 +20,18 @@ import {
   styleUrl: 'atomic-numeric-facet.pcss',
   shadow: true,
 })
-export class AtomicNumericFacet implements AtomicComponentInterface {
-  @Prop({mutable: true}) facetId = '';
-  @Prop() field = '';
-  @Prop() label = 'No label';
-  @State() controllerState!: NumericFacetState;
+export class AtomicNumericFacet implements InitializableComponent {
+  @InitializeBindings() public bindings!: Bindings;
+  private facet!: NumericFacet;
 
-  public bindings!: Bindings;
-  public controller!: NumericFacet;
+  @BindStateToController('facet', {subscribeOnConnectedCallback: true})
+  @State()
+  private facetState!: NumericFacetState;
 
-  @Initialization({resubscribeControllerOnConnectedCallback: true})
+  @Prop({mutable: true}) public facetId = '';
+  @Prop() public field = '';
+  @Prop() public label = 'No label';
+
   public initialize() {
     const options: NumericFacetOptions = {
       facetId: this.facetId,
@@ -43,21 +46,21 @@ export class AtomicNumericFacet implements AtomicComponentInterface {
       ],
     };
 
-    this.controller = buildNumericFacet(this.bindings.engine, {options});
-    this.facetId = this.controller.state.facetId;
+    this.facet = buildNumericFacet(this.bindings.engine, {options});
+    this.facetId = this.facet.state.facetId;
   }
 
   private get values() {
-    return this.controllerState.values.map((listItem) =>
+    return this.facetState.values.map((listItem) =>
       this.buildListItem(listItem)
     );
   }
 
   private buildListItem(item: NumericFacetValue) {
-    const isSelected = this.controller.isValueSelected(item);
+    const isSelected = this.facet.isValueSelected(item);
 
     return (
-      <div onClick={() => this.controller.toggleSelect(item)}>
+      <div onClick={() => this.facet.toggleSelect(item)}>
         <input type="checkbox" checked={isSelected}></input>
         <span>
           {item.start}-{item.end} {item.numberOfResults}
@@ -67,8 +70,8 @@ export class AtomicNumericFacet implements AtomicComponentInterface {
   }
 
   private get resetButton() {
-    return this.controllerState.hasActiveValues ? (
-      <button onClick={() => this.controller.deselectAll()}>X</button>
+    return this.facetState.hasActiveValues ? (
+      <button onClick={() => this.facet.deselectAll()}>X</button>
     ) : null;
   }
 
@@ -84,10 +87,7 @@ export class AtomicNumericFacet implements AtomicComponentInterface {
     const criteria: RangeFacetSortCriterion[] = ['ascending', 'descending'];
 
     return criteria.map((criterion) => (
-      <option
-        value={criterion}
-        selected={this.controller.isSortedBy(criterion)}
-      >
+      <option value={criterion} selected={this.facet.isSortedBy(criterion)}>
         {criterion}
       </option>
     ));
@@ -97,10 +97,10 @@ export class AtomicNumericFacet implements AtomicComponentInterface {
     const select = e.composedPath()[0] as HTMLSelectElement;
     const criterion = select.value as RangeFacetSortCriterion;
 
-    this.controller.sortBy(criterion);
+    this.facet.sortBy(criterion);
   }
 
-  render() {
+  public render() {
     return (
       <div>
         <div>

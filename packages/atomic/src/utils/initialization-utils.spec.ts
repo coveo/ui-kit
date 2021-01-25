@@ -1,4 +1,7 @@
-import {AtomicComponentInterface, Initialization} from './initialization-utils';
+import {
+  InitializableComponent,
+  InitializeBindings,
+} from './initialization-utils';
 import {AtomicPager} from '../components/atomic-pager/atomic-pager';
 import {TestUtils} from '@coveo/headless';
 import {newSpecPage, SpecPage} from '@stencil/core/testing';
@@ -13,8 +16,8 @@ describe('Initialization decorator', () => {
 
     it(`when "error" is defined
     should render an atomic-component-error component`, () => {
-      const component: AtomicComponentInterface = new AtomicPager();
-      Initialization()(component, 'initialize');
+      const component: InitializableComponent = new AtomicPager();
+      InitializeBindings()(component, 'initialize');
       component.error = new Error('oups');
 
       expect(component.render!()).toMatchObject({
@@ -25,7 +28,7 @@ describe('Initialization decorator', () => {
     it(`when "engine" is not defined
     should render nothing `, () => {
       const component = new AtomicPager();
-      Initialization()(component, 'initialize');
+      InitializeBindings()(component, 'initialize');
       expect(component.render()).toBe('atomic-pager_loading');
     });
 
@@ -38,7 +41,7 @@ describe('Initialization decorator', () => {
         }),
         i18n: i18next,
       };
-      Initialization()(component, 'initialize');
+      InitializeBindings()(component, 'initialize');
       component.initialize();
 
       expect(component.render()).toBeTruthy();

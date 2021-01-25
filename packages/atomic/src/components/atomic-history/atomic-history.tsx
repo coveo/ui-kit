@@ -1,32 +1,29 @@
-import {Component, h, State} from '@stencil/core';
-import {History, HistoryState, buildHistory} from '@coveo/headless';
+import {Component, h} from '@stencil/core';
+import {History, buildHistory} from '@coveo/headless';
 import {
-  Initialization,
   Bindings,
-  AtomicComponentInterface,
+  InitializableComponent,
+  InitializeBindings,
 } from '../../utils/initialization-utils';
 
 @Component({
   tag: 'atomic-history',
   shadow: true,
 })
-export class AtomicHistory implements AtomicComponentInterface {
-  @State() controllerState!: HistoryState;
+export class AtomicHistory implements InitializableComponent {
+  @InitializeBindings() public bindings!: Bindings;
+  private history!: History;
 
-  public bindings!: Bindings;
-  public controller!: History;
-
-  @Initialization()
   public initialize() {
-    this.controller = buildHistory(this.bindings.engine);
+    this.history = buildHistory(this.bindings.engine);
   }
 
   private back() {
-    this.controller.back();
+    this.history.back();
   }
 
   private forward() {
-    this.controller.forward();
+    this.history.forward();
   }
 
   public render() {
