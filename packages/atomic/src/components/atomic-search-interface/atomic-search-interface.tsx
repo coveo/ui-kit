@@ -49,7 +49,7 @@ export class AtomicSearchInterface {
   @Prop({reflect: true}) public searchHub = 'default';
   @Prop() public logLevel?: LogLevel;
   @Prop() public i18n: i18n = i18next.createInstance();
-  @Prop({reflect: true}) public language = 'en'; // TODO: make watchable and update i18next language on change
+  @Prop({reflect: true}) public language = 'en';
   @Prop({mutable: true}) public engine?: Engine;
 
   @Watch('searchHub')
@@ -61,6 +61,11 @@ export class AtomicSearchInterface {
         searchHub: this.searchHub,
       })
     );
+  }
+
+  @Watch('language')
+  public updateLanguage() {
+    this.i18n.changeLanguage(this.language);
   }
 
   public disconnectedCallback() {
