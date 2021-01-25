@@ -23,97 +23,257 @@
   "controllers": [
     {
       "name": "BreadcrumbManager",
-      "sources": ["src/controllers/breadcrumb-manager/"]
-    },
-    {
-      "name": "Context",
-      "sources": ["src/controllers/context/"]
-    },
-    {
-      "name": "DidYouMean",
-      "sources": ["src/controllers/did-you-mean/"]
-    },
-    {
-      "name": "FacetManager",
-      "sources": ["src/controllers/facet-manager/"]
-    },
-    {
-      "name": "CategoryFacet",
-      "sources": ["src/controllers/facets/category-facet/"]
+      "initialize": {
+        "initializer": {
+          "name": "buildBreadcrumbManager",
+          "source": "src/controllers/breadcrumb-manager/headless-breadcrumb-manager.ts"
+        },
+        "others": []
+      },
+      "state": "BreadcrumbManagerState",
+      "related": [
+        {
+          "name": "BreadcrumbValue",
+          "source": "src/controllers/breadcrumb-manager/headless-breadcrumb-manager.ts"
+        },
+        {
+          "name": "FacetBreadcrumb",
+          "source": "src/controllers/breadcrumb-manager/headless-breadcrumb-manager.ts"
+        },
+        {
+          "name": "NumericFacetBreadcrumb",
+          "source": "src/controllers/breadcrumb-manager/headless-breadcrumb-manager.ts"
+        },
+        {
+          "name": "DateFacetBreadcrumb",
+          "source": "src/controllers/breadcrumb-manager/headless-breadcrumb-manager.ts"
+        },
+        {
+          "name": "Breadcrumb",
+          "source": "src/controllers/breadcrumb-manager/headless-breadcrumb-manager.ts"
+        },
+        {
+          "name": "CategoryFacetBreadcrumb",
+          "source": "src/controllers/breadcrumb-manager/headless-breadcrumb-manager.ts"
+        }
+      ]
     },
     {
       "name": "Facet",
-      "sources": ["src/controllers/facets/facet/"]
-    },
-    {
-      "name": "FacetSearch",
-      "sources": ["src/controllers/facets/facet-search/specific/"]
-    },
-    {
-      "name": "CategoryFacetSearch",
-      "sources": ["src/controllers/facets/facet-search/category/"]
-    },
-    {
-      "name": "DateFacet",
-      "sources": ["src/controllers/facets/range-facet/date-facet/"]
-    },
-    {
-      "name": "NumericFacet",
-      "sources": ["src/controllers/facets/range-facet/numeric-facet/"]
-    },
-    {
-      "name": "History",
-      "sources": ["src/controllers/history/"]
-    },
-    {
-      "name": "Pager",
-      "sources": ["src/controllers/pager/"]
-    },
-    {
-      "name": "QueryError",
-      "sources": ["src/controllers/query-error/"]
-    },
-    {
-      "name": "QuerySummary",
-      "sources": ["src/controllers/query-summary/"]
-    },
-    {
-      "name": "RelevanceInspector",
-      "sources": ["src/controllers/relevance-inspector/"]
+      "initialize": {
+        "initializer": {
+          "name": "buildFacet",
+          "source": "src/controllers/facets/facet/headless-facet.ts"
+        },
+        "others": [
+          {
+            "name": "FacetProps",
+            "source": "src/controllers/facets/facet/headless-facet.ts"
+          },
+          {
+            "name": "FacetOptions",
+            "source": "src/controllers/facets/facet/headless-facet-options.ts"
+          }
+        ]
+      },
+      "state": "FacetState",
+      "related": [],
+      "subcontrollers": [
+        {
+          "name": "FacetSearch",
+          "initialize": {
+            "initializer": {
+              "name": "buildFacetSearch",
+              "source": "src/controllers/facets/facet-search/specific/headless-facet-search.ts"
+            },
+            "others": [
+              {
+                "name": "FacetSearchProps",
+                "source": "src/controllers/facets/facet-search/specific/headless-facet-search.ts"
+              },
+              {
+                "name": "FacetSearchOptions",
+                "source": "src/features/facets/facet-search-set/facet-search-request-options.ts"
+              }
+            ]
+          },
+          "state": "none",
+          "related": []
+        }
+      ]
     },
     {
       "name": "ResultList",
-      "sources": [
-        "src/controllers/result-list/",
-        "src/features/result-templates"
+      "initialize": {
+        "initializer": {
+          "name": "buildResultList",
+          "source": "src/controllers/result-list/headless-result-list.ts"
+        },
+        "others": []
+      },
+      "state": "ResultListState",
+      "related": [
+        {
+          "name": "Result",
+          "source": "src/api/search/search/result.ts"
+        },
+        {
+          "name": "ResultTemplateCondition",
+          "source": "src/features/result-templates/result-templates.ts"
+        },
+        {
+          "name": "ResultTemplate",
+          "source": "src/features/result-templates/result-templates.ts"
+        },
+        {
+          "name": "ResultTemplatesManager",
+          "source": "src/features/result-templates/result-templates-manager.ts"
+        },
+        {
+          "name": "buildResultTemplatesManager",
+          "source": "src/features/result-templates/result-templates-manager.ts"
+        },
+        {
+          "name": "getResultProperty",
+          "source": "src/features/result-templates/result-templates-helpers.ts"
+        },
+        {
+          "name": "fieldsMustBeDefined",
+          "source": "src/features/result-templates/result-templates-helpers.ts"
+        },
+        {
+          "name": "fieldsMustNotBeDefined",
+          "source": "src/features/result-templates/result-templates-helpers.ts"
+        },
+        {
+          "name": "fieldMustMatch",
+          "source": "src/features/result-templates/result-templates-helpers.ts"
+        }
       ]
-    },
-    {
-      "name": "ResultsPerPage",
-      "sources": ["src/controllers/results-per-page/"]
     },
     {
       "name": "SearchBox",
-      "sources": ["src/controllers/search-box/"]
-    },
-    {
-      "name": "SearchParameterManager",
-      "sources": ["src/controllers/search-parameter-manager/"]
+      "initialize": {
+        "initializer": {
+          "name": "buildSearchBox",
+          "source": "src/controllers/search-box/headless-search-box.ts"
+        },
+        "others": [
+          {
+            "name": "SearchBoxProps",
+            "source": "src/controllers/search-box/headless-search-box.ts"
+          },
+          {
+            "name": "SearchBoxOptions",
+            "source": "src/controllers/search-box/headless-search-box-options.ts"
+          }
+        ]
+      },
+      "state": "SearchBoxState",
+      "related": []
     },
     {
       "name": "Sort",
-      "sources": [
-        "src/controllers/sort/",
-        "src/features/sort-criteria/criteria"
+      "initialize": {
+        "initializer": {
+          "name": "buildSort",
+          "source": "src/controllers/sort/headless-sort.ts"
+        },
+        "others": [
+          {
+            "name": "SortProps",
+            "source": "src/controllers/sort/headless-sort.ts"
+          },
+          {
+            "name": "SortInitialState",
+            "source": "src/controllers/sort/headless-sort.ts"
+          }
+        ]
+      },
+      "state": "SortState",
+      "related": [
+        {
+          "name": "SortOrder",
+          "source": "src/features/sort-criteria/criteria.ts"
+        },
+        {
+          "name": "SortBy",
+          "source": "src/features/sort-criteria/criteria.ts"
+        },
+        {
+          "name": "SortByRelevancy",
+          "source": "src/features/sort-criteria/criteria.ts"
+        },
+        {
+          "name": "SortByQRE",
+          "source": "src/features/sort-criteria/criteria.ts"
+        },
+        {
+          "name": "SortByDate",
+          "source": "src/features/sort-criteria/criteria.ts"
+        },
+        {
+          "name": "SortByField",
+          "source": "src/features/sort-criteria/criteria.ts"
+        },
+        {
+          "name": "SortByNoSort",
+          "source": "src/features/sort-criteria/criteria.ts"
+        },
+        {
+          "name": "SortCriterion",
+          "source": "src/features/sort-criteria/criteria.ts"
+        },
+        {
+          "name": "buildCriterionExpression",
+          "source": "src/features/sort-criteria/criteria.ts"
+        },
+        {
+          "name": "buildRelevanceSortCriterion",
+          "source": "src/features/sort-criteria/criteria.ts"
+        },
+        {
+          "name": "buildDateSortCriterion",
+          "source": "src/features/sort-criteria/criteria.ts"
+        },
+        {
+          "name": "buildFieldSortCriterion",
+          "source": "src/features/sort-criteria/criteria.ts"
+        },
+        {
+          "name": "buildQueryRankingExpressionSortCriterion",
+          "source": "src/features/sort-criteria/criteria.ts"
+        },
+        {
+          "name": "buildNoSortCriterion",
+          "source": "src/features/sort-criteria/criteria.ts"
+        }
       ]
     },
     {
-      "name": "StandaloneSearchBox",
-      "sources": ["src/controllers/standalone-search-box/"]
-    },
-    {
       "name": "Tab",
-      "sources": ["src/controllers/tab/"]
+      "initialize": {
+        "initializer": {
+          "name": "buildTab",
+          "source": "src/controllers/tab/headless-tab.ts"
+        },
+        "others": [
+          {
+            "name": "TabProps",
+            "source": "src/controllers/tab/headless-tab.ts"
+          },
+          {
+            "name": "TabOptions",
+            "source": "src/controllers/tab/headless-tab.ts"
+          },
+          {
+            "name": "TabInitialState",
+            "source": "src/controllers/tab/headless-tab.ts"
+          }
+        ]
+      },
+      "state": "TabState",
+      "related": []
     }
   ]
 }
