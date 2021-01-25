@@ -16,8 +16,8 @@
   ],
   "scripts": {
     "build": "npm run build:locales && stencil build --docs && npm run build:utils",
-    "build:utils": "rollup -c --environment BUILD:production",
-    "build:locales": "node ./scripts/split-locales.js",
+    "build:utils": "node --max-old-space-size=2048 ./node_modules/rollup/dist/bin/rollup -c --environment BUILD:production",
+    "build:locales": "node --max-old-space-size=2048 ./scripts/split-locales.js",
     "start": "npm run build:locales && stencil build --dev --watch --serve",
     "test": "stencil test --spec --e2e",
     "test:watch": "stencil test --spec --e2e --watchAll",
