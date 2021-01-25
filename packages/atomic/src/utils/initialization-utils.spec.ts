@@ -9,43 +9,18 @@ import {AtomicSearchInterface} from '../components/atomic-search-interface/atomi
 import i18next from 'i18next';
 
 describe('InitializeBindings decorator', () => {
-  describe('render method override', () => {
-    beforeEach(() => {
-      console.error = jest.fn();
-    });
+  beforeEach(() => {
+    console.error = jest.fn();
+  });
 
-    it(`when "error" is defined
-    should render an atomic-component-error component`, () => {
-      const component: InitializableComponent = new AtomicPager();
-      InitializeBindings()(component, 'bidings');
-      component.error = new Error('oups');
-
-      expect(component.render!()).toMatchObject({
-        $tag$: 'atomic-component-error',
-      });
-    });
-
-    it(`when "engine" is not defined
-    should render nothing `, () => {
-      const component = new AtomicPager();
-      InitializeBindings()(component, 'bidings');
-      expect(component.render()).toBeUndefined();
-    });
-
-    it(`when "engine" is defined
-    should render the content `, () => {
-      const component = new AtomicPager();
-      component['bindings'] = {
-        engine: TestUtils.buildMockSearchAppEngine({
-          state: TestUtils.createMockState(),
-        }),
-        i18n: i18next,
-      };
-      InitializeBindings()(component, 'bidings');
-      component.initialize();
-
-      expect(component.render()).toBeTruthy();
-    });
+  it(`when using the decorator with a property other than bindings 
+  should log an error`, () => {
+    const component: InitializableComponent = new AtomicPager();
+    InitializeBindings()(component, 'anything');
+    expect(console.error).toHaveBeenCalledWith(
+      'The InitializeBindings decorator should be used on a property called "bindings", and not "anything"',
+      component
+    );
   });
 
   describe('componentWillLoad method override', () => {
@@ -81,6 +56,44 @@ describe('InitializeBindings decorator', () => {
       await page.waitForChanges();
       expect(spy).toHaveBeenCalled();
       expect(typeof eventContent.detail).toBe('function');
+    });
+  });
+
+  describe('render method override', () => {
+    let component: InitializableComponent;
+
+    beforeEach(() => {
+      component = new AtomicPager();
+    });
+
+    it(`when "error" is defined
+    should render an atomic-component-error component`, () => {
+      InitializeBindings()(component, 'bindings');
+      component.error = new Error('oups');
+
+      expect(component.render!()).toMatchObject({
+        $tag$: 'atomic-component-error',
+      });
+    });
+
+    it(`when "engine" is not defined
+    should render nothing `, () => {
+      InitializeBindings()(component, 'bindings');
+      expect(component.render!()).toBeUndefined();
+    });
+
+    it(`when "engine" is defined
+    should render the content `, () => {
+      component['bindings'] = {
+        engine: TestUtils.buildMockSearchAppEngine({
+          state: TestUtils.createMockState(),
+        }),
+        i18n: i18next,
+      };
+      InitializeBindings()(component, 'bindings');
+      component.initialize!();
+
+      expect(component.render!()).toBeTruthy();
     });
   });
 });
