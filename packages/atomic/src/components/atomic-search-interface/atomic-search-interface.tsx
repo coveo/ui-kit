@@ -47,6 +47,7 @@ export class AtomicSearchInterface {
   @Prop() i18n: i18n = i18next.createInstance();
   @Prop({reflect: true}) language = 'en'; // TODO: make watchable and update i18next language on change
   @Prop({mutable: true}) engine?: Engine;
+  @Prop() enableSearchParameterSerialization = true;
   @State() error?: Error;
 
   private unsubscribe: Unsubscribe = () => {};
@@ -69,7 +70,9 @@ export class AtomicSearchInterface {
     this.initEngine(options);
     await this.initI18n();
     this.initComponents();
-    this.initSearchParameterManager();
+    if (this.enableSearchParameterSerialization) {
+      this.initSearchParameterManager();
+    }
     this.initialized = true;
   }
 
