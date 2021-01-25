@@ -37,6 +37,7 @@ export const config: Config = {
       '^.+\\.html?$': 'html-loader-jest',
       '^.+\\.svg$': './svg.transform.js',
     },
+    transformIgnorePatterns: [],
   },
   devServer: {
     reloadStrategy: 'hmr',
