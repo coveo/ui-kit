@@ -112,6 +112,7 @@ export namespace Components {
         "placeholder": string;
     }
     interface AtomicSearchInterface {
+        "enableSearchParameterSerialization": boolean;
         "engine"?: Engine;
         "executeFirstSearch": () => Promise<void>;
         "i18n": i18n;
@@ -408,6 +409,7 @@ declare namespace LocalJSX {
         "placeholder"?: string;
     }
     interface AtomicSearchInterface {
+        "enableSearchParameterSerialization"?: boolean;
         "engine"?: Engine;
         "i18n"?: i18n;
         "language"?: string;
