@@ -18,8 +18,6 @@ import {
   AnalyticsActions,
   ConfigurationActions,
   LogLevel,
-  buildSearchParameterManager,
-  buildSearchParameterSerializer,
   Unsubscribe,
 } from '@coveo/headless';
 import {
@@ -69,7 +67,6 @@ export class AtomicSearchInterface {
     this.initEngine(options);
     await this.initI18n();
     this.initComponents();
-    this.initSearchParameterManager();
     this.initialized = true;
   }
 
@@ -131,21 +128,6 @@ export class AtomicSearchInterface {
     this.hangingComponentsInitialization.forEach((event) =>
       event.detail(this.context)
     );
-  }
-
-  private initSearchParameterManager() {
-    const stateWithoutHash = window.location.hash.slice(1);
-    const decodedState = decodeURIComponent(stateWithoutHash);
-    const {serialize, deserialize} = buildSearchParameterSerializer();
-    const params = deserialize(decodedState);
-
-    const manager = buildSearchParameterManager(this.engine!, {
-      initialState: {parameters: params},
-    });
-
-    this.unsubscribe = manager.subscribe(() => {
-      window.location.hash = serialize(manager.state.parameters);
-    });
   }
 
   @Watch('searchHub')
