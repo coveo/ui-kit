@@ -38,6 +38,7 @@ describe('recommendation slice', () => {
     const response = buildMockRecommendation({
       recommendations: [result],
       duration: 123,
+      searchUid: 'some-id',
     });
 
     const action = getRecommendations.fulfilled(response, '');
@@ -46,6 +47,7 @@ describe('recommendation slice', () => {
     expect(finalState.recommendations[0]).toEqual(result);
     expect(finalState.duration).toEqual(123);
     expect(finalState.isLoading).toBe(false);
+    expect(finalState.searchUid).toBe('some-id');
   });
 
   it('set the error on rejection', () => {
