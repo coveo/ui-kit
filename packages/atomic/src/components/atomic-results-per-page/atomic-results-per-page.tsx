@@ -18,7 +18,7 @@ import {
  */
 @Component({
   tag: 'atomic-results-per-page',
-  styleUrl: 'atomic-results-per-page.css',
+  styleUrl: 'atomic-results-per-page.pcss',
   shadow: true,
 })
 export class AtomicResultsPerPage {

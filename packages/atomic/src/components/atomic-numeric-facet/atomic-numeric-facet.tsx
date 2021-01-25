@@ -16,7 +16,7 @@ import {
 
 @Component({
   tag: 'atomic-numeric-facet',
-  styleUrl: 'atomic-numeric-facet.css',
+  styleUrl: 'atomic-numeric-facet.pcss',
   shadow: true,
 })
 export class AtomicNumericFacet {

@@ -1,4 +1,0 @@
-/* Prevents displaying customer defined html before Stencil has a chance to load */
-atomic-search-interface:not(.hydrated) {
-  display: none;
-}

@@ -15,6 +15,7 @@ import {
   ContextSection,
   PipelineSection,
   QuerySection,
+  RecommendationSection,
   SearchHubSection,
   SearchSection,
 } from '../../state/state-sections';
@@ -26,7 +27,8 @@ export type StateNeededByAnalyticsProvider = ConfigurationSection &
       SearchSection &
       PipelineSection &
       QuerySection &
-      ContextSection
+      ContextSection &
+      RecommendationSection
   >;
 
 export class AnalyticsProvider implements SearchPageClientProvider {
@@ -56,6 +58,7 @@ export class AnalyticsProvider implements SearchPageClientProvider {
   public getSearchUID() {
     return (
       this.state.search?.response.searchUid ||
+      this.state.recommendation?.searchUid ||
       getSearchInitialState().response.searchUid
     );
   }

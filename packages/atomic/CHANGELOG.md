@@ -3,6 +3,76 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.3.0-alpha.4](https://github.com/coveo/ui-kit/compare/v0.3.0-alpha.3...v0.3.0-alpha.4) (2021-01-22)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [0.3.0-alpha.3](https://github.com/coveo/ui-kit/compare/v0.3.0-alpha.2...v0.3.0-alpha.3) (2021-01-22)
+
+
+### Features
+
+* **atomic:** add build step which splits a main locales JSON file into 1 JSON file per locale ([#431](https://github.com/coveo/ui-kit/issues/431)) ([0804e21](https://github.com/coveo/ui-kit/commit/0804e21c3dfd2312e2fee86ef44312170dd564e5))
+
+
+
+
+
+# [0.3.0-alpha.2](https://github.com/coveo/ui-kit/compare/v0.3.0-alpha.1...v0.3.0-alpha.2) (2021-01-21)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [0.3.0-alpha.1](https://github.com/coveo/ui-kit/compare/v0.3.0-alpha.0...v0.3.0-alpha.1) (2021-01-20)
+
+
+### Features
+
+* **atomic:** Added Tailwind CSS to Atomic ([#410](https://github.com/coveo/ui-kit/issues/410)) ([7f3f5aa](https://github.com/coveo/ui-kit/commit/7f3f5aa72edce74108249e82c09737b059590bf3))
+
+
+
+
+
+# [0.3.0-alpha.0](https://github.com/coveo/ui-kit/compare/v0.2.2-alpha.0...v0.3.0-alpha.0) (2021-01-20)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [0.2.2-alpha.0](https://github.com/coveo/ui-kit/compare/v0.2.1...v0.2.2-alpha.0) (2021-01-19)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [0.2.1](https://github.com/coveo/ui-kit/compare/v0.2.1-alpha.0...v0.2.1) (2021-01-19)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [0.2.1-alpha.0](https://github.com/coveo/ui-kit/compare/v0.2.0...v0.2.1-alpha.0) (2021-01-19)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
 # [0.2.0](https://github.com/coveo/ui-kit/compare/v0.2.0-alpha.11...v0.2.0) (2021-01-15)
 
 **Note:** Version bump only for package @coveo/atomic

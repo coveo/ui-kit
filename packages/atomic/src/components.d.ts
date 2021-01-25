@@ -21,9 +21,6 @@ export namespace Components {
     interface AtomicComponentError {
         "error": Error;
     }
-    interface AtomicContextProvider {
-        "contextValue": string;
-    }
     interface AtomicDateFacet {
         "facetId": string;
         "field": string;
@@ -104,7 +101,6 @@ export namespace Components {
     }
     interface AtomicSearchBox {
         "_id": string;
-        "enableQuerySyntax": boolean;
         /**
           * Wether the submit button should be place before the input
          */
@@ -113,6 +109,7 @@ export namespace Components {
           * Maximum number of suggestions to display
          */
         "numberOfSuggestions": number;
+        "placeholder": string;
     }
     interface AtomicSearchInterface {
         "engine"?: Engine;
@@ -149,12 +146,6 @@ declare global {
     var HTMLAtomicComponentErrorElement: {
         prototype: HTMLAtomicComponentErrorElement;
         new (): HTMLAtomicComponentErrorElement;
-    };
-    interface HTMLAtomicContextProviderElement extends Components.AtomicContextProvider, HTMLStencilElement {
-    }
-    var HTMLAtomicContextProviderElement: {
-        prototype: HTMLAtomicContextProviderElement;
-        new (): HTMLAtomicContextProviderElement;
     };
     interface HTMLAtomicDateFacetElement extends Components.AtomicDateFacet, HTMLStencilElement {
     }
@@ -292,7 +283,6 @@ declare global {
         "atomic-breadcrumb-manager": HTMLAtomicBreadcrumbManagerElement;
         "atomic-category-facet": HTMLAtomicCategoryFacetElement;
         "atomic-component-error": HTMLAtomicComponentErrorElement;
-        "atomic-context-provider": HTMLAtomicContextProviderElement;
         "atomic-date-facet": HTMLAtomicDateFacetElement;
         "atomic-did-you-mean": HTMLAtomicDidYouMeanElement;
         "atomic-facet": HTMLAtomicFacetElement;
@@ -329,9 +319,6 @@ declare namespace LocalJSX {
     }
     interface AtomicComponentError {
         "error": Error;
-    }
-    interface AtomicContextProvider {
-        "contextValue"?: string;
     }
     interface AtomicDateFacet {
         "facetId"?: string;
@@ -410,7 +397,6 @@ declare namespace LocalJSX {
     }
     interface AtomicSearchBox {
         "_id"?: string;
-        "enableQuerySyntax"?: boolean;
         /**
           * Wether the submit button should be place before the input
          */
@@ -419,6 +405,7 @@ declare namespace LocalJSX {
           * Maximum number of suggestions to display
          */
         "numberOfSuggestions"?: number;
+        "placeholder"?: string;
     }
     interface AtomicSearchInterface {
         "engine"?: Engine;
@@ -438,7 +425,6 @@ declare namespace LocalJSX {
         "atomic-breadcrumb-manager": AtomicBreadcrumbManager;
         "atomic-category-facet": AtomicCategoryFacet;
         "atomic-component-error": AtomicComponentError;
-        "atomic-context-provider": AtomicContextProvider;
         "atomic-date-facet": AtomicDateFacet;
         "atomic-did-you-mean": AtomicDidYouMean;
         "atomic-facet": AtomicFacet;
@@ -470,7 +456,6 @@ declare module "@stencil/core" {
             "atomic-breadcrumb-manager": LocalJSX.AtomicBreadcrumbManager & JSXBase.HTMLAttributes<HTMLAtomicBreadcrumbManagerElement>;
             "atomic-category-facet": LocalJSX.AtomicCategoryFacet & JSXBase.HTMLAttributes<HTMLAtomicCategoryFacetElement>;
             "atomic-component-error": LocalJSX.AtomicComponentError & JSXBase.HTMLAttributes<HTMLAtomicComponentErrorElement>;
-            "atomic-context-provider": LocalJSX.AtomicContextProvider & JSXBase.HTMLAttributes<HTMLAtomicContextProviderElement>;
             "atomic-date-facet": LocalJSX.AtomicDateFacet & JSXBase.HTMLAttributes<HTMLAtomicDateFacetElement>;
             "atomic-did-you-mean": LocalJSX.AtomicDidYouMean & JSXBase.HTMLAttributes<HTMLAtomicDidYouMeanElement>;
             "atomic-facet": LocalJSX.AtomicFacet & JSXBase.HTMLAttributes<HTMLAtomicFacetElement>;

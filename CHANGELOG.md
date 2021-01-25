@@ -3,6 +3,90 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.3.0-alpha.4](https://github.com/coveo/ui-kit/compare/v0.3.0-alpha.3...v0.3.0-alpha.4) (2021-01-22)
+
+
+### Bug Fixes
+
+* **headless:** pass searchUid for recommendation analytics events ([#430](https://github.com/coveo/ui-kit/issues/430)) ([03ef3c1](https://github.com/coveo/ui-kit/commit/03ef3c139bf4344f613152cc133b391b7e4595f0))
+
+
+
+
+
+# [0.3.0-alpha.3](https://github.com/coveo/ui-kit/compare/v0.3.0-alpha.2...v0.3.0-alpha.3) (2021-01-22)
+
+
+### Features
+
+* **atomic:** add build step which splits a main locales JSON file into 1 JSON file per locale ([#431](https://github.com/coveo/ui-kit/issues/431)) ([0804e21](https://github.com/coveo/ui-kit/commit/0804e21c3dfd2312e2fee86ef44312170dd564e5))
+
+
+
+
+
+# [0.3.0-alpha.2](https://github.com/coveo/ui-kit/compare/v0.3.0-alpha.1...v0.3.0-alpha.2) (2021-01-21)
+
+**Note:** Version bump only for package ui-kit
+
+
+
+
+
+# [0.3.0-alpha.1](https://github.com/coveo/ui-kit/compare/v0.3.0-alpha.0...v0.3.0-alpha.1) (2021-01-20)
+
+
+### Features
+
+* **atomic:** Added Tailwind CSS to Atomic ([#410](https://github.com/coveo/ui-kit/issues/410)) ([7f3f5aa](https://github.com/coveo/ui-kit/commit/7f3f5aa72edce74108249e82c09737b059590bf3))
+
+
+
+
+
+# [0.3.0-alpha.0](https://github.com/coveo/ui-kit/compare/v0.2.2-alpha.0...v0.3.0-alpha.0) (2021-01-20)
+
+
+### Bug Fixes
+
+* **headless:** improve PreprocessRequestMiddleware type; simplify PlatformClientCallOptions type ([#424](https://github.com/coveo/ui-kit/issues/424)) ([aa64491](https://github.com/coveo/ui-kit/commit/aa644917aa66a0e8071b7bb1ee3872e6ce808085))
+
+
+### Features
+
+* **headless:** export deselectAllFacets action and Facet Actions ([#419](https://github.com/coveo/ui-kit/issues/419)) ([8c2ed8f](https://github.com/coveo/ui-kit/commit/8c2ed8f64d529b3b97f2ab4759e4fe96815bd48f))
+
+
+
+
+
+## [0.2.2-alpha.0](https://github.com/coveo/ui-kit/compare/v0.2.1...v0.2.2-alpha.0) (2021-01-19)
+
+**Note:** Version bump only for package ui-kit
+
+
+
+
+
+## [0.2.1](https://github.com/coveo/ui-kit/compare/v0.2.1-alpha.0...v0.2.1) (2021-01-19)
+
+**Note:** Version bump only for package ui-kit
+
+
+
+
+
+## [0.2.1-alpha.0](https://github.com/coveo/ui-kit/compare/v0.2.0...v0.2.1-alpha.0) (2021-01-19)
+
+
+### Bug Fixes
+
+* **headless:** make AbortController usable in locker service ([#420](https://github.com/coveo/ui-kit/issues/420)) ([ac1cc8b](https://github.com/coveo/ui-kit/commit/ac1cc8bd6ea689d9324c604ce05db7f263bbc0da))
+
+
+
+
+
 # [0.2.0](https://github.com/coveo/ui-kit/compare/v0.2.0-alpha.11...v0.2.0) (2021-01-15)
 
 **Note:** Version bump only for package ui-kit

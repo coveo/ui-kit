@@ -37,6 +37,7 @@ export type StateNeededByGetRecommendations = ConfigurationSection &
 export interface GetRecommendationsThunkReturn {
   recommendations: Result[];
   analyticsAction: SearchAction;
+  searchUid: string;
   duration: number;
 }
 
@@ -74,6 +75,7 @@ export const getRecommendations = createAsyncThunk<
       recommendations: fetched.success.results,
       analyticsAction: logRecommendationUpdate(),
       duration,
+      searchUid: fetched.success.searchUid,
     };
   }
 );

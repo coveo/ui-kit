@@ -15,7 +15,7 @@ import {
 
 @Component({
   tag: 'atomic-facet',
-  styleUrl: 'atomic-facet.css',
+  styleUrl: 'atomic-facet.pcss',
   shadow: true,
 })
 export class AtomicFacet {

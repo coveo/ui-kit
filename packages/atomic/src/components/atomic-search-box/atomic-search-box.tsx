@@ -11,8 +11,8 @@ import {
 } from '../../utils/initialization-utils';
 import {randomID} from '../../utils/utils';
 import {Combobox} from '../../utils/combobox';
-import ClearIcon from './icons/clear.svg';
-import SearchIcon from './icons/search.svg';
+import ClearIcon from 'coveo-styleguide/resources/icons/svg/clear.svg';
+import SearchIcon from 'coveo-styleguide/resources/icons/svg/search.svg';
 
 export interface AtomicSearchBoxOptions {
   /**
@@ -35,14 +35,14 @@ export interface AtomicSearchBoxOptions {
  */
 @Component({
   tag: 'atomic-search-box',
-  styleUrl: 'atomic-search-box.css',
-  shadow: true,
+  styleUrl: 'atomic-search-box.pcss',
+  shadow: false,
 })
 export class AtomicSearchBox implements AtomicSearchBoxOptions {
   @Element() host!: HTMLDivElement;
   @State() searchBoxState!: SearchBoxState;
   @Prop() numberOfSuggestions = 5;
-  @Prop() enableQuerySyntax = false;
+  @Prop() placeholder = '';
   @Prop() leadingSubmitButton = false;
   @Prop({reflect: true, attribute: 'data-id'}) _id = randomID(
     'atomic-search-box-'
@@ -98,7 +98,6 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
             close: '</i>',
           },
         },
-        enableQuerySyntax: this.enableQuerySyntax,
       },
     });
     this.unsubscribe = this.searchBox.subscribe(() => this.updateState());
@@ -116,21 +115,13 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
     this.searchBox.showSuggestions();
   }
 
-  private onClickSuggestion(e: MouseEvent) {
-    e.preventDefault();
-    const value = (e.target as HTMLLIElement).value;
-    this.searchBox.selectSuggestion(
-      this.searchBoxState.suggestions[value].rawValue
-    );
-  }
-
   private get submitButton() {
     return (
       <button
         type="button"
         part="submit-button"
         class={
-          'submit mx-1 w-10 bg-transparent border-0 outline-none border-gray-400 border-solid p-0 ' +
+          'w-10 bg-transparent border-0 focus:outline-none border-on-background border-solid p-0 ' +
           (this.leadingSubmitButton ? 'border-r' : 'border-l')
         }
         aria-label={this.context.i18n.t('search')}
@@ -139,7 +130,7 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
         <slot name="submit-button">
           <div
             innerHTML={SearchIcon}
-            class="search mx-auto pl-1 w-3.5 text-gray-500 fill-current"
+            class="search mx-auto w-3.5 text-on-background fill-current"
           />
         </slot>
       </button>
@@ -155,7 +146,7 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
       <button
         type="button"
         part="clear-button"
-        class="bg-transparent border-none outline-none mr-1"
+        class="bg-transparent border-none outline-none mr-2"
         aria-label={this.context.i18n.t('clear')}
         onClick={() => {
           this.searchBox.clear();
@@ -163,7 +154,10 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
         }}
       >
         <slot name="clear-button">
-          <div innerHTML={ClearIcon} class="w-2.5 text-gray-500 fill-current" />
+          <div
+            innerHTML={ClearIcon}
+            class="w-2.5 text-on-background fill-current"
+          />
         </slot>
       </button>
     );
@@ -180,10 +174,11 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
         onKeyUp={(e) => this.combobox.onInputKeyup(e)}
         onKeyDown={(e) => this.combobox.onInputKeydown(e)}
         type="text"
+        autocomplete="false"
         aria-autocomplete="list"
-        aria-controls="suggestions-list"
-        class="mx-1 my-0 input text-base placeholder-gray-400 border-none outline-none flex flex-grow flex-row align-items-center"
-        placeholder="Search for something"
+        aria-controls={this.valuesRef?.id}
+        class="mx-2 my-0 input text-base placeholder-on-background border-none outline-none flex flex-grow flex-row align-items-center"
+        placeholder={this.placeholder}
         value={this.searchBoxState.value}
       />
     );
@@ -194,13 +189,14 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
       const id = `${this._id}-suggestion-${index}`;
       return (
         <li
-          role="result"
-          tabIndex={-1}
-          onClick={(e) => this.onClickSuggestion(e)}
+          role="option"
+          onClick={() => {
+            this.searchBox.selectSuggestion(suggestion.rawValue);
+          }}
           onMouseDown={(e) => e.preventDefault()}
           part="suggestion"
           id={id}
-          class="suggestion h-7 p-2 cursor-pointer text-left text-sm bg-transparent border-none shadow-none hover:bg-gray-200 flex flex-row align-items-center"
+          class="suggestion h-9 px-2 cursor-pointer text-left text-sm bg-transparent border-none shadow-none hover:bg-gray-200 flex flex-row items-center"
           innerHTML={suggestion.highlightedValue}
           value={index}
         ></li>
@@ -212,10 +208,10 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
     return (
       <div>
         <div
-          class="box-border h-9 w-80 border border-solid rounded border-gray-400 flex flex-row align-items-center focus:rounded-b-0"
+          class="box-border w-full lg:w-80 h-9 border border-solid rounded border-on-background flex flex-row align-items-center focus-within:rounded-b-none"
           role="combobox"
-          aria-owns={this.valuesRef?.id || ''}
-          aria-haspopup="true"
+          aria-owns={this.valuesRef?.id}
+          aria-haspopup="listbox"
           ref={(el) => (this.containerRef = el as HTMLElement)}
         >
           {this.leadingSubmitButton && this.submitButton}
@@ -226,7 +222,7 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
         <ul
           id="suggestions"
           part="suggestions"
-          class="suggestions w-80 p-0 my-0 flex box-border flex-col border border-t-0 border-solid border-gray-400 rounded-b list-none"
+          class="suggestions box-border w-full lg:w-80 p-0 my-0 flex flex-col border border-t-0 border-solid border-on-background rounded-b list-none"
           role="listbox"
           ref={(el) => (this.valuesRef = el as HTMLElement)}
         >

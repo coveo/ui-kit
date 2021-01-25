@@ -8,7 +8,6 @@
     <script type="module" src="/build/atomic.esm.js"></script>
     <script nomodule src="/build/atomic.js"></script>
     <link rel="stylesheet" href="/build/atomic.css" />
-    <link rel="stylesheet" href="/build/tailwind.css" />
     <script>
       (async () => {
         await customElements.whenDefined('atomic-search-interface');
@@ -34,6 +33,12 @@
       })();
     </script>
     <style>
+      /* Example on how to customize Atomic component CSS parts */
+      atomic-search-box::part(submit-button) {
+        background-color: #ed731a;
+        border-color: #ed731a;
+      }
+
       /* Example on how to customize custom templates CSS parts */
       atomic-result-list::part(france-title)::before,
       atomic-result-list::part(france-title)::after {
@@ -48,8 +53,7 @@
         <atomic-tab expression="" class="mr-2">All Files</atomic-tab>
         <atomic-tab expression='@author *= "BBC News"'>BBC News</atomic-tab>
       </div>
-      <atomic-context-provider context-value='{"test":"value","test2":"value2"}'></atomic-context-provider>
-      <atomic-search-box class="m-3"></atomic-search-box>
+      <atomic-search-box class="m-3 block"></atomic-search-box>
       <div style="display: flex">
         <atomic-facet-manager>
           <atomic-facet field="author" label="Authors"></atomic-facet>
