@@ -60,6 +60,7 @@ export function Initialization() {
     let hasLoaded = false;
 
     component.render = function () {
+      console.log(this);
       if (this[errorProperty]) {
         return (
           <atomic-component-error
