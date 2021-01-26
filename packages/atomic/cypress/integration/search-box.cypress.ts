@@ -39,7 +39,13 @@ describe('SearchBox Test Suites', () => {
     // Search section make sure number of items displays should be same as what returns from api call
     const jsonResponse = await getApiResponseBody('@coveoSearch');
     expect(jsonResponse).to.have.property('results');
-    expect(jsonResponse.results?.length).to.be.greaterThan(0);
+    expect(jsonResponse.results?.length).to.be.eq(10);
+  });
+
+  it('Searchbox should clear query on clear button click', async () => {
+    cy.get('@searchInput').type(queryText);
+    cy.get('button').find('.clear').click();
+    cy.get('@searchInput').should('be.empty');
   });
 
   it('Searchbox should log UA when excute a query', async () => {
@@ -62,11 +68,8 @@ describe('SearchBox Test Suites', () => {
   });
 
   it('passes automated accessibility tests', () => {
-    cy.checkA11y(SearchBoxSelectors.component, {
-      runOnly: {
-        type: 'tag',
-        values: ['wcag2a']
-      }
-    });
+    cy.checkA11y(SearchBoxSelectors.component);
+    cy.get('@searchInput').type(queryText, {force: true});
+    cy.checkA11y(SearchBoxSelectors.component);
   });
 });

@@ -146,7 +146,7 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
       <button
         type="button"
         part="clear-button"
-        class="bg-transparent border-none outline-none mr-2"
+        class="clear bg-transparent border-none outline-none mr-2"
         aria-label={this.context.i18n.t('clear')}
         onClick={() => {
           this.searchBox.clear();
