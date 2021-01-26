@@ -95,7 +95,7 @@ Here is a complete example using all these decorators:
 ```typescript
 @Component({
   tag: 'atomic-component',
-  shadow: true,
+  shadow: false,
 })
 export class AtomicComponent {
   @InitializeBindings() public bindings!: Bindings;

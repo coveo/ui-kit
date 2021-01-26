@@ -29,7 +29,7 @@ enum SortOption {
 @Component({
   tag: 'atomic-sort-dropdown',
   styleUrl: 'atomic-sort-dropdown.pcss',
-  shadow: true,
+  shadow: false,
 })
 export class AtomicSortDropdown implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;

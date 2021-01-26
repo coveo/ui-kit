@@ -17,7 +17,7 @@ import {
 @Component({
   tag: 'atomic-date-facet',
   styleUrl: 'atomic-date-facet.pcss',
-  shadow: true,
+  shadow: false,
 })
 export class AtomicDateFacet implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;

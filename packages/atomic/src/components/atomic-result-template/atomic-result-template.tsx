@@ -9,7 +9,8 @@ export interface FieldMatch {
 
 @Component({
   tag: 'atomic-result-template',
-  shadow: true,
+  styleUrl: 'atomic-result-template.pcss',
+  shadow: false,
 })
 export class AtomicResultTemplate {
   private fields: string[] = [];

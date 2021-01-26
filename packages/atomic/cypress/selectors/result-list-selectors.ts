@@ -3,5 +3,5 @@ export const ResultListSelectors = {
 };
 
 export function generateAliasForResultList() {
-  cy.get(ResultListSelectors.component).shadow().as('resultList');
+  cy.get(ResultListSelectors.component).as('resultList');
 }
