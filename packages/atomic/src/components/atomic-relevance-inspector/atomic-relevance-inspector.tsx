@@ -4,29 +4,30 @@ import {
   RelevanceInspectorState,
   Unsubscribe,
   buildRelevanceInspector,
-  Engine,
 } from '@coveo/headless';
+import {Bindings} from '../../utils/initialization-utils';
 
 @Component({
   tag: 'atomic-relevance-inspector',
   shadow: true,
 })
 export class AtomicRelevanceInspector {
-  @State() state!: RelevanceInspectorState;
-  @Prop() engine!: Engine;
-
-  private relevanceInspector!: RelevanceInspector;
+  public relevanceInspector!: RelevanceInspector;
   private unsubscribe: Unsubscribe = () => {};
 
+  @State() relevanceInspectorState!: RelevanceInspectorState;
+
+  @Prop() bindings!: Bindings;
+
   constructor() {
-    this.relevanceInspector = buildRelevanceInspector(this.engine, {
+    this.relevanceInspector = buildRelevanceInspector(this.bindings.engine, {
       initialState: {
         // TODO: add enable/disable mechanism
         enabled: false,
       },
     });
-    this.unsubscribe = this.relevanceInspector.subscribe(() =>
-      this.updateState()
+    this.unsubscribe = this.relevanceInspector.subscribe(
+      () => (this.relevanceInspectorState = this.relevanceInspector.state)
     );
   }
 
@@ -34,12 +35,8 @@ export class AtomicRelevanceInspector {
     this.unsubscribe();
   }
 
-  private updateState() {
-    this.state = this.relevanceInspector.state;
-  }
-
   public render() {
-    if (!this.state.isEnabled) {
+    if (!this.relevanceInspectorState.isEnabled) {
       return;
     }
 

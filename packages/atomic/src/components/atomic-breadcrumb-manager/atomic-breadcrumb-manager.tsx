@@ -1,12 +1,13 @@
 import {Component, h, State, Prop} from '@stencil/core';
 import {
-  Initialization,
-  InterfaceContext,
+  Bindings,
+  InitializableComponent,
+  BindStateToController,
+  InitializeBindings,
 } from '../../utils/initialization-utils';
 import {
   BreadcrumbManagerState,
   BreadcrumbManager,
-  Unsubscribe,
   buildBreadcrumbManager,
   CategoryFacetBreadcrumb,
   FacetValue,
@@ -30,38 +31,24 @@ import mainclear from '../../images/main-clear.svg';
   styleUrl: 'atomic-breadcrumb-manager.css',
   shadow: true,
 })
-export class AtomicBreadcrumbManager {
-  @State() state!: BreadcrumbManagerState;
-  @State() collapsedBreadcrumbsState: string[] = [];
-  @Prop() collapseThreshold = 5;
-  @Prop() categoryDivider = '/';
-
-  private context!: InterfaceContext;
+export class AtomicBreadcrumbManager implements InitializableComponent {
+  @InitializeBindings() public bindings!: Bindings;
   private breadcrumbManager!: BreadcrumbManager;
-  private unsubscribe: Unsubscribe = () => {};
 
-  @Initialization()
+  @BindStateToController('breadcrumbManager')
+  @State()
+  private breadcrumbManagerState!: BreadcrumbManagerState;
+  @State() private collapsedBreadcrumbsState: string[] = [];
+
+  @Prop() public collapseThreshold = 5;
+  @Prop() public categoryDivider = '/';
+
   public initialize() {
-    this.breadcrumbManager = buildBreadcrumbManager(this.context.engine);
-    this.subscribe();
-  }
-
-  private subscribe() {
-    this.unsubscribe = this.breadcrumbManager.subscribe(() =>
-      this.updateState()
-    );
-  }
-
-  private updateState() {
-    this.state = this.breadcrumbManager.state;
-  }
-
-  public disconnectedCallback() {
-    this.unsubscribe();
+    this.breadcrumbManager = buildBreadcrumbManager(this.bindings.engine);
   }
 
   private get facetBreadcrumbs() {
-    return this.state.facetBreadcrumbs.map((breadcrumb) => {
+    return this.breadcrumbManagerState.facetBreadcrumbs.map((breadcrumb) => {
       const breadcrumbsValues = this.getBreadrumbValues(breadcrumb);
       return (
         <ul part="breadcrumbs">
@@ -97,27 +84,37 @@ export class AtomicBreadcrumbManager {
   }
 
   private get numericFacetBreadcrumbs() {
-    return this.state.numericFacetBreadcrumbs.map((breadcrumb) => {
-      const breadcrumbsValues = this.getRangeBreadrumbValues(breadcrumb, false);
-      return (
-        <ul part="breadcrumbs">
-          <li part="breadcrumb-label">{breadcrumb.field}:&nbsp;</li>
-          {breadcrumbsValues}
-        </ul>
-      );
-    });
+    return this.breadcrumbManagerState.numericFacetBreadcrumbs.map(
+      (breadcrumb) => {
+        const breadcrumbsValues = this.getRangeBreadrumbValues(
+          breadcrumb,
+          false
+        );
+        return (
+          <ul part="breadcrumbs">
+            <li part="breadcrumb-label">{breadcrumb.field}:&nbsp;</li>
+            {breadcrumbsValues}
+          </ul>
+        );
+      }
+    );
   }
 
   private get dateFacetBreadcrumbs() {
-    return this.state.dateFacetBreadcrumbs.map((breadcrumb) => {
-      const breadcrumbsValues = this.getRangeBreadrumbValues(breadcrumb, true);
-      return (
-        <ul part="breadcrumbs">
-          <li part="breadcrumb-label">{breadcrumb.field}:&nbsp;</li>
-          {breadcrumbsValues}
-        </ul>
-      );
-    });
+    return this.breadcrumbManagerState.dateFacetBreadcrumbs.map(
+      (breadcrumb) => {
+        const breadcrumbsValues = this.getRangeBreadrumbValues(
+          breadcrumb,
+          true
+        );
+        return (
+          <ul part="breadcrumbs">
+            <li part="breadcrumb-label">{breadcrumb.field}:&nbsp;</li>
+            {breadcrumbsValues}
+          </ul>
+        );
+      }
+    );
   }
 
   private getRangeBreadrumbValues(
@@ -153,15 +150,17 @@ export class AtomicBreadcrumbManager {
   }
 
   private get categoryFacetBreadcrumbs() {
-    return this.state.categoryFacetBreadcrumbs.map((breadcrumb) => {
-      const breadcrumbsValues = this.getCategoryBreadrumbValues(breadcrumb);
-      return (
-        <ul part="breadcrumbs">
-          <li part="breadcrumb-label">{breadcrumb.field}:&nbsp;</li>
-          {breadcrumbsValues}
-        </ul>
-      );
-    });
+    return this.breadcrumbManagerState.categoryFacetBreadcrumbs.map(
+      (breadcrumb) => {
+        const breadcrumbsValues = this.getCategoryBreadrumbValues(breadcrumb);
+        return (
+          <ul part="breadcrumbs">
+            <li part="breadcrumb-label">{breadcrumb.field}:&nbsp;</li>
+            {breadcrumbsValues}
+          </ul>
+        );
+      }
+    );
   }
 
   private getCategoryBreadrumbValues(values: CategoryFacetBreadcrumb) {
@@ -277,7 +276,7 @@ export class AtomicBreadcrumbManager {
     return `Remove inclusion filter on ${breadcrumbValue.start} to ${breadcrumbValue.end}`;
   }
 
-  render() {
+  public render() {
     if (!this.breadcrumbManager.state.hasBreadcrumbs) {
       return;
     }

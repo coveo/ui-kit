@@ -2,7 +2,6 @@ import {Component, h, Element, State, Prop, Listen} from '@stencil/core';
 import {
   ResultList,
   ResultListState,
-  Unsubscribe,
   ResultTemplatesManager,
   buildResultList,
   buildResultTemplatesManager,
@@ -10,8 +9,10 @@ import {
 import Mustache from 'mustache';
 import defaultTemplate from '../../templates/default.html';
 import {
-  Initialization,
-  InterfaceContext,
+  Bindings,
+  BindStateToController,
+  InitializableComponent,
+  InitializeBindings,
 } from '../../utils/initialization-utils';
 
 /**
@@ -23,43 +24,44 @@ import {
   styleUrl: 'atomic-result-list.pcss',
   shadow: true,
 })
-export class AtomicResultList {
+export class AtomicResultList implements InitializableComponent {
+  @InitializeBindings() public bindings!: Bindings;
+  private resultList!: ResultList;
+  private resultTemplatesManager!: ResultTemplatesManager<string>;
+
+  @Element() private host!: HTMLDivElement;
+
+  @BindStateToController('resultList')
+  @State()
+  private resultListState!: ResultListState;
+
   /**
    * Whether to automatically retrieve an additional page of results and append it to the
    * current results when the user scrolls down to the bottom of element
    */
-  @Prop() enableInfiniteScroll = false;
+  @Prop() public enableInfiniteScroll = false;
   /**
    * Css class for the list wrapper
    */
-  @Prop() listClass = '';
+  @Prop() public listClass = '';
   /**
    * Css class for a list element
    */
-  @Prop() listElementClass = '';
-  @Prop() fieldsToInclude = '';
-  @Element() host!: HTMLDivElement;
-  @State() state!: ResultListState;
-
-  private context!: InterfaceContext;
-  private unsubscribe: Unsubscribe = () => {};
-  private resultList!: ResultList;
-  private resultTemplatesManager!: ResultTemplatesManager<string>;
+  @Prop() public listElementClass = '';
+  @Prop() public fieldsToInclude = '';
 
   private get fields() {
     if (this.fieldsToInclude.trim() === '') return;
     return this.fieldsToInclude.split(',').map((field) => field.trim());
   }
 
-  @Initialization()
   public initialize() {
     this.resultTemplatesManager = buildResultTemplatesManager(
-      this.context.engine
+      this.bindings.engine
     );
-    this.resultList = buildResultList(this.context.engine, {
+    this.resultList = buildResultList(this.bindings.engine, {
       options: {fieldsToInclude: this.fields},
     });
-    this.unsubscribe = this.resultList.subscribe(() => this.updateState());
     this.registerDefaultResultTemplates();
     this.registerChildrenResultTemplates();
   }
@@ -87,22 +89,14 @@ export class AtomicResultList {
       });
   }
 
-  public disconnectedCallback() {
-    this.unsubscribe();
-  }
-
-  private updateState() {
-    this.state = this.resultList.state;
-  }
-
   private get results() {
-    return this.state.results.map((result) => (
+    return this.resultListState.results.map((result) => (
       <atomic-result
         key={result.uniqueId}
         part="list-element"
         class={this.listElementClass}
         result={result}
-        engine={this.context.engine}
+        engine={this.bindings.engine}
         innerHTML={Mustache.render(
           this.resultTemplatesManager.selectTemplate(result) || '',
           result

@@ -4,13 +4,14 @@ import {
   buildFacet,
   FacetState,
   FacetValue,
-  Unsubscribe,
   FacetOptions,
   FacetSortCriterion,
 } from '@coveo/headless';
 import {
-  Initialization,
-  InterfaceContext,
+  Bindings,
+  BindStateToController,
+  InitializableComponent,
+  InitializeBindings,
 } from '../../utils/initialization-utils';
 
 @Component({
@@ -18,42 +19,28 @@ import {
   styleUrl: 'atomic-facet.pcss',
   shadow: true,
 })
-export class AtomicFacet {
-  @Prop({mutable: true}) facetId = '';
-  @Prop() field = '';
-  @Prop() label = 'No label';
-  @State() state!: FacetState;
-  private context!: InterfaceContext;
-
-  private unsubscribe: Unsubscribe = () => {};
+export class AtomicFacet implements InitializableComponent {
+  @InitializeBindings() public bindings!: Bindings;
   private facet!: Facet;
 
-  @Initialization()
+  @BindStateToController('facet', {subscribeOnConnectedCallback: true})
+  @State()
+  private facetState!: FacetState;
+
+  @Prop({mutable: true, reflect: true}) public facetId = '';
+  @Prop() public field = '';
+  @Prop() public label = 'No label';
+
   public initialize() {
     const options: FacetOptions = {facetId: this.facetId, field: this.field};
-    this.facet = buildFacet(this.context.engine, {options});
+    this.facet = buildFacet(this.bindings.engine, {options});
     this.facetId = this.facet.state.facetId;
-    this.subscribe();
-  }
-
-  private subscribe() {
-    this.unsubscribe = this.facet.subscribe(() => this.updateState());
-  }
-
-  public connectedCallback() {
-    this.facet && this.subscribe();
-  }
-
-  public disconnectedCallback() {
-    this.unsubscribe();
-  }
-
-  private updateState() {
-    this.state = this.facet.state;
   }
 
   private get values() {
-    return this.state.values.map((listItem) => this.buildListItem(listItem));
+    return this.facetState.values.map((listItem) =>
+      this.buildListItem(listItem)
+    );
   }
 
   private buildListItem(item: FacetValue) {
@@ -70,7 +57,7 @@ export class AtomicFacet {
   }
 
   private get resetButton() {
-    return this.state.hasActiveValues ? (
+    return this.facetState.hasActiveValues ? (
       <button onClick={() => this.facet.deselectAll()}>X</button>
     ) : null;
   }
@@ -88,7 +75,7 @@ export class AtomicFacet {
   }
 
   private get facetSearchResults() {
-    return this.state.facetSearch.values.map((searchResult) => (
+    return this.facetState.facetSearch.values.map((searchResult) => (
       <div onClick={() => this.facet.facetSearch.select(searchResult)}>
         {searchResult.displayValue} {searchResult.count}
       </div>
@@ -96,7 +83,7 @@ export class AtomicFacet {
   }
 
   private get showMoreSearchResults() {
-    if (!this.state.facetSearch.moreValuesAvailable) {
+    if (!this.facetState.facetSearch.moreValuesAvailable) {
       return null;
     }
 
@@ -138,7 +125,7 @@ export class AtomicFacet {
   }
 
   private get showMoreButton() {
-    if (!this.state.canShowMoreValues) {
+    if (!this.facetState.canShowMoreValues) {
       return null;
     }
 
@@ -148,7 +135,7 @@ export class AtomicFacet {
   }
 
   private get showLessButton() {
-    if (!this.state.canShowLessValues) {
+    if (!this.facetState.canShowLessValues) {
       return null;
     }
 
@@ -157,7 +144,7 @@ export class AtomicFacet {
     );
   }
 
-  render() {
+  public render() {
     return (
       <div>
         <div>

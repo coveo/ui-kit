@@ -2,12 +2,13 @@ import {Component, h, State} from '@stencil/core';
 import {
   QuerySummary,
   QuerySummaryState,
-  Unsubscribe,
   buildQuerySummary,
 } from '@coveo/headless';
 import {
-  Initialization,
-  InterfaceContext,
+  Bindings,
+  BindStateToController,
+  InitializableComponent,
+  InitializeBindings,
 } from '../../utils/initialization-utils';
 
 /**
@@ -23,35 +24,16 @@ import {
   styleUrl: 'atomic-query-summary.pcss',
   shadow: true,
 })
-export class AtomicQuerySummary {
-  @State() state!: QuerySummaryState;
+export class AtomicQuerySummary implements InitializableComponent {
+  @InitializeBindings() public bindings!: Bindings;
+  public querySummary!: QuerySummary;
 
-  private context!: InterfaceContext;
-  private querySummary!: QuerySummary;
-  private unsubscribe: Unsubscribe = () => {};
+  @BindStateToController('querySummary')
+  @State()
+  private querySummaryState!: QuerySummaryState;
 
-  @Initialization()
   public initialize() {
-    this.querySummary = buildQuerySummary(this.context.engine);
-    this.unsubscribe = this.querySummary.subscribe(() => this.updateState());
-  }
-
-  public disconnectedCallback() {
-    this.unsubscribe();
-  }
-
-  public render() {
-    return (
-      <div part="container">
-        {this.state.hasResults
-          ? this.renderHasResults()
-          : this.renderNoResults()}
-      </div>
-    );
-  }
-
-  private updateState() {
-    this.state = this.querySummary.state;
+    this.querySummary = buildQuerySummary(this.bindings.engine);
   }
 
   private renderNoResults() {
@@ -73,17 +55,20 @@ export class AtomicQuerySummary {
   }
 
   private get range() {
-    return `${this.state.firstResult.toLocaleString()}-${this.state.lastResult.toLocaleString()}`;
+    return `${this.querySummaryState.firstResult.toLocaleString()}-${this.querySummaryState.lastResult.toLocaleString()}`;
   }
 
   private get total() {
-    return this.state.total.toLocaleString();
+    return this.querySummaryState.total.toLocaleString();
   }
 
   private renderQuery() {
-    if (this.state.hasQuery) {
+    if (this.querySummaryState.hasQuery) {
       return (
-        <span part="query"> for {this.renderHighlight(this.state.query)}</span>
+        <span part="query">
+          {' '}
+          for {this.renderHighlight(this.querySummaryState.query)}
+        </span>
       );
     }
 
@@ -91,11 +76,11 @@ export class AtomicQuerySummary {
   }
 
   private renderDuration() {
-    if (this.state.hasDuration) {
+    if (this.querySummaryState.hasDuration) {
       return (
         <span part="duration">
           {' '}
-          in {this.state.durationInSeconds.toLocaleString()} seconds
+          in {this.querySummaryState.durationInSeconds.toLocaleString()} seconds
         </span>
       );
     }
@@ -105,5 +90,15 @@ export class AtomicQuerySummary {
 
   private renderHighlight(input: string) {
     return <strong part="highlight">{input}</strong>;
+  }
+
+  public render() {
+    return (
+      <div part="container">
+        {this.querySummaryState.hasResults
+          ? this.renderHasResults()
+          : this.renderNoResults()}
+      </div>
+    );
   }
 }
