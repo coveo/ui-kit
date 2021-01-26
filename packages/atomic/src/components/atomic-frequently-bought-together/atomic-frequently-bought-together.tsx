@@ -12,7 +12,7 @@ import {
 
 @Component({
   tag: 'atomic-frequently-bought-together',
-  shadow: true,
+  shadow: false,
 })
 export class AtomicProductRecommendations {
   @State() state!: FrequentlyBoughtTogetherListState;
