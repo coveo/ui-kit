@@ -41,7 +41,7 @@ export const SearchBox: FunctionComponent<SearchBoxProps> = (props) => {
 
 // usage
 
-// const options: SearchBoxOptions = {numberOfSuggestions: 8};
-// const searchBox = buildSearchBox(engine, {options});
+const options: SearchBoxOptions = {numberOfSuggestions: 8};
+const searchBox = buildSearchBox(engine, {options});
 
-// <SearchBox searchBox={searchBox}/>
+<SearchBox searchBox={searchBox} />;

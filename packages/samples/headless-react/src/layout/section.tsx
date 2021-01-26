@@ -1,8 +1,10 @@
+import {FunctionComponent} from 'react';
+
 interface SectionProps {
   title: string;
 }
 
-export const Section: React.FunctionComponent<SectionProps> = (props) => {
+export const Section: FunctionComponent<SectionProps> = (props) => {
   return (
     <div>
       <p>{props.title}</p>
