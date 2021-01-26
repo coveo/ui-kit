@@ -47,7 +47,7 @@ export class AtomicSearchInterface {
   @Prop() i18n: i18n = i18next.createInstance();
   @Prop({reflect: true}) language = 'en'; // TODO: make watchable and update i18next language on change
   @Prop({mutable: true}) engine?: Engine;
-  @Prop() enableSearchParameterSerialization = true;
+  @Prop() reflectStateInUrl = true;
   @State() error?: Error;
 
   private unsubscribe: Unsubscribe = () => {};
@@ -70,9 +70,8 @@ export class AtomicSearchInterface {
     this.initEngine(options);
     await this.initI18n();
     this.initComponents();
-    if (this.enableSearchParameterSerialization) {
-      this.initSearchParameterManager();
-    }
+    this.initSearchParameterManager();
+
     this.initialized = true;
   }
 
@@ -137,18 +136,20 @@ export class AtomicSearchInterface {
   }
 
   private initSearchParameterManager() {
-    const stateWithoutHash = window.location.hash.slice(1);
-    const decodedState = decodeURIComponent(stateWithoutHash);
-    const {serialize, deserialize} = buildSearchParameterSerializer();
-    const params = deserialize(decodedState);
+    if (this.reflectStateInUrl) {
+      const stateWithoutHash = window.location.hash.slice(1);
+      const decodedState = decodeURIComponent(stateWithoutHash);
+      const {serialize, deserialize} = buildSearchParameterSerializer();
+      const params = deserialize(decodedState);
 
-    const manager = buildSearchParameterManager(this.engine!, {
-      initialState: {parameters: params},
-    });
+      const manager = buildSearchParameterManager(this.engine!, {
+        initialState: {parameters: params},
+      });
 
-    this.unsubscribe = manager.subscribe(() => {
-      window.location.hash = serialize(manager.state.parameters);
-    });
+      this.unsubscribe = manager.subscribe(() => {
+        window.location.hash = serialize(manager.state.parameters);
+      });
+    }
   }
 
   @Watch('searchHub')
