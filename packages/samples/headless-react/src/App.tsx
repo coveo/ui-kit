@@ -1,6 +1,13 @@
 import logo from './logo.svg';
 import './App.css';
-import {SearchBox} from './components/search-box/search-box.function';
+import {SearchBox} from './components/search-box/search-box.class';
+import {SearchBox as SearchBoxFn} from './components/search-box/search-box.fn';
+import {buildSearchBox, SearchBoxOptions} from '@coveo/headless';
+import {engine} from './engine';
+import {Section} from './layout/section';
+
+const options: SearchBoxOptions = {numberOfSuggestions: 8};
+const searchBox = buildSearchBox(engine, {options});
 
 function App() {
   return (
@@ -19,7 +26,11 @@ function App() {
           Learn React
         </a>
 
-        <SearchBox />
+        <Section title="SearchBox">
+          <SearchBox />
+          {/* <hr/> */}
+          <SearchBoxFn searchBox={searchBox} />
+        </Section>
       </header>
     </div>
   );

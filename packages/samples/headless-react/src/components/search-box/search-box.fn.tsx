@@ -1,11 +1,17 @@
-import {buildSearchBox, SearchBoxOptions} from '@coveo/headless';
-import {useEffect, useState} from 'react';
+import {useEffect, useState, FunctionComponent} from 'react';
+import {
+  buildSearchBox,
+  SearchBox as HeadlessSearchBox,
+  SearchBoxOptions,
+} from '@coveo/headless';
 import {engine} from '../../engine';
 
-const options: SearchBoxOptions = {numberOfSuggestions: 8};
-const searchBox = buildSearchBox(engine, {options});
+interface SearchBoxProps {
+  searchBox: HeadlessSearchBox;
+}
 
-export function SearchBox() {
+export const SearchBox: FunctionComponent<SearchBoxProps> = (props) => {
+  const {searchBox} = props;
   const [state, setState] = useState(searchBox.state);
   const isEnterKey = (e: React.KeyboardEvent<HTMLInputElement>) =>
     e.key === 'Enter';
@@ -31,4 +37,11 @@ export function SearchBox() {
       </ul>
     </div>
   );
-}
+};
+
+// usage
+
+// const options: SearchBoxOptions = {numberOfSuggestions: 8};
+// const searchBox = buildSearchBox(engine, {options});
+
+// <SearchBox searchBox={searchBox}/>
