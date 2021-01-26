@@ -121,6 +121,7 @@ export namespace Components {
         "language": string;
         "logLevel"?: LogLevel;
         "pipeline": string;
+        "reflectStateInUrl": boolean;
         "searchHub": string;
     }
     interface AtomicSortDropdown {
@@ -433,6 +434,7 @@ declare namespace LocalJSX {
         "language"?: string;
         "logLevel"?: LogLevel;
         "pipeline"?: string;
+        "reflectStateInUrl"?: boolean;
         "searchHub"?: string;
     }
     interface AtomicSortDropdown {

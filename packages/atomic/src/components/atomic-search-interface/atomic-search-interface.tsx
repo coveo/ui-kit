@@ -37,6 +37,7 @@ export type InitializationOptions = Pick<
   assetsDirs: ['lang'],
 })
 export class AtomicSearchInterface {
+  @Prop() reflectStateInUrl = true;
   private unsubscribe: Unsubscribe = () => {};
   private hangingComponentsInitialization: InitializeEvent[] = [];
   private initialized = false;
@@ -98,6 +99,7 @@ export class AtomicSearchInterface {
     await this.initI18n();
     this.initComponents();
     this.initSearchParameterManager();
+
     this.initialized = true;
   }
 
@@ -166,18 +168,20 @@ export class AtomicSearchInterface {
   }
 
   private initSearchParameterManager() {
-    const stateWithoutHash = window.location.hash.slice(1);
-    const decodedState = decodeURIComponent(stateWithoutHash);
-    const {serialize, deserialize} = buildSearchParameterSerializer();
-    const params = deserialize(decodedState);
+    if (this.reflectStateInUrl) {
+      const stateWithoutHash = window.location.hash.slice(1);
+      const decodedState = decodeURIComponent(stateWithoutHash);
+      const {serialize, deserialize} = buildSearchParameterSerializer();
+      const params = deserialize(decodedState);
 
-    const manager = buildSearchParameterManager(this.engine!, {
-      initialState: {parameters: params},
-    });
+      const manager = buildSearchParameterManager(this.engine!, {
+        initialState: {parameters: params},
+      });
 
-    this.unsubscribe = manager.subscribe(() => {
-      window.location.hash = serialize(manager.state.parameters);
-    });
+      this.unsubscribe = manager.subscribe(() => {
+        window.location.hash = serialize(manager.state.parameters);
+      });
+    }
   }
 
   public render() {
