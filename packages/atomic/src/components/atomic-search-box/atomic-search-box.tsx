@@ -3,6 +3,8 @@ import {SearchBox, SearchBoxState, buildSearchBox} from '@coveo/headless';
 import {
   Bindings,
   BindStateToController,
+  BindStateToI18n,
+  I18nState,
   InitializeBindings,
 } from '../../utils/initialization-utils';
 import {randomID} from '../../utils/utils';
@@ -32,10 +34,18 @@ export interface AtomicSearchBoxOptions {
 @Component({
   tag: 'atomic-search-box',
   styleUrl: 'atomic-search-box.pcss',
-  shadow: true,
+  shadow: false,
 })
 export class AtomicSearchBox implements AtomicSearchBoxOptions {
   @InitializeBindings() public bindings!: Bindings;
+
+  @BindStateToI18n()
+  @State()
+  public strings: I18nState = {
+    clear: () => this.bindings.i18n.t('clear'),
+    search: () => this.bindings.i18n.t('search'),
+  };
+
   @Prop() numberOfSuggestions = 5;
   @Prop() placeholder = '';
   @Prop() leadingSubmitButton = false;
@@ -115,7 +125,7 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
           'w-10 bg-transparent border-0 focus:outline-none border-on-background border-solid p-0 ' +
           (this.leadingSubmitButton ? 'border-r' : 'border-l')
         }
-        aria-label={this.bindings.i18n.t('search')}
+        aria-label={this.strings.search()}
         onClick={() => this.searchBox.submit()}
       >
         <slot name="submit-button">
@@ -138,7 +148,7 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
         type="button"
         part="clear-button"
         class="bg-transparent border-none outline-none mr-2"
-        aria-label={this.bindings.i18n.t('clear')}
+        aria-label={this.strings.clear()}
         onClick={() => {
           this.searchBox.clear();
           this.inputRef.focus();
