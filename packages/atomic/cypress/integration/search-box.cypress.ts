@@ -67,8 +67,11 @@ describe('SearchBox Test Suites', () => {
     );
   });
 
-  it('passes automated accessibility tests', () => {
+  it('Searchbox passes automated accessibility tests with no query', () => {
     cy.checkA11y(SearchBoxSelectors.component);
+  });
+
+  it('Searchbox passes auutomated accessibility tests with a query', () => {
     cy.get('@searchInput').type(queryText, {force: true});
     cy.checkA11y(SearchBoxSelectors.component);
   });

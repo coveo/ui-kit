@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="/build/atomic.css" />
     <script>
       (async () => {
-        console.log("loading")
+        console.log('loading');
 
         await customElements.whenDefined('atomic-search-interface');
         const searchInterface = document.querySelector('#search');
@@ -22,7 +22,7 @@
     </script>
   </head>
   <body>
-    <atomic-search-interface id="search" sample>
+    <atomic-search-interface id="search" reflect-state-in-url="false" sample>
       <h1>Content for Integration Test will be replaced here.</h1>
     </atomic-search-interface>
   </body>
