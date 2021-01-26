@@ -35,7 +35,7 @@
         // Add/modify a translation
         // searchInterface.i18n.addResource('en', 'translation', 'search', 'Make me feel lucky!');
         // Change the language of the interface dynamically
-        // searchInterface.i18n.changeLanguage('fr');
+        // searchInterface.language = 'fr';
         // Interact with the engine
         // searchInterface.engine.dispatch(...);
         // Get all strings for a language/namespace
@@ -58,7 +58,7 @@
   </head>
 
   <body>
-    <atomic-search-interface id="search" sample>
+    <atomic-search-interface id="search">
       <div style="display: flex" class="mx-auto my-2 justify-center">
         <atomic-tab expression="" class="mr-2">All Files</atomic-tab>
         <atomic-tab expression='@author *= "BBC News"'>BBC News</atomic-tab>

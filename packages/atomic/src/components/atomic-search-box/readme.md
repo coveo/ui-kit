@@ -47,12 +47,15 @@
 
 ### Depends on
 
+- [atomic-text](../atomic-text)
 - [atomic-component-error](../atomic-component-error)
 
 ### Graph
 ```mermaid
 graph TD;
+  atomic-search-box --> atomic-text
   atomic-search-box --> atomic-component-error
+  atomic-text --> atomic-component-error
   style atomic-search-box fill:#f9f,stroke:#333,stroke-width:4px
 ```
 

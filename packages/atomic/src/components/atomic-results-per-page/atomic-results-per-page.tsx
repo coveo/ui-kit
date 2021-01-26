@@ -1,13 +1,14 @@
 import {Component, h, Prop, State} from '@stencil/core';
 import {
   ResultsPerPage,
-  ResultsPerPageState,
-  Unsubscribe,
   buildResultsPerPage,
+  ResultsPerPageState,
 } from '@coveo/headless';
 import {
-  Initialization,
-  InterfaceContext,
+  Bindings,
+  BindStateToController,
+  InitializableComponent,
+  InitializeBindings,
 } from '../../utils/initialization-utils';
 
 /**
@@ -21,12 +22,13 @@ import {
   styleUrl: 'atomic-results-per-page.pcss',
   shadow: true,
 })
-export class AtomicResultsPerPage {
-  @State() state!: ResultsPerPageState;
+export class AtomicResultsPerPage implements InitializableComponent {
+  @InitializeBindings() public bindings!: Bindings;
+  private resultPerPage!: ResultsPerPage;
 
-  private context!: InterfaceContext;
-  private resultsPerPage!: ResultsPerPage;
-  private unsubscribe: Unsubscribe = () => {};
+  @State()
+  @BindStateToController('resultPerPage')
+  public resultPerPageState!: ResultsPerPageState;
 
   // TODO: validate props
   /**
@@ -38,32 +40,22 @@ export class AtomicResultsPerPage {
    */
   @Prop() initialOption = 10;
 
-  @Initialization()
   public initialize() {
-    this.resultsPerPage = buildResultsPerPage(this.context.engine, {
+    this.resultPerPage = buildResultsPerPage(this.bindings.engine, {
       initialState: {numberOfResults: this.initialOption},
     });
-    this.unsubscribe = this.resultsPerPage.subscribe(() => this.updateState());
-  }
-
-  public disconnectedCallback() {
-    this.unsubscribe();
-  }
-
-  private updateState() {
-    this.state = this.resultsPerPage.state;
   }
 
   private get optionsList() {
     return this.options.split(',').map((value) => {
       const num = parseInt(value);
-      const isSelected = this.resultsPerPage.isSetTo(num);
+      const isSelected = this.resultPerPage.isSetTo(num);
       const className = isSelected ? 'active' : '';
       return (
         <li class={className}>
           <button
             part={`page-button ${isSelected && 'active-page-button'}`}
-            onClick={() => this.resultsPerPage.set(num)}
+            onClick={() => this.resultPerPage.set(num)}
           >
             {num}
           </button>

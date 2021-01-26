@@ -1,13 +1,10 @@
 import {Component, h, State} from '@stencil/core';
+import {QueryError, QueryErrorState, buildQueryError} from '@coveo/headless';
 import {
-  QueryError,
-  QueryErrorState,
-  Unsubscribe,
-  buildQueryError,
-} from '@coveo/headless';
-import {
-  Initialization,
-  InterfaceContext,
+  Bindings,
+  BindStateToController,
+  InitializableComponent,
+  InitializeBindings,
 } from '../../utils/initialization-utils';
 
 @Component({
@@ -15,32 +12,23 @@ import {
   styleUrl: 'atomic-query-error.pcss',
   shadow: true,
 })
-export class AtomicQueryError {
-  @State() state!: QueryErrorState;
+export class AtomicQueryError implements InitializableComponent {
+  @InitializeBindings() public bindings!: Bindings;
+  public queryError!: QueryError;
 
-  private context!: InterfaceContext;
-  private queryError!: QueryError;
-  private unsubscribe: Unsubscribe = () => {};
+  @BindStateToController('queryError')
+  @State()
+  private queryErrorState!: QueryErrorState;
 
-  @Initialization()
   public initialize() {
-    this.queryError = buildQueryError(this.context.engine);
-    this.unsubscribe = this.queryError.subscribe(() => this.updateState());
-  }
-
-  public disconnectedCallback() {
-    this.unsubscribe();
-  }
-
-  private updateState() {
-    this.state = this.queryError.state;
+    this.queryError = buildQueryError(this.bindings.engine);
   }
 
   private get results() {
-    return this.state.hasError ? (
+    return this.queryErrorState.hasError ? (
       <div>
-        <div>Oops {this.state.error?.message}</div>
-        <code>{JSON.stringify(this.state.error)}</code>
+        <div>Oops {this.queryErrorState.error?.message}</div>
+        <code>{JSON.stringify(this.queryErrorState.error)}</code>
       </div>
     ) : (
       ''

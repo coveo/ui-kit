@@ -6,6 +6,7 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { Engine, LogLevel, Result, ResultTemplateCondition } from "@coveo/headless";
+import { Bindings } from "./utils/initialization-utils";
 import { i18n } from "i18next";
 import { InitializationOptions } from "./components/atomic-search-interface/atomic-search-interface";
 export namespace Components {
@@ -57,7 +58,7 @@ export namespace Components {
     interface AtomicQuerySummary {
     }
     interface AtomicRelevanceInspector {
-        "engine": Engine;
+        "bindings": Bindings;
     }
     interface AtomicResult {
         "engine": Engine;
@@ -112,7 +113,6 @@ export namespace Components {
         "numberOfSuggestions": number;
     }
     interface AtomicSearchInterface {
-        "enableSearchParameterSerialization": boolean;
         "engine"?: Engine;
         "executeFirstSearch": () => Promise<void>;
         "i18n": i18n;
@@ -120,6 +120,7 @@ export namespace Components {
         "language": string;
         "logLevel"?: LogLevel;
         "pipeline": string;
+        "reflectStateInUrl": boolean;
         "searchHub": string;
     }
     interface AtomicSortDropdown {
@@ -127,6 +128,16 @@ export namespace Components {
     interface AtomicTab {
         "expression": string;
         "isActive": boolean;
+    }
+    interface AtomicText {
+        /**
+          * Count value used for plurals
+         */
+        "count"?: number;
+        /**
+          * String key value
+         */
+        "value": string;
     }
 }
 declare global {
@@ -280,6 +291,12 @@ declare global {
         prototype: HTMLAtomicTabElement;
         new (): HTMLAtomicTabElement;
     };
+    interface HTMLAtomicTextElement extends Components.AtomicText, HTMLStencilElement {
+    }
+    var HTMLAtomicTextElement: {
+        prototype: HTMLAtomicTextElement;
+        new (): HTMLAtomicTextElement;
+    };
     interface HTMLElementTagNameMap {
         "atomic-breadcrumb-manager": HTMLAtomicBreadcrumbManagerElement;
         "atomic-category-facet": HTMLAtomicCategoryFacetElement;
@@ -306,6 +323,7 @@ declare global {
         "atomic-search-interface": HTMLAtomicSearchInterfaceElement;
         "atomic-sort-dropdown": HTMLAtomicSortDropdownElement;
         "atomic-tab": HTMLAtomicTabElement;
+        "atomic-text": HTMLAtomicTextElement;
     }
 }
 declare namespace LocalJSX {
@@ -356,7 +374,7 @@ declare namespace LocalJSX {
     interface AtomicQuerySummary {
     }
     interface AtomicRelevanceInspector {
-        "engine": Engine;
+        "bindings": Bindings;
     }
     interface AtomicResult {
         "engine": Engine;
@@ -409,12 +427,12 @@ declare namespace LocalJSX {
         "numberOfSuggestions"?: number;
     }
     interface AtomicSearchInterface {
-        "enableSearchParameterSerialization"?: boolean;
         "engine"?: Engine;
         "i18n"?: i18n;
         "language"?: string;
         "logLevel"?: LogLevel;
         "pipeline"?: string;
+        "reflectStateInUrl"?: boolean;
         "searchHub"?: string;
     }
     interface AtomicSortDropdown {
@@ -422,6 +440,16 @@ declare namespace LocalJSX {
     interface AtomicTab {
         "expression"?: string;
         "isActive"?: boolean;
+    }
+    interface AtomicText {
+        /**
+          * Count value used for plurals
+         */
+        "count"?: number;
+        /**
+          * String key value
+         */
+        "value": string;
     }
     interface IntrinsicElements {
         "atomic-breadcrumb-manager": AtomicBreadcrumbManager;
@@ -449,6 +477,7 @@ declare namespace LocalJSX {
         "atomic-search-interface": AtomicSearchInterface;
         "atomic-sort-dropdown": AtomicSortDropdown;
         "atomic-tab": AtomicTab;
+        "atomic-text": AtomicText;
     }
 }
 export { LocalJSX as JSX };
@@ -480,6 +509,7 @@ declare module "@stencil/core" {
             "atomic-search-interface": LocalJSX.AtomicSearchInterface & JSXBase.HTMLAttributes<HTMLAtomicSearchInterfaceElement>;
             "atomic-sort-dropdown": LocalJSX.AtomicSortDropdown & JSXBase.HTMLAttributes<HTMLAtomicSortDropdownElement>;
             "atomic-tab": LocalJSX.AtomicTab & JSXBase.HTMLAttributes<HTMLAtomicTabElement>;
+            "atomic-text": LocalJSX.AtomicText & JSXBase.HTMLAttributes<HTMLAtomicTextElement>;
         }
     }
 }

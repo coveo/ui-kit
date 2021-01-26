@@ -1,8 +1,10 @@
 import {Component, h, State} from '@stencil/core';
-import {Pager, PagerState, Unsubscribe, buildPager} from '@coveo/headless';
+import {Pager, PagerState, buildPager} from '@coveo/headless';
 import {
-  Initialization,
-  InterfaceContext,
+  Bindings,
+  BindStateToController,
+  InitializableComponent,
+  InitializeBindings,
 } from '../../utils/initialization-utils';
 
 /**
@@ -20,29 +22,20 @@ import {
   styleUrl: 'atomic-pager.pcss',
   shadow: true,
 })
-export class AtomicPager {
-  @State() state!: PagerState;
-
-  private context!: InterfaceContext;
+export class AtomicPager implements InitializableComponent {
+  @InitializeBindings() public bindings!: Bindings;
   private pager!: Pager;
-  private unsubscribe: Unsubscribe = () => {};
 
-  @Initialization()
+  @BindStateToController('pager')
+  @State()
+  private pagerState!: PagerState;
+
   public initialize() {
-    this.pager = buildPager(this.context.engine);
-    this.unsubscribe = this.pager.subscribe(() => this.updateState());
-  }
-
-  public disconnectedCallback() {
-    this.unsubscribe();
-  }
-
-  private updateState() {
-    this.state = this.pager.state;
+    this.pager = buildPager(this.bindings.engine);
   }
 
   private get backButton() {
-    if (!this.state.hasPreviousPage) {
+    if (!this.pagerState.hasPreviousPage) {
       return null;
     }
 
@@ -63,7 +56,7 @@ export class AtomicPager {
   }
 
   private get nextButton() {
-    if (!this.state.hasNextPage) {
+    if (!this.pagerState.hasNextPage) {
       return null;
     }
 
@@ -107,7 +100,7 @@ export class AtomicPager {
     );
   }
 
-  render() {
+  public render() {
     return (
       <nav aria-label="Pager">
         <ul part="list">
