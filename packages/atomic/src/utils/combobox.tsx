@@ -151,13 +151,6 @@ export class Combobox {
     return `${this.options.id}-empty-option`;
   }
 
-  private buildEmptyOptionElement() {
-    const div = document.createElement('div');
-    div.id = this.emptyOptionId;
-    div.setAttribute('role', 'option');
-    return div;
-  }
-
   public updateAccessibilityAttributes() {
     this.setAttributes(this.containerAttributes, this.container);
     this.setAttributes(this.textboxAttributes, this.textbox);
@@ -168,8 +161,6 @@ export class Combobox {
     Array.from(this.listboxOptions).forEach((value) =>
       this.updateOption(value)
     );
-
-    !this.listboxOptions.length && this.addEmptyOptionForAccessibility();
   }
 
   private updateOption(value: Element) {
@@ -183,10 +174,6 @@ export class Combobox {
       `#${this.emptyOptionId}`
     );
     emptyOptionElement && emptyOptionElement.remove();
-  }
-
-  private addEmptyOptionForAccessibility() {
-    this.listbox.appendChild(this.buildEmptyOptionElement());
   }
 
   private setAttributes(attributes: Record<string, string>, element: Element) {

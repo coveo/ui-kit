@@ -16,7 +16,7 @@ const isDevWatch: boolean =
 export const config: Config = {
   namespace: 'atomic',
   taskQueue: 'async',
-  globalStyle: 'src/global.pcss',
+  globalStyle: 'src/globals/global.pcss',
   outputTargets: [
     {
       type: 'dist',
@@ -37,6 +37,7 @@ export const config: Config = {
       '^.+\\.html?$': 'html-loader-jest',
       '^.+\\.svg$': './svg.transform.js',
     },
+    transformIgnorePatterns: [],
   },
   devServer: {
     reloadStrategy: 'hmr',
@@ -45,6 +46,7 @@ export const config: Config = {
     inlineSvg(),
     postcss({
       plugins: [atImport(), tailwind()],
+      injectGlobalPaths: ['src/globals/utilities.pcss'],
     }),
   ],
   rollupPlugins: {

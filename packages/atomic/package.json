@@ -16,8 +16,8 @@
   ],
   "scripts": {
     "build": "npm run build:locales && stencil build --docs && npm run build:utils",
-    "build:utils": "rollup -c --environment BUILD:production",
-    "build:locales": "node ./scripts/split-locales.js",
+    "build:utils": "node --max-old-space-size=4096 ./node_modules/rollup/dist/bin/rollup -c --environment BUILD:production",
+    "build:locales": "node --max-old-space-size=4096 ./scripts/split-locales.js",
     "start": "npm run build:locales && stencil build --dev --watch --serve",
     "test": "stencil test --spec --e2e",
     "test:watch": "stencil test --spec --e2e --watchAll",
@@ -29,6 +29,7 @@
   "dependencies": {
     "@coveo/bueno": "^0.2.0",
     "@coveo/headless": "^0.3.0",
+    "coveo-styleguide": "^9.26.0",
     "i18next": "^19.8.4",
     "i18next-http-backend": "^1.0.21",
     "mustache": "^4.0.1",
