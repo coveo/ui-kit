@@ -39,6 +39,10 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
   @Prop() numberOfSuggestions = 5;
   @Prop() placeholder = '';
   @Prop() leadingSubmitButton = false;
+  @Prop({reflect: true, attribute: 'data-id'}) public _id = randomID(
+    'atomic-search-box-'
+  );
+
   private searchBox!: SearchBox;
   private inputRef!: HTMLInputElement;
   private valuesRef!: HTMLElement;
@@ -48,13 +52,6 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
   @BindStateToController('searchBox')
   @State()
   private searchBoxState!: SearchBoxState;
-
-  @Prop() public numberOfSuggestions = 5;
-  @Prop() public enableQuerySyntax = false;
-  @Prop() public leadingSubmitButton = false;
-  @Prop({reflect: true, attribute: 'data-id'}) public _id = randomID(
-    'atomic-search-box-'
-  );
 
   constructor() {
     this.combobox = new Combobox({
