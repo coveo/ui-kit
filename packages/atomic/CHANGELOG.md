@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.4.0-alpha.0](https://github.com/coveo/ui-kit/compare/v0.3.0...v0.4.0-alpha.0) (2021-01-25)
+
+
+### Features
+
+* **atomic:** improve initialization decorators in order to offer a complete component boilerplate ([#427](https://github.com/coveo/ui-kit/issues/427)) ([be8541d](https://github.com/coveo/ui-kit/commit/be8541d1a36c2cfdcc3cf4245c15c7b170b6aa03))
+
+
+
+
+
 # [0.3.0](https://github.com/coveo/ui-kit/compare/v0.3.0-alpha.5...v0.3.0) (2021-01-25)
 
 **Note:** Version bump only for package @coveo/atomic

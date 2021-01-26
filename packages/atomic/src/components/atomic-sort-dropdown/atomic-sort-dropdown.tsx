@@ -1,18 +1,19 @@
 import {Component, h, State} from '@stencil/core';
 import {
   Sort,
-  SortState,
   SortInitialState,
-  Unsubscribe,
   buildSort,
   buildRelevanceSortCriterion,
   buildDateSortCriterion,
   buildFieldSortCriterion,
   SortOrder,
+  SortState,
 } from '@coveo/headless';
 import {
-  Initialization,
-  InterfaceContext,
+  Bindings,
+  BindStateToController,
+  InitializableComponent,
+  InitializeBindings,
 } from '../../utils/initialization-utils';
 
 enum SortOption {
@@ -30,27 +31,15 @@ enum SortOption {
   styleUrl: 'atomic-sort-dropdown.pcss',
   shadow: true,
 })
-export class AtomicSortDropdown {
-  @State() state!: SortState;
-
-  private context!: InterfaceContext;
+export class AtomicSortDropdown implements InitializableComponent {
+  @InitializeBindings() public bindings!: Bindings;
   private sort!: Sort;
-  private unsubscribe: Unsubscribe = () => {};
 
-  @Initialization()
+  @State() @BindStateToController('sort') public sortState!: SortState;
+
   public initialize() {
     const initialState: Partial<SortInitialState> = {criterion: this.relevance};
-    this.sort = buildSort(this.context.engine, {initialState});
-
-    this.unsubscribe = this.sort.subscribe(() => this.updateState());
-  }
-
-  public disconnectedCallback() {
-    this.unsubscribe();
-  }
-
-  private updateState() {
-    this.state = this.sort.state;
+    this.sort = buildSort(this.bindings.engine, {initialState});
   }
 
   private select(e: Event) {
@@ -94,7 +83,7 @@ export class AtomicSortDropdown {
     return buildFieldSortCriterion('size', SortOrder.Descending);
   }
 
-  render() {
+  public render() {
     return (
       <select
         class="form-select"

@@ -1,6 +1,6 @@
 {
   "name": "@coveo/atomic",
-  "version": "0.3.0",
+  "version": "0.4.0-alpha.0",
   "description": "A web-component library for building modern UIs interfacing with the Coveo platform",
   "main": "dist/index.cjs.js",
   "module": "dist/index.js",
@@ -16,8 +16,8 @@
   ],
   "scripts": {
     "build": "npm run build:locales && stencil build --docs && npm run build:utils",
-    "build:utils": "node --max-old-space-size=2048 ./node_modules/rollup/dist/bin/rollup -c --environment BUILD:production",
-    "build:locales": "node --max-old-space-size=2048 ./scripts/split-locales.js",
+    "build:utils": "node --max-old-space-size=4096 ./node_modules/rollup/dist/bin/rollup -c --environment BUILD:production",
+    "build:locales": "node --max-old-space-size=4096 ./scripts/split-locales.js",
     "start": "npm run build:locales && stencil build --dev --watch --serve",
     "test": "stencil test --spec --e2e",
     "test:watch": "stencil test --spec --e2e --watchAll",
