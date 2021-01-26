@@ -1,8 +1,14 @@
+const isDevWatch =
+  process.argv &&
+  process.argv.indexOf('--dev') > -1 &&
+  process.argv.indexOf('--watch') > -1;
+
 module.exports = {
   purge: {
     content: [
       './src/**/*.tsx', './src/index.html', './src/**/*.css'
-    ]
+    ],
+    enabled: !isDevWatch
   },
   darkMode: false, // or 'media' or 'class'
   theme: {
