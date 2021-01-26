@@ -86,6 +86,7 @@ export class AtomicResultList implements InitializableComponent {
           fields,
           priority: 1,
         });
+        resultTemplateElement.remove();
       });
   }
 
