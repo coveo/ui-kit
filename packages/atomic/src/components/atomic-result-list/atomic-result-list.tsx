@@ -22,7 +22,7 @@ import {
 @Component({
   tag: 'atomic-result-list',
   styleUrl: 'atomic-result-list.pcss',
-  shadow: true,
+  shadow: false,
 })
 export class AtomicResultList implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;

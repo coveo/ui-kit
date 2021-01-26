@@ -22,7 +22,7 @@ import {
 @Component({
   tag: 'atomic-query-summary',
   styleUrl: 'atomic-query-summary.pcss',
-  shadow: true,
+  shadow: false,
 })
 export class AtomicQuerySummary implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;

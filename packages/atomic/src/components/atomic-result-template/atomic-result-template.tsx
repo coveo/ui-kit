@@ -9,7 +9,7 @@ export interface FieldMatch {
 
 @Component({
   tag: 'atomic-result-template',
-  shadow: true,
+  shadow: false,
 })
 export class AtomicResultTemplate {
   private fields: string[] = [];

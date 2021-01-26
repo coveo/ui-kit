@@ -8,7 +8,7 @@ import {
 
 @Component({
   tag: 'atomic-history',
-  shadow: true,
+  shadow: false,
 })
 export class AtomicHistory implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;

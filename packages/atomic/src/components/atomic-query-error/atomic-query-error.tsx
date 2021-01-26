@@ -10,7 +10,7 @@ import {
 @Component({
   tag: 'atomic-query-error',
   styleUrl: 'atomic-query-error.pcss',
-  shadow: true,
+  shadow: false,
 })
 export class AtomicQueryError implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;
