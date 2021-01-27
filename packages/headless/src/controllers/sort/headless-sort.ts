@@ -58,7 +58,7 @@ function validateSortInitialState(
   const criterion = getCriterionAsArray(state);
   const initialState: SortInitialState = {...state, criterion};
 
-  validateInitialState(engine, schema, initialState, buildSort.name);
+  validateInitialState(engine, schema, initialState, 'buildSort');
 }
 
 function getCriterionAsArray(state: Partial<SortInitialState>) {

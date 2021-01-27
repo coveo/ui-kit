@@ -46,7 +46,7 @@ export function buildRecommendationList(
     engine,
     optionsSchema,
     props.options,
-    buildRecommendationList.name
+    'buildRecommendationList'
   ) as Required<RecommendationListOptions>;
   if (options.id !== '') {
     dispatch(setRecommendationId({id: options.id}));

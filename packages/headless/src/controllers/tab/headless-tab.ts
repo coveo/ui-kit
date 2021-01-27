@@ -71,13 +71,13 @@ export function buildTab(
     engine,
     optionsSchema,
     props.options,
-    buildTab.name
+    'buildTab'
   );
   const initialState = validateInitialState(
     engine,
     initialStateSchema,
     props.initialState,
-    buildTab.name
+    'buildTab'
   );
 
   if (initialState.isActive) {

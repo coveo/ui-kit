@@ -35,7 +35,7 @@ export const buildFrequentlyViewedTogetherList = (
     engine,
     optionsSchema,
     props.options,
-    buildFrequentlyViewedTogetherList.name
+    'buildFrequentlyViewedTogetherList'
   ) as Required<FrequentlyViewedTogetherListOptions>;
   return buildBaseProductRecommendationsList(engine, {
     ...props,

@@ -75,7 +75,7 @@ export function buildCategoryFacet(
     engine,
     categoryFacetOptionsSchema,
     options,
-    buildCategoryFacet.name
+    'buildCategoryFacet'
   );
 
   const createFacetSearch = () => {

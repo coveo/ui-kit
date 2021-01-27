@@ -58,7 +58,7 @@ export function buildStandaloneSearchBox(
     engine,
     standaloneSearchBoxSchema,
     options,
-    buildStandaloneSearchBox.name
+    'buildStandaloneSearchBox'
   );
 
   const searchBox = buildSearchBox(engine, {options});
