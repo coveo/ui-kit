@@ -1,6 +1,6 @@
-import {Config, Controller, DocGen, Func, Source} from './DocJsonTypes';
-import {getDesc, getFromModuleByName, getModule, parseEntity} from './Utils';
-import {getType} from './TypeResolver';
+import {Config, Controller, DocGen, Func, Source} from './doc-json-types';
+import {getDesc, getFromModuleByName, getModule, parseEntity} from './utils';
+import {getType} from './type-resolver';
 
 export function parseControllers(docgen: DocGen, config: Config) {
   return config.controllers.map((controller) => {

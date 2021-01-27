@@ -8,8 +8,8 @@ import {
   Func,
   Interface,
   Type,
-} from './DocJsonTypes';
-import {getType} from './TypeResolver';
+} from './doc-json-types';
+import {getType} from './type-resolver';
 
 export function getModule(docgen: DocGen, modulePath: string) {
   const mod = docgen.children.find((child) => {

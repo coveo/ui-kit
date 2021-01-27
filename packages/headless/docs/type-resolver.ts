@@ -18,7 +18,7 @@ import {
   StringLiteralType,
   TypeParameterType,
   UnionType,
-} from './DocJsonTypes';
+} from './doc-json-types';
 
 export function getType(
   typeObject: EntityType | undefined,

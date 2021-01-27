@@ -1,8 +1,8 @@
 import {readFileSync, writeFileSync} from 'fs';
-import {Config, DocGen} from './DocJsonTypes';
-import {parseControllers} from './ControllersParser';
-import {parseEngine} from './EngineParser';
-import {parseActions} from './ActionsParser';
+import {Config, DocGen} from './doc-json-types';
+import {parseControllers} from './controllers-parser';
+import {parseEngine} from './engine-parser';
+import {parseActions} from './actions-parser';
 
 const DOC_GEN_PATH = './packages/headless/dist/doc.json';
 const CONFIG_PATH = './packages/headless/docs.config.json';

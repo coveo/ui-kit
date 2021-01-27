@@ -4,6 +4,6 @@
     "outDir": "js"
   },
   "files": [
-    "DocJsonParser.ts"
+    "doc-json-parser.ts"
   ]
 }
