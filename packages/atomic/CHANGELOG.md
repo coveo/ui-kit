@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.4.0-alpha.5](https://github.com/coveo/ui-kit/compare/v0.4.0-alpha.4...v0.4.0-alpha.5) (2021-01-27)
+
+
+### Features
+
+* **atomic:** cypress tests for searchbox ([#441](https://github.com/coveo/ui-kit/issues/441)) ([d36259c](https://github.com/coveo/ui-kit/commit/d36259c7c087004759cd90af679405ae90555f60))
+
+
+
+
+
 # [0.4.0-alpha.4](https://github.com/coveo/ui-kit/compare/v0.4.0-alpha.3...v0.4.0-alpha.4) (2021-01-27)
 
 **Note:** Version bump only for package @coveo/atomic
