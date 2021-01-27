@@ -17,7 +17,7 @@ export function generateAliasForSearchBox() {
   cy.get('@searchBoxFirstDiv')
     .find(SearchBoxSelectors.inputBox)
     .as('searchInput');
-  cy.get('@searchBoxFirstDiv').contains(ButtonText.search).as('searchBtn');
+  cy.get('button').find('.search').as('searchBtn');
   cy.get('@searchBoxFirstDiv')
     .find(SearchBoxSelectors.querySuggestionList)
     .as('querySuggestList');

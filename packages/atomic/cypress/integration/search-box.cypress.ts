@@ -4,28 +4,22 @@ import {
   SearchBoxSelectors,
   generateAliasForSearchBox,
 } from '../selectors/search-box-selectors';
-import {
-  ResultListSelectors,
-  generateAliasForResultList,
-} from '../selectors/result-list-selectors';
 
 const queryText = 'test';
-const htmlCode =
-  '<atomic-search-box></atomic-search-box><atomic-result-list></atomic-result-list>';
+const htmlCode = '<atomic-search-box></atomic-search-box>';
 
-describe('SearchBox Test Suites', () => {
+describe('Search Box Test Suites', () => {
   beforeEach(() => {
     setUpPage(htmlCode);
     cy.wait(500);
     generateAliasForSearchBox();
-    generateAliasForResultList();
   });
 
-  it('Searchbox should load', () => {
+  it('should load', () => {
     cy.get(SearchBoxSelectors.component).should('be.visible');
   });
 
-  it('Searchbox should show query suggestions', async () => {
+  it('should show query suggestions', async () => {
     cy.get('@searchInput').type(queryText, {force: true});
     cy.wait(500);
     for (let i = 1; i < queryText.length - 1; i++) {
@@ -39,23 +33,24 @@ describe('SearchBox Test Suites', () => {
       .should('have.length', search.completions.length);
   });
 
-  it('Searchbox should execute a query on button click', async () => {
-    cy.get('@searchInput').type(queryText, {force: true});
+  it('should execute a query on button click', async () => {
+    cy.get('@searchInput').type(queryText);
     cy.get('@searchBtn').click();
-    cy.get(ResultListSelectors.component).should('be.visible');
-
     // Search section make sure number of items displays should be same as what returns from api call
     const jsonResponse = await getApiResponseBody('@coveoSearch');
-
-    cy.get('@resultList')
-      .children()
-      .should('have.length', jsonResponse.results.length);
+    expect(jsonResponse).to.have.property('results');
+    expect(jsonResponse.results?.length).to.be.eq(10);
   });
 
-  it('Searchbox should log UA when excute a query', async () => {
+  it('should clear query on clear button click', async () => {
+    cy.get('@searchInput').type(queryText);
+    cy.get('button').find('.clear').click();
+    cy.get('@searchInput').should('be.empty');
+  });
+
+  it('should log UA when excute a query', async () => {
     cy.get('@searchInput').type(queryText, {force: true});
     cy.get('@searchBtn').click();
-    cy.get(ResultListSelectors.component).should('be.visible');
 
     // UA section make sure that the information sent should contains some context
     const searchUA = {
@@ -70,5 +65,14 @@ describe('SearchBox Test Suites', () => {
       'actionCause',
       searchUA['actionCause']
     );
+  });
+
+  it('passes automated accessibility tests with no query', () => {
+    cy.checkA11y(SearchBoxSelectors.component);
+  });
+
+  it('passes automated accessibility tests with a query', () => {
+    cy.get('@searchInput').type(queryText, {force: true});
+    cy.checkA11y(SearchBoxSelectors.component);
   });
 });

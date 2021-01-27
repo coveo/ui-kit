@@ -122,7 +122,7 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
         type="button"
         part="submit-button"
         class={
-          'w-10 bg-transparent border-0 focus:outline-none border-on-background border-solid p-0 ' +
+          'search w-10 bg-transparent border-0 focus:outline-none border-on-background border-solid p-0 ' +
           (this.leadingSubmitButton ? 'border-r' : 'border-l')
         }
         aria-label={this.strings.search()}
@@ -147,7 +147,7 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
       <button
         type="button"
         part="clear-button"
-        class="bg-transparent border-none outline-none mr-2"
+        class="clear bg-transparent border-none outline-none mr-2"
         aria-label={this.strings.clear()}
         onClick={() => {
           this.searchBox.clear();
