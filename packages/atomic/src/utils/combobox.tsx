@@ -1,5 +1,8 @@
+import {I18nState} from './initialization-utils';
+
 export interface ComboboxOptions {
   id: string;
+  strings: I18nState;
   containerRef: () => HTMLElement;
   inputRef: () => HTMLInputElement;
   valuesRef: () => HTMLElement;
@@ -8,7 +11,6 @@ export interface ComboboxOptions {
   onBlur: () => void;
   onChange: (value: string) => void;
   activeClass: string;
-  activePartName: string;
 }
 
 export class Combobox {
@@ -166,7 +168,7 @@ export class Combobox {
   private updateOption(value: Element) {
     const isActive = value.id === this.activeDescendant;
     value.classList.toggle(this.options.activeClass, isActive);
-    this.setAttributes(this.optionAttributes(isActive, value), value);
+    this.setAttributes(this.optionAttributes(isActive), value);
   }
 
   private removeEmptyOptionElement() {
@@ -184,7 +186,8 @@ export class Combobox {
 
   private get containerAttributes() {
     return {
-      role: 'search',
+      'aria-owns': `${this.options.id}-listbox`,
+      role: 'combobox',
       'aria-haspopup': 'listbox',
     };
   }
@@ -197,11 +200,10 @@ export class Combobox {
       autocapitalize: 'off',
       autocorrect: 'off',
       'aria-autocomplete': 'list',
-      'aria-owns': `${this.options.id}-listbox`,
       'aria-controls': `${this.options.id}-listbox`,
       'aria-expanded': `${this.hasValues}`,
       'aria-activedescendant': this.activeDescendant,
-      'aria-label': 'Search', // add option
+      'aria-label': this.options.strings.searchBox(), // add option
     };
   }
 
@@ -209,17 +211,14 @@ export class Combobox {
     return {
       id: `${this.options.id}-listbox`,
       role: 'listbox',
-      'aria-labelledby': `${this.options.id}-textbox`,
+      'aria-label': this.options.strings.querySuggestionList(),
     };
   }
 
-  private optionAttributes(isActive: boolean, value: Element) {
-    const part = value.getAttribute('part') ?? '';
-    const activePart = ` ${this.options.activePartName}`;
+  private optionAttributes(isActive: boolean) {
     return {
       role: 'option',
       'aria-selected': `${isActive}`,
-      part: isActive ? `${part}${activePart}` : part.replace(activePart, ''),
     };
   }
 }

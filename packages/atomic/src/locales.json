@@ -3,6 +3,14 @@
     "en": "Search",
     "fr": "Recherche"
   },
+  "searchBox": {
+    "en": "Insert a query. Press enter to send.",
+    "fr": ""
+  },
+  "querySuggestionList": {
+    "en": "Search suggestions. Select one to search.",
+    "fr": ""
+  },
   "clear": {
     "en": "Clear",
     "fr": "Effacer"
