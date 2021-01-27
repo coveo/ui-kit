@@ -25,13 +25,5 @@ node('linux && docker') {
         sh 'npm run npm:publish:beta || true'
       }
     }
-
-    stage('Notify Docs') {
-      withCredentials([
-        usernamePassword(credentialsId: 'github-commit-token', usernameVariable: 'GITHUB_USERNAME', passwordVariable: 'GITHUB_TOKEN')
-      ]) {
-        sh 'npm run notify:docs'
-      }
-    }
   }
 }
