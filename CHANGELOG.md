@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.4.0-alpha.3](https://github.com/coveo/ui-kit/compare/v0.4.0-alpha.2...v0.4.0-alpha.3) (2021-01-27)
+
+
+### Bug Fixes
+
+* **atomic:** fix purge css in prod ([#442](https://github.com/coveo/ui-kit/issues/442)) ([e8d4fbe](https://github.com/coveo/ui-kit/commit/e8d4fbef4e8d7f5e22b6b308fcb42fcf81848a1b))
+
+
+
+
+
 # [0.4.0-alpha.2](https://github.com/coveo/ui-kit/compare/v0.4.0-alpha.1...v0.4.0-alpha.2) (2021-01-27)
 
 **Note:** Version bump only for package ui-kit
