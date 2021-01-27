@@ -1,7 +1,4 @@
-const isDevWatch =
-  process.argv &&
-  process.argv.indexOf('--dev') > -1 &&
-  process.argv.indexOf('--watch') > -1;
+const isDevWatch = process.argv.indexOf('--dev') > -1;
 
 module.exports = {
   purge: {
