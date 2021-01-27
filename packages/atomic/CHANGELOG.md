@@ -3,6 +3,45 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.4.0-alpha.4](https://github.com/coveo/ui-kit/compare/v0.4.0-alpha.3...v0.4.0-alpha.4) (2021-01-27)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [0.4.0-alpha.3](https://github.com/coveo/ui-kit/compare/v0.4.0-alpha.2...v0.4.0-alpha.3) (2021-01-27)
+
+
+### Bug Fixes
+
+* **atomic:** fix purge css in prod ([#442](https://github.com/coveo/ui-kit/issues/442)) ([e8d4fbe](https://github.com/coveo/ui-kit/commit/e8d4fbef4e8d7f5e22b6b308fcb42fcf81848a1b))
+
+
+
+
+
+# [0.4.0-alpha.2](https://github.com/coveo/ui-kit/compare/v0.4.0-alpha.1...v0.4.0-alpha.2) (2021-01-27)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [0.4.0-alpha.1](https://github.com/coveo/ui-kit/compare/v0.4.0-alpha.0...v0.4.0-alpha.1) (2021-01-26)
+
+
+### Features
+
+* **atomic:** add option to disable search parameter serialization ([#438](https://github.com/coveo/ui-kit/issues/438)) ([8108e43](https://github.com/coveo/ui-kit/commit/8108e4353f662dbb97dbcdf6f21ee6e424ea85e3))
+* **atomic:** Search Box Component ([#432](https://github.com/coveo/ui-kit/issues/432)) ([d369edd](https://github.com/coveo/ui-kit/commit/d369edd7510968e5c110f514f4e25146b39ef127))
+
+
+
+
+
 # [0.4.0-alpha.0](https://github.com/coveo/ui-kit/compare/v0.3.0...v0.4.0-alpha.0) (2021-01-25)
 
 
