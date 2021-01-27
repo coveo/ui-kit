@@ -26,10 +26,10 @@ export const SearchBox: FunctionComponent<SearchBoxProps> = (props) => {
         onKeyDown={(e) => isEnterKey(e) && searchBox.submit()}
       />
       <ul>
-        {state.suggestions.map((suggestion, index) => {
+        {state.suggestions.map((suggestion) => {
           const value = suggestion.rawValue;
           return (
-            <li key={index} onClick={() => searchBox.selectSuggestion(value)}>
+            <li key={value} onClick={() => searchBox.selectSuggestion(value)}>
               {value}
             </li>
           );

@@ -46,11 +46,11 @@ export class SearchBox extends Component {
           onKeyDown={(e) => this.isEnterKey(e) && this.searchBox.submit()}
         />
         <ul>
-          {this.state.suggestions.map((suggestion, index) => {
+          {this.state.suggestions.map((suggestion) => {
             const value = suggestion.rawValue;
             return (
               <li
-                key={index}
+                key={value}
                 onClick={() => this.searchBox.selectSuggestion(value)}
               >
                 {value}
