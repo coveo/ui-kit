@@ -34,6 +34,7 @@ export class AtomicResultList implements InitializableComponent {
   @BindStateToController('resultList')
   @State()
   private resultListState!: ResultListState;
+  @State() public error!: Error;
 
   /**
    * Whether to automatically retrieve an additional page of results and append it to the

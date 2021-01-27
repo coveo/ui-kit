@@ -20,6 +20,7 @@ export class AtomicTab implements InitializableComponent {
   private tab!: Tab;
 
   @BindStateToController('tab') @State() private tabState!: TabState;
+  @State() public error!: Error;
 
   @Prop() public expression = '';
   @Prop() public isActive = false;

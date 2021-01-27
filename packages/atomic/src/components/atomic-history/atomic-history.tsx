@@ -1,4 +1,4 @@
-import {Component, h} from '@stencil/core';
+import {Component, h, State} from '@stencil/core';
 import {History, buildHistory} from '@coveo/headless';
 import {
   Bindings,
@@ -13,6 +13,8 @@ import {
 export class AtomicHistory implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;
   private history!: History;
+
+  @State() public error!: Error;
 
   public initialize() {
     this.history = buildHistory(this.bindings.engine);

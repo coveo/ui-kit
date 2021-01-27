@@ -26,6 +26,7 @@ export class AtomicFacet implements InitializableComponent {
   @BindStateToController('facet', {subscribeOnConnectedCallback: true})
   @State()
   private facetState!: FacetState;
+  @State() public error!: Error;
 
   @Prop({mutable: true, reflect: true}) public facetId = '';
   @Prop() public field = '';

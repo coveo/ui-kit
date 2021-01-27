@@ -62,6 +62,7 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
   @BindStateToController('searchBox')
   @State()
   private searchBoxState!: SearchBoxState;
+  @State() public error!: Error;
 
   constructor() {
     this.combobox = new Combobox({
