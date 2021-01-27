@@ -9,7 +9,7 @@ import {
 import {engine} from '../../engine';
 
 export class SearchBox extends Component {
-  private searchBox: HeadlessSearchBox;
+  private controller: HeadlessSearchBox;
   public state: SearchBoxState;
   private unsubscribe: Unsubscribe = () => {};
 
@@ -17,12 +17,12 @@ export class SearchBox extends Component {
     super(props);
 
     const options: SearchBoxOptions = {numberOfSuggestions: 8};
-    this.searchBox = buildSearchBox(engine, {options});
-    this.state = this.searchBox.state;
+    this.controller = buildSearchBox(engine, {options});
+    this.state = this.controller.state;
   }
 
   componentDidMount() {
-    this.unsubscribe = this.searchBox.subscribe(() => this.updateState());
+    this.unsubscribe = this.controller.subscribe(() => this.updateState());
   }
 
   componentWillUnmount() {
@@ -30,7 +30,7 @@ export class SearchBox extends Component {
   }
 
   private updateState() {
-    this.setState(this.searchBox.state);
+    this.setState(this.controller.state);
   }
 
   private isEnterKey(e: React.KeyboardEvent<HTMLInputElement>) {
@@ -42,8 +42,8 @@ export class SearchBox extends Component {
       <div>
         <input
           value={this.state.value}
-          onChange={(e) => this.searchBox.updateText(e.target.value)}
-          onKeyDown={(e) => this.isEnterKey(e) && this.searchBox.submit()}
+          onChange={(e) => this.controller.updateText(e.target.value)}
+          onKeyDown={(e) => this.isEnterKey(e) && this.controller.submit()}
         />
         <ul>
           {this.state.suggestions.map((suggestion) => {
@@ -51,7 +51,7 @@ export class SearchBox extends Component {
             return (
               <li
                 key={value}
-                onClick={() => this.searchBox.selectSuggestion(value)}
+                onClick={() => this.controller.selectSuggestion(value)}
               >
                 {value}
               </li>

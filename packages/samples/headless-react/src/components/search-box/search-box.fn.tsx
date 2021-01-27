@@ -7,29 +7,29 @@ import {
 import {engine} from '../../engine';
 
 interface SearchBoxProps {
-  searchBox: HeadlessSearchBox;
+  controller: HeadlessSearchBox;
 }
 
 export const SearchBox: FunctionComponent<SearchBoxProps> = (props) => {
-  const {searchBox} = props;
-  const [state, setState] = useState(searchBox.state);
+  const {controller} = props;
+  const [state, setState] = useState(controller.state);
   const isEnterKey = (e: React.KeyboardEvent<HTMLInputElement>) =>
     e.key === 'Enter';
 
-  useEffect(() => searchBox.subscribe(() => setState(searchBox.state)), []);
+  useEffect(() => controller.subscribe(() => setState(controller.state)), []);
 
   return (
     <div>
       <input
         value={state.value}
-        onChange={(e) => searchBox.updateText(e.target.value)}
-        onKeyDown={(e) => isEnterKey(e) && searchBox.submit()}
+        onChange={(e) => controller.updateText(e.target.value)}
+        onKeyDown={(e) => isEnterKey(e) && controller.submit()}
       />
       <ul>
         {state.suggestions.map((suggestion) => {
           const value = suggestion.rawValue;
           return (
-            <li key={value} onClick={() => searchBox.selectSuggestion(value)}>
+            <li key={value} onClick={() => controller.selectSuggestion(value)}>
               {value}
             </li>
           );
@@ -42,6 +42,6 @@ export const SearchBox: FunctionComponent<SearchBoxProps> = (props) => {
 // usage
 
 const options: SearchBoxOptions = {numberOfSuggestions: 8};
-const searchBox = buildSearchBox(engine, {options});
+const controller = buildSearchBox(engine, {options});
 
-<SearchBox searchBox={searchBox} />;
+<SearchBox controller={controller} />;

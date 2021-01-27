@@ -16,7 +16,7 @@ function App() {
         <img src={logo} className="App-logo" alt="logo" />
         <Section title="search-box">
           <SearchBox />
-          <SearchBoxFn searchBox={searchBox} />
+          <SearchBoxFn controller={searchBox} />
         </Section>
       </header>
     </div>
