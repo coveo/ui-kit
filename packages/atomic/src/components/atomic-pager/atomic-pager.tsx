@@ -1,15 +1,17 @@
-import {Component, h, State} from '@stencil/core';
+import {Component, h, Prop, State} from '@stencil/core';
 import {Pager, PagerState, buildPager} from '@coveo/headless';
 import {
   Bindings,
   BindStateToController,
+  BindStateToI18n,
   InitializableComponent,
   InitializeBindings,
 } from '../../utils/initialization-utils';
+import ArrowRightIcon from 'coveo-styleguide/resources/icons/svg/arrow-right-rounded.svg';
+import ArrowLeftIcon from 'coveo-styleguide/resources/icons/svg/arrow-left-rounded.svg';
 
 /**
- * @slot back-button - Content of the back button
- * @slot next-button - Content of the next button
+ * The Pager provides buttons that allow the end user to navigate through the different result pages.
  *
  * @part list - The list of buttons
  * @part back-button - The back button
@@ -29,10 +31,29 @@ export class AtomicPager implements InitializableComponent {
   @BindStateToController('pager')
   @State()
   private pagerState!: PagerState;
-  @State() public error!: Error;
+  @BindStateToI18n()
+  @State()
+  private strings = {
+    pagination: () => this.bindings.i18n.t('pagination'),
+    previous: () => this.bindings.i18n.t('previous'),
+    next: () => this.bindings.i18n.t('next'),
+    pageNumber: (page: number) => this.bindings.i18n.t('pageNumber', {page}),
+  };
+  @State() error!: Error;
+
+  /**
+   * Specifies how many page buttons to display in the pager.
+   */
+  @Prop() numberOfPages = 5;
+  /**
+   * Specifies whether the **Previous** and **Next** buttons should appear at each end of the pager when appropriate.
+   */
+  @Prop() enableNavigationButtons = true;
 
   public initialize() {
-    this.pager = buildPager(this.bindings.engine);
+    this.pager = buildPager(this.bindings.engine, {
+      options: {numberOfPages: this.numberOfPages},
+    });
   }
 
   private get backButton() {
@@ -40,17 +61,16 @@ export class AtomicPager implements InitializableComponent {
       return null;
     }
 
-    const icon = '<';
     return (
       <li>
         <button
           part="back-button"
-          aria-label="Previous page"
+          aria-label={this.strings.previous()}
           onClick={() => {
             this.pager.previousPage();
           }}
         >
-          <slot name="back-button">{icon}</slot>
+          <span innerHTML={ArrowLeftIcon}></span>
         </button>
       </li>
     );
@@ -61,17 +81,16 @@ export class AtomicPager implements InitializableComponent {
       return null;
     }
 
-    const icon = '>';
     return (
       <li>
         <button
           part="next-button"
-          aria-label="Next page"
+          aria-label={this.strings.next()}
           onClick={() => {
             this.pager.nextPage();
           }}
         >
-          <slot name="next-button">{icon}</slot>
+          <div innerHTML={ArrowRightIcon}></div>
         </button>
       </li>
     );
@@ -84,13 +103,12 @@ export class AtomicPager implements InitializableComponent {
 
   private buildPage(page: number) {
     const isSelected = this.pager.isCurrentPage(page);
-    const className = isSelected ? 'active' : '';
 
     return (
-      <li class={className}>
+      <li>
         <button
           part={`page-button ${isSelected && 'active-page-button'}`}
-          aria-label={`Page ${page}`}
+          aria-label={this.strings.pageNumber(page)}
           onClick={() => {
             this.pager.selectPage(page);
           }}
@@ -103,11 +121,11 @@ export class AtomicPager implements InitializableComponent {
 
   public render() {
     return (
-      <nav aria-label="Pager">
+      <nav aria-label={this.strings.pagination()}>
         <ul part="list">
-          {this.backButton}
+          {this.enableNavigationButtons && this.backButton}
           {this.pages}
-          {this.nextButton}
+          {this.enableNavigationButtons && this.nextButton}
         </ul>
       </nav>
     );
