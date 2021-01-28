@@ -1,8 +1,8 @@
-import {SVC, SVCPluginEventTypes} from './svc';
+import {SVCPlugin, SVCPluginEventTypes} from './svc';
 import {createAnalyticsClientMock} from '../../tests/analyticsClientMock';
 
 describe('SVC plugin', () => {
-    let svc: SVC;
+    let svc: SVCPlugin;
     let client: ReturnType<typeof createAnalyticsClientMock>;
 
     const someUUIDGenerator = jest.fn(() => someUUID);
@@ -25,7 +25,7 @@ describe('SVC plugin', () => {
     beforeEach(() => {
         jest.clearAllMocks();
         client = createAnalyticsClientMock();
-        svc = new SVC({client, uuidGenerator: someUUIDGenerator});
+        svc = new SVCPlugin({client, uuidGenerator: someUUIDGenerator});
     });
 
     it('should register a hook in the client', () => {

@@ -1,8 +1,7 @@
-import {AnalyticsClient} from '../client/analytics';
 import {EventType} from '../events';
 import {uuidv4} from '../client/crypto';
 import {convertTicketToMeasurementProtocol} from '../client/measurementProtocolMapping/serviceMeasurementProtocolMapper';
-import {BasePlugin, BasePluginEventTypes} from './BasePlugin';
+import {BasePlugin, BasePluginEventTypes, PluginClass, PluginOptions} from './BasePlugin';
 
 export const SVCPluginEventTypes = {
     ...BasePluginEventTypes,
@@ -27,10 +26,11 @@ export interface TicketProperties {
 
 export type Ticket = TicketProperties;
 
-export class SVC extends BasePlugin {
+export class SVCPlugin extends BasePlugin {
+    public static readonly Id = 'svc';
     private ticket: Ticket = {};
 
-    constructor({client, uuidGenerator = uuidv4}: {client: AnalyticsClient; uuidGenerator?: typeof uuidv4}) {
+    constructor({client, uuidGenerator = uuidv4}: PluginOptions) {
         super({client, uuidGenerator});
     }
 
@@ -94,3 +94,5 @@ export class SVC extends BasePlugin {
         return convertTicketToMeasurementProtocol(this.ticket);
     }
 }
+
+export const SVC: PluginClass = SVCPlugin;

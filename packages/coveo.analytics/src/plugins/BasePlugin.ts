@@ -1,11 +1,20 @@
 import {AnalyticsClient} from '../client/analytics';
 import {uuidv4} from '../client/crypto';
 import {getFormattedLocation} from '../client/location';
+import {UAPluginOptions} from '../coveoua/plugins';
+
+type PluginWithId = {
+    readonly Id: string;
+};
+
+export type PluginClass = typeof BasePlugin & PluginWithId;
 
 export const BasePluginEventTypes = {
     pageview: 'pageview',
     event: 'event',
 };
+
+export type PluginOptions = {client: AnalyticsClient; uuidGenerator?: typeof uuidv4};
 
 export abstract class BasePlugin {
     protected client: AnalyticsClient;
@@ -17,7 +26,7 @@ export abstract class BasePlugin {
     private lastLocation: string;
     private lastReferrer: string;
 
-    constructor({client, uuidGenerator = uuidv4}: {client: AnalyticsClient; uuidGenerator?: typeof uuidv4}) {
+    constructor({client, uuidGenerator = uuidv4}: PluginOptions) {
         this.client = client;
         this.uuidGenerator = uuidGenerator;
         this.pageViewId = uuidGenerator();

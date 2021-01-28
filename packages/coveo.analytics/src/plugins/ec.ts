@@ -1,11 +1,10 @@
-import {AnalyticsClient} from '../client/analytics';
 import {EventType} from '../events';
 import {uuidv4} from '../client/crypto';
 import {
     convertProductToMeasurementProtocol,
     convertImpressionListToMeasurementProtocol,
 } from '../client/measurementProtocolMapping/commerceMeasurementProtocolMapper';
-import {BasePlugin, BasePluginEventTypes} from './BasePlugin';
+import {BasePlugin, BasePluginEventTypes, PluginClass, PluginOptions} from './BasePlugin';
 
 export const ECPluginEventTypes = {
     ...BasePluginEventTypes,
@@ -59,11 +58,12 @@ export interface ImpressionList {
     impressions: BaseImpression[];
 }
 
-export class EC extends BasePlugin {
+export class ECPlugin extends BasePlugin {
+    public static readonly Id = 'ec';
     private products: Product[] = [];
     private impressions: Impression[] = [];
 
-    constructor({client, uuidGenerator = uuidv4}: {client: AnalyticsClient; uuidGenerator?: typeof uuidv4}) {
+    constructor({client, uuidGenerator = uuidv4}: PluginOptions) {
         super({client, uuidGenerator});
     }
 
@@ -202,3 +202,5 @@ export class EC extends BasePlugin {
         }, [] as ImpressionList[]);
     }
 }
+
+export const EC: PluginClass = ECPlugin;

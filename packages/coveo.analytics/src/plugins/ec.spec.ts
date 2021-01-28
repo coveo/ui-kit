@@ -1,8 +1,8 @@
-import {EC, ECPluginEventTypes} from './ec';
+import {ECPlugin, ECPluginEventTypes} from './ec';
 import {createAnalyticsClientMock} from '../../tests/analyticsClientMock';
 
 describe('EC plugin', () => {
-    let ec: EC;
+    let ec: ECPlugin;
     let client: ReturnType<typeof createAnalyticsClientMock>;
 
     const someUUIDGenerator = jest.fn(() => someUUID);
@@ -25,7 +25,7 @@ describe('EC plugin', () => {
     beforeEach(() => {
         jest.clearAllMocks();
         client = createAnalyticsClientMock();
-        ec = new EC({client, uuidGenerator: someUUIDGenerator});
+        ec = new ECPlugin({client, uuidGenerator: someUUIDGenerator});
     });
 
     it('should register a hook in the client', () => {
