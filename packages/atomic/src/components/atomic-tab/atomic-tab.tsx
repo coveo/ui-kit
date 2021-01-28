@@ -13,7 +13,7 @@ import {
 @Component({
   tag: 'atomic-tab',
   styleUrl: 'atomic-tab.pcss',
-  shadow: false,
+  shadow: true,
 })
 export class AtomicTab implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;

@@ -12,7 +12,7 @@ import {MapProp} from '../../../utils/props-utils';
 
 @Component({
   tag: 'atomic-field-condition',
-  shadow: false,
+  shadow: true,
 })
 export class AtomicFieldCondition {
   @Element() host!: HTMLElement;

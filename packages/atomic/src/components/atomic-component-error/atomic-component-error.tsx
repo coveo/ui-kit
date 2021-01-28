@@ -3,7 +3,7 @@ import {Component, Prop, h} from '@stencil/core';
 @Component({
   tag: 'atomic-component-error',
   styleUrl: 'atomic-component-error.pcss',
-  shadow: false,
+  shadow: true,
 })
 export class AtomicComponentError {
   @Prop() error!: Error;
