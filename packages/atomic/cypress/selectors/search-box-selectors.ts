@@ -11,6 +11,7 @@ export const ButtonText = {
 
 export function generateAliasForSearchBox() {
   cy.get(SearchBoxSelectors.component)
+    .shadow()
     .find('div')
     .first()
     .as('searchBoxFirstDiv');

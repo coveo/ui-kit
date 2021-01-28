@@ -1,5 +1,5 @@
 {
-  "includeShadowDom": false,
+  "experimentalShadowDomSupport": true,
   "experimentalFetchPolyfill": true,
   "reporter": "spec",
   "viewportHeight": 1080,

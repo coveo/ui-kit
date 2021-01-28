@@ -10,7 +10,7 @@ import {
 @Component({
   tag: 'atomic-did-you-mean',
   styleUrl: 'atomic-did-you-mean.pcss',
-  shadow: false,
+  shadow: true,
 })
 export class AtomicDidYouMean implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;

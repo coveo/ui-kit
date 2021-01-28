@@ -20,7 +20,7 @@ import {
 @Component({
   tag: 'atomic-results-per-page',
   styleUrl: 'atomic-results-per-page.pcss',
-  shadow: false,
+  shadow: true,
 })
 export class AtomicResultsPerPage implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;

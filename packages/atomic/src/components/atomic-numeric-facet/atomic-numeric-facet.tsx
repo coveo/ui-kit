@@ -18,7 +18,7 @@ import {
 @Component({
   tag: 'atomic-numeric-facet',
   styleUrl: 'atomic-numeric-facet.pcss',
-  shadow: false,
+  shadow: true,
 })
 export class AtomicNumericFacet implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;

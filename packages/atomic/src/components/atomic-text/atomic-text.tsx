@@ -8,7 +8,7 @@ import {
 
 @Component({
   tag: 'atomic-text',
-  shadow: false,
+  shadow: true,
 })
 export class AtomicText implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;
