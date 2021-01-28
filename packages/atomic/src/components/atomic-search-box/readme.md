@@ -11,7 +11,7 @@ A search box with built in support for query suggestions.
 | `_id`                 | `data-id`               |                                                             | `string`  | `randomID(     'atomic-search-box-'   )` |
 | `leadingSubmitButton` | `leading-submit-button` | Whether the submit button should be placed before the input | `boolean` | `false`                                  |
 | `numberOfSuggestions` | `number-of-suggestions` | Maximum number of suggestions to display                    | `number`  | `5`                                      |
-| `placeholder`         | `placeholder`           |                                                             | `string`  | `''`                                     |
+| `placeholder`         | `placeholder`           | The placeholder for the search box input                    | `string`  | `''`                                     |
 
 
 ## Shadow Parts

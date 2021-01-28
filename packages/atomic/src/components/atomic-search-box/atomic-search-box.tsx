@@ -12,20 +12,9 @@ import {Combobox} from '../../utils/combobox';
 import ClearIcon from 'coveo-styleguide/resources/icons/svg/clear.svg';
 import SearchIcon from 'coveo-styleguide/resources/icons/svg/search.svg';
 
-export interface AtomicSearchBoxOptions {
-  /**
-   * Maximum number of suggestions to display
-   * @default 5
-   */
-  numberOfSuggestions: number;
-  /**
-   * Whether the submit button should be placed before the input
-   * @default false
-   */
-  leadingSubmitButton: boolean;
-}
-
 /**
+ * A search box with built in support for query suggestions.
+ *
  * @part submit-button - The search box submit button
  * @part input - The search box input
  * @part clear-button - The search box input's clear button
@@ -38,7 +27,7 @@ export interface AtomicSearchBoxOptions {
   styleUrl: 'atomic-search-box.pcss',
   shadow: true,
 })
-export class AtomicSearchBox implements AtomicSearchBoxOptions {
+export class AtomicSearchBox {
   @InitializeBindings() public bindings!: Bindings;
 
   @BindStateToI18n()
@@ -49,9 +38,20 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
     searchBox: () => this.bindings.i18n.t('searchBox'),
     querySuggestionList: () => this.bindings.i18n.t('querySuggestionList'),
   };
-
+  /**
+   * Maximum number of suggestions to display
+   * @default 5
+   */
   @Prop() numberOfSuggestions = 5;
+  /**
+   * The placeholder for the search box input
+   * @default ''
+   */
   @Prop() placeholder = '';
+  /**
+   * Whether the submit button should be placed before the input
+   * @default false
+   */
   @Prop() leadingSubmitButton = false;
   @Prop({reflect: true, attribute: 'data-id'}) public _id = randomID(
     'atomic-search-box-'
@@ -189,7 +189,6 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
       const id = `${this._id}-suggestion-${index}`;
       return (
         <li
-          role="option"
           onClick={() => {
             this.searchBox.selectSuggestion(suggestion.rawValue);
           }}
@@ -220,10 +219,8 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
         </div>
 
         <ul
-          id="suggestions"
           part="suggestions"
           class="suggestions box-border w-full lg:w-80 p-0 my-0 flex flex-col border border-t-0 border-solid border-on-background rounded-b list-none"
-          role="listbox"
           ref={(el) => (this.valuesRef = el as HTMLElement)}
         >
           {this.suggestions}
