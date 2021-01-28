@@ -6,20 +6,27 @@ import {ResultList} from './components/result-list/result-list.class';
 import {ResultList as ResultListFn} from './components/result-list/result-list.fn';
 import {
   buildSearchBox,
-  SearchBoxOptions,
   buildQuerySummary,
   buildResultList,
+  buildResultsPerPage,
 } from '@coveo/headless';
+import {ResultsPerPage} from './components/results-per-page/results-per-page.class';
+import {ResultsPerPage as ResultsPerPageFn} from './components/results-per-page/results-per-page.fn';
 import {engine} from './engine';
 import {Section} from './layout/section';
 import {QuerySummary} from './components/query-summary/query-summary.class';
 import {QuerySummary as QuerySummaryFn} from './components/query-summary/query-summary.fn';
 
-const options: SearchBoxOptions = {numberOfSuggestions: 8};
-const searchBox = buildSearchBox(engine, {options});
+const searchBox = buildSearchBox(engine, {options: {numberOfSuggestions: 8}});
+
 const querySummary = buildQuerySummary(engine);
 
 const resultList = buildResultList(engine);
+
+const resultsPerPageOptions = [10, 25, 50, 100];
+const resultsPerPage = buildResultsPerPage(engine, {
+  initialState: {numberOfResults: resultsPerPageOptions[0]},
+});
 
 function App() {
   return (
@@ -37,6 +44,13 @@ function App() {
         <Section title="result-list">
           <ResultList />
           <ResultListFn controller={resultList} />
+        </Section>
+        <Section title="results-per-page">
+          <ResultsPerPage />
+          <ResultsPerPageFn
+            controller={resultsPerPage}
+            options={resultsPerPageOptions}
+          />
         </Section>
       </header>
     </div>
