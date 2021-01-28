@@ -204,7 +204,7 @@ export class Combobox {
       'aria-controls': `${this.options.id}-listbox`,
       'aria-expanded': `${this.hasValues}`,
       'aria-activedescendant': this.activeDescendant,
-      'aria-label': this.options.strings.searchBox(), // add option
+      'aria-label': this.options.strings.searchBox(),
     };
   }
 
