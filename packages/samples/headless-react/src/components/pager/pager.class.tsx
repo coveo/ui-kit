@@ -45,6 +45,10 @@ export class Pager extends Component {
     this.controller.selectPage(page);
   }
 
+  private isCurrentPage(page: number) {
+    return this.controller.isCurrentPage(page);
+  }
+
   render() {
     return (
       <nav>
@@ -56,7 +60,8 @@ export class Pager extends Component {
         </button>
         {this.state.currentPages.map((page) => (
           <button
-            disabled={page === this.state.currentPage}
+            key={page}
+            disabled={this.isCurrentPage(page)}
             onClick={() => this.selectPage(page)}
           >
             {page}

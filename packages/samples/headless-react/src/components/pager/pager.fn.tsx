@@ -28,6 +28,10 @@ export const Pager: FunctionComponent<PagerProps> = (props) => {
     controller.selectPage(page);
   };
 
+  const isCurrentPage = (page: number) => {
+    return controller.isCurrentPage(page);
+  };
+
   return (
     <nav>
       <button disabled={!state.hasPreviousPage} onClick={() => previousPage()}>
@@ -35,7 +39,8 @@ export const Pager: FunctionComponent<PagerProps> = (props) => {
       </button>
       {state.currentPages.map((page) => (
         <button
-          disabled={page === state.currentPage}
+          key={page}
+          disabled={isCurrentPage(page)}
           onClick={() => selectPage(page)}
         >
           {page}
