@@ -15,11 +15,18 @@ export const QuerySummary: FunctionComponent<QuerySummaryProps> = (props) => {
 
   useEffect(() => controller.subscribe(() => setState(controller.state)), []);
 
-  return state.hasQuery ? (
+  const {
+    hasQuery,
+    firstResult,
+    lastResult,
+    total,
+    query,
+    durationInSeconds,
+  } = state;
+  return hasQuery ? (
     <p>
-      Results {state.firstResult}-{state.lastResult} of{' '}
-      <strong>{state.total}</strong> for <strong>{state.query}</strong> in{' '}
-      {state.durationInSeconds.toLocaleString()} seconds
+      Results {firstResult}-{lastResult} of {total} for {query} in{' '}
+      {durationInSeconds} seconds
     </p>
   ) : null;
 };

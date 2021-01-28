@@ -32,13 +32,19 @@ export class QuerySummary extends Component {
   }
 
   render() {
+    const {
+      hasQuery,
+      firstResult,
+      lastResult,
+      total,
+      query,
+      durationInSeconds,
+    } = this.state;
     return (
-      this.state.hasQuery && (
+      hasQuery && (
         <p>
-          Results {this.state.firstResult}-{this.state.lastResult} of{' '}
-          <strong>{this.state.total}</strong> for{' '}
-          <strong>{this.state.query}</strong> in{' '}
-          {this.state.durationInSeconds.toLocaleString()} seconds
+          Results {firstResult}-{lastResult} of {total} for {query} in{' '}
+          {durationInSeconds} seconds
         </p>
       )
     );
