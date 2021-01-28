@@ -36,7 +36,7 @@ export function buildPopularViewedRecommendationsList(
     engine,
     optionsSchema,
     props.options,
-    buildPopularViewedRecommendationsList.name
+    'buildPopularViewedRecommendationsList'
   ) as Required<PopularViewedRecommendationsListOptions>;
   const controller = buildBaseProductRecommendationsList(engine, {
     ...props,
