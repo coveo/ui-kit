@@ -109,6 +109,7 @@ describe('BindStateToController decorator', () => {
         }),
         i18n: i18next,
       },
+      error: {} as Error,
     };
   });
 

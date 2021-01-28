@@ -39,6 +39,7 @@ export class AtomicBreadcrumbManager implements InitializableComponent {
   @State()
   private breadcrumbManagerState!: BreadcrumbManagerState;
   @State() private collapsedBreadcrumbsState: string[] = [];
+  @State() public error!: Error;
 
   @Prop() public collapseThreshold = 5;
   @Prop() public categoryDivider = '/';

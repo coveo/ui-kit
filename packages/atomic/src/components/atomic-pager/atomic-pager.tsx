@@ -29,6 +29,7 @@ export class AtomicPager implements InitializableComponent {
   @BindStateToController('pager')
   @State()
   private pagerState!: PagerState;
+  @State() public error!: Error;
 
   public initialize() {
     this.pager = buildPager(this.bindings.engine);

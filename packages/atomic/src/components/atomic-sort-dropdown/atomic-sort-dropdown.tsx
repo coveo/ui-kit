@@ -36,6 +36,7 @@ export class AtomicSortDropdown implements InitializableComponent {
   private sort!: Sort;
 
   @State() @BindStateToController('sort') public sortState!: SortState;
+  @State() public error!: Error;
 
   public initialize() {
     const initialState: Partial<SortInitialState> = {criterion: this.relevance};

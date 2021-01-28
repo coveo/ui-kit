@@ -29,6 +29,7 @@ export class AtomicResultsPerPage implements InitializableComponent {
   @State()
   @BindStateToController('resultPerPage')
   public resultPerPageState!: ResultsPerPageState;
+  @State() public error!: Error;
 
   // TODO: validate props
   /**

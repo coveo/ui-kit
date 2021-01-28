@@ -31,6 +31,7 @@ export class AtomicQuerySummary implements InitializableComponent {
   @BindStateToController('querySummary')
   @State()
   private querySummaryState!: QuerySummaryState;
+  @State() public error!: Error;
 
   public initialize() {
     this.querySummary = buildQuerySummary(this.bindings.engine);

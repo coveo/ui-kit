@@ -19,6 +19,7 @@ export class AtomicDidYouMean implements InitializableComponent {
   @BindStateToController('didYouMean')
   @State()
   private didYouMeanState!: DidYouMeanState;
+  @State() public error!: Error;
 
   public initialize() {
     this.didYouMean = buildDidYouMean(this.bindings.engine);

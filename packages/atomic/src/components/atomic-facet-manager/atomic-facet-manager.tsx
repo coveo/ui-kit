@@ -31,6 +31,7 @@ export class AtomicFacetManager implements InitializableComponent {
   })
   @State()
   public facetManagerState!: FacetManagerState;
+  @State() public error!: Error;
 
   public initialize() {
     this.facetManager = buildFacetManager(this.bindings.engine);

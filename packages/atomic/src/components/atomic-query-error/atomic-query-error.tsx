@@ -19,6 +19,7 @@ export class AtomicQueryError implements InitializableComponent {
   @BindStateToController('queryError')
   @State()
   private queryErrorState!: QueryErrorState;
+  @State() public error!: Error;
 
   public initialize() {
     this.queryError = buildQueryError(this.bindings.engine);

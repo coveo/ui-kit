@@ -12,7 +12,6 @@ import {
 })
 export class AtomicText implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;
-  public error?: Error;
 
   @BindStateToI18n() @State() private strings = {
     value: () =>
@@ -20,6 +19,7 @@ export class AtomicText implements InitializableComponent {
         count: this.count,
       }),
   };
+  @State() public error!: Error;
 
   /**
    * String key value
