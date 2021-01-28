@@ -11,6 +11,7 @@ export interface ComboboxOptions {
   onBlur: () => void;
   onChange: (value: string) => void;
   activeClass: string;
+  activePartName: string;
 }
 
 export class Combobox {
@@ -168,7 +169,7 @@ export class Combobox {
   private updateOption(value: Element) {
     const isActive = value.id === this.activeDescendant;
     value.classList.toggle(this.options.activeClass, isActive);
-    this.setAttributes(this.optionAttributes(isActive), value);
+    this.setAttributes(this.optionAttributes(isActive, value), value);
   }
 
   private removeEmptyOptionElement() {
@@ -215,10 +216,13 @@ export class Combobox {
     };
   }
 
-  private optionAttributes(isActive: boolean) {
+  private optionAttributes(isActive: boolean, value: Element) {
+    const part = value.getAttribute('part') ?? '';
+    const activePart = ` ${this.options.activePartName}`;
     return {
       role: 'option',
       'aria-selected': `${isActive}`,
+      part: isActive ? `${part}${activePart}` : part.replace(activePart, ''),
     };
   }
 }

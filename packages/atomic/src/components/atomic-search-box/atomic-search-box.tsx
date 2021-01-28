@@ -23,13 +23,16 @@ export interface AtomicSearchBoxOptions {
    * @default false
    */
   leadingSubmitButton: boolean;
-  /**
-   * Placeholder text for the search box input
-   * @default ''
-   */
-  placeholder: string;
 }
 
+/**
+ * @part submit-button - The search box submit button
+ * @part input - The search box input
+ * @part clear-button - The search box input's clear button
+ * @part suggestions - The list of suggestions
+ * @part suggestion - The suggestion
+ * @part active-suggestion - The currently active suggestion
+ */
 @Component({
   tag: 'atomic-search-box',
   styleUrl: 'atomic-search-box.pcss',
@@ -88,7 +91,8 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
       onBlur: () => {
         setTimeout(() => this.searchBox.hideSuggestions(), 100);
       },
-      activeClass: 'active-suggestion',
+      activeClass: 'active',
+      activePartName: 'active-suggestion',
     });
   }
 
@@ -122,6 +126,7 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
     return (
       <button
         type="button"
+        part="submit-button"
         class={
           'submit-button w-10 bg-transparent border-0 focus:outline-none border-on-background border-solid p-0 ' +
           (this.leadingSubmitButton ? 'border-r' : 'border-l')
@@ -145,6 +150,7 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
     return (
       <button
         type="button"
+        part="clear-button"
         class="clear-button bg-transparent border-none outline-none mr-2"
         aria-label={this.strings.clear()}
         onClick={() => {
@@ -163,6 +169,7 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
   private get input() {
     return (
       <input
+        part="input"
         ref={(el) => (this.inputRef = el as HTMLInputElement)}
         onFocus={() => this.onInputFocus()}
         onBlur={() => this.combobox.onInputBlur()}
@@ -170,8 +177,6 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
         onKeyUp={(e) => this.combobox.onInputKeyup(e)}
         onKeyDown={(e) => this.combobox.onInputKeydown(e)}
         type="text"
-        aria-autocomplete="list"
-        aria-controls={this.valuesRef?.id}
         class="input mx-2 my-0 text-base placeholder-on-background border-none outline-none flex-grow flex-row align-items-center"
         placeholder={this.placeholder}
         value={this.searchBoxState.value}
@@ -189,6 +194,7 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
             this.searchBox.selectSuggestion(suggestion.rawValue);
           }}
           onMouseDown={(e) => e.preventDefault()}
+          part="suggestion"
           id={id}
           class="suggestion h-9 px-2 cursor-pointer text-left text-sm bg-transparent border-none shadow-none hover:bg-gray-200 flex flex-row items-center"
           innerHTML={suggestion.highlightedValue}
@@ -215,6 +221,7 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
 
         <ul
           id="suggestions"
+          part="suggestions"
           class="suggestions box-border w-full lg:w-80 p-0 my-0 flex flex-col border border-t-0 border-solid border-on-background rounded-b list-none"
           role="listbox"
           ref={(el) => (this.valuesRef = el as HTMLElement)}

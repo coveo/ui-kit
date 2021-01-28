@@ -110,9 +110,6 @@ export namespace Components {
           * Maximum number of suggestions to display
          */
         "numberOfSuggestions": number;
-        /**
-          * Placeholder text for the search box input
-         */
         "placeholder": string;
     }
     interface AtomicSearchInterface {
@@ -427,9 +424,6 @@ declare namespace LocalJSX {
           * Maximum number of suggestions to display
          */
         "numberOfSuggestions"?: number;
-        /**
-          * Placeholder text for the search box input
-         */
         "placeholder"?: string;
     }
     interface AtomicSearchInterface {
