@@ -1,19 +1,15 @@
-import {Config, DocComment, DocGen, Entity, Module} from './doc-json-types';
+import {Config, DocComment, DocGen, Entity} from './doc-json-types';
 import {getDesc, getModule} from './utils';
 
 export function parseActions(docgen: DocGen, config: Config) {
   return config.actions.sections.map((section) => {
-    const sectionModules: Module[] = section.sources.map((source) =>
+    const sectionModules = section.sources.map((source) =>
       getModule(docgen, source)
     );
     return {
       section: section.name,
       actions: sectionModules
-        .map((sectionModule) => {
-          return sectionModule.children.map((entity) => {
-            return parseAction(entity);
-          });
-        })
+        .map((sectionModule) => sectionModule.children.map(parseAction))
         .reduce((acc, val) => acc.concat(val), []),
     };
   });
