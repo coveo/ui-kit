@@ -172,7 +172,7 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
         type="text"
         aria-autocomplete="list"
         aria-controls={this.valuesRef?.id}
-        class="input mx-2 my-0 text-base placeholder-on-background border-none outline-none flex flex-grow flex-row align-items-center"
+        class="input mx-2 my-0 text-base placeholder-on-background border-none outline-none flex-grow flex-row align-items-center"
         placeholder={this.placeholder}
         value={this.searchBoxState.value}
       />
@@ -201,15 +201,18 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
   public render() {
     return (
       <div>
-        <div
-          class="box-border w-full lg:w-80 h-9 border border-solid rounded border-on-background flex flex-row align-items-center focus-within:rounded-b-none"
-          ref={(el) => (this.containerRef = el as HTMLElement)}
-        >
+        <div class="box-border w-full lg:w-80 h-9 border border-solid rounded border-on-background focus-within:rounded-b-none flex flex-row align-items-center">
           {this.leadingSubmitButton && this.submitButton}
-          {this.input}
+          <div
+            class="flex flex-row flex-grow align-items-center"
+            ref={(el) => (this.containerRef = el as HTMLElement)}
+          >
+            {this.input}
+          </div>
           {this.clearButton}
           {!this.leadingSubmitButton && this.submitButton}
         </div>
+
         <ul
           id="suggestions"
           class="suggestions box-border w-full lg:w-80 p-0 my-0 flex flex-col border border-t-0 border-solid border-on-background rounded-b list-none"
