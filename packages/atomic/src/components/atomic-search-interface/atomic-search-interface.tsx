@@ -33,7 +33,7 @@ export type InitializationOptions = Pick<
 
 @Component({
   tag: 'atomic-search-interface',
-  shadow: false,
+  shadow: true,
   assetsDirs: ['lang'],
 })
 export class AtomicSearchInterface {

@@ -22,7 +22,7 @@ import {
 @Component({
   tag: 'atomic-query-summary',
   styleUrl: 'atomic-query-summary.pcss',
-  shadow: false,
+  shadow: true,
 })
 export class AtomicQuerySummary implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;
@@ -31,6 +31,7 @@ export class AtomicQuerySummary implements InitializableComponent {
   @BindStateToController('querySummary')
   @State()
   private querySummaryState!: QuerySummaryState;
+  @State() public error!: Error;
 
   public initialize() {
     this.querySummary = buildQuerySummary(this.bindings.engine);

@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.4.0-alpha.8](https://github.com/coveo/ui-kit/compare/v0.4.0-alpha.7...v0.4.0-alpha.8) (2021-01-28)
+
+
+### Bug Fixes
+
+* **atomic:** add error internal state property to all components ([#446](https://github.com/coveo/ui-kit/issues/446)) ([6fbfc59](https://github.com/coveo/ui-kit/commit/6fbfc59a8fcf1f5363f0c87c2368b948c4ce6e6a))
+
+
+
+
+
+# [0.4.0-alpha.7](https://github.com/coveo/ui-kit/compare/v0.4.0-alpha.6...v0.4.0-alpha.7) (2021-01-28)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
 # [0.4.0-alpha.5](https://github.com/coveo/ui-kit/compare/v0.4.0-alpha.4...v0.4.0-alpha.5) (2021-01-27)
 
 

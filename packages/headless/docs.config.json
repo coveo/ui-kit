@@ -7,15 +7,135 @@
   "actions": {
     "sections": [
       {
-        "name": "Configuration",
+        "name": "AdvancedSearchQueriesActions",
+        "sources": [
+          "src/features/advanced-search-queries/advanced-search-queries-actions"
+        ]
+      },
+      {
+        "name": "BreadcrumbActions",
+        "sources": [
+          "src/features/facets/generic/facet-actions"
+        ]
+      },
+      {
+        "name": "CategoryFacetSetActions",
+        "sources": [
+          "src/features/facets/category-facet-set/category-facet-set-actions"
+        ]
+      },
+      {
+        "name": "ConfigurationActions",
         "sources": [
           "src/features/configuration/configuration-actions"
         ]
       },
       {
-        "name": "Did-You-Mean",
+        "name": "ContextActions",
+        "sources": [
+          "src/features/context/context-actions"
+        ]
+      },
+      {
+        "name": "DateFacetActions",
+        "sources": [
+          "src/features/facets/range-facets/date-facet-set/date-facet-actions"
+        ]
+      },
+      {
+        "name": "DidYouMeanActions",
         "sources": [
           "src/features/did-you-mean/did-you-mean-actions"
+        ]
+      },
+      {
+        "name": "FacetActions",
+        "sources": [
+          "src/features/facets/facet-set/facet-set-actions"
+        ]
+      },
+      {
+        "name": "FieldActions",
+        "sources": [
+          "src/features/fields/fields-actions"
+        ]
+      },
+      {
+        "name": "HistoryActions",
+        "sources": [
+          "src/features/history/history-actions"
+        ]
+      },
+      {
+        "name": "NumericFacetActions",
+        "sources": [
+          "src/features/facets/range-facets/numeric-facet-set/numeric-facet-actions"
+        ]
+      },
+      {
+        "name": "PaginationActions",
+        "sources": [
+          "src/features/pagination/pagination-actions"
+        ]
+      },
+      {
+        "name": "PipelineActions",
+        "sources": [
+          "src/features/pipeline/pipeline-actions"
+        ]
+      },
+      {
+        "name": "ProductRecommendationActions",
+        "sources": [
+          "src/features/product-recommendations/product-recommendations-actions"
+        ]
+      },
+      {
+        "name": "QueryActions",
+        "sources": [
+          "src/features/query/query-actions"
+        ]
+      },
+      {
+        "name": "QuerySetActions",
+        "sources": [
+          "src/features/query-set/query-set-actions"
+        ]
+      },
+      {
+        "name": "QuerySuggestActions",
+        "sources": [
+          "src/features/query-suggest/query-suggest-actions"
+        ]
+      },
+      {
+        "name": "RedirectionActions",
+        "sources": [
+          "src/features/redirection/redirection-actions"
+        ]
+      },
+      {
+        "name": "SearchActions",
+        "sources": [
+          "src/features/search/search-actions"
+        ]
+      },
+      {
+        "name": "SearchHubActions",
+        "sources": [
+          "src/features/search-hub/search-hub-actions"
+        ]
+      },
+      {
+        "name": "SortCriterionActions",
+        "sources": [
+          "src/features/sort-criteria/sort-criteria-actions"
+        ]
+      },
+      {
+        "name": "RecommendationActions",
+        "sources": [
+          "src/features/recommendation/recommendation-actions"
         ]
       }
     ]

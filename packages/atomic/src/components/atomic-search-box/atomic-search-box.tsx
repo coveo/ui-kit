@@ -33,7 +33,7 @@ export interface AtomicSearchBoxOptions {
 @Component({
   tag: 'atomic-search-box',
   styleUrl: 'atomic-search-box.pcss',
-  shadow: false,
+  shadow: true,
 })
 export class AtomicSearchBox implements AtomicSearchBoxOptions {
   @InitializeBindings() public bindings!: Bindings;
@@ -63,6 +63,7 @@ export class AtomicSearchBox implements AtomicSearchBoxOptions {
   @BindStateToController('searchBox')
   @State()
   private searchBoxState!: SearchBoxState;
+  @State() public error!: Error;
 
   constructor() {
     this.combobox = new Combobox({

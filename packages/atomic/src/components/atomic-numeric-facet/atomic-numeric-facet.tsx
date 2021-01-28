@@ -18,7 +18,7 @@ import {
 @Component({
   tag: 'atomic-numeric-facet',
   styleUrl: 'atomic-numeric-facet.pcss',
-  shadow: false,
+  shadow: true,
 })
 export class AtomicNumericFacet implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;
@@ -27,6 +27,7 @@ export class AtomicNumericFacet implements InitializableComponent {
   @BindStateToController('facet', {subscribeOnConnectedCallback: true})
   @State()
   private facetState!: NumericFacetState;
+  @State() public error!: Error;
 
   @Prop({mutable: true}) public facetId = '';
   @Prop() public field = '';

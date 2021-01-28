@@ -4,7 +4,7 @@ import {bindLogDocumentOpenOnResult} from '../../utils/result-utils';
 
 @Component({
   tag: 'atomic-result',
-  shadow: false,
+  shadow: true,
 })
 export class AtomicResult {
   @Element() host!: HTMLDivElement;

@@ -26,7 +26,9 @@ describe('InitializeBindings decorator', () => {
     let page: SpecPage;
 
     function getErrorComponent() {
-      return page.body.querySelector('atomic-pager atomic-component-error');
+      return page.body
+        .querySelector('atomic-pager')!
+        .shadowRoot!.querySelector('atomic-component-error');
     }
 
     it(`when the child-component component is not the child of an atomic-search-interface component
@@ -109,6 +111,7 @@ describe('BindStateToController decorator', () => {
         }),
         i18n: i18next,
       },
+      error: {} as Error,
     };
   });
 

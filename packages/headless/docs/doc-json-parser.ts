@@ -12,7 +12,7 @@ function parse(docgen: DocGen, config: Config) {
   return {
     engine: parseEngine(),
     controllers: parseControllers(docgen, config),
-    actions: parseActions(),
+    actions: parseActions(docgen, config),
   };
 }
 

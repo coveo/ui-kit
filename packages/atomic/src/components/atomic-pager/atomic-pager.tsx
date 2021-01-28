@@ -20,7 +20,7 @@ import {
 @Component({
   tag: 'atomic-pager',
   styleUrl: 'atomic-pager.pcss',
-  shadow: false,
+  shadow: true,
 })
 export class AtomicPager implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;
@@ -29,6 +29,7 @@ export class AtomicPager implements InitializableComponent {
   @BindStateToController('pager')
   @State()
   private pagerState!: PagerState;
+  @State() public error!: Error;
 
   public initialize() {
     this.pager = buildPager(this.bindings.engine);
