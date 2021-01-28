@@ -15,7 +15,9 @@ export class ResultList extends Component {
   constructor(props: {}) {
     super(props);
 
-    this.controller = buildResultList(engine);
+    this.controller = buildResultList(engine, {
+      options: {fieldsToInclude: ['author', 'filetype']},
+    });
     this.state = this.controller.state;
   }
 
@@ -31,39 +33,41 @@ export class ResultList extends Component {
     this.setState(this.controller.state);
   }
 
-  private showMore() {
-    this.controller.fetchMoreResults();
-  }
-
-  private get resultsAvailable() {
-    return this.state.results.length > 0;
-  }
-
-  private get results() {
-    return this.state.results.map((result) => (
-      <li key={result.uniqueId}>
-        <article>
-          <h2>
-            <a href={result.clickUri}>{result.title}</a>
-          </h2>
-          <p>{result.excerpt}</p>
-        </article>
-      </li>
-    ));
-  }
-
   render() {
+    if (!this.state.results.length) {
+      return <div>No results</div>;
+    }
+
     return (
       <div>
-        <ul>{this.resultsAvailable ? this.results : <li>No results</li>}</ul>
-        {this.resultsAvailable && (
-          <button
-            onClick={() => this.showMore()}
-            disabled={this.state.isLoading}
-          >
-            Show more
-          </button>
-        )}
+        <ul style={{textAlign: 'left'}}>
+          {this.state.results.map((result) => (
+            <li key={result.uniqueId}>
+              <article>
+                <h2>
+                  <a href={result.clickUri}>{result.title}</a>
+                </h2>
+                <table>
+                  <tbody>
+                    {result.raw.author && (
+                      <tr>
+                        <th>Author</th>
+                        <td>{result.raw.author as string}</td>
+                      </tr>
+                    )}
+                    {result.raw.filetype && (
+                      <tr>
+                        <th>File type</th>
+                        <td>{result.raw.filetype}</td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+                <p>{result.excerpt}</p>
+              </article>
+            </li>
+          ))}
+        </ul>
       </div>
     );
   }
