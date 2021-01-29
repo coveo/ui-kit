@@ -16,37 +16,27 @@ export const Pager: FunctionComponent<PagerProps> = (props) => {
 
   useEffect(() => controller.subscribe(() => setState(controller.state)), []);
 
-  const previousPage = () => {
-    controller.previousPage();
-  };
-
-  const nextPage = () => {
-    controller.nextPage();
-  };
-
-  const selectPage = (page: number) => {
-    controller.selectPage(page);
-  };
-
-  const isCurrentPage = (page: number) => {
-    return controller.isCurrentPage(page);
-  };
-
   return (
     <nav>
-      <button disabled={!state.hasPreviousPage} onClick={() => previousPage()}>
+      <button
+        disabled={!state.hasPreviousPage}
+        onClick={() => controller.previousPage()}
+      >
         {'<'}
       </button>
       {state.currentPages.map((page) => (
         <button
           key={page}
-          disabled={isCurrentPage(page)}
-          onClick={() => selectPage(page)}
+          disabled={controller.isCurrentPage(page)}
+          onClick={() => controller.selectPage(page)}
         >
           {page}
         </button>
       ))}
-      <button disabled={!state.hasNextPage} onClick={() => nextPage()}>
+      <button
+        disabled={!state.hasNextPage}
+        onClick={() => controller.nextPage()}
+      >
         {'>'}
       </button>
     </nav>

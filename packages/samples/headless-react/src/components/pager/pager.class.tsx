@@ -33,43 +33,27 @@ export class Pager extends Component {
     this.setState(this.controller.state);
   }
 
-  private previousPage() {
-    this.controller.previousPage();
-  }
-
-  private nextPage() {
-    this.controller.nextPage();
-  }
-
-  private selectPage(page: number) {
-    this.controller.selectPage(page);
-  }
-
-  private isCurrentPage(page: number) {
-    return this.controller.isCurrentPage(page);
-  }
-
   render() {
     return (
       <nav>
         <button
           disabled={!this.state.hasPreviousPage}
-          onClick={() => this.previousPage()}
+          onClick={() => this.controller.previousPage()}
         >
           {'<'}
         </button>
         {this.state.currentPages.map((page) => (
           <button
             key={page}
-            disabled={this.isCurrentPage(page)}
-            onClick={() => this.selectPage(page)}
+            disabled={this.controller.isCurrentPage(page)}
+            onClick={() => this.controller.selectPage(page)}
           >
             {page}
           </button>
         ))}
         <button
           disabled={!this.state.hasNextPage}
-          onClick={() => this.nextPage()}
+          onClick={() => this.controller.nextPage()}
         >
           {'>'}
         </button>
