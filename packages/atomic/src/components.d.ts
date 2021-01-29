@@ -52,6 +52,14 @@ export namespace Components {
         "label": string;
     }
     interface AtomicPager {
+        /**
+          * Specifies whether the **Previous** and **Next** buttons should appear at each end of the pager when appropriate.
+         */
+        "enableNavigationButtons": boolean;
+        /**
+          * Specifies how many page buttons to display in the pager.
+         */
+        "numberOfPages": number;
     }
     interface AtomicQueryError {
     }
@@ -374,6 +382,14 @@ declare namespace LocalJSX {
         "label"?: string;
     }
     interface AtomicPager {
+        /**
+          * Specifies whether the **Previous** and **Next** buttons should appear at each end of the pager when appropriate.
+         */
+        "enableNavigationButtons"?: boolean;
+        /**
+          * Specifies how many page buttons to display in the pager.
+         */
+        "numberOfPages"?: number;
     }
     interface AtomicQueryError {
     }
