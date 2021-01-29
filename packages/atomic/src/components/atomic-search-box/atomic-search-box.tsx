@@ -128,15 +128,15 @@ export class AtomicSearchBox {
         type="button"
         part="submit-button"
         class={
-          'submit-button w-10 bg-transparent border-0 focus:outline-none border-on-background border-solid p-0 ' +
-          (this.leadingSubmitButton ? 'border-r' : 'border-l')
+          'submit-button bg-transparent border-0 focus:outline-none bg-primary p-0 ' +
+          (this.leadingSubmitButton ? ' rounded-l-lg' : 'rounded-r-lg')
         }
         aria-label={this.strings.search()}
         onClick={() => this.searchBox.submit()}
       >
         <div
           innerHTML={SearchIcon}
-          class="search mx-auto w-3.5 h-3.5 text-on-background fill-current"
+          class="search mx-auto w-3.5 h-3.5 text-on-primary fill-current"
         />
       </button>
     );
@@ -177,7 +177,9 @@ export class AtomicSearchBox {
         onKeyUp={(e) => this.combobox.onInputKeyup(e)}
         onKeyDown={(e) => this.combobox.onInputKeydown(e)}
         type="text"
-        class="input mx-2 my-0 text-base placeholder-on-background border-none outline-none flex-grow flex-row align-items-center"
+        class={
+          'input mx-2 my-0 text-base placeholder-on-background outline-none flex-grow flex-row align-items-center '
+        }
         placeholder={this.placeholder}
         value={this.searchBoxState.value}
       />
@@ -206,15 +208,18 @@ export class AtomicSearchBox {
   public render() {
     return (
       <div>
-        <div class="box-border w-full lg:w-80 h-9 border border-solid rounded border-on-background focus-within:rounded-b-none flex flex-row align-items-center">
+        <div class="search-box box-border w-full lg:w-80 flex flex-row align-items-center">
           {this.leadingSubmitButton && this.submitButton}
           <div
-            class="flex flex-row flex-grow align-items-center"
+            class={
+              'input-wrapper flex flex-row flex-grow align-items-center border border-r-0 border-solid border-on-background ' +
+              (this.leadingSubmitButton ? ' rounded-r-lg' : 'rounded-l-lg')
+            }
             ref={(el) => (this.containerRef = el as HTMLElement)}
           >
             {this.input}
+            {this.clearButton}
           </div>
-          {this.clearButton}
           {!this.leadingSubmitButton && this.submitButton}
         </div>
 
