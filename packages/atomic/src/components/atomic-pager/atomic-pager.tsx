@@ -14,7 +14,7 @@ import ArrowLeftIcon from 'coveo-styleguide/resources/icons/svg/arrow-left-round
  * The Pager provides buttons that allow the end user to navigate through the different result pages.
  *
  * @part list - The list of buttons
- * @part back-button - The back button
+ * @part previous-button - The previous button
  * @part next-button - The next button
  * @part page-button - The page button
  * @part active-page-button - The active page button
@@ -56,44 +56,53 @@ export class AtomicPager implements InitializableComponent {
     });
   }
 
-  private get backButton() {
-    if (!this.pagerState.hasPreviousPage) {
-      return null;
-    }
-
+  private buildButton(options: {
+    part: string;
+    disabled: boolean;
+    ariaLabel: string;
+    callback: () => void;
+    icon: string;
+  }) {
     return (
       <li>
         <button
-          part="back-button"
-          aria-label={this.strings.previous()}
-          onClick={() => {
-            this.pager.previousPage();
-          }}
+          part={options.part}
+          class={`text-secondary ${
+            options.disabled ? 'opacity-50 cursor-not-allowed' : ''
+          }`}
+          disabled={options.disabled}
+          aria-hidden={options.disabled}
+          aria-label={options.ariaLabel}
+          onClick={options.callback}
         >
-          <span innerHTML={ArrowLeftIcon}></span>
+          <span class="fill-current" innerHTML={options.icon}></span>
         </button>
       </li>
     );
   }
 
-  private get nextButton() {
-    if (!this.pagerState.hasNextPage) {
-      return null;
-    }
+  private get previousButton() {
+    return this.buildButton({
+      ariaLabel: this.strings.previous(),
+      callback: () => {
+        this.pager.previousPage();
+      },
+      disabled: !this.pagerState.hasPreviousPage,
+      icon: ArrowLeftIcon,
+      part: 'previous-button',
+    });
+  }
 
-    return (
-      <li>
-        <button
-          part="next-button"
-          aria-label={this.strings.next()}
-          onClick={() => {
-            this.pager.nextPage();
-          }}
-        >
-          <div innerHTML={ArrowRightIcon}></div>
-        </button>
-      </li>
-    );
+  private get nextButton() {
+    return this.buildButton({
+      ariaLabel: this.strings.next(),
+      callback: () => {
+        this.pager.nextPage();
+      },
+      disabled: !this.pagerState.hasNextPage,
+      icon: ArrowRightIcon,
+      part: 'next-button',
+    });
   }
 
   private get pages() {
@@ -103,10 +112,14 @@ export class AtomicPager implements InitializableComponent {
 
   private buildPage(page: number) {
     const isSelected = this.pager.isCurrentPage(page);
+    const classes = isSelected
+      ? 'border-secondary text-on-secondary bg-secondary'
+      : 'border-divider text-secondary bg-on-secondary';
 
     return (
       <li>
         <button
+          class={`border rounded-sm ${classes}`}
           part={`page-button ${isSelected && 'active-page-button'}`}
           aria-label={this.strings.pageNumber(page)}
           onClick={() => {
@@ -122,8 +135,8 @@ export class AtomicPager implements InitializableComponent {
   public render() {
     return (
       <nav aria-label={this.strings.pagination()}>
-        <ul part="list">
-          {this.enableNavigationButtons && this.backButton}
+        <ul part="list" class="flex justify-between">
+          {this.enableNavigationButtons && this.previousButton}
           {this.pages}
           {this.enableNavigationButtons && this.nextButton}
         </ul>
