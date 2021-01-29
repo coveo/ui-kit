@@ -27,7 +27,7 @@ export const ResultLink: FunctionComponent<LinkProps> = (props) => {
     longPressTimer && clearTimeout(longPressTimer);
   };
 
-  useEffect(() => clearPressTimer);
+  useEffect(() => clearPressTimer, []);
 
   return (
     <a
