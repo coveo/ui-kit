@@ -15,10 +15,6 @@
 
 ## Dependencies
 
-### Used by
-
- - [atomic-search-box](../atomic-search-box)
-
 ### Depends on
 
 - [atomic-component-error](../atomic-component-error)
@@ -27,7 +23,6 @@
 ```mermaid
 graph TD;
   atomic-text --> atomic-component-error
-  atomic-search-box --> atomic-text
   style atomic-text fill:#f9f,stroke:#333,stroke-width:4px
 ```
 
