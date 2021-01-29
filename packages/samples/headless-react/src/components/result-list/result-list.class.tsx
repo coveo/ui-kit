@@ -44,7 +44,7 @@ export class ResultList extends Component {
             <li key={result.uniqueId} onLoad={(e) => console.log(e.target)}>
               <article>
                 <h2>
-                  {/* It's important not to use a barebones anchor element in order to log analytics */}
+                  {/* It's important not to use a bare-bones anchor element in order to log analytics */}
                   <ResultLink result={result}>{result.title}</ResultLink>
                 </h2>
                 <p>{result.excerpt}</p>
