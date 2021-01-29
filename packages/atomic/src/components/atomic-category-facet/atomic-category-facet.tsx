@@ -17,7 +17,7 @@ import {
 @Component({
   tag: 'atomic-category-facet',
   styleUrl: 'atomic-category-facet.pcss',
-  shadow: false,
+  shadow: true,
 })
 export class AtomicCategoryFacet implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;
@@ -26,6 +26,7 @@ export class AtomicCategoryFacet implements InitializableComponent {
   @BindStateToController('facet', {subscribeOnConnectedCallback: true})
   @State()
   private facetState!: CategoryFacetState;
+  @State() public error!: Error;
 
   @Prop({mutable: true, reflect: true}) public facetId = '';
   @Prop() public field = '';

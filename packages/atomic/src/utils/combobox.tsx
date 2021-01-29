@@ -1,5 +1,8 @@
+import {I18nState} from './initialization-utils';
+
 export interface ComboboxOptions {
   id: string;
+  strings: I18nState;
   containerRef: () => HTMLElement;
   inputRef: () => HTMLInputElement;
   valuesRef: () => HTMLElement;
@@ -184,7 +187,8 @@ export class Combobox {
 
   private get containerAttributes() {
     return {
-      role: 'search',
+      'aria-owns': `${this.options.id}-listbox`,
+      role: 'combobox',
       'aria-haspopup': 'listbox',
     };
   }
@@ -197,11 +201,10 @@ export class Combobox {
       autocapitalize: 'off',
       autocorrect: 'off',
       'aria-autocomplete': 'list',
-      'aria-owns': `${this.options.id}-listbox`,
       'aria-controls': `${this.options.id}-listbox`,
       'aria-expanded': `${this.hasValues}`,
       'aria-activedescendant': this.activeDescendant,
-      'aria-label': 'Search', // add option
+      'aria-label': this.options.strings.searchBox(),
     };
   }
 
@@ -209,7 +212,7 @@ export class Combobox {
     return {
       id: `${this.options.id}-listbox`,
       role: 'listbox',
-      'aria-labelledby': `${this.options.id}-textbox`,
+      'aria-label': this.options.strings.querySuggestionList(),
     };
   }
 

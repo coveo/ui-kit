@@ -9,7 +9,7 @@ import {Bindings} from '../../utils/initialization-utils';
 
 @Component({
   tag: 'atomic-relevance-inspector',
-  shadow: false,
+  shadow: true,
 })
 export class AtomicRelevanceInspector {
   public relevanceInspector!: RelevanceInspector;

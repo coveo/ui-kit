@@ -49,7 +49,7 @@ export function buildResultsPerPage(
     engine,
     initialStateSchema,
     props.initialState,
-    buildResultsPerPage.name
+    'buildResultsPerPage'
   );
 
   const num = validated.numberOfResults;

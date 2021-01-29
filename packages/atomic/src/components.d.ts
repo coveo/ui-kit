@@ -103,13 +103,19 @@ export namespace Components {
     interface AtomicSearchBox {
         "_id": string;
         /**
-          * Wether the submit button should be place before the input
+          * Whether the submit button should be placed before the input
+          * @default false
          */
         "leadingSubmitButton": boolean;
         /**
           * Maximum number of suggestions to display
+          * @default 5
          */
         "numberOfSuggestions": number;
+        /**
+          * The placeholder for the search box input
+          * @default ''
+         */
         "placeholder": string;
     }
     interface AtomicSearchInterface {
@@ -417,13 +423,19 @@ declare namespace LocalJSX {
     interface AtomicSearchBox {
         "_id"?: string;
         /**
-          * Wether the submit button should be place before the input
+          * Whether the submit button should be placed before the input
+          * @default false
          */
         "leadingSubmitButton"?: boolean;
         /**
           * Maximum number of suggestions to display
+          * @default 5
          */
         "numberOfSuggestions"?: number;
+        /**
+          * The placeholder for the search box input
+          * @default ''
+         */
         "placeholder"?: string;
     }
     interface AtomicSearchInterface {

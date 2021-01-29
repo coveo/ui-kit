@@ -48,7 +48,7 @@ export function buildResultList(
     engine,
     optionsSchema,
     props?.options,
-    buildResultList.name
+    'buildResultList'
   );
 
   if (options.fieldsToInclude) {

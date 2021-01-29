@@ -63,7 +63,7 @@ export const buildBaseProductRecommendationsList = (
     engine,
     optionsSchema,
     props.options,
-    buildBaseProductRecommendationsList.name
+    'buildBaseProductRecommendationsList'
   ) as Required<ProductRecommendationsListOptions>;
   dispatch(
     setProductRecommendationsRecommenderId({

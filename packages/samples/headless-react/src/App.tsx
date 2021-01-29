@@ -7,13 +7,17 @@ import {ResultList as ResultListFn} from './components/result-list/result-list.f
 import {
   buildSearchBox,
   SearchBoxOptions,
+  buildQuerySummary,
   buildResultList,
 } from '@coveo/headless';
 import {engine} from './engine';
 import {Section} from './layout/section';
+import {QuerySummary} from './components/query-summary/query-summary.class';
+import {QuerySummary as QuerySummaryFn} from './components/query-summary/query-summary.fn';
 
 const options: SearchBoxOptions = {numberOfSuggestions: 8};
 const searchBox = buildSearchBox(engine, {options});
+const querySummary = buildQuerySummary(engine);
 
 const resultList = buildResultList(engine);
 
@@ -25,6 +29,10 @@ function App() {
         <Section title="search-box">
           <SearchBox />
           <SearchBoxFn controller={searchBox} />
+        </Section>
+        <Section title="query-summary">
+          <QuerySummary />
+          <QuerySummaryFn controller={querySummary} />
         </Section>
         <Section title="result-list">
           <ResultList />

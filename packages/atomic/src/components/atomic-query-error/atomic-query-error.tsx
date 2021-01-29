@@ -10,7 +10,7 @@ import {
 @Component({
   tag: 'atomic-query-error',
   styleUrl: 'atomic-query-error.pcss',
-  shadow: false,
+  shadow: true,
 })
 export class AtomicQueryError implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;
@@ -19,6 +19,7 @@ export class AtomicQueryError implements InitializableComponent {
   @BindStateToController('queryError')
   @State()
   private queryErrorState!: QueryErrorState;
+  @State() public error!: Error;
 
   public initialize() {
     this.queryError = buildQueryError(this.bindings.engine);

@@ -10,7 +10,7 @@ import {
 @Component({
   tag: 'atomic-did-you-mean',
   styleUrl: 'atomic-did-you-mean.pcss',
-  shadow: false,
+  shadow: true,
 })
 export class AtomicDidYouMean implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;
@@ -19,6 +19,7 @@ export class AtomicDidYouMean implements InitializableComponent {
   @BindStateToController('didYouMean')
   @State()
   private didYouMeanState!: DidYouMeanState;
+  @State() public error!: Error;
 
   public initialize() {
     this.didYouMean = buildDidYouMean(this.bindings.engine);

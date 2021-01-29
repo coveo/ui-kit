@@ -7,7 +7,7 @@ import {
 
 @Component({
   tag: 'atomic-result-value',
-  shadow: false,
+  shadow: true,
 })
 export class AtomicResultValue {
   @Element() host!: HTMLDivElement;

@@ -58,13 +58,13 @@ export function buildRelevanceInspector(
     engine,
     initialStateSchema,
     props.initialState,
-    buildRelevanceInspector.name
+    'buildRelevanceInspector'
   );
   const options = validateOptions(
     engine,
     optionsSchema,
     props.options,
-    buildRelevanceInspector.name
+    'buildRelevanceInspector'
   );
 
   const hasNewResponse = (currentSearchUid: string): boolean => {

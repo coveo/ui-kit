@@ -33,7 +33,7 @@ export const buildCartRecommendationsList = (
     engine,
     optionsSchema,
     props.options,
-    buildCartRecommendationsList.name
+    'buildCartRecommendationsList'
   ) as Required<CartRecommendationsListOptions>;
   return buildBaseProductRecommendationsList(engine, {
     ...props,

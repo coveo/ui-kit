@@ -29,13 +29,14 @@ enum SortOption {
 @Component({
   tag: 'atomic-sort-dropdown',
   styleUrl: 'atomic-sort-dropdown.pcss',
-  shadow: false,
+  shadow: true,
 })
 export class AtomicSortDropdown implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;
   private sort!: Sort;
 
   @State() @BindStateToController('sort') public sortState!: SortState;
+  @State() public error!: Error;
 
   public initialize() {
     const initialState: Partial<SortInitialState> = {criterion: this.relevance};

@@ -29,7 +29,7 @@ import mainclear from '../../images/main-clear.svg';
 @Component({
   tag: 'atomic-breadcrumb-manager',
   styleUrl: 'atomic-breadcrumb-manager.css',
-  shadow: false,
+  shadow: true,
 })
 export class AtomicBreadcrumbManager implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;
@@ -39,6 +39,7 @@ export class AtomicBreadcrumbManager implements InitializableComponent {
   @State()
   private breadcrumbManagerState!: BreadcrumbManagerState;
   @State() private collapsedBreadcrumbsState: string[] = [];
+  @State() public error!: Error;
 
   @Prop() public collapseThreshold = 5;
   @Prop() public categoryDivider = '/';

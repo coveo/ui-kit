@@ -20,7 +20,7 @@ import {
 @Component({
   tag: 'atomic-results-per-page',
   styleUrl: 'atomic-results-per-page.pcss',
-  shadow: false,
+  shadow: true,
 })
 export class AtomicResultsPerPage implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;
@@ -29,6 +29,7 @@ export class AtomicResultsPerPage implements InitializableComponent {
   @State()
   @BindStateToController('resultPerPage')
   public resultPerPageState!: ResultsPerPageState;
+  @State() public error!: Error;
 
   // TODO: validate props
   /**

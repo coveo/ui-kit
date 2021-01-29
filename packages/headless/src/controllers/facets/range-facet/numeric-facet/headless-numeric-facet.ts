@@ -66,7 +66,7 @@ export function buildNumericFacet(
     engine,
     numericFacetOptionsSchema,
     options,
-    buildNumericFacet.name
+    'buildNumericFacet'
   );
 
   dispatch(registerNumericFacet(options));

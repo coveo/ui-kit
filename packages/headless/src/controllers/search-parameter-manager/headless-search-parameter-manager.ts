@@ -53,7 +53,7 @@ export function buildSearchParameterManager(
     engine,
     initialStateSchema,
     props.initialState,
-    buildSearchParameterManager.name
+    'buildSearchParameterManager'
   );
   dispatch(restoreSearchParameters(props.initialState.parameters));
 

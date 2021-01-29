@@ -8,7 +8,7 @@ import {
 @Component({
   tag: 'atomic-result-link',
   styleUrl: 'atomic-result-link.css',
-  shadow: false,
+  shadow: true,
 })
 export class AtomicResultValue {
   @ResultContext() private result!: Result;
