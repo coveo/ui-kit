@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.4.0-alpha.11](https://github.com/coveo/ui-kit/compare/v0.4.0-alpha.10...v0.4.0-alpha.11) (2021-01-29)
+
+
+### Features
+
+* **atomic:** Add documentation to search box ([#452](https://github.com/coveo/ui-kit/issues/452)) ([6dde213](https://github.com/coveo/ui-kit/commit/6dde213f4681b14a415570074185972eb2e97cc8))
+
+
+
+
+
 # [0.4.0-alpha.9](https://github.com/coveo/ui-kit/compare/v0.4.0-alpha.8...v0.4.0-alpha.9) (2021-01-28)
 
 **Note:** Version bump only for package @coveo/atomic
