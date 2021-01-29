@@ -1,5 +1,14 @@
-/**
-Atomic Tab
- */
 @import "tailwindcss/base";
 @import "tailwindcss/utilities";
+
+/**
+ * @prop --atomic-pagination-button-size: Size of the pagination buttons
+ * @prop --atomic-pagination-button-border-radius: Border radius of the pagination button
+ * @prop --atomic-pagination-font-size: Font size of the pagination
+ */
+ button {
+  min-width: var(--atomic-pagination-button-size, 32px);
+  height: var(--atomic-pagination-button-size, 32px);
+  font-size: var(--atomic-pagination-font-size);
+  border-radius:var(--atomic-pagination-button-border-radius, 50%);
+}
