@@ -7,14 +7,15 @@
 
 ## Properties
 
-| Property    | Attribute    | Description | Type                                                                                    | Default                    |
-| ----------- | ------------ | ----------- | --------------------------------------------------------------------------------------- | -------------------------- |
-| `engine`    | --           |             | `Engine<SearchAppState> \| undefined`                                                   | `undefined`                |
-| `i18n`      | --           |             | `i18n`                                                                                  | `i18next.createInstance()` |
-| `language`  | `language`   |             | `string`                                                                                | `'en'`                     |
-| `logLevel`  | `log-level`  |             | `"debug" \| "error" \| "fatal" \| "info" \| "silent" \| "trace" \| "warn" \| undefined` | `undefined`                |
-| `pipeline`  | `pipeline`   |             | `string`                                                                                | `'default'`                |
-| `searchHub` | `search-hub` |             | `string`                                                                                | `'default'`                |
+| Property            | Attribute              | Description | Type                                                                                    | Default                    |
+| ------------------- | ---------------------- | ----------- | --------------------------------------------------------------------------------------- | -------------------------- |
+| `engine`            | --                     |             | `Engine<SearchAppState> \| undefined`                                                   | `undefined`                |
+| `i18n`              | --                     |             | `i18n`                                                                                  | `i18next.createInstance()` |
+| `language`          | `language`             |             | `string`                                                                                | `'en'`                     |
+| `logLevel`          | `log-level`            |             | `"debug" \| "error" \| "fatal" \| "info" \| "silent" \| "trace" \| "warn" \| undefined` | `undefined`                |
+| `pipeline`          | `pipeline`             |             | `string`                                                                                | `'default'`                |
+| `reflectStateInUrl` | `reflect-state-in-url` |             | `boolean`                                                                               | `true`                     |
+| `searchHub`         | `search-hub`           |             | `string`                                                                                | `'default'`                |
 
 
 ## Methods

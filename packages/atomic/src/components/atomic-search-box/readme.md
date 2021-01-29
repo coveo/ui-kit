@@ -1,34 +1,17 @@
 # atomic-search-box
-
-
+A search box with built in support for query suggestions.
 
 <!-- Auto Generated Below -->
 
 
-## Usage
-
-### Example
-
-```html
-<!-- Default with props -->
-<atomic-search-box number-of-suggestions=10></atomic-search-box>
-
-<!-- Search box with a slot for the submit button's content -->
-<atomic-search-box>
-  <span slot="submit-button">Go! 😊</span>
-</atomic-search-box>
-```
-
-
-
 ## Properties
 
-| Property              | Attribute               | Description                                               | Type      | Default                                  |
-| --------------------- | ----------------------- | --------------------------------------------------------- | --------- | ---------------------------------------- |
-| `_id`                 | `data-id`               |                                                           | `string`  | `randomID(     'atomic-search-box-'   )` |
-| `enableQuerySyntax`   | `enable-query-syntax`   |                                                           | `boolean` | `false`                                  |
-| `leadingSubmitButton` | `leading-submit-button` | Wether the submit button should be place before the input | `boolean` | `false`                                  |
-| `numberOfSuggestions` | `number-of-suggestions` | Maximum number of suggestions to display                  | `number`  | `5`                                      |
+| Property              | Attribute               | Description                                                 | Type      | Default                                  |
+| --------------------- | ----------------------- | ----------------------------------------------------------- | --------- | ---------------------------------------- |
+| `_id`                 | `data-id`               |                                                             | `string`  | `randomID(     'atomic-search-box-'   )` |
+| `leadingSubmitButton` | `leading-submit-button` | Whether the submit button should be placed before the input | `boolean` | `false`                                  |
+| `numberOfSuggestions` | `number-of-suggestions` | Maximum number of suggestions to display                    | `number`  | `5`                                      |
+| `placeholder`         | `placeholder`           | The placeholder for the search box input                    | `string`  | `''`                                     |
 
 
 ## Shadow Parts
@@ -47,15 +30,12 @@
 
 ### Depends on
 
-- [atomic-text](../atomic-text)
 - [atomic-component-error](../atomic-component-error)
 
 ### Graph
 ```mermaid
 graph TD;
-  atomic-search-box --> atomic-text
   atomic-search-box --> atomic-component-error
-  atomic-text --> atomic-component-error
   style atomic-search-box fill:#f9f,stroke:#333,stroke-width:4px
 ```
 
