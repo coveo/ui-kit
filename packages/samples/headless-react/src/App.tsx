@@ -46,7 +46,7 @@ function App() {
           <ResultListFn controller={resultList} />
         </Section>
         <Section title="results-per-page">
-          <ResultsPerPage />
+          <ResultsPerPage options={resultsPerPageOptions} />
           <ResultsPerPageFn
             controller={resultsPerPage}
             options={resultsPerPageOptions}

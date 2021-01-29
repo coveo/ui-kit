@@ -7,18 +7,20 @@ import {
 } from '@coveo/headless';
 import {engine} from '../../engine';
 
-const options = [10, 25, 50, 100];
+interface ResultsPerPageProps {
+  options: number[];
+}
 
-export class ResultsPerPage extends Component {
+export class ResultsPerPage extends Component<ResultsPerPageProps> {
   private controller: HeadlessResultsPerPage;
   public state: ResultsPerPageState;
   private unsubscribe: Unsubscribe = () => {};
 
-  constructor(props: {}) {
+  constructor(props: ResultsPerPageProps) {
     super(props);
 
     this.controller = buildResultsPerPage(engine, {
-      initialState: {numberOfResults: options[0]},
+      initialState: {numberOfResults: props.options[0]},
     });
     this.state = this.controller.state;
   }
@@ -35,22 +37,14 @@ export class ResultsPerPage extends Component {
     this.setState(this.controller.state);
   }
 
-  private isSetTo(numberOfResults: number) {
-    return this.controller.isSetTo(numberOfResults);
-  }
-
-  private set(numberOfResults: number) {
-    this.controller.set(numberOfResults);
-  }
-
   render() {
     return (
       <ul>
-        {options.map((numberOfResults) => (
+        {this.props.options.map((numberOfResults) => (
           <li key={numberOfResults}>
             <button
-              disabled={this.isSetTo(numberOfResults)}
-              onClick={() => this.set(numberOfResults)}
+              disabled={this.controller.isSetTo(numberOfResults)}
+              onClick={() => this.controller.set(numberOfResults)}
             >
               {numberOfResults}
             </button>

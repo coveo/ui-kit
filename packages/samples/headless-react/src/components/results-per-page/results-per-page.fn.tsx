@@ -18,21 +18,13 @@ export const ResultsPerPage: FunctionComponent<ResultsPerPageProps> = (
 
   useEffect(() => controller.subscribe(() => setState(controller.state)), []);
 
-  const isSetTo = (numberOfResults: number) => {
-    return controller.isSetTo(numberOfResults);
-  };
-
-  const set = (numberOfResults: number) => {
-    controller.set(numberOfResults);
-  };
-
   return (
     <ul>
       {options.map((numberOfResults) => (
         <li key={numberOfResults}>
           <button
-            disabled={isSetTo(numberOfResults)}
-            onClick={() => set(numberOfResults)}
+            disabled={controller.isSetTo(numberOfResults)}
+            onClick={() => controller.set(numberOfResults)}
           >
             {numberOfResults}
           </button>
