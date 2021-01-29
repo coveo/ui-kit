@@ -13,11 +13,10 @@ import {
   buildResultList,
   buildDateSortCriterion,
   buildFieldSortCriterion,
-  buildNoSortCriterion,
-  buildQueryRankingExpressionSortCriterion,
   buildRelevanceSortCriterion,
   buildSort,
   SortOrder,
+  SortCriterion,
 } from '@coveo/headless';
 import {engine} from './engine';
 import {Section} from './layout/section';
@@ -28,17 +27,16 @@ const options: SearchBoxOptions = {numberOfSuggestions: 8};
 const searchBox = buildSearchBox(engine, {options});
 const querySummary = buildQuerySummary(engine);
 
-const criterions = {
-  Relevance: buildRelevanceSortCriterion(),
-  'Date (Ascending)': buildDateSortCriterion(SortOrder.Ascending),
-  'Date (Descending)': buildDateSortCriterion(SortOrder.Descending),
-  'Size (Ascending)': buildFieldSortCriterion('size', SortOrder.Ascending),
-  'Size (Descending)': buildFieldSortCriterion('size', SortOrder.Descending),
-  Suggested: buildQueryRankingExpressionSortCriterion(),
-  None: buildNoSortCriterion(),
-};
+const criteria: [string, SortCriterion][] = [
+  ['Relevance', buildRelevanceSortCriterion()],
+  ['Date (Ascending)', buildDateSortCriterion(SortOrder.Ascending)],
+  ['Date (Descending)', buildDateSortCriterion(SortOrder.Descending)],
+  ['Size (Ascending)', buildFieldSortCriterion('size', SortOrder.Ascending)],
+  ['Size (Descending)', buildFieldSortCriterion('size', SortOrder.Descending)],
+];
+const initialCriterion = criteria[0][1];
 const sort = buildSort(engine, {
-  initialState: {criterion: criterions.Suggested},
+  initialState: {criterion: initialCriterion},
 });
 
 const fieldsToInclude = {author: 'Author', filetype: 'File type'};
@@ -60,8 +58,8 @@ function App() {
           <QuerySummaryFn controller={querySummary} />
         </Section>
         <Section title="sort">
-          <Sort />
-          <SortFn controller={sort} criterions={criterions} />
+          <Sort criteria={criteria} initialCriterion={initialCriterion} />
+          <SortFn controller={sort} criteria={criteria} />
         </Section>
         <Section title="result-list">
           <ResultList />

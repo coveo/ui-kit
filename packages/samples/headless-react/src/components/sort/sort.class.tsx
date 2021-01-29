@@ -1,38 +1,29 @@
 import {Component} from 'react';
 import {
-  buildDateSortCriterion,
-  buildFieldSortCriterion,
-  buildNoSortCriterion,
-  buildQueryRankingExpressionSortCriterion,
-  buildRelevanceSortCriterion,
+  buildCriterionExpression,
   buildSort,
   Sort as HeadlessSort,
-  SortOrder,
+  SortCriterion,
   SortState,
   Unsubscribe,
 } from '@coveo/headless';
 import {engine} from '../../engine';
 
-const criterions = {
-  Relevance: buildRelevanceSortCriterion(),
-  'Date (Ascending)': buildDateSortCriterion(SortOrder.Ascending),
-  'Date (Descending)': buildDateSortCriterion(SortOrder.Descending),
-  'Size (Ascending)': buildFieldSortCriterion('size', SortOrder.Ascending),
-  'Size (Descending)': buildFieldSortCriterion('size', SortOrder.Descending),
-  Suggested: buildQueryRankingExpressionSortCriterion(),
-  None: buildNoSortCriterion(),
-};
+interface SortProps {
+  criteria: [string, SortCriterion][];
+  initialCriterion: SortCriterion;
+}
 
-export class Sort extends Component {
+export class Sort extends Component<SortProps> {
   private controller: HeadlessSort;
   public state: SortState;
   private unsubscribe: Unsubscribe = () => {};
 
-  constructor(props: {}) {
+  constructor(props: SortProps) {
     super(props);
 
     this.controller = buildSort(engine, {
-      initialState: {criterion: criterions.Suggested},
+      initialState: {criterion: props.initialCriterion},
     });
     this.state = this.controller.state;
   }
@@ -49,32 +40,33 @@ export class Sort extends Component {
     this.setState(this.controller.state);
   }
 
-  private get criterionNames() {
-    return Object.keys(criterions) as (keyof typeof criterions)[];
+  private getCriterionFromName(name: string) {
+    return this.props.criteria.find(
+      ([criterionName]) => criterionName === name
+    )!;
   }
 
-  private sortBy(criterionName: keyof typeof criterions) {
-    this.controller.sortBy(criterions[criterionName]);
-  }
-
-  private isSortedBy(criterionName: keyof typeof criterions) {
-    return this.controller.isSortedBy(criterions[criterionName]);
+  private get currentCriterion() {
+    return this.props.criteria.find(
+      ([, criterion]) =>
+        this.state.sortCriteria === buildCriterionExpression(criterion)
+    )!;
   }
 
   render() {
     return (
-      <ul>
-        {this.criterionNames.map((criterionName) => (
-          <li key={criterionName}>
-            <button
-              disabled={this.isSortedBy(criterionName)}
-              onClick={() => this.sortBy(criterionName)}
-            >
-              {criterionName}
-            </button>
-          </li>
+      <select
+        value={this.currentCriterion[0]}
+        onChange={(e) =>
+          this.controller.sortBy(this.getCriterionFromName(e.target.value)[1])
+        }
+      >
+        {this.props.criteria.map(([criterionName]) => (
+          <option key={criterionName} value={criterionName}>
+            {criterionName}
+          </option>
         ))}
-      </ul>
+      </select>
     );
   }
 }

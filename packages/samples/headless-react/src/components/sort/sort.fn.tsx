@@ -1,9 +1,8 @@
 import {useEffect, useState, FunctionComponent} from 'react';
 import {
+  buildCriterionExpression,
   buildDateSortCriterion,
   buildFieldSortCriterion,
-  buildNoSortCriterion,
-  buildQueryRankingExpressionSortCriterion,
   buildRelevanceSortCriterion,
   buildSort,
   Sort as HeadlessSort,
@@ -14,56 +13,52 @@ import {engine} from '../../engine';
 
 interface SortProps {
   controller: HeadlessSort;
-  criterions: {[criterionName: string]: SortCriterion};
+  criteria: [string, SortCriterion][];
 }
 
 export const Sort: FunctionComponent<SortProps> = (props) => {
   const {controller} = props;
-  const [, setState] = useState(controller.state);
+  const [state, setState] = useState(controller.state);
 
   useEffect(() => controller.subscribe(() => setState(controller.state)), []);
 
-  const criterionNames = () => {
-    return Object.keys(props.criterions) as (keyof typeof props.criterions)[];
-  };
+  const getCriterionFromName = (name: string) =>
+    props.criteria.find(([criterionName]) => criterionName === name)!;
 
-  const sortBy = (criterionName: keyof typeof props.criterions) => {
-    controller.sortBy(props.criterions[criterionName]);
-  };
-
-  const isSortedBy = (criterionName: keyof typeof props.criterions) => {
-    return controller.isSortedBy(props.criterions[criterionName]);
-  };
+  const getCurrentCriterion = () =>
+    props.criteria.find(
+      ([, criterion]) =>
+        state.sortCriteria === buildCriterionExpression(criterion)
+    )!;
 
   return (
-    <ul>
-      {criterionNames().map((criterionName) => (
-        <li key={criterionName}>
-          <button
-            disabled={isSortedBy(criterionName)}
-            onClick={() => sortBy(criterionName)}
-          >
-            {criterionName}
-          </button>
-        </li>
+    <select
+      value={getCurrentCriterion()[0]}
+      onChange={(e) =>
+        controller.sortBy(getCriterionFromName(e.target.value)[1])
+      }
+    >
+      {props.criteria.map(([criterionName]) => (
+        <option key={criterionName} value={criterionName}>
+          {criterionName}
+        </option>
       ))}
-    </ul>
+    </select>
   );
 };
 
 // usage
 
-const criterions = {
-  Relevance: buildRelevanceSortCriterion(),
-  'Date (Ascending)': buildDateSortCriterion(SortOrder.Ascending),
-  'Date (Descending)': buildDateSortCriterion(SortOrder.Descending),
-  'Size (Ascending)': buildFieldSortCriterion('size', SortOrder.Ascending),
-  'Size (Descending)': buildFieldSortCriterion('size', SortOrder.Descending),
-  Suggested: buildQueryRankingExpressionSortCriterion(),
-  None: buildNoSortCriterion(),
-};
+const criteria: [string, SortCriterion][] = [
+  ['Relevance', buildRelevanceSortCriterion()],
+  ['Date (Ascending)', buildDateSortCriterion(SortOrder.Ascending)],
+  ['Date (Descending)', buildDateSortCriterion(SortOrder.Descending)],
+  ['Size (Ascending)', buildFieldSortCriterion('size', SortOrder.Ascending)],
+  ['Size (Descending)', buildFieldSortCriterion('size', SortOrder.Descending)],
+];
+const initialCriterion = criteria[0][1];
 const controller = buildSort(engine, {
-  initialState: {criterion: criterions.Suggested},
+  initialState: {criterion: initialCriterion},
 });
 
-<Sort controller={controller} criterions={criterions} />;
+<Sort controller={controller} criteria={criteria} />;
