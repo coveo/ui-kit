@@ -5,6 +5,7 @@ import {
   ResultListState,
   Unsubscribe,
 } from '@coveo/headless';
+import {ResultLink} from './result-link';
 import {engine} from '../../engine';
 
 export class ResultList extends Component {
@@ -15,9 +16,7 @@ export class ResultList extends Component {
   constructor(props: {}) {
     super(props);
 
-    this.controller = buildResultList(engine, {
-      options: {fieldsToInclude: ['author', 'filetype']},
-    });
+    this.controller = buildResultList(engine);
     this.state = this.controller.state;
   }
 
@@ -42,27 +41,12 @@ export class ResultList extends Component {
       <div>
         <ul style={{textAlign: 'left'}}>
           {this.state.results.map((result) => (
-            <li key={result.uniqueId}>
+            <li key={result.uniqueId} onLoad={(e) => console.log(e.target)}>
               <article>
                 <h2>
-                  <a href={result.clickUri}>{result.title}</a>
+                  {/* It's important not to use a barebones anchor element in order to log analytics */}
+                  <ResultLink result={result}>{result.title}</ResultLink>
                 </h2>
-                <table>
-                  <tbody>
-                    {result.raw.author && (
-                      <tr>
-                        <th>Author</th>
-                        <td>{result.raw.author as string}</td>
-                      </tr>
-                    )}
-                    {result.raw.filetype && (
-                      <tr>
-                        <th>File type</th>
-                        <td>{result.raw.filetype}</td>
-                      </tr>
-                    )}
-                  </tbody>
-                </table>
                 <p>{result.excerpt}</p>
               </article>
             </li>

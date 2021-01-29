@@ -15,10 +15,7 @@ import {Section} from './layout/section';
 const options: SearchBoxOptions = {numberOfSuggestions: 8};
 const searchBox = buildSearchBox(engine, {options});
 
-const fieldsToInclude = {author: 'Author', filetype: 'File type'};
-const resultList = buildResultList(engine, {
-  options: {fieldsToInclude: Object.keys(fieldsToInclude)},
-});
+const resultList = buildResultList(engine);
 
 function App() {
   return (
@@ -31,10 +28,7 @@ function App() {
         </Section>
         <Section title="result-list">
           <ResultList />
-          <ResultListFn
-            controller={resultList}
-            fieldsToInclude={fieldsToInclude}
-          />
+          <ResultListFn controller={resultList} />
         </Section>
       </header>
     </div>
