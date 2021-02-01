@@ -7,10 +7,10 @@
 
 ## Properties
 
-| Property        | Attribute        | Description                                                    | Type     | Default          |
-| --------------- | ---------------- | -------------------------------------------------------------- | -------- | ---------------- |
-| `initialOption` | `initial-option` | Initial value of the result per page option                    | `number` | `10`             |
-| `options`       | `options`        | List of possible results per page options, separated by commas | `string` | `'10,25,50,100'` |
+| Property           | Attribute           | Description                                                                                        | Type     | Default          |
+| ------------------ | ------------------- | -------------------------------------------------------------------------------------------------- | -------- | ---------------- |
+| `choicesDisplayed` | `choices-displayed` | List of possible results per page choices, separated by commas.                                    | `string` | `'10,25,50,100'` |
+| `initialChoice`    | `initial-choice`    | Initial choice for the number of result per page. Should be part of the `choicesDisplayed` option. | `number` | `10`             |
 
 
 ## Shadow Parts
@@ -18,9 +18,18 @@
 | Part                   | Description                  |
 | ---------------------- | ---------------------------- |
 | `"active-page-button"` | The active page button       |
+| `"buttons"`            | The list of buttons          |
 | `"label"`              | The "Results per page" label |
-| `"list"`               | The list of buttons          |
 | `"page-button"`        | The page button              |
+
+
+## CSS Custom Properties
+
+| Name                                       | Description                            |
+| ------------------------------------------ | -------------------------------------- |
+| `--atomic-pagination-button-border-radius` | Border radius of the pagination button |
+| `--atomic-pagination-button-size`          | Size of the pagination buttons         |
+| `--atomic-pagination-font-size`            | Font size of the pagination            |
 
 
 ## Dependencies

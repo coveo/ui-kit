@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.5.0-alpha.0](https://github.com/coveo/ui-kit/compare/v0.4.0...v0.5.0-alpha.0) (2021-02-01)
+
+
+### Features
+
+* **atomic:** atomic-pager & atomic-result-per-page components completion ([#456](https://github.com/coveo/ui-kit/issues/456)) ([af75a9b](https://github.com/coveo/ui-kit/commit/af75a9bc918d98ef8fe65d8b2899190e432de227))
+
+
+
+
+
+# [0.4.0](https://github.com/coveo/ui-kit/compare/v0.4.0-alpha.11...v0.4.0) (2021-01-29)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
 # [0.4.0-alpha.8](https://github.com/coveo/ui-kit/compare/v0.4.0-alpha.7...v0.4.0-alpha.8) (2021-01-28)
 
 **Note:** Version bump only for package @coveo/headless
