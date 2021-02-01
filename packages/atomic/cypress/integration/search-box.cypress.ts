@@ -1,4 +1,7 @@
-import {getApiResponseBody, getUAFetch} from '../utils/network';
+import {
+  getApiResponseBody,
+  getAnalyticsSearchEventRequest,
+} from '../utils/network';
 import {setUpPage} from '../utils/setupComponent';
 import {
   SearchBoxSelectors,
@@ -57,11 +60,13 @@ describe('Search Box Test Suites', () => {
       actionCause: 'searchboxSubmit',
     };
 
-    const fetchAnalytic = await getUAFetch('@coveoAnalytics');
+    const fetchAnalytic = await getAnalyticsSearchEventRequest(
+      '@coveoAnalytics'
+    );
     // expect(fetchAnalytic.status).to.eq(200);
     // Comment the check for now, as has UA issue with first query sent out
     // TODO: Put UA status check back when issue is fixed
-    expect(fetchAnalytic.request.body).to.have.property(
+    expect(fetchAnalytic).to.have.property(
       'actionCause',
       searchUA['actionCause']
     );
