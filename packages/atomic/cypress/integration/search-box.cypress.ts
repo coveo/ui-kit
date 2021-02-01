@@ -83,9 +83,8 @@ describe('Search Box Test Suites', () => {
       };
 
       const fetchAnalytic = await getUAFetch('@coveoAnalytics');
-      // expect(fetchAnalytic.status).to.eq(200);
-      // Comment the check for now, as has UA issue with first query sent out
-      // TODO: Put UA status check back when issue is fixed
+      console.log(fetchAnalytic);
+      expect(fetchAnalytic.response.statusCode).to.eq(200);
       expect(fetchAnalytic.request.body).to.have.property(
         'actionCause',
         searchUA['actionCause']
