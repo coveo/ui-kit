@@ -49,7 +49,7 @@ describe('Search Box Test Suites', () => {
     it('should execute a query on button click', async () => {
       cy.get('@searchBoxFirstDiv').find('.input').type(queryText);
       cy.get('@searchBoxFirstDiv').find('.submit-button').click();
-      // Search section make sure number of items displays should be same as what returns from api call
+
       const jsonResponse = await getApiResponseBody('@coveoSearch');
       expect(jsonResponse).to.have.property('results');
       expect(jsonResponse.results?.length).to.be.eq(10);
@@ -59,7 +59,7 @@ describe('Search Box Test Suites', () => {
       cy.get('@searchBoxFirstDiv')
         .find('.input')
         .type(queryText + '{enter}');
-      // Search section make sure number of items displays should be same as what returns from api call
+
       const jsonResponse = await getApiResponseBody('@coveoSearch');
       expect(jsonResponse).to.have.property('results');
       expect(jsonResponse.results?.length).to.be.eq(10);
@@ -77,7 +77,6 @@ describe('Search Box Test Suites', () => {
         .type(queryText, {force: true});
       cy.get('@searchBoxFirstDiv').find('.submit-button').click();
 
-      // UA section make sure that the information sent should contains some context
       const searchUA = {
         actionCause: 'searchboxSubmit',
       };
@@ -141,16 +140,6 @@ describe('Search Box Test Suites', () => {
       testLoad();
     });
 
-    it('should not show query suggestions', async () => {
-      cy.get('@searchBoxFirstDiv')
-        .find('.input')
-        .type(queryText, {force: true});
-
-      cy.get('@searchBoxFirstDiv')
-        .find(SearchBoxSelectors.querySuggestionList)
-        .should('not.be.visible');
-    });
-
     it('passes automated accessibility tests with a query', () => {
       cy.get('@searchBoxFirstDiv')
         .find('.input')
@@ -175,7 +164,7 @@ describe('Search Box Test Suites', () => {
     it('should execute a query on button click', async () => {
       cy.get('@searchBoxFirstDiv').find('.input').type(queryText);
       cy.get('@searchBoxFirstDiv').find('.submit-button').click();
-      // Search section make sure number of items displays should be same as what returns from api call
+
       const jsonResponse = await getApiResponseBody('@coveoSearch');
       expect(jsonResponse).to.have.property('results');
       expect(jsonResponse.results?.length).to.be.eq(10);
