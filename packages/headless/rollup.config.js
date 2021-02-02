@@ -6,6 +6,7 @@ import {terser} from 'rollup-plugin-terser';
 import {sizeSnapshot} from 'rollup-plugin-size-snapshot';
 import alias from '@rollup/plugin-alias';
 import {resolve as pathResolve} from 'path';
+import dts from "rollup-plugin-dts";
 
 const isCI = process.env.CI === 'true';
 const isProduction = process.env.BUILD === 'production';
@@ -86,6 +87,16 @@ const browserConfig = {
   ],
 };
 
-const config = isProduction ? [nodeConfig, browserConfig] : [browserConfig];
+
+// Api-extractor cannot resolve import() types, so we use dts to create a file that api-extractor
+// can consume. When the api-extractor limitation is resolved, this step will not be necessary.
+// [https://github.com/microsoft/rushstack/issues/1050]
+const typeDefinitions = {
+  input: "./dist/index.d.ts",
+  output: [{file: "dist/headless.d.ts", format: "es"}],
+  plugins: [dts()]
+}
+
+const config = isProduction ? [nodeConfig, typeDefinitions, browserConfig] : [browserConfig];
 
 export default config;
