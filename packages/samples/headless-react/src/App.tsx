@@ -2,6 +2,8 @@ import logo from './logo.svg';
 import './App.css';
 import {SearchBox} from './components/search-box/search-box.class';
 import {SearchBox as SearchBoxFn} from './components/search-box/search-box.fn';
+import {DidYouMean} from './components/did-you-mean/did-you-mean.class';
+import {DidYouMean as DidYouMeanFn} from './components/did-you-mean/did-you-mean.fn';
 import {Sort} from './components/sort/sort.class';
 import {Sort as SortFn} from './components/sort/sort.fn';
 import {ResultList} from './components/result-list/result-list.class';
@@ -10,6 +12,7 @@ import {Pager} from './components/pager/pager.class';
 import {Pager as PagerFn} from './components/pager/pager.fn';
 import {
   buildSearchBox,
+  buildDidYouMean,
   buildQuerySummary,
   buildResultList,
   buildDateSortCriterion,
@@ -29,6 +32,8 @@ import {QuerySummary} from './components/query-summary/query-summary.class';
 import {QuerySummary as QuerySummaryFn} from './components/query-summary/query-summary.fn';
 
 const searchBox = buildSearchBox(engine, {options: {numberOfSuggestions: 8}});
+
+const didYouMean = buildDidYouMean(engine);
 
 const querySummary = buildQuerySummary(engine);
 
@@ -61,6 +66,10 @@ function App() {
         <Section title="search-box">
           <SearchBox />
           <SearchBoxFn controller={searchBox} />
+        </Section>
+        <Section title="did-you-mean">
+          <DidYouMean />
+          <DidYouMeanFn controller={didYouMean} />
         </Section>
         <Section title="query-summary">
           <QuerySummary />
