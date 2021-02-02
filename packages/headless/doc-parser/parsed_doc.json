@@ -1,0 +1,121 @@
+{
+  "initializer": {
+    "name": "buildPager",
+    "desc": "",
+    "params": [
+      {
+        "name": "engine",
+        "desc": "",
+        "isOptional": false,
+        "type": "Engine<PaginationSection & ConfigurationSection>"
+      },
+      {
+        "name": "props",
+        "desc": "",
+        "isOptional": false,
+        "type": "PagerProps",
+        "members": [
+          {
+            "name": "initialState",
+            "desc": "/**\n * The initial state that should be applied to the `Pager` controller.\n */\n",
+            "isOptional": true,
+            "type": "PagerInitialState",
+            "members": [
+              {
+                "name": "page",
+                "desc": "/**\n * The initial page number\n */\n",
+                "isOptional": true,
+                "type": "number"
+              }
+            ]
+          },
+          {
+            "name": "options",
+            "desc": "/**\n * The options for the `Pager` controller.\n */\n",
+            "isOptional": true,
+            "type": "PagerOptions",
+            "members": [
+              {
+                "name": "numberOfPages",
+                "desc": "/**\n * The number of pages to display in the pager.\n */\n",
+                "isOptional": true,
+                "type": "number"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "returnType": "Pager"
+  },
+  "instance": {
+    "name": "Pager",
+    "type": "Pager",
+    "desc": "",
+    "isOptional": false,
+    "members": [
+      {
+        "name": "isCurrentPage",
+        "desc": "/**\n * @param page - The page number to check.\n *\n * @returns boolean.\n */\n",
+        "isOptional": false,
+        "type": "(page: number) => void"
+      },
+      {
+        "name": "nextPage",
+        "desc": "/**\n * Updates the results to those on the next page.\n */\n",
+        "isOptional": false,
+        "type": "() => void"
+      },
+      {
+        "name": "previousPage",
+        "desc": "/**\n * Updates the results to those on the previous page.\n */\n",
+        "isOptional": false,
+        "type": "() => void"
+      },
+      {
+        "name": "selectPage",
+        "desc": "/**\n * Updates the results to those on the passed page.\n *\n * @param page - The page number.\n */\n",
+        "isOptional": false,
+        "type": "(page: number) => void"
+      },
+      {
+        "name": "state",
+        "desc": "/**\n * The state of the Pager controller\n */\n",
+        "isOptional": false,
+        "type": "PagerState",
+        "members": [
+          {
+            "name": "currentPage",
+            "desc": "/**\n * @returns the current selected page\n */\n",
+            "isOptional": false,
+            "type": "number"
+          },
+          {
+            "name": "currentPages",
+            "desc": "/**\n * @returns the current pages range\n */\n",
+            "isOptional": false,
+            "type": "number[]"
+          },
+          {
+            "name": "hasNextPage",
+            "desc": "/**\n * @returns `true` when a next page is available, and `false` otherwise.\n */\n",
+            "isOptional": false,
+            "type": "boolean"
+          },
+          {
+            "name": "hasPreviousPage",
+            "desc": "/**\n * @returns `true` when a previous page is available, and `false` otherwise.\n */\n",
+            "isOptional": false,
+            "type": "boolean"
+          },
+          {
+            "name": "maxPage",
+            "desc": "/**\n * @returns the max available page for this query\n */\n",
+            "isOptional": false,
+            "type": "number"
+          }
+        ]
+      }
+    ]
+  }
+}
