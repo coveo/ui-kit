@@ -178,7 +178,7 @@ export class AtomicSearchBox {
         onKeyDown={(e) => this.combobox.onInputKeydown(e)}
         type="text"
         class={
-          'input mx-2 my-0 text-base placeholder-on-background outline-none flex-grow flex-row align-items-center '
+          'input mx-2 my-0 text-base placeholder-on-background outline-none flex-grow flex-row items-center '
         }
         placeholder={this.placeholder}
         value={this.searchBoxState.value}
@@ -197,10 +197,10 @@ export class AtomicSearchBox {
           onMouseDown={(e) => e.preventDefault()}
           part="suggestion"
           id={id}
-          class="suggestion h-9 px-2 cursor-pointer text-left text-sm bg-transparent border-none shadow-none hover:bg-gray-200 flex flex-row items-center"
+          class="suggestion h-9 px-2 cursor-pointer text-left text-sm bg-transparent border-none shadow-none hover:bg-primary-variant hover:text-on-primary flex flex-row items-center"
           innerHTML={suggestion.highlightedValue}
           value={index}
-        ></li>
+        />
       );
     });
   }
@@ -212,8 +212,10 @@ export class AtomicSearchBox {
           {this.leadingSubmitButton && this.submitButton}
           <div
             class={
-              'input-wrapper flex flex-row flex-grow align-items-center border border-r-0 border-solid border-on-background ' +
-              (this.leadingSubmitButton ? ' rounded-r-lg' : 'rounded-l-lg')
+              'input-wrapper flex flex-row flex-grow align-items-center apply-border-on-background ' +
+              (this.leadingSubmitButton
+                ? 'border-l-0 rounded-r-lg'
+                : 'border-r-0 rounded-l-lg')
             }
             ref={(el) => (this.containerRef = el as HTMLElement)}
           >
@@ -225,7 +227,7 @@ export class AtomicSearchBox {
 
         <ul
           part="suggestions"
-          class="suggestions box-border w-full lg:w-80 p-0 my-0 flex flex-col border border-t-0 border-solid border-on-background rounded-b list-none"
+          class="suggestions box-border w-full lg:w-80 p-0 my-0 flex flex-col apply-border-on-background border-t-0 rounded-b list-none"
           ref={(el) => (this.valuesRef = el as HTMLElement)}
         >
           {this.suggestions}

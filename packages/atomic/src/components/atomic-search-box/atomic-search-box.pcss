@@ -1,11 +1,6 @@
 @import "tailwindcss/base";
 @import "tailwindcss/utilities";
 
-
-:host {
-  display: block;
-}
-
 .submit-button {
   width: var(--submit-button-width, 48px)
 }
@@ -14,13 +9,13 @@
   height: var(--search-box-height, 48px);
 }
 
+.suggestion {
+  height: var(--search-box-height, 48px);
+}
+
 .search-box:focus-within .input-wrapper, .search-box:focus-within .submit-button {
   border-bottom-right-radius: 0;
   border-bottom-left-radius: 0;
-}
-
-.suggestion {
-  height: var(--search-box-height, 48px);
 }
 
 .suggestion.active-suggestion {
