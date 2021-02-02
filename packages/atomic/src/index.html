@@ -55,20 +55,23 @@
         <atomic-tab expression='@author *= "BBC News"'>BBC News</atomic-tab>
       </div>
       <atomic-search-box class="m-3 block"></atomic-search-box>
-      <div style="display: flex">
+      <div class="flex px-2">
         <atomic-facet-manager>
           <atomic-facet field="author" label="Authors"></atomic-facet>
           <atomic-numeric-facet field="size" label="File sizes"></atomic-numeric-facet>
           <atomic-date-facet field="created" label="Created"></atomic-date-facet>
           <atomic-category-facet field="geographicalhierarchy" label="World Atlas"></atomic-category-facet>
         </atomic-facet-manager>
-        <div>
+        <div class="flex-grow">
           <atomic-breadcrumb-manager></atomic-breadcrumb-manager>
           <atomic-did-you-mean></atomic-did-you-mean>
           <atomic-query-error></atomic-query-error>
-          <div style="display: flex">
+          <div class="flex justify-between items-center my-2">
             <atomic-query-summary></atomic-query-summary>
-            <atomic-sort-dropdown></atomic-sort-dropdown>
+            <atomic-sort-dropdown>
+              <atomic-sort-criterion by="relevancy"></atomic-sort-criterion>
+              <atomic-sort-criterion by="date" order="descending"></atomic-sort-criterion>
+            </atomic-sort-dropdown>
           </div>
 
           <atomic-result-list>

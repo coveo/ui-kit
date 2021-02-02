@@ -5,7 +5,7 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { Engine, LogLevel, Result, ResultTemplateCondition } from "@coveo/headless";
+import { Engine, LogLevel, Result, ResultTemplateCondition, SortBy, SortCriterion, SortOrder } from "@coveo/headless";
 import { Bindings } from "./utils/initialization-utils";
 import { i18n } from "i18next";
 import { InitializationOptions } from "./components/atomic-search-interface/atomic-search-interface";
@@ -20,6 +20,7 @@ export namespace Components {
         "label": string;
     }
     interface AtomicComponentError {
+        "element": HTMLElement;
         "error": Error;
     }
     interface AtomicDateFacet {
@@ -137,7 +138,33 @@ export namespace Components {
         "reflectStateInUrl": boolean;
         "searchHub": string;
     }
+    interface AtomicSortCriterion {
+        /**
+          * The available criteria that can be used to sort query results.  - `relevancy`: Uses standard index ranking factors (adjacency, TDIDF) and custom ranking expressions (QREs and QRFs) to compute a ranking score for each query result item, and sorts the query results by descending score value. - `qre`: Uses only custom ranking expressions (QREs and QRFs) to compute a ranking score for each query result item, and sorts the query results by descending score value. - `date`: Uses the date field to sort the query results. This field typically contains the last modification date of each item. May be in ascending or descending order. - `field`: Uses the value of a specific sortable field to sort the query results. May be in ascending or descending order.
+         */
+        "by": SortBy;
+        /**
+          * The non-localized caption to display for this criteria.
+         */
+        "caption": string;
+        /**
+          * Validated sort criterion. `null` when invalid. For development purposes, not meant to be specified by users.
+         */
+        "criterion": SortCriterion;
+        /**
+          * The sortable field on which to sort when `by` is `field`.
+         */
+        "field"?: string;
+        /**
+          * The available sort orders: `ascending` or `descending`/
+         */
+        "order"?: SortOrder;
+    }
     interface AtomicSortDropdown {
+        /**
+          * Specifies whether a label should be displayed in front of the dropdown.
+         */
+        "displayLabel": boolean;
     }
     interface AtomicTab {
         "expression": string;
@@ -293,6 +320,12 @@ declare global {
         prototype: HTMLAtomicSearchInterfaceElement;
         new (): HTMLAtomicSearchInterfaceElement;
     };
+    interface HTMLAtomicSortCriterionElement extends Components.AtomicSortCriterion, HTMLStencilElement {
+    }
+    var HTMLAtomicSortCriterionElement: {
+        prototype: HTMLAtomicSortCriterionElement;
+        new (): HTMLAtomicSortCriterionElement;
+    };
     interface HTMLAtomicSortDropdownElement extends Components.AtomicSortDropdown, HTMLStencilElement {
     }
     var HTMLAtomicSortDropdownElement: {
@@ -335,6 +368,7 @@ declare global {
         "atomic-results-per-page": HTMLAtomicResultsPerPageElement;
         "atomic-search-box": HTMLAtomicSearchBoxElement;
         "atomic-search-interface": HTMLAtomicSearchInterfaceElement;
+        "atomic-sort-criterion": HTMLAtomicSortCriterionElement;
         "atomic-sort-dropdown": HTMLAtomicSortDropdownElement;
         "atomic-tab": HTMLAtomicTabElement;
         "atomic-text": HTMLAtomicTextElement;
@@ -351,6 +385,7 @@ declare namespace LocalJSX {
         "label"?: string;
     }
     interface AtomicComponentError {
+        "element": HTMLElement;
         "error": Error;
     }
     interface AtomicDateFacet {
@@ -463,7 +498,33 @@ declare namespace LocalJSX {
         "reflectStateInUrl"?: boolean;
         "searchHub"?: string;
     }
+    interface AtomicSortCriterion {
+        /**
+          * The available criteria that can be used to sort query results.  - `relevancy`: Uses standard index ranking factors (adjacency, TDIDF) and custom ranking expressions (QREs and QRFs) to compute a ranking score for each query result item, and sorts the query results by descending score value. - `qre`: Uses only custom ranking expressions (QREs and QRFs) to compute a ranking score for each query result item, and sorts the query results by descending score value. - `date`: Uses the date field to sort the query results. This field typically contains the last modification date of each item. May be in ascending or descending order. - `field`: Uses the value of a specific sortable field to sort the query results. May be in ascending or descending order.
+         */
+        "by": SortBy;
+        /**
+          * The non-localized caption to display for this criteria.
+         */
+        "caption": string;
+        /**
+          * Validated sort criterion. `null` when invalid. For development purposes, not meant to be specified by users.
+         */
+        "criterion": SortCriterion;
+        /**
+          * The sortable field on which to sort when `by` is `field`.
+         */
+        "field"?: string;
+        /**
+          * The available sort orders: `ascending` or `descending`/
+         */
+        "order"?: SortOrder;
+    }
     interface AtomicSortDropdown {
+        /**
+          * Specifies whether a label should be displayed in front of the dropdown.
+         */
+        "displayLabel"?: boolean;
     }
     interface AtomicTab {
         "expression"?: string;
@@ -503,6 +564,7 @@ declare namespace LocalJSX {
         "atomic-results-per-page": AtomicResultsPerPage;
         "atomic-search-box": AtomicSearchBox;
         "atomic-search-interface": AtomicSearchInterface;
+        "atomic-sort-criterion": AtomicSortCriterion;
         "atomic-sort-dropdown": AtomicSortDropdown;
         "atomic-tab": AtomicTab;
         "atomic-text": AtomicText;
@@ -535,6 +597,7 @@ declare module "@stencil/core" {
             "atomic-results-per-page": LocalJSX.AtomicResultsPerPage & JSXBase.HTMLAttributes<HTMLAtomicResultsPerPageElement>;
             "atomic-search-box": LocalJSX.AtomicSearchBox & JSXBase.HTMLAttributes<HTMLAtomicSearchBoxElement>;
             "atomic-search-interface": LocalJSX.AtomicSearchInterface & JSXBase.HTMLAttributes<HTMLAtomicSearchInterfaceElement>;
+            "atomic-sort-criterion": LocalJSX.AtomicSortCriterion & JSXBase.HTMLAttributes<HTMLAtomicSortCriterionElement>;
             "atomic-sort-dropdown": LocalJSX.AtomicSortDropdown & JSXBase.HTMLAttributes<HTMLAtomicSortDropdownElement>;
             "atomic-tab": LocalJSX.AtomicTab & JSXBase.HTMLAttributes<HTMLAtomicTabElement>;
             "atomic-text": LocalJSX.AtomicText & JSXBase.HTMLAttributes<HTMLAtomicTextElement>;

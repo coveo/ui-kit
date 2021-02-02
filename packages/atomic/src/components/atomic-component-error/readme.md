@@ -7,9 +7,10 @@
 
 ## Properties
 
-| Property             | Attribute | Description | Type    | Default     |
-| -------------------- | --------- | ----------- | ------- | ----------- |
-| `error` _(required)_ | --        |             | `Error` | `undefined` |
+| Property               | Attribute | Description | Type          | Default     |
+| ---------------------- | --------- | ----------- | ------------- | ----------- |
+| `element` _(required)_ | --        |             | `HTMLElement` | `undefined` |
+| `error` _(required)_   | --        |             | `Error`       | `undefined` |
 
 
 ## Dependencies
@@ -31,6 +32,7 @@
  - [atomic-results-per-page](../atomic-results-per-page)
  - [atomic-search-box](../atomic-search-box)
  - [atomic-search-interface](../atomic-search-interface)
+ - [atomic-sort-criterion](../atomic-sort-criterion)
  - [atomic-sort-dropdown](../atomic-sort-dropdown)
  - [atomic-tab](../atomic-tab)
  - [atomic-text](../atomic-text)
@@ -53,6 +55,7 @@ graph TD;
   atomic-results-per-page --> atomic-component-error
   atomic-search-box --> atomic-component-error
   atomic-search-interface --> atomic-component-error
+  atomic-sort-criterion --> atomic-component-error
   atomic-sort-dropdown --> atomic-component-error
   atomic-tab --> atomic-component-error
   atomic-text --> atomic-component-error

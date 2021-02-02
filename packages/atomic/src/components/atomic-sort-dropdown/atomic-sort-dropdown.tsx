@@ -1,29 +1,25 @@
-import {Component, h, State} from '@stencil/core';
-import {
-  Sort,
-  SortInitialState,
-  buildSort,
-  buildRelevanceSortCriterion,
-  buildDateSortCriterion,
-  buildFieldSortCriterion,
-  SortOrder,
-  SortState,
-} from '@coveo/headless';
+import {Component, h, State, Element, Prop} from '@stencil/core';
+import {Sort, buildSort, SortState, SortCriterion} from '@coveo/headless';
 import {
   Bindings,
   BindStateToController,
+  BindStateToI18n,
+  I18nState,
   InitializableComponent,
   InitializeBindings,
 } from '../../utils/initialization-utils';
+import {randomID} from '../../utils/utils';
+import ArrowBottomIcon from 'coveo-styleguide/resources/icons/svg/arrow-bottom-rounded.svg';
 
-enum SortOption {
-  Relevance = 'relevance',
-  Newest = 'newest',
-  Oldest = 'oldest',
-  Size = 'size',
+interface SortDropdownOption {
+  criterion: SortCriterion;
+  caption: string;
 }
 
 /**
+ * The Sort Dropdown allows the end user to select the criterion to use when sorting query results.
+ *
+ * @part label - The "Sort by" label
  * @part select - The select element
  */
 @Component({
@@ -34,90 +30,120 @@ enum SortOption {
 export class AtomicSortDropdown implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;
   private sort!: Sort;
+  private options: SortDropdownOption[] = [];
+  private id = randomID('atomic-sort-dropdown-');
+
+  @Element() host!: HTMLElement;
 
   @State() @BindStateToController('sort') public sortState!: SortState;
+  @BindStateToI18n() @State() private strings: I18nState = {
+    sortBy: () => this.bindings.i18n.t('sortBy'),
+  };
   @State() public error!: Error;
 
+  /**
+   * Specifies whether a label should be displayed in front of the dropdown.
+   */
+  @Prop({reflect: true}) displayLabel = true;
+
   public initialize() {
-    const initialState: Partial<SortInitialState> = {criterion: this.relevance};
-    this.sort = buildSort(this.bindings.engine, {initialState});
+    this.buildOptions();
+    this.sort = buildSort(this.bindings.engine, {
+      initialState: {
+        criterion: this.options[0].criterion,
+      },
+    });
+  }
+
+  private buildOptions() {
+    const sortCriterionElements = Array.from(
+      this.host.querySelectorAll('atomic-sort-criterion')
+    );
+
+    this.options = sortCriterionElements
+      .filter((element) => element.criterion)
+      .map(({criterion, caption}) => {
+        this.strings[caption] = () => this.bindings.i18n.t(caption);
+
+        return {
+          criterion,
+          caption,
+        };
+      });
+
+    if (!this.options.length) {
+      this.error = new Error(
+        'The "atomic-sort-dropdown" element requires at least one "atomic-sort-criterion" child.'
+      );
+    }
   }
 
   private select(e: Event) {
     const select = e.composedPath()[0] as HTMLSelectElement;
+    const option = this.getOptionFromValue(select.value);
+    option && this.sort.sortBy(option.criterion);
+  }
 
-    switch (select.value) {
-      case SortOption.Relevance:
-        this.sort.sortBy(this.relevance);
-        break;
+  private buildOption({criterion, caption}: SortDropdownOption) {
+    return (
+      <option
+        value={this.formatOptionValue(criterion)}
+        selected={this.sort.isSortedBy(criterion)}
+      >
+        {this.strings[caption]()}
+      </option>
+    );
+  }
 
-      case SortOption.Newest:
-        this.sort.sortBy(this.dateDescending);
-        break;
+  private formatOptionValue(criterion: SortCriterion) {
+    const order = 'order' in criterion ? `-${criterion.order}` : '';
+    return `${criterion.by}_${order}`;
+  }
 
-      case SortOption.Oldest:
-        this.sort.sortBy(this.dateAscending);
-        break;
+  private getOptionFromValue(value: string) {
+    return this.options.find(
+      (option) => this.formatOptionValue(option.criterion) === value
+    );
+  }
 
-      case SortOption.Size:
-        this.sort.sortBy(this.largest);
-        break;
-
-      default:
-        break;
+  private renderLabel() {
+    if (!this.displayLabel) {
+      return;
     }
+
+    return (
+      <label
+        class="text-on-background text-sm mr-2"
+        part="label"
+        htmlFor={this.id}
+      >
+        {this.strings.sortBy()}
+      </label>
+    );
   }
 
-  private get relevance() {
-    return buildRelevanceSortCriterion();
-  }
-
-  private get dateDescending() {
-    return buildDateSortCriterion(SortOrder.Descending);
-  }
-
-  private get dateAscending() {
-    return buildDateSortCriterion(SortOrder.Ascending);
-  }
-
-  private get largest() {
-    return buildFieldSortCriterion('size', SortOrder.Descending);
+  private renderSelect() {
+    return (
+      <div class="relative">
+        {this.renderLabel()}
+        <select
+          id={this.id}
+          class="appearance-none rounded bg-background text-secondary font-bold border border-divider py-1.5 pl-2 pr-5"
+          part="select"
+          aria-label={this.strings.sortBy()}
+          onChange={(option) => this.select(option)}
+        >
+          {this.options.map((option) => this.buildOption(option))}
+        </select>
+        <div
+          class="absolute right-3 top-4 fill-current w-3 h-3 pointer-events-none"
+          innerHTML={ArrowBottomIcon}
+        ></div>
+      </div>
+    );
   }
 
   public render() {
-    return (
-      <select
-        class="form-select"
-        aria-label="Sort results by"
-        part="select"
-        name="sorts"
-        onChange={(val) => this.select(val)}
-      >
-        <option
-          value={SortOption.Relevance}
-          selected={this.sort.isSortedBy(this.relevance)}
-        >
-          Relevance
-        </option>
-        <option
-          value={SortOption.Newest}
-          selected={this.sort.isSortedBy(this.dateDescending)}
-        >
-          Newest
-        </option>
-        <option
-          value={SortOption.Oldest}
-          selected={this.sort.isSortedBy(this.dateAscending)}
-        >
-          Oldest
-        </option>
-        <option
-          value={SortOption.Size}
-          selected={this.sort.isSortedBy(this.largest)}
-        >
-          Largest Size
-        </option>
-      </select>
-    );
+    return [this.renderSelect(), <slot></slot>];
   }
 }
