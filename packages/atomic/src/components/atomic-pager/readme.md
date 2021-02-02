@@ -18,7 +18,7 @@
 | Part                   | Description            |
 | ---------------------- | ---------------------- |
 | `"active-page-button"` | The active page button |
-| `"list"`               | The list of buttons    |
+| `"buttons"`            | The list of buttons    |
 | `"next-button"`        | The next button        |
 | `"page-button"`        | The page button        |
 | `"previous-button"`    | The previous button    |
@@ -26,10 +26,11 @@
 
 ## CSS Custom Properties
 
-| Name                              | Description                    |
-| --------------------------------- | ------------------------------ |
-| `--atomic-pagination-button-size` | Size of the pagination buttons |
-| `--atomic-pagination-font-size`   | Font size of the pagination    |
+| Name                                       | Description                            |
+| ------------------------------------------ | -------------------------------------- |
+| `--atomic-pagination-button-border-radius` | Border radius of the pagination button |
+| `--atomic-pagination-button-size`          | Size of the pagination buttons         |
+| `--atomic-pagination-font-size`            | Font size of the pagination            |
 
 
 ## Dependencies

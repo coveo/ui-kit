@@ -13,7 +13,7 @@ import ArrowLeftIcon from 'coveo-styleguide/resources/icons/svg/arrow-left-round
 /**
  * The Pager provides buttons that allow the end user to navigate through the different result pages.
  *
- * @part list - The list of buttons
+ * @part buttons - The list of buttons
  * @part previous-button - The previous button
  * @part next-button - The next button
  * @part page-button - The page button
@@ -44,11 +44,11 @@ export class AtomicPager implements InitializableComponent {
   /**
    * Specifies how many page buttons to display in the pager.
    */
-  @Prop() numberOfPages = 5;
+  @Prop({reflect: true}) numberOfPages = 5;
   /**
    * Specifies whether the **Previous** and **Next** buttons should appear at each end of the pager when appropriate.
    */
-  @Prop() enableNavigationButtons = true;
+  @Prop({reflect: true}) enableNavigationButtons = true;
 
   public initialize() {
     this.pager = buildPager(this.bindings.engine, {
@@ -67,11 +67,12 @@ export class AtomicPager implements InitializableComponent {
       <li>
         <button
           part={options.part}
-          class={`text-secondary ${
-            options.disabled ? 'opacity-50 cursor-not-allowed' : ''
+          class={`text-primary ${
+            options.disabled
+              ? 'opacity-50 cursor-not-allowed'
+              : 'hover:text-primary-variant'
           }`}
           disabled={options.disabled}
-          aria-hidden={options.disabled}
           aria-label={options.ariaLabel}
           onClick={options.callback}
         >
@@ -113,13 +114,14 @@ export class AtomicPager implements InitializableComponent {
   private buildPage(page: number) {
     const isSelected = this.pager.isCurrentPage(page);
     const classes = isSelected
-      ? 'border-secondary text-on-secondary bg-secondary'
-      : 'border-divider text-secondary bg-on-secondary';
+      ? 'text-on-primary bg-primary hover:bg-primary-variant'
+      : 'text-on-background';
 
     return (
       <li>
         <button
-          class={`border rounded-sm ${classes}`}
+          class={`hover:underline ${classes}`}
+          aria-current={isSelected ? 'page' : null}
           part={`page-button ${isSelected && 'active-page-button'}`}
           aria-label={this.strings.pageNumber(page)}
           onClick={() => {
@@ -134,8 +136,8 @@ export class AtomicPager implements InitializableComponent {
 
   public render() {
     return (
-      <nav aria-label={this.strings.pagination()}>
-        <ul part="list" class="flex justify-between">
+      <nav aria-label={this.strings.pagination()} class="items-center ">
+        <ul part="buttons" class="flex justify-between space-x-2">
           {this.enableNavigationButtons && this.previousButton}
           {this.pages}
           {this.enableNavigationButtons && this.nextButton}
