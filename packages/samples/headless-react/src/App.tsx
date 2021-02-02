@@ -8,7 +8,6 @@ import {ResultList} from './components/result-list/result-list.class';
 import {ResultList as ResultListFn} from './components/result-list/result-list.fn';
 import {
   buildSearchBox,
-  SearchBoxOptions,
   buildQuerySummary,
   buildResultList,
   buildDateSortCriterion,
@@ -23,8 +22,8 @@ import {Section} from './layout/section';
 import {QuerySummary} from './components/query-summary/query-summary.class';
 import {QuerySummary as QuerySummaryFn} from './components/query-summary/query-summary.fn';
 
-const options: SearchBoxOptions = {numberOfSuggestions: 8};
-const searchBox = buildSearchBox(engine, {options});
+const searchBox = buildSearchBox(engine, {options: {numberOfSuggestions: 8}});
+
 const querySummary = buildQuerySummary(engine);
 
 const criteria: [string, SortCriterion][] = [
@@ -39,10 +38,7 @@ const sort = buildSort(engine, {
   initialState: {criterion: initialCriterion},
 });
 
-const fieldsToInclude = {author: 'Author', filetype: 'File type'};
-const resultList = buildResultList(engine, {
-  options: {fieldsToInclude: Object.keys(fieldsToInclude)},
-});
+const resultList = buildResultList(engine);
 
 function App() {
   return (
