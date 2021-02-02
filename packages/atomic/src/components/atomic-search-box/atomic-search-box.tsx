@@ -197,7 +197,7 @@ export class AtomicSearchBox {
           onMouseDown={(e) => e.preventDefault()}
           part="suggestion"
           id={id}
-          class="suggestion h-9 px-2 cursor-pointer text-left text-sm bg-transparent border-none shadow-none hover:bg-primary-variant hover:text-on-primary flex flex-row items-center"
+          class="suggestion h-9 px-2 cursor-pointer text-left text-sm bg-transparent border-none shadow-none hover:bg-primary hover:text-on-primary flex flex-row items-center"
           innerHTML={suggestion.highlightedValue}
           value={index}
         />
