@@ -4,11 +4,14 @@ import {SearchBox} from './components/search-box/search-box.class';
 import {SearchBox as SearchBoxFn} from './components/search-box/search-box.fn';
 import {ResultList} from './components/result-list/result-list.class';
 import {ResultList as ResultListFn} from './components/result-list/result-list.fn';
+import {Pager} from './components/pager/pager.class';
+import {Pager as PagerFn} from './components/pager/pager.fn';
 import {
   buildSearchBox,
   buildQuerySummary,
   buildResultList,
   buildResultsPerPage,
+  buildPager,
 } from '@coveo/headless';
 import {ResultsPerPage} from './components/results-per-page/results-per-page.class';
 import {ResultsPerPage as ResultsPerPageFn} from './components/results-per-page/results-per-page.fn';
@@ -27,6 +30,8 @@ const resultsPerPageOptions = [10, 25, 50, 100];
 const resultsPerPage = buildResultsPerPage(engine, {
   initialState: {numberOfResults: resultsPerPageOptions[0]},
 });
+
+const pager = buildPager(engine, {options: {numberOfPages: 6}});
 
 function App() {
   return (
@@ -51,6 +56,10 @@ function App() {
             controller={resultsPerPage}
             options={resultsPerPageOptions}
           />
+        </Section>
+        <Section title="pager">
+          <Pager />
+          <PagerFn controller={pager} />
         </Section>
       </header>
     </div>
