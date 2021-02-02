@@ -41,7 +41,7 @@ export class ResultList extends Component {
       <div>
         <ul style={{textAlign: 'left'}}>
           {this.state.results.map((result) => (
-            <li key={result.uniqueId} onLoad={(e) => console.log(e.target)}>
+            <li key={result.uniqueId}>
               <article>
                 <h2>
                   {/* Make sure to log analytics when the result link is clicked. */}
