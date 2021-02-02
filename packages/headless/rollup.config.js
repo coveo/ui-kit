@@ -93,7 +93,7 @@ const browserConfig = {
 // [https://github.com/microsoft/rushstack/issues/1050]
 const typeDefinitions = {
   input: "./dist/index.d.ts",
-  output: [{file: "dist/headless.d.ts", format: "es"}],
+  output: [{file: "temp/headless.d.ts", format: "es"}],
   plugins: [dts()]
 }
 
