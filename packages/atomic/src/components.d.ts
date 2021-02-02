@@ -52,6 +52,14 @@ export namespace Components {
         "label": string;
     }
     interface AtomicPager {
+        /**
+          * Specifies whether the **Previous** and **Next** buttons should appear at each end of the pager when appropriate.
+         */
+        "enableNavigationButtons": boolean;
+        /**
+          * Specifies how many page buttons to display in the pager.
+         */
+        "numberOfPages": number;
     }
     interface AtomicQueryError {
     }
@@ -92,13 +100,13 @@ export namespace Components {
     }
     interface AtomicResultsPerPage {
         /**
-          * Initial value of the result per page option
+          * List of possible results per page choices, separated by commas.
          */
-        "initialOption": number;
+        "choicesDisplayed": string;
         /**
-          * List of possible results per page options, separated by commas
+          * Initial choice for the number of result per page. Should be part of the `choicesDisplayed` option.
          */
-        "options": string;
+        "initialChoice": number;
     }
     interface AtomicSearchBox {
         "_id": string;
@@ -374,6 +382,14 @@ declare namespace LocalJSX {
         "label"?: string;
     }
     interface AtomicPager {
+        /**
+          * Specifies whether the **Previous** and **Next** buttons should appear at each end of the pager when appropriate.
+         */
+        "enableNavigationButtons"?: boolean;
+        /**
+          * Specifies how many page buttons to display in the pager.
+         */
+        "numberOfPages"?: number;
     }
     interface AtomicQueryError {
     }
@@ -412,13 +428,13 @@ declare namespace LocalJSX {
     }
     interface AtomicResultsPerPage {
         /**
-          * Initial value of the result per page option
+          * List of possible results per page choices, separated by commas.
          */
-        "initialOption"?: number;
+        "choicesDisplayed"?: string;
         /**
-          * List of possible results per page options, separated by commas
+          * Initial choice for the number of result per page. Should be part of the `choicesDisplayed` option.
          */
-        "options"?: string;
+        "initialChoice"?: number;
     }
     interface AtomicSearchBox {
         "_id"?: string;
