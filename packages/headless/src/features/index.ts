@@ -20,6 +20,7 @@ export namespace CategoryFacetSetActions {
 
 import {
   registerFacet as registerFacetAlias,
+  removeFacet as removeFacetAlias,
   toggleSelectFacetValue as toggleSelectFacetValueAlias,
   updateFacetIsFieldExpanded as updateFacetIsFieldExpandedAlias,
   updateFacetNumberOfValues as updateFacetNumberOfValuesAlias,
@@ -29,6 +30,7 @@ import {
 } from './facets/facet-set/facet-set-actions';
 export namespace FacetActions {
   export const registerFacet = registerFacetAlias;
+  export const removeFacet = removeFacetAlias;
   export const toggleSelectFacetValue = toggleSelectFacetValueAlias;
   export const updateFacetIsFieldExpanded = updateFacetIsFieldExpandedAlias;
   export const updateFacetNumberOfValues = updateFacetNumberOfValuesAlias;

@@ -1,5 +1,8 @@
 import {createAction} from '@reduxjs/toolkit';
-import {FacetRegistrationOptions} from './interfaces/options';
+import {
+  FacetRegistrationOptions,
+  FacetRemovalOptions,
+} from './interfaces/options';
 import {FacetSortCriterion} from './interfaces/request';
 import {validatePayload} from '../../../utils/validate-payload';
 import {
@@ -30,6 +33,15 @@ export const registerFacet = createAction(
   'facet/register',
   (payload: FacetRegistrationOptions) =>
     validatePayload(payload, facetRegistrationOptionsDefinition)
+);
+
+/**
+ * Removes a facet from the facet set.
+ * @param (FacetRemovalOptions) The options to remove the facet with.
+ */
+export const removeFacet = createAction(
+  'facet/remove',
+  (payload: FacetRemovalOptions) => validatePayload(payload, facetIdDefinition)
 );
 
 /**

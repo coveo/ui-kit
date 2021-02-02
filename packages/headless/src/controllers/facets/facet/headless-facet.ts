@@ -6,6 +6,7 @@ import {
   updateFacetSortCriterion,
   updateFacetNumberOfValues,
   updateFacetIsFieldExpanded,
+  removeFacet,
 } from '../../../features/facets/facet-set/facet-set-actions';
 import {
   facetRequestSelector,
@@ -171,6 +172,13 @@ export function buildFacet(
       dispatch(updateFacetIsFieldExpanded({facetId, isFieldExpanded: false}));
       dispatch(updateFacetOptions({freezeFacetOrder: true}));
       dispatch(executeSearch(logFacetShowLess(facetId)));
+    },
+
+    /**
+     * Removes a facet so that its id may be used again.
+     */
+    remove() {
+      dispatch(removeFacet(options.facetId));
     },
 
     /** The state of the `Facet` controller. */

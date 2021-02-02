@@ -41,7 +41,7 @@ function App() {
           <QuerySummaryFn controller={querySummary} />
         </Section>
         <Section title="facet">
-          <Facet field="author" />
+          <Facet field="author" facetId="author" />
           <FacetFn controller={facet} />
         </Section>
         <Section title="result-list">
