@@ -1,6 +1,6 @@
 import {Schema, NumberValue} from '@coveo/bueno';
 import {Engine} from '../../app/headless-engine';
-import {buildController} from '../controller/headless-controller';
+import {buildController, Controller} from '../controller/headless-controller';
 import {
   updatePage,
   registerPage,
@@ -57,7 +57,7 @@ const initialStateSchema = new Schema({
   page: new NumberValue({min: 1}),
 });
 
-export interface Pager {
+export interface Pager extends Controller {
   /**
    * Updates the results to those on the passed page.
    * @param page The page number.
