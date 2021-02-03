@@ -13,5 +13,3 @@ export type FacetOptionalParameters = Pick<
 
 export type FacetRegistrationOptions = FacetRequiredParameters &
   Partial<FacetOptionalParameters>;
-
-export type FacetRemovalOptions = string;

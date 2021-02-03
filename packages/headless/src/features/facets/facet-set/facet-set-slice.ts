@@ -8,7 +8,6 @@ import {
   updateFacetNumberOfValues,
   updateFacetIsFieldExpanded,
   updateFreezeCurrentValues,
-  removeFacet,
 } from './facet-set-actions';
 import {executeSearch} from '../../search/search-actions';
 import {selectFacetSearchResult} from '../facet-search-set/specific/specific-facet-search-actions';
@@ -39,15 +38,6 @@ export const facetSetReducer = createReducer(
         }
 
         state[facetId] = buildFacetRequest(action.payload);
-      })
-      .addCase(removeFacet, (state, action) => {
-        const facetId = action.payload;
-
-        if (!(facetId in state)) {
-          return;
-        }
-
-        delete state[facetId];
       })
       .addCase(change.fulfilled, (_, action) => {
         if (Object.keys(action.payload.facetSet).length === 0) {

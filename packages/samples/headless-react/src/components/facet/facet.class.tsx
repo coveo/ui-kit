@@ -2,7 +2,6 @@ import {Component} from 'react';
 import {
   buildFacet,
   Facet as HeadlessFacet,
-  FacetActions,
   FacetState,
   Unsubscribe,
 } from '@coveo/headless';
@@ -10,7 +9,6 @@ import {engine} from '../../engine';
 
 interface FacetProps {
   field: string;
-  facetId: string;
 }
 
 export class Facet extends Component<FacetProps> {
@@ -20,11 +18,6 @@ export class Facet extends Component<FacetProps> {
 
   constructor(props: FacetProps) {
     super(props);
-    if (process.env.NODE_ENV === 'development') {
-      // When `React.StrictMode` is active in development, the constructor is executed twice.
-      // This ensures the facet isn't already defined from a previous execution.
-      engine.dispatch(FacetActions.removeFacet(this.props.facetId));
-    }
 
     this.controller = buildFacet(engine, {options: {field: props.field}});
     this.state = this.controller.state;
@@ -37,7 +30,6 @@ export class Facet extends Component<FacetProps> {
 
   componentWillUnmount() {
     this.unsubscribe();
-    this.controller.remove();
   }
 
   private updateState() {
