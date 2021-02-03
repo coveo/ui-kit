@@ -15,6 +15,14 @@ export function getApiResponseBody(
   });
 }
 
+export function getAnalytics(selector: string) {
+  return new Promise((resolve) => {
+    cy.wait(selector).then((interception) => {
+      resolve(interception);
+    });
+  });
+}
+
 function getAnalyticsRequest<T = EventBaseRequest>(
   selector: string
 ): Promise<T> {
