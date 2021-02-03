@@ -1,10 +1,4 @@
-import {
-  EnumValue,
-  isArray,
-  RecordValue,
-  Schema,
-  StringValue,
-} from '@coveo/bueno';
+import {EnumValue, isArray, RecordValue, StringValue} from '@coveo/bueno';
 
 /**
  * The available sort orders.
@@ -77,7 +71,7 @@ export const buildCriterionExpression = (
   criterion: SortCriterion | SortCriterion[]
 ): string => {
   if (isArray(criterion)) {
-    return criterion.map((c) => buildCriterionExpression(c)).join(',');
+    return criterion.map((c) => buildCriterionExpression(c)).join(';');
   }
 
   switch (criterion.by) {
@@ -90,7 +84,6 @@ export const buildCriterionExpression = (
     case SortBy.Field:
       return `@${criterion.field} ${criterion.order}`;
     default:
-      console.error(`Unknown criterion: ${criterion}`);
       return '';
   }
 };
@@ -150,24 +143,19 @@ export const criterionDefinition = new RecordValue({
   },
 });
 
-/**
- * Utility function that validates and builds a valid criterion. Throws an error when the criterion is invalid.
- * @param criterion The criterion definition.
- * @returns A criterion.
- */
-export function validateSortCriterion(criterion: {
-  by: SortBy;
+function parseCriterion(criterion: {
+  by: string;
   order?: SortOrder;
-  field?: string;
 }): SortCriterion {
-  new Schema({criterion: criterionDefinition}).validate({criterion});
-  const {by, field, order} = criterion;
+  const {by, order} = criterion;
 
   switch (by) {
     case SortBy.Relevancy:
       return buildRelevanceSortCriterion();
     case SortBy.QRE:
       return buildQueryRankingExpressionSortCriterion();
+    case SortBy.NoSort:
+      return buildNoSortCriterion();
     case SortBy.Date:
       if (!order) {
         throw new Error(
@@ -175,19 +163,64 @@ export function validateSortCriterion(criterion: {
         );
       }
       return buildDateSortCriterion(order);
-    case SortBy.Field:
-      if (!field) {
-        throw new Error(
-          '"field" should be specified when "by" value is "field"'
-        );
-      }
+    default:
       if (!order) {
         throw new Error(
-          '"order" should be specified when "by" value is "field"'
+          `"order" should be specified when "by" value is "field" for field "${by}"`
         );
       }
-      return buildFieldSortCriterion(field, order);
-    default:
-      return buildNoSortCriterion();
+      return buildFieldSortCriterion(by, order);
   }
+}
+
+function isSortOrder(order?: string): order is SortOrder {
+  return (
+    order === undefined ||
+    order === SortOrder.Ascending ||
+    order === SortOrder.Descending
+  );
+}
+
+/**
+ * Parses a criterion expression and return a list of `SortCriterion`
+ * @param expression Sort criterion expression
+ *
+ * The available sort criteria are:
+ * - `relevancy`
+ * - `date ascending`/`date descending`
+ * - `qre`
+ * - `field ascending`/`field descending`, where you must replace `field` with the name of a sortable field in your index (e.g., `criteria="size ascending"`).
+ *
+ * You can specify multiple sort criteria to be used in the same request by separating them with a semicolon (e.g., `criteria="size ascending; date ascending"` ).
+ */
+export function parseCriterionExpression(expression: string) {
+  const criteria = expression.split(';');
+  const wrongFormatError = new Error(
+    `Wrong criterion expression format for "${expression}"`
+  );
+  if (!criteria.length) {
+    throw wrongFormatError;
+  }
+
+  return criteria.map((criterion) => {
+    const criterionValues = criterion.trim().split(' ');
+    const by = criterionValues[0].toLowerCase();
+    const order = criterionValues[1] && criterionValues[1].toLowerCase();
+
+    if (criterionValues.length > 2) {
+      throw wrongFormatError;
+    }
+
+    if (by === '') {
+      throw wrongFormatError;
+    }
+
+    if (!isSortOrder(order)) {
+      throw new Error(
+        `Wrong criterion sort order "${order}" in expression "${expression}". Order should either be "${SortOrder.Ascending}" or "${SortOrder.Descending}"`
+      );
+    }
+
+    return parseCriterion({by, order});
+  });
 }

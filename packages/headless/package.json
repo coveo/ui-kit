@@ -20,7 +20,7 @@
     "typedefinitions": "tsc -d --emitDeclarationOnly --declarationDir dist",
     "clean": "rimraf -f -r dist/*",
     "test": "jest",
-    "test:watch": "jest --watch --colors --no-cache",
+    "test:watch": "jest --watch --colors --no-cache --silent=false",
     "test:unit": "jest --testPathIgnorePatterns=src/integration-tests",
     "test:integration": "jest --testPathPattern=src/integration-tests",
     "npm:publish": "npm publish --access public",

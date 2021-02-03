@@ -5,7 +5,7 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { Engine, LogLevel, Result, ResultTemplateCondition, SortBy, SortCriterion, SortOrder } from "@coveo/headless";
+import { Engine, LogLevel, Result, ResultTemplateCondition } from "@coveo/headless";
 import { Bindings } from "./utils/initialization-utils";
 import { i18n } from "i18next";
 import { InitializationOptions } from "./components/atomic-search-interface/atomic-search-interface";
@@ -138,27 +138,15 @@ export namespace Components {
         "reflectStateInUrl": boolean;
         "searchHub": string;
     }
-    interface AtomicSortCriterion {
-        /**
-          * The available criteria that can be used to sort query results.  - `relevancy`: Uses standard index ranking factors (adjacency, TDIDF) and custom ranking expressions (QREs and QRFs) to compute a ranking score for each query result item, and sorts the query results by descending score value. - `qre`: Uses only custom ranking expressions (QREs and QRFs) to compute a ranking score for each query result item, and sorts the query results by descending score value. - `date`: Uses the date field to sort the query results. This field typically contains the last modification date of each item. May be in ascending or descending order. - `field`: Uses the value of a specific sortable field to sort the query results. May be in ascending or descending order.
-         */
-        "by": SortBy;
+    interface AtomicSortCriteria {
         /**
           * The non-localized caption to display for this criteria.
          */
         "caption": string;
         /**
-          * Validated sort criterion. `null` when invalid. For development purposes, not meant to be specified by users.
+          * The sort criterion/criteria the end user can select/toggle between.  The available sort criteria are: - `relevancy` - `date ascending`/`date descending` - `qre` - `field ascending`/`field descending`, where you must replace `field` with the name of a sortable field in your index (e.g., `criteria="size ascending"`).  You can specify multiple sort criteria to be used in the same request by separating them with a semicolon (e.g., `criteria="size ascending; date ascending"` ).
          */
-        "criterion": SortCriterion;
-        /**
-          * The sortable field on which to sort when `by` is `field`.
-         */
-        "field"?: string;
-        /**
-          * The available sort orders: `ascending` or `descending`/
-         */
-        "order"?: SortOrder;
+        "criteria": string;
     }
     interface AtomicSortDropdown {
         /**
@@ -320,11 +308,11 @@ declare global {
         prototype: HTMLAtomicSearchInterfaceElement;
         new (): HTMLAtomicSearchInterfaceElement;
     };
-    interface HTMLAtomicSortCriterionElement extends Components.AtomicSortCriterion, HTMLStencilElement {
+    interface HTMLAtomicSortCriteriaElement extends Components.AtomicSortCriteria, HTMLStencilElement {
     }
-    var HTMLAtomicSortCriterionElement: {
-        prototype: HTMLAtomicSortCriterionElement;
-        new (): HTMLAtomicSortCriterionElement;
+    var HTMLAtomicSortCriteriaElement: {
+        prototype: HTMLAtomicSortCriteriaElement;
+        new (): HTMLAtomicSortCriteriaElement;
     };
     interface HTMLAtomicSortDropdownElement extends Components.AtomicSortDropdown, HTMLStencilElement {
     }
@@ -368,7 +356,7 @@ declare global {
         "atomic-results-per-page": HTMLAtomicResultsPerPageElement;
         "atomic-search-box": HTMLAtomicSearchBoxElement;
         "atomic-search-interface": HTMLAtomicSearchInterfaceElement;
-        "atomic-sort-criterion": HTMLAtomicSortCriterionElement;
+        "atomic-sort-criteria": HTMLAtomicSortCriteriaElement;
         "atomic-sort-dropdown": HTMLAtomicSortDropdownElement;
         "atomic-tab": HTMLAtomicTabElement;
         "atomic-text": HTMLAtomicTextElement;
@@ -498,27 +486,15 @@ declare namespace LocalJSX {
         "reflectStateInUrl"?: boolean;
         "searchHub"?: string;
     }
-    interface AtomicSortCriterion {
-        /**
-          * The available criteria that can be used to sort query results.  - `relevancy`: Uses standard index ranking factors (adjacency, TDIDF) and custom ranking expressions (QREs and QRFs) to compute a ranking score for each query result item, and sorts the query results by descending score value. - `qre`: Uses only custom ranking expressions (QREs and QRFs) to compute a ranking score for each query result item, and sorts the query results by descending score value. - `date`: Uses the date field to sort the query results. This field typically contains the last modification date of each item. May be in ascending or descending order. - `field`: Uses the value of a specific sortable field to sort the query results. May be in ascending or descending order.
-         */
-        "by": SortBy;
+    interface AtomicSortCriteria {
         /**
           * The non-localized caption to display for this criteria.
          */
         "caption": string;
         /**
-          * Validated sort criterion. `null` when invalid. For development purposes, not meant to be specified by users.
+          * The sort criterion/criteria the end user can select/toggle between.  The available sort criteria are: - `relevancy` - `date ascending`/`date descending` - `qre` - `field ascending`/`field descending`, where you must replace `field` with the name of a sortable field in your index (e.g., `criteria="size ascending"`).  You can specify multiple sort criteria to be used in the same request by separating them with a semicolon (e.g., `criteria="size ascending; date ascending"` ).
          */
-        "criterion": SortCriterion;
-        /**
-          * The sortable field on which to sort when `by` is `field`.
-         */
-        "field"?: string;
-        /**
-          * The available sort orders: `ascending` or `descending`/
-         */
-        "order"?: SortOrder;
+        "criteria": string;
     }
     interface AtomicSortDropdown {
         /**
@@ -564,7 +540,7 @@ declare namespace LocalJSX {
         "atomic-results-per-page": AtomicResultsPerPage;
         "atomic-search-box": AtomicSearchBox;
         "atomic-search-interface": AtomicSearchInterface;
-        "atomic-sort-criterion": AtomicSortCriterion;
+        "atomic-sort-criteria": AtomicSortCriteria;
         "atomic-sort-dropdown": AtomicSortDropdown;
         "atomic-tab": AtomicTab;
         "atomic-text": AtomicText;
@@ -597,7 +573,7 @@ declare module "@stencil/core" {
             "atomic-results-per-page": LocalJSX.AtomicResultsPerPage & JSXBase.HTMLAttributes<HTMLAtomicResultsPerPageElement>;
             "atomic-search-box": LocalJSX.AtomicSearchBox & JSXBase.HTMLAttributes<HTMLAtomicSearchBoxElement>;
             "atomic-search-interface": LocalJSX.AtomicSearchInterface & JSXBase.HTMLAttributes<HTMLAtomicSearchInterfaceElement>;
-            "atomic-sort-criterion": LocalJSX.AtomicSortCriterion & JSXBase.HTMLAttributes<HTMLAtomicSortCriterionElement>;
+            "atomic-sort-criteria": LocalJSX.AtomicSortCriteria & JSXBase.HTMLAttributes<HTMLAtomicSortCriteriaElement>;
             "atomic-sort-dropdown": LocalJSX.AtomicSortDropdown & JSXBase.HTMLAttributes<HTMLAtomicSortDropdownElement>;
             "atomic-tab": LocalJSX.AtomicTab & JSXBase.HTMLAttributes<HTMLAtomicTabElement>;
             "atomic-text": LocalJSX.AtomicText & JSXBase.HTMLAttributes<HTMLAtomicTextElement>;

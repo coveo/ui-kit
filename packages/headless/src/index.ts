@@ -57,7 +57,7 @@ export {
   buildNoSortCriterion,
   buildQueryRankingExpressionSortCriterion,
   buildRelevanceSortCriterion,
-  validateSortCriterion,
+  parseCriterionExpression,
   SortBy,
   SortByDate,
   SortByField,
