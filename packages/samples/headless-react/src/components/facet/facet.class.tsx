@@ -9,6 +9,7 @@ import {engine} from '../../engine';
 
 interface FacetProps {
   field: string;
+  facetId: string;
 }
 
 export class Facet extends Component<FacetProps> {
@@ -19,7 +20,9 @@ export class Facet extends Component<FacetProps> {
   constructor(props: FacetProps) {
     super(props);
 
-    this.controller = buildFacet(engine, {options: {field: props.field}});
+    this.controller = buildFacet(engine, {
+      options: {field: props.field, facetId: props.facetId},
+    });
     this.state = this.controller.state;
   }
 
