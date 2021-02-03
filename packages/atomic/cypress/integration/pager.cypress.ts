@@ -17,6 +17,7 @@ describe('Pager Test Suites', () => {
 
   function componentLoaded(numberOfPages: number) {
     const totalLi = numberOfPages + 2;
+    cy.get('@pagerLi').get(PagerSelectors.pager).should('be.visible');
     cy.get('@pagerLi')
       .find('button')
       .contains(numberOfPages.toString())
@@ -83,7 +84,7 @@ describe('Pager Test Suites', () => {
     });
 
     it('should go to page 3 and log UA on button Pager', async () => {
-      cy.get('@pagerLi').contains('3').click();
+      cy.get('@pagerLi').find('button').contains('3').click();
       checkPagerSelected('3', true);
       checkPagerSelected('1', false);
       validateUrlhash(3);
@@ -96,18 +97,19 @@ describe('Pager Test Suites', () => {
     });
 
     it('should load more numbers when click 5', () => {
-      cy.get('@pagerLi').contains('5').click();
+      cy.get('@pagerLi').find('button').contains('5').click();
       checkPagerSelected('5', true);
       checkPagerSelected('6', false);
     });
   });
 
   describe('Pager should load from url', () => {
-    it('should activate correct page number', () => {
+    it('should activate correct page number', async () => {
       cy.visit('http://localhost:3333/pages/test.html#firstResult=20');
       injectComponent('<atomic-pager></atomic-pager>');
       cy.wait(1000);
       createAliasNavigation();
+      cy.get('@pagerLi').get(PagerSelectors.pager).should('be.visible');
       checkPagerSelected('3', true);
     });
   });
