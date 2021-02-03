@@ -3,6 +3,41 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.5.0-alpha.6](https://github.com/coveo/ui-kit/compare/v0.5.0-alpha.5...v0.5.0-alpha.6) (2021-02-03)
+
+
+### Features
+
+* **atomic:** update search box styles ([#468](https://github.com/coveo/ui-kit/issues/468)) ([4ee87e5](https://github.com/coveo/ui-kit/commit/4ee87e58c7d48db983dbace7fb42d6e7e5bf824d))
+
+
+
+
+
+# [0.5.0-alpha.5](https://github.com/coveo/ui-kit/compare/v0.5.0-alpha.4...v0.5.0-alpha.5) (2021-02-02)
+
+**Note:** Version bump only for package ui-kit
+
+
+
+
+
+# [0.5.0-alpha.4](https://github.com/coveo/ui-kit/compare/v0.5.0-alpha.3...v0.5.0-alpha.4) (2021-02-02)
+
+**Note:** Version bump only for package ui-kit
+
+
+
+
+
+# [0.5.0-alpha.3](https://github.com/coveo/ui-kit/compare/v0.5.0-alpha.2...v0.5.0-alpha.3) (2021-02-02)
+
+**Note:** Version bump only for package ui-kit
+
+
+
+
+
 # [0.5.0-alpha.2](https://github.com/coveo/ui-kit/compare/v0.5.0-alpha.1...v0.5.0-alpha.2) (2021-02-02)
 
 
