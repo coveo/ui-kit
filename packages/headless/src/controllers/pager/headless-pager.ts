@@ -75,7 +75,7 @@ export interface Pager {
    * @param page The page number to check.
    * @returns boolean.
    */
-  isCurrentPage: (page: number) => void;
+  isCurrentPage: (page: number) => boolean;
 
   /** The state of the Pager controller */
   state: PagerState;
