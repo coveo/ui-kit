@@ -50,10 +50,55 @@
 
   <body>
     <atomic-search-interface id="search">
-      <atomic-sort-dropdown>
-        <atomic-sort-criteria caption="relevance" criteria="relevancy"></atomic-sort-criteria>
-        <atomic-sort-criteria caption="mostRecent" criteria="date descending"></atomic-sort-criteria>
-      </atomic-sort-dropdown>
+      <div style="display: flex" class="mx-auto my-2 justify-center">
+        <atomic-tab expression="" class="mr-2">All Files</atomic-tab>
+        <atomic-tab expression='@author *= "BBC News"'>BBC News</atomic-tab>
+      </div>
+      <atomic-search-box class="m-3 block"></atomic-search-box>
+      <div class="flex px-2">
+        <atomic-facet-manager>
+          <atomic-facet field="author" label="Authors"></atomic-facet>
+          <atomic-numeric-facet field="size" label="File sizes"></atomic-numeric-facet>
+          <atomic-date-facet field="created" label="Created"></atomic-date-facet>
+          <atomic-category-facet field="geographicalhierarchy" label="World Atlas"></atomic-category-facet>
+        </atomic-facet-manager>
+        <div class="flex-grow">
+          <atomic-breadcrumb-manager></atomic-breadcrumb-manager>
+          <atomic-did-you-mean></atomic-did-you-mean>
+          <atomic-query-error></atomic-query-error>
+          <div class="flex justify-between items-center my-2">
+            <atomic-query-summary></atomic-query-summary>
+            <atomic-sort-dropdown>
+              <atomic-sort-criteria caption="relevance" criteria="relevancy"></atomic-sort-criteria>
+              <atomic-sort-criteria caption="mostRecent" criteria="date descending"></atomic-sort-criteria>
+            </atomic-sort-dropdown>
+          </div>
+
+          <atomic-result-list>
+            <atomic-result-template id="france-template">
+              <hr />
+              <img src="https://www.cia-france.com/media/1558/parcarou1_720x500.jpg" alt="Paris" />
+              <h5 part="france-title">{{title}}</h5>
+              <p>
+                <atomic-result-value value="excerpt"> </atomic-result-value>
+              </p>
+              <a href="{{clickUri}}">More info</a>
+            </atomic-result-template>
+
+            <script>
+              document.querySelector('#france-template').conditions = [(result) => result.title === 'France'];
+            </script>
+          </atomic-result-list>
+
+          <div style="display: flex">
+            <atomic-pager></atomic-pager>
+            <atomic-results-per-page></atomic-results-per-page>
+          </div>
+        </div>
+      </div>
+      <atomic-history></atomic-history>
     </atomic-search-interface>
+    <atomic-recommendation></atomic-recommendation>
+    <atomic-frequently-bought-together></atomic-frequently-bought-together>
   </body>
 </html>
