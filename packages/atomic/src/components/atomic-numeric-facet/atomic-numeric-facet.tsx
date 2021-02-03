@@ -15,6 +15,8 @@ import {
   InitializeBindings,
 } from '../../utils/initialization-utils';
 
+import {randomID} from '../../utils/utils';
+
 @Component({
   tag: 'atomic-numeric-facet',
   styleUrl: 'atomic-numeric-facet.pcss',
@@ -59,26 +61,54 @@ export class AtomicNumericFacet implements InitializableComponent {
 
   private buildListItem(item: NumericFacetValue) {
     const isSelected = this.facet.isValueSelected(item);
-
+    const id = randomID('');
     return (
-      <div onClick={() => this.facet.toggleSelect(item)}>
-        <input type="checkbox" checked={isSelected}></input>
+      <li
+        role="option"
+        class="flex flex-row items-center mt-2 cursor-pointer"
+        onClick={() => this.facet.toggleSelect(item)}
+      >
         <span>
-          {item.start}-{item.end} {item.numberOfResults}
+          <input
+            type="checkbox"
+            checked={isSelected}
+            class="w-4 h-4"
+            id={`${id}-input`}
+            name={`${id}-input`}
+          />
         </span>
-      </div>
+
+        <label
+          htmlFor={`${id}-input`}
+          class="ml-3 flex flex-row text-on-background flex-grow cursor-pointer"
+        >
+          {item.start}-{item.end}{' '}
+          <span class="ml-auto self-end text-secondary">
+            ({item.numberOfResults})
+          </span>
+        </label>
+      </li>
     );
   }
 
   private get resetButton() {
     return this.facetState.hasActiveValues ? (
-      <button onClick={() => this.facet.deselectAll()}>X</button>
+      <button
+        onClick={() => this.facet.deselectAll()}
+        class="block text-primary mr-2 text-sm"
+      >
+        Clear
+      </button>
     ) : null;
   }
 
   private get sortSelector() {
     return (
-      <select name="facetSort" onChange={(val) => this.onFacetSortChange(val)}>
+      <select
+        class="p-1 apply-border-on-background rounded"
+        name="facetSort"
+        onChange={(val) => this.onFacetSortChange(val)}
+      >
         {this.sortOptions}
       </select>
     );
@@ -103,13 +133,15 @@ export class AtomicNumericFacet implements InitializableComponent {
 
   public render() {
     return (
-      <div>
-        <div>
-          <span>{this.label}</span>
-          {this.sortSelector}
-          {this.resetButton}
+      <div class="facet mx-2 my-4">
+        <div class="flex flex-row items-center pb-2 mb-2 border-b border-solid border-on-background">
+          <span class="font-semibold text-primary">{this.label}</span>
+          <span class="flex flex-row block ml-auto">
+            {this.resetButton}
+            {this.sortSelector}
+          </span>
         </div>
-        <div>{this.values}</div>
+        <ul class="list-none">{this.values}</ul>
       </div>
     );
   }
