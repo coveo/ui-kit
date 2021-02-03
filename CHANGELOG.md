@@ -3,6 +3,41 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.5.0-alpha.5](https://github.com/coveo/ui-kit/compare/v0.5.0-alpha.4...v0.5.0-alpha.5) (2021-02-02)
+
+**Note:** Version bump only for package ui-kit
+
+
+
+
+
+# [0.5.0-alpha.4](https://github.com/coveo/ui-kit/compare/v0.5.0-alpha.3...v0.5.0-alpha.4) (2021-02-02)
+
+**Note:** Version bump only for package ui-kit
+
+
+
+
+
+# [0.5.0-alpha.3](https://github.com/coveo/ui-kit/compare/v0.5.0-alpha.2...v0.5.0-alpha.3) (2021-02-02)
+
+**Note:** Version bump only for package ui-kit
+
+
+
+
+
+# [0.5.0-alpha.2](https://github.com/coveo/ui-kit/compare/v0.5.0-alpha.1...v0.5.0-alpha.2) (2021-02-02)
+
+
+### Features
+
+* **headless:** bump rtk to 1.5.0 ([#470](https://github.com/coveo/ui-kit/issues/470)) ([92d48dc](https://github.com/coveo/ui-kit/commit/92d48dc52970876826af39b95a9ae77d084ad380))
+
+
+
+
+
 # [0.5.0-alpha.1](https://github.com/coveo/ui-kit/compare/v0.5.0-alpha.0...v0.5.0-alpha.1) (2021-02-01)
 
 **Note:** Version bump only for package ui-kit
