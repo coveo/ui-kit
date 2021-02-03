@@ -1,4 +1,4 @@
-# atomic-sort-criterion
+# atomic-sort-criteria
 
 
 
