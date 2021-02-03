@@ -81,9 +81,9 @@ describe('Search Box Test Suites', () => {
         actionCause: 'searchboxSubmit',
       };
 
-      const analyticsResponse = await getAnalytics('@coveoAnalytics');
-      expect(analyticsResponse.response.statusCode).to.eq(200);
-      expect(analyticsResponse.request.body).to.have.property(
+      const analytics = await getAnalytics('@coveoAnalytics');
+      expect(analytics.response.statusCode).to.eq(200);
+      expect(analytics.request.body).to.have.property(
         'actionCause',
         searchUA['actionCause']
       );

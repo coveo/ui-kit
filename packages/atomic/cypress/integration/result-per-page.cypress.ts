@@ -1,7 +1,4 @@
-import {
-  getApiResponseBody,
-  getAnalyticsCustomEventRequest,
-} from '../utils/network';
+import {getApiResponseBody, getAnalytics} from '../utils/network';
 import {setUpPage} from '../utils/setupComponent';
 
 const resultPerPage = 'atomic-results-per-page';
@@ -43,10 +40,11 @@ describe('Result Per Page Component', () => {
     setup();
     clickButton(1);
 
-    const fetchAnalytics = await getAnalyticsCustomEventRequest(
-      '@coveoAnalytics'
+    const analytics = await getAnalytics('@coveoAnalytics');
+    expect(analytics.request.body).to.have.property(
+      'eventValue',
+      'pagerResize'
     );
-    expect(fetchAnalytics).to.have.property('eventValue', 'pagerResize');
   });
 
   it('passes automated accessibility', () => {
