@@ -123,27 +123,30 @@ export class AtomicSortDropdown implements InitializableComponent {
   }
 
   private renderSelect() {
-    return (
-      <div class="relative">
-        {this.renderLabel()}
-        <select
-          id={this.id}
-          class="appearance-none rounded bg-background text-secondary font-bold border border-divider py-1.5 pl-2 pr-5"
-          part="select"
-          aria-label={this.strings.sortBy()}
-          onChange={(option) => this.select(option)}
-        >
-          {this.options.map((option) => this.buildOption(option))}
-        </select>
-        <div
-          class="absolute right-3 top-4 fill-current w-3 h-3 pointer-events-none"
-          innerHTML={ArrowBottomIcon}
-        ></div>
-      </div>
-    );
+    return [
+      <select
+        id={this.id}
+        class="flex-grow appearance-none rounded bg-background text-secondary font-bold border border-divider py-1.5 pl-2 pr-5"
+        part="select"
+        aria-label={this.strings.sortBy()}
+        onChange={(option) => this.select(option)}
+      >
+        {this.options.map((option) => this.buildOption(option))}
+      </select>,
+      <div
+        class="absolute right-3 top-4 fill-current w-3 h-3 pointer-events-none"
+        innerHTML={ArrowBottomIcon}
+      ></div>,
+    ];
   }
 
   public render() {
-    return [this.renderSelect(), <slot></slot>];
+    return [
+      <div class="flex items-center relative">
+        {this.renderLabel()}
+        {this.renderSelect()}
+      </div>,
+      <slot></slot>,
+    ];
   }
 }
