@@ -8,7 +8,6 @@ describe('Result Per Page Component', () => {
     setUpPage(
       `<atomic-results-per-page ${attributes}></atomic-results-per-page>`
     );
-    cy.wait(500);
   }
 
   function clickButton(position: number) {

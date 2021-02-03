@@ -13,7 +13,6 @@ import {
 describe('Pager Test Suites', () => {
   function setupPager(attributes = '') {
     setUpPage(`<atomic-pager ${attributes}></atomic-pager>`);
-    cy.wait(1000);
   }
 
   function componentLoaded(numberOfPages: number) {
