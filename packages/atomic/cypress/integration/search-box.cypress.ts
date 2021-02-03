@@ -1,4 +1,4 @@
-import {getApiResponseBody, getAnalytics} from '../utils/network';
+import {getApiResponseBody, getAnalyticsAt} from '../utils/network';
 import {setUpPage} from '../utils/setupComponent';
 import {
   SearchBoxSelectors,
@@ -81,7 +81,7 @@ describe('Search Box Test Suites', () => {
         actionCause: 'searchboxSubmit',
       };
 
-      const analytics = await getAnalytics('@coveoAnalytics');
+      const analytics = await getAnalyticsAt('@coveoAnalytics', 1);
       expect(analytics.response.statusCode).to.eq(200);
       expect(analytics.request.body).to.have.property(
         'actionCause',
