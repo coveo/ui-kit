@@ -26,6 +26,14 @@ A search box with built in support for query suggestions.
 | `"suggestions"`       | The list of suggestions             |
 
 
+## CSS Custom Properties
+
+| Name                          | Description                                     |
+| ----------------------------- | ----------------------------------------------- |
+| `--atomic-search-box-height`  | Height of the search box                        |
+| `--atomic-submit-button-size` | Size of the submit button inside the search box |
+
+
 ## Dependencies
 
 ### Depends on

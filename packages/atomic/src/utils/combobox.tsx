@@ -190,19 +190,18 @@ export class Combobox {
       'aria-owns': `${this.options.id}-listbox`,
       role: 'combobox',
       'aria-haspopup': 'listbox',
+      'aria-expanded': `${this.hasValues}`,
     };
   }
 
   private get textboxAttributes() {
     return {
       id: `${this.options.id}-textbox`,
-      role: 'combobox',
       autocomplete: 'off',
       autocapitalize: 'off',
       autocorrect: 'off',
       'aria-autocomplete': 'list',
       'aria-controls': `${this.options.id}-listbox`,
-      'aria-expanded': `${this.hasValues}`,
       'aria-activedescendant': this.activeDescendant,
       'aria-label': this.options.strings.searchBox(),
     };

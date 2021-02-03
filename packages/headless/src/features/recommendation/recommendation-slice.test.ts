@@ -52,12 +52,7 @@ describe('recommendation slice', () => {
 
   it('set the error on rejection', () => {
     const err = {message: 'message', statusCode: 500, type: 'type'};
-    const action = getRecommendations.rejected(
-      {message: 'asd', name: 'asd'},
-      '',
-      undefined,
-      err
-    );
+    const action = {type: 'recommendation/get/rejected', payload: err};
     const finalState = recommendationReducer(state, action);
     expect(finalState.error).toEqual(err);
     expect(finalState.isLoading).toBe(false);

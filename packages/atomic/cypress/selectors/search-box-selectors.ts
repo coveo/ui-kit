@@ -15,13 +15,6 @@ export function generateAliasForSearchBox() {
     .find('div')
     .first()
     .as('searchBoxFirstDiv');
-  cy.get('@searchBoxFirstDiv')
-    .find(SearchBoxSelectors.inputBox)
-    .as('searchInput');
-  cy.get('button').find('.search').as('searchBtn');
-  cy.get('@searchBoxFirstDiv')
-    .find(SearchBoxSelectors.querySuggestionList)
-    .as('querySuggestList');
 }
 
 export function searchAQueryUsingMouse(query: string) {
