@@ -141,7 +141,7 @@ describe('sort-criterion functions', () => {
     it('should split expressions by comma', () => {
       expect(
         parseCriterionExpression(
-          `${SortBy.Relevancy}, ${SortBy.QRE},size ${SortOrder.Ascending}`
+          ` ${SortBy.Relevancy}, ${SortBy.QRE},size ${SortOrder.Ascending}`
         ).length
       ).toBe(3);
     });
