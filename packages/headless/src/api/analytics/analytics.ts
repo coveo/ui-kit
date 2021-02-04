@@ -20,6 +20,7 @@ import {
   SearchSection,
 } from '../../state/state-sections';
 import {Context} from '../../features/context/context-state';
+import {PreprocessAnalyticsRequestMiddleware} from 'coveo.analytics/dist/definitions/client/analyticsFetchClient';
 
 export type StateNeededByAnalyticsProvider = ConfigurationSection &
   Partial<
@@ -115,6 +116,7 @@ interface ConfigureAnalyticsOptions {
   state: StateNeededByAnalyticsProvider;
   logger: Logger;
   analyticsClientMiddleware?: AnalyticsClientSendEventHook;
+  preprocessAnalyticsRequestMiddleware?: PreprocessAnalyticsRequestMiddleware;
   provider?: SearchPageClientProvider;
 }
 
@@ -122,6 +124,7 @@ export const configureAnalytics = ({
   logger,
   state,
   analyticsClientMiddleware = (_, p) => p,
+  preprocessAnalyticsRequestMiddleware,
   provider = new AnalyticsProvider(state),
 }: ConfigureAnalyticsOptions) => {
   const token = state.configuration.accessToken;
@@ -132,6 +135,7 @@ export const configureAnalytics = ({
       token,
       endpoint,
       runtimeEnvironment,
+      preprocessRequestMiddleware: preprocessAnalyticsRequestMiddleware,
       beforeSendHooks: [
         analyticsClientMiddleware,
         (type, payload) => {

@@ -35,6 +35,7 @@ import {
   PostprocessSearchResponseMiddleware,
 } from '../api/search/search-api-client-middleware';
 import {IRuntimeEnvironment} from 'coveo.analytics';
+import {PreprocessAnalyticsRequestMiddleware} from 'coveo.analytics/dist/definitions/client/analyticsFetchClient';
 
 export type LogLevel = LevelWithSilent;
 
@@ -128,7 +129,7 @@ export interface HeadlessConfigurationOptions {
      */
     searchHub?: string;
     /**
-     * Allows for augmenting request before any (search, facet-search, query-suggest) a request is sent.
+     * Allows for augmenting a request (search, facet-search, query-suggest, etc.) before it is sent.
      */
     preprocessRequestMiddleware?: PreprocessRequestMiddleware;
     /**
@@ -169,7 +170,7 @@ export interface HeadlessConfigurationOptions {
      */
     originLevel3?: string;
     /**
-     * analyticsClientMiddleware allows to hook into the analytics request before it is sent to the Coveo platform.
+     * analyticsClientMiddleware allows to hook into an analytics event payload before it is sent to the Coveo platform.
      */
     analyticsClientMiddleware?: AnalyticsClientSendEventHook;
     /**
@@ -177,6 +178,10 @@ export interface HeadlessConfigurationOptions {
      * See https://github.com/coveo/coveo.analytics.js for more info.
      */
     runtimeEnvironment?: IRuntimeEnvironment;
+    /**
+     * Allows for augmenting an analytics request before it is sent.
+     */
+    preprocessAnalyticsRequestMiddleware?: PreprocessAnalyticsRequestMiddleware;
   };
 }
 
@@ -251,6 +256,7 @@ export class HeadlessEngine<Reducers extends ReducersMapObject>
     if (options.configuration.analytics) {
       const {
         analyticsClientMiddleware,
+        preprocessAnalyticsRequestMiddleware,
         ...rest
       } = options.configuration.analytics;
       this.reduxStore.dispatch(updateAnalyticsConfiguration(rest));
@@ -311,7 +317,7 @@ export class HeadlessEngine<Reducers extends ReducersMapObject>
   }
 
   private initStore() {
-    const {search} = this.options.configuration;
+    const {search, analytics} = this.options.configuration;
     this.reduxStore = configureStore({
       preloadedState: this.options.preloadedState,
       reducers: this.options.reducers,
@@ -334,6 +340,8 @@ export class HeadlessEngine<Reducers extends ReducersMapObject>
             NoopPostprocessQuerySuggestResponseMiddleware,
         }),
         analyticsClientMiddleware: this.analyticsClientMiddleware(this.options),
+        preprocessAnalyticsRequestMiddleware:
+          analytics?.preprocessAnalyticsRequestMiddleware,
         logger: this.logger,
         validatePayload: validatePayloadAndThrow,
       },

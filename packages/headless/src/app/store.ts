@@ -14,10 +14,12 @@ import {
   logActionMiddleware,
 } from './logger-middlewares';
 import {validatePayloadAndThrow} from '../utils/validate-payload';
+import {PreprocessAnalyticsRequestMiddleware} from 'coveo.analytics/dist/definitions/client/analyticsFetchClient';
 
 export interface ThunkExtraArguments {
   searchAPIClient: SearchAPIClient;
   analyticsClientMiddleware: AnalyticsClientSendEventHook;
+  preprocessAnalyticsRequestMiddleware?: PreprocessAnalyticsRequestMiddleware;
   logger: Logger;
   validatePayload: typeof validatePayloadAndThrow;
 }
