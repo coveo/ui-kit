@@ -149,10 +149,6 @@ export namespace Components {
         "criteria": string;
     }
     interface AtomicSortDropdown {
-        /**
-          * Specifies whether a label should be displayed in front of the dropdown.
-         */
-        "displayLabel": boolean;
     }
     interface AtomicTab {
         "expression": string;
@@ -497,10 +493,6 @@ declare namespace LocalJSX {
         "criteria": string;
     }
     interface AtomicSortDropdown {
-        /**
-          * Specifies whether a label should be displayed in front of the dropdown.
-         */
-        "displayLabel"?: boolean;
     }
     interface AtomicTab {
         "expression"?: string;
