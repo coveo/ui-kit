@@ -12,7 +12,7 @@ import {
 } from '@microsoft/api-extractor-model';
 import {writeFileSync} from 'fs';
 
-const prefix = '@coveo/headless!';
+const project = '@coveo/headless';
 const apiModel = new ApiModel();
 const apiPackage = apiModel.loadPackage('temp/headless.api.json');
 const entryPoint = findEntryPoint(apiPackage) as ApiEntryPoint;
@@ -50,9 +50,22 @@ interface Controller {
 }
 
 function findApi(entry: ApiEntryPoint, apiName: string) {
-  return entry.members.find((m) =>
-    m.canonicalReference.toString().startsWith(`${prefix}${apiName}`)
+  const name = extractCanonicalName(apiName);
+  const result = entry.members.find((m) =>
+    m.canonicalReference.toString().startsWith(`${project}!${name}:`)
   );
+
+  if (!result) {
+    throw new Error(`No api found for ${name}`);
+  }
+
+  return result;
+}
+
+function extractCanonicalName(apiName: string) {
+  const dollarIndex = apiName.indexOf('$');
+  const nameEndIndex = dollarIndex !== -1 ? dollarIndex : apiName.length;
+  return apiName.slice(0, nameEndIndex);
 }
 
 function findEntryPoint(apiPackage: ApiPackage) {
