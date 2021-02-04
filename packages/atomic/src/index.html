@@ -55,12 +55,12 @@
         <atomic-tab expression='@author *= "BBC News"'>BBC News</atomic-tab>
       </div>
       <atomic-search-box class="m-3 block"></atomic-search-box>
-      <div style="display: flex">
+      <div class="flex flex-col md:flex-row">
         <atomic-facet-manager>
           <atomic-facet field="author" label="Authors"></atomic-facet>
           <atomic-numeric-facet field="size" label="File sizes"></atomic-numeric-facet>
-          <atomic-date-facet field="created" label="Created"></atomic-date-facet>
-          <atomic-category-facet field="geographicalhierarchy" label="World Atlas"></atomic-category-facet>
+<!--          <atomic-date-facet field="created" label="Created"></atomic-date-facet>-->
+<!--          <atomic-category-facet field="geographicalhierarchy" label="World Atlas"></atomic-category-facet>-->
         </atomic-facet-manager>
         <div>
           <atomic-breadcrumb-manager></atomic-breadcrumb-manager>
@@ -71,7 +71,7 @@
             <atomic-sort-dropdown></atomic-sort-dropdown>
           </div>
 
-          <atomic-result-list>
+          <atomic-result-list class="max-w-full">
             <atomic-result-template id="france-template">
               <hr />
               <img src="https://www.cia-france.com/media/1558/parcarou1_720x500.jpg" alt="Paris" />
@@ -87,7 +87,7 @@
             </script>
           </atomic-result-list>
 
-          <div class="flex justify-between my-2">
+          <div class="flex flex-col md:flex-row justify-between my-2">
             <atomic-pager></atomic-pager>
             <atomic-results-per-page></atomic-results-per-page>
           </div>

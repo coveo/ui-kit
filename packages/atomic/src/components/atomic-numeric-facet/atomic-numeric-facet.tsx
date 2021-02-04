@@ -16,6 +16,7 @@ import {
 } from '../../utils/initialization-utils';
 
 import {randomID} from '../../utils/utils';
+import CloseIcon from 'coveo-styleguide/resources/icons/svg/close.svg';
 
 @Component({
   tag: 'atomic-numeric-facet',
@@ -30,7 +31,7 @@ export class AtomicNumericFacet implements InitializableComponent {
   @State()
   private facetState!: NumericFacetState;
   @State() public error!: Error;
-
+  @State() public isExpanded: Boolean = false;
   @Prop({mutable: true}) public facetId = '';
   @Prop() public field = '';
   @Prop() public label = 'No label';
@@ -63,29 +64,20 @@ export class AtomicNumericFacet implements InitializableComponent {
     const isSelected = this.facet.isValueSelected(item);
     const id = randomID('');
     return (
-      <li
-        role="option"
-        class="flex flex-row items-center mt-2 cursor-pointer"
-        onClick={() => this.facet.toggleSelect(item)}
-      >
-        <span>
-          <input
-            type="checkbox"
-            checked={isSelected}
-            class="w-4 h-4"
-            id={`${id}-input`}
-            name={`${id}-input`}
-          />
-        </span>
-
-        <label
-          htmlFor={`${id}-input`}
-          class="ml-3 flex flex-row text-on-background flex-grow cursor-pointer"
-        >
+      <li role="option" class="value">
+        <input
+          type="checkbox"
+          checked={isSelected}
+          class="checkbox"
+          id={`${id}-input`}
+          name={`${id}-input`}
+          onClick={() => {
+            this.facet.toggleSelect(item);
+          }}
+        />
+        <label htmlFor={`${id}-input`} class="label">
           {item.start}-{item.end}{' '}
-          <span class="ml-auto self-end text-secondary">
-            ({item.numberOfResults})
-          </span>
+          <span class="number-of-results">({item.numberOfResults})</span>
         </label>
       </li>
     );
@@ -105,13 +97,27 @@ export class AtomicNumericFacet implements InitializableComponent {
   private get sortSelector() {
     return (
       <select
-        class="p-1 apply-border-on-background rounded"
+        class="sort"
         name="facetSort"
         onChange={(val) => this.onFacetSortChange(val)}
       >
         {this.sortOptions}
       </select>
     );
+  }
+
+  private get closeButton() {
+    return this.isExpanded ? (
+      <button
+        onClick={() => {
+          this.isExpanded = false;
+          document.body.classList.remove('overflow-hidden');
+        }}
+        class="close-button ml-2"
+      >
+        <div innerHTML={CloseIcon} />
+      </button>
+    ) : null;
   }
 
   private get sortOptions() {
@@ -133,15 +139,27 @@ export class AtomicNumericFacet implements InitializableComponent {
 
   public render() {
     return (
-      <div class="facet mx-2 my-4">
-        <div class="flex flex-row items-center pb-2 mb-2 border-b border-solid border-on-background">
-          <span class="font-semibold text-primary">{this.label}</span>
-          <span class="flex flex-row block ml-auto">
-            {this.resetButton}
-            {this.sortSelector}
-          </span>
+      <div class="facet">
+        <button
+          class="open-button"
+          onClick={() => {
+            this.isExpanded = true;
+            document.body.classList.add('overflow-hidden');
+          }}
+        >
+          {this.label}
+        </button>
+        <div class={'content ' + (this.isExpanded ? 'active' : '')}>
+          <div class="header">
+            <span class="label">{this.label}</span>
+            <span class="buttons">
+              {this.resetButton}
+              {this.sortSelector}
+              {this.closeButton}
+            </span>
+          </div>
+          <ul class="list-none">{this.values}</ul>
         </div>
-        <ul class="list-none">{this.values}</ul>
       </div>
     );
   }

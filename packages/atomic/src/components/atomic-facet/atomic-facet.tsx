@@ -13,6 +13,8 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../utils/initialization-utils';
+import CloseIcon from 'coveo-styleguide/resources/icons/svg/close.svg';
+import {randomID} from '../../utils/utils';
 
 @Component({
   tag: 'atomic-facet',
@@ -27,6 +29,7 @@ export class AtomicFacet implements InitializableComponent {
   @State()
   private facetState!: FacetState;
   @State() public error!: Error;
+  @State() public isExpanded: Boolean = false;
 
   @Prop({mutable: true, reflect: true}) public facetId = '';
   @Prop() public field = '';
@@ -46,14 +49,15 @@ export class AtomicFacet implements InitializableComponent {
 
   private buildListItem(item: FacetValue) {
     const isSelected = this.facet.isValueSelected(item);
-
+    const id = randomID('');
     return (
-      <div onClick={() => this.facet.toggleSelect(item)}>
-        <input type="checkbox" checked={isSelected}></input>
-        <span>
-          {item.value} {item.numberOfResults}
-        </span>
-      </div>
+      <li class="value" onClick={() => this.facet.toggleSelect(item)}>
+        <input type="checkbox" checked={isSelected} id={`${id}-input`} />
+        <label htmlFor={`${id}-input`} class="label">
+          {item.value}
+          <span class="number-of-results">({item.numberOfResults})</span>
+        </label>
+      </li>
     );
   }
 
@@ -64,7 +68,7 @@ export class AtomicFacet implements InitializableComponent {
   }
 
   private get facetSearchInput() {
-    return <input onInput={(e) => this.onFacetSearch(e)} />;
+    return <input onInput={(e) => this.onFacetSearch(e)} class="apply-border-on-background rounded" />;
   }
 
   private onFacetSearch(e: Event) {
@@ -97,7 +101,11 @@ export class AtomicFacet implements InitializableComponent {
 
   private get sortSelector() {
     return (
-      <select name="facetSort" onChange={(val) => this.onFacetSortChange(val)}>
+      <select
+        class="sort"
+        name="facetSort"
+        onChange={(val) => this.onFacetSortChange(val)}
+      >
         {this.sortOptions}
       </select>
     );
@@ -125,6 +133,20 @@ export class AtomicFacet implements InitializableComponent {
     this.facet.sortBy(criterion);
   }
 
+  private get closeButton() {
+    return this.isExpanded ? (
+      <button
+        onClick={() => {
+          this.isExpanded = false;
+          document.body.classList.remove('overflow-hidden');
+        }}
+        class="close-button ml-2"
+      >
+        <div innerHTML={CloseIcon} />
+      </button>
+    ) : null;
+  }
+
   private get showMoreButton() {
     if (!this.facetState.canShowMoreValues) {
       return null;
@@ -147,21 +169,35 @@ export class AtomicFacet implements InitializableComponent {
 
   public render() {
     return (
-      <div>
-        <div>
-          <span>{this.label}</span>
-          {this.sortSelector}
-          {this.resetButton}
-        </div>
-        <div>
-          {this.facetSearchInput}
-          {this.facetSearchResults}
-          {this.showMoreSearchResults}
-        </div>
-        <div>{this.values}</div>
-        <div>
-          {this.showMoreButton}
-          {this.showLessButton}
+      <div class="facet">
+        <button
+          class="open-button"
+          onClick={() => {
+            this.isExpanded = true;
+            document.body.classList.add('overflow-hidden');
+          }}
+        >
+          {this.label}
+        </button>
+        <div class={'content ' + (this.isExpanded ? 'active' : '')}>
+          <div class="header">
+            <span class="label">{this.label}</span>
+            <span class="buttons">
+              {this.resetButton}
+              {this.sortSelector}
+              {this.closeButton}
+            </span>
+          </div>
+          <div>
+            {this.facetSearchInput}
+            {this.facetSearchResults}
+            {this.showMoreSearchResults}
+          </div>
+          <ul class="list-none">{this.values}</ul>
+          <div>
+            {this.showMoreButton}
+            {this.showLessButton}
+          </div>
         </div>
       </div>
     );
