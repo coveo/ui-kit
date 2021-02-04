@@ -1,4 +1,4 @@
-import {Component, h, State, Element, Prop} from '@stencil/core';
+import {Component, h, State, Element} from '@stencil/core';
 import {
   Sort,
   buildSort,
