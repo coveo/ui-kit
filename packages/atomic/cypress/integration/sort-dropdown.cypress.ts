@@ -36,14 +36,9 @@ describe('Sort Dropdown Component', () => {
     cy.checkA11y(sortDropdown);
   });
 
-  it('should display a label by default', () => {
+  it('should display a label', () => {
     setup();
     cy.get(sortDropdown).shadow().find('label').should('exist');
-  });
-
-  it('should not display a label when display-label="false"', () => {
-    setup('display-label="false"');
-    cy.get(sortDropdown).shadow().find('label').should('not.exist');
   });
 
   it('should display the localized string for the option innerHTML', () => {

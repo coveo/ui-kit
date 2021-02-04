@@ -57,7 +57,6 @@ export {
   buildNoSortCriterion,
   buildQueryRankingExpressionSortCriterion,
   buildRelevanceSortCriterion,
-  parseCriterionExpression,
   SortBy,
   SortByDate,
   SortByField,
@@ -66,6 +65,7 @@ export {
   SortByRelevancy,
   SortOrder,
 } from './features/sort-criteria/criteria';
+export {parseCriterionExpression} from './features/sort-criteria/criteria-parser';
 export {ResultTemplatesManager} from './features/result-templates/result-templates-manager';
 export {
   ResultTemplate,

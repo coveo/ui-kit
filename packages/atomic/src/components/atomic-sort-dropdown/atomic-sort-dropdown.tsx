@@ -48,11 +48,6 @@ export class AtomicSortDropdown implements InitializableComponent {
   };
   @State() public error!: Error;
 
-  /**
-   * Specifies whether a label should be displayed in front of the dropdown.
-   */
-  @Prop({reflect: true}) displayLabel = true;
-
   public initialize() {
     this.buildOptions();
     this.sort = buildSort(this.bindings.engine, {
@@ -101,10 +96,6 @@ export class AtomicSortDropdown implements InitializableComponent {
   }
 
   private renderLabel() {
-    if (!this.displayLabel) {
-      return;
-    }
-
     return (
       <label
         class="text-on-background text-sm mr-2"
