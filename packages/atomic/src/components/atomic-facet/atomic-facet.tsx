@@ -68,7 +68,12 @@ export class AtomicFacet implements InitializableComponent {
   }
 
   private get facetSearchInput() {
-    return <input onInput={(e) => this.onFacetSearch(e)} class="apply-border-on-background rounded" />;
+    return (
+      <input
+        onInput={(e) => this.onFacetSearch(e)}
+        class="apply-border-on-background rounded"
+      />
+    );
   }
 
   private onFacetSearch(e: Event) {
@@ -184,7 +189,6 @@ export class AtomicFacet implements InitializableComponent {
             <span class="label">{this.label}</span>
             <span class="buttons">
               {this.resetButton}
-              {this.sortSelector}
               {this.closeButton}
             </span>
           </div>
