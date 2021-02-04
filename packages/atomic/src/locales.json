@@ -127,7 +127,7 @@
     "zh-cn": "排序方式",
     "zh-tw": "排序依據"
   },
-  "relevancy": {
+  "relevance": {
     "en": "Relevance",
     "fr": "Pertinence",
     "cs": "Relevance",
@@ -152,7 +152,7 @@
     "zh-cn": "关联",
     "zh-tw": "關聯"
   },
-  "date_descending": {
+  "mostRecent": {
     "en": "Most recent",
     "fr": "Plus récents"
   }

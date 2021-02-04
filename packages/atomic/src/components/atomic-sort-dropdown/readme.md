@@ -5,13 +5,6 @@
 <!-- Auto Generated Below -->
 
 
-## Properties
-
-| Property       | Attribute       | Description                                                             | Type      | Default |
-| -------------- | --------------- | ----------------------------------------------------------------------- | --------- | ------- |
-| `displayLabel` | `display-label` | Specifies whether a label should be displayed in front of the dropdown. | `boolean` | `true`  |
-
-
 ## Shadow Parts
 
 | Part       | Description         |

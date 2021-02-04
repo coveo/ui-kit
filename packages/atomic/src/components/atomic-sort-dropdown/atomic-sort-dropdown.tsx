@@ -1,5 +1,11 @@
 import {Component, h, State, Element, Prop} from '@stencil/core';
-import {Sort, buildSort, SortState, SortCriterion} from '@coveo/headless';
+import {
+  Sort,
+  buildSort,
+  SortState,
+  SortCriterion,
+  parseCriterionExpression,
+} from '@coveo/headless';
 import {
   Bindings,
   BindStateToController,
@@ -12,12 +18,13 @@ import {randomID} from '../../utils/utils';
 import ArrowBottomIcon from 'coveo-styleguide/resources/icons/svg/arrow-bottom-rounded.svg';
 
 interface SortDropdownOption {
-  criterion: SortCriterion;
+  expression: string;
+  criteria: SortCriterion[];
   caption: string;
 }
 
 /**
- * The Sort Dropdown allows the end user to select the criterion to use when sorting query results.
+ * The Sort Dropdown allows the end user to select the criteria to use when sorting query results.
  *
  * @part label - The "Sort by" label
  * @part select - The select element
@@ -41,76 +48,54 @@ export class AtomicSortDropdown implements InitializableComponent {
   };
   @State() public error!: Error;
 
-  /**
-   * Specifies whether a label should be displayed in front of the dropdown.
-   */
-  @Prop({reflect: true}) displayLabel = true;
-
   public initialize() {
     this.buildOptions();
     this.sort = buildSort(this.bindings.engine, {
       initialState: {
-        criterion: this.options[0].criterion,
+        criterion: this.options[0].criteria,
       },
     });
   }
 
   private buildOptions() {
     const sortCriterionElements = Array.from(
-      this.host.querySelectorAll('atomic-sort-criterion')
+      this.host.querySelectorAll('atomic-sort-criteria')
     );
 
-    this.options = sortCriterionElements
-      .filter((element) => element.criterion)
-      .map(({criterion, caption}) => {
-        this.strings[caption] = () => this.bindings.i18n.t(caption);
+    this.options = sortCriterionElements.map(({criteria, caption}) => {
+      this.strings[caption] = () => this.bindings.i18n.t(caption);
 
-        return {
-          criterion,
-          caption,
-        };
-      });
+      return {
+        criteria: parseCriterionExpression(criteria),
+        expression: criteria,
+        caption,
+      };
+    });
 
     if (!this.options.length) {
       this.error = new Error(
-        'The "atomic-sort-dropdown" element requires at least one "atomic-sort-criterion" child.'
+        'The "atomic-sort-dropdown" element requires at least one "atomic-sort-criteria" child.'
       );
     }
   }
 
   private select(e: Event) {
     const select = e.composedPath()[0] as HTMLSelectElement;
-    const option = this.getOptionFromValue(select.value);
-    option && this.sort.sortBy(option.criterion);
+    const option = this.options.find(
+      (option) => option.expression === select.value
+    );
+    option && this.sort.sortBy(option.criteria);
   }
 
-  private buildOption({criterion, caption}: SortDropdownOption) {
+  private buildOption({expression, criteria, caption}: SortDropdownOption) {
     return (
-      <option
-        value={this.formatOptionValue(criterion)}
-        selected={this.sort.isSortedBy(criterion)}
-      >
+      <option value={expression} selected={this.sort.isSortedBy(criteria)}>
         {this.strings[caption]()}
       </option>
     );
   }
 
-  private formatOptionValue(criterion: SortCriterion) {
-    const order = 'order' in criterion ? `-${criterion.order}` : '';
-    return `${criterion.by}_${order}`;
-  }
-
-  private getOptionFromValue(value: string) {
-    return this.options.find(
-      (option) => this.formatOptionValue(option.criterion) === value
-    );
-  }
-
   private renderLabel() {
-    if (!this.displayLabel) {
-      return;
-    }
-
     return (
       <label
         class="text-on-background text-sm mr-2"
@@ -126,7 +111,7 @@ export class AtomicSortDropdown implements InitializableComponent {
     return [
       <select
         id={this.id}
-        class="flex-grow appearance-none rounded bg-background text-secondary font-bold border border-divider py-1.5 pl-2 pr-5"
+        class="flex-grow appearance-none rounded bg-background text-secondary font-bold border border-divider py-1.5 pl-2 pr-8"
         part="select"
         aria-label={this.strings.sortBy()}
         onChange={(option) => this.select(option)}

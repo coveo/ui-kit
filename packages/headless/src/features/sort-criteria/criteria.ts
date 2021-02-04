@@ -1,10 +1,4 @@
-import {
-  EnumValue,
-  isArray,
-  RecordValue,
-  Schema,
-  StringValue,
-} from '@coveo/bueno';
+import {EnumValue, isArray, RecordValue, StringValue} from '@coveo/bueno';
 
 /**
  * The available sort orders.
@@ -90,7 +84,6 @@ export const buildCriterionExpression = (
     case SortBy.Field:
       return `@${criterion.field} ${criterion.order}`;
     default:
-      console.error(`Unknown criterion: ${criterion}`);
       return '';
   }
 };
@@ -149,45 +142,3 @@ export const criterionDefinition = new RecordValue({
     field: new StringValue(),
   },
 });
-
-/**
- * Utility function that validates and builds a valid criterion. Throws an error when the criterion is invalid.
- * @param criterion The criterion definition.
- * @returns A criterion.
- */
-export function validateSortCriterion(criterion: {
-  by: SortBy;
-  order?: SortOrder;
-  field?: string;
-}): SortCriterion {
-  new Schema({criterion: criterionDefinition}).validate({criterion});
-  const {by, field, order} = criterion;
-
-  switch (by) {
-    case SortBy.Relevancy:
-      return buildRelevanceSortCriterion();
-    case SortBy.QRE:
-      return buildQueryRankingExpressionSortCriterion();
-    case SortBy.Date:
-      if (!order) {
-        throw new Error(
-          '"order" should be specified when "by" value is "date"'
-        );
-      }
-      return buildDateSortCriterion(order);
-    case SortBy.Field:
-      if (!field) {
-        throw new Error(
-          '"field" should be specified when "by" value is "field"'
-        );
-      }
-      if (!order) {
-        throw new Error(
-          '"order" should be specified when "by" value is "field"'
-        );
-      }
-      return buildFieldSortCriterion(field, order);
-    default:
-      return buildNoSortCriterion();
-  }
-}
