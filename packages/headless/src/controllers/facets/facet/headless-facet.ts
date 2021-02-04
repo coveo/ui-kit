@@ -1,4 +1,7 @@
-import {buildController} from '../../controller/headless-controller';
+import {
+  buildController,
+  Controller,
+} from '../../controller/headless-controller';
 import {Engine} from '../../../app/headless-engine';
 import {
   registerFacet,
@@ -20,7 +23,6 @@ import {
 } from '../../../features/facets/facet-set/facet-set-analytics-actions';
 import {buildFacetSearch} from '../facet-search/specific/headless-facet-search';
 import {FacetSearchOptions} from '../../../features/facets/facet-search-set/facet-search-request-options';
-import {FacetValue} from '../../../features/facets/facet-set/interfaces/response';
 import {FacetSortCriterion} from '../../../features/facets/facet-set/interfaces/request';
 import {updateFacetOptions} from '../../../features/facet-options/facet-options-actions';
 import {
@@ -36,28 +38,143 @@ import {defaultFacetOptions} from '../../../features/facets/facet-set/facet-set-
 import {defaultFacetSearchOptions} from '../../../features/facets/facet-search-set/facet-search-reducer-helpers';
 import {FacetOptions, facetOptionsSchema} from './headless-facet-options';
 import {determineFacetId} from '../_common/facet-id-determinor';
+import {FacetValueState} from '../../../features/facets/facet-api/value';
 
 export {FacetOptions};
-export type FacetProps = {
+
+export interface FacetProps {
   /** The options for the `Facet` controller. */
   options: FacetOptions;
-};
+}
 
 /**
  * The `Facet` headless controller offers a high-level interface for designing a common facet UI controller.
  */
-export type Facet = ReturnType<typeof buildFacet>;
+export interface Facet extends Controller {
+  facetSearch: FacetSearch;
+
+  /**
+   * Toggles the specified facet value.
+   * @param selection The facet value to toggle.
+   */
+  toggleSelect: (selection: FacetValue) => void;
+
+  /**
+   * Checks whether the specified facet value is selected.
+   * @param value The facet value to check.
+   * @returns Whether the specified facet value is selected.
+   */
+  isValueSelected: (value: FacetValue) => boolean;
+
+  /** Deselects all facet values.*/
+  deselectAll: () => void;
+
+  /** Sorts the facet values according to the specified criterion.
+   * @param criterion The criterion to sort values by.
+   */
+  sortBy: (criterion: FacetSortCriterion) => void;
+
+  /**
+   * Checks whether the facet values are sorted according to the specified criterion.
+   * @param criterion The criterion to compare.
+   * @returns Whether the facet values are sorted according to the specified criterion.
+   */
+  isSortedBy: (criterion: FacetSortCriterion) => boolean;
+
+  /**
+   * Increases the number of values displayed in the facet to the next multiple of the originally configured value.
+   */
+  showMoreValues: () => void;
+
+  /** Sets the displayed number of values to the originally configured value.*/
+  showLessValues: () => void;
+
+  /** The state of the `Facet` controller. */
+  state: FacetState;
+}
+
 /**
  * A scoped and simplified part of the headless state that is relevant to the `Facet` controller.
  */
-export type FacetState = Facet['state'];
+export interface FacetState {
+  /** The facet id. */
+  facetId: string;
+
+  /** The values of the facet. */
+  values: FacetValue[];
+
+  /** The active sortCriterion of the facet. */
+  sortCriterion: FacetSortCriterion;
+
+  /** `true` if a search is in progress and `false` otherwise. */
+  isLoading: boolean;
+
+  /** `true` if there is at least one non-idle value and `false` otherwise. */
+  hasActiveValues: boolean;
+
+  /** `true` if there are more values to display and `false` otherwise. */
+  canShowMoreValues: boolean;
+
+  /** `true` if fewer values can be displayed and `false` otherwise. */
+  canShowLessValues: boolean;
+
+  /** The state of the facet's searchbox. */
+  facetSearch: FacetSearchState;
+}
+
+export interface FacetSearch {
+  /** updates text */
+  updateText(text: string): void;
+  /** shows more results */
+  showMoreResults(): void;
+  /** performs a search */
+  search(): void;
+  /** selects a result */
+  select(value: SpecificFacetSearchResult): void;
+  /** state of the facet search */
+  readonly state: FacetSearchState;
+}
+
+export interface FacetSearchState {
+  /** search results */
+  values: SpecificFacetSearchResult[];
+  /** whether loading */
+  isLoading: boolean;
+  /** whether more values are available */
+  moreValuesAvailable: boolean;
+}
+
+export interface SpecificFacetSearchResult {
+  /**
+   * The custom facet value display name, as specified in the `captions` argument of the facet request.
+   */
+  displayValue: string;
+  /**
+   * The original facet value, as retrieved from the field in the index.
+   */
+  rawValue: string;
+  /**
+   * An estimate number of result items matching both the current query and
+   * the filter expression that would get generated if the facet value were selected.
+   */
+  count: number;
+}
+
+export interface FacetValue {
+  /** whether the value is selected or idle */
+  state: FacetValueState;
+  /** the number of results having the value */
+  numberOfResults: number;
+  /** the value */
+  value: string;
+}
 
 export function buildFacet(
   engine: Engine<
     FacetSection & ConfigurationSection & FacetSearchSection & SearchSection
   >,
   props: FacetProps
-) {
+): Facet {
   const {dispatch} = engine;
   const controller = buildController(engine);
 
@@ -99,51 +216,33 @@ export function buildFacet(
 
   dispatch(registerFacet(options));
   const facetSearch = createFacetSearch();
-  const {state, ...restOfFacetSearch} = facetSearch;
+
   return {
     ...controller,
-    facetSearch: restOfFacetSearch,
-    /**
-     * Toggles the specified facet value.
-     * @param selection The facet value to toggle.
-     */
+
+    facetSearch,
+
     toggleSelect: (selection: FacetValue) =>
       dispatch(executeToggleFacetSelect({facetId: options.facetId, selection})),
-    /**
-     * Checks whether the specified facet value is selected.
-     * @param value The facet value to check.
-     * @returns Whether the specified facet value is selected.
-     */
+
     isValueSelected: isFacetValueSelected,
 
-    /** Deselects all facet values.*/
     deselectAll() {
       dispatch(deselectAllFacetValues(facetId));
       dispatch(updateFacetOptions({freezeFacetOrder: true}));
       dispatch(executeSearch(logFacetClearAll(facetId)));
     },
 
-    /** Sorts the facet values according to the specified criterion.
-     * @param criterion The criterion to sort values by.
-     */
     sortBy(criterion: FacetSortCriterion) {
       dispatch(updateFacetSortCriterion({facetId, criterion}));
       dispatch(updateFacetOptions({freezeFacetOrder: true}));
       dispatch(executeSearch(logFacetUpdateSort({facetId, criterion})));
     },
 
-    /**
-     * Checks whether the facet values are sorted according to the specified criterion.
-     * @param criterion The criterion to compare.
-     * @returns Whether the facet values are sorted according to the specified criterion.
-     */
     isSortedBy(criterion: FacetSortCriterion) {
       return this.state.sortCriterion === criterion;
     },
 
-    /**
-     * Increases the number of values displayed in the facet to the next multiple of the originally configured value.
-     */
     showMoreValues() {
       const numberInState = getRequest().numberOfValues;
       const initialNumberOfValues = options.numberOfValues;
@@ -157,7 +256,6 @@ export function buildFacet(
       dispatch(executeSearch(logFacetShowMore(facetId)));
     },
 
-    /** Sets the displayed number of values to the originally configured value.*/
     showLessValues() {
       const initialNumberOfValues = options.numberOfValues;
       const newNumberOfValues = Math.max(
@@ -173,7 +271,6 @@ export function buildFacet(
       dispatch(executeSearch(logFacetShowLess(facetId)));
     },
 
-    /** The state of the `Facet` controller. */
     get state() {
       const request = getRequest();
       const response = getResponse();
@@ -187,28 +284,13 @@ export function buildFacet(
       const canShowMoreValues = response ? response.moreValuesAvailable : false;
 
       return {
-        /** The facet id. */
         facetId,
-
-        /** The values of the facet. */
         values,
-
-        /** The active sortCriterion of the facet. */
         sortCriterion,
-
-        /** `true` if a search is in progress and `false` otherwise. */
         isLoading,
-
-        /** `true` if there is at least one non-idle value and `false` otherwise. */
         hasActiveValues,
-
-        /** `true` if there are more values to display and `false` otherwise. */
         canShowMoreValues,
-
-        /** `true` if fewer values can be displayed and `false` otherwise. */
         canShowLessValues: computeCanShowLessValues(),
-
-        /** The state of the facet's searchbox. */
         facetSearch: facetSearch.state,
       };
     },

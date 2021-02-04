@@ -31,6 +31,10 @@ export {
   FacetState,
   Facet,
   buildFacet,
+  FacetValue,
+  FacetSearch,
+  FacetSearchState,
+  SpecificFacetSearchResult,
 } from './facets/facet/headless-facet';
 
 export {
