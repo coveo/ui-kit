@@ -1,6 +1,7 @@
 import * as fetchMock from 'fetch-mock';
 import {EventType, ViewEventRequest, DefaultEventResponse} from '../events';
 import {CoveoAnalyticsClient} from './analytics';
+import {IAnalyticsFetchClientCallOptions} from './analyticsFetchClient';
 import {CookieStorage} from '../storage';
 import HistoryStore from '../history';
 
@@ -369,6 +370,43 @@ describe('Analytics', () => {
             beforeSendHooks: [spy],
         }).sendEvent(EventType.search, searchEventPayload);
         expect(spy).toHaveBeenLastCalledWith(EventType.search, expect.objectContaining(searchEventPayload));
+    });
+
+    it('should preprocess the request with the preprocessRequestMiddleware', async () => {
+        const processedRequest: IAnalyticsFetchClientCallOptions = {
+            url: 'https://www.myownanalytics.com/endpoint',
+            credentials: 'same-origin',
+            headers: {
+                Age: '24',
+            },
+            method: 'PUT',
+            mode: 'same-origin',
+            payload: {
+                test: 'custom',
+            },
+        };
+        fetchMock.put(processedRequest.url, eventResponse);
+        const searchEventPayload = {queryText: 'potato'};
+        await new CoveoAnalyticsClient({
+            token: aToken,
+            endpoint: anEndpoint,
+            version: A_VERSION,
+            preprocessRequestMiddleware: () => {
+                return processedRequest;
+            },
+        }).sendEvent(EventType.search, searchEventPayload);
+
+        const call = fetchMock.calls()[0];
+        const url = call[0];
+        const options: RequestInit = call[1];
+        const body = getParsedBodyCalls()[0];
+
+        expect(url).toBe(processedRequest.url);
+        expect(options.credentials).toBe(processedRequest.credentials);
+        expect(options.headers).toEqual(processedRequest.headers);
+        expect(options.method).toBe(processedRequest.method);
+        expect(options.mode).toBe(processedRequest.mode);
+        expect(body).toEqual(processedRequest.payload);
     });
 
     const getParsedBodyCalls = (): any[] => {

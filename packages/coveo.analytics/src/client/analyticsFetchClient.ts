@@ -1,26 +1,54 @@
 import {AnalyticsRequestClient, VisitorIdProvider} from './analyticsRequestClient';
 import {AnyEventResponse, EventType, IRequestPayload} from '../events';
 
+export type HttpMethods = 'POST' | 'GET' | 'PUT' | 'DELETE';
+
+export interface IAnalyticsFetchClientCallOptions {
+    url: string;
+    headers: Record<string, string>;
+    method: HttpMethods;
+    mode: RequestMode;
+    credentials: RequestCredentials;
+    payload: Record<string, any>;
+}
+
+export type PreprocessAnalyticsRequestMiddleware = (
+    request: IAnalyticsFetchClientCallOptions
+) => IAnalyticsFetchClientCallOptions | Promise<IAnalyticsFetchClientCallOptions>;
+
 export interface IAnalyticsFetchClientOptions {
     baseUrl: string;
     token?: string;
     visitorIdProvider: VisitorIdProvider;
+    preprocessRequestMiddleware?: PreprocessAnalyticsRequestMiddleware;
 }
 
 export class AnalyticsFetchClient implements AnalyticsRequestClient {
     constructor(private opts: IAnalyticsFetchClientOptions) {}
 
     public async sendEvent(eventType: EventType, payload: IRequestPayload): Promise<AnyEventResponse> {
-        const {baseUrl, visitorIdProvider} = this.opts;
+        const {baseUrl, visitorIdProvider, preprocessRequestMiddleware} = this.opts;
 
         const visitorIdParam = this.shouldAppendVisitorId(eventType) ? await this.getVisitorIdParam() : '';
-
-        const response = await fetch(`${baseUrl}/analytics/${eventType}${visitorIdParam}`, {
-            method: 'POST',
-            headers: this.getHeaders(),
-            mode: 'cors',
-            body: JSON.stringify(payload),
+        const fetchOptions: IAnalyticsFetchClientCallOptions = {
+            url: `${baseUrl}/analytics/${eventType}${visitorIdParam}`,
             credentials: 'include',
+            mode: 'cors',
+            headers: this.getHeaders(),
+            method: 'POST',
+            payload,
+        };
+        const processedOptions: IAnalyticsFetchClientCallOptions = {
+            ...fetchOptions,
+            ...(preprocessRequestMiddleware ? await preprocessRequestMiddleware(fetchOptions) : {}),
+        };
+
+        const response = await fetch(processedOptions.url, {
+            method: processedOptions.method,
+            headers: processedOptions.headers,
+            mode: processedOptions.mode,
+            body: JSON.stringify(processedOptions.payload),
+            credentials: processedOptions.credentials,
         });
         if (response.ok) {
             const visit = (await response.json()) as AnyEventResponse;
