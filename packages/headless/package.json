@@ -17,7 +17,7 @@
     "start": "npx concurrently \"npm run typedefinitions -- -w\" \"rollup -c -w\"",
     "build": "npm run clean && npm run build:prod",
     "build:prod": "npm run typedefinitions && rollup -c --environment BUILD:production",
-    "typedefinitions": "tsc -d --emitDeclarationOnly --declarationDir dist",
+    "typedefinitions": "tsc -p src/ -d --emitDeclarationOnly --declarationDir dist",
     "clean": "rimraf -f -r dist/*",
     "test": "jest",
     "test:watch": "jest --watch --colors --no-cache",
