@@ -1,5 +1,5 @@
 import {getApiRequestBody, getAnalytics} from '../utils/network';
-import {setUpPage} from '../utils/setupComponent';
+import {setUpPage, shouldRenderErrorComponent} from '../utils/setupComponent';
 
 const sortDropdown = 'atomic-sort-dropdown';
 const criteria = ['relevancy', 'date descending'];
@@ -18,13 +18,6 @@ describe('Sort Dropdown Component', () => {
 
   function selectOption(value: string) {
     return cy.get(sortDropdown).shadow().find('select').select(value);
-  }
-
-  function shouldRenderErrorComponent() {
-    cy.get(sortDropdown)
-      .shadow()
-      .find('atomic-component-error')
-      .should('exist');
   }
 
   it('should load', () => {
@@ -81,6 +74,6 @@ describe('Sort Dropdown Component', () => {
       </atomic-sort-dropdown>
     `);
     cy.wait(500);
-    shouldRenderErrorComponent();
+    shouldRenderErrorComponent('sortDropdown');
   });
 });
