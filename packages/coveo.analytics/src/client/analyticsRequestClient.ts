@@ -10,7 +10,8 @@ export interface AnalyticsRequestClient {
 }
 
 export type PreprocessRequest = (
-    request: IAnalyticsRequestOptions
+    request: IAnalyticsRequestOptions,
+    clientType: 'fetch' | 'beacon'
 ) => IAnalyticsRequestOptions | Promise<IAnalyticsRequestOptions>;
 
 export interface IAnalyticsRequestOptions extends RequestInit {
