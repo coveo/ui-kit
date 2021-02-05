@@ -1,29 +1,26 @@
-import {AnalyticsRequestClient, VisitorIdProvider} from './analyticsRequestClient';
+import {
+    AnalyticsRequestClient,
+    VisitorIdProvider,
+    IAnalyticsRequestOptions,
+    PreprocessRequest,
+} from './analyticsRequestClient';
 import {AnyEventResponse, EventType, IRequestPayload} from '../events';
-
-export interface IAnalyticsFetchClientCallOptions extends RequestInit {
-    url: string;
-}
-
-export type PreprocessRequestMiddleware = (
-    request: IAnalyticsFetchClientCallOptions
-) => IAnalyticsFetchClientCallOptions | Promise<IAnalyticsFetchClientCallOptions>;
 
 export interface IAnalyticsFetchClientOptions {
     baseUrl: string;
     token?: string;
     visitorIdProvider: VisitorIdProvider;
-    preprocessRequestMiddleware?: PreprocessRequestMiddleware;
+    preprocessRequest?: PreprocessRequest;
 }
 
 export class AnalyticsFetchClient implements AnalyticsRequestClient {
     constructor(private opts: IAnalyticsFetchClientOptions) {}
 
     public async sendEvent(eventType: EventType, payload: IRequestPayload): Promise<AnyEventResponse> {
-        const {baseUrl, visitorIdProvider, preprocessRequestMiddleware} = this.opts;
+        const {baseUrl, visitorIdProvider, preprocessRequest} = this.opts;
 
         const visitorIdParam = this.shouldAppendVisitorId(eventType) ? await this.getVisitorIdParam() : '';
-        const defaultOptions: IAnalyticsFetchClientCallOptions = {
+        const defaultOptions: IAnalyticsRequestOptions = {
             url: `${baseUrl}/analytics/${eventType}${visitorIdParam}`,
             credentials: 'include',
             mode: 'cors',
@@ -31,12 +28,12 @@ export class AnalyticsFetchClient implements AnalyticsRequestClient {
             method: 'POST',
             body: JSON.stringify(payload),
         };
-        const {url, ...request}: IAnalyticsFetchClientCallOptions = {
+        const {url, ...fetchData}: IAnalyticsRequestOptions = {
             ...defaultOptions,
-            ...(preprocessRequestMiddleware ? await preprocessRequestMiddleware(defaultOptions) : {}),
+            ...(preprocessRequest ? await preprocessRequest(defaultOptions) : {}),
         };
 
-        const response = await fetch(url, request);
+        const response = await fetch(url, fetchData);
         if (response.ok) {
             const visit = (await response.json()) as AnyEventResponse;
 

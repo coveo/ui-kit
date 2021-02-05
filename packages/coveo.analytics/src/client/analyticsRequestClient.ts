@@ -8,3 +8,11 @@ export interface VisitorIdProvider {
 export interface AnalyticsRequestClient {
     sendEvent(eventType: string, payload: IRequestPayload): Promise<AnyEventResponse | void>;
 }
+
+export type PreprocessRequest = (
+    request: IAnalyticsRequestOptions
+) => IAnalyticsRequestOptions | Promise<IAnalyticsRequestOptions>;
+
+export interface IAnalyticsRequestOptions extends RequestInit {
+    url: string;
+}

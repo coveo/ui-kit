@@ -1,10 +1,16 @@
-import {AnalyticsRequestClient, VisitorIdProvider} from './analyticsRequestClient';
+import {
+    AnalyticsRequestClient,
+    VisitorIdProvider,
+    PreprocessRequest,
+    IAnalyticsRequestOptions,
+} from './analyticsRequestClient';
 import {EventType, IRequestPayload} from '../events';
 
 export interface IAnalyticsBeaconClientOptions {
     baseUrl: string;
     token?: string;
     visitorIdProvider: VisitorIdProvider;
+    preprocessRequest?: PreprocessRequest;
 }
 
 export class AnalyticsBeaconClient implements AnalyticsRequestClient {
@@ -17,18 +23,23 @@ export class AnalyticsBeaconClient implements AnalyticsRequestClient {
             );
         }
 
-        const {baseUrl} = this.opts;
+        const {baseUrl, preprocessRequest} = this.opts;
         const parsedRequestData = this.encodeForEventType(eventType, payload);
         const paramsFragments = await this.getQueryParamsForEventType(eventType);
-        const url = `${baseUrl}/analytics/${eventType}?${paramsFragments}`;
+        const defaultOptions: IAnalyticsRequestOptions = {
+            url: `${baseUrl}/analytics/${eventType}?${paramsFragments}`,
+            body: new Blob([parsedRequestData], {
+                type: 'application/x-www-form-urlencoded',
+            }),
+        };
+        const {url, body}: IAnalyticsRequestOptions = {
+            ...defaultOptions,
+            ...(preprocessRequest ? await preprocessRequest(defaultOptions) : {}),
+        };
+
         // tslint:disable-next-line: no-console
         console.log(`Sending beacon for "${eventType}" with: `, JSON.stringify(payload));
-        navigator.sendBeacon(
-            url,
-            new Blob([parsedRequestData], {
-                type: 'application/x-www-form-urlencoded',
-            })
-        );
+        navigator.sendBeacon(url, body as any); // https://github.com/microsoft/TypeScript/issues/38715
         return;
     }
 

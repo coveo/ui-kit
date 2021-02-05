@@ -1,5 +1,6 @@
 import {AnalyticsBeaconClient} from './analyticsBeaconClient';
 import {EventType} from '../events';
+import {IAnalyticsRequestOptions} from './analyticsRequestClient';
 
 describe('AnalyticsBeaconClient', () => {
     const baseUrl = 'https://bloup.com';
@@ -96,6 +97,32 @@ describe('AnalyticsBeaconClient', () => {
         expect(await getSendBeaconFirstCallBlobArgument()).toBe(
             `access_token=%F0%9F%91%9B&value=${encodeURIComponent(JSON.stringify({subvalue: 'ok'}))}`
         );
+    });
+
+    it('should preprocess the request with the preprocessRequest', async () => {
+        const processedRequest: IAnalyticsRequestOptions = {
+            url: 'https://www.myownanalytics.com/endpoint',
+            body: JSON.stringify({
+                test: 'custom',
+            }),
+        };
+        const client = new AnalyticsBeaconClient({
+            baseUrl,
+            token,
+            visitorIdProvider: {
+                getCurrentVisitorId: () => {
+                    return Promise.resolve(currentVisitorId);
+                },
+                setCurrentVisitorId: (visitorId) => {},
+            },
+            preprocessRequest: () => {
+                return processedRequest;
+            },
+        });
+
+        await client.sendEvent(EventType.collect, {});
+
+        expect(sendBeaconMock).toHaveBeenCalledWith(processedRequest.url, processedRequest.body);
     });
 
     const getSendBeaconFirstCallBlobArgument = async () => {

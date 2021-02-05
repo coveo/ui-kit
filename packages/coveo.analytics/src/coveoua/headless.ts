@@ -1,4 +1,4 @@
 export {CoveoSearchPageClient, SearchPageClientProvider} from '../searchPage/searchPageClient';
 export {CoveoAnalyticsClient, AnalyticsClientSendEventHook} from '../client/analytics';
-export {PreprocessRequestMiddleware} from '../client/analyticsFetchClient';
+export {PreprocessRequest} from '../client/analyticsRequestClient';
 export * as history from '../history';

@@ -1,7 +1,7 @@
 import * as fetchMock from 'fetch-mock';
 import {EventType, ViewEventRequest, DefaultEventResponse} from '../events';
 import {CoveoAnalyticsClient} from './analytics';
-import {IAnalyticsFetchClientCallOptions} from './analyticsFetchClient';
+import {IAnalyticsRequestOptions} from './analyticsRequestClient';
 import {CookieStorage} from '../storage';
 import HistoryStore from '../history';
 
@@ -372,15 +372,13 @@ describe('Analytics', () => {
         expect(spy).toHaveBeenLastCalledWith(EventType.search, expect.objectContaining(searchEventPayload));
     });
 
-    it('should preprocess the request with the preprocessRequestMiddleware', async () => {
-        const processedRequest: IAnalyticsFetchClientCallOptions = {
+    it('should preprocess the request with the preprocessRequest', async () => {
+        let processedRequest: IAnalyticsRequestOptions = {
             url: 'https://www.myownanalytics.com/endpoint',
-            credentials: 'same-origin',
             headers: {
                 Age: '24',
             },
             method: 'PUT',
-            mode: 'same-origin',
             body: JSON.stringify({
                 test: 'custom',
             }),
@@ -391,7 +389,11 @@ describe('Analytics', () => {
             token: aToken,
             endpoint: anEndpoint,
             version: A_VERSION,
-            preprocessRequestMiddleware: () => {
+            preprocessRequest: (request) => {
+                processedRequest = {
+                    ...request,
+                    ...processedRequest,
+                };
                 return processedRequest;
             },
         }).sendEvent(EventType.search, searchEventPayload);
@@ -400,12 +402,9 @@ describe('Analytics', () => {
         const url = call[0];
         const options: RequestInit = call[1];
 
-        expect(url).toBe(processedRequest.url);
-        expect(options.credentials).toBe(processedRequest.credentials);
-        expect(options.headers).toEqual(processedRequest.headers);
-        expect(options.method).toBe(processedRequest.method);
-        expect(options.mode).toBe(processedRequest.mode);
-        expect(options.body).toBe(processedRequest.body);
+        const {url: expectedUrl, ...expectedOptions} = processedRequest;
+        expect(url).toBe(expectedUrl);
+        expect(options).toEqual(expectedOptions);
     });
 
     const getParsedBodyCalls = (): any[] => {
