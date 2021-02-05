@@ -36,7 +36,7 @@ import {
 import {
   AnalyticsClientSendEventHook,
   IRuntimeEnvironment,
-  PreprocessRequestMiddleware as PreprocessAnalyticsRequestMiddleware,
+  PreprocessRequest as PreprocessAnalyticsRequestMiddleware,
 } from 'coveo.analytics';
 
 export type LogLevel = LevelWithSilent;
