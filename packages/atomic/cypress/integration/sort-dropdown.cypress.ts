@@ -2,7 +2,11 @@ import {getApiRequestBody, getAnalytics} from '../utils/network';
 import {setUpPage, shouldRenderErrorComponent} from '../utils/setupComponent';
 
 const sortDropdown = 'atomic-sort-dropdown';
-const criteria = ['relevancy', 'date descending'];
+const criteria = [
+  'relevancy',
+  'date descending',
+  'size ascending, date descending',
+];
 
 describe('Sort Dropdown Component', () => {
   function setup(attributes = '') {
@@ -10,7 +14,7 @@ describe('Sort Dropdown Component', () => {
       <atomic-sort-dropdown ${attributes}>
         <atomic-sort-criteria caption="relevance" criteria="${criteria[0]}"></atomic-sort-criteria>
         <atomic-sort-criteria caption="mostRecent" criteria="${criteria[1]}"></atomic-sort-criteria>
-        <atomic-sort-criteria caption="mostRecent" criteria="size ascending, date descending"></atomic-sort-criteria>
+        <atomic-sort-criteria caption="mostRecent" criteria="${criteria[2]}"></atomic-sort-criteria>
       </atomic-sort-dropdown>
     `);
     cy.wait(500);
