@@ -8,7 +8,7 @@ import {
   createAliasLi,
   createAliasNavigation,
   PagerSelectors,
-} from '../selectors/pager-selectors';
+} from './pager-selectors';
 
 describe('Pager Test Suites', () => {
   function setupPager(attributes = '') {

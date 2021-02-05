@@ -31,7 +31,7 @@ export function setUpPage(htmlCode: string) {
   cy.visit('http://localhost:3333/pages/test.html');
   cy.injectAxe();
   injectComponent(htmlCode);
-  cy.wait(1000);
+  cy.wait(500);
 }
 
 export function shouldRenderErrorComponent(selector: string) {

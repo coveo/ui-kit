@@ -3,7 +3,7 @@ import {setUpPage} from '../utils/setupComponent';
 import {
   SearchBoxSelectors,
   generateAliasForSearchBox,
-} from '../selectors/search-box-selectors';
+} from './search-box-selectors';
 
 const queryText = 'test';
 
