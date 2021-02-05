@@ -12,7 +12,7 @@ export interface IAnalyticsFetchClientCallOptions {
     payload: Record<string, any>;
 }
 
-export type PreprocessAnalyticsRequestMiddleware = (
+export type PreprocessRequestMiddleware = (
     request: IAnalyticsFetchClientCallOptions
 ) => IAnalyticsFetchClientCallOptions | Promise<IAnalyticsFetchClientCallOptions>;
 
@@ -20,7 +20,7 @@ export interface IAnalyticsFetchClientOptions {
     baseUrl: string;
     token?: string;
     visitorIdProvider: VisitorIdProvider;
-    preprocessRequestMiddleware?: PreprocessAnalyticsRequestMiddleware;
+    preprocessRequestMiddleware?: PreprocessRequestMiddleware;
 }
 
 export class AnalyticsFetchClient implements AnalyticsRequestClient {

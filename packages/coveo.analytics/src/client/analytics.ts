@@ -1,9 +1,5 @@
 import {IAnalyticsBeaconClientOptions} from './analyticsBeaconClient';
-import {
-    AnalyticsFetchClient,
-    IAnalyticsFetchClientOptions,
-    PreprocessAnalyticsRequestMiddleware,
-} from './analyticsFetchClient';
+import {AnalyticsFetchClient, IAnalyticsFetchClientOptions, PreprocessRequestMiddleware} from './analyticsFetchClient';
 import {
     AnyEventResponse,
     ClickEventRequest,
@@ -49,7 +45,7 @@ export interface ClientOptions {
     version: string;
     runtimeEnvironment?: IRuntimeEnvironment;
     beforeSendHooks: AnalyticsClientSendEventHook[];
-    preprocessRequestMiddleware?: PreprocessAnalyticsRequestMiddleware;
+    preprocessRequestMiddleware?: PreprocessRequestMiddleware;
 }
 
 export type AnalyticsClientSendEventHook = <TResult>(eventType: string, payload: any) => TResult | Promise<TResult>;
