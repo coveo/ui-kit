@@ -8,7 +8,7 @@ import alias from '@rollup/plugin-alias';
 import {resolve as pathResolve} from 'path';
 import dts from "rollup-plugin-dts";
 
-const typescript = () => tsPlugin({tsconfig: './src/tsconfig.json'});
+const typescript = () => tsPlugin({tsconfig: './src/tsconfig.build.json'});
 const isCI = process.env.CI === 'true';
 const isProduction = process.env.BUILD === 'production';
 

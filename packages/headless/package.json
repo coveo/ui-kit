@@ -17,7 +17,7 @@
     "start": "npx concurrently \"npm run typedefinitions -- -w\" \"rollup -c -w\"",
     "build": "npm run clean && npm run build:prod",
     "build:prod": "npm run typedefinitions && rollup -c --environment BUILD:production",
-    "typedefinitions": "tsc -p src/ -d --emitDeclarationOnly --declarationDir dist",
+    "typedefinitions": "tsc -p src/tsconfig.build.json -d --emitDeclarationOnly --declarationDir dist",
     "clean": "rimraf -f -r dist/*",
     "test": "jest",
     "test:watch": "jest --watch --colors --no-cache",
@@ -25,7 +25,7 @@
     "test:integration": "jest --testPathPattern=src/integration-tests",
     "npm:publish": "npm publish --access public",
     "doc": "typedoc --tsconfig tsconfig.typedoc.json",
-    "build:doc-parser": "tsc -p doc-parser/",
+    "build:doc-parser": "tsc -p doc-parser/tsconfig.build.json",
     "doc:extract": "api-extractor run --local --verbose",
     "doc:parse": "node ./doc-parser/build/doc-parser.js"
   },
