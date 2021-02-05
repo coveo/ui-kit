@@ -88,7 +88,7 @@ export interface ExecuteSearchThunkReturn {
   /** Whether the query was automatically corrected. */
   automaticallyCorrected: boolean;
   /** The analytics action to log after the query. */
-  analyticsAction: SearchAction;
+  analyticsActions: SearchAction[];
 }
 
 const fetchFromAPI = async (
@@ -105,11 +105,11 @@ const fetchFromAPI = async (
 
 /**
  * Executes a search query.
- * @param analyticsAction (SearchAction) The analytics action to log after a successful query.
+ * @param analyticsActions (SearchAction) The analytics action to log after a successful query.
  */
 /**
  * Executes a search query.
- * @param analyticsAction (SearchAction) The analytics action to log after a successful query.
+ * @param analyticsActions (SearchAction) The analytics action to log after a successful query.
  */
 export const executeSearch = createAsyncThunk<
   ExecuteSearchThunkReturn,
@@ -142,11 +142,9 @@ export const executeSearch = createAsyncThunk<
         ...fetched,
         response: fetched.response.success,
         automaticallyCorrected: false,
-        analyticsAction,
+        analyticsActions: [analyticsAction],
       };
     }
-
-    dispatch(analyticsAction);
 
     const retried = await automaticallyRetryQueryWithCorrection(
       searchAPIClient,
@@ -169,7 +167,7 @@ export const executeSearch = createAsyncThunk<
         queryCorrections: fetched.response.success.queryCorrections,
       },
       automaticallyCorrected: true,
-      analyticsAction: logDidYouMeanAutomatic(),
+      analyticsActions: [analyticsAction, logDidYouMeanAutomatic()],
     };
   }
 );
@@ -202,7 +200,7 @@ export const fetchMoreResults = createAsyncThunk<
       ...fetched,
       response: fetched.response.success,
       automaticallyCorrected: false,
-      analyticsAction: logFetchMoreResults(),
+      analyticsActions: [logFetchMoreResults()],
     };
   }
 );

@@ -9,7 +9,7 @@ export function buildMockProductRecommendations(
     skus: [],
     recommendations: [],
     error: null,
-    analyticsAction: logInterfaceLoad(),
+    analyticsActions: [logInterfaceLoad()],
     searchUid: '',
     duration: 0,
     ...config,
