@@ -1,9 +1,14 @@
 {
-  "experimentalShadowDomSupport": true,
+  "integrationFolder": "cypress/integration",
+  "ignoreTestFiles": "*selectors.ts",
   "experimentalFetchPolyfill": true,
   "reporter": "spec",
   "viewportHeight": 1080,
   "viewportWidth": 1920,
+  "retries": {
+    "runMode": 3,
+    "openMode": 1
+  },
   "reporterOptions": {
     "toConsole": true
   },

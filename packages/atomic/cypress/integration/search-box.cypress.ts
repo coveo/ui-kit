@@ -1,9 +1,9 @@
-import {getApiResponseBody, getAnalytics} from '../utils/network';
+import {getApiResponseBody, getAnalyticsAt} from '../utils/network';
 import {setUpPage} from '../utils/setupComponent';
 import {
   SearchBoxSelectors,
   generateAliasForSearchBox,
-} from '../selectors/search-box-selectors';
+} from './search-box-selectors';
 
 const queryText = 'test';
 
@@ -17,7 +17,6 @@ describe('Search Box Test Suites', () => {
 
   async function testQuerySuggestionsShown(numberOfSuggestions: number) {
     cy.get('@searchBoxFirstDiv').find('.input').type(queryText, {force: true});
-    cy.wait(500);
     for (let i = 1; i < queryText.length - 1; i++) {
       cy.wait('@coveoQuerySuggest');
     }
@@ -34,7 +33,6 @@ describe('Search Box Test Suites', () => {
     const htmlCode = '<atomic-search-box></atomic-search-box>';
     beforeEach(() => {
       setUpPage(htmlCode);
-      cy.wait(500);
       generateAliasForSearchBox();
     });
 
@@ -81,7 +79,7 @@ describe('Search Box Test Suites', () => {
         actionCause: 'searchboxSubmit',
       };
 
-      const analytics = await getAnalytics('@coveoAnalytics');
+      const analytics = await getAnalyticsAt('@coveoAnalytics', 1);
       expect(analytics.response.statusCode).to.eq(200);
       expect(analytics.request.body).to.have.property(
         'actionCause',
@@ -106,7 +104,6 @@ describe('Search Box Test Suites', () => {
       '<atomic-search-box number-of-suggestions="3"></atomic-search-box>';
     beforeEach(() => {
       setUpPage(htmlCode);
-      cy.wait(500);
       generateAliasForSearchBox();
     });
 
@@ -131,7 +128,6 @@ describe('Search Box Test Suites', () => {
       '<atomic-search-box number-of-suggestions="0"></atomic-search-box>';
     beforeEach(() => {
       setUpPage(htmlCode);
-      cy.wait(500);
       generateAliasForSearchBox();
     });
 
@@ -152,7 +148,6 @@ describe('Search Box Test Suites', () => {
       '<atomic-search-box leading-submit-button></atomic-search-box>';
     beforeEach(() => {
       setUpPage(htmlCode);
-      cy.wait(500);
       generateAliasForSearchBox();
     });
 
