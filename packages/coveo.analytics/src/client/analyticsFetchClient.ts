@@ -1,15 +1,8 @@
 import {AnalyticsRequestClient, VisitorIdProvider} from './analyticsRequestClient';
 import {AnyEventResponse, EventType, IRequestPayload} from '../events';
 
-export type HttpMethods = 'POST' | 'GET' | 'PUT' | 'DELETE';
-
-export interface IAnalyticsFetchClientCallOptions {
+export interface IAnalyticsFetchClientCallOptions extends RequestInit {
     url: string;
-    headers: Record<string, string>;
-    method: HttpMethods;
-    mode: RequestMode;
-    credentials: RequestCredentials;
-    payload: Record<string, any>;
 }
 
 export type PreprocessRequestMiddleware = (
@@ -30,26 +23,20 @@ export class AnalyticsFetchClient implements AnalyticsRequestClient {
         const {baseUrl, visitorIdProvider, preprocessRequestMiddleware} = this.opts;
 
         const visitorIdParam = this.shouldAppendVisitorId(eventType) ? await this.getVisitorIdParam() : '';
-        const fetchOptions: IAnalyticsFetchClientCallOptions = {
+        const defaultOptions: IAnalyticsFetchClientCallOptions = {
             url: `${baseUrl}/analytics/${eventType}${visitorIdParam}`,
             credentials: 'include',
             mode: 'cors',
             headers: this.getHeaders(),
             method: 'POST',
-            payload,
+            body: JSON.stringify(payload),
         };
-        const processedOptions: IAnalyticsFetchClientCallOptions = {
-            ...fetchOptions,
-            ...(preprocessRequestMiddleware ? await preprocessRequestMiddleware(fetchOptions) : {}),
+        const {url, ...request}: IAnalyticsFetchClientCallOptions = {
+            ...defaultOptions,
+            ...(preprocessRequestMiddleware ? await preprocessRequestMiddleware(defaultOptions) : {}),
         };
 
-        const response = await fetch(processedOptions.url, {
-            method: processedOptions.method,
-            headers: processedOptions.headers,
-            mode: processedOptions.mode,
-            body: JSON.stringify(processedOptions.payload),
-            credentials: processedOptions.credentials,
-        });
+        const response = await fetch(url, request);
         if (response.ok) {
             const visit = (await response.json()) as AnyEventResponse;
 

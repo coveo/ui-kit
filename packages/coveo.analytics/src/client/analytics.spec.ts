@@ -381,9 +381,9 @@ describe('Analytics', () => {
             },
             method: 'PUT',
             mode: 'same-origin',
-            payload: {
+            body: JSON.stringify({
                 test: 'custom',
-            },
+            }),
         };
         fetchMock.put(processedRequest.url, eventResponse);
         const searchEventPayload = {queryText: 'potato'};
@@ -399,14 +399,13 @@ describe('Analytics', () => {
         const call = fetchMock.calls()[0];
         const url = call[0];
         const options: RequestInit = call[1];
-        const body = getParsedBodyCalls()[0];
 
         expect(url).toBe(processedRequest.url);
         expect(options.credentials).toBe(processedRequest.credentials);
         expect(options.headers).toEqual(processedRequest.headers);
         expect(options.method).toBe(processedRequest.method);
         expect(options.mode).toBe(processedRequest.mode);
-        expect(body).toEqual(processedRequest.payload);
+        expect(options.body).toBe(processedRequest.body);
     });
 
     const getParsedBodyCalls = (): any[] => {
