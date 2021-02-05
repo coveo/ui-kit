@@ -36,6 +36,7 @@ npm test
 ### Initialization
 
 - To initialize the `atomic-search-interface` component, you have to add a script tag calling `initialize(...)` on it once the custom element is defined:
+
 ```html
 <script>
   (async () => {
@@ -47,6 +48,7 @@ npm test
   })();
 </script>
 ```
+
 - All other components have to be the child of an initialized `atomic-search-interface` to work properly.
 - For testing or demo purposes, adding the `sample` attribute on the `atomic-search-interface` element is sufficient and will bypass initialization.
 
@@ -73,13 +75,13 @@ Ref: https://docs.cypress.io/
 To open cypress, run:
 
 ```sh
-npm run cypressopen
+npm run cypress:open
 ```
 
 To run all the test, run:
 
 ```sh
-npm run cypresstest
+npm run cypress:test
 ```
 
 ## Utilities
@@ -88,7 +90,7 @@ npm run cypresstest
 
 The `InitializeBindings` is an utility that automatically fetches the `bindings` from the parent `atomic-search-interface` component. This decorator should be applied to the `bindings` property directly.
 
-*Important* In order for a component using this decorator to render properly, it should have an internal state bound to one of the property from `bindings`. This is possible by using either the `BindStateToController` or the `BindStateToI18n` decorator.
+_Important_ In order for a component using this decorator to render properly, it should have an internal state bound to one of the property from `bindings`. This is possible by using either the `BindStateToController` or the `BindStateToI18n` decorator.
 
 Here is a complete example using all these decorators:
 
@@ -100,9 +102,9 @@ Here is a complete example using all these decorators:
 export class AtomicComponent {
   @InitializeBindings() public bindings!: Bindings;
   private controller!: Controller;
-  
+
   // Will automatically subscribe the `controllerState` to state of the `controller`
-  @BindStateToController('controller') 
+  @BindStateToController('controller')
   @State()
   private controllerState!: ControllerState;
 
@@ -110,7 +112,10 @@ export class AtomicComponent {
   @BindStateToI18n()
   @State()
   private strings = {
-    value: () => this.bindings.i18n.t('value', { /* options */ }),
+    value: () =>
+      this.bindings.i18n.t('value', {
+        /* options */
+      }),
   };
 
   // Method called after bindings are defined, where controllers should be initialized
@@ -119,10 +124,7 @@ export class AtomicComponent {
   }
 
   render() {
-    return [
-      this.strings.value(),
-      this.controllerState.value,
-    ];
+    return [this.strings.value(), this.controllerState.value];
   }
 }
 ```

@@ -6,7 +6,7 @@ function getDocument() {
   });
 }
 
-async function injectComponent(componentInCode: string) {
+export async function injectComponent(componentInCode: string) {
   const document = await getDocument();
   document.querySelector('atomic-search-interface').innerHTML = componentInCode;
 }
@@ -31,4 +31,9 @@ export function setUpPage(htmlCode: string) {
   cy.visit('http://localhost:3333/pages/test.html');
   cy.injectAxe();
   injectComponent(htmlCode);
+  cy.wait(500);
+}
+
+export function shouldRenderErrorComponent(selector: string) {
+  cy.get(selector).shadow().find('atomic-component-error').should('exist');
 }
