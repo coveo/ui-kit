@@ -3,6 +3,79 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.1-alpha.0](https://github.com/coveo/ui-kit/compare/v0.5.0...v0.5.1-alpha.0) (2021-02-05)
+
+
+### Bug Fixes
+
+* **headless-react:** made lerna bootstrap headless-react ([#481](https://github.com/coveo/ui-kit/issues/481)) ([6deb31c](https://github.com/coveo/ui-kit/commit/6deb31cdd722d1a854ade8ff70901b76d86897fe))
+
+
+
+
+
+# [0.5.0](https://github.com/coveo/ui-kit/compare/v0.5.0-alpha.7...v0.5.0) (2021-02-04)
+
+**Note:** Version bump only for package ui-kit
+
+
+
+
+
+# [0.5.0-alpha.7](https://github.com/coveo/ui-kit/compare/v0.5.0-alpha.6...v0.5.0-alpha.7) (2021-02-04)
+
+**Note:** Version bump only for package ui-kit
+
+
+
+
+
+# [0.5.0-alpha.6](https://github.com/coveo/ui-kit/compare/v0.5.0-alpha.5...v0.5.0-alpha.6) (2021-02-03)
+
+
+### Features
+
+* **atomic:** update search box styles ([#468](https://github.com/coveo/ui-kit/issues/468)) ([4ee87e5](https://github.com/coveo/ui-kit/commit/4ee87e58c7d48db983dbace7fb42d6e7e5bf824d))
+
+
+
+
+
+# [0.5.0-alpha.5](https://github.com/coveo/ui-kit/compare/v0.5.0-alpha.4...v0.5.0-alpha.5) (2021-02-02)
+
+**Note:** Version bump only for package ui-kit
+
+
+
+
+
+# [0.5.0-alpha.4](https://github.com/coveo/ui-kit/compare/v0.5.0-alpha.3...v0.5.0-alpha.4) (2021-02-02)
+
+**Note:** Version bump only for package ui-kit
+
+
+
+
+
+# [0.5.0-alpha.3](https://github.com/coveo/ui-kit/compare/v0.5.0-alpha.2...v0.5.0-alpha.3) (2021-02-02)
+
+**Note:** Version bump only for package ui-kit
+
+
+
+
+
+# [0.5.0-alpha.2](https://github.com/coveo/ui-kit/compare/v0.5.0-alpha.1...v0.5.0-alpha.2) (2021-02-02)
+
+
+### Features
+
+* **headless:** bump rtk to 1.5.0 ([#470](https://github.com/coveo/ui-kit/issues/470)) ([92d48dc](https://github.com/coveo/ui-kit/commit/92d48dc52970876826af39b95a9ae77d084ad380))
+
+
+
+
+
 # [0.5.0-alpha.1](https://github.com/coveo/ui-kit/compare/v0.5.0-alpha.0...v0.5.0-alpha.1) (2021-02-01)
 
 **Note:** Version bump only for package ui-kit

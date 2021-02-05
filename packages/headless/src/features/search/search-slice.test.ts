@@ -114,25 +114,23 @@ describe('search-slice', () => {
   });
 
   it('when a executeSearch rejected is received, set the error', () => {
-    const err = {message: 'message', statusCode: 500, type: 'type'};
-    const action = executeSearch.rejected(
-      {message: 'asd', name: 'asd'},
-      '',
-      logSearchboxSubmit(),
-      err
-    );
+    const err = {
+      message: 'message',
+      statusCode: 500,
+      type: 'type',
+    };
+    const action = {type: 'search/executeSearch/rejected', payload: err};
     const finalState = searchReducer(state, action);
     expect(finalState.error).toEqual(err);
   });
 
   it('when a fetchMoreResults rejected is received, set the error', () => {
-    const err = {message: 'message', statusCode: 500, type: 'type'};
-    const action = fetchMoreResults.rejected(
-      {message: 'asd', name: 'asd'},
-      '',
-      undefined,
-      err
-    );
+    const err = {
+      message: 'message',
+      statusCode: 500,
+      type: 'type',
+    };
+    const action = {type: 'search/fetchMoreResults/rejected', payload: err};
     const finalState = searchReducer(state, action);
     expect(finalState.error).toEqual(err);
   });

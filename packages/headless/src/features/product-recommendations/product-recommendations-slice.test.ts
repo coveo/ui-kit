@@ -44,13 +44,12 @@ describe('frequently-bought-together slice', () => {
   });
 
   it('set the error on rejection', () => {
-    const err = {message: 'message', statusCode: 500, type: 'type'};
-    const action = getProductRecommendations.rejected(
-      {message: 'asd', name: 'asd'},
-      '',
-      undefined,
-      err
-    );
+    const err = {
+      message: 'message',
+      statusCode: 500,
+      type: 'type',
+    };
+    const action = {type: 'productrecommendations/get/rejected', payload: err};
     const finalState = productRecommendationsReducer(state, action);
     expect(finalState.error).toEqual(err);
     expect(finalState.isLoading).toBe(false);
