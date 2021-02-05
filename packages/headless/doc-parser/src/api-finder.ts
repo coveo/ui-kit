@@ -1,22 +1,11 @@
 import {ApiEntryPoint} from '@microsoft/api-extractor-model';
 
 export function findApi(entry: ApiEntryPoint, apiName: string) {
-  const name = extractCanonicalName(apiName);
-  const result = entry.members.find((m) =>
-    m.canonicalReference
-      .toString()
-      .startsWith(`${entry.canonicalReference}${name}:`)
-  );
+  const [result] = entry.findMembersByName(apiName);
 
   if (!result) {
-    throw new Error(`No api found for ${name}`);
+    throw new Error(`No api found for ${apiName}`);
   }
 
   return result;
-}
-
-function extractCanonicalName(apiName: string) {
-  const dollarIndex = apiName.indexOf('$');
-  const nameEndIndex = dollarIndex !== -1 ? dollarIndex : apiName.length;
-  return apiName.slice(0, nameEndIndex);
 }
