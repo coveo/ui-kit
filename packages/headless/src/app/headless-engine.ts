@@ -18,7 +18,6 @@ import {configureStore, Store, ThunkExtraArguments} from './store';
 import {SearchAPIClient} from '../api/search/search-api-client';
 import {debounce} from 'ts-debounce';
 import {SearchAppState} from '../state/search-app-state';
-import {AnalyticsClientSendEventHook} from 'coveo.analytics/dist/definitions/client/analytics';
 import pino, {Logger, LogEvent, LevelWithSilent} from 'pino';
 import {
   NoopPreprocessRequestMiddleware,
@@ -34,8 +33,11 @@ import {
   PostprocessQuerySuggestResponseMiddleware,
   PostprocessSearchResponseMiddleware,
 } from '../api/search/search-api-client-middleware';
-import {IRuntimeEnvironment} from 'coveo.analytics';
-import {PreprocessAnalyticsRequestMiddleware} from 'coveo.analytics/dist/definitions/client/analyticsFetchClient';
+import {
+  AnalyticsClientSendEventHook,
+  IRuntimeEnvironment,
+  PreprocessRequestMiddleware as PreprocessAnalyticsRequestMiddleware,
+} from 'coveo.analytics';
 
 export type LogLevel = LevelWithSilent;
 

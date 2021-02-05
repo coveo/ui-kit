@@ -4,6 +4,7 @@ import {
   history,
   CoveoAnalyticsClient,
   AnalyticsClientSendEventHook,
+  PreprocessRequestMiddleware,
 } from 'coveo.analytics';
 import {Logger} from 'pino';
 import {getPipelineInitialState} from '../../features/pipeline/pipeline-state';
@@ -20,7 +21,6 @@ import {
   SearchSection,
 } from '../../state/state-sections';
 import {Context} from '../../features/context/context-state';
-import {PreprocessAnalyticsRequestMiddleware} from 'coveo.analytics/dist/definitions/client/analyticsFetchClient';
 
 export type StateNeededByAnalyticsProvider = ConfigurationSection &
   Partial<
@@ -116,7 +116,7 @@ interface ConfigureAnalyticsOptions {
   state: StateNeededByAnalyticsProvider;
   logger: Logger;
   analyticsClientMiddleware?: AnalyticsClientSendEventHook;
-  preprocessAnalyticsRequestMiddleware?: PreprocessAnalyticsRequestMiddleware;
+  preprocessAnalyticsRequestMiddleware?: PreprocessRequestMiddleware;
   provider?: SearchPageClientProvider;
 }
 
