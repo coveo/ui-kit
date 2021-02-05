@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.1-alpha.0](https://github.com/coveo/ui-kit/compare/v0.5.0...v0.5.1-alpha.0) (2021-02-05)
+
+
+### Bug Fixes
+
+* **headless-react:** made lerna bootstrap headless-react ([#481](https://github.com/coveo/ui-kit/issues/481)) ([6deb31c](https://github.com/coveo/ui-kit/commit/6deb31cdd722d1a854ade8ff70901b76d86897fe))
+
+
+
+
+
 # [0.5.0](https://github.com/coveo/ui-kit/compare/v0.5.0-alpha.7...v0.5.0) (2021-02-04)
 
 **Note:** Version bump only for package ui-kit
