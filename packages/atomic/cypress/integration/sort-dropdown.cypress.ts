@@ -10,6 +10,7 @@ describe('Sort Dropdown Component', () => {
       <atomic-sort-dropdown ${attributes}>
         <atomic-sort-criteria caption="relevance" criteria="${criteria[0]}"></atomic-sort-criteria>
         <atomic-sort-criteria caption="mostRecent" criteria="${criteria[1]}"></atomic-sort-criteria>
+        <atomic-sort-criteria caption="mostRecent" criteria="size ascending, date descending"></atomic-sort-criteria>
       </atomic-sort-dropdown>
     `);
     cy.wait(500);
