@@ -100,6 +100,7 @@ describe('AnalyticsBeaconClient', () => {
     });
 
     it('should preprocess the request with the preprocessRequest', async () => {
+        let clientType: string;
         const processedRequest: IAnalyticsRequestOptions = {
             url: 'https://www.myownanalytics.com/endpoint',
             body: JSON.stringify({
@@ -113,15 +114,17 @@ describe('AnalyticsBeaconClient', () => {
                 getCurrentVisitorId: () => {
                     return Promise.resolve(currentVisitorId);
                 },
-                setCurrentVisitorId: (visitorId) => {},
+                setCurrentVisitorId: () => {},
             },
-            preprocessRequest: () => {
+            preprocessRequest: (_request, type) => {
+                clientType = type;
                 return processedRequest;
             },
         });
 
         await client.sendEvent(EventType.collect, {});
 
+        expect(clientType).toBe('beacon');
         expect(sendBeaconMock).toHaveBeenCalledWith(processedRequest.url, processedRequest.body);
     });
 

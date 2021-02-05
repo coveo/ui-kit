@@ -373,6 +373,7 @@ describe('Analytics', () => {
     });
 
     it('should preprocess the request with the preprocessRequest', async () => {
+        let clientType: string;
         let processedRequest: IAnalyticsRequestOptions = {
             url: 'https://www.myownanalytics.com/endpoint',
             headers: {
@@ -389,7 +390,8 @@ describe('Analytics', () => {
             token: aToken,
             endpoint: anEndpoint,
             version: A_VERSION,
-            preprocessRequest: (request) => {
+            preprocessRequest: (request, type) => {
+                clientType = type;
                 processedRequest = {
                     ...request,
                     ...processedRequest,
@@ -403,6 +405,7 @@ describe('Analytics', () => {
         const options: RequestInit = call[1];
 
         const {url: expectedUrl, ...expectedOptions} = processedRequest;
+        expect(clientType).toBe('fetch');
         expect(url).toBe(expectedUrl);
         expect(options).toEqual(expectedOptions);
     });
