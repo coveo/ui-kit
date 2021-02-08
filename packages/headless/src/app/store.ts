@@ -5,7 +5,7 @@ import {
   StateFromReducersMapObject,
   Middleware,
 } from '@reduxjs/toolkit';
-import {AnalyticsClientSendEventHook, PreprocessRequest} from 'coveo.analytics';
+import {AnalyticsClientSendEventHook} from 'coveo.analytics';
 import {SearchAPIClient} from '../api/search/search-api-client';
 import {analyticsMiddleware} from './analytics-middleware';
 import {Logger} from 'pino';
@@ -14,11 +14,12 @@ import {
   logActionMiddleware,
 } from './logger-middlewares';
 import {validatePayloadAndThrow} from '../utils/validate-payload';
+import {PreprocessRequest} from '../api/preprocess-request';
 
 export interface ThunkExtraArguments {
+  preprocessRequest?: PreprocessRequest;
   searchAPIClient: SearchAPIClient;
   analyticsClientMiddleware: AnalyticsClientSendEventHook;
-  preprocessRequestMiddleware?: PreprocessRequest;
   logger: Logger;
   validatePayload: typeof validatePayloadAndThrow;
 }

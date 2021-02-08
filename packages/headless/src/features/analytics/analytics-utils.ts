@@ -70,17 +70,14 @@ export const makeAnalyticsAction = <T extends AnalyticsType>(
     prefix,
     async (
       _,
-      {
-        getState,
-        extra: {analyticsClientMiddleware, preprocessRequestMiddleware, logger},
-      }
+      {getState, extra: {analyticsClientMiddleware, preprocessRequest, logger}}
     ) => {
       const state = searchPageState(getState);
       const client = configureAnalytics({
         state,
         logger,
         analyticsClientMiddleware,
-        preprocessRequestMiddleware,
+        preprocessRequest,
         provider: provider(state),
       });
       const response = await log(client, state);

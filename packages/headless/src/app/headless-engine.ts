@@ -23,6 +23,10 @@ import {
   NoopPreprocessRequestMiddleware,
   PreprocessRequestMiddleware,
 } from '../api/platform-client';
+import {
+  PreprocessRequest,
+  NoopPreprocessRequest,
+} from '../api/preprocess-request';
 import {RecordValue, Schema, StringValue} from '@coveo/bueno';
 import {validatePayloadAndThrow} from '../utils/validate-payload';
 import {
@@ -36,7 +40,6 @@ import {
 import {
   AnalyticsClientSendEventHook,
   IRuntimeEnvironment,
-  PreprocessRequest as PreprocessAnalyticsRequestMiddleware,
 } from 'coveo.analytics';
 
 export type LogLevel = LevelWithSilent;
@@ -110,6 +113,14 @@ export interface HeadlessConfigurationOptions {
    */
   renewAccessToken?: () => Promise<string>;
   /**
+   * Allows for augmenting a Platform request before it is sent.
+   * @param request Request to be augmented
+   * @param clientOrigin The origin of the client, can be "analyticsFetch", "analyticsBeacon" or "searchApiFetch"
+   *
+   * @returns Augmented request
+   */
+  preprocessRequest?: PreprocessRequest;
+  /**
    * The Plaform URL to use. (e.g., https://platform.cloud.coveo.com)
    * The platformUrl() helper method can be useful to know what url is available.
    */
@@ -181,10 +192,6 @@ export interface HeadlessConfigurationOptions {
      * See https://github.com/coveo/coveo.analytics.js for more info.
      */
     runtimeEnvironment?: IRuntimeEnvironment;
-    /**
-     * Allows for augmenting an analytics request before it is sent.
-     */
-    preprocessRequestMiddleware?: PreprocessAnalyticsRequestMiddleware;
   };
 }
 
@@ -259,7 +266,6 @@ export class HeadlessEngine<Reducers extends ReducersMapObject>
     if (options.configuration.analytics) {
       const {
         analyticsClientMiddleware,
-        preprocessRequestMiddleware: preprocessRequestMiddleware,
         ...rest
       } = options.configuration.analytics;
       this.reduxStore.dispatch(updateAnalyticsConfiguration(rest));
@@ -320,7 +326,9 @@ export class HeadlessEngine<Reducers extends ReducersMapObject>
   }
 
   private initStore() {
-    const {search, analytics} = this.options.configuration;
+    const {search} = this.options.configuration;
+    const preprocessRequest =
+      this.options.configuration.preprocessRequest || NoopPreprocessRequest;
     this.reduxStore = configureStore({
       preloadedState: this.options.preloadedState,
       reducers: this.options.reducers,
@@ -329,6 +337,7 @@ export class HeadlessEngine<Reducers extends ReducersMapObject>
         searchAPIClient: new SearchAPIClient({
           logger: this.logger,
           renewAccessToken: () => this.renewAccessToken(),
+          preprocessRequest,
           deprecatedPreprocessRequest:
             search?.preprocessRequestMiddleware ||
             NoopPreprocessRequestMiddleware,
@@ -343,9 +352,9 @@ export class HeadlessEngine<Reducers extends ReducersMapObject>
             NoopPostprocessQuerySuggestResponseMiddleware,
         }),
         analyticsClientMiddleware: this.analyticsClientMiddleware(this.options),
-        preprocessRequestMiddleware: analytics?.preprocessRequestMiddleware,
         logger: this.logger,
         validatePayload: validatePayloadAndThrow,
+        preprocessRequest,
       },
     });
   }
