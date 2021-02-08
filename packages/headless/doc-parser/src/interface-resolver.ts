@@ -24,7 +24,7 @@ export function resolveInterfaceMembers(
       return resolveMethodSignature(m);
     }
 
-    throw new Error('Unsupported member');
+    throw new Error(`Unsupported member: ${m.displayName}`);
   });
 }
 
