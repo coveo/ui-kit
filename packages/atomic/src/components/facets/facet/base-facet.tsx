@@ -50,8 +50,10 @@ export class BaseFacet {
       <div class="facet" part="facet">
         <button
           class={
-            'facet-button border border-solid border-divider bg-transparent text-on-background-variant px-4 h-9 outline-none focus:outline-none lg:hidden cursor-pointer ' +
-            (this.hasActiveValues ? 'active' : '')
+            'facet-button border-solid bg-transparent  px-4 h-9 outline-none focus:outline-none lg:hidden cursor-pointer ' +
+            (this.hasActiveValues
+              ? 'border-2 border-primary text-primary'
+              : 'border border-divider text-on-background-variant')
           }
           onClick={() => this.openModal()}
         >
@@ -59,8 +61,8 @@ export class BaseFacet {
         </button>
         <div
           class={
-            'content box-border hidden lg:block h-screen w-screen lg:h-auto lg:w-auto fixed object-left-top bg-white top-0 left-0 lg:static p-3 ' +
-            (this.isExpanded ? 'open' : '')
+            'content box-border  lg:block h-screen w-screen lg:h-auto lg:w-auto fixed object-left-top bg-white top-0 left-0 lg:static p-3 ' +
+            (this.isExpanded ? 'block' : 'hidden')
           }
         >
           <div class="flex flex-row items-center pb-2 mb-2 border-b border-solid border-on-background">
