@@ -132,6 +132,7 @@ export interface HeadlessConfigurationOptions {
     searchHub?: string;
     /**
      * Allows for augmenting a request (search, facet-search, query-suggest, etc.) before it is sent.
+     * @deprecated Use `preprocessRequest` instead.
      */
     preprocessRequestMiddleware?: PreprocessRequestMiddleware;
     /**
@@ -328,7 +329,7 @@ export class HeadlessEngine<Reducers extends ReducersMapObject>
         searchAPIClient: new SearchAPIClient({
           logger: this.logger,
           renewAccessToken: () => this.renewAccessToken(),
-          preprocessRequest:
+          deprecatedPreprocessRequest:
             search?.preprocessRequestMiddleware ||
             NoopPreprocessRequestMiddleware,
           postprocessSearchResponseMiddleware:

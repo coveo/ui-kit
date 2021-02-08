@@ -16,7 +16,7 @@ export interface PlatformClientCallOptions {
   requestParams: unknown;
   accessToken: string;
   renewAccessToken: () => Promise<string>;
-  preprocessRequest: PreprocessRequestMiddleware;
+  deprecatedPreprocessRequest: PreprocessRequestMiddleware;
   logger: Logger;
   signal?: AbortSignal;
 }
@@ -40,7 +40,7 @@ export class PlatformClient {
   ): Promise<PlatformResponse<ResponseType>> {
     const processedOptions = {
       ...options,
-      ...(await options.preprocessRequest(options)),
+      ...(await options.deprecatedPreprocessRequest(options)),
     };
 
     const requestInfo = {

@@ -57,7 +57,8 @@ describe('PlatformClient call', () => {
       },
       url: platformUrl(),
       renewAccessToken: async () => 'accessToken2',
-      preprocessRequest: middleware || NoopPreprocessRequestMiddleware,
+      deprecatedPreprocessRequest:
+        middleware || NoopPreprocessRequestMiddleware,
       logger: pino({level: 'silent'}),
     });
   }

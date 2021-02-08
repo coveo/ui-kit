@@ -1,6 +1,5 @@
 import {redirectionReducer} from './redirection-slice';
 import {checkForRedirection} from './redirection-actions';
-import {SearchAPIClient} from '../../api/search/search-api-client';
 import {Trigger} from '../../api/search/trigger';
 import {logTriggerRedirect} from './redirection-analytics-actions';
 import {
@@ -13,18 +12,11 @@ import {
   MockEngine,
 } from '../../test';
 import {SearchAppState} from '../../state/search-app-state';
-import {NoopPreprocessRequestMiddleware} from '../../api/platform-client';
 import pino from 'pino';
 import {validatePayloadAndThrow} from '../../utils/validate-payload';
-import {
-  NoopPostprocessFacetSearchResponseMiddleware,
-  NoopPostprocessQuerySuggestResponseMiddleware,
-  NoopPostprocessSearchResponseMiddleware,
-} from '../../api/search/search-api-client-middleware';
+import {buildMockSearchAPIClient} from '../../test/mock-search-api-client';
 
 describe('redirection slice', () => {
-  const logger = pino({level: 'silent'});
-
   it('should have initial state', () => {
     expect(redirectionReducer(undefined, {type: 'randomAction'})).toEqual(
       getRedirectionInitialState()
@@ -61,14 +53,7 @@ describe('redirection slice', () => {
 
   let engine: MockEngine<SearchAppState>;
   async function mockPlan(trigger?: Trigger) {
-    const apiClient = new SearchAPIClient({
-      renewAccessToken: async () => '',
-      logger,
-      preprocessRequest: NoopPreprocessRequestMiddleware,
-      postprocessSearchResponseMiddleware: NoopPostprocessSearchResponseMiddleware,
-      postprocessFacetSearchResponseMiddleware: NoopPostprocessFacetSearchResponseMiddleware,
-      postprocessQuerySuggestResponseMiddleware: NoopPostprocessQuerySuggestResponseMiddleware,
-    });
+    const apiClient = buildMockSearchAPIClient();
     const triggers = trigger ? [trigger] : [];
     jest.spyOn(apiClient, 'plan').mockResolvedValue({
       success: {
@@ -84,7 +69,7 @@ describe('redirection slice', () => {
     })(engine.dispatch, () => createMockState(), {
       searchAPIClient: apiClient,
       analyticsClientMiddleware: (_, p) => p,
-      logger,
+      logger: pino({level: 'silent'}),
       validatePayload: validatePayloadAndThrow,
     });
 

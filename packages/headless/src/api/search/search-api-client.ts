@@ -42,7 +42,7 @@ export interface AsyncThunkSearchOptions<T extends Partial<SearchAppState>> {
 export interface SearchAPIClientOptions {
   renewAccessToken: () => Promise<string>;
   logger: Logger;
-  preprocessRequest: PreprocessRequestMiddleware;
+  deprecatedPreprocessRequest: PreprocessRequestMiddleware;
   postprocessSearchResponseMiddleware: PostprocessSearchResponseMiddleware;
   postprocessQuerySuggestResponseMiddleware: PostprocessQuerySuggestResponseMiddleware;
   postprocessFacetSearchResponseMiddleware: PostprocessFacetSearchResponseMiddleware;

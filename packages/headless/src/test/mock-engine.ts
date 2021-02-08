@@ -110,7 +110,7 @@ const configureMockStore = (logger: Logger) => {
       searchAPIClient: new SearchAPIClient({
         logger,
         renewAccessToken: mockRenewAccessToken,
-        preprocessRequest: NoopPreprocessRequestMiddleware,
+        deprecatedPreprocessRequest: NoopPreprocessRequestMiddleware,
         postprocessSearchResponseMiddleware: NoopPostprocessSearchResponseMiddleware,
         postprocessQuerySuggestResponseMiddleware: NoopPostprocessQuerySuggestResponseMiddleware,
         postprocessFacetSearchResponseMiddleware: NoopPostprocessFacetSearchResponseMiddleware,
