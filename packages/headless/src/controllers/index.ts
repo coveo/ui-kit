@@ -81,6 +81,11 @@ export {
 } from './result-list/headless-result-list';
 
 export {
+  ResultSelectionHelpers,
+  buildResultSelectionHelpers,
+} from './result-list/headless-result-selection-helpers';
+
+export {
   ResultsPerPageInitialState,
   ResultsPerPageProps,
   ResultsPerPageState,
