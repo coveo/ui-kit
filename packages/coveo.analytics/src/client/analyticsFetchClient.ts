@@ -2,7 +2,7 @@ import {
     AnalyticsRequestClient,
     VisitorIdProvider,
     IAnalyticsRequestOptions,
-    PreprocessRequest,
+    PreprocessAnalyticsRequest,
 } from './analyticsRequestClient';
 import {AnyEventResponse, EventType, IRequestPayload} from '../events';
 
@@ -10,7 +10,7 @@ export interface IAnalyticsFetchClientOptions {
     baseUrl: string;
     token?: string;
     visitorIdProvider: VisitorIdProvider;
-    preprocessRequest?: PreprocessRequest;
+    preprocessRequest?: PreprocessAnalyticsRequest;
 }
 
 export class AnalyticsFetchClient implements AnalyticsRequestClient {

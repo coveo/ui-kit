@@ -16,7 +16,7 @@ import {
     IRequestPayload,
     VariableArgumentsPayload,
 } from '../events';
-import {PreprocessRequest, VisitorIdProvider} from './analyticsRequestClient';
+import {PreprocessAnalyticsRequest, VisitorIdProvider} from './analyticsRequestClient';
 import {hasWindow, hasDocument} from '../detector';
 import {addDefaultValues} from '../hook/addDefaultValues';
 import {enhanceViewEvent} from '../hook/enhanceViewEvent';
@@ -45,7 +45,7 @@ export interface ClientOptions {
     version: string;
     runtimeEnvironment?: IRuntimeEnvironment;
     beforeSendHooks: AnalyticsClientSendEventHook[];
-    preprocessRequest?: PreprocessRequest;
+    preprocessRequest?: PreprocessAnalyticsRequest;
 }
 
 export type AnalyticsClientSendEventHook = <TResult>(eventType: string, payload: any) => TResult | Promise<TResult>;
