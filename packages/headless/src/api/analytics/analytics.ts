@@ -116,7 +116,7 @@ interface ConfigureAnalyticsOptions {
   state: StateNeededByAnalyticsProvider;
   logger: Logger;
   analyticsClientMiddleware?: AnalyticsClientSendEventHook;
-  preprocessAnalyticsRequestMiddleware?: PreprocessRequest;
+  preprocessRequestMiddleware?: PreprocessRequest;
   provider?: SearchPageClientProvider;
 }
 
@@ -124,7 +124,7 @@ export const configureAnalytics = ({
   logger,
   state,
   analyticsClientMiddleware = (_, p) => p,
-  preprocessAnalyticsRequestMiddleware,
+  preprocessRequestMiddleware,
   provider = new AnalyticsProvider(state),
 }: ConfigureAnalyticsOptions) => {
   const token = state.configuration.accessToken;
@@ -135,7 +135,7 @@ export const configureAnalytics = ({
       token,
       endpoint,
       runtimeEnvironment,
-      preprocessRequest: preprocessAnalyticsRequestMiddleware,
+      preprocessRequest: preprocessRequestMiddleware,
       beforeSendHooks: [
         analyticsClientMiddleware,
         (type, payload) => {

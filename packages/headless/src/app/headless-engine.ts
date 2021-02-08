@@ -183,7 +183,7 @@ export interface HeadlessConfigurationOptions {
     /**
      * Allows for augmenting an analytics request before it is sent.
      */
-    preprocessAnalyticsRequestMiddleware?: PreprocessAnalyticsRequestMiddleware;
+    preprocessRequestMiddleware?: PreprocessAnalyticsRequestMiddleware;
   };
 }
 
@@ -258,7 +258,7 @@ export class HeadlessEngine<Reducers extends ReducersMapObject>
     if (options.configuration.analytics) {
       const {
         analyticsClientMiddleware,
-        preprocessAnalyticsRequestMiddleware,
+        preprocessRequestMiddleware: preprocessRequestMiddleware,
         ...rest
       } = options.configuration.analytics;
       this.reduxStore.dispatch(updateAnalyticsConfiguration(rest));
@@ -342,8 +342,7 @@ export class HeadlessEngine<Reducers extends ReducersMapObject>
             NoopPostprocessQuerySuggestResponseMiddleware,
         }),
         analyticsClientMiddleware: this.analyticsClientMiddleware(this.options),
-        preprocessAnalyticsRequestMiddleware:
-          analytics?.preprocessAnalyticsRequestMiddleware,
+        preprocessRequestMiddleware: analytics?.preprocessRequestMiddleware,
         logger: this.logger,
         validatePayload: validatePayloadAndThrow,
       },

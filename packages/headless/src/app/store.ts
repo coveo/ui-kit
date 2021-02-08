@@ -18,7 +18,7 @@ import {validatePayloadAndThrow} from '../utils/validate-payload';
 export interface ThunkExtraArguments {
   searchAPIClient: SearchAPIClient;
   analyticsClientMiddleware: AnalyticsClientSendEventHook;
-  preprocessAnalyticsRequestMiddleware?: PreprocessRequest;
+  preprocessRequestMiddleware?: PreprocessRequest;
   logger: Logger;
   validatePayload: typeof validatePayloadAndThrow;
 }
