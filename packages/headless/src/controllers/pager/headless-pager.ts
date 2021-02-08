@@ -62,20 +62,20 @@ export interface Pager extends Controller {
    * Updates the results to those on the passed page.
    * @param page The page number.
    */
-  selectPage: (page: number) => void;
+  selectPage(page: number): void;
 
   /** Updates the results to those on the next page.*/
-  nextPage: () => void;
+  nextPage(): void;
 
   /** Updates the results to those on the previous page.*/
-  previousPage: () => void;
+  previousPage(): void;
 
   /**
    * @returns `true` when the current page is equal to the current page, and `false` otherwise.
    * @param page The page number to check.
    * @returns boolean.
    */
-  isCurrentPage: (page: number) => boolean;
+  isCurrentPage(page: number): boolean;
 
   /** The state of the Pager controller */
   state: PagerState;

@@ -1,6 +1,6 @@
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
-import typescript from '@rollup/plugin-typescript';
+import tsPlugin from '@rollup/plugin-typescript';
 import replacePlugin from '@rollup/plugin-replace';
 import {terser} from 'rollup-plugin-terser';
 import {sizeSnapshot} from 'rollup-plugin-size-snapshot';
@@ -8,6 +8,7 @@ import alias from '@rollup/plugin-alias';
 import {resolve as pathResolve} from 'path';
 import dts from "rollup-plugin-dts";
 
+const typescript = () => tsPlugin({tsconfig: './src/tsconfig.build.json'});
 const isCI = process.env.CI === 'true';
 const isProduction = process.env.BUILD === 'production';
 
