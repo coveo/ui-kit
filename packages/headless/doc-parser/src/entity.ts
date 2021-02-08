@@ -1,11 +1,19 @@
 export interface Entity {
   name: string;
+  desc: string;
   type: string;
   isOptional: boolean;
-  desc: string;
-  // notes?: []
 }
 
 export interface ObjEntity extends Entity {
-  members: Entity[];
+  members: AnyEntity[];
 }
+
+export interface FuncEntity {
+  name: string;
+  desc: string;
+  params: AnyEntity[];
+  returnType: string | ObjEntity | FuncEntity;
+}
+
+export type AnyEntity = Entity | ObjEntity | FuncEntity;

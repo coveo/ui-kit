@@ -1,8 +1,14 @@
-import {ExcerptTokenKind, IExcerptToken} from '@microsoft/api-extractor-model';
+import {
+  ApiMethodSignature,
+  ExcerptTokenKind,
+  IExcerptToken,
+  ReleaseTag,
+} from '@microsoft/api-extractor-model';
 import {buildMockApiInterface} from '../mocks/mock-api-interface';
 import {buildMockApiPropertySignature} from '../mocks/mock-api-property-signature';
 import {buildMockEntity} from '../mocks/mock-entity';
 import {buildMockEntryPoint} from '../mocks/mock-entry-point';
+import {buildMockFuncEntity} from '../mocks/mock-func-entity';
 import {buildMockObjEntity} from '../mocks/mock-obj-entity';
 import {resolveInterfaceMembers} from './interface-resolver';
 
@@ -90,5 +96,44 @@ describe('#resolveInterfaceMembers', () => {
     });
 
     expect(result).toEqual([objEntity]);
+  });
+
+  it('resolves a method with primitive return type', () => {
+    const entryPoint = buildMockEntryPoint();
+    const pagerInterface = buildMockApiInterface({name: 'Pager'});
+
+    const method = new ApiMethodSignature({
+      docComment: undefined,
+      excerptTokens: [
+        buildContentExcerptToken('isCurrentPage(page: '),
+        buildContentExcerptToken('number'),
+        buildContentExcerptToken('): '),
+        buildContentExcerptToken('boolean'),
+        buildContentExcerptToken(';'),
+      ],
+      isOptional: false,
+      name: 'isCurrentPage',
+      overloadIndex: 1,
+      parameters: [
+        {
+          parameterName: 'page',
+          parameterTypeTokenRange: {startIndex: 1, endIndex: 2},
+        },
+      ],
+      releaseTag: ReleaseTag.None,
+      returnTypeTokenRange: {startIndex: 3, endIndex: 4},
+      typeParameters: [],
+    });
+
+    pagerInterface.addMember(method);
+    entryPoint.addMember(pagerInterface);
+
+    const result = resolveInterfaceMembers(entryPoint, pagerInterface);
+    const funcEntity = buildMockFuncEntity({
+      name: 'isCurrentPage',
+      params: [buildMockEntity({name: 'page', type: 'number'})],
+      returnType: 'boolean',
+    });
+    expect(result).toEqual([funcEntity]);
   });
 });
