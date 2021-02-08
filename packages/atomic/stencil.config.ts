@@ -7,6 +7,7 @@ import {inlineSvg} from 'stencil-inline-svg';
 
 import tailwind from 'tailwindcss';
 import atImport from 'postcss-import';
+import autoprefixer from 'autoprefixer';
 
 const isDevWatch: boolean =
   process.argv &&
@@ -45,7 +46,7 @@ export const config: Config = {
   plugins: [
     inlineSvg(),
     postcss({
-      plugins: [atImport(), tailwind()],
+      plugins: [atImport(), tailwind(), autoprefixer()],
       injectGlobalPaths: ['src/globals/utilities.pcss'],
     }),
   ],

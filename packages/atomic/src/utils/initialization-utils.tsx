@@ -114,7 +114,10 @@ export function InitializeBindings() {
     component.render = function () {
       if (this.error) {
         return (
-          <atomic-component-error error={this.error}></atomic-component-error>
+          <atomic-component-error
+            element={getElement(this)}
+            error={this.error}
+          ></atomic-component-error>
         );
       }
 

@@ -1,29 +1,32 @@
-import {Component, h, State} from '@stencil/core';
+import {Component, h, State, Element} from '@stencil/core';
 import {
   Sort,
-  SortInitialState,
   buildSort,
-  buildRelevanceSortCriterion,
-  buildDateSortCriterion,
-  buildFieldSortCriterion,
-  SortOrder,
   SortState,
+  SortCriterion,
+  parseCriterionExpression,
 } from '@coveo/headless';
 import {
   Bindings,
   BindStateToController,
+  BindStateToI18n,
+  I18nState,
   InitializableComponent,
   InitializeBindings,
 } from '../../utils/initialization-utils';
+import {randomID} from '../../utils/utils';
+import ArrowBottomIcon from 'coveo-styleguide/resources/icons/svg/arrow-bottom-rounded.svg';
 
-enum SortOption {
-  Relevance = 'relevance',
-  Newest = 'newest',
-  Oldest = 'oldest',
-  Size = 'size',
+interface SortDropdownOption {
+  expression: string;
+  criteria: SortCriterion[];
+  caption: string;
 }
 
 /**
+ * The Sort Dropdown allows the end user to select the criteria to use when sorting query results.
+ *
+ * @part label - The "Sort by" label
  * @part select - The select element
  */
 @Component({
@@ -34,90 +37,101 @@ enum SortOption {
 export class AtomicSortDropdown implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;
   private sort!: Sort;
+  private options: SortDropdownOption[] = [];
+  private id = randomID('atomic-sort-dropdown-');
+
+  @Element() host!: HTMLElement;
 
   @State() @BindStateToController('sort') public sortState!: SortState;
+  @BindStateToI18n() @State() private strings: I18nState = {
+    sortBy: () => this.bindings.i18n.t('sortBy'),
+  };
   @State() public error!: Error;
 
   public initialize() {
-    const initialState: Partial<SortInitialState> = {criterion: this.relevance};
-    this.sort = buildSort(this.bindings.engine, {initialState});
+    this.buildOptions();
+    this.sort = buildSort(this.bindings.engine, {
+      initialState: {
+        criterion: this.options[0].criteria,
+      },
+    });
+  }
+
+  private buildOptions() {
+    const sortCriterionElements = Array.from(
+      this.host.querySelectorAll('atomic-sort-criteria')
+    );
+
+    this.options = sortCriterionElements.map(({criteria, caption}) => {
+      this.strings[caption] = () => this.bindings.i18n.t(caption);
+
+      return {
+        criteria: parseCriterionExpression(criteria),
+        expression: criteria,
+        caption,
+      };
+    });
+
+    if (!this.options.length) {
+      this.error = new Error(
+        'The "atomic-sort-dropdown" element requires at least one "atomic-sort-criteria" child.'
+      );
+    }
   }
 
   private select(e: Event) {
     const select = e.composedPath()[0] as HTMLSelectElement;
-
-    switch (select.value) {
-      case SortOption.Relevance:
-        this.sort.sortBy(this.relevance);
-        break;
-
-      case SortOption.Newest:
-        this.sort.sortBy(this.dateDescending);
-        break;
-
-      case SortOption.Oldest:
-        this.sort.sortBy(this.dateAscending);
-        break;
-
-      case SortOption.Size:
-        this.sort.sortBy(this.largest);
-        break;
-
-      default:
-        break;
-    }
+    const option = this.options.find(
+      (option) => option.expression === select.value
+    );
+    option && this.sort.sortBy(option.criteria);
   }
 
-  private get relevance() {
-    return buildRelevanceSortCriterion();
+  private buildOption({expression, criteria, caption}: SortDropdownOption) {
+    return (
+      <option value={expression} selected={this.sort.isSortedBy(criteria)}>
+        {this.strings[caption]()}
+      </option>
+    );
   }
 
-  private get dateDescending() {
-    return buildDateSortCriterion(SortOrder.Descending);
+  private renderLabel() {
+    return (
+      <label
+        class="text-on-background text-sm mr-2"
+        part="label"
+        htmlFor={this.id}
+      >
+        {this.strings.sortBy()}
+      </label>
+    );
   }
 
-  private get dateAscending() {
-    return buildDateSortCriterion(SortOrder.Ascending);
-  }
-
-  private get largest() {
-    return buildFieldSortCriterion('size', SortOrder.Descending);
+  private renderSelect() {
+    return [
+      <select
+        id={this.id}
+        class="flex-grow appearance-none rounded bg-background text-secondary font-bold border border-divider py-1.5 pl-2 pr-8"
+        part="select"
+        aria-label={this.strings.sortBy()}
+        onChange={(option) => this.select(option)}
+      >
+        {this.options.map((option) => this.buildOption(option))}
+      </select>,
+      <div
+        class="absolute right-3 top-4 fill-current w-3 h-3 pointer-events-none"
+        innerHTML={ArrowBottomIcon}
+      ></div>,
+    ];
   }
 
   public render() {
-    return (
-      <select
-        class="form-select"
-        aria-label="Sort results by"
-        part="select"
-        name="sorts"
-        onChange={(val) => this.select(val)}
-      >
-        <option
-          value={SortOption.Relevance}
-          selected={this.sort.isSortedBy(this.relevance)}
-        >
-          Relevance
-        </option>
-        <option
-          value={SortOption.Newest}
-          selected={this.sort.isSortedBy(this.dateDescending)}
-        >
-          Newest
-        </option>
-        <option
-          value={SortOption.Oldest}
-          selected={this.sort.isSortedBy(this.dateAscending)}
-        >
-          Oldest
-        </option>
-        <option
-          value={SortOption.Size}
-          selected={this.sort.isSortedBy(this.largest)}
-        >
-          Largest Size
-        </option>
-      </select>
-    );
+    return [
+      <div class="flex items-center relative">
+        {this.renderLabel()}
+        {this.renderSelect()}
+      </div>,
+      <slot></slot>,
+    ];
   }
 }
