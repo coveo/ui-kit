@@ -1,4 +1,4 @@
-import {getApiRequestBody, getAnalytics} from '../utils/network';
+import {getApiRequestBodyAt, getAnalyticsAt} from '../utils/network';
 import {setUpPage, shouldRenderErrorComponent} from '../utils/setupComponent';
 
 const sortDropdown = 'atomic-sort-dropdown';
@@ -51,7 +51,7 @@ describe('Sort Dropdown Component', () => {
     setup();
     selectOption(criteria[1]);
 
-    const request = await getApiRequestBody('@coveoSearch');
+    const request = await getApiRequestBodyAt('@coveoSearch', 1);
     expect(request.sortCriteria).to.be.eq(criteria[1]);
   });
 
@@ -59,7 +59,7 @@ describe('Sort Dropdown Component', () => {
     setup();
     selectOption(criteria[1]);
 
-    const analytics = await getAnalytics('@coveoAnalytics');
+    const analytics = await getAnalyticsAt('@coveoAnalytics', 1);
     expect(analytics.request.body).to.have.property(
       'actionCause',
       'resultsSort'
@@ -78,6 +78,6 @@ describe('Sort Dropdown Component', () => {
       </atomic-sort-dropdown>
     `);
     cy.wait(500);
-    shouldRenderErrorComponent('sortDropdown');
+    shouldRenderErrorComponent(sortDropdown);
   });
 });

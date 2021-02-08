@@ -24,7 +24,7 @@ export async function getApiRequestBody(
   return interception.request.body;
 }
 
-export function getAnalytics(selector: string): Promise<any> {
+function getAnalytics(selector: string): Promise<any> {
   return new Promise((resolve) => {
     cy.wait(selector).then((interception) => {
       resolve(interception);
@@ -37,6 +37,13 @@ export function getApiResponseBodyAt(selector: string, order: number) {
     getApiResponseBody(selector);
   }
   return getApiResponseBody(selector);
+}
+
+export async function getApiRequestBodyAt(selector: string, order: number) {
+  for (let i = 0; i < order; i++) {
+    getApiRequestBody(selector);
+  }
+  return getApiRequestBody(selector);
 }
 
 export function getAnalyticsAt(selector: string, order: number) {
