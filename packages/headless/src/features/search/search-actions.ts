@@ -87,7 +87,7 @@ export interface ExecuteSearchThunkReturn {
   queryExecuted: string;
   /** Whether the query was automatically corrected. */
   automaticallyCorrected: boolean;
-  /** The analytics action to log after the query. */
+  /** The analytics actions to log after the query. */
   analyticsActions: SearchAction[];
 }
 
@@ -105,11 +105,11 @@ const fetchFromAPI = async (
 
 /**
  * Executes a search query.
- * @param analyticsActions (SearchAction) The analytics action to log after a successful query.
+ * @param analyticsActions (SearchAction) The analytics actions to log after a successful query.
  */
 /**
  * Executes a search query.
- * @param analyticsActions (SearchAction) The analytics action to log after a successful query.
+ * @param analyticsActions (SearchAction) The analytics actions to log after a successful query.
  */
 export const executeSearch = createAsyncThunk<
   ExecuteSearchThunkReturn,
