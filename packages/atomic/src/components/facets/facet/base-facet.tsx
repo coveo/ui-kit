@@ -38,7 +38,7 @@ export class BaseFacet {
     return this.hasActiveValues ? (
       <button
         onClick={() => this.deselectAll.emit()}
-        class="block text-primary mr-2 text-sm"
+        class="block text-primary mr-2 lg:mr-0 text-sm"
       >
         Clear
       </button>
