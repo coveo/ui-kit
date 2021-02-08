@@ -30,7 +30,7 @@ export class AnalyticsFetchClient implements AnalyticsRequestClient {
         };
         const {url, ...fetchData}: IAnalyticsRequestOptions = {
             ...defaultOptions,
-            ...(preprocessRequest ? await preprocessRequest(defaultOptions, 'fetch') : {}),
+            ...(preprocessRequest ? await preprocessRequest(defaultOptions, 'analyticsFetch') : {}),
         };
 
         const response = await fetch(url, fetchData);

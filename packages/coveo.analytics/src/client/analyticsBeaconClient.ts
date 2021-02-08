@@ -34,7 +34,7 @@ export class AnalyticsBeaconClient implements AnalyticsRequestClient {
         };
         const {url, body}: IAnalyticsRequestOptions = {
             ...defaultOptions,
-            ...(preprocessRequest ? await preprocessRequest(defaultOptions, 'beacon') : {}),
+            ...(preprocessRequest ? await preprocessRequest(defaultOptions, 'analyticsBeacon') : {}),
         };
 
         // tslint:disable-next-line: no-console

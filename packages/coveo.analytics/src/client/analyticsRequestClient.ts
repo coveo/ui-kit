@@ -9,9 +9,11 @@ export interface AnalyticsRequestClient {
     sendEvent(eventType: string, payload: IRequestPayload): Promise<AnyEventResponse | void>;
 }
 
+export type AnalyticsClientOrigin = 'analyticsFetch' | 'analyticsBeacon';
+
 export type PreprocessRequest = (
     request: IAnalyticsRequestOptions,
-    clientType: 'fetch' | 'beacon'
+    clientOrigin: AnalyticsClientOrigin
 ) => IAnalyticsRequestOptions | Promise<IAnalyticsRequestOptions>;
 
 export interface IAnalyticsRequestOptions extends RequestInit {
