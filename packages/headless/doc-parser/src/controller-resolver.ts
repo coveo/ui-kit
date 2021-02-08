@@ -2,25 +2,18 @@ import {
   ApiEntryPoint,
   ApiFunction,
   ApiInterface,
+  Parameter,
 } from '@microsoft/api-extractor-model';
 import {findApi} from './api-finder';
-import {Entity, ObjEntity} from './entity';
+import {Entity, FuncEntity, ObjEntity} from './entity';
 import {
   buildEntityFromParam,
   buildParamEntityBasedOnKind,
 } from './function-param-resolver';
 import {resolveInterfaceMembers} from './interface-resolver';
 
-interface FuncEntity {
-  name: string;
-  params: (Entity | ObjEntity)[];
-  returnType: string;
-  desc: string;
-}
-
 interface Controller {
   initializer: FuncEntity;
-  instance: ObjEntity;
 }
 
 export function resolveController(
@@ -28,37 +21,40 @@ export function resolveController(
   controllerName: string
 ): Controller {
   const controller = findApi(entryPoint, controllerName) as ApiFunction;
-  const initializer = getInitializerDoc(entryPoint, controller);
+  const initializer = resolveControllerFunction(entryPoint, controller);
 
-  const apiInterface = findApi(
-    entryPoint,
-    initializer.returnType
-  ) as ApiInterface;
-  const instance = buildObjEntityFromInterface(entryPoint, apiInterface);
-
-  return {
-    initializer,
-    instance,
-  };
+  return {initializer};
 }
 
-function getInitializerDoc(
-  entryPoint: ApiEntryPoint,
+function resolveControllerFunction(
+  entry: ApiEntryPoint,
   fn: ApiFunction
 ): FuncEntity {
-  const params: Entity[] = fn.parameters.map((p, index) => {
-    const isEngine = index === 0;
-    return isEngine
-      ? buildEntityFromParam(p)
-      : buildParamEntityBasedOnKind(entryPoint, p);
-  });
+  const params: Entity[] = fn.parameters.map((p, index) =>
+    resolveControllerParam(entry, p, index)
+  );
+  const returnTypeText = fn.returnTypeExcerpt.text;
+  const returnTypeInterface = findApi(entry, returnTypeText) as ApiInterface;
+
+  const returnType = buildObjEntityFromInterface(entry, returnTypeInterface);
 
   return {
     name: fn.name,
     desc: '',
     params,
-    returnType: fn.returnTypeExcerpt.text,
+    returnType,
   };
+}
+
+function resolveControllerParam(
+  entryPoint: ApiEntryPoint,
+  p: Parameter,
+  index: number
+) {
+  const isEngine = index === 0;
+  return isEngine
+    ? buildEntityFromParam(p)
+    : buildParamEntityBasedOnKind(entryPoint, p);
 }
 
 function buildObjEntityFromInterface(
