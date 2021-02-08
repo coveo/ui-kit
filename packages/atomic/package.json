@@ -48,6 +48,7 @@
     "@types/mustache": "^4.0.1",
     "@types/postcss-import": "^12.0.0",
     "@types/puppeteer": "5.4.0",
+    "autoprefixer": "^10.2.4",
     "axe-core": "^4.1.1",
     "cross-fetch": "^3.0.6",
     "cypress": "^6.3.0",

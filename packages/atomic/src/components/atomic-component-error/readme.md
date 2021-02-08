@@ -7,9 +7,10 @@
 
 ## Properties
 
-| Property             | Attribute | Description | Type    | Default     |
-| -------------------- | --------- | ----------- | ------- | ----------- |
-| `error` _(required)_ | --        |             | `Error` | `undefined` |
+| Property               | Attribute | Description | Type          | Default     |
+| ---------------------- | --------- | ----------- | ------------- | ----------- |
+| `element` _(required)_ | --        |             | `HTMLElement` | `undefined` |
+| `error` _(required)_   | --        |             | `Error`       | `undefined` |
 
 
 ## Dependencies

@@ -1,4 +1,4 @@
-import {isArray} from '@coveo/bueno';
+import {EnumValue, isArray, RecordValue, StringValue} from '@coveo/bueno';
 
 /**
  * The available sort orders.
@@ -84,7 +84,6 @@ export const buildCriterionExpression = (
     case SortBy.Field:
       return `@${criterion.field} ${criterion.order}`;
     default:
-      console.error(`Unknown criterion: ${criterion}`);
       return '';
   }
 };
@@ -135,3 +134,11 @@ export const buildQueryRankingExpressionSortCriterion = (): SortByQRE => ({
  * @returns A `SortByNoSort` criterion.
  */
 export const buildNoSortCriterion = (): SortByNoSort => ({by: SortBy.NoSort});
+
+export const criterionDefinition = new RecordValue({
+  values: {
+    by: new EnumValue({enum: SortBy, required: true}),
+    order: new EnumValue({enum: SortOrder}),
+    field: new StringValue(),
+  },
+});
