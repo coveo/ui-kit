@@ -14,7 +14,6 @@ export class BaseFacet {
   @Prop() public hasActiveValues!: boolean;
 
   private openModal() {
-    console.log('Clicked');
     this.isExpanded = true;
     document.body.classList.add('overflow-hidden');
   }
