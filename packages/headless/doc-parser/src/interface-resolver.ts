@@ -36,12 +36,17 @@ function resolvePropertySignature(
   entry: ApiEntryPoint,
   m: ApiPropertySignature
 ) {
-  const {kind} = m.propertyTypeExcerpt.spannedTokens[0];
-  const isReference = kind === ExcerptTokenKind.Reference;
-
-  return isReference
+  return shouldResolvePropertyType(m)
     ? buildObjEntityFromProperty(entry, m)
     : buildEntityFromProperty(m);
+}
+
+function shouldResolvePropertyType(m: ApiPropertySignature) {
+  const {kind, text} = m.propertyTypeExcerpt.spannedTokens[0];
+  const isReference = kind === ExcerptTokenKind.Reference;
+  const isRecord = text === 'Record';
+
+  return isReference && !isRecord;
 }
 
 function buildEntityFromProperty(p: ApiPropertySignature): Entity {

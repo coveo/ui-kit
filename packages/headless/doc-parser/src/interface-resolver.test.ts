@@ -136,4 +136,32 @@ describe('#resolveInterfaceMembers', () => {
     });
     expect(result).toEqual([funcEntity]);
   });
+
+  it('treats a record as a primitive entity and does not resolve it further', () => {
+    const entry = buildMockEntryPoint();
+    const apiInterface = buildMockApiInterface({name: 'FacetSearchOptions'});
+    const recordProp = buildMockApiPropertySignature({
+      name: 'captions',
+      excerptTokens: [
+        buildContentExcerptToken('captions?: '),
+        buildReferenceExcerptToken('Record', '!Record:type'),
+        buildContentExcerptToken('<string, string>'),
+        buildContentExcerptToken(';'),
+      ],
+      propertyTypeTokenRange: {startIndex: 1, endIndex: 3},
+      isOptional: true,
+    });
+
+    apiInterface.addMember(recordProp);
+    entry.addMember(apiInterface);
+
+    const result = resolveInterfaceMembers(entry, apiInterface);
+    const entity = buildMockEntity({
+      name: 'captions',
+      type: 'Record<string, string>',
+      isOptional: true,
+    });
+
+    expect(result).toEqual([entity]);
+  });
 });
