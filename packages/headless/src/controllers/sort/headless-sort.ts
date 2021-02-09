@@ -6,22 +6,14 @@ import {
 import {executeSearch} from '../../features/search/search-actions';
 import {
   buildCriterionExpression,
-  SortBy,
   SortCriterion,
-  SortOrder,
+  criterionDefinition,
 } from '../../features/sort-criteria/criteria';
 import {buildController} from '../controller/headless-controller';
 import {updatePage} from '../../features/pagination/pagination-actions';
 import {logResultsSort} from '../../features/sort-criteria/sort-criteria-analytics-actions';
 import {ConfigurationSection, SortSection} from '../../state/state-sections';
-import {
-  ArrayValue,
-  EnumValue,
-  isArray,
-  RecordValue,
-  Schema,
-  StringValue,
-} from '@coveo/bueno';
+import {ArrayValue, isArray, Schema} from '@coveo/bueno';
 import {validateInitialState} from '../../utils/validate-payload';
 
 export interface SortProps {
@@ -35,14 +27,6 @@ export interface SortInitialState {
   /** The initial sort criterion to register in state. */
   criterion: SortCriterion | SortCriterion[];
 }
-
-const criterionDefinition = new RecordValue({
-  values: {
-    by: new EnumValue({enum: SortBy, required: true}),
-    order: new EnumValue({enum: SortOrder}),
-    field: new StringValue(),
-  },
-});
 
 function validateSortInitialState(
   engine: Engine<ConfigurationSection & SortSection>,

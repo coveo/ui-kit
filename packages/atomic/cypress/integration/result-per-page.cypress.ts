@@ -1,5 +1,5 @@
-import {getApiResponseBody, getAnalytics} from '../utils/network';
-import {setUpPage} from '../utils/setupComponent';
+import {getApiResponseBodyAt, getAnalyticsAt} from '../utils/network';
+import {setUpPage, shouldRenderErrorComponent} from '../utils/setupComponent';
 
 const resultPerPage = 'atomic-results-per-page';
 
@@ -8,18 +8,10 @@ describe('Result Per Page Component', () => {
     setUpPage(
       `<atomic-results-per-page ${attributes}></atomic-results-per-page>`
     );
-    cy.wait(500);
   }
 
   function clickButton(position: number) {
     return cy.get(resultPerPage).shadow().find('button').eq(position).click();
-  }
-
-  function shouldRenderErrorComponent() {
-    cy.get(resultPerPage)
-      .shadow()
-      .find('atomic-component-error')
-      .should('exist');
   }
 
   it('should load', () => {
@@ -30,8 +22,7 @@ describe('Result Per Page Component', () => {
   it('should execute a query with a different number of results on button click', async () => {
     setup();
     clickButton(1);
-
-    const jsonResponse = await getApiResponseBody('@coveoSearch');
+    const jsonResponse = await getApiResponseBodyAt('@coveoSearch', 1);
     expect(jsonResponse).to.have.property('results');
     expect(jsonResponse.results.length).to.be.eq(25);
   });
@@ -39,8 +30,8 @@ describe('Result Per Page Component', () => {
   it('should log the right analytics on button click', async () => {
     setup();
     clickButton(1);
+    const analytics = await getAnalyticsAt('@coveoAnalytics', 1);
 
-    const analytics = await getAnalytics('@coveoAnalytics');
     expect(analytics.request.body).to.have.property(
       'eventValue',
       'pagerResize'
@@ -56,7 +47,7 @@ describe('Result Per Page Component', () => {
     it(`when the prop is not of the right type/format
     should render an error`, () => {
       setup('choices-displayed="hello"');
-      shouldRenderErrorComponent();
+      shouldRenderErrorComponent(resultPerPage);
     });
 
     it('should render the choices in the component', () => {
@@ -69,13 +60,13 @@ describe('Result Per Page Component', () => {
     it(`when the prop is not valid
     should render an error`, () => {
       setup('initial-choice=-1');
-      shouldRenderErrorComponent();
+      shouldRenderErrorComponent(resultPerPage);
     });
 
     it(`when the prop is not in the list of choicesDisplayed
     should render an error`, () => {
       setup('initial-choice=59');
-      shouldRenderErrorComponent();
+      shouldRenderErrorComponent(resultPerPage);
     });
 
     it('should select the initialChoice correctly', () => {
