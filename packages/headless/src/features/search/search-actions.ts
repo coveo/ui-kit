@@ -163,7 +163,13 @@ export const executeSearch = createAsyncThunk<
     const retriedResponse = retried.response.success;
     analyticsAction(
       dispatch,
-      () => getStateAfterResponse(correctedQuery, state, retriedResponse),
+      () =>
+        getStateAfterResponse(
+          correctedQuery,
+          retried.duration,
+          state,
+          retriedResponse
+        ),
       extra
     );
     dispatch(snapshot(extractHistory(getState())));
@@ -215,9 +221,15 @@ export const fetchMoreResults = createAsyncThunk<
 
 const getStateAfterResponse: (
   query: string,
+  duration: number,
   previousState: StateNeededByExecuteSearch,
   response: SearchResponseSuccess
-) => StateNeededByAnalyticsProvider = (query, previousState, response) => ({
+) => StateNeededByAnalyticsProvider = (
+  query,
+  duration,
+  previousState,
+  response
+) => ({
   ...previousState,
   query: {
     q: query,
@@ -227,6 +239,7 @@ const getStateAfterResponse: (
   },
   search: {
     ...getSearchInitialState(),
+    duration,
     response,
     results: response.results,
   },
