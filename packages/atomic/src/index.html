@@ -68,9 +68,12 @@
           <atomic-breadcrumb-manager></atomic-breadcrumb-manager>
           <atomic-did-you-mean></atomic-did-you-mean>
           <atomic-query-error></atomic-query-error>
-          <div class="my-2 flex justify-between">
+          <div class="flex justify-between items-end my-2">
             <atomic-query-summary></atomic-query-summary>
-            <atomic-sort-dropdown></atomic-sort-dropdown>
+            <atomic-sort-dropdown>
+              <atomic-sort-criteria caption="relevance" criteria="relevancy"></atomic-sort-criteria>
+              <atomic-sort-criteria caption="mostRecent" criteria="date descending"></atomic-sort-criteria>
+            </atomic-sort-dropdown>
           </div>
 
           <atomic-result-list>

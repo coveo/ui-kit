@@ -20,6 +20,7 @@ export namespace Components {
         "label": string;
     }
     interface AtomicComponentError {
+        "element": HTMLElement;
         "error": Error;
     }
     interface AtomicDateFacet {
@@ -136,6 +137,16 @@ export namespace Components {
         "pipeline": string;
         "reflectStateInUrl": boolean;
         "searchHub": string;
+    }
+    interface AtomicSortCriteria {
+        /**
+          * The non-localized caption to display for this criteria.
+         */
+        "caption": string;
+        /**
+          * The sort criterion/criteria the end user can select/toggle between.  The available sort criteria are: - `relevancy` - `date ascending`/`date descending` - `qre` - `field ascending`/`field descending`, where you must replace `field` with the name of a sortable field in your index (e.g., `criteria="size ascending"`).  You can specify multiple sort criteria to be used in the same request by separating them with a comma (e.g., `criteria="size ascending, date ascending"` ).
+         */
+        "criteria": string;
     }
     interface AtomicSortDropdown {
     }
@@ -293,6 +304,12 @@ declare global {
         prototype: HTMLAtomicSearchInterfaceElement;
         new (): HTMLAtomicSearchInterfaceElement;
     };
+    interface HTMLAtomicSortCriteriaElement extends Components.AtomicSortCriteria, HTMLStencilElement {
+    }
+    var HTMLAtomicSortCriteriaElement: {
+        prototype: HTMLAtomicSortCriteriaElement;
+        new (): HTMLAtomicSortCriteriaElement;
+    };
     interface HTMLAtomicSortDropdownElement extends Components.AtomicSortDropdown, HTMLStencilElement {
     }
     var HTMLAtomicSortDropdownElement: {
@@ -335,6 +352,7 @@ declare global {
         "atomic-results-per-page": HTMLAtomicResultsPerPageElement;
         "atomic-search-box": HTMLAtomicSearchBoxElement;
         "atomic-search-interface": HTMLAtomicSearchInterfaceElement;
+        "atomic-sort-criteria": HTMLAtomicSortCriteriaElement;
         "atomic-sort-dropdown": HTMLAtomicSortDropdownElement;
         "atomic-tab": HTMLAtomicTabElement;
         "atomic-text": HTMLAtomicTextElement;
@@ -351,6 +369,7 @@ declare namespace LocalJSX {
         "label"?: string;
     }
     interface AtomicComponentError {
+        "element": HTMLElement;
         "error": Error;
     }
     interface AtomicDateFacet {
@@ -463,6 +482,16 @@ declare namespace LocalJSX {
         "reflectStateInUrl"?: boolean;
         "searchHub"?: string;
     }
+    interface AtomicSortCriteria {
+        /**
+          * The non-localized caption to display for this criteria.
+         */
+        "caption": string;
+        /**
+          * The sort criterion/criteria the end user can select/toggle between.  The available sort criteria are: - `relevancy` - `date ascending`/`date descending` - `qre` - `field ascending`/`field descending`, where you must replace `field` with the name of a sortable field in your index (e.g., `criteria="size ascending"`).  You can specify multiple sort criteria to be used in the same request by separating them with a comma (e.g., `criteria="size ascending, date ascending"` ).
+         */
+        "criteria": string;
+    }
     interface AtomicSortDropdown {
     }
     interface AtomicTab {
@@ -503,6 +532,7 @@ declare namespace LocalJSX {
         "atomic-results-per-page": AtomicResultsPerPage;
         "atomic-search-box": AtomicSearchBox;
         "atomic-search-interface": AtomicSearchInterface;
+        "atomic-sort-criteria": AtomicSortCriteria;
         "atomic-sort-dropdown": AtomicSortDropdown;
         "atomic-tab": AtomicTab;
         "atomic-text": AtomicText;
@@ -535,6 +565,7 @@ declare module "@stencil/core" {
             "atomic-results-per-page": LocalJSX.AtomicResultsPerPage & JSXBase.HTMLAttributes<HTMLAtomicResultsPerPageElement>;
             "atomic-search-box": LocalJSX.AtomicSearchBox & JSXBase.HTMLAttributes<HTMLAtomicSearchBoxElement>;
             "atomic-search-interface": LocalJSX.AtomicSearchInterface & JSXBase.HTMLAttributes<HTMLAtomicSearchInterfaceElement>;
+            "atomic-sort-criteria": LocalJSX.AtomicSortCriteria & JSXBase.HTMLAttributes<HTMLAtomicSortCriteriaElement>;
             "atomic-sort-dropdown": LocalJSX.AtomicSortDropdown & JSXBase.HTMLAttributes<HTMLAtomicSortDropdownElement>;
             "atomic-tab": LocalJSX.AtomicTab & JSXBase.HTMLAttributes<HTMLAtomicTabElement>;
             "atomic-text": LocalJSX.AtomicText & JSXBase.HTMLAttributes<HTMLAtomicTextElement>;
