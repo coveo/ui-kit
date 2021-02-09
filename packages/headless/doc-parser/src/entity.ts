@@ -17,3 +17,15 @@ export interface FuncEntity {
 }
 
 export type AnyEntity = Entity | ObjEntity | FuncEntity;
+
+export function buildEntity(config: Entity): Entity {
+  return {...config};
+}
+
+export function buildObjEntity(config: ObjEntity): ObjEntity {
+  return {...config};
+}
+
+export function buildFuncEntity(config: FuncEntity): FuncEntity {
+  return {...config};
+}

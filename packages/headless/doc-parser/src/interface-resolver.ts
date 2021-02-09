@@ -10,7 +10,12 @@ import {
   Parameter,
 } from '@microsoft/api-extractor-model';
 import {findApi} from './api-finder';
-import {AnyEntity, Entity, FuncEntity, ObjEntity} from './entity';
+import {
+  AnyEntity,
+  buildEntity,
+  buildFuncEntity,
+  buildObjEntity,
+} from './entity';
 
 export function resolveInterfaceMembers(
   entry: ApiEntryPoint,
@@ -70,59 +75,59 @@ function isReference(m: ApiPropertySignature) {
   return kind === ExcerptTokenKind.Reference;
 }
 
-function buildEntityFromProperty(p: ApiPropertySignature): Entity {
-  return {
+function buildEntityFromProperty(p: ApiPropertySignature) {
+  return buildEntity({
     name: p.name,
     desc: p.tsdocComment?.emitAsTsdoc() || '',
     isOptional: p.isOptional,
     type: p.propertyTypeExcerpt.text,
-  };
+  });
 }
 
 function buildObjEntityFromProperty(
   entry: ApiEntryPoint,
   p: ApiPropertySignature
-): ObjEntity {
+) {
   const entity = buildEntityFromProperty(p);
   const apiInterface = findApi(entry, entity.type) as ApiInterface;
   const members = resolveInterfaceMembers(entry, apiInterface);
 
-  return {...entity, members};
+  return buildObjEntity({...entity, members});
 }
 
 function buildEntityFromPropertyAndResolveTypeAlias(
   entry: ApiEntryPoint,
   p: ApiPropertySignature
-): Entity {
+) {
   const entity = buildEntityFromProperty(p);
   const alias = p.propertyTypeExcerpt.text;
   const typeAlias = findApi(entry, alias) as ApiTypeAlias;
   const type = typeAlias.typeExcerpt.text;
 
-  return {...entity, type};
+  return buildEntity({...entity, type});
 }
 
 function isMethodSignature(m: ApiItem): m is ApiMethodSignature {
   return m.kind === ApiItemKind.MethodSignature;
 }
 
-function resolveMethodSignature(m: ApiMethodSignature): FuncEntity {
+function resolveMethodSignature(m: ApiMethodSignature) {
   const params = m.parameters.map((p) => buildEntityFromParam(p));
   const returnType = m.returnTypeExcerpt.text;
 
-  return {
+  return buildFuncEntity({
     name: m.displayName,
     desc: m.tsdocComment?.emitAsTsdoc() || '',
     params,
     returnType,
-  };
+  });
 }
 
-function buildEntityFromParam(p: Parameter): Entity {
-  return {
+function buildEntityFromParam(p: Parameter) {
+  return buildEntity({
     name: p.name,
     desc: '',
     isOptional: false,
     type: p.parameterTypeExcerpt.text,
-  };
+  });
 }
