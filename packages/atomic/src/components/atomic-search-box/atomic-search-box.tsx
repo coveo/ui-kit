@@ -17,6 +17,7 @@ import SearchIcon from 'coveo-styleguide/resources/icons/svg/search.svg';
  *
  * @part submit-button - The search box submit button
  * @part input - The search box input
+ * @part input-wrapper - The wrapper for the searchbox input
  * @part clear-button - The search box input's clear button
  * @part suggestions - The list of suggestions
  * @part suggestion - The suggestion
@@ -91,7 +92,7 @@ export class AtomicSearchBox {
       onBlur: () => {
         setTimeout(() => this.searchBox.hideSuggestions(), 100);
       },
-      activeClass: 'active',
+      activeClass: 'bg-primary text-on-primary',
       activePartName: 'active-suggestion',
     });
   }
@@ -123,14 +124,15 @@ export class AtomicSearchBox {
   }
 
   private get submitButton() {
+    const roundedClasses = this.leadingSubmitButton
+      ? ' rounded-l-lg'
+      : 'rounded-r-lg';
+
     return (
       <button
         type="button"
         part="submit-button"
-        class={
-          'submit-button bg-transparent border-0 focus:outline-none bg-primary p-0 ' +
-          (this.leadingSubmitButton ? ' rounded-l-lg' : 'rounded-r-lg')
-        }
+        class={`submit-button border-0 focus:outline-none bg-primary p-0 ${roundedClasses}`}
         aria-label={this.strings.search()}
         onClick={() => this.searchBox.submit()}
       >
@@ -205,29 +207,33 @@ export class AtomicSearchBox {
     });
   }
 
+  private renderInputWrapper() {
+    const roundedClasses = this.leadingSubmitButton
+      ? 'border-l-0 rounded-r-lg'
+      : 'border-r-0 rounded-l-lg';
+    return (
+      <div
+        part="input-wrapper"
+        class={`input-wrapper flex flex-grow items-center border border-divider ${roundedClasses}`}
+        ref={(el) => (this.containerRef = el as HTMLElement)}
+      >
+        {this.input}
+        {this.clearButton}
+      </div>
+    );
+  }
+
   public render() {
     return (
-      <div>
-        <div class="search-box box-border w-full lg:w-80 flex flex-row align-items-center">
+      <div class="relative">
+        <div class="search-box box-border w-full flex">
           {this.leadingSubmitButton && this.submitButton}
-          <div
-            class={
-              'input-wrapper flex flex-row flex-grow align-items-center apply-border-on-background ' +
-              (this.leadingSubmitButton
-                ? 'border-l-0 rounded-r-lg'
-                : 'border-r-0 rounded-l-lg')
-            }
-            ref={(el) => (this.containerRef = el as HTMLElement)}
-          >
-            {this.input}
-            {this.clearButton}
-          </div>
+          {this.renderInputWrapper()}
           {!this.leadingSubmitButton && this.submitButton}
         </div>
-
         <ul
           part="suggestions"
-          class="suggestions box-border w-full lg:w-80 p-0 my-0 flex flex-col apply-border-on-background border-t-0 rounded-b list-none"
+          class="suggestions box-border w-full p-0 my-0 flex flex-col bg-background border border-divider border-t-0 rounded-b list-none absolute"
           ref={(el) => (this.valuesRef = el as HTMLElement)}
         >
           {this.suggestions}

@@ -13,13 +13,13 @@
   height: var(--atomic-search-box-height, 48px);
 }
 
+.suggestion {
+  top: var(--atomic-search-box-height, 48px);
+}
+
 .search-box:focus-within .input-wrapper, .search-box:focus-within .submit-button {
   border-bottom-right-radius: 0;
   border-bottom-left-radius: 0;
-}
-
-.suggestion.active-suggestion {
-  @apply bg-gray-200
 }
 
 .suggestions:empty {
