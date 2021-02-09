@@ -40,7 +40,7 @@ function resolveControllerFunction(
 
   return {
     name: fn.name,
-    desc: '',
+    desc: fn.tsdocComment?.emitAsTsdoc() || '',
     params,
     returnType,
   };
