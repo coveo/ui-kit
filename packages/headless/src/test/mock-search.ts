@@ -4,7 +4,7 @@ import {logSearchboxSubmit} from '../features/query/query-analytics-actions';
 import {ExecuteSearchThunkReturn} from '../features/search/search-actions';
 
 export function buildMockSearch(
-  config: Partial<SearchState & ExecuteSearchThunkReturn> = {}
+  config: Partial<SearchState> = {}
 ): ExecuteSearchThunkReturn {
   return {
     response: buildMockSearchResponse(),
@@ -12,7 +12,7 @@ export function buildMockSearch(
     queryExecuted: '',
     error: null,
     automaticallyCorrected: false,
-    analyticsActions: [logSearchboxSubmit()],
+    analyticsAction: logSearchboxSubmit(),
     ...config,
   };
 }

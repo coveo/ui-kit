@@ -5,7 +5,6 @@ import {
 import {buildMockSearch} from '../test/mock-search';
 import {buildMockSearchAppEngine} from '../test/mock-engine';
 import {logSearchboxSubmit} from '../features/query/query-analytics-actions';
-import {logDidYouMeanAutomatic} from '../features/did-you-mean/did-you-mean-analytics-actions';
 
 describe('analytics middleware', () => {
   beforeEach(() => {
@@ -25,7 +24,7 @@ describe('analytics middleware', () => {
   it('correctly pass through a search action with no analytics payload', () => {
     const e = buildMockSearchAppEngine();
     const {dispatch, mockStore: store} = e;
-    const {analyticsActions, ...mockSearchWithoutAnalytics} = buildMockSearch();
+    const {analyticsAction, ...mockSearchWithoutAnalytics} = buildMockSearch();
 
     const action = executeSearch.fulfilled(
       mockSearchWithoutAnalytics as ExecuteSearchThunkReturn,
@@ -65,26 +64,6 @@ describe('analytics middleware', () => {
     expect(store.getActions()[1].type).toBe(logSearchboxSubmit.pending.type);
   });
 
-  it('correctly queue log multiple analytics after search action', () => {
-    const e = buildMockSearchAppEngine();
-    const {dispatch, mockStore: store} = e;
-    const mockSearch = buildMockSearch({
-      analyticsActions: [logSearchboxSubmit(), logDidYouMeanAutomatic()],
-    });
-
-    const action = executeSearch.fulfilled(
-      mockSearch,
-      '',
-      logSearchboxSubmit()
-    );
-    dispatch(action);
-    expect(store.getActions()[0].type).toBe(executeSearch.fulfilled.type);
-    expect(store.getActions()[1].type).toBe(logSearchboxSubmit.pending.type);
-    expect(store.getActions()[2].type).toBe(
-      logDidYouMeanAutomatic.pending.type
-    );
-  });
-
   it('correctly remove analytics payload from action', () => {
     const e = buildMockSearchAppEngine();
     const {dispatch, mockStore: store} = e;
@@ -97,6 +76,6 @@ describe('analytics middleware', () => {
     );
     dispatch(action);
     expect(store.getActions()[0].payload).toBeDefined();
-    expect(store.getActions()[0].payload.analyticsActions).not.toBeDefined();
+    expect(store.getActions()[0].payload.analyticsAction).not.toBeDefined();
   });
 });

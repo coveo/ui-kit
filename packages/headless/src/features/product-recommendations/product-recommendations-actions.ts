@@ -28,7 +28,7 @@ export type StateNeededByGetProductRecommendations = ConfigurationSection &
 
 export interface GetProductRecommendationsThunkReturn {
   recommendations: ProductRecommendation[];
-  analyticsActions: SearchAction[];
+  analyticsAction: SearchAction;
   searchUid: string;
   duration: number;
 }
@@ -95,7 +95,7 @@ export const getProductRecommendations = createAsyncThunk<
     }
     return {
       recommendations: fetched.success.results.map(mapResultToProductResult),
-      analyticsActions: [logProductRecommendations()],
+      analyticsAction: logProductRecommendations(),
       searchUid: fetched.success.searchUid,
       duration,
     };
