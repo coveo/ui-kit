@@ -22,7 +22,6 @@ import {
   logFacetShowLess,
 } from '../../../features/facets/facet-set/facet-set-analytics-actions';
 import {buildFacetSearch} from '../facet-search/specific/headless-facet-search';
-import {FacetSearchOptions} from '../../../features/facets/facet-search-set/facet-search-request-options';
 import {FacetSortCriterion} from '../../../features/facets/facet-set/interfaces/request';
 import {updateFacetOptions} from '../../../features/facet-options/facet-options-actions';
 import {
@@ -36,11 +35,15 @@ import {executeToggleFacetSelect} from '../../../features/facets/facet-set/facet
 import {validateOptions} from '../../../utils/validate-payload';
 import {defaultFacetOptions} from '../../../features/facets/facet-set/facet-set-slice';
 import {defaultFacetSearchOptions} from '../../../features/facets/facet-search-set/facet-search-reducer-helpers';
-import {FacetOptions, facetOptionsSchema} from './headless-facet-options';
+import {
+  FacetOptions,
+  facetOptionsSchema,
+  FacetSearchOptions,
+} from './headless-facet-options';
 import {determineFacetId} from '../_common/facet-id-determinor';
 import {FacetValueState} from '../../../features/facets/facet-api/value';
 
-export {FacetOptions};
+export {FacetOptions, FacetSearchOptions, FacetValueState};
 
 export interface FacetProps {
   /** The options for the `Facet` controller. */
@@ -190,10 +193,7 @@ export function buildFacet(
 
   const createFacetSearch = () => {
     const {facetId, facetSearch} = options;
-    const facetSearchOptions: FacetSearchOptions = {
-      facetId,
-      ...facetSearch,
-    };
+    const facetSearchOptions = {facetId, ...facetSearch};
 
     return buildFacetSearch(engine, {options: facetSearchOptions});
   };

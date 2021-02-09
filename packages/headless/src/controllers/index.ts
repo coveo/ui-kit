@@ -27,11 +27,13 @@ export {
 
 export {
   FacetOptions,
+  FacetSearchOptions,
   FacetProps,
   FacetState,
   Facet,
   buildFacet,
   FacetValue,
+  FacetValueState,
   FacetSearch,
   FacetSearchState,
   SpecificFacetSearchResult,
