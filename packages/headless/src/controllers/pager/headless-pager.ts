@@ -57,6 +57,9 @@ const initialStateSchema = new Schema({
   page: new NumberValue({min: 1}),
 });
 
+/**
+ * The `Pager` controller allows to navigate through the different result pages.
+ */
 export interface Pager extends Controller {
   /**
    * Updates the results to those on the passed page.
@@ -101,9 +104,7 @@ export interface PagerState {
   hasNextPage: boolean;
 }
 
-/**
- * The `Pager` controller allows to navigate through the different result pages.
- */
+/** Creates a `Pager` controller instance. */
 export function buildPager(
   engine: Engine<PaginationSection & ConfigurationSection>,
   props: PagerProps = {}

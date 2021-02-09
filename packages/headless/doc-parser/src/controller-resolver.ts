@@ -37,7 +37,7 @@ function resolveControllerFunction(entry: ApiEntryPoint, fn: ApiFunction) {
 
   return buildFuncEntity({
     name: fn.name,
-    desc: '',
+    desc: fn.tsdocComment?.emitAsTsdoc() || '',
     params,
     returnType,
   });
