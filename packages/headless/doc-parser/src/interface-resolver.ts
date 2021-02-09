@@ -5,6 +5,7 @@ import {
   ApiItemKind,
   ApiMethodSignature,
   ApiPropertySignature,
+  ApiTypeAlias,
   ExcerptTokenKind,
   Parameter,
 } from '@microsoft/api-extractor-model';
@@ -34,19 +35,39 @@ function isPropertySignature(item: ApiItem): item is ApiPropertySignature {
 
 function resolvePropertySignature(
   entry: ApiEntryPoint,
-  m: ApiPropertySignature
+  p: ApiPropertySignature
 ) {
-  return shouldResolvePropertyType(m)
-    ? buildObjEntityFromProperty(entry, m)
-    : buildEntityFromProperty(m);
+  if (isRecordType(p)) {
+    return buildEntityFromProperty(p);
+  }
+
+  if (isPropertyUsingTypeAlias(p)) {
+    return buildEntityFromPropertyAndResolveTypeAlias(entry, p);
+  }
+
+  if (isReference(p)) {
+    return buildObjEntityFromProperty(entry, p);
+  }
+
+  return buildEntityFromProperty(p);
 }
 
-function shouldResolvePropertyType(m: ApiPropertySignature) {
-  const {kind, text} = m.propertyTypeExcerpt.spannedTokens[0];
-  const isReference = kind === ExcerptTokenKind.Reference;
+function isPropertyUsingTypeAlias(m: ApiPropertySignature) {
+  const {canonicalReference} = m.propertyTypeExcerpt.spannedTokens[0];
+  const canonicalRef = canonicalReference?.toString() || '';
+  return /:type$/.test(canonicalRef);
+}
+
+function isRecordType(p: ApiPropertySignature) {
+  const {text} = p.propertyTypeExcerpt.spannedTokens[0];
   const isRecord = text === 'Record';
 
-  return isReference && !isRecord;
+  return isReference(p) && isRecord;
+}
+
+function isReference(m: ApiPropertySignature) {
+  const {kind} = m.propertyTypeExcerpt.spannedTokens[0];
+  return kind === ExcerptTokenKind.Reference;
 }
 
 function buildEntityFromProperty(p: ApiPropertySignature): Entity {
@@ -67,6 +88,18 @@ function buildObjEntityFromProperty(
   const members = resolveInterfaceMembers(entry, apiInterface);
 
   return {...entity, members};
+}
+
+function buildEntityFromPropertyAndResolveTypeAlias(
+  entry: ApiEntryPoint,
+  p: ApiPropertySignature
+): Entity {
+  const entity = buildEntityFromProperty(p);
+  const alias = p.propertyTypeExcerpt.text;
+  const typeAlias = findApi(entry, alias) as ApiTypeAlias;
+  const type = typeAlias.typeExcerpt.text;
+
+  return {...entity, type};
 }
 
 function isMethodSignature(m: ApiItem): m is ApiMethodSignature {

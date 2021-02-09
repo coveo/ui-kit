@@ -6,6 +6,7 @@ import {
 } from '@microsoft/api-extractor-model';
 import {buildMockApiInterface} from '../mocks/mock-api-interface';
 import {buildMockApiPropertySignature} from '../mocks/mock-api-property-signature';
+import {buildMockApiTypeAlias} from '../mocks/mock-api-type-alias';
 import {buildMockEntity} from '../mocks/mock-entity';
 import {buildMockEntryPoint} from '../mocks/mock-entry-point';
 import {buildMockFuncEntity} from '../mocks/mock-func-entity';
@@ -160,6 +161,45 @@ describe('#resolveInterfaceMembers', () => {
       name: 'captions',
       type: 'Record<string, string>',
       isOptional: true,
+    });
+
+    expect(result).toEqual([entity]);
+  });
+
+  it('when the type is a type alias, it resolves the alias', () => {
+    const entry = buildMockEntryPoint();
+    const apiInterface = buildMockApiInterface({name: 'FacetValue'});
+    const prop = buildMockApiPropertySignature({
+      name: 'state',
+      excerptTokens: [
+        buildContentExcerptToken('state: '),
+        buildReferenceExcerptToken(
+          'FacetValueState',
+          '@coveo/headless!~FacetValueState:type'
+        ),
+        buildContentExcerptToken(';'),
+      ],
+      propertyTypeTokenRange: {startIndex: 1, endIndex: 2},
+    });
+
+    const typeAlias = buildMockApiTypeAlias({
+      name: 'FacetValueState',
+      excerptTokens: [
+        buildContentExcerptToken('declare type FacetValueState = '),
+        buildContentExcerptToken("'idle' | 'selected'"),
+        buildContentExcerptToken(';'),
+      ],
+      typeTokenRange: {startIndex: 1, endIndex: 2},
+    });
+
+    apiInterface.addMember(prop);
+    entry.addMember(apiInterface);
+    entry.addMember(typeAlias);
+
+    const result = resolveInterfaceMembers(entry, apiInterface);
+    const entity = buildMockEntity({
+      name: 'state',
+      type: "'idle' | 'selected'",
     });
 
     expect(result).toEqual([entity]);
