@@ -12,7 +12,7 @@ export const ResultLink: FunctionComponent<LinkProps> = (props) => {
     props.result
   );
 
-  useEffect(() => resultSelectionHelpers.cancelPendingSelect(), []);
+  useEffect(() => () => resultSelectionHelpers.cancelPendingSelect(), []);
 
   return (
     <a
