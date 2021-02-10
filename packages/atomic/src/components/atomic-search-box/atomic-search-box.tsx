@@ -41,17 +41,14 @@ export class AtomicSearchBox {
   };
   /**
    * Maximum number of suggestions to display
-   * @default 5
    */
   @Prop() numberOfSuggestions = 5;
   /**
    * The placeholder for the search box input
-   * @default ''
    */
   @Prop() placeholder = '';
   /**
    * Whether the submit button should be placed before the input
-   * @default false
    */
   @Prop() leadingSubmitButton = false;
   @Prop({reflect: true, attribute: 'data-id'}) public _id = randomID(
@@ -124,9 +121,13 @@ export class AtomicSearchBox {
   }
 
   private get submitButton() {
-    const roundedClasses = this.leadingSubmitButton
-      ? ' rounded-l-lg'
+    let roundedClasses = this.leadingSubmitButton
+      ? 'rounded-l-lg'
       : 'rounded-r-lg';
+
+    if (this.searchBoxState.suggestions.length) {
+      roundedClasses += ' rounded-bl-none rounded-br-none';
+    }
 
     return (
       <button
@@ -208,9 +209,14 @@ export class AtomicSearchBox {
   }
 
   private renderInputWrapper() {
-    const roundedClasses = this.leadingSubmitButton
+    let roundedClasses = this.leadingSubmitButton
       ? 'border-l-0 rounded-r-lg'
       : 'border-r-0 rounded-l-lg';
+
+    if (this.searchBoxState.suggestions.length) {
+      roundedClasses += ' rounded-bl-none rounded-br-none';
+    }
+
     return (
       <div
         part="input-wrapper"
@@ -233,7 +239,7 @@ export class AtomicSearchBox {
         </div>
         <ul
           part="suggestions"
-          class="suggestions box-border w-full p-0 my-0 flex flex-col bg-background border border-divider border-t-0 rounded-b list-none absolute"
+          class="suggestions box-border w-full p-0 my-0 flex flex-col bg-background border border-divider border-t-0 rounded-b list-none absolute z-50"
           ref={(el) => (this.valuesRef = el as HTMLElement)}
         >
           {this.suggestions}
