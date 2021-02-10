@@ -1,5 +1,5 @@
 {
-  "ignorePatterns": ["dist"],
+  "ignorePatterns": ["dist", "temp"],
   "rules": {
     "node/no-unpublished-import": [
       "error",

@@ -27,11 +27,6 @@ import {buildProductRecommendationsRequest} from '../../features/product-recomme
 import {buildMockProductRecommendationsState} from '../../test/mock-product-recommendations-state';
 import {getProductRecommendationsInitialState} from '../../features/product-recommendations/product-recommendations-state';
 import pino from 'pino';
-import {
-  NoopPostprocessFacetSearchResponseMiddleware,
-  NoopPostprocessQuerySuggestResponseMiddleware,
-  NoopPostprocessSearchResponseMiddleware,
-} from './search-api-client-middleware';
 import {buildMockSearchResponse} from '../../test/mock-search-response';
 import {buildMockQuerySuggestCompletion} from '../../test/mock-query-suggest-completion';
 import {buildMockFacetSearchResponse} from '../../test/mock-facet-search-response';
@@ -39,6 +34,8 @@ import {SearchResponseSuccess} from './search/search-response';
 import {QuerySuggestSuccessResponse} from './query-suggest/query-suggest-response';
 import {buildMockCategoryFacetSlice} from '../../test/mock-category-facet-slice';
 import {buildSearchRequest} from '../../features/search/search-actions';
+import {buildMockSearchAPIClient} from '../../test/mock-search-api-client';
+import {NoopPreprocessRequest} from '../preprocess-request';
 
 jest.mock('../platform-client');
 describe('search api client', () => {
@@ -48,13 +45,9 @@ describe('search api client', () => {
   let state: SearchAppState;
 
   function buildSearchAPIClient(options?: Partial<SearchAPIClientOptions>) {
-    searchAPIClient = new SearchAPIClient({
-      logger,
+    searchAPIClient = buildMockSearchAPIClient({
       renewAccessToken,
-      preprocessRequest: NoopPreprocessRequestMiddleware,
-      postprocessSearchResponseMiddleware: NoopPostprocessSearchResponseMiddleware,
-      postprocessQuerySuggestResponseMiddleware: NoopPostprocessQuerySuggestResponseMiddleware,
-      postprocessFacetSearchResponseMiddleware: NoopPostprocessFacetSearchResponseMiddleware,
+      logger,
       ...options,
     });
   }
@@ -202,7 +195,8 @@ describe('search api client', () => {
           searchHub: state.searchHub,
           visitorId: expect.any(String),
         },
-        preprocessRequest: NoopPreprocessRequestMiddleware,
+        preprocessRequest: NoopPreprocessRequest,
+        deprecatedPreprocessRequest: NoopPreprocessRequestMiddleware,
       };
 
       expect(request).toMatchObject(expectedRequest);
@@ -243,7 +237,8 @@ describe('search api client', () => {
           pipeline: state.pipeline,
           searchHub: state.searchHub,
         },
-        preprocessRequest: NoopPreprocessRequestMiddleware,
+        preprocessRequest: NoopPreprocessRequest,
+        deprecatedPreprocessRequest: NoopPreprocessRequestMiddleware,
       };
 
       expect(request).toMatchObject(expectedRequest);
@@ -276,7 +271,8 @@ describe('search api client', () => {
           searchHub: state.searchHub,
           actionsHistory: expect.any(Array),
         },
-        preprocessRequest: NoopPreprocessRequestMiddleware,
+        preprocessRequest: NoopPreprocessRequest,
+        deprecatedPreprocessRequest: NoopPreprocessRequestMiddleware,
       };
 
       expect(request).toMatchObject(expectedRequest);
@@ -399,7 +395,8 @@ describe('search api client', () => {
             searchHub: recommendationState.searchHub,
             actionsHistory: expect.any(Array),
           },
-          preprocessRequest: NoopPreprocessRequestMiddleware,
+          preprocessRequest: NoopPreprocessRequest,
+          deprecatedPreprocessRequest: NoopPreprocessRequestMiddleware,
         };
         const request = (PlatformClient.call as jest.Mock).mock.calls[0][0];
 
@@ -456,7 +453,8 @@ describe('search api client', () => {
                   .category,
             },
           },
-          preprocessRequest: NoopPreprocessRequestMiddleware,
+          preprocessRequest: NoopPreprocessRequest,
+          deprecatedPreprocessRequest: NoopPreprocessRequestMiddleware,
         };
 
         expect(request).toMatchObject(expectedRequest);

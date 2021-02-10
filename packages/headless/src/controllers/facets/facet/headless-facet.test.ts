@@ -56,6 +56,10 @@ describe('facet', () => {
     expect(facet).toBeTruthy();
   });
 
+  it('exposes a #subscribe method', () => {
+    expect(facet.subscribe).toBeTruthy();
+  });
+
   it('it calls #determineFacetId with the correct params', () => {
     jest.spyOn(FacetIdDeterminor, 'determineFacetId');
 

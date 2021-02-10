@@ -1,0 +1,20 @@
+{
+  "metadata": {
+    "toolPackage": "@microsoft/api-extractor",
+    "toolVersion": "7.13.0",
+    "schemaVersion": 1003,
+    "oldestForwardsCompatibleVersion": 1001
+  },
+  "kind": "Package",
+  "canonicalReference": "@coveo/headless!",
+  "docComment": "",
+  "name": "@coveo/headless",
+  "members": [
+    {
+      "kind": "EntryPoint",
+      "canonicalReference": "@coveo/headless!",
+      "name": "",
+      "members": []
+    }
+  ]
+}
