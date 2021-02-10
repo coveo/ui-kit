@@ -1,4 +1,4 @@
-import {buildResultSelectionHelpers, Engine, Result} from '@coveo/headless';
+import {buildResultLinkAnalytics, Engine, Result} from '@coveo/headless';
 
 /**
  * Binds the logging of document
@@ -14,15 +14,17 @@ export function bindLogDocumentOpenOnResult(
   resultElement: Element,
   selector?: string
 ) {
-  const resultSelectionHelpers = buildResultSelectionHelpers(engine, result);
+  const resultLinkAnalytics = buildResultLinkAnalytics(engine, {
+    options: {result},
+  });
 
   const eventsMap: Record<string, EventListenerOrEventListenerObject> = {
-    contextmenu: () => resultSelectionHelpers.select(),
-    click: () => resultSelectionHelpers.select(),
-    mouseup: () => resultSelectionHelpers.select(),
-    mousedown: () => resultSelectionHelpers.select(),
-    touchstart: () => resultSelectionHelpers.beginDelayedSelect(),
-    touchend: () => resultSelectionHelpers.cancelPendingSelect(),
+    contextmenu: () => resultLinkAnalytics.select(),
+    click: () => resultLinkAnalytics.select(),
+    mouseup: () => resultLinkAnalytics.select(),
+    mousedown: () => resultLinkAnalytics.select(),
+    touchstart: () => resultLinkAnalytics.beginDelayedSelect(),
+    touchend: () => resultLinkAnalytics.cancelPendingSelect(),
   };
   const elements = resultElement.querySelectorAll(
     selector || `a[href='${result.clickUri}']`

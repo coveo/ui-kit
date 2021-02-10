@@ -1,28 +1,42 @@
 import {Result} from '../../api/search/search/result';
 import {Engine} from '../../app/headless-engine';
-import {ResultAnalyticsActions} from '../../features/analytics';
+import {logDocumentOpen} from '../../features/result/result-analytics-actions';
 
 // 1 second is a reasonable amount of time to catch most longpress actions
 const defaultDelay = 1000;
 
-/**
- * Helpers that more easily allow sending analytics when a search result is selected.
- */
-export type ResultSelectionHelpers = ReturnType<
-  typeof buildResultSelectionHelpers
->;
+type ResultLinkAnalyticsOptions = {
+  /**
+   * The result for which to log analytics.
+   */
+  result: Result;
+  /**
+   * The amount of time to wait before selecting the result after calling `beginDelayedSelect`.
+   */
+  delay?: number;
+};
+
+type ResultLinkAnalyticsProps = {
+  /** The options for the `ResultLinkAnalytics` controller. */
+  options: ResultLinkAnalyticsOptions;
+};
 
 /**
- * Creates helpers that more easily allow sending analytics when a search result is selected.
+ * The `ResultLinkAnalytics` headless controller helps more easily send analytics when a search result is selected.
  */
-export function buildResultSelectionHelpers(engine: Engine, result: Result) {
+export type ResultLinkAnalytics = ReturnType<typeof buildResultLinkAnalytics>;
+
+export function buildResultLinkAnalytics(
+  engine: Engine,
+  props: ResultLinkAnalyticsProps
+) {
   let wasOpened = false;
   const logAnalyticsIfNeverOpened = () => {
     if (wasOpened) {
       return;
     }
     wasOpened = true;
-    engine.dispatch(ResultAnalyticsActions.logDocumentOpen(result));
+    engine.dispatch(logDocumentOpen(props.options.result));
   };
 
   let longPressTimer: NodeJS.Timeout;
@@ -44,11 +58,12 @@ export function buildResultSelectionHelpers(engine: Engine, result: Result) {
      * This is especially useful in a DOM context to log analytics when a user long presses.
      *
      * In a DOM context, it's recommended to execute this on the `touchstart` event.
-     *
-     * @param delay The amount of time to wait before selecting the result.
      */
-    beginDelayedSelect: (delay = defaultDelay) => {
-      longPressTimer = setTimeout(logAnalyticsIfNeverOpened, delay);
+    beginDelayedSelect: () => {
+      longPressTimer = setTimeout(
+        logAnalyticsIfNeverOpened,
+        props.options.delay ?? defaultDelay
+      );
     },
     /**
      * Cancels the pending selection caused by `beginDelayedSelect`.

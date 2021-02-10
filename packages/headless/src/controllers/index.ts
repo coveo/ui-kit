@@ -81,9 +81,9 @@ export {
 } from './result-list/headless-result-list';
 
 export {
-  ResultSelectionHelpers,
-  buildResultSelectionHelpers,
-} from './result-list/headless-result-selection-helpers';
+  ResultLinkAnalytics,
+  buildResultLinkAnalytics,
+} from './result-list/headless-result-link-analytics';
 
 export {
   ResultsPerPageInitialState,

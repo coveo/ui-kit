@@ -1,4 +1,4 @@
-import {buildResultSelectionHelpers, Result} from '@coveo/headless';
+import {buildResultLinkAnalytics, Result} from '@coveo/headless';
 import {FunctionComponent, useEffect} from 'react';
 import {engine} from '../../engine';
 
@@ -7,22 +7,21 @@ interface LinkProps {
 }
 
 export const ResultLink: FunctionComponent<LinkProps> = (props) => {
-  const resultSelectionHelpers = buildResultSelectionHelpers(
-    engine,
-    props.result
-  );
+  const resultLinkAnalytics = buildResultLinkAnalytics(engine, {
+    options: {result: props.result},
+  });
 
-  useEffect(() => () => resultSelectionHelpers.cancelPendingSelect(), []);
+  useEffect(() => () => resultLinkAnalytics.cancelPendingSelect(), []);
 
   return (
     <a
       href={props.result.clickUri}
-      onClick={() => resultSelectionHelpers.select()}
-      onContextMenu={() => resultSelectionHelpers.select()}
-      onMouseDown={() => resultSelectionHelpers.select()}
-      onMouseUp={() => resultSelectionHelpers.select()}
-      onTouchStart={() => resultSelectionHelpers.beginDelayedSelect()}
-      onTouchEnd={() => resultSelectionHelpers.cancelPendingSelect()}
+      onClick={() => resultLinkAnalytics.select()}
+      onContextMenu={() => resultLinkAnalytics.select()}
+      onMouseDown={() => resultLinkAnalytics.select()}
+      onMouseUp={() => resultLinkAnalytics.select()}
+      onTouchStart={() => resultLinkAnalytics.beginDelayedSelect()}
+      onTouchEnd={() => resultLinkAnalytics.cancelPendingSelect()}
     >
       {props.children}
     </a>
