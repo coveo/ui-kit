@@ -5,7 +5,7 @@ import {
   Parameter,
 } from '@microsoft/api-extractor-model';
 import {findApi} from './api-finder';
-import {Entity, FuncEntity, ObjEntity} from './entity';
+import {buildFuncEntity, buildObjEntity, FuncEntity} from './entity';
 import {
   buildEntityFromParam,
   buildParamEntityBasedOnKind,
@@ -26,11 +26,8 @@ export function resolveController(
   return {initializer};
 }
 
-function resolveControllerFunction(
-  entry: ApiEntryPoint,
-  fn: ApiFunction
-): FuncEntity {
-  const params: Entity[] = fn.parameters.map((p, index) =>
+function resolveControllerFunction(entry: ApiEntryPoint, fn: ApiFunction) {
+  const params = fn.parameters.map((p, index) =>
     resolveControllerParam(entry, p, index)
   );
   const returnTypeText = fn.returnTypeExcerpt.text;
@@ -38,12 +35,12 @@ function resolveControllerFunction(
 
   const returnType = buildObjEntityFromInterface(entry, returnTypeInterface);
 
-  return {
+  return buildFuncEntity({
     name: fn.name,
     desc: fn.tsdocComment?.emitAsTsdoc() || '',
     params,
     returnType,
-  };
+  });
 }
 
 function resolveControllerParam(
@@ -60,15 +57,15 @@ function resolveControllerParam(
 function buildObjEntityFromInterface(
   entryPoint: ApiEntryPoint,
   apiInterface: ApiInterface
-): ObjEntity {
+) {
   const name = apiInterface.name;
   const members = resolveInterfaceMembers(entryPoint, apiInterface);
 
-  return {
+  return buildObjEntity({
     name,
     type: name,
     desc: apiInterface.tsdocComment?.emitAsTsdoc() || '',
     isOptional: false,
     members,
-  };
+  });
 }

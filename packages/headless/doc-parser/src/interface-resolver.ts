@@ -5,11 +5,17 @@ import {
   ApiItemKind,
   ApiMethodSignature,
   ApiPropertySignature,
+  ApiTypeAlias,
   ExcerptTokenKind,
   Parameter,
 } from '@microsoft/api-extractor-model';
 import {findApi} from './api-finder';
-import {AnyEntity, Entity, FuncEntity, ObjEntity} from './entity';
+import {
+  AnyEntity,
+  buildEntity,
+  buildFuncEntity,
+  buildObjEntity,
+} from './entity';
 
 export function resolveInterfaceMembers(
   entry: ApiEntryPoint,
@@ -34,57 +40,95 @@ function isPropertySignature(item: ApiItem): item is ApiPropertySignature {
 
 function resolvePropertySignature(
   entry: ApiEntryPoint,
-  m: ApiPropertySignature
+  p: ApiPropertySignature
 ) {
-  const {kind} = m.propertyTypeExcerpt.spannedTokens[0];
-  const isReference = kind === ExcerptTokenKind.Reference;
+  if (isRecordType(p)) {
+    return buildEntityFromProperty(p);
+  }
 
-  return isReference
-    ? buildObjEntityFromProperty(entry, m)
-    : buildEntityFromProperty(m);
+  if (isPropertyUsingTypeAlias(p)) {
+    return buildEntityFromPropertyAndResolveTypeAlias(entry, p);
+  }
+
+  if (isReference(p)) {
+    return buildObjEntityFromProperty(entry, p);
+  }
+
+  return buildEntityFromProperty(p);
 }
 
-function buildEntityFromProperty(p: ApiPropertySignature): Entity {
-  return {
+function isPropertyUsingTypeAlias(m: ApiPropertySignature) {
+  const {canonicalReference} = m.propertyTypeExcerpt.spannedTokens[0];
+  const canonicalRef = canonicalReference?.toString() || '';
+  return /:type$/.test(canonicalRef);
+}
+
+function isRecordType(p: ApiPropertySignature) {
+  const {text} = p.propertyTypeExcerpt.spannedTokens[0];
+  const isRecord = text === 'Record';
+
+  return isReference(p) && isRecord;
+}
+
+function isReference(m: ApiPropertySignature) {
+  const {kind} = m.propertyTypeExcerpt.spannedTokens[0];
+  return kind === ExcerptTokenKind.Reference;
+}
+
+function buildEntityFromProperty(p: ApiPropertySignature) {
+  return buildEntity({
     name: p.name,
     desc: p.tsdocComment?.emitAsTsdoc() || '',
     isOptional: p.isOptional,
     type: p.propertyTypeExcerpt.text,
-  };
+  });
 }
 
 function buildObjEntityFromProperty(
   entry: ApiEntryPoint,
   p: ApiPropertySignature
-): ObjEntity {
-  const entity = buildEntityFromProperty(p);
-  const apiInterface = findApi(entry, entity.type) as ApiInterface;
+) {
+  const type = p.propertyTypeExcerpt.text;
+  const apiInterface = findApi(entry, type) as ApiInterface;
   const members = resolveInterfaceMembers(entry, apiInterface);
+  const entity = buildEntityFromProperty(p);
 
-  return {...entity, members};
+  return buildObjEntity({...entity, members});
+}
+
+function buildEntityFromPropertyAndResolveTypeAlias(
+  entry: ApiEntryPoint,
+  p: ApiPropertySignature
+) {
+  const entity = buildEntityFromProperty(p);
+  const alias = p.propertyTypeExcerpt.text;
+  const typeAlias = findApi(entry, alias) as ApiTypeAlias;
+  const type = typeAlias.typeExcerpt.text;
+
+  return buildEntity({...entity, type});
 }
 
 function isMethodSignature(m: ApiItem): m is ApiMethodSignature {
   return m.kind === ApiItemKind.MethodSignature;
 }
 
-function resolveMethodSignature(m: ApiMethodSignature): FuncEntity {
+function resolveMethodSignature(m: ApiMethodSignature) {
   const params = m.parameters.map((p) => buildEntityFromParam(p));
   const returnType = m.returnTypeExcerpt.text;
 
-  return {
+  return buildFuncEntity({
     name: m.displayName,
     desc: m.tsdocComment?.emitAsTsdoc() || '',
     params,
     returnType,
-  };
+  });
 }
 
-function buildEntityFromParam(p: Parameter): Entity {
-  return {
+function buildEntityFromParam(p: Parameter) {
+  return buildEntity({
     name: p.name,
     desc: '',
     isOptional: false,
     type: p.parameterTypeExcerpt.text,
-  };
+  });
 }

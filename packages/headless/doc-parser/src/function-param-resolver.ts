@@ -5,7 +5,7 @@ import {
   Parameter,
 } from '@microsoft/api-extractor-model';
 import {findApi} from './api-finder';
-import {Entity, ObjEntity} from './entity';
+import {buildEntity, buildObjEntity} from './entity';
 import {resolveInterfaceMembers} from './interface-resolver';
 
 export function buildParamEntityBasedOnKind(
@@ -20,22 +20,20 @@ export function buildParamEntityBasedOnKind(
     : buildEntityFromParam(p);
 }
 
-export function buildEntityFromParam(p: Parameter): Entity {
-  return {
+export function buildEntityFromParam(p: Parameter) {
+  return buildEntity({
     name: p.name,
     desc: '',
     isOptional: false,
     type: p.parameterTypeExcerpt.text,
-  };
+  });
 }
 
-function buildObjEntityFromParam(
-  entryPoint: ApiEntryPoint,
-  p: Parameter
-): ObjEntity {
-  const entity = buildEntityFromParam(p);
-  const apiInterface = findApi(entryPoint, entity.type) as ApiInterface;
+function buildObjEntityFromParam(entryPoint: ApiEntryPoint, p: Parameter) {
+  const type = p.parameterTypeExcerpt.text;
+  const apiInterface = findApi(entryPoint, type) as ApiInterface;
   const members = resolveInterfaceMembers(entryPoint, apiInterface);
+  const entity = buildEntityFromParam(p);
 
-  return {...entity, members};
+  return buildObjEntity({...entity, members});
 }
