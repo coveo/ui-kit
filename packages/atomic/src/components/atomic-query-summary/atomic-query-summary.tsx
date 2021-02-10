@@ -67,11 +67,7 @@ export class AtomicQuerySummary implements InitializableComponent {
   @State() public error!: Error;
 
   /**
-   * Specifies wether to display a message when no results are returned.
-   */
-  @Prop() enableNoResult = true; // TODO: should be true only if atomic-no-result exists
-  /**
-   * Specifies wether to display the duration of the last query execution.
+   * Whether to display the duration of the last query execution.
    */
   @Prop() enableDuration = true;
 
@@ -95,10 +91,6 @@ export class AtomicQuerySummary implements InitializableComponent {
   }
 
   private renderNoResults() {
-    if (!this.enableNoResult) {
-      return;
-    }
-
     const content = this.querySummaryState.hasQuery
       ? this.strings.noResultsFor(
           this.wrapHighlight(this.querySummaryState.query)

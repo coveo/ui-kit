@@ -7,10 +7,9 @@
 
 ## Properties
 
-| Property         | Attribute          | Description                                                           | Type      | Default |
-| ---------------- | ------------------ | --------------------------------------------------------------------- | --------- | ------- |
-| `enableDuration` | `enable-duration`  | Specifies wether to display the duration of the last query execution. | `boolean` | `true`  |
-| `enableNoResult` | `enable-no-result` | Specifies wether to display a message when no results are returned.   | `boolean` | `true`  |
+| Property         | Attribute         | Description                                                  | Type      | Default |
+| ---------------- | ----------------- | ------------------------------------------------------------ | --------- | ------- |
+| `enableDuration` | `enable-duration` | Whether to display the duration of the last query execution. | `boolean` | `true`  |
 
 
 ## Shadow Parts

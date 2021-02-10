@@ -24,6 +24,7 @@
  - [atomic-facet](../atomic-facet)
  - [atomic-facet-manager](../atomic-facet-manager)
  - [atomic-history](../atomic-history)
+ - [atomic-no-results](../atomic-no-results)
  - [atomic-numeric-facet](../atomic-numeric-facet)
  - [atomic-pager](../atomic-pager)
  - [atomic-query-error](../atomic-query-error)
@@ -46,6 +47,7 @@ graph TD;
   atomic-facet --> atomic-component-error
   atomic-facet-manager --> atomic-component-error
   atomic-history --> atomic-component-error
+  atomic-no-results --> atomic-component-error
   atomic-numeric-facet --> atomic-component-error
   atomic-pager --> atomic-component-error
   atomic-query-error --> atomic-component-error
