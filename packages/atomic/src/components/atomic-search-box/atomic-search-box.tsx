@@ -172,7 +172,7 @@ export class AtomicSearchBox {
         part="input"
         ref={(el) => (this.inputRef = el as HTMLInputElement)}
         onFocus={() => this.onInputFocus()}
-        onBlur={() => this.combobox.onInputBlur()}
+        // onBlur={() => this.combobox.onInputBlur()}
         onInput={(e) => this.combobox.onInputChange(e)}
         onKeyUp={(e) => this.combobox.onInputKeyup(e)}
         onKeyDown={(e) => this.combobox.onInputKeydown(e)}
@@ -188,7 +188,6 @@ export class AtomicSearchBox {
 
   private get suggestions() {
     return this.searchBoxState.suggestions.map((suggestion, index) => {
-      const id = `${this._id}-suggestion-${index}`;
       return (
         <li
           onClick={() => {
@@ -196,8 +195,7 @@ export class AtomicSearchBox {
           }}
           onMouseDown={(e) => e.preventDefault()}
           part="suggestion"
-          id={id}
-          class="suggestion h-9 px-2 cursor-pointer text-left text-sm bg-transparent border-none shadow-none hover:bg-primary hover:text-on-primary flex flex-row items-center"
+          class="suggestion h-9 px-2 cursor-pointer text-left text-sm bg-transparent border-none shadow-none  flex flex-row items-center"
           innerHTML={suggestion.highlightedValue}
           value={index}
         />
@@ -227,7 +225,7 @@ export class AtomicSearchBox {
 
         <ul
           part="suggestions"
-          class="suggestions box-border w-full lg:w-80 p-0 my-0 flex flex-col apply-border-on-background border-t-0 rounded-b list-none"
+          class="empty:border-none box-border w-full lg:w-80 p-0 my-0 flex flex-col apply-border-on-background border-t-0 rounded-b list-none"
           ref={(el) => (this.valuesRef = el as HTMLElement)}
         >
           {this.suggestions}

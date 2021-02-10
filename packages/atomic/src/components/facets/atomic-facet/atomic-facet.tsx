@@ -58,13 +58,6 @@ export class AtomicFacet implements InitializableComponent {
     );
   }
 
-  private onFacetSearch(e: CustomEvent<string>) {
-    const facetSearch = this.facet.facetSearch;
-
-    facetSearch.updateText(e.detail);
-    facetSearch.search();
-  }
-
   private get showMoreButton() {
     if (!this.facetState.canShowMoreValues) {
       return null;
@@ -93,13 +86,7 @@ export class AtomicFacet implements InitializableComponent {
         onDeselectAll={() => this.facet.deselectAll()}
       >
         <div>
-          <facet-search
-            onFacetSearch={(e) => this.onFacetSearch(e)}
-            facetSearchResults={this.facetState.facetSearch.values}
-            moreValuesAvailable={
-              this.facetState.facetSearch.moreValuesAvailable
-            }
-          />
+          <facet-search facet={this.facet} facetState={this.facetState} />
           <ul class="list-none p-0">{this.values}</ul>
           <div>
             {this.showMoreButton}

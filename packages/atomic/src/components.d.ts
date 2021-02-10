@@ -5,11 +5,10 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { Engine, LogLevel, Result, ResultTemplateCondition } from "@coveo/headless";
+import { CategoryFacet, CategoryFacetState, Engine, Facet, FacetState, LogLevel, Result, ResultTemplateCondition } from "@coveo/headless";
 import { Bindings } from "./utils/initialization-utils";
 import { i18n } from "i18next";
 import { InitializationOptions } from "./components/atomic-search-interface/atomic-search-interface";
-import { BaseFacetSearchResult } from "@coveo/headless/dist/api/search/facet-search/base/base-facet-search-response";
 export namespace Components {
     interface AtomicBreadcrumbManager {
         "categoryDivider": string;
@@ -170,8 +169,9 @@ export namespace Components {
         "label": string;
     }
     interface FacetSearch {
-        "facetSearchResults": BaseFacetSearchResult[];
-        "moreValuesAvailable": boolean;
+        "_id": string;
+        "facet": Facet | CategoryFacet;
+        "facetState": FacetState | CategoryFacetState;
     }
     interface FacetValue {
         "isSelected": boolean;
@@ -549,11 +549,9 @@ declare namespace LocalJSX {
         "onDeselectAll"?: (event: CustomEvent<void>) => void;
     }
     interface FacetSearch {
-        "facetSearchResults": BaseFacetSearchResult[];
-        "moreValuesAvailable": boolean;
-        "onFacetSearch"?: (event: CustomEvent<string>) => void;
-        "onResultSelected"?: (event: CustomEvent<BaseFacetSearchResult>) => void;
-        "onShowMoreResults"?: (event: CustomEvent<void>) => void;
+        "_id"?: string;
+        "facet": Facet | CategoryFacet;
+        "facetState": FacetState | CategoryFacetState;
     }
     interface FacetValue {
         "isSelected": boolean;
