@@ -1,6 +1,7 @@
 import * as fetchMock from 'fetch-mock';
 import {EventType, ViewEventRequest, DefaultEventResponse} from '../events';
 import {CoveoAnalyticsClient} from './analytics';
+import {IAnalyticsRequestOptions} from './analyticsRequestClient';
 import {CookieStorage} from '../storage';
 import HistoryStore from '../history';
 
@@ -369,6 +370,44 @@ describe('Analytics', () => {
             beforeSendHooks: [spy],
         }).sendEvent(EventType.search, searchEventPayload);
         expect(spy).toHaveBeenLastCalledWith(EventType.search, expect.objectContaining(searchEventPayload));
+    });
+
+    it('should preprocess the request with the preprocessRequest', async () => {
+        let clientOrigin: string;
+        let processedRequest: IAnalyticsRequestOptions = {
+            url: 'https://www.myownanalytics.com/endpoint',
+            headers: {
+                Age: '24',
+            },
+            method: 'PUT',
+            body: JSON.stringify({
+                test: 'custom',
+            }),
+        };
+        fetchMock.put(processedRequest.url, eventResponse);
+        const searchEventPayload = {queryText: 'potato'};
+        await new CoveoAnalyticsClient({
+            token: aToken,
+            endpoint: anEndpoint,
+            version: A_VERSION,
+            preprocessRequest: (request, type) => {
+                clientOrigin = type;
+                processedRequest = {
+                    ...request,
+                    ...processedRequest,
+                };
+                return processedRequest;
+            },
+        }).sendEvent(EventType.search, searchEventPayload);
+
+        const call = fetchMock.calls()[0];
+        const url = call[0];
+        const options: RequestInit = call[1];
+
+        const {url: expectedUrl, ...expectedOptions} = processedRequest;
+        expect(clientOrigin).toBe('analyticsFetch');
+        expect(url).toBe(expectedUrl);
+        expect(options).toEqual(expectedOptions);
     });
 
     const getParsedBodyCalls = (): any[] => {

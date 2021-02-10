@@ -1,27 +1,39 @@
-import {AnalyticsRequestClient, VisitorIdProvider} from './analyticsRequestClient';
+import {
+    AnalyticsRequestClient,
+    VisitorIdProvider,
+    IAnalyticsRequestOptions,
+    PreprocessAnalyticsRequest,
+} from './analyticsRequestClient';
 import {AnyEventResponse, EventType, IRequestPayload} from '../events';
 
 export interface IAnalyticsFetchClientOptions {
     baseUrl: string;
     token?: string;
     visitorIdProvider: VisitorIdProvider;
+    preprocessRequest?: PreprocessAnalyticsRequest;
 }
 
 export class AnalyticsFetchClient implements AnalyticsRequestClient {
     constructor(private opts: IAnalyticsFetchClientOptions) {}
 
     public async sendEvent(eventType: EventType, payload: IRequestPayload): Promise<AnyEventResponse> {
-        const {baseUrl, visitorIdProvider} = this.opts;
+        const {baseUrl, visitorIdProvider, preprocessRequest} = this.opts;
 
         const visitorIdParam = this.shouldAppendVisitorId(eventType) ? await this.getVisitorIdParam() : '';
-
-        const response = await fetch(`${baseUrl}/analytics/${eventType}${visitorIdParam}`, {
-            method: 'POST',
-            headers: this.getHeaders(),
-            mode: 'cors',
-            body: JSON.stringify(payload),
+        const defaultOptions: IAnalyticsRequestOptions = {
+            url: `${baseUrl}/analytics/${eventType}${visitorIdParam}`,
             credentials: 'include',
-        });
+            mode: 'cors',
+            headers: this.getHeaders(),
+            method: 'POST',
+            body: JSON.stringify(payload),
+        };
+        const {url, ...fetchData}: IAnalyticsRequestOptions = {
+            ...defaultOptions,
+            ...(preprocessRequest ? await preprocessRequest(defaultOptions, 'analyticsFetch') : {}),
+        };
+
+        const response = await fetch(url, fetchData);
         if (response.ok) {
             const visit = (await response.json()) as AnyEventResponse;
 

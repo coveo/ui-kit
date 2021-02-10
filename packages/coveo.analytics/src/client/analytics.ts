@@ -1,5 +1,5 @@
 import {IAnalyticsBeaconClientOptions} from './analyticsBeaconClient';
-import {AnalyticsFetchClient} from './analyticsFetchClient';
+import {AnalyticsFetchClient, IAnalyticsFetchClientOptions} from './analyticsFetchClient';
 import {
     AnyEventResponse,
     ClickEventRequest,
@@ -16,7 +16,7 @@ import {
     IRequestPayload,
     VariableArgumentsPayload,
 } from '../events';
-import {VisitorIdProvider} from './analyticsRequestClient';
+import {PreprocessAnalyticsRequest, VisitorIdProvider} from './analyticsRequestClient';
 import {hasWindow, hasDocument} from '../detector';
 import {addDefaultValues} from '../hook/addDefaultValues';
 import {enhanceViewEvent} from '../hook/enhanceViewEvent';
@@ -45,6 +45,7 @@ export interface ClientOptions {
     version: string;
     runtimeEnvironment?: IRuntimeEnvironment;
     beforeSendHooks: AnalyticsClientSendEventHook[];
+    preprocessRequest?: PreprocessAnalyticsRequest;
 }
 
 export type AnalyticsClientSendEventHook = <TResult>(eventType: string, payload: any) => TResult | Promise<TResult>;
@@ -108,10 +109,11 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
         this.beforeSendHooks = [enhanceViewEvent, addDefaultValues].concat(this.options.beforeSendHooks);
         this.eventTypeMapping = {};
 
-        const clientsOptions = {
+        const clientsOptions: IAnalyticsFetchClientOptions = {
             baseUrl: this.baseUrl,
             token: this.options.token,
             visitorIdProvider: this,
+            preprocessRequest: this.options.preprocessRequest,
         };
 
         this.runtime = this.options.runtimeEnvironment || this.initRuntime(clientsOptions);
