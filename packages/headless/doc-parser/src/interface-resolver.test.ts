@@ -204,4 +204,39 @@ describe('#resolveInterfaceMembers', () => {
 
     expect(result).toEqual([entity]);
   });
+
+  it(`when an interface member type is an interface with a $1 suffix,
+  it resolves the type correctly`, () => {
+    const entry = buildMockEntryPoint();
+    const interface1 = buildMockApiInterface({name: 'FacetSearchState'});
+    const prop1 = buildMockApiPropertySignature({
+      name: 'values',
+      excerptTokens: [
+        buildContentExcerptToken('values: '),
+        buildReferenceExcerptToken(
+          'SpecificFacetSearchResult$1',
+          '@coveo/headless!~SpecificFacetSearchResult$1:interface'
+        ),
+        buildContentExcerptToken('[]'),
+        buildContentExcerptToken(';'),
+      ],
+      propertyTypeTokenRange: {startIndex: 1, endIndex: 3},
+    });
+
+    const interface2 = buildMockApiInterface({
+      name: 'SpecificFacetSearchResult',
+    });
+
+    interface1.addMember(prop1);
+    entry.addMember(interface1);
+    entry.addMember(interface2);
+
+    const result = resolveInterfaceMembers(entry, interface1);
+    const entity = buildMockObjEntity({
+      name: 'values',
+      type: 'SpecificFacetSearchResult[]',
+    });
+
+    expect(result).toEqual([entity]);
+  });
 });

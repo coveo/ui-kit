@@ -30,9 +30,10 @@ export function buildEntityFromParam(p: Parameter) {
 }
 
 function buildObjEntityFromParam(entryPoint: ApiEntryPoint, p: Parameter) {
-  const entity = buildEntityFromParam(p);
-  const apiInterface = findApi(entryPoint, entity.type) as ApiInterface;
+  const type = p.parameterTypeExcerpt.text;
+  const apiInterface = findApi(entryPoint, type) as ApiInterface;
   const members = resolveInterfaceMembers(entryPoint, apiInterface);
+  const entity = buildEntityFromParam(p);
 
   return buildObjEntity({...entity, members});
 }
