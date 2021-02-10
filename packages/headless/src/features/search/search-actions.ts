@@ -160,15 +160,15 @@ export const executeSearch = createAsyncThunk<
       return rejectWithValue(retried.response.error);
     }
 
-    const retriedResponse = retried.response.success;
+    const fetchedResponse = fetched.response.success;
     analyticsAction(
       dispatch,
       () =>
         getStateAfterResponse(
-          correctedQuery,
-          retried.duration,
+          fetched.queryExecuted,
+          fetched.duration,
           state,
-          retriedResponse
+          fetchedResponse
         ),
       extra
     );
