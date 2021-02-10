@@ -27,10 +27,16 @@ export {
 
 export {
   FacetOptions,
+  FacetSearchOptions,
   FacetProps,
   FacetState,
   Facet,
   buildFacet,
+  FacetValue,
+  FacetValueState,
+  FacetSearch,
+  FacetSearchState,
+  SpecificFacetSearchResult,
 } from './facets/facet/headless-facet';
 
 export {
