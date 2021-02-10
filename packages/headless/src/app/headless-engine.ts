@@ -27,7 +27,7 @@ import {
   PreprocessRequest,
   NoopPreprocessRequest,
 } from '../api/preprocess-request';
-import {RecordValue, Schema, StringValue} from '@coveo/bueno';
+import {BooleanValue, RecordValue, Schema, StringValue} from '@coveo/bueno';
 import {validatePayloadAndThrow} from '../utils/validate-payload';
 import {
   NoopPostprocessFacetSearchResponseMiddleware,
@@ -273,6 +273,11 @@ export class HeadlessEngine<Reducers extends ReducersMapObject>
   }
 
   private validateConfiguration(options: HeadlessOptions<Reducers>) {
+    if (options.configuration.search?.preprocessRequestMiddleware) {
+      this.logger
+        .warn(`The "search.preprocessRequestMiddleware" configuration option is now deprecated and will be removed in the upcoming @coveo/headless major version.
+      Please use the "preprocessRequest" option instead, which works for both the Search and Analytics API requests.`);
+    }
     const configurationSchema = new Schema<HeadlessConfigurationOptions>({
       organizationId: new StringValue({
         required: true,
@@ -298,6 +303,22 @@ export class HeadlessEngine<Reducers extends ReducersMapObject>
           searchHub: new StringValue({
             required: false,
             emptyAllowed: false,
+          }),
+        },
+      }),
+      analytics: new RecordValue({
+        options: {
+          required: false,
+        },
+        values: {
+          enabled: new BooleanValue({
+            required: false,
+          }),
+          originLevel2: new StringValue({
+            required: false,
+          }),
+          originLevel3: new StringValue({
+            required: false,
           }),
         },
       }),
