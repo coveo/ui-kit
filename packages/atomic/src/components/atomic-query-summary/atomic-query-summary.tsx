@@ -12,15 +12,22 @@ import {
   InitializeBindings,
 } from '../../utils/initialization-utils';
 
+interface ResultOfOptions {
+  count: number;
+  first: string;
+  last: string;
+  total: string;
+  query: string;
+}
+
 /**
- * TODO: document and edit parts
+ * The QuerySummary displays information about the current range of results and the request duration (e.g., "Results
+ * 1-10 of 123 in 0.47 seconds").
+ *
  * @part container - The container of the whole summary
  * @part results - The results container
  * @part no-results - The container when there are no results
  * @part duration - The duration container
- *
- * TODO: remove
- * @part query - The query container
  * @part highlight - The summary highlights
  */
 @Component({
@@ -31,6 +38,7 @@ import {
 export class AtomicQuerySummary implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;
   public querySummary!: QuerySummary;
+  private unescapeStringOption = {interpolation: {escapeValue: false}};
 
   @BindStateToController('querySummary')
   @State()
@@ -40,26 +48,31 @@ export class AtomicQuerySummary implements InitializableComponent {
   private strings = {
     noResults: () => this.bindings.i18n.t('noResults'),
     noResultsFor: (query: string) =>
-      this.bindings.i18n.t('noResultsFor', {query}),
-    showingResultsOf: (first: number, last: number, total: number) =>
-      this.bindings.i18n.t('showingResultsOf', {first, count: last, total}),
-    showingResultsOfWithQuery: (
-      first: number,
-      last: number,
-      total: number,
-      query: string
-    ) =>
-      this.bindings.i18n.t('showingResultsOfWithQuery', {
-        first,
-        count: last,
-        total,
+      this.bindings.i18n.t('noResultsFor', {
+        ...this.unescapeStringOption,
         query,
+      }),
+    showingResultsOf: (resultOfOptions: ResultOfOptions) =>
+      this.bindings.i18n.t('showingResultsOf', {
+        ...this.unescapeStringOption,
+        ...resultOfOptions,
+      }),
+    showingResultsOfWithQuery: (resultOfOptions: ResultOfOptions) =>
+      this.bindings.i18n.t('showingResultsOfWithQuery', {
+        ...this.unescapeStringOption,
+        ...resultOfOptions,
       }),
     inSeconds: (count: number) => this.bindings.i18n.t('inSeconds', {count}),
   };
   @State() public error!: Error;
 
+  /**
+   * Specifies wether to display a message when no results are returned.
+   */
   @Prop() enableNoResult = true; // TODO: should be true only if atomic-no-result exists
+  /**
+   * Specifies wether to display the duration of the last query execution.
+   */
   @Prop() enableDuration = true;
 
   public initialize() {
@@ -77,38 +90,53 @@ export class AtomicQuerySummary implements InitializableComponent {
     }
   }
 
+  private wrapHighlight(content: string) {
+    return `<b part="highlight">${content}</b>`;
+  }
+
   private renderNoResults() {
     if (!this.enableNoResult) {
       return;
     }
 
     const content = this.querySummaryState.hasQuery
-      ? this.strings.noResultsFor(this.querySummaryState.query)
+      ? this.strings.noResultsFor(
+          this.wrapHighlight(this.querySummaryState.query)
+        )
       : this.strings.noResults();
-    return <span part="no-results">{content}</span>;
+    return <span part="no-results" innerHTML={content}></span>;
+  }
+
+  private get resultOfOptions(): ResultOfOptions {
+    const locale = this.bindings.i18n.language;
+    return {
+      count: this.querySummaryState.lastResult,
+      first: this.wrapHighlight(
+        this.querySummaryState.firstResult.toLocaleString(locale)
+      ),
+      last: this.wrapHighlight(
+        this.querySummaryState.lastResult.toLocaleString(locale)
+      ),
+      total: this.wrapHighlight(
+        this.querySummaryState.total.toLocaleString(locale)
+      ),
+      query: this.wrapHighlight(this.querySummaryState.query),
+    };
   }
 
   private renderHasResults() {
     const content = this.querySummaryState.hasQuery
-      ? this.strings.showingResultsOfWithQuery(
-          this.querySummaryState.firstResult,
-          this.querySummaryState.lastResult,
-          this.querySummaryState.total,
-          this.querySummaryState.query
-        )
-      : this.strings.showingResultsOf(
-          this.querySummaryState.firstResult,
-          this.querySummaryState.lastResult,
-          this.querySummaryState.total
-        );
-    return [<span part="results">{content}</span>, this.renderDuration()];
+      ? this.strings.showingResultsOfWithQuery(this.resultOfOptions)
+      : this.strings.showingResultsOf(this.resultOfOptions);
+
+    return <span part="results" innerHTML={content}></span>;
   }
 
   public render() {
     return (
-      <div part="container">
+      <div class="text-on-background" part="container">
         {this.querySummaryState.hasResults
-          ? this.renderHasResults()
+          ? [this.renderHasResults(), this.renderDuration()]
           : this.renderNoResults()}
       </div>
     );
