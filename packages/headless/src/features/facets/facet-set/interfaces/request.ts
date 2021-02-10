@@ -9,13 +9,17 @@ import {
   Expandable,
 } from '../../facet-api/request';
 
-export const facetSortCriteria = [
+export const facetSortCriteria: FacetSortCriterion[] = [
   'score',
   'alphanumeric',
   'occurrences',
   'automatic',
-] as const;
-export type FacetSortCriterion = typeof facetSortCriteria[number];
+];
+export type FacetSortCriterion =
+  | 'score'
+  | 'alphanumeric'
+  | 'occurrences'
+  | 'automatic';
 
 export interface FacetValueRequest extends BaseFacetValueRequest {
   value: string;
