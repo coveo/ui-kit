@@ -172,6 +172,7 @@ export interface FacetValue {
   value: string;
 }
 
+/** Creates a `Facet` controller instance. */
 export function buildFacet(
   engine: Engine<
     FacetSection & ConfigurationSection & FacetSearchSection & SearchSection
