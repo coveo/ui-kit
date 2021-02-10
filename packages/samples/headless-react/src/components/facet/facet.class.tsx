@@ -39,6 +39,11 @@ export class Facet extends Component<FacetProps> {
     this.setState(this.controller.state);
   }
 
+  private onInput(text: string) {
+    this.controller.facetSearch.updateText(text);
+    this.controller.facetSearch.search();
+  }
+
   render() {
     if (!this.state.values.length) {
       return <div>No facet values</div>;
@@ -46,17 +51,45 @@ export class Facet extends Component<FacetProps> {
 
     return (
       <ul>
-        {this.state.values.map((value) => (
-          <li key={value.value}>
-            <input
-              type="checkbox"
-              checked={this.controller.isValueSelected(value)}
-              onChange={() => this.controller.toggleSelect(value)}
-              disabled={this.state.isLoading}
-            />
-            {value.value} ({value.numberOfResults} results)
-          </li>
-        ))}
+        <li>
+          <input onInput={(e) => this.onInput(e.currentTarget.value)} />
+          <ul>
+            {this.state.facetSearch.values.map((facetSearchValue) => (
+              <li key={facetSearchValue.rawValue}>
+                <button
+                  onClick={() =>
+                    this.controller.facetSearch.select(facetSearchValue)
+                  }
+                  disabled={
+                    !!this.state.values.find(
+                      (facetValue) =>
+                        facetValue.value === facetSearchValue.displayValue &&
+                        this.controller.isValueSelected(facetValue)
+                    )
+                  }
+                >
+                  {facetSearchValue.displayValue} ({facetSearchValue.count}{' '}
+                  results)
+                </button>
+              </li>
+            ))}
+          </ul>
+        </li>
+        <li>
+          <ul>
+            {this.state.values.map((value) => (
+              <li key={value.value}>
+                <input
+                  type="checkbox"
+                  checked={this.controller.isValueSelected(value)}
+                  onChange={() => this.controller.toggleSelect(value)}
+                  disabled={this.state.isLoading}
+                />
+                {value.value} ({value.numberOfResults} results)
+              </li>
+            ))}
+          </ul>
+        </li>
       </ul>
     );
   }
