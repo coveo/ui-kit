@@ -187,7 +187,10 @@ export class AtomicSearchInterface {
   public render() {
     if (this.error) {
       return (
-        <atomic-component-error error={this.error}></atomic-component-error>
+        <atomic-component-error
+          element={this.host}
+          error={this.error}
+        ></atomic-component-error>
       );
     }
 
