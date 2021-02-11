@@ -48,19 +48,21 @@
     </style>
   </head>
 
-  <body>
+  <body class="p-2">
     <atomic-search-interface id="search">
-      <div style="display: flex" class="mx-auto my-2 justify-center">
+      <div class="flex mx-auto mb-2 justify-center">
         <atomic-tab expression="" class="mr-2">All Files</atomic-tab>
         <atomic-tab expression='@author *= "BBC News"'>BBC News</atomic-tab>
       </div>
-      <atomic-search-box class="m-3 block"></atomic-search-box>
-      <div class="flex px-2">
-        <atomic-facet-manager>
-          <atomic-facet field="author" label="Authors"></atomic-facet>
-          <atomic-numeric-facet field="size" label="File sizes"></atomic-numeric-facet>
-          <atomic-date-facet field="created" label="Created"></atomic-date-facet>
-          <atomic-category-facet field="geographicalhierarchy" label="World Atlas"></atomic-category-facet>
+      <div class="m-auto my-3 max-w-5xl">
+        <atomic-search-box></atomic-search-box>
+      </div>
+      <div class="flex flex-col lg:flex-row">
+        <atomic-facet-manager class="flex flex-row mx-2 mb-2 lg:flex-col lg:w-80">
+          <atomic-facet class="mr-2" field="author" label="Authors"></atomic-facet>
+          <atomic-numeric-facet class="mr-2" field="size" label="File sizes"></atomic-numeric-facet>
+          <atomic-date-facet class="mr-2" field="created" label="Created"></atomic-date-facet>
+          <atomic-category-facet class="mr-2" field="geographicalhierarchy" label="World Atlas"></atomic-category-facet>
         </atomic-facet-manager>
         <div class="flex-grow">
           <atomic-breadcrumb-manager></atomic-breadcrumb-manager>
@@ -74,7 +76,7 @@
             </atomic-sort-dropdown>
           </div>
 
-          <atomic-result-list>
+          <atomic-result-list class="max-w-full">
             <atomic-result-template id="france-template">
               <hr />
               <img src="https://www.cia-france.com/media/1558/parcarou1_720x500.jpg" alt="Paris" />
@@ -90,7 +92,7 @@
             </script>
           </atomic-result-list>
 
-          <div class="flex justify-between my-2">
+          <div class="flex flex-col lg:flex-row justify-between my-2">
             <atomic-pager></atomic-pager>
             <atomic-results-per-page></atomic-results-per-page>
           </div>
