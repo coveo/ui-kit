@@ -3,6 +3,36 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.6.0-alpha.3](https://github.com/coveo/ui-kit/compare/v0.6.0-alpha.2...v0.6.0-alpha.3) (2021-02-11)
+
+
+### Features
+
+* **atomic:** make search box suggestions absolute and more ([#490](https://github.com/coveo/ui-kit/issues/490)) ([7c42b66](https://github.com/coveo/ui-kit/commit/7c42b66370000bddcd5beda9c58876d6694dcd31))
+
+
+
+
+
+# [0.6.0-alpha.2](https://github.com/coveo/ui-kit/compare/v0.6.0-alpha.1...v0.6.0-alpha.2) (2021-02-10)
+
+
+### Features
+
+* **headless:** add preprocessRequest for both Analytics/SearchAPI ([#488](https://github.com/coveo/ui-kit/issues/488)) ([c026310](https://github.com/coveo/ui-kit/commit/c0263106cf6328556893874b37d7521e42f73d5a))
+
+
+
+
+
+# [0.6.0-alpha.1](https://github.com/coveo/ui-kit/compare/v0.6.0-alpha.0...v0.6.0-alpha.1) (2021-02-10)
+
+**Note:** Version bump only for package ui-kit
+
+
+
+
+
 # [0.6.0-alpha.0](https://github.com/coveo/ui-kit/compare/v0.5.1-alpha.1...v0.6.0-alpha.0) (2021-02-08)
 
 

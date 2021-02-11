@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.6.0-alpha.2](https://github.com/coveo/ui-kit/compare/v0.6.0-alpha.1...v0.6.0-alpha.2) (2021-02-10)
+
+
+### Features
+
+* **headless:** add preprocessRequest for both Analytics/SearchAPI ([#488](https://github.com/coveo/ui-kit/issues/488)) ([c026310](https://github.com/coveo/ui-kit/commit/c0263106cf6328556893874b37d7521e42f73d5a))
+
+
+
+
+
+# [0.6.0-alpha.1](https://github.com/coveo/ui-kit/compare/v0.6.0-alpha.0...v0.6.0-alpha.1) (2021-02-10)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
 # [0.6.0-alpha.0](https://github.com/coveo/ui-kit/compare/v0.5.1-alpha.1...v0.6.0-alpha.0) (2021-02-08)
 
 

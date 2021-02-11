@@ -30,7 +30,11 @@ import {
   SearchSection,
   SortSection,
 } from '../../state/state-sections';
-import {getVisitorID, historyStore} from '../../api/analytics/analytics';
+import {
+  getVisitorID,
+  historyStore,
+  StateNeededByAnalyticsProvider,
+} from '../../api/analytics/analytics';
 import {AnyFacetRequest} from '../facets/generic/interfaces/generic-facet-request';
 import {SearchRequest} from '../../api/search/search/search-request';
 import {getContextInitialState} from '../context/context-state';
@@ -55,6 +59,7 @@ import {HistoryState} from '../history/history-state';
 import {sortFacets} from '../../utils/facet-utils';
 import {getDebugInitialState} from '../debug/debug-state';
 import {getFacetOrderInitialState} from '../facets/facet-order/facet-order-state';
+import {getSearchInitialState} from './search-state';
 
 export type StateNeededByExecuteSearch = ConfigurationSection &
   Partial<
@@ -107,10 +112,6 @@ const fetchFromAPI = async (
  * Executes a search query.
  * @param analyticsAction (SearchAction) The analytics action to log after a successful query.
  */
-/**
- * Executes a search query.
- * @param analyticsAction (SearchAction) The analytics action to log after a successful query.
- */
 export const executeSearch = createAsyncThunk<
   ExecuteSearchThunkReturn,
   SearchAction,
@@ -119,12 +120,12 @@ export const executeSearch = createAsyncThunk<
   'search/executeSearch',
   async (
     analyticsAction: SearchAction,
-    {getState, dispatch, rejectWithValue, extra: {searchAPIClient}}
+    {getState, dispatch, rejectWithValue, extra}
   ) => {
     const state = getState();
     addEntryInActionsHistory(state);
     const fetched = await fetchFromAPI(
-      searchAPIClient,
+      extra.searchAPIClient,
       state,
       buildSearchRequest(state)
     );
@@ -146,11 +147,10 @@ export const executeSearch = createAsyncThunk<
       };
     }
 
-    dispatch(analyticsAction);
-
+    const {correctedQuery} = fetched.response.success.queryCorrections[0];
     const retried = await automaticallyRetryQueryWithCorrection(
-      searchAPIClient,
-      fetched.response.success.queryCorrections[0].correctedQuery,
+      extra.searchAPIClient,
+      correctedQuery,
       getState,
       dispatch
     );
@@ -160,6 +160,18 @@ export const executeSearch = createAsyncThunk<
       return rejectWithValue(retried.response.error);
     }
 
+    const fetchedResponse = fetched.response.success;
+    analyticsAction(
+      dispatch,
+      () =>
+        getStateAfterResponse(
+          fetched.queryExecuted,
+          fetched.duration,
+          state,
+          fetchedResponse
+        ),
+      extra
+    );
     dispatch(snapshot(extractHistory(getState())));
 
     return {
@@ -206,6 +218,32 @@ export const fetchMoreResults = createAsyncThunk<
     };
   }
 );
+
+const getStateAfterResponse: (
+  query: string,
+  duration: number,
+  previousState: StateNeededByExecuteSearch,
+  response: SearchResponseSuccess
+) => StateNeededByAnalyticsProvider = (
+  query,
+  duration,
+  previousState,
+  response
+) => ({
+  ...previousState,
+  query: {
+    q: query,
+    enableQuerySyntax:
+      previousState.query?.enableQuerySyntax ??
+      getQueryInitialState().enableQuerySyntax,
+  },
+  search: {
+    ...getSearchInitialState(),
+    duration,
+    response,
+    results: response.results,
+  },
+});
 
 const automaticallyRetryQueryWithCorrection = async (
   client: SearchAPIClient,

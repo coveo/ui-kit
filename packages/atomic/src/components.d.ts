@@ -114,17 +114,14 @@ export namespace Components {
         "_id": string;
         /**
           * Whether the submit button should be placed before the input
-          * @default false
          */
         "leadingSubmitButton": boolean;
         /**
           * Maximum number of suggestions to display
-          * @default 5
          */
         "numberOfSuggestions": number;
         /**
           * The placeholder for the search box input
-          * @default ''
          */
         "placeholder": string;
     }
@@ -494,17 +491,14 @@ declare namespace LocalJSX {
         "_id"?: string;
         /**
           * Whether the submit button should be placed before the input
-          * @default false
          */
         "leadingSubmitButton"?: boolean;
         /**
           * Maximum number of suggestions to display
-          * @default 5
          */
         "numberOfSuggestions"?: number;
         /**
           * The placeholder for the search box input
-          * @default ''
          */
         "placeholder"?: string;
     }
