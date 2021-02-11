@@ -48,14 +48,16 @@
     </style>
   </head>
 
-  <body>
+  <body class="p-2">
     <atomic-search-interface id="search">
-      <div style="display: flex" class="mx-auto my-2 justify-center">
+      <div class="flex mx-auto mb-2 justify-center">
         <atomic-tab expression="" class="mr-2">All Files</atomic-tab>
         <atomic-tab expression='@author *= "BBC News"'>BBC News</atomic-tab>
       </div>
-      <atomic-search-box class="m-3 block"></atomic-search-box>
-      <div class="flex px-2">
+      <div class="m-auto my-3 max-w-5xl">
+        <atomic-search-box></atomic-search-box>
+      </div>
+      <div class="flex">
         <atomic-facet-manager>
           <atomic-facet field="author" label="Authors"></atomic-facet>
           <atomic-numeric-facet field="size" label="File sizes"></atomic-numeric-facet>
