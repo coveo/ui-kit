@@ -11,8 +11,9 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../utils/initialization-utils';
+import {sanitize} from '../../utils/utils';
 
-interface ResultOfOptions {
+interface Summary {
   count: number;
   first: string;
   last: string;
@@ -52,12 +53,12 @@ export class AtomicQuerySummary implements InitializableComponent {
         ...this.unescapeStringOption,
         query,
       }),
-    showingResultsOf: (resultOfOptions: ResultOfOptions) =>
+    showingResultsOf: (resultOfOptions: Summary) =>
       this.bindings.i18n.t('showingResultsOf', {
         ...this.unescapeStringOption,
         ...resultOfOptions,
       }),
-    showingResultsOfWithQuery: (resultOfOptions: ResultOfOptions) =>
+    showingResultsOfWithQuery: (resultOfOptions: Summary) =>
       this.bindings.i18n.t('showingResultsOfWithQuery', {
         ...this.unescapeStringOption,
         ...resultOfOptions,
@@ -93,13 +94,13 @@ export class AtomicQuerySummary implements InitializableComponent {
   private renderNoResults() {
     const content = this.querySummaryState.hasQuery
       ? this.strings.noResultsFor(
-          this.wrapHighlight(this.querySummaryState.query)
+          this.wrapHighlight(sanitize(this.querySummaryState.query))
         )
       : this.strings.noResults();
     return <span part="no-results" innerHTML={content}></span>;
   }
 
-  private get resultOfOptions(): ResultOfOptions {
+  private get resultOfOptions(): Summary {
     const locale = this.bindings.i18n.language;
     return {
       count: this.querySummaryState.lastResult,
@@ -112,7 +113,7 @@ export class AtomicQuerySummary implements InitializableComponent {
       total: this.wrapHighlight(
         this.querySummaryState.total.toLocaleString(locale)
       ),
-      query: this.wrapHighlight(this.querySummaryState.query),
+      query: this.wrapHighlight(sanitize(this.querySummaryState.query)),
     };
   }
 
