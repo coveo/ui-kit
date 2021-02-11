@@ -1,4 +1,4 @@
-# atomic-date-facet
+# atomic-category-facet
 
 
 
@@ -18,13 +18,13 @@
 
 ### Depends on
 
-- [atomic-component-error](../atomic-component-error)
+- [atomic-component-error](../../atomic-component-error)
 
 ### Graph
 ```mermaid
 graph TD;
-  atomic-date-facet --> atomic-component-error
-  style atomic-date-facet fill:#f9f,stroke:#333,stroke-width:4px
+  atomic-category-facet --> atomic-component-error
+  style atomic-category-facet fill:#f9f,stroke:#333,stroke-width:4px
 ```
 
 ----------------------------------------------
