@@ -18,7 +18,7 @@
 
 ### Depends on
 
-- [atomic-component-error](../atomic-component-error)
+- [atomic-component-error](../../atomic-component-error)
 
 ### Graph
 ```mermaid

@@ -1,8 +1,18 @@
+import {Unsubscribe} from 'redux';
 import {Engine} from '../../app/headless-engine';
 
-export type Controller = ReturnType<typeof buildController>;
+export interface Controller {
+  /**
+   * Adds a callback that will be called on state change.
+   *
+   * @param listener A callback to be invoked on state change.
+   * @returns An unsubscribe function to remove the listener.
+   */
+  subscribe(listener: () => void): Unsubscribe;
+  readonly state: {};
+}
 
-export function buildController<T>(engine: Engine<T>) {
+export function buildController<T>(engine: Engine<T>): Controller {
   let prevState = '{}';
 
   const hasStateChanged = (currentState: Record<string, unknown>): boolean => {
@@ -21,12 +31,6 @@ export function buildController<T>(engine: Engine<T>) {
   };
 
   return {
-    /**
-     * Adds a callback that will be called on state change.
-     *
-     * @param listener A callback to be invoked on state change.
-     * @returns An unsubscribe function to remove the listener.
-     */
     subscribe(listener: () => void) {
       listener();
       return engine.subscribe(() => {

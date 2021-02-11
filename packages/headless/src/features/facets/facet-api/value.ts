@@ -1,2 +1,2 @@
-export const facetValueStates = ['idle', 'selected'] as const;
-export type FacetValueState = typeof facetValueStates[number];
+export const facetValueStates: FacetValueState[] = ['idle', 'selected'];
+export type FacetValueState = 'idle' | 'selected';

@@ -68,12 +68,16 @@ export const makeAnalyticsAction = <T extends AnalyticsType>(
     AsyncThunkAnalyticsOptions<StateNeededByAnalyticsProvider>
   >(
     prefix,
-    async (_, {getState, extra: {analyticsClientMiddleware, logger}}) => {
+    async (
+      _,
+      {getState, extra: {analyticsClientMiddleware, preprocessRequest, logger}}
+    ) => {
       const state = searchPageState(getState);
       const client = configureAnalytics({
         state,
         logger,
         analyticsClientMiddleware,
+        preprocessRequest,
         provider: provider(state),
       });
       const response = await log(client, state);

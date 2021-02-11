@@ -5,14 +5,13 @@ import {
   DateFacetState,
   DateFacetOptions,
   DateFacetValue,
-  RangeFacetSortCriterion,
 } from '@coveo/headless';
 import {
   Bindings,
   BindStateToController,
   InitializableComponent,
   InitializeBindings,
-} from '../../utils/initialization-utils';
+} from '../../../utils/initialization-utils';
 
 @Component({
   tag: 'atomic-date-facet',
@@ -53,56 +52,26 @@ export class AtomicDateFacet implements InitializableComponent {
     const isSelected = this.facet.isValueSelected(item);
 
     return (
-      <div onClick={() => this.facet.toggleSelect(item)}>
-        <input type="checkbox" checked={isSelected}></input>
-        <span>
-          {item.start}-{item.end} {item.numberOfResults}
-        </span>
-      </div>
+      <facet-value
+        label={` ${item.start}-${item.end}`}
+        isSelected={isSelected}
+        numberOfResults={item.numberOfResults}
+        onFacetValueSelected={() => {
+          this.facet.toggleSelect(item);
+        }}
+      />
     );
-  }
-
-  private get resetButton() {
-    return this.facetState.hasActiveValues ? (
-      <button onClick={() => this.facet.deselectAll()}>X</button>
-    ) : null;
-  }
-
-  private get sortSelector() {
-    return (
-      <select name="facetSort" onChange={(val) => this.onFacetSortChange(val)}>
-        {this.sortOptions}
-      </select>
-    );
-  }
-
-  private get sortOptions() {
-    const criteria: RangeFacetSortCriterion[] = ['ascending', 'descending'];
-
-    return criteria.map((criterion) => (
-      <option value={criterion} selected={this.facet.isSortedBy(criterion)}>
-        {criterion}
-      </option>
-    ));
-  }
-
-  private onFacetSortChange(e: Event) {
-    const select = e.composedPath()[0] as HTMLSelectElement;
-    const criterion = select.value as RangeFacetSortCriterion;
-
-    this.facet.sortBy(criterion);
   }
 
   public render() {
     return (
-      <div>
-        <div>
-          <span>{this.label}</span>
-          {this.sortSelector}
-          {this.resetButton}
-        </div>
-        <div>{this.values}</div>
-      </div>
+      <base-facet
+        label={this.label}
+        hasActiveValues={this.facetState.hasActiveValues}
+        onDeselectAll={() => this.facet.deselectAll()}
+      >
+        <ul class="list-none p-0">{this.values}</ul>
+      </base-facet>
     );
   }
 }

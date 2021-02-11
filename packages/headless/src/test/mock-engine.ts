@@ -9,24 +9,18 @@ import {
 } from '@reduxjs/toolkit';
 import thunk from 'redux-thunk';
 import {analyticsMiddleware} from '../app/analytics-middleware';
-import {SearchAPIClient} from '../api/search/search-api-client';
 import {SearchAppState} from '../state/search-app-state';
 import {RecommendationAppState} from '../state/recommendation-app-state';
 import {createMockRecommendationState} from './mock-recommendation-state';
 import {ProductRecommendationsAppState} from '../state/product-recommendations-app-state';
 import {buildMockProductRecommendationsState} from './mock-product-recommendations-state';
-import {NoopPreprocessRequestMiddleware} from '../api/platform-client';
 import pino, {Logger} from 'pino';
 import {
   logActionErrorMiddleware,
   logActionMiddleware,
 } from '../app/logger-middlewares';
 import {validatePayloadAndThrow} from '../utils/validate-payload';
-import {
-  NoopPostprocessFacetSearchResponseMiddleware,
-  NoopPostprocessQuerySuggestResponseMiddleware,
-  NoopPostprocessSearchResponseMiddleware,
-} from '../api/search/search-api-client-middleware';
+import {buildMockSearchAPIClient} from './mock-search-api-client';
 
 type AsyncActionCreator<ThunkArg> = ActionCreatorWithPreparedPayload<
   [string, ThunkArg],
@@ -107,14 +101,7 @@ const configureMockStore = (logger: Logger) => {
     logActionErrorMiddleware(logger),
     analyticsMiddleware,
     thunk.withExtraArgument({
-      searchAPIClient: new SearchAPIClient({
-        logger,
-        renewAccessToken: mockRenewAccessToken,
-        preprocessRequest: NoopPreprocessRequestMiddleware,
-        postprocessSearchResponseMiddleware: NoopPostprocessSearchResponseMiddleware,
-        postprocessQuerySuggestResponseMiddleware: NoopPostprocessQuerySuggestResponseMiddleware,
-        postprocessFacetSearchResponseMiddleware: NoopPostprocessFacetSearchResponseMiddleware,
-      }),
+      searchAPIClient: buildMockSearchAPIClient({logger}),
       validatePayload: validatePayloadAndThrow,
       logger,
     }),

@@ -3,6 +3,36 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.6.0-alpha.4](https://github.com/coveo/ui-kit/compare/v0.6.0-alpha.3...v0.6.0-alpha.4) (2021-02-11)
+
+
+### Bug Fixes
+
+* **headless:** made `executeSearch` always log analytics events after the query ([#489](https://github.com/coveo/ui-kit/issues/489)) ([97908f2](https://github.com/coveo/ui-kit/commit/97908f206823f673c15be2ead00ada711b61b31e))
+
+
+
+
+
+# [0.6.0-alpha.2](https://github.com/coveo/ui-kit/compare/v0.6.0-alpha.1...v0.6.0-alpha.2) (2021-02-10)
+
+
+### Features
+
+* **headless:** add preprocessRequest for both Analytics/SearchAPI ([#488](https://github.com/coveo/ui-kit/issues/488)) ([c026310](https://github.com/coveo/ui-kit/commit/c0263106cf6328556893874b37d7521e42f73d5a))
+
+
+
+
+
+# [0.6.0-alpha.1](https://github.com/coveo/ui-kit/compare/v0.6.0-alpha.0...v0.6.0-alpha.1) (2021-02-10)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
 # [0.6.0-alpha.0](https://github.com/coveo/ui-kit/compare/v0.5.1-alpha.1...v0.6.0-alpha.0) (2021-02-08)
 
 

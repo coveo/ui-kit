@@ -5,14 +5,13 @@ import {
   buildCategoryFacet,
   CategoryFacetOptions,
   CategoryFacetValue,
-  CategoryFacetSortCriterion,
 } from '@coveo/headless';
 import {
   Bindings,
   BindStateToController,
   InitializableComponent,
   InitializeBindings,
-} from '../../utils/initialization-utils';
+} from '../../../utils/initialization-utils';
 
 @Component({
   tag: 'atomic-category-facet',
@@ -65,44 +64,19 @@ export class AtomicCategoryFacet implements InitializableComponent {
 
   private buildValue(item: CategoryFacetValue) {
     return (
-      <div onClick={() => this.facet.toggleSelect(item)}>
+      <li onClick={() => this.facet.toggleSelect(item)}>
         <span>
           {item.value} {item.numberOfResults}
         </span>
-      </div>
+      </li>
     );
   }
 
-  private get facetSearchInput() {
-    return <input onInput={(e) => this.onFacetSearch(e)} />;
-  }
-
-  private onFacetSearch(e: Event) {
-    const value = (e.target as HTMLInputElement).value;
+  private onFacetSearch(e: CustomEvent<string>) {
     const facetSearch = this.facet.facetSearch;
 
-    facetSearch.updateText(value);
+    facetSearch.updateText(e.detail);
     facetSearch.search();
-  }
-
-  private get facetSearchResults() {
-    return this.facetState.facetSearch.values.map((searchResult) => (
-      <div onClick={() => this.facet.facetSearch.select(searchResult)}>
-        {searchResult.displayValue} {searchResult.count}
-      </div>
-    ));
-  }
-
-  private get showMoreSearchResults() {
-    if (!this.facetState.facetSearch.moreValuesAvailable) {
-      return null;
-    }
-
-    return (
-      <button onClick={() => this.facet.facetSearch.showMoreResults()}>
-        show more
-      </button>
-    );
   }
 
   private get resetButton() {
@@ -114,25 +88,6 @@ export class AtomicCategoryFacet implements InitializableComponent {
       <button onClick={() => this.facet.deselectAll()}>All Categories</button>
     );
   }
-
-  private get sortOptions() {
-    const criteria: CategoryFacetSortCriterion[] = [
-      'occurrences',
-      'alphanumeric',
-    ];
-
-    return criteria.map((criterion) => (
-      <option value={criterion} selected={this.facet.isSortedBy(criterion)}>
-        {criterion}
-      </option>
-    ));
-  }
-
-  private handleSelect = (event: Event) => {
-    const target = event.target as HTMLSelectElement;
-    const criterion = target.value as CategoryFacetSortCriterion;
-    this.facet.sortBy(criterion);
-  };
 
   private get showMore() {
     if (!this.facetState.canShowMoreValues) {
@@ -154,24 +109,25 @@ export class AtomicCategoryFacet implements InitializableComponent {
 
   public render() {
     return (
-      <div>
-        <div>
-          <span>{this.label}</span>
-          <select onInput={this.handleSelect}>{this.sortOptions}</select>
-        </div>
-        <div>
-          {this.facetSearchInput}
-          {this.facetSearchResults}
-          {this.showMoreSearchResults}
-        </div>
+      <base-facet
+        label={this.label}
+        hasActiveValues={this.facetState.hasActiveValues}
+        onDeselectAll={() => this.facet.deselectAll()}
+      >
+        <facet-search
+          onFacetSearch={(e) => this.onFacetSearch(e)}
+          onShowMoreResults={() => this.facet.facetSearch.showMoreResults()}
+          facetSearchResults={this.facetState.facetSearch.values}
+          moreValuesAvailable={this.facetState.facetSearch.moreValuesAvailable}
+        />
         <div>
           <div>{this.resetButton}</div>
           <div>{this.parents}</div>
-          <div>{this.values}</div>
+          <ul class="list-none p-0">{this.values}</ul>
           <div>{this.showMore}</div>
           <div>{this.showLess}</div>
         </div>
-      </div>
+      </base-facet>
     );
   }
 }
