@@ -120,7 +120,7 @@ function resolveMethodSignature(m: ApiMethodSignature) {
 
   return buildFuncEntity({
     name: m.displayName,
-    desc: m.tsdocComment?.emitAsTsdoc() || '',
+    comment: (m.tsdocComment as unknown) as DocComment,
     params,
     returnType,
   });

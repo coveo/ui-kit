@@ -38,6 +38,8 @@ export interface PagerInitialState {
 export interface PagerOptions {
   /**
    * The number of pages to display in the pager.
+   *
+   * @default 5
    * */
   numberOfPages?: number;
 }

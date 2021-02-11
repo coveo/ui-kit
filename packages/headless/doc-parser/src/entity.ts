@@ -22,11 +22,20 @@ export interface FuncEntity {
 
 export type AnyEntity = Entity | ObjEntity | FuncEntity;
 
-interface EntityOptions {
+interface Comment {
+  comment: DocComment | undefined;
+}
+
+interface EntityOptions extends Comment {
   name: string;
   type: string;
   isOptional: boolean;
-  comment: DocComment | undefined;
+}
+
+interface FuncEntityOptions extends Comment {
+  name: string;
+  params: AnyEntity[];
+  returnType: string | ObjEntity | FuncEntity;
 }
 
 export function buildEntity(config: EntityOptions): Entity {
@@ -53,8 +62,15 @@ export function buildParamEntity(param: Parameter): Entity {
   };
 }
 
-export function buildFuncEntity(config: FuncEntity): FuncEntity {
-  return {...config};
+export function buildFuncEntity(config: FuncEntityOptions): FuncEntity {
+  const desc = getSummary(config.comment);
+
+  return {
+    name: config.name,
+    params: config.params,
+    returnType: config.returnType,
+    desc,
+  };
 }
 
 function sanitizeType(type: string) {
