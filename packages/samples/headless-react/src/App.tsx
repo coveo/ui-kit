@@ -1,5 +1,7 @@
 import logo from './logo.svg';
 import './App.css';
+import {useEffect} from 'react';
+
 import {SearchBox} from './components/search-box/search-box.class';
 import {SearchBox as SearchBoxFn} from './components/search-box/search-box.fn';
 import {DidYouMean} from './components/did-you-mean/did-you-mean.class';
@@ -10,7 +12,16 @@ import {ResultList} from './components/result-list/result-list.class';
 import {ResultList as ResultListFn} from './components/result-list/result-list.fn';
 import {Pager} from './components/pager/pager.class';
 import {Pager as PagerFn} from './components/pager/pager.fn';
+import {ResultsPerPage} from './components/results-per-page/results-per-page.class';
+import {ResultsPerPage as ResultsPerPageFn} from './components/results-per-page/results-per-page.fn';
+import {engine} from './engine';
+import {Section} from './layout/section';
+import {QuerySummary} from './components/query-summary/query-summary.class';
+import {QuerySummary as QuerySummaryFn} from './components/query-summary/query-summary.fn';
+import {Facet} from './components/facet/facet.class';
+import {Facet as FacetFn} from './components/facet/facet.fn';
 import {
+  buildSearchParameterManager,
   buildSearchBox,
   buildDidYouMean,
   buildQuerySummary,
@@ -24,24 +35,16 @@ import {
   SortCriterion,
   buildResultsPerPage,
   buildPager,
-  // buildSearchParameterManager,
 } from '@coveo/headless';
 
-import {SearchParameterManager} from './components/search-parameter-manager/search-parameter-manager.class';
-// import {SearchParameterManager as SearchParameterManagerFn} from './components/search-parameter-manager/search-parameter-manager.fn';
-// import {readSearchParametersFromURI} from './components/search-parameter-manager/search-parameter-serializer';
-import {ResultsPerPage} from './components/results-per-page/results-per-page.class';
-import {ResultsPerPage as ResultsPerPageFn} from './components/results-per-page/results-per-page.fn';
-import {engine} from './engine';
-import {Section} from './layout/section';
-import {QuerySummary} from './components/query-summary/query-summary.class';
-import {QuerySummary as QuerySummaryFn} from './components/query-summary/query-summary.fn';
-import {Facet} from './components/facet/facet.class';
-import {Facet as FacetFn} from './components/facet/facet.fn';
+import {
+  readSearchParametersFromURI,
+  writeSearchParametersToURI,
+} from './components/search-parameter-manager/search-parameter-serializer';
 
-// const searchParameterManager = buildSearchParameterManager(engine, {
-//   initialState: {parameters: readSearchParametersFromURI()},
-// });
+const searchParameterManager = buildSearchParameterManager(engine, {
+  initialState: {parameters: readSearchParametersFromURI()},
+});
 
 const searchBox = buildSearchBox(engine, {options: {numberOfSuggestions: 8}});
 
@@ -73,10 +76,16 @@ const resultsPerPage = buildResultsPerPage(engine, {
 const pager = buildPager(engine, {options: {numberOfPages: 6}});
 
 function App() {
+  useEffect(
+    () =>
+      searchParameterManager.subscribe(() =>
+        writeSearchParametersToURI(searchParameterManager.state.parameters)
+      ),
+    []
+  );
+
   return (
     <div className="App">
-      {/* <SearchParameterManagerFn controller={searchParameterManager} /> */}
-      <SearchParameterManager />
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <Section title="search-box">
