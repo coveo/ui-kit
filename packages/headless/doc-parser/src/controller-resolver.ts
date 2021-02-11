@@ -4,8 +4,9 @@ import {
   ApiInterface,
   Parameter,
 } from '@microsoft/api-extractor-model';
+import {DocComment} from '@microsoft/tsdoc';
 import {findApi} from './api-finder';
-import {buildFuncEntity, buildObjEntity, FuncEntity} from './entity';
+import {buildEntity, buildFuncEntity, FuncEntity, ObjEntity} from './entity';
 import {
   buildEntityFromParam,
   buildParamEntityBasedOnKind,
@@ -57,15 +58,15 @@ function resolveControllerParam(
 function buildObjEntityFromInterface(
   entryPoint: ApiEntryPoint,
   apiInterface: ApiInterface
-) {
+): ObjEntity {
   const name = apiInterface.name;
   const members = resolveInterfaceMembers(entryPoint, apiInterface);
-
-  return buildObjEntity({
+  const entity = buildEntity({
     name,
     type: name,
-    desc: apiInterface.tsdocComment?.emitAsTsdoc() || '',
     isOptional: false,
-    members,
+    comment: (apiInterface.tsdocComment as unknown) as DocComment,
   });
+
+  return {...entity, members};
 }

@@ -7,7 +7,7 @@ import {
   DocPlainText,
 } from '@microsoft/tsdoc';
 
-export function emit(nodes: readonly DocNode[]) {
+export function emitAsTsDoc(nodes: readonly DocNode[]) {
   return nodes.map(emitNode).join('');
 }
 
@@ -18,7 +18,7 @@ function emitNode(node: DocNode): string {
     const trimmed = DocNodeTransforms.trimSpacesInParagraph(
       node as DocParagraph
     );
-    return emit(trimmed.nodes);
+    return emitAsTsDoc(trimmed.nodes);
   }
 
   if (kind === DocNodeKind.PlainText) {

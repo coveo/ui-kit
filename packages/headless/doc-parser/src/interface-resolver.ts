@@ -9,12 +9,14 @@ import {
   ExcerptTokenKind,
   Parameter,
 } from '@microsoft/api-extractor-model';
+import {DocComment} from '@microsoft/tsdoc';
 import {findApi} from './api-finder';
 import {
   AnyEntity,
   buildEntity,
   buildFuncEntity,
-  buildObjEntity,
+  Entity,
+  ObjEntity,
 } from './entity';
 
 export function resolveInterfaceMembers(
@@ -78,7 +80,7 @@ function isReference(m: ApiPropertySignature) {
 function buildEntityFromProperty(p: ApiPropertySignature) {
   return buildEntity({
     name: p.name,
-    desc: p.tsdocComment?.emitAsTsdoc() || '',
+    comment: (p.tsdocComment as unknown) as DocComment,
     isOptional: p.isOptional,
     type: p.propertyTypeExcerpt.text,
   });
@@ -87,25 +89,25 @@ function buildEntityFromProperty(p: ApiPropertySignature) {
 function buildObjEntityFromProperty(
   entry: ApiEntryPoint,
   p: ApiPropertySignature
-) {
+): ObjEntity {
   const type = p.propertyTypeExcerpt.text;
   const apiInterface = findApi(entry, type) as ApiInterface;
   const members = resolveInterfaceMembers(entry, apiInterface);
   const entity = buildEntityFromProperty(p);
 
-  return buildObjEntity({...entity, members});
+  return {...entity, members};
 }
 
 function buildEntityFromPropertyAndResolveTypeAlias(
   entry: ApiEntryPoint,
   p: ApiPropertySignature
-) {
+): Entity {
   const entity = buildEntityFromProperty(p);
   const alias = p.propertyTypeExcerpt.text;
   const typeAlias = findApi(entry, alias) as ApiTypeAlias;
   const type = typeAlias.typeExcerpt.text;
 
-  return buildEntity({...entity, type});
+  return {...entity, type};
 }
 
 function isMethodSignature(m: ApiItem): m is ApiMethodSignature {
@@ -127,7 +129,7 @@ function resolveMethodSignature(m: ApiMethodSignature) {
 function buildEntityFromParam(p: Parameter) {
   return buildEntity({
     name: p.name,
-    desc: '',
+    comment: undefined,
     isOptional: false,
     type: p.parameterTypeExcerpt.text,
   });

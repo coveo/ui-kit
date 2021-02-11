@@ -1,3 +1,5 @@
+import {DocComment} from '@microsoft/tsdoc';
+
 export interface Entity {
   name: string;
   desc: string;
@@ -18,14 +20,23 @@ export interface FuncEntity {
 
 export type AnyEntity = Entity | ObjEntity | FuncEntity;
 
-export function buildEntity(config: Entity): Entity {
-  const type = sanitizeType(config.type);
-  return {...config, type};
+interface EntityOptions {
+  name: string;
+  type: string;
+  isOptional: boolean;
+  comment: DocComment | undefined;
 }
 
-export function buildObjEntity(config: ObjEntity): ObjEntity {
+export function buildEntity(config: EntityOptions): Entity {
   const type = sanitizeType(config.type);
-  return {...config, type};
+  const desc = config.comment?.emitAsTsdoc() || '';
+
+  return {
+    name: config.name,
+    isOptional: config.isOptional,
+    type,
+    desc,
+  };
 }
 
 export function buildFuncEntity(config: FuncEntity): FuncEntity {
