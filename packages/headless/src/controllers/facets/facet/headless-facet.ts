@@ -134,8 +134,6 @@ export interface FacetSearch {
   search(): void;
   /** selects a result */
   select(value: SpecificFacetSearchResult): void;
-  /** state of the facet search */
-  readonly state: FacetSearchState;
 }
 
 export interface FacetSearchState {
@@ -217,11 +215,12 @@ export function buildFacet(
 
   dispatch(registerFacet(options));
   const facetSearch = createFacetSearch();
+  const {state, ...restOfFacetSearch} = facetSearch;
 
   return {
     ...controller,
 
-    facetSearch,
+    facetSearch: restOfFacetSearch,
 
     toggleSelect: (selection: FacetValue) =>
       dispatch(executeToggleFacetSelect({facetId: options.facetId, selection})),
