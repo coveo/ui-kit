@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.6.0-alpha.5](https://github.com/coveo/ui-kit/compare/v0.6.0-alpha.4...v0.6.0-alpha.5) (2021-02-11)
+
+
+### Features
+
+* **atomic:** base facet component ([#486](https://github.com/coveo/ui-kit/issues/486)) ([7ef25da](https://github.com/coveo/ui-kit/commit/7ef25dafccfc84b9ff20f7bb0b8aabf4d980e9f6))
+
+
+
+
+
 # [0.6.0-alpha.4](https://github.com/coveo/ui-kit/compare/v0.6.0-alpha.3...v0.6.0-alpha.4) (2021-02-11)
 
 
