@@ -107,7 +107,14 @@ export class AtomicCategoryFacet implements InitializableComponent {
         hasActiveValues={this.facetState.hasActiveValues}
         onDeselectAll={() => this.facet.deselectAll()}
       >
-        <facet-search facet={this.facet} facetState={this.facetState} />
+        <facet-search
+          facet={this.facet}
+          facetState={this.facetState}
+          onSelectValue={(e: CustomEvent<number>) => {
+            const value = this.facetState.facetSearch.values[e.detail];
+            this.facet.facetSearch.select(value);
+          }}
+        />
         <div>
           <div>{this.resetButton}</div>
           <div>{this.parents}</div>

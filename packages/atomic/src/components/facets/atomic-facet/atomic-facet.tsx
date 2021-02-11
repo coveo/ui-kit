@@ -86,7 +86,14 @@ export class AtomicFacet implements InitializableComponent {
         onDeselectAll={() => this.facet.deselectAll()}
       >
         <div>
-          <facet-search facet={this.facet} facetState={this.facetState} />
+          <facet-search
+            facet={this.facet}
+            facetState={this.facetState}
+            onSelectValue={(e: CustomEvent<number>) => {
+              const value = this.facetState.facetSearch.values[e.detail];
+              this.facet.facetSearch.select(value);
+            }}
+          />
           <ul class="list-none p-0">{this.values}</ul>
           <div>
             {this.showMoreButton}

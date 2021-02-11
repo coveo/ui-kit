@@ -80,14 +80,14 @@ export class AtomicSearchBox {
   public render() {
     return (
       <base-search
-        id={this._id}
+        _id={this._id}
         strings={this.strings}
         suggestionValues={this.searchBoxState.suggestions.map((v) => ({
           ...v,
           value: v.highlightedValue,
         }))}
         onTextChange={(e) => this.searchBox.updateText(e.detail)}
-        onSubmit={() => this.searchBox.submit()}
+        onSearch={() => this.searchBox.submit()}
         onSelectValue={(e) => {
           this.searchBox.selectSuggestion(
             this.searchBoxState.suggestions[e.detail].rawValue

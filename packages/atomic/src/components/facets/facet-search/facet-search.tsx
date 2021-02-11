@@ -1,4 +1,4 @@
-import {Component, h, Prop, State} from '@stencil/core';
+import {Component, Event, EventEmitter, h, Prop, State} from '@stencil/core';
 import {BaseFacetSearchResult} from '@coveo/headless/dist/api/search/facet-search/base/base-facet-search-response';
 import {
   CategoryFacet,
@@ -20,6 +20,7 @@ export class FacetSearch {
   @Prop({reflect: true, attribute: 'data-id'}) public _id = randomID(
     'atomic-facet-search-'
   );
+  @Event() public selectValue!: EventEmitter<number>;
 
   @State()
   public strings: I18nState = {
@@ -29,25 +30,23 @@ export class FacetSearch {
     querySuggestionList: () => 'querySuggestionList',
   };
 
+  private getSuggestionValue(value: BaseFacetSearchResult) {
+    return `<span class="label">${value.rawValue}</span>
+          <span class="number-of-values">${value.count}</span>`;
+  }
+
   public render() {
     return (
       <base-search
-        id={this._id}
+        _id={this._id}
         moreValuesAvailable={this.facetState.facetSearch.moreValuesAvailable}
         strings={this.strings}
         hideSubmit={true}
         suggestionValues={(this.facetState.facetSearch
-          .values as BaseFacetSearchResult[]).map(
-          (value: BaseFacetSearchResult) => ({
-            ...value,
-            value: `<span class="label">${value.rawValue}</span>
-          <span class="number-of-values">${value.count}</span>`,
-          })
-        )}
-        onSelectValue={(e: CustomEvent<number>) => {
-          const value = this.facetState.facetSearch.values[e.detail];
-          this.facet.facetSearch.select(value as any);
-        }}
+          .values as BaseFacetSearchResult[]).map((value) => ({
+          ...value,
+          value: this.getSuggestionValue(value),
+        }))}
         onTextChange={(event: CustomEvent<string>) => {
           this.facet.facetSearch.updateText(event.detail);
           this.facet.facetSearch.search();

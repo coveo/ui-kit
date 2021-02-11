@@ -16,7 +16,7 @@ export interface Suggestion {
 })
 export class BaseSearch {
   @State() public value = '';
-  @Prop() public id!: string;
+  @Prop() public _id!: string;
   @Prop() public strings!: I18nState;
   @Prop() public suggestionValues!: Suggestion[];
   @Prop() public moreValuesAvailable = false;
@@ -24,7 +24,7 @@ export class BaseSearch {
   @Prop() public leadingSubmitButton = false;
   @Prop() public hideSubmit = false;
   @Event() public textChange!: EventEmitter<string>;
-  @Event() public submit!: EventEmitter<void>;
+  @Event() public search!: EventEmitter<void>;
   @Event() public selectValue!: EventEmitter<number>;
   @Event() public showSuggestions!: EventEmitter<void>;
   @Event() public hideSuggestions!: EventEmitter<void>;
@@ -38,13 +38,13 @@ export class BaseSearch {
 
   constructor() {
     this.combobox = new Combobox({
-      id: this.id,
+      id: this._id,
       strings: this.strings,
       containerRef: () => this.containerRef,
       inputRef: () => this.inputRef,
       valuesRef: () => this.valuesRef,
       onChange: (value) => this.textChange.emit(value),
-      onSubmit: () => this.submit.emit(),
+      onSubmit: () => this.search.emit(),
       onSelectValue: (element) =>
         this.selectValue.emit((element as HTMLLIElement).value),
       onBlur: () => this.hideSuggestions.emit(),
@@ -111,7 +111,7 @@ export class BaseSearch {
           'submit-button ' + (this.leadingSubmitButton ? 'leading-submit' : '')
         }
         aria-label={this.strings.search()}
-        onClick={() => this.submit.emit()}
+        onClick={() => this.search.emit()}
       >
         <div innerHTML={SearchIcon} class="search-icon" />
       </button>
