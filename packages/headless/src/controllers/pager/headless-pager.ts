@@ -128,6 +128,10 @@ export interface PagerState {
 
 /**
  * Creates a `Pager` controller instance.
+ *
+ * @param engine - The headless engine.
+ * @param props - The configurable `Pager` properties.
+ * @returns A `Pager` controller instance.
  * */
 export function buildPager(
   engine: Engine<PaginationSection & ConfigurationSection>,

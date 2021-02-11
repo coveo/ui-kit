@@ -1,4 +1,5 @@
-import {DocComment} from '@microsoft/tsdoc';
+import {Parameter} from '@microsoft/api-extractor-model';
+import {DocComment, DocNode} from '@microsoft/tsdoc';
 import {emitAsTsDoc} from './tsdoc-emitter';
 
 export interface Entity {
@@ -40,6 +41,18 @@ export function buildEntity(config: EntityOptions): Entity {
   };
 }
 
+export function buildParamEntity(param: Parameter): Entity {
+  const desc = getParamDescription(param);
+  const type = sanitizeType(param.parameterTypeExcerpt.text);
+
+  return {
+    name: param.name,
+    isOptional: false,
+    desc,
+    type,
+  };
+}
+
 export function buildFuncEntity(config: FuncEntity): FuncEntity {
   return {...config};
 }
@@ -49,5 +62,29 @@ function sanitizeType(type: string) {
 }
 
 function getSummary(comment: DocComment | undefined) {
-  return comment ? emitAsTsDoc(comment.summarySection.nodes) : '';
+  if (!comment) {
+    return '';
+  }
+
+  try {
+    return emitAsTsDoc(comment.summarySection.nodes);
+  } catch (e) {
+    console.log(
+      'failed to get summary for comment:\n',
+      comment.emitAsTsdoc(),
+      e
+    );
+    return '';
+  }
+}
+
+function getParamDescription(param: Parameter) {
+  const nodes = param.tsdocParamBlock?.content.getChildNodes() || [];
+
+  try {
+    return emitAsTsDoc((nodes as unknown) as readonly DocNode[]);
+  } catch (e) {
+    console.log('failed to description for param:', param.name, e);
+    return '';
+  }
 }

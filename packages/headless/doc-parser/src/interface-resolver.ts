@@ -7,7 +7,6 @@ import {
   ApiPropertySignature,
   ApiTypeAlias,
   ExcerptTokenKind,
-  Parameter,
 } from '@microsoft/api-extractor-model';
 import {DocComment} from '@microsoft/tsdoc';
 import {findApi} from './api-finder';
@@ -15,6 +14,7 @@ import {
   AnyEntity,
   buildEntity,
   buildFuncEntity,
+  buildParamEntity,
   Entity,
   ObjEntity,
 } from './entity';
@@ -115,7 +115,7 @@ function isMethodSignature(m: ApiItem): m is ApiMethodSignature {
 }
 
 function resolveMethodSignature(m: ApiMethodSignature) {
-  const params = m.parameters.map((p) => buildEntityFromParam(p));
+  const params = m.parameters.map((p) => buildParamEntity(p));
   const returnType = m.returnTypeExcerpt.text;
 
   return buildFuncEntity({
@@ -123,14 +123,5 @@ function resolveMethodSignature(m: ApiMethodSignature) {
     desc: m.tsdocComment?.emitAsTsdoc() || '',
     params,
     returnType,
-  });
-}
-
-function buildEntityFromParam(p: Parameter) {
-  return buildEntity({
-    name: p.name,
-    comment: undefined,
-    isOptional: false,
-    type: p.parameterTypeExcerpt.text,
   });
 }

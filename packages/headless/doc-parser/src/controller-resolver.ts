@@ -6,11 +6,14 @@ import {
 } from '@microsoft/api-extractor-model';
 import {DocComment} from '@microsoft/tsdoc';
 import {findApi} from './api-finder';
-import {buildEntity, buildFuncEntity, FuncEntity, ObjEntity} from './entity';
 import {
-  buildEntityFromParam,
-  buildParamEntityBasedOnKind,
-} from './function-param-resolver';
+  buildEntity,
+  buildFuncEntity,
+  buildParamEntity,
+  FuncEntity,
+  ObjEntity,
+} from './entity';
+import {buildParamEntityBasedOnKind} from './function-param-resolver';
 import {resolveInterfaceMembers} from './interface-resolver';
 
 interface Controller {
@@ -51,7 +54,7 @@ function resolveControllerParam(
 ) {
   const isEngine = index === 0;
   return isEngine
-    ? buildEntityFromParam(p)
+    ? buildParamEntity(p)
     : buildParamEntityBasedOnKind(entryPoint, p);
 }
 
