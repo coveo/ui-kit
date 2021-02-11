@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.6.0-alpha.3](https://github.com/coveo/ui-kit/compare/v0.6.0-alpha.2...v0.6.0-alpha.3) (2021-02-11)
+
+
+### Features
+
+* **atomic:** make search box suggestions absolute and more ([#490](https://github.com/coveo/ui-kit/issues/490)) ([7c42b66](https://github.com/coveo/ui-kit/commit/7c42b66370000bddcd5beda9c58876d6694dcd31))
+
+
+
+
+
 # [0.6.0-alpha.2](https://github.com/coveo/ui-kit/compare/v0.6.0-alpha.1...v0.6.0-alpha.2) (2021-02-10)
 
 
