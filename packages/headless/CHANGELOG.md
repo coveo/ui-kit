@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.6.0-alpha.6](https://github.com/coveo/ui-kit/compare/v0.6.0-alpha.5...v0.6.0-alpha.6) (2021-02-11)
+
+
+### Bug Fixes
+
+* **headless:** remove #state attribute from FacetSearch interface ([#493](https://github.com/coveo/ui-kit/issues/493)) ([845b18b](https://github.com/coveo/ui-kit/commit/845b18b2e3745ea06988b4823329c615e0f7ce5e))
+
+
+
+
+
 # [0.6.0-alpha.4](https://github.com/coveo/ui-kit/compare/v0.6.0-alpha.3...v0.6.0-alpha.4) (2021-02-11)
 
 
