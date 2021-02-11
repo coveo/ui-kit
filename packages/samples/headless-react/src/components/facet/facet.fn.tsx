@@ -5,6 +5,7 @@ import {
   FacetOptions,
 } from '@coveo/headless';
 import {engine} from '../../engine';
+import {FacetSearch} from './facet-search';
 
 interface FacetProps {
   controller: HeadlessFacet;
@@ -16,11 +17,6 @@ export const Facet: FunctionComponent<FacetProps> = (props) => {
 
   useEffect(() => controller.subscribe(() => setState(controller.state)), []);
 
-  const onInput = (text: string) => {
-    controller.facetSearch.updateText(text);
-    controller.facetSearch.search();
-  };
-
   if (!state.values.length) {
     return <div>No facet values</div>;
   }
@@ -28,26 +24,17 @@ export const Facet: FunctionComponent<FacetProps> = (props) => {
   return (
     <ul>
       <li>
-        <input onInput={(e) => onInput(e.currentTarget.value)} />
-        <ul>
-          {state.facetSearch.values.map((facetSearchValue) => (
-            <li key={facetSearchValue.rawValue}>
-              <button
-                onClick={() => controller.facetSearch.select(facetSearchValue)}
-                disabled={
-                  !!state.values.find(
-                    (facetValue) =>
-                      facetValue.value === facetSearchValue.displayValue &&
-                      controller.isValueSelected(facetValue)
-                  )
-                }
-              >
-                {facetSearchValue.displayValue} ({facetSearchValue.count}{' '}
-                results)
-              </button>
-            </li>
-          ))}
-        </ul>
+        <FacetSearch
+          controller={controller.facetSearch}
+          facetState={state.facetSearch}
+          isValueSelected={(facetSearchValue) =>
+            !!state.values.find(
+              (facetValue) =>
+                facetValue.value === facetSearchValue.displayValue &&
+                controller.isValueSelected(facetValue)
+            )
+          }
+        />
       </li>
       <li>
         <ul>

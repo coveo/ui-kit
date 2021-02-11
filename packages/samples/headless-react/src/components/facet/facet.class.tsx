@@ -6,6 +6,7 @@ import {
   Unsubscribe,
 } from '@coveo/headless';
 import {engine} from '../../engine';
+import {FacetSearch} from './facet-search';
 
 interface FacetProps {
   field: string;
@@ -52,28 +53,17 @@ export class Facet extends Component<FacetProps> {
     return (
       <ul>
         <li>
-          <input onInput={(e) => this.onInput(e.currentTarget.value)} />
-          <ul>
-            {this.state.facetSearch.values.map((facetSearchValue) => (
-              <li key={facetSearchValue.rawValue}>
-                <button
-                  onClick={() =>
-                    this.controller.facetSearch.select(facetSearchValue)
-                  }
-                  disabled={
-                    !!this.state.values.find(
-                      (facetValue) =>
-                        facetValue.value === facetSearchValue.displayValue &&
-                        this.controller.isValueSelected(facetValue)
-                    )
-                  }
-                >
-                  {facetSearchValue.displayValue} ({facetSearchValue.count}{' '}
-                  results)
-                </button>
-              </li>
-            ))}
-          </ul>
+          <FacetSearch
+            controller={this.controller.facetSearch}
+            facetState={this.state.facetSearch}
+            isValueSelected={(facetSearchValue) =>
+              !!this.state.values.find(
+                (facetValue) =>
+                  facetValue.value === facetSearchValue.displayValue &&
+                  this.controller.isValueSelected(facetValue)
+              )
+            }
+          />
         </li>
         <li>
           <ul>
