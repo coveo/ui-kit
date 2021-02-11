@@ -29,12 +29,16 @@ import {
 } from '../../utils/validate-payload';
 
 export interface PagerInitialState {
-  /** The initial page number */
+  /**
+   * The initial page number.
+   * */
   page?: number;
 }
 
 export interface PagerOptions {
-  /** The number of pages to display in the pager. */
+  /**
+   * The number of pages to display in the pager.
+   * */
   numberOfPages?: number;
 }
 
@@ -63,24 +67,32 @@ const initialStateSchema = new Schema({
 export interface Pager extends Controller {
   /**
    * Updates the results to those on the passed page.
-   * @param page The page number.
+   *
+   * @param page - The page number.
    */
   selectPage(page: number): void;
 
-  /** Updates the results to those on the next page.*/
+  /**
+   * Updates the results to those on the next page.
+   * */
   nextPage(): void;
 
-  /** Updates the results to those on the previous page.*/
+  /**
+   * Updates the results to those on the previous page.
+   * */
   previousPage(): void;
 
   /**
-   * @returns `true` when the current page is equal to the current page, and `false` otherwise.
-   * @param page The page number to check.
-   * @returns boolean.
+   * Returns `true` when the current page is equal to the passed page, and `false` otherwise.
+   *
+   * @param page - The page number to check.
+   * @returns Whether the passed page is selected.
    */
   isCurrentPage(page: number): boolean;
 
-  /** The state of the Pager controller */
+  /**
+   * The state of the Pager controller.
+   * */
   state: PagerState;
 }
 
@@ -88,23 +100,35 @@ export interface Pager extends Controller {
  * A scoped and simplified part of the headless state that is relevant to the `Pager` controller.
  */
 export interface PagerState {
-  /** @returns the current selected page */
+  /**
+   * The active page number.
+   * */
   currentPage: number;
 
-  /** @returns the current pages range */
+  /**
+   * The page range to display.
+   * */
   currentPages: number[];
 
-  /**  @returns the max available page for this query */
+  /**
+   * The maximum available page.
+   * */
   maxPage: number;
 
-  /** @returns `true` when a previous page is available, and `false` otherwise.*/
+  /**
+   * Returns `true` when a previous page is available, and `false` otherwise.
+   * */
   hasPreviousPage: boolean;
 
-  /** @returns `true` when a next page is available, and `false` otherwise. */
+  /**
+   * Returns `true` when a next page is available, and `false` otherwise.
+   * */
   hasNextPage: boolean;
 }
 
-/** Creates a `Pager` controller instance. */
+/**
+ * Creates a `Pager` controller instance.
+ * */
 export function buildPager(
   engine: Engine<PaginationSection & ConfigurationSection>,
   props: PagerProps = {}
