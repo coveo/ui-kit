@@ -8,7 +8,6 @@ import {
 } from '@coveo/headless';
 import {randomID} from '../../../utils/utils';
 import {I18nState} from '../../../utils/initialization-utils';
-import {CategoryFacetSearchResult} from '@coveo/headless/dist/api/search/facet-search/category-facet-search/category-facet-search-response';
 
 @Component({
   tag: 'facet-search',
@@ -47,7 +46,7 @@ export class FacetSearch {
         )}
         onSelectValue={(e: CustomEvent<number>) => {
           const value = this.facetState.facetSearch.values[e.detail];
-          this.facet.facetSearch.select(value as CategoryFacetSearchResult);
+          this.facet.facetSearch.select(value as any);
         }}
         onTextChange={(event: CustomEvent<string>) => {
           this.facet.facetSearch.updateText(event.detail);
