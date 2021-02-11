@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.6.0-alpha.4](https://github.com/coveo/ui-kit/compare/v0.6.0-alpha.3...v0.6.0-alpha.4) (2021-02-11)
+
+
+### Bug Fixes
+
+* **headless:** made `executeSearch` always log analytics events after the query ([#489](https://github.com/coveo/ui-kit/issues/489)) ([97908f2](https://github.com/coveo/ui-kit/commit/97908f206823f673c15be2ead00ada711b61b31e))
+
+
+
+
+
 # [0.6.0-alpha.3](https://github.com/coveo/ui-kit/compare/v0.6.0-alpha.2...v0.6.0-alpha.3) (2021-02-11)
 
 
