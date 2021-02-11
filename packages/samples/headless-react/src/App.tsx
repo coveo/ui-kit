@@ -24,7 +24,12 @@ import {
   SortCriterion,
   buildResultsPerPage,
   buildPager,
+  // buildSearchParameterManager,
 } from '@coveo/headless';
+
+import {SearchParameterManager} from './components/search-parameter-manager/search-parameter-manager.class';
+// import {SearchParameterManager as SearchParameterManagerFn} from './components/search-parameter-manager/search-parameter-manager.fn';
+// import {readSearchParametersFromURI} from './components/search-parameter-manager/search-parameter-serializer';
 import {ResultsPerPage} from './components/results-per-page/results-per-page.class';
 import {ResultsPerPage as ResultsPerPageFn} from './components/results-per-page/results-per-page.fn';
 import {engine} from './engine';
@@ -33,6 +38,10 @@ import {QuerySummary} from './components/query-summary/query-summary.class';
 import {QuerySummary as QuerySummaryFn} from './components/query-summary/query-summary.fn';
 import {Facet} from './components/facet/facet.class';
 import {Facet as FacetFn} from './components/facet/facet.fn';
+
+// const searchParameterManager = buildSearchParameterManager(engine, {
+//   initialState: {parameters: readSearchParametersFromURI()},
+// });
 
 const searchBox = buildSearchBox(engine, {options: {numberOfSuggestions: 8}});
 
@@ -66,6 +75,8 @@ const pager = buildPager(engine, {options: {numberOfPages: 6}});
 function App() {
   return (
     <div className="App">
+      {/* <SearchParameterManagerFn controller={searchParameterManager} /> */}
+      <SearchParameterManager />
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <Section title="search-box">
