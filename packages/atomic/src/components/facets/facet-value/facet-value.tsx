@@ -15,7 +15,7 @@ export class FacetValue {
   public isSelected!: boolean;
 
   public render() {
-    const id = randomID('');
+    const id = randomID('input');
     return (
       <li
         role="option"
@@ -25,12 +25,12 @@ export class FacetValue {
           type="checkbox"
           checked={this.isSelected}
           class="facet-value-checkbox w-5 h-5"
-          id={`${id}-input`}
-          name={`${id}-input`}
+          id={id}
+          name={id}
           onClick={() => this.facetValueSelected.emit()}
         />
         <label
-          htmlFor={`${id}-input`}
+          htmlFor={id}
           class="ml-3 flex flex-row text-on-background flex-grow cursor-pointer"
         >
           {this.label}
