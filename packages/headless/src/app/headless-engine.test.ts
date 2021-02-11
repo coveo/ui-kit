@@ -5,38 +5,24 @@ import {
 } from '../features/configuration/configuration-actions';
 import * as storeConfig from './store';
 import {searchAppReducers} from './search-app-reducers';
-import {SearchAPIClient} from '../api/search/search-api-client';
 import {AnalyticsClientSendEventHook} from 'coveo.analytics/dist/definitions/client/analytics';
 import pino from 'pino';
-import {NoopPreprocessRequestMiddleware} from '../api/platform-client';
 import {validatePayloadAndThrow} from '../utils/validate-payload';
-import {
-  NoopPostprocessFacetSearchResponseMiddleware,
-  NoopPostprocessQuerySuggestResponseMiddleware,
-  NoopPostprocessSearchResponseMiddleware,
-} from '../api/search/search-api-client-middleware';
+import {buildMockSearchAPIClient} from '../test/mock-search-api-client';
 
 describe('headless engine', () => {
   let options: HeadlessOptions<typeof searchAppReducers>;
   let configureStoreSpy: jest.SpyInstance;
   let store: storeConfig.Store;
   let engine: Engine;
-  const logger = pino({level: 'silent'});
 
   beforeEach(() => {
     store = storeConfig.configureStore({
       reducers: searchAppReducers,
       thunkExtraArguments: {
-        searchAPIClient: new SearchAPIClient({
-          logger,
-          renewAccessToken: async () => '',
-          preprocessRequest: NoopPreprocessRequestMiddleware,
-          postprocessSearchResponseMiddleware: NoopPostprocessSearchResponseMiddleware,
-          postprocessQuerySuggestResponseMiddleware: NoopPostprocessQuerySuggestResponseMiddleware,
-          postprocessFacetSearchResponseMiddleware: NoopPostprocessFacetSearchResponseMiddleware,
-        }),
+        searchAPIClient: buildMockSearchAPIClient(),
         analyticsClientMiddleware: {} as AnalyticsClientSendEventHook,
-        logger: logger,
+        logger: pino({level: 'silent'}),
         validatePayload: validatePayloadAndThrow,
       },
     });

@@ -14,8 +14,10 @@ import {
   logActionMiddleware,
 } from './logger-middlewares';
 import {validatePayloadAndThrow} from '../utils/validate-payload';
+import {PreprocessRequest} from '../api/preprocess-request';
 
 export interface ThunkExtraArguments {
+  preprocessRequest?: PreprocessRequest;
   searchAPIClient: SearchAPIClient;
   analyticsClientMiddleware: AnalyticsClientSendEventHook;
   logger: Logger;

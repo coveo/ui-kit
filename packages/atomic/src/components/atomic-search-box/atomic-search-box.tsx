@@ -14,6 +14,7 @@ import {randomID} from '../../utils/utils';
  *
  * @part submit-button - The search box submit button
  * @part input - The search box input
+ * @part input-wrapper - The wrapper for the searchbox input
  * @part clear-button - The search box input's clear button
  * @part suggestions - The list of suggestions
  * @part suggestion - The suggestion
@@ -37,17 +38,14 @@ export class AtomicSearchBox {
   };
   /**
    * Maximum number of suggestions to display
-   * @default 5
    */
   @Prop() numberOfSuggestions = 5;
   /**
    * The placeholder for the search box input
-   * @default ''
    */
   @Prop() placeholder = '';
   /**
    * Whether the submit button should be placed before the input
-   * @default false
    */
   @Prop() leadingSubmitButton = false;
   @Prop({reflect: true, attribute: 'data-id'}) public _id = randomID(
