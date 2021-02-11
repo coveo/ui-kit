@@ -72,13 +72,6 @@ export class AtomicCategoryFacet implements InitializableComponent {
     );
   }
 
-  private onFacetSearch(e: CustomEvent<string>) {
-    const facetSearch = this.facet.facetSearch;
-
-    facetSearch.updateText(e.detail);
-    facetSearch.search();
-  }
-
   private get resetButton() {
     if (!this.facetState.hasActiveValues) {
       return null;

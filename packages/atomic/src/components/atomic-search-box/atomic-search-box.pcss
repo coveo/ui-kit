@@ -9,8 +9,44 @@
   width: var(--atomic-submit-button-size, 48px)
 }
 
-.search-box, .suggestion {
+.search-box-wrapper, .suggestion {
   height: var(--atomic-search-box-height, 48px);
+}
+
+.search-box {
+  @apply w-full lg:w-80;
+}
+
+.search-box-wrapper {
+  @apply focus:outline-none box-border flex flex-row items-center w-full;
+}
+
+.input-wrapper {
+  @apply h-full flex flex-row flex-grow items-center apply-border-on-background border-r-0 rounded-l-lg;
+}
+
+.input-wrapper.leading-submit {
+  @apply border-l-0 rounded-r-lg;
+}
+
+.search-input {
+  @apply h-full mx-2 my-0 text-base placeholder-on-background outline-none flex-grow flex-row items-center;
+}
+
+.submit-button {
+  @apply h-full bg-transparent border-0 focus:outline-none bg-primary p-0 rounded-r-lg;
+}
+
+.submit-button.leading-submit {
+  @apply rounded-l-lg;
+}
+
+.search-icon {
+  @apply mx-auto w-3.5 h-3.5 text-on-primary fill-current;
+}
+
+.suggestion {
+  @apply px-2;
 }
 
 .search-box:focus-within .input-wrapper, .search-box:focus-within .submit-button {

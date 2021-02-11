@@ -6,9 +6,10 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { CategoryFacet, CategoryFacetState, Engine, Facet, FacetState, LogLevel, Result, ResultTemplateCondition } from "@coveo/headless";
-import { Bindings } from "./utils/initialization-utils";
+import { Bindings, I18nState } from "./utils/initialization-utils";
 import { i18n } from "i18next";
 import { InitializationOptions } from "./components/atomic-search-interface/atomic-search-interface";
+import { Suggestion } from "./components/searchbox/base-search";
 export namespace Components {
     interface AtomicBreadcrumbManager {
         "categoryDivider": string;
@@ -167,6 +168,15 @@ export namespace Components {
     interface BaseFacet {
         "hasActiveValues": boolean;
         "label": string;
+    }
+    interface BaseSearch {
+        "hideSubmit": boolean;
+        "id": string;
+        "leadingSubmitButton": boolean;
+        "moreValuesAvailable": boolean;
+        "placeholder": string;
+        "strings": I18nState;
+        "suggestionValues": Suggestion[];
     }
     interface FacetSearch {
         "_id": string;
@@ -348,6 +358,12 @@ declare global {
         prototype: HTMLBaseFacetElement;
         new (): HTMLBaseFacetElement;
     };
+    interface HTMLBaseSearchElement extends Components.BaseSearch, HTMLStencilElement {
+    }
+    var HTMLBaseSearchElement: {
+        prototype: HTMLBaseSearchElement;
+        new (): HTMLBaseSearchElement;
+    };
     interface HTMLFacetSearchElement extends Components.FacetSearch, HTMLStencilElement {
     }
     var HTMLFacetSearchElement: {
@@ -389,6 +405,7 @@ declare global {
         "atomic-tab": HTMLAtomicTabElement;
         "atomic-text": HTMLAtomicTextElement;
         "base-facet": HTMLBaseFacetElement;
+        "base-search": HTMLBaseSearchElement;
         "facet-search": HTMLFacetSearchElement;
         "facet-value": HTMLFacetValueElement;
     }
@@ -548,6 +565,22 @@ declare namespace LocalJSX {
         "label": string;
         "onDeselectAll"?: (event: CustomEvent<void>) => void;
     }
+    interface BaseSearch {
+        "hideSubmit"?: boolean;
+        "id": string;
+        "leadingSubmitButton"?: boolean;
+        "moreValuesAvailable"?: boolean;
+        "onClear"?: (event: CustomEvent<void>) => void;
+        "onHideSuggestions"?: (event: CustomEvent<void>) => void;
+        "onSelectValue"?: (event: CustomEvent<number>) => void;
+        "onShowMoreResults"?: (event: CustomEvent<void>) => void;
+        "onShowSuggestions"?: (event: CustomEvent<void>) => void;
+        "onSubmit"?: (event: CustomEvent<void>) => void;
+        "onTextChange"?: (event: CustomEvent<string>) => void;
+        "placeholder"?: string;
+        "strings": I18nState;
+        "suggestionValues": Suggestion[];
+    }
     interface FacetSearch {
         "_id"?: string;
         "facet": Facet | CategoryFacet;
@@ -588,6 +621,7 @@ declare namespace LocalJSX {
         "atomic-tab": AtomicTab;
         "atomic-text": AtomicText;
         "base-facet": BaseFacet;
+        "base-search": BaseSearch;
         "facet-search": FacetSearch;
         "facet-value": FacetValue;
     }
@@ -624,6 +658,7 @@ declare module "@stencil/core" {
             "atomic-tab": LocalJSX.AtomicTab & JSXBase.HTMLAttributes<HTMLAtomicTabElement>;
             "atomic-text": LocalJSX.AtomicText & JSXBase.HTMLAttributes<HTMLAtomicTextElement>;
             "base-facet": LocalJSX.BaseFacet & JSXBase.HTMLAttributes<HTMLBaseFacetElement>;
+            "base-search": LocalJSX.BaseSearch & JSXBase.HTMLAttributes<HTMLBaseSearchElement>;
             "facet-search": LocalJSX.FacetSearch & JSXBase.HTMLAttributes<HTMLFacetSearchElement>;
             "facet-value": LocalJSX.FacetValue & JSXBase.HTMLAttributes<HTMLFacetValueElement>;
         }

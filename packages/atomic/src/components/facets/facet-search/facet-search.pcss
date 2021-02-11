@@ -1,25 +1,46 @@
-@import "tailwindcss/base";
-@import "tailwindcss/utilities";
+.search-box {
+  @apply relative;
+}
 
-/**
- * @prop --atomic-submit-button-size: Size of the submit button inside the search box
- * @prop --atomic-search-box-height: Height of the search box
- */
-.submit-button, .suggestion {
+.search-box-wrapper, .suggestion {
   height: var(--atomic-facet-search-height, 30px);
 }
 
-.suggestion-list {
-  max-height: 250px;
-  overflow-y: scroll;
+.search-box-wrapper {
+  @apply apply-border-on-background rounded  focus-within:rounded-b-none;
 }
 
-.search-box:focus-within .input-wrapper, .search-box:focus-within .submit-button {
+.search-box-wrapper.has-values {
   border-bottom-right-radius: 0;
   border-bottom-left-radius: 0;
 }
 
+.search-input {
+  @apply mx-2;
+}
+
+.clear-button {
+  @apply h-2.5 w-2.5 mr-2;
+}
+
+.suggestions {
+  max-height: 250px;
+  overflow-y: scroll;
+}
+
+.suggestion {
+  @apply px-2 text-sm;
+}
+
 .suggestion.active {
-  @apply bg-gray-200
+  @apply bg-gray-200;
+}
+
+.suggestion .label {
+  @apply font-semibold whitespace-nowrap overflow-ellipsis overflow-hidden;
+}
+
+.suggestion .number-of-values {
+  @apply ml-auto text-on-background-variant;
 }
 
