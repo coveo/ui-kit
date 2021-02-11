@@ -1,4 +1,5 @@
 import {DocComment} from '@microsoft/tsdoc';
+import {emitAsTsDoc} from './tsdoc-emitter';
 
 export interface Entity {
   name: string;
@@ -29,7 +30,7 @@ interface EntityOptions {
 
 export function buildEntity(config: EntityOptions): Entity {
   const type = sanitizeType(config.type);
-  const desc = config.comment?.emitAsTsdoc() || '';
+  const desc = getSummary(config.comment);
 
   return {
     name: config.name,
@@ -45,4 +46,8 @@ export function buildFuncEntity(config: FuncEntity): FuncEntity {
 
 function sanitizeType(type: string) {
   return type.replace(/\$[0-9]{1}/, '');
+}
+
+function getSummary(comment: DocComment | undefined) {
+  return comment ? emitAsTsDoc(comment.summarySection.nodes) : '';
 }

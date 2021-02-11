@@ -23,7 +23,7 @@ export function buildParamEntityBasedOnKind(
 export function buildEntityFromParam(p: Parameter) {
   return buildEntity({
     name: p.name,
-    desc: '',
+    comment: undefined,
     isOptional: false,
     type: p.parameterTypeExcerpt.text,
   });
