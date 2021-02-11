@@ -5,7 +5,8 @@ import {
   Parameter,
 } from '@microsoft/api-extractor-model';
 import {findApi} from './api-finder';
-import {buildParamEntity, ObjEntity} from './entity';
+import {ObjEntity} from './entity';
+import {buildParamEntity} from './entity-builder';
 import {resolveInterfaceMembers} from './interface-resolver';
 
 export function buildParamEntityBasedOnKind(

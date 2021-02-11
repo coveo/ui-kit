@@ -10,14 +10,8 @@ import {
 } from '@microsoft/api-extractor-model';
 import {DocComment} from '@microsoft/tsdoc';
 import {findApi} from './api-finder';
-import {
-  AnyEntity,
-  buildEntity,
-  buildFuncEntity,
-  buildParamEntity,
-  Entity,
-  ObjEntity,
-} from './entity';
+import {AnyEntity, Entity, ObjEntity} from './entity';
+import {buildEntity, buildFuncEntity, buildParamEntity} from './entity-builder';
 
 export function resolveInterfaceMembers(
   entry: ApiEntryPoint,

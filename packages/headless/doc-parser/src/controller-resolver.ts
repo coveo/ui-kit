@@ -6,13 +6,8 @@ import {
 } from '@microsoft/api-extractor-model';
 import {DocComment} from '@microsoft/tsdoc';
 import {findApi} from './api-finder';
-import {
-  buildEntity,
-  buildFuncEntity,
-  buildParamEntity,
-  FuncEntity,
-  ObjEntity,
-} from './entity';
+import {FuncEntity, ObjEntity} from './entity';
+import {buildEntity, buildFuncEntity, buildParamEntity} from './entity-builder';
 import {buildParamEntityBasedOnKind} from './function-param-resolver';
 import {resolveInterfaceMembers} from './interface-resolver';
 
