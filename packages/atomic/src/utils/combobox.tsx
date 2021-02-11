@@ -168,7 +168,9 @@ export class Combobox {
 
   private updateOption(value: Element) {
     const isActive = value.id === this.activeDescendant;
-    value.classList.toggle(this.options.activeClass, isActive);
+    this.options.activeClass
+      .split(' ')
+      .forEach((activeClass) => value.classList.toggle(activeClass, isActive));
     this.setAttributes(this.optionAttributes(isActive, value), value);
   }
 
