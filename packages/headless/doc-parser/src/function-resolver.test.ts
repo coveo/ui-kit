@@ -20,12 +20,12 @@ describe('#resolveFunction', () => {
         buildContentExcerptToken('declare function buildNumericRange(config: '),
         buildReferenceExcerptToken(
           'NumericRangeOptions',
-          '@coveo/headless!~NumericRangeOptions:type'
+          '@coveo/headless!~NumericRangeOptions:interface'
         ),
         buildContentExcerptToken('): '),
         buildReferenceExcerptToken(
           'NumericRangeRequest',
-          '@coveo/headless!~NumericRangeRequest:type'
+          '@coveo/headless!~NumericRangeRequest:interface'
         ),
         buildContentExcerptToken(';'),
       ],
