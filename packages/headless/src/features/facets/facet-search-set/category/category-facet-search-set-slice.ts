@@ -4,11 +4,15 @@ import {
   handleFacetSearchPending,
   handleFacetSearchRejected,
   handleFacetSearchFulfilled,
+  handleClearFacetSearchValues,
 } from '../facet-search-reducer-helpers';
 import {CategoryFacetSearchResponse} from '../../../../api/search/facet-search/category-facet-search/category-facet-search-response';
 import {registerCategoryFacetSearch} from './category-facet-search-actions';
 import {createReducer} from '@reduxjs/toolkit';
-import {updateFacetSearch} from '../specific/specific-facet-search-actions';
+import {
+  clearFacetSearchResults,
+  updateFacetSearch,
+} from '../specific/specific-facet-search-actions';
 import {getCategoryFacetSearchSetInitialState} from './category-facet-search-set-state';
 import {executeFacetSearch} from '../generic/generic-facet-search-actions';
 
@@ -22,6 +26,9 @@ export const categoryFacetSearchSetReducer = createReducer(
       })
       .addCase(updateFacetSearch, (state, action) => {
         handleFacetSearchUpdate(state, action.payload);
+      })
+      .addCase(clearFacetSearchResults, (state, action) => {
+        handleClearFacetSearchValues(state, action.payload);
       })
       .addCase(executeFacetSearch.pending, (state, action) => {
         const facetId = action.meta.arg;

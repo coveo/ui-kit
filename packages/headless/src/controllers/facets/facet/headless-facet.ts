@@ -134,6 +134,8 @@ export interface FacetSearch {
   search(): void;
   /** selects a result */
   select(value: SpecificFacetSearchResult): void;
+  /** clears facet search results */
+  clearResults(): void;
   /** state of the facet search */
   readonly state: FacetSearchState;
 }

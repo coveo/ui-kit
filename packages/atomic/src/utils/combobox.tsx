@@ -19,7 +19,6 @@ export class Combobox {
   constructor(private options: ComboboxOptions) {}
 
   public onInputChange(e: Event) {
-    console.log('Input change');
     const value = (e.target as HTMLInputElement).value;
     this.options.onChange(value);
   }

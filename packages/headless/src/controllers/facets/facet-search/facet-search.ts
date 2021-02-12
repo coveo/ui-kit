@@ -1,5 +1,8 @@
 import {Engine} from '../../../app/headless-engine';
-import {updateFacetSearch} from '../../../features/facets/facet-search-set/specific/specific-facet-search-actions';
+import {
+  clearFacetSearchResults,
+  updateFacetSearch,
+} from '../../../features/facets/facet-search-set/specific/specific-facet-search-actions';
 import {executeSearch} from '../../../features/search/search-actions';
 import {logFacetSelect} from '../../../features/facets/facet-set/facet-set-analytics-actions';
 import {SpecificFacetSearchState} from '../../../features/facets/facet-search-set/specific/specific-facet-search-set-state';
@@ -75,6 +78,13 @@ export function buildGenericFacetSearch<T extends FacetSearchState>(
 
       dispatch(updateFacetOptions({freezeFacetOrder: true}));
       dispatch(executeSearch(logFacetSelect({facetId, facetValue})));
+    },
+
+    /**
+     * Clears the results for the facet search
+     */
+    clearResults() {
+      dispatch(clearFacetSearchResults(facetId));
     },
 
     get state() {

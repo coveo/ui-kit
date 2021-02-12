@@ -9,7 +9,6 @@ import { CategoryFacet, CategoryFacetState, Engine, Facet, FacetState, LogLevel,
 import { Bindings, I18nState } from "./utils/initialization-utils";
 import { i18n } from "i18next";
 import { InitializationOptions } from "./components/atomic-search-interface/atomic-search-interface";
-import { Suggestion } from "./components/searchbox/base-search";
 export namespace Components {
     interface AtomicBreadcrumbManager {
         "categoryDivider": string;
@@ -168,12 +167,13 @@ export namespace Components {
     }
     interface BaseSearch {
         "_id": string;
-        "hideSubmit": boolean;
+        "hideSubmitButton": boolean;
         "leadingSubmitButton": boolean;
         "moreValuesAvailable": boolean;
         "placeholder": string;
         "strings": I18nState;
-        "suggestionValues": Suggestion[];
+        "suggestionValues": {value: string}[];
+        "value": string;
     }
     interface FacetSearch {
         "_id": string;
@@ -561,7 +561,7 @@ declare namespace LocalJSX {
     }
     interface BaseSearch {
         "_id": string;
-        "hideSubmit"?: boolean;
+        "hideSubmitButton"?: boolean;
         "leadingSubmitButton"?: boolean;
         "moreValuesAvailable"?: boolean;
         "onClear"?: (event: CustomEvent<void>) => void;
@@ -573,7 +573,8 @@ declare namespace LocalJSX {
         "onTextChange"?: (event: CustomEvent<string>) => void;
         "placeholder"?: string;
         "strings": I18nState;
-        "suggestionValues": Suggestion[];
+        "suggestionValues": {value: string}[];
+        "value": string;
     }
     interface FacetSearch {
         "_id"?: string;

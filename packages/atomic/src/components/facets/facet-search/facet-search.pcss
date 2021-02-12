@@ -19,10 +19,6 @@
   @apply mx-2;
 }
 
-.clear-button {
-  @apply h-2.5 w-2.5 mr-2;
-}
-
 .suggestions {
   max-height: 250px;
   overflow-y: scroll;
@@ -32,8 +28,12 @@
   @apply px-2 text-sm;
 }
 
-.suggestion.active {
-  @apply bg-gray-200;
+.suggestion.active, .suggestion:hover {
+  @apply bg-primary text-on-primary;
+}
+
+.suggestion.active .number-of-values, .suggestion:hover .number-of-values {
+  @apply text-on-primary
 }
 
 .suggestion .label {

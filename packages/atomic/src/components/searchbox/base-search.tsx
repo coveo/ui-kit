@@ -1,13 +1,9 @@
-import {Component, Event, EventEmitter, h, Prop, State} from '@stencil/core';
+import {Component, Event, EventEmitter, h, Prop} from '@stencil/core';
 import {I18nState} from '../../utils/initialization-utils';
 import {Combobox} from '../../utils/combobox';
 
 import ClearIcon from 'coveo-styleguide/resources/icons/svg/clear.svg';
 import SearchIcon from 'coveo-styleguide/resources/icons/svg/search.svg';
-
-export interface Suggestion {
-  value: string;
-}
 
 @Component({
   tag: 'base-search',
@@ -15,14 +11,14 @@ export interface Suggestion {
   shadow: false,
 })
 export class BaseSearch {
-  @State() public value = '';
   @Prop() public _id!: string;
+  @Prop() public value!: string;
   @Prop() public strings!: I18nState;
-  @Prop() public suggestionValues!: Suggestion[];
+  @Prop() public suggestionValues!: {value: string}[];
   @Prop() public moreValuesAvailable = false;
   @Prop() public placeholder = '';
   @Prop() public leadingSubmitButton = false;
-  @Prop() public hideSubmit = false;
+  @Prop() public hideSubmitButton = false;
   @Event() public textChange!: EventEmitter<string>;
   @Event() public search!: EventEmitter<void>;
   @Event() public selectValue!: EventEmitter<number>;
@@ -43,7 +39,9 @@ export class BaseSearch {
       containerRef: () => this.containerRef,
       inputRef: () => this.inputRef,
       valuesRef: () => this.valuesRef,
-      onChange: (value) => this.textChange.emit(value),
+      onChange: (value) => {
+        this.textChange.emit(value);
+      },
       onSubmit: () => this.search.emit(),
       onSelectValue: (element) =>
         this.selectValue.emit((element as HTMLLIElement).value),
@@ -59,21 +57,23 @@ export class BaseSearch {
 
   private get clearButton() {
     if (this.value === '') {
-      return;
+      return null;
     }
-
     return (
       <button
         type="button"
         part="clear-button"
-        class="clear-button"
+        class="clear-button mr-2"
         aria-label={this.strings.clear()}
         onClick={() => {
           this.clear.emit();
           this.inputRef.focus();
         }}
       >
-        <div innerHTML={ClearIcon} class="text-on-background fill-current" />
+        <div
+          innerHTML={ClearIcon}
+          class="text-on-background fill-current h-2.5 w-2.5"
+        />
       </button>
     );
   }
@@ -88,19 +88,16 @@ export class BaseSearch {
         onInput={(e) => this.combobox.onInputChange(e)}
         onKeyUp={(e) => this.combobox.onInputKeyup(e)}
         onKeyDown={(e) => this.combobox.onInputKeydown(e)}
-        onChange={(e) => {
-          this.value = (e.target as HTMLInputElement).value;
-          this.textChange.emit(this.value);
-        }}
         type="text"
         class={'search-input flex-grow outline-none focus:outline-none'}
         placeholder={this.placeholder}
+        value={this.value}
       />
     );
   }
 
   private get submitButton() {
-    if (this.hideSubmit) {
+    if (this.hideSubmitButton) {
       return null;
     }
     return (
@@ -134,7 +131,7 @@ export class BaseSearch {
   }
 
   private get showMoreSearchResults() {
-    if (!this.moreValuesAvailable) {
+    if (this.suggestionValues.length === 0 || !this.moreValuesAvailable) {
       return null;
     }
 

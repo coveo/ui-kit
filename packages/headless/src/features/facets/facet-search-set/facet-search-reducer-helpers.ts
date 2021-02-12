@@ -54,6 +54,19 @@ export function handleFacetSearchUpdate<T extends FacetSearchResponse>(
   search.options = {...search.options, ...rest};
 }
 
+export function handleClearFacetSearchValues<T extends FacetSearchResponse>(
+  state: FacetSearchSetState<T>,
+  facetId: string
+) {
+  const search = state[facetId];
+
+  if (!search) {
+    return;
+  }
+
+  search.response.values = [];
+}
+
 export function handleFacetSearchPending<T extends FacetSearchResponse>(
   state: FacetSearchSetState<T>,
   facetId: string
