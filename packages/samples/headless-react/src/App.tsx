@@ -21,7 +21,6 @@ import {QuerySummary as QuerySummaryFn} from './components/query-summary/query-s
 import {Facet} from './components/facet/facet.class';
 import {Facet as FacetFn} from './components/facet/facet.fn';
 import {
-  buildSearchParameterManager,
   buildSearchBox,
   buildDidYouMean,
   buildQuerySummary,
@@ -36,15 +35,7 @@ import {
   buildResultsPerPage,
   buildPager,
 } from '@coveo/headless';
-
-import {
-  readSearchParametersFromURI,
-  writeSearchParametersToURI,
-} from './components/search-parameter-manager/search-parameter-serializer';
-
-const searchParameterManager = buildSearchParameterManager(engine, {
-  initialState: {parameters: readSearchParametersFromURI()},
-});
+import {bindSearchParametersToURI} from './components/search-parameter-manager/search-parameter-manager';
 
 const searchBox = buildSearchBox(engine, {options: {numberOfSuggestions: 8}});
 
@@ -75,14 +66,10 @@ const resultsPerPage = buildResultsPerPage(engine, {
 
 const pager = buildPager(engine, {options: {numberOfPages: 6}});
 
+const {autoUpdateURI: startUpdatingURI} = bindSearchParametersToURI(engine);
+
 function App() {
-  useEffect(
-    () =>
-      searchParameterManager.subscribe(() =>
-        writeSearchParametersToURI(searchParameterManager.state.parameters)
-      ),
-    []
-  );
+  useEffect(() => startUpdatingURI(), []);
 
   return (
     <div className="App">
