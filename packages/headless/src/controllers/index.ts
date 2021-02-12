@@ -80,10 +80,7 @@ export {
   buildResultList,
 } from './result-list/headless-result-list';
 
-export {
-  ResultLinkAnalytics,
-  buildResultLinkAnalytics,
-} from './result-list/headless-result-link-analytics';
+export {ResultLink, buildResultLink} from './result-list/headless-result-link';
 
 export {
   ResultsPerPageInitialState,

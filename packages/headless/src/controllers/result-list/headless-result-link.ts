@@ -5,38 +5,40 @@ import {logDocumentOpen} from '../../features/result/result-analytics-actions';
 // 1 second is a reasonable amount of time to catch most longpress actions
 const defaultDelay = 1000;
 
-type ResultLinkAnalyticsOptions = {
+type ResultLinkOptions = {
   /**
-   * The result for which to log analytics.
+   * The result for which to perform actions.
    */
   result: Result;
   /**
    * The amount of time to wait before selecting the result after calling `beginDelayedSelect`.
    */
-  delay?: number;
+  selectionDelay?: number;
 };
 
-type ResultLinkAnalyticsProps = {
-  /** The options for the `ResultLinkAnalytics` controller. */
-  options: ResultLinkAnalyticsOptions;
+type ResultLinkProps = {
+  /** The options for the `ResultLink` controller. */
+  options: ResultLinkOptions;
 };
 
 /**
- * The `ResultLinkAnalytics` headless controller helps more easily send analytics when a search result is selected.
+ * The `ResultLink` headless controller allows users to perform standard actions on results.
  */
-export type ResultLinkAnalytics = ReturnType<typeof buildResultLinkAnalytics>;
+export type ResultLink = ReturnType<typeof buildResultLink>;
 
-export function buildResultLinkAnalytics(
-  engine: Engine,
-  props: ResultLinkAnalyticsProps
-) {
+export function buildResultLink(engine: Engine, props: ResultLinkProps) {
+  const options: Required<ResultLinkOptions> = {
+    selectionDelay: defaultDelay,
+    ...props.options,
+  };
+
   let wasOpened = false;
   const logAnalyticsIfNeverOpened = () => {
     if (wasOpened) {
       return;
     }
     wasOpened = true;
-    engine.dispatch(logDocumentOpen(props.options.result));
+    engine.dispatch(logDocumentOpen(options.result));
   };
 
   let longPressTimer: NodeJS.Timeout;
@@ -62,7 +64,7 @@ export function buildResultLinkAnalytics(
     beginDelayedSelect: () => {
       longPressTimer = setTimeout(
         logAnalyticsIfNeverOpened,
-        props.options.delay ?? defaultDelay
+        options.selectionDelay
       );
     },
     /**

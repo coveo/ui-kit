@@ -3,22 +3,19 @@ import {logDocumentOpenThunk} from '../../features/result/result-analytics-actio
 import {SearchAppState} from '../../state/search-app-state';
 import {buildMockResult} from '../../test';
 import {buildMockSearchAppEngine, MockEngine} from '../../test/mock-engine';
-import {
-  buildResultLinkAnalytics,
-  ResultLinkAnalytics,
-} from './headless-result-link-analytics';
+import {buildResultLink, ResultLink} from './headless-result-link';
 
-describe('ResultLinkAnalytics', () => {
+describe('ResultLink', () => {
   let mockEngine: MockEngine<SearchAppState>;
   let mockResult: Result;
-  let resultLinkAnalytics: ResultLinkAnalytics;
+  let resultLink: ResultLink;
   let logDocumentOpenPendingActionType: string;
-  function initializeResultLinkAnalytics(delay?: number) {
+  function initializeResultLink(delay?: number) {
     const result = (mockResult = buildMockResult());
     logDocumentOpenPendingActionType = logDocumentOpenThunk(mockResult).pending
       .type;
-    resultLinkAnalytics = buildResultLinkAnalytics(mockEngine, {
-      options: {result, delay},
+    resultLink = buildResultLink(mockEngine, {
+      options: {result, selectionDelay: delay},
     });
   }
 
@@ -44,7 +41,7 @@ describe('ResultLinkAnalytics', () => {
 
   beforeEach(() => {
     mockEngine = buildMockSearchAppEngine();
-    initializeResultLinkAnalytics();
+    initializeResultLink();
     jest.useFakeTimers();
   });
 
@@ -53,32 +50,32 @@ describe('ResultLinkAnalytics', () => {
   });
 
   it('when calling select(), logs documentOpen', () => {
-    resultLinkAnalytics.select();
+    resultLink.select();
     expectLogDocumentActionPending();
   });
 
   describe('with a delay', () => {
     const selectDelay = 2;
     beforeEach(() => {
-      initializeResultLinkAnalytics(selectDelay);
+      initializeResultLink(selectDelay);
     });
 
     it("when calling beginDelayedSelect(), doesn't log documentOpen before the delay", () => {
-      resultLinkAnalytics.beginDelayedSelect();
+      resultLink.beginDelayedSelect();
       jest.advanceTimersByTime(selectDelay - 1);
       expectLogDocumentActionNotPending();
     });
 
     it('when calling beginDelayedSelect(), logs documentOpen after the delay', () => {
-      resultLinkAnalytics.beginDelayedSelect();
+      resultLink.beginDelayedSelect();
       jest.advanceTimersByTime(selectDelay);
       expectLogDocumentActionPending();
     });
 
     it("when calling beginDelayedSelect(), doesn't log documentOpen after the delay if cancelPendingSelect() was called", () => {
-      resultLinkAnalytics.beginDelayedSelect();
+      resultLink.beginDelayedSelect();
       jest.advanceTimersByTime(selectDelay - 1);
-      resultLinkAnalytics.cancelPendingSelect();
+      resultLink.cancelPendingSelect();
       jest.advanceTimersByTime(1);
       expectLogDocumentActionNotPending();
     });
