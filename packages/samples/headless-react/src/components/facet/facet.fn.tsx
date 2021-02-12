@@ -5,6 +5,7 @@ import {
   FacetOptions,
 } from '@coveo/headless';
 import {engine} from '../../engine';
+import {FacetSearch} from './facet-search';
 
 interface FacetProps {
   controller: HeadlessFacet;
@@ -22,17 +23,34 @@ export const Facet: FunctionComponent<FacetProps> = (props) => {
 
   return (
     <ul>
-      {state.values.map((value) => (
-        <li key={value.value}>
-          <input
-            type="checkbox"
-            checked={controller.isValueSelected(value)}
-            onChange={() => controller.toggleSelect(value)}
-            disabled={state.isLoading}
-          />
-          {value.value} ({value.numberOfResults} results)
-        </li>
-      ))}
+      <li>
+        <FacetSearch
+          controller={controller.facetSearch}
+          facetState={state.facetSearch}
+          isValueSelected={(facetSearchValue) =>
+            !!state.values.find(
+              (facetValue) =>
+                facetValue.value === facetSearchValue.displayValue &&
+                controller.isValueSelected(facetValue)
+            )
+          }
+        />
+      </li>
+      <li>
+        <ul>
+          {state.values.map((value) => (
+            <li key={value.value}>
+              <input
+                type="checkbox"
+                checked={controller.isValueSelected(value)}
+                onChange={() => controller.toggleSelect(value)}
+                disabled={state.isLoading}
+              />
+              {value.value} ({value.numberOfResults} results)
+            </li>
+          ))}
+        </ul>
+      </li>
     </ul>
   );
 };
