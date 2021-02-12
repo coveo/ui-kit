@@ -12,23 +12,30 @@ export function emitAsTsDoc(nodes: readonly DocNode[]) {
 }
 
 function emitNode(node: DocNode): string {
-  const {kind} = node;
-
-  if (kind === DocNodeKind.Paragraph) {
-    const trimmed = DocNodeTransforms.trimSpacesInParagraph(
-      node as DocParagraph
-    );
+  if (isParagraph(node)) {
+    const trimmed = DocNodeTransforms.trimSpacesInParagraph(node);
     return emitAsTsDoc(trimmed.nodes);
   }
 
-  if (kind === DocNodeKind.PlainText) {
-    return (node as DocPlainText).text;
+  if (isPlainText(node)) {
+    return node.text;
   }
 
-  if (kind === DocNodeKind.CodeSpan) {
-    const {code} = node as DocCodeSpan;
-    return `\`${code}\``;
+  if (isCodeSpan(node)) {
+    return `\`${node.code}\``;
   }
 
   throw new Error(`Unsupported DocNode kind: ${node.kind}`);
+}
+
+function isParagraph(node: DocNode): node is DocParagraph {
+  return node.kind === DocNodeKind.Paragraph;
+}
+
+function isPlainText(node: DocNode): node is DocPlainText {
+  return node.kind === DocNodeKind.PlainText;
+}
+
+function isCodeSpan(node: DocNode): node is DocCodeSpan {
+  return node.kind === DocNodeKind.CodeSpan;
 }
