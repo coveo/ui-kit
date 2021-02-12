@@ -1,5 +1,5 @@
 import {Parameter} from '@microsoft/api-extractor-model';
-import {DocComment, DocNode} from '@microsoft/tsdoc';
+import {DocComment, DocNode, DocNodeKind} from '@microsoft/tsdoc';
 import {AnyEntity, Entity, FuncEntity, ObjEntity} from './entity';
 import {emitAsTsDoc} from './tsdoc-emitter';
 
@@ -64,7 +64,8 @@ function getSummary(comment: DocComment | undefined) {
   }
 
   try {
-    return emitAsTsDoc(comment.summarySection.nodes);
+    const nodes = removeBlockTagNodes(comment.summarySection.nodes);
+    return emitAsTsDoc(nodes);
   } catch (e) {
     console.log(
       'failed to get summary for comment:\n',
@@ -84,4 +85,16 @@ function getParamDescription(param: Parameter) {
     console.log('failed to description for param:', param.name, e);
     return '';
   }
+}
+
+function removeBlockTagNodes(nodes: readonly DocNode[]) {
+  return nodes.filter((n) => !hasBlockTag([n]));
+}
+
+function hasBlockTag(nodes: readonly DocNode[]): boolean {
+  return nodes.some((n) => {
+    const isBlockTag = n.kind === DocNodeKind.BlockTag;
+    const hasBlockTagChild = hasBlockTag(n.getChildNodes());
+    return isBlockTag || hasBlockTagChild;
+  });
 }
