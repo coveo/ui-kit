@@ -86,7 +86,12 @@ export {
   buildResultList,
 } from './result-list/headless-result-list';
 
-export {ResultLink, buildResultLink} from './result-list/headless-result-link';
+export {
+  ResultLinkOptions,
+  ResultLinkProps,
+  ResultLink,
+  buildResultLink,
+} from './result-list/headless-result-link';
 
 export {
   ResultsPerPageInitialState,
