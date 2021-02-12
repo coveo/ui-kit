@@ -3,6 +3,57 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.6.0-alpha.6](https://bitbucket.org/coveord/ui-kit/compare/v0.6.0-alpha.5...v0.6.0-alpha.6) (2021-02-11)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+# [0.6.0-alpha.5](https://bitbucket.org/coveord/ui-kit/compare/v0.6.0-alpha.4...v0.6.0-alpha.5) (2021-02-11)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+# [0.6.0-alpha.4](https://bitbucket.org/coveord/ui-kit/compare/v0.6.0-alpha.3...v0.6.0-alpha.4) (2021-02-11)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+# [0.6.0-alpha.3](https://bitbucket.org/coveord/ui-kit/compare/v0.6.0-alpha.2...v0.6.0-alpha.3) (2021-02-11)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+# [0.6.0-alpha.2](https://bitbucket.org/coveord/ui-kit/compare/v0.6.0-alpha.1...v0.6.0-alpha.2) (2021-02-10)
+
+
+### Features
+
+* **headless:** add preprocessRequest for both Analytics/SearchAPI ([#488](https://bitbucket.org/coveord/ui-kit/issues/488)) ([c026310](https://bitbucket.org/coveord/ui-kit/commits/c0263106cf6328556893874b37d7521e42f73d5a))
+
+
+
+
+
+# [0.6.0-alpha.1](https://bitbucket.org/coveord/ui-kit/compare/v0.6.0-alpha.0...v0.6.0-alpha.1) (2021-02-10)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
 # [0.6.0-alpha.0](https://bitbucket.org/coveord/ui-kit/compare/v0.5.1-alpha.1...v0.6.0-alpha.0) (2021-02-08)
 
 **Note:** Version bump only for package @coveo/quantic

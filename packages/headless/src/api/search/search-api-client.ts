@@ -30,6 +30,7 @@ import {
   PostprocessQuerySuggestResponseMiddleware,
   PostprocessSearchResponseMiddleware,
 } from './search-api-client-middleware';
+import {PreprocessRequest} from '../preprocess-request';
 
 export type AllSearchAPIResponse = Plan | Search | QuerySuggest;
 
@@ -42,7 +43,8 @@ export interface AsyncThunkSearchOptions<T extends Partial<SearchAppState>> {
 export interface SearchAPIClientOptions {
   renewAccessToken: () => Promise<string>;
   logger: Logger;
-  preprocessRequest: PreprocessRequestMiddleware;
+  preprocessRequest: PreprocessRequest;
+  deprecatedPreprocessRequest: PreprocessRequestMiddleware;
   postprocessSearchResponseMiddleware: PostprocessSearchResponseMiddleware;
   postprocessQuerySuggestResponseMiddleware: PostprocessQuerySuggestResponseMiddleware;
   postprocessFacetSearchResponseMiddleware: PostprocessFacetSearchResponseMiddleware;

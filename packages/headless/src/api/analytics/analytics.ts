@@ -20,6 +20,7 @@ import {
   SearchSection,
 } from '../../state/state-sections';
 import {Context} from '../../features/context/context-state';
+import {PreprocessRequest} from '../preprocess-request';
 
 export type StateNeededByAnalyticsProvider = ConfigurationSection &
   Partial<
@@ -115,6 +116,7 @@ interface ConfigureAnalyticsOptions {
   state: StateNeededByAnalyticsProvider;
   logger: Logger;
   analyticsClientMiddleware?: AnalyticsClientSendEventHook;
+  preprocessRequest?: PreprocessRequest;
   provider?: SearchPageClientProvider;
 }
 
@@ -122,6 +124,7 @@ export const configureAnalytics = ({
   logger,
   state,
   analyticsClientMiddleware = (_, p) => p,
+  preprocessRequest,
   provider = new AnalyticsProvider(state),
 }: ConfigureAnalyticsOptions) => {
   const token = state.configuration.accessToken;
@@ -132,6 +135,7 @@ export const configureAnalytics = ({
       token,
       endpoint,
       runtimeEnvironment,
+      preprocessRequest,
       beforeSendHooks: [
         analyticsClientMiddleware,
         (type, payload) => {

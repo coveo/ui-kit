@@ -20,7 +20,8 @@ module.exports = {
         "background": "var(--atomic-background, #FFFFFF)",
         "background-variant": "var(--atomic-background-variant, #F6F7F9)",
         "on-background": "var(--atomic-on-background, #282829)",
-        "divider": "var(--atomic-divider, #E5E8E8)",
+        "on-background-variant": "var(--atomic-on-background-variant, #6b6b6b)",
+        "divider": "var(--atomic-divider, #BCC3CA)",
         "error": "var(--atomic-error, #CE3F00)",
         "on-error": "var(--atomic-on-error, #FFFFFF)",
       }
