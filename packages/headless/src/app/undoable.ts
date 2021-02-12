@@ -66,13 +66,7 @@ const updateHistory = <State>(options: {
     return makeHistory(newPresent);
   }
 
-  console.log(
-    'states are truly equal',
-    JSON.stringify(present) === JSON.stringify(newPresent)
-  );
-
   if (present === newPresent) {
-    console.log('updateHistory are equal!');
     return state;
   }
 
