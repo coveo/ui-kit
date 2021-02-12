@@ -22,25 +22,15 @@ import {
   numericFacetOptionsSchema,
 } from './headless-numeric-facet-options';
 import {determineFacetId} from '../../_common/facet-id-determinor';
+import {buildNumericRange, NumericRangeOptions} from './numeric-range';
 
-type NumericRangeOptions = Pick<NumericRangeRequest, 'start' | 'end'> &
-  Partial<NumericRangeRequest>;
+export {
+  buildNumericRange,
+  NumericRangeOptions,
+  NumericRangeRequest,
+  NumericFacetOptions,
+};
 
-/** Creates a `NumericRangeRequest`.
- * @param config The options with which to create a `NumericRangeRequest`.
- * @returns A new `NumericRangeRequest`.
- */
-export function buildNumericRange(
-  config: NumericRangeOptions
-): NumericRangeRequest {
-  return {
-    endInclusive: false,
-    state: 'idle',
-    ...config,
-  };
-}
-
-export {NumericFacetOptions};
 export type NumericFacetProps = {
   /** The options for the `NumericFacet` controller. */
   options: NumericFacetOptions;
