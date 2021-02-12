@@ -12,13 +12,19 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
+import {FacetValue} from '../facet-value/facet-value';
+import {
+  BaseFacet,
+  BaseFacetController,
+  BaseFacetState,
+} from '../facet/base-facet';
 
 @Component({
   tag: 'atomic-date-facet',
   styleUrl: 'atomic-date-facet.pcss',
   shadow: true,
 })
-export class AtomicDateFacet implements InitializableComponent {
+export class AtomicDateFacet implements InitializableComponent, BaseFacetState {
   @InitializeBindings() public bindings!: Bindings;
   private facet!: DateFacet;
 
@@ -27,6 +33,7 @@ export class AtomicDateFacet implements InitializableComponent {
   private facetState!: DateFacetState;
   @State() public error!: Error;
 
+  @State() public isExpanded = false;
   @Prop({mutable: true, reflect: true}) public facetId = '';
   @Prop() public field = '';
   @Prop() public label = 'No label';
@@ -52,11 +59,11 @@ export class AtomicDateFacet implements InitializableComponent {
     const isSelected = this.facet.isValueSelected(item);
 
     return (
-      <facet-value
+      <FacetValue
         label={` ${item.start}-${item.end}`}
         isSelected={isSelected}
         numberOfResults={item.numberOfResults}
-        onFacetValueSelected={() => {
+        facetValueSelected={() => {
           this.facet.toggleSelect(item);
         }}
       />
@@ -65,13 +72,14 @@ export class AtomicDateFacet implements InitializableComponent {
 
   public render() {
     return (
-      <base-facet
+      <BaseFacet
+        controller={new BaseFacetController(this)}
         label={this.label}
         hasActiveValues={this.facetState.hasActiveValues}
-        onDeselectAll={() => this.facet.deselectAll()}
+        deselectAll={() => this.facet.deselectAll()}
       >
         <ul class="list-none p-0">{this.values}</ul>
-      </base-facet>
+      </BaseFacet>
     );
   }
 }
