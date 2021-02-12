@@ -1,20 +1,17 @@
 import {injectComponent, setUpPage} from '../utils/setupComponent';
 
 describe('Query Summary Test Suites', () => {
-  const component = (attributes = '') =>
-    `<atomic-query-summary ${attributes}></atomic-query-summary>`;
+  const tag = 'atomic-query-summary';
+  const component = (attributes = '') => `<${tag} ${attributes}></${tag}>`;
   const wait = 1000;
 
   function contentShouldMatch(content: RegExp | string) {
-    cy.get('atomic-query-summary')
-      .shadow()
-      .find('div[part="container"]')
-      .contains(content);
+    cy.get(tag).shadow().find('div[part="container"]').contains(content);
   }
 
-  it('should load', () => {
-    setUpPage('<atomic-query-summary></atomic-query-summary>');
-    cy.get('atomic-query-summary').should('be.visible');
+  it('should be visible', () => {
+    setUpPage(component());
+    cy.get(tag).should('be.visible');
   });
 
   describe('should match text content', () => {
