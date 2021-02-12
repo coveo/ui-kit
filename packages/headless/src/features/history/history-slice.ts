@@ -47,6 +47,7 @@ const isEqual = (current: HistoryState, next: HistoryState) => {
 const isContextEqual = (current: ContextState, next: ContextState) =>
   JSON.stringify(current.contextValues) === JSON.stringify(next.contextValues);
 
+// TODO: compare all facets non-idle values, comparing current values changes history after 1st request
 const isFacetsEqual = (current: FacetSetState, next: FacetSetState) =>
   JSON.stringify(current) === JSON.stringify(next);
 
