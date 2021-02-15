@@ -18,6 +18,9 @@ export const contextReducer = createReducer(
         delete state.contextValues[action.payload];
       })
       .addCase(change.fulfilled, (state, action) => {
+        if (!action.payload) {
+          return;
+        }
         state.contextValues = action.payload.context.contextValues;
       });
   }

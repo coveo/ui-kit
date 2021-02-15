@@ -1,5 +1,5 @@
 import {historyReducer} from './history-slice';
-import {snapshot} from './history-actions';
+import {redo, snapshot, undo} from './history-actions';
 import {Reducer} from 'redux';
 import {undoable, StateWithHistory, makeHistory} from '../../app/undoable';
 import {buildMockFacetRequest} from '../../test/mock-facet-request';
@@ -15,7 +15,14 @@ describe('history slice', () => {
   let undoableReducer: Reducer<StateWithHistory<HistoryState>>;
 
   beforeEach(() => {
-    undoableReducer = undoable(historyReducer, getHistoryInitialState());
+    undoableReducer = undoable({
+      reducer: historyReducer,
+      actionTypes: {
+        redo: redo.type,
+        undo: undo.type,
+        snapshot: snapshot.type,
+      },
+    });
   });
 
   const getSnapshot = (snap: Partial<HistoryState>) => ({
