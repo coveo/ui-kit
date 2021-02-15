@@ -1,3 +1,9 @@
+import {readFileSync} from 'fs';
+import {resolve} from 'path';
+
+const path = resolve('package.json');
+const packageJson = JSON.parse(readFileSync(path, 'utf-8'));
+
 export interface SamplePaths {
   react_class?: string[];
   react_fn?: string[];
@@ -32,7 +38,7 @@ function buildGithubInfo(): GithubInfo {
   return {
     owner: 'coveo',
     repo: 'ui-kit',
-    ref: `v${1}`,
+    ref: `v${packageJson.version}`,
   };
 }
 

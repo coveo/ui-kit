@@ -1,4 +1,6 @@
 import {buildCodeSampleConfiguration} from './code-sample-configuration';
+import {readFileSync} from 'fs';
+import {resolve} from 'path';
 
 describe('#buildCodeSampleConfiguration', () => {
   it("#github.owner is 'coveo'", () => {
@@ -13,7 +15,10 @@ describe('#buildCodeSampleConfiguration', () => {
 
   it('#github.ref matches the headless package.json version prefixed by a #v', () => {
     const config = buildCodeSampleConfiguration({});
-    expect(config.githubInfo.ref).toBe(`v${1}`);
+    const path = resolve(__dirname, '../../package.json');
+    const file = JSON.parse(readFileSync(path, 'utf-8'));
+
+    expect(config.githubInfo.ref).toBe(`v${file.version}`);
   });
 
   it('specifying the #react_class parameter places the path under #react.class', () => {
