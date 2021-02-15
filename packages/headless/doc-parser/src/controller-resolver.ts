@@ -10,7 +10,7 @@ import {
 
 export interface ControllerConfiguration {
   initializer: string;
-  samples: SamplePaths;
+  samplePaths: SamplePaths;
   utils?: string[];
 }
 
@@ -26,7 +26,7 @@ export function resolveController(
 ): Controller {
   const initializer = resolveControllerFunction(entry, config.initializer);
   const utils = (config.utils || []).map((util) => resolveUtility(entry, util));
-  const samples = buildCodeSampleConfiguration(config.samples);
+  const samples = buildCodeSampleConfiguration(config.samplePaths);
 
   return {initializer, utils, samples};
 }

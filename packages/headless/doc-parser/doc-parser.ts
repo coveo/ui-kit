@@ -11,7 +11,7 @@ const entryPoint = apiPackage.entryPoints[0];
 
 const config: ControllerConfiguration = {
   initializer: 'buildPager',
-  samples: {
+  samplePaths: {
     react_class: [
       'packages/samples/headless-react/src/components/pager/pager.class.tsx',
     ],
