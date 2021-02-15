@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.6.0-alpha.7](https://github.com/coveo/ui-kit/compare/v0.6.0-alpha.6...v0.6.0-alpha.7) (2021-02-15)
+
+
+### Bug Fixes
+
+* **atomic:** atomic-pager - add width/height to svgs ([#502](https://github.com/coveo/ui-kit/issues/502)) ([d50e128](https://github.com/coveo/ui-kit/commit/d50e128adae25152ef0f74aad4051d4bad6b5901))
+
+
+
+
+
 # [0.6.0-alpha.6](https://github.com/coveo/ui-kit/compare/v0.6.0-alpha.5...v0.6.0-alpha.6) (2021-02-11)
 
 **Note:** Version bump only for package @coveo/atomic
