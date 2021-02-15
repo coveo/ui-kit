@@ -14,7 +14,7 @@ export class AtomicSortCriteria {
   /**
    * The non-localized caption to display for this criteria.
    */
-  @Prop({reflect: true}) caption!: string;
+  @Prop() caption!: string;
 
   /**
    * The sort criterion/criteria the end user can select/toggle between.
@@ -27,5 +27,5 @@ export class AtomicSortCriteria {
    *
    * You can specify multiple sort criteria to be used in the same request by separating them with a comma (e.g., `criteria="size ascending, date ascending"` ).
    */
-  @Prop({reflect: true}) criteria!: string;
+  @Prop() criteria!: string;
 }
