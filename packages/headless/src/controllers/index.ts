@@ -19,10 +19,15 @@ export {
 
 export {
   CategoryFacetOptions,
+  CategoryFacetSearchOptions,
   CategoryFacetProps,
   CategoryFacetState,
   CategoryFacet,
   buildCategoryFacet,
+  CategoryFacetValue,
+  CategoryFacetSearch,
+  CategoryFacetSearchState,
+  CategoryFacetSearchResult,
 } from './facets/category-facet/headless-category-facet';
 
 export {

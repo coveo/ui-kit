@@ -1,10 +1,12 @@
 import {Schema, StringValue} from '@coveo/bueno';
-import {FacetSearchRequestOptions} from '../../../api/search/facet-search/base/base-facet-search-request';
-import {CategoryFacetRegistrationOptions} from '../../../features/facets/category-facet-set/interfaces/options';
 import {
   categoryFacetSortCriteria,
   CategoryFacetSortCriterion,
 } from '../../../features/facets/category-facet-set/interfaces/request';
+import {
+  BaseFacetOptions,
+  BaseFacetSearchOptions,
+} from '../_common/base-facet-options';
 import {
   facetId,
   field,
@@ -17,14 +19,31 @@ import {
   facetSearch,
 } from '../_common/facet-option-definitions';
 
-type OptionalFacetId = Partial<
-  Pick<CategoryFacetRegistrationOptions, 'facetId'>
->;
+export interface CategoryFacetOptions extends BaseFacetOptions {
+  /**
+   * Facet search options.
+   */
+  facetSearch?: CategoryFacetSearchOptions;
+  /**
+   * The base path shared by all values for the facet.
+   * @default []
+   */
+  basePath?: string[];
+  /**
+   * Whether to use basePath as a filter for the results.
+   * @default true
+   */
+  filterByBasePath?: boolean;
+  /**
+   * The sort criterion to apply to the returned facet values.
+   *
+   * @default "automatic"
+   */
+  sortCriteria?: CategoryFacetSortCriterion;
+}
 
-export type CategoryFacetOptions = OptionalFacetId &
-  Omit<CategoryFacetRegistrationOptions, 'facetId'> & {
-    facetSearch?: Partial<FacetSearchRequestOptions>;
-  };
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface CategoryFacetSearchOptions extends BaseFacetSearchOptions {}
 
 export const categoryFacetOptionsSchema = new Schema<
   Required<CategoryFacetOptions>
