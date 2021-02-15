@@ -42,6 +42,7 @@ import {
 import {determineFacetId} from '../_common/facet-id-determinor';
 import {FacetSearch} from '../facet/headless-facet';
 import {
+  BaseFacetSearch,
   BaseFacetSearchResult,
   BaseFacetSearchState,
   BaseFacetState,
@@ -116,7 +117,7 @@ export interface CategoryFacetState extends BaseFacetState {
   facetSearch: CategoryFacetSearchState;
 }
 
-export interface CategoryFacetSearch extends FacetSearch {
+export interface CategoryFacetSearch extends BaseFacetSearch {
   select(value: CategoryFacetSearchResult): void;
 }
 

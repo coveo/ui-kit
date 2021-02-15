@@ -11,6 +11,15 @@ export interface BaseFacetState {
   canShowLessValues: boolean;
 }
 
+export interface BaseFacetSearch {
+  /** updates text */
+  updateText(text: string): void;
+  /** shows more results */
+  showMoreResults(): void;
+  /** performs a search */
+  search(): void;
+}
+
 export interface BaseFacetSearchState {
   /** whether loading */
   isLoading: boolean;

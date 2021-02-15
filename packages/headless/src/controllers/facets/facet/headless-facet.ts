@@ -43,6 +43,7 @@ import {
 import {determineFacetId} from '../_common/facet-id-determinor';
 import {FacetValueState} from '../../../features/facets/facet-api/value';
 import {
+  BaseFacetSearch,
   BaseFacetSearchResult,
   BaseFacetSearchState,
   BaseFacetState,
@@ -122,13 +123,7 @@ export interface FacetState extends BaseFacetState {
   facetSearch: FacetSearchState;
 }
 
-export interface FacetSearch {
-  /** updates text */
-  updateText(text: string): void;
-  /** shows more results */
-  showMoreResults(): void;
-  /** performs a search */
-  search(): void;
+export interface FacetSearch extends BaseFacetSearch {
   /** selects a result */
   select(value: SpecificFacetSearchResult): void;
 }
