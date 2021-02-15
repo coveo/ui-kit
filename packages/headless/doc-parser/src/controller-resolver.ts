@@ -4,12 +4,11 @@ import {
   ApiInterface,
   Parameter,
 } from '@microsoft/api-extractor-model';
+import {DocComment} from '@microsoft/tsdoc';
 import {findApi} from './api-finder';
-import {buildFuncEntity, buildObjEntity, FuncEntity} from './entity';
-import {
-  buildEntityFromParam,
-  buildParamEntityBasedOnKind,
-} from './function-param-resolver';
+import {FuncEntity, ObjEntity} from './entity';
+import {buildEntity, buildFuncEntity, buildParamEntity} from './entity-builder';
+import {buildParamEntityBasedOnKind} from './function-param-resolver';
 import {resolveInterfaceMembers} from './interface-resolver';
 
 interface Controller {
@@ -37,7 +36,7 @@ function resolveControllerFunction(entry: ApiEntryPoint, fn: ApiFunction) {
 
   return buildFuncEntity({
     name: fn.name,
-    desc: fn.tsdocComment?.emitAsTsdoc() || '',
+    comment: (fn.tsdocComment as unknown) as DocComment,
     params,
     returnType,
   });
@@ -50,22 +49,22 @@ function resolveControllerParam(
 ) {
   const isEngine = index === 0;
   return isEngine
-    ? buildEntityFromParam(p)
+    ? buildParamEntity(p)
     : buildParamEntityBasedOnKind(entryPoint, p);
 }
 
 function buildObjEntityFromInterface(
   entryPoint: ApiEntryPoint,
   apiInterface: ApiInterface
-) {
+): ObjEntity {
   const name = apiInterface.name;
   const members = resolveInterfaceMembers(entryPoint, apiInterface);
-
-  return buildObjEntity({
+  const entity = buildEntity({
     name,
     type: name,
-    desc: apiInterface.tsdocComment?.emitAsTsdoc() || '',
     isOptional: false,
-    members,
+    comment: (apiInterface.tsdocComment as unknown) as DocComment,
   });
+
+  return {...entity, members};
 }
