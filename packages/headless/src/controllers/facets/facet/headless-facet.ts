@@ -44,6 +44,7 @@ import {determineFacetId} from '../_common/facet-id-determinor';
 import {FacetValueState} from '../../../features/facets/facet-api/value';
 import {
   BaseFacetSearchResult,
+  BaseFacetSearchState,
   BaseFacetState,
   BaseFacetValue,
 } from '../_common/base-facet';
@@ -132,13 +133,9 @@ export interface FacetSearch {
   select(value: SpecificFacetSearchResult): void;
 }
 
-export interface FacetSearchState {
+export interface FacetSearchState extends BaseFacetSearchState {
   /** search results */
   values: SpecificFacetSearchResult[];
-  /** whether loading */
-  isLoading: boolean;
-  /** whether more values are available */
-  moreValuesAvailable: boolean;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
