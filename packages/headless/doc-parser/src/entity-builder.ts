@@ -78,13 +78,13 @@ function getSummary(comment: DocComment | undefined) {
 
 function getParamDescription(param: Parameter) {
   const nodes = param.tsdocParamBlock?.content.getChildNodes() || [];
+  const description = emitAsTsDoc((nodes as unknown) as readonly DocNode[]);
 
-  try {
-    return emitAsTsDoc((nodes as unknown) as readonly DocNode[]);
-  } catch (e) {
-    console.log('failed to description for param:', param.name, e);
-    return '';
+  if (!description) {
+    throw new Error(`No description found for param: ${param.name}`);
   }
+
+  return description;
 }
 
 function removeBlockTagNodes(nodes: readonly DocNode[]) {
