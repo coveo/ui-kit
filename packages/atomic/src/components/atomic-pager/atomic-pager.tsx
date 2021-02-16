@@ -44,11 +44,11 @@ export class AtomicPager implements InitializableComponent {
   /**
    * Specifies how many page buttons to display in the pager.
    */
-  @Prop({reflect: true}) numberOfPages = 5;
+  @Prop() numberOfPages = 5;
   /**
    * Specifies whether the **Previous** and **Next** buttons should appear at each end of the pager when appropriate.
    */
-  @Prop({reflect: true}) enableNavigationButtons = true;
+  @Prop() enableNavigationButtons = true;
 
   public initialize() {
     this.pager = buildPager(this.bindings.engine, {

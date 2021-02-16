@@ -64,7 +64,7 @@
           <atomic-date-facet class="mr-2" field="created" label="Created"></atomic-date-facet>
           <atomic-category-facet class="mr-2" field="geographicalhierarchy" label="World Atlas"></atomic-category-facet>
         </atomic-facet-manager>
-        <div class="flex-grow">
+        <div class="flex-grow pl-2">
           <atomic-breadcrumb-manager></atomic-breadcrumb-manager>
           <atomic-did-you-mean></atomic-did-you-mean>
           <atomic-query-error></atomic-query-error>
@@ -75,6 +75,8 @@
               <atomic-sort-criteria caption="mostRecent" criteria="date descending"></atomic-sort-criteria>
             </atomic-sort-dropdown>
           </div>
+
+          <atomic-no-results></atomic-no-results>
 
           <atomic-result-list class="max-w-full">
             <atomic-result-template id="france-template">
@@ -100,7 +102,7 @@
       </div>
       <atomic-history></atomic-history>
     </atomic-search-interface>
-    <atomic-recommendation></atomic-recommendation>
-    <atomic-frequently-bought-together></atomic-frequently-bought-together>
+    <!-- <atomic-recommendation></atomic-recommendation> -->
+    <!-- <atomic-frequently-bought-together></atomic-frequently-bought-together> -->
   </body>
 </html>

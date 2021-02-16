@@ -3,6 +3,47 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.6.0](https://github.com/coveo/ui-kit/compare/v0.6.0-alpha.8...v0.6.0) (2021-02-16)
+
+
+### Features
+
+* **atomic:** atomic-query-summary & atomic-no-results components completion ([#491](https://github.com/coveo/ui-kit/issues/491)) ([83f8b05](https://github.com/coveo/ui-kit/commit/83f8b05676dc5d6290d615afc8b6c0d212618f54))
+
+
+
+
+
+# [0.6.0-alpha.8](https://github.com/coveo/ui-kit/compare/v0.6.0-alpha.7...v0.6.0-alpha.8) (2021-02-16)
+
+
+### Bug Fixes
+
+* **headless:** refactored undoable to remove initial state and update only on snapshots ([#498](https://github.com/coveo/ui-kit/issues/498)) ([bb01bef](https://github.com/coveo/ui-kit/commit/bb01befc5bd828477bf342be7bce022c75b77c69))
+
+
+
+
+
+# [0.6.0-alpha.7](https://github.com/coveo/ui-kit/compare/v0.6.0-alpha.6...v0.6.0-alpha.7) (2021-02-15)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+# [0.6.0-alpha.6](https://github.com/coveo/ui-kit/compare/v0.6.0-alpha.5...v0.6.0-alpha.6) (2021-02-11)
+
+
+### Bug Fixes
+
+* **headless:** remove #state attribute from FacetSearch interface ([#493](https://github.com/coveo/ui-kit/issues/493)) ([845b18b](https://github.com/coveo/ui-kit/commit/845b18b2e3745ea06988b4823329c615e0f7ce5e))
+
+
+
+
+
 # [0.6.0-alpha.4](https://github.com/coveo/ui-kit/compare/v0.6.0-alpha.3...v0.6.0-alpha.4) (2021-02-11)
 
 

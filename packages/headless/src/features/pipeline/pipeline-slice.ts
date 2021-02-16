@@ -9,7 +9,10 @@ export const pipelineReducer = createReducer(
   (builder) => {
     builder
       .addCase(setPipeline, (_, action) => action.payload)
-      .addCase(change.fulfilled, (_, action) => action.payload.pipeline)
+      .addCase(
+        change.fulfilled,
+        (state, action) => action.payload?.pipeline ?? state
+      )
       .addCase(
         updateSearchConfiguration,
         (state, action) => action.payload.pipeline || state

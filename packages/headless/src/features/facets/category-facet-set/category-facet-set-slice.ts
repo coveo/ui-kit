@@ -48,7 +48,10 @@ export const categoryFacetSetReducer = createReducer(
         const initialNumberOfValues = request.numberOfValues;
         state[facetId] = {request, initialNumberOfValues};
       })
-      .addCase(change.fulfilled, (_, action) => action.payload.categoryFacetSet)
+      .addCase(
+        change.fulfilled,
+        (state, action) => action.payload?.categoryFacetSet ?? state
+      )
       .addCase(restoreSearchParameters, (state, action) => {
         const cf = action.payload.cf || {};
 

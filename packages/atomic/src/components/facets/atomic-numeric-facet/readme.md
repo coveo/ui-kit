@@ -18,11 +18,15 @@
 
 ### Depends on
 
+- [facet-value](../facet-value)
+- [base-facet](../facet)
 - [atomic-component-error](../../atomic-component-error)
 
 ### Graph
 ```mermaid
 graph TD;
+  atomic-numeric-facet --> facet-value
+  atomic-numeric-facet --> base-facet
   atomic-numeric-facet --> atomic-component-error
   style atomic-numeric-facet fill:#f9f,stroke:#333,stroke-width:4px
 ```

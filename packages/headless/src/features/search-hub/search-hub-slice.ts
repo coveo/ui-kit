@@ -9,7 +9,10 @@ export const searchHubReducer = createReducer(
   (builder) => {
     builder
       .addCase(setSearchHub, (_, action) => action.payload)
-      .addCase(change.fulfilled, (_, action) => action.payload.searchHub)
+      .addCase(
+        change.fulfilled,
+        (state, action) => action.payload?.searchHub ?? state
+      )
       .addCase(
         updateSearchConfiguration,
         (state, action) => action.payload.searchHub || state

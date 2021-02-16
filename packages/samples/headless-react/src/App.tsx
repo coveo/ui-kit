@@ -1,18 +1,31 @@
 import logo from './logo.svg';
 import './App.css';
+import {useEffect} from 'react';
+
 import {SearchBox} from './components/search-box/search-box.class';
 import {SearchBox as SearchBoxFn} from './components/search-box/search-box.fn';
 import {DidYouMean} from './components/did-you-mean/did-you-mean.class';
 import {DidYouMean as DidYouMeanFn} from './components/did-you-mean/did-you-mean.fn';
+import {QueryError} from './components/query-error/query-error.class';
+import {QueryError as QueryErrorFn} from './components/query-error/query-error.fn';
 import {Sort} from './components/sort/sort.class';
 import {Sort as SortFn} from './components/sort/sort.fn';
 import {ResultList} from './components/result-list/result-list.class';
 import {ResultList as ResultListFn} from './components/result-list/result-list.fn';
 import {Pager} from './components/pager/pager.class';
 import {Pager as PagerFn} from './components/pager/pager.fn';
+import {ResultsPerPage} from './components/results-per-page/results-per-page.class';
+import {ResultsPerPage as ResultsPerPageFn} from './components/results-per-page/results-per-page.fn';
+import {engine} from './engine';
+import {Section} from './layout/section';
+import {QuerySummary} from './components/query-summary/query-summary.class';
+import {QuerySummary as QuerySummaryFn} from './components/query-summary/query-summary.fn';
+import {Facet} from './components/facet/facet.class';
+import {Facet as FacetFn} from './components/facet/facet.fn';
 import {
   buildSearchBox,
   buildDidYouMean,
+  buildQueryError,
   buildQuerySummary,
   buildResultList,
   buildFacet,
@@ -25,18 +38,13 @@ import {
   buildResultsPerPage,
   buildPager,
 } from '@coveo/headless';
-import {ResultsPerPage} from './components/results-per-page/results-per-page.class';
-import {ResultsPerPage as ResultsPerPageFn} from './components/results-per-page/results-per-page.fn';
-import {engine} from './engine';
-import {Section} from './layout/section';
-import {QuerySummary} from './components/query-summary/query-summary.class';
-import {QuerySummary as QuerySummaryFn} from './components/query-summary/query-summary.fn';
-import {Facet} from './components/facet/facet.class';
-import {Facet as FacetFn} from './components/facet/facet.fn';
+import {bindSearchParametersToURI} from './components/search-parameter-manager/search-parameter-manager';
 
 const searchBox = buildSearchBox(engine, {options: {numberOfSuggestions: 8}});
 
 const didYouMean = buildDidYouMean(engine);
+
+const queryError = buildQueryError(engine);
 
 const querySummary = buildQuerySummary(engine);
 
@@ -63,7 +71,11 @@ const resultsPerPage = buildResultsPerPage(engine, {
 
 const pager = buildPager(engine, {options: {numberOfPages: 6}});
 
+const {autoUpdateURI: startUpdatingURI} = bindSearchParametersToURI(engine);
+
 function App() {
+  useEffect(() => startUpdatingURI(), []);
+
   return (
     <div className="App">
       <header className="App-header">
@@ -75,6 +87,10 @@ function App() {
         <Section title="did-you-mean">
           <DidYouMean />
           <DidYouMeanFn controller={didYouMean} />
+        </Section>
+        <Section title="query-error">
+          <QueryError />
+          <QueryErrorFn controller={queryError} />
         </Section>
         <Section title="query-summary">
           <QuerySummary />

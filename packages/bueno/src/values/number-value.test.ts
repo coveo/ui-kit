@@ -28,6 +28,12 @@ describe('number value', () => {
       expect(value.validate(('a string' as unknown) as number)).not.toBeNull();
     });
 
+    it(`when passing NaN
+    it returns an error description`, () => {
+      value = new NumberValue();
+      expect(value.validate(NaN)).not.toBeNull();
+    });
+
     it(`when a minimum is defined
     passing a value that is under it returns an error description`, () => {
       value = new NumberValue({min: 5});

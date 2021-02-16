@@ -47,6 +47,16 @@ export namespace Components {
     }
     interface AtomicHistory {
     }
+    interface AtomicNoResults {
+        /**
+          * Whether to display a button which cancels the last available action.
+         */
+        "enableCancelLastAction": boolean;
+        /**
+          * Whether to display a list of search tips to the user.
+         */
+        "enableSearchTips": boolean;
+    }
     interface AtomicNumericFacet {
         "facetId": string;
         "field": string;
@@ -65,6 +75,10 @@ export namespace Components {
     interface AtomicQueryError {
     }
     interface AtomicQuerySummary {
+        /**
+          * Whether to display the duration of the last query execution.
+         */
+        "enableDuration": boolean;
     }
     interface AtomicRelevanceInspector {
         "bindings": Bindings;
@@ -247,6 +261,12 @@ declare global {
         prototype: HTMLAtomicHistoryElement;
         new (): HTMLAtomicHistoryElement;
     };
+    interface HTMLAtomicNoResultsElement extends Components.AtomicNoResults, HTMLStencilElement {
+    }
+    var HTMLAtomicNoResultsElement: {
+        prototype: HTMLAtomicNoResultsElement;
+        new (): HTMLAtomicNoResultsElement;
+    };
     interface HTMLAtomicNumericFacetElement extends Components.AtomicNumericFacet, HTMLStencilElement {
     }
     var HTMLAtomicNumericFacetElement: {
@@ -384,6 +404,7 @@ declare global {
         "atomic-field-condition": HTMLAtomicFieldConditionElement;
         "atomic-frequently-bought-together": HTMLAtomicFrequentlyBoughtTogetherElement;
         "atomic-history": HTMLAtomicHistoryElement;
+        "atomic-no-results": HTMLAtomicNoResultsElement;
         "atomic-numeric-facet": HTMLAtomicNumericFacetElement;
         "atomic-pager": HTMLAtomicPagerElement;
         "atomic-query-error": HTMLAtomicQueryErrorElement;
@@ -444,6 +465,16 @@ declare namespace LocalJSX {
     }
     interface AtomicHistory {
     }
+    interface AtomicNoResults {
+        /**
+          * Whether to display a button which cancels the last available action.
+         */
+        "enableCancelLastAction"?: boolean;
+        /**
+          * Whether to display a list of search tips to the user.
+         */
+        "enableSearchTips"?: boolean;
+    }
     interface AtomicNumericFacet {
         "facetId"?: string;
         "field"?: string;
@@ -462,6 +493,10 @@ declare namespace LocalJSX {
     interface AtomicQueryError {
     }
     interface AtomicQuerySummary {
+        /**
+          * Whether to display the duration of the last query execution.
+         */
+        "enableDuration"?: boolean;
     }
     interface AtomicRelevanceInspector {
         "bindings": Bindings;
@@ -599,6 +634,7 @@ declare namespace LocalJSX {
         "atomic-field-condition": AtomicFieldCondition;
         "atomic-frequently-bought-together": AtomicFrequentlyBoughtTogether;
         "atomic-history": AtomicHistory;
+        "atomic-no-results": AtomicNoResults;
         "atomic-numeric-facet": AtomicNumericFacet;
         "atomic-pager": AtomicPager;
         "atomic-query-error": AtomicQueryError;
@@ -636,6 +672,7 @@ declare module "@stencil/core" {
             "atomic-field-condition": LocalJSX.AtomicFieldCondition & JSXBase.HTMLAttributes<HTMLAtomicFieldConditionElement>;
             "atomic-frequently-bought-together": LocalJSX.AtomicFrequentlyBoughtTogether & JSXBase.HTMLAttributes<HTMLAtomicFrequentlyBoughtTogetherElement>;
             "atomic-history": LocalJSX.AtomicHistory & JSXBase.HTMLAttributes<HTMLAtomicHistoryElement>;
+            "atomic-no-results": LocalJSX.AtomicNoResults & JSXBase.HTMLAttributes<HTMLAtomicNoResultsElement>;
             "atomic-numeric-facet": LocalJSX.AtomicNumericFacet & JSXBase.HTMLAttributes<HTMLAtomicNumericFacetElement>;
             "atomic-pager": LocalJSX.AtomicPager & JSXBase.HTMLAttributes<HTMLAtomicPagerElement>;
             "atomic-query-error": LocalJSX.AtomicQueryError & JSXBase.HTMLAttributes<HTMLAtomicQueryErrorElement>;
