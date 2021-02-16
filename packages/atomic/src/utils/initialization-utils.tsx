@@ -154,7 +154,7 @@ export function BindStateToController(
   controllerProperty: string,
   options?: {
     /**
-     * Wether the component should resubscribe when disconnected and reconnected from the DOM
+     * Whether the component should resubscribe when disconnected and reconnected from the DOM
      */
     subscribeOnConnectedCallback?: boolean;
     /**
