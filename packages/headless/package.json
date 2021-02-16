@@ -25,9 +25,8 @@
     "test:integration": "jest --testPathPattern=src/integration-tests",
     "npm:publish": "npm publish --access public",
     "doc": "typedoc --tsconfig tsconfig.typedoc.json",
-    "build:doc-parser": "tsc -p doc-parser/tsconfig.build.json",
     "doc:extract": "api-extractor run --local --verbose",
-    "doc:parse": "node ./doc-parser/build/doc-parser.js"
+    "doc:parse": "ts-node --project ./doc-parser/tsconfig.build.json ./doc-parser/doc-parser.ts"
   },
   "dependencies": {
     "@coveo/bueno": "^0.6.0",
@@ -61,6 +60,7 @@
     "rollup-plugin-dts": "^2.0.1",
     "rollup-plugin-size-snapshot": "^0.11.0",
     "rollup-plugin-terser": "^7.0.2",
-    "ts-jest": "^26.3.0"
+    "ts-jest": "^26.3.0",
+    "ts-node": "^9.1.1"
   }
 }

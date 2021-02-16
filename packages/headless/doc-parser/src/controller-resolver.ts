@@ -2,30 +2,33 @@ import {ApiEntryPoint, ApiFunction} from '@microsoft/api-extractor-model';
 import {findApi} from './api-finder';
 import {FuncEntity} from './entity';
 import {resolveFunction} from './function-resolver';
+import {
+  resolveCodeSamplePaths,
+  SamplePaths,
+  CodeSampleInfo,
+} from './code-sample-resolver';
 
-interface ControllerConfiguration {
+export interface ControllerConfiguration {
   initializer: string;
+  samplePaths: SamplePaths;
   utils?: string[];
 }
 
 interface Controller {
   initializer: FuncEntity;
   utils: FuncEntity[];
-}
-
-export function buildControllerConfiguration(
-  config: ControllerConfiguration
-): Required<ControllerConfiguration> {
-  return {utils: [], ...config};
+  codeSampleInfo: CodeSampleInfo;
 }
 
 export function resolveController(
   entry: ApiEntryPoint,
-  config: Required<ControllerConfiguration>
+  config: ControllerConfiguration
 ): Controller {
   const initializer = resolveControllerFunction(entry, config.initializer);
-  const utils = config.utils.map((util) => resolveUtility(entry, util));
-  return {initializer, utils};
+  const utils = (config.utils || []).map((util) => resolveUtility(entry, util));
+  const codeSampleInfo = resolveCodeSamplePaths(config.samplePaths);
+
+  return {initializer, utils, codeSampleInfo};
 }
 
 function resolveControllerFunction(entry: ApiEntryPoint, name: string) {
