@@ -90,10 +90,10 @@ const isCategoryFacetsEqual = (
 
     const currentSelectedValues = partitionIntoParentsAndValues(
       current[key]?.request.currentValues
-    ).parents;
+    ).parents.map(({value}) => value);
     const nextSelectedValues = partitionIntoParentsAndValues(
       value?.request.currentValues
-    ).parents;
+    ).parents.map(({value}) => value);
 
     if (
       JSON.stringify(currentSelectedValues) !==
