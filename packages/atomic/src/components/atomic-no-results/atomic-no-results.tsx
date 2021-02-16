@@ -1,10 +1,10 @@
 import {
   buildHistory,
-  buildQuerySummary,
   History,
   HistoryState,
-  QuerySummary,
-  QuerySummaryState,
+  buildSearchStatus,
+  SearchStatus,
+  SearchStatusState,
 } from '@coveo/headless';
 import {Component, h, Prop, State} from '@stencil/core';
 import {
@@ -30,12 +30,12 @@ import {
 })
 export class AtomicNoResults {
   @InitializeBindings() public bindings!: Bindings;
-  public querySummary!: QuerySummary;
+  public searchStatus!: SearchStatus;
   public history!: History;
 
-  @BindStateToController('querySummary')
+  @BindStateToController('searchStatus')
   @State()
-  private querySummaryState!: QuerySummaryState;
+  private searchStatusState!: SearchStatusState;
   @BindStateToController('history')
   @State()
   private historyState!: HistoryState;
@@ -60,7 +60,7 @@ export class AtomicNoResults {
   @Prop() enableSearchTips = true;
 
   public initialize() {
-    this.querySummary = buildQuerySummary(this.bindings.engine);
+    this.searchStatus = buildSearchStatus(this.bindings.engine);
     this.history = buildHistory(this.bindings.engine);
   }
 
@@ -94,7 +94,11 @@ export class AtomicNoResults {
   }
 
   public render() {
-    if (this.querySummaryState.hasResults) {
+    if (
+      !this.searchStatusState.firstSearchExecuted ||
+      this.searchStatusState.isLoading ||
+      this.searchStatusState.hasResults
+    ) {
       return;
     }
 

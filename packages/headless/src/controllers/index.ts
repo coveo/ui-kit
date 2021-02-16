@@ -208,3 +208,9 @@ export {
   SearchParameterManager,
   buildSearchParameterManager,
 } from './search-parameter-manager/headless-search-parameter-manager';
+
+export {
+  SearchStatus,
+  SearchStatusState,
+  buildSearchStatus,
+} from './search-status/headless-search-status';

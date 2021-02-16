@@ -3,6 +3,9 @@ import {
   ResultsPerPage,
   buildResultsPerPage,
   ResultsPerPageState,
+  buildSearchStatus,
+  SearchStatus,
+  SearchStatusState,
 } from '@coveo/headless';
 import {
   Bindings,
@@ -28,11 +31,15 @@ import {
 export class AtomicResultsPerPage implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;
   private resultPerPage!: ResultsPerPage;
+  public searchStatus!: SearchStatus;
   private choices!: number[];
 
   @State()
   @BindStateToController('resultPerPage')
   public resultPerPageState!: ResultsPerPageState;
+  @BindStateToController('searchStatus')
+  @State()
+  private searchStatusState!: SearchStatusState;
   @BindStateToI18n()
   @State()
   private strings = {
@@ -52,6 +59,7 @@ export class AtomicResultsPerPage implements InitializableComponent {
   @Prop() initialChoice = 10;
 
   public initialize() {
+    this.searchStatus = buildSearchStatus(this.bindings.engine);
     this.resultPerPage = buildResultsPerPage(this.bindings.engine, {
       initialState: {numberOfResults: this.initialChoice},
     });
@@ -102,6 +110,10 @@ export class AtomicResultsPerPage implements InitializableComponent {
   }
 
   public render() {
+    if (!this.searchStatusState.hasResults) {
+      return;
+    }
+
     return (
       <div class="flex justify-between items-center">
         <span part="label" class="text-on-background pr-4 text-sm">
