@@ -12,13 +12,19 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
+import {
+  BaseFacet,
+  BaseFacetController,
+  BaseFacetState,
+} from '../facet/base-facet';
 
 @Component({
   tag: 'atomic-category-facet',
   styleUrl: 'atomic-category-facet.pcss',
   shadow: true,
 })
-export class AtomicCategoryFacet implements InitializableComponent {
+export class AtomicCategoryFacet
+  implements InitializableComponent, BaseFacetState {
   @InitializeBindings() public bindings!: Bindings;
   private facet!: CategoryFacet;
 
@@ -27,6 +33,7 @@ export class AtomicCategoryFacet implements InitializableComponent {
   private facetState!: CategoryFacetState;
   @State() public error!: Error;
 
+  @State() public isExpanded = false;
   @Prop({mutable: true, reflect: true}) public facetId = '';
   @Prop() public field = '';
   @Prop() public label = 'No label';
@@ -102,10 +109,11 @@ export class AtomicCategoryFacet implements InitializableComponent {
 
   public render() {
     return (
-      <base-facet
+      <BaseFacet
+        controller={new BaseFacetController(this)}
         label={this.label}
         hasActiveValues={this.facetState.hasActiveValues}
-        onDeselectAll={() => this.facet.deselectAll()}
+        deselectAll={() => this.facet.deselectAll()}
       >
         <facet-search
           facet={this.facet}
@@ -122,7 +130,7 @@ export class AtomicCategoryFacet implements InitializableComponent {
           <div>{this.showMore}</div>
           <div>{this.showLess}</div>
         </div>
-      </base-facet>
+      </BaseFacet>
     );
   }
 }
