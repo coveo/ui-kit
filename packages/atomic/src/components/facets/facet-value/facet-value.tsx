@@ -35,4 +35,3 @@ export const FacetValue = (props: FacetValueProps) => {
     </li>
   );
 };
-
