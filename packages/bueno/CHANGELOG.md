@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.6.0-alpha.8](https://github.com/coveo/ui-kit/compare/v0.6.0-alpha.7...v0.6.0-alpha.8) (2021-02-16)
+
+
+### Bug Fixes
+
+* **atomic,bueno:** validate isNaN for NumberValue (bueno) and remove some reflected props (atomic) ([#505](https://github.com/coveo/ui-kit/issues/505)) ([ea0c153](https://github.com/coveo/ui-kit/commit/ea0c153995afac1915ec2f75299348092201e7f9))
+
+
+
+
+
 # [0.2.0](https://github.com/coveo/ui-kit/compare/v0.2.0-alpha.11...v0.2.0) (2021-01-15)
 
 **Note:** Version bump only for package @coveo/bueno
