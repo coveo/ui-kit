@@ -6,25 +6,20 @@ import {
 
 const {serialize, deserialize} = buildSearchParameterSerializer();
 
-function readSearchParametersFromURI() {
-  return deserialize(decodeURIComponent(window.location.hash.slice(1)));
-}
-
-type SearchParameters = ReturnType<typeof readSearchParametersFromURI>;
-
-function writeSearchParametersToURI(searchParameters: SearchParameters) {
-  window.location.hash = serialize(searchParameters);
-}
-
 export function bindSearchParametersToURI(engine: Engine) {
+  const hash = window.location.hash.slice(1);
+  const parameters = deserialize(decodeURIComponent(hash));
+
   const searchParameterManager = buildSearchParameterManager(engine, {
-    initialState: {parameters: readSearchParametersFromURI()},
+    initialState: {parameters},
   });
 
   return {
     autoUpdateURI: () =>
-      searchParameterManager.subscribe(() =>
-        writeSearchParametersToURI(searchParameterManager.state.parameters)
-      ),
+      searchParameterManager.subscribe(() => {
+        window.location.hash = serialize(
+          searchParameterManager.state.parameters
+        );
+      }),
   };
 }
