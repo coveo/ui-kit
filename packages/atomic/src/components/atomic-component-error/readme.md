@@ -18,14 +18,14 @@
 ### Used by
 
  - [atomic-breadcrumb-manager](../atomic-breadcrumb-manager)
- - [atomic-category-facet](../atomic-category-facet)
- - [atomic-date-facet](../atomic-date-facet)
+ - [atomic-category-facet](../facets/atomic-category-facet)
+ - [atomic-date-facet](../facets/atomic-date-facet)
  - [atomic-did-you-mean](../atomic-did-you-mean)
- - [atomic-facet](../atomic-facet)
+ - [atomic-facet](../facets/atomic-facet)
  - [atomic-facet-manager](../atomic-facet-manager)
  - [atomic-history](../atomic-history)
  - [atomic-no-results](../atomic-no-results)
- - [atomic-numeric-facet](../atomic-numeric-facet)
+ - [atomic-numeric-facet](../facets/atomic-numeric-facet)
  - [atomic-pager](../atomic-pager)
  - [atomic-query-error](../atomic-query-error)
  - [atomic-query-summary](../atomic-query-summary)
