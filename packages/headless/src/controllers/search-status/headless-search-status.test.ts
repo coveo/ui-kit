@@ -24,7 +24,7 @@ describe('SearchStatus', () => {
     expect(buildSearchStatus(engine).state.hasResults).toBe(true);
   });
 
-  it('returns right state "hasResults"', () => {
+  it('returns right state "firstSearchExecuted"', () => {
     expect(buildSearchStatus(engine).state.firstSearchExecuted).toBe(false);
 
     engine.state.search.response.searchUid = '1234567';
