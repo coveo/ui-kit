@@ -1,8 +1,6 @@
 import {LightningElement, api} from 'lwc';
-import HeadlessPath from '@salesforce/resourceUrl/coveoheadless';
-import AtomicPath from '@salesforce/resourceUrl/atomicutils';
 // @ts-ignore
-import {loadScript} from 'lightning/platformResourceLoader';
+import {getHeadlessEngine} from 'c/headlessLoader';
 
 export default class SearchInterface extends LightningElement {
   /** @type {any} */
@@ -29,39 +27,26 @@ export default class SearchInterface extends LightningElement {
   /** @type {import("coveo").HeadlessConfigurationOptions} */
   config;
 
-  async connectedCallback() {
+  connectedCallback() {
     if (this.dependenciesLoaded) {
       return;
     }
 
     try {
-      await Promise.all([
-        loadScript(this, HeadlessPath + '/browser/headless.js'),
-        loadScript(this, AtomicPath + '/atomic-utils.js'),
-      ]);
-
-      this.loadDependencies();
+      getHeadlessEngine(this).then((engine) => {
+        this.engine = engine;
+        this.dependenciesLoaded = Boolean(this.engine);
+        this.initHangingComponents();
+      });
     } catch (error) {
       console.error('Fatal error: unable to initialize interface', error);
-    }
-  }
-
-  loadDependencies() {
-    this.dependenciesLoaded = true;
-
-    if (this.sample) {
-      this.config = CoveoHeadless.HeadlessEngine.getSampleConfiguration();
-    }
-
-    if (this.config) {
-      this.initEngine();
     }
   }
 
   /**
    * @param {import("coveo").HeadlessConfigurationOptions} options
    */
-  @api initialize(options) {
+  @api async initialize(options) {
     if (this.config || this.sample) {
       console.error(
         'The Quantic search interface has already been initialized',
@@ -78,20 +63,24 @@ export default class SearchInterface extends LightningElement {
       },
     };
 
+    if (!this.dependenciesLoaded) {
+      try {
+        this.engine = await getHeadlessEngine(this);
+        this.dependenciesLoaded = Boolean(this.engine);
+      } catch (error) {
+        console.error('Fatal error: unable to initialize interface', error);
+      }
+    }
+
     if (this.dependenciesLoaded) {
-      this.initEngine();
+      this.initHangingComponents();
     }
   }
 
-  initEngine() {
-    this.engine = new CoveoHeadless.HeadlessEngine({
-      configuration: this.config,
-      reducers: CoveoHeadless.searchAppReducers,
-    });
-
-    this.hangingComponents.forEach((component) =>
+  initHangingComponents() {
+    this.hangingComponents.forEach((component) =>{
       component.initialize(this.engine)
-    );
+    });
     this.hangingComponents = [];
 
     this.engine.dispatch(

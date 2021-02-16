@@ -2,6 +2,7 @@ import {LightningElement, api, track} from 'lwc';
 import TributePath from '@salesforce/resourceUrl/tributejs';
 // @ts-ignore
 import {loadScript} from 'lightning/platformResourceLoader';
+import {getHeadlessEngine} from 'c/headlessLoader';
 import {initializeComponent} from 'c/initialization';
 
 export default class SearchBox extends LightningElement {
@@ -15,6 +16,8 @@ export default class SearchBox extends LightningElement {
   /** @type {any} */
   @track suggestions = [];
 
+  /** @type {boolean} */
+  @api sample = false;
   /** @type {import("coveo").SearchBox} */
   searchBox;
   /** @type {import("coveo").Unsubscribe} */
@@ -24,6 +27,14 @@ export default class SearchBox extends LightningElement {
   tribute;
 
   connectedCallback() {
+    try {
+      getHeadlessEngine(this).then((engine) => {
+        this.initialize(engine);
+      })
+    } catch (error) {
+      console.error('Fatal error: unable to initialize interface', error);
+    }
+
     initializeComponent(this);
 
     if (this.tributeLoaded) {
