@@ -126,6 +126,10 @@ export class AtomicQuerySummary implements InitializableComponent {
   }
 
   public render() {
+    if (!this.querySummaryState.firstSearchExecuted) {
+      return;
+    }
+
     return (
       <div class="text-on-background" part="container">
         {this.querySummaryState.hasResults
