@@ -50,11 +50,13 @@ export {
 
 export {
   buildNumericRange,
+  NumericRangeOptions,
+  NumericRangeRequest,
+  buildNumericFacet,
   NumericFacetOptions,
   NumericFacetProps,
   NumericFacetState,
   NumericFacet,
-  buildNumericFacet,
 } from './facets/range-facet/numeric-facet/headless-numeric-facet';
 
 export {History, HistoryState, buildHistory} from './history/headless-history';
