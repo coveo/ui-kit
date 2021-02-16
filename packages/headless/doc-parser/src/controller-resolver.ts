@@ -3,9 +3,9 @@ import {findApi} from './api-finder';
 import {FuncEntity} from './entity';
 import {resolveFunction} from './function-resolver';
 import {
-  buildCodeSampleConfiguration,
+  resolveCodeSamplePaths,
   SamplePaths,
-  Samples,
+  CodeSampleInfo,
 } from './code-sample-resolver';
 
 export interface ControllerConfiguration {
@@ -17,7 +17,7 @@ export interface ControllerConfiguration {
 interface Controller {
   initializer: FuncEntity;
   utils: FuncEntity[];
-  samples: Samples;
+  codeSampleInfo: CodeSampleInfo;
 }
 
 export function resolveController(
@@ -26,9 +26,9 @@ export function resolveController(
 ): Controller {
   const initializer = resolveControllerFunction(entry, config.initializer);
   const utils = (config.utils || []).map((util) => resolveUtility(entry, util));
-  const samples = buildCodeSampleConfiguration(config.samplePaths);
+  const codeSampleInfo = resolveCodeSamplePaths(config.samplePaths);
 
-  return {initializer, utils, samples};
+  return {initializer, utils, codeSampleInfo};
 }
 
 function resolveControllerFunction(entry: ApiEntryPoint, name: string) {
