@@ -6,7 +6,7 @@ import {ConfigurationSection} from '../../state/state-sections';
 // 1 second is a reasonable amount of time to catch most longpress actions
 const defaultDelay = 1000;
 
-export interface ResultLinkOptions {
+export interface InteractiveResultOptions {
   /**
    * The query result.
    */
@@ -17,15 +17,15 @@ export interface ResultLinkOptions {
   selectionDelay?: number;
 }
 
-export interface ResultLinkProps {
-  /** The options for the `ResultLink` controller. */
-  options: ResultLinkOptions;
+export interface InteractiveResultProps {
+  /** The options for the `InteractiveResult` controller. */
+  options: InteractiveResultOptions;
 }
 
 /**
- * The `ResultLink` controller provides an interface for triggering desirable side effects, such as logging UA events to the Coveo Platform, when a user selects a query result.
+ * The `InteractiveResult` controller provides an interface for triggering desirable side effects, such as logging UA events to the Coveo Platform, when a user selects a query result.
  */
-export interface ResultLink {
+export interface InteractiveResult {
   /**
    * Selects the result, logging a UA event to the Coveo Platform if the result wasn't selected before.
    *
@@ -50,11 +50,11 @@ export interface ResultLink {
   cancelPendingSelect: () => void;
 }
 
-export function buildResultLink(
+export function buildInteractiveResult(
   engine: Engine<ConfigurationSection>,
-  props: ResultLinkProps
-): ResultLink {
-  const options: Required<ResultLinkOptions> = {
+  props: InteractiveResultProps
+): InteractiveResult {
+  const options: Required<InteractiveResultOptions> = {
     selectionDelay: defaultDelay,
     ...props.options,
   };

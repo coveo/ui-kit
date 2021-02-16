@@ -87,11 +87,11 @@ export {
 } from './result-list/headless-result-list';
 
 export {
-  ResultLinkOptions,
-  ResultLinkProps,
-  ResultLink,
-  buildResultLink,
-} from './result-list/headless-result-link';
+  InteractiveResultOptions,
+  InteractiveResultProps,
+  InteractiveResult,
+  buildInteractiveResult,
+} from './result-list/headless-interactive-result';
 
 export {
   ResultsPerPageInitialState,

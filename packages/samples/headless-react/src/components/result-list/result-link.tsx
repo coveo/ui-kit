@@ -1,4 +1,4 @@
-import {buildResultLink, Result} from '@coveo/headless';
+import {buildInteractiveResult, Result} from '@coveo/headless';
 import {FunctionComponent, useEffect} from 'react';
 import {engine} from '../../engine';
 
@@ -7,21 +7,21 @@ interface LinkProps {
 }
 
 export const ResultLink: FunctionComponent<LinkProps> = (props) => {
-  const resultLink = buildResultLink(engine, {
+  const interactiveResult = buildInteractiveResult(engine, {
     options: {result: props.result},
   });
 
-  useEffect(() => () => resultLink.cancelPendingSelect(), []);
+  useEffect(() => () => interactiveResult.cancelPendingSelect(), []);
 
   return (
     <a
       href={props.result.clickUri}
-      onClick={() => resultLink.select()}
-      onContextMenu={() => resultLink.select()}
-      onMouseDown={() => resultLink.select()}
-      onMouseUp={() => resultLink.select()}
-      onTouchStart={() => resultLink.beginDelayedSelect()}
-      onTouchEnd={() => resultLink.cancelPendingSelect()}
+      onClick={() => interactiveResult.select()}
+      onContextMenu={() => interactiveResult.select()}
+      onMouseDown={() => interactiveResult.select()}
+      onMouseUp={() => interactiveResult.select()}
+      onTouchStart={() => interactiveResult.beginDelayedSelect()}
+      onTouchEnd={() => interactiveResult.cancelPendingSelect()}
     >
       {props.children}
     </a>
