@@ -1,4 +1,4 @@
-import {buildCodeSampleConfiguration} from './code-sample-configuration';
+import {buildCodeSampleConfiguration} from './code-sample-resolver';
 import {readFileSync} from 'fs';
 import {resolve} from 'path';
 

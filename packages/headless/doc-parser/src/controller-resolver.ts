@@ -6,7 +6,7 @@ import {
   buildCodeSampleConfiguration,
   SamplePaths,
   Samples,
-} from './code-sample-configuration';
+} from './code-sample-resolver';
 
 export interface ControllerConfiguration {
   initializer: string;
