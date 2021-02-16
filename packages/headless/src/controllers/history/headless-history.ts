@@ -28,6 +28,9 @@ export const buildHistory = (engine: Engine) => {
      * Move backward in the interface history.
      */
     async back() {
+      if (!this.state.past.length || !this.state.present) {
+        return;
+      }
       await dispatch(back());
       dispatch(executeSearch(logNavigateBackward()));
     },
@@ -36,6 +39,9 @@ export const buildHistory = (engine: Engine) => {
      * Move forward in the interface history.
      */
     async forward() {
+      if (!this.state.future.length || !this.state.present) {
+        return;
+      }
       await dispatch(forward());
       dispatch(executeSearch(logNavigateForward()));
     },

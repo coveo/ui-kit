@@ -31,6 +31,10 @@ export const querySetReducer = createReducer(
         Object.keys(state).forEach((q) => (state[q] = queryExecuted));
       })
       .addCase(change.fulfilled, (state, action) => {
+        if (!action.payload) {
+          return;
+        }
+
         for (const [id, query] of Object.entries(action.payload.querySet)) {
           updateQuery(state, id, query);
         }

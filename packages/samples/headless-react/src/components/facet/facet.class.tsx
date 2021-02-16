@@ -6,6 +6,7 @@ import {
   Unsubscribe,
 } from '@coveo/headless';
 import {engine} from '../../engine';
+import {FacetSearch} from './facet-search';
 
 interface FacetProps {
   field: string;
@@ -39,6 +40,11 @@ export class Facet extends Component<FacetProps> {
     this.setState(this.controller.state);
   }
 
+  private onInput(text: string) {
+    this.controller.facetSearch.updateText(text);
+    this.controller.facetSearch.search();
+  }
+
   render() {
     if (!this.state.values.length) {
       return <div>No facet values</div>;
@@ -46,17 +52,34 @@ export class Facet extends Component<FacetProps> {
 
     return (
       <ul>
-        {this.state.values.map((value) => (
-          <li key={value.value}>
-            <input
-              type="checkbox"
-              checked={this.controller.isValueSelected(value)}
-              onChange={() => this.controller.toggleSelect(value)}
-              disabled={this.state.isLoading}
-            />
-            {value.value} ({value.numberOfResults} results)
-          </li>
-        ))}
+        <li>
+          <FacetSearch
+            controller={this.controller.facetSearch}
+            facetState={this.state.facetSearch}
+            isValueSelected={(facetSearchValue) =>
+              !!this.state.values.find(
+                (facetValue) =>
+                  facetValue.value === facetSearchValue.displayValue &&
+                  this.controller.isValueSelected(facetValue)
+              )
+            }
+          />
+        </li>
+        <li>
+          <ul>
+            {this.state.values.map((value) => (
+              <li key={value.value}>
+                <input
+                  type="checkbox"
+                  checked={this.controller.isValueSelected(value)}
+                  onChange={() => this.controller.toggleSelect(value)}
+                  disabled={this.state.isLoading}
+                />
+                {value.value} ({value.numberOfResults} results)
+              </li>
+            ))}
+          </ul>
+        </li>
       </ul>
     );
   }

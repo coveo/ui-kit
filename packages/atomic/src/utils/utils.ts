@@ -24,3 +24,17 @@ export function randomID(prepend?: string, length = 5) {
       .substr(2, 2 + length)
   );
 }
+
+export function sanitize(string: string) {
+  const map: Record<string, string> = {
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#x27;',
+    '/': '&#x2F;',
+    '`': '&#x60;',
+  };
+  const reg = /[&<>"'/]/gi;
+  return string.replace(reg, (match) => map[match]);
+}

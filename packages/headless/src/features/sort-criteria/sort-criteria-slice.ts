@@ -19,7 +19,9 @@ export const sortCriteriaReducer = createReducer(
       .addCase(updateSortCriterion, (_, action) =>
         buildCriterionExpression(action.payload)
       )
-      .addCase(change.fulfilled, (_, action) => action.payload.sortCriteria)
+      .addCase(change.fulfilled, (state, action) => {
+        return action.payload?.sortCriteria ?? state;
+      })
       .addCase(restoreSearchParameters, (state, action) => {
         return action.payload.sortCriteria ?? state;
       });
