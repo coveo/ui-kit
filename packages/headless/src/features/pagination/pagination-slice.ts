@@ -57,8 +57,10 @@ export const paginationReducer = createReducer(
         );
       })
       .addCase(change.fulfilled, (state, action) => {
-        state.numberOfResults = action.payload.pagination.numberOfResults;
-        state.firstResult = action.payload.pagination.firstResult;
+        if (action.payload) {
+          state.numberOfResults = action.payload.pagination.numberOfResults;
+          state.firstResult = action.payload.pagination.firstResult;
+        }
       })
       .addCase(restoreSearchParameters, (state, action) => {
         state.firstResult = action.payload.firstResult ?? state.firstResult;

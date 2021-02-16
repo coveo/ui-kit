@@ -1,12 +1,6 @@
 import {Reducer, AnyAction} from 'redux';
-import {createAction} from '@reduxjs/toolkit';
 
-const ActionTypes = {
-  UNDO: '@@undoable/UNDO',
-  REDO: '@@undoable/REDO',
-};
-
-export const makeHistory = <State>(state: State): StateWithHistory<State> => ({
+export const makeHistory = <State>(state?: State): StateWithHistory<State> => ({
   past: [],
   present: state,
   future: [],
@@ -14,17 +8,18 @@ export const makeHistory = <State>(state: State): StateWithHistory<State> => ({
 
 export interface StateWithHistory<State> {
   past: State[];
-  present: State;
+  present?: State;
   future: State[];
 }
 
-export const ActionCreators = {
-  undo: createAction(ActionTypes.UNDO),
-  redo: createAction(ActionTypes.REDO),
-};
-
-const undo = <State>(state: StateWithHistory<State>) => {
+const undo = <State>(
+  state: StateWithHistory<State>
+): StateWithHistory<State> => {
   const {past, present, future} = state;
+  if (!present) {
+    return state;
+  }
+
   if (past.length === 0) {
     return state;
   }
@@ -38,8 +33,13 @@ const undo = <State>(state: StateWithHistory<State>) => {
   };
 };
 
-const redo = <State>(state: StateWithHistory<State>) => {
+const redo = <State>(
+  state: StateWithHistory<State>
+): StateWithHistory<State> => {
   const {past, present, future} = state;
+  if (!present) {
+    return state;
+  }
 
   if (future.length === 0) {
     return state;
@@ -54,24 +54,20 @@ const redo = <State>(state: StateWithHistory<State>) => {
   };
 };
 
-const updateHistory = <State, Action extends AnyAction>(
-  state: StateWithHistory<State>,
-  emptyState: StateWithHistory<State>,
-  reducer: Reducer<State>,
-  action: Action
-) => {
+const updateHistory = <State>(options: {
+  state: StateWithHistory<State>;
+  reducer: Reducer<State>;
+  action: AnyAction;
+}) => {
+  const {action, state, reducer} = options;
   const {past, present} = state;
   const newPresent = reducer(present, action);
-
-  if (newPresent === emptyState.present || present === newPresent) {
-    return state;
+  if (!present) {
+    return makeHistory(newPresent);
   }
 
-  // Small special twist on the documented/standard redux undo recipe
-  // We want to make the "actual first valid initial state" the first one that ends up being different from the "empty state" passed into undoable
-  // This allows for slices to register themselves dynamically (Concrete example: facet-slice).
-  if (present === emptyState.present) {
-    return makeHistory(newPresent);
+  if (present === newPresent) {
+    return state;
   }
 
   return {
@@ -81,21 +77,36 @@ const updateHistory = <State, Action extends AnyAction>(
   };
 };
 
-export const undoable = <State, Action extends AnyAction>(
-  reducer: Reducer<State>,
-  emptyState: State
-) => {
-  const emptyStateWithHistory = makeHistory(emptyState);
-  return (state = emptyStateWithHistory, action: Action) => {
+export const undoable = <State>(options: {
+  reducer: Reducer<State>;
+  actionTypes: {
+    undo: string;
+    redo: string;
+    snapshot: string;
+  };
+}) => {
+  const {actionTypes, reducer} = options;
+  const emptyHistoryState = makeHistory<State>();
+  return (
+    state = emptyHistoryState,
+    action: AnyAction
+  ): StateWithHistory<State> => {
     switch (action.type) {
-      case ActionTypes.UNDO:
+      case actionTypes.undo:
         return undo(state);
 
-      case ActionTypes.REDO:
+      case actionTypes.redo:
         return redo(state);
 
+      case actionTypes.snapshot:
+        return updateHistory({
+          state,
+          reducer,
+          action,
+        });
+
       default:
-        return updateHistory(state, emptyStateWithHistory, reducer, action);
+        return state;
     }
   };
 };

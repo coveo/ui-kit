@@ -32,7 +32,10 @@ export const dateFacetSetReducer = createReducer(
         const request = buildDateFacetRequest(payload);
         registerRangeFacet<DateFacetRequest>(state, request);
       })
-      .addCase(change.fulfilled, (_, action) => action.payload.dateFacetSet)
+      .addCase(
+        change.fulfilled,
+        (state, action) => action.payload?.dateFacetSet ?? state
+      )
       .addCase(restoreSearchParameters, (state, action) => {
         const df = action.payload.df || {};
         handleRangeFacetSearchParameterRestoration(state, df);
