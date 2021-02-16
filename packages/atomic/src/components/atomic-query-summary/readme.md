@@ -5,16 +5,22 @@
 <!-- Auto Generated Below -->
 
 
+## Properties
+
+| Property         | Attribute         | Description                                                  | Type      | Default |
+| ---------------- | ----------------- | ------------------------------------------------------------ | --------- | ------- |
+| `enableDuration` | `enable-duration` | Whether to display the duration of the last query execution. | `boolean` | `true`  |
+
+
 ## Shadow Parts
 
-| Part          | Description                            |
-| ------------- | -------------------------------------- |
-| `"container"` | The container of the whole summary     |
-| `"duration"`  | The duration container                 |
-| `"highlight"` | The summary highlights                 |
-| `"no-result"` | The container when there are no result |
-| `"query"`     | The query container                    |
-| `"results"`   | The results container                  |
+| Part           | Description                             |
+| -------------- | --------------------------------------- |
+| `"container"`  | The container of the whole summary      |
+| `"duration"`   | The duration container                  |
+| `"highlight"`  | The summary highlights                  |
+| `"no-results"` | The container when there are no results |
+| `"results"`    | The results container                   |
 
 
 ## CSS Custom Properties

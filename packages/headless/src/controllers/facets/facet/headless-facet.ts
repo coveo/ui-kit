@@ -46,7 +46,9 @@ import {FacetValueState} from '../../../features/facets/facet-api/value';
 export {FacetOptions, FacetSearchOptions, FacetValueState};
 
 export interface FacetProps {
-  /** The options for the `Facet` controller. */
+  /**
+   * The options for the `Facet` controller.
+   * */
   options: FacetOptions;
 }
 
@@ -54,45 +56,59 @@ export interface FacetProps {
  * The `Facet` headless controller offers a high-level interface for designing a common facet UI controller.
  */
 export interface Facet extends Controller {
+  /**
+   * Provides methods to search the facet's values.
+   */
   facetSearch: FacetSearch;
 
   /**
    * Toggles the specified facet value.
-   * @param selection The facet value to toggle.
+   *
+   * @param selection - The facet value to toggle.
    */
-  toggleSelect: (selection: FacetValue) => void;
+  toggleSelect(selection: FacetValue): void;
 
   /**
    * Checks whether the specified facet value is selected.
-   * @param value The facet value to check.
+   *
+   * @param value - The facet value to check.
    * @returns Whether the specified facet value is selected.
    */
-  isValueSelected: (value: FacetValue) => boolean;
+  isValueSelected(value: FacetValue): boolean;
 
-  /** Deselects all facet values.*/
-  deselectAll: () => void;
+  /**
+   * Deselects all facet values.
+   * */
+  deselectAll(): void;
 
-  /** Sorts the facet values according to the specified criterion.
-   * @param criterion The criterion to sort values by.
+  /**
+   * Sorts the facet values according to the specified criterion.
+   *
+   * @param criterion - The criterion to sort values by.
    */
-  sortBy: (criterion: FacetSortCriterion) => void;
+  sortBy(criterion: FacetSortCriterion): void;
 
   /**
    * Checks whether the facet values are sorted according to the specified criterion.
-   * @param criterion The criterion to compare.
+   *
+   * @param criterion - The criterion to compare.
    * @returns Whether the facet values are sorted according to the specified criterion.
    */
-  isSortedBy: (criterion: FacetSortCriterion) => boolean;
+  isSortedBy(criterion: FacetSortCriterion): boolean;
 
   /**
    * Increases the number of values displayed in the facet to the next multiple of the originally configured value.
    */
-  showMoreValues: () => void;
+  showMoreValues(): void;
 
-  /** Sets the displayed number of values to the originally configured value.*/
-  showLessValues: () => void;
+  /**
+   * Sets the displayed number of values to the originally configured value.
+   * */
+  showLessValues(): void;
 
-  /** The state of the `Facet` controller. */
+  /**
+   * The state of the `Facet` controller.
+   * */
   state: FacetState;
 }
 
@@ -126,22 +142,45 @@ export interface FacetState {
 }
 
 export interface FacetSearch {
-  /** updates text */
+  /**
+   * Updates the facet search query.
+   *
+   * @param text - The query to search.
+   * */
   updateText(text: string): void;
-  /** shows more results */
+
+  /**
+   * Shows more facet search results.
+   * */
   showMoreResults(): void;
-  /** performs a search */
+
+  /**
+   * Performs a facet search.
+   * */
   search(): void;
-  /** selects a result */
+
+  /**
+   * Selects a facet search result.
+   *
+   * @param value - The search result to select.
+   * */
   select(value: SpecificFacetSearchResult): void;
 }
 
 export interface FacetSearchState {
-  /** search results */
+  /**
+   * The facet search results.
+   * */
   values: SpecificFacetSearchResult[];
-  /** whether loading */
+
+  /**
+   * `true` if the facet search is in progress and `false` otherwise.
+   * */
   isLoading: boolean;
-  /** whether more values are available */
+
+  /**
+   * Whether more values are available.
+   * */
   moreValuesAvailable: boolean;
 }
 
@@ -150,10 +189,12 @@ export interface SpecificFacetSearchResult {
    * The custom facet value display name, as specified in the `captions` argument of the facet request.
    */
   displayValue: string;
+
   /**
    * The original facet value, as retrieved from the field in the index.
    */
   rawValue: string;
+
   /**
    * An estimate number of result items matching both the current query and
    * the filter expression that would get generated if the facet value were selected.
@@ -162,15 +203,29 @@ export interface SpecificFacetSearchResult {
 }
 
 export interface FacetValue {
-  /** whether the value is selected or idle */
+  /**
+   * Whether a facet value is filtering results (`selected`) or not (`idle`).
+   * */
   state: FacetValueState;
-  /** the number of results having the value */
+
+  /**
+   * The number of results having the facet value.
+   * */
   numberOfResults: number;
-  /** the value */
+
+  /**
+   * The facet value.
+   * */
   value: string;
 }
 
-/** Creates a `Facet` controller instance. */
+/**
+ * Creates a `Facet` controller instance.
+ *
+ * @param engine - The headless engine.
+ * @param props - The configurable `Facet` properties.
+ * @returns A `Facet` controller instance.
+ * */
 export function buildFacet(
   engine: Engine<
     FacetSection & ConfigurationSection & FacetSearchSection & SearchSection
