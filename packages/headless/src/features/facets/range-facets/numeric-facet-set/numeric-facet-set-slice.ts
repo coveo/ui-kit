@@ -32,7 +32,10 @@ export const numericFacetSetReducer = createReducer(
         const request = buildNumericFacetRequest(payload);
         registerRangeFacet<NumericFacetRequest>(state, request);
       })
-      .addCase(change.fulfilled, (_, action) => action.payload.numericFacetSet)
+      .addCase(
+        change.fulfilled,
+        (state, action) => action.payload?.numericFacetSet ?? state
+      )
       .addCase(restoreSearchParameters, (state, action) => {
         const nf = action.payload.nf || {};
         handleRangeFacetSearchParameterRestoration(state, nf);

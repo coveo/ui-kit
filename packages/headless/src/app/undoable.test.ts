@@ -1,17 +1,35 @@
-import {makeHistory, undoable, ActionCreators} from './undoable';
-import {Reducer} from 'redux';
+import {makeHistory, undoable} from './undoable';
+import {AnyAction, Reducer} from 'redux';
 
 describe('undoable', () => {
-  const noopReducer: Reducer = <S>(s: S) => s;
+  const reducer: Reducer = (state: string, action: AnyAction) =>
+    action.payload ?? state;
+  const undo = () => ({type: 'undo'});
+  const redo = () => ({type: 'redo'});
+  const snapshot = (payload?: string) => ({type: 'snapshot', payload});
   const anyAction = () => ({type: 'random'});
-  const addUnderscoreReducer: Reducer = <S>(s: S) => s + '_';
+
+  const setupUndoable = () =>
+    undoable({
+      reducer,
+      actionTypes: {
+        redo: redo().type,
+        undo: undo().type,
+        snapshot: snapshot().type,
+      },
+    });
+
+  it('returns same state when the action is not snapshot/undo/redo', () => {
+    const state = makeHistory();
+    const newState = setupUndoable()(state, anyAction());
+    expect(newState).toEqual(state);
+  });
 
   describe('support #undo', () => {
     it('returns same state when there is no past history', () => {
       const state = makeHistory('foo');
 
-      const testUndoable = undoable(noopReducer, '');
-      const newState = testUndoable(state, ActionCreators.undo());
+      const newState = setupUndoable()(state, undo());
       expect(newState).toEqual(state);
     });
 
@@ -20,8 +38,7 @@ describe('undoable', () => {
       state.past = ['bar'];
       state.future = ['hello', 'world'];
 
-      const testUndoable = undoable(noopReducer, '');
-      const newState = testUndoable(state, ActionCreators.undo());
+      const newState = setupUndoable()(state, undo());
       expect(newState.future).toEqual(['foo', 'hello', 'world']);
       expect(newState.present).toBe('bar');
       expect(newState.past).toEqual([]);
@@ -32,8 +49,7 @@ describe('undoable', () => {
     it('returns same state when there is no future history', () => {
       const state = makeHistory('foo');
 
-      const testUndoable = undoable(noopReducer, '');
-      const newState = testUndoable(state, ActionCreators.redo());
+      const newState = setupUndoable()(state, redo());
       expect(newState).toEqual(state);
     });
 
@@ -42,52 +58,34 @@ describe('undoable', () => {
       state.past = ['bar'];
       state.future = ['hello', 'world'];
 
-      const testUndoable = undoable(noopReducer, '');
-      const newState = testUndoable(state, ActionCreators.redo());
+      const newState = setupUndoable()(state, redo());
       expect(newState.future).toEqual(['world']);
       expect(newState.present).toBe('hello');
       expect(newState.past).toEqual(['bar', 'foo']);
     });
   });
 
-  describe('support #updateHistory on default action', () => {
-    it('returns same state when the reducer returns same state', () => {
-      const state = makeHistory('foo');
-
-      const testUndoable = undoable(noopReducer, '');
-      const newState = testUndoable(state, anyAction());
-      expect(newState).toEqual(state);
+  describe('support #snapshot', () => {
+    it('creates present on first snapshot', () => {
+      const newState = setupUndoable()(makeHistory(), snapshot('first'));
+      expect(newState).toEqual(makeHistory('first'));
     });
 
-    it('returns same state when the reducer returns empty state', () => {
-      const state = makeHistory('');
-
-      const testUndoable = undoable(addUnderscoreReducer, '_');
-      const newState = testUndoable(state, anyAction());
-      expect(newState).toEqual(state);
+    it('returns the same state when snapshot is identical', () => {
+      const newState = setupUndoable()(makeHistory('first'), snapshot('first'));
+      expect(newState).toEqual(makeHistory('first'));
     });
 
-    it('returns initial state when the reducer does not returns empty state', () => {
-      const state = makeHistory('');
-
-      const testUndoable = undoable(addUnderscoreReducer, '');
-      const newState = testUndoable(state, anyAction());
-      expect(newState.present).toBe('_');
-      expect(newState.future).toEqual([]);
-      expect(newState.past).toEqual([]);
-    });
-
-    it('returns updated state after the reducer has not returned empty state', () => {
-      const state = makeHistory('');
-
-      const testUndoable = undoable(addUnderscoreReducer, '');
-      const firstState = testUndoable(state, anyAction());
-      const secondState = testUndoable(firstState, anyAction());
-      const thirdState = testUndoable(secondState, anyAction());
-
-      expect(thirdState.present).toBe('___');
-      expect(thirdState.future).toEqual([]);
-      expect(thirdState.past).toEqual(['_', '__']);
+    it('returns updated state when snapshot is different from current state', () => {
+      const newState = setupUndoable()(
+        makeHistory('first'),
+        snapshot('second')
+      );
+      expect(newState).toEqual({
+        past: ['first'],
+        present: 'second',
+        future: [],
+      });
     });
   });
 });

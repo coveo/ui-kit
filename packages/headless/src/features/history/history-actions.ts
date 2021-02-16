@@ -1,8 +1,9 @@
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
-
-import {ActionCreators} from '../../app/undoable';
 import {SearchAppState} from '../../state/search-app-state';
 import {HistoryState} from './history-state';
+
+export const undo = createAction('history/undo');
+export const redo = createAction('history/redo');
 
 /**
  * Creates a snapshot of the current request parameters and adds it to the interface history.
@@ -14,7 +15,7 @@ export const snapshot = createAction<HistoryState>('history/snapshot');
  * Moves backward in the interface history.
  */
 export const back = createAsyncThunk('history/back', async (_, {dispatch}) => {
-  await dispatch(ActionCreators.undo());
+  dispatch(undo());
   await dispatch(change());
 });
 
@@ -24,7 +25,7 @@ export const back = createAsyncThunk('history/back', async (_, {dispatch}) => {
 export const forward = createAsyncThunk(
   'history/forward',
   async (_, {dispatch}) => {
-    await dispatch(ActionCreators.redo());
+    dispatch(redo());
     await dispatch(change());
   }
 );

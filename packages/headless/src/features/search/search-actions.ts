@@ -37,29 +37,13 @@ import {
 } from '../../api/analytics/analytics';
 import {AnyFacetRequest} from '../facets/generic/interfaces/generic-facet-request';
 import {SearchRequest} from '../../api/search/search/search-request';
-import {getContextInitialState} from '../context/context-state';
-import {getFacetSetInitialState} from '../facets/facet-set/facet-set-state';
-import {getNumericFacetSetInitialState} from '../facets/range-facets/numeric-facet-set/numeric-facet-set-state';
-import {getDateFacetSetInitialState} from '../facets/range-facets/date-facet-set/date-facet-set-state';
-import {
-  CategoryFacetSetState,
-  getCategoryFacetSetInitialState,
-} from '../facets/category-facet-set/category-facet-set-state';
-import {getPaginationInitialState} from '../pagination/pagination-state';
+import {CategoryFacetSetState} from '../facets/category-facet-set/category-facet-set-state';
 import {getQueryInitialState} from '../query/query-state';
-import {getAdvancedSearchQueriesInitialState} from '../advanced-search-queries/advanced-search-queries-state';
-import {getQuerySetInitialState} from '../query-set/query-set-state';
-import {getSortCriteriaInitialState} from '../sort-criteria/sort-criteria-state';
-import {getPipelineInitialState} from '../pipeline/pipeline-state';
-import {getSearchHubInitialState} from '../search-hub/search-hub-state';
-import {getFacetOptionsInitialState} from '../facet-options/facet-options-state';
-import {logFetchMoreResults, logQueryError} from './search-analytics-actions';
 import {SearchAction} from '../analytics/analytics-utils';
-import {HistoryState} from '../history/history-state';
+import {extractHistory} from '../history/history-state';
 import {sortFacets} from '../../utils/facet-utils';
-import {getDebugInitialState} from '../debug/debug-state';
-import {getFacetOrderInitialState} from '../facets/facet-order/facet-order-state';
 import {getSearchInitialState} from './search-state';
+import {logFetchMoreResults, logQueryError} from './search-analytics-actions';
 
 export type StateNeededByExecuteSearch = ConfigurationSection &
   Partial<
@@ -274,25 +258,6 @@ const shouldReExecuteTheQueryWithCorrections = (
   }
   return false;
 };
-
-const extractHistory = (state: StateNeededByExecuteSearch): HistoryState => ({
-  context: state.context || getContextInitialState(),
-  facetSet: state.facetSet || getFacetSetInitialState(),
-  numericFacetSet: state.numericFacetSet || getNumericFacetSetInitialState(),
-  dateFacetSet: state.dateFacetSet || getDateFacetSetInitialState(),
-  categoryFacetSet: state.categoryFacetSet || getCategoryFacetSetInitialState(),
-  pagination: state.pagination || getPaginationInitialState(),
-  query: state.query || getQueryInitialState(),
-  advancedSearchQueries:
-    state.advancedSearchQueries || getAdvancedSearchQueriesInitialState(),
-  querySet: state.querySet || getQuerySetInitialState(),
-  sortCriteria: state.sortCriteria || getSortCriteriaInitialState(),
-  pipeline: state.pipeline || getPipelineInitialState(),
-  searchHub: state.searchHub || getSearchHubInitialState(),
-  facetOptions: state.facetOptions || getFacetOptionsInitialState(),
-  facetOrder: state.facetOrder ?? getFacetOrderInitialState(),
-  debug: state.debug ?? getDebugInitialState(),
-});
 
 export const buildSearchRequest = (
   state: StateNeededByExecuteSearch

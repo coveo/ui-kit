@@ -40,6 +40,10 @@ export const facetSetReducer = createReducer(
         state[facetId] = buildFacetRequest(action.payload);
       })
       .addCase(change.fulfilled, (_, action) => {
+        if (!action.payload) {
+          return;
+        }
+
         if (Object.keys(action.payload.facetSet).length === 0) {
           return;
         }
