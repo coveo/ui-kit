@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.7.0-alpha.0](https://github.com/coveo/ui-kit/compare/v0.6.1-alpha.0...v0.7.0-alpha.0) (2021-02-17)
+
+
+### Features
+
+* **atomic,headless:** add search status controller and handle state ([#511](https://github.com/coveo/ui-kit/issues/511)) ([39a375b](https://github.com/coveo/ui-kit/commit/39a375b2290a0cfe299cfa82b119cb2c6148f5c8))
+
+
+
+
+
+## [0.6.1-alpha.0](https://github.com/coveo/ui-kit/compare/v0.6.0...v0.6.1-alpha.0) (2021-02-16)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
 # [0.6.0](https://github.com/coveo/ui-kit/compare/v0.6.0-alpha.8...v0.6.0) (2021-02-16)
 
 

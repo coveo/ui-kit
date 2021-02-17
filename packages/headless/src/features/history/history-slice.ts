@@ -1,17 +1,18 @@
 import {createReducer} from '@reduxjs/toolkit';
 import {ContextState} from '../context/context-state';
-import {FacetSetState} from '../facets/facet-set/facet-set-state';
 import {QueryState} from '../query/query-state';
 import {PaginationState} from '../pagination/pagination-state';
 import {SortState} from '../../controllers/sort/headless-sort';
-import {snapshot} from './history-actions';
-import {DateFacetSetState} from '../facets/range-facets/date-facet-set/date-facet-set-state';
-import {NumericFacetSetState} from '../facets/range-facets/numeric-facet-set/numeric-facet-set-state';
 import {CategoryFacetSetState} from '../facets/category-facet-set/category-facet-set-state';
-import {FacetOptionsState} from '../facet-options/facet-options-state';
 import {AdvancedSearchQueriesState} from '../advanced-search-queries/advanced-search-queries-state';
+import {partitionIntoParentsAndValues} from '../facets/category-facet-set/category-facet-utils';
 import {getHistoryInitialState, HistoryState} from './history-state';
 import {arrayEquals} from '../../utils/utils';
+import {snapshot} from './history-actions';
+import {
+  BaseFacetValueRequest,
+  CurrentValues,
+} from '../facets/facet-api/request';
 
 export const historyReducer = createReducer(
   getHistoryInitialState(),
@@ -30,10 +31,9 @@ const isEqual = (current: HistoryState, next: HistoryState) => {
       next.advancedSearchQueries
     ) &&
     isFacetsEqual(current.facetSet, next.facetSet) &&
-    isDateFacetsEqual(current.dateFacetSet, next.dateFacetSet) &&
-    isNumericFacetsEqual(current.numericFacetSet, next.numericFacetSet) &&
+    isFacetsEqual(current.dateFacetSet, next.dateFacetSet) &&
+    isFacetsEqual(current.numericFacetSet, next.numericFacetSet) &&
     isCategoryFacetsEqual(current.categoryFacetSet, next.categoryFacetSet) &&
-    isFacetOptionsEqual(current.facetOptions, next.facetOptions) &&
     isPaginationEqual(current.pagination, next.pagination) &&
     isQueryEqual(current.query, next.query) &&
     isSortEqual(current, next) &&
@@ -47,29 +47,64 @@ const isEqual = (current: HistoryState, next: HistoryState) => {
 const isContextEqual = (current: ContextState, next: ContextState) =>
   JSON.stringify(current.contextValues) === JSON.stringify(next.contextValues);
 
-// TODO: compare all facets non-idle values, comparing current values changes history after 1st request
-const isFacetsEqual = (current: FacetSetState, next: FacetSetState) =>
-  JSON.stringify(current) === JSON.stringify(next);
+type FacetStateWithCurrentValues = Record<
+  string,
+  CurrentValues<BaseFacetValueRequest>
+>;
 
-const isDateFacetsEqual = (
-  current: DateFacetSetState,
-  next: DateFacetSetState
-) => JSON.stringify(current) === JSON.stringify(next);
+const isFacetsEqual = (
+  current: FacetStateWithCurrentValues,
+  next: FacetStateWithCurrentValues
+) => {
+  for (const [key, value] of Object.entries(next)) {
+    if (!current[key]) {
+      return false;
+    }
 
-const isNumericFacetsEqual = (
-  current: NumericFacetSetState,
-  next: NumericFacetSetState
-) => JSON.stringify(current) === JSON.stringify(next);
+    const currentSelectedValues = current[key].currentValues.filter(
+      (value) => value.state === 'selected'
+    );
+    const nextSelectedValues = value.currentValues.filter(
+      (value) => value.state === 'selected'
+    );
+
+    if (
+      JSON.stringify(currentSelectedValues) !==
+      JSON.stringify(nextSelectedValues)
+    ) {
+      return false;
+    }
+  }
+
+  return true;
+};
 
 const isCategoryFacetsEqual = (
   current: CategoryFacetSetState,
   next: CategoryFacetSetState
-) => JSON.stringify(current) === JSON.stringify(next);
+) => {
+  for (const [key, value] of Object.entries(next)) {
+    if (!current[key]) {
+      return false;
+    }
 
-const isFacetOptionsEqual = (
-  current: FacetOptionsState,
-  next: FacetOptionsState
-) => JSON.stringify(current) === JSON.stringify(next);
+    const currentSelectedValues = partitionIntoParentsAndValues(
+      current[key]?.request.currentValues
+    ).parents.map(({value}) => value);
+    const nextSelectedValues = partitionIntoParentsAndValues(
+      value?.request.currentValues
+    ).parents.map(({value}) => value);
+
+    if (
+      JSON.stringify(currentSelectedValues) !==
+      JSON.stringify(nextSelectedValues)
+    ) {
+      return false;
+    }
+  }
+
+  return true;
+};
 
 const isPaginationEqual = (current: PaginationState, next: PaginationState) =>
   current.firstResult === next.firstResult &&

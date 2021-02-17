@@ -6,10 +6,11 @@ import {buildMockFacetRequest} from '../../test/mock-facet-request';
 import {buildMockNumericFacetRequest} from '../../test/mock-numeric-facet-request';
 import {buildMockDateFacetRequest} from '../../test/mock-date-facet-request';
 import {buildMockAdvancedSearchQueriesState} from '../../test/mock-advanced-search-queries-state';
-import {buildMockFacetOptions} from '../../test/mock-facet-options';
 import {buildMockQueryState} from '../../test/mock-query-state';
 import {buildMockCategoryFacetSlice} from '../../test/mock-category-facet-slice';
 import {getHistoryInitialState, HistoryState} from './history-state';
+import {buildMockCategoryFacetRequest} from '../../test/mock-category-facet-request';
+import {buildMockCategoryFacetValueRequest} from '../../test/mock-category-facet-value-request';
 
 describe('history slice', () => {
   let undoableReducer: Reducer<StateWithHistory<HistoryState>>;
@@ -198,22 +199,62 @@ describe('history slice', () => {
       );
     });
 
-    it('for #facetOptions keys', () => {
+    it('should consider different snapshot for facet set selected values', () => {
       expectHistoryToHaveCreatedDifferentSnapshots(
+        getSnapshot({facetSet: {foo: buildMockFacetRequest()}}),
         getSnapshot({
-          facetOptions: buildMockFacetOptions({freezeFacetOrder: true}),
-        }),
-        getSnapshot({
-          facetOptions: buildMockFacetOptions({freezeFacetOrder: false}),
+          facetSet: {
+            foo: buildMockFacetRequest({
+              currentValues: [{state: 'selected', value: 'good'}],
+            }),
+          },
         })
       );
     });
 
-    it('should consider different snapshot for facet set values', () => {
-      expectHistoryToHaveCreatedDifferentSnapshots(
+    it('should not consider different snapshot for facet set idle values', () => {
+      expectHistoryNotToHaveCreatedDifferentSnapshots(
         getSnapshot({facetSet: {foo: buildMockFacetRequest()}}),
         getSnapshot({
-          facetSet: {foo: buildMockFacetRequest({field: '@different'})},
+          facetSet: {
+            foo: buildMockFacetRequest({
+              currentValues: [{state: 'idle', value: 'good'}],
+            }),
+          },
+        })
+      );
+    });
+
+    it('should consider different snapshot for category facet set selected values', () => {
+      expectHistoryToHaveCreatedDifferentSnapshots(
+        getSnapshot({categoryFacetSet: {foo: buildMockCategoryFacetSlice()}}),
+        getSnapshot({
+          categoryFacetSet: {
+            foo: buildMockCategoryFacetSlice({
+              request: buildMockCategoryFacetRequest({
+                currentValues: [
+                  buildMockCategoryFacetValueRequest({state: 'selected'}),
+                ],
+              }),
+            }),
+          },
+        })
+      );
+    });
+
+    it('should not consider different snapshot for category facet set idle values', () => {
+      expectHistoryNotToHaveCreatedDifferentSnapshots(
+        getSnapshot({categoryFacetSet: {foo: buildMockCategoryFacetSlice()}}),
+        getSnapshot({
+          categoryFacetSet: {
+            foo: buildMockCategoryFacetSlice({
+              request: buildMockCategoryFacetRequest({
+                currentValues: [
+                  buildMockCategoryFacetValueRequest({state: 'idle'}),
+                ],
+              }),
+            }),
+          },
         })
       );
     });

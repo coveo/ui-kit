@@ -1,70 +1,42 @@
-import {
-  ApiEntryPoint,
-  ApiFunction,
-  ApiInterface,
-  Parameter,
-} from '@microsoft/api-extractor-model';
-import {DocComment} from '@microsoft/tsdoc';
+import {ApiEntryPoint, ApiFunction} from '@microsoft/api-extractor-model';
 import {findApi} from './api-finder';
-import {FuncEntity, ObjEntity} from './entity';
-import {buildEntity, buildFuncEntity, buildParamEntity} from './entity-builder';
-import {buildParamEntityBasedOnKind} from './function-param-resolver';
-import {resolveInterfaceMembers} from './interface-resolver';
+import {FuncEntity} from './entity';
+import {resolveFunction} from './function-resolver';
+import {
+  resolveCodeSamplePaths,
+  SamplePaths,
+  CodeSampleInfo,
+} from './code-sample-resolver';
+
+export interface ControllerConfiguration {
+  initializer: string;
+  samplePaths: SamplePaths;
+  utils?: string[];
+}
 
 interface Controller {
   initializer: FuncEntity;
+  utils: FuncEntity[];
+  codeSampleInfo: CodeSampleInfo;
 }
 
 export function resolveController(
-  entryPoint: ApiEntryPoint,
-  controllerName: string
+  entry: ApiEntryPoint,
+  config: ControllerConfiguration
 ): Controller {
-  const controller = findApi(entryPoint, controllerName) as ApiFunction;
-  const initializer = resolveControllerFunction(entryPoint, controller);
+  const initializer = resolveControllerFunction(entry, config.initializer);
+  const utils = (config.utils || []).map((util) => resolveUtility(entry, util));
+  const codeSampleInfo = resolveCodeSamplePaths(config.samplePaths);
 
-  return {initializer};
+  return {initializer, utils, codeSampleInfo};
 }
 
-function resolveControllerFunction(entry: ApiEntryPoint, fn: ApiFunction) {
-  const params = fn.parameters.map((p, index) =>
-    resolveControllerParam(entry, p, index)
-  );
-  const returnTypeText = fn.returnTypeExcerpt.text;
-  const returnTypeInterface = findApi(entry, returnTypeText) as ApiInterface;
-
-  const returnType = buildObjEntityFromInterface(entry, returnTypeInterface);
-
-  return buildFuncEntity({
-    name: fn.name,
-    comment: (fn.tsdocComment as unknown) as DocComment,
-    params,
-    returnType,
-  });
+function resolveControllerFunction(entry: ApiEntryPoint, name: string) {
+  const fn = findApi(entry, name) as ApiFunction;
+  return resolveFunction(entry, fn, [0]);
 }
 
-function resolveControllerParam(
-  entryPoint: ApiEntryPoint,
-  p: Parameter,
-  index: number
-) {
-  const isEngine = index === 0;
-  return isEngine
-    ? buildParamEntity(p)
-    : buildParamEntityBasedOnKind(entryPoint, p);
-}
-
-function buildObjEntityFromInterface(
-  entryPoint: ApiEntryPoint,
-  apiInterface: ApiInterface
-): ObjEntity {
-  const name = apiInterface.name;
-  const members = resolveInterfaceMembers(entryPoint, apiInterface);
-  const entity = buildEntity({
-    name,
-    type: name,
-    isOptional: false,
-    comment: (apiInterface.tsdocComment as unknown) as DocComment,
-  });
-
-  return {...entity, members};
+function resolveUtility(entry: ApiEntryPoint, name: string) {
+  const fn = findApi(entry, name) as ApiFunction;
+  return resolveFunction(entry, fn, []);
 }

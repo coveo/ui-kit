@@ -1,30 +1,18 @@
-import {
-  ApiMethodSignature,
-  ExcerptTokenKind,
-  IExcerptToken,
-  ReleaseTag,
-} from '@microsoft/api-extractor-model';
+import {ApiMethodSignature, ReleaseTag} from '@microsoft/api-extractor-model';
 import {buildMockApiInterface} from '../mocks/mock-api-interface';
 import {buildMockApiPropertySignature} from '../mocks/mock-api-property-signature';
 import {buildMockApiTypeAlias} from '../mocks/mock-api-type-alias';
 import {buildMockEntity} from '../mocks/mock-entity';
 import {buildMockEntryPoint} from '../mocks/mock-entry-point';
+import {
+  buildContentExcerptToken,
+  buildReferenceExcerptToken,
+} from '../mocks/mock-excerpt-token';
 import {buildMockFuncEntity} from '../mocks/mock-func-entity';
 import {buildMockObjEntity} from '../mocks/mock-obj-entity';
 import {resolveInterfaceMembers} from './interface-resolver';
 
 describe('#resolveInterfaceMembers', () => {
-  function buildContentExcerptToken(text: string): IExcerptToken {
-    return {kind: ExcerptTokenKind.Content, text};
-  }
-
-  function buildReferenceExcerptToken(
-    text: string,
-    canonicalReference: string
-  ): IExcerptToken {
-    return {kind: ExcerptTokenKind.Reference, text, canonicalReference};
-  }
-
   it('resolves a property with a primitive type', () => {
     const entryPoint = buildMockEntryPoint();
     const apiInterface = buildMockApiInterface({name: 'Pager'});
