@@ -23,6 +23,7 @@ import {QuerySummary as QuerySummaryFn} from './components/query-summary/query-s
 import {Facet} from './components/facet/facet.class';
 import {Facet as FacetFn} from './components/facet/facet.fn';
 import {
+  buildContext,
   buildSearchBox,
   buildDidYouMean,
   buildQueryError,
@@ -75,6 +76,7 @@ const {autoUpdateURI: startUpdatingURI} = bindSearchParametersToURI(engine);
 
 function App() {
   useEffect(() => startUpdatingURI(), []);
+  buildContext(engine).add('pageId', 'search page');
 
   return (
     <div className="App">
