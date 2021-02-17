@@ -139,10 +139,8 @@ export interface FacetSearch {
 export interface FacetSearchState {
   /** search results */
   values: SpecificFacetSearchResult[];
-
   /** whether loading */
   isLoading: boolean;
-
   /** whether more values are available */
   moreValuesAvailable: boolean;
 }
@@ -164,12 +162,12 @@ export interface SpecificFacetSearchResult {
 }
 
 export interface FacetValue {
-  /** the value */
-  value: string;
   /** whether the value is selected or idle */
   state: FacetValueState;
   /** the number of results having the value */
   numberOfResults: number;
+  /** the value */
+  value: string;
 }
 
 /** Creates a `Facet` controller instance. */

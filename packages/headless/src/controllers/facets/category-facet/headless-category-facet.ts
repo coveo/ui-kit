@@ -133,10 +133,8 @@ export interface CategoryFacetSearch {
 export interface CategoryFacetSearchState {
   /** search results */
   values: CategoryFacetSearchResult[];
-
   /** whether loading */
   isLoading: boolean;
-
   /** whether more values are available */
   moreValuesAvailable: boolean;
 }
@@ -163,11 +161,6 @@ export interface CategoryFacetSearchResult {
 
 export interface CategoryFacetValue {
   /**
-   * the value
-   * */
-  value: string;
-
-  /**
    * whether the value is selected or idle
    * */
   state: FacetValueState;
@@ -191,6 +184,11 @@ export interface CategoryFacetValue {
    * Whether more values are available.
    * */
   moreValuesAvailable?: boolean;
+
+  /**
+   * the value
+   * */
+  value: string;
 }
 
 export function buildCategoryFacet(
