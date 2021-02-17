@@ -40,14 +40,7 @@ import {
   CategoryFacetSearchOptions,
 } from './headless-category-facet-options';
 import {determineFacetId} from '../_common/facet-id-determinor';
-import {FacetSearch} from '../facet/headless-facet';
-import {
-  BaseFacetSearch,
-  BaseFacetSearchResult,
-  BaseFacetSearchState,
-  BaseFacetState,
-  BaseFacetValue,
-} from '../_common/base-facet';
+import {FacetValueState} from '../../../features/facets/facet-api/value';
 
 export {CategoryFacetOptions, CategoryFacetSearchOptions};
 
@@ -97,7 +90,7 @@ export interface CategoryFacet extends Controller {
 /**
  * A scoped and simplified part of the headless state that is relevant to the `CategoryFacet` controller.
  */
-export interface CategoryFacetState extends BaseFacetState {
+export interface CategoryFacetState {
   /** The facet id. */
   facetId: string;
 
@@ -107,33 +100,83 @@ export interface CategoryFacetState extends BaseFacetState {
   /** The values of the facet. */
   values: CategoryFacetValue[];
 
+  /** The active sortCriterion of the facet. */
+  sortCriteria: CategoryFacetSortCriterion;
+
+  /** `true` if a search is in progress and `false` otherwise. */
+  isLoading: boolean;
+
+  /** `true` if there is at least one non-idle value and `false` otherwise. */
+  hasActiveValues: boolean;
+
   /** `true` if there are more values to display and `false` otherwise. */
   canShowMoreValues: boolean | undefined;
 
-  /** The active sortCriterion of the facet. */
-  sortCriteria: CategoryFacetSortCriterion;
+  /** `true` if fewer values can be displayed and `false` otherwise. */
+  canShowLessValues: boolean;
 
   /** The state of the facet's searchbox. */
   facetSearch: CategoryFacetSearchState;
 }
 
-export interface CategoryFacetSearch extends BaseFacetSearch {
+export interface CategoryFacetSearch {
+  /** updates text */
+  updateText(text: string): void;
+  /** shows more results */
+  showMoreResults(): void;
+  /** performs a search */
+  search(): void;
+  /** selects a result */
   select(value: CategoryFacetSearchResult): void;
 }
 
-export interface CategoryFacetSearchState extends BaseFacetSearchState {
+export interface CategoryFacetSearchState {
   /** search results */
   values: CategoryFacetSearchResult[];
+
+  /** whether loading */
+  isLoading: boolean;
+
+  /** whether more values are available */
+  moreValuesAvailable: boolean;
 }
 
-export interface CategoryFacetSearchResult extends BaseFacetSearchResult {
+export interface CategoryFacetSearchResult {
+  /**
+   * The custom facet value display name, as specified in the `captions` argument of the facet request.
+   */
+  displayValue: string;
+  /**
+   * The original facet value, as retrieved from the field in the index.
+   */
+  rawValue: string;
+  /**
+   * An estimate number of result items matching both the current query and
+   * the filter expression that would get generated if the facet value were selected.
+   */
+  count: number;
   /**
    * The hierarchical path to the value.
    */
   path: string[];
 }
 
-export interface CategoryFacetValue extends BaseFacetValue {
+export interface CategoryFacetValue {
+  /**
+   * the value
+   * */
+  value: string;
+
+  /**
+   * whether the value is selected or idle
+   * */
+  state: FacetValueState;
+
+  /**
+   * the number of results having the value
+   * */
+  numberOfResults: number;
+
   /**
    * The hierarchical path to the value.
    */
