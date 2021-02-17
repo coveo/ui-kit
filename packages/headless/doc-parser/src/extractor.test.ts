@@ -3,34 +3,35 @@ import {buildMockObjEntity} from '../mocks/mock-obj-entity';
 import {extractTypes} from './extractor';
 
 describe('#extractTypes', () => {
-  describe('given Facet.state.values with type #FacetValue[]', () => {
-    it('extracts #FacetValue as an entity', () => {
-      const numberOfResults = buildMockEntity({
-        name: 'numberOfResults',
-        type: 'number',
-      });
-
-      const values = buildMockObjEntity({
-        name: 'values',
-        type: 'FacetValue[]',
-        members: [numberOfResults],
-      });
-
-      const state = buildMockObjEntity({
-        name: 'state',
-        members: [values],
-      });
-
-      const {types} = extractTypes([state]);
-
-      const expectedEntity = buildMockObjEntity({
-        name: 'FacetValue[]',
-        type: 'FacetValue[]',
-        members: [numberOfResults],
-      });
-
-      expect(types).toEqual([expectedEntity]);
+  it(`given Facet.state.values with type #FacetValue[],
+  it extracts #FacetValue as an entity, and sets #values.isTypeExtracted to true`, () => {
+    const numberOfResults = buildMockEntity({
+      name: 'numberOfResults',
+      type: 'number',
     });
+
+    const values = buildMockObjEntity({
+      name: 'values',
+      type: 'FacetValue[]',
+      members: [numberOfResults],
+      isTypeExtracted: false,
+    });
+
+    const state = buildMockObjEntity({
+      name: 'state',
+      members: [values],
+    });
+
+    const {types} = extractTypes([state]);
+
+    const expectedEntity = buildMockObjEntity({
+      name: 'FacetValue[]',
+      type: 'FacetValue[]',
+      members: [numberOfResults],
+    });
+
+    expect(types).toEqual([expectedEntity]);
+    expect(values.isTypeExtracted).toBe(true);
   });
 
   it(`given Facet.state.facetSearch.values with type #SpecificFacetSearchResult,

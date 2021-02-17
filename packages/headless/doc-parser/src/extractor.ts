@@ -36,8 +36,9 @@ function extract(entity: ObjEntity, extraction: Extraction, level: number) {
   if (level === maxDepth) {
     const typeHeading = buildTypeEntity(entity, members);
     extraction.types.push(typeHeading);
-    processObjectEntities([typeHeading], extraction, 0);
+    entity.isTypeExtracted = true;
 
+    processObjectEntities([typeHeading], extraction, 0);
     return;
   }
 
