@@ -160,30 +160,31 @@ export class BaseSearch {
           }
         >
           {this.leadingSubmitButton && this.submitButton}
-          <div
-            class={
-              'input-wrapper flex flex-grow items-center ' +
-              (this.leadingSubmitButton ? 'leading-submit' : '')
-            }
-            ref={(el) => (this.containerRef = el as HTMLElement)}
-          >
-            {this.input}
-            {this.clearButton}
+          <div class="combobox flex flex-grow">
+            <div
+              class={
+                'input-wrapper flex flex-grow items-center ' +
+                (this.leadingSubmitButton ? 'leading-submit' : '')
+              }
+              ref={(el) => (this.containerRef = el as HTMLElement)}
+            >
+              {this.input}
+              {this.clearButton}
+            </div>
+            <ul
+              part="suggestions"
+              class={
+                'suggestions absolute w-full bg-background apply-border-on-background empty:border-none rounded-b ' +
+                (this.shouldShowSuggestions ? 'block' : 'hidden')
+              }
+              ref={(el) => (this.valuesRef = el as HTMLElement)}
+            >
+              {this.suggestions}
+              {this.showMoreSearchResults}
+            </ul>
           </div>
           {!this.leadingSubmitButton && this.submitButton}
         </div>
-
-        <ul
-          part="suggestions"
-          class={
-            'suggestions absolute w-full bg-background apply-border-on-background empty:border-none rounded-b ' +
-            (this.shouldShowSuggestions ? 'block' : 'hidden')
-          }
-          ref={(el) => (this.valuesRef = el as HTMLElement)}
-        >
-          {this.suggestions}
-          {this.showMoreSearchResults}
-        </ul>
       </div>
     );
   }
