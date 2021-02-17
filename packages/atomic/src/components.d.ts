@@ -600,11 +600,9 @@ declare namespace LocalJSX {
         "leadingSubmitButton"?: boolean;
         "moreValuesAvailable"?: boolean;
         "onClear"?: (event: CustomEvent<void>) => void;
-        "onHideSuggestions"?: (event: CustomEvent<void>) => void;
         "onSearch"?: (event: CustomEvent<void>) => void;
         "onSelectValue"?: (event: CustomEvent<number>) => void;
         "onShowMoreResults"?: (event: CustomEvent<void>) => void;
-        "onShowSuggestions"?: (event: CustomEvent<void>) => void;
         "onTextChange"?: (event: CustomEvent<string>) => void;
         "placeholder"?: string;
         "strings": I18nState;
