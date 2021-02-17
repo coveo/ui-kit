@@ -16,7 +16,9 @@ describe('Search Box Test Suites', () => {
   }
 
   async function testQuerySuggestionsShown(numberOfSuggestions: number) {
-    cy.get('@searchBoxFirstDiv').find('.search-input').type(queryText, {force: true});
+    cy.get('@searchBoxFirstDiv')
+      .find('.search-input')
+      .type(queryText, {force: true});
     for (let i = 1; i < queryText.length - 1; i++) {
       cy.wait('@coveoQuerySuggest');
     }
