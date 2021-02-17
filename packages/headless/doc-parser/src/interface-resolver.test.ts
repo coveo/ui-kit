@@ -1,4 +1,5 @@
 import {ApiMethodSignature, ReleaseTag} from '@microsoft/api-extractor-model';
+import {buildMockApiDocComment} from '../mocks/mock-api-doc-comment';
 import {buildMockApiInterface} from '../mocks/mock-api-interface';
 import {buildMockApiPropertySignature} from '../mocks/mock-api-property-signature';
 import {buildMockApiTypeAlias} from '../mocks/mock-api-type-alias';
@@ -91,8 +92,12 @@ describe('#resolveInterfaceMembers', () => {
     const entryPoint = buildMockEntryPoint();
     const pagerInterface = buildMockApiInterface({name: 'Pager'});
 
+    const docComment = buildMockApiDocComment(
+      '/**\n * Returns `true` when the current page is equal to the passed page, and `false` otherwise.\n *\n * @param page - The page number to check.\n *\n * @returns Whether the passed page is selected.\n */\n'
+    );
+
     const method = new ApiMethodSignature({
-      docComment: undefined,
+      docComment,
       excerptTokens: [
         buildContentExcerptToken('isCurrentPage(page: '),
         buildContentExcerptToken('number'),
@@ -118,9 +123,18 @@ describe('#resolveInterfaceMembers', () => {
     entryPoint.addMember(pagerInterface);
 
     const result = resolveInterfaceMembers(entryPoint, pagerInterface);
+
+    const paramEntity = buildMockEntity({
+      name: 'page',
+      type: 'number',
+      desc: 'The page number to check.',
+    });
+
     const funcEntity = buildMockFuncEntity({
       name: 'isCurrentPage',
-      params: [buildMockEntity({name: 'page', type: 'number'})],
+      desc:
+        'Returns `true` when the current page is equal to the passed page, and `false` otherwise.',
+      params: [paramEntity],
       returnType: 'boolean',
     });
     expect(result).toEqual([funcEntity]);
