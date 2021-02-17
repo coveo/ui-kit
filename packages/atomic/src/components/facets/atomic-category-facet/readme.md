@@ -18,7 +18,7 @@
 
 ### Depends on
 
-- [base-facet](../facet)
+- [base-facet](../base-facet)
 - [facet-search](../facet-search)
 - [atomic-component-error](../../atomic-component-error)
 

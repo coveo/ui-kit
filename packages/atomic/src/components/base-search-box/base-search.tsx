@@ -82,6 +82,7 @@ export class BaseSearch {
   private get input() {
     return (
       <input
+        tabindex="0"
         part="input"
         ref={(el) => (this.inputRef = el as HTMLInputElement)}
         onFocus={() => {
@@ -154,7 +155,9 @@ export class BaseSearch {
         <div
           class={
             'search-box-wrapper flex items-center ' +
-            ((this.suggestions.length > 0 && this.shouldShowSuggestions) ? 'has-values' : '')
+            (this.suggestions.length > 0 && this.shouldShowSuggestions
+              ? 'has-values'
+              : '')
           }
         >
           {this.leadingSubmitButton && this.submitButton}

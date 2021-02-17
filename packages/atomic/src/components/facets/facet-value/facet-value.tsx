@@ -13,7 +13,7 @@ export const FacetValue = (props: FacetValueProps) => {
   return (
     <li
       role="option"
-      class="flex flex-row items-center mt-2 cursor-pointer text-base"
+      class="flex flex-row items-center py-2 lg:py-1 cursor-pointer text-lg lg:text-base"
     >
       <input
         type="checkbox"
@@ -27,8 +27,8 @@ export const FacetValue = (props: FacetValueProps) => {
         htmlFor={id}
         class="ml-3 flex flex-row text-on-background flex-grow cursor-pointer"
       >
-        {props.label}
-        <span class="ml-auto self-end text-on-background-variant">
+        <span class="my-auto">{props.label}</span>
+        <span class="ml-auto my-auto self-end text-on-background-variant">
           {props.numberOfResults}
         </span>
       </label>

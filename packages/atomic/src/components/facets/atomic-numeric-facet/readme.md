@@ -19,7 +19,7 @@
 ### Depends on
 
 - [facet-value](../facet-value)
-- [base-facet](../facet)
+- [base-facet](../base-facet)
 - [atomic-component-error](../../atomic-component-error)
 
 ### Graph
