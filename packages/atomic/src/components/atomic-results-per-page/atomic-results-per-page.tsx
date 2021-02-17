@@ -55,17 +55,18 @@ export class AtomicResultsPerPage implements InitializableComponent {
   @Prop() choicesDisplayed = '10,25,50,100';
   /**
    * Initial choice for the number of result per page. Should be part of the `choicesDisplayed` option.
+   * @default number The first value of choices displayed.
    */
-  @Prop() initialChoice = 10;
+  @Prop() initialChoice!: number;
 
   public initialize() {
+    this.choices = this.validateChoicesDisplayed();
+    this.validateInitialChoice();
+
     this.searchStatus = buildSearchStatus(this.bindings.engine);
     this.resultPerPage = buildResultsPerPage(this.bindings.engine, {
       initialState: {numberOfResults: this.initialChoice},
     });
-
-    this.choices = this.validateChoicesDisplayed();
-    this.validateInitialChoice();
   }
 
   private validateChoicesDisplayed() {
@@ -82,6 +83,10 @@ export class AtomicResultsPerPage implements InitializableComponent {
   }
 
   private validateInitialChoice() {
+    if (!this.initialChoice) {
+      this.initialChoice = this.choices[0];
+      return;
+    }
     if (!this.choices.includes(this.initialChoice)) {
       const errorMsg = `The "initialChoice" option value "${this.initialChoice}" is not included in the "choicesDisplayed" option "${this.choicesDisplayed}".`;
       this.bindings.engine.logger.error(errorMsg, this);

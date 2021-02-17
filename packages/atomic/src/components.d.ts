@@ -92,18 +92,9 @@ export namespace Components {
     }
     interface AtomicResultList {
         /**
-          * Whether to automatically retrieve an additional page of results and append it to the current results when the user scrolls down to the bottom of element
+          * A list of fields to include in the query results, separated by commas.
          */
-        "enableInfiniteScroll": boolean;
         "fieldsToInclude": string;
-        /**
-          * Css class for the list wrapper
-         */
-        "listClass": string;
-        /**
-          * Css class for a list element
-         */
-        "listElementClass": string;
     }
     interface AtomicResultTemplate {
         "conditions": ResultTemplateCondition[];
@@ -121,6 +112,7 @@ export namespace Components {
         "choicesDisplayed": string;
         /**
           * Initial choice for the number of result per page. Should be part of the `choicesDisplayed` option.
+          * @default number The first value of choices displayed.
          */
         "initialChoice": number;
     }
@@ -492,18 +484,9 @@ declare namespace LocalJSX {
     }
     interface AtomicResultList {
         /**
-          * Whether to automatically retrieve an additional page of results and append it to the current results when the user scrolls down to the bottom of element
+          * A list of fields to include in the query results, separated by commas.
          */
-        "enableInfiniteScroll"?: boolean;
         "fieldsToInclude"?: string;
-        /**
-          * Css class for the list wrapper
-         */
-        "listClass"?: string;
-        /**
-          * Css class for a list element
-         */
-        "listElementClass"?: string;
     }
     interface AtomicResultTemplate {
         "conditions"?: ResultTemplateCondition[];
@@ -519,8 +502,9 @@ declare namespace LocalJSX {
         "choicesDisplayed"?: string;
         /**
           * Initial choice for the number of result per page. Should be part of the `choicesDisplayed` option.
+          * @default number The first value of choices displayed.
          */
-        "initialChoice"?: number;
+        "initialChoice": number;
     }
     interface AtomicSearchBox {
         "_id"?: string;
