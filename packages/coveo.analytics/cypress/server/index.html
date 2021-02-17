@@ -1,12 +1,23 @@
 <head>
     <script>
         var queryParams = new URLSearchParams(document.location.search);
-        var scriptVersion = queryParams.get('version') || '2';
+        const keepQueryParamIfDefined = (key) => {
+            if (queryParams.has(key)) {
+                localStorage.setItem(key, queryParams.get(key));
+            }
+            return localStorage.getItem(key);
+        };
+
+        var scriptVersion = keepQueryParamIfDefined('version') || '2';
         var scriptUrl =
-            queryParams.get('staticurl') ||
+            keepQueryParamIfDefined('staticurl') ||
             'https://static.cloud.coveo.com/coveo.analytics.js/' + scriptVersion + '/coveoua.js';
-        var analyticsToken = queryParams.get('token');
-        var endpoint = queryParams.get('endpoint');
+        var analyticsToken = keepQueryParamIfDefined('token');
+        var endpoint = keepQueryParamIfDefined('endpoint');
+
+        if (document.location.search != '') {
+            document.location.search = '';
+        }
 
         // prettier-ignore
         (function(c,o,v,e,O,u,a){
