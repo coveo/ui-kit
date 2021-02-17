@@ -42,7 +42,7 @@ export function buildObjEntity(config: ObjEntityOptions): ObjEntity {
   return {
     ...entity,
     members,
-    isExtracted: false,
+    isTypeExtracted: false,
   };
 }
 

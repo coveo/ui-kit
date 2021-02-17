@@ -7,7 +7,7 @@ export interface Entity {
 
 export interface ObjEntity extends Entity {
   members: AnyEntity[];
-  isExtracted: boolean;
+  isTypeExtracted: boolean;
 }
 
 export interface FuncEntity {
