@@ -49,11 +49,9 @@ const tabs = {
     options: {expression: ''},
   }),
   messages: buildTab(engine, {
-    initialState: {isActive: false},
     options: {expression: '@objecttype==Message'},
   }),
   confluence: buildTab(engine, {
-    initialState: {isActive: false},
     options: {
       expression:
         '@connectortype==Confluence2Crawler AND NOT @documenttype==Space',
