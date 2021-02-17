@@ -22,7 +22,7 @@ export interface ControllerConfiguration {
 
 interface Controller {
   initializer: FuncEntity;
-  types: ObjEntity[];
+  extractedTypes: ObjEntity[];
   utils: FuncEntity[];
   codeSampleInfo: CodeSampleInfo;
 }
@@ -32,11 +32,11 @@ export function resolveController(
   config: ControllerConfiguration
 ): Controller {
   const initializer = resolveControllerInitializer(entry, config.initializer);
-  const types = extractTypesFromInitializer(initializer);
+  const extractedTypes = extractTypesFromInitializer(initializer);
   const utils = (config.utils || []).map((util) => resolveUtility(entry, util));
   const codeSampleInfo = resolveCodeSamplePaths(config.samplePaths);
 
-  return {initializer, types, utils, codeSampleInfo};
+  return {initializer, extractedTypes, utils, codeSampleInfo};
 }
 
 function resolveControllerInitializer(entry: ApiEntryPoint, name: string) {
