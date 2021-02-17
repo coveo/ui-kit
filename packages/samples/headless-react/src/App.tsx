@@ -2,6 +2,8 @@ import logo from './logo.svg';
 import './App.css';
 import {useEffect} from 'react';
 
+import {RecommendationList} from './components/recommendation-list/recommendation-list.class';
+import {RecommendationList as RecommendationListFn} from './components/recommendation-list/recommendation-list.fn';
 import {Tab} from './components/tab/tab.class';
 import {Tab as TabFn} from './components/tab/tab.fn';
 import {SearchBox} from './components/search-box/search-box.class';
@@ -25,6 +27,7 @@ import {QuerySummary as QuerySummaryFn} from './components/query-summary/query-s
 import {Facet} from './components/facet/facet.class';
 import {Facet as FacetFn} from './components/facet/facet.fn';
 import {
+  buildRecommendationList,
   buildTab,
   buildSearchBox,
   buildDidYouMean,
@@ -42,6 +45,8 @@ import {
   buildPager,
 } from '@coveo/headless';
 import {bindSearchParametersToURI} from './components/search-parameter-manager/search-parameter-manager';
+
+const recommendationList = buildRecommendationList(engine);
 
 const tabs = {
   all: buildTab(engine, {
@@ -99,6 +104,10 @@ function App() {
     <div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
+        <Section title="recommendation-list">
+          <RecommendationList />
+          <RecommendationListFn controller={recommendationList} />
+        </Section>
         <Section title="tabs">
           <nav>
             <Tab active>All</Tab>

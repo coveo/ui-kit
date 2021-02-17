@@ -1,6 +1,13 @@
-import {HeadlessEngine, searchAppReducers} from '@coveo/headless';
+import {
+  HeadlessEngine,
+  searchAppReducers,
+  recommendationAppReducers,
+} from '@coveo/headless';
 
 export const engine = new HeadlessEngine({
   configuration: HeadlessEngine.getSampleConfiguration(),
-  reducers: searchAppReducers,
+  reducers: {
+    ...searchAppReducers,
+    ...recommendationAppReducers,
+  },
 });
