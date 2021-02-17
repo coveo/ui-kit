@@ -22,7 +22,7 @@ function processObjectEntities(
 ) {
   entities
     .filter(isObjectEntity)
-    .forEach((entity) => extract(entity, extraction, ++level));
+    .forEach((entity) => extract(entity, extraction, level + 1));
 }
 
 function extract(entity: ObjEntity, extraction: Extraction, level: number) {

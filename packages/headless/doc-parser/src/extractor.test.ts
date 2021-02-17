@@ -73,4 +73,27 @@ describe('#extractTypes', () => {
 
     expect(types).toEqual([expectedEntity1, expectedEntity2]);
   });
+
+  it(`when multiple entities have strictly members with primitive types,
+  it does not extract anything`, () => {
+    const numberOfResults = buildMockEntity({
+      name: 'numberOfResults',
+      type: 'number',
+    });
+
+    const facetSearch = buildMockObjEntity({
+      name: 'facetSearch',
+      type: 'FacetSearchState',
+      members: [numberOfResults],
+    });
+
+    const state = buildMockObjEntity({
+      name: 'state',
+      type: 'FacetState',
+      members: [numberOfResults],
+    });
+
+    const {types} = extractTypes([state, facetSearch]);
+    expect(types).toEqual([]);
+  });
 });
