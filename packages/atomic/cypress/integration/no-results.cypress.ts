@@ -29,7 +29,9 @@ describe('No Results Test Suites', () => {
   function submitNoResultsSearch() {
     setUpPage(component() + searchBox);
     generateAliasForSearchBox();
-    cy.get('@searchBoxFirstDiv').find('.input').type('asiufasfgasiufhsaiufgsa');
+    cy.get('@searchBoxFirstDiv')
+      .find('.search-input')
+      .type('asiufasfgasiufhsaiufgsa');
     cy.get('@searchBoxFirstDiv').find('.submit-button').click();
     cy.wait(wait);
   }
