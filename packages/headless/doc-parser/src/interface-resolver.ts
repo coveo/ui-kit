@@ -10,8 +10,13 @@ import {
 } from '@microsoft/api-extractor-model';
 import {DocComment} from '@microsoft/tsdoc';
 import {findApi} from './api-finder';
-import {AnyEntity, Entity, ObjEntity} from './entity';
-import {buildEntity, buildFuncEntity, buildParamEntity} from './entity-builder';
+import {AnyEntity, Entity} from './entity';
+import {
+  buildEntity,
+  buildFuncEntity,
+  buildObjEntity,
+  buildParamEntity,
+} from './entity-builder';
 
 export function resolveInterfaceMembers(
   entry: ApiEntryPoint,
@@ -83,13 +88,13 @@ function buildEntityFromProperty(p: ApiPropertySignature) {
 function buildObjEntityFromProperty(
   entry: ApiEntryPoint,
   p: ApiPropertySignature
-): ObjEntity {
+) {
   const type = p.propertyTypeExcerpt.text;
   const apiInterface = findApi(entry, type) as ApiInterface;
   const members = resolveInterfaceMembers(entry, apiInterface);
   const entity = buildEntityFromProperty(p);
 
-  return {...entity, members};
+  return buildObjEntity({entity, members});
 }
 
 function buildEntityFromPropertyAndResolveTypeAlias(

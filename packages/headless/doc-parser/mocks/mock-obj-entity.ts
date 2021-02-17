@@ -7,6 +7,7 @@ export function buildMockObjEntity(config: Partial<ObjEntity> = {}): ObjEntity {
     desc: '',
     isOptional: false,
     members: [],
+    isExtracted: false,
     ...config,
   };
 }

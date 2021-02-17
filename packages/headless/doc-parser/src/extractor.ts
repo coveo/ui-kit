@@ -1,5 +1,5 @@
 import {AnyEntity, ObjEntity} from './entity';
-import {buildEntity} from './entity-builder';
+import {buildEntity, buildObjEntity} from './entity-builder';
 
 interface Extraction {
   types: ObjEntity[];
@@ -34,7 +34,7 @@ function extract(entity: ObjEntity, extraction: Extraction, level: number) {
   }
 
   if (level === maxDepth) {
-    const typeHeading = {...buildTypeEntity(entity), members};
+    const typeHeading = buildTypeEntity(entity, members);
     extraction.types.push(typeHeading);
     processObjectEntities([typeHeading], extraction, 0);
 
@@ -44,15 +44,15 @@ function extract(entity: ObjEntity, extraction: Extraction, level: number) {
   processObjectEntities(members, extraction, level);
 }
 
-function buildTypeEntity(entity: ObjEntity) {
-  const type = buildEntity({
-    name: entity.type,
-    type: entity.type,
+function buildTypeEntity(originalEntity: ObjEntity, members: AnyEntity[]) {
+  const entity = buildEntity({
+    name: originalEntity.type,
+    type: originalEntity.type,
     isOptional: false,
     comment: undefined,
   });
 
-  return type;
+  return buildObjEntity({entity, members});
 }
 
 export function isObjectEntity(entity: unknown): entity is ObjEntity {
