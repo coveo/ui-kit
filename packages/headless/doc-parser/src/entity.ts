@@ -18,3 +18,11 @@ export interface FuncEntity {
 }
 
 export type AnyEntity = Entity | ObjEntity | FuncEntity;
+
+export function isObjectEntity(entity: unknown): entity is ObjEntity {
+  if (typeof entity !== 'object') {
+    return false;
+  }
+
+  return !!entity && 'members' in entity;
+}

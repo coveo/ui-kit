@@ -1,4 +1,4 @@
-import {AnyEntity, ObjEntity} from './entity';
+import {AnyEntity, isObjectEntity, ObjEntity} from './entity';
 import {buildEntity, buildObjEntity} from './entity-builder';
 
 interface Extraction {
@@ -53,12 +53,4 @@ function buildTypeEntity(originalEntity: ObjEntity, members: AnyEntity[]) {
   });
 
   return buildObjEntity({entity, members});
-}
-
-export function isObjectEntity(entity: unknown): entity is ObjEntity {
-  if (typeof entity !== 'object') {
-    return false;
-  }
-
-  return !!entity && 'members' in entity;
 }

@@ -5,14 +5,14 @@ import {
   ApiItemKind,
 } from '@microsoft/api-extractor-model';
 import {findApi} from './api-finder';
-import {FuncEntity, ObjEntity} from './entity';
+import {FuncEntity, isObjectEntity, ObjEntity} from './entity';
 import {resolveFunction} from './function-resolver';
 import {
   resolveCodeSamplePaths,
   SamplePaths,
   CodeSampleInfo,
 } from './code-sample-resolver';
-import {isObjectEntity, extractTypes} from './extractor';
+import {extractTypes} from './extractor';
 
 export interface ControllerConfiguration {
   initializer: string;
