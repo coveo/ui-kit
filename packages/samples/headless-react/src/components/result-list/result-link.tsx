@@ -1,4 +1,4 @@
-import {Result, ResultAnalyticsActions} from '@coveo/headless';
+import {buildInteractiveResult, Result} from '@coveo/headless';
 import {FunctionComponent, useEffect} from 'react';
 import {engine} from '../../engine';
 
@@ -7,37 +7,21 @@ interface LinkProps {
 }
 
 export const ResultLink: FunctionComponent<LinkProps> = (props) => {
-  let wasOpened = false;
-  const onOpen = () => {
-    if (wasOpened) {
-      return;
-    }
-    wasOpened = true;
-    engine.dispatch(ResultAnalyticsActions.logDocumentOpen(props.result));
-  };
+  const interactiveResult = buildInteractiveResult(engine, {
+    options: {result: props.result},
+  });
 
-  // 1 second is a reasonable amount of time to catch most longpress actions
-  const longpressDelay = 1000;
-  let longPressTimer: number;
-
-  const startPressTimer = () => {
-    longPressTimer = window.setTimeout(onOpen, longpressDelay);
-  };
-  const clearPressTimer = () => {
-    longPressTimer && clearTimeout(longPressTimer);
-  };
-
-  useEffect(() => clearPressTimer, []);
+  useEffect(() => () => interactiveResult.cancelPendingSelect(), []);
 
   return (
     <a
       href={props.result.clickUri}
-      onClick={onOpen}
-      onContextMenu={onOpen}
-      onMouseDown={onOpen}
-      onMouseUp={onOpen}
-      onTouchStart={startPressTimer}
-      onTouchEnd={clearPressTimer}
+      onClick={() => interactiveResult.select()}
+      onContextMenu={() => interactiveResult.select()}
+      onMouseDown={() => interactiveResult.select()}
+      onMouseUp={() => interactiveResult.select()}
+      onTouchStart={() => interactiveResult.beginDelayedSelect()}
+      onTouchEnd={() => interactiveResult.cancelPendingSelect()}
     >
       {props.children}
     </a>

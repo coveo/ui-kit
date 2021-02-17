@@ -89,6 +89,13 @@ export {
 } from './result-list/headless-result-list';
 
 export {
+  InteractiveResultOptions,
+  InteractiveResultProps,
+  InteractiveResult,
+  buildInteractiveResult,
+} from './result-list/headless-interactive-result';
+
+export {
   ResultsPerPageInitialState,
   ResultsPerPageProps,
   ResultsPerPageState,
