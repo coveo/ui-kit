@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.7.0-alpha.0](https://github.com/coveo/ui-kit/compare/v0.6.1-alpha.0...v0.7.0-alpha.0) (2021-02-17)
+
+
+### Bug Fixes
+
+* **headless:** only compare selected values for facets history ([#510](https://github.com/coveo/ui-kit/issues/510)) ([026b517](https://github.com/coveo/ui-kit/commit/026b51794e50e97b26d01ca65ae5c61b72cbdbb6))
+
+
+### Features
+
+* **atomic,headless:** add search status controller and handle state ([#511](https://github.com/coveo/ui-kit/issues/511)) ([39a375b](https://github.com/coveo/ui-kit/commit/39a375b2290a0cfe299cfa82b119cb2c6148f5c8))
+
+
+
+
+
 ## [0.6.1-alpha.0](https://github.com/coveo/ui-kit/compare/v0.6.0...v0.6.1-alpha.0) (2021-02-16)
 
 **Note:** Version bump only for package @coveo/headless
