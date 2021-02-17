@@ -1,0 +1,43 @@
+<head>
+    <script>
+        var queryParams = new URLSearchParams(document.location.search);
+        var scriptVersion = queryParams.get('version') || '2';
+        var scriptUrl =
+            queryParams.get('staticurl') ||
+            'https://static.cloud.coveo.com/coveo.analytics.js/' + scriptVersion + '/coveoua.js';
+        var analyticsToken = queryParams.get('token');
+        var endpoint = queryParams.get('endpoint');
+
+        // prettier-ignore
+        (function(c,o,v,e,O,u,a){
+        a='coveoua';c[a]=c[a]||function(){(c[a].q=c[a].q|| []).push(arguments)};
+        c[a].t=Date.now();u=o.createElement(v);u.async=1;u.src=e;
+        O=o.getElementsByTagName(v)[0];O.parentNode.insertBefore(u,O)
+        })(window,document,'script', scriptUrl)
+
+        coveoua('init', analyticsToken, endpoint);
+        coveoua('onLoad', function () {
+            let div = document.createElement('div');
+            div.innerText = `Coveo UA loaded!`;
+            document.body.appendChild(div);
+
+            let version = document.createElement('div');
+            version.className = 'version';
+            version.innerText = scriptVersion;
+            document.body.appendChild(version);
+        });
+        coveoua('ec:addProduct', {
+            name: 'wow',
+            id: 'something',
+            brand: 'brand',
+            custom: {verycustom: 'value'},
+            unknown: 'shouldberemoved',
+        });
+        coveoua('ec:setAction', 'detail', {storeid: 'amazing'});
+        coveoua('send', 'pageview', '/firstpage');
+    </script>
+</head>
+
+<body>
+    Hello
+</body>
