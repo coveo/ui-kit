@@ -2,6 +2,8 @@ import logo from './logo.svg';
 import './App.css';
 import {useEffect} from 'react';
 
+import {Tab} from './components/tab/tab.class';
+import {Tab as TabFn} from './components/tab/tab.fn';
 import {SearchBox} from './components/search-box/search-box.class';
 import {SearchBox as SearchBoxFn} from './components/search-box/search-box.fn';
 import {DidYouMean} from './components/did-you-mean/did-you-mean.class';
@@ -23,6 +25,7 @@ import {QuerySummary as QuerySummaryFn} from './components/query-summary/query-s
 import {Facet} from './components/facet/facet.class';
 import {Facet as FacetFn} from './components/facet/facet.fn';
 import {
+  buildTab,
   buildSearchBox,
   buildDidYouMean,
   buildQueryError,
@@ -39,6 +42,22 @@ import {
   buildPager,
 } from '@coveo/headless';
 import {bindSearchParametersToURI} from './components/search-parameter-manager/search-parameter-manager';
+
+const tabs = {
+  all: buildTab(engine, {
+    initialState: {isActive: true},
+    options: {expression: ''},
+  }),
+  messages: buildTab(engine, {
+    options: {expression: '@objecttype==Message'},
+  }),
+  confluence: buildTab(engine, {
+    options: {
+      expression:
+        '@connectortype==Confluence2Crawler AND NOT @documenttype==Space',
+    },
+  }),
+};
 
 const searchBox = buildSearchBox(engine, {options: {numberOfSuggestions: 8}});
 
@@ -80,6 +99,20 @@ function App() {
     <div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
+        <Section title="tabs">
+          <nav>
+            <Tab active>All</Tab>
+            <Tab expression="@objecttype==Message">Messages</Tab>
+            <Tab expression="@connectortype==Confluence2Crawler AND NOT @documenttype==Space">
+              Confluence
+            </Tab>
+          </nav>
+          <nav>
+            <TabFn controller={tabs.all}>All</TabFn>
+            <TabFn controller={tabs.messages}>Messages</TabFn>
+            <TabFn controller={tabs.confluence}>Confluence</TabFn>
+          </nav>
+        </Section>
         <Section title="search-box">
           <SearchBox />
           <SearchBoxFn controller={searchBox} />
