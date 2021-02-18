@@ -55,11 +55,13 @@ export {
 
 export {
   buildNumericRange,
+  NumericRangeOptions,
+  NumericRangeRequest,
+  buildNumericFacet,
   NumericFacetOptions,
   NumericFacetProps,
   NumericFacetState,
   NumericFacet,
-  buildNumericFacet,
 } from './facets/range-facet/numeric-facet/headless-numeric-facet';
 
 export {History, HistoryState, buildHistory} from './history/headless-history';
@@ -90,6 +92,13 @@ export {
   ResultList,
   buildResultList,
 } from './result-list/headless-result-list';
+
+export {
+  InteractiveResultOptions,
+  InteractiveResultProps,
+  InteractiveResult,
+  buildInteractiveResult,
+} from './result-list/headless-interactive-result';
 
 export {
   ResultsPerPageInitialState,
@@ -213,3 +222,9 @@ export {
   SearchParameterManager,
   buildSearchParameterManager,
 } from './search-parameter-manager/headless-search-parameter-manager';
+
+export {
+  SearchStatus,
+  SearchStatusState,
+  buildSearchStatus,
+} from './search-status/headless-search-status';

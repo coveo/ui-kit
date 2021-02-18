@@ -48,6 +48,16 @@ export namespace Components {
     }
     interface AtomicHistory {
     }
+    interface AtomicNoResults {
+        /**
+          * Whether to display a button which cancels the last available action.
+         */
+        "enableCancelLastAction": boolean;
+        /**
+          * Whether to display a list of search tips to the user.
+         */
+        "enableSearchTips": boolean;
+    }
     interface AtomicNumericFacet {
         "facetId": string;
         "field": string;
@@ -66,6 +76,10 @@ export namespace Components {
     interface AtomicQueryError {
     }
     interface AtomicQuerySummary {
+        /**
+          * Whether to display the duration of the last query execution.
+         */
+        "enableDuration": boolean;
     }
     interface AtomicRelevanceInspector {
         "bindings": Bindings;
@@ -162,18 +176,9 @@ export namespace Components {
          */
         "value": string;
     }
-    interface BaseFacet {
-        "hasActiveValues": boolean;
-        "label": string;
-    }
     interface FacetSearch {
         "facetSearchResults": BaseFacetSearchResult[];
         "moreValuesAvailable": boolean;
-    }
-    interface FacetValue {
-        "isSelected": boolean;
-        "label": string;
-        "numberOfResults": number;
     }
 }
 declare global {
@@ -236,6 +241,12 @@ declare global {
     var HTMLAtomicHistoryElement: {
         prototype: HTMLAtomicHistoryElement;
         new (): HTMLAtomicHistoryElement;
+    };
+    interface HTMLAtomicNoResultsElement extends Components.AtomicNoResults, HTMLStencilElement {
+    }
+    var HTMLAtomicNoResultsElement: {
+        prototype: HTMLAtomicNoResultsElement;
+        new (): HTMLAtomicNoResultsElement;
     };
     interface HTMLAtomicNumericFacetElement extends Components.AtomicNumericFacet, HTMLStencilElement {
     }
@@ -339,23 +350,11 @@ declare global {
         prototype: HTMLAtomicTextElement;
         new (): HTMLAtomicTextElement;
     };
-    interface HTMLBaseFacetElement extends Components.BaseFacet, HTMLStencilElement {
-    }
-    var HTMLBaseFacetElement: {
-        prototype: HTMLBaseFacetElement;
-        new (): HTMLBaseFacetElement;
-    };
     interface HTMLFacetSearchElement extends Components.FacetSearch, HTMLStencilElement {
     }
     var HTMLFacetSearchElement: {
         prototype: HTMLFacetSearchElement;
         new (): HTMLFacetSearchElement;
-    };
-    interface HTMLFacetValueElement extends Components.FacetValue, HTMLStencilElement {
-    }
-    var HTMLFacetValueElement: {
-        prototype: HTMLFacetValueElement;
-        new (): HTMLFacetValueElement;
     };
     interface HTMLElementTagNameMap {
         "atomic-breadcrumb-manager": HTMLAtomicBreadcrumbManagerElement;
@@ -368,6 +367,7 @@ declare global {
         "atomic-field-condition": HTMLAtomicFieldConditionElement;
         "atomic-frequently-bought-together": HTMLAtomicFrequentlyBoughtTogetherElement;
         "atomic-history": HTMLAtomicHistoryElement;
+        "atomic-no-results": HTMLAtomicNoResultsElement;
         "atomic-numeric-facet": HTMLAtomicNumericFacetElement;
         "atomic-pager": HTMLAtomicPagerElement;
         "atomic-query-error": HTMLAtomicQueryErrorElement;
@@ -385,9 +385,7 @@ declare global {
         "atomic-sort-dropdown": HTMLAtomicSortDropdownElement;
         "atomic-tab": HTMLAtomicTabElement;
         "atomic-text": HTMLAtomicTextElement;
-        "base-facet": HTMLBaseFacetElement;
         "facet-search": HTMLFacetSearchElement;
-        "facet-value": HTMLFacetValueElement;
     }
 }
 declare namespace LocalJSX {
@@ -427,6 +425,16 @@ declare namespace LocalJSX {
     }
     interface AtomicHistory {
     }
+    interface AtomicNoResults {
+        /**
+          * Whether to display a button which cancels the last available action.
+         */
+        "enableCancelLastAction"?: boolean;
+        /**
+          * Whether to display a list of search tips to the user.
+         */
+        "enableSearchTips"?: boolean;
+    }
     interface AtomicNumericFacet {
         "facetId"?: string;
         "field"?: string;
@@ -445,6 +453,10 @@ declare namespace LocalJSX {
     interface AtomicQueryError {
     }
     interface AtomicQuerySummary {
+        /**
+          * Whether to display the duration of the last query execution.
+         */
+        "enableDuration"?: boolean;
     }
     interface AtomicRelevanceInspector {
         "bindings": Bindings;
@@ -537,23 +549,12 @@ declare namespace LocalJSX {
          */
         "value": string;
     }
-    interface BaseFacet {
-        "hasActiveValues": boolean;
-        "label": string;
-        "onDeselectAll"?: (event: CustomEvent<void>) => void;
-    }
     interface FacetSearch {
         "facetSearchResults": BaseFacetSearchResult[];
         "moreValuesAvailable": boolean;
         "onFacetSearch"?: (event: CustomEvent<string>) => void;
         "onResultSelected"?: (event: CustomEvent<BaseFacetSearchResult>) => void;
         "onShowMoreResults"?: (event: CustomEvent<void>) => void;
-    }
-    interface FacetValue {
-        "isSelected": boolean;
-        "label": string;
-        "numberOfResults": number;
-        "onFacetValueSelected"?: (event: CustomEvent<void>) => void;
     }
     interface IntrinsicElements {
         "atomic-breadcrumb-manager": AtomicBreadcrumbManager;
@@ -566,6 +567,7 @@ declare namespace LocalJSX {
         "atomic-field-condition": AtomicFieldCondition;
         "atomic-frequently-bought-together": AtomicFrequentlyBoughtTogether;
         "atomic-history": AtomicHistory;
+        "atomic-no-results": AtomicNoResults;
         "atomic-numeric-facet": AtomicNumericFacet;
         "atomic-pager": AtomicPager;
         "atomic-query-error": AtomicQueryError;
@@ -583,9 +585,7 @@ declare namespace LocalJSX {
         "atomic-sort-dropdown": AtomicSortDropdown;
         "atomic-tab": AtomicTab;
         "atomic-text": AtomicText;
-        "base-facet": BaseFacet;
         "facet-search": FacetSearch;
-        "facet-value": FacetValue;
     }
 }
 export { LocalJSX as JSX };
@@ -602,6 +602,7 @@ declare module "@stencil/core" {
             "atomic-field-condition": LocalJSX.AtomicFieldCondition & JSXBase.HTMLAttributes<HTMLAtomicFieldConditionElement>;
             "atomic-frequently-bought-together": LocalJSX.AtomicFrequentlyBoughtTogether & JSXBase.HTMLAttributes<HTMLAtomicFrequentlyBoughtTogetherElement>;
             "atomic-history": LocalJSX.AtomicHistory & JSXBase.HTMLAttributes<HTMLAtomicHistoryElement>;
+            "atomic-no-results": LocalJSX.AtomicNoResults & JSXBase.HTMLAttributes<HTMLAtomicNoResultsElement>;
             "atomic-numeric-facet": LocalJSX.AtomicNumericFacet & JSXBase.HTMLAttributes<HTMLAtomicNumericFacetElement>;
             "atomic-pager": LocalJSX.AtomicPager & JSXBase.HTMLAttributes<HTMLAtomicPagerElement>;
             "atomic-query-error": LocalJSX.AtomicQueryError & JSXBase.HTMLAttributes<HTMLAtomicQueryErrorElement>;
@@ -619,9 +620,7 @@ declare module "@stencil/core" {
             "atomic-sort-dropdown": LocalJSX.AtomicSortDropdown & JSXBase.HTMLAttributes<HTMLAtomicSortDropdownElement>;
             "atomic-tab": LocalJSX.AtomicTab & JSXBase.HTMLAttributes<HTMLAtomicTabElement>;
             "atomic-text": LocalJSX.AtomicText & JSXBase.HTMLAttributes<HTMLAtomicTextElement>;
-            "base-facet": LocalJSX.BaseFacet & JSXBase.HTMLAttributes<HTMLBaseFacetElement>;
             "facet-search": LocalJSX.FacetSearch & JSXBase.HTMLAttributes<HTMLFacetSearchElement>;
-            "facet-value": LocalJSX.FacetValue & JSXBase.HTMLAttributes<HTMLFacetValueElement>;
         }
     }
 }

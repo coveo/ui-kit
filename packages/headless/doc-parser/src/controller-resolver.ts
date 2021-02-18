@@ -1,71 +1,58 @@
 import {
   ApiEntryPoint,
   ApiFunction,
-  ApiInterface,
-  Parameter,
+  ApiItem,
+  ApiItemKind,
 } from '@microsoft/api-extractor-model';
 import {findApi} from './api-finder';
-import {buildFuncEntity, buildObjEntity, FuncEntity} from './entity';
+import {FuncEntity} from './entity';
+import {resolveFunction} from './function-resolver';
 import {
-  buildEntityFromParam,
-  buildParamEntityBasedOnKind,
-} from './function-param-resolver';
-import {resolveInterfaceMembers} from './interface-resolver';
+  resolveCodeSamplePaths,
+  SamplePaths,
+  CodeSampleInfo,
+} from './code-sample-resolver';
+
+export interface ControllerConfiguration {
+  initializer: string;
+  samplePaths: SamplePaths;
+  utils?: string[];
+}
 
 interface Controller {
   initializer: FuncEntity;
+  utils: FuncEntity[];
+  codeSampleInfo: CodeSampleInfo;
 }
 
 export function resolveController(
-  entryPoint: ApiEntryPoint,
-  controllerName: string
+  entry: ApiEntryPoint,
+  config: ControllerConfiguration
 ): Controller {
-  const controller = findApi(entryPoint, controllerName) as ApiFunction;
-  const initializer = resolveControllerFunction(entryPoint, controller);
+  const initializer = resolveControllerInitializer(entry, config.initializer);
+  const utils = (config.utils || []).map((util) => resolveUtility(entry, util));
+  const codeSampleInfo = resolveCodeSamplePaths(config.samplePaths);
 
-  return {initializer};
+  return {initializer, utils, codeSampleInfo};
 }
 
-function resolveControllerFunction(entry: ApiEntryPoint, fn: ApiFunction) {
-  const params = fn.parameters.map((p, index) =>
-    resolveControllerParam(entry, p, index)
-  );
-  const returnTypeText = fn.returnTypeExcerpt.text;
-  const returnTypeInterface = findApi(entry, returnTypeText) as ApiInterface;
+function resolveControllerInitializer(entry: ApiEntryPoint, name: string) {
+  const fn = findApi(entry, name);
 
-  const returnType = buildObjEntityFromInterface(entry, returnTypeInterface);
+  if (!isFunction(fn)) {
+    throw new Error(
+      `controller initializer "${name}" must be a function. Instead found: ${fn.kind}`
+    );
+  }
 
-  return buildFuncEntity({
-    name: fn.name,
-    desc: fn.tsdocComment?.emitAsTsdoc() || '',
-    params,
-    returnType,
-  });
+  return resolveFunction(entry, fn, [0]);
 }
 
-function resolveControllerParam(
-  entryPoint: ApiEntryPoint,
-  p: Parameter,
-  index: number
-) {
-  const isEngine = index === 0;
-  return isEngine
-    ? buildEntityFromParam(p)
-    : buildParamEntityBasedOnKind(entryPoint, p);
+function resolveUtility(entry: ApiEntryPoint, name: string) {
+  const fn = findApi(entry, name) as ApiFunction;
+  return resolveFunction(entry, fn, []);
 }
 
-function buildObjEntityFromInterface(
-  entryPoint: ApiEntryPoint,
-  apiInterface: ApiInterface
-) {
-  const name = apiInterface.name;
-  const members = resolveInterfaceMembers(entryPoint, apiInterface);
-
-  return buildObjEntity({
-    name,
-    type: name,
-    desc: apiInterface.tsdocComment?.emitAsTsdoc() || '',
-    isOptional: false,
-    members,
-  });
+function isFunction(item: ApiItem): item is ApiFunction {
+  return item.kind === ApiItemKind.Function;
 }

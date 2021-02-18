@@ -100,7 +100,7 @@ export const updateFacetIsFieldExpanded = createAction(
 /**
  * Updates the updateFreezeCurrentValues flag of a facet.
  * @param facetId (string) The unique identifier of the facet (e.g., `"1"`).
- * @param freezeCurrentValues (boolean) Wether the values should be frozen in the next request.
+ * @param freezeCurrentValues (boolean) Whether the values should be frozen in the next request.
  */
 export const updateFreezeCurrentValues = createAction(
   'facet/updateFreezeCurrentValues',
