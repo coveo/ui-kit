@@ -83,7 +83,7 @@ async function initEngine(element) {
   await loadScript(element, HeadlessPath + '/browser/headless.js')
   await loadScript(element, AtomicPath + '/atomic-utils.js');
 
-  const config = element.sample ? CoveoHeadless.HeadlessEngine.getSampleConfiguration() : element.config;
+  const config = CoveoHeadless.HeadlessEngine.getSampleConfiguration();
 
   const engine = new CoveoHeadless.HeadlessEngine({
     configuration: config,
