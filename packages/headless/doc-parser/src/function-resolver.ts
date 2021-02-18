@@ -5,9 +5,16 @@ import {
 } from '@microsoft/api-extractor-model';
 import {DocComment} from '@microsoft/tsdoc';
 import {findApi} from './api-finder';
-import {buildEntity, buildFuncEntity, buildObjEntity} from './entity-builder';
-import {resolveParams} from './function-param-resolver';
-import {resolveInterfaceMembers} from './interface-resolver';
+import {
+  buildEntity,
+  buildFuncEntity,
+  buildObjEntity,
+  buildParamEntity,
+} from './entity-builder';
+import {
+  buildParamEntityBasedOnKind,
+  resolveInterfaceMembers,
+} from './interface-resolver';
 
 export function resolveFunction(
   entry: ApiEntryPoint,
@@ -25,6 +32,19 @@ export function resolveFunction(
     comment: (fn.tsdocComment as unknown) as DocComment,
     params,
     returnType,
+  });
+}
+
+function resolveParams(
+  entry: ApiEntryPoint,
+  fn: ApiFunction,
+  shallowParamIndices: number[]
+) {
+  return fn.parameters.map((p, index) => {
+    const shouldResolveShallow = shallowParamIndices.includes(index);
+    return shouldResolveShallow
+      ? buildParamEntity(p)
+      : buildParamEntityBasedOnKind(entry, p);
   });
 }
 

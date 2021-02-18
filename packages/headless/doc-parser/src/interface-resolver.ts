@@ -7,6 +7,7 @@ import {
   ApiPropertySignature,
   ApiTypeAlias,
   ExcerptTokenKind,
+  Parameter,
 } from '@microsoft/api-extractor-model';
 import {DocComment} from '@microsoft/tsdoc';
 import {findApi} from './api-finder';
@@ -28,7 +29,7 @@ export function resolveInterfaceMembers(
     }
 
     if (isMethodSignature(m)) {
-      return resolveMethodSignature(m);
+      return resolveMethodSignature(entry, m);
     }
 
     throw new Error(`Unsupported member: ${m.displayName}`);
@@ -116,8 +117,8 @@ function isMethodSignature(m: ApiItem): m is ApiMethodSignature {
   return m.kind === ApiItemKind.MethodSignature;
 }
 
-function resolveMethodSignature(m: ApiMethodSignature) {
-  const params = m.parameters.map((p) => buildParamEntity(p));
+function resolveMethodSignature(entry: ApiEntryPoint, m: ApiMethodSignature) {
+  const params = m.parameters.map((p) => buildParamEntityBasedOnKind(entry, p));
   const returnType = m.returnTypeExcerpt.text;
 
   return buildFuncEntity({
@@ -126,4 +127,28 @@ function resolveMethodSignature(m: ApiMethodSignature) {
     params,
     returnType,
   });
+}
+
+export function buildParamEntityBasedOnKind(
+  entryPoint: ApiEntryPoint,
+  p: Parameter
+) {
+  const {kind} = p.parameterTypeExcerpt.spannedTokens[0];
+  const isReference = kind === ExcerptTokenKind.Reference;
+
+  return isReference
+    ? buildObjEntityFromParam(entryPoint, p)
+    : buildParamEntity(p);
+}
+
+function buildObjEntityFromParam(entryPoint: ApiEntryPoint, p: Parameter) {
+  const typeExcerpt = p.parameterTypeExcerpt;
+
+  const type = typeExcerpt.text;
+  const typeName = typeExcerpt.spannedTokens[0].text;
+  const apiInterface = findApi(entryPoint, type) as ApiInterface;
+  const members = resolveInterfaceMembers(entryPoint, apiInterface);
+  const entity = buildParamEntity(p);
+
+  return buildObjEntity({entity, members, typeName});
 }
