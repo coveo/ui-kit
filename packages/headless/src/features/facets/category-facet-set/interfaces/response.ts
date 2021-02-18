@@ -4,7 +4,7 @@ export interface CategoryFacetValue extends BaseFacetValue {
   value: string;
   path: string[];
   children: CategoryFacetValue[];
-  moreValuesAvailable?: boolean;
+  moreValuesAvailable: boolean;
 }
 
 export type CategoryFacetResponse = BaseFacetResponse<CategoryFacetValue>;

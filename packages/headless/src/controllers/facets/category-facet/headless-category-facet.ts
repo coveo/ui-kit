@@ -53,25 +53,34 @@ export interface CategoryFacetProps {
  * The `CategoryFacet` headless controller offers a high-level interface for designing a facet UI controller that renders values in a hierarchical fashion.
  */
 export interface CategoryFacet extends Controller {
+  /**
+   * Provides methods to search the facet's values.
+   */
   facetSearch: CategoryFacetSearch;
 
   /**
    * Toggles the specified facet value.
+   *
    * @param selection The facet value to toggle.
    */
   toggleSelect: (selection: CategoryFacetValue) => void;
 
-  /** Deselects all facet values.*/
+  /**
+   * Deselects all facet values.
+   * */
   deselectAll: () => void;
 
-  /** Sorts the facet values according to the specified criterion.
-   * @param criterion The criterion to sort values by.
+  /**
+   * Sorts the facet values according to the specified criterion.
+   *
+   * @param criterion - The criterion to sort values by.
    */
   sortBy: (criterion: CategoryFacetSortCriterion) => void;
 
   /**
    * Checks whether the facet values are sorted according to the specified criterion.
-   * @param criterion The criterion to compare.
+   *
+   * @param criterion - The criterion to compare.
    * @returns Whether the facet values are sorted according to the specified criterion.
    */
   isSortedBy: (criterion: CategoryFacetSortCriterion) => boolean;
@@ -81,9 +90,14 @@ export interface CategoryFacet extends Controller {
    */
   showMoreValues: () => void;
 
-  /** Sets the displayed number of values to the originally configured value. */
+  /**
+   * Sets the displayed number of values to the originally configured value.
+   * */
   showLessValues: () => void;
 
+  /**
+   * The state of the `Facet` controller.
+   * */
   state: CategoryFacetState;
 }
 
@@ -110,7 +124,7 @@ export interface CategoryFacetState {
   hasActiveValues: boolean;
 
   /** `true` if there are more values to display and `false` otherwise. */
-  canShowMoreValues: boolean | undefined;
+  canShowMoreValues: boolean;
 
   /** `true` if fewer values can be displayed and `false` otherwise. */
   canShowLessValues: boolean;
@@ -120,22 +134,45 @@ export interface CategoryFacetState {
 }
 
 export interface CategoryFacetSearch {
-  /** updates text */
+  /**
+   * Updates the facet search query.
+   *
+   * @param text - The query to search.
+   * */
   updateText(text: string): void;
-  /** shows more results */
+
+  /**
+   * Shows more facet search results.
+   * */
   showMoreResults(): void;
-  /** performs a search */
+
+  /**
+   * Performs a facet search.
+   * */
   search(): void;
-  /** selects a result */
+
+  /**
+   * Selects a facet search result.
+   *
+   * @param value - The search result to select.
+   * */
   select(value: CategoryFacetSearchResult): void;
 }
 
 export interface CategoryFacetSearchState {
-  /** search results */
+  /**
+   * The facet search results.
+   * */
   values: CategoryFacetSearchResult[];
-  /** whether loading */
+
+  /**
+   * `true` if the facet search is in progress and `false` otherwise.
+   * */
   isLoading: boolean;
-  /** whether more values are available */
+
+  /**
+   * Whether more values are available.
+   * */
   moreValuesAvailable: boolean;
 }
 
@@ -144,34 +181,37 @@ export interface CategoryFacetSearchResult {
    * The custom facet value display name, as specified in the `captions` argument of the facet request.
    */
   displayValue: string;
+
   /**
    * The original facet value, as retrieved from the field in the index.
    */
   rawValue: string;
+
   /**
    * An estimate number of result items matching both the current query and
    * the filter expression that would get generated if the facet value were selected.
    */
   count: number;
+
   /**
-   * The hierarchical path to the value.
+   * The hierarchical path to the facet value.
    */
   path: string[];
 }
 
 export interface CategoryFacetValue {
   /**
-   * whether the value is selected or idle
+   * Whether a facet value is filtering results (`selected`) or not (`idle`).
    * */
   state: FacetValueState;
 
   /**
-   * the number of results having the value
+   * The number of results having the facet value.
    * */
   numberOfResults: number;
 
   /**
-   * The hierarchical path to the value.
+   * The hierarchical path to the facet value.
    */
   path: string[];
 
@@ -183,10 +223,10 @@ export interface CategoryFacetValue {
   /**
    * Whether more values are available.
    * */
-  moreValuesAvailable?: boolean;
+  moreValuesAvailable: boolean;
 
   /**
-   * the value
+   * The facet value.
    * */
   value: string;
 }
