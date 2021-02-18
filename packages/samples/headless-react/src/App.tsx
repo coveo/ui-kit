@@ -25,7 +25,6 @@ import {QuerySummary as QuerySummaryFn} from './components/query-summary/query-s
 import {Facet} from './components/facet/facet.class';
 import {Facet as FacetFn} from './components/facet/facet.fn';
 import {
-  buildContext,
   buildTab,
   buildSearchBox,
   buildDidYouMean,
@@ -43,6 +42,7 @@ import {
   buildPager,
 } from '@coveo/headless';
 import {bindSearchParametersToURI} from './components/search-parameter-manager/search-parameter-manager';
+import {setCoveoContext} from './components/context/coveo-context';
 
 const tabs = {
   all: buildTab(engine, {
@@ -95,7 +95,7 @@ const {autoUpdateURI: startUpdatingURI} = bindSearchParametersToURI(engine);
 
 function App() {
   useEffect(() => startUpdatingURI(), []);
-  buildContext(engine).add('pageId', 'search page');
+  setCoveoContext('search page');
 
   return (
     <div className="App">
