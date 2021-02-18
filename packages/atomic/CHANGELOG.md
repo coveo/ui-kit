@@ -3,6 +3,94 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.7.0-alpha.5](https://github.com/coveo/ui-kit/compare/v0.7.0-alpha.4...v0.7.0-alpha.5) (2021-02-18)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [0.7.0-alpha.3](https://github.com/coveo/ui-kit/compare/v0.7.0-alpha.2...v0.7.0-alpha.3) (2021-02-17)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [0.7.0-alpha.2](https://github.com/coveo/ui-kit/compare/v0.7.0-alpha.1...v0.7.0-alpha.2) (2021-02-17)
+
+
+### Features
+
+* **headless:** added `ResultLinkAnalytics` ([#492](https://github.com/coveo/ui-kit/issues/492)) ([de45056](https://github.com/coveo/ui-kit/commit/de45056386fd0b487c835090bb68f37aab8652aa))
+
+
+
+
+
+# [0.7.0-alpha.1](https://github.com/coveo/ui-kit/compare/v0.7.0-alpha.0...v0.7.0-alpha.1) (2021-02-17)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [0.7.0-alpha.0](https://github.com/coveo/ui-kit/compare/v0.6.1-alpha.0...v0.7.0-alpha.0) (2021-02-17)
+
+
+### Features
+
+* **atomic,headless:** add search status controller and handle state ([#511](https://github.com/coveo/ui-kit/issues/511)) ([39a375b](https://github.com/coveo/ui-kit/commit/39a375b2290a0cfe299cfa82b119cb2c6148f5c8))
+
+
+
+
+
+## [0.6.1-alpha.0](https://github.com/coveo/ui-kit/compare/v0.6.0...v0.6.1-alpha.0) (2021-02-16)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [0.6.0](https://github.com/coveo/ui-kit/compare/v0.6.0-alpha.8...v0.6.0) (2021-02-16)
+
+
+### Features
+
+* **atomic:** atomic-query-summary & atomic-no-results components completion ([#491](https://github.com/coveo/ui-kit/issues/491)) ([83f8b05](https://github.com/coveo/ui-kit/commit/83f8b05676dc5d6290d615afc8b6c0d212618f54))
+
+
+
+
+
+# [0.6.0-alpha.8](https://github.com/coveo/ui-kit/compare/v0.6.0-alpha.7...v0.6.0-alpha.8) (2021-02-16)
+
+
+### Bug Fixes
+
+* **atomic,bueno:** validate isNaN for NumberValue (bueno) and remove some reflected props (atomic) ([#505](https://github.com/coveo/ui-kit/issues/505)) ([ea0c153](https://github.com/coveo/ui-kit/commit/ea0c153995afac1915ec2f75299348092201e7f9))
+* **headless:** refactored undoable to remove initial state and update only on snapshots ([#498](https://github.com/coveo/ui-kit/issues/498)) ([bb01bef](https://github.com/coveo/ui-kit/commit/bb01befc5bd828477bf342be7bce022c75b77c69))
+
+
+
+
+
+# [0.6.0-alpha.7](https://github.com/coveo/ui-kit/compare/v0.6.0-alpha.6...v0.6.0-alpha.7) (2021-02-15)
+
+
+### Bug Fixes
+
+* **atomic:** atomic-pager - add width/height to svgs ([#502](https://github.com/coveo/ui-kit/issues/502)) ([d50e128](https://github.com/coveo/ui-kit/commit/d50e128adae25152ef0f74aad4051d4bad6b5901))
+
+
+
+
+
 # [0.6.0-alpha.6](https://github.com/coveo/ui-kit/compare/v0.6.0-alpha.5...v0.6.0-alpha.6) (2021-02-11)
 
 **Note:** Version bump only for package @coveo/atomic

@@ -17,6 +17,9 @@ export const facetOptionsReducer = createReducer(
       .addCase(executeSearch.rejected, (state) => {
         state.freezeFacetOrder = false;
       })
-      .addCase(change.fulfilled, (_, action) => action.payload.facetOptions);
+      .addCase(
+        change.fulfilled,
+        (state, action) => action.payload?.facetOptions ?? state
+      );
   }
 );

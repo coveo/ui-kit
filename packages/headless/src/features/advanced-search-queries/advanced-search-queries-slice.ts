@@ -19,7 +19,7 @@ export const advancedSearchQueriesReducer = createReducer(
       })
       .addCase(
         change.fulfilled,
-        (_, action) => action.payload.advancedSearchQueries
+        (state, action) => action.payload?.advancedSearchQueries ?? state
       )
       .addCase(restoreSearchParameters, (state, action) => {
         state.aq = action.payload.aq ?? state.aq;

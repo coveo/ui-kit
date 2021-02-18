@@ -1,7 +1,8 @@
 import {Component, h, State} from '@stencil/core';
-import {History, buildHistory} from '@coveo/headless';
+import {History, buildHistory, HistoryState} from '@coveo/headless';
 import {
   Bindings,
+  BindStateToController,
   InitializableComponent,
   InitializeBindings,
 } from '../../utils/initialization-utils';
@@ -12,9 +13,10 @@ import {
 })
 export class AtomicHistory implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;
-  private history!: History;
+  public history!: History;
 
   @State() public error!: Error;
+  @BindStateToController('history') @State() historyState!: HistoryState;
 
   public initialize() {
     this.history = buildHistory(this.bindings.engine);
@@ -31,8 +33,18 @@ export class AtomicHistory implements InitializableComponent {
   public render() {
     return (
       <div>
-        <button onClick={() => this.back()}>BACK</button>
-        <button onClick={() => this.forward()}>FORWARD</button>
+        <button
+          disabled={!this.historyState.past.length}
+          onClick={() => this.back()}
+        >
+          Back
+        </button>
+        <button
+          disabled={!this.historyState.future.length}
+          onClick={() => this.forward()}
+        >
+          Forward
+        </button>
       </div>
     );
   }
