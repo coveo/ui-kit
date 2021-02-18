@@ -33,20 +33,30 @@ export class QuerySummary extends Component {
 
   render() {
     const {
+      hasResults,
       hasQuery,
+      hasDuration,
       firstResult,
       lastResult,
       total,
       query,
       durationInSeconds,
     } = this.state;
-    return (
-      hasQuery && (
-        <p>
-          Results {firstResult}-{lastResult} of {total} for {query} in{' '}
-          {durationInSeconds} seconds
-        </p>
-      )
-    );
+
+    if (!hasResults) {
+      return null;
+    }
+
+    const summary = [`Results ${firstResult}-${lastResult} of ${total}`];
+
+    if (hasQuery) {
+      summary.push(`for ${query}`);
+    }
+
+    if (hasDuration) {
+      summary.push(`in ${durationInSeconds} seconds`);
+    }
+
+    return <p>{summary.join(' ')}</p>;
   }
 }
