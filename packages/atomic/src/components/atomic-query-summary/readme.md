@@ -14,13 +14,14 @@
 
 ## Shadow Parts
 
-| Part           | Description                             |
-| -------------- | --------------------------------------- |
-| `"container"`  | The container of the whole summary      |
-| `"duration"`   | The duration container                  |
-| `"highlight"`  | The summary highlights                  |
-| `"no-results"` | The container when there are no results |
-| `"results"`    | The results container                   |
+| Part            | Description                             |
+| --------------- | --------------------------------------- |
+| `"container"`   | The container of the whole summary      |
+| `"duration"`    | The duration container                  |
+| `"highlight"`   | The summary highlights                  |
+| `"no-results"`  | The container when there are no results |
+| `"placeholder"` | The initialization placeholder          |
+| `"results"`     | The results container                   |
 
 
 ## CSS Custom Properties

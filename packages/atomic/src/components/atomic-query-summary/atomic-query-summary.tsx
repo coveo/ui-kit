@@ -30,6 +30,7 @@ interface Summary {
  * @part no-results - The container when there are no results
  * @part duration - The duration container
  * @part highlight - The summary highlights
+ * @part placeholder - The initialization placeholder
  */
 @Component({
   tag: 'atomic-query-summary',
@@ -127,7 +128,13 @@ export class AtomicQuerySummary implements InitializableComponent {
 
   public render() {
     if (!this.querySummaryState.firstSearchExecuted) {
-      return;
+      return (
+        <div
+          part="placeholder"
+          aria-hidden
+          class="h-6 my-2 w-60 bg-divider animate-pulse"
+        ></div>
+      );
     }
 
     return (

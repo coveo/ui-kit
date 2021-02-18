@@ -24,6 +24,7 @@ module.exports = {
         "divider": "var(--atomic-divider, #BCC3CA)",
         "error": "var(--atomic-error, #CE3F00)",
         "on-error": "var(--atomic-on-error, #FFFFFF)",
+        "visited": "var(--atomic-visited, #9333EA)", 
       }
     },
     backgroundColor: (theme) => ({
@@ -34,7 +35,9 @@ module.exports = {
     }
   },
   variants: {
-    extend: {},
+    extend: {
+      textColor: ['visited'],
+    },
   },
   plugins: [],
 }
