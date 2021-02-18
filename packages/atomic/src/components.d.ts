@@ -111,8 +111,7 @@ export namespace Components {
          */
         "choicesDisplayed": string;
         /**
-          * Initial choice for the number of result per page. Should be part of the `choicesDisplayed` option.
-          * @defaultValue The first value of choices displayed.
+          * Initial choice for the number of result per page. Should be part of the `choicesDisplayed` option. By default, the first value of choices displayed.
          */
         "initialChoice"?: number;
     }
@@ -478,8 +477,7 @@ declare namespace LocalJSX {
          */
         "choicesDisplayed"?: string;
         /**
-          * Initial choice for the number of result per page. Should be part of the `choicesDisplayed` option.
-          * @defaultValue The first value of choices displayed.
+          * Initial choice for the number of result per page. Should be part of the `choicesDisplayed` option. By default, the first value of choices displayed.
          */
         "initialChoice"?: number;
     }

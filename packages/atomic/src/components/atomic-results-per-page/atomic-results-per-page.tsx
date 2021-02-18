@@ -55,7 +55,7 @@ export class AtomicResultsPerPage implements InitializableComponent {
   @Prop() choicesDisplayed = '10,25,50,100';
   /**
    * Initial choice for the number of result per page. Should be part of the `choicesDisplayed` option.
-   * @defaultValue The first value of choices displayed.
+   * By default, the first value of choices displayed.
    */
   @Prop() initialChoice?: number;
 

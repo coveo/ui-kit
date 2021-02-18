@@ -7,10 +7,10 @@
 
 ## Properties
 
-| Property           | Attribute           | Description                                                                                        | Type                  | Default          |
-| ------------------ | ------------------- | -------------------------------------------------------------------------------------------------- | --------------------- | ---------------- |
-| `choicesDisplayed` | `choices-displayed` | List of possible results per page choices, separated by commas.                                    | `string`              | `'10,25,50,100'` |
-| `initialChoice`    | `initial-choice`    | Initial choice for the number of result per page. Should be part of the `choicesDisplayed` option. | `number \| undefined` | `undefined`      |
+| Property           | Attribute           | Description                                                                                                                                          | Type                  | Default          |
+| ------------------ | ------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------- | ---------------- |
+| `choicesDisplayed` | `choices-displayed` | List of possible results per page choices, separated by commas.                                                                                      | `string`              | `'10,25,50,100'` |
+| `initialChoice`    | `initial-choice`    | Initial choice for the number of result per page. Should be part of the `choicesDisplayed` option. By default, the first value of choices displayed. | `number \| undefined` | `undefined`      |
 
 
 ## Shadow Parts
