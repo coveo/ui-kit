@@ -82,6 +82,7 @@ describe('#resolveInterfaceMembers', () => {
     const objEntity = buildMockObjEntity({
       name: 'state',
       type: 'PagerState',
+      typeName: 'PagerState',
       members: [entity],
     });
 
@@ -237,6 +238,7 @@ describe('#resolveInterfaceMembers', () => {
     const entity = buildMockObjEntity({
       name: 'values',
       type: 'SpecificFacetSearchResult[]',
+      typeName: 'SpecificFacetSearchResult',
     });
 
     expect(result).toEqual([entity]);

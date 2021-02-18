@@ -47,11 +47,11 @@ function extract(entity: ObjEntity, extraction: Extraction, level: number) {
 
 function buildTypeEntity(originalEntity: ObjEntity, members: AnyEntity[]) {
   const entity = buildEntity({
-    name: originalEntity.type,
-    type: originalEntity.type,
+    name: originalEntity.typeName,
+    type: '',
     isOptional: false,
     comment: undefined,
   });
 
-  return buildObjEntity({entity, members});
+  return buildObjEntity({entity, members, typeName: ''});
 }

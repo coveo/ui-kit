@@ -16,6 +16,7 @@ interface EntityOptions extends Comment {
 interface ObjEntityOptions {
   entity: Entity;
   members: AnyEntity[];
+  typeName: string;
 }
 
 interface FuncEntityOptions extends Comment {
@@ -38,11 +39,13 @@ export function buildEntity(config: EntityOptions): Entity {
 
 export function buildObjEntity(config: ObjEntityOptions): ObjEntity {
   const {entity, members} = config;
+  const typeName = sanitizeType(config.typeName);
 
   return {
     ...entity,
     members,
     isTypeExtracted: false,
+    typeName,
   };
 }
 

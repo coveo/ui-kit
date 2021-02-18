@@ -41,5 +41,5 @@ function buildObjEntityFromInterface(
     comment: (apiInterface.tsdocComment as unknown) as DocComment,
   });
 
-  return buildObjEntity({entity, members});
+  return buildObjEntity({entity, members, typeName: name});
 }

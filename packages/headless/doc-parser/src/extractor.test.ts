@@ -13,6 +13,7 @@ describe('#extractTypes', () => {
     const values = buildMockObjEntity({
       name: 'values',
       type: 'FacetValue[]',
+      typeName: 'FacetValue',
       members: [numberOfResults],
       isTypeExtracted: false,
     });
@@ -25,8 +26,7 @@ describe('#extractTypes', () => {
     const {types} = extractTypes([state]);
 
     const expectedEntity = buildMockObjEntity({
-      name: 'FacetValue[]',
-      type: 'FacetValue[]',
+      name: 'FacetValue',
       members: [numberOfResults],
     });
 
@@ -44,12 +44,14 @@ describe('#extractTypes', () => {
     const values = buildMockObjEntity({
       name: 'values',
       type: 'SpecificFacetSearchResult[]',
+      typeName: 'SpecificFacetSearchResult',
       members: [displayValue],
     });
 
     const facetSearch = buildMockObjEntity({
       name: 'facetSearch',
       type: 'FacetSearchState',
+      typeName: 'FacetSearchState',
       members: [values],
     });
 
@@ -62,13 +64,11 @@ describe('#extractTypes', () => {
 
     const expectedEntity1 = buildMockObjEntity({
       name: 'FacetSearchState',
-      type: 'FacetSearchState',
       members: [values],
     });
 
     const expectedEntity2 = buildMockObjEntity({
-      name: 'SpecificFacetSearchResult[]',
-      type: 'SpecificFacetSearchResult[]',
+      name: 'SpecificFacetSearchResult',
       members: [displayValue],
     });
 

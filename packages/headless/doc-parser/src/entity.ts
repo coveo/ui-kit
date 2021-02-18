@@ -8,6 +8,7 @@ export interface Entity {
 export interface ObjEntity extends Entity {
   members: AnyEntity[];
   isTypeExtracted: boolean;
+  typeName: string;
 }
 
 export interface FuncEntity {
