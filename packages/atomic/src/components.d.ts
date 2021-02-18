@@ -112,9 +112,9 @@ export namespace Components {
         "choicesDisplayed": string;
         /**
           * Initial choice for the number of result per page. Should be part of the `choicesDisplayed` option.
-          * @default number The first value of choices displayed.
+          * @defaultValue The first value of choices displayed.
          */
-        "initialChoice": number;
+        "initialChoice"?: number;
     }
     interface AtomicSearchBox {
         "_id": string;
@@ -479,9 +479,9 @@ declare namespace LocalJSX {
         "choicesDisplayed"?: string;
         /**
           * Initial choice for the number of result per page. Should be part of the `choicesDisplayed` option.
-          * @default number The first value of choices displayed.
+          * @defaultValue The first value of choices displayed.
          */
-        "initialChoice": number;
+        "initialChoice"?: number;
     }
     interface AtomicSearchBox {
         "_id"?: string;

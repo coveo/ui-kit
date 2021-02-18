@@ -14,9 +14,10 @@
 
 ## Shadow Parts
 
-| Part             | Description      |
-| ---------------- | ---------------- |
-| `"list-element"` | The list element |
+| Part             | Description                            |
+| ---------------- | -------------------------------------- |
+| `"list-element"` | The list element                       |
+| `"placeholder"`  | The initialization placeholder wrapper |
 
 
 ## Dependencies
