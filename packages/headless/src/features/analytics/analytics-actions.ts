@@ -4,7 +4,7 @@ import {
   requiredNonEmptyString,
 } from '../../utils/validate-payload';
 import {StringValue} from '@coveo/bueno';
-import {getAdvancedSearchQueriesInitialState} from '../advanced-search-queries/advanced-search-queries-state';
+import {getConstantQueryDefaultValue} from '../advanced-search-queries/advanced-search-queries-state';
 import {Result} from '../../api/search/search/result';
 import {
   AnalyticsType,
@@ -112,7 +112,6 @@ export const logInterfaceChange = makeAnalyticsAction(
   (client, state) =>
     client.logInterfaceChange({
       interfaceChangeTo:
-        state.advancedSearchQueries?.cq ||
-        getAdvancedSearchQueriesInitialState().cq,
+        state.advancedSearchQueries?.cq ?? getConstantQueryDefaultValue(),
     })
 );

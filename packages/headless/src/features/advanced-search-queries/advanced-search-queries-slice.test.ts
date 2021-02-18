@@ -34,7 +34,7 @@ describe('advanced search parameters', () => {
   });
 
   it('#updateAdvancedSearchQueries sets only aq to the correct values', () => {
-    const expected = {aq: aq, cq: ''};
+    const expected = {aq: aq, cq: null};
     const action = updateAdvancedSearchQueries({aq: aq});
     state = advancedSearchQueriesReducer(state, action);
 
