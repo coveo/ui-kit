@@ -1,6 +1,7 @@
 import {Engine} from '../../app/headless-engine';
 import {PaginationSection, SearchSection} from '../../state/state-sections';
 import {buildController} from '../controller/headless-controller';
+import {buildSearchStatus} from '../search-status/headless-search-status';
 
 export type QuerySummary = ReturnType<typeof buildQuerySummary>;
 /** The state relevant to the `QuerySummary` controller.*/
@@ -16,6 +17,7 @@ export const buildQuerySummary = (
   engine: Engine<SearchSection & PaginationSection>
 ) => {
   const controller = buildController(engine);
+  const searchStatus = buildSearchStatus(engine);
 
   const durationInSeconds = () => {
     const state = engine.state;
@@ -32,6 +34,7 @@ export const buildQuerySummary = (
     get state() {
       const state = engine.state;
       return {
+        ...searchStatus.state,
         /**
          * The 1-based index of the first search result returned for the current page.
          */
@@ -56,10 +59,6 @@ export const buildQuerySummary = (
          * Determines if a query execution time is available.
          */
         hasDuration: state.search.duration !== 0,
-        /**
-         * Determines if there are results available for the last executed query.
-         */
-        hasResults: state.search.results.length !== 0,
         /**
          * The duration, in milliseconds, that the last query took to execute.
          */

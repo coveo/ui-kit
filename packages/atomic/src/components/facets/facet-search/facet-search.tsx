@@ -70,8 +70,6 @@ export class FacetSearch implements InitializableComponent {
           this.facet.facetSearch.search();
         }}
         onShowMoreResults={() => this.facet.facetSearch.showMoreResults()}
-        onHideSuggestions={() => this.facet.facetSearch.clearResults()}
-        onShowSuggestions={() => this.facet.facetSearch.search()}
       />
     );
   }

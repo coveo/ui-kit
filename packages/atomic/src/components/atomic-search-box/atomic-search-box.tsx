@@ -95,8 +95,6 @@ export class AtomicSearchBox {
             this.searchBoxState.suggestions[e.detail].rawValue
           );
         }}
-        onShowSuggestions={() => this.searchBox.showSuggestions()}
-        onHideSuggestions={() => this.searchBox.hideSuggestions()}
       />
     );
   }

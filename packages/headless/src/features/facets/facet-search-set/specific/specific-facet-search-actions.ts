@@ -46,14 +46,6 @@ export const updateFacetSearch = createAction(
 );
 
 /**
- * Clears the results for the facet search
- * @param an object contaiing th
- */
-export const clearFacetSearchResults = createAction<string>(
-  'facetSearch/clearResults'
-);
-
-/**
  * Selects a facet search result.
  * @param (selectFacetSearchResultPayload) An object that specifies the target facet and facet search result.
  */

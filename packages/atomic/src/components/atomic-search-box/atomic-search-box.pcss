@@ -1,6 +1,10 @@
 @import "tailwindcss/base";
 @import "tailwindcss/utilities";
 
+atomic-search-box {
+  z-index: 1000;
+}
+
 /**
  * @prop --atomic-submit-button-size: Size of the submit button inside the search box
  * @prop --atomic-search-box-height: Height of the search box
@@ -41,8 +45,16 @@
   @apply rounded-l-lg;
 }
 
+.combobox {
+  @apply h-full;
+}
+
 .search-icon {
   @apply mx-auto w-3.5 h-3.5 text-on-primary fill-current;
+}
+
+.suggestions {
+  top: var(--atomic-search-box-height, 48px)
 }
 
 .suggestion {

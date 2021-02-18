@@ -165,8 +165,6 @@ export interface FacetSearch {
    * @param value - The search result to select.
    * */
   select(value: SpecificFacetSearchResult): void;
-  /** clears facet search results */
-  clearResults(): void;
 }
 
 export interface FacetSearchState {

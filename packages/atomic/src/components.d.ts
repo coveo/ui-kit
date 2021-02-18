@@ -175,6 +175,10 @@ export namespace Components {
          */
         "value": string;
     }
+    interface BaseFacet {
+        "hasActiveValues": boolean;
+        "label": string;
+    }
     interface BaseSearch {
         "_id": string;
         "hideSubmitButton": boolean;
@@ -360,6 +364,12 @@ declare global {
         prototype: HTMLAtomicTextElement;
         new (): HTMLAtomicTextElement;
     };
+    interface HTMLBaseFacetElement extends Components.BaseFacet, HTMLStencilElement {
+    }
+    var HTMLBaseFacetElement: {
+        prototype: HTMLBaseFacetElement;
+        new (): HTMLBaseFacetElement;
+    };
     interface HTMLBaseSearchElement extends Components.BaseSearch, HTMLStencilElement {
     }
     var HTMLBaseSearchElement: {
@@ -401,6 +411,7 @@ declare global {
         "atomic-sort-dropdown": HTMLAtomicSortDropdownElement;
         "atomic-tab": HTMLAtomicTabElement;
         "atomic-text": HTMLAtomicTextElement;
+        "base-facet": HTMLBaseFacetElement;
         "base-search": HTMLBaseSearchElement;
         "facet-search": HTMLFacetSearchElement;
     }
@@ -566,17 +577,20 @@ declare namespace LocalJSX {
          */
         "value": string;
     }
+    interface BaseFacet {
+        "hasActiveValues": boolean;
+        "label": string;
+        "onDeselectAll"?: (event: CustomEvent<void>) => void;
+    }
     interface BaseSearch {
         "_id": string;
         "hideSubmitButton"?: boolean;
         "leadingSubmitButton"?: boolean;
         "moreValuesAvailable"?: boolean;
         "onClear"?: (event: CustomEvent<void>) => void;
-        "onHideSuggestions"?: (event: CustomEvent<void>) => void;
         "onSearch"?: (event: CustomEvent<void>) => void;
         "onSelectValue"?: (event: CustomEvent<number>) => void;
         "onShowMoreResults"?: (event: CustomEvent<void>) => void;
-        "onShowSuggestions"?: (event: CustomEvent<void>) => void;
         "onTextChange"?: (event: CustomEvent<string>) => void;
         "placeholder"?: string;
         "strings": I18nState;
@@ -618,6 +632,7 @@ declare namespace LocalJSX {
         "atomic-sort-dropdown": AtomicSortDropdown;
         "atomic-tab": AtomicTab;
         "atomic-text": AtomicText;
+        "base-facet": BaseFacet;
         "base-search": BaseSearch;
         "facet-search": FacetSearch;
     }
@@ -654,6 +669,7 @@ declare module "@stencil/core" {
             "atomic-sort-dropdown": LocalJSX.AtomicSortDropdown & JSXBase.HTMLAttributes<HTMLAtomicSortDropdownElement>;
             "atomic-tab": LocalJSX.AtomicTab & JSXBase.HTMLAttributes<HTMLAtomicTabElement>;
             "atomic-text": LocalJSX.AtomicText & JSXBase.HTMLAttributes<HTMLAtomicTextElement>;
+            "base-facet": LocalJSX.BaseFacet & JSXBase.HTMLAttributes<HTMLBaseFacetElement>;
             "base-search": LocalJSX.BaseSearch & JSXBase.HTMLAttributes<HTMLBaseSearchElement>;
             "facet-search": LocalJSX.FacetSearch & JSXBase.HTMLAttributes<HTMLFacetSearchElement>;
         }

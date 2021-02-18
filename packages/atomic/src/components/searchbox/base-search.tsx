@@ -1,4 +1,4 @@
-import {Component, Event, EventEmitter, h, Prop} from '@stencil/core';
+import {Component, Event, EventEmitter, h, Prop, State} from '@stencil/core';
 import {I18nState} from '../../utils/initialization-utils';
 import {Combobox} from '../../utils/combobox';
 
@@ -11,6 +11,7 @@ import SearchIcon from 'coveo-styleguide/resources/icons/svg/search.svg';
   shadow: false,
 })
 export class BaseSearch {
+  @State() public shouldShowSuggestions = false;
   @Prop() public _id!: string;
   @Prop() public value!: string;
   @Prop() public strings!: I18nState;
@@ -22,8 +23,6 @@ export class BaseSearch {
   @Event() public textChange!: EventEmitter<string>;
   @Event() public search!: EventEmitter<void>;
   @Event() public selectValue!: EventEmitter<number>;
-  @Event() public showSuggestions!: EventEmitter<void>;
-  @Event() public hideSuggestions!: EventEmitter<void>;
   @Event() public clear!: EventEmitter<void>;
   @Event() public showMoreResults!: EventEmitter<void>;
 
@@ -45,7 +44,9 @@ export class BaseSearch {
       onSubmit: () => this.search.emit(),
       onSelectValue: (element) =>
         this.selectValue.emit((element as HTMLLIElement).value),
-      onBlur: () => this.hideSuggestions.emit(),
+      onBlur: () => {
+        this.shouldShowSuggestions = false;
+      },
       activeClass: 'active',
       activePartName: 'active-suggestion',
     });
@@ -83,7 +84,9 @@ export class BaseSearch {
       <input
         part="input"
         ref={(el) => (this.inputRef = el as HTMLInputElement)}
-        onFocus={() => this.showSuggestions.emit()}
+        onFocus={() => {
+          this.shouldShowSuggestions = true;
+        }}
         onBlur={() => this.combobox.onInputBlur()}
         onInput={(e) => this.combobox.onInputChange(e)}
         onKeyUp={(e) => this.combobox.onInputKeyup(e)}
@@ -151,31 +154,37 @@ export class BaseSearch {
         <div
           class={
             'search-box-wrapper flex items-center ' +
-            (this.suggestions.length > 0 ? 'has-values' : '')
+            (this.suggestions.length > 0 && this.shouldShowSuggestions
+              ? 'has-values'
+              : '')
           }
         >
           {this.leadingSubmitButton && this.submitButton}
-          <div
-            class={
-              'input-wrapper flex flex-grow items-center ' +
-              (this.leadingSubmitButton ? 'leading-submit' : '')
-            }
-            ref={(el) => (this.containerRef = el as HTMLElement)}
-          >
-            {this.input}
-            {this.clearButton}
+          <div class="combobox flex flex-grow">
+            <div
+              class={
+                'input-wrapper flex flex-grow items-center ' +
+                (this.leadingSubmitButton ? 'leading-submit' : '')
+              }
+              ref={(el) => (this.containerRef = el as HTMLElement)}
+            >
+              {this.input}
+              {this.clearButton}
+            </div>
+            <ul
+              part="suggestions"
+              class={
+                'suggestions absolute w-full bg-background apply-border-on-background empty:border-none rounded-b ' +
+                (this.shouldShowSuggestions ? 'block' : 'hidden')
+              }
+              ref={(el) => (this.valuesRef = el as HTMLElement)}
+            >
+              {this.suggestions}
+              {this.showMoreSearchResults}
+            </ul>
           </div>
           {!this.leadingSubmitButton && this.submitButton}
         </div>
-
-        <ul
-          part="suggestions"
-          class="suggestions absolute w-full bg-background apply-border-on-background empty:border-none rounded-b"
-          ref={(el) => (this.valuesRef = el as HTMLElement)}
-        >
-          {this.suggestions}
-          {this.showMoreSearchResults}
-        </ul>
       </div>
     );
   }
