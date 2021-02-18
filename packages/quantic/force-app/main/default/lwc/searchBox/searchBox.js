@@ -2,7 +2,7 @@ import {LightningElement, api, track} from 'lwc';
 import TributePath from '@salesforce/resourceUrl/tributejs';
 // @ts-ignore
 import {loadScript} from 'lightning/platformResourceLoader';
-import {getHeadlessEngine} from 'c/headlessLoader';
+import {getHeadlessEngine, registerComponentForInit, setComponentInitialized} from 'c/headlessLoader';
 import {initializeComponent} from 'c/initialization';
 
 export default class SearchBox extends LightningElement {
@@ -26,13 +26,21 @@ export default class SearchBox extends LightningElement {
   /** @type {any} */
   tribute;
 
+  constructor() {
+    super();
+    registerComponentForInit(this);
+    console.log('registered searchbox');
+  }
+
   connectedCallback() {
     try {
       getHeadlessEngine(this).then((engine) => {
         this.initialize(engine);
+        setComponentInitialized(this);
+        console.log('initialized searchbox');
       })
     } catch (error) {
-      console.error('Fatal error: unable to initialize interface', error);
+      console.error('Fatal error: unable to initialize component', error);
     }
 
     initializeComponent(this);

@@ -1,5 +1,6 @@
 import {api, LightningElement, track} from 'lwc';
 import {initializeComponent} from 'c/initialization';
+import {getHeadlessEngine} from 'c/headlessLoader';
 
 export default class CategoryFacet extends LightningElement {
   /** @type {import("coveo").CategoryFacetState} */
@@ -19,6 +20,13 @@ export default class CategoryFacet extends LightningElement {
   unsubscribe;
 
   connectedCallback() {
+    try {
+      getHeadlessEngine(this).then((engine) => {
+        this.initialize(engine);
+      })
+    } catch (error) {
+      console.error('Fatal error: unable to initialize component', error);
+    }
     initializeComponent(this);
   }
 

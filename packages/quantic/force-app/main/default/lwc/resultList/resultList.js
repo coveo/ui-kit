@@ -1,5 +1,6 @@
 import {LightningElement, api, track} from 'lwc';
 import {initializeComponent} from 'c/initialization';
+import {getHeadlessEngine, registerComponentForInit, setComponentInitialized} from 'c/headlessLoader';
 
 export default class ResultList extends LightningElement {
   @track state = {};
@@ -13,7 +14,22 @@ export default class ResultList extends LightningElement {
   /** @type {import("coveo").ResultTemplatesManager} */
   resultTemplatesManager;
 
+  constructor() {
+    super();
+    registerComponentForInit(this);
+    console.log('registered resultList');
+  }
+
   connectedCallback() {
+    try {
+      getHeadlessEngine(this).then((engine) => {
+        this.initialize(engine);
+        setComponentInitialized(this);
+        console.log('initialized resultList');
+      })
+    } catch (error) {
+      console.error('Fatal error: unable to initialize component', error);
+    }
     initializeComponent(this);
   }
 
