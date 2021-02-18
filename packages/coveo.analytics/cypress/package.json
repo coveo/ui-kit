@@ -1,0 +1,25 @@
+{
+    "name": "coveo.analytics-fts",
+    "version": "1.0.0",
+    "description": "Functional Tests to validate coveo.analytics in production",
+    "main": "index.js",
+    "scripts": {
+        "server": "http-server server",
+        "cypress:open": "concurrently \"cypress open .\" --kill-others \"npm run server\" --success first",
+        "cypress": "concurrently \"cypress run .\" --kill-others \"npm run server\" --success first"
+    },
+    "author": "Coveo",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/coveo/coveo.analytics.js.git"
+    },
+    "license": "MIT",
+    "devDependencies": {
+        "concurrently": "^5.3.0",
+        "cypress": "^6.5.0",
+        "eslint-plugin-cypress": "^2.11.2",
+        "http-server": "^0.12.3",
+        "typescript": "^4.1.5"
+    },
+    "dependencies": {}
+}

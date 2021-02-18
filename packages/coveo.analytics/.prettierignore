@@ -16,4 +16,6 @@ node_modules
 coverage
 deploy
 Jenkinsfile
+Jenkinsfile_FT
+Dockerfile
 *.sh
