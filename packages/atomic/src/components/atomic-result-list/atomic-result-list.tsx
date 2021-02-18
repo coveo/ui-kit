@@ -22,6 +22,7 @@ import {
  * The `ResultList` component is responsible for displaying query results by applying one or several result templates.
  *
  * @part list-element - The list element
+ * @part placeholder - The initialization placeholder wrapper
  */
 @Component({
   tag: 'atomic-result-list',
@@ -128,17 +129,21 @@ export class AtomicResultList implements InitializableComponent {
     const results = [];
     for (let i = 0; i < this.resultPerPageState.numberOfResults; i++) {
       results.push(
-        <div class="flex pl-5 pt-5 mb-5">
-          <div class="w-14 h-14 bg-divider mr-8"></div>
+        <div
+          part="placeholder"
+          class="flex pl-5 pt-5 mb-5 animate-pulse"
+          aria-hidden
+        >
+          <div class="w-16 h-16 bg-divider mr-10"></div>
           <div class="flex-grow">
             <div>
               <div class="flex justify-between mb-5">
-                <div class="h-3 bg-divider w-1/2"></div>
-                <div class="h-2 bg-divider w-1/6"></div>
+                <div class="h-4 bg-divider w-1/2"></div>
+                <div class="h-3 bg-divider w-1/6"></div>
               </div>
-              <div class="h-2 bg-divider w-4/6 mb-3"></div>
-              <div class="h-2 bg-divider w-5/6 mb-3"></div>
-              <div class="h-2 bg-divider w-5/12"></div>
+              <div class="h-3 bg-divider w-4/6 mb-3"></div>
+              <div class="h-3 bg-divider w-5/6 mb-3"></div>
+              <div class="h-3 bg-divider w-5/12"></div>
             </div>
           </div>
         </div>
