@@ -1,6 +1,6 @@
 import {LightningElement, api, track} from 'lwc';
 import {initializeComponent} from 'c/initialization';
-import {getHeadlessEngine} from 'c/headlessLoader';
+import {getHeadlessEngine, registerComponentForInit, setComponentInitialized} from 'c/headlessLoader';
 
 export default class Pager extends LightningElement {
   /** @type {number[]} */
@@ -16,10 +16,18 @@ export default class Pager extends LightningElement {
   hasNext;
   currentPage = 1;
 
+  constructor() {
+    super();
+    registerComponentForInit(this);
+    console.log('registered pager');
+  }
+
   connectedCallback() {
     try {
       getHeadlessEngine(this).then((engine) => {
         this.initialize(engine);
+        setComponentInitialized(this);
+        console.log('initialized pager');
       })
     } catch (error) {
       console.error('Fatal error: unable to initialize component', error);

@@ -2,8 +2,8 @@ import {LightningElement, api, track} from 'lwc';
 import TributePath from '@salesforce/resourceUrl/tributejs';
 // @ts-ignore
 import {loadScript} from 'lightning/platformResourceLoader';
-import {getHeadlessEngine, registerComponentForInit, setComponentInitialized} from 'c/headlessLoader';
 import {initializeComponent} from 'c/initialization';
+import {getHeadlessEngine, registerComponentForInit, setComponentInitialized} from 'c/headlessLoader';
 
 export default class SearchBox extends LightningElement {
   /** @type {import("coveo").SearchBoxState} */

@@ -1,6 +1,6 @@
 import {LightningElement, track, api} from 'lwc';
 import {initializeComponent} from 'c/initialization';
-import {getHeadlessEngine} from 'c/headlessLoader';
+import {getHeadlessEngine, registerComponentForInit, setComponentInitialized} from 'c/headlessLoader';
 
 export default class DateFacet extends LightningElement {
   /** @type {import("coveo").DateFacetState} */
@@ -18,10 +18,18 @@ export default class DateFacet extends LightningElement {
   /** @type {import("coveo").Unsubscribe} */
   unsubscribe;
 
+  constructor() {
+    super();
+    registerComponentForInit(this);
+    console.log('registered dateFacet');
+  }
+
   connectedCallback() {
     try {
       getHeadlessEngine(this).then((engine) => {
         this.initialize(engine);
+        setComponentInitialized(this);
+        console.log('initialized dateFacet');
       })
     } catch (error) {
       console.error('Fatal error: unable to initialize component', error);

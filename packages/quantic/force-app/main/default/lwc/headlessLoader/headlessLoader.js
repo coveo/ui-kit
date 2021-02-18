@@ -30,7 +30,7 @@ const executeInitialSearch = debounce(() => {
       CoveoHeadless.AnalyticsActions.logInterfaceLoad()
     )
   );
-}, 1000);
+}, 0); //TODO: determine if debounce needed and how much
 
 const getAreComponentsReady = () => {
   return !window.coveoHeadless.components.find(component => component.initialized === false)

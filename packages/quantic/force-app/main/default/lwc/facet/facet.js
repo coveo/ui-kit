@@ -1,6 +1,6 @@
 import {LightningElement, track, api} from 'lwc';
 import {initializeComponent} from 'c/initialization';
-import {getHeadlessEngine} from 'c/headlessLoader';
+import {getHeadlessEngine, registerComponentForInit, setComponentInitialized} from 'c/headlessLoader';
 
 export default class Facet extends LightningElement {
   /** @type {import("coveo").FacetState} */
@@ -19,10 +19,18 @@ export default class Facet extends LightningElement {
   /** @type {import("coveo").Unsubscribe} */
   unsubscribe;
 
+  constructor() {
+    super();
+    registerComponentForInit(this);
+    console.log('registered facet');
+  }
+
   connectedCallback() {
     try {
       getHeadlessEngine(this).then((engine) => {
         this.initialize(engine);
+        setComponentInitialized(this);
+        console.log('initialized facet');
       })
     } catch (error) {
       console.error('Fatal error: unable to initialize component', error);
