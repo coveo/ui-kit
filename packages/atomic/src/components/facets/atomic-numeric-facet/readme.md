@@ -18,19 +18,13 @@ It is displayed as a regular facet in desktop browsers and as a button which ope
 
 ## Shadow Parts
 
-| Part                  | Description                                                        |
-| --------------------- | ------------------------------------------------------------------ |
-| `"active-suggestion"` | The currently highlighted facet search result                      |
-| `"clear-button"`      | The facet search input's clear button                              |
-| `"close-button"`      | The button to close the facet when displayed modally (mobile only) |
-| `"facet"`             | The wrapping div for the entire facet                              |
-| `"facet-value"`       | A single facet value                                               |
-| `"facet-values"`      | The list of facet values                                           |
-| `"input-wrapper"`     | The wrapper for the facet search input                             |
-| `"reset-button"`      | The button that resets the actively selected facet values          |
-| `"search-input"`      | The facet search input                                             |
-| `"suggestion"`        | A single facet search result                                       |
-| `"suggestions"`       | The list of facet search results                                   |
+| Part             | Description                                                        |
+| ---------------- | ------------------------------------------------------------------ |
+| `"close-button"` | The button to close the facet when displayed modally (mobile only) |
+| `"facet"`        | The wrapping div for the entire facet                              |
+| `"facet-value"`  | A single facet value                                               |
+| `"facet-values"` | The list of facet values                                           |
+| `"reset-button"` | The button that resets the actively selected facet values          |
 
 
 ## Dependencies

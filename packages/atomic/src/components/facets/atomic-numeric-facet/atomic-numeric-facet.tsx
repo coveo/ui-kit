@@ -25,12 +25,6 @@ import {
  * a button which opens a facet modal in mobile browsers.
  *
  * @part facet - The wrapping div for the entire facet
- * @part search-input - The facet search input
- * @part input-wrapper - The wrapper for the facet search input
- * @part clear-button - The facet search input's clear button
- * @part suggestions - The list of facet search results
- * @part suggestion - A single facet search result
- * @part active-suggestion - The currently highlighted facet search result
  * @part facet-values - The list of facet values
  * @part facet-value - A single facet value
  * @part close-button - The button to close the facet when displayed modally (mobile only)
