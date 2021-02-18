@@ -20,8 +20,8 @@ A search box with built in support for query suggestions.
 | --------------------- | ----------------------------------- |
 | `"active-suggestion"` | The currently active suggestion     |
 | `"clear-button"`      | The search box input's clear button |
-| `"input"`             | The search box input                |
 | `"input-wrapper"`     | The wrapper for the searchbox input |
+| `"search-input"`      | The search box input                |
 | `"submit-button"`     | The search box submit button        |
 | `"suggestion"`        | The suggestion                      |
 | `"suggestions"`       | The list of suggestions             |
@@ -39,11 +39,13 @@ A search box with built in support for query suggestions.
 
 ### Depends on
 
+- [base-search](../base-search-box)
 - [atomic-component-error](../atomic-component-error)
 
 ### Graph
 ```mermaid
 graph TD;
+  atomic-search-box --> base-search
   atomic-search-box --> atomic-component-error
   style atomic-search-box fill:#f9f,stroke:#333,stroke-width:4px
 ```

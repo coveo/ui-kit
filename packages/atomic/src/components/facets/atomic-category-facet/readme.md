@@ -18,16 +18,16 @@
 
 ### Depends on
 
-- [base-facet](../base-facet)
 - [facet-search](../facet-search)
 - [atomic-component-error](../../atomic-component-error)
 
 ### Graph
 ```mermaid
 graph TD;
-  atomic-category-facet --> base-facet
   atomic-category-facet --> facet-search
   atomic-category-facet --> atomic-component-error
+  facet-search --> base-search
+  facet-search --> atomic-component-error
   style atomic-category-facet fill:#f9f,stroke:#333,stroke-width:4px
 ```
 

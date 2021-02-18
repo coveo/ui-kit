@@ -13,7 +13,7 @@ import {randomID} from '../../utils/utils';
  * A search box with built in support for query suggestions.
  *
  * @part submit-button - The search box submit button
- * @part input - The search box input
+ * @part search-input - The search box input
  * @part input-wrapper - The wrapper for the searchbox input
  * @part clear-button - The search box input's clear button
  * @part suggestions - The list of suggestions

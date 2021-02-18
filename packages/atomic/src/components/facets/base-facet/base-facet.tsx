@@ -29,7 +29,11 @@ type BaseFacetProps = {
 
 export const BaseFacet = (props: BaseFacetProps, children: any) => {
   const closeButton = props.controller.state.isExpanded ? (
-    <button onClick={() => props.controller.closeModal()} class="ml-2">
+    <button
+      part="close-button"
+      onClick={() => props.controller.closeModal()}
+      class="ml-2"
+    >
       <div
         class="h-5 w-5 text-on-background fill-current"
         innerHTML={CloseIcon}
@@ -39,6 +43,7 @@ export const BaseFacet = (props: BaseFacetProps, children: any) => {
 
   const resetButton = props.hasActiveValues ? (
     <button
+      part="reset-button"
       onClick={() => props.deselectAll()}
       class="block text-primary mr-2 lg:mr-0 text-sm"
     >

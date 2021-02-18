@@ -5,6 +5,9 @@ import {Combobox} from '../../utils/combobox';
 import ClearIcon from 'coveo-styleguide/resources/icons/svg/clear.svg';
 import SearchIcon from 'coveo-styleguide/resources/icons/svg/search.svg';
 
+/**
+ * This is an internal component and is not intended to be used.
+ */
 @Component({
   tag: 'base-search',
   styleUrl: 'base-search.pcss',
@@ -82,8 +85,7 @@ export class BaseSearch {
   private get input() {
     return (
       <input
-        tabindex="0"
-        part="input"
+        part="search-input"
         ref={(el) => (this.inputRef = el as HTMLInputElement)}
         onFocus={() => {
           this.shouldShowSuggestions = true;
