@@ -20,7 +20,7 @@ import {Pager} from './components/pager/pager.class';
 import {Pager as PagerFn} from './components/pager/pager.fn';
 import {ResultsPerPage} from './components/results-per-page/results-per-page.class';
 import {ResultsPerPage as ResultsPerPageFn} from './components/results-per-page/results-per-page.fn';
-import {engine} from './engine';
+import {engine, recommendationEngine} from './engine';
 import {Section} from './layout/section';
 import {QuerySummary} from './components/query-summary/query-summary.class';
 import {QuerySummary as QuerySummaryFn} from './components/query-summary/query-summary.fn';
@@ -46,7 +46,7 @@ import {
 } from '@coveo/headless';
 import {bindSearchParametersToURI} from './components/search-parameter-manager/search-parameter-manager';
 
-const recommendationList = buildRecommendationList(engine);
+const recommendationList = buildRecommendationList(recommendationEngine);
 
 const tabs = {
   all: buildTab(engine, {

@@ -6,7 +6,7 @@ import {
   RecommendationListState,
   Unsubscribe,
 } from '@coveo/headless';
-import {engine} from '../../engine';
+import {recommendationEngine} from '../../engine';
 
 export interface RecommendationListProps {
   id?: string;
@@ -21,7 +21,7 @@ export class RecommendationList extends Component<RecommendationListProps> {
     super(props);
 
     this.controller = buildRecommendationList(
-      engine,
+      recommendationEngine,
       props.id ? {options: {id: props.id}} : {}
     );
     this.state = this.controller.state;

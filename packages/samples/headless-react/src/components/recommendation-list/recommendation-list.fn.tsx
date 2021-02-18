@@ -4,7 +4,7 @@ import {
   buildRecommendationList,
   RecommendationList as HeadlessRecommendationList,
 } from '@coveo/headless';
-import {engine} from '../../engine';
+import {recommendationEngine} from '../../engine';
 
 interface RecommendationListProps {
   controller: HeadlessRecommendationList;
@@ -56,7 +56,7 @@ export const RecommendationList: FunctionComponent<RecommendationListProps> = (
 
 // usage
 
-const controller = buildRecommendationList(engine, {
+const controller = buildRecommendationList(recommendationEngine, {
   options: {id: 'Recommendation'},
 });
 
