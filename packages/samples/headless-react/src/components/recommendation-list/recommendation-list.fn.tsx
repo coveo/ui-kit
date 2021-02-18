@@ -21,7 +21,7 @@ export const RecommendationList: FunctionComponent<RecommendationListProps> = (
   if (state.error) {
     return (
       <div>
-        <div>Oops {state.error!.message}</div>
+        <div>Oops {state.error.message}</div>
         <code>{JSON.stringify(state.error)}</code>
         <button onClick={() => controller.refresh()}>Try again</button>
       </div>

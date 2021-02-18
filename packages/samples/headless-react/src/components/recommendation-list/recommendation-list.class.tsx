@@ -43,7 +43,7 @@ export class RecommendationList extends Component<RecommendationListProps> {
     if (this.state.error) {
       return (
         <div>
-          <div>Oops {this.state.error!.message}</div>
+          <div>Oops {this.state.error.message}</div>
           <code>{JSON.stringify(this.state.error)}</code>
           <button onClick={() => this.controller.refresh()}>Try again</button>
         </div>
