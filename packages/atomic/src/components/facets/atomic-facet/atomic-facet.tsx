@@ -3,8 +3,8 @@ import {
   Facet,
   buildFacet,
   FacetState,
-  FacetValue,
   FacetOptions,
+  FacetValue,
 } from '@coveo/headless';
 import {
   Bindings,
@@ -12,13 +12,19 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
+import {FacetValue as FacetValueComponent} from '../facet-value/facet-value';
+import {
+  BaseFacet,
+  BaseFacetController,
+  BaseFacetState,
+} from '../facet/base-facet';
 
 @Component({
   tag: 'atomic-facet',
   styleUrl: 'atomic-facet.pcss',
   shadow: true,
 })
-export class AtomicFacet implements InitializableComponent {
+export class AtomicFacet implements InitializableComponent, BaseFacetState {
   @InitializeBindings() public bindings!: Bindings;
   private facet!: Facet;
 
@@ -26,8 +32,8 @@ export class AtomicFacet implements InitializableComponent {
   @State()
   private facetState!: FacetState;
   @State() public error!: Error;
-  @State() public isExpanded: Boolean = false;
 
+  @State() public isExpanded = false;
   @Prop({mutable: true, reflect: true}) public facetId = '';
   @Prop() public field = '';
   @Prop() public label = 'No label';
@@ -47,11 +53,11 @@ export class AtomicFacet implements InitializableComponent {
   private buildListItem(item: FacetValue) {
     const isSelected = this.facet.isValueSelected(item);
     return (
-      <facet-value
+      <FacetValueComponent
         label={`${item.value}`}
         isSelected={isSelected}
         numberOfResults={item.numberOfResults}
-        onFacetValueSelected={() => {
+        facetValueSelected={() => {
           this.facet.toggleSelect(item);
         }}
       />
@@ -87,10 +93,11 @@ export class AtomicFacet implements InitializableComponent {
 
   public render() {
     return (
-      <base-facet
+      <BaseFacet
+        controller={new BaseFacetController(this)}
         label={this.label}
         hasActiveValues={this.facetState.hasActiveValues}
-        onDeselectAll={() => this.facet.deselectAll()}
+        deselectAll={() => this.facet.deselectAll()}
       >
         <div>
           <facet-search
@@ -106,7 +113,7 @@ export class AtomicFacet implements InitializableComponent {
             {this.showLessButton}
           </div>
         </div>
-      </base-facet>
+      </BaseFacet>
     );
   }
 }

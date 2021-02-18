@@ -13,13 +13,20 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
+import {FacetValue} from '../facet-value/facet-value';
+import {
+  BaseFacet,
+  BaseFacetController,
+  BaseFacetState,
+} from '../facet/base-facet';
 
 @Component({
   tag: 'atomic-numeric-facet',
   styleUrl: 'atomic-numeric-facet.pcss',
   shadow: true,
 })
-export class AtomicNumericFacet implements InitializableComponent {
+export class AtomicNumericFacet
+  implements InitializableComponent, BaseFacetState {
   @InitializeBindings() public bindings!: Bindings;
   private facet!: NumericFacet;
 
@@ -27,7 +34,8 @@ export class AtomicNumericFacet implements InitializableComponent {
   @State()
   private facetState!: NumericFacetState;
   @State() public error!: Error;
-  @State() public isExpanded: Boolean = false;
+
+  @State() public isExpanded = false;
   @Prop({mutable: true}) public facetId = '';
   @Prop() public field = '';
   @Prop() public label = 'No label';
@@ -59,11 +67,11 @@ export class AtomicNumericFacet implements InitializableComponent {
   private buildListItem(item: NumericFacetValue) {
     const isSelected = this.facet.isValueSelected(item);
     return (
-      <facet-value
+      <FacetValue
         label={` ${item.start}-${item.end}`}
         isSelected={isSelected}
         numberOfResults={item.numberOfResults}
-        onFacetValueSelected={() => {
+        facetValueSelected={() => {
           this.facet.toggleSelect(item);
         }}
       />
@@ -72,13 +80,14 @@ export class AtomicNumericFacet implements InitializableComponent {
 
   public render() {
     return (
-      <base-facet
+      <BaseFacet
+        controller={new BaseFacetController(this)}
         label={this.label}
         hasActiveValues={this.facetState.hasActiveValues}
-        onDeselectAll={() => this.facet.deselectAll()}
+        deselectAll={() => this.facet.deselectAll()}
       >
         <ul class="list-none p-0">{this.values}</ul>
-      </base-facet>
+      </BaseFacet>
     );
   }
 }
