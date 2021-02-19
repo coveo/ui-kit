@@ -32,8 +32,8 @@ export function resolveController(
   config: ControllerConfiguration
 ): Controller {
   const initializer = resolveControllerInitializer(entry, config.initializer);
-  const extractedTypes = extractTypesFrom(initializer);
   const utils = (config.utils || []).map((util) => resolveUtility(entry, util));
+  const extractedTypes = extractTypesFrom(initializer, utils);
   const codeSampleInfo = resolveCodeSamplePaths(config.samplePaths);
 
   return {initializer, extractedTypes, utils, codeSampleInfo};
@@ -60,12 +60,15 @@ function isFunction(item: ApiItem): item is ApiFunction {
   return item.kind === ApiItemKind.Function;
 }
 
-function extractTypesFrom(initializer: FuncEntity) {
-  const types = extractTypesFromInitializer(initializer);
+function extractTypesFrom(initializer: FuncEntity, utils: FuncEntity[]) {
+  const instanceTypes = extractTypesFromInitializerInstance(initializer);
+  const utilTypes = extractTypes(utils).types;
+  const types = instanceTypes.concat(utilTypes);
+
   return removeDuplicates(types);
 }
 
-function extractTypesFromInitializer(entity: FuncEntity) {
+function extractTypesFromInitializerInstance(entity: FuncEntity) {
   const {returnType} = entity;
 
   if (typeof returnType === 'string') {
