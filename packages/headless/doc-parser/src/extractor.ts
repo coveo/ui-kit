@@ -5,12 +5,32 @@ interface Extraction {
   types: ObjEntity[];
 }
 
+/**
+ * The level at which the entity will be displayed in the documentation.
+ *
+ * Section
+ *    Heading
+ *        Key : Type
+ *
+ * @example
+ *
+ * Facet
+ *    state
+ *        canShowMoreValues : boolean
+ */
+enum Level {
+  Section,
+  Heading,
+  Key,
+  Type,
+}
+
 export function extractTypes(headingEntities: AnyEntity[]): Extraction {
   const extraction: Extraction = {
     types: [],
   };
 
-  processObjectEntities(headingEntities, extraction, 0);
+  processObjectEntities(headingEntities, extraction, Level.Heading);
   processFunctionEntities(headingEntities, extraction);
 
   return extraction;
@@ -19,7 +39,7 @@ export function extractTypes(headingEntities: AnyEntity[]): Extraction {
 function processObjectEntities(
   entities: AnyEntity[],
   extraction: Extraction,
-  level: number
+  level: Level
 ) {
   entities
     .filter(isObjectEntity)
@@ -32,25 +52,26 @@ function processFunctionEntities(
 ) {
   entities
     .filter(isFunctionEntity)
-    .forEach((func) => processObjectEntities(func.params, extraction, 1));
+    .forEach((func) =>
+      processObjectEntities(func.params, extraction, Level.Key)
+    );
 }
 
-function extract(entity: ObjEntity, extraction: Extraction, level: number) {
-  const maxDepth = 2;
+function extract(entity: ObjEntity, extraction: Extraction, level: Level) {
   const {members} = entity;
 
   if (!members.length) {
     return;
   }
 
-  if (level === maxDepth) {
+  if (level === Level.Type) {
     const typeHeading = buildTypeEntity(entity, members);
     extraction.types.push(typeHeading);
 
     entity.isTypeExtracted = true;
     entity.members = [];
 
-    processObjectEntities([typeHeading], extraction, 0);
+    processObjectEntities([typeHeading], extraction, Level.Heading);
     return;
   }
 
