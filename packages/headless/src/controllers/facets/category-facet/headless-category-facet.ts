@@ -73,7 +73,7 @@ export interface CategoryFacet extends Controller {
   /**
    * Sorts the facet values according to the specified criterion.
    *
-   * @param criterion - The criterion to sort values by.
+   * @param criterion - The criterion to use for sorting values.
    */
   sortBy(criterion: CategoryFacetSortCriterion): void;
 
@@ -91,7 +91,7 @@ export interface CategoryFacet extends Controller {
   showMoreValues(): void;
 
   /**
-   * Sets the displayed number of values to the originally configured value.
+   * Sets the number of values displayed in the facet to the originally configured value.
    * */
   showLessValues(): void;
 
@@ -105,7 +105,7 @@ export interface CategoryFacet extends Controller {
  * A scoped and simplified part of the headless state that is relevant to the `CategoryFacet` controller.
  */
 export interface CategoryFacetState {
-  /** The facet id. */
+  /** The facet ID. */
   facetId: string;
 
   /** The parent values of the facet. */
@@ -188,7 +188,7 @@ export interface CategoryFacetSearchResult {
   rawValue: string;
 
   /**
-   * An estimate number of result items matching both the current query and
+   * An estimate of the number of result items matching both the current query and
    * the filter expression that would get generated if the facet value were selected.
    */
   count: number;
