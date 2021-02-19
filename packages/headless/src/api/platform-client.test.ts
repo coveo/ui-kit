@@ -9,6 +9,7 @@ import * as BackOff from 'exponential-backoff';
 
 jest.mock('cross-fetch');
 import fetch from 'cross-fetch';
+import {NoopPreprocessRequest} from './preprocess-request';
 const {Response} = jest.requireActual('node-fetch');
 const mockFetch = fetch as jest.Mock;
 
@@ -57,7 +58,9 @@ describe('PlatformClient call', () => {
       },
       url: platformUrl(),
       renewAccessToken: async () => 'accessToken2',
-      preprocessRequest: middleware || NoopPreprocessRequestMiddleware,
+      deprecatedPreprocessRequest:
+        middleware || NoopPreprocessRequestMiddleware,
+      preprocessRequest: NoopPreprocessRequest,
       logger: pino({level: 'silent'}),
     });
   }

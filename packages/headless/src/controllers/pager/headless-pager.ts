@@ -1,6 +1,6 @@
-import {Schema, SchemaValues, NumberValue} from '@coveo/bueno';
+import {Schema, NumberValue} from '@coveo/bueno';
 import {Engine} from '../../app/headless-engine';
-import {buildController} from '../controller/headless-controller';
+import {buildController, Controller} from '../controller/headless-controller';
 import {
   updatePage,
   registerPage,
@@ -28,35 +28,117 @@ import {
   validateOptions,
 } from '../../utils/validate-payload';
 
+export interface PagerInitialState {
+  /**
+   * The initial page number.
+   * */
+  page?: number;
+}
+
+export interface PagerOptions {
+  /**
+   * The number of pages to display in the pager.
+   *
+   * @default 5
+   * */
+  numberOfPages?: number;
+}
+
 export interface PagerProps {
+  /**
+   * The options for the `Pager` controller.
+   */
   options?: PagerOptions;
+  /**
+   * The initial state that should be applied to the `Pager` controller.
+   */
   initialState?: PagerInitialState;
 }
 
 const optionsSchema = new Schema({
-  /** The number of pages to display in the pager. */
   numberOfPages: new NumberValue({default: 5, min: 0}),
 });
 
 const initialStateSchema = new Schema({
-  /** The initial page number */
   page: new NumberValue({min: 1}),
 });
-
-export type PagerOptions = SchemaValues<typeof optionsSchema>;
-export type PagerInitialState = SchemaValues<typeof initialStateSchema>;
 
 /**
  * The `Pager` controller allows to navigate through the different result pages.
  */
-export type Pager = ReturnType<typeof buildPager>;
+export interface Pager extends Controller {
+  /**
+   * Updates the results to those on the passed page.
+   *
+   * @param page - The page number.
+   */
+  selectPage(page: number): void;
 
-export type PagerState = Pager['state'];
+  /**
+   * Updates the results to those on the next page.
+   * */
+  nextPage(): void;
 
+  /**
+   * Updates the results to those on the previous page.
+   * */
+  previousPage(): void;
+
+  /**
+   * Returns `true` when the current page is equal to the passed page, and `false` otherwise.
+   *
+   * @param page - The page number to check.
+   * @returns Whether the passed page is selected.
+   */
+  isCurrentPage(page: number): boolean;
+
+  /**
+   * The state of the Pager controller.
+   * */
+  state: PagerState;
+}
+
+/**
+ * A scoped and simplified part of the headless state that is relevant to the `Pager` controller.
+ */
+export interface PagerState {
+  /**
+   * The active page number.
+   * */
+  currentPage: number;
+
+  /**
+   * The page range to display.
+   * */
+  currentPages: number[];
+
+  /**
+   * The maximum available page.
+   * */
+  maxPage: number;
+
+  /**
+   * Returns `true` when a previous page is available, and `false` otherwise.
+   * */
+  hasPreviousPage: boolean;
+
+  /**
+   * Returns `true` when a next page is available, and `false` otherwise.
+   * */
+  hasNextPage: boolean;
+}
+
+/**
+ * Creates a `Pager` controller instance.
+ *
+ * @param engine - The headless engine.
+ * @param props - The configurable `Pager` properties.
+ * @returns A `Pager` controller instance.
+ * */
 export function buildPager(
   engine: Engine<PaginationSection & ConfigurationSection>,
   props: PagerProps = {}
-) {
+): Pager {
   const controller = buildController(engine);
   const {dispatch} = engine;
 
@@ -64,13 +146,13 @@ export function buildPager(
     engine,
     optionsSchema,
     props.options,
-    buildPager.name
+    'buildPager'
   ) as Required<PagerOptions>;
   const initialState = validateInitialState(
     engine,
     initialStateSchema,
     props.initialState,
-    buildPager.name
+    'buildPager'
   );
   const page = initialState.page;
 
@@ -94,7 +176,6 @@ export function buildPager(
   return {
     ...controller,
 
-    /** @returns The state of the `Pager` controller. */
     get state() {
       const currentPage = getCurrentPage();
       const maxPage = getMaxPage();
@@ -102,53 +183,29 @@ export function buildPager(
       const hasNextPage = currentPage < maxPage;
 
       return {
-        /** @returns the current selected page */
         currentPage,
-
-        /** @returns the current pages range */
         currentPages: getCurrentPages(),
-
-        /**  @returns the max available page for this query */
         maxPage,
-
-        /** @returns `true` when a previous page is available, and `false` otherwise.*/
         hasPreviousPage,
-
-        /** @returns `true` when a next page is available, and `false` otherwise. */
         hasNextPage,
       };
     },
 
-    /**
-     * Updates the results to those on the passed page.
-     * @param page The page number.
-     */
     selectPage(page: number) {
       dispatch(updatePage(page));
       dispatch(executeSearch(logPageNumber()));
     },
 
-    /**
-     * Updates the results to those on the next page.
-     */
     nextPage() {
       dispatch(nextPage());
       dispatch(executeSearch(logPageNext()));
     },
 
-    /**
-     * Updates the results to those on the previous page.
-     */
     previousPage() {
       dispatch(previousPage());
       dispatch(executeSearch(logPagePrevious()));
     },
 
-    /**
-     * @returns `true` when the current page is equal to the current page, and `false` otherwise.
-     * @param page The page number to check.
-     * @returns boolean.
-     */
     isCurrentPage(page: number) {
       return page === this.state.currentPage;
     },

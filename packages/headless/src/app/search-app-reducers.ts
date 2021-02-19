@@ -11,10 +11,7 @@ import {sortCriteriaReducer} from '../features/sort-criteria/sort-criteria-slice
 import {facetSetReducer} from '../features/facets/facet-set/facet-set-slice';
 import {contextReducer} from '../features/context/context-slice';
 import {undoable} from './undoable';
-import {
-  historyReducer,
-  getHistoryEmptyState,
-} from '../features/history/history-slice';
+import {historyReducer} from '../features/history/history-slice';
 import {didYouMeanReducer} from '../features/did-you-mean/did-you-mean-slice';
 import {specificFacetSearchSetReducer} from '../features/facets/facet-search-set/specific/specific-facet-search-set-slice';
 import {fieldsReducer} from '../features/fields/fields-slice';
@@ -27,6 +24,8 @@ import {categoryFacetSearchSetReducer} from '../features/facets/facet-search-set
 import {facetOptionsReducer} from '../features/facet-options/facet-options-slice';
 import {advancedSearchQueriesReducer} from '../features/advanced-search-queries/advanced-search-queries-slice';
 import {debugReducer} from '../features/debug/debug-slice';
+import {facetOrderReducer} from '../features/facets/facet-order/facet-order-slice';
+import {redo, snapshot, undo} from '../features/history/history-actions';
 
 /**
  * Map of reducers that make up the SearchAppState.
@@ -35,6 +34,7 @@ export const searchAppReducers: ReducersMapObject<SearchAppState> = {
   configuration: configurationReducer,
   facetSet: facetSetReducer,
   dateFacetSet: dateFacetSetReducer,
+  facetOrder: facetOrderReducer,
   numericFacetSet: numericFacetSetReducer,
   categoryFacetSet: categoryFacetSetReducer,
   facetSearchSet: specificFacetSearchSetReducer,
@@ -49,7 +49,14 @@ export const searchAppReducers: ReducersMapObject<SearchAppState> = {
   search: searchReducer,
   sortCriteria: sortCriteriaReducer,
   context: contextReducer,
-  history: undoable(historyReducer, getHistoryEmptyState()),
+  history: undoable({
+    actionTypes: {
+      redo: redo.type,
+      undo: undo.type,
+      snapshot: snapshot.type,
+    },
+    reducer: historyReducer,
+  }),
   didYouMean: didYouMeanReducer,
   fields: fieldsReducer,
   pipeline: pipelineReducer,

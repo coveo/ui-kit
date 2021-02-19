@@ -1,37 +1,45 @@
-import {historyReducer, getHistoryEmptyState} from './history-slice';
-import {snapshot} from './history-actions';
+import {historyReducer} from './history-slice';
+import {redo, snapshot, undo} from './history-actions';
 import {Reducer} from 'redux';
 import {undoable, StateWithHistory, makeHistory} from '../../app/undoable';
 import {buildMockFacetRequest} from '../../test/mock-facet-request';
 import {buildMockNumericFacetRequest} from '../../test/mock-numeric-facet-request';
 import {buildMockDateFacetRequest} from '../../test/mock-date-facet-request';
-import {buildMockCategoryFacetRequest} from '../../test/mock-category-facet-request';
 import {buildMockAdvancedSearchQueriesState} from '../../test/mock-advanced-search-queries-state';
-import {SearchParametersState} from '../../state/search-app-state';
-import {buildMockFacetOptions} from '../../test/mock-facet-options';
 import {buildMockQueryState} from '../../test/mock-query-state';
+import {buildMockCategoryFacetSlice} from '../../test/mock-category-facet-slice';
+import {getHistoryInitialState, HistoryState} from './history-state';
+import {buildMockCategoryFacetRequest} from '../../test/mock-category-facet-request';
+import {buildMockCategoryFacetValueRequest} from '../../test/mock-category-facet-value-request';
 
 describe('history slice', () => {
-  let undoableReducer: Reducer<StateWithHistory<SearchParametersState>>;
+  let undoableReducer: Reducer<StateWithHistory<HistoryState>>;
 
   beforeEach(() => {
-    undoableReducer = undoable(historyReducer, getHistoryEmptyState());
+    undoableReducer = undoable({
+      reducer: historyReducer,
+      actionTypes: {
+        redo: redo.type,
+        undo: undo.type,
+        snapshot: snapshot.type,
+      },
+    });
   });
 
-  const getSnapshot = (snap: Partial<SearchParametersState>) => ({
-    ...getHistoryEmptyState(),
+  const getSnapshot = (snap: Partial<HistoryState>) => ({
+    ...getHistoryInitialState(),
     ...snap,
   });
 
   const addSnapshot = (
-    snap: Partial<SearchParametersState>,
-    history = makeHistory(getHistoryEmptyState())
+    snap: Partial<HistoryState>,
+    history = makeHistory(getHistoryInitialState())
   ) => {
     return undoableReducer(history, snapshot(getSnapshot(snap)));
   };
 
-  const addSnapshots = (...snaps: Partial<SearchParametersState>[]) => {
-    let previous = makeHistory(getHistoryEmptyState());
+  const addSnapshots = (...snaps: Partial<HistoryState>[]) => {
+    let previous = makeHistory(getHistoryInitialState());
     snaps.forEach((s) => {
       previous = addSnapshot(s, previous);
     });
@@ -39,8 +47,8 @@ describe('history slice', () => {
   };
 
   const expectHistoryToHaveCreatedDifferentSnapshots = (
-    firstSnap: Partial<SearchParametersState>,
-    secondSnap: Partial<SearchParametersState>
+    firstSnap: Partial<HistoryState>,
+    secondSnap: Partial<HistoryState>
   ) => {
     const history = addSnapshots(firstSnap, secondSnap);
     expect(history.past.length).toBe(2);
@@ -49,22 +57,22 @@ describe('history slice', () => {
   };
 
   const expectHistoryNotToHaveCreatedDifferentSnapshots = (
-    firstSnap: Partial<SearchParametersState>,
-    secondSnap: Partial<SearchParametersState>
+    firstSnap: Partial<HistoryState>,
+    secondSnap: Partial<HistoryState>
   ) => {
     const history = addSnapshots(firstSnap, secondSnap);
     expect(history.past.length).toBe(1);
-    expect(history.past[0]).toEqual(getHistoryEmptyState());
+    expect(history.past[0]).toEqual(getHistoryInitialState());
     expect(history.present).toEqual(firstSnap);
   };
 
   it('allows to add a snapshot to the state', () => {
-    const expectedSnapshot: SearchParametersState = {
+    const expectedSnapshot: HistoryState = {
       context: {contextValues: {foo: 'bar'}},
       facetSet: {foo: buildMockFacetRequest()},
       numericFacetSet: {bar: buildMockNumericFacetRequest()},
       dateFacetSet: {foo: buildMockDateFacetRequest()},
-      categoryFacetSet: {foo: buildMockCategoryFacetRequest()},
+      categoryFacetSet: {foo: buildMockCategoryFacetSlice()},
       facetOptions: {freezeFacetOrder: false},
       pagination: {
         firstResult: 123,
@@ -77,6 +85,7 @@ describe('history slice', () => {
       sortCriteria: 'date descending',
       pipeline: 'my-pipeline',
       searchHub: 'my-search-hub',
+      facetOrder: [],
       debug: false,
     };
 
@@ -185,27 +194,67 @@ describe('history slice', () => {
 
     it('for #categoryFacetSet keys', () => {
       expectHistoryToHaveCreatedDifferentSnapshots(
-        getSnapshot({categoryFacetSet: {foo: buildMockCategoryFacetRequest()}}),
-        getSnapshot({categoryFacetSet: {foo2: buildMockCategoryFacetRequest()}})
+        getSnapshot({categoryFacetSet: {foo: buildMockCategoryFacetSlice()}}),
+        getSnapshot({categoryFacetSet: {foo2: buildMockCategoryFacetSlice()}})
       );
     });
 
-    it('for #facetOptions keys', () => {
+    it('should consider different snapshot for facet set selected values', () => {
       expectHistoryToHaveCreatedDifferentSnapshots(
+        getSnapshot({facetSet: {foo: buildMockFacetRequest()}}),
         getSnapshot({
-          facetOptions: buildMockFacetOptions({freezeFacetOrder: true}),
-        }),
-        getSnapshot({
-          facetOptions: buildMockFacetOptions({freezeFacetOrder: false}),
+          facetSet: {
+            foo: buildMockFacetRequest({
+              currentValues: [{state: 'selected', value: 'good'}],
+            }),
+          },
         })
       );
     });
 
-    it('should consider different snapshot for facet set values', () => {
-      expectHistoryToHaveCreatedDifferentSnapshots(
+    it('should not consider different snapshot for facet set idle values', () => {
+      expectHistoryNotToHaveCreatedDifferentSnapshots(
         getSnapshot({facetSet: {foo: buildMockFacetRequest()}}),
         getSnapshot({
-          facetSet: {foo: buildMockFacetRequest({field: '@different'})},
+          facetSet: {
+            foo: buildMockFacetRequest({
+              currentValues: [{state: 'idle', value: 'good'}],
+            }),
+          },
+        })
+      );
+    });
+
+    it('should consider different snapshot for category facet set selected values', () => {
+      expectHistoryToHaveCreatedDifferentSnapshots(
+        getSnapshot({categoryFacetSet: {foo: buildMockCategoryFacetSlice()}}),
+        getSnapshot({
+          categoryFacetSet: {
+            foo: buildMockCategoryFacetSlice({
+              request: buildMockCategoryFacetRequest({
+                currentValues: [
+                  buildMockCategoryFacetValueRequest({state: 'selected'}),
+                ],
+              }),
+            }),
+          },
+        })
+      );
+    });
+
+    it('should not consider different snapshot for category facet set idle values', () => {
+      expectHistoryNotToHaveCreatedDifferentSnapshots(
+        getSnapshot({categoryFacetSet: {foo: buildMockCategoryFacetSlice()}}),
+        getSnapshot({
+          categoryFacetSet: {
+            foo: buildMockCategoryFacetSlice({
+              request: buildMockCategoryFacetRequest({
+                currentValues: [
+                  buildMockCategoryFacetValueRequest({state: 'idle'}),
+                ],
+              }),
+            }),
+          },
         })
       );
     });
@@ -294,7 +343,7 @@ describe('history slice', () => {
     const snap = getSnapshot({query: buildMockQueryState({q: 'foo'})});
     const history = addSnapshots(snap, snap);
     expect(history.past.length).toBe(1);
-    expect(history.past[0]).toEqual(getHistoryEmptyState());
+    expect(history.past[0]).toEqual(getHistoryInitialState());
     expect(history.present).toEqual(snap);
   });
 });

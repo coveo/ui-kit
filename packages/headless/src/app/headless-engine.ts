@@ -18,13 +18,16 @@ import {configureStore, Store, ThunkExtraArguments} from './store';
 import {SearchAPIClient} from '../api/search/search-api-client';
 import {debounce} from 'ts-debounce';
 import {SearchAppState} from '../state/search-app-state';
-import {AnalyticsClientSendEventHook} from 'coveo.analytics/dist/definitions/client/analytics';
 import pino, {Logger, LogEvent, LevelWithSilent} from 'pino';
 import {
   NoopPreprocessRequestMiddleware,
   PreprocessRequestMiddleware,
 } from '../api/platform-client';
-import {RecordValue, Schema, StringValue} from '@coveo/bueno';
+import {
+  PreprocessRequest,
+  NoopPreprocessRequest,
+} from '../api/preprocess-request';
+import {BooleanValue, RecordValue, Schema, StringValue} from '@coveo/bueno';
 import {validatePayloadAndThrow} from '../utils/validate-payload';
 import {
   NoopPostprocessFacetSearchResponseMiddleware,
@@ -34,6 +37,10 @@ import {
   PostprocessQuerySuggestResponseMiddleware,
   PostprocessSearchResponseMiddleware,
 } from '../api/search/search-api-client-middleware';
+import {
+  AnalyticsClientSendEventHook,
+  IRuntimeEnvironment,
+} from 'coveo.analytics';
 
 export type LogLevel = LevelWithSilent;
 
@@ -106,6 +113,14 @@ export interface HeadlessConfigurationOptions {
    */
   renewAccessToken?: () => Promise<string>;
   /**
+   * Allows for augmenting a Platform request before it is sent.
+   * @param request Request to be augmented
+   * @param clientOrigin The origin of the client, can be "analyticsFetch", "analyticsBeacon" or "searchApiFetch"
+   *
+   * @returns Augmented request
+   */
+  preprocessRequest?: PreprocessRequest;
+  /**
    * The Plaform URL to use. (e.g., https://platform.cloud.coveo.com)
    * The platformUrl() helper method can be useful to know what url is available.
    */
@@ -127,7 +142,8 @@ export interface HeadlessConfigurationOptions {
      */
     searchHub?: string;
     /**
-     * Allows for augmenting request before any (search, facet-search, query-suggest) a request is sent.
+     * Allows for augmenting a request (search, facet-search, query-suggest, etc.) before it is sent.
+     * @deprecated Use `preprocessRequest` instead.
      */
     preprocessRequestMiddleware?: PreprocessRequestMiddleware;
     /**
@@ -168,9 +184,14 @@ export interface HeadlessConfigurationOptions {
      */
     originLevel3?: string;
     /**
-     * analyticsClientMiddleware allows to hook into the analytics request before it is sent to the Coveo platform.
+     * analyticsClientMiddleware allows to hook into an analytics event payload before it is sent to the Coveo platform.
      */
     analyticsClientMiddleware?: AnalyticsClientSendEventHook;
+    /**
+     * Optional analytics runtime environment, this is needed for analytics to work correctly if you're running outside of a browser.
+     * See https://github.com/coveo/coveo.analytics.js for more info.
+     */
+    runtimeEnvironment?: IRuntimeEnvironment;
   };
 }
 
@@ -252,6 +273,11 @@ export class HeadlessEngine<Reducers extends ReducersMapObject>
   }
 
   private validateConfiguration(options: HeadlessOptions<Reducers>) {
+    if (options.configuration.search?.preprocessRequestMiddleware) {
+      this.logger
+        .warn(`The "search.preprocessRequestMiddleware" configuration option is now deprecated and will be removed in the upcoming @coveo/headless major version.
+      Please use the "preprocessRequest" option instead, which works for both the Search and Analytics API requests.`);
+    }
     const configurationSchema = new Schema<HeadlessConfigurationOptions>({
       organizationId: new StringValue({
         required: true,
@@ -277,6 +303,22 @@ export class HeadlessEngine<Reducers extends ReducersMapObject>
           searchHub: new StringValue({
             required: false,
             emptyAllowed: false,
+          }),
+        },
+      }),
+      analytics: new RecordValue({
+        options: {
+          required: false,
+        },
+        values: {
+          enabled: new BooleanValue({
+            required: false,
+          }),
+          originLevel2: new StringValue({
+            required: false,
+          }),
+          originLevel3: new StringValue({
+            required: false,
           }),
         },
       }),
@@ -306,6 +348,8 @@ export class HeadlessEngine<Reducers extends ReducersMapObject>
 
   private initStore() {
     const {search} = this.options.configuration;
+    const preprocessRequest =
+      this.options.configuration.preprocessRequest || NoopPreprocessRequest;
     this.reduxStore = configureStore({
       preloadedState: this.options.preloadedState,
       reducers: this.options.reducers,
@@ -314,7 +358,8 @@ export class HeadlessEngine<Reducers extends ReducersMapObject>
         searchAPIClient: new SearchAPIClient({
           logger: this.logger,
           renewAccessToken: () => this.renewAccessToken(),
-          preprocessRequest:
+          preprocessRequest,
+          deprecatedPreprocessRequest:
             search?.preprocessRequestMiddleware ||
             NoopPreprocessRequestMiddleware,
           postprocessSearchResponseMiddleware:
@@ -330,6 +375,7 @@ export class HeadlessEngine<Reducers extends ReducersMapObject>
         analyticsClientMiddleware: this.analyticsClientMiddleware(this.options),
         logger: this.logger,
         validatePayload: validatePayloadAndThrow,
+        preprocessRequest,
       },
     });
   }

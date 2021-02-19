@@ -12,14 +12,25 @@ import {getSearchHubInitialState} from '../../features/search-hub/search-hub-sta
 import {getSearchInitialState} from '../../features/search/search-state';
 import {
   ConfigurationSection,
+  ContextSection,
   PipelineSection,
   QuerySection,
+  RecommendationSection,
   SearchHubSection,
   SearchSection,
 } from '../../state/state-sections';
+import {Context} from '../../features/context/context-state';
+import {PreprocessRequest} from '../preprocess-request';
 
 export type StateNeededByAnalyticsProvider = ConfigurationSection &
-  Partial<SearchHubSection & SearchSection & PipelineSection & QuerySection>;
+  Partial<
+    SearchHubSection &
+      SearchSection &
+      PipelineSection &
+      QuerySection &
+      ContextSection &
+      RecommendationSection
+  >;
 
 export class AnalyticsProvider implements SearchPageClientProvider {
   constructor(private state: StateNeededByAnalyticsProvider) {}
@@ -30,16 +41,25 @@ export class AnalyticsProvider implements SearchPageClientProvider {
       responseTime: this.responseTime,
       results: this.mapResultsToAnalyticsDocument(),
       numberOfResults: this.numberOfResults,
+      getBaseMetadata: this.getBaseMetadata(),
     };
   }
 
   public getBaseMetadata() {
-    return {};
+    const {context} = this.state;
+    const contextValues = context?.contextValues || {};
+    const formattedObject: Context = {};
+    for (const [key, value] of Object.entries(contextValues)) {
+      const formattedKey = `context_${key}`;
+      formattedObject[formattedKey] = value;
+    }
+    return formattedObject;
   }
 
   public getSearchUID() {
     return (
       this.state.search?.response.searchUid ||
+      this.state.recommendation?.searchUid ||
       getSearchInitialState().response.searchUid
     );
   }
@@ -96,6 +116,7 @@ interface ConfigureAnalyticsOptions {
   state: StateNeededByAnalyticsProvider;
   logger: Logger;
   analyticsClientMiddleware?: AnalyticsClientSendEventHook;
+  preprocessRequest?: PreprocessRequest;
   provider?: SearchPageClientProvider;
 }
 
@@ -103,14 +124,18 @@ export const configureAnalytics = ({
   logger,
   state,
   analyticsClientMiddleware = (_, p) => p,
+  preprocessRequest,
   provider = new AnalyticsProvider(state),
 }: ConfigureAnalyticsOptions) => {
   const token = state.configuration.accessToken;
   const endpoint = state.configuration.analytics.apiBaseUrl;
+  const runtimeEnvironment = state.configuration.analytics.runtimeEnvironment;
   const client = new CoveoSearchPageClient(
     {
       token,
       endpoint,
+      runtimeEnvironment,
+      preprocessRequest,
       beforeSendHooks: [
         analyticsClientMiddleware,
         (type, payload) => {

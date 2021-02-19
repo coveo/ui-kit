@@ -19,5 +19,7 @@ export const searchParametersDefinition: SchemaDefinition<Required<
   sortCriteria: new StringValue(),
   f: new RecordValue(),
   cf: new RecordValue(),
+  nf: new RecordValue(),
+  df: new RecordValue(),
   debug: new BooleanValue(),
 };

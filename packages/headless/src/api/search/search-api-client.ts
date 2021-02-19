@@ -1,4 +1,3 @@
-import AbortController from 'node-abort-controller';
 import {
   PlatformClient,
   PlatformResponse,
@@ -31,6 +30,7 @@ import {
   PostprocessQuerySuggestResponseMiddleware,
   PostprocessSearchResponseMiddleware,
 } from './search-api-client-middleware';
+import {PreprocessRequest} from '../preprocess-request';
 
 export type AllSearchAPIResponse = Plan | Search | QuerySuggest;
 
@@ -43,7 +43,8 @@ export interface AsyncThunkSearchOptions<T extends Partial<SearchAppState>> {
 export interface SearchAPIClientOptions {
   renewAccessToken: () => Promise<string>;
   logger: Logger;
-  preprocessRequest: PreprocessRequestMiddleware;
+  preprocessRequest: PreprocessRequest;
+  deprecatedPreprocessRequest: PreprocessRequestMiddleware;
   postprocessSearchResponseMiddleware: PostprocessSearchResponseMiddleware;
   postprocessQuerySuggestResponseMiddleware: PostprocessQuerySuggestResponseMiddleware;
   postprocessFacetSearchResponseMiddleware: PostprocessFacetSearchResponseMiddleware;
@@ -59,10 +60,7 @@ export class SearchAPIClient {
   async plan(
     req: PlanRequest
   ): Promise<SearchAPIClientResponse<PlanResponseSuccess>> {
-    const platformResponse = await PlatformClient.call<
-      PlanRequest,
-      PlanResponseSuccess
-    >({
+    const platformResponse = await PlatformClient.call<PlanResponseSuccess>({
       ...baseSearchRequest(req, 'POST', 'application/json', '/plan'),
       requestParams: pickNonBaseParams(req) as PlanRequest, // TODO: This cast won't be needed once all methods have been reworked and we can change types in PlatformClient
       ...this.options,
@@ -80,7 +78,6 @@ export class SearchAPIClient {
     req: QuerySuggestRequest
   ): Promise<SearchAPIClientResponse<QuerySuggestSuccessResponse>> {
     const platformResponse = await PlatformClient.call<
-      QuerySuggestRequest,
       QuerySuggestSuccessResponse
     >({
       ...baseSearchRequest(req, 'POST', 'application/json', '/querySuggest'),
@@ -109,13 +106,13 @@ export class SearchAPIClient {
       this.options.logger.warn('Cancelling current pending search query');
       this.searchAbortController.abort();
     }
-    this.searchAbortController = new AbortController();
+    this.searchAbortController = this.getAbortControllerInstanceIfAvailable();
 
-    const platformResponse = await PlatformClient.call<SearchRequest, Search>({
+    const platformResponse = await PlatformClient.call<Search>({
       ...baseSearchRequest(req, 'POST', 'application/json', ''),
       requestParams: pickNonBaseParams(req),
       ...this.options,
-      signal: this.searchAbortController.signal,
+      signal: this.searchAbortController?.signal,
     });
 
     this.searchAbortController = null;
@@ -135,10 +132,7 @@ export class SearchAPIClient {
   }
 
   async facetSearch(req: FacetSearchRequest | CategoryFacetSearchRequest) {
-    const platformResponse = await PlatformClient.call<
-      FacetSearchRequest,
-      FacetSearchResponse
-    >({
+    const platformResponse = await PlatformClient.call<FacetSearchResponse>({
       ...baseSearchRequest(req, 'POST', 'application/json', '/facet'),
       requestParams: pickNonBaseParams(req),
       ...this.options,
@@ -151,10 +145,7 @@ export class SearchAPIClient {
   }
 
   async recommendations(req: RecommendationRequest) {
-    const platformResponse = await PlatformClient.call<
-      RecommendationRequest,
-      Search
-    >({
+    const platformResponse = await PlatformClient.call<Search>({
       ...baseSearchRequest(req, 'POST', 'application/json', ''),
       requestParams: pickNonBaseParams(req),
       ...this.options,
@@ -172,10 +163,7 @@ export class SearchAPIClient {
   }
 
   async productRecommendations(req: ProductRecommendationsRequest) {
-    const platformResponse = await PlatformClient.call<
-      ProductRecommendationsRequest,
-      Search
-    >({
+    const platformResponse = await PlatformClient.call<Search>({
       ...baseSearchRequest(req, 'POST', 'application/json', ''),
       requestParams: pickNonBaseParams(req),
       ...this.options,
@@ -190,6 +178,22 @@ export class SearchAPIClient {
     return {
       error: unwrapError(platformResponse),
     };
+  }
+
+  private getAbortControllerInstanceIfAvailable(): AbortController | null {
+    // For nodejs environments only, we want to load the implementation of AbortController from node-abort-controller package.
+    // For browser environments, we need to make sure that we don't use AbortController as it might not be available (Locker Service in Salesforce)
+    // This is not something that can be polyfilled in a meaningful manner.
+    // This is a low level browser API after all, and only JS code inside a polyfill cannot actually cancel network requests done by the browser.
+
+    if (typeof window === 'undefined') {
+      // eslint-disable-next-line @typescript-eslint/no-var-requires
+      const nodeAbort = require('node-abort-controller');
+      return new nodeAbort() as AbortController;
+    }
+    return typeof AbortController === 'undefined'
+      ? null
+      : new AbortController();
   }
 }
 

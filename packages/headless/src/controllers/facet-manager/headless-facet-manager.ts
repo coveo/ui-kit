@@ -1,5 +1,6 @@
 import {Engine} from '../../app/headless-engine';
 import {SearchSection} from '../../state/state-sections';
+import {sortFacets} from '../../utils/facet-utils';
 import {buildController} from '../controller/headless-controller';
 
 export type FacetManagerPayload<T> = {
@@ -21,12 +22,7 @@ export function buildFacetManager(engine: Engine<SearchSection>) {
      * @returns FacetManagerPayload[].
      */
     sort<T>(facets: FacetManagerPayload<T>[]) {
-      const payloadMap: Record<string, FacetManagerPayload<T>> = {};
-      facets.forEach((f) => (payloadMap[f.facetId] = f));
-
-      return this.state.facetIds
-        .map((id) => payloadMap[id])
-        .filter((payload) => payload !== undefined);
+      return sortFacets(facets, this.state.facetIds);
     },
 
     /** @returns The state of the `FacetManager` controller. */

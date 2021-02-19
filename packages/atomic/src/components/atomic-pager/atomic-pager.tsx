@@ -1,91 +1,121 @@
-import {Component, h, State} from '@stencil/core';
+import {Component, h, Prop, State} from '@stencil/core';
 import {
   Pager,
   PagerState,
-  Unsubscribe,
   buildPager,
-  Engine,
+  buildSearchStatus,
+  SearchStatus,
+  SearchStatusState,
 } from '@coveo/headless';
-import {Initialization} from '../../utils/initialization-utils';
+import {
+  Bindings,
+  BindStateToController,
+  BindStateToI18n,
+  InitializableComponent,
+  InitializeBindings,
+} from '../../utils/initialization-utils';
+import ArrowRightIcon from 'coveo-styleguide/resources/icons/svg/arrow-right-rounded.svg';
+import ArrowLeftIcon from 'coveo-styleguide/resources/icons/svg/arrow-left-rounded.svg';
 
 /**
- * @slot back-button - Content of the back button
- * @slot next-button - Content of the next button
+ * The Pager provides buttons that allow the end user to navigate through the different result pages.
  *
- * @part list - The list of buttons
- * @part back-button - The back button
+ * @part buttons - The list of buttons
+ * @part previous-button - The previous button
  * @part next-button - The next button
  * @part page-button - The page button
  * @part active-page-button - The active page button
  */
 @Component({
   tag: 'atomic-pager',
-  styleUrl: 'atomic-pager.scss',
+  styleUrl: 'atomic-pager.pcss',
   shadow: true,
 })
-export class AtomicPager {
-  @State() state!: PagerState;
-
-  private engine!: Engine;
+export class AtomicPager implements InitializableComponent {
+  @InitializeBindings() public bindings!: Bindings;
   private pager!: Pager;
-  private unsubscribe: Unsubscribe = () => {};
+  public searchStatus!: SearchStatus;
 
-  @Initialization()
+  @BindStateToController('pager')
+  @State()
+  private pagerState!: PagerState;
+  @BindStateToController('searchStatus')
+  @State()
+  private searchStatusState!: SearchStatusState;
+  @BindStateToI18n()
+  @State()
+  private strings = {
+    pagination: () => this.bindings.i18n.t('pagination'),
+    previous: () => this.bindings.i18n.t('previous'),
+    next: () => this.bindings.i18n.t('next'),
+    pageNumber: (page: number) => this.bindings.i18n.t('pageNumber', {page}),
+  };
+  @State() error!: Error;
+
+  /**
+   * Specifies how many page buttons to display in the pager.
+   */
+  @Prop() numberOfPages = 5;
+  /**
+   * Specifies whether the **Previous** and **Next** buttons should appear at each end of the pager when appropriate.
+   */
+  @Prop() enableNavigationButtons = true;
+
   public initialize() {
-    this.pager = buildPager(this.engine);
-    this.unsubscribe = this.pager.subscribe(() => this.updateState());
+    this.searchStatus = buildSearchStatus(this.bindings.engine);
+    this.pager = buildPager(this.bindings.engine, {
+      options: {numberOfPages: this.numberOfPages},
+    });
   }
 
-  public disconnectedCallback() {
-    this.unsubscribe();
-  }
-
-  private updateState() {
-    this.state = this.pager.state;
-  }
-
-  private get backButton() {
-    if (!this.state.hasPreviousPage) {
-      return null;
-    }
-
-    const icon = '<';
+  private buildButton(options: {
+    part: string;
+    disabled: boolean;
+    ariaLabel: string;
+    callback: () => void;
+    icon: string;
+  }) {
     return (
-      <li class="page-item">
+      <li>
         <button
-          part="back-button"
-          class="page-link"
-          aria-label="Previous page"
-          onClick={() => {
-            this.pager.previousPage();
-          }}
+          part={options.part}
+          class={`text-primary ${
+            options.disabled
+              ? 'opacity-50 cursor-not-allowed'
+              : 'hover:text-primary-variant'
+          }`}
+          disabled={options.disabled}
+          aria-label={options.ariaLabel}
+          onClick={options.callback}
         >
-          <slot name="back-button">{icon}</slot>
+          <span class="fill-current" innerHTML={options.icon}></span>
         </button>
       </li>
     );
+  }
+
+  private get previousButton() {
+    return this.buildButton({
+      ariaLabel: this.strings.previous(),
+      callback: () => {
+        this.pager.previousPage();
+      },
+      disabled: !this.pagerState.hasPreviousPage,
+      icon: ArrowLeftIcon,
+      part: 'previous-button',
+    });
   }
 
   private get nextButton() {
-    if (!this.state.hasNextPage) {
-      return null;
-    }
-
-    const icon = '>';
-    return (
-      <li class="page-item">
-        <button
-          part="next-button"
-          class="page-link"
-          aria-label="Next page"
-          onClick={() => {
-            this.pager.nextPage();
-          }}
-        >
-          <slot name="next-button">{icon}</slot>
-        </button>
-      </li>
-    );
+    return this.buildButton({
+      ariaLabel: this.strings.next(),
+      callback: () => {
+        this.pager.nextPage();
+      },
+      disabled: !this.pagerState.hasNextPage,
+      icon: ArrowRightIcon,
+      part: 'next-button',
+    });
   }
 
   private get pages() {
@@ -95,14 +125,17 @@ export class AtomicPager {
 
   private buildPage(page: number) {
     const isSelected = this.pager.isCurrentPage(page);
-    const className = isSelected ? 'active' : '';
+    const classes = isSelected
+      ? 'text-on-primary bg-primary hover:bg-primary-variant'
+      : 'text-on-background';
 
     return (
-      <li class={`page-item ${className}`}>
+      <li>
         <button
+          class={`hover:underline ${classes}`}
+          aria-current={isSelected ? 'page' : null}
           part={`page-button ${isSelected && 'active-page-button'}`}
-          class="page-link"
-          aria-label={`Page ${page}`}
+          aria-label={this.strings.pageNumber(page)}
           onClick={() => {
             this.pager.selectPage(page);
           }}
@@ -113,13 +146,17 @@ export class AtomicPager {
     );
   }
 
-  render() {
+  public render() {
+    if (!this.searchStatusState.hasResults) {
+      return;
+    }
+
     return (
-      <nav aria-label="Pager">
-        <ul class="pagination mb-0" part="list">
-          {this.backButton}
+      <nav aria-label={this.strings.pagination()} class="items-center ">
+        <ul part="buttons" class="flex justify-between space-x-2">
+          {this.enableNavigationButtons && this.previousButton}
           {this.pages}
-          {this.nextButton}
+          {this.enableNavigationButtons && this.nextButton}
         </ul>
       </nav>
     );

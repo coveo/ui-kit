@@ -44,22 +44,26 @@ export const categoryFacetSetReducer = createReducer(
           return;
         }
 
-        state[facetId] = buildCategoryFacetRequest(options);
+        const request = buildCategoryFacetRequest(options);
+        const initialNumberOfValues = request.numberOfValues;
+        state[facetId] = {request, initialNumberOfValues};
       })
-      .addCase(change.fulfilled, (_, action) => action.payload.categoryFacetSet)
+      .addCase(
+        change.fulfilled,
+        (state, action) => action.payload?.categoryFacetSet ?? state
+      )
       .addCase(restoreSearchParameters, (state, action) => {
         const cf = action.payload.cf || {};
-        const facetIds = Object.keys(state);
 
-        facetIds.forEach((id) => {
-          const request = state[id];
+        Object.keys(state).forEach((id) => {
+          const request = state[id]!.request;
           const path = cf[id] || [];
           selectPath(request, path, request.numberOfValues);
         });
       })
       .addCase(updateCategoryFacetSortCriterion, (state, action) => {
         const {facetId, criterion} = action.payload;
-        const request = state[facetId];
+        const request = state[facetId]?.request;
 
         if (!request) {
           return;
@@ -69,7 +73,7 @@ export const categoryFacetSetReducer = createReducer(
       })
       .addCase(toggleSelectCategoryFacetValue, (state, action) => {
         const {facetId, selection, retrieveCount} = action.payload;
-        const request = state[facetId];
+        const request = state[facetId]?.request;
 
         if (!request) {
           return;
@@ -108,30 +112,31 @@ export const categoryFacetSetReducer = createReducer(
         request.numberOfValues = 1;
       })
       .addCase(deselectAllCategoryFacetValues, (state, action) => {
-        handleFacetDeselectAll<CategoryFacetRequest>(state, action.payload);
+        const facetId = action.payload;
+        handleCategoryFacetDeselectAll(state, facetId);
       })
       .addCase(deselectAllFacets, (state) => {
-        Object.keys(state).forEach((facetId) => {
-          handleFacetDeselectAll<CategoryFacetRequest>(state, facetId);
-        });
+        Object.keys(state).forEach((facetId) =>
+          handleCategoryFacetDeselectAll(state, facetId)
+        );
       })
       .addCase(updateCategoryFacetNumberOfValues, (state, action) => {
-        const {facetId} = action.payload;
-        const request = state[facetId];
+        const {facetId, numberOfValues} = action.payload;
+        const request = state[facetId]?.request;
         if (!request) {
           return;
         }
         if (!request.currentValues.length) {
           return handleFacetUpdateNumberOfValues<CategoryFacetRequest>(
-            state,
-            action.payload
+            request,
+            numberOfValues
           );
         }
         handleCategoryFacetNestedNumberOfValuesUpdate(state, action.payload);
       })
       .addCase(selectCategoryFacetSearchResult, (state, action) => {
         const {facetId, value, retrieveCount} = action.payload;
-        const request = state[facetId];
+        const request = state[facetId]?.request;
 
         if (!request) {
           return;
@@ -149,7 +154,12 @@ export const categoryFacetSetReducer = createReducer(
           }
 
           const id = response.facetId;
-          const request = state[id];
+          const request = state[id]?.request;
+
+          if (!request) {
+            return;
+          }
+
           const requestWasInvalid = isRequestInvalid(request, response);
 
           request.currentValues = requestWasInvalid
@@ -202,7 +212,7 @@ function handleCategoryFacetNestedNumberOfValuesUpdate(
   payload: {facetId: string; numberOfValues: number}
 ) {
   const {facetId, numberOfValues} = payload;
-  let selectedValue = state[facetId]?.currentValues[0];
+  let selectedValue = state[facetId]?.request.currentValues[0];
   if (!selectedValue) {
     return;
   }
@@ -230,4 +240,18 @@ function isRequestInvalid(
   const responseParents = partitionIntoParentsAndValues(response.values)
     .parents;
   return requestParents.length !== responseParents.length;
+}
+
+function handleCategoryFacetDeselectAll(
+  state: CategoryFacetSetState,
+  facetId: string
+) {
+  const slice = state[facetId];
+
+  if (!slice) {
+    return;
+  }
+
+  slice.request.numberOfValues = slice.initialNumberOfValues;
+  handleFacetDeselectAll<CategoryFacetRequest>(slice.request);
 }

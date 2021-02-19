@@ -30,9 +30,10 @@ export interface RecommendationListProps {
 }
 
 /**
- * `Recommendation` controller allows to retrieve information about the current recommendations by the search API, if any.
+ * The `RecommendationList` controller retrieves information about the current recommendations by the search API, if there are any.
  */
 export type RecommendationList = ReturnType<typeof buildRecommendationList>;
+/** The state relevant to the `RecommendationList` controller.*/
 export type RecommendationListState = RecommendationList['state'];
 
 export function buildRecommendationList(
@@ -45,24 +46,31 @@ export function buildRecommendationList(
     engine,
     optionsSchema,
     props.options,
-    buildRecommendationList.name
+    'buildRecommendationList'
   ) as Required<RecommendationListOptions>;
   if (options.id !== '') {
     dispatch(setRecommendationId({id: options.id}));
   }
   return {
     ...controller,
-
+    /**
+     * Gets new recommendations.
+     */
     refresh() {
       dispatch(getRecommendations());
     },
-
+    /**
+     * The state of the `Recommendation` controller.
+     */
     get state() {
       const state = engine.state;
 
       return {
+        /** The recommendations based on the last executed query. */
         recommendations: state.recommendation.recommendations,
+        /** The current error for the last executed query, or `null` if none is present. */
         error: state.recommendation.error,
+        /** `true` if a search is in progress and `false` otherwise. */
         isLoading: state.recommendation.isLoading,
       };
     },

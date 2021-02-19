@@ -7,9 +7,11 @@
 
 ## Shadow Parts
 
-| Part       | Description        |
-| ---------- | ------------------ |
-| `"select"` | The select element |
+| Part            | Description                    |
+| --------------- | ------------------------------ |
+| `"label"`       | The "Sort by" label            |
+| `"placeholder"` | The initialization placeholder |
+| `"select"`      | The select element             |
 
 
 ## Dependencies

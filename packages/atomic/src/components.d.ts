@@ -5,7 +5,11 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { Engine, HeadlessConfigurationOptions, HighlightUtils, LogLevel, Result, ResultTemplateCondition } from "@coveo/headless";
+import { Engine, LogLevel, Result, ResultTemplateCondition } from "@coveo/headless";
+import { Bindings } from "./utils/initialization-utils";
+import { i18n } from "i18next";
+import { InitializationOptions } from "./components/atomic-search-interface/atomic-search-interface";
+import { BaseFacetSearchResult } from "@coveo/headless/dist/api/search/facet-search/base/base-facet-search-response";
 export namespace Components {
     interface AtomicBreadcrumbManager {
         "categoryDivider": string;
@@ -17,6 +21,7 @@ export namespace Components {
         "label": string;
     }
     interface AtomicComponentError {
+        "element": HTMLElement;
         "error": Error;
     }
     interface AtomicDateFacet {
@@ -43,19 +48,41 @@ export namespace Components {
     }
     interface AtomicHistory {
     }
+    interface AtomicNoResults {
+        /**
+          * Whether to display a button which cancels the last available action.
+         */
+        "enableCancelLastAction": boolean;
+        /**
+          * Whether to display a list of search tips to the user.
+         */
+        "enableSearchTips": boolean;
+    }
     interface AtomicNumericFacet {
         "facetId": string;
         "field": string;
         "label": string;
     }
     interface AtomicPager {
+        /**
+          * Specifies whether the **Previous** and **Next** buttons should appear at each end of the pager when appropriate.
+         */
+        "enableNavigationButtons": boolean;
+        /**
+          * Specifies how many page buttons to display in the pager.
+         */
+        "numberOfPages": number;
     }
     interface AtomicQueryError {
     }
     interface AtomicQuerySummary {
+        /**
+          * Whether to display the duration of the last query execution.
+         */
+        "enableDuration": boolean;
     }
     interface AtomicRelevanceInspector {
-        "engine": Engine;
+        "bindings": Bindings;
     }
     interface AtomicResult {
         "engine": Engine;
@@ -67,18 +94,9 @@ export namespace Components {
     }
     interface AtomicResultList {
         /**
-          * Whether to automatically retrieve an additional page of results and append it to the current results when the user scrolls down to the bottom of element
+          * A list of fields to include in the query results, separated by commas.
          */
-        "enableInfiniteScroll": boolean;
         "fieldsToInclude": string;
-        /**
-          * Css class for the list wrapper
-         */
-        "listClass": string;
-        /**
-          * Css class for a list element
-         */
-        "listElementClass": string;
     }
     interface AtomicResultTemplate {
         "conditions": ResultTemplateCondition[];
@@ -92,38 +110,69 @@ export namespace Components {
     }
     interface AtomicResultsPerPage {
         /**
-          * Initial value of the result per page option
+          * List of possible results per page choices, separated by commas.
          */
-        "initialOption": number;
+        "choicesDisplayed": string;
         /**
-          * List of possible results per page options, separated by commas
+          * Initial choice for the number of result per page. Should be part of the `choicesDisplayed` option. By default, the first value of choices displayed.
          */
-        "options": string;
+        "initialChoice"?: number;
     }
     interface AtomicSearchBox {
         "_id": string;
-        "enableQuerySyntax": boolean;
         /**
-          * Wether the submit button should be place before the input
+          * Whether the submit button should be placed before the input
          */
         "leadingSubmitButton": boolean;
         /**
           * Maximum number of suggestions to display
          */
         "numberOfSuggestions": number;
+        /**
+          * The placeholder for the search box input
+         */
+        "placeholder": string;
     }
     interface AtomicSearchInterface {
-        "initialize": (options: Pick<HeadlessConfigurationOptions, 'accessToken' | 'organizationId' | 'renewAccessToken' | 'platformUrl'>) => Promise<void>;
+        "engine"?: Engine;
+        "executeFirstSearch": () => Promise<void>;
+        "i18n": i18n;
+        "initialize": (options: InitializationOptions) => Promise<void>;
+        "language": string;
         "logLevel"?: LogLevel;
         "pipeline": string;
-        "sample": boolean;
+        "reflectStateInUrl": boolean;
         "searchHub": string;
+    }
+    interface AtomicSortCriteria {
+        /**
+          * The non-localized caption to display for this criteria.
+         */
+        "caption": string;
+        /**
+          * The sort criterion/criteria the end user can select/toggle between.  The available sort criteria are: - `relevancy` - `date ascending`/`date descending` - `qre` - `field ascending`/`field descending`, where you must replace `field` with the name of a sortable field in your index (e.g., `criteria="size ascending"`).  You can specify multiple sort criteria to be used in the same request by separating them with a comma (e.g., `criteria="size ascending, date ascending"` ).
+         */
+        "criteria": string;
     }
     interface AtomicSortDropdown {
     }
     interface AtomicTab {
         "expression": string;
         "isActive": boolean;
+    }
+    interface AtomicText {
+        /**
+          * Count value used for plurals
+         */
+        "count"?: number;
+        /**
+          * String key value
+         */
+        "value": string;
+    }
+    interface FacetSearch {
+        "facetSearchResults": BaseFacetSearchResult[];
+        "moreValuesAvailable": boolean;
     }
 }
 declare global {
@@ -186,6 +235,12 @@ declare global {
     var HTMLAtomicHistoryElement: {
         prototype: HTMLAtomicHistoryElement;
         new (): HTMLAtomicHistoryElement;
+    };
+    interface HTMLAtomicNoResultsElement extends Components.AtomicNoResults, HTMLStencilElement {
+    }
+    var HTMLAtomicNoResultsElement: {
+        prototype: HTMLAtomicNoResultsElement;
+        new (): HTMLAtomicNoResultsElement;
     };
     interface HTMLAtomicNumericFacetElement extends Components.AtomicNumericFacet, HTMLStencilElement {
     }
@@ -271,6 +326,12 @@ declare global {
         prototype: HTMLAtomicSearchInterfaceElement;
         new (): HTMLAtomicSearchInterfaceElement;
     };
+    interface HTMLAtomicSortCriteriaElement extends Components.AtomicSortCriteria, HTMLStencilElement {
+    }
+    var HTMLAtomicSortCriteriaElement: {
+        prototype: HTMLAtomicSortCriteriaElement;
+        new (): HTMLAtomicSortCriteriaElement;
+    };
     interface HTMLAtomicSortDropdownElement extends Components.AtomicSortDropdown, HTMLStencilElement {
     }
     var HTMLAtomicSortDropdownElement: {
@@ -283,6 +344,18 @@ declare global {
         prototype: HTMLAtomicTabElement;
         new (): HTMLAtomicTabElement;
     };
+    interface HTMLAtomicTextElement extends Components.AtomicText, HTMLStencilElement {
+    }
+    var HTMLAtomicTextElement: {
+        prototype: HTMLAtomicTextElement;
+        new (): HTMLAtomicTextElement;
+    };
+    interface HTMLFacetSearchElement extends Components.FacetSearch, HTMLStencilElement {
+    }
+    var HTMLFacetSearchElement: {
+        prototype: HTMLFacetSearchElement;
+        new (): HTMLFacetSearchElement;
+    };
     interface HTMLElementTagNameMap {
         "atomic-breadcrumb-manager": HTMLAtomicBreadcrumbManagerElement;
         "atomic-category-facet": HTMLAtomicCategoryFacetElement;
@@ -294,6 +367,7 @@ declare global {
         "atomic-field-condition": HTMLAtomicFieldConditionElement;
         "atomic-frequently-bought-together": HTMLAtomicFrequentlyBoughtTogetherElement;
         "atomic-history": HTMLAtomicHistoryElement;
+        "atomic-no-results": HTMLAtomicNoResultsElement;
         "atomic-numeric-facet": HTMLAtomicNumericFacetElement;
         "atomic-pager": HTMLAtomicPagerElement;
         "atomic-query-error": HTMLAtomicQueryErrorElement;
@@ -308,8 +382,11 @@ declare global {
         "atomic-results-per-page": HTMLAtomicResultsPerPageElement;
         "atomic-search-box": HTMLAtomicSearchBoxElement;
         "atomic-search-interface": HTMLAtomicSearchInterfaceElement;
+        "atomic-sort-criteria": HTMLAtomicSortCriteriaElement;
         "atomic-sort-dropdown": HTMLAtomicSortDropdownElement;
         "atomic-tab": HTMLAtomicTabElement;
+        "atomic-text": HTMLAtomicTextElement;
+        "facet-search": HTMLFacetSearchElement;
     }
 }
 declare namespace LocalJSX {
@@ -323,6 +400,7 @@ declare namespace LocalJSX {
         "label"?: string;
     }
     interface AtomicComponentError {
+        "element": HTMLElement;
         "error": Error;
     }
     interface AtomicDateFacet {
@@ -348,19 +426,41 @@ declare namespace LocalJSX {
     }
     interface AtomicHistory {
     }
+    interface AtomicNoResults {
+        /**
+          * Whether to display a button which cancels the last available action.
+         */
+        "enableCancelLastAction"?: boolean;
+        /**
+          * Whether to display a list of search tips to the user.
+         */
+        "enableSearchTips"?: boolean;
+    }
     interface AtomicNumericFacet {
         "facetId"?: string;
         "field"?: string;
         "label"?: string;
     }
     interface AtomicPager {
+        /**
+          * Specifies whether the **Previous** and **Next** buttons should appear at each end of the pager when appropriate.
+         */
+        "enableNavigationButtons"?: boolean;
+        /**
+          * Specifies how many page buttons to display in the pager.
+         */
+        "numberOfPages"?: number;
     }
     interface AtomicQueryError {
     }
     interface AtomicQuerySummary {
+        /**
+          * Whether to display the duration of the last query execution.
+         */
+        "enableDuration"?: boolean;
     }
     interface AtomicRelevanceInspector {
-        "engine": Engine;
+        "bindings": Bindings;
     }
     interface AtomicResult {
         "engine": Engine;
@@ -372,18 +472,9 @@ declare namespace LocalJSX {
     }
     interface AtomicResultList {
         /**
-          * Whether to automatically retrieve an additional page of results and append it to the current results when the user scrolls down to the bottom of element
+          * A list of fields to include in the query results, separated by commas.
          */
-        "enableInfiniteScroll"?: boolean;
         "fieldsToInclude"?: string;
-        /**
-          * Css class for the list wrapper
-         */
-        "listClass"?: string;
-        /**
-          * Css class for a list element
-         */
-        "listElementClass"?: string;
     }
     interface AtomicResultTemplate {
         "conditions"?: ResultTemplateCondition[];
@@ -395,37 +486,70 @@ declare namespace LocalJSX {
     }
     interface AtomicResultsPerPage {
         /**
-          * Initial value of the result per page option
+          * List of possible results per page choices, separated by commas.
          */
-        "initialOption"?: number;
+        "choicesDisplayed"?: string;
         /**
-          * List of possible results per page options, separated by commas
+          * Initial choice for the number of result per page. Should be part of the `choicesDisplayed` option. By default, the first value of choices displayed.
          */
-        "options"?: string;
+        "initialChoice"?: number;
     }
     interface AtomicSearchBox {
         "_id"?: string;
-        "enableQuerySyntax"?: boolean;
         /**
-          * Wether the submit button should be place before the input
+          * Whether the submit button should be placed before the input
          */
         "leadingSubmitButton"?: boolean;
         /**
           * Maximum number of suggestions to display
          */
         "numberOfSuggestions"?: number;
+        /**
+          * The placeholder for the search box input
+         */
+        "placeholder"?: string;
     }
     interface AtomicSearchInterface {
+        "engine"?: Engine;
+        "i18n"?: i18n;
+        "language"?: string;
         "logLevel"?: LogLevel;
         "pipeline"?: string;
-        "sample"?: boolean;
+        "reflectStateInUrl"?: boolean;
         "searchHub"?: string;
+    }
+    interface AtomicSortCriteria {
+        /**
+          * The non-localized caption to display for this criteria.
+         */
+        "caption": string;
+        /**
+          * The sort criterion/criteria the end user can select/toggle between.  The available sort criteria are: - `relevancy` - `date ascending`/`date descending` - `qre` - `field ascending`/`field descending`, where you must replace `field` with the name of a sortable field in your index (e.g., `criteria="size ascending"`).  You can specify multiple sort criteria to be used in the same request by separating them with a comma (e.g., `criteria="size ascending, date ascending"` ).
+         */
+        "criteria": string;
     }
     interface AtomicSortDropdown {
     }
     interface AtomicTab {
         "expression"?: string;
         "isActive"?: boolean;
+    }
+    interface AtomicText {
+        /**
+          * Count value used for plurals
+         */
+        "count"?: number;
+        /**
+          * String key value
+         */
+        "value": string;
+    }
+    interface FacetSearch {
+        "facetSearchResults": BaseFacetSearchResult[];
+        "moreValuesAvailable": boolean;
+        "onFacetSearch"?: (event: CustomEvent<string>) => void;
+        "onResultSelected"?: (event: CustomEvent<BaseFacetSearchResult>) => void;
+        "onShowMoreResults"?: (event: CustomEvent<void>) => void;
     }
     interface IntrinsicElements {
         "atomic-breadcrumb-manager": AtomicBreadcrumbManager;
@@ -438,6 +562,7 @@ declare namespace LocalJSX {
         "atomic-field-condition": AtomicFieldCondition;
         "atomic-frequently-bought-together": AtomicFrequentlyBoughtTogether;
         "atomic-history": AtomicHistory;
+        "atomic-no-results": AtomicNoResults;
         "atomic-numeric-facet": AtomicNumericFacet;
         "atomic-pager": AtomicPager;
         "atomic-query-error": AtomicQueryError;
@@ -452,8 +577,11 @@ declare namespace LocalJSX {
         "atomic-results-per-page": AtomicResultsPerPage;
         "atomic-search-box": AtomicSearchBox;
         "atomic-search-interface": AtomicSearchInterface;
+        "atomic-sort-criteria": AtomicSortCriteria;
         "atomic-sort-dropdown": AtomicSortDropdown;
         "atomic-tab": AtomicTab;
+        "atomic-text": AtomicText;
+        "facet-search": FacetSearch;
     }
 }
 export { LocalJSX as JSX };
@@ -470,6 +598,7 @@ declare module "@stencil/core" {
             "atomic-field-condition": LocalJSX.AtomicFieldCondition & JSXBase.HTMLAttributes<HTMLAtomicFieldConditionElement>;
             "atomic-frequently-bought-together": LocalJSX.AtomicFrequentlyBoughtTogether & JSXBase.HTMLAttributes<HTMLAtomicFrequentlyBoughtTogetherElement>;
             "atomic-history": LocalJSX.AtomicHistory & JSXBase.HTMLAttributes<HTMLAtomicHistoryElement>;
+            "atomic-no-results": LocalJSX.AtomicNoResults & JSXBase.HTMLAttributes<HTMLAtomicNoResultsElement>;
             "atomic-numeric-facet": LocalJSX.AtomicNumericFacet & JSXBase.HTMLAttributes<HTMLAtomicNumericFacetElement>;
             "atomic-pager": LocalJSX.AtomicPager & JSXBase.HTMLAttributes<HTMLAtomicPagerElement>;
             "atomic-query-error": LocalJSX.AtomicQueryError & JSXBase.HTMLAttributes<HTMLAtomicQueryErrorElement>;
@@ -484,8 +613,11 @@ declare module "@stencil/core" {
             "atomic-results-per-page": LocalJSX.AtomicResultsPerPage & JSXBase.HTMLAttributes<HTMLAtomicResultsPerPageElement>;
             "atomic-search-box": LocalJSX.AtomicSearchBox & JSXBase.HTMLAttributes<HTMLAtomicSearchBoxElement>;
             "atomic-search-interface": LocalJSX.AtomicSearchInterface & JSXBase.HTMLAttributes<HTMLAtomicSearchInterfaceElement>;
+            "atomic-sort-criteria": LocalJSX.AtomicSortCriteria & JSXBase.HTMLAttributes<HTMLAtomicSortCriteriaElement>;
             "atomic-sort-dropdown": LocalJSX.AtomicSortDropdown & JSXBase.HTMLAttributes<HTMLAtomicSortDropdownElement>;
             "atomic-tab": LocalJSX.AtomicTab & JSXBase.HTMLAttributes<HTMLAtomicTabElement>;
+            "atomic-text": LocalJSX.AtomicText & JSXBase.HTMLAttributes<HTMLAtomicTextElement>;
+            "facet-search": LocalJSX.FacetSearch & JSXBase.HTMLAttributes<HTMLFacetSearchElement>;
         }
     }
 }

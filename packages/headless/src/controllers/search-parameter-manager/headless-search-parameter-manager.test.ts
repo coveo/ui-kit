@@ -2,9 +2,14 @@ import {restoreSearchParameters} from '../../features/search-parameters/search-p
 import {SearchAppState} from '../../state/search-app-state';
 import {buildMockSearchAppEngine, MockEngine} from '../../test';
 import {buildMockCategoryFacetRequest} from '../../test/mock-category-facet-request';
+import {buildMockCategoryFacetSlice} from '../../test/mock-category-facet-slice';
 import {buildMockCategoryFacetValueRequest} from '../../test/mock-category-facet-value-request';
+import {buildMockDateFacetRequest} from '../../test/mock-date-facet-request';
+import {buildMockDateFacetValue} from '../../test/mock-date-facet-value';
 import {buildMockFacetRequest} from '../../test/mock-facet-request';
 import {buildMockFacetValueRequest} from '../../test/mock-facet-value-request';
+import {buildMockNumericFacetRequest} from '../../test/mock-numeric-facet-request';
+import {buildMockNumericFacetValue} from '../../test/mock-numeric-facet-value';
 import {buildMockSearchParameters} from '../../test/mock-search-parameters';
 import {
   buildSearchParameterManager,
@@ -150,10 +155,12 @@ describe('state manager', () => {
         state: 'idle',
       });
 
+      const request = buildMockCategoryFacetRequest({
+        currentValues: [selected, idle],
+      });
+
       engine.state.categoryFacetSet = {
-        author: buildMockCategoryFacetRequest({
-          currentValues: [selected, idle],
-        }),
+        author: buildMockCategoryFacetSlice({request}),
       };
 
       expect(manager.state.parameters.cf).toEqual({author: ['a']});
@@ -170,16 +177,71 @@ describe('state manager', () => {
         children: [child],
       });
 
+      const request = buildMockCategoryFacetRequest({currentValues: [parent]});
       engine.state.categoryFacetSet = {
-        author: buildMockCategoryFacetRequest({currentValues: [parent]}),
+        author: buildMockCategoryFacetSlice({request}),
       };
 
       expect(manager.state.parameters.cf).toEqual({author: ['a', 'b']});
     });
 
     it('when there are no category facets with selected values, the #cf parameter is not included', () => {
-      engine.state.categoryFacetSet = {author: buildMockCategoryFacetRequest()};
+      engine.state.categoryFacetSet = {author: buildMockCategoryFacetSlice()};
       expect('cf' in manager.state.parameters).toBe(false);
+    });
+  });
+
+  describe('#state.parameters.nf', () => {
+    it('when a numeric facet has selected values, only selected values are included', () => {
+      const selected = buildMockNumericFacetValue({
+        start: 0,
+        end: 10,
+        state: 'selected',
+      });
+      const idle = buildMockNumericFacetValue({
+        start: 10,
+        end: 20,
+        state: 'idle',
+      });
+
+      const currentValues = [selected, idle];
+      engine.state.numericFacetSet = {
+        size: buildMockNumericFacetRequest({currentValues}),
+      };
+
+      expect(manager.state.parameters.nf).toEqual({size: [selected]});
+    });
+
+    it('when there are no numeric facets with selected values, the #nf parameter is not included', () => {
+      engine.state.numericFacetSet = {author: buildMockNumericFacetRequest()};
+      expect('nf' in manager.state.parameters).toBe(false);
+    });
+  });
+
+  describe('#state.parameters.df', () => {
+    it('when a date facet has selected values, only selected values are included', () => {
+      const selected = buildMockDateFacetValue({
+        start: '2020/10/01',
+        end: '2020/11/01',
+        state: 'selected',
+      });
+      const idle = buildMockDateFacetValue({
+        start: '2020/11/01',
+        end: '2020/12/01',
+        state: 'idle',
+      });
+
+      const currentValues = [selected, idle];
+      engine.state.dateFacetSet = {
+        created: buildMockDateFacetRequest({currentValues}),
+      };
+
+      expect(manager.state.parameters.df).toEqual({created: [selected]});
+    });
+
+    it('when there are no date facets with selected values, the #df parameter is not included', () => {
+      engine.state.dateFacetSet = {created: buildMockDateFacetRequest()};
+      expect('df' in manager.state.parameters).toBe(false);
     });
   });
 
@@ -222,13 +284,21 @@ describe('state manager', () => {
       author: buildMockFacetRequest({currentValues: facetValues}),
     };
 
-    const categoryFacetValues = [
-      buildMockCategoryFacetValueRequest({state: 'selected'}),
-    ];
+    const request = buildMockCategoryFacetRequest({
+      currentValues: [buildMockCategoryFacetValueRequest({state: 'selected'})],
+    });
     engine.state.categoryFacetSet = {
-      author: buildMockCategoryFacetRequest({
-        currentValues: categoryFacetValues,
-      }),
+      author: buildMockCategoryFacetSlice({request}),
+    };
+
+    const numericRanges = [buildMockNumericFacetValue({state: 'selected'})];
+    engine.state.numericFacetSet = {
+      size: buildMockNumericFacetRequest({currentValues: numericRanges}),
+    };
+
+    const dateRanges = [buildMockDateFacetValue({state: 'selected'})];
+    engine.state.dateFacetSet = {
+      created: buildMockDateFacetRequest({currentValues: dateRanges}),
     };
 
     engine.state.query.q = 'a';

@@ -3,6 +3,577 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.7.0-alpha.8](https://bitbucket.org/coveord/ui-kit/compare/v0.7.0-alpha.7...v0.7.0-alpha.8) (2021-02-18)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+# [0.7.0-alpha.6](https://bitbucket.org/coveord/ui-kit/compare/v0.7.0-alpha.5...v0.7.0-alpha.6) (2021-02-18)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+# [0.7.0-alpha.5](https://bitbucket.org/coveord/ui-kit/compare/v0.7.0-alpha.4...v0.7.0-alpha.5) (2021-02-18)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+# [0.7.0-alpha.3](https://bitbucket.org/coveord/ui-kit/compare/v0.7.0-alpha.2...v0.7.0-alpha.3) (2021-02-17)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+# [0.7.0-alpha.2](https://bitbucket.org/coveord/ui-kit/compare/v0.7.0-alpha.1...v0.7.0-alpha.2) (2021-02-17)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+# [0.7.0-alpha.1](https://bitbucket.org/coveord/ui-kit/compare/v0.7.0-alpha.0...v0.7.0-alpha.1) (2021-02-17)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+# [0.7.0-alpha.0](https://bitbucket.org/coveord/ui-kit/compare/v0.6.1-alpha.0...v0.7.0-alpha.0) (2021-02-17)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [0.6.1-alpha.0](https://bitbucket.org/coveord/ui-kit/compare/v0.6.0...v0.6.1-alpha.0) (2021-02-16)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+# [0.6.0](https://bitbucket.org/coveord/ui-kit/compare/v0.6.0-alpha.8...v0.6.0) (2021-02-16)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+# [0.6.0-alpha.8](https://bitbucket.org/coveord/ui-kit/compare/v0.6.0-alpha.7...v0.6.0-alpha.8) (2021-02-16)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+# [0.6.0-alpha.7](https://bitbucket.org/coveord/ui-kit/compare/v0.6.0-alpha.6...v0.6.0-alpha.7) (2021-02-15)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+# [0.6.0-alpha.6](https://bitbucket.org/coveord/ui-kit/compare/v0.6.0-alpha.5...v0.6.0-alpha.6) (2021-02-11)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+# [0.6.0-alpha.5](https://bitbucket.org/coveord/ui-kit/compare/v0.6.0-alpha.4...v0.6.0-alpha.5) (2021-02-11)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+# [0.6.0-alpha.4](https://bitbucket.org/coveord/ui-kit/compare/v0.6.0-alpha.3...v0.6.0-alpha.4) (2021-02-11)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+# [0.6.0-alpha.3](https://bitbucket.org/coveord/ui-kit/compare/v0.6.0-alpha.2...v0.6.0-alpha.3) (2021-02-11)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+# [0.6.0-alpha.2](https://bitbucket.org/coveord/ui-kit/compare/v0.6.0-alpha.1...v0.6.0-alpha.2) (2021-02-10)
+
+
+### Features
+
+* **headless:** add preprocessRequest for both Analytics/SearchAPI ([#488](https://bitbucket.org/coveord/ui-kit/issues/488)) ([c026310](https://bitbucket.org/coveord/ui-kit/commits/c0263106cf6328556893874b37d7521e42f73d5a))
+
+
+
+
+
+# [0.6.0-alpha.1](https://bitbucket.org/coveord/ui-kit/compare/v0.6.0-alpha.0...v0.6.0-alpha.1) (2021-02-10)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+# [0.6.0-alpha.0](https://bitbucket.org/coveord/ui-kit/compare/v0.5.1-alpha.1...v0.6.0-alpha.0) (2021-02-08)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [0.5.1-alpha.1](https://bitbucket.org/coveord/ui-kit/compare/v0.5.1-alpha.0...v0.5.1-alpha.1) (2021-02-05)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+# [0.5.0](https://bitbucket.org/coveord/ui-kit/compare/v0.5.0-alpha.7...v0.5.0) (2021-02-04)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+# [0.5.0-alpha.6](https://bitbucket.org/coveord/ui-kit/compare/v0.5.0-alpha.5...v0.5.0-alpha.6) (2021-02-03)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+# [0.5.0-alpha.2](https://bitbucket.org/coveord/ui-kit/compare/v0.5.0-alpha.1...v0.5.0-alpha.2) (2021-02-02)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+# [0.5.0-alpha.1](https://bitbucket.org/coveord/ui-kit/compare/v0.5.0-alpha.0...v0.5.0-alpha.1) (2021-02-01)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+# [0.5.0-alpha.0](https://bitbucket.org/coveord/ui-kit/compare/v0.4.0...v0.5.0-alpha.0) (2021-02-01)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+# [0.4.0](https://bitbucket.org/coveord/ui-kit/compare/v0.4.0-alpha.11...v0.4.0) (2021-01-29)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+# [0.4.0-alpha.11](https://bitbucket.org/coveord/ui-kit/compare/v0.4.0-alpha.10...v0.4.0-alpha.11) (2021-01-29)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+# [0.4.0-alpha.9](https://bitbucket.org/coveord/ui-kit/compare/v0.4.0-alpha.8...v0.4.0-alpha.9) (2021-01-28)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+# [0.4.0-alpha.8](https://bitbucket.org/coveord/ui-kit/compare/v0.4.0-alpha.7...v0.4.0-alpha.8) (2021-01-28)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+# [0.4.0-alpha.7](https://bitbucket.org/coveord/ui-kit/compare/v0.4.0-alpha.6...v0.4.0-alpha.7) (2021-01-28)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+# [0.4.0-alpha.5](https://bitbucket.org/coveord/ui-kit/compare/v0.4.0-alpha.4...v0.4.0-alpha.5) (2021-01-27)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+# [0.4.0-alpha.4](https://bitbucket.org/coveord/ui-kit/compare/v0.4.0-alpha.3...v0.4.0-alpha.4) (2021-01-27)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+# [0.4.0-alpha.3](https://bitbucket.org/coveord/ui-kit/compare/v0.4.0-alpha.2...v0.4.0-alpha.3) (2021-01-27)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+# [0.4.0-alpha.2](https://bitbucket.org/coveord/ui-kit/compare/v0.4.0-alpha.1...v0.4.0-alpha.2) (2021-01-27)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+# [0.4.0-alpha.1](https://bitbucket.org/coveord/ui-kit/compare/v0.4.0-alpha.0...v0.4.0-alpha.1) (2021-01-26)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+# [0.4.0-alpha.0](https://bitbucket.org/coveord/ui-kit/compare/v0.3.0...v0.4.0-alpha.0) (2021-01-25)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+# [0.3.0](https://bitbucket.org/coveord/ui-kit/compare/v0.3.0-alpha.5...v0.3.0) (2021-01-25)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+# [0.3.0-alpha.5](https://bitbucket.org/coveord/ui-kit/compare/v0.3.0-alpha.4...v0.3.0-alpha.5) (2021-01-25)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+# [0.3.0-alpha.4](https://bitbucket.org/coveord/ui-kit/compare/v0.3.0-alpha.3...v0.3.0-alpha.4) (2021-01-22)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+# [0.3.0-alpha.3](https://bitbucket.org/coveord/ui-kit/compare/v0.3.0-alpha.2...v0.3.0-alpha.3) (2021-01-22)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+# [0.3.0-alpha.2](https://bitbucket.org/coveord/ui-kit/compare/v0.3.0-alpha.1...v0.3.0-alpha.2) (2021-01-21)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+# [0.3.0-alpha.1](https://bitbucket.org/coveord/ui-kit/compare/v0.3.0-alpha.0...v0.3.0-alpha.1) (2021-01-20)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+# [0.3.0-alpha.0](https://bitbucket.org/coveord/ui-kit/compare/v0.2.2-alpha.0...v0.3.0-alpha.0) (2021-01-20)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [0.2.2-alpha.0](https://bitbucket.org/coveord/ui-kit/compare/v0.2.1...v0.2.2-alpha.0) (2021-01-19)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [0.2.1](https://bitbucket.org/coveord/ui-kit/compare/v0.2.1-alpha.0...v0.2.1) (2021-01-19)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+## [0.2.1-alpha.0](https://bitbucket.org/coveord/ui-kit/compare/v0.2.0...v0.2.1-alpha.0) (2021-01-19)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+# [0.2.0](https://bitbucket.org/coveord/ui-kit/compare/v0.2.0-alpha.11...v0.2.0) (2021-01-15)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+# [0.2.0-alpha.11](https://bitbucket.org/coveord/ui-kit/compare/v0.2.0-alpha.10...v0.2.0-alpha.11) (2021-01-15)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+# [0.2.0-alpha.10](https://bitbucket.org/coveord/ui-kit/compare/v0.2.0-alpha.9...v0.2.0-alpha.10) (2021-01-12)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+# [0.2.0-alpha.9](https://bitbucket.org/coveord/ui-kit/compare/v0.2.0-alpha.8...v0.2.0-alpha.9) (2021-01-12)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+# [0.2.0-alpha.8](https://bitbucket.org/coveord/ui-kit/compare/v0.2.0-alpha.7...v0.2.0-alpha.8) (2021-01-07)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+# [0.2.0-alpha.7](https://bitbucket.org/coveord/ui-kit/compare/v0.2.0-alpha.6...v0.2.0-alpha.7) (2021-01-07)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+# [0.2.0-alpha.6](https://bitbucket.org/coveord/ui-kit/compare/v0.2.0-alpha.5...v0.2.0-alpha.6) (2021-01-05)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+# [0.2.0-alpha.5](https://bitbucket.org/coveord/ui-kit/compare/v0.2.0-alpha.4...v0.2.0-alpha.5) (2020-12-29)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+# [0.2.0-alpha.4](https://bitbucket.org/coveord/ui-kit/compare/v0.2.0-alpha.3...v0.2.0-alpha.4) (2020-12-22)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+# [0.2.0-alpha.3](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0...v0.2.0-alpha.3) (2020-12-21)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+# [0.2.0-alpha.2](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0...v0.2.0-alpha.2) (2020-12-18)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+# [0.2.0-alpha.1](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0...v0.2.0-alpha.1) (2020-12-18)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+# [0.2.0-alpha.0](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0...v0.2.0-alpha.0) (2020-12-18)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+# [0.1.0](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.113...v0.1.0) (2020-12-18)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+# [0.1.0-alpha.113](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.112...v0.1.0-alpha.113) (2020-12-18)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+# [0.1.0-alpha.112](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.111...v0.1.0-alpha.112) (2020-12-18)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+# [0.1.0-alpha.111](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.110...v0.1.0-alpha.111) (2020-12-17)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+# [0.1.0-alpha.110](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.109...v0.1.0-alpha.110) (2020-12-17)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+# [0.1.0-alpha.109](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.108...v0.1.0-alpha.109) (2020-12-17)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+# [0.1.0-alpha.108](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.107...v0.1.0-alpha.108) (2020-12-17)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+# [0.1.0-alpha.107](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.106...v0.1.0-alpha.107) (2020-12-16)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+# [0.1.0-alpha.106](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.105...v0.1.0-alpha.106) (2020-12-16)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+# [0.1.0-alpha.105](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.104...v0.1.0-alpha.105) (2020-12-16)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+# [0.1.0-alpha.104](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.103...v0.1.0-alpha.104) (2020-12-16)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+# [0.1.0-alpha.103](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.102...v0.1.0-alpha.103) (2020-12-15)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+# [0.1.0-alpha.102](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.101...v0.1.0-alpha.102) (2020-12-15)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
 # [0.1.0-alpha.101](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.100...v0.1.0-alpha.101) (2020-12-15)
 
 **Note:** Version bump only for package @coveo/quantic

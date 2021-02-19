@@ -6,25 +6,20 @@ import {
 import {executeSearch} from '../../features/search/search-actions';
 import {
   buildCriterionExpression,
-  SortBy,
   SortCriterion,
-  SortOrder,
+  criterionDefinition,
 } from '../../features/sort-criteria/criteria';
 import {buildController} from '../controller/headless-controller';
 import {updatePage} from '../../features/pagination/pagination-actions';
 import {logResultsSort} from '../../features/sort-criteria/sort-criteria-analytics-actions';
 import {ConfigurationSection, SortSection} from '../../state/state-sections';
-import {
-  ArrayValue,
-  EnumValue,
-  isArray,
-  RecordValue,
-  Schema,
-  StringValue,
-} from '@coveo/bueno';
+import {ArrayValue, isArray, Schema} from '@coveo/bueno';
 import {validateInitialState} from '../../utils/validate-payload';
 
 export interface SortProps {
+  /**
+   * The initial state that should be applied to this `Sort` controller.
+   */
   initialState: Partial<SortInitialState>;
 }
 
@@ -32,14 +27,6 @@ export interface SortInitialState {
   /** The initial sort criterion to register in state. */
   criterion: SortCriterion | SortCriterion[];
 }
-
-const criterionDefinition = new RecordValue({
-  values: {
-    by: new EnumValue({enum: SortBy, required: true}),
-    order: new EnumValue({enum: SortOrder}),
-    field: new StringValue(),
-  },
-});
 
 function validateSortInitialState(
   engine: Engine<ConfigurationSection & SortSection>,
@@ -55,7 +42,7 @@ function validateSortInitialState(
   const criterion = getCriterionAsArray(state);
   const initialState: SortInitialState = {...state, criterion};
 
-  validateInitialState(engine, schema, initialState, buildSort.name);
+  validateInitialState(engine, schema, initialState, 'buildSort');
 }
 
 function getCriterionAsArray(state: Partial<SortInitialState>) {
@@ -66,10 +53,10 @@ function getCriterionAsArray(state: Partial<SortInitialState>) {
   return isArray(state.criterion) ? state.criterion : [state.criterion];
 }
 
-/** The `Sort` controller allows to changing how the results are sorted.*/
+/** The `Sort` controller manages how the results are sorted. */
 export type Sort = ReturnType<typeof buildSort>;
 
-/** The state relevant to the `Sort` controller.*/
+/** A scoped and simplified part of the headless state that is relevant to the `Sort` controller. */
 export type SortState = Sort['state'];
 
 export function buildSort(
@@ -102,17 +89,20 @@ export function buildSort(
     },
 
     /**
-     * Returns `true` if the passed sort criterion matches the value in state, and `false` otherwise.
+     * Checks whether the specified sort criterion matches the value in state.
      * @param criterion The criterion to compare.
-     * @returns {boolean}
+     * @returns `true` if the passed sort criterion matches the value in state, and `false` otherwise.
      */
     isSortedBy(criterion: SortCriterion | SortCriterion[]) {
       return this.state.sortCriteria === buildCriterionExpression(criterion);
     },
 
-    /**  @returns The state of the `Sort` controller.*/
+    /** The state of the `Sort` controller. */
     get state() {
       return {
+        /**
+         * The sort criteria associated with this `Sort` controller.
+         */
         sortCriteria: engine.state.sortCriteria,
       };
     },

@@ -30,7 +30,7 @@ export const categoryFacetRequestSelector = (
   state: CategoryFacetSection,
   id: string
 ) => {
-  return state.categoryFacetSet[id];
+  return state.categoryFacetSet[id]?.request;
 };
 
 export const categoryFacetSelectedValuesSelector = (

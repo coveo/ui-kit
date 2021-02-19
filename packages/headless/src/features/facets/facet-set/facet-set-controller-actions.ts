@@ -13,6 +13,11 @@ import {facetIdDefinition} from '../generic/facet-actions-validation';
 import {RecordValue} from '@coveo/bueno';
 import {facetValueDefinition} from './facet-set-validate-payload';
 
+const definition = {
+  facetId: facetIdDefinition,
+  selection: new RecordValue({values: facetValueDefinition}),
+};
+
 /**
  * Toggles the facet value and then executes a search with the appropriate analytics tag.
  * @param facetId (string) The unique identifier of the facet (e.g., `"1"`).
@@ -32,13 +37,7 @@ export const executeToggleFacetSelect = createAsyncThunk<
       facetId,
       selection
     );
-    validatePayload(
-      {facetId, selection},
-      {
-        facetId: facetIdDefinition,
-        selection: new RecordValue({values: facetValueDefinition}),
-      }
-    );
+    validatePayload({facetId, selection}, definition);
     dispatch(toggleSelectFacetValue({facetId, selection}));
     dispatch(updateFacetOptions({freezeFacetOrder: true}));
     dispatch(executeSearch(analyticsAction));

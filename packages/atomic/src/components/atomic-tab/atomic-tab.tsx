@@ -1,32 +1,30 @@
 import {Component, h, Prop, State} from '@stencil/core';
+import {buildTab, Tab, TabProps, TabState} from '@coveo/headless';
 import {
-  buildTab,
-  Engine,
-  Tab,
-  TabProps,
-  TabState,
-  Unsubscribe,
-} from '@coveo/headless';
-import {Initialization} from '../../utils/initialization-utils';
+  Bindings,
+  BindStateToController,
+  InitializableComponent,
+  InitializeBindings,
+} from '../../utils/initialization-utils';
 /**
  * @part tab-button - The tab button
  * @part active-tab - The active tab
  */
 @Component({
   tag: 'atomic-tab',
-  styleUrl: 'atomic-tab.scss',
+  styleUrl: 'atomic-tab.pcss',
   shadow: true,
 })
-export class AtomicTab {
-  @Prop() expression = '';
-  @Prop() isActive = false;
-  @State() state!: TabState;
-
-  private engine!: Engine;
+export class AtomicTab implements InitializableComponent {
+  @InitializeBindings() public bindings!: Bindings;
   private tab!: Tab;
-  private unsubscribe: Unsubscribe = () => {};
 
-  @Initialization()
+  @BindStateToController('tab') @State() private tabState!: TabState;
+  @State() public error!: Error;
+
+  @Prop() public expression = '';
+  @Prop() public isActive = false;
+
   public initialize() {
     const options: TabProps = {
       options: {
@@ -36,34 +34,25 @@ export class AtomicTab {
         isActive: this.isActive,
       },
     };
-    this.tab = buildTab(this.engine, options);
-    this.unsubscribe = this.tab.subscribe(() => this.updateState());
+    this.tab = buildTab(this.bindings.engine, options);
   }
 
-  public disconnectedCallback() {
-    this.unsubscribe();
-  }
-
-  private updateState() {
-    this.state = this.tab.state;
-  }
-
-  public handleClick() {
+  private handleClick() {
     this.tab.select();
   }
 
-  render() {
+  public render() {
     let activeClass = 'btn-outline-primary';
     let activePart = {};
-    if (this.state.isActive) {
+    if (this.tabState.isActive) {
       activeClass = 'active';
       activePart = {part: 'active-tab'};
     }
     return (
-      <span class="nav nav-pills" {...activePart}>
+      <span {...activePart}>
         <button
           part="tab-button"
-          class={`nav-link btn  ${activeClass}`}
+          class={'p-2 bg-primary border-none h-10 ' + activeClass}
           onClick={() => this.handleClick()}
         >
           <slot />

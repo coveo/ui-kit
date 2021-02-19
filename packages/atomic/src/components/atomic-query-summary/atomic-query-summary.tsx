@@ -1,107 +1,148 @@
-import {Component, h, State} from '@stencil/core';
+import {Component, h, Prop, State} from '@stencil/core';
 import {
   QuerySummary,
   QuerySummaryState,
-  Unsubscribe,
   buildQuerySummary,
-  Engine,
 } from '@coveo/headless';
-import {Initialization} from '../../utils/initialization-utils';
+import {
+  Bindings,
+  BindStateToController,
+  BindStateToI18n,
+  InitializableComponent,
+  InitializeBindings,
+} from '../../utils/initialization-utils';
+import {sanitize} from '../../utils/utils';
+
+interface Summary {
+  count: number;
+  first: string;
+  last: string;
+  total: string;
+  query: string;
+}
 
 /**
+ * The QuerySummary displays information about the current range of results and the request duration (e.g., "Results
+ * 1-10 of 123 in 0.47 seconds").
+ *
  * @part container - The container of the whole summary
  * @part results - The results container
- * @part no-result - The container when there are no result
- * @part query - The query container
+ * @part no-results - The container when there are no results
  * @part duration - The duration container
  * @part highlight - The summary highlights
+ * @part placeholder - The initialization placeholder
  */
 @Component({
   tag: 'atomic-query-summary',
-  styleUrl: 'atomic-query-summary.scss',
+  styleUrl: 'atomic-query-summary.pcss',
   shadow: true,
 })
-export class AtomicQuerySummary {
-  @State() state!: QuerySummaryState;
+export class AtomicQuerySummary implements InitializableComponent {
+  @InitializeBindings() public bindings!: Bindings;
+  public querySummary!: QuerySummary;
+  private unescapeStringOption = {interpolation: {escapeValue: false}};
 
-  private engine!: Engine;
-  private querySummary!: QuerySummary;
-  private unsubscribe: Unsubscribe = () => {};
+  @BindStateToController('querySummary')
+  @State()
+  private querySummaryState!: QuerySummaryState;
+  @BindStateToI18n()
+  @State()
+  private strings = {
+    noResults: () => this.bindings.i18n.t('noResults'),
+    noResultsFor: (query: string) =>
+      this.bindings.i18n.t('noResultsFor', {
+        ...this.unescapeStringOption,
+        query,
+      }),
+    showingResultsOf: (resultOfOptions: Summary) =>
+      this.bindings.i18n.t('showingResultsOf', {
+        ...this.unescapeStringOption,
+        ...resultOfOptions,
+      }),
+    showingResultsOfWithQuery: (resultOfOptions: Summary) =>
+      this.bindings.i18n.t('showingResultsOfWithQuery', {
+        ...this.unescapeStringOption,
+        ...resultOfOptions,
+      }),
+    inSeconds: (count: number) => this.bindings.i18n.t('inSeconds', {count}),
+  };
+  @State() public error!: Error;
 
-  @Initialization()
+  /**
+   * Whether to display the duration of the last query execution.
+   */
+  @Prop() enableDuration = true;
+
   public initialize() {
-    this.querySummary = buildQuerySummary(this.engine);
-    this.unsubscribe = this.querySummary.subscribe(() => this.updateState());
-  }
-
-  public disconnectedCallback() {
-    this.unsubscribe();
-  }
-
-  public render() {
-    return (
-      <div part="container">
-        {this.state.hasResults
-          ? this.renderHasResults()
-          : this.renderNoResults()}
-      </div>
-    );
-  }
-
-  private updateState() {
-    this.state = this.querySummary.state;
-  }
-
-  private renderNoResults() {
-    return <span part="no-result">No results{this.renderQuery()}</span>;
-  }
-
-  private renderHasResults() {
-    // TODO: This whole render loop will not work with localization
-    return [this.renderResults(), this.renderQuery(), this.renderDuration()];
-  }
-
-  private renderResults() {
-    return (
-      <span part="results">
-        Results {this.renderHighlight(this.range)} of{' '}
-        {this.renderHighlight(this.total)}
-      </span>
-    );
-  }
-
-  private get range() {
-    return `${this.state.firstResult.toLocaleString()}-${this.state.lastResult.toLocaleString()}`;
-  }
-
-  private get total() {
-    return this.state.total.toLocaleString();
-  }
-
-  private renderQuery() {
-    if (this.state.hasQuery) {
-      return (
-        <span part="query"> for {this.renderHighlight(this.state.query)}</span>
-      );
-    }
-
-    return '';
+    this.querySummary = buildQuerySummary(this.bindings.engine);
   }
 
   private renderDuration() {
-    if (this.state.hasDuration) {
+    if (this.enableDuration && this.querySummaryState.hasDuration) {
       return (
         <span part="duration">
-          {' '}
-          in {this.state.durationInSeconds.toLocaleString()} seconds
+          &nbsp;{' '}
+          {this.strings.inSeconds(this.querySummaryState.durationInSeconds)}
         </span>
       );
     }
-
-    return '';
   }
 
-  private renderHighlight(input: string) {
-    return <strong part="highlight">{input}</strong>;
+  private wrapHighlight(content: string) {
+    return `<b part="highlight">${content}</b>`;
+  }
+
+  private renderNoResults() {
+    const content = this.querySummaryState.hasQuery
+      ? this.strings.noResultsFor(
+          this.wrapHighlight(sanitize(this.querySummaryState.query))
+        )
+      : this.strings.noResults();
+    return <span part="no-results" innerHTML={content}></span>;
+  }
+
+  private get resultOfOptions(): Summary {
+    const locale = this.bindings.i18n.language;
+    return {
+      count: this.querySummaryState.lastResult,
+      first: this.wrapHighlight(
+        this.querySummaryState.firstResult.toLocaleString(locale)
+      ),
+      last: this.wrapHighlight(
+        this.querySummaryState.lastResult.toLocaleString(locale)
+      ),
+      total: this.wrapHighlight(
+        this.querySummaryState.total.toLocaleString(locale)
+      ),
+      query: this.wrapHighlight(sanitize(this.querySummaryState.query)),
+    };
+  }
+
+  private renderHasResults() {
+    const content = this.querySummaryState.hasQuery
+      ? this.strings.showingResultsOfWithQuery(this.resultOfOptions)
+      : this.strings.showingResultsOf(this.resultOfOptions);
+
+    return <span part="results" innerHTML={content}></span>;
+  }
+
+  public render() {
+    if (!this.querySummaryState.firstSearchExecuted) {
+      return (
+        <div
+          part="placeholder"
+          aria-hidden
+          class="h-6 my-2 w-60 bg-divider animate-pulse"
+        ></div>
+      );
+    }
+
+    return (
+      <div class="text-on-background" part="container">
+        {this.querySummaryState.hasResults
+          ? [this.renderHasResults(), this.renderDuration()]
+          : this.renderNoResults()}
+      </div>
+    );
   }
 }

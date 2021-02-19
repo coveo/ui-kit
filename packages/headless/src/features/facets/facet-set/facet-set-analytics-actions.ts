@@ -1,10 +1,10 @@
 import {FacetSortCriterion} from './interfaces/request';
 import {RangeFacetSortCriterion} from '../range-facets/generic/interfaces/request';
-import {validatePayload} from '../../../utils/validate-payload';
 import {
-  facetIdDefinition,
+  validatePayload,
   requiredNonEmptyString,
-} from '../generic/facet-actions-validation';
+} from '../../../utils/validate-payload';
+import {facetIdDefinition} from '../generic/facet-actions-validation';
 import {Value} from '@coveo/bueno';
 import {
   AnalyticsType,
@@ -163,5 +163,29 @@ export const logFacetDeselect = (payload: FacetSelectionChangeMetadata) =>
       const facetState = buildFacetStateMetadata(stateForAnalytics);
 
       return client.logFacetDeselect(metadata, facetState);
+    }
+  )();
+
+/**
+ * Logs a facet breadcrumb event.
+ * @param payload (FacetSelectionChangeMetadata) Object specifying the target facet and value.
+ */
+export const logFacetBreadcrumb = (payload: FacetSelectionChangeMetadata) =>
+  makeAnalyticsAction(
+    'analytics/facet/breadcrumb',
+    AnalyticsType.Search,
+    (client, state) => {
+      validatePayload(payload, {
+        facetId: facetIdDefinition,
+        facetValue: requiredNonEmptyString,
+      });
+      const stateForAnalytics = getStateNeededForFacetMetadata(state);
+      const metadata = buildFacetSelectionChangeMetadata(
+        payload,
+        getStateNeededForFacetMetadata(state)
+      );
+      const facetState = buildFacetStateMetadata(stateForAnalytics);
+
+      return client.logBreadcrumbFacet(metadata, facetState);
     }
   )();

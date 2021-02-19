@@ -36,44 +36,39 @@ describe('generic facet reducers', () => {
   });
 
   describe('#handleFacetDeselectAll', () => {
-    describe('when the passed id is registered', () => {
+    describe('when the request is defined', () => {
       it('sets #currentValues to an empty array', () => {
-        const id = '1';
         const value = buildMockFacetValueRequest();
-        const state = {[id]: buildMockFacetRequest({currentValues: [value]})};
+        const request = buildMockFacetRequest({currentValues: [value]});
 
-        handleFacetDeselectAll<FacetRequest>(state, id);
-        expect(state[id].currentValues).toEqual([]);
+        handleFacetDeselectAll<FacetRequest>(request);
+        expect(request.currentValues).toEqual([]);
       });
 
       it('sets #preventAutoSelect to true on the request', () => {
-        const id = '1';
-        const state = {[id]: buildMockFacetRequest({preventAutoSelect: false})};
+        const request = buildMockFacetRequest({preventAutoSelect: false});
 
-        handleFacetDeselectAll(state, id);
-        expect(state[id].preventAutoSelect).toBe(true);
+        handleFacetDeselectAll(request);
+        expect(request.preventAutoSelect).toBe(true);
       });
     });
 
-    it('when the passed id is not registered, it does not throw', () => {
-      expect(() => handleFacetDeselectAll({}, '1')).not.toThrow();
+    it('when the request is not defined, it does not throw', () => {
+      expect(() => handleFacetDeselectAll(undefined)).not.toThrow();
     });
   });
 
   describe('#handleFacetUpdateNumberOfValues', () => {
-    it('when the id is registered, it updates the number of values', () => {
-      const facetId = '1';
-      const state = {[facetId]: buildMockFacetRequest()};
+    it('when the request is defined, it updates the number of values', () => {
+      const request = buildMockFacetRequest();
       const numberOfValues = 20;
 
-      handleFacetUpdateNumberOfValues(state, {facetId, numberOfValues});
-      expect(state[facetId].numberOfValues).toBe(numberOfValues);
+      handleFacetUpdateNumberOfValues(request, numberOfValues);
+      expect(request.numberOfValues).toBe(numberOfValues);
     });
 
-    it('when the id is not registered, it does not throw', () => {
-      const method = () =>
-        handleFacetUpdateNumberOfValues({}, {facetId: '1', numberOfValues: 20});
-
+    it('when the request not defined, it does not throw', () => {
+      const method = () => handleFacetUpdateNumberOfValues(undefined, 20);
       expect(method).not.toThrow();
     });
   });

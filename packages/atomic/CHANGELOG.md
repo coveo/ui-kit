@@ -3,6 +3,652 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.7.0-alpha.8](https://github.com/coveo/ui-kit/compare/v0.7.0-alpha.7...v0.7.0-alpha.8) (2021-02-18)
+
+
+### Features
+
+* **atomic:** improve atomic-result-list component ([#518](https://github.com/coveo/ui-kit/issues/518)) ([28fe250](https://github.com/coveo/ui-kit/commit/28fe250f357c63193e3a1cf24e5b8647c8ebc572))
+
+
+
+
+
+# [0.7.0-alpha.6](https://github.com/coveo/ui-kit/compare/v0.7.0-alpha.5...v0.7.0-alpha.6) (2021-02-18)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [0.7.0-alpha.5](https://github.com/coveo/ui-kit/compare/v0.7.0-alpha.4...v0.7.0-alpha.5) (2021-02-18)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [0.7.0-alpha.3](https://github.com/coveo/ui-kit/compare/v0.7.0-alpha.2...v0.7.0-alpha.3) (2021-02-17)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [0.7.0-alpha.2](https://github.com/coveo/ui-kit/compare/v0.7.0-alpha.1...v0.7.0-alpha.2) (2021-02-17)
+
+
+### Features
+
+* **headless:** added `ResultLinkAnalytics` ([#492](https://github.com/coveo/ui-kit/issues/492)) ([de45056](https://github.com/coveo/ui-kit/commit/de45056386fd0b487c835090bb68f37aab8652aa))
+
+
+
+
+
+# [0.7.0-alpha.1](https://github.com/coveo/ui-kit/compare/v0.7.0-alpha.0...v0.7.0-alpha.1) (2021-02-17)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [0.7.0-alpha.0](https://github.com/coveo/ui-kit/compare/v0.6.1-alpha.0...v0.7.0-alpha.0) (2021-02-17)
+
+
+### Features
+
+* **atomic,headless:** add search status controller and handle state ([#511](https://github.com/coveo/ui-kit/issues/511)) ([39a375b](https://github.com/coveo/ui-kit/commit/39a375b2290a0cfe299cfa82b119cb2c6148f5c8))
+
+
+
+
+
+## [0.6.1-alpha.0](https://github.com/coveo/ui-kit/compare/v0.6.0...v0.6.1-alpha.0) (2021-02-16)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [0.6.0](https://github.com/coveo/ui-kit/compare/v0.6.0-alpha.8...v0.6.0) (2021-02-16)
+
+
+### Features
+
+* **atomic:** atomic-query-summary & atomic-no-results components completion ([#491](https://github.com/coveo/ui-kit/issues/491)) ([83f8b05](https://github.com/coveo/ui-kit/commit/83f8b05676dc5d6290d615afc8b6c0d212618f54))
+
+
+
+
+
+# [0.6.0-alpha.8](https://github.com/coveo/ui-kit/compare/v0.6.0-alpha.7...v0.6.0-alpha.8) (2021-02-16)
+
+
+### Bug Fixes
+
+* **atomic,bueno:** validate isNaN for NumberValue (bueno) and remove some reflected props (atomic) ([#505](https://github.com/coveo/ui-kit/issues/505)) ([ea0c153](https://github.com/coveo/ui-kit/commit/ea0c153995afac1915ec2f75299348092201e7f9))
+* **headless:** refactored undoable to remove initial state and update only on snapshots ([#498](https://github.com/coveo/ui-kit/issues/498)) ([bb01bef](https://github.com/coveo/ui-kit/commit/bb01befc5bd828477bf342be7bce022c75b77c69))
+
+
+
+
+
+# [0.6.0-alpha.7](https://github.com/coveo/ui-kit/compare/v0.6.0-alpha.6...v0.6.0-alpha.7) (2021-02-15)
+
+
+### Bug Fixes
+
+* **atomic:** atomic-pager - add width/height to svgs ([#502](https://github.com/coveo/ui-kit/issues/502)) ([d50e128](https://github.com/coveo/ui-kit/commit/d50e128adae25152ef0f74aad4051d4bad6b5901))
+
+
+
+
+
+# [0.6.0-alpha.6](https://github.com/coveo/ui-kit/compare/v0.6.0-alpha.5...v0.6.0-alpha.6) (2021-02-11)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [0.6.0-alpha.5](https://github.com/coveo/ui-kit/compare/v0.6.0-alpha.4...v0.6.0-alpha.5) (2021-02-11)
+
+
+### Features
+
+* **atomic:** base facet component ([#486](https://github.com/coveo/ui-kit/issues/486)) ([7ef25da](https://github.com/coveo/ui-kit/commit/7ef25dafccfc84b9ff20f7bb0b8aabf4d980e9f6))
+
+
+
+
+
+# [0.6.0-alpha.4](https://github.com/coveo/ui-kit/compare/v0.6.0-alpha.3...v0.6.0-alpha.4) (2021-02-11)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [0.6.0-alpha.3](https://github.com/coveo/ui-kit/compare/v0.6.0-alpha.2...v0.6.0-alpha.3) (2021-02-11)
+
+
+### Features
+
+* **atomic:** make search box suggestions absolute and more ([#490](https://github.com/coveo/ui-kit/issues/490)) ([7c42b66](https://github.com/coveo/ui-kit/commit/7c42b66370000bddcd5beda9c58876d6694dcd31))
+
+
+
+
+
+# [0.6.0-alpha.2](https://github.com/coveo/ui-kit/compare/v0.6.0-alpha.1...v0.6.0-alpha.2) (2021-02-10)
+
+
+### Features
+
+* **headless:** add preprocessRequest for both Analytics/SearchAPI ([#488](https://github.com/coveo/ui-kit/issues/488)) ([c026310](https://github.com/coveo/ui-kit/commit/c0263106cf6328556893874b37d7521e42f73d5a))
+
+
+
+
+
+# [0.6.0-alpha.1](https://github.com/coveo/ui-kit/compare/v0.6.0-alpha.0...v0.6.0-alpha.1) (2021-02-10)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [0.6.0-alpha.0](https://github.com/coveo/ui-kit/compare/v0.5.1-alpha.1...v0.6.0-alpha.0) (2021-02-08)
+
+
+### Features
+
+* **atomic:** atomic-sort-dropdown completion ([#475](https://github.com/coveo/ui-kit/issues/475)) ([64ff6d8](https://github.com/coveo/ui-kit/commit/64ff6d8394b05bc03a50fe813a174ed40a8b7ff1))
+
+
+
+
+
+## [0.5.1-alpha.1](https://github.com/coveo/ui-kit/compare/v0.5.1-alpha.0...v0.5.1-alpha.1) (2021-02-05)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [0.5.0](https://github.com/coveo/ui-kit/compare/v0.5.0-alpha.7...v0.5.0) (2021-02-04)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [0.5.0-alpha.6](https://github.com/coveo/ui-kit/compare/v0.5.0-alpha.5...v0.5.0-alpha.6) (2021-02-03)
+
+
+### Features
+
+* **atomic:** update search box styles ([#468](https://github.com/coveo/ui-kit/issues/468)) ([4ee87e5](https://github.com/coveo/ui-kit/commit/4ee87e58c7d48db983dbace7fb42d6e7e5bf824d))
+
+
+
+
+
+# [0.5.0-alpha.2](https://github.com/coveo/ui-kit/compare/v0.5.0-alpha.1...v0.5.0-alpha.2) (2021-02-02)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [0.5.0-alpha.1](https://github.com/coveo/ui-kit/compare/v0.5.0-alpha.0...v0.5.0-alpha.1) (2021-02-01)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [0.5.0-alpha.0](https://github.com/coveo/ui-kit/compare/v0.4.0...v0.5.0-alpha.0) (2021-02-01)
+
+
+### Features
+
+* **atomic:** atomic-pager & atomic-result-per-page components completion ([#456](https://github.com/coveo/ui-kit/issues/456)) ([af75a9b](https://github.com/coveo/ui-kit/commit/af75a9bc918d98ef8fe65d8b2899190e432de227))
+
+
+
+
+
+# [0.4.0](https://github.com/coveo/ui-kit/compare/v0.4.0-alpha.11...v0.4.0) (2021-01-29)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [0.4.0-alpha.11](https://github.com/coveo/ui-kit/compare/v0.4.0-alpha.10...v0.4.0-alpha.11) (2021-01-29)
+
+
+### Features
+
+* **atomic:** Add documentation to search box ([#452](https://github.com/coveo/ui-kit/issues/452)) ([6dde213](https://github.com/coveo/ui-kit/commit/6dde213f4681b14a415570074185972eb2e97cc8))
+
+
+
+
+
+# [0.4.0-alpha.9](https://github.com/coveo/ui-kit/compare/v0.4.0-alpha.8...v0.4.0-alpha.9) (2021-01-28)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [0.4.0-alpha.8](https://github.com/coveo/ui-kit/compare/v0.4.0-alpha.7...v0.4.0-alpha.8) (2021-01-28)
+
+
+### Bug Fixes
+
+* **atomic:** add error internal state property to all components ([#446](https://github.com/coveo/ui-kit/issues/446)) ([6fbfc59](https://github.com/coveo/ui-kit/commit/6fbfc59a8fcf1f5363f0c87c2368b948c4ce6e6a))
+
+
+
+
+
+# [0.4.0-alpha.7](https://github.com/coveo/ui-kit/compare/v0.4.0-alpha.6...v0.4.0-alpha.7) (2021-01-28)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [0.4.0-alpha.5](https://github.com/coveo/ui-kit/compare/v0.4.0-alpha.4...v0.4.0-alpha.5) (2021-01-27)
+
+
+### Features
+
+* **atomic:** cypress tests for searchbox ([#441](https://github.com/coveo/ui-kit/issues/441)) ([d36259c](https://github.com/coveo/ui-kit/commit/d36259c7c087004759cd90af679405ae90555f60))
+
+
+
+
+
+# [0.4.0-alpha.4](https://github.com/coveo/ui-kit/compare/v0.4.0-alpha.3...v0.4.0-alpha.4) (2021-01-27)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [0.4.0-alpha.3](https://github.com/coveo/ui-kit/compare/v0.4.0-alpha.2...v0.4.0-alpha.3) (2021-01-27)
+
+
+### Bug Fixes
+
+* **atomic:** fix purge css in prod ([#442](https://github.com/coveo/ui-kit/issues/442)) ([e8d4fbe](https://github.com/coveo/ui-kit/commit/e8d4fbef4e8d7f5e22b6b308fcb42fcf81848a1b))
+
+
+
+
+
+# [0.4.0-alpha.2](https://github.com/coveo/ui-kit/compare/v0.4.0-alpha.1...v0.4.0-alpha.2) (2021-01-27)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [0.4.0-alpha.1](https://github.com/coveo/ui-kit/compare/v0.4.0-alpha.0...v0.4.0-alpha.1) (2021-01-26)
+
+
+### Features
+
+* **atomic:** add option to disable search parameter serialization ([#438](https://github.com/coveo/ui-kit/issues/438)) ([8108e43](https://github.com/coveo/ui-kit/commit/8108e4353f662dbb97dbcdf6f21ee6e424ea85e3))
+* **atomic:** Search Box Component ([#432](https://github.com/coveo/ui-kit/issues/432)) ([d369edd](https://github.com/coveo/ui-kit/commit/d369edd7510968e5c110f514f4e25146b39ef127))
+
+
+
+
+
+# [0.4.0-alpha.0](https://github.com/coveo/ui-kit/compare/v0.3.0...v0.4.0-alpha.0) (2021-01-25)
+
+
+### Features
+
+* **atomic:** improve initialization decorators in order to offer a complete component boilerplate ([#427](https://github.com/coveo/ui-kit/issues/427)) ([be8541d](https://github.com/coveo/ui-kit/commit/be8541d1a36c2cfdcc3cf4245c15c7b170b6aa03))
+
+
+
+
+
+# [0.3.0](https://github.com/coveo/ui-kit/compare/v0.3.0-alpha.5...v0.3.0) (2021-01-25)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [0.3.0-alpha.5](https://github.com/coveo/ui-kit/compare/v0.3.0-alpha.4...v0.3.0-alpha.5) (2021-01-25)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [0.3.0-alpha.4](https://github.com/coveo/ui-kit/compare/v0.3.0-alpha.3...v0.3.0-alpha.4) (2021-01-22)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [0.3.0-alpha.3](https://github.com/coveo/ui-kit/compare/v0.3.0-alpha.2...v0.3.0-alpha.3) (2021-01-22)
+
+
+### Features
+
+* **atomic:** add build step which splits a main locales JSON file into 1 JSON file per locale ([#431](https://github.com/coveo/ui-kit/issues/431)) ([0804e21](https://github.com/coveo/ui-kit/commit/0804e21c3dfd2312e2fee86ef44312170dd564e5))
+
+
+
+
+
+# [0.3.0-alpha.2](https://github.com/coveo/ui-kit/compare/v0.3.0-alpha.1...v0.3.0-alpha.2) (2021-01-21)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [0.3.0-alpha.1](https://github.com/coveo/ui-kit/compare/v0.3.0-alpha.0...v0.3.0-alpha.1) (2021-01-20)
+
+
+### Features
+
+* **atomic:** Added Tailwind CSS to Atomic ([#410](https://github.com/coveo/ui-kit/issues/410)) ([7f3f5aa](https://github.com/coveo/ui-kit/commit/7f3f5aa72edce74108249e82c09737b059590bf3))
+
+
+
+
+
+# [0.3.0-alpha.0](https://github.com/coveo/ui-kit/compare/v0.2.2-alpha.0...v0.3.0-alpha.0) (2021-01-20)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [0.2.2-alpha.0](https://github.com/coveo/ui-kit/compare/v0.2.1...v0.2.2-alpha.0) (2021-01-19)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [0.2.1](https://github.com/coveo/ui-kit/compare/v0.2.1-alpha.0...v0.2.1) (2021-01-19)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [0.2.1-alpha.0](https://github.com/coveo/ui-kit/compare/v0.2.0...v0.2.1-alpha.0) (2021-01-19)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [0.2.0](https://github.com/coveo/ui-kit/compare/v0.2.0-alpha.11...v0.2.0) (2021-01-15)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [0.2.0-alpha.11](https://github.com/coveo/ui-kit/compare/v0.2.0-alpha.10...v0.2.0-alpha.11) (2021-01-15)
+
+
+### Features
+
+* **atomic:** add initial localization with i18next ([#416](https://github.com/coveo/ui-kit/issues/416)) ([176f9da](https://github.com/coveo/ui-kit/commit/176f9da1b889491fb3998ef24cdfc0fc101a0a54))
+
+
+
+
+
+# [0.2.0-alpha.10](https://github.com/coveo/ui-kit/compare/v0.2.0-alpha.9...v0.2.0-alpha.10) (2021-01-12)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [0.2.0-alpha.9](https://github.com/coveo/ui-kit/compare/v0.2.0-alpha.8...v0.2.0-alpha.9) (2021-01-12)
+
+
+### Features
+
+* **headless:** add support for deselecting breadcrumb directly from the manager ([#406](https://github.com/coveo/ui-kit/issues/406)) ([ae7ecaf](https://github.com/coveo/ui-kit/commit/ae7ecaf859ec02374ee06d3599fd546d6312995a))
+
+
+
+
+
+# [0.2.0-alpha.7](https://github.com/coveo/ui-kit/compare/v0.2.0-alpha.6...v0.2.0-alpha.7) (2021-01-07)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [0.2.0-alpha.6](https://github.com/coveo/ui-kit/compare/v0.2.0-alpha.5...v0.2.0-alpha.6) (2021-01-05)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [0.2.0-alpha.5](https://github.com/coveo/ui-kit/compare/v0.2.0-alpha.4...v0.2.0-alpha.5) (2020-12-29)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [0.2.0-alpha.4](https://github.com/coveo/ui-kit/compare/v0.2.0-alpha.3...v0.2.0-alpha.4) (2020-12-22)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [0.2.0-alpha.3](https://github.com/coveo/ui-kit/compare/v0.1.0...v0.2.0-alpha.3) (2020-12-21)
+
+
+### Features
+
+* **headless:** send context info inside analytics event payload ([#389](https://github.com/coveo/ui-kit/issues/389)) ([f97f9e4](https://github.com/coveo/ui-kit/commit/f97f9e4a416ad3b7f58451035ded5b28f31eda5a))
+
+
+
+
+
+# [0.2.0-alpha.2](https://github.com/coveo/ui-kit/compare/v0.1.0...v0.2.0-alpha.2) (2020-12-18)
+
+
+### Features
+
+* **headless:** send context info inside analytics event payload ([#389](https://github.com/coveo/ui-kit/issues/389)) ([f97f9e4](https://github.com/coveo/ui-kit/commit/f97f9e4a416ad3b7f58451035ded5b28f31eda5a))
+
+
+
+
+
+# [0.2.0-alpha.1](https://github.com/coveo/ui-kit/compare/v0.1.0...v0.2.0-alpha.1) (2020-12-18)
+
+
+### Features
+
+* **headless:** send context info inside analytics event payload ([#389](https://github.com/coveo/ui-kit/issues/389)) ([f97f9e4](https://github.com/coveo/ui-kit/commit/f97f9e4a416ad3b7f58451035ded5b28f31eda5a))
+
+
+
+
+
+# [0.2.0-alpha.0](https://github.com/coveo/ui-kit/compare/v0.1.0...v0.2.0-alpha.0) (2020-12-18)
+
+
+### Features
+
+* **headless:** send context info inside analytics event payload ([#389](https://github.com/coveo/ui-kit/issues/389)) ([f97f9e4](https://github.com/coveo/ui-kit/commit/f97f9e4a416ad3b7f58451035ded5b28f31eda5a))
+
+
+
+
+
+# [0.1.0](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.113...v0.1.0) (2020-12-18)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [0.1.0-alpha.113](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.112...v0.1.0-alpha.113) (2020-12-18)
+
+
+### Bug Fixes
+
+* **headless:**  make validateResultPayload less strict  ([#388](https://github.com/coveo/ui-kit/issues/388)) ([197da05](https://github.com/coveo/ui-kit/commit/197da05c0051b2fdeeb992b7ca5ff9f22d1d0832))
+
+
+
+
+
+# [0.1.0-alpha.112](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.111...v0.1.0-alpha.112) (2020-12-18)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [0.1.0-alpha.111](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.110...v0.1.0-alpha.111) (2020-12-17)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [0.1.0-alpha.110](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.109...v0.1.0-alpha.110) (2020-12-17)
+
+
+### Bug Fixes
+
+* **headless:** get queryCorrections from fetched response instead of retried response ([#377](https://github.com/coveo/ui-kit/issues/377)) ([3a00391](https://github.com/coveo/ui-kit/commit/3a00391d0a43a16b4ef7f1cfe1e0d1f232f0d42f))
+
+
+
+
+
+# [0.1.0-alpha.109](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.108...v0.1.0-alpha.109) (2020-12-17)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [0.1.0-alpha.108](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.107...v0.1.0-alpha.108) (2020-12-17)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [0.1.0-alpha.107](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.106...v0.1.0-alpha.107) (2020-12-16)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [0.1.0-alpha.106](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.105...v0.1.0-alpha.106) (2020-12-16)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [0.1.0-alpha.105](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.104...v0.1.0-alpha.105) (2020-12-16)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [0.1.0-alpha.104](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.103...v0.1.0-alpha.104) (2020-12-16)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [0.1.0-alpha.103](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.102...v0.1.0-alpha.103) (2020-12-15)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [0.1.0-alpha.102](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.101...v0.1.0-alpha.102) (2020-12-15)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
 # [0.1.0-alpha.101](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.100...v0.1.0-alpha.101) (2020-12-15)
 
 **Note:** Version bump only for package @coveo/atomic

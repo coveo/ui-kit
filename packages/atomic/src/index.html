@@ -8,113 +8,88 @@
     <script type="module" src="/build/atomic.esm.js"></script>
     <script nomodule src="/build/atomic.js"></script>
     <link rel="stylesheet" href="/build/atomic.css" />
-    <!-- Initialization example
-  <script>
-    (async () => {
-      await customElements.whenDefined('atomic-search-interface');
-      document.querySelector('#search').initialize({
-        accessToken: 'my_token',
-        organizationId: 'my_org',
-      });
-    })();
-  </script> -->
+    <script>
+      (async () => {
+        await customElements.whenDefined('atomic-search-interface');
+        const searchInterface = document.querySelector('#search');
+
+        // Initialization
+        await searchInterface.initialize({
+          accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
+          organizationId: 'searchuisamples',
+        });
+
+        // Trigger a first search
+        searchInterface.executeFirstSearch();
+
+        // Add/modify a translation
+        // searchInterface.i18n.addResource('en', 'translation', 'search', 'Make me feel lucky!');
+        // Change the language of the interface dynamically
+        // searchInterface.language = 'fr';
+        // Interact with the engine
+        // searchInterface.engine.dispatch(...);
+        // Get all strings for a language/namespace
+        // const allStrings = searchInterface.i18n.getResourceBundle('en', 'translation');
+      })();
+    </script>
     <style>
-      * {
-        box-sizing: border-box;
-      }
-
-      :root {
-        --bs-font-sans-serif: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif,
-          'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
-        --atomic-border-radius: 0.5em;
-      }
-
-      /* Example on how to customize Atomic component CSS parts */
-      atomic-search-box::part(submit-button) {
-        background-color: #ed731a;
-        border-color: #ed731a;
-      }
+      /* Example on how to customize CSS variables */
+      /* :root {
+        --atomic-primary: red;
+        --atomic-font-family: "Comic Sans MS", "Comic Sans", cursive;
+        --atomic-secondary: green;
+      } */
 
       /* Example on how to customize custom templates CSS parts */
-      atomic-result-list::part(france-title)::before,
+      /* atomic-result-list::part(france-title)::before,
       atomic-result-list::part(france-title)::after {
         content: '🇫🇷';
-      }
+      } */
     </style>
   </head>
 
-  <body>
-    <div class="container-xl">
-      <atomic-search-interface id="search" sample>
-        <div class="row justify-content-center">
-          <atomic-tab class="col-auto" expression="">All Files</atomic-tab>
-          <atomic-tab class="col-auto" expression='@author *= "BBC News"'>BBC News</atomic-tab>
-        </div>
-        <div class="row justify-content-center my-5">
-          <div class="col-8">
-            <atomic-search-box>
-              <span slot="submit-button">Go!</span>
-            </atomic-search-box>
+  <body class="p-2">
+    <atomic-search-interface id="search">
+      <!-- <div class="flex mx-auto mb-2 justify-center">
+        <atomic-tab expression="" class="mr-2">All Files</atomic-tab>
+        <atomic-tab expression='@author *= "BBC News"'>BBC News</atomic-tab>
+      </div> -->
+      <div class="m-auto my-3 max-w-5xl">
+        <atomic-search-box></atomic-search-box>
+      </div>
+      <div class="flex flex-col lg:flex-row">
+        <atomic-facet-manager class="flex flex-row mx-2 mb-2 lg:flex-col lg:w-80">
+          <atomic-facet class="mr-2" field="author" label="Authors"></atomic-facet>
+          <atomic-numeric-facet class="mr-2" field="size" label="File sizes"></atomic-numeric-facet>
+          <atomic-date-facet class="mr-2" field="created" label="Created"></atomic-date-facet>
+          <atomic-category-facet class="mr-2" field="geographicalhierarchy" label="World Atlas"></atomic-category-facet>
+        </atomic-facet-manager>
+        <div class="flex-grow pl-2">
+          <atomic-breadcrumb-manager></atomic-breadcrumb-manager>
+          <atomic-did-you-mean></atomic-did-you-mean>
+          <atomic-query-error></atomic-query-error>
+          <div class="flex justify-between items-end my-2">
+            <atomic-query-summary></atomic-query-summary>
+            <atomic-sort-dropdown>
+              <atomic-sort-criteria caption="relevance" criteria="relevancy"></atomic-sort-criteria>
+              <atomic-sort-criteria caption="mostRecent" criteria="date descending"></atomic-sort-criteria>
+            </atomic-sort-dropdown>
+          </div>
+
+          <atomic-no-results></atomic-no-results>
+
+          <!-- TODO: add result template example -->
+          <atomic-result-list class="max-w-full border-t border-divider"></atomic-result-list>
+
+          <div class="flex flex-col lg:flex-row justify-between my-3">
+            <atomic-pager></atomic-pager>
+            <atomic-results-per-page></atomic-results-per-page>
           </div>
         </div>
-        <div class="row">
-          <div class="col-4">
-            <atomic-facet-manager>
-              <atomic-facet field="author" label="Authors"></atomic-facet>
-              <atomic-numeric-facet field="size" label="File sizes"></atomic-numeric-facet>
-              <atomic-date-facet field="created" label="Created"></atomic-date-facet>
-              <atomic-category-facet field="geographicalhierarchy" label="World Atlas"></atomic-category-facet>
-            </atomic-facet-manager>
-          </div>
-          <div class="col">
-            <div class="row">
-              <atomic-breadcrumb-manager></atomic-breadcrumb-manager>
-            </div>
-
-            <div class="row">
-              <atomic-did-you-mean></atomic-did-you-mean>
-              <atomic-query-error></atomic-query-error>
-            </div>
-
-            <div class="d-flex justify-content-between align-items-center">
-              <atomic-query-summary></atomic-query-summary>
-              <atomic-sort-dropdown></atomic-sort-dropdown>
-            </div>
-
-            <div class="row">
-              <atomic-result-list>
-                <atomic-result-template id="france-template">
-                  <hr />
-                  <div class="card" style="width: 18rem">
-                    <img
-                      src="https://www.cia-france.com/media/1558/parcarou1_720x500.jpg"
-                      class="card-img-top"
-                      alt="Paris"
-                    />
-                    <div class="card-body">
-                      <h5 class="card-title" part="france-title">{{title}}</h5>
-                      <p class="card-text"><atomic-result-excerpt></atomic-result-excerpt></p>
-                      <a href="{{clickUri}}" class="btn btn-primary">More info</a>
-                    </div>
-                  </div>
-                </atomic-result-template>
-
-                <script>
-                  document.querySelector('#france-template').conditions = [(result) => result.title === 'France'];
-                </script>
-              </atomic-result-list>
-            </div>
-
-            <div class="d-flex justify-content-between my-4">
-              <atomic-pager></atomic-pager>
-              <atomic-results-per-page></atomic-results-per-page>
-            </div>
-          </div>
-        </div>
-        <atomic-history></atomic-history>
-      </atomic-search-interface>
-      <atomic-recommendation></atomic-recommendation>
-      <atomic-frequently-bought-together></atomic-frequently-bought-together>
-    </div>
+      </div>
+      <!-- <atomic-history></atomic-history> -->
+    </atomic-search-interface>
+    <!-- <atomic-recommendation></atomic-recommendation> -->
+    <!-- <atomic-frequently-bought-together></atomic-frequently-bought-together> -->
   </body>
 </html>

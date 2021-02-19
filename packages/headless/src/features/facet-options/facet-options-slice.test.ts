@@ -2,7 +2,7 @@ import {buildMockFacetOptions} from '../../test/mock-facet-options';
 import {buildMockSearch} from '../../test/mock-search';
 import {logSearchEvent} from '../analytics/analytics-actions';
 import {change} from '../history/history-actions';
-import {getHistoryEmptyState} from '../history/history-slice';
+import {getHistoryInitialState} from '../history/history-state';
 import {executeSearch} from '../search/search-actions';
 import {updateFacetOptions} from './facet-options-actions';
 import {facetOptionsReducer} from './facet-options-slice';
@@ -70,7 +70,7 @@ describe('facet options slice', () => {
 
   it('history #change payload updates the state', () => {
     const payload = {
-      ...getHistoryEmptyState(),
+      ...getHistoryInitialState(),
       facetOptions: buildMockFacetOptions({freezeFacetOrder: true}),
     };
 

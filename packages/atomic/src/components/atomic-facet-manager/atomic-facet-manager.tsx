@@ -2,11 +2,14 @@ import {Component, h, Element, State} from '@stencil/core';
 import {
   FacetManager,
   buildFacetManager,
-  Engine,
-  Unsubscribe,
   FacetManagerState,
 } from '@coveo/headless';
-import {Initialization} from '../../utils/initialization-utils';
+import {
+  Bindings,
+  BindStateToController,
+  InitializableComponent,
+  InitializeBindings,
+} from '../../utils/initialization-utils';
 
 interface FacetElement extends HTMLElement {
   facetId: string;
@@ -14,32 +17,28 @@ interface FacetElement extends HTMLElement {
 
 @Component({
   tag: 'atomic-facet-manager',
-  styleUrl: 'atomic-facet-manager.css',
+  styleUrl: 'atomic-facet-manager.pcss',
   shadow: true,
 })
-export class AtomicFacetManager {
-  @State() state!: FacetManagerState;
-  @Element() host!: HTMLDivElement;
-  private engine!: Engine;
-  private unsubscribe: Unsubscribe = () => {};
+export class AtomicFacetManager implements InitializableComponent {
+  @InitializeBindings() public bindings!: Bindings;
   private facetManager!: FacetManager;
 
-  @Initialization()
+  @Element() private host!: HTMLDivElement;
+
+  @BindStateToController('facetManager', {
+    onUpdateCallbackMethod: 'onFacetManagerUpdate',
+  })
+  @State()
+  public facetManagerState!: FacetManagerState;
+  @State() public error!: Error;
+
   public initialize() {
-    this.facetManager = buildFacetManager(this.engine);
-
-    this.unsubscribe = this.facetManager.subscribe(() => {
-      this.updateStateToTriggerRender();
-      this.sortFacets();
-    });
+    this.facetManager = buildFacetManager(this.bindings.engine);
   }
 
-  public disconnectedCallback() {
-    this.unsubscribe();
-  }
-
-  private updateStateToTriggerRender() {
-    this.state = this.facetManager.state;
+  public onFacetManagerUpdate() {
+    this.sortFacets();
   }
 
   private sortFacets() {

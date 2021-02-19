@@ -9,9 +9,6 @@ import {
   PlatformClientCallOptions,
   PlatformResponse,
 } from '../platform-client';
-import {PlanRequest} from './plan/plan-request';
-import {QuerySuggestRequest} from './query-suggest/query-suggest-request';
-import {SearchRequest} from './search/search-request';
 import {createMockState} from '../../test/mock-state';
 import {createMockRecommendationState} from '../../test/mock-recommendation-state';
 import {buildMockQuerySuggest} from '../../test/mock-query-suggest';
@@ -23,26 +20,22 @@ import {buildMockCategoryFacetRequest} from '../../test/mock-category-facet-requ
 import {SearchAppState} from '../../state/search-app-state';
 import {buildPlanRequest} from '../../features/redirection/redirection-actions';
 import {buildQuerySuggestRequest} from '../../features/query-suggest/query-suggest-actions';
-import {buildSearchRequest} from '../../features/search/search-actions';
 import {buildSpecificFacetSearchRequest} from '../../features/facets/facet-search-set/specific/specific-facet-search-request-builder';
 import {buildCategoryFacetSearchRequest} from '../../features/facets/facet-search-set/category/category-facet-search-request-builder';
 import {buildRecommendationRequest} from '../../features/recommendation/recommendation-actions';
-import {RecommendationRequest} from './recommendation/recommendation-request';
 import {buildProductRecommendationsRequest} from '../../features/product-recommendations/product-recommendations-actions';
 import {buildMockProductRecommendationsState} from '../../test/mock-product-recommendations-state';
-import {ProductRecommendationsRequest} from './product-recommendations/product-recommendations-request';
 import {getProductRecommendationsInitialState} from '../../features/product-recommendations/product-recommendations-state';
 import pino from 'pino';
-import {
-  NoopPostprocessFacetSearchResponseMiddleware,
-  NoopPostprocessQuerySuggestResponseMiddleware,
-  NoopPostprocessSearchResponseMiddleware,
-} from './search-api-client-middleware';
 import {buildMockSearchResponse} from '../../test/mock-search-response';
 import {buildMockQuerySuggestCompletion} from '../../test/mock-query-suggest-completion';
 import {buildMockFacetSearchResponse} from '../../test/mock-facet-search-response';
 import {SearchResponseSuccess} from './search/search-response';
 import {QuerySuggestSuccessResponse} from './query-suggest/query-suggest-response';
+import {buildMockCategoryFacetSlice} from '../../test/mock-category-facet-slice';
+import {buildSearchRequest} from '../../features/search/search-actions';
+import {buildMockSearchAPIClient} from '../../test/mock-search-api-client';
+import {NoopPreprocessRequest} from '../preprocess-request';
 
 jest.mock('../platform-client');
 describe('search api client', () => {
@@ -52,13 +45,9 @@ describe('search api client', () => {
   let state: SearchAppState;
 
   function buildSearchAPIClient(options?: Partial<SearchAPIClientOptions>) {
-    searchAPIClient = new SearchAPIClient({
-      logger,
+    searchAPIClient = buildMockSearchAPIClient({
       renewAccessToken,
-      preprocessRequest: NoopPreprocessRequestMiddleware,
-      postprocessSearchResponseMiddleware: NoopPostprocessSearchResponseMiddleware,
-      postprocessQuerySuggestResponseMiddleware: NoopPostprocessQuerySuggestResponseMiddleware,
-      postprocessFacetSearchResponseMiddleware: NoopPostprocessFacetSearchResponseMiddleware,
+      logger,
       ...options,
     });
   }
@@ -179,7 +168,7 @@ describe('search api client', () => {
       searchAPIClient.search(req);
       const request = (PlatformClient.call as jest.Mock).mock.calls[0][0];
 
-      const expectedRequest: PlatformClientCallOptions<SearchRequest> = {
+      const expectedRequest: PlatformClientCallOptions = {
         accessToken: state.configuration.accessToken,
         method: 'POST',
         contentType: 'application/json',
@@ -206,7 +195,8 @@ describe('search api client', () => {
           searchHub: state.searchHub,
           visitorId: expect.any(String),
         },
-        preprocessRequest: NoopPreprocessRequestMiddleware,
+        preprocessRequest: NoopPreprocessRequest,
+        deprecatedPreprocessRequest: NoopPreprocessRequestMiddleware,
       };
 
       expect(request).toMatchObject(expectedRequest);
@@ -232,7 +222,7 @@ describe('search api client', () => {
       searchAPIClient.plan(req);
       const request = (PlatformClient.call as jest.Mock).mock.calls[0][0];
 
-      const expectedRequest: PlatformClientCallOptions<PlanRequest> = {
+      const expectedRequest: PlatformClientCallOptions = {
         accessToken: state.configuration.accessToken,
         method: 'POST',
         contentType: 'application/json',
@@ -247,7 +237,8 @@ describe('search api client', () => {
           pipeline: state.pipeline,
           searchHub: state.searchHub,
         },
-        preprocessRequest: NoopPreprocessRequestMiddleware,
+        preprocessRequest: NoopPreprocessRequest,
+        deprecatedPreprocessRequest: NoopPreprocessRequestMiddleware,
       };
 
       expect(request).toMatchObject(expectedRequest);
@@ -263,7 +254,7 @@ describe('search api client', () => {
       searchAPIClient.querySuggest(req);
       const request = (PlatformClient.call as jest.Mock).mock.calls[0][0];
 
-      const expectedRequest: PlatformClientCallOptions<QuerySuggestRequest> = {
+      const expectedRequest: PlatformClientCallOptions = {
         accessToken: state.configuration.accessToken,
         method: 'POST',
         contentType: 'application/json',
@@ -280,7 +271,8 @@ describe('search api client', () => {
           searchHub: state.searchHub,
           actionsHistory: expect.any(Array),
         },
-        preprocessRequest: NoopPreprocessRequestMiddleware,
+        preprocessRequest: NoopPreprocessRequest,
+        deprecatedPreprocessRequest: NoopPreprocessRequestMiddleware,
       };
 
       expect(request).toMatchObject(expectedRequest);
@@ -349,7 +341,9 @@ describe('search api client', () => {
         const categoryFacet = buildMockCategoryFacetRequest();
 
         state.categoryFacetSearchSet[id] = categoryFacetSearch;
-        state.categoryFacetSet[id] = categoryFacet;
+        state.categoryFacetSet[id] = buildMockCategoryFacetSlice({
+          request: categoryFacet,
+        });
 
         const req = buildCategoryFacetSearchRequest(id, state);
 
@@ -382,7 +376,7 @@ describe('search api client', () => {
 
         searchAPIClient.recommendations(req);
 
-        const expectedRequest: PlatformClientCallOptions<RecommendationRequest> = {
+        const expectedRequest: PlatformClientCallOptions = {
           accessToken: recommendationState.configuration.accessToken,
           method: 'POST',
           contentType: 'application/json',
@@ -401,7 +395,8 @@ describe('search api client', () => {
             searchHub: recommendationState.searchHub,
             actionsHistory: expect.any(Array),
           },
-          preprocessRequest: NoopPreprocessRequestMiddleware,
+          preprocessRequest: NoopPreprocessRequest,
+          deprecatedPreprocessRequest: NoopPreprocessRequestMiddleware,
         };
         const request = (PlatformClient.call as jest.Mock).mock.calls[0][0];
 
@@ -430,7 +425,7 @@ describe('search api client', () => {
         searchAPIClient.productRecommendations(req);
         const request = (PlatformClient.call as jest.Mock).mock.calls[0][0];
 
-        const expectedRequest: PlatformClientCallOptions<ProductRecommendationsRequest> = {
+        const expectedRequest: PlatformClientCallOptions = {
           accessToken: productRecommendationsState.configuration.accessToken,
           method: 'POST',
           contentType: 'application/json',
@@ -458,7 +453,8 @@ describe('search api client', () => {
                   .category,
             },
           },
-          preprocessRequest: NoopPreprocessRequestMiddleware,
+          preprocessRequest: NoopPreprocessRequest,
+          deprecatedPreprocessRequest: NoopPreprocessRequestMiddleware,
         };
 
         expect(request).toMatchObject(expectedRequest);

@@ -6,17 +6,34 @@ function getDocument() {
   });
 }
 
-async function injectComponent(componentInCode: string) {
+export async function injectComponent(componentInCode: string) {
   const document = await getDocument();
-  document.body.innerHTML = componentInCode;
+  document.querySelector('atomic-search-interface').innerHTML = componentInCode;
 }
 
 export function setUpPage(htmlCode: string) {
-  cy.server();
-  cy.route('POST', '**/rest/ua/v15/analytics/*').as('coveoAnalytics');
-  cy.route('POST', '**/rest/search/querySuggest').as('coveoQuerySuggest');
-  cy.route('POST', '**/rest/search').as('coveoSearch');
+  cy.intercept({
+    method: 'POST',
+    path: '**/rest/ua/v15/analytics/*',
+  }).as('coveoAnalytics');
+
+  cy.intercept({
+    method: 'POST',
+    path: '**/rest/search/v2/querySuggest?*',
+  }).as('coveoQuerySuggest');
+
+  cy.intercept({
+    method: 'POST',
+    url:
+      'https://platform.cloud.coveo.com/rest/search/v2?organizationId=searchuisamples',
+  }).as('coveoSearch');
   // Setup page with new component
   cy.visit('http://localhost:3333/pages/test.html');
+  cy.injectAxe();
   injectComponent(htmlCode);
+  cy.wait(500);
+}
+
+export function shouldRenderErrorComponent(selector: string) {
+  cy.get(selector).shadow().find('atomic-component-error').should('exist');
 }

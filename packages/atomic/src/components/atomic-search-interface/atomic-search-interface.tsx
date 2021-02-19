@@ -7,6 +7,7 @@ import {
   Watch,
   Element,
   State,
+  getAssetPath,
 } from '@stencil/core';
 import {
   HeadlessEngine,
@@ -21,109 +22,40 @@ import {
   buildSearchParameterSerializer,
   Unsubscribe,
 } from '@coveo/headless';
-import {InitializeEvent} from '../../utils/initialization-utils';
+import {Bindings, InitializeEvent} from '../../utils/initialization-utils';
+import i18next, {i18n} from 'i18next';
+import Backend, {BackendOptions} from 'i18next-http-backend';
+
+export type InitializationOptions = Pick<
+  HeadlessConfigurationOptions,
+  'accessToken' | 'organizationId' | 'renewAccessToken' | 'platformUrl'
+>;
 
 @Component({
   tag: 'atomic-search-interface',
   shadow: true,
+  assetsDirs: ['lang'],
 })
 export class AtomicSearchInterface {
-  @Element() host!: HTMLDivElement;
-  @Prop() sample = false;
-  @Prop({reflect: true}) pipeline = 'default';
-  @Prop({reflect: true}) searchHub = 'default';
-  @Prop() logLevel?: LogLevel = 'info';
-  @State() error?: Error;
-  @State() engine?: Engine;
-
+  @Prop() reflectStateInUrl = true;
   private unsubscribe: Unsubscribe = () => {};
   private hangingComponentsInitialization: InitializeEvent[] = [];
   private initialized = false;
 
-  componentWillLoad() {
-    if (this.sample) {
-      this.initialize(HeadlessEngine.getSampleConfiguration());
-    }
-  }
+  @Element() private host!: HTMLDivElement;
 
-  disconnectedCallback() {
-    this.unsubscribe();
-  }
+  @State() private error?: Error;
 
-  @Method() async initialize(
-    options: Pick<
-      HeadlessConfigurationOptions,
-      'accessToken' | 'organizationId' | 'renewAccessToken' | 'platformUrl'
-    >
-  ) {
-    if (this.initialized) {
-      console.error(
-        'The atomic-search-interface component has already been initialized.',
-        this.host,
-        this
-      );
-      return;
-    }
-
-    this.initEngine({
-      ...options,
-      search: {
-        searchHub: this.searchHub,
-        pipeline: this.pipeline,
-      },
-    });
-
-    this.initialized = true;
-  }
-
-  private initEngine(config: HeadlessConfigurationOptions) {
-    try {
-      this.engine = new HeadlessEngine({
-        configuration: config,
-        reducers: searchAppReducers,
-        loggerOptions: {
-          level: this.logLevel,
-        },
-      });
-    } catch (error) {
-      this.error = error;
-      return;
-    }
-
-    this.hangingComponentsInitialization.forEach((event) =>
-      event.detail(this.engine!)
-    );
-
-    this.hangingComponentsInitialization = [];
-
-    // Waits until the fields are registered asynchronously before triggering a search
-    setTimeout(() => {
-      this.initSearchParameterManager();
-
-      this.engine!.dispatch(
-        SearchActions.executeSearch(AnalyticsActions.logInterfaceLoad())
-      );
-    }, 0);
-  }
-
-  private initSearchParameterManager() {
-    const stateWithoutHash = window.location.hash.slice(1);
-    const decodedState = decodeURIComponent(stateWithoutHash);
-    const {serialize, deserialize} = buildSearchParameterSerializer();
-    const params = deserialize(decodedState);
-
-    const manager = buildSearchParameterManager(this.engine!, {
-      initialState: {parameters: params},
-    });
-
-    this.unsubscribe = manager.subscribe(() => {
-      window.location.hash = serialize(manager.state.parameters);
-    });
-  }
+  @Prop({reflect: true}) public pipeline = 'default';
+  @Prop({reflect: true}) public searchHub = 'default';
+  @Prop() public logLevel?: LogLevel;
+  @Prop() public i18n: i18n = i18next.createInstance();
+  @Prop({reflect: true}) public language = 'en';
+  @Prop({mutable: true}) public engine?: Engine;
 
   @Watch('searchHub')
   @Watch('pipeline')
-  updateSearchConfiguration() {
+  public updateSearchConfiguration() {
     this.engine?.dispatch(
       ConfigurationActions.updateSearchConfiguration({
         pipeline: this.pipeline,
@@ -132,33 +64,142 @@ export class AtomicSearchInterface {
     );
   }
 
+  @Watch('language')
+  public updateLanguage() {
+    this.i18n.changeLanguage(this.language);
+  }
+
+  public disconnectedCallback() {
+    this.unsubscribe();
+  }
+
   @Listen('atomic/initializeComponent')
   public handleInitialization(event: InitializeEvent) {
+    event.preventDefault();
     event.stopPropagation();
 
     if (this.engine) {
-      event.detail(this.engine);
+      event.detail(this.bindings);
       return;
     }
 
     this.hangingComponentsInitialization.push(event);
   }
 
-  public render() {
-    if (this.error) {
-      return (
-        <atomic-component-error error={this.error}></atomic-component-error>
+  @Method() public async initialize(options: InitializationOptions) {
+    if (this.engine) {
+      this.engine.logger.warn(
+        'The atomic-search-interface component "initialize" has already been called.',
+        this.host
       );
-    }
-
-    if (!this.engine) {
       return;
     }
 
+    this.initEngine(options);
+    await this.initI18n();
+    this.initComponents();
+    this.initSearchParameterManager();
+
+    this.initialized = true;
+  }
+
+  @Method() public async executeFirstSearch() {
+    if (!this.engine) {
+      console.error(
+        'You have to call "initialize" on the atomic-search-interface component before executing a search.',
+        this.host
+      );
+      return;
+    }
+
+    if (!this.initialized) {
+      console.error(
+        'You have to wait until the "initialize" promise is fulfilled before executing a search.',
+        this.host
+      );
+      return;
+    }
+
+    this.engine.dispatch(
+      SearchActions.executeSearch(AnalyticsActions.logInterfaceLoad())
+    );
+  }
+
+  private initEngine(options: InitializationOptions) {
+    try {
+      this.engine = new HeadlessEngine({
+        configuration: {
+          ...options,
+          search: {
+            searchHub: this.searchHub,
+            pipeline: this.pipeline,
+          },
+        },
+        reducers: searchAppReducers,
+        loggerOptions: {
+          level: this.logLevel,
+        },
+      });
+    } catch (error) {
+      this.error = error;
+      throw error;
+    }
+  }
+
+  private initI18n() {
+    return this.i18n.use(Backend).init({
+      debug: this.logLevel === 'debug',
+      lng: this.language,
+      fallbackLng: ['en'],
+      backend: {
+        loadPath: `${getAssetPath('./lang/')}{{lng}}.json`,
+      } as BackendOptions,
+    });
+  }
+
+  private get bindings(): Bindings {
+    return {engine: this.engine!, i18n: this.i18n};
+  }
+
+  private initComponents() {
+    this.hangingComponentsInitialization.forEach((event) =>
+      event.detail(this.bindings)
+    );
+  }
+
+  private initSearchParameterManager() {
+    if (this.reflectStateInUrl) {
+      const stateWithoutHash = window.location.hash.slice(1);
+      const decodedState = decodeURIComponent(stateWithoutHash);
+      const {serialize, deserialize} = buildSearchParameterSerializer();
+      const params = deserialize(decodedState);
+
+      const manager = buildSearchParameterManager(this.engine!, {
+        initialState: {parameters: params},
+      });
+
+      this.unsubscribe = manager.subscribe(() => {
+        window.location.hash = serialize(manager.state.parameters);
+      });
+    }
+  }
+
+  public render() {
+    if (this.error) {
+      return (
+        <atomic-component-error
+          element={this.host}
+          error={this.error}
+        ></atomic-component-error>
+      );
+    }
+
     return [
-      <atomic-relevance-inspector
-        engine={this.engine}
-      ></atomic-relevance-inspector>,
+      this.engine && (
+        <atomic-relevance-inspector
+          bindings={{engine: this.engine, i18n: this.i18n}}
+        ></atomic-relevance-inspector>
+      ),
       <slot></slot>,
     ];
   }

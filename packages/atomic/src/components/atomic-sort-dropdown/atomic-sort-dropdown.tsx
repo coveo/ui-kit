@@ -1,131 +1,156 @@
-import {Component, h, State} from '@stencil/core';
+import {Component, h, State, Element} from '@stencil/core';
 import {
   Sort,
-  SortState,
-  SortInitialState,
-  Unsubscribe,
   buildSort,
-  Engine,
-  buildRelevanceSortCriterion,
-  buildDateSortCriterion,
-  buildFieldSortCriterion,
-  SortOrder,
+  SortState,
+  SortCriterion,
+  parseCriterionExpression,
+  buildSearchStatus,
+  SearchStatus,
+  SearchStatusState,
 } from '@coveo/headless';
-import {Initialization} from '../../utils/initialization-utils';
+import {
+  Bindings,
+  BindStateToController,
+  BindStateToI18n,
+  I18nState,
+  InitializableComponent,
+  InitializeBindings,
+} from '../../utils/initialization-utils';
+import {randomID} from '../../utils/utils';
+import ArrowBottomIcon from 'coveo-styleguide/resources/icons/svg/arrow-bottom-rounded.svg';
 
-enum SortOption {
-  Relevance = 'relevance',
-  Newest = 'newest',
-  Oldest = 'oldest',
-  Size = 'size',
+interface SortDropdownOption {
+  expression: string;
+  criteria: SortCriterion[];
+  caption: string;
 }
 
 /**
+ * The Sort Dropdown allows the end user to select the criteria to use when sorting query results.
+ *
+ * @part label - The "Sort by" label
  * @part select - The select element
+ * @part placeholder - The initialization placeholder
  */
 @Component({
   tag: 'atomic-sort-dropdown',
-  styleUrl: 'atomic-sort-dropdown.scss',
+  styleUrl: 'atomic-sort-dropdown.pcss',
   shadow: true,
 })
-export class AtomicSortDropdown {
-  @State() state!: SortState;
-
-  private engine!: Engine;
+export class AtomicSortDropdown implements InitializableComponent {
+  @InitializeBindings() public bindings!: Bindings;
   private sort!: Sort;
-  private unsubscribe: Unsubscribe = () => {};
+  public searchStatus!: SearchStatus;
+  private options: SortDropdownOption[] = [];
+  private id = randomID('atomic-sort-dropdown-');
 
-  @Initialization()
+  @Element() host!: HTMLElement;
+
+  @State() @BindStateToController('sort') public sortState!: SortState;
+  @BindStateToController('searchStatus')
+  @State()
+  private searchStatusState!: SearchStatusState;
+  @BindStateToI18n() @State() private strings: I18nState = {
+    sortBy: () => this.bindings.i18n.t('sortBy'),
+  };
+  @State() public error!: Error;
+
   public initialize() {
-    const initialState: Partial<SortInitialState> = {criterion: this.relevance};
-    this.sort = buildSort(this.engine, {initialState});
-
-    this.unsubscribe = this.sort.subscribe(() => this.updateState());
+    this.buildOptions();
+    this.searchStatus = buildSearchStatus(this.bindings.engine);
+    this.sort = buildSort(this.bindings.engine, {
+      initialState: {
+        criterion: this.options[0].criteria,
+      },
+    });
   }
 
-  public disconnectedCallback() {
-    this.unsubscribe();
-  }
+  private buildOptions() {
+    const sortCriterionElements = Array.from(
+      this.host.querySelectorAll('atomic-sort-criteria')
+    );
 
-  private updateState() {
-    this.state = this.sort.state;
+    this.options = sortCriterionElements.map(({criteria, caption}) => {
+      this.strings[caption] = () => this.bindings.i18n.t(caption);
+
+      return {
+        criteria: parseCriterionExpression(criteria),
+        expression: criteria,
+        caption,
+      };
+    });
+
+    if (!this.options.length) {
+      this.error = new Error(
+        'The "atomic-sort-dropdown" element requires at least one "atomic-sort-criteria" child.'
+      );
+    }
   }
 
   private select(e: Event) {
     const select = e.composedPath()[0] as HTMLSelectElement;
-
-    switch (select.value) {
-      case SortOption.Relevance:
-        this.sort.sortBy(this.relevance);
-        break;
-
-      case SortOption.Newest:
-        this.sort.sortBy(this.dateDescending);
-        break;
-
-      case SortOption.Oldest:
-        this.sort.sortBy(this.dateAscending);
-        break;
-
-      case SortOption.Size:
-        this.sort.sortBy(this.largest);
-        break;
-
-      default:
-        break;
-    }
-  }
-
-  private get relevance() {
-    return buildRelevanceSortCriterion();
-  }
-
-  private get dateDescending() {
-    return buildDateSortCriterion(SortOrder.Descending);
-  }
-
-  private get dateAscending() {
-    return buildDateSortCriterion(SortOrder.Ascending);
-  }
-
-  private get largest() {
-    return buildFieldSortCriterion('size', SortOrder.Descending);
-  }
-
-  render() {
-    return (
-      <select
-        class="form-select"
-        aria-label="Sort results by"
-        part="select"
-        name="sorts"
-        onChange={(val) => this.select(val)}
-      >
-        <option
-          value={SortOption.Relevance}
-          selected={this.sort.isSortedBy(this.relevance)}
-        >
-          Relevance
-        </option>
-        <option
-          value={SortOption.Newest}
-          selected={this.sort.isSortedBy(this.dateDescending)}
-        >
-          Newest
-        </option>
-        <option
-          value={SortOption.Oldest}
-          selected={this.sort.isSortedBy(this.dateAscending)}
-        >
-          Oldest
-        </option>
-        <option
-          value={SortOption.Size}
-          selected={this.sort.isSortedBy(this.largest)}
-        >
-          Largest Size
-        </option>
-      </select>
+    const option = this.options.find(
+      (option) => option.expression === select.value
     );
+    option && this.sort.sortBy(option.criteria);
+  }
+
+  private buildOption({expression, criteria, caption}: SortDropdownOption) {
+    return (
+      <option value={expression} selected={this.sort.isSortedBy(criteria)}>
+        {this.strings[caption]()}
+      </option>
+    );
+  }
+
+  private renderLabel() {
+    return (
+      <label
+        class="text-on-background text-sm mr-2"
+        part="label"
+        htmlFor={this.id}
+      >
+        {this.strings.sortBy()}
+      </label>
+    );
+  }
+
+  private renderSelect() {
+    return [
+      <select
+        id={this.id}
+        class="flex-grow appearance-none rounded bg-background text-secondary font-bold border border-divider py-1.5 pl-2 pr-8"
+        part="select"
+        aria-label={this.strings.sortBy()}
+        onChange={(option) => this.select(option)}
+      >
+        {this.options.map((option) => this.buildOption(option))}
+      </select>,
+      <div
+        class="absolute right-3 top-4 fill-current w-3 h-3 pointer-events-none"
+        innerHTML={ArrowBottomIcon}
+      ></div>,
+    ];
+  }
+
+  public render() {
+    if (!this.searchStatusState.firstSearchExecuted) {
+      return (
+        <div
+          part="placeholder"
+          aria-hidden
+          class="h-6 my-2 w-44 bg-divider animate-pulse"
+        ></div>
+      );
+    }
+
+    return [
+      <div class="flex items-center relative">
+        {this.renderLabel()}
+        {this.renderSelect()}
+      </div>,
+      <slot></slot>,
+    ];
   }
 }

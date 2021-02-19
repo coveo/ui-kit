@@ -1,62 +1,61 @@
 import {Component, h, State} from '@stencil/core';
+import {DidYouMean, DidYouMeanState, buildDidYouMean} from '@coveo/headless';
 import {
-  DidYouMean,
-  DidYouMeanState,
-  Unsubscribe,
-  buildDidYouMean,
-  Engine,
-} from '@coveo/headless';
-import {Initialization} from '../../utils/initialization-utils';
+  Bindings,
+  BindStateToController,
+  InitializableComponent,
+  InitializeBindings,
+} from '../../utils/initialization-utils';
 
 @Component({
   tag: 'atomic-did-you-mean',
-  styleUrl: 'atomic-did-you-mean.css',
+  styleUrl: 'atomic-did-you-mean.pcss',
   shadow: true,
 })
-export class AtomicDidYouMean {
-  @State() state!: DidYouMeanState;
-
-  private engine!: Engine;
+export class AtomicDidYouMean implements InitializableComponent {
+  @InitializeBindings() public bindings!: Bindings;
   private didYouMean!: DidYouMean;
-  private unsubscribe: Unsubscribe = () => {};
 
-  @Initialization()
+  @BindStateToController('didYouMean')
+  @State()
+  private didYouMeanState!: DidYouMeanState;
+  @State() public error!: Error;
+
   public initialize() {
-    this.didYouMean = buildDidYouMean(this.engine);
-    this.unsubscribe = this.didYouMean.subscribe(() => this.updateState());
-  }
-
-  public disconnectedCallback() {
-    this.unsubscribe();
-  }
-
-  public render() {
-    if (!this.state.hasQueryCorrection) {
-      return '';
-    }
-
-    if (this.state.wasAutomaticallyCorrected) {
-      return (
-        <div>
-          Query was automatically corrected to {this.state.wasCorrectedTo}
-        </div>
-      );
-    }
-
-    return (
-      <div>
-        <button onClick={() => this.applyCorrection()}>
-          Did you mean: {this.state.queryCorrection.correctedQuery} ?
-        </button>
-      </div>
-    );
+    this.didYouMean = buildDidYouMean(this.bindings.engine);
   }
 
   private applyCorrection() {
     this.didYouMean.applyCorrection();
   }
 
-  private updateState() {
-    this.state = this.didYouMean.state;
+  public render() {
+    if (!this.didYouMeanState.hasQueryCorrection) {
+      return '';
+    }
+
+    if (this.didYouMeanState.wasAutomaticallyCorrected) {
+      return [
+        <p>
+          No results for{' '}
+          <b>
+            {
+              this.didYouMeanState.queryCorrection.wordCorrections[0]
+                .originalWord
+            }
+          </b>
+        </p>,
+        <p>
+          Query was automatically corrected to{' '}
+          <b>{this.didYouMeanState.wasCorrectedTo}</b>
+        </p>,
+      ];
+    }
+
+    return (
+      <button onClick={() => this.applyCorrection()}>
+        Did you mean: {this.didYouMeanState.queryCorrection.correctedQuery} ?
+      </button>
+    );
   }
 }

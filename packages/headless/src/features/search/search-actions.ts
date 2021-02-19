@@ -18,6 +18,7 @@ import {
   DebugSection,
   DidYouMeanSection,
   FacetOptionsSection,
+  FacetOrderSection,
   FacetSection,
   FieldsSection,
   NumericFacetSection,
@@ -29,26 +30,20 @@ import {
   SearchSection,
   SortSection,
 } from '../../state/state-sections';
-import {getVisitorID, historyStore} from '../../api/analytics/analytics';
+import {
+  getVisitorID,
+  historyStore,
+  StateNeededByAnalyticsProvider,
+} from '../../api/analytics/analytics';
 import {AnyFacetRequest} from '../facets/generic/interfaces/generic-facet-request';
-import {SearchParametersState} from '../../state/search-app-state';
 import {SearchRequest} from '../../api/search/search/search-request';
-import {getContextInitialState} from '../context/context-state';
-import {getFacetSetInitialState} from '../facets/facet-set/facet-set-state';
-import {getNumericFacetSetInitialState} from '../facets/range-facets/numeric-facet-set/numeric-facet-set-state';
-import {getDateFacetSetInitialState} from '../facets/range-facets/date-facet-set/date-facet-set-state';
-import {getCategoryFacetSetInitialState} from '../facets/category-facet-set/category-facet-set-state';
-import {getPaginationInitialState} from '../pagination/pagination-state';
+import {CategoryFacetSetState} from '../facets/category-facet-set/category-facet-set-state';
 import {getQueryInitialState} from '../query/query-state';
-import {getAdvancedSearchQueriesInitialState} from '../advanced-search-queries/advanced-search-queries-state';
-import {getQuerySetInitialState} from '../query-set/query-set-state';
-import {getSortCriteriaInitialState} from '../sort-criteria/sort-criteria-state';
-import {getPipelineInitialState} from '../pipeline/pipeline-state';
-import {getSearchHubInitialState} from '../search-hub/search-hub-state';
-import {getFacetOptionsInitialState} from '../facet-options/facet-options-state';
-import {logFetchMoreResults, logQueryError} from './search-analytics-actions';
 import {SearchAction} from '../analytics/analytics-utils';
-import {getDebugInitialState} from '../debug/debug-state';
+import {extractHistory} from '../history/history-state';
+import {sortFacets} from '../../utils/facet-utils';
+import {getSearchInitialState} from './search-state';
+import {logFetchMoreResults, logQueryError} from './search-analytics-actions';
 
 export type StateNeededByExecuteSearch = ConfigurationSection &
   Partial<
@@ -67,6 +62,7 @@ export type StateNeededByExecuteSearch = ConfigurationSection &
       SearchHubSection &
       QuerySetSection &
       FacetOptionsSection &
+      FacetOrderSection &
       DebugSection &
       SearchSection
   >;
@@ -100,10 +96,6 @@ const fetchFromAPI = async (
  * Executes a search query.
  * @param analyticsAction (SearchAction) The analytics action to log after a successful query.
  */
-/**
- * Executes a search query.
- * @param analyticsAction (SearchAction) The analytics action to log after a successful query.
- */
 export const executeSearch = createAsyncThunk<
   ExecuteSearchThunkReturn,
   SearchAction,
@@ -112,12 +104,12 @@ export const executeSearch = createAsyncThunk<
   'search/executeSearch',
   async (
     analyticsAction: SearchAction,
-    {getState, dispatch, rejectWithValue, extra: {searchAPIClient}}
+    {getState, dispatch, rejectWithValue, extra}
   ) => {
     const state = getState();
     addEntryInActionsHistory(state);
     const fetched = await fetchFromAPI(
-      searchAPIClient,
+      extra.searchAPIClient,
       state,
       buildSearchRequest(state)
     );
@@ -139,11 +131,10 @@ export const executeSearch = createAsyncThunk<
       };
     }
 
-    dispatch(analyticsAction);
-
+    const {correctedQuery} = fetched.response.success.queryCorrections[0];
     const retried = await automaticallyRetryQueryWithCorrection(
-      searchAPIClient,
-      fetched.response.success.queryCorrections[0].correctedQuery,
+      extra.searchAPIClient,
+      correctedQuery,
       getState,
       dispatch
     );
@@ -153,11 +144,26 @@ export const executeSearch = createAsyncThunk<
       return rejectWithValue(retried.response.error);
     }
 
+    const fetchedResponse = fetched.response.success;
+    analyticsAction(
+      dispatch,
+      () =>
+        getStateAfterResponse(
+          fetched.queryExecuted,
+          fetched.duration,
+          state,
+          fetchedResponse
+        ),
+      extra
+    );
     dispatch(snapshot(extractHistory(getState())));
 
     return {
       ...retried,
-      response: retried.response.success,
+      response: {
+        ...retried.response.success,
+        queryCorrections: fetched.response.success.queryCorrections,
+      },
       automaticallyCorrected: true,
       analyticsAction: logDidYouMeanAutomatic(),
     };
@@ -197,6 +203,32 @@ export const fetchMoreResults = createAsyncThunk<
   }
 );
 
+const getStateAfterResponse: (
+  query: string,
+  duration: number,
+  previousState: StateNeededByExecuteSearch,
+  response: SearchResponseSuccess
+) => StateNeededByAnalyticsProvider = (
+  query,
+  duration,
+  previousState,
+  response
+) => ({
+  ...previousState,
+  query: {
+    q: query,
+    enableQuerySyntax:
+      previousState.query?.enableQuerySyntax ??
+      getQueryInitialState().enableQuerySyntax,
+  },
+  search: {
+    ...getSearchInitialState(),
+    duration,
+    response,
+    results: response.results,
+  },
+});
+
 const automaticallyRetryQueryWithCorrection = async (
   client: SearchAPIClient,
   correction: string,
@@ -226,26 +258,6 @@ const shouldReExecuteTheQueryWithCorrections = (
   }
   return false;
 };
-
-const extractHistory = (
-  state: StateNeededByExecuteSearch
-): SearchParametersState => ({
-  context: state.context || getContextInitialState(),
-  facetSet: state.facetSet || getFacetSetInitialState(),
-  numericFacetSet: state.numericFacetSet || getNumericFacetSetInitialState(),
-  dateFacetSet: state.dateFacetSet || getDateFacetSetInitialState(),
-  categoryFacetSet: state.categoryFacetSet || getCategoryFacetSetInitialState(),
-  pagination: state.pagination || getPaginationInitialState(),
-  query: state.query || getQueryInitialState(),
-  advancedSearchQueries:
-    state.advancedSearchQueries || getAdvancedSearchQueriesInitialState(),
-  querySet: state.querySet || getQuerySetInitialState(),
-  sortCriteria: state.sortCriteria || getSortCriteriaInitialState(),
-  pipeline: state.pipeline || getPipelineInitialState(),
-  searchHub: state.searchHub || getSearchHubInitialState(),
-  facetOptions: state.facetOptions || getFacetOptionsInitialState(),
-  debug: state.debug ?? getDebugInitialState(),
-});
 
 export const buildSearchRequest = (
   state: StateNeededByExecuteSearch
@@ -310,45 +322,18 @@ const buildFetchMoreRequest = (
 };
 
 function getFacets(state: StateNeededByExecuteSearch) {
-  return [
-    ...getFacetsInSameOrderAsResponse(state),
-    ...getFacetsNotInResponse(state),
-  ];
+  return [...getFacetsInOrder(state), ...getRemainingUnorderedFacets(state)];
 }
 
-function getFacetsInSameOrderAsResponse(state: StateNeededByExecuteSearch) {
-  const requests: AnyFacetRequest[] = [];
-  if (!state.search) {
-    return requests;
-  }
-  const responseFacets = state.search.response.facets;
-
-  responseFacets.forEach((f) => {
-    const request = findFacetRequest(state, f.facetId);
-    request && requests.push(request);
-  });
-
-  return requests;
+function getFacetsInOrder(state: StateNeededByExecuteSearch) {
+  return sortFacets(getAllFacets(state), state.facetOrder ?? []);
 }
 
-function findFacetRequest(state: StateNeededByExecuteSearch, facetId: string) {
-  const sets = [
-    state.facetSet,
-    state.numericFacetSet,
-    state.dateFacetSet,
-    state.categoryFacetSet,
-  ];
-
-  const targetSet = sets.find((set) => set && set[facetId]);
-  return targetSet ? targetSet[facetId] : undefined;
-}
-
-function getFacetsNotInResponse(state: StateNeededByExecuteSearch) {
-  const excludedFacetIds = new Set<string>();
-  const responseFacets = state.search?.response.facets;
-  responseFacets?.forEach((f) => excludedFacetIds.add(f.facetId));
-
-  return getAllFacets(state).filter((f) => !excludedFacetIds.has(f.facetId));
+function getRemainingUnorderedFacets(state: StateNeededByExecuteSearch) {
+  const facetOrder = state.facetOrder ?? [];
+  return getAllFacets(state).filter(
+    (f) => facetOrder.indexOf(f.facetId) === -1
+  );
 }
 
 function getAllFacets(state: StateNeededByExecuteSearch) {
@@ -356,11 +341,17 @@ function getAllFacets(state: StateNeededByExecuteSearch) {
     ...getFacetRequests(state.facetSet),
     ...getFacetRequests(state.numericFacetSet),
     ...getFacetRequests(state.dateFacetSet),
-    ...getFacetRequests(state.categoryFacetSet),
+    ...getCategoryFacetRequests(state.categoryFacetSet),
   ];
 }
 
-function getFacetRequests(requests: Record<string, AnyFacetRequest> = {}) {
+function getCategoryFacetRequests(state: CategoryFacetSetState | undefined) {
+  return Object.values(state || {}).map((slice) => slice!.request);
+}
+
+function getFacetRequests<T extends AnyFacetRequest>(
+  requests: Record<string, T> = {}
+) {
   return Object.keys(requests).map((id) => requests[id]);
 }
 

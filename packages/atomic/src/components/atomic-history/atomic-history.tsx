@@ -1,36 +1,25 @@
 import {Component, h, State} from '@stencil/core';
+import {History, buildHistory, HistoryState} from '@coveo/headless';
 import {
-  History,
-  HistoryState,
-  Unsubscribe,
-  buildHistory,
-  Engine,
-} from '@coveo/headless';
-import {Initialization} from '../../utils/initialization-utils';
+  Bindings,
+  BindStateToController,
+  InitializableComponent,
+  InitializeBindings,
+} from '../../utils/initialization-utils';
 
 @Component({
   tag: 'atomic-history',
   shadow: true,
 })
-export class AtomicHistory {
-  @State() state!: HistoryState;
+export class AtomicHistory implements InitializableComponent {
+  @InitializeBindings() public bindings!: Bindings;
+  public history!: History;
 
-  private engine!: Engine;
-  private history!: History;
-  private unsubscribe: Unsubscribe = () => {};
+  @State() public error!: Error;
+  @BindStateToController('history') @State() historyState!: HistoryState;
 
-  @Initialization()
   public initialize() {
-    this.history = buildHistory(this.engine);
-    this.unsubscribe = this.history.subscribe(() => this.updateState());
-  }
-
-  public disconnectedCallback() {
-    this.unsubscribe();
-  }
-
-  private updateState() {
-    this.state = this.history.state;
+    this.history = buildHistory(this.bindings.engine);
   }
 
   private back() {
@@ -44,8 +33,18 @@ export class AtomicHistory {
   public render() {
     return (
       <div>
-        <button onClick={() => this.back()}>BACK</button>
-        <button onClick={() => this.forward()}>FORWARD</button>
+        <button
+          disabled={!this.historyState.past.length}
+          onClick={() => this.back()}
+        >
+          Back
+        </button>
+        <button
+          disabled={!this.historyState.future.length}
+          onClick={() => this.forward()}
+        >
+          Forward
+        </button>
       </div>
     );
   }

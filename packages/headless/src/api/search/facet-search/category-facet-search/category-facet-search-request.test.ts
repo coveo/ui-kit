@@ -1,10 +1,11 @@
 import {createMockState} from '../../../../test/mock-state';
 import {buildMockSearchRequest} from '../../../../test/mock-search-request';
-import {buildMockCategoryFacetRequest} from '../../../../test/mock-category-facet-request';
 import {buildMockCategoryFacetSearch} from '../../../../test/mock-category-facet-search';
 import {buildMockCategoryFacetValueRequest} from '../../../../test/mock-category-facet-value-request';
 import {SearchAppState} from '../../../../state/search-app-state';
 import {buildCategoryFacetSearchRequest} from '../../../../features/facets/facet-search-set/category/category-facet-search-request-builder';
+import {buildMockCategoryFacetSlice} from '../../../../test/mock-category-facet-slice';
+import {buildMockCategoryFacetRequest} from '../../../../test/mock-category-facet-request';
 
 describe('#buildCategoryFacetSearchRequest', () => {
   const id = '1';
@@ -12,7 +13,7 @@ describe('#buildCategoryFacetSearchRequest', () => {
 
   function setupState() {
     state = createMockState();
-    state.categoryFacetSet[id] = buildMockCategoryFacetRequest();
+    state.categoryFacetSet[id] = buildMockCategoryFacetSlice();
     state.categoryFacetSearchSet[id] = buildMockCategoryFacetSearch();
   }
 
@@ -45,27 +46,30 @@ describe('#buildCategoryFacetSearchRequest', () => {
 
   it('retrieves the #basePath fron the categoryFacetSet', () => {
     const basePath = ['a'];
-    state.categoryFacetSet[id].basePath = basePath;
+    const request = buildMockCategoryFacetRequest({basePath});
+    state.categoryFacetSet[id] = buildMockCategoryFacetSlice({request});
 
     expect(buildParms().basePath).toBe(basePath);
   });
 
   it('retrieves the #field from the categoryFacetSet', () => {
     const field = 'author';
-    state.categoryFacetSet[id].field = field;
+    const request = buildMockCategoryFacetRequest({field});
+    state.categoryFacetSet[id] = buildMockCategoryFacetSlice({request});
 
     expect(buildParms().field).toBe(field);
   });
 
   it('retrieves the #delimitingCharacter from the categoryFacetSet', () => {
-    const char = '|';
-    state.categoryFacetSet[id].delimitingCharacter = char;
+    const delimitingCharacter = '|';
+    const request = buildMockCategoryFacetRequest({delimitingCharacter});
+    state.categoryFacetSet[id] = buildMockCategoryFacetSlice({request});
 
-    expect(buildParms().delimitingCharacter).toBe(char);
+    expect(buildParms().delimitingCharacter).toBe(delimitingCharacter);
   });
 
   it('sets the #searchContext to the search request params', () => {
-    const facet = state.categoryFacetSet[id];
+    const facet = state.categoryFacetSet[id]!.request;
     const request = buildMockSearchRequest({facets: [facet]});
 
     expect(buildParms().searchContext).toEqual({
@@ -75,12 +79,12 @@ describe('#buildCategoryFacetSearchRequest', () => {
   });
 
   it('#ignorePaths is empty when currentValues is empty', () => {
-    state.categoryFacetSet[id].currentValues = [];
+    state.categoryFacetSet[id]!.request.currentValues = [];
     expect(buildParms().ignorePaths).toEqual([]);
   });
 
   it('#ignorePaths returns the correct path when currentValues has one level', () => {
-    state.categoryFacetSet[id].currentValues = [
+    state.categoryFacetSet[id]!.request.currentValues = [
       buildMockCategoryFacetValueRequest({
         value: 'level1',
         state: 'selected',
@@ -90,7 +94,7 @@ describe('#buildCategoryFacetSearchRequest', () => {
   });
 
   it('#ignorePaths returns the correct path when currentValues has more than one level', () => {
-    state.categoryFacetSet[id].currentValues = [
+    state.categoryFacetSet[id]!.request.currentValues = [
       buildMockCategoryFacetValueRequest({
         value: 'level1',
         children: [

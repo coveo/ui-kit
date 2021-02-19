@@ -7,17 +7,30 @@
 
 ## Properties
 
-| Property    | Attribute    | Description | Type                                                                                    | Default     |
-| ----------- | ------------ | ----------- | --------------------------------------------------------------------------------------- | ----------- |
-| `logLevel`  | `log-level`  |             | `"debug" \| "error" \| "fatal" \| "info" \| "silent" \| "trace" \| "warn" \| undefined` | `'info'`    |
-| `pipeline`  | `pipeline`   |             | `string`                                                                                | `'default'` |
-| `sample`    | `sample`     |             | `boolean`                                                                               | `false`     |
-| `searchHub` | `search-hub` |             | `string`                                                                                | `'default'` |
+| Property            | Attribute              | Description | Type                                                                                    | Default                    |
+| ------------------- | ---------------------- | ----------- | --------------------------------------------------------------------------------------- | -------------------------- |
+| `engine`            | --                     |             | `Engine<SearchAppState> \| undefined`                                                   | `undefined`                |
+| `i18n`              | --                     |             | `i18n`                                                                                  | `i18next.createInstance()` |
+| `language`          | `language`             |             | `string`                                                                                | `'en'`                     |
+| `logLevel`          | `log-level`            |             | `"debug" \| "error" \| "fatal" \| "info" \| "silent" \| "trace" \| "warn" \| undefined` | `undefined`                |
+| `pipeline`          | `pipeline`             |             | `string`                                                                                | `'default'`                |
+| `reflectStateInUrl` | `reflect-state-in-url` |             | `boolean`                                                                               | `true`                     |
+| `searchHub`         | `search-hub`           |             | `string`                                                                                | `'default'`                |
 
 
 ## Methods
 
-### `initialize(options: Pick<HeadlessConfigurationOptions, 'accessToken' | 'organizationId' | 'renewAccessToken' | 'platformUrl'>) => Promise<void>`
+### `executeFirstSearch() => Promise<void>`
+
+
+
+#### Returns
+
+Type: `Promise<void>`
+
+
+
+### `initialize(options: InitializationOptions) => Promise<void>`
 
 
 

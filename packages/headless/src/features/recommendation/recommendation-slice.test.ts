@@ -38,6 +38,7 @@ describe('recommendation slice', () => {
     const response = buildMockRecommendation({
       recommendations: [result],
       duration: 123,
+      searchUid: 'some-id',
     });
 
     const action = getRecommendations.fulfilled(response, '');
@@ -46,16 +47,12 @@ describe('recommendation slice', () => {
     expect(finalState.recommendations[0]).toEqual(result);
     expect(finalState.duration).toEqual(123);
     expect(finalState.isLoading).toBe(false);
+    expect(finalState.searchUid).toBe('some-id');
   });
 
   it('set the error on rejection', () => {
     const err = {message: 'message', statusCode: 500, type: 'type'};
-    const action = getRecommendations.rejected(
-      {message: 'asd', name: 'asd'},
-      '',
-      undefined,
-      err
-    );
+    const action = {type: 'recommendation/get/rejected', payload: err};
     const finalState = recommendationReducer(state, action);
     expect(finalState.error).toEqual(err);
     expect(finalState.isLoading).toBe(false);

@@ -1,10 +1,13 @@
 import {Component, h, State, Prop} from '@stencil/core';
-import {Initialization} from '../../utils/initialization-utils';
+import {
+  Bindings,
+  InitializableComponent,
+  BindStateToController,
+  InitializeBindings,
+} from '../../utils/initialization-utils';
 import {
   BreadcrumbManagerState,
   BreadcrumbManager,
-  Engine,
-  Unsubscribe,
   buildBreadcrumbManager,
   CategoryFacetBreadcrumb,
   FacetValue,
@@ -25,47 +28,32 @@ import mainclear from '../../images/main-clear.svg';
 
 @Component({
   tag: 'atomic-breadcrumb-manager',
-  styleUrl: 'atomic-breadcrumb-manager.scss',
+  styleUrl: 'atomic-breadcrumb-manager.css',
   shadow: true,
 })
-export class AtomicBreadcrumbManager {
-  @State() state!: BreadcrumbManagerState;
-  @State() collapsedBreadcrumbsState: string[] = [];
-  @Prop() collapseThreshold = 5;
-  @Prop() categoryDivider = '/';
-
-  private engine!: Engine;
+export class AtomicBreadcrumbManager implements InitializableComponent {
+  @InitializeBindings() public bindings!: Bindings;
   private breadcrumbManager!: BreadcrumbManager;
-  private unsubscribe: Unsubscribe = () => {};
 
-  @Initialization()
+  @BindStateToController('breadcrumbManager')
+  @State()
+  private breadcrumbManagerState!: BreadcrumbManagerState;
+  @State() private collapsedBreadcrumbsState: string[] = [];
+  @State() public error!: Error;
+
+  @Prop() public collapseThreshold = 5;
+  @Prop() public categoryDivider = '/';
+
   public initialize() {
-    this.breadcrumbManager = buildBreadcrumbManager(this.engine);
-    this.subscribe();
-  }
-
-  private subscribe() {
-    this.unsubscribe = this.breadcrumbManager.subscribe(() =>
-      this.updateState()
-    );
-  }
-
-  private updateState() {
-    this.state = this.breadcrumbManager.state;
-  }
-
-  public disconnectedCallback() {
-    this.unsubscribe();
+    this.breadcrumbManager = buildBreadcrumbManager(this.bindings.engine);
   }
 
   private get facetBreadcrumbs() {
-    return this.state.facetBreadcrumbs.map((breadcrumb) => {
+    return this.breadcrumbManagerState.facetBreadcrumbs.map((breadcrumb) => {
       const breadcrumbsValues = this.getBreadrumbValues(breadcrumb);
       return (
-        <ul part="breadcrumbs" class="breadcrumb p-0 m-0">
-          <li part="breadcrumb-label" class="text-muted">
-            {breadcrumb.field}:&nbsp;
-          </li>
+        <ul part="breadcrumbs">
+          <li part="breadcrumb-label">{breadcrumb.field}:&nbsp;</li>
           {breadcrumbsValues}
         </ul>
       );
@@ -77,12 +65,13 @@ export class AtomicBreadcrumbManager {
       breadcrumb
     );
     const renderedBreadcrumbs = breadcrumbsToShow.map((breadcrumbValue) => (
-      <li part="breadcrumb-value" class="pr-3">
+      <li part="breadcrumb-value">
         <button
           part="breadcrumb-button"
           aria-label={`Remove inclusion filter on ${breadcrumbValue.value.value}`}
-          class={this.buttonClasses}
-          onClick={breadcrumbValue.deselect}
+          onClick={() =>
+            this.breadcrumbManager.deselectBreadcrumb(breadcrumbValue)
+          }
         >
           {breadcrumbValue.value.value}
           {this.mainClear}
@@ -96,31 +85,37 @@ export class AtomicBreadcrumbManager {
   }
 
   private get numericFacetBreadcrumbs() {
-    return this.state.numericFacetBreadcrumbs.map((breadcrumb) => {
-      const breadcrumbsValues = this.getRangeBreadrumbValues(breadcrumb, false);
-      return (
-        <ul part="breadcrumbs" class="breadcrumb p-0 m-0">
-          <li part="breadcrumb-label" class="text-muted">
-            {breadcrumb.field}:&nbsp;
-          </li>
-          {breadcrumbsValues}
-        </ul>
-      );
-    });
+    return this.breadcrumbManagerState.numericFacetBreadcrumbs.map(
+      (breadcrumb) => {
+        const breadcrumbsValues = this.getRangeBreadrumbValues(
+          breadcrumb,
+          false
+        );
+        return (
+          <ul part="breadcrumbs">
+            <li part="breadcrumb-label">{breadcrumb.field}:&nbsp;</li>
+            {breadcrumbsValues}
+          </ul>
+        );
+      }
+    );
   }
 
   private get dateFacetBreadcrumbs() {
-    return this.state.dateFacetBreadcrumbs.map((breadcrumb) => {
-      const breadcrumbsValues = this.getRangeBreadrumbValues(breadcrumb, true);
-      return (
-        <ul part="breadcrumbs" class="breadcrumb p-0 m-0">
-          <li part="breadcrumb-label" class="text-muted">
-            {breadcrumb.field}:&nbsp;
-          </li>
-          {breadcrumbsValues}
-        </ul>
-      );
-    });
+    return this.breadcrumbManagerState.dateFacetBreadcrumbs.map(
+      (breadcrumb) => {
+        const breadcrumbsValues = this.getRangeBreadrumbValues(
+          breadcrumb,
+          true
+        );
+        return (
+          <ul part="breadcrumbs">
+            <li part="breadcrumb-label">{breadcrumb.field}:&nbsp;</li>
+            {breadcrumbsValues}
+          </ul>
+        );
+      }
+    );
   }
 
   private getRangeBreadrumbValues(
@@ -136,12 +131,13 @@ export class AtomicBreadcrumbManager {
         breadcrumbValue.value
       );
       return (
-        <li part="breadcrumb-value" class="pr-3">
+        <li part="breadcrumb-value">
           <button
             part="breadcrumb-button"
             aria-label={ariaLabel}
-            class={this.buttonClasses}
-            onClick={breadcrumbValue.deselect}
+            onClick={() =>
+              this.breadcrumbManager.deselectBreadcrumb(breadcrumbValue)
+            }
           >
             {breadcrumbValue.value.start} - {breadcrumbValue.value.end}
             {this.mainClear}
@@ -155,17 +151,17 @@ export class AtomicBreadcrumbManager {
   }
 
   private get categoryFacetBreadcrumbs() {
-    return this.state.categoryFacetBreadcrumbs.map((breadcrumb) => {
-      const breadcrumbsValues = this.getCategoryBreadrumbValues(breadcrumb);
-      return (
-        <ul part="breadcrumbs" class="breadcrumb p-0 m-0">
-          <li part="breadcrumb-label" class="text-muted">
-            {breadcrumb.field}:&nbsp;
-          </li>
-          {breadcrumbsValues}
-        </ul>
-      );
-    });
+    return this.breadcrumbManagerState.categoryFacetBreadcrumbs.map(
+      (breadcrumb) => {
+        const breadcrumbsValues = this.getCategoryBreadrumbValues(breadcrumb);
+        return (
+          <ul part="breadcrumbs">
+            <li part="breadcrumb-label">{breadcrumb.field}:&nbsp;</li>
+            {breadcrumbsValues}
+          </ul>
+        );
+      }
+    );
   }
 
   private getCategoryBreadrumbValues(values: CategoryFacetBreadcrumb) {
@@ -175,15 +171,11 @@ export class AtomicBreadcrumbManager {
       ` ${this.categoryDivider} `
     );
     return (
-      <li
-        part="breadcrumb-value category-breadcrumb-value"
-        class="breadcrumb-item"
-      >
+      <li part="breadcrumb-value category-breadcrumb-value">
         <button
           part="breadcrumb-button"
           aria-label={`Remove inclusion filter on ${ariaLabel}`}
-          class={this.buttonClasses}
-          onClick={values.deselect}
+          onClick={() => this.breadcrumbManager.deselectBreadcrumb(values)}
         >
           {joinedBreadcrumbs}
           {this.mainClear}
@@ -196,7 +188,6 @@ export class AtomicBreadcrumbManager {
     return (
       <button
         part="breadcrumb-button"
-        class={this.buttonClasses}
         onClick={() => this.breadcrumbManager.deselectAll()}
       >
         Clear All Filters
@@ -251,7 +242,6 @@ export class AtomicBreadcrumbManager {
       <li part="breadcrumb-value">
         <button
           part="breadcrumb-button"
-          class={this.buttonClasses}
           aria-label={`Show ${collapsedBreadcrumbNumber} more ${
             collapsedBreadcrumbNumber > 1 ? 'filters' : 'filter'
           }`}
@@ -264,17 +254,7 @@ export class AtomicBreadcrumbManager {
   }
 
   private get mainClear() {
-    return (
-      <span
-        class="pl-1 text-primary align-baseline"
-        role="button"
-        innerHTML={mainclear}
-      ></span>
-    );
-  }
-
-  private get buttonClasses() {
-    return 'btn btn-link btn-sm text-decoration-none p-0  align-baseline ';
+    return <span role="button" innerHTML={mainclear}></span>;
   }
 
   private resetCollapsedBreadcrumbs(length: number, field: string) {
@@ -297,19 +277,19 @@ export class AtomicBreadcrumbManager {
     return `Remove inclusion filter on ${breadcrumbValue.start} to ${breadcrumbValue.end}`;
   }
 
-  render() {
-    if (!this.breadcrumbManager.hasBreadcrumbs()) {
+  public render() {
+    if (!this.breadcrumbManager.state.hasBreadcrumbs) {
       return;
     }
     return (
-      <div class="row">
-        <span class=" col-9">
+      <div>
+        <span>
           {this.facetBreadcrumbs}
           {this.numericFacetBreadcrumbs}
           {this.dateFacetBreadcrumbs}
           {this.categoryFacetBreadcrumbs}
         </span>
-        <span class="col-3 text-right">{this.getClearAllFiltersButton()}</span>
+        <span>{this.getClearAllFiltersButton()}</span>
       </div>
     );
   }

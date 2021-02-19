@@ -16,10 +16,12 @@ import {
   onRangeFacetRequestFulfilled,
   handleRangeFacetDeselectAll,
   defaultRangeFacetOptions,
+  handleRangeFacetSearchParameterRestoration,
 } from '../generic/range-facet-reducers';
 import {handleFacetSortCriterionUpdate} from '../../generic/facet-reducer-helpers';
 import {getNumericFacetSetInitialState} from './numeric-facet-set-state';
 import {deselectAllFacets} from '../../generic/facet-actions';
+import {restoreSearchParameters} from '../../../search-parameters/search-parameter-actions';
 
 export const numericFacetSetReducer = createReducer(
   getNumericFacetSetInitialState(),
@@ -30,7 +32,14 @@ export const numericFacetSetReducer = createReducer(
         const request = buildNumericFacetRequest(payload);
         registerRangeFacet<NumericFacetRequest>(state, request);
       })
-      .addCase(change.fulfilled, (_, action) => action.payload.numericFacetSet)
+      .addCase(
+        change.fulfilled,
+        (state, action) => action.payload?.numericFacetSet ?? state
+      )
+      .addCase(restoreSearchParameters, (state, action) => {
+        const nf = action.payload.nf || {};
+        handleRangeFacetSearchParameterRestoration(state, nf);
+      })
       .addCase(toggleSelectNumericFacetValue, (state, action) => {
         const {facetId, selection} = action.payload;
         toggleSelectRangeValue<NumericFacetRequest, NumericFacetValue>(

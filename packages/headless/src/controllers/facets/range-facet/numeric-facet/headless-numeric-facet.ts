@@ -22,27 +22,25 @@ import {
   numericFacetOptionsSchema,
 } from './headless-numeric-facet-options';
 import {determineFacetId} from '../../_common/facet-id-determinor';
+import {buildNumericRange, NumericRangeOptions} from './numeric-range';
 
-type NumericRangeOptions = Pick<NumericRangeRequest, 'start' | 'end'> &
-  Partial<NumericRangeRequest>;
+export {
+  buildNumericRange,
+  NumericRangeOptions,
+  NumericRangeRequest,
+  NumericFacetOptions,
+};
 
-export function buildNumericRange(
-  config: NumericRangeOptions
-): NumericRangeRequest {
-  return {
-    endInclusive: false,
-    state: 'idle',
-    ...config,
-  };
-}
-
-export {NumericFacetOptions};
 export type NumericFacetProps = {
+  /** The options for the `NumericFacet` controller. */
   options: NumericFacetOptions;
 };
 
-/** The `NumericFacet` controller makes it possible to create a facet with numeric ranges.*/
+/** The `NumericFacet` controller makes it possible to create a facet with numeric ranges. */
 export type NumericFacet = ReturnType<typeof buildNumericFacet>;
+/**
+ * A scoped and simplified part of the headless state that is relevant to the `NumericFacet` controller.
+ */
 export type NumericFacetState = NumericFacet['state'];
 
 export function buildNumericFacet(
@@ -58,7 +56,7 @@ export function buildNumericFacet(
     engine,
     numericFacetOptionsSchema,
     options,
-    buildNumericFacet.name
+    'buildNumericFacet'
   );
 
   dispatch(registerNumericFacet(options));
@@ -74,13 +72,13 @@ export function buildNumericFacet(
   return {
     ...rangeFacet,
     /**
-     * Selects (deselects) the passed value if unselected (selected).
-     * @param selection The facet value to select or deselect.
+     * Toggles the specified facet value.
+     * @param selection The facet value to toggle.
      */
     toggleSelect: (selection: NumericFacetValue) =>
       dispatch(executeToggleNumericFacetSelect({facetId, selection})),
 
-    /** @returns The state of the `NumericFacet` controller.*/
+    /** The state of the `NumericFacet` controller.*/
     get state() {
       return rangeFacet.state;
     },

@@ -1,44 +1,35 @@
 import {Component, h, State} from '@stencil/core';
+import {QueryError, QueryErrorState, buildQueryError} from '@coveo/headless';
 import {
-  QueryError,
-  QueryErrorState,
-  Unsubscribe,
-  buildQueryError,
-  Engine,
-} from '@coveo/headless';
-import {Initialization} from '../../utils/initialization-utils';
+  Bindings,
+  BindStateToController,
+  InitializableComponent,
+  InitializeBindings,
+} from '../../utils/initialization-utils';
 
 @Component({
   tag: 'atomic-query-error',
-  styleUrl: 'atomic-query-error.css',
+  styleUrl: 'atomic-query-error.pcss',
   shadow: true,
 })
-export class AtomicQueryError {
-  @State() state!: QueryErrorState;
+export class AtomicQueryError implements InitializableComponent {
+  @InitializeBindings() public bindings!: Bindings;
+  public queryError!: QueryError;
 
-  private engine!: Engine;
-  private queryError!: QueryError;
-  private unsubscribe: Unsubscribe = () => {};
+  @BindStateToController('queryError')
+  @State()
+  private queryErrorState!: QueryErrorState;
+  @State() public error!: Error;
 
-  @Initialization()
   public initialize() {
-    this.queryError = buildQueryError(this.engine);
-    this.unsubscribe = this.queryError.subscribe(() => this.updateState());
-  }
-
-  public disconnectedCallback() {
-    this.unsubscribe();
-  }
-
-  private updateState() {
-    this.state = this.queryError.state;
+    this.queryError = buildQueryError(this.bindings.engine);
   }
 
   private get results() {
-    return this.state.hasError ? (
+    return this.queryErrorState.hasError ? (
       <div>
-        <div>Oops {this.state.error?.message}</div>
-        <code>{JSON.stringify(this.state.error)}</code>
+        <div>Oops {this.queryErrorState.error?.message}</div>
+        <code>{JSON.stringify(this.queryErrorState.error)}</code>
       </div>
     ) : (
       ''

@@ -1,0 +1,34 @@
+node('linux && docker') {
+  checkout scm
+
+  withDockerContainer(image: 'node:14', args: '-u=root') {
+    stage('Checkout') {
+      sh "git checkout ${params.COMMIT_HASH}"
+    }
+
+    stage('Setup') {
+      sh 'npm run setup'
+      sh 'npm run doc'
+    }
+
+    stage('Build') {
+      sh 'npm run build'
+    }
+
+    stage('Npm publish') {
+      withCredentials([
+      string(credentialsId: 'NPM_TOKEN', variable: 'NPM_TOKEN')]) {
+        sh "echo //registry.npmjs.org/:_authToken=${NPM_TOKEN} > ~/.npmrc"
+        sh 'npm run npm:publish || true'
+      }
+    }
+
+    stage('Notify Docs') {
+      withCredentials([
+        usernamePassword(credentialsId: 'github-commit-token', usernameVariable: 'GITHUB_USERNAME', passwordVariable: 'GITHUB_TOKEN')
+      ]) {
+        sh 'npm run notify:docs'
+      }
+    }
+  }
+}

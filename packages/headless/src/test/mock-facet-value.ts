@@ -4,7 +4,7 @@ export function buildMockFacetValue(
   config: Partial<FacetValue> = {}
 ): FacetValue {
   return {
-    value: '',
+    value: 'something',
     state: 'idle',
     numberOfResults: 0,
     ...config,

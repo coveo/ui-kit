@@ -2,26 +2,23 @@ import fetch from 'cross-fetch';
 export type HttpMethods = 'POST' | 'GET' | 'DELETE' | 'PUT';
 export type HTTPContentTypes = 'application/json' | 'text/html';
 import {backOff} from 'exponential-backoff';
-import {BaseParam} from './search/search-api-params';
 import {Logger} from 'pino';
+import {PlatformRequestOptions, PreprocessRequest} from './preprocess-request';
 
 function isThrottled(status: number): boolean {
   return status === 429;
 }
 
-export interface BasePlatformClientOptions {
+export interface PlatformClientCallOptions {
   url: string;
   method: HttpMethods;
   contentType: HTTPContentTypes;
   headers?: Record<string, string>;
-}
-
-export interface PlatformClientCallOptions<RequestParams extends BaseParam>
-  extends BasePlatformClientOptions {
-  requestParams: Omit<RequestParams, 'url' | 'organizationId' | 'accessToken'>;
+  requestParams: unknown;
   accessToken: string;
   renewAccessToken: () => Promise<string>;
-  preprocessRequest: PreprocessRequestMiddleware;
+  preprocessRequest: PreprocessRequest;
+  deprecatedPreprocessRequest: PreprocessRequestMiddleware;
   logger: Logger;
   signal?: AbortSignal;
 }
@@ -32,23 +29,25 @@ export interface PlatformResponse<T> {
 }
 
 export type PreprocessRequestMiddleware = (
-  request: BasePlatformClientOptions
-) => BasePlatformClientOptions | Promise<BasePlatformClientOptions>;
+  request: PlatformClientCallOptions
+) => PlatformClientCallOptions | Promise<PlatformClientCallOptions>;
 
 export const NoopPreprocessRequestMiddleware: PreprocessRequestMiddleware = (
   request
 ) => request;
 
 export class PlatformClient {
-  static async call<RequestParams extends BaseParam, ResponseType>(
-    options: PlatformClientCallOptions<RequestParams>
+  static async call<ResponseType>(
+    options: PlatformClientCallOptions
   ): Promise<PlatformResponse<ResponseType>> {
+    // TODO: use options directly when removing deprecatedPreprocessRequest
     const processedOptions = {
       ...options,
-      ...(await options.preprocessRequest(options)),
+      ...(await options.deprecatedPreprocessRequest(options)),
     };
 
-    const requestInfo = {
+    const {preprocessRequest, logger} = options;
+    const defaultRequestOptions: PlatformRequestOptions = {
       url: processedOptions.url,
       method: processedOptions.method,
       headers: {
@@ -56,22 +55,21 @@ export class PlatformClient {
         Authorization: `Bearer ${processedOptions.accessToken}`,
         ...processedOptions.headers,
       },
-      body: processedOptions.requestParams,
+      body: JSON.stringify(processedOptions.requestParams),
+      signal: processedOptions.signal,
     };
 
-    processedOptions.logger.info(requestInfo, 'Platform request');
+    const requestInfo: PlatformRequestOptions = {
+      ...defaultRequestOptions,
+      ...(preprocessRequest
+        ? await preprocessRequest(defaultRequestOptions, 'searchApiFetch')
+        : {}),
+    };
+    logger.info(requestInfo, 'Platform request');
 
+    const {url, ...requestData} = requestInfo;
     const request = async () => {
-      const response = await fetch(processedOptions.url, {
-        method: processedOptions.method,
-        headers: {
-          'Content-Type': processedOptions.contentType,
-          Authorization: `Bearer ${processedOptions.accessToken}`,
-          ...processedOptions.headers,
-        },
-        body: JSON.stringify(processedOptions.requestParams),
-        signal: options.signal,
-      });
+      const response = await fetch(url, requestData);
       if (isThrottled(response.status)) {
         throw response;
       }
@@ -82,12 +80,12 @@ export class PlatformClient {
       const response = await backOff(request, {
         retry: (e: Response) => {
           const shouldRetry = e && isThrottled(e.status);
-          shouldRetry && options.logger.info('Platform retrying request');
+          shouldRetry && logger.info('Platform retrying request');
           return shouldRetry;
         },
       });
       if (response.status === 419) {
-        processedOptions.logger.info('Platform renewing token');
+        logger.info('Platform renewing token');
         const accessToken = await processedOptions.renewAccessToken();
 
         if (accessToken !== '') {
@@ -97,7 +95,7 @@ export class PlatformClient {
 
       const body = (await response.json()) as ResponseType;
 
-      options.logger.info({response, body, requestInfo}, 'Platform response');
+      logger.info({response, body, requestInfo}, 'Platform response');
 
       return {
         response,

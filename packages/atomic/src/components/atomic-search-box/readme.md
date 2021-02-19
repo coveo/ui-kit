@@ -1,42 +1,17 @@
 # atomic-search-box
-
-
+A search box with built in support for query suggestions.
 
 <!-- Auto Generated Below -->
 
 
-## Usage
-
-### Example
-
-```html
-<!-- Default with props -->
-<atomic-search-box number-of-suggestions=10></atomic-search-box>
-
-<!-- Search box with a slot for the submit button's content -->
-<atomic-search-box>
-  <span slot="submit-button">Go! 😊</span>
-</atomic-search-box>
-```
-
-
-
 ## Properties
 
-| Property              | Attribute               | Description                                               | Type      | Default                                  |
-| --------------------- | ----------------------- | --------------------------------------------------------- | --------- | ---------------------------------------- |
-| `_id`                 | `data-id`               |                                                           | `string`  | `randomID(     'atomic-search-box-'   )` |
-| `enableQuerySyntax`   | `enable-query-syntax`   |                                                           | `boolean` | `false`                                  |
-| `leadingSubmitButton` | `leading-submit-button` | Wether the submit button should be place before the input | `boolean` | `false`                                  |
-| `numberOfSuggestions` | `number-of-suggestions` | Maximum number of suggestions to display                  | `number`  | `5`                                      |
-
-
-## Slots
-
-| Slot              | Description                         |
-| ----------------- | ----------------------------------- |
-| `"clear-button"`  | Content of the input's clear button |
-| `"submit-button"` | Content of the submit button        |
+| Property              | Attribute               | Description                                                 | Type      | Default                                  |
+| --------------------- | ----------------------- | ----------------------------------------------------------- | --------- | ---------------------------------------- |
+| `_id`                 | `data-id`               |                                                             | `string`  | `randomID(     'atomic-search-box-'   )` |
+| `leadingSubmitButton` | `leading-submit-button` | Whether the submit button should be placed before the input | `boolean` | `false`                                  |
+| `numberOfSuggestions` | `number-of-suggestions` | Maximum number of suggestions to display                    | `number`  | `5`                                      |
+| `placeholder`         | `placeholder`           | The placeholder for the search box input                    | `string`  | `''`                                     |
 
 
 ## Shadow Parts
@@ -46,9 +21,18 @@
 | `"active-suggestion"` | The currently active suggestion     |
 | `"clear-button"`      | The search box input's clear button |
 | `"input"`             | The search box input                |
+| `"input-wrapper"`     | The wrapper for the searchbox input |
 | `"submit-button"`     | The search box submit button        |
 | `"suggestion"`        | The suggestion                      |
 | `"suggestions"`       | The list of suggestions             |
+
+
+## CSS Custom Properties
+
+| Name                          | Description                                     |
+| ----------------------------- | ----------------------------------------------- |
+| `--atomic-search-box-height`  | Height of the search box                        |
+| `--atomic-submit-button-size` | Size of the submit button inside the search box |
 
 
 ## Dependencies

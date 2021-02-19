@@ -45,6 +45,10 @@ describe('Pager', () => {
     expect(pager).toBeTruthy();
   });
 
+  it('exposes a #subscribe method', () => {
+    expect(pager.subscribe).toBeTruthy();
+  });
+
   it('when initialState #isActive is an invalid value, it throws an error', () => {
     initialState.page = ('1' as unknown) as number;
     expect(() => initPager()).toThrow('Check the initialState of buildPager');

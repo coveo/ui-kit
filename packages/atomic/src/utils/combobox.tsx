@@ -1,5 +1,8 @@
+import {I18nState} from './initialization-utils';
+
 export interface ComboboxOptions {
   id: string;
+  strings: I18nState;
   containerRef: () => HTMLElement;
   inputRef: () => HTMLInputElement;
   valuesRef: () => HTMLElement;
@@ -151,13 +154,6 @@ export class Combobox {
     return `${this.options.id}-empty-option`;
   }
 
-  private buildEmptyOptionElement() {
-    const div = document.createElement('div');
-    div.id = this.emptyOptionId;
-    div.setAttribute('role', 'option');
-    return div;
-  }
-
   public updateAccessibilityAttributes() {
     this.setAttributes(this.containerAttributes, this.container);
     this.setAttributes(this.textboxAttributes, this.textbox);
@@ -168,13 +164,13 @@ export class Combobox {
     Array.from(this.listboxOptions).forEach((value) =>
       this.updateOption(value)
     );
-
-    !this.listboxOptions.length && this.addEmptyOptionForAccessibility();
   }
 
   private updateOption(value: Element) {
     const isActive = value.id === this.activeDescendant;
-    value.classList.toggle(this.options.activeClass, isActive);
+    this.options.activeClass
+      .split(' ')
+      .forEach((activeClass) => value.classList.toggle(activeClass, isActive));
     this.setAttributes(this.optionAttributes(isActive, value), value);
   }
 
@@ -185,10 +181,6 @@ export class Combobox {
     emptyOptionElement && emptyOptionElement.remove();
   }
 
-  private addEmptyOptionForAccessibility() {
-    this.listbox.appendChild(this.buildEmptyOptionElement());
-  }
-
   private setAttributes(attributes: Record<string, string>, element: Element) {
     Object.entries(attributes).forEach(([key, value]) =>
       element.setAttribute(key, value)
@@ -197,24 +189,23 @@ export class Combobox {
 
   private get containerAttributes() {
     return {
-      role: 'search',
+      'aria-owns': `${this.options.id}-listbox`,
+      role: 'combobox',
       'aria-haspopup': 'listbox',
+      'aria-expanded': `${this.hasValues}`,
     };
   }
 
   private get textboxAttributes() {
     return {
       id: `${this.options.id}-textbox`,
-      role: 'combobox',
       autocomplete: 'off',
       autocapitalize: 'off',
       autocorrect: 'off',
       'aria-autocomplete': 'list',
-      'aria-owns': `${this.options.id}-listbox`,
       'aria-controls': `${this.options.id}-listbox`,
-      'aria-expanded': `${this.hasValues}`,
       'aria-activedescendant': this.activeDescendant,
-      'aria-label': 'Search', // add option
+      'aria-label': this.options.strings.searchBox(),
     };
   }
 
@@ -222,7 +213,7 @@ export class Combobox {
     return {
       id: `${this.options.id}-listbox`,
       role: 'listbox',
-      'aria-labelledby': `${this.options.id}-textbox`,
+      'aria-label': this.options.strings.querySuggestionList(),
     };
   }
 

@@ -1,9 +1,13 @@
 import {Config} from '@stencil/core';
-import {sass} from '@stencil/sass';
+import {postcss} from '@stencil/postcss';
 import alias from '@rollup/plugin-alias';
 import path from 'path';
 import html from 'rollup-plugin-html';
 import {inlineSvg} from 'stencil-inline-svg';
+
+import tailwind from 'tailwindcss';
+import atImport from 'postcss-import';
+import autoprefixer from 'autoprefixer';
 
 const isDevWatch: boolean =
   process.argv &&
@@ -13,7 +17,7 @@ const isDevWatch: boolean =
 export const config: Config = {
   namespace: 'atomic',
   taskQueue: 'async',
-  globalStyle: 'node_modules/bootstrap/dist/css/bootstrap-grid.css',
+  globalStyle: 'src/globals/global.pcss',
   outputTargets: [
     {
       type: 'dist',
@@ -34,16 +38,17 @@ export const config: Config = {
       '^.+\\.html?$': 'html-loader-jest',
       '^.+\\.svg$': './svg.transform.js',
     },
+    transformIgnorePatterns: [],
   },
   devServer: {
-    reloadStrategy: 'pageReload',
+    reloadStrategy: 'hmr',
   },
   plugins: [
-    sass({
-      includePaths: ['src/scss/'],
-      injectGlobalPaths: ['src/scss/_global.scss'],
-    }),
     inlineSvg(),
+    postcss({
+      plugins: [atImport(), tailwind(), autoprefixer()],
+      injectGlobalPaths: ['src/globals/utilities.pcss'],
+    }),
   ],
   rollupPlugins: {
     before: [

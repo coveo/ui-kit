@@ -5,6 +5,7 @@ import {fetchMoreResults} from '../../features/search/search-actions';
 import {registerFieldsToInclude} from '../../features/fields/fields-actions';
 import {Schema, ArrayValue, StringValue} from '@coveo/bueno';
 import {validateOptions} from '../../utils/validate-payload';
+import {buildSearchStatus} from '../search-status/headless-search-status';
 
 const optionsSchema = new Schema<ResultListOptions>({
   fieldsToInclude: new ArrayValue({
@@ -42,13 +43,14 @@ export function buildResultList(
   props?: ResultListProps
 ) {
   const controller = buildController(engine);
+  const searchStatus = buildSearchStatus(engine);
   const {dispatch} = engine;
 
   const options = validateOptions(
     engine,
     optionsSchema,
     props?.options,
-    buildResultList.name
+    'buildResultList'
   );
 
   if (options.fieldsToInclude) {
@@ -90,14 +92,15 @@ export function buildResultList(
     ...controller,
 
     /**
-     * @returns (ResultListState) The state of the `ResultList` controller.
+     * The state of the `ResultList` controller.
      */
     get state() {
       const state = engine.state;
 
       return {
+        ...searchStatus.state,
+        /** The results of the last executed search. */
         results: state.search.results,
-        isLoading: state.search.isLoading,
       };
     },
     /**

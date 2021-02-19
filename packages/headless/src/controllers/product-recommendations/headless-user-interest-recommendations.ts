@@ -36,7 +36,7 @@ export function buildUserInterestRecommendationsList(
     engine,
     optionsSchema,
     props.options,
-    buildUserInterestRecommendationsList.name
+    'buildUserInterestRecommendationsList'
   ) as Required<UserInterestRecommendationsListOptions>;
   const controller = buildBaseProductRecommendationsList(engine, {
     ...props,
