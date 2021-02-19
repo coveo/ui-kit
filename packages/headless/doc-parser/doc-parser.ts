@@ -25,6 +25,17 @@ const controllers: ControllerConfiguration[] = [
     initializer: 'buildContext',
     samplePaths: {},
   },
+  {
+    initializer: 'buildDidYouMean',
+    samplePaths: {
+      react_class: [
+        'packages/samples/headless-react/src/components/did-you-mean/did-you-mean.class.tsx',
+      ],
+      react_fn: [
+        'packages/samples/headless-react/src/components/did-you-mean/did-you-mean.fn.tsx',
+      ],
+    },
+  },
 ];
 
 const result = controllers.map((controller) =>
