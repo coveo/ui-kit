@@ -6,10 +6,9 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { Engine, LogLevel, Result, ResultTemplateCondition } from "@coveo/headless";
-import { Bindings } from "./utils/initialization-utils";
+import { Bindings, I18nState } from "./utils/initialization-utils";
 import { i18n } from "i18next";
 import { InitializationOptions } from "./components/atomic-search-interface/atomic-search-interface";
-import { BaseFacetSearchResult } from "@coveo/headless/dist/api/search/facet-search/base/base-facet-search-response";
 export namespace Components {
     interface AtomicBreadcrumbManager {
         "categoryDivider": string;
@@ -176,9 +175,15 @@ export namespace Components {
          */
         "value": string;
     }
-    interface FacetSearch {
-        "facetSearchResults": BaseFacetSearchResult[];
+    interface BaseSearch {
+        "_id": string;
+        "hideSubmitButton": boolean;
+        "leadingSubmitButton": boolean;
         "moreValuesAvailable": boolean;
+        "placeholder": string;
+        "strings": I18nState;
+        "suggestionValues": {value: string}[];
+        "value": string;
     }
 }
 declare global {
@@ -350,11 +355,11 @@ declare global {
         prototype: HTMLAtomicTextElement;
         new (): HTMLAtomicTextElement;
     };
-    interface HTMLFacetSearchElement extends Components.FacetSearch, HTMLStencilElement {
+    interface HTMLBaseSearchElement extends Components.BaseSearch, HTMLStencilElement {
     }
-    var HTMLFacetSearchElement: {
-        prototype: HTMLFacetSearchElement;
-        new (): HTMLFacetSearchElement;
+    var HTMLBaseSearchElement: {
+        prototype: HTMLBaseSearchElement;
+        new (): HTMLBaseSearchElement;
     };
     interface HTMLElementTagNameMap {
         "atomic-breadcrumb-manager": HTMLAtomicBreadcrumbManagerElement;
@@ -385,7 +390,7 @@ declare global {
         "atomic-sort-dropdown": HTMLAtomicSortDropdownElement;
         "atomic-tab": HTMLAtomicTabElement;
         "atomic-text": HTMLAtomicTextElement;
-        "facet-search": HTMLFacetSearchElement;
+        "base-search": HTMLBaseSearchElement;
     }
 }
 declare namespace LocalJSX {
@@ -549,12 +554,20 @@ declare namespace LocalJSX {
          */
         "value": string;
     }
-    interface FacetSearch {
-        "facetSearchResults": BaseFacetSearchResult[];
-        "moreValuesAvailable": boolean;
-        "onFacetSearch"?: (event: CustomEvent<string>) => void;
-        "onResultSelected"?: (event: CustomEvent<BaseFacetSearchResult>) => void;
+    interface BaseSearch {
+        "_id": string;
+        "hideSubmitButton"?: boolean;
+        "leadingSubmitButton"?: boolean;
+        "moreValuesAvailable"?: boolean;
+        "onClear"?: (event: CustomEvent<void>) => void;
+        "onSearch"?: (event: CustomEvent<void>) => void;
+        "onSelectValue"?: (event: CustomEvent<number>) => void;
         "onShowMoreResults"?: (event: CustomEvent<void>) => void;
+        "onTextChange"?: (event: CustomEvent<string>) => void;
+        "placeholder"?: string;
+        "strings": I18nState;
+        "suggestionValues": {value: string}[];
+        "value": string;
     }
     interface IntrinsicElements {
         "atomic-breadcrumb-manager": AtomicBreadcrumbManager;
@@ -585,7 +598,7 @@ declare namespace LocalJSX {
         "atomic-sort-dropdown": AtomicSortDropdown;
         "atomic-tab": AtomicTab;
         "atomic-text": AtomicText;
-        "facet-search": FacetSearch;
+        "base-search": BaseSearch;
     }
 }
 export { LocalJSX as JSX };
@@ -620,7 +633,7 @@ declare module "@stencil/core" {
             "atomic-sort-dropdown": LocalJSX.AtomicSortDropdown & JSXBase.HTMLAttributes<HTMLAtomicSortDropdownElement>;
             "atomic-tab": LocalJSX.AtomicTab & JSXBase.HTMLAttributes<HTMLAtomicTabElement>;
             "atomic-text": LocalJSX.AtomicText & JSXBase.HTMLAttributes<HTMLAtomicTextElement>;
-            "facet-search": LocalJSX.FacetSearch & JSXBase.HTMLAttributes<HTMLFacetSearchElement>;
+            "base-search": LocalJSX.BaseSearch & JSXBase.HTMLAttributes<HTMLBaseSearchElement>;
         }
     }
 }
