@@ -6,7 +6,7 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { Engine, LogLevel, Result, ResultTemplateCondition } from "@coveo/headless";
-import { Bindings, I18nState } from "./utils/initialization-utils";
+import { Bindings } from "./utils/initialization-utils";
 import { i18n } from "i18next";
 import { InitializationOptions } from "./components/atomic-search-interface/atomic-search-interface";
 export namespace Components {
@@ -173,16 +173,6 @@ export namespace Components {
         /**
           * String key value
          */
-        "value": string;
-    }
-    interface BaseSearch {
-        "_id": string;
-        "hideSubmitButton": boolean;
-        "leadingSubmitButton": boolean;
-        "moreValuesAvailable": boolean;
-        "placeholder": string;
-        "strings": I18nState;
-        "suggestionValues": {value: string}[];
         "value": string;
     }
 }
@@ -355,12 +345,6 @@ declare global {
         prototype: HTMLAtomicTextElement;
         new (): HTMLAtomicTextElement;
     };
-    interface HTMLBaseSearchElement extends Components.BaseSearch, HTMLStencilElement {
-    }
-    var HTMLBaseSearchElement: {
-        prototype: HTMLBaseSearchElement;
-        new (): HTMLBaseSearchElement;
-    };
     interface HTMLElementTagNameMap {
         "atomic-breadcrumb-manager": HTMLAtomicBreadcrumbManagerElement;
         "atomic-category-facet": HTMLAtomicCategoryFacetElement;
@@ -390,7 +374,6 @@ declare global {
         "atomic-sort-dropdown": HTMLAtomicSortDropdownElement;
         "atomic-tab": HTMLAtomicTabElement;
         "atomic-text": HTMLAtomicTextElement;
-        "base-search": HTMLBaseSearchElement;
     }
 }
 declare namespace LocalJSX {
@@ -554,21 +537,6 @@ declare namespace LocalJSX {
          */
         "value": string;
     }
-    interface BaseSearch {
-        "_id": string;
-        "hideSubmitButton"?: boolean;
-        "leadingSubmitButton"?: boolean;
-        "moreValuesAvailable"?: boolean;
-        "onClear"?: (event: CustomEvent<void>) => void;
-        "onSearch"?: (event: CustomEvent<void>) => void;
-        "onSelectValue"?: (event: CustomEvent<number>) => void;
-        "onShowMoreResults"?: (event: CustomEvent<void>) => void;
-        "onTextChange"?: (event: CustomEvent<string>) => void;
-        "placeholder"?: string;
-        "strings": I18nState;
-        "suggestionValues": {value: string}[];
-        "value": string;
-    }
     interface IntrinsicElements {
         "atomic-breadcrumb-manager": AtomicBreadcrumbManager;
         "atomic-category-facet": AtomicCategoryFacet;
@@ -598,7 +566,6 @@ declare namespace LocalJSX {
         "atomic-sort-dropdown": AtomicSortDropdown;
         "atomic-tab": AtomicTab;
         "atomic-text": AtomicText;
-        "base-search": BaseSearch;
     }
 }
 export { LocalJSX as JSX };
@@ -633,7 +600,6 @@ declare module "@stencil/core" {
             "atomic-sort-dropdown": LocalJSX.AtomicSortDropdown & JSXBase.HTMLAttributes<HTMLAtomicSortDropdownElement>;
             "atomic-tab": LocalJSX.AtomicTab & JSXBase.HTMLAttributes<HTMLAtomicTabElement>;
             "atomic-text": LocalJSX.AtomicText & JSXBase.HTMLAttributes<HTMLAtomicTextElement>;
-            "base-search": LocalJSX.BaseSearch & JSXBase.HTMLAttributes<HTMLBaseSearchElement>;
         }
     }
 }
