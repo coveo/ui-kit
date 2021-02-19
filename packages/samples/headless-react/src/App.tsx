@@ -10,6 +10,8 @@ import {SearchBox} from './components/search-box/search-box.class';
 import {SearchBox as SearchBoxFn} from './components/search-box/search-box.fn';
 import {DidYouMean} from './components/did-you-mean/did-you-mean.class';
 import {DidYouMean as DidYouMeanFn} from './components/did-you-mean/did-you-mean.fn';
+import {SearchStatus} from './components/search-status/search-status.class';
+import {SearchStatus as SearchStatusFn} from './components/search-status/search-status.fn';
 import {QueryError} from './components/query-error/query-error.class';
 import {QueryError as QueryErrorFn} from './components/query-error/query-error.fn';
 import {Sort} from './components/sort/sort.class';
@@ -33,6 +35,7 @@ import {
   buildTab,
   buildSearchBox,
   buildDidYouMean,
+  buildSearchStatus,
   buildQueryError,
   buildQuerySummary,
   buildResultList,
@@ -70,6 +73,8 @@ const tabs = {
 const searchBox = buildSearchBox(engine, {options: {numberOfSuggestions: 8}});
 
 const didYouMean = buildDidYouMean(engine);
+
+const searchStatus = buildSearchStatus(engine);
 
 const queryError = buildQueryError(engine);
 
@@ -134,6 +139,10 @@ function App() {
         <Section title="did-you-mean">
           <DidYouMean />
           <DidYouMeanFn controller={didYouMean} />
+        </Section>
+        <Section title="search-status">
+          <SearchStatus />
+          <SearchStatusFn controller={searchStatus} />
         </Section>
         <Section title="query-error">
           <QueryError />
