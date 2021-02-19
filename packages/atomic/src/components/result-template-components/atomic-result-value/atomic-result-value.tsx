@@ -5,16 +5,26 @@ import {
   ResultContextRenderer,
 } from '../result-template-decorators';
 
+/**
+ * The ResultValue component renders the value of a result property.
+ */
 @Component({
   tag: 'atomic-result-value',
   shadow: false,
 })
 export class AtomicResultValue {
-  @Element() host!: HTMLDivElement;
-  @Prop() value = '';
-  @Prop() shouldHighlightWith?: HighlightUtils.ResultHighlights;
-
   @ResultContext() private result!: Result;
+
+  @Element() host!: HTMLDivElement;
+
+  /**
+   * Which result value should the component render
+   */
+  @Prop() value!: string;
+  /**
+   * Which highlight should the value be highlighted with
+   */
+  @Prop() shouldHighlightWith?: HighlightUtils.ResultHighlights;
 
   private get resultValue() {
     return `${ResultTemplatesHelpers.getResultProperty(
@@ -36,7 +46,7 @@ export class AtomicResultValue {
         closingDelimiter: '</strong>',
         highlights,
       });
-      return <Host class="inline-block" innerHTML={highlightedValue}></Host>;
+      return <Host class="block" innerHTML={highlightedValue}></Host>;
     } catch (error) {
       return (
         <atomic-component-error
@@ -58,6 +68,6 @@ export class AtomicResultValue {
       return this.renderWithHighlights();
     }
 
-    return <Host class="inline-block">{this.resultValue}</Host>;
+    return <Host class="block">{this.resultValue}</Host>;
   }
 }

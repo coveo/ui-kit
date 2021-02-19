@@ -33,7 +33,7 @@
       <atomic-result-excerpt class="mb-2"></atomic-result-excerpt>
     </p>
 
-    <div class="flex justify-start">
+    <div class="flex justify-start mb-2">
       <atomic-field-condition if-defined="author" class="mr-5 flex">
         <b class="mr-2">
           <atomic-text value="author"></atomic-text>
@@ -41,26 +41,28 @@
         <atomic-result-value value="author"></atomic-result-value>
       </atomic-field-condition>
 
-      <atomic-field-condition if-defined="source" class="mr-5">
+      <atomic-field-condition if-defined="source" class="mr-5 flex">
         <b class="mr-2">
           <atomic-text value="source"></atomic-text>
         </b>
         <atomic-result-value value="source"></atomic-result-value>
       </atomic-field-condition>
 
-      <atomic-field-condition if-defined="language" class="mr-5">
+      <atomic-field-condition if-defined="language" class="mr-5 flex">
         <b class="mr-2">
           <atomic-text value="language"></atomic-text>
         </b>
         <atomic-result-value value="language"></atomic-result-value>
       </atomic-field-condition>
 
-      <atomic-field-condition if-defined="filetype" class="mr-5">
+      <atomic-field-condition if-defined="filetype" class="mr-5 flex">
         <b class="mr-2">
           <atomic-text value="type"></atomic-text>
         </b>
         <atomic-result-value value="filetype"></atomic-result-value>
       </atomic-field-condition>
     </div>
+
+    <atomic-result-uri></atomic-result-uri>
   </div>
 </div>

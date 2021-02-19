@@ -104,8 +104,16 @@ export namespace Components {
         "getConditions": () => Promise<ResultTemplateCondition[]>;
         "getFields": () => Promise<string[]>;
     }
+    interface AtomicResultUri {
+    }
     interface AtomicResultValue {
+        /**
+          * Which highlight should the value be highlighted with
+         */
         "shouldHighlightWith"?: HighlightUtils.ResultHighlights;
+        /**
+          * Which result value should the component render
+         */
         "value": string;
     }
     interface AtomicResultsPerPage {
@@ -302,6 +310,12 @@ declare global {
         prototype: HTMLAtomicResultTemplateElement;
         new (): HTMLAtomicResultTemplateElement;
     };
+    interface HTMLAtomicResultUriElement extends Components.AtomicResultUri, HTMLStencilElement {
+    }
+    var HTMLAtomicResultUriElement: {
+        prototype: HTMLAtomicResultUriElement;
+        new (): HTMLAtomicResultUriElement;
+    };
     interface HTMLAtomicResultValueElement extends Components.AtomicResultValue, HTMLStencilElement {
     }
     var HTMLAtomicResultValueElement: {
@@ -378,6 +392,7 @@ declare global {
         "atomic-result-link": HTMLAtomicResultLinkElement;
         "atomic-result-list": HTMLAtomicResultListElement;
         "atomic-result-template": HTMLAtomicResultTemplateElement;
+        "atomic-result-uri": HTMLAtomicResultUriElement;
         "atomic-result-value": HTMLAtomicResultValueElement;
         "atomic-results-per-page": HTMLAtomicResultsPerPageElement;
         "atomic-search-box": HTMLAtomicSearchBoxElement;
@@ -480,9 +495,17 @@ declare namespace LocalJSX {
         "conditions"?: ResultTemplateCondition[];
         "fieldsToInclude"?: string;
     }
+    interface AtomicResultUri {
+    }
     interface AtomicResultValue {
+        /**
+          * Which highlight should the value be highlighted with
+         */
         "shouldHighlightWith"?: HighlightUtils.ResultHighlights;
-        "value"?: string;
+        /**
+          * Which result value should the component render
+         */
+        "value": string;
     }
     interface AtomicResultsPerPage {
         /**
@@ -573,6 +596,7 @@ declare namespace LocalJSX {
         "atomic-result-link": AtomicResultLink;
         "atomic-result-list": AtomicResultList;
         "atomic-result-template": AtomicResultTemplate;
+        "atomic-result-uri": AtomicResultUri;
         "atomic-result-value": AtomicResultValue;
         "atomic-results-per-page": AtomicResultsPerPage;
         "atomic-search-box": AtomicSearchBox;
@@ -609,6 +633,7 @@ declare module "@stencil/core" {
             "atomic-result-link": LocalJSX.AtomicResultLink & JSXBase.HTMLAttributes<HTMLAtomicResultLinkElement>;
             "atomic-result-list": LocalJSX.AtomicResultList & JSXBase.HTMLAttributes<HTMLAtomicResultListElement>;
             "atomic-result-template": LocalJSX.AtomicResultTemplate & JSXBase.HTMLAttributes<HTMLAtomicResultTemplateElement>;
+            "atomic-result-uri": LocalJSX.AtomicResultUri & JSXBase.HTMLAttributes<HTMLAtomicResultUriElement>;
             "atomic-result-value": LocalJSX.AtomicResultValue & JSXBase.HTMLAttributes<HTMLAtomicResultValueElement>;
             "atomic-results-per-page": LocalJSX.AtomicResultsPerPage & JSXBase.HTMLAttributes<HTMLAtomicResultsPerPageElement>;
             "atomic-search-box": LocalJSX.AtomicSearchBox & JSXBase.HTMLAttributes<HTMLAtomicSearchBoxElement>;

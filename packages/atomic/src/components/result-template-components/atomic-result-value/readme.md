@@ -7,10 +7,10 @@
 
 ## Properties
 
-| Property              | Attribute               | Description | Type                                                                                                                                     | Default     |
-| --------------------- | ----------------------- | ----------- | ---------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
-| `shouldHighlightWith` | `should-highlight-with` |             | `"excerptHighlights" \| "firstSentencesHighlights" \| "printableUriHighlights" \| "summaryHighlights" \| "titleHighlights" \| undefined` | `undefined` |
-| `value`               | `value`                 |             | `string`                                                                                                                                 | `''`        |
+| Property              | Attribute               | Description                                          | Type                                                                                                                                     | Default     |
+| --------------------- | ----------------------- | ---------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| `shouldHighlightWith` | `should-highlight-with` | Which highlight should the value be highlighted with | `"excerptHighlights" \| "firstSentencesHighlights" \| "printableUriHighlights" \| "summaryHighlights" \| "titleHighlights" \| undefined` | `undefined` |
+| `value` _(required)_  | `value`                 | Which result value should the component render       | `string`                                                                                                                                 | `undefined` |
 
 
 ## Dependencies
@@ -19,6 +19,7 @@
 
  - [atomic-result-excerpt](../atomic-result-excerpt)
  - [atomic-result-link](../atomic-result-link)
+ - [atomic-result-uri](../atomic-result-uri)
 
 ### Depends on
 
@@ -30,6 +31,7 @@ graph TD;
   atomic-result-value --> atomic-component-error
   atomic-result-excerpt --> atomic-result-value
   atomic-result-link --> atomic-result-value
+  atomic-result-uri --> atomic-result-value
   style atomic-result-value fill:#f9f,stroke:#333,stroke-width:4px
 ```
 
