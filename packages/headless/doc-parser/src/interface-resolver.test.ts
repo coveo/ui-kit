@@ -89,6 +89,38 @@ describe('#resolveInterfaceMembers', () => {
     expect(result).toEqual([objEntity]);
   });
 
+  it('resolves a property with an interface array type', () => {
+    const entry = buildMockEntryPoint();
+    const queryCorrection = buildMockApiInterface({name: 'QueryCorrection'});
+
+    const wordCorrections = buildMockApiPropertySignature({
+      name: 'wordCorrections',
+      excerptTokens: [
+        buildContentExcerptToken('wordCorrections: '),
+        buildReferenceExcerptToken('WordCorrection', ''),
+        buildContentExcerptToken('[]'),
+        buildContentExcerptToken(';'),
+      ],
+      propertyTypeTokenRange: {startIndex: 1, endIndex: 3},
+    });
+
+    const wordCorrection = buildMockApiInterface({name: 'WordCorrection'});
+
+    queryCorrection.addMember(wordCorrections);
+    entry.addMember(queryCorrection);
+    entry.addMember(wordCorrection);
+
+    const result = resolveInterfaceMembers(entry, queryCorrection);
+
+    const expected = buildMockObjEntity({
+      name: 'wordCorrections',
+      type: 'WordCorrection[]',
+      typeName: 'WordCorrection',
+    });
+
+    expect(result).toEqual([expected]);
+  });
+
   it('resolves a method with primitive return type', () => {
     const entryPoint = buildMockEntryPoint();
     const pagerInterface = buildMockApiInterface({name: 'Pager'});
