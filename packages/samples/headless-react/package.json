@@ -1,6 +1,6 @@
 {
   "name": "headless-react",
-  "version": "0.7.0-alpha.7",
+  "version": "0.7.0-alpha.9",
   "dependencies": {
     "@coveo/headless": "^0.7.0-alpha.3",
     "@testing-library/jest-dom": "^5.11.9",
