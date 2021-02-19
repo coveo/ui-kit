@@ -1,4 +1,5 @@
 import {buildMockEntity} from '../mocks/mock-entity';
+import {buildMockFuncEntity} from '../mocks/mock-func-entity';
 import {buildMockObjEntity} from '../mocks/mock-obj-entity';
 import {extractTypes} from './extractor';
 
@@ -111,5 +112,32 @@ describe('#extractTypes', () => {
 
     const {types} = extractTypes([state, facetSearch]);
     expect(types).toEqual([]);
+  });
+
+  it('when funcEntity has a param with a complex type, it extracts the type', () => {
+    const numberOfResults = buildMockEntity({
+      name: 'numberOfResults',
+      type: 'number',
+    });
+
+    const selection = buildMockObjEntity({
+      name: 'selection',
+      typeName: 'FacetValue',
+      members: [numberOfResults],
+    });
+
+    const toggleSelect = buildMockFuncEntity({
+      name: 'toggleSelect',
+      params: [selection],
+    });
+
+    const {types} = extractTypes([toggleSelect]);
+
+    const expected = buildMockObjEntity({
+      name: 'FacetValue',
+      members: [numberOfResults],
+    });
+
+    expect(types).toEqual([expected]);
   });
 });

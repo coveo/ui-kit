@@ -1,4 +1,4 @@
-import {AnyEntity, isObjectEntity, ObjEntity} from './entity';
+import {AnyEntity, isFunctionEntity, isObjectEntity, ObjEntity} from './entity';
 import {buildEntity, buildObjEntity} from './entity-builder';
 
 interface Extraction {
@@ -11,6 +11,7 @@ export function extractTypes(headingEntities: AnyEntity[]): Extraction {
   };
 
   processObjectEntities(headingEntities, extraction, 0);
+  processFunctionEntities(headingEntities, extraction);
 
   return extraction;
 }
@@ -23,6 +24,15 @@ function processObjectEntities(
   entities
     .filter(isObjectEntity)
     .forEach((entity) => extract(entity, extraction, level + 1));
+}
+
+function processFunctionEntities(
+  entities: AnyEntity[],
+  extraction: Extraction
+) {
+  entities
+    .filter(isFunctionEntity)
+    .forEach((func) => processObjectEntities(func.params, extraction, 1));
 }
 
 function extract(entity: ObjEntity, extraction: Extraction, level: number) {

@@ -27,3 +27,11 @@ export function isObjectEntity(entity: unknown): entity is ObjEntity {
 
   return !!entity && 'members' in entity;
 }
+
+export function isFunctionEntity(entity: unknown): entity is FuncEntity {
+  if (typeof entity !== 'object') {
+    return false;
+  }
+
+  return !!entity && 'params' in entity;
+}
