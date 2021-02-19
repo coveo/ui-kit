@@ -45,18 +45,14 @@ export interface FuncEntity extends Kind<'function'>, Name, Description {
 
 export type AnyEntity = Entity | ObjEntity | FuncEntity;
 
-export function isObjectEntity(entity: unknown): entity is ObjEntity {
-  if (typeof entity !== 'object') {
-    return false;
-  }
-
-  return !!entity && 'members' in entity;
+interface UnknownEntity {
+  kind: EntityKind;
 }
 
-export function isFunctionEntity(entity: unknown): entity is FuncEntity {
-  if (typeof entity !== 'object') {
-    return false;
-  }
+export function isObjectEntity(entity: UnknownEntity): entity is ObjEntity {
+  return entity.kind === 'object';
+}
 
-  return !!entity && 'params' in entity;
+export function isFunctionEntity(entity: UnknownEntity): entity is FuncEntity {
+  return entity.kind === 'function';
 }

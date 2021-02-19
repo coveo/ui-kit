@@ -61,7 +61,15 @@ function isFunction(item: ApiItem): item is ApiFunction {
 }
 
 function extractTypesFromInitializer(entity: FuncEntity) {
-  return isObjectEntity(entity.returnType)
-    ? extractTypes(entity.returnType.members).types
-    : [];
+  const {returnType} = entity;
+
+  if (typeof returnType === 'string') {
+    return [];
+  }
+
+  if (isObjectEntity(returnType)) {
+    return extractTypes(returnType.members);
+  }
+
+  return [];
 }
