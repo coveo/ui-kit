@@ -63,19 +63,19 @@ export interface CategoryFacet extends Controller {
    *
    * @param selection The facet value to toggle.
    */
-  toggleSelect: (selection: CategoryFacetValue) => void;
+  toggleSelect(selection: CategoryFacetValue): void;
 
   /**
    * Deselects all facet values.
    * */
-  deselectAll: () => void;
+  deselectAll(): void;
 
   /**
    * Sorts the facet values according to the specified criterion.
    *
    * @param criterion - The criterion to sort values by.
    */
-  sortBy: (criterion: CategoryFacetSortCriterion) => void;
+  sortBy(criterion: CategoryFacetSortCriterion): void;
 
   /**
    * Checks whether the facet values are sorted according to the specified criterion.
@@ -83,17 +83,17 @@ export interface CategoryFacet extends Controller {
    * @param criterion - The criterion to compare.
    * @returns Whether the facet values are sorted according to the specified criterion.
    */
-  isSortedBy: (criterion: CategoryFacetSortCriterion) => boolean;
+  isSortedBy(criterion: CategoryFacetSortCriterion): boolean;
 
   /**
    * Increases the number of values displayed in the facet to the next multiple of the originally configured value.
    */
-  showMoreValues: () => void;
+  showMoreValues(): void;
 
   /**
    * Sets the displayed number of values to the originally configured value.
    * */
-  showLessValues: () => void;
+  showLessValues(): void;
 
   /**
    * The state of the `Facet` controller.
