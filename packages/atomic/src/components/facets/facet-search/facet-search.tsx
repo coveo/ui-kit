@@ -45,7 +45,7 @@ export class FacetSearch {
 
   constructor(private props: FacetSearchProps) {
     this.combobox = new Combobox({
-      id: randomID(''),
+      id: randomID('facet-search'),
       strings: props.controller.state.strings,
       containerRef: () => this.containerRef,
       inputRef: () => this.inputRef,
