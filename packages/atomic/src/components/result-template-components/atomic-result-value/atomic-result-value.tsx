@@ -42,7 +42,10 @@ export class AtomicResultValue {
           return <span innerHTML={resultValue as string}></span>;
         } catch (error) {
           return (
-            <atomic-component-error error={error}></atomic-component-error>
+            <atomic-component-error
+              element={this.host}
+              error={error}
+            ></atomic-component-error>
           );
         }
       }
