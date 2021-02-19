@@ -68,7 +68,7 @@ function extractTypesFromInitializer(entity: FuncEntity) {
   }
 
   if (isObjectEntity(returnType)) {
-    return extractTypes(returnType.members);
+    return extractTypes(returnType.members).types;
   }
 
   return [];
