@@ -26,6 +26,8 @@ import {QuerySummary} from './components/query-summary/query-summary.class';
 import {QuerySummary as QuerySummaryFn} from './components/query-summary/query-summary.fn';
 import {Facet} from './components/facet/facet.class';
 import {Facet as FacetFn} from './components/facet/facet.fn';
+import {History} from './components/history/history.class';
+import {History as HistoryFn} from './components/history/history.fn';
 import {
   buildRecommendationList,
   buildTab,
@@ -43,6 +45,7 @@ import {
   SortCriterion,
   buildResultsPerPage,
   buildPager,
+  buildHistory,
 } from '@coveo/headless';
 import {bindSearchParametersToURI} from './components/search-parameter-manager/search-parameter-manager';
 
@@ -94,6 +97,8 @@ const resultsPerPage = buildResultsPerPage(engine, {
 });
 
 const pager = buildPager(engine, {options: {numberOfPages: 6}});
+
+const history = buildHistory(engine);
 
 const {autoUpdateURI: startUpdatingURI} = bindSearchParametersToURI(engine);
 
@@ -160,6 +165,10 @@ function App() {
         <Section title="pager">
           <Pager />
           <PagerFn controller={pager} />
+        </Section>
+        <Section title="history">
+          <History />
+          <HistoryFn controller={history} />
         </Section>
       </header>
     </div>
