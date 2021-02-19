@@ -1,4 +1,4 @@
-import {Component, Prop, Element, h} from '@stencil/core';
+import {Component, Prop, Element, h, Host} from '@stencil/core';
 import {Result, ResultTemplatesHelpers, HighlightUtils} from '@coveo/headless';
 import {
   ResultContext,
@@ -12,46 +12,52 @@ import {
 export class AtomicResultValue {
   @Element() host!: HTMLDivElement;
   @Prop() value = '';
-  @Prop() shouldHighlightWith: HighlightUtils.ResultHighlights | undefined;
+  @Prop() shouldHighlightWith?: HighlightUtils.ResultHighlights;
 
   @ResultContext() private result!: Result;
 
-  @ResultContextRenderer
-  public render() {
-    let resultValue = ResultTemplatesHelpers.getResultProperty(
+  private get resultValue() {
+    return `${ResultTemplatesHelpers.getResultProperty(
       this.result,
       this.value
-    );
+    )}`;
+  }
 
-    if (resultValue !== null) {
-      if (this.shouldHighlightWith) {
-        try {
-          const highlights = ResultTemplatesHelpers.getResultProperty(
-            this.result,
-            this.shouldHighlightWith
-          ) as HighlightUtils.HighlightKeyword[];
+  private renderWithHighlights() {
+    try {
+      const highlights = ResultTemplatesHelpers.getResultProperty(
+        this.result,
+        this.shouldHighlightWith!
+      ) as HighlightUtils.HighlightKeyword[];
 
-          resultValue = HighlightUtils.highlightString({
-            content: resultValue as string,
-            delimiters: {
-              open: '<strong>',
-              close: '</strong>',
-            },
-            highlights,
-          });
-          return <span innerHTML={resultValue as string}></span>;
-        } catch (error) {
-          return (
-            <atomic-component-error
-              element={this.host}
-              error={error}
-            ></atomic-component-error>
-          );
-        }
-      }
-      return <span>{resultValue}</span>;
+      const highlightedValue = HighlightUtils.highlightString({
+        content: this.resultValue,
+        openingDelimiter: '<strong>',
+        closingDelimiter: '</strong>',
+        highlights,
+      });
+      return <Host class="inline-block" innerHTML={highlightedValue}></Host>;
+    } catch (error) {
+      return (
+        <atomic-component-error
+          element={this.host}
+          error={error}
+        ></atomic-component-error>
+      );
+    }
+  }
+
+  @ResultContextRenderer
+  public render() {
+    if (this.resultValue === null) {
+      this.host.remove();
+      return;
     }
 
-    this.host.remove();
+    if (this.shouldHighlightWith) {
+      return this.renderWithHighlights();
+    }
+
+    return <Host class="inline-block">{this.resultValue}</Host>;
   }
 }

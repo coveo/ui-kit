@@ -105,7 +105,7 @@ export namespace Components {
         "getFields": () => Promise<string[]>;
     }
     interface AtomicResultValue {
-        "shouldHighlightWith": HighlightUtils.ResultHighlights | undefined;
+        "shouldHighlightWith"?: HighlightUtils.ResultHighlights;
         "value": string;
     }
     interface AtomicResultsPerPage {
@@ -481,7 +481,7 @@ declare namespace LocalJSX {
         "fieldsToInclude"?: string;
     }
     interface AtomicResultValue {
-        "shouldHighlightWith"?: HighlightUtils.ResultHighlights | undefined;
+        "shouldHighlightWith"?: HighlightUtils.ResultHighlights;
         "value"?: string;
     }
     interface AtomicResultsPerPage {

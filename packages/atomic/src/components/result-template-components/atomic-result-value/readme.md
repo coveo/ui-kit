@@ -18,6 +18,7 @@
 ### Used by
 
  - [atomic-result-excerpt](../atomic-result-excerpt)
+ - [atomic-result-link](../atomic-result-link)
 
 ### Depends on
 
@@ -28,6 +29,7 @@
 graph TD;
   atomic-result-value --> atomic-component-error
   atomic-result-excerpt --> atomic-result-value
+  atomic-result-link --> atomic-result-value
   style atomic-result-value fill:#f9f,stroke:#333,stroke-width:4px
 ```
 
