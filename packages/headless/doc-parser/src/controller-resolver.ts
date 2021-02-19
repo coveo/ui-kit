@@ -32,7 +32,7 @@ export function resolveController(
   config: ControllerConfiguration
 ): Controller {
   const initializer = resolveControllerInitializer(entry, config.initializer);
-  const extractedTypes = extractTypesFromInitializer(initializer);
+  const extractedTypes = extractTypesFrom(initializer);
   const utils = (config.utils || []).map((util) => resolveUtility(entry, util));
   const codeSampleInfo = resolveCodeSamplePaths(config.samplePaths);
 
@@ -60,6 +60,11 @@ function isFunction(item: ApiItem): item is ApiFunction {
   return item.kind === ApiItemKind.Function;
 }
 
+function extractTypesFrom(initializer: FuncEntity) {
+  const types = extractTypesFromInitializer(initializer);
+  return removeDuplicates(types);
+}
+
 function extractTypesFromInitializer(entity: FuncEntity) {
   const {returnType} = entity;
 
@@ -72,4 +77,19 @@ function extractTypesFromInitializer(entity: FuncEntity) {
   }
 
   return [];
+}
+
+function removeDuplicates(entities: ObjEntity[]) {
+  const seenNames = new Set();
+
+  return entities.filter((entity) => {
+    const {name} = entity;
+
+    if (seenNames.has(name)) {
+      return false;
+    }
+
+    seenNames.add(name);
+    return true;
+  });
 }
