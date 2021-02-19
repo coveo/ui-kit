@@ -50,11 +50,12 @@ function processFunctionEntities(
   entities: AnyEntity[],
   extraction: Extraction
 ) {
-  entities
-    .filter(isFunctionEntity)
-    .forEach((func) =>
-      processObjectEntities(func.params, extraction, Level.Key)
-    );
+  entities.filter(isFunctionEntity).forEach((func) => {
+    const {params, returnType} = func;
+    const entities = isString(returnType) ? params : [...params, returnType];
+
+    processObjectEntities(entities, extraction, Level.Key);
+  });
 }
 
 function extract(entity: ObjEntity, extraction: Extraction, level: Level) {
@@ -87,4 +88,8 @@ function buildTypeEntity(originalEntity: ObjEntity, members: AnyEntity[]) {
   });
 
   return buildObjEntity({entity, members, typeName: ''});
+}
+
+function isString(value: unknown): value is string {
+  return typeof value === 'string';
 }

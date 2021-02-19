@@ -114,7 +114,7 @@ describe('#extractTypes', () => {
     expect(types).toEqual([]);
   });
 
-  it('when funcEntity has a param with a complex type, it extracts the type', () => {
+  it('when funcEntity has a param that is an object type, it extracts the type', () => {
     const numberOfResults = buildMockEntity({
       name: 'numberOfResults',
       type: 'number',
@@ -132,6 +132,34 @@ describe('#extractTypes', () => {
     });
 
     const {types} = extractTypes([toggleSelect]);
+
+    const expected = buildMockObjEntity({
+      name: 'FacetValue',
+      members: [numberOfResults],
+    });
+
+    expect(types).toEqual([expected]);
+  });
+
+  it('when funcEntity has a returnType that is an object type, it extracts the type', () => {
+    const numberOfResults = buildMockEntity({
+      name: 'numberOfResults',
+      type: 'number',
+    });
+
+    const facetValue = buildMockObjEntity({
+      name: 'FacetValue',
+      type: 'FacetValue',
+      typeName: 'FacetValue',
+      members: [numberOfResults],
+    });
+
+    const getFacetValue = buildMockFuncEntity({
+      name: 'getFacetValue',
+      returnType: facetValue,
+    });
+
+    const {types} = extractTypes([getFacetValue]);
 
     const expected = buildMockObjEntity({
       name: 'FacetValue',
