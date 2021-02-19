@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.7.0-alpha.8](https://github.com/coveo/ui-kit/compare/v0.7.0-alpha.7...v0.7.0-alpha.8) (2021-02-18)
+
+
+### Features
+
+* **atomic:** improve atomic-result-list component ([#518](https://github.com/coveo/ui-kit/issues/518)) ([28fe250](https://github.com/coveo/ui-kit/commit/28fe250f357c63193e3a1cf24e5b8647c8ebc572))
+
+
+
+
+
 # [0.7.0-alpha.6](https://github.com/coveo/ui-kit/compare/v0.7.0-alpha.5...v0.7.0-alpha.6) (2021-02-18)
 
 **Note:** Version bump only for package @coveo/atomic

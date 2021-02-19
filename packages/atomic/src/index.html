@@ -41,19 +41,19 @@
       } */
 
       /* Example on how to customize custom templates CSS parts */
-      atomic-result-list::part(france-title)::before,
+      /* atomic-result-list::part(france-title)::before,
       atomic-result-list::part(france-title)::after {
         content: '🇫🇷';
-      }
+      } */
     </style>
   </head>
 
   <body class="p-2">
     <atomic-search-interface id="search">
-      <div class="flex mx-auto mb-2 justify-center">
+      <!-- <div class="flex mx-auto mb-2 justify-center">
         <atomic-tab expression="" class="mr-2">All Files</atomic-tab>
         <atomic-tab expression='@author *= "BBC News"'>BBC News</atomic-tab>
-      </div>
+      </div> -->
       <div class="m-auto my-3 max-w-5xl">
         <atomic-search-box></atomic-search-box>
       </div>
@@ -78,29 +78,16 @@
 
           <atomic-no-results></atomic-no-results>
 
-          <atomic-result-list class="max-w-full">
-            <atomic-result-template id="france-template">
-              <hr />
-              <img src="https://www.cia-france.com/media/1558/parcarou1_720x500.jpg" alt="Paris" />
-              <h5 part="france-title">{{title}}</h5>
-              <p>
-                <atomic-result-value value="excerpt"> </atomic-result-value>
-              </p>
-              <a href="{{clickUri}}">More info</a>
-            </atomic-result-template>
+          <!-- TODO: add result template example -->
+          <atomic-result-list class="max-w-full border-t border-divider"></atomic-result-list>
 
-            <script>
-              document.querySelector('#france-template').conditions = [(result) => result.title === 'France'];
-            </script>
-          </atomic-result-list>
-
-          <div class="flex flex-col lg:flex-row justify-between my-2">
+          <div class="flex flex-col lg:flex-row justify-between my-3">
             <atomic-pager></atomic-pager>
             <atomic-results-per-page></atomic-results-per-page>
           </div>
         </div>
       </div>
-      <atomic-history></atomic-history>
+      <!-- <atomic-history></atomic-history> -->
     </atomic-search-interface>
     <!-- <atomic-recommendation></atomic-recommendation> -->
     <!-- <atomic-frequently-bought-together></atomic-frequently-bought-together> -->
