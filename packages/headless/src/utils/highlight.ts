@@ -1,4 +1,5 @@
 import {isNullOrUndefined} from '@coveo/bueno';
+import {isEmptyString} from './utils';
 
 export interface HighlightKeyword {
   /**
@@ -59,10 +60,6 @@ export interface SuggestionHighlightingOptions {
   correctionDelimiters?: Delimiters;
 }
 
-function isEmptyString(str: string) {
-  return str === '';
-}
-
 /**
  * Highlight the passed string using specified highlights.
  */
@@ -77,6 +74,7 @@ export function highlightString(params: HighlightParams): string {
   if (isNullOrUndefined(params.content) || isEmptyString(params.content)) {
     return params.content;
   }
+
   const maxIndex = params.content.length;
   let highlighted = '';
   let last = 0;
@@ -88,10 +86,9 @@ export function highlightString(params: HighlightParams): string {
     if (end > maxIndex) {
       break;
     }
-
-    highlighted += params.content.slice(last, start);
+    highlighted += escape(params.content.slice(last, start));
     highlighted += params.openingDelimiter;
-    highlighted += params.content.slice(start, end);
+    highlighted += escape(params.content.slice(start, end));
     highlighted += params.closingDelimiter;
 
     last = end;
