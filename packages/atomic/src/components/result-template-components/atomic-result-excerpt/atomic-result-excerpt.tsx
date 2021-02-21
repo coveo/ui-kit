@@ -13,7 +13,7 @@ export class AtomicResultExcerpt {
       <Host class="block">
         <atomic-result-value
           value="excerpt"
-          should-highlight-with="excerptHighlights"
+          shouldHighlightWith="excerptHighlights"
         ></atomic-result-value>
       </Host>
     );

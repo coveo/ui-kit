@@ -12,13 +12,6 @@ export interface HighlightKeyword {
   length: number;
 }
 
-export type ResultHighlights =
-  | 'titleHighlights'
-  | 'firstSentencesHighlights'
-  | 'excerptHighlights'
-  | 'printableUriHighlights'
-  | 'summaryHighlights';
-
 export interface HighlightParams {
   /**
    * The string to highlight items in.

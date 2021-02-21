@@ -7,10 +7,10 @@
 
 ## Properties
 
-| Property              | Attribute               | Description                                          | Type                                                                                                                                     | Default     |
-| --------------------- | ----------------------- | ---------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
-| `shouldHighlightWith` | `should-highlight-with` | Which highlight should the value be highlighted with | `"excerptHighlights" \| "firstSentencesHighlights" \| "printableUriHighlights" \| "summaryHighlights" \| "titleHighlights" \| undefined` | `undefined` |
-| `value` _(required)_  | `value`                 | Which result value should the component render       | `string`                                                                                                                                 | `undefined` |
+| Property              | Attribute               | Description                                          | Type                  | Default     |
+| --------------------- | ----------------------- | ---------------------------------------------------- | --------------------- | ----------- |
+| `shouldHighlightWith` | `should-highlight-with` | Which highlight should the value be highlighted with | `string \| undefined` | `undefined` |
+| `value` _(required)_  | `value`                 | Which result value should the component render       | `string`              | `undefined` |
 
 
 ## Dependencies

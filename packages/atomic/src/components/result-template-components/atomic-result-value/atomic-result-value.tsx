@@ -24,7 +24,7 @@ export class AtomicResultValue {
   /**
    * Which highlight should the value be highlighted with
    */
-  @Prop() shouldHighlightWith?: HighlightUtils.ResultHighlights;
+  @Prop() shouldHighlightWith?: string;
 
   private get resultValue() {
     return `${ResultTemplatesHelpers.getResultProperty(
