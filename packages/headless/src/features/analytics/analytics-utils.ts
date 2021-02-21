@@ -174,14 +174,13 @@ function partialResultPayload(result: Result): Partial<Result> {
   );
 }
 
-function getDocumentAuthor(r: Result): string {
-  if (isNullOrUndefined(r.raw['author'])) {
+function getDocumentAuthor(result: Result) {
+  const author = result.raw['author'];
+  if (isNullOrUndefined(author)) {
     return 'unknown';
   }
 
-  return Array.isArray(r.raw['author'])
-    ? r.raw['author'].join(';')
-    : (r.raw['author'] as string);
+  return Array.isArray(author) ? author.join(';') : `${author}`;
 }
 
 export const validateResultPayload = (result: Result) =>
