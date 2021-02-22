@@ -1,4 +1,4 @@
-import {FunctionalComponent, h} from '@stencil/core';
+import {h} from '@stencil/core';
 
 import ClearIcon from 'coveo-styleguide/resources/icons/svg/clear.svg';
 import {Combobox} from '../../../utils/combobox';
@@ -78,9 +78,9 @@ export class FacetSearch {
     this.combobox.updateAccessibilityAttributes();
   }
 
-  private get clearButton(): FunctionalComponent {
+  private get clearButton() {
     if (this.props.controller.state.facetSearchQuery === '') {
-      return <div></div>;
+      return null;
     }
     return (
       <button
