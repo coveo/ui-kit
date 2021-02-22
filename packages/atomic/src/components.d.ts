@@ -59,8 +59,32 @@ export namespace Components {
     }
     interface AtomicNumericFacet {
         "facetId": string;
+        /**
+          * Specifies the index field whose values the facet should use
+         */
         "field": string;
+        /**
+          * Whether or not the index should automatically generate options for the facet
+         */
+        "generateAutomaticRanges": boolean;
+        /**
+          * The displayed label for the facet
+         */
         "label": string;
+    }
+    interface AtomicNumericRange {
+        /**
+          * The ending value for the numeric range
+         */
+        "end": number;
+        /**
+          * Specifies whether or not the end value should be included in the range
+         */
+        "endInclusive": boolean;
+        /**
+          * The starting value for the numeric range
+         */
+        "start": number;
     }
     interface AtomicPager {
         /**
@@ -251,6 +275,12 @@ declare global {
         prototype: HTMLAtomicNumericFacetElement;
         new (): HTMLAtomicNumericFacetElement;
     };
+    interface HTMLAtomicNumericRangeElement extends Components.AtomicNumericRange, HTMLStencilElement {
+    }
+    var HTMLAtomicNumericRangeElement: {
+        prototype: HTMLAtomicNumericRangeElement;
+        new (): HTMLAtomicNumericRangeElement;
+    };
     interface HTMLAtomicPagerElement extends Components.AtomicPager, HTMLStencilElement {
     }
     var HTMLAtomicPagerElement: {
@@ -372,6 +402,7 @@ declare global {
         "atomic-history": HTMLAtomicHistoryElement;
         "atomic-no-results": HTMLAtomicNoResultsElement;
         "atomic-numeric-facet": HTMLAtomicNumericFacetElement;
+        "atomic-numeric-range": HTMLAtomicNumericRangeElement;
         "atomic-pager": HTMLAtomicPagerElement;
         "atomic-query-error": HTMLAtomicQueryErrorElement;
         "atomic-query-summary": HTMLAtomicQuerySummaryElement;
@@ -441,8 +472,32 @@ declare namespace LocalJSX {
     }
     interface AtomicNumericFacet {
         "facetId"?: string;
+        /**
+          * Specifies the index field whose values the facet should use
+         */
         "field"?: string;
+        /**
+          * Whether or not the index should automatically generate options for the facet
+         */
+        "generateAutomaticRanges"?: boolean;
+        /**
+          * The displayed label for the facet
+         */
         "label"?: string;
+    }
+    interface AtomicNumericRange {
+        /**
+          * The ending value for the numeric range
+         */
+        "end": number;
+        /**
+          * Specifies whether or not the end value should be included in the range
+         */
+        "endInclusive"?: boolean;
+        /**
+          * The starting value for the numeric range
+         */
+        "start": number;
     }
     interface AtomicPager {
         /**
@@ -568,6 +623,7 @@ declare namespace LocalJSX {
         "atomic-history": AtomicHistory;
         "atomic-no-results": AtomicNoResults;
         "atomic-numeric-facet": AtomicNumericFacet;
+        "atomic-numeric-range": AtomicNumericRange;
         "atomic-pager": AtomicPager;
         "atomic-query-error": AtomicQueryError;
         "atomic-query-summary": AtomicQuerySummary;
@@ -604,6 +660,7 @@ declare module "@stencil/core" {
             "atomic-history": LocalJSX.AtomicHistory & JSXBase.HTMLAttributes<HTMLAtomicHistoryElement>;
             "atomic-no-results": LocalJSX.AtomicNoResults & JSXBase.HTMLAttributes<HTMLAtomicNoResultsElement>;
             "atomic-numeric-facet": LocalJSX.AtomicNumericFacet & JSXBase.HTMLAttributes<HTMLAtomicNumericFacetElement>;
+            "atomic-numeric-range": LocalJSX.AtomicNumericRange & JSXBase.HTMLAttributes<HTMLAtomicNumericRangeElement>;
             "atomic-pager": LocalJSX.AtomicPager & JSXBase.HTMLAttributes<HTMLAtomicPagerElement>;
             "atomic-query-error": LocalJSX.AtomicQueryError & JSXBase.HTMLAttributes<HTMLAtomicQueryErrorElement>;
             "atomic-query-summary": LocalJSX.AtomicQuerySummary & JSXBase.HTMLAttributes<HTMLAtomicQuerySummaryElement>;
