@@ -1,4 +1,4 @@
-import {h} from '@stencil/core';
+import {FunctionalComponent, h} from '@stencil/core';
 
 import CloseIcon from 'coveo-styleguide/resources/icons/svg/close.svg';
 
@@ -27,7 +27,10 @@ type BaseFacetProps = {
   hasActiveValues: boolean;
 };
 
-export const BaseFacet = (props: BaseFacetProps, children: any) => {
+export const BaseFacet: FunctionalComponent<BaseFacetProps> = (
+  props: BaseFacetProps,
+  children
+) => {
   const closeButton = props.controller.state.isExpanded ? (
     <button onClick={() => props.controller.closeModal()} class="ml-2">
       <div
