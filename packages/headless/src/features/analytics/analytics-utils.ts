@@ -5,7 +5,12 @@ import {
 } from 'coveo.analytics/dist/definitions/searchPage/searchPageEvents';
 import {SearchAppState} from '../../state/search-app-state';
 import {getPipelineInitialState} from '../pipeline/pipeline-state';
-import {RecordValue, Schema, StringValue} from '@coveo/bueno';
+import {
+  isNullOrUndefined,
+  RecordValue,
+  Schema,
+  StringValue,
+} from '@coveo/bueno';
 import {Raw} from '../../api/search/search/raw';
 import {
   AnalyticsProvider,
@@ -112,7 +117,7 @@ export const partialDocumentInformation = (
     ) || 0;
   return {
     collectionName: result.raw['collection'] || 'default',
-    documentAuthor: result.raw['author'] as string,
+    documentAuthor: getDocumentAuthor(result),
     documentPosition: resultIndex + 1,
     documentTitle: result.title,
     documentUri: result.uri,
@@ -138,7 +143,6 @@ const requiredNonEmptyString = new StringValue({
 
 const rawPartialDefinition = {
   collection: new StringValue(),
-  author: new StringValue(),
   urihash: new StringValue(),
   source: new StringValue(),
   permanentid: new StringValue(),
@@ -168,6 +172,15 @@ function partialResultPayload(result: Result): Partial<Result> {
     })),
     {raw: partialRawPayload(result.raw)}
   );
+}
+
+function getDocumentAuthor(result: Result) {
+  const author = result.raw['author'];
+  if (isNullOrUndefined(author)) {
+    return 'unknown';
+  }
+
+  return Array.isArray(author) ? author.join(';') : `${author}`;
 }
 
 export const validateResultPayload = (result: Result) =>

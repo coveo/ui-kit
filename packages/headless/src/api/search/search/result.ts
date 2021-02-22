@@ -1,4 +1,5 @@
 import {Raw} from './raw';
+import {HighlightKeyword} from '../../../utils/highlight';
 
 export type Result = {
   /**
@@ -94,23 +95,23 @@ export type Result = {
   /**
    * The length and offset of each word to highlight in the item title string.
    */
-  titleHighlights: string[];
+  titleHighlights: HighlightKeyword[];
   /**
    * The length and offset of each word to highlight in the item firstSentences string.
    */
-  firstSentencesHighlights: string[];
+  firstSentencesHighlights: HighlightKeyword[];
   /**
    * The length and offset of each word to highlight in the item excerpt string.
    */
-  excerptHighlights: string[];
+  excerptHighlights: HighlightKeyword[];
   /**
    * The length and offset of each word to highlight in the item printableUri string.
    */
-  printableUriHighlights: string[];
+  printableUriHighlights: HighlightKeyword[];
   /**
    * The length and offset of each word to highlight in the item summary string.
    */
-  summaryHighlights: string[];
+  summaryHighlights: HighlightKeyword[];
   /**
    * The basic query expression terms which this query result item does not match.
    * Note: This property is populated by terms from the query pipeline-processed q value (not from the original q value).

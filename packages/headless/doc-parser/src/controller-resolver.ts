@@ -5,13 +5,14 @@ import {
   ApiItemKind,
 } from '@microsoft/api-extractor-model';
 import {findApi} from './api-finder';
-import {FuncEntity} from './entity';
+import {FuncEntity, isObjectEntity, ObjEntity} from './entity';
 import {resolveFunction} from './function-resolver';
 import {
   resolveCodeSamplePaths,
   SamplePaths,
   CodeSampleInfo,
 } from './code-sample-resolver';
+import {extractTypes} from './extractor';
 
 export interface ControllerConfiguration {
   initializer: string;
@@ -21,6 +22,7 @@ export interface ControllerConfiguration {
 
 interface Controller {
   initializer: FuncEntity;
+  extractedTypes: ObjEntity[];
   utils: FuncEntity[];
   codeSampleInfo: CodeSampleInfo;
 }
@@ -30,10 +32,11 @@ export function resolveController(
   config: ControllerConfiguration
 ): Controller {
   const initializer = resolveControllerInitializer(entry, config.initializer);
+  const extractedTypes = extractTypesFromInitializer(initializer);
   const utils = (config.utils || []).map((util) => resolveUtility(entry, util));
   const codeSampleInfo = resolveCodeSamplePaths(config.samplePaths);
 
-  return {initializer, utils, codeSampleInfo};
+  return {initializer, extractedTypes, utils, codeSampleInfo};
 }
 
 function resolveControllerInitializer(entry: ApiEntryPoint, name: string) {
@@ -55,4 +58,10 @@ function resolveUtility(entry: ApiEntryPoint, name: string) {
 
 function isFunction(item: ApiItem): item is ApiFunction {
   return item.kind === ApiItemKind.Function;
+}
+
+function extractTypesFromInitializer(entity: FuncEntity) {
+  return isObjectEntity(entity.returnType)
+    ? extractTypes(entity.returnType.members).types
+    : [];
 }
