@@ -95,7 +95,7 @@ const {autoUpdateURI: startUpdatingURI} = bindSearchParametersToURI(engine);
 
 function App() {
   useEffect(() => startUpdatingURI(), []);
-  setContext('search page');
+  setContext('30-45', ['sports', 'camping', 'electronics']);
 
   return (
     <div className="App">
