@@ -44,7 +44,6 @@ import {extractHistory} from '../history/history-state';
 import {sortFacets} from '../../utils/facet-utils';
 import {getSearchInitialState} from './search-state';
 import {logFetchMoreResults, logQueryError} from './search-analytics-actions';
-import {getConstantQueryDefaultValue} from '../advanced-search-queries/advanced-search-queries-state';
 
 export type StateNeededByExecuteSearch = ConfigurationSection &
   Partial<
@@ -273,7 +272,7 @@ export const buildSearchRequest = (
     }),
     ...(state.advancedSearchQueries && {
       aq: state.advancedSearchQueries.aq,
-      cq: state.advancedSearchQueries.cq ?? getConstantQueryDefaultValue(),
+      cq: state.advancedSearchQueries.cq,
     }),
     ...(state.context && {
       context: state.context.contextValues,

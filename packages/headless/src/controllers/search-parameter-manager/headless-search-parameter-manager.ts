@@ -119,9 +119,8 @@ function getCq(state: Partial<SearchParametersState>) {
   }
 
   const cq = state.advancedSearchQueries.cq;
-  const shouldInclude =
-    cq !== null && cq !== getAdvancedSearchQueriesInitialState().cq;
-  return shouldInclude ? {cq: cq as string} : {};
+  const shouldInclude = cq !== getAdvancedSearchQueriesInitialState().cq;
+  return shouldInclude ? {cq} : {};
 }
 
 function getFirstResult(state: Partial<SearchParametersState>) {

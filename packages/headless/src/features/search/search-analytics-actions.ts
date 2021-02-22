@@ -1,8 +1,5 @@
 import {SearchAPIErrorWithStatusCode} from '../../api/search/search-api-error-response';
-import {
-  getAdvancedSearchQueriesInitialState,
-  getConstantQueryDefaultValue,
-} from '../advanced-search-queries/advanced-search-queries-state';
+import {getAdvancedSearchQueriesInitialState} from '../advanced-search-queries/advanced-search-queries-state';
 import {makeAnalyticsAction, AnalyticsType} from '../analytics/analytics-utils';
 import {getQueryInitialState} from '../query/query-state';
 
@@ -20,9 +17,11 @@ export const logQueryError = (error: SearchAPIErrorWithStatusCode) =>
       client.logQueryError({
         query: state.query?.q || getQueryInitialState().q,
         aq:
-          state.advancedSearchQueries?.aq ??
+          state.advancedSearchQueries?.aq ||
           getAdvancedSearchQueriesInitialState().aq,
-        cq: state.advancedSearchQueries?.cq ?? getConstantQueryDefaultValue(),
+        cq:
+          state.advancedSearchQueries?.cq ||
+          getAdvancedSearchQueriesInitialState().cq,
         // TODO: add dq when its added to advanced queries
         dq: '',
         errorType: error.type,

@@ -27,8 +27,7 @@ describe('Tab', () => {
   });
 
   describe('initalization', () => {
-    it('calls #registerConstantQuery if isActive is true and cq is unset', () => {
-      engine.state.advancedSearchQueries.cq = null;
+    it('calls #registerConstantQuery if isActive is true', () => {
       props = {
         options: {
           expression,
@@ -41,21 +40,6 @@ describe('Tab', () => {
 
       const action = updateAdvancedSearchQueries({cq: expression});
       expect(engine.actions).toContainEqual(action);
-    });
-
-    it("doesn't call #registerConstantQuery if isActive is true and cq is set", () => {
-      props = {
-        options: {
-          expression,
-        },
-        initialState: {
-          isActive: true,
-        },
-      };
-      initTab();
-
-      const action = updateAdvancedSearchQueries({cq: expression});
-      expect(engine.actions).not.toContainEqual(action);
     });
 
     it('does not throw if initialState is undefined', () => {

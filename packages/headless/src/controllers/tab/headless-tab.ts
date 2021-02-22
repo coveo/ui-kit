@@ -80,7 +80,7 @@ export function buildTab(
     'buildTab'
   );
 
-  if (initialState.isActive && engine.state.advancedSearchQueries.cq === null) {
+  if (initialState.isActive) {
     dispatch(updateAdvancedSearchQueries({cq: options.expression}));
   }
 

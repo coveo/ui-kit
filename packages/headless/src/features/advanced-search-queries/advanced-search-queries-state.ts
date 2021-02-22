@@ -2,7 +2,7 @@ export interface AdvancedSearchQueriesState {
   /**
    * The cq filter (e.g., `((q AND aq) OR dq) AND cq).
    */
-  cq: string | null;
+  cq: string;
 
   /**
    * The aq filter (e.g., `((q AND aq) OR dq) AND cq).
@@ -11,8 +11,6 @@ export interface AdvancedSearchQueriesState {
 }
 
 export const getAdvancedSearchQueriesInitialState: () => AdvancedSearchQueriesState = () => ({
-  cq: null,
+  cq: '',
   aq: '',
 });
-
-export const getConstantQueryDefaultValue = () => '';

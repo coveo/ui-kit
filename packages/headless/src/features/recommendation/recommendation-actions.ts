@@ -22,7 +22,6 @@ import {
 } from '../../utils/validate-payload';
 import {logRecommendationUpdate} from './recommendation-analytics-actions';
 import {SearchAction} from '../analytics/analytics-utils';
-import {getConstantQueryDefaultValue} from '../advanced-search-queries/advanced-search-queries-state';
 
 export type StateNeededByGetRecommendations = ConfigurationSection &
   RecommendationSection &
@@ -93,7 +92,7 @@ export const buildRecommendationRequest = (
     : [],
   ...(s.advancedSearchQueries && {
     aq: s.advancedSearchQueries.aq,
-    cq: s.advancedSearchQueries.cq ?? getConstantQueryDefaultValue(),
+    cq: s.advancedSearchQueries.cq,
   }),
   ...(s.pipeline && {
     pipeline: s.pipeline,

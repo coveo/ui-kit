@@ -36,7 +36,6 @@ import {buildMockCategoryFacetSlice} from '../../test/mock-category-facet-slice'
 import {buildSearchRequest} from '../../features/search/search-actions';
 import {buildMockSearchAPIClient} from '../../test/mock-search-api-client';
 import {NoopPreprocessRequest} from '../preprocess-request';
-import {getConstantQueryDefaultValue} from '../../features/advanced-search-queries/advanced-search-queries-state';
 
 jest.mock('../platform-client');
 describe('search api client', () => {
@@ -389,7 +388,7 @@ describe('search api client', () => {
           requestParams: {
             recommendation: recommendationState.recommendation.id,
             aq: recommendationState.advancedSearchQueries.aq,
-            cq: getConstantQueryDefaultValue(),
+            cq: recommendationState.advancedSearchQueries.cq,
             fieldsToInclude: recommendationState.fields.fieldsToInclude,
             context: recommendationState.context.contextValues,
             pipeline: recommendationState.pipeline,
