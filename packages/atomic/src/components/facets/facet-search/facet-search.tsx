@@ -159,40 +159,45 @@ export class FacetSearch {
     );
   }
 
+  private get suggestionList() {
+    if (!this.props.controller.state.showFacetSearchResults) {
+      return null;
+    }
+    return (
+      <ul
+        part="suggestions"
+        class="suggestions absolute w-full bg-background border-divider apply-border-on-background empty:border-none rounded-b border-t-0"
+        ref={(el) => (this.valuesRef = el as HTMLElement)}
+      >
+        {this.suggestions}
+        {this.showMoreSearchResults}
+      </ul>
+    );
+  }
+
+  private get searchBoxWrapperClasses() {
+    const hasValues =
+      this.props.controller.facetSearchState.values.length > 0 &&
+      this.props.controller.state.showFacetSearchResults;
+
+    return (
+      'search-box-wrapper box-border flex items-center border-divider apply-border-on-background rounded focus-within:rounded-b-none ' +
+      (hasValues ? 'has-values' : '')
+    );
+  }
+
   public render() {
     return (
-      <div class="search-box relative">
-        <div
-          class={
-            'search-box-wrapper box-border flex items-center border-divider apply-border-on-background rounded focus-within:rounded-b-none ' +
-            (this.props.controller.facetSearchState.values.length > 0 &&
-            this.props.controller.state.showFacetSearchResults
-              ? 'has-values'
-              : '')
-          }
-        >
-          <div class="combobox flex flex-grow">
-            <div
-              class={'input-wrapper flex flex-grow items-center '}
-              ref={(el) => (this.containerRef = el as HTMLElement)}
-            >
-              {this.input}
-              {this.clearButton}
-            </div>
-            <ul
-              part="suggestions"
-              class={
-                'suggestions absolute w-full bg-background border-divider apply-border-on-background empty:border-none rounded-b border-t-0 ' +
-                (this.props.controller.state.showFacetSearchResults
-                  ? 'block'
-                  : 'hidden')
-              }
-              ref={(el) => (this.valuesRef = el as HTMLElement)}
-            >
-              {this.suggestions}
-              {this.showMoreSearchResults}
-            </ul>
+      <div class={this.searchBoxWrapperClasses}>
+        <div class="combobox flex flex-grow">
+          <div
+            class={'input-wrapper flex flex-grow items-center '}
+            ref={(el) => (this.containerRef = el as HTMLElement)}
+          >
+            {this.input}
+            {this.clearButton}
           </div>
+          {this.suggestionList}
         </div>
       </div>
     );
