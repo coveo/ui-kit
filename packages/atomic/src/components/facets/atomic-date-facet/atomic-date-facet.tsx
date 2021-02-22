@@ -20,6 +20,17 @@ import {
   BaseFacetState,
 } from '../base-facet/base-facet';
 
+/**
+ * A facet who's values are expressed as date ranges. It is displayed as a regular facet in desktop browsers and as
+ * a button which opens a facet modal in mobile browsers.
+ *
+ * @part facet - The wrapping div for the entire facet
+ * @part facet-values - The list of facet values
+ * @part facet-value - A single facet value
+ * @part close-button - The button to close the facet when displayed modally (mobile only)
+ * @part reset-button - The button that resets the actively selected facet values
+ *
+ */
 @Component({
   tag: 'atomic-date-facet',
   styleUrl: 'atomic-date-facet.pcss',
