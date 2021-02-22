@@ -209,43 +209,53 @@ export class AtomicSearchBox {
     });
   }
 
+  private get suggestionList() {
+    if (!this.shouldShowSuggestions) {
+      return null;
+    }
+    return (
+      <ul
+        part="suggestions"
+        class="suggestions absolute w-full bg-background border-on-background-variant apply-border-on-background empty:border-none rounded-b border-t-0"
+        ref={(el) => (this.valuesRef = el as HTMLElement)}
+      >
+        {this.suggestions}
+      </ul>
+    );
+  }
+
+  private get searchBoxClasses() {
+    const hasValues =
+      this.searchBoxState.suggestions.length > 0 && this.shouldShowSuggestions;
+
+    return (
+      'search-box relative w-full lg:w-80 box-border flex items-center border-divider ' +
+      (hasValues ? 'has-values' : '')
+    );
+  }
+
+  private get inputWrapperClasses() {
+    return (
+      'input-wrapper flex flex-grow items-center h-full border-on-background-variant apply-border-on-background border-r-0 ' +
+      (this.leadingSubmitButton ? 'rounded-r-lg' : 'rounded-l-lg')
+    );
+  }
+
   public render() {
     return (
-      <div class="search-box relative w-full lg:w-80">
-        <div
-          class={
-            'search-box-wrapper flex items-center focus:outline-none box-border w-full ' +
-            (this.searchBoxState.suggestions.length > 0 &&
-            this.shouldShowSuggestions
-              ? 'has-values'
-              : '')
-          }
-        >
-          {this.leadingSubmitButton && this.submitButton}
-          <div class="combobox flex flex-grow h-full">
-            <div
-              class={
-                'input-wrapper flex flex-grow items-center h-full apply-border-on-background border-r-0 ' +
-                (this.leadingSubmitButton ? 'rounded-r-lg' : 'rounded-l-lg')
-              }
-              ref={(el) => (this.containerRef = el as HTMLElement)}
-            >
-              {this.input}
-              {this.clearButton}
-            </div>
-            <ul
-              part="suggestions"
-              class={
-                'suggestions absolute border-t-0 w-full bg-background apply-border-on-background empty:border-none rounded-b ' +
-                (this.shouldShowSuggestions ? 'block' : 'hidden')
-              }
-              ref={(el) => (this.valuesRef = el as HTMLElement)}
-            >
-              {this.suggestions}
-            </ul>
+      <div class={this.searchBoxClasses}>
+        {this.leadingSubmitButton && this.submitButton}
+        <div class="combobox flex flex-grow h-full">
+          <div
+            class={this.inputWrapperClasses}
+            ref={(el) => (this.containerRef = el as HTMLElement)}
+          >
+            {this.input}
+            {this.clearButton}
           </div>
-          {!this.leadingSubmitButton && this.submitButton}
+          {this.suggestionList}
         </div>
+        {!this.leadingSubmitButton && this.submitButton}
       </div>
     );
   }

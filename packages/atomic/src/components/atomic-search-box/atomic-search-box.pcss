@@ -9,7 +9,7 @@
   width: var(--atomic-submit-button-size, 48px)
 }
 
-.search-box-wrapper, .suggestion {
+.search-box, .suggestion {
   height: var(--atomic-search-box-height, 48px);
 }
 
@@ -21,7 +21,7 @@
   top: var(--atomic-search-box-height, 48px)
 }
 
-.search-box:focus-within .input-wrapper, .search-box:focus-within .submit-button {
+.search-box.has-values .input-wrapper, .search-box.has-values .submit-button {
   border-bottom-right-radius: 0;
   border-bottom-left-radius: 0;
 }
