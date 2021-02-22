@@ -25,8 +25,32 @@ export namespace Components {
     }
     interface AtomicDateFacet {
         "facetId": string;
+        /**
+          * Specifies the index field whose values the facet should use
+         */
         "field": string;
+        /**
+          * Whether or not the index should automatically generate options for the facet
+         */
+        "generateAutomaticRanges": boolean;
+        /**
+          * The displayed label for the facet
+         */
         "label": string;
+    }
+    interface AtomicDateRange {
+        /**
+          * The ending date for the range. It can be expressed as a Javascript date, as a number using epoch time or as a string using the ISO 8601 format
+         */
+        "end": Date | string | number;
+        /**
+          * Specifies whether or not the end date should be included in the range
+         */
+        "endInclusive": boolean;
+        /**
+          * The starting date for the range. It can be expressed as a Javascript date, as a number using epoch time or as a string using the ISO 8601 format
+         */
+        "start": Date | string | number;
     }
     interface AtomicDidYouMean {
     }
@@ -227,6 +251,12 @@ declare global {
         prototype: HTMLAtomicDateFacetElement;
         new (): HTMLAtomicDateFacetElement;
     };
+    interface HTMLAtomicDateRangeElement extends Components.AtomicDateRange, HTMLStencilElement {
+    }
+    var HTMLAtomicDateRangeElement: {
+        prototype: HTMLAtomicDateRangeElement;
+        new (): HTMLAtomicDateRangeElement;
+    };
     interface HTMLAtomicDidYouMeanElement extends Components.AtomicDidYouMean, HTMLStencilElement {
     }
     var HTMLAtomicDidYouMeanElement: {
@@ -394,6 +424,7 @@ declare global {
         "atomic-category-facet": HTMLAtomicCategoryFacetElement;
         "atomic-component-error": HTMLAtomicComponentErrorElement;
         "atomic-date-facet": HTMLAtomicDateFacetElement;
+        "atomic-date-range": HTMLAtomicDateRangeElement;
         "atomic-did-you-mean": HTMLAtomicDidYouMeanElement;
         "atomic-facet": HTMLAtomicFacetElement;
         "atomic-facet-manager": HTMLAtomicFacetManagerElement;
@@ -439,8 +470,32 @@ declare namespace LocalJSX {
     }
     interface AtomicDateFacet {
         "facetId"?: string;
+        /**
+          * Specifies the index field whose values the facet should use
+         */
         "field"?: string;
+        /**
+          * Whether or not the index should automatically generate options for the facet
+         */
+        "generateAutomaticRanges"?: boolean;
+        /**
+          * The displayed label for the facet
+         */
         "label"?: string;
+    }
+    interface AtomicDateRange {
+        /**
+          * The ending date for the range. It can be expressed as a Javascript date, as a number using epoch time or as a string using the ISO 8601 format
+         */
+        "end": Date | string | number;
+        /**
+          * Specifies whether or not the end date should be included in the range
+         */
+        "endInclusive"?: boolean;
+        /**
+          * The starting date for the range. It can be expressed as a Javascript date, as a number using epoch time or as a string using the ISO 8601 format
+         */
+        "start": Date | string | number;
     }
     interface AtomicDidYouMean {
     }
@@ -615,6 +670,7 @@ declare namespace LocalJSX {
         "atomic-category-facet": AtomicCategoryFacet;
         "atomic-component-error": AtomicComponentError;
         "atomic-date-facet": AtomicDateFacet;
+        "atomic-date-range": AtomicDateRange;
         "atomic-did-you-mean": AtomicDidYouMean;
         "atomic-facet": AtomicFacet;
         "atomic-facet-manager": AtomicFacetManager;
@@ -652,6 +708,7 @@ declare module "@stencil/core" {
             "atomic-category-facet": LocalJSX.AtomicCategoryFacet & JSXBase.HTMLAttributes<HTMLAtomicCategoryFacetElement>;
             "atomic-component-error": LocalJSX.AtomicComponentError & JSXBase.HTMLAttributes<HTMLAtomicComponentErrorElement>;
             "atomic-date-facet": LocalJSX.AtomicDateFacet & JSXBase.HTMLAttributes<HTMLAtomicDateFacetElement>;
+            "atomic-date-range": LocalJSX.AtomicDateRange & JSXBase.HTMLAttributes<HTMLAtomicDateRangeElement>;
             "atomic-did-you-mean": LocalJSX.AtomicDidYouMean & JSXBase.HTMLAttributes<HTMLAtomicDidYouMeanElement>;
             "atomic-facet": LocalJSX.AtomicFacet & JSXBase.HTMLAttributes<HTMLAtomicFacetElement>;
             "atomic-facet-manager": LocalJSX.AtomicFacetManager & JSXBase.HTMLAttributes<HTMLAtomicFacetManagerElement>;
