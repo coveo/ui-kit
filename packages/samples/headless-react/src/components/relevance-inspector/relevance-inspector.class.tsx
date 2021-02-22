@@ -39,7 +39,7 @@ export class RelevanceInspector extends Component {
     return (
       <div>
         <label>
-          Debugging:{' '}
+          Enable debug mode:{' '}
           <input
             type="checkbox"
             checked={this.state.isEnabled}

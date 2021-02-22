@@ -27,7 +27,7 @@ export const RelevanceInspector: FunctionComponent<RelevanceInspectorProps> = (
   return (
     <div>
       <label>
-        Debugging:{' '}
+        Enable debug mode:{' '}
         <input
           type="checkbox"
           checked={state.isEnabled}
