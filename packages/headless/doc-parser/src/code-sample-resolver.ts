@@ -7,7 +7,6 @@ const packageJson = JSON.parse(readFileSync(packageJsonPath, 'utf-8'));
 export interface SamplePaths {
   react_class?: string[];
   react_fn?: string[];
-  react_usage?: string[];
 }
 
 export interface CodeSampleInfo {
@@ -25,7 +24,6 @@ interface Paths {
   react: {
     class: SampleInfo[];
     fn: SampleInfo[];
-    usage: SampleInfo[];
   };
 }
 
@@ -53,13 +51,11 @@ function buildGithubInfo(): GithubInfo {
 function resolveSamples(paths: SamplePaths): Paths {
   const reactClass = paths.react_class || [];
   const reactFn = paths.react_fn || [];
-  const reactUsage = paths.react_usage || [];
 
   return {
     react: {
       class: reactClass.map(resolveSample),
       fn: reactFn.map(resolveSample),
-      usage: reactUsage.map(resolveSample),
     },
   };
 }

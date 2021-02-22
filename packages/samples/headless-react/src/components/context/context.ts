@@ -1,7 +1,7 @@
 import {buildContext} from '@coveo/headless';
 import {engine} from '../../engine';
 
-export function setCoveoContext(pageId: string) {
+export function setContext(pageId: string) {
   buildContext(engine).set({
     pageId,
     application: 'my react app',

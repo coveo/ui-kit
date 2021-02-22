@@ -24,8 +24,8 @@ const controllers: ControllerConfiguration[] = [
   {
     initializer: 'buildContext',
     samplePaths: {
-      react_usage: [
-        'packages/samples/headless-react/src/components/context/coveo-context.ts',
+      react_fn: [
+        'packages/samples/headless-react/src/components/context/context.ts',
       ],
     },
   },

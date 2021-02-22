@@ -42,7 +42,7 @@ import {
   buildPager,
 } from '@coveo/headless';
 import {bindSearchParametersToURI} from './components/search-parameter-manager/search-parameter-manager';
-import {setCoveoContext} from './components/context/coveo-context';
+import {setContext} from './components/context/context';
 
 const tabs = {
   all: buildTab(engine, {
@@ -95,7 +95,7 @@ const {autoUpdateURI: startUpdatingURI} = bindSearchParametersToURI(engine);
 
 function App() {
   useEffect(() => startUpdatingURI(), []);
-  setCoveoContext('search page');
+  setContext('search page');
 
   return (
     <div className="App">
