@@ -139,11 +139,8 @@ export function buildParamEntityBasedOnKind(
 }
 
 function buildObjEntityFromParam(entryPoint: ApiEntryPoint, p: Parameter) {
-  const typeExcerpt = p.parameterTypeExcerpt;
-
-  const type = typeExcerpt.text;
-  const typeName = typeExcerpt.spannedTokens[0].text;
-  const apiInterface = findApi(entryPoint, type) as ApiInterface;
+  const typeName = p.parameterTypeExcerpt.spannedTokens[0].text;
+  const apiInterface = findApi(entryPoint, typeName) as ApiInterface;
   const members = resolveInterfaceMembers(entryPoint, apiInterface);
   const entity = buildParamEntity(p);
 

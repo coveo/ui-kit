@@ -1,31 +1,63 @@
 import {Engine} from '../../app/headless-engine';
 import {SearchSection} from '../../state/state-sections';
 import {sortFacets} from '../../utils/facet-utils';
-import {buildController} from '../controller/headless-controller';
+import {buildController, Controller} from '../controller/headless-controller';
 
+/**
+ * A facet payload object to be sorted by the manager.
+ */
 export type FacetManagerPayload<T> = {
+  /**
+   * A unique string identifying a facet.
+   */
   facetId: string;
+
+  /**
+   * The payload to associate with the facetId. This can be anything e.g., a DOM element, JSX, a string.
+   */
   payload: T;
 };
 
-export type FacetManager = ReturnType<typeof buildFacetManager>;
-export type FacetManagerState = FacetManager['state'];
+/**
+ * The `FacetManager` controller helps reorder facets to match the most recent search response.
+ */
+export interface FacetManager extends Controller {
+  /**
+   * Sorts the facets to match the order in the most recent search response.
+   *
+   * @param facets - An array of facet payloads to sort.
+   * @returns A sorted array.
+   */
+  sort<T>(facets: FacetManagerPayload<T>[]): FacetManagerPayload<T>[];
 
-export function buildFacetManager(engine: Engine<SearchSection>) {
+  /**
+   * The state of the `FacetManager` controller.
+   * */
+  state: FacetManagerState;
+}
+
+export interface FacetManagerState {
+  /**
+   * The facet ids sorted in the same order as the latest response.
+   */
+  facetIds: string[];
+}
+
+/**
+ * Creates a `FacetManger` instance.
+ *
+ * @param engine - The headless engine.
+ */
+export function buildFacetManager(engine: Engine<SearchSection>): FacetManager {
   const controller = buildController(engine);
 
   return {
     ...controller,
 
-    /** Sorts the facets to match the order in the most recent search response.
-     * @param FacetManagerPayload[] An array of facet payloads to sort.
-     * @returns FacetManagerPayload[].
-     */
     sort<T>(facets: FacetManagerPayload<T>[]) {
       return sortFacets(facets, this.state.facetIds);
     },
 
-    /** @returns The state of the `FacetManager` controller. */
     get state() {
       const facets = engine.state.search.response.facets;
       const facetIds = facets.map((f) => f.facetId);
