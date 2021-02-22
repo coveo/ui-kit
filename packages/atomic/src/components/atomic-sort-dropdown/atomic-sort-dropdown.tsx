@@ -31,6 +31,7 @@ interface SortDropdownOption {
  *
  * @part label - The "Sort by" label
  * @part select - The select element
+ * @part placeholder - The initialization placeholder
  */
 @Component({
   tag: 'atomic-sort-dropdown',
@@ -134,8 +135,14 @@ export class AtomicSortDropdown implements InitializableComponent {
   }
 
   public render() {
-    if (!this.searchStatusState.hasResults) {
-      return;
+    if (!this.searchStatusState.firstSearchExecuted) {
+      return (
+        <div
+          part="placeholder"
+          aria-hidden
+          class="h-6 my-2 w-44 bg-divider animate-pulse"
+        ></div>
+      );
     }
 
     return [

@@ -150,16 +150,10 @@ export class Combobox {
     return this.options.valuesRef().children;
   }
 
-  private get emptyOptionId() {
-    return `${this.options.id}-empty-option`;
-  }
-
   public updateAccessibilityAttributes() {
     this.setAttributes(this.containerAttributes, this.container);
     this.setAttributes(this.textboxAttributes, this.textbox);
     this.setAttributes(this.listboxAttributes, this.listbox);
-
-    this.removeEmptyOptionElement();
 
     Array.from(this.listboxOptions).forEach((value, index) => {
       value.setAttribute('id', `${this.options.id}-suggestion-${index}`);
@@ -173,13 +167,6 @@ export class Combobox {
       .split(' ')
       .forEach((activeClass) => value.classList.toggle(activeClass, isActive));
     this.setAttributes(this.optionAttributes(isActive, value), value);
-  }
-
-  private removeEmptyOptionElement() {
-    const emptyOptionElement = this.listbox.querySelector(
-      `#${this.emptyOptionId}`
-    );
-    emptyOptionElement && emptyOptionElement.remove();
   }
 
   private setAttributes(attributes: Record<string, string>, element: Element) {

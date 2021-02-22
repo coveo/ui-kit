@@ -1,13 +1,5 @@
-.search-box {
-  @apply relative;
-}
-
 .search-box-wrapper, .suggestion {
   height: var(--atomic-facet-search-height, 30px);
-}
-
-.search-box-wrapper {
-  @apply apply-border-on-background rounded  focus-within:rounded-b-none;
 }
 
 .search-box-wrapper.has-values {
@@ -15,18 +7,11 @@
   border-bottom-left-radius: 0;
 }
 
-.search-input {
-  @apply mx-2;
-}
-
 .suggestions {
   max-height: 250px;
   overflow-y: scroll;
   top: var(--atomic-facet-search-height, 30px);
-}
-
-.suggestion {
-  @apply px-2 text-sm;
+  left: 0;
 }
 
 .suggestion.active, .suggestion:hover {
@@ -34,14 +19,6 @@
 }
 
 .suggestion.active .number-of-values, .suggestion:hover .number-of-values {
-  @apply text-on-primary
-}
-
-.suggestion .label {
-  @apply font-semibold whitespace-nowrap overflow-ellipsis overflow-hidden;
-}
-
-.suggestion .number-of-values {
-  @apply ml-auto text-on-background-variant;
+  @apply text-on-primary;
 }
 

@@ -6,15 +6,14 @@ import {
 } from '../result-template-decorators';
 
 /**
- * The ResultLink component automatically transform a search result title into a clickable link pointing to the
- * original item.
- * @part result-link - The result link
+ * The ResultUri component displays the URI, or path, to access a result.
+ * @part result-uri - The result uri
  */
 @Component({
-  tag: 'atomic-result-link',
+  tag: 'atomic-result-uri',
   shadow: false,
 })
-export class AtomicResultValue {
+export class AtomicResultUri {
   @ResultContext() private result!: Result;
 
   @ResultContextRenderer
@@ -22,16 +21,14 @@ export class AtomicResultValue {
     return (
       <Host class="block">
         <a
-          part="result-link"
+          part="result-uri"
           href={this.result.clickUri}
           class="block text-primary visited:text-visited hover:underline"
         >
-          <h3>
-            <atomic-result-value
-              value="title"
-              shouldHighlightWith="titleHighlights"
-            ></atomic-result-value>
-          </h3>
+          <atomic-result-value
+            value="printableUri"
+            shouldHighlightWith="printableUriHighlights"
+          ></atomic-result-value>
         </a>
       </Host>
     );

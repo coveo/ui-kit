@@ -5,8 +5,8 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { CategoryFacet, CategoryFacetState, Engine, Facet, FacetState, LogLevel, Result, ResultTemplateCondition } from "@coveo/headless";
-import { Bindings, I18nState } from "./utils/initialization-utils";
+import { Engine, LogLevel, Result, ResultTemplateCondition } from "@coveo/headless";
+import { Bindings } from "./utils/initialization-utils";
 import { i18n } from "i18next";
 import { InitializationOptions } from "./components/atomic-search-interface/atomic-search-interface";
 export namespace Components {
@@ -87,22 +87,15 @@ export namespace Components {
         "engine": Engine;
         "result": Result;
     }
+    interface AtomicResultExcerpt {
+    }
     interface AtomicResultLink {
     }
     interface AtomicResultList {
         /**
-          * Whether to automatically retrieve an additional page of results and append it to the current results when the user scrolls down to the bottom of element
+          * A list of fields to include in the query results, separated by commas.
          */
-        "enableInfiniteScroll": boolean;
         "fieldsToInclude": string;
-        /**
-          * Css class for the list wrapper
-         */
-        "listClass": string;
-        /**
-          * Css class for a list element
-         */
-        "listElementClass": string;
     }
     interface AtomicResultTemplate {
         "conditions": ResultTemplateCondition[];
@@ -110,7 +103,16 @@ export namespace Components {
         "getConditions": () => Promise<ResultTemplateCondition[]>;
         "getFields": () => Promise<string[]>;
     }
+    interface AtomicResultUri {
+    }
     interface AtomicResultValue {
+        /**
+          * Which highlight should the value be highlighted with
+         */
+        "shouldHighlightWith"?: string;
+        /**
+          * Which result value should the component render
+         */
         "value": string;
     }
     interface AtomicResultsPerPage {
@@ -119,9 +121,9 @@ export namespace Components {
          */
         "choicesDisplayed": string;
         /**
-          * Initial choice for the number of result per page. Should be part of the `choicesDisplayed` option.
+          * Initial choice for the number of result per page. Should be part of the `choicesDisplayed` option. By default, the first value of choices displayed.
          */
-        "initialChoice": number;
+        "initialChoice"?: number;
     }
     interface AtomicSearchBox {
         "_id": string;
@@ -174,25 +176,6 @@ export namespace Components {
           * String key value
          */
         "value": string;
-    }
-    interface BaseFacet {
-        "hasActiveValues": boolean;
-        "label": string;
-    }
-    interface BaseSearch {
-        "_id": string;
-        "hideSubmitButton": boolean;
-        "leadingSubmitButton": boolean;
-        "moreValuesAvailable": boolean;
-        "placeholder": string;
-        "strings": I18nState;
-        "suggestionValues": {value: string}[];
-        "value": string;
-    }
-    interface FacetSearch {
-        "_id": string;
-        "facet": Facet | CategoryFacet;
-        "facetState": FacetState | CategoryFacetState;
     }
 }
 declare global {
@@ -298,6 +281,12 @@ declare global {
         prototype: HTMLAtomicResultElement;
         new (): HTMLAtomicResultElement;
     };
+    interface HTMLAtomicResultExcerptElement extends Components.AtomicResultExcerpt, HTMLStencilElement {
+    }
+    var HTMLAtomicResultExcerptElement: {
+        prototype: HTMLAtomicResultExcerptElement;
+        new (): HTMLAtomicResultExcerptElement;
+    };
     interface HTMLAtomicResultLinkElement extends Components.AtomicResultLink, HTMLStencilElement {
     }
     var HTMLAtomicResultLinkElement: {
@@ -315,6 +304,12 @@ declare global {
     var HTMLAtomicResultTemplateElement: {
         prototype: HTMLAtomicResultTemplateElement;
         new (): HTMLAtomicResultTemplateElement;
+    };
+    interface HTMLAtomicResultUriElement extends Components.AtomicResultUri, HTMLStencilElement {
+    }
+    var HTMLAtomicResultUriElement: {
+        prototype: HTMLAtomicResultUriElement;
+        new (): HTMLAtomicResultUriElement;
     };
     interface HTMLAtomicResultValueElement extends Components.AtomicResultValue, HTMLStencilElement {
     }
@@ -364,24 +359,6 @@ declare global {
         prototype: HTMLAtomicTextElement;
         new (): HTMLAtomicTextElement;
     };
-    interface HTMLBaseFacetElement extends Components.BaseFacet, HTMLStencilElement {
-    }
-    var HTMLBaseFacetElement: {
-        prototype: HTMLBaseFacetElement;
-        new (): HTMLBaseFacetElement;
-    };
-    interface HTMLBaseSearchElement extends Components.BaseSearch, HTMLStencilElement {
-    }
-    var HTMLBaseSearchElement: {
-        prototype: HTMLBaseSearchElement;
-        new (): HTMLBaseSearchElement;
-    };
-    interface HTMLFacetSearchElement extends Components.FacetSearch, HTMLStencilElement {
-    }
-    var HTMLFacetSearchElement: {
-        prototype: HTMLFacetSearchElement;
-        new (): HTMLFacetSearchElement;
-    };
     interface HTMLElementTagNameMap {
         "atomic-breadcrumb-manager": HTMLAtomicBreadcrumbManagerElement;
         "atomic-category-facet": HTMLAtomicCategoryFacetElement;
@@ -400,9 +377,11 @@ declare global {
         "atomic-query-summary": HTMLAtomicQuerySummaryElement;
         "atomic-relevance-inspector": HTMLAtomicRelevanceInspectorElement;
         "atomic-result": HTMLAtomicResultElement;
+        "atomic-result-excerpt": HTMLAtomicResultExcerptElement;
         "atomic-result-link": HTMLAtomicResultLinkElement;
         "atomic-result-list": HTMLAtomicResultListElement;
         "atomic-result-template": HTMLAtomicResultTemplateElement;
+        "atomic-result-uri": HTMLAtomicResultUriElement;
         "atomic-result-value": HTMLAtomicResultValueElement;
         "atomic-results-per-page": HTMLAtomicResultsPerPageElement;
         "atomic-search-box": HTMLAtomicSearchBoxElement;
@@ -411,9 +390,6 @@ declare global {
         "atomic-sort-dropdown": HTMLAtomicSortDropdownElement;
         "atomic-tab": HTMLAtomicTabElement;
         "atomic-text": HTMLAtomicTextElement;
-        "base-facet": HTMLBaseFacetElement;
-        "base-search": HTMLBaseSearchElement;
-        "facet-search": HTMLFacetSearchElement;
     }
 }
 declare namespace LocalJSX {
@@ -493,29 +469,31 @@ declare namespace LocalJSX {
         "engine": Engine;
         "result": Result;
     }
+    interface AtomicResultExcerpt {
+    }
     interface AtomicResultLink {
     }
     interface AtomicResultList {
         /**
-          * Whether to automatically retrieve an additional page of results and append it to the current results when the user scrolls down to the bottom of element
+          * A list of fields to include in the query results, separated by commas.
          */
-        "enableInfiniteScroll"?: boolean;
         "fieldsToInclude"?: string;
-        /**
-          * Css class for the list wrapper
-         */
-        "listClass"?: string;
-        /**
-          * Css class for a list element
-         */
-        "listElementClass"?: string;
     }
     interface AtomicResultTemplate {
         "conditions"?: ResultTemplateCondition[];
         "fieldsToInclude"?: string;
     }
+    interface AtomicResultUri {
+    }
     interface AtomicResultValue {
-        "value"?: string;
+        /**
+          * Which highlight should the value be highlighted with
+         */
+        "shouldHighlightWith"?: string;
+        /**
+          * Which result value should the component render
+         */
+        "value": string;
     }
     interface AtomicResultsPerPage {
         /**
@@ -523,7 +501,7 @@ declare namespace LocalJSX {
          */
         "choicesDisplayed"?: string;
         /**
-          * Initial choice for the number of result per page. Should be part of the `choicesDisplayed` option.
+          * Initial choice for the number of result per page. Should be part of the `choicesDisplayed` option. By default, the first value of choices displayed.
          */
         "initialChoice"?: number;
     }
@@ -577,32 +555,6 @@ declare namespace LocalJSX {
          */
         "value": string;
     }
-    interface BaseFacet {
-        "hasActiveValues": boolean;
-        "label": string;
-        "onDeselectAll"?: (event: CustomEvent<void>) => void;
-    }
-    interface BaseSearch {
-        "_id": string;
-        "hideSubmitButton"?: boolean;
-        "leadingSubmitButton"?: boolean;
-        "moreValuesAvailable"?: boolean;
-        "onClear"?: (event: CustomEvent<void>) => void;
-        "onSearch"?: (event: CustomEvent<void>) => void;
-        "onSelectValue"?: (event: CustomEvent<number>) => void;
-        "onShowMoreResults"?: (event: CustomEvent<void>) => void;
-        "onTextChange"?: (event: CustomEvent<string>) => void;
-        "placeholder"?: string;
-        "strings": I18nState;
-        "suggestionValues": {value: string}[];
-        "value": string;
-    }
-    interface FacetSearch {
-        "_id"?: string;
-        "facet": Facet | CategoryFacet;
-        "facetState": FacetState | CategoryFacetState;
-        "onSelectValue"?: (event: CustomEvent<number>) => void;
-    }
     interface IntrinsicElements {
         "atomic-breadcrumb-manager": AtomicBreadcrumbManager;
         "atomic-category-facet": AtomicCategoryFacet;
@@ -621,9 +573,11 @@ declare namespace LocalJSX {
         "atomic-query-summary": AtomicQuerySummary;
         "atomic-relevance-inspector": AtomicRelevanceInspector;
         "atomic-result": AtomicResult;
+        "atomic-result-excerpt": AtomicResultExcerpt;
         "atomic-result-link": AtomicResultLink;
         "atomic-result-list": AtomicResultList;
         "atomic-result-template": AtomicResultTemplate;
+        "atomic-result-uri": AtomicResultUri;
         "atomic-result-value": AtomicResultValue;
         "atomic-results-per-page": AtomicResultsPerPage;
         "atomic-search-box": AtomicSearchBox;
@@ -632,9 +586,6 @@ declare namespace LocalJSX {
         "atomic-sort-dropdown": AtomicSortDropdown;
         "atomic-tab": AtomicTab;
         "atomic-text": AtomicText;
-        "base-facet": BaseFacet;
-        "base-search": BaseSearch;
-        "facet-search": FacetSearch;
     }
 }
 export { LocalJSX as JSX };
@@ -658,9 +609,11 @@ declare module "@stencil/core" {
             "atomic-query-summary": LocalJSX.AtomicQuerySummary & JSXBase.HTMLAttributes<HTMLAtomicQuerySummaryElement>;
             "atomic-relevance-inspector": LocalJSX.AtomicRelevanceInspector & JSXBase.HTMLAttributes<HTMLAtomicRelevanceInspectorElement>;
             "atomic-result": LocalJSX.AtomicResult & JSXBase.HTMLAttributes<HTMLAtomicResultElement>;
+            "atomic-result-excerpt": LocalJSX.AtomicResultExcerpt & JSXBase.HTMLAttributes<HTMLAtomicResultExcerptElement>;
             "atomic-result-link": LocalJSX.AtomicResultLink & JSXBase.HTMLAttributes<HTMLAtomicResultLinkElement>;
             "atomic-result-list": LocalJSX.AtomicResultList & JSXBase.HTMLAttributes<HTMLAtomicResultListElement>;
             "atomic-result-template": LocalJSX.AtomicResultTemplate & JSXBase.HTMLAttributes<HTMLAtomicResultTemplateElement>;
+            "atomic-result-uri": LocalJSX.AtomicResultUri & JSXBase.HTMLAttributes<HTMLAtomicResultUriElement>;
             "atomic-result-value": LocalJSX.AtomicResultValue & JSXBase.HTMLAttributes<HTMLAtomicResultValueElement>;
             "atomic-results-per-page": LocalJSX.AtomicResultsPerPage & JSXBase.HTMLAttributes<HTMLAtomicResultsPerPageElement>;
             "atomic-search-box": LocalJSX.AtomicSearchBox & JSXBase.HTMLAttributes<HTMLAtomicSearchBoxElement>;
@@ -669,9 +622,6 @@ declare module "@stencil/core" {
             "atomic-sort-dropdown": LocalJSX.AtomicSortDropdown & JSXBase.HTMLAttributes<HTMLAtomicSortDropdownElement>;
             "atomic-tab": LocalJSX.AtomicTab & JSXBase.HTMLAttributes<HTMLAtomicTabElement>;
             "atomic-text": LocalJSX.AtomicText & JSXBase.HTMLAttributes<HTMLAtomicTextElement>;
-            "base-facet": LocalJSX.BaseFacet & JSXBase.HTMLAttributes<HTMLBaseFacetElement>;
-            "base-search": LocalJSX.BaseSearch & JSXBase.HTMLAttributes<HTMLBaseSearchElement>;
-            "facet-search": LocalJSX.FacetSearch & JSXBase.HTMLAttributes<HTMLFacetSearchElement>;
         }
     }
 }

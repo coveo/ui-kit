@@ -3,6 +3,30 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.7.0-alpha.11](https://github.com/coveo/ui-kit/compare/v0.7.0-alpha.10...v0.7.0-alpha.11) (2021-02-21)
+
+
+### Bug Fixes
+
+* **headless:** support multiple author for a document for analytics ([#515](https://github.com/coveo/ui-kit/issues/515)) ([a0c7c48](https://github.com/coveo/ui-kit/commit/a0c7c486c2ee1d0e750579ec965ac9c606a31294))
+
+
+### Features
+
+* **atomic,headless:** add highlights, atomic-result-excerpt & atomic-result-uri components ([#524](https://github.com/coveo/ui-kit/issues/524)) ([2b73da1](https://github.com/coveo/ui-kit/commit/2b73da10bbfdf52d9ada6533b532b9ae7463cd98))
+
+
+
+
+
+# [0.7.0-alpha.10](https://github.com/coveo/ui-kit/compare/v0.7.0-alpha.9...v0.7.0-alpha.10) (2021-02-19)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
 # [0.7.0-alpha.3](https://github.com/coveo/ui-kit/compare/v0.7.0-alpha.2...v0.7.0-alpha.3) (2021-02-17)
 
 **Note:** Version bump only for package @coveo/headless

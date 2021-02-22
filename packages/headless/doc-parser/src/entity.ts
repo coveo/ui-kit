@@ -7,6 +7,8 @@ export interface Entity {
 
 export interface ObjEntity extends Entity {
   members: AnyEntity[];
+  isTypeExtracted: boolean;
+  typeName: string;
 }
 
 export interface FuncEntity {
@@ -17,3 +19,11 @@ export interface FuncEntity {
 }
 
 export type AnyEntity = Entity | ObjEntity | FuncEntity;
+
+export function isObjectEntity(entity: unknown): entity is ObjEntity {
+  if (typeof entity !== 'object') {
+    return false;
+  }
+
+  return !!entity && 'members' in entity;
+}
