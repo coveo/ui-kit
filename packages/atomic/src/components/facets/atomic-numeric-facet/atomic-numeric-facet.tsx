@@ -64,7 +64,7 @@ export class AtomicNumericFacet
 
   public buildOptions() {
     const options = Array.from(
-      this.host.querySelectorAll('atomic-numeric-facet-range')
+      this.host.querySelectorAll('atomic-numeric-range')
     );
     return options.map(({start, end, endInclusive}) =>
       buildNumericRange({start, end, endInclusive})
