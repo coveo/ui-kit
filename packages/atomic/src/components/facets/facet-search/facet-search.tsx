@@ -1,4 +1,4 @@
-import {h} from '@stencil/core';
+import {FunctionalComponent, h} from '@stencil/core';
 
 import ClearIcon from 'coveo-styleguide/resources/icons/svg/clear.svg';
 import {Combobox} from '../../../utils/combobox';
@@ -30,6 +30,12 @@ export class FacetSearchController {
   public get facetSearchState() {
     return this.state.facetState.facetSearch;
   }
+
+  public set text(text: string) {
+    this.state.facetSearchQuery = text;
+    this.facetSearch.updateText(text);
+    this.facetSearch.search();
+  }
 }
 
 export type FacetSearchProps = {
@@ -51,14 +57,13 @@ export class FacetSearch {
       inputRef: () => this.inputRef,
       valuesRef: () => this.valuesRef,
       onChange: (value) => {
-        props.controller.facetSearch.updateText(value);
-        props.controller.facetSearch.search();
+        this.props.controller.text = value;
       },
       onSubmit: () => props.controller.facetSearch.search(),
       onSelectValue: (element) => {
         const index = (element as HTMLLIElement).value;
-        props.controller.facetSearch.select(
-          props.controller.facetSearchState.values[index] as any
+        this.props.controller.facetSearch.select(
+          this.props.controller.facetSearchState.values[index] as any
         );
       },
       onBlur: () => {
@@ -73,9 +78,9 @@ export class FacetSearch {
     this.combobox.updateAccessibilityAttributes();
   }
 
-  private get clearButton() {
+  private get clearButton(): FunctionalComponent {
     if (this.props.controller.state.facetSearchQuery === '') {
-      return null;
+      return <div></div>;
     }
     return (
       <button
@@ -83,7 +88,7 @@ export class FacetSearch {
         part="clear-button"
         class="clear-button mr-2"
         onClick={() => {
-          this.props.controller.facetSearch.updateText('');
+          this.props.controller.text = '';
           this.inputRef.focus();
         }}
       >
@@ -159,7 +164,7 @@ export class FacetSearch {
       <div class="search-box relative">
         <div
           class={
-            'search-box-wrapper box-border flex items-center apply-border-on-background rounded focus-within:rounded-b-none ' +
+            'search-box-wrapper box-border flex items-center border-divider apply-border-on-background rounded focus-within:rounded-b-none ' +
             (this.props.controller.facetSearchState.values.length > 0 &&
             this.props.controller.state.showFacetSearchResults
               ? 'has-values'
@@ -177,7 +182,7 @@ export class FacetSearch {
             <ul
               part="suggestions"
               class={
-                'suggestions absolute w-full bg-background apply-border-on-background empty:border-none rounded-b border-t-0 ' +
+                'suggestions absolute w-full bg-background border-divider apply-border-on-background empty:border-none rounded-b border-t-0 ' +
                 (this.props.controller.state.showFacetSearchResults
                   ? 'block'
                   : 'hidden')
