@@ -1,5 +1,5 @@
 import {Engine} from '../../app/headless-engine';
-import {buildController} from '../controller/headless-controller';
+import {buildController, Controller} from '../controller/headless-controller';
 import {
   Context as ContextPayload,
   ContextValue,
@@ -16,44 +16,70 @@ import {ContextSection} from '../../state/state-sections';
  *
  * See [Sending Custom Context Information](https://docs.coveo.com/en/399/).
  */
-export type Context = ReturnType<typeof buildContext>;
-export type ContextState = Context['state'];
+export interface Context extends Controller {
+  /**
+   * Set the context for the query. Replace any existing context by the new one.
+   *
+   *  @param ctx - The context to set in the query.
+   */
+  set(ctx: ContextPayload): void;
 
-export const buildContext = (engine: Engine<ContextSection>) => {
+  /**
+   * Add, or replace if already present, a new context key and value pair.
+   *
+   * @param contextKey - The context key to add.
+   * @param contextValue - The context value to add.
+   */
+  add(contextKey: string, contextValue: ContextValue): void;
+
+  /**
+   * Remove a context key from the query.
+   * @param key - The context key to remove.
+   */
+  remove(key: string): void;
+
+  /**
+   * The state of the `Context` controller.
+   */
+  state: ContextState;
+}
+
+export interface ContextState {
+  /**
+   * An object holding the context keys and their values.
+   */
+  values: Record<string, ContextValue>;
+}
+
+/**
+ * Creates a `Context` controller instance.
+ *
+ * @param engine - The headless engine.
+ * @returns A `Context` controller instance.
+ */
+export function buildContext(engine: Engine<ContextSection>): Context {
   const controller = buildController(engine);
   const {dispatch} = engine;
 
   return {
     ...controller,
+
     get state() {
       return {
         values: engine.state.context.contextValues,
       };
     },
 
-    /**
-     * Set the context for the query. Replace any existing context by the new one.
-     *  @param ctx The context to set in the query.
-     */
     set(ctx: ContextPayload) {
       dispatch(setContext(ctx));
     },
 
-    /**
-     * Add, or replace if already present, a new context key and value pair.
-     * @param contextKey The context key to add.
-     * @param contextValue The context value to add.
-     */
     add(contextKey: string, contextValue: ContextValue) {
       dispatch(addContext({contextKey, contextValue}));
     },
 
-    /**
-     * Remove a context key from the query.
-     * @param key The context key to remove.
-     */
     remove(key: string) {
       dispatch(removeContext(key));
     },
   };
-};
+}

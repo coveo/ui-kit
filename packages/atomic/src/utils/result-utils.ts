@@ -1,5 +1,4 @@
-import {once} from './utils';
-import {Engine, ResultAnalyticsActions, Result} from '@coveo/headless';
+import {buildInteractiveResult, Engine, Result} from '@coveo/headless';
 
 /**
  * Binds the logging of document
@@ -15,27 +14,17 @@ export function bindLogDocumentOpenOnResult(
   resultElement: Element,
   selector?: string
 ) {
-  const logDocumentOpenOnce = once(() => {
-    engine.dispatch(ResultAnalyticsActions.logDocumentOpen(result));
+  const interactiveResult = buildInteractiveResult(engine, {
+    options: {result},
   });
-  // 1 second is a reasonable amount of time to catch most longpress actions
-  const longpressDelay = 1000;
-  let longPressTimer: number;
-
-  const startPressTimer = () => {
-    longPressTimer = window.setTimeout(logDocumentOpenOnce, longpressDelay);
-  };
-  const clearPressTimer = () => {
-    longPressTimer && clearTimeout(longPressTimer);
-  };
 
   const eventsMap: Record<string, EventListenerOrEventListenerObject> = {
-    contextmenu: logDocumentOpenOnce,
-    click: logDocumentOpenOnce,
-    mouseup: logDocumentOpenOnce,
-    mousedown: logDocumentOpenOnce,
-    touchstart: startPressTimer,
-    touchend: clearPressTimer,
+    contextmenu: () => interactiveResult.select(),
+    click: () => interactiveResult.select(),
+    mouseup: () => interactiveResult.select(),
+    mousedown: () => interactiveResult.select(),
+    touchstart: () => interactiveResult.beginDelayedSelect(),
+    touchend: () => interactiveResult.cancelPendingSelect(),
   };
   const elements = resultElement.querySelectorAll(
     selector || `a[href='${result.clickUri}']`

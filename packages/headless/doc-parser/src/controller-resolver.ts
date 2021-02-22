@@ -1,12 +1,18 @@
-import {ApiEntryPoint, ApiFunction} from '@microsoft/api-extractor-model';
+import {
+  ApiEntryPoint,
+  ApiFunction,
+  ApiItem,
+  ApiItemKind,
+} from '@microsoft/api-extractor-model';
 import {findApi} from './api-finder';
-import {FuncEntity} from './entity';
+import {FuncEntity, isObjectEntity, ObjEntity} from './entity';
 import {resolveFunction} from './function-resolver';
 import {
   resolveCodeSamplePaths,
   SamplePaths,
   CodeSampleInfo,
 } from './code-sample-resolver';
+import {extractTypes} from './extractor';
 
 export interface ControllerConfiguration {
   initializer: string;
@@ -16,6 +22,7 @@ export interface ControllerConfiguration {
 
 interface Controller {
   initializer: FuncEntity;
+  extractedTypes: ObjEntity[];
   utils: FuncEntity[];
   codeSampleInfo: CodeSampleInfo;
 }
@@ -24,19 +31,37 @@ export function resolveController(
   entry: ApiEntryPoint,
   config: ControllerConfiguration
 ): Controller {
-  const initializer = resolveControllerFunction(entry, config.initializer);
+  const initializer = resolveControllerInitializer(entry, config.initializer);
+  const extractedTypes = extractTypesFromInitializer(initializer);
   const utils = (config.utils || []).map((util) => resolveUtility(entry, util));
   const codeSampleInfo = resolveCodeSamplePaths(config.samplePaths);
 
-  return {initializer, utils, codeSampleInfo};
+  return {initializer, extractedTypes, utils, codeSampleInfo};
 }
 
-function resolveControllerFunction(entry: ApiEntryPoint, name: string) {
-  const fn = findApi(entry, name) as ApiFunction;
+function resolveControllerInitializer(entry: ApiEntryPoint, name: string) {
+  const fn = findApi(entry, name);
+
+  if (!isFunction(fn)) {
+    throw new Error(
+      `controller initializer "${name}" must be a function. Instead found: ${fn.kind}`
+    );
+  }
+
   return resolveFunction(entry, fn, [0]);
 }
 
 function resolveUtility(entry: ApiEntryPoint, name: string) {
   const fn = findApi(entry, name) as ApiFunction;
   return resolveFunction(entry, fn, []);
+}
+
+function isFunction(item: ApiItem): item is ApiFunction {
+  return item.kind === ApiItemKind.Function;
+}
+
+function extractTypesFromInitializer(entity: FuncEntity) {
+  return isObjectEntity(entity.returnType)
+    ? extractTypes(entity.returnType.members).types
+    : [];
 }

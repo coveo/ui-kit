@@ -13,6 +13,12 @@ interface EntityOptions extends Comment {
   isOptional: boolean;
 }
 
+interface ObjEntityOptions {
+  entity: Entity;
+  members: AnyEntity[];
+  typeName: string;
+}
+
 interface FuncEntityOptions extends Comment {
   name: string;
   params: AnyEntity[];
@@ -28,6 +34,18 @@ export function buildEntity(config: EntityOptions): Entity {
     isOptional: config.isOptional,
     type,
     desc,
+  };
+}
+
+export function buildObjEntity(config: ObjEntityOptions): ObjEntity {
+  const {entity, members} = config;
+  const typeName = sanitizeType(config.typeName);
+
+  return {
+    ...entity,
+    members,
+    isTypeExtracted: false,
+    typeName,
   };
 }
 
@@ -78,13 +96,13 @@ function getSummary(comment: DocComment | undefined) {
 
 function getParamDescription(param: Parameter) {
   const nodes = param.tsdocParamBlock?.content.getChildNodes() || [];
+  const description = emitAsTsDoc((nodes as unknown) as readonly DocNode[]);
 
-  try {
-    return emitAsTsDoc((nodes as unknown) as readonly DocNode[]);
-  } catch (e) {
-    console.log('failed to description for param:', param.name, e);
-    return '';
+  if (!description) {
+    throw new Error(`No description found for param: ${param.name}`);
   }
+
+  return description;
 }
 
 function removeBlockTagNodes(nodes: readonly DocNode[]) {

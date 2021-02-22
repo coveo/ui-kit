@@ -1,10 +1,6 @@
 @import "tailwindcss/base";
 @import "tailwindcss/utilities";
 
-atomic-search-box {
-  z-index: 1000;
-}
-
 /**
  * @prop --atomic-submit-button-size: Size of the submit button inside the search box
  * @prop --atomic-search-box-height: Height of the search box
@@ -17,48 +13,12 @@ atomic-search-box {
   height: var(--atomic-search-box-height, 48px);
 }
 
-.search-box {
-  @apply w-full lg:w-80;
-}
-
-.search-box-wrapper {
-  @apply focus:outline-none box-border flex flex-row items-center w-full;
-}
-
-.input-wrapper {
-  @apply h-full flex flex-row flex-grow items-center apply-border-on-background border-r-0 rounded-l-lg;
-}
-
 .input-wrapper.leading-submit {
   @apply border-l-0 rounded-r-lg;
 }
 
-.search-input {
-  @apply h-full mx-2 my-0 text-base placeholder-on-background outline-none flex-grow flex-row items-center;
-}
-
-.submit-button {
-  @apply h-full bg-transparent border-0 focus:outline-none bg-primary p-0 rounded-r-lg;
-}
-
-.submit-button.leading-submit {
-  @apply rounded-l-lg;
-}
-
-.combobox {
-  @apply h-full;
-}
-
-.search-icon {
-  @apply mx-auto w-3.5 h-3.5 text-on-primary fill-current;
-}
-
 .suggestions {
   top: var(--atomic-search-box-height, 48px)
-}
-
-.suggestion {
-  @apply px-2;
 }
 
 .search-box:focus-within .input-wrapper, .search-box:focus-within .submit-button {

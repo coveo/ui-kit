@@ -2,6 +2,10 @@ import logo from './logo.svg';
 import './App.css';
 import {useEffect} from 'react';
 
+import {RecommendationList} from './components/recommendation-list/recommendation-list.class';
+import {RecommendationList as RecommendationListFn} from './components/recommendation-list/recommendation-list.fn';
+import {Tab} from './components/tab/tab.class';
+import {Tab as TabFn} from './components/tab/tab.fn';
 import {SearchBox} from './components/search-box/search-box.class';
 import {SearchBox as SearchBoxFn} from './components/search-box/search-box.fn';
 import {DidYouMean} from './components/did-you-mean/did-you-mean.class';
@@ -16,13 +20,17 @@ import {Pager} from './components/pager/pager.class';
 import {Pager as PagerFn} from './components/pager/pager.fn';
 import {ResultsPerPage} from './components/results-per-page/results-per-page.class';
 import {ResultsPerPage as ResultsPerPageFn} from './components/results-per-page/results-per-page.fn';
-import {engine} from './engine';
+import {engine, recommendationEngine} from './engine';
 import {Section} from './layout/section';
 import {QuerySummary} from './components/query-summary/query-summary.class';
 import {QuerySummary as QuerySummaryFn} from './components/query-summary/query-summary.fn';
 import {Facet} from './components/facet/facet.class';
 import {Facet as FacetFn} from './components/facet/facet.fn';
+import {History} from './components/history/history.class';
+import {History as HistoryFn} from './components/history/history.fn';
 import {
+  buildRecommendationList,
+  buildTab,
   buildSearchBox,
   buildDidYouMean,
   buildQueryError,
@@ -37,8 +45,27 @@ import {
   SortCriterion,
   buildResultsPerPage,
   buildPager,
+  buildHistory,
 } from '@coveo/headless';
 import {bindSearchParametersToURI} from './components/search-parameter-manager/search-parameter-manager';
+
+const recommendationList = buildRecommendationList(recommendationEngine);
+
+const tabs = {
+  all: buildTab(engine, {
+    initialState: {isActive: true},
+    options: {expression: ''},
+  }),
+  messages: buildTab(engine, {
+    options: {expression: '@objecttype==Message'},
+  }),
+  confluence: buildTab(engine, {
+    options: {
+      expression:
+        '@connectortype==Confluence2Crawler AND NOT @documenttype==Space',
+    },
+  }),
+};
 
 const searchBox = buildSearchBox(engine, {options: {numberOfSuggestions: 8}});
 
@@ -71,6 +98,8 @@ const resultsPerPage = buildResultsPerPage(engine, {
 
 const pager = buildPager(engine, {options: {numberOfPages: 6}});
 
+const history = buildHistory(engine);
+
 const {autoUpdateURI: startUpdatingURI} = bindSearchParametersToURI(engine);
 
 function App() {
@@ -80,6 +109,24 @@ function App() {
     <div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
+        <Section title="recommendation-list">
+          <RecommendationList />
+          <RecommendationListFn controller={recommendationList} />
+        </Section>
+        <Section title="tabs">
+          <nav>
+            <Tab active>All</Tab>
+            <Tab expression="@objecttype==Message">Messages</Tab>
+            <Tab expression="@connectortype==Confluence2Crawler AND NOT @documenttype==Space">
+              Confluence
+            </Tab>
+          </nav>
+          <nav>
+            <TabFn controller={tabs.all}>All</TabFn>
+            <TabFn controller={tabs.messages}>Messages</TabFn>
+            <TabFn controller={tabs.confluence}>Confluence</TabFn>
+          </nav>
+        </Section>
         <Section title="search-box">
           <SearchBox />
           <SearchBoxFn controller={searchBox} />
@@ -118,6 +165,10 @@ function App() {
         <Section title="pager">
           <Pager />
           <PagerFn controller={pager} />
+        </Section>
+        <Section title="history">
+          <History />
+          <HistoryFn controller={history} />
         </Section>
       </header>
     </div>

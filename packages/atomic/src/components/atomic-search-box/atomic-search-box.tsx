@@ -8,6 +8,9 @@ import {
   InitializeBindings,
 } from '../../utils/initialization-utils';
 import {randomID} from '../../utils/utils';
+import {Combobox} from '../../utils/combobox';
+import ClearIcon from 'coveo-styleguide/resources/icons/svg/clear.svg';
+import SearchIcon from 'coveo-styleguide/resources/icons/svg/search.svg';
 
 /**
  * A search box with built in support for query suggestions.
@@ -53,11 +56,48 @@ export class AtomicSearchBox {
   );
 
   private searchBox!: SearchBox;
+  private inputRef!: HTMLInputElement;
+  private valuesRef!: HTMLElement;
+  private containerRef!: HTMLElement;
+  private combobox!: Combobox;
 
   @BindStateToController('searchBox')
   @State()
   private searchBoxState!: SearchBoxState;
   @State() public error!: Error;
+  @State() shouldShowSuggestions = false;
+
+  constructor() {
+    this.combobox = new Combobox({
+      id: this._id,
+      strings: this.strings,
+      containerRef: () => this.containerRef,
+      inputRef: () => this.inputRef,
+      valuesRef: () => this.valuesRef,
+      onChange: (value) => {
+        this.searchBox.updateText(value);
+      },
+      onSubmit: () => {
+        this.searchBox.submit();
+        this.shouldShowSuggestions = false;
+      },
+      onSelectValue: (element) => {
+        this.searchBox.selectSuggestion(
+          this.searchBoxState.suggestions[(element as HTMLLIElement).value]
+            .rawValue
+        );
+      },
+      onBlur: () => {
+        this.shouldShowSuggestions = false;
+      },
+      activeClass: 'bg-primary text-on-primary',
+      activePartName: 'active-suggestion',
+    });
+  }
+
+  public componentDidRender() {
+    this.combobox.updateAccessibilityAttributes();
+  }
 
   public initialize() {
     this.searchBox = buildSearchBox(this.bindings.engine, {
@@ -77,25 +117,136 @@ export class AtomicSearchBox {
     });
   }
 
+  private onInputFocus() {
+    this.shouldShowSuggestions = true;
+  }
+
+  private get submitButton() {
+    let roundedClasses = this.leadingSubmitButton
+      ? 'rounded-l-lg'
+      : 'rounded-r-lg';
+
+    if (this.searchBoxState.suggestions.length) {
+      roundedClasses += ' rounded-bl-none rounded-br-none';
+    }
+
+    return (
+      <button
+        type="button"
+        part="submit-button"
+        class={`submit-button h-full bg-transparent border-0 focus:outline-none bg-primary p-0 rounded-r-lg ${roundedClasses}`}
+        aria-label={this.strings.search()}
+        onClick={() => this.searchBox.submit()}
+      >
+        <div
+          innerHTML={SearchIcon}
+          class="search mx-auto w-3.5 h-3.5 text-on-primary fill-current"
+        />
+      </button>
+    );
+  }
+
+  private get clearButton() {
+    if (this.searchBoxState.value === '') {
+      return;
+    }
+
+    return (
+      <button
+        type="button"
+        part="clear-button"
+        class="clear-button bg-transparent border-none outline-none mr-2"
+        aria-label={this.strings.clear()}
+        onClick={() => {
+          this.searchBox.clear();
+          this.inputRef.focus();
+        }}
+      >
+        <div
+          innerHTML={ClearIcon}
+          class="w-2.5 h-2.5 text-on-background fill-current"
+        />
+      </button>
+    );
+  }
+
+  private get input() {
+    return (
+      <input
+        part="search-input"
+        ref={(el) => (this.inputRef = el as HTMLInputElement)}
+        onFocus={() => this.onInputFocus()}
+        onBlur={() => this.combobox.onInputBlur()}
+        onInput={(e) => this.combobox.onInputChange(e)}
+        onKeyUp={(e) => this.combobox.onInputKeyup(e)}
+        onKeyDown={(e) => this.combobox.onInputKeydown(e)}
+        type="text"
+        class={
+          'search-input mx-2 my-0 text-base placeholder-on-background outline-none flex-grow flex-row items-center '
+        }
+        placeholder={this.placeholder}
+        value={this.searchBoxState.value}
+      />
+    );
+  }
+
+  private get suggestions() {
+    return this.searchBoxState.suggestions.map((suggestion, index) => {
+      const id = `${this._id}-suggestion-${index}`;
+      return (
+        <li
+          onClick={() => {
+            this.searchBox.selectSuggestion(suggestion.rawValue);
+          }}
+          onMouseDown={(e) => e.preventDefault()}
+          part="suggestion"
+          id={id}
+          class="suggestion h-9 px-2 cursor-pointer text-left text-sm bg-transparent border-none shadow-none flex flex-row items-center"
+          innerHTML={suggestion.highlightedValue}
+          value={index}
+        />
+      );
+    });
+  }
+
   public render() {
     return (
-      <base-search
-        _id={this._id}
-        strings={this.strings}
-        value={this.searchBoxState.value}
-        suggestionValues={this.searchBoxState.suggestions.map((v) => ({
-          ...v,
-          value: v.highlightedValue,
-        }))}
-        onTextChange={(e) => this.searchBox.updateText(e.detail)}
-        onSearch={() => this.searchBox.submit()}
-        onClear={() => this.searchBox.clear()}
-        onSelectValue={(e) => {
-          this.searchBox.selectSuggestion(
-            this.searchBoxState.suggestions[e.detail].rawValue
-          );
-        }}
-      />
+      <div class="search-box relative w-full lg:w-80">
+        <div
+          class={
+            'search-box-wrapper flex items-center focus:outline-none box-border w-full ' +
+            (this.searchBoxState.suggestions.length > 0 &&
+            this.shouldShowSuggestions
+              ? 'has-values'
+              : '')
+          }
+        >
+          {this.leadingSubmitButton && this.submitButton}
+          <div class="combobox flex flex-grow h-full">
+            <div
+              class={
+                'input-wrapper flex flex-grow items-center h-full apply-border-on-background border-r-0 ' +
+                (this.leadingSubmitButton ? 'rounded-r-lg' : 'rounded-l-lg')
+              }
+              ref={(el) => (this.containerRef = el as HTMLElement)}
+            >
+              {this.input}
+              {this.clearButton}
+            </div>
+            <ul
+              part="suggestions"
+              class={
+                'suggestions absolute border-t-0 w-full bg-background apply-border-on-background empty:border-none rounded-b ' +
+                (this.shouldShowSuggestions ? 'block' : 'hidden')
+              }
+              ref={(el) => (this.valuesRef = el as HTMLElement)}
+            >
+              {this.suggestions}
+            </ul>
+          </div>
+          {!this.leadingSubmitButton && this.submitButton}
+        </div>
+      </div>
     );
   }
 }
