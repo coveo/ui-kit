@@ -56,6 +56,7 @@ describe('SearchPageClient', () => {
         getOriginLevel1: () => 'origin-level-1',
         getOriginLevel2: () => 'origin-level-2',
         getOriginLevel3: () => 'origin-level-3',
+        getLanguage: () => 'en',
     };
 
     beforeEach(() => {
@@ -89,6 +90,7 @@ describe('SearchPageClient', () => {
             queryPipeline: 'my-pipeline',
             actionCause,
             customData,
+            language: 'en',
             ...expectOrigins(),
         });
     };
@@ -103,6 +105,7 @@ describe('SearchPageClient', () => {
             actionCause,
             customData,
             facetState,
+            language: 'en',
             ...expectOrigins(),
         });
     };
@@ -114,6 +117,7 @@ describe('SearchPageClient', () => {
             actionCause,
             customData,
             queryPipeline: 'my-pipeline',
+            language: 'en',
             ...doc,
             ...expectOrigins(),
         });
@@ -127,6 +131,7 @@ describe('SearchPageClient', () => {
             eventType: CustomEventsTypes[actionCause],
             lastSearchQueryUid: 'my-uid',
             customData,
+            language: 'en',
             ...expectOrigins(),
         });
     };
@@ -139,6 +144,7 @@ describe('SearchPageClient', () => {
             eventType,
             lastSearchQueryUid: 'my-uid',
             customData,
+            language: 'en',
             ...expectOrigins(),
         });
     };

@@ -32,6 +32,7 @@ export interface SearchPageClientProvider {
     getOriginLevel1: () => string;
     getOriginLevel2: () => string;
     getOriginLevel3: () => string;
+    getLanguage: () => string;
 }
 
 export interface SearchPageClientOptions extends ClientOptions {
@@ -229,11 +230,9 @@ export class CoveoSearchPageClient {
         const customData = {...this.provider.getBaseMetadata(), ...metadata};
 
         const payload: CustomEventRequest = {
-            ...this.getOrigins(),
+            ...this.getBaseCustomEventRequest(customData),
             eventType: CustomEventsTypes[event]!,
             eventValue: event,
-            lastSearchQueryUid: this.provider.getSearchUID(),
-            customData,
         };
 
         return this.coveoAnalyticsClient.sendCustomEvent(payload);
@@ -243,11 +242,9 @@ export class CoveoSearchPageClient {
         const customData = {...this.provider.getBaseMetadata(), ...metadata};
 
         const payload: CustomEventRequest = {
-            ...this.getOrigins(),
+            ...this.getBaseCustomEventRequest(customData),
             eventType,
             eventValue,
-            lastSearchQueryUid: this.provider.getSearchUID(),
-            customData,
         };
         return this.coveoAnalyticsClient.sendCustomEvent(payload);
     }
@@ -262,19 +259,12 @@ export class CoveoSearchPageClient {
         identifier: DocumentIdentifier,
         metadata?: Record<string, any>
     ) {
-        const customData = {
-            ...this.provider.getBaseMetadata(),
-            ...identifier,
-            ...metadata,
-        };
-
         const payload: ClickEventRequest = {
             ...info,
-            ...this.getOrigins(),
+            ...this.getBaseEventRequest({...identifier, ...metadata}),
             searchQueryUid: this.provider.getSearchUID(),
             queryPipeline: this.provider.getPipeline(),
             actionCause: event,
-            customData,
         };
 
         return this.coveoAnalyticsClient.sendClickEvent(payload);
@@ -294,15 +284,28 @@ export class CoveoSearchPageClient {
     }
 
     private getBaseSearchEventRequest(event: SearchPageEvents, metadata?: Record<string, any>): SearchEventRequest {
-        const customData = {...this.provider.getBaseMetadata(), ...metadata};
-
         return {
+            ...this.getBaseEventRequest(metadata),
             ...this.provider.getSearchEventRequestPayload(),
-            ...this.getOrigins(),
             searchQueryUid: this.provider.getSearchUID(),
             queryPipeline: this.provider.getPipeline(),
-            customData,
             actionCause: event,
+        };
+    }
+
+    private getBaseCustomEventRequest(metadata?: Record<string, any>) {
+        return {
+            ...this.getBaseEventRequest(metadata),
+            lastSearchQueryUid: this.provider.getSearchUID(),
+        };
+    }
+
+    private getBaseEventRequest(metadata?: Record<string, any>) {
+        const customData = {...this.provider.getBaseMetadata(), ...metadata};
+        return {
+            ...this.getOrigins(),
+            customData,
+            language: this.provider.getLanguage(),
         };
     }
 
