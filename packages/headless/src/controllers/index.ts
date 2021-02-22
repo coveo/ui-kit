@@ -14,6 +14,8 @@ export {Context, ContextState, buildContext} from './context/headless-context';
 export {
   DidYouMean,
   DidYouMeanState,
+  QueryCorrection,
+  WordCorrection,
   buildDidYouMean,
 } from './did-you-mean/headless-did-you-mean';
 

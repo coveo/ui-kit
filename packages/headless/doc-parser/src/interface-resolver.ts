@@ -89,11 +89,8 @@ function buildObjEntityFromProperty(
   entry: ApiEntryPoint,
   p: ApiPropertySignature
 ) {
-  const typeExcerpt = p.propertyTypeExcerpt;
-
-  const type = typeExcerpt.text;
-  const typeName = typeExcerpt.spannedTokens[0].text;
-  const apiInterface = findApi(entry, type) as ApiInterface;
+  const typeName = p.propertyTypeExcerpt.spannedTokens[0].text;
+  const apiInterface = findApi(entry, typeName) as ApiInterface;
   const members = resolveInterfaceMembers(entry, apiInterface);
   const entity = buildEntityFromProperty(p);
 
