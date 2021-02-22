@@ -1,4 +1,4 @@
-# atomic-result-link
+# atomic-result-uri
 
 
 
@@ -7,9 +7,9 @@
 
 ## Shadow Parts
 
-| Part            | Description     |
-| --------------- | --------------- |
-| `"result-link"` | The result link |
+| Part           | Description    |
+| -------------- | -------------- |
+| `"result-uri"` | The result uri |
 
 
 ## Dependencies
@@ -21,9 +21,9 @@
 ### Graph
 ```mermaid
 graph TD;
-  atomic-result-link --> atomic-result-value
+  atomic-result-uri --> atomic-result-value
   atomic-result-value --> atomic-component-error
-  style atomic-result-link fill:#f9f,stroke:#333,stroke-width:4px
+  style atomic-result-uri fill:#f9f,stroke:#333,stroke-width:4px
 ```
 
 ----------------------------------------------

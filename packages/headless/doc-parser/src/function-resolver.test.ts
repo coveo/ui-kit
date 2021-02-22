@@ -78,6 +78,7 @@ describe('#resolveFunction', () => {
     const optionsParam = buildMockObjEntity({
       name: 'config',
       type: 'NumericRangeOptions',
+      typeName: 'NumericRangeOptions',
       desc: 'The options with which to create a `NumericRangeRequest`.',
       members: [startProperty],
     });
@@ -85,6 +86,7 @@ describe('#resolveFunction', () => {
     const returnType = buildMockObjEntity({
       name: 'NumericRangeRequest',
       type: 'NumericRangeRequest',
+      typeName: 'NumericRangeRequest',
       members: [startProperty],
     });
 
