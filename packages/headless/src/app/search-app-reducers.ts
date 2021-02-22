@@ -26,6 +26,7 @@ import {advancedSearchQueriesReducer} from '../features/advanced-search-queries/
 import {debugReducer} from '../features/debug/debug-slice';
 import {facetOrderReducer} from '../features/facets/facet-order/facet-order-slice';
 import {redo, snapshot, undo} from '../features/history/history-actions';
+import {defaultConstantQueryFilterReducer} from '../features/defaults/default-constant-query-filter-slice';
 
 /**
  * Map of reducers that make up the SearchAppState.
@@ -42,6 +43,7 @@ export const searchAppReducers: ReducersMapObject<SearchAppState> = {
   categoryFacetSearchSet: categoryFacetSearchSetReducer,
   query: queryReducer,
   advancedSearchQueries: advancedSearchQueriesReducer,
+  defaultConstantQueryFilter: defaultConstantQueryFilterReducer,
   querySet: querySetReducer,
   pagination: paginationReducer,
   redirection: redirectionReducer,

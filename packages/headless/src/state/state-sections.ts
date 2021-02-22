@@ -20,6 +20,7 @@ import {RedirectionState} from '../features/redirection/redirection-state';
 import {SearchState} from '../features/search/search-state';
 import {SortCriteriaState} from '../features/sort-criteria/sort-criteria-state';
 import {FacetOrderState} from '../features/facets/facet-order/facet-order-state';
+import {DefaultConstantQueryFilterState} from '../features/defaults/default-constant-query-filter-state';
 
 export interface QuerySection {
   /**
@@ -33,6 +34,13 @@ export interface AdvancedSearchQueriesSection {
    * The current advanced search parameters (e.g: aq and cq)
    */
   advancedSearchQueries: AdvancedSearchQueriesState;
+}
+
+export interface DefaultsSection {
+  /**
+   * The default constant query filter
+   */
+  defaultConstantQueryFilter: DefaultConstantQueryFilterState;
 }
 
 export interface FacetSection {

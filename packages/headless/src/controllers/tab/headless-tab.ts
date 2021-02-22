@@ -3,9 +3,11 @@ import {buildController} from '../controller/headless-controller';
 import {executeSearch} from '../../features/search/search-actions';
 import {logInterfaceChange} from '../../features/analytics/analytics-actions';
 import {updateAdvancedSearchQueries} from '../../features/advanced-search-queries/advanced-search-queries-actions';
+import {setDefaultConstantQueryFilter} from '../../features/defaults/default-constant-query-filter-actions';
 import {
   AdvancedSearchQueriesSection,
   ConfigurationSection,
+  DefaultsSection,
 } from '../../state/state-sections';
 import {BooleanValue, Schema, StringValue} from '@coveo/bueno';
 import {
@@ -61,7 +63,9 @@ export type Tab = ReturnType<typeof buildTab>;
 export type TabState = Tab['state'];
 
 export function buildTab(
-  engine: Engine<ConfigurationSection & AdvancedSearchQueriesSection>,
+  engine: Engine<
+    ConfigurationSection & AdvancedSearchQueriesSection & DefaultsSection
+  >,
   props: TabProps
 ) {
   const controller = buildController(engine);
@@ -81,7 +85,12 @@ export function buildTab(
   );
 
   if (initialState.isActive) {
-    dispatch(updateAdvancedSearchQueries({cq: options.expression}));
+    if (options.expression) {
+      dispatch(setDefaultConstantQueryFilter(options.expression));
+    }
+    if (!engine.state.defaultConstantQueryFilter.actualValueWasChanged) {
+      dispatch(updateAdvancedSearchQueries({cq: options.expression}));
+    }
   }
 
   return {

@@ -22,7 +22,7 @@ export const Tab: FunctionComponent<TabProps> = (props) => {
 // usage
 
 const controller = buildTab(engine, {
-  initialState: {isActive: true},
+  // initialState: {isActive: true},
   options: {expression: '@objecttype==Message'},
 });
 
