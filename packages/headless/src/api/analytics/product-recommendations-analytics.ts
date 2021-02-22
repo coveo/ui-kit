@@ -6,6 +6,7 @@ import {
   ProductRecommendationsSection,
   SearchHubSection,
 } from '../../state/state-sections';
+import {getLanguage} from './shared-analytics';
 
 export type StateNeededByProductRecommendationsAnalyticsProvider = ConfigurationSection &
   Partial<SearchHubSection & ProductRecommendationsSection>;
@@ -18,11 +19,7 @@ export class ProductRecommendationAnalyticsProvider
   ) {}
 
   public getLanguage() {
-    const langKey = this.state.configuration.search.locale.split('-')[0];
-    if (!langKey || langKey.length !== 2) {
-      return 'en';
-    }
-    return langKey;
+    return getLanguage(this.state);
   }
 
   public getSearchEventRequestPayload() {

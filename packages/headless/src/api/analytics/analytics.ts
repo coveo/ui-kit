@@ -21,6 +21,7 @@ import {
 } from '../../state/state-sections';
 import {Context} from '../../features/context/context-state';
 import {PreprocessRequest} from '../preprocess-request';
+import {getLanguage} from './shared-analytics';
 
 export type StateNeededByAnalyticsProvider = ConfigurationSection &
   Partial<
@@ -36,11 +37,7 @@ export class AnalyticsProvider implements SearchPageClientProvider {
   constructor(private state: StateNeededByAnalyticsProvider) {}
 
   public getLanguage() {
-    const langKey = this.state.configuration.search.locale.split('-')[0];
-    if (!langKey || langKey.length !== 2) {
-      return 'en';
-    }
-    return langKey;
+    return getLanguage(this.state);
   }
 
   public getSearchEventRequestPayload() {
