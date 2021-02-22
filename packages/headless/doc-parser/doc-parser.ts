@@ -23,7 +23,11 @@ const controllers: ControllerConfiguration[] = [
   },
   {
     initializer: 'buildContext',
-    samplePaths: {},
+    samplePaths: {
+      react_fn: [
+        'packages/samples/headless-react/src/components/context/context.ts',
+      ],
+    },
   },
 ];
 
