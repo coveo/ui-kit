@@ -52,6 +52,7 @@ export function buildRelevanceInspector(
   props: RelevanceInspectorProps = {}
 ) {
   let prevSearchUid = '';
+  let wasEnabled = false;
   const controller = buildController(engine);
   const {dispatch} = engine;
   const initialState = validateInitialState(
@@ -158,6 +159,12 @@ export function buildRelevanceInspector(
             logOnNextResponse = false;
             this.logInformation();
           }
+          listener();
+          wasEnabled = this.state.isEnabled;
+          return;
+        }
+        if (this.state.isEnabled !== wasEnabled) {
+          wasEnabled = this.state.isEnabled;
           listener();
         }
       });
