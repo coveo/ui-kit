@@ -24,6 +24,7 @@ describe('configuration slice', () => {
     organizationId: 'myorg',
     search: {
       apiBaseUrl: `${url}/rest/search/v2`,
+      locale: 'en-US',
     },
     analytics: {
       enabled: true,
@@ -132,6 +133,7 @@ describe('configuration slice', () => {
         ...getConfigurationInitialState(),
         search: {
           apiBaseUrl: 'http://test.com/search',
+          locale: 'fr-CA',
         },
       };
 
@@ -140,6 +142,7 @@ describe('configuration slice', () => {
           undefined,
           updateSearchConfiguration({
             apiBaseUrl: 'http://test.com/search',
+            locale: 'fr-CA',
           })
         )
       ).toEqual(expectedState);
@@ -149,6 +152,7 @@ describe('configuration slice', () => {
         ...existingState,
         search: {
           apiBaseUrl: 'http://test.com/search',
+          locale: 'fr-CA',
         },
       };
 
@@ -157,15 +161,17 @@ describe('configuration slice', () => {
           existingState,
           updateSearchConfiguration({
             apiBaseUrl: 'http://test.com/search',
+            locale: 'fr-CA',
           })
         )
       ).toEqual(expectedState);
     });
 
-    it('does not overwrite searchHub value when only pipeline is passed as argument', () => {
+    it('does not overwrite other values when only pipeline is passed as argument', () => {
       const search = {
         pipeline: 'initPipeline',
         searchHub: 'initSearchHub',
+        locale: 'en-US',
       };
       const reducer = createReducer(search, (builder) =>
         builder.addCase(updateSearchConfiguration, (state, action) => {
@@ -179,10 +185,11 @@ describe('configuration slice', () => {
       expect(newState).toEqual({...search, pipeline: 'mockPipeline'});
     });
 
-    it('does not overwrite pipeline value when only searchhub is passed as argument', () => {
+    it('does not overwrite other values when only searchhub is passed as argument', () => {
       const search = {
         pipeline: 'initPipeline',
         searchHub: 'initSearchHub',
+        locale: 'en-US',
       };
       const reducer = createReducer(search, (builder) =>
         builder.addCase(updateSearchConfiguration, (state, action) => {
@@ -194,6 +201,24 @@ describe('configuration slice', () => {
         updateSearchConfiguration({searchHub: 'mockSearchHub'})
       );
       expect(newState).toEqual({...search, searchHub: 'mockSearchHub'});
+    });
+
+    it('does not overwrite other values when only locale is passed as argument', () => {
+      const search = {
+        pipeline: 'initPipeline',
+        searchHub: 'initSearchHub',
+        locale: 'en-US',
+      };
+      const reducer = createReducer(search, (builder) =>
+        builder.addCase(updateSearchConfiguration, (state, action) => {
+          state.locale = action.payload.locale!;
+        })
+      );
+      const newState = reducer(
+        search,
+        updateSearchConfiguration({locale: 'fr-CA'})
+      );
+      expect(newState).toEqual({...search, locale: 'fr-CA'});
     });
   });
 

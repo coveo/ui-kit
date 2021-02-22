@@ -63,6 +63,7 @@ export const buildPlanRequest = (state: RedirectionState): PlanRequest => {
     accessToken: state.configuration.accessToken,
     organizationId: state.configuration.organizationId,
     url: state.configuration.search.apiBaseUrl,
+    locale: state.configuration.search.locale,
     q: state.query.q,
     ...(state.context && {context: state.context.contextValues}),
     ...(state.pipeline && {pipeline: state.pipeline}),

@@ -17,6 +17,14 @@ export class ProductRecommendationAnalyticsProvider
     private state: StateNeededByProductRecommendationsAnalyticsProvider
   ) {}
 
+  public getLanguage() {
+    const langKey = this.state.configuration.search.locale.split('-')[0];
+    if (!langKey || langKey.length !== 2) {
+      return 'en';
+    }
+    return langKey;
+  }
+
   public getSearchEventRequestPayload() {
     return {
       queryText: '',

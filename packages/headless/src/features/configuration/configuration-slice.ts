@@ -36,6 +36,9 @@ export const configurationReducer = createReducer(
         if (action.payload.apiBaseUrl) {
           state.search.apiBaseUrl = action.payload.apiBaseUrl;
         }
+        if (action.payload.locale) {
+          state.search.locale = action.payload.locale;
+        }
       })
       .addCase(updateAnalyticsConfiguration, (state, action) => {
         if (action.payload.enabled !== undefined) {

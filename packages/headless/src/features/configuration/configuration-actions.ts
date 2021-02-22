@@ -3,6 +3,12 @@ import {validatePayload} from '../../utils/validate-payload';
 import {StringValue, BooleanValue, Value} from '@coveo/bueno';
 import {IRuntimeEnvironment} from 'coveo.analytics';
 
+export const localeValidation = new StringValue({
+  emptyAllowed: false,
+  required: false,
+  regex: /[a-z]{2}-[A-Z]{2}/,
+});
+
 const originSchemaOnConfigUpdate = () =>
   new StringValue({emptyAllowed: false, required: false});
 
@@ -37,11 +43,17 @@ export const updateBasicConfiguration = createAction(
  */
 export const updateSearchConfiguration = createAction(
   'configuration/updateSearchConfiguration',
-  (payload: {apiBaseUrl?: string; pipeline?: string; searchHub?: string}) =>
+  (payload: {
+    apiBaseUrl?: string;
+    pipeline?: string;
+    searchHub?: string;
+    locale?: string;
+  }) =>
     validatePayload(payload, {
       apiBaseUrl: new StringValue({url: true, emptyAllowed: false}),
       pipeline: new StringValue({emptyAllowed: false}),
       searchHub: new StringValue({emptyAllowed: false}),
+      locale: localeValidation,
     })
 );
 

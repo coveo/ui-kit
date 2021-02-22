@@ -5,6 +5,7 @@ import {
   NumberValue,
   RecordValue,
 } from '@coveo/bueno';
+import {localeValidation} from '../configuration/configuration-actions';
 import {SearchParameters} from './search-parameter-actions';
 
 export const searchParametersDefinition: SchemaDefinition<Required<
@@ -12,6 +13,7 @@ export const searchParametersDefinition: SchemaDefinition<Required<
 >> = {
   q: new StringValue(),
   enableQuerySyntax: new BooleanValue(),
+  locale: localeValidation,
   aq: new StringValue(),
   cq: new StringValue(),
   firstResult: new NumberValue({min: 0}),
