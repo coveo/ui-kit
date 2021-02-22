@@ -231,6 +231,13 @@ export interface CategoryFacetValue {
   value: string;
 }
 
+/**
+ * Creates a `CategoryFacet` controller instance.
+ *
+ * @param engine - The headless engine.
+ * @param props - The configurable `CategoryFacet` properties.
+ * @returns A `CategoryFacet` controller instance.
+ * */
 export function buildCategoryFacet(
   engine: Engine<
     CategoryFacetSection &

@@ -29,6 +29,10 @@ const controllers: ControllerConfiguration[] = [
       ],
     },
   },
+  {
+    initializer: 'buildCategoryFacet',
+    samplePaths: {},
+  },
 ];
 
 const result = controllers.map((controller) =>
