@@ -6,6 +6,7 @@ import {
   ApiMethodSignature,
   ApiPropertySignature,
   ApiTypeAlias,
+  ExcerptToken,
   ExcerptTokenKind,
   Parameter,
 } from '@microsoft/api-extractor-model';
@@ -44,37 +45,35 @@ function resolvePropertySignature(
   entry: ApiEntryPoint,
   p: ApiPropertySignature
 ) {
-  if (isRecordType(p)) {
+  const typeExcerpt = p.propertyTypeExcerpt.spannedTokens[0];
+
+  if (isRecordType(typeExcerpt)) {
     return buildEntityFromProperty(p);
   }
 
-  if (isPropertyUsingTypeAlias(p)) {
+  if (isTypeAlias(typeExcerpt)) {
     return buildEntityFromPropertyAndResolveTypeAlias(entry, p);
   }
 
-  if (isReference(p)) {
+  if (isReference(typeExcerpt)) {
     return buildObjEntityFromProperty(entry, p);
   }
 
   return buildEntityFromProperty(p);
 }
 
-function isPropertyUsingTypeAlias(m: ApiPropertySignature) {
-  const {canonicalReference} = m.propertyTypeExcerpt.spannedTokens[0];
-  const canonicalRef = canonicalReference?.toString() || '';
+function isTypeAlias(token: ExcerptToken) {
+  const canonicalRef = token.canonicalReference?.toString() || '';
   return /:type$/.test(canonicalRef);
 }
 
-function isRecordType(p: ApiPropertySignature) {
-  const {text} = p.propertyTypeExcerpt.spannedTokens[0];
-  const isRecord = text === 'Record';
-
-  return isReference(p) && isRecord;
+function isRecordType(token: ExcerptToken) {
+  const isRecord = token.text === 'Record';
+  return isReference(token) && isRecord;
 }
 
-function isReference(m: ApiPropertySignature) {
-  const {kind} = m.propertyTypeExcerpt.spannedTokens[0];
-  return kind === ExcerptTokenKind.Reference;
+function isReference(token: ExcerptToken) {
+  return token.kind === ExcerptTokenKind.Reference;
 }
 
 function buildEntityFromProperty(p: ApiPropertySignature) {
@@ -127,15 +126,32 @@ function resolveMethodSignature(entry: ApiEntryPoint, m: ApiMethodSignature) {
 }
 
 export function buildParamEntityBasedOnKind(
-  entryPoint: ApiEntryPoint,
+  entry: ApiEntryPoint,
   p: Parameter
 ) {
-  const {kind} = p.parameterTypeExcerpt.spannedTokens[0];
-  const isReference = kind === ExcerptTokenKind.Reference;
+  const typeExcerpt = p.parameterTypeExcerpt.spannedTokens[0];
 
-  return isReference
-    ? buildObjEntityFromParam(entryPoint, p)
-    : buildParamEntity(p);
+  if (isTypeAlias(typeExcerpt)) {
+    return buildEntityFromParamAndResolveTypeAlias(entry, p);
+  }
+
+  if (isReference(typeExcerpt)) {
+    return buildObjEntityFromParam(entry, p);
+  }
+
+  return buildParamEntity(p);
+}
+
+function buildEntityFromParamAndResolveTypeAlias(
+  entry: ApiEntryPoint,
+  p: Parameter
+): Entity {
+  const entity = buildParamEntity(p);
+  const alias = p.parameterTypeExcerpt.text;
+  const typeAlias = findApi(entry, alias) as ApiTypeAlias;
+  const type = typeAlias.typeExcerpt.text;
+
+  return {...entity, type};
 }
 
 function buildObjEntityFromParam(entryPoint: ApiEntryPoint, p: Parameter) {
