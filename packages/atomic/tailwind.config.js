@@ -5,7 +5,7 @@ module.exports = {
     content: [
       './src/**/*.tsx', './src/index.html', './src/**/*.css'
     ],
-    enabled: !isDevWatch
+    enabled: true
   },
   darkMode: false, // or 'media' or 'class'
   theme: {
@@ -24,7 +24,7 @@ module.exports = {
         "divider": "var(--atomic-divider, #BCC3CA)",
         "error": "var(--atomic-error, #CE3F00)",
         "on-error": "var(--atomic-on-error, #FFFFFF)",
-        "visited": "var(--atomic-visited, #9333EA)", 
+        "visited": "var(--atomic-visited, #9333EA)",
       }
     },
     backgroundColor: (theme) => ({
