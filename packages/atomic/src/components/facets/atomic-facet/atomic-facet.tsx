@@ -65,6 +65,11 @@ export class AtomicFacet
     const options: FacetOptions = {facetId: this.facetId, field: this.field};
     this.facet = buildFacet(this.bindings.engine, {options});
     this.facetId = this.facet.state.facetId;
+    this.facetSearch = new FacetSearch(this.facetSearchProps);
+  }
+
+  componentDidRender() {
+    this.facetSearch.updateCombobox();
   }
 
   componentDidRender() {

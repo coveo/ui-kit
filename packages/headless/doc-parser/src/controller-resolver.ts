@@ -32,8 +32,8 @@ export function resolveController(
   config: ControllerConfiguration
 ): Controller {
   const initializer = resolveControllerInitializer(entry, config.initializer);
-  const extractedTypes = extractTypesFromInitializer(initializer);
   const utils = (config.utils || []).map((util) => resolveUtility(entry, util));
+  const extractedTypes = extractTypesFrom(initializer, utils);
   const codeSampleInfo = resolveCodeSamplePaths(config.samplePaths);
 
   return {initializer, extractedTypes, utils, codeSampleInfo};
@@ -60,8 +60,39 @@ function isFunction(item: ApiItem): item is ApiFunction {
   return item.kind === ApiItemKind.Function;
 }
 
-function extractTypesFromInitializer(entity: FuncEntity) {
-  return isObjectEntity(entity.returnType)
-    ? extractTypes(entity.returnType.members).types
-    : [];
+function extractTypesFrom(initializer: FuncEntity, utils: FuncEntity[]) {
+  const instanceTypes = extractTypesFromInitializerInstance(initializer);
+  const utilTypes = extractTypes(utils).types;
+  const types = instanceTypes.concat(utilTypes);
+
+  return removeDuplicates(types);
+}
+
+function extractTypesFromInitializerInstance(entity: FuncEntity) {
+  const {returnType} = entity;
+
+  if (typeof returnType === 'string') {
+    return [];
+  }
+
+  if (isObjectEntity(returnType)) {
+    return extractTypes(returnType.members).types;
+  }
+
+  return [];
+}
+
+function removeDuplicates(entities: ObjEntity[]) {
+  const seenNames = new Set();
+
+  return entities.filter((entity) => {
+    const {name} = entity;
+
+    if (seenNames.has(name)) {
+      return false;
+    }
+
+    seenNames.add(name);
+    return true;
+  });
 }

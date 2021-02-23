@@ -4,6 +4,7 @@ export function buildMockFuncEntity(
   config: Partial<FuncEntity> = {}
 ): FuncEntity {
   return {
+    kind: 'function',
     desc: '',
     name: '',
     params: [],

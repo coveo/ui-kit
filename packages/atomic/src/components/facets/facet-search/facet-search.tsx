@@ -1,4 +1,4 @@
-import {FunctionalComponent, h} from '@stencil/core';
+import {h} from '@stencil/core';
 
 import ClearIcon from 'coveo-styleguide/resources/icons/svg/clear.svg';
 import {Combobox} from '../../../utils/combobox';
@@ -11,6 +11,7 @@ import {
 } from '@coveo/headless';
 import {BaseFacetSearchResult} from '@coveo/headless/dist/api/search/facet-search/base/base-facet-search-response';
 import {randomID} from '../../../utils/utils';
+import {CategoryFacetSearchResult} from '@coveo/headless/dist/api/search/facet-search/category-facet-search/category-facet-search-response';
 
 export interface FacetSearchState {
   strings: I18nState;
@@ -63,7 +64,9 @@ export class FacetSearch {
       onSelectValue: (element) => {
         const index = (element as HTMLLIElement).value;
         this.props.controller.facetSearch.select(
-          this.props.controller.facetSearchState.values[index] as any
+          this.props.controller.facetSearchState.values[
+            index
+          ] as CategoryFacetSearchResult
         );
       },
       onBlur: () => {
@@ -78,9 +81,9 @@ export class FacetSearch {
     this.combobox.updateAccessibilityAttributes();
   }
 
-  private get clearButton(): FunctionalComponent {
+  private get clearButton() {
     if (this.props.controller.state.facetSearchQuery === '') {
-      return <div></div>;
+      return null;
     }
     return (
       <button
@@ -126,7 +129,9 @@ export class FacetSearch {
       return (
         <li
           onClick={() =>
-            this.props.controller.facetSearch.select(suggestion as any)
+            this.props.controller.facetSearch.select(
+              suggestion as CategoryFacetSearchResult
+            )
           }
           onMouseDown={(e) => e.preventDefault()}
           part="suggestion"
@@ -159,41 +164,45 @@ export class FacetSearch {
     );
   }
 
+  private get suggestionList() {
+    const showResults = this.props.controller.state.showFacetSearchResults;
+    return (
+      <ul
+        part="suggestions"
+        class={
+          'suggestions z-10 absolute w-full bg-background border-on-background-variant apply-border-on-background empty:border-none rounded-b border-t-0 ' +
+          (showResults ? 'block' : 'hidden')
+        }
+        ref={(el) => (this.valuesRef = el as HTMLElement)}
+      >
+        {this.suggestions}
+        {this.showMoreSearchResults}
+      </ul>
+    );
+  }
+
+  private get inputWrapperClasses() {
+    const hasValues =
+      this.props.controller.facetSearchState.values.length > 0 &&
+      this.props.controller.state.showFacetSearchResults;
+
+    return (
+      'input-wrapper flex flex-grow items-center border-on-background-variant apply-border-on-background rounded ' +
+      (hasValues ? 'has-values' : '')
+    );
+  }
+
   public render() {
     return (
-      <div class="search-box relative">
+      <div class="combobox relative flex flex-grow">
         <div
-          class={
-            'search-box-wrapper box-border flex items-center border-divider apply-border-on-background rounded focus-within:rounded-b-none ' +
-            (this.props.controller.facetSearchState.values.length > 0 &&
-            this.props.controller.state.showFacetSearchResults
-              ? 'has-values'
-              : '')
-          }
+          class={this.inputWrapperClasses}
+          ref={(el) => (this.containerRef = el as HTMLElement)}
         >
-          <div class="combobox flex flex-grow">
-            <div
-              class={'input-wrapper flex flex-grow items-center '}
-              ref={(el) => (this.containerRef = el as HTMLElement)}
-            >
-              {this.input}
-              {this.clearButton}
-            </div>
-            <ul
-              part="suggestions"
-              class={
-                'suggestions absolute w-full bg-background border-divider apply-border-on-background empty:border-none rounded-b border-t-0 ' +
-                (this.props.controller.state.showFacetSearchResults
-                  ? 'block'
-                  : 'hidden')
-              }
-              ref={(el) => (this.valuesRef = el as HTMLElement)}
-            >
-              {this.suggestions}
-              {this.showMoreSearchResults}
-            </ul>
-          </div>
+          {this.input}
+          {this.clearButton}
         </div>
+        {this.suggestionList}
       </div>
     );
   }
