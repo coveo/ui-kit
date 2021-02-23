@@ -48,6 +48,7 @@ import {
   buildHistory,
 } from '@coveo/headless';
 import {bindSearchParametersToURI} from './components/search-parameter-manager/search-parameter-manager';
+import {setContext} from './components/context/context';
 
 const recommendationList = buildRecommendationList(recommendationEngine);
 
@@ -104,6 +105,7 @@ const {autoUpdateURI: startUpdatingURI} = bindSearchParametersToURI(engine);
 
 function App() {
   useEffect(() => startUpdatingURI(), []);
+  setContext('30-45', ['sports', 'camping', 'electronics']);
 
   return (
     <div className="App">
