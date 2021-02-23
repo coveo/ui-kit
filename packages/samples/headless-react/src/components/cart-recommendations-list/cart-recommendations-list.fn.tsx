@@ -59,7 +59,7 @@ export const CartRecommendationsList: FunctionComponent<CartRecommendationsListP
                 <table>
                   <tr>
                     <th>Rating</th>
-                    <td>{product.rating}/10</td>
+                    <td>{Math.round(product.rating)}/10</td>
                   </tr>
                   <tr>
                     <th>Brand</th>
