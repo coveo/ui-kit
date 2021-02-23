@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.7.0-alpha.17](https://github.com/coveo/ui-kit/compare/v0.7.0-alpha.16...v0.7.0-alpha.17) (2021-02-23)
+
+
+### Features
+
+* **atomic:** numeric facet ([#521](https://github.com/coveo/ui-kit/issues/521)) ([2259add](https://github.com/coveo/ui-kit/commit/2259add97432eb6ce6c57c53078aa6658a228389))
+
+
+
+
+
 # [0.7.0-alpha.16](https://github.com/coveo/ui-kit/compare/v0.7.0-alpha.15...v0.7.0-alpha.16) (2021-02-23)
 
 **Note:** Version bump only for package @coveo/atomic
