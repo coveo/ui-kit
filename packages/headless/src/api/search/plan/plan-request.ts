@@ -1,6 +1,7 @@
 import {
   BaseParam,
   ContextParam,
+  LocaleParam,
   PipelineParam,
   QueryParam,
   SearchHubParam,
@@ -10,4 +11,5 @@ export type PlanRequest = BaseParam &
   SearchHubParam &
   ContextParam &
   QueryParam &
-  PipelineParam;
+  PipelineParam &
+  LocaleParam;

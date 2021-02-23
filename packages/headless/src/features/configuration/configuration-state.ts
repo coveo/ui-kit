@@ -24,6 +24,10 @@ export interface ConfigurationState {
      * By default, will append /rest/search/v2 to the platformUrl value.
      */
     apiBaseUrl: string;
+    /**
+     * The locale of the current user. Must comply with IETF’s BCP 47 definition: https://www.rfc-editor.org/rfc/bcp/bcp47.txt.
+     */
+    locale: string;
   };
   /**
    * The global headless engine Usage Analytics API configuration.
@@ -72,6 +76,7 @@ export const getConfigurationInitialState: () => ConfigurationState = () => ({
   platformUrl: platformUrl(),
   search: {
     apiBaseUrl: `${platformUrl()}${searchAPIEndpoint}`,
+    locale: 'en-US',
   },
   analytics: {
     enabled: true,

@@ -10,7 +10,6 @@ import {
   setOriginLevel2,
 } from './configuration-actions';
 import {platformUrl} from '../../api/platform-client';
-import {createReducer} from '../..';
 import {
   ConfigurationState,
   getConfigurationInitialState,
@@ -24,6 +23,7 @@ describe('configuration slice', () => {
     organizationId: 'myorg',
     search: {
       apiBaseUrl: `${url}/rest/search/v2`,
+      locale: 'en-US',
     },
     analytics: {
       enabled: true,
@@ -132,6 +132,7 @@ describe('configuration slice', () => {
         ...getConfigurationInitialState(),
         search: {
           apiBaseUrl: 'http://test.com/search',
+          locale: 'fr-CA',
         },
       };
 
@@ -140,6 +141,7 @@ describe('configuration slice', () => {
           undefined,
           updateSearchConfiguration({
             apiBaseUrl: 'http://test.com/search',
+            locale: 'fr-CA',
           })
         )
       ).toEqual(expectedState);
@@ -149,6 +151,7 @@ describe('configuration slice', () => {
         ...existingState,
         search: {
           apiBaseUrl: 'http://test.com/search',
+          locale: 'fr-CA',
         },
       };
 
@@ -157,43 +160,10 @@ describe('configuration slice', () => {
           existingState,
           updateSearchConfiguration({
             apiBaseUrl: 'http://test.com/search',
+            locale: 'fr-CA',
           })
         )
       ).toEqual(expectedState);
-    });
-
-    it('does not overwrite searchHub value when only pipeline is passed as argument', () => {
-      const search = {
-        pipeline: 'initPipeline',
-        searchHub: 'initSearchHub',
-      };
-      const reducer = createReducer(search, (builder) =>
-        builder.addCase(updateSearchConfiguration, (state, action) => {
-          state.pipeline = action.payload.pipeline!;
-        })
-      );
-      const newState = reducer(
-        search,
-        updateSearchConfiguration({pipeline: 'mockPipeline'})
-      );
-      expect(newState).toEqual({...search, pipeline: 'mockPipeline'});
-    });
-
-    it('does not overwrite pipeline value when only searchhub is passed as argument', () => {
-      const search = {
-        pipeline: 'initPipeline',
-        searchHub: 'initSearchHub',
-      };
-      const reducer = createReducer(search, (builder) =>
-        builder.addCase(updateSearchConfiguration, (state, action) => {
-          state.searchHub = action.payload.searchHub!;
-        })
-      );
-      const newState = reducer(
-        search,
-        updateSearchConfiguration({searchHub: 'mockSearchHub'})
-      );
-      expect(newState).toEqual({...search, searchHub: 'mockSearchHub'});
     });
   });
 

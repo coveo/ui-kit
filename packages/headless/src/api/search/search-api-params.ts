@@ -81,6 +81,10 @@ export interface DebugParam {
   debug?: boolean;
 }
 
+export interface LocaleParam {
+  locale?: string;
+}
+
 export interface MachineLearningECommerceParameters {
   itemIds?: string[];
   categoryFilter?: string;
