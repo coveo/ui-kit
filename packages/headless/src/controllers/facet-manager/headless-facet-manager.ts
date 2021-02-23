@@ -6,7 +6,7 @@ import {buildController, Controller} from '../controller/headless-controller';
 /**
  * A facet payload object to be sorted by the manager.
  */
-export type FacetManagerPayload<T> = {
+export interface FacetManagerPayload<T> {
   /**
    * A unique string identifying a facet.
    */
@@ -16,7 +16,7 @@ export type FacetManagerPayload<T> = {
    * The payload to associate with the facetId. This can be anything e.g., a DOM element, JSX, a string.
    */
   payload: T;
-};
+}
 
 /**
  * The `FacetManager` controller helps reorder facets to match the most recent search response.
