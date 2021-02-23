@@ -38,7 +38,7 @@ export class AtomicFacet
   private facetSearchProps = {
     controller: new FacetSearchController(this),
   };
-  private facetSearch = new FacetSearch(this.facetSearchProps);
+  private facetSearch!: FacetSearch;
   @BindStateToController('facet', {subscribeOnConnectedCallback: true})
   @State()
   public facetState!: FacetState;
@@ -65,6 +65,7 @@ export class AtomicFacet
     const options: FacetOptions = {facetId: this.facetId, field: this.field};
     this.facet = buildFacet(this.bindings.engine, {options});
     this.facetId = this.facet.state.facetId;
+    this.facetSearch = new FacetSearch(this.facetSearchProps);
   }
 
   componentDidRender() {

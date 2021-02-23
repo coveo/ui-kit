@@ -165,13 +165,14 @@ export class FacetSearch {
   }
 
   private get suggestionList() {
-    if (!this.props.controller.state.showFacetSearchResults) {
-      return null;
-    }
+    const showResults = this.props.controller.state.showFacetSearchResults;
     return (
       <ul
         part="suggestions"
-        class="suggestions absolute w-full bg-background border-on-background-variant apply-border-on-background empty:border-none rounded-b border-t-0"
+        class={
+          'suggestions absolute w-full bg-background border-on-background-variant apply-border-on-background empty:border-none rounded-b border-t-0 ' +
+          (showResults ? 'block' : 'hidden')
+        }
         ref={(el) => (this.valuesRef = el as HTMLElement)}
       >
         {this.suggestions}

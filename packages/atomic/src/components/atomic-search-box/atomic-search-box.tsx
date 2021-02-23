@@ -134,7 +134,7 @@ export class AtomicSearchBox {
       <button
         type="button"
         part="submit-button"
-        class={`submit-button h-full bg-transparent border-0 focus:outline-none bg-primary p-0 rounded-r-lg ${roundedClasses}`}
+        class={`submit-button h-full bg-transparent border-0 focus:outline-none bg-primary p-0 ${roundedClasses}`}
         aria-label={this.strings.search()}
         onClick={() => this.searchBox.submit()}
       >
@@ -210,13 +210,13 @@ export class AtomicSearchBox {
   }
 
   private get suggestionList() {
-    if (!this.shouldShowSuggestions) {
-      return null;
-    }
     return (
       <ul
         part="suggestions"
-        class="suggestions absolute w-full bg-background border-on-background-variant apply-border-on-background empty:border-none rounded-b border-t-0"
+        class={
+          'suggestions absolute w-full bg-background border-on-background-variant apply-border-on-background empty:border-none rounded-b border-t-0 ' +
+          (this.shouldShowSuggestions ? 'block' : 'hidden')
+        }
         ref={(el) => (this.valuesRef = el as HTMLElement)}
       >
         {this.suggestions}
@@ -236,8 +236,10 @@ export class AtomicSearchBox {
 
   private get inputWrapperClasses() {
     return (
-      'input-wrapper flex flex-grow items-center h-full border-on-background-variant apply-border-on-background border-r-0 ' +
-      (this.leadingSubmitButton ? 'rounded-r-lg' : 'rounded-l-lg')
+      'input-wrapper flex flex-grow items-center h-full border-on-background-variant apply-border-on-background  ' +
+      (this.leadingSubmitButton
+        ? 'rounded-r-lg border-l-0'
+        : 'rounded-l-lg border-r-0')
     );
   }
 
