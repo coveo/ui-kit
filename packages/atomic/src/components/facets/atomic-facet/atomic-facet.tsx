@@ -72,10 +72,6 @@ export class AtomicFacet
     this.facetSearch.updateCombobox();
   }
 
-  componentDidRender() {
-    this.facetSearch.updateCombobox();
-  }
-
   private get values() {
     return this.facetState.values.map((listItem) =>
       this.buildListItem(listItem)
