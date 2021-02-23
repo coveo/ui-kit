@@ -1,6 +1,6 @@
-import {ApiMethodSignature, ReleaseTag} from '@microsoft/api-extractor-model';
 import {buildMockApiDocComment} from '../mocks/mock-api-doc-comment';
 import {buildMockApiInterface} from '../mocks/mock-api-interface';
+import {buildMockApiMethodSignature} from '../mocks/mock-api-method-signature';
 import {buildMockApiPropertySignature} from '../mocks/mock-api-property-signature';
 import {buildMockApiTypeAlias} from '../mocks/mock-api-type-alias';
 import {buildMockEntity} from '../mocks/mock-entity';
@@ -89,6 +89,38 @@ describe('#resolveInterfaceMembers', () => {
     expect(result).toEqual([objEntity]);
   });
 
+  it('resolves a property with an interface array type', () => {
+    const entry = buildMockEntryPoint();
+    const queryCorrection = buildMockApiInterface({name: 'QueryCorrection'});
+
+    const wordCorrections = buildMockApiPropertySignature({
+      name: 'wordCorrections',
+      excerptTokens: [
+        buildContentExcerptToken('wordCorrections: '),
+        buildReferenceExcerptToken('WordCorrection', ''),
+        buildContentExcerptToken('[]'),
+        buildContentExcerptToken(';'),
+      ],
+      propertyTypeTokenRange: {startIndex: 1, endIndex: 3},
+    });
+
+    const wordCorrection = buildMockApiInterface({name: 'WordCorrection'});
+
+    queryCorrection.addMember(wordCorrections);
+    entry.addMember(queryCorrection);
+    entry.addMember(wordCorrection);
+
+    const result = resolveInterfaceMembers(entry, queryCorrection);
+
+    const expected = buildMockObjEntity({
+      name: 'wordCorrections',
+      type: 'WordCorrection[]',
+      typeName: 'WordCorrection',
+    });
+
+    expect(result).toEqual([expected]);
+  });
+
   it('resolves a method with primitive return type', () => {
     const entryPoint = buildMockEntryPoint();
     const pagerInterface = buildMockApiInterface({name: 'Pager'});
@@ -97,7 +129,7 @@ describe('#resolveInterfaceMembers', () => {
       '/**\n * Returns `true` when the current page is equal to the passed page, and `false` otherwise.\n *\n * @param page - The page number to check.\n *\n * @returns Whether the passed page is selected.\n */\n'
     );
 
-    const method = new ApiMethodSignature({
+    const method = buildMockApiMethodSignature({
       docComment,
       excerptTokens: [
         buildContentExcerptToken('isCurrentPage(page: '),
@@ -106,18 +138,14 @@ describe('#resolveInterfaceMembers', () => {
         buildContentExcerptToken('boolean'),
         buildContentExcerptToken(';'),
       ],
-      isOptional: false,
       name: 'isCurrentPage',
-      overloadIndex: 1,
       parameters: [
         {
           parameterName: 'page',
           parameterTypeTokenRange: {startIndex: 1, endIndex: 2},
         },
       ],
-      releaseTag: ReleaseTag.None,
       returnTypeTokenRange: {startIndex: 3, endIndex: 4},
-      typeParameters: [],
     });
 
     pagerInterface.addMember(method);
@@ -242,5 +270,60 @@ describe('#resolveInterfaceMembers', () => {
     });
 
     expect(result).toEqual([entity]);
+  });
+
+  it(`interface with method with one parameter with a complex type,
+  it resolves the parameter as an object`, () => {
+    const entry = buildMockEntryPoint();
+    const facet = buildMockApiInterface({name: 'Facet'});
+
+    const docComment = buildMockApiDocComment(
+      '/**\n * Toggles the specified facet value.\n *\n * @param selection - The facet value to toggle.\n */\n'
+    );
+    const toggleSelect = buildMockApiMethodSignature({
+      name: 'toggleSelect',
+      docComment,
+      excerptTokens: [
+        buildContentExcerptToken('toggleSelect(selection: '),
+        buildReferenceExcerptToken(
+          'FacetValue$1',
+          '@coveo/headless!~FacetValue$1:interface'
+        ),
+        buildContentExcerptToken('): '),
+        buildContentExcerptToken('void'),
+        buildContentExcerptToken(';'),
+      ],
+      returnTypeTokenRange: {startIndex: 3, endIndex: 4},
+      parameters: [
+        {
+          parameterName: 'selection',
+          parameterTypeTokenRange: {startIndex: 1, endIndex: 2},
+        },
+      ],
+    });
+
+    const facetValue = buildMockApiInterface({name: 'FacetValue'});
+
+    facet.addMember(toggleSelect);
+    entry.addMember(facet);
+    entry.addMember(facetValue);
+
+    const result = resolveInterfaceMembers(entry, facet);
+
+    const param = buildMockObjEntity({
+      name: 'selection',
+      type: 'FacetValue',
+      typeName: 'FacetValue',
+      desc: 'The facet value to toggle.',
+    });
+
+    const funcEntity = buildMockFuncEntity({
+      name: 'toggleSelect',
+      desc: 'Toggles the specified facet value.',
+      params: [param],
+      returnType: 'void',
+    });
+
+    expect(result).toEqual([funcEntity]);
   });
 });
