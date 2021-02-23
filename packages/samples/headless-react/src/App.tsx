@@ -2,6 +2,8 @@ import logo from './logo.svg';
 import './App.css';
 import {useEffect} from 'react';
 
+import {CartRecommendationsList} from './components/cart-recommendations-list/cart-recommendations-list.class';
+import {CartRecommendationsList as CartRecommendationsListFn} from './components/cart-recommendations-list/cart-recommendations-list.fn';
 import {RecommendationList} from './components/recommendation-list/recommendation-list.class';
 import {RecommendationList as RecommendationListFn} from './components/recommendation-list/recommendation-list.fn';
 import {Tab} from './components/tab/tab.class';
@@ -20,7 +22,11 @@ import {Pager} from './components/pager/pager.class';
 import {Pager as PagerFn} from './components/pager/pager.fn';
 import {ResultsPerPage} from './components/results-per-page/results-per-page.class';
 import {ResultsPerPage as ResultsPerPageFn} from './components/results-per-page/results-per-page.fn';
-import {engine, recommendationEngine} from './engine';
+import {
+  engine,
+  productRecommendationEngine,
+  recommendationEngine,
+} from './engine';
 import {Section} from './layout/section';
 import {QuerySummary} from './components/query-summary/query-summary.class';
 import {QuerySummary as QuerySummaryFn} from './components/query-summary/query-summary.fn';
@@ -29,6 +35,7 @@ import {Facet as FacetFn} from './components/facet/facet.fn';
 import {History} from './components/history/history.class';
 import {History as HistoryFn} from './components/history/history.fn';
 import {
+  buildCartRecommendationsList,
   buildRecommendationList,
   buildTab,
   buildSearchBox,
@@ -49,6 +56,21 @@ import {
 } from '@coveo/headless';
 import {bindSearchParametersToURI} from './components/search-parameter-manager/search-parameter-manager';
 import {setContext} from './components/context/context';
+
+const skusInCart = [
+  'tv-fakebrand-expensiveedition',
+  'tvaccessories-fakebrand-2014',
+];
+
+const cartRecommendationsList = buildCartRecommendationsList(
+  productRecommendationEngine,
+  {
+    options: {
+      maxNumberOfRecommendations: 7,
+      skus: skusInCart,
+    },
+  }
+);
 
 const recommendationList = buildRecommendationList(recommendationEngine);
 
@@ -111,6 +133,13 @@ function App() {
     <div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
+        <Section title="cart-recommendations-list">
+          <CartRecommendationsList
+            maxNumberOfRecommendations={7}
+            skus={skusInCart}
+          />
+          <CartRecommendationsListFn controller={cartRecommendationsList} />
+        </Section>
         <Section title="recommendation-list">
           <RecommendationList />
           <RecommendationListFn controller={recommendationList} />
