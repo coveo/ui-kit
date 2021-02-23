@@ -38,7 +38,7 @@ export class AtomicFacet
   private facetSearchProps = {
     controller: new FacetSearchController(this),
   };
-  private facetSearch = new FacetSearch(this.facetSearchProps);
+  private facetSearch!: FacetSearch;
   @BindStateToController('facet', {subscribeOnConnectedCallback: true})
   @State()
   public facetState!: FacetState;
