@@ -79,13 +79,6 @@ export class AtomicCategoryFacet
     );
   }
 
-  private onFacetSearch(e: CustomEvent<string>) {
-    const facetSearch = this.facet.facetSearch;
-
-    facetSearch.updateText(e.detail);
-    facetSearch.search();
-  }
-
   private get resetButton() {
     if (!this.facetState.hasActiveValues) {
       return null;
@@ -123,10 +116,12 @@ export class AtomicCategoryFacet
         deselectAll={() => this.facet.deselectAll()}
       >
         <facet-search
-          onFacetSearch={(e) => this.onFacetSearch(e)}
-          onShowMoreResults={() => this.facet.facetSearch.showMoreResults()}
-          facetSearchResults={this.facetState.facetSearch.values}
-          moreValuesAvailable={this.facetState.facetSearch.moreValuesAvailable}
+          facet={this.facet}
+          facetState={this.facetState}
+          onSelectValue={(e: CustomEvent<number>) => {
+            const value = this.facetState.facetSearch.values[e.detail];
+            this.facet.facetSearch.select(value);
+          }}
         />
         <div>
           <div>{this.resetButton}</div>
