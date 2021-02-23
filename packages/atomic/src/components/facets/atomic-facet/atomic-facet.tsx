@@ -26,6 +26,18 @@ import {
   FacetSearchState,
 } from '../facet-search/facet-search';
 
+/**
+ * A facet component. It is displayed as a facet in desktop browsers and as
+ * a button which opens a facet modal in mobile browsers.
+ *
+ * @part facet - The wrapping div for the entire facet
+ * @part facet-values - The list of facet values
+ * @part facet-value - A single facet value
+ * @part close-button - The button to close the facet when displayed modally (mobile only)
+ * @part reset-button - The button that resets the actively selected facet values
+ * @part show-more - The show more results button
+ * @part show-less - The show less button
+ */
 @Component({
   tag: 'atomic-facet',
   styleUrl: 'atomic-facet.pcss',
@@ -115,7 +127,7 @@ export class AtomicFacet
     }
 
     return (
-      <button onClick={() => this.facet.showMoreValues()}>
+      <button part="show-more" onClick={() => this.facet.showMoreValues()}>
         {this.strings.showMore()}
       </button>
     );
@@ -127,7 +139,7 @@ export class AtomicFacet
     }
 
     return (
-      <button onClick={() => this.facet.showLessValues()}>
+      <button part="show-less" onClick={() => this.facet.showLessValues()}>
         {this.strings.showLess()}
       </button>
     );
@@ -144,7 +156,7 @@ export class AtomicFacet
         <div>
           {this.facetSearch.render()}
           <ul class="list-none p-0">{this.values}</ul>
-          <div class="space-y-1">
+          <div class="flex space-x-1">
             {this.showMoreButton}
             {this.showLessButton}
           </div>
