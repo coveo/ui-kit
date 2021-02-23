@@ -19,7 +19,7 @@ import {
   BaseFacet,
   BaseFacetController,
   BaseFacetState,
-} from '../facet/base-facet';
+} from '../base-facet/base-facet';
 import {
   FacetSearch,
   FacetSearchController,

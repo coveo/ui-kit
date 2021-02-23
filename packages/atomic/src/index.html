@@ -53,15 +53,21 @@
         <atomic-tab expression="" class="mr-2">All Files</atomic-tab>
         <atomic-tab expression='@author *= "BBC News"'>BBC News</atomic-tab>
       </div> -->
-      <div class="m-auto my-3 max-w-5xl">
+      <div class="lg:ml-2 my-3">
         <atomic-search-box></atomic-search-box>
       </div>
       <div class="flex flex-col lg:flex-row">
-        <atomic-facet-manager class="flex flex-row mx-2 mb-2 lg:flex-col lg:w-80">
-          <atomic-facet class="mr-2" field="author" label="Authors"></atomic-facet>
-          <atomic-numeric-facet class="mr-2" field="size" label="File sizes"></atomic-numeric-facet>
-          <atomic-date-facet class="mr-2" field="created" label="Created"></atomic-date-facet>
-          <atomic-category-facet class="mr-2" field="geographicalhierarchy" label="World Atlas"></atomic-category-facet>
+        <atomic-facet-manager class="flex flex-row flex-wrap justify-center mx-2 mb-3 lg:flex-col lg:w-80">
+          <atomic-facet class="mr-2 mt-2" field="author" label="Authors"></atomic-facet>
+          <atomic-numeric-facet class="mr-2 mt-2" field="size" label="File sizes">
+            <atomic-numeric-range start="0" end="10" end-inclusive="true"></atomic-numeric-range>
+          </atomic-numeric-facet>
+          <atomic-date-facet class="mr-2 mt-2" field="created" label="Created"></atomic-date-facet>
+          <atomic-category-facet
+            class="mr-2 mt-2"
+            field="geographicalhierarchy"
+            label="World Atlas"
+          ></atomic-category-facet>
         </atomic-facet-manager>
         <div class="flex-grow pl-2">
           <atomic-breadcrumb-manager></atomic-breadcrumb-manager>

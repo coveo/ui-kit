@@ -32,9 +32,13 @@ export const BaseFacet: FunctionalComponent<BaseFacetProps> = (
   children
 ) => {
   const closeButton = props.controller.state.isExpanded ? (
-    <button onClick={() => props.controller.closeModal()} class="ml-2">
+    <button
+      part="close-button"
+      onClick={() => props.controller.closeModal()}
+      class="ml-2"
+    >
       <div
-        class="h-4 w-4 text-on-background fill-current"
+        class="h-5 w-5 text-on-background fill-current"
         innerHTML={CloseIcon}
       />
     </button>
@@ -42,6 +46,7 @@ export const BaseFacet: FunctionalComponent<BaseFacetProps> = (
 
   const resetButton = props.hasActiveValues ? (
     <button
+      part="reset-button"
       onClick={() => props.deselectAll()}
       class="block text-primary mr-2 lg:mr-0 text-sm"
     >
@@ -53,7 +58,7 @@ export const BaseFacet: FunctionalComponent<BaseFacetProps> = (
     <div class="facet" part="facet">
       <button
         class={
-          'facet-button border-solid bg-transparent  px-4 h-9 outline-none focus:outline-none lg:hidden cursor-pointer ' +
+          'facet-button border-solid bg-transparent px-4 h-9 outline-none focus:outline-none lg:hidden cursor-pointer ' +
           (props.hasActiveValues
             ? 'border-2 border-primary text-primary'
             : 'border border-divider text-on-background-variant')
@@ -69,7 +74,7 @@ export const BaseFacet: FunctionalComponent<BaseFacetProps> = (
         }
       >
         <div class="flex flex-row items-center pb-2 mb-2 border-b border-solid border-on-background">
-          <span class="font-semibold text-on-background text-sm">
+          <span class="font-semibold text-on-background text-base lg:text-sm">
             {props.label}
           </span>
           <span class="flex flex-row block ml-auto">

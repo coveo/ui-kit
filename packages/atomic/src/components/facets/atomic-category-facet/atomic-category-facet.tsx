@@ -16,7 +16,7 @@ import {
   BaseFacet,
   BaseFacetController,
   BaseFacetState,
-} from '../facet/base-facet';
+} from '../base-facet/base-facet';
 
 @Component({
   tag: 'atomic-category-facet',
