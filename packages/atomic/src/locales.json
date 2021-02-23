@@ -7,6 +7,10 @@
     "en": "Insert a query. Press enter to send.",
     "fr": "Insérer une requête. Appuyez sur Entrée pour envoyer."
   },
+  "facetSearch": {
+    "en": "Insert a query.",
+    "fr": "Insérer une requête."
+  },
   "querySuggestionList": {
     "en": "Search suggestions. Select one to search.",
     "fr": ""
@@ -14,6 +18,12 @@
   "clear": {
     "en": "Clear",
     "fr": "Effacer"
+  },
+  "showMore": {
+    "en": "show more"
+  },
+  "showLess": {
+    "en": "show less"
   },
   "pagination": {
     "en": "Pagination",
