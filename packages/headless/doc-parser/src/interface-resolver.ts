@@ -6,6 +6,7 @@ import {
   ApiMethodSignature,
   ApiPropertySignature,
   ApiTypeAlias,
+  Excerpt,
   ExcerptToken,
   ExcerptTokenKind,
   Parameter,
@@ -89,7 +90,7 @@ function buildObjEntityFromProperty(
   entry: ApiEntryPoint,
   p: ApiPropertySignature
 ) {
-  const typeName = p.propertyTypeExcerpt.spannedTokens[0].text;
+  const typeName = extractTypeName(p.propertyTypeExcerpt);
   const apiInterface = findApi(entry, typeName) as ApiInterface;
   const members = resolveInterfaceMembers(entry, apiInterface);
   const entity = buildEntityFromProperty(p);
@@ -102,7 +103,7 @@ function buildEntityFromPropertyAndResolveTypeAlias(
   p: ApiPropertySignature
 ): Entity {
   const entity = buildEntityFromProperty(p);
-  const alias = p.propertyTypeExcerpt.text;
+  const alias = extractTypeName(p.propertyTypeExcerpt);
   const typeAlias = findApi(entry, alias) as ApiTypeAlias;
   const type = typeAlias.typeExcerpt.text;
 
@@ -114,7 +115,7 @@ function isMethodSignature(m: ApiItem): m is ApiMethodSignature {
 }
 
 function resolveMethodSignature(entry: ApiEntryPoint, m: ApiMethodSignature) {
-  const params = m.parameters.map((p) => buildParamEntityBasedOnKind(entry, p));
+  const params = m.parameters.map((p) => resolveParameter(entry, p));
   const returnType = m.returnTypeExcerpt.text;
 
   return buildFuncEntity({
@@ -125,10 +126,7 @@ function resolveMethodSignature(entry: ApiEntryPoint, m: ApiMethodSignature) {
   });
 }
 
-export function buildParamEntityBasedOnKind(
-  entry: ApiEntryPoint,
-  p: Parameter
-) {
+export function resolveParameter(entry: ApiEntryPoint, p: Parameter) {
   const typeExcerpt = p.parameterTypeExcerpt.spannedTokens[0];
 
   if (isTypeAlias(typeExcerpt)) {
@@ -147,7 +145,7 @@ function buildEntityFromParamAndResolveTypeAlias(
   p: Parameter
 ): Entity {
   const entity = buildParamEntity(p);
-  const alias = p.parameterTypeExcerpt.text;
+  const alias = extractTypeName(p.parameterTypeExcerpt);
   const typeAlias = findApi(entry, alias) as ApiTypeAlias;
   const type = typeAlias.typeExcerpt.text;
 
@@ -155,13 +153,14 @@ function buildEntityFromParamAndResolveTypeAlias(
 }
 
 function buildObjEntityFromParam(entryPoint: ApiEntryPoint, p: Parameter) {
-  const typeExcerpt = p.parameterTypeExcerpt;
-
-  const type = typeExcerpt.text;
-  const typeName = typeExcerpt.spannedTokens[0].text;
-  const apiInterface = findApi(entryPoint, type) as ApiInterface;
+  const typeName = extractTypeName(p.parameterTypeExcerpt);
+  const apiInterface = findApi(entryPoint, typeName) as ApiInterface;
   const members = resolveInterfaceMembers(entryPoint, apiInterface);
   const entity = buildParamEntity(p);
 
   return buildObjEntity({entity, members, typeName});
+}
+
+function extractTypeName(excerpt: Excerpt) {
+  return excerpt.spannedTokens[0].text;
 }
