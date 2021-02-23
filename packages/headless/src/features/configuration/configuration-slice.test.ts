@@ -10,7 +10,6 @@ import {
   setOriginLevel2,
 } from './configuration-actions';
 import {platformUrl} from '../../api/platform-client';
-import {createReducer} from '../..';
 import {
   ConfigurationState,
   getConfigurationInitialState,
@@ -165,60 +164,6 @@ describe('configuration slice', () => {
           })
         )
       ).toEqual(expectedState);
-    });
-
-    it('does not overwrite other values when only pipeline is passed as argument', () => {
-      const search = {
-        pipeline: 'initPipeline',
-        searchHub: 'initSearchHub',
-        locale: 'en-US',
-      };
-      const reducer = createReducer(search, (builder) =>
-        builder.addCase(updateSearchConfiguration, (state, action) => {
-          state.pipeline = action.payload.pipeline!;
-        })
-      );
-      const newState = reducer(
-        search,
-        updateSearchConfiguration({pipeline: 'mockPipeline'})
-      );
-      expect(newState).toEqual({...search, pipeline: 'mockPipeline'});
-    });
-
-    it('does not overwrite other values when only searchhub is passed as argument', () => {
-      const search = {
-        pipeline: 'initPipeline',
-        searchHub: 'initSearchHub',
-        locale: 'en-US',
-      };
-      const reducer = createReducer(search, (builder) =>
-        builder.addCase(updateSearchConfiguration, (state, action) => {
-          state.searchHub = action.payload.searchHub!;
-        })
-      );
-      const newState = reducer(
-        search,
-        updateSearchConfiguration({searchHub: 'mockSearchHub'})
-      );
-      expect(newState).toEqual({...search, searchHub: 'mockSearchHub'});
-    });
-
-    it('does not overwrite other values when only locale is passed as argument', () => {
-      const search = {
-        pipeline: 'initPipeline',
-        searchHub: 'initSearchHub',
-        locale: 'en-US',
-      };
-      const reducer = createReducer(search, (builder) =>
-        builder.addCase(updateSearchConfiguration, (state, action) => {
-          state.locale = action.payload.locale!;
-        })
-      );
-      const newState = reducer(
-        search,
-        updateSearchConfiguration({locale: 'fr-CA'})
-      );
-      expect(newState).toEqual({...search, locale: 'fr-CA'});
     });
   });
 
