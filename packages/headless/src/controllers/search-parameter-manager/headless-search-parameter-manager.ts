@@ -12,10 +12,7 @@ import {
 } from '../../features/search-parameters/search-parameter-actions';
 import {searchParametersDefinition} from '../../features/search-parameters/search-parameter-schema';
 import {getSortCriteriaInitialState} from '../../features/sort-criteria/sort-criteria-state';
-import {
-  SearchAppState,
-  SearchParametersState,
-} from '../../state/search-app-state';
+import {SearchParametersState} from '../../state/search-app-state';
 import {validateInitialState} from '../../utils/validate-payload';
 import {buildController} from '../controller/headless-controller';
 import {RangeValueRequest} from '../../features/facets/range-facets/generic/interfaces/range-facet';
@@ -46,7 +43,7 @@ export type SearchParameterManager = ReturnType<
 export type SearchParameterManagerState = SearchParameterManager['state'];
 
 export function buildSearchParameterManager(
-  engine: Engine<Partial<SearchAppState>>,
+  engine: Engine<Partial<SearchParametersState>>,
   props: SearchParameterManagerProps
 ) {
   const {dispatch} = engine;
@@ -116,13 +113,13 @@ function getAq(state: Partial<SearchParametersState>) {
   return shouldInclude ? {aq} : {};
 }
 
-function getCq(state: Partial<SearchAppState>) {
+function getCq(state: Partial<SearchParametersState>) {
   if (state.advancedSearchQueries === undefined) {
     return {};
   }
 
   const cq = state.advancedSearchQueries.cq;
-  const shouldInclude = cq !== state.defaultConstantQueryFilter!.defaultValue;
+  const shouldInclude = cq !== getAdvancedSearchQueriesInitialState().cq;
   return shouldInclude ? {cq} : {};
 }
 

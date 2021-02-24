@@ -96,11 +96,6 @@ describe('state manager', () => {
       expect(manager.state.parameters.cq).toBe('a');
     });
 
-    it("when the parameter is an empty string and the default value isn't, it is included", () => {
-      engine.state.defaultConstantQueryFilter.defaultValue = 'a';
-      expect(manager.state.parameters.cq).toBe('');
-    });
-
     it('when the parameter is equal to the default value, it is not included', () => {
       expect('cq' in manager.state.parameters).toBe(false);
     });

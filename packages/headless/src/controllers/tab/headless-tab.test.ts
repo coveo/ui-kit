@@ -2,7 +2,6 @@ import {MockEngine, buildMockSearchAppEngine} from '../../test/mock-engine';
 import {TabProps, buildTab, Tab} from './headless-tab';
 import {updateAdvancedSearchQueries} from '../../features/advanced-search-queries/advanced-search-queries-actions';
 import {SearchAppState} from '../../state/search-app-state';
-import {setDefaultConstantQueryFilter} from '../../features/defaults/default-constant-query-filter-actions';
 
 describe('Tab', () => {
   const expression = 'abc123';
@@ -28,7 +27,7 @@ describe('Tab', () => {
   });
 
   describe('initalization', () => {
-    it('calls #setDefaultConstantQueryFilter if isActive is true', () => {
+    it('calls #registerConstantQuery if isActive is true', () => {
       props = {
         options: {
           expression,
@@ -37,42 +36,10 @@ describe('Tab', () => {
           isActive: true,
         },
       };
-      initTab();
-
-      const action = setDefaultConstantQueryFilter(expression);
-      expect(engine.actions).toContainEqual(action);
-    });
-
-    it('calls #registerConstantQuery if isActive is true and actaulValueWasChanged is false', () => {
-      props = {
-        options: {
-          expression,
-        },
-        initialState: {
-          isActive: true,
-        },
-      };
-      engine.state.defaultConstantQueryFilter.actualValueWasChanged = false;
       initTab();
 
       const action = updateAdvancedSearchQueries({cq: expression});
       expect(engine.actions).toContainEqual(action);
-    });
-
-    it("doesn't call #registerConstantQuery if isActive is true and actaulValueWasChanged is true", () => {
-      props = {
-        options: {
-          expression,
-        },
-        initialState: {
-          isActive: true,
-        },
-      };
-      engine.state.defaultConstantQueryFilter.actualValueWasChanged = true;
-      initTab();
-
-      const action = updateAdvancedSearchQueries({cq: expression});
-      expect(engine.actions).not.toContainEqual(action);
     });
 
     it('does not throw if initialState is undefined', () => {

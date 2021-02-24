@@ -23,7 +23,6 @@ import {getFacetOptionsInitialState} from '../features/facet-options/facet-optio
 import {getHistoryInitialState} from '../features/history/history-state';
 import {getDebugInitialState} from '../features/debug/debug-state';
 import {getFacetOrderInitialState} from '../features/facets/facet-order/facet-order-state';
-import {getDefaultConstantQueryFilterInitialState} from '../features/defaults/default-constant-query-filter-state';
 
 export function createMockState(
   config: Partial<SearchAppState> = {}
@@ -31,7 +30,6 @@ export function createMockState(
   return {
     configuration: getConfigurationInitialState(),
     advancedSearchQueries: getAdvancedSearchQueriesInitialState(),
-    defaultConstantQueryFilter: getDefaultConstantQueryFilterInitialState(),
     facetSet: getFacetSetInitialState(),
     dateFacetSet: getDateFacetSetInitialState(),
     numericFacetSet: getNumericFacetSetInitialState(),

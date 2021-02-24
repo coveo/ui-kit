@@ -45,10 +45,10 @@ import {bindSearchParametersToURI} from './components/search-parameter-manager/s
 
 const tabs = {
   all: buildTab(engine, {
+    initialState: {isActive: true},
     options: {expression: ''},
   }),
   messages: buildTab(engine, {
-    initialState: {isActive: true},
     options: {expression: '@objecttype==Message'},
   }),
   confluence: buildTab(engine, {
@@ -101,10 +101,8 @@ function App() {
         <img src={logo} className="App-logo" alt="logo" />
         <Section title="tabs">
           <nav>
-            <Tab>All</Tab>
-            <Tab active expression="@objecttype==Message">
-              Messages
-            </Tab>
+            <Tab active>All</Tab>
+            <Tab expression="@objecttype==Message">Messages</Tab>
             <Tab expression="@connectortype==Confluence2Crawler AND NOT @documenttype==Space">
               Confluence
             </Tab>

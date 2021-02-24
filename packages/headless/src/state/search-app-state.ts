@@ -5,7 +5,6 @@ import {
   CategoryFacetSection,
   ConfigurationSection,
   AdvancedSearchQueriesSection,
-  DefaultsSection,
   ContextSection,
   DateFacetSection,
   DidYouMeanSection,
@@ -43,7 +42,6 @@ export type SearchParametersState = FacetSection &
   DebugSection;
 
 export type SearchAppState = SearchParametersState &
-  DefaultsSection &
   ConfigurationSection &
   FacetSearchSection &
   CategoryFacetSearchSection &
