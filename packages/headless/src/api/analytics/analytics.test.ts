@@ -114,5 +114,31 @@ describe('analytics', () => {
       const provider = new AnalyticsProvider(state);
       expect(provider.getOriginLevel1()).toEqual(searchHub);
     });
+
+    it('when a locale search parameter is configured, #getLanguage returns the correct value', () => {
+      const locale = 'fr-CA';
+      const state: StateNeededByAnalyticsProvider = {
+        ...baseState,
+        configuration: {
+          ...getConfigurationInitialState(),
+          search: {...getConfigurationInitialState().search, locale},
+        },
+      };
+      const provider = new AnalyticsProvider(state);
+      expect(provider.getLanguage()).toEqual('fr');
+    });
+
+    it('when a locale search parameter is configured to something invalid, #getLanguage returns the correct value', () => {
+      const locale = 'thisWillBlowUp';
+      const state: StateNeededByAnalyticsProvider = {
+        ...baseState,
+        configuration: {
+          ...getConfigurationInitialState(),
+          search: {...getConfigurationInitialState().search, locale},
+        },
+      };
+      const provider = new AnalyticsProvider(state);
+      expect(provider.getLanguage()).toEqual('en');
+    });
   });
 });

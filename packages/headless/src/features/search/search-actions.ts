@@ -266,6 +266,7 @@ export const buildSearchRequest = (
     accessToken: state.configuration.accessToken,
     organizationId: state.configuration.organizationId,
     url: state.configuration.search.apiBaseUrl,
+    locale: state.configuration.search.locale,
     debug: state.debug,
     ...(state.configuration.analytics.enabled && {
       visitorId: getVisitorID(),

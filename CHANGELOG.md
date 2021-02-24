@@ -3,6 +3,34 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.7.0-alpha.18](https://github.com/coveo/ui-kit/compare/v0.7.0-alpha.17...v0.7.0-alpha.18) (2021-02-23)
+
+**Note:** Version bump only for package ui-kit
+
+
+
+
+
+# [0.7.0-alpha.17](https://github.com/coveo/ui-kit/compare/v0.7.0-alpha.16...v0.7.0-alpha.17) (2021-02-23)
+
+
+### Features
+
+* **atomic:** numeric facet ([#521](https://github.com/coveo/ui-kit/issues/521)) ([2259add](https://github.com/coveo/ui-kit/commit/2259add97432eb6ce6c57c53078aa6658a228389))
+* **headless:** add support for locale parameter + analytics language ([#532](https://github.com/coveo/ui-kit/issues/532)) ([49b8318](https://github.com/coveo/ui-kit/commit/49b83182c0c1569198c4c1a5572310c1bd2d5f04))
+
+
+
+
+
+# [0.7.0-alpha.16](https://github.com/coveo/ui-kit/compare/v0.7.0-alpha.15...v0.7.0-alpha.16) (2021-02-23)
+
+**Note:** Version bump only for package ui-kit
+
+
+
+
+
 # [0.7.0-alpha.15](https://github.com/coveo/ui-kit/compare/v0.7.0-alpha.14...v0.7.0-alpha.15) (2021-02-22)
 
 **Note:** Version bump only for package ui-kit

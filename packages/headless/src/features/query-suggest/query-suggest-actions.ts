@@ -135,6 +135,7 @@ export const buildQuerySuggestRequest = (
     url: s.configuration.search.apiBaseUrl,
     count: s.querySuggest[id]!.count,
     q: s.querySuggest[id]!.q,
+    locale: s.configuration.search.locale,
     actionsHistory: s.configuration.analytics.enabled
       ? historyStore.getHistory()
       : [],

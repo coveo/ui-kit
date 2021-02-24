@@ -21,6 +21,7 @@ import {
 } from '../../state/state-sections';
 import {Context} from '../../features/context/context-state';
 import {PreprocessRequest} from '../preprocess-request';
+import {getLanguage} from './shared-analytics';
 
 export type StateNeededByAnalyticsProvider = ConfigurationSection &
   Partial<
@@ -34,6 +35,10 @@ export type StateNeededByAnalyticsProvider = ConfigurationSection &
 
 export class AnalyticsProvider implements SearchPageClientProvider {
   constructor(private state: StateNeededByAnalyticsProvider) {}
+
+  public getLanguage() {
+    return getLanguage(this.state);
+  }
 
   public getSearchEventRequestPayload() {
     return {

@@ -16,7 +16,7 @@ import SearchIcon from 'coveo-styleguide/resources/icons/svg/search.svg';
  * A search box with built in support for query suggestions.
  *
  * @part submit-button - The search box submit button
- * @part input - The search box input
+ * @part search-input - The search box input
  * @part input-wrapper - The wrapper for the searchbox input
  * @part clear-button - The search box input's clear button
  * @part suggestions - The list of suggestions
@@ -65,6 +65,7 @@ export class AtomicSearchBox {
   @State()
   private searchBoxState!: SearchBoxState;
   @State() public error!: Error;
+  @State() shouldShowSuggestions = false;
 
   constructor() {
     this.combobox = new Combobox({
@@ -78,7 +79,7 @@ export class AtomicSearchBox {
       },
       onSubmit: () => {
         this.searchBox.submit();
-        this.searchBox.hideSuggestions();
+        this.shouldShowSuggestions = false;
       },
       onSelectValue: (element) => {
         this.searchBox.selectSuggestion(
@@ -87,7 +88,7 @@ export class AtomicSearchBox {
         );
       },
       onBlur: () => {
-        setTimeout(() => this.searchBox.hideSuggestions(), 100);
+        this.shouldShowSuggestions = false;
       },
       activeClass: 'bg-primary text-on-primary',
       activePartName: 'active-suggestion',
@@ -117,7 +118,7 @@ export class AtomicSearchBox {
   }
 
   private onInputFocus() {
-    this.searchBox.showSuggestions();
+    this.shouldShowSuggestions = true;
   }
 
   private get submitButton() {
@@ -133,7 +134,7 @@ export class AtomicSearchBox {
       <button
         type="button"
         part="submit-button"
-        class={`submit-button border-0 focus:outline-none bg-primary p-0 ${roundedClasses}`}
+        class={`submit-button h-full bg-transparent border-0 focus:outline-none bg-primary p-0 ${roundedClasses}`}
         aria-label={this.strings.search()}
         onClick={() => this.searchBox.submit()}
       >
@@ -172,7 +173,7 @@ export class AtomicSearchBox {
   private get input() {
     return (
       <input
-        part="input"
+        part="search-input"
         ref={(el) => (this.inputRef = el as HTMLInputElement)}
         onFocus={() => this.onInputFocus()}
         onBlur={() => this.combobox.onInputBlur()}
@@ -181,7 +182,7 @@ export class AtomicSearchBox {
         onKeyDown={(e) => this.combobox.onInputKeydown(e)}
         type="text"
         class={
-          'input mx-2 my-0 text-base placeholder-on-background outline-none flex-grow flex-row items-center '
+          'search-input mx-2 my-0 text-base placeholder-on-background outline-none flex-grow flex-row items-center '
         }
         placeholder={this.placeholder}
         value={this.searchBoxState.value}
@@ -200,7 +201,7 @@ export class AtomicSearchBox {
           onMouseDown={(e) => e.preventDefault()}
           part="suggestion"
           id={id}
-          class="suggestion h-9 px-2 cursor-pointer text-left text-sm bg-transparent border-none shadow-none hover:bg-primary hover:text-on-primary flex flex-row items-center"
+          class="suggestion h-9 px-2 cursor-pointer text-left text-sm bg-transparent border-none shadow-none flex flex-row items-center"
           innerHTML={suggestion.highlightedValue}
           value={index}
         />
@@ -208,42 +209,55 @@ export class AtomicSearchBox {
     });
   }
 
-  private renderInputWrapper() {
-    let roundedClasses = this.leadingSubmitButton
-      ? 'border-l-0 rounded-r-lg'
-      : 'border-r-0 rounded-l-lg';
+  private get suggestionList() {
+    return (
+      <ul
+        part="suggestions"
+        class={
+          'suggestions absolute w-full bg-background border-on-background-variant apply-border-on-background empty:border-none rounded-b border-t-0 ' +
+          (this.shouldShowSuggestions ? 'block' : 'hidden')
+        }
+        ref={(el) => (this.valuesRef = el as HTMLElement)}
+      >
+        {this.suggestions}
+      </ul>
+    );
+  }
 
-    if (this.searchBoxState.suggestions.length) {
-      roundedClasses += ' rounded-bl-none rounded-br-none';
-    }
+  private get searchBoxClasses() {
+    const hasValues =
+      this.searchBoxState.suggestions.length > 0 && this.shouldShowSuggestions;
 
     return (
-      <div
-        part="input-wrapper"
-        class={`input-wrapper flex flex-grow items-center border border-divider ${roundedClasses}`}
-        ref={(el) => (this.containerRef = el as HTMLElement)}
-      >
-        {this.input}
-        {this.clearButton}
-      </div>
+      'search-box relative w-full lg:w-80 box-border flex items-center border-divider ' +
+      (hasValues ? 'has-values' : '')
+    );
+  }
+
+  private get inputWrapperClasses() {
+    return (
+      'input-wrapper flex flex-grow items-center h-full border-on-background-variant apply-border-on-background  ' +
+      (this.leadingSubmitButton
+        ? 'rounded-r-lg border-l-0'
+        : 'rounded-l-lg border-r-0')
     );
   }
 
   public render() {
     return (
-      <div class="relative">
-        <div class="search-box box-border w-full flex">
-          {this.leadingSubmitButton && this.submitButton}
-          {this.renderInputWrapper()}
-          {!this.leadingSubmitButton && this.submitButton}
+      <div class={this.searchBoxClasses}>
+        {this.leadingSubmitButton && this.submitButton}
+        <div class="combobox flex flex-grow h-full">
+          <div
+            class={this.inputWrapperClasses}
+            ref={(el) => (this.containerRef = el as HTMLElement)}
+          >
+            {this.input}
+            {this.clearButton}
+          </div>
+          {this.suggestionList}
         </div>
-        <ul
-          part="suggestions"
-          class="suggestions box-border w-full p-0 my-0 flex flex-col bg-background border border-divider border-t-0 rounded-b list-none absolute z-50"
-          ref={(el) => (this.valuesRef = el as HTMLElement)}
-        >
-          {this.suggestions}
-        </ul>
+        {!this.leadingSubmitButton && this.submitButton}
       </div>
     );
   }

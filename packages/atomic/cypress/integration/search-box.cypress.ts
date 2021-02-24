@@ -10,13 +10,15 @@ const queryText = 'test';
 describe('Search Box Test Suites', () => {
   function testLoad() {
     cy.get(SearchBoxSelectors.component).should('be.visible');
-    cy.get('@searchBoxFirstDiv').find('.input').should('be.visible');
+    cy.get('@searchBoxFirstDiv').find('.search-input').should('be.visible');
     cy.get('@searchBoxFirstDiv').find('.submit-button').should('be.visible');
     cy.get('@searchBoxFirstDiv').find('.clear-button').should('not.exist');
   }
 
   async function testQuerySuggestionsShown(numberOfSuggestions: number) {
-    cy.get('@searchBoxFirstDiv').find('.input').type(queryText, {force: true});
+    cy.get('@searchBoxFirstDiv')
+      .find('.search-input')
+      .type(queryText, {force: true});
     for (let i = 1; i < queryText.length - 1; i++) {
       cy.wait('@coveoQuerySuggest');
     }
@@ -45,7 +47,7 @@ describe('Search Box Test Suites', () => {
     });
 
     it('should execute a query on button click', async () => {
-      cy.get('@searchBoxFirstDiv').find('.input').type(queryText);
+      cy.get('@searchBoxFirstDiv').find('.search-input').type(queryText);
       cy.get('@searchBoxFirstDiv').find('.submit-button').click();
 
       const jsonResponse = await getApiResponseBody('@coveoSearch');
@@ -55,7 +57,7 @@ describe('Search Box Test Suites', () => {
 
     it('should execute a query on enter press', async () => {
       cy.get('@searchBoxFirstDiv')
-        .find('.input')
+        .find('.search-input')
         .type(queryText + '{enter}');
 
       const jsonResponse = await getApiResponseBody('@coveoSearch');
@@ -64,14 +66,14 @@ describe('Search Box Test Suites', () => {
     });
 
     it('should clear query on clear button click', async () => {
-      cy.get('@searchBoxFirstDiv').find('.input').type(queryText);
+      cy.get('@searchBoxFirstDiv').find('.search-input').type(queryText);
       cy.get('button').find('.clear').click();
-      cy.get('@searchBoxFirstDiv').find('.input').should('be.empty');
+      cy.get('@searchBoxFirstDiv').find('.search-input').should('be.empty');
     });
 
     it('should log UA when excute a query', async () => {
       cy.get('@searchBoxFirstDiv')
-        .find('.input')
+        .find('.search-input')
         .type(queryText, {force: true});
       cy.get('@searchBoxFirstDiv').find('.submit-button').click();
 
@@ -93,7 +95,7 @@ describe('Search Box Test Suites', () => {
 
     it('passes automated accessibility tests with a query', () => {
       cy.get('@searchBoxFirstDiv')
-        .find('.input')
+        .find('.search-input')
         .type(queryText, {force: true});
       cy.checkA11y(SearchBoxSelectors.component);
     });
@@ -117,7 +119,7 @@ describe('Search Box Test Suites', () => {
 
     it('passes automated accessibility tests with a query', () => {
       cy.get('@searchBoxFirstDiv')
-        .find('.input')
+        .find('.search-input')
         .type(queryText, {force: true});
       cy.checkA11y(SearchBoxSelectors.component);
     });
@@ -137,7 +139,7 @@ describe('Search Box Test Suites', () => {
 
     it('passes automated accessibility tests with a query', () => {
       cy.get('@searchBoxFirstDiv')
-        .find('.input')
+        .find('.search-input')
         .type(queryText, {force: true});
       cy.checkA11y(SearchBoxSelectors.component);
     });
@@ -156,7 +158,7 @@ describe('Search Box Test Suites', () => {
     });
 
     it('should execute a query on button click', async () => {
-      cy.get('@searchBoxFirstDiv').find('.input').type(queryText);
+      cy.get('@searchBoxFirstDiv').find('.search-input').type(queryText);
       cy.get('@searchBoxFirstDiv').find('.submit-button').click();
 
       const jsonResponse = await getApiResponseBody('@coveoSearch');
@@ -170,7 +172,7 @@ describe('Search Box Test Suites', () => {
 
     it('passes automated accessibility tests with a query', () => {
       cy.get('@searchBoxFirstDiv')
-        .find('.input')
+        .find('.search-input')
         .type(queryText, {force: true});
       cy.checkA11y(SearchBoxSelectors.component);
     });

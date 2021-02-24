@@ -126,6 +126,7 @@ export const buildProductRecommendationsRequest = (
     accessToken: s.configuration.accessToken,
     organizationId: s.configuration.organizationId,
     url: s.configuration.search.apiBaseUrl,
+    locale: s.configuration.search.locale,
     ...(s.configuration.analytics.enabled && {
       visitorId: getVisitorID(),
     }),

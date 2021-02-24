@@ -13,10 +13,21 @@
   height: var(--atomic-search-box-height, 48px);
 }
 
-.suggestion {
-  top: var(--atomic-search-box-height, 48px);
+.input-wrapper.leading-submit {
+  @apply border-l-0 rounded-r-lg;
 }
 
-.suggestions:empty {
-  border: none;
+.suggestions {
+  top: var(--atomic-search-box-height, 48px);
+  left: 0;
 }
+
+.search-box.has-values .input-wrapper, .search-box.has-values .submit-button {
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.suggestion.active, .suggestion:hover {
+  @apply bg-primary text-on-primary;
+}
+
