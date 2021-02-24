@@ -80,23 +80,23 @@ describe('state manager', () => {
   });
 
   describe('#state.parameters.aq', () => {
-    it('when the parameter does not equal the default value, it is included', () => {
-      engine.state.advancedSearchQueries.aq = 'a';
-      expect(manager.state.parameters.aq).toBe('a');
+    it('when the parameter is set, it is included', () => {
+      engine.state.advancedSearchQueries.aqWasSet = true;
+      expect(manager.state.parameters.aq).toBe('');
     });
 
-    it('when the parameter is equal to the default value, it is not included', () => {
+    it('when the parameter is not set, it is not included', () => {
       expect('aq' in manager.state.parameters).toBe(false);
     });
   });
 
   describe('#state.parameters.cq', () => {
-    it('when the parameter does not equal the default value, it is included', () => {
-      engine.state.advancedSearchQueries.cq = 'a';
-      expect(manager.state.parameters.cq).toBe('a');
+    it('when the parameter is set, it is included', () => {
+      engine.state.advancedSearchQueries.cqWasSet = true;
+      expect(manager.state.parameters.cq).toBe('');
     });
 
-    it('when the parameter is equal to the default value, it is not included', () => {
+    it('when the parameter is not set, it is not included', () => {
       expect('cq' in manager.state.parameters).toBe(false);
     });
   });
@@ -303,8 +303,8 @@ describe('state manager', () => {
 
     engine.state.query.q = 'a';
     engine.state.query.enableQuerySyntax = true;
-    engine.state.advancedSearchQueries.aq = 'a';
-    engine.state.advancedSearchQueries.cq = 'a';
+    engine.state.advancedSearchQueries.aqWasSet = true;
+    engine.state.advancedSearchQueries.cqWasSet = true;
     engine.state.pagination.firstResult = 1;
     engine.state.pagination.numberOfResults = 1;
     engine.state.sortCriteria = 'qre';

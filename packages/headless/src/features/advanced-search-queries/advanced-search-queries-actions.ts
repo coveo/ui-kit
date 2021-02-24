@@ -14,3 +14,16 @@ export const updateAdvancedSearchQueries = createAction(
       cq: new StringValue({required: false, emptyAllowed: true}),
     })
 );
+
+/**
+ * Registers the initial state of the advanced search queries.
+ * @param (advancedSearchQueries)  The initial state of the advanced search queries.
+ */
+export const registerAdvancedSearchQueries = createAction(
+  'advancedSearchQueries/register',
+  (payload: {aq?: string; cq?: string}) =>
+    validatePayload(payload, {
+      aq: new StringValue({required: false, emptyAllowed: true}),
+      cq: new StringValue({required: false, emptyAllowed: true}),
+    })
+);

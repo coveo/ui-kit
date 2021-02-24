@@ -1,6 +1,5 @@
 import {RecordValue, Schema} from '@coveo/bueno';
 import {Engine} from '../../app/headless-engine';
-import {getAdvancedSearchQueriesInitialState} from '../../features/advanced-search-queries/advanced-search-queries-state';
 import {partitionIntoParentsAndValues} from '../../features/facets/category-facet-set/category-facet-utils';
 import {FacetValueRequest} from '../../features/facets/facet-set/interfaces/request';
 import {getDebugInitialState} from '../../features/debug/debug-state';
@@ -108,9 +107,8 @@ function getAq(state: Partial<SearchParametersState>) {
     return {};
   }
 
-  const aq = state.advancedSearchQueries.aq;
-  const shouldInclude = aq !== getAdvancedSearchQueriesInitialState().aq;
-  return shouldInclude ? {aq} : {};
+  const {aq, aqWasSet} = state.advancedSearchQueries;
+  return aqWasSet ? {aq} : {};
 }
 
 function getCq(state: Partial<SearchParametersState>) {
@@ -118,9 +116,8 @@ function getCq(state: Partial<SearchParametersState>) {
     return {};
   }
 
-  const cq = state.advancedSearchQueries.cq;
-  const shouldInclude = cq !== getAdvancedSearchQueriesInitialState().cq;
-  return shouldInclude ? {cq} : {};
+  const {cq, cqWasSet} = state.advancedSearchQueries;
+  return cqWasSet ? {cq} : {};
 }
 
 function getFirstResult(state: Partial<SearchParametersState>) {
