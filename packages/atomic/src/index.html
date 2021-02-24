@@ -7,7 +7,6 @@
 
     <script type="module" src="/build/atomic.esm.js"></script>
     <script nomodule src="/build/atomic.js"></script>
-    <link rel="stylesheet" href="/build/atomic.css" />
     <script>
       (async () => {
         await customElements.whenDefined('atomic-search-interface');
@@ -41,12 +40,12 @@
       } */
 
       /* Example on how to customize result templates CSS parts */
-      /* atomic-result-list::part(result-link):hover {
+      /* atomic-result::part(result-link):hover {
         color: orange;
       } */
     </style>
   </head>
-
+  <!-- TODO: remove tailwind classes and style html -->
   <body class="p-2">
     <atomic-search-interface id="search">
       <!-- <div class="flex mx-auto mb-2 justify-center">

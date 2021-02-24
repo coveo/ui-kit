@@ -4,10 +4,7 @@ import {
   ResultTemplateCondition,
   ResultTemplatesHelpers,
 } from '@coveo/headless';
-import {
-  ResultContext,
-  ResultContextRenderer,
-} from '../result-template-decorators';
+import {ResultContext} from '../result-template-decorators';
 import {MapProp} from '../../../utils/props-utils';
 
 @Component({
@@ -63,7 +60,6 @@ export class AtomicFieldCondition {
     }
   }
 
-  @ResultContextRenderer
   public render() {
     if (!this.conditions.every((condition) => condition(this.result))) {
       this.shouldBeRemoved = true;

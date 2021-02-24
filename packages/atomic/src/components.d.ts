@@ -5,7 +5,7 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { Engine, LogLevel, Result, ResultTemplateCondition } from "@coveo/headless";
+import { Engine, LogLevel, Result, ResultTemplate, ResultTemplateCondition } from "@coveo/headless";
 import { Bindings } from "./utils/initialization-utils";
 import { i18n } from "i18next";
 import { InitializationOptions } from "./components/atomic-search-interface/atomic-search-interface";
@@ -85,6 +85,7 @@ export namespace Components {
         "bindings": Bindings;
     }
     interface AtomicResult {
+        "content": string;
         "engine": Engine;
         "result": Result;
     }
@@ -101,8 +102,7 @@ export namespace Components {
     interface AtomicResultTemplate {
         "conditions": ResultTemplateCondition[];
         "fieldsToInclude"?: string;
-        "getConditions": () => Promise<ResultTemplateCondition[]>;
-        "getFields": () => Promise<string[]>;
+        "getTemplate": () => Promise<ResultTemplate<string> | null>;
     }
     interface AtomicResultUri {
     }
@@ -478,6 +478,7 @@ declare namespace LocalJSX {
         "bindings": Bindings;
     }
     interface AtomicResult {
+        "content": string;
         "engine": Engine;
         "result": Result;
     }

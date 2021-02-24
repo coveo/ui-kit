@@ -26,8 +26,7 @@ import {
  */
 @Component({
   tag: 'atomic-result-list',
-  styleUrl: 'atomic-result-list.pcss',
-  shadow: true,
+  shadow: false,
 })
 export class AtomicResultList implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;
@@ -44,6 +43,7 @@ export class AtomicResultList implements InitializableComponent {
   @State()
   private resultPerPageState!: ResultsPerPageState;
   @State() public error!: Error;
+  @State() private templateHasError = false;
 
   /**
    * TODO: KIT-452 Infinite scroll feature
@@ -74,7 +74,7 @@ export class AtomicResultList implements InitializableComponent {
   }
 
   private registerDefaultResultTemplates() {
-    // TODO: get fields & conditions from default templates
+    // TODO: build more default templates
     this.resultTemplatesManager.registerTemplates({
       content: defaultTemplate,
       conditions: [],
@@ -85,25 +85,24 @@ export class AtomicResultList implements InitializableComponent {
     this.host
       .querySelectorAll('atomic-result-template')
       .forEach(async (resultTemplateElement) => {
-        const conditions = await resultTemplateElement.getConditions();
-        const fields = await resultTemplateElement.getFields();
-        this.resultTemplatesManager.registerTemplates({
-          content: resultTemplateElement.innerHTML,
-          conditions,
-          fields,
-          priority: 1,
-        });
+        const template = await resultTemplateElement.getTemplate();
+        if (!template) {
+          this.templateHasError = true;
+          return;
+        }
+        this.resultTemplatesManager.registerTemplates(template);
       });
   }
 
   private get results() {
     return this.resultListState.results.map((result) => (
       <atomic-result
-        key={result.uniqueId}
+        key={result.raw.permanentid}
         part="list-element"
         result={result}
         engine={this.bindings.engine}
-        innerHTML={Mustache.render(
+        // TODO: decide to get rid of Mustache or not
+        content={Mustache.render(
           this.resultTemplatesManager.selectTemplate(result) || '',
           result
         )}
@@ -125,6 +124,7 @@ export class AtomicResultList implements InitializableComponent {
     }
   }
 
+  // TODO: create atomic-result-placeholder component
   private renderPlaceholder() {
     const results = [];
     for (let i = 0; i < this.resultPerPageState.numberOfResults; i++) {
@@ -157,6 +157,6 @@ export class AtomicResultList implements InitializableComponent {
       return this.renderPlaceholder();
     }
 
-    return this.results;
+    return [this.templateHasError && <slot></slot>, this.results];
   }
 }

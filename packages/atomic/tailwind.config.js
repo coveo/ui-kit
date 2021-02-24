@@ -3,7 +3,7 @@ const isDevWatch = process.argv.indexOf('--dev') > -1;
 module.exports = {
   purge: {
     content: [
-      './src/**/*.tsx', './src/index.html', './src/**/*.css'
+      './src/**/*.tsx', './src/**/*.css'
     ],
     enabled: !isDevWatch
   },
