@@ -44,6 +44,17 @@ const controllers: ControllerConfiguration[] = [
     initializer: 'buildFacetManager',
     samplePaths: {},
   },
+  {
+    initializer: 'buildRecommendationList',
+    samplePaths: {
+      react_class: [
+        'packages/samples/headless-react/src/components/recommendation-list/recommendation-list.class.tsx',
+      ],
+      react_fn: [
+        'packages/samples/headless-react/src/components/recommendation-list/recommendation-list.fn.tsx',
+      ],
+    },
+  },
 ];
 
 const result = controllers.map((controller) =>
