@@ -115,7 +115,7 @@ export class AtomicResultList implements InitializableComponent {
 
   public render() {
     if (!this.resultListState.firstSearchExecuted) {
-      return <atomic-results-placeholder></atomic-results-placeholder>;
+      return <atomic-result-list-placeholder></atomic-result-list-placeholder>;
     }
 
     return [this.templateHasError && <slot></slot>, this.results];

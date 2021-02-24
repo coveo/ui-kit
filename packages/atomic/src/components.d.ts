@@ -158,6 +158,8 @@ export namespace Components {
          */
         "fieldsToInclude": string;
     }
+    interface AtomicResultListPlaceholder {
+    }
     interface AtomicResultTemplate {
         "conditions": ResultTemplateCondition[];
         "getTemplate": () => Promise<ResultTemplate<string> | null>;
@@ -183,8 +185,6 @@ export namespace Components {
           * Initial choice for the number of result per page. Should be part of the `choicesDisplayed` option. By default, the first value of choices displayed.
          */
         "initialChoice"?: number;
-    }
-    interface AtomicResultsPlaceholder {
     }
     interface AtomicSearchBox {
         "_id": string;
@@ -372,6 +372,12 @@ declare global {
         prototype: HTMLAtomicResultListElement;
         new (): HTMLAtomicResultListElement;
     };
+    interface HTMLAtomicResultListPlaceholderElement extends Components.AtomicResultListPlaceholder, HTMLStencilElement {
+    }
+    var HTMLAtomicResultListPlaceholderElement: {
+        prototype: HTMLAtomicResultListPlaceholderElement;
+        new (): HTMLAtomicResultListPlaceholderElement;
+    };
     interface HTMLAtomicResultTemplateElement extends Components.AtomicResultTemplate, HTMLStencilElement {
     }
     var HTMLAtomicResultTemplateElement: {
@@ -395,12 +401,6 @@ declare global {
     var HTMLAtomicResultsPerPageElement: {
         prototype: HTMLAtomicResultsPerPageElement;
         new (): HTMLAtomicResultsPerPageElement;
-    };
-    interface HTMLAtomicResultsPlaceholderElement extends Components.AtomicResultsPlaceholder, HTMLStencilElement {
-    }
-    var HTMLAtomicResultsPlaceholderElement: {
-        prototype: HTMLAtomicResultsPlaceholderElement;
-        new (): HTMLAtomicResultsPlaceholderElement;
     };
     interface HTMLAtomicSearchBoxElement extends Components.AtomicSearchBox, HTMLStencilElement {
     }
@@ -461,11 +461,11 @@ declare global {
         "atomic-result-excerpt": HTMLAtomicResultExcerptElement;
         "atomic-result-link": HTMLAtomicResultLinkElement;
         "atomic-result-list": HTMLAtomicResultListElement;
+        "atomic-result-list-placeholder": HTMLAtomicResultListPlaceholderElement;
         "atomic-result-template": HTMLAtomicResultTemplateElement;
         "atomic-result-uri": HTMLAtomicResultUriElement;
         "atomic-result-value": HTMLAtomicResultValueElement;
         "atomic-results-per-page": HTMLAtomicResultsPerPageElement;
-        "atomic-results-placeholder": HTMLAtomicResultsPlaceholderElement;
         "atomic-search-box": HTMLAtomicSearchBoxElement;
         "atomic-search-interface": HTMLAtomicSearchInterfaceElement;
         "atomic-sort-criteria": HTMLAtomicSortCriteriaElement;
@@ -623,6 +623,8 @@ declare namespace LocalJSX {
          */
         "fieldsToInclude"?: string;
     }
+    interface AtomicResultListPlaceholder {
+    }
     interface AtomicResultTemplate {
         "conditions"?: ResultTemplateCondition[];
     }
@@ -647,8 +649,6 @@ declare namespace LocalJSX {
           * Initial choice for the number of result per page. Should be part of the `choicesDisplayed` option. By default, the first value of choices displayed.
          */
         "initialChoice"?: number;
-    }
-    interface AtomicResultsPlaceholder {
     }
     interface AtomicSearchBox {
         "_id"?: string;
@@ -723,11 +723,11 @@ declare namespace LocalJSX {
         "atomic-result-excerpt": AtomicResultExcerpt;
         "atomic-result-link": AtomicResultLink;
         "atomic-result-list": AtomicResultList;
+        "atomic-result-list-placeholder": AtomicResultListPlaceholder;
         "atomic-result-template": AtomicResultTemplate;
         "atomic-result-uri": AtomicResultUri;
         "atomic-result-value": AtomicResultValue;
         "atomic-results-per-page": AtomicResultsPerPage;
-        "atomic-results-placeholder": AtomicResultsPlaceholder;
         "atomic-search-box": AtomicSearchBox;
         "atomic-search-interface": AtomicSearchInterface;
         "atomic-sort-criteria": AtomicSortCriteria;
@@ -762,11 +762,11 @@ declare module "@stencil/core" {
             "atomic-result-excerpt": LocalJSX.AtomicResultExcerpt & JSXBase.HTMLAttributes<HTMLAtomicResultExcerptElement>;
             "atomic-result-link": LocalJSX.AtomicResultLink & JSXBase.HTMLAttributes<HTMLAtomicResultLinkElement>;
             "atomic-result-list": LocalJSX.AtomicResultList & JSXBase.HTMLAttributes<HTMLAtomicResultListElement>;
+            "atomic-result-list-placeholder": LocalJSX.AtomicResultListPlaceholder & JSXBase.HTMLAttributes<HTMLAtomicResultListPlaceholderElement>;
             "atomic-result-template": LocalJSX.AtomicResultTemplate & JSXBase.HTMLAttributes<HTMLAtomicResultTemplateElement>;
             "atomic-result-uri": LocalJSX.AtomicResultUri & JSXBase.HTMLAttributes<HTMLAtomicResultUriElement>;
             "atomic-result-value": LocalJSX.AtomicResultValue & JSXBase.HTMLAttributes<HTMLAtomicResultValueElement>;
             "atomic-results-per-page": LocalJSX.AtomicResultsPerPage & JSXBase.HTMLAttributes<HTMLAtomicResultsPerPageElement>;
-            "atomic-results-placeholder": LocalJSX.AtomicResultsPlaceholder & JSXBase.HTMLAttributes<HTMLAtomicResultsPlaceholderElement>;
             "atomic-search-box": LocalJSX.AtomicSearchBox & JSXBase.HTMLAttributes<HTMLAtomicSearchBoxElement>;
             "atomic-search-interface": LocalJSX.AtomicSearchInterface & JSXBase.HTMLAttributes<HTMLAtomicSearchInterfaceElement>;
             "atomic-sort-criteria": LocalJSX.AtomicSortCriteria & JSXBase.HTMLAttributes<HTMLAtomicSortCriteriaElement>;

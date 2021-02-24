@@ -1,4 +1,4 @@
-# atomic-results-placeholder
+# atomic-result-list-placeholder
 
 
 
@@ -25,9 +25,9 @@
 ### Graph
 ```mermaid
 graph TD;
-  atomic-results-placeholder --> atomic-component-error
-  atomic-result-list --> atomic-results-placeholder
-  style atomic-results-placeholder fill:#f9f,stroke:#333,stroke-width:4px
+  atomic-result-list-placeholder --> atomic-component-error
+  atomic-result-list --> atomic-result-list-placeholder
+  style atomic-result-list-placeholder fill:#f9f,stroke:#333,stroke-width:4px
 ```
 
 ----------------------------------------------

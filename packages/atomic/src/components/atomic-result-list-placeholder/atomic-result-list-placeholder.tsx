@@ -12,15 +12,15 @@ import {
 } from '../../utils/initialization-utils';
 
 /**
- * The Placeholder provides an intermediate visual state that is rendered before the first results are available.
+ * The ResultListPlaceholder provides an intermediate visual state that is rendered before the first results are available.
  * @part result - The placeholder for a single result
  */
 @Component({
-  tag: 'atomic-results-placeholder',
-  styleUrl: 'atomic-results-placeholder.pcss',
+  tag: 'atomic-result-list-placeholder',
+  styleUrl: 'atomic-result-list-placeholder.pcss',
   shadow: true,
 })
-export class AtomicResultPlaceholder implements InitializableComponent {
+export class AtomicResultListPlaceholder implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;
   public resultPerPage!: ResultsPerPage;
 
