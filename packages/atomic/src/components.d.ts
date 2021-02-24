@@ -55,9 +55,22 @@ export namespace Components {
     interface AtomicDidYouMean {
     }
     interface AtomicFacet {
-        "facetId": string;
+        /**
+          * The character that separates values of a multi-value field
+         */
+        "delimitingCharacter"?: string;
+        /**
+          * The field whose values you want to display in the facet.
+         */
         "field": string;
+        /**
+          * The displayed label for the facet.
+         */
         "label": string;
+        /**
+          * The number of values to request for this facet. Also determines the number of additional values to request each time this facet is expanded, and the number of values to display when this facet is collapsed.
+         */
+        "numberOfValues": number;
     }
     interface AtomicFacetManager {
     }
@@ -500,9 +513,22 @@ declare namespace LocalJSX {
     interface AtomicDidYouMean {
     }
     interface AtomicFacet {
-        "facetId"?: string;
+        /**
+          * The character that separates values of a multi-value field
+         */
+        "delimitingCharacter"?: string;
+        /**
+          * The field whose values you want to display in the facet.
+         */
         "field"?: string;
+        /**
+          * The displayed label for the facet.
+         */
         "label"?: string;
+        /**
+          * The number of values to request for this facet. Also determines the number of additional values to request each time this facet is expanded, and the number of values to display when this facet is collapsed.
+         */
+        "numberOfValues"?: number;
     }
     interface AtomicFacetManager {
     }

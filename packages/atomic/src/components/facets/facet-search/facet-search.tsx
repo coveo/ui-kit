@@ -63,10 +63,8 @@ export class FacetSearch {
       onSubmit: () => props.controller.facetSearch.search(),
       onSelectValue: (element) => {
         const index = (element as HTMLLIElement).value;
-        this.props.controller.facetSearch.select(
-          this.props.controller.facetSearchState.values[
-            index
-          ] as CategoryFacetSearchResult
+        this.onSelectValue(
+          this.props.controller.facetSearchState.values[index]
         );
       },
       onBlur: () => {
@@ -75,6 +73,13 @@ export class FacetSearch {
       activeClass: 'active',
       activePartName: 'active-suggestion',
     });
+  }
+
+  private onSelectValue(value: BaseFacetSearchResult) {
+    this.props.controller.facetSearch.select(
+      value as CategoryFacetSearchResult
+    );
+    this.combobox.onInputBlur();
   }
 
   public updateCombobox() {
@@ -128,11 +133,7 @@ export class FacetSearch {
       .values as BaseFacetSearchResult[]).map((suggestion, index) => {
       return (
         <li
-          onClick={() =>
-            this.props.controller.facetSearch.select(
-              suggestion as CategoryFacetSearchResult
-            )
-          }
+          onClick={() => this.onSelectValue(suggestion)}
           onMouseDown={(e) => e.preventDefault()}
           part="suggestion"
           class="suggestion cursor-pointer flex flex-row items-center px-2 text-sm"
