@@ -39,7 +39,6 @@ export namespace Components {
     }
     interface AtomicFieldCondition {
         "conditions": ResultTemplateCondition[];
-        "getFields": () => Promise<string[]>;
         "ifDefined"?: string;
         "ifNotDefined"?: string;
     }
@@ -124,7 +123,6 @@ export namespace Components {
     }
     interface AtomicResultTemplate {
         "conditions": ResultTemplateCondition[];
-        "fieldsToInclude"?: string;
         "getTemplate": () => Promise<ResultTemplate<string> | null>;
     }
     interface AtomicResultUri {
@@ -537,7 +535,6 @@ declare namespace LocalJSX {
     }
     interface AtomicResultTemplate {
         "conditions"?: ResultTemplateCondition[];
-        "fieldsToInclude"?: string;
     }
     interface AtomicResultUri {
     }

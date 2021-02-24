@@ -1,4 +1,4 @@
-import {Component, Prop, h, Method, Element} from '@stencil/core';
+import {Component, Prop, h, Element} from '@stencil/core';
 import {
   Result,
   ResultTemplateCondition,
@@ -20,7 +20,6 @@ export class AtomicFieldCondition {
   @MapProp() mustMatch: Record<string, string[]> = {};
   @MapProp() mustNotMatch: Record<string, string[]> = {};
 
-  private fields: string[] = [];
   private shouldBeRemoved = false;
 
   @ResultContext() private result!: Result;
@@ -28,7 +27,6 @@ export class AtomicFieldCondition {
   public componentWillLoad() {
     if (this.ifDefined) {
       const fieldNames = this.ifDefined.split(',');
-      this.fields.push(...fieldNames);
       this.conditions.push(
         ResultTemplatesHelpers.fieldsMustBeDefined(fieldNames)
       );
@@ -36,7 +34,6 @@ export class AtomicFieldCondition {
 
     if (this.ifNotDefined) {
       const fieldNames = this.ifNotDefined.split(',');
-      this.fields.push(...fieldNames);
       this.conditions.push(
         ResultTemplatesHelpers.fieldsMustNotBeDefined(fieldNames)
       );
@@ -46,7 +43,6 @@ export class AtomicFieldCondition {
       this.conditions.push(
         ResultTemplatesHelpers.fieldMustMatch(field, this.mustMatch[field])
       );
-      this.fields.push(field);
     }
 
     for (const field in this.mustNotMatch) {
@@ -56,7 +52,6 @@ export class AtomicFieldCondition {
           this.mustNotMatch[field]
         )
       );
-      this.fields.push(field);
     }
   }
 
@@ -71,10 +66,5 @@ export class AtomicFieldCondition {
 
   public componentDidLoad() {
     this.shouldBeRemoved && this.host.remove();
-  }
-
-  @Method()
-  public async getFields() {
-    return this.fields;
   }
 }

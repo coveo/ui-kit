@@ -24,7 +24,6 @@ export class AtomicResultTemplate {
   @State() private error?: Error;
 
   @Prop() public conditions: ResultTemplateCondition[] = [];
-  @Prop() public fieldsToInclude?: string;
   @MapProp() public mustMatch: Record<string, string[]> = {};
   @MapProp() public mustNotMatch: Record<string, string[]> = {};
 
@@ -47,9 +46,6 @@ export class AtomicResultTemplate {
   }
 
   public componentWillLoad() {
-    this.fieldsToInclude &&
-      this.fields.push(...this.fieldsToInclude.split(','));
-
     for (const field in this.mustMatch) {
       this.matchConditions.push(
         ResultTemplatesHelpers.fieldMustMatch(field, this.mustMatch[field])
@@ -97,17 +93,9 @@ export class AtomicResultTemplate {
         fieldValues.push(resultValueElement.value);
       });
 
-    const fieldsPromises: Promise<string[]>[] = [];
-    this.host
-      .querySelectorAll('atomic-field-condition')
-      .forEach((fieldConditionElement) => {
-        fieldsPromises.push(fieldConditionElement.getFields());
-      });
+    // TODO: extract fields from atomic-field-condition
 
-    return this.fields.concat(
-      fieldValues,
-      ...(await Promise.all(fieldsPromises))
-    );
+    return this.fields.concat(fieldValues);
   }
 
   public render() {

@@ -26,23 +26,4 @@ describe('atomic-field-condition', () => {
       })
     ).rejects.toBeTruthy();
   });
-
-  // TODO: fix getFields
-  it('should return all used fields', async () => {
-    const page = await newSpecPage({
-      components: [
-        AtomicResultList,
-        AtomicResultTemplate,
-        AtomicFieldCondition,
-      ],
-      html: `<atomic-result-list>
-        <atomic-result-template>
-          <atomic-field-condition if-defined="test1,test2" must-match-test3="bidon" must-not-match-test4="bidon"></atomic-field-condition>
-      </template>`,
-    });
-
-    const component = page.doc.querySelector('atomic-field-condition')!;
-    const fields = await component.getFields();
-    expect(fields).toEqual(['test1', 'test2', 'test3', 'test4']);
-  });
 });

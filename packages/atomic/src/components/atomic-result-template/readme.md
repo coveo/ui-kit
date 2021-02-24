@@ -7,10 +7,9 @@
 
 ## Properties
 
-| Property          | Attribute           | Description | Type                        | Default     |
-| ----------------- | ------------------- | ----------- | --------------------------- | ----------- |
-| `conditions`      | --                  |             | `ResultTemplateCondition[]` | `[]`        |
-| `fieldsToInclude` | `fields-to-include` |             | `string \| undefined`       | `undefined` |
+| Property     | Attribute | Description | Type                        | Default |
+| ------------ | --------- | ----------- | --------------------------- | ------- |
+| `conditions` | --        |             | `ResultTemplateCondition[]` | `[]`    |
 
 
 ## Methods
