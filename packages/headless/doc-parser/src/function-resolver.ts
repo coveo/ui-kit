@@ -11,10 +11,7 @@ import {
   buildObjEntity,
   buildParamEntity,
 } from './entity-builder';
-import {
-  buildParamEntityBasedOnKind,
-  resolveInterfaceMembers,
-} from './interface-resolver';
+import {resolveParameter, resolveInterfaceMembers} from './interface-resolver';
 
 export function resolveFunction(
   entry: ApiEntryPoint,
@@ -44,7 +41,7 @@ function resolveParams(
     const shouldResolveShallow = shallowParamIndices.includes(index);
     return shouldResolveShallow
       ? buildParamEntity(p)
-      : buildParamEntityBasedOnKind(entry, p);
+      : resolveParameter(entry, p);
   });
 }
 

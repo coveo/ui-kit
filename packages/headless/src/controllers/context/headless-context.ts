@@ -1,7 +1,7 @@
 import {Engine} from '../../app/headless-engine';
 import {buildController, Controller} from '../controller/headless-controller';
 import {
-  Context as ContextPayload,
+  ContextPayload,
   ContextValue,
 } from '../../features/context/context-state';
 import {
@@ -10,6 +10,8 @@ import {
   removeContext,
 } from '../../features/context/context-actions';
 import {ContextSection} from '../../state/state-sections';
+
+export {ContextPayload, ContextValue};
 
 /**
  * The `Context` controller injects custom contextual information into the search requests and usage analytics search events sent from a search interface.
