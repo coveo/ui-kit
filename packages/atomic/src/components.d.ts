@@ -15,6 +15,7 @@ export namespace Components {
         "collapseThreshold": number;
     }
     interface AtomicCategoryFacet {
+        "delimitingCharacter"?: string;
         "facetId": string;
         "field": string;
         "label": string;
@@ -473,6 +474,7 @@ declare namespace LocalJSX {
         "collapseThreshold"?: number;
     }
     interface AtomicCategoryFacet {
+        "delimitingCharacter"?: string;
         "facetId"?: string;
         "field"?: string;
         "label"?: string;
