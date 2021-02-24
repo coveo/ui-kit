@@ -46,7 +46,14 @@ const controllers: ControllerConfiguration[] = [
   },
   {
     initializer: 'buildQueryError',
-    samplePaths: {},
+    samplePaths: {
+      react_class: [
+        'packages/samples/headless-react/src/components/query-error/query-error.class.tsx',
+      ],
+      react_fn: [
+        'packages/samples/headless-react/src/components/query-error/query-error.fn.tsx',
+      ],
+    },
   },
 ];
 
