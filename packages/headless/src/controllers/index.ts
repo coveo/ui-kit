@@ -79,8 +79,9 @@ export {
 } from './pager/headless-pager';
 
 export {
-  QueryErrorState,
   QueryError,
+  QueryErrorState,
+  QueryErrorPayload,
   buildQueryError,
 } from './query-error/headless-query-error';
 

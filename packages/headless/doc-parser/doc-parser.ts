@@ -44,6 +44,10 @@ const controllers: ControllerConfiguration[] = [
     initializer: 'buildFacetManager',
     samplePaths: {},
   },
+  {
+    initializer: 'buildQueryError',
+    samplePaths: {},
+  },
 ];
 
 const result = controllers.map((controller) =>
