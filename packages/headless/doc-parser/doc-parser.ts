@@ -40,6 +40,10 @@ const controllers: ControllerConfiguration[] = [
       ],
     },
   },
+  {
+    initializer: 'buildFacetManager',
+    samplePaths: {},
+  },
 ];
 
 const result = controllers.map((controller) =>
