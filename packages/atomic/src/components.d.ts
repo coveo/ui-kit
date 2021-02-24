@@ -184,6 +184,8 @@ export namespace Components {
          */
         "initialChoice"?: number;
     }
+    interface AtomicResultsPlaceholder {
+    }
     interface AtomicSearchBox {
         "_id": string;
         /**
@@ -394,6 +396,12 @@ declare global {
         prototype: HTMLAtomicResultsPerPageElement;
         new (): HTMLAtomicResultsPerPageElement;
     };
+    interface HTMLAtomicResultsPlaceholderElement extends Components.AtomicResultsPlaceholder, HTMLStencilElement {
+    }
+    var HTMLAtomicResultsPlaceholderElement: {
+        prototype: HTMLAtomicResultsPlaceholderElement;
+        new (): HTMLAtomicResultsPlaceholderElement;
+    };
     interface HTMLAtomicSearchBoxElement extends Components.AtomicSearchBox, HTMLStencilElement {
     }
     var HTMLAtomicSearchBoxElement: {
@@ -457,6 +465,7 @@ declare global {
         "atomic-result-uri": HTMLAtomicResultUriElement;
         "atomic-result-value": HTMLAtomicResultValueElement;
         "atomic-results-per-page": HTMLAtomicResultsPerPageElement;
+        "atomic-results-placeholder": HTMLAtomicResultsPlaceholderElement;
         "atomic-search-box": HTMLAtomicSearchBoxElement;
         "atomic-search-interface": HTMLAtomicSearchInterfaceElement;
         "atomic-sort-criteria": HTMLAtomicSortCriteriaElement;
@@ -639,6 +648,8 @@ declare namespace LocalJSX {
          */
         "initialChoice"?: number;
     }
+    interface AtomicResultsPlaceholder {
+    }
     interface AtomicSearchBox {
         "_id"?: string;
         /**
@@ -716,6 +727,7 @@ declare namespace LocalJSX {
         "atomic-result-uri": AtomicResultUri;
         "atomic-result-value": AtomicResultValue;
         "atomic-results-per-page": AtomicResultsPerPage;
+        "atomic-results-placeholder": AtomicResultsPlaceholder;
         "atomic-search-box": AtomicSearchBox;
         "atomic-search-interface": AtomicSearchInterface;
         "atomic-sort-criteria": AtomicSortCriteria;
@@ -754,6 +766,7 @@ declare module "@stencil/core" {
             "atomic-result-uri": LocalJSX.AtomicResultUri & JSXBase.HTMLAttributes<HTMLAtomicResultUriElement>;
             "atomic-result-value": LocalJSX.AtomicResultValue & JSXBase.HTMLAttributes<HTMLAtomicResultValueElement>;
             "atomic-results-per-page": LocalJSX.AtomicResultsPerPage & JSXBase.HTMLAttributes<HTMLAtomicResultsPerPageElement>;
+            "atomic-results-placeholder": LocalJSX.AtomicResultsPlaceholder & JSXBase.HTMLAttributes<HTMLAtomicResultsPlaceholderElement>;
             "atomic-search-box": LocalJSX.AtomicSearchBox & JSXBase.HTMLAttributes<HTMLAtomicSearchBoxElement>;
             "atomic-search-interface": LocalJSX.AtomicSearchInterface & JSXBase.HTMLAttributes<HTMLAtomicSearchInterfaceElement>;
             "atomic-sort-criteria": LocalJSX.AtomicSortCriteria & JSXBase.HTMLAttributes<HTMLAtomicSortCriteriaElement>;

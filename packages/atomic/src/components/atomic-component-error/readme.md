@@ -33,6 +33,7 @@
  - [atomic-result-template](../atomic-result-template)
  - [atomic-result-value](../result-template-components/atomic-result-value)
  - [atomic-results-per-page](../atomic-results-per-page)
+ - [atomic-results-placeholder](../atomic-results-placeholder)
  - [atomic-search-box](../atomic-search-box)
  - [atomic-search-interface](../atomic-search-interface)
  - [atomic-sort-dropdown](../atomic-sort-dropdown)
@@ -58,6 +59,7 @@ graph TD;
   atomic-result-template --> atomic-component-error
   atomic-result-value --> atomic-component-error
   atomic-results-per-page --> atomic-component-error
+  atomic-results-placeholder --> atomic-component-error
   atomic-search-box --> atomic-component-error
   atomic-search-interface --> atomic-component-error
   atomic-sort-dropdown --> atomic-component-error
