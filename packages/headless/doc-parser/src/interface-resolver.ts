@@ -64,8 +64,8 @@ function resolvePropertySignature(
 }
 
 function isTypeAlias(token: ExcerptToken) {
-  const canonicalRef = token.canonicalReference?.toString() || '';
-  return /:type$/.test(canonicalRef);
+  const meaning = token.canonicalReference?.symbol?.meaning;
+  return meaning === 'type';
 }
 
 function isRecordType(token: ExcerptToken) {
