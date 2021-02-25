@@ -5,10 +5,13 @@ import {
 } from '@microsoft/api-extractor-model';
 import {DocComment} from '@microsoft/tsdoc';
 import {findApi} from './api-finder';
-import {ObjEntity} from './entity';
-import {buildEntity, buildFuncEntity} from './entity-builder';
-import {resolveParams} from './function-param-resolver';
-import {resolveInterfaceMembers} from './interface-resolver';
+import {
+  buildEntity,
+  buildFuncEntity,
+  buildObjEntity,
+  buildParamEntity,
+} from './entity-builder';
+import {resolveParameter, resolveInterfaceMembers} from './interface-resolver';
 
 export function resolveFunction(
   entry: ApiEntryPoint,
@@ -29,10 +32,23 @@ export function resolveFunction(
   });
 }
 
+function resolveParams(
+  entry: ApiEntryPoint,
+  fn: ApiFunction,
+  shallowParamIndices: number[]
+) {
+  return fn.parameters.map((p, index) => {
+    const shouldResolveShallow = shallowParamIndices.includes(index);
+    return shouldResolveShallow
+      ? buildParamEntity(p)
+      : resolveParameter(entry, p);
+  });
+}
+
 function buildObjEntityFromInterface(
   entryPoint: ApiEntryPoint,
   apiInterface: ApiInterface
-): ObjEntity {
+) {
   const name = apiInterface.name;
   const members = resolveInterfaceMembers(entryPoint, apiInterface);
   const entity = buildEntity({
@@ -42,5 +58,5 @@ function buildObjEntityFromInterface(
     comment: (apiInterface.tsdocComment as unknown) as DocComment,
   });
 
-  return {...entity, members};
+  return buildObjEntity({entity, members, typeName: name});
 }

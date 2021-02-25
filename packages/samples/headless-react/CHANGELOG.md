@@ -3,6 +3,94 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.7.0-alpha.20](https://github.com/coveo/ui-kit/compare/v0.7.0-alpha.19...v0.7.0-alpha.20) (2021-02-24)
+
+**Note:** Version bump only for package headless-react
+
+
+
+
+
+# [0.7.0-alpha.19](https://github.com/coveo/ui-kit/compare/v0.7.0-alpha.18...v0.7.0-alpha.19) (2021-02-24)
+
+**Note:** Version bump only for package headless-react
+
+
+
+
+
+# [0.7.0-alpha.18](https://github.com/coveo/ui-kit/compare/v0.7.0-alpha.17...v0.7.0-alpha.18) (2021-02-23)
+
+**Note:** Version bump only for package headless-react
+
+
+
+
+
+# [0.7.0-alpha.17](https://github.com/coveo/ui-kit/compare/v0.7.0-alpha.16...v0.7.0-alpha.17) (2021-02-23)
+
+**Note:** Version bump only for package headless-react
+
+
+
+
+
+# [0.7.0-alpha.16](https://github.com/coveo/ui-kit/compare/v0.7.0-alpha.15...v0.7.0-alpha.16) (2021-02-23)
+
+**Note:** Version bump only for package headless-react
+
+
+
+
+
+# [0.7.0-alpha.15](https://github.com/coveo/ui-kit/compare/v0.7.0-alpha.14...v0.7.0-alpha.15) (2021-02-22)
+
+**Note:** Version bump only for package headless-react
+
+
+
+
+
+# [0.7.0-alpha.14](https://github.com/coveo/ui-kit/compare/v0.7.0-alpha.13...v0.7.0-alpha.14) (2021-02-22)
+
+**Note:** Version bump only for package headless-react
+
+
+
+
+
+# [0.7.0-alpha.13](https://github.com/coveo/ui-kit/compare/v0.7.0-alpha.12...v0.7.0-alpha.13) (2021-02-22)
+
+**Note:** Version bump only for package headless-react
+
+
+
+
+
+# [0.7.0-alpha.12](https://github.com/coveo/ui-kit/compare/v0.7.0-alpha.11...v0.7.0-alpha.12) (2021-02-22)
+
+**Note:** Version bump only for package headless-react
+
+
+
+
+
+# [0.7.0-alpha.11](https://github.com/coveo/ui-kit/compare/v0.7.0-alpha.10...v0.7.0-alpha.11) (2021-02-21)
+
+**Note:** Version bump only for package headless-react
+
+
+
+
+
+# [0.7.0-alpha.10](https://github.com/coveo/ui-kit/compare/v0.7.0-alpha.9...v0.7.0-alpha.10) (2021-02-19)
+
+**Note:** Version bump only for package headless-react
+
+
+
+
+
 # [0.7.0-alpha.9](https://github.com/coveo/ui-kit/compare/v0.7.0-alpha.8...v0.7.0-alpha.9) (2021-02-19)
 
 **Note:** Version bump only for package headless-react

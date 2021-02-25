@@ -1,5 +1,5 @@
 import {createAction} from '@reduxjs/toolkit';
-import {Context, ContextValue} from './context-state';
+import {ContextPayload, ContextValue} from './context-state';
 import {
   validatePayload,
   requiredNonEmptyString,
@@ -25,12 +25,15 @@ const nonEmptyPayload = (contextKey: string, contextValue: ContextValue) => {
  * Sets the query context.
  * @param payload (Context) The new context (e.g., {age: "18-35"}).
  */
-export const setContext = createAction('context/set', (payload: Context) => {
-  for (const [k, v] of Object.entries(payload)) {
-    nonEmptyPayload(k, v);
+export const setContext = createAction(
+  'context/set',
+  (payload: ContextPayload) => {
+    for (const [k, v] of Object.entries(payload)) {
+      nonEmptyPayload(k, v);
+    }
+    return {payload};
   }
-  return {payload};
-});
+);
 
 /**
  * Adds a new context value.

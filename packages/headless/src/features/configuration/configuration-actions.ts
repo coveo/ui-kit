@@ -3,6 +3,12 @@ import {validatePayload} from '../../utils/validate-payload';
 import {StringValue, BooleanValue, Value} from '@coveo/bueno';
 import {IRuntimeEnvironment} from 'coveo.analytics';
 
+export const localeValidation = new StringValue({
+  emptyAllowed: false,
+  required: false,
+  regex: /[a-z]{2}-[A-Z]{2}/,
+});
+
 const originSchemaOnConfigUpdate = () =>
   new StringValue({emptyAllowed: false, required: false});
 
@@ -34,14 +40,21 @@ export const updateBasicConfiguration = createAction(
  * @param apiBaseUrl (string) The Search API base URL to use (e.g., `https://platform.cloud.coveo.com/rest/search/v2`).
  * @param pipeline (string) The name of the query pipeline to use for the query (e.g., `External Search`). If not specified, the default query pipeline will be used.
  * @param searchHub (string) The first level of origin of the request, typically the identifier of the graphical search interface from which the request originates (e.g., `ExternalSearch`).
+ * @param locale (string) The locale of the current user. Must comply with IETF’s BCP 47 definition: https://www.rfc-editor.org/rfc/bcp/bcp47.txt.
  */
 export const updateSearchConfiguration = createAction(
   'configuration/updateSearchConfiguration',
-  (payload: {apiBaseUrl?: string; pipeline?: string; searchHub?: string}) =>
+  (payload: {
+    apiBaseUrl?: string;
+    pipeline?: string;
+    searchHub?: string;
+    locale?: string;
+  }) =>
     validatePayload(payload, {
       apiBaseUrl: new StringValue({url: true, emptyAllowed: false}),
       pipeline: new StringValue({emptyAllowed: false}),
       searchHub: new StringValue({emptyAllowed: false}),
+      locale: localeValidation,
     })
 );
 

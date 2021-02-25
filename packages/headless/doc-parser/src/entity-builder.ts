@@ -13,6 +13,12 @@ interface EntityOptions extends Comment {
   isOptional: boolean;
 }
 
+interface ObjEntityOptions {
+  entity: Entity;
+  members: AnyEntity[];
+  typeName: string;
+}
+
 interface FuncEntityOptions extends Comment {
   name: string;
   params: AnyEntity[];
@@ -24,10 +30,24 @@ export function buildEntity(config: EntityOptions): Entity {
   const desc = getSummary(config.comment);
 
   return {
+    kind: 'primitive',
     name: config.name,
     isOptional: config.isOptional,
     type,
     desc,
+  };
+}
+
+export function buildObjEntity(config: ObjEntityOptions): ObjEntity {
+  const {entity, members} = config;
+  const typeName = sanitizeType(config.typeName);
+
+  return {
+    ...entity,
+    kind: 'object',
+    members,
+    isTypeExtracted: false,
+    typeName,
   };
 }
 
@@ -36,6 +56,7 @@ export function buildParamEntity(param: Parameter): Entity {
   const type = sanitizeType(param.parameterTypeExcerpt.text);
 
   return {
+    kind: 'primitive',
     name: param.name,
     isOptional: false,
     desc,
@@ -47,6 +68,7 @@ export function buildFuncEntity(config: FuncEntityOptions): FuncEntity {
   const desc = getSummary(config.comment);
 
   return {
+    kind: 'function',
     name: config.name,
     params: config.params,
     returnType: config.returnType,

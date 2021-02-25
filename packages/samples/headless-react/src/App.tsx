@@ -28,6 +28,8 @@ import {Facet} from './components/facet/facet.class';
 import {Facet as FacetFn} from './components/facet/facet.fn';
 import {History} from './components/history/history.class';
 import {History as HistoryFn} from './components/history/history.fn';
+import {RelevanceInspector} from './components/relevance-inspector/relevance-inspector.class';
+import {RelevanceInspector as RelevanceInspectorFn} from './components/relevance-inspector/relevance-inspector.fn';
 import {
   buildRecommendationList,
   buildTab,
@@ -46,8 +48,10 @@ import {
   buildResultsPerPage,
   buildPager,
   buildHistory,
+  buildRelevanceInspector,
 } from '@coveo/headless';
 import {bindSearchParametersToURI} from './components/search-parameter-manager/search-parameter-manager';
+import {setContext} from './components/context/context';
 
 const recommendationList = buildRecommendationList(recommendationEngine);
 
@@ -100,10 +104,13 @@ const pager = buildPager(engine, {options: {numberOfPages: 6}});
 
 const history = buildHistory(engine);
 
+const relevanceInspector = buildRelevanceInspector(engine);
+
 const {autoUpdateURI: startUpdatingURI} = bindSearchParametersToURI(engine);
 
 function App() {
   useEffect(() => startUpdatingURI(), []);
+  setContext('30-45', ['sports', 'camping', 'electronics']);
 
   return (
     <div className="App">
@@ -169,6 +176,10 @@ function App() {
         <Section title="history">
           <History />
           <HistoryFn controller={history} />
+        </Section>
+        <Section title="relevance-inspector">
+          <RelevanceInspector />
+          <RelevanceInspectorFn controller={relevanceInspector} />
         </Section>
       </header>
     </div>

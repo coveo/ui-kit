@@ -38,8 +38,30 @@ describe('highlight', () => {
 
     it('should throw if "tag" is an empty string', () => {
       expect(() =>
-        highlightString({...highlightParams, openingDelimiter: ''})
+        highlightString({
+          ...highlightParams,
+          openingDelimiter: '',
+        })
       ).toThrow('delimiters should be a non-empty string');
+    });
+
+    it('should escape the string and return correctly highlighted string', () => {
+      const str = 'malicious <script/> string';
+      const newHighlights: HighlightKeyword[] = [
+        {offset: 3, length: 5},
+        {offset: 20, length: 3},
+      ];
+
+      const expectedString =
+        'mal<span>iciou</span>s &ltscript/&gt <span>str</span>ing';
+
+      expect(
+        highlightString({
+          ...highlightParams,
+          highlights: newHighlights,
+          content: str,
+        })
+      ).toBe(expectedString);
     });
   });
 
@@ -115,8 +137,10 @@ describe('highlight', () => {
 
   describe('escape', () => {
     it('should replace special characters', () => {
-      const str = "''&<&>`\"`";
-      expect(escape(str)).toBe('&#x27&#x27&amp&lt&amp&gt&#96&quot&#96');
+      const str = "an'es'caped&<str&>ing`\"`";
+      expect(escape(str)).toBe(
+        'an&#x27es&#x27caped&amp&ltstr&amp&gting&#96&quot&#96'
+      );
     });
   });
 });

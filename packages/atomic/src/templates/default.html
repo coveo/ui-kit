@@ -25,46 +25,42 @@
     </svg>
   </div>
   <div>
-    <!-- TODO: use atomic-result-link when https://coveord.atlassian.net/browse/KIT-98 is resolved -->
-    <a href="{{clickUri}}" class="inline-block text-primary hover:underline visited:text-visited mb-2">
-      <h3>{{title}}</h3>
-    </a>
+    <atomic-result-link class="mb-2"></atomic-result-link>
 
     <!-- TODO: add "date type" for atomic-result-value -->
 
-    <!-- TODO: use atomic-excerpt when https://coveord.atlassian.net/browse/KIT-305 is resolved -->
-    <p class="mb-2">
-      <atomic-result-value value="excerpt"></atomic-result-value>
-    </p>
+    <atomic-result-excerpt class="mb-2"></atomic-result-excerpt>
 
-    <div class="flex justify-start">
-      <atomic-field-condition if-defined="author" class="mr-5">
+    <div class="flex justify-start mb-2">
+      <atomic-field-condition if-defined="author" class="mr-5 flex">
         <b class="mr-2">
           <atomic-text value="author"></atomic-text>
         </b>
         <atomic-result-value value="author"></atomic-result-value>
       </atomic-field-condition>
 
-      <atomic-field-condition if-defined="source" class="mr-5">
+      <atomic-field-condition if-defined="source" class="mr-5 flex">
         <b class="mr-2">
           <atomic-text value="source"></atomic-text>
         </b>
         <atomic-result-value value="source"></atomic-result-value>
       </atomic-field-condition>
 
-      <atomic-field-condition if-defined="language" class="mr-5">
+      <atomic-field-condition if-defined="language" class="mr-5 flex">
         <b class="mr-2">
           <atomic-text value="language"></atomic-text>
         </b>
         <atomic-result-value value="language"></atomic-result-value>
       </atomic-field-condition>
 
-      <atomic-field-condition if-defined="filetype" class="mr-5">
+      <atomic-field-condition if-defined="filetype" class="mr-5 flex">
         <b class="mr-2">
           <atomic-text value="type"></atomic-text>
         </b>
         <atomic-result-value value="filetype"></atomic-result-value>
       </atomic-field-condition>
     </div>
+
+    <atomic-result-uri></atomic-result-uri>
   </div>
 </div>

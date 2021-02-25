@@ -5,13 +5,14 @@ import {
   ApiItemKind,
 } from '@microsoft/api-extractor-model';
 import {findApi} from './api-finder';
-import {FuncEntity} from './entity';
+import {FuncEntity, isObjectEntity, ObjEntity} from './entity';
 import {resolveFunction} from './function-resolver';
 import {
   resolveCodeSamplePaths,
   SamplePaths,
   CodeSampleInfo,
 } from './code-sample-resolver';
+import {extractTypes} from './extractor';
 
 export interface ControllerConfiguration {
   initializer: string;
@@ -21,6 +22,7 @@ export interface ControllerConfiguration {
 
 interface Controller {
   initializer: FuncEntity;
+  extractedTypes: ObjEntity[];
   utils: FuncEntity[];
   codeSampleInfo: CodeSampleInfo;
 }
@@ -31,9 +33,10 @@ export function resolveController(
 ): Controller {
   const initializer = resolveControllerInitializer(entry, config.initializer);
   const utils = (config.utils || []).map((util) => resolveUtility(entry, util));
+  const extractedTypes = extractTypesFrom(initializer, utils);
   const codeSampleInfo = resolveCodeSamplePaths(config.samplePaths);
 
-  return {initializer, utils, codeSampleInfo};
+  return {initializer, extractedTypes, utils, codeSampleInfo};
 }
 
 function resolveControllerInitializer(entry: ApiEntryPoint, name: string) {
@@ -55,4 +58,41 @@ function resolveUtility(entry: ApiEntryPoint, name: string) {
 
 function isFunction(item: ApiItem): item is ApiFunction {
   return item.kind === ApiItemKind.Function;
+}
+
+function extractTypesFrom(initializer: FuncEntity, utils: FuncEntity[]) {
+  const instanceTypes = extractTypesFromInitializerInstance(initializer);
+  const utilTypes = extractTypes(utils).types;
+  const types = instanceTypes.concat(utilTypes);
+
+  return removeDuplicates(types);
+}
+
+function extractTypesFromInitializerInstance(entity: FuncEntity) {
+  const {returnType} = entity;
+
+  if (typeof returnType === 'string') {
+    return [];
+  }
+
+  if (isObjectEntity(returnType)) {
+    return extractTypes(returnType.members).types;
+  }
+
+  return [];
+}
+
+function removeDuplicates(entities: ObjEntity[]) {
+  const seenNames = new Set();
+
+  return entities.filter((entity) => {
+    const {name} = entity;
+
+    if (seenNames.has(name)) {
+      return false;
+    }
+
+    seenNames.add(name);
+    return true;
+  });
 }

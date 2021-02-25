@@ -9,7 +9,6 @@ import { Engine, LogLevel, Result, ResultTemplateCondition } from "@coveo/headle
 import { Bindings } from "./utils/initialization-utils";
 import { i18n } from "i18next";
 import { InitializationOptions } from "./components/atomic-search-interface/atomic-search-interface";
-import { BaseFacetSearchResult } from "@coveo/headless/dist/api/search/facet-search/base/base-facet-search-response";
 export namespace Components {
     interface AtomicBreadcrumbManager {
         "categoryDivider": string;
@@ -26,15 +25,52 @@ export namespace Components {
     }
     interface AtomicDateFacet {
         "facetId": string;
+        /**
+          * Specifies the index field whose values the facet should use
+         */
         "field": string;
+        /**
+          * Whether or not the index should automatically generate options for the facet
+         */
+        "generateAutomaticRanges": boolean;
+        /**
+          * The displayed label for the facet
+         */
         "label": string;
+    }
+    interface AtomicDateRange {
+        /**
+          * The ending date for the range. It can be expressed as a Javascript date, as a number using epoch time or as a string using the ISO 8601 format
+         */
+        "end": Date | string | number;
+        /**
+          * Specifies whether or not the end date should be included in the range
+         */
+        "endInclusive": boolean;
+        /**
+          * The starting date for the range. It can be expressed as a Javascript date, as a number using epoch time or as a string using the ISO 8601 format
+         */
+        "start": Date | string | number;
     }
     interface AtomicDidYouMean {
     }
     interface AtomicFacet {
-        "facetId": string;
+        /**
+          * The character that separates values of a multi-value field
+         */
+        "delimitingCharacter"?: string;
+        /**
+          * The field whose values you want to display in the facet.
+         */
         "field": string;
+        /**
+          * The displayed label for the facet.
+         */
         "label": string;
+        /**
+          * The number of values to request for this facet. Also determines the number of additional values to request each time this facet is expanded, and the number of values to display when this facet is collapsed.
+         */
+        "numberOfValues": number;
     }
     interface AtomicFacetManager {
     }
@@ -60,8 +96,32 @@ export namespace Components {
     }
     interface AtomicNumericFacet {
         "facetId": string;
+        /**
+          * Specifies the index field whose values the facet should use
+         */
         "field": string;
+        /**
+          * Whether or not the index should automatically generate options for the facet
+         */
+        "generateAutomaticRanges": boolean;
+        /**
+          * The displayed label for the facet
+         */
         "label": string;
+    }
+    interface AtomicNumericRange {
+        /**
+          * The ending value for the numeric range
+         */
+        "end": number;
+        /**
+          * Specifies whether or not the end value should be included in the range
+         */
+        "endInclusive": boolean;
+        /**
+          * The starting value for the numeric range
+         */
+        "start": number;
     }
     interface AtomicPager {
         /**
@@ -88,6 +148,8 @@ export namespace Components {
         "engine": Engine;
         "result": Result;
     }
+    interface AtomicResultExcerpt {
+    }
     interface AtomicResultLink {
     }
     interface AtomicResultList {
@@ -102,7 +164,16 @@ export namespace Components {
         "getConditions": () => Promise<ResultTemplateCondition[]>;
         "getFields": () => Promise<string[]>;
     }
+    interface AtomicResultUri {
+    }
     interface AtomicResultValue {
+        /**
+          * Which highlight should the value be highlighted with
+         */
+        "shouldHighlightWith"?: string;
+        /**
+          * Which result value should the component render
+         */
         "value": string;
     }
     interface AtomicResultsPerPage {
@@ -167,10 +238,6 @@ export namespace Components {
          */
         "value": string;
     }
-    interface FacetSearch {
-        "facetSearchResults": BaseFacetSearchResult[];
-        "moreValuesAvailable": boolean;
-    }
 }
 declare global {
     interface HTMLAtomicBreadcrumbManagerElement extends Components.AtomicBreadcrumbManager, HTMLStencilElement {
@@ -196,6 +263,12 @@ declare global {
     var HTMLAtomicDateFacetElement: {
         prototype: HTMLAtomicDateFacetElement;
         new (): HTMLAtomicDateFacetElement;
+    };
+    interface HTMLAtomicDateRangeElement extends Components.AtomicDateRange, HTMLStencilElement {
+    }
+    var HTMLAtomicDateRangeElement: {
+        prototype: HTMLAtomicDateRangeElement;
+        new (): HTMLAtomicDateRangeElement;
     };
     interface HTMLAtomicDidYouMeanElement extends Components.AtomicDidYouMean, HTMLStencilElement {
     }
@@ -245,6 +318,12 @@ declare global {
         prototype: HTMLAtomicNumericFacetElement;
         new (): HTMLAtomicNumericFacetElement;
     };
+    interface HTMLAtomicNumericRangeElement extends Components.AtomicNumericRange, HTMLStencilElement {
+    }
+    var HTMLAtomicNumericRangeElement: {
+        prototype: HTMLAtomicNumericRangeElement;
+        new (): HTMLAtomicNumericRangeElement;
+    };
     interface HTMLAtomicPagerElement extends Components.AtomicPager, HTMLStencilElement {
     }
     var HTMLAtomicPagerElement: {
@@ -275,6 +354,12 @@ declare global {
         prototype: HTMLAtomicResultElement;
         new (): HTMLAtomicResultElement;
     };
+    interface HTMLAtomicResultExcerptElement extends Components.AtomicResultExcerpt, HTMLStencilElement {
+    }
+    var HTMLAtomicResultExcerptElement: {
+        prototype: HTMLAtomicResultExcerptElement;
+        new (): HTMLAtomicResultExcerptElement;
+    };
     interface HTMLAtomicResultLinkElement extends Components.AtomicResultLink, HTMLStencilElement {
     }
     var HTMLAtomicResultLinkElement: {
@@ -292,6 +377,12 @@ declare global {
     var HTMLAtomicResultTemplateElement: {
         prototype: HTMLAtomicResultTemplateElement;
         new (): HTMLAtomicResultTemplateElement;
+    };
+    interface HTMLAtomicResultUriElement extends Components.AtomicResultUri, HTMLStencilElement {
+    }
+    var HTMLAtomicResultUriElement: {
+        prototype: HTMLAtomicResultUriElement;
+        new (): HTMLAtomicResultUriElement;
     };
     interface HTMLAtomicResultValueElement extends Components.AtomicResultValue, HTMLStencilElement {
     }
@@ -341,17 +432,12 @@ declare global {
         prototype: HTMLAtomicTextElement;
         new (): HTMLAtomicTextElement;
     };
-    interface HTMLFacetSearchElement extends Components.FacetSearch, HTMLStencilElement {
-    }
-    var HTMLFacetSearchElement: {
-        prototype: HTMLFacetSearchElement;
-        new (): HTMLFacetSearchElement;
-    };
     interface HTMLElementTagNameMap {
         "atomic-breadcrumb-manager": HTMLAtomicBreadcrumbManagerElement;
         "atomic-category-facet": HTMLAtomicCategoryFacetElement;
         "atomic-component-error": HTMLAtomicComponentErrorElement;
         "atomic-date-facet": HTMLAtomicDateFacetElement;
+        "atomic-date-range": HTMLAtomicDateRangeElement;
         "atomic-did-you-mean": HTMLAtomicDidYouMeanElement;
         "atomic-facet": HTMLAtomicFacetElement;
         "atomic-facet-manager": HTMLAtomicFacetManagerElement;
@@ -360,14 +446,17 @@ declare global {
         "atomic-history": HTMLAtomicHistoryElement;
         "atomic-no-results": HTMLAtomicNoResultsElement;
         "atomic-numeric-facet": HTMLAtomicNumericFacetElement;
+        "atomic-numeric-range": HTMLAtomicNumericRangeElement;
         "atomic-pager": HTMLAtomicPagerElement;
         "atomic-query-error": HTMLAtomicQueryErrorElement;
         "atomic-query-summary": HTMLAtomicQuerySummaryElement;
         "atomic-relevance-inspector": HTMLAtomicRelevanceInspectorElement;
         "atomic-result": HTMLAtomicResultElement;
+        "atomic-result-excerpt": HTMLAtomicResultExcerptElement;
         "atomic-result-link": HTMLAtomicResultLinkElement;
         "atomic-result-list": HTMLAtomicResultListElement;
         "atomic-result-template": HTMLAtomicResultTemplateElement;
+        "atomic-result-uri": HTMLAtomicResultUriElement;
         "atomic-result-value": HTMLAtomicResultValueElement;
         "atomic-results-per-page": HTMLAtomicResultsPerPageElement;
         "atomic-search-box": HTMLAtomicSearchBoxElement;
@@ -376,7 +465,6 @@ declare global {
         "atomic-sort-dropdown": HTMLAtomicSortDropdownElement;
         "atomic-tab": HTMLAtomicTabElement;
         "atomic-text": HTMLAtomicTextElement;
-        "facet-search": HTMLFacetSearchElement;
     }
 }
 declare namespace LocalJSX {
@@ -395,15 +483,52 @@ declare namespace LocalJSX {
     }
     interface AtomicDateFacet {
         "facetId"?: string;
+        /**
+          * Specifies the index field whose values the facet should use
+         */
         "field"?: string;
+        /**
+          * Whether or not the index should automatically generate options for the facet
+         */
+        "generateAutomaticRanges"?: boolean;
+        /**
+          * The displayed label for the facet
+         */
         "label"?: string;
+    }
+    interface AtomicDateRange {
+        /**
+          * The ending date for the range. It can be expressed as a Javascript date, as a number using epoch time or as a string using the ISO 8601 format
+         */
+        "end": Date | string | number;
+        /**
+          * Specifies whether or not the end date should be included in the range
+         */
+        "endInclusive"?: boolean;
+        /**
+          * The starting date for the range. It can be expressed as a Javascript date, as a number using epoch time or as a string using the ISO 8601 format
+         */
+        "start": Date | string | number;
     }
     interface AtomicDidYouMean {
     }
     interface AtomicFacet {
-        "facetId"?: string;
+        /**
+          * The character that separates values of a multi-value field
+         */
+        "delimitingCharacter"?: string;
+        /**
+          * The field whose values you want to display in the facet.
+         */
         "field"?: string;
+        /**
+          * The displayed label for the facet.
+         */
         "label"?: string;
+        /**
+          * The number of values to request for this facet. Also determines the number of additional values to request each time this facet is expanded, and the number of values to display when this facet is collapsed.
+         */
+        "numberOfValues"?: number;
     }
     interface AtomicFacetManager {
     }
@@ -428,8 +553,32 @@ declare namespace LocalJSX {
     }
     interface AtomicNumericFacet {
         "facetId"?: string;
+        /**
+          * Specifies the index field whose values the facet should use
+         */
         "field"?: string;
+        /**
+          * Whether or not the index should automatically generate options for the facet
+         */
+        "generateAutomaticRanges"?: boolean;
+        /**
+          * The displayed label for the facet
+         */
         "label"?: string;
+    }
+    interface AtomicNumericRange {
+        /**
+          * The ending value for the numeric range
+         */
+        "end": number;
+        /**
+          * Specifies whether or not the end value should be included in the range
+         */
+        "endInclusive"?: boolean;
+        /**
+          * The starting value for the numeric range
+         */
+        "start": number;
     }
     interface AtomicPager {
         /**
@@ -456,6 +605,8 @@ declare namespace LocalJSX {
         "engine": Engine;
         "result": Result;
     }
+    interface AtomicResultExcerpt {
+    }
     interface AtomicResultLink {
     }
     interface AtomicResultList {
@@ -468,8 +619,17 @@ declare namespace LocalJSX {
         "conditions"?: ResultTemplateCondition[];
         "fieldsToInclude"?: string;
     }
+    interface AtomicResultUri {
+    }
     interface AtomicResultValue {
-        "value"?: string;
+        /**
+          * Which highlight should the value be highlighted with
+         */
+        "shouldHighlightWith"?: string;
+        /**
+          * Which result value should the component render
+         */
+        "value": string;
     }
     interface AtomicResultsPerPage {
         /**
@@ -531,18 +691,12 @@ declare namespace LocalJSX {
          */
         "value": string;
     }
-    interface FacetSearch {
-        "facetSearchResults": BaseFacetSearchResult[];
-        "moreValuesAvailable": boolean;
-        "onFacetSearch"?: (event: CustomEvent<string>) => void;
-        "onResultSelected"?: (event: CustomEvent<BaseFacetSearchResult>) => void;
-        "onShowMoreResults"?: (event: CustomEvent<void>) => void;
-    }
     interface IntrinsicElements {
         "atomic-breadcrumb-manager": AtomicBreadcrumbManager;
         "atomic-category-facet": AtomicCategoryFacet;
         "atomic-component-error": AtomicComponentError;
         "atomic-date-facet": AtomicDateFacet;
+        "atomic-date-range": AtomicDateRange;
         "atomic-did-you-mean": AtomicDidYouMean;
         "atomic-facet": AtomicFacet;
         "atomic-facet-manager": AtomicFacetManager;
@@ -551,14 +705,17 @@ declare namespace LocalJSX {
         "atomic-history": AtomicHistory;
         "atomic-no-results": AtomicNoResults;
         "atomic-numeric-facet": AtomicNumericFacet;
+        "atomic-numeric-range": AtomicNumericRange;
         "atomic-pager": AtomicPager;
         "atomic-query-error": AtomicQueryError;
         "atomic-query-summary": AtomicQuerySummary;
         "atomic-relevance-inspector": AtomicRelevanceInspector;
         "atomic-result": AtomicResult;
+        "atomic-result-excerpt": AtomicResultExcerpt;
         "atomic-result-link": AtomicResultLink;
         "atomic-result-list": AtomicResultList;
         "atomic-result-template": AtomicResultTemplate;
+        "atomic-result-uri": AtomicResultUri;
         "atomic-result-value": AtomicResultValue;
         "atomic-results-per-page": AtomicResultsPerPage;
         "atomic-search-box": AtomicSearchBox;
@@ -567,7 +724,6 @@ declare namespace LocalJSX {
         "atomic-sort-dropdown": AtomicSortDropdown;
         "atomic-tab": AtomicTab;
         "atomic-text": AtomicText;
-        "facet-search": FacetSearch;
     }
 }
 export { LocalJSX as JSX };
@@ -578,6 +734,7 @@ declare module "@stencil/core" {
             "atomic-category-facet": LocalJSX.AtomicCategoryFacet & JSXBase.HTMLAttributes<HTMLAtomicCategoryFacetElement>;
             "atomic-component-error": LocalJSX.AtomicComponentError & JSXBase.HTMLAttributes<HTMLAtomicComponentErrorElement>;
             "atomic-date-facet": LocalJSX.AtomicDateFacet & JSXBase.HTMLAttributes<HTMLAtomicDateFacetElement>;
+            "atomic-date-range": LocalJSX.AtomicDateRange & JSXBase.HTMLAttributes<HTMLAtomicDateRangeElement>;
             "atomic-did-you-mean": LocalJSX.AtomicDidYouMean & JSXBase.HTMLAttributes<HTMLAtomicDidYouMeanElement>;
             "atomic-facet": LocalJSX.AtomicFacet & JSXBase.HTMLAttributes<HTMLAtomicFacetElement>;
             "atomic-facet-manager": LocalJSX.AtomicFacetManager & JSXBase.HTMLAttributes<HTMLAtomicFacetManagerElement>;
@@ -586,14 +743,17 @@ declare module "@stencil/core" {
             "atomic-history": LocalJSX.AtomicHistory & JSXBase.HTMLAttributes<HTMLAtomicHistoryElement>;
             "atomic-no-results": LocalJSX.AtomicNoResults & JSXBase.HTMLAttributes<HTMLAtomicNoResultsElement>;
             "atomic-numeric-facet": LocalJSX.AtomicNumericFacet & JSXBase.HTMLAttributes<HTMLAtomicNumericFacetElement>;
+            "atomic-numeric-range": LocalJSX.AtomicNumericRange & JSXBase.HTMLAttributes<HTMLAtomicNumericRangeElement>;
             "atomic-pager": LocalJSX.AtomicPager & JSXBase.HTMLAttributes<HTMLAtomicPagerElement>;
             "atomic-query-error": LocalJSX.AtomicQueryError & JSXBase.HTMLAttributes<HTMLAtomicQueryErrorElement>;
             "atomic-query-summary": LocalJSX.AtomicQuerySummary & JSXBase.HTMLAttributes<HTMLAtomicQuerySummaryElement>;
             "atomic-relevance-inspector": LocalJSX.AtomicRelevanceInspector & JSXBase.HTMLAttributes<HTMLAtomicRelevanceInspectorElement>;
             "atomic-result": LocalJSX.AtomicResult & JSXBase.HTMLAttributes<HTMLAtomicResultElement>;
+            "atomic-result-excerpt": LocalJSX.AtomicResultExcerpt & JSXBase.HTMLAttributes<HTMLAtomicResultExcerptElement>;
             "atomic-result-link": LocalJSX.AtomicResultLink & JSXBase.HTMLAttributes<HTMLAtomicResultLinkElement>;
             "atomic-result-list": LocalJSX.AtomicResultList & JSXBase.HTMLAttributes<HTMLAtomicResultListElement>;
             "atomic-result-template": LocalJSX.AtomicResultTemplate & JSXBase.HTMLAttributes<HTMLAtomicResultTemplateElement>;
+            "atomic-result-uri": LocalJSX.AtomicResultUri & JSXBase.HTMLAttributes<HTMLAtomicResultUriElement>;
             "atomic-result-value": LocalJSX.AtomicResultValue & JSXBase.HTMLAttributes<HTMLAtomicResultValueElement>;
             "atomic-results-per-page": LocalJSX.AtomicResultsPerPage & JSXBase.HTMLAttributes<HTMLAtomicResultsPerPageElement>;
             "atomic-search-box": LocalJSX.AtomicSearchBox & JSXBase.HTMLAttributes<HTMLAtomicSearchBoxElement>;
@@ -602,7 +762,6 @@ declare module "@stencil/core" {
             "atomic-sort-dropdown": LocalJSX.AtomicSortDropdown & JSXBase.HTMLAttributes<HTMLAtomicSortDropdownElement>;
             "atomic-tab": LocalJSX.AtomicTab & JSXBase.HTMLAttributes<HTMLAtomicTabElement>;
             "atomic-text": LocalJSX.AtomicText & JSXBase.HTMLAttributes<HTMLAtomicTextElement>;
-            "facet-search": LocalJSX.FacetSearch & JSXBase.HTMLAttributes<HTMLFacetSearchElement>;
         }
     }
 }
