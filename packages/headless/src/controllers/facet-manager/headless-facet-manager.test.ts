@@ -44,12 +44,12 @@ describe('facet manager', () => {
       return {facetId, payload};
     }
 
-    it('when the facetId does not exist, it returns an empty array', () => {
+    it('when the facetId does not exist, it still returns it', () => {
       const facet1 = buildFacetManagerPayload('1', 'a');
 
       const facets = [facet1];
       const sortedFacets = facetManager.sort(facets);
-      expect(sortedFacets.length).toBe(0);
+      expect(sortedFacets).toEqual([facet1]);
     });
 
     it('when the facetId exists, it returns the facet payload', () => {
@@ -78,7 +78,7 @@ describe('facet manager', () => {
       expect(facetManager.sort(facets)).toEqual([facet2, facet1]);
     });
 
-    it('when one facetId exists but another does not, it returns only the facetId that exists', () => {
+    it('when one facetId exists but another does not, it returns the facetId that exists first', () => {
       const facet1 = buildFacetManagerPayload('1', 'a');
       const facet2 = buildFacetManagerPayload('2', 'b');
 
@@ -89,7 +89,7 @@ describe('facet manager', () => {
         buildMockFacetResponse({facetId: '3'}),
       ];
 
-      expect(facetManager.sort(facets)).toEqual([facet2]);
+      expect(facetManager.sort(facets)).toEqual([facet2, facet1]);
     });
   });
 });
