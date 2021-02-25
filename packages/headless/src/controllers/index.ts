@@ -79,8 +79,8 @@ export {
 } from './pager/headless-pager';
 
 export {
-  QueryErrorState,
   QueryError,
+  QueryErrorState,
   buildQueryError,
 } from './query-error/headless-query-error';
 
@@ -232,3 +232,5 @@ export {
   SearchStatusState,
   buildSearchStatus,
 } from './search-status/headless-search-status';
+
+export {ErrorPayload} from './controller/error-payload';

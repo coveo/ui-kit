@@ -1,9 +1,6 @@
 import {Component, Prop, Element, h, Host} from '@stencil/core';
 import {Result, ResultTemplatesHelpers, HighlightUtils} from '@coveo/headless';
-import {
-  ResultContext,
-  ResultContextRenderer,
-} from '../result-template-decorators';
+import {ResultContext} from '../result-template-decorators';
 
 /**
  * The ResultValue component renders the value of a result property.
@@ -46,7 +43,7 @@ export class AtomicResultValue {
         closingDelimiter: '</strong>',
         highlights,
       });
-      return <Host class="block" innerHTML={highlightedValue}></Host>;
+      return <Host innerHTML={highlightedValue}></Host>;
     } catch (error) {
       return (
         <atomic-component-error
@@ -57,7 +54,6 @@ export class AtomicResultValue {
     }
   }
 
-  @ResultContextRenderer
   public render() {
     if (this.resultValue === null) {
       this.host.remove();
@@ -68,6 +64,6 @@ export class AtomicResultValue {
       return this.renderWithHighlights();
     }
 
-    return <Host class="block">{this.resultValue}</Host>;
+    return this.resultValue;
   }
 }

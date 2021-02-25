@@ -323,18 +323,7 @@ const buildFetchMoreRequest = (
 };
 
 function getFacets(state: StateNeededByExecuteSearch) {
-  return [...getFacetsInOrder(state), ...getRemainingUnorderedFacets(state)];
-}
-
-function getFacetsInOrder(state: StateNeededByExecuteSearch) {
   return sortFacets(getAllFacets(state), state.facetOrder ?? []);
-}
-
-function getRemainingUnorderedFacets(state: StateNeededByExecuteSearch) {
-  const facetOrder = state.facetOrder ?? [];
-  return getAllFacets(state).filter(
-    (f) => facetOrder.indexOf(f.facetId) === -1
-  );
 }
 
 function getAllFacets(state: StateNeededByExecuteSearch) {
