@@ -25,28 +25,38 @@ export function resolveInterfaceMembers(
   entry: ApiEntryPoint,
   apiInterface: ApiInterface
 ): AnyEntity[] {
-  const members = apiInterface.members.map((m) => resolveMember(entry, m));
-  const inheritedMembers = resolveInheritedInterfaceMembers(
-    entry,
-    apiInterface
-  );
+  const members = resolveMembers(entry, apiInterface);
+  const inheritedMembers = resolveInheritedMembers(entry, apiInterface);
 
-  return members.concat(inheritedMembers);
+  return filterOverridesAndCombine(members, inheritedMembers);
 }
 
-function resolveMember(entry: ApiEntryPoint, m: ApiItem) {
-  if (isPropertySignature(m)) {
-    return resolvePropertySignature(entry, m);
-  }
+function filterOverridesAndCombine(
+  members: AnyEntity[],
+  inheritedMembers: AnyEntity[]
+) {
+  const memberNames = new Set();
+  members.forEach((m) => memberNames.add(m.name));
+  const filtered = inheritedMembers.filter((m) => !memberNames.has(m.name));
 
-  if (isMethodSignature(m)) {
-    return resolveMethodSignature(entry, m);
-  }
-
-  throw new Error(`Unsupported member: ${m.displayName}`);
+  return members.concat(filtered);
 }
 
-function resolveInheritedInterfaceMembers(
+function resolveMembers(entry: ApiEntryPoint, apiInterface: ApiInterface) {
+  return apiInterface.members.map((m) => {
+    if (isPropertySignature(m)) {
+      return resolvePropertySignature(entry, m);
+    }
+
+    if (isMethodSignature(m)) {
+      return resolveMethodSignature(entry, m);
+    }
+
+    throw new Error(`Unsupported member: ${m.displayName}`);
+  });
+}
+
+function resolveInheritedMembers(
   entry: ApiEntryPoint,
   apiInterface: ApiInterface
 ) {

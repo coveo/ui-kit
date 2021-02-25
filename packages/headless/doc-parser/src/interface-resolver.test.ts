@@ -389,7 +389,7 @@ describe('#resolveInterfaceMembers', () => {
     expect(result).toEqual([funcEntity]);
   });
 
-  it(`interface extending another interface,
+  it(`an interface extends another interface,
   it resolves the members of both interfaces`, () => {
     const entry = buildMockEntryPoint();
 
@@ -443,5 +443,56 @@ describe('#resolveInterfaceMembers', () => {
     });
 
     expect(result).toEqual([queryEntity, isLoadingEntity]);
+  });
+
+  it(`an interface extends another interface,
+  both have a property with the same name,
+  it discards the inherited property`, () => {
+    const entry = buildMockEntryPoint();
+    const pager = buildMockApiInterface({
+      name: 'Pager',
+      excerptTokens: [
+        buildContentExcerptToken('interface Pager extends '),
+        buildReferenceExcerptToken('Controller', ''),
+        buildContentExcerptToken(' '),
+      ],
+      extendsTokenRanges: [{startIndex: 1, endIndex: 3}],
+    });
+
+    const pagerState = buildMockApiPropertySignature({
+      name: 'state',
+      excerptTokens: [
+        buildContentExcerptToken('state: '),
+        buildContentExcerptToken('string'),
+        buildContentExcerptToken(';'),
+      ],
+      propertyTypeTokenRange: {startIndex: 1, endIndex: 2},
+    });
+
+    const controller = buildMockApiInterface({name: 'Controller'});
+
+    const controllerState = buildMockApiPropertySignature({
+      name: 'state',
+      excerptTokens: [
+        buildContentExcerptToken('state: '),
+        buildContentExcerptToken('boolean'),
+        buildContentExcerptToken(';'),
+      ],
+      propertyTypeTokenRange: {startIndex: 1, endIndex: 2},
+    });
+
+    pager.addMember(pagerState);
+    controller.addMember(controllerState);
+
+    entry.addMember(pager);
+    entry.addMember(controller);
+
+    const result = resolveInterfaceMembers(entry, pager);
+    const expected = buildMockEntity({
+      name: 'state',
+      type: 'string',
+    });
+
+    expect(result).toEqual([expected]);
   });
 });
