@@ -326,4 +326,66 @@ describe('#resolveInterfaceMembers', () => {
 
     expect(result).toEqual([funcEntity]);
   });
+
+  it(`interface with method with parameter with type alias,
+  it resolves the type alias`, () => {
+    const entry = buildMockEntryPoint();
+    const context = buildMockApiInterface({name: 'Context'});
+
+    const docComment = buildMockApiDocComment(
+      '/**\n * Add, or replace if already present, a new context key and value pair.\n *\n * @param contextValue - The context value to add.\n */\n'
+    );
+    const add = buildMockApiMethodSignature({
+      name: 'add',
+      docComment,
+      excerptTokens: [
+        buildContentExcerptToken('add(contextValue: '),
+        buildReferenceExcerptToken(
+          'ContextValue',
+          '@coveo/headless!~ContextValue:type'
+        ),
+        buildContentExcerptToken('): '),
+        buildContentExcerptToken('void'),
+        buildContentExcerptToken(';'),
+      ],
+      parameters: [
+        {
+          parameterName: 'contextValue',
+          parameterTypeTokenRange: {startIndex: 1, endIndex: 2},
+        },
+      ],
+      returnTypeTokenRange: {startIndex: 3, endIndex: 4},
+    });
+
+    const contextValue = buildMockApiTypeAlias({
+      name: 'ContextValue',
+      excerptTokens: [
+        buildContentExcerptToken('declare type ContextValue = '),
+        buildContentExcerptToken('string | string[]'),
+        buildContentExcerptToken(';'),
+      ],
+      typeTokenRange: {startIndex: 1, endIndex: 2},
+    });
+
+    context.addMember(add);
+    entry.addMember(context);
+    entry.addMember(contextValue);
+
+    const result = resolveInterfaceMembers(entry, context);
+
+    const param = buildMockEntity({
+      name: 'contextValue',
+      type: 'string | string[]',
+      desc: 'The context value to add.',
+    });
+
+    const funcEntity = buildMockFuncEntity({
+      name: 'add',
+      desc:
+        'Add, or replace if already present, a new context key and value pair.',
+      params: [param],
+      returnType: 'void',
+    });
+    expect(result).toEqual([funcEntity]);
+  });
 });
