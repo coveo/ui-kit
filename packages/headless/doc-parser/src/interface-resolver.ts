@@ -25,17 +25,38 @@ export function resolveInterfaceMembers(
   entry: ApiEntryPoint,
   apiInterface: ApiInterface
 ): AnyEntity[] {
-  return apiInterface.members.map((m) => {
-    if (isPropertySignature(m)) {
-      return resolvePropertySignature(entry, m);
-    }
+  const members = apiInterface.members.map((m) => resolveMember(entry, m));
+  const inheritedMembers = resolveInheritedInterfaceMembers(
+    entry,
+    apiInterface
+  );
 
-    if (isMethodSignature(m)) {
-      return resolveMethodSignature(entry, m);
-    }
+  return members.concat(inheritedMembers);
+}
 
-    throw new Error(`Unsupported member: ${m.displayName}`);
-  });
+function resolveMember(entry: ApiEntryPoint, m: ApiItem) {
+  if (isPropertySignature(m)) {
+    return resolvePropertySignature(entry, m);
+  }
+
+  if (isMethodSignature(m)) {
+    return resolveMethodSignature(entry, m);
+  }
+
+  throw new Error(`Unsupported member: ${m.displayName}`);
+}
+
+function resolveInheritedInterfaceMembers(
+  entry: ApiEntryPoint,
+  apiInterface: ApiInterface
+) {
+  return apiInterface.extendsTypes
+    .map((m) => {
+      const typeName = extractTypeName(m.excerpt);
+      const inheritedInterface = findApi(entry, typeName) as ApiInterface;
+      return resolveInterfaceMembers(entry, inheritedInterface);
+    })
+    .reduce((acc, curr) => acc.concat(curr), []);
 }
 
 function isPropertySignature(item: ApiItem): item is ApiPropertySignature {

@@ -388,4 +388,60 @@ describe('#resolveInterfaceMembers', () => {
     });
     expect(result).toEqual([funcEntity]);
   });
+
+  it(`interface extending another interface,
+  it resolves the members of both interfaces`, () => {
+    const entry = buildMockEntryPoint();
+
+    const querySummaryState = buildMockApiInterface({
+      name: 'QuerySummaryState',
+      excerptTokens: [
+        buildContentExcerptToken('interface QuerySummaryState extends '),
+        buildReferenceExcerptToken(
+          'SearchStatusState',
+          '@coveo/headless!~SearchStatusState:interface'
+        ),
+        buildContentExcerptToken(' '),
+      ],
+      extendsTokenRanges: [{startIndex: 1, endIndex: 3}],
+    });
+    const query = buildMockApiPropertySignature({
+      name: 'query',
+      excerptTokens: [
+        buildContentExcerptToken('query: '),
+        buildContentExcerptToken('string'),
+        buildContentExcerptToken(';'),
+      ],
+      propertyTypeTokenRange: {startIndex: 1, endIndex: 2},
+    });
+
+    const searchStatusState = buildMockApiInterface({
+      name: 'SearchStatusState',
+    });
+    const isLoading = buildMockApiPropertySignature({
+      name: 'isLoading',
+      excerptTokens: [
+        buildContentExcerptToken('isLoading: '),
+        buildContentExcerptToken('boolean'),
+        buildContentExcerptToken(';'),
+      ],
+      propertyTypeTokenRange: {startIndex: 1, endIndex: 2},
+    });
+
+    querySummaryState.addMember(query);
+    searchStatusState.addMember(isLoading);
+
+    entry.addMember(querySummaryState);
+    entry.addMember(searchStatusState);
+
+    const result = resolveInterfaceMembers(entry, querySummaryState);
+
+    const queryEntity = buildMockEntity({name: 'query', type: 'string'});
+    const isLoadingEntity = buildMockEntity({
+      name: 'isLoading',
+      type: 'boolean',
+    });
+
+    expect(result).toEqual([queryEntity, isLoadingEntity]);
+  });
 });

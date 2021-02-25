@@ -1,7 +1,10 @@
 import {Engine} from '../../app/headless-engine';
 import {PaginationSection, SearchSection} from '../../state/state-sections';
 import {buildController, Controller} from '../controller/headless-controller';
-import {buildSearchStatus} from '../search-status/headless-search-status';
+import {
+  buildSearchStatus,
+  SearchStatusState,
+} from '../search-status/headless-search-status';
 
 /**
  * The `QuerySummary` controller provides information about the current query and results (e.g., "Results
@@ -12,7 +15,7 @@ export interface QuerySummary extends Controller {
   state: QuerySummaryState;
 }
 
-export interface QuerySummaryState {
+export interface QuerySummaryState extends SearchStatusState {
   /**
    * The duration, in milliseconds, that the last query took to execute.
    */
@@ -29,11 +32,6 @@ export interface QuerySummaryState {
   firstResult: number;
 
   /**
-   * Whether the first search has been executed.
-   */
-  firstSearchExecuted: boolean;
-
-  /**
    * Determines if a query execution time is available.
    */
   hasDuration: boolean;
@@ -42,16 +40,6 @@ export interface QuerySummaryState {
    * Determines if an empty query was executed.
    */
   hasQuery: boolean;
-
-  /**
-   * Whether the current query has results.
-   */
-  hasResults: boolean;
-
-  /**
-   * `true` if a query is in progress and `false` otherwise.
-   */
-  isLoading: boolean;
 
   /**
    * The 1-based index of the last search result returned for the current page.
