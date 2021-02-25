@@ -119,6 +119,9 @@ export class AtomicSearchBox {
 
   private onInputFocus() {
     this.shouldShowSuggestions = true;
+    if (!this.searchBoxState.suggestions.length) {
+      this.searchBox.showSuggestions();
+    }
   }
 
   private get submitButton() {
