@@ -1,7 +1,7 @@
 import {Raw} from './raw';
 import {HighlightKeyword} from '../../../utils/highlight';
 
-export type Result = {
+export interface Result {
   /**
    * Contains the title of the item.
    */
@@ -130,4 +130,8 @@ export type Result = {
    * Sample value: TopResult
    */
   rankingModifier?: string;
-};
+  /**
+   * Custom keys depending on documents present in the index.
+   */
+  [key: string]: unknown;
+}

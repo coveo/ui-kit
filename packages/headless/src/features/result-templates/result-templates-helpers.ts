@@ -10,7 +10,7 @@ import {Result} from '../../api/search/search/result';
  */
 export const getResultProperty = (result: Result, property: string) => {
   if (property in result) {
-    return (result as Record<string, unknown>)[property];
+    return result[property];
   }
 
   if (property in result.raw) {
