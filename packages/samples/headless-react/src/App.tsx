@@ -24,6 +24,8 @@ import {engine, recommendationEngine} from './engine';
 import {Section} from './layout/section';
 import {QuerySummary} from './components/query-summary/query-summary.class';
 import {QuerySummary as QuerySummaryFn} from './components/query-summary/query-summary.fn';
+import {FacetManager} from './components/facet-manager/facet-manager.class';
+import {FacetManager as FacetManagerFn} from './components/facet-manager/facet-manager.fn';
 import {Facet} from './components/facet/facet.class';
 import {Facet as FacetFn} from './components/facet/facet.fn';
 import {History} from './components/history/history.class';
@@ -38,6 +40,7 @@ import {
   buildQueryError,
   buildQuerySummary,
   buildResultList,
+  buildFacetManager,
   buildFacet,
   buildDateSortCriterion,
   buildFieldSortCriterion,
@@ -79,7 +82,14 @@ const queryError = buildQueryError(engine);
 
 const querySummary = buildQuerySummary(engine);
 
-const facet = buildFacet(engine, {options: {field: 'filetype'}});
+const facetManager = buildFacetManager(engine);
+
+const objectTypeFacet = buildFacet(engine, {
+  options: {field: 'objecttype'},
+});
+const fileTypeFacet = buildFacet(engine, {
+  options: {field: 'filetype'},
+});
 
 const criteria: [string, SortCriterion][] = [
   ['Relevance', buildRelevanceSortCriterion()],
@@ -151,8 +161,14 @@ function App() {
           <QuerySummaryFn controller={querySummary} />
         </Section>
         <Section title="facet">
-          <Facet field="author" facetId="author-1" />
-          <FacetFn controller={facet} />
+          <FacetManager>
+            <Facet field="author" facetId="author-1" />
+            <Facet field="category" facetId="category-1" />
+          </FacetManager>
+          <FacetManagerFn controller={facetManager}>
+            <FacetFn controller={objectTypeFacet} />
+            <FacetFn controller={fileTypeFacet} />
+          </FacetManagerFn>
         </Section>
         <Section title="sort">
           <Sort criteria={criteria} initialCriterion={initialCriterion} />
