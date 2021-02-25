@@ -5,9 +5,6 @@ import {
   ResultTemplatesManager,
   buildResultList,
   buildResultTemplatesManager,
-  ResultsPerPage,
-  ResultsPerPageState,
-  buildResultsPerPage,
 } from '@coveo/headless';
 import Mustache from 'mustache';
 import defaultTemplate from '../../templates/default.html';
@@ -20,9 +17,6 @@ import {
 
 /**
  * The `ResultList` component is responsible for displaying query results by applying one or several result templates.
- *
- * @part list-element - The list element
- * @part placeholder - The initialization placeholder wrapper
  */
 @Component({
   tag: 'atomic-result-list',
@@ -30,7 +24,6 @@ import {
 })
 export class AtomicResultList implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;
-  public resultPerPage!: ResultsPerPage;
   private resultList!: ResultList;
   private resultTemplatesManager!: ResultTemplatesManager<string>;
 
@@ -39,9 +32,7 @@ export class AtomicResultList implements InitializableComponent {
   @BindStateToController('resultList')
   @State()
   private resultListState!: ResultListState;
-  @BindStateToController('resultPerPage')
-  @State()
-  private resultPerPageState!: ResultsPerPageState;
+
   @State() public error!: Error;
   @State() private templateHasError = false;
 
@@ -68,7 +59,6 @@ export class AtomicResultList implements InitializableComponent {
     this.resultList = buildResultList(this.bindings.engine, {
       options: {fieldsToInclude: this.fields},
     });
-    this.resultPerPage = buildResultsPerPage(this.bindings.engine);
     this.registerDefaultResultTemplates();
     this.registerChildrenResultTemplates();
   }
@@ -98,7 +88,6 @@ export class AtomicResultList implements InitializableComponent {
     return this.resultListState.results.map((result) => (
       <atomic-result
         key={result.raw.permanentid}
-        part="list-element"
         result={result}
         engine={this.bindings.engine}
         // TODO: decide to get rid of Mustache or not
@@ -124,37 +113,9 @@ export class AtomicResultList implements InitializableComponent {
     }
   }
 
-  // TODO: create atomic-result-placeholder component
-  private renderPlaceholder() {
-    const results = [];
-    for (let i = 0; i < this.resultPerPageState.numberOfResults; i++) {
-      results.push(
-        <div
-          part="placeholder"
-          class="flex pl-5 pt-5 mb-5 animate-pulse"
-          aria-hidden
-        >
-          <div class="w-16 h-16 bg-divider mr-10"></div>
-          <div class="flex-grow">
-            <div>
-              <div class="flex justify-between mb-5">
-                <div class="h-4 bg-divider w-1/2"></div>
-                <div class="h-3 bg-divider w-1/6"></div>
-              </div>
-              <div class="h-3 bg-divider w-4/6 mb-3"></div>
-              <div class="h-3 bg-divider w-5/6 mb-3"></div>
-              <div class="h-3 bg-divider w-5/12"></div>
-            </div>
-          </div>
-        </div>
-      );
-    }
-    return results;
-  }
-
   public render() {
     if (!this.resultListState.firstSearchExecuted) {
-      return this.renderPlaceholder();
+      return <atomic-result-list-placeholder></atomic-result-list-placeholder>;
     }
 
     return [this.templateHasError && <slot></slot>, this.results];

@@ -229,7 +229,7 @@ export class AtomicSearchBox {
       this.searchBoxState.suggestions.length > 0 && this.shouldShowSuggestions;
 
     return (
-      'search-box relative w-full lg:w-80 box-border flex items-center border-divider ' +
+      'search-box relative w-full box-border flex items-center border-divider ' +
       (hasValues ? 'has-values' : '')
     );
   }
