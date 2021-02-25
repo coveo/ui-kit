@@ -5,7 +5,14 @@ export function sortFacets<T extends {facetId: string}>(
   const payloadMap: Record<string, T> = {};
   facets.forEach((f) => (payloadMap[f.facetId] = f));
 
-  return sortOrder
-    .map((id) => payloadMap[id])
-    .filter((payload) => payload !== undefined);
+  const sortedFacets: T[] = [];
+  sortOrder.forEach((facetId) => {
+    if (facetId in payloadMap) {
+      sortedFacets.push(payloadMap[facetId]);
+      delete payloadMap[facetId];
+    }
+  });
+  const remainingFacets = Object.values(payloadMap);
+
+  return [...sortedFacets, ...remainingFacets];
 }
