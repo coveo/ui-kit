@@ -171,7 +171,7 @@ export class FacetSearch {
       <ul
         part="suggestions"
         class={
-          'suggestions z-10 absolute w-full bg-background border-on-background-variant apply-border-on-background empty:border-none rounded-b border-t-0 ' +
+          'suggestions z-10 absolute w-full bg-background border-divider apply-border-on-background empty:border-none rounded-b border-t-0 ' +
           (showResults ? 'block' : 'hidden')
         }
         ref={(el) => (this.valuesRef = el as HTMLElement)}
@@ -188,7 +188,7 @@ export class FacetSearch {
       this.props.controller.state.showFacetSearchResults;
 
     return (
-      'input-wrapper flex flex-grow items-center border-on-background-variant apply-border-on-background rounded ' +
+      'input-wrapper flex flex-grow items-center border-divider apply-border-on-background rounded ' +
       (hasValues ? 'has-values' : '')
     );
   }
