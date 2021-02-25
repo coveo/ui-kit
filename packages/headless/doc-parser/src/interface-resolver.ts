@@ -90,14 +90,13 @@ function buildObjEntityFromProperty(
   entry: ApiEntryPoint,
   p: ApiPropertySignature
 ) {
-  const {typeName, typeNameWithGenerics} = extractTypeName(
-    p.propertyTypeExcerpt
-  );
-  const apiInterface = findApi(entry, typeName) as ApiInterface;
+  const typeName = extractTypeName(p.propertyTypeExcerpt);
+  const searchableTypeName = extractSearchableTypeName(p.propertyTypeExcerpt);
+  const apiInterface = findApi(entry, searchableTypeName) as ApiInterface;
   const members = resolveInterfaceMembers(entry, apiInterface);
   const entity = buildEntityFromProperty(p);
 
-  return buildObjEntity({entity, members, typeName: typeNameWithGenerics});
+  return buildObjEntity({entity, members, typeName});
 }
 
 function buildEntityFromPropertyAndResolveTypeAlias(
@@ -105,8 +104,8 @@ function buildEntityFromPropertyAndResolveTypeAlias(
   p: ApiPropertySignature
 ): Entity {
   const entity = buildEntityFromProperty(p);
-  const alias = extractTypeName(p.propertyTypeExcerpt);
-  const typeAlias = findApi(entry, alias.typeName) as ApiTypeAlias;
+  const searchableTypeName = extractSearchableTypeName(p.propertyTypeExcerpt);
+  const typeAlias = findApi(entry, searchableTypeName) as ApiTypeAlias;
   const type = typeAlias.typeExcerpt.text;
 
   return {...entity, type};
@@ -147,29 +146,27 @@ function buildEntityFromParamAndResolveTypeAlias(
   p: Parameter
 ): Entity {
   const entity = buildParamEntity(p);
-  const alias = extractTypeName(p.parameterTypeExcerpt);
-  const typeAlias = findApi(entry, alias.typeName) as ApiTypeAlias;
+  const searchableTypeName = extractSearchableTypeName(p.parameterTypeExcerpt);
+  const typeAlias = findApi(entry, searchableTypeName) as ApiTypeAlias;
   const type = typeAlias.typeExcerpt.text;
 
   return {...entity, type};
 }
 
 function buildObjEntityFromParam(entryPoint: ApiEntryPoint, p: Parameter) {
-  const {typeName, typeNameWithGenerics} = extractTypeName(
-    p.parameterTypeExcerpt
-  );
-  const apiInterface = findApi(entryPoint, typeName) as ApiInterface;
+  const typeName = extractTypeName(p.parameterTypeExcerpt);
+  const searchableTypeName = extractSearchableTypeName(p.parameterTypeExcerpt);
+  const apiInterface = findApi(entryPoint, searchableTypeName) as ApiInterface;
   const members = resolveInterfaceMembers(entryPoint, apiInterface);
   const entity = buildParamEntity(p);
 
-  return buildObjEntity({entity, members, typeName: typeNameWithGenerics});
+  return buildObjEntity({entity, members, typeName});
 }
 
 function extractTypeName(excerpt: Excerpt) {
-  const typeName = excerpt.spannedTokens[0].text;
-  const typeNameWithGenerics = excerpt.spannedTokens
-    .map((token) => token.text)
-    .join('')
-    .replace(/\[\]/, '');
-  return {typeName, typeNameWithGenerics};
+  return excerpt.text.replace(/\[\]/, '');
+}
+
+function extractSearchableTypeName(excerpt: Excerpt) {
+  return excerpt.spannedTokens[0].text;
 }
