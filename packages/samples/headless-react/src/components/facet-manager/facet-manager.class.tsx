@@ -36,7 +36,7 @@ export class FacetManager extends Component<{
     this.setState(this.controller.state);
   }
 
-  private facetsToPayloads(
+  private createPayload(
     facets: FacetManagerChild[]
   ): FacetManagerPayload<FacetManagerChild>[] {
     return facets.map((facet) => ({
@@ -45,24 +45,13 @@ export class FacetManager extends Component<{
     }));
   }
 
-  private payloadsToFacets(
-    facetPayloads: FacetManagerPayload<FacetManagerChild>[]
-  ) {
-    return facetPayloads.map((facetPayloads) => facetPayloads.payload);
-  }
-
-  private sortFacets(facets: FacetManagerChild[]) {
-    const payloads = this.facetsToPayloads(facets);
-    const sortedPayloads = this.controller.sort(payloads);
-    const sortedFacets = this.payloadsToFacets(sortedPayloads);
-    return sortedFacets;
-  }
-
-  private get children() {
-    return Children.toArray(this.props.children) as FacetManagerChild[];
-  }
-
   render() {
-    return this.sortFacets(this.children);
+    const childFacets = Children.toArray(
+      this.props.children
+    ) as FacetManagerChild[];
+    const payload = this.createPayload(childFacets);
+    const sortedFacets = this.controller.sort(payload).map((p) => p.payload);
+
+    return sortedFacets;
   }
 }

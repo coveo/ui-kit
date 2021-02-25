@@ -24,7 +24,7 @@ export const FacetManager: FunctionComponent<FacetManagerProps> = (props) => {
 
   useEffect(() => controller.subscribe(() => setState(controller.state)), []);
 
-  function facetsToPayloads(
+  function createPayload(
     facets: FacetManagerChild[]
   ): FacetManagerPayload<FacetManagerChild>[] {
     return facets.map((facet) => ({
@@ -33,37 +33,24 @@ export const FacetManager: FunctionComponent<FacetManagerProps> = (props) => {
     }));
   }
 
-  function payloadsToFacets(
-    facetPayloads: FacetManagerPayload<FacetManagerChild>[]
-  ) {
-    return facetPayloads.map((facetPayloads) => facetPayloads.payload);
-  }
+  const childFacets = Children.toArray(props.children) as FacetManagerChild[];
+  const payload = createPayload(childFacets);
+  const sortedFacets = controller.sort(payload).map((p) => p.payload);
 
-  function sortFacets(facets: FacetManagerChild[]) {
-    const payloads = facetsToPayloads(facets);
-    const sortedPayloads = controller.sort(payloads);
-    const sortedFacets = payloadsToFacets(sortedPayloads);
-    return sortedFacets;
-  }
-
-  function children() {
-    return Children.toArray(props.children) as FacetManagerChild[];
-  }
-
-  return <div>{sortFacets(children())}</div>;
+  return <div>{sortedFacets}</div>;
 };
 
 // usage
 
 /**
  * ```tsx
- * const managerController = buildFacetManager(engine);
- * const facetAController = buildFacet(engine, {options: {field: 'abc'}});
- * const facetBController = buildFacet(engine, {options: {field: 'def'}});
+ * const facetManager = buildFacetManager(engine);
+ * const facetA = buildFacet(engine, {options: {field: 'abc'}});
+ * const facetB = buildFacet(engine, {options: {field: 'def'}});
  *
- * <FacetManager controller={managerController}>
- *   <Facet controller={facetAController} />
- *   <Facet controller={facetBController} />
+ * <FacetManager controller={facetManager}>
+ *   <Facet controller={facetA} />
+ *   <Facet controller={facetB} />
  * </FacetManager>
  * ```
  */
