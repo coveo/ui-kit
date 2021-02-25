@@ -1,5 +1,9 @@
-import {Component, Element, Prop, Method} from '@stencil/core';
-import {ResultTemplateCondition, ResultTemplatesHelpers} from '@coveo/headless';
+import {Component, Element, Prop, Method, State, h} from '@stencil/core';
+import {
+  ResultTemplate,
+  ResultTemplateCondition,
+  ResultTemplatesHelpers,
+} from '@coveo/headless';
 import {MapProp} from '../../utils/props-utils';
 
 export interface FieldMatch {
@@ -15,28 +19,33 @@ export class AtomicResultTemplate {
   private fields: string[] = [];
   private matchConditions: ResultTemplateCondition[] = [];
 
-  @Element() host!: HTMLDivElement;
+  @Element() private host!: HTMLDivElement;
 
-  @Prop() conditions: ResultTemplateCondition[] = [];
-  @Prop() fieldsToInclude?: string;
-  @MapProp() mustMatch: Record<string, string[]> = {};
-  @MapProp() mustNotMatch: Record<string, string[]> = {};
+  @State() private error?: Error;
+
+  @Prop() public conditions: ResultTemplateCondition[] = [];
+  @MapProp() public mustMatch: Record<string, string[]> = {};
+  @MapProp() public mustNotMatch: Record<string, string[]> = {};
 
   constructor() {
     const isParentResultList =
       this.host.parentElement?.nodeName === 'ATOMIC-RESULT-LIST';
 
     if (!isParentResultList) {
-      throw new Error(
+      this.error = new Error(
         'The "atomic-result-template" component has to be the child of an "atomic-result-list" component.'
+      );
+      return;
+    }
+
+    if (!this.host.querySelector('template')) {
+      this.error = new Error(
+        'The "atomic-result-template" component has to contain a "template" element as a child.'
       );
     }
   }
 
   public componentWillLoad() {
-    this.fieldsToInclude &&
-      this.fields.push(...this.fieldsToInclude.split(','));
-
     for (const field in this.mustMatch) {
       this.matchConditions.push(
         ResultTemplatesHelpers.fieldMustMatch(field, this.mustMatch[field])
@@ -55,13 +64,28 @@ export class AtomicResultTemplate {
     }
   }
 
-  @Method()
-  public async getConditions() {
+  @Method() public async getTemplate(): Promise<ResultTemplate<string> | null> {
+    if (this.error) {
+      return null;
+    }
+
+    return {
+      conditions: this.getConditions(),
+      content: this.getContent(),
+      fields: this.getFields(),
+      priority: 1,
+    };
+  }
+
+  private getConditions() {
     return this.conditions.concat(this.matchConditions);
   }
 
-  @Method()
-  public async getFields() {
+  private getContent() {
+    return this.host.querySelector('template')?.innerHTML || '';
+  }
+
+  private getFields() {
     const fieldValues: string[] = [];
     this.host
       .querySelectorAll('atomic-result-value')
@@ -69,16 +93,19 @@ export class AtomicResultTemplate {
         fieldValues.push(resultValueElement.value);
       });
 
-    const fieldsPromises: Promise<string[]>[] = [];
-    this.host
-      .querySelectorAll('atomic-field-condition')
-      .forEach((fieldConditionElement) => {
-        fieldsPromises.push(fieldConditionElement.getFields());
-      });
+    // TODO: extract fields from atomic-field-condition
 
-    return this.fields.concat(
-      fieldValues,
-      ...(await Promise.all(fieldsPromises))
-    );
+    return this.fields.concat(fieldValues);
+  }
+
+  public render() {
+    if (this.error) {
+      return (
+        <atomic-component-error
+          element={this.host}
+          error={this.error}
+        ></atomic-component-error>
+      );
+    }
   }
 }

@@ -7,34 +7,36 @@
 
 ## Properties
 
-| Property          | Attribute           | Description | Type                        | Default     |
-| ----------------- | ------------------- | ----------- | --------------------------- | ----------- |
-| `conditions`      | --                  |             | `ResultTemplateCondition[]` | `[]`        |
-| `fieldsToInclude` | `fields-to-include` |             | `string \| undefined`       | `undefined` |
+| Property     | Attribute | Description | Type                        | Default |
+| ------------ | --------- | ----------- | --------------------------- | ------- |
+| `conditions` | --        |             | `ResultTemplateCondition[]` | `[]`    |
 
 
 ## Methods
 
-### `getConditions() => Promise<ResultTemplateCondition[]>`
+### `getTemplate() => Promise<ResultTemplate<string> | null>`
 
 
 
 #### Returns
 
-Type: `Promise<ResultTemplateCondition[]>`
+Type: `Promise<ResultTemplate<string> | null>`
 
 
 
-### `getFields() => Promise<string[]>`
 
+## Dependencies
 
+### Depends on
 
-#### Returns
+- [atomic-component-error](../atomic-component-error)
 
-Type: `Promise<string[]>`
-
-
-
+### Graph
+```mermaid
+graph TD;
+  atomic-result-template --> atomic-component-error
+  style atomic-result-template fill:#f9f,stroke:#333,stroke-width:4px
+```
 
 ----------------------------------------------
 
