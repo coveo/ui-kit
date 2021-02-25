@@ -81,7 +81,6 @@ export {
 export {
   QueryError,
   QueryErrorState,
-  QueryErrorPayload,
   buildQueryError,
 } from './query-error/headless-query-error';
 
@@ -232,3 +231,5 @@ export {
   SearchStatusState,
   buildSearchStatus,
 } from './search-status/headless-search-status';
+
+export {ErrorPayload} from './controller/error-payload';

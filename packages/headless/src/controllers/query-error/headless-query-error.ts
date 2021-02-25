@@ -1,5 +1,6 @@
 import {Engine} from '../../app/headless-engine';
 import {SearchSection} from '../../state/state-sections';
+import {ErrorPayload} from '../controller/error-payload';
 import {buildController, Controller} from '../controller/headless-controller';
 
 /**
@@ -24,24 +25,7 @@ export interface QueryErrorState {
   /**
    * The current error for the last executed query, or `null` if none is present.
    */
-  error: QueryErrorPayload | null;
-}
-
-export interface QueryErrorPayload {
-  /**
-   * The error HTTP status code.
-   */
-  statusCode: number;
-
-  /**
-   * The error message.
-   */
-  message: string;
-
-  /**
-   * The error type.
-   */
-  type: string;
+  error: ErrorPayload | null;
 }
 
 /**
