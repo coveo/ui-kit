@@ -22,7 +22,7 @@
     },
     "license": "MIT",
     "dependencies": {
-        "@react-native-async-storage/async-storage": "^1.13.2"
+        "@react-native-async-storage/async-storage": "^1.13.3"
     },
     "devDependencies": {
         "@types/fetch-mock": "^7.3.2",
