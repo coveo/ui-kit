@@ -73,6 +73,17 @@ const controllers: ControllerConfiguration[] = [
       ],
     },
   },
+  {
+    initializer: 'buildQuerySummary',
+    samplePaths: {
+      react_class: [
+        'packages/samples/headless-react/src/components/query-summary/query-summary.class.tsx',
+      ],
+      react_fn: [
+        'packages/samples/headless-react/src/components/query-summary/query-summary.fn.tsx',
+      ],
+    },
+  },
 ];
 
 const result = controllers.map((controller) =>
