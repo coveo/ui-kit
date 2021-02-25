@@ -72,7 +72,7 @@ export class AtomicResultTemplate {
     return {
       conditions: this.getConditions(),
       content: this.getContent(),
-      fields: await this.getFields(),
+      fields: this.getFields(),
       priority: 1,
     };
   }
@@ -85,7 +85,7 @@ export class AtomicResultTemplate {
     return this.host.querySelector('template')?.innerHTML || '';
   }
 
-  private async getFields() {
+  private getFields() {
     const fieldValues: string[] = [];
     this.host
       .querySelectorAll('atomic-result-value')

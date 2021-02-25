@@ -9,7 +9,8 @@ export function ResultContext() {
         .host as HTMLAtomicResultElement;
       if (!parentResultComponent) {
         throw new Error(
-          `The "${element.nodeName.toLowerCase()}" component has to be used inside a template element https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template`
+          `The "${element.nodeName.toLowerCase()}" component has to be used inside a template element 
+          https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template`
         );
       }
       component[resultVariable] = parentResultComponent.result;

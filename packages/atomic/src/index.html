@@ -44,35 +44,65 @@
         color: orange;
       } */
     </style>
+    <style>
+      /* Example of generic layout styling  */
+      .interface-container {
+        width: 100%;
+        max-width: 1250px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 25% 1fr;
+        gap: 20px;
+      }
+
+      .search-box-item {
+        grid-column-start: 2;
+      }
+
+      .footer-item {
+        grid-column-start: 2;
+        grid-row-start: 3;
+      }
+
+      .side-by-side-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+      }
+
+      atomic-facet-manager {
+        padding-top: 13px;
+      }
+
+      atomic-result-list {
+        display: block;
+        margin-top: 10px;
+      }
+    </style>
   </head>
-  <!-- TODO: remove tailwind classes and style html -->
-  <body class="p-2">
+  <body>
     <atomic-search-interface id="search">
-      <!-- <div class="flex mx-auto mb-2 justify-center">
-        <atomic-tab expression="" class="mr-2">All Files</atomic-tab>
-        <atomic-tab expression='@author *= "BBC News"'>BBC News</atomic-tab>
-      </div> -->
-      <div class="lg:ml-2 my-3">
-        <atomic-search-box></atomic-search-box>
-      </div>
-      <div class="flex flex-col lg:flex-row">
-        <atomic-facet-manager class="flex flex-row flex-wrap justify-center mx-2 mb-3 lg:flex-col lg:w-80">
-          <atomic-facet class="mr-2 mt-2" field="author" label="Authors"></atomic-facet>
-          <atomic-numeric-facet class="mr-2 mt-2" field="size" label="File sizes">
+      <div class="interface-container">
+        <!--
+          <atomic-tab expression="">All Files</atomic-tab>
+          <atomic-tab expression='@author *= "BBC News"'>BBC News</atomic-tab>
+        -->
+        <atomic-search-box class="search-box-item"></atomic-search-box>
+
+        <atomic-facet-manager>
+          <atomic-facet field="author" label="Authors"></atomic-facet>
+          <atomic-numeric-facet field="size" label="File sizes">
             <atomic-numeric-range start="0" end="10" end-inclusive="true"></atomic-numeric-range>
           </atomic-numeric-facet>
-          <atomic-date-facet class="mr-2 mt-2" field="created" label="Created"></atomic-date-facet>
-          <atomic-category-facet
-            class="mr-2 mt-2"
-            field="geographicalhierarchy"
-            label="World Atlas"
-          ></atomic-category-facet>
+          <atomic-date-facet field="created" label="Created"></atomic-date-facet>
+          <atomic-category-facet field="geographicalhierarchy" label="World Atlas"></atomic-category-facet>
         </atomic-facet-manager>
-        <div class="flex-grow pl-2">
+
+        <div class="results-container">
           <atomic-breadcrumb-manager></atomic-breadcrumb-manager>
           <atomic-did-you-mean></atomic-did-you-mean>
           <atomic-query-error></atomic-query-error>
-          <div class="flex justify-between items-end my-2">
+          <div class="side-by-side-container">
             <atomic-query-summary></atomic-query-summary>
             <atomic-sort-dropdown>
               <atomic-sort-criteria caption="relevance" criteria="relevancy"></atomic-sort-criteria>
@@ -83,15 +113,14 @@
           <atomic-no-results></atomic-no-results>
 
           <!-- TODO: add result template example -->
-          <atomic-result-list class="max-w-full border-t border-divider"></atomic-result-list>
-
-          <div class="flex flex-col lg:flex-row justify-between my-3">
-            <atomic-pager></atomic-pager>
-            <atomic-results-per-page></atomic-results-per-page>
-          </div>
+          <atomic-result-list></atomic-result-list>
         </div>
+        <div class="footer-item side-by-side-container">
+          <atomic-pager></atomic-pager>
+          <atomic-results-per-page></atomic-results-per-page>
+        </div>
+        <!-- <atomic-history></atomic-history> -->
       </div>
-      <!-- <atomic-history></atomic-history> -->
     </atomic-search-interface>
     <!-- <atomic-recommendation></atomic-recommendation> -->
     <!-- <atomic-frequently-bought-together></atomic-frequently-bought-together> -->
