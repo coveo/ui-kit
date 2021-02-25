@@ -1,10 +1,5 @@
 import {useEffect, useState, FunctionComponent} from 'react';
-import {
-  buildFacet,
-  Facet as HeadlessFacet,
-  FacetOptions,
-} from '@coveo/headless';
-import {engine} from '../../engine';
+import {Facet as HeadlessFacet} from '@coveo/headless';
 import {FacetSearch} from './facet-search';
 
 interface FacetProps {
@@ -57,7 +52,11 @@ export const Facet: FunctionComponent<FacetProps> = (props) => {
 
 // usage
 
-const options: FacetOptions = {field: 'objecttype'};
-const controller = buildFacet(engine, {options});
-
-<Facet controller={controller} />;
+/**
+ * ```tsx
+ * const options: FacetOptions = {field: 'objecttype'};
+ * const controller = buildFacet(engine, {options});
+ *
+ * <Facet controller={controller} />;
+ * ```
+ */
