@@ -29,7 +29,8 @@ import {
 } from '../facet-search/facet-search';
 
 /**
- * A hierarchical category facet component.
+ * A hierarchical category facet component. It is displayed as a facet in desktop browsers and as
+ * a button which opens a facet modal in mobile browsers.
  * @part facet - The wrapping div for the entire facet
  * @part facet-values - The list of facet values (children)
  * @part facet-value - A single facet value
@@ -69,19 +70,29 @@ export class AtomicCategoryFacet
   @State() public facetSearchQuery = '';
   @State() public showFacetSearchResults = false;
 
-  @Prop({mutable: true, reflect: true}) public facetId = '';
+  /**
+   * Specifies the index field whose values the facet should use
+   */
   @Prop() public field = '';
+  /**
+   * The displayed label for the facet
+   */
   @Prop() public label = 'No label';
+  /**
+   * The character that separates values of a multi-value field
+   */
   @Prop() public delimitingCharacter?: string;
+  /**
+   * The number of values to request for this facet. Also determines the number of additional values to request each time this facet is expanded, and the number of values to display when this facet is collapsed.
+   */
+  @Prop() public numberOfValues = 5;
 
   public initialize() {
     const options: CategoryFacetOptions = {
-      facetId: this.facetId,
       field: this.field,
       delimitingCharacter: this.delimitingCharacter,
     };
     this.facet = buildCategoryFacet(this.bindings.engine, {options});
-    this.facetId = this.facet.state.facetId;
     this.facetSearch = new FacetSearch({
       controller: new FacetSearchController(this),
     });
@@ -178,7 +189,7 @@ export class AtomicCategoryFacet
       <button
         class="text-primary"
         part="show-less"
-        onClick={() => this.facet.showMoreValues()}
+        onClick={() => this.facet.showLessValues()}
       >
         {this.strings.showLess()}
       </button>
@@ -194,7 +205,7 @@ export class AtomicCategoryFacet
         deselectAll={() => this.facet.deselectAll()}
       >
         {this.facetSearch.render()}
-        <div>
+        <div class="mt-1">
           <div>{this.resetButton}</div>
           <ul part="parents" class="list-none p-0">
             {this.parents}
@@ -202,7 +213,7 @@ export class AtomicCategoryFacet
           <ul
             class={
               'list-none p-0 ' +
-              (this.parents.length > 0 ? 'pl-10 lg:pl-8' : 'pl-0')
+              (this.parents.length > 0 ? 'pl-11 lg:pl-9' : 'pl-0')
             }
           >
             {this.values}
