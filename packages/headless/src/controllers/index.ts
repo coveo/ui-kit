@@ -160,7 +160,6 @@ export {
   RecommendationListProps,
   RecommendationListState,
   RecommendationList,
-  RecommendationListError,
   buildRecommendationList,
 } from './recommendation/headless-recommendation';
 

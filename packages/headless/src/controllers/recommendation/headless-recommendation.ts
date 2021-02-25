@@ -11,6 +11,7 @@ import {buildController, Controller} from '../controller/headless-controller';
 import {Schema, StringValue} from '@coveo/bueno';
 import {validateOptions} from '../../utils/validate-payload';
 import {Result} from '../../api/search/search/result';
+import {ErrorPayload} from '../controller/error-payload';
 
 const optionsSchema = new Schema({
   id: new StringValue<string>({
@@ -52,7 +53,7 @@ export interface RecommendationListState {
   /**
    * The current error for the last executed query, or `null` if none is present.
    * */
-  error: RecommendationListError | null;
+  error: ErrorPayload | null;
 
   /**
    * `true` if a search is in progress and `false` otherwise.
@@ -63,23 +64,6 @@ export interface RecommendationListState {
    * The recommendations based on the last executed query.
    * */
   recommendations: Result[];
-}
-
-export interface RecommendationListError {
-  /**
-   * The error message.
-   */
-  message: string;
-
-  /**
-   * The HTTP status code
-   */
-  statusCode: number;
-
-  /**
-   * The error type.
-   */
-  type: string;
 }
 
 /**
