@@ -111,6 +111,10 @@ export class AtomicCategoryFacet
     }
   }
 
+  public componentDidRender() {
+    this.facetSearch?.updateCombobox();
+  }
+
   private get parents() {
     const parents = this.facetState.parents;
 

@@ -88,7 +88,7 @@ export class AtomicFacet
   /**
    * Whether this facet should contain a search box.
    */
-  @Prop() public enableFacetSearch = false;
+  @Prop() public enableFacetSearch = true;
   /**
    * The sort criterion to apply to the returned facet values. Possible values are 'score', 'numeric', 'occurrences', and 'automatic'.
    */
@@ -109,7 +109,7 @@ export class AtomicFacet
     }
   }
 
-  componentDidRender() {
+  public componentDidRender() {
     this.facetSearch?.updateCombobox();
   }
 
