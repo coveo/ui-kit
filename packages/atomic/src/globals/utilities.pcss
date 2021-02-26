@@ -1,6 +1,6 @@
 :host {
   display: block;
-  font-family: Lato, Helvetica Neue, Helvetica, Arial, sans-serif, sans-serif;
+  font-family: var(--atomic-font-family, Lato, Arial, Helvetica, sans-serif);
 }
 
 .focus-within\:rounded-b-none:focus-within {
@@ -8,7 +8,15 @@
 }
 
 .apply-border-on-background {
-  @apply border border-solid border-on-background
+  @apply border border-solid border-on-background;
+}
+
+.apply-border-on-background-variant {
+  @apply border border-solid border-on-background-variant;
+}
+
+.empty\:border-none:empty {
+  border: none;
 }
 
 .apply-border-on-background-variant {

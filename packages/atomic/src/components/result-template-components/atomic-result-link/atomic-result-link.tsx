@@ -1,25 +1,26 @@
 import {Component, h} from '@stencil/core';
 import {Result} from '@coveo/headless';
-import {
-  ResultContext,
-  ResultContextRenderer,
-} from '../result-template-decorators';
+import {ResultContext} from '../result-template-decorators';
 
+/**
+ * The ResultLink component automatically transform a search result title into a clickable link pointing to the
+ * original item.
+ * @part result-link - The result link
+ */
 @Component({
   tag: 'atomic-result-link',
-  styleUrl: 'atomic-result-link.css',
-  shadow: true,
+  shadow: false,
 })
 export class AtomicResultValue {
   @ResultContext() private result!: Result;
 
-  @ResultContextRenderer
   public render() {
     return (
-      <a href={this.result.clickUri}>
-        <slot>
-          <h3>{this.result.title}</h3>
-        </slot>
+      <a part="result-link" href={this.result.clickUri}>
+        <atomic-result-value
+          value="title"
+          shouldHighlightWith="titleHighlights"
+        ></atomic-result-value>
       </a>
     );
   }

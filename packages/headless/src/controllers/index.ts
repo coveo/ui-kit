@@ -9,11 +9,19 @@ export {
   buildRelevanceInspector,
 } from './relevance-inspector/headless-relevance-inspector';
 
-export {Context, ContextState, buildContext} from './context/headless-context';
+export {
+  Context,
+  ContextState,
+  ContextValue,
+  ContextPayload,
+  buildContext,
+} from './context/headless-context';
 
 export {
   DidYouMean,
   DidYouMeanState,
+  QueryCorrection,
+  WordCorrection,
   buildDidYouMean,
 } from './did-you-mean/headless-did-you-mean';
 
@@ -71,8 +79,8 @@ export {
 } from './pager/headless-pager';
 
 export {
-  QueryErrorState,
   QueryError,
+  QueryErrorState,
   buildQueryError,
 } from './query-error/headless-query-error';
 
@@ -223,3 +231,5 @@ export {
   SearchStatusState,
   buildSearchStatus,
 } from './search-status/headless-search-status';
+
+export {ErrorPayload} from './controller/error-payload';

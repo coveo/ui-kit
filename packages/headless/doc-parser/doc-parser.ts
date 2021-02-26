@@ -23,7 +23,77 @@ const controllers: ControllerConfiguration[] = [
   },
   {
     initializer: 'buildContext',
-    samplePaths: {},
+    samplePaths: {
+      react_fn: [
+        'packages/samples/headless-react/src/components/context/context.ts',
+      ],
+    },
+  },
+  {
+    initializer: 'buildDidYouMean',
+    samplePaths: {
+      react_class: [
+        'packages/samples/headless-react/src/components/did-you-mean/did-you-mean.class.tsx',
+      ],
+      react_fn: [
+        'packages/samples/headless-react/src/components/did-you-mean/did-you-mean.fn.tsx',
+      ],
+    },
+  },
+  {
+    initializer: 'buildFacetManager',
+    samplePaths: {
+      react_class: [
+        'packages/samples/headless-react/src/components/facet-manager/facet-manager.class.tsx',
+      ],
+      react_fn: [
+        'packages/samples/headless-react/src/components/facet-manager/facet-manager.fn.tsx',
+      ],
+    },
+  },
+  {
+    initializer: 'buildQueryError',
+    samplePaths: {
+      react_class: [
+        'packages/samples/headless-react/src/components/query-error/query-error.class.tsx',
+      ],
+      react_fn: [
+        'packages/samples/headless-react/src/components/query-error/query-error.fn.tsx',
+      ],
+    },
+  },
+  {
+    initializer: 'buildRecommendationList',
+    samplePaths: {
+      react_class: [
+        'packages/samples/headless-react/src/components/recommendation-list/recommendation-list.class.tsx',
+      ],
+      react_fn: [
+        'packages/samples/headless-react/src/components/recommendation-list/recommendation-list.fn.tsx',
+      ],
+    },
+  },
+  {
+    initializer: 'buildQuerySummary',
+    samplePaths: {
+      react_class: [
+        'packages/samples/headless-react/src/components/query-summary/query-summary.class.tsx',
+      ],
+      react_fn: [
+        'packages/samples/headless-react/src/components/query-summary/query-summary.fn.tsx',
+      ],
+    },
+  },
+  {
+    initializer: 'buildSearchStatus',
+    samplePaths: {
+      react_class: [
+        'packages/samples/headless-react/src/components/search-status/search-status.class.tsx',
+      ],
+      react_fn: [
+        'packages/samples/headless-react/src/components/search-status/search-status.fn.tsx',
+      ],
+    },
   },
 ];
 

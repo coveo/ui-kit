@@ -20,8 +20,8 @@ A search box with built in support for query suggestions.
 | --------------------- | ----------------------------------- |
 | `"active-suggestion"` | The currently active suggestion     |
 | `"clear-button"`      | The search box input's clear button |
-| `"input"`             | The search box input                |
 | `"input-wrapper"`     | The wrapper for the searchbox input |
+| `"search-input"`      | The search box input                |
 | `"submit-button"`     | The search box submit button        |
 | `"suggestion"`        | The suggestion                      |
 | `"suggestions"`       | The list of suggestions             |

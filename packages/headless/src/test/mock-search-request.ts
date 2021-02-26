@@ -13,6 +13,7 @@ export function buildMockSearchRequest(
     facetOptions: buildMockFacetOptions(),
     firstResult: 0,
     numberOfResults: 10,
+    locale: 'en-US',
     q: '',
     cq: '',
     aq: '',

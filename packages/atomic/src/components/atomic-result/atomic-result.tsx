@@ -10,6 +10,7 @@ export class AtomicResult {
   @Element() host!: HTMLDivElement;
   @Prop() result!: Result;
   @Prop() engine!: Engine;
+  @Prop() content!: string;
 
   private unbindLogDocumentOpen = () => {};
 
@@ -26,6 +27,6 @@ export class AtomicResult {
   }
 
   public render() {
-    return <slot></slot>;
+    return <div innerHTML={this.content}></div>;
   }
 }

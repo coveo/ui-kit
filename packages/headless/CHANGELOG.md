@@ -3,6 +3,127 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.7.0-alpha.23](https://github.com/coveo/ui-kit/compare/v0.7.0-alpha.22...v0.7.0-alpha.23) (2021-02-26)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+# [0.7.0-alpha.22](https://github.com/coveo/ui-kit/compare/v0.7.0-alpha.21...v0.7.0-alpha.22) (2021-02-26)
+
+
+### Features
+
+* **atomic:** category Facet ([#542](https://github.com/coveo/ui-kit/issues/542)) ([cdd2c01](https://github.com/coveo/ui-kit/commit/cdd2c01c0eb34585c703f03fd6b764723c77b3e0))
+
+
+
+
+
+# [0.7.0-alpha.21](https://github.com/coveo/ui-kit/compare/v0.7.0-alpha.20...v0.7.0-alpha.21) (2021-02-25)
+
+
+### Features
+
+* **headless:** made facet manager's sort results include every payload ([#548](https://github.com/coveo/ui-kit/issues/548)) ([3bdb34d](https://github.com/coveo/ui-kit/commit/3bdb34da9f1c6f6c6fd972c8f10629e118564f44))
+
+
+
+
+
+# [0.7.0-alpha.20](https://github.com/coveo/ui-kit/compare/v0.7.0-alpha.19...v0.7.0-alpha.20) (2021-02-24)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+# [0.7.0-alpha.19](https://github.com/coveo/ui-kit/compare/v0.7.0-alpha.18...v0.7.0-alpha.19) (2021-02-24)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+# [0.7.0-alpha.17](https://github.com/coveo/ui-kit/compare/v0.7.0-alpha.16...v0.7.0-alpha.17) (2021-02-23)
+
+
+### Features
+
+* **headless:** add support for locale parameter + analytics language ([#532](https://github.com/coveo/ui-kit/issues/532)) ([49b8318](https://github.com/coveo/ui-kit/commit/49b83182c0c1569198c4c1a5572310c1bd2d5f04))
+
+
+
+
+
+# [0.7.0-alpha.16](https://github.com/coveo/ui-kit/compare/v0.7.0-alpha.15...v0.7.0-alpha.16) (2021-02-23)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+# [0.7.0-alpha.15](https://github.com/coveo/ui-kit/compare/v0.7.0-alpha.14...v0.7.0-alpha.15) (2021-02-22)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+# [0.7.0-alpha.14](https://github.com/coveo/ui-kit/compare/v0.7.0-alpha.13...v0.7.0-alpha.14) (2021-02-22)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+# [0.7.0-alpha.13](https://github.com/coveo/ui-kit/compare/v0.7.0-alpha.12...v0.7.0-alpha.13) (2021-02-22)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+# [0.7.0-alpha.12](https://github.com/coveo/ui-kit/compare/v0.7.0-alpha.11...v0.7.0-alpha.12) (2021-02-22)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+# [0.7.0-alpha.11](https://github.com/coveo/ui-kit/compare/v0.7.0-alpha.10...v0.7.0-alpha.11) (2021-02-21)
+
+
+### Bug Fixes
+
+* **headless:** support multiple author for a document for analytics ([#515](https://github.com/coveo/ui-kit/issues/515)) ([a0c7c48](https://github.com/coveo/ui-kit/commit/a0c7c486c2ee1d0e750579ec965ac9c606a31294))
+
+
+### Features
+
+* **atomic,headless:** add highlights, atomic-result-excerpt & atomic-result-uri components ([#524](https://github.com/coveo/ui-kit/issues/524)) ([2b73da1](https://github.com/coveo/ui-kit/commit/2b73da10bbfdf52d9ada6533b532b9ae7463cd98))
+
+
+
+
+
+# [0.7.0-alpha.10](https://github.com/coveo/ui-kit/compare/v0.7.0-alpha.9...v0.7.0-alpha.10) (2021-02-19)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
 # [0.7.0-alpha.3](https://github.com/coveo/ui-kit/compare/v0.7.0-alpha.2...v0.7.0-alpha.3) (2021-02-17)
 
 **Note:** Version bump only for package @coveo/headless

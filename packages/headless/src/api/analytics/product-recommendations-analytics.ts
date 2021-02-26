@@ -6,6 +6,7 @@ import {
   ProductRecommendationsSection,
   SearchHubSection,
 } from '../../state/state-sections';
+import {getLanguage} from './shared-analytics';
 
 export type StateNeededByProductRecommendationsAnalyticsProvider = ConfigurationSection &
   Partial<SearchHubSection & ProductRecommendationsSection>;
@@ -16,6 +17,10 @@ export class ProductRecommendationAnalyticsProvider
   constructor(
     private state: StateNeededByProductRecommendationsAnalyticsProvider
   ) {}
+
+  public getLanguage() {
+    return getLanguage(this.state);
+  }
 
   public getSearchEventRequestPayload() {
     return {

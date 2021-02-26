@@ -29,7 +29,6 @@ export class Facet extends Component<FacetProps> {
 
   componentDidMount() {
     this.unsubscribe = this.controller.subscribe(() => this.updateState());
-    this.controller.showMoreValues();
   }
 
   componentWillUnmount() {
@@ -38,11 +37,6 @@ export class Facet extends Component<FacetProps> {
 
   private updateState() {
     this.setState(this.controller.state);
-  }
-
-  private onInput(text: string) {
-    this.controller.facetSearch.updateText(text);
-    this.controller.facetSearch.search();
   }
 
   render() {

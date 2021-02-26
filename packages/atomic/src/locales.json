@@ -15,6 +15,12 @@
     "en": "Clear",
     "fr": "Effacer"
   },
+  "showMore": {
+    "en": "Show More"
+  },
+  "showLess": {
+    "en": "Show Less"
+  },
   "pagination": {
     "en": "Pagination",
     "fr": "Pagination"
@@ -460,5 +466,84 @@
     "tr": "Aramanızı genişletmek için daha az filtre seçin.",
     "zh-cn": "选择较少的筛选条件以扩大您的搜索范围。",
     "zh-tw": "選擇較少的篩選條件以擴大您的搜尋範圍。"
+  },
+  "author": {
+    "en": "Author",
+    "fr": "Auteur",
+    "cs": "Autor",
+    "da": "Forfatter",
+    "de": "Autor",
+    "el": "Συγγραφέας",
+    "es-es": "Autor",
+    "fi": "Tekijä",
+    "hu": "Szerző",
+    "id": "Penyusun",
+    "it": "Autore",
+    "ja": "作成者",
+    "ko": "작성자",
+    "nl": "Auteur",
+    "no": "Forfatter",
+    "pl": "Autor",
+    "pt-br": "Autor",
+    "ru": "Автор",
+    "sv": "Författare",
+    "th": "ผู้สร้าง",
+    "tr": "Yazan",
+    "zh-cn": "作者",
+    "zh-tw": "作者"
+  },
+  "fileType": {
+    "en": "File type",
+    "fr": "Type de fichier",
+    "cs": "Typ souboru",
+    "da": "Filtype",
+    "de": "Dateityp",
+    "el": "Τύπος εγγράφου",
+    "es-es": "Tipo de archivo",
+    "fi": "Tiedostotyyppi",
+    "hu": "Fájltípus",
+    "id": "Jenis file",
+    "it": "Tipo di file",
+    "ja": "ファイルの種類",
+    "ko": "파일 형식",
+    "nl": "Bestandtype",
+    "no": "Filtype",
+    "pl": "Typ pliku",
+    "pt-br": "Tipo de arquivo",
+    "ru": "Тип файла",
+    "sv": "Filtyp",
+    "th": "ประเภทไฟล์",
+    "tr": "Dosya türü",
+    "zh-cn": "文件类型",
+    "zh-tw": "檔案類型"
+  },
+  "language": {
+    "en": "Language",
+    "fr": "Langage",
+    "cs": "Jazyk",
+    "da": "Sprog",
+    "de": "Sprache",
+    "el": "Γλώσσα",
+    "es-es": "Idioma",
+    "fi": "Kieli",
+    "hu": "Nyelv",
+    "id": "Bahasa",
+    "it": "Lingua",
+    "ja": "言語",
+    "ko": "언어",
+    "nl": "Taal",
+    "no": "Språk",
+    "pl": "Język",
+    "pt-br": "Idioma",
+    "ru": "Язык",
+    "sv": "Språk",
+    "th": "ภาษา",
+    "tr": "Dil",
+    "zh-cn": "语言",
+    "zh-tw": "語言設定"
+  },
+  "source": {
+    "en": "Source",
+    "fr": "Source"
   }
 }
