@@ -21,11 +21,11 @@ const cancelInitialSearch = () => {
   if (timeout) {
     console.log('canceled search')
     clearTimeout(timeout);
+    timeout = undefined;
   }
 }
 
 const executeInitialSearch = debounce(() => {
-  console.log(window.coveoHeadless)
   window.coveoHeadless.engine.dispatch(
     CoveoHeadless.SearchActions.executeSearch(
       CoveoHeadless.AnalyticsActions.logInterfaceLoad()
