@@ -42,7 +42,47 @@ const controllers: ControllerConfiguration[] = [
   },
   {
     initializer: 'buildFacetManager',
-    samplePaths: {},
+    samplePaths: {
+      react_class: [
+        'packages/samples/headless-react/src/components/facet-manager/facet-manager.class.tsx',
+      ],
+      react_fn: [
+        'packages/samples/headless-react/src/components/facet-manager/facet-manager.fn.tsx',
+      ],
+    },
+  },
+  {
+    initializer: 'buildQueryError',
+    samplePaths: {
+      react_class: [
+        'packages/samples/headless-react/src/components/query-error/query-error.class.tsx',
+      ],
+      react_fn: [
+        'packages/samples/headless-react/src/components/query-error/query-error.fn.tsx',
+      ],
+    },
+  },
+  {
+    initializer: 'buildRecommendationList',
+    samplePaths: {
+      react_class: [
+        'packages/samples/headless-react/src/components/recommendation-list/recommendation-list.class.tsx',
+      ],
+      react_fn: [
+        'packages/samples/headless-react/src/components/recommendation-list/recommendation-list.fn.tsx',
+      ],
+    },
+  },
+  {
+    initializer: 'buildQuerySummary',
+    samplePaths: {
+      react_class: [
+        'packages/samples/headless-react/src/components/query-summary/query-summary.class.tsx',
+      ],
+      react_fn: [
+        'packages/samples/headless-react/src/components/query-summary/query-summary.fn.tsx',
+      ],
+    },
   },
 ];
 

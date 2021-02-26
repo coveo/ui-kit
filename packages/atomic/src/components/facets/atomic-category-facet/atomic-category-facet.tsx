@@ -55,13 +55,14 @@ export class AtomicCategoryFacet
   public facetState!: CategoryFacetState;
   @State() public error!: Error;
 
-  private facetSearch!: FacetSearch;
+  private facetSearch?: FacetSearch;
 
   @BindStateToI18n()
   @State()
   public strings: I18nState = {
     clear: () => this.bindings.i18n.t('clear'),
-    searchBox: () => this.bindings.i18n.t('facetSearch'),
+    placeholder: () => this.bindings.i18n.t('search'),
+    searchBox: () => this.bindings.i18n.t('search'),
     querySuggestionList: () => this.bindings.i18n.t('querySuggestionList'),
     showMore: () => this.bindings.i18n.t('showMore'),
     showLess: () => this.bindings.i18n.t('showLess'),
@@ -82,7 +83,7 @@ export class AtomicCategoryFacet
   /**
    * The character that separates values of a multi-value field
    */
-  @Prop() public delimitingCharacter?: string;
+  @Prop() public delimitingCharacter = ';';
   /**
    * The number of values to request for this facet. Also determines the number of additional values to request each time this facet is expanded, and the number of values to display when this facet is collapsed.
    */
@@ -121,21 +122,25 @@ export class AtomicCategoryFacet
 
   private buildParent(parent: CategoryFacetValue, isLast: boolean) {
     return (
-      <li
-        class="flex items-center cursor-pointer text-lg lg:text-base py-1 lg:py-0.5"
-        onClick={() => !isLast && this.facet.toggleSelect(parent)}
-      >
-        {!isLast ? (
-          <div
-            innerHTML={LeftArrow}
-            class="arrow-size text-secondary fill-current"
-          />
-        ) : null}
-        {isLast ? (
-          <b class="ml-8 lg:ml-6">{parent.value}</b>
-        ) : (
-          <span class="ml-2">{parent.value}</span>
-        )}
+      <li>
+        <button
+          class="w-full flex items-center text-lg lg:text-base py-1 lg:py-0.5"
+          onClick={() => !isLast && this.facet.toggleSelect(parent)}
+        >
+          {!isLast ? (
+            <div
+              innerHTML={LeftArrow}
+              class="arrow-size text-secondary fill-current"
+            />
+          ) : null}
+          <label>
+            {isLast ? (
+              <b class="ml-8 lg:ml-6">{parent.value}</b>
+            ) : (
+              <span class="ml-2">{parent.value}</span>
+            )}
+          </label>
+        </button>
       </li>
     );
   }
@@ -146,18 +151,20 @@ export class AtomicCategoryFacet
 
   private buildValue(item: CategoryFacetValue) {
     return (
-      <li
-        onClick={() => this.facet.toggleSelect(item)}
-        class="flex items-center text-lg lg:text-base py-1 lg:py-0.5 cursor-pointer"
-      >
-        <span class="my-auto">{item.value}</span>
-        <span class="ml-auto my-auto self-end text-on-background-variant">
-          {item.numberOfResults}
-        </span>
-        <div
-          innerHTML={RightArrow}
-          class="ml-2 arrow-size text-secondary fill-current"
-        />
+      <li>
+        <button
+          class="w-full flex items-center text-lg lg:text-base py-1 lg:py-0.5"
+          onClick={() => this.facet.toggleSelect(item)}
+        >
+          <span class="my-auto">{item.value}</span>
+          <span class="ml-auto my-auto self-end text-on-background-variant">
+            {item.numberOfResults}
+          </span>
+          <div
+            innerHTML={RightArrow}
+            class="ml-2 arrow-size text-secondary fill-current"
+          />
+        </button>
       </li>
     );
   }
@@ -216,23 +223,18 @@ export class AtomicCategoryFacet
         hasActiveValues={this.facetState.hasActiveValues}
         deselectAll={() => this.facet.deselectAll()}
       >
-        {this.enableFacetSearch ? this.facetSearch.render() : null}
+        {this.facetSearch?.render()}
         <div class="mt-1">
           <div>{this.resetButton}</div>
           <ul part="parents" class="list-none p-0">
             {this.parents}
           </ul>
-          <ul
-            class={
-              'list-none p-0 ' +
-              (this.parents.length > 0 ? 'pl-11 lg:pl-9' : 'pl-0')
-            }
-          >
-            {this.values}
-          </ul>
-          <div class="flex flex-col items-start space-y-1">
-            {this.showLessButton}
-            {this.showMoreButton}
+          <div class={this.parents.length > 0 ? 'pl-11 lg:pl-9' : 'pl-0'}>
+            <ul class="list-none p-0">{this.values}</ul>
+            <div class="flex flex-col items-start space-y-1">
+              {this.showLessButton}
+              {this.showMoreButton}
+            </div>
           </div>
         </div>
       </BaseFacet>

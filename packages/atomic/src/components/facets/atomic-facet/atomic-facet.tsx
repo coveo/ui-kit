@@ -48,7 +48,7 @@ export class AtomicFacet
   implements InitializableComponent, FacetSearchState, BaseFacetState {
   @InitializeBindings() public bindings!: Bindings;
   public facet!: Facet;
-  private facetSearch!: FacetSearch;
+  private facetSearch?: FacetSearch;
   @BindStateToController('facet', {subscribeOnConnectedCallback: true})
   @State()
   public facetState!: FacetState;
@@ -58,7 +58,8 @@ export class AtomicFacet
   @State()
   public strings: I18nState = {
     clear: () => this.bindings.i18n.t('clear'),
-    searchBox: () => this.bindings.i18n.t('facetSearch'),
+    searchBox: () => this.bindings.i18n.t('search'),
+    placeholder: () => this.bindings.i18n.t('search'),
     querySuggestionList: () => this.bindings.i18n.t('querySuggestionList'),
     showMore: () => this.bindings.i18n.t('showMore'),
     showLess: () => this.bindings.i18n.t('showLess'),
@@ -79,7 +80,7 @@ export class AtomicFacet
   /**
    * The character that separates values of a multi-value field.
    */
-  @Prop() public delimitingCharacter?: string;
+  @Prop() public delimitingCharacter = ';';
   /**
    * The number of values to request for this facet. Also determines the number of additional values to request each time this facet is expanded, and the number of values to display when this facet is collapsed.
    */
@@ -109,7 +110,7 @@ export class AtomicFacet
   }
 
   componentDidRender() {
-    this.facetSearch.updateCombobox();
+    this.facetSearch?.updateCombobox();
   }
 
   private get values() {
@@ -173,7 +174,7 @@ export class AtomicFacet
         deselectAll={() => this.facet.deselectAll()}
       >
         <div>
-          {this.enableFacetSearch ? this.facetSearch.render() : null}
+          {this.facetSearch?.render()}
           <ul class="list-none p-0">{this.values}</ul>
           <div class="flex flex-col items-start space-y-1">
             {this.showLessButton}

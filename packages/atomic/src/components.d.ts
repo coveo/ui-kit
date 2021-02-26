@@ -5,7 +5,7 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { CategoryFacetSortCriterion, Engine, FacetSortCriterion, LogLevel, Result, ResultTemplateCondition } from "@coveo/headless";
+import { CategoryFacetSortCriterion, Engine, FacetSortCriterion, LogLevel, Result, ResultTemplate, ResultTemplateCondition } from "@coveo/headless";
 import { Bindings } from "./utils/initialization-utils";
 import { i18n } from "i18next";
 import { InitializationOptions } from "./components/atomic-search-interface/atomic-search-interface";
@@ -18,7 +18,7 @@ export namespace Components {
         /**
           * The character that separates values of a multi-value field
          */
-        "delimitingCharacter"?: string;
+        "delimitingCharacter": string;
         /**
           * Whether this facet should contain a search box.
          */
@@ -79,7 +79,7 @@ export namespace Components {
         /**
           * The character that separates values of a multi-value field.
          */
-        "delimitingCharacter"?: string;
+        "delimitingCharacter": string;
         /**
           * Whether this facet should contain a search box.
          */
@@ -105,7 +105,6 @@ export namespace Components {
     }
     interface AtomicFieldCondition {
         "conditions": ResultTemplateCondition[];
-        "getFields": () => Promise<string[]>;
         "ifDefined"?: string;
         "ifNotDefined"?: string;
     }
@@ -174,6 +173,7 @@ export namespace Components {
         "bindings": Bindings;
     }
     interface AtomicResult {
+        "content": string;
         "engine": Engine;
         "result": Result;
     }
@@ -187,11 +187,11 @@ export namespace Components {
          */
         "fieldsToInclude": string;
     }
+    interface AtomicResultListPlaceholder {
+    }
     interface AtomicResultTemplate {
         "conditions": ResultTemplateCondition[];
-        "fieldsToInclude"?: string;
-        "getConditions": () => Promise<ResultTemplateCondition[]>;
-        "getFields": () => Promise<string[]>;
+        "getTemplate": () => Promise<ResultTemplate<string> | null>;
     }
     interface AtomicResultUri {
     }
@@ -401,6 +401,12 @@ declare global {
         prototype: HTMLAtomicResultListElement;
         new (): HTMLAtomicResultListElement;
     };
+    interface HTMLAtomicResultListPlaceholderElement extends Components.AtomicResultListPlaceholder, HTMLStencilElement {
+    }
+    var HTMLAtomicResultListPlaceholderElement: {
+        prototype: HTMLAtomicResultListPlaceholderElement;
+        new (): HTMLAtomicResultListPlaceholderElement;
+    };
     interface HTMLAtomicResultTemplateElement extends Components.AtomicResultTemplate, HTMLStencilElement {
     }
     var HTMLAtomicResultTemplateElement: {
@@ -484,6 +490,7 @@ declare global {
         "atomic-result-excerpt": HTMLAtomicResultExcerptElement;
         "atomic-result-link": HTMLAtomicResultLinkElement;
         "atomic-result-list": HTMLAtomicResultListElement;
+        "atomic-result-list-placeholder": HTMLAtomicResultListPlaceholderElement;
         "atomic-result-template": HTMLAtomicResultTemplateElement;
         "atomic-result-uri": HTMLAtomicResultUriElement;
         "atomic-result-value": HTMLAtomicResultValueElement;
@@ -660,6 +667,7 @@ declare namespace LocalJSX {
         "bindings": Bindings;
     }
     interface AtomicResult {
+        "content": string;
         "engine": Engine;
         "result": Result;
     }
@@ -673,9 +681,10 @@ declare namespace LocalJSX {
          */
         "fieldsToInclude"?: string;
     }
+    interface AtomicResultListPlaceholder {
+    }
     interface AtomicResultTemplate {
         "conditions"?: ResultTemplateCondition[];
-        "fieldsToInclude"?: string;
     }
     interface AtomicResultUri {
     }
@@ -772,6 +781,7 @@ declare namespace LocalJSX {
         "atomic-result-excerpt": AtomicResultExcerpt;
         "atomic-result-link": AtomicResultLink;
         "atomic-result-list": AtomicResultList;
+        "atomic-result-list-placeholder": AtomicResultListPlaceholder;
         "atomic-result-template": AtomicResultTemplate;
         "atomic-result-uri": AtomicResultUri;
         "atomic-result-value": AtomicResultValue;
@@ -810,6 +820,7 @@ declare module "@stencil/core" {
             "atomic-result-excerpt": LocalJSX.AtomicResultExcerpt & JSXBase.HTMLAttributes<HTMLAtomicResultExcerptElement>;
             "atomic-result-link": LocalJSX.AtomicResultLink & JSXBase.HTMLAttributes<HTMLAtomicResultLinkElement>;
             "atomic-result-list": LocalJSX.AtomicResultList & JSXBase.HTMLAttributes<HTMLAtomicResultListElement>;
+            "atomic-result-list-placeholder": LocalJSX.AtomicResultListPlaceholder & JSXBase.HTMLAttributes<HTMLAtomicResultListPlaceholderElement>;
             "atomic-result-template": LocalJSX.AtomicResultTemplate & JSXBase.HTMLAttributes<HTMLAtomicResultTemplateElement>;
             "atomic-result-uri": LocalJSX.AtomicResultUri & JSXBase.HTMLAttributes<HTMLAtomicResultUriElement>;
             "atomic-result-value": LocalJSX.AtomicResultValue & JSXBase.HTMLAttributes<HTMLAtomicResultValueElement>;
