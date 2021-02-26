@@ -17,6 +17,7 @@ const isDevWatch: boolean =
 export const config: Config = {
   namespace: 'atomic',
   taskQueue: 'async',
+  globalStyle: 'src/styles/variables.pcss',
   outputTargets: [
     {
       type: 'dist',
@@ -46,7 +47,6 @@ export const config: Config = {
     inlineSvg(),
     postcss({
       plugins: [atImport(), tailwind(), autoprefixer()],
-      injectGlobalPaths: ['src/globals/utilities.pcss'],
     }),
   ],
   rollupPlugins: {
