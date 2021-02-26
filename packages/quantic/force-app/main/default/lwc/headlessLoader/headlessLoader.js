@@ -78,7 +78,7 @@ function getHeadlessEngine(element) {
       console.error('Fatal error: unable to initialize Coveo Headless', error);
     }
   }
-  return window.coveoHeadless.engine;
+  return Promise.resolve(window.coveoHeadless.engine);
 }
 
 async function initEngine(element) {
