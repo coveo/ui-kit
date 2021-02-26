@@ -28,7 +28,7 @@ import mainclear from '../../images/main-clear.svg';
 
 @Component({
   tag: 'atomic-breadcrumb-manager',
-  styleUrl: 'atomic-breadcrumb-manager.css',
+  styleUrl: 'atomic-breadcrumb-manager.pcss',
   shadow: true,
 })
 export class AtomicBreadcrumbManager implements InitializableComponent {
@@ -50,7 +50,7 @@ export class AtomicBreadcrumbManager implements InitializableComponent {
 
   private get facetBreadcrumbs() {
     return this.breadcrumbManagerState.facetBreadcrumbs.map((breadcrumb) => {
-      const breadcrumbsValues = this.getBreadrumbValues(breadcrumb);
+      const breadcrumbsValues = this.getBreadcrumbValues(breadcrumb);
       return (
         <ul part="breadcrumbs">
           <li part="breadcrumb-label">{breadcrumb.field}:&nbsp;</li>
@@ -60,28 +60,38 @@ export class AtomicBreadcrumbManager implements InitializableComponent {
     });
   }
 
-  private getBreadrumbValues(breadcrumb: Breadcrumb<FacetValue>) {
+  private getBreadcrumbValues(breadcrumb: Breadcrumb<FacetValue>) {
     const {breadcrumbsToShow, moreButton} = this.collapsedBreadcrumbsHandler(
       breadcrumb
     );
-    const renderedBreadcrumbs = breadcrumbsToShow.map((breadcrumbValue) => (
-      <li part="breadcrumb-value">
-        <button
-          part="breadcrumb-button"
-          aria-label={`Remove inclusion filter on ${breadcrumbValue.value.value}`}
-          onClick={() =>
-            this.breadcrumbManager.deselectBreadcrumb(breadcrumbValue)
-          }
-        >
-          {breadcrumbValue.value.value}
-          {this.mainClear}
-        </button>
-      </li>
-    ));
+    const renderedBreadcrumbs = breadcrumbsToShow.map((breadcrumbValue) =>
+      this.getBreadcrumbValue(breadcrumbValue.value.value, breadcrumbValue)
+    );
 
     return moreButton
       ? [...renderedBreadcrumbs, moreButton]
       : renderedBreadcrumbs;
+  }
+
+  private getBreadcrumbValue(
+    value: string,
+    breadcrumbValue: BreadcrumbValue<BaseFacetValue> | CategoryFacetBreadcrumb
+  ) {
+    return (
+      <li part="breadcrumb-value">
+        <button
+          part="breadcrumb-button"
+          class="flex items-center"
+          aria-label={`Remove inclusion filter on ${value}`}
+          onClick={() =>
+            this.breadcrumbManager.deselectBreadcrumb(breadcrumbValue)
+          }
+        >
+          {value}
+          <div role="button" class="h-3 w-3" innerHTML={mainclear} />
+        </button>
+      </li>
+    );
   }
 
   private get numericFacetBreadcrumbs() {
@@ -130,19 +140,9 @@ export class AtomicBreadcrumbManager implements InitializableComponent {
         needDateFormatting,
         breadcrumbValue.value
       );
-      return (
-        <li part="breadcrumb-value">
-          <button
-            part="breadcrumb-button"
-            aria-label={ariaLabel}
-            onClick={() =>
-              this.breadcrumbManager.deselectBreadcrumb(breadcrumbValue)
-            }
-          >
-            {breadcrumbValue.value.start} - {breadcrumbValue.value.end}
-            {this.mainClear}
-          </button>
-        </li>
+      return this.getBreadcrumbValue(
+        `${breadcrumbValue.value.start} - ${breadcrumbValue.value.end}`,
+        breadcrumbValue
       );
     });
     return moreButton
@@ -174,6 +174,7 @@ export class AtomicBreadcrumbManager implements InitializableComponent {
       <li part="breadcrumb-value category-breadcrumb-value">
         <button
           part="breadcrumb-button"
+          class="flex"
           aria-label={`Remove inclusion filter on ${ariaLabel}`}
           onClick={() => this.breadcrumbManager.deselectBreadcrumb(values)}
         >
@@ -242,6 +243,7 @@ export class AtomicBreadcrumbManager implements InitializableComponent {
       <li part="breadcrumb-value">
         <button
           part="breadcrumb-button"
+          class="flex"
           aria-label={`Show ${collapsedBreadcrumbNumber} more ${
             collapsedBreadcrumbNumber > 1 ? 'filters' : 'filter'
           }`}
@@ -253,10 +255,6 @@ export class AtomicBreadcrumbManager implements InitializableComponent {
     );
   }
 
-  private get mainClear() {
-    return <span role="button" innerHTML={mainclear}></span>;
-  }
-
   private resetCollapsedBreadcrumbs(length: number, field: string) {
     length <= this.collapseThreshold
       ? this.collapsedBreadcrumbsState.splice(
@@ -265,6 +263,7 @@ export class AtomicBreadcrumbManager implements InitializableComponent {
         )
       : null;
   }
+
   private getRangeAriaLabel(
     needDateFormatting: boolean,
     breadcrumbValue: RangeFacetValue
