@@ -1,5 +1,4 @@
 import {LightningElement, api, track} from 'lwc';
-import {initializeComponent} from 'c/initialization';
 import {getHeadlessEngine, registerComponentForInit, setComponentInitialized} from 'c/headlessLoader';
 
 export default class Pager extends LightningElement {
@@ -32,7 +31,6 @@ export default class Pager extends LightningElement {
     } catch (error) {
       console.error('Fatal error: unable to initialize component', error);
     }
-    initializeComponent(this);
   }
 
   /**

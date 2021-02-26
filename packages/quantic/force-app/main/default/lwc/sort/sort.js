@@ -1,5 +1,4 @@
 import {LightningElement, track, api} from 'lwc';
-import {initializeComponent} from 'c/initialization';
 import {getHeadlessEngine, registerComponentForInit, setComponentInitialized} from 'c/headlessLoader';
 
 export default class Sort extends LightningElement {
@@ -26,7 +25,6 @@ export default class Sort extends LightningElement {
     } catch (error) {
       console.error('Fatal error: unable to initialize component', error);
     }
-    initializeComponent(this);
   }
 
   /**

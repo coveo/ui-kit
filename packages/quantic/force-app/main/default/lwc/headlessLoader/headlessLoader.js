@@ -19,18 +19,20 @@ const debounce = (func, wait) => {
 
 const cancelInitialSearch = () => {
   if (timeout) {
+    console.log('canceled search')
     clearTimeout(timeout);
   }
 }
 
 const executeInitialSearch = debounce(() => {
-  console.log('Executed initial search')
+  console.log(window.coveoHeadless)
   window.coveoHeadless.engine.dispatch(
     CoveoHeadless.SearchActions.executeSearch(
       CoveoHeadless.AnalyticsActions.logInterfaceLoad()
     )
   );
-}, 0); //TODO: determine if debounce needed and how much
+  console.log('Executed initial search')
+}, 1000); //TODO: determine if debounce needed and how much
 
 const getAreComponentsReady = () => {
   return !window.coveoHeadless.components.find(component => component.initialized === false)
@@ -80,7 +82,7 @@ function getHeadlessEngine(element) {
 }
 
 async function initEngine(element) {
-  await loadScript(element, HeadlessPath + '/browser/headless.js')
+  await loadScript(element, HeadlessPath + '/browser/headless.js');
   await loadScript(element, AtomicPath + '/atomic-utils.js');
 
   const config = CoveoHeadless.HeadlessEngine.getSampleConfiguration();

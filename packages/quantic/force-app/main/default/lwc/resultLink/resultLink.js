@@ -1,5 +1,5 @@
 import {LightningElement, api} from 'lwc';
-import {initializeComponent} from 'c/initialization';
+import {getHeadlessEngine} from 'c/headlessLoader';
 
 export default class ResultLink extends LightningElement {
   /** @type {import("coveo").Result} */
@@ -7,8 +7,13 @@ export default class ResultLink extends LightningElement {
 
   /** @type {import("coveo").Engine} */
   engine;
+
   connectedCallback() {
-    initializeComponent(this);
+    try {
+      this.initialize(getHeadlessEngine());
+    } catch (error) {
+      console.error('Fatal error: unable to initialize component', error);
+    }
   }
 
   /**

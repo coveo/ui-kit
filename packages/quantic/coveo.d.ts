@@ -8,4 +8,14 @@ declare global {
   const CoveoHeadless: typeof HeadlessTypes;
   // eslint-disable-next-line no-undef
   const CoveoAtomicUtils: typeof AtomicTypes;
+
+  interface Window {
+    coveoHeadless: {
+      components: {
+        element: any;
+        initialized: boolean;
+      }[];
+      engine: any;
+    };
+  }
 }
