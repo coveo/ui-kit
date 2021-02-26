@@ -13,6 +13,7 @@ import {
   disableAnalytics,
   enableAnalytics,
   updateAnalyticsConfiguration,
+  localeValidation,
 } from '../features/configuration/configuration-actions';
 import {configureStore, Store, ThunkExtraArguments} from './store';
 import {SearchAPIClient} from '../api/search/search-api-client';
@@ -141,6 +142,14 @@ export interface HeadlessConfigurationOptions {
      *    When logging a Search usage analytics event for a query, the originLevel1 field of that event should be set to the value of the searchHub search request parameter.
      */
     searchHub?: string;
+    /**
+     * The locale of the current user. Must comply with IETF’s BCP 47 definition: https://www.rfc-editor.org/rfc/bcp/bcp47.txt.
+     *
+     * Notes:
+     *  Coveo Machine Learning models use this information to provide contextually relevant output.
+     *  Moreover, this information can be referred to in query expressions and QPL statements by using the $locale object.
+     */
+    locale?: string;
     /**
      * Allows for augmenting a request (search, facet-search, query-suggest, etc.) before it is sent.
      * @deprecated Use `preprocessRequest` instead.
@@ -304,6 +313,7 @@ export class HeadlessEngine<Reducers extends ReducersMapObject>
             required: false,
             emptyAllowed: false,
           }),
+          locale: localeValidation,
         },
       }),
       analytics: new RecordValue({

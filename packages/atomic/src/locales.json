@@ -15,6 +15,12 @@
     "en": "Clear",
     "fr": "Effacer"
   },
+  "showMore": {
+    "en": "Show More"
+  },
+  "showLess": {
+    "en": "Show Less"
+  },
   "pagination": {
     "en": "Pagination",
     "fr": "Pagination"

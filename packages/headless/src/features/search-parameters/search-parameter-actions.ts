@@ -25,6 +25,7 @@ export type SearchParameters = Omit<
   | 'searchHub'
   | 'pipeline'
   | 'context'
+  | 'locale'
 > &
   Partial<FacetParameters>;
 

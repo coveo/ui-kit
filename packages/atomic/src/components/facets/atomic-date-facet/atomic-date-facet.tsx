@@ -1,10 +1,11 @@
-import {Component, Prop, State, h} from '@stencil/core';
+import {Component, Prop, State, h, Element} from '@stencil/core';
 import {
   DateFacet,
   buildDateFacet,
   DateFacetState,
   DateFacetOptions,
   DateFacetValue,
+  buildDateRange,
 } from '@coveo/headless';
 import {
   Bindings,
@@ -19,12 +20,24 @@ import {
   BaseFacetState,
 } from '../base-facet/base-facet';
 
+/**
+ * A facet who's values are expressed as date ranges. It is displayed as a regular facet in desktop browsers and as
+ * a button which opens a facet modal in mobile browsers.
+ *
+ * @part facet - The wrapping div for the entire facet
+ * @part facet-values - The list of facet values
+ * @part facet-value - A single facet value
+ * @part close-button - The button to close the facet when displayed modally (mobile only)
+ * @part reset-button - The button that resets the actively selected facet values
+ *
+ */
 @Component({
   tag: 'atomic-date-facet',
   styleUrl: 'atomic-date-facet.pcss',
   shadow: true,
 })
 export class AtomicDateFacet implements InitializableComponent, BaseFacetState {
+  @Element() host!: HTMLElement;
   @InitializeBindings() public bindings!: Bindings;
   private facet!: DateFacet;
 
@@ -35,14 +48,32 @@ export class AtomicDateFacet implements InitializableComponent, BaseFacetState {
 
   @State() public isExpanded = false;
   @Prop({mutable: true, reflect: true}) public facetId = '';
+  /**
+   * Specifies the index field whose values the facet should use
+   */
   @Prop() public field = '';
+  /**
+   * The displayed label for the facet
+   */
   @Prop() public label = 'No label';
+  /**
+   * Whether or not the index should automatically generate options for the facet
+   */
+  @Prop() public generateAutomaticRanges = true;
+
+  public buildOptions() {
+    const options = Array.from(this.host.querySelectorAll('atomic-date-range'));
+    return options.map(({start, end, endInclusive}) =>
+      buildDateRange({start, end, endInclusive})
+    );
+  }
 
   public initialize() {
     const options: DateFacetOptions = {
       facetId: this.facetId,
       field: this.field,
-      generateAutomaticRanges: true,
+      generateAutomaticRanges: this.generateAutomaticRanges,
+      currentValues: this.buildOptions(),
     };
 
     this.facet = buildDateFacet(this.bindings.engine, {options});

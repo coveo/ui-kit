@@ -16,6 +16,7 @@ import {
   SortCriteriaParam,
   VisitorIDParam,
   DebugParam,
+  LocaleParam,
 } from '../search-api-params';
 
 export type SearchRequest = BaseParam &
@@ -34,4 +35,5 @@ export type SearchRequest = BaseParam &
   SearchHubParam &
   FacetOptionsParam &
   VisitorIDParam &
-  DebugParam;
+  DebugParam &
+  LocaleParam;

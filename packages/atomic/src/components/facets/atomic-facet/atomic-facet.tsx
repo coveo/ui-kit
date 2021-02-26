@@ -5,6 +5,7 @@ import {
   FacetState,
   FacetOptions,
   FacetValue,
+  FacetSortCriterion,
 } from '@coveo/headless';
 import {
   Bindings,
@@ -26,6 +27,18 @@ import {
   FacetSearchState,
 } from '../facet-search/facet-search';
 
+/**
+ * A facet component. It is displayed as a facet in desktop browsers and as
+ * a button which opens a facet modal in mobile browsers.
+ *
+ * @part facet - The wrapping div for the entire facet
+ * @part facet-values - The list of facet values
+ * @part facet-value - A single facet value
+ * @part close-button - The button to close the facet when displayed modally (mobile only)
+ * @part reset-button - The button that resets the actively selected facet values
+ * @part show-more - The show more results button
+ * @part show-less - The show less button
+ */
 @Component({
   tag: 'atomic-facet',
   styleUrl: 'atomic-facet.pcss',
@@ -35,10 +48,7 @@ export class AtomicFacet
   implements InitializableComponent, FacetSearchState, BaseFacetState {
   @InitializeBindings() public bindings!: Bindings;
   public facet!: Facet;
-  private facetSearchProps = {
-    controller: new FacetSearchController(this),
-  };
-  private facetSearch!: FacetSearch;
+  private facetSearch?: FacetSearch;
   @BindStateToController('facet', {subscribeOnConnectedCallback: true})
   @State()
   public facetState!: FacetState;
@@ -48,28 +58,59 @@ export class AtomicFacet
   @State()
   public strings: I18nState = {
     clear: () => this.bindings.i18n.t('clear'),
-    search: () => this.bindings.i18n.t('search'),
-    searchBox: () => this.bindings.i18n.t('searchBox'),
+    searchBox: () => this.bindings.i18n.t('search'),
+    placeholder: () => this.bindings.i18n.t('search'),
     querySuggestionList: () => this.bindings.i18n.t('querySuggestionList'),
+    showMore: () => this.bindings.i18n.t('showMore'),
+    showLess: () => this.bindings.i18n.t('showLess'),
   };
 
   @State() public isExpanded = false;
   @State() public facetSearchQuery = '';
   @State() public showFacetSearchResults = false;
 
-  @Prop({mutable: true, reflect: true}) public facetId = '';
+  /**
+   * The field whose values you want to display in the facet.
+   */
   @Prop() public field = '';
+  /**
+   * The displayed label for the facet.
+   */
   @Prop() public label = 'No label';
+  /**
+   * The character that separates values of a multi-value field.
+   */
+  @Prop() public delimitingCharacter = ';';
+  /**
+   * The number of values to request for this facet. Also determines the number of additional values to request each time this facet is expanded, and the number of values to display when this facet is collapsed.
+   */
+  @Prop() public numberOfValues = 10;
+  /**
+   * Whether this facet should contain a search box.
+   */
+  @Prop() public enableFacetSearch = true;
+  /**
+   * The sort criterion to apply to the returned facet values. Possible values are 'score', 'numeric', 'occurrences', and 'automatic'.
+   */
+  @Prop() public sortCriteria: FacetSortCriterion = 'automatic';
 
   public initialize() {
-    const options: FacetOptions = {facetId: this.facetId, field: this.field};
+    const options: FacetOptions = {
+      field: this.field,
+      delimitingCharacter: this.delimitingCharacter,
+      numberOfValues: this.numberOfValues,
+      sortCriteria: this.sortCriteria,
+    };
     this.facet = buildFacet(this.bindings.engine, {options});
-    this.facetId = this.facet.state.facetId;
-    this.facetSearch = new FacetSearch(this.facetSearchProps);
+    if (this.enableFacetSearch) {
+      this.facetSearch = new FacetSearch({
+        controller: new FacetSearchController(this),
+      });
+    }
   }
 
-  componentDidRender() {
-    this.facetSearch.updateCombobox();
+  public componentDidRender() {
+    this.facetSearch?.updateCombobox();
   }
 
   private get values() {
@@ -98,7 +139,13 @@ export class AtomicFacet
     }
 
     return (
-      <button onClick={() => this.facet.showMoreValues()}>show more</button>
+      <button
+        class="text-primary"
+        part="show-more"
+        onClick={() => this.facet.showMoreValues()}
+      >
+        {this.strings.showMore()}
+      </button>
     );
   }
 
@@ -108,7 +155,13 @@ export class AtomicFacet
     }
 
     return (
-      <button onClick={() => this.facet.showLessValues()}>show less</button>
+      <button
+        class="text-primary"
+        part="show-less"
+        onClick={() => this.facet.showLessValues()}
+      >
+        {this.strings.showLess()}
+      </button>
     );
   }
 
@@ -121,11 +174,11 @@ export class AtomicFacet
         deselectAll={() => this.facet.deselectAll()}
       >
         <div>
-          {this.facetSearch.render()}
+          {this.facetSearch?.render()}
           <ul class="list-none p-0">{this.values}</ul>
-          <div>
-            {this.showMoreButton}
+          <div class="flex flex-col items-start space-y-1">
             {this.showLessButton}
+            {this.showMoreButton}
           </div>
         </div>
       </BaseFacet>

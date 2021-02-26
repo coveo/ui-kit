@@ -2,6 +2,7 @@ import {
   ActionsHistoryParam,
   BaseParam,
   ContextParam,
+  LocaleParam,
   MachineLearningParam,
   NumberOfResultsParam,
   RecommendationParam,
@@ -16,4 +17,5 @@ export type ProductRecommendationsRequest = BaseParam &
   ContextParam &
   SearchHubParam &
   ActionsHistoryParam &
-  VisitorIDParam;
+  VisitorIDParam &
+  LocaleParam;

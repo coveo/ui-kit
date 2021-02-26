@@ -12,6 +12,7 @@ import {
 import {BaseFacetSearchResult} from '@coveo/headless/dist/api/search/facet-search/base/base-facet-search-response';
 import {randomID} from '../../../utils/utils';
 import {CategoryFacetSearchResult} from '@coveo/headless/dist/api/search/facet-search/category-facet-search/category-facet-search-response';
+import SearchIcon from 'coveo-styleguide/resources/icons/svg/search.svg';
 
 export interface FacetSearchState {
   strings: I18nState;
@@ -32,6 +33,10 @@ export class FacetSearchController {
     return this.state.facetState.facetSearch;
   }
 
+  public get strings() {
+    return this.state.strings;
+  }
+
   public set text(text: string) {
     this.state.facetSearchQuery = text;
     this.facetSearch.updateText(text);
@@ -41,7 +46,6 @@ export class FacetSearchController {
 
 export type FacetSearchProps = {
   controller: FacetSearchController;
-  placeholder?: string;
 };
 
 export class FacetSearch {
@@ -63,10 +67,8 @@ export class FacetSearch {
       onSubmit: () => props.controller.facetSearch.search(),
       onSelectValue: (element) => {
         const index = (element as HTMLLIElement).value;
-        this.props.controller.facetSearch.select(
-          this.props.controller.facetSearchState.values[
-            index
-          ] as CategoryFacetSearchResult
+        this.onSelectValue(
+          this.props.controller.facetSearchState.values[index]
         );
       },
       onBlur: () => {
@@ -77,8 +79,22 @@ export class FacetSearch {
     });
   }
 
+  private onSelectValue(value: BaseFacetSearchResult) {
+    this.props.controller.facetSearch.select(
+      value as CategoryFacetSearchResult
+    );
+    this.combobox.onInputBlur();
+  }
+
   public updateCombobox() {
     this.combobox.updateAccessibilityAttributes();
+  }
+
+  private onFocus() {
+    this.props.controller.state.showFacetSearchResults = true;
+    if (this.props.controller.facetSearchState.values.length === 0) {
+      this.props.controller.facetSearch.search();
+    }
   }
 
   private get clearButton() {
@@ -108,16 +124,16 @@ export class FacetSearch {
       <input
         part="search-input"
         ref={(el) => (this.inputRef = el as HTMLInputElement)}
-        onFocus={() => {
-          this.props.controller.state.showFacetSearchResults = true;
-        }}
+        onFocus={() => this.onFocus()}
         onBlur={() => this.combobox.onInputBlur()}
         onInput={(e) => this.combobox.onInputChange(e)}
         onKeyUp={(e) => this.combobox.onInputKeyup(e)}
         onKeyDown={(e) => this.combobox.onInputKeydown(e)}
         type="text"
-        class={'search-input flex-grow outline-none focus:outline-none mx-2'}
-        placeholder={this.props.placeholder}
+        class={
+          'search-input placeholder-on-background-variant flex-grow outline-none focus:outline-none mx-2'
+        }
+        placeholder={this.props.controller.strings.placeholder()}
         value={this.props.controller.state.facetSearchQuery}
       />
     );
@@ -128,17 +144,13 @@ export class FacetSearch {
       .values as BaseFacetSearchResult[]).map((suggestion, index) => {
       return (
         <li
-          onClick={() =>
-            this.props.controller.facetSearch.select(
-              suggestion as CategoryFacetSearchResult
-            )
-          }
+          onClick={() => this.onSelectValue(suggestion)}
           onMouseDown={(e) => e.preventDefault()}
           part="suggestion"
           class="suggestion cursor-pointer flex flex-row items-center px-2 text-sm"
           value={index}
         >
-          <span class="label font-semibold whitespace-nowrap overflow-ellipsis overflow-hidden">
+          <span class="label whitespace-nowrap overflow-ellipsis overflow-hidden">
             {suggestion.rawValue}
           </span>
           <span class="number-of-values ml-auto text-on-background-variant">
@@ -157,7 +169,8 @@ export class FacetSearch {
     return (
       <button
         class="px-1 text-primary"
-        onClick={() => this.props.controller.state.facet.showMoreValues()}
+        onMouseDown={(e) => e.preventDefault()}
+        onClick={() => this.props.controller.facetSearch.showMoreResults()}
       >
         show more
       </button>
@@ -170,7 +183,7 @@ export class FacetSearch {
       <ul
         part="suggestions"
         class={
-          'suggestions z-10 absolute w-full bg-background border-on-background-variant apply-border-on-background empty:border-none rounded-b border-t-0 ' +
+          'suggestions z-10 absolute w-full bg-background border-divider apply-border-on-background empty:border-none rounded-b border-t-0 ' +
           (showResults ? 'block' : 'hidden')
         }
         ref={(el) => (this.valuesRef = el as HTMLElement)}
@@ -187,7 +200,7 @@ export class FacetSearch {
       this.props.controller.state.showFacetSearchResults;
 
     return (
-      'input-wrapper flex flex-grow items-center border-on-background-variant apply-border-on-background rounded ' +
+      'input-wrapper flex flex-grow items-center border-divider apply-border-on-background rounded ' +
       (hasValues ? 'has-values' : '')
     );
   }
@@ -199,6 +212,10 @@ export class FacetSearch {
           class={this.inputWrapperClasses}
           ref={(el) => (this.containerRef = el as HTMLElement)}
         >
+          <div
+            class={'ml-2 w-3 h-3 text-on-background-variant fill-current'}
+            innerHTML={SearchIcon}
+          />
           {this.input}
           {this.clearButton}
         </div>
