@@ -10,6 +10,8 @@ import {
 import {
   Bindings,
   BindStateToController,
+  BindStateToI18n,
+  I18nState,
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
@@ -46,6 +48,10 @@ export class AtomicDateFacet implements InitializableComponent, BaseFacetState {
   private facetState!: DateFacetState;
   @State() public error!: Error;
 
+  @BindStateToI18n()
+  @State()
+  public strings: I18nState = {};
+
   @State() public isExpanded = false;
   @Prop({mutable: true, reflect: true}) public facetId = '';
   /**
@@ -53,7 +59,7 @@ export class AtomicDateFacet implements InitializableComponent, BaseFacetState {
    */
   @Prop() public field = '';
   /**
-   * The displayed label for the facet
+   * The non-localized label for the facet
    */
   @Prop() public label = 'No label';
   /**
@@ -75,7 +81,7 @@ export class AtomicDateFacet implements InitializableComponent, BaseFacetState {
       generateAutomaticRanges: this.generateAutomaticRanges,
       currentValues: this.buildOptions(),
     };
-
+    this.strings[this.label] = () => this.bindings.i18n.t(this.label);
     this.facet = buildDateFacet(this.bindings.engine, {options});
     this.facetId = this.facet.state.facetId;
   }
@@ -105,7 +111,7 @@ export class AtomicDateFacet implements InitializableComponent, BaseFacetState {
     return (
       <BaseFacet
         controller={new BaseFacetController(this)}
-        label={this.label}
+        label={this.strings[this.label]()}
         hasActiveValues={this.facetState.hasActiveValues}
         deselectAll={() => this.facet.deselectAll()}
       >
