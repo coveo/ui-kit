@@ -239,6 +239,7 @@ export class AtomicSearchBox {
     return (
       <div
         part="input-wrapper"
+        ref={(el) => (this.containerRef = el as HTMLElement)}
         class={`input-wrapper flex flex-grow items-center border border-divider ${roundedClasses}`}
       >
         {this.input}
@@ -251,10 +252,7 @@ export class AtomicSearchBox {
     return (
       <div class="search-box relative w-full box-border flex items-center border-divider">
         {this.leadingSubmitButton && this.submitButton}
-        <div
-          class="combobox flex flex-grow h-full"
-          ref={(el) => (this.containerRef = el as HTMLElement)}
-        >
+        <div class="combobox flex flex-grow h-full">
           {this.renderInputWrapper()}
           {this.suggestionList}
         </div>

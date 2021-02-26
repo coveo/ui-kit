@@ -47,9 +47,6 @@ export class AtomicFacet
   implements InitializableComponent, FacetSearchState, BaseFacetState {
   @InitializeBindings() public bindings!: Bindings;
   public facet!: Facet;
-  private facetSearchProps = {
-    controller: new FacetSearchController(this),
-  };
   private facetSearch!: FacetSearch;
   @BindStateToController('facet', {subscribeOnConnectedCallback: true})
   @State()
@@ -60,7 +57,8 @@ export class AtomicFacet
   @State()
   public strings: I18nState = {
     clear: () => this.bindings.i18n.t('clear'),
-    searchBox: () => this.bindings.i18n.t('facetSearch'),
+    searchBox: () => this.bindings.i18n.t('search'),
+    placeholder: () => this.bindings.i18n.t('search'),
     querySuggestionList: () => this.bindings.i18n.t('querySuggestionList'),
     showMore: () => this.bindings.i18n.t('showMore'),
     showLess: () => this.bindings.i18n.t('showLess'),
@@ -94,7 +92,9 @@ export class AtomicFacet
       numberOfValues: this.numberOfValues,
     };
     this.facet = buildFacet(this.bindings.engine, {options});
-    this.facetSearch = new FacetSearch(this.facetSearchProps);
+    this.facetSearch = new FacetSearch({
+      controller: new FacetSearchController(this),
+    });
   }
 
   componentDidRender() {
@@ -127,7 +127,11 @@ export class AtomicFacet
     }
 
     return (
-      <button part="show-more" onClick={() => this.facet.showMoreValues()}>
+      <button
+        class="text-primary"
+        part="show-more"
+        onClick={() => this.facet.showMoreValues()}
+      >
         {this.strings.showMore()}
       </button>
     );
@@ -139,7 +143,11 @@ export class AtomicFacet
     }
 
     return (
-      <button part="show-less" onClick={() => this.facet.showLessValues()}>
+      <button
+        class="text-primary"
+        part="show-less"
+        onClick={() => this.facet.showLessValues()}
+      >
         {this.strings.showLess()}
       </button>
     );
@@ -156,9 +164,9 @@ export class AtomicFacet
         <div>
           {this.facetSearch.render()}
           <ul class="list-none p-0">{this.values}</ul>
-          <div class="flex space-x-1">
-            {this.showMoreButton}
+          <div class="flex flex-col items-start space-y-1">
             {this.showLessButton}
+            {this.showMoreButton}
           </div>
         </div>
       </BaseFacet>

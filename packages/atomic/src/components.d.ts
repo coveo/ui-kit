@@ -15,9 +15,22 @@ export namespace Components {
         "collapseThreshold": number;
     }
     interface AtomicCategoryFacet {
-        "facetId": string;
+        /**
+          * The character that separates values of a multi-value field
+         */
+        "delimitingCharacter"?: string;
+        /**
+          * Specifies the index field whose values the facet should use
+         */
         "field": string;
+        /**
+          * The displayed label for the facet
+         */
         "label": string;
+        /**
+          * The number of values to request for this facet. Also determines the number of additional values to request each time this facet is expanded, and the number of values to display when this facet is collapsed.
+         */
+        "numberOfValues": number;
     }
     interface AtomicComponentError {
         "element": HTMLElement;
@@ -480,9 +493,22 @@ declare namespace LocalJSX {
         "collapseThreshold"?: number;
     }
     interface AtomicCategoryFacet {
-        "facetId"?: string;
+        /**
+          * The character that separates values of a multi-value field
+         */
+        "delimitingCharacter"?: string;
+        /**
+          * Specifies the index field whose values the facet should use
+         */
         "field"?: string;
+        /**
+          * The displayed label for the facet
+         */
         "label"?: string;
+        /**
+          * The number of values to request for this facet. Also determines the number of additional values to request each time this facet is expanded, and the number of values to display when this facet is collapsed.
+         */
+        "numberOfValues"?: number;
     }
     interface AtomicComponentError {
         "element": HTMLElement;
