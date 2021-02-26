@@ -20,7 +20,6 @@ export default class NumericFacet extends LightningElement {
   constructor() {
     super();
     registerComponentForInit(this);
-    console.log('registered numericFacet');
   }
 
   connectedCallback() {
@@ -28,7 +27,6 @@ export default class NumericFacet extends LightningElement {
       getHeadlessEngine(this).then((engine) => {
         this.initialize(engine);
         setComponentInitialized(this);
-        console.log('initialized numericFacet');
       })
     } catch (error) {
       console.error('Fatal error: unable to initialize component', error);

@@ -14,7 +14,6 @@ export default class ResultsPerPage extends LightningElement {
   constructor() {
     super();
     registerComponentForInit(this);
-    console.log('registered resultsPerPage');
   }
   
   connectedCallback() {
@@ -22,7 +21,6 @@ export default class ResultsPerPage extends LightningElement {
       getHeadlessEngine(this).then((engine) => {
         this.initialize(engine);
         setComponentInitialized(this);
-        console.log('initialized resultsPerPage');
       })
     } catch (error) {
       console.error('Fatal error: unable to initialize component', error);

@@ -20,7 +20,6 @@ export default class DateFacet extends LightningElement {
   constructor() {
     super();
     registerComponentForInit(this);
-    console.log('registered dateFacet');
   }
 
   connectedCallback() {
@@ -28,7 +27,6 @@ export default class DateFacet extends LightningElement {
       getHeadlessEngine(this).then((engine) => {
         this.initialize(engine);
         setComponentInitialized(this);
-        console.log('initialized dateFacet');
       })
     } catch (error) {
       console.error('Fatal error: unable to initialize component', error);

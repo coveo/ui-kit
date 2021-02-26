@@ -18,7 +18,6 @@ export default class Pager extends LightningElement {
   constructor() {
     super();
     registerComponentForInit(this);
-    console.log('registered pager');
   }
 
   connectedCallback() {
@@ -26,7 +25,6 @@ export default class Pager extends LightningElement {
       getHeadlessEngine(this).then((engine) => {
         this.initialize(engine);
         setComponentInitialized(this);
-        console.log('initialized pager');
       })
     } catch (error) {
       console.error('Fatal error: unable to initialize component', error);

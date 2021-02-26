@@ -10,7 +10,9 @@ export default class ResultLink extends LightningElement {
 
   connectedCallback() {
     try {
-      this.initialize(getHeadlessEngine());
+      getHeadlessEngine(this).then((engine) => {
+        this.initialize(engine);
+      })
     } catch (error) {
       console.error('Fatal error: unable to initialize component', error);
     }

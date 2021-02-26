@@ -12,7 +12,6 @@ export default class Summary extends LightningElement {
   constructor() {
     super();
     registerComponentForInit(this);
-    console.log('registered summary');
   }
 
   connectedCallback() {
@@ -20,7 +19,6 @@ export default class Summary extends LightningElement {
       getHeadlessEngine(this).then((engine) => {
         this.initialize(engine);
         setComponentInitialized(this);
-        console.log('initialized summary');
       })
     } catch (error) {
       console.error('Fatal error: unable to initialize component', error);

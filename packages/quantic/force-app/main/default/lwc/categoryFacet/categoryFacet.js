@@ -21,7 +21,6 @@ export default class CategoryFacet extends LightningElement {
   constructor() {
     super();
     registerComponentForInit(this);
-    console.log('registered categoryFacet');
   }
 
   connectedCallback() {
@@ -29,7 +28,6 @@ export default class CategoryFacet extends LightningElement {
       getHeadlessEngine(this).then((engine) => {
         this.initialize(engine);
         setComponentInitialized(this);
-        console.log('initialized categoryFacet');
       })
     } catch (error) {
       console.error('Fatal error: unable to initialize component', error);
