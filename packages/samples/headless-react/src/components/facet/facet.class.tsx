@@ -39,11 +39,6 @@ export class Facet extends Component<FacetProps> {
     this.setState(this.controller.state);
   }
 
-  private onInput(text: string) {
-    this.controller.facetSearch.updateText(text);
-    this.controller.facetSearch.search();
-  }
-
   render() {
     if (!this.state.values.length) {
       return <div>No facet values</div>;

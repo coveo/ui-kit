@@ -3,6 +3,36 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.7.0-alpha.24](https://github.com/coveo/ui-kit/compare/v0.7.0-alpha.23...v0.7.0-alpha.24) (2021-02-26)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [0.7.0-alpha.23](https://github.com/coveo/ui-kit/compare/v0.7.0-alpha.22...v0.7.0-alpha.23) (2021-02-26)
+
+
+### Features
+
+* **atomic:** facet Sort Criterion and Enable Facet Search Prop ([#543](https://github.com/coveo/ui-kit/issues/543)) ([a2c50c3](https://github.com/coveo/ui-kit/commit/a2c50c357144a024a7dca551ada59f4e72c6f9ff))
+
+
+
+
+
+# [0.7.0-alpha.22](https://github.com/coveo/ui-kit/compare/v0.7.0-alpha.21...v0.7.0-alpha.22) (2021-02-26)
+
+
+### Features
+
+* **atomic:** category Facet ([#542](https://github.com/coveo/ui-kit/issues/542)) ([cdd2c01](https://github.com/coveo/ui-kit/commit/cdd2c01c0eb34585c703f03fd6b764723c77b3e0))
+
+
+
+
+
 # [0.7.0-alpha.21](https://github.com/coveo/ui-kit/compare/v0.7.0-alpha.20...v0.7.0-alpha.21) (2021-02-25)
 
 

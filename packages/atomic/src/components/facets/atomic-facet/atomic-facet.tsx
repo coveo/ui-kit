@@ -5,6 +5,7 @@ import {
   FacetState,
   FacetOptions,
   FacetValue,
+  FacetSortCriterion,
 } from '@coveo/headless';
 import {
   Bindings,
@@ -47,10 +48,7 @@ export class AtomicFacet
   implements InitializableComponent, FacetSearchState, BaseFacetState {
   @InitializeBindings() public bindings!: Bindings;
   public facet!: Facet;
-  private facetSearchProps = {
-    controller: new FacetSearchController(this),
-  };
-  private facetSearch!: FacetSearch;
+  private facetSearch?: FacetSearch;
   @BindStateToController('facet', {subscribeOnConnectedCallback: true})
   @State()
   public facetState!: FacetState;
@@ -60,7 +58,8 @@ export class AtomicFacet
   @State()
   public strings: I18nState = {
     clear: () => this.bindings.i18n.t('clear'),
-    searchBox: () => this.bindings.i18n.t('facetSearch'),
+    searchBox: () => this.bindings.i18n.t('search'),
+    placeholder: () => this.bindings.i18n.t('search'),
     querySuggestionList: () => this.bindings.i18n.t('querySuggestionList'),
     showMore: () => this.bindings.i18n.t('showMore'),
     showLess: () => this.bindings.i18n.t('showLess'),
@@ -79,26 +78,39 @@ export class AtomicFacet
    */
   @Prop() public label = 'No label';
   /**
-   * The character that separates values of a multi-value field
+   * The character that separates values of a multi-value field.
    */
-  @Prop() public delimitingCharacter?: string;
+  @Prop() public delimitingCharacter = ';';
   /**
    * The number of values to request for this facet. Also determines the number of additional values to request each time this facet is expanded, and the number of values to display when this facet is collapsed.
    */
   @Prop() public numberOfValues = 10;
+  /**
+   * Whether this facet should contain a search box.
+   */
+  @Prop() public enableFacetSearch = true;
+  /**
+   * The sort criterion to apply to the returned facet values. Possible values are 'score', 'numeric', 'occurrences', and 'automatic'.
+   */
+  @Prop() public sortCriteria: FacetSortCriterion = 'automatic';
 
   public initialize() {
     const options: FacetOptions = {
       field: this.field,
       delimitingCharacter: this.delimitingCharacter,
       numberOfValues: this.numberOfValues,
+      sortCriteria: this.sortCriteria,
     };
     this.facet = buildFacet(this.bindings.engine, {options});
-    this.facetSearch = new FacetSearch(this.facetSearchProps);
+    if (this.enableFacetSearch) {
+      this.facetSearch = new FacetSearch({
+        controller: new FacetSearchController(this),
+      });
+    }
   }
 
-  componentDidRender() {
-    this.facetSearch.updateCombobox();
+  public componentDidRender() {
+    this.facetSearch?.updateCombobox();
   }
 
   private get values() {
@@ -127,7 +139,11 @@ export class AtomicFacet
     }
 
     return (
-      <button part="show-more" onClick={() => this.facet.showMoreValues()}>
+      <button
+        class="text-primary"
+        part="show-more"
+        onClick={() => this.facet.showMoreValues()}
+      >
         {this.strings.showMore()}
       </button>
     );
@@ -139,7 +155,11 @@ export class AtomicFacet
     }
 
     return (
-      <button part="show-less" onClick={() => this.facet.showLessValues()}>
+      <button
+        class="text-primary"
+        part="show-less"
+        onClick={() => this.facet.showLessValues()}
+      >
         {this.strings.showLess()}
       </button>
     );
@@ -154,11 +174,11 @@ export class AtomicFacet
         deselectAll={() => this.facet.deselectAll()}
       >
         <div>
-          {this.facetSearch.render()}
+          {this.facetSearch?.render()}
           <ul class="list-none p-0">{this.values}</ul>
-          <div class="flex space-x-1">
-            {this.showMoreButton}
+          <div class="flex flex-col items-start space-y-1">
             {this.showLessButton}
+            {this.showMoreButton}
           </div>
         </div>
       </BaseFacet>

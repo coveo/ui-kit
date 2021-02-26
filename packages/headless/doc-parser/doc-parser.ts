@@ -62,6 +62,39 @@ const controllers: ControllerConfiguration[] = [
       ],
     },
   },
+  {
+    initializer: 'buildRecommendationList',
+    samplePaths: {
+      react_class: [
+        'packages/samples/headless-react/src/components/recommendation-list/recommendation-list.class.tsx',
+      ],
+      react_fn: [
+        'packages/samples/headless-react/src/components/recommendation-list/recommendation-list.fn.tsx',
+      ],
+    },
+  },
+  {
+    initializer: 'buildQuerySummary',
+    samplePaths: {
+      react_class: [
+        'packages/samples/headless-react/src/components/query-summary/query-summary.class.tsx',
+      ],
+      react_fn: [
+        'packages/samples/headless-react/src/components/query-summary/query-summary.fn.tsx',
+      ],
+    },
+  },
+  {
+    initializer: 'buildSearchStatus',
+    samplePaths: {
+      react_class: [
+        'packages/samples/headless-react/src/components/search-status/search-status.class.tsx',
+      ],
+      react_fn: [
+        'packages/samples/headless-react/src/components/search-status/search-status.fn.tsx',
+      ],
+    },
+  },
 ];
 
 const result = controllers.map((controller) =>

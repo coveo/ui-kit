@@ -388,4 +388,111 @@ describe('#resolveInterfaceMembers', () => {
     });
     expect(result).toEqual([funcEntity]);
   });
+
+  it(`an interface extends another interface,
+  it resolves the members of both interfaces`, () => {
+    const entry = buildMockEntryPoint();
+
+    const querySummaryState = buildMockApiInterface({
+      name: 'QuerySummaryState',
+      excerptTokens: [
+        buildContentExcerptToken('interface QuerySummaryState extends '),
+        buildReferenceExcerptToken(
+          'SearchStatusState',
+          '@coveo/headless!~SearchStatusState:interface'
+        ),
+        buildContentExcerptToken(' '),
+      ],
+      extendsTokenRanges: [{startIndex: 1, endIndex: 3}],
+    });
+    const query = buildMockApiPropertySignature({
+      name: 'query',
+      excerptTokens: [
+        buildContentExcerptToken('query: '),
+        buildContentExcerptToken('string'),
+        buildContentExcerptToken(';'),
+      ],
+      propertyTypeTokenRange: {startIndex: 1, endIndex: 2},
+    });
+
+    const searchStatusState = buildMockApiInterface({
+      name: 'SearchStatusState',
+    });
+    const isLoading = buildMockApiPropertySignature({
+      name: 'isLoading',
+      excerptTokens: [
+        buildContentExcerptToken('isLoading: '),
+        buildContentExcerptToken('boolean'),
+        buildContentExcerptToken(';'),
+      ],
+      propertyTypeTokenRange: {startIndex: 1, endIndex: 2},
+    });
+
+    querySummaryState.addMember(query);
+    searchStatusState.addMember(isLoading);
+
+    entry.addMember(querySummaryState);
+    entry.addMember(searchStatusState);
+
+    const result = resolveInterfaceMembers(entry, querySummaryState);
+
+    const queryEntity = buildMockEntity({name: 'query', type: 'string'});
+    const isLoadingEntity = buildMockEntity({
+      name: 'isLoading',
+      type: 'boolean',
+    });
+
+    expect(result).toEqual([queryEntity, isLoadingEntity]);
+  });
+
+  it(`an interface extends another interface,
+  both have a property with the same name,
+  it discards the inherited property`, () => {
+    const entry = buildMockEntryPoint();
+    const pager = buildMockApiInterface({
+      name: 'Pager',
+      excerptTokens: [
+        buildContentExcerptToken('interface Pager extends '),
+        buildReferenceExcerptToken('Controller', ''),
+        buildContentExcerptToken(' '),
+      ],
+      extendsTokenRanges: [{startIndex: 1, endIndex: 3}],
+    });
+
+    const pagerState = buildMockApiPropertySignature({
+      name: 'state',
+      excerptTokens: [
+        buildContentExcerptToken('state: '),
+        buildContentExcerptToken('string'),
+        buildContentExcerptToken(';'),
+      ],
+      propertyTypeTokenRange: {startIndex: 1, endIndex: 2},
+    });
+
+    const controller = buildMockApiInterface({name: 'Controller'});
+
+    const controllerState = buildMockApiPropertySignature({
+      name: 'state',
+      excerptTokens: [
+        buildContentExcerptToken('state: '),
+        buildContentExcerptToken('boolean'),
+        buildContentExcerptToken(';'),
+      ],
+      propertyTypeTokenRange: {startIndex: 1, endIndex: 2},
+    });
+
+    pager.addMember(pagerState);
+    controller.addMember(controllerState);
+
+    entry.addMember(pager);
+    entry.addMember(controller);
+
+    const result = resolveInterfaceMembers(entry, pager);
+    const expected = buildMockEntity({
+      name: 'state',
+      type: 'string',
+    });
+
+    expect(result).toEqual([expected]);
+  });
 });
