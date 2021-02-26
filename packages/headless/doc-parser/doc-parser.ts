@@ -84,6 +84,17 @@ const controllers: ControllerConfiguration[] = [
       ],
     },
   },
+  {
+    initializer: 'buildSearchStatus',
+    samplePaths: {
+      react_class: [
+        'packages/samples/headless-react/src/components/search-status/search-status.class.tsx',
+      ],
+      react_fn: [
+        'packages/samples/headless-react/src/components/search-status/search-status.fn.tsx',
+      ],
+    },
+  },
 ];
 
 const result = controllers.map((controller) =>
