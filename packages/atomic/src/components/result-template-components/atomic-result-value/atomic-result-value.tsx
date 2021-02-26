@@ -12,7 +12,7 @@ import {ResultContext} from '../result-template-decorators';
 export class AtomicResultValue {
   @ResultContext() private result!: Result;
 
-  @Element() host!: HTMLDivElement;
+  @Element() host!: HTMLElement;
 
   /**
    * Which result value should the component render
