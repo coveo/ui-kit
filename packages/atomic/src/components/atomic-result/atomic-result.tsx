@@ -4,7 +4,6 @@ import {bindLogDocumentOpenOnResult} from '../../utils/result-utils';
 
 @Component({
   tag: 'atomic-result',
-  styleUrl: 'atomic-result.pcss',
   shadow: true,
 })
 export class AtomicResult {
@@ -28,6 +27,6 @@ export class AtomicResult {
   }
 
   public render() {
-    return <div innerHTML={this.content} class="utility-test"></div>;
+    return <div innerHTML={this.content}></div>;
   }
 }
