@@ -5,7 +5,7 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { Engine, LogLevel, Result, ResultTemplate, ResultTemplateCondition } from "@coveo/headless";
+import { CategoryFacetSortCriterion, Engine, FacetSortCriterion, LogLevel, Result, ResultTemplate, ResultTemplateCondition } from "@coveo/headless";
 import { Bindings } from "./utils/initialization-utils";
 import { i18n } from "i18next";
 import { InitializationOptions } from "./components/atomic-search-interface/atomic-search-interface";
@@ -18,7 +18,11 @@ export namespace Components {
         /**
           * The character that separates values of a multi-value field
          */
-        "delimitingCharacter"?: string;
+        "delimitingCharacter": string;
+        /**
+          * Whether this facet should contain a search box.
+         */
+        "enableFacetSearch": boolean;
         /**
           * Specifies the index field whose values the facet should use
          */
@@ -31,6 +35,10 @@ export namespace Components {
           * The number of values to request for this facet. Also determines the number of additional values to request each time this facet is expanded, and the number of values to display when this facet is collapsed.
          */
         "numberOfValues": number;
+        /**
+          * The sort criterion to apply to the returned facet values. Possible values are 'alphanumeric', and 'occurrences''.
+         */
+        "sortCriteria": CategoryFacetSortCriterion;
     }
     interface AtomicComponentError {
         "element": HTMLElement;
@@ -69,9 +77,13 @@ export namespace Components {
     }
     interface AtomicFacet {
         /**
-          * The character that separates values of a multi-value field
+          * The character that separates values of a multi-value field.
          */
-        "delimitingCharacter"?: string;
+        "delimitingCharacter": string;
+        /**
+          * Whether this facet should contain a search box.
+         */
+        "enableFacetSearch": boolean;
         /**
           * The field whose values you want to display in the facet.
          */
@@ -84,6 +96,10 @@ export namespace Components {
           * The number of values to request for this facet. Also determines the number of additional values to request each time this facet is expanded, and the number of values to display when this facet is collapsed.
          */
         "numberOfValues": number;
+        /**
+          * The sort criterion to apply to the returned facet values. Possible values are 'score', 'numeric', 'occurrences', and 'automatic'.
+         */
+        "sortCriteria": FacetSortCriterion;
     }
     interface AtomicFacetManager {
     }
@@ -498,6 +514,10 @@ declare namespace LocalJSX {
          */
         "delimitingCharacter"?: string;
         /**
+          * Whether this facet should contain a search box.
+         */
+        "enableFacetSearch"?: boolean;
+        /**
           * Specifies the index field whose values the facet should use
          */
         "field"?: string;
@@ -509,6 +529,10 @@ declare namespace LocalJSX {
           * The number of values to request for this facet. Also determines the number of additional values to request each time this facet is expanded, and the number of values to display when this facet is collapsed.
          */
         "numberOfValues"?: number;
+        /**
+          * The sort criterion to apply to the returned facet values. Possible values are 'alphanumeric', and 'occurrences''.
+         */
+        "sortCriteria"?: CategoryFacetSortCriterion;
     }
     interface AtomicComponentError {
         "element": HTMLElement;
@@ -547,9 +571,13 @@ declare namespace LocalJSX {
     }
     interface AtomicFacet {
         /**
-          * The character that separates values of a multi-value field
+          * The character that separates values of a multi-value field.
          */
         "delimitingCharacter"?: string;
+        /**
+          * Whether this facet should contain a search box.
+         */
+        "enableFacetSearch"?: boolean;
         /**
           * The field whose values you want to display in the facet.
          */
@@ -562,6 +590,10 @@ declare namespace LocalJSX {
           * The number of values to request for this facet. Also determines the number of additional values to request each time this facet is expanded, and the number of values to display when this facet is collapsed.
          */
         "numberOfValues"?: number;
+        /**
+          * The sort criterion to apply to the returned facet values. Possible values are 'score', 'numeric', 'occurrences', and 'automatic'.
+         */
+        "sortCriteria"?: FacetSortCriterion;
     }
     interface AtomicFacetManager {
     }

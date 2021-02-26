@@ -5,6 +5,7 @@ import {
   buildCategoryFacet,
   CategoryFacetOptions,
   CategoryFacetValue,
+  CategoryFacetSortCriterion,
 } from '@coveo/headless';
 import {
   Bindings,
@@ -54,7 +55,7 @@ export class AtomicCategoryFacet
   public facetState!: CategoryFacetState;
   @State() public error!: Error;
 
-  private facetSearch!: FacetSearch;
+  private facetSearch?: FacetSearch;
 
   @BindStateToI18n()
   @State()
@@ -82,21 +83,36 @@ export class AtomicCategoryFacet
   /**
    * The character that separates values of a multi-value field
    */
-  @Prop() public delimitingCharacter?: string;
+  @Prop() public delimitingCharacter = ';';
   /**
    * The number of values to request for this facet. Also determines the number of additional values to request each time this facet is expanded, and the number of values to display when this facet is collapsed.
    */
   @Prop() public numberOfValues = 5;
+  /**
+   * Whether this facet should contain a search box.
+   */
+  @Prop() public enableFacetSearch = false;
+  /**
+   * The sort criterion to apply to the returned facet values. Possible values are 'alphanumeric', and 'occurrences''.
+   */
+  @Prop() public sortCriteria: CategoryFacetSortCriterion = 'occurrences';
 
   public initialize() {
     const options: CategoryFacetOptions = {
       field: this.field,
       delimitingCharacter: this.delimitingCharacter,
+      sortCriteria: this.sortCriteria,
     };
     this.facet = buildCategoryFacet(this.bindings.engine, {options});
-    this.facetSearch = new FacetSearch({
-      controller: new FacetSearchController(this),
-    });
+    if (this.enableFacetSearch) {
+      this.facetSearch = new FacetSearch({
+        controller: new FacetSearchController(this),
+      });
+    }
+  }
+
+  public componentDidRender() {
+    this.facetSearch?.updateCombobox();
   }
 
   private get parents() {
@@ -141,7 +157,7 @@ export class AtomicCategoryFacet
     return (
       <li>
         <button
-          class="w-full flex items-center text-lg lg:text-base py-1 lg:py-0.5"
+          class="w-full flex items-center text-left text-lg lg:text-base py-1 lg:py-0.5"
           onClick={() => this.facet.toggleSelect(item)}
         >
           <span class="my-auto">{item.value}</span>
@@ -211,7 +227,7 @@ export class AtomicCategoryFacet
         hasActiveValues={this.facetState.hasActiveValues}
         deselectAll={() => this.facet.deselectAll()}
       >
-        {this.facetSearch.render()}
+        {this.facetSearch?.render()}
         <div class="mt-1">
           <div>{this.resetButton}</div>
           <ul part="parents" class="list-none p-0">
