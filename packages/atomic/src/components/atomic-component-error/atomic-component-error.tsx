@@ -9,6 +9,10 @@ export class AtomicComponentError {
   @Prop() element!: HTMLElement;
   @Prop() error!: Error;
 
+  connectedCallback() {
+    console.error(this.error, this.element);
+  }
+
   render() {
     return (
       <div>

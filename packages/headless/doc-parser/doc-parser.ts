@@ -42,7 +42,14 @@ const controllers: ControllerConfiguration[] = [
   },
   {
     initializer: 'buildFacetManager',
-    samplePaths: {},
+    samplePaths: {
+      react_class: [
+        'packages/samples/headless-react/src/components/facet-manager/facet-manager.class.tsx',
+      ],
+      react_fn: [
+        'packages/samples/headless-react/src/components/facet-manager/facet-manager.fn.tsx',
+      ],
+    },
   },
 ];
 

@@ -5,9 +5,6 @@ import {
   ResultTemplatesManager,
   buildResultList,
   buildResultTemplatesManager,
-  ResultsPerPage,
-  ResultsPerPageState,
-  buildResultsPerPage,
 } from '@coveo/headless';
 import Mustache from 'mustache';
 import defaultTemplate from '../../templates/default.html';
@@ -20,18 +17,13 @@ import {
 
 /**
  * The `ResultList` component is responsible for displaying query results by applying one or several result templates.
- *
- * @part list-element - The list element
- * @part placeholder - The initialization placeholder wrapper
  */
 @Component({
   tag: 'atomic-result-list',
-  styleUrl: 'atomic-result-list.pcss',
-  shadow: true,
+  shadow: false,
 })
 export class AtomicResultList implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;
-  public resultPerPage!: ResultsPerPage;
   private resultList!: ResultList;
   private resultTemplatesManager!: ResultTemplatesManager<string>;
 
@@ -40,10 +32,9 @@ export class AtomicResultList implements InitializableComponent {
   @BindStateToController('resultList')
   @State()
   private resultListState!: ResultListState;
-  @BindStateToController('resultPerPage')
-  @State()
-  private resultPerPageState!: ResultsPerPageState;
+
   @State() public error!: Error;
+  @State() private templateHasError = false;
 
   /**
    * TODO: KIT-452 Infinite scroll feature
@@ -68,13 +59,12 @@ export class AtomicResultList implements InitializableComponent {
     this.resultList = buildResultList(this.bindings.engine, {
       options: {fieldsToInclude: this.fields},
     });
-    this.resultPerPage = buildResultsPerPage(this.bindings.engine);
     this.registerDefaultResultTemplates();
     this.registerChildrenResultTemplates();
   }
 
   private registerDefaultResultTemplates() {
-    // TODO: get fields & conditions from default templates
+    // TODO: build more default templates
     this.resultTemplatesManager.registerTemplates({
       content: defaultTemplate,
       conditions: [],
@@ -85,25 +75,23 @@ export class AtomicResultList implements InitializableComponent {
     this.host
       .querySelectorAll('atomic-result-template')
       .forEach(async (resultTemplateElement) => {
-        const conditions = await resultTemplateElement.getConditions();
-        const fields = await resultTemplateElement.getFields();
-        this.resultTemplatesManager.registerTemplates({
-          content: resultTemplateElement.innerHTML,
-          conditions,
-          fields,
-          priority: 1,
-        });
+        const template = await resultTemplateElement.getTemplate();
+        if (!template) {
+          this.templateHasError = true;
+          return;
+        }
+        this.resultTemplatesManager.registerTemplates(template);
       });
   }
 
   private get results() {
     return this.resultListState.results.map((result) => (
       <atomic-result
-        key={result.uniqueId}
-        part="list-element"
+        key={result.raw.permanentid}
         result={result}
         engine={this.bindings.engine}
-        innerHTML={Mustache.render(
+        // TODO: decide to get rid of Mustache or not
+        content={Mustache.render(
           this.resultTemplatesManager.selectTemplate(result) || '',
           result
         )}
@@ -125,38 +113,11 @@ export class AtomicResultList implements InitializableComponent {
     }
   }
 
-  private renderPlaceholder() {
-    const results = [];
-    for (let i = 0; i < this.resultPerPageState.numberOfResults; i++) {
-      results.push(
-        <div
-          part="placeholder"
-          class="flex pl-5 pt-5 mb-5 animate-pulse"
-          aria-hidden
-        >
-          <div class="w-16 h-16 bg-divider mr-10"></div>
-          <div class="flex-grow">
-            <div>
-              <div class="flex justify-between mb-5">
-                <div class="h-4 bg-divider w-1/2"></div>
-                <div class="h-3 bg-divider w-1/6"></div>
-              </div>
-              <div class="h-3 bg-divider w-4/6 mb-3"></div>
-              <div class="h-3 bg-divider w-5/6 mb-3"></div>
-              <div class="h-3 bg-divider w-5/12"></div>
-            </div>
-          </div>
-        </div>
-      );
-    }
-    return results;
-  }
-
   public render() {
     if (!this.resultListState.firstSearchExecuted) {
-      return this.renderPlaceholder();
+      return <atomic-result-list-placeholder></atomic-result-list-placeholder>;
     }
 
-    return this.results;
+    return [this.templateHasError && <slot></slot>, this.results];
   }
 }

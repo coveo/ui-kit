@@ -19,37 +19,33 @@ describe('atomic-result-template', () => {
         components: [AtomicResultTemplate],
         html: '<atomic-result-template></atomic-result-template>',
       })
-    ).rejects.toEqual(
-      new Error(
-        'The "atomic-result-template" component has to be the child of an "atomic-result-list" component.'
-      )
-    );
+    ).rejects.toBeTruthy();
   });
 
-  it('should return all used fields', async () => {
-    const page = await newSpecPage({
-      components: [AtomicResultList, AtomicResultTemplate],
-      html: `<atomic-result-list>
-        <atomic-result-template fields-to-include="test1,test2" must-match-test3="bidon" must-not-match-test4="bidon"></atomic-result-template>
-      </atomic-result-list>`,
+  describe('methods', () => {
+    let component: HTMLAtomicResultTemplateElement;
+    beforeEach(async () => {
+      const page = await newSpecPage({
+        components: [AtomicResultList, AtomicResultTemplate],
+        html: `<atomic-result-list>
+          <atomic-result-template must-match-test1="bidon" must-not-match-test2="bidon">
+            <template></template>
+          </atomic-result-template>
+        </atomic-result-list>`,
+      });
+
+      component = page.doc.querySelector('atomic-result-template')!;
     });
 
-    const component = page.doc.querySelector('atomic-result-template')!;
-    const fields = await component.getFields();
-    expect(fields).toEqual(['test1', 'test2', 'test3', 'test4']);
-  });
-
-  it('should return all conditions', async () => {
-    const page = await newSpecPage({
-      components: [AtomicResultList, AtomicResultTemplate],
-      html: `<atomic-result-list>
-        <atomic-result-template must-match-test3="bidon" must-not-match-test4="bidon"></atomic-result-template>
-      </atomic-result-list>`,
+    it('should return template with all used fields', async () => {
+      const template = await component.getTemplate();
+      expect(template!.fields).toEqual(['test1', 'test2']);
     });
 
-    const component = page.doc.querySelector('atomic-result-template')!;
-    component.conditions = [() => true];
-    const conditions = await component.getConditions()!;
-    expect(conditions.length).toBe(3);
+    it('should return template with all conditions', async () => {
+      component.conditions = [() => true];
+      const template = await component.getTemplate()!;
+      expect(template!.conditions.length).toBe(3);
+    });
   });
 });

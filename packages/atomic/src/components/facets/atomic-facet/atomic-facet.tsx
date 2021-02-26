@@ -57,7 +57,8 @@ export class AtomicFacet
   @State()
   public strings: I18nState = {
     clear: () => this.bindings.i18n.t('clear'),
-    searchBox: () => this.bindings.i18n.t('facetSearch'),
+    searchBox: () => this.bindings.i18n.t('search'),
+    placeholder: () => this.bindings.i18n.t('search'),
     querySuggestionList: () => this.bindings.i18n.t('querySuggestionList'),
     showMore: () => this.bindings.i18n.t('showMore'),
     showLess: () => this.bindings.i18n.t('showLess'),

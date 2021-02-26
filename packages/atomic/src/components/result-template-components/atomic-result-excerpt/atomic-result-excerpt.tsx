@@ -1,4 +1,4 @@
-import {Component, h, Host} from '@stencil/core';
+import {Component, h} from '@stencil/core';
 
 /**
  * The ResultExcerpt component renders an excerpt of its associated result and highlights the keywords from the query.
@@ -10,12 +10,10 @@ import {Component, h, Host} from '@stencil/core';
 export class AtomicResultExcerpt {
   render() {
     return (
-      <Host class="block">
-        <atomic-result-value
-          value="excerpt"
-          shouldHighlightWith="excerptHighlights"
-        ></atomic-result-value>
-      </Host>
+      <atomic-result-value
+        value="excerpt"
+        shouldHighlightWith="excerptHighlights"
+      ></atomic-result-value>
     );
   }
 }

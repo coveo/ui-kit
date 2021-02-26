@@ -119,6 +119,9 @@ export class AtomicSearchBox {
 
   private onInputFocus() {
     this.shouldShowSuggestions = true;
+    if (!this.searchBoxState.suggestions.length) {
+      this.searchBox.showSuggestions();
+    }
   }
 
   private get submitButton() {
@@ -126,7 +129,7 @@ export class AtomicSearchBox {
       ? 'rounded-l-lg'
       : 'rounded-r-lg';
 
-    if (this.searchBoxState.suggestions.length) {
+    if (this.searchBoxState.suggestions.length && this.shouldShowSuggestions) {
       roundedClasses += ' rounded-bl-none rounded-br-none';
     }
 
@@ -214,7 +217,7 @@ export class AtomicSearchBox {
       <ul
         part="suggestions"
         class={
-          'suggestions absolute w-full bg-background border-on-background-variant apply-border-on-background empty:border-none rounded-b border-t-0 ' +
+          'suggestions box-border w-full p-0 my-0 flex flex-col bg-background border border-divider border-t-0 rounded-b list-none absolute z-50 empty:border-none ' +
           (this.shouldShowSuggestions ? 'block' : 'hidden')
         }
         ref={(el) => (this.valuesRef = el as HTMLElement)}
@@ -224,37 +227,33 @@ export class AtomicSearchBox {
     );
   }
 
-  private get searchBoxClasses() {
-    const hasValues =
-      this.searchBoxState.suggestions.length > 0 && this.shouldShowSuggestions;
+  private renderInputWrapper() {
+    let roundedClasses = this.leadingSubmitButton
+      ? 'border-l-0 rounded-r-lg'
+      : 'border-r-0 rounded-l-lg';
+
+    if (this.searchBoxState.suggestions.length && this.shouldShowSuggestions) {
+      roundedClasses += ' rounded-bl-none rounded-br-none';
+    }
 
     return (
-      'search-box relative w-full lg:w-80 box-border flex items-center border-divider ' +
-      (hasValues ? 'has-values' : '')
-    );
-  }
-
-  private get inputWrapperClasses() {
-    return (
-      'input-wrapper flex flex-grow items-center h-full border-on-background-variant apply-border-on-background  ' +
-      (this.leadingSubmitButton
-        ? 'rounded-r-lg border-l-0'
-        : 'rounded-l-lg border-r-0')
+      <div
+        part="input-wrapper"
+        ref={(el) => (this.containerRef = el as HTMLElement)}
+        class={`input-wrapper flex flex-grow items-center border border-divider ${roundedClasses}`}
+      >
+        {this.input}
+        {this.clearButton}
+      </div>
     );
   }
 
   public render() {
     return (
-      <div class={this.searchBoxClasses}>
+      <div class="search-box relative w-full box-border flex items-center border-divider">
         {this.leadingSubmitButton && this.submitButton}
         <div class="combobox flex flex-grow h-full">
-          <div
-            class={this.inputWrapperClasses}
-            ref={(el) => (this.containerRef = el as HTMLElement)}
-          >
-            {this.input}
-            {this.clearButton}
-          </div>
+          {this.renderInputWrapper()}
           {this.suggestionList}
         </div>
         {!this.leadingSubmitButton && this.submitButton}

@@ -29,7 +29,6 @@ export class Facet extends Component<FacetProps> {
 
   componentDidMount() {
     this.unsubscribe = this.controller.subscribe(() => this.updateState());
-    this.controller.showMoreValues();
   }
 
   componentWillUnmount() {

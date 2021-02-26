@@ -1,6 +1,39 @@
-<div class="pl-4 pt-4 pb-4 border-b border-divider text-on-background flex">
-  <div class="mr-3">
-    <!-- TODO: add atomic-svg component with svgs -->
+<style>
+  :host {
+    /* TODO: make default atomic CSS variables available */
+    font-family: var(--atomic-font-family, Lato, Arial, Helvetica, sans-serif);
+    border-top: 1px solid var(--atomic-divider, #bcc3ca);
+    display: block;
+    padding: 15px;
+  }
+
+  a {
+    color: var(--atomic-primary, #1372ec);
+    text-decoration: none;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+
+  .template-container {
+    display: flex;
+  }
+
+  .content-container {
+    display: grid;
+    margin-left: 15px;
+    gap: 15px;
+  }
+
+  .fields-container {
+    display: flex;
+    justify-content: space-between;
+  }
+</style>
+<div class="template-container">
+  <!-- TODO: add atomic-svg component with svgs -->
+  <div>
     <svg
       xmlns="http://www.w3.org/2000/svg"
       aria-label="custom"
@@ -24,43 +57,45 @@
       ></path>
     </svg>
   </div>
-  <div>
-    <atomic-result-link class="mb-2"></atomic-result-link>
+
+  <div class="content-container">
+    <atomic-result-link></atomic-result-link>
 
     <!-- TODO: add "date type" for atomic-result-value -->
 
-    <atomic-result-excerpt class="mb-2"></atomic-result-excerpt>
+    <atomic-result-excerpt></atomic-result-excerpt>
 
-    <div class="flex justify-start mb-2">
-      <atomic-field-condition if-defined="author" class="mr-5 flex">
-        <b class="mr-2">
+    <div class="fields-container">
+      <atomic-field-condition if-defined="author">
+        <b>
           <atomic-text value="author"></atomic-text>
         </b>
         <atomic-result-value value="author"></atomic-result-value>
       </atomic-field-condition>
 
-      <atomic-field-condition if-defined="source" class="mr-5 flex">
-        <b class="mr-2">
+      <atomic-field-condition if-defined="source">
+        <b>
           <atomic-text value="source"></atomic-text>
         </b>
         <atomic-result-value value="source"></atomic-result-value>
       </atomic-field-condition>
 
-      <atomic-field-condition if-defined="language" class="mr-5 flex">
-        <b class="mr-2">
+      <atomic-field-condition if-defined="language">
+        <b>
           <atomic-text value="language"></atomic-text>
         </b>
         <atomic-result-value value="language"></atomic-result-value>
       </atomic-field-condition>
 
-      <atomic-field-condition if-defined="filetype" class="mr-5 flex">
-        <b class="mr-2">
+      <atomic-field-condition if-defined="filetype">
+        <b>
           <atomic-text value="type"></atomic-text>
         </b>
         <atomic-result-value value="filetype"></atomic-result-value>
       </atomic-field-condition>
     </div>
 
-    <atomic-result-uri></atomic-result-uri>
+    <!-- TODO: improve and rename to atomic-printable-uri -->
+    <!-- <atomic-result-uri></atomic-result-uri> -->
   </div>
 </div>
