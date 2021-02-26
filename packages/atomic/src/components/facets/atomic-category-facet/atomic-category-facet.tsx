@@ -157,7 +157,7 @@ export class AtomicCategoryFacet
     return (
       <li>
         <button
-          class="w-full flex items-center text-lg lg:text-base py-1 lg:py-0.5"
+          class="w-full flex items-center text-left text-lg lg:text-base py-1 lg:py-0.5"
           onClick={() => this.facet.toggleSelect(item)}
         >
           <span class="my-auto">{item.value}</span>
