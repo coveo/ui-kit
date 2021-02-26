@@ -3,6 +3,33 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.7.0-alpha.22](https://github.com/coveo/ui-kit/compare/v0.7.0-alpha.21...v0.7.0-alpha.22) (2021-02-26)
+
+
+### Features
+
+* **atomic:** category Facet ([#542](https://github.com/coveo/ui-kit/issues/542)) ([cdd2c01](https://github.com/coveo/ui-kit/commit/cdd2c01c0eb34585c703f03fd6b764723c77b3e0))
+
+
+
+
+
+# [0.7.0-alpha.21](https://github.com/coveo/ui-kit/compare/v0.7.0-alpha.20...v0.7.0-alpha.21) (2021-02-25)
+
+
+### Bug Fixes
+
+* **atomic:** fix search box styles ([#546](https://github.com/coveo/ui-kit/issues/546)) ([13a85aa](https://github.com/coveo/ui-kit/commit/13a85aaad37d737f0a7d9b8e3fc9e0533742436b))
+
+
+### Features
+
+* **atomic:** improve styling solution for page layout & templates ([#538](https://github.com/coveo/ui-kit/issues/538)) ([afb53b4](https://github.com/coveo/ui-kit/commit/afb53b426d217e8a10a44b20ab5d090a7c350b9c))
+
+
+
+
+
 # [0.7.0-alpha.20](https://github.com/coveo/ui-kit/compare/v0.7.0-alpha.19...v0.7.0-alpha.20) (2021-02-24)
 
 **Note:** Version bump only for package @coveo/atomic

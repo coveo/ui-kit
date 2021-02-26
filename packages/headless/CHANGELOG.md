@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.7.0-alpha.22](https://github.com/coveo/ui-kit/compare/v0.7.0-alpha.21...v0.7.0-alpha.22) (2021-02-26)
+
+
+### Features
+
+* **atomic:** category Facet ([#542](https://github.com/coveo/ui-kit/issues/542)) ([cdd2c01](https://github.com/coveo/ui-kit/commit/cdd2c01c0eb34585c703f03fd6b764723c77b3e0))
+
+
+
+
+
+# [0.7.0-alpha.21](https://github.com/coveo/ui-kit/compare/v0.7.0-alpha.20...v0.7.0-alpha.21) (2021-02-25)
+
+
+### Features
+
+* **headless:** made facet manager's sort results include every payload ([#548](https://github.com/coveo/ui-kit/issues/548)) ([3bdb34d](https://github.com/coveo/ui-kit/commit/3bdb34da9f1c6f6c6fd972c8f10629e118564f44))
+
+
+
+
+
 # [0.7.0-alpha.20](https://github.com/coveo/ui-kit/compare/v0.7.0-alpha.19...v0.7.0-alpha.20) (2021-02-24)
 
 **Note:** Version bump only for package @coveo/headless
