@@ -1,5 +1,6 @@
 import {
   ApiEntryPoint,
+  ApiIndexSignature,
   ApiInterface,
   ApiItem,
   ApiItemKind,
@@ -50,6 +51,10 @@ function resolveMembers(entry: ApiEntryPoint, apiInterface: ApiInterface) {
 
     if (isMethodSignature(m)) {
       return resolveMethodSignature(entry, m);
+    }
+
+    if (isIndexSignature(m)) {
+      return resolveIndexSignature(m);
     }
 
     throw new Error(`Unsupported member: ${m.displayName}`);
@@ -139,6 +144,26 @@ function buildEntityFromPropertyAndResolveTypeAlias(
   const type = typeAlias.typeExcerpt.text;
 
   return {...entity, type};
+}
+
+function isIndexSignature(m: ApiItem): m is ApiIndexSignature {
+  return m.kind === ApiItemKind.IndexSignature;
+}
+
+function resolveIndexSignature(m: ApiIndexSignature) {
+  const params = m.parameters
+    .map((p) => `${p.name}: ${p.parameterTypeExcerpt.text}`)
+    .join(',');
+
+  const name = `[${params}]`;
+  const type = m.returnTypeExcerpt.text;
+
+  return buildEntity({
+    name,
+    type,
+    isOptional: false,
+    comment: (m.tsdocComment as unknown) as DocComment,
+  });
 }
 
 function isMethodSignature(m: ApiItem): m is ApiMethodSignature {

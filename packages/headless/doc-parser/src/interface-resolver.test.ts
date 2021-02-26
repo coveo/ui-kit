@@ -1,4 +1,5 @@
 import {buildMockApiDocComment} from '../mocks/mock-api-doc-comment';
+import {buildMockApiIndexSignature} from '../mocks/mock-api-index-signature';
 import {buildMockApiInterface} from '../mocks/mock-api-interface';
 import {buildMockApiMethodSignature} from '../mocks/mock-api-method-signature';
 import {buildMockApiPropertySignature} from '../mocks/mock-api-property-signature';
@@ -119,6 +120,38 @@ describe('#resolveInterfaceMembers', () => {
     });
 
     expect(result).toEqual([expected]);
+  });
+
+  it('resolves an index signature', () => {
+    const entry = buildMockEntryPoint();
+    const resultInterface = buildMockApiInterface({name: 'Result'});
+    const indexer = buildMockApiIndexSignature({
+      excerptTokens: [
+        buildContentExcerptToken('[key: '),
+        buildContentExcerptToken('string'),
+        buildContentExcerptToken(']: '),
+        buildContentExcerptToken('unknown'),
+        buildContentExcerptToken(';'),
+      ],
+      returnTypeTokenRange: {startIndex: 3, endIndex: 4},
+      parameters: [
+        {
+          parameterName: 'key',
+          parameterTypeTokenRange: {startIndex: 1, endIndex: 2},
+        },
+      ],
+    });
+
+    resultInterface.addMember(indexer);
+    entry.addMember(resultInterface);
+
+    const result = resolveInterfaceMembers(entry, resultInterface);
+    const entity = buildMockEntity({
+      name: '[key: string]',
+      type: 'unknown',
+    });
+
+    expect(result).toEqual([entity]);
   });
 
   it('resolves a method with primitive return type', () => {
