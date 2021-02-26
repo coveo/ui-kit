@@ -115,16 +115,21 @@ export const partialDocumentInformation = (
     state.search?.response.results.findIndex(
       ({uniqueId}) => result.uniqueId === uniqueId
     ) || 0;
+
+  const collection = result.raw.collection;
+  const collectionName =
+    typeof collection === 'string' ? collection : 'default';
+
   return {
-    collectionName: result.raw['collection'] || 'default',
+    collectionName,
     documentAuthor: getDocumentAuthor(result),
     documentPosition: resultIndex + 1,
     documentTitle: result.title,
     documentUri: result.uri,
-    documentUriHash: result.raw['urihash'],
+    documentUriHash: result.raw.urihash,
     documentUrl: result.clickUri,
     rankingModifier: result.rankingModifier || '',
-    sourceName: result.raw['source'],
+    sourceName: result.raw.sourcetype,
     queryPipeline: state.pipeline || getPipelineInitialState(),
   };
 };
@@ -142,9 +147,8 @@ const requiredNonEmptyString = new StringValue({
 });
 
 const rawPartialDefinition = {
-  collection: new StringValue(),
   urihash: new StringValue(),
-  source: new StringValue(),
+  sourcetype: new StringValue(),
   permanentid: new StringValue(),
 };
 
