@@ -33,8 +33,8 @@
     "fr": "Rechercher des valeurs dans la facette {{label}}"
   },
   "facetValue": {
-    "en": "Inclusion filter on {0}; {1}",
-    "fr": "Filtre d'inclusion sur {0}; {1}"
+    "en": "Inclusion filter on {{value}}; {{numberOfResults}} results",
+    "fr": "Filtre d'inclusion sur {{value}}; {{numberOfResults}} résultats"
   },
   "querySuggestionList": {
     "en": "Search suggestions. Select one to search.",

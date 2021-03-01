@@ -67,6 +67,7 @@ export class AtomicCategoryFacet
     querySuggestionList: () => this.bindings.i18n.t('querySuggestionList'),
     showMore: () => this.bindings.i18n.t('showMore'),
     showLess: () => this.bindings.i18n.t('showLess'),
+    facetValue: (variables) => this.bindings.i18n.t('facetValue', variables),
   };
 
   @State() public isExpanded = false;
@@ -157,7 +158,7 @@ export class AtomicCategoryFacet
 
   private buildValue(item: CategoryFacetValue) {
     return (
-      <li>
+      <li aria-label={this.strings.facetValue(item)}>
         <button
           class="w-full flex items-center text-left text-lg lg:text-base py-1 lg:py-0.5"
           onClick={() => this.facet.toggleSelect(item)}

@@ -9,7 +9,9 @@ import {
 } from '@coveo/headless';
 import {
   Bindings,
-  BindStateToController, BindStateToI18n, I18nState,
+  BindStateToController,
+  BindStateToI18n,
+  I18nState,
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
@@ -49,7 +51,9 @@ export class AtomicNumericFacet
 
   @BindStateToI18n()
   @State()
-  public strings: I18nState = {};
+  public strings: I18nState = {
+    facetValue: (variables) => this.bindings.i18n.t('facetValue', variables),
+  };
 
   @State() public isExpanded = false;
   @Prop({mutable: true}) public facetId = '';
@@ -104,6 +108,7 @@ export class AtomicNumericFacet
         facetValueSelected={() => {
           this.facet.toggleSelect(item);
         }}
+        ariaLabel={this.strings.facetValue(item)}
       />
     );
   }

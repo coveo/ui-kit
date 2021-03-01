@@ -58,12 +58,13 @@ export class AtomicFacet
   @State()
   public strings: I18nState = {
     clear: () => this.bindings.i18n.t('clear'),
-    searchBox: (variables) => this.bindings.i18n.t('facetSearch', variables),
+    searchBox: () =>
+      this.bindings.i18n.t('facetSearch', {label: this.strings[this.label]()}),
     placeholder: () => this.bindings.i18n.t('search'),
     querySuggestionList: () => this.bindings.i18n.t('querySuggestionList'),
     showMore: () => this.bindings.i18n.t('showMore'),
     showLess: () => this.bindings.i18n.t('showLess'),
-    facetValue: (variables) => this.bindings.i18n.t('facetValue', variables)
+    facetValue: (variables) => this.bindings.i18n.t('facetValue', variables),
   };
 
   @State() public isExpanded = false;
@@ -126,7 +127,7 @@ export class AtomicFacet
     return (
       <FacetValueComponent
         label={`${item.value}`}
-        ariaLabel={this.strings.}
+        ariaLabel={this.strings.facetValue(item)}
         isSelected={isSelected}
         numberOfResults={item.numberOfResults}
         facetValueSelected={() => {
