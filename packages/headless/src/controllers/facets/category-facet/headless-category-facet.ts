@@ -61,7 +61,7 @@ export interface CategoryFacet extends Controller {
   /**
    * Toggles the specified facet value.
    *
-   * @param selection The facet value to toggle.
+   * @param selection - The facet value to toggle.
    */
   toggleSelect(selection: CategoryFacetValue): void;
 
