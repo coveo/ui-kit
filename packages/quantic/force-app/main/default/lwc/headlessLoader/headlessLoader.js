@@ -48,8 +48,24 @@ const executeInitialSearch = debounce(() => {
 /**
  * Returns true if registered components are initialized, false otherwise.
  */
-const getAreComponentsReady = () => {
-  return !window.coveoHeadless.components.find(component => component.initialized === false)
+const getAreComponentsReady = () => !window.coveoHeadless.components.find(component => component.initialized === false);
+
+/**
+ * Loads dependencies and returns an initialized Headless engine. 
+ * @param element 
+ */
+async function initEngine(element) {
+  await loadScript(element, HeadlessPath + '/browser/headless.js');
+  await loadScript(element, AtomicPath + '/atomic-utils.js');
+
+  const config = CoveoHeadless.HeadlessEngine.getSampleConfiguration();
+
+  const engine = new CoveoHeadless.HeadlessEngine({
+    configuration: config,
+    reducers: CoveoHeadless.searchAppReducers,
+  });
+
+  return engine;
 }
 
 /**
@@ -78,7 +94,7 @@ function registerComponentForInit(element) {
  * @param element 
  */
 function setComponentInitialized(element) {
-  const component = window.coveoHeadless.components.find((comp) => comp.element === element);
+  const component = window.coveoHeadless ? window.coveoHeadless.components.find((comp) => comp.element === element) : undefined;
   if (!component) {
     console.log('Fatal Error: Component was not registered before initialization.');
     return;
@@ -98,7 +114,7 @@ function getHeadlessEngine(element) {
     try {
       window.coveoHeadless.engine = initEngine(element);
       window.coveoHeadless.engine.then((engine) => {
-        window.coveoHeadless.engine = engine
+        window.coveoHeadless.engine = engine;
       })
     } catch (error) {
       console.error('Fatal error: unable to initialize Coveo Headless', error);
@@ -107,27 +123,9 @@ function getHeadlessEngine(element) {
   return Promise.resolve(window.coveoHeadless.engine);
 }
 
-/**
- * Loads dependencies and returns an initialized Headless engine. 
- * @param element 
- */
-async function initEngine(element) {
-  await loadScript(element, HeadlessPath + '/browser/headless.js');
-  await loadScript(element, AtomicPath + '/atomic-utils.js');
-
-  const config = CoveoHeadless.HeadlessEngine.getSampleConfiguration();
-
-  const engine = new CoveoHeadless.HeadlessEngine({
-    configuration: config,
-    reducers: CoveoHeadless.searchAppReducers,
-  });
-
-  return engine;
-}
-
 export {
-  getHeadlessEngine,
-  initEngine,
+  executeInitialSearch,
   registerComponentForInit,
   setComponentInitialized,
+  getHeadlessEngine,
 }
