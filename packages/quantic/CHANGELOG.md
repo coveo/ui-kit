@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.7.0-alpha.25](https://bitbucket.org/coveord/ui-kit/compare/v0.7.0-alpha.24...v0.7.0-alpha.25) (2021-03-01)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
 # [0.7.0-alpha.24](https://bitbucket.org/coveord/ui-kit/compare/v0.7.0-alpha.23...v0.7.0-alpha.24) (2021-02-26)
 
 **Note:** Version bump only for package @coveo/quantic
