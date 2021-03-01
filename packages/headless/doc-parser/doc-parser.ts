@@ -95,6 +95,10 @@ const controllers: ControllerConfiguration[] = [
       ],
     },
   },
+  {
+    initializer: 'buildCartRecommendationsList',
+    samplePaths: {},
+  },
 ];
 
 const result = controllers.map((controller) =>

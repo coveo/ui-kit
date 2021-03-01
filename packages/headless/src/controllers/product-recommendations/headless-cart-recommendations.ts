@@ -3,32 +3,84 @@ import {
   ConfigurationSection,
   ProductRecommendationsSection,
 } from '../../state/state-sections';
-import {Schema, SchemaValues} from '@coveo/bueno';
+import {Schema} from '@coveo/bueno';
 import {
   baseProductRecommendationsOptionsSchema,
   buildBaseProductRecommendationsList,
 } from './headless-base-product-recommendations';
 import {validateOptions} from '../../utils/validate-payload';
+import {Controller} from '../controller/headless-controller';
+import {Product} from '../../api/search/search/product';
+import {CartRecommendationsListOptions} from './headless-cart-recommendations-options';
+import {ErrorPayload} from '../controller/error-payload';
+
+export {CartRecommendationsListOptions};
 
 const optionsSchema = new Schema({
   ...baseProductRecommendationsOptionsSchema,
 });
 
-export type CartRecommendationsListOptions = SchemaValues<typeof optionsSchema>;
-
 export interface CartRecommendationsListProps {
   options?: CartRecommendationsListOptions;
 }
 
-export type CartRecommendationsList = ReturnType<
-  typeof buildCartRecommendationsList
->;
-export type CartRecommendationsListState = CartRecommendationsList['state'];
+export interface CartRecommendationsList extends Controller {
+  /**
+   * Gets new recommendations based on the current SKUs.
+   */
+  refresh(): void;
 
-export const buildCartRecommendationsList = (
+  /**
+   * Sets the SKUs in the cart.
+   *
+   * @param skus - The SKUs of products in the cart.
+   */
+  setSkus(skus: string[]): void;
+
+  /**
+   * The state of the `CartRecommendationsList` controller.
+   */
+  state: CartRecommendationsListState;
+}
+
+export interface CartRecommendationsListState {
+  /**
+   * The SKUs of products in the cart.
+   */
+  skus: string[];
+
+  /**
+   * The maximum number of recommendations.
+   */
+  maxNumberOfRecommendations: number;
+
+  /**
+   * The products recommended by the Coveo platform.
+   */
+  recommendations: Product[];
+
+  /**
+   * The error returned by the Coveo platform while executing the cart recommendation request, if any. `null` otherwise.
+   */
+  error: ErrorPayload | null;
+
+  /**
+   * `true` if the cart recommendation request is currently being executed against the Coveo platform, `false` otherwise.
+   */
+  isLoading: boolean;
+}
+
+/**
+ * Creates a `CartRecommendationsList` controller instance.
+ *
+ * @param engine - The headless engine.
+ * @param props - The configurable `CartRecommendationsList` properties.
+ * @returns A `CartRecommendationsList` controller instance.
+ */
+export function buildCartRecommendationsList(
   engine: Engine<ProductRecommendationsSection & ConfigurationSection>,
   props: CartRecommendationsListProps
-) => {
+): CartRecommendationsList {
   const options = validateOptions(
     engine,
     optionsSchema,
@@ -42,4 +94,4 @@ export const buildCartRecommendationsList = (
       id: 'cart',
     },
   });
-};
+}

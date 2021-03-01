@@ -102,20 +102,35 @@ export const getProductRecommendations = createAsyncThunk<
   }
 );
 
-// TODO: Review the mappings here
 const mapResultToProductResult = (result: Result): ProductRecommendation => {
+  const price = (result.raw.ec_price || result.raw.price) as number | undefined;
+  const promoPrice = (result.raw.ec_promo_price || result.raw.promo_price) as
+    | number
+    | undefined;
+  const inStock = (result.raw.ec_in_stock || result.raw.in_stock) as
+    | string
+    | boolean
+    | undefined;
+
   return {
     sku: (result.raw.productid || result.raw.sku) as string,
-    name: (result.raw.ec_name || result.title) as string,
-    thumbnailUrl: (result.raw.ec_image || result.raw.image) as string,
+    name: (result.raw.ec_name as string) || result.title,
+    description: (result.raw.ec_description as string) || result.excerpt,
     link: result.clickUri,
-    price: (result.raw.ec_price || result.raw.price) as number,
-    promoPrice: (result.raw.ec_promo_price || result.raw.promo_price) as number,
+    brand: (result.raw.ec_brand || result.raw.brand) as string,
+    categories: (result.raw.ec_category ||
+      result.raw.ec_categories ||
+      result.raw.categories) as string[],
+    price,
+    shortDescription: result.raw.ec_shortdesc as string,
+    thumbnailUrl: (result.raw.ec_image || result.raw.image) as string,
+    imageUrls: result.raw.ec_images as string[],
+    promoPrice:
+      promoPrice === undefined || promoPrice === price ? undefined : promoPrice,
+    inStock:
+      inStock === undefined ? undefined : inStock === 'yes' || inStock === true,
     rating: (result.raw.ec_rating || result.raw.rating) as number,
     tags: result.raw.tags as string[],
-    brand: (result.raw.ec_brand || result.raw.brand) as string,
-    categories: (result.raw.ec_categories || result.raw.categories) as string[],
-    inStock: (result.raw.ec_in_stock || result.raw.in_stock) as boolean,
   };
 };
 
