@@ -35,9 +35,10 @@ import {SearchAction} from '../../features/analytics/analytics-utils';
 import {
   getHighlightedSuggestion,
   SuggestionHighlightingOptions,
+  Delimiters,
 } from '../../utils/highlight';
 
-export {SearchBoxOptions};
+export {SearchBoxOptions, SuggestionHighlightingOptions, Delimiters};
 
 export interface SearchBoxProps {
   options?: SearchBoxOptions;
@@ -101,7 +102,7 @@ export interface SearchBoxState {
   /**
    * The query suggestions for the search box query.
    */
-  suggestions: SearchBoxSuggestion[];
+  suggestions: Suggestion[];
 
   /**
    * Determines if a search is in progress.
@@ -109,7 +110,7 @@ export interface SearchBoxState {
   isLoading: boolean;
 }
 
-export interface SearchBoxSuggestion {
+export interface Suggestion {
   /**
    * The suggestion after applying any `highlightOptions`.
    */
@@ -122,7 +123,7 @@ export interface SearchBoxSuggestion {
 }
 
 /**
- * Createsa  `SearchBox` controller instance.
+ * Creates a `SearchBox` controller instance.
  *
  * @param engine - The headless engine.
  * @param props - The configurable `SearchBox` properties.
