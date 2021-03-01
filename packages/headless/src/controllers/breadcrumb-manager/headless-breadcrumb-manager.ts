@@ -2,7 +2,6 @@ import {Engine} from '../../app/headless-engine';
 import {buildController} from '../controller/headless-controller';
 import {BaseFacetValue} from '../../features/facets/facet-api/response';
 import {FacetValue} from '../../features/facets/facet-set/interfaces/response';
-import {CategoryFacetValue} from '../../features/facets/category-facet-set/interfaces/response';
 import {NumericFacetValue} from '../../features/facets/range-facets/numeric-facet-set/interfaces/response';
 import {DateFacetValue} from '../../features/facets/range-facets/date-facet-set/interfaces/response';
 import {facetResponseSelectedValuesSelector} from '../../features/facets/facet-set/facet-set-selectors';
@@ -32,6 +31,7 @@ import {deselectAllCategoryFacetValues} from '../../features/facets/category-fac
 import {logCategoryFacetBreadcrumb} from '../../features/facets/category-facet-set/category-facet-set-analytics-actions';
 import {logNumericFacetBreadcrumb} from '../../features/facets/range-facets/numeric-facet-set/numeric-facet-analytics-actions';
 import {logDateFacetBreadcrumb} from '../../features/facets/range-facets/date-facet-set/date-facet-analytics-actions';
+import {CategoryFacetValue} from '../facets/category-facet/headless-category-facet';
 
 /**
  * The `BreadcrumbManager` headless controller manages a summary of the currently active facet filters.

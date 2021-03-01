@@ -15,7 +15,7 @@ import {
   CategoryFacetOptionalParameters,
 } from './interfaces/options';
 import {change} from '../../history/history-actions';
-import {CategoryFacetResponse, CategoryFacetValue} from './interfaces/response';
+import {CategoryFacetResponse} from './interfaces/response';
 import {
   handleFacetDeselectAll,
   handleFacetUpdateNumberOfValues,
@@ -31,6 +31,7 @@ import {selectPath} from './category-facet-reducer-helpers';
 import {executeSearch} from '../../search/search-actions';
 import {partitionIntoParentsAndValues} from './category-facet-utils';
 import {AnyFacetResponse} from '../generic/interfaces/generic-facet-response';
+import {CategoryFacetValue} from '../../../controllers/facets/category-facet/headless-category-facet';
 
 export const categoryFacetSetReducer = createReducer(
   getCategoryFacetSetInitialState(),

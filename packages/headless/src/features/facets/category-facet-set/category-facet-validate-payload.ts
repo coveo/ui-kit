@@ -10,7 +10,7 @@ import {
   validatePayloadAndThrow,
   requiredNonEmptyString,
 } from '../../../utils/validate-payload';
-import {CategoryFacetValue} from './interfaces/response';
+import {CategoryFacetValue} from '../../../controllers/facets/category-facet/headless-category-facet';
 
 export const categoryFacetValueDefinition = {
   state: new Value<FacetValueState>({required: true}),

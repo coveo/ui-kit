@@ -1,4 +1,5 @@
 import {FacetStateMetadata} from 'coveo.analytics/dist/definitions/searchPage/searchPageEvents';
+import {CategoryFacetValue} from '../../../controllers/facets/category-facet/headless-category-facet';
 import {SearchAppState} from '../../../state/search-app-state';
 import {
   CategoryFacetSection,
@@ -10,7 +11,6 @@ import {
 import {getSearchInitialState} from '../../search/search-state';
 import {getCategoryFacetSetInitialState} from '../category-facet-set/category-facet-set-state';
 import {CategoryFacetRequest} from '../category-facet-set/interfaces/request';
-import {CategoryFacetValue} from '../category-facet-set/interfaces/response';
 import {FacetType} from '../facet-api/request';
 import {
   AnyFacetResponse,

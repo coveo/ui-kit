@@ -1,6 +1,5 @@
 import {createAction} from '@reduxjs/toolkit';
 import {CategoryFacetRegistrationOptions} from './interfaces/options';
-import {CategoryFacetValue} from './interfaces/response';
 import {
   deselectAllFacetValues,
   updateFacetNumberOfValues,
@@ -21,6 +20,7 @@ import {
   NumberValue,
 } from '@coveo/bueno';
 import {validateCategoryFacetValue} from './category-facet-validate-payload';
+import {CategoryFacetValue} from '../../../controllers/facets/category-facet/headless-category-facet';
 
 const categoryFacetRegistrationOptionsDefinition = {
   facetId: facetIdDefinition,

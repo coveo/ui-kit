@@ -338,13 +338,15 @@ export function buildCategoryFacet(
       const request = getRequest();
       const response = getResponse();
 
-      const {parents, values} = partitionIntoParentsAndValues(response?.values);
+      const {parents, values} = partitionIntoParentsAndValues(
+        response?.values as CategoryFacetValue[]
+      );
       const isLoading = engine.state.search.isLoading;
       const hasActiveValues = parents.length !== 0;
       const canShowMoreValues =
-        parents.length > 0
+        (parents.length > 0
           ? parents[parents.length - 1].moreValuesAvailable
-          : response?.moreValuesAvailable || false;
+          : response?.moreValuesAvailable) ?? false;
       const canShowLessValues = values.length > options.numberOfValues;
 
       return {
