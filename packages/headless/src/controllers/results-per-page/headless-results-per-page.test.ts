@@ -33,7 +33,7 @@ describe('ResultsPerPage', () => {
 
   it('when the #numberOfResults option is specified to 10, it dispatches a register action with the value', () => {
     const num = 10;
-    props.initialState.numberOfResults = num;
+    props.initialState!.numberOfResults = num;
     initResultsPerPage();
 
     expect(engine.actions).toContainEqual(registerNumberOfResults(num));
@@ -41,7 +41,7 @@ describe('ResultsPerPage', () => {
 
   it('when the #numberOfResults option is specified to 0, it dispatches a register action', () => {
     const num = 0;
-    props.initialState.numberOfResults = num;
+    props.initialState!.numberOfResults = num;
     initResultsPerPage();
 
     expect(engine.actions).toContainEqual(registerNumberOfResults(num));
@@ -56,7 +56,7 @@ describe('ResultsPerPage', () => {
   });
 
   it('when #numberOfResults is set to a string, it throws an error with a context message', () => {
-    props.initialState.numberOfResults = ('1' as unknown) as number;
+    props.initialState!.numberOfResults = ('1' as unknown) as number;
 
     expect(() => initResultsPerPage()).toThrow(
       'Check the initialState of buildResultsPerPage'
