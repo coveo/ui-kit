@@ -22,7 +22,7 @@ export function resolveFunction(
   const returnTypeText = fn.returnTypeExcerpt.text;
   const returnTypeInterface = findApi(entry, returnTypeText) as ApiInterface;
 
-  const returnType = buildObjEntityFromInterface(
+  const returnType = resolveInterface(
     entry,
     returnTypeInterface,
     referencesCount
@@ -48,12 +48,4 @@ function resolveParams(
       ? buildParamEntity(p)
       : resolveParameter(entry, p, referencesCount);
   });
-}
-
-function buildObjEntityFromInterface(
-  entryPoint: ApiEntryPoint,
-  apiInterface: ApiInterface,
-  referencesCount: InterfaceReferencesCount
-) {
-  return resolveInterface(entryPoint, apiInterface, referencesCount);
 }
