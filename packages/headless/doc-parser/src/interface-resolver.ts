@@ -21,12 +21,70 @@ import {
   buildParamEntity,
 } from './entity-builder';
 
-export function resolveInterfaceMembers(
+export type InterfaceReferencesCount = Record<string, number>;
+
+export function resolveInterface(
   entry: ApiEntryPoint,
-  apiInterface: ApiInterface
+  apiInterface: ApiInterface,
+  referencesCount: InterfaceReferencesCount,
+  source?: ApiPropertySignature | Parameter
+) {
+  const typeName = apiInterface.name;
+  if (!referencesCount[typeName]) {
+    referencesCount[typeName] = 1;
+    const members = resolveInterfaceMembers(
+      entry,
+      apiInterface,
+      referencesCount
+    );
+
+    return buildObjEntity({
+      entity: buildEntityFromSource(source ?? apiInterface),
+      members,
+      typeName,
+    });
+  }
+  referencesCount[typeName] += 1;
+
+  const extractedEntity = buildObjEntity({
+    entity: buildEntityFromSource(source ?? apiInterface),
+    members: [],
+    typeName,
+  });
+  extractedEntity.isTypeExtracted = true;
+  return extractedEntity;
+}
+
+function buildEntityFromSource(
+  source: ApiPropertySignature | Parameter | ApiInterface
+) {
+  if (source instanceof ApiPropertySignature) {
+    return buildEntityFromProperty(source);
+  }
+
+  if (source instanceof Parameter) {
+    return buildParamEntity(source);
+  }
+
+  return buildEntity({
+    name: source.name,
+    type: source.name,
+    isOptional: false,
+    comment: (source.tsdocComment as unknown) as DocComment,
+  });
+}
+
+function resolveInterfaceMembers(
+  entry: ApiEntryPoint,
+  apiInterface: ApiInterface,
+  referencesCount: InterfaceReferencesCount
 ): AnyEntity[] {
-  const members = resolveMembers(entry, apiInterface);
-  const inheritedMembers = resolveInheritedMembers(entry, apiInterface);
+  const members = resolveMembers(entry, apiInterface, referencesCount);
+  const inheritedMembers = resolveInheritedMembers(
+    entry,
+    apiInterface,
+    referencesCount
+  );
 
   return filterOverridesAndCombine(members, inheritedMembers);
 }
@@ -42,14 +100,18 @@ function filterOverridesAndCombine(
   return members.concat(filtered);
 }
 
-function resolveMembers(entry: ApiEntryPoint, apiInterface: ApiInterface) {
+function resolveMembers(
+  entry: ApiEntryPoint,
+  apiInterface: ApiInterface,
+  referencesCount: InterfaceReferencesCount
+) {
   return apiInterface.members.map((m) => {
     if (isPropertySignature(m)) {
-      return resolvePropertySignature(entry, m);
+      return resolvePropertySignature(entry, m, referencesCount);
     }
 
     if (isMethodSignature(m)) {
-      return resolveMethodSignature(entry, m);
+      return resolveMethodSignature(entry, m, referencesCount);
     }
 
     throw new Error(`Unsupported member: ${m.displayName}`);
@@ -58,13 +120,18 @@ function resolveMembers(entry: ApiEntryPoint, apiInterface: ApiInterface) {
 
 function resolveInheritedMembers(
   entry: ApiEntryPoint,
-  apiInterface: ApiInterface
+  apiInterface: ApiInterface,
+  referencesCount: InterfaceReferencesCount
 ) {
   return apiInterface.extendsTypes
     .map((m) => {
       const typeName = extractTypeName(m.excerpt);
       const inheritedInterface = findApi(entry, typeName) as ApiInterface;
-      return resolveInterfaceMembers(entry, inheritedInterface);
+      return resolveInterfaceMembers(
+        entry,
+        inheritedInterface,
+        referencesCount
+      );
     })
     .reduce((acc, curr) => acc.concat(curr), []);
 }
@@ -75,7 +142,8 @@ function isPropertySignature(item: ApiItem): item is ApiPropertySignature {
 
 function resolvePropertySignature(
   entry: ApiEntryPoint,
-  p: ApiPropertySignature
+  p: ApiPropertySignature,
+  referencesCount: InterfaceReferencesCount
 ) {
   const typeExcerpt = p.propertyTypeExcerpt.spannedTokens[0];
 
@@ -88,7 +156,7 @@ function resolvePropertySignature(
   }
 
   if (isReference(typeExcerpt)) {
-    return buildObjEntityFromProperty(entry, p);
+    return buildObjEntityFromProperty(entry, p, referencesCount);
   }
 
   return buildEntityFromProperty(p);
@@ -119,14 +187,15 @@ function buildEntityFromProperty(p: ApiPropertySignature) {
 
 function buildObjEntityFromProperty(
   entry: ApiEntryPoint,
-  p: ApiPropertySignature
+  p: ApiPropertySignature,
+  referencesCount: InterfaceReferencesCount
 ) {
-  const typeName = extractTypeName(p.propertyTypeExcerpt);
-  const apiInterface = findApi(entry, typeName) as ApiInterface;
-  const members = resolveInterfaceMembers(entry, apiInterface);
-  const entity = buildEntityFromProperty(p);
-
-  return buildObjEntity({entity, members, typeName});
+  return resolveInterface(
+    entry,
+    findApi(entry, extractTypeName(p.propertyTypeExcerpt)) as ApiInterface,
+    referencesCount,
+    p
+  );
 }
 
 function buildEntityFromPropertyAndResolveTypeAlias(
@@ -145,8 +214,14 @@ function isMethodSignature(m: ApiItem): m is ApiMethodSignature {
   return m.kind === ApiItemKind.MethodSignature;
 }
 
-function resolveMethodSignature(entry: ApiEntryPoint, m: ApiMethodSignature) {
-  const params = m.parameters.map((p) => resolveParameter(entry, p));
+function resolveMethodSignature(
+  entry: ApiEntryPoint,
+  m: ApiMethodSignature,
+  referencesCount: InterfaceReferencesCount
+) {
+  const params = m.parameters.map((p) =>
+    resolveParameter(entry, p, referencesCount)
+  );
   const returnType = m.returnTypeExcerpt.text;
 
   return buildFuncEntity({
@@ -157,7 +232,11 @@ function resolveMethodSignature(entry: ApiEntryPoint, m: ApiMethodSignature) {
   });
 }
 
-export function resolveParameter(entry: ApiEntryPoint, p: Parameter) {
+export function resolveParameter(
+  entry: ApiEntryPoint,
+  p: Parameter,
+  referencesCount: InterfaceReferencesCount
+) {
   const typeExcerpt = p.parameterTypeExcerpt.spannedTokens[0];
 
   if (isTypeAlias(typeExcerpt)) {
@@ -165,7 +244,7 @@ export function resolveParameter(entry: ApiEntryPoint, p: Parameter) {
   }
 
   if (isReference(typeExcerpt)) {
-    return buildObjEntityFromParam(entry, p);
+    return buildObjEntityFromParam(entry, p, referencesCount);
   }
 
   return buildParamEntity(p);
@@ -183,13 +262,20 @@ function buildEntityFromParamAndResolveTypeAlias(
   return {...entity, type};
 }
 
-function buildObjEntityFromParam(entryPoint: ApiEntryPoint, p: Parameter) {
-  const typeName = extractTypeName(p.parameterTypeExcerpt);
-  const apiInterface = findApi(entryPoint, typeName) as ApiInterface;
-  const members = resolveInterfaceMembers(entryPoint, apiInterface);
-  const entity = buildParamEntity(p);
-
-  return buildObjEntity({entity, members, typeName});
+function buildObjEntityFromParam(
+  entryPoint: ApiEntryPoint,
+  p: Parameter,
+  referencesCount: InterfaceReferencesCount
+) {
+  return resolveInterface(
+    entryPoint,
+    findApi(
+      entryPoint,
+      extractTypeName(p.parameterTypeExcerpt)
+    ) as ApiInterface,
+    referencesCount,
+    p
+  );
 }
 
 function extractTypeName(excerpt: Excerpt) {

@@ -23,7 +23,7 @@ describe('#extractTypes', () => {
       members: [values],
     });
 
-    const {types} = extractTypes([state]);
+    const {types} = extractTypes([state], {});
 
     const expectedEntity = buildMockObjEntity({
       name: 'FacetValue',
@@ -44,7 +44,7 @@ describe('#extractTypes', () => {
 
     const state = buildMockObjEntity({name: 'state', members: [values]});
 
-    extractTypes([state]);
+    extractTypes([state], {});
 
     expect(values.members.length).toBe(0);
     expect(values.isTypeExtracted).toBe(true);
@@ -76,7 +76,7 @@ describe('#extractTypes', () => {
       members: [facetSearch],
     });
 
-    const {types} = extractTypes([state]);
+    const {types} = extractTypes([state], {});
 
     const expectedEntity1 = buildMockObjEntity({
       name: 'FacetSearchState',
@@ -110,7 +110,7 @@ describe('#extractTypes', () => {
       members: [numberOfResults],
     });
 
-    const {types} = extractTypes([state, facetSearch]);
+    const {types} = extractTypes([state, facetSearch], {});
     expect(types).toEqual([]);
   });
 
@@ -131,7 +131,7 @@ describe('#extractTypes', () => {
       params: [selection],
     });
 
-    const {types} = extractTypes([toggleSelect]);
+    const {types} = extractTypes([toggleSelect], {});
 
     const expected = buildMockObjEntity({
       name: 'FacetValue',
@@ -159,7 +159,7 @@ describe('#extractTypes', () => {
       returnType: facetValue,
     });
 
-    const {types} = extractTypes([getFacetValue]);
+    const {types} = extractTypes([getFacetValue], {});
 
     const expected = buildMockObjEntity({
       name: 'FacetValue',
@@ -167,5 +167,37 @@ describe('#extractTypes', () => {
     });
 
     expect(types).toEqual([expected]);
+  });
+
+  it("when objEntity has more than one reference and isn't a type heading, it extracts the type", () => {
+    const entity = buildMockObjEntity({
+      name: 'CategoryFacetValue',
+      type: 'CategoryFacetValue',
+      typeName: 'CategoryFacetValue',
+      members: [buildMockEntity({name: 'value', type: 'string'})],
+    });
+
+    const {types} = extractTypes([entity], {CategoryFacetValue: 2});
+
+    const expected = buildMockObjEntity({
+      name: 'CategoryFacetValue',
+      members: [buildMockEntity({name: 'value', type: 'string'})],
+    });
+
+    expect(types).toEqual([expected]);
+  });
+
+  it("when objEntity has more than one reference and is a type heading, it doesn't extract the type", () => {
+    const entity = buildMockObjEntity({
+      name: 'CategoryFacetValue',
+      type: 'CategoryFacetValue',
+      typeName: 'CategoryFacetValue',
+      members: [],
+      isTypeExtracted: true,
+    });
+
+    const {types} = extractTypes([entity], {CategoryFacetValue: 2});
+
+    expect(types).toEqual([]);
   });
 });

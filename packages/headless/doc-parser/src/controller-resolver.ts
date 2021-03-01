@@ -13,6 +13,7 @@ import {
   CodeSampleInfo,
 } from './code-sample-resolver';
 import {extractTypes} from './extractor';
+import {InterfaceReferencesCount} from './interface-resolver';
 
 export interface ControllerConfiguration {
   initializer: string;
@@ -31,15 +32,26 @@ export function resolveController(
   entry: ApiEntryPoint,
   config: ControllerConfiguration
 ): Controller {
-  const initializer = resolveControllerInitializer(entry, config.initializer);
-  const utils = (config.utils || []).map((util) => resolveUtility(entry, util));
-  const extractedTypes = extractTypesFrom(initializer, utils);
+  const referencesCount: InterfaceReferencesCount = {};
+  const initializer = resolveControllerInitializer(
+    entry,
+    config.initializer,
+    referencesCount
+  );
+  const utils = (config.utils || []).map((util) =>
+    resolveUtility(entry, util, referencesCount)
+  );
+  const extractedTypes = extractTypesFrom(initializer, utils, referencesCount);
   const codeSampleInfo = resolveCodeSamplePaths(config.samplePaths);
 
   return {initializer, extractedTypes, utils, codeSampleInfo};
 }
 
-function resolveControllerInitializer(entry: ApiEntryPoint, name: string) {
+function resolveControllerInitializer(
+  entry: ApiEntryPoint,
+  name: string,
+  referencesCount: InterfaceReferencesCount
+) {
   const fn = findApi(entry, name);
 
   if (!isFunction(fn)) {
@@ -48,27 +60,41 @@ function resolveControllerInitializer(entry: ApiEntryPoint, name: string) {
     );
   }
 
-  return resolveFunction(entry, fn, [0]);
+  return resolveFunction(entry, fn, [0], referencesCount);
 }
 
-function resolveUtility(entry: ApiEntryPoint, name: string) {
+function resolveUtility(
+  entry: ApiEntryPoint,
+  name: string,
+  referencesCount: InterfaceReferencesCount
+) {
   const fn = findApi(entry, name) as ApiFunction;
-  return resolveFunction(entry, fn, []);
+  return resolveFunction(entry, fn, [], referencesCount);
 }
 
 function isFunction(item: ApiItem): item is ApiFunction {
   return item.kind === ApiItemKind.Function;
 }
 
-function extractTypesFrom(initializer: FuncEntity, utils: FuncEntity[]) {
-  const instanceTypes = extractTypesFromInitializerInstance(initializer);
-  const utilTypes = extractTypes(utils).types;
+function extractTypesFrom(
+  initializer: FuncEntity,
+  utils: FuncEntity[],
+  referencesCount: InterfaceReferencesCount
+) {
+  const instanceTypes = extractTypesFromInitializerInstance(
+    initializer,
+    referencesCount
+  );
+  const utilTypes = extractTypes(utils, referencesCount).types;
   const types = instanceTypes.concat(utilTypes);
 
   return removeDuplicates(types);
 }
 
-function extractTypesFromInitializerInstance(entity: FuncEntity) {
+function extractTypesFromInitializerInstance(
+  entity: FuncEntity,
+  referencesCount: InterfaceReferencesCount
+) {
   const {returnType} = entity;
 
   if (typeof returnType === 'string') {
@@ -76,7 +102,7 @@ function extractTypesFromInitializerInstance(entity: FuncEntity) {
   }
 
   if (isObjectEntity(returnType)) {
-    return extractTypes(returnType.members).types;
+    return extractTypes(returnType.members, referencesCount).types;
   }
 
   return [];
