@@ -11,7 +11,7 @@ import {buildInteractiveResult, Engine, Result} from '@coveo/headless';
 export function bindLogDocumentOpenOnResult(
   engine: Engine,
   result: Result,
-  resultElement: Element,
+  resultElement: Element | ShadowRoot,
   selector?: string
 ) {
   const interactiveResult = buildInteractiveResult(engine, {

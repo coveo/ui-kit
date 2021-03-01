@@ -24,13 +24,6 @@
 | `"results"`     | The results container                   |
 
 
-## CSS Custom Properties
-
-| Name                                     | Description            |
-| ---------------------------------------- | ---------------------- |
-| `--atomic-query-summary-highlight-color` | Color of the highlight |
-
-
 ## Dependencies
 
 ### Depends on

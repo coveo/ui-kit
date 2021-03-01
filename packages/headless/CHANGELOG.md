@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.7.0-alpha.24](https://github.com/coveo/ui-kit/compare/v0.7.0-alpha.23...v0.7.0-alpha.24) (2021-02-26)
+
+
+### Bug Fixes
+
+* **headless:** made RelevanceInspector call its subscribers when enabled/disabled ([#530](https://github.com/coveo/ui-kit/issues/530)) ([12450ea](https://github.com/coveo/ui-kit/commit/12450ea69ace9c4273c4499a0d1d6e03da022649))
+
+
+
+
+
+# [0.7.0-alpha.23](https://github.com/coveo/ui-kit/compare/v0.7.0-alpha.22...v0.7.0-alpha.23) (2021-02-26)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
 # [0.7.0-alpha.22](https://github.com/coveo/ui-kit/compare/v0.7.0-alpha.21...v0.7.0-alpha.22) (2021-02-26)
 
 
