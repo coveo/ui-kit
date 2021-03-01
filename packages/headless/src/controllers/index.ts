@@ -221,8 +221,10 @@ export {
 
 export {
   SearchParameterManagerProps,
+  SearchParameterManagerInitialState,
   SearchParameterManagerState,
   SearchParameterManager,
+  SearchParameters,
   buildSearchParameterManager,
 } from './search-parameter-manager/headless-search-parameter-manager';
 
