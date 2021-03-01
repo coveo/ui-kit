@@ -17,11 +17,11 @@ const isDevWatch: boolean =
 export const config: Config = {
   namespace: 'atomic',
   taskQueue: 'async',
-  globalStyle: 'src/styles/variables.pcss',
   outputTargets: [
     {
       type: 'dist',
       esmLoaderPath: '../loader',
+      copy: [{src: 'themes'}],
     },
     {
       type: 'docs-readme',
@@ -29,7 +29,7 @@ export const config: Config = {
     {
       type: 'www',
       serviceWorker: null, // disable service workers
-      copy: [{src: 'pages'}],
+      copy: [{src: 'pages'}, {src: 'themes'}],
     },
   ],
   testing: {
