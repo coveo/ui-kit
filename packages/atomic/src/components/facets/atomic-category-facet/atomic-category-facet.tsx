@@ -68,6 +68,7 @@ export class AtomicCategoryFacet
     showMore: () => this.bindings.i18n.t('showMore'),
     showLess: () => this.bindings.i18n.t('showLess'),
     facetValue: (variables) => this.bindings.i18n.t('facetValue', variables),
+    allCategories: () => this.bindings.i18n.t('allCategories'),
   };
 
   @State() public isExpanded = false;
@@ -187,7 +188,9 @@ export class AtomicCategoryFacet
           innerHTML={LeftArrow}
           class="mr-2 arrow-size text-secondary fill-current"
         />
-        <button onClick={() => this.facet.deselectAll()}>All Categories</button>
+        <button onClick={() => this.facet.deselectAll()}>
+          {this.strings.allCategories()}
+        </button>
       </div>
     );
   }

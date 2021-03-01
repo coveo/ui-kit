@@ -44,6 +44,10 @@
     "en": "Clear",
     "fr": "Effacer"
   },
+  "allCategories": {
+    "en": "All Categories",
+    "fr": "Toutes les catégories"
+  },
   "showMore": {
     "en": "Show more",
     "fr": "Voir plus de résultats",

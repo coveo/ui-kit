@@ -51,6 +51,7 @@ export class AtomicDateFacet implements InitializableComponent, BaseFacetState {
   @BindStateToI18n()
   @State()
   public strings: I18nState = {
+    clear: () => this.bindings.i18n.t('clear'),
     facetValue: (variables) => this.bindings.i18n.t('facetValue', variables),
   };
 
