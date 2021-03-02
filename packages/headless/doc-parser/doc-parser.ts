@@ -22,6 +22,10 @@ const controllers: ControllerConfiguration[] = [
     },
   },
   {
+    initializer: 'buildNumericFacet',
+    samplePaths: {},
+  },
+  {
     initializer: 'buildPager',
     samplePaths: {
       react_class: [
