@@ -26,11 +26,11 @@ export type Product = {
    */
   brand?: string;
   /**
-   * Category of the product (e.g., `["Electronics", "Electronics|Televisions", "Electronics|Televisions|4K Televisions"]`)
+   * Category of the product (e.g., `"Electronics"`, `"Electronics|Televisions"`, or `"Electronics|Televisions|4K Televisions"`)
    *
    * From the `ec_category` field.
    */
-  categories?: string[];
+  category?: string;
   /**
    * Base price of the product or variant.
    *
@@ -46,7 +46,7 @@ export type Product = {
   /**
    * Product image in URL format.
    *
-   * From the `ec_image` field.
+   * From the `ec_thumbnail` field.
    */
   thumbnailUrl?: string;
   /**

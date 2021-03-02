@@ -117,16 +117,21 @@ const mapResultToProductResult = (result: Result): ProductRecommendation => {
     description: (result.raw.ec_description as string) || result.excerpt,
     link: result.clickUri,
     brand: (result.raw.ec_brand || result.raw.brand) as string,
-    categories: (result.raw.ec_category ||
-      result.raw.ec_categories ||
-      result.raw.categories) as string[],
+    categories: result.raw.ec_category as string,
     price,
     shortDescription: result.raw.ec_shortdesc as string,
-    thumbnailUrl: (result.raw.ec_image || result.raw.image) as string,
+    thumbnailUrl: (result.raw.ec_thumbnail ||
+      result.raw.ec_image ||
+      result.raw.image ||
+      (result.raw.ec_images &&
+        (result.raw.ec_images as string[])[0])) as string,
     imageUrls: result.raw.ec_images as string[],
     promoPrice:
-      promoPrice === undefined || promoPrice === price ? undefined : promoPrice,
-    inStock: inStock === undefined ? undefined : inStock === 'yes',
+      promoPrice === undefined || (price !== undefined && promoPrice >= price)
+        ? undefined
+        : promoPrice,
+    inStock:
+      inStock === undefined ? undefined : inStock.toLowerCase() === 'yes',
     rating: (result.raw.ec_rating || result.raw.rating) as number,
     tags: result.raw.tags as string[],
   };
