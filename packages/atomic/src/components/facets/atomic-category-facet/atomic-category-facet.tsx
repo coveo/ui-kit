@@ -62,7 +62,8 @@ export class AtomicCategoryFacet
   public strings: I18nState = {
     clear: () => this.bindings.i18n.t('clear'),
     placeholder: () => this.bindings.i18n.t('search'),
-    searchBox: () => this.bindings.i18n.t('search'),
+    searchBox: () =>
+      this.bindings.i18n.t('facetSearch', {label: this.strings[this.label]()}),
     querySuggestionList: () => this.bindings.i18n.t('querySuggestionList'),
     showMore: () => this.bindings.i18n.t('showMore'),
     showLess: () => this.bindings.i18n.t('showLess'),
@@ -77,7 +78,7 @@ export class AtomicCategoryFacet
    */
   @Prop() public field = '';
   /**
-   * The displayed label for the facet
+   * The non-localized label for the facet
    */
   @Prop() public label = 'No label';
   /**
@@ -104,6 +105,7 @@ export class AtomicCategoryFacet
       sortCriteria: this.sortCriteria,
     };
     this.facet = buildCategoryFacet(this.bindings.engine, {options});
+    this.strings[this.label] = () => this.bindings.i18n.t(this.label);
     if (this.enableFacetSearch) {
       this.facetSearch = new FacetSearch({
         controller: new FacetSearchController(this),
@@ -223,7 +225,7 @@ export class AtomicCategoryFacet
     return (
       <BaseFacet
         controller={new BaseFacetController(this)}
-        label={this.label}
+        label={this.strings[this.label]()}
         hasActiveValues={this.facetState.hasActiveValues}
         deselectAll={() => this.facet.deselectAll()}
       >

@@ -9,7 +9,7 @@ import {
 } from '@coveo/headless';
 import {
   Bindings,
-  BindStateToController,
+  BindStateToController, BindStateToI18n, I18nState,
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
@@ -47,6 +47,10 @@ export class AtomicNumericFacet
   private facetState!: NumericFacetState;
   @State() public error!: Error;
 
+  @BindStateToI18n()
+  @State()
+  public strings: I18nState = {};
+
   @State() public isExpanded = false;
   @Prop({mutable: true}) public facetId = '';
   /**
@@ -54,7 +58,7 @@ export class AtomicNumericFacet
    */
   @Prop() public field = '';
   /**
-   * The displayed label for the facet
+   * The non-localized label for the facet
    */
   @Prop() public label = 'No label';
   /**
@@ -80,6 +84,7 @@ export class AtomicNumericFacet
     };
 
     this.facet = buildNumericFacet(this.bindings.engine, {options});
+    this.strings[this.label] = () => this.bindings.i18n.t(this.label);
     this.facetId = this.facet.state.facetId;
   }
 
@@ -107,7 +112,7 @@ export class AtomicNumericFacet
     return (
       <BaseFacet
         controller={new BaseFacetController(this)}
-        label={this.label}
+        label={this.strings[this.label]()}
         hasActiveValues={this.facetState.hasActiveValues}
         deselectAll={() => this.facet.deselectAll()}
       >
