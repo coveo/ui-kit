@@ -35,7 +35,7 @@ export class AtomicResultPrintableUri {
   @State() error!: Error;
 
   /**
-   * The maximum number of Uri parts to display, has to be over the minimum of `3` in order to be effective.
+   * The maximum number of Uri parts to display, has to be over the minimum of `3` in order to be effective. Putting `0` will disable the ellipsis.
    */
   @Prop() maxNumOfParts = 5;
 
@@ -73,6 +73,7 @@ export class AtomicResultPrintableUri {
     const parents = this.allParents;
     if (
       this.listExpanded ||
+      this.maxNumOfParts === 0 ||
       parents.length <= Math.max(this.minNumOfParts, this.maxNumOfParts)
     ) {
       return parents;

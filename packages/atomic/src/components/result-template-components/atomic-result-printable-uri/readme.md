@@ -7,9 +7,9 @@
 
 ## Properties
 
-| Property        | Attribute          | Description                                                                                             | Type     | Default |
-| --------------- | ------------------ | ------------------------------------------------------------------------------------------------------- | -------- | ------- |
-| `maxNumOfParts` | `max-num-of-parts` | The maximum number of Uri parts to display, has to be over the minimum of `3` in order to be effective. | `number` | `5`     |
+| Property        | Attribute          | Description                                                                                                                                    | Type     | Default |
+| --------------- | ------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------- | -------- | ------- |
+| `maxNumOfParts` | `max-num-of-parts` | The maximum number of Uri parts to display, has to be over the minimum of `3` in order to be effective. Putting `0` will disable the ellipsis. | `number` | `5`     |
 
 
 ## Shadow Parts
