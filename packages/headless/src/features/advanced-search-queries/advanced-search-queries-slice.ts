@@ -25,17 +25,11 @@ export const advancedSearchQueriesReducer = createReducer(
       })
       .addCase(registerAdvancedSearchQueries, (state, action) => {
         const {aq, cq} = action.payload;
-        if (!isUndefined(aq)) {
-          state.defaultFilters.aq = aq;
-          if (!state.aqWasSet) {
-            state.aq = aq;
-          }
+        if (!isUndefined(aq) && !state.aqWasSet) {
+          state.aq = aq;
         }
-        if (!isUndefined(cq)) {
-          state.defaultFilters.cq = cq;
-          if (!state.cqWasSet) {
-            state.cq = cq;
-          }
+        if (!isUndefined(cq) && !state.cqWasSet) {
+          state.cq = cq;
         }
       })
       .addCase(

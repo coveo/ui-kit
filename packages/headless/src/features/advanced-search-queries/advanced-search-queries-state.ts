@@ -1,15 +1,3 @@
-export interface AdvancedSearchQueriesDefaultFiltersState {
-  /**
-   * The initial cq filter (e.g., `((q AND aq) OR dq) AND cq).
-   */
-  cq: string;
-
-  /**
-   * The initial aq filter (e.g., `((q AND aq) OR dq) AND cq).
-   */
-  aq: string;
-}
-
 export interface AdvancedSearchQueriesState {
   /**
    * The cq filter (e.g., `((q AND aq) OR dq) AND cq).
@@ -34,11 +22,6 @@ export interface AdvancedSearchQueriesState {
    * If the aq was manually set and the aq is registered, the aq will not be overriden by the default filter.
    */
   aqWasSet: boolean;
-
-  /**
-   * The initial filters meant to be used as default values for the cq filter and aq filter.
-   */
-  defaultFilters: AdvancedSearchQueriesDefaultFiltersState;
 }
 
 export const getAdvancedSearchQueriesInitialState: () => AdvancedSearchQueriesState = () => ({
@@ -46,8 +29,4 @@ export const getAdvancedSearchQueriesInitialState: () => AdvancedSearchQueriesSt
   cqWasSet: false,
   aq: '',
   aqWasSet: false,
-  defaultFilters: {
-    cq: '',
-    aq: '',
-  },
 });
