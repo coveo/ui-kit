@@ -100,6 +100,17 @@ const controllers: ControllerConfiguration[] = [
     },
   },
   {
+    initializer: 'buildTab',
+    samplePaths: {
+      react_class: [
+        'packages/samples/headless-react/src/components/tab/tab.class.tsx',
+      ],
+      react_fn: [
+        'packages/samples/headless-react/src/components/tab/tab.fn.tsx',
+      ],
+    },
+  },
+  {
     initializer: 'buildSearchStatus',
     samplePaths: {
       react_class: [
@@ -107,6 +118,17 @@ const controllers: ControllerConfiguration[] = [
       ],
       react_fn: [
         'packages/samples/headless-react/src/components/search-status/search-status.fn.tsx',
+      ],
+    },
+  },
+  {
+    initializer: 'buildSearchBox',
+    samplePaths: {
+      react_class: [
+        'packages/samples/headless-react/src/components/search-box/search-box.class.tsx',
+      ],
+      react_fn: [
+        'packages/samples/headless-react/src/components/search-box/search-box.fn.tsx',
       ],
     },
   },
@@ -127,6 +149,17 @@ const controllers: ControllerConfiguration[] = [
       ],
       react_fn: [
         'packages/samples/headless-react/src/components/results-per-page/results-per-page.fn.tsx',
+      ],
+    },
+  },
+  {
+    initializer: 'buildSearchParameterManager',
+    samplePaths: {
+      react_class: [
+        'packages/samples/headless-react/src/components/search-parameter-manager/search-parameter-manager.ts',
+      ],
+      react_fn: [
+        'packages/samples/headless-react/src/components/search-parameter-manager/search-parameter-manager.ts',
       ],
     },
   },
