@@ -159,12 +159,19 @@ describe('#resolveInterfaceMembers', () => {
       desc: 'The page number to check.',
     });
 
+    const returnType = buildMockEntity({
+      name: 'returnType',
+      type: 'boolean',
+      isOptional: false,
+      desc: 'Whether the passed page is selected.',
+    });
+
     const funcEntity = buildMockFuncEntity({
       name: 'isCurrentPage',
       desc:
         'Returns `true` when the current page is equal to the passed page, and `false` otherwise.',
       params: [paramEntity],
-      returnType: 'boolean',
+      returnType: returnType,
     });
     expect(result).toEqual([funcEntity]);
   });
@@ -317,11 +324,18 @@ describe('#resolveInterfaceMembers', () => {
       desc: 'The facet value to toggle.',
     });
 
+    const returnType = buildMockEntity({
+      name: 'returnType',
+      type: 'void',
+      isOptional: false,
+      desc: '',
+    });
+
     const funcEntity = buildMockFuncEntity({
       name: 'toggleSelect',
       desc: 'Toggles the specified facet value.',
       params: [param],
-      returnType: 'void',
+      returnType: returnType,
     });
 
     expect(result).toEqual([funcEntity]);
@@ -379,12 +393,19 @@ describe('#resolveInterfaceMembers', () => {
       desc: 'The context value to add.',
     });
 
+    const returnType = buildMockEntity({
+      name: 'returnType',
+      type: 'void',
+      isOptional: false,
+      desc: '',
+    });
+
     const funcEntity = buildMockFuncEntity({
       name: 'add',
       desc:
         'Add, or replace if already present, a new context key and value pair.',
       params: [param],
-      returnType: 'void',
+      returnType: returnType,
     });
     expect(result).toEqual([funcEntity]);
   });

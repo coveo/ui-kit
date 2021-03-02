@@ -4,7 +4,7 @@ import {AnyEntity, Entity, FuncEntity, ObjEntity} from './entity';
 import {emitAsTsDoc} from './tsdoc-emitter';
 
 interface Comment {
-  comment: DocComment | undefined;
+  comment: DocComment | string | undefined;
 }
 
 interface EntityOptions extends Comment {
@@ -22,12 +22,15 @@ interface ObjEntityOptions {
 interface FuncEntityOptions extends Comment {
   name: string;
   params: AnyEntity[];
-  returnType: string | ObjEntity | FuncEntity;
+  returnType: AnyEntity;
 }
 
 export function buildEntity(config: EntityOptions): Entity {
   const type = sanitizeType(config.type);
-  const desc = getSummary(config.comment);
+  const desc =
+    typeof config.comment === 'string'
+      ? config.comment
+      : getSummary(config.comment);
 
   return {
     kind: 'primitive',
@@ -65,7 +68,10 @@ export function buildParamEntity(param: Parameter): Entity {
 }
 
 export function buildFuncEntity(config: FuncEntityOptions): FuncEntity {
-  const desc = getSummary(config.comment);
+  const desc =
+    typeof config.comment === 'string'
+      ? config.comment
+      : getSummary(config.comment);
 
   return {
     kind: 'function',

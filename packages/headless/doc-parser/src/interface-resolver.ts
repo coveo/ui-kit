@@ -1,4 +1,5 @@
 import {
+  ApiCallSignature,
   ApiEntryPoint,
   ApiInterface,
   ApiItem,
@@ -11,7 +12,7 @@ import {
   ExcerptTokenKind,
   Parameter,
 } from '@microsoft/api-extractor-model';
-import {DocComment} from '@microsoft/tsdoc';
+import {DocComment, DocNode} from '@microsoft/tsdoc';
 import {findApi} from './api-finder';
 import {AnyEntity, Entity} from './entity';
 import {
@@ -20,6 +21,7 @@ import {
   buildObjEntity,
   buildParamEntity,
 } from './entity-builder';
+import {emitAsTsDoc} from './tsdoc-emitter';
 
 export function resolveInterfaceMembers(
   entry: ApiEntryPoint,
@@ -52,6 +54,10 @@ function resolveMembers(entry: ApiEntryPoint, apiInterface: ApiInterface) {
       return resolveMethodSignature(entry, m);
     }
 
+    if (isCallSignature(m)) {
+      return resolveCallSignature(m);
+    }
+
     throw new Error(`Unsupported member: ${m.displayName}`);
   });
 }
@@ -78,7 +84,6 @@ function resolvePropertySignature(
   p: ApiPropertySignature
 ) {
   const typeExcerpt = p.propertyTypeExcerpt.spannedTokens[0];
-
   if (isRecordType(typeExcerpt)) {
     return buildEntityFromProperty(p);
   }
@@ -92,20 +97,6 @@ function resolvePropertySignature(
   }
 
   return buildEntityFromProperty(p);
-}
-
-function isTypeAlias(token: ExcerptToken) {
-  const meaning = token.canonicalReference?.symbol?.meaning;
-  return meaning === 'type';
-}
-
-function isRecordType(token: ExcerptToken) {
-  const isRecord = token.text === 'Record';
-  return isReference(token) && isRecord;
-}
-
-function isReference(token: ExcerptToken) {
-  return token.kind === ExcerptTokenKind.Reference;
 }
 
 function buildEntityFromProperty(p: ApiPropertySignature) {
@@ -147,7 +138,11 @@ function isMethodSignature(m: ApiItem): m is ApiMethodSignature {
 
 function resolveMethodSignature(entry: ApiEntryPoint, m: ApiMethodSignature) {
   const params = m.parameters.map((p) => resolveParameter(entry, p));
-  const returnType = m.returnTypeExcerpt.text;
+  const typeExcerpt = m.returnTypeExcerpt.spannedTokens[0];
+  let returnType: AnyEntity = buildEntityFromReturnType(m);
+  if (isReference(typeExcerpt)) {
+    returnType = buildObjEntityFromReturnType(entry, m);
+  }
 
   return buildFuncEntity({
     name: m.displayName,
@@ -155,6 +150,30 @@ function resolveMethodSignature(entry: ApiEntryPoint, m: ApiMethodSignature) {
     params,
     returnType,
   });
+}
+
+function buildEntityFromReturnType(m: ApiMethodSignature) {
+  const nodes = m.tsdocComment?.returnsBlock?.content.getChildNodes() || [];
+  const description = emitAsTsDoc((nodes as unknown) as readonly DocNode[]);
+
+  return buildEntity({
+    name: 'returnType',
+    type: m.returnTypeExcerpt.text,
+    isOptional: false,
+    comment: description,
+  });
+}
+
+function buildObjEntityFromReturnType(
+  entry: ApiEntryPoint,
+  m: ApiMethodSignature
+) {
+  const typeName = extractTypeName(m.returnTypeExcerpt);
+  const apiInterface = findApi(entry, typeName) as ApiInterface;
+  const members = resolveInterfaceMembers(entry, apiInterface);
+  const entity = buildEntityFromReturnType(m);
+
+  return buildObjEntity({entity, members, typeName});
 }
 
 export function resolveParameter(entry: ApiEntryPoint, p: Parameter) {
@@ -192,6 +211,33 @@ function buildObjEntityFromParam(entryPoint: ApiEntryPoint, p: Parameter) {
   return buildObjEntity({entity, members, typeName});
 }
 
+function isCallSignature(c: ApiItem): c is ApiCallSignature {
+  return c.kind === ApiItemKind.CallSignature;
+}
+
+function resolveCallSignature(c: ApiCallSignature) {
+  return buildEntity({
+    name: c.displayName,
+    type: c.returnTypeExcerpt.tokens.map((t) => t.text).join(''),
+    isOptional: false,
+    comment: (c.tsdocComment as unknown) as DocComment,
+  });
+}
+
 function extractTypeName(excerpt: Excerpt) {
   return excerpt.spannedTokens[0].text;
+}
+
+function isTypeAlias(token: ExcerptToken) {
+  const meaning = token.canonicalReference?.symbol?.meaning;
+  return meaning === 'type';
+}
+
+function isRecordType(token: ExcerptToken) {
+  const isRecord = token.text === 'Record';
+  return isReference(token) && isRecord;
+}
+
+function isReference(token: ExcerptToken) {
+  return token.kind === ExcerptTokenKind.Reference;
 }
