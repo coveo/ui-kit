@@ -13,7 +13,6 @@ import {
   CodeSampleInfo,
 } from './code-sample-resolver';
 import {extractTypes} from './extractor';
-import {InterfaceReferencesCount} from './interface-resolver';
 
 export interface ControllerConfiguration {
   initializer: string;
@@ -32,26 +31,15 @@ export function resolveController(
   entry: ApiEntryPoint,
   config: ControllerConfiguration
 ): Controller {
-  const referencesCount: InterfaceReferencesCount = {};
-  const initializer = resolveControllerInitializer(
-    entry,
-    config.initializer,
-    referencesCount
-  );
-  const utils = (config.utils || []).map((util) =>
-    resolveUtility(entry, util, referencesCount)
-  );
-  const extractedTypes = extractTypesFrom(initializer, utils, referencesCount);
+  const initializer = resolveControllerInitializer(entry, config.initializer);
+  const utils = (config.utils || []).map((util) => resolveUtility(entry, util));
+  const extractedTypes = extractTypesFrom(initializer, utils);
   const codeSampleInfo = resolveCodeSamplePaths(config.samplePaths);
 
   return {initializer, extractedTypes, utils, codeSampleInfo};
 }
 
-function resolveControllerInitializer(
-  entry: ApiEntryPoint,
-  name: string,
-  referencesCount: InterfaceReferencesCount
-) {
+function resolveControllerInitializer(entry: ApiEntryPoint, name: string) {
   const fn = findApi(entry, name);
 
   if (!isFunction(fn)) {
@@ -60,41 +48,27 @@ function resolveControllerInitializer(
     );
   }
 
-  return resolveFunction(entry, fn, [0], referencesCount);
+  return resolveFunction(entry, fn, [0]);
 }
 
-function resolveUtility(
-  entry: ApiEntryPoint,
-  name: string,
-  referencesCount: InterfaceReferencesCount
-) {
+function resolveUtility(entry: ApiEntryPoint, name: string) {
   const fn = findApi(entry, name) as ApiFunction;
-  return resolveFunction(entry, fn, [], referencesCount);
+  return resolveFunction(entry, fn, []);
 }
 
 function isFunction(item: ApiItem): item is ApiFunction {
   return item.kind === ApiItemKind.Function;
 }
 
-function extractTypesFrom(
-  initializer: FuncEntity,
-  utils: FuncEntity[],
-  referencesCount: InterfaceReferencesCount
-) {
-  const instanceTypes = extractTypesFromInitializerInstance(
-    initializer,
-    referencesCount
-  );
-  const utilTypes = extractTypes(utils, referencesCount).types;
+function extractTypesFrom(initializer: FuncEntity, utils: FuncEntity[]) {
+  const instanceTypes = extractTypesFromInitializerInstance(initializer);
+  const utilTypes = extractTypes(utils).types;
   const types = instanceTypes.concat(utilTypes);
 
   return removeDuplicates(types);
 }
 
-function extractTypesFromInitializerInstance(
-  entity: FuncEntity,
-  referencesCount: InterfaceReferencesCount
-) {
+function extractTypesFromInitializerInstance(entity: FuncEntity) {
   const {returnType} = entity;
 
   if (typeof returnType === 'string') {
@@ -102,7 +76,7 @@ function extractTypesFromInitializerInstance(
   }
 
   if (isObjectEntity(returnType)) {
-    return extractTypes(returnType.members, referencesCount).types;
+    return extractTypes(returnType.members).types;
   }
 
   return [];

@@ -5,28 +5,24 @@ import {
 } from '@microsoft/api-extractor-model';
 import {DocComment} from '@microsoft/tsdoc';
 import {findApi} from './api-finder';
-import {buildFuncEntity, buildParamEntity} from './entity-builder';
 import {
-  resolveParameter,
-  resolveInterface,
-  InterfaceReferencesCount,
-} from './interface-resolver';
+  buildEntity,
+  buildFuncEntity,
+  buildObjEntity,
+  buildParamEntity,
+} from './entity-builder';
+import {resolveParameter, resolveInterfaceMembers} from './interface-resolver';
 
 export function resolveFunction(
   entry: ApiEntryPoint,
   fn: ApiFunction,
-  shallowParamIndices: number[],
-  referencesCount: InterfaceReferencesCount
+  shallowParamIndices: number[]
 ) {
-  const params = resolveParams(entry, fn, shallowParamIndices, referencesCount);
+  const params = resolveParams(entry, fn, shallowParamIndices);
   const returnTypeText = fn.returnTypeExcerpt.text;
   const returnTypeInterface = findApi(entry, returnTypeText) as ApiInterface;
 
-  const returnType = buildObjEntityFromInterface(
-    entry,
-    returnTypeInterface,
-    referencesCount
-  );
+  const returnType = buildObjEntityFromInterface(entry, returnTypeInterface);
 
   return buildFuncEntity({
     name: fn.name,
@@ -39,21 +35,28 @@ export function resolveFunction(
 function resolveParams(
   entry: ApiEntryPoint,
   fn: ApiFunction,
-  shallowParamIndices: number[],
-  referencesCount: InterfaceReferencesCount
+  shallowParamIndices: number[]
 ) {
   return fn.parameters.map((p, index) => {
     const shouldResolveShallow = shallowParamIndices.includes(index);
     return shouldResolveShallow
       ? buildParamEntity(p)
-      : resolveParameter(entry, p, referencesCount);
+      : resolveParameter(entry, p);
   });
 }
 
 function buildObjEntityFromInterface(
   entryPoint: ApiEntryPoint,
-  apiInterface: ApiInterface,
-  referencesCount: InterfaceReferencesCount
+  apiInterface: ApiInterface
 ) {
-  return resolveInterface(entryPoint, apiInterface, referencesCount);
+  const name = apiInterface.name;
+  const members = resolveInterfaceMembers(entryPoint, apiInterface);
+  const entity = buildEntity({
+    name,
+    type: name,
+    isOptional: false,
+    comment: (apiInterface.tsdocComment as unknown) as DocComment,
+  });
+
+  return buildObjEntity({entity, members, typeName: name});
 }

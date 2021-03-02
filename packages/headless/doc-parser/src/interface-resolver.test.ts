@@ -11,9 +11,9 @@ import {
 } from '../mocks/mock-excerpt-token';
 import {buildMockFuncEntity} from '../mocks/mock-func-entity';
 import {buildMockObjEntity} from '../mocks/mock-obj-entity';
-import {resolveInterface} from './interface-resolver';
+import {resolveInterfaceMembers} from './interface-resolver';
 
-describe('#resolveInterface', () => {
+describe('#resolveInterfaceMembers', () => {
   it('resolves a property with a primitive type', () => {
     const entryPoint = buildMockEntryPoint();
     const apiInterface = buildMockApiInterface({name: 'Pager'});
@@ -31,23 +31,14 @@ describe('#resolveInterface', () => {
     apiInterface.addMember(prop);
     entryPoint.addMember(apiInterface);
 
-    const result = resolveInterface(entryPoint, apiInterface, {});
-
-    const isCurrentPageEntity = buildMockEntity({
+    const result = resolveInterfaceMembers(entryPoint, apiInterface);
+    const entity = buildMockEntity({
       name: 'isCurrentPage',
       type: '(page: number) => boolean',
       isOptional: true,
     });
 
-    const entity = buildMockObjEntity({
-      name: 'Pager',
-      type: 'Pager',
-      typeName: 'Pager',
-      members: [isCurrentPageEntity],
-      isOptional: false,
-    });
-
-    expect(result).toEqual(entity);
+    expect(result).toEqual([entity]);
   });
 
   it('resolves a property with an interface type', () => {
@@ -85,34 +76,22 @@ describe('#resolveInterface', () => {
     entryPoint.addMember(pagerInterface);
     entryPoint.addMember(pagerStateInterface);
 
-    const result = resolveInterface(entryPoint, pagerInterface, {});
+    const result = resolveInterfaceMembers(entryPoint, pagerInterface);
 
-    const currentPageEntity = buildMockEntity({
-      name: 'currentPage',
-      type: 'number',
-    });
-    const stateEntity = buildMockObjEntity({
+    const entity = buildMockEntity({name: 'currentPage', type: 'number'});
+    const objEntity = buildMockObjEntity({
       name: 'state',
       type: 'PagerState',
       typeName: 'PagerState',
-      members: [currentPageEntity],
-    });
-    const entity = buildMockObjEntity({
-      name: 'Pager',
-      type: 'Pager',
-      typeName: 'Pager',
-      members: [stateEntity],
-      isOptional: false,
+      members: [entity],
     });
 
-    expect(result).toEqual(entity);
+    expect(result).toEqual([objEntity]);
   });
 
   it('resolves a property with an interface array type', () => {
     const entry = buildMockEntryPoint();
-    const queryCorrectionInterface = buildMockApiInterface({
-      name: 'QueryCorrection',
-    });
+    const queryCorrection = buildMockApiInterface({name: 'QueryCorrection'});
 
     const wordCorrections = buildMockApiPropertySignature({
       name: 'wordCorrections',
@@ -127,26 +106,19 @@ describe('#resolveInterface', () => {
 
     const wordCorrection = buildMockApiInterface({name: 'WordCorrection'});
 
-    queryCorrectionInterface.addMember(wordCorrections);
-    entry.addMember(queryCorrectionInterface);
+    queryCorrection.addMember(wordCorrections);
+    entry.addMember(queryCorrection);
     entry.addMember(wordCorrection);
 
-    const result = resolveInterface(entry, queryCorrectionInterface, {});
+    const result = resolveInterfaceMembers(entry, queryCorrection);
 
-    const wordCorrectionsEntity = buildMockObjEntity({
+    const expected = buildMockObjEntity({
       name: 'wordCorrections',
       type: 'WordCorrection[]',
       typeName: 'WordCorrection',
     });
-    const entity = buildMockObjEntity({
-      name: 'QueryCorrection',
-      type: 'QueryCorrection',
-      typeName: 'QueryCorrection',
-      members: [wordCorrectionsEntity],
-      isOptional: false,
-    });
 
-    expect(result).toEqual(entity);
+    expect(result).toEqual([expected]);
   });
 
   it('resolves a method with primitive return type', () => {
@@ -179,7 +151,7 @@ describe('#resolveInterface', () => {
     pagerInterface.addMember(method);
     entryPoint.addMember(pagerInterface);
 
-    const result = resolveInterface(entryPoint, pagerInterface, {});
+    const result = resolveInterfaceMembers(entryPoint, pagerInterface);
 
     const paramEntity = buildMockEntity({
       name: 'page',
@@ -194,16 +166,7 @@ describe('#resolveInterface', () => {
       params: [paramEntity],
       returnType: 'boolean',
     });
-
-    const entity = buildMockObjEntity({
-      name: 'Pager',
-      type: 'Pager',
-      typeName: 'Pager',
-      members: [funcEntity],
-      isOptional: false,
-    });
-
-    expect(result).toEqual(entity);
+    expect(result).toEqual([funcEntity]);
   });
 
   it('treats a record as a primitive entity and does not resolve it further', () => {
@@ -224,23 +187,14 @@ describe('#resolveInterface', () => {
     apiInterface.addMember(recordProp);
     entry.addMember(apiInterface);
 
-    const result = resolveInterface(entry, apiInterface, {});
-
-    const captionsEntity = buildMockEntity({
+    const result = resolveInterfaceMembers(entry, apiInterface);
+    const entity = buildMockEntity({
       name: 'captions',
       type: 'Record<string, string>',
       isOptional: true,
     });
 
-    const entity = buildMockObjEntity({
-      name: 'FacetSearchOptions',
-      type: 'FacetSearchOptions',
-      typeName: 'FacetSearchOptions',
-      members: [captionsEntity],
-      isOptional: false,
-    });
-
-    expect(result).toEqual(entity);
+    expect(result).toEqual([entity]);
   });
 
   it('when the type is a type alias, it resolves the alias', () => {
@@ -273,22 +227,13 @@ describe('#resolveInterface', () => {
     entry.addMember(apiInterface);
     entry.addMember(typeAlias);
 
-    const result = resolveInterface(entry, apiInterface, {});
-
-    const stateEntity = buildMockEntity({
+    const result = resolveInterfaceMembers(entry, apiInterface);
+    const entity = buildMockEntity({
       name: 'state',
       type: "'idle' | 'selected'",
     });
 
-    const entity = buildMockObjEntity({
-      name: 'FacetValue',
-      type: 'FacetValue',
-      typeName: 'FacetValue',
-      members: [stateEntity],
-      isOptional: false,
-    });
-
-    expect(result).toEqual(entity);
+    expect(result).toEqual([entity]);
   });
 
   it(`when an interface member type is an interface with a $1 suffix,
@@ -317,23 +262,14 @@ describe('#resolveInterface', () => {
     entry.addMember(interface1);
     entry.addMember(interface2);
 
-    const result = resolveInterface(entry, interface1, {});
-
-    const valuesEntity = buildMockObjEntity({
+    const result = resolveInterfaceMembers(entry, interface1);
+    const entity = buildMockObjEntity({
       name: 'values',
       type: 'SpecificFacetSearchResult[]',
       typeName: 'SpecificFacetSearchResult',
     });
 
-    const entity = buildMockObjEntity({
-      name: 'FacetSearchState',
-      type: 'FacetSearchState',
-      typeName: 'FacetSearchState',
-      members: [valuesEntity],
-      isOptional: false,
-    });
-
-    expect(result).toEqual(entity);
+    expect(result).toEqual([entity]);
   });
 
   it(`interface with method with one parameter with a complex type,
@@ -372,31 +308,23 @@ describe('#resolveInterface', () => {
     entry.addMember(facet);
     entry.addMember(facetValue);
 
-    const result = resolveInterface(entry, facet, {});
+    const result = resolveInterfaceMembers(entry, facet);
 
-    const selectionEntity = buildMockObjEntity({
+    const param = buildMockObjEntity({
       name: 'selection',
       type: 'FacetValue',
       typeName: 'FacetValue',
       desc: 'The facet value to toggle.',
     });
 
-    const toggleSelectEntity = buildMockFuncEntity({
+    const funcEntity = buildMockFuncEntity({
       name: 'toggleSelect',
       desc: 'Toggles the specified facet value.',
-      params: [selectionEntity],
+      params: [param],
       returnType: 'void',
     });
 
-    const entity = buildMockObjEntity({
-      name: 'Facet',
-      type: 'Facet',
-      typeName: 'Facet',
-      members: [toggleSelectEntity],
-      isOptional: false,
-    });
-
-    expect(result).toEqual(entity);
+    expect(result).toEqual([funcEntity]);
   });
 
   it(`interface with method with parameter with type alias,
@@ -443,31 +371,22 @@ describe('#resolveInterface', () => {
     entry.addMember(context);
     entry.addMember(contextValue);
 
-    const result = resolveInterface(entry, context, {});
+    const result = resolveInterfaceMembers(entry, context);
 
-    const contextValueEntity = buildMockEntity({
+    const param = buildMockEntity({
       name: 'contextValue',
       type: 'string | string[]',
       desc: 'The context value to add.',
     });
 
-    const addEntity = buildMockFuncEntity({
+    const funcEntity = buildMockFuncEntity({
       name: 'add',
       desc:
         'Add, or replace if already present, a new context key and value pair.',
-      params: [contextValueEntity],
+      params: [param],
       returnType: 'void',
     });
-
-    const entity = buildMockObjEntity({
-      name: 'Context',
-      type: 'Context',
-      typeName: 'Context',
-      members: [addEntity],
-      isOptional: false,
-    });
-
-    expect(result).toEqual(entity);
+    expect(result).toEqual([funcEntity]);
   });
 
   it(`an interface extends another interface,
@@ -515,7 +434,7 @@ describe('#resolveInterface', () => {
     entry.addMember(querySummaryState);
     entry.addMember(searchStatusState);
 
-    const result = resolveInterface(entry, querySummaryState, {});
+    const result = resolveInterfaceMembers(entry, querySummaryState);
 
     const queryEntity = buildMockEntity({name: 'query', type: 'string'});
     const isLoadingEntity = buildMockEntity({
@@ -523,15 +442,7 @@ describe('#resolveInterface', () => {
       type: 'boolean',
     });
 
-    const entity = buildMockObjEntity({
-      name: 'QuerySummaryState',
-      type: 'QuerySummaryState',
-      typeName: 'QuerySummaryState',
-      members: [queryEntity, isLoadingEntity],
-      isOptional: false,
-    });
-
-    expect(result).toEqual(entity);
+    expect(result).toEqual([queryEntity, isLoadingEntity]);
   });
 
   it(`an interface extends another interface,
@@ -576,66 +487,12 @@ describe('#resolveInterface', () => {
     entry.addMember(pager);
     entry.addMember(controller);
 
-    const result = resolveInterface(entry, pager, {});
-
-    const stateEntity = buildMockEntity({
+    const result = resolveInterfaceMembers(entry, pager);
+    const expected = buildMockEntity({
       name: 'state',
       type: 'string',
     });
 
-    const entity = buildMockObjEntity({
-      name: 'Pager',
-      type: 'Pager',
-      typeName: 'Pager',
-      members: [stateEntity],
-      isOptional: false,
-    });
-
-    expect(result).toEqual(entity);
-  });
-
-  it(`an interface has a property of its own type,
-  the interface's members are parsed only once`, () => {
-    const entryPoint = buildMockEntryPoint();
-    const apiInterface = buildMockApiInterface({name: 'CategoryFacetValue'});
-    const prop = buildMockApiPropertySignature({
-      name: 'parent',
-      excerptTokens: [
-        buildContentExcerptToken('parent: '),
-        buildReferenceExcerptToken(
-          'CategoryFacetValue',
-          '@coveo/headless!~CategoryFacetValue:interface'
-        ),
-        buildContentExcerptToken(';'),
-      ],
-      propertyTypeTokenRange: {startIndex: 1, endIndex: 2},
-      isOptional: true,
-    });
-
-    apiInterface.addMember(prop);
-    entryPoint.addMember(apiInterface);
-
-    const referencesCount = {};
-
-    const result = resolveInterface(entryPoint, apiInterface, referencesCount);
-
-    const parentEntity = buildMockObjEntity({
-      name: 'parent',
-      type: 'CategoryFacetValue',
-      typeName: 'CategoryFacetValue',
-      isOptional: true,
-      isTypeExtracted: true,
-    });
-
-    const entity = buildMockObjEntity({
-      name: 'CategoryFacetValue',
-      type: 'CategoryFacetValue',
-      typeName: 'CategoryFacetValue',
-      members: [parentEntity],
-      isOptional: false,
-    });
-
-    expect(result).toEqual(entity);
-    expect(referencesCount).toEqual({CategoryFacetValue: 2});
+    expect(result).toEqual([expected]);
   });
 });

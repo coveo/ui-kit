@@ -11,7 +11,6 @@ import {
 import {buildMockFuncEntity} from '../mocks/mock-func-entity';
 import {buildMockObjEntity} from '../mocks/mock-obj-entity';
 import {resolveFunction} from './function-resolver';
-import {AnyEntity} from './entity';
 
 describe('#resolveFunction', () => {
   it('resolves function with a an interface return type', () => {
@@ -73,7 +72,7 @@ describe('#resolveFunction', () => {
     entry.addMember(requestInterface);
     entry.addMember(fn);
 
-    const result = resolveFunction(entry, fn, [], {});
+    const result = resolveFunction(entry, fn, []);
 
     const startProperty = buildMockEntity({name: 'start', type: 'number'});
     const optionsParam = buildMockObjEntity({
@@ -95,183 +94,6 @@ describe('#resolveFunction', () => {
       name: 'buildNumericRange',
       desc: 'Creates a `NumericRangeRequest`.',
       params: [optionsParam],
-      returnType,
-    });
-
-    expect(result).toEqual(funcEntity);
-  });
-
-  it('correctly resolves a function with a recursive return type', () => {
-    const entry = buildMockEntryPoint();
-
-    const fn = buildMockApiFunction({
-      name: 'getRootDirectory',
-      excerptTokens: [
-        buildContentExcerptToken('declare function getRootDirectory(): '),
-        buildReferenceExcerptToken(
-          'Directory',
-          '@some-package!~Directory:interface'
-        ),
-        buildContentExcerptToken(';'),
-      ],
-      returnTypeTokenRange: {startIndex: 1, endIndex: 2},
-    });
-
-    const directoryInterface = buildMockApiInterface({
-      name: 'Directory',
-      members: [
-        buildMockApiPropertySignature({
-          name: 'name',
-          excerptTokens: [
-            buildContentExcerptToken('name: '),
-            buildContentExcerptToken('string'),
-            buildContentExcerptToken(';'),
-          ],
-          propertyTypeTokenRange: {startIndex: 1, endIndex: 2},
-        }),
-        buildMockApiPropertySignature({
-          name: 'parent',
-          excerptTokens: [
-            buildContentExcerptToken('parent: '),
-            buildReferenceExcerptToken(
-              'Directory',
-              '@some-package!~Directory:interface'
-            ),
-            buildContentExcerptToken(';'),
-          ],
-          propertyTypeTokenRange: {
-            startIndex: 1,
-            endIndex: 2,
-          },
-        }),
-      ],
-    });
-
-    entry.addMember(directoryInterface);
-    entry.addMember(fn);
-
-    const result = resolveFunction(entry, fn, [], {});
-
-    const returnType = buildMockObjEntity({
-      name: 'Directory',
-      type: 'Directory',
-      typeName: 'Directory',
-      members: [
-        buildMockEntity({name: 'name', type: 'string'}),
-        buildMockObjEntity({
-          name: 'parent',
-          type: 'Directory',
-          typeName: 'Directory',
-          members: [],
-          isTypeExtracted: true,
-        }),
-      ],
-      isTypeExtracted: false,
-    });
-
-    const funcEntity = buildMockFuncEntity({
-      name: 'getRootDirectory',
-      returnType,
-    });
-
-    expect(result).toEqual(funcEntity);
-  });
-
-  it('correctly resolves a function with a recursive return type and parameter type', () => {
-    const entry = buildMockEntryPoint();
-
-    const fn = buildMockApiFunction({
-      name: 'deleteDirectory',
-      docComment: buildMockApiDocComment(`
-      /**
-       * Deletes a directory
-       * @param directory - The directory to delete
-      */
-      `),
-      excerptTokens: [
-        buildContentExcerptToken(
-          'declare function deleteDirectory(directory: '
-        ),
-        buildReferenceExcerptToken(
-          'Directory',
-          '@some-package!~Directory:interface'
-        ),
-        buildContentExcerptToken('): '),
-        buildReferenceExcerptToken(
-          'Directory',
-          '@some-package!~Directory:interface'
-        ),
-        buildContentExcerptToken(';'),
-      ],
-      returnTypeTokenRange: {startIndex: 3, endIndex: 4},
-      parameters: [
-        {
-          parameterName: 'directory',
-          parameterTypeTokenRange: {startIndex: 1, endIndex: 2},
-        },
-      ],
-    });
-
-    const directoryInterface = buildMockApiInterface({
-      name: 'Directory',
-      members: [
-        buildMockApiPropertySignature({
-          name: 'name',
-          excerptTokens: [
-            buildContentExcerptToken('name: '),
-            buildContentExcerptToken('string'),
-            buildContentExcerptToken(';'),
-          ],
-          propertyTypeTokenRange: {startIndex: 1, endIndex: 2},
-        }),
-        buildMockApiPropertySignature({
-          name: 'parent',
-          excerptTokens: [
-            buildContentExcerptToken('parent: '),
-            buildReferenceExcerptToken(
-              'Directory',
-              '@some-package!~Directory:interface'
-            ),
-            buildContentExcerptToken(';'),
-          ],
-          propertyTypeTokenRange: {
-            startIndex: 1,
-            endIndex: 2,
-          },
-        }),
-      ],
-    });
-
-    entry.addMember(directoryInterface);
-    entry.addMember(fn);
-
-    const result = resolveFunction(entry, fn, [], {});
-
-    const buildDirectoryObj = (name: string, members: AnyEntity[], desc = '') =>
-      buildMockObjEntity({
-        name,
-        desc,
-        type: 'Directory',
-        typeName: 'Directory',
-        members,
-        isTypeExtracted: members.length === 0,
-      });
-
-    const directoryParam = buildDirectoryObj(
-      'directory',
-      [
-        buildMockEntity({name: 'name', type: 'string'}),
-        buildDirectoryObj('parent', []),
-      ],
-      'The directory to delete'
-    );
-
-    const returnType = buildDirectoryObj('Directory', []);
-
-    const funcEntity = buildMockFuncEntity({
-      name: 'deleteDirectory',
-      desc: 'Deletes a directory',
-      params: [directoryParam],
       returnType,
     });
 

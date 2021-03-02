@@ -1,6 +1,5 @@
 import {AnyEntity, isFunctionEntity, isObjectEntity, ObjEntity} from './entity';
 import {buildEntity, buildObjEntity} from './entity-builder';
-import {InterfaceReferencesCount} from './interface-resolver';
 
 interface Extraction {
   types: ObjEntity[];
@@ -26,21 +25,13 @@ enum Level {
   Type,
 }
 
-export function extractTypes(
-  headingEntities: AnyEntity[],
-  referencesCount: InterfaceReferencesCount
-): Extraction {
+export function extractTypes(headingEntities: AnyEntity[]): Extraction {
   const extraction: Extraction = {
     types: [],
   };
 
-  processObjectEntities(
-    headingEntities,
-    extraction,
-    Level.Heading,
-    referencesCount
-  );
-  processFunctionEntities(headingEntities, extraction, referencesCount);
+  processObjectEntities(headingEntities, extraction, Level.Heading);
+  processFunctionEntities(headingEntities, extraction);
 
   return extraction;
 }
@@ -48,61 +39,44 @@ export function extractTypes(
 function processObjectEntities(
   entities: AnyEntity[],
   extraction: Extraction,
-  level: Level,
-  referencesCount: InterfaceReferencesCount
+  level: Level
 ) {
   entities
     .filter(isObjectEntity)
-    .forEach((entity) =>
-      extract(entity, extraction, level + 1, referencesCount)
-    );
+    .forEach((entity) => extract(entity, extraction, level + 1));
 }
 
 function processFunctionEntities(
   entities: AnyEntity[],
-  extraction: Extraction,
-  referencesCount: InterfaceReferencesCount
+  extraction: Extraction
 ) {
   entities.filter(isFunctionEntity).forEach((func) => {
     const {params, returnType} = func;
     const entities = isString(returnType) ? params : [...params, returnType];
 
-    processObjectEntities(entities, extraction, Level.Key, referencesCount);
+    processObjectEntities(entities, extraction, Level.Key);
   });
 }
 
-function extract(
-  entity: ObjEntity,
-  extraction: Extraction,
-  level: Level,
-  referencesCount: InterfaceReferencesCount
-) {
+function extract(entity: ObjEntity, extraction: Extraction, level: Level) {
   const {members} = entity;
 
   if (!members.length) {
     return;
   }
 
-  if (
-    !entity.isTypeExtracted &&
-    (level === Level.Type || referencesCount[entity.typeName] > 1)
-  ) {
+  if (level === Level.Type) {
     const typeHeading = buildTypeEntity(entity, members);
     extraction.types.push(typeHeading);
 
     entity.isTypeExtracted = true;
     entity.members = [];
 
-    processObjectEntities(
-      [typeHeading],
-      extraction,
-      Level.Heading,
-      referencesCount
-    );
+    processObjectEntities([typeHeading], extraction, Level.Heading);
     return;
   }
 
-  processObjectEntities(members, extraction, level, referencesCount);
+  processObjectEntities(members, extraction, level);
 }
 
 function buildTypeEntity(originalEntity: ObjEntity, members: AnyEntity[]) {
