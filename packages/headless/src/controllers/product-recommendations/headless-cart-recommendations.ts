@@ -65,7 +65,7 @@ export interface CartRecommendationsListState {
   error: ErrorPayload | null;
 
   /**
-   * `true` if the cart recommendation request is currently being executed against the Coveo platform, `false` otherwise.
+   * Whether the cart recommendation request is currently being executed against the Coveo platform.
    */
   isLoading: boolean;
 }
