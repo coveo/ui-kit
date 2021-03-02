@@ -191,9 +191,9 @@ export namespace Components {
     }
     interface AtomicResultPrintableUri {
         /**
-          * The maximum number of Uri parts to display, has to be over the minimum of `3` in order to be effective. Putting `0` will disable the ellipsis.
+          * The maximum number of Uri parts to display, has to be over the minimum of `3` in order to be effective. Putting `Infinity` will disable the ellipsis.
          */
-        "maxNumOfParts": number;
+        "maxNumberOfParts": number;
     }
     interface AtomicResultTemplate {
         "conditions": ResultTemplateCondition[];
@@ -689,9 +689,9 @@ declare namespace LocalJSX {
     }
     interface AtomicResultPrintableUri {
         /**
-          * The maximum number of Uri parts to display, has to be over the minimum of `3` in order to be effective. Putting `0` will disable the ellipsis.
+          * The maximum number of Uri parts to display, has to be over the minimum of `3` in order to be effective. Putting `Infinity` will disable the ellipsis.
          */
-        "maxNumOfParts"?: number;
+        "maxNumberOfParts"?: number;
     }
     interface AtomicResultTemplate {
         "conditions"?: ResultTemplateCondition[];

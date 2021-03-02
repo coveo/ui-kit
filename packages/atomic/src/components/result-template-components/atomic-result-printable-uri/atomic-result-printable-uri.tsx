@@ -7,6 +7,7 @@ import {
   BindStateToI18n,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
+import {Schema, NumberValue} from '@coveo/bueno';
 
 /**
  * The ResultUri component displays the URI, or path, to access a result.
@@ -24,7 +25,6 @@ import {
 export class AtomicResultPrintableUri {
   @InitializeBindings() public bindings!: Bindings;
   @ResultContext() private result!: Result;
-  private minNumOfParts = 3;
 
   @State() listExpanded = false;
   @BindStateToI18n()
@@ -35,9 +35,19 @@ export class AtomicResultPrintableUri {
   @State() error!: Error;
 
   /**
-   * The maximum number of Uri parts to display, has to be over the minimum of `3` in order to be effective. Putting `0` will disable the ellipsis.
+   * The maximum number of Uri parts to display, has to be over the minimum of `3` in order to be effective. Putting `Infinity` will disable the ellipsis.
    */
-  @Prop() maxNumOfParts = 5;
+  @Prop() maxNumberOfParts = 5;
+
+  public connectedCallback() {
+    try {
+      new Schema({
+        maxNumberOfParts: new NumberValue({min: 3}),
+      }).validate({maxNumberOfParts: this.maxNumberOfParts});
+    } catch (error) {
+      this.error = error;
+    }
+  }
 
   private renderEllipsis() {
     return (
@@ -54,9 +64,9 @@ export class AtomicResultPrintableUri {
   }
 
   private get allParents() {
-    return Array.from(
-      parseXML(this.result.raw.parents!).getElementsByTagName('parent')
-    ).map((parent) => {
+    const parentsXml = parseXML(`${this.result.raw.parents}`);
+    const parents = Array.from(parentsXml.getElementsByTagName('parent'));
+    return parents.map((parent) => {
       const name = parent.getAttribute('name');
       const uri = parent.getAttribute('uri')!;
       return (
@@ -71,17 +81,13 @@ export class AtomicResultPrintableUri {
 
   private renderParents() {
     const parents = this.allParents;
-    if (
-      this.listExpanded ||
-      this.maxNumOfParts === 0 ||
-      parents.length <= Math.max(this.minNumOfParts, this.maxNumOfParts)
-    ) {
+    if (this.listExpanded || parents.length <= this.maxNumberOfParts) {
       return parents;
     }
 
     const lastIndexBeforeEllipsis = Math.min(
       parents.length - 2,
-      this.maxNumOfParts - 1
+      this.maxNumberOfParts - 1
     );
     return [
       parents.slice(0, lastIndexBeforeEllipsis),
@@ -91,11 +97,13 @@ export class AtomicResultPrintableUri {
   }
 
   public render() {
-    if (this.result.raw.parents) {
+    const parents = this.renderParents();
+    if (parents.length) {
       const parts = `result-printable-uri-list${
         this.listExpanded ? ' result-printable-uri-list-expanded' : ''
       }`;
-      return <ul part={parts}>{this.renderParents()}</ul>;
+
+      return <ul part={parts}>{parents}</ul>;
     }
 
     return (
