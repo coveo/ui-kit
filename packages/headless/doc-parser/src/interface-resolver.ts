@@ -68,8 +68,11 @@ function resolveInheritedMembers(
 ) {
   return apiInterface.extendsTypes
     .map((m) => {
-      const typeName = extractTypeName(m.excerpt);
-      const inheritedInterface = findApi(entry, typeName) as ApiInterface;
+      const searchableTypeName = extractSearchableTypeName(m.excerpt);
+      const inheritedInterface = findApi(
+        entry,
+        searchableTypeName
+      ) as ApiInterface;
       return resolveInterfaceMembers(entry, inheritedInterface);
     })
     .reduce((acc, curr) => acc.concat(curr), []);
@@ -170,7 +173,8 @@ function buildObjEntityFromReturnType(
   m: ApiMethodSignature
 ) {
   const typeName = extractTypeName(m.returnTypeExcerpt);
-  const apiInterface = findApi(entry, typeName) as ApiInterface;
+  const searchableTypeName = extractSearchableTypeName(m.returnTypeExcerpt);
+  const apiInterface = findApi(entry, searchableTypeName) as ApiInterface;
   const members = resolveInterfaceMembers(entry, apiInterface);
   const entity = buildEntityFromReturnType(m);
 
