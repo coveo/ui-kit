@@ -80,7 +80,7 @@ describe('history slice', () => {
         totalCountFiltered: 789,
       },
       query: buildMockQueryState({q: 'foo'}),
-      advancedSearchQueries: {aq: '', cq: ''},
+      advancedSearchQueries: {aq: '', cq: '', aqWasSet: false, cqWasSet: false},
       querySet: {foo: 'bar', hello: 'world'},
       sortCriteria: 'date descending',
       pipeline: 'my-pipeline',
