@@ -37,11 +37,6 @@ describe('atomic-result-template', () => {
       component = page.doc.querySelector('atomic-result-template')!;
     });
 
-    it('should return template with all used fields', async () => {
-      const template = await component.getTemplate();
-      expect(template!.fields).toEqual(['test1', 'test2']);
-    });
-
     it('should return template with all conditions', async () => {
       component.conditions = [() => true];
       const template = await component.getTemplate()!;

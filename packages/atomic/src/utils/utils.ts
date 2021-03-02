@@ -38,3 +38,7 @@ export function sanitize(string: string) {
   const reg = /[&<>"'/]/gi;
   return string.replace(reg, (match) => map[match]);
 }
+
+export function parseXML(string: string) {
+  return new window.DOMParser().parseFromString(string, 'text/xml');
+}
