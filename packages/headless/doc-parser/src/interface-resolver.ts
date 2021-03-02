@@ -26,26 +26,8 @@ export type InterfaceReferencesCount = Record<string, number>;
 export function resolveInterface(
   entry: ApiEntryPoint,
   apiInterface: ApiInterface,
-  referencesCount: InterfaceReferencesCount
-) {
-  return buildObjEntityFromInterface(
-    entry,
-    apiInterface,
-    referencesCount,
-    buildEntity({
-      name: apiInterface.name,
-      type: apiInterface.name,
-      isOptional: false,
-      comment: (apiInterface.tsdocComment as unknown) as DocComment,
-    })
-  );
-}
-
-function buildObjEntityFromInterface(
-  entry: ApiEntryPoint,
-  apiInterface: ApiInterface,
   referencesCount: InterfaceReferencesCount,
-  entity: Entity
+  source?: ApiPropertySignature | Parameter
 ) {
   const typeName = apiInterface.name;
   if (!referencesCount[typeName]) {
@@ -57,7 +39,7 @@ function buildObjEntityFromInterface(
     );
 
     return buildObjEntity({
-      entity,
+      entity: buildEntityFromSource(source ?? apiInterface),
       members,
       typeName,
     });
@@ -65,12 +47,31 @@ function buildObjEntityFromInterface(
   referencesCount[typeName] += 1;
 
   const extractedEntity = buildObjEntity({
-    entity,
+    entity: buildEntityFromSource(source ?? apiInterface),
     members: [],
     typeName,
   });
   extractedEntity.isTypeExtracted = true;
   return extractedEntity;
+}
+
+function buildEntityFromSource(
+  source: ApiPropertySignature | Parameter | ApiInterface
+) {
+  if (source instanceof ApiPropertySignature) {
+    return buildEntityFromProperty(source);
+  }
+
+  if (source instanceof Parameter) {
+    return buildParamEntity(source);
+  }
+
+  return buildEntity({
+    name: source.name,
+    type: source.name,
+    isOptional: false,
+    comment: (source.tsdocComment as unknown) as DocComment,
+  });
 }
 
 function resolveInterfaceMembers(
@@ -189,11 +190,11 @@ function buildObjEntityFromProperty(
   p: ApiPropertySignature,
   referencesCount: InterfaceReferencesCount
 ) {
-  return buildObjEntityFromInterface(
+  return resolveInterface(
     entry,
     findApi(entry, extractTypeName(p.propertyTypeExcerpt)) as ApiInterface,
     referencesCount,
-    buildEntityFromProperty(p)
+    p
   );
 }
 
@@ -266,14 +267,14 @@ function buildObjEntityFromParam(
   p: Parameter,
   referencesCount: InterfaceReferencesCount
 ) {
-  return buildObjEntityFromInterface(
+  return resolveInterface(
     entryPoint,
     findApi(
       entryPoint,
       extractTypeName(p.parameterTypeExcerpt)
     ) as ApiInterface,
     referencesCount,
-    buildParamEntity(p)
+    p
   );
 }
 
