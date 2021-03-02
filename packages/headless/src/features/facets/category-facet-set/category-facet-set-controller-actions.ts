@@ -1,4 +1,5 @@
 import {createAsyncThunk} from '@reduxjs/toolkit';
+import {CategoryFacetValue} from './interfaces/response';
 import {AsyncThunkSearchOptions} from '../../../api/search/search-api-client';
 import {
   CategoryFacetSection,
@@ -15,7 +16,6 @@ import {
 import {facetIdDefinition} from '../generic/facet-actions-validation';
 import {validateCategoryFacetValue} from './category-facet-validate-payload';
 import {requiredNonEmptyString} from '../../../utils/validate-payload';
-import {CategoryFacetValue} from '../../../controllers/facets/category-facet/headless-category-facet';
 
 /**
  * Toggles the facet value and then executes a search with the appropriate analytics tag.

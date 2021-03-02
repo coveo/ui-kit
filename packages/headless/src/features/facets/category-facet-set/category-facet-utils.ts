@@ -1,9 +1,9 @@
 import {CategoryFacetValueRequest} from './interfaces/request';
+import {CategoryFacetValue} from './interfaces/response';
 import {
   logFacetDeselect,
   logFacetSelect,
 } from '../facet-set/facet-set-analytics-actions';
-import {CategoryFacetValue} from '../../../controllers/facets/category-facet/headless-category-facet';
 
 type GenericCategoryFacetValue = CategoryFacetValueRequest | CategoryFacetValue;
 

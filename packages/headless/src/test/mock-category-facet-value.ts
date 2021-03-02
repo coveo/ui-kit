@@ -1,4 +1,4 @@
-import {CategoryFacetValue} from '../controllers/facets/category-facet/headless-category-facet';
+import {CategoryFacetValue} from '../features/facets/category-facet-set/interfaces/response';
 
 export function buildMockCategoryFacetValue(
   config: Partial<CategoryFacetValue> = {}
