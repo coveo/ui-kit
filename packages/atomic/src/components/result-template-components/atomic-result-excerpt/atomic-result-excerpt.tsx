@@ -1,4 +1,6 @@
-import {Component, h} from '@stencil/core';
+import {Result} from '@coveo/headless';
+import {Component, h, Element} from '@stencil/core';
+import {ResultContext} from '../result-template-decorators';
 
 /**
  * The ResultExcerpt component renders an excerpt of its associated result and highlights the keywords from the query.
@@ -8,7 +10,15 @@ import {Component, h} from '@stencil/core';
   shadow: false,
 })
 export class AtomicResultExcerpt {
-  render() {
+  @ResultContext() private result!: Result;
+  @Element() host!: HTMLElement;
+
+  public render() {
+    if (!this.result.excerpt || this.result.excerpt.trim() === '') {
+      this.host.remove();
+      return;
+    }
+
     return (
       <atomic-result-value
         value="excerpt"

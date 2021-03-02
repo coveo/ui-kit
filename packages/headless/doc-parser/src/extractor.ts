@@ -77,6 +77,7 @@ function extract(entity: ObjEntity, extraction: Extraction, level: Level) {
   }
 
   processObjectEntities(members, extraction, level);
+  processFunctionEntities(members, extraction);
 }
 
 function buildTypeEntity(originalEntity: ObjEntity, members: AnyEntity[]) {

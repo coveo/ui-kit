@@ -27,10 +27,15 @@ export {
 
 export {
   CategoryFacetOptions,
+  CategoryFacetSearchOptions,
   CategoryFacetProps,
   CategoryFacetState,
   CategoryFacet,
   buildCategoryFacet,
+  CategoryFacetValue,
+  CategoryFacetSearch,
+  CategoryFacetSearchState,
+  CategoryFacetSearchResult,
 } from './facets/category-facet/headless-category-facet';
 
 export {
@@ -118,6 +123,9 @@ export {
   SearchBoxProps,
   SearchBoxState,
   SearchBox,
+  Suggestion,
+  SuggestionHighlightingOptions,
+  Delimiters,
   buildSearchBox,
 } from './search-box/headless-search-box';
 
@@ -223,8 +231,10 @@ export {
 
 export {
   SearchParameterManagerProps,
+  SearchParameterManagerInitialState,
   SearchParameterManagerState,
   SearchParameterManager,
+  SearchParameters,
   buildSearchParameterManager,
 } from './search-parameter-manager/headless-search-parameter-manager';
 

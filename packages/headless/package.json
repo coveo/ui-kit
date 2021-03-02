@@ -9,7 +9,7 @@
   },
   "types": "./dist/index.d.ts",
   "license": "Apache-2.0",
-  "version": "0.7.0-alpha.21",
+  "version": "0.7.0-alpha.25",
   "files": [
     "dist/"
   ],
@@ -24,11 +24,12 @@
     "test:unit": "jest --testPathIgnorePatterns=src/integration-tests",
     "test:integration": "jest --testPathPattern=src/integration-tests",
     "npm:publish": "npm publish --access public",
+    "doc:generate": "npm run doc:extract && npm run doc:parse",
     "doc:extract": "api-extractor run --local --verbose",
     "doc:parse": "ts-node --project ./doc-parser/tsconfig.build.json ./doc-parser/doc-parser.ts"
   },
   "dependencies": {
-    "@coveo/bueno": "^0.7.0-alpha.12",
+    "@coveo/bueno": "^0.7.0-alpha.25",
     "@reduxjs/toolkit": "^1.5.0",
     "@types/pino": "^6.3.4",
     "@types/redux-mock-store": "^1.0.2",
@@ -48,7 +49,7 @@
     "@microsoft/api-extractor-model": "^7.12.1",
     "@microsoft/tsdoc": "^0.13.0",
     "@rollup/plugin-alias": "^3.1.1",
-    "@rollup/plugin-commonjs": "^12.0.0",
+    "@rollup/plugin-commonjs": "^17.1.0",
     "@rollup/plugin-node-resolve": "^7.1.3",
     "@rollup/plugin-replace": "^2.3.2",
     "@types/jest": "^26.0.14",
