@@ -14,7 +14,7 @@ export interface SearchParameters {
   aq?: string;
 
   /**
-   * A record of the category facets, where the key is the facet id, and values are the selected path segements.
+   * A record of the category facets, where the key is the facet id, and values are the parts of the selected path.
    */
   cf?: Record<string, string[]>;
 
