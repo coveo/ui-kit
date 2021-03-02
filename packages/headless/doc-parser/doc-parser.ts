@@ -11,6 +11,17 @@ const entryPoint = apiPackage.entryPoints[0];
 
 const controllers: ControllerConfiguration[] = [
   {
+    initializer: 'buildFacet',
+    samplePaths: {
+      react_class: [
+        'packages/samples/headless-react/src/components/facet/facet.class.tsx',
+      ],
+      react_fn: [
+        'packages/samples/headless-react/src/components/facet/facet.fn.tsx',
+      ],
+    },
+  },
+  {
     initializer: 'buildPager',
     samplePaths: {
       react_class: [
@@ -28,6 +39,10 @@ const controllers: ControllerConfiguration[] = [
         'packages/samples/headless-react/src/components/context/context.ts',
       ],
     },
+  },
+  {
+    initializer: 'buildCategoryFacet',
+    samplePaths: {},
   },
   {
     initializer: 'buildDidYouMean',
