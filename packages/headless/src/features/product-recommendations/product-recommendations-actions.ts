@@ -117,7 +117,7 @@ const mapResultToProductResult = (result: Result): ProductRecommendation => {
     description: (result.raw.ec_description as string) || result.excerpt,
     link: result.clickUri,
     brand: (result.raw.ec_brand || result.raw.brand) as string,
-    categories: result.raw.ec_category as string,
+    category: result.raw.ec_category as string,
     price,
     shortDescription: result.raw.ec_shortdesc as string,
     thumbnailUrl: (result.raw.ec_thumbnail ||
