@@ -67,6 +67,8 @@ export class AtomicCategoryFacet
     querySuggestionList: () => this.bindings.i18n.t('querySuggestionList'),
     showMore: () => this.bindings.i18n.t('showMore'),
     showLess: () => this.bindings.i18n.t('showLess'),
+    facetValue: (variables) => this.bindings.i18n.t('facetValue', variables),
+    allCategories: () => this.bindings.i18n.t('allCategories'),
   };
 
   @State() public isExpanded = false;
@@ -157,7 +159,7 @@ export class AtomicCategoryFacet
 
   private buildValue(item: CategoryFacetValue) {
     return (
-      <li>
+      <li aria-label={this.strings.facetValue(item)}>
         <button
           class="w-full flex items-center text-left text-lg lg:text-base py-1 lg:py-0.5"
           onClick={() => this.facet.toggleSelect(item)}
@@ -186,7 +188,9 @@ export class AtomicCategoryFacet
           innerHTML={LeftArrow}
           class="mr-2 arrow-size text-secondary fill-current"
         />
-        <button onClick={() => this.facet.deselectAll()}>All Categories</button>
+        <button onClick={() => this.facet.deselectAll()}>
+          {this.strings.allCategories()}
+        </button>
       </div>
     );
   }

@@ -50,7 +50,10 @@ export class AtomicDateFacet implements InitializableComponent, BaseFacetState {
 
   @BindStateToI18n()
   @State()
-  public strings: I18nState = {};
+  public strings: I18nState = {
+    clear: () => this.bindings.i18n.t('clear'),
+    facetValue: (variables) => this.bindings.i18n.t('facetValue', variables),
+  };
 
   @State() public isExpanded = false;
   @Prop({mutable: true, reflect: true}) public facetId = '';
@@ -103,6 +106,7 @@ export class AtomicDateFacet implements InitializableComponent, BaseFacetState {
         facetValueSelected={() => {
           this.facet.toggleSelect(item);
         }}
+        ariaLabel={this.strings.facetValue(item)}
       />
     );
   }

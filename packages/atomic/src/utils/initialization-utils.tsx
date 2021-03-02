@@ -220,10 +220,7 @@ export function BindStateToController(
   };
 }
 
-export type I18nState = Record<
-  string,
-  (variables?: Record<string, string>) => string
->;
+export type I18nState = Record<string, (variables?: Object) => string>;
 
 /**
  * Decorator to be used on a property decorator with Stencil's `State` that will be subscribed automatically to the i18next language change.
