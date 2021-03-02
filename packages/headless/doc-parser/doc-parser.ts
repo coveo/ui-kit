@@ -100,6 +100,17 @@ const controllers: ControllerConfiguration[] = [
     },
   },
   {
+    initializer: 'buildTab',
+    samplePaths: {
+      react_class: [
+        'packages/samples/headless-react/src/components/tab/tab.class.tsx',
+      ],
+      react_fn: [
+        'packages/samples/headless-react/src/components/tab/tab.fn.tsx',
+      ],
+    },
+  },
+  {
     initializer: 'buildSearchStatus',
     samplePaths: {
       react_class: [
