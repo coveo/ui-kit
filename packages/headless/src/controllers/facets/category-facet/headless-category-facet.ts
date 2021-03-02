@@ -40,9 +40,9 @@ import {
   CategoryFacetSearchOptions,
 } from './headless-category-facet-options';
 import {determineFacetId} from '../_common/facet-id-determinor';
-import {FacetValueState} from '../../../features/facets/facet-api/value';
+import {CategoryFacetValue} from '../../../features/facets/category-facet-set/interfaces/response';
 
-export {CategoryFacetOptions, CategoryFacetSearchOptions};
+export {CategoryFacetValue, CategoryFacetOptions, CategoryFacetSearchOptions};
 
 export interface CategoryFacetProps {
   /** The options for the `CategoryFacet` controller. */
@@ -197,38 +197,6 @@ export interface CategoryFacetSearchResult {
    * The hierarchical path to the facet value.
    */
   path: string[];
-}
-
-export interface CategoryFacetValue {
-  /**
-   * Whether a facet value is filtering results (`selected`) or not (`idle`).
-   * */
-  state: FacetValueState;
-
-  /**
-   * The number of results having the facet value.
-   * */
-  numberOfResults: number;
-
-  /**
-   * The hierarchical path to the facet value.
-   */
-  path: string[];
-
-  /**
-   * The children of this facet value.
-   */
-  children: CategoryFacetValue[];
-
-  /**
-   * Whether more values are available.
-   * */
-  moreValuesAvailable: boolean;
-
-  /**
-   * The facet value.
-   * */
-  value: string;
 }
 
 /**
