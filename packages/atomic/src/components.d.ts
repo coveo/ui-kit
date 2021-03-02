@@ -189,11 +189,15 @@ export namespace Components {
     }
     interface AtomicResultListPlaceholder {
     }
+    interface AtomicResultPrintableUri {
+        /**
+          * The maximum number of Uri parts to display, has to be over the minimum of `3` in order to be effective.
+         */
+        "maxNumOfParts": number;
+    }
     interface AtomicResultTemplate {
         "conditions": ResultTemplateCondition[];
         "getTemplate": () => Promise<ResultTemplate<string> | null>;
-    }
-    interface AtomicResultUri {
     }
     interface AtomicResultValue {
         /**
@@ -407,17 +411,17 @@ declare global {
         prototype: HTMLAtomicResultListPlaceholderElement;
         new (): HTMLAtomicResultListPlaceholderElement;
     };
+    interface HTMLAtomicResultPrintableUriElement extends Components.AtomicResultPrintableUri, HTMLStencilElement {
+    }
+    var HTMLAtomicResultPrintableUriElement: {
+        prototype: HTMLAtomicResultPrintableUriElement;
+        new (): HTMLAtomicResultPrintableUriElement;
+    };
     interface HTMLAtomicResultTemplateElement extends Components.AtomicResultTemplate, HTMLStencilElement {
     }
     var HTMLAtomicResultTemplateElement: {
         prototype: HTMLAtomicResultTemplateElement;
         new (): HTMLAtomicResultTemplateElement;
-    };
-    interface HTMLAtomicResultUriElement extends Components.AtomicResultUri, HTMLStencilElement {
-    }
-    var HTMLAtomicResultUriElement: {
-        prototype: HTMLAtomicResultUriElement;
-        new (): HTMLAtomicResultUriElement;
     };
     interface HTMLAtomicResultValueElement extends Components.AtomicResultValue, HTMLStencilElement {
     }
@@ -491,8 +495,8 @@ declare global {
         "atomic-result-link": HTMLAtomicResultLinkElement;
         "atomic-result-list": HTMLAtomicResultListElement;
         "atomic-result-list-placeholder": HTMLAtomicResultListPlaceholderElement;
+        "atomic-result-printable-uri": HTMLAtomicResultPrintableUriElement;
         "atomic-result-template": HTMLAtomicResultTemplateElement;
-        "atomic-result-uri": HTMLAtomicResultUriElement;
         "atomic-result-value": HTMLAtomicResultValueElement;
         "atomic-results-per-page": HTMLAtomicResultsPerPageElement;
         "atomic-search-box": HTMLAtomicSearchBoxElement;
@@ -683,10 +687,14 @@ declare namespace LocalJSX {
     }
     interface AtomicResultListPlaceholder {
     }
+    interface AtomicResultPrintableUri {
+        /**
+          * The maximum number of Uri parts to display, has to be over the minimum of `3` in order to be effective.
+         */
+        "maxNumOfParts"?: number;
+    }
     interface AtomicResultTemplate {
         "conditions"?: ResultTemplateCondition[];
-    }
-    interface AtomicResultUri {
     }
     interface AtomicResultValue {
         /**
@@ -782,8 +790,8 @@ declare namespace LocalJSX {
         "atomic-result-link": AtomicResultLink;
         "atomic-result-list": AtomicResultList;
         "atomic-result-list-placeholder": AtomicResultListPlaceholder;
+        "atomic-result-printable-uri": AtomicResultPrintableUri;
         "atomic-result-template": AtomicResultTemplate;
-        "atomic-result-uri": AtomicResultUri;
         "atomic-result-value": AtomicResultValue;
         "atomic-results-per-page": AtomicResultsPerPage;
         "atomic-search-box": AtomicSearchBox;
@@ -821,8 +829,8 @@ declare module "@stencil/core" {
             "atomic-result-link": LocalJSX.AtomicResultLink & JSXBase.HTMLAttributes<HTMLAtomicResultLinkElement>;
             "atomic-result-list": LocalJSX.AtomicResultList & JSXBase.HTMLAttributes<HTMLAtomicResultListElement>;
             "atomic-result-list-placeholder": LocalJSX.AtomicResultListPlaceholder & JSXBase.HTMLAttributes<HTMLAtomicResultListPlaceholderElement>;
+            "atomic-result-printable-uri": LocalJSX.AtomicResultPrintableUri & JSXBase.HTMLAttributes<HTMLAtomicResultPrintableUriElement>;
             "atomic-result-template": LocalJSX.AtomicResultTemplate & JSXBase.HTMLAttributes<HTMLAtomicResultTemplateElement>;
-            "atomic-result-uri": LocalJSX.AtomicResultUri & JSXBase.HTMLAttributes<HTMLAtomicResultUriElement>;
             "atomic-result-value": LocalJSX.AtomicResultValue & JSXBase.HTMLAttributes<HTMLAtomicResultValueElement>;
             "atomic-results-per-page": LocalJSX.AtomicResultsPerPage & JSXBase.HTMLAttributes<HTMLAtomicResultsPerPageElement>;
             "atomic-search-box": LocalJSX.AtomicSearchBox & JSXBase.HTMLAttributes<HTMLAtomicSearchBoxElement>;
