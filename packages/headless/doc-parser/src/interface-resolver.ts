@@ -113,7 +113,8 @@ function buildObjEntityFromProperty(
   p: ApiPropertySignature
 ) {
   const typeName = extractTypeName(p.propertyTypeExcerpt);
-  const apiInterface = findApi(entry, typeName) as ApiInterface;
+  const searchableTypeName = extractSearchableTypeName(p.propertyTypeExcerpt);
+  const apiInterface = findApi(entry, searchableTypeName) as ApiInterface;
   const members = resolveInterfaceMembers(entry, apiInterface);
   const entity = buildEntityFromProperty(p);
 
@@ -125,8 +126,8 @@ function buildEntityFromPropertyAndResolveTypeAlias(
   p: ApiPropertySignature
 ): Entity {
   const entity = buildEntityFromProperty(p);
-  const alias = extractTypeName(p.propertyTypeExcerpt);
-  const typeAlias = findApi(entry, alias) as ApiTypeAlias;
+  const searchableTypeName = extractSearchableTypeName(p.propertyTypeExcerpt);
+  const typeAlias = findApi(entry, searchableTypeName) as ApiTypeAlias;
   const type = typeAlias.typeExcerpt.text;
 
   return {...entity, type};
@@ -195,8 +196,8 @@ function buildEntityFromParamAndResolveTypeAlias(
   p: Parameter
 ): Entity {
   const entity = buildParamEntity(p);
-  const alias = extractTypeName(p.parameterTypeExcerpt);
-  const typeAlias = findApi(entry, alias) as ApiTypeAlias;
+  const searchableTypeName = extractSearchableTypeName(p.parameterTypeExcerpt);
+  const typeAlias = findApi(entry, searchableTypeName) as ApiTypeAlias;
   const type = typeAlias.typeExcerpt.text;
 
   return {...entity, type};
@@ -204,7 +205,8 @@ function buildEntityFromParamAndResolveTypeAlias(
 
 function buildObjEntityFromParam(entryPoint: ApiEntryPoint, p: Parameter) {
   const typeName = extractTypeName(p.parameterTypeExcerpt);
-  const apiInterface = findApi(entryPoint, typeName) as ApiInterface;
+  const searchableTypeName = extractSearchableTypeName(p.parameterTypeExcerpt);
+  const apiInterface = findApi(entryPoint, searchableTypeName) as ApiInterface;
   const members = resolveInterfaceMembers(entryPoint, apiInterface);
   const entity = buildParamEntity(p);
 
@@ -225,6 +227,10 @@ function resolveCallSignature(c: ApiCallSignature) {
 }
 
 function extractTypeName(excerpt: Excerpt) {
+  return excerpt.text.replace(/\[\]/, '');
+}
+
+function extractSearchableTypeName(excerpt: Excerpt) {
   return excerpt.spannedTokens[0].text;
 }
 

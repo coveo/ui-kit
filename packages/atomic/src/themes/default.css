@@ -1,0 +1,20 @@
+:root {
+  /* Colors */
+  --atomic-primary: #1372EC;
+  --atomic-primary-variant: #215CD3;
+  --atomic-on-primary: #FFFFFF;
+  --atomic-secondary: #333357;
+  --atomic-secondary-variant: #333357;
+  --atomic-on-secondary: #FFFFFF;
+  --atomic-background: #FFFFFF;
+  --atomic-background-variant: #F6F7F9;
+  --atomic-on-background: #282829;
+  --atomic-on-background-variant: #6b6b6b;
+  --atomic-divider: #BCC3CA;
+  --atomic-error: #CE3F00;
+  --atomic-on-error: #FFFFFF;
+  --atomic-visited: #9333EA;
+
+  /* Others */
+  --atomic-font-family: Lato, Arial, Helvetica, sans-serif;
+}

@@ -148,19 +148,30 @@ export function buildRelevanceInspector(
     },
 
     subscribe(listener: () => void) {
-      listener();
-      return engine.subscribe(() => {
-        if (hasNewResponse(engine.state.search.response.searchUid)) {
-          if (
-            this.state.isEnabled &&
-            (options.automaticallyLogInformation || logOnNextResponse)
-          ) {
-            logOnNextResponse = false;
-            this.logInformation();
-          }
-          listener();
+      const unsubscribeLogListener = engine.subscribe(() => {
+        if (
+          hasNewResponse(engine.state.search.response.searchUid) &&
+          this.state.isEnabled &&
+          (options.automaticallyLogInformation || logOnNextResponse)
+        ) {
+          logOnNextResponse = false;
+          this.logInformation();
         }
       });
+
+      const getState = () => this.state;
+
+      const unsubscribeStateListener = {
+        ...controller,
+        get state() {
+          return getState();
+        },
+      }.subscribe(listener);
+
+      return () => {
+        unsubscribeLogListener();
+        unsubscribeStateListener();
+      };
     },
   };
 }

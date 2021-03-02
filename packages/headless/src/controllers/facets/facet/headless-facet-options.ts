@@ -27,7 +27,7 @@ export interface FacetOptions {
   delimitingCharacter?: string;
 
   /**
-   * A unique identifier for the controller. By default, a unique random identifier is generated.
+   * A unique identifier for the controller. By default, a random unique identifier is generated.
    * */
   facetId?: string;
 
@@ -37,7 +37,7 @@ export interface FacetOptions {
   facetSearch?: FacetSearchOptions;
 
   /**
-   * Whether to exclude folded result parents when estimating the result count for each facet value.
+   * Whether to exclude the parents of folded results when estimating the result count for each facet value.
    *
    * @default true
    */
@@ -62,7 +62,7 @@ export interface FacetOptions {
   numberOfValues?: number;
 
   /**
-   * The sort criterion to apply to the returned facet values.
+   * The criterion to use for sorting returned facet values.
    *
    * @default "automatic"
    */
