@@ -24,6 +24,7 @@
     "test:unit": "jest --testPathIgnorePatterns=src/integration-tests",
     "test:integration": "jest --testPathPattern=src/integration-tests",
     "npm:publish": "npm publish --access public",
+    "doc:create": "npm run doc:extract && npm run doc:parse",
     "doc:extract": "api-extractor run --local --verbose",
     "doc:parse": "ts-node --project ./doc-parser/tsconfig.build.json ./doc-parser/doc-parser.ts"
   },
