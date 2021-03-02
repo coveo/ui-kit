@@ -95,6 +95,26 @@ const controllers: ControllerConfiguration[] = [
       ],
     },
   },
+  {
+    initializer: 'buildInteractiveResult',
+    samplePaths: {
+      react_class: [],
+      react_fn: [
+        'packages/samples/headless-react/src/components/result-list/result-link.tsx',
+      ],
+    },
+  },
+  {
+    initializer: 'buildResultsPerPage',
+    samplePaths: {
+      react_class: [
+        'packages/samples/headless-react/src/components/results-per-page/results-per-page.class.tsx',
+      ],
+      react_fn: [
+        'packages/samples/headless-react/src/components/results-per-page/results-per-page.fn.tsx',
+      ],
+    },
+  },
 ];
 
 const result = controllers.map((controller) =>
