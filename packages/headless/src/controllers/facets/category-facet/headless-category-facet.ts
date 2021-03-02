@@ -259,7 +259,7 @@ export function buildCategoryFacet(
     ...controller,
     facetSearch: restOfFacetSearch,
 
-    toggleSelect: (selection) =>
+    toggleSelect: (selection: CategoryFacetValue) =>
       dispatch(
         executeToggleCategoryFacetSelect({
           facetId,
@@ -271,7 +271,7 @@ export function buildCategoryFacet(
     deselectAll: () =>
       dispatch(executeDeselectAllCategoryFacetValues({facetId})),
 
-    sortBy(criterion) {
+    sortBy(criterion: CategoryFacetSortCriterion) {
       const facetId = options.facetId;
 
       dispatch(updateCategoryFacetSortCriterion({facetId, criterion}));
@@ -279,7 +279,7 @@ export function buildCategoryFacet(
       dispatch(executeSearch(logFacetUpdateSort({facetId, criterion})));
     },
 
-    isSortedBy(criterion) {
+    isSortedBy(criterion: CategoryFacetSortCriterion) {
       const request = getRequest();
       return request!.sortCriteria === criterion;
     },
