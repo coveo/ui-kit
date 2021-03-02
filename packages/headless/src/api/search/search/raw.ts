@@ -12,10 +12,65 @@ export interface Raw {
   /**
    * @internal @preapproved
    */
-  permanentid: string;
+  clickableuri?: string;
 
   /**
    * @internal @preapproved
    */
-  sourcetype: string;
+  collection?: string;
+
+  /**
+   * @internal @preapproved
+   */
+  connectortype?: string;
+
+  /**
+   * @internal @preapproved
+   */
+  documenttype?: string;
+
+  /**
+   * @internal @preapproved
+   */
+  date?: number;
+
+  /**
+   * @internal @preapproved
+   */
+  filetype?: string;
+
+  /**
+   * @internal @preapproved
+   */
+  language?: string[];
+
+  /**
+   * @internal @preapproved
+   */
+  objecttype?: string;
+
+  /**
+   * @internal @preapproved
+   */
+  parents?: string;
+
+  /**
+   * @internal @preapproved
+   */
+  permanentid?: string;
+
+  /**
+   * @internal @preapproved
+   */
+  size?: number;
+
+  /**
+   * @internal @preapproved
+   */
+  source?: string;
+
+  /**
+   * @internal @preapproved
+   */
+  sourcetype?: string;
 }
