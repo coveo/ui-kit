@@ -1,6 +1,5 @@
 import HeadlessPath from '@salesforce/resourceUrl/coveoheadless';
 import AtomicPath from '@salesforce/resourceUrl/atomicutils';
-// @ts-ignore
 import { loadScript } from 'lightning/platformResourceLoader';
 
 const DEBOUNCE_DELAY = 200;
@@ -17,7 +16,6 @@ const debounce = (func, wait) => {
       clearTimeout(timeout);
       func(...args);
     };
-
     clearTimeout(timeout);
     // eslint-disable-next-line @lwc/lwc/no-async-operation
     timeout = setTimeout(later, wait);
@@ -110,7 +108,7 @@ function setComponentInitialized(element) {
 
 /**
  * Returns headless engine promise.
- * @param element 
+ * @param element The Lightning Element component with which to load dependencies.
  */
 function getHeadlessEngine(element) {
   if (window.coveoHeadless.engine) {
@@ -125,8 +123,8 @@ function getHeadlessEngine(element) {
 
 /**
  * Initializes a component with Coveo Headless.
- * @param element The LightningElement component to initialize
- * @param {Function} initialize The component's initialization function 
+ * @param element The LightningElement component to initialize.
+ * @param {Function} initialize The component's initialization function.
  */
 function initializeWithHeadless(element, initialize) {
   getHeadlessEngine(element).then((engine) => {
