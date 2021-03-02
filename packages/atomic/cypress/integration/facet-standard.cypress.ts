@@ -47,7 +47,7 @@ function setupPager(field: string, label: string) {
 function componentLoaded(label: string) {
   cy.get(FacetSelectors.facetStandard).should('be.visible');
   cy.get('@facetShadow').find('div:nth-child(1)').should('contain.text', label);
-  // cy.checkA11y(FacetSelectors.facetStandard);
+  cy.checkA11y(FacetSelectors.facetStandard);
 }
 
 function validateNumberofValue(totalNumber: number) {
