@@ -5,6 +5,9 @@ import {
   SortState,
   SortCriterion,
   parseCriterionExpression,
+  buildSearchStatus,
+  SearchStatus,
+  SearchStatusState,
 } from '@coveo/headless';
 import {
   Bindings,
@@ -28,6 +31,7 @@ interface SortDropdownOption {
  *
  * @part label - The "Sort by" label
  * @part select - The select element
+ * @part placeholder - The initialization placeholder
  */
 @Component({
   tag: 'atomic-sort-dropdown',
@@ -37,12 +41,16 @@ interface SortDropdownOption {
 export class AtomicSortDropdown implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;
   private sort!: Sort;
+  public searchStatus!: SearchStatus;
   private options: SortDropdownOption[] = [];
   private id = randomID('atomic-sort-dropdown-');
 
   @Element() host!: HTMLElement;
 
   @State() @BindStateToController('sort') public sortState!: SortState;
+  @BindStateToController('searchStatus')
+  @State()
+  private searchStatusState!: SearchStatusState;
   @BindStateToI18n() @State() private strings: I18nState = {
     sortBy: () => this.bindings.i18n.t('sortBy'),
   };
@@ -50,6 +58,7 @@ export class AtomicSortDropdown implements InitializableComponent {
 
   public initialize() {
     this.buildOptions();
+    this.searchStatus = buildSearchStatus(this.bindings.engine);
     this.sort = buildSort(this.bindings.engine, {
       initialState: {
         criterion: this.options[0].criteria,
@@ -126,6 +135,16 @@ export class AtomicSortDropdown implements InitializableComponent {
   }
 
   public render() {
+    if (!this.searchStatusState.firstSearchExecuted) {
+      return (
+        <div
+          part="placeholder"
+          aria-hidden
+          class="h-6 my-2 w-44 bg-divider animate-pulse"
+        ></div>
+      );
+    }
+
     return [
       <div class="flex items-center relative">
         {this.renderLabel()}

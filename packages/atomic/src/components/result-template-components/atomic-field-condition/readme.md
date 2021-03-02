@@ -14,19 +14,6 @@
 | `ifNotDefined` | `if-not-defined` |             | `string \| undefined`       | `undefined` |
 
 
-## Methods
-
-### `getFields() => Promise<string[]>`
-
-
-
-#### Returns
-
-Type: `Promise<string[]>`
-
-
-
-
 ----------------------------------------------
 
 *Built with [StencilJS](https://stenciljs.com/)*

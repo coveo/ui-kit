@@ -3,6 +3,9 @@ import {
   ResultsPerPage,
   buildResultsPerPage,
   ResultsPerPageState,
+  buildSearchStatus,
+  SearchStatus,
+  SearchStatusState,
 } from '@coveo/headless';
 import {
   Bindings,
@@ -28,11 +31,15 @@ import {
 export class AtomicResultsPerPage implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;
   private resultPerPage!: ResultsPerPage;
+  public searchStatus!: SearchStatus;
   private choices!: number[];
 
   @State()
   @BindStateToController('resultPerPage')
   public resultPerPageState!: ResultsPerPageState;
+  @BindStateToController('searchStatus')
+  @State()
+  private searchStatusState!: SearchStatusState;
   @BindStateToI18n()
   @State()
   private strings = {
@@ -48,16 +55,18 @@ export class AtomicResultsPerPage implements InitializableComponent {
   @Prop() choicesDisplayed = '10,25,50,100';
   /**
    * Initial choice for the number of result per page. Should be part of the `choicesDisplayed` option.
+   * By default, the first value of choices displayed.
    */
-  @Prop() initialChoice = 10;
+  @Prop() initialChoice?: number;
 
   public initialize() {
+    this.choices = this.validateChoicesDisplayed();
+    this.validateInitialChoice();
+
+    this.searchStatus = buildSearchStatus(this.bindings.engine);
     this.resultPerPage = buildResultsPerPage(this.bindings.engine, {
       initialState: {numberOfResults: this.initialChoice},
     });
-
-    this.choices = this.validateChoicesDisplayed();
-    this.validateInitialChoice();
   }
 
   private validateChoicesDisplayed() {
@@ -74,6 +83,10 @@ export class AtomicResultsPerPage implements InitializableComponent {
   }
 
   private validateInitialChoice() {
+    if (!this.initialChoice) {
+      this.initialChoice = this.choices[0];
+      return;
+    }
     if (!this.choices.includes(this.initialChoice)) {
       const errorMsg = `The "initialChoice" option value "${this.initialChoice}" is not included in the "choicesDisplayed" option "${this.choicesDisplayed}".`;
       this.bindings.engine.logger.error(errorMsg, this);
@@ -102,6 +115,10 @@ export class AtomicResultsPerPage implements InitializableComponent {
   }
 
   public render() {
+    if (!this.searchStatusState.hasResults) {
+      return;
+    }
+
     return (
       <div class="flex justify-between items-center">
         <span part="label" class="text-on-background pr-4 text-sm">

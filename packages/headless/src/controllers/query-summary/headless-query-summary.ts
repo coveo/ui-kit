@@ -1,21 +1,72 @@
 import {Engine} from '../../app/headless-engine';
 import {PaginationSection, SearchSection} from '../../state/state-sections';
-import {buildController} from '../controller/headless-controller';
-
-export type QuerySummary = ReturnType<typeof buildQuerySummary>;
-/** The state relevant to the `QuerySummary` controller.*/
-export type QuerySummaryState = QuerySummary['state'];
+import {buildController, Controller} from '../controller/headless-controller';
+import {
+  buildSearchStatus,
+  SearchStatusState,
+} from '../search-status/headless-search-status';
 
 /**
- * The QuerySummary component can display information about the current range of results (e.g., "Results
+ * The `QuerySummary` controller provides information about the current query and results (e.g., "Results
  * 1-10 of 123").
+ * */
+export interface QuerySummary extends Controller {
+  /** The state relevant to the `QuerySummary` controller.*/
+  state: QuerySummaryState;
+}
+
+export interface QuerySummaryState extends SearchStatusState {
+  /**
+   * The duration, in milliseconds, that the last query took to execute.
+   */
+  durationInMilliseconds: number;
+
+  /**
+   * The duration, in seconds, that the last query took to execute.
+   */
+  durationInSeconds: number;
+
+  /**
+   * The 1-based index of the first search result returned for the current page.
+   */
+  firstResult: number;
+
+  /**
+   * Determines if a query execution time is available.
+   */
+  hasDuration: boolean;
+
+  /**
+   * Determines if an empty query was executed.
+   */
+  hasQuery: boolean;
+
+  /**
+   * The 1-based index of the last search result returned for the current page.
+   */
+  lastResult: number;
+
+  /**
+   * The query that was last executed (the content of the searchbox).
+   */
+  query: string;
+
+  /**
+   * The total count of results available.
+   */
+  total: number;
+}
+
+/**
+ * Creates a `QuerySummary` controller instance.
  *
- * When the query does not match any items, the QuerySummary component can instead return information to the end users.
+ * @param engine - The headless engine instance.
  */
-export const buildQuerySummary = (
+export function buildQuerySummary(
   engine: Engine<SearchSection & PaginationSection>
-) => {
+): QuerySummary {
   const controller = buildController(engine);
+  const searchStatus = buildSearchStatus(engine);
 
   const durationInSeconds = () => {
     const state = engine.state;
@@ -26,49 +77,19 @@ export const buildQuerySummary = (
   return {
     ...controller,
 
-    /**
-     * @returns {QuerySummaryState} The state of the `QuerySummary` controller.
-     */
     get state() {
       const state = engine.state;
       return {
-        /**
-         * The 1-based index of the first search result returned for the current page.
-         */
-        firstResult: state.pagination.firstResult + 1,
-        /**
-         * The 1-based index of the last search result returned for the current page.
-         */
-        lastResult: state.pagination.firstResult + state.search.results.length,
-        /**
-         * The total count of results available.
-         */
-        total: state.pagination.totalCountFiltered,
-        /**
-         * The query that was last executed (the content of the searchbox).
-         */
-        query: state.search.queryExecuted,
-        /**
-         * Determines if an empty query was executed.
-         */
-        hasQuery: state.search.queryExecuted !== '',
-        /**
-         * Determines if a query execution time is available.
-         */
-        hasDuration: state.search.duration !== 0,
-        /**
-         * Determines if there are results available for the last executed query.
-         */
-        hasResults: state.search.results.length !== 0,
-        /**
-         * The duration, in milliseconds, that the last query took to execute.
-         */
+        ...searchStatus.state,
         durationInMilliseconds: state.search.duration,
-        /**
-         * The duration, in seconds, that the last query took to execute.
-         */
         durationInSeconds: durationInSeconds(),
+        firstResult: state.pagination.firstResult + 1,
+        hasDuration: state.search.duration !== 0,
+        hasQuery: state.search.queryExecuted !== '',
+        lastResult: state.pagination.firstResult + state.search.results.length,
+        query: state.search.queryExecuted,
+        total: state.pagination.totalCountFiltered,
       };
     },
   };
-};
+}

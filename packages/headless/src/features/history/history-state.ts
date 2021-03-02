@@ -20,28 +20,27 @@ export interface HistoryState extends SearchParametersState {
 }
 
 export function getHistoryInitialState(): HistoryState {
-  return {
-    context: getContextInitialState(),
-    facetSet: getFacetSetInitialState(),
-    numericFacetSet: getNumericFacetSetInitialState(),
-    dateFacetSet: getDateFacetSetInitialState(),
-    categoryFacetSet: getCategoryFacetSetInitialState(),
-    pagination: getPaginationInitialState(),
-    query: getQueryInitialState(),
-    advancedSearchQueries: getAdvancedSearchQueriesInitialState(),
-    querySet: getQuerySetInitialState(),
-    sortCriteria: getSortCriteriaInitialState(),
-    pipeline: getPipelineInitialState(),
-    searchHub: getSearchHubInitialState(),
-    facetOptions: getFacetOptionsInitialState(),
-    facetOrder: getFacetOrderInitialState(),
-    debug: getDebugInitialState(),
-  };
+  return extractHistory({});
 }
 
 export function extractHistory(state: Partial<HistoryState>): HistoryState {
   return {
-    ...getHistoryInitialState(),
-    ...state,
+    context: state.context || getContextInitialState(),
+    facetSet: state.facetSet || getFacetSetInitialState(),
+    numericFacetSet: state.numericFacetSet || getNumericFacetSetInitialState(),
+    dateFacetSet: state.dateFacetSet || getDateFacetSetInitialState(),
+    categoryFacetSet:
+      state.categoryFacetSet || getCategoryFacetSetInitialState(),
+    pagination: state.pagination || getPaginationInitialState(),
+    query: state.query || getQueryInitialState(),
+    advancedSearchQueries:
+      state.advancedSearchQueries || getAdvancedSearchQueriesInitialState(),
+    querySet: state.querySet || getQuerySetInitialState(),
+    sortCriteria: state.sortCriteria || getSortCriteriaInitialState(),
+    pipeline: state.pipeline || getPipelineInitialState(),
+    searchHub: state.searchHub || getSearchHubInitialState(),
+    facetOptions: state.facetOptions || getFacetOptionsInitialState(),
+    facetOrder: state.facetOrder ?? getFacetOrderInitialState(),
+    debug: state.debug ?? getDebugInitialState(),
   };
 }

@@ -182,6 +182,7 @@ describe('search api client', () => {
           cq: '',
           aq: '',
           debug: false,
+          locale: state.configuration.search.locale,
           numberOfResults: state.pagination.numberOfResults,
           sortCriteria: state.sortCriteria,
           firstResult: state.pagination.firstResult,

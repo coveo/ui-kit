@@ -11,7 +11,6 @@ node('linux && docker') {
 
       stage('Build') {
         sh 'npm run build'
-        sh 'npm run doc'
       }
 
       stage('Install Chrome') {

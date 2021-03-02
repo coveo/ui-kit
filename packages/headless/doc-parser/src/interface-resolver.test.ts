@@ -1,30 +1,19 @@
-import {
-  ApiMethodSignature,
-  ExcerptTokenKind,
-  IExcerptToken,
-  ReleaseTag,
-} from '@microsoft/api-extractor-model';
+import {buildMockApiDocComment} from '../mocks/mock-api-doc-comment';
 import {buildMockApiInterface} from '../mocks/mock-api-interface';
+import {buildMockApiMethodSignature} from '../mocks/mock-api-method-signature';
 import {buildMockApiPropertySignature} from '../mocks/mock-api-property-signature';
 import {buildMockApiTypeAlias} from '../mocks/mock-api-type-alias';
 import {buildMockEntity} from '../mocks/mock-entity';
 import {buildMockEntryPoint} from '../mocks/mock-entry-point';
+import {
+  buildContentExcerptToken,
+  buildReferenceExcerptToken,
+} from '../mocks/mock-excerpt-token';
 import {buildMockFuncEntity} from '../mocks/mock-func-entity';
 import {buildMockObjEntity} from '../mocks/mock-obj-entity';
 import {resolveInterfaceMembers} from './interface-resolver';
 
 describe('#resolveInterfaceMembers', () => {
-  function buildContentExcerptToken(text: string): IExcerptToken {
-    return {kind: ExcerptTokenKind.Content, text};
-  }
-
-  function buildReferenceExcerptToken(
-    text: string,
-    canonicalReference: string
-  ): IExcerptToken {
-    return {kind: ExcerptTokenKind.Reference, text, canonicalReference};
-  }
-
   it('resolves a property with a primitive type', () => {
     const entryPoint = buildMockEntryPoint();
     const apiInterface = buildMockApiInterface({name: 'Pager'});
@@ -93,18 +82,55 @@ describe('#resolveInterfaceMembers', () => {
     const objEntity = buildMockObjEntity({
       name: 'state',
       type: 'PagerState',
+      typeName: 'PagerState',
       members: [entity],
     });
 
     expect(result).toEqual([objEntity]);
   });
 
+  it('resolves a property with an interface array type', () => {
+    const entry = buildMockEntryPoint();
+    const queryCorrection = buildMockApiInterface({name: 'QueryCorrection'});
+
+    const wordCorrections = buildMockApiPropertySignature({
+      name: 'wordCorrections',
+      excerptTokens: [
+        buildContentExcerptToken('wordCorrections: '),
+        buildReferenceExcerptToken('WordCorrection', ''),
+        buildContentExcerptToken('[]'),
+        buildContentExcerptToken(';'),
+      ],
+      propertyTypeTokenRange: {startIndex: 1, endIndex: 3},
+    });
+
+    const wordCorrection = buildMockApiInterface({name: 'WordCorrection'});
+
+    queryCorrection.addMember(wordCorrections);
+    entry.addMember(queryCorrection);
+    entry.addMember(wordCorrection);
+
+    const result = resolveInterfaceMembers(entry, queryCorrection);
+
+    const expected = buildMockObjEntity({
+      name: 'wordCorrections',
+      type: 'WordCorrection[]',
+      typeName: 'WordCorrection',
+    });
+
+    expect(result).toEqual([expected]);
+  });
+
   it('resolves a method with primitive return type', () => {
     const entryPoint = buildMockEntryPoint();
     const pagerInterface = buildMockApiInterface({name: 'Pager'});
 
-    const method = new ApiMethodSignature({
-      docComment: undefined,
+    const docComment = buildMockApiDocComment(
+      '/**\n * Returns `true` when the current page is equal to the passed page, and `false` otherwise.\n *\n * @param page - The page number to check.\n *\n * @returns Whether the passed page is selected.\n */\n'
+    );
+
+    const method = buildMockApiMethodSignature({
+      docComment,
       excerptTokens: [
         buildContentExcerptToken('isCurrentPage(page: '),
         buildContentExcerptToken('number'),
@@ -112,27 +138,32 @@ describe('#resolveInterfaceMembers', () => {
         buildContentExcerptToken('boolean'),
         buildContentExcerptToken(';'),
       ],
-      isOptional: false,
       name: 'isCurrentPage',
-      overloadIndex: 1,
       parameters: [
         {
           parameterName: 'page',
           parameterTypeTokenRange: {startIndex: 1, endIndex: 2},
         },
       ],
-      releaseTag: ReleaseTag.None,
       returnTypeTokenRange: {startIndex: 3, endIndex: 4},
-      typeParameters: [],
     });
 
     pagerInterface.addMember(method);
     entryPoint.addMember(pagerInterface);
 
     const result = resolveInterfaceMembers(entryPoint, pagerInterface);
+
+    const paramEntity = buildMockEntity({
+      name: 'page',
+      type: 'number',
+      desc: 'The page number to check.',
+    });
+
     const funcEntity = buildMockFuncEntity({
       name: 'isCurrentPage',
-      params: [buildMockEntity({name: 'page', type: 'number'})],
+      desc:
+        'Returns `true` when the current page is equal to the passed page, and `false` otherwise.',
+      params: [paramEntity],
       returnType: 'boolean',
     });
     expect(result).toEqual([funcEntity]);
@@ -235,8 +266,233 @@ describe('#resolveInterfaceMembers', () => {
     const entity = buildMockObjEntity({
       name: 'values',
       type: 'SpecificFacetSearchResult[]',
+      typeName: 'SpecificFacetSearchResult',
     });
 
     expect(result).toEqual([entity]);
+  });
+
+  it(`interface with method with one parameter with a complex type,
+  it resolves the parameter as an object`, () => {
+    const entry = buildMockEntryPoint();
+    const facet = buildMockApiInterface({name: 'Facet'});
+
+    const docComment = buildMockApiDocComment(
+      '/**\n * Toggles the specified facet value.\n *\n * @param selection - The facet value to toggle.\n */\n'
+    );
+    const toggleSelect = buildMockApiMethodSignature({
+      name: 'toggleSelect',
+      docComment,
+      excerptTokens: [
+        buildContentExcerptToken('toggleSelect(selection: '),
+        buildReferenceExcerptToken(
+          'FacetValue$1',
+          '@coveo/headless!~FacetValue$1:interface'
+        ),
+        buildContentExcerptToken('): '),
+        buildContentExcerptToken('void'),
+        buildContentExcerptToken(';'),
+      ],
+      returnTypeTokenRange: {startIndex: 3, endIndex: 4},
+      parameters: [
+        {
+          parameterName: 'selection',
+          parameterTypeTokenRange: {startIndex: 1, endIndex: 2},
+        },
+      ],
+    });
+
+    const facetValue = buildMockApiInterface({name: 'FacetValue'});
+
+    facet.addMember(toggleSelect);
+    entry.addMember(facet);
+    entry.addMember(facetValue);
+
+    const result = resolveInterfaceMembers(entry, facet);
+
+    const param = buildMockObjEntity({
+      name: 'selection',
+      type: 'FacetValue',
+      typeName: 'FacetValue',
+      desc: 'The facet value to toggle.',
+    });
+
+    const funcEntity = buildMockFuncEntity({
+      name: 'toggleSelect',
+      desc: 'Toggles the specified facet value.',
+      params: [param],
+      returnType: 'void',
+    });
+
+    expect(result).toEqual([funcEntity]);
+  });
+
+  it(`interface with method with parameter with type alias,
+  it resolves the type alias`, () => {
+    const entry = buildMockEntryPoint();
+    const context = buildMockApiInterface({name: 'Context'});
+
+    const docComment = buildMockApiDocComment(
+      '/**\n * Add, or replace if already present, a new context key and value pair.\n *\n * @param contextValue - The context value to add.\n */\n'
+    );
+    const add = buildMockApiMethodSignature({
+      name: 'add',
+      docComment,
+      excerptTokens: [
+        buildContentExcerptToken('add(contextValue: '),
+        buildReferenceExcerptToken(
+          'ContextValue',
+          '@coveo/headless!~ContextValue:type'
+        ),
+        buildContentExcerptToken('): '),
+        buildContentExcerptToken('void'),
+        buildContentExcerptToken(';'),
+      ],
+      parameters: [
+        {
+          parameterName: 'contextValue',
+          parameterTypeTokenRange: {startIndex: 1, endIndex: 2},
+        },
+      ],
+      returnTypeTokenRange: {startIndex: 3, endIndex: 4},
+    });
+
+    const contextValue = buildMockApiTypeAlias({
+      name: 'ContextValue',
+      excerptTokens: [
+        buildContentExcerptToken('declare type ContextValue = '),
+        buildContentExcerptToken('string | string[]'),
+        buildContentExcerptToken(';'),
+      ],
+      typeTokenRange: {startIndex: 1, endIndex: 2},
+    });
+
+    context.addMember(add);
+    entry.addMember(context);
+    entry.addMember(contextValue);
+
+    const result = resolveInterfaceMembers(entry, context);
+
+    const param = buildMockEntity({
+      name: 'contextValue',
+      type: 'string | string[]',
+      desc: 'The context value to add.',
+    });
+
+    const funcEntity = buildMockFuncEntity({
+      name: 'add',
+      desc:
+        'Add, or replace if already present, a new context key and value pair.',
+      params: [param],
+      returnType: 'void',
+    });
+    expect(result).toEqual([funcEntity]);
+  });
+
+  it(`an interface extends another interface,
+  it resolves the members of both interfaces`, () => {
+    const entry = buildMockEntryPoint();
+
+    const querySummaryState = buildMockApiInterface({
+      name: 'QuerySummaryState',
+      excerptTokens: [
+        buildContentExcerptToken('interface QuerySummaryState extends '),
+        buildReferenceExcerptToken(
+          'SearchStatusState',
+          '@coveo/headless!~SearchStatusState:interface'
+        ),
+        buildContentExcerptToken(' '),
+      ],
+      extendsTokenRanges: [{startIndex: 1, endIndex: 3}],
+    });
+    const query = buildMockApiPropertySignature({
+      name: 'query',
+      excerptTokens: [
+        buildContentExcerptToken('query: '),
+        buildContentExcerptToken('string'),
+        buildContentExcerptToken(';'),
+      ],
+      propertyTypeTokenRange: {startIndex: 1, endIndex: 2},
+    });
+
+    const searchStatusState = buildMockApiInterface({
+      name: 'SearchStatusState',
+    });
+    const isLoading = buildMockApiPropertySignature({
+      name: 'isLoading',
+      excerptTokens: [
+        buildContentExcerptToken('isLoading: '),
+        buildContentExcerptToken('boolean'),
+        buildContentExcerptToken(';'),
+      ],
+      propertyTypeTokenRange: {startIndex: 1, endIndex: 2},
+    });
+
+    querySummaryState.addMember(query);
+    searchStatusState.addMember(isLoading);
+
+    entry.addMember(querySummaryState);
+    entry.addMember(searchStatusState);
+
+    const result = resolveInterfaceMembers(entry, querySummaryState);
+
+    const queryEntity = buildMockEntity({name: 'query', type: 'string'});
+    const isLoadingEntity = buildMockEntity({
+      name: 'isLoading',
+      type: 'boolean',
+    });
+
+    expect(result).toEqual([queryEntity, isLoadingEntity]);
+  });
+
+  it(`an interface extends another interface,
+  both have a property with the same name,
+  it discards the inherited property`, () => {
+    const entry = buildMockEntryPoint();
+    const pager = buildMockApiInterface({
+      name: 'Pager',
+      excerptTokens: [
+        buildContentExcerptToken('interface Pager extends '),
+        buildReferenceExcerptToken('Controller', ''),
+        buildContentExcerptToken(' '),
+      ],
+      extendsTokenRanges: [{startIndex: 1, endIndex: 3}],
+    });
+
+    const pagerState = buildMockApiPropertySignature({
+      name: 'state',
+      excerptTokens: [
+        buildContentExcerptToken('state: '),
+        buildContentExcerptToken('string'),
+        buildContentExcerptToken(';'),
+      ],
+      propertyTypeTokenRange: {startIndex: 1, endIndex: 2},
+    });
+
+    const controller = buildMockApiInterface({name: 'Controller'});
+
+    const controllerState = buildMockApiPropertySignature({
+      name: 'state',
+      excerptTokens: [
+        buildContentExcerptToken('state: '),
+        buildContentExcerptToken('boolean'),
+        buildContentExcerptToken(';'),
+      ],
+      propertyTypeTokenRange: {startIndex: 1, endIndex: 2},
+    });
+
+    pager.addMember(pagerState);
+    controller.addMember(controllerState);
+
+    entry.addMember(pager);
+    entry.addMember(controller);
+
+    const result = resolveInterfaceMembers(entry, pager);
+    const expected = buildMockEntity({
+      name: 'state',
+      type: 'string',
+    });
+
+    expect(result).toEqual([expected]);
   });
 });

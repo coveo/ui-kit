@@ -1,5 +1,12 @@
 import {Component, h, Prop, State} from '@stencil/core';
-import {Pager, PagerState, buildPager} from '@coveo/headless';
+import {
+  Pager,
+  PagerState,
+  buildPager,
+  buildSearchStatus,
+  SearchStatus,
+  SearchStatusState,
+} from '@coveo/headless';
 import {
   Bindings,
   BindStateToController,
@@ -27,10 +34,14 @@ import ArrowLeftIcon from 'coveo-styleguide/resources/icons/svg/arrow-left-round
 export class AtomicPager implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;
   private pager!: Pager;
+  public searchStatus!: SearchStatus;
 
   @BindStateToController('pager')
   @State()
   private pagerState!: PagerState;
+  @BindStateToController('searchStatus')
+  @State()
+  private searchStatusState!: SearchStatusState;
   @BindStateToI18n()
   @State()
   private strings = {
@@ -51,6 +62,7 @@ export class AtomicPager implements InitializableComponent {
   @Prop() enableNavigationButtons = true;
 
   public initialize() {
+    this.searchStatus = buildSearchStatus(this.bindings.engine);
     this.pager = buildPager(this.bindings.engine, {
       options: {numberOfPages: this.numberOfPages},
     });
@@ -135,6 +147,10 @@ export class AtomicPager implements InitializableComponent {
   }
 
   public render() {
+    if (!this.searchStatusState.hasResults) {
+      return;
+    }
+
     return (
       <nav aria-label={this.strings.pagination()} class="items-center ">
         <ul part="buttons" class="flex justify-between space-x-2">

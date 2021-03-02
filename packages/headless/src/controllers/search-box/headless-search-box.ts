@@ -114,6 +114,7 @@ export function buildSearchBox(
     },
 
     /**
+     * @deprecated suggestions should be hidden using css instead for an optimal user experience.
      * Clears the suggestions.
      */
     hideSuggestions() {

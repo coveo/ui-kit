@@ -14,3 +14,7 @@ export function arrayEquals<T>(firstArray: T[], secondArray: T[]) {
     firstArray.findIndex((val, i) => secondArray[i] !== val) === -1
   );
 }
+
+export function isEmptyString(str: string) {
+  return str.trim() === '';
+}

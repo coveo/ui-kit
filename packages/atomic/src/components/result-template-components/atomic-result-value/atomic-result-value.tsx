@@ -1,30 +1,69 @@
-import {Component, Prop, Element} from '@stencil/core';
-import {Result, ResultTemplatesHelpers} from '@coveo/headless';
-import {
-  ResultContext,
-  ResultContextRenderer,
-} from '../result-template-decorators';
+import {Component, Prop, Element, h, Host} from '@stencil/core';
+import {Result, ResultTemplatesHelpers, HighlightUtils} from '@coveo/headless';
+import {ResultContext} from '../result-template-decorators';
 
+/**
+ * The ResultValue component renders the value of a result property.
+ */
 @Component({
   tag: 'atomic-result-value',
-  shadow: true,
+  shadow: false,
 })
 export class AtomicResultValue {
-  @Element() host!: HTMLDivElement;
-  @Prop() value = '';
-
   @ResultContext() private result!: Result;
 
-  @ResultContextRenderer
-  public render() {
-    const resultValue = ResultTemplatesHelpers.getResultProperty(
+  @Element() host!: HTMLElement;
+
+  /**
+   * Which result value should the component render
+   */
+  @Prop() value!: string;
+  /**
+   * Which highlight should the value be highlighted with
+   */
+  @Prop() shouldHighlightWith?: string;
+
+  private get resultValue() {
+    return `${ResultTemplatesHelpers.getResultProperty(
       this.result,
       this.value
-    );
-    if (resultValue !== null) {
-      return resultValue;
+    )}`;
+  }
+
+  private renderWithHighlights() {
+    try {
+      const highlights = ResultTemplatesHelpers.getResultProperty(
+        this.result,
+        this.shouldHighlightWith!
+      ) as HighlightUtils.HighlightKeyword[];
+
+      const highlightedValue = HighlightUtils.highlightString({
+        content: this.resultValue,
+        openingDelimiter: '<strong>',
+        closingDelimiter: '</strong>',
+        highlights,
+      });
+      return <Host innerHTML={highlightedValue}></Host>;
+    } catch (error) {
+      return (
+        <atomic-component-error
+          element={this.host}
+          error={error}
+        ></atomic-component-error>
+      );
+    }
+  }
+
+  public render() {
+    if (this.resultValue === null) {
+      this.host.remove();
+      return;
     }
 
-    this.host.remove();
+    if (this.shouldHighlightWith) {
+      return this.renderWithHighlights();
+    }
+
+    return this.resultValue;
   }
 }

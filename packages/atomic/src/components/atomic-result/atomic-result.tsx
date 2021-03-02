@@ -7,9 +7,10 @@ import {bindLogDocumentOpenOnResult} from '../../utils/result-utils';
   shadow: true,
 })
 export class AtomicResult {
-  @Element() host!: HTMLDivElement;
+  @Element() host!: HTMLElement;
   @Prop() result!: Result;
   @Prop() engine!: Engine;
+  @Prop() content!: string;
 
   private unbindLogDocumentOpen = () => {};
 
@@ -17,7 +18,7 @@ export class AtomicResult {
     this.unbindLogDocumentOpen = bindLogDocumentOpenOnResult(
       this.engine,
       this.result,
-      this.host
+      this.host.shadowRoot!
     );
   }
 
@@ -26,6 +27,6 @@ export class AtomicResult {
   }
 
   public render() {
-    return <slot></slot>;
+    return <div innerHTML={this.content}></div>;
   }
 }

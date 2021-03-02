@@ -16,13 +16,11 @@ import {
 } from '../../utils/initialization-utils';
 
 /**
- * @part list - The list wrapper
- * @part list-element - The list element
+ * The `ResultList` component is responsible for displaying query results by applying one or several result templates.
  */
 @Component({
   tag: 'atomic-result-list',
-  styleUrl: 'atomic-result-list.pcss',
-  shadow: true,
+  shadow: false,
 })
 export class AtomicResultList implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;
@@ -34,21 +32,19 @@ export class AtomicResultList implements InitializableComponent {
   @BindStateToController('resultList')
   @State()
   private resultListState!: ResultListState;
+
   @State() public error!: Error;
+  @State() private templateHasError = false;
 
   /**
+   * TODO: KIT-452 Infinite scroll feature
    * Whether to automatically retrieve an additional page of results and append it to the
    * current results when the user scrolls down to the bottom of element
    */
-  @Prop() public enableInfiniteScroll = false;
+  private enableInfiniteScroll = false;
   /**
-   * Css class for the list wrapper
+   * A list of fields to include in the query results, separated by commas.
    */
-  @Prop() public listClass = '';
-  /**
-   * Css class for a list element
-   */
-  @Prop() public listElementClass = '';
   @Prop() public fieldsToInclude = '';
 
   private get fields() {
@@ -68,7 +64,7 @@ export class AtomicResultList implements InitializableComponent {
   }
 
   private registerDefaultResultTemplates() {
-    // TODO: get fields & conditions from default templates
+    // TODO: build more default templates
     this.resultTemplatesManager.registerTemplates({
       content: defaultTemplate,
       conditions: [],
@@ -79,26 +75,23 @@ export class AtomicResultList implements InitializableComponent {
     this.host
       .querySelectorAll('atomic-result-template')
       .forEach(async (resultTemplateElement) => {
-        const conditions = await resultTemplateElement.getConditions();
-        const fields = await resultTemplateElement.getFields();
-        this.resultTemplatesManager.registerTemplates({
-          content: resultTemplateElement.innerHTML,
-          conditions,
-          fields,
-          priority: 1,
-        });
+        const template = await resultTemplateElement.getTemplate();
+        if (!template) {
+          this.templateHasError = true;
+          return;
+        }
+        this.resultTemplatesManager.registerTemplates(template);
       });
   }
 
   private get results() {
     return this.resultListState.results.map((result) => (
       <atomic-result
-        key={result.uniqueId}
-        part="list-element"
-        class={this.listElementClass}
+        key={result.raw.permanentid}
         result={result}
         engine={this.bindings.engine}
-        innerHTML={Mustache.render(
+        // TODO: decide to get rid of Mustache or not
+        content={Mustache.render(
           this.resultTemplatesManager.selectTemplate(result) || '',
           result
         )}
@@ -106,7 +99,6 @@ export class AtomicResultList implements InitializableComponent {
     ));
   }
 
-  // TODO: improve rudimentary infinite scroll, add scroll container option
   @Listen('scroll', {target: 'window'})
   handleInfiniteScroll() {
     if (!this.enableInfiniteScroll) {
@@ -122,10 +114,10 @@ export class AtomicResultList implements InitializableComponent {
   }
 
   public render() {
-    return (
-      <div part="list" class={this.listClass}>
-        {this.results}
-      </div>
-    );
+    if (!this.resultListState.firstSearchExecuted) {
+      return <atomic-result-list-placeholder></atomic-result-list-placeholder>;
+    }
+
+    return [this.templateHasError && <slot></slot>, this.results];
   }
 }

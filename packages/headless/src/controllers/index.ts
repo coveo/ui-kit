@@ -9,11 +9,19 @@ export {
   buildRelevanceInspector,
 } from './relevance-inspector/headless-relevance-inspector';
 
-export {Context, ContextState, buildContext} from './context/headless-context';
+export {
+  Context,
+  ContextState,
+  ContextValue,
+  ContextPayload,
+  buildContext,
+} from './context/headless-context';
 
 export {
   DidYouMean,
   DidYouMeanState,
+  QueryCorrection,
+  WordCorrection,
   buildDidYouMean,
 } from './did-you-mean/headless-did-you-mean';
 
@@ -50,11 +58,13 @@ export {
 
 export {
   buildNumericRange,
+  NumericRangeOptions,
+  NumericRangeRequest,
+  buildNumericFacet,
   NumericFacetOptions,
   NumericFacetProps,
   NumericFacetState,
   NumericFacet,
-  buildNumericFacet,
 } from './facets/range-facet/numeric-facet/headless-numeric-facet';
 
 export {History, HistoryState, buildHistory} from './history/headless-history';
@@ -69,8 +79,8 @@ export {
 } from './pager/headless-pager';
 
 export {
-  QueryErrorState,
   QueryError,
+  QueryErrorState,
   buildQueryError,
 } from './query-error/headless-query-error';
 
@@ -85,6 +95,13 @@ export {
   ResultList,
   buildResultList,
 } from './result-list/headless-result-list';
+
+export {
+  InteractiveResultOptions,
+  InteractiveResultProps,
+  InteractiveResult,
+  buildInteractiveResult,
+} from './result-list/headless-interactive-result';
 
 export {
   ResultsPerPageInitialState,
@@ -208,3 +225,11 @@ export {
   SearchParameterManager,
   buildSearchParameterManager,
 } from './search-parameter-manager/headless-search-parameter-manager';
+
+export {
+  SearchStatus,
+  SearchStatusState,
+  buildSearchStatus,
+} from './search-status/headless-search-status';
+
+export {ErrorPayload} from './controller/error-payload';

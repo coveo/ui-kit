@@ -3,17 +3,17 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from './initialization-utils';
-import {AtomicPager} from '../components/atomic-pager/atomic-pager';
-import {buildPager, Controller, TestUtils} from '@coveo/headless';
+import {buildSearchBox, Controller, TestUtils} from '@coveo/headless';
 import {newSpecPage, SpecPage} from '@stencil/core/testing';
 import {AtomicSearchInterface} from '../components/atomic-search-interface/atomic-search-interface';
 import i18next from 'i18next';
+import {AtomicSearchBox} from '../components/atomic-search-box/atomic-search-box';
 
 describe('InitializeBindings decorator', () => {
   it(`when using the decorator with a property other than bindings 
   should log an error`, () => {
     console.error = jest.fn();
-    const component: InitializableComponent = new AtomicPager();
+    const component: InitializableComponent = new AtomicSearchBox();
     InitializeBindings()(component, 'anything');
 
     expect(console.error).toHaveBeenCalledWith(
@@ -27,15 +27,15 @@ describe('InitializeBindings decorator', () => {
 
     function getErrorComponent() {
       return page.body
-        .querySelector('atomic-pager')!
+        .querySelector('atomic-search-box')!
         .shadowRoot!.querySelector('atomic-component-error');
     }
 
     it(`when the child-component component is not the child of an atomic-search-interface component
     should set an error`, async () => {
       page = await newSpecPage({
-        components: [AtomicPager],
-        html: '<atomic-pager></atomic-pager>',
+        components: [AtomicSearchBox],
+        html: '<atomic-search-box></atomic-search-box>',
       });
 
       expect(getErrorComponent()).toBeTruthy();
@@ -44,7 +44,7 @@ describe('InitializeBindings decorator', () => {
     it(`when child component is loaded
     should dispatch an "atomic/initializeComponent" custom event with the initialize method as detail`, async () => {
       page = await newSpecPage({
-        components: [AtomicPager, AtomicSearchInterface],
+        components: [AtomicSearchBox, AtomicSearchInterface],
         html: '<atomic-search-interface></atomic-search-interface>',
       });
       let eventContent!: CustomEvent;
@@ -52,7 +52,7 @@ describe('InitializeBindings decorator', () => {
         .fn()
         .mockImplementation((event) => (eventContent = event));
       page.root!.addEventListener('atomic/initializeComponent', spy);
-      page.root!.innerHTML = '<atomic-pager></atomic-pager>';
+      page.root!.innerHTML = '<atomic-search-box></atomic-search-box>';
       await page.waitForChanges();
 
       expect(spy).toHaveBeenCalled();
@@ -64,7 +64,7 @@ describe('InitializeBindings decorator', () => {
     let component: InitializableComponent;
 
     beforeEach(() => {
-      component = new AtomicPager();
+      component = new AtomicSearchBox();
     });
 
     it(`when "error" is defined
@@ -141,7 +141,7 @@ describe('BindStateToController decorator', () => {
   describe('when controller is initialized', () => {
     let controller: Controller;
     beforeEach(() => {
-      controller = buildPager(component.bindings.engine);
+      controller = buildSearchBox(component.bindings.engine);
       component.initialize = () => {
         component.controller = controller;
       };

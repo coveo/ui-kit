@@ -7,11 +7,7 @@ import {
 } from '../analytics/analytics-utils';
 import {Result} from '../../api/search/search/result';
 
-/**
- * Logs a click event with an `actionCause` value of `documentOpen`.
- * @param result (Result) The result that was opened.
- */
-export const logDocumentOpen = (result: Result) =>
+export const logDocumentOpenThunk = (result: Result) =>
   makeAnalyticsAction(
     'analytics/result/open',
     AnalyticsType.Click,
@@ -22,4 +18,11 @@ export const logDocumentOpen = (result: Result) =>
         documentIdentifier(result)
       );
     }
-  )();
+  );
+
+/**
+ * Logs a click event with an `actionCause` value of `documentOpen`.
+ * @param result (Result) The result that was opened.
+ */
+export const logDocumentOpen = (result: Result) =>
+  logDocumentOpenThunk(result)();

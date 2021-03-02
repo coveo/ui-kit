@@ -1,5 +1,4 @@
-@import "tailwindcss/base";
-@import "tailwindcss/utilities";
+@import "../../global/global.pcss";
 
 /**
  * @prop --atomic-submit-button-size: Size of the submit button inside the search box
@@ -13,10 +12,16 @@
   height: var(--atomic-search-box-height, 48px);
 }
 
-.suggestion {
-  top: var(--atomic-search-box-height, 48px);
+.input-wrapper.leading-submit {
+  @apply border-l-0 rounded-r-lg;
 }
 
-.suggestions:empty {
-  border: none;
+.suggestions {
+  top: var(--atomic-search-box-height, 48px);
+  left: 0;
 }
+
+.suggestion.active, .suggestion:hover {
+  @apply bg-primary text-on-primary;
+}
+
