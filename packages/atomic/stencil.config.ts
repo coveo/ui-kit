@@ -21,6 +21,7 @@ export const config: Config = {
     {
       type: 'dist',
       esmLoaderPath: '../loader',
+      copy: [{src: 'themes'}],
     },
     {
       type: 'docs-readme',
@@ -28,7 +29,7 @@ export const config: Config = {
     {
       type: 'www',
       serviceWorker: null, // disable service workers
-      copy: [{src: 'pages'}],
+      copy: [{src: 'pages'}, {src: 'themes'}],
     },
   ],
   testing: {
@@ -46,7 +47,6 @@ export const config: Config = {
     inlineSvg(),
     postcss({
       plugins: [atImport(), tailwind(), autoprefixer()],
-      injectGlobalPaths: ['src/globals/utilities.pcss'],
     }),
   ],
   rollupPlugins: {

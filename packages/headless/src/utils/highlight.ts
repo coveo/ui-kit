@@ -31,7 +31,7 @@ export interface HighlightParams {
   closingDelimiter: string;
 }
 
-interface Delimiters {
+export interface Delimiters {
   /**
    * Opening delimiter
    */

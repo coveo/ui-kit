@@ -11,6 +11,17 @@ const entryPoint = apiPackage.entryPoints[0];
 
 const controllers: ControllerConfiguration[] = [
   {
+    initializer: 'buildFacet',
+    samplePaths: {
+      react_class: [
+        'packages/samples/headless-react/src/components/facet/facet.class.tsx',
+      ],
+      react_fn: [
+        'packages/samples/headless-react/src/components/facet/facet.fn.tsx',
+      ],
+    },
+  },
+  {
     initializer: 'buildPager',
     samplePaths: {
       react_class: [
@@ -28,6 +39,10 @@ const controllers: ControllerConfiguration[] = [
         'packages/samples/headless-react/src/components/context/context.ts',
       ],
     },
+  },
+  {
+    initializer: 'buildCategoryFacet',
+    samplePaths: {},
   },
   {
     initializer: 'buildDidYouMean',
@@ -92,6 +107,37 @@ const controllers: ControllerConfiguration[] = [
       ],
       react_fn: [
         'packages/samples/headless-react/src/components/search-status/search-status.fn.tsx',
+      ],
+    },
+  },
+  {
+    initializer: 'buildSearchBox',
+    samplePaths: {
+      react_class: [
+        'packages/samples/headless-react/src/components/search-box/search-box.class.tsx',
+      ],
+      react_fn: [
+        'packages/samples/headless-react/src/components/search-box/search-box.fn.tsx',
+      ],
+    },
+  },
+  {
+    initializer: 'buildInteractiveResult',
+    samplePaths: {
+      react_class: [],
+      react_fn: [
+        'packages/samples/headless-react/src/components/result-list/result-link.tsx',
+      ],
+    },
+  },
+  {
+    initializer: 'buildResultsPerPage',
+    samplePaths: {
+      react_class: [
+        'packages/samples/headless-react/src/components/results-per-page/results-per-page.class.tsx',
+      ],
+      react_fn: [
+        'packages/samples/headless-react/src/components/results-per-page/results-per-page.fn.tsx',
       ],
     },
   },
