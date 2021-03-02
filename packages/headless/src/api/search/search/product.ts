@@ -50,7 +50,7 @@ export type Product = {
    */
   thumbnailUrl?: string;
   /**
-   * Product images in URL format.
+   * Additional product images in URL format.
    *
    * From the `ec_images` field.
    */

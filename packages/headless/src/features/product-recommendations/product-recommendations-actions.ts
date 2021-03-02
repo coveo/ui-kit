@@ -109,7 +109,6 @@ const mapResultToProductResult = (result: Result): ProductRecommendation => {
     | undefined;
   const inStock = (result.raw.ec_in_stock || result.raw.in_stock) as
     | string
-    | boolean
     | undefined;
 
   return {
@@ -127,8 +126,7 @@ const mapResultToProductResult = (result: Result): ProductRecommendation => {
     imageUrls: result.raw.ec_images as string[],
     promoPrice:
       promoPrice === undefined || promoPrice === price ? undefined : promoPrice,
-    inStock:
-      inStock === undefined ? undefined : inStock === 'yes' || inStock === true,
+    inStock: inStock === undefined ? undefined : inStock === 'yes',
     rating: (result.raw.ec_rating || result.raw.rating) as number,
     tags: result.raw.tags as string[],
   };
