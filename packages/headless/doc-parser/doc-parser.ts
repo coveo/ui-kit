@@ -30,6 +30,10 @@ const controllers: ControllerConfiguration[] = [
     },
   },
   {
+    initializer: 'buildCategoryFacet',
+    samplePaths: {},
+  },
+  {
     initializer: 'buildDidYouMean',
     samplePaths: {
       react_class: [

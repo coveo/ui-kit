@@ -84,7 +84,7 @@ export interface Facet extends Controller {
   /**
    * Sorts the facet values according to the specified criterion.
    *
-   * @param criterion - The criterion to sort values by.
+   * @param criterion - The criterion to use for sorting values.
    */
   sortBy(criterion: FacetSortCriterion): void;
 
@@ -102,7 +102,7 @@ export interface Facet extends Controller {
   showMoreValues(): void;
 
   /**
-   * Sets the displayed number of values to the originally configured value.
+   * Sets the number of values displayed in the facet to the originally configured value.
    * */
   showLessValues(): void;
 
@@ -116,7 +116,7 @@ export interface Facet extends Controller {
  * A scoped and simplified part of the headless state that is relevant to the `Facet` controller.
  */
 export interface FacetState {
-  /** The facet id. */
+  /** The facet ID. */
   facetId: string;
 
   /** The values of the facet. */
@@ -196,7 +196,7 @@ export interface SpecificFacetSearchResult {
   rawValue: string;
 
   /**
-   * An estimate number of result items matching both the current query and
+   * An estimate of the number of result items matching both the current query and
    * the filter expression that would get generated if the facet value were selected.
    */
   count: number;
