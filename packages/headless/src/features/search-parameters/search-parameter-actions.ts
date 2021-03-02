@@ -14,7 +14,7 @@ export interface SearchParameters {
   aq?: string;
 
   /**
-   * A record of the category facets, where the key is the facet id, and values are the parts of the selected path.
+   * A record of the category facets, where the key is the facet id, and value is an array containing the parts of the selected path.
    */
   cf?: Record<string, string[]>;
 
@@ -29,7 +29,7 @@ export interface SearchParameters {
   debug?: boolean;
 
   /**
-   * A record of the date facets, where the key is the facet id, and the values are the date ranges to request.
+   * A record of the date facets, where the key is the facet id, and value is an array containing the date ranges to request.
    */
   df?: Record<string, DateRangeRequest[]>;
 
@@ -39,7 +39,7 @@ export interface SearchParameters {
   enableQuerySyntax?: boolean;
 
   /**
-   * A record of the facets, where the key is the facet id, and values are the selected values.
+   * A record of the facets, where the key is the facet id, and value is an array containing the selected values.
    */
   f?: Record<string, string[]>;
 
@@ -49,7 +49,7 @@ export interface SearchParameters {
   firstResult?: number;
 
   /**
-   * A record of the numeric facets, where the key is the facet id, and the values are the numeric ranges to request.
+   * A record of the numeric facets, where the key is the facet id, and value is an array containing the numeric ranges to request.
    */
   nf?: Record<string, NumericRangeRequest[]>;
 
