@@ -39,7 +39,7 @@ node('linux && docker') {
       }
 
       stage('Generate Docs') {
-        sh 'npm run doc:create'
+        sh 'npm run doc:generate'
       }
     }
 
