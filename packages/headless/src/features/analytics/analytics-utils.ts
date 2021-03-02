@@ -129,7 +129,7 @@ export const partialDocumentInformation = (
     documentUriHash: result.raw.urihash,
     documentUrl: result.clickUri,
     rankingModifier: result.rankingModifier || '',
-    sourceName: result.raw.sourcetype,
+    sourceName: result.raw.sourcetype || '',
     queryPipeline: state.pipeline || getPipelineInitialState(),
   };
 };
@@ -137,7 +137,7 @@ export const partialDocumentInformation = (
 export const documentIdentifier = (result: Result): DocumentIdentifier => {
   return {
     contentIDKey: '@permanentid',
-    contentIDValue: result.raw.permanentid,
+    contentIDValue: result.raw.permanentid || '',
   };
 };
 
