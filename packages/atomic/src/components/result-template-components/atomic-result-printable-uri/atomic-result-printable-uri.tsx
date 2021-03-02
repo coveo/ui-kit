@@ -73,7 +73,7 @@ export class AtomicResultPrintableUri {
     const parents = this.allParents;
     if (
       this.listExpanded ||
-      parents.length < Math.max(this.minNumOfParts, this.maxNumOfParts)
+      parents.length <= Math.max(this.minNumOfParts, this.maxNumOfParts)
     ) {
       return parents;
     }
