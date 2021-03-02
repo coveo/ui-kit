@@ -2,7 +2,7 @@ import {LightningElement, api, track} from 'lwc';
 import TributePath from '@salesforce/resourceUrl/tributejs';
 // @ts-ignore
 import {loadScript} from 'lightning/platformResourceLoader';
-import {getHeadlessEngine, registerComponentForInit, setComponentInitialized} from 'c/headlessLoader';
+import {registerComponentForInit, initializeWithHeadless} from 'c/headlessLoader';
 
 export default class SearchBox extends LightningElement {
   /** @type {import("coveo").SearchBoxState} */
@@ -31,14 +31,7 @@ export default class SearchBox extends LightningElement {
   }
 
   connectedCallback() {
-    try {
-      getHeadlessEngine(this).then((engine) => {
-        this.initialize(engine);
-        setComponentInitialized(this);
-      })
-    } catch (error) {
-      console.error('Fatal error: unable to initialize component', error);
-    }
+    initializeWithHeadless(this, this.initialize.bind(this));
 
     if (this.tributeLoaded) {
       return;

@@ -55,16 +55,20 @@ const getAreComponentsReady = () => !window.coveoHeadless.components.find(compon
  * @param element 
  */
 async function initEngine(element) {
-  await loadScript(element, HeadlessPath + '/browser/headless.js');
-  await loadScript(element, AtomicPath + '/atomic-utils.js');
-
-  const config = CoveoHeadless.HeadlessEngine.getSampleConfiguration();
-
-  const engine = new CoveoHeadless.HeadlessEngine({
-    configuration: config,
-    reducers: CoveoHeadless.searchAppReducers,
-  });
-
+  let engine;
+  try {
+    await loadScript(element, HeadlessPath + '/browser/headless.js');
+    await loadScript(element, AtomicPath + '/atomic-utils.js');
+  
+    const config = CoveoHeadless.HeadlessEngine.getSampleConfiguration();
+  
+    engine = new CoveoHeadless.HeadlessEngine({
+      configuration: config,
+      reducers: CoveoHeadless.searchAppReducers,
+    });
+  } catch (error) {
+    console.error('Fatal error: unable to initialize Coveo Headless', error);
+  }
   return engine;
 }
 
@@ -96,8 +100,7 @@ function registerComponentForInit(element) {
 function setComponentInitialized(element) {
   const component = window.coveoHeadless ? window.coveoHeadless.components.find((comp) => comp.element === element) : undefined;
   if (!component) {
-    console.log('Fatal Error: Component was not registered before initialization.');
-    return;
+    throw new Error('Fatal Error: Component was not registered before initialization');
   }
   component.initialized = true;
   if (getAreComponentsReady()) {
@@ -110,17 +113,28 @@ function setComponentInitialized(element) {
  * @param element 
  */
 function getHeadlessEngine(element) {
-  if (!window.coveoHeadless.engine) {
-    try {
-      window.coveoHeadless.engine = initEngine(element);
-      window.coveoHeadless.engine.then((engine) => {
-        window.coveoHeadless.engine = engine;
-      })
-    } catch (error) {
-      console.error('Fatal error: unable to initialize Coveo Headless', error);
-    }
-  }
-  return Promise.resolve(window.coveoHeadless.engine);
+  if (window.coveoHeadless.engine) {
+    return Promise.resolve(window.coveoHeadless.engine);
+  } 
+  window.coveoHeadless.engine = initEngine(element);
+  window.coveoHeadless.engine.then((engine) => {
+    window.coveoHeadless.engine = engine;
+  });
+  return window.coveoHeadless.engine;
+}
+
+/**
+ * Initializes a component with Coveo Headless.
+ * @param element The LightningElement component to initialize
+ * @param {Function} initialize The component's initialization function 
+ */
+function initializeWithHeadless(element, initialize) {
+  getHeadlessEngine(element).then((engine) => {
+    initialize(engine);
+    setComponentInitialized(element);
+  }).catch((error) => {
+    console.error('Fatal error: unable to initialize component', error);
+  });
 }
 
 export {
@@ -128,4 +142,5 @@ export {
   registerComponentForInit,
   setComponentInitialized,
   getHeadlessEngine,
+  initializeWithHeadless,
 }
