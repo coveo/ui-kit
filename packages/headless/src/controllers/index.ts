@@ -121,6 +121,9 @@ export {
   SearchBoxProps,
   SearchBoxState,
   SearchBox,
+  Suggestion,
+  SuggestionHighlightingOptions,
+  Delimiters,
   buildSearchBox,
 } from './search-box/headless-search-box';
 

@@ -111,6 +111,17 @@ const controllers: ControllerConfiguration[] = [
     },
   },
   {
+    initializer: 'buildSearchBox',
+    samplePaths: {
+      react_class: [
+        'packages/samples/headless-react/src/components/search-box/search-box.class.tsx',
+      ],
+      react_fn: [
+        'packages/samples/headless-react/src/components/search-box/search-box.fn.tsx',
+      ],
+    },
+  },
+  {
     initializer: 'buildInteractiveResult',
     samplePaths: {
       react_class: [],
