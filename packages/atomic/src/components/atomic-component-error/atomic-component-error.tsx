@@ -15,7 +15,7 @@ export class AtomicComponentError {
 
   render() {
     return (
-      <div>
+      <div class="text-error">
         <p>
           <b>{this.element.nodeName.toLowerCase()}</b>
         </p>

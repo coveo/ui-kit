@@ -1,0 +1,21 @@
+:root {
+  /* Colors */
+  --atomic-primary: #1372ec;
+  --atomic-primary-variant: #215cd3;
+  --atomic-on-primary: #ffffff;
+  --atomic-secondary: #333357;
+  --atomic-secondary-variant: #333357;
+  --atomic-on-secondary: #ffffff;
+  --atomic-background: #ffffff;
+  --atomic-background-variant: #f6f7f9;
+  --atomic-on-background: #282829;
+  --atomic-on-background-variant: #6b6b6b;
+  --atomic-divider: #bcc3ca;
+  --atomic-error: #ce3f00;
+  --atomic-on-error: #ffffff;
+  --atomic-visited: #9333ea;
+
+  /* Others */
+  --atomic-font-family: Lato, Arial, Helvetica, sans-serif;
+  --atomic-separator: ' > ';
+}

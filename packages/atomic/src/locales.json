@@ -622,5 +622,9 @@
   "source": {
     "en": "Source",
     "fr": "Source"
+  },
+  "collapsedUriParts": {
+    "en": "Collapsed URI parts",
+    "fr": "Segments d'URI réduits"
   }
 }

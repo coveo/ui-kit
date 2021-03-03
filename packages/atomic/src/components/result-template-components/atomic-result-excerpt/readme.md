@@ -5,6 +5,13 @@
 <!-- Auto Generated Below -->
 
 
+## Shadow Parts
+
+| Part               | Description              |
+| ------------------ | ------------------------ |
+| `"result-excerpt"` | The result excerpt value |
+
+
 ## Dependencies
 
 ### Depends on

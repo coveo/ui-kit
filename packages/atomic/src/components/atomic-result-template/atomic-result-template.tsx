@@ -72,7 +72,6 @@ export class AtomicResultTemplate {
     return {
       conditions: this.getConditions(),
       content: this.getContent(),
-      fields: this.getFields(),
       priority: 1,
     };
   }
@@ -83,19 +82,6 @@ export class AtomicResultTemplate {
 
   private getContent() {
     return this.host.querySelector('template')?.innerHTML || '';
-  }
-
-  private getFields() {
-    const fieldValues: string[] = [];
-    this.host
-      .querySelectorAll('atomic-result-value')
-      .forEach((resultValueElement) => {
-        fieldValues.push(resultValueElement.value);
-      });
-
-    // TODO: extract fields from atomic-field-condition
-
-    return this.fields.concat(fieldValues);
   }
 
   public render() {

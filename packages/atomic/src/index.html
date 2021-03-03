@@ -7,6 +7,7 @@
 
     <script type="module" src="/build/atomic.esm.js"></script>
     <script nomodule src="/build/atomic.js"></script>
+    <link rel="stylesheet" href="/themes/default.css" />
     <script>
       (async () => {
         await customElements.whenDefined('atomic-search-interface');
@@ -77,6 +78,10 @@
       atomic-result-list {
         display: block;
         margin-top: 10px;
+      }
+
+      atomic-result::part(result-printable-uri-list-element) {
+        text-transform: capitalize;
       }
     </style>
   </head>

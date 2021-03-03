@@ -48,8 +48,13 @@ export class AtomicResultList implements InitializableComponent {
   @Prop() public fieldsToInclude = '';
 
   private get fields() {
-    if (this.fieldsToInclude.trim() === '') return;
+    if (this.fieldsToInclude.trim() === '') return [];
     return this.fieldsToInclude.split(',').map((field) => field.trim());
+  }
+
+  private get defaultFieldsToInclude() {
+    // TODO: add more default fields to include
+    return ['parents'];
   }
 
   public initialize() {
@@ -57,7 +62,9 @@ export class AtomicResultList implements InitializableComponent {
       this.bindings.engine
     );
     this.resultList = buildResultList(this.bindings.engine, {
-      options: {fieldsToInclude: this.fields},
+      options: {
+        fieldsToInclude: [...this.defaultFieldsToInclude, ...this.fields],
+      },
     });
     this.registerDefaultResultTemplates();
     this.registerChildrenResultTemplates();

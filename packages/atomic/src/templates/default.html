@@ -1,19 +1,8 @@
 <style>
   :host {
-    /* TODO: make default atomic CSS variables available */
-    font-family: var(--atomic-font-family, Lato, Arial, Helvetica, sans-serif);
-    border-top: 1px solid var(--atomic-divider, #bcc3ca);
+    border-top: 1px solid var(--atomic-divider);
     display: block;
     padding: 15px;
-  }
-
-  a {
-    color: var(--atomic-primary, #1372ec);
-    text-decoration: none;
-  }
-
-  a:hover {
-    text-decoration: underline;
   }
 
   .template-container {
@@ -98,7 +87,6 @@
       </atomic-field-condition>
     </div>
 
-    <!-- TODO: improve and rename to atomic-printable-uri -->
-    <!-- <atomic-result-uri></atomic-result-uri> -->
+    <atomic-result-printable-uri></atomic-result-printable-uri>
   </div>
 </div>
