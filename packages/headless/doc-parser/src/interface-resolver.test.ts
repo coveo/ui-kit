@@ -497,8 +497,10 @@ describe('#resolveInterfaceMembers', () => {
     expect(result).toEqual([expected]);
   });
 
+  // Allowing members to be parsed twice gives a chance for the extractor to set `isTypeExtracted` to true.
+  // Source: https://github.com/coveo/ui-kit/pull/567#discussion_r586461134
   it(`an interface has a property of its own type,
-  the interface's members are parsed only twice`, () => {
+  the interface's members are parsed up to two times`, () => {
     const entryPoint = buildMockEntryPoint();
     const apiInterface = buildMockApiInterface({name: 'CategoryFacetValue'});
     const prop = buildMockApiPropertySignature({
