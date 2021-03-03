@@ -117,9 +117,9 @@ describe('c/headlessLoader', () => {
       beforeEach(() => {
         window.coveoHeadless = {
           components: [],
-          engine: {
+          engine: Promise.resolve({
             dispatch: dispatchMock
-          }
+          })
         }
       });
 
@@ -158,11 +158,12 @@ describe('c/headlessLoader', () => {
           ];
         });
 
-        it('should set the component to initialized and start delayed search', () => {
+        it('should set the component to initialized and start delayed search', async () => {
           setComponentInitialized(element);
   
           assertComponentIsSetInitialized(element);
           jest.runAllTimers();
+          await window.coveoHeadless.engine;
           expect(dispatchMock).toBeCalled();
         });
       });
@@ -193,7 +194,7 @@ describe('c/headlessLoader', () => {
       beforeEach(() => {
         window.coveoHeadless = {
           components: [],
-          engine: definedEngine
+          engine: Promise.resolve(definedEngine)
         }
       });
 
@@ -259,7 +260,7 @@ describe('c/headlessLoader', () => {
             element,
             initialized: false
           }],
-          engine: definedEngine
+          engine: Promise.resolve(definedEngine)
         }
       });
 

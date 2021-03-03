@@ -37,11 +37,13 @@ const cancelInitialSearch = () => {
  * Dispatches search request.
  */
 const executeInitialSearch = debounce(() => {
-  window.coveoHeadless.engine.dispatch(
-    CoveoHeadless.SearchActions.executeSearch(
-      CoveoHeadless.AnalyticsActions.logInterfaceLoad()
-    )
-  );
+  window.coveoHeadless.engine.then((engine) => {
+    engine.dispatch(
+      CoveoHeadless.SearchActions.executeSearch(
+        CoveoHeadless.AnalyticsActions.logInterfaceLoad()
+      )
+    );
+  });
 }, DEBOUNCE_DELAY);
 
 /**
@@ -118,12 +120,9 @@ function setComponentInitialized(element) {
  */
 function getHeadlessEngine(element) {
   if (window.coveoHeadless.engine) {
-    return Promise.resolve(window.coveoHeadless.engine);
+    return window.coveoHeadless.engine;
   }
   window.coveoHeadless.engine = initEngine(element);
-  window.coveoHeadless.engine.then((engine) => {
-    window.coveoHeadless.engine = engine;
-  });
   return window.coveoHeadless.engine;
 }
 
