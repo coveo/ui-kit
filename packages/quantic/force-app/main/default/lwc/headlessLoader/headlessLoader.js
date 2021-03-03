@@ -24,11 +24,13 @@ const cancelInitialSearch = (searchInterfaceId) => {
  * @param {String} searchInterfaceId
  */
 const executeInitialSearch = (searchInterfaceId) => {
-  window.coveoHeadless[searchInterfaceId].engine.dispatch(
-    CoveoHeadless.SearchActions.executeSearch(
-      CoveoHeadless.AnalyticsActions.logInterfaceLoad()
-    )
-  );
+  window.coveoHeadless[searchInterfaceId].engine.then((engine) => {
+    engine.dispatch(
+      CoveoHeadless.SearchActions.executeSearch(
+        CoveoHeadless.AnalyticsActions.logInterfaceLoad()
+      )
+    );
+  });
 };
 
 /**
@@ -47,8 +49,15 @@ const debounceInitialSearch = (searchInterfaceId) => {
  * Returns true if registered components are initialized, false otherwise.
  * @param {String} searchInterfaceId
  */
-const getAreComponentsReady = (searchInterfaceId) => 
+const areAllComponentsInitialized = (searchInterfaceId) => 
   !window.coveoHeadless[searchInterfaceId].components.find(component => component.initialized === false);
+
+/**
+ * Returns the registered component object if it exists. 
+ * @param element
+ * @param {String} searchInterfaceId
+ */
+const getRegisteredComponent = (element, searchInterfaceId) => window.coveoHeadless[searchInterfaceId].components.find((component) => component.element === element);
 
 /**
  * Loads dependencies and returns an initialized Headless engine. 
@@ -67,7 +76,7 @@ async function initEngine(element) {
       reducers: CoveoHeadless.searchAppReducers,
     });
   } catch (error) {
-    console.error('Fatal error: unable to initialize Coveo Headless', error);
+    throw new Error('Fatal error: unable to initialize Coveo Headless: ' + error);
   }
   return engine;
 }
@@ -93,9 +102,8 @@ function registerComponentForInit(element, searchInterfaceId) {
     }
   }
   const coveoHeadless = window.coveoHeadless[searchInterfaceId];
-  const isComponentRegistered = coveoHeadless.components.find((component) => component.element === element);
 
-  if (!isComponentRegistered) {
+  if (!getRegisteredComponent(element, searchInterfaceId)) {
     coveoHeadless.components.push({
       element,
       initialized: false
@@ -111,16 +119,14 @@ function registerComponentForInit(element, searchInterfaceId) {
 function setComponentInitialized(element, searchInterfaceId) {
   const component = window.coveoHeadless
     && window.coveoHeadless[searchInterfaceId]
-    ? window.coveoHeadless[searchInterfaceId]
-      .components
-      .find((comp) => comp.element === element)
+    ? getRegisteredComponent(element, searchInterfaceId)
     : undefined;
 
   if (!component) {
     throw new Error('Fatal Error: Component was not registered before initialization');
   }
   component.initialized = true;
-  if (getAreComponentsReady(searchInterfaceId)) {
+  if (areAllComponentsInitialized(searchInterfaceId)) {
     debounceInitialSearch(searchInterfaceId);
   }
 }
@@ -131,15 +137,11 @@ function setComponentInitialized(element, searchInterfaceId) {
  * @param {String} searchInterfaceId
  */
 function getHeadlessEngine(element, searchInterfaceId) {
-  const coveoHeadless = window.coveoHeadless[searchInterfaceId];
-  if (coveoHeadless.engine) {
-    return Promise.resolve(coveoHeadless.engine);
-  } 
-  coveoHeadless.engine = initEngine(element);
-  coveoHeadless.engine.then((engine) => {
-    coveoHeadless.engine = engine;
-  });
-  return coveoHeadless.engine;
+  if (window.coveoHeadless[searchInterfaceId] && window.coveoHeadless[searchInterfaceId].engine) {
+    return window.coveoHeadless.engine;
+  }
+  window.coveoHeadless[searchInterfaceId].engine = initEngine(element);
+  return window.coveoHeadless.engine;
 }
 
 /**

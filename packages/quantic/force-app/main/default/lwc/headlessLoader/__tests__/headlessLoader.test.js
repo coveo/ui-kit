@@ -108,9 +108,9 @@ describe('c/headlessLoader', () => {
         window.coveoHeadless = {
           [testId]: {
             components: [],
-            engine: {
+            engine: Promise.resolve({
               dispatch: dispatchMock
-            }
+            })
           }
         }
       });
@@ -150,11 +150,12 @@ describe('c/headlessLoader', () => {
           ];
         });
 
-        it('should set the component to initialized and start delayed search', () => {
+        it('should set the component to initialized and start delayed search', async () => {
           setComponentInitialized(element, testId);
   
           assertComponentIsSetInitialized(element, testId);
           jest.runAllTimers();
+          await window.coveoHeadless.engine;
           expect(dispatchMock).toBeCalled();
         });
       });
@@ -188,7 +189,7 @@ describe('c/headlessLoader', () => {
         window.coveoHeadless = {
           [testId]: {
             components: [],
-            engine: definedEngine
+            engine: Promise.resolve(definedEngine)
           }
         }
       });
@@ -226,18 +227,23 @@ describe('c/headlessLoader', () => {
       });
 
       describe('when initializing the engine fails', () => {
-        const error = new Error('simulating failure');
+        const errorMessage = 'simulating failure';
         beforeEach(() => {
           jest
             .spyOn(CoveoHeadlessStub.HeadlessEngine, 'getSampleConfiguration')
-            .mockImplementation(() => {throw error});
+            .mockImplementation(() => {throw new Error(errorMessage)});
         });
         
-        it ('should log an error', async () => {
+        it ('should throw an error', async () => {
+          let caughtError;
           initializeWithHeadless(element, testId, initialize);
-          await window.coveoHeadless[testId].engine;
+          try {
+            await window.coveoHeadless[testId].engine;
+          } catch(error) {
+            caughtError = error.message;
+          }
 
-          expect(mockedConsoleError).toHaveBeenCalled();
+          expect(caughtError).toContain(errorMessage);
         });
       });
     });
@@ -253,7 +259,7 @@ describe('c/headlessLoader', () => {
               element,
               initialized: false
             }],
-            engine: definedEngine
+            engine: Promise.resolve(definedEngine)
           }
         }
       });
