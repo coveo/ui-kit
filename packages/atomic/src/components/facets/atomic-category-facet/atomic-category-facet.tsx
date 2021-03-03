@@ -220,6 +220,13 @@ export class AtomicCategoryFacet
   }
 
   public render() {
+    if (
+      this.facetState.values.length === 0 &&
+      this.facetState.parents.length === 0
+    ) {
+      return null;
+    }
+
     return (
       <BaseFacet
         controller={new BaseFacetController(this)}
