@@ -121,6 +121,9 @@ export {
   SearchBoxProps,
   SearchBoxState,
   SearchBox,
+  Suggestion,
+  SuggestionHighlightingOptions,
+  Delimiters,
   buildSearchBox,
 } from './search-box/headless-search-box';
 
@@ -226,8 +229,10 @@ export {
 
 export {
   SearchParameterManagerProps,
+  SearchParameterManagerInitialState,
   SearchParameterManagerState,
   SearchParameterManager,
+  SearchParameters,
   buildSearchParameterManager,
 } from './search-parameter-manager/headless-search-parameter-manager';
 

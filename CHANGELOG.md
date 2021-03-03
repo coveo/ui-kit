@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.7.0-alpha.27](https://github.com/coveo/ui-kit/compare/v0.7.0-alpha.26...v0.7.0-alpha.27) (2021-03-02)
+
+
+### Features
+
+* **atomic:** complete atomic-result-printable-uri component ([#566](https://github.com/coveo/ui-kit/issues/566)) ([f6ea7d2](https://github.com/coveo/ui-kit/commit/f6ea7d2275717e8b743cfe01a1f6d6528061f6ee))
+
+
+
+
+
+# [0.7.0-alpha.26](https://github.com/coveo/ui-kit/compare/v0.7.0-alpha.25...v0.7.0-alpha.26) (2021-03-02)
+
+**Note:** Version bump only for package ui-kit
+
+
+
+
+
 # [0.7.0-alpha.25](https://github.com/coveo/ui-kit/compare/v0.7.0-alpha.24...v0.7.0-alpha.25) (2021-03-01)
 
 

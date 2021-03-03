@@ -21,7 +21,8 @@
     "npm:publish": "lerna run --no-bail npm:publish",
     "npm:publish:alpha": "npm run npm:publish -- -- -- --tag alpha",
     "npm:publish:beta": "npm run npm:publish -- -- -- --tag beta",
-    "notify:docs": "node ./scripts/notify-docs/published-headless.js"
+    "notify:docs": "node ./scripts/notify-docs/published-headless.js",
+    "doc:generate": "lerna run doc:generate"
   },
   "devDependencies": {
     "@actions/github": "^4.0.0",
