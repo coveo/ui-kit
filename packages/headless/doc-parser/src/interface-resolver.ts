@@ -12,7 +12,7 @@ import {
   ExcerptTokenKind,
   Parameter,
 } from '@microsoft/api-extractor-model';
-import {DocComment, DocNode} from '@microsoft/tsdoc';
+import {DocComment} from '@microsoft/tsdoc';
 import {findApi} from './api-finder';
 import {AnyEntity, Entity} from './entity';
 import {
@@ -20,8 +20,8 @@ import {
   buildFuncEntity,
   buildObjEntity,
   buildParamEntity,
+  buildReturnTypeEntity,
 } from './entity-builder';
-import {emitAsTsDoc} from './tsdoc-emitter';
 
 export function resolveInterfaceMembers(
   entry: ApiEntryPoint,
@@ -143,7 +143,7 @@ function isMethodSignature(m: ApiItem): m is ApiMethodSignature {
 function resolveMethodSignature(entry: ApiEntryPoint, m: ApiMethodSignature) {
   const params = m.parameters.map((p) => resolveParameter(entry, p));
   const typeExcerpt = m.returnTypeExcerpt.spannedTokens[0];
-  let returnType: AnyEntity = buildEntityFromReturnType(m);
+  let returnType: AnyEntity = buildReturnTypeEntity(m);
   if (isReference(typeExcerpt)) {
     returnType = buildObjEntityFromReturnType(entry, m);
   }
@@ -156,18 +156,6 @@ function resolveMethodSignature(entry: ApiEntryPoint, m: ApiMethodSignature) {
   });
 }
 
-function buildEntityFromReturnType(m: ApiMethodSignature) {
-  const nodes = m.tsdocComment?.returnsBlock?.content.getChildNodes() || [];
-  const description = emitAsTsDoc((nodes as unknown) as readonly DocNode[]);
-
-  return buildEntity({
-    name: 'returnType',
-    type: m.returnTypeExcerpt.text,
-    isOptional: false,
-    comment: description,
-  });
-}
-
 function buildObjEntityFromReturnType(
   entry: ApiEntryPoint,
   m: ApiMethodSignature
@@ -176,7 +164,7 @@ function buildObjEntityFromReturnType(
   const searchableTypeName = extractSearchableTypeName(m.returnTypeExcerpt);
   const apiInterface = findApi(entry, searchableTypeName) as ApiInterface;
   const members = resolveInterfaceMembers(entry, apiInterface);
-  const entity = buildEntityFromReturnType(m);
+  const entity = buildReturnTypeEntity(m);
 
   return buildObjEntity({entity, members, typeName});
 }

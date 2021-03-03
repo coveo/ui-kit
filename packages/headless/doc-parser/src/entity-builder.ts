@@ -1,10 +1,10 @@
-import {Parameter} from '@microsoft/api-extractor-model';
+import {ApiMethodSignature, Parameter} from '@microsoft/api-extractor-model';
 import {DocComment, DocNode, DocNodeKind} from '@microsoft/tsdoc';
 import {AnyEntity, Entity, FuncEntity, ObjEntity} from './entity';
 import {emitAsTsDoc} from './tsdoc-emitter';
 
 interface Comment {
-  comment: DocComment | string | undefined;
+  comment: DocComment | undefined;
 }
 
 interface EntityOptions extends Comment {
@@ -27,10 +27,7 @@ interface FuncEntityOptions extends Comment {
 
 export function buildEntity(config: EntityOptions): Entity {
   const type = sanitizeType(config.type);
-  const desc =
-    typeof config.comment === 'string'
-      ? config.comment
-      : getSummary(config.comment);
+  const desc = getSummary(config.comment);
 
   return {
     kind: 'primitive',
@@ -64,6 +61,18 @@ export function buildParamEntity(param: Parameter): Entity {
     isOptional: false,
     desc,
     type,
+  };
+}
+
+export function buildReturnTypeEntity(m: ApiMethodSignature): Entity {
+  const desc = getReturnTypeDescription(m);
+
+  return {
+    kind: 'primitive',
+    name: 'returnType',
+    type: m.returnTypeExcerpt.text,
+    isOptional: false,
+    desc,
   };
 }
 
@@ -110,6 +119,17 @@ function getParamDescription(param: Parameter) {
 
   if (!description) {
     throw new Error(`No description found for param: ${param.name}`);
+  }
+
+  return description;
+}
+
+function getReturnTypeDescription(m: ApiMethodSignature) {
+  const nodes = m.tsdocComment?.returnsBlock?.content.getChildNodes() || [];
+  const description = emitAsTsDoc((nodes as unknown) as readonly DocNode[]);
+
+  if (m.returnTypeExcerpt.text !== 'void' && !description) {
+    throw new Error(`No description found for returnType: ${m.name}`);
   }
 
   return description;
