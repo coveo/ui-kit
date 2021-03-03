@@ -80,7 +80,8 @@ export interface NumericFacetOptions {
    */
   filterFacetCount?: boolean;
 
-  /** The maximum number of results to scan in the index to ensure that the facet lists all potential facet values.
+  /**
+   * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values.
    *
    * Note: A high injectionDepth may negatively impact the facet request performance.
    *
