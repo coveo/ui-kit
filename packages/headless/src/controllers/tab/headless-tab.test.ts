@@ -1,9 +1,6 @@
 import {MockEngine, buildMockSearchAppEngine} from '../../test/mock-engine';
 import {TabProps, buildTab, Tab} from './headless-tab';
-import {
-  registerAdvancedSearchQueries,
-  updateAdvancedSearchQueries,
-} from '../../features/advanced-search-queries/advanced-search-queries-actions';
+import {updateAdvancedSearchQueries} from '../../features/advanced-search-queries/advanced-search-queries-actions';
 import {SearchAppState} from '../../state/search-app-state';
 
 describe('Tab', () => {
@@ -18,12 +15,7 @@ describe('Tab', () => {
 
   beforeEach(() => {
     engine = buildMockSearchAppEngine();
-    engine.state.advancedSearchQueries = {
-      aq: '',
-      cq: '',
-      aqWasSet: false,
-      cqWasSet: false,
-    };
+    engine.state.advancedSearchQueries = {aq: '', cq: ''};
     props = {
       options: {
         expression,
@@ -46,7 +38,7 @@ describe('Tab', () => {
       };
       initTab();
 
-      const action = registerAdvancedSearchQueries({cq: expression});
+      const action = updateAdvancedSearchQueries({cq: expression});
       expect(engine.actions).toContainEqual(action);
     });
 
