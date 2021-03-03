@@ -25,6 +25,9 @@ import {
   numberOfValues,
 } from '../../_common/facet-option-definitions';
 
+/**
+ * The options defining a value to display in a `NumericFacet`.
+ */
 export interface NumericFacetValueOption {
   /**
    * The start value of the range.
@@ -47,6 +50,9 @@ export interface NumericFacetValueOption {
   state: FacetValueState;
 }
 
+/**
+ * The options defining a `NumericFacet`.
+ */
 export interface NumericFacetOptions {
   /**
    * The field whose values you want to display in the facet.
@@ -62,6 +68,9 @@ export interface NumericFacetOptions {
 
   /**
    * The values displayed by the facet in the search interface at the moment of the request.
+   *
+   * If `generateAutomaticRanges` is false, values must be specified.
+   * If `generateAutomaticRanges` is true, automatic ranges are going to be appended after the specified values.
    *
    * @default []
    */
