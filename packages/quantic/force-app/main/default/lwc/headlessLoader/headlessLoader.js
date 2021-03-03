@@ -47,7 +47,13 @@ const executeInitialSearch = debounce(() => {
 /**
  * Returns true if registered components are initialized, false otherwise.
  */
-const getAreComponentsReady = () => !window.coveoHeadless.components.find(component => component.initialized === false);
+const areAllComponentsInitialized = () => !window.coveoHeadless.components.find(component => component.initialized === false);
+
+/**
+ * Returns the registered component object if it exists. 
+ * @param element 
+ */
+const getRegisteredComponent = (element) => window.coveoHeadless.components.find((component) => component.element === element);
 
 /**
  * Loads dependencies and returns an initialized Headless engine. 
@@ -66,7 +72,7 @@ async function initEngine(element) {
       reducers: CoveoHeadless.searchAppReducers,
     });
   } catch (error) {
-    console.error('Fatal error: unable to initialize Coveo Headless', error);
+    throw new Error('Fatal error: unable to initialize Coveo Headless: ' + error);
   }
   return engine;
 }
@@ -83,8 +89,7 @@ function registerComponentForInit(element) {
       engine: undefined
     }
   }
-  const isComponentRegistered = window.coveoHeadless.components.find((component) => component.element === element)
-  if (!isComponentRegistered) {
+  if (!getRegisteredComponent(element)) {
     window.coveoHeadless.components.push({
       element,
       initialized: false
@@ -97,12 +102,12 @@ function registerComponentForInit(element) {
  * @param element 
  */
 function setComponentInitialized(element) {
-  const component = window.coveoHeadless ? window.coveoHeadless.components.find((comp) => comp.element === element) : undefined;
+  const component = window.coveoHeadless ? getRegisteredComponent(element) : undefined;
   if (!component) {
     throw new Error('Fatal Error: Component was not registered before initialization');
   }
   component.initialized = true;
-  if (getAreComponentsReady()) {
+  if (areAllComponentsInitialized()) {
     executeInitialSearch();
   }
 }
@@ -114,7 +119,7 @@ function setComponentInitialized(element) {
 function getHeadlessEngine(element) {
   if (window.coveoHeadless.engine) {
     return Promise.resolve(window.coveoHeadless.engine);
-  } 
+  }
   window.coveoHeadless.engine = initEngine(element);
   window.coveoHeadless.engine.then((engine) => {
     window.coveoHeadless.engine = engine;

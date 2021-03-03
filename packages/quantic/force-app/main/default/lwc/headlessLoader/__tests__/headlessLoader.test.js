@@ -228,18 +228,23 @@ describe('c/headlessLoader', () => {
       });
 
       describe('when initializing the engine fails', () => {
-        const error = new Error('simulating failure');
+        const errorMessage = 'simulating failure';
         beforeEach(() => {
           jest
             .spyOn(CoveoHeadlessStub.HeadlessEngine, 'getSampleConfiguration')
-            .mockImplementation(() => {throw error});
+            .mockImplementation(() => {throw new Error(errorMessage)});
         });
         
-        it ('should log an error', async () => {
+        it ('should throw an error', async () => {
+          let caughtError;
           initializeWithHeadless(element, initialize);
-          await window.coveoHeadless.engine;
+          try {
+            await window.coveoHeadless.engine;
+          } catch(error) {
+            caughtError = error.message;
+          }
 
-          expect(mockedConsoleError).toHaveBeenCalled();
+          expect(caughtError).toContain(errorMessage);
         });
       });
     });
