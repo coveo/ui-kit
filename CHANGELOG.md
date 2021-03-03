@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.7.0-alpha.28](https://github.com/coveo/ui-kit/compare/v0.7.0-alpha.27...v0.7.0-alpha.28) (2021-03-03)
+
+
+### Features
+
+* **atomic:** facet localization ([#559](https://github.com/coveo/ui-kit/issues/559)) ([27d7320](https://github.com/coveo/ui-kit/commit/27d7320012b1878698c143f8d5229cf777bd2fbd))
+
+
+
+
+
 # [0.7.0-alpha.27](https://github.com/coveo/ui-kit/compare/v0.7.0-alpha.26...v0.7.0-alpha.27) (2021-03-02)
 
 
