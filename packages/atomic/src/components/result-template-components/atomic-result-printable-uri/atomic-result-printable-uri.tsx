@@ -108,10 +108,7 @@ export class AtomicResultPrintableUri {
 
     return (
       <a part="result-printable-uri-link" href={this.result.clickUri}>
-        <atomic-result-value
-          value="printableUri"
-          shouldHighlightWith="printableUriHighlights"
-        ></atomic-result-value>
+        <atomic-result-text-value property="printableUri"></atomic-result-text-value>
       </a>
     );
   }

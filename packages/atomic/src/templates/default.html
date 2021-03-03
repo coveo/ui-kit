@@ -58,38 +58,38 @@
   <div class="content-container">
     <div class="title-container">
       <atomic-result-link></atomic-result-link>
-      <atomic-result-value value="date" format="date"></atomic-result-value>
+      <atomic-result-date-value></atomic-result-date-value>
     </div>
 
-    <atomic-result-excerpt></atomic-result-excerpt>
+    <atomic-result-text-value property="excerpt"></atomic-result-text-value>
 
     <div class="fields-container">
       <atomic-field-condition if-defined="author">
         <b>
           <atomic-text value="author"></atomic-text>
         </b>
-        <atomic-result-value value="author"></atomic-result-value>
+        <atomic-result-text-value property="author"></atomic-result-text-value>
       </atomic-field-condition>
 
       <atomic-field-condition if-defined="source">
         <b>
           <atomic-text value="source"></atomic-text>
         </b>
-        <atomic-result-value value="source"></atomic-result-value>
+        <atomic-result-text-value property="source"></atomic-result-text-value>
       </atomic-field-condition>
 
       <atomic-field-condition if-defined="language">
         <b>
           <atomic-text value="language"></atomic-text>
         </b>
-        <atomic-result-value value="language"></atomic-result-value>
+        <atomic-result-text-value property="language"></atomic-result-text-value>
       </atomic-field-condition>
 
       <atomic-field-condition if-defined="filetype">
         <b>
           <atomic-text value="type"></atomic-text>
         </b>
-        <atomic-result-value value="filetype"></atomic-result-value>
+        <atomic-result-text-value property="filetype"></atomic-result-text-value>
       </atomic-field-condition>
     </div>
 
