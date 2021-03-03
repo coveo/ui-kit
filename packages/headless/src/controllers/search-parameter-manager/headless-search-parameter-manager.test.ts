@@ -80,23 +80,29 @@ describe('state manager', () => {
   });
 
   describe('#state.parameters.aq', () => {
-    it('when the parameter is set, it is included', () => {
-      engine.state.advancedSearchQueries.aqWasSet = true;
-      expect(manager.state.parameters.aq).toBe('');
+    it('when the parameter is not the default, it is included', () => {
+      engine.state.advancedSearchQueries.aq = 'abc';
+      engine.state.advancedSearchQueries.defaultFilters.aq = 'def';
+      expect(manager.state.parameters.aq).toBe('abc');
     });
 
-    it('when the parameter is not set, it is not included', () => {
+    it('when the parameter is the default, it is not included', () => {
+      engine.state.advancedSearchQueries.aq = 'abc';
+      engine.state.advancedSearchQueries.defaultFilters.aq = 'abc';
       expect('aq' in manager.state.parameters).toBe(false);
     });
   });
 
   describe('#state.parameters.cq', () => {
-    it('when the parameter is set, it is included', () => {
-      engine.state.advancedSearchQueries.cqWasSet = true;
-      expect(manager.state.parameters.cq).toBe('');
+    it('when the parameter is not the default, it is included', () => {
+      engine.state.advancedSearchQueries.cq = 'abc';
+      engine.state.advancedSearchQueries.defaultFilters.cq = 'def';
+      expect(manager.state.parameters.cq).toBe('abc');
     });
 
-    it('when the parameter is not set, it is not included', () => {
+    it('when the parameter is the default, it is not included', () => {
+      engine.state.advancedSearchQueries.cq = 'abc';
+      engine.state.advancedSearchQueries.defaultFilters.cq = 'abc';
       expect('cq' in manager.state.parameters).toBe(false);
     });
   });
@@ -303,8 +309,10 @@ describe('state manager', () => {
 
     engine.state.query.q = 'a';
     engine.state.query.enableQuerySyntax = true;
-    engine.state.advancedSearchQueries.aqWasSet = true;
-    engine.state.advancedSearchQueries.cqWasSet = true;
+    engine.state.advancedSearchQueries.aq = 'someAq';
+    engine.state.advancedSearchQueries.defaultFilters.aq = 'anotherAq';
+    engine.state.advancedSearchQueries.cq = 'someCq';
+    engine.state.advancedSearchQueries.defaultFilters.cq = 'anotherCq';
     engine.state.pagination.firstResult = 1;
     engine.state.pagination.numberOfResults = 1;
     engine.state.sortCriteria = 'qre';

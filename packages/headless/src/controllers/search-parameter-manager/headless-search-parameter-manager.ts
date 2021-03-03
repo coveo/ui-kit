@@ -107,8 +107,9 @@ function getAq(state: Partial<SearchParametersState>) {
     return {};
   }
 
-  const {aq, aqWasSet} = state.advancedSearchQueries;
-  return aqWasSet ? {aq} : {};
+  const {aq, defaultFilters} = state.advancedSearchQueries;
+  const shouldInclude = aq !== defaultFilters.aq;
+  return shouldInclude ? {aq} : {};
 }
 
 function getCq(state: Partial<SearchParametersState>) {
@@ -116,8 +117,9 @@ function getCq(state: Partial<SearchParametersState>) {
     return {};
   }
 
-  const {cq, cqWasSet} = state.advancedSearchQueries;
-  return cqWasSet ? {cq} : {};
+  const {cq, defaultFilters} = state.advancedSearchQueries;
+  const shouldInclude = cq !== defaultFilters.cq;
+  return shouldInclude ? {cq} : {};
 }
 
 function getFirstResult(state: Partial<SearchParametersState>) {
