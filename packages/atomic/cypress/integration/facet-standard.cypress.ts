@@ -404,3 +404,10 @@ describe('Facet with invalid options', () => {
     });
   });
 });
+
+describe('Facet with custom delimitingCharacter', () => {
+  beforeEach(() => {
+    setupPager(facetProp.field, facetProp.label, 'delimiting-character=","');
+  });
+  it('Should generate Facet correctly');
+});
