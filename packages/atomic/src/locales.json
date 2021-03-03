@@ -36,6 +36,10 @@
     "en": "Inclusion filter on {{value}}; {{numberOfResults}} results",
     "fr": "Filtre d'inclusion sur {{value}}; {{numberOfResults}} résultats"
   },
+  "removeFilterOn": {
+    "en": "Remove inclusion filter on {{value}}",
+    "fr": "Enlever le filtre d'inclusion sur {{value}}"
+  },
   "querySuggestionList": {
     "en": "Search suggestions. Select one to search.",
     "fr": ""

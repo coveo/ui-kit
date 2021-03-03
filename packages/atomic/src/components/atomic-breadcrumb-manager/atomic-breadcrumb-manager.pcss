@@ -1,2 +1,15 @@
 @import "tailwindcss/base";
 @import "tailwindcss/utilities";
+@import "../../global/global.pcss";
+
+/**
+ * @prop --max-breadcrumb-width: Maximum width of a breadcrumb before the text is truncated
+ */
+.breadcrumb {
+  max-width: var(--max-breadcrumb-width, 155px);
+}
+
+.breadcrumb-clear svg {
+  width: 10px;
+  height: 10px;
+}

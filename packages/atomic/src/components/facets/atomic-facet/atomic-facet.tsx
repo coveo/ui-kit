@@ -26,6 +26,7 @@ import {
   FacetSearchController,
   FacetSearchState,
 } from '../facet-search/facet-search';
+import {facetStore} from '../facet-store/facet-store';
 
 /**
  * A facet component. It is displayed as a facet in desktop browsers and as
@@ -95,6 +96,10 @@ export class AtomicFacet
    * The sort criterion to apply to the returned facet values. Possible values are 'score', 'numeric', 'occurrences', and 'automatic'.
    */
   @Prop() public sortCriteria: FacetSortCriterion = 'automatic';
+
+  constructor() {
+    facetStore.set(this.field, this.label);
+  }
 
   public initialize() {
     const options: FacetOptions = {

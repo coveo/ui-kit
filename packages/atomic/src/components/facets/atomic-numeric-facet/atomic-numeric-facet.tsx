@@ -21,6 +21,7 @@ import {
   BaseFacetController,
   BaseFacetState,
 } from '../base-facet/base-facet';
+import {facetStore} from '../facet-store/facet-store';
 
 /**
  * A facet who's values are expressed as numeric ranges. It is displayed as a regular facet in desktop browsers and as
@@ -70,6 +71,10 @@ export class AtomicNumericFacet
    * Whether or not the index should automatically generate options for the facet
    */
   @Prop() public generateAutomaticRanges = true;
+
+  constructor() {
+    facetStore.set(this.field, this.label);
+  }
 
   public buildOptions() {
     const options = Array.from(

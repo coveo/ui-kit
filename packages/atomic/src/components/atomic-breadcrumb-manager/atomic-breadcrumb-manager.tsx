@@ -4,26 +4,33 @@ import {
   InitializableComponent,
   BindStateToController,
   InitializeBindings,
+  BindStateToI18n,
+  I18nState,
 } from '../../utils/initialization-utils';
 import {
   BreadcrumbManagerState,
   BreadcrumbManager,
   buildBreadcrumbManager,
   CategoryFacetBreadcrumb,
-  FacetValue,
   Breadcrumb,
   BreadcrumbValue,
 } from '@coveo/headless';
 import {RangeFacetValue} from '@coveo/headless/dist/features/facets/range-facets/generic/interfaces/range-facet';
 import {BaseFacetValue} from '@coveo/headless/dist/features/facets/facet-api/response';
 import mainclear from '../../images/main-clear.svg';
+import {facetStore} from '../facets/facet-store/facet-store';
 
 /**
+ * A component that creates breadcrumbs that display the currently active facet values
+ *
  * @part breadcrumbs - Container for all types of breadcrumbs
+ * @part breadcrumb-clear-all - The clear all breadcrumbs button
+ * @part breadcrumb - An individual breadcrumb
+ * @part breadcrumb-button - Button element for all types of breadcrumb values
+ * @part breadcrumb-wrapper = The wrapper for a single breadcrumb value
+ * @part breadcrumb-clear - The clear button for a single breadcrumb value
+ * @part breadcrumb-value-label - The label for a single breadcrumb value
  * @part breadcrumb-label - Label for the breadcrumb's title
- * @part breadcrumb-value - Breadcrumb list element for all types of breadcrumbs
- * @part category-breadcrumb-value - Breadcrumb list element for category breadcrumbs
- * @part breadcrumb-button - Button element for all types of breadcrumb
  */
 
 @Component({
@@ -41,36 +48,24 @@ export class AtomicBreadcrumbManager implements InitializableComponent {
   @State() private collapsedBreadcrumbsState: string[] = [];
   @State() public error!: Error;
 
+  /**
+   * Number of breadcrumbs to be shown before collapsing.
+   */
   @Prop() public collapseThreshold = 5;
+  /**
+   * Character that divides each path segment in a category facet breadcrumb
+   */
   @Prop() public categoryDivider = '/';
+
+  @BindStateToI18n()
+  @State()
+  public strings: I18nState = {
+    breadcrumb: (variables) =>
+      this.bindings.i18n.t('removeFilterOn', variables),
+  };
 
   public initialize() {
     this.breadcrumbManager = buildBreadcrumbManager(this.bindings.engine);
-  }
-
-  private get facetBreadcrumbs() {
-    return this.breadcrumbManagerState.facetBreadcrumbs.map((breadcrumb) => {
-      const breadcrumbsValues = this.getBreadcrumbValues(breadcrumb);
-      return (
-        <ul part="breadcrumbs">
-          <li part="breadcrumb-label">{breadcrumb.field}:&nbsp;</li>
-          {breadcrumbsValues}
-        </ul>
-      );
-    });
-  }
-
-  private getBreadcrumbValues(breadcrumb: Breadcrumb<FacetValue>) {
-    const {breadcrumbsToShow, moreButton} = this.collapsedBreadcrumbsHandler(
-      breadcrumb
-    );
-    const renderedBreadcrumbs = breadcrumbsToShow.map((breadcrumbValue) =>
-      this.getBreadcrumbValue(breadcrumbValue.value.value, breadcrumbValue)
-    );
-
-    return moreButton
-      ? [...renderedBreadcrumbs, moreButton]
-      : renderedBreadcrumbs;
   }
 
   private getBreadcrumbValue(
@@ -78,117 +73,135 @@ export class AtomicBreadcrumbManager implements InitializableComponent {
     breadcrumbValue: BreadcrumbValue<BaseFacetValue> | CategoryFacetBreadcrumb
   ) {
     return (
-      <li part="breadcrumb-value">
-        <button
-          part="breadcrumb-button"
-          class="flex items-center"
-          aria-label={`Remove inclusion filter on ${value}`}
-          onClick={() =>
-            this.breadcrumbManager.deselectBreadcrumb(breadcrumbValue)
-          }
+      <button
+        part="breadcrumb-button"
+        class="text-on-background-variant breadcrumb-button flex items-center"
+        aria-label={this.strings.breadcrumb({value})}
+        onClick={() =>
+          this.breadcrumbManager.deselectBreadcrumb(breadcrumbValue)
+        }
+      >
+        <span
+          part="breadcrumb-value-label"
+          class="whitespace-nowrap overflow-ellipsis overflow-hidden"
         >
           {value}
-          <div role="button" class="h-3 w-3" innerHTML={mainclear} />
-        </button>
-      </li>
+        </span>
+        <div
+          part="breadcrumb-clear"
+          role="button"
+          class="breadcrumb-clear ml-1.5"
+          innerHTML={mainclear}
+        />
+      </button>
     );
+  }
+
+  private getBreadcrumbWrapper(field: string, children: any) {
+    return (
+      <div class="flex items-center text-sm" part="breadcrumb-wrapper">
+        <span class="text-on-background" part="breadcrumb-label">
+          {facetStore.get(field) || field}:&nbsp;
+        </span>
+        {children}
+      </div>
+    );
+  }
+
+  private getBreadcrumbValues(
+    breadcrumb: Breadcrumb<BaseFacetValue & {value: string}>
+  ) {
+    const {breadcrumbsToShow, moreButton} = this.collapsedBreadcrumbsHandler(
+      breadcrumb
+    );
+    const renderedBreadcrumbs = breadcrumbsToShow.map((breadcrumbValue) => (
+      <li class="breadcrumb" part="breadcrumb">
+        {this.getBreadcrumbValue(breadcrumbValue.value.value, breadcrumbValue)}
+      </li>
+    ));
+
+    return this.getBreadcrumbWrapper(
+      breadcrumb.field,
+      <ul class="flex space-x-2.5">
+        {moreButton
+          ? [...renderedBreadcrumbs, moreButton]
+          : renderedBreadcrumbs}
+      </ul>
+    );
+  }
+
+  private get facetBreadcrumbs() {
+    return this.breadcrumbManagerState.facetBreadcrumbs.map((breadcrumb) => {
+      return this.getBreadcrumbValues(breadcrumb);
+    });
+  }
+
+  private formatRangeBreadcrumb(
+    breadcrumb: Breadcrumb<RangeFacetValue>
+  ): Breadcrumb<BaseFacetValue & {value: string}> {
+    return {
+      ...breadcrumb,
+      values: breadcrumb.values.map((value) => ({
+        deselect: value.deselect,
+        value: {
+          ...value.value,
+          value: `${value.value.start} - ${value.value.end}`,
+        },
+      })),
+    };
   }
 
   private get numericFacetBreadcrumbs() {
     return this.breadcrumbManagerState.numericFacetBreadcrumbs.map(
-      (breadcrumb) => {
-        const breadcrumbsValues = this.getRangeBreadrumbValues(
-          breadcrumb,
-          false
-        );
-        return (
-          <ul part="breadcrumbs">
-            <li part="breadcrumb-label">{breadcrumb.field}:&nbsp;</li>
-            {breadcrumbsValues}
-          </ul>
-        );
-      }
+      (breadcrumb) =>
+        this.getBreadcrumbValues(this.formatRangeBreadcrumb(breadcrumb))
     );
   }
 
   private get dateFacetBreadcrumbs() {
-    return this.breadcrumbManagerState.dateFacetBreadcrumbs.map(
-      (breadcrumb) => {
-        const breadcrumbsValues = this.getRangeBreadrumbValues(
-          breadcrumb,
-          true
-        );
-        return (
-          <ul part="breadcrumbs">
-            <li part="breadcrumb-label">{breadcrumb.field}:&nbsp;</li>
-            {breadcrumbsValues}
-          </ul>
-        );
-      }
+    return this.breadcrumbManagerState.dateFacetBreadcrumbs.map((breadcrumb) =>
+      this.getBreadcrumbValues(this.formatRangeBreadcrumb(breadcrumb))
     );
   }
 
-  private getRangeBreadrumbValues(
-    values: Breadcrumb<RangeFacetValue>,
-    needDateFormatting: boolean
+  private categoryCollapsedBreadcrumbsHandler(
+    breadcrumb: CategoryFacetBreadcrumb
   ) {
-    const {breadcrumbsToShow, moreButton} = this.collapsedBreadcrumbsHandler(
-      values
+    if (breadcrumb.path.length <= 3) {
+      return breadcrumb.path.map((breadcrumb) => breadcrumb.value);
+    }
+
+    const collapsed = '...';
+    const firstBreadcrumbValue = breadcrumb.path[0].value;
+    const lastTwoBreadcrumbsValues = breadcrumb.path
+      .slice(-2)
+      .map((breadcrumb) => breadcrumb.value);
+    return [firstBreadcrumbValue, collapsed, ...lastTwoBreadcrumbsValues];
+  }
+
+  private getCategoryBreadrumbValue(breadcrumb: CategoryFacetBreadcrumb) {
+    const breadcrumbsToShow = this.categoryCollapsedBreadcrumbsHandler(
+      breadcrumb
     );
-    const renderedBreadcrumbs = breadcrumbsToShow.map((breadcrumbValue) => {
-      const ariaLabel = this.getRangeAriaLabel(
-        needDateFormatting,
-        breadcrumbValue.value
-      );
-      return this.getBreadcrumbValue(
-        `${breadcrumbValue.value.start} - ${breadcrumbValue.value.end}`,
-        breadcrumbValue
-      );
-    });
-    return moreButton
-      ? [...renderedBreadcrumbs, moreButton]
-      : renderedBreadcrumbs;
+    const joinedBreadcrumbs = breadcrumbsToShow.join(
+      ` ${this.categoryDivider} `
+    );
+    return this.getBreadcrumbValue(joinedBreadcrumbs, breadcrumb);
   }
 
   private get categoryFacetBreadcrumbs() {
     return this.breadcrumbManagerState.categoryFacetBreadcrumbs.map(
       (breadcrumb) => {
-        const breadcrumbsValues = this.getCategoryBreadrumbValues(breadcrumb);
-        return (
-          <ul part="breadcrumbs">
-            <li part="breadcrumb-label">{breadcrumb.field}:&nbsp;</li>
-            {breadcrumbsValues}
-          </ul>
-        );
+        const breadcrumbsValue = this.getCategoryBreadrumbValue(breadcrumb);
+        return this.getBreadcrumbWrapper(breadcrumb.field, breadcrumbsValue);
       }
-    );
-  }
-
-  private getCategoryBreadrumbValues(values: CategoryFacetBreadcrumb) {
-    const breadcrumbsToShow = this.categoryCollapsedBreadcrumbsHandler(values);
-    const ariaLabel = breadcrumbsToShow.join('/');
-    const joinedBreadcrumbs = breadcrumbsToShow.join(
-      ` ${this.categoryDivider} `
-    );
-    return (
-      <li part="breadcrumb-value category-breadcrumb-value">
-        <button
-          part="breadcrumb-button"
-          class="flex"
-          aria-label={`Remove inclusion filter on ${ariaLabel}`}
-          onClick={() => this.breadcrumbManager.deselectBreadcrumb(values)}
-        >
-          {joinedBreadcrumbs}
-          {this.mainClear}
-        </button>
-      </li>
     );
   }
 
   private getClearAllFiltersButton() {
     return (
       <button
-        part="breadcrumb-button"
+        part="breadcrumb-clear-all"
         onClick={() => this.breadcrumbManager.deselectAll()}
       >
         Clear All Filters
@@ -222,25 +235,10 @@ export class AtomicBreadcrumbManager implements InitializableComponent {
     };
   }
 
-  private categoryCollapsedBreadcrumbsHandler(
-    breadcrumb: CategoryFacetBreadcrumb
-  ) {
-    if (breadcrumb.path.length <= 3) {
-      return breadcrumb.path.map((breadcrumb) => breadcrumb.value);
-    }
-
-    const collapsed = '...';
-    const firstBreadcrumbValue = breadcrumb.path[0].value;
-    const lastTwoBreadcrumbsValues = breadcrumb.path
-      .slice(-2)
-      .map((breadcrumb) => breadcrumb.value);
-    return [firstBreadcrumbValue, collapsed, ...lastTwoBreadcrumbsValues];
-  }
-
   private getMoreButton(collapsedBreadcrumbNumber: number, field: string) {
     if (collapsedBreadcrumbNumber <= 0) return undefined;
     return (
-      <li part="breadcrumb-value">
+      <li class="text-primary-variant" part="breadcrumb-value">
         <button
           part="breadcrumb-button"
           class="flex"
@@ -264,31 +262,21 @@ export class AtomicBreadcrumbManager implements InitializableComponent {
       : null;
   }
 
-  private getRangeAriaLabel(
-    needDateFormatting: boolean,
-    breadcrumbValue: RangeFacetValue
-  ) {
-    if (needDateFormatting) {
-      const dateStart = new Date(breadcrumbValue.start);
-      const dateEnd = new Date(breadcrumbValue.end);
-      return `Remove inclusion filter on ${dateStart.toLocaleString()} to ${dateEnd.toLocaleString()}`;
-    }
-    return `Remove inclusion filter on ${breadcrumbValue.start} to ${breadcrumbValue.end}`;
-  }
-
   public render() {
     if (!this.breadcrumbManager.state.hasBreadcrumbs) {
       return;
     }
     return (
-      <div>
-        <span>
+      <div class="flex">
+        <span part="breadcrumbs">
           {this.facetBreadcrumbs}
           {this.numericFacetBreadcrumbs}
           {this.dateFacetBreadcrumbs}
           {this.categoryFacetBreadcrumbs}
         </span>
-        <span>{this.getClearAllFiltersButton()}</span>
+        <span class="text-primary text-sm ml-auto">
+          {this.getClearAllFiltersButton()}
+        </span>
       </div>
     );
   }

@@ -28,6 +28,7 @@ import {
   FacetSearchController,
   FacetSearchState,
 } from '../facet-search/facet-search';
+import {facetStore} from '../facet-store/facet-store';
 
 /**
  * A hierarchical category facet component. It is displayed as a facet in desktop browsers and as
@@ -99,6 +100,10 @@ export class AtomicCategoryFacet
    * The sort criterion to apply to the returned facet values. Possible values are 'alphanumeric', and 'occurrences''.
    */
   @Prop() public sortCriteria: CategoryFacetSortCriterion = 'occurrences';
+
+  constructor() {
+    facetStore.set(this.field, this.label);
+  }
 
   public initialize() {
     const options: CategoryFacetOptions = {

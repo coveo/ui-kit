@@ -11,7 +11,13 @@ import { i18n } from "i18next";
 import { InitializationOptions } from "./components/atomic-search-interface/atomic-search-interface";
 export namespace Components {
     interface AtomicBreadcrumbManager {
+        /**
+          * Character that divides each path segment in a category facet breadcrumb
+         */
         "categoryDivider": string;
+        /**
+          * Number of breadcrumbs to be shown before collapsing.
+         */
         "collapseThreshold": number;
     }
     interface AtomicCategoryFacet {
@@ -509,7 +515,13 @@ declare global {
 }
 declare namespace LocalJSX {
     interface AtomicBreadcrumbManager {
+        /**
+          * Character that divides each path segment in a category facet breadcrumb
+         */
         "categoryDivider"?: string;
+        /**
+          * Number of breadcrumbs to be shown before collapsing.
+         */
         "collapseThreshold"?: number;
     }
     interface AtomicCategoryFacet {

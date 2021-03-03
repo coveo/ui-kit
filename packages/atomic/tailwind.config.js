@@ -5,7 +5,7 @@ module.exports = {
     content: [
       './src/**/*.tsx', './src/**/*.css'
     ],
-    enabled: true
+    enabled: !isDevWatch
   },
   darkMode: false, // or 'media' or 'class'
   theme: {
