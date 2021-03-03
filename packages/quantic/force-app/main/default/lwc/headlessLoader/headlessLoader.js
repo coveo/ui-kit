@@ -1,5 +1,6 @@
 import HeadlessPath from '@salesforce/resourceUrl/coveoheadless';
 import AtomicPath from '@salesforce/resourceUrl/atomicutils';
+// @ts-ignore	
 import { loadScript } from 'lightning/platformResourceLoader';
 
 const DEBOUNCE_DELAY = 200;
