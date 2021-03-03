@@ -1,17 +1,77 @@
 type ListOfTermsWeights = Record<string, WeightsPerTerm>;
 
-export type RankingInfo = ReturnType<typeof parseRankingInfo>;
+export interface Ranking {
+  /**
+   * The attributes of the document that contributed to its ranking.
+   * */
+  documentWeights: DocumentWeights | null;
 
-export interface ListOfWeights {
+  /**
+   * The weight attributed to each term in the query.
+   */
+  termsWeight: Record<string, WeightsPerTerm> | null;
+
+  /**
+   * The sum of all weights.
+   */
+  totalWeight: number | null;
+
+  /**
+   * The weights applied by query ranking expressions.
+   */
+  qreWeights: ListOfQRE[];
+}
+
+export interface DocumentWeights {
+  /**
+   * The effect of proximity of query terms. More weight is given to documents having the terms closer together.
+   */
   Adjacency: number;
+
+  /**
+   * The weight attributed to user ratings.
+   */
   'Collaborative rating': number;
+
+  /**
+   * The custom weight assigned through an [indexing pipeline extension (IPE)](https://docs.coveo.com/en/206/) for the item.
+   */
   Custom: number;
+
+  /**
+   * The weight attributed to the document date.
+   */
   Date: number;
+
+  /**
+   * The weight applied by a [query ranking expression (QRE)](https://docs.coveo.com/en/2777/coveo-solutions/using-query-ranking-expressions).
+   */
   QRE: number;
+
+  /**
+   * The proximity of the document in the remaining results after filtering indexed items by query terms and user permissions.
+   * See [item weighting](https://docs.coveo.com/en/1624/searching-with-coveo/understanding-search-result-ranking#phase-2-item-weighting) for more information.
+   */
   Quality: number;
+
+  /**
+   * The weight applied by a [ranking function](https://docs.coveo.com/en/1448/build-a-search-ui/ranking-functions).
+   */
   'Ranking functions': number;
+
+  /**
+   * The effect of the reputation of the document source on the ranking.
+   */
   Source: number;
+
+  /**
+   * The presence of queried keywords in the title of the item.
+   */
   Title: number;
+
+  /**
+   * Custom factors affecting the document weight.
+   */
   [key: string]: number;
 }
 
@@ -72,7 +132,7 @@ export const parseRankingInfo = (value: string) => {
   };
 };
 
-const parseWeights = (value: string | null): ListOfWeights | null => {
+const parseWeights = (value: string | null): DocumentWeights | null => {
   const REGEX_EXTRACT_LIST_OF_WEIGHTS = /(\w+(?:\s\w+)*): ([-0-9]+)/g;
   const REGEX_EXTRACT_WEIGHT_GROUP = /^(\w+(?:\s\w+)*): ([-0-9]+)$/;
 
@@ -86,7 +146,7 @@ const parseWeights = (value: string | null): ListOfWeights | null => {
     return null;
   }
 
-  const weights = {} as ListOfWeights;
+  const weights = {} as DocumentWeights;
 
   for (const weight of listOfWeight) {
     const weightGroup = weight.match(REGEX_EXTRACT_WEIGHT_GROUP);

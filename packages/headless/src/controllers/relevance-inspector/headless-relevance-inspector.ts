@@ -13,7 +13,8 @@ import {enableDebug, disableDebug} from '../../features/debug/debug-actions';
 import {rankingInformationSelector} from '../../features/debug/debug-selectors';
 import {
   ListOfQRE,
-  ListOfWeights,
+  DocumentWeights,
+  Ranking,
   WeightsPerTerm,
 } from '../../features/debug/ranking-info-parser';
 import {executeSearch} from '../../features/search/search-actions';
@@ -28,8 +29,17 @@ import {
 } from '../../utils/validate-payload';
 import {buildController, Controller} from '../controller/headless-controller';
 
+export {Ranking, ListOfQRE, DocumentWeights, WeightsPerTerm};
+
 export interface RelevanceInspectorProps {
+  /**
+   * The initial state that should be applied to the `RelevanceInspector` controller.
+   */
   initialState?: RelevanceInspectorInitialState;
+
+  /**
+   * The options for the `RelevanceInspector` controller.
+   */
   options?: RelevanceInspectorOptions;
 }
 
@@ -81,29 +91,63 @@ export interface RelevanceInspector extends Controller {
 }
 
 export interface RelevanceInspectorState {
+  /**
+   * Whether debug mode is enabled.
+   * */
   isEnabled: boolean;
+
+  /**
+   * The ranking information for every result.
+   */
   rankingInformation?: RankingInformation[];
+
+  /**
+   * The query execution report.
+   */
   executionReport?: ExecutionReport;
+
+  /**
+   * The query expressions sent in the request.
+   */
   expressions?: Expressions;
+
+  /**
+   * The user identities.
+   */
   userIdentities?: UserIdentity[];
+
+  /**
+   * The ranking expression.
+   */
   rankingExpressions?: RankingExpression[];
 }
 
 export interface RankingInformation {
+  /**
+   * The result.
+   */
   result: Result;
+
+  /**
+   * The ranking information for the associated result.
+   */
   ranking: Ranking | null;
 }
 
-export interface Ranking {
-  documentWeights: ListOfWeights | null;
-  termsWeight: Record<string, WeightsPerTerm> | null;
-  totalWeight: number | null;
-  qreWeights: ListOfQRE[];
-}
-
 export interface Expressions {
+  /**
+   * The query.
+   */
   basicExpression: string;
+
+  /**
+   * The dynamic filter expression.
+   */
   advancedExpression: string;
+
+  /**
+   * The static filter expression, typically set by a `Tab`.
+   */
   constantExpression: string;
 }
 
