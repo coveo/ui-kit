@@ -11,6 +11,7 @@ import {
 } from '../mocks/mock-excerpt-token';
 import {buildMockFuncEntity} from '../mocks/mock-func-entity';
 import {buildMockObjEntity} from '../mocks/mock-obj-entity';
+import {AnyEntity} from './entity';
 import {resolveInterfaceMembers} from './interface-resolver';
 
 describe('#resolveInterfaceMembers', () => {
@@ -31,7 +32,7 @@ describe('#resolveInterfaceMembers', () => {
     apiInterface.addMember(prop);
     entryPoint.addMember(apiInterface);
 
-    const result = resolveInterfaceMembers(entryPoint, apiInterface);
+    const result = resolveInterfaceMembers(entryPoint, apiInterface, []);
     const entity = buildMockEntity({
       name: 'isCurrentPage',
       type: '(page: number) => boolean',
@@ -76,7 +77,7 @@ describe('#resolveInterfaceMembers', () => {
     entryPoint.addMember(pagerInterface);
     entryPoint.addMember(pagerStateInterface);
 
-    const result = resolveInterfaceMembers(entryPoint, pagerInterface);
+    const result = resolveInterfaceMembers(entryPoint, pagerInterface, []);
 
     const entity = buildMockEntity({name: 'currentPage', type: 'number'});
     const objEntity = buildMockObjEntity({
@@ -110,7 +111,7 @@ describe('#resolveInterfaceMembers', () => {
     entry.addMember(queryCorrection);
     entry.addMember(wordCorrection);
 
-    const result = resolveInterfaceMembers(entry, queryCorrection);
+    const result = resolveInterfaceMembers(entry, queryCorrection, []);
 
     const expected = buildMockObjEntity({
       name: 'wordCorrections',
@@ -151,7 +152,7 @@ describe('#resolveInterfaceMembers', () => {
     pagerInterface.addMember(method);
     entryPoint.addMember(pagerInterface);
 
-    const result = resolveInterfaceMembers(entryPoint, pagerInterface);
+    const result = resolveInterfaceMembers(entryPoint, pagerInterface, []);
 
     const paramEntity = buildMockEntity({
       name: 'page',
@@ -187,7 +188,7 @@ describe('#resolveInterfaceMembers', () => {
     apiInterface.addMember(recordProp);
     entry.addMember(apiInterface);
 
-    const result = resolveInterfaceMembers(entry, apiInterface);
+    const result = resolveInterfaceMembers(entry, apiInterface, []);
     const entity = buildMockEntity({
       name: 'captions',
       type: 'Record<string, string>',
@@ -227,7 +228,7 @@ describe('#resolveInterfaceMembers', () => {
     entry.addMember(apiInterface);
     entry.addMember(typeAlias);
 
-    const result = resolveInterfaceMembers(entry, apiInterface);
+    const result = resolveInterfaceMembers(entry, apiInterface, []);
     const entity = buildMockEntity({
       name: 'state',
       type: "'idle' | 'selected'",
@@ -262,7 +263,7 @@ describe('#resolveInterfaceMembers', () => {
     entry.addMember(interface1);
     entry.addMember(interface2);
 
-    const result = resolveInterfaceMembers(entry, interface1);
+    const result = resolveInterfaceMembers(entry, interface1, []);
     const entity = buildMockObjEntity({
       name: 'values',
       type: 'SpecificFacetSearchResult[]',
@@ -308,7 +309,7 @@ describe('#resolveInterfaceMembers', () => {
     entry.addMember(facet);
     entry.addMember(facetValue);
 
-    const result = resolveInterfaceMembers(entry, facet);
+    const result = resolveInterfaceMembers(entry, facet, []);
 
     const param = buildMockObjEntity({
       name: 'selection',
@@ -371,7 +372,7 @@ describe('#resolveInterfaceMembers', () => {
     entry.addMember(context);
     entry.addMember(contextValue);
 
-    const result = resolveInterfaceMembers(entry, context);
+    const result = resolveInterfaceMembers(entry, context, []);
 
     const param = buildMockEntity({
       name: 'contextValue',
@@ -434,7 +435,7 @@ describe('#resolveInterfaceMembers', () => {
     entry.addMember(querySummaryState);
     entry.addMember(searchStatusState);
 
-    const result = resolveInterfaceMembers(entry, querySummaryState);
+    const result = resolveInterfaceMembers(entry, querySummaryState, []);
 
     const queryEntity = buildMockEntity({name: 'query', type: 'string'});
     const isLoadingEntity = buildMockEntity({
@@ -487,12 +488,60 @@ describe('#resolveInterfaceMembers', () => {
     entry.addMember(pager);
     entry.addMember(controller);
 
-    const result = resolveInterfaceMembers(entry, pager);
+    const result = resolveInterfaceMembers(entry, pager, []);
     const expected = buildMockEntity({
       name: 'state',
       type: 'string',
     });
 
     expect(result).toEqual([expected]);
+  });
+
+  it(`an interface has a property of its own type,
+  the interface's members are parsed only twice`, () => {
+    const entryPoint = buildMockEntryPoint();
+    const apiInterface = buildMockApiInterface({name: 'CategoryFacetValue'});
+    const prop = buildMockApiPropertySignature({
+      name: 'child',
+      excerptTokens: [
+        buildContentExcerptToken('child?: '),
+        buildReferenceExcerptToken(
+          'CategoryFacetValue',
+          '@coveo/headless!~CategoryFacetValue:interface'
+        ),
+        buildContentExcerptToken(';'),
+      ],
+      propertyTypeTokenRange: {startIndex: 1, endIndex: 2},
+      isOptional: true,
+    });
+
+    apiInterface.addMember(prop);
+    entryPoint.addMember(apiInterface);
+
+    const result = resolveInterfaceMembers(entryPoint, apiInterface, []);
+
+    const thirdExpectedMembers: AnyEntity[] = [];
+
+    const secondExpectedMembers = [
+      buildMockObjEntity({
+        name: 'child',
+        type: 'CategoryFacetValue',
+        typeName: 'CategoryFacetValue',
+        members: thirdExpectedMembers,
+        isOptional: true,
+      }),
+    ];
+
+    const firstExpectedMembers = [
+      buildMockObjEntity({
+        name: 'child',
+        type: 'CategoryFacetValue',
+        typeName: 'CategoryFacetValue',
+        members: secondExpectedMembers,
+        isOptional: true,
+      }),
+    ];
+
+    expect(result).toEqual(firstExpectedMembers);
   });
 });

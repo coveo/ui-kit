@@ -20,13 +20,14 @@ import {
   buildObjEntity,
   buildParamEntity,
 } from './entity-builder';
+import {includesAtLeast} from './utils';
 
 export function resolveInterfaceMembers(
   entry: ApiEntryPoint,
   apiInterface: ApiInterface,
   ancestorNames: string[]
 ): AnyEntity[] {
-  if (ancestorNames.includes(apiInterface.name)) {
+  if (includesAtLeast(ancestorNames, apiInterface.name, 2)) {
     return [];
   }
   const ancestorNamesForChildren = [...ancestorNames, apiInterface.name];
