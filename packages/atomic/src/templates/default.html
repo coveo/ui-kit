@@ -9,6 +9,11 @@
     display: flex;
   }
 
+  .title-container {
+    display: flex;
+    justify-content: space-between;
+  }
+
   .content-container {
     display: grid;
     margin-left: 15px;
@@ -51,9 +56,10 @@
   </div>
 
   <div class="content-container">
-    <atomic-result-link></atomic-result-link>
-
-    <!-- TODO: add "date type" for atomic-result-value -->
+    <div class="title-container">
+      <atomic-result-link></atomic-result-link>
+      <atomic-result-value value="date" format="date"></atomic-result-value>
+    </div>
 
     <atomic-result-excerpt></atomic-result-excerpt>
 

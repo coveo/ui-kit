@@ -54,7 +54,7 @@ export class AtomicResultList implements InitializableComponent {
 
   private get defaultFieldsToInclude() {
     // TODO: add more default fields to include
-    return ['parents'];
+    return ['parents', 'date'];
   }
 
   public initialize() {

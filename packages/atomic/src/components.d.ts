@@ -7,6 +7,7 @@
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { CategoryFacetSortCriterion, Engine, FacetSortCriterion, LogLevel, Result, ResultTemplate, ResultTemplateCondition } from "@coveo/headless";
 import { Bindings } from "./utils/initialization-utils";
+import { ResultValueFormat } from "./components/result-template-components/atomic-result-value/atomic-result-value";
 import { i18n } from "i18next";
 import { InitializationOptions } from "./components/atomic-search-interface/atomic-search-interface";
 export namespace Components {
@@ -201,7 +202,23 @@ export namespace Components {
     }
     interface AtomicResultValue {
         /**
-          * Which highlight should the value be highlighted with
+          * When the `format` is `currency`, allows to define which currency to display.
+         */
+        "currency": string;
+        /**
+          * When the `format` is `date`, defines the format of the date itself. Available formats: https://day.js.org/docs/en/display/format
+         */
+        "dateFormat": string;
+        /**
+          * The format in which to display the result value. Possible values are `text`, `date`, `number` or `currency`.
+         */
+        "format": ResultValueFormat;
+        /**
+          * When the `format` is `number`, allows to define the number of digits.
+         */
+        "numberOfDigits"?: number;
+        /**
+          * Which highlight should the value be highlighted with. Possible values are `firstSentencesHighlights`, `excerptHighlights`, `printableUriHighlights` or `summaryHighlights`.
          */
         "shouldHighlightWith"?: string;
         /**
@@ -698,7 +715,23 @@ declare namespace LocalJSX {
     }
     interface AtomicResultValue {
         /**
-          * Which highlight should the value be highlighted with
+          * When the `format` is `currency`, allows to define which currency to display.
+         */
+        "currency"?: string;
+        /**
+          * When the `format` is `date`, defines the format of the date itself. Available formats: https://day.js.org/docs/en/display/format
+         */
+        "dateFormat"?: string;
+        /**
+          * The format in which to display the result value. Possible values are `text`, `date`, `number` or `currency`.
+         */
+        "format"?: ResultValueFormat;
+        /**
+          * When the `format` is `number`, allows to define the number of digits.
+         */
+        "numberOfDigits"?: number;
+        /**
+          * Which highlight should the value be highlighted with. Possible values are `firstSentencesHighlights`, `excerptHighlights`, `printableUriHighlights` or `summaryHighlights`.
          */
         "shouldHighlightWith"?: string;
         /**
