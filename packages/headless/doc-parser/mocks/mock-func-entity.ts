@@ -9,12 +9,7 @@ export function buildMockFuncEntity(
     desc: '',
     name: '',
     params: [],
-    returnType: buildMockEntity({
-      name: 'returnType',
-      type: 'void',
-      isOptional: false,
-      desc: '',
-    }),
+    returnType: buildMockEntity(),
     ...config,
   };
 }
