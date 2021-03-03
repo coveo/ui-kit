@@ -1,3 +1,5 @@
+type ListOfTermsWeights = Record<string, WeightsPerTerm>;
+
 export type RankingInfo = ReturnType<typeof parseRankingInfo>;
 
 export interface ListOfWeights {
@@ -17,8 +19,6 @@ export interface ListOfQRE {
   expression: string;
   score: number;
 }
-
-export type ListOfTermsWeights = Record<string, WeightsPerTerm>;
 
 export interface WeightsPerTerm {
   Weights: WeightsPerTermBreakdown;

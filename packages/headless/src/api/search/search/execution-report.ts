@@ -3,13 +3,11 @@ export interface ExecutionReport {
   children: ExecutionReportSection[];
 }
 
-export interface BaseExecutionReportSection {
+export interface ExecutionReportSection {
   name: string;
   duration: number;
   description: string;
   result?: Record<string, unknown>;
   children?: ExecutionReportSection[];
+  [key: string]: unknown;
 }
-
-export type ExecutionReportSection = BaseExecutionReportSection &
-  Record<string, unknown>;
