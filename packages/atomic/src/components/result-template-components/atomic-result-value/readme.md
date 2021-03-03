@@ -19,7 +19,7 @@
 
  - [atomic-result-excerpt](../atomic-result-excerpt)
  - [atomic-result-link](../atomic-result-link)
- - [atomic-result-uri](../atomic-result-uri)
+ - [atomic-result-printable-uri](../atomic-result-printable-uri)
 
 ### Depends on
 
@@ -31,7 +31,7 @@ graph TD;
   atomic-result-value --> atomic-component-error
   atomic-result-excerpt --> atomic-result-value
   atomic-result-link --> atomic-result-value
-  atomic-result-uri --> atomic-result-value
+  atomic-result-printable-uri --> atomic-result-value
   style atomic-result-value fill:#f9f,stroke:#333,stroke-width:4px
 ```
 

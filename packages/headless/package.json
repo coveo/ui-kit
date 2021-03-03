@@ -9,7 +9,7 @@
   },
   "types": "./dist/index.d.ts",
   "license": "Apache-2.0",
-  "version": "0.7.0-alpha.25",
+  "version": "0.7.0-alpha.26",
   "files": [
     "dist/"
   ],
@@ -24,6 +24,7 @@
     "test:unit": "jest --testPathIgnorePatterns=src/integration-tests",
     "test:integration": "jest --testPathPattern=src/integration-tests",
     "npm:publish": "npm publish --access public",
+    "doc:generate": "npm run doc:extract && npm run doc:parse",
     "doc:extract": "api-extractor run --local --verbose",
     "doc:parse": "ts-node --project ./doc-parser/tsconfig.build.json ./doc-parser/doc-parser.ts"
   },

@@ -68,11 +68,8 @@ function resolveInheritedMembers(
 ) {
   return apiInterface.extendsTypes
     .map((m) => {
-      const searchableTypeName = extractSearchableTypeName(m.excerpt);
-      const inheritedInterface = findApi(
-        entry,
-        searchableTypeName
-      ) as ApiInterface;
+      const typeName = extractSearchableTypeName(m.excerpt);
+      const inheritedInterface = findApi(entry, typeName) as ApiInterface;
       return resolveInterfaceMembers(entry, inheritedInterface);
     })
     .reduce((acc, curr) => acc.concat(curr), []);
