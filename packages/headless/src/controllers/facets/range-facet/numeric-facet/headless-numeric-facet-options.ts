@@ -27,24 +27,46 @@ import {
 
 export interface NumericFacetValueOption {
   /**
-   * Whether a facet value is filtering results (`selected`) or not (`idle`).
-   */
-  state: FacetValueState;
-  /**
-   * The starting date for the range. It can be expressed as a Javascript date, as a number using epoch time or as a string using the ISO 8601 format
+   * The start value of the range.
    */
   start: number;
+
   /**
-   * The ending date for the range. It can be expressed as a Javascript date, as a number using epoch time or as a string using the ISO 8601 format
+   * The end value of the range.
    */
   end: number;
+
   /**
-   * Specifies whether or not the end date should be included in the range
+   * Whether to include the `end` value in the range.
    */
   endInclusive: boolean;
+
+  /**
+   * The current facet value state.
+   */
+  state: FacetValueState;
 }
 
 export interface NumericFacetOptions {
+  /**
+   * The field whose values you want to display in the facet.
+   */
+  field: string;
+
+  /**
+   * Whether the index should automatically create range values.
+   *
+   * Tip: If you set this parameter to true, you should ensure that the Use cache for numeric queries option is enabled for the Facet field in your index in order to speed up automatic range evaluation (see [Add or Edit Fields](https://docs.coveo.com/en/1982/index-content/add-or-edit-a-field)).
+   */
+  generateAutomaticRanges: boolean;
+
+  /**
+   * The values displayed by the facet in the search interface at the moment of the request.
+   *
+   * @default []
+   */
+  currentValues?: NumericFacetValueOption[];
+
   /**
    * A unique identifier for the controller.
    * By default, a unique random identifier is generated.
@@ -52,22 +74,8 @@ export interface NumericFacetOptions {
   facetId?: string;
 
   /**
-   * The field whose values you want to display in the facet.
-   */
-  field: string;
-
-  /** Whether the index should automatically create range values.
+   * Whether to exclude folded result parents when estimating the result count for each facet value.
    *
-   * Tip: If you set this parameter to true, you should ensure that the Use cache for numeric queries option is enabled for the Facet field in your index in order to speed up automatic range evaluation (see [Add or Edit Fields](https://docs.coveo.com/en/1982/index-content/add-or-edit-a-field)).
-   */
-  generateAutomaticRanges: boolean;
-
-  /** The values displayed by the facet in the search interface at the moment of the request.
-   * @default []
-   */
-  currentValues?: NumericFacetValueOption[];
-
-  /** Whether to exclude folded result parents when estimating the result count for each facet value.
    * @default true
    */
   filterFacetCount?: boolean;
@@ -91,6 +99,8 @@ export interface NumericFacetOptions {
 
   /**
    * The sort criterion to apply to the returned facet values.
+   *
+   * @default "ascending"
    */
   sortCriteria?: RangeFacetSortCriterion;
 }

@@ -5,7 +5,7 @@ export function findApi(entry: ApiEntryPoint, apiName: string) {
   const [result] = entry.findMembersByName(canonicalName);
 
   if (!result) {
-    throw new Error(`No api found for ${canonicalName}`);
+    throw new Error(`No api found for "${canonicalName}"`);
   }
 
   return result;
@@ -15,5 +15,5 @@ function extractCanonicalName(apiName: string) {
   const dollarIndex = apiName.indexOf('$');
   const endIndex = dollarIndex !== -1 ? dollarIndex : apiName.length;
 
-  return apiName.slice(0, endIndex);
+  return apiName.slice(0, endIndex).trim();
 }

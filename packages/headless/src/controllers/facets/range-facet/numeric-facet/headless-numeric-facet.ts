@@ -41,37 +41,43 @@ export type NumericFacetProps = {
   options: NumericFacetOptions;
 };
 
-/** The `NumericFacet` controller makes it possible to create a facet with numeric ranges. */
+/**
+ * The `NumericFacet` controller makes it possible to create a facet with numeric ranges.
+ */
 export interface NumericFacet extends Controller {
-  /**
-   * Toggles the specified facet value.
-   * @param selection - The facet value to toggle.
-   */
-  toggleSelect(selection: NumericFacetValue): void;
-
-  /**
-   * Checks whether the specified facet value is selected.
-   * @param selection - The facet value to check.
-   * @returns Whether the specified facet value is selected.
-   */
-  isValueSelected(selection: NumericFacetValue): boolean;
-
   /**
    * Deselects all facet values.
    */
   deselectAll(): void;
 
+  /**
+   * Checks whether the facet values are sorted according to the specified criterion.
+   *
+   * @param criterion - The criterion to compare.
+   * @returns Whether the facet values are sorted according to the specified criterion.
+   */
+  isSortedBy(criterion: RangeFacetSortCriterion): boolean;
+
+  /**
+   * Checks whether the specified facet value is selected.
+   *
+   * @param selection - The facet value to check.
+   * @returns Whether the specified facet value is selected.
+   */
+  isValueSelected(selection: NumericFacetValue): boolean;
+
   /** Sorts the facet values according to the specified criterion.
+   *
    * @param criterion - The criterion to sort values by.
    */
   sortBy(criterion: RangeFacetSortCriterion): void;
 
   /**
-   * Checks whether the facet values are sorted according to the specified criterion.
-   * @param criterion - The criterion to compare.
-   * @returns Whether the facet values are sorted according to the specified criterion.
+   * Toggles the specified facet value.
+   *
+   * @param selection - The facet value to toggle.
    */
-  isSortedBy(criterion: RangeFacetSortCriterion): boolean;
+  toggleSelect(selection: NumericFacetValue): void;
 
   /**
    * The state of the `NumericFacet` controller
@@ -123,10 +129,10 @@ export function buildNumericFacet(
   const dispatch = engine.dispatch;
 
   const facetId = determineFacetId(engine, props.options);
-  const options = {
+  const options: NumericFacetOptions = {
     ...props.options,
     facetId,
-  } as NumericFacetRegistrationOptions;
+  };
 
   validateOptions(
     engine,
@@ -135,7 +141,13 @@ export function buildNumericFacet(
     'buildNumericFacet'
   );
 
-  dispatch(registerNumericFacet(options));
+  if (!options.generateAutomaticRanges && options.currentValues === undefined) {
+    engine.logger.error(
+      'currentValues should be specified for buildNumericFacet when generateAutomaticRanges is false.'
+    );
+  }
+
+  dispatch(registerNumericFacet(options as NumericFacetRegistrationOptions));
 
   const rangeFacet = buildRangeFacet<NumericFacetRequest, NumericFacetResponse>(
     engine,
@@ -147,14 +159,9 @@ export function buildNumericFacet(
 
   return {
     ...rangeFacet,
-    /**
-     * Toggles the specified facet value.
-     * @param selection The facet value to toggle.
-     */
     toggleSelect: (selection: NumericFacetValue) =>
       dispatch(executeToggleNumericFacetSelect({facetId, selection})),
 
-    /** The state of the `NumericFacet` controller.*/
     get state() {
       return rangeFacet.state;
     },
