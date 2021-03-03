@@ -5,7 +5,7 @@ export function findApi(entry: ApiEntryPoint, apiName: string) {
   const [result] = entry.findMembersByName(canonicalName);
 
   if (!result) {
-    throw new Error(`No api found for "${canonicalName}"`);
+    throw new Error(`No api found for ${canonicalName}`);
   }
 
   return result;
