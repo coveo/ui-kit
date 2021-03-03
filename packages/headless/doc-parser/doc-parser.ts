@@ -133,6 +133,10 @@ const controllers: ControllerConfiguration[] = [
     },
   },
   {
+    initializer: 'buildStandaloneSearchBox',
+    samplePaths: {},
+  },
+  {
     initializer: 'buildInteractiveResult',
     samplePaths: {
       react_class: [],
