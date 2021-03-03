@@ -14,14 +14,16 @@ export default class Pager extends LightningElement {
   /** @type {boolean} */
   hasNext;
   currentPage = 1;
+  /** @type {string} */
+  @api searchInterfaceId;
 
   constructor() {
     super();
-    registerComponentForInit(this);
+    registerComponentForInit(this, 'sample-app');
   }
 
   connectedCallback() {
-    initializeWithHeadless(this, this.initialize.bind(this));
+    initializeWithHeadless(this, this.searchInterfaceId, this.initialize.bind(this));
   }
 
   /**

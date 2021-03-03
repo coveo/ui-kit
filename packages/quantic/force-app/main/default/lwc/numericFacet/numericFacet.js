@@ -11,6 +11,8 @@ export default class NumericFacet extends LightningElement {
   @api field;
   /** @type {string} */
   @api label;
+  /** @type {string} */
+  @api searchInterfaceId;
 
   /** @type {import("coveo").NumericFacet} */
   facet;
@@ -19,11 +21,11 @@ export default class NumericFacet extends LightningElement {
 
   constructor() {
     super();
-    registerComponentForInit(this);
+    registerComponentForInit(this, 'sample-app');
   }
 
   connectedCallback() {
-    initializeWithHeadless(this, this.initialize.bind(this));
+    initializeWithHeadless(this, this.searchInterfaceId, this.initialize.bind(this));
   }
 
   /**

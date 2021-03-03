@@ -4,6 +4,9 @@ import {registerComponentForInit, initializeWithHeadless} from 'c/headlessLoader
 export default class Sort extends LightningElement {
   @track state = {};
 
+  /** @type {string} */
+  @api searchInterfaceId;
+
   /** @type {import("coveo").Sort} */
   sort;
   /** @type {import("coveo").Unsubscribe} */
@@ -11,11 +14,11 @@ export default class Sort extends LightningElement {
 
   constructor() {
     super();
-    registerComponentForInit(this);
+    registerComponentForInit(this, 'sample-app');
   }
 
   connectedCallback() {
-    initializeWithHeadless(this, this.initialize.bind(this));
+    initializeWithHeadless(this, this.searchInterfaceId, this.initialize.bind(this));
   }
 
   /**

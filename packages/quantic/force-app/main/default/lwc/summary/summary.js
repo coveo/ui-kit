@@ -4,6 +4,9 @@ import {registerComponentForInit, initializeWithHeadless} from 'c/headlessLoader
 export default class Summary extends LightningElement {
   @track state = {};
 
+  /** @type {string} */
+  @api searchInterfaceId;
+
   /** @type {import("coveo").QuerySummary} */
   querySummary;
   /** @type {import("coveo").Unsubscribe} */
@@ -11,11 +14,11 @@ export default class Summary extends LightningElement {
 
   constructor() {
     super();
-    registerComponentForInit(this);
+    registerComponentForInit(this, 'sample-app');
   }
 
   connectedCallback() {
-    initializeWithHeadless(this, this.initialize.bind(this));
+    initializeWithHeadless(this, this.searchInterfaceId, this.initialize.bind(this));
   }
 
   /**

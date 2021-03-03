@@ -11,13 +11,16 @@ export default class ResultsPerPage extends LightningElement {
   /** @type {()=> void} */
   unsubscribe;
 
+  /** @type {string} */
+  @api searchInterfaceId;
+
   constructor() {
     super();
-    registerComponentForInit(this);
+    registerComponentForInit(this, 'sample-app');
   }
   
   connectedCallback() {
-    initializeWithHeadless(this, this.initialize.bind(this));
+    initializeWithHeadless(this, this.searchInterfaceId, this.initialize.bind(this));
   }
 
   /**

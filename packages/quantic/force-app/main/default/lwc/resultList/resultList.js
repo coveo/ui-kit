@@ -6,20 +6,21 @@ export default class ResultList extends LightningElement {
 
   /** @type {import("coveo").ResultList} */
   resultList;
-
   /** @type {import("coveo").Unsubscribe} */
   unsubscribe;
-
   /** @type {import("coveo").ResultTemplatesManager} */
   resultTemplatesManager;
 
+  /** @type {string} */
+  @api searchInterfaceId;
+
   constructor() {
     super();
-    registerComponentForInit(this);
+    registerComponentForInit(this, 'sample-app');
   }
 
   connectedCallback() {
-    initializeWithHeadless(this, this.initialize.bind(this));
+    initializeWithHeadless(this, this.searchInterfaceId, this.initialize.bind(this));
   }
 
   /**

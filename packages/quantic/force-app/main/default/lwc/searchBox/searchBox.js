@@ -17,6 +17,9 @@ export default class SearchBox extends LightningElement {
 
   /** @type {boolean} */
   @api sample = false;
+  /** @type {string} */
+  @api searchInterfaceId;
+
   /** @type {import("coveo").SearchBox} */
   searchBox;
   /** @type {import("coveo").Unsubscribe} */
@@ -27,11 +30,11 @@ export default class SearchBox extends LightningElement {
 
   constructor() {
     super();
-    registerComponentForInit(this);
+    registerComponentForInit(this, 'sample-app');
   }
 
   connectedCallback() {
-    initializeWithHeadless(this, this.initialize.bind(this));
+    initializeWithHeadless(this, this.searchInterfaceId, this.initialize.bind(this));
 
     if (this.tributeLoaded) {
       return;

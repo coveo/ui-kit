@@ -12,6 +12,8 @@ export default class CategoryFacet extends LightningElement {
   @api field;
   /** @type {string} */
   @api label;
+  /** @type {string} */
+  @api searchInterfaceId;
 
   /** @type {import("coveo").CategoryFacet}} */
   facet;
@@ -20,11 +22,11 @@ export default class CategoryFacet extends LightningElement {
 
   constructor() {
     super();
-    registerComponentForInit(this);
+    registerComponentForInit(this, "sample-app");
   }
 
   connectedCallback() {
-    initializeWithHeadless(this, this.initialize.bind(this));
+    initializeWithHeadless(this, this.searchInterfaceId, this.initialize.bind(this));
   }
 
   /**

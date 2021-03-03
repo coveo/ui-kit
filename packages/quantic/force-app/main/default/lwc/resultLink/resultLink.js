@@ -4,12 +4,14 @@ import {getHeadlessEngine} from 'c/headlessLoader';
 export default class ResultLink extends LightningElement {
   /** @type {import("coveo").Result} */
   @api result;
+  /** @type {string} */
+  @api searchInterfaceId;
 
   /** @type {import("coveo").Engine} */
   engine;
 
   connectedCallback() {
-    getHeadlessEngine(this).then((engine) => {
+    getHeadlessEngine(this, this.searchInterfaceId).then((engine) => {
       this.initialize(engine);
     }).catch((error) => {
       console.error(error.message);

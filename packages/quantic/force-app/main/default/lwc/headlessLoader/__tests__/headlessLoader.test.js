@@ -1,6 +1,5 @@
 /* eslint-disable jest/expect-expect */
 import {
-  executeInitialSearch,
   registerComponentForInit,
   setComponentInitialized,
   getHeadlessEngine,
@@ -9,16 +8,19 @@ import {
 import { CoveoHeadlessStub, MockEngine } from '../../testUtils/coveoHeadlessStub';
 
 describe('c/headlessLoader', () => {
+  const dispatchMock = jest.fn();
+
   let mockedConsoleError;
   let initialize;
+  let testId = 'search-page-1';
 
   const createComponentEntryWithInitStatus = (isInitialized) => ({
     element: document.createElement('div'),
     initialized: isInitialized
   });
 
-  const assertComponentIsSetInitialized = (element) => {
-    expect(window.coveoHeadless.components).toContainEqual({
+  const assertComponentIsSetInitialized = (element, searchInterfaceId) => {
+    expect(window.coveoHeadless[searchInterfaceId].components).toContainEqual({
       element,
       initialized: true
     });
@@ -40,7 +42,7 @@ describe('c/headlessLoader', () => {
 
   describe('registerComponentForInit', () => {
     const assertComponentIsRegistered = (element) => {
-      expect(window.coveoHeadless.components).toContainEqual({
+      expect(window.coveoHeadless[testId].components).toContainEqual({
         element,
         initialized: false
       });
@@ -49,7 +51,7 @@ describe('c/headlessLoader', () => {
     describe('when coveoHeadless is undefined', () => {
       it('should initialize coveoHeadless and register component', () => {
         const element = document.createElement('div');
-        registerComponentForInit(element);
+        registerComponentForInit(element, testId);
 
         assertComponentIsRegistered(element);
       });
@@ -58,67 +60,57 @@ describe('c/headlessLoader', () => {
     describe('when coveoHeadless is defined', () => {
       beforeEach(() => {
         window.coveoHeadless = {
-          components: [],
-          engine: undefined
+          [testId]: {
+            components: [],
+            engine: {
+              dispatch: dispatchMock
+            }
+          }
         }
       });
 
       describe('when no search is pending', () => {
         it('should register the component', () => {
           const element = document.createElement('div');
-          registerComponentForInit(element);
+          registerComponentForInit(element, testId);
   
           assertComponentIsRegistered(element);
         });
   
         it('should not register the component if it already is', () => {
           const element = document.createElement('div');
-          window.coveoHeadless.components.push({
+          window.coveoHeadless[testId].components.push({
               element,
               initialized: false
           });
           const mockedPush = jest.fn();
-          window.coveoHeadless.components.push = mockedPush;
+          window.coveoHeadless[testId].components.push = mockedPush;
   
-          registerComponentForInit(element);
+          registerComponentForInit(element, testId);
   
           expect(mockedPush).not.toBeCalled();
-        });
-      });
-  
-      describe('when search is pending', () => {
-        beforeEach(() =>{
-          executeInitialSearch();
-        });
-  
-        it('should cancel search and register the component', () => {
-            const element = document.createElement('div');
-            registerComponentForInit(element);
-  
-            expect(clearTimeout).toBeCalled();
-            assertComponentIsRegistered(element);
         });
       });
     });
   });
 
   describe('setComponentInitialized', () => {
-    const dispatchMock = jest.fn();
-
     describe('when coveoHeadless is undefined', () => {
       it('should log an error', () => {
         const element = document.createElement('div');
 
-        expect(() => setComponentInitialized(element)).toThrowError('Fatal Error: Component was not registered before initialization');
+        expect(() => setComponentInitialized(element, testId)).toThrowError('Fatal Error: Component was not registered before initialization');
       });
     });
 
     describe('when coveoHeadless is defined', () => {      
       beforeEach(() => {
         window.coveoHeadless = {
-          components: [],
-          engine: {
-            dispatch: dispatchMock
+          [testId]: {
+            components: [],
+            engine: {
+              dispatch: dispatchMock
+            }
           }
         }
       });
@@ -127,7 +119,7 @@ describe('c/headlessLoader', () => {
         const element = document.createElement('div');
 
         beforeEach(() => {
-          window.coveoHeadless.components = [
+          window.coveoHeadless[testId].components = [
             {
               element,
               initialized: false
@@ -137,9 +129,9 @@ describe('c/headlessLoader', () => {
         });
 
         it('should set the component to initialized', () => {
-          setComponentInitialized(element);
+          setComponentInitialized(element, testId);
   
-          assertComponentIsSetInitialized(element);
+          assertComponentIsSetInitialized(element, testId);
           jest.runAllTimers();
           expect(dispatchMock).not.toBeCalled();
         });
@@ -149,7 +141,7 @@ describe('c/headlessLoader', () => {
         const element = document.createElement('div');
 
         beforeEach(() => {
-          window.coveoHeadless.components = [
+          window.coveoHeadless[testId].components = [
             {
               element,
               initialized: false
@@ -159,9 +151,9 @@ describe('c/headlessLoader', () => {
         });
 
         it('should set the component to initialized and start delayed search', () => {
-          setComponentInitialized(element);
+          setComponentInitialized(element, testId);
   
-          assertComponentIsSetInitialized(element);
+          assertComponentIsSetInitialized(element, testId);
           jest.runAllTimers();
           expect(dispatchMock).toBeCalled();
         });
@@ -175,12 +167,14 @@ describe('c/headlessLoader', () => {
     describe('when the engine is undefined', () => {      
       beforeEach(() => {
         window.coveoHeadless = {
-          components: []
+          [testId]: {
+            components: []
+          }
         }
       });
 
       it('should init the engine return a promise that resolves to that instance', async () => {
-        const engine = await getHeadlessEngine(element);
+        const engine = await getHeadlessEngine(element, testId);
 
         expect(engine).toBeInstanceOf(MockEngine);
       });
@@ -192,13 +186,15 @@ describe('c/headlessLoader', () => {
       }
       beforeEach(() => {
         window.coveoHeadless = {
-          components: [],
-          engine: definedEngine
+          [testId]: {
+            components: [],
+            engine: definedEngine
+          }
         }
       });
 
       it('should return a promise that resolves to an instance of the engine', async () => {
-        const engine = await getHeadlessEngine(element);
+        const engine = await getHeadlessEngine(element, testId);
 
         expect(engine).toEqual(definedEngine);
       });
@@ -211,20 +207,22 @@ describe('c/headlessLoader', () => {
     describe('when the engine is undefined', () => {      
       beforeEach(() => {
         window.coveoHeadless = {
-          components: [{
-            element,
-            initialized: false
-          }]
+          [testId]: {
+            components: [{
+              element,
+              initialized: false
+            }]
+          }
         }
       });
 
       it('should init the engine and initialize ', async () => {
-        initializeWithHeadless(element, initialize);
-        const engine = await window.coveoHeadless.engine;
+        initializeWithHeadless(element, testId, initialize);
+        const engine = await window.coveoHeadless[testId].engine;
 
         expect(engine).toBeInstanceOf(MockEngine);
         expect(initialize).toHaveBeenCalled();
-        assertComponentIsSetInitialized(element);
+        assertComponentIsSetInitialized(element, testId);
       });
 
       describe('when initializing the engine fails', () => {
@@ -236,8 +234,8 @@ describe('c/headlessLoader', () => {
         });
         
         it ('should log an error', async () => {
-          initializeWithHeadless(element, initialize);
-          await window.coveoHeadless.engine;
+          initializeWithHeadless(element, testId, initialize);
+          await window.coveoHeadless[testId].engine;
 
           expect(mockedConsoleError).toHaveBeenCalled();
         });
@@ -250,21 +248,23 @@ describe('c/headlessLoader', () => {
       }
       beforeEach(() => {
         window.coveoHeadless = {
-          components: [{
-            element,
-            initialized: false
-          }],
-          engine: definedEngine
+          [testId]: {
+            components: [{
+              element,
+              initialized: false
+            }],
+            engine: definedEngine
+          }
         }
       });
 
       it('should initialize the component using the defined engine', async () => {
-        initializeWithHeadless(element, initialize);
-        const engine = await window.coveoHeadless.engine;
+        initializeWithHeadless(element, testId, initialize);
+        const engine = await window.coveoHeadless[testId].engine;
 
         expect(engine).toEqual(definedEngine);
         expect(initialize).toHaveBeenCalled();
-        assertComponentIsSetInitialized(element);
+        assertComponentIsSetInitialized(element, testId);
       });
     });
   });
