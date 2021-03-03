@@ -56,7 +56,7 @@ export interface NumericFacetOptions {
   /**
    * Whether the index should automatically create range values.
    *
-   * Tip: If you set this parameter to true, you should ensure that the Use cache for numeric queries option is enabled for the Facet field in your index in order to speed up automatic range evaluation (see [Add or Edit Fields](https://docs.coveo.com/en/1982/index-content/add-or-edit-a-field)).
+   * Tip: If you set this parameter to true, you should ensure that the ['Use cache for numeric queries' option](https://docs.coveo.com/en/1982/#use-cache-for-numeric-queries) is enabled for this facet's field in your index in order to speed up automatic range evaluation.
    */
   generateAutomaticRanges: boolean;
 
