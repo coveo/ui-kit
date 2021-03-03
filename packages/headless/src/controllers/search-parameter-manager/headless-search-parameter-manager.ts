@@ -14,14 +14,22 @@ import {searchParametersDefinition} from '../../features/search-parameters/searc
 import {getSortCriteriaInitialState} from '../../features/sort-criteria/sort-criteria-state';
 import {SearchParametersState} from '../../state/search-app-state';
 import {validateInitialState} from '../../utils/validate-payload';
-import {buildController} from '../controller/headless-controller';
+import {buildController, Controller} from '../controller/headless-controller';
 import {RangeValueRequest} from '../../features/facets/range-facets/generic/interfaces/range-facet';
 
+export {SearchParameters};
+
 export interface SearchParameterManagerProps {
+  /**
+   * The initial state that should be applied to the `SearchParameterManager` controller.
+   */
   initialState: SearchParameterManagerInitialState;
 }
 
-interface SearchParameterManagerInitialState {
+export interface SearchParameterManagerInitialState {
+  /**
+   * The parameters affecting the search response.
+   */
   parameters: SearchParameters;
 }
 
@@ -34,18 +42,34 @@ const initialStateSchema = new Schema<
   }),
 });
 
-/** The `SearchParameterManager` controller allows restoring parameters that affect the results from e.g. a url.*/
-export type SearchParameterManager = ReturnType<
-  typeof buildSearchParameterManager
->;
+/**
+ * The `SearchParameterManager` controller allows restoring parameters that affect the results from e.g. a url.
+ * */
+export interface SearchParameterManager extends Controller {
+  /**
+   * The state relevant to the `SearchParameterManager` controller.
+   * */
+  state: SearchParameterManagerState;
+}
 
-/** The state relevant to the `SearchParameterManager` controller.*/
-export type SearchParameterManagerState = SearchParameterManager['state'];
+export interface SearchParameterManagerState {
+  /**
+   * The parameters affecting the search response.
+   */
+  parameters: SearchParameters;
+}
 
+/**
+ * Creates a `SearchParameterManager` controller instance.
+ *
+ * @param engine - The headless engine.
+ * @param props - The configurable `SearchParameterManager` properties.
+ * @returns A `SearchParameterManager` controller instance.
+ */
 export function buildSearchParameterManager(
   engine: Engine<Partial<SearchParametersState>>,
   props: SearchParameterManagerProps
-) {
+): SearchParameterManager {
   const {dispatch} = engine;
   const controller = buildController(engine);
 

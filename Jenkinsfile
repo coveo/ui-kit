@@ -37,6 +37,10 @@ node('linux && docker') {
        sh 'cd packages/atomic && npm start & npx wait-on http://localhost:3333'
        sh 'NO_COLOR=1 npm run cypress:test'
       }
+
+      stage('Generate Docs') {
+        sh 'npm run doc:generate'
+      }
     }
 
     if (!isMaster) {

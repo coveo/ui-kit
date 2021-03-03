@@ -1,9 +1,11 @@
 import {FunctionalComponent, h} from '@stencil/core';
 
 import CloseIcon from 'coveo-styleguide/resources/icons/svg/close.svg';
+import {I18nState} from '../../../utils/initialization-utils';
 
 export interface BaseFacetState {
   isExpanded: boolean;
+  strings: I18nState;
 }
 
 export class BaseFacetController {
@@ -50,7 +52,7 @@ export const BaseFacet: FunctionalComponent<BaseFacetProps> = (
       onClick={() => props.deselectAll()}
       class="block text-primary mr-2 lg:mr-0 text-sm"
     >
-      Clear
+      {props.controller.state.strings.clear()}
     </button>
   ) : null;
 
