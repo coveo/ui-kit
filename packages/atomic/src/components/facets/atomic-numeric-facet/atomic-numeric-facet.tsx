@@ -84,8 +84,9 @@ export class AtomicNumericFacet
   }
 
   private get values() {
-    return this.facetState.values.map((listItem) =>
-      this.buildListItem(listItem)
+    return this.facetState.values.map(
+      (listItem) =>
+        (listItem.numberOfResults && this.buildListItem(listItem)) || null
     );
   }
 
@@ -103,7 +104,17 @@ export class AtomicNumericFacet
     );
   }
 
+  public get totalNumberOfResults() {
+    return this.facetState.values.reduce(
+      (accum, value) => accum + value.numberOfResults,
+      0
+    );
+  }
+
   public render() {
+    if (this.totalNumberOfResults === 0) {
+      return null;
+    }
     return (
       <BaseFacet
         controller={new BaseFacetController(this)}
