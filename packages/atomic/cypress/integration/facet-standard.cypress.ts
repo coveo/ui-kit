@@ -12,16 +12,6 @@ const facetProp = {
   label: 'Authors',
 };
 
-const compareAlphanumericalValues = (valueA: string, valueB: string) => {
-  if (valueA.toLowerCase() < valueB.toLowerCase()) {
-    return -1;
-  }
-  if (valueA.toLowerCase() > valueB.toLowerCase()) {
-    return 1;
-  }
-  return 0;
-};
-
 const sortCriteriaOption = {
   automatic: 'automatic',
   alphanumeric: 'alphanumeric',
@@ -84,15 +74,10 @@ async function getTextOfAllElements(selector: string) {
   });
 }
 
-function isArraySorted(originalValues: string[], expectedSort: boolean) {
-  const sortedValues = originalValues
+function doSort(originalValues: string[]) {
+  return originalValues
     .concat()
-    .sort(compareAlphanumericalValues);
-  if (expectedSort === true) {
-    expect(originalValues).to.eql(sortedValues);
-  } else {
-    expect(originalValues).not.to.eql(sortedValues);
-  }
+    .sort((first, second) => first.localeCompare(second));
 }
 
 async function facetSortShouldApply(
@@ -105,18 +90,16 @@ async function facetSortShouldApply(
   expect(requestBodyFacets[0]).to.have.property('sortCriteria', sortOption);
 }
 
-function replaceSpaceInURLhash(text: string) {
-  return text.replace(/ /g, '%20');
-}
-
 describe('Standard Facet', () => {
   beforeEach(() => {
     setupPager(facetProp.field, facetProp.label);
     createAliasShadow(facetProp.field);
     createAliasFacetUL(facetProp.field);
-    cy.get('@facet_ul').find('li:nth-child(1)').as('facetLi_1');
-    cy.get('@facet_ul').find('li:nth-child(2)').as('facetLi_2');
-    cy.get('@facet_ul').find('label span:nth-child(1)').as('listFacetValue');
+    cy.get('@facet_ul').find('li:nth-child(1)').as('firstFacetValue');
+    cy.get('@facet_ul').find('li:nth-child(2)').as('secondFacetValue');
+    cy.get('@facet_ul')
+      .find('label span:nth-child(1)')
+      .as('allFacetValueLabel');
   });
 
   describe('When page is loaded', () => {
@@ -135,33 +118,38 @@ describe('Standard Facet', () => {
     });
 
     it('FacetValue list should not in Alphanumeric order', async () => {
-      const originalValues = await getTextOfAllElements('@listFacetValue');
-      isArraySorted(originalValues as string[], false);
+      const originalValues = (await getTextOfAllElements(
+        '@allFacetValueLabel'
+      )) as string[];
+      expect(originalValues).not.to.eql(doSort(originalValues));
     });
   });
 
   describe('When select 1 facetValue checkbox', () => {
     it('Should active checkbox and log UA', async () => {
-      await validateBasicFacetFunctionality('@facetLi_1', facetProp.field);
+      await validateBasicFacetFunctionality(
+        '@firstFacetValue',
+        facetProp.field
+      );
     });
 
     it('Should trigger breadcrumb and display correctly', () => {
-      cy.get('@facetLi_1').click();
+      cy.get('@firstFacetValue').click();
       createBreadcrumbShadowAlias();
       cy.get('@breadcrumbClearAllFilter').should('be.visible');
       facetValueShouldDisplayInBreadcrumb(
-        '@facetLi_1',
+        '@firstFacetValue',
         'ul li:nth-child(2) button'
       );
     });
 
     it('Should reflect selected facetValue on URL', async () => {
-      cy.get('@facetLi_1')
+      cy.get('@firstFacetValue')
         .click()
         .find('label span:nth-child(1)')
         .invoke('text')
         .then((txt) => {
-          const urlHash = `#f[author]=${replaceSpaceInURLhash(txt)}`;
+          const urlHash = `#f[author]=${encodeURIComponent(txt)}`;
           cy.url().should('include', urlHash);
         });
     });
@@ -169,10 +157,10 @@ describe('Standard Facet', () => {
 
   describe('When deselect 1 selected facetValue checkbox', () => {
     it('should clear the checkbox and log UA', async () => {
-      cy.get('@facetLi_1').click();
+      cy.get('@firstFacetValue').click();
       cy.wait(500);
-      cy.get('@facetLi_1').click();
-      cy.get('@facetLi_1')
+      cy.get('@firstFacetValue')
+        .click()
         .find(FacetSelectors.checkbox)
         .should('not.be.checked');
       const analyticsBody = (await getAnalyticsAt('@coveoAnalytics', 2)).request
@@ -187,10 +175,14 @@ describe('Standard Facet', () => {
 
   describe('When select 2 facetValue checkboxes', () => {
     it('Two checkboxes should selected and should record UA correctly', async () => {
-      cy.get('@facetLi_1').click();
-      cy.get('@facetLi_2').click();
-      cy.get('@facetLi_1').find(FacetSelectors.checkbox).should('be.checked');
-      cy.get('@facetLi_2').find(FacetSelectors.checkbox).should('be.checked');
+      cy.get('@firstFacetValue').click();
+      cy.get('@secondFacetValue').click();
+      cy.get('@firstFacetValue')
+        .find(FacetSelectors.checkbox)
+        .should('be.checked');
+      cy.get('@secondFacetValue')
+        .find(FacetSelectors.checkbox)
+        .should('be.checked');
       const analyticsBody = (await getAnalyticsAt('@coveoAnalytics', 2)).request
         .body;
       expect(analyticsBody).to.have.property('actionCause', 'facetSelect');
@@ -198,32 +190,32 @@ describe('Standard Facet', () => {
     });
 
     it('Should trigger breadcrumb and display correctly', () => {
-      cy.get('@facetLi_1').click();
-      cy.get('@facetLi_2').click();
+      cy.get('@firstFacetValue').click();
+      cy.get('@secondFacetValue').click();
       createBreadcrumbShadowAlias();
       cy.get('@breadcrumbClearAllFilter').should('be.visible');
       facetValueShouldDisplayInBreadcrumb(
-        '@facetLi_1',
+        '@firstFacetValue',
         'ul li:nth-child(2) button'
       );
       facetValueShouldDisplayInBreadcrumb(
-        '@facetLi_2',
+        '@secondFacetValue',
         'ul li:nth-child(3) button'
       );
     });
 
     it('Should reflect selected facetValue on URL', async () => {
-      cy.get('@facetLi_1').click();
-      cy.get('@facetLi_2').click();
-      cy.get('@facetLi_1')
+      cy.get('@firstFacetValue').click();
+      cy.get('@secondFacetValue').click();
+      cy.get('@firstFacetValue')
         .find('label span:nth-child(1)')
         .invoke('text')
         .then((txtFacet1) => {
-          cy.get('@facetLi_2')
+          cy.get('@secondFacetValue')
             .find('label span:nth-child(1)')
             .invoke('text')
             .then((txtFacet2) => {
-              const urlHash = `#f[author]=${replaceSpaceInURLhash(
+              const urlHash = `#f[author]=${encodeURIComponent(
                 `${txtFacet1},${txtFacet2}`
               )}`;
               cy.url().should('include', urlHash);
@@ -255,8 +247,11 @@ describe('Standard Facet', () => {
     it('Should sort facetValue in alphanumeric order', async () => {
       cy.get('@facetShadow').find(FacetSelectors.showMoreButton).click();
       cy.wait(500);
-      const originalValues = await getTextOfAllElements('@listFacetValue');
-      isArraySorted(originalValues as string[], true);
+      const originalValues = (await getTextOfAllElements(
+        '@allFacetValueLabel'
+      )) as string[];
+
+      expect(originalValues).to.eql(doSort(originalValues));
     });
   });
 
@@ -285,13 +280,13 @@ describe('Standard Facet', () => {
 
   describe('When click ClearAll facet', () => {
     it('Should clear all checkboxes and log UA', async () => {
-      cy.get('@facetLi_1').click();
-      cy.get('@facetLi_2').click();
+      cy.get('@firstFacetValue').click();
+      cy.get('@secondFacetValue').click();
       cy.get('@facetShadow').find(FacetSelectors.clearAllButton).click();
-      cy.get('@facetLi_1')
+      cy.get('@firstFacetValue')
         .find(FacetSelectors.checkbox)
         .should('not.be.checked');
-      cy.get('@facetLi_2')
+      cy.get('@secondFacetValue')
         .find(FacetSelectors.checkbox)
         .should('not.be.checked');
       const analyticsBody = (await getAnalyticsAt('@coveoAnalytics', 3)).request
@@ -311,8 +306,8 @@ describe('Facet with no facetSearch, and numberOfValues is 5 ', () => {
     );
     createAliasShadow(facetProp.field);
     createAliasFacetUL(facetProp.field);
-    cy.get('@facet_ul').find('li:nth-child(1)').as('facetLi_1');
-    cy.get('@facet_ul').find('li:nth-child(2)').as('facetLi_2');
+    cy.get('@facet_ul').find('li:nth-child(1)').as('firstFacetValue');
+    cy.get('@facet_ul').find('li:nth-child(2)').as('secondFacetValue');
   });
 
   it('Facet should load without facet search and 5 facet values', async () => {
@@ -324,7 +319,7 @@ describe('Facet with no facetSearch, and numberOfValues is 5 ', () => {
   });
 
   it('Should active checkbox and log UA', async () => {
-    await validateBasicFacetFunctionality('@facetLi_1', facetProp.field);
+    await validateBasicFacetFunctionality('@firstFacetValue', facetProp.field);
   });
 });
 
