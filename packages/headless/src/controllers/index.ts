@@ -106,6 +106,8 @@ export {
 } from './query-summary/headless-query-summary';
 
 export {
+  ResultListProps,
+  ResultListOptions,
   ResultListState,
   ResultList,
   buildResultList,
