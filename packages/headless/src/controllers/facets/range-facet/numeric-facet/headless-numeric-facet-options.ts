@@ -7,10 +7,7 @@ import {
   SchemaDefinition,
   StringValue,
 } from '@coveo/bueno';
-import {
-  FacetValueState,
-  facetValueStates,
-} from '../../../../features/facets/facet-api/value';
+import {facetValueStates} from '../../../../features/facets/facet-api/value';
 import {
   rangeFacetSortCriteria,
   RangeFacetSortCriterion,
@@ -24,31 +21,6 @@ import {
   injectionDepth,
   numberOfValues,
 } from '../../_common/facet-option-definitions';
-
-/**
- * The options defining a value to display in a `NumericFacet`.
- */
-export interface NumericFacetValueOption {
-  /**
-   * The start value of the range.
-   */
-  start: number;
-
-  /**
-   * The end value of the range.
-   */
-  end: number;
-
-  /**
-   * Whether to include the `end` value in the range.
-   */
-  endInclusive: boolean;
-
-  /**
-   * The current facet value state.
-   */
-  state: FacetValueState;
-}
 
 /**
  * The options defining a `NumericFacet`.
@@ -74,7 +46,7 @@ export interface NumericFacetOptions {
    *
    * @default []
    */
-  currentValues?: NumericFacetValueOption[];
+  currentValues?: NumericRangeRequest[];
 
   /**
    * A unique identifier for the controller.
