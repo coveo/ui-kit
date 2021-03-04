@@ -40,7 +40,7 @@ export interface ObjEntity
 
 export interface FuncEntity extends Kind<'function'>, Name, Description {
   params: AnyEntity[];
-  returnType: string | ObjEntity | FuncEntity;
+  returnType: AnyEntity;
 }
 
 export type AnyEntity = Entity | ObjEntity | FuncEntity;

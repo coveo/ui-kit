@@ -1,4 +1,5 @@
 import {
+  ApiCallSignature,
   ApiEntryPoint,
   ApiInterface,
   ApiItem,
@@ -19,6 +20,7 @@ import {
   buildFuncEntity,
   buildObjEntity,
   buildParamEntity,
+  buildReturnTypeEntity,
 } from './entity-builder';
 
 export function resolveInterfaceMembers(
@@ -68,6 +70,10 @@ function resolveMembers(
       return resolveMethodSignature(entry, m, ancestorNames);
     }
 
+    if (isCallSignature(m)) {
+      return resolveCallSignature(m);
+    }
+
     throw new Error(`Unsupported member: ${m.displayName}`);
   });
 }
@@ -96,7 +102,6 @@ function resolvePropertySignature(
   ancestorNames: string[]
 ) {
   const typeExcerpt = p.propertyTypeExcerpt.spannedTokens[0];
-
   if (isRecordType(typeExcerpt)) {
     return buildEntityFromProperty(p);
   }
@@ -110,20 +115,6 @@ function resolvePropertySignature(
   }
 
   return buildEntityFromProperty(p);
-}
-
-function isTypeAlias(token: ExcerptToken) {
-  const meaning = token.canonicalReference?.symbol?.meaning;
-  return meaning === 'type';
-}
-
-function isRecordType(token: ExcerptToken) {
-  const isRecord = token.text === 'Record';
-  return isReference(token) && isRecord;
-}
-
-function isReference(token: ExcerptToken) {
-  return token.kind === ExcerptTokenKind.Reference;
 }
 
 function buildEntityFromProperty(p: ApiPropertySignature) {
@@ -173,7 +164,11 @@ function resolveMethodSignature(
   const params = m.parameters.map((p) =>
     resolveParameter(entry, p, ancestorNames)
   );
-  const returnType = m.returnTypeExcerpt.text;
+  const typeExcerpt = m.returnTypeExcerpt.spannedTokens[0];
+  let returnType: AnyEntity = buildReturnTypeEntity(m);
+  if (isReference(typeExcerpt)) {
+    returnType = buildObjEntityFromReturnType(entry, m, ancestorNames);
+  }
 
   return buildFuncEntity({
     name: m.displayName,
@@ -181,6 +176,20 @@ function resolveMethodSignature(
     params,
     returnType,
   });
+}
+
+function buildObjEntityFromReturnType(
+  entry: ApiEntryPoint,
+  m: ApiMethodSignature,
+  ancestorNames: string[]
+) {
+  const typeName = extractTypeName(m.returnTypeExcerpt);
+  const searchableTypeName = extractSearchableTypeName(m.returnTypeExcerpt);
+  const apiInterface = findApi(entry, searchableTypeName) as ApiInterface;
+  const members = resolveInterfaceMembers(entry, apiInterface, ancestorNames);
+  const entity = buildReturnTypeEntity(m);
+
+  return buildObjEntity({entity, members, typeName});
 }
 
 export function resolveParameter(
@@ -231,10 +240,37 @@ function buildObjEntityFromParam(
   return buildObjEntity({entity, members, typeName});
 }
 
+function isCallSignature(c: ApiItem): c is ApiCallSignature {
+  return c.kind === ApiItemKind.CallSignature;
+}
+
+function resolveCallSignature(c: ApiCallSignature) {
+  return buildEntity({
+    name: c.displayName,
+    type: c.returnTypeExcerpt.tokens.map((t) => t.text).join(''),
+    isOptional: false,
+    comment: (c.tsdocComment as unknown) as DocComment,
+  });
+}
+
 function extractTypeName(excerpt: Excerpt) {
   return excerpt.text.replace(/\[\]/, '');
 }
 
 function extractSearchableTypeName(excerpt: Excerpt) {
   return excerpt.spannedTokens[0].text;
+}
+
+function isTypeAlias(token: ExcerptToken) {
+  const meaning = token.canonicalReference?.symbol?.meaning;
+  return meaning === 'type';
+}
+
+function isRecordType(token: ExcerptToken) {
+  const isRecord = token.text === 'Record';
+  return isReference(token) && isRecord;
+}
+
+function isReference(token: ExcerptToken) {
+  return token.kind === ExcerptTokenKind.Reference;
 }
