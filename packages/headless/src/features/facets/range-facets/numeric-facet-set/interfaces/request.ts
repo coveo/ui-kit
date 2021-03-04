@@ -2,6 +2,9 @@ import {BaseRangeFacetRequest} from '../../generic/interfaces/request';
 import {CurrentValues, Type} from '../../../facet-api/request';
 import {FacetValueState} from '../../../facet-api/value';
 
+/**
+ * The options defining a value to display in a `NumericFacet`.
+ */
 export interface NumericRangeRequest {
   /**
    * The start value of the range.

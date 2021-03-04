@@ -22,6 +22,10 @@ const controllers: ControllerConfiguration[] = [
     },
   },
   {
+    initializer: 'buildNumericFacet',
+    samplePaths: {},
+  },
+  {
     initializer: 'buildPager',
     samplePaths: {
       react_class: [
@@ -40,10 +44,10 @@ const controllers: ControllerConfiguration[] = [
       ],
     },
   },
-  // {
-  //   initializer: 'buildCategoryFacet',
-  //   samplePaths: {},
-  // },
+  {
+    initializer: 'buildCategoryFacet',
+    samplePaths: {},
+  },
   {
     initializer: 'buildDidYouMean',
     samplePaths: {

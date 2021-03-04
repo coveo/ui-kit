@@ -58,11 +58,13 @@ export class AtomicFacet
   @State()
   public strings: I18nState = {
     clear: () => this.bindings.i18n.t('clear'),
-    searchBox: () => this.bindings.i18n.t('search'),
+    searchBox: () =>
+      this.bindings.i18n.t('facetSearch', {label: this.strings[this.label]()}),
     placeholder: () => this.bindings.i18n.t('search'),
     querySuggestionList: () => this.bindings.i18n.t('querySuggestionList'),
     showMore: () => this.bindings.i18n.t('showMore'),
     showLess: () => this.bindings.i18n.t('showLess'),
+    facetValue: (variables) => this.bindings.i18n.t('facetValue', variables),
   };
 
   @State() public isExpanded = false;
@@ -74,7 +76,7 @@ export class AtomicFacet
    */
   @Prop() public field = '';
   /**
-   * The displayed label for the facet.
+   * The non-localized label for the facet.
    */
   @Prop() public label = 'No label';
   /**
@@ -102,6 +104,7 @@ export class AtomicFacet
       sortCriteria: this.sortCriteria,
     };
     this.facet = buildFacet(this.bindings.engine, {options});
+    this.strings[this.label] = () => this.bindings.i18n.t(this.label);
     if (this.enableFacetSearch) {
       this.facetSearch = new FacetSearch({
         controller: new FacetSearchController(this),
@@ -124,6 +127,7 @@ export class AtomicFacet
     return (
       <FacetValueComponent
         label={`${item.value}`}
+        ariaLabel={this.strings.facetValue(item)}
         isSelected={isSelected}
         numberOfResults={item.numberOfResults}
         facetValueSelected={() => {
@@ -173,7 +177,7 @@ export class AtomicFacet
     return (
       <BaseFacet
         controller={new BaseFacetController(this)}
-        label={this.label}
+        label={this.strings[this.label]()}
         hasActiveValues={this.facetState.hasActiveValues}
         deselectAll={() => this.facet.deselectAll()}
       >

@@ -1,11 +1,40 @@
 {
   "search": {
     "en": "Search",
-    "fr": "Recherche"
+    "fr": "Recherche",
+    "cs": "Hledat",
+    "da": "Søg",
+    "de": "Suchen",
+    "el": "Αναζήτηση",
+    "es-es": "Buscar",
+    "fi": "Hae",
+    "hu": "Keresés",
+    "id": "Cari",
+    "it": "Cerca",
+    "ja": "検索する",
+    "ko": "검색",
+    "nl": "Zoeken",
+    "no": "Søk",
+    "pl": "Wyszukaj",
+    "pt-br": "Pesquisar",
+    "ru": "Искать",
+    "sv": "Sök",
+    "th": "ค้นหา",
+    "tr": "Ara",
+    "zh-cn": "搜索",
+    "zh-tw": "搜尋"
   },
   "searchBox": {
     "en": "Insert a query. Press enter to send.",
     "fr": "Insérer une requête. Appuyez sur Entrée pour envoyer."
+  },
+  "facetSearch": {
+    "en": "Search for values in {{label}} facet",
+    "fr": "Rechercher des valeurs dans la facette {{label}}"
+  },
+  "facetValue": {
+    "en": "Inclusion filter on {{value}}; {{numberOfResults}} results",
+    "fr": "Filtre d'inclusion sur {{value}}; {{numberOfResults}} résultats"
   },
   "querySuggestionList": {
     "en": "Search suggestions. Select one to search.",
@@ -15,11 +44,59 @@
     "en": "Clear",
     "fr": "Effacer"
   },
+  "allCategories": {
+    "en": "All Categories",
+    "fr": "Toutes les catégories"
+  },
   "showMore": {
-    "en": "Show More"
+    "en": "Show more",
+    "fr": "Voir plus de résultats",
+    "cs": "Zobrazit více",
+    "da": "Vis mere",
+    "de": "Mehr anzeigen",
+    "el": "Εμφάνιση περισσότερων",
+    "es-es": "Mostrar más",
+    "fi": "Näytä enemmän",
+    "hu": "Többet mutat",
+    "id": "Tunjukkan lebih banyak",
+    "it": "Mostra altro",
+    "ja": "もっと表示",
+    "ko": "최대 표시",
+    "nl": "Meer tonen",
+    "no": "Vis mer",
+    "pl": "Pokaż więcej",
+    "pt-br": "Mostrar mais",
+    "ru": "Показывать больше",
+    "sv": "Visa mer",
+    "th": "แสดงเพิ่มขึ้น",
+    "tr": "Daha fazla göster",
+    "zh-cn": "显示较多的值",
+    "zh-tw": "顯示較多的值"
   },
   "showLess": {
-    "en": "Show Less"
+    "en": "Show less",
+    "fr": "Voir moins de résultats",
+    "cs": "Zobrazit méně",
+    "da": "Vis mindre",
+    "de": "Weniger anzeigen",
+    "el": "Εμφάνιση λιγότερων",
+    "es-es": "Mostrar menos",
+    "fi": "Näytä vähemmän",
+    "hu": "Kevesebbet mutat",
+    "id": "Tunjukkan lebih sedikit",
+    "it": "Mostra meno",
+    "ja": "少なく表示",
+    "ko": "최소 표시",
+    "nl": "Minder tonen",
+    "no": "Vis mindre",
+    "pl": "Pokaż mniej",
+    "pt-br": "Mostrar menos",
+    "ru": "Показывать меньше",
+    "sv": "Visa mindre",
+    "th": "แสดงน้อยลง",
+    "tr": "Daha az göster",
+    "zh-cn": "显示较少的值",
+    "zh-tw": "顯示較少的值"
   },
   "pagination": {
     "en": "Pagination",
