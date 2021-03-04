@@ -12,10 +12,9 @@ import {
 import {enableDebug, disableDebug} from '../../features/debug/debug-actions';
 import {rankingInformationSelector} from '../../features/debug/debug-selectors';
 import {
-  ListOfQRE,
+  QueryRankingExpressionWeights,
   DocumentWeights,
   Ranking,
-  WeightsPerTerm,
 } from '../../features/debug/ranking-info-parser';
 import {executeSearch} from '../../features/search/search-actions';
 import {
@@ -29,7 +28,7 @@ import {
 } from '../../utils/validate-payload';
 import {buildController, Controller} from '../controller/headless-controller';
 
-export {Ranking, ListOfQRE, DocumentWeights, WeightsPerTerm};
+export {Ranking, QueryRankingExpressionWeights, DocumentWeights};
 
 export interface RelevanceInspectorProps {
   /**
@@ -112,12 +111,12 @@ export interface RelevanceInspectorState {
   expressions?: Expressions;
 
   /**
-   * The user identities.
+   * The security identities.
    */
   userIdentities?: UserIdentity[];
 
   /**
-   * The ranking expression.
+   * The ranking expressions.
    */
   rankingExpressions?: RankingExpression[];
 }
@@ -141,7 +140,7 @@ export interface Expressions {
   basicExpression: string;
 
   /**
-   * The dynamic filter expression.
+   * The dynamic filter expression, sent as the `aq` parameter in the request.
    */
   advancedExpression: string;
 
