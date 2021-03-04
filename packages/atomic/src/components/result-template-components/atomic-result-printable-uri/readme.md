@@ -1,16 +1,12 @@
 # atomic-result-uri
 
-
-
 <!-- Auto Generated Below -->
-
 
 ## Properties
 
 | Property           | Attribute             | Description                                                                                                                                           | Type     | Default |
 | ------------------ | --------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- | -------- | ------- |
 | `maxNumberOfParts` | `max-number-of-parts` | The maximum number of Uri parts to display, has to be over the minimum of `3` in order to be effective. Putting `Infinity` will disable the ellipsis. | `number` | `5`     |
-
 
 ## Shadow Parts
 
@@ -22,7 +18,6 @@
 | `"result-printable-uri-list-ellipsis"` | The clickable ellipsis of a result uri |
 | `"result-printable-uri-list-expanded"` | The expanded result printable uri list |
 
-
 ## Dependencies
 
 ### Depends on
@@ -31,6 +26,7 @@
 - [atomic-component-error](../../atomic-component-error)
 
 ### Graph
+
 ```mermaid
 graph TD;
   atomic-result-printable-uri --> atomic-result-value
@@ -39,6 +35,6 @@ graph TD;
   style atomic-result-printable-uri fill:#f9f,stroke:#333,stroke-width:4px
 ```
 
-----------------------------------------------
+---
 
-*Built with [StencilJS](https://stenciljs.com/)*
+_Built with [StencilJS](https://stenciljs.com/)_

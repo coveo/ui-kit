@@ -1,86 +1,44 @@
 {
-    "compilerOptions": {
-        "experimentalDecorators": true,
-        "skipLibCheck": true,
-        "noEmit": true,
-        "checkJs": true,
-        "allowJs": true,
-        "baseUrl": "force-app/main/default/lwc",
-        "target": "es2016",
-        "module": "ESNext",
-        "paths": {
-            "c/dateFacet": [
-                "dateFacet/dateFacet.js"
-            ],
-            "c/dateFacetValue": [
-                "dateFacetValue/dateFacetValue.js"
-            ],
-            "c/categoryFacet": [
-                "categoryFacet/categoryFacet.js"
-            ],
-            "c/categoryFacetValue": [
-                "categoryFacetValue/categoryFacetValue.js"
-            ],
-            "c/facet": [
-                "facet/facet.js"
-            ],
-            "c/pager": [
-                "pager/pager.js"
-            ],
-            "c/result": [
-                "result/result.js"
-            ],
-            "c/resultList": [
-                "resultList/resultList.js"
-            ],
-            "c/sort": [
-                "sort/sort.js"
-            ],
-            "c/summary": [
-                "summary/summary.js"
-            ],
-            "c/facetValue": [
-                "facetValue/facetValue.js"
-            ],
-            "c/numericFacet": [
-                "numericFacet/numericFacet.js"
-            ],
-            "c/numericFacetValue": [
-                "numericFacetValue/numericFacetValue.js"
-            ],
-            "c/resultsPerPage": [
-                "resultsPerPage/resultsPerPage.js"
-            ],
-            "c/searchBox": [
-                "searchBox/searchBox.js"
-            ],
-            "c/searchInterface": [
-                "searchInterface/searchInterface.js"
-            ],
-            "c/numberButton": [
-                "numberButton/numberButton.js"
-            ],
-            "c/initialization": [
-                "initialization/initialization.js"
-            ]
-        }
-    },
-    "include": [
-        "force-app/main/default/lwc",
-        "typings/lwc/**/*.d.ts",
-        "coveo.d.ts"
-    ],
-    "exclude": [
-        "**/__tests__/**"
-    ],
-    "typeAcquisition": {
-        "include": [
-            "jest"
-        ]
-    },
+  "compilerOptions": {
+    "experimentalDecorators": true,
+    "skipLibCheck": true,
+    "noEmit": true,
+    "checkJs": true,
+    "allowJs": true,
+    "baseUrl": "force-app/main/default/lwc",
+    "target": "es2016",
+    "module": "ESNext",
     "paths": {
-        "c/*": [
-            "*"
-        ]
+      "c/dateFacet": ["dateFacet/dateFacet.js"],
+      "c/dateFacetValue": ["dateFacetValue/dateFacetValue.js"],
+      "c/categoryFacet": ["categoryFacet/categoryFacet.js"],
+      "c/categoryFacetValue": ["categoryFacetValue/categoryFacetValue.js"],
+      "c/facet": ["facet/facet.js"],
+      "c/pager": ["pager/pager.js"],
+      "c/result": ["result/result.js"],
+      "c/resultList": ["resultList/resultList.js"],
+      "c/sort": ["sort/sort.js"],
+      "c/summary": ["summary/summary.js"],
+      "c/facetValue": ["facetValue/facetValue.js"],
+      "c/numericFacet": ["numericFacet/numericFacet.js"],
+      "c/numericFacetValue": ["numericFacetValue/numericFacetValue.js"],
+      "c/resultsPerPage": ["resultsPerPage/resultsPerPage.js"],
+      "c/searchBox": ["searchBox/searchBox.js"],
+      "c/searchInterface": ["searchInterface/searchInterface.js"],
+      "c/numberButton": ["numberButton/numberButton.js"],
+      "c/initialization": ["initialization/initialization.js"]
     }
+  },
+  "include": [
+    "force-app/main/default/lwc",
+    "typings/lwc/**/*.d.ts",
+    "coveo.d.ts"
+  ],
+  "exclude": ["**/__tests__/**"],
+  "typeAcquisition": {
+    "include": ["jest"]
+  },
+  "paths": {
+    "c/*": ["*"]
+  }
 }

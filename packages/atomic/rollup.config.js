@@ -20,12 +20,7 @@ const config = {
       sourcemap: true,
     },
   ],
-  plugins: [
-    resolve({browser: true}),
-    commonjs(),
-    typescript(),
-    replace(),
-  ],
+  plugins: [resolve({browser: true}), commonjs(), typescript(), replace()],
 };
 
 export default [config];

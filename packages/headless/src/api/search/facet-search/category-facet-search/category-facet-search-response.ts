@@ -10,6 +10,4 @@ export interface CategoryFacetSearchResult extends BaseFacetSearchResult {
   path: string[];
 }
 
-export type CategoryFacetSearchResponse = BaseFacetSearchResponse<
-  CategoryFacetSearchResult
->;
+export type CategoryFacetSearchResponse = BaseFacetSearchResponse<CategoryFacetSearchResult>;

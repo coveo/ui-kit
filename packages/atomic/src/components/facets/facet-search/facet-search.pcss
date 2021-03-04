@@ -1,4 +1,5 @@
-.combobox, .suggestion {
+.combobox,
+.suggestion {
   height: var(--atomic-facet-search-height, 30px);
 }
 
@@ -14,11 +15,12 @@
   left: 0;
 }
 
-.suggestion.active, .suggestion:hover {
+.suggestion.active,
+.suggestion:hover {
   @apply bg-primary text-on-primary;
 }
 
-.suggestion.active .number-of-values, .suggestion:hover .number-of-values {
+.suggestion.active .number-of-values,
+.suggestion:hover .number-of-values {
   @apply text-on-primary;
 }
-

@@ -1,4 +1,4 @@
-declare module "@salesforce/resourceUrl/atomicutils" {
-    var atomicutils: string;
-    export default atomicutils;
+declare module '@salesforce/resourceUrl/atomicutils' {
+  var atomicutils: string;
+  export default atomicutils;
 }

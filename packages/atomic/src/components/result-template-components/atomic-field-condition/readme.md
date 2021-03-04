@@ -1,9 +1,6 @@
 # atomic-field-condition
 
-
-
 <!-- Auto Generated Below -->
-
 
 ## Properties
 
@@ -13,7 +10,6 @@
 | `ifDefined`    | `if-defined`     |             | `string \| undefined`       | `undefined` |
 | `ifNotDefined` | `if-not-defined` |             | `string \| undefined`       | `undefined` |
 
+---
 
-----------------------------------------------
-
-*Built with [StencilJS](https://stenciljs.com/)*
+_Built with [StencilJS](https://stenciljs.com/)_

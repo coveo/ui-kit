@@ -1,16 +1,12 @@
 # atomic-result-list
 
-
-
 <!-- Auto Generated Below -->
-
 
 ## Properties
 
 | Property          | Attribute           | Description                                                            | Type     | Default |
 | ----------------- | ------------------- | ---------------------------------------------------------------------- | -------- | ------- |
 | `fieldsToInclude` | `fields-to-include` | A list of fields to include in the query results, separated by commas. | `string` | `''`    |
-
 
 ## Dependencies
 
@@ -21,6 +17,7 @@
 - [atomic-component-error](../atomic-component-error)
 
 ### Graph
+
 ```mermaid
 graph TD;
   atomic-result-list --> atomic-result
@@ -30,6 +27,6 @@ graph TD;
   style atomic-result-list fill:#f9f,stroke:#333,stroke-width:4px
 ```
 
-----------------------------------------------
+---
 
-*Built with [StencilJS](https://stenciljs.com/)*
+_Built with [StencilJS](https://stenciljs.com/)_

@@ -1,7 +1,7 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/api-extractor/v7/api-extractor.schema.json",
   "mainEntryPointFilePath": "<projectFolder>/temp/headless.d.ts",
-  "bundledPackages": [ "redux", "@reduxjs/toolkit" ],
+  "bundledPackages": ["redux", "@reduxjs/toolkit"],
   "apiReport": {
     "enabled": false
   },

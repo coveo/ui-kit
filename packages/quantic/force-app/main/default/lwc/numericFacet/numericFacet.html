@@ -3,7 +3,11 @@
     <lightning-card title={label}>
       <ul class="slds-has-dividers_around-space slds-m-vertical_medium">
         <template for:each={values} for:item="v">
-          <c-numeric-facet-value onselectvalue={onSelect} key={v.start} item={v}></c-numeric-facet-value>
+          <c-numeric-facet-value
+            onselectvalue={onSelect}
+            key={v.start}
+            item={v}
+          ></c-numeric-facet-value>
         </template>
       </ul>
     </lightning-card>

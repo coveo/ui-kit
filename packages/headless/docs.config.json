@@ -1,8 +1,6 @@
 {
   "engine": {
-    "sources": [
-      "src/app/headless-engine"
-    ]
+    "sources": ["src/app/headless-engine"]
   },
   "actions": {
     "sections": [
@@ -14,9 +12,7 @@
       },
       {
         "name": "BreadcrumbActions",
-        "sources": [
-          "src/features/facets/generic/facet-actions"
-        ]
+        "sources": ["src/features/facets/generic/facet-actions"]
       },
       {
         "name": "CategoryFacetSetActions",
@@ -26,15 +22,11 @@
       },
       {
         "name": "ConfigurationActions",
-        "sources": [
-          "src/features/configuration/configuration-actions"
-        ]
+        "sources": ["src/features/configuration/configuration-actions"]
       },
       {
         "name": "ContextActions",
-        "sources": [
-          "src/features/context/context-actions"
-        ]
+        "sources": ["src/features/context/context-actions"]
       },
       {
         "name": "DateFacetActions",
@@ -44,27 +36,19 @@
       },
       {
         "name": "DidYouMeanActions",
-        "sources": [
-          "src/features/did-you-mean/did-you-mean-actions"
-        ]
+        "sources": ["src/features/did-you-mean/did-you-mean-actions"]
       },
       {
         "name": "FacetActions",
-        "sources": [
-          "src/features/facets/facet-set/facet-set-actions"
-        ]
+        "sources": ["src/features/facets/facet-set/facet-set-actions"]
       },
       {
         "name": "FieldActions",
-        "sources": [
-          "src/features/fields/fields-actions"
-        ]
+        "sources": ["src/features/fields/fields-actions"]
       },
       {
         "name": "HistoryActions",
-        "sources": [
-          "src/features/history/history-actions"
-        ]
+        "sources": ["src/features/history/history-actions"]
       },
       {
         "name": "NumericFacetActions",
@@ -74,15 +58,11 @@
       },
       {
         "name": "PaginationActions",
-        "sources": [
-          "src/features/pagination/pagination-actions"
-        ]
+        "sources": ["src/features/pagination/pagination-actions"]
       },
       {
         "name": "PipelineActions",
-        "sources": [
-          "src/features/pipeline/pipeline-actions"
-        ]
+        "sources": ["src/features/pipeline/pipeline-actions"]
       },
       {
         "name": "ProductRecommendationActions",
@@ -92,51 +72,35 @@
       },
       {
         "name": "QueryActions",
-        "sources": [
-          "src/features/query/query-actions"
-        ]
+        "sources": ["src/features/query/query-actions"]
       },
       {
         "name": "QuerySetActions",
-        "sources": [
-          "src/features/query-set/query-set-actions"
-        ]
+        "sources": ["src/features/query-set/query-set-actions"]
       },
       {
         "name": "QuerySuggestActions",
-        "sources": [
-          "src/features/query-suggest/query-suggest-actions"
-        ]
+        "sources": ["src/features/query-suggest/query-suggest-actions"]
       },
       {
         "name": "RedirectionActions",
-        "sources": [
-          "src/features/redirection/redirection-actions"
-        ]
+        "sources": ["src/features/redirection/redirection-actions"]
       },
       {
         "name": "SearchActions",
-        "sources": [
-          "src/features/search/search-actions"
-        ]
+        "sources": ["src/features/search/search-actions"]
       },
       {
         "name": "SearchHubActions",
-        "sources": [
-          "src/features/search-hub/search-hub-actions"
-        ]
+        "sources": ["src/features/search-hub/search-hub-actions"]
       },
       {
         "name": "SortCriterionActions",
-        "sources": [
-          "src/features/sort-criteria/sort-criteria-actions"
-        ]
+        "sources": ["src/features/sort-criteria/sort-criteria-actions"]
       },
       {
         "name": "RecommendationActions",
-        "sources": [
-          "src/features/recommendation/recommendation-actions"
-        ]
+        "sources": ["src/features/recommendation/recommendation-actions"]
       }
     ]
   },

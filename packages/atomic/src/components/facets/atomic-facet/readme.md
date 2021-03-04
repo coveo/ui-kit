@@ -4,7 +4,6 @@ A facet component. It is displayed as a facet in desktop browsers and as a butto
 
 <!-- Auto Generated Below -->
 
-
 ## Properties
 
 | Property              | Attribute              | Description                                                                                                                                                                                                    | Type                                                        | Default       |
@@ -15,7 +14,6 @@ A facet component. It is displayed as a facet in desktop browsers and as a butto
 | `label`               | `label`                | The displayed label for the facet.                                                                                                                                                                             | `string`                                                    | `'No label'`  |
 | `numberOfValues`      | `number-of-values`     | The number of values to request for this facet. Also determines the number of additional values to request each time this facet is expanded, and the number of values to display when this facet is collapsed. | `number`                                                    | `10`          |
 | `sortCriteria`        | `sort-criteria`        | The sort criterion to apply to the returned facet values. Possible values are 'score', 'numeric', 'occurrences', and 'automatic'.                                                                              | `"alphanumeric" \| "automatic" \| "occurrences" \| "score"` | `'automatic'` |
-
 
 ## Shadow Parts
 
@@ -29,7 +27,6 @@ A facet component. It is displayed as a facet in desktop browsers and as a butto
 | `"show-less"`    | The show less button                                               |
 | `"show-more"`    | The show more results button                                       |
 
-
 ## Dependencies
 
 ### Depends on
@@ -37,12 +34,13 @@ A facet component. It is displayed as a facet in desktop browsers and as a butto
 - [atomic-component-error](../../atomic-component-error)
 
 ### Graph
+
 ```mermaid
 graph TD;
   atomic-facet --> atomic-component-error
   style atomic-facet fill:#f9f,stroke:#333,stroke-width:4px
 ```
 
-----------------------------------------------
+---
 
-*Built with [StencilJS](https://stenciljs.com/)*
+_Built with [StencilJS](https://stenciljs.com/)_

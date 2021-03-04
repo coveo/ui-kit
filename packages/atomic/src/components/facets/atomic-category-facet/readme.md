@@ -4,7 +4,6 @@ A hierarchical category facet component. It is displayed as a facet in desktop b
 
 <!-- Auto Generated Below -->
 
-
 ## Properties
 
 | Property              | Attribute              | Description                                                                                                                                                                                                    | Type                              | Default         |
@@ -15,7 +14,6 @@ A hierarchical category facet component. It is displayed as a facet in desktop b
 | `label`               | `label`                | The displayed label for the facet                                                                                                                                                                              | `string`                          | `'No label'`    |
 | `numberOfValues`      | `number-of-values`     | The number of values to request for this facet. Also determines the number of additional values to request each time this facet is expanded, and the number of values to display when this facet is collapsed. | `number`                          | `5`             |
 | `sortCriteria`        | `sort-criteria`        | The sort criterion to apply to the returned facet values. Possible values are 'alphanumeric', and 'occurrences''.                                                                                              | `"alphanumeric" \| "occurrences"` | `'occurrences'` |
-
 
 ## Shadow Parts
 
@@ -30,7 +28,6 @@ A hierarchical category facet component. It is displayed as a facet in desktop b
 | `"show-less"`    | The show less button                                               |
 | `"show-more"`    | The show more results button                                       |
 
-
 ## Dependencies
 
 ### Depends on
@@ -38,12 +35,13 @@ A hierarchical category facet component. It is displayed as a facet in desktop b
 - [atomic-component-error](../../atomic-component-error)
 
 ### Graph
+
 ```mermaid
 graph TD;
   atomic-category-facet --> atomic-component-error
   style atomic-category-facet fill:#f9f,stroke:#333,stroke-width:4px
 ```
 
-----------------------------------------------
+---
 
-*Built with [StencilJS](https://stenciljs.com/)*
+_Built with [StencilJS](https://stenciljs.com/)_

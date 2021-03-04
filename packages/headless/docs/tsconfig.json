@@ -3,7 +3,5 @@
   "compilerOptions": {
     "outDir": "js"
   },
-  "files": [
-    "doc-json-parser.ts"
-  ]
+  "files": ["doc-json-parser.ts"]
 }

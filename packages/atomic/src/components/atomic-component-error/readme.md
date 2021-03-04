@@ -1,9 +1,6 @@
 # atomic-component-error
 
-
-
 <!-- Auto Generated Below -->
-
 
 ## Properties
 
@@ -12,36 +9,36 @@
 | `element` _(required)_ | --        |             | `HTMLElement` | `undefined` |
 | `error` _(required)_   | --        |             | `Error`       | `undefined` |
 
-
 ## Dependencies
 
 ### Used by
 
- - [atomic-breadcrumb-manager](../atomic-breadcrumb-manager)
- - [atomic-category-facet](../facets/atomic-category-facet)
- - [atomic-date-facet](../facets/atomic-date-facet)
- - [atomic-did-you-mean](../atomic-did-you-mean)
- - [atomic-facet](../facets/atomic-facet)
- - [atomic-facet-manager](../atomic-facet-manager)
- - [atomic-history](../atomic-history)
- - [atomic-no-results](../atomic-no-results)
- - [atomic-numeric-facet](../facets/atomic-numeric-facet)
- - [atomic-pager](../atomic-pager)
- - [atomic-query-error](../atomic-query-error)
- - [atomic-query-summary](../atomic-query-summary)
- - [atomic-result-list](../atomic-result-list)
- - [atomic-result-list-placeholder](../atomic-result-list-placeholder)
- - [atomic-result-printable-uri](../result-template-components/atomic-result-printable-uri)
- - [atomic-result-template](../atomic-result-template)
- - [atomic-result-value](../result-template-components/atomic-result-value)
- - [atomic-results-per-page](../atomic-results-per-page)
- - [atomic-search-box](../atomic-search-box)
- - [atomic-search-interface](../atomic-search-interface)
- - [atomic-sort-dropdown](../atomic-sort-dropdown)
- - [atomic-tab](../atomic-tab)
- - [atomic-text](../atomic-text)
+- [atomic-breadcrumb-manager](../atomic-breadcrumb-manager)
+- [atomic-category-facet](../facets/atomic-category-facet)
+- [atomic-date-facet](../facets/atomic-date-facet)
+- [atomic-did-you-mean](../atomic-did-you-mean)
+- [atomic-facet](../facets/atomic-facet)
+- [atomic-facet-manager](../atomic-facet-manager)
+- [atomic-history](../atomic-history)
+- [atomic-no-results](../atomic-no-results)
+- [atomic-numeric-facet](../facets/atomic-numeric-facet)
+- [atomic-pager](../atomic-pager)
+- [atomic-query-error](../atomic-query-error)
+- [atomic-query-summary](../atomic-query-summary)
+- [atomic-result-list](../atomic-result-list)
+- [atomic-result-list-placeholder](../atomic-result-list-placeholder)
+- [atomic-result-printable-uri](../result-template-components/atomic-result-printable-uri)
+- [atomic-result-template](../atomic-result-template)
+- [atomic-result-value](../result-template-components/atomic-result-value)
+- [atomic-results-per-page](../atomic-results-per-page)
+- [atomic-search-box](../atomic-search-box)
+- [atomic-search-interface](../atomic-search-interface)
+- [atomic-sort-dropdown](../atomic-sort-dropdown)
+- [atomic-tab](../atomic-tab)
+- [atomic-text](../atomic-text)
 
 ### Graph
+
 ```mermaid
 graph TD;
   atomic-breadcrumb-manager --> atomic-component-error
@@ -70,6 +67,6 @@ graph TD;
   style atomic-component-error fill:#f9f,stroke:#333,stroke-width:4px
 ```
 
-----------------------------------------------
+---
 
-*Built with [StencilJS](https://stenciljs.com/)*
+_Built with [StencilJS](https://stenciljs.com/)_
