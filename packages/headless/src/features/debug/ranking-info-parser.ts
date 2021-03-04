@@ -88,7 +88,7 @@ export interface QueryRankingExpressionWeights {
 export type TermWeightDictionary = Record<string, TermWeightInformation>;
 
 interface TermWeightInformation {
-  Weights: TermWeights;
+  Weights: TermWeights | null;
   terms: Record<string, TermWeightsPerDocument>;
 }
 
@@ -172,7 +172,7 @@ export const parseRankingInfo = (value: string) => {
   const totalWeigthRegexResult = REGEX_EXTRACT_TOTAL_WEIGHTS.exec(value);
 
   const qreWeights = parseQREWeights(value);
-  const documentWeights = parseWeights(
+  const documentWeights = parseWeights<DocumentWeights>(
     docWeightsRegexResult ? docWeightsRegexResult[1] : null
   );
   const termsWeight = parseTermsWeights(termsWeightRegexResult);
@@ -188,7 +188,9 @@ export const parseRankingInfo = (value: string) => {
   };
 };
 
-const parseWeights = (value: string | null): DocumentWeights | null => {
+const parseWeights = <T extends Record<string, number>>(
+  value: string | null
+): T | null => {
   const REGEX_EXTRACT_LIST_OF_WEIGHTS = /(\w+(?:\s\w+)*): ([-0-9]+)/g;
   const REGEX_EXTRACT_WEIGHT_GROUP = /^(\w+(?:\s\w+)*): ([-0-9]+)$/;
 
@@ -202,7 +204,7 @@ const parseWeights = (value: string | null): DocumentWeights | null => {
     return null;
   }
 
-  const weights = {} as DocumentWeights;
+  const weights: Record<string, number> = {};
 
   for (const weight of listOfWeight) {
     const weightGroup = weight.match(REGEX_EXTRACT_WEIGHT_GROUP);
@@ -213,7 +215,7 @@ const parseWeights = (value: string | null): DocumentWeights | null => {
       weights[weightAppliedOn] = Number(weightValue);
     }
   }
-  return weights;
+  return weights as T;
 };
 
 const matchExec = (value: string, regex: RegExp) => {
@@ -239,11 +241,11 @@ const parseTermsWeights = (
   if (!listOfTerms) {
     return null;
   }
-  const terms = {} as TermWeightDictionary;
+  const terms: TermWeightDictionary = {};
   for (const term of listOfTerms) {
     const listOfWords = matchExec(term[1], REGEX_EXTRACT_SINGLE_TERM);
 
-    const words = {} as Record<string, TermWeightsPerDocument>;
+    const words: Record<string, TermWeightsPerDocument> = {};
     for (const word of listOfWords) {
       words[word[1]] = {
         Correlation: Number(word[2]),
@@ -251,10 +253,10 @@ const parseTermsWeights = (
       };
     }
 
-    const weights = parseWeights(term[2]);
+    const weights = parseWeights<TermWeights>(term[2]);
     terms[Object.keys(words).join(', ')] = {
       terms: words,
-      Weights: (weights as unknown) as TermWeights,
+      Weights: weights,
     };
   }
 
