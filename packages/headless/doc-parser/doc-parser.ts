@@ -104,6 +104,18 @@ const controllers: ControllerConfiguration[] = [
     },
   },
   {
+    initializer: 'buildResultList',
+    samplePaths: {
+      react_class: [
+        'packages/samples/headless-react/src/components/result-list/result-list.class.tsx',
+        'packages/samples/headless-react/src/components/result-list/result-link.tsx',
+      ],
+      react_fn: [
+        'packages/samples/headless-react/src/components/result-list/result-list.fn.tsx',
+      ],
+    },
+  },
+  {
     initializer: 'buildTab',
     samplePaths: {
       react_class: [

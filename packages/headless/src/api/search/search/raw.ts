@@ -1,27 +1,76 @@
-type BaseRaw = {
-  urihash: string;
-  parents: string;
-  sfid: string;
-  sfparentid: string;
-  sfinsertedbyid: string;
-  documenttype: string;
-  sfcreatedbyid: string;
-  permanentid: string;
-  date: number;
-  objecttype: string;
-  sourcetype: string;
-  sftitle: string;
-  size: number;
-  sffeeditemid: string;
-  clickableuri: string;
-  sfcreatedby: string;
-  source: string;
-  collection: string;
-  connectortype: string;
-  filetype: string;
-  sfcreatedbyname: string;
-  sflikecount: number;
-  language: string[];
-};
+export interface Raw {
+  /**
+   * Custom keys that depend on the documents in the index.
+   */
+  [key: string]: unknown;
 
-export type Raw = BaseRaw & Record<string, unknown>;
+  /**
+   * @internal @preapproved
+   */
+  urihash: string;
+
+  /**
+   * @internal @preapproved
+   */
+  clickableuri?: string;
+
+  /**
+   * @internal @preapproved
+   */
+  collection?: string;
+
+  /**
+   * @internal @preapproved
+   */
+  connectortype?: string;
+
+  /**
+   * @internal @preapproved
+   */
+  documenttype?: string;
+
+  /**
+   * @internal @preapproved
+   */
+  date?: number;
+
+  /**
+   * @internal @preapproved
+   */
+  filetype?: string;
+
+  /**
+   * @internal @preapproved
+   */
+  language?: string[];
+
+  /**
+   * @internal @preapproved
+   */
+  objecttype?: string;
+
+  /**
+   * @internal @preapproved
+   */
+  parents?: string;
+
+  /**
+   * @internal @preapproved
+   */
+  permanentid?: string;
+
+  /**
+   * @internal @preapproved
+   */
+  size?: number;
+
+  /**
+   * @internal @preapproved
+   */
+  source?: string;
+
+  /**
+   * @internal @preapproved
+   */
+  sourcetype?: string;
+}
