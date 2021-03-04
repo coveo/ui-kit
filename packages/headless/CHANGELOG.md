@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.7.0-alpha.31](https://github.com/coveo/ui-kit/compare/v0.7.0-alpha.30...v0.7.0-alpha.31) (2021-03-04)
+
+
+### Bug Fixes
+
+* **headless:** allowed the constant query to be unset ([#522](https://github.com/coveo/ui-kit/issues/522)) ([07dbcf2](https://github.com/coveo/ui-kit/commit/07dbcf2ab0e53cbd0056d4d074832661ea9367f6))
+
+
+
+
+
 # [0.7.0-alpha.30](https://github.com/coveo/ui-kit/compare/v0.7.0-alpha.29...v0.7.0-alpha.30) (2021-03-04)
 
 **Note:** Version bump only for package @coveo/headless
