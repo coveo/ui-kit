@@ -1,4 +1,5 @@
 import {FuncEntity} from '../src/entity';
+import {buildMockEntity} from './mock-entity';
 
 export function buildMockFuncEntity(
   config: Partial<FuncEntity> = {}
@@ -8,7 +9,7 @@ export function buildMockFuncEntity(
     desc: '',
     name: '',
     params: [],
-    returnType: '',
+    returnType: buildMockEntity(),
     ...config,
   };
 }
