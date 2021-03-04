@@ -1,5 +1,8 @@
 import {BooleanValue, Schema} from '@coveo/bueno';
-import {ExecutionReport} from '../../api/search/search/execution-report';
+import {
+  ExecutionReport,
+  ExecutionStep,
+} from '../../api/search/search/execution-report';
 import {RankingExpression} from '../../api/search/search/ranking-expression';
 import {Result} from '../../api/search/search/result';
 import {SearchResponseSuccessWithDebugInfo} from '../../api/search/search/search-response';
@@ -15,6 +18,7 @@ import {
   QueryRankingExpressionWeights,
   DocumentWeights,
   RankingInformation,
+  TermWeightReport,
 } from '../../features/debug/ranking-info-parser';
 import {executeSearch} from '../../features/search/search-actions';
 import {
@@ -28,7 +32,16 @@ import {
 } from '../../utils/validate-payload';
 import {buildController, Controller} from '../controller/headless-controller';
 
-export {RankingInformation, QueryRankingExpressionWeights, DocumentWeights};
+export {
+  RankingInformation,
+  DocumentWeights,
+  TermWeightReport,
+  QueryRankingExpressionWeights,
+  ExecutionReport,
+  ExecutionStep,
+  UserIdentity,
+  RankingExpression,
+};
 
 export interface RelevanceInspectorProps {
   /**
@@ -108,7 +121,7 @@ export interface RelevanceInspectorState {
   /**
    * The query expressions sent in the request.
    */
-  expressions?: Expressions;
+  expressions?: QueryExpressions;
 
   /**
    * The security identities.
@@ -133,9 +146,9 @@ export interface ResultRankingInformation {
   ranking: RankingInformation | null;
 }
 
-export interface Expressions {
+export interface QueryExpressions {
   /**
-   * The query.
+   * The search query.
    */
   basicExpression: string;
 

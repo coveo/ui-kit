@@ -6,6 +6,16 @@ export {
   RelevanceInspectorProps,
   RelevanceInspectorState,
   RelevanceInspector,
+  DocumentWeights,
+  ExecutionReport,
+  ExecutionStep,
+  QueryExpressions,
+  QueryRankingExpressionWeights,
+  RankingExpression,
+  ResultRankingInformation,
+  RankingInformation,
+  TermWeightReport,
+  UserIdentity,
   buildRelevanceInspector,
 } from './relevance-inspector/headless-relevance-inspector';
 
