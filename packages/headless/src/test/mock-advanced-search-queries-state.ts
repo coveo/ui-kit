@@ -4,8 +4,11 @@ export function buildMockAdvancedSearchQueriesState(
   config: Partial<AdvancedSearchQueriesState> = {}
 ): AdvancedSearchQueriesState {
   return {
-    aq: '',
     cq: '',
+    cqWasSet: false,
+    aq: '',
+    aqWasSet: false,
+    defaultFilters: {aq: '', cq: ''},
     ...config,
   };
 }
