@@ -44,10 +44,10 @@ const controllers: ControllerConfiguration[] = [
       ],
     },
   },
-  // {
-  //   initializer: 'buildCategoryFacet',
-  //   samplePaths: {},
-  // },
+  {
+    initializer: 'buildCategoryFacet',
+    samplePaths: {},
+  },
   {
     initializer: 'buildDidYouMean',
     samplePaths: {

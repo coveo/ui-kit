@@ -25,10 +25,22 @@ import {
 
 export function resolveInterfaceMembers(
   entry: ApiEntryPoint,
-  apiInterface: ApiInterface
+  apiInterface: ApiInterface,
+  ancestorNames: string[]
 ): AnyEntity[] {
-  const members = resolveMembers(entry, apiInterface);
-  const inheritedMembers = resolveInheritedMembers(entry, apiInterface);
+  if (
+    ancestorNames.filter((ancestorName) => ancestorName === apiInterface.name)
+      .length >= 2
+  ) {
+    return [];
+  }
+  const ancestorNamesForChildren = [...ancestorNames, apiInterface.name];
+  const members = resolveMembers(entry, apiInterface, ancestorNamesForChildren);
+  const inheritedMembers = resolveInheritedMembers(
+    entry,
+    apiInterface,
+    ancestorNamesForChildren
+  );
 
   return filterOverridesAndCombine(members, inheritedMembers);
 }
@@ -44,14 +56,18 @@ function filterOverridesAndCombine(
   return members.concat(filtered);
 }
 
-function resolveMembers(entry: ApiEntryPoint, apiInterface: ApiInterface) {
+function resolveMembers(
+  entry: ApiEntryPoint,
+  apiInterface: ApiInterface,
+  ancestorNames: string[]
+) {
   return apiInterface.members.map((m) => {
     if (isPropertySignature(m)) {
-      return resolvePropertySignature(entry, m);
+      return resolvePropertySignature(entry, m, ancestorNames);
     }
 
     if (isMethodSignature(m)) {
-      return resolveMethodSignature(entry, m);
+      return resolveMethodSignature(entry, m, ancestorNames);
     }
 
     if (isCallSignature(m)) {
@@ -64,13 +80,14 @@ function resolveMembers(entry: ApiEntryPoint, apiInterface: ApiInterface) {
 
 function resolveInheritedMembers(
   entry: ApiEntryPoint,
-  apiInterface: ApiInterface
+  apiInterface: ApiInterface,
+  ancestorNames: string[]
 ) {
   return apiInterface.extendsTypes
     .map((m) => {
       const typeName = extractSearchableTypeName(m.excerpt);
       const inheritedInterface = findApi(entry, typeName) as ApiInterface;
-      return resolveInterfaceMembers(entry, inheritedInterface);
+      return resolveInterfaceMembers(entry, inheritedInterface, ancestorNames);
     })
     .reduce((acc, curr) => acc.concat(curr), []);
 }
@@ -81,7 +98,8 @@ function isPropertySignature(item: ApiItem): item is ApiPropertySignature {
 
 function resolvePropertySignature(
   entry: ApiEntryPoint,
-  p: ApiPropertySignature
+  p: ApiPropertySignature,
+  ancestorNames: string[]
 ) {
   const typeExcerpt = p.propertyTypeExcerpt.spannedTokens[0];
   if (isRecordType(typeExcerpt)) {
@@ -93,7 +111,7 @@ function resolvePropertySignature(
   }
 
   if (isReference(typeExcerpt)) {
-    return buildObjEntityFromProperty(entry, p);
+    return buildObjEntityFromProperty(entry, p, ancestorNames);
   }
 
   return buildEntityFromProperty(p);
@@ -110,12 +128,13 @@ function buildEntityFromProperty(p: ApiPropertySignature) {
 
 function buildObjEntityFromProperty(
   entry: ApiEntryPoint,
-  p: ApiPropertySignature
+  p: ApiPropertySignature,
+  ancestorNames: string[]
 ) {
   const typeName = extractTypeName(p.propertyTypeExcerpt);
   const searchableTypeName = extractSearchableTypeName(p.propertyTypeExcerpt);
   const apiInterface = findApi(entry, searchableTypeName) as ApiInterface;
-  const members = resolveInterfaceMembers(entry, apiInterface);
+  const members = resolveInterfaceMembers(entry, apiInterface, ancestorNames);
   const entity = buildEntityFromProperty(p);
 
   return buildObjEntity({entity, members, typeName});
@@ -137,12 +156,18 @@ function isMethodSignature(m: ApiItem): m is ApiMethodSignature {
   return m.kind === ApiItemKind.MethodSignature;
 }
 
-function resolveMethodSignature(entry: ApiEntryPoint, m: ApiMethodSignature) {
-  const params = m.parameters.map((p) => resolveParameter(entry, p));
+function resolveMethodSignature(
+  entry: ApiEntryPoint,
+  m: ApiMethodSignature,
+  ancestorNames: string[]
+) {
+  const params = m.parameters.map((p) =>
+    resolveParameter(entry, p, ancestorNames)
+  );
   const typeExcerpt = m.returnTypeExcerpt.spannedTokens[0];
   let returnType: AnyEntity = buildReturnTypeEntity(m);
   if (isReference(typeExcerpt)) {
-    returnType = buildObjEntityFromReturnType(entry, m);
+    returnType = buildObjEntityFromReturnType(entry, m, ancestorNames);
   }
 
   return buildFuncEntity({
@@ -155,18 +180,23 @@ function resolveMethodSignature(entry: ApiEntryPoint, m: ApiMethodSignature) {
 
 function buildObjEntityFromReturnType(
   entry: ApiEntryPoint,
-  m: ApiMethodSignature
+  m: ApiMethodSignature,
+  ancestorNames: string[]
 ) {
   const typeName = extractTypeName(m.returnTypeExcerpt);
   const searchableTypeName = extractSearchableTypeName(m.returnTypeExcerpt);
   const apiInterface = findApi(entry, searchableTypeName) as ApiInterface;
-  const members = resolveInterfaceMembers(entry, apiInterface);
+  const members = resolveInterfaceMembers(entry, apiInterface, ancestorNames);
   const entity = buildReturnTypeEntity(m);
 
   return buildObjEntity({entity, members, typeName});
 }
 
-export function resolveParameter(entry: ApiEntryPoint, p: Parameter) {
+export function resolveParameter(
+  entry: ApiEntryPoint,
+  p: Parameter,
+  ancestorNames: string[]
+) {
   const typeExcerpt = p.parameterTypeExcerpt.spannedTokens[0];
 
   if (isTypeAlias(typeExcerpt)) {
@@ -174,7 +204,7 @@ export function resolveParameter(entry: ApiEntryPoint, p: Parameter) {
   }
 
   if (isReference(typeExcerpt)) {
-    return buildObjEntityFromParam(entry, p);
+    return buildObjEntityFromParam(entry, p, ancestorNames);
   }
 
   return buildParamEntity(p);
@@ -192,11 +222,19 @@ function buildEntityFromParamAndResolveTypeAlias(
   return {...entity, type};
 }
 
-function buildObjEntityFromParam(entryPoint: ApiEntryPoint, p: Parameter) {
+function buildObjEntityFromParam(
+  entryPoint: ApiEntryPoint,
+  p: Parameter,
+  ancestorNames: string[]
+) {
   const typeName = extractTypeName(p.parameterTypeExcerpt);
   const searchableTypeName = extractSearchableTypeName(p.parameterTypeExcerpt);
   const apiInterface = findApi(entryPoint, searchableTypeName) as ApiInterface;
-  const members = resolveInterfaceMembers(entryPoint, apiInterface);
+  const members = resolveInterfaceMembers(
+    entryPoint,
+    apiInterface,
+    ancestorNames
+  );
   const entity = buildParamEntity(p);
 
   return buildObjEntity({entity, members, typeName});
