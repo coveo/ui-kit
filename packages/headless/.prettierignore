@@ -1,0 +1,15 @@
+.idea
+node_modules
+npm-debug.log
+.vscode/*
+.ds_store
+dist
+veracode
+.size-snapshot.json
+reports/*.xml
+
+!.vscode/extensions.json
+
+docs/js
+temp/
+doc-parser/build

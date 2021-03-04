@@ -12,6 +12,8 @@
   },
   "scripts": {
     "test": "npm run test:lint && npm run test:typings && npm run test:unit",
+    "prettier:lint": "prettier --check .",
+    "prettier:fix": "prettier --write .",
     "test:lint": "eslint force-app/main/default/lwc/ --format junit -o reports/eslint.xml",
     "lint:fix": "eslint force-app/main/default/lwc/ --fix",
     "fix": "npm run lint:fix",
@@ -35,6 +37,7 @@
     "@types/jest": "^26.0.15",
     "eslint": "^7.11.0",
     "jest-junit": "^12.0.0",
-    "ncp": "^2.0.0"
+    "ncp": "^2.0.0",
+    "prettier": "^2.2.1"
   }
 }
