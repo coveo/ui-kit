@@ -5,8 +5,10 @@
     "setup": "npm i && lerna bootstrap",
     "start": "lerna run --parallel start",
     "build": "lerna run build",
-    "test": "lerna run test",
+    "test": "lerna run test && npm run prettier:check && npm run lint:check",
     "test:watch": "lerna run --parallel test:watch --no-prefix",
+    "prettier:check": "prettier --check .",
+    "prettier:fix": "prettier --write .",
     "lint:check": "eslint .",
     "lint:fix": "eslint --fix .",
     "pr:report": "node ./scripts/reports/pr-report.js",
@@ -72,12 +74,10 @@
   },
   "lint-staged": {
     "**/*.ts?(x)": [
-      "npm run lint:fix",
-      "git add"
+      "npm run lint:fix"
     ],
     "**/*.{scss,css,html}": [
-      "prettier --print-width 120 --write",
-      "git add"
+      "prettier --print-width 120 --write"
     ]
   },
   "engines": {
