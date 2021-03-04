@@ -94,10 +94,12 @@ export class AtomicNumericFacet
   }
 
   private get values() {
-    return this.facetState.values.map(
-      (listItem) =>
-        (listItem.numberOfResults && this.buildListItem(listItem)) || null
-    );
+    return this.facetState.values.map((listItem) => {
+      if (!listItem.numberOfResults && !this.facet.isValueSelected(listItem)) {
+        return null;
+      }
+      return this.buildListItem(listItem);
+    });
   }
 
   private buildListItem(item: NumericFacetValue) {
@@ -123,7 +125,7 @@ export class AtomicNumericFacet
   }
 
   public render() {
-    if (this.totalNumberOfResults === 0) {
+    if (!this.facetState.hasActiveValues && this.totalNumberOfResults === 0) {
       return null;
     }
     return (
