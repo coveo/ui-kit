@@ -14,7 +14,7 @@ import {rankingInformationSelector} from '../../features/debug/debug-selectors';
 import {
   QueryRankingExpressionWeights,
   DocumentWeights,
-  Ranking,
+  RankingInformation,
 } from '../../features/debug/ranking-info-parser';
 import {executeSearch} from '../../features/search/search-actions';
 import {
@@ -28,7 +28,7 @@ import {
 } from '../../utils/validate-payload';
 import {buildController, Controller} from '../controller/headless-controller';
 
-export {Ranking, QueryRankingExpressionWeights, DocumentWeights};
+export {RankingInformation, QueryRankingExpressionWeights, DocumentWeights};
 
 export interface RelevanceInspectorProps {
   /**
@@ -98,7 +98,7 @@ export interface RelevanceInspectorState {
   /**
    * The ranking information for every result.
    */
-  rankingInformation?: RankingInformation[];
+  rankingInformation?: ResultRankingInformation[];
 
   /**
    * The query execution report.
@@ -121,7 +121,7 @@ export interface RelevanceInspectorState {
   rankingExpressions?: RankingExpression[];
 }
 
-export interface RankingInformation {
+export interface ResultRankingInformation {
   /**
    * The result.
    */
@@ -130,7 +130,7 @@ export interface RankingInformation {
   /**
    * The ranking information for the associated result.
    */
-  ranking: Ranking | null;
+  ranking: RankingInformation | null;
 }
 
 export interface Expressions {

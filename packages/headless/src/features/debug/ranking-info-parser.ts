@@ -1,4 +1,4 @@
-export interface Ranking {
+export interface RankingInformation {
   /**
    * The attributes of the document that contributed to its ranking.
    * */
@@ -7,7 +7,7 @@ export interface Ranking {
   /**
    * The weight attributed to each term in the query.
    */
-  termsWeight: TermWeightDictionary | null;
+  termsWeight: TermWeightReport | null;
 
   /**
    * The sum of all weights.
@@ -85,9 +85,9 @@ export interface QueryRankingExpressionWeights {
   score: number;
 }
 
-export type TermWeightDictionary = Record<string, TermWeightInformation>;
+export type TermWeightReport = Record<string, ExpandedTermWeightInformation>;
 
-interface TermWeightInformation {
+interface ExpandedTermWeightInformation {
   Weights: TermWeights | null;
   terms: Record<string, TermWeightsPerDocument>;
 }
@@ -229,7 +229,7 @@ const matchExec = (value: string, regex: RegExp) => {
 
 const parseTermsWeights = (
   termsWeight: RegExpExecArray | null
-): TermWeightDictionary | null => {
+): TermWeightReport | null => {
   const REGEX_EXTRACT_GROUP_OF_TERMS = /((?:[^:]+: [0-9]+, [0-9]+; )+)\n((?:\w+: [0-9]+; )+)/g;
   const REGEX_EXTRACT_SINGLE_TERM = /([^:]+): ([0-9]+), ([0-9]+); /g;
 
@@ -241,7 +241,7 @@ const parseTermsWeights = (
   if (!listOfTerms) {
     return null;
   }
-  const terms: TermWeightDictionary = {};
+  const terms: TermWeightReport = {};
   for (const term of listOfTerms) {
     const listOfWords = matchExec(term[1], REGEX_EXTRACT_SINGLE_TERM);
 
