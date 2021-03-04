@@ -225,7 +225,7 @@ describe('#resolveInterfaceMembers', () => {
     entryPoint.addMember(controllerInterface);
     entryPoint.addMember(unsubscribeInterface);
 
-    const result = resolveInterfaceMembers(entryPoint, controllerInterface);
+    const result = resolveInterfaceMembers(entryPoint, controllerInterface, []);
 
     const paramEntity = buildMockEntity({
       name: 'listener',
@@ -270,7 +270,11 @@ describe('#resolveInterfaceMembers', () => {
     unsubscribeInterface.addMember(method);
     entryPoint.addMember(unsubscribeInterface);
 
-    const result = resolveInterfaceMembers(entryPoint, unsubscribeInterface);
+    const result = resolveInterfaceMembers(
+      entryPoint,
+      unsubscribeInterface,
+      []
+    );
 
     const entity = buildMockEntity({
       name: '(call)',
