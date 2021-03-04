@@ -77,10 +77,7 @@ export function buildReturnTypeEntity(m: ApiMethodSignature): Entity {
 }
 
 export function buildFuncEntity(config: FuncEntityOptions): FuncEntity {
-  const desc =
-    typeof config.comment === 'string'
-      ? config.comment
-      : getSummary(config.comment);
+  const desc = getSummary(config.comment);
 
   return {
     kind: 'function',
