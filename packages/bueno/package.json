@@ -21,7 +21,7 @@
     "test": "jest",
     "test:watch": "jest --watch --colors --no-cache",
     "npm:publish": "npm publish --access public",
-    "prettier:lint": "prettier --check .",
+    "prettier:check": "prettier --check .",
     "prettier:fix": "prettier --write ."
   },
   "devDependencies": {

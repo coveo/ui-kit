@@ -23,7 +23,7 @@
     "test:watch": "jest --watch --colors --no-cache --silent=false",
     "test:unit": "jest --testPathIgnorePatterns=src/integration-tests",
     "test:integration": "jest --testPathPattern=src/integration-tests",
-    "prettier:lint": "prettier --check .",
+    "prettier:check": "prettier --check .",
     "prettier:fix": "prettier --write .",
     "npm:publish": "npm publish --access public",
     "doc:generate": "npm run doc:extract && npm run doc:parse",
