@@ -62,7 +62,7 @@
             ],
             "c/headlessLoader": [
                 "headlessLoader/headlessLoader.js"
-            ]
+            ],
         }
     },
     "include": [

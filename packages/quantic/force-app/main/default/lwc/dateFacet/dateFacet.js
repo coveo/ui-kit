@@ -12,7 +12,7 @@ export default class DateFacet extends LightningElement {
   /** @type {string} */
   @api label;
   /** @type {string} */
-  @api searchInterfaceId;
+  @api engineId;
 
   /** @type {import("coveo").DateFacet} */
   facet;
@@ -25,7 +25,7 @@ export default class DateFacet extends LightningElement {
   }
 
   connectedCallback() {
-    initializeWithHeadless(this, this.searchInterfaceId, this.initialize.bind(this));
+    initializeWithHeadless(this, this.engineId, this.initialize.bind(this));
   }
 
   /**

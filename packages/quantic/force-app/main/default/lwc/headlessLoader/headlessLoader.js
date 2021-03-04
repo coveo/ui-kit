@@ -10,21 +10,21 @@ let debouncers = {};
 
 /**
  * Cancels the delayed search query.
- * @param {String} searchInterfaceId
+ * @param {String} engineId
  */
-const cancelInitialSearch = (searchInterfaceId) => {
-  if (debouncers[searchInterfaceId]) {
-    debouncers[searchInterfaceId].clearTimeout();
-    delete debouncers[searchInterfaceId];
+const cancelInitialSearch = (engineId) => {
+  if (debouncers[engineId]) {
+    debouncers[engineId].clearTimeout();
+    delete debouncers[engineId];
   }
 }
 
 /**
  * Dispatches search request.
- * @param {String} searchInterfaceId
+ * @param {String} engineId
  */
-const executeInitialSearch = (searchInterfaceId) => {
-  window.coveoHeadless[searchInterfaceId].engine.then((engine) => {
+const executeInitialSearch = (engineId) => {
+  window.coveoHeadless[engineId].engine.then((engine) => {
     engine.dispatch(
       CoveoHeadless.SearchActions.executeSearch(
         CoveoHeadless.AnalyticsActions.logInterfaceLoad()
@@ -35,29 +35,28 @@ const executeInitialSearch = (searchInterfaceId) => {
 
 /**
  * 
- * @param {String} searchInterfaceId 
+ * @param {String} engineId 
  */
-const debounceInitialSearch = (searchInterfaceId) => {
-  if (!debouncers[searchInterfaceId]) {
-    const debouncer = new Debouncer();
-    debouncers.searchInterfaceId = debouncer;
+const debounceInitialSearch = (engineId) => {
+  if (!debouncers[engineId]) {
+    debouncers[engineId] = new Debouncer();
   }
-  debouncers.searchInterfaceId.debounce(executeInitialSearch, DEBOUNCE_DELAY)(searchInterfaceId);
+  debouncers[engineId].debounce(executeInitialSearch, DEBOUNCE_DELAY)(engineId);
 };
 
 /**
  * Returns true if registered components are initialized, false otherwise.
- * @param {String} searchInterfaceId
+ * @param {String} engineId
  */
-const areAllComponentsInitialized = (searchInterfaceId) => 
-  !window.coveoHeadless[searchInterfaceId].components.find(component => component.initialized === false);
+const areAllComponentsInitialized = (engineId) => 
+  !window.coveoHeadless[engineId].components.find(component => component.initialized === false);
 
 /**
  * Returns the registered component object if it exists. 
  * @param element
- * @param {String} searchInterfaceId
+ * @param {String} engineId
  */
-const getRegisteredComponent = (element, searchInterfaceId) => window.coveoHeadless[searchInterfaceId].components.find((component) => component.element === element);
+const getRegisteredComponent = (element, engineId) => window.coveoHeadless[engineId].components.find((component) => component.element === element);
 
 /**
  * Loads dependencies and returns an initialized Headless engine. 
@@ -84,26 +83,26 @@ async function initEngine(element) {
 /**
  * Registers a component for future initialization.
  * @param element
- * @param {String} searchInterfaceId
+ * @param {String} engineId
  */
-function registerComponentForInit(element, searchInterfaceId) {
-  cancelInitialSearch(searchInterfaceId);
+function registerComponentForInit(element, engineId) {
+  cancelInitialSearch(engineId);
   if (!window.coveoHeadless) {
     window.coveoHeadless = {
-      [searchInterfaceId]: {
+      [engineId]: {
         components: [],
         engine: undefined
       }
     }
-  } else if (!window.coveoHeadless[searchInterfaceId]) {
-    window.coveoHeadless[searchInterfaceId] = {
+  } else if (!window.coveoHeadless[engineId]) {
+    window.coveoHeadless[engineId] = {
       components: [],
       engine: undefined
     }
   }
-  const coveoHeadless = window.coveoHeadless[searchInterfaceId];
+  const coveoHeadless = window.coveoHeadless[engineId];
 
-  if (!getRegisteredComponent(element, searchInterfaceId)) {
+  if (!getRegisteredComponent(element, engineId)) {
     coveoHeadless.components.push({
       element,
       initialized: false
@@ -114,46 +113,46 @@ function registerComponentForInit(element, searchInterfaceId) {
 /**
  * Sets registered component to initialized.
  * @param element
- * @param {String} searchInterfaceId
+ * @param {String} engineId
  */
-function setComponentInitialized(element, searchInterfaceId) {
+function setComponentInitialized(element, engineId) {
   const component = window.coveoHeadless
-    && window.coveoHeadless[searchInterfaceId]
-    ? getRegisteredComponent(element, searchInterfaceId)
+    && window.coveoHeadless[engineId]
+    ? getRegisteredComponent(element, engineId)
     : undefined;
 
   if (!component) {
     throw new Error('Fatal Error: Component was not registered before initialization');
   }
   component.initialized = true;
-  if (areAllComponentsInitialized(searchInterfaceId)) {
-    debounceInitialSearch(searchInterfaceId);
+  if (areAllComponentsInitialized(engineId)) {
+    debounceInitialSearch(engineId);
   }
 }
 
 /**
  * Returns headless engine promise.
  * @param element The Lightning Element component with which to load dependencies.
- * @param {String} searchInterfaceId
+ * @param {String} engineId
  */
-function getHeadlessEngine(element, searchInterfaceId) {
-  if (window.coveoHeadless[searchInterfaceId] && window.coveoHeadless[searchInterfaceId].engine) {
-    return window.coveoHeadless.engine;
+function getHeadlessEngine(element, engineId) {
+  if (window.coveoHeadless[engineId] && window.coveoHeadless[engineId].engine) {
+    return window.coveoHeadless[engineId].engine;
   }
-  window.coveoHeadless[searchInterfaceId].engine = initEngine(element);
-  return window.coveoHeadless.engine;
+  window.coveoHeadless[engineId].engine = initEngine(element);
+  return window.coveoHeadless[engineId].engine;
 }
 
 /**
  * Initializes a component with Coveo Headless.
  * @param element The LightningElement component to initialize.
- * @param {String} searchInterfaceId
+ * @param {String} engineId
  * @param {Function} initialize The component's initialization function.
  */
-function initializeWithHeadless(element, searchInterfaceId, initialize) {
-  getHeadlessEngine(element, searchInterfaceId).then((engine) => {
+function initializeWithHeadless(element, engineId, initialize) {
+  getHeadlessEngine(element, engineId).then((engine) => {
     initialize(engine);
-    setComponentInitialized(element, searchInterfaceId);
+    setComponentInitialized(element, engineId);
   }).catch((error) => {
     console.error('Fatal error: unable to initialize component', error);
   });

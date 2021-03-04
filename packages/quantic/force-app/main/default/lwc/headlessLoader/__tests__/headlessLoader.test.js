@@ -19,8 +19,8 @@ describe('c/headlessLoader', () => {
     initialized: isInitialized
   });
 
-  const assertComponentIsSetInitialized = (element, searchInterfaceId) => {
-    expect(window.coveoHeadless[searchInterfaceId].components).toContainEqual({
+  const assertComponentIsSetInitialized = (element, engineId) => {
+    expect(window.coveoHeadless[engineId].components).toContainEqual({
       element,
       initialized: true
     });

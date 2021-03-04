@@ -10,7 +10,7 @@ export default class Result extends LightningElement {
   @api resultTemplatesManager;
 
   /** @type {string} */
-  @api searchInterfaceId;
+  @api engineId;
 
   get icon() {
     if (this.objectTypeIcon) {

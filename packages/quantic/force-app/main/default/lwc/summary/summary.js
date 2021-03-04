@@ -5,7 +5,7 @@ export default class Summary extends LightningElement {
   @track state = {};
 
   /** @type {string} */
-  @api searchInterfaceId;
+  @api engineId;
 
   /** @type {import("coveo").QuerySummary} */
   querySummary;
@@ -18,7 +18,7 @@ export default class Summary extends LightningElement {
   }
 
   connectedCallback() {
-    initializeWithHeadless(this, this.searchInterfaceId, this.initialize.bind(this));
+    initializeWithHeadless(this, this.engineId, this.initialize.bind(this));
   }
 
   /**

@@ -5,13 +5,13 @@ export default class ResultLink extends LightningElement {
   /** @type {import("coveo").Result} */
   @api result;
   /** @type {string} */
-  @api searchInterfaceId;
+  @api engineId;
 
   /** @type {import("coveo").Engine} */
   engine;
 
   connectedCallback() {
-    getHeadlessEngine(this, this.searchInterfaceId).then((engine) => {
+    getHeadlessEngine(this, this.engineId).then((engine) => {
       this.initialize(engine);
     }).catch((error) => {
       console.error(error.message);

@@ -12,7 +12,7 @@ export default class ResultsPerPage extends LightningElement {
   unsubscribe;
 
   /** @type {string} */
-  @api searchInterfaceId;
+  @api engineId;
 
   constructor() {
     super();
@@ -20,7 +20,7 @@ export default class ResultsPerPage extends LightningElement {
   }
   
   connectedCallback() {
-    initializeWithHeadless(this, this.searchInterfaceId, this.initialize.bind(this));
+    initializeWithHeadless(this, this.engineId, this.initialize.bind(this));
   }
 
   /**

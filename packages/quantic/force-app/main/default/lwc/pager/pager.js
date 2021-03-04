@@ -15,7 +15,7 @@ export default class Pager extends LightningElement {
   hasNext;
   currentPage = 1;
   /** @type {string} */
-  @api searchInterfaceId;
+  @api engineId;
 
   constructor() {
     super();
@@ -23,7 +23,7 @@ export default class Pager extends LightningElement {
   }
 
   connectedCallback() {
-    initializeWithHeadless(this, this.searchInterfaceId, this.initialize.bind(this));
+    initializeWithHeadless(this, this.engineId, this.initialize.bind(this));
   }
 
   /**
