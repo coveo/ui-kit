@@ -1,5 +1,3 @@
-type ListOfTermsWeights = Record<string, WeightsPerTerm>;
-
 export interface Ranking {
   /**
    * The attributes of the document that contributed to its ranking.
@@ -9,7 +7,7 @@ export interface Ranking {
   /**
    * The weight attributed to each term in the query.
    */
-  termsWeight: Record<string, WeightsPerTerm> | null;
+  termsWeight: TermWeightDictionary | null;
 
   /**
    * The sum of all weights.
@@ -19,7 +17,7 @@ export interface Ranking {
   /**
    * The weights applied by query ranking expressions.
    */
-  qreWeights: ListOfQRE[];
+  qreWeights: QueryRankingExpressionWeights[];
 }
 
 export interface DocumentWeights {
@@ -34,7 +32,7 @@ export interface DocumentWeights {
   'Collaborative rating': number;
 
   /**
-   * The custom weight assigned through an [indexing pipeline extension (IPE)](https://docs.coveo.com/en/206/) for the item.
+   * The weight assigned through an [indexing pipeline extension (IPE)](https://docs.coveo.com/en/206/) for the item.
    */
   Custom: number;
 
@@ -65,7 +63,7 @@ export interface DocumentWeights {
   Source: number;
 
   /**
-   * The presence of queried keywords in the title of the item.
+   * The presence of query terms in the document title.
    */
   Title: number;
 
@@ -75,30 +73,88 @@ export interface DocumentWeights {
   [key: string]: number;
 }
 
-export interface ListOfQRE {
+export interface QueryRankingExpressionWeights {
+  /**
+   * The query ranking expression (QRE).
+   */
   expression: string;
+
+  /**
+   * The score added by the query ranking expression (QRE).
+   */
   score: number;
 }
 
-export interface WeightsPerTerm {
-  Weights: WeightsPerTermBreakdown;
-  terms: Record<string, WeightsPerTermPerDocument>;
+export type TermWeightDictionary = Record<string, TermWeightInformation>;
+
+interface TermWeightInformation {
+  Weights: TermWeights;
+  terms: Record<string, TermWeightsPerDocument>;
 }
 
-export interface WeightsPerTermBreakdown {
+interface TermWeights {
+  /**
+   * Whether query terms have a special casing in the document.
+   */
   Casing: number;
+
+  /**
+   * The presence of query terms in the automatically populated '@concepts' field of the document.
+   */
   Concept: number;
+
+  /**
+   * Whether query terms are formatted in the document (e.g., heading level, bold, large, etc.).
+   */
   Formatted: number;
+
+  /**
+   * The number of times query terms appear in the document.
+   */
   Frequency: number;
+
+  /**
+   * The presence of words in the document with the same root as the query terms.
+   *
+   * @example
+   * Searching for `programmer` will match documents with `programmer`, `programmers`, `program`, `programming`, etc.
+   */
   Relation: number;
+
+  /**
+   * The presence of query terms in the document summary.
+   */
   Summary: number;
+
+  /**
+   * The presence of query terms in the document title.
+   */
   Title: number;
+
+  /**
+   * The presence of query terms in the document URI.
+   */
   URI: number;
+
+  /**
+   * Custom factors affecting the term weight.
+   */
   [key: string]: number;
 }
 
-export interface WeightsPerTermPerDocument {
+interface TermWeightsPerDocument {
+  /**
+   * Captures the likelihood that query term expansions are related to the original query term. Documents containing highly correlated expansions are ranked higher than ones containing poorly correlated expansions.
+   *
+   * @example
+   *
+   * When you search for `universe`, because of the way the stemming algorithm works, the index expands the query using terms from the `univer` stem classes that can include `university`. When the terms `universe` and `university` rarely co-occur in your indexed items, items containing `university` are ranked lower.
+   */
   Correlation: number;
+
+  /**
+   * The number of times a queried keyword appears in a given item, offset by the number of items in the index containing that keyword (see [TF-IDF](https://en.wikipedia.org/wiki/Tf%E2%80%93idf)).
+   */
   'TF-IDF': number;
 }
 
@@ -171,7 +227,7 @@ const matchExec = (value: string, regex: RegExp) => {
 
 const parseTermsWeights = (
   termsWeight: RegExpExecArray | null
-): ListOfTermsWeights | null => {
+): TermWeightDictionary | null => {
   const REGEX_EXTRACT_GROUP_OF_TERMS = /((?:[^:]+: [0-9]+, [0-9]+; )+)\n((?:\w+: [0-9]+; )+)/g;
   const REGEX_EXTRACT_SINGLE_TERM = /([^:]+): ([0-9]+), ([0-9]+); /g;
 
@@ -183,11 +239,11 @@ const parseTermsWeights = (
   if (!listOfTerms) {
     return null;
   }
-  const terms = {} as ListOfTermsWeights;
+  const terms = {} as TermWeightDictionary;
   for (const term of listOfTerms) {
     const listOfWords = matchExec(term[1], REGEX_EXTRACT_SINGLE_TERM);
 
-    const words = {} as Record<string, WeightsPerTermPerDocument>;
+    const words = {} as Record<string, TermWeightsPerDocument>;
     for (const word of listOfWords) {
       words[word[1]] = {
         Correlation: Number(word[2]),
@@ -198,19 +254,19 @@ const parseTermsWeights = (
     const weights = parseWeights(term[2]);
     terms[Object.keys(words).join(', ')] = {
       terms: words,
-      Weights: (weights as unknown) as WeightsPerTermBreakdown,
+      Weights: (weights as unknown) as TermWeights,
     };
   }
 
   return terms;
 };
 
-const parseQREWeights = (value: string): ListOfQRE[] => {
+const parseQREWeights = (value: string): QueryRankingExpressionWeights[] => {
   const REGEX_EXTRACT_QRE_WEIGHTS = /(Expression:\s".*")\sScore:\s(?!0)([0-9]+)\n+/g;
 
   let qreWeightsRegexResult = REGEX_EXTRACT_QRE_WEIGHTS.exec(value);
 
-  const qreWeights: ListOfQRE[] = [];
+  const qreWeights: QueryRankingExpressionWeights[] = [];
   while (qreWeightsRegexResult) {
     qreWeights.push({
       expression: qreWeightsRegexResult[1],
