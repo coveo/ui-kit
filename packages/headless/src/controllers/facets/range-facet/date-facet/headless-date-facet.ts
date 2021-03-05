@@ -22,12 +22,11 @@ import {
   dateFacetOptionsSchema,
 } from './headless-date-facet-options';
 import {determineFacetId} from '../../_common/facet-id-determinor';
-import {buildDateRange} from './date-range';
+import {DateRangeOptions, DateRangeValue, buildDateRange} from './date-range';
 import {Controller} from '../../../controller/headless-controller';
 import {RangeFacetSortCriterion} from '../../../../features/facets/range-facets/generic/interfaces/request';
 
-export {buildDateRange};
-export {DateFacetOptions};
+export {DateFacetOptions, DateRangeOptions, DateRangeValue, buildDateRange};
 
 export interface DateFacetProps {
   /**
