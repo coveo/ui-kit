@@ -67,7 +67,7 @@ export class NumericFacet extends Component<
       return <div>No facet values</div>;
     }
 
-    const {format: formatNumber} = this.props;
+    const {format} = this.props;
 
     return (
       <ul>
@@ -79,7 +79,7 @@ export class NumericFacet extends Component<
               onChange={() => this.controller.toggleSelect(value)}
               disabled={this.state.isLoading}
             />
-            From {formatNumber(value.start)} to {formatNumber(value.end)}{' '}
+            From {format(value.start)} to {format(value.end)}{' '}
             {value.endInclusive ? 'inclusively' : 'exclusively'} (
             {value.numberOfResults}{' '}
             {value.numberOfResults === 1 ? 'result' : 'results'})
