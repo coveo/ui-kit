@@ -80,7 +80,7 @@ export interface NumericFacet extends Controller {
   toggleSelect(selection: NumericFacetValue): void;
 
   /**
-   * The state of the `NumericFacet` controller
+   * The state of the `NumericFacet` controller.
    */
   state: NumericFacetState;
 }
