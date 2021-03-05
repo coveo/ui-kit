@@ -30,6 +30,8 @@ import {FacetManager} from './components/facet-manager/facet-manager.class';
 import {FacetManager as FacetManagerFn} from './components/facet-manager/facet-manager.fn';
 import {Facet} from './components/facet/facet.class';
 import {Facet as FacetFn} from './components/facet/facet.fn';
+import {DateFacet} from './components/date-facet/date-facet.class';
+import {DateFacet as DateFacetFn} from './components/date-facet/date-facet.fn';
 import {History} from './components/history/history.class';
 import {History as HistoryFn} from './components/history/history.fn';
 import {RelevanceInspector} from './components/relevance-inspector/relevance-inspector.class';
@@ -45,6 +47,7 @@ import {
   buildResultList,
   buildFacetManager,
   buildFacet,
+  buildDateFacet,
   buildDateSortCriterion,
   buildFieldSortCriterion,
   buildRelevanceSortCriterion,
@@ -58,6 +61,7 @@ import {
 } from '@coveo/headless';
 import {bindSearchParametersToURI} from './components/search-parameter-manager/search-parameter-manager';
 import {setContext} from './components/context/context';
+import {dateRanges} from './components/date-facet/date-utils';
 
 const recommendationList = buildRecommendationList(recommendationEngine);
 
@@ -94,6 +98,17 @@ const objectTypeFacet = buildFacet(engine, {
 });
 const fileTypeFacet = buildFacet(engine, {
   options: {field: 'filetype'},
+});
+
+const createdAutomaticDateFacet = buildDateFacet(engine, {
+  options: {field: 'created', generateAutomaticRanges: true},
+});
+const createdManualDateFacet = buildDateFacet(engine, {
+  options: {
+    field: 'created',
+    generateAutomaticRanges: false,
+    currentValues: dateRanges,
+  },
 });
 
 const criteria: [string, SortCriterion][] = [
@@ -173,10 +188,23 @@ function App() {
           <FacetManager>
             <Facet field="author" facetId="author-1" />
             <Facet field="category" facetId="category-1" />
+            <DateFacet
+              field="created"
+              facetId="created-1"
+              generateAutomaticRanges={true}
+            />
+            <DateFacet
+              field="created"
+              facetId="created-2"
+              generateAutomaticRanges={false}
+              currentValues={dateRanges}
+            />
           </FacetManager>
           <FacetManagerFn controller={facetManager}>
             <FacetFn controller={objectTypeFacet} />
             <FacetFn controller={fileTypeFacet} />
+            <DateFacetFn controller={createdAutomaticDateFacet} />
+            <DateFacetFn controller={createdManualDateFacet} />
           </FacetManagerFn>
         </Section>
         <Section title="sort">
