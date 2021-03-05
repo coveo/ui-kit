@@ -28,7 +28,7 @@ export namespace Components {
          */
         "field": string;
         /**
-          * The displayed label for the facet
+          * The non-localized label for the facet
          */
         "label": string;
         /**
@@ -55,7 +55,7 @@ export namespace Components {
          */
         "generateAutomaticRanges": boolean;
         /**
-          * The displayed label for the facet
+          * The non-localized label for the facet
          */
         "label": string;
     }
@@ -89,7 +89,7 @@ export namespace Components {
          */
         "field": string;
         /**
-          * The displayed label for the facet.
+          * The non-localized label for the facet.
          */
         "label": string;
         /**
@@ -133,7 +133,7 @@ export namespace Components {
          */
         "generateAutomaticRanges": boolean;
         /**
-          * The displayed label for the facet
+          * The non-localized label for the facet
          */
         "label": string;
     }
@@ -588,7 +588,7 @@ declare namespace LocalJSX {
          */
         "field"?: string;
         /**
-          * The displayed label for the facet
+          * The non-localized label for the facet
          */
         "label"?: string;
         /**
@@ -615,7 +615,7 @@ declare namespace LocalJSX {
          */
         "generateAutomaticRanges"?: boolean;
         /**
-          * The displayed label for the facet
+          * The non-localized label for the facet
          */
         "label"?: string;
     }
@@ -649,7 +649,7 @@ declare namespace LocalJSX {
          */
         "field"?: string;
         /**
-          * The displayed label for the facet.
+          * The non-localized label for the facet.
          */
         "label"?: string;
         /**
@@ -693,7 +693,7 @@ declare namespace LocalJSX {
          */
         "generateAutomaticRanges"?: boolean;
         /**
-          * The displayed label for the facet
+          * The non-localized label for the facet
          */
         "label"?: string;
     }

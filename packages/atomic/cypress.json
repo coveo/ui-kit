@@ -1,6 +1,7 @@
 {
+  "projectId": "5ph2j4",
   "integrationFolder": "cypress/integration",
-  "ignoreTestFiles": "*selectors.ts",
+  "ignoreTestFiles": ["*selectors.ts", "*utils.ts"],
   "experimentalFetchPolyfill": true,
   "reporter": "spec",
   "viewportHeight": 1080,
