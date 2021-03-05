@@ -29,6 +29,7 @@ export namespace Components {
           * Whether this facet should contain a search box.
          */
         "enableFacetSearch": boolean;
+        "facetId": string;
         /**
           * Specifies the index field whose values the facet should use
          */
@@ -90,6 +91,7 @@ export namespace Components {
           * Whether this facet should contain a search box.
          */
         "enableFacetSearch": boolean;
+        "facetId": string;
         /**
           * The field whose values you want to display in the facet.
          */
@@ -533,6 +535,7 @@ declare namespace LocalJSX {
           * Whether this facet should contain a search box.
          */
         "enableFacetSearch"?: boolean;
+        "facetId"?: string;
         /**
           * Specifies the index field whose values the facet should use
          */
@@ -594,6 +597,7 @@ declare namespace LocalJSX {
           * Whether this facet should contain a search box.
          */
         "enableFacetSearch"?: boolean;
+        "facetId"?: string;
         /**
           * The field whose values you want to display in the facet.
          */

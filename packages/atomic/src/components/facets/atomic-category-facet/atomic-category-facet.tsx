@@ -28,7 +28,6 @@ import {
   FacetSearchController,
   FacetSearchState,
 } from '../facet-search/facet-search';
-import {facetStore} from '../facet-store/facet-store';
 
 /**
  * A hierarchical category facet component. It is displayed as a facet in desktop browsers and as
@@ -76,6 +75,7 @@ export class AtomicCategoryFacet
   @State() public facetSearchQuery = '';
   @State() public showFacetSearchResults = false;
 
+  @Prop({mutable: true, reflect: true}) public facetId = '';
   /**
    * Specifies the index field whose values the facet should use
    */
@@ -101,10 +101,6 @@ export class AtomicCategoryFacet
    */
   @Prop() public sortCriteria: CategoryFacetSortCriterion = 'occurrences';
 
-  constructor() {
-    facetStore.set(this.field, this.label);
-  }
-
   public initialize() {
     const options: CategoryFacetOptions = {
       field: this.field,
@@ -118,6 +114,8 @@ export class AtomicCategoryFacet
         controller: new FacetSearchController(this),
       });
     }
+    this.facetId = this.facet.state.facetId;
+    this.bindings.store.state.facetLabels[this.facetId] = this.label;
   }
 
   public componentDidRender() {

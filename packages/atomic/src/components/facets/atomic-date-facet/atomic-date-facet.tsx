@@ -21,7 +21,6 @@ import {
   BaseFacetController,
   BaseFacetState,
 } from '../base-facet/base-facet';
-import {facetStore} from '../facet-store/facet-store';
 
 /**
  * A facet who's values are expressed as date ranges. It is displayed as a regular facet in desktop browsers and as
@@ -71,10 +70,6 @@ export class AtomicDateFacet implements InitializableComponent, BaseFacetState {
    */
   @Prop() public generateAutomaticRanges = true;
 
-  constructor() {
-    facetStore.set(this.field, this.label);
-  }
-
   public buildOptions() {
     const options = Array.from(this.host.querySelectorAll('atomic-date-range'));
     return options.map(({start, end, endInclusive}) =>
@@ -92,6 +87,7 @@ export class AtomicDateFacet implements InitializableComponent, BaseFacetState {
     this.strings[this.label] = () => this.bindings.i18n.t(this.label);
     this.facet = buildDateFacet(this.bindings.engine, {options});
     this.facetId = this.facet.state.facetId;
+    this.bindings.store.state.facetLabels[this.facetId] = this.label;
   }
 
   private get values() {

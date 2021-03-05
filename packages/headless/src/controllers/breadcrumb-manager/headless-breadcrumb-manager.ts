@@ -74,6 +74,7 @@ export const buildBreadcrumbManager = (
         );
 
         return {
+          facetId,
           field: facetSet[facetId].field,
           values,
         };
@@ -124,6 +125,7 @@ export const buildBreadcrumbManager = (
   function buildCategoryFacetBreadcrumb(facetId: string) {
     const path = categoryFacetSelectedValuesSelector(engine.state, facetId);
     return {
+      facetId,
       field: engine.state.categoryFacetSet[facetId]!.request.field,
       path,
       deselect: () => {
@@ -214,6 +216,10 @@ export const buildBreadcrumbManager = (
  */
 export interface Breadcrumb<T extends BaseFacetValue> {
   /**
+   * The id for the underlying facet.
+   */
+  facetId: string;
+  /**
    * The field on which the underlying facet is configured.
    */
   field: string;
@@ -254,6 +260,10 @@ export type DateFacetBreadcrumb = Breadcrumb<DateFacetValue>;
  * Represents a breadcrumb for a category facet.
  */
 export interface CategoryFacetBreadcrumb {
+  /**
+   * The id for the underlying facet.
+   */
+  facetId: string;
   /**
    * The field on which the underlying facet is configured.
    */

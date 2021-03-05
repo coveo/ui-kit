@@ -26,7 +26,6 @@ import {
   FacetSearchController,
   FacetSearchState,
 } from '../facet-search/facet-search';
-import {facetStore} from '../facet-store/facet-store';
 
 /**
  * A facet component. It is displayed as a facet in desktop browsers and as
@@ -72,6 +71,7 @@ export class AtomicFacet
   @State() public facetSearchQuery = '';
   @State() public showFacetSearchResults = false;
 
+  @Prop({mutable: true, reflect: true}) public facetId = '';
   /**
    * The field whose values you want to display in the facet.
    */
@@ -97,10 +97,6 @@ export class AtomicFacet
    */
   @Prop() public sortCriteria: FacetSortCriterion = 'automatic';
 
-  constructor() {
-    facetStore.set(this.field, this.label);
-  }
-
   public initialize() {
     const options: FacetOptions = {
       field: this.field,
@@ -115,6 +111,8 @@ export class AtomicFacet
         controller: new FacetSearchController(this),
       });
     }
+    this.facetId = this.facet.state.facetId;
+    this.bindings.store.state.facetLabels[this.facetId] = this.label;
   }
 
   public componentDidRender() {

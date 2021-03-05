@@ -21,7 +21,6 @@ import {
   BaseFacetController,
   BaseFacetState,
 } from '../base-facet/base-facet';
-import {facetStore} from '../facet-store/facet-store';
 
 /**
  * A facet who's values are expressed as numeric ranges. It is displayed as a regular facet in desktop browsers and as
@@ -58,7 +57,7 @@ export class AtomicNumericFacet
   };
 
   @State() public isExpanded = false;
-  @Prop({mutable: true}) public facetId = '';
+  @Prop({mutable: true, reflect: true}) public facetId = '';
   /**
    * Specifies the index field whose values the facet should use
    */
@@ -71,10 +70,6 @@ export class AtomicNumericFacet
    * Whether or not the index should automatically generate options for the facet
    */
   @Prop() public generateAutomaticRanges = true;
-
-  constructor() {
-    facetStore.set(this.field, this.label);
-  }
 
   public buildOptions() {
     const options = Array.from(
@@ -96,6 +91,7 @@ export class AtomicNumericFacet
     this.facet = buildNumericFacet(this.bindings.engine, {options});
     this.strings[this.label] = () => this.bindings.i18n.t(this.label);
     this.facetId = this.facet.state.facetId;
+    this.bindings.store.state.facetLabels[this.facetId] = this.label;
   }
 
   private get values() {

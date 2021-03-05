@@ -1,4 +1,4 @@
-import {Component, h, State, Prop} from '@stencil/core';
+import {Component, h, State, Prop, VNode} from '@stencil/core';
 import {
   Bindings,
   InitializableComponent,
@@ -18,7 +18,6 @@ import {
 import {RangeFacetValue} from '@coveo/headless/dist/features/facets/range-facets/generic/interfaces/range-facet';
 import {BaseFacetValue} from '@coveo/headless/dist/features/facets/facet-api/response';
 import mainclear from '../../images/main-clear.svg';
-import {facetStore} from '../facets/facet-store/facet-store';
 
 /**
  * A component that creates breadcrumbs that display the currently active facet values
@@ -75,7 +74,7 @@ export class AtomicBreadcrumbManager implements InitializableComponent {
     return (
       <button
         part="breadcrumb-button"
-        class="text-on-background-variant breadcrumb-button flex items-center"
+        class="text-on-background-variant breadcrumb-button flex items-center hover:underline"
         aria-label={this.strings.breadcrumb({value})}
         onClick={() =>
           this.breadcrumbManager.deselectBreadcrumb(breadcrumbValue)
@@ -97,11 +96,15 @@ export class AtomicBreadcrumbManager implements InitializableComponent {
     );
   }
 
-  private getBreadcrumbWrapper(field: string, children: any) {
+  private getBreadcrumbWrapper(
+    facetId: string,
+    field: string,
+    children: any
+  ) {
     return (
       <div class="flex items-center text-sm" part="breadcrumb-wrapper">
         <span class="text-on-background" part="breadcrumb-label">
-          {facetStore.get(field) || field}:&nbsp;
+          {this.bindings.store.state.facetLabels[facetId] || field}:&nbsp;
         </span>
         {children}
       </div>
@@ -121,6 +124,7 @@ export class AtomicBreadcrumbManager implements InitializableComponent {
     ));
 
     return this.getBreadcrumbWrapper(
+      breadcrumb.facetId,
       breadcrumb.field,
       <ul class="flex space-x-2.5">
         {moreButton
@@ -193,7 +197,11 @@ export class AtomicBreadcrumbManager implements InitializableComponent {
     return this.breadcrumbManagerState.categoryFacetBreadcrumbs.map(
       (breadcrumb) => {
         const breadcrumbsValue = this.getCategoryBreadrumbValue(breadcrumb);
-        return this.getBreadcrumbWrapper(breadcrumb.field, breadcrumbsValue);
+        return this.getBreadcrumbWrapper(
+          breadcrumb.facetId,
+          breadcrumb.field,
+          breadcrumbsValue
+        );
       }
     );
   }

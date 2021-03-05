@@ -1,6 +1,11 @@
 import {Engine} from '@coveo/headless';
 import {ComponentInterface, getElement, h} from '@stencil/core';
 import {i18n, StringMap} from 'i18next';
+import {ObservableMap} from "@stencil/store";
+
+export type AtomicStore = {
+  facetLabels: Record<string, string>;
+};
 
 /**
  * Bindings passed from the `AtomicSearchInterface` to its children components.
@@ -14,6 +19,10 @@ export interface Bindings {
    * i18n instance, for localization.
    */
   i18n: i18n;
+  /**
+   * Global state for Atomic
+   */
+  store: ObservableMap<AtomicStore>;
 }
 
 export type InitializeEventHandler = (bindings: Bindings) => void;
