@@ -30,6 +30,8 @@ import {FacetManager} from './components/facet-manager/facet-manager.class';
 import {FacetManager as FacetManagerFn} from './components/facet-manager/facet-manager.fn';
 import {Facet} from './components/facet/facet.class';
 import {Facet as FacetFn} from './components/facet/facet.fn';
+import {NumericFacet} from './components/numeric-facet/numeric-facet.class';
+import {NumericFacet as NumericFacetFn} from './components/numeric-facet/numeric-facet.fn';
 import {History} from './components/history/history.class';
 import {History as HistoryFn} from './components/history/history.fn';
 import {RelevanceInspector} from './components/relevance-inspector/relevance-inspector.class';
@@ -45,6 +47,8 @@ import {
   buildResultList,
   buildFacetManager,
   buildFacet,
+  buildNumericFacet,
+  buildNumericRange,
   buildDateSortCriterion,
   buildFieldSortCriterion,
   buildRelevanceSortCriterion,
@@ -58,6 +62,7 @@ import {
 } from '@coveo/headless';
 import {bindSearchParametersToURI} from './components/search-parameter-manager/search-parameter-manager';
 import {setContext} from './components/context/context';
+import filesize from 'filesize';
 
 const recommendationList = buildRecommendationList(recommendationEngine);
 
@@ -94,6 +99,22 @@ const objectTypeFacet = buildFacet(engine, {
 });
 const fileTypeFacet = buildFacet(engine, {
   options: {field: 'filetype'},
+});
+
+const fileSizeAutomaticNumericFacet = buildNumericFacet(engine, {
+  options: {field: 'size', facetId: 'size-3', generateAutomaticRanges: true},
+});
+const fileSizeManualNumericFacet = buildNumericFacet(engine, {
+  options: {
+    field: 'size',
+    facetId: 'size-4',
+    generateAutomaticRanges: false,
+    currentValues: [
+      buildNumericRange({start: 0, end: 5e3}),
+      buildNumericRange({start: 5e3, end: 50e3}),
+      buildNumericRange({start: 50e3, end: 5e6}),
+    ],
+  },
 });
 
 const criteria: [string, SortCriterion][] = [
@@ -173,10 +194,35 @@ function App() {
           <FacetManager>
             <Facet field="author" facetId="author-1" />
             <Facet field="category" facetId="category-1" />
+            <NumericFacet
+              format={(bytes) => filesize(bytes, {base: 10})}
+              field="size"
+              facetId="size-1"
+              generateAutomaticRanges={true}
+            />
+            <NumericFacet
+              format={(bytes) => filesize(bytes, {base: 10})}
+              field="size"
+              facetId="size-2"
+              generateAutomaticRanges={false}
+              currentValues={[
+                buildNumericRange({start: 0, end: 5e3}),
+                buildNumericRange({start: 5e3, end: 50e3}),
+                buildNumericRange({start: 50e3, end: 5e6}),
+              ]}
+            />
           </FacetManager>
           <FacetManagerFn controller={facetManager}>
             <FacetFn controller={objectTypeFacet} />
             <FacetFn controller={fileTypeFacet} />
+            <NumericFacetFn
+              controller={fileSizeAutomaticNumericFacet}
+              format={(bytes) => filesize(bytes, {base: 10})}
+            />
+            <NumericFacetFn
+              controller={fileSizeManualNumericFacet}
+              format={(bytes) => filesize(bytes, {base: 10})}
+            />
           </FacetManagerFn>
         </Section>
         <Section title="sort">

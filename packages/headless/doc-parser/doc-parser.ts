@@ -23,7 +23,14 @@ const controllers: ControllerConfiguration[] = [
   },
   {
     initializer: 'buildNumericFacet',
-    samplePaths: {},
+    samplePaths: {
+      react_class: [
+        'packages/samples/headless-react/src/components/numeric-facet/numeric-facet.class.tsx',
+      ],
+      react_fn: [
+        'packages/samples/headless-react/src/components/numeric-facet/numeric-facet.fn.tsx',
+      ],
+    },
   },
   {
     initializer: 'buildPager',
