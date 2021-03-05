@@ -19,7 +19,13 @@ import {
   createBreadcrumbShadowAlias,
 } from './facet-selectors';
 
-const facetProp = {
+interface FacetProps {
+  field: string;
+  label: string;
+  'sort-criteria'?: string;
+}
+
+const facetProp: FacetProps = {
   field: 'author',
   label: 'Authors',
 };
@@ -31,7 +37,7 @@ const sortCriteriaOption = {
   score: 'score',
 };
 
-function setupPager(field: string, label: string, option?: string) {
+function setupFacet(field: string, label: string, option?: string) {
   setUpPage(
     `<atomic-breadcrumb-manager></atomic-breadcrumb-manager>
      <atomic-facet field="${field}" label="${label}" ${option}></atomic-facet>`
@@ -40,7 +46,7 @@ function setupPager(field: string, label: string, option?: string) {
 
 describe('Standard Facet', () => {
   beforeEach(() => {
-    setupPager(facetProp.field, facetProp.label);
+    setupFacet(facetProp.field, facetProp.label);
     createAliasShadow(facetProp.field);
     createAliasFacetUL(facetProp.field);
     cy.get('@facet_ul').find('li:nth-child(1)').as('firstFacetValue');
@@ -244,7 +250,7 @@ describe('Standard Facet', () => {
 
 describe('Facet with no facetSearch, and numberOfValues is 5 ', () => {
   beforeEach(() => {
-    setupPager(
+    setupFacet(
       facetProp.field,
       facetProp.label,
       'enable-facet-search=false number-of-values=5'
@@ -270,12 +276,12 @@ describe('Facet with no facetSearch, and numberOfValues is 5 ', () => {
 
 describe('Facet with different sort-criteria options', () => {
   it('Should using "automatic" sort for default setting', async () => {
-    setupPager(facetProp.field, facetProp.label);
+    setupFacet(facetProp.field, facetProp.label);
     await assertSortCriteria(sortCriteriaOption.automatic, 0);
   });
 
   it('Should using "alphanumeric" sort for custom setting', async () => {
-    setupPager(
+    setupFacet(
       facetProp.field,
       facetProp.label,
       'sort-criteria="alphanumeric"'
@@ -284,23 +290,23 @@ describe('Facet with different sort-criteria options', () => {
   });
 
   it('Should using "occurrences" sort for custom setting', async () => {
-    setupPager(facetProp.field, facetProp.label, 'sort-criteria="occurrences"');
+    setupFacet(facetProp.field, facetProp.label, 'sort-criteria="occurrences"');
     await assertSortCriteria(sortCriteriaOption.occurrences, 0);
   });
 
   it('Should using "score" sort for custom setting', async () => {
-    setupPager(facetProp.field, facetProp.label, 'sort-criteria="score"');
+    setupFacet(facetProp.field, facetProp.label, 'sort-criteria="score"');
     await assertSortCriteria(sortCriteriaOption.score, 0);
   });
 
   it('Should using "automatic" sort for custom setting', async () => {
-    setupPager(facetProp.field, facetProp.label, 'sort-criteria="automatic"');
+    setupFacet(facetProp.field, facetProp.label, 'sort-criteria="automatic"');
     await assertSortCriteria(sortCriteriaOption.automatic, 0);
   });
 
-  describe('Trigger ShowMore on facet with custom sort-criteria', () => {
+  describe('Trigger ShowMore on a facet with sort-criteria other than "automatic"', () => {
     it('Should not change the sort order', async () => {
-      setupPager(
+      setupFacet(
         facetProp.field,
         facetProp.label,
         'sort-criteria="occurrences"'
@@ -316,30 +322,30 @@ describe('Facet with different sort-criteria options', () => {
 describe('Facet with invalid options', () => {
   describe('Facet with invalid field', () => {
     it('Should render an error when field is invalid', () => {
-      setupPager('@test', facetProp.label);
+      setupFacet('@test', facetProp.label);
       shouldRenderErrorComponent(FacetSelectors.facetStandard);
     });
 
     it.skip('Should not render when field returns no result', () => {
-      setupPager('author2', facetProp.label);
+      setupFacet('author2', facetProp.label);
     });
   });
 
   describe('Facet with invalid numberOfValues', () => {
     it('Should render an error when the prop is not in the list of numberOfValues', () => {
-      setupPager(facetProp.field, facetProp.label, 'number-of-values=-5');
+      setupFacet(facetProp.field, facetProp.label, 'number-of-values=-5');
       shouldRenderErrorComponent(FacetSelectors.facetStandard);
     });
 
     it('Should render an error when the prop is not a number ', () => {
-      setupPager(facetProp.field, facetProp.label, 'number-of-values="here"');
+      setupFacet(facetProp.field, facetProp.label, 'number-of-values="here"');
       shouldRenderErrorComponent(FacetSelectors.facetStandard);
     });
   });
 
   describe('Facet with invalid sort criteria', () => {
     it('Should render an error when the prop is not in the list of sortCriteria', () => {
-      setupPager(facetProp.field, facetProp.label, 'sort-criteria=test');
+      setupFacet(facetProp.field, facetProp.label, 'sort-criteria=test');
       shouldRenderErrorComponent(FacetSelectors.facetStandard);
     });
   });
@@ -347,7 +353,7 @@ describe('Facet with invalid options', () => {
 
 describe('Facet with custom delimitingCharacter', () => {
   beforeEach(() => {
-    setupPager(facetProp.field, facetProp.label, 'delimiting-character=","');
+    setupFacet(facetProp.field, facetProp.label, 'delimiting-character=","');
   });
   it('Should generate Facet correctly');
 });
