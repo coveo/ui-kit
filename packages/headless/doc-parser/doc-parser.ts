@@ -22,6 +22,18 @@ const controllers: ControllerConfiguration[] = [
     },
   },
   {
+    initializer: 'buildSort',
+    samplePaths: {
+      react_class: [
+        'packages/samples/headless-react/src/components/sort/sort.class.tsx',
+      ],
+      react_fn: [
+        'packages/samples/headless-react/src/components/sort/sort.fn.tsx',
+      ],
+    },
+    utils: [],
+  },
+  {
     initializer: 'buildNumericFacet',
     samplePaths: {},
   },
