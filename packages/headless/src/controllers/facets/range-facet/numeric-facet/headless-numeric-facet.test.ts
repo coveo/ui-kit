@@ -19,7 +19,6 @@ import {buildMockNumericFacetResponse} from '../../../../test/mock-numeric-facet
 import {buildMockNumericFacetRequest} from '../../../../test/mock-numeric-facet-request';
 import {SearchAppState} from '../../../../state/search-app-state';
 import * as FacetIdDeterminor from '../../_common/facet-id-determinor';
-import {NumericFacetRegistrationOptions} from '../../../../features/facets/range-facets/numeric-facet-set/interfaces/options';
 
 describe('numeric facet', () => {
   const facetId = '1';
@@ -60,8 +59,9 @@ describe('numeric facet', () => {
   it('registers a numeric facet with the passed options', () => {
     const action = registerNumericFacet({
       facetId,
+      currentValues: [],
       ...options,
-    } as NumericFacetRegistrationOptions);
+    });
     expect(engine.actions).toContainEqual(action);
   });
 

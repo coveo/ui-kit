@@ -6,7 +6,10 @@ import {
   DateFacetValue,
 } from '../../../../features/facets/range-facets/date-facet-set/interfaces/response';
 import {registerDateFacet} from '../../../../features/facets/range-facets/date-facet-set/date-facet-actions';
-import {buildRangeFacet} from '../headless-range-facet';
+import {
+  assertRangeFacetOptions,
+  buildRangeFacet,
+} from '../headless-range-facet';
 import {
   ConfigurationSection,
   DateFacetSection,
@@ -118,10 +121,16 @@ export function buildDateFacet(
   engine: Engine<ConfigurationSection & SearchSection & DateFacetSection>,
   props: DateFacetProps
 ): DateFacet {
+  assertRangeFacetOptions(props.options, 'buildDateFacet');
+
   const dispatch = engine.dispatch;
 
   const facetId = determineFacetId(engine, props.options);
-  const options: DateFacetRegistrationOptions = {...props.options, facetId};
+  const options: DateFacetRegistrationOptions = {
+    currentValues: [],
+    ...props.options,
+    facetId,
+  };
 
   validateOptions(engine, dateFacetOptionsSchema, options, 'buildDateFacet');
 

@@ -9,7 +9,10 @@ import {
   NumericFacetValue,
 } from '../../../../features/facets/range-facets/numeric-facet-set/interfaces/response';
 import {registerNumericFacet} from '../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions';
-import {buildRangeFacet} from '../headless-range-facet';
+import {
+  assertRangeFacetOptions,
+  buildRangeFacet,
+} from '../headless-range-facet';
 import {
   ConfigurationSection,
   NumericFacetSection,
@@ -126,10 +129,13 @@ export function buildNumericFacet(
   engine: Engine<NumericFacetSection & ConfigurationSection & SearchSection>,
   props: NumericFacetProps
 ): NumericFacet {
+  assertRangeFacetOptions(props.options, 'buildNumericFacet');
+
   const dispatch = engine.dispatch;
 
   const facetId = determineFacetId(engine, props.options);
-  const options: NumericFacetOptions = {
+  const options: NumericFacetRegistrationOptions = {
+    currentValues: [],
     ...props.options,
     facetId,
   };
@@ -141,13 +147,7 @@ export function buildNumericFacet(
     'buildNumericFacet'
   );
 
-  if (!options.generateAutomaticRanges && options.currentValues === undefined) {
-    engine.logger.error(
-      'currentValues should be specified for buildNumericFacet when generateAutomaticRanges is false.'
-    );
-  }
-
-  dispatch(registerNumericFacet(options as NumericFacetRegistrationOptions));
+  dispatch(registerNumericFacet(options));
 
   const rangeFacet = buildRangeFacet<NumericFacetRequest, NumericFacetResponse>(
     engine,
