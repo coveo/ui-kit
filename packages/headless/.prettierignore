@@ -13,3 +13,4 @@ reports/*.xml
 docs/js
 temp/
 doc-parser/build
+npm-cache
