@@ -1,4 +1,4 @@
-import {once, camelToKebab, randomID} from './utils';
+import {once, camelToKebab, randomID, filterProtocol} from './utils';
 
 describe('once', () => {
   it('should call the function only once', () => {
@@ -31,5 +31,19 @@ describe('randomID', () => {
 
   it('when called twice, it returns two different ids', () => {
     expect(randomID()).not.toBe(randomID());
+  });
+});
+
+describe('filterProtocol', () => {
+  it('when passing a problematic protocal such as javascript, it returns and empty string', () => {
+    expect(filterProtocol('javascript:alert(1)')).toBe('');
+  });
+
+  it('allows good protocols', () => {
+    expect(filterProtocol('https://github.com/')).toBe('https://github.com/');
+  });
+
+  it('allows local paths', () => {
+    expect(filterProtocol('/index.html')).toBe('/index.html');
   });
 });
