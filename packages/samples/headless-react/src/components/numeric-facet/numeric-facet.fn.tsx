@@ -49,7 +49,6 @@ export const NumericFacet: FunctionComponent<NumericFacetProps> = (props) => {
 
 /**
  * ```tsx
- * const options: NumericFacetOptions = {field: 'views', };
  * const controller = buildNumericFacet(engine, {
  *   options: {
  *     field: 'size',
