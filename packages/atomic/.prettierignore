@@ -42,3 +42,7 @@ reports/*.xml
 
 !.vscode/extensions.json
 npm-cache
+
+# generated readmes
+
+src/components/**/readme.md
