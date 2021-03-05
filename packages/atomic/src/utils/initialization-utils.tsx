@@ -1,6 +1,6 @@
 import {Engine} from '@coveo/headless';
 import {ComponentInterface, getElement, h} from '@stencil/core';
-import {i18n} from 'i18next';
+import {i18n, StringMap} from 'i18next';
 
 /**
  * Bindings passed from the `AtomicSearchInterface` to its children components.
@@ -220,7 +220,7 @@ export function BindStateToController(
   };
 }
 
-export type I18nState = Record<string, () => string>;
+export type I18nState = Record<string, (variables?: StringMap) => string>;
 
 /**
  * Decorator to be used on a property decorator with Stencil's `State` that will be subscribed automatically to the i18next language change.

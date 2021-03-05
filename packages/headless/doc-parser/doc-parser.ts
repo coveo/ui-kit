@@ -34,6 +34,10 @@ const controllers: ControllerConfiguration[] = [
     utils: [],
   },
   {
+    initializer: 'buildNumericFacet',
+    samplePaths: {},
+  },
+  {
     initializer: 'buildPager',
     samplePaths: {
       react_class: [
@@ -52,10 +56,10 @@ const controllers: ControllerConfiguration[] = [
       ],
     },
   },
-  // {
-  //   initializer: 'buildCategoryFacet',
-  //   samplePaths: {},
-  // },
+  {
+    initializer: 'buildCategoryFacet',
+    samplePaths: {},
+  },
   {
     initializer: 'buildDidYouMean',
     samplePaths: {
@@ -108,6 +112,18 @@ const controllers: ControllerConfiguration[] = [
       ],
       react_fn: [
         'packages/samples/headless-react/src/components/query-summary/query-summary.fn.tsx',
+      ],
+    },
+  },
+  {
+    initializer: 'buildResultList',
+    samplePaths: {
+      react_class: [
+        'packages/samples/headless-react/src/components/result-list/result-list.class.tsx',
+        'packages/samples/headless-react/src/components/result-list/result-link.tsx',
+      ],
+      react_fn: [
+        'packages/samples/headless-react/src/components/result-list/result-list.fn.tsx',
       ],
     },
   },

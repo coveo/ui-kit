@@ -1,6 +1,9 @@
 import {createReducer} from '@reduxjs/toolkit';
 import {change} from '../history/history-actions';
-import {updateAdvancedSearchQueries} from './advanced-search-queries-actions';
+import {
+  registerAdvancedSearchQueries,
+  updateAdvancedSearchQueries,
+} from './advanced-search-queries-actions';
 import {isUndefined} from '@coveo/bueno';
 import {getAdvancedSearchQueriesInitialState} from './advanced-search-queries-state';
 import {restoreSearchParameters} from '../search-parameters/search-parameter-actions';
@@ -10,11 +13,29 @@ export const advancedSearchQueriesReducer = createReducer(
   (builder) => {
     builder
       .addCase(updateAdvancedSearchQueries, (state, action) => {
-        if (!isUndefined(action.payload.aq)) {
-          state.aq = action.payload.aq!;
+        const {aq, cq} = action.payload;
+        if (!isUndefined(aq)) {
+          state.aq = aq;
+          state.aqWasSet = true;
         }
-        if (!isUndefined(action.payload.cq)) {
-          state.cq = action.payload.cq!;
+        if (!isUndefined(cq)) {
+          state.cq = cq;
+          state.cqWasSet = true;
+        }
+      })
+      .addCase(registerAdvancedSearchQueries, (state, action) => {
+        const {aq, cq} = action.payload;
+        if (!isUndefined(aq)) {
+          state.defaultFilters.aq = aq;
+          if (!state.aqWasSet) {
+            state.aq = aq;
+          }
+        }
+        if (!isUndefined(cq)) {
+          state.defaultFilters.cq = cq;
+          if (!state.cqWasSet) {
+            state.cq = cq;
+          }
         }
       })
       .addCase(
@@ -22,8 +43,15 @@ export const advancedSearchQueriesReducer = createReducer(
         (state, action) => action.payload?.advancedSearchQueries ?? state
       )
       .addCase(restoreSearchParameters, (state, action) => {
-        state.aq = action.payload.aq ?? state.aq;
-        state.cq = action.payload.cq ?? state.cq;
+        const {aq, cq} = action.payload;
+        if (!isUndefined(aq)) {
+          state.aq = aq;
+          state.aqWasSet = true;
+        }
+        if (!isUndefined(cq)) {
+          state.cq = cq;
+          state.cqWasSet = true;
+        }
       });
   }
 );

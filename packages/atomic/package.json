@@ -1,6 +1,6 @@
 {
   "name": "@coveo/atomic",
-  "version": "0.7.0-alpha.26",
+  "version": "0.7.0-alpha.33",
   "description": "A web-component library for building modern UIs interfacing with the Coveo platform",
   "main": "dist/index.cjs.js",
   "module": "dist/index.js",
@@ -22,13 +22,13 @@
     "test": "stencil test --spec --e2e",
     "test:watch": "stencil test --spec --e2e --watchAll",
     "generate": "stencil generate",
-    "cypress:test": "npx cypress run",
+    "cypress:test": "npx cypress run --record --key 0e9d8bcc-a33a-4562-8604-c04e7bed0c7e",
     "cypress:open": "npx cypress open",
     "npm:publish": "npm publish --access public"
   },
   "dependencies": {
     "@coveo/bueno": "^0.7.0-alpha.25",
-    "@coveo/headless": "^0.7.0-alpha.26",
+    "@coveo/headless": "^0.7.0-alpha.33",
     "coveo-styleguide": "^9.26.0",
     "i18next": "^19.8.4",
     "i18next-http-backend": "^1.0.21",
