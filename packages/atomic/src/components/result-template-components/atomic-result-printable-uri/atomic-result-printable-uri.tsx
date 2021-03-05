@@ -1,7 +1,7 @@
 import {Component, h, Prop, State} from '@stencil/core';
 import {Result} from '@coveo/headless';
 import {ResultContext} from '../result-template-decorators';
-import {parseXML} from '../../../utils/utils';
+import {filterProtocol, parseXML} from '../../../utils/utils';
 import {
   Bindings,
   BindStateToI18n,
@@ -71,7 +71,7 @@ export class AtomicResultPrintableUri {
       const uri = parent.getAttribute('uri')!;
       return (
         <li part="result-printable-uri-list-element">
-          <a part="result-printable-uri-link" href={uri}>
+          <a part="result-printable-uri-link" href={filterProtocol(uri)}>
             {name}
           </a>
         </li>
@@ -107,7 +107,10 @@ export class AtomicResultPrintableUri {
     }
 
     return (
-      <a part="result-printable-uri-link" href={this.result.clickUri}>
+      <a
+        part="result-printable-uri-link"
+        href={filterProtocol(this.result.clickUri)}
+      >
         <atomic-result-value
           value="printableUri"
           shouldHighlightWith="printableUriHighlights"

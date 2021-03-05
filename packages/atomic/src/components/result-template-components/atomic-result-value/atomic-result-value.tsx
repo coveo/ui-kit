@@ -1,9 +1,11 @@
 import {Component, Prop, Element, h, Host} from '@stencil/core';
 import {Result, ResultTemplatesHelpers, HighlightUtils} from '@coveo/headless';
 import {ResultContext} from '../result-template-decorators';
+import {sanitize} from '../../../utils/utils';
 
 /**
  * The ResultValue component renders the value of a result property.
+ * @part highlight - The highlights
  */
 @Component({
   tag: 'atomic-result-value',
@@ -37,13 +39,19 @@ export class AtomicResultValue {
         this.shouldHighlightWith!
       ) as HighlightUtils.HighlightKeyword[];
 
+      const openingDelimiter = '_openingDelimiter_';
+      const closingDelimiter = '_closingDelimiter_';
       const highlightedValue = HighlightUtils.highlightString({
         content: this.resultValue,
-        openingDelimiter: '<strong>',
-        closingDelimiter: '</strong>',
+        openingDelimiter,
+        closingDelimiter,
         highlights,
       });
-      return <Host innerHTML={highlightedValue}></Host>;
+
+      const innerHTML = sanitize(highlightedValue)
+        .replace(new RegExp(openingDelimiter, 'g'), '<b part="highlight">')
+        .replace(new RegExp(closingDelimiter, 'g'), '</b>');
+      return <Host innerHTML={innerHTML}></Host>;
     } catch (error) {
       return (
         <atomic-component-error

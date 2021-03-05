@@ -39,6 +39,13 @@ export function sanitize(string: string) {
   return string.replace(reg, (match) => map[match]);
 }
 
+export function filterProtocol(uri: string) {
+  const isAbsolute = /^(https?|ftp|file|mailto|tel):/i.test(uri);
+  const isRelative = /^\//.test(uri);
+
+  return isAbsolute || isRelative ? uri : '';
+}
+
 export function parseXML(string: string) {
   return new window.DOMParser().parseFromString(string, 'text/xml');
 }
