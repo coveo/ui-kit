@@ -101,11 +101,16 @@ const fileTypeFacet = buildFacet(engine, {
 });
 
 const createdAutomaticDateFacet = buildDateFacet(engine, {
-  options: {field: 'created', generateAutomaticRanges: true},
+  options: {
+    field: 'created',
+    facetId: 'created-3',
+    generateAutomaticRanges: true,
+  },
 });
 const createdManualDateFacet = buildDateFacet(engine, {
   options: {
     field: 'created',
+    facetId: 'created-4',
     generateAutomaticRanges: false,
     currentValues: dateRanges,
   },
