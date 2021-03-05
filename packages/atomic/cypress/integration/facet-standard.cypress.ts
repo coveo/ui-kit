@@ -1,5 +1,17 @@
-import {getAnalyticsAt, getApiRequestBodyAt} from '../utils/network';
+import {getAnalyticsAt} from '../utils/network';
 import {setUpPage, shouldRenderErrorComponent} from '../utils/setupComponent';
+import {
+  getTextOfAllElements,
+  doSortAlphanumeric,
+} from '../utils/componentUtils';
+import {
+  validateFacetComponentLoaded,
+  validateFacetNumberofValue,
+  assertBasicFacetFunctionality,
+  assertSortCriteria,
+  facetValueShouldDisplayInBreadcrumb,
+} from './facet-utils';
+
 import {
   FacetSelectors,
   createAliasShadow,
@@ -26,70 +38,6 @@ function setupPager(field: string, label: string, option?: string) {
   );
 }
 
-function componentLoaded(label: string) {
-  cy.get(FacetSelectors.facetStandard).should('be.visible');
-  cy.get('@facetShadow').find('div:nth-child(1)').should('contain.text', label);
-  cy.checkA11y(FacetSelectors.facetStandard);
-}
-
-function validateNumberofValue(totalNumber: number) {
-  cy.wait(200);
-  cy.get('@facet_ul').find('li').its('length').should('eq', totalNumber);
-}
-
-async function facetValueShouldDisplayInBreadcrumb(
-  facetValueSelector: string,
-  valueDisplayInBreadcrumbSelector: string
-) {
-  cy.get(facetValueSelector)
-    .find('label span:nth-child(1)')
-    .invoke('text')
-    .then((text) => {
-      cy.get('@breadcrumbFacet')
-        .find(valueDisplayInBreadcrumbSelector)
-        .should('be.visible')
-        .contains(text);
-    });
-}
-
-async function validateBasicFacetFunctionality(
-  selector: string,
-  field: string
-) {
-  cy.get(selector).click();
-  cy.get(selector).find(FacetSelectors.checkbox).should('be.checked');
-  const analyticsBody = (await getAnalyticsAt('@coveoAnalytics', 1)).request
-    .body;
-  expect(analyticsBody).to.have.property('actionCause', 'facetSelect');
-  expect(analyticsBody.customData).to.have.property('facetField', field);
-  expect(analyticsBody.facetState[0]).to.have.property('state', 'selected');
-  expect(analyticsBody.facetState[0]).to.have.property('field', field);
-}
-async function getTextOfAllElements(selector: string) {
-  return new Promise((resolve) => {
-    cy.get(selector).then((elems) => {
-      const originalValues = [...elems].map((el: any) => el.textContent.trim());
-      resolve(originalValues);
-    });
-  });
-}
-
-function doSort(originalValues: string[]) {
-  return originalValues
-    .concat()
-    .sort((first, second) => first.localeCompare(second));
-}
-
-async function facetSortShouldApply(
-  sortOption: string,
-  requestBodyOrder: number
-) {
-  const requestBodyFacets = (
-    await getApiRequestBodyAt('@coveoSearch', requestBodyOrder)
-  ).facets;
-  expect(requestBodyFacets[0]).to.have.property('sortCriteria', sortOption);
-}
-
 describe('Standard Facet', () => {
   beforeEach(() => {
     setupPager(facetProp.field, facetProp.label);
@@ -104,7 +52,7 @@ describe('Standard Facet', () => {
 
   describe('When page is loaded', () => {
     it('Facet should load, pass accessibility test and have correct label', () => {
-      componentLoaded(facetProp.label);
+      validateFacetComponentLoaded(facetProp.label);
     });
 
     it('Facet should contain Searchbox, ShowMore button and 10 facetValue', () => {
@@ -114,23 +62,20 @@ describe('Standard Facet', () => {
       cy.get('@facetShadow')
         .find(FacetSelectors.showMoreButton)
         .should('be.visible');
-      validateNumberofValue(10);
+      validateFacetNumberofValue(10);
     });
 
     it('FacetValue list should not in Alphanumeric order', async () => {
       const originalValues = (await getTextOfAllElements(
         '@allFacetValueLabel'
       )) as string[];
-      expect(originalValues).not.to.eql(doSort(originalValues));
+      expect(originalValues).not.to.eql(doSortAlphanumeric(originalValues));
     });
   });
 
   describe('When select 1 facetValue checkbox', () => {
     it('Should active checkbox and log UA', async () => {
-      await validateBasicFacetFunctionality(
-        '@firstFacetValue',
-        facetProp.field
-      );
+      await assertBasicFacetFunctionality('@firstFacetValue', facetProp.field);
     });
 
     it('Should trigger breadcrumb and display correctly', () => {
@@ -226,9 +171,9 @@ describe('Standard Facet', () => {
 
   describe('When click on ShowMore button', () => {
     it('Should display double NumberOfValue and ShowLessButton should be visible', () => {
-      validateNumberofValue(10);
+      validateFacetNumberofValue(10);
       cy.get('@facetShadow').find(FacetSelectors.showMoreButton).click();
-      validateNumberofValue(20);
+      validateFacetNumberofValue(20);
       cy.get('@facetShadow')
         .find(FacetSelectors.showLessButton)
         .should('be.visible');
@@ -251,16 +196,16 @@ describe('Standard Facet', () => {
         '@allFacetValueLabel'
       )) as string[];
 
-      expect(originalValues).to.eql(doSort(originalValues));
+      expect(originalValues).to.eql(doSortAlphanumeric(originalValues));
     });
   });
 
   describe('When click on ShowLess button', () => {
     it('Should display original numberOfValue and ShowLessButton should not be visible', () => {
       cy.get('@facetShadow').find(FacetSelectors.showMoreButton).click();
-      validateNumberofValue(20);
+      validateFacetNumberofValue(20);
       cy.get('@facetShadow').find(FacetSelectors.showLessButton).click();
-      validateNumberofValue(10);
+      validateFacetNumberofValue(10);
       cy.get('@facetShadow')
         .find(FacetSelectors.showLessButton)
         .should('not.exist');
@@ -311,22 +256,22 @@ describe('Facet with no facetSearch, and numberOfValues is 5 ', () => {
   });
 
   it('Facet should load without facet search and 5 facet values', async () => {
-    componentLoaded(facetProp.label);
+    validateFacetComponentLoaded(facetProp.label);
     cy.get('@facetShadow')
       .find(FacetSelectors.facetSearchbox)
       .should('not.exist');
-    validateNumberofValue(5);
+    validateFacetNumberofValue(5);
   });
 
   it('Should active checkbox and log UA', async () => {
-    await validateBasicFacetFunctionality('@firstFacetValue', facetProp.field);
+    await assertBasicFacetFunctionality('@firstFacetValue', facetProp.field);
   });
 });
 
 describe('Facet with different sort-criteria options', () => {
   it('Should using "automatic" sort for default setting', async () => {
     setupPager(facetProp.field, facetProp.label);
-    await facetSortShouldApply(sortCriteriaOption.automatic, 0);
+    await assertSortCriteria(sortCriteriaOption.automatic, 0);
   });
 
   it('Should using "alphanumeric" sort for custom setting', async () => {
@@ -335,22 +280,22 @@ describe('Facet with different sort-criteria options', () => {
       facetProp.label,
       'sort-criteria="alphanumeric"'
     );
-    await facetSortShouldApply(sortCriteriaOption.alphanumeric, 0);
+    await assertSortCriteria(sortCriteriaOption.alphanumeric, 0);
   });
 
   it('Should using "occurrences" sort for custom setting', async () => {
     setupPager(facetProp.field, facetProp.label, 'sort-criteria="occurrences"');
-    await facetSortShouldApply(sortCriteriaOption.occurrences, 0);
+    await assertSortCriteria(sortCriteriaOption.occurrences, 0);
   });
 
   it('Should using "score" sort for custom setting', async () => {
     setupPager(facetProp.field, facetProp.label, 'sort-criteria="score"');
-    await facetSortShouldApply(sortCriteriaOption.score, 0);
+    await assertSortCriteria(sortCriteriaOption.score, 0);
   });
 
   it('Should using "automatic" sort for custom setting', async () => {
     setupPager(facetProp.field, facetProp.label, 'sort-criteria="automatic"');
-    await facetSortShouldApply(sortCriteriaOption.automatic, 0);
+    await assertSortCriteria(sortCriteriaOption.automatic, 0);
   });
 
   describe('Trigger ShowMore on facet with custom sort-criteria', () => {
@@ -363,7 +308,7 @@ describe('Facet with different sort-criteria options', () => {
       createAliasShadow(facetProp.field);
 
       cy.get('@facetShadow').find(FacetSelectors.showMoreButton).click();
-      await facetSortShouldApply(sortCriteriaOption.occurrences, 1);
+      await assertSortCriteria(sortCriteriaOption.occurrences, 1);
     });
   });
 });
