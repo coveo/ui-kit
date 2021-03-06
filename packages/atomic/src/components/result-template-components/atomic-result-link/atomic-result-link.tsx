@@ -17,7 +17,7 @@ export class AtomicResultValue {
   public render() {
     return (
       <a part="result-link" href={this.result.clickUri}>
-        <atomic-result-text-value property="title"></atomic-result-text-value>
+        <atomic-result-text field="title"></atomic-result-text>
       </a>
     );
   }

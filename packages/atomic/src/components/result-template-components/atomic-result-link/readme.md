@@ -16,13 +16,13 @@
 
 ### Depends on
 
-- [atomic-result-text-value](../atomic-result-text-value)
+- [atomic-result-text](../atomic-result-text)
 
 ### Graph
 ```mermaid
 graph TD;
-  atomic-result-link --> atomic-result-text-value
-  atomic-result-text-value --> atomic-component-error
+  atomic-result-link --> atomic-result-text
+  atomic-result-text --> atomic-component-error
   style atomic-result-link fill:#f9f,stroke:#333,stroke-width:4px
 ```
 

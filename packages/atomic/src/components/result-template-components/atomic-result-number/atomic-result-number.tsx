@@ -7,13 +7,13 @@ import {
 } from '../../../utils/initialization-utils';
 
 /**
- * The ResultNumberValue component renders the value of a number result property.
+ * The ResultNumber component renders the value of a number result field.
  */
 @Component({
-  tag: 'atomic-result-number-value',
+  tag: 'atomic-result-number',
   shadow: false,
 })
-export class AtomicResultNumberValue {
+export class AtomicResultNumber {
   @InitializeBindings() public bindings!: Bindings;
   @ResultContext() private result!: Result;
 
@@ -22,11 +22,11 @@ export class AtomicResultNumberValue {
   @State() public error!: Error;
 
   /**
-   * The result property which the component should use.
+   * The result field which the component should use.
    * Will look in the Result object first and then in the Result.raw object for the fields.
    * It is important to include the necessary fields in the ResultList component.
    */
-  @Prop() property!: string;
+  @Prop() field!: string;
   /**
    * The minimum number of integer digits to use.
    */
@@ -51,7 +51,7 @@ export class AtomicResultNumberValue {
   public render() {
     const value = ResultTemplatesHelpers.getResultProperty(
       this.result,
-      this.property
+      this.field
     );
 
     if (value === null) {

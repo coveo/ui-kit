@@ -3,14 +3,14 @@ import {HighlightUtils, Result, ResultTemplatesHelpers} from '@coveo/headless';
 import {ResultContext} from '../result-template-decorators';
 
 /**
- * The ResultTextValue component renders the value of a string result property.
+ * The ResultText component renders the value of a string result field.
  * @part result-text-highlight - The highlighted elements from the text value.
  */
 @Component({
-  tag: 'atomic-result-text-value',
+  tag: 'atomic-result-text',
   shadow: false,
 })
-export class AtomicResultTextValue {
+export class AtomicResultText {
   @ResultContext() private result!: Result;
 
   @Element() private host!: HTMLElement;
@@ -18,11 +18,11 @@ export class AtomicResultTextValue {
   @State() private error?: Error;
 
   /**
-   * The result property which the component should use.
+   * The result field which the component should use.
    * Will look in the Result object first and then in the Result.raw object for the fields.
    * It is important to include the necessary fields in the ResultList component.
    */
-  @Prop() public property!: string;
+  @Prop() public field!: string;
   /**
    * If true, will look for the corresponding highlight property use it if available.
    */
@@ -56,7 +56,7 @@ export class AtomicResultTextValue {
     }
     const value = ResultTemplatesHelpers.getResultProperty(
       this.result,
-      this.property
+      this.field
     );
 
     if (value === null) {
@@ -67,7 +67,7 @@ export class AtomicResultTextValue {
     const textValue = `${value}`;
     const highlightsValue = ResultTemplatesHelpers.getResultProperty(
       this.result,
-      `${this.property}Highlights`
+      `${this.field}Highlights`
     ) as HighlightUtils.HighlightKeyword[];
 
     if (this.shouldHighlight && highlightsValue !== null) {
