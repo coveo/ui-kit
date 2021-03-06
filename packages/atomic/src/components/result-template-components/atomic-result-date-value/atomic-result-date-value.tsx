@@ -26,6 +26,10 @@ export class AtomicResultDateValue {
    */
   @Prop() format = 'D/M/YYYY';
 
+  private removeComponent() {
+    this.host.remove();
+  }
+
   public render() {
     const value = ResultTemplatesHelpers.getResultProperty(
       this.result,
@@ -33,10 +37,18 @@ export class AtomicResultDateValue {
     );
 
     if (value === null) {
-      this.host.remove();
-      return;
+      return this.removeComponent();
     }
 
-    return dayjs(parseInt(`${value}`)).format(this.format);
+    const parsedValue = dayjs(value as never);
+    if (!parsedValue.isValid()) {
+      return this.removeComponent();
+    }
+
+    try {
+      return parsedValue.format(this.format);
+    } catch (error) {
+      return this.removeComponent();
+    }
   }
 }

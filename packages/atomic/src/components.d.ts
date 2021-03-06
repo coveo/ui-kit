@@ -183,10 +183,6 @@ export namespace Components {
          */
         "currency": string;
         /**
-          * The exchange rate multiplier with which to convert the currency from the indexed value.
-         */
-        "exchangeRateMultiplier": number;
-        /**
           * The result property which the component should use. Will look in the Result object first and then in the Result.raw object for the fields. It is important to include the necessary fields in the ResultList component.
          */
         "property": string;
@@ -742,10 +738,6 @@ declare namespace LocalJSX {
           * The currency to use in currency formatting. Possible values are the ISO 4217 currency codes, such as "USD" for the US dollar, "EUR" for the euro, or "CNY" for the Chinese RMB — see the [Current currency & funds code list](http://www.currency-iso.org/en/home/tables/table-a1.html).
          */
         "currency"?: string;
-        /**
-          * The exchange rate multiplier with which to convert the currency from the indexed value.
-         */
-        "exchangeRateMultiplier"?: number;
         /**
           * The result property which the component should use. Will look in the Result object first and then in the Result.raw object for the fields. It is important to include the necessary fields in the ResultList component.
          */

@@ -31,10 +31,10 @@ export class AtomicResultCurrencyValue {
    * The currency to use in currency formatting. Possible values are the ISO 4217 currency codes, such as "USD" for the US dollar, "EUR" for the euro, or "CNY" for the Chinese RMB — see the [Current currency & funds code list](http://www.currency-iso.org/en/home/tables/table-a1.html).
    */
   @Prop() currency = 'USD';
-  /**
-   * The exchange rate multiplier with which to convert the currency from the indexed value.
-   */
-  @Prop() exchangeRateMultiplier = 1;
+
+  private removeComponent() {
+    this.host.remove();
+  }
 
   public render() {
     const value = ResultTemplatesHelpers.getResultProperty(
@@ -43,15 +43,19 @@ export class AtomicResultCurrencyValue {
     );
 
     if (value === null) {
-      this.host.remove();
-      return;
+      return this.removeComponent();
     }
 
-    return (
-      parseFloat(`${value}`) * this.exchangeRateMultiplier
-    ).toLocaleString(this.bindings.i18n.languages, {
-      currency: this.currency,
-      style: 'currency',
-    });
+    try {
+      return parseFloat(`${value}`).toLocaleString(
+        this.bindings.i18n.languages,
+        {
+          currency: this.currency,
+          style: 'currency',
+        }
+      );
+    } catch (error) {
+      return this.removeComponent();
+    }
   }
 }
