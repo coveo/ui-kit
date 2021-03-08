@@ -61,6 +61,18 @@ export class AtomicResultList implements InitializableComponent {
       'filetype',
       'parents',
       'ec_price',
+      'ec_name',
+      'ec_description',
+      'ec_brand',
+      'ec_category',
+      'ec_item_group_id',
+      'ec_shortdesc',
+      'ec_image',
+      'ec_images',
+      'ec_promo_price',
+      'ec_in_stock',
+      'ec_cogs',
+      'ec_rating',
     ];
   }
 
