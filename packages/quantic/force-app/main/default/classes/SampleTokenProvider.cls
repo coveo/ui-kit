@@ -1,4 +1,10 @@
+/**
+ * Return a static sample configuration with preconfigured value for the sample organization.
+ */
 global with sharing class SampleTokenProvider implements ITokenProvider {
+    /**
+     * @see `ITokenProvider.getHeadlessConfiguration`.
+     */ 
     public static String getHeadlessConfiguration() {
         Map<String, String> headlessConfiguration = new Map<String,String>();
         headlessConfiguration.put('organizationId', 'searchuisamples');

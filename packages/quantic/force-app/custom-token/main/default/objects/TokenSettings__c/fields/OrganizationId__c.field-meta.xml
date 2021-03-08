@@ -7,4 +7,5 @@
     <length>255</length>
     <type>Text</type>
     <unique>false</unique>
+    <description>The ID of the organization to query. See: https://docs.coveo.com/en/148/manage-an-organization/retrieve-the-organization-id</description>
 </CustomField>

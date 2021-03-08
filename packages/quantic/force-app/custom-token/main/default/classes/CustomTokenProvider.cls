@@ -1,3 +1,8 @@
+/**
+ * Example class showing off how to create your own TokenProvider,
+ * using a [CustomSettings](https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_methods_system_custom_settings.htm)
+ * to store the sensitive data such as the API Key.
+ */
 global with sharing class CustomTokenProvider implements ITokenProvider {
     global with sharing class HttpException extends Exception {}
     global with sharing class InvalidTokenSettingsException extends Exception {}
@@ -35,6 +40,11 @@ global with sharing class CustomTokenProvider implements ITokenProvider {
         return userIdentities;
     }
 
+    /**
+     * Ensure that all the field of the @see `TokenSettings__c` are not empty and that the URL of the platform is actually an URL.
+     * @param {TokenSettings__c} settings the settings to check.
+     * @return {Boolean} false if the settings are valid. True otherwise.
+     */
     private static Boolean isTokenSettingInvalid(TokenSettings__c settings) {
         return  String.isEmpty(settings.OrganizationId__c) ||
                 String.isEmpty(settings.ApiKey__c);
@@ -52,7 +62,7 @@ global with sharing class CustomTokenProvider implements ITokenProvider {
 
     /**
      * Build a HttpRequest to get a search token from a TokenSettings__c object.
-     * @param {settings} the settings to use.
+     * @param {TokenSettings__c} settings the settings to use.
      */
     private static HttpRequest buildHttpRequest(TokenSettings__c settings) {
         HttpRequest tokenRequest = new HttpRequest();
@@ -73,7 +83,7 @@ global with sharing class CustomTokenProvider implements ITokenProvider {
 
     /**
      * Get a search token from Coveo Platform based on the setting and the current user identity.
-     * @param {settings} the settings to use.
+     * @param {TokenSettings__c} settings the settings to use.
      */
     private static String getToken(TokenSettings__c settings) {
         HttpRequest tokenRequest = CustomTokenProvider.buildHttpRequest(settings);
@@ -89,9 +99,11 @@ global with sharing class CustomTokenProvider implements ITokenProvider {
     /**
      * Get a serialized object representing a HeadlessConfiguration, based on the TokenSettings__c
      * of the organization and the user identity of the user that called the method/loaded the page.
+     * @see `ITokenProvider.getHeadlessConfiguration` for more details.
      */
     @AuraEnabled(continuation=true cacheable=false)
     global static String getHeadlessConfiguration() {
+        // Fetch the default value of the TokenSettings__c see https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_methods_system_custom_settings.htm#apex_System_HierarchyCustomSetting_getOrgDefaults.
         TokenSettings__c settings = TokenSettings__c.getOrgDefaults();
 
         if (CustomTokenProvider.isTokenSettingInvalid(settings)) {
