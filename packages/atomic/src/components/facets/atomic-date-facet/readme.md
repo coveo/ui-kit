@@ -12,7 +12,7 @@ a button which opens a facet modal in mobile browsers.
 | `facetId`                 | `facet-id`                  |                                                                              | `string`  | `''`         |
 | `field`                   | `field`                     | Specifies the index field whose values the facet should use                  | `string`  | `''`         |
 | `generateAutomaticRanges` | `generate-automatic-ranges` | Whether or not the index should automatically generate options for the facet | `boolean` | `true`       |
-| `label`                   | `label`                     | The displayed label for the facet                                            | `string`  | `'No label'` |
+| `label`                   | `label`                     | The non-localized label for the facet                                        | `string`  | `'No label'` |
 
 ## Shadow Parts
 

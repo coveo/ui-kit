@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.7.0-alpha.35](https://github.com/coveo/ui-kit/compare/v0.7.0-alpha.34...v0.7.0-alpha.35) (2021-03-08)
+
+**Note:** Version bump only for package ui-kit
+
+
+
+
+
+# [0.7.0-alpha.34](https://github.com/coveo/ui-kit/compare/v0.7.0-alpha.33...v0.7.0-alpha.34) (2021-03-05)
+
+**Note:** Version bump only for package ui-kit
+
+
+
+
+
 # [0.7.0-alpha.33](https://github.com/coveo/ui-kit/compare/v0.7.0-alpha.32...v0.7.0-alpha.33) (2021-03-04)
 
 **Note:** Version bump only for package ui-kit

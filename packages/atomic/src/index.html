@@ -136,8 +136,34 @@
 
           <atomic-no-results></atomic-no-results>
 
-          <!-- TODO: add result template example -->
-          <atomic-result-list></atomic-result-list>
+          <atomic-result-list fields-to-include="filetype,liboardinteractionstyle">
+            <!-- Custom result templates examples -->
+            <atomic-result-template
+              must-match-filetype="lithiummessage"
+              must-not-match-liboardinteractionstyle="contest"
+            >
+              <template>
+                <!-- Styling result template internaly -->
+                <style>
+                  h3 {
+                    font-weight: bold;
+                    color: var(--atomic-secondary);
+                  }
+                </style>
+                <h3>Contest message</h3>
+                <atomic-result-link></atomic-result-link>
+              </template>
+            </atomic-result-template>
+            <atomic-result-template id="singaporeTitle">
+              <template> 🇸🇬 <atomic-result-link></atomic-result-link> </template>
+              <!-- Adding Javascript conditions -->
+              <script>
+                document.querySelector('atomic-result-template#singaporeTitle').conditions = [
+                  (result) => /singapore/i.test(result.title),
+                ];
+              </script>
+            </atomic-result-template>
+          </atomic-result-list>
         </div>
         <div class="footer-item side-by-side-container">
           <atomic-pager></atomic-pager>
