@@ -43,6 +43,7 @@ const controllers: ControllerConfiguration[] = [
         'packages/samples/headless-react/src/components/numeric-facet/numeric-facet.fn.tsx',
       ],
     },
+    utils: ['buildNumericRange'],
   },
   {
     initializer: 'buildPager',

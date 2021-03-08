@@ -9,30 +9,20 @@ import {
 } from '@coveo/headless';
 import {engine} from '../../engine';
 
-interface BaseNumericFacetProps {
+interface NumericFacetProps {
+  format: (n: number) => string;
   field: string;
   facetId: string;
-  format: (n: number) => string;
-}
-
-interface AutomaticNumericFacetProps extends BaseNumericFacetProps {
-  generateAutomaticRanges: true;
+  generateAutomaticRanges: boolean;
   currentValues?: NumericRangeRequest[];
 }
 
-interface ManualNumericFacetProps extends BaseNumericFacetProps {
-  generateAutomaticRanges: false;
-  currentValues: NumericRangeRequest[];
-}
-
-export class NumericFacet extends Component<
-  AutomaticNumericFacetProps | ManualNumericFacetProps
-> {
+export class NumericFacet extends Component<NumericFacetProps> {
   private controller: HeadlessNumericFacet;
   public state: NumericFacetState;
   private unsubscribe: Unsubscribe = () => {};
 
-  constructor(props: AutomaticNumericFacetProps | ManualNumericFacetProps) {
+  constructor(props: NumericFacetProps) {
     super(props);
 
     this.controller = buildNumericFacet(engine, {
@@ -79,7 +69,7 @@ export class NumericFacet extends Component<
               onChange={() => this.controller.toggleSelect(value)}
               disabled={this.state.isLoading}
             />
-            From {format(value.start)} to {format(value.end)}{' '}
+            {format(value.start)} to {format(value.end)}{' '}
             {value.endInclusive ? 'inclusively' : 'exclusively'} (
             {value.numberOfResults}{' '}
             {value.numberOfResults === 1 ? 'result' : 'results'})
