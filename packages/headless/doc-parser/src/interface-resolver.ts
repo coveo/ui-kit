@@ -107,15 +107,16 @@ function resolvePropertySignature(
   ancestorNames: string[]
 ) {
   const typeExcerpt = p.propertyTypeExcerpt.spannedTokens[0];
+  const typeName = extractTypeName(p.propertyTypeExcerpt);
   if (isRecordType(typeExcerpt)) {
     return buildEntityFromProperty(p);
   }
 
-  if (isTypeAlias(typeExcerpt)) {
+  if (isTypeAlias(typeExcerpt) && !typeName.includes('|')) {
     return buildEntityFromPropertyAndResolveTypeAlias(entry, p);
   }
 
-  if (isReference(typeExcerpt)) {
+  if (isReference(typeExcerpt) && !typeName.includes('|')) {
     return buildObjEntityFromProperty(entry, p, ancestorNames);
   }
 
