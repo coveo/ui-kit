@@ -147,7 +147,7 @@ describe('#resolveInterfaceMembers', () => {
     resultInterface.addMember(indexer);
     entry.addMember(resultInterface);
 
-    const result = resolveInterfaceMembers(entry, resultInterface);
+    const result = resolveInterfaceMembers(entry, resultInterface, []);
     const entity = buildMockEntity({
       name: '[key: string]',
       type: 'unknown',
