@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.8.0-alpha.0](https://github.com/coveo/ui-kit/compare/v0.7.0...v0.8.0-alpha.0) (2021-03-08)
+
+
+### Features
+
+* **atomic:** add formats to result value ([#570](https://github.com/coveo/ui-kit/issues/570)) ([7038c28](https://github.com/coveo/ui-kit/commit/7038c28196e5efc279ee73f512a311cc1d057723))
+
+
+
+
+
 # [0.7.0](https://github.com/coveo/ui-kit/compare/v0.7.0-alpha.39...v0.7.0) (2021-03-08)
 
 **Note:** Version bump only for package ui-kit
