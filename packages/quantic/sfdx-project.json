@@ -7,9 +7,9 @@
       "default": true
     },
     {
-      "package": "Quantic - CoveoV2Token",
+      "package": "Quantic - CoveoToken",
       "versionNumber": "0.0.0.NEXT",
-      "path": "force-app/coveo-v2-token",
+      "path": "force-app/coveo-token",
       "default": false,
       "dependencies": [
         {"package": "CoveoForSalesforce@4.12.0.0"},
