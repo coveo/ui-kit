@@ -2,7 +2,10 @@ import {Engine} from '../../app/headless-engine';
 import {buildController, Controller} from '../controller/headless-controller';
 import {executeSearch} from '../../features/search/search-actions';
 import {logInterfaceChange} from '../../features/analytics/analytics-actions';
-import {updateAdvancedSearchQueries} from '../../features/advanced-search-queries/advanced-search-queries-actions';
+import {
+  registerAdvancedSearchQueries,
+  updateAdvancedSearchQueries,
+} from '../../features/advanced-search-queries/advanced-search-queries-actions';
 import {
   AdvancedSearchQueriesSection,
   ConfigurationSection,
@@ -105,7 +108,7 @@ export function buildTab(
   );
 
   if (initialState.isActive) {
-    dispatch(updateAdvancedSearchQueries({cq: options.expression}));
+    dispatch(registerAdvancedSearchQueries({cq: options.expression}));
   }
 
   return {

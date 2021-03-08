@@ -41,7 +41,7 @@ function resolveParams(
     const shouldResolveShallow = shallowParamIndices.includes(index);
     return shouldResolveShallow
       ? buildParamEntity(p)
-      : resolveParameter(entry, p);
+      : resolveParameter(entry, p, []);
   });
 }
 
@@ -50,7 +50,7 @@ function buildObjEntityFromInterface(
   apiInterface: ApiInterface
 ) {
   const name = apiInterface.name;
-  const members = resolveInterfaceMembers(entryPoint, apiInterface);
+  const members = resolveInterfaceMembers(entryPoint, apiInterface, []);
   const entity = buildEntity({
     name,
     type: name,

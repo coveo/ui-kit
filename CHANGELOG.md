@@ -3,6 +3,76 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.7.0-alpha.35](https://github.com/coveo/ui-kit/compare/v0.7.0-alpha.34...v0.7.0-alpha.35) (2021-03-08)
+
+**Note:** Version bump only for package ui-kit
+
+
+
+
+
+# [0.7.0-alpha.34](https://github.com/coveo/ui-kit/compare/v0.7.0-alpha.33...v0.7.0-alpha.34) (2021-03-05)
+
+**Note:** Version bump only for package ui-kit
+
+
+
+
+
+# [0.7.0-alpha.33](https://github.com/coveo/ui-kit/compare/v0.7.0-alpha.32...v0.7.0-alpha.33) (2021-03-04)
+
+**Note:** Version bump only for package ui-kit
+
+
+
+
+
+# [0.7.0-alpha.32](https://github.com/coveo/ui-kit/compare/v0.7.0-alpha.31...v0.7.0-alpha.32) (2021-03-04)
+
+**Note:** Version bump only for package ui-kit
+
+
+
+
+
+# [0.7.0-alpha.31](https://github.com/coveo/ui-kit/compare/v0.7.0-alpha.30...v0.7.0-alpha.31) (2021-03-04)
+
+
+### Bug Fixes
+
+* **headless:** allowed the constant query to be unset ([#522](https://github.com/coveo/ui-kit/issues/522)) ([07dbcf2](https://github.com/coveo/ui-kit/commit/07dbcf2ab0e53cbd0056d4d074832661ea9367f6))
+
+
+
+
+
+# [0.7.0-alpha.30](https://github.com/coveo/ui-kit/compare/v0.7.0-alpha.29...v0.7.0-alpha.30) (2021-03-04)
+
+**Note:** Version bump only for package ui-kit
+
+
+
+
+
+# [0.7.0-alpha.29](https://github.com/coveo/ui-kit/compare/v0.7.0-alpha.28...v0.7.0-alpha.29) (2021-03-03)
+
+**Note:** Version bump only for package ui-kit
+
+
+
+
+
+# [0.7.0-alpha.28](https://github.com/coveo/ui-kit/compare/v0.7.0-alpha.27...v0.7.0-alpha.28) (2021-03-03)
+
+
+### Features
+
+* **atomic:** facet localization ([#559](https://github.com/coveo/ui-kit/issues/559)) ([27d7320](https://github.com/coveo/ui-kit/commit/27d7320012b1878698c143f8d5229cf777bd2fbd))
+
+
+
+
+
 # [0.7.0-alpha.27](https://github.com/coveo/ui-kit/compare/v0.7.0-alpha.26...v0.7.0-alpha.27) (2021-03-02)
 
 
