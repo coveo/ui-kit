@@ -60,6 +60,10 @@ export interface ResultListState extends SearchStatusState {
    * The results of the last executed search.
    * */
   results: Result[];
+  /**
+   * The unique identifier of the last executed search.
+   */
+  searchUid: string;
 }
 
 /**
@@ -128,6 +132,7 @@ export function buildResultList(
       return {
         ...searchStatus.state,
         results: state.search.results,
+        searchUid: state.search.response.searchUid,
       };
     },
 
