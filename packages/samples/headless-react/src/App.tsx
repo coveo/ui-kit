@@ -28,6 +28,8 @@ import {QuerySummary} from './components/query-summary/query-summary.class';
 import {QuerySummary as QuerySummaryFn} from './components/query-summary/query-summary.fn';
 import {FacetManager} from './components/facet-manager/facet-manager.class';
 import {FacetManager as FacetManagerFn} from './components/facet-manager/facet-manager.fn';
+import {CategoryFacet} from './components/category-facet/category-facet.class';
+import {CategoryFacet as CategoryFacetFn} from './components/category-facet/category-facet.fn';
 import {Facet} from './components/facet/facet.class';
 import {Facet as FacetFn} from './components/facet/facet.fn';
 import {History} from './components/history/history.class';
@@ -44,6 +46,7 @@ import {
   buildQuerySummary,
   buildResultList,
   buildFacetManager,
+  buildCategoryFacet,
   buildFacet,
   buildDateSortCriterion,
   buildFieldSortCriterion,
@@ -55,6 +58,8 @@ import {
   buildPager,
   buildHistory,
   buildRelevanceInspector,
+  AnalyticsActions,
+  SearchActions,
 } from '@coveo/headless';
 import {bindSearchParametersToURI} from './components/search-parameter-manager/search-parameter-manager';
 import {setContext} from './components/context/context';
@@ -89,11 +94,11 @@ const querySummary = buildQuerySummary(engine);
 
 const facetManager = buildFacetManager(engine);
 
+const geographyFacet = buildCategoryFacet(engine, {
+  options: {field: 'geographicalhierarchy'},
+});
 const objectTypeFacet = buildFacet(engine, {
   options: {field: 'objecttype'},
-});
-const fileTypeFacet = buildFacet(engine, {
-  options: {field: 'filetype'},
 });
 
 const criteria: [string, SortCriterion][] = [
@@ -121,9 +126,15 @@ const history = buildHistory(engine);
 
 const relevanceInspector = buildRelevanceInspector(engine);
 
-const {autoUpdateURI: startUpdatingURI} = bindSearchParametersToURI(engine);
-
 function App() {
+  // Search parameters should not be restored until all components are registered.
+  const {autoUpdateURI: startUpdatingURI} = bindSearchParametersToURI(engine);
+
+  // A search should not be executed until the search parameters are restored.
+  engine.dispatch(
+    SearchActions.executeSearch(AnalyticsActions.logInterfaceLoad())
+  );
+
   useEffect(() => startUpdatingURI(), []);
   setContext('30-45', ['sports', 'camping', 'electronics']);
 
@@ -171,12 +182,15 @@ function App() {
         </Section>
         <Section title="facet">
           <FacetManager>
+            <CategoryFacet
+              field="geographicalhierarchy"
+              facetId="geographicalhierarchy-1"
+            />
             <Facet field="author" facetId="author-1" />
-            <Facet field="category" facetId="category-1" />
           </FacetManager>
           <FacetManagerFn controller={facetManager}>
+            <CategoryFacetFn controller={geographyFacet} />
             <FacetFn controller={objectTypeFacet} />
-            <FacetFn controller={fileTypeFacet} />
           </FacetManagerFn>
         </Section>
         <Section title="sort">
