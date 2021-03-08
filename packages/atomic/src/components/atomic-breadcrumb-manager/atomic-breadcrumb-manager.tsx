@@ -1,4 +1,4 @@
-import {Component, h, State, Prop} from '@stencil/core';
+import {Component, h, State, Prop, VNode} from '@stencil/core';
 import {
   Bindings,
   InitializableComponent,
@@ -74,7 +74,7 @@ export class AtomicBreadcrumbManager implements InitializableComponent {
     return (
       <button
         part="breadcrumb-button"
-        class="text-on-background-variant breadcrumb-button flex items-center hover:underline"
+        class="text-on-background-variant breadcrumb-button flex items-center hover:text-primary-variant"
         aria-label={this.strings.breadcrumb({value})}
         onClick={() =>
           this.breadcrumbManager.deselectBreadcrumb(breadcrumbValue)
@@ -96,11 +96,7 @@ export class AtomicBreadcrumbManager implements InitializableComponent {
     );
   }
 
-  private getBreadcrumbWrapper(
-    facetId: string,
-    field: string,
-    children: any
-  ) {
+  private getBreadcrumbWrapper(facetId: string, field: string, children: VNode[]) {
     return (
       <div class="flex items-center text-sm" part="breadcrumb-wrapper">
         <span class="text-on-background" part="breadcrumb-label">

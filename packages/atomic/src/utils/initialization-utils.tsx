@@ -1,7 +1,7 @@
 import {Engine} from '@coveo/headless';
 import {ComponentInterface, getElement, h} from '@stencil/core';
 import {i18n, StringMap} from 'i18next';
-import {ObservableMap} from "@stencil/store";
+import {ObservableMap} from '@stencil/store';
 
 export type AtomicStore = {
   facetLabels: Record<string, string>;
