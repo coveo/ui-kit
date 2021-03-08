@@ -58,6 +58,8 @@ import {
   buildPager,
   buildHistory,
   buildRelevanceInspector,
+  AnalyticsActions,
+  SearchActions,
 } from '@coveo/headless';
 import {bindSearchParametersToURI} from './components/search-parameter-manager/search-parameter-manager';
 import {setContext} from './components/context/context';
@@ -125,9 +127,13 @@ const history = buildHistory(engine);
 const relevanceInspector = buildRelevanceInspector(engine);
 
 function App() {
-  const {autoUpdateURI: startUpdatingURI} = bindSearchParametersToURI(engine, {
-    executeInitialSearch: true,
-  });
+  // Search parameters should not be restored until all components are registered.
+  const {autoUpdateURI: startUpdatingURI} = bindSearchParametersToURI(engine);
+
+  // A search should not be executed until the search parameters are restored.
+  engine.dispatch(
+    SearchActions.executeSearch(AnalyticsActions.logInterfaceLoad())
+  );
 
   useEffect(() => startUpdatingURI(), []);
   setContext('30-45', ['sports', 'camping', 'electronics']);

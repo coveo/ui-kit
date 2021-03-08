@@ -1,29 +1,23 @@
 import {
-  AnalyticsActions,
   buildSearchParameterManager,
   buildSearchParameterSerializer,
   Engine,
-  SearchActions,
 } from '@coveo/headless';
 
 const {serialize, deserialize} = buildSearchParameterSerializer();
 
-export function bindSearchParametersToURI(
-  engine: Engine,
-  options: {executeInitialSearch: boolean}
-) {
+/**
+ * Search parameters should not be restored until all components are registered.
+ *
+ * Additionally, a search should not be executed until search parameters are restored.
+ */
+export function bindSearchParametersToURI(engine: Engine) {
   const hash = window.location.hash.slice(1);
   const parameters = deserialize(decodeURIComponent(hash));
 
   const searchParameterManager = buildSearchParameterManager(engine, {
     initialState: {parameters},
   });
-
-  if (options.executeInitialSearch) {
-    engine.dispatch(
-      SearchActions.executeSearch(AnalyticsActions.logInterfaceLoad())
-    );
-  }
 
   return {
     autoUpdateURI: () =>
