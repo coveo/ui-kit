@@ -15,9 +15,11 @@ const controllers: ControllerConfiguration[] = [
     samplePaths: {
       react_class: [
         'packages/samples/headless-react/src/components/facet/facet.class.tsx',
+        'packages/samples/headless-react/src/components/facet/facet-search.tsx',
       ],
       react_fn: [
         'packages/samples/headless-react/src/components/facet/facet.fn.tsx',
+        'packages/samples/headless-react/src/components/facet/facet-search.tsx',
       ],
     },
   },
@@ -66,7 +68,16 @@ const controllers: ControllerConfiguration[] = [
   },
   {
     initializer: 'buildCategoryFacet',
-    samplePaths: {},
+    samplePaths: {
+      react_class: [
+        'packages/samples/headless-react/src/components/category-facet/category-facet.class.tsx',
+        'packages/samples/headless-react/src/components/category-facet/category-facet-search.tsx',
+      ],
+      react_fn: [
+        'packages/samples/headless-react/src/components/category-facet/category-facet.fn.tsx',
+        'packages/samples/headless-react/src/components/category-facet/category-facet-search.tsx',
+      ],
+    },
   },
   {
     initializer: 'buildDidYouMean',

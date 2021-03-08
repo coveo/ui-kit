@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.7.0-alpha.38](https://github.com/coveo/ui-kit/compare/v0.7.0-alpha.37...v0.7.0-alpha.38) (2021-03-08)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [0.7.0-alpha.37](https://github.com/coveo/ui-kit/compare/v0.7.0-alpha.36...v0.7.0-alpha.37) (2021-03-08)
+
+
+### Bug Fixes
+
+* **atomic:** hide facet and facet search contextually ([#571](https://github.com/coveo/ui-kit/issues/571)) ([8f2614f](https://github.com/coveo/ui-kit/commit/8f2614f6f15bcfd3b5ca3d40fcb0d679b3fb289f))
+
+
+
+
+
 # [0.7.0-alpha.36](https://github.com/coveo/ui-kit/compare/v0.7.0-alpha.35...v0.7.0-alpha.36) (2021-03-08)
 
 **Note:** Version bump only for package @coveo/atomic
