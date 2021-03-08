@@ -75,6 +75,12 @@ export {
 export {History, HistoryState, buildHistory} from './history/headless-history';
 
 export {
+  HistoryManager,
+  HistoryManagerState,
+  buildHistoryManager,
+} from './history/headless-history-manager';
+
+export {
   PagerInitialState,
   PagerOptions,
   PagerProps,

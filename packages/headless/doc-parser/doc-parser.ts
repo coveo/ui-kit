@@ -11,6 +11,10 @@ const entryPoint = apiPackage.entryPoints[0];
 
 const controllers: ControllerConfiguration[] = [
   {
+    initializer: 'buildHistoryManager',
+    samplePaths: {},
+  },
+  {
     initializer: 'buildFacet',
     samplePaths: {
       react_class: [
