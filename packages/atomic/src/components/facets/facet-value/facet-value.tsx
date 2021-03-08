@@ -14,7 +14,6 @@ export const FacetValue = (props: FacetValueProps) => {
   return (
     <li
       part="facet-value"
-      role="option"
       class="flex flex-row items-center py-2 lg:py-1 cursor-pointer text-lg lg:text-base"
       aria-label={props.ariaLabel}
     >
