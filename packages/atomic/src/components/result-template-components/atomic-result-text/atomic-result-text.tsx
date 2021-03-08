@@ -1,6 +1,7 @@
 import {Component, Prop, h, Element, Host, State} from '@stencil/core';
 import {HighlightUtils, Result, ResultTemplatesHelpers} from '@coveo/headless';
 import {ResultContext} from '../result-template-decorators';
+import {sanitize} from '../../../utils/xss-utils';
 
 /**
  * The ResultText component renders the value of a string result field.
@@ -33,13 +34,18 @@ export class AtomicResultText {
     highlights: HighlightUtils.HighlightKeyword[]
   ) {
     try {
+      const openingDelimiter = '_openingDelimiter_';
+      const closingDelimiter = '_closingDelimiter_';
       const highlightedValue = HighlightUtils.highlightString({
         content: value,
-        openingDelimiter: '<b part="result-text-highlight">',
-        closingDelimiter: '</b>',
+        openingDelimiter,
+        closingDelimiter,
         highlights,
       });
-      return <Host innerHTML={highlightedValue}></Host>;
+      const innerHTML = sanitize(highlightedValue)
+        .replace(new RegExp(openingDelimiter, 'g'), '<b part="highlight">')
+        .replace(new RegExp(closingDelimiter, 'g'), '</b>');
+      return <Host innerHTML={innerHTML}></Host>;
     } catch (error) {
       this.error = error;
     }

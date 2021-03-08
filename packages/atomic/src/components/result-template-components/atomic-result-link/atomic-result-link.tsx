@@ -1,7 +1,7 @@
 import {Component, h} from '@stencil/core';
 import {Result} from '@coveo/headless';
 import {ResultContext} from '../result-template-decorators';
-import {filterProtocol} from '../../../utils/utils';
+import {filterProtocol} from '../../../utils/xss-utils';
 
 /**
  * The ResultLink component automatically transform a search result title into a clickable link pointing to the

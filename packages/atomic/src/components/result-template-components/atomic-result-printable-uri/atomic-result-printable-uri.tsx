@@ -1,13 +1,14 @@
 import {Component, h, Prop, State} from '@stencil/core';
 import {Result} from '@coveo/headless';
 import {ResultContext} from '../result-template-decorators';
-import {filterProtocol, parseXML} from '../../../utils/utils';
+import {parseXML} from '../../../utils/utils';
 import {
   Bindings,
   BindStateToI18n,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import {Schema, NumberValue} from '@coveo/bueno';
+import {filterProtocol} from '../../../utils/xss-utils';
 
 /**
  * The ResultUri component displays the URI, or path, to access a result.
