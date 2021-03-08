@@ -101,6 +101,8 @@ const fileTypeFacet = buildFacet(engine, {
   options: {field: 'filetype'},
 });
 
+const [KB, MB, GB] = [1e3, 1e6, 1e9];
+
 const fileSizeAutomaticNumericFacet = buildNumericFacet(engine, {
   options: {field: 'size', facetId: 'size-3', generateAutomaticRanges: true},
 });
@@ -110,9 +112,9 @@ const fileSizeManualNumericFacet = buildNumericFacet(engine, {
     facetId: 'size-4',
     generateAutomaticRanges: false,
     currentValues: [
-      buildNumericRange({start: 0, end: 5e3}),
-      buildNumericRange({start: 5e3, end: 50e3}),
-      buildNumericRange({start: 50e3, end: 5e6}),
+      buildNumericRange({start: 0, end: 5 * KB}),
+      buildNumericRange({start: 5 * KB, end: 5 * MB}),
+      buildNumericRange({start: 5 * MB, end: 5 * GB}),
     ],
   },
 });
@@ -206,9 +208,9 @@ function App() {
               facetId="size-2"
               generateAutomaticRanges={false}
               currentValues={[
-                buildNumericRange({start: 0, end: 5e3}),
-                buildNumericRange({start: 5e3, end: 50e3}),
-                buildNumericRange({start: 50e3, end: 5e6}),
+                buildNumericRange({start: 0, end: 5 * KB}),
+                buildNumericRange({start: 5 * KB, end: 5 * MB}),
+                buildNumericRange({start: 5 * MB, end: 5 * GB}),
               ]}
             />
           </FacetManager>

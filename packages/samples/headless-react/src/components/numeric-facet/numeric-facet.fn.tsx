@@ -49,14 +49,16 @@ export const NumericFacet: FunctionComponent<NumericFacetProps> = (props) => {
 
 /**
  * ```tsx
+ * const [KB, MB, GB] = [1e3, 1e6, 1e9];
+ *
  * const controller = buildNumericFacet(engine, {
  *   options: {
  *     field: 'size',
  *     generateAutomaticRanges: false,
  *     currentValues: [ // Must be specified when `generateAutomaticRanges` is false.
- *       buildNumericRange({start: 0, end: 5e3}),
- *       buildNumericRange({start: 5e3, end: 50e3}),
- *       buildNumericRange({start: 50e3, end: 5e6}),
+ *       buildNumericRange({start: 0, end: 5 * KB}),
+ *       buildNumericRange({start: 5 * KB, end: 5 * MB}),
+ *       buildNumericRange({start: 5 * MB, end: 5 * GB}),
  *     ],
  *   },
  * });
