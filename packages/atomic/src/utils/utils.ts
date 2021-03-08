@@ -25,20 +25,6 @@ export function randomID(prepend?: string, length = 5) {
   );
 }
 
-export function sanitize(string: string) {
-  const map: Record<string, string> = {
-    '&': '&amp;',
-    '<': '&lt;',
-    '>': '&gt;',
-    '"': '&quot;',
-    "'": '&#x27;',
-    '/': '&#x2F;',
-    '`': '&#x60;',
-  };
-  const reg = /[&<>"'/]/gi;
-  return string.replace(reg, (match) => map[match]);
-}
-
 export function parseXML(string: string) {
   return new window.DOMParser().parseFromString(string, 'text/xml');
 }
