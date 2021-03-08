@@ -44,7 +44,16 @@ export class CategoryFacet extends Component<CategoryFacetProps> {
     return value.path.join('>');
   }
 
-  private get clearButton() {
+  private renderSearch() {
+    return (
+      <CategoryFacetSearch
+        controller={this.controller.facetSearch}
+        searchState={this.state.facetSearch}
+      />
+    );
+  }
+
+  private renderClearButton() {
     return (
       <button onClick={() => this.controller.deselectAll()}>
         All categories
@@ -52,23 +61,64 @@ export class CategoryFacet extends Component<CategoryFacetProps> {
     );
   }
 
-  private get parents() {
-    return this.state.parents.map((parentValue, i) => {
-      const isSelectedValue = i === this.state.parents.length - 1;
+  private renderParents() {
+    return (
+      this.state.hasActiveValues && (
+        <div>
+          Filtering by: {this.renderClearButton()}
+          {this.state.parents.map((parentValue, i) => {
+            const isSelectedValue = i === this.state.parents.length - 1;
 
-      return (
-        <span key={this.getUniqueKeyForValue(parentValue)}>
-          &rarr;
-          {!isSelectedValue ? (
-            <button onClick={() => this.controller.toggleSelect(parentValue)}>
-              {parentValue.value}
+            return (
+              <span key={this.getUniqueKeyForValue(parentValue)}>
+                &rarr;
+                {!isSelectedValue ? (
+                  <button
+                    onClick={() => this.controller.toggleSelect(parentValue)}
+                  >
+                    {parentValue.value}
+                  </button>
+                ) : (
+                  <span>{parentValue.value}</span>
+                )}
+              </span>
+            );
+          })}
+        </div>
+      )
+    );
+  }
+
+  private renderActiveValues() {
+    return (
+      <ul>
+        {this.state.values.map((value) => (
+          <li key={this.getUniqueKeyForValue(value)}>
+            <button onClick={() => this.controller.toggleSelect(value)}>
+              {value.value} ({value.numberOfResults}{' '}
+              {value.numberOfResults === 1 ? 'result' : 'results'})
             </button>
-          ) : (
-            <span>{parentValue.value}</span>
-          )}
-        </span>
-      );
-    });
+          </li>
+        ))}
+      </ul>
+    );
+  }
+
+  private renderCanShowMoreLess() {
+    return (
+      <div>
+        {this.state.canShowLessValues && (
+          <button onClick={() => this.controller.showLessValues()}>
+            Show less
+          </button>
+        )}
+        {this.state.canShowMoreValues && (
+          <button onClick={() => this.controller.showMoreValues()}>
+            Show more
+          </button>
+        )}
+      </div>
+    );
   }
 
   render() {
@@ -78,39 +128,11 @@ export class CategoryFacet extends Component<CategoryFacetProps> {
 
     return (
       <ul>
+        <li>{this.renderSearch()}</li>
         <li>
-          <CategoryFacetSearch
-            controller={this.controller.facetSearch}
-            searchState={this.state.facetSearch}
-          />
-        </li>
-        <li>
-          {this.state.hasActiveValues && (
-            <div>
-              Filtering by: {this.clearButton}
-              {this.parents}
-            </div>
-          )}
-          <ul>
-            {this.state.values.map((value) => (
-              <li key={this.getUniqueKeyForValue(value)}>
-                <button onClick={() => this.controller.toggleSelect(value)}>
-                  {value.value} ({value.numberOfResults}{' '}
-                  {value.numberOfResults === 1 ? 'result' : 'results'})
-                </button>
-              </li>
-            ))}
-          </ul>
-          {this.state.canShowLessValues && (
-            <button onClick={() => this.controller.showLessValues()}>
-              Show less
-            </button>
-          )}
-          {this.state.canShowMoreValues && (
-            <button onClick={() => this.controller.showMoreValues()}>
-              Show more
-            </button>
-          )}
+          {this.renderParents()}
+          {this.renderActiveValues()}
+          {this.renderCanShowMoreLess()}
         </li>
       </ul>
     );
