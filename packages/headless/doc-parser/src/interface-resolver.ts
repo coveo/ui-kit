@@ -107,7 +107,12 @@ function resolvePropertySignature(
   ancestorNames: string[]
 ) {
   const typeExcerpt = p.propertyTypeExcerpt.spannedTokens[0];
+  const typeName = extractTypeName(p.propertyTypeExcerpt);
   if (isRecordType(typeExcerpt)) {
+    return buildEntityFromProperty(p);
+  }
+
+  if (isUnionType(typeName)) {
     return buildEntityFromProperty(p);
   }
 
@@ -298,4 +303,8 @@ function isRecordType(token: ExcerptToken) {
 
 function isReference(token: ExcerptToken) {
   return token.kind === ExcerptTokenKind.Reference;
+}
+
+function isUnionType(typeName: string) {
+  return typeName.includes('|');
 }
