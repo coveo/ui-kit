@@ -32,6 +32,8 @@ import {CategoryFacet} from './components/category-facet/category-facet.class';
 import {CategoryFacet as CategoryFacetFn} from './components/category-facet/category-facet.fn';
 import {Facet} from './components/facet/facet.class';
 import {Facet as FacetFn} from './components/facet/facet.fn';
+import {NumericFacet} from './components/numeric-facet/numeric-facet.class';
+import {NumericFacet as NumericFacetFn} from './components/numeric-facet/numeric-facet.fn';
 import {History} from './components/history/history.class';
 import {History as HistoryFn} from './components/history/history.fn';
 import {RelevanceInspector} from './components/relevance-inspector/relevance-inspector.class';
@@ -48,6 +50,8 @@ import {
   buildFacetManager,
   buildCategoryFacet,
   buildFacet,
+  buildNumericFacet,
+  buildNumericRange,
   buildDateSortCriterion,
   buildFieldSortCriterion,
   buildRelevanceSortCriterion,
@@ -63,6 +67,7 @@ import {
 } from '@coveo/headless';
 import {bindSearchParametersToURI} from './components/search-parameter-manager/search-parameter-manager';
 import {setContext} from './components/context/context';
+import filesize from 'filesize';
 
 const recommendationList = buildRecommendationList(recommendationEngine);
 
@@ -99,6 +104,24 @@ const geographyFacet = buildCategoryFacet(engine, {
 });
 const objectTypeFacet = buildFacet(engine, {
   options: {field: 'objecttype'},
+});
+
+const [KB, MB, GB] = [1e3, 1e6, 1e9];
+
+const fileSizeAutomaticNumericFacet = buildNumericFacet(engine, {
+  options: {field: 'size', facetId: 'size-3', generateAutomaticRanges: true},
+});
+const fileSizeManualNumericFacet = buildNumericFacet(engine, {
+  options: {
+    field: 'size',
+    facetId: 'size-4',
+    generateAutomaticRanges: false,
+    currentValues: [
+      buildNumericRange({start: 0, end: 5 * KB}),
+      buildNumericRange({start: 5 * KB, end: 5 * MB}),
+      buildNumericRange({start: 5 * MB, end: 5 * GB}),
+    ],
+  },
 });
 
 const criteria: [string, SortCriterion][] = [
@@ -187,10 +210,35 @@ function App() {
               facetId="geographicalhierarchy-1"
             />
             <Facet field="author" facetId="author-1" />
+            <NumericFacet
+              format={(bytes) => filesize(bytes, {base: 10})}
+              field="size"
+              facetId="size-1"
+              generateAutomaticRanges={true}
+            />
+            <NumericFacet
+              format={(bytes) => filesize(bytes, {base: 10})}
+              field="size"
+              facetId="size-2"
+              generateAutomaticRanges={false}
+              currentValues={[
+                buildNumericRange({start: 0, end: 5 * KB}),
+                buildNumericRange({start: 5 * KB, end: 5 * MB}),
+                buildNumericRange({start: 5 * MB, end: 5 * GB}),
+              ]}
+            />
           </FacetManager>
           <FacetManagerFn controller={facetManager}>
             <CategoryFacetFn controller={geographyFacet} />
             <FacetFn controller={objectTypeFacet} />
+            <NumericFacetFn
+              controller={fileSizeAutomaticNumericFacet}
+              format={(bytes) => filesize(bytes, {base: 10})}
+            />
+            <NumericFacetFn
+              controller={fileSizeManualNumericFacet}
+              format={(bytes) => filesize(bytes, {base: 10})}
+            />
           </FacetManagerFn>
         </Section>
         <Section title="sort">
