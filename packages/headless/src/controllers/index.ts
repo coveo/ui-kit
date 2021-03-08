@@ -53,6 +53,9 @@ export {
 } from './facets/facet/headless-facet';
 
 export {
+  DateRangeOptions,
+  DateRangeRequest,
+  DateValueType,
   buildDateRange,
   DateFacetOptions,
   DateFacetProps,

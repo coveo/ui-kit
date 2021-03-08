@@ -8,22 +8,22 @@ export interface NumericFacetValue {
   numberOfResults: number;
 
   /**
-   * The starting value for the numeric range
+   * The starting value for the numeric range.
    */
   start: number;
 
   /**
-   * The ending value for the numeric range
+   * The ending value for the numeric range.
    */
   end: number;
 
   /**
-   * Whether or not the end value is included in the range
+   * Whether or not the end value is included in the range.
    */
   endInclusive: boolean;
 
   /**
-   * Whether a facet value is filtering results (`selected`) or not (`idle`).
+   * The state of the facet value, indicating whether it is filtering results (`selected`) or not (`idle`).
    */
   state: FacetValueState;
 }

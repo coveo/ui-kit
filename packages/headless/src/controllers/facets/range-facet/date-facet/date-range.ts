@@ -7,18 +7,18 @@ import {FacetValueState} from '../../../../features/facets/facet-api/value';
 dayjs.extend(utc);
 dayjs.extend(customParseFormat);
 
-export type DateRangeValue = string | number | Date;
+export type DateValueType = string | number | Date;
 
 export interface DateRangeOptions {
   /**
    * The start value of the range.
    */
-  start: DateRangeValue;
+  start: DateValueType;
 
   /**
    * The end value of the range.
    */
-  end: DateRangeValue;
+  end: DateValueType;
 
   /**
    * Whether to include the end value in the range.
@@ -32,7 +32,7 @@ export interface DateRangeOptions {
    *
    * @default "idle"
    */
-  state: FacetValueState;
+  state?: FacetValueState;
 
   /**
    * Allows specifying a custom string date format. See [Day.js](https://day.js.org/docs/en/parse/string-format#list-of-all-available-parsing-tokens) for possible parsing tokens. Assumes [ISO 8601](https://day.js.org/docs/en/parse/string) format by default.
@@ -71,7 +71,7 @@ export function buildDateRange(config: DateRangeOptions): DateRangeRequest {
   };
 }
 
-function buildDate(rawDate: DateRangeValue, options: DateRangeOptions) {
+function buildDate(rawDate: DateValueType, options: DateRangeOptions) {
   const {dateFormat, useLocalTime} = options;
   const date = dayjs(rawDate, dateFormat);
 

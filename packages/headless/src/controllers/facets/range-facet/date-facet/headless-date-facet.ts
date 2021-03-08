@@ -1,4 +1,7 @@
-import {DateFacetRequest} from '../../../../features/facets/range-facets/date-facet-set/interfaces/request';
+import {
+  DateFacetRequest,
+  DateRangeRequest,
+} from '../../../../features/facets/range-facets/date-facet-set/interfaces/request';
 import {Engine} from '../../../../app/headless-engine';
 import {DateFacetRegistrationOptions} from '../../../../features/facets/range-facets/date-facet-set/interfaces/options';
 import {
@@ -22,11 +25,17 @@ import {
   dateFacetOptionsSchema,
 } from './headless-date-facet-options';
 import {determineFacetId} from '../../_common/facet-id-determinor';
-import {DateRangeOptions, DateRangeValue, buildDateRange} from './date-range';
+import {DateRangeOptions, DateValueType, buildDateRange} from './date-range';
 import {Controller} from '../../../controller/headless-controller';
 import {RangeFacetSortCriterion} from '../../../../features/facets/range-facets/generic/interfaces/request';
 
-export {DateFacetOptions, DateRangeOptions, DateRangeValue, buildDateRange};
+export {
+  DateFacetOptions,
+  DateValueType,
+  DateRangeOptions,
+  DateRangeRequest,
+  buildDateRange,
+};
 
 export interface DateFacetProps {
   /**
