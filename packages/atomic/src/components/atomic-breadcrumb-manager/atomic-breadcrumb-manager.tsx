@@ -1,4 +1,4 @@
-import {Component, h, State, Prop, VNode} from '@stencil/core';
+import {Component, h, State, Prop} from '@stencil/core';
 import {
   Bindings,
   InitializableComponent,
