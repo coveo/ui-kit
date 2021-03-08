@@ -1,6 +1,7 @@
 import {
   ApiCallSignature,
   ApiEntryPoint,
+  ApiIndexSignature,
   ApiInterface,
   ApiItem,
   ApiItemKind,
@@ -74,6 +75,10 @@ function resolveMembers(
       return resolveCallSignature(m);
     }
 
+    if (isIndexSignature(m)) {
+      return resolveIndexSignature(m);
+    }
+
     throw new Error(`Unsupported member: ${m.displayName}`);
   });
 }
@@ -102,7 +107,12 @@ function resolvePropertySignature(
   ancestorNames: string[]
 ) {
   const typeExcerpt = p.propertyTypeExcerpt.spannedTokens[0];
+  const typeName = extractTypeName(p.propertyTypeExcerpt);
   if (isRecordType(typeExcerpt)) {
+    return buildEntityFromProperty(p);
+  }
+
+  if (isUnionType(typeName)) {
     return buildEntityFromProperty(p);
   }
 
@@ -150,6 +160,26 @@ function buildEntityFromPropertyAndResolveTypeAlias(
   const type = typeAlias.typeExcerpt.text;
 
   return {...entity, type};
+}
+
+function isIndexSignature(m: ApiItem): m is ApiIndexSignature {
+  return m.kind === ApiItemKind.IndexSignature;
+}
+
+function resolveIndexSignature(m: ApiIndexSignature) {
+  const params = m.parameters
+    .map((p) => `${p.name}: ${p.parameterTypeExcerpt.text}`)
+    .join(',');
+
+  const name = `[${params}]`;
+  const type = m.returnTypeExcerpt.text;
+
+  return buildEntity({
+    name,
+    type,
+    isOptional: false,
+    comment: (m.tsdocComment as unknown) as DocComment,
+  });
 }
 
 function isMethodSignature(m: ApiItem): m is ApiMethodSignature {
@@ -273,4 +303,8 @@ function isRecordType(token: ExcerptToken) {
 
 function isReference(token: ExcerptToken) {
   return token.kind === ExcerptTokenKind.Reference;
+}
+
+function isUnionType(typeName: string) {
+  return typeName.includes('|');
 }

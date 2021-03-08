@@ -111,10 +111,7 @@ export class AtomicResultPrintableUri {
         part="result-printable-uri-link"
         href={filterProtocol(this.result.clickUri)}
       >
-        <atomic-result-value
-          value="printableUri"
-          shouldHighlightWith="printableUriHighlights"
-        ></atomic-result-value>
+        <atomic-result-text field="printableUri"></atomic-result-text>
       </a>
     );
   }

@@ -18,10 +18,7 @@ export class AtomicResultValue {
   public render() {
     return (
       <a part="result-link" href={filterProtocol(this.result.clickUri)}>
-        <atomic-result-value
-          value="title"
-          shouldHighlightWith="titleHighlights"
-        ></atomic-result-value>
+        <atomic-result-text field="title"></atomic-result-text>
       </a>
     );
   }
