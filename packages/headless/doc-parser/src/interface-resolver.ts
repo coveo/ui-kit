@@ -112,11 +112,15 @@ function resolvePropertySignature(
     return buildEntityFromProperty(p);
   }
 
-  if (isTypeAlias(typeExcerpt) && !typeName.includes('|')) {
+  if (isUnionType(typeName)) {
+    return buildEntityFromProperty(p);
+  }
+
+  if (isTypeAlias(typeExcerpt)) {
     return buildEntityFromPropertyAndResolveTypeAlias(entry, p);
   }
 
-  if (isReference(typeExcerpt) && !typeName.includes('|')) {
+  if (isReference(typeExcerpt)) {
     return buildObjEntityFromProperty(entry, p, ancestorNames);
   }
 
@@ -299,4 +303,8 @@ function isRecordType(token: ExcerptToken) {
 
 function isReference(token: ExcerptToken) {
   return token.kind === ExcerptTokenKind.Reference;
+}
+
+function isUnionType(typeName: string) {
+  return typeName.includes('|');
 }
