@@ -48,6 +48,11 @@ const controllers: ControllerConfiguration[] = [
     utils: ['buildNumericRange'],
   },
   {
+    initializer: 'buildDateFacet',
+    samplePaths: {},
+    utils: ['buildDateRange'],
+  },
+  {
     initializer: 'buildPager',
     samplePaths: {
       react_class: [
