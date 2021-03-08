@@ -12,29 +12,19 @@ import {parseDate} from './date-utils';
 
 type DateRangeRequest = Required<DateFacetOptions>['currentValues'][number]; // TODO: Remove this when using the new interface.
 
-interface BaseDateFacetProps {
+interface DateFacetProps {
   field: string;
   facetId: string;
-}
-
-interface AutomaticDateFacetProps extends BaseDateFacetProps {
-  generateAutomaticRanges: true;
+  generateAutomaticRanges: boolean;
   currentValues?: DateRangeRequest[];
 }
 
-interface ManualDateFacetProps extends BaseDateFacetProps {
-  generateAutomaticRanges: false;
-  currentValues: DateRangeRequest[];
-}
-
-export class DateFacet extends Component<
-  AutomaticDateFacetProps | ManualDateFacetProps
-> {
+export class DateFacet extends Component<DateFacetProps> {
   private controller: HeadlessDateFacet;
   public state: DateFacetState;
   private unsubscribe: Unsubscribe = () => {};
 
-  constructor(props: AutomaticDateFacetProps | ManualDateFacetProps) {
+  constructor(props: DateFacetProps) {
     super(props);
 
     this.controller = buildDateFacet(engine, {
