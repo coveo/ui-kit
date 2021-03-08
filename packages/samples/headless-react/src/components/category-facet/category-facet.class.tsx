@@ -81,7 +81,7 @@ export class CategoryFacet extends Component<CategoryFacetProps> {
         <li>
           <CategoryFacetSearch
             controller={this.controller.facetSearch}
-            facetState={this.state.facetSearch}
+            searchState={this.state.facetSearch}
           />
         </li>
         <li>

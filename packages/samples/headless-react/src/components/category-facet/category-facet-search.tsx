@@ -6,7 +6,7 @@ import {FunctionComponent} from 'react';
 
 export interface CategoryFacetSearchProps {
   controller: HeadlessCategoryFacetSearch;
-  facetState: CategoryFacetSearchState;
+  searchState: CategoryFacetSearchState;
 }
 
 export const CategoryFacetSearch: FunctionComponent<CategoryFacetSearchProps> = (
@@ -21,7 +21,7 @@ export const CategoryFacetSearch: FunctionComponent<CategoryFacetSearchProps> = 
     <div>
       <input onInput={(e) => onInput(e.currentTarget.value)} />
       <ul>
-        {props.facetState.values.map((value) => (
+        {props.searchState.values.map((value) => (
           <li key={[...value.path, value.rawValue].join('>')}>
             <button onClick={() => props.controller.select(value)}>
               {value.displayValue} ({value.count} results)

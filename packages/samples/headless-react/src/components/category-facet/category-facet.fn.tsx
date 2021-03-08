@@ -53,7 +53,7 @@ export const CategoryFacet: FunctionComponent<CategoryFacetProps> = (props) => {
       <li>
         <CategoryFacetSearch
           controller={controller.facetSearch}
-          facetState={state.facetSearch}
+          searchState={state.facetSearch}
         />
       </li>
       <li>
