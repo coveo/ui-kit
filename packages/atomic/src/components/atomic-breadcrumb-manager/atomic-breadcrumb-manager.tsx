@@ -96,7 +96,11 @@ export class AtomicBreadcrumbManager implements InitializableComponent {
     );
   }
 
-  private getBreadcrumbWrapper(facetId: string, field: string, children: VNode[]) {
+  private getBreadcrumbWrapper(
+    facetId: string,
+    field: string,
+    children: VNode[]
+  ) {
     return (
       <div class="flex items-center text-sm" part="breadcrumb-wrapper">
         <span class="text-on-background" part="breadcrumb-label">
