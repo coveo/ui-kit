@@ -27,15 +27,15 @@
 
 ### Depends on
 
-- [atomic-result-value](../atomic-result-value)
+- [atomic-result-text](../atomic-result-text)
 - [atomic-component-error](../../atomic-component-error)
 
 ### Graph
 ```mermaid
 graph TD;
-  atomic-result-printable-uri --> atomic-result-value
+  atomic-result-printable-uri --> atomic-result-text
   atomic-result-printable-uri --> atomic-component-error
-  atomic-result-value --> atomic-component-error
+  atomic-result-text --> atomic-component-error
   style atomic-result-printable-uri fill:#f9f,stroke:#333,stroke-width:4px
 ```
 
