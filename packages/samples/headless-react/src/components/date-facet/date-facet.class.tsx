@@ -83,7 +83,7 @@ export class DateFacet extends Component<
               onChange={() => this.controller.toggleSelect(value)}
               disabled={this.state.isLoading}
             />
-            From {this.format(value.start)} to {this.format(value.end)}{' '}
+            {this.format(value.start)} to {this.format(value.end)}{' '}
             {value.endInclusive ? 'inclusively' : 'exclusively'} (
             {value.numberOfResults}{' '}
             {value.numberOfResults === 1 ? 'result' : 'results'})

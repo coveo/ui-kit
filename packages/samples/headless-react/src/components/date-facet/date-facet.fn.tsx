@@ -34,7 +34,7 @@ export const DateFacet: FunctionComponent<DateFacetProps> = (props) => {
             onChange={() => controller.toggleSelect(value)}
             disabled={state.isLoading}
           />
-          From {format(value.start)} to {format(value.end)}{' '}
+          {format(value.start)} to {format(value.end)}{' '}
           {value.endInclusive ? 'inclusively' : 'exclusively'} (
           {value.numberOfResults}{' '}
           {value.numberOfResults === 1 ? 'result' : 'results'})
