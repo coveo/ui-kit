@@ -18,7 +18,7 @@ export function bindSearchParametersToURI(
   const hash = window.location.hash.slice(1);
   const parameters = deserialize(decodeURIComponent(hash));
 
-  const searchParameterManager = buildSearchParameterManager(engine!, {
+  const searchParameterManager = buildSearchParameterManager(engine, {
     initialState: {parameters},
   });
 
