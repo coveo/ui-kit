@@ -11,6 +11,43 @@ const entryPoint = apiPackage.entryPoints[0];
 
 const controllers: ControllerConfiguration[] = [
   {
+    initializer: 'buildFacet',
+    samplePaths: {
+      react_class: [
+        'packages/samples/headless-react/src/components/facet/facet.class.tsx',
+        'packages/samples/headless-react/src/components/facet/facet-search.tsx',
+      ],
+      react_fn: [
+        'packages/samples/headless-react/src/components/facet/facet.fn.tsx',
+        'packages/samples/headless-react/src/components/facet/facet-search.tsx',
+      ],
+    },
+  },
+  {
+    initializer: 'buildSort',
+    samplePaths: {
+      react_class: [
+        'packages/samples/headless-react/src/components/sort/sort.class.tsx',
+      ],
+      react_fn: [
+        'packages/samples/headless-react/src/components/sort/sort.fn.tsx',
+      ],
+    },
+    utils: [],
+  },
+  {
+    initializer: 'buildNumericFacet',
+    samplePaths: {
+      react_class: [
+        'packages/samples/headless-react/src/components/numeric-facet/numeric-facet.class.tsx',
+      ],
+      react_fn: [
+        'packages/samples/headless-react/src/components/numeric-facet/numeric-facet.fn.tsx',
+      ],
+    },
+    utils: ['buildNumericRange'],
+  },
+  {
     initializer: 'buildPager',
     samplePaths: {
       react_class: [
@@ -26,6 +63,19 @@ const controllers: ControllerConfiguration[] = [
     samplePaths: {
       react_fn: [
         'packages/samples/headless-react/src/components/context/context.ts',
+      ],
+    },
+  },
+  {
+    initializer: 'buildCategoryFacet',
+    samplePaths: {
+      react_class: [
+        'packages/samples/headless-react/src/components/category-facet/category-facet.class.tsx',
+        'packages/samples/headless-react/src/components/category-facet/category-facet-search.tsx',
+      ],
+      react_fn: [
+        'packages/samples/headless-react/src/components/category-facet/category-facet.fn.tsx',
+        'packages/samples/headless-react/src/components/category-facet/category-facet-search.tsx',
       ],
     },
   },
@@ -63,6 +113,10 @@ const controllers: ControllerConfiguration[] = [
     },
   },
   {
+    initializer: 'buildBreadcrumbManager',
+    samplePaths: {},
+  },
+  {
     initializer: 'buildRecommendationList',
     samplePaths: {
       react_class: [
@@ -85,6 +139,29 @@ const controllers: ControllerConfiguration[] = [
     },
   },
   {
+    initializer: 'buildResultList',
+    samplePaths: {
+      react_class: [
+        'packages/samples/headless-react/src/components/result-list/result-list.class.tsx',
+        'packages/samples/headless-react/src/components/result-list/result-link.tsx',
+      ],
+      react_fn: [
+        'packages/samples/headless-react/src/components/result-list/result-list.fn.tsx',
+      ],
+    },
+  },
+  {
+    initializer: 'buildTab',
+    samplePaths: {
+      react_class: [
+        'packages/samples/headless-react/src/components/tab/tab.class.tsx',
+      ],
+      react_fn: [
+        'packages/samples/headless-react/src/components/tab/tab.fn.tsx',
+      ],
+    },
+  },
+  {
     initializer: 'buildSearchStatus',
     samplePaths: {
       react_class: [
@@ -98,6 +175,52 @@ const controllers: ControllerConfiguration[] = [
   {
     initializer: 'buildCartRecommendationsList',
     samplePaths: {},
+  },
+  {
+    initializer: 'buildSearchBox',
+    samplePaths: {
+      react_class: [
+        'packages/samples/headless-react/src/components/search-box/search-box.class.tsx',
+      ],
+      react_fn: [
+        'packages/samples/headless-react/src/components/search-box/search-box.fn.tsx',
+      ],
+    },
+  },
+  {
+    initializer: 'buildStandaloneSearchBox',
+    samplePaths: {},
+  },
+  {
+    initializer: 'buildInteractiveResult',
+    samplePaths: {
+      react_class: [],
+      react_fn: [
+        'packages/samples/headless-react/src/components/result-list/result-link.tsx',
+      ],
+    },
+  },
+  {
+    initializer: 'buildResultsPerPage',
+    samplePaths: {
+      react_class: [
+        'packages/samples/headless-react/src/components/results-per-page/results-per-page.class.tsx',
+      ],
+      react_fn: [
+        'packages/samples/headless-react/src/components/results-per-page/results-per-page.fn.tsx',
+      ],
+    },
+  },
+  {
+    initializer: 'buildSearchParameterManager',
+    samplePaths: {
+      react_class: [
+        'packages/samples/headless-react/src/components/search-parameter-manager/search-parameter-manager.ts',
+      ],
+      react_fn: [
+        'packages/samples/headless-react/src/components/search-parameter-manager/search-parameter-manager.ts',
+      ],
+    },
   },
 ];
 

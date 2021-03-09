@@ -3,22 +3,24 @@ import {Engine} from '../../app/headless-engine';
 import {logDocumentOpen} from '../../features/result/result-analytics-actions';
 import {ConfigurationSection} from '../../state/state-sections';
 
-// 1 second is a reasonable amount of time to catch most longpress actions
-const defaultDelay = 1000;
-
 export interface InteractiveResultOptions {
   /**
    * The query result.
    */
   result: Result;
+
   /**
    * The amount of time to wait before selecting the result after calling `beginDelayedSelect`.
+   *
+   * @default 1000
    */
   selectionDelay?: number;
 }
 
 export interface InteractiveResultProps {
-  /** The options for the `InteractiveResult` controller. */
+  /**
+   * The options for the `InteractiveResult` controller.
+   * */
   options: InteractiveResultOptions;
 }
 
@@ -35,25 +37,36 @@ export interface InteractiveResult {
    * * `mouseup`
    * * `mousedown`
    */
-  select: () => void;
+  select(): void;
+
   /**
    * Prepares to select the result after a certain delay, sending analytics if it was never selected before.
    *
    * In a DOM context, it's recommended to call this method on the `touchstart` event.
    */
-  beginDelayedSelect: () => void;
+  beginDelayedSelect(): void;
+
   /**
    * Cancels the pending selection caused by `beginDelayedSelect`.
    *
    * In a DOM context, it's recommended to call this method on the `touchend` event.
    */
-  cancelPendingSelect: () => void;
+  cancelPendingSelect(): void;
 }
 
+/**
+ * Creates an `InteractiveResult` controller instance.
+ *
+ * @param engine - The headless engine.
+ * @param props - The configurable `InteractiveResult` properties.
+ * @returns An `InteractiveResult` controller instance.
+ */
 export function buildInteractiveResult(
   engine: Engine<ConfigurationSection>,
   props: InteractiveResultProps
 ): InteractiveResult {
+  // 1 second is a reasonable amount of time to catch most longpress actions
+  const defaultDelay = 1000;
   const options: Required<InteractiveResultOptions> = {
     selectionDelay: defaultDelay,
     ...props.options,

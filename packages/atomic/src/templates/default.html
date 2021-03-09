@@ -1,23 +1,17 @@
 <style>
   :host {
-    /* TODO: make default atomic CSS variables available */
-    font-family: var(--atomic-font-family, Lato, Arial, Helvetica, sans-serif);
-    border-top: 1px solid var(--atomic-divider, #bcc3ca);
+    border-top: 1px solid var(--atomic-divider);
     display: block;
     padding: 15px;
   }
 
-  a {
-    color: var(--atomic-primary, #1372ec);
-    text-decoration: none;
-  }
-
-  a:hover {
-    text-decoration: underline;
-  }
-
   .template-container {
     display: flex;
+  }
+
+  .title-container {
+    display: flex;
+    justify-content: space-between;
   }
 
   .content-container {
@@ -62,43 +56,43 @@
   </div>
 
   <div class="content-container">
-    <atomic-result-link></atomic-result-link>
+    <div class="title-container">
+      <atomic-result-link></atomic-result-link>
+      <atomic-result-date></atomic-result-date>
+    </div>
 
-    <!-- TODO: add "date type" for atomic-result-value -->
-
-    <atomic-result-excerpt></atomic-result-excerpt>
+    <atomic-result-text field="excerpt"></atomic-result-text>
 
     <div class="fields-container">
       <atomic-field-condition if-defined="author">
         <b>
           <atomic-text value="author"></atomic-text>
         </b>
-        <atomic-result-value value="author"></atomic-result-value>
+        <atomic-result-text field="author"></atomic-result-text>
       </atomic-field-condition>
 
       <atomic-field-condition if-defined="source">
         <b>
           <atomic-text value="source"></atomic-text>
         </b>
-        <atomic-result-value value="source"></atomic-result-value>
+        <atomic-result-text field="source"></atomic-result-text>
       </atomic-field-condition>
 
       <atomic-field-condition if-defined="language">
         <b>
           <atomic-text value="language"></atomic-text>
         </b>
-        <atomic-result-value value="language"></atomic-result-value>
+        <atomic-result-text field="language"></atomic-result-text>
       </atomic-field-condition>
 
       <atomic-field-condition if-defined="filetype">
         <b>
-          <atomic-text value="type"></atomic-text>
+          <atomic-text value="fileType"></atomic-text>
         </b>
-        <atomic-result-value value="filetype"></atomic-result-value>
+        <atomic-result-text field="filetype"></atomic-result-text>
       </atomic-field-condition>
     </div>
 
-    <!-- TODO: improve and rename to atomic-printable-uri -->
-    <!-- <atomic-result-uri></atomic-result-uri> -->
+    <atomic-result-printable-uri></atomic-result-printable-uri>
   </div>
 </div>

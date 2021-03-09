@@ -1,6 +1,5 @@
 import {RecordValue, Schema} from '@coveo/bueno';
 import {Engine} from '../../app/headless-engine';
-import {getAdvancedSearchQueriesInitialState} from '../../features/advanced-search-queries/advanced-search-queries-state';
 import {partitionIntoParentsAndValues} from '../../features/facets/category-facet-set/category-facet-utils';
 import {FacetValueRequest} from '../../features/facets/facet-set/interfaces/request';
 import {getDebugInitialState} from '../../features/debug/debug-state';
@@ -14,14 +13,22 @@ import {searchParametersDefinition} from '../../features/search-parameters/searc
 import {getSortCriteriaInitialState} from '../../features/sort-criteria/sort-criteria-state';
 import {SearchParametersState} from '../../state/search-app-state';
 import {validateInitialState} from '../../utils/validate-payload';
-import {buildController} from '../controller/headless-controller';
+import {buildController, Controller} from '../controller/headless-controller';
 import {RangeValueRequest} from '../../features/facets/range-facets/generic/interfaces/range-facet';
 
+export {SearchParameters};
+
 export interface SearchParameterManagerProps {
+  /**
+   * The initial state that should be applied to the `SearchParameterManager` controller.
+   */
   initialState: SearchParameterManagerInitialState;
 }
 
-interface SearchParameterManagerInitialState {
+export interface SearchParameterManagerInitialState {
+  /**
+   * The parameters affecting the search response.
+   */
   parameters: SearchParameters;
 }
 
@@ -34,18 +41,34 @@ const initialStateSchema = new Schema<
   }),
 });
 
-/** The `SearchParameterManager` controller allows restoring parameters that affect the results from e.g. a url.*/
-export type SearchParameterManager = ReturnType<
-  typeof buildSearchParameterManager
->;
+/**
+ * The `SearchParameterManager` controller allows restoring parameters that affect the results from e.g. a url.
+ * */
+export interface SearchParameterManager extends Controller {
+  /**
+   * The state relevant to the `SearchParameterManager` controller.
+   * */
+  state: SearchParameterManagerState;
+}
 
-/** The state relevant to the `SearchParameterManager` controller.*/
-export type SearchParameterManagerState = SearchParameterManager['state'];
+export interface SearchParameterManagerState {
+  /**
+   * The parameters affecting the search response.
+   */
+  parameters: SearchParameters;
+}
 
+/**
+ * Creates a `SearchParameterManager` controller instance.
+ *
+ * @param engine - The headless engine.
+ * @param props - The configurable `SearchParameterManager` properties.
+ * @returns A `SearchParameterManager` controller instance.
+ */
 export function buildSearchParameterManager(
   engine: Engine<Partial<SearchParametersState>>,
   props: SearchParameterManagerProps
-) {
+): SearchParameterManager {
   const {dispatch} = engine;
   const controller = buildController(engine);
 
@@ -108,8 +131,8 @@ function getAq(state: Partial<SearchParametersState>) {
     return {};
   }
 
-  const aq = state.advancedSearchQueries.aq;
-  const shouldInclude = aq !== getAdvancedSearchQueriesInitialState().aq;
+  const {aq, defaultFilters} = state.advancedSearchQueries;
+  const shouldInclude = aq !== defaultFilters.aq;
   return shouldInclude ? {aq} : {};
 }
 
@@ -118,8 +141,8 @@ function getCq(state: Partial<SearchParametersState>) {
     return {};
   }
 
-  const cq = state.advancedSearchQueries.cq;
-  const shouldInclude = cq !== getAdvancedSearchQueriesInitialState().cq;
+  const {cq, defaultFilters} = state.advancedSearchQueries;
+  const shouldInclude = cq !== defaultFilters.cq;
   return shouldInclude ? {cq} : {};
 }
 

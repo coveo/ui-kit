@@ -3,6 +3,207 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.8.0-alpha.5](https://github.com/coveo/ui-kit/compare/v0.8.0-alpha.4...v0.8.0-alpha.5) (2021-03-09)
+
+**Note:** Version bump only for package ui-kit
+
+
+
+
+
+# [0.8.0-alpha.4](https://github.com/coveo/ui-kit/compare/v0.8.0-alpha.3...v0.8.0-alpha.4) (2021-03-09)
+
+**Note:** Version bump only for package ui-kit
+
+
+
+
+
+# [0.8.0-alpha.3](https://github.com/coveo/ui-kit/compare/v0.8.0-alpha.2...v0.8.0-alpha.3) (2021-03-09)
+
+**Note:** Version bump only for package ui-kit
+
+
+
+
+
+# [0.8.0-alpha.2](https://github.com/coveo/ui-kit/compare/v0.8.0-alpha.1...v0.8.0-alpha.2) (2021-03-09)
+
+
+### Bug Fixes
+
+* **atomic:** prevent XSS injections in templates field values ([#585](https://github.com/coveo/ui-kit/issues/585)) ([aa4bee6](https://github.com/coveo/ui-kit/commit/aa4bee69b4df1418a7678cc2b598fb4f7b52e5a2))
+
+
+
+
+
+# [0.8.0-alpha.1](https://github.com/coveo/ui-kit/compare/v0.8.0-alpha.0...v0.8.0-alpha.1) (2021-03-08)
+
+
+### Bug Fixes
+
+* **atomic:** prepend timestamp to the results key ([#589](https://github.com/coveo/ui-kit/issues/589)) ([d9d6701](https://github.com/coveo/ui-kit/commit/d9d670125f526ab24074f7ad354bd11a47d09508))
+
+
+
+
+
+# [0.8.0-alpha.0](https://github.com/coveo/ui-kit/compare/v0.7.0...v0.8.0-alpha.0) (2021-03-08)
+
+
+### Features
+
+* **atomic:** add formats to result value ([#570](https://github.com/coveo/ui-kit/issues/570)) ([7038c28](https://github.com/coveo/ui-kit/commit/7038c28196e5efc279ee73f512a311cc1d057723))
+
+
+
+
+
+# [0.7.0](https://github.com/coveo/ui-kit/compare/v0.7.0-alpha.39...v0.7.0) (2021-03-08)
+
+**Note:** Version bump only for package ui-kit
+
+
+
+
+
+# [0.7.0-alpha.39](https://github.com/coveo/ui-kit/compare/v0.7.0-alpha.38...v0.7.0-alpha.39) (2021-03-08)
+
+**Note:** Version bump only for package ui-kit
+
+
+
+
+
+# [0.7.0-alpha.38](https://github.com/coveo/ui-kit/compare/v0.7.0-alpha.37...v0.7.0-alpha.38) (2021-03-08)
+
+**Note:** Version bump only for package ui-kit
+
+
+
+
+
+# [0.7.0-alpha.37](https://github.com/coveo/ui-kit/compare/v0.7.0-alpha.36...v0.7.0-alpha.37) (2021-03-08)
+
+
+### Bug Fixes
+
+* **atomic:** hide facet and facet search contextually ([#571](https://github.com/coveo/ui-kit/issues/571)) ([8f2614f](https://github.com/coveo/ui-kit/commit/8f2614f6f15bcfd3b5ca3d40fcb0d679b3fb289f))
+
+
+
+
+
+# [0.7.0-alpha.36](https://github.com/coveo/ui-kit/compare/v0.7.0-alpha.35...v0.7.0-alpha.36) (2021-03-08)
+
+**Note:** Version bump only for package ui-kit
+
+
+
+
+
+# [0.7.0-alpha.35](https://github.com/coveo/ui-kit/compare/v0.7.0-alpha.34...v0.7.0-alpha.35) (2021-03-08)
+
+**Note:** Version bump only for package ui-kit
+
+
+
+
+
+# [0.7.0-alpha.34](https://github.com/coveo/ui-kit/compare/v0.7.0-alpha.33...v0.7.0-alpha.34) (2021-03-05)
+
+**Note:** Version bump only for package ui-kit
+
+
+
+
+
+# [0.7.0-alpha.33](https://github.com/coveo/ui-kit/compare/v0.7.0-alpha.32...v0.7.0-alpha.33) (2021-03-04)
+
+**Note:** Version bump only for package ui-kit
+
+
+
+
+
+# [0.7.0-alpha.32](https://github.com/coveo/ui-kit/compare/v0.7.0-alpha.31...v0.7.0-alpha.32) (2021-03-04)
+
+**Note:** Version bump only for package ui-kit
+
+
+
+
+
+# [0.7.0-alpha.31](https://github.com/coveo/ui-kit/compare/v0.7.0-alpha.30...v0.7.0-alpha.31) (2021-03-04)
+
+
+### Bug Fixes
+
+* **headless:** allowed the constant query to be unset ([#522](https://github.com/coveo/ui-kit/issues/522)) ([07dbcf2](https://github.com/coveo/ui-kit/commit/07dbcf2ab0e53cbd0056d4d074832661ea9367f6))
+
+
+
+
+
+# [0.7.0-alpha.30](https://github.com/coveo/ui-kit/compare/v0.7.0-alpha.29...v0.7.0-alpha.30) (2021-03-04)
+
+**Note:** Version bump only for package ui-kit
+
+
+
+
+
+# [0.7.0-alpha.29](https://github.com/coveo/ui-kit/compare/v0.7.0-alpha.28...v0.7.0-alpha.29) (2021-03-03)
+
+**Note:** Version bump only for package ui-kit
+
+
+
+
+
+# [0.7.0-alpha.28](https://github.com/coveo/ui-kit/compare/v0.7.0-alpha.27...v0.7.0-alpha.28) (2021-03-03)
+
+
+### Features
+
+* **atomic:** facet localization ([#559](https://github.com/coveo/ui-kit/issues/559)) ([27d7320](https://github.com/coveo/ui-kit/commit/27d7320012b1878698c143f8d5229cf777bd2fbd))
+
+
+
+
+
+# [0.7.0-alpha.27](https://github.com/coveo/ui-kit/compare/v0.7.0-alpha.26...v0.7.0-alpha.27) (2021-03-02)
+
+
+### Features
+
+* **atomic:** complete atomic-result-printable-uri component ([#566](https://github.com/coveo/ui-kit/issues/566)) ([f6ea7d2](https://github.com/coveo/ui-kit/commit/f6ea7d2275717e8b743cfe01a1f6d6528061f6ee))
+
+
+
+
+
+# [0.7.0-alpha.26](https://github.com/coveo/ui-kit/compare/v0.7.0-alpha.25...v0.7.0-alpha.26) (2021-03-02)
+
+**Note:** Version bump only for package ui-kit
+
+
+
+
+
+# [0.7.0-alpha.25](https://github.com/coveo/ui-kit/compare/v0.7.0-alpha.24...v0.7.0-alpha.25) (2021-03-01)
+
+
+### Features
+
+* **atomic:** make default CSS variables available at the root ([#551](https://github.com/coveo/ui-kit/issues/551)) ([950c1fc](https://github.com/coveo/ui-kit/commit/950c1fc58cbbcebc06265fc66d6c79c39158271e))
+* **atomic:** remove atomic-result-excerpt component from DOM when empty ([#550](https://github.com/coveo/ui-kit/issues/550)) ([28baaae](https://github.com/coveo/ui-kit/commit/28baaae439c9dbf5d7df139013615b57c2d99733))
+
+
+
+
+
 # [0.7.0-alpha.24](https://github.com/coveo/ui-kit/compare/v0.7.0-alpha.23...v0.7.0-alpha.24) (2021-02-26)
 
 

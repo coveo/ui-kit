@@ -91,6 +91,42 @@ describe('#extractTypes', () => {
     expect(types).toEqual([expectedEntity1, expectedEntity2]);
   });
 
+  it(`given Facet.facetSearch.select(value: SpecificFacetSearchResult) i.e. a function on an attribute,
+  it extracts #SpecificFacetSearchResult as type entities`, () => {
+    const displayValue = buildMockEntity({
+      name: 'displayValue',
+      type: 'string',
+    });
+
+    const value = buildMockObjEntity({
+      name: 'value',
+      type: 'SpecificFacetSearchResult',
+      typeName: 'SpecificFacetSearchResult',
+      members: [displayValue],
+    });
+
+    const select = buildMockFuncEntity({
+      name: 'select',
+      params: [value],
+    });
+
+    const facetSearch = buildMockObjEntity({
+      name: 'facetSearch',
+      type: 'FacetSearch',
+      typeName: 'FacetSearch',
+      members: [select],
+    });
+
+    const {types} = extractTypes([facetSearch]);
+
+    const expected = buildMockObjEntity({
+      name: 'SpecificFacetSearchResult',
+      members: [displayValue],
+    });
+
+    expect(types).toEqual([expected]);
+  });
+
   it(`when multiple entities have strictly members with primitive types,
   it does not extract anything`, () => {
     const numberOfResults = buildMockEntity({

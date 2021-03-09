@@ -9,7 +9,7 @@ import {
   SortCriterion,
   criterionDefinition,
 } from '../../features/sort-criteria/criteria';
-import {buildController} from '../controller/headless-controller';
+import {buildController, Controller} from '../controller/headless-controller';
 import {updatePage} from '../../features/pagination/pagination-actions';
 import {logResultsSort} from '../../features/sort-criteria/sort-criteria-analytics-actions';
 import {ConfigurationSection, SortSection} from '../../state/state-sections';
@@ -20,12 +20,14 @@ export interface SortProps {
   /**
    * The initial state that should be applied to this `Sort` controller.
    */
-  initialState: Partial<SortInitialState>;
+  initialState?: SortInitialState;
 }
 
 export interface SortInitialState {
-  /** The initial sort criterion to register in state. */
-  criterion: SortCriterion | SortCriterion[];
+  /**
+   * The initial sort criterion to register in state.
+   * */
+  criterion?: SortCriterion | SortCriterion[];
 }
 
 function validateSortInitialState(
@@ -53,16 +55,49 @@ function getCriterionAsArray(state: Partial<SortInitialState>) {
   return isArray(state.criterion) ? state.criterion : [state.criterion];
 }
 
-/** The `Sort` controller manages how the results are sorted. */
-export type Sort = ReturnType<typeof buildSort>;
+/**
+ * The `Sort` controller manages how the results are sorted.
+ * */
+export interface Sort extends Controller {
+  /**
+   * Updates the sort criterion and executes a new search.
+   *
+   * @param criterion - The new sort criterion.
+   */
+  sortBy(criterion: SortCriterion | SortCriterion[]): void;
 
-/** A scoped and simplified part of the headless state that is relevant to the `Sort` controller. */
-export type SortState = Sort['state'];
+  /**
+   * Checks whether the specified sort criterion matches the value in state.
+   *
+   * @param criterion - The criterion to compare.
+   * @returns `true` if the passed sort criterion matches the value in state, and `false` otherwise.
+   */
+  isSortedBy(criterion: SortCriterion | SortCriterion[]): boolean;
 
+  /**
+   * A scoped and simplified part of the headless state that is relevant to the `Sort` controller.
+   * */
+  state: SortState;
+}
+
+export interface SortState {
+  /**
+   * The current sort criteria.
+   */
+  sortCriteria: string;
+}
+
+/**
+ * Creates a `Sort` controller instance.
+ *
+ * @param engine - The headless engine.
+ * @param props - The configurable `Sort` controller properties.
+ * @returns A `Sort` controller instance.
+ */
 export function buildSort(
   engine: Engine<ConfigurationSection & SortSection>,
-  props: Partial<SortProps> = {}
-) {
+  props: SortProps = {}
+): Sort {
   const controller = buildController(engine);
   const {dispatch} = engine;
 
@@ -78,31 +113,18 @@ export function buildSort(
   return {
     ...controller,
 
-    /**
-     * Updates the sort criterion and executes a new search.
-     * @param criterion The new sort criterion.
-     */
     sortBy(criterion: SortCriterion | SortCriterion[]) {
       dispatch(updateSortCriterion(criterion));
       dispatch(updatePage(1));
       search();
     },
 
-    /**
-     * Checks whether the specified sort criterion matches the value in state.
-     * @param criterion The criterion to compare.
-     * @returns `true` if the passed sort criterion matches the value in state, and `false` otherwise.
-     */
     isSortedBy(criterion: SortCriterion | SortCriterion[]) {
       return this.state.sortCriteria === buildCriterionExpression(criterion);
     },
 
-    /** The state of the `Sort` controller. */
     get state() {
       return {
-        /**
-         * The sort criteria associated with this `Sort` controller.
-         */
         sortCriteria: engine.state.sortCriteria,
       };
     },

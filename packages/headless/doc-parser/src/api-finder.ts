@@ -15,5 +15,5 @@ function extractCanonicalName(apiName: string) {
   const dollarIndex = apiName.indexOf('$');
   const endIndex = dollarIndex !== -1 ? dollarIndex : apiName.length;
 
-  return apiName.slice(0, endIndex);
+  return apiName.slice(0, endIndex).trim();
 }

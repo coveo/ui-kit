@@ -79,19 +79,19 @@ describe('headless searchBox', () => {
   describe('validating options', () => {
     it(`when passing an invalid id as option
     creating the controller should throw`, () => {
-      props.options.id = (1 as unknown) as string;
+      props.options!.id = (1 as unknown) as string;
       expect(() => initController()).toThrow();
     });
 
     it(`when passing an invalid numberOfSuggestions as option
     creating the controller should throw`, () => {
-      props.options.numberOfSuggestions = -2;
+      props.options!.numberOfSuggestions = -2;
       expect(() => initController()).toThrow();
     });
 
     it(`when passing an invalid highlightOptions as option
     creating the controller should throw`, () => {
-      props.options.highlightOptions = {
+      props.options!.highlightOptions = {
         notMatchDelimiters: {
           open: (1 as unknown) as string,
           close: (2 as unknown) as string,
@@ -101,7 +101,7 @@ describe('headless searchBox', () => {
     });
 
     it('when passing an invalid option, it throws an error', () => {
-      props.options.id = (1 as unknown) as string;
+      props.options!.id = (1 as unknown) as string;
       expect(() => initController()).toThrow(
         'Check the options of buildSearchBox'
       );
@@ -129,7 +129,7 @@ describe('headless searchBox', () => {
       registerQuerySuggest({
         id,
         q: state.query.q,
-        count: props.options.numberOfSuggestions,
+        count: props.options!.numberOfSuggestions,
       })
     );
   });
@@ -186,7 +186,7 @@ describe('headless searchBox', () => {
 
     it(`when numberOfQuerySuggestions is 0,
     it does not dispatch fetchQuerySuggestions`, () => {
-      props.options.numberOfSuggestions = 0;
+      props.options!.numberOfSuggestions = 0;
       initController();
 
       searchBox.showSuggestions();

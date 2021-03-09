@@ -31,8 +31,11 @@
  - [atomic-query-summary](../atomic-query-summary)
  - [atomic-result-list](../atomic-result-list)
  - [atomic-result-list-placeholder](../atomic-result-list-placeholder)
+ - [atomic-result-number](../result-template-components/atomic-result-number)
+ - [atomic-result-price](../result-template-components/atomic-result-price)
+ - [atomic-result-printable-uri](../result-template-components/atomic-result-printable-uri)
  - [atomic-result-template](../atomic-result-template)
- - [atomic-result-value](../result-template-components/atomic-result-value)
+ - [atomic-result-text](../result-template-components/atomic-result-text)
  - [atomic-results-per-page](../atomic-results-per-page)
  - [atomic-search-box](../atomic-search-box)
  - [atomic-search-interface](../atomic-search-interface)
@@ -57,8 +60,11 @@ graph TD;
   atomic-query-summary --> atomic-component-error
   atomic-result-list --> atomic-component-error
   atomic-result-list-placeholder --> atomic-component-error
+  atomic-result-number --> atomic-component-error
+  atomic-result-price --> atomic-component-error
+  atomic-result-printable-uri --> atomic-component-error
   atomic-result-template --> atomic-component-error
-  atomic-result-value --> atomic-component-error
+  atomic-result-text --> atomic-component-error
   atomic-results-per-page --> atomic-component-error
   atomic-search-box --> atomic-component-error
   atomic-search-interface --> atomic-component-error

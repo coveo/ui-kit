@@ -48,8 +48,32 @@ export class AtomicResultList implements InitializableComponent {
   @Prop() public fieldsToInclude = '';
 
   private get fields() {
-    if (this.fieldsToInclude.trim() === '') return;
+    if (this.fieldsToInclude.trim() === '') return [];
     return this.fieldsToInclude.split(',').map((field) => field.trim());
+  }
+
+  private get defaultFieldsToInclude() {
+    return [
+      'date',
+      'author',
+      'source',
+      'language',
+      'filetype',
+      'parents',
+      'ec_price',
+      'ec_name',
+      'ec_description',
+      'ec_brand',
+      'ec_category',
+      'ec_item_group_id',
+      'ec_shortdesc',
+      'ec_image',
+      'ec_images',
+      'ec_promo_price',
+      'ec_in_stock',
+      'ec_cogs',
+      'ec_rating',
+    ];
   }
 
   public initialize() {
@@ -57,7 +81,9 @@ export class AtomicResultList implements InitializableComponent {
       this.bindings.engine
     );
     this.resultList = buildResultList(this.bindings.engine, {
-      options: {fieldsToInclude: this.fields},
+      options: {
+        fieldsToInclude: [...this.defaultFieldsToInclude, ...this.fields],
+      },
     });
     this.registerDefaultResultTemplates();
     this.registerChildrenResultTemplates();
@@ -87,7 +113,7 @@ export class AtomicResultList implements InitializableComponent {
   private get results() {
     return this.resultListState.results.map((result) => (
       <atomic-result
-        key={result.raw.permanentid}
+        key={`${result.raw.permanentid}${this.resultListState.searchUid}`}
         result={result}
         engine={this.bindings.engine}
         // TODO: decide to get rid of Mustache or not
