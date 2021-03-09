@@ -113,6 +113,10 @@ const controllers: ControllerConfiguration[] = [
     },
   },
   {
+    initializer: 'buildBreadcrumbManager',
+    samplePaths: {},
+  },
+  {
     initializer: 'buildRecommendationList',
     samplePaths: {
       react_class: [
