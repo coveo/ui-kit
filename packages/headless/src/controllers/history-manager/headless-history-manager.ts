@@ -15,13 +15,17 @@ import {buildController, Controller} from '../controller/headless-controller';
 export interface HistoryManager extends Controller {
   /**
    * Move backward in the interface history.
+   *
+   * @returns A promise that resolves when the previous state has been restored.
    */
-  back(): void;
+  back(): Promise<void>;
 
   /**
    * Move forward in the interface history.
+   *
+   * @returns A promise that resolves when the next state has been restored.
    */
-  forward(): void;
+  forward(): Promise<void>;
 
   /**
    * The state relevant to the `HistoryManager` controller.
