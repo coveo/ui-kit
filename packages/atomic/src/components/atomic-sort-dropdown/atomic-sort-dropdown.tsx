@@ -131,7 +131,7 @@ export class AtomicSortDropdown implements InitializableComponent {
         {this.options.map((option) => this.buildOption(option))}
       </select>,
       <div
-        class="absolute right-3 top-4 fill-current w-3 h-3 pointer-events-none"
+        class="absolute pointer-events-none right-3 fill-current w-3"
         innerHTML={ArrowBottomIcon}
       ></div>,
     ];
