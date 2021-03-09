@@ -23,8 +23,19 @@ export class AtomicResultTemplate {
 
   @State() private error?: Error;
 
+  /**
+   * Functions that must return true on results for the result template to apply.
+   */
   @Prop() public conditions: ResultTemplateCondition[] = [];
+
+  /**
+   * Field-value pairs that results must match for the result template to apply.
+   */
   @MapProp() public mustMatch: Record<string, string[]> = {};
+
+  /**
+   * Field-value pairs that results must not match for the result template to apply.
+   */
   @MapProp() public mustNotMatch: Record<string, string[]> = {};
 
   constructor() {

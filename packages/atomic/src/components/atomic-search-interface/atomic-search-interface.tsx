@@ -46,11 +46,34 @@ export class AtomicSearchInterface {
 
   @State() private error?: Error;
 
+  /**
+   * The search interface query pipeline.
+   */
   @Prop({reflect: true}) public pipeline = 'default';
+
+  /**
+   * The search interface search hub.
+   */
   @Prop({reflect: true}) public searchHub = 'default';
+
+  /**
+   * The level of messages you want to be logged in the console.
+   */
   @Prop() public logLevel?: LogLevel;
+
+  /**
+   * The search interface i18next instance.
+   */
   @Prop() public i18n: i18n = i18next.createInstance();
+
+  /**
+   * The search interface language.
+   */
   @Prop({reflect: true}) public language = 'en';
+
+  /**
+   * The search interface Headless engine.
+   */
   @Prop({mutable: true}) public engine?: Engine;
 
   @Watch('searchHub')

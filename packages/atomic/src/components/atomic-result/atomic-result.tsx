@@ -9,8 +9,20 @@ import {bindLogDocumentOpenOnResult} from '../../utils/result-utils';
 })
 export class AtomicResult {
   @Element() host!: HTMLElement;
+
+  /**
+   * The result item.
+   */
   @Prop() result!: Result;
+
+  /**
+   * The Headless Engine.
+   */
   @Prop() engine!: Engine;
+
+  /**
+   * The result content to display.
+   */
   @Prop() content!: string;
 
   private unbindLogDocumentOpen = () => {};

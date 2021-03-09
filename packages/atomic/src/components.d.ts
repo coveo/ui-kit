@@ -11,7 +11,13 @@ import { i18n } from "i18next";
 import { InitializationOptions } from "./components/atomic-search-interface/atomic-search-interface";
 export namespace Components {
     interface AtomicBreadcrumbManager {
+        /**
+          * The separator to use in category facet breadcrumbs.
+         */
         "categoryDivider": string;
+        /**
+          * The number of facet values to display before starting to hide new ones in the breadcrumbs.
+         */
         "collapseThreshold": number;
     }
     interface AtomicCategoryFacet {
@@ -41,7 +47,13 @@ export namespace Components {
         "sortCriteria": CategoryFacetSortCriterion;
     }
     interface AtomicComponentError {
+        /**
+          * The target HTML element
+         */
         "element": HTMLElement;
+        /**
+          * The target error
+         */
         "error": Error;
     }
     interface AtomicDateFacet {
@@ -61,15 +73,15 @@ export namespace Components {
     }
     interface AtomicDateRange {
         /**
-          * The ending date for the range. It can be expressed as a Javascript date, as a number using epoch time or as a string using the ISO 8601 format
+          * The ending date for the range. It can be expressed as a Javascript date, as a number using epoch time or as a string using the ISO 8601 format.
          */
         "end": Date | string | number;
         /**
-          * Specifies whether or not the end date should be included in the range
+          * Specifies whether or not the end date should be included in the range.
          */
         "endInclusive": boolean;
         /**
-          * The starting date for the range. It can be expressed as a Javascript date, as a number using epoch time or as a string using the ISO 8601 format
+          * The starting date for the range. It can be expressed as a Javascript date, as a number using epoch time or as a string using the ISO 8601 format.
          */
         "start": Date | string | number;
     }
@@ -125,29 +137,29 @@ export namespace Components {
     interface AtomicNumericFacet {
         "facetId": string;
         /**
-          * Specifies the index field whose values the facet should use
+          * Specifies the index field whose values the facet should use.
          */
         "field": string;
         /**
-          * Whether or not the index should automatically generate options for the facet
+          * Whether or not the index should automatically generate options for the facet.
          */
         "generateAutomaticRanges": boolean;
         /**
-          * The non-localized label for the facet
+          * The non-localized label for the facet.
          */
         "label": string;
     }
     interface AtomicNumericRange {
         /**
-          * The ending value for the numeric range
+          * The ending value for the numeric range.
          */
         "end": number;
         /**
-          * Specifies whether or not the end value should be included in the range
+          * Specifies whether or not the end value should be included in the range.
          */
         "endInclusive": boolean;
         /**
-          * The starting value for the numeric range
+          * The starting value for the numeric range.
          */
         "start": number;
     }
@@ -170,11 +182,23 @@ export namespace Components {
         "enableDuration": boolean;
     }
     interface AtomicRelevanceInspector {
+        /**
+          * The Atomic interface bindings, namely the Headless Engine and i18n instance.
+         */
         "bindings": Bindings;
     }
     interface AtomicResult {
+        /**
+          * The result content to display.
+         */
         "content": string;
+        /**
+          * The Headless Engine.
+         */
         "engine": Engine;
+        /**
+          * The result item.
+         */
         "result": Result;
     }
     interface AtomicResultDate {
@@ -240,6 +264,9 @@ export namespace Components {
         "maxNumberOfParts": number;
     }
     interface AtomicResultTemplate {
+        /**
+          * Functions that must return true on results for the result template to apply.
+         */
         "conditions": ResultTemplateCondition[];
         "getTemplate": () => Promise<ResultTemplate<string> | null>;
     }
@@ -266,27 +293,45 @@ export namespace Components {
     interface AtomicSearchBox {
         "_id": string;
         /**
-          * Whether the submit button should be placed before the input
+          * Whether the submit button should be placed before the input.
          */
         "leadingSubmitButton": boolean;
         /**
-          * Maximum number of suggestions to display
+          * Maximum number of suggestions to display.
          */
         "numberOfSuggestions": number;
         /**
-          * The placeholder for the search box input
+          * The placeholder for the search box input.
          */
         "placeholder": string;
     }
     interface AtomicSearchInterface {
+        /**
+          * The search interface Headless engine.
+         */
         "engine"?: Engine;
         "executeFirstSearch": () => Promise<void>;
+        /**
+          * The search interface i18next instance.
+         */
         "i18n": i18n;
         "initialize": (options: InitializationOptions) => Promise<void>;
+        /**
+          * The search interface language.
+         */
         "language": string;
+        /**
+          * The level of messages you want to be logged in the console.
+         */
         "logLevel"?: LogLevel;
+        /**
+          * The search interface query pipeline.
+         */
         "pipeline": string;
         "reflectStateInUrl": boolean;
+        /**
+          * The search interface search hub.
+         */
         "searchHub": string;
     }
     interface AtomicSortCriteria {
@@ -302,7 +347,13 @@ export namespace Components {
     interface AtomicSortDropdown {
     }
     interface AtomicTab {
+        /**
+          * The advanced expression or filter that the Tab should add to any outgoing query.  Example: `@objecttype==Message`
+         */
         "expression": string;
+        /**
+          * Whether the tab is set to active.
+         */
         "isActive": boolean;
     }
     interface AtomicText {
@@ -567,7 +618,13 @@ declare global {
 }
 declare namespace LocalJSX {
     interface AtomicBreadcrumbManager {
+        /**
+          * The separator to use in category facet breadcrumbs.
+         */
         "categoryDivider"?: string;
+        /**
+          * The number of facet values to display before starting to hide new ones in the breadcrumbs.
+         */
         "collapseThreshold"?: number;
     }
     interface AtomicCategoryFacet {
@@ -597,7 +654,13 @@ declare namespace LocalJSX {
         "sortCriteria"?: CategoryFacetSortCriterion;
     }
     interface AtomicComponentError {
+        /**
+          * The target HTML element
+         */
         "element": HTMLElement;
+        /**
+          * The target error
+         */
         "error": Error;
     }
     interface AtomicDateFacet {
@@ -617,15 +680,15 @@ declare namespace LocalJSX {
     }
     interface AtomicDateRange {
         /**
-          * The ending date for the range. It can be expressed as a Javascript date, as a number using epoch time or as a string using the ISO 8601 format
+          * The ending date for the range. It can be expressed as a Javascript date, as a number using epoch time or as a string using the ISO 8601 format.
          */
         "end": Date | string | number;
         /**
-          * Specifies whether or not the end date should be included in the range
+          * Specifies whether or not the end date should be included in the range.
          */
         "endInclusive"?: boolean;
         /**
-          * The starting date for the range. It can be expressed as a Javascript date, as a number using epoch time or as a string using the ISO 8601 format
+          * The starting date for the range. It can be expressed as a Javascript date, as a number using epoch time or as a string using the ISO 8601 format.
          */
         "start": Date | string | number;
     }
@@ -681,29 +744,29 @@ declare namespace LocalJSX {
     interface AtomicNumericFacet {
         "facetId"?: string;
         /**
-          * Specifies the index field whose values the facet should use
+          * Specifies the index field whose values the facet should use.
          */
         "field"?: string;
         /**
-          * Whether or not the index should automatically generate options for the facet
+          * Whether or not the index should automatically generate options for the facet.
          */
         "generateAutomaticRanges"?: boolean;
         /**
-          * The non-localized label for the facet
+          * The non-localized label for the facet.
          */
         "label"?: string;
     }
     interface AtomicNumericRange {
         /**
-          * The ending value for the numeric range
+          * The ending value for the numeric range.
          */
         "end": number;
         /**
-          * Specifies whether or not the end value should be included in the range
+          * Specifies whether or not the end value should be included in the range.
          */
         "endInclusive"?: boolean;
         /**
-          * The starting value for the numeric range
+          * The starting value for the numeric range.
          */
         "start": number;
     }
@@ -726,11 +789,23 @@ declare namespace LocalJSX {
         "enableDuration"?: boolean;
     }
     interface AtomicRelevanceInspector {
+        /**
+          * The Atomic interface bindings, namely the Headless Engine and i18n instance.
+         */
         "bindings": Bindings;
     }
     interface AtomicResult {
+        /**
+          * The result content to display.
+         */
         "content": string;
+        /**
+          * The Headless Engine.
+         */
         "engine": Engine;
+        /**
+          * The result item.
+         */
         "result": Result;
     }
     interface AtomicResultDate {
@@ -796,6 +871,9 @@ declare namespace LocalJSX {
         "maxNumberOfParts"?: number;
     }
     interface AtomicResultTemplate {
+        /**
+          * Functions that must return true on results for the result template to apply.
+         */
         "conditions"?: ResultTemplateCondition[];
     }
     interface AtomicResultText {
@@ -821,25 +899,43 @@ declare namespace LocalJSX {
     interface AtomicSearchBox {
         "_id"?: string;
         /**
-          * Whether the submit button should be placed before the input
+          * Whether the submit button should be placed before the input.
          */
         "leadingSubmitButton"?: boolean;
         /**
-          * Maximum number of suggestions to display
+          * Maximum number of suggestions to display.
          */
         "numberOfSuggestions"?: number;
         /**
-          * The placeholder for the search box input
+          * The placeholder for the search box input.
          */
         "placeholder"?: string;
     }
     interface AtomicSearchInterface {
+        /**
+          * The search interface Headless engine.
+         */
         "engine"?: Engine;
+        /**
+          * The search interface i18next instance.
+         */
         "i18n"?: i18n;
+        /**
+          * The search interface language.
+         */
         "language"?: string;
+        /**
+          * The level of messages you want to be logged in the console.
+         */
         "logLevel"?: LogLevel;
+        /**
+          * The search interface query pipeline.
+         */
         "pipeline"?: string;
         "reflectStateInUrl"?: boolean;
+        /**
+          * The search interface search hub.
+         */
         "searchHub"?: string;
     }
     interface AtomicSortCriteria {
@@ -855,7 +951,13 @@ declare namespace LocalJSX {
     interface AtomicSortDropdown {
     }
     interface AtomicTab {
+        /**
+          * The advanced expression or filter that the Tab should add to any outgoing query.  Example: `@objecttype==Message`
+         */
         "expression"?: string;
+        /**
+          * Whether the tab is set to active.
+         */
         "isActive"?: boolean;
     }
     interface AtomicText {

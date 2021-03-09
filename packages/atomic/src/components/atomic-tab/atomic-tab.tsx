@@ -22,7 +22,16 @@ export class AtomicTab implements InitializableComponent {
   @BindStateToController('tab') @State() private tabState!: TabState;
   @State() public error!: Error;
 
+  /**
+   * The advanced expression or filter that the Tab should add to any outgoing query.
+   *
+   * Example: `@objecttype==Message`
+   */
   @Prop() public expression = '';
+
+  /**
+   * Whether the tab is set to active.
+   */
   @Prop() public isActive = false;
 
   public initialize() {

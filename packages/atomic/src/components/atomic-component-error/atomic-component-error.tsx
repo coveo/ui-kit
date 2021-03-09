@@ -6,7 +6,14 @@ import {Component, Prop, h} from '@stencil/core';
   shadow: true,
 })
 export class AtomicComponentError {
+  /**
+   * The target HTML element.
+   */
   @Prop() element!: HTMLElement;
+
+  /**
+   * The target error.
+   */
   @Prop() error!: Error;
 
   connectedCallback() {
