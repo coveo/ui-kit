@@ -47,7 +47,7 @@ describe('c/headlessLoader', () => {
     }
 
     describe('when coveoHeadless is undefined', () => {
-      it('should initialize coveoHeadless and register component', () => {
+      it('should defined coveoHeadless and register component', () => {
         const element = document.createElement('div');
         registerComponentForInit(element);
 
@@ -123,7 +123,7 @@ describe('c/headlessLoader', () => {
         }
       });
 
-      describe('when other components are still unintialized ', () => {
+      describe('when other components are still uninitialized ', () => {
         const element = document.createElement('div');
 
         beforeEach(() => {
