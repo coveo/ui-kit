@@ -22,7 +22,7 @@ export interface RankingInformation {
 
 export interface DocumentWeights {
   /**
-   * The effect of proximity of query terms. More weight is given to documents having the terms closer together.
+   * The effect of proximity of query terms in the document. More weight is given to documents having the terms closer together.
    */
   Adjacency: number;
 
@@ -47,7 +47,7 @@ export interface DocumentWeights {
   QRE: number;
 
   /**
-   * The proximity of the document in the remaining results after filtering indexed items by query terms and user permissions.
+   * The weight attributed to rank of the document in the documents remaining after filtering indexed items by query terms and user permissions.
    * See [item weighting](https://docs.coveo.com/en/1624/#phase-2-item-weighting) for more information.
    */
   Quality: number;
@@ -63,7 +63,7 @@ export interface DocumentWeights {
   Source: number;
 
   /**
-   * The presence of query terms in the document title.
+   * The weight attributed to presence of query terms in the document title.
    */
   Title: number;
 
