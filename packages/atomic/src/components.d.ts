@@ -11,13 +11,7 @@ import { i18n } from "i18next";
 import { InitializationOptions } from "./components/atomic-search-interface/atomic-search-interface";
 export namespace Components {
     interface AtomicBreadcrumbManager {
-        /**
-          * The separator to use in category facet breadcrumbs.
-         */
         "categoryDivider": string;
-        /**
-          * The number of facet values to display before starting to hide new ones in the breadcrumbs.
-         */
         "collapseThreshold": number;
     }
     interface AtomicCategoryFacet {
@@ -48,11 +42,11 @@ export namespace Components {
     }
     interface AtomicComponentError {
         /**
-          * The target HTML element
+          * The target HTML element.
          */
         "element": HTMLElement;
         /**
-          * The target error
+          * The target error.
          */
         "error": Error;
     }
@@ -183,7 +177,7 @@ export namespace Components {
     }
     interface AtomicRelevanceInspector {
         /**
-          * The Atomic interface bindings, namely the Headless Engine and i18n instance.
+          * The Atomic interface bindings, namely the Headless Engine and i18n instances.
          */
         "bindings": Bindings;
     }
@@ -618,13 +612,7 @@ declare global {
 }
 declare namespace LocalJSX {
     interface AtomicBreadcrumbManager {
-        /**
-          * The separator to use in category facet breadcrumbs.
-         */
         "categoryDivider"?: string;
-        /**
-          * The number of facet values to display before starting to hide new ones in the breadcrumbs.
-         */
         "collapseThreshold"?: number;
     }
     interface AtomicCategoryFacet {
@@ -655,11 +643,11 @@ declare namespace LocalJSX {
     }
     interface AtomicComponentError {
         /**
-          * The target HTML element
+          * The target HTML element.
          */
         "element": HTMLElement;
         /**
-          * The target error
+          * The target error.
          */
         "error": Error;
     }
@@ -790,7 +778,7 @@ declare namespace LocalJSX {
     }
     interface AtomicRelevanceInspector {
         /**
-          * The Atomic interface bindings, namely the Headless Engine and i18n instance.
+          * The Atomic interface bindings, namely the Headless Engine and i18n instances.
          */
         "bindings": Bindings;
     }

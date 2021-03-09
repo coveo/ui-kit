@@ -13,11 +13,33 @@ import {
 } from '../../utils/initialization-utils';
 import {sanitize} from '../../utils/utils';
 
+/**
+ * A summary of the query result list.
+ */
 interface Summary {
+  /**
+   * The index of the last result in the query result list.
+   */
   count: number;
+
+  /**
+   * The index of the first result in the query result list.
+   */
   first: string;
+
+  /**
+   * The index of the last result in the query result list.
+   */
   last: string;
+
+  /**
+   * The total number of query results.
+   */
   total: string;
+
+  /**
+   * The query string.
+   */
   query: string;
 }
 

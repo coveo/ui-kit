@@ -11,7 +11,13 @@ import {
   InitializeBindings,
 } from '../../utils/initialization-utils';
 
+/**
+ * A facet HTML element.
+ */
 interface FacetElement extends HTMLElement {
+  /**
+   * The unique identifier of the facet.
+   */
   facetId: string;
 }
 
