@@ -12,12 +12,11 @@ export default class Summary extends LightningElement {
   /** @type {import("coveo").Unsubscribe} */
   unsubscribe;
 
-  constructor() {
-    super();
-    registerComponentForInit(this, 'sample-app');
+  connectedCallback() {
+    registerComponentForInit(this, this.engineId);
   }
 
-  connectedCallback() {
+  renderedCallback() {
     initializeWithHeadless(this, this.engineId, this.initialize.bind(this));
   }
 

@@ -2,7 +2,7 @@
   <h1>Default template</h1>
   <div class="slds-p-around_medium lgc-bg slds-border_bottom">
     <lightning-tile type="media">
-      <h3><c-result-link result={result} engine-id="sample-app"></c-result-link></h3>
+      <h3><c-result-link result={result} engine-id={engineId}></c-result-link></h3>
       <lightning-icon slot="media" icon-name={icon}></lightning-icon>
       <p class="slds-text-body_regular">{result.excerpt}</p>
       <dl class="slds-dl_horizontal">

@@ -28,13 +28,8 @@ export default class SearchBox extends LightningElement {
   /** @type {any} */
   tribute;
 
-  constructor() {
-    super();
-    registerComponentForInit(this, 'sample-app');
-  }
-
   connectedCallback() {
-    initializeWithHeadless(this, this.engineId, this.initialize.bind(this));
+    registerComponentForInit(this, this.engineId);
 
     if (this.tributeLoaded) {
       return;
@@ -52,6 +47,8 @@ export default class SearchBox extends LightningElement {
   }
 
   renderedCallback() {
+    initializeWithHeadless(this, this.engineId, this.initialize.bind(this));
+
     // @ts-ignore
     const input = this.template.querySelector('input');
     // @ts-ignore

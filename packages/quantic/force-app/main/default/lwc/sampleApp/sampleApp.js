@@ -2,9 +2,12 @@
 import template1 from './resultTemplates/template1.html';
 // @ts-ignore
 import template2 from './resultTemplates/template2.html';
-import { LightningElement } from 'lwc';
+import { LightningElement, api } from 'lwc';
 
 export default class SampleApp extends LightningElement {
+  /** @type {String} */
+  @api engineId;
+
   renderedCallback() {	
     // Example on how to init the search interface	
     // const searchInterface = this.template.querySelector('c-search-interface');	

@@ -52,7 +52,7 @@ const areAllComponentsInitialized = (engineId) =>
   !window.coveoHeadless[engineId].components.find(component => component.initialized === false);
 
 /**
- * Returns the registered component object if it exists. 
+ * Returns the registered component object if it exists.
  * @param element
  * @param {String} engineId
  */
@@ -150,6 +150,9 @@ function getHeadlessEngine(element, engineId) {
  * @param {Function} initialize The component's initialization function.
  */
 function initializeWithHeadless(element, engineId, initialize) {
+  if (getRegisteredComponent(element, engineId).initialized) {
+    return;
+  }
   getHeadlessEngine(element, engineId).then((engine) => {
     initialize(engine);
     setComponentInitialized(element, engineId);
