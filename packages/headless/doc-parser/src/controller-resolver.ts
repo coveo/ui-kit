@@ -61,19 +61,32 @@ function isFunction(item: ApiItem): item is ApiFunction {
 }
 
 function extractTypesFrom(initializer: FuncEntity, utils: FuncEntity[]) {
-  const instanceTypes = extractTypesFromInitializerInstance(initializer);
+  const initializerTypes = extractedTypesFromInitializer(initializer);
   const utilTypes = extractTypes(utils).types;
-  const types = instanceTypes.concat(utilTypes);
+  const types = initializerTypes.concat(utilTypes);
 
   return removeDuplicates(types);
 }
 
-function extractTypesFromInitializerInstance(entity: FuncEntity) {
-  const {returnType} = entity;
+function extractedTypesFromInitializer(initializer: FuncEntity) {
+  const propTypes = extractTypesFromInitializerProps(initializer);
+  const instanceTypes = extractTypesFromInitializerInstance(initializer);
 
-  if (typeof returnType === 'string') {
-    return [];
+  return propTypes.concat(instanceTypes);
+}
+
+function extractTypesFromInitializerProps(initializer: FuncEntity) {
+  const propsParameter = initializer.params[1];
+
+  if (propsParameter && isObjectEntity(propsParameter)) {
+    return extractTypes(propsParameter.members).types;
   }
+
+  return [];
+}
+
+function extractTypesFromInitializerInstance(initializer: FuncEntity) {
+  const {returnType} = initializer;
 
   if (isObjectEntity(returnType)) {
     return extractTypes(returnType.members).types;
