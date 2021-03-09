@@ -8,7 +8,7 @@ import {
 } from '@microsoft/tsdoc';
 
 export function emitAsTsDoc(nodes: readonly DocNode[]) {
-  return nodes.map(emitNode).join('').trimRight();
+  return nodes.map(emitNode).join('').trim();
 }
 
 function emitNode(node: DocNode): string {
