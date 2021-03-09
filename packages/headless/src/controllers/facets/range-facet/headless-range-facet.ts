@@ -43,46 +43,28 @@ export function buildRangeFacet<
 
   return {
     ...controller,
-    /**
-     * Toggles the specified facet value.
-     * @param selection The facet value to toggle.
-     */
+
     toggleSelect: (selection: RangeFacetValue) =>
       dispatch(executeToggleRangeFacetSelect({facetId, selection})),
 
-    /**
-     * Checks whether the specified facet value is selected.
-     * @param selection The facet value to check.
-     * @returns Whether the specified facet value is selected.
-     */
     isValueSelected: isRangeFacetValueSelected,
 
-    /** Deselects all facet values. */
     deselectAll() {
       dispatch(deselectAllFacetValues(facetId));
       dispatch(updateFacetOptions({freezeFacetOrder: true}));
       dispatch(executeSearch(logFacetClearAll(facetId)));
     },
 
-    /** Sorts the facet values according to the specified criterion.
-     * @param criterion The criterion to sort values by.
-     */
     sortBy(criterion: RangeFacetSortCriterion) {
       dispatch(updateRangeFacetSortCriterion({facetId, criterion}));
       dispatch(updateFacetOptions({freezeFacetOrder: true}));
       dispatch(executeSearch(logFacetUpdateSort({facetId, criterion})));
     },
 
-    /**
-     * Checks whether the facet values are sorted according to the specified criterion.
-     * @param criterion The criterion to compare.
-     * @returns Whether the facet values are sorted according to the specified criterion.
-     */
     isSortedBy(criterion: RangeFacetSortCriterion) {
       return this.state.sortCriterion === criterion;
     },
 
-    /** The state of the `RangeFacet` controller.*/
     get state() {
       const request = getRequest();
       const response = baseFacetResponseSelector(engine.state, facetId) as
@@ -97,17 +79,27 @@ export function buildRangeFacet<
       );
 
       return {
-        /** The facet id. */
         facetId,
-        /** The values of the facet. */
         values,
-        /** The active sortCriterion of the facet. */
         sortCriterion,
-        /** `true` if there is at least one non-idle value and `false` otherwise. */
         hasActiveValues,
-        /** `true` if a search is in progress and `false` otherwise. */
         isLoading,
       };
     },
   };
+}
+
+interface AssertRangeFacetOptions {
+  generateAutomaticRanges: boolean;
+  currentValues?: unknown[];
+}
+
+export function assertRangeFacetOptions(
+  options: AssertRangeFacetOptions,
+  controllerName: 'buildNumericFacet' | 'buildDateFacet'
+) {
+  if (!options.generateAutomaticRanges && options.currentValues === undefined) {
+    const message = `currentValues should be specified for ${controllerName} when generateAutomaticRanges is false.`;
+    throw new Error(message);
+  }
 }
