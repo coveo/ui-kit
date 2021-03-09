@@ -173,6 +173,10 @@ const controllers: ControllerConfiguration[] = [
     },
   },
   {
+    initializer: 'buildCartRecommendationsList',
+    samplePaths: {},
+  },
+  {
     initializer: 'buildSearchBox',
     samplePaths: {
       react_class: [

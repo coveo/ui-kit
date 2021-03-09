@@ -181,6 +181,8 @@ export {
   buildStandaloneSearchBox,
 } from './standalone-search-box/headless-standalone-search-box';
 
+export {Product} from './product-recommendations/headless-base-product-recommendations';
+
 export {
   FrequentlyBoughtTogetherListOptions,
   FrequentlyBoughtTogetherListProps,
