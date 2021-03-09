@@ -42,18 +42,18 @@ export interface DocumentWeights {
   Date: number;
 
   /**
-   * The weight applied by a [query ranking expression (QRE)](https://docs.coveo.com/en/2777/coveo-solutions/using-query-ranking-expressions).
+   * The weight applied by a [query ranking expression (QRE)](https://docs.coveo.com/en/2777/).
    */
   QRE: number;
 
   /**
    * The proximity of the document in the remaining results after filtering indexed items by query terms and user permissions.
-   * See [item weighting](https://docs.coveo.com/en/1624/searching-with-coveo/understanding-search-result-ranking#phase-2-item-weighting) for more information.
+   * See [item weighting](https://docs.coveo.com/en/1624/#phase-2-item-weighting) for more information.
    */
   Quality: number;
 
   /**
-   * The weight applied by a [ranking function](https://docs.coveo.com/en/1448/build-a-search-ui/ranking-functions).
+   * The weight applied by a [ranking function](https://docs.coveo.com/en/1448/).
    */
   'Ranking functions': number;
 
