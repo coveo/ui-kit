@@ -1,9 +1,12 @@
 import {useEffect, useState, FunctionComponent} from 'react';
-import {buildHistory, History as HeadlessHistory} from '@coveo/headless';
+import {
+  buildHistoryManager,
+  HistoryManager as HeadlessHistoryManager,
+} from '@coveo/headless';
 import {engine} from '../../engine';
 
 interface HistoryProps {
-  controller: HeadlessHistory;
+  controller: HeadlessHistoryManager;
 }
 
 export const History: FunctionComponent<HistoryProps> = (props) => {
@@ -32,6 +35,6 @@ export const History: FunctionComponent<HistoryProps> = (props) => {
 
 // usage
 
-const controller = buildHistory(engine);
+const controller = buildHistoryManager(engine);
 
 <History controller={controller} />;

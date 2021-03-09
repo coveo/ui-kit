@@ -60,7 +60,7 @@ import {
   SortCriterion,
   buildResultsPerPage,
   buildPager,
-  buildHistory,
+  buildHistoryManager,
   buildRelevanceInspector,
   AnalyticsActions,
   SearchActions,
@@ -145,7 +145,7 @@ const resultsPerPage = buildResultsPerPage(engine, {
 
 const pager = buildPager(engine, {options: {numberOfPages: 6}});
 
-const history = buildHistory(engine);
+const history = buildHistoryManager(engine);
 
 const relevanceInspector = buildRelevanceInspector(engine);
 
