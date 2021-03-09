@@ -6,7 +6,7 @@ import {
 import {RankingExpression} from '../../api/search/search/ranking-expression';
 import {Result} from '../../api/search/search/result';
 import {SearchResponseSuccessWithDebugInfo} from '../../api/search/search/search-response';
-import {UserIdentity} from '../../api/search/search/user-identity';
+import {SecurityIdentity} from '../../api/search/search/security-identity';
 import {Engine} from '../../app/headless-engine';
 import {
   AnalyticsType,
@@ -39,7 +39,7 @@ export {
   QueryRankingExpressionWeights,
   ExecutionReport,
   ExecutionStep,
-  UserIdentity,
+  SecurityIdentity,
   RankingExpression,
 };
 
@@ -126,7 +126,7 @@ export interface RelevanceInspectorState {
   /**
    * The security identities.
    */
-  userIdentities?: UserIdentity[];
+  userIdentities?: SecurityIdentity[];
 
   /**
    * The ranking expressions.

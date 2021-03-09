@@ -1,4 +1,4 @@
-export interface UserIdentity {
+export interface SecurityIdentity {
   /**
    * The security identity name.
    */

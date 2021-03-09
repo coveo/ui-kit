@@ -6,7 +6,7 @@ import {
 import {QueryCorrection} from './query-corrections';
 import {AnyFacetResponse} from '../../../features/facets/generic/interfaces/generic-facet-response';
 import {RankingExpression} from './ranking-expression';
-import {UserIdentity} from './user-identity';
+import {SecurityIdentity} from './security-identity';
 import {ExecutionReport} from './execution-report';
 
 export interface SearchResponseSuccess {
@@ -23,7 +23,7 @@ export interface SearchResponseSuccessWithDebugInfo
   basicExpression: string;
   advancedExpression: string;
   constantExpression: string;
-  userIdentities: UserIdentity[];
+  userIdentities: SecurityIdentity[];
   rankingExpressions: RankingExpression[];
 }
 

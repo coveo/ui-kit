@@ -15,7 +15,7 @@ export {
   ResultRankingInformation,
   RankingInformation,
   TermWeightReport,
-  UserIdentity,
+  SecurityIdentity,
   buildRelevanceInspector,
 } from './relevance-inspector/headless-relevance-inspector';
 
