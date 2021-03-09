@@ -1,4 +1,4 @@
-export interface RankingExpression {
+export interface QueryRankingExpression {
   /**
    * The query ranking expression (QRE).
    */

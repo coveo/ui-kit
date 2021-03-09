@@ -3,7 +3,7 @@ import {
   ExecutionReport,
   ExecutionStep,
 } from '../../api/search/search/execution-report';
-import {RankingExpression} from '../../api/search/search/ranking-expression';
+import {QueryRankingExpression} from '../../api/search/search/query-ranking-expression';
 import {Result} from '../../api/search/search/result';
 import {SearchResponseSuccessWithDebugInfo} from '../../api/search/search/search-response';
 import {SecurityIdentity} from '../../api/search/search/security-identity';
@@ -40,7 +40,7 @@ export {
   ExecutionReport,
   ExecutionStep,
   SecurityIdentity,
-  RankingExpression,
+  QueryRankingExpression,
 };
 
 export interface RelevanceInspectorProps {
@@ -131,7 +131,7 @@ export interface RelevanceInspectorState {
   /**
    * The ranking expressions.
    */
-  rankingExpressions?: RankingExpression[];
+  rankingExpressions?: QueryRankingExpression[];
 }
 
 export interface ResultRankingInformation {

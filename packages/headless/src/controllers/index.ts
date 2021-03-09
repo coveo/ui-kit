@@ -11,7 +11,7 @@ export {
   ExecutionStep,
   QueryExpressions,
   QueryRankingExpressionWeights,
-  RankingExpression,
+  QueryRankingExpression,
   ResultRankingInformation,
   RankingInformation,
   TermWeightReport,

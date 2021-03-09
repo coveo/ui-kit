@@ -5,7 +5,7 @@ import {
 } from '../search-api-error-response';
 import {QueryCorrection} from './query-corrections';
 import {AnyFacetResponse} from '../../../features/facets/generic/interfaces/generic-facet-response';
-import {RankingExpression} from './ranking-expression';
+import {QueryRankingExpression} from './query-ranking-expression';
 import {SecurityIdentity} from './security-identity';
 import {ExecutionReport} from './execution-report';
 
@@ -24,7 +24,7 @@ export interface SearchResponseSuccessWithDebugInfo
   advancedExpression: string;
   constantExpression: string;
   userIdentities: SecurityIdentity[];
-  rankingExpressions: RankingExpression[];
+  rankingExpressions: QueryRankingExpression[];
 }
 
 export type Search =
