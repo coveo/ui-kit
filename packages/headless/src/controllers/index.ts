@@ -55,7 +55,7 @@ export {
 export {
   DateRangeOptions,
   DateRangeRequest,
-  DateValueType,
+  DateRangeInput,
   buildDateRange,
   DateFacetOptions,
   DateFacetProps,

@@ -7,18 +7,18 @@ import {FacetValueState} from '../../../../features/facets/facet-api/value';
 dayjs.extend(utc);
 dayjs.extend(customParseFormat);
 
-export type DateValueType = string | number | Date;
+export type DateRangeInput = string | number | Date;
 
 export interface DateRangeOptions {
   /**
    * The start value of the range.
    */
-  start: DateValueType;
+  start: DateRangeInput;
 
   /**
    * The end value of the range.
    */
-  end: DateValueType;
+  end: DateRangeInput;
 
   /**
    * Whether to include the end value in the range.
@@ -71,7 +71,7 @@ export function buildDateRange(config: DateRangeOptions): DateRangeRequest {
   };
 }
 
-function buildDate(rawDate: DateValueType, options: DateRangeOptions) {
+function buildDate(rawDate: DateRangeInput, options: DateRangeOptions) {
   const {dateFormat, useLocalTime} = options;
   const date = dayjs(rawDate, dateFormat);
 
