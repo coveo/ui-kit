@@ -41,14 +41,7 @@ export class AtomicBreadcrumbManager implements InitializableComponent {
   @State() private collapsedBreadcrumbsState: string[] = [];
   @State() public error!: Error;
 
-  /**
-   * The number of facet values to display before starting to hide new ones in the breadcrumbs.
-   */
   @Prop() public collapseThreshold = 5;
-
-  /**
-   * The separator to use in category facet breadcrumbs.
-   */
   @Prop() public categoryDivider = '/';
 
   public initialize() {
