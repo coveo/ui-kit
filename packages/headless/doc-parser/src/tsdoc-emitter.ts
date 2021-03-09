@@ -8,13 +8,13 @@ import {
 } from '@microsoft/tsdoc';
 
 export function emitAsTsDoc(nodes: readonly DocNode[]) {
-  return nodes.map(emitNode).join('');
+  return nodes.map(emitNode).join('').trimRight();
 }
 
 function emitNode(node: DocNode): string {
   if (isParagraph(node)) {
     const trimmed = DocNodeTransforms.trimSpacesInParagraph(node);
-    return emitAsTsDoc(trimmed.nodes);
+    return emitAsTsDoc(trimmed.nodes) + '\n\n';
   }
 
   if (isPlainText(node)) {
