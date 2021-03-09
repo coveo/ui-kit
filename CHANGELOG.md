@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.8.0-alpha.6](https://github.com/coveo/ui-kit/compare/v0.8.0-alpha.5...v0.8.0-alpha.6) (2021-03-09)
+
+
+### Bug Fixes
+
+* **atomic:** handle invalid sort criteria options  ([#595](https://github.com/coveo/ui-kit/issues/595)) ([4ce70d6](https://github.com/coveo/ui-kit/commit/4ce70d635745741ceddfcd99fc6893f01b4c2865))
+
+
+
+
+
 # [0.8.0-alpha.5](https://github.com/coveo/ui-kit/compare/v0.8.0-alpha.4...v0.8.0-alpha.5) (2021-03-09)
 
 **Note:** Version bump only for package ui-kit
