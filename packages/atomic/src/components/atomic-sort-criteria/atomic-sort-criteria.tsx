@@ -9,12 +9,12 @@ import {Component, Prop, Element} from '@stencil/core';
   shadow: false,
 })
 export class AtomicSortCriteria {
-  @Element() host!: HTMLElement;
+  @Element() public host!: HTMLElement;
 
   /**
    * The non-localized caption to display for this criteria.
    */
-  @Prop() caption!: string;
+  @Prop() public caption!: string;
 
   /**
    * The sort criterion/criteria the end user can select/toggle between.
@@ -27,5 +27,5 @@ export class AtomicSortCriteria {
    *
    * You can specify multiple sort criteria to be used in the same request by separating them with a comma (e.g., `criteria="size ascending, date ascending"` ).
    */
-  @Prop() criteria!: string;
+  @Prop() public criteria!: string;
 }

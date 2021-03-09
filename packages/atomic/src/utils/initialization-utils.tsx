@@ -27,14 +27,6 @@ export class MissingInterfaceParentError extends Error {
   }
 }
 
-export class ComponentInitializationError extends Error {
-  constructor(elementName: string) {
-    super(
-      `The "${elementName}" element had an initialization error. Look at the developer console for more information.`
-    );
-  }
-}
-
 /**
  * Necessary interface an Atomic Component must have to initialize itself correctly.
  */
@@ -84,9 +76,7 @@ export function InitializeBindings() {
           try {
             this.initialize && this.initialize();
           } catch (e) {
-            this.error = new ComponentInitializationError(
-              element.nodeName.toLowerCase()
-            );
+            this.error = e;
           }
         },
         // Event will bubble up the DOM until it is caught
