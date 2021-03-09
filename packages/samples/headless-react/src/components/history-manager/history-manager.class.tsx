@@ -7,7 +7,7 @@ import {
 } from '@coveo/headless';
 import {engine} from '../../engine';
 
-export class History extends Component {
+export class HistoryManager extends Component {
   private controller: HeadlessHistoryManager;
   public state: HistoryManagerState;
   private unsubscribe: Unsubscribe = () => {};
