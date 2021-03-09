@@ -7,12 +7,12 @@ import {FacetValueState} from '../../../facet-api/value';
  */
 export interface DateRangeRequest {
   /**
-   * The start value of the range.
+   * The start value of the range, formatted as YYYY/MM/DD@HH:mm:ss.
    */
   start: string;
 
   /**
-   * The end value of the range.
+   * The end value of the range, formatted as YYYY/MM/DD@HH:mm:ss.
    */
   end: string;
 

@@ -8,12 +8,12 @@ export interface DateFacetValue {
   numberOfResults: number;
 
   /**
-   * The starting value for the date range.
+   * The starting value for the date range, formatted as YYYY/MM/DD@HH:mm:ss.
    */
   start: string;
 
   /**
-   * The ending value for the date range.
+   * The ending value for the date range, formatted as YYYY/MM/DD@HH:mm:ss.
    */
   end: string;
 
