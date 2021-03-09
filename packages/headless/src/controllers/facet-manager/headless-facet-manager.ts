@@ -44,7 +44,7 @@ export interface FacetManagerState {
 }
 
 /**
- * Creates a `FacetManger` instance.
+ * Creates a `FacetManager` instance.
  *
  * @param engine - The headless engine.
  */
