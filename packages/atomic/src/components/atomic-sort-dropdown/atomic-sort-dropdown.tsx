@@ -19,6 +19,7 @@ import {
 } from '../../utils/initialization-utils';
 import {randomID} from '../../utils/utils';
 import ArrowBottomIcon from 'coveo-styleguide/resources/icons/svg/arrow-bottom-rounded.svg';
+import {Schema, StringValue} from '@coveo/bueno';
 
 interface SortDropdownOption {
   expression: string;
@@ -78,17 +79,18 @@ export class AtomicSortDropdown implements InitializableComponent {
       return;
     }
 
-    this.options = sortCriterionElements
-      .filter(({error}) => !error)
-      .map(({criteria, caption}) => {
-        this.strings[caption] = () => this.bindings.i18n.t(caption);
+    this.options = sortCriterionElements.map(({criteria, caption}) => {
+      new Schema({
+        caption: new StringValue({emptyAllowed: false, required: true}),
+      }).validate({caption});
+      this.strings[caption] = () => this.bindings.i18n.t(caption);
 
-        return {
-          criteria: parseCriterionExpression(criteria),
-          expression: criteria,
-          caption,
-        };
-      });
+      return {
+        criteria: parseCriterionExpression(criteria),
+        expression: criteria,
+        caption,
+      };
+    });
   }
 
   private select(e: Event) {

@@ -1,5 +1,4 @@
-import {Schema, StringValue} from '@coveo/bueno';
-import {Component, Prop, Element, h} from '@stencil/core';
+import {Component, Prop, Element} from '@stencil/core';
 
 /**
  * Component that defines a sort criteria.
@@ -11,8 +10,6 @@ import {Component, Prop, Element, h} from '@stencil/core';
 })
 export class AtomicSortCriteria {
   @Element() public host!: HTMLElement;
-
-  @Prop({mutable: true}) public error?: Error;
 
   /**
    * The non-localized caption to display for this criteria.
@@ -31,26 +28,4 @@ export class AtomicSortCriteria {
    * You can specify multiple sort criteria to be used in the same request by separating them with a comma (e.g., `criteria="size ascending, date ascending"` ).
    */
   @Prop() public criteria!: string;
-
-  constructor() {
-    try {
-      new Schema({
-        caption: new StringValue({emptyAllowed: false, required: true}),
-        criteria: new StringValue({emptyAllowed: false, required: true}),
-      }).validate({caption: this.caption, criteria: this.criteria});
-    } catch (error) {
-      this.error = error;
-    }
-  }
-
-  public render() {
-    if (this.error) {
-      return (
-        <atomic-component-error
-          element={this.host}
-          error={this.error}
-        ></atomic-component-error>
-      );
-    }
-  }
 }
