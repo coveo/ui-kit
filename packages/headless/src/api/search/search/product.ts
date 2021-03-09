@@ -10,12 +10,6 @@ export type Product = {
    */
   name: string;
   /**
-   * Description of the product.
-   *
-   * From the `ec_description` field.
-   */
-  description: string;
-  /**
    * A direct link to the product in URL format.
    */
   link: string;
@@ -73,10 +67,6 @@ export type Product = {
    * From the `ec_rating` field.
    */
   rating?: number;
-  /**
-   * The tags of the product.
-   */
-  tags?: string[];
 };
 
 export type ProductRecommendation = Product;

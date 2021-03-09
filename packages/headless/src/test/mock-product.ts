@@ -6,7 +6,6 @@ export function buildMockProductRecommendation(
   return {
     sku: '',
     name: '',
-    description: '',
     link: '',
     ...config,
   };

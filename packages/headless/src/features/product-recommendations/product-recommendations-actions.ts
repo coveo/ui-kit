@@ -103,28 +103,19 @@ export const getProductRecommendations = createAsyncThunk<
 );
 
 const mapResultToProductResult = (result: Result): ProductRecommendation => {
-  const price = (result.raw.ec_price || result.raw.price) as number | undefined;
-  const promoPrice = (result.raw.ec_promo_price || result.raw.promo_price) as
-    | number
-    | undefined;
-  const inStock = (result.raw.ec_in_stock || result.raw.in_stock) as
-    | string
-    | undefined;
+  const price = result.raw.ec_price as number | undefined;
+  const promoPrice = result.raw.ec_promo_price as number | undefined;
+  const inStock = result.raw.ec_in_stock as string | undefined;
 
   return {
-    sku: (result.raw.productid || result.raw.sku) as string,
-    name: (result.raw.ec_name as string) || result.title,
-    description: (result.raw.ec_description as string) || result.excerpt,
+    sku: result.raw.permanentid!,
+    name: result.raw.ec_name as string,
     link: result.clickUri,
-    brand: (result.raw.ec_brand || result.raw.brand) as string,
+    brand: result.raw.ec_brand as string,
     category: result.raw.ec_category as string,
     price,
     shortDescription: result.raw.ec_shortdesc as string,
-    thumbnailUrl: (result.raw.ec_thumbnail ||
-      result.raw.ec_image ||
-      result.raw.image ||
-      (result.raw.ec_images &&
-        (result.raw.ec_images as string[])[0])) as string,
+    thumbnailUrl: result.raw.ec_thumbnail as string,
     imageUrls: result.raw.ec_images as string[],
     promoPrice:
       promoPrice === undefined || (price !== undefined && promoPrice >= price)
@@ -132,8 +123,7 @@ const mapResultToProductResult = (result: Result): ProductRecommendation => {
         : promoPrice,
     inStock:
       inStock === undefined ? undefined : inStock.toLowerCase() === 'yes',
-    rating: (result.raw.ec_rating || result.raw.rating) as number,
-    tags: result.raw.tags as string[],
+    rating: result.raw.ec_rating as number,
   };
 };
 
