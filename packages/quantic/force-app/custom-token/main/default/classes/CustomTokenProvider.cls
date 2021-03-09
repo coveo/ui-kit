@@ -1,5 +1,6 @@
 global with sharing class CustomTokenProvider implements ITokenProvider {
     global with sharing class HttpException extends Exception {}
+    global with sharing class InvalidTokenSettingsException extends Exception {}
 
     private static final String CONTENT_TYPE_APPLICATION_JSON = 'application/json; charset=UTF-8';
     private static final String TOKEN_PATH = '/rest/search/v2/token';
@@ -94,8 +95,7 @@ global with sharing class CustomTokenProvider implements ITokenProvider {
         TokenSettings__c settings = TokenSettings__c.getOrgDefaults();
 
         if (CustomTokenProvider.isTokenSettingInvalid(settings)) {
-            System.debug('TokenSettings invalid. Defaulting to sample organization settings.');
-            return SampleTokenProvider.getHeadlessConfiguration();
+            throw new InvalidTokenSettingsException('TokenSettings invalid. Defaulting to sample organization settings.');
         }
 
         Map<String, String> headlessConfiguration = new Map<String, String>();
