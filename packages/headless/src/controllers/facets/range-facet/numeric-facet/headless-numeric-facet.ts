@@ -34,12 +34,12 @@ export {
   NumericFacetOptions,
 };
 
-export type NumericFacetProps = {
+export interface NumericFacetProps {
   /**
    * The options for the `NumericFacet` controller.
    */
   options: NumericFacetOptions;
-};
+}
 
 /**
  * The `NumericFacet` controller makes it possible to create a facet with numeric ranges.

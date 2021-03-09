@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.8.0-alpha.2](https://github.com/coveo/ui-kit/compare/v0.8.0-alpha.1...v0.8.0-alpha.2) (2021-03-09)
+
+
+### Bug Fixes
+
+* **atomic:** prevent XSS injections in templates field values ([#585](https://github.com/coveo/ui-kit/issues/585)) ([aa4bee6](https://github.com/coveo/ui-kit/commit/aa4bee69b4df1418a7678cc2b598fb4f7b52e5a2))
+
+
+
+
+
 # [0.8.0-alpha.1](https://github.com/coveo/ui-kit/compare/v0.8.0-alpha.0...v0.8.0-alpha.1) (2021-03-08)
 
 
