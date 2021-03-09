@@ -75,11 +75,17 @@ describe('Sort Dropdown Component', () => {
 });
 
 describe('When sort with invalid criteria option', () => {
-  it('Should render an error when <atomic-sort-criteria> is invalid', () => {
+  it('Should render an error when <atomic-sort-dropdown> has no child', () => {
     setUpPage(`
         <atomic-sort-dropdown>
-          <atomic-sort-criteria</atomic-sort-criteria>
         </atomic-sort-dropdown>
+      `);
+    shouldRenderErrorComponent(sortDropdown);
+  });
+
+  it.skip('Should render an error when "<atomic-sort-dropdown" is missing', () => {
+    setUpPage(`
+    <atomic-sort-criteria caption="Relevance" criteria="${criteria[0]}"></atomic-sort-criteria>
       `);
     shouldRenderErrorComponent(sortDropdown);
   });
