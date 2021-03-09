@@ -94,27 +94,27 @@ export interface ExpandedTermWeightInformation {
 
 interface TermWeights {
   /**
-   * Whether query terms have a special casing in the document.
+   * The weight allocated when query terms have a special casing in the document.
    */
   Casing: number;
 
   /**
-   * The presence of query terms in the automatically populated '@concepts' field of the document.
+   * The weight allocated to the presence of query terms in the automatically populated '@concepts' field of the document.
    */
   Concept: number;
 
   /**
-   * Whether query terms are formatted in the document (e.g., heading level, bold, large, etc.).
+   * The weight allocated when query terms are formatted in the document (e.g., heading level, bold, large, etc.).
    */
   Formatted: number;
 
   /**
-   * The number of times query terms appear in the document.
+   * The weight allocated based on the number of times query terms appear in the document.
    */
   Frequency: number;
 
   /**
-   * The presence of words in the document with the same root as the query terms.
+   * The weight allocated when the document contains words with the same root as the query terms.
    *
    * @example
    * Searching for `programmer` will match documents with `programmer`, `programmers`, `program`, `programming`, etc.
@@ -122,17 +122,17 @@ interface TermWeights {
   Relation: number;
 
   /**
-   * The presence of query terms in the document summary.
+   * The weight allocated when the document summary contains query terms.
    */
   Summary: number;
 
   /**
-   * The presence of query terms in the document title.
+   * The weight allocated when the document title contains query terms.
    */
   Title: number;
 
   /**
-   * The presence of query terms in the document URI.
+   * The weight allocated when the document URI contains query terms.
    */
   URI: number;
 
