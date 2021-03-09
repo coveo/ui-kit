@@ -1,4 +1,4 @@
-import {Component} from 'react';
+import {Component, ContextType} from 'react';
 import {
   buildResultList,
   ResultList as ResultListController,
@@ -6,21 +6,19 @@ import {
   Unsubscribe,
 } from '@coveo/headless';
 import {ResultLink} from './result-link';
-import {engine} from '../../engine';
+import {AppContext} from '../../context/engine';
 
-export class ResultList extends Component {
-  private readonly controller: ResultListController;
-  public state: ResultListState;
+export class ResultList extends Component<{}, ResultListState> {
+  static contextType = AppContext;
+  context!: ContextType<typeof AppContext>;
+
+  private controller!: ResultListController;
   private unsubscribe: Unsubscribe = () => {};
 
-  constructor(props: {}) {
-    super(props);
-
-    this.controller = buildResultList(engine);
-    this.state = this.controller.state;
-  }
-
   componentDidMount() {
+    this.controller = buildResultList(this.context.engine!);
+    this.updateState();
+
     this.unsubscribe = this.controller.subscribe(() => this.updateState());
   }
 
@@ -33,6 +31,10 @@ export class ResultList extends Component {
   }
 
   render() {
+    if (!this.state) {
+      return null;
+    }
+
     if (!this.state.results.length) {
       return <div>No results</div>;
     }

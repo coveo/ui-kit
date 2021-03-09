@@ -1,13 +1,15 @@
 import {buildInteractiveResult, Result} from '@coveo/headless';
-import {FunctionComponent, useEffect} from 'react';
-import {engine} from '../../engine';
+import {FunctionComponent, useContext, useEffect} from 'react';
+import {AppContext} from '../../context/engine';
 
 interface LinkProps {
   result: Result;
 }
 
 export const ResultLink: FunctionComponent<LinkProps> = (props) => {
-  const interactiveResult = buildInteractiveResult(engine, {
+  const {engine} = useContext(AppContext);
+
+  const interactiveResult = buildInteractiveResult(engine!, {
     options: {result: props.result},
   });
 

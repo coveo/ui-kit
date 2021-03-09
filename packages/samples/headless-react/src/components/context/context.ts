@@ -1,8 +1,11 @@
-import {buildContext} from '@coveo/headless';
-import {engine} from '../../engine';
+import {buildContext, HeadlessEngine, searchAppReducers} from '@coveo/headless';
 
-export function setContext(ageGroup: string, interests: string[]) {
-  buildContext(engine).set({
+export function setContext(
+  engine: HeadlessEngine<typeof searchAppReducers>,
+  ageGroup: string,
+  interests: string[]
+) {
+  buildContext(engine!).set({
     ageGroup,
     interests,
   });

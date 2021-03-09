@@ -1,7 +1,8 @@
 import {
   buildSearchParameterManager,
   buildSearchParameterSerializer,
-  Engine,
+  HeadlessEngine,
+  searchAppReducers,
 } from '@coveo/headless';
 
 const {serialize, deserialize} = buildSearchParameterSerializer();
@@ -11,11 +12,13 @@ const {serialize, deserialize} = buildSearchParameterSerializer();
  *
  * Additionally, a search should not be executed until search parameters are restored.
  */
-export function bindSearchParametersToURI(engine: Engine) {
+export function bindSearchParametersToURI(
+  engine: HeadlessEngine<typeof searchAppReducers>
+) {
   const hash = window.location.hash.slice(1);
   const parameters = deserialize(decodeURIComponent(hash));
 
-  const searchParameterManager = buildSearchParameterManager(engine, {
+  const searchParameterManager = buildSearchParameterManager(engine!, {
     initialState: {parameters},
   });
 

@@ -1,25 +1,23 @@
-import {Component} from 'react';
+import {Component, ContextType} from 'react';
 import {
   buildQuerySummary,
   QuerySummary as HeadlessQuerySummary,
   QuerySummaryState,
   Unsubscribe,
 } from '@coveo/headless';
-import {engine} from '../../engine';
+import {AppContext} from '../../context/engine';
 
-export class QuerySummary extends Component {
-  private controller: HeadlessQuerySummary;
-  public state: QuerySummaryState;
+export class QuerySummary extends Component<{}, QuerySummaryState> {
+  static contextType = AppContext;
+  context!: ContextType<typeof AppContext>;
+
+  private controller!: HeadlessQuerySummary;
   private unsubscribe: Unsubscribe = () => {};
 
-  constructor(props: {}) {
-    super(props);
-
-    this.controller = buildQuerySummary(engine);
-    this.state = this.controller.state;
-  }
-
   componentDidMount() {
+    this.controller = buildQuerySummary(this.context.engine!);
+    this.updateState();
+
     this.unsubscribe = this.controller.subscribe(() => this.updateState());
   }
 
@@ -32,6 +30,10 @@ export class QuerySummary extends Component {
   }
 
   render() {
+    if (!this.state) {
+      return null;
+    }
+
     const {
       hasResults,
       hasQuery,

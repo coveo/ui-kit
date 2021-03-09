@@ -1,25 +1,23 @@
-import {Component} from 'react';
+import {Component, ContextType} from 'react';
 import {
   buildHistory,
   History as HeadlessHistory,
   HistoryState,
   Unsubscribe,
 } from '@coveo/headless';
-import {engine} from '../../engine';
+import {AppContext} from '../../context/engine';
 
-export class History extends Component {
-  private controller: HeadlessHistory;
-  public state: HistoryState;
+export class History extends Component<{}, HistoryState> {
+  static contextType = AppContext;
+  context!: ContextType<typeof AppContext>;
+
+  private controller!: HeadlessHistory;
   private unsubscribe: Unsubscribe = () => {};
 
-  constructor(props: {}) {
-    super(props);
-
-    this.controller = buildHistory(engine);
-    this.state = this.controller.state;
-  }
-
   componentDidMount() {
+    this.controller = buildHistory(this.context.engine!);
+    this.updateState();
+
     this.unsubscribe = this.controller.subscribe(() => this.updateState());
   }
 
@@ -32,6 +30,10 @@ export class History extends Component {
   }
 
   render() {
+    if (!this.state) {
+      return null;
+    }
+
     return (
       <div>
         <button
