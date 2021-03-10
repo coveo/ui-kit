@@ -40,7 +40,7 @@ export interface BreadcrumbManager extends Controller {
   /**
    * Deselects all facet values.
    */
-  deselectAll: () => void;
+  deselectAll(): void;
 
   /**
    * Deselects a facet breadcrumb value or category facet breadcrumb.
