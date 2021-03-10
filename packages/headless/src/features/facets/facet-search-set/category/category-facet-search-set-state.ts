@@ -4,13 +4,9 @@ import {
   FacetSearchState,
 } from '../facet-search-reducer-helpers';
 
-export type CategoryFacetSearchState = FacetSearchState<
-  CategoryFacetSearchResponse
->;
+export type CategoryFacetSearchState = FacetSearchState<CategoryFacetSearchResponse>;
 
-export type CategoryFacetSearchSetState = FacetSearchSetState<
-  CategoryFacetSearchResponse
->;
+export type CategoryFacetSearchSetState = FacetSearchSetState<CategoryFacetSearchResponse>;
 
 export function getCategoryFacetSearchSetInitialState(): CategoryFacetSearchSetState {
   return {};

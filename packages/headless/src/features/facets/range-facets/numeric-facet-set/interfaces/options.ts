@@ -5,9 +5,7 @@ import {
 import {NumericFacetRequest} from './request';
 
 type ManualNumericFacetOptions = ManualRangeFacetOptions<NumericFacetRequest>;
-type AutomaticNumericFacetOptions = AutomaticRangeFacetOptions<
-  NumericFacetRequest
->;
+type AutomaticNumericFacetOptions = AutomaticRangeFacetOptions<NumericFacetRequest>;
 
 export type NumericFacetRegistrationOptions =
   | ManualNumericFacetOptions

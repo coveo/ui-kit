@@ -1,7 +1,7 @@
-const { promisify } = require('util');
-const { buildReport } = require('./report');
-const { computeFileSizes } = require('./command');
-const { getHeadBranchName, getBaseBranchName } = require('../github-client');
+const {promisify} = require('util');
+const {buildReport} = require('./report');
+const {computeFileSizes} = require('./command');
+const {getHeadBranchName, getBaseBranchName} = require('../github-client');
 const exec = promisify(require('child_process').exec);
 
 async function deleteNodeModules() {
@@ -21,7 +21,7 @@ async function checkoutTargetBranch() {
 }
 
 async function buildBundleSizeReport() {
-  const sourceBranch = await getHeadBranchName()
+  const sourceBranch = await getHeadBranchName();
   console.log(`on branch: ${sourceBranch}`);
   const newSizes = await computeFileSizes();
 
@@ -34,4 +34,4 @@ async function buildBundleSizeReport() {
   return buildReport(oldSizes, newSizes);
 }
 
-module.exports = { buildBundleSizeReport }
+module.exports = {buildBundleSizeReport};

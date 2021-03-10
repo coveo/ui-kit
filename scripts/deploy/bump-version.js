@@ -69,10 +69,10 @@ async function main() {
       return await bumpVersionAndPush('pre');
     }
 
-    console.log('Build commit is tagged and not being graduated. Skipping version bump.');
+    console.log(
+      'Build commit is tagged and not being graduated. Skipping version bump.'
+    );
     return;
-
-    
   } catch (e) {
     console.error(e);
   }

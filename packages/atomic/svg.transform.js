@@ -6,4 +6,4 @@ module.exports = {
     // The output is always the same.
     return 'svgTransform';
   },
-}
+};

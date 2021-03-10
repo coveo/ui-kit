@@ -1,5 +1,5 @@
-@import "tailwindcss/base";
-@import "tailwindcss/utilities";
+@import 'tailwindcss/base';
+@import 'tailwindcss/utilities';
 
 :host {
   display: block;
@@ -8,17 +8,17 @@
 
 @layer utilities {
   .focus-within\:rounded-b-none:focus-within {
-    @apply rounded-t rounded-b-none
+    @apply rounded-t rounded-b-none;
   }
-  
+
   .apply-border-on-background {
     @apply border border-solid border-on-background;
   }
-  
+
   .apply-border-on-background-variant {
     @apply border border-solid border-on-background-variant;
   }
-  
+
   .empty\:border-none:empty {
     border: none;
   }

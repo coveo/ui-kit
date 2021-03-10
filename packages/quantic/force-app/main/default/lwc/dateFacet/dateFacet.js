@@ -36,7 +36,6 @@ export default class DateFacet extends LightningElement {
   }
 
   disconnectedCallback() {
-
     if (this.unsubscribe) {
       this.unsubscribe();
     }

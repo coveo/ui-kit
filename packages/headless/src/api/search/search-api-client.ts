@@ -77,13 +77,13 @@ export class SearchAPIClient {
   async querySuggest(
     req: QuerySuggestRequest
   ): Promise<SearchAPIClientResponse<QuerySuggestSuccessResponse>> {
-    const platformResponse = await PlatformClient.call<
-      QuerySuggestSuccessResponse
-    >({
-      ...baseSearchRequest(req, 'POST', 'application/json', '/querySuggest'),
-      requestParams: pickNonBaseParams(req),
-      ...this.options,
-    });
+    const platformResponse = await PlatformClient.call<QuerySuggestSuccessResponse>(
+      {
+        ...baseSearchRequest(req, 'POST', 'application/json', '/querySuggest'),
+        requestParams: pickNonBaseParams(req),
+        ...this.options,
+      }
+    );
     if (isSuccessQuerySuggestionsResponse(platformResponse)) {
       const processedResponse = await this.options.postprocessQuerySuggestResponseMiddleware(
         platformResponse
