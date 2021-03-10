@@ -99,14 +99,13 @@ private class CustomTokenProviderTest {
         Test.startTest();
         System.runAs(testUser){
             try {
-				CustomTokenProvider.getHeadlessConfiguration();
+                CustomTokenProvider.getHeadlessConfiguration();
             } catch (Exception e) {
                 System.assert(e instanceOf CustomTokenProvider.HttpException);
                 System.assertEquals('someError', e.getMessage());
             }
         }
         Test.stopTest();
-        
     }
     
     @IsTest
@@ -128,6 +127,5 @@ private class CustomTokenProviderTest {
             System.assertEquals('https://foo.com', (String) headlessConfiguration.get('platformUrl'));
         }
         Test.stopTest();
-        
     }
 }

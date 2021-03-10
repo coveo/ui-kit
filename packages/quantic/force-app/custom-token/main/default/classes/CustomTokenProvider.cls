@@ -1,5 +1,5 @@
 /**
- * Example class showing off how to create your own TokenProvider,
+ * Example class showing how to create your own TokenProvider,
  * using a [CustomSettings](https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_methods_system_custom_settings.htm)
  * to store the sensitive data such as the API Key.
  */
@@ -11,9 +11,6 @@ global with sharing class CustomTokenProvider implements ITokenProvider {
     private static final String TOKEN_PATH = '/rest/search/v2/token';
 
     private static Boolean isValidURL(String candidateURL) {
-        if(String.isEmpty(candidateURL)) {
-            return false;
-        }
         try {
             new Url(candidateURL);
         } catch (Exception e) {
@@ -41,13 +38,14 @@ global with sharing class CustomTokenProvider implements ITokenProvider {
     }
 
     /**
-     * Ensure that all the field of the @see `TokenSettings__c` are not empty and that the URL of the platform is actually an URL.
+     * Ensure that all the fields of the @see `TokenSettings__c` are not empty and that the platform URL format is valid.
      * @param {TokenSettings__c} settings the settings to check.
      * @return {Boolean} false if the settings are valid. True otherwise.
      */
-    private static Boolean isTokenSettingInvalid(TokenSettings__c settings) {
-        return  String.isEmpty(settings.OrganizationId__c) ||
-                String.isEmpty(settings.ApiKey__c);
+    private static Boolean isTokenSettingValid(TokenSettings__c settings) {
+        return  isValidURL(settings.PlatformUrl__c) &&
+                !String.isEmpty(settings.OrganizationId__c) &&
+                !String.isEmpty(settings.ApiKey__c);
     }
 
     private static Boolean isASuccessResponse(HTTPResponse response) {
@@ -106,13 +104,13 @@ global with sharing class CustomTokenProvider implements ITokenProvider {
         // Fetch the default value of the TokenSettings__c see https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_methods_system_custom_settings.htm#apex_System_HierarchyCustomSetting_getOrgDefaults.
         TokenSettings__c settings = TokenSettings__c.getOrgDefaults();
 
-        if (CustomTokenProvider.isTokenSettingInvalid(settings)) {
+        if (!CustomTokenProvider.isTokenSettingValid(settings)) {
             throw new InvalidTokenSettingsException('TokenSettings invalid. Defaulting to sample organization settings.');
         }
 
         Map<String, String> headlessConfiguration = new Map<String, String>();
         headlessConfiguration.put('organizationId', settings.OrganizationId__c);
-        headlessConfiguration.put('accessToken', CustomTokenProvider.getToken(settings););
+        headlessConfiguration.put('accessToken', CustomTokenProvider.getToken(settings));
         headlessConfiguration.put('platformUrl', settings.PlatformUrl__c);
         return JSON.serialize(headlessConfiguration);
     }

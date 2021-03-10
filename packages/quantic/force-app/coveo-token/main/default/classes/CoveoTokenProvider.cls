@@ -1,6 +1,6 @@
 global with sharing class CoveoTokenProvider implements ITokenProvider {
     /**
-     * Call the CoveoForSalesforce package to ge the information on the organization linked and a search token.
+     * Call the CoveoForSalesforce package to get the information on the organization linked and a search token.
      * This requires to have the Coveo For Salesforce package installed and configured. @see https://docs.coveo.com/en/1158/coveo-for-salesforce/getting-started-with-coveo-for-salesforce
      */
     @AuraEnabled(continuation=true cacheable=false)
