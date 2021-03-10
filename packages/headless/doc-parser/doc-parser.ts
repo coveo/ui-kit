@@ -217,6 +217,17 @@ const controllers: ControllerConfiguration[] = [
     },
   },
   {
+    initializer: 'buildRelevanceInspector',
+    samplePaths: {
+      react_class: [
+        'packages/samples/headless-react/src/components/relevance-inspector/relevance-inspector.class.tsx',
+      ],
+      react_fn: [
+        'packages/samples/headless-react/src/components/relevance-inspector/relevance-inspector.fn.tsx',
+      ],
+    },
+  },
+  {
     initializer: 'buildSearchParameterManager',
     samplePaths: {
       react_class: [
