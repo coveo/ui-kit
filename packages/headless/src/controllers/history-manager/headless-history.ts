@@ -24,7 +24,7 @@ export type HistoryState = History['state'];
  * @deprecated The `buildHistory` controller will be removed in a future release. Please use `buildHistoryManager` instead.
  */
 export const buildHistory = (engine: Engine) => {
-  engine.logger.error(
+  engine.logger.warn(
     'The "buildHistory" controller will be removed in a future release. Please use "buildHistoryManager" instead.'
   );
   return buildHistoryManager(engine);
