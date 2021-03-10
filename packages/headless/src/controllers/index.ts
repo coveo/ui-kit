@@ -85,7 +85,17 @@ export {
   NumericFacet,
 } from './facets/range-facet/numeric-facet/headless-numeric-facet';
 
-export {History, HistoryState, buildHistory} from './history/headless-history';
+export {
+  History,
+  HistoryState,
+  buildHistory,
+} from './history-manager/headless-history';
+
+export {
+  HistoryManager,
+  HistoryManagerState,
+  buildHistoryManager,
+} from './history-manager/headless-history-manager';
 
 export {
   PagerInitialState,

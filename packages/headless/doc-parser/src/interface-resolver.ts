@@ -195,11 +195,7 @@ function resolveMethodSignature(
   const params = m.parameters.map((p) =>
     resolveParameter(entry, p, ancestorNames)
   );
-  const typeExcerpt = m.returnTypeExcerpt.spannedTokens[0];
-  let returnType: AnyEntity = buildReturnTypeEntity(m);
-  if (isReference(typeExcerpt)) {
-    returnType = buildObjEntityFromReturnType(entry, m, ancestorNames);
-  }
+  const returnType = resolveMethodReturnType(entry, m, ancestorNames);
 
   return buildFuncEntity({
     name: m.displayName,
@@ -207,6 +203,24 @@ function resolveMethodSignature(
     params,
     returnType,
   });
+}
+
+function resolveMethodReturnType(
+  entry: ApiEntryPoint,
+  m: ApiMethodSignature,
+  ancestorNames: string[]
+) {
+  const typeExcerpt = m.returnTypeExcerpt.spannedTokens[0];
+
+  if (isPromise(typeExcerpt)) {
+    return buildReturnTypeEntity(m);
+  }
+
+  if (isReference(typeExcerpt)) {
+    return buildObjEntityFromReturnType(entry, m, ancestorNames);
+  }
+
+  return buildReturnTypeEntity(m);
 }
 
 function buildObjEntityFromReturnType(
@@ -305,6 +319,11 @@ function isTypeAlias(token: ExcerptToken) {
 function isRecordType(token: ExcerptToken) {
   const isRecord = token.text === 'Record';
   return isReference(token) && isRecord;
+}
+
+function isPromise(token: ExcerptToken) {
+  const isPromise = token.text === 'Promise';
+  return isReference(token) && isPromise;
 }
 
 function isReference(token: ExcerptToken) {
