@@ -14,3 +14,5 @@ docs/js
 temp/
 doc-parser/build
 npm-cache
+
+CHANGELOG.md

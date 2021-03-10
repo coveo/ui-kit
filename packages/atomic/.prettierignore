@@ -47,3 +47,4 @@ npm-cache
 
 src/components/**/readme.md
 src/components.d.ts
+CHANGELOG.md

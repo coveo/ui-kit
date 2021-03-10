@@ -49,3 +49,5 @@ reports/*.xml
 
 !.vscode/extensions.json
 npm-cache
+
+CHANGELOG.md
