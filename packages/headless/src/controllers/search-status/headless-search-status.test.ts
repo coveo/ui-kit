@@ -30,4 +30,15 @@ describe('SearchStatus', () => {
     engine.state.search.response.searchUid = '1234567';
     expect(buildSearchStatus(engine).state.firstSearchExecuted).toBe(true);
   });
+
+  it('returns right state "hasError"', () => {
+    expect(buildSearchStatus(engine).state.hasError).toBe(false);
+
+    engine.state.search.error = {
+      message: 'unknown',
+      statusCode: 0,
+      type: 'unknown',
+    };
+    expect(buildSearchStatus(engine).state.hasError).toBe(true);
+  });
 });
