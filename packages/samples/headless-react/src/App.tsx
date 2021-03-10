@@ -28,12 +28,16 @@ import {QuerySummary} from './components/query-summary/query-summary.class';
 import {QuerySummary as QuerySummaryFn} from './components/query-summary/query-summary.fn';
 import {FacetManager} from './components/facet-manager/facet-manager.class';
 import {FacetManager as FacetManagerFn} from './components/facet-manager/facet-manager.fn';
+import {CategoryFacet} from './components/category-facet/category-facet.class';
+import {CategoryFacet as CategoryFacetFn} from './components/category-facet/category-facet.fn';
 import {Facet} from './components/facet/facet.class';
 import {Facet as FacetFn} from './components/facet/facet.fn';
 import {DateFacet} from './components/date-facet/date-facet.class';
 import {DateFacet as DateFacetFn} from './components/date-facet/date-facet.fn';
-import {History} from './components/history/history.class';
-import {History as HistoryFn} from './components/history/history.fn';
+import {NumericFacet} from './components/numeric-facet/numeric-facet.class';
+import {NumericFacet as NumericFacetFn} from './components/numeric-facet/numeric-facet.fn';
+import {HistoryManager} from './components/history-manager/history-manager.class';
+import {HistoryManager as HistoryManagerFn} from './components/history-manager/history-manager.fn';
 import {RelevanceInspector} from './components/relevance-inspector/relevance-inspector.class';
 import {RelevanceInspector as RelevanceInspectorFn} from './components/relevance-inspector/relevance-inspector.fn';
 import {
@@ -46,8 +50,11 @@ import {
   buildQuerySummary,
   buildResultList,
   buildFacetManager,
+  buildCategoryFacet,
   buildFacet,
   buildDateFacet,
+  buildNumericFacet,
+  buildNumericRange,
   buildDateSortCriterion,
   buildFieldSortCriterion,
   buildRelevanceSortCriterion,
@@ -56,12 +63,15 @@ import {
   SortCriterion,
   buildResultsPerPage,
   buildPager,
-  buildHistory,
+  buildHistoryManager,
   buildRelevanceInspector,
+  AnalyticsActions,
+  SearchActions,
 } from '@coveo/headless';
 import {bindSearchParametersToURI} from './components/search-parameter-manager/search-parameter-manager';
 import {setContext} from './components/context/context';
 import {dateRanges} from './components/date-facet/date-utils';
+import filesize from 'filesize';
 
 const recommendationList = buildRecommendationList(recommendationEngine);
 
@@ -93,11 +103,29 @@ const querySummary = buildQuerySummary(engine);
 
 const facetManager = buildFacetManager(engine);
 
+const geographyFacet = buildCategoryFacet(engine, {
+  options: {field: 'geographicalhierarchy'},
+});
 const objectTypeFacet = buildFacet(engine, {
   options: {field: 'objecttype'},
 });
-const fileTypeFacet = buildFacet(engine, {
-  options: {field: 'filetype'},
+
+const [KB, MB, GB] = [1e3, 1e6, 1e9];
+
+const fileSizeAutomaticNumericFacet = buildNumericFacet(engine, {
+  options: {field: 'size', facetId: 'size-3', generateAutomaticRanges: true},
+});
+const fileSizeManualNumericFacet = buildNumericFacet(engine, {
+  options: {
+    field: 'size',
+    facetId: 'size-4',
+    generateAutomaticRanges: false,
+    currentValues: [
+      buildNumericRange({start: 0, end: 5 * KB}),
+      buildNumericRange({start: 5 * KB, end: 5 * MB}),
+      buildNumericRange({start: 5 * MB, end: 5 * GB}),
+    ],
+  },
 });
 
 const createdAutomaticDateFacet = buildDateFacet(engine, {
@@ -137,13 +165,19 @@ const resultsPerPage = buildResultsPerPage(engine, {
 
 const pager = buildPager(engine, {options: {numberOfPages: 6}});
 
-const history = buildHistory(engine);
+const history = buildHistoryManager(engine);
 
 const relevanceInspector = buildRelevanceInspector(engine);
 
-const {autoUpdateURI: startUpdatingURI} = bindSearchParametersToURI(engine);
-
 function App() {
+  // Search parameters should not be restored until all components are registered.
+  const {autoUpdateURI: startUpdatingURI} = bindSearchParametersToURI(engine);
+
+  // A search should not be executed until the search parameters are restored.
+  engine.dispatch(
+    SearchActions.executeSearch(AnalyticsActions.logInterfaceLoad())
+  );
+
   useEffect(() => startUpdatingURI(), []);
   setContext('30-45', ['sports', 'camping', 'electronics']);
 
@@ -191,8 +225,11 @@ function App() {
         </Section>
         <Section title="facet">
           <FacetManager>
+            <CategoryFacet
+              field="geographicalhierarchy"
+              facetId="geographicalhierarchy-1"
+            />
             <Facet field="author" facetId="author-1" />
-            <Facet field="category" facetId="category-1" />
             <DateFacet
               field="created"
               facetId="created-1"
@@ -204,12 +241,37 @@ function App() {
               generateAutomaticRanges={false}
               currentValues={dateRanges}
             />
+            <NumericFacet
+              format={(bytes) => filesize(bytes, {base: 10})}
+              field="size"
+              facetId="size-1"
+              generateAutomaticRanges={true}
+            />
+            <NumericFacet
+              format={(bytes) => filesize(bytes, {base: 10})}
+              field="size"
+              facetId="size-2"
+              generateAutomaticRanges={false}
+              currentValues={[
+                buildNumericRange({start: 0, end: 5 * KB}),
+                buildNumericRange({start: 5 * KB, end: 5 * MB}),
+                buildNumericRange({start: 5 * MB, end: 5 * GB}),
+              ]}
+            />
           </FacetManager>
           <FacetManagerFn controller={facetManager}>
+            <CategoryFacetFn controller={geographyFacet} />
             <FacetFn controller={objectTypeFacet} />
-            <FacetFn controller={fileTypeFacet} />
             <DateFacetFn controller={createdAutomaticDateFacet} />
             <DateFacetFn controller={createdManualDateFacet} />
+            <NumericFacetFn
+              controller={fileSizeAutomaticNumericFacet}
+              format={(bytes) => filesize(bytes, {base: 10})}
+            />
+            <NumericFacetFn
+              controller={fileSizeManualNumericFacet}
+              format={(bytes) => filesize(bytes, {base: 10})}
+            />
           </FacetManagerFn>
         </Section>
         <Section title="sort">
@@ -231,9 +293,9 @@ function App() {
           <Pager />
           <PagerFn controller={pager} />
         </Section>
-        <Section title="history">
-          <History />
-          <HistoryFn controller={history} />
+        <Section title="history-manager">
+          <HistoryManager />
+          <HistoryManagerFn controller={history} />
         </Section>
         <Section title="relevance-inspector">
           <RelevanceInspector />

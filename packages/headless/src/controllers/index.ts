@@ -6,6 +6,16 @@ export {
   RelevanceInspectorProps,
   RelevanceInspectorState,
   RelevanceInspector,
+  DocumentWeights,
+  ExecutionReport,
+  ExecutionStep,
+  QueryExpressions,
+  QueryRankingExpressionWeights,
+  QueryRankingExpression,
+  ResultRankingInformation,
+  RankingInformation,
+  TermWeightReport,
+  SecurityIdentity,
   buildRelevanceInspector,
 } from './relevance-inspector/headless-relevance-inspector';
 
@@ -53,6 +63,9 @@ export {
 } from './facets/facet/headless-facet';
 
 export {
+  DateRangeOptions,
+  DateRangeRequest,
+  DateRangeInput,
   buildDateRange,
   DateFacetOptions,
   DateFacetProps,
@@ -72,7 +85,17 @@ export {
   NumericFacet,
 } from './facets/range-facet/numeric-facet/headless-numeric-facet';
 
-export {History, HistoryState, buildHistory} from './history/headless-history';
+export {
+  History,
+  HistoryState,
+  buildHistory,
+} from './history-manager/headless-history';
+
+export {
+  HistoryManager,
+  HistoryManagerState,
+  buildHistoryManager,
+} from './history-manager/headless-history-manager';
 
 export {
   PagerInitialState,
@@ -180,6 +203,8 @@ export {
   StandaloneSearchBox,
   buildStandaloneSearchBox,
 } from './standalone-search-box/headless-standalone-search-box';
+
+export {Product} from './product-recommendations/headless-base-product-recommendations';
 
 export {
   FrequentlyBoughtTogetherListOptions,

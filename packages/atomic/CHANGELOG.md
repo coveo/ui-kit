@@ -3,6 +3,114 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.8.0-alpha.8](https://github.com/coveo/ui-kit/compare/v0.8.0-alpha.7...v0.8.0-alpha.8) (2021-03-09)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [0.8.0-alpha.7](https://github.com/coveo/ui-kit/compare/v0.8.0-alpha.6...v0.8.0-alpha.7) (2021-03-09)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [0.8.0-alpha.6](https://github.com/coveo/ui-kit/compare/v0.8.0-alpha.5...v0.8.0-alpha.6) (2021-03-09)
+
+
+### Bug Fixes
+
+* **atomic:** handle invalid sort criteria options  ([#595](https://github.com/coveo/ui-kit/issues/595)) ([4ce70d6](https://github.com/coveo/ui-kit/commit/4ce70d635745741ceddfcd99fc6893f01b4c2865))
+
+
+
+
+
+# [0.8.0-alpha.5](https://github.com/coveo/ui-kit/compare/v0.8.0-alpha.4...v0.8.0-alpha.5) (2021-03-09)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [0.8.0-alpha.4](https://github.com/coveo/ui-kit/compare/v0.8.0-alpha.3...v0.8.0-alpha.4) (2021-03-09)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [0.8.0-alpha.3](https://github.com/coveo/ui-kit/compare/v0.8.0-alpha.2...v0.8.0-alpha.3) (2021-03-09)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [0.8.0-alpha.2](https://github.com/coveo/ui-kit/compare/v0.8.0-alpha.1...v0.8.0-alpha.2) (2021-03-09)
+
+
+### Bug Fixes
+
+* **atomic:** prevent XSS injections in templates field values ([#585](https://github.com/coveo/ui-kit/issues/585)) ([aa4bee6](https://github.com/coveo/ui-kit/commit/aa4bee69b4df1418a7678cc2b598fb4f7b52e5a2))
+
+
+
+
+
+# [0.8.0-alpha.1](https://github.com/coveo/ui-kit/compare/v0.8.0-alpha.0...v0.8.0-alpha.1) (2021-03-08)
+
+
+### Bug Fixes
+
+* **atomic:** prepend timestamp to the results key ([#589](https://github.com/coveo/ui-kit/issues/589)) ([d9d6701](https://github.com/coveo/ui-kit/commit/d9d670125f526ab24074f7ad354bd11a47d09508))
+
+
+
+
+
+# [0.8.0-alpha.0](https://github.com/coveo/ui-kit/compare/v0.7.0...v0.8.0-alpha.0) (2021-03-08)
+
+
+### Features
+
+* **atomic:** add formats to result value ([#570](https://github.com/coveo/ui-kit/issues/570)) ([7038c28](https://github.com/coveo/ui-kit/commit/7038c28196e5efc279ee73f512a311cc1d057723))
+
+
+
+
+
+# [0.7.0](https://github.com/coveo/ui-kit/compare/v0.7.0-alpha.39...v0.7.0) (2021-03-08)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [0.7.0-alpha.39](https://github.com/coveo/ui-kit/compare/v0.7.0-alpha.38...v0.7.0-alpha.39) (2021-03-08)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [0.7.0-alpha.38](https://github.com/coveo/ui-kit/compare/v0.7.0-alpha.37...v0.7.0-alpha.38) (2021-03-08)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
 # [0.7.0-alpha.37](https://github.com/coveo/ui-kit/compare/v0.7.0-alpha.36...v0.7.0-alpha.37) (2021-03-08)
 
 

@@ -8,6 +8,7 @@ import {
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import {Schema, NumberValue} from '@coveo/bueno';
+import {filterProtocol} from '../../../utils/xss-utils';
 
 /**
  * The ResultUri component displays the URI, or path, to access a result.
@@ -71,7 +72,7 @@ export class AtomicResultPrintableUri {
       const uri = parent.getAttribute('uri')!;
       return (
         <li part="result-printable-uri-list-element">
-          <a part="result-printable-uri-link" href={uri}>
+          <a part="result-printable-uri-link" href={filterProtocol(uri)}>
             {name}
           </a>
         </li>
@@ -107,11 +108,11 @@ export class AtomicResultPrintableUri {
     }
 
     return (
-      <a part="result-printable-uri-link" href={this.result.clickUri}>
-        <atomic-result-value
-          value="printableUri"
-          shouldHighlightWith="printableUriHighlights"
-        ></atomic-result-value>
+      <a
+        part="result-printable-uri-link"
+        href={filterProtocol(this.result.clickUri)}
+      >
+        <atomic-result-text field="printableUri"></atomic-result-text>
       </a>
     );
   }

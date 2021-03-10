@@ -56,7 +56,7 @@ describe('date facet', () => {
   });
 
   it('registers a date facet with the passed options', () => {
-    const action = registerDateFacet({facetId, ...options});
+    const action = registerDateFacet({facetId, currentValues: [], ...options});
     expect(engine.actions).toContainEqual(action);
   });
 
