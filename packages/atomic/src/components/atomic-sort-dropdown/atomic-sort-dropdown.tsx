@@ -140,6 +140,10 @@ export class AtomicSortDropdown implements InitializableComponent {
   }
 
   public render() {
+    if (this.searchStatusState.hasError) {
+      return;
+    }
+
     if (!this.searchStatusState.firstSearchExecuted) {
       return (
         <div
