@@ -62,7 +62,7 @@ export class SearchAPIClient {
   ): Promise<SearchAPIClientResponse<PlanResponseSuccess>> {
     const platformResponse = await PlatformClient.call<PlanResponseSuccess>({
       ...baseSearchRequest(req, 'POST', 'application/json', '/plan'),
-      requestParams: pickNonBaseParams(req) as PlanRequest, // TODO: This cast won't be needed once all methods have been reworked and we can change types in PlatformClient
+      requestParams: pickNonBaseParams(req),
       ...this.options,
     });
 
@@ -205,7 +205,7 @@ const unwrapError = (res: PlatformResponse<AllSearchAPIResponse>) => {
     return unwrapByStatusCode(res);
   }
 
-  return {message: 'unknown', statusCode: 0, type: 'unknown'};
+  return {message: 'unknown', statusCode: 0, type: 'unknown', ...res.body};
 };
 
 const unwrapByBodyException = (
