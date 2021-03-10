@@ -26,14 +26,23 @@ export class SchemaValidationError extends Error {
   }
 }
 
+function keysOf<T>(obj: T): (keyof T)[] {
+  return Object.keys(obj) as (keyof T)[];
+}
+
+function addDefinedEntries<T>(target: T, source: T): void {
+  keysOf(source).forEach(
+    (key) => source[key] !== undefined && (target[key] = source[key])
+  );
+}
+
 export class Schema<Values extends object> {
   constructor(private definition: SchemaDefinition<Values>) {}
 
   public validate(values: Partial<Values> = {}, message = '') {
-    const mergedValues = {
-      ...this.default,
-      ...values,
-    };
+    const mergedValues: Partial<Values> = {};
+    addDefinedEntries(mergedValues, this.default);
+    addDefinedEntries(mergedValues, values);
 
     const errors: string[] = [];
 

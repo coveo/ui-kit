@@ -1,4 +1,5 @@
 import {Schema} from './schema';
+import {StringValue} from './values/string-value';
 import {Value} from './values/value';
 
 describe('schema', () => {
@@ -11,6 +12,20 @@ describe('schema', () => {
       expect(schema.validate({})).toEqual({
         valueWithDefault: 'default',
       });
+    });
+
+    it('should not return undefined entries', () => {
+      const schema = new Schema({
+        value: new StringValue({regex: /^[a-zA-Z0-9-_]+$/}),
+      });
+      expect(schema.validate({value: undefined})).toStrictEqual({});
+    });
+
+    it('should overwrite undefined entries with their defined default', () => {
+      const schema = new Schema({
+        value: new StringValue({regex: /^[a-zA-Z0-9-_]+$/, default: 'abc'}),
+      });
+      expect(schema.validate({value: undefined})).toStrictEqual({value: 'abc'});
     });
 
     it('should not return the default if a value is defined', () => {

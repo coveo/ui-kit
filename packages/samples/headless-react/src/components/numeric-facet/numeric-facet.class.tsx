@@ -30,7 +30,7 @@ export class NumericFacet extends Component<NumericFacetProps> {
         field: props.field,
         facetId: props.facetId,
         generateAutomaticRanges: props.generateAutomaticRanges,
-        ...(props.currentValues && {currentValues: props.currentValues}),
+        currentValues: props.currentValues,
       },
     });
     this.state = this.controller.state;
