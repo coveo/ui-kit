@@ -24,9 +24,9 @@ export default class SearchBox extends LightningElement {
   searchBox;
   /** @type {import("coveo").Unsubscribe} */
   unsubscribe;
-  tributeLoaded = false;
   /** @type {any} */
   tribute;
+  tributeLoaded = false;
 
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
