@@ -11,12 +11,7 @@
     ></lightning-button>
 
     <template for:each={currentPages} for:item="pageNumber">
-      <c-number-button
-        key={pageNumber}
-        number={pageNumber}
-        current={currentPage}
-        ongoto={goto}
-      ></c-number-button>
+      <c-number-button key={pageNumber} number={pageNumber} current={currentPage} ongoto={goto}></c-number-button>
     </template>
 
     <lightning-button

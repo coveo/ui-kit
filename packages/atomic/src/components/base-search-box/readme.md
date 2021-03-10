@@ -4,6 +4,7 @@
 
 <!-- Auto Generated Below -->
 
+
 ## Properties
 
 | Property                        | Attribute               | Description | Type                             | Default     |
@@ -17,6 +18,7 @@
 | `suggestionValues` _(required)_ | --                      |             | `{ value: string; }[]`           | `undefined` |
 | `value` _(required)_            | `value`                 |             | `string`                         | `undefined` |
 
+
 ## Events
 
 | Event             | Description | Type                  |
@@ -26,6 +28,7 @@
 | `selectValue`     |             | `CustomEvent<number>` |
 | `showMoreResults` |             | `CustomEvent<void>`   |
 | `textChange`      |             | `CustomEvent<string>` |
+
 
 ## Shadow Parts
 
@@ -37,15 +40,15 @@
 | `"suggestion"`    |             |
 | `"suggestions"`   |             |
 
+
 ## Dependencies
 
 ### Used by
 
-- [atomic-search-box](../atomic-search-box)
-- [facet-search](../facets/facet-search)
+ - [atomic-search-box](../atomic-search-box)
+ - [facet-search](../facets/facet-search)
 
 ### Graph
-
 ```mermaid
 graph TD;
   atomic-search-box --> base-search
@@ -53,6 +56,6 @@ graph TD;
   style base-search fill:#f9f,stroke:#333,stroke-width:4px
 ```
 
----
+----------------------------------------------
 
-_Built with [StencilJS](https://stenciljs.com/)_
+*Built with [StencilJS](https://stenciljs.com/)*

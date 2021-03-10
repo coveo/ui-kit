@@ -1,6 +1,9 @@
 # atomic-result-list-placeholder
 
+
+
 <!-- Auto Generated Below -->
+
 
 ## Shadow Parts
 
@@ -8,18 +11,18 @@
 | ---------- | ----------------------------------- |
 | `"result"` | The placeholder for a single result |
 
+
 ## Dependencies
 
 ### Used by
 
-- [atomic-result-list](../atomic-result-list)
+ - [atomic-result-list](../atomic-result-list)
 
 ### Depends on
 
 - [atomic-component-error](../atomic-component-error)
 
 ### Graph
-
 ```mermaid
 graph TD;
   atomic-result-list-placeholder --> atomic-component-error
@@ -27,6 +30,6 @@ graph TD;
   style atomic-result-list-placeholder fill:#f9f,stroke:#333,stroke-width:4px
 ```
 
----
+----------------------------------------------
 
-_Built with [StencilJS](https://stenciljs.com/)_
+*Built with [StencilJS](https://stenciljs.com/)*

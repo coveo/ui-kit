@@ -1,58 +1,33 @@
 <template>
-  <template if:true={hasParentsOrValues}>
-    <lightning-card title={label}>
-      <ul class="slds-has-dividers_around-space slds-m-bottom_medium">
-        <template if:true={hasParents}>
-          <lightning-button
-            variant="base"
-            label="All"
-            title="Show All"
-            icon-name="utility:all"
-            class="slds-m-left_medium"
-            onclick={reset}
-          ></lightning-button>
-        </template>
-        <template for:each={parents} for:item="v">
-          <li
-            class="slds-m-horizontal--medium slds-m-vertical--x-small slds-grid"
-            key={v.value}
-          >
-            <span class="nowrap slds-text-title_bold">{v.value}</span>
-          </li>
-        </template>
-      </ul>
-      <ul class="slds-has-dividers_around-space slds-m-vertical_medium">
-        <template for:each={values} for:item="v">
-          <c-category-facet-value
-            onselectvalue={onSelect}
-            key={v.value}
-            item={v}
-          ></c-category-facet-value>
-        </template>
-      </ul>
+    <template if:true={hasParentsOrValues}>
+        <lightning-card title={label}>
+            <ul class="slds-has-dividers_around-space slds-m-bottom_medium">
+                <template if:true={hasParents}>
+                    <lightning-button variant="base" label="All" title="Show All" icon-name="utility:all"
+                                      class="slds-m-left_medium" onclick={reset}></lightning-button>
+                </template>
+                <template for:each={parents} for:item="v">
+                    <li class="slds-m-horizontal--medium slds-m-vertical--x-small slds-grid" key={v.value}>
+                        <span class="nowrap slds-text-title_bold">{v.value}</span>
+                    </li>
+                </template>
+            </ul>
+            <ul class="slds-has-dividers_around-space slds-m-vertical_medium">
+                <template for:each={values} for:item="v">
+                    <c-category-facet-value onselectvalue={onSelect} key={v.value} item={v}></c-category-facet-value>
+                </template>
+            </ul>
 
-      <lightning-button-group>
-        <template if:true={canShowMore}>
-          <lightning-button
-            variant="base"
-            label="More"
-            title="Show more"
-            icon-name="utility:arrowdown"
-            class="slds-m-left_x-small"
-            onclick={showMore}
-          ></lightning-button>
-        </template>
-        <template if:true={canShowLess}>
-          <lightning-button
-            variant="base"
-            label="Less"
-            title="Show less"
-            icon-name="utility:arrowup"
-            class="slds-m-left_x-small"
-            onclick={showLess}
-          ></lightning-button>
-        </template>
-      </lightning-button-group>
-    </lightning-card>
-  </template>
+            <lightning-button-group>
+                <template if:true={canShowMore}>
+                    <lightning-button variant="base" label="More" title="Show more" icon-name="utility:arrowdown"
+                                      class="slds-m-left_x-small" onclick={showMore}></lightning-button>
+                </template>
+                <template if:true={canShowLess}>
+                    <lightning-button variant="base" label="Less" title="Show less" icon-name="utility:arrowup"
+                                      class="slds-m-left_x-small" onclick={showLess}></lightning-button>
+                </template>
+            </lightning-button-group>
+        </lightning-card>
+    </template>
 </template>

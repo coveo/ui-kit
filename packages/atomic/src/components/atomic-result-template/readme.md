@@ -1,6 +1,9 @@
 # atomic-result-template
 
+
+
 <!-- Auto Generated Below -->
+
 
 ## Properties
 
@@ -8,13 +11,19 @@
 | ------------ | --------- | ----------- | --------------------------- | ------- |
 | `conditions` | --        |             | `ResultTemplateCondition[]` | `[]`    |
 
+
 ## Methods
 
 ### `getTemplate() => Promise<ResultTemplate<string> | null>`
 
+
+
 #### Returns
 
 Type: `Promise<ResultTemplate<string> | null>`
+
+
+
 
 ## Dependencies
 
@@ -23,13 +32,12 @@ Type: `Promise<ResultTemplate<string> | null>`
 - [atomic-component-error](../atomic-component-error)
 
 ### Graph
-
 ```mermaid
 graph TD;
   atomic-result-template --> atomic-component-error
   style atomic-result-template fill:#f9f,stroke:#333,stroke-width:4px
 ```
 
----
+----------------------------------------------
 
-_Built with [StencilJS](https://stenciljs.com/)_
+*Built with [StencilJS](https://stenciljs.com/)*

@@ -1,4 +1,4 @@
-declare module '@salesforce/resourceUrl/tributejs' {
-  var tributejs: string;
-  export default tributejs;
+declare module "@salesforce/resourceUrl/tributejs" {
+    var tributejs: string;
+    export default tributejs;
 }

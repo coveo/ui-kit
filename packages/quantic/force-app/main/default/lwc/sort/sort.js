@@ -55,22 +55,15 @@ export default class Sort extends LightningElement {
   }
 
   get dateDescending() {
-    return CoveoHeadless.buildDateSortCriterion(
-      CoveoHeadless.SortOrder.Descending
-    );
+    return CoveoHeadless.buildDateSortCriterion(CoveoHeadless.SortOrder.Descending)
   }
-
+  
   get dateAscending() {
-    return CoveoHeadless.buildDateSortCriterion(
-      CoveoHeadless.SortOrder.Ascending
-    );
+    return CoveoHeadless.buildDateSortCriterion(CoveoHeadless.SortOrder.Ascending)
   }
 
   get largest() {
-    return CoveoHeadless.buildFieldSortCriterion(
-      'size',
-      CoveoHeadless.SortOrder.Descending
-    );
+    return CoveoHeadless.buildFieldSortCriterion('size', CoveoHeadless.SortOrder.Descending)
   }
 
   get options() {

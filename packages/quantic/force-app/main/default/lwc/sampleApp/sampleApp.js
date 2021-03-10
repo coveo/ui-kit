@@ -2,7 +2,7 @@
 import template1 from './resultTemplates/template1.html';
 // @ts-ignore
 import template2 from './resultTemplates/template2.html';
-import {LightningElement} from 'lwc';
+import { LightningElement } from 'lwc';
 
 export default class SampleApp extends LightningElement {
   renderedCallback() {

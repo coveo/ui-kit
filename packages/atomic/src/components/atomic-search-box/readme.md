@@ -1,17 +1,18 @@
 # atomic-search-box
-
 A search box with built in support for query suggestions.
 
 <!-- Auto Generated Below -->
 
+
 ## Properties
 
-| Property              | Attribute               | Description                                                 | Type      | Default                            |
-| --------------------- | ----------------------- | ----------------------------------------------------------- | --------- | ---------------------------------- |
-| `_id`                 | `data-id`               |                                                             | `string`  | `randomID( 'atomic-search-box-' )` |
-| `leadingSubmitButton` | `leading-submit-button` | Whether the submit button should be placed before the input | `boolean` | `false`                            |
-| `numberOfSuggestions` | `number-of-suggestions` | Maximum number of suggestions to display                    | `number`  | `5`                                |
-| `placeholder`         | `placeholder`           | The placeholder for the search box input                    | `string`  | `''`                               |
+| Property              | Attribute               | Description                                                 | Type      | Default                                  |
+| --------------------- | ----------------------- | ----------------------------------------------------------- | --------- | ---------------------------------------- |
+| `_id`                 | `data-id`               |                                                             | `string`  | `randomID(     'atomic-search-box-'   )` |
+| `leadingSubmitButton` | `leading-submit-button` | Whether the submit button should be placed before the input | `boolean` | `false`                                  |
+| `numberOfSuggestions` | `number-of-suggestions` | Maximum number of suggestions to display                    | `number`  | `5`                                      |
+| `placeholder`         | `placeholder`           | The placeholder for the search box input                    | `string`  | `''`                                     |
+
 
 ## Shadow Parts
 
@@ -25,12 +26,14 @@ A search box with built in support for query suggestions.
 | `"suggestion"`        | The suggestion                      |
 | `"suggestions"`       | The list of suggestions             |
 
+
 ## CSS Custom Properties
 
 | Name                          | Description                                     |
 | ----------------------------- | ----------------------------------------------- |
 | `--atomic-search-box-height`  | Height of the search box                        |
 | `--atomic-submit-button-size` | Size of the submit button inside the search box |
+
 
 ## Dependencies
 
@@ -39,13 +42,12 @@ A search box with built in support for query suggestions.
 - [atomic-component-error](../atomic-component-error)
 
 ### Graph
-
 ```mermaid
 graph TD;
   atomic-search-box --> atomic-component-error
   style atomic-search-box fill:#f9f,stroke:#333,stroke-width:4px
 ```
 
----
+----------------------------------------------
 
-_Built with [StencilJS](https://stenciljs.com/)_
+*Built with [StencilJS](https://stenciljs.com/)*

@@ -24,7 +24,7 @@ export async function getApiRequestBody(
   return interception.request.body;
 }
 
-function getAnalytics(selector: string): Promise<Interception> {
+function getAnalytics(selector: string): Promise<any> {
   return new Promise((resolve) => {
     cy.wait(selector).then((interception) => {
       resolve(interception);

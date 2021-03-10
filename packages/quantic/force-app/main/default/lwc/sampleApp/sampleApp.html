@@ -1,44 +1,30 @@
 <template>
-  <div onregisterresulttemplates={handleResultTemplateRegistration}>
-    <c-search-interface sample>
-      <div class="slds-grid slds-gutters slds-wrap main">
-        <div
-          class="slds-col slds-order_2 slds-large-order_1 slds-size_1-of-1 slds-large-size_4-of-12"
-        >
-          <c-facet field="objecttype" label="Type"></c-facet>
-          <c-facet field="filetype" label="File Type"></c-facet>
-          <c-numeric-facet
-            field="ytlikecount"
-            label="Youtube Likes"
-          ></c-numeric-facet>
-          <c-date-facet field="date" label="Date"></c-date-facet>
-          <c-category-facet
-            field="geographicalhierarchy"
-            label="Country"
-          ></c-category-facet>
-        </div>
-        <div
-          class="slds-col slds-order_1 slds-large-order_2 slds-size_1-of-1 slds-large-size_8-of-12"
-        >
-          <c-search-box></c-search-box>
-          <div class="slds-grid slds-wrap">
-            <c-summary
-              class="slds-order_2 slds-medium-order_1 slds-size_1-of-1 slds-medium-size_9-of-12"
-            >
-            </c-summary>
-            <c-sort
-              class="slds-order_1 slds-medium-order_2 slds-size_1-of-1 slds-medium-size_3-of-12"
-            >
-            </c-sort>
-          </div>
-
-          <c-result-list></c-result-list>
-          <div class="slds-m-vertical_medium">
-            <c-pager></c-pager>
-            <c-results-per-page></c-results-per-page>
-          </div>
-        </div>
-      </div>
-    </c-search-interface>
-  </div>
+    <div onregisterresulttemplates={handleResultTemplateRegistration}>
+        <c-search-interface sample>
+            <div class="slds-grid slds-gutters slds-wrap main">
+                <div class="slds-col slds-order_2 slds-large-order_1 slds-size_1-of-1 slds-large-size_4-of-12">
+                    <c-facet field="objecttype" label="Type"></c-facet>
+                    <c-facet field="filetype" label="File Type"></c-facet>
+                    <c-numeric-facet field="ytlikecount" label="Youtube Likes"></c-numeric-facet>
+                    <c-date-facet field="date" label="Date"></c-date-facet>
+                    <c-category-facet field="geographicalhierarchy" label="Country"></c-category-facet>
+                </div>
+                <div class="slds-col slds-order_1 slds-large-order_2 slds-size_1-of-1 slds-large-size_8-of-12">
+                    <c-search-box></c-search-box>
+                    <div class="slds-grid slds-wrap">
+                        <c-summary class="slds-order_2 slds-medium-order_1 slds-size_1-of-1 slds-medium-size_9-of-12">
+                        </c-summary>
+                        <c-sort class="slds-order_1 slds-medium-order_2 slds-size_1-of-1 slds-medium-size_3-of-12">
+                        </c-sort>
+                    </div>
+    
+                    <c-result-list></c-result-list>
+                    <div class="slds-m-vertical_medium">
+                        <c-pager></c-pager>
+                        <c-results-per-page></c-results-per-page>
+                    </div>
+                </div>
+            </div>
+        </c-search-interface>
+    </div>
 </template>

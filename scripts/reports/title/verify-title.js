@@ -1,4 +1,4 @@
-const {getPullRequestTitle} = require('../github-client');
+const { getPullRequestTitle } = require('../github-client');
 
 const load = require('@commitlint/load').default;
 const lint = require('@commitlint/lint').default;
@@ -6,7 +6,7 @@ const lint = require('@commitlint/lint').default;
 const specUrl = 'https://www.conventionalcommits.org/en/v1.0.0/#summary';
 
 async function buildTitleReport() {
-  const prTitle = (await getPullRequestTitle()) || '';
+  const prTitle = await getPullRequestTitle() || '';
   const {valid} = await analyze(prTitle);
   const isTitleValid = prTitle && valid;
 
@@ -19,24 +19,24 @@ async function analyze(title) {
 }
 
 async function getLinterConfiguration() {
-  const conventionalConfig = {extends: ['@commitlint/config-conventional']};
-  return await load(conventionalConfig);
+  const conventionalConfig = { extends: ['@commitlint/config-conventional'] };
+  return await load(conventionalConfig)
 }
 
 function buildReport(isTitleValid) {
   const message = isTitleValid ? buildSuccessMessage() : buildErrorMessage();
-
+  
   return `
   **PR Title**
 
   ${message}
-  `;
+  `
 }
 
 function buildSuccessMessage() {
   return `
   :white_check_mark: Title follows the [conventional commit](${specUrl}) spec.
-  `;
+  `
 }
 
 function buildErrorMessage() {
@@ -48,7 +48,7 @@ function buildErrorMessage() {
   Example:
   
   feat(headless): add result-list controller
-  `;
+  `
 }
 
-module.exports = {buildTitleReport};
+module.exports = { buildTitleReport };

@@ -1,11 +1,7 @@
 <template>
   <div>
     <template for:each={results} for:item="result">
-      <c-result
-        key={result.uniqueId}
-        result={result}
-        result-templates-manager={resultTemplatesManager}
-      >
+      <c-result key={result.uniqueId} result={result} result-templates-manager={resultTemplatesManager}>
         <p></p>
       </c-result>
     </template>

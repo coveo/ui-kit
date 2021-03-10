@@ -331,7 +331,10 @@ console.log(engine.state.counter); // 1
 It is possible to create custom headless controllers using the `buildController` function. When using Typescript, it is necessary to specify the type of the engine.
 
 ```typescript
-import {Engine, buildController} from '@coveo/headless';
+import {
+  Engine,
+  buildController
+} from '@coveo/headless';
 import {
   incrementCounterAction,
   decrementCounterAction,
@@ -342,7 +345,9 @@ export type CounterState = Counter['state'];
 
 export type Counter = ReturnType<typeof buildCounter>;
 
-export const buildCounter = (engine: Engine) => {
+export const buildCounter = (
+  engine: Engine
+) => {
   const controller = buildController(engine);
 
   return {

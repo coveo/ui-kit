@@ -1,6 +1,9 @@
 # atomic-component-error
 
+
+
 <!-- Auto Generated Below -->
+
 
 ## Properties
 
@@ -8,6 +11,7 @@
 | ---------------------- | --------- | ----------- | ------------- | ----------- |
 | `element` _(required)_ | --        |             | `HTMLElement` | `undefined` |
 | `error` _(required)_   | --        |             | `Error`       | `undefined` |
+
 
 ## Dependencies
 
@@ -40,7 +44,6 @@
  - [atomic-text](../atomic-text)
 
 ### Graph
-
 ```mermaid
 graph TD;
   atomic-breadcrumb-manager --> atomic-component-error
@@ -71,6 +74,6 @@ graph TD;
   style atomic-component-error fill:#f9f,stroke:#333,stroke-width:4px
 ```
 
----
+----------------------------------------------
 
-_Built with [StencilJS](https://stenciljs.com/)_
+*Built with [StencilJS](https://stenciljs.com/)*

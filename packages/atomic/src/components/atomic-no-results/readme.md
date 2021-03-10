@@ -1,6 +1,9 @@
 # atomic-no-results
 
+
+
 <!-- Auto Generated Below -->
+
 
 ## Properties
 
@@ -8,6 +11,7 @@
 | ------------------------ | --------------------------- | -------------------------------------------------------------------- | --------- | ------- |
 | `enableCancelLastAction` | `enable-cancel-last-action` | Whether to display a button which cancels the last available action. | `boolean` | `true`  |
 | `enableSearchTips`       | `enable-search-tips`        | Whether to display a list of search tips to the user.                | `boolean` | `true`  |
+
 
 ## Shadow Parts
 
@@ -18,6 +22,7 @@
 | `"tips-list-element"` | The tips list elements          |
 | `"tips-title"`        | The "Search tips" title         |
 
+
 ## Dependencies
 
 ### Depends on
@@ -25,13 +30,12 @@
 - [atomic-component-error](../atomic-component-error)
 
 ### Graph
-
 ```mermaid
 graph TD;
   atomic-no-results --> atomic-component-error
   style atomic-no-results fill:#f9f,stroke:#333,stroke-width:4px
 ```
 
----
+----------------------------------------------
 
-_Built with [StencilJS](https://stenciljs.com/)_
+*Built with [StencilJS](https://stenciljs.com/)*

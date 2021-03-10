@@ -1,6 +1,9 @@
 # atomic-search-interface
 
+
+
 <!-- Auto Generated Below -->
+
 
 ## Properties
 
@@ -14,19 +17,29 @@
 | `reflectStateInUrl` | `reflect-state-in-url` |             | `boolean`                                                                               | `true`                     |
 | `searchHub`         | `search-hub`           |             | `string`                                                                                | `'default'`                |
 
+
 ## Methods
 
 ### `executeFirstSearch() => Promise<void>`
 
+
+
 #### Returns
 
 Type: `Promise<void>`
+
+
 
 ### `initialize(options: InitializationOptions) => Promise<void>`
 
+
+
 #### Returns
 
 Type: `Promise<void>`
+
+
+
 
 ## Dependencies
 
@@ -36,7 +49,6 @@ Type: `Promise<void>`
 - [atomic-relevance-inspector](../atomic-relevance-inspector)
 
 ### Graph
-
 ```mermaid
 graph TD;
   atomic-search-interface --> atomic-component-error
@@ -44,6 +56,6 @@ graph TD;
   style atomic-search-interface fill:#f9f,stroke:#333,stroke-width:4px
 ```
 
----
+----------------------------------------------
 
-_Built with [StencilJS](https://stenciljs.com/)_
+*Built with [StencilJS](https://stenciljs.com/)*

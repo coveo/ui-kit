@@ -1,5 +1,5 @@
-const {existsSync, writeFileSync, appendFileSync} = require('fs');
-const {computeFileSizes} = require('./command');
+const { existsSync, writeFileSync, appendFileSync } = require('fs')
+const { computeFileSizes } = require('./command');
 
 const branch = process.env.GIT_BRANCH;
 const fileName = 'bundle-size-time-series.csv';
@@ -21,19 +21,19 @@ function initDataFile() {
 
 async function prepareData() {
   const data = await getData();
-  const {minified, gzipped} = data;
+  const { minified, gzipped } = data;
   return `\n${minified},${gzipped}`;
 }
 
 async function getData() {
-  const slash = isWindows() ? '\\' : '/';
+  const slash = isWindows() ? '\\' : '/'
   const bundleName = `dist${slash}browser${slash}headless.esm.js`;
-
+  
   const sizes = await computeFileSizes();
   const data = sizes[bundleName];
-
+  
   if (!data) {
-    throw new Error(`failed to retrieve data for bundle: ${bundleName}`);
+    throw new Error(`failed to retrieve data for bundle: ${bundleName}`)
   }
 
   return data;

@@ -1,9 +1,10 @@
 # atomic-numeric-facet
 
-A facet who's values are expressed as numeric ranges.
+A facet who's values are expressed as numeric ranges. 
 It is displayed as a regular facet in desktop browsers and as a button which opens a facet modal in mobile browsers.
 
 <!-- Auto Generated Below -->
+
 
 ## Properties
 
@@ -13,6 +14,7 @@ It is displayed as a regular facet in desktop browsers and as a button which ope
 | `field`                   | `field`                     | Specifies the index field whose values the facet should use                  | `string`  | `''`         |
 | `generateAutomaticRanges` | `generate-automatic-ranges` | Whether or not the index should automatically generate options for the facet | `boolean` | `true`       |
 | `label`                   | `label`                     | The non-localized label for the facet                                        | `string`  | `'No label'` |
+
 
 ## Shadow Parts
 
@@ -24,6 +26,7 @@ It is displayed as a regular facet in desktop browsers and as a button which ope
 | `"facet-values"` | The list of facet values                                           |
 | `"reset-button"` | The button that resets the actively selected facet values          |
 
+
 ## Dependencies
 
 ### Depends on
@@ -31,13 +34,12 @@ It is displayed as a regular facet in desktop browsers and as a button which ope
 - [atomic-component-error](../../atomic-component-error)
 
 ### Graph
-
 ```mermaid
 graph TD;
   atomic-numeric-facet --> atomic-component-error
   style atomic-numeric-facet fill:#f9f,stroke:#333,stroke-width:4px
 ```
 
----
+----------------------------------------------
 
-_Built with [StencilJS](https://stenciljs.com/)_
+*Built with [StencilJS](https://stenciljs.com/)*

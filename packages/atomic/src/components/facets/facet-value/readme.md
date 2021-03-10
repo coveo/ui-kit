@@ -1,6 +1,9 @@
 # facet-value
 
+
+
 <!-- Auto Generated Below -->
+
 
 ## Properties
 
@@ -10,22 +13,23 @@
 | `label` _(required)_           | `label`             |             | `string`  | `undefined` |
 | `numberOfResults` _(required)_ | `number-of-results` |             | `number`  | `undefined` |
 
+
 ## Events
 
 | Event                | Description | Type                |
 | -------------------- | ----------- | ------------------- |
 | `facetValueSelected` |             | `CustomEvent<void>` |
 
+
 ## Dependencies
 
 ### Used by
 
-- [atomic-date-facet](../atomic-date-facet)
-- [atomic-facet](../atomic-facet)
-- [atomic-numeric-facet](../atomic-numeric-facet)
+ - [atomic-date-facet](../atomic-date-facet)
+ - [atomic-facet](../atomic-facet)
+ - [atomic-numeric-facet](../atomic-numeric-facet)
 
 ### Graph
-
 ```mermaid
 graph TD;
   atomic-date-facet --> facet-value
@@ -34,6 +38,6 @@ graph TD;
   style facet-value fill:#f9f,stroke:#333,stroke-width:4px
 ```
 
----
+----------------------------------------------
 
-_Built with [StencilJS](https://stenciljs.com/)_
+*Built with [StencilJS](https://stenciljs.com/)*

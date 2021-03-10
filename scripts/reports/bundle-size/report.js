@@ -7,15 +7,15 @@ function prepareData(oldBundleMaps, newBundleMaps) {
   console.log('preparing data');
 
   const oldEntries = Object.entries(oldBundleMaps);
-
-  const combinedEntries = oldEntries.map((entry) => {
+  
+  const combinedEntries = oldEntries.map(entry => {
     const [bundleName, oldBundleSizeMap] = entry;
     const newBundleSizeMap = newBundleMaps[bundleName] || buildNullSizeMap();
-
+    
     return [bundleName, oldBundleSizeMap, newBundleSizeMap];
-  });
-
-  return combinedEntries.map((entry) => buildRows(...entry));
+  })
+  
+  return combinedEntries.map(entry => buildRows(...entry));
 }
 
 function buildNullSizeMap() {
@@ -23,27 +23,21 @@ function buildNullSizeMap() {
     bundled: 0,
     minified: 0,
     gzipped: 0,
-  };
+  }
 }
 
 function buildRows(bundleName, oldSizeMap, newSizeMap) {
   return Object.keys(oldSizeMap)
-    .filter((key) => isNumeric(oldSizeMap[key]))
-    .map((compression, index) => {
-      const fileName = index === 0 ? bundleName : '';
+  .filter(key => isNumeric(oldSizeMap[key]))
+  .map((compression, index) => {
+    const fileName = index === 0 ? bundleName : '';
+    
+    const oldSize = oldSizeMap[compression];
+    const newSize = newSizeMap[compression];
+    const change = (newSize - oldSize) * 100 / oldSize;
 
-      const oldSize = oldSizeMap[compression];
-      const newSize = newSizeMap[compression];
-      const change = ((newSize - oldSize) * 100) / oldSize;
-
-      return [
-        fileName,
-        compression,
-        toKb(oldSize),
-        toKb(newSize),
-        toOneDecimal(change),
-      ];
-    });
+    return [fileName, compression, toKb(oldSize), toKb(newSize), toOneDecimal(change)];
+  });
 }
 
 function toKb(num) {
@@ -56,28 +50,23 @@ function toOneDecimal(num) {
 }
 
 function isNumeric(value) {
-  return typeof value === 'number';
+  return typeof value === 'number'
 }
 
 function buildVisualReport(rows) {
   console.log('building visual report');
 
-  const rowsCombinedAcrossBundles = rows.reduce(
-    (accumulated, current) => accumulated.concat(current),
-    []
-  );
-  const rowsWithColumnsConcatenated = rowsCombinedAcrossBundles.map(
-    (row) => '|' + row.join('|')
-  );
+  const rowsCombinedAcrossBundles = rows.reduce((accumulated, current) => accumulated.concat(current), []);
+  const rowsWithColumnsConcatenated = rowsCombinedAcrossBundles.map(row => '|' + row.join('|'))
   const presentableRows = rowsWithColumnsConcatenated.join('\n');
-
+  
   return `
   **Bundle Size**
   
   | File | Compression | Old (kb) | New (kb) | Change (%)
   | ---- |:-----------:|:--------:|:--------:|:------:
   ${presentableRows}
-  `;
+  `
 }
 
-module.exports = {buildReport};
+module.exports = { buildReport }

@@ -1,6 +1,6 @@
 // @ts-ignore
 import defaultTemplate from './result.html';
-import {LightningElement, api} from 'lwc';
+import { LightningElement, api } from "lwc";
 
 export default class Result extends LightningElement {
   /** @type {import("coveo").Result} */

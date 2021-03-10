@@ -1,6 +1,9 @@
 # atomic-breadcrumb-manager
 
+
+
 <!-- Auto Generated Below -->
+
 
 ## Properties
 
@@ -8,6 +11,7 @@
 | ------------------- | -------------------- | ----------- | -------- | ------- |
 | `categoryDivider`   | `category-divider`   |             | `string` | `'/'`   |
 | `collapseThreshold` | `collapse-threshold` |             | `number` | `5`     |
+
 
 ## Shadow Parts
 
@@ -19,6 +23,7 @@
 | `"breadcrumbs"`               | Container for all types of breadcrumbs               |
 | `"category-breadcrumb-value"` | Breadcrumb list element for category breadcrumbs     |
 
+
 ## Dependencies
 
 ### Depends on
@@ -26,13 +31,12 @@
 - [atomic-component-error](../atomic-component-error)
 
 ### Graph
-
 ```mermaid
 graph TD;
   atomic-breadcrumb-manager --> atomic-component-error
   style atomic-breadcrumb-manager fill:#f9f,stroke:#333,stroke-width:4px
 ```
 
----
+----------------------------------------------
 
-_Built with [StencilJS](https://stenciljs.com/)_
+*Built with [StencilJS](https://stenciljs.com/)*

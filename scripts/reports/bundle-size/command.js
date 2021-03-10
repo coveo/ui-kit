@@ -1,6 +1,6 @@
-const {resolve} = require('path');
-const {readFileSync} = require('fs');
-const {promisify} = require('util');
+const { resolve } = require('path');
+const { readFileSync } = require('fs');
+const { promisify } = require('util');
 const exec = promisify(require('child_process').exec);
 
 async function computeFileSizes() {
@@ -21,9 +21,9 @@ async function buildFiles() {
 
 function readFileSizes() {
   console.log('getting file sizes');
-  const path = resolve('packages/headless/.size-snapshot.json');
-  const buffer = readFileSync(path);
+  const path = resolve('packages/headless/.size-snapshot.json')
+  const buffer = readFileSync(path)
   return JSON.parse(buffer.toString());
 }
 
-module.exports = {computeFileSizes};
+module.exports = { computeFileSizes }

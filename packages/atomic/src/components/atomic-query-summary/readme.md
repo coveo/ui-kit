@@ -1,12 +1,16 @@
 # atomic-query-summary
 
+
+
 <!-- Auto Generated Below -->
+
 
 ## Properties
 
 | Property         | Attribute         | Description                                                  | Type      | Default |
 | ---------------- | ----------------- | ------------------------------------------------------------ | --------- | ------- |
 | `enableDuration` | `enable-duration` | Whether to display the duration of the last query execution. | `boolean` | `true`  |
+
 
 ## Shadow Parts
 
@@ -19,6 +23,7 @@
 | `"placeholder"` | The initialization placeholder          |
 | `"results"`     | The results container                   |
 
+
 ## Dependencies
 
 ### Depends on
@@ -26,13 +31,12 @@
 - [atomic-component-error](../atomic-component-error)
 
 ### Graph
-
 ```mermaid
 graph TD;
   atomic-query-summary --> atomic-component-error
   style atomic-query-summary fill:#f9f,stroke:#333,stroke-width:4px
 ```
 
----
+----------------------------------------------
 
-_Built with [StencilJS](https://stenciljs.com/)_
+*Built with [StencilJS](https://stenciljs.com/)*
