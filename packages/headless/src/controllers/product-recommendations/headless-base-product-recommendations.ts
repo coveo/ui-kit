@@ -19,6 +19,8 @@ import {
 } from '@coveo/bueno';
 import {validateOptions} from '../../utils/validate-payload';
 
+export {Product} from '../../api/search/search/product';
+
 export const baseProductRecommendationsOptionsSchema = {
   skus: new ArrayValue<string>({
     required: false,

@@ -11,7 +11,7 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../utils/initialization-utils';
-import {sanitize} from '../../utils/utils';
+import {sanitize} from '../../utils/xss-utils';
 
 interface Summary {
   count: number;
@@ -102,17 +102,17 @@ export class AtomicQuerySummary implements InitializableComponent {
   }
 
   private get resultOfOptions(): Summary {
-    const locale = this.bindings.i18n.language;
+    const locales = this.bindings.i18n.languages;
     return {
       count: this.querySummaryState.lastResult,
       first: this.wrapHighlight(
-        this.querySummaryState.firstResult.toLocaleString(locale)
+        this.querySummaryState.firstResult.toLocaleString(locales)
       ),
       last: this.wrapHighlight(
-        this.querySummaryState.lastResult.toLocaleString(locale)
+        this.querySummaryState.lastResult.toLocaleString(locales)
       ),
       total: this.wrapHighlight(
-        this.querySummaryState.total.toLocaleString(locale)
+        this.querySummaryState.total.toLocaleString(locales)
       ),
       query: this.wrapHighlight(sanitize(this.querySummaryState.query)),
     };

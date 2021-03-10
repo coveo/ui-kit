@@ -6,6 +6,11 @@ import {
 
 const {serialize, deserialize} = buildSearchParameterSerializer();
 
+/**
+ * Search parameters should not be restored until all components are registered.
+ *
+ * Additionally, a search should not be executed until search parameters are restored.
+ */
 export function bindSearchParametersToURI(engine: Engine) {
   const hash = window.location.hash.slice(1);
   const parameters = deserialize(decodeURIComponent(hash));
