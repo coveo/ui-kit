@@ -11,7 +11,7 @@ export default class ResultLink extends LightningElement {
   engine;
 
   connectedCallback() {
-    getHeadlessEngine(this, this.engineId).then((engine) => {
+    getHeadlessEngine(this.engineId).then((engine) => {
       this.initialize(engine);
     }).catch((error) => {
       console.error(error.message);

@@ -7,6 +7,14 @@ import { Debouncer } from 'c/utils';
 
 const DEBOUNCE_DELAY = 200;
 let debouncers = {};
+let dependencyPromises = [];
+
+const loadDependencies = (element) => {
+  dependencyPromises = [
+    loadScript(element, HeadlessPath + '/browser/headless.js'),
+    loadScript(element, AtomicPath + '/atomic-utils.js')
+  ]
+}
 
 /**
  * Cancels the delayed search query.
@@ -60,14 +68,14 @@ const getRegisteredComponent = (element, engineId) => window.coveoHeadless[engin
 
 /**
  * Loads dependencies and returns an initialized Headless engine. 
- * @param element The Lightning Element component with which to load dependencies.
  */
-async function initEngine(element) {
+async function initEngine() {
   let engine;
   try {
-    await loadScript(element, HeadlessPath + '/browser/headless.js');
-    await loadScript(element, AtomicPath + '/atomic-utils.js');
-  
+    if (dependencyPromises.length === 0) {
+      throw new Error('Dependencies were never requested.');
+    }
+    await Promise.all(dependencyPromises);
     const config = CoveoHeadless.HeadlessEngine.getSampleConfiguration();
   
     engine = new CoveoHeadless.HeadlessEngine({
@@ -88,6 +96,7 @@ async function initEngine(element) {
 function registerComponentForInit(element, engineId) {
   cancelInitialSearch(engineId);
   if (!window.coveoHeadless) {
+    loadDependencies(element);
     window.coveoHeadless = {
       [engineId]: {
         components: [],
@@ -132,14 +141,13 @@ function setComponentInitialized(element, engineId) {
 
 /**
  * Returns headless engine promise.
- * @param element The Lightning Element component with which to load dependencies.
  * @param {String} engineId The id of the engine.
  */
-function getHeadlessEngine(element, engineId) {
+function getHeadlessEngine(engineId) {
   if (window.coveoHeadless[engineId] && window.coveoHeadless[engineId].engine) {
     return window.coveoHeadless[engineId].engine;
   }
-  window.coveoHeadless[engineId].engine = initEngine(element);
+  window.coveoHeadless[engineId].engine = initEngine();
   return window.coveoHeadless[engineId].engine;
 }
 
@@ -153,7 +161,7 @@ function initializeWithHeadless(element, engineId, initialize) {
   if (getRegisteredComponent(element, engineId).initialized) {
     return;
   }
-  getHeadlessEngine(element, engineId).then((engine) => {
+  getHeadlessEngine(engineId).then((engine) => {
     initialize(engine);
     setComponentInitialized(element, engineId);
   }).catch((error) => {
