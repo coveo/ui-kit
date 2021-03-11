@@ -24,11 +24,9 @@ export class AtomicComponentError {
     return (
       <div class="text-error">
         <p>
-          <b>{this.element.nodeName.toLowerCase()}</b>
+          <b>{this.element.nodeName.toLowerCase()} component error</b>
         </p>
-        <p>
-          {this.error.name}: {this.error.message}
-        </p>
+        <p>Look at the developer console for more information.</p>
       </div>
     );
   }

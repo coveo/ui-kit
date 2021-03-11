@@ -34,8 +34,8 @@ import {Facet} from './components/facet/facet.class';
 import {Facet as FacetFn} from './components/facet/facet.fn';
 import {NumericFacet} from './components/numeric-facet/numeric-facet.class';
 import {NumericFacet as NumericFacetFn} from './components/numeric-facet/numeric-facet.fn';
-import {History} from './components/history/history.class';
-import {History as HistoryFn} from './components/history/history.fn';
+import {HistoryManager} from './components/history-manager/history-manager.class';
+import {HistoryManager as HistoryManagerFn} from './components/history-manager/history-manager.fn';
 import {RelevanceInspector} from './components/relevance-inspector/relevance-inspector.class';
 import {RelevanceInspector as RelevanceInspectorFn} from './components/relevance-inspector/relevance-inspector.fn';
 import {
@@ -60,7 +60,7 @@ import {
   SortCriterion,
   buildResultsPerPage,
   buildPager,
-  buildHistory,
+  buildHistoryManager,
   buildRelevanceInspector,
   AnalyticsActions,
   SearchActions,
@@ -145,7 +145,7 @@ const resultsPerPage = buildResultsPerPage(engine, {
 
 const pager = buildPager(engine, {options: {numberOfPages: 6}});
 
-const history = buildHistory(engine);
+const history = buildHistoryManager(engine);
 
 const relevanceInspector = buildRelevanceInspector(engine);
 
@@ -260,9 +260,9 @@ function App() {
           <Pager />
           <PagerFn controller={pager} />
         </Section>
-        <Section title="history">
-          <History />
-          <HistoryFn controller={history} />
+        <Section title="history-manager">
+          <HistoryManager />
+          <HistoryManagerFn controller={history} />
         </Section>
         <Section title="relevance-inspector">
           <RelevanceInspector />

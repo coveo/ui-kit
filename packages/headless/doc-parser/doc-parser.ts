@@ -11,6 +11,10 @@ const entryPoint = apiPackage.entryPoints[0];
 
 const controllers: ControllerConfiguration[] = [
   {
+    initializer: 'buildHistoryManager',
+    samplePaths: {},
+  },
+  {
     initializer: 'buildFacet',
     samplePaths: {
       react_class: [
@@ -46,6 +50,11 @@ const controllers: ControllerConfiguration[] = [
       ],
     },
     utils: ['buildNumericRange'],
+  },
+  {
+    initializer: 'buildDateFacet',
+    samplePaths: {},
+    utils: ['buildDateRange'],
   },
   {
     initializer: 'buildPager',
@@ -113,6 +122,10 @@ const controllers: ControllerConfiguration[] = [
     },
   },
   {
+    initializer: 'buildBreadcrumbManager',
+    samplePaths: {},
+  },
+  {
     initializer: 'buildRecommendationList',
     samplePaths: {
       react_class: [
@@ -169,6 +182,10 @@ const controllers: ControllerConfiguration[] = [
     },
   },
   {
+    initializer: 'buildCartRecommendationsList',
+    samplePaths: {},
+  },
+  {
     initializer: 'buildSearchBox',
     samplePaths: {
       react_class: [
@@ -200,6 +217,17 @@ const controllers: ControllerConfiguration[] = [
       ],
       react_fn: [
         'packages/samples/headless-react/src/components/results-per-page/results-per-page.fn.tsx',
+      ],
+    },
+  },
+  {
+    initializer: 'buildRelevanceInspector',
+    samplePaths: {
+      react_class: [
+        'packages/samples/headless-react/src/components/relevance-inspector/relevance-inspector.class.tsx',
+      ],
+      react_fn: [
+        'packages/samples/headless-react/src/components/relevance-inspector/relevance-inspector.fn.tsx',
       ],
     },
   },

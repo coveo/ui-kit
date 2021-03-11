@@ -11,7 +11,7 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../utils/initialization-utils';
-import {sanitize} from '../../utils/utils';
+import {sanitize} from '../../utils/xss-utils';
 
 /**
  * A summary of the query result list.

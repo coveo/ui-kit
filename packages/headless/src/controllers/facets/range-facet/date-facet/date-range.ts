@@ -2,29 +2,59 @@ import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import {DateRangeRequest} from '../../../../features/facets/range-facets/date-facet-set/interfaces/request';
+import {FacetValueState} from '../../../../features/facets/facet-api/value';
 
 dayjs.extend(utc);
 dayjs.extend(customParseFormat);
 
-type DateType = string | number | Date;
+export type DateRangeInput = string | number | Date;
 
-type DateOptions = {
-  useLocalTime?: boolean;
+export interface DateRangeOptions {
+  /**
+   * The start value of the range.
+   */
+  start: DateRangeInput;
+
+  /**
+   * The end value of the range.
+   */
+  end: DateRangeInput;
+
+  /**
+   * Whether to include the end value in the range.
+   *
+   * @default false
+   */
+  endInclusive?: boolean;
+
+  /**
+   * The current facet value state.
+   *
+   * @default "idle"
+   */
+  state?: FacetValueState;
+
+  /**
+   * Allows specifying a custom string date format. See [Day.js](https://day.js.org/docs/en/parse/string-format#list-of-all-available-parsing-tokens) for possible parsing tokens. Assumes [ISO 8601](https://day.js.org/docs/en/parse/string) format by default.
+   */
   dateFormat?: string;
-};
 
-type DateRangeOptions = Partial<Omit<DateRangeRequest, 'start' | 'end'>> &
-  DateOptions & {
-    start: DateType;
-    end: DateType;
-  };
+  /**
+   * If `true`, the date will be returned unshifted. If `false`, the date will be adjusted to UTC time.
+   *
+   * @default false
+   */
+  useLocalTime?: boolean;
+}
 
 export function isSearchApiDate(date: string) {
   return formatForSearchApi(dayjs(date)) === date;
 }
 
-/** Creates a `DateRangeRequest`.
- * @param config The options with which to create a `DateRangeRequest`.
+/**
+ * Creates a `DateRangeRequest`.
+ *
+ * @param config - The options with which to create a `DateRangeRequest`.
  * @returns A new `DateRangeRequest`.
  */
 export function buildDateRange(config: DateRangeOptions): DateRangeRequest {
@@ -41,7 +71,7 @@ export function buildDateRange(config: DateRangeOptions): DateRangeRequest {
   };
 }
 
-function buildDate(rawDate: DateType, options: DateOptions) {
+function buildDate(rawDate: DateRangeInput, options: DateRangeOptions) {
   const {dateFormat, useLocalTime} = options;
   const date = dayjs(rawDate, dateFormat);
 
