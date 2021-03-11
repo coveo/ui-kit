@@ -10,11 +10,11 @@ import {
 } from './headless-base-product-recommendations';
 import {validateOptions} from '../../utils/validate-payload';
 import {Controller} from '../controller/headless-controller';
-import {Product} from '../../api/search/search/product';
+import {ProductRecommendation} from '../../api/search/search/product-recommendation';
 import {CartRecommendationsListOptions} from './headless-cart-recommendations-options';
 import {ErrorPayload} from '../controller/error-payload';
 
-export {CartRecommendationsListOptions};
+export {CartRecommendationsListOptions, ProductRecommendation};
 
 const optionsSchema = new Schema({
   ...baseProductRecommendationsOptionsSchema,
@@ -57,7 +57,7 @@ export interface CartRecommendationsListState {
   /**
    * The products recommended by the Coveo platform.
    */
-  recommendations: Product[];
+  recommendations: ProductRecommendation[];
 
   /**
    * The error returned by the Coveo platform while executing the cart recommendation request, if any. `null` otherwise.
