@@ -75,8 +75,8 @@ export const BaseFacet: FunctionalComponent<BaseFacetProps> = (
           (props.controller.state.isExpanded ? 'block' : 'hidden')
         }
       >
-        <div class="flex flex-row items-center pb-2 mb-2 border-b border-solid border-on-background">
-          <span class="font-semibold text-on-background text-base lg:text-sm">
+        <div class="flex flex-row items-center pb-2 mb-2 border-b border-solid border-divider">
+          <span class="font-semibold text-on-background-variant text-base lg:text-sm">
             {props.label}
           </span>
           <span class="flex flex-row ml-auto">

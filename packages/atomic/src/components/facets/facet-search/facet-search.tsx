@@ -49,7 +49,7 @@ export type FacetSearchProps = {
 };
 
 export class FacetSearch {
-  private static ShowMoreResults = 1;
+  private static ShowMoreResultsValue = -1;
   private inputRef!: HTMLInputElement;
   private valuesRef!: HTMLElement;
   private containerRef!: HTMLElement;
@@ -67,12 +67,12 @@ export class FacetSearch {
       },
       onSubmit: () => props.controller.facetSearch.search(),
       onSelectValue: (element) => {
-        const index = (element as HTMLLIElement).value;
-        if (index === FacetSearch.ShowMoreResults) {
+        const value = (element as HTMLLIElement).value;
+        if (value === FacetSearch.ShowMoreResultsValue) {
           return this.props.controller.facetSearch.showMoreResults();
         }
         this.onSelectValue(
-          this.props.controller.facetSearchState.values[index]
+          this.props.controller.facetSearchState.values[value]
         );
       },
       onBlur: () => {
@@ -166,10 +166,7 @@ export class FacetSearch {
   }
 
   private get showMoreSearchResults() {
-    if (
-      this.props.controller.facetSearchState.values.length === 0 ||
-      !this.props.controller.facetSearchState.moreValuesAvailable
-    ) {
+    if (!this.props.controller.facetSearchState.moreValuesAvailable) {
       return null;
     }
 
@@ -179,9 +176,11 @@ export class FacetSearch {
         onMouseDown={(e) => e.preventDefault()}
         part="suggestion"
         class="suggestion cursor-pointer flex flex-row items-center px-2 text-sm text-primary"
-        value={FacetSearch.ShowMoreResults}
+        value={FacetSearch.ShowMoreResultsValue}
       >
-        <button onMouseDown={(e) => e.preventDefault()}>show more</button>
+        <button onMouseDown={(e) => e.preventDefault()}>
+          {this.props.controller.strings.showMore()}
+        </button>
       </li>
     );
   }
