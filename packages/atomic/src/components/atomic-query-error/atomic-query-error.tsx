@@ -8,6 +8,18 @@ import {
   InitializeBindings,
 } from '../../utils/initialization-utils';
 
+/**
+ * The QueryError component takes care of handling fatal error when doing a query on the index / Search API.
+ *
+ * When the error is known, it displays a relevant documentation link for debugging purposes. When the error is unknown,
+ * it displays a small text area with the JSON content of the error.
+ *
+ * @part title - The title of the error.
+ * @part description - A description of the error.
+ * @part doc-link - A relevant documentation link.
+ * @part more-info-btn - The button allowing to display error information.
+ * @part error-info - The additional error information.
+ */
 @Component({
   tag: 'atomic-query-error',
   styleUrl: 'atomic-query-error.pcss',
@@ -34,13 +46,33 @@ export class AtomicQueryError implements InitializableComponent {
   @State()
   private queryErrorState!: QueryErrorState;
   @State() public error!: Error;
+  @State() showMoreInfo = false;
 
   public initialize() {
     this.queryError = buildQueryError(this.bindings.engine);
   }
 
   private renderShowMoreInfo() {
-    return <code>{JSON.stringify(this.queryErrorState.error)}</code>;
+    if (!this.showMoreInfo) {
+      return (
+        <button
+          part="more-info-btn"
+          class="text-primary"
+          onClick={() => (this.showMoreInfo = true)}
+        >
+          {this.strings.moreInfo()}
+        </button>
+      );
+    }
+
+    return (
+      <pre
+        part="error-info"
+        class="text-left border border-divider bg-background-variant p-3 rounded my-4 whitespace-pre-wrap"
+      >
+        <code>{JSON.stringify(this.queryErrorState.error, null, 2)}</code>
+      </pre>
+    );
   }
 
   public render() {
@@ -57,21 +89,33 @@ export class AtomicQueryError implements InitializableComponent {
     if (errorType === 'NoEndpointsException') {
       title = this.strings.noEndpoints();
       description = this.strings.addSources();
-      link = 'https://docs.coveo.com/'; // TODO: update website
+      link = 'https://docs.coveo.com/'; // TODO: update link
       showMoreInfo = false;
     }
     if (errorType === 'InvalidTokenException') {
       title = this.strings.cannotAccess();
       description = this.strings.invalidToken();
-      link = 'https://docs.coveo.com/'; // TODO: update website
+      link = 'https://docs.coveo.com/'; // TODO: update link
       showMoreInfo = false;
     }
 
     return (
-      <div>
-        <h3>{title}</h3>
-        <p>{description}</p>
-        {link && <a href={link}>{this.strings.coveoOnlineHelp()}</a>}
+      <div class="text-center">
+        <h3 part="title" class="text-2xl text-secondary my-4">
+          {title}
+        </h3>
+        <p part="description" class="text-xl text-secondary my-4">
+          {description}
+        </p>
+        {link && (
+          <a
+            href={link}
+            part="doc-link"
+            class="text-primary hover:underline visited:text-visited"
+          >
+            {this.strings.coveoOnlineHelp()}
+          </a>
+        )}
         {showMoreInfo && this.renderShowMoreInfo()}
       </div>
     );
