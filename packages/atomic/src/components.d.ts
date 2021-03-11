@@ -336,7 +336,7 @@ export namespace Components {
     }
     interface AtomicTab {
         /**
-          * The advanced expression or filter that the Tab should add to any outgoing query.  Example: `@objecttype==Message`
+          * The constant query expression that the Tab should add to any outgoing query.  Example: `@objecttype==Message`
          */
         "expression": string;
         /**
@@ -928,7 +928,7 @@ declare namespace LocalJSX {
     }
     interface AtomicTab {
         /**
-          * The advanced expression or filter that the Tab should add to any outgoing query.  Example: `@objecttype==Message`
+          * The constant query expression that the Tab should add to any outgoing query.  Example: `@objecttype==Message`
          */
         "expression"?: string;
         /**

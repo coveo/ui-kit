@@ -7,10 +7,10 @@
 
 ## Properties
 
-| Property     | Attribute    | Description                                                                                                       | Type      | Default |
-| ------------ | ------------ | ----------------------------------------------------------------------------------------------------------------- | --------- | ------- |
-| `expression` | `expression` | The advanced expression or filter that the Tab should add to any outgoing query.  Example: `@objecttype==Message` | `string`  | `''`    |
-| `isActive`   | `is-active`  | Whether the tab is set to active.                                                                                 | `boolean` | `false` |
+| Property     | Attribute    | Description                                                                                                   | Type      | Default |
+| ------------ | ------------ | ------------------------------------------------------------------------------------------------------------- | --------- | ------- |
+| `expression` | `expression` | The constant query expression that the Tab should add to any outgoing query.  Example: `@objecttype==Message` | `string`  | `''`    |
+| `isActive`   | `is-active`  | Whether the tab is set to active.                                                                             | `boolean` | `false` |
 
 
 ## Shadow Parts
