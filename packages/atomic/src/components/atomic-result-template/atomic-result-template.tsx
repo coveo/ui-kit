@@ -6,14 +6,6 @@ import {
 } from '@coveo/headless';
 import {MapProp} from '../../utils/props-utils';
 
-/**
- * This doesn't seem to ever be used. Can I just delete?
- */
-export interface FieldMatch {
-  field: string;
-  values: string[];
-}
-
 @Component({
   tag: 'atomic-result-template',
   shadow: true,

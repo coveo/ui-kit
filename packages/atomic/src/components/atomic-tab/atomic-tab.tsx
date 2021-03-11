@@ -23,7 +23,7 @@ export class AtomicTab implements InitializableComponent {
   @State() public error!: Error;
 
   /**
-   * The advanced expression or filter that the Tab should add to any outgoing query.
+   * The constant query expression that the Tab should add to any outgoing query.
    *
    * Example: `@objecttype==Message`
    */
