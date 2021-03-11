@@ -15,7 +15,7 @@ import {
 } from '@microsoft/api-extractor-model';
 import {DocComment} from '@microsoft/tsdoc';
 import {findApi} from './api-finder';
-import {AnyEntity, Entity} from './entity';
+import {AnyEntity, EntityWithTypeAlias} from './entity';
 import {
   buildEntity,
   buildFuncEntity,
@@ -154,13 +154,13 @@ function buildObjEntityFromProperty(
 function buildEntityFromPropertyAndResolveTypeAlias(
   entry: ApiEntryPoint,
   p: ApiPropertySignature
-): Entity {
+): EntityWithTypeAlias {
   const entity = buildEntityFromProperty(p);
   const searchableTypeName = extractSearchableTypeName(p.propertyTypeExcerpt);
   const typeAlias = findApi(entry, searchableTypeName) as ApiTypeAlias;
   const type = typeAlias.typeExcerpt.text;
 
-  return {...entity, type};
+  return {...entity, kind: 'primitive-with-type-alias', type};
 }
 
 function isIndexSignature(m: ApiItem): m is ApiIndexSignature {
@@ -263,13 +263,13 @@ export function resolveParameter(
 function buildEntityFromParamAndResolveTypeAlias(
   entry: ApiEntryPoint,
   p: Parameter
-): Entity {
+): EntityWithTypeAlias {
   const entity = buildParamEntity(p);
   const searchableTypeName = extractSearchableTypeName(p.parameterTypeExcerpt);
   const typeAlias = findApi(entry, searchableTypeName) as ApiTypeAlias;
   const type = typeAlias.typeExcerpt.text;
 
-  return {...entity, type};
+  return {...entity, kind: 'primitive-with-type-alias', type};
 }
 
 function buildObjEntityFromParam(
