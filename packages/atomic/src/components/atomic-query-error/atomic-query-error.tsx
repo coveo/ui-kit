@@ -40,7 +40,6 @@ export class AtomicQueryError implements InitializableComponent {
     somethingWentWrong: () => this.bindings.i18n.t('somethingWentWrong'),
     ifProblemPersists: () => this.bindings.i18n.t('ifProblemPersists'),
     moreInfo: () => this.bindings.i18n.t('moreInfo'),
-    tryAgain: () => this.bindings.i18n.t('tryAgain'),
   };
   @BindStateToController('queryError')
   @State()

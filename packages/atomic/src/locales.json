@@ -639,10 +639,6 @@
     "en": "You will need to add sources in your index, or wait for the created sources to finish indexing.",
     "fr": "Vous devrez ajouter des sources à votre index, ou attendre la fin de l'indexation des sources créées."
   },
-  "tryAgain": {
-    "en": "Please try again.",
-    "fr": "Veuillez essayer de nouveau."
-  },
   "coveoOnlineHelp": {
     "en": "Coveo Online Help",
     "fr": "Aide en ligne Coveo"
