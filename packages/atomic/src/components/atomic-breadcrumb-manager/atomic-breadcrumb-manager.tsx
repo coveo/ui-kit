@@ -61,6 +61,8 @@ export class AtomicBreadcrumbManager implements InitializableComponent {
   public strings: I18nState = {
     breadcrumb: (variables) =>
       this.bindings.i18n.t('removeFilterOn', variables),
+    clearAllFilters: () => this.bindings.i18n.t('clearAllFilters'),
+    nMore: (variables) => this.bindings.i18n.t('nMore', variables),
   };
 
   public initialize() {
@@ -126,7 +128,7 @@ export class AtomicBreadcrumbManager implements InitializableComponent {
     return this.getBreadcrumbWrapper(
       breadcrumb.facetId,
       breadcrumb.field,
-      <ul class="flex space-x-2.5">
+      <ul class="breadcrumbs flex space-x-2.5">
         {moreButton
           ? [...renderedBreadcrumbs, moreButton]
           : renderedBreadcrumbs}
@@ -212,7 +214,7 @@ export class AtomicBreadcrumbManager implements InitializableComponent {
         part="breadcrumb-clear-all"
         onClick={() => this.breadcrumbManager.deselectAll()}
       >
-        Clear All Filters
+        {this.strings.clearAllFilters()}
       </button>
     );
   }
@@ -255,7 +257,7 @@ export class AtomicBreadcrumbManager implements InitializableComponent {
           }`}
           onClick={() => this.showFacetCollapsedBreadcrumbs(field)}
         >
-          {collapsedBreadcrumbNumber} more...
+          {this.strings.nMore({value: collapsedBreadcrumbNumber})}
         </button>
       </li>
     );

@@ -147,11 +147,11 @@ describe('Standard Facet', () => {
       cy.get('@breadcrumbClearAllFilter').should('be.visible');
       facetValueShouldDisplayInBreadcrumb(
         '@firstFacetValue',
-        '.breadcrumb:nth-child(2) button span'
+        '.breadcrumb:nth-child(1) button span'
       );
       facetValueShouldDisplayInBreadcrumb(
         '@secondFacetValue',
-        '.breadcrumb:nth-child(3) button span'
+        '.breadcrumb:nth-child(2) button span'
       );
     });
 

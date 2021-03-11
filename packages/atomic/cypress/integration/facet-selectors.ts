@@ -13,7 +13,7 @@ export const BreadcrumbSelectors = {
 export function createBreadcrumbShadowAlias() {
   cy.get(BreadcrumbSelectors.breadcrumb)
     .shadow()
-    .find('.breadcrumb:nth-child(1)')
+    .find('.breadcrumbs')
     .as('breadcrumbFacet');
   cy.get(BreadcrumbSelectors.breadcrumb)
     .shadow()
