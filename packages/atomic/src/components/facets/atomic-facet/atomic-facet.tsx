@@ -116,7 +116,7 @@ export class AtomicFacet
   }
 
   public componentDidRender() {
-    this.facetSearch?.updateCombobox();
+    this.facetState.canShowMoreValues && this.facetSearch?.updateCombobox();
   }
 
   private get values() {
@@ -173,6 +173,10 @@ export class AtomicFacet
   }
 
   public render() {
+    if (this.facetState.values.length === 0) {
+      return null;
+    }
+
     return (
       <BaseFacet
         controller={new BaseFacetController(this)}
@@ -181,8 +185,8 @@ export class AtomicFacet
         deselectAll={() => this.facet.deselectAll()}
       >
         <div>
-          {this.facetSearch?.render()}
-          <ul class="list-none p-0">{this.values}</ul>
+          {this.facetState.canShowMoreValues && this.facetSearch?.render()}
+          <ul class="mt-1 list-none p-0">{this.values}</ul>
           <div class="flex flex-col items-start space-y-1">
             {this.showLessButton}
             {this.showMoreButton}

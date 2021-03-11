@@ -185,7 +185,15 @@ export namespace Components {
         "engine": Engine;
         "result": Result;
     }
-    interface AtomicResultExcerpt {
+    interface AtomicResultDate {
+        /**
+          * The result field which the component should use. Will look in the Result object first and then in the Result.raw object for the fields. It is important to include the necessary fields in the ResultList component.
+         */
+        "field": string;
+        /**
+          * Available formats: https://day.js.org/docs/en/display/format
+         */
+        "format": string;
     }
     interface AtomicResultLink {
     }
@@ -197,6 +205,42 @@ export namespace Components {
     }
     interface AtomicResultListPlaceholder {
     }
+    interface AtomicResultNumber {
+        /**
+          * The result field which the component should use. Will look in the Result object first and then in the Result.raw object for the fields. It is important to include the necessary fields in the ResultList component.
+         */
+        "field": string;
+        /**
+          * The maximum number of fraction digits to use.
+         */
+        "maximumFractionDigits"?: number;
+        /**
+          * The maximum number of significant digits to use.
+         */
+        "maximumSignificantDigits"?: number;
+        /**
+          * The minimum number of fraction digits to use.
+         */
+        "minimumFractionDigits"?: number;
+        /**
+          * The minimum number of integer digits to use.
+         */
+        "minimumIntegerDigits"?: number;
+        /**
+          * The minimum number of significant digits to use.
+         */
+        "minimumSignificantDigits"?: number;
+    }
+    interface AtomicResultPrice {
+        /**
+          * The currency to use in currency formatting. Possible values are the ISO 4217 currency codes, such as "USD" for the US dollar, "EUR" for the euro, or "CNY" for the Chinese RMB — see the [Current currency & funds code list](http://www.currency-iso.org/en/home/tables/table-a1.html).
+         */
+        "currency": string;
+        /**
+          * The result field which the component should use. Will look in the Result object first and then in the Result.raw object for the fields. It is important to include the necessary fields in the ResultList component.
+         */
+        "field": string;
+    }
     interface AtomicResultPrintableUri {
         /**
           * The maximum number of Uri parts to display, has to be over the minimum of `3` in order to be effective. Putting `Infinity` will disable the ellipsis.
@@ -207,15 +251,15 @@ export namespace Components {
         "conditions": ResultTemplateCondition[];
         "getTemplate": () => Promise<ResultTemplate<string> | null>;
     }
-    interface AtomicResultValue {
+    interface AtomicResultText {
         /**
-          * Which highlight should the value be highlighted with
+          * The result field which the component should use. Will look in the Result object first and then in the Result.raw object for the fields. It is important to include the necessary fields in the ResultList component.
          */
-        "shouldHighlightWith"?: string;
+        "field": string;
         /**
-          * Which result value should the component render
+          * If true, will look for the corresponding highlight property use it if available.
          */
-        "value": string;
+        "shouldHighlight": boolean;
     }
     interface AtomicResultsPerPage {
         /**
@@ -395,11 +439,11 @@ declare global {
         prototype: HTMLAtomicResultElement;
         new (): HTMLAtomicResultElement;
     };
-    interface HTMLAtomicResultExcerptElement extends Components.AtomicResultExcerpt, HTMLStencilElement {
+    interface HTMLAtomicResultDateElement extends Components.AtomicResultDate, HTMLStencilElement {
     }
-    var HTMLAtomicResultExcerptElement: {
-        prototype: HTMLAtomicResultExcerptElement;
-        new (): HTMLAtomicResultExcerptElement;
+    var HTMLAtomicResultDateElement: {
+        prototype: HTMLAtomicResultDateElement;
+        new (): HTMLAtomicResultDateElement;
     };
     interface HTMLAtomicResultLinkElement extends Components.AtomicResultLink, HTMLStencilElement {
     }
@@ -419,6 +463,18 @@ declare global {
         prototype: HTMLAtomicResultListPlaceholderElement;
         new (): HTMLAtomicResultListPlaceholderElement;
     };
+    interface HTMLAtomicResultNumberElement extends Components.AtomicResultNumber, HTMLStencilElement {
+    }
+    var HTMLAtomicResultNumberElement: {
+        prototype: HTMLAtomicResultNumberElement;
+        new (): HTMLAtomicResultNumberElement;
+    };
+    interface HTMLAtomicResultPriceElement extends Components.AtomicResultPrice, HTMLStencilElement {
+    }
+    var HTMLAtomicResultPriceElement: {
+        prototype: HTMLAtomicResultPriceElement;
+        new (): HTMLAtomicResultPriceElement;
+    };
     interface HTMLAtomicResultPrintableUriElement extends Components.AtomicResultPrintableUri, HTMLStencilElement {
     }
     var HTMLAtomicResultPrintableUriElement: {
@@ -431,11 +487,11 @@ declare global {
         prototype: HTMLAtomicResultTemplateElement;
         new (): HTMLAtomicResultTemplateElement;
     };
-    interface HTMLAtomicResultValueElement extends Components.AtomicResultValue, HTMLStencilElement {
+    interface HTMLAtomicResultTextElement extends Components.AtomicResultText, HTMLStencilElement {
     }
-    var HTMLAtomicResultValueElement: {
-        prototype: HTMLAtomicResultValueElement;
-        new (): HTMLAtomicResultValueElement;
+    var HTMLAtomicResultTextElement: {
+        prototype: HTMLAtomicResultTextElement;
+        new (): HTMLAtomicResultTextElement;
     };
     interface HTMLAtomicResultsPerPageElement extends Components.AtomicResultsPerPage, HTMLStencilElement {
     }
@@ -499,13 +555,15 @@ declare global {
         "atomic-query-summary": HTMLAtomicQuerySummaryElement;
         "atomic-relevance-inspector": HTMLAtomicRelevanceInspectorElement;
         "atomic-result": HTMLAtomicResultElement;
-        "atomic-result-excerpt": HTMLAtomicResultExcerptElement;
+        "atomic-result-date": HTMLAtomicResultDateElement;
         "atomic-result-link": HTMLAtomicResultLinkElement;
         "atomic-result-list": HTMLAtomicResultListElement;
         "atomic-result-list-placeholder": HTMLAtomicResultListPlaceholderElement;
+        "atomic-result-number": HTMLAtomicResultNumberElement;
+        "atomic-result-price": HTMLAtomicResultPriceElement;
         "atomic-result-printable-uri": HTMLAtomicResultPrintableUriElement;
         "atomic-result-template": HTMLAtomicResultTemplateElement;
-        "atomic-result-value": HTMLAtomicResultValueElement;
+        "atomic-result-text": HTMLAtomicResultTextElement;
         "atomic-results-per-page": HTMLAtomicResultsPerPageElement;
         "atomic-search-box": HTMLAtomicSearchBoxElement;
         "atomic-search-interface": HTMLAtomicSearchInterfaceElement;
@@ -691,7 +749,15 @@ declare namespace LocalJSX {
         "engine": Engine;
         "result": Result;
     }
-    interface AtomicResultExcerpt {
+    interface AtomicResultDate {
+        /**
+          * The result field which the component should use. Will look in the Result object first and then in the Result.raw object for the fields. It is important to include the necessary fields in the ResultList component.
+         */
+        "field"?: string;
+        /**
+          * Available formats: https://day.js.org/docs/en/display/format
+         */
+        "format"?: string;
     }
     interface AtomicResultLink {
     }
@@ -703,6 +769,42 @@ declare namespace LocalJSX {
     }
     interface AtomicResultListPlaceholder {
     }
+    interface AtomicResultNumber {
+        /**
+          * The result field which the component should use. Will look in the Result object first and then in the Result.raw object for the fields. It is important to include the necessary fields in the ResultList component.
+         */
+        "field": string;
+        /**
+          * The maximum number of fraction digits to use.
+         */
+        "maximumFractionDigits"?: number;
+        /**
+          * The maximum number of significant digits to use.
+         */
+        "maximumSignificantDigits"?: number;
+        /**
+          * The minimum number of fraction digits to use.
+         */
+        "minimumFractionDigits"?: number;
+        /**
+          * The minimum number of integer digits to use.
+         */
+        "minimumIntegerDigits"?: number;
+        /**
+          * The minimum number of significant digits to use.
+         */
+        "minimumSignificantDigits"?: number;
+    }
+    interface AtomicResultPrice {
+        /**
+          * The currency to use in currency formatting. Possible values are the ISO 4217 currency codes, such as "USD" for the US dollar, "EUR" for the euro, or "CNY" for the Chinese RMB — see the [Current currency & funds code list](http://www.currency-iso.org/en/home/tables/table-a1.html).
+         */
+        "currency"?: string;
+        /**
+          * The result field which the component should use. Will look in the Result object first and then in the Result.raw object for the fields. It is important to include the necessary fields in the ResultList component.
+         */
+        "field"?: string;
+    }
     interface AtomicResultPrintableUri {
         /**
           * The maximum number of Uri parts to display, has to be over the minimum of `3` in order to be effective. Putting `Infinity` will disable the ellipsis.
@@ -712,15 +814,15 @@ declare namespace LocalJSX {
     interface AtomicResultTemplate {
         "conditions"?: ResultTemplateCondition[];
     }
-    interface AtomicResultValue {
+    interface AtomicResultText {
         /**
-          * Which highlight should the value be highlighted with
+          * The result field which the component should use. Will look in the Result object first and then in the Result.raw object for the fields. It is important to include the necessary fields in the ResultList component.
          */
-        "shouldHighlightWith"?: string;
+        "field": string;
         /**
-          * Which result value should the component render
+          * If true, will look for the corresponding highlight property use it if available.
          */
-        "value": string;
+        "shouldHighlight"?: boolean;
     }
     interface AtomicResultsPerPage {
         /**
@@ -802,13 +904,15 @@ declare namespace LocalJSX {
         "atomic-query-summary": AtomicQuerySummary;
         "atomic-relevance-inspector": AtomicRelevanceInspector;
         "atomic-result": AtomicResult;
-        "atomic-result-excerpt": AtomicResultExcerpt;
+        "atomic-result-date": AtomicResultDate;
         "atomic-result-link": AtomicResultLink;
         "atomic-result-list": AtomicResultList;
         "atomic-result-list-placeholder": AtomicResultListPlaceholder;
+        "atomic-result-number": AtomicResultNumber;
+        "atomic-result-price": AtomicResultPrice;
         "atomic-result-printable-uri": AtomicResultPrintableUri;
         "atomic-result-template": AtomicResultTemplate;
-        "atomic-result-value": AtomicResultValue;
+        "atomic-result-text": AtomicResultText;
         "atomic-results-per-page": AtomicResultsPerPage;
         "atomic-search-box": AtomicSearchBox;
         "atomic-search-interface": AtomicSearchInterface;
@@ -841,13 +945,15 @@ declare module "@stencil/core" {
             "atomic-query-summary": LocalJSX.AtomicQuerySummary & JSXBase.HTMLAttributes<HTMLAtomicQuerySummaryElement>;
             "atomic-relevance-inspector": LocalJSX.AtomicRelevanceInspector & JSXBase.HTMLAttributes<HTMLAtomicRelevanceInspectorElement>;
             "atomic-result": LocalJSX.AtomicResult & JSXBase.HTMLAttributes<HTMLAtomicResultElement>;
-            "atomic-result-excerpt": LocalJSX.AtomicResultExcerpt & JSXBase.HTMLAttributes<HTMLAtomicResultExcerptElement>;
+            "atomic-result-date": LocalJSX.AtomicResultDate & JSXBase.HTMLAttributes<HTMLAtomicResultDateElement>;
             "atomic-result-link": LocalJSX.AtomicResultLink & JSXBase.HTMLAttributes<HTMLAtomicResultLinkElement>;
             "atomic-result-list": LocalJSX.AtomicResultList & JSXBase.HTMLAttributes<HTMLAtomicResultListElement>;
             "atomic-result-list-placeholder": LocalJSX.AtomicResultListPlaceholder & JSXBase.HTMLAttributes<HTMLAtomicResultListPlaceholderElement>;
+            "atomic-result-number": LocalJSX.AtomicResultNumber & JSXBase.HTMLAttributes<HTMLAtomicResultNumberElement>;
+            "atomic-result-price": LocalJSX.AtomicResultPrice & JSXBase.HTMLAttributes<HTMLAtomicResultPriceElement>;
             "atomic-result-printable-uri": LocalJSX.AtomicResultPrintableUri & JSXBase.HTMLAttributes<HTMLAtomicResultPrintableUriElement>;
             "atomic-result-template": LocalJSX.AtomicResultTemplate & JSXBase.HTMLAttributes<HTMLAtomicResultTemplateElement>;
-            "atomic-result-value": LocalJSX.AtomicResultValue & JSXBase.HTMLAttributes<HTMLAtomicResultValueElement>;
+            "atomic-result-text": LocalJSX.AtomicResultText & JSXBase.HTMLAttributes<HTMLAtomicResultTextElement>;
             "atomic-results-per-page": LocalJSX.AtomicResultsPerPage & JSXBase.HTMLAttributes<HTMLAtomicResultsPerPageElement>;
             "atomic-search-box": LocalJSX.AtomicSearchBox & JSXBase.HTMLAttributes<HTMLAtomicSearchBoxElement>;
             "atomic-search-interface": LocalJSX.AtomicSearchInterface & JSXBase.HTMLAttributes<HTMLAtomicSearchInterfaceElement>;

@@ -15,9 +15,11 @@ const controllers: ControllerConfiguration[] = [
     samplePaths: {
       react_class: [
         'packages/samples/headless-react/src/components/facet/facet.class.tsx',
+        'packages/samples/headless-react/src/components/facet/facet-search.tsx',
       ],
       react_fn: [
         'packages/samples/headless-react/src/components/facet/facet.fn.tsx',
+        'packages/samples/headless-react/src/components/facet/facet-search.tsx',
       ],
     },
   },
@@ -35,7 +37,20 @@ const controllers: ControllerConfiguration[] = [
   },
   {
     initializer: 'buildNumericFacet',
+    samplePaths: {
+      react_class: [
+        'packages/samples/headless-react/src/components/numeric-facet/numeric-facet.class.tsx',
+      ],
+      react_fn: [
+        'packages/samples/headless-react/src/components/numeric-facet/numeric-facet.fn.tsx',
+      ],
+    },
+    utils: ['buildNumericRange'],
+  },
+  {
+    initializer: 'buildDateFacet',
     samplePaths: {},
+    utils: ['buildDateRange'],
   },
   {
     initializer: 'buildPager',
@@ -58,7 +73,16 @@ const controllers: ControllerConfiguration[] = [
   },
   {
     initializer: 'buildCategoryFacet',
-    samplePaths: {},
+    samplePaths: {
+      react_class: [
+        'packages/samples/headless-react/src/components/category-facet/category-facet.class.tsx',
+        'packages/samples/headless-react/src/components/category-facet/category-facet-search.tsx',
+      ],
+      react_fn: [
+        'packages/samples/headless-react/src/components/category-facet/category-facet.fn.tsx',
+        'packages/samples/headless-react/src/components/category-facet/category-facet-search.tsx',
+      ],
+    },
   },
   {
     initializer: 'buildDidYouMean',
@@ -92,6 +116,10 @@ const controllers: ControllerConfiguration[] = [
         'packages/samples/headless-react/src/components/query-error/query-error.fn.tsx',
       ],
     },
+  },
+  {
+    initializer: 'buildBreadcrumbManager',
+    samplePaths: {},
   },
   {
     initializer: 'buildRecommendationList',
@@ -148,6 +176,10 @@ const controllers: ControllerConfiguration[] = [
         'packages/samples/headless-react/src/components/search-status/search-status.fn.tsx',
       ],
     },
+  },
+  {
+    initializer: 'buildCartRecommendationsList',
+    samplePaths: {},
   },
   {
     initializer: 'buildSearchBox',

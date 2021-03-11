@@ -19,6 +19,7 @@ import {
 } from '../../utils/initialization-utils';
 import {randomID} from '../../utils/utils';
 import ArrowBottomIcon from 'coveo-styleguide/resources/icons/svg/arrow-bottom-rounded.svg';
+import {Schema, StringValue} from '@coveo/bueno';
 
 interface SortDropdownOption {
   expression: string;
@@ -61,7 +62,7 @@ export class AtomicSortDropdown implements InitializableComponent {
     this.searchStatus = buildSearchStatus(this.bindings.engine);
     this.sort = buildSort(this.bindings.engine, {
       initialState: {
-        criterion: this.options[0].criteria,
+        criterion: this.options[0]?.criteria,
       },
     });
   }
@@ -71,7 +72,17 @@ export class AtomicSortDropdown implements InitializableComponent {
       this.host.querySelectorAll('atomic-sort-criteria')
     );
 
+    if (!sortCriterionElements.length) {
+      this.error = new Error(
+        'The "atomic-sort-dropdown" element requires at least one "atomic-sort-criteria" child.'
+      );
+      return;
+    }
+
     this.options = sortCriterionElements.map(({criteria, caption}) => {
+      new Schema({
+        caption: new StringValue({emptyAllowed: false, required: true}),
+      }).validate({caption});
       this.strings[caption] = () => this.bindings.i18n.t(caption);
 
       return {
@@ -80,12 +91,6 @@ export class AtomicSortDropdown implements InitializableComponent {
         caption,
       };
     });
-
-    if (!this.options.length) {
-      this.error = new Error(
-        'The "atomic-sort-dropdown" element requires at least one "atomic-sort-criteria" child.'
-      );
-    }
   }
 
   private select(e: Event) {
@@ -128,7 +133,7 @@ export class AtomicSortDropdown implements InitializableComponent {
         {this.options.map((option) => this.buildOption(option))}
       </select>,
       <div
-        class="absolute right-3 top-4 fill-current w-3 h-3 pointer-events-none"
+        class="absolute pointer-events-none right-3 fill-current w-3"
         innerHTML={ArrowBottomIcon}
       ></div>,
     ];

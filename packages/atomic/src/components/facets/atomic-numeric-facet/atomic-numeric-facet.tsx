@@ -95,9 +95,12 @@ export class AtomicNumericFacet
   }
 
   private get values() {
-    return this.facetState.values.map((listItem) =>
-      this.buildListItem(listItem)
-    );
+    return this.facetState.values.map((listItem) => {
+      if (!listItem.numberOfResults && !this.facet.isValueSelected(listItem)) {
+        return null;
+      }
+      return this.buildListItem(listItem);
+    });
   }
 
   private buildListItem(item: NumericFacetValue) {
@@ -115,7 +118,17 @@ export class AtomicNumericFacet
     );
   }
 
+  public get totalNumberOfResults() {
+    return this.facetState.values.reduce(
+      (accum, value) => accum + value.numberOfResults,
+      0
+    );
+  }
+
   public render() {
+    if (!this.facetState.hasActiveValues && this.totalNumberOfResults === 0) {
+      return null;
+    }
     return (
       <BaseFacet
         controller={new BaseFacetController(this)}

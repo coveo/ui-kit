@@ -94,7 +94,7 @@ describe('Standard Facet', () => {
       );
     });
 
-    it('Should reflect selected facetValue on URL', async () => {
+    it('Should reflect selected facetValue on URL', () => {
       cy.get('@firstFacetValue')
         .click()
         .find('label span:nth-child(1)')

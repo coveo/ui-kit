@@ -53,6 +53,9 @@ export {
 } from './facets/facet/headless-facet';
 
 export {
+  DateRangeOptions,
+  DateRangeRequest,
+  DateRangeInput,
   buildDateRange,
   DateFacetOptions,
   DateFacetProps,
@@ -180,6 +183,8 @@ export {
   StandaloneSearchBox,
   buildStandaloneSearchBox,
 } from './standalone-search-box/headless-standalone-search-box';
+
+export {Product} from './product-recommendations/headless-base-product-recommendations';
 
 export {
   FrequentlyBoughtTogetherListOptions,

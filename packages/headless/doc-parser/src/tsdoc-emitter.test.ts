@@ -17,4 +17,14 @@ describe('#emitAsTsDoc', () => {
     const result = emitAsTsDoc(ast.docComment.summarySection.nodes);
     expect(result).toBe('Creates a `Pager`.');
   });
+
+  it('when the summary has multiple paragraphs, it inserts newlines between them but not at the end', () => {
+    const parser = new TSDocParser();
+    const ast = parser.parseString(
+      '/**\n * Creates a `Pager`.\n *\n * Note: test note.\n */\n'
+    );
+
+    const result = emitAsTsDoc(ast.docComment.summarySection.nodes);
+    expect(result).toBe('Creates a `Pager`.\n\nNote: test note.');
+  });
 });
