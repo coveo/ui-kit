@@ -22,7 +22,9 @@ export function facetValueShouldDisplayInBreadcrumb(
     .invoke('text')
     .then((text) => {
       cy.get('@breadcrumbFacet')
+        .first()
         .find(valueDisplayInBreadcrumbSelector)
+        .debug()
         .should('be.visible')
         .contains(text);
     });
@@ -52,7 +54,7 @@ export async function assertSortCriteria(
     '@coveoSearch',
     requestBodyOrder
   );
-  const firstRequestBodyFacets = requestBody.facets[0];
+  const firstRequestBodyFacets = (requestBody.facets as any)[0];
 
   expect(firstRequestBodyFacets).to.have.property('sortCriteria', sortOption);
 }

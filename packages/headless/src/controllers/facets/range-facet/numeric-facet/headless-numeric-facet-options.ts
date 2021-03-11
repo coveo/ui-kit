@@ -74,6 +74,7 @@ export interface NumericFacetOptions {
   /**
    * The number of values to request for this facet.
    * Also determines the number of additional values to request each time this facet is expanded, and the number of values to display when this facet is collapsed.
+   *
    * @minimum 1
    * @default 8
    */

@@ -1,5 +1,4 @@
 import {buildMockSearchAppEngine, MockEngine} from '../../test/mock-engine';
-import {buildHistory} from './headless-history';
 import {
   back,
   forward,
@@ -11,8 +10,9 @@ import {
   getHistoryInitialState,
 } from '../../features/history/history-state';
 import {SearchAppState} from '../../state/search-app-state';
+import {buildHistoryManager} from './headless-history-manager';
 
-describe('history', () => {
+describe('History Manager', () => {
   let engine: MockEngine<SearchAppState>;
 
   beforeEach(() => {
@@ -20,27 +20,27 @@ describe('history', () => {
   });
 
   it("won't navigate backwards when there is no past history", () => {
-    buildHistory(engine).back();
+    buildHistoryManager(engine).back();
     expect(engine.actions.length).toBe(0);
   });
 
   it('should allow to navigate backward when there is a past history', () => {
     engine.state.history.present = getHistoryInitialState();
     engine.state.history.past = [extractHistory({pipeline: 'test'})];
-    buildHistory(engine).back();
+    buildHistoryManager(engine).back();
     expect(engine.actions[0].type).toBe(back.pending.type);
     expect(engine.actions[1].type).toBe(undo().type);
   });
 
   it("won't navigate backwards when there is no future history", () => {
-    buildHistory(engine).forward();
+    buildHistoryManager(engine).forward();
     expect(engine.actions.length).toBe(0);
   });
 
   it('should allow to navigate forward when there is a future history', () => {
     engine.state.history.present = getHistoryInitialState();
     engine.state.history.future = [extractHistory({pipeline: 'test'})];
-    buildHistory(engine).forward();
+    buildHistoryManager(engine).forward();
     expect(engine.actions[0].type).toBe(forward.pending.type);
     expect(engine.actions[1].type).toBe(redo().type);
   });

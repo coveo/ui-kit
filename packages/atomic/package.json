@@ -1,6 +1,6 @@
 {
   "name": "@coveo/atomic",
-  "version": "0.8.0-alpha.2",
+  "version": "0.8.0-alpha.9",
   "description": "A web-component library for building modern UIs interfacing with the Coveo platform",
   "main": "dist/index.cjs.js",
   "module": "dist/index.js",
@@ -28,7 +28,7 @@
   },
   "dependencies": {
     "@coveo/bueno": "^0.7.0",
-    "@coveo/headless": "^0.8.0-alpha.2",
+    "@coveo/headless": "^0.8.0-alpha.9",
     "coveo-styleguide": "^9.26.0",
     "dayjs": "^1.10.4",
     "i18next": "^19.8.4",
@@ -45,6 +45,7 @@
     "@rollup/plugin-replace": "^2.3.2",
     "@stencil/core": "^2.0.3",
     "@stencil/postcss": "^2.0.0",
+    "@stencil/store": "^1.4.1",
     "@types/jest": "^26.0.14",
     "@types/mustache": "^4.0.1",
     "@types/postcss-import": "^12.0.0",

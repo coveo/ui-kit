@@ -90,11 +90,11 @@ describe('Standard Facet', () => {
       cy.get('@breadcrumbClearAllFilter').should('be.visible');
       facetValueShouldDisplayInBreadcrumb(
         '@firstFacetValue',
-        'ul li:nth-child(2) button'
+        '.breadcrumb:nth-child(1) button span'
       );
     });
 
-    it('Should reflect selected facetValue on URL', async () => {
+    it('Should reflect selected facetValue on URL', () => {
       cy.get('@firstFacetValue')
         .click()
         .find('label span:nth-child(1)')
@@ -147,11 +147,11 @@ describe('Standard Facet', () => {
       cy.get('@breadcrumbClearAllFilter').should('be.visible');
       facetValueShouldDisplayInBreadcrumb(
         '@firstFacetValue',
-        'ul li:nth-child(2) button'
+        '.breadcrumb:nth-child(1) button span'
       );
       facetValueShouldDisplayInBreadcrumb(
         '@secondFacetValue',
-        'ul li:nth-child(3) button'
+        '.breadcrumb:nth-child(2) button span'
       );
     });
 
