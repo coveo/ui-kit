@@ -42,7 +42,10 @@ export interface ResultListProps {
  */
 export interface ResultList extends Controller {
   /**
-   * Using the same parameters as the last successful query, fetch another batch of results. Particularly useful for infinite scrolling, for example.
+   * Using the same parameters as the last successful query, fetch another batch of results, if available.
+   * Particularly useful for infinite scrolling, for example.
+   *
+   * This method is not compatible with the `Pager` controller.
    */
   fetchMoreResults(): void;
 
@@ -64,6 +67,12 @@ export interface ResultListState extends SearchStatusState {
    * The unique identifier of the last executed search.
    */
   searchUid: string;
+  /**
+   * Whether more results are available, using the same parameters as the last successful query.
+   *
+   * This property is not compatible with the `Pager` controller.
+   */
+  moreResultsAvailable: boolean;
 }
 
 /**
@@ -92,6 +101,10 @@ export function buildResultList(
     dispatch(registerFieldsToInclude(options.fieldsToInclude));
   }
 
+  const moreResultsAvailable = () =>
+    engine.state.search.response.results.length <
+    engine.state.search.response.totalCountFiltered;
+
   let lastFetchCompleted = 0;
   let consecutiveFetches = 0;
   const maxConsecutiveFetches = 5;
@@ -100,6 +113,13 @@ export function buildResultList(
 
   const triggerFetchMoreResult = () => {
     if (engine.state.search.isLoading) {
+      return;
+    }
+
+    if (!moreResultsAvailable()) {
+      engine.logger.info(
+        'No more results are available for the result list to fetch.'
+      );
       return;
     }
 
@@ -133,6 +153,7 @@ export function buildResultList(
         ...searchStatus.state,
         results: state.search.results,
         searchUid: state.search.response.searchUid,
+        moreResultsAvailable: moreResultsAvailable(),
       };
     },
 

@@ -4,12 +4,16 @@ import {SearchAppState} from '../../state/search-app-state';
 import {registerFieldsToInclude} from '../../features/fields/fields-actions';
 import {SchemaValidationError} from '@coveo/bueno';
 import {fetchMoreResults} from '../../features/search/search-actions';
+import {buildMockResult} from '../../test';
 
 describe('ResultList', () => {
   let engine: MockEngine<SearchAppState>;
 
   beforeEach(() => {
     engine = buildMockSearchAppEngine();
+    const results = new Array(10).fill(buildMockResult());
+    engine.state.search.response.results = results;
+    engine.state.search.response.totalCountFiltered = 1000;
   });
 
   it('initializes correctly with no fields to include', () => {
@@ -77,6 +81,7 @@ describe('ResultList', () => {
         dispatch: mockDispatch,
       });
       spyOn(engine.logger, 'error');
+      spyOn(engine.logger, 'info');
     });
 
     it(`when calling fetchMoreResults consecutively many times with a small delay
@@ -103,6 +108,19 @@ describe('ResultList', () => {
 
       expect(mockDispatch).toHaveBeenCalledTimes(6);
       expect(engine.logger.error).not.toHaveBeenCalled();
+      done();
+    });
+
+    it(`when calling fetchMoreResults while there are no more results available
+    is should not dispatch and log an info`, async (done) => {
+      engine.state.search.response.totalCountFiltered =
+        engine.state.search.response.results.length;
+      await fetchMoreResultsAndWait(1, 0);
+
+      expect(mockDispatch).not.toHaveBeenCalled();
+      expect(engine.logger.info).toHaveBeenCalledWith(
+        'No more results are available for the result list to fetch.'
+      );
       done();
     });
   });
