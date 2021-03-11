@@ -1,5 +1,5 @@
 import {buildMockProductRecommendations} from '../../test/mock-product-recommendations';
-import {buildMockProductRecommendation} from '../../test/mock-product';
+import {buildMockProductRecommendation} from '../../test/mock-product-recommendation';
 import {
   getProductRecommendations,
   setProductRecommendationsSkus,
