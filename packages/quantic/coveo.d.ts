@@ -11,11 +11,13 @@ declare global {
 
   interface Window {
     coveoHeadless: {
-      components: {
-        element: any;
-        initialized: boolean;
-      }[];
-      engine: any;
+      [x: string]: {
+        components: {
+          element: any;
+          initialized: boolean;
+        }[];
+        engine: any;
+      };
     };
   }
 }

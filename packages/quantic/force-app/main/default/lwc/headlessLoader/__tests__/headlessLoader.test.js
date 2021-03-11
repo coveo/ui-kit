@@ -49,7 +49,7 @@ describe('c/headlessLoader', () => {
     }
 
     describe('when coveoHeadless is undefined', () => {
-      it('should defined coveoHeadless and register component', () => {
+      it('should define coveoHeadless and register component', () => {
         const element = document.createElement('div');
         registerComponentForInit(element, testId);
 
@@ -163,8 +163,6 @@ describe('c/headlessLoader', () => {
   });
 
   describe('getHeadlessEngine', () => {
-    const element = document.createElement('div');
-
     describe('when the engine is undefined', () => {      
       beforeEach(() => {
         window.coveoHeadless = {
@@ -175,7 +173,7 @@ describe('c/headlessLoader', () => {
       });
 
       it('should init the engine return a promise that resolves to that instance', async () => {
-        const engine = await getHeadlessEngine(element, testId);
+        const engine = await getHeadlessEngine(testId);
 
         expect(engine).toBeInstanceOf(MockEngine);
       });
@@ -195,7 +193,7 @@ describe('c/headlessLoader', () => {
       });
 
       it('should return a promise that resolves to an instance of the engine', async () => {
-        const engine = await getHeadlessEngine(element, testId);
+        const engine = await getHeadlessEngine(testId);
 
         expect(engine).toEqual(definedEngine);
       });
