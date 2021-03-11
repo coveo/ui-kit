@@ -75,6 +75,7 @@ export class AtomicCategoryFacet
   @State() public facetSearchQuery = '';
   @State() public showFacetSearchResults = false;
 
+  @Prop({mutable: true, reflect: true}) public facetId = '';
   /**
    * Specifies the index field whose values the facet should use
    */
@@ -113,6 +114,8 @@ export class AtomicCategoryFacet
         controller: new FacetSearchController(this),
       });
     }
+    this.facetId = this.facet.state.facetId;
+    this.bindings.store.state.facetLabels[this.facetId] = this.label;
   }
 
   public componentDidRender() {

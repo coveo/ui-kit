@@ -1,11 +1,33 @@
 {
   "packageDirectories": [
     {
-      "path": "force-app",
+      "package": "Quantic",
+      "versionNumber": "0.0.0.NEXT",
+      "path": "force-app/main",
       "default": true
+    },
+    {
+      "package": "Quantic - CoveoToken",
+      "versionNumber": "0.0.0.NEXT",
+      "path": "force-app/coveo-token",
+      "default": false,
+      "dependencies": [
+        {"package": "CoveoForSalesforce@4.12.0.0"},
+        {"package": "Quantic"}
+      ]
+    },
+    {
+      "package": "Quantic - CustomToken",
+      "versionNumber": "0.0.0.NEXT",
+      "path": "force-app/custom-token",
+      "default": false,
+      "dependencies": [{"package": "Quantic"}]
     }
   ],
   "namespace": "",
   "sfdcLoginUrl": "https://login.salesforce.com",
-  "sourceApiVersion": "50.0"
+  "sourceApiVersion": "50.0",
+  "packageAliases": {
+    "CoveoForSalesforce@4.12.0.0": "04t1P000000Y08cQAC"
+  }
 }

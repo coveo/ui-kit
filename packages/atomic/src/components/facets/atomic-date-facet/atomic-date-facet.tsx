@@ -87,6 +87,7 @@ export class AtomicDateFacet implements InitializableComponent, BaseFacetState {
     this.strings[this.label] = () => this.bindings.i18n.t(this.label);
     this.facet = buildDateFacet(this.bindings.engine, {options});
     this.facetId = this.facet.state.facetId;
+    this.bindings.store.state.facetLabels[this.facetId] = this.label;
   }
 
   private get values() {

@@ -22,9 +22,14 @@ import {
   buildSearchParameterSerializer,
   Unsubscribe,
 } from '@coveo/headless';
-import {Bindings, InitializeEvent} from '../../utils/initialization-utils';
+import {
+  AtomicStore,
+  Bindings,
+  InitializeEvent,
+} from '../../utils/initialization-utils';
 import i18next, {i18n} from 'i18next';
 import Backend, {BackendOptions} from 'i18next-http-backend';
+import {createStore} from '@stencil/store';
 
 export type InitializationOptions = Pick<
   HeadlessConfigurationOptions,
@@ -41,6 +46,7 @@ export class AtomicSearchInterface {
   private unsubscribe: Unsubscribe = () => {};
   private hangingComponentsInitialization: InitializeEvent[] = [];
   private initialized = false;
+  private store = createStore<AtomicStore>({facetLabels: {}});
 
   @Element() private host!: HTMLDivElement;
 
@@ -181,7 +187,7 @@ export class AtomicSearchInterface {
   }
 
   private get bindings(): Bindings {
-    return {engine: this.engine!, i18n: this.i18n};
+    return {engine: this.engine!, i18n: this.i18n, store: this.store};
   }
 
   private initComponents() {
@@ -220,7 +226,7 @@ export class AtomicSearchInterface {
     return [
       this.engine && (
         <atomic-relevance-inspector
-          bindings={{engine: this.engine, i18n: this.i18n}}
+          bindings={{engine: this.engine, i18n: this.i18n, store: this.store}}
         ></atomic-relevance-inspector>
       ),
       <slot></slot>,
