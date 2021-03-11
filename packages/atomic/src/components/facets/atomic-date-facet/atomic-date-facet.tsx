@@ -1,4 +1,6 @@
 import {Component, Prop, State, h, Element} from '@stencil/core';
+import dayjs from 'dayjs';
+
 import {
   DateFacet,
   buildDateFacet,
@@ -69,6 +71,10 @@ export class AtomicDateFacet implements InitializableComponent, BaseFacetState {
    * Whether or not the index should automatically generate options for the facet
    */
   @Prop() public generateAutomaticRanges = true;
+  /**
+   * The format that the date will be displayed in. See https://day.js.org/docs/en/display/format for formatting details.
+   */
+  @Prop() public dateFormat = 'DD/MM/YYYY';
 
   public buildOptions() {
     const options = Array.from(this.host.querySelectorAll('atomic-date-range'));
@@ -87,7 +93,10 @@ export class AtomicDateFacet implements InitializableComponent, BaseFacetState {
     this.strings[this.label] = () => this.bindings.i18n.t(this.label);
     this.facet = buildDateFacet(this.bindings.engine, {options});
     this.facetId = this.facet.state.facetId;
-    this.bindings.store.state.facetLabels[this.facetId] = this.label;
+    this.bindings.store.state.facets[this.facetId] = {
+      label: this.label,
+      formatting: this.dateFormat,
+    };
   }
 
   private get values() {
@@ -104,7 +113,9 @@ export class AtomicDateFacet implements InitializableComponent, BaseFacetState {
 
     return (
       <FacetValue
-        label={` ${item.start}-${item.end}`}
+        label={`${dayjs(item.start).format(this.dateFormat)} - ${dayjs(
+          item.end
+        ).format(this.dateFormat)}`}
         isSelected={isSelected}
         numberOfResults={item.numberOfResults}
         facetValueSelected={() => {

@@ -18,6 +18,7 @@ import {
 import {RangeFacetValue} from '@coveo/headless/dist/features/facets/range-facets/generic/interfaces/range-facet';
 import {BaseFacetValue} from '@coveo/headless/dist/features/facets/facet-api/response';
 import mainclear from '../../images/main-clear.svg';
+import dayjs from 'dayjs';
 
 /**
  * A component that creates breadcrumbs that display the currently active facet values
@@ -69,6 +70,10 @@ export class AtomicBreadcrumbManager implements InitializableComponent {
     this.breadcrumbManager = buildBreadcrumbManager(this.bindings.engine);
   }
 
+  private getFormat(id: string) {
+    return this.bindings.store.state.facets[id].formatting;
+  }
+
   private getBreadcrumbValue(
     value: string,
     breadcrumbValue: BreadcrumbValue<BaseFacetValue> | CategoryFacetBreadcrumb
@@ -106,7 +111,7 @@ export class AtomicBreadcrumbManager implements InitializableComponent {
     return (
       <div class="flex items-center text-sm" part="breadcrumb-wrapper">
         <span class="text-on-background" part="breadcrumb-label">
-          {this.bindings.store.state.facetLabels[facetId] || field}:&nbsp;
+          {this.bindings.store.state.facets[facetId].label || field}:&nbsp;
         </span>
         {children}
       </div>
@@ -143,7 +148,8 @@ export class AtomicBreadcrumbManager implements InitializableComponent {
   }
 
   private formatRangeBreadcrumb(
-    breadcrumb: Breadcrumb<RangeFacetValue>
+    breadcrumb: Breadcrumb<RangeFacetValue>,
+    formatValue: (value: RangeFacetValue) => string
   ): Breadcrumb<BaseFacetValue & {value: string}> {
     return {
       ...breadcrumb,
@@ -151,7 +157,7 @@ export class AtomicBreadcrumbManager implements InitializableComponent {
         deselect: value.deselect,
         value: {
           ...value.value,
-          value: `${value.value.start} - ${value.value.end}`,
+          value: formatValue(value.value),
         },
       })),
     };
@@ -160,13 +166,31 @@ export class AtomicBreadcrumbManager implements InitializableComponent {
   private get numericFacetBreadcrumbs() {
     return this.breadcrumbManagerState.numericFacetBreadcrumbs.map(
       (breadcrumb) =>
-        this.getBreadcrumbValues(this.formatRangeBreadcrumb(breadcrumb))
+        this.getBreadcrumbValues(
+          this.formatRangeBreadcrumb(breadcrumb, (value) => {
+            const {language} = this.bindings.i18n;
+            return `${value.start.toLocaleString(
+              language
+            )} - ${value.end.toLocaleString(language)}`;
+          })
+        )
     );
   }
 
   private get dateFacetBreadcrumbs() {
-    return this.breadcrumbManagerState.dateFacetBreadcrumbs.map((breadcrumb) =>
-      this.getBreadcrumbValues(this.formatRangeBreadcrumb(breadcrumb))
+    return this.breadcrumbManagerState.dateFacetBreadcrumbs.map(
+      (breadcrumb) => {
+        const dateFormat = this.getFormat(breadcrumb.facetId);
+        return this.getBreadcrumbValues(
+          this.formatRangeBreadcrumb(
+            breadcrumb,
+            (value) =>
+              `${dayjs(value.start).format(dateFormat)} - ${dayjs(
+                value.end
+              ).format(dateFormat)}`
+          )
+        );
+      }
     );
   }
 

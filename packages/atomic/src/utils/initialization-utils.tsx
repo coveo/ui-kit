@@ -3,8 +3,13 @@ import {ComponentInterface, getElement, h} from '@stencil/core';
 import {i18n, StringMap} from 'i18next';
 import {ObservableMap} from '@stencil/store';
 
+export type FacetState = {
+  label: string;
+  formatting?: string;
+};
+
 export type AtomicStore = {
-  facetLabels: Record<string, string>;
+  facets: Record<string, FacetState>;
 };
 
 /**

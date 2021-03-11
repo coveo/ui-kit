@@ -46,7 +46,7 @@ export class AtomicSearchInterface {
   private unsubscribe: Unsubscribe = () => {};
   private hangingComponentsInitialization: InitializeEvent[] = [];
   private initialized = false;
-  private store = createStore<AtomicStore>({facetLabels: {}});
+  private store = createStore<AtomicStore>({facets: {}});
 
   @Element() private host!: HTMLDivElement;
 
