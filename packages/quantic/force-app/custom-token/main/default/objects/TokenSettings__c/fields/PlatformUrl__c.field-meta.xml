@@ -8,5 +8,5 @@
     <trackTrending>false</trackTrending>
     <type>Text</type>
     <unique>false</unique>
-    <description>The base URL of the endpoint used for querying Coveo, token generation included. Should usually be https://platform.cloud.coveo.com. Custom endpoint must follow the same structure as https://platform.cloud.coveo.com.</description>
+    <description>The base URL of the endpoint used to query Coveo. The default is https://platform.cloud.coveo.com. Custom endpoints must use the https://platform.cloud.coveo.com structure as well.</description>
 </CustomField>

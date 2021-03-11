@@ -8,5 +8,5 @@
     <trackTrending>false</trackTrending>
     <type>Text</type>
     <unique>false</unique>
-    <description>An API Key capable of requesting a search token (see: https://docs.coveo.com/en/56/build-a-search-ui/search-token-authentication#requesting-a-search-token)</description>
+    <description>An API key capable of requesting a search token (see: https://docs.coveo.com/en/56/build-a-search-ui/search-token-authentication#requesting-a-search-token)</description>
 </CustomField>

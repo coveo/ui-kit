@@ -1,5 +1,5 @@
 /**
- * Return a static sample configuration with preconfigured value for the sample organization.
+ * Return a static sample configuration with pre-configured value for the sample organization.
  */
 global with sharing class SampleTokenProvider implements ITokenProvider {
     /**

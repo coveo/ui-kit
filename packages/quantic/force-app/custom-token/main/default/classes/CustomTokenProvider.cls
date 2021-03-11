@@ -1,7 +1,7 @@
 /**
  * Example class showing how to create your own TokenProvider,
- * using a [CustomSettings](https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_methods_system_custom_settings.htm)
- * to store the sensitive data such as the API Key.
+ * using [custom settings](https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_methods_system_custom_settings.htm)
+ * to store sensitive data such as the API Key.
  */
 global with sharing class CustomTokenProvider implements ITokenProvider {
     global with sharing class HttpException extends Exception {}
@@ -28,7 +28,7 @@ global with sharing class CustomTokenProvider implements ITokenProvider {
     }
 
     /**
-     * Return the array of user identities to be concerned by the token.
+     * Return the array of user identities the token can impersonates.
      * See https://docs.coveo.com/en/56/build-a-search-ui/search-token-authentication#userids-array-of-restuserid-required.
      */
     private static List<Map<String,String>> getUserIdentities() {
@@ -80,7 +80,7 @@ global with sharing class CustomTokenProvider implements ITokenProvider {
     }
 
     /**
-     * Get a search token from Coveo Platform based on the setting and the current user identity.
+     * Get a search token from the Coveo Platform based on the setting and the current user identity.
      * @param {TokenSettings__c} settings the settings to use.
      */
     private static String getToken(TokenSettings__c settings) {

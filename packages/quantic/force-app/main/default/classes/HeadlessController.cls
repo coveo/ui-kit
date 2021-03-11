@@ -12,7 +12,7 @@ global with sharing class HeadlessController {
     @AuraEnabled(continuation=true cacheable=false)
     public static String getHeadlessConfiguration() {
         /**
-         * e.g. you could simply switch to the Coveo Package Token Provider by replacing the following line with
+         * e.g. To switch to the Coveo Token Provider, you simply need to replace the following line by:
          * `return CoveoTokenprovider.getHeadlessConfiguration();`
          */
         return SampleTokenProvider.getHeadlessConfiguration();

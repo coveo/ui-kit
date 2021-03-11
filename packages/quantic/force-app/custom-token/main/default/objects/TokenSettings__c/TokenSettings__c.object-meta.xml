@@ -4,5 +4,5 @@
     <enableFeeds>false</enableFeeds>
     <label>Settings</label>
     <visibility>Protected</visibility>
-    <description>Custom settings containing the information needed to generate a search token using the CustomTokenProvider.</description>
+    <description>Custom settings containing the required information to generate a search token using the CustomTokenProvider.</description>
 </CustomObject>
