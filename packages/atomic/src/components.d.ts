@@ -41,13 +41,7 @@ export namespace Components {
         "sortCriteria": CategoryFacetSortCriterion;
     }
     interface AtomicComponentError {
-        /**
-          * The target HTML element.
-         */
         "element": HTMLElement;
-        /**
-          * The target error.
-         */
         "error": Error;
     }
     interface AtomicDateFacet {
@@ -319,12 +313,12 @@ export namespace Components {
          */
         "logLevel"?: LogLevel;
         /**
-          * The search interface query pipeline.
+          * The search interface [query pipeline](https://docs.coveo.com/en/180/).
          */
         "pipeline": string;
         "reflectStateInUrl": boolean;
         /**
-          * The search interface search hub.
+          * The search interface [search hub](https://docs.coveo.com/en/1342/).
          */
         "searchHub": string;
     }
@@ -642,13 +636,7 @@ declare namespace LocalJSX {
         "sortCriteria"?: CategoryFacetSortCriterion;
     }
     interface AtomicComponentError {
-        /**
-          * The target HTML element.
-         */
         "element": HTMLElement;
-        /**
-          * The target error.
-         */
         "error": Error;
     }
     interface AtomicDateFacet {
@@ -917,12 +905,12 @@ declare namespace LocalJSX {
          */
         "logLevel"?: LogLevel;
         /**
-          * The search interface query pipeline.
+          * The search interface [query pipeline](https://docs.coveo.com/en/180/).
          */
         "pipeline"?: string;
         "reflectStateInUrl"?: boolean;
         /**
-          * The search interface search hub.
+          * The search interface [search hub](https://docs.coveo.com/en/1342/).
          */
         "searchHub"?: string;
     }

@@ -7,9 +7,9 @@
 
 ## Properties
 
-| Property     | Attribute | Description | Type                        | Default |
-| ------------ | --------- | ----------- | --------------------------- | ------- |
-| `conditions` | --        |             | `ResultTemplateCondition[]` | `[]`    |
+| Property     | Attribute | Description                                                                  | Type                        | Default |
+| ------------ | --------- | ---------------------------------------------------------------------------- | --------------------------- | ------- |
+| `conditions` | --        | Functions that must return true on results for the result template to apply. | `ResultTemplateCondition[]` | `[]`    |
 
 
 ## Methods

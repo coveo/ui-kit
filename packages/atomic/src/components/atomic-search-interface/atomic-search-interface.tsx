@@ -47,12 +47,12 @@ export class AtomicSearchInterface {
   @State() private error?: Error;
 
   /**
-   * The search interface query pipeline.
+   * The search interface [query pipeline](https://docs.coveo.com/en/180/).
    */
   @Prop({reflect: true}) public pipeline = 'default';
 
   /**
-   * The search interface search hub.
+   * The search interface [search hub](https://docs.coveo.com/en/1342/).
    */
   @Prop({reflect: true}) public searchHub = 'default';
 
