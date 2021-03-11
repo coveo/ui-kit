@@ -45,6 +45,7 @@
     "@rollup/plugin-replace": "^2.3.2",
     "@stencil/core": "^2.0.3",
     "@stencil/postcss": "^2.0.0",
+    "@stencil/store": "^1.4.1",
     "@types/jest": "^26.0.14",
     "@types/mustache": "^4.0.1",
     "@types/postcss-import": "^12.0.0",
