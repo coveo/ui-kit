@@ -253,7 +253,7 @@ export namespace Components {
     }
     interface AtomicResultTemplate {
         /**
-          * Functions that must return true on results for the result template to apply.
+          * Functions that must return true on results for the result template to apply.  For example, a template with the following only applies to results whose `title` contains `singapore`: `[(result) => /singapore/i.test(result.title)]`
          */
         "conditions": ResultTemplateCondition[];
         "getTemplate": () => Promise<ResultTemplate<string> | null>;
@@ -848,7 +848,7 @@ declare namespace LocalJSX {
     }
     interface AtomicResultTemplate {
         /**
-          * Functions that must return true on results for the result template to apply.
+          * Functions that must return true on results for the result template to apply.  For example, a template with the following only applies to results whose `title` contains `singapore`: `[(result) => /singapore/i.test(result.title)]`
          */
         "conditions"?: ResultTemplateCondition[];
     }
