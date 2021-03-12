@@ -207,11 +207,13 @@ const unwrapError = (
     return res.body;
   }
 
+  const body = (res.body as unknown) as Error;
+
   return {
-    message: '',
+    ...body,
+    message: `Client side error: ${body.message || ''}`,
     statusCode: 400,
     type: 'ClientError',
-    ...res.body,
   };
 };
 
