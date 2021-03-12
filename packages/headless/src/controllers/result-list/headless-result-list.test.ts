@@ -60,6 +60,16 @@ describe('ResultList', () => {
     ).toBeFalsy();
   });
 
+  it('moreResultsAvailable should return true when totalCountFiltered is greater than the results length', () => {
+    expect(buildResultList(engine).state.moreResultsAvailable).toBe(true);
+  });
+
+  it('moreResultsAvailable should return true when totalCountFiltered is lower or equal than the results length', () => {
+    engine.state.search.response.totalCountFiltered =
+      engine.state.search.response.results.length;
+    expect(buildResultList(engine).state.moreResultsAvailable).toBe(false);
+  });
+
   describe('fetchMoreResults "infinite" fetches prevention', () => {
     let resultList: ResultList;
     let mockDispatch: jest.Mock;
