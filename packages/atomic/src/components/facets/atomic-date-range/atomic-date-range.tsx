@@ -13,16 +13,16 @@ export class AtomicDateRange {
 
   /**
    * The starting date for the range.
-   * It can be expressed as a Javascript date, as a number using epoch time or as a string using the ISO 8601 format
+   * It can be expressed as a Javascript date, as a number using epoch time or as a string using the ISO 8601 format.
    */
   @Prop() public start!: Date | string | number;
   /**
    * The ending date for the range.
-   * It can be expressed as a Javascript date, as a number using epoch time or as a string using the ISO 8601 format
+   * It can be expressed as a Javascript date, as a number using epoch time or as a string using the ISO 8601 format.
    */
   @Prop() public end!: Date | string | number;
   /**
-   * Specifies whether or not the end date should be included in the range
+   * Specifies whether or not the end date should be included in the range.
    */
   @Prop() public endInclusive = false;
 }

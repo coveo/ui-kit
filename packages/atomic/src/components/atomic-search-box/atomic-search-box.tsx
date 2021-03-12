@@ -40,15 +40,15 @@ export class AtomicSearchBox {
     querySuggestionList: () => this.bindings.i18n.t('querySuggestionList'),
   };
   /**
-   * Maximum number of suggestions to display
+   * Maximum number of suggestions to display.
    */
   @Prop() numberOfSuggestions = 5;
   /**
-   * The placeholder for the search box input
+   * The placeholder for the search box input.
    */
   @Prop() placeholder = '';
   /**
-   * Whether the submit button should be placed before the input
+   * Whether the submit button should be placed before the input.
    */
   @Prop() leadingSubmitButton = false;
   @Prop({reflect: true, attribute: 'data-id'}) public _id = randomID(
