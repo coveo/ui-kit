@@ -1,3 +1,21 @@
-import {SearchAPIErrorWithStatusCode} from '../../api/search/search-api-error-response';
+export interface ErrorPayload {
+  /**
+   * The HTTP status code.
+   */
+  statusCode: number;
 
-export type ErrorPayload = SearchAPIErrorWithStatusCode;
+  /**
+   * The error message.
+   */
+  message: string;
+
+  /**
+   * The error stack.
+   */
+  stack?: string;
+
+  /**
+   * The error type.
+   */
+  type: string;
+}
