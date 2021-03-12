@@ -123,7 +123,14 @@ const controllers: ControllerConfiguration[] = [
   },
   {
     initializer: 'buildBreadcrumbManager',
-    samplePaths: {},
+    samplePaths: {
+      react_class: [
+        'packages/samples/headless-react/src/components/breadcrumb-manager/breadcrumb-manager.class.tsx',
+      ],
+      react_fn: [
+        'packages/samples/headless-react/src/components/breadcrumb-manager/breadcrumb-manager.fn.tsx',
+      ],
+    },
   },
   {
     initializer: 'buildRecommendationList',
