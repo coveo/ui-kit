@@ -6,7 +6,7 @@ import { LightningElement, api } from 'lwc';
 
 export default class SampleApp extends LightningElement {
   /** @type {String} */
-  @api engineId;
+  @api engineId = 'sample-app';
 
   renderedCallback() {	
     // Example on how to init the search interface	

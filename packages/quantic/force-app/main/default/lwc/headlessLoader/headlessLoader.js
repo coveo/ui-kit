@@ -56,7 +56,7 @@ const debounceInitialSearch = (engineId) => {
  * Returns true if registered components are initialized, false otherwise.
  * @param {String} engineId The id of the engine.
  */
-const areAllComponentsInitialized = (engineId) => 
+const areAllComponentsInitialized = (engineId) =>
   !window.coveoHeadless[engineId].components.find(component => component.initialized === false);
 
 /**
@@ -69,23 +69,30 @@ const getRegisteredComponent = (element, engineId) => window.coveoHeadless[engin
 /**
  * Loads dependencies and returns an initialized Headless engine. 
  */
-async function initEngine() {
-  let engine;
+async function initEngine(engineId) {
   try {
     if (dependencyPromises.length === 0) {
       throw new Error('Dependencies were never requested.');
     }
     await Promise.all(dependencyPromises);
-    const config = CoveoHeadless.HeadlessEngine.getSampleConfiguration();
-  
-    engine = new CoveoHeadless.HeadlessEngine({
-      configuration: config,
+
+    //temp
+    setEngineConfiguration(engineId, CoveoHeadless.HeadlessEngine.getSampleConfiguration())
+
+    return new CoveoHeadless.HeadlessEngine({
+      configuration: window.coveoHeadless[engineId].config,
       reducers: CoveoHeadless.searchAppReducers,
     });
   } catch (error) {
     throw new Error('Fatal error: unable to initialize Coveo Headless: ' + error);
   }
-  return engine;
+}
+
+function setEngineConfiguration(engineId, config) {
+  if (!(window.coveoHeadless && window.coveoHeadless[engineId])) {
+    throw new Error('Fatal error: attempted to set config on undefined engine');
+  }
+  window.coveoHeadless[engineId].config = config;
 }
 
 /**
@@ -95,6 +102,7 @@ async function initEngine() {
  */
 function registerComponentForInit(element, engineId) {
   cancelInitialSearch(engineId);
+
   if (!window.coveoHeadless) {
     loadDependencies(element);
     window.coveoHeadless = {
@@ -109,10 +117,9 @@ function registerComponentForInit(element, engineId) {
       engine: undefined
     }
   }
-  const coveoHeadless = window.coveoHeadless[engineId];
 
   if (!getRegisteredComponent(element, engineId)) {
-    coveoHeadless.components.push({
+    window.coveoHeadless[engineId].components.push({
       element,
       initialized: false
     });
@@ -142,12 +149,12 @@ function setComponentInitialized(element, engineId) {
 /**
  * Returns headless engine promise.
  * @param {String} engineId The id of the engine.
+ * @param config The configuration used for the engine.
  */
-function getHeadlessEngine(engineId) {
-  if (window.coveoHeadless[engineId] && window.coveoHeadless[engineId].engine) {
-    return window.coveoHeadless[engineId].engine;
+async function getHeadlessEngine(engineId) {
+  if (!window.coveoHeadless[engineId].engine) {
+    window.coveoHeadless[engineId].engine = initEngine(engineId);
   }
-  window.coveoHeadless[engineId].engine = initEngine();
   return window.coveoHeadless[engineId].engine;
 }
 
@@ -157,19 +164,20 @@ function getHeadlessEngine(engineId) {
  * @param {String} engineId The id of the engine.
  * @param {Function} initialize The component's initialization function.
  */
-function initializeWithHeadless(element, engineId, initialize) {
+async function initializeWithHeadless(element, engineId, initialize) {
   if (getRegisteredComponent(element, engineId).initialized) {
     return;
   }
-  getHeadlessEngine(engineId).then((engine) => {
-    initialize(engine);
+  try {
+    initialize(await getHeadlessEngine(engineId));
     setComponentInitialized(element, engineId);
-  }).catch((error) => {
+  } catch (error) {
     console.error('Fatal error: unable to initialize component', error);
-  });
+  }
 }
 
 export {
+  setEngineConfiguration,
   registerComponentForInit,
   setComponentInitialized,
   getHeadlessEngine,

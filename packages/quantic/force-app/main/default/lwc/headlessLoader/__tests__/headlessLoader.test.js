@@ -216,7 +216,7 @@ describe('c/headlessLoader', () => {
       });
 
       it('should init the engine and initialize ', async () => {
-        initializeWithHeadless(element, testId, initialize);
+        await initializeWithHeadless(element, testId, initialize);
         const engine = await window.coveoHeadless[testId].engine;
 
         expect(engine).toBeInstanceOf(MockEngine);
@@ -263,7 +263,7 @@ describe('c/headlessLoader', () => {
       });
 
       it('should initialize the component using the defined engine', async () => {
-        initializeWithHeadless(element, testId, initialize);
+        await initializeWithHeadless(element, testId, initialize);
         const engine = await window.coveoHeadless[testId].engine;
 
         expect(engine).toEqual(definedEngine);
