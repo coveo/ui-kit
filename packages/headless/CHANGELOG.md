@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.8.0-alpha.16](https://github.com/coveo/ui-kit/compare/v0.8.0-alpha.15...v0.8.0-alpha.16) (2021-03-12)
+
+
+### Features
+
+* **headless:** add moreResultsAvailable to ResultList state ([#611](https://github.com/coveo/ui-kit/issues/611)) ([fa85a5c](https://github.com/coveo/ui-kit/commit/fa85a5cda5087adb3d451048c2a4e0534e627f9d))
+
+
+
+
+
 # [0.8.0-alpha.15](https://github.com/coveo/ui-kit/compare/v0.8.0-alpha.14...v0.8.0-alpha.15) (2021-03-12)
 
 
