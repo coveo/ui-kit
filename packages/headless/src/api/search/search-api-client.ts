@@ -20,7 +20,6 @@ import {FacetSearchRequest} from './facet-search/facet-search-request';
 import {FacetSearchResponse} from './facet-search/facet-search-response';
 import {SearchAppState} from '../../state/search-app-state';
 import {BaseParam, baseSearchRequest} from './search-api-params';
-import {CategoryFacetSearchRequest} from './facet-search/category-facet-search/category-facet-search-request';
 import {RecommendationRequest} from './recommendation/recommendation-request';
 import {ProductRecommendationsRequest} from './product-recommendations/product-recommendations-request';
 import {Logger} from 'pino';
@@ -31,6 +30,7 @@ import {
   PostprocessSearchResponseMiddleware,
 } from './search-api-client-middleware';
 import {PreprocessRequest} from '../preprocess-request';
+import {HtmlRequest} from './html/html-request';
 
 export type AllSearchAPIResponse = Plan | Search | QuerySuggest;
 
@@ -131,7 +131,7 @@ export class SearchAPIClient {
     };
   }
 
-  async facetSearch(req: FacetSearchRequest | CategoryFacetSearchRequest) {
+  async facetSearch(req: FacetSearchRequest) {
     const platformResponse = await PlatformClient.call<FacetSearchResponse>({
       ...baseSearchRequest(req, 'POST', 'application/json', '/facet'),
       requestParams: pickNonBaseParams(req),
@@ -160,6 +160,20 @@ export class SearchAPIClient {
     return {
       error: unwrapError(platformResponse),
     };
+  }
+
+  async html(req: HtmlRequest) {
+    const response = await PlatformClient.call<string>({
+      ...baseSearchRequest(req, 'POST', 'application/json', '/html'),
+      requestParams: pickNonBaseParams(req),
+      ...this.options,
+    });
+
+    if (isSuccessHtmlResponse(response)) {
+      return {success: response.body};
+    }
+
+    return {error: unwrapError(response)};
   }
 
   async productRecommendations(req: ProductRecommendationsRequest) {
@@ -252,6 +266,12 @@ function isSuccessPlanResponse(
     (r as PlatformResponse<PlanResponseSuccess>).body.preprocessingOutput !==
     undefined
   );
+}
+
+function isSuccessHtmlResponse(
+  r: PlatformResponse<string>
+): r is PlatformResponse<string> {
+  return typeof r.body === 'string';
 }
 
 function isSuccessSearchResponse(

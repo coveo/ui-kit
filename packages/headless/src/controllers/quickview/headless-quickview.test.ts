@@ -1,3 +1,4 @@
+import {fetchResultContent} from '../../features/quickview/quickview-actions';
 import {SearchAppState} from '../../state/search-app-state';
 import {
   buildMockResult,
@@ -36,10 +37,15 @@ describe('Quickview', () => {
     expect(quickview.subscribe).toBeTruthy();
   });
 
-  it('#fetchResultPreview dispatches a #fetchResultPreview action', () => {
-    quickview.fetchResultPreview();
+  it('#fetchResultContent dispatches a #fetchResultContent action with the result uniqueId', () => {
+    const uniqueId = '1';
+    options.result = buildMockResult({uniqueId});
+    initQuickview();
 
-    const action = engine.findAsyncAction();
-    expect(action).toBeTruthy();
+    quickview.fetchResultContent();
+
+    const action = engine.findAsyncAction(fetchResultContent.pending);
+
+    expect(action?.meta.arg).toEqual({uniqueId});
   });
 });
