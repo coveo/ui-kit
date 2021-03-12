@@ -57,17 +57,17 @@ export class AtomicNumericFacet
   };
 
   @State() public isExpanded = false;
-  @Prop({mutable: true}) public facetId = '';
+  @Prop({mutable: true, reflect: true}) public facetId = '';
   /**
-   * Specifies the index field whose values the facet should use
+   * Specifies the index field whose values the facet should use.
    */
   @Prop() public field = '';
   /**
-   * The non-localized label for the facet
+   * The non-localized label for the facet.
    */
   @Prop() public label = 'No label';
   /**
-   * Whether or not the index should automatically generate options for the facet
+   * Whether or not the index should automatically generate options for the facet.
    */
   @Prop() public generateAutomaticRanges = true;
 
@@ -91,6 +91,7 @@ export class AtomicNumericFacet
     this.facet = buildNumericFacet(this.bindings.engine, {options});
     this.strings[this.label] = () => this.bindings.i18n.t(this.label);
     this.facetId = this.facet.state.facetId;
+    this.bindings.store.state.facetLabels[this.facetId] = this.label;
   }
 
   private get values() {

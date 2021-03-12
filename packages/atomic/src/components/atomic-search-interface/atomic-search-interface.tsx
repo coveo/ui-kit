@@ -22,9 +22,14 @@ import {
   buildSearchParameterSerializer,
   Unsubscribe,
 } from '@coveo/headless';
-import {Bindings, InitializeEvent} from '../../utils/initialization-utils';
+import {
+  AtomicStore,
+  Bindings,
+  InitializeEvent,
+} from '../../utils/initialization-utils';
 import i18next, {i18n} from 'i18next';
 import Backend, {BackendOptions} from 'i18next-http-backend';
+import {createStore} from '@stencil/store';
 
 export type InitializationOptions = Pick<
   HeadlessConfigurationOptions,
@@ -41,16 +46,40 @@ export class AtomicSearchInterface {
   private unsubscribe: Unsubscribe = () => {};
   private hangingComponentsInitialization: InitializeEvent[] = [];
   private initialized = false;
+  private store = createStore<AtomicStore>({facetLabels: {}});
 
   @Element() private host!: HTMLDivElement;
 
   @State() private error?: Error;
 
+  /**
+   * The search interface [query pipeline](https://docs.coveo.com/en/180/).
+   */
   @Prop({reflect: true}) public pipeline = 'default';
+
+  /**
+   * The search interface [search hub](https://docs.coveo.com/en/1342/).
+   */
   @Prop({reflect: true}) public searchHub = 'default';
+
+  /**
+   * The level of messages you want to be logged in the console.
+   */
   @Prop() public logLevel?: LogLevel;
+
+  /**
+   * The search interface i18next instance.
+   */
   @Prop() public i18n: i18n = i18next.createInstance();
+
+  /**
+   * The search interface language.
+   */
   @Prop({reflect: true}) public language = 'en';
+
+  /**
+   * The search interface Headless engine.
+   */
   @Prop({mutable: true}) public engine?: Engine;
 
   @Watch('searchHub')
@@ -158,7 +187,7 @@ export class AtomicSearchInterface {
   }
 
   private get bindings(): Bindings {
-    return {engine: this.engine!, i18n: this.i18n};
+    return {engine: this.engine!, i18n: this.i18n, store: this.store};
   }
 
   private initComponents() {
@@ -197,7 +226,7 @@ export class AtomicSearchInterface {
     return [
       this.engine && (
         <atomic-relevance-inspector
-          bindings={{engine: this.engine, i18n: this.i18n}}
+          bindings={{engine: this.engine, i18n: this.i18n, store: this.store}}
         ></atomic-relevance-inspector>
       ),
       <slot></slot>,

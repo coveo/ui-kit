@@ -36,6 +36,10 @@
     "en": "Inclusion filter on {{value}}; {{numberOfResults}} results",
     "fr": "Filtre d'inclusion sur {{value}}; {{numberOfResults}} résultats"
   },
+  "removeFilterOn": {
+    "en": "Remove inclusion filter on {{value}}",
+    "fr": "Enlever le filtre d'inclusion sur {{value}}"
+  },
   "querySuggestionList": {
     "en": "Search suggestions. Select one to search.",
     "fr": ""
@@ -721,5 +725,55 @@
     "tr": "Daha Fazla Bilgi",
     "zh-cn": "更多信息",
     "zh-tw": "更多資訊"
+  },
+  "clearAllFilters": {
+    "en": "Clear All Filters",
+    "fr": "Enlever tous les filtres",
+    "cs": "Vymazat všechny filtry",
+    "da": "Ryd alle filtre",
+    "de": "Alle Filter löschen",
+    "el": "Διαγραφή όλων των φίλτρων",
+    "es-es": "Borrar todos los filtros",
+    "fi": "Tyhjennä kaikki suodattimet",
+    "hu": "Összes szűrő törlése",
+    "id": "Bersihkan Semua Filter",
+    "it": "Cancella tutti i filtri",
+    "ja": "すべてのフィルターをクリア",
+    "ko": "모든 필터 지우기",
+    "nl": "Alle filters wissen",
+    "no": "Tøm alle filtre",
+    "pl": "Wyczyść wszystkie filtry",
+    "pt-br": "Desmarcar todos os filtros",
+    "ru": "Сброс всех фильтров",
+    "sv": "Rensa Alla Filter",
+    "th": "ล้างตัวกรองทั้งหมด",
+    "tr": "Tüm Filtreleri Temizleyin",
+    "zh-cn": "清除所有筛选条件",
+    "zh-tw": "清除所有篩選條件"
+  },
+  "nMore": {
+    "en": "{{value}} more...",
+    "fr": "{{value}} de plus...",
+    "cs": "počet dalších: {{value}}",
+    "da": "{{value}} mere ...",
+    "de": "{{value}} mehr...",
+    "el": "{{value}} ακόμα...",
+    "es-es": "{{value}} más...",
+    "fi": "{{value}} lisää…",
+    "hu": "{{value}} több...",
+    "id": "{{value}} selengkapnya",
+    "it": "{{value}} in più...",
+    "ja": "{{value}}件以上...",
+    "ko": "{{value}}개 더…",
+    "nl": "{{value}} meer…",
+    "no": "{{value}} mer...",
+    "pl": "{{value}} więcej...",
+    "pt-br": "{{value}} mais...",
+    "ru": "еще {{value}}…",
+    "sv": "{{value}} fler…",
+    "th": "{{value}} เพิ่มเติม...",
+    "tr": "{{value}} daha fazla…",
+    "zh-cn": "{{value}} 更多...",
+    "zh-tw": "{{value}} 更多..."
   }
 }

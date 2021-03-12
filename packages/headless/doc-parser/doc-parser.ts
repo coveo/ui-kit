@@ -11,6 +11,10 @@ const entryPoint = apiPackage.entryPoints[0];
 
 const controllers: ControllerConfiguration[] = [
   {
+    initializer: 'buildHistoryManager',
+    samplePaths: {},
+  },
+  {
     initializer: 'buildFacet',
     samplePaths: {
       react_class: [
@@ -213,6 +217,17 @@ const controllers: ControllerConfiguration[] = [
       ],
       react_fn: [
         'packages/samples/headless-react/src/components/results-per-page/results-per-page.fn.tsx',
+      ],
+    },
+  },
+  {
+    initializer: 'buildRelevanceInspector',
+    samplePaths: {
+      react_class: [
+        'packages/samples/headless-react/src/components/relevance-inspector/relevance-inspector.class.tsx',
+      ],
+      react_fn: [
+        'packages/samples/headless-react/src/components/relevance-inspector/relevance-inspector.fn.tsx',
       ],
     },
   },

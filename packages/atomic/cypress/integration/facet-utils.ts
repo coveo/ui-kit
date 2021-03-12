@@ -22,7 +22,9 @@ export function facetValueShouldDisplayInBreadcrumb(
     .invoke('text')
     .then((text) => {
       cy.get('@breadcrumbFacet')
+        .first()
         .find(valueDisplayInBreadcrumbSelector)
+        .debug()
         .should('be.visible')
         .contains(text);
     });

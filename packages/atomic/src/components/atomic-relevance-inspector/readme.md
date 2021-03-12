@@ -7,9 +7,9 @@
 
 ## Properties
 
-| Property                | Attribute | Description | Type       | Default     |
-| ----------------------- | --------- | ----------- | ---------- | ----------- |
-| `bindings` _(required)_ | --        |             | `Bindings` | `undefined` |
+| Property                | Attribute | Description                                                                   | Type       | Default     |
+| ----------------------- | --------- | ----------------------------------------------------------------------------- | ---------- | ----------- |
+| `bindings` _(required)_ | --        | The Atomic interface bindings, namely the Headless Engine and i18n instances. | `Bindings` | `undefined` |
 
 
 ## Dependencies

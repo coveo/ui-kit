@@ -1,5 +1,12 @@
-import {BooleanValue, Schema, SchemaValues} from '@coveo/bueno';
+import {BooleanValue, Schema} from '@coveo/bueno';
+import {
+  ExecutionReport,
+  ExecutionStep,
+} from '../../api/search/search/execution-report';
+import {QueryRankingExpression} from '../../api/search/search/query-ranking-expression';
+import {Result} from '../../api/search/search/result';
 import {SearchResponseSuccessWithDebugInfo} from '../../api/search/search/search-response';
+import {SecurityIdentity} from '../../api/search/search/security-identity';
 import {Engine} from '../../app/headless-engine';
 import {
   AnalyticsType,
@@ -7,6 +14,12 @@ import {
 } from '../../features/analytics/analytics-utils';
 import {enableDebug, disableDebug} from '../../features/debug/debug-actions';
 import {rankingInformationSelector} from '../../features/debug/debug-selectors';
+import {
+  QueryRankingExpressionWeights,
+  DocumentWeights,
+  RankingInformation,
+  TermWeightReport,
+} from '../../features/debug/ranking-info-parser';
 import {executeSearch} from '../../features/search/search-actions';
 import {
   ConfigurationSection,
@@ -17,40 +30,150 @@ import {
   validateInitialState,
   validateOptions,
 } from '../../utils/validate-payload';
-import {buildController} from '../controller/headless-controller';
+import {buildController, Controller} from '../controller/headless-controller';
+
+export {
+  RankingInformation,
+  DocumentWeights,
+  TermWeightReport,
+  QueryRankingExpressionWeights,
+  ExecutionReport,
+  ExecutionStep,
+  SecurityIdentity,
+  QueryRankingExpression,
+};
 
 export interface RelevanceInspectorProps {
+  /**
+   * The initial state that should be applied to the `RelevanceInspector` controller.
+   */
   initialState?: RelevanceInspectorInitialState;
+
+  /**
+   * The options for the `RelevanceInspector` controller.
+   */
   options?: RelevanceInspectorOptions;
 }
 
 const initialStateSchema = new Schema({
-  /**  If debug mode should be enabled */
   enabled: new BooleanValue({default: false}),
 });
 
 const optionsSchema = new Schema({
-  /** Whether to automatically log state to console on new responses */
   automaticallyLogInformation: new BooleanValue({default: true}),
 });
 
-export type RelevanceInspectorInitialState = SchemaValues<
-  typeof initialStateSchema
->;
+export interface RelevanceInspectorInitialState {
+  /**
+   * Whether debug mode should be enabled.
+   * */
+  enabled?: boolean;
+}
 
-export type RelevanceInspectorOptions = SchemaValues<typeof optionsSchema>;
-
-export type RelevanceInspectorState = RelevanceInspector['state'];
+export interface RelevanceInspectorOptions {
+  /**
+   * Whether to automatically log state to console on new responses.
+   * */
+  automaticallyLogInformation?: boolean;
+}
 
 /**
  * The `RelevanceInspector` controller is in charge of allowing displaying various debug information.
  */
-export type RelevanceInspector = ReturnType<typeof buildRelevanceInspector>;
+export interface RelevanceInspector extends Controller {
+  /**
+   * Enables debug mode.
+   */
+  enable(): void;
 
+  /**
+   * Disables debug mode.
+   */
+  disable(): void;
+
+  /**
+   * Logs debug information to the console.
+   */
+  logInformation(): void;
+
+  /**
+   * The state of the `RelevanceInspector` controller.
+   * */
+  state: RelevanceInspectorState;
+}
+
+export interface RelevanceInspectorState {
+  /**
+   * Whether debug mode is enabled.
+   * */
+  isEnabled: boolean;
+
+  /**
+   * The ranking information for every result.
+   */
+  rankingInformation?: ResultRankingInformation[];
+
+  /**
+   * The query execution report.
+   */
+  executionReport?: ExecutionReport;
+
+  /**
+   * The query expressions sent in the request.
+   */
+  expressions?: QueryExpressions;
+
+  /**
+   * The security identities.
+   */
+  userIdentities?: SecurityIdentity[];
+
+  /**
+   * The ranking expressions.
+   */
+  rankingExpressions?: QueryRankingExpression[];
+}
+
+export interface ResultRankingInformation {
+  /**
+   * The result.
+   */
+  result: Result;
+
+  /**
+   * The ranking information for the associated result.
+   */
+  ranking: RankingInformation | null;
+}
+
+export interface QueryExpressions {
+  /**
+   * The search query.
+   */
+  basicExpression: string;
+
+  /**
+   * The dynamic filter expression, sent as the `aq` parameter in the request.
+   */
+  advancedExpression: string;
+
+  /**
+   * The static filter expression, typically set by a `Tab`.
+   */
+  constantExpression: string;
+}
+
+/**
+ * Creates a `RelevanceInspector` controller instance.
+ *
+ * @param engine - The headless engine.
+ * @param props - The configurable `RelevanceInspector` properties.
+ * @returns A `RelevanceInspector` controller instance.
+ */
 export function buildRelevanceInspector(
   engine: Engine<DebugSection & SearchSection & ConfigurationSection>,
   props: RelevanceInspectorProps = {}
-) {
+): RelevanceInspector {
   let prevSearchUid = '';
   const controller = buildController(engine);
   const {dispatch} = engine;
@@ -82,7 +205,6 @@ export function buildRelevanceInspector(
   return {
     ...controller,
 
-    /** @returns The state of the `RelevanceInspector` controller. */
     get state() {
       const isEnabled = engine.state.debug;
       if (!engine.state.debug) {
@@ -113,23 +235,14 @@ export function buildRelevanceInspector(
       };
     },
 
-    /**
-     * Enables debug.
-     */
     enable() {
       dispatch(enableDebug());
     },
 
-    /**
-     * Disables debug.
-     */
     disable() {
       dispatch(disableDebug());
     },
 
-    /**
-     * Logs information to the console.
-     */
     logInformation() {
       if (this.state.isEnabled) {
         engine.logger.info(

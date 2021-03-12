@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>PlatformUrl__c</fullName>
+    <externalId>false</externalId>
+    <label>Token Provider Endpoint</label>
+    <length>255</length>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+    <description>The base URL of the endpoint used to query Coveo. The default is https://platform.cloud.coveo.com. Custom endpoints must use the https://platform.cloud.coveo.com structure as well.</description>
+</CustomField>

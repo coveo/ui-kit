@@ -101,12 +101,8 @@ function getSummary(comment: DocComment | undefined) {
     const nodes = removeBlockTagNodes(comment.summarySection.nodes);
     return emitAsTsDoc(nodes);
   } catch (e) {
-    console.log(
-      'failed to get summary for comment:\n',
-      comment.emitAsTsdoc(),
-      e
-    );
-    return '';
+    const message = `failed to get summary for comment:\n\n${comment.emitAsTsdoc()}\n${e}`;
+    throw new Error(message);
   }
 }
 

@@ -3,6 +3,55 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.8.0-alpha.13](https://github.com/coveo/ui-kit/compare/v0.8.0-alpha.12...v0.8.0-alpha.13) (2021-03-12)
+
+
+### Bug Fixes
+
+* **atomic:** display error when atomic-sort-criteria has no parent atomic-sort-dropdown ([#600](https://github.com/coveo/ui-kit/issues/600)) ([41892ba](https://github.com/coveo/ui-kit/commit/41892bade014857637c6020d19d8b8bcc528d3fb))
+
+
+
+
+
+# [0.8.0-alpha.12](https://github.com/coveo/ui-kit/compare/v0.8.0-alpha.11...v0.8.0-alpha.12) (2021-03-11)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [0.8.0-alpha.11](https://github.com/coveo/ui-kit/compare/v0.8.0-alpha.10...v0.8.0-alpha.11) (2021-03-11)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [0.8.0-alpha.10](https://github.com/coveo/ui-kit/compare/v0.8.0-alpha.9...v0.8.0-alpha.10) (2021-03-11)
+
+
+### Features
+
+* **quantic:** add salesforce server tokens generation. ([#573](https://github.com/coveo/ui-kit/issues/573)) ([c3506ab](https://github.com/coveo/ui-kit/commit/c3506abe18a5f7a1a3c6153521bb18b11b2afd7a))
+
+
+
+
+
+# [0.8.0-alpha.9](https://github.com/coveo/ui-kit/compare/v0.8.0-alpha.8...v0.8.0-alpha.9) (2021-03-11)
+
+
+### Features
+
+* **atomic:** breadcrumb manager ([#574](https://github.com/coveo/ui-kit/issues/574)) ([5c8b9af](https://github.com/coveo/ui-kit/commit/5c8b9afde01fb5a014defa776932ce7c38b57514))
+
+
+
+
+
 # [0.8.0-alpha.8](https://github.com/coveo/ui-kit/compare/v0.8.0-alpha.7...v0.8.0-alpha.8) (2021-03-09)
 
 **Note:** Version bump only for package @coveo/atomic

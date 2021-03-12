@@ -1,21 +1,21 @@
 import {Component} from 'react';
 import {
-  buildHistory,
-  History as HeadlessHistory,
-  HistoryState,
+  buildHistoryManager,
+  HistoryManager as HeadlessHistoryManager,
+  HistoryManagerState,
   Unsubscribe,
 } from '@coveo/headless';
 import {engine} from '../../engine';
 
-export class History extends Component {
-  private controller: HeadlessHistory;
-  public state: HistoryState;
+export class HistoryManager extends Component {
+  private controller: HeadlessHistoryManager;
+  public state: HistoryManagerState;
   private unsubscribe: Unsubscribe = () => {};
 
   constructor(props: {}) {
     super(props);
 
-    this.controller = buildHistory(engine);
+    this.controller = buildHistoryManager(engine);
     this.state = this.controller.state;
   }
 
