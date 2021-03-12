@@ -102,7 +102,7 @@ export function buildResultList(
   }
 
   const moreResultsAvailable = () =>
-    engine.state.search.response.results.length <
+    engine.state.search.results.length <
     engine.state.search.response.totalCountFiltered;
 
   let lastFetchCompleted = 0;

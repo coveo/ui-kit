@@ -12,7 +12,7 @@ describe('ResultList', () => {
   beforeEach(() => {
     engine = buildMockSearchAppEngine();
     const results = new Array(10).fill(buildMockResult());
-    engine.state.search.response.results = results;
+    engine.state.search.results = results;
     engine.state.search.response.totalCountFiltered = 1000;
   });
 
@@ -66,7 +66,7 @@ describe('ResultList', () => {
 
   it('moreResultsAvailable should return true when totalCountFiltered is lower or equal than the results length', () => {
     engine.state.search.response.totalCountFiltered =
-      engine.state.search.response.results.length;
+      engine.state.search.results.length;
     expect(buildResultList(engine).state.moreResultsAvailable).toBe(false);
   });
 
