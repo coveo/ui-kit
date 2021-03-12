@@ -8,6 +8,10 @@ import {
   InitializeBindings,
 } from '../../utils/initialization-utils';
 
+// TODO: Get type from Headless once the API provides more streamlined errors.
+const noEndpointsException = 'NoEndpointsException';
+const invalidTokenException = 'InvalidTokenException';
+
 /**
  * The QueryError component takes care of handling fatal error when doing a query on the index / Search API.
  *
@@ -32,13 +36,13 @@ export class AtomicQueryError implements InitializableComponent {
   @BindStateToI18n()
   @State()
   private strings = {
-    noEndpoints: () => this.bindings.i18n.t('noEndpoints'),
-    invalidToken: () => this.bindings.i18n.t('invalidToken'),
-    addSources: () => this.bindings.i18n.t('addSources'),
-    coveoOnlineHelp: () => this.bindings.i18n.t('coveoOnlineHelp'),
-    cannotAccess: () => this.bindings.i18n.t('cannotAccess'),
-    somethingWentWrong: () => this.bindings.i18n.t('somethingWentWrong'),
-    ifProblemPersists: () => this.bindings.i18n.t('ifProblemPersists'),
+    noEndpointsTitle: () => this.bindings.i18n.t('noEndpoints'),
+    noEndpointsDesc: () => this.bindings.i18n.t('addSources'),
+    invalidTokenTitle: () => this.bindings.i18n.t('cannotAccess'),
+    invalidTokenDesc: () => this.bindings.i18n.t('invalidToken'),
+    genericErrorTitle: () => this.bindings.i18n.t('somethingWentWrong'),
+    genericErrorDesc: () => this.bindings.i18n.t('ifProblemPersists'),
+    helpLink: () => this.bindings.i18n.t('coveoOnlineHelp'),
     moreInfo: () => this.bindings.i18n.t('moreInfo'),
   };
   @BindStateToController('queryError')
@@ -74,48 +78,63 @@ export class AtomicQueryError implements InitializableComponent {
     );
   }
 
+  private get title() {
+    switch (this.queryErrorState.error!.type) {
+      case noEndpointsException:
+        return this.strings.noEndpointsTitle();
+      case invalidTokenException:
+        return this.strings.invalidTokenTitle();
+      default:
+        return this.strings.genericErrorTitle();
+    }
+  }
+
+  private get description() {
+    switch (this.queryErrorState.error!.type) {
+      case noEndpointsException:
+        return this.strings.noEndpointsDesc();
+      case invalidTokenException:
+        return this.strings.invalidTokenDesc();
+      default:
+        return this.strings.genericErrorDesc();
+    }
+  }
+
+  private get link() {
+    switch (this.queryErrorState.error!.type) {
+      case noEndpointsException:
+        return 'https://docs.coveo.com/'; // TODO: update link
+      case invalidTokenException:
+        return 'https://docs.coveo.com/'; // TODO: update link
+      default:
+        return null;
+    }
+  }
+
   public render() {
     if (!this.queryErrorState.hasError) {
       return;
     }
 
-    let title = this.strings.somethingWentWrong();
-    let description = this.strings.ifProblemPersists();
-    let link: string | undefined;
-    let showMoreInfo = true;
-
-    const errorType = this.queryErrorState.error!.type;
-    if (errorType === 'NoEndpointsException') {
-      title = this.strings.noEndpoints();
-      description = this.strings.addSources();
-      link = 'https://docs.coveo.com/'; // TODO: update link
-      showMoreInfo = false;
-    }
-    if (errorType === 'InvalidTokenException') {
-      title = this.strings.cannotAccess();
-      description = this.strings.invalidToken();
-      link = 'https://docs.coveo.com/'; // TODO: update link
-      showMoreInfo = false;
-    }
-
     return (
       <div class="text-center">
         <h3 part="title" class="text-2xl text-secondary my-4">
-          {title}
+          {this.title}
         </h3>
         <p part="description" class="text-xl text-secondary my-4">
-          {description}
+          {this.description}
         </p>
-        {link && (
+        {this.link ? (
           <a
-            href={link}
+            href={this.link}
             part="doc-link"
             class="text-primary hover:underline visited:text-visited"
           >
-            {this.strings.coveoOnlineHelp()}
+            {this.strings.helpLink()}
           </a>
+        ) : (
+          this.renderShowMoreInfo()
         )}
-        {showMoreInfo && this.renderShowMoreInfo()}
       </div>
     );
   }

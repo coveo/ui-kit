@@ -636,7 +636,7 @@
     "fr": "L'organisation Coveo n'a pas de point de terminaison unique."
   },
   "invalidToken": {
-    "en": "The token used is invalid.",
+    "en": "The token is invalid.",
     "fr": "Le jeton d'identification est invalide."
   },
   "addSources": {
