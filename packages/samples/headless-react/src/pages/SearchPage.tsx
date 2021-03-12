@@ -40,8 +40,13 @@ import {RelevanceInspector} from '../components/relevance-inspector/relevance-in
 import {RelevanceInspector as RelevanceInspectorFn} from '../components/relevance-inspector/relevance-inspector.fn';
 import {
   HeadlessEngine,
-  recommendationAppReducers,
+  Engine,
   searchAppReducers,
+  recommendationAppReducers,
+  RecommendationAppState,
+  SearchActions,
+  AnalyticsActions,
+  Unsubscribe,
   RecommendationList as HeadlessRecommendationList,
   buildRecommendationList,
   Tab as HeadlessTab,
@@ -82,9 +87,6 @@ import {
   buildHistory,
   RelevanceInspector as HeadlessRelevanceInspector,
   buildRelevanceInspector,
-  AnalyticsActions,
-  SearchActions,
-  Unsubscribe,
 } from '@coveo/headless';
 import {bindSearchParametersToURI} from '../components/search-parameter-manager/search-parameter-manager';
 import {setContext} from '../components/context/context';
@@ -103,10 +105,8 @@ const initialCriterion = criteria[0][1];
 const resultsPerPageOptions = [10, 25, 50, 100];
 
 export class SearchPage extends Component {
-  private readonly engine: HeadlessEngine<typeof searchAppReducers>;
-  private readonly recommendationEngine: HeadlessEngine<
-    typeof recommendationAppReducers
-  >;
+  private readonly engine: Engine;
+  private readonly recommendationEngine: Engine<RecommendationAppState>;
 
   private readonly recommendationList: HeadlessRecommendationList;
   private readonly tabs: {
