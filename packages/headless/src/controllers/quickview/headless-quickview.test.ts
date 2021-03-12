@@ -1,4 +1,4 @@
-import {fetchResultContent} from '../../features/quickview/quickview-actions';
+import {fetchResultContent} from '../../features/result-preview/result-preview-actions';
 import {SearchAppState} from '../../state/search-app-state';
 import {
   buildMockResult,

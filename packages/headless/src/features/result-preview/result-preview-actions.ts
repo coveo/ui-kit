@@ -5,9 +5,9 @@ import {
   isErrorResponse,
 } from '../../api/search/search-api-client';
 import {
-  buildQuickviewRequest,
+  buildResultPreviewRequest,
   StateNeededByHtmlEndpoint,
-} from './quickview-request-builder';
+} from './result-preview-request-builder';
 
 export const fetchResultContent = createAsyncThunk<
   string,
@@ -17,7 +17,7 @@ export const fetchResultContent = createAsyncThunk<
   'quickview/fetchResultContent',
   async (options: HtmlRequestOptions, {extra, getState, rejectWithValue}) => {
     const state = getState();
-    const req = buildQuickviewRequest(state, options);
+    const req = buildResultPreviewRequest(state, options);
     const res = await extra.searchAPIClient.html(req);
 
     if (isErrorResponse(res)) {

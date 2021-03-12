@@ -7,7 +7,7 @@ import {ConfigurationSection, QuerySection} from '../../state/state-sections';
 export type StateNeededByHtmlEndpoint = ConfigurationSection &
   Partial<QuerySection>;
 
-export function buildQuickviewRequest(
+export function buildResultPreviewRequest(
   state: StateNeededByHtmlEndpoint,
   options: HtmlRequestOptions
 ): HtmlRequest {

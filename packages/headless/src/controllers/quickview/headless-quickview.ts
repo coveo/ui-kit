@@ -1,6 +1,6 @@
 import {Result} from '../../api/search/search/result';
 import {Engine} from '../../app/headless-engine';
-import {fetchResultContent} from '../../features/quickview/quickview-actions';
+import {fetchResultContent} from '../../features/result-preview/result-preview-actions';
 import {buildController, Controller} from '../controller/headless-controller';
 
 export interface QuickviewProps {
