@@ -312,13 +312,8 @@ export class SearchPage extends Component {
             </nav>
           </Section>
           <Section title="breadcrumb-manager">
-            <BreadcrumbManager
-              numericFormat={(bytes) => filesize(bytes, {base: 10})}
-            />
-            <BreadcrumbManagerFn
-              controller={this.breadcrumbManager}
-              numericFormat={(bytes) => filesize(bytes, {base: 10})}
-            />
+            <BreadcrumbManager />
+            <BreadcrumbManagerFn controller={this.breadcrumbManager} />
           </Section>
           <Section title="search-box">
             <SearchBox />

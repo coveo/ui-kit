@@ -10,14 +10,7 @@ import {
 import {AppContext} from '../../context/engine';
 import {parseDate} from '../date-facet/date-utils';
 
-export interface BreadcrumbManagerProps {
-  numericFormat: (n: number) => string;
-}
-
-export class BreadcrumbManager extends Component<
-  BreadcrumbManagerProps,
-  BreadcrumbManagerState
-> {
+export class BreadcrumbManager extends Component<{}, BreadcrumbManagerState> {
   static contextType = AppContext;
   context!: ContextType<typeof AppContext>;
 
@@ -78,10 +71,6 @@ export class BreadcrumbManager extends Component<
     return `[${value.start}..${value.end}${value.endInclusive ? ']' : '['}`;
   }
 
-  private formatNumericRangeValue(value: number) {
-    return this.props.numericFormat(value);
-  }
-
   private renderNumericFacetBreadcrumbs() {
     return (
       <li>
@@ -93,8 +82,7 @@ export class BreadcrumbManager extends Component<
                 key={this.getKeyForRange(breadcrumb.value)}
                 onClick={() => breadcrumb.deselect()}
               >
-                {this.formatNumericRangeValue(breadcrumb.value.start)} to{' '}
-                {this.formatNumericRangeValue(breadcrumb.value.end)}
+                {breadcrumb.value.start} to {breadcrumb.value.end}
               </button>
             ))}
           </span>

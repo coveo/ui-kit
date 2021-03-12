@@ -8,7 +8,6 @@ import {parseDate} from '../date-facet/date-utils';
 
 interface BreadcrumbManagerProps {
   controller: HeadlessBreadcrumbManager;
-  numericFormat: (n: number) => string;
 }
 
 export const BreadcrumbManager: FunctionComponent<BreadcrumbManagerProps> = (
@@ -58,10 +57,6 @@ export const BreadcrumbManager: FunctionComponent<BreadcrumbManagerProps> = (
     return `[${value.start}..${value.end}${value.endInclusive ? ']' : '['}`;
   }
 
-  function formatNumericRangeValue(value: number) {
-    return props.numericFormat(value);
-  }
-
   function renderNumericFacetBreadcrumbs() {
     return (
       <li>
@@ -73,8 +68,7 @@ export const BreadcrumbManager: FunctionComponent<BreadcrumbManagerProps> = (
                 key={getKeyForRange(breadcrumb.value)}
                 onClick={() => breadcrumb.deselect()}
               >
-                {formatNumericRangeValue(breadcrumb.value.start)} to{' '}
-                {formatNumericRangeValue(breadcrumb.value.end)}
+                {breadcrumb.value.start} to {breadcrumb.value.end}
               </button>
             ))}
           </span>
