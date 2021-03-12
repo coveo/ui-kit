@@ -32,6 +32,8 @@ import {CategoryFacet} from './components/category-facet/category-facet.class';
 import {CategoryFacet as CategoryFacetFn} from './components/category-facet/category-facet.fn';
 import {Facet} from './components/facet/facet.class';
 import {Facet as FacetFn} from './components/facet/facet.fn';
+import {DateFacet} from './components/date-facet/date-facet.class';
+import {DateFacet as DateFacetFn} from './components/date-facet/date-facet.fn';
 import {NumericFacet} from './components/numeric-facet/numeric-facet.class';
 import {NumericFacet as NumericFacetFn} from './components/numeric-facet/numeric-facet.fn';
 import {HistoryManager} from './components/history-manager/history-manager.class';
@@ -50,6 +52,7 @@ import {
   buildFacetManager,
   buildCategoryFacet,
   buildFacet,
+  buildDateFacet,
   buildNumericFacet,
   buildNumericRange,
   buildDateSortCriterion,
@@ -67,6 +70,7 @@ import {
 } from '@coveo/headless';
 import {bindSearchParametersToURI} from './components/search-parameter-manager/search-parameter-manager';
 import {setContext} from './components/context/context';
+import {dateRanges} from './components/date-facet/date-utils';
 import filesize from 'filesize';
 
 const recommendationList = buildRecommendationList(recommendationEngine);
@@ -121,6 +125,22 @@ const fileSizeManualNumericFacet = buildNumericFacet(engine, {
       buildNumericRange({start: 5 * KB, end: 5 * MB}),
       buildNumericRange({start: 5 * MB, end: 5 * GB}),
     ],
+  },
+});
+
+const createdAutomaticDateFacet = buildDateFacet(engine, {
+  options: {
+    field: 'created',
+    facetId: 'created-3',
+    generateAutomaticRanges: true,
+  },
+});
+const createdManualDateFacet = buildDateFacet(engine, {
+  options: {
+    field: 'created',
+    facetId: 'created-4',
+    generateAutomaticRanges: false,
+    currentValues: dateRanges,
   },
 });
 
@@ -210,6 +230,17 @@ function App() {
               facetId="geographicalhierarchy-1"
             />
             <Facet field="author" facetId="author-1" />
+            <DateFacet
+              field="created"
+              facetId="created-1"
+              generateAutomaticRanges={true}
+            />
+            <DateFacet
+              field="created"
+              facetId="created-2"
+              generateAutomaticRanges={false}
+              currentValues={dateRanges}
+            />
             <NumericFacet
               format={(bytes) => filesize(bytes, {base: 10})}
               field="size"
@@ -231,6 +262,8 @@ function App() {
           <FacetManagerFn controller={facetManager}>
             <CategoryFacetFn controller={geographyFacet} />
             <FacetFn controller={objectTypeFacet} />
+            <DateFacetFn controller={createdAutomaticDateFacet} />
+            <DateFacetFn controller={createdManualDateFacet} />
             <NumericFacetFn
               controller={fileSizeAutomaticNumericFacet}
               format={(bytes) => filesize(bytes, {base: 10})}
