@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.8.0-alpha.15](https://github.com/coveo/ui-kit/compare/v0.8.0-alpha.14...v0.8.0-alpha.15) (2021-03-12)
+
+
+### Features
+
+* **atomic,headless:** complete atomic-query-error & return generic platform errors ([#605](https://github.com/coveo/ui-kit/issues/605)) ([dee98b8](https://github.com/coveo/ui-kit/commit/dee98b831c09e993f7c0e68787d3da1c8a8edbd4))
+
+
+
+
+
 # [0.8.0-alpha.14](https://github.com/coveo/ui-kit/compare/v0.8.0-alpha.13...v0.8.0-alpha.14) (2021-03-12)
 
 **Note:** Version bump only for package ui-kit
