@@ -53,14 +53,7 @@ const controllers: ControllerConfiguration[] = [
   },
   {
     initializer: 'buildDateFacet',
-    samplePaths: {
-      react_class: [
-        'packages/samples/headless-react/src/components/date-facet/date-facet.class.tsx',
-      ],
-      react_fn: [
-        'packages/samples/headless-react/src/components/date-facet/date-facet.fn.tsx',
-      ],
-    },
+    samplePaths: {},
     utils: ['buildDateRange'],
   },
   {
