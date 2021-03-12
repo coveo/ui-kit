@@ -7,7 +7,10 @@ export function ResultContext() {
       const element = getElement(this);
       const parentResultComponent = (element.getRootNode() as ShadowRoot)
         .host as HTMLAtomicResultElement;
-      if (!parentResultComponent) {
+      if (
+        !parentResultComponent ||
+        parentResultComponent.nodeName !== 'ATOMIC-RESULT'
+      ) {
         throw new Error(
           `The "${element.nodeName.toLowerCase()}" component has to be used inside a template element 
           https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template`
