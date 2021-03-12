@@ -1,21 +1,29 @@
 import {createAsyncThunk} from '@reduxjs/toolkit';
 import {HtmlRequestOptions} from '../../api/search/html/html-request';
-import {AsyncThunkSearchOptions} from '../../api/search/search-api-client';
+import {
+  AsyncThunkSearchOptions,
+  isErrorResponse,
+} from '../../api/search/search-api-client';
 import {
   buildQuickviewRequest,
   StateNeededByHtmlEndpoint,
 } from './quickview-request-builder';
 
 export const fetchResultContent = createAsyncThunk<
-  void,
+  string,
   HtmlRequestOptions,
   AsyncThunkSearchOptions<StateNeededByHtmlEndpoint>
 >(
   'quickview/fetchResultContent',
-  async (options: HtmlRequestOptions, {extra, getState}) => {
+  async (options: HtmlRequestOptions, {extra, getState, rejectWithValue}) => {
     const state = getState();
     const req = buildQuickviewRequest(state, options);
+    const res = await extra.searchAPIClient.html(req);
 
-    return await extra.searchAPIClient.html(req);
+    if (isErrorResponse(res)) {
+      return rejectWithValue(res.error);
+    }
+
+    return res.success;
   }
 );
