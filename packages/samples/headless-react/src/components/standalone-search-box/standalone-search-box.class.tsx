@@ -34,24 +34,13 @@ export class StandaloneSearchBox extends Component<
     if (!this.state?.redirectTo) {
       return;
     }
-    window.location.href = this.state.redirectTo + this.getURIParameters();
+    window.location.href = `${this.state.redirectTo}/${encodeURIComponent(
+      this.state.value
+    )}`;
   }
 
   private updateState() {
     this.setState(this.controller.state);
-  }
-
-  private getURIParameters() {
-    const {redirectTo, value} = this.state;
-    const query = encodeURIComponent(value);
-    // The query pipeline can trigger different redirection URLs, as documented here: https://docs.coveo.com/en/1458/tune-relevance/trigger-query-pipeline-feature
-    // Unless a redirect trigger is added, you won't need such conditions. These redirections are only verified here as an example.
-    if (redirectTo === 'https://mywebsite.com/search') {
-      return '/' + query;
-    } else if (redirectTo === 'https://www.google.com') {
-      return '?q=' + query;
-    }
-    return '?search=' + query;
   }
 
   private isEnterKey(e: React.KeyboardEvent<HTMLInputElement>) {
