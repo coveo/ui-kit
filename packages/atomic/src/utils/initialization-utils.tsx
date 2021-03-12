@@ -1,6 +1,11 @@
 import {Engine} from '@coveo/headless';
 import {ComponentInterface, getElement, h} from '@stencil/core';
-import {i18n} from 'i18next';
+import {i18n, StringMap} from 'i18next';
+import {ObservableMap} from '@stencil/store';
+
+export type AtomicStore = {
+  facetLabels: Record<string, string>;
+};
 
 /**
  * Bindings passed from the `AtomicSearchInterface` to its children components.
@@ -14,6 +19,10 @@ export interface Bindings {
    * i18n instance, for localization.
    */
   i18n: i18n;
+  /**
+   * Global state for Atomic
+   */
+  store: ObservableMap<AtomicStore>;
 }
 
 export type InitializeEventHandler = (bindings: Bindings) => void;
@@ -23,14 +32,6 @@ export class MissingInterfaceParentError extends Error {
   constructor(elementName: string) {
     super(
       `The "${elementName}" element must be the child of a configured "atomic-search-interface" element.`
-    );
-  }
-}
-
-export class ComponentInitializationError extends Error {
-  constructor(elementName: string) {
-    super(
-      `The "${elementName}" element had an initialization error. Look at the developer console for more information.`
     );
   }
 }
@@ -84,9 +85,7 @@ export function InitializeBindings() {
           try {
             this.initialize && this.initialize();
           } catch (e) {
-            this.error = new ComponentInitializationError(
-              element.nodeName.toLowerCase()
-            );
+            this.error = e;
           }
         },
         // Event will bubble up the DOM until it is caught
@@ -220,7 +219,7 @@ export function BindStateToController(
   };
 }
 
-export type I18nState = Record<string, () => string>;
+export type I18nState = Record<string, (variables?: StringMap) => string>;
 
 /**
  * Decorator to be used on a property decorator with Stencil's `State` that will be subscribed automatically to the i18next language change.

@@ -1,5 +1,8 @@
 import {Engine} from '../../../app/headless-engine';
-import {buildController} from '../../controller/headless-controller';
+import {
+  buildController,
+  Controller,
+} from '../../controller/headless-controller';
 import {CategoryFacetRegistrationOptions} from '../../../features/facets/category-facet-set/interfaces/options';
 import {
   registerCategoryFacet,
@@ -7,7 +10,6 @@ import {
   updateCategoryFacetSortCriterion,
 } from '../../../features/facets/category-facet-set/category-facet-set-actions';
 import {categoryFacetResponseSelector} from '../../../features/facets/category-facet-set/category-facet-set-selectors';
-import {CategoryFacetValue} from '../../../features/facets/category-facet-set/interfaces/response';
 import {executeSearch} from '../../../features/search/search-actions';
 import {
   logFacetUpdateSort,
@@ -35,23 +37,175 @@ import {validateOptions} from '../../../utils/validate-payload';
 import {
   CategoryFacetOptions,
   categoryFacetOptionsSchema,
+  CategoryFacetSearchOptions,
 } from './headless-category-facet-options';
 import {determineFacetId} from '../_common/facet-id-determinor';
+import {CategoryFacetValue} from '../../../features/facets/category-facet-set/interfaces/response';
 
-export {CategoryFacetOptions};
-export type CategoryFacetProps = {
+export {CategoryFacetValue, CategoryFacetOptions, CategoryFacetSearchOptions};
+
+export interface CategoryFacetProps {
   /** The options for the `CategoryFacet` controller. */
   options: CategoryFacetOptions;
-};
+}
+
 /**
  * The `CategoryFacet` headless controller offers a high-level interface for designing a facet UI controller that renders values in a hierarchical fashion.
  */
-export type CategoryFacet = ReturnType<typeof buildCategoryFacet>;
+export interface CategoryFacet extends Controller {
+  /**
+   * Provides methods to search the facet's values.
+   */
+  facetSearch: CategoryFacetSearch;
+
+  /**
+   * Toggles the specified facet value.
+   *
+   * @param selection - The facet value to toggle.
+   */
+  toggleSelect(selection: CategoryFacetValue): void;
+
+  /**
+   * Deselects all facet values.
+   * */
+  deselectAll(): void;
+
+  /**
+   * Sorts the facet values according to the specified criterion.
+   *
+   * @param criterion - The criterion to use for sorting values.
+   */
+  sortBy(criterion: CategoryFacetSortCriterion): void;
+
+  /**
+   * Checks whether the facet values are sorted according to the specified criterion.
+   *
+   * @param criterion - The criterion to compare.
+   * @returns Whether the facet values are sorted according to the specified criterion.
+   */
+  isSortedBy(criterion: CategoryFacetSortCriterion): boolean;
+
+  /**
+   * Increases the number of values displayed in the facet to the next multiple of the originally configured value.
+   */
+  showMoreValues(): void;
+
+  /**
+   * Sets the number of values displayed in the facet to the originally configured value.
+   * */
+  showLessValues(): void;
+
+  /**
+   * The state of the `Facet` controller.
+   * */
+  state: CategoryFacetState;
+}
+
 /**
  * A scoped and simplified part of the headless state that is relevant to the `CategoryFacet` controller.
  */
-export type CategoryFacetState = CategoryFacet['state'];
+export interface CategoryFacetState {
+  /** The facet ID. */
+  facetId: string;
 
+  /** The parent values of the facet. */
+  parents: CategoryFacetValue[];
+
+  /** The values of the facet. */
+  values: CategoryFacetValue[];
+
+  /** The active sortCriterion of the facet. */
+  sortCriteria: CategoryFacetSortCriterion;
+
+  /** `true` if a search is in progress and `false` otherwise. */
+  isLoading: boolean;
+
+  /** `true` if there is at least one non-idle value and `false` otherwise. */
+  hasActiveValues: boolean;
+
+  /** `true` if there are more values to display and `false` otherwise. */
+  canShowMoreValues: boolean;
+
+  /** `true` if fewer values can be displayed and `false` otherwise. */
+  canShowLessValues: boolean;
+
+  /** The state of the facet's searchbox. */
+  facetSearch: CategoryFacetSearchState;
+}
+
+export interface CategoryFacetSearch {
+  /**
+   * Updates the facet search query.
+   *
+   * @param text - The query to search.
+   * */
+  updateText(text: string): void;
+
+  /**
+   * Shows more facet search results.
+   * */
+  showMoreResults(): void;
+
+  /**
+   * Performs a facet search.
+   * */
+  search(): void;
+
+  /**
+   * Selects a facet search result.
+   *
+   * @param value - The search result to select.
+   * */
+  select(value: CategoryFacetSearchResult): void;
+}
+
+export interface CategoryFacetSearchState {
+  /**
+   * The facet search results.
+   * */
+  values: CategoryFacetSearchResult[];
+
+  /**
+   * `true` if the facet search is in progress and `false` otherwise.
+   * */
+  isLoading: boolean;
+
+  /**
+   * Whether more values are available.
+   * */
+  moreValuesAvailable: boolean;
+}
+
+export interface CategoryFacetSearchResult {
+  /**
+   * The custom facet value display name, as specified in the `captions` argument of the facet request.
+   */
+  displayValue: string;
+
+  /**
+   * The original facet value, as retrieved from the field in the index.
+   */
+  rawValue: string;
+
+  /**
+   * An estimate of the number of result items matching both the current query and
+   * the filter expression that would get generated if the facet value were selected.
+   */
+  count: number;
+
+  /**
+   * The hierarchical path to the facet value.
+   */
+  path: string[];
+}
+
+/**
+ * Creates a `CategoryFacet` controller instance.
+ *
+ * @param engine - The headless engine.
+ * @param props - The configurable `CategoryFacet` properties.
+ * @returns A `CategoryFacet` controller instance.
+ * */
 export function buildCategoryFacet(
   engine: Engine<
     CategoryFacetSection &
@@ -60,7 +214,7 @@ export function buildCategoryFacet(
       CategoryFacetSearchSection
   >,
   props: CategoryFacetProps
-) {
+): CategoryFacet {
   const controller = buildController(engine);
   const {dispatch} = engine;
 
@@ -105,10 +259,6 @@ export function buildCategoryFacet(
     ...controller,
     facetSearch: restOfFacetSearch,
 
-    /**
-     * Toggles the specified facet value.
-     * @param selection The facet value to toggle.
-     */
     toggleSelect: (selection: CategoryFacetValue) =>
       dispatch(
         executeToggleCategoryFacetSelect({
@@ -118,13 +268,9 @@ export function buildCategoryFacet(
         })
       ),
 
-    /** Deselects all facet values.*/
     deselectAll: () =>
       dispatch(executeDeselectAllCategoryFacetValues({facetId})),
 
-    /** Sorts the facet values according to the specified criterion.
-     * @param criterion The criterion to sort values by.
-     */
     sortBy(criterion: CategoryFacetSortCriterion) {
       const facetId = options.facetId;
 
@@ -133,18 +279,11 @@ export function buildCategoryFacet(
       dispatch(executeSearch(logFacetUpdateSort({facetId, criterion})));
     },
 
-    /**
-     * Checks whether the facet values are sorted according to the specified criterion.
-     * @param criterion The criterion to compare.
-     * @returns Whether the facet values are sorted according to the specified criterion.
-     */
     isSortedBy(criterion: CategoryFacetSortCriterion) {
       const request = getRequest();
       return request!.sortCriteria === criterion;
     },
-    /**
-     * Increases the number of values displayed in the facet to the next multiple of the originally configured value.
-     */
+
     showMoreValues() {
       const {facetId, numberOfValues: increment} = options;
       const {values} = this.state;
@@ -155,7 +294,6 @@ export function buildCategoryFacet(
       dispatch(executeSearch(logFacetShowMore(facetId)));
     },
 
-    /** Sets the displayed number of values to the originally configured value. */
     showLessValues() {
       const {facetId, numberOfValues} = options;
 
@@ -164,7 +302,6 @@ export function buildCategoryFacet(
       dispatch(executeSearch(logFacetShowLess(facetId)));
     },
 
-    /** The state of the `CategoryFacet` controller. */
     get state() {
       const request = getRequest();
       const response = getResponse();
@@ -179,23 +316,14 @@ export function buildCategoryFacet(
       const canShowLessValues = values.length > options.numberOfValues;
 
       return {
-        /** The facet id. */
         facetId,
-        /** The parent values of the facet. */
         parents,
-        /** The values of the facet. */
         values,
-        /** `true` if a search is in progress and `false` otherwise. */
         isLoading,
-        /** `true` if there is at least one non-idle value and `false` otherwise. */
         hasActiveValues,
-        /** `true` if there are more values to display and `false` otherwise. */
         canShowMoreValues,
-        /** `true` if fewer values can be displayed and `false` otherwise. */
         canShowLessValues,
-        /** The active sortCriterion of the facet. */
         sortCriteria: request!.sortCriteria,
-        /** The state of the facet's searchbox. */
         facetSearch: facetSearch.state,
       };
     },

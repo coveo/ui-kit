@@ -58,23 +58,26 @@ export class AtomicFacet
   @State()
   public strings: I18nState = {
     clear: () => this.bindings.i18n.t('clear'),
-    searchBox: () => this.bindings.i18n.t('search'),
+    searchBox: () =>
+      this.bindings.i18n.t('facetSearch', {label: this.strings[this.label]()}),
     placeholder: () => this.bindings.i18n.t('search'),
     querySuggestionList: () => this.bindings.i18n.t('querySuggestionList'),
     showMore: () => this.bindings.i18n.t('showMore'),
     showLess: () => this.bindings.i18n.t('showLess'),
+    facetValue: (variables) => this.bindings.i18n.t('facetValue', variables),
   };
 
   @State() public isExpanded = false;
   @State() public facetSearchQuery = '';
   @State() public showFacetSearchResults = false;
 
+  @Prop({mutable: true, reflect: true}) public facetId = '';
   /**
    * The field whose values you want to display in the facet.
    */
   @Prop() public field = '';
   /**
-   * The displayed label for the facet.
+   * The non-localized label for the facet.
    */
   @Prop() public label = 'No label';
   /**
@@ -102,15 +105,18 @@ export class AtomicFacet
       sortCriteria: this.sortCriteria,
     };
     this.facet = buildFacet(this.bindings.engine, {options});
+    this.strings[this.label] = () => this.bindings.i18n.t(this.label);
     if (this.enableFacetSearch) {
       this.facetSearch = new FacetSearch({
         controller: new FacetSearchController(this),
       });
     }
+    this.facetId = this.facet.state.facetId;
+    this.bindings.store.state.facetLabels[this.facetId] = this.label;
   }
 
   public componentDidRender() {
-    this.facetSearch?.updateCombobox();
+    this.facetState.canShowMoreValues && this.facetSearch?.updateCombobox();
   }
 
   private get values() {
@@ -124,6 +130,7 @@ export class AtomicFacet
     return (
       <FacetValueComponent
         label={`${item.value}`}
+        ariaLabel={this.strings.facetValue(item)}
         isSelected={isSelected}
         numberOfResults={item.numberOfResults}
         facetValueSelected={() => {
@@ -166,16 +173,20 @@ export class AtomicFacet
   }
 
   public render() {
+    if (this.facetState.values.length === 0) {
+      return null;
+    }
+
     return (
       <BaseFacet
         controller={new BaseFacetController(this)}
-        label={this.label}
+        label={this.strings[this.label]()}
         hasActiveValues={this.facetState.hasActiveValues}
         deselectAll={() => this.facet.deselectAll()}
       >
         <div>
-          {this.facetSearch?.render()}
-          <ul class="list-none p-0">{this.values}</ul>
+          {this.facetState.canShowMoreValues && this.facetSearch?.render()}
+          <ul class="mt-1 list-none p-0">{this.values}</ul>
           <div class="flex flex-col items-start space-y-1">
             {this.showLessButton}
             {this.showMoreButton}

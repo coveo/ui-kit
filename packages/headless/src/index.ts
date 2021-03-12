@@ -49,6 +49,7 @@ export * from './features/analytics/index';
 
 // Types & Helpers
 export {Result} from './api/search/search/result';
+export {Raw} from './api/search/search/raw';
 export {
   SortCriterion,
   buildDateSortCriterion,
@@ -81,3 +82,4 @@ export {NumericFacetValue} from './features/facets/range-facets/numeric-facet-se
 export {RangeFacetSortCriterion} from './features/facets/range-facets/generic/interfaces/request';
 export {buildSearchParameterSerializer} from './features/search-parameters/search-parameter-serializer';
 export * as HighlightUtils from './utils/highlight';
+export {HighlightKeyword} from './utils/highlight';

@@ -6,6 +6,16 @@ export {
   RelevanceInspectorProps,
   RelevanceInspectorState,
   RelevanceInspector,
+  DocumentWeights,
+  ExecutionReport,
+  ExecutionStep,
+  QueryExpressions,
+  QueryRankingExpressionWeights,
+  QueryRankingExpression,
+  ResultRankingInformation,
+  RankingInformation,
+  TermWeightReport,
+  SecurityIdentity,
   buildRelevanceInspector,
 } from './relevance-inspector/headless-relevance-inspector';
 
@@ -27,10 +37,15 @@ export {
 
 export {
   CategoryFacetOptions,
+  CategoryFacetSearchOptions,
   CategoryFacetProps,
   CategoryFacetState,
   CategoryFacet,
   buildCategoryFacet,
+  CategoryFacetValue,
+  CategoryFacetSearch,
+  CategoryFacetSearchState,
+  CategoryFacetSearchResult,
 } from './facets/category-facet/headless-category-facet';
 
 export {
@@ -48,6 +63,9 @@ export {
 } from './facets/facet/headless-facet';
 
 export {
+  DateRangeOptions,
+  DateRangeRequest,
+  DateRangeInput,
   buildDateRange,
   DateFacetOptions,
   DateFacetProps,
@@ -67,7 +85,17 @@ export {
   NumericFacet,
 } from './facets/range-facet/numeric-facet/headless-numeric-facet';
 
-export {History, HistoryState, buildHistory} from './history/headless-history';
+export {
+  History,
+  HistoryState,
+  buildHistory,
+} from './history-manager/headless-history';
+
+export {
+  HistoryManager,
+  HistoryManagerState,
+  buildHistoryManager,
+} from './history-manager/headless-history-manager';
 
 export {
   PagerInitialState,
@@ -91,6 +119,8 @@ export {
 } from './query-summary/headless-query-summary';
 
 export {
+  ResultListProps,
+  ResultListOptions,
   ResultListState,
   ResultList,
   buildResultList,
@@ -116,6 +146,9 @@ export {
   SearchBoxProps,
   SearchBoxState,
   SearchBox,
+  Suggestion,
+  SuggestionHighlightingOptions,
+  Delimiters,
   buildSearchBox,
 } from './search-box/headless-search-box';
 
@@ -183,6 +216,7 @@ export {
   CartRecommendationsListOptions,
   CartRecommendationsListProps,
   CartRecommendationsListState,
+  ProductRecommendation,
   CartRecommendationsList,
   buildCartRecommendationsList,
 } from './product-recommendations/headless-cart-recommendations';
@@ -221,8 +255,10 @@ export {
 
 export {
   SearchParameterManagerProps,
+  SearchParameterManagerInitialState,
   SearchParameterManagerState,
   SearchParameterManager,
+  SearchParameters,
   buildSearchParameterManager,
 } from './search-parameter-manager/headless-search-parameter-manager';
 

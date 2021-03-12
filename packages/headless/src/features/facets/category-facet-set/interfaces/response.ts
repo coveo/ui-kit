@@ -1,10 +1,36 @@
-import {BaseFacetValue, BaseFacetResponse} from '../../facet-api/response';
+import {BaseFacetResponse} from '../../facet-api/response';
+import {FacetValueState} from '../../facet-api/value';
 
-export interface CategoryFacetValue extends BaseFacetValue {
-  value: string;
+export interface CategoryFacetValue {
+  /**
+   * Whether a facet value is filtering results (`selected`) or not (`idle`).
+   * */
+  state: FacetValueState;
+
+  /**
+   * The number of results having the facet value.
+   * */
+  numberOfResults: number;
+
+  /**
+   * The hierarchical path to the facet value.
+   */
   path: string[];
+
+  /**
+   * The children of this facet value.
+   */
   children: CategoryFacetValue[];
-  moreValuesAvailable?: boolean;
+
+  /**
+   * Whether more values are available.
+   * */
+  moreValuesAvailable: boolean;
+
+  /**
+   * The facet value.
+   * */
+  value: string;
 }
 
 export type CategoryFacetResponse = BaseFacetResponse<CategoryFacetValue>;

@@ -6,11 +6,6 @@ import {
 } from '@coveo/headless';
 import {MapProp} from '../../utils/props-utils';
 
-export interface FieldMatch {
-  field: string;
-  values: string[];
-}
-
 @Component({
   tag: 'atomic-result-template',
   shadow: true,
@@ -23,8 +18,30 @@ export class AtomicResultTemplate {
 
   @State() private error?: Error;
 
+  /**
+   * Functions that must return true on results for the result template to apply.
+   *
+   * For example, a template with the following only applies to results whose `title` contains `singapore`:
+   * `[(result) => /singapore/i.test(result.title)]`
+   */
   @Prop() public conditions: ResultTemplateCondition[] = [];
+
+  /**
+   * Fields and field values that results must match for the result template to apply.
+   *
+   * For example, a template with the following attribute only applies
+   * to result items whose `filetype` is `lithiummessage` or `YouTubePlaylist`:
+   * `must-match-filetype="lithiummessage,YouTubePlaylist"`
+   */
   @MapProp() public mustMatch: Record<string, string[]> = {};
+
+  /**
+   * Fields and field values that results must not match for the result template to apply.
+   *
+   * For example, a template with the following attribute only applies
+   * to result items whose `filetype` is not `lithiummessage`:
+   * `must-not-match-filetype="lithiummessage"`
+   */
   @MapProp() public mustNotMatch: Record<string, string[]> = {};
 
   constructor() {
@@ -72,7 +89,6 @@ export class AtomicResultTemplate {
     return {
       conditions: this.getConditions(),
       content: this.getContent(),
-      fields: this.getFields(),
       priority: 1,
     };
   }
@@ -83,19 +99,6 @@ export class AtomicResultTemplate {
 
   private getContent() {
     return this.host.querySelector('template')?.innerHTML || '';
-  }
-
-  private getFields() {
-    const fieldValues: string[] = [];
-    this.host
-      .querySelectorAll('atomic-result-value')
-      .forEach((resultValueElement) => {
-        fieldValues.push(resultValueElement.value);
-      });
-
-    // TODO: extract fields from atomic-field-condition
-
-    return this.fields.concat(fieldValues);
   }
 
   public render() {

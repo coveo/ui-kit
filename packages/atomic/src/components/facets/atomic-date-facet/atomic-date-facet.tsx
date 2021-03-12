@@ -10,6 +10,8 @@ import {
 import {
   Bindings,
   BindStateToController,
+  BindStateToI18n,
+  I18nState,
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
@@ -46,6 +48,13 @@ export class AtomicDateFacet implements InitializableComponent, BaseFacetState {
   private facetState!: DateFacetState;
   @State() public error!: Error;
 
+  @BindStateToI18n()
+  @State()
+  public strings: I18nState = {
+    clear: () => this.bindings.i18n.t('clear'),
+    facetValue: (variables) => this.bindings.i18n.t('facetValue', variables),
+  };
+
   @State() public isExpanded = false;
   @Prop({mutable: true, reflect: true}) public facetId = '';
   /**
@@ -53,7 +62,7 @@ export class AtomicDateFacet implements InitializableComponent, BaseFacetState {
    */
   @Prop() public field = '';
   /**
-   * The displayed label for the facet
+   * The non-localized label for the facet
    */
   @Prop() public label = 'No label';
   /**
@@ -75,15 +84,19 @@ export class AtomicDateFacet implements InitializableComponent, BaseFacetState {
       generateAutomaticRanges: this.generateAutomaticRanges,
       currentValues: this.buildOptions(),
     };
-
+    this.strings[this.label] = () => this.bindings.i18n.t(this.label);
     this.facet = buildDateFacet(this.bindings.engine, {options});
     this.facetId = this.facet.state.facetId;
+    this.bindings.store.state.facetLabels[this.facetId] = this.label;
   }
 
   private get values() {
-    return this.facetState.values.map((listItem) =>
-      this.buildListItem(listItem)
-    );
+    return this.facetState.values.map((listItem) => {
+      if (!listItem.numberOfResults && !this.facet.isValueSelected(listItem)) {
+        return null;
+      }
+      return this.buildListItem(listItem);
+    });
   }
 
   private buildListItem(item: DateFacetValue) {
@@ -97,15 +110,27 @@ export class AtomicDateFacet implements InitializableComponent, BaseFacetState {
         facetValueSelected={() => {
           this.facet.toggleSelect(item);
         }}
+        ariaLabel={this.strings.facetValue(item)}
       />
     );
   }
 
+  public get totalNumberOfResults() {
+    return this.facetState.values.reduce(
+      (accum, value) => accum + value.numberOfResults,
+      0
+    );
+  }
+
   public render() {
+    if (!this.facetState.hasActiveValues && this.totalNumberOfResults === 0) {
+      return null;
+    }
+
     return (
       <BaseFacet
         controller={new BaseFacetController(this)}
-        label={this.label}
+        label={this.strings[this.label]()}
         hasActiveValues={this.facetState.hasActiveValues}
         deselectAll={() => this.facet.deselectAll()}
       >

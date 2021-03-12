@@ -2,6 +2,8 @@
 import * as HeadlessTypes from './force-app/main/default/staticresources/coveoheadless/index';
 export * from './force-app/main/default/staticresources/coveoheadless/index';
 import * as AtomicTypes from './force-app/main/default/staticresources/atomicutils/types/utils-exports';
+import {LightningElement} from 'lwc';
+import {HeadlessEngine} from '../headless/dist/index';
 export * from './force-app/main/default/staticresources/atomicutils/types/utils-exports';
 declare global {
   // eslint-disable-next-line no-undef
@@ -13,10 +15,10 @@ declare global {
     coveoHeadless: {
       [x: string]: {
         components: {
-          element: any;
+          element: LightningElement;
           initialized: boolean;
         }[];
-        engine: any;
+        engine: HeadlessEngine;
       };
     };
   }

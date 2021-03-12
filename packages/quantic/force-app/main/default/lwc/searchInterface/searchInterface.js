@@ -1,8 +1,4 @@
 import {LightningElement, api} from 'lwc';
-import HeadlessPath from '@salesforce/resourceUrl/coveoheadless';
-import AtomicPath from '@salesforce/resourceUrl/atomicutils';
-// @ts-ignore
-import {loadScript} from 'lightning/platformResourceLoader';
 
 export default class SearchInterface extends LightningElement {
   /** @type {any} */
@@ -29,7 +25,8 @@ export default class SearchInterface extends LightningElement {
   /** @type {import("coveo").HeadlessConfigurationOptions} */
   config;
 
-  async connectedCallback() {
+  connectedCallback() {
+    console.log('connectedCallback')
   }
 
   /**

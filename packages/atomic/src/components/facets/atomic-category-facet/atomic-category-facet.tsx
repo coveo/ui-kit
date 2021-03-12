@@ -62,22 +62,26 @@ export class AtomicCategoryFacet
   public strings: I18nState = {
     clear: () => this.bindings.i18n.t('clear'),
     placeholder: () => this.bindings.i18n.t('search'),
-    searchBox: () => this.bindings.i18n.t('search'),
+    searchBox: () =>
+      this.bindings.i18n.t('facetSearch', {label: this.strings[this.label]()}),
     querySuggestionList: () => this.bindings.i18n.t('querySuggestionList'),
     showMore: () => this.bindings.i18n.t('showMore'),
     showLess: () => this.bindings.i18n.t('showLess'),
+    facetValue: (variables) => this.bindings.i18n.t('facetValue', variables),
+    allCategories: () => this.bindings.i18n.t('allCategories'),
   };
 
   @State() public isExpanded = false;
   @State() public facetSearchQuery = '';
   @State() public showFacetSearchResults = false;
 
+  @Prop({mutable: true, reflect: true}) public facetId = '';
   /**
    * Specifies the index field whose values the facet should use
    */
   @Prop() public field = '';
   /**
-   * The displayed label for the facet
+   * The non-localized label for the facet
    */
   @Prop() public label = 'No label';
   /**
@@ -104,11 +108,14 @@ export class AtomicCategoryFacet
       sortCriteria: this.sortCriteria,
     };
     this.facet = buildCategoryFacet(this.bindings.engine, {options});
+    this.strings[this.label] = () => this.bindings.i18n.t(this.label);
     if (this.enableFacetSearch) {
       this.facetSearch = new FacetSearch({
         controller: new FacetSearchController(this),
       });
     }
+    this.facetId = this.facet.state.facetId;
+    this.bindings.store.state.facetLabels[this.facetId] = this.label;
   }
 
   public componentDidRender() {
@@ -155,7 +162,7 @@ export class AtomicCategoryFacet
 
   private buildValue(item: CategoryFacetValue) {
     return (
-      <li>
+      <li aria-label={this.strings.facetValue(item)}>
         <button
           class="w-full flex items-center text-left text-lg lg:text-base py-1 lg:py-0.5"
           onClick={() => this.facet.toggleSelect(item)}
@@ -184,7 +191,9 @@ export class AtomicCategoryFacet
           innerHTML={LeftArrow}
           class="mr-2 arrow-size text-secondary fill-current"
         />
-        <button onClick={() => this.facet.deselectAll()}>All Categories</button>
+        <button onClick={() => this.facet.deselectAll()}>
+          {this.strings.allCategories()}
+        </button>
       </div>
     );
   }
@@ -220,10 +229,17 @@ export class AtomicCategoryFacet
   }
 
   public render() {
+    if (
+      this.facetState.values.length === 0 &&
+      this.facetState.parents.length === 0
+    ) {
+      return null;
+    }
+
     return (
       <BaseFacet
         controller={new BaseFacetController(this)}
-        label={this.label}
+        label={this.strings[this.label]()}
         hasActiveValues={this.facetState.hasActiveValues}
         deselectAll={() => this.facet.deselectAll()}
       >

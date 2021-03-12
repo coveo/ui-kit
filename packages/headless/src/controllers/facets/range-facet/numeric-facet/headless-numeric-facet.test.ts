@@ -57,7 +57,11 @@ describe('numeric facet', () => {
   });
 
   it('registers a numeric facet with the passed options', () => {
-    const action = registerNumericFacet({facetId, ...options});
+    const action = registerNumericFacet({
+      facetId,
+      currentValues: [],
+      ...options,
+    });
     expect(engine.actions).toContainEqual(action);
   });
 

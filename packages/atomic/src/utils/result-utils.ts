@@ -26,9 +26,7 @@ export function bindLogDocumentOpenOnResult(
     touchstart: () => interactiveResult.beginDelayedSelect(),
     touchend: () => interactiveResult.cancelPendingSelect(),
   };
-  const elements = resultElement.querySelectorAll(
-    selector || `a[href='${result.clickUri}']`
-  );
+  const elements = resultElement.querySelectorAll(selector || 'a');
 
   elements.forEach((element) => {
     Object.keys(eventsMap).forEach((key) =>

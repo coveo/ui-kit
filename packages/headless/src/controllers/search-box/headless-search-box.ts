@@ -12,7 +12,7 @@ import {
   updateQuerySetQuery,
 } from '../../features/query-set/query-set-actions';
 import {executeSearch} from '../../features/search/search-actions';
-import {buildController} from '../controller/headless-controller';
+import {buildController, Controller} from '../controller/headless-controller';
 import {updatePage} from '../../features/pagination/pagination-actions';
 import {logSearchboxSubmit} from '../../features/query/query-analytics-actions';
 import {
@@ -35,22 +35,100 @@ import {SearchAction} from '../../features/analytics/analytics-utils';
 import {
   getHighlightedSuggestion,
   SuggestionHighlightingOptions,
+  Delimiters,
 } from '../../utils/highlight';
 
-export {SearchBoxOptions};
+export {SearchBoxOptions, SuggestionHighlightingOptions, Delimiters};
+
 export interface SearchBoxProps {
-  options: SearchBoxOptions;
+  options?: SearchBoxOptions;
+}
+
+/**
+ * The `SearchBox` headless controller offers a high-level interface for designing a common search box UI controller.
+ */
+export interface SearchBox extends Controller {
+  /**
+   * Updates the search box text value and shows the suggestions for that value.
+   *
+   * @param value - The string value to update the search box with.
+   */
+  updateText(value: string): void;
+
+  /**
+   * Clears the search box text and the suggestions.
+   */
+  clear(): void;
+
+  /**
+   * Clears the suggestions.
+   *
+   * @deprecated Suggestions should be hidden using CSS instead for an optimal user experience.
+   */
+  hideSuggestions(): void;
+
+  /**
+   * Shows the suggestions for the current search box value.
+   */
+  showSuggestions(): void;
+
+  /**
+   * Selects a suggestion and calls `submit`.
+   *
+   * @param value - The string value of the suggestion to select
+   */
+  selectSuggestion(value: string): void;
+
+  /**
+   * Triggers a search query.
+   */
+  submit(): void;
+
+  /**
+   * The state of the `SearchBox` controller.
+   */
+  state: SearchBoxState;
 }
 
 /**
  * A scoped and simplified part of the headless state that is relevant to the `SearchBox` controller.
  */
-export type SearchBoxState = SearchBox['state'];
-/**
- * The `SearchBox` headless controller offers a high-level interface for designing a common search box UI controller.
- */
-export type SearchBox = ReturnType<typeof buildSearchBox>;
+export interface SearchBoxState {
+  /**
+   * The current query in the search box.
+   */
+  value: string;
 
+  /**
+   * The query suggestions for the search box query.
+   */
+  suggestions: Suggestion[];
+
+  /**
+   * Determines if a search is in progress.
+   */
+  isLoading: boolean;
+}
+
+export interface Suggestion {
+  /**
+   * The suggestion after applying any `highlightOptions`.
+   */
+  highlightedValue: string;
+
+  /**
+   * The suggestion text.
+   */
+  rawValue: string;
+}
+
+/**
+ * Creates a `SearchBox` controller instance.
+ *
+ * @param engine - The headless engine.
+ * @param props - The configurable `SearchBox` properties.
+ * @returns A `SearchBox` controller instance.
+ */
 export function buildSearchBox(
   engine: Engine<
     QuerySection &
@@ -59,8 +137,8 @@ export function buildSearchBox(
       QuerySetSection &
       SearchSection
   >,
-  props: Partial<SearchBoxProps> = {}
-) {
+  props: SearchBoxProps = {}
+): SearchBox {
   const controller = buildController(engine);
   const {dispatch} = engine;
 
@@ -96,59 +174,35 @@ export function buildSearchBox(
   return {
     ...controller,
 
-    /**
-     * Updates the search box text value and shows the suggestions for that value.
-     * @param value  The string value to update the search box with.
-     */
     updateText(value: string) {
       dispatch(updateQuerySetQuery({id, query: value}));
       this.showSuggestions();
     },
 
-    /**
-     * Clears the search box text and the suggestions.
-     */
     clear() {
       dispatch(updateQuerySetQuery({id, query: ''}));
       dispatch(clearQuerySuggest({id}));
     },
 
-    /**
-     * @deprecated suggestions should be hidden using css instead for an optimal user experience.
-     * Clears the suggestions.
-     */
     hideSuggestions() {
       dispatch(clearQuerySuggestCompletions({id}));
     },
 
-    /**
-     * Shows the suggestions for the current search box value.
-     */
     showSuggestions() {
       if (options.numberOfSuggestions) {
         dispatch(fetchQuerySuggestions({id}));
       }
     },
 
-    /**
-     * Selects a suggestion and calls `submit`.
-     * @param value The string value of the suggestion to select
-     */
     selectSuggestion(value: string) {
       dispatch(selectQuerySuggestion({id, expression: value}));
       performSearch(logQuerySuggestionClick({id, suggestion: value}));
     },
 
-    /**
-     * Triggers a search query.
-     */
     submit() {
       performSearch(logSearchboxSubmit());
     },
 
-    /**
-     * @returns The state of the `SearchBox` controller.
-     */
     get state() {
       const state = engine.state;
       const querySuggestState = state.querySuggest[options.id];

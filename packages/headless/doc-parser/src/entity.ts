@@ -1,4 +1,8 @@
-type EntityKind = 'primitive' | 'object' | 'function';
+type EntityKind =
+  | 'primitive'
+  | 'primitive-with-type-alias'
+  | 'object'
+  | 'function';
 
 interface Kind<T extends EntityKind> {
   kind: T;
@@ -27,6 +31,13 @@ export interface Entity
     Type,
     Optional {}
 
+export interface EntityWithTypeAlias
+  extends Kind<'primitive-with-type-alias'>,
+    Name,
+    Description,
+    Type,
+    Optional {}
+
 export interface ObjEntity
   extends Kind<'object'>,
     Name,
@@ -40,10 +51,10 @@ export interface ObjEntity
 
 export interface FuncEntity extends Kind<'function'>, Name, Description {
   params: AnyEntity[];
-  returnType: string | ObjEntity | FuncEntity;
+  returnType: AnyEntity;
 }
 
-export type AnyEntity = Entity | ObjEntity | FuncEntity;
+export type AnyEntity = Entity | EntityWithTypeAlias | ObjEntity | FuncEntity;
 
 interface UnknownEntity {
   kind: EntityKind;
