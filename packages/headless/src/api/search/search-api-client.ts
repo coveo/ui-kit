@@ -197,31 +197,30 @@ export class SearchAPIClient {
   }
 }
 
-const unwrapError = (res: PlatformResponse<AllSearchAPIResponse>) => {
-  if (isException(res)) {
-    return unwrapByBodyException(res);
+const unwrapError = (
+  res: PlatformResponse<AllSearchAPIResponse>
+): SearchAPIErrorWithStatusCode => {
+  if (isSearchAPIException(res)) {
+    return unwrapErrorByException(res);
   }
-  if (isError(res)) {
-    return unwrapByStatusCode(res);
+  if (isSearchAPIErrorWithStatusCode(res)) {
+    return res.body;
   }
 
-  return {message: 'unknown', statusCode: 0, type: 'unknown', ...res.body};
+  return {
+    message: '',
+    statusCode: 400,
+    type: 'ClientError',
+    ...res.body,
+  };
 };
 
-const unwrapByBodyException = (
+const unwrapErrorByException = (
   res: PlatformResponse<SearchAPIErrorWithExceptionInBody>
-) => ({
+): SearchAPIErrorWithStatusCode => ({
   message: res.body.exception.code,
   statusCode: res.response.status,
   type: res.body.exception.code,
-});
-
-const unwrapByStatusCode = (
-  res: PlatformResponse<SearchAPIErrorWithStatusCode>
-) => ({
-  message: res.body.message,
-  statusCode: res.body.statusCode,
-  type: res.body.type,
 });
 
 export const isSuccessResponse = <T>(
@@ -262,7 +261,7 @@ function isSuccessSearchResponse(
   );
 }
 
-function isError(
+function isSearchAPIErrorWithStatusCode(
   r: PlatformResponse<AllSearchAPIResponse>
 ): r is PlatformResponse<SearchAPIErrorWithStatusCode> {
   return (
@@ -271,7 +270,7 @@ function isError(
   );
 }
 
-function isException(
+function isSearchAPIException(
   r: PlatformResponse<AllSearchAPIResponse>
 ): r is PlatformResponse<SearchAPIErrorWithExceptionInBody> {
   return (
