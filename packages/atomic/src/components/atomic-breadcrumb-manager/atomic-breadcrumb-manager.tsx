@@ -64,6 +64,7 @@ export class AtomicBreadcrumbManager implements InitializableComponent {
       this.bindings.i18n.t('removeFilterOn', variables),
     clearAllFilters: () => this.bindings.i18n.t('clearAllFilters'),
     nMore: (variables) => this.bindings.i18n.t('nMore', variables),
+    to: (variables) => this.bindings.i18n.t('to', variables),
   };
 
   public initialize() {
@@ -169,9 +170,9 @@ export class AtomicBreadcrumbManager implements InitializableComponent {
         this.getBreadcrumbValues(
           this.formatRangeBreadcrumb(breadcrumb, (value) => {
             const {language} = this.bindings.i18n;
-            return `${value.start.toLocaleString(
-              language
-            )} - ${value.end.toLocaleString(language)}`;
+            const start = value.start.toLocaleString(language);
+            const end = value.end.toLocaleString(language);
+            return this.strings.to({start, end});
           })
         )
     );
@@ -182,13 +183,11 @@ export class AtomicBreadcrumbManager implements InitializableComponent {
       (breadcrumb) => {
         const dateFormat = this.getFormat(breadcrumb.facetId);
         return this.getBreadcrumbValues(
-          this.formatRangeBreadcrumb(
-            breadcrumb,
-            (value) =>
-              `${dayjs(value.start).format(dateFormat)} - ${dayjs(
-                value.end
-              ).format(dateFormat)}`
-          )
+          this.formatRangeBreadcrumb(breadcrumb, (value) => {
+            const start = dayjs(value.start).format(dateFormat);
+            const end = dayjs(value.end).format(dateFormat);
+            return this.strings.to({start, end});
+          })
         );
       }
     );

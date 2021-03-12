@@ -55,6 +55,7 @@ export class AtomicDateFacet implements InitializableComponent, BaseFacetState {
   public strings: I18nState = {
     clear: () => this.bindings.i18n.t('clear'),
     facetValue: (variables) => this.bindings.i18n.t('facetValue', variables),
+    to: (variables) => this.bindings.i18n.t('to', variables),
   };
 
   @State() public isExpanded = false;
@@ -110,18 +111,21 @@ export class AtomicDateFacet implements InitializableComponent, BaseFacetState {
 
   private buildListItem(item: DateFacetValue) {
     const isSelected = this.facet.isValueSelected(item);
-
+    const start = dayjs(item.start).format(this.dateFormat);
+    const end = dayjs(item.end).format(this.dateFormat);
+    const value = this.strings.to({start, end});
     return (
       <FacetValue
-        label={`${dayjs(item.start).format(this.dateFormat)} - ${dayjs(
-          item.end
-        ).format(this.dateFormat)}`}
+        label={value}
         isSelected={isSelected}
         numberOfResults={item.numberOfResults}
         facetValueSelected={() => {
           this.facet.toggleSelect(item);
         }}
-        ariaLabel={this.strings.facetValue(item)}
+        ariaLabel={this.strings.facetValue({
+          value,
+          numberOfResults: item.numberOfResults,
+        })}
       />
     );
   }
