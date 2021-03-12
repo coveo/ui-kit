@@ -34,8 +34,10 @@ import {Facet} from '../components/facet/facet.class';
 import {Facet as FacetFn} from '../components/facet/facet.fn';
 import {NumericFacet} from '../components/numeric-facet/numeric-facet.class';
 import {NumericFacet as NumericFacetFn} from '../components/numeric-facet/numeric-facet.fn';
-import {History} from '../components/history/history.class';
-import {History as HistoryFn} from '../components/history/history.fn';
+import {DateFacet} from '../components/date-facet/date-facet.class';
+import {DateFacet as DateFacetFn} from '../components/date-facet/date-facet.fn';
+import {HistoryManager} from '../components/history-manager/history-manager.class';
+import {HistoryManager as HistoryManagerFn} from '../components/history-manager/history-manager.fn';
 import {RelevanceInspector} from '../components/relevance-inspector/relevance-inspector.class';
 import {RelevanceInspector as RelevanceInspectorFn} from '../components/relevance-inspector/relevance-inspector.fn';
 import {
@@ -72,6 +74,8 @@ import {
   NumericFacet as HeadlessNumericFacet,
   buildNumericFacet,
   buildNumericRange,
+  DateFacet as HeadlessDateFacet,
+  buildDateFacet,
   buildDateSortCriterion,
   buildFieldSortCriterion,
   buildRelevanceSortCriterion,
@@ -83,13 +87,14 @@ import {
   buildResultsPerPage,
   Pager as HeadlessPager,
   buildPager,
-  History as HeadlessHistory,
-  buildHistory,
+  HistoryManager as HeadlessHistoryManager,
+  buildHistoryManager,
   RelevanceInspector as HeadlessRelevanceInspector,
   buildRelevanceInspector,
 } from '@coveo/headless';
 import {bindSearchParametersToURI} from '../components/search-parameter-manager/search-parameter-manager';
 import {setContext} from '../components/context/context';
+import {dateRanges} from '../components/date-facet/date-utils';
 
 const [KB, MB, GB] = [1e3, 1e6, 1e9];
 
@@ -125,10 +130,12 @@ export class SearchPage extends Component {
   private readonly objectTypeFacet: HeadlessFacet;
   private readonly fileSizeAutomaticNumericFacet: HeadlessNumericFacet;
   private readonly fileSizeManualNumericFacet: HeadlessNumericFacet;
+  private readonly createdAutomaticDateFacet: HeadlessDateFacet;
+  private readonly createdManualDateFacet: HeadlessDateFacet;
   private readonly sort: HeadlessSort;
   private readonly resultsPerPage: HeadlessResultsPerPage;
   private readonly pager: HeadlessPager;
-  private readonly history: HeadlessHistory;
+  private readonly historyManager: HeadlessHistoryManager;
   private readonly relevanceInspector: HeadlessRelevanceInspector;
 
   private stopUpdatingSearchParameters?: Unsubscribe;
@@ -207,6 +214,22 @@ export class SearchPage extends Component {
       },
     });
 
+    this.createdAutomaticDateFacet = buildDateFacet(this.engine, {
+      options: {
+        field: 'created',
+        facetId: 'created-3',
+        generateAutomaticRanges: true,
+      },
+    });
+    this.createdManualDateFacet = buildDateFacet(this.engine, {
+      options: {
+        field: 'created',
+        facetId: 'created-4',
+        generateAutomaticRanges: false,
+        currentValues: dateRanges,
+      },
+    });
+
     this.sort = buildSort(this.engine, {
       initialState: {criterion: initialCriterion},
     });
@@ -219,7 +242,7 @@ export class SearchPage extends Component {
 
     this.pager = buildPager(this.engine, {options: {numberOfPages: 6}});
 
-    this.history = buildHistory(this.engine);
+    this.historyManager = buildHistoryManager(this.engine);
 
     this.relevanceInspector = buildRelevanceInspector(this.engine);
   }
@@ -325,6 +348,17 @@ export class SearchPage extends Component {
                   buildNumericRange({start: 5 * MB, end: 5 * GB}),
                 ]}
               />
+              <DateFacet
+                field="created"
+                facetId="created-1"
+                generateAutomaticRanges={true}
+              />
+              <DateFacet
+                field="created"
+                facetId="created-2"
+                generateAutomaticRanges={false}
+                currentValues={dateRanges}
+              />
             </FacetManager>
             <FacetManagerFn controller={this.facetManager}>
               <CategoryFacetFn controller={this.geographyFacet} />
@@ -337,6 +371,8 @@ export class SearchPage extends Component {
                 controller={this.fileSizeManualNumericFacet}
                 format={(bytes) => filesize(bytes, {base: 10})}
               />
+              <DateFacetFn controller={this.createdAutomaticDateFacet} />
+              <DateFacetFn controller={this.createdManualDateFacet} />
             </FacetManagerFn>
           </Section>
           <Section title="sort">
@@ -358,9 +394,9 @@ export class SearchPage extends Component {
             <Pager />
             <PagerFn controller={this.pager} />
           </Section>
-          <Section title="history">
-            <History />
-            <HistoryFn controller={this.history} />
+          <Section title="history-manager">
+            <HistoryManager />
+            <HistoryManagerFn controller={this.historyManager} />
           </Section>
           <Section title="relevance-inspector">
             <RelevanceInspector />

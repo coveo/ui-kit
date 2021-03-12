@@ -6,6 +6,7 @@ import {buildMockApiMethodSignature} from '../mocks/mock-api-method-signature';
 import {buildMockApiPropertySignature} from '../mocks/mock-api-property-signature';
 import {buildMockApiTypeAlias} from '../mocks/mock-api-type-alias';
 import {buildMockEntity} from '../mocks/mock-entity';
+import {buildMockEntityWithTypeAlias} from '../mocks/mock-entity-with-type-alias';
 import {buildMockEntryPoint} from '../mocks/mock-entry-point';
 import {
   buildContentExcerptToken,
@@ -289,6 +290,46 @@ describe('#resolveInterfaceMembers', () => {
     expect(result).toEqual([funcEntity]);
   });
 
+  it('resolves a method with a promise return type', () => {
+    const entry = buildMockEntryPoint();
+    const historyManager = buildMockApiInterface({name: 'HistoryManager'});
+
+    const docComment = buildMockApiDocComment(
+      '/**\n * Move forward in the interface history.\n *\n * @returns A promise that resolves when the previous state has been restored.\n */\n'
+    );
+    const forward = buildMockApiMethodSignature({
+      name: 'forward',
+      docComment,
+      excerptTokens: [
+        buildContentExcerptToken('forward(): '),
+        buildReferenceExcerptToken('Promise', ''),
+        buildContentExcerptToken('<void>'),
+        buildContentExcerptToken(';'),
+      ],
+      returnTypeTokenRange: {startIndex: 1, endIndex: 3},
+    });
+
+    historyManager.addMember(forward);
+    entry.addMember(historyManager);
+
+    const result = resolveInterfaceMembers(entry, historyManager, []);
+
+    const returnType = buildMockEntity({
+      name: 'returnType',
+      type: 'Promise<void>',
+      desc:
+        'A promise that resolves when the previous state has been restored.',
+    });
+
+    const func = buildMockFuncEntity({
+      desc: 'Move forward in the interface history.',
+      name: 'forward',
+      returnType,
+    });
+
+    expect(result).toEqual([func]);
+  });
+
   it('resolves a call signature with primitive types', () => {
     const entryPoint = buildMockEntryPoint();
     const unsubscribeInterface = buildMockApiInterface({name: 'Unsubscribe'});
@@ -375,7 +416,7 @@ describe('#resolveInterfaceMembers', () => {
     entry.addMember(typeAlias);
 
     const result = resolveInterfaceMembers(entry, apiInterface, []);
-    const entity = buildMockEntity({
+    const entity = buildMockEntityWithTypeAlias({
       name: 'state',
       type: "'idle' | 'selected'",
     });
@@ -527,7 +568,7 @@ describe('#resolveInterfaceMembers', () => {
 
     const result = resolveInterfaceMembers(entry, context, []);
 
-    const param = buildMockEntity({
+    const param = buildMockEntityWithTypeAlias({
       name: 'contextValue',
       type: 'string | string[]',
       desc: 'The context value to add.',

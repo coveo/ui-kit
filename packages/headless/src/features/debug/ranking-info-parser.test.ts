@@ -43,14 +43,14 @@ describe('ranking infor parser', () => {
     const parsed = parseRankingInfo(toParse)!;
     const testsTermsWeights = parsed.termsWeight?.['test'];
 
-    expect(testsTermsWeights?.Weights.Title).toBe(800);
-    expect(testsTermsWeights?.Weights.Concept).toBe(0);
-    expect(testsTermsWeights?.Weights.Summary).toBe(300);
-    expect(testsTermsWeights?.Weights.URI).toBe(500);
-    expect(testsTermsWeights?.Weights.Formatted).toBe(0);
-    expect(testsTermsWeights?.Weights.Casing).toBe(0);
-    expect(testsTermsWeights?.Weights.Relation).toBe(200);
-    expect(testsTermsWeights?.Weights.Frequency).toBe(1744);
+    expect(testsTermsWeights?.Weights?.Title).toBe(800);
+    expect(testsTermsWeights?.Weights?.Concept).toBe(0);
+    expect(testsTermsWeights?.Weights?.Summary).toBe(300);
+    expect(testsTermsWeights?.Weights?.URI).toBe(500);
+    expect(testsTermsWeights?.Weights?.Formatted).toBe(0);
+    expect(testsTermsWeights?.Weights?.Casing).toBe(0);
+    expect(testsTermsWeights?.Weights?.Relation).toBe(200);
+    expect(testsTermsWeights?.Weights?.Frequency).toBe(1744);
     expect(testsTermsWeights?.terms.test['TF-IDF']).toBe(26);
     expect(testsTermsWeights?.terms.test.Correlation).toBe(100);
   });

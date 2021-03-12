@@ -15,7 +15,7 @@ import {
 } from '@microsoft/api-extractor-model';
 import {DocComment} from '@microsoft/tsdoc';
 import {findApi} from './api-finder';
-import {AnyEntity, Entity} from './entity';
+import {AnyEntity, EntityWithTypeAlias} from './entity';
 import {
   buildEntity,
   buildFuncEntity,
@@ -108,6 +108,7 @@ function resolvePropertySignature(
 ) {
   const typeExcerpt = p.propertyTypeExcerpt.spannedTokens[0];
   const typeName = extractTypeName(p.propertyTypeExcerpt);
+
   if (isRecordType(typeExcerpt)) {
     return buildEntityFromProperty(p);
   }
@@ -153,13 +154,13 @@ function buildObjEntityFromProperty(
 function buildEntityFromPropertyAndResolveTypeAlias(
   entry: ApiEntryPoint,
   p: ApiPropertySignature
-): Entity {
+): EntityWithTypeAlias {
   const entity = buildEntityFromProperty(p);
   const searchableTypeName = extractSearchableTypeName(p.propertyTypeExcerpt);
   const typeAlias = findApi(entry, searchableTypeName) as ApiTypeAlias;
   const type = typeAlias.typeExcerpt.text;
 
-  return {...entity, type};
+  return {...entity, kind: 'primitive-with-type-alias', type};
 }
 
 function isIndexSignature(m: ApiItem): m is ApiIndexSignature {
@@ -194,11 +195,7 @@ function resolveMethodSignature(
   const params = m.parameters.map((p) =>
     resolveParameter(entry, p, ancestorNames)
   );
-  const typeExcerpt = m.returnTypeExcerpt.spannedTokens[0];
-  let returnType: AnyEntity = buildReturnTypeEntity(m);
-  if (isReference(typeExcerpt)) {
-    returnType = buildObjEntityFromReturnType(entry, m, ancestorNames);
-  }
+  const returnType = resolveMethodReturnType(entry, m, ancestorNames);
 
   return buildFuncEntity({
     name: m.displayName,
@@ -206,6 +203,24 @@ function resolveMethodSignature(
     params,
     returnType,
   });
+}
+
+function resolveMethodReturnType(
+  entry: ApiEntryPoint,
+  m: ApiMethodSignature,
+  ancestorNames: string[]
+) {
+  const typeExcerpt = m.returnTypeExcerpt.spannedTokens[0];
+
+  if (isPromise(typeExcerpt)) {
+    return buildReturnTypeEntity(m);
+  }
+
+  if (isReference(typeExcerpt)) {
+    return buildObjEntityFromReturnType(entry, m, ancestorNames);
+  }
+
+  return buildReturnTypeEntity(m);
 }
 
 function buildObjEntityFromReturnType(
@@ -228,9 +243,14 @@ export function resolveParameter(
   ancestorNames: string[]
 ) {
   const typeExcerpt = p.parameterTypeExcerpt.spannedTokens[0];
+  const type = p.parameterTypeExcerpt.text;
 
   if (isTypeAlias(typeExcerpt)) {
     return buildEntityFromParamAndResolveTypeAlias(entry, p);
+  }
+
+  if (isUnionType(type)) {
+    return buildParamEntity(p);
   }
 
   if (isReference(typeExcerpt)) {
@@ -243,13 +263,13 @@ export function resolveParameter(
 function buildEntityFromParamAndResolveTypeAlias(
   entry: ApiEntryPoint,
   p: Parameter
-): Entity {
+): EntityWithTypeAlias {
   const entity = buildParamEntity(p);
   const searchableTypeName = extractSearchableTypeName(p.parameterTypeExcerpt);
   const typeAlias = findApi(entry, searchableTypeName) as ApiTypeAlias;
   const type = typeAlias.typeExcerpt.text;
 
-  return {...entity, type};
+  return {...entity, kind: 'primitive-with-type-alias', type};
 }
 
 function buildObjEntityFromParam(
@@ -299,6 +319,11 @@ function isTypeAlias(token: ExcerptToken) {
 function isRecordType(token: ExcerptToken) {
   const isRecord = token.text === 'Record';
   return isReference(token) && isRecord;
+}
+
+function isPromise(token: ExcerptToken) {
+  const isPromise = token.text === 'Promise';
+  return isReference(token) && isPromise;
 }
 
 function isReference(token: ExcerptToken) {

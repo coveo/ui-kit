@@ -83,6 +83,10 @@
       atomic-result::part(result-printable-uri-list-element) {
         text-transform: capitalize;
       }
+
+      atomic-breadcrumb-manager {
+        margin: 10px 0;
+      }
     </style>
   </head>
   <body>
@@ -117,7 +121,7 @@
 
           <atomic-no-results></atomic-no-results>
 
-          <atomic-result-list fields-to-include="filetype,liboardinteractionstyle">
+          <atomic-result-list fields-to-include="liboardinteractionstyle">
             <!-- Custom result templates examples -->
             <atomic-result-template
               must-match-filetype="lithiummessage"

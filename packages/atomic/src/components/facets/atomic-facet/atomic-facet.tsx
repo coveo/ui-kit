@@ -71,6 +71,7 @@ export class AtomicFacet
   @State() public facetSearchQuery = '';
   @State() public showFacetSearchResults = false;
 
+  @Prop({mutable: true, reflect: true}) public facetId = '';
   /**
    * The field whose values you want to display in the facet.
    */
@@ -110,6 +111,8 @@ export class AtomicFacet
         controller: new FacetSearchController(this),
       });
     }
+    this.facetId = this.facet.state.facetId;
+    this.bindings.store.state.facetLabels[this.facetId] = this.label;
   }
 
   public componentDidRender() {

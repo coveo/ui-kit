@@ -1,7 +1,7 @@
 import {
-  buildHistory,
-  History,
-  HistoryState,
+  buildHistoryManager,
+  HistoryManager,
+  HistoryManagerState,
   buildSearchStatus,
   SearchStatus,
   SearchStatusState,
@@ -31,14 +31,14 @@ import {
 export class AtomicNoResults {
   @InitializeBindings() public bindings!: Bindings;
   public searchStatus!: SearchStatus;
-  public history!: History;
+  public history!: HistoryManager;
 
   @BindStateToController('searchStatus')
   @State()
   private searchStatusState!: SearchStatusState;
   @BindStateToController('history')
   @State()
-  private historyState!: HistoryState;
+  private historyState!: HistoryManagerState;
   @BindStateToI18n()
   @State()
   private strings = {
@@ -61,7 +61,7 @@ export class AtomicNoResults {
 
   public initialize() {
     this.searchStatus = buildSearchStatus(this.bindings.engine);
-    this.history = buildHistory(this.bindings.engine);
+    this.history = buildHistoryManager(this.bindings.engine);
   }
 
   private renderCancel() {

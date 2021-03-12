@@ -53,8 +53,27 @@ export class AtomicResultList implements InitializableComponent {
   }
 
   private get defaultFieldsToInclude() {
-    // TODO: add more default fields to include
-    return ['parents'];
+    return [
+      'date',
+      'author',
+      'source',
+      'language',
+      'filetype',
+      'parents',
+      'ec_price',
+      'ec_name',
+      'ec_description',
+      'ec_brand',
+      'ec_category',
+      'ec_item_group_id',
+      'ec_shortdesc',
+      'ec_image',
+      'ec_images',
+      'ec_promo_price',
+      'ec_in_stock',
+      'ec_cogs',
+      'ec_rating',
+    ];
   }
 
   public initialize() {
@@ -94,7 +113,7 @@ export class AtomicResultList implements InitializableComponent {
   private get results() {
     return this.resultListState.results.map((result) => (
       <atomic-result
-        key={result.raw.permanentid}
+        key={`${result.raw.permanentid}${this.resultListState.searchUid}`}
         result={result}
         engine={this.bindings.engine}
         // TODO: decide to get rid of Mustache or not
