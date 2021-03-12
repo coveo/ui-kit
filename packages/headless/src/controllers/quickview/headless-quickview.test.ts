@@ -35,4 +35,11 @@ describe('Quickview', () => {
   it('exposes a subscribe method', () => {
     expect(quickview.subscribe).toBeTruthy();
   });
+
+  it('#fetchResultPreview dispatches a #fetchResultPreview action', () => {
+    quickview.fetchResultPreview();
+
+    const action = engine.findAsyncAction();
+    expect(action).toBeTruthy();
+  });
 });
