@@ -53,14 +53,7 @@ const controllers: ControllerConfiguration[] = [
   },
   {
     initializer: 'buildDateFacet',
-    samplePaths: {
-      react_class: [
-        'packages/samples/headless-react/src/components/date-facet/date-facet.class.tsx',
-      ],
-      react_fn: [
-        'packages/samples/headless-react/src/components/date-facet/date-facet.fn.tsx',
-      ],
-    },
+    samplePaths: {},
     utils: ['buildDateRange'],
   },
   {
@@ -130,7 +123,14 @@ const controllers: ControllerConfiguration[] = [
   },
   {
     initializer: 'buildBreadcrumbManager',
-    samplePaths: {},
+    samplePaths: {
+      react_class: [
+        'packages/samples/headless-react/src/components/breadcrumb-manager/breadcrumb-manager.class.tsx',
+      ],
+      react_fn: [
+        'packages/samples/headless-react/src/components/breadcrumb-manager/breadcrumb-manager.fn.tsx',
+      ],
+    },
   },
   {
     initializer: 'buildRecommendationList',
@@ -205,7 +205,14 @@ const controllers: ControllerConfiguration[] = [
   },
   {
     initializer: 'buildStandaloneSearchBox',
-    samplePaths: {},
+    samplePaths: {
+      react_class: [
+        'packages/samples/headless-react/src/components/standalone-search-box/standalone-search-box.class.tsx',
+      ],
+      react_fn: [
+        'packages/samples/headless-react/src/components/standalone-search-box/standalone-search-box.fn.tsx',
+      ],
+    },
   },
   {
     initializer: 'buildInteractiveResult',

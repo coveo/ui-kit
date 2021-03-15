@@ -115,7 +115,9 @@ export class AtomicCategoryFacet
       });
     }
     this.facetId = this.facet.state.facetId;
-    this.bindings.store.state.facetLabels[this.facetId] = this.label;
+    this.bindings.store.state.facets[this.facetId] = {
+      label: this.label,
+    };
   }
 
   public componentDidRender() {
