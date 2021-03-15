@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.8.0-alpha.22](https://github.com/coveo/ui-kit/compare/v0.8.0-alpha.21...v0.8.0-alpha.22) (2021-03-15)
+
+
+### Features
+
+* **atomic:** complete atomic-did-you-mean component ([#621](https://github.com/coveo/ui-kit/issues/621)) ([3adff56](https://github.com/coveo/ui-kit/commit/3adff56bd038fb3186fb7d94a243e6af8fde0364))
+
+
+
+
+
 # [0.8.0-alpha.21](https://github.com/coveo/ui-kit/compare/v0.8.0-alpha.20...v0.8.0-alpha.21) (2021-03-15)
 
 **Note:** Version bump only for package ui-kit
