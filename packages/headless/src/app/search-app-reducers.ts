@@ -26,6 +26,7 @@ import {advancedSearchQueriesReducer} from '../features/advanced-search-queries/
 import {debugReducer} from '../features/debug/debug-slice';
 import {facetOrderReducer} from '../features/facets/facet-order/facet-order-slice';
 import {redo, snapshot, undo} from '../features/history/history-actions';
+import {resultPreviewReducer} from '../features/result-preview/result-preview-slice';
 
 /**
  * Map of reducers that make up the SearchAppState.
@@ -62,4 +63,5 @@ export const searchAppReducers: ReducersMapObject<SearchAppState> = {
   pipeline: pipelineReducer,
   searchHub: searchHubReducer,
   debug: debugReducer,
+  resultPreview: resultPreviewReducer,
 };
