@@ -1,25 +1,23 @@
-import {Component} from 'react';
+import {Component, ContextType} from 'react';
 import {
   buildSearchStatus,
   SearchStatus as HeadlessSearchStatus,
   SearchStatusState,
   Unsubscribe,
 } from '@coveo/headless';
-import {engine} from '../../engine';
+import {AppContext} from '../../context/engine';
 
-export class SearchStatus extends Component {
-  private controller: HeadlessSearchStatus;
-  public state: SearchStatusState;
+export class SearchStatus extends Component<{}, SearchStatusState> {
+  static contextType = AppContext;
+  context!: ContextType<typeof AppContext>;
+
+  private controller!: HeadlessSearchStatus;
   private unsubscribe: Unsubscribe = () => {};
 
-  constructor(props: {}) {
-    super(props);
-
-    this.controller = buildSearchStatus(engine);
-    this.state = this.controller.state;
-  }
-
   componentDidMount() {
+    this.controller = buildSearchStatus(this.context.engine!);
+    this.updateState();
+
     this.unsubscribe = this.controller.subscribe(() => this.updateState());
   }
 
@@ -32,6 +30,10 @@ export class SearchStatus extends Component {
   }
 
   render() {
+    if (!this.state) {
+      return null;
+    }
+
     const {hasResults, firstSearchExecuted, isLoading} = this.state;
 
     if (!hasResults && !firstSearchExecuted && isLoading) {

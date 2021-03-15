@@ -1,4 +1,4 @@
-import {Component, Prop, Element} from '@stencil/core';
+import {Component, Prop, Element, h} from '@stencil/core';
 
 /**
  * Component that defines a sort criteria.
@@ -28,4 +28,19 @@ export class AtomicSortCriteria {
    * You can specify multiple sort criteria to be used in the same request by separating them with a comma (e.g., `criteria="size ascending, date ascending"` ).
    */
   @Prop() public criteria!: string;
+
+  public render() {
+    const dropdownComponent = 'atomic-sort-dropdown';
+    if (!this.host.closest(dropdownComponent)) {
+      const error = new Error(
+        `The "${this.host.nodeName.toLowerCase()}" component has to be used inside an ${dropdownComponent} element.`
+      );
+      return (
+        <atomic-component-error
+          element={this.host}
+          error={error}
+        ></atomic-component-error>
+      );
+    }
+  }
 }

@@ -3,6 +3,57 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.8.0-alpha.16](https://github.com/coveo/ui-kit/compare/v0.8.0-alpha.15...v0.8.0-alpha.16) (2021-03-12)
+
+**Note:** Version bump only for package headless-react
+
+
+
+
+
+# [0.8.0-alpha.15](https://github.com/coveo/ui-kit/compare/v0.8.0-alpha.14...v0.8.0-alpha.15) (2021-03-12)
+
+**Note:** Version bump only for package headless-react
+
+
+
+
+
+# [0.8.0-alpha.14](https://github.com/coveo/ui-kit/compare/v0.8.0-alpha.13...v0.8.0-alpha.14) (2021-03-12)
+
+**Note:** Version bump only for package headless-react
+
+
+
+
+
+# [0.8.0-alpha.12](https://github.com/coveo/ui-kit/compare/v0.8.0-alpha.11...v0.8.0-alpha.12) (2021-03-11)
+
+**Note:** Version bump only for package headless-react
+
+
+
+
+
+# [0.8.0-alpha.10](https://github.com/coveo/ui-kit/compare/v0.8.0-alpha.9...v0.8.0-alpha.10) (2021-03-11)
+
+
+### Features
+
+* **quantic:** add salesforce server tokens generation. ([#573](https://github.com/coveo/ui-kit/issues/573)) ([c3506ab](https://github.com/coveo/ui-kit/commit/c3506abe18a5f7a1a3c6153521bb18b11b2afd7a))
+
+
+
+
+
+# [0.8.0-alpha.9](https://github.com/coveo/ui-kit/compare/v0.8.0-alpha.8...v0.8.0-alpha.9) (2021-03-11)
+
+**Note:** Version bump only for package headless-react
+
+
+
+
+
 # [0.8.0-alpha.8](https://github.com/coveo/ui-kit/compare/v0.8.0-alpha.7...v0.8.0-alpha.8) (2021-03-09)
 
 **Note:** Version bump only for package headless-react

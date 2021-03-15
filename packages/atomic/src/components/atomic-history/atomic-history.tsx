@@ -1,5 +1,9 @@
 import {Component, h, State} from '@stencil/core';
-import {History, buildHistory, HistoryState} from '@coveo/headless';
+import {
+  HistoryManager,
+  buildHistoryManager,
+  HistoryManagerState,
+} from '@coveo/headless';
 import {
   Bindings,
   BindStateToController,
@@ -13,13 +17,13 @@ import {
 })
 export class AtomicHistory implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;
-  public history!: History;
+  public history!: HistoryManager;
 
   @State() public error!: Error;
-  @BindStateToController('history') @State() historyState!: HistoryState;
+  @BindStateToController('history') @State() historyState!: HistoryManagerState;
 
   public initialize() {
-    this.history = buildHistory(this.bindings.engine);
+    this.history = buildHistoryManager(this.bindings.engine);
   }
 
   private back() {

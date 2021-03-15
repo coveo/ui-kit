@@ -1,4 +1,4 @@
-export type Product = {
+export interface ProductRecommendation {
   /**
    * The SKU of the product.
    */
@@ -67,6 +67,4 @@ export type Product = {
    * From the `ec_rating` field.
    */
   rating?: number;
-};
-
-export type ProductRecommendation = Product;
+}

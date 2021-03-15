@@ -17,6 +17,10 @@ export interface SearchStatus extends Controller {
  */
 export interface SearchStatusState {
   /**
+   * `true` if there is an error for the last executed query and `false` otherwise.
+   */
+  hasError: boolean;
+  /**
    * Determines if a search is in progress.
    */
   isLoading: boolean;
@@ -44,6 +48,7 @@ export function buildSearchStatus(engine: Engine<SearchSection>): SearchStatus {
 
     get state() {
       return {
+        hasError: engine.state.search.error !== null,
         isLoading: engine.state.search.isLoading,
         hasResults: !!engine.state.search.results.length,
         firstSearchExecuted: engine.state.search.response.searchUid !== '',

@@ -1,9 +1,5 @@
 import {useEffect, useState, FunctionComponent} from 'react';
-import {
-  buildSearchStatus,
-  SearchStatus as HeadlessSearchStatus,
-} from '@coveo/headless';
-import {engine} from '../../engine';
+import {SearchStatus as HeadlessSearchStatus} from '@coveo/headless';
 
 interface SearchStatusProps {
   controller: HeadlessSearchStatus;
@@ -47,6 +43,10 @@ export const SearchStatus: FunctionComponent<SearchStatusProps> = (props) => {
 
 // usage
 
-const controller = buildSearchStatus(engine);
-
-<SearchStatus controller={controller} />;
+/**
+ * ```tsx
+ * const controller = buildSearchStatus(engine);
+ *
+ * <SearchStatus controller={controller} />;
+ * ```
+ */

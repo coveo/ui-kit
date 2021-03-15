@@ -3,6 +3,55 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.8.0-alpha.16](https://github.com/coveo/ui-kit/compare/v0.8.0-alpha.15...v0.8.0-alpha.16) (2021-03-12)
+
+
+### Features
+
+* **headless:** add moreResultsAvailable to ResultList state ([#611](https://github.com/coveo/ui-kit/issues/611)) ([fa85a5c](https://github.com/coveo/ui-kit/commit/fa85a5cda5087adb3d451048c2a4e0534e627f9d))
+
+
+
+
+
+# [0.8.0-alpha.15](https://github.com/coveo/ui-kit/compare/v0.8.0-alpha.14...v0.8.0-alpha.15) (2021-03-12)
+
+
+### Features
+
+* **atomic,headless:** complete atomic-query-error & return generic platform errors ([#605](https://github.com/coveo/ui-kit/issues/605)) ([dee98b8](https://github.com/coveo/ui-kit/commit/dee98b831c09e993f7c0e68787d3da1c8a8edbd4))
+
+
+
+
+
+# [0.8.0-alpha.12](https://github.com/coveo/ui-kit/compare/v0.8.0-alpha.11...v0.8.0-alpha.12) (2021-03-11)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+# [0.8.0-alpha.10](https://github.com/coveo/ui-kit/compare/v0.8.0-alpha.9...v0.8.0-alpha.10) (2021-03-11)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+# [0.8.0-alpha.9](https://github.com/coveo/ui-kit/compare/v0.8.0-alpha.8...v0.8.0-alpha.9) (2021-03-11)
+
+
+### Features
+
+* **atomic:** breadcrumb manager ([#574](https://github.com/coveo/ui-kit/issues/574)) ([5c8b9af](https://github.com/coveo/ui-kit/commit/5c8b9afde01fb5a014defa776932ce7c38b57514))
+
+
+
+
+
 # [0.8.0-alpha.8](https://github.com/coveo/ui-kit/compare/v0.8.0-alpha.7...v0.8.0-alpha.8) (2021-03-09)
 
 **Note:** Version bump only for package @coveo/headless

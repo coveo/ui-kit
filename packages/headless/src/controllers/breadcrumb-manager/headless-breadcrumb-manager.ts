@@ -40,7 +40,7 @@ export interface BreadcrumbManager extends Controller {
   /**
    * Deselects all facet values.
    */
-  deselectAll: () => void;
+  deselectAll(): void;
 
   /**
    * Deselects a facet breadcrumb value or category facet breadcrumb.
@@ -106,6 +106,10 @@ export type DateFacetBreadcrumb = Breadcrumb<DateFacetValue>;
  */
 export interface CategoryFacetBreadcrumb {
   /**
+   * The id for the underlying facet.
+   */
+  facetId: string;
+  /**
    * The field on which the underlying facet is configured.
    */
   field: string;
@@ -125,6 +129,10 @@ export interface CategoryFacetBreadcrumb {
  * Can either be a `FacetBreadcrumb`, `NumericFacetBreadcrumb`, `DateFacetBreadcrumb`, or `CategoryFacetBreadcrumb`.
  */
 export interface Breadcrumb<T extends BaseFacetValue> {
+  /**
+   * The id for the underlying facet.
+   */
+  facetId: string;
   /**
    * The field on which the underlying facet is configured.
    */
@@ -186,6 +194,7 @@ export function buildBreadcrumbManager(
         );
 
         return {
+          facetId,
           field: facetSet[facetId].field,
           values,
         };
@@ -236,6 +245,7 @@ export function buildBreadcrumbManager(
   function buildCategoryFacetBreadcrumb(facetId: string) {
     const path = categoryFacetSelectedValuesSelector(engine.state, facetId);
     return {
+      facetId,
       field: engine.state.categoryFacetSet[facetId]!.request.field,
       path,
       deselect: () => {
