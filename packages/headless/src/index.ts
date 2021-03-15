@@ -18,11 +18,13 @@ export {
 } from './app/headless-engine';
 export {searchAppReducers} from './app/search-app-reducers';
 export {recommendationAppReducers} from './app/recommendation-app-reducers';
+export {caseAssistAppReducers} from './app/case-assist-app-reducers';
 
 // State
 export {ProductRecommendationsAppState} from './state/product-recommendations-app-state';
 export {SearchParametersState, SearchAppState} from './state/search-app-state';
 export {RecommendationAppState} from './state/recommendation-app-state';
+export {CaseAssistAppState} from './state/case-assist-app-state';
 
 // Controllers
 export * from './controllers/index';

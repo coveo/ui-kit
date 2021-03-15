@@ -152,6 +152,8 @@ export {
   buildSearchBox,
 } from './search-box/headless-search-box';
 
+export {buildCaseAssist} from './case-assist/headless-case-assist';
+
 export {
   SortInitialState,
   SortProps,
