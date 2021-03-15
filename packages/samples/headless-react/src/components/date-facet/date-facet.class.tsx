@@ -1,16 +1,14 @@
-import {Component} from 'react';
+import {Component, ContextType} from 'react';
 import {
   buildDateFacet,
   DateFacet as HeadlessDateFacet,
-  DateFacetOptions,
   DateFacetState,
   DateFacetValue,
+  DateRangeRequest,
   Unsubscribe,
 } from '@coveo/headless';
-import {engine} from '../../engine';
 import {parseDate} from './date-utils';
-
-type DateRangeRequest = Required<DateFacetOptions>['currentValues'][number]; // TODO: Remove this when using the new interface.
+import {AppContext} from '../../context/engine';
 
 interface DateFacetProps {
   field: string;
@@ -19,26 +17,26 @@ interface DateFacetProps {
   currentValues?: DateRangeRequest[];
 }
 
-export class DateFacet extends Component<DateFacetProps> {
-  private controller: HeadlessDateFacet;
-  public state: DateFacetState;
+export class DateFacet extends Component<DateFacetProps, DateFacetState> {
+  static contextType = AppContext;
+  context!: ContextType<typeof AppContext>;
+
+  private controller!: HeadlessDateFacet;
   private unsubscribe: Unsubscribe = () => {};
 
-  constructor(props: DateFacetProps) {
-    super(props);
-
-    this.controller = buildDateFacet(engine, {
+  componentDidMount() {
+    this.controller = buildDateFacet(this.context.engine!, {
       options: {
-        field: props.field,
-        facetId: props.facetId,
-        generateAutomaticRanges: props.generateAutomaticRanges as true, // TODO: Remove this cast when using the new interface,
-        ...(props.currentValues && {currentValues: props.currentValues}),
+        field: this.props.field,
+        facetId: this.props.facetId,
+        generateAutomaticRanges: this.props.generateAutomaticRanges,
+        ...(this.props.currentValues && {
+          currentValues: this.props.currentValues,
+        }),
       },
     });
-    this.state = this.controller.state;
-  }
+    this.updateState();
 
-  componentDidMount() {
     this.unsubscribe = this.controller.subscribe(() => this.updateState());
   }
 
@@ -59,6 +57,10 @@ export class DateFacet extends Component<DateFacetProps> {
   }
 
   render() {
+    if (!this.state) {
+      return null;
+    }
+
     if (!this.state.values.length) {
       return <div>No facet values</div>;
     }

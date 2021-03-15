@@ -1,6 +1,5 @@
 import {useEffect, useState, FunctionComponent} from 'react';
-import {buildTab, Tab as HeadlessTab} from '@coveo/headless';
-import {engine} from '../../engine';
+import {Tab as HeadlessTab} from '@coveo/headless';
 
 interface TabProps {
   controller: HeadlessTab;
@@ -21,9 +20,13 @@ export const Tab: FunctionComponent<TabProps> = (props) => {
 
 // usage
 
-const controller = buildTab(engine, {
-  initialState: {isActive: true},
-  options: {expression: '@objecttype==Message'},
-});
-
-<Tab controller={controller}>Messages</Tab>;
+/**
+ * ```tsx
+ * const controller = buildTab(engine, {
+ *   initialState: {isActive: true},
+ *   options: {expression: '@objecttype==Message'},
+ * });
+ *
+ * <Tab controller={controller}>Messages</Tab>;
+ * ```
+ */

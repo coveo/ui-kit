@@ -1,9 +1,5 @@
 import {useEffect, useState, FunctionComponent} from 'react';
-import {
-  buildQuerySummary,
-  QuerySummary as HeadlessQuerySummary,
-} from '@coveo/headless';
-import {engine} from '../../engine';
+import {QuerySummary as HeadlessQuerySummary} from '@coveo/headless';
 
 interface QuerySummaryProps {
   controller: HeadlessQuerySummary;
@@ -45,6 +41,10 @@ export const QuerySummary: FunctionComponent<QuerySummaryProps> = (props) => {
 
 // usage
 
-const controller = buildQuerySummary(engine);
-
-<QuerySummary controller={controller} />;
+/**
+ * ```tsx
+ * const controller = buildQuerySummary(engine);
+ *
+ * <QuerySummary controller={controller} />;
+ * ```
+ */

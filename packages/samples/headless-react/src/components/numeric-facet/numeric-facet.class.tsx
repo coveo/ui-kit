@@ -1,4 +1,4 @@
-import {Component} from 'react';
+import {Component, ContextType} from 'react';
 import {
   buildNumericFacet,
   NumericFacet as HeadlessNumericFacet,
@@ -7,7 +7,7 @@ import {
   NumericRangeRequest,
   Unsubscribe,
 } from '@coveo/headless';
-import {engine} from '../../engine';
+import {AppContext} from '../../context/engine';
 
 interface NumericFacetProps {
   format: (n: number) => string;
@@ -17,26 +17,29 @@ interface NumericFacetProps {
   currentValues?: NumericRangeRequest[];
 }
 
-export class NumericFacet extends Component<NumericFacetProps> {
-  private controller: HeadlessNumericFacet;
-  public state: NumericFacetState;
+export class NumericFacet extends Component<
+  NumericFacetProps,
+  NumericFacetState
+> {
+  static contextType = AppContext;
+  context!: ContextType<typeof AppContext>;
+
+  private controller!: HeadlessNumericFacet;
   private unsubscribe: Unsubscribe = () => {};
 
-  constructor(props: NumericFacetProps) {
-    super(props);
-
-    this.controller = buildNumericFacet(engine, {
+  componentDidMount() {
+    this.controller = buildNumericFacet(this.context.engine!, {
       options: {
-        field: props.field,
-        facetId: props.facetId,
-        generateAutomaticRanges: props.generateAutomaticRanges,
-        ...(props.currentValues && {currentValues: props.currentValues}),
+        field: this.props.field,
+        facetId: this.props.facetId,
+        generateAutomaticRanges: this.props.generateAutomaticRanges,
+        ...(this.props.currentValues && {
+          currentValues: this.props.currentValues,
+        }),
       },
     });
-    this.state = this.controller.state;
-  }
+    this.updateState();
 
-  componentDidMount() {
     this.unsubscribe = this.controller.subscribe(() => this.updateState());
   }
 
@@ -53,6 +56,10 @@ export class NumericFacet extends Component<NumericFacetProps> {
   }
 
   render() {
+    if (!this.state) {
+      return null;
+    }
+
     if (!this.state.values.length) {
       return <div>No facet values</div>;
     }

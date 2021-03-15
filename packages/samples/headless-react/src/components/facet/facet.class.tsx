@@ -1,33 +1,31 @@
-import {Component} from 'react';
+import {Component, ContextType} from 'react';
 import {
   buildFacet,
   Facet as HeadlessFacet,
   FacetState,
   Unsubscribe,
 } from '@coveo/headless';
-import {engine} from '../../engine';
 import {FacetSearch} from './facet-search';
+import {AppContext} from '../../context/engine';
 
 interface FacetProps {
   field: string;
   facetId: string;
 }
 
-export class Facet extends Component<FacetProps> {
-  private controller: HeadlessFacet;
-  public state: FacetState;
+export class Facet extends Component<FacetProps, FacetState> {
+  static contextType = AppContext;
+  context!: ContextType<typeof AppContext>;
+
+  private controller!: HeadlessFacet;
   private unsubscribe: Unsubscribe = () => {};
 
-  constructor(props: FacetProps) {
-    super(props);
-
-    this.controller = buildFacet(engine, {
-      options: {field: props.field, facetId: props.facetId},
-    });
-    this.state = this.controller.state;
-  }
-
   componentDidMount() {
+    this.controller = buildFacet(this.context.engine!, {
+      options: {field: this.props.field, facetId: this.props.facetId},
+    });
+    this.updateState();
+
     this.unsubscribe = this.controller.subscribe(() => this.updateState());
   }
 
@@ -40,6 +38,10 @@ export class Facet extends Component<FacetProps> {
   }
 
   render() {
+    if (!this.state) {
+      return null;
+    }
+
     if (!this.state.values.length) {
       return <div>No facet values</div>;
     }

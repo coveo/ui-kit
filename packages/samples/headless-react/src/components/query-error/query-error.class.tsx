@@ -1,25 +1,23 @@
-import {Component} from 'react';
+import {Component, ContextType} from 'react';
 import {
   buildQueryError,
   QueryError as HeadlessQueryError,
   QueryErrorState,
   Unsubscribe,
 } from '@coveo/headless';
-import {engine} from '../../engine';
+import {AppContext} from '../../context/engine';
 
-export class QueryError extends Component {
-  private controller: HeadlessQueryError;
-  public state: QueryErrorState;
+export class QueryError extends Component<{}, QueryErrorState> {
+  static contextType = AppContext;
+  context!: ContextType<typeof AppContext>;
+
+  private controller!: HeadlessQueryError;
   private unsubscribe: Unsubscribe = () => {};
 
-  constructor(props: {}) {
-    super(props);
-
-    this.controller = buildQueryError(engine);
-    this.state = this.controller.state;
-  }
-
   componentDidMount() {
+    this.controller = buildQueryError(this.context.engine!);
+    this.updateState();
+
     this.unsubscribe = this.controller.subscribe(() => this.updateState());
   }
 
@@ -32,8 +30,8 @@ export class QueryError extends Component {
   }
 
   render() {
-    if (!this.state.hasError) {
-      return '';
+    if (!this.state?.hasError) {
+      return null;
     }
 
     return (

@@ -1,10 +1,5 @@
 import {useEffect, useState, FunctionComponent} from 'react';
-import {
-  buildPager,
-  Pager as HeadlessPager,
-  PagerOptions,
-} from '@coveo/headless';
-import {engine} from '../../engine';
+import {Pager as HeadlessPager} from '@coveo/headless';
 
 interface PagerProps {
   controller: HeadlessPager;
@@ -45,7 +40,11 @@ export const Pager: FunctionComponent<PagerProps> = (props) => {
 
 // usage
 
-const options: PagerOptions = {numberOfPages: 6};
-const controller = buildPager(engine, {options});
-
-<Pager controller={controller} />;
+/**
+ * ```tsx
+ * const options: PagerOptions = {numberOfPages: 6};
+ * const controller = buildPager(engine, {options});
+ *
+ * <Pager controller={controller} />;
+ * ```
+ */
