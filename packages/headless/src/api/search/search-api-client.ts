@@ -61,7 +61,7 @@ export class SearchAPIClient {
   ): Promise<SearchAPIClientResponse<PlanResponseSuccess>> {
     const response = await PlatformClient.call({
       ...baseSearchRequest(req, 'POST', 'application/json', '/plan'),
-      requestParams: pickNonBaseParams(req) as PlanRequest, // TODO: This cast won't be needed once all methods have been reworked and we can change types in PlatformClient
+      requestParams: pickNonBaseParams(req),
       ...this.options,
     });
 
@@ -175,7 +175,12 @@ export class SearchAPIClient {
 
   async html(req: HtmlRequest) {
     const response = await PlatformClient.call({
-      ...baseSearchRequest(req, 'POST', 'application/json', '/html'),
+      ...baseSearchRequest(
+        req,
+        'POST',
+        'application/x-www-form-urlencoded',
+        '/html'
+      ),
       requestParams: pickNonBaseParams(req),
       ...this.options,
     });
