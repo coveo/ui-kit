@@ -64,7 +64,7 @@ export class AtomicDidYouMean implements InitializableComponent {
     );
     return [
       <p
-        class="text-on-background"
+        class="text-on-background mb-1"
         part="no-results"
         innerHTML={noResults}
       ></p>,
@@ -95,7 +95,7 @@ export class AtomicDidYouMean implements InitializableComponent {
       return;
     }
 
-    if (!this.didYouMeanState.wasAutomaticallyCorrected) {
+    if (this.didYouMeanState.wasAutomaticallyCorrected) {
       return this.renderAutomaticallyCorrected();
     }
 
