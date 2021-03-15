@@ -52,6 +52,10 @@ export namespace Components {
         "error": Error;
     }
     interface AtomicDateFacet {
+        /**
+          * The format that the date will be displayed in. See https://day.js.org/docs/en/display/format for formatting details.
+         */
+        "dateFormat": string;
         "facetId": string;
         /**
           * Specifies the index field whose values the facet should use
@@ -655,6 +659,10 @@ declare namespace LocalJSX {
         "error": Error;
     }
     interface AtomicDateFacet {
+        /**
+          * The format that the date will be displayed in. See https://day.js.org/docs/en/display/format for formatting details.
+         */
+        "dateFormat"?: string;
         "facetId"?: string;
         /**
           * Specifies the index field whose values the facet should use

@@ -775,5 +775,9 @@
     "tr": "{{value}} daha fazla…",
     "zh-cn": "{{value}} 更多...",
     "zh-tw": "{{value}} 更多..."
+  },
+  "to": {
+    "en": "{{- start}} to {{- end}}",
+    "fr": "{{- start}} à {{- end}}"
   }
 }

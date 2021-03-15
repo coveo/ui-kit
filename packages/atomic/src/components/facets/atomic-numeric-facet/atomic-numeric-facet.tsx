@@ -54,6 +54,7 @@ export class AtomicNumericFacet
   public strings: I18nState = {
     clear: () => this.bindings.i18n.t('clear'),
     facetValue: (variables) => this.bindings.i18n.t('facetValue', variables),
+    to: (variables) => this.bindings.i18n.t('to', variables),
   };
 
   @State() public isExpanded = false;
@@ -91,7 +92,9 @@ export class AtomicNumericFacet
     this.facet = buildNumericFacet(this.bindings.engine, {options});
     this.strings[this.label] = () => this.bindings.i18n.t(this.label);
     this.facetId = this.facet.state.facetId;
-    this.bindings.store.state.facetLabels[this.facetId] = this.label;
+    this.bindings.store.state.facets[this.facetId] = {
+      label: this.label,
+    };
   }
 
   private get values() {
@@ -105,15 +108,23 @@ export class AtomicNumericFacet
 
   private buildListItem(item: NumericFacetValue) {
     const isSelected = this.facet.isValueSelected(item);
+    const {language} = this.bindings.i18n;
+    const start = item.start.toLocaleString(language);
+    const end = item.end.toLocaleString(language);
+    const value = this.strings.to({start, end});
+
     return (
       <FacetValue
-        label={` ${item.start}-${item.end}`}
+        label={value}
         isSelected={isSelected}
         numberOfResults={item.numberOfResults}
         facetValueSelected={() => {
           this.facet.toggleSelect(item);
         }}
-        ariaLabel={this.strings.facetValue(item)}
+        ariaLabel={this.strings.facetValue({
+          value,
+          numberOfResults: item.numberOfResults,
+        })}
       />
     );
   }
