@@ -71,13 +71,13 @@ export class AtomicDateFacet implements InitializableComponent, BaseFacetState {
   /**
    * Whether or not the index should automatically generate options for the facet
    */
-  @Prop() public generateAutomaticRanges = true;
+  @Prop() public generateAutomaticRanges?: boolean;
   /**
    * The format that the date will be displayed in. See https://day.js.org/docs/en/display/format for formatting details.
    */
   @Prop() public dateFormat = 'DD/MM/YYYY';
 
-  public buildOptions() {
+  private buildManualRanges() {
     const options = Array.from(this.host.querySelectorAll('atomic-date-range'));
     return options.map(({start, end, endInclusive}) =>
       buildDateRange({start, end, endInclusive})
@@ -85,11 +85,13 @@ export class AtomicDateFacet implements InitializableComponent, BaseFacetState {
   }
 
   public initialize() {
+    const manualRanges = this.buildManualRanges();
     const options: DateFacetOptions = {
       facetId: this.facetId,
       field: this.field,
-      generateAutomaticRanges: this.generateAutomaticRanges,
-      currentValues: this.buildOptions(),
+      generateAutomaticRanges:
+        this.generateAutomaticRanges || manualRanges.length === 0,
+      currentValues: manualRanges,
     };
     this.strings[this.label] = () => this.bindings.i18n.t(this.label);
     this.facet = buildDateFacet(this.bindings.engine, {options});

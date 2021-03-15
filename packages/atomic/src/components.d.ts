@@ -64,7 +64,7 @@ export namespace Components {
         /**
           * Whether or not the index should automatically generate options for the facet
          */
-        "generateAutomaticRanges": boolean;
+        "generateAutomaticRanges"?: boolean;
         /**
           * The non-localized label for the facet
          */
@@ -143,7 +143,7 @@ export namespace Components {
         /**
           * Whether or not the index should automatically generate options for the facet.
          */
-        "generateAutomaticRanges": boolean;
+        "generateAutomaticRanges"?: boolean;
         /**
           * The non-localized label for the facet.
          */
