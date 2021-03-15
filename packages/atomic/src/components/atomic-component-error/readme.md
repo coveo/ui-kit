@@ -39,8 +39,8 @@
  - [atomic-results-per-page](../atomic-results-per-page)
  - [atomic-search-box](../atomic-search-box)
  - [atomic-search-interface](../atomic-search-interface)
- - [atomic-sort-criteria](../atomic-sort-criteria)
  - [atomic-sort-dropdown](../atomic-sort-dropdown)
+ - [atomic-sort-expression](../atomic-sort-expression)
  - [atomic-tab](../atomic-tab)
  - [atomic-text](../atomic-text)
 
@@ -69,8 +69,8 @@ graph TD;
   atomic-results-per-page --> atomic-component-error
   atomic-search-box --> atomic-component-error
   atomic-search-interface --> atomic-component-error
-  atomic-sort-criteria --> atomic-component-error
   atomic-sort-dropdown --> atomic-component-error
+  atomic-sort-expression --> atomic-component-error
   atomic-tab --> atomic-component-error
   atomic-text --> atomic-component-error
   style atomic-component-error fill:#f9f,stroke:#333,stroke-width:4px
