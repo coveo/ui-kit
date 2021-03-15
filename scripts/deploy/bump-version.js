@@ -32,9 +32,14 @@ async function checkoutLatestMaster() {
   await exec('git pull origin master');
 }
 
+/**
+ * @param {'pre' | 'graduate'} versionType
+ */
 async function bumpVersionAndPush(versionType) {
   try {
-    await exec(`npm run version:${versionType} -- --yes`);
+    const message = '[version bump]: publish %s';
+
+    await exec(`npm run version:${versionType} -- --yes -m "${message}"`);
   } catch (e) {
     console.error(
       'Failed to bump version. Exiting to not publish local changes.',
