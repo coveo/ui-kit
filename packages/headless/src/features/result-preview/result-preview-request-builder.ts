@@ -16,11 +16,11 @@ export function buildResultPreviewRequest(
   state: StateNeededByHtmlEndpoint,
   options: HtmlRequestOptions
 ): HtmlRequest {
-  const {platformUrl, accessToken, organizationId} = state.configuration;
+  const {search, accessToken, organizationId} = state.configuration;
   const q = state.query?.q || '';
 
   return {
-    url: platformUrl,
+    url: search.apiBaseUrl,
     accessToken,
     organizationId,
     enableNavigation: false,
