@@ -4,11 +4,8 @@ import {
   BreadcrumbManager as HeadlessBreadcrumbManager,
   BreadcrumbManagerState,
   Unsubscribe,
-  NumericFacetValue,
-  DateFacetValue,
 } from '@coveo/headless';
 import {AppContext} from '../../context/engine';
-import {parseDate} from '../date-facet/date-utils';
 
 export class BreadcrumbManager extends Component<{}, BreadcrumbManagerState> {
   static contextType = AppContext;
@@ -32,11 +29,15 @@ export class BreadcrumbManager extends Component<{}, BreadcrumbManagerState> {
     this.setState(this.controller.state);
   }
 
-  private renderFacetBreadcrumbs() {
+  render() {
+    if (!this.state?.hasBreadcrumbs) {
+      return null;
+    }
+
     return (
-      <li>
+      <ul>
         {this.state.facetBreadcrumbs.map((facet) => (
-          <span key={facet.facetId}>
+          <li key={facet.facetId}>
             {facet.field}:{' '}
             {facet.values.map((breadcrumb) => (
               <button
@@ -46,87 +47,8 @@ export class BreadcrumbManager extends Component<{}, BreadcrumbManagerState> {
                 {breadcrumb.value.value}
               </button>
             ))}
-          </span>
+          </li>
         ))}
-      </li>
-    );
-  }
-
-  private renderCategoryFacetBreadcrumbs() {
-    return (
-      <li>
-        {this.state.categoryFacetBreadcrumbs.map((facet) => (
-          <span key={facet.path.join('/')}>
-            {facet.field}:{' '}
-            <button onClick={() => facet.deselect()}>
-              {facet.path.map(({value}) => value).join('/')}
-            </button>
-          </span>
-        ))}
-      </li>
-    );
-  }
-
-  private getKeyForRange(value: NumericFacetValue | DateFacetValue) {
-    return `[${value.start}..${value.end}${value.endInclusive ? ']' : '['}`;
-  }
-
-  private renderNumericFacetBreadcrumbs() {
-    return (
-      <li>
-        {this.state.numericFacetBreadcrumbs.map((facet) => (
-          <span key={facet.facetId}>
-            {facet.field}:{' '}
-            {facet.values.map((breadcrumb) => (
-              <button
-                key={this.getKeyForRange(breadcrumb.value)}
-                onClick={() => breadcrumb.deselect()}
-              >
-                {breadcrumb.value.start} to {breadcrumb.value.end}
-              </button>
-            ))}
-          </span>
-        ))}
-      </li>
-    );
-  }
-
-  private formatDate(dateStr: string) {
-    return parseDate(dateStr).format('MMMM D YYYY');
-  }
-
-  private renderDateFacetBreadcrumbs() {
-    return (
-      <li>
-        {this.state.dateFacetBreadcrumbs.map((facet) => (
-          <span key={facet.facetId}>
-            {facet.field}:{' '}
-            {facet.values.map((breadcrumb) => (
-              <button
-                key={this.getKeyForRange(breadcrumb.value)}
-                onClick={() => breadcrumb.deselect()}
-              >
-                {this.formatDate(breadcrumb.value.start)} to{' '}
-                {this.formatDate(breadcrumb.value.end)}
-              </button>
-            ))}
-          </span>
-        ))}
-      </li>
-    );
-  }
-
-  render() {
-    if (!this.state?.hasBreadcrumbs) {
-      return null;
-    }
-
-    return (
-      <ul>
-        {this.renderFacetBreadcrumbs()}
-        {this.renderCategoryFacetBreadcrumbs()}
-        {this.renderNumericFacetBreadcrumbs()}
-        {this.renderDateFacetBreadcrumbs()}
       </ul>
     );
   }
