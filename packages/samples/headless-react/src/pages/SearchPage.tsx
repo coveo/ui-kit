@@ -7,6 +7,8 @@ import {RecommendationList} from '../components/recommendation-list/recommendati
 import {RecommendationList as RecommendationListFn} from '../components/recommendation-list/recommendation-list.fn';
 import {Tab} from '../components/tab/tab.class';
 import {Tab as TabFn} from '../components/tab/tab.fn';
+import {BreadcrumbManager} from '../components/breadcrumb-manager/breadcrumb-manager.class';
+import {BreadcrumbManager as BreadcrumbManagerFn} from '../components/breadcrumb-manager/breadcrumb-manager.fn';
 import {SearchBox} from '../components/search-box/search-box.class';
 import {SearchBox as SearchBoxFn} from '../components/search-box/search-box.fn';
 import {DidYouMean} from '../components/did-you-mean/did-you-mean.class';
@@ -53,6 +55,8 @@ import {
   buildRecommendationList,
   Tab as HeadlessTab,
   buildTab,
+  BreadcrumbManager as HeadlessBreadcrumbManager,
+  buildBreadcrumbManager,
   SearchBox as HeadlessSearchBox,
   buildSearchBox,
   DidYouMean as HeadlessDidYouMean,
@@ -119,6 +123,7 @@ export class SearchPage extends Component {
     messages: HeadlessTab;
     confluence: HeadlessTab;
   };
+  private readonly breadcrumbManager: HeadlessBreadcrumbManager;
   private readonly searchBox: HeadlessSearchBox;
   private readonly didYouMean: HeadlessDidYouMean;
   private readonly searchStatus: HeadlessSearchStatus;
@@ -172,6 +177,8 @@ export class SearchPage extends Component {
         },
       }),
     };
+
+    this.breadcrumbManager = buildBreadcrumbManager(this.engine);
 
     this.searchBox = buildSearchBox(this.engine, {
       options: {numberOfSuggestions: 8},
@@ -303,6 +310,10 @@ export class SearchPage extends Component {
               <TabFn controller={this.tabs.messages}>Messages</TabFn>
               <TabFn controller={this.tabs.confluence}>Confluence</TabFn>
             </nav>
+          </Section>
+          <Section title="breadcrumb-manager">
+            <BreadcrumbManager />
+            <BreadcrumbManagerFn controller={this.breadcrumbManager} />
           </Section>
           <Section title="search-box">
             <SearchBox />
