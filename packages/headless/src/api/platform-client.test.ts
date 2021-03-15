@@ -168,7 +168,7 @@ describe('PlatformClient call', () => {
     spy.mockRejectedValueOnce(expectedResponse);
 
     const response = await platformCall();
-    expect(response.response).toBe(expectedResponse);
+    expect(response).toBe(expectedResponse);
     done();
   });
 

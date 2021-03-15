@@ -37,9 +37,7 @@ export const NoopPreprocessRequestMiddleware: PreprocessRequestMiddleware = (
 ) => request;
 
 export class PlatformClient {
-  static async call<ResponseType>(
-    options: PlatformClientCallOptions
-  ): Promise<PlatformResponse<ResponseType>> {
+  static async call(options: PlatformClientCallOptions): Promise<Response> {
     // TODO: use options directly when removing deprecatedPreprocessRequest
     const processedOptions = {
       ...options,
@@ -93,20 +91,12 @@ export class PlatformClient {
         }
       }
 
-      const body = (await response.json()) as ResponseType;
+      logger.info({response, requestInfo}, 'Platform response');
 
-      logger.info({response, body, requestInfo}, 'Platform response');
-
-      return {
-        response,
-        body,
-      };
+      return response;
     } catch (error) {
       if (error.body) {
-        return {
-          response: error,
-          body: await error.json(),
-        };
+        return error;
       }
 
       throw error;

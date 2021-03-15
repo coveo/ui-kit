@@ -12,6 +12,8 @@ import {SearchAppState} from '../../state/search-app-state';
 import {Result} from '../../api/search/search/result';
 import {applyDidYouMeanCorrection} from '../did-you-mean/did-you-mean-actions';
 import {AnalyticsType, makeAnalyticsAction} from '../analytics/analytics-utils';
+import {Response} from 'cross-fetch';
+
 jest.mock('../../api/platform-client');
 
 describe('search-slice', () => {
@@ -160,11 +162,16 @@ describe('search-slice', () => {
     let e: MockEngine<SearchAppState>;
     beforeEach(() => {
       e = buildMockSearchAppEngine({state: createMockState()});
-      PlatformClient.call = jest.fn().mockImplementation(() =>
-        Promise.resolve({
-          body: {message: 'message', statusCode: 500, type: 'type'},
-        })
-      );
+      PlatformClient.call = jest.fn().mockImplementation(() => {
+        const body = JSON.stringify({
+          message: 'message',
+          statusCode: 500,
+          type: 'type',
+        });
+        const response = new Response(body);
+
+        return Promise.resolve(response);
+      });
     });
 
     it('on a executeSearch error', async () => {
@@ -226,14 +233,18 @@ describe('search-slice', () => {
     });
 
     it('should retry the query automatically when corrections are available and there is no result', async () => {
-      PlatformClient.call = jest.fn().mockImplementation(() =>
-        Promise.resolve({
-          body: buildMockSearchResponse({
-            results: [],
-            queryCorrections: [{correctedQuery: 'foo', wordCorrections: []}],
-          }),
-        })
-      );
+      PlatformClient.call = jest.fn().mockImplementation(() => {
+        const payload = buildMockSearchResponse({
+          results: [],
+          queryCorrections: [{correctedQuery: 'foo', wordCorrections: []}],
+        });
+
+        const body = JSON.stringify(payload);
+        const response = new Response(body);
+
+        return Promise.resolve(response);
+      });
+
       await e.dispatch(executeSearch(logSearchboxSubmit()));
       expect(e.actions).toContainEqual({
         type: applyDidYouMeanCorrection.type,
@@ -252,20 +263,28 @@ describe('search-slice', () => {
           (_, state) => analyticsStateQuerySpy(state.query?.q)
         );
 
-        const fetched = () =>
-          Promise.resolve({
-            body: buildMockSearchResponse({
-              results: [],
-              queryCorrections,
-            }),
+        const fetched = () => {
+          const payload = buildMockSearchResponse({
+            results: [],
+            queryCorrections,
           });
-        const retried = () =>
-          Promise.resolve({
-            body: buildMockSearchResponse({
-              results: [],
-              queryCorrections: [],
-            }),
+
+          const body = JSON.stringify(payload);
+          const response = new Response(body);
+
+          return Promise.resolve(response);
+        };
+        const retried = () => {
+          const payload = buildMockSearchResponse({
+            results: [],
+            queryCorrections: [],
           });
+
+          const body = JSON.stringify(payload);
+          const response = new Response(body);
+
+          return Promise.resolve(response);
+        };
 
         PlatformClient.call = jest
           .fn()
