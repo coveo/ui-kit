@@ -5,6 +5,16 @@
 <!-- Auto Generated Below -->
 
 
+## Shadow Parts
+
+| Part               | Description                                              |
+| ------------------ | -------------------------------------------------------- |
+| `"auto-corrected"` | The text displayed for the automatically corrected query |
+| `"correction-btn"` | The button that allows to manually correct a query       |
+| `"highlight"`      | The query highlights                                     |
+| `"no-results"`     | The text displayed for no results                        |
+
+
 ## Dependencies
 
 ### Depends on
