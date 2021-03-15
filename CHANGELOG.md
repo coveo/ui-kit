@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.8.0-alpha.18](https://github.com/coveo/ui-kit/compare/v0.8.0-alpha.17...v0.8.0-alpha.18) (2021-03-15)
+
+
+### Bug Fixes
+
+* **atomic:** fix UI Issues and show more results button in Facet Search ([#602](https://github.com/coveo/ui-kit/issues/602)) ([9a03c78](https://github.com/coveo/ui-kit/commit/9a03c7812e80abbd2989dfd67082c61882d7c11e))
+
+
+### Features
+
+* **atomic:** date and numeric facet formatting ([#609](https://github.com/coveo/ui-kit/issues/609)) ([d577058](https://github.com/coveo/ui-kit/commit/d57705833def2dbc18105b99cb249a3390b7afbf))
+
+
+
+
+
 # [0.8.0-alpha.17](https://github.com/coveo/ui-kit/compare/v0.8.0-alpha.16...v0.8.0-alpha.17) (2021-03-15)
 
 **Note:** Version bump only for package ui-kit
