@@ -12,7 +12,14 @@ const entryPoint = apiPackage.entryPoints[0];
 const controllers: ControllerConfiguration[] = [
   {
     initializer: 'buildHistoryManager',
-    samplePaths: {},
+    samplePaths: {
+      react_class: [
+        'packages/samples/headless-react/src/components/history-manager/history-manager.class.tsx',
+      ],
+      react_fn: [
+        'packages/samples/headless-react/src/components/history-manager/history-manager.fn.tsx',
+      ],
+    },
   },
   {
     initializer: 'buildFacet',
