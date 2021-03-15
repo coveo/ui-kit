@@ -143,6 +143,12 @@ export class FacetSearch {
     );
   }
 
+  private highlightSuggestion(suggestion: string) {
+    const search = this.props.controller.state.facetSearchQuery;
+    const regex = new RegExp(`(${search})`, 'ig');
+    return suggestion.replace(regex, '<b>$1</b>');
+  }
+
   private get suggestions() {
     return (this.props.controller.facetSearchState
       .values as BaseFacetSearchResult[]).map((suggestion, index) => {
@@ -154,9 +160,10 @@ export class FacetSearch {
           class="suggestion cursor-pointer flex flex-row items-center px-2 text-sm"
           value={index}
         >
-          <span class="label whitespace-nowrap overflow-ellipsis overflow-hidden">
-            {suggestion.rawValue}
-          </span>
+          <span
+            class="label whitespace-nowrap overflow-ellipsis overflow-hidden"
+            innerHTML={this.highlightSuggestion(suggestion.displayValue)}
+          />
           <span class="number-of-values ml-auto text-on-background-variant">
             {suggestion.count}
           </span>
