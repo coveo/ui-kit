@@ -9,12 +9,17 @@ import {
   StateNeededByHtmlEndpoint,
 } from './result-preview-request-builder';
 
+interface FetchResultContentResponse {
+  content: string;
+  uniqueId: string;
+}
+
 export const fetchResultContent = createAsyncThunk<
-  string,
+  FetchResultContentResponse,
   HtmlRequestOptions,
   AsyncThunkSearchOptions<StateNeededByHtmlEndpoint>
 >(
-  'quickview/fetchResultContent',
+  'resultPreview/fetchResultContent',
   async (options: HtmlRequestOptions, {extra, getState, rejectWithValue}) => {
     const state = getState();
     const req = buildResultPreviewRequest(state, options);
@@ -24,6 +29,9 @@ export const fetchResultContent = createAsyncThunk<
       return rejectWithValue(res.error);
     }
 
-    return res.success;
+    return {
+      content: res.success,
+      uniqueId: options.uniqueId,
+    };
   }
 );
