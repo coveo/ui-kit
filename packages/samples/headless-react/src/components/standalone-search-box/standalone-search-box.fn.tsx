@@ -22,9 +22,7 @@ export const StandaloneSearchBox: FunctionComponent<StandaloneSearchBoxProps> = 
   }
 
   if (state.redirectTo) {
-    window.location.href = `${state.redirectTo}/${encodeURIComponent(
-      state.value
-    )}`;
+    window.location.href = state.redirectTo;
     return null;
   }
 

@@ -34,9 +34,7 @@ export class StandaloneSearchBox extends Component<
     if (!this.state?.redirectTo) {
       return;
     }
-    window.location.href = `${this.state.redirectTo}/${encodeURIComponent(
-      this.state.value
-    )}`;
+    window.location.href = this.state.redirectTo;
   }
 
   private updateState() {
