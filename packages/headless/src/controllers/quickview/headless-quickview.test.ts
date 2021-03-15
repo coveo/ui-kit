@@ -48,4 +48,25 @@ describe('Quickview', () => {
 
     expect(action?.meta.arg).toEqual({uniqueId});
   });
+
+  it(`when configured result uniqueId matches the uniqueId in state,
+  #state.resultContent returns the content in state`, () => {
+    const uniqueId = '1';
+    const content = '<div></div>';
+
+    engine.state.resultPreview = {uniqueId, content};
+    options.result = buildMockResult({uniqueId});
+    initQuickview();
+
+    expect(quickview.state.resultContent).toEqual(content);
+  });
+
+  it(`when configured result uniqueId matches the uniqueId in state,
+  #state.resultContent returns an empty string`, () => {
+    engine.state.resultPreview = {uniqueId: '1', content: '<div></div>'};
+    options.result = buildMockResult({uniqueId: '2'});
+    initQuickview();
+
+    expect(quickview.state.resultContent).toEqual('');
+  });
 });

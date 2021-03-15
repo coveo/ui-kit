@@ -1,6 +1,10 @@
 import {Result} from '../../api/search/search/result';
 import {Engine} from '../../app/headless-engine';
 import {fetchResultContent} from '../../features/result-preview/result-preview-actions';
+import {
+  ConfigurationSection,
+  ResultPreviewSection,
+} from '../../state/state-sections';
 import {buildController, Controller} from '../controller/headless-controller';
 
 export interface QuickviewProps {
@@ -31,7 +35,7 @@ export interface Quickview extends Controller {
 
 export interface QuickviewState {
   /**
-   * The result content.
+   * The result preview HTML content.
    *
    * @default ""
    */
@@ -46,23 +50,27 @@ export interface QuickviewState {
  * @returns A `Quickview` controller instance.
  */
 export function buildQuickview(
-  engine: Engine,
+  engine: Engine<ConfigurationSection & ResultPreviewSection>,
   props: QuickviewProps
 ): Quickview {
   const {dispatch} = engine;
   const controller = buildController(engine);
+  const uniqueId = props.options.result.uniqueId;
 
   return {
     ...controller,
 
     fetchResultContent() {
-      const uniqueId = props.options.result.uniqueId;
       dispatch(fetchResultContent({uniqueId}));
     },
 
     get state() {
+      const preview = engine.state.resultPreview;
+      const resultContent =
+        uniqueId === preview.uniqueId ? preview.content : '';
+
       return {
-        resultContent: '',
+        resultContent,
       };
     },
   };

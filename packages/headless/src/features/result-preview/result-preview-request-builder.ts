@@ -2,9 +2,14 @@ import {
   HtmlRequest,
   HtmlRequestOptions,
 } from '../../api/search/html/html-request';
-import {ConfigurationSection, QuerySection} from '../../state/state-sections';
+import {
+  ConfigurationSection,
+  QuerySection,
+  ResultPreviewSection,
+} from '../../state/state-sections';
 
 export type StateNeededByHtmlEndpoint = ConfigurationSection &
+  ResultPreviewSection &
   Partial<QuerySection>;
 
 export function buildResultPreviewRequest(
