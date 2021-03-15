@@ -42,6 +42,8 @@ import {HistoryManager} from '../components/history-manager/history-manager.clas
 import {HistoryManager as HistoryManagerFn} from '../components/history-manager/history-manager.fn';
 import {RelevanceInspector} from '../components/relevance-inspector/relevance-inspector.class';
 import {RelevanceInspector as RelevanceInspectorFn} from '../components/relevance-inspector/relevance-inspector.fn';
+import {StandaloneSearchBox} from '../components/standalone-search-box/standalone-search-box.class';
+import {StandaloneSearchBox as StandaloneSearchBoxFn} from '../components/standalone-search-box/standalone-search-box.fn';
 import {
   HeadlessEngine,
   Engine,
@@ -95,6 +97,8 @@ import {
   buildHistoryManager,
   RelevanceInspector as HeadlessRelevanceInspector,
   buildRelevanceInspector,
+  StandaloneSearchBox as HeadlessStandaloneSearchBox,
+  buildStandaloneSearchBox,
 } from '@coveo/headless';
 import {bindSearchParametersToURI} from '../components/search-parameter-manager/search-parameter-manager';
 import {setContext} from '../components/context/context';
@@ -142,6 +146,7 @@ export class SearchPage extends Component {
   private readonly pager: HeadlessPager;
   private readonly historyManager: HeadlessHistoryManager;
   private readonly relevanceInspector: HeadlessRelevanceInspector;
+  private readonly standaloneSearchBox: HeadlessStandaloneSearchBox;
 
   private stopUpdatingSearchParameters?: Unsubscribe;
 
@@ -252,6 +257,10 @@ export class SearchPage extends Component {
     this.historyManager = buildHistoryManager(this.engine);
 
     this.relevanceInspector = buildRelevanceInspector(this.engine);
+
+    this.standaloneSearchBox = buildStandaloneSearchBox(this.engine, {
+      options: {redirectionUrl: 'https://mywebsite.com/search'},
+    });
   }
 
   componentDidMount() {
@@ -412,6 +421,10 @@ export class SearchPage extends Component {
           <Section title="relevance-inspector">
             <RelevanceInspector />
             <RelevanceInspectorFn controller={this.relevanceInspector} />
+          </Section>
+          <Section title="standalone-search-box">
+            <StandaloneSearchBox />
+            <StandaloneSearchBoxFn controller={this.standaloneSearchBox} />
           </Section>
         </AppContext.Provider>
       </div>
