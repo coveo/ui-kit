@@ -21,7 +21,7 @@ describe('ResultPreview', () => {
   });
 
   it(`on #fetchResultContent.fulfilled,
-  it sets the #uniqueId and #content to the payload values`, () => {
+  it sets the state #uniqueId and #content to the payload values`, () => {
     const payload = {
       uniqueId: '1',
       content: '<div></div>',
