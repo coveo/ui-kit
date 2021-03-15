@@ -7,6 +7,8 @@ import {RecommendationList} from '../components/recommendation-list/recommendati
 import {RecommendationList as RecommendationListFn} from '../components/recommendation-list/recommendation-list.fn';
 import {Tab} from '../components/tab/tab.class';
 import {Tab as TabFn} from '../components/tab/tab.fn';
+import {BreadcrumbManager} from '../components/breadcrumb-manager/breadcrumb-manager.class';
+import {BreadcrumbManager as BreadcrumbManagerFn} from '../components/breadcrumb-manager/breadcrumb-manager.fn';
 import {SearchBox} from '../components/search-box/search-box.class';
 import {SearchBox as SearchBoxFn} from '../components/search-box/search-box.fn';
 import {DidYouMean} from '../components/did-you-mean/did-you-mean.class';
@@ -40,6 +42,8 @@ import {HistoryManager} from '../components/history-manager/history-manager.clas
 import {HistoryManager as HistoryManagerFn} from '../components/history-manager/history-manager.fn';
 import {RelevanceInspector} from '../components/relevance-inspector/relevance-inspector.class';
 import {RelevanceInspector as RelevanceInspectorFn} from '../components/relevance-inspector/relevance-inspector.fn';
+import {StandaloneSearchBox} from '../components/standalone-search-box/standalone-search-box.class';
+import {StandaloneSearchBox as StandaloneSearchBoxFn} from '../components/standalone-search-box/standalone-search-box.fn';
 import {
   HeadlessEngine,
   Engine,
@@ -53,6 +57,8 @@ import {
   buildRecommendationList,
   Tab as HeadlessTab,
   buildTab,
+  BreadcrumbManager as HeadlessBreadcrumbManager,
+  buildBreadcrumbManager,
   SearchBox as HeadlessSearchBox,
   buildSearchBox,
   DidYouMean as HeadlessDidYouMean,
@@ -91,6 +97,8 @@ import {
   buildHistoryManager,
   RelevanceInspector as HeadlessRelevanceInspector,
   buildRelevanceInspector,
+  StandaloneSearchBox as HeadlessStandaloneSearchBox,
+  buildStandaloneSearchBox,
 } from '@coveo/headless';
 import {bindSearchParametersToURI} from '../components/search-parameter-manager/search-parameter-manager';
 import {setContext} from '../components/context/context';
@@ -119,6 +127,7 @@ export class SearchPage extends Component {
     messages: HeadlessTab;
     confluence: HeadlessTab;
   };
+  private readonly breadcrumbManager: HeadlessBreadcrumbManager;
   private readonly searchBox: HeadlessSearchBox;
   private readonly didYouMean: HeadlessDidYouMean;
   private readonly searchStatus: HeadlessSearchStatus;
@@ -137,6 +146,7 @@ export class SearchPage extends Component {
   private readonly pager: HeadlessPager;
   private readonly historyManager: HeadlessHistoryManager;
   private readonly relevanceInspector: HeadlessRelevanceInspector;
+  private readonly standaloneSearchBox: HeadlessStandaloneSearchBox;
 
   private stopUpdatingSearchParameters?: Unsubscribe;
 
@@ -172,6 +182,8 @@ export class SearchPage extends Component {
         },
       }),
     };
+
+    this.breadcrumbManager = buildBreadcrumbManager(this.engine);
 
     this.searchBox = buildSearchBox(this.engine, {
       options: {numberOfSuggestions: 8},
@@ -245,6 +257,10 @@ export class SearchPage extends Component {
     this.historyManager = buildHistoryManager(this.engine);
 
     this.relevanceInspector = buildRelevanceInspector(this.engine);
+
+    this.standaloneSearchBox = buildStandaloneSearchBox(this.engine, {
+      options: {redirectionUrl: 'https://mywebsite.com/search'},
+    });
   }
 
   componentDidMount() {
@@ -303,6 +319,10 @@ export class SearchPage extends Component {
               <TabFn controller={this.tabs.messages}>Messages</TabFn>
               <TabFn controller={this.tabs.confluence}>Confluence</TabFn>
             </nav>
+          </Section>
+          <Section title="breadcrumb-manager">
+            <BreadcrumbManager />
+            <BreadcrumbManagerFn controller={this.breadcrumbManager} />
           </Section>
           <Section title="search-box">
             <SearchBox />
@@ -401,6 +421,10 @@ export class SearchPage extends Component {
           <Section title="relevance-inspector">
             <RelevanceInspector />
             <RelevanceInspectorFn controller={this.relevanceInspector} />
+          </Section>
+          <Section title="standalone-search-box">
+            <StandaloneSearchBox />
+            <StandaloneSearchBoxFn controller={this.standaloneSearchBox} />
           </Section>
         </AppContext.Provider>
       </div>
