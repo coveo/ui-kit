@@ -39,7 +39,7 @@ export interface QuickviewState {
    *
    * @default ""
    */
-  resultContent: string;
+  content: string;
 }
 
 /**
@@ -66,11 +66,10 @@ export function buildQuickview(
 
     get state() {
       const preview = engine.state.resultPreview;
-      const resultContent =
-        uniqueId === preview.uniqueId ? preview.content : '';
+      const content = uniqueId === preview.uniqueId ? preview.content : '';
 
       return {
-        resultContent,
+        content,
       };
     },
   };

@@ -50,7 +50,7 @@ describe('Quickview', () => {
   });
 
   it(`when configured result uniqueId matches the uniqueId in state,
-  #state.resultContent returns the content in state`, () => {
+  #state.content returns the content in state`, () => {
     const uniqueId = '1';
     const content = '<div></div>';
 
@@ -58,15 +58,15 @@ describe('Quickview', () => {
     options.result = buildMockResult({uniqueId});
     initQuickview();
 
-    expect(quickview.state.resultContent).toEqual(content);
+    expect(quickview.state.content).toEqual(content);
   });
 
   it(`when configured result uniqueId matches the uniqueId in state,
-  #state.resultContent returns an empty string`, () => {
+  #state.content returns an empty string`, () => {
     engine.state.resultPreview = {uniqueId: '1', content: '<div></div>'};
     options.result = buildMockResult({uniqueId: '2'});
     initQuickview();
 
-    expect(quickview.state.resultContent).toEqual('');
+    expect(quickview.state.content).toEqual('');
   });
 });
