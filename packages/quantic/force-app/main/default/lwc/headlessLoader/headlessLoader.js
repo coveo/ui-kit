@@ -11,7 +11,7 @@ let dependencyPromises = [];
 
 /**
  * Initiates dependency loading promises.
- * @param {*} element The Lightning element to use to load dependencies.
+ * @param element The Lightning element to use to load dependencies.
  */
 const loadDependencies = (element) => {
   dependencyPromises = [
@@ -96,6 +96,7 @@ const instantiateWindowEngineObject = (element, engineId) => {
 
 /**
  * Loads dependencies and returns an initialized Headless engine. 
+ * @param {string} engineId The id of the engine.
  */
 async function initEngine(engineId) {
   try {
