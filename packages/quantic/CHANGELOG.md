@@ -3,6 +3,41 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.8.0-alpha.25](https://bitbucket.org/coveord/ui-kit/compare/v0.8.0-alpha.24...v0.8.0-alpha.25) (2021-03-16)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+# [0.8.0-alpha.24](https://bitbucket.org/coveord/ui-kit/compare/v0.8.0-alpha.23...v0.8.0-alpha.24) (2021-03-16)
+
+
+### Bug Fixes
+
+* **quantic:** add missing files ([#622](https://bitbucket.org/coveord/ui-kit/issues/622)) ([e4776d5](https://bitbucket.org/coveord/ui-kit/commits/e4776d5f910abd20ec2d878bc2b5c9e44429d53e))
+
+
+
+
+
+# [0.8.0-alpha.23](https://bitbucket.org/coveord/ui-kit/compare/v0.8.0-alpha.22...v0.8.0-alpha.23) (2021-03-16)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
+# [0.8.0-alpha.22](https://bitbucket.org/coveord/ui-kit/compare/v0.8.0-alpha.21...v0.8.0-alpha.22) (2021-03-15)
+
+**Note:** Version bump only for package @coveo/quantic
+
+
+
+
+
 # [0.8.0-alpha.21](https://bitbucket.org/coveord/ui-kit/compare/v0.8.0-alpha.20...v0.8.0-alpha.21) (2021-03-15)
 
 **Note:** Version bump only for package @coveo/quantic
