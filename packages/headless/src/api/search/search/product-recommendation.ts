@@ -73,8 +73,60 @@ export interface ProductRecommendation {
    * An object containing the requested additional fields for the product.
    */
   additionalFields: Record<string, unknown>;
+
+  // Deprecated fields
+
+  /**
+   * @deprecated Use `permanentid` instead.
+   */
+  sku?: string;
+  /**
+   * @deprecated Use `ec_name` instead.
+   */
+  name?: string;
+  /**
+   * @deprecated Use `clickUri` instead.
+   */
+  link?: string;
+  /**
+   * @deprecated Use `ec_brand` instead.
+   */
+  brand?: string;
+  /**
+   * @deprecated Use `ec_category` instead.
+   */
+  category?: string;
+  /**
+   * @deprecated Use `ec_price` instead.
+   */
+  price?: number;
+  /**
+   * @deprecated Use `ec_shortdesc` instead.
+   */
+  shortDescription?: string;
+  /**
+   * @deprecated Use `ec_thumbnails` instead.
+   */
+  thumbnailUrl?: string;
+  /**
+   * @deprecated Use `ec_images` instead.
+   */
+  imageUrls?: string[];
+  /**
+   * @deprecated Use `ec_promo_price` instead.
+   */
+  promoPrice?: number;
+  /**
+   * @deprecated Use `ec_in_stock` instead.
+   */
+  inStock?: boolean;
+  /**
+   * @deprecated Use `ec_rating` instead.
+   */
+  rating?: number;
 }
 
+// Change this list when changing the fields exposed by `ProductRecommendation`
 export const ProductRecommendationDefaultFields: string[] = [
   'permanentid',
   'ec_name',
