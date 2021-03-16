@@ -13,6 +13,8 @@ import {BaseFacetSearchResult} from '@coveo/headless/dist/api/search/facet-searc
 import {randomID} from '../../../utils/utils';
 import {CategoryFacetSearchResult} from '@coveo/headless/dist/api/search/facet-search/category-facet-search/category-facet-search-response';
 import SearchIcon from 'coveo-styleguide/resources/icons/svg/search.svg';
+import {sanitize} from '../../../utils/xss-utils';
+import {regexEncode} from "../../../utils/string-utils";
 
 export interface FacetSearchState {
   strings: I18nState;
@@ -144,9 +146,9 @@ export class FacetSearch {
   }
 
   private highlightSuggestion(suggestion: string) {
-    const search = this.props.controller.state.facetSearchQuery;
+    const search = regexEncode(this.props.controller.state.facetSearchQuery);
     const regex = new RegExp(`(${search})`, 'ig');
-    return suggestion.replace(regex, '<b>$1</b>');
+    return sanitize(suggestion).replace(regex, '<b>$1</b>');
   }
 
   private get suggestions() {
