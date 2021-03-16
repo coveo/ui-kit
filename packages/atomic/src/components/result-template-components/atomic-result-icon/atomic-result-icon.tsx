@@ -1,4 +1,4 @@
-import {Component, Element, h, getAssetPath, Host} from '@stencil/core';
+import {Component, Element, h, getAssetPath, Host, Prop} from '@stencil/core';
 import {Result, ResultTemplatesHelpers} from '@coveo/headless';
 import {ResultContext} from '../result-template-decorators';
 import {objectTypeIcons} from './object-type-icons';
@@ -20,11 +20,14 @@ export class AtomicResultIcon {
 
   @Element() host!: HTMLElement;
 
-  private removeComponent() {
-    this.host.remove();
-  }
+  /**
+   * Allow to specify the icon to display from the list of available icons.
+   *
+   * By default, will parse the `objecttype` field and the `filetype` field to find a matching icon. If none are available, will use the `custom` icon.
+   */
+  @Prop() icon?: string;
 
-  public render() {
+  private get defaultIcon() {
     const fileTypeValue = ResultTemplatesHelpers.getResultProperty(
       this.result,
       'filetype'
@@ -34,18 +37,18 @@ export class AtomicResultIcon {
       'objecttype'
     ) as string;
 
-    if (fileTypeValue === null && objectTypeValue === null) {
-      return this.removeComponent();
-    }
-
     const fileType = fileTypeIcons[fileTypeValue?.toLowerCase()];
     const objectType = objectTypeIcons[objectTypeValue?.toLowerCase()];
-    const iconFile = objectType || fileType || 'custom';
-    const iconPath = getAssetPath(`./assets/${iconFile}.svg`);
+    return objectType || fileType || 'custom';
+  }
+
+  public render() {
+    const icon = this.icon || this.defaultIcon;
+    const iconPath = getAssetPath(`./assets/${icon}.svg`);
 
     return (
       <Host
-        class={iconFile}
+        class={icon}
         style={{'background-image': `url(${iconPath})`}}
       ></Host>
     );

@@ -212,6 +212,10 @@ export namespace Components {
         "format": string;
     }
     interface AtomicResultIcon {
+        /**
+          * Allow to specify the icon to display from the list of available icons.  By default, will parse the `objecttype` field and the `filetype` field to find a matching icon. If none are available, will use the `custom` icon.
+         */
+        "icon"?: string;
     }
     interface AtomicResultLink {
     }
@@ -828,6 +832,10 @@ declare namespace LocalJSX {
         "format"?: string;
     }
     interface AtomicResultIcon {
+        /**
+          * Allow to specify the icon to display from the list of available icons.  By default, will parse the `objecttype` field and the `filetype` field to find a matching icon. If none are available, will use the `custom` icon.
+         */
+        "icon"?: string;
     }
     interface AtomicResultLink {
     }
