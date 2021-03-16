@@ -2,5 +2,10 @@
   "packages": [
     "packages/**"
   ],
+  "command": {
+    "version": {
+      "message": "[version bump]: publish %s\nlerna.json\nCHANGELOG.md\n**/CHANGELOG.md"
+    }
+  },
   "version": "0.8.0-alpha.21"
 }

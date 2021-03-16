@@ -37,14 +37,7 @@ async function checkoutLatestMaster() {
  */
 async function bumpVersionAndPush(versionType) {
   try {
-    const patternsToIgnore = [
-      'lerna.json',
-      'CHANGELOG.md',
-      '**/CHANGELOG.md'
-    ];
-    const message = '[version bump]: publish %s\n' + patternsToIgnore.join('\n');
-
-    await exec(`npm run version:${versionType} -- --yes -m "${message}"`);
+    await exec(`npm run version:${versionType} -- --yes`);
   } catch (e) {
     console.error(
       'Failed to bump version. Exiting to not publish local changes.',
