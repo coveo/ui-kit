@@ -7,14 +7,23 @@ import {sizeSnapshot} from 'rollup-plugin-size-snapshot';
 import alias from '@rollup/plugin-alias';
 import {resolve as pathResolve} from 'path';
 import dts from "rollup-plugin-dts";
+import {readFileSync} from 'fs';
 
 const typescript = () => tsPlugin({tsconfig: './src/tsconfig.build.json'});
 const isCI = process.env.CI === 'true';
 const isProduction = process.env.BUILD === 'production';
 
+/**
+ * @returns {{ version: string }}
+ */
+function getPackageConfiguration() {
+  return JSON.parse(readFileSync('package.json', 'utf-8'));
+}
+
 function replace() {
   const env = isProduction ? 'production' : 'development';
-  return replacePlugin({'process.env.NODE_ENV': JSON.stringify(env)});
+  const {version} = getPackageConfiguration();
+  return replacePlugin({'process.env.NODE_ENV': JSON.stringify(env), 'process.env.VERSION': JSON.stringify(version)});
 }
 
 function onWarn(warning, warn) {

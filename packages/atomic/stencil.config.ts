@@ -8,6 +8,23 @@ import {inlineSvg} from 'stencil-inline-svg';
 import tailwind from 'tailwindcss';
 import atImport from 'postcss-import';
 import autoprefixer from 'autoprefixer';
+import replacePlugin from '@rollup/plugin-replace';
+import {readFileSync} from 'fs';
+
+const isProduction = process.env.BUILD === 'production';
+
+function getPackageConfiguration(): {version: string} {
+  return JSON.parse(readFileSync('package.json', 'utf-8'));
+}
+
+function replace() {
+  const env = isProduction ? 'production' : 'development';
+  const {version} = getPackageConfiguration();
+  return replacePlugin({
+    'process.env.NODE_ENV': JSON.stringify(env),
+    'process.env.VERSION': JSON.stringify(version),
+  });
+}
 
 const isDevWatch: boolean =
   process.argv &&
@@ -17,6 +34,7 @@ const isDevWatch: boolean =
 export const config: Config = {
   namespace: 'atomic',
   taskQueue: 'async',
+  globalScript: 'src/global/environment.ts',
   outputTargets: [
     {
       type: 'dist',
@@ -48,6 +66,7 @@ export const config: Config = {
     postcss({
       plugins: [atImport(), tailwind(), autoprefixer()],
     }),
+    replace(),
   ],
   rollupPlugins: {
     before: [

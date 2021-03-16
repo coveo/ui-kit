@@ -83,3 +83,5 @@ export {RangeFacetSortCriterion} from './features/facets/range-facets/generic/in
 export {buildSearchParameterSerializer} from './features/search-parameters/search-parameter-serializer';
 export * as HighlightUtils from './utils/highlight';
 export {HighlightKeyword} from './utils/highlight';
+
+export const VERSION = process.env.VERSION!;

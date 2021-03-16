@@ -9,6 +9,12 @@ node('linux && docker') {
         sh 'npm run setup'
       }
 
+      if (isMaster) {
+        stage('Bump build version') {
+          sh 'npx lerna version --conventional-prerelease --amend'
+        }
+      }
+
       stage('Build') {
         sh 'npm run build'
       }
@@ -31,11 +37,11 @@ node('linux && docker') {
       }
 
       stage('Cypress Test') {
-       sh 'apt-get -y install libgtk2.0-0 libgtk-3-0 libnotify-dev libgconf-2-4 libgbm-dev libnss3 libasound2 xauth xvfb'
-       sh 'rm -rf /var/lib/apt/lists/*'
-       sh 'cd packages/atomic && npx cypress install'
-       sh 'cd packages/atomic && npm start & npx wait-on http://localhost:3333'
-       sh 'NO_COLOR=1 npm run cypress:test'
+        sh 'apt-get -y install libgtk2.0-0 libgtk-3-0 libnotify-dev libgconf-2-4 libgbm-dev libnss3 libasound2 xauth xvfb'
+        sh 'rm -rf /var/lib/apt/lists/*'
+        sh 'cd packages/atomic && npx cypress install'
+        sh 'cd packages/atomic && npm start & npx wait-on http://localhost:3333'
+        sh 'NO_COLOR=1 npm run cypress:test'
       }
 
       stage('Generate Docs') {
@@ -53,12 +59,12 @@ node('linux && docker') {
     }
 
     withDockerContainer(image: 'node:14', args: '-u=root') {
-      stage('Bump version') {
+      stage('Commit bumped version') {
         withCredentials([
         usernameColonPassword(credentialsId: 'github-commit-token', variable: 'GH_CREDENTIALS')]) {
           sh 'npm run bump:version:pre'
         }
-     }
+      }
 
       stage('Npm publish') {
         withCredentials([
