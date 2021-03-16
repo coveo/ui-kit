@@ -89,8 +89,7 @@ export class AtomicDateFacet implements InitializableComponent, BaseFacetState {
     const options: DateFacetOptions = {
       facetId: this.facetId,
       field: this.field,
-      generateAutomaticRanges:
-        this.generateAutomaticRanges || manualRanges.length === 0,
+      generateAutomaticRanges: manualRanges.length === 0,
       currentValues: manualRanges,
     };
     this.strings[this.label] = () => this.bindings.i18n.t(this.label);

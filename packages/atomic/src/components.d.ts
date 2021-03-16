@@ -141,10 +141,6 @@ export namespace Components {
          */
         "field": string;
         /**
-          * Whether or not the index should automatically generate options for the facet.
-         */
-        "generateAutomaticRanges"?: boolean;
-        /**
           * The non-localized label for the facet.
          */
         "label": string;
@@ -747,10 +743,6 @@ declare namespace LocalJSX {
           * Specifies the index field whose values the facet should use.
          */
         "field"?: string;
-        /**
-          * Whether or not the index should automatically generate options for the facet.
-         */
-        "generateAutomaticRanges"?: boolean;
         /**
           * The non-localized label for the facet.
          */
