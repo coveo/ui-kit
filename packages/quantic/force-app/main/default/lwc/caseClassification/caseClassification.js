@@ -3,7 +3,12 @@ import { LightningElement, api, track} from 'lwc';
 
 export default class CaseClassification extends LightningElement {
 
-    @track classifications = {};
+    @track classifications = {
+        fields: [],
+        responseId: '',
+        loading: false,
+        error: null
+    };
     unsubscribe;
     caseAssist;
 
@@ -27,7 +32,7 @@ export default class CaseClassification extends LightningElement {
         this.classifications = this.caseAssist.state.classifications;
     }
 
-    get classificationsJson() {
-        return JSON.stringify(this.classifications);
+    get hasClassifications() {
+        return !this.classifications.loading && !this.classifications.error && this.classifications.fields.length > 0;
     }
 }

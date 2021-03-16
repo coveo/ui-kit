@@ -85,9 +85,11 @@ export default class CaseAssistApp extends LightningElement {
     }
 
     updateWithCaseInformation() {
-        this.caseAssist.updateClassifications({
-            subject: this.currentSubject,
-            description: this.currentDescription,
+        this.caseAssist.getClassifications({
+            fields: {
+                subject: this.currentSubject,
+                description: this.currentDescription,
+            }
         });
     }
 }

@@ -1,23 +1,32 @@
 import {createReducer} from '@reduxjs/toolkit';
-import {updateClassifications} from './case-assist-actions';
+import {getClassifications} from './case-assist-actions';
 import {getCaseAssistInitialState} from './case-assist-state';
 
 export const caseAssistReducer = createReducer(
   getCaseAssistInitialState(),
   (builder) => {
-    builder.addCase(updateClassifications, (state, action) => {
-      console.log('LB. Entering updateClassifications reducer');
-      console.log(`LB. action: ${JSON.stringify(action)}`);
-
-      console.log(`LB. State (before): ${JSON.stringify(state)}`);
-
-      if (action.payload) {
+    builder
+      .addCase(getClassifications.pending, (state) => {
+        state.classifications.loading = true;
+      })
+      .addCase(getClassifications.fulfilled, (state, action) => {
+        if (action.payload) {
+          state.classifications = {
+            ...action.payload.classifications,
+            loading: false,
+            error: null,
+          };
+        }
+      })
+      .addCase(getClassifications.rejected, (state, action) => {
         state.classifications = {
-          now: [Date.now().toString()],
+          fields: [],
+          responseId: '',
+          loading: false,
+          error: {
+            message: action.error.message,
+          },
         };
-      }
-
-      console.log(`LB. State (after): ${JSON.stringify(state)}`);
-    });
+      });
   }
 );

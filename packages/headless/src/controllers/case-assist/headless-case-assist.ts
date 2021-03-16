@@ -1,16 +1,16 @@
 // import { BooleanValue, Schema, StringValue } from '@coveo/bueno';
 import {Engine} from '../../app/headless-engine';
-import {updateClassifications} from '../../features/case-assist/case-assist-actions';
+import {
+  getClassifications,
+  GetClassificationsRequest,
+} from '../../features/case-assist/case-assist-actions';
+import {CaseAssistState} from '../../features/case-assist/case-assist-state';
 import {
   CaseAssistSection,
   ConfigurationSection,
 } from '../../state/state-sections';
 // import { validateOptions } from '../../utils/validate-payload';
 import {buildController, Controller} from '../controller/headless-controller';
-
-export interface ServiceApiState {
-  classifications: {[field: string]: string[]};
-}
 
 export interface ServiceApiOptions {
   caseAssistId?: string;
@@ -31,12 +31,12 @@ const optionsSchema = new Schema({
 */
 
 export interface CaseAssist extends Controller {
-  updateClassifications(fields: {[key: string]: string}): void;
+  getClassifications(request: GetClassificationsRequest): void;
 
   /**
-   * The state of the `ServiceApi` controller.
+   * The state of the `CaseAssist` controller.
    */
-  state: ServiceApiState;
+  state: CaseAssistState;
 }
 
 export function buildCaseAssist(
@@ -65,8 +65,8 @@ export function buildCaseAssist(
       };
     },
 
-    updateClassifications(fields) {
-      dispatch(updateClassifications(fields));
+    getClassifications(request) {
+      dispatch(getClassifications(request));
     },
   };
 }
