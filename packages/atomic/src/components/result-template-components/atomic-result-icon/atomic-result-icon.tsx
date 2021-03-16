@@ -1,9 +1,14 @@
-import {Component, Element, h, getAssetPath} from '@stencil/core';
+import {Component, Element, h, getAssetPath, Host} from '@stencil/core';
 import {Result, ResultTemplatesHelpers} from '@coveo/headless';
 import {ResultContext} from '../result-template-decorators';
 import {objectTypeIcons} from './object-type-icons';
 import {fileTypeIcons} from './file-type-icons';
 
+/**
+ * The ResultIcon component outputs the corresponding icon for a given file type.
+ *
+ * The component searches for a suitable icon or outputs a generic icon if none is found.
+ */
 @Component({
   tag: 'atomic-result-icon',
   styleUrl: 'atomic-result-icon.pcss',
@@ -39,10 +44,10 @@ export class AtomicResultIcon {
     const iconPath = getAssetPath(`./assets/${iconFile}.svg`);
 
     return (
-      <div
-        class={`result-icon ${iconFile}`}
+      <Host
+        class={iconFile}
         style={{'background-image': `url(${iconPath})`}}
-      ></div>
+      ></Host>
     );
   }
 }
