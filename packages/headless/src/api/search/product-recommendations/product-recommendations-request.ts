@@ -2,6 +2,7 @@ import {
   ActionsHistoryParam,
   BaseParam,
   ContextParam,
+  FieldsToIncludeParam,
   LocaleParam,
   MachineLearningParam,
   NumberOfResultsParam,
@@ -11,6 +12,7 @@ import {
 } from '../search-api-params';
 
 export type ProductRecommendationsRequest = BaseParam &
+  FieldsToIncludeParam &
   NumberOfResultsParam &
   MachineLearningParam &
   RecommendationParam &
