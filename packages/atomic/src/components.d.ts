@@ -52,6 +52,10 @@ export namespace Components {
         "error": Error;
     }
     interface AtomicDateFacet {
+        /**
+          * The format that the date will be displayed in. See https://day.js.org/docs/en/display/format for formatting details.
+         */
+        "dateFormat": string;
         "facetId": string;
         /**
           * Specifies the index field whose values the facet should use
@@ -60,7 +64,7 @@ export namespace Components {
         /**
           * Whether or not the index should automatically generate options for the facet
          */
-        "generateAutomaticRanges": boolean;
+        "generateAutomaticRanges"?: boolean;
         /**
           * The non-localized label for the facet
          */
@@ -139,7 +143,7 @@ export namespace Components {
         /**
           * Whether or not the index should automatically generate options for the facet.
          */
-        "generateAutomaticRanges": boolean;
+        "generateAutomaticRanges"?: boolean;
         /**
           * The non-localized label for the facet.
          */
@@ -330,17 +334,17 @@ export namespace Components {
          */
         "searchHub": string;
     }
-    interface AtomicSortCriteria {
+    interface AtomicSortDropdown {
+    }
+    interface AtomicSortExpression {
         /**
-          * The non-localized caption to display for this criteria.
+          * The non-localized caption to display for this expression.
          */
         "caption": string;
         /**
-          * The sort criterion/criteria the end user can select/toggle between.  The available sort criteria are: - `relevancy` - `date ascending`/`date descending` - `qre` - `field ascending`/`field descending`, where you must replace `field` with the name of a sortable field in your index (e.g., `criteria="size ascending"`).  You can specify multiple sort criteria to be used in the same request by separating them with a comma (e.g., `criteria="size ascending, date ascending"` ).
+          * The sort criterion/criteria expression the end user can select/toggle between.  The available sort criteria are: - `relevancy` - `date ascending`/`date descending` - `qre` - `field ascending`/`field descending`, where you must replace `field` with the name of a sortable field in your index (e.g., `criteria="size ascending"`).  You can specify multiple sort criteria to be used in the same request by separating them with a comma (e.g., `criteria="size ascending, date ascending"` ).
          */
-        "criteria": string;
-    }
-    interface AtomicSortDropdown {
+        "expression": string;
     }
     interface AtomicTab {
         /**
@@ -550,17 +554,17 @@ declare global {
         prototype: HTMLAtomicSearchInterfaceElement;
         new (): HTMLAtomicSearchInterfaceElement;
     };
-    interface HTMLAtomicSortCriteriaElement extends Components.AtomicSortCriteria, HTMLStencilElement {
-    }
-    var HTMLAtomicSortCriteriaElement: {
-        prototype: HTMLAtomicSortCriteriaElement;
-        new (): HTMLAtomicSortCriteriaElement;
-    };
     interface HTMLAtomicSortDropdownElement extends Components.AtomicSortDropdown, HTMLStencilElement {
     }
     var HTMLAtomicSortDropdownElement: {
         prototype: HTMLAtomicSortDropdownElement;
         new (): HTMLAtomicSortDropdownElement;
+    };
+    interface HTMLAtomicSortExpressionElement extends Components.AtomicSortExpression, HTMLStencilElement {
+    }
+    var HTMLAtomicSortExpressionElement: {
+        prototype: HTMLAtomicSortExpressionElement;
+        new (): HTMLAtomicSortExpressionElement;
     };
     interface HTMLAtomicTabElement extends Components.AtomicTab, HTMLStencilElement {
     }
@@ -606,8 +610,8 @@ declare global {
         "atomic-results-per-page": HTMLAtomicResultsPerPageElement;
         "atomic-search-box": HTMLAtomicSearchBoxElement;
         "atomic-search-interface": HTMLAtomicSearchInterfaceElement;
-        "atomic-sort-criteria": HTMLAtomicSortCriteriaElement;
         "atomic-sort-dropdown": HTMLAtomicSortDropdownElement;
+        "atomic-sort-expression": HTMLAtomicSortExpressionElement;
         "atomic-tab": HTMLAtomicTabElement;
         "atomic-text": HTMLAtomicTextElement;
     }
@@ -655,6 +659,10 @@ declare namespace LocalJSX {
         "error": Error;
     }
     interface AtomicDateFacet {
+        /**
+          * The format that the date will be displayed in. See https://day.js.org/docs/en/display/format for formatting details.
+         */
+        "dateFormat"?: string;
         "facetId"?: string;
         /**
           * Specifies the index field whose values the facet should use
@@ -930,17 +938,17 @@ declare namespace LocalJSX {
          */
         "searchHub"?: string;
     }
-    interface AtomicSortCriteria {
+    interface AtomicSortDropdown {
+    }
+    interface AtomicSortExpression {
         /**
-          * The non-localized caption to display for this criteria.
+          * The non-localized caption to display for this expression.
          */
         "caption": string;
         /**
-          * The sort criterion/criteria the end user can select/toggle between.  The available sort criteria are: - `relevancy` - `date ascending`/`date descending` - `qre` - `field ascending`/`field descending`, where you must replace `field` with the name of a sortable field in your index (e.g., `criteria="size ascending"`).  You can specify multiple sort criteria to be used in the same request by separating them with a comma (e.g., `criteria="size ascending, date ascending"` ).
+          * The sort criterion/criteria expression the end user can select/toggle between.  The available sort criteria are: - `relevancy` - `date ascending`/`date descending` - `qre` - `field ascending`/`field descending`, where you must replace `field` with the name of a sortable field in your index (e.g., `criteria="size ascending"`).  You can specify multiple sort criteria to be used in the same request by separating them with a comma (e.g., `criteria="size ascending, date ascending"` ).
          */
-        "criteria": string;
-    }
-    interface AtomicSortDropdown {
+        "expression": string;
     }
     interface AtomicTab {
         /**
@@ -994,8 +1002,8 @@ declare namespace LocalJSX {
         "atomic-results-per-page": AtomicResultsPerPage;
         "atomic-search-box": AtomicSearchBox;
         "atomic-search-interface": AtomicSearchInterface;
-        "atomic-sort-criteria": AtomicSortCriteria;
         "atomic-sort-dropdown": AtomicSortDropdown;
+        "atomic-sort-expression": AtomicSortExpression;
         "atomic-tab": AtomicTab;
         "atomic-text": AtomicText;
     }
@@ -1035,8 +1043,8 @@ declare module "@stencil/core" {
             "atomic-results-per-page": LocalJSX.AtomicResultsPerPage & JSXBase.HTMLAttributes<HTMLAtomicResultsPerPageElement>;
             "atomic-search-box": LocalJSX.AtomicSearchBox & JSXBase.HTMLAttributes<HTMLAtomicSearchBoxElement>;
             "atomic-search-interface": LocalJSX.AtomicSearchInterface & JSXBase.HTMLAttributes<HTMLAtomicSearchInterfaceElement>;
-            "atomic-sort-criteria": LocalJSX.AtomicSortCriteria & JSXBase.HTMLAttributes<HTMLAtomicSortCriteriaElement>;
             "atomic-sort-dropdown": LocalJSX.AtomicSortDropdown & JSXBase.HTMLAttributes<HTMLAtomicSortDropdownElement>;
+            "atomic-sort-expression": LocalJSX.AtomicSortExpression & JSXBase.HTMLAttributes<HTMLAtomicSortExpressionElement>;
             "atomic-tab": LocalJSX.AtomicTab & JSXBase.HTMLAttributes<HTMLAtomicTabElement>;
             "atomic-text": LocalJSX.AtomicText & JSXBase.HTMLAttributes<HTMLAtomicTextElement>;
         }

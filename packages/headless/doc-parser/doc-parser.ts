@@ -12,7 +12,14 @@ const entryPoint = apiPackage.entryPoints[0];
 const controllers: ControllerConfiguration[] = [
   {
     initializer: 'buildHistoryManager',
-    samplePaths: {},
+    samplePaths: {
+      react_class: [
+        'packages/samples/headless-react/src/components/history-manager/history-manager.class.tsx',
+      ],
+      react_fn: [
+        'packages/samples/headless-react/src/components/history-manager/history-manager.fn.tsx',
+      ],
+    },
   },
   {
     initializer: 'buildFacet',
@@ -123,7 +130,14 @@ const controllers: ControllerConfiguration[] = [
   },
   {
     initializer: 'buildBreadcrumbManager',
-    samplePaths: {},
+    samplePaths: {
+      react_class: [
+        'packages/samples/headless-react/src/components/breadcrumb-manager/breadcrumb-manager.class.tsx',
+      ],
+      react_fn: [
+        'packages/samples/headless-react/src/components/breadcrumb-manager/breadcrumb-manager.fn.tsx',
+      ],
+    },
   },
   {
     initializer: 'buildRecommendationList',
@@ -198,7 +212,14 @@ const controllers: ControllerConfiguration[] = [
   },
   {
     initializer: 'buildStandaloneSearchBox',
-    samplePaths: {},
+    samplePaths: {
+      react_class: [
+        'packages/samples/headless-react/src/components/standalone-search-box/standalone-search-box.class.tsx',
+      ],
+      react_fn: [
+        'packages/samples/headless-react/src/components/standalone-search-box/standalone-search-box.fn.tsx',
+      ],
+    },
   },
   {
     initializer: 'buildInteractiveResult',

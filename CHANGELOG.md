@@ -3,6 +3,98 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.8.0-alpha.23](https://github.com/coveo/ui-kit/compare/v0.8.0-alpha.22...v0.8.0-alpha.23) (2021-03-16)
+
+
+### Features
+
+* **atomic:** do not generate automatic ranges when manual ranges are provided ([50063a6](https://github.com/coveo/ui-kit/commit/50063a603eb2f4b2f44be946d2f9cb990b96b196))
+
+
+
+
+
+# [0.8.0-alpha.22](https://github.com/coveo/ui-kit/compare/v0.8.0-alpha.21...v0.8.0-alpha.22) (2021-03-15)
+
+
+### Features
+
+* **atomic:** complete atomic-did-you-mean component ([#621](https://github.com/coveo/ui-kit/issues/621)) ([3adff56](https://github.com/coveo/ui-kit/commit/3adff56bd038fb3186fb7d94a243e6af8fde0364))
+
+
+
+
+
+# [0.8.0-alpha.21](https://github.com/coveo/ui-kit/compare/v0.8.0-alpha.20...v0.8.0-alpha.21) (2021-03-15)
+
+**Note:** Version bump only for package ui-kit
+
+
+
+
+
+# [0.8.0-alpha.20](https://github.com/coveo/ui-kit/compare/v0.8.0-alpha.19...v0.8.0-alpha.20) (2021-03-15)
+
+**Note:** Version bump only for package ui-kit
+
+
+
+
+
+# [0.8.0-alpha.19](https://github.com/coveo/ui-kit/compare/v0.8.0-alpha.18...v0.8.0-alpha.19) (2021-03-15)
+
+**Note:** Version bump only for package ui-kit
+
+
+
+
+
+# [0.8.0-alpha.18](https://github.com/coveo/ui-kit/compare/v0.8.0-alpha.17...v0.8.0-alpha.18) (2021-03-15)
+
+
+### Bug Fixes
+
+* **atomic:** fix UI Issues and show more results button in Facet Search ([#602](https://github.com/coveo/ui-kit/issues/602)) ([9a03c78](https://github.com/coveo/ui-kit/commit/9a03c7812e80abbd2989dfd67082c61882d7c11e))
+
+
+### Features
+
+* **atomic:** date and numeric facet formatting ([#609](https://github.com/coveo/ui-kit/issues/609)) ([d577058](https://github.com/coveo/ui-kit/commit/d57705833def2dbc18105b99cb249a3390b7afbf))
+
+
+
+
+
+# [0.8.0-alpha.17](https://github.com/coveo/ui-kit/compare/v0.8.0-alpha.16...v0.8.0-alpha.17) (2021-03-15)
+
+**Note:** Version bump only for package ui-kit
+
+
+
+
+
+# [0.8.0-alpha.16](https://github.com/coveo/ui-kit/compare/v0.8.0-alpha.15...v0.8.0-alpha.16) (2021-03-12)
+
+
+### Features
+
+* **headless:** add moreResultsAvailable to ResultList state ([#611](https://github.com/coveo/ui-kit/issues/611)) ([fa85a5c](https://github.com/coveo/ui-kit/commit/fa85a5cda5087adb3d451048c2a4e0534e627f9d))
+
+
+
+
+
+# [0.8.0-alpha.15](https://github.com/coveo/ui-kit/compare/v0.8.0-alpha.14...v0.8.0-alpha.15) (2021-03-12)
+
+
+### Features
+
+* **atomic,headless:** complete atomic-query-error & return generic platform errors ([#605](https://github.com/coveo/ui-kit/issues/605)) ([dee98b8](https://github.com/coveo/ui-kit/commit/dee98b831c09e993f7c0e68787d3da1c8a8edbd4))
+
+
+
+
+
 # [0.8.0-alpha.14](https://github.com/coveo/ui-kit/compare/v0.8.0-alpha.13...v0.8.0-alpha.14) (2021-03-12)
 
 **Note:** Version bump only for package ui-kit

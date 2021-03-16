@@ -1,27 +1,25 @@
-import {Component} from 'react';
+import {Component, ContextType} from 'react';
 import {
   buildSearchBox,
   SearchBox as HeadlessSearchBox,
-  SearchBoxOptions,
   SearchBoxState,
   Unsubscribe,
 } from '@coveo/headless';
-import {engine} from '../../engine';
+import {AppContext} from '../../context/engine';
 
-export class SearchBox extends Component {
-  private controller: HeadlessSearchBox;
-  public state: SearchBoxState;
+export class SearchBox extends Component<{}, SearchBoxState> {
+  static contextType = AppContext;
+  context!: ContextType<typeof AppContext>;
+
+  private controller!: HeadlessSearchBox;
   private unsubscribe: Unsubscribe = () => {};
 
-  constructor(props: {}) {
-    super(props);
-
-    const options: SearchBoxOptions = {numberOfSuggestions: 8};
-    this.controller = buildSearchBox(engine, {options});
-    this.state = this.controller.state;
-  }
-
   componentDidMount() {
+    this.controller = buildSearchBox(this.context.engine!, {
+      options: {numberOfSuggestions: 8},
+    });
+    this.updateState();
+
     this.unsubscribe = this.controller.subscribe(() => this.updateState());
   }
 
@@ -38,6 +36,10 @@ export class SearchBox extends Component {
   }
 
   render() {
+    if (!this.state) {
+      return null;
+    }
+
     return (
       <div>
         <input

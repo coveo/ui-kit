@@ -4,10 +4,16 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
+const strictMode = true;
+
 ReactDOM.render(
-  <React.StrictMode>
+  strictMode ? (
+    <React.StrictMode>
+      <App />
+    </React.StrictMode>
+  ) : (
     <App />
-  </React.StrictMode>,
+  ),
   document.getElementById('root')
 );
 

@@ -10,6 +10,11 @@ export interface ErrorPayload {
   message: string;
 
   /**
+   * The error stack.
+   */
+  stack?: string;
+
+  /**
    * The error type.
    */
   type: string;

@@ -1,23 +1,23 @@
 import {Component, Prop, Element, h} from '@stencil/core';
 
 /**
- * Component that defines a sort criteria.
+ * Component that defines a sort expression.
  * Has to be used inside an `atomic-sort-dropdown` component.
  */
 @Component({
-  tag: 'atomic-sort-criteria',
+  tag: 'atomic-sort-expression',
   shadow: false,
 })
-export class AtomicSortCriteria {
+export class AtomicSortExpression {
   @Element() public host!: HTMLElement;
 
   /**
-   * The non-localized caption to display for this criteria.
+   * The non-localized caption to display for this expression.
    */
   @Prop() public caption!: string;
 
   /**
-   * The sort criterion/criteria the end user can select/toggle between.
+   * The sort criterion/criteria expression the end user can select/toggle between.
    *
    * The available sort criteria are:
    * - `relevancy`
@@ -27,7 +27,7 @@ export class AtomicSortCriteria {
    *
    * You can specify multiple sort criteria to be used in the same request by separating them with a comma (e.g., `criteria="size ascending, date ascending"` ).
    */
-  @Prop() public criteria!: string;
+  @Prop() public expression!: string;
 
   public render() {
     const dropdownComponent = 'atomic-sort-dropdown';

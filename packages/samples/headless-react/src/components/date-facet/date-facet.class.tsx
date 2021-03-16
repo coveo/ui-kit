@@ -1,4 +1,4 @@
-import {Component} from 'react';
+import {Component, ContextType} from 'react';
 import {
   buildDateFacet,
   DateFacet as HeadlessDateFacet,
@@ -7,38 +7,26 @@ import {
   DateFacetValue,
   Unsubscribe,
 } from '@coveo/headless';
-import {engine} from '../../engine';
 import {parseDate} from './date-utils';
+import {AppContext} from '../../context/engine';
 
-type DateRangeRequest = Required<DateFacetOptions>['currentValues'][number]; // TODO: Remove this when using the new interface.
-
-interface DateFacetProps {
-  field: string;
+interface DateFacetProps extends DateFacetOptions {
   facetId: string;
-  generateAutomaticRanges: boolean;
-  currentValues?: DateRangeRequest[];
 }
 
-export class DateFacet extends Component<DateFacetProps> {
-  private controller: HeadlessDateFacet;
-  public state: DateFacetState;
+export class DateFacet extends Component<DateFacetProps, DateFacetState> {
+  static contextType = AppContext;
+  context!: ContextType<typeof AppContext>;
+
+  private controller!: HeadlessDateFacet;
   private unsubscribe: Unsubscribe = () => {};
 
-  constructor(props: DateFacetProps) {
-    super(props);
-
-    this.controller = buildDateFacet(engine, {
-      options: {
-        field: props.field,
-        facetId: props.facetId,
-        generateAutomaticRanges: props.generateAutomaticRanges as true, // TODO: Remove this cast when using the new interface,
-        ...(props.currentValues && {currentValues: props.currentValues}),
-      },
-    });
-    this.state = this.controller.state;
-  }
-
   componentDidMount() {
+    this.controller = buildDateFacet(this.context.engine!, {
+      options: this.props,
+    });
+    this.updateState();
+
     this.unsubscribe = this.controller.subscribe(() => this.updateState());
   }
 
@@ -59,6 +47,10 @@ export class DateFacet extends Component<DateFacetProps> {
   }
 
   render() {
+    if (!this.state) {
+      return null;
+    }
+
     if (!this.state.values.length) {
       return <div>No facet values</div>;
     }
