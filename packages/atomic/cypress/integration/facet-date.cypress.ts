@@ -12,6 +12,7 @@ import {
   convertDateToFacetValue,
   assertDeselectFacet,
   assertClearAllFacet,
+  convertDateFormatLabel,
 } from './facet-utils';
 
 import {
@@ -179,11 +180,31 @@ describe('Date facet contains range returns 0 result', () => {
     setUpPage(`
     <atomic-date-facet field="${dateFacetProp.field}" label="${dateFacetProp.label}">
         <atomic-date-range start='01/01/2006' end='01/01/2014' end-inclusive="true"></atomic-date-range>
-        <atomic-date-range start='01/01/2014' end='01/01/2021' end-inclusive="true"></atomic-date-range>          
-        <atomic-date-range start='01/01/20014' end='01/01/20021' end-inclusive="true"></atomic-date-range>             
+        <atomic-date-range start='01/01/2014' end='01/01/2021' end-inclusive="true"></atomic-date-range>
+        <atomic-date-range start='01/01/20014' end='01/01/20021' end-inclusive="true"></atomic-date-range>
     </atomic-date-facet>`);
     createAliasFacetUL(dateFacetProp.field, FacetSelectors.facetDate);
     assertNonZeroFacetCount();
+  });
+});
+
+describe('Date with custom date-format', () => {
+  it('Should render correct date format', () => {
+    setUpPage(`
+    <atomic-date-facet field="${dateFacetProp.field}" label="${dateFacetProp.label}" date-format="DD/MMM/YYYY">
+          <atomic-date-range start='01/01/2006' end='01/01/2014' end-inclusive="true"></atomic-date-range>
+          <atomic-date-range start='01/01/2014' end='01/01/2021' end-inclusive="true"></atomic-date-range>
+    </atomic-date-facet>`);
+    createAliasFacetUL(dateFacetProp.field, FacetSelectors.facetDate);
+    validateFacetComponentLoaded(dateFacetProp.label, FacetSelectors.facetDate);
+
+    const formatedStart = convertDateFormatLabel('01/01/2006', 'DD/MMM/YYYY');
+    const formatedEnd = convertDateFormatLabel('01/01/2014', 'DD/MMM/YYYY');
+    const formatedLabel = `${formatedStart} to ${formatedEnd}`;
+
+    cy.get('@firstFacetValue')
+      .find('label span:nth-child(1)')
+      .should('contain.text', formatedLabel);
   });
 });
 
@@ -198,6 +219,7 @@ describe('Date with invalid options', () => {
         .should('not.exist');
     });
   });
+
   describe('When date facet uses invalid range', () => {
     it('Should render a warning message when range start with non-number', () => {
       setUpPage(`

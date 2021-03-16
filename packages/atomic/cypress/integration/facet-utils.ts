@@ -175,3 +175,21 @@ export function assertNonZeroFacetCount(selector?: string) {
     expect(counts).not.to.include('0');
   });
 }
+
+export function convertDateFormatLabel(date: string, formatType?: string) {
+  formatType = formatType ? formatType : 'DD/MM/YYYY';
+  console.log(formatType);
+  const splitDate = date.split('/');
+  const year = splitDate[2];
+  let month = splitDate[1];
+  const day = splitDate[0];
+  const generateDate = new Date(Number(year), Number(month) - 1, Number(day));
+  switch (formatType) {
+    case 'DD/MMM/YYYY': {
+      month = generateDate.toLocaleString('en', {month: 'short'});
+      return `${day}/${month}/${year}`;
+    }
+    default:
+      return date;
+  }
+}
