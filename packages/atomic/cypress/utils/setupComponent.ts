@@ -1,17 +1,11 @@
-function getDocument() {
-  return new Promise((resolve) => {
-    cy.document().then((d) => {
-      resolve(d);
-    });
+export function injectComponent(componentInCode: string) {
+  cy.document().then((document: any) => {
+    document.querySelector(
+      'atomic-search-interface'
+    ).innerHTML = componentInCode;
   });
 }
-
-export async function injectComponent(componentInCode: string) {
-  const document = await getDocument();
-  document.querySelector('atomic-search-interface').innerHTML = componentInCode;
-}
-
-export function setUpPage(htmlCode: string) {
+export function setupIntercept() {
   cy.intercept({
     method: 'POST',
     path: '**/rest/ua/v15/analytics/*',
@@ -27,6 +21,10 @@ export function setUpPage(htmlCode: string) {
     url:
       'https://platform.cloud.coveo.com/rest/search/v2?organizationId=searchuisamples',
   }).as('coveoSearch');
+}
+
+export function setUpPage(htmlCode: string) {
+  setupIntercept();
   // Setup page with new component
   cy.visit('http://localhost:3333/pages/test.html');
   cy.injectAxe();
