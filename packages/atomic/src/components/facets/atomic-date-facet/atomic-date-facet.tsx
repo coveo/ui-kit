@@ -69,10 +69,6 @@ export class AtomicDateFacet implements InitializableComponent, BaseFacetState {
    */
   @Prop() public label = 'No label';
   /**
-   * Whether or not the index should automatically generate options for the facet
-   */
-  @Prop() public generateAutomaticRanges?: boolean;
-  /**
    * The format that the date will be displayed in. See https://day.js.org/docs/en/display/format for formatting details.
    */
   @Prop() public dateFormat = 'DD/MM/YYYY';
@@ -89,8 +85,7 @@ export class AtomicDateFacet implements InitializableComponent, BaseFacetState {
     const options: DateFacetOptions = {
       facetId: this.facetId,
       field: this.field,
-      generateAutomaticRanges:
-        this.generateAutomaticRanges || manualRanges.length === 0,
+      generateAutomaticRanges: manualRanges.length === 0,
       currentValues: manualRanges,
     };
     this.strings[this.label] = () => this.bindings.i18n.t(this.label);
