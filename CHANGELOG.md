@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.8.0-alpha.24](https://github.com/coveo/ui-kit/compare/v0.8.0-alpha.23...v0.8.0-alpha.24) (2021-03-16)
+
+
+### Bug Fixes
+
+* **atomic:** do not generate automatic ranges when manual values are provided ([#631](https://github.com/coveo/ui-kit/issues/631)) ([17b6931](https://github.com/coveo/ui-kit/commit/17b6931600956315832fdab2a92e8f7ff8cb7fef))
+* **quantic:** add missing files ([#622](https://github.com/coveo/ui-kit/issues/622)) ([e4776d5](https://github.com/coveo/ui-kit/commit/e4776d5f910abd20ec2d878bc2b5c9e44429d53e))
+
+
+
+
+
 # [0.8.0-alpha.23](https://github.com/coveo/ui-kit/compare/v0.8.0-alpha.22...v0.8.0-alpha.23) (2021-03-16)
 
 
