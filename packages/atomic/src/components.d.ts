@@ -211,6 +211,8 @@ export namespace Components {
          */
         "format": string;
     }
+    interface AtomicResultIcon {
+    }
     interface AtomicResultLink {
     }
     interface AtomicResultList {
@@ -488,6 +490,12 @@ declare global {
         prototype: HTMLAtomicResultDateElement;
         new (): HTMLAtomicResultDateElement;
     };
+    interface HTMLAtomicResultIconElement extends Components.AtomicResultIcon, HTMLStencilElement {
+    }
+    var HTMLAtomicResultIconElement: {
+        prototype: HTMLAtomicResultIconElement;
+        new (): HTMLAtomicResultIconElement;
+    };
     interface HTMLAtomicResultLinkElement extends Components.AtomicResultLink, HTMLStencilElement {
     }
     var HTMLAtomicResultLinkElement: {
@@ -599,6 +607,7 @@ declare global {
         "atomic-relevance-inspector": HTMLAtomicRelevanceInspectorElement;
         "atomic-result": HTMLAtomicResultElement;
         "atomic-result-date": HTMLAtomicResultDateElement;
+        "atomic-result-icon": HTMLAtomicResultIconElement;
         "atomic-result-link": HTMLAtomicResultLinkElement;
         "atomic-result-list": HTMLAtomicResultListElement;
         "atomic-result-list-placeholder": HTMLAtomicResultListPlaceholderElement;
@@ -818,6 +827,8 @@ declare namespace LocalJSX {
          */
         "format"?: string;
     }
+    interface AtomicResultIcon {
+    }
     interface AtomicResultLink {
     }
     interface AtomicResultList {
@@ -991,6 +1002,7 @@ declare namespace LocalJSX {
         "atomic-relevance-inspector": AtomicRelevanceInspector;
         "atomic-result": AtomicResult;
         "atomic-result-date": AtomicResultDate;
+        "atomic-result-icon": AtomicResultIcon;
         "atomic-result-link": AtomicResultLink;
         "atomic-result-list": AtomicResultList;
         "atomic-result-list-placeholder": AtomicResultListPlaceholder;
@@ -1032,6 +1044,7 @@ declare module "@stencil/core" {
             "atomic-relevance-inspector": LocalJSX.AtomicRelevanceInspector & JSXBase.HTMLAttributes<HTMLAtomicRelevanceInspectorElement>;
             "atomic-result": LocalJSX.AtomicResult & JSXBase.HTMLAttributes<HTMLAtomicResultElement>;
             "atomic-result-date": LocalJSX.AtomicResultDate & JSXBase.HTMLAttributes<HTMLAtomicResultDateElement>;
+            "atomic-result-icon": LocalJSX.AtomicResultIcon & JSXBase.HTMLAttributes<HTMLAtomicResultIconElement>;
             "atomic-result-link": LocalJSX.AtomicResultLink & JSXBase.HTMLAttributes<HTMLAtomicResultLinkElement>;
             "atomic-result-list": LocalJSX.AtomicResultList & JSXBase.HTMLAttributes<HTMLAtomicResultListElement>;
             "atomic-result-list-placeholder": LocalJSX.AtomicResultListPlaceholder & JSXBase.HTMLAttributes<HTMLAtomicResultListPlaceholderElement>;
