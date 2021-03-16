@@ -2,19 +2,16 @@ import {Component, ContextType} from 'react';
 import {
   buildNumericFacet,
   NumericFacet as HeadlessNumericFacet,
+  NumericFacetOptions,
   NumericFacetState,
   NumericFacetValue,
-  NumericRangeRequest,
   Unsubscribe,
 } from '@coveo/headless';
 import {AppContext} from '../../context/engine';
 
-interface NumericFacetProps {
+interface NumericFacetProps extends NumericFacetOptions {
   format: (n: number) => string;
-  field: string;
   facetId: string;
-  generateAutomaticRanges: boolean;
-  currentValues?: NumericRangeRequest[];
 }
 
 export class NumericFacet extends Component<

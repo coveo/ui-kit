@@ -2,19 +2,16 @@ import {Component, ContextType} from 'react';
 import {
   buildDateFacet,
   DateFacet as HeadlessDateFacet,
+  DateFacetOptions,
   DateFacetState,
   DateFacetValue,
-  DateRangeRequest,
   Unsubscribe,
 } from '@coveo/headless';
 import {parseDate} from './date-utils';
 import {AppContext} from '../../context/engine';
 
-interface DateFacetProps {
-  field: string;
+interface DateFacetProps extends DateFacetOptions {
   facetId: string;
-  generateAutomaticRanges: boolean;
-  currentValues?: DateRangeRequest[];
 }
 
 export class DateFacet extends Component<DateFacetProps, DateFacetState> {
@@ -26,14 +23,7 @@ export class DateFacet extends Component<DateFacetProps, DateFacetState> {
 
   componentDidMount() {
     this.controller = buildDateFacet(this.context.engine!, {
-      options: {
-        field: this.props.field,
-        facetId: this.props.facetId,
-        generateAutomaticRanges: this.props.generateAutomaticRanges,
-        ...(this.props.currentValues && {
-          currentValues: this.props.currentValues,
-        }),
-      },
+      options: this.props,
     });
     this.updateState();
 
