@@ -37,7 +37,12 @@ async function checkoutLatestMaster() {
  */
 async function bumpVersionAndPush(versionType) {
   try {
-    const message = '[version bump]: publish %s';
+    const patternsToIgnore = [
+      'lerna.json',
+      'CHANGELOG.md',
+      '**/CHANGELOG.md'
+    ];
+    const message = '[version bump]: publish %s\n' + patternsToIgnore.join('\n');
 
     await exec(`npm run version:${versionType} -- --yes -m "${message}"`);
   } catch (e) {
