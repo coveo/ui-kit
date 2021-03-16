@@ -1,6 +1,6 @@
 {
   "name": "@coveo/atomic",
-  "version": "0.8.0-alpha.22",
+  "version": "0.8.0-alpha.23",
   "description": "A web-component library for building modern UIs interfacing with the Coveo platform",
   "main": "dist/index.cjs.js",
   "module": "dist/index.js",
