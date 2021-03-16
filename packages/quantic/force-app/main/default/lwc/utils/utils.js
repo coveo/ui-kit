@@ -26,3 +26,27 @@ export class Debouncer {
     };
   }
 }
+
+/**
+ * A *Deferred* is a promise that is resolve or reject by an external actor.
+ *
+ * ```javascript
+ * let deferred = new Deferred();
+ *
+ * setTimeout(() => { deferred.resolve('foo') }, 5000);
+ *
+ * // Result after 5 sec : 'foo'
+ * deferred.promise.then(data => console.log(data));```
+ */
+ export class Deferred {
+  constructor() {
+    this.promise = new Promise((resolve, reject) => {
+      this.isResolved = false
+      this.resolve = (value) => {
+        resolve(value);
+        this.isResolved = true;
+      }
+      this.reject = reject;
+    });
+  }
+}

@@ -18,6 +18,7 @@ declare global {
           element: LightningElement;
           initialized: boolean;
         }[];
+        config: HeadlessConfigurationOptions;
         engine: HeadlessEngine;
       };
     };

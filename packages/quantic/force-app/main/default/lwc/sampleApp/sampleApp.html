@@ -1,28 +1,30 @@
 <template>
     <div onregisterresulttemplates={handleResultTemplateRegistration}>
-        <div class="slds-grid slds-gutters slds-wrap main">
-            <div class="slds-col slds-order_2 slds-large-order_1 slds-size_1-of-1 slds-large-size_4-of-12">
-                <c-facet field="objecttype" label="Type" engine-id={engineId}></c-facet>
-                <c-facet field="filetype" label="File Type" engine-id={engineId}></c-facet>
-                <c-numeric-facet field="ytlikecount" label="Youtube Likes" engine-id={engineId}></c-numeric-facet>
-                <c-date-facet field="date" label="Date" engine-id={engineId}></c-date-facet>
-                <c-category-facet field="geographicalhierarchy" label="Country" engine-id={engineId}></c-category-facet>
-            </div>
-            <div class="slds-col slds-order_1 slds-large-order_2 slds-size_1-of-1 slds-large-size_8-of-12">
-                <c-search-box engine-id={engineId}></c-search-box>
-                <div class="slds-grid slds-wrap">
-                    <c-summary class="slds-order_2 slds-medium-order_1 slds-size_1-of-1 slds-medium-size_9-of-12" engine-id={engineId}>
-                    </c-summary>
-                    <c-sort class="slds-order_1 slds-medium-order_2 slds-size_1-of-1 slds-medium-size_3-of-12" engine-id={engineId}>
-                    </c-sort>
+        <c-search-interface engine-id={engineId}>
+            <div class="slds-grid slds-gutters slds-wrap main">
+                <div class="slds-col slds-order_2 slds-large-order_1 slds-size_1-of-1 slds-large-size_4-of-12">
+                    <c-facet field="objecttype" label="Type" engine-id={engineId}></c-facet>
+                    <c-facet field="filetype" label="File Type" engine-id={engineId}></c-facet>
+                    <c-numeric-facet field="ytlikecount" label="Youtube Likes" engine-id={engineId}></c-numeric-facet>
+                    <c-date-facet field="date" label="Date" engine-id={engineId}></c-date-facet>
+                    <c-category-facet field="geographicalhierarchy" label="Country" engine-id={engineId}></c-category-facet>
                 </div>
+                <div class="slds-col slds-order_1 slds-large-order_2 slds-size_1-of-1 slds-large-size_8-of-12">
+                    <c-search-box engine-id={engineId}></c-search-box>
+                    <div class="slds-grid slds-wrap">
+                        <c-summary class="slds-order_2 slds-medium-order_1 slds-size_1-of-1 slds-medium-size_9-of-12" engine-id={engineId}>
+                        </c-summary>
+                        <c-sort class="slds-order_1 slds-medium-order_2 slds-size_1-of-1 slds-medium-size_3-of-12" engine-id={engineId}>
+                        </c-sort>
+                    </div>
 
-                <c-result-list engine-id={engineId}></c-result-list>
-                <div class="slds-m-vertical_medium">
-                    <c-pager engine-id={engineId}></c-pager>
-                    <c-results-per-page engine-id={engineId}></c-results-per-page>
+                    <c-result-list engine-id={engineId}></c-result-list>
+                    <div class="slds-m-vertical_medium">
+                        <c-pager engine-id={engineId}></c-pager>
+                        <c-results-per-page engine-id={engineId}></c-results-per-page>
+                    </div>
                 </div>
             </div>
-        </div>
+        </c-search-interface>
     </div>
 </template>

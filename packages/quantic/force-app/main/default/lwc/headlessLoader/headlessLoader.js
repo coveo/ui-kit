@@ -1,14 +1,18 @@
 import HeadlessPath from '@salesforce/resourceUrl/coveoheadless';
 import AtomicPath from '@salesforce/resourceUrl/atomicutils';
-// @ts-ignore	
-import { loadScript } from 'lightning/platformResourceLoader';
-// @ts-ignore	
-import { Debouncer } from 'c/utils';
+// @ts-ignore
+import {loadScript} from 'lightning/platformResourceLoader';
+// @ts-ignore
+import {Debouncer, Deferred} from 'c/utils';
 
 const DEBOUNCE_DELAY = 200;
 let debouncers = {};
 let dependencyPromises = [];
 
+/**
+ * Initiates dependency loading promises.
+ * @param {*} element The Lightning element to use to load dependencies.
+ */
 const loadDependencies = (element) => {
   dependencyPromises = [
     loadScript(element, HeadlessPath + '/browser/headless.js'),
@@ -18,7 +22,7 @@ const loadDependencies = (element) => {
 
 /**
  * Cancels the delayed search query.
- * @param {String} engineId The id of the engine. 
+ * @param {string} engineId The id of the engine. 
  */
 const cancelInitialSearch = (engineId) => {
   if (debouncers[engineId]) {
@@ -29,7 +33,7 @@ const cancelInitialSearch = (engineId) => {
 
 /**
  * Dispatches search request.
- * @param {String} engineId The id of the engine. 
+ * @param {string} engineId The id of the engine. 
  */
 const executeInitialSearch = (engineId) => {
   window.coveoHeadless[engineId].engine.then((engine) => {
@@ -43,7 +47,7 @@ const executeInitialSearch = (engineId) => {
 
 /**
  * Starts the debounced initial search request.
- * @param {String} engineId The id of the engine. 
+ * @param {string} engineId The id of the engine. 
  */
 const debounceInitialSearch = (engineId) => {
   if (!debouncers[engineId]) {
@@ -54,7 +58,7 @@ const debounceInitialSearch = (engineId) => {
 
 /**
  * Returns true if registered components are initialized, false otherwise.
- * @param {String} engineId The id of the engine.
+ * @param {string} engineId The id of the engine.
  */
 const areAllComponentsInitialized = (engineId) =>
   !window.coveoHeadless[engineId].components.find(component => component.initialized === false);
@@ -62,9 +66,33 @@ const areAllComponentsInitialized = (engineId) =>
 /**
  * Returns the registered component object if it exists.
  * @param element The Lightning Element component with which to load dependencies.
- * @param {String} engineId The id of the engine.
+ * @param {string} engineId The id of the engine.
  */
 const getRegisteredComponent = (element, engineId) => window.coveoHeadless[engineId].components.find((component) => component.element === element);
+
+/**
+ * Instantiates the coveoHeadless window object and the engine attribute for the provided ID.
+ * @param element The Lightning element to use to load dependencies.
+ * @param {string} engineId The id of the engine.
+ */
+const instantiateWindowEngineObject = (element, engineId) => {
+  if (!window.coveoHeadless) {
+    loadDependencies(element);
+    window.coveoHeadless = {
+      [engineId]: {
+        components: [],
+        engine: undefined,
+        config: new Deferred()
+      }
+    }
+  } else if(!window.coveoHeadless[engineId]) {
+    window.coveoHeadless[engineId] = {
+      components: [],
+      engine: undefined,
+      config: new Deferred()
+    }
+  }
+}
 
 /**
  * Loads dependencies and returns an initialized Headless engine. 
@@ -76,11 +104,13 @@ async function initEngine(engineId) {
     }
     await Promise.all(dependencyPromises);
 
-    //temp
-    setEngineConfiguration(engineId, CoveoHeadless.HeadlessEngine.getSampleConfiguration())
+    if (!window.coveoHeadless[engineId].config) {
+      throw new Error('Engine configuration has not been set.');
+    }
+    const configuration = await window.coveoHeadless[engineId].config.promise;
 
     return new CoveoHeadless.HeadlessEngine({
-      configuration: window.coveoHeadless[engineId].config,
+      configuration,
       reducers: CoveoHeadless.searchAppReducers,
     });
   } catch (error) {
@@ -88,35 +118,31 @@ async function initEngine(engineId) {
   }
 }
 
-function setEngineConfiguration(engineId, config) {
-  if (!(window.coveoHeadless && window.coveoHeadless[engineId])) {
-    throw new Error('Fatal error: attempted to set config on undefined engine');
+/**
+ * 
+ * @param {import("coveo").HeadlessConfigurationOptions} config The Headless configuration options for the specified engine ID.
+ * @param {string} engineId The id of the engine.
+ * @param element The Lightning element to use to load dependencies.
+ */
+function setEngineConfiguration(config, engineId, element) {
+  if (window.coveoHeadless && window.coveoHeadless[engineId] && window.coveoHeadless[engineId].config.isResolved) {
+    throw new Error(`Attempted to overwrite configuration for engine: ${engineId}`);
   }
-  window.coveoHeadless[engineId].config = config;
+  if (!(window.coveoHeadless && window.coveoHeadless[engineId])) {
+    instantiateWindowEngineObject(element, engineId)
+  }
+  window.coveoHeadless[engineId].config.resolve(config);
 }
 
 /**
  * Registers a component for future initialization.
- * @param element The Lightning Element component with which to load dependencies.
- * @param {String} engineId The id of the engine.
+ * @param element The Lightning element to use to load dependencies.
+ * @param {string} engineId The id of the engine.
  */
 function registerComponentForInit(element, engineId) {
   cancelInitialSearch(engineId);
 
-  if (!window.coveoHeadless) {
-    loadDependencies(element);
-    window.coveoHeadless = {
-      [engineId]: {
-        components: [],
-        engine: undefined
-      }
-    }
-  } else if (!window.coveoHeadless[engineId]) {
-    window.coveoHeadless[engineId] = {
-      components: [],
-      engine: undefined
-    }
-  }
+  instantiateWindowEngineObject(element, engineId);
 
   if (!getRegisteredComponent(element, engineId)) {
     window.coveoHeadless[engineId].components.push({
@@ -128,8 +154,8 @@ function registerComponentForInit(element, engineId) {
 
 /**
  * Sets registered component to initialized.
- * @param element The Lightning Element component with which to load dependencies.
- * @param {String} engineId The id of the engine.
+ * @param element The Lightning element to use to load dependencies.
+ * @param {string} engineId The id of the engine.
  */
 function setComponentInitialized(element, engineId) {
   const component = window.coveoHeadless
@@ -148,8 +174,7 @@ function setComponentInitialized(element, engineId) {
 
 /**
  * Returns headless engine promise.
- * @param {String} engineId The id of the engine.
- * @param config The configuration used for the engine.
+ * @param {string} engineId The id of the engine.
  */
 async function getHeadlessEngine(engineId) {
   if (!window.coveoHeadless[engineId].engine) {
@@ -161,7 +186,7 @@ async function getHeadlessEngine(engineId) {
 /**
  * Initializes a component with Coveo Headless.
  * @param element The LightningElement component to initialize.
- * @param {String} engineId The id of the engine.
+ * @param {string} engineId The id of the engine.
  * @param {Function} initialize The component's initialization function.
  */
 async function initializeWithHeadless(element, engineId, initialize) {

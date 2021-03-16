@@ -7,15 +7,6 @@ import { LightningElement, api } from 'lwc';
 export default class SampleApp extends LightningElement {
   /** @type {String} */
   @api engineId = 'sample-app';
-
-  renderedCallback() {	
-    // Example on how to init the search interface	
-    // const searchInterface = this.template.querySelector('c-search-interface');	
-    // searchInterface.initialize({	
-    //   organizationId: 'my_org',	
-    //   accessToken: 'my_access_token'	
-    // });	
-  }
   
   handleResultTemplateRegistration(event) {
     event.stopPropagation();
