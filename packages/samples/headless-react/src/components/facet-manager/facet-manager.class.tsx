@@ -1,4 +1,4 @@
-import {Children, Component, ReactElement} from 'react';
+import {Children, Component, ContextType, ReactElement} from 'react';
 import {
   buildFacetManager,
   FacetManager as HeadlessFacetManager,
@@ -6,25 +6,25 @@ import {
   FacetManagerState,
   Unsubscribe,
 } from '@coveo/headless';
-import {engine} from '../../engine';
+import {AppContext} from '../../context/engine';
 
 type FacetManagerChild = ReactElement<{facetId: string}>;
+export class FacetManager extends Component<
+  {
+    children?: FacetManagerChild | FacetManagerChild[];
+  },
+  FacetManagerState
+> {
+  static contextType = AppContext;
+  context!: ContextType<typeof AppContext>;
 
-export class FacetManager extends Component<{
-  children?: FacetManagerChild | FacetManagerChild[];
-}> {
-  private controller: HeadlessFacetManager;
-  public state: FacetManagerState;
+  private controller!: HeadlessFacetManager;
   private unsubscribe: Unsubscribe = () => {};
 
-  constructor(props: {}) {
-    super(props);
-
-    this.controller = buildFacetManager(engine);
-    this.state = this.controller.state;
-  }
-
   componentDidMount() {
+    this.controller = buildFacetManager(this.context.engine!);
+    this.updateState();
+
     this.unsubscribe = this.controller.subscribe(() => this.updateState());
   }
 
@@ -46,6 +46,10 @@ export class FacetManager extends Component<{
   }
 
   render() {
+    if (!this.state) {
+      return this.props.children;
+    }
+
     const childFacets = Children.toArray(
       this.props.children
     ) as FacetManagerChild[];

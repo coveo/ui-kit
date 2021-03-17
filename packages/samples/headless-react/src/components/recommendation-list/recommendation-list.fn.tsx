@@ -1,10 +1,6 @@
 import {useEffect, useState, FunctionComponent} from 'react';
 import {ResultLink} from '../result-list/result-link';
-import {
-  buildRecommendationList,
-  RecommendationList as HeadlessRecommendationList,
-} from '@coveo/headless';
-import {recommendationEngine} from '../../engine';
+import {RecommendationList as HeadlessRecommendationList} from '@coveo/headless';
 
 interface RecommendationListProps {
   controller: HeadlessRecommendationList;
@@ -56,8 +52,12 @@ export const RecommendationList: FunctionComponent<RecommendationListProps> = (
 
 // usage
 
-const controller = buildRecommendationList(recommendationEngine, {
-  options: {id: 'Recommendation'},
-});
-
-<RecommendationList controller={controller} />;
+/**
+ * ```tsx
+ * const controller = buildRecommendationList(recommendationEngine, {
+ *   options: {id: 'Recommendation'},
+ * });
+ *
+ * <RecommendationList controller={controller} />;
+ * ```
+ */

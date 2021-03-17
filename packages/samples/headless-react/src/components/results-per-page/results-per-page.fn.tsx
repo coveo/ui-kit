@@ -1,9 +1,5 @@
 import {useEffect, useState, FunctionComponent} from 'react';
-import {
-  buildResultsPerPage,
-  ResultsPerPage as HeadlessResultsPerPage,
-} from '@coveo/headless';
-import {engine} from '../../engine';
+import {ResultsPerPage as HeadlessResultsPerPage} from '@coveo/headless';
 
 interface ResultsPerPageProps {
   controller: HeadlessResultsPerPage;
@@ -36,9 +32,13 @@ export const ResultsPerPage: FunctionComponent<ResultsPerPageProps> = (
 
 // usage
 
-const options = [10, 25, 50, 100];
-const controller = buildResultsPerPage(engine, {
-  initialState: {numberOfResults: options[0]},
-});
-
-<ResultsPerPage controller={controller} options={options} />;
+/**
+ * ```tsx
+ * const options = [10, 25, 50, 100];
+ * const controller = buildResultsPerPage(engine, {
+ *   initialState: {numberOfResults: options[0]},
+ * });
+ *
+ * <ResultsPerPage controller={controller} options={options} />;
+ * ```
+ */

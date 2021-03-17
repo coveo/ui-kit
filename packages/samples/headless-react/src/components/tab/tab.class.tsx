@@ -1,33 +1,31 @@
-import {Component} from 'react';
+import {Component, ContextType} from 'react';
 import {
   buildTab,
   Tab as HeadlessTab,
   TabState,
   Unsubscribe,
 } from '@coveo/headless';
-import {engine} from '../../engine';
+import {AppContext} from '../../context/engine';
 
 export interface TabProps {
   expression?: string;
   active?: boolean;
 }
 
-export class Tab extends Component<TabProps> {
-  private controller: HeadlessTab;
-  public state: TabState;
+export class Tab extends Component<TabProps, TabState> {
+  static contextType = AppContext;
+  context!: ContextType<typeof AppContext>;
+
+  private controller!: HeadlessTab;
   private unsubscribe: Unsubscribe = () => {};
 
-  constructor(props: TabProps) {
-    super(props);
-
-    this.controller = buildTab(engine, {
-      initialState: {isActive: !!this.props.active},
-      options: {expression: props.expression ?? ''},
-    });
-    this.state = this.controller.state;
-  }
-
   componentDidMount() {
+    this.controller = buildTab(this.context.engine!, {
+      initialState: {isActive: !!this.props.active},
+      options: {expression: this.props.expression ?? ''},
+    });
+    this.updateState();
+
     this.unsubscribe = this.controller.subscribe(() => this.updateState());
   }
 
@@ -40,6 +38,10 @@ export class Tab extends Component<TabProps> {
   }
 
   render() {
+    if (!this.state) {
+      return null;
+    }
+
     return (
       <button
         disabled={this.state.isActive}

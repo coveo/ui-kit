@@ -52,15 +52,15 @@ export namespace Components {
         "error": Error;
     }
     interface AtomicDateFacet {
+        /**
+          * The format that the date will be displayed in. See https://day.js.org/docs/en/display/format for formatting details.
+         */
+        "dateFormat": string;
         "facetId": string;
         /**
           * Specifies the index field whose values the facet should use
          */
         "field": string;
-        /**
-          * Whether or not the index should automatically generate options for the facet
-         */
-        "generateAutomaticRanges": boolean;
         /**
           * The non-localized label for the facet
          */
@@ -68,15 +68,15 @@ export namespace Components {
     }
     interface AtomicDateRange {
         /**
-          * The ending date for the range. It can be expressed as a Javascript date, as a number using epoch time or as a string using the ISO 8601 format
+          * The ending date for the range. It can be expressed as a Javascript date, as a number using epoch time or as a string using the ISO 8601 format.
          */
         "end": Date | string | number;
         /**
-          * Specifies whether or not the end date should be included in the range
+          * Specifies whether or not the end date should be included in the range.
          */
         "endInclusive": boolean;
         /**
-          * The starting date for the range. It can be expressed as a Javascript date, as a number using epoch time or as a string using the ISO 8601 format
+          * The starting date for the range. It can be expressed as a Javascript date, as a number using epoch time or as a string using the ISO 8601 format.
          */
         "start": Date | string | number;
     }
@@ -133,29 +133,25 @@ export namespace Components {
     interface AtomicNumericFacet {
         "facetId": string;
         /**
-          * Specifies the index field whose values the facet should use
+          * Specifies the index field whose values the facet should use.
          */
         "field": string;
         /**
-          * Whether or not the index should automatically generate options for the facet
-         */
-        "generateAutomaticRanges": boolean;
-        /**
-          * The non-localized label for the facet
+          * The non-localized label for the facet.
          */
         "label": string;
     }
     interface AtomicNumericRange {
         /**
-          * The ending value for the numeric range
+          * The ending value for the numeric range.
          */
         "end": number;
         /**
-          * Specifies whether or not the end value should be included in the range
+          * Specifies whether or not the end value should be included in the range.
          */
         "endInclusive": boolean;
         /**
-          * The starting value for the numeric range
+          * The starting value for the numeric range.
          */
         "start": number;
     }
@@ -178,11 +174,23 @@ export namespace Components {
         "enableDuration": boolean;
     }
     interface AtomicRelevanceInspector {
+        /**
+          * The Atomic interface bindings, namely the Headless Engine and i18n instances.
+         */
         "bindings": Bindings;
     }
     interface AtomicResult {
+        /**
+          * The result content to display.
+         */
         "content": string;
+        /**
+          * The Headless Engine.
+         */
         "engine": Engine;
+        /**
+          * The result item.
+         */
         "result": Result;
     }
     interface AtomicResultDate {
@@ -248,6 +256,9 @@ export namespace Components {
         "maxNumberOfParts": number;
     }
     interface AtomicResultTemplate {
+        /**
+          * Functions that must return true on results for the result template to apply.  For example, a template with the following only applies to results whose `title` contains `singapore`: `[(result) => /singapore/i.test(result.title)]`
+         */
         "conditions": ResultTemplateCondition[];
         "getTemplate": () => Promise<ResultTemplate<string> | null>;
     }
@@ -274,43 +285,67 @@ export namespace Components {
     interface AtomicSearchBox {
         "_id": string;
         /**
-          * Whether the submit button should be placed before the input
+          * Whether the submit button should be placed before the input.
          */
         "leadingSubmitButton": boolean;
         /**
-          * Maximum number of suggestions to display
+          * Maximum number of suggestions to display.
          */
         "numberOfSuggestions": number;
         /**
-          * The placeholder for the search box input
+          * The placeholder for the search box input.
          */
         "placeholder": string;
     }
     interface AtomicSearchInterface {
+        /**
+          * The search interface Headless engine.
+         */
         "engine"?: Engine;
         "executeFirstSearch": () => Promise<void>;
+        /**
+          * The search interface i18next instance.
+         */
         "i18n": i18n;
         "initialize": (options: InitializationOptions) => Promise<void>;
+        /**
+          * The search interface language.
+         */
         "language": string;
+        /**
+          * The level of messages you want to be logged in the console.
+         */
         "logLevel"?: LogLevel;
+        /**
+          * The search interface [query pipeline](https://docs.coveo.com/en/180/).
+         */
         "pipeline": string;
         "reflectStateInUrl": boolean;
+        /**
+          * The search interface [search hub](https://docs.coveo.com/en/1342/).
+         */
         "searchHub": string;
-    }
-    interface AtomicSortCriteria {
-        /**
-          * The non-localized caption to display for this criteria.
-         */
-        "caption": string;
-        /**
-          * The sort criterion/criteria the end user can select/toggle between.  The available sort criteria are: - `relevancy` - `date ascending`/`date descending` - `qre` - `field ascending`/`field descending`, where you must replace `field` with the name of a sortable field in your index (e.g., `criteria="size ascending"`).  You can specify multiple sort criteria to be used in the same request by separating them with a comma (e.g., `criteria="size ascending, date ascending"` ).
-         */
-        "criteria": string;
     }
     interface AtomicSortDropdown {
     }
-    interface AtomicTab {
+    interface AtomicSortExpression {
+        /**
+          * The non-localized caption to display for this expression.
+         */
+        "caption": string;
+        /**
+          * The sort criterion/criteria expression the end user can select/toggle between.  The available sort criteria are: - `relevancy` - `date ascending`/`date descending` - `qre` - `field ascending`/`field descending`, where you must replace `field` with the name of a sortable field in your index (e.g., `criteria="size ascending"`).  You can specify multiple sort criteria to be used in the same request by separating them with a comma (e.g., `criteria="size ascending, date ascending"` ).
+         */
         "expression": string;
+    }
+    interface AtomicTab {
+        /**
+          * The constant query expression that the Tab should add to any outgoing query.  Example: `@objecttype==Message`
+         */
+        "expression": string;
+        /**
+          * Whether the tab is set to active.
+         */
         "isActive": boolean;
     }
     interface AtomicText {
@@ -511,17 +546,17 @@ declare global {
         prototype: HTMLAtomicSearchInterfaceElement;
         new (): HTMLAtomicSearchInterfaceElement;
     };
-    interface HTMLAtomicSortCriteriaElement extends Components.AtomicSortCriteria, HTMLStencilElement {
-    }
-    var HTMLAtomicSortCriteriaElement: {
-        prototype: HTMLAtomicSortCriteriaElement;
-        new (): HTMLAtomicSortCriteriaElement;
-    };
     interface HTMLAtomicSortDropdownElement extends Components.AtomicSortDropdown, HTMLStencilElement {
     }
     var HTMLAtomicSortDropdownElement: {
         prototype: HTMLAtomicSortDropdownElement;
         new (): HTMLAtomicSortDropdownElement;
+    };
+    interface HTMLAtomicSortExpressionElement extends Components.AtomicSortExpression, HTMLStencilElement {
+    }
+    var HTMLAtomicSortExpressionElement: {
+        prototype: HTMLAtomicSortExpressionElement;
+        new (): HTMLAtomicSortExpressionElement;
     };
     interface HTMLAtomicTabElement extends Components.AtomicTab, HTMLStencilElement {
     }
@@ -567,8 +602,8 @@ declare global {
         "atomic-results-per-page": HTMLAtomicResultsPerPageElement;
         "atomic-search-box": HTMLAtomicSearchBoxElement;
         "atomic-search-interface": HTMLAtomicSearchInterfaceElement;
-        "atomic-sort-criteria": HTMLAtomicSortCriteriaElement;
         "atomic-sort-dropdown": HTMLAtomicSortDropdownElement;
+        "atomic-sort-expression": HTMLAtomicSortExpressionElement;
         "atomic-tab": HTMLAtomicTabElement;
         "atomic-text": HTMLAtomicTextElement;
     }
@@ -616,15 +651,15 @@ declare namespace LocalJSX {
         "error": Error;
     }
     interface AtomicDateFacet {
+        /**
+          * The format that the date will be displayed in. See https://day.js.org/docs/en/display/format for formatting details.
+         */
+        "dateFormat"?: string;
         "facetId"?: string;
         /**
           * Specifies the index field whose values the facet should use
          */
         "field"?: string;
-        /**
-          * Whether or not the index should automatically generate options for the facet
-         */
-        "generateAutomaticRanges"?: boolean;
         /**
           * The non-localized label for the facet
          */
@@ -632,15 +667,15 @@ declare namespace LocalJSX {
     }
     interface AtomicDateRange {
         /**
-          * The ending date for the range. It can be expressed as a Javascript date, as a number using epoch time or as a string using the ISO 8601 format
+          * The ending date for the range. It can be expressed as a Javascript date, as a number using epoch time or as a string using the ISO 8601 format.
          */
         "end": Date | string | number;
         /**
-          * Specifies whether or not the end date should be included in the range
+          * Specifies whether or not the end date should be included in the range.
          */
         "endInclusive"?: boolean;
         /**
-          * The starting date for the range. It can be expressed as a Javascript date, as a number using epoch time or as a string using the ISO 8601 format
+          * The starting date for the range. It can be expressed as a Javascript date, as a number using epoch time or as a string using the ISO 8601 format.
          */
         "start": Date | string | number;
     }
@@ -697,29 +732,25 @@ declare namespace LocalJSX {
     interface AtomicNumericFacet {
         "facetId"?: string;
         /**
-          * Specifies the index field whose values the facet should use
+          * Specifies the index field whose values the facet should use.
          */
         "field"?: string;
         /**
-          * Whether or not the index should automatically generate options for the facet
-         */
-        "generateAutomaticRanges"?: boolean;
-        /**
-          * The non-localized label for the facet
+          * The non-localized label for the facet.
          */
         "label"?: string;
     }
     interface AtomicNumericRange {
         /**
-          * The ending value for the numeric range
+          * The ending value for the numeric range.
          */
         "end": number;
         /**
-          * Specifies whether or not the end value should be included in the range
+          * Specifies whether or not the end value should be included in the range.
          */
         "endInclusive"?: boolean;
         /**
-          * The starting value for the numeric range
+          * The starting value for the numeric range.
          */
         "start": number;
     }
@@ -742,11 +773,23 @@ declare namespace LocalJSX {
         "enableDuration"?: boolean;
     }
     interface AtomicRelevanceInspector {
+        /**
+          * The Atomic interface bindings, namely the Headless Engine and i18n instances.
+         */
         "bindings": Bindings;
     }
     interface AtomicResult {
+        /**
+          * The result content to display.
+         */
         "content": string;
+        /**
+          * The Headless Engine.
+         */
         "engine": Engine;
+        /**
+          * The result item.
+         */
         "result": Result;
     }
     interface AtomicResultDate {
@@ -812,6 +855,9 @@ declare namespace LocalJSX {
         "maxNumberOfParts"?: number;
     }
     interface AtomicResultTemplate {
+        /**
+          * Functions that must return true on results for the result template to apply.  For example, a template with the following only applies to results whose `title` contains `singapore`: `[(result) => /singapore/i.test(result.title)]`
+         */
         "conditions"?: ResultTemplateCondition[];
     }
     interface AtomicResultText {
@@ -837,41 +883,65 @@ declare namespace LocalJSX {
     interface AtomicSearchBox {
         "_id"?: string;
         /**
-          * Whether the submit button should be placed before the input
+          * Whether the submit button should be placed before the input.
          */
         "leadingSubmitButton"?: boolean;
         /**
-          * Maximum number of suggestions to display
+          * Maximum number of suggestions to display.
          */
         "numberOfSuggestions"?: number;
         /**
-          * The placeholder for the search box input
+          * The placeholder for the search box input.
          */
         "placeholder"?: string;
     }
     interface AtomicSearchInterface {
+        /**
+          * The search interface Headless engine.
+         */
         "engine"?: Engine;
+        /**
+          * The search interface i18next instance.
+         */
         "i18n"?: i18n;
+        /**
+          * The search interface language.
+         */
         "language"?: string;
+        /**
+          * The level of messages you want to be logged in the console.
+         */
         "logLevel"?: LogLevel;
+        /**
+          * The search interface [query pipeline](https://docs.coveo.com/en/180/).
+         */
         "pipeline"?: string;
         "reflectStateInUrl"?: boolean;
+        /**
+          * The search interface [search hub](https://docs.coveo.com/en/1342/).
+         */
         "searchHub"?: string;
-    }
-    interface AtomicSortCriteria {
-        /**
-          * The non-localized caption to display for this criteria.
-         */
-        "caption": string;
-        /**
-          * The sort criterion/criteria the end user can select/toggle between.  The available sort criteria are: - `relevancy` - `date ascending`/`date descending` - `qre` - `field ascending`/`field descending`, where you must replace `field` with the name of a sortable field in your index (e.g., `criteria="size ascending"`).  You can specify multiple sort criteria to be used in the same request by separating them with a comma (e.g., `criteria="size ascending, date ascending"` ).
-         */
-        "criteria": string;
     }
     interface AtomicSortDropdown {
     }
+    interface AtomicSortExpression {
+        /**
+          * The non-localized caption to display for this expression.
+         */
+        "caption": string;
+        /**
+          * The sort criterion/criteria expression the end user can select/toggle between.  The available sort criteria are: - `relevancy` - `date ascending`/`date descending` - `qre` - `field ascending`/`field descending`, where you must replace `field` with the name of a sortable field in your index (e.g., `criteria="size ascending"`).  You can specify multiple sort criteria to be used in the same request by separating them with a comma (e.g., `criteria="size ascending, date ascending"` ).
+         */
+        "expression": string;
+    }
     interface AtomicTab {
+        /**
+          * The constant query expression that the Tab should add to any outgoing query.  Example: `@objecttype==Message`
+         */
         "expression"?: string;
+        /**
+          * Whether the tab is set to active.
+         */
         "isActive"?: boolean;
     }
     interface AtomicText {
@@ -916,8 +986,8 @@ declare namespace LocalJSX {
         "atomic-results-per-page": AtomicResultsPerPage;
         "atomic-search-box": AtomicSearchBox;
         "atomic-search-interface": AtomicSearchInterface;
-        "atomic-sort-criteria": AtomicSortCriteria;
         "atomic-sort-dropdown": AtomicSortDropdown;
+        "atomic-sort-expression": AtomicSortExpression;
         "atomic-tab": AtomicTab;
         "atomic-text": AtomicText;
     }
@@ -957,8 +1027,8 @@ declare module "@stencil/core" {
             "atomic-results-per-page": LocalJSX.AtomicResultsPerPage & JSXBase.HTMLAttributes<HTMLAtomicResultsPerPageElement>;
             "atomic-search-box": LocalJSX.AtomicSearchBox & JSXBase.HTMLAttributes<HTMLAtomicSearchBoxElement>;
             "atomic-search-interface": LocalJSX.AtomicSearchInterface & JSXBase.HTMLAttributes<HTMLAtomicSearchInterfaceElement>;
-            "atomic-sort-criteria": LocalJSX.AtomicSortCriteria & JSXBase.HTMLAttributes<HTMLAtomicSortCriteriaElement>;
             "atomic-sort-dropdown": LocalJSX.AtomicSortDropdown & JSXBase.HTMLAttributes<HTMLAtomicSortDropdownElement>;
+            "atomic-sort-expression": LocalJSX.AtomicSortExpression & JSXBase.HTMLAttributes<HTMLAtomicSortExpressionElement>;
             "atomic-tab": LocalJSX.AtomicTab & JSXBase.HTMLAttributes<HTMLAtomicTabElement>;
             "atomic-text": LocalJSX.AtomicText & JSXBase.HTMLAttributes<HTMLAtomicTextElement>;
         }

@@ -12,15 +12,15 @@ export class AtomicNumericRange {
   @Element() public host!: HTMLElement;
 
   /**
-   * The starting value for the numeric range
+   * The starting value for the numeric range.
    */
   @Prop() public start!: number;
   /**
-   * The ending value for the numeric range
+   * The ending value for the numeric range.
    */
   @Prop() public end!: number;
   /**
-   * Specifies whether or not the end value should be included in the range
+   * Specifies whether or not the end value should be included in the range.
    */
   @Prop() public endInclusive = false;
 }

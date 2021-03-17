@@ -1,25 +1,23 @@
-import {Component} from 'react';
+import {Component, ContextType} from 'react';
 import {
   buildRelevanceInspector,
   RelevanceInspector as HeadlessRelevanceInspector,
   RelevanceInspectorState,
   Unsubscribe,
 } from '@coveo/headless';
-import {engine} from '../../engine';
+import {AppContext} from '../../context/engine';
 
-export class RelevanceInspector extends Component {
-  private controller: HeadlessRelevanceInspector;
-  public state: RelevanceInspectorState;
+export class RelevanceInspector extends Component<{}, RelevanceInspectorState> {
+  static contextType = AppContext;
+  context!: ContextType<typeof AppContext>;
+
+  private controller!: HeadlessRelevanceInspector;
   private unsubscribe: Unsubscribe = () => {};
 
-  constructor(props: {}) {
-    super(props);
-
-    this.controller = buildRelevanceInspector(engine);
-    this.state = this.controller.state;
-  }
-
   componentDidMount() {
+    this.controller = buildRelevanceInspector(this.context.engine!);
+    this.updateState();
+
     this.unsubscribe = this.controller.subscribe(() => this.updateState());
   }
 
@@ -36,6 +34,10 @@ export class RelevanceInspector extends Component {
   }
 
   render() {
+    if (!this.state) {
+      return null;
+    }
+
     return (
       <div>
         <label>

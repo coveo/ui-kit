@@ -2,7 +2,7 @@
   "name": "ui-kit",
   "private": true,
   "scripts": {
-    "setup": "npm i && lerna bootstrap",
+    "setup": "npm i && husky install && lerna bootstrap",
     "start": "lerna run --parallel start",
     "build": "lerna run build",
     "test": "lerna run test",
@@ -41,18 +41,12 @@
     "eslint-config-prettier": "^6.15.0",
     "eslint-plugin-cypress": "^2.11.1",
     "gts": "^3.1.0",
-    "husky": "^4.2.3",
+    "husky": "^5.1.3",
     "lerna": "^3.20.2",
     "lint-staged": "^10.0.8",
     "prettier": "^2.1.2",
     "rimraf": "^3.0.2",
     "typescript": "^4.1.2"
-  },
-  "husky": {
-    "hooks": {
-      "commit-msg": "node ./hooks/commit-msg.js",
-      "pre-commit": "lint-staged"
-    }
   },
   "config": {
     "commitizen": {

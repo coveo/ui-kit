@@ -6,6 +6,7 @@ import {buildMockApiMethodSignature} from '../mocks/mock-api-method-signature';
 import {buildMockApiPropertySignature} from '../mocks/mock-api-property-signature';
 import {buildMockApiTypeAlias} from '../mocks/mock-api-type-alias';
 import {buildMockEntity} from '../mocks/mock-entity';
+import {buildMockEntityWithTypeAlias} from '../mocks/mock-entity-with-type-alias';
 import {buildMockEntryPoint} from '../mocks/mock-entry-point';
 import {
   buildContentExcerptToken,
@@ -415,7 +416,7 @@ describe('#resolveInterfaceMembers', () => {
     entry.addMember(typeAlias);
 
     const result = resolveInterfaceMembers(entry, apiInterface, []);
-    const entity = buildMockEntity({
+    const entity = buildMockEntityWithTypeAlias({
       name: 'state',
       type: "'idle' | 'selected'",
     });
@@ -567,7 +568,7 @@ describe('#resolveInterfaceMembers', () => {
 
     const result = resolveInterfaceMembers(entry, context, []);
 
-    const param = buildMockEntity({
+    const param = buildMockEntityWithTypeAlias({
       name: 'contextValue',
       type: 'string | string[]',
       desc: 'The context value to add.',

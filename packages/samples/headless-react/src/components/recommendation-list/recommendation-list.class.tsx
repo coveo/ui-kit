@@ -1,33 +1,31 @@
-import {Component} from 'react';
+import {Component, ContextType} from 'react';
 import {ResultLink} from '../result-list/result-link';
 import {
   buildRecommendationList,
   RecommendationList as HeadlessRecommendationList,
+  RecommendationListOptions,
   RecommendationListState,
   Unsubscribe,
 } from '@coveo/headless';
-import {recommendationEngine} from '../../engine';
+import {AppContext} from '../../context/engine';
 
-export interface RecommendationListProps {
-  id?: string;
-}
+export class RecommendationList extends Component<
+  RecommendationListOptions,
+  RecommendationListState
+> {
+  static contextType = AppContext;
+  context!: ContextType<typeof AppContext>;
 
-export class RecommendationList extends Component<RecommendationListProps> {
-  private controller: HeadlessRecommendationList;
-  public state: RecommendationListState;
+  private controller!: HeadlessRecommendationList;
   private unsubscribe: Unsubscribe = () => {};
 
-  constructor(props: RecommendationListProps) {
-    super(props);
-
-    this.controller = buildRecommendationList(
-      recommendationEngine,
-      props.id ? {options: {id: props.id}} : {}
-    );
-    this.state = this.controller.state;
-  }
-
   componentDidMount() {
+    this.controller = buildRecommendationList(
+      this.context.recommendationEngine!,
+      {options: this.props}
+    );
+    this.updateState();
+
     this.unsubscribe = this.controller.subscribe(() => this.updateState());
   }
 
@@ -40,6 +38,10 @@ export class RecommendationList extends Component<RecommendationListProps> {
   }
 
   render() {
+    if (!this.state) {
+      return null;
+    }
+
     if (this.state.error) {
       return (
         <div>

@@ -17,7 +17,7 @@ import {
 import {ArrayValue, NumberValue, StringValue} from '@coveo/bueno';
 import {getVisitorID, historyStore} from '../../api/analytics/analytics';
 import {ProductRecommendationsRequest} from '../../api/search/product-recommendations/product-recommendations-request';
-import {ProductRecommendation} from '../../api/search/search/product';
+import {ProductRecommendation} from '../../api/search/search/product-recommendation';
 import {Result} from '../../api/search/search/result';
 import {logProductRecommendations} from './product-recommendations-analytics.actions';
 import {SearchAction} from '../analytics/analytics-utils';

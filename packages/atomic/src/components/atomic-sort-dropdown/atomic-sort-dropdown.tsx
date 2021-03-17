@@ -68,26 +68,26 @@ export class AtomicSortDropdown implements InitializableComponent {
   }
 
   private buildOptions() {
-    const sortCriterionElements = Array.from(
-      this.host.querySelectorAll('atomic-sort-criteria')
+    const sortExpressionElements = Array.from(
+      this.host.querySelectorAll('atomic-sort-expression')
     );
 
-    if (!sortCriterionElements.length) {
+    if (!sortExpressionElements.length) {
       this.error = new Error(
-        'The "atomic-sort-dropdown" element requires at least one "atomic-sort-criteria" child.'
+        'The "atomic-sort-dropdown" element requires at least one "atomic-sort-expression" child.'
       );
       return;
     }
 
-    this.options = sortCriterionElements.map(({criteria, caption}) => {
+    this.options = sortExpressionElements.map(({expression, caption}) => {
       new Schema({
         caption: new StringValue({emptyAllowed: false, required: true}),
       }).validate({caption});
       this.strings[caption] = () => this.bindings.i18n.t(caption);
 
       return {
-        criteria: parseCriterionExpression(criteria),
-        expression: criteria,
+        criteria: parseCriterionExpression(expression),
+        expression,
         caption,
       };
     });
@@ -140,6 +140,10 @@ export class AtomicSortDropdown implements InitializableComponent {
   }
 
   public render() {
+    if (this.searchStatusState.hasError) {
+      return;
+    }
+
     if (!this.searchStatusState.firstSearchExecuted) {
       return (
         <div
