@@ -7,7 +7,6 @@ import {filterProtocol} from '../../../utils/xss-utils';
  * The ResultImage component renders an image from  a result field.
  *
  *  @part result-image - The img element.
-
  */
 @Component({
   tag: 'atomic-result-image',
