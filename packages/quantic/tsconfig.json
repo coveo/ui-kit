@@ -60,9 +60,9 @@
             "c/numberButton": [
                 "numberButton/numberButton.js"
             ],
-            "c/initialization": [
-                "initialization/initialization.js"
-            ]
+            "c/headlessLoader": [
+                "headlessLoader/headlessLoader.js"
+            ],
         }
     },
     "include": [
