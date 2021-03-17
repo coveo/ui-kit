@@ -79,16 +79,17 @@ export class AtomicResultText {
       );
     }
 
-    if (!this.resultValue && !this.default) {
+    const resultValue = this.resultValue;
+    if (!resultValue && !this.default) {
       this.host.remove();
       return;
     }
 
-    if (!this.resultValue && this.default) {
+    if (!resultValue && this.default) {
       return <atomic-text value={this.default}></atomic-text>;
     }
 
-    const textValue = `${this.resultValue}`;
+    const textValue = `${resultValue}`;
     const highlightsValue = ResultTemplatesHelpers.getResultProperty(
       this.result,
       `${this.field}Highlights`
