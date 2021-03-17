@@ -13,7 +13,7 @@ declare global {
 
   interface Window {
     coveoHeadless: {
-      [x: string]: {
+      [engineId: string]: {
         components: {
           element: LightningElement;
           initialized: boolean;
