@@ -21,6 +21,7 @@ import {
   buildSearchParameterManager,
   buildSearchParameterSerializer,
   Unsubscribe,
+  SearchParameterManager,
 } from '@coveo/headless';
 import {
   AtomicStore,
@@ -30,6 +31,7 @@ import {
 import i18next, {i18n} from 'i18next';
 import Backend, {BackendOptions} from 'i18next-http-backend';
 import {createStore} from '@stencil/store';
+import {defer} from '../../utils/utils';
 
 export type InitializationOptions = Pick<
   HeadlessConfigurationOptions,
@@ -42,8 +44,9 @@ export type InitializationOptions = Pick<
   assetsDirs: ['lang'],
 })
 export class AtomicSearchInterface {
-  @Prop() reflectStateInUrl = true;
-  private unsubscribe: Unsubscribe = () => {};
+  private searchParamsManager!: SearchParameterManager;
+  private updatingSearchParams = false;
+  private unsubscribeSearchParamsManager: Unsubscribe = () => {};
   private hangingComponentsInitialization: InitializeEvent[] = [];
   private initialized = false;
   private store = createStore<AtomicStore>({facets: {}});
@@ -82,6 +85,11 @@ export class AtomicSearchInterface {
    */
   @Prop({mutable: true}) public engine?: Engine;
 
+  /**
+   * Whether the state should be reflected in the url parameters
+   */
+  @Prop() public reflectStateInUrl = true;
+
   @Watch('searchHub')
   @Watch('pipeline')
   public updateSearchConfiguration() {
@@ -99,7 +107,7 @@ export class AtomicSearchInterface {
   }
 
   public disconnectedCallback() {
-    this.unsubscribe();
+    this.unsubscribeSearchParamsManager();
   }
 
   @Listen('atomic/initializeComponent')
@@ -196,21 +204,58 @@ export class AtomicSearchInterface {
     );
   }
 
+  private get urlSearchParams() {
+    const stateWithoutHash = window.location.hash.slice(1);
+    const decodedState = decodeURIComponent(stateWithoutHash);
+    return buildSearchParameterSerializer().deserialize(decodedState);
+  }
+
+  private get stateSearchParams() {
+    return buildSearchParameterSerializer().serialize(
+      this.searchParamsManager.state.parameters
+    );
+  }
+
   private initSearchParameterManager() {
-    if (this.reflectStateInUrl) {
-      const stateWithoutHash = window.location.hash.slice(1);
-      const decodedState = decodeURIComponent(stateWithoutHash);
-      const {serialize, deserialize} = buildSearchParameterSerializer();
-      const params = deserialize(decodedState);
-
-      const manager = buildSearchParameterManager(this.engine!, {
-        initialState: {parameters: params},
-      });
-
-      this.unsubscribe = manager.subscribe(() => {
-        window.location.hash = serialize(manager.state.parameters);
-      });
+    if (!this.reflectStateInUrl) {
+      return;
     }
+
+    this.searchParamsManager = buildSearchParameterManager(this.engine!, {
+      initialState: {parameters: this.urlSearchParams},
+    });
+
+    this.unsubscribeSearchParamsManager = this.searchParamsManager.subscribe(
+      () => this.updateUrlSearchParams()
+    );
+
+    // TODO: remove event listener on disconnectedCallback
+    window.addEventListener('hashchange', () => this.onUrlHashChange());
+  }
+
+  private updateUrlSearchParams() {
+    const state = this.stateSearchParams;
+    this.bindings.engine.logger.debug(
+      'Updating url parameters from state',
+      state
+    );
+    defer(() => (this.updatingSearchParams = false));
+    this.updatingSearchParams = true;
+    window.location.hash = state;
+  }
+
+  private onUrlHashChange() {
+    if (this.updatingSearchParams) {
+      return;
+    }
+
+    const params = this.urlSearchParams;
+    this.bindings.engine.logger.debug(
+      'Updating state from url parameters',
+      params
+    );
+    // TODO: add method
+    // this.searchParamsManager.updateState...
   }
 
   public render() {

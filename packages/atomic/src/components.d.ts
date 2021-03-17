@@ -320,6 +320,9 @@ export namespace Components {
           * The search interface [query pipeline](https://docs.coveo.com/en/180/).
          */
         "pipeline": string;
+        /**
+          * Whether the state should be reflected in the url parameters
+         */
         "reflectStateInUrl": boolean;
         /**
           * The search interface [search hub](https://docs.coveo.com/en/1342/).
@@ -916,6 +919,9 @@ declare namespace LocalJSX {
           * The search interface [query pipeline](https://docs.coveo.com/en/180/).
          */
         "pipeline"?: string;
+        /**
+          * Whether the state should be reflected in the url parameters
+         */
         "reflectStateInUrl"?: boolean;
         /**
           * The search interface [search hub](https://docs.coveo.com/en/1342/).
