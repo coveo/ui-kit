@@ -12,7 +12,8 @@ export const caseAssistReducer = createReducer(
       .addCase(getClassifications.fulfilled, (state, action) => {
         if (action.payload) {
           state.classifications = {
-            ...action.payload.classifications,
+            fields: action.payload.classifications.fields,
+            responseId: action.payload.classifications.responseId,
             loading: false,
             error: null,
           };

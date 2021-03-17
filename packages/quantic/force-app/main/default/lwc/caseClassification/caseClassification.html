@@ -11,13 +11,11 @@
             <template for:each={classifications.fields} for:item="field">
                 <li key={field.name}>
                     <h2>{field.name}</h2>
-                    <ol>
+                    <div class="slds-pill_container">
                         <template for:each={field.predictions} for:item="prediction">
-                            <li key={prediction.id}>
-                                <span>({prediction.confidence}%)</span>&nbsp;<span>{prediction.value}</span>
-                            </li>
+                            <span key={prediction.value} class="slds-pill">{prediction.value}</span>
                         </template>
-                    </ol>
+                    </div>
                 </li>
             </template>
         </ul>

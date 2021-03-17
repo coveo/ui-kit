@@ -14,6 +14,7 @@ import {
   enableAnalytics,
   updateAnalyticsConfiguration,
   localeValidation,
+  updateCaseAssistConfiguration,
 } from '../features/configuration/configuration-actions';
 import {configureStore, Store, ThunkExtraArguments} from './store';
 import {SearchAPIClient} from '../api/search/search-api-client';
@@ -42,6 +43,7 @@ import {
   AnalyticsClientSendEventHook,
   IRuntimeEnvironment,
 } from 'coveo.analytics';
+import {ServiceAPIClient} from '../api/service/service-api-client';
 
 export type LogLevel = LevelWithSilent;
 
@@ -202,6 +204,20 @@ export interface HeadlessConfigurationOptions {
      */
     runtimeEnvironment?: IRuntimeEnvironment;
   };
+  /**
+   * The global headless engine options specific to the Case Assist.
+   */
+  caseAssist?: {
+    /**
+     * Specifies the current visitor ID.
+     */
+    visitorId?: string;
+
+    /**
+     * Specifies the Case Assist configuration ID to use.
+     */
+    caseAssistId: string;
+  };
 }
 
 type EngineDispatch<State> = ThunkDispatch<
@@ -278,6 +294,11 @@ export class HeadlessEngine<Reducers extends ReducersMapObject>
         ...rest
       } = options.configuration.analytics;
       this.reduxStore.dispatch(updateAnalyticsConfiguration(rest));
+    }
+    if (options.configuration.caseAssist) {
+      this.reduxStore.dispatch(
+        updateCaseAssistConfiguration(options.configuration.caseAssist)
+      );
     }
   }
 
@@ -381,6 +402,10 @@ export class HeadlessEngine<Reducers extends ReducersMapObject>
           postprocessQuerySuggestResponseMiddleware:
             search?.preprocessQuerySuggestResponseMiddleware ||
             NoopPostprocessQuerySuggestResponseMiddleware,
+        }),
+        serviceAPIClient: new ServiceAPIClient({
+          logger: this.logger,
+          renewAccessToken: () => this.renewAccessToken(),
         }),
         analyticsClientMiddleware: this.analyticsClientMiddleware(this.options),
         logger: this.logger,

@@ -15,10 +15,12 @@ import {
 } from './logger-middlewares';
 import {validatePayloadAndThrow} from '../utils/validate-payload';
 import {PreprocessRequest} from '../api/preprocess-request';
+import {ServiceAPIClient} from '../api/service/service-api-client';
 
 export interface ThunkExtraArguments {
   preprocessRequest?: PreprocessRequest;
   searchAPIClient: SearchAPIClient;
+  serviceAPIClient: ServiceAPIClient;
   analyticsClientMiddleware: AnalyticsClientSendEventHook;
   logger: Logger;
   validatePayload: typeof validatePayloadAndThrow;

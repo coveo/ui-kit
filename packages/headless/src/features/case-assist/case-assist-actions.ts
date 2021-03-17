@@ -1,38 +1,63 @@
 import {createAsyncThunk} from '@reduxjs/toolkit';
+import {ServiceAPIClient} from '../../api/service/service-api-client';
 
 export interface GetClassificationsRequest {
   fields: {[field: string]: string};
   context?: {[key: string]: any};
 }
 
+export interface GetClassificationsFieldResponse {
+  name: string;
+  predictions: {
+    // id: string;
+    value: string;
+    confidence: number;
+  }[];
+}
+
+export interface GetClassificationsResponse {
+  classifications: {
+    fields: GetClassificationsFieldResponse[];
+    responseId: string;
+  };
+}
+
 export const getClassifications = createAsyncThunk(
   'caseAssist/getClassifications',
-  async (request: GetClassificationsRequest, thunkApi) => {
-    console.log(`has request: ${request !== undefined}`);
-    console.log(`has thunkApi: ${thunkApi !== undefined}`);
+  async (
+    request: GetClassificationsRequest,
+    {getState, extra: {serviceAPIClient}}: any
+  ) => {
+    const state = getState();
 
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    const response = await (serviceAPIClient as ServiceAPIClient).classify({
+      url: state.configuration.platformUrl,
+      accessToken: state.configuration.accessToken,
+      organizationId: state.configuration.organizationId,
+      locale: state.configuration.search.locale,
+      caseAssistId: state.configuration.caseAssist.caseAssistId,
+      visitorId: state.configuration.caseAssist.visitorId,
+      ...request,
+    });
 
-    if (request.fields.subject === 'error') {
-      throw new Error('Boom!');
-    }
-
-    return {
-      classifications: {
-        fields: [
-          {
-            name: 'now',
-            predictions: [
-              {
-                id: '3fe56ea0-1b98-4822-ad40-d42480c818d3',
-                value: Date.now().toString(),
-                confidence: Math.random(),
-              },
-            ],
-          },
-        ],
-        responseId: '1d2a7406-d0f8-41bf-ba5d-8bbd78536929',
-      },
-    };
+    return parseGetClassificationsResponse(response);
   }
 );
+
+const parseGetClassificationsResponse = (response: any) => {
+  const fields: GetClassificationsFieldResponse[] = [];
+
+  Object.keys(response.success.fields).forEach((fieldName) => {
+    fields.push({
+      name: fieldName,
+      predictions: response.success.fields[fieldName].predictions,
+    });
+  });
+
+  return {
+    classifications: {
+      fields: fields,
+      responseId: response.success.responseId,
+    },
+  };
+};

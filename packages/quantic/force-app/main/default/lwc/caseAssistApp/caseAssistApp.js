@@ -48,8 +48,10 @@ export default class CaseAssistApp extends LightningElement {
         this.config.organizationId = 'lbergeronsfdevt1z2624x'
         this.config.accessToken = 'xxc4fa7e0b-cc28-4a46-a648-1fb055c94808'
         this.config.platformUrl = 'https://platformdev.cloud.coveo.com'
-        // TODO: Deleting this.config.search looks hackish... find out why it is required.
-        delete this.config.search;
+        this.config.caseAssist = {
+            visitorId: 'foo',
+            caseAssistId: '42f425ff-fdb9-4438-b457-185b2fc5fc0e'
+        }
     }
 
     initEngine() {

@@ -4,7 +4,7 @@ export interface ClassificationFieldState {
 }
 
 export interface ClassificationPredictionState {
-  id: string;
+  // id: string;
   value: string;
   confidence: number;
 }

@@ -65,6 +65,20 @@ export interface ConfigurationState {
      */
     runtimeEnvironment?: IRuntimeEnvironment;
   };
+  /**
+   * The global headless engine Case Assist configuration
+   */
+  caseAssist: {
+    /**
+     * Specifies the current visitor ID.
+     */
+    visitorId?: string;
+
+    /**
+     * Specifies the ID of the Case Assist configuration to use.
+     */
+    caseAssistId?: string;
+  };
 }
 
 export const searchAPIEndpoint = '/rest/search/v2';
@@ -83,5 +97,9 @@ export const getConfigurationInitialState: () => ConfigurationState = () => ({
     apiBaseUrl: `${platformUrl()}${analyticsAPIEndpoint}`,
     originLevel2: 'default',
     originLevel3: 'default',
+  },
+  caseAssist: {
+    visitorId: undefined,
+    caseAssistId: undefined,
   },
 });
