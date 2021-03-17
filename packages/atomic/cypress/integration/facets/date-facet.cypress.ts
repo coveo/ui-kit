@@ -1,4 +1,7 @@
-import {setUpPage, shouldRenderErrorComponent} from '../utils/setupComponent';
+import {
+  setUpPage,
+  shouldRenderErrorComponent,
+} from '../../utils/setupComponent';
 import {
   validateFacetComponentLoaded,
   validateFacetNumberofValueGreaterThan,
@@ -20,6 +23,7 @@ import {
   createAliasShadow,
   createAliasFacetUL,
   createBreadcrumbShadowAlias,
+  FacetAlias,
 } from './facet-selectors';
 
 const dateFacetProp = {
@@ -70,7 +74,7 @@ function setupCustomDateFacet(
   );
 }
 
-describe('Standard Numeric Facet', () => {
+describe('Date Facet', () => {
   beforeEach(() => {
     setupAutoDateFacet(dateFacetProp.field, dateFacetProp.label);
     createAliasShadow(dateFacetProp.field, FacetSelectors.facetDate);
@@ -78,7 +82,7 @@ describe('Standard Numeric Facet', () => {
   });
 
   describe('When page is loaded', () => {
-    it('Numeric facet should load, pass accessibility test and have correct label and facetCount', () => {
+    it('Date facet should load, pass accessibility test and have correct label and facetCount', () => {
       validateFacetComponentLoaded(
         dateFacetProp.label,
         FacetSelectors.facetDate
@@ -91,21 +95,24 @@ describe('Standard Numeric Facet', () => {
 
     describe('When select 1 facetValue checkbox', () => {
       it('Should activate checkbox, have valid facetCount and log UA', () => {
-        assertBasicFacetFunctionality('@firstFacetValue', dateFacetProp.field);
+        assertBasicFacetFunctionality(
+          FacetAlias.facetFirstValueLabel,
+          dateFacetProp.field
+        );
       });
 
       it('Should trigger breadcrumb and display correctly', () => {
-        cy.get('@firstFacetValue').click();
+        cy.get(FacetAlias.facetFirstValueLabel).click();
         createBreadcrumbShadowAlias();
         cy.get('@breadcrumbClearAllFilter').should('be.visible');
         facetValueShouldDisplayInBreadcrumb(
-          '@firstFacetValue',
+          FacetAlias.facetFirstValueLabel,
           '.breadcrumb:nth-child(1) button span'
         );
       });
 
       it('Should reflect selected facetValue on URL', () => {
-        cy.get('@firstFacetValue')
+        cy.get(FacetAlias.facetFirstValueLabel)
           .click()
           .find('label span:nth-child(1)')
           .invoke('text')
@@ -144,7 +151,7 @@ describe('Date facet with custom ranges', () => {
   });
 
   describe('When page is loaded', () => {
-    it('Numeric facet should load, pass accessibility test and have correct label', () => {
+    it('Date facet should load, pass accessibility test and have correct label', () => {
       validateFacetComponentLoaded(
         dateFacetProp.label,
         FacetSelectors.facetDate
@@ -152,14 +159,16 @@ describe('Date facet with custom ranges', () => {
     });
 
     it('Should generate all custom ranges', () => {
-      cy.getTextOfAllElements('@allFacetValueLabel').then((elements) => {
-        Object.keys(dateRange).forEach((i) => {
-          const facetValueConverted = convertDateToFacetValue(
-            (dateRange as any)[i]
-          );
-          expect(elements).to.include(facetValueConverted);
-        });
-      });
+      cy.getTextOfAllElements(FacetAlias.facetAllValueLabel).then(
+        (elements) => {
+          Object.keys(dateRange).forEach((i) => {
+            const facetValueConverted = convertDateToFacetValue(
+              (dateRange as any)[i]
+            );
+            expect(elements).to.include(facetValueConverted);
+          });
+        }
+      );
     });
 
     it('Should generate correct number of custom ranges', () => {
@@ -169,7 +178,10 @@ describe('Date facet with custom ranges', () => {
 
     describe.skip('When select 1 facetValue checkbox', () => {
       it('Should activate checkbox and log UA', () => {
-        assertBasicFacetFunctionality('@firstFacetValue', dateFacetProp.field);
+        assertBasicFacetFunctionality(
+          FacetAlias.facetFirstValueLabel,
+          dateFacetProp.field
+        );
       });
     });
   });
@@ -202,7 +214,7 @@ describe('Date with custom date-format', () => {
     const formatedEnd = convertDateFormatLabel('01/01/2014', 'DD/MMM/YYYY');
     const formatedLabel = `${formatedStart} to ${formatedEnd}`;
 
-    cy.get('@firstFacetValue')
+    cy.get(FacetAlias.facetFirstValueLabel)
       .find('label span:nth-child(1)')
       .should('contain.text', formatedLabel);
   });

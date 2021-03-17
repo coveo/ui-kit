@@ -1,10 +1,5 @@
-import {getApiRequestBodyAt} from '../utils/network';
-
-import {FacetSelectors} from './facet-selectors';
-import {
-  revertFormatNumericFacet,
-  revertFormatedDateFacet,
-} from '../utils/componentUtils';
+import {getApiRequestBodyAt} from '../../utils/network';
+import {FacetSelectors, FacetAlias, BreadcrumbAlias} from './facet-selectors';
 
 export const FacetType = {
   numericFacet: 'numericalRange',
@@ -17,18 +12,23 @@ export function validateFacetComponentLoaded(
 ) {
   facetSelector = facetSelector ? facetSelector : FacetSelectors.facetStandard;
   cy.get(facetSelector).should('be.visible');
-  cy.get('@facetShadow').find('div:nth-child(1)').should('contain.text', label);
+  cy.get(FacetAlias.facetShadow)
+    .find('div:nth-child(1)')
+    .should('contain.text', label);
   cy.checkA11y(facetSelector);
   assertNonZeroFacetCount();
 }
 
 export function validateFacetNumberofValueEqual(totalNumber: number) {
   cy.wait(200);
-  cy.get('@facet_ul').find('li').its('length').should('eq', totalNumber);
+  cy.get(FacetAlias.facetUL).find('li').its('length').should('eq', totalNumber);
 }
 
 export function validateFacetNumberofValueGreaterThan(totalNumber: number) {
-  cy.get('@facet_ul').find('li').its('length').should('be.gt', totalNumber);
+  cy.get(FacetAlias.facetUL)
+    .find('li')
+    .its('length')
+    .should('be.gt', totalNumber);
 }
 
 export function facetValueShouldDisplayInBreadcrumb(
@@ -39,7 +39,7 @@ export function facetValueShouldDisplayInBreadcrumb(
     .find('label span:nth-child(1)')
     .invoke('text')
     .then((text) => {
-      cy.get('@breadcrumbFacet')
+      cy.get(BreadcrumbAlias.breadcrumbFacet)
         .first()
         .find(valueDisplayInBreadcrumbSelector)
         // .debug()
@@ -98,8 +98,8 @@ export function convertFacetValueToAPIformat(
 
   switch (facetTypeOption) {
     case FacetType.numericFacet: {
-      const formtedStart = revertFormatNumericFacet(start);
-      const formatedEnd = revertFormatNumericFacet(end);
+      const formtedStart = revertFormatedNumericFacet(start);
+      const formatedEnd = revertFormatedNumericFacet(end);
       return `${formtedStart}..${formatedEnd}`;
     }
     case FacetType.dateFacet: {
@@ -141,9 +141,9 @@ export function convertDateToFacetValue(
 }
 
 export function assertDeselectFacet(field: string) {
-  cy.get('@firstFacetValue').click();
+  cy.get(FacetAlias.facetFirstValueLabel).click();
   cy.wait(500);
-  cy.get('@firstFacetValue')
+  cy.get(FacetAlias.facetFirstValueLabel)
     .click()
     .find(FacetSelectors.checkbox)
     .should('not.be.checked');
@@ -154,13 +154,13 @@ export function assertDeselectFacet(field: string) {
 }
 
 export function assertClearAllFacet() {
-  cy.get('@firstFacetValue').click();
-  cy.get('@secondFacetValue').click();
-  cy.get('@facetShadow').find(FacetSelectors.clearAllButton).click();
-  cy.get('@firstFacetValue')
+  cy.get(FacetAlias.facetFirstValueLabel).click();
+  cy.get(FacetAlias.facetSecondValueLabel).click();
+  cy.get(FacetAlias.facetShadow).find(FacetSelectors.clearAllButton).click();
+  cy.get(FacetAlias.facetFirstValueLabel)
     .find(FacetSelectors.checkbox)
     .should('not.be.checked');
-  cy.get('@secondFacetValue')
+  cy.get(FacetAlias.facetSecondValueLabel)
     .find(FacetSelectors.checkbox)
     .should('not.be.checked');
   cy.getAnalyticsAt('@coveoAnalytics', 3).then((analyticsBody) => {
@@ -170,7 +170,7 @@ export function assertClearAllFacet() {
 }
 
 export function assertNonZeroFacetCount(selector?: string) {
-  selector = selector ? selector : '@allFacetValueCount';
+  selector = selector ? selector : FacetAlias.facetAllValueLabel;
   cy.getTextOfAllElements(selector).then((counts) => {
     expect(counts).not.to.include('0');
   });
@@ -192,4 +192,16 @@ export function convertDateFormatLabel(date: string, formatType?: string) {
     default:
       return date;
   }
+}
+
+export function revertFormatedNumericFacet(num: string) {
+  return Number(num.replace(/,/g, ''));
+}
+
+export function revertFormatedDateFacet(date: string) {
+  const splitDate = date.split('/');
+  const year = splitDate[2];
+  const month = splitDate[1];
+  const day = splitDate[0];
+  return `${year}/${month}/${day}`;
 }

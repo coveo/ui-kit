@@ -1,4 +1,7 @@
-import {setUpPage, shouldRenderErrorComponent} from '../utils/setupComponent';
+import {
+  setUpPage,
+  shouldRenderErrorComponent,
+} from '../../utils/setupComponent';
 import {
   validateFacetComponentLoaded,
   validateFacetNumberofValueGreaterThan,
@@ -19,6 +22,8 @@ import {
   createAliasShadow,
   createAliasFacetUL,
   createBreadcrumbShadowAlias,
+  FacetAlias,
+  BreadcrumbAlias,
 } from './facet-selectors';
 
 const numericFacetProp = {
@@ -91,23 +96,23 @@ describe('Standard Numeric Facet', () => {
     describe('When select 1 facetValue checkbox', () => {
       it('Should activate checkbox and log UA', () => {
         assertBasicFacetFunctionality(
-          '@firstFacetValue',
+          FacetAlias.facetFirstValueLabel,
           numericFacetProp.field
         );
       });
 
       it('Should trigger breadcrumb and display correctly', () => {
-        cy.get('@firstFacetValue').click();
+        cy.get(FacetAlias.facetFirstValueLabel).click();
         createBreadcrumbShadowAlias();
-        cy.get('@breadcrumbClearAllFilter').should('be.visible');
+        cy.get(BreadcrumbAlias.breadcrumbClearAllFilter).should('be.visible');
         facetValueShouldDisplayInBreadcrumb(
-          '@firstFacetValue',
+          FacetAlias.facetFirstValueLabel,
           '.breadcrumb:nth-child(1) button span'
         );
       });
 
       it('Should reflect selected facetValue on URL', () => {
-        cy.get('@firstFacetValue')
+        cy.get(FacetAlias.facetFirstValueLabel)
           .click()
           .find('label span:nth-child(1)')
           .invoke('text')
@@ -158,14 +163,16 @@ describe('Numeric facet with custom ranges', () => {
     });
 
     it('Should generate all custom ranges', () => {
-      cy.getTextOfAllElements('@allFacetValueLabel').then((elements) => {
-        Object.keys(numericRange).forEach((i) => {
-          const facetValueConverted = convertRangeToFacetValue(
-            (numericRange as any)[i]
-          );
-          expect(elements).to.include(facetValueConverted);
-        });
-      });
+      cy.getTextOfAllElements(FacetAlias.facetAllValueLabel).then(
+        (elements) => {
+          Object.keys(numericRange).forEach((i) => {
+            const facetValueConverted = convertRangeToFacetValue(
+              (numericRange as any)[i]
+            );
+            expect(elements).to.include(facetValueConverted);
+          });
+        }
+      );
     });
 
     it('Should generate correct number of custom ranges', () => {
@@ -176,7 +183,7 @@ describe('Numeric facet with custom ranges', () => {
     describe('When select 1 facetValue checkbox', () => {
       it('Should activate checkbox and log UA', () => {
         assertBasicFacetFunctionality(
-          '@firstFacetValue',
+          FacetAlias.facetFirstValueLabel,
           numericFacetProp.field
         );
       });
