@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.8.0-alpha.26](https://github.com/coveo/ui-kit/compare/v0.8.0-alpha.25...v0.8.0-alpha.26) (2021-03-17)
+
+
+### Bug Fixes
+
+* **atomic:** remove double space in atomic-query-summary ([#637](https://github.com/coveo/ui-kit/issues/637)) ([a9e8031](https://github.com/coveo/ui-kit/commit/a9e803177ec7db94be631bc81f2af1a63c5b20a3))
+
+
+
+
+
 # [0.8.0-alpha.25](https://github.com/coveo/ui-kit/compare/v0.8.0-alpha.24...v0.8.0-alpha.25) (2021-03-16)
 
 **Note:** Version bump only for package ui-kit
