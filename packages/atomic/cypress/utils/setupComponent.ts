@@ -1,4 +1,5 @@
 export function injectComponent(componentInCode: string) {
+  cy.get('atomic-search-interface').should('exist');
   cy.document().then((document: any) => {
     document.querySelector(
       'atomic-search-interface'
