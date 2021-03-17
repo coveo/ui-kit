@@ -3,6 +3,47 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.8.0-alpha.25](https://github.com/coveo/ui-kit/compare/v0.8.0-alpha.24...v0.8.0-alpha.25) (2021-03-16)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [0.8.0-alpha.24](https://github.com/coveo/ui-kit/compare/v0.8.0-alpha.23...v0.8.0-alpha.24) (2021-03-16)
+
+
+### Bug Fixes
+
+* **atomic:** do not generate automatic ranges when manual values are provided ([#631](https://github.com/coveo/ui-kit/issues/631)) ([17b6931](https://github.com/coveo/ui-kit/commit/17b6931600956315832fdab2a92e8f7ff8cb7fef))
+
+
+
+
+
+# [0.8.0-alpha.23](https://github.com/coveo/ui-kit/compare/v0.8.0-alpha.22...v0.8.0-alpha.23) (2021-03-16)
+
+
+### Features
+
+* **atomic:** do not generate automatic ranges when manual ranges are provided ([50063a6](https://github.com/coveo/ui-kit/commit/50063a603eb2f4b2f44be946d2f9cb990b96b196))
+
+
+
+
+
+# [0.8.0-alpha.22](https://github.com/coveo/ui-kit/compare/v0.8.0-alpha.21...v0.8.0-alpha.22) (2021-03-15)
+
+
+### Features
+
+* **atomic:** complete atomic-did-you-mean component ([#621](https://github.com/coveo/ui-kit/issues/621)) ([3adff56](https://github.com/coveo/ui-kit/commit/3adff56bd038fb3186fb7d94a243e6af8fde0364))
+
+
+
+
+
 # [0.8.0-alpha.21](https://github.com/coveo/ui-kit/compare/v0.8.0-alpha.20...v0.8.0-alpha.21) (2021-03-15)
 
 **Note:** Version bump only for package @coveo/atomic
