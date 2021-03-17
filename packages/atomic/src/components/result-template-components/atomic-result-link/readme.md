@@ -23,6 +23,8 @@
 graph TD;
   atomic-result-link --> atomic-result-text
   atomic-result-text --> atomic-component-error
+  atomic-result-text --> atomic-text
+  atomic-text --> atomic-component-error
   style atomic-result-link fill:#f9f,stroke:#333,stroke-width:4px
 ```
 
