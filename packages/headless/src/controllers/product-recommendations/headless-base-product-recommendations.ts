@@ -4,6 +4,7 @@ import {
   setProductRecommendationsSkus,
   setProductRecommendationsMaxNumberOfRecommendations,
   setProductRecommendationsRecommenderId,
+  setProductRecommendationsAdditionalFields,
 } from '../../features/product-recommendations/product-recommendations-actions';
 import {
   ConfigurationSection,
@@ -20,6 +21,10 @@ import {
 import {validateOptions} from '../../utils/validate-payload';
 
 export const baseProductRecommendationsOptionsSchema = {
+  additionalFields: new ArrayValue<string>({
+    required: false,
+    each: new StringValue({emptyAllowed: false}),
+  }),
   skus: new ArrayValue<string>({
     required: false,
     each: new StringValue({emptyAllowed: false}),
@@ -75,6 +80,13 @@ export const buildBaseProductRecommendationsList = (
       number: options.maxNumberOfRecommendations,
     })
   );
+  if (options.additionalFields) {
+    dispatch(
+      setProductRecommendationsAdditionalFields({
+        additionalFields: options.additionalFields,
+      })
+    );
+  }
   if (options.skus) {
     dispatch(
       setProductRecommendationsSkus({

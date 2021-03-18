@@ -203,7 +203,23 @@ export namespace Components {
          */
         "format": string;
     }
+    interface AtomicResultIcon {
+        /**
+          * Allow to specify the icon to display from the list of available icons.  By default, will parse the `objecttype` field and the `filetype` field to find a matching icon. If none are available, will use the `custom` icon.
+         */
+        "icon"?: string;
+    }
+    interface AtomicResultImage {
+        /**
+          * The result field which the component should use. Will look in the Result object first and then in the Result.raw object for the fields. It is important to include the necessary fields in the ResultList component.
+         */
+        "field": string;
+    }
     interface AtomicResultLink {
+        /**
+          * Where to display the linked URL, as the name for a browsing context (a tab, window, or <iframe>).  The following keywords have special meanings for where to load the URL: - _self: the current browsing context. (Default) - _blank: usually a new tab, but users can configure browsers to open a new window instead. - _parent: the parent browsing context of the current one. If no parent, behaves as _self. - _top: the topmost browsing context (the "highest" context that’s an ancestor of the current one). If no ancestors, behaves as _self.
+         */
+        "target": string;
     }
     interface AtomicResultList {
         /**
@@ -484,6 +500,18 @@ declare global {
         prototype: HTMLAtomicResultDateElement;
         new (): HTMLAtomicResultDateElement;
     };
+    interface HTMLAtomicResultIconElement extends Components.AtomicResultIcon, HTMLStencilElement {
+    }
+    var HTMLAtomicResultIconElement: {
+        prototype: HTMLAtomicResultIconElement;
+        new (): HTMLAtomicResultIconElement;
+    };
+    interface HTMLAtomicResultImageElement extends Components.AtomicResultImage, HTMLStencilElement {
+    }
+    var HTMLAtomicResultImageElement: {
+        prototype: HTMLAtomicResultImageElement;
+        new (): HTMLAtomicResultImageElement;
+    };
     interface HTMLAtomicResultLinkElement extends Components.AtomicResultLink, HTMLStencilElement {
     }
     var HTMLAtomicResultLinkElement: {
@@ -595,6 +623,8 @@ declare global {
         "atomic-relevance-inspector": HTMLAtomicRelevanceInspectorElement;
         "atomic-result": HTMLAtomicResultElement;
         "atomic-result-date": HTMLAtomicResultDateElement;
+        "atomic-result-icon": HTMLAtomicResultIconElement;
+        "atomic-result-image": HTMLAtomicResultImageElement;
         "atomic-result-link": HTMLAtomicResultLinkElement;
         "atomic-result-list": HTMLAtomicResultListElement;
         "atomic-result-list-placeholder": HTMLAtomicResultListPlaceholderElement;
@@ -806,7 +836,23 @@ declare namespace LocalJSX {
          */
         "format"?: string;
     }
+    interface AtomicResultIcon {
+        /**
+          * Allow to specify the icon to display from the list of available icons.  By default, will parse the `objecttype` field and the `filetype` field to find a matching icon. If none are available, will use the `custom` icon.
+         */
+        "icon"?: string;
+    }
+    interface AtomicResultImage {
+        /**
+          * The result field which the component should use. Will look in the Result object first and then in the Result.raw object for the fields. It is important to include the necessary fields in the ResultList component.
+         */
+        "field": string;
+    }
     interface AtomicResultLink {
+        /**
+          * Where to display the linked URL, as the name for a browsing context (a tab, window, or <iframe>).  The following keywords have special meanings for where to load the URL: - _self: the current browsing context. (Default) - _blank: usually a new tab, but users can configure browsers to open a new window instead. - _parent: the parent browsing context of the current one. If no parent, behaves as _self. - _top: the topmost browsing context (the "highest" context that’s an ancestor of the current one). If no ancestors, behaves as _self.
+         */
+        "target"?: string;
     }
     interface AtomicResultList {
         /**
@@ -983,6 +1029,8 @@ declare namespace LocalJSX {
         "atomic-relevance-inspector": AtomicRelevanceInspector;
         "atomic-result": AtomicResult;
         "atomic-result-date": AtomicResultDate;
+        "atomic-result-icon": AtomicResultIcon;
+        "atomic-result-image": AtomicResultImage;
         "atomic-result-link": AtomicResultLink;
         "atomic-result-list": AtomicResultList;
         "atomic-result-list-placeholder": AtomicResultListPlaceholder;
@@ -1024,6 +1072,8 @@ declare module "@stencil/core" {
             "atomic-relevance-inspector": LocalJSX.AtomicRelevanceInspector & JSXBase.HTMLAttributes<HTMLAtomicRelevanceInspectorElement>;
             "atomic-result": LocalJSX.AtomicResult & JSXBase.HTMLAttributes<HTMLAtomicResultElement>;
             "atomic-result-date": LocalJSX.AtomicResultDate & JSXBase.HTMLAttributes<HTMLAtomicResultDateElement>;
+            "atomic-result-icon": LocalJSX.AtomicResultIcon & JSXBase.HTMLAttributes<HTMLAtomicResultIconElement>;
+            "atomic-result-image": LocalJSX.AtomicResultImage & JSXBase.HTMLAttributes<HTMLAtomicResultImageElement>;
             "atomic-result-link": LocalJSX.AtomicResultLink & JSXBase.HTMLAttributes<HTMLAtomicResultLinkElement>;
             "atomic-result-list": LocalJSX.AtomicResultList & JSXBase.HTMLAttributes<HTMLAtomicResultListElement>;
             "atomic-result-list-placeholder": LocalJSX.AtomicResultListPlaceholder & JSXBase.HTMLAttributes<HTMLAtomicResultListPlaceholderElement>;
