@@ -9,7 +9,7 @@ export interface GetClassificationsRequest {
 export interface GetClassificationsFieldResponse {
   name: string;
   predictions: {
-    // id: string;
+    id: string;
     value: string;
     confidence: number;
   }[];

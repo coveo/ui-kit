@@ -1,6 +1,7 @@
 import {LightningElement, track} from 'lwc';
 import HeadlessPath from '@salesforce/resourceUrl/coveoheadless';
 import AtomicPath from '@salesforce/resourceUrl/atomicutils';
+// @ts-ignore
 import { loadScript } from 'lightning/platformResourceLoader';
 
 export default class CaseAssistApp extends LightningElement {

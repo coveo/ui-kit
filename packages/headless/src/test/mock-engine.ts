@@ -21,6 +21,8 @@ import {
 } from '../app/logger-middlewares';
 import {validatePayloadAndThrow} from '../utils/validate-payload';
 import {buildMockSearchAPIClient} from './mock-search-api-client';
+import {CaseAssistAppState} from '../state/case-assist-app-state';
+import {createMockCaseAssistState} from './mock-case-assist-state';
 
 type AsyncActionCreator<ThunkArg> = ActionCreatorWithPreparedPayload<
   [string, ThunkArg],
@@ -33,7 +35,8 @@ type AsyncActionCreator<ThunkArg> = ActionCreatorWithPreparedPayload<
 export type AppState =
   | SearchAppState
   | RecommendationAppState
-  | ProductRecommendationsAppState;
+  | ProductRecommendationsAppState
+  | CaseAssistAppState;
 
 export interface MockEngine<T extends AppState> extends Engine<T> {
   mockStore: MockStore;
@@ -64,6 +67,12 @@ export function buildMockProductRecommendationsAppEngine(
   config: Partial<Engine<ProductRecommendationsAppState>> = {}
 ): MockEngine<ProductRecommendationsAppState> {
   return buildMockEngine(config, buildMockProductRecommendationsState);
+}
+
+export function buildMockCaseAssistAppEngine(
+  config: Partial<Engine<CaseAssistAppState>> = {}
+): MockEngine<CaseAssistAppState> {
+  return buildMockEngine(config, createMockCaseAssistState);
 }
 
 function buildMockEngine<T extends AppState>(
