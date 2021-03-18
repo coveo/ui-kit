@@ -45,7 +45,7 @@ export type InitializationOptions = Pick<
 })
 export class AtomicSearchInterface {
   private searchParamsManager!: SearchParameterManager;
-  private updatingSearchParams = false;
+  private searchParamsUpdating = false;
   private unsubscribeSearchParamsManager: Unsubscribe = () => {};
   private hangingComponentsInitialization: InitializeEvent[] = [];
   private initialized = false;
@@ -234,28 +234,37 @@ export class AtomicSearchInterface {
   }
 
   private updateUrlSearchParams() {
+    if (this.searchParamsUpdating) {
+      return;
+    }
+    defer(() => (this.searchParamsUpdating = false));
+    this.searchParamsUpdating = true;
+
     const state = this.stateSearchParams;
     this.bindings.engine.logger.debug(
       'Updating url parameters from state',
       state
     );
-    defer(() => (this.updatingSearchParams = false));
-    this.updatingSearchParams = true;
     window.location.hash = state;
   }
 
-  private onUrlHashChange() {
-    if (this.updatingSearchParams) {
+  private async onUrlHashChange() {
+    if (this.searchParamsUpdating) {
       return;
     }
+    defer(() => (this.searchParamsUpdating = false));
+    this.searchParamsUpdating = true;
 
     const params = this.urlSearchParams;
     this.bindings.engine.logger.debug(
       'Updating state from url parameters',
       params
     );
-    // TODO: add method
-    // this.searchParamsManager.updateState...
+    this.searchParamsManager.updateParameters(params);
+    // TODO: move search into the headless controller
+    this.engine!.dispatch(
+      SearchActions.executeSearch(AnalyticsActions.logInterfaceLoad())
+    );
   }
 
   public render() {
