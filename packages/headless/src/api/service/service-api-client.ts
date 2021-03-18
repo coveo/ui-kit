@@ -4,7 +4,12 @@ import {
 } from '../platform-client';
 import {NoopPreprocessRequest} from '../preprocess-request';
 import {Logger} from 'pino';
-import {baseCaseAssistRequest, ClassifyParam} from './service-api-params';
+import {
+  baseCaseAssistRequest,
+  ClassifyParam,
+  SuggestDocumentsParam,
+} from './service-api-params';
+import {Result} from '../search/search/result';
 
 export interface ServiceAPIClientOptions {
   renewAccessToken: () => Promise<string>;
@@ -42,6 +47,12 @@ export interface ClassifySuccessContent {
   responseId: string;
 }
 
+export interface SuggestDocumentsSuccessContent {
+  documents: Result[];
+  totalCount: number;
+  responseId: string;
+}
+
 export class ServiceAPIClient {
   private defaultClientHooks = {
     preprocessRequest: NoopPreprocessRequest,
@@ -50,7 +61,6 @@ export class ServiceAPIClient {
 
   constructor(private options: ServiceAPIClientOptions) {}
 
-  // TODO: figure out all the typing stuff once the call works
   async classify(
     req: ClassifyParam
   ): Promise<ServiceAPIResponse<ClassifySuccessContent>> {
@@ -65,16 +75,44 @@ export class ServiceAPIClient {
       ? {success: platformResponse.body}
       : {error: platformResponse.body};
   }
+
+  async suggestDocuments(
+    req: SuggestDocumentsParam
+  ): Promise<ServiceAPIResponse<SuggestDocumentsSuccessContent>> {
+    const platformResponse = await PlatformClient.call<any>({
+      ...baseCaseAssistRequest(
+        req,
+        'POST',
+        'application/json',
+        '/documents/suggest'
+      ),
+      requestParams: prepareSuggestDocumentsRequestParams(req),
+      ...this.options,
+      ...this.defaultClientHooks,
+    });
+
+    return platformResponse.response.ok
+      ? {success: platformResponse.body}
+      : {error: platformResponse.body};
+  }
 }
 
 const prepareClassifyRequestParams = (req: ClassifyParam) => ({
   visitorId: req.visitorId,
   locale: req.locale,
-  fields: prepareClassifyRequestFields(req.fields),
-  context: req.context,
+  fields: prepareSuggestionRequestFields(req.fields),
+  debug: req.debug,
 });
 
-const prepareClassifyRequestFields = (fields: any) => {
+const prepareSuggestDocumentsRequestParams = (req: SuggestDocumentsParam) => ({
+  visitorId: req.visitorId,
+  locale: req.locale,
+  fields: prepareSuggestionRequestFields(req.fields),
+  context: req.context,
+  debug: req.debug,
+});
+
+const prepareSuggestionRequestFields = (fields: any) => {
   const payload: {[key: string]: {value: string}} = {};
 
   Object.keys(fields).forEach((fieldName) => {

@@ -1,13 +1,13 @@
 import { initializeComponent } from 'c/initialization';
-import { LightningElement, api, track} from 'lwc';
+import {api, LightningElement, track} from 'lwc';
 
-export default class CaseClassification extends LightningElement {
-
+export default class DocumentSuggestions extends LightningElement {
     @track state = {
-        fields: [],
+        documents: [],
+        totalCount: 0,
         responseId: '',
         loading: false,
-        error: null
+        error: null,
     };
     unsubscribe;
     caseAssist;
@@ -29,10 +29,10 @@ export default class CaseClassification extends LightningElement {
     }
 
     updateState() {
-        this.state = this.caseAssist.state.classifications;
+        this.state = this.caseAssist.state.documentSuggestions;
     }
 
-    get hasClassifications() {
-        return !this.state.loading && !this.state.error && this.state.fields.length > 0;
+    get hasDocuments() {
+        return !this.state.loading && !this.state.error && this.state.documents.length > 0;
     }
 }

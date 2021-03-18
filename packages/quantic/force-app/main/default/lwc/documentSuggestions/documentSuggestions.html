@@ -1,0 +1,16 @@
+<template>
+    <template if:true={state.loading}>
+        <span style="font-weight: bold;">Loading...</span>
+    </template>
+    <template if:true={state.error}>
+        <span class="mod-error">Cannot get document suggestions</span><br />
+        <span class="mod-error">{state.error.message}</span>
+    </template>
+    <template if:true={hasDocuments}>
+        <ol>
+            <template for:each={state.documents} for:item="document">
+                <li key={document.uniqueId}>{document.title}</li>
+            </template>
+        </ol>
+    </template>
+</template>

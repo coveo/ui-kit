@@ -14,6 +14,13 @@ export interface ClassifyParam extends BaseCaseAssistParam {
   visitorId: string;
   locale?: string;
   fields: {[name: string]: string};
+  debug?: boolean;
+}
+
+export interface SuggestDocumentsParam extends BaseCaseAssistParam {
+  visitorId: string;
+  locale?: string;
+  fields: {[name: string]: string};
   context?: {[key: string]: any};
   debug?: boolean;
 }

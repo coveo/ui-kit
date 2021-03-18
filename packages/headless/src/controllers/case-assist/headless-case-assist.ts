@@ -2,6 +2,7 @@
 import {Engine} from '../../app/headless-engine';
 import {
   getClassifications,
+  getDocumentSuggestions,
   setCaseAssistId,
   setCaseInformationValue,
   setUserContextValue,
@@ -37,6 +38,7 @@ export interface CaseAssist extends Controller {
   setCaseInformationValue(fieldName: string, fieldValue: string): void;
   setUserContextValue(key: string, value: string): void;
   getClassifications(): void;
+  getDocumentSuggestions(): void;
 
   /**
    * The state of the `CaseAssist` controller.
@@ -81,6 +83,9 @@ export function buildCaseAssist(
     },
     getClassifications() {
       dispatch(getClassifications());
+    },
+    getDocumentSuggestions() {
+      dispatch(getDocumentSuggestions());
     },
   };
 }

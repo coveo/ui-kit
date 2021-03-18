@@ -1,6 +1,7 @@
 import {createReducer} from '@reduxjs/toolkit';
 import {
   getClassifications,
+  getDocumentSuggestions,
   setCaseAssistId,
   setCaseInformationValue,
   setUserContextValue,
@@ -35,6 +36,25 @@ export const caseAssistReducer = createReducer(
       .addCase(getClassifications.rejected, (state, action) => {
         state.classifications = {
           ...state.classifications,
+          loading: false,
+          error: action.payload?.error,
+        };
+      })
+      .addCase(getDocumentSuggestions.pending, (state) => {
+        state.documentSuggestions.loading = true;
+      })
+      .addCase(getDocumentSuggestions.fulfilled, (state, action) => {
+        state.documentSuggestions = {
+          documents: action.payload.documents,
+          totalCount: action.payload.totalCount,
+          responseId: action.payload.responseId,
+          loading: false,
+          error: null,
+        };
+      })
+      .addCase(getDocumentSuggestions.rejected, (state, action) => {
+        state.documentSuggestions = {
+          ...state.documentSuggestions,
           loading: false,
           error: action.payload?.error,
         };

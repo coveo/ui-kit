@@ -84,5 +84,6 @@ export default class CaseAssistApp extends LightningElement {
 
     invalidateSuggestions() {
         this.caseAssist.getClassifications();
+        this.caseAssist.getDocumentSuggestions();
     }
 }
