@@ -30,7 +30,7 @@ export class AtomicResultText {
   @Prop() public shouldHighlight = true;
 
   /**
-   * The non-localized text to display if the field has no value.
+   * The locale key for the text to display when the configured field has no value.
    */
   @Prop() public default?: string;
 
@@ -60,9 +60,9 @@ export class AtomicResultText {
     const value = ResultTemplatesHelpers.getResultProperty(
       this.result,
       this.field
-    ) as string;
+    );
 
-    if (!value || value.trim() === '') {
+    if (typeof value !== 'string' || value.trim() === '') {
       return null;
     }
 

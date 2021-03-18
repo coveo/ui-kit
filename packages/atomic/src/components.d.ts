@@ -280,7 +280,7 @@ export namespace Components {
     }
     interface AtomicResultText {
         /**
-          * The non-localized text to display if the field has no value.
+          * The locale key for the text to display when the configured field has no value.
          */
         "default"?: string;
         /**
@@ -912,7 +912,7 @@ declare namespace LocalJSX {
     }
     interface AtomicResultText {
         /**
-          * The non-localized text to display if the field has no value.
+          * The locale key for the text to display when the configured field has no value.
          */
         "default"?: string;
         /**
