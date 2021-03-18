@@ -45,7 +45,10 @@ export class AtomicResultValue {
         {this.hasSlot ? (
           <slot></slot>
         ) : (
-          <atomic-result-text field="title"></atomic-result-text>
+          <atomic-result-text
+            field="title"
+            default="noTitle"
+          ></atomic-result-text>
         )}
       </a>
     );

@@ -280,6 +280,10 @@ export namespace Components {
     }
     interface AtomicResultText {
         /**
+          * The locale key for the text to display when the configured field has no value.
+         */
+        "default"?: string;
+        /**
           * The result field which the component should use. Will look in the Result object first and then in the Result.raw object for the fields. It is important to include the necessary fields in the ResultList component.
          */
         "field": string;
@@ -907,6 +911,10 @@ declare namespace LocalJSX {
         "conditions"?: ResultTemplateCondition[];
     }
     interface AtomicResultText {
+        /**
+          * The locale key for the text to display when the configured field has no value.
+         */
+        "default"?: string;
         /**
           * The result field which the component should use. Will look in the Result object first and then in the Result.raw object for the fields. It is important to include the necessary fields in the ResultList component.
          */
