@@ -13,6 +13,7 @@ import {validateOptions} from '../../utils/validate-payload';
 const optionsSchema = new Schema({
   maxNumberOfRecommendations:
     baseProductRecommendationsOptionsSchema.maxNumberOfRecommendations,
+  additionalFields: baseProductRecommendationsOptionsSchema.additionalFields,
 });
 
 export type PopularViewedRecommendationsListOptions = SchemaValues<
