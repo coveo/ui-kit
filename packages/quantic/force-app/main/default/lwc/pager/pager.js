@@ -1,5 +1,5 @@
 import {LightningElement, api, track} from 'lwc';
-import {initializeComponent} from 'c/initialization';
+import {registerComponentForInit, initializeWithHeadless} from 'c/headlessLoader';
 
 export default class Pager extends LightningElement {
   /** @type {number[]} */
@@ -14,9 +14,15 @@ export default class Pager extends LightningElement {
   /** @type {boolean} */
   hasNext;
   currentPage = 1;
+  /** @type {string} */
+  @api engineId;
 
   connectedCallback() {
-    initializeComponent(this);
+    registerComponentForInit(this, this.engineId);
+  }
+
+  renderedCallback() {
+    initializeWithHeadless(this, this.engineId, this.initialize.bind(this));
   }
 
   /**

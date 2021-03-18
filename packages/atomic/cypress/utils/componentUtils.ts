@@ -1,10 +1,5 @@
-export async function getTextOfAllElements(selector: string) {
-  return new Promise((resolve) => {
-    cy.get(selector).then((elems) => {
-      const originalValues = [...elems].map((el: any) => el.textContent.trim());
-      resolve(originalValues);
-    });
-  });
+export interface IAlias {
+  [key: string]: string;
 }
 
 export function doSortAlphanumeric(originalValues: string[]) {
@@ -12,3 +7,11 @@ export function doSortAlphanumeric(originalValues: string[]) {
     .concat()
     .sort((first, second) => first.localeCompare(second));
 }
+
+export const aliasNoAtSignBuilder = (alaisWithAtSign: IAlias) => {
+  const alaisNoAtSign = Object.assign({}, alaisWithAtSign);
+  Object.keys(alaisNoAtSign).forEach((key: string) => {
+    alaisNoAtSign[key] = alaisNoAtSign[key].split('@')[1];
+  });
+  return alaisNoAtSign;
+};

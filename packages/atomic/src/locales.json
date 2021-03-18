@@ -24,6 +24,31 @@
     "zh-cn": "搜索",
     "zh-tw": "搜尋"
   },
+  "noTitle": {
+    "en": "No title",
+    "fr": "Pas de titre",
+    "cs": "Žádný název",
+    "da": "Ingen titel",
+    "de": "Ohne Titel",
+    "el": "Δεν υφίσταται τίτλος",
+    "es-es": "Sin título",
+    "fi": "Ei otsikkoa",
+    "hu": "Nincs cím",
+    "id": "Tanpa judul",
+    "it": "Nessun titolo",
+    "ja": "表題なし",
+    "ko": "제목 없음",
+    "nl": "Geen titel",
+    "no": "Ingen tittel",
+    "pl": "Brak tytułu",
+    "pt-br": "Sem título",
+    "ru": "Без названия",
+    "sv": "Ingen Titel",
+    "th": "ไม่มีชื่อ",
+    "tr": "Başlık yok",
+    "zh-cn": "无标题",
+    "zh-tw": "無標題"
+  },
   "searchBox": {
     "en": "Insert a query. Press enter to send.",
     "fr": "Insérer une requête. Appuyez sur Entrée pour envoyer."

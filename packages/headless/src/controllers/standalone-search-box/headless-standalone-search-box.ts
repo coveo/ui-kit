@@ -12,7 +12,6 @@ import {
 } from '../../state/state-sections';
 import {randomID} from '../../utils/utils';
 import {validateOptions} from '../../utils/validate-payload';
-import {Controller} from '../controller/headless-controller';
 import {
   buildSearchBox,
   SearchBox,
@@ -34,7 +33,7 @@ export interface StandaloneSearchBoxProps {
  * The `StandaloneSearchBox` headless controller offers a high-level interface for designing a common search box UI controller.
  * Meant to be used for a search box that will redirect instead of executing a query.
  */
-export interface StandaloneSearchBox extends SearchBox, Controller {
+export interface StandaloneSearchBox extends SearchBox {
   /**
    * Triggers a redirection.
    */
