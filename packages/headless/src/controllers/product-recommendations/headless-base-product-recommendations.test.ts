@@ -12,6 +12,7 @@ import {buildMockProductRecommendationsState} from '../../test/mock-product-reco
 import {Action} from 'redux';
 import {
   getProductRecommendations,
+  setProductRecommendationsAdditionalFields,
   setProductRecommendationsMaxNumberOfRecommendations,
   setProductRecommendationsRecommenderId,
   setProductRecommendationsSkus,
@@ -56,6 +57,13 @@ describe('headless product-recommendations', () => {
       options: {...baseOptions, maxNumberOfRecommendations: 10},
     });
     expectContainAction(setProductRecommendationsMaxNumberOfRecommendations);
+  });
+
+  it('when options.additionalFields is set to a non empty value, it dispatches #setProductRecommendationsAdditionalFields', () => {
+    productRecommendations = buildBaseProductRecommendationsList(engine, {
+      options: {...baseOptions, additionalFields: ['bloup']},
+    });
+    expectContainAction(setProductRecommendationsAdditionalFields);
   });
 
   it('when options.skus is set to a one item array, it dispatches #setProductRecommendationsSkus', () => {

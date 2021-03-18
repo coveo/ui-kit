@@ -698,6 +698,56 @@ describe('#resolveInterfaceMembers', () => {
     expect(result).toEqual([expected]);
   });
 
+  it(`an interface extends two interfaces,
+  both inherited interfaces have a property with the same name,
+  it only keeps one inherited instance`, () => {
+    const entry = buildMockEntryPoint();
+    const standaloneSearchBox = buildMockApiInterface({
+      name: 'StandaloneSearchBox',
+      excerptTokens: [
+        buildContentExcerptToken('interface StandaloneSearchBox extends '),
+        buildReferenceExcerptToken('SearchBox', ''),
+        buildContentExcerptToken(', '),
+        buildReferenceExcerptToken('Controller', ''),
+        buildContentExcerptToken(' '),
+      ],
+      extendsTokenRanges: [
+        {startIndex: 1, endIndex: 3},
+        {startIndex: 3, endIndex: 5},
+      ],
+    });
+
+    const createValueMemeber = () =>
+      buildMockApiPropertySignature({
+        name: 'value',
+        excerptTokens: [
+          buildContentExcerptToken('value: '),
+          buildContentExcerptToken('string'),
+          buildContentExcerptToken(';'),
+        ],
+        propertyTypeTokenRange: {startIndex: 1, endIndex: 2},
+      });
+
+    const searchBox = buildMockApiInterface({
+      name: 'SearchBox',
+      members: [createValueMemeber()],
+    });
+
+    const controller = buildMockApiInterface({
+      name: 'Controller',
+      members: [createValueMemeber()],
+    });
+
+    entry.addMember(standaloneSearchBox);
+    entry.addMember(searchBox);
+    entry.addMember(controller);
+
+    const result = resolveInterfaceMembers(entry, standaloneSearchBox, []);
+    const valueEntity = buildMockEntity({name: 'value', type: 'string'});
+
+    expect(result).toEqual([valueEntity]);
+  });
+
   // Allowing members to be parsed twice gives a chance for the extractor to set `isTypeExtracted` to true.
   // Source: https://github.com/coveo/ui-kit/pull/567#discussion_r586461134
   it(`an interface has a property of its own type,

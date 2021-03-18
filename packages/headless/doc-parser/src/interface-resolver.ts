@@ -52,7 +52,12 @@ function filterOverridesAndCombine(
 ) {
   const memberNames = new Set();
   members.forEach((m) => memberNames.add(m.name));
-  const filtered = inheritedMembers.filter((m) => !memberNames.has(m.name));
+
+  const filtered = inheritedMembers.filter((m) => {
+    const shouldKeep = !memberNames.has(m.name);
+    memberNames.add(m.name);
+    return shouldKeep;
+  });
 
   return members.concat(filtered);
 }

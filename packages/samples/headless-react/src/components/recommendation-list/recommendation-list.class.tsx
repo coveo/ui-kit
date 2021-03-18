@@ -3,17 +3,14 @@ import {ResultLink} from '../result-list/result-link';
 import {
   buildRecommendationList,
   RecommendationList as HeadlessRecommendationList,
+  RecommendationListOptions,
   RecommendationListState,
   Unsubscribe,
 } from '@coveo/headless';
 import {AppContext} from '../../context/engine';
 
-export interface RecommendationListProps {
-  id?: string;
-}
-
 export class RecommendationList extends Component<
-  RecommendationListProps,
+  RecommendationListOptions,
   RecommendationListState
 > {
   static contextType = AppContext;
@@ -25,7 +22,7 @@ export class RecommendationList extends Component<
   componentDidMount() {
     this.controller = buildRecommendationList(
       this.context.recommendationEngine!,
-      this.props.id ? {options: {id: this.props.id}} : {}
+      {options: this.props}
     );
     this.updateState();
 

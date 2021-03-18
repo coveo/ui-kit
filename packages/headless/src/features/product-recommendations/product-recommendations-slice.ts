@@ -5,6 +5,7 @@ import {
   setProductRecommendationsBrandFilter,
   setProductRecommendationsCategoryFilter,
   setProductRecommendationsMaxNumberOfRecommendations,
+  setProductRecommendationsAdditionalFields,
   setProductRecommendationsRecommenderId,
 } from './product-recommendations-actions';
 import {getProductRecommendationsInitialState} from './product-recommendations-state';
@@ -32,6 +33,9 @@ export const productRecommendationsReducer = createReducer(
           state.maxNumberOfRecommendations = action.payload.number;
         }
       )
+      .addCase(setProductRecommendationsAdditionalFields, (state, action) => {
+        state.additionalFields = action.payload.additionalFields;
+      })
       .addCase(getProductRecommendations.rejected, (state, action) => {
         state.error = action.payload ? action.payload : null;
         state.isLoading = false;

@@ -67,12 +67,8 @@ export class AtomicNumericFacet
    * The non-localized label for the facet.
    */
   @Prop() public label = 'No label';
-  /**
-   * Whether or not the index should automatically generate options for the facet.
-   */
-  @Prop() public generateAutomaticRanges = true;
 
-  public buildOptions() {
+  private buildManualRanges() {
     const options = Array.from(
       this.host.querySelectorAll('atomic-numeric-range')
     );
@@ -82,11 +78,12 @@ export class AtomicNumericFacet
   }
 
   public initialize() {
+    const manualRanges = this.buildManualRanges();
     const options: NumericFacetOptions = {
       facetId: this.facetId,
       field: this.field,
-      generateAutomaticRanges: this.generateAutomaticRanges,
-      currentValues: this.buildOptions(),
+      generateAutomaticRanges: manualRanges.length === 0,
+      currentValues: manualRanges,
     };
 
     this.facet = buildNumericFacet(this.bindings.engine, {options});

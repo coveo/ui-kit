@@ -2,6 +2,7 @@ import {Component, ContextType} from 'react';
 import {
   buildCategoryFacet,
   CategoryFacet as HeadlessCategoryFacet,
+  CategoryFacetOptions,
   CategoryFacetState,
   CategoryFacetValue,
   Unsubscribe,
@@ -9,8 +10,7 @@ import {
 import {CategoryFacetSearch} from './category-facet-search';
 import {AppContext} from '../../context/engine';
 
-interface CategoryFacetProps {
-  field: string;
+interface CategoryFacetProps extends CategoryFacetOptions {
   facetId: string;
 }
 
@@ -26,7 +26,7 @@ export class CategoryFacet extends Component<
 
   componentDidMount() {
     this.controller = buildCategoryFacet(this.context.engine!, {
-      options: {field: this.props.field, facetId: this.props.facetId},
+      options: this.props,
     });
     this.updateState();
 

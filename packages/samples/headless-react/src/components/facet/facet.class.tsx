@@ -2,14 +2,14 @@ import {Component, ContextType} from 'react';
 import {
   buildFacet,
   Facet as HeadlessFacet,
+  FacetOptions,
   FacetState,
   Unsubscribe,
 } from '@coveo/headless';
 import {FacetSearch} from './facet-search';
 import {AppContext} from '../../context/engine';
 
-interface FacetProps {
-  field: string;
+interface FacetProps extends FacetOptions {
   facetId: string;
 }
 
@@ -22,7 +22,7 @@ export class Facet extends Component<FacetProps, FacetState> {
 
   componentDidMount() {
     this.controller = buildFacet(this.context.engine!, {
-      options: {field: this.props.field, facetId: this.props.facetId},
+      options: this.props,
     });
     this.updateState();
 

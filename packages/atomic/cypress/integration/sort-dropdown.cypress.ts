@@ -2,7 +2,7 @@ import {getApiRequestBodyAt, getAnalyticsAt} from '../utils/network';
 import {setUpPage, shouldRenderErrorComponent} from '../utils/setupComponent';
 
 const sortDropdown = 'atomic-sort-dropdown';
-const criteria = [
+const expressions = [
   'relevancy',
   'date descending',
   'size ascending, date descending',
@@ -17,10 +17,10 @@ describe('Sort Dropdown Component', () => {
   function setup(attributes = '') {
     setUpPage(`
       <atomic-sort-dropdown ${attributes}>
-        <atomic-sort-criteria caption="Relevance" criteria="${criteria[0]}"></atomic-sort-criteria>
-        <atomic-sort-criteria caption="Most Recent" criteria="${criteria[1]}"></atomic-sort-criteria>
-        <atomic-sort-criteria caption="Size Date" criteria="${criteria[2]}"></atomic-sort-criteria>
-        <atomic-sort-criteria caption="QRE" criteria="${criteria[3]}"></atomic-sort-criteria>
+        <atomic-sort-expression caption="Relevance" expression="${expressions[0]}"></atomic-sort-expression>
+        <atomic-sort-expression caption="Most Recent" expression="${expressions[1]}"></atomic-sort-expression>
+        <atomic-sort-expression caption="Size Date" expression="${expressions[2]}"></atomic-sort-expression>
+        <atomic-sort-expression caption="QRE" expression="${expressions[3]}"></atomic-sort-expression>
       </atomic-sort-dropdown>
     `);
   }
@@ -47,14 +47,14 @@ describe('Sort Dropdown Component', () => {
   });
 
   it('should execute a query with the correct sort order on selection', async () => {
-    selectOption(criteria[1]);
+    selectOption(expressions[1]);
 
     const request = await getApiRequestBodyAt('@coveoSearch', 1);
-    expect(request.sortCriteria).to.be.eq(criteria[1]);
+    expect(request.sortCriteria).to.be.eq(expressions[1]);
   });
 
   it('should log the right analytics on selection', async () => {
-    selectOption(criteria[1]);
+    selectOption(expressions[1]);
 
     const analytics = await getAnalyticsAt('@coveoAnalytics', 1);
     expect(analytics.request.body).to.have.property(
@@ -63,13 +63,13 @@ describe('Sort Dropdown Component', () => {
     );
     expect(analytics.request.body.customData).to.have.property(
       'resultsSortBy',
-      criteria[1]
+      expressions[1]
     );
   });
 
   it('Should reflect selected sort on URL', () => {
-    selectOption(criteria[1]);
-    const urlHash = `sortCriteria=${encodeURIComponent(criteria[1])}`;
+    selectOption(expressions[1]);
+    const urlHash = `sortCriteria=${encodeURIComponent(expressions[1])}`;
     cy.url().should('include', urlHash);
   });
 });
@@ -85,24 +85,24 @@ describe('When sort with invalid criteria option', () => {
 
   it.skip('Should render an error when "<atomic-sort-dropdown" is missing', () => {
     setUpPage(`
-    <atomic-sort-criteria caption="Relevance" criteria="${criteria[0]}"></atomic-sort-criteria>
+    <atomic-sort-expression caption="Relevance" criteria="${expressions[0]}"></atomic-sort-expression>
       `);
     shouldRenderErrorComponent(sortDropdown);
   });
 
-  it('Should render an error when criteria is missing', () => {
+  it('Should render an error when expression is missing', () => {
     setUpPage(`
         <atomic-sort-dropdown>
-          <atomic-sort-criteria label="Sort"></atomic-sort-criteria>
+          <atomic-sort-expression label="Sort"></atomic-sort-expression>
         </atomic-sort-dropdown>
       `);
     shouldRenderErrorComponent(sortDropdown);
   });
 
-  it('Should render an error when criteria contains invalid character', () => {
+  it('Should render an error when expression contains invalid characters', () => {
     setUpPage(`
         <atomic-sort-dropdown>
-          <atomic-sort-criteria criteria="size ascending; date ascending"></atomic-sort-criteria>
+          <atomic-sort-expression expression="size ascending; date ascending"></atomic-sort-expression>
         </atomic-sort-dropdown>
       `);
     shouldRenderErrorComponent(sortDropdown);
