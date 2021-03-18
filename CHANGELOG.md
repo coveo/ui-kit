@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.9.0-alpha.2](https://github.com/coveo/ui-kit/compare/v0.9.0-alpha.1...v0.9.0-alpha.2) (2021-03-18)
+
+
+### Features
+
+* **atomic:** add atomic-result-image component ([#635](https://github.com/coveo/ui-kit/issues/635)) ([c2b0f30](https://github.com/coveo/ui-kit/commit/c2b0f307a4054f34d72cdcb06b8e1d2eeb8882e3))
+
+
+
+
+
 # [0.9.0-alpha.1](https://github.com/coveo/ui-kit/compare/v0.9.0-alpha.0...v0.9.0-alpha.1) (2021-03-18)
 
 
