@@ -261,10 +261,6 @@ export class AtomicSearchInterface {
       params
     );
     this.searchParamsManager.updateParameters(params);
-    // TODO: move search into the headless controller
-    this.engine!.dispatch(
-      SearchActions.executeSearch(AnalyticsActions.logInterfaceLoad())
-    );
   }
 
   public render() {

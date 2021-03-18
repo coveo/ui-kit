@@ -16,6 +16,9 @@ import {validateInitialState} from '../../utils/validate-payload';
 import {buildController, Controller} from '../controller/headless-controller';
 import {RangeValueRequest} from '../../features/facets/range-facets/generic/interfaces/range-facet';
 import {getAdvancedSearchQueriesInitialState} from '../../features/advanced-search-queries/advanced-search-queries-state';
+import {executeSearch} from '../../features/search/search-actions';
+import {ConfigurationSection} from '../../state/state-sections';
+import {logSearchParametersChange} from '../../features/search-parameters/search-parameter-analytics-actions';
 
 export {SearchParameters};
 
@@ -51,7 +54,7 @@ export interface SearchParameterManager extends Controller {
    * */
   state: SearchParameterManagerState;
   /**
-   * Updates the search parameters.
+   * Updates the search parameters & launches a search.
    * @param parameters The parameters affecting the search response.
    */
   updateParameters(parameters: SearchParameters): void;
@@ -72,7 +75,7 @@ export interface SearchParameterManagerState {
  * @returns A `SearchParameterManager` controller instance.
  */
 export function buildSearchParameterManager(
-  engine: Engine<Partial<SearchParametersState>>,
+  engine: Engine<Partial<SearchParametersState> & ConfigurationSection>,
   props: SearchParameterManagerProps
 ): SearchParameterManager {
   const {dispatch} = engine;
@@ -111,6 +114,7 @@ export function buildSearchParameterManager(
 
     updateParameters(parameters: SearchParameters) {
       const state = engine.state;
+      const previousParameters = this.state.parameters;
       const initialParameters: Required<SearchParameters> = {
         q: getQueryInitialState().q,
         enableQuerySyntax: getQueryInitialState().enableQuerySyntax,
@@ -123,15 +127,19 @@ export function buildSearchParameterManager(
         firstResult: getPaginationInitialState().firstResult,
         numberOfResults: getPaginationInitialState().numberOfResults,
         sortCriteria: getSortCriteriaInitialState(),
-        // TODO: don't reset the whole facet state, only selected values
         f: {},
         cf: {},
         nf: {},
         df: {},
         debug: getDebugInitialState(),
       };
-      dispatch(restoreSearchParameters({...initialParameters, ...parameters}));
-      // TODO: dispatch search with relevant analytics?
+      const newParameters = {...initialParameters, ...parameters};
+      dispatch(restoreSearchParameters(newParameters));
+      dispatch(
+        executeSearch(
+          logSearchParametersChange(previousParameters, newParameters)
+        )
+      );
     },
   };
 }
