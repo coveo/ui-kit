@@ -14,7 +14,7 @@ import {randomID} from '../../../utils/utils';
 import {CategoryFacetSearchResult} from '@coveo/headless/dist/api/search/facet-search/category-facet-search/category-facet-search-response';
 import SearchIcon from 'coveo-styleguide/resources/icons/svg/search.svg';
 import {sanitize} from '../../../utils/xss-utils';
-import {regexEncode} from "../../../utils/string-utils";
+import {regexEncode} from '../../../utils/string-utils';
 
 export interface FacetSearchState {
   strings: I18nState;
