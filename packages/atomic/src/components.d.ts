@@ -203,6 +203,12 @@ export namespace Components {
          */
         "format": string;
     }
+    interface AtomicResultIcon {
+        /**
+          * Allow to specify the icon to display from the list of available icons.  By default, will parse the `objecttype` field and the `filetype` field to find a matching icon. If none are available, will use the `custom` icon.
+         */
+        "icon"?: string;
+    }
     interface AtomicResultImage {
         /**
           * The result field which the component should use. Will look in the Result object first and then in the Result.raw object for the fields. It is important to include the necessary fields in the ResultList component.
@@ -273,10 +279,6 @@ export namespace Components {
         "getTemplate": () => Promise<ResultTemplate<string> | null>;
     }
     interface AtomicResultText {
-        /**
-          * The non-localized text to display if the field has no value.
-         */
-        "default"?: string;
         /**
           * The result field which the component should use. Will look in the Result object first and then in the Result.raw object for the fields. It is important to include the necessary fields in the ResultList component.
          */
@@ -494,6 +496,12 @@ declare global {
         prototype: HTMLAtomicResultDateElement;
         new (): HTMLAtomicResultDateElement;
     };
+    interface HTMLAtomicResultIconElement extends Components.AtomicResultIcon, HTMLStencilElement {
+    }
+    var HTMLAtomicResultIconElement: {
+        prototype: HTMLAtomicResultIconElement;
+        new (): HTMLAtomicResultIconElement;
+    };
     interface HTMLAtomicResultImageElement extends Components.AtomicResultImage, HTMLStencilElement {
     }
     var HTMLAtomicResultImageElement: {
@@ -611,6 +619,7 @@ declare global {
         "atomic-relevance-inspector": HTMLAtomicRelevanceInspectorElement;
         "atomic-result": HTMLAtomicResultElement;
         "atomic-result-date": HTMLAtomicResultDateElement;
+        "atomic-result-icon": HTMLAtomicResultIconElement;
         "atomic-result-image": HTMLAtomicResultImageElement;
         "atomic-result-link": HTMLAtomicResultLinkElement;
         "atomic-result-list": HTMLAtomicResultListElement;
@@ -823,6 +832,12 @@ declare namespace LocalJSX {
          */
         "format"?: string;
     }
+    interface AtomicResultIcon {
+        /**
+          * Allow to specify the icon to display from the list of available icons.  By default, will parse the `objecttype` field and the `filetype` field to find a matching icon. If none are available, will use the `custom` icon.
+         */
+        "icon"?: string;
+    }
     interface AtomicResultImage {
         /**
           * The result field which the component should use. Will look in the Result object first and then in the Result.raw object for the fields. It is important to include the necessary fields in the ResultList component.
@@ -892,10 +907,6 @@ declare namespace LocalJSX {
         "conditions"?: ResultTemplateCondition[];
     }
     interface AtomicResultText {
-        /**
-          * The non-localized text to display if the field has no value.
-         */
-        "default"?: string;
         /**
           * The result field which the component should use. Will look in the Result object first and then in the Result.raw object for the fields. It is important to include the necessary fields in the ResultList component.
          */
@@ -1010,8 +1021,8 @@ declare namespace LocalJSX {
         "atomic-relevance-inspector": AtomicRelevanceInspector;
         "atomic-result": AtomicResult;
         "atomic-result-date": AtomicResultDate;
-        "atomic-result-image": AtomicResultImage;
         "atomic-result-icon": AtomicResultIcon;
+        "atomic-result-image": AtomicResultImage;
         "atomic-result-link": AtomicResultLink;
         "atomic-result-list": AtomicResultList;
         "atomic-result-list-placeholder": AtomicResultListPlaceholder;
@@ -1053,6 +1064,7 @@ declare module "@stencil/core" {
             "atomic-relevance-inspector": LocalJSX.AtomicRelevanceInspector & JSXBase.HTMLAttributes<HTMLAtomicRelevanceInspectorElement>;
             "atomic-result": LocalJSX.AtomicResult & JSXBase.HTMLAttributes<HTMLAtomicResultElement>;
             "atomic-result-date": LocalJSX.AtomicResultDate & JSXBase.HTMLAttributes<HTMLAtomicResultDateElement>;
+            "atomic-result-icon": LocalJSX.AtomicResultIcon & JSXBase.HTMLAttributes<HTMLAtomicResultIconElement>;
             "atomic-result-image": LocalJSX.AtomicResultImage & JSXBase.HTMLAttributes<HTMLAtomicResultImageElement>;
             "atomic-result-link": LocalJSX.AtomicResultLink & JSXBase.HTMLAttributes<HTMLAtomicResultLinkElement>;
             "atomic-result-list": LocalJSX.AtomicResultList & JSXBase.HTMLAttributes<HTMLAtomicResultListElement>;

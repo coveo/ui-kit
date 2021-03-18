@@ -27,9 +27,9 @@ export class AtomicResultImage {
     const url = ResultTemplatesHelpers.getResultProperty(
       this.result,
       this.field
-    ) as string;
+    );
 
-    if (url === null) {
+    if (typeof url !== 'string') {
       this.host.remove();
       return;
     }
