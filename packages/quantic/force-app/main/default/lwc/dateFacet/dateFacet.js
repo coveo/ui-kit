@@ -1,5 +1,5 @@
 import {LightningElement, track, api} from 'lwc';
-import {initializeComponent} from 'c/initialization';
+import {registerComponentForInit, initializeWithHeadless} from 'c/headlessLoader';
 
 export default class DateFacet extends LightningElement {
   /** @type {import("coveo").DateFacetState} */
@@ -11,6 +11,8 @@ export default class DateFacet extends LightningElement {
   @api field;
   /** @type {string} */
   @api label;
+  /** @type {string} */
+  @api engineId;
 
   /** @type {import("coveo").DateFacet} */
   facet;
@@ -18,7 +20,11 @@ export default class DateFacet extends LightningElement {
   unsubscribe;
 
   connectedCallback() {
-    initializeComponent(this);
+    registerComponentForInit(this, this.engineId);
+  }
+
+  renderedCallback() {
+    initializeWithHeadless(this, this.engineId, this.initialize.bind(this));
   }
 
   /**

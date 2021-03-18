@@ -1011,6 +1011,7 @@ declare namespace LocalJSX {
         "atomic-result": AtomicResult;
         "atomic-result-date": AtomicResultDate;
         "atomic-result-image": AtomicResultImage;
+        "atomic-result-icon": AtomicResultIcon;
         "atomic-result-link": AtomicResultLink;
         "atomic-result-list": AtomicResultList;
         "atomic-result-list-placeholder": AtomicResultListPlaceholder;

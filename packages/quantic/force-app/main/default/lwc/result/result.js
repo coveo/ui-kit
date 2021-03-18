@@ -9,6 +9,9 @@ export default class Result extends LightningElement {
   /** @type {import("coveo").ResultTemplatesManager} */
   @api resultTemplatesManager;
 
+  /** @type {string} */
+  @api engineId;
+
   get icon() {
     if (this.objectTypeIcon) {
       return this.objectTypeIcon;
