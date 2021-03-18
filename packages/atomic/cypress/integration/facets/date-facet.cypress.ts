@@ -71,71 +71,66 @@ function setupCustomDateFacet(
   setUpPage(html);
 }
 
-describe('Date Facet', () => {
+describe('Date Facet with automatic ranges generated', () => {
   beforeEach(() => {
     setupAutoDateFacet(dateFacetProp.field, dateFacetProp.label);
     createAliasShadow(dateFacetProp.field, FacetSelectors.dateFacet);
     createAliasFacetUL(dateFacetProp.field, FacetSelectors.dateFacet);
   });
 
-  describe('When page is loaded', () => {
-    it('Date facet should load, pass accessibility test and have correct label and facetCount', () => {
-      validateFacetComponentLoaded(
-        dateFacetProp.label,
-        FacetSelectors.dateFacet
+  it('Date facet should load, pass accessibility test and have correct label and facetCount', () => {
+    validateFacetComponentLoaded(dateFacetProp.label, FacetSelectors.dateFacet);
+  });
+
+  it('Should contains more than 1 checkboxes', () => {
+    validateFacetNumberofValueGreaterThan(1);
+  });
+
+  describe('When select 1 facetValue checkbox', () => {
+    it('Should activate checkbox, have valid facetCount and log UA', () => {
+      assertBasicFacetFunctionality(
+        FacetAlias.facetFirstValueLabel,
+        dateFacetProp.field
       );
     });
 
-    it('Should contains more than 1 checkboxes', () => {
-      validateFacetNumberofValueGreaterThan(1);
+    it('Should trigger breadcrumb and display correctly', () => {
+      cy.get(FacetAlias.facetFirstValueLabel).click();
+      createBreadcrumbShadowAlias();
+      cy.get('@breadcrumbClearAllFilter').should('be.visible');
+      facetValueShouldDisplayInBreadcrumb(
+        FacetAlias.facetFirstValueLabel,
+        '.breadcrumb:nth-child(1) button span'
+      );
     });
 
-    describe('When select 1 facetValue checkbox', () => {
-      it('Should activate checkbox, have valid facetCount and log UA', () => {
-        assertBasicFacetFunctionality(
-          FacetAlias.facetFirstValueLabel,
-          dateFacetProp.field
-        );
-      });
-
-      it('Should trigger breadcrumb and display correctly', () => {
-        cy.get(FacetAlias.facetFirstValueLabel).click();
-        createBreadcrumbShadowAlias();
-        cy.get('@breadcrumbClearAllFilter').should('be.visible');
-        facetValueShouldDisplayInBreadcrumb(
-          FacetAlias.facetFirstValueLabel,
-          '.breadcrumb:nth-child(1) button span'
-        );
-      });
-
-      it('Should reflect selected facetValue on URL', () => {
-        cy.get(FacetAlias.facetFirstValueLabel)
-          .click()
-          .find('label span:nth-child(1)')
-          .invoke('text')
-          .then((txt) => {
-            const facetValueInApiFormat = convertFacetValueToAPIformat(
-              txt,
-              FacetType.dateFacet
-            );
-            const urlHash = `#df[${dateFacetProp.field}]=${encodeURI(
-              facetValueInApiFormat
-            )}`;
-            cy.url().should('include', urlHash);
-          });
-      });
+    it('Should reflect selected facetValue on URL', () => {
+      cy.get(FacetAlias.facetFirstValueLabel)
+        .click()
+        .find('label span:nth-child(1)')
+        .invoke('text')
+        .then((txt) => {
+          const facetValueInApiFormat = convertFacetValueToAPIformat(
+            txt,
+            FacetType.dateFacet
+          );
+          const urlHash = `#df[${dateFacetProp.field}]=${encodeURI(
+            facetValueInApiFormat
+          )}`;
+          cy.url().should('include', urlHash);
+        });
     });
+  });
 
-    describe('When deselect 1 selected facetValue checkbox', () => {
-      it('should clear the checkbox and log UA', () => {
-        assertDeselectFacet(dateFacetProp.field);
-      });
+  describe('When deselect 1 selected facetValue checkbox', () => {
+    it('should clear the checkbox and log UA', () => {
+      assertDeselectFacet(dateFacetProp.field);
     });
+  });
 
-    describe('When click ClearAll facet', () => {
-      it('Should clear all checkboxes and log UA', () => {
-        assertClearAllFacet();
-      });
+  describe('When click ClearAll facet', () => {
+    it('Should clear all checkboxes and log UA', () => {
+      assertClearAllFacet();
     });
   });
 });

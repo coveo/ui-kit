@@ -1,3 +1,5 @@
+import {IAlias, aliasNoAtSignBuilder} from '../../utils/componentUtils';
+
 export const FacetSelectors = {
   facetStandard: 'atomic-facet',
   facetSearchbox: 'input[part="search-input"]',
@@ -13,39 +15,22 @@ export const BreadcrumbSelectors = {
   breadcrumb: 'atomic-breadcrumb-manager',
 };
 
-interface IAlias {
-  [key: string]: string;
-}
-
 export const FacetAlias: IAlias = {
   facetShadow: '@facetShadow',
-  facetUL: '@facet_ul',
+  facetUL: '@facetUL',
   facetFirstValueLabel: '@facetFirstValueLabel',
   facetSecondValueLabel: '@facetSecondValueLabel',
   facetAllValueLabel: '@facetAllValueLabel',
   facetAllValueCount: '@facetAllValueCount',
 };
 
-const assignedFacetAlias = Object.assign({}, FacetAlias);
-
-Object.keys(assignedFacetAlias).forEach((key: string) => {
-  assignedFacetAlias[key] = assignedFacetAlias[key].split('@')[1];
-});
-
-const FacetAliasNoAtSign = assignedFacetAlias;
-
 export const BreadcrumbAlias: IAlias = {
   breadcrumbFacet: '@breadcrumbFacet',
   breadcrumbClearAllFilter: '@breadcrumbClearAllFilter',
 };
 
-const assignedBreadCrumbAlias = Object.assign({}, BreadcrumbAlias);
-
-Object.keys(assignedBreadCrumbAlias).forEach((key: string) => {
-  assignedBreadCrumbAlias[key] = assignedBreadCrumbAlias[key].split('@')[1];
-});
-
-const BreadcrumbAliasNoAtSign = assignedBreadCrumbAlias;
+const FacetAliasNoAtSign = aliasNoAtSignBuilder(FacetAlias);
+const BreadcrumbAliasNoAtSign = aliasNoAtSignBuilder(BreadcrumbAlias);
 
 export function createBreadcrumbShadowAlias() {
   cy.get(BreadcrumbSelectors.breadcrumb)
