@@ -84,15 +84,6 @@ export const updateAnalyticsConfiguration = createAction(
     })
 );
 
-export const updateCaseAssistConfiguration = createAction(
-  'configuration/updateCaseAssistConfiguration',
-  (payload: {visitorId?: string; caseAssistId: string}) =>
-    validatePayload(payload, {
-      visitorId: new StringValue(),
-      caseAssistId: new StringValue({required: true}),
-    })
-);
-
 /**
  * Renews the accessToken specified in the global headless engine configuration.
  * @param renew (`() => Promise<string>`) A function that fetches a new access token. The function must return a Promise that resolves to a string (the new access token).

@@ -14,9 +14,6 @@ export default class CaseAssistApp extends LightningElement {
     componentsToInitialize = [];
     unsubscribe;
 
-    currentSubject;
-    currentDescription;
-
     async connectedCallback() {
         if (this.dependenciesLoaded) {
             return;
@@ -35,6 +32,8 @@ export default class CaseAssistApp extends LightningElement {
                 this.unsubscribe = this.caseAssist.subscribe(() => this.updateState());
 
                 this.componentsToInitialize.forEach((cmp) => cmp.initialize(this.engine));
+
+                this.caseAssist.setCaseAssistId('42f425ff-fdb9-4438-b457-185b2fc5fc0e');
             }
         } catch (error) {
             console.error('Fatal error: unable to initialize Case Assist app', error);
@@ -46,13 +45,9 @@ export default class CaseAssistApp extends LightningElement {
         this.dependenciesLoaded = true;
 
         this.config = CoveoHeadless.HeadlessEngine.getSampleConfiguration();
-        this.config.organizationId = 'lbergeronsfdevt1z2624x'
-        this.config.accessToken = 'xxc4fa7e0b-cc28-4a46-a648-1fb055c94808'
-        this.config.platformUrl = 'https://platformdev.cloud.coveo.com'
-        this.config.caseAssist = {
-            visitorId: 'foo',
-            caseAssistId: '42f425ff-fdb9-4438-b457-185b2fc5fc0e'
-        }
+        this.config.organizationId = 'lbergeronsfdevt1z2624x';
+        this.config.accessToken = 'xxc4fa7e0b-cc28-4a46-a648-1fb055c94808';
+        this.config.platformUrl = 'https://platformdev.cloud.coveo.com';
     }
 
     initEngine() {
@@ -78,21 +73,16 @@ export default class CaseAssistApp extends LightningElement {
     }
 
     subjectchanged(event) {
-        this.currentSubject = event.target.value;
-        this.updateWithCaseInformation();
+        this.caseAssist.setCaseInformationValue('subject', event.target.value);
+        this.invalidateSuggestions();
     }
 
     descriptionchanged(event) {
-        this.currentDescription = event.target.value;
-        this.updateWithCaseInformation();
+        this.caseAssist.setCaseInformationValue('description', event.target.value);
+        this.invalidateSuggestions();
     }
 
-    updateWithCaseInformation() {
-        this.caseAssist.getClassifications({
-            fields: {
-                subject: this.currentSubject,
-                description: this.currentDescription,
-            }
-        });
+    invalidateSuggestions() {
+        this.caseAssist.getClassifications();
     }
 }

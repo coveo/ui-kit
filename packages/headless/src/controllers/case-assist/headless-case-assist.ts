@@ -2,7 +2,9 @@
 import {Engine} from '../../app/headless-engine';
 import {
   getClassifications,
-  GetClassificationsRequest,
+  setCaseAssistId,
+  setCaseInformationValue,
+  setUserContextValue,
 } from '../../features/case-assist/case-assist-actions';
 import {CaseAssistState} from '../../features/case-assist/case-assist-state';
 import {
@@ -31,7 +33,10 @@ const optionsSchema = new Schema({
 */
 
 export interface CaseAssist extends Controller {
-  getClassifications(request: GetClassificationsRequest): void;
+  setCaseAssistId(id: string): void;
+  setCaseInformationValue(fieldName: string, fieldValue: string): void;
+  setUserContextValue(key: string, value: string): void;
+  getClassifications(): void;
 
   /**
    * The state of the `CaseAssist` controller.
@@ -65,8 +70,17 @@ export function buildCaseAssist(
       };
     },
 
-    getClassifications(request) {
-      dispatch(getClassifications(request));
+    setCaseAssistId(id) {
+      dispatch(setCaseAssistId({id}));
+    },
+    setCaseInformationValue(fieldName, fieldValue) {
+      dispatch(setCaseInformationValue({fieldName, fieldValue}));
+    },
+    setUserContextValue(key, value) {
+      dispatch(setUserContextValue({key, value}));
+    },
+    getClassifications() {
+      dispatch(getClassifications());
     },
   };
 }

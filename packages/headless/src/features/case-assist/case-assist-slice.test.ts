@@ -1,6 +1,24 @@
-import {getClassifications} from './case-assist-actions';
+import {Action} from '@reduxjs/toolkit';
+import {
+  getClassifications,
+  setCaseAssistId,
+  setCaseInformationValue,
+  setUserContextValue,
+} from './case-assist-actions';
 import {caseAssistReducer} from './case-assist-slice';
 import {CaseAssistState, getCaseAssistInitialState} from './case-assist-state';
+
+const rejectWithValue = (action: Action, payload: object) => ({
+  type: action.type,
+  meta: {
+    requestId: 'some request id',
+    rejectedWithValue: true,
+    requestStatus: 'rejected',
+    aborted: false,
+    condition: false,
+  },
+  payload,
+});
 
 describe('case assist slice', () => {
   let state: CaseAssistState;
@@ -15,10 +33,35 @@ describe('case assist slice', () => {
     expect(finalState).toEqual(getCaseAssistInitialState());
   });
 
-  it('getClassifications.pending raises the loading flag', () => {
-    const action = getClassifications.pending('some request id', {
-      fields: {subject: 'something'},
+  it('setCaseAssistId sets the id in the state', () => {
+    const expectedId = 'some id';
+    const action = setCaseAssistId({id: expectedId});
+    const finalState = caseAssistReducer(state, action);
+
+    expect(finalState.caseAssistId).toBe(expectedId);
+  });
+
+  it('setCaseInformationValue sets the value in the state', () => {
+    const expected = {field: 'subject', value: 'some case subject'};
+    const action = setCaseInformationValue({
+      fieldName: expected.field,
+      fieldValue: expected.value,
     });
+    const finalState = caseAssistReducer(state, action);
+
+    expect(finalState.caseInformation[expected.field]).toBe(expected.value);
+  });
+
+  it('setUserContextValue sets the value in the state', () => {
+    const expected = {key: 'occupation', value: 'marketer'};
+    const action = setUserContextValue(expected);
+    const finalState = caseAssistReducer(state, action);
+
+    expect(finalState.userContext[expected.key]).toBe(expected.value);
+  });
+
+  it('getClassifications.pending raises the loading flag', () => {
+    const action = getClassifications.pending('some request id');
     const finalState = caseAssistReducer(state, action);
 
     expect(finalState.classifications.loading).toBe(true);
@@ -42,8 +85,7 @@ describe('case assist slice', () => {
     };
     const action = getClassifications.fulfilled(
       {classifications},
-      'some request id',
-      {fields: {subject: 'something'}}
+      'some request id'
     );
     const finalState = caseAssistReducer(state, action);
 
@@ -55,18 +97,18 @@ describe('case assist slice', () => {
   });
 
   it('getClassifications.rejected stores the error', () => {
-    const action = getClassifications.rejected(
-      new Error('something bad happened'),
-      'some request id',
-      {fields: {subject: 'something'}}
-    );
+    const expectedError = {
+      statusCode: 400,
+      message: 'some value is missing',
+      type: 'invalid request',
+    };
+    const action = rejectWithValue(getClassifications.rejected, {
+      error: expectedError,
+    });
+
     const finalState = caseAssistReducer(state, action);
 
-    expect(finalState.classifications.error).toEqual({
-      message: 'something bad happened',
-    });
+    expect(finalState.classifications.error).toEqual(expectedError);
     expect(finalState.classifications.loading).toBe(false);
-    expect(finalState.classifications.fields).toEqual([]);
-    expect(finalState.classifications.responseId).toBe('');
   });
 });
