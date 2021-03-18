@@ -5,8 +5,8 @@ export const FacetSelectors = {
   showMoreButton: 'button[part="show-more"]',
   showLessButton: 'button[part="show-less"]',
   clearAllButton: 'button[part="reset-button"]',
-  facetNumeric: 'atomic-numeric-facet',
-  facetDate: 'atomic-date-facet',
+  numericFacet: 'atomic-numeric-facet',
+  dateFacet: 'atomic-date-facet',
 };
 
 export const BreadcrumbSelectors = {

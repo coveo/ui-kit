@@ -42,10 +42,9 @@ const sortCriteriaOption = {
 };
 
 function setupFacet(field: string, label: string, option?: string) {
-  setUpPage(
-    `<atomic-breadcrumb-manager></atomic-breadcrumb-manager>
-     <atomic-facet field="${field}" label="${label}" ${option}></atomic-facet>`
-  );
+  setUpPage(`
+  <atomic-breadcrumb-manager></atomic-breadcrumb-manager>
+  <atomic-facet field="${field}" label="${label}" ${option}></atomic-facet>`);
 }
 
 describe('Standard Facet', () => {

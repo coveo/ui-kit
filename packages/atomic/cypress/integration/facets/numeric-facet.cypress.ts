@@ -31,61 +31,57 @@ const numericFacetProp = {
   label: 'File size',
 };
 
-interface NumericRanges {
-  range1: NumericRange;
-  range2: NumericRange;
-  range3: NumericRange;
-}
-const numericRange: NumericRanges = {
-  range1: {
+const numericRanges: NumericRange[] = [
+  {
     start: 0,
     end: 100000,
   },
-  range2: {
+  {
     start: 100001,
     end: 1000000,
   },
-  range3: {
+  {
     start: 1000001,
     end: 10000000,
   },
-};
+];
 
 function setupAutoNumericFacet(field: string, label: string, option?: string) {
-  setUpPage(
-    `<atomic-breadcrumb-manager></atomic-breadcrumb-manager>
-    <atomic-numeric-facet field="${field}" label="${label}" ${option}>
-  </atomic-numeric-facet>`
-  );
+  setUpPage(`
+  <atomic-breadcrumb-manager></atomic-breadcrumb-manager>
+  <atomic-numeric-facet field="${field}" label="${label}" ${option}></atomic-numeric-facet>`);
 }
 
 function setupCustomNumericFacet(
   field: string,
   label: string,
-  numericRange: NumericRanges
+  numericRanges: NumericRange[]
 ) {
-  setUpPage(
-    `<atomic-breadcrumb-manager></atomic-breadcrumb-manager>
-    <atomic-numeric-facet field="${field}" label="${label}">
-           <atomic-numeric-range start=${numericRange.range1.start} end=${numericRange.range1.end} end-inclusive="true"></atomic-numeric-range>
-           <atomic-numeric-range start=${numericRange.range2.start} end=${numericRange.range2.end} end-inclusive="true"></atomic-numeric-range>
-           <atomic-numeric-range start=${numericRange.range3.start} end=${numericRange.range3.end} end-inclusive="true"></atomic-numeric-range>
-  </atomic-numeric-facet>`
-  );
+  const ranges = numericRanges
+    .map(
+      (r: NumericRange) =>
+        `<atomic-numeric-range start=${r.start} end=${r.end} end-inclusive="true"></atomic-numeric-range>`
+    )
+    .join();
+  const html = `
+  <atomic-breadcrumb-manager></atomic-breadcrumb-manager>
+  <atomic-numeric-facet field="${field}" label="${label}">${ranges}</atomic-numeric-facet>`;
+
+  setUpPage(html);
 }
 
 describe('Standard Numeric Facet', () => {
   beforeEach(() => {
     setupAutoNumericFacet(numericFacetProp.field, numericFacetProp.label);
-    createAliasShadow(numericFacetProp.field, FacetSelectors.facetNumeric);
-    createAliasFacetUL(numericFacetProp.field, FacetSelectors.facetNumeric);
+    createAliasShadow(numericFacetProp.field, FacetSelectors.numericFacet);
+    createAliasFacetUL(numericFacetProp.field, FacetSelectors.numericFacet);
   });
 
   describe('When page is loaded', () => {
     it('Numeric facet should load, pass accessibility test and have correct label', () => {
       validateFacetComponentLoaded(
         numericFacetProp.label,
-        FacetSelectors.facetNumeric
+        FacetSelectors.numericFacet
       );
     });
 
@@ -143,40 +139,38 @@ describe('Standard Numeric Facet', () => {
   });
 });
 
-describe('Numeric facet with custom ranges', () => {
+describe('Numeric facet with manually specified ranges', () => {
   beforeEach(() => {
     setupCustomNumericFacet(
       numericFacetProp.field,
       numericFacetProp.label,
-      numericRange
+      numericRanges
     );
-    createAliasShadow(numericFacetProp.field, FacetSelectors.facetNumeric);
-    createAliasFacetUL(numericFacetProp.field, FacetSelectors.facetNumeric);
+    createAliasShadow(numericFacetProp.field, FacetSelectors.numericFacet);
+    createAliasFacetUL(numericFacetProp.field, FacetSelectors.numericFacet);
   });
 
   describe('When page is loaded', () => {
     it('Numeric facet should load, pass accessibility test and have correct label', () => {
       validateFacetComponentLoaded(
         numericFacetProp.label,
-        FacetSelectors.facetNumeric
+        FacetSelectors.numericFacet
       );
     });
 
-    it('Should generate all custom ranges', () => {
+    it('Should generate all manually specified ranges', () => {
       cy.getTextOfAllElements(FacetAlias.facetAllValueLabel).then(
         (elements) => {
-          Object.keys(numericRange).forEach((i) => {
-            const facetValueConverted = convertRangeToFacetValue(
-              (numericRange as any)[i]
-            );
+          numericRanges.forEach((r: NumericRange) => {
+            const facetValueConverted = convertRangeToFacetValue(r);
             expect(elements).to.include(facetValueConverted);
           });
         }
       );
     });
 
-    it('Should generate correct number of custom ranges', () => {
-      const totalCustomRangeLength = Object.keys(numericRange).length;
+    it('Should generate correct number of manually specified ranges', () => {
+      const totalCustomRangeLength = numericRanges.length;
       validateFacetNumberofValueEqual(totalCustomRangeLength);
     });
 
@@ -193,13 +187,26 @@ describe('Numeric facet with custom ranges', () => {
 
 describe('Numeric facet contains range returns 0 result', () => {
   it('Should hide the range automatically', () => {
-    setUpPage(`
-    <atomic-numeric-facet field="${numericFacetProp.field}" label="${numericFacetProp.label}">
-          <atomic-numeric-range start='0' end='1' end-inclusive="true"></atomic-numeric-range> 
-          <atomic-numeric-range start='1' end='1000' end-inclusive="true"></atomic-numeric-range> 
-          <atomic-numeric-range start='10000' end='100000' end-inclusive="true"></atomic-numeric-range>             
-    </atomic-numeric-facet>`);
-    createAliasFacetUL(numericFacetProp.field, FacetSelectors.facetNumeric);
+    const noResultnumericRanges: NumericRange[] = [
+      {
+        start: 0,
+        end: 1,
+      },
+      {
+        start: 1,
+        end: 1000,
+      },
+      {
+        start: 10000,
+        end: 100000,
+      },
+    ];
+    setupCustomNumericFacet(
+      numericFacetProp.field,
+      numericFacetProp.label,
+      noResultnumericRanges
+    );
+    createAliasFacetUL(numericFacetProp.field, FacetSelectors.numericFacet);
     assertNonZeroFacetCount();
   });
 });
@@ -208,8 +215,8 @@ describe('Numeric with invalid options', () => {
   describe('When numeric facet uses invalid field/field returns no result', () => {
     it('Should hide the facet', () => {
       setupAutoNumericFacet('author', numericFacetProp.label);
-      cy.get(FacetSelectors.facetNumeric).should('exist');
-      cy.get(FacetSelectors.facetNumeric)
+      cy.get(FacetSelectors.numericFacet).should('exist');
+      cy.get(FacetSelectors.numericFacet)
         .shadow()
         .find('div.facet div')
         .should('not.exist');
@@ -217,12 +224,23 @@ describe('Numeric with invalid options', () => {
   });
   describe('When numeric facet uses invalid range', () => {
     it('Should render a warning message when range start with non-number', () => {
-      setUpPage(`
-      <atomic-numeric-facet field="${numericFacetProp.field}" label="${numericFacetProp.label}">
-            <atomic-numeric-range start='10000' end='100000' end-inclusive="true"></atomic-numeric-range>
-            <atomic-numeric-range start='x1000000' end='1000000' end-inclusive="true"></atomic-numeric-range>
-      </atomic-numeric-facet>`);
-      shouldRenderErrorComponent(FacetSelectors.facetNumeric);
+      const invalidNumericRanges: NumericRange[] = [
+        {
+          start: 10000,
+          end: 100000,
+        },
+        {
+          start: 'x1000000',
+          end: 1000000,
+        },
+      ];
+
+      setupCustomNumericFacet(
+        numericFacetProp.field,
+        numericFacetProp.label,
+        invalidNumericRanges
+      );
+      shouldRenderErrorComponent(FacetSelectors.numericFacet);
     });
   });
 });

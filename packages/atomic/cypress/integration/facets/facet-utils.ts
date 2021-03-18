@@ -42,7 +42,6 @@ export function facetValueShouldDisplayInBreadcrumb(
       cy.get(BreadcrumbAlias.breadcrumbFacet)
         .first()
         .find(valueDisplayInBreadcrumbSelector)
-        // .debug()
         .should('be.visible')
         .contains(text);
     });
@@ -113,7 +112,7 @@ export function convertFacetValueToAPIformat(
 }
 
 export interface NumericRange {
-  start: number;
+  start: number | string;
   end: number;
 }
 export interface DateRange {

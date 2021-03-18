@@ -31,61 +31,58 @@ const dateFacetProp = {
   label: 'Date',
 };
 
-interface DateRanges {
-  range1: DateRange;
-  range2: DateRange;
-  range3: DateRange;
-}
-const dateRange: DateRanges = {
-  range1: {
+const dateRanges: DateRange[] = [
+  {
     start: '01/01/2006',
     end: '01/01/2011',
   },
-  range2: {
+  {
     start: '01/01/2011',
     end: '01/01/2015',
   },
-  range3: {
+  {
     start: '01/01/2015',
     end: '01/01/2021',
   },
-};
+];
 
 function setupAutoDateFacet(field: string, label: string, option?: string) {
-  setUpPage(
-    `<atomic-breadcrumb-manager></atomic-breadcrumb-manager>    
-    <atomic-date-facet field="${field}" label="${label}" ${option}>
-  </atomic-date-facet>`
-  );
+  setUpPage(`
+  <atomic-breadcrumb-manager></atomic-breadcrumb-manager>    
+  <atomic-date-facet field="${field}" label="${label}" ${option}></atomic-date-facet>`);
 }
 
 function setupCustomDateFacet(
   field: string,
   label: string,
-  dateRange: DateRanges
+  dateRanges: DateRange[],
+  option?: {}
 ) {
-  setUpPage(
-    `<atomic-breadcrumb-manager></atomic-breadcrumb-manager>
-    <atomic-date-facet field="${field}" label="${label}">
-           <atomic-date-range start=${dateRange.range1.start} end=${dateRange.range1.end} end-inclusive="true"></atomic-date-range>
-           <atomic-date-range start=${dateRange.range2.start} end=${dateRange.range2.end} end-inclusive="true"></atomic-date-range>
-           <atomic-date-range start=${dateRange.range3.start} end=${dateRange.range3.end} end-inclusive="true"></atomic-date-range>
-  </atomic-date-facet>`
-  );
+  const ranges = dateRanges
+    .map(
+      (r: DateRange) =>
+        `<atomic-date-range start=${r.start} end=${r.end} end-inclusive="true"></atomic-date-range>`
+    )
+    .join();
+  const html = `
+  <atomic-breadcrumb-manager></atomic-breadcrumb-manager>
+  <atomic-date-facet field="${field}" label="${label}" ${option}>${ranges}</atomic-date-facet>`;
+
+  setUpPage(html);
 }
 
 describe('Date Facet', () => {
   beforeEach(() => {
     setupAutoDateFacet(dateFacetProp.field, dateFacetProp.label);
-    createAliasShadow(dateFacetProp.field, FacetSelectors.facetDate);
-    createAliasFacetUL(dateFacetProp.field, FacetSelectors.facetDate);
+    createAliasShadow(dateFacetProp.field, FacetSelectors.dateFacet);
+    createAliasFacetUL(dateFacetProp.field, FacetSelectors.dateFacet);
   });
 
   describe('When page is loaded', () => {
     it('Date facet should load, pass accessibility test and have correct label and facetCount', () => {
       validateFacetComponentLoaded(
         dateFacetProp.label,
-        FacetSelectors.facetDate
+        FacetSelectors.dateFacet
       );
     });
 
@@ -143,36 +140,34 @@ describe('Date Facet', () => {
   });
 });
 
-describe('Date facet with custom ranges', () => {
+describe('Date facet with manually specified ranges', () => {
   beforeEach(() => {
-    setupCustomDateFacet(dateFacetProp.field, dateFacetProp.label, dateRange);
-    createAliasShadow(dateFacetProp.field, FacetSelectors.facetDate);
-    createAliasFacetUL(dateFacetProp.field, FacetSelectors.facetDate);
+    setupCustomDateFacet(dateFacetProp.field, dateFacetProp.label, dateRanges);
+    createAliasShadow(dateFacetProp.field, FacetSelectors.dateFacet);
+    createAliasFacetUL(dateFacetProp.field, FacetSelectors.dateFacet);
   });
 
   describe('When page is loaded', () => {
     it('Date facet should load, pass accessibility test and have correct label', () => {
       validateFacetComponentLoaded(
         dateFacetProp.label,
-        FacetSelectors.facetDate
+        FacetSelectors.dateFacet
       );
     });
 
-    it('Should generate all custom ranges', () => {
+    it('Should generate all manually specified ranges', () => {
       cy.getTextOfAllElements(FacetAlias.facetAllValueLabel).then(
         (elements) => {
-          Object.keys(dateRange).forEach((i) => {
-            const facetValueConverted = convertDateToFacetValue(
-              (dateRange as any)[i]
-            );
+          dateRanges.forEach((r: DateRange) => {
+            const facetValueConverted = convertDateToFacetValue(r);
             expect(elements).to.include(facetValueConverted);
           });
         }
       );
     });
 
-    it('Should generate correct number of custom ranges', () => {
-      const totalCustomRangeLength = Object.keys(dateRange).length;
+    it('Should generate correct number of manually specified ranges', () => {
+      const totalCustomRangeLength = dateRanges.length;
       validateFacetNumberofValueEqual(totalCustomRangeLength);
     });
 
@@ -189,26 +184,53 @@ describe('Date facet with custom ranges', () => {
 
 describe('Date facet contains range returns 0 result', () => {
   it('Should hide the range automatically', () => {
-    setUpPage(`
-    <atomic-date-facet field="${dateFacetProp.field}" label="${dateFacetProp.label}">
-        <atomic-date-range start='01/01/2006' end='01/01/2014' end-inclusive="true"></atomic-date-range>
-        <atomic-date-range start='01/01/2014' end='01/01/2021' end-inclusive="true"></atomic-date-range>
-        <atomic-date-range start='01/01/20014' end='01/01/20021' end-inclusive="true"></atomic-date-range>
-    </atomic-date-facet>`);
-    createAliasFacetUL(dateFacetProp.field, FacetSelectors.facetDate);
+    const rangeWithNoResultsPeriods: DateRange[] = [
+      {
+        start: '01/01/2006',
+        end: '01/01/2014',
+      },
+      {
+        start: '01/01/2014',
+        end: '01/01/2021',
+      },
+      {
+        start: '01/01/20014',
+        end: '01/01/20021',
+      },
+    ];
+    setupCustomDateFacet(
+      dateFacetProp.field,
+      dateFacetProp.label,
+      rangeWithNoResultsPeriods
+    );
+
+    createAliasFacetUL(dateFacetProp.field, FacetSelectors.dateFacet);
     assertNonZeroFacetCount();
   });
 });
 
 describe('Date with custom date-format', () => {
   it('Should render correct date format', () => {
-    setUpPage(`
-    <atomic-date-facet field="${dateFacetProp.field}" label="${dateFacetProp.label}" date-format="DD/MMM/YYYY">
-          <atomic-date-range start='01/01/2006' end='01/01/2014' end-inclusive="true"></atomic-date-range>
-          <atomic-date-range start='01/01/2014' end='01/01/2021' end-inclusive="true"></atomic-date-range>
-    </atomic-date-facet>`);
-    createAliasFacetUL(dateFacetProp.field, FacetSelectors.facetDate);
-    validateFacetComponentLoaded(dateFacetProp.label, FacetSelectors.facetDate);
+    const customDateFormatDateRanges: DateRange[] = [
+      {
+        start: '01/01/2006',
+        end: '01/01/2014',
+      },
+      {
+        start: '01/01/2014',
+        end: '01/01/2021',
+      },
+    ];
+
+    setupCustomDateFacet(
+      dateFacetProp.field,
+      dateFacetProp.label,
+      customDateFormatDateRanges,
+      'date-format="DD/MMM/YYYY"'
+    );
+
+    createAliasFacetUL(dateFacetProp.field, FacetSelectors.dateFacet);
+    validateFacetComponentLoaded(dateFacetProp.label, FacetSelectors.dateFacet);
 
     const formatedStart = convertDateFormatLabel('01/01/2006', 'DD/MMM/YYYY');
     const formatedEnd = convertDateFormatLabel('01/01/2014', 'DD/MMM/YYYY');
@@ -224,8 +246,8 @@ describe('Date with invalid options', () => {
   describe('When date facet uses invalid field/field returns no result', () => {
     it('Should hide the facet', () => {
       setupAutoDateFacet('author', dateFacetProp.label);
-      cy.get(FacetSelectors.facetDate).should('exist');
-      cy.get(FacetSelectors.facetDate)
+      cy.get(FacetSelectors.dateFacet).should('exist');
+      cy.get(FacetSelectors.dateFacet)
         .shadow()
         .find('div.facet div')
         .should('not.exist');
@@ -234,12 +256,23 @@ describe('Date with invalid options', () => {
 
   describe('When date facet uses invalid range', () => {
     it('Should render a warning message when range start with non-number', () => {
-      setUpPage(`
-      <atomic-date-facet field="${dateFacetProp.field}" label="${dateFacetProp.label}">
-            <atomic-date-range start='01/01/2006' end='01/01/2014' end-inclusive="true"></atomic-date-range>
-            <atomic-date-range start='x01/01/2014' end='01/01/2021' end-inclusive="true"></atomic-date-range>
-      </atomic-date-facet>`);
-      shouldRenderErrorComponent(FacetSelectors.facetDate);
+      const invalidDateRanges: DateRange[] = [
+        {
+          start: '01/01/2006',
+          end: '01/01/2014',
+        },
+        {
+          start: 'x01/01/2014',
+          end: '01/01/2021',
+        },
+      ];
+
+      setupCustomDateFacet(
+        dateFacetProp.field,
+        dateFacetProp.label,
+        invalidDateRanges
+      );
+      shouldRenderErrorComponent(FacetSelectors.dateFacet);
     });
   });
 });
