@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.9.0-alpha.3](https://github.com/coveo/ui-kit/compare/v0.9.0-alpha.2...v0.9.0-alpha.3) (2021-03-19)
+
+
+### Bug Fixes
+
+* **atomic:** allow default value on atomic-result-text & add noTitle to atomic-result-link ([#636](https://github.com/coveo/ui-kit/issues/636)) ([73fc748](https://github.com/coveo/ui-kit/commit/73fc748f9f9f10231eaa5ecf66dfb8f4522c6b79))
+* **atomic:** fixed overflow on breadcrumbs ([#638](https://github.com/coveo/ui-kit/issues/638)) ([0bf9598](https://github.com/coveo/ui-kit/commit/0bf9598294d0ce8fbfba12838bd02e01c8afea80))
+
+
+### Features
+
+* **atomic:** facet-search highlighting ([#620](https://github.com/coveo/ui-kit/issues/620)) ([b235adb](https://github.com/coveo/ui-kit/commit/b235adb666737714988aae5499c62a3efec5dde9))
+
+
+
+
+
 # [0.9.0-alpha.2](https://github.com/coveo/ui-kit/compare/v0.9.0-alpha.1...v0.9.0-alpha.2) (2021-03-18)
 
 
