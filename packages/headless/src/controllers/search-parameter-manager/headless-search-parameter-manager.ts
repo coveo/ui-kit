@@ -114,7 +114,6 @@ export function buildSearchParameterManager(
 
     updateParameters(parameters: SearchParameters) {
       const state = engine.state;
-      const previousParameters = this.state.parameters;
       const initialParameters: Required<SearchParameters> = {
         q: getQueryInitialState().q,
         enableQuerySyntax: getQueryInitialState().enableQuerySyntax,
@@ -133,11 +132,15 @@ export function buildSearchParameterManager(
         df: {},
         debug: getDebugInitialState(),
       };
+      const previousParameters = {
+        ...initialParameters,
+        ...this.state.parameters,
+      };
       const newParameters = {...initialParameters, ...parameters};
       dispatch(restoreSearchParameters(newParameters));
       dispatch(
         executeSearch(
-          logSearchParametersChange(previousParameters, newParameters)
+          logSearchParametersChange({previousParameters, newParameters})
         )
       );
     },
