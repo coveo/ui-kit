@@ -23,4 +23,12 @@ export class AtomicNumericRange {
    * Specifies whether or not the end value should be included in the range.
    */
   @Prop() public endInclusive = false;
+
+  public componentWillLoad() {
+    if (this.start > this.end) {
+      console.error(
+        `Start of numeric range is after end for: ${this.start} to ${this.end}`
+      );
+    }
+  }
 }
