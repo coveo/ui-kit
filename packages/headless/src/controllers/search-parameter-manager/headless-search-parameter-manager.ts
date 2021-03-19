@@ -18,7 +18,12 @@ import {RangeValueRequest} from '../../features/facets/range-facets/generic/inte
 import {getAdvancedSearchQueriesInitialState} from '../../features/advanced-search-queries/advanced-search-queries-state';
 import {executeSearch} from '../../features/search/search-actions';
 import {ConfigurationSection} from '../../state/state-sections';
-import {logSearchParametersChange} from '../../features/search-parameters/search-parameter-analytics-actions';
+import {logSearchboxSubmit} from '../../features/query/query-analytics-actions';
+import {
+  AnalyticsType,
+  makeNoopAnalyticsAction,
+} from '../../features/analytics/analytics-utils';
+import {logResultsSort} from '../../features/sort-criteria/sort-criteria-analytics-actions';
 
 export {SearchParameters};
 
@@ -140,7 +145,7 @@ export function buildSearchParameterManager(
       dispatch(restoreSearchParameters(newParameters));
       dispatch(
         executeSearch(
-          logSearchParametersChange({previousParameters, newParameters})
+          getRelevantAnalyticsAction(previousParameters, newParameters)()
         )
       );
     },
@@ -299,4 +304,21 @@ function getDebug(state: Partial<SearchParametersState>) {
   const debug = state.debug;
   const shouldInclude = debug !== getDebugInitialState();
   return shouldInclude ? {debug} : {};
+}
+
+function getRelevantAnalyticsAction(
+  previousParameters: SearchParameters,
+  newParameters: SearchParameters
+) {
+  if (previousParameters.q !== newParameters.q) {
+    return logSearchboxSubmit;
+  }
+
+  if (previousParameters.sortCriteria !== newParameters.sortCriteria) {
+    return logResultsSort;
+  }
+
+  // TODO: handle facets
+
+  return makeNoopAnalyticsAction(AnalyticsType.Search);
 }
