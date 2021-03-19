@@ -13,6 +13,8 @@ import {BaseFacetSearchResult} from '@coveo/headless/dist/api/search/facet-searc
 import {randomID} from '../../../utils/utils';
 import {CategoryFacetSearchResult} from '@coveo/headless/dist/api/search/facet-search/category-facet-search/category-facet-search-response';
 import SearchIcon from 'coveo-styleguide/resources/icons/svg/search.svg';
+import {sanitize} from '../../../utils/xss-utils';
+import {regexEncode} from '../../../utils/string-utils';
 
 export interface FacetSearchState {
   strings: I18nState;
@@ -143,6 +145,12 @@ export class FacetSearch {
     );
   }
 
+  private highlightSuggestion(suggestion: string) {
+    const search = regexEncode(this.props.controller.state.facetSearchQuery);
+    const regex = new RegExp(`(${search})`, 'ig');
+    return sanitize(suggestion).replace(regex, '<b>$1</b>');
+  }
+
   private get suggestions() {
     return (this.props.controller.facetSearchState
       .values as BaseFacetSearchResult[]).map((suggestion, index) => {
@@ -154,9 +162,10 @@ export class FacetSearch {
           class="suggestion cursor-pointer flex flex-row items-center px-2 text-sm"
           value={index}
         >
-          <span class="label whitespace-nowrap overflow-ellipsis overflow-hidden">
-            {suggestion.rawValue}
-          </span>
+          <span
+            class="label whitespace-nowrap overflow-ellipsis overflow-hidden"
+            innerHTML={this.highlightSuggestion(suggestion.displayValue)}
+          />
           <span class="number-of-values ml-auto text-on-background-variant">
             {suggestion.count}
           </span>

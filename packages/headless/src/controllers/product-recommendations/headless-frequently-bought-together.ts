@@ -14,6 +14,7 @@ const optionsSchema = new Schema({
   sku: new StringValue({required: true, emptyAllowed: false}),
   maxNumberOfRecommendations:
     baseProductRecommendationsOptionsSchema.maxNumberOfRecommendations,
+  additionalFields: baseProductRecommendationsOptionsSchema.additionalFields,
 });
 
 export type FrequentlyBoughtTogetherListOptions = SchemaValues<
@@ -43,6 +44,7 @@ export const buildFrequentlyBoughtTogetherList = (
     ...props,
     options: {
       maxNumberOfRecommendations: options.maxNumberOfRecommendations,
+      additionalFields: options.additionalFields,
       skus: [options.sku],
       id: 'frequentBought',
     },

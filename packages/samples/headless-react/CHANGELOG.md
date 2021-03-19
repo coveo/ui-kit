@@ -3,6 +3,30 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.9.0-alpha.0](https://github.com/coveo/ui-kit/compare/v0.8.1-alpha.0...v0.9.0-alpha.0) (2021-03-18)
+
+**Note:** Version bump only for package headless-react
+
+
+
+
+
+## [0.8.1-alpha.0](https://github.com/coveo/ui-kit/compare/v0.8.0...v0.8.1-alpha.0) (2021-03-17)
+
+**Note:** Version bump only for package headless-react
+
+
+
+
+
+# [0.8.0](https://github.com/coveo/ui-kit/compare/v0.8.0-alpha.26...v0.8.0) (2021-03-17)
+
+**Note:** Version bump only for package headless-react
+
+
+
+
+
 # [0.8.0-alpha.21](https://github.com/coveo/ui-kit/compare/v0.8.0-alpha.20...v0.8.0-alpha.21) (2021-03-15)
 
 **Note:** Version bump only for package headless-react

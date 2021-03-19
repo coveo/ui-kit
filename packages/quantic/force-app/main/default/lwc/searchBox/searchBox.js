@@ -2,7 +2,7 @@ import {LightningElement, api, track} from 'lwc';
 import TributePath from '@salesforce/resourceUrl/tributejs';
 // @ts-ignore
 import {loadScript} from 'lightning/platformResourceLoader';
-import {initializeComponent} from 'c/initialization';
+import {registerComponentForInit, initializeWithHeadless} from 'c/headlessLoader';
 
 export default class SearchBox extends LightningElement {
   /** @type {import("coveo").SearchBoxState} */
@@ -15,16 +15,21 @@ export default class SearchBox extends LightningElement {
   /** @type {any} */
   @track suggestions = [];
 
+  /** @type {boolean} */
+  @api sample = false;
+  /** @type {string} */
+  @api engineId;
+
   /** @type {import("coveo").SearchBox} */
   searchBox;
   /** @type {import("coveo").Unsubscribe} */
   unsubscribe;
-  tributeLoaded = false;
   /** @type {any} */
   tribute;
+  tributeLoaded = false;
 
   connectedCallback() {
-    initializeComponent(this);
+    registerComponentForInit(this, this.engineId);
 
     if (this.tributeLoaded) {
       return;
@@ -42,6 +47,8 @@ export default class SearchBox extends LightningElement {
   }
 
   renderedCallback() {
+    initializeWithHeadless(this, this.engineId, this.initialize.bind(this));
+
     // @ts-ignore
     const input = this.template.querySelector('input');
     // @ts-ignore
