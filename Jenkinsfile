@@ -10,6 +10,10 @@ node('linux && docker') {
       }
 
       if (isMaster) {
+        /**
+         * The build versions must be bumped before building ui-kit in order
+         * to expose the correct versions in headless and atomic.
+         */
         stage('Bump build version') {
           sh 'npx lerna version --conventional-prerelease --amend'
         }

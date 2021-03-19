@@ -13,13 +13,13 @@ import {readFileSync} from 'fs';
 
 const isProduction = process.env.BUILD === 'production';
 
-function getPackageConfiguration(): {version: string} {
-  return JSON.parse(readFileSync('package.json', 'utf-8'));
+function getPackageVersion(): string {
+  return JSON.parse(readFileSync('package.json', 'utf-8')).version;
 }
 
 function replace() {
   const env = isProduction ? 'production' : 'development';
-  const {version} = getPackageConfiguration();
+  const version = getPackageVersion();
   return replacePlugin({
     'process.env.NODE_ENV': JSON.stringify(env),
     'process.env.VERSION': JSON.stringify(version),

@@ -5,9 +5,17 @@ export interface AtomicEnvironment {
   headlessVersion: string;
 }
 
-export default function () {
-  ((window as unknown) as {atomic: AtomicEnvironment}).atomic = {
+function getWindow() {
+  return (window as unknown) as {Coveo: AtomicEnvironment};
+}
+
+function getAtomicEnvironment(): AtomicEnvironment {
+  return {
     version: process.env.VERSION!,
     headlessVersion: VERSION,
   };
+}
+
+export default function () {
+  getWindow().Coveo = getAtomicEnvironment();
 }
