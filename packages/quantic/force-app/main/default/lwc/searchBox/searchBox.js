@@ -1,43 +1,44 @@
-import {LightningElement, api, track} from 'lwc';
-import TributePath from '@salesforce/resourceUrl/tributejs';
+import { LightningElement, api, track } from 'lwc';
 // @ts-ignore
-import {loadScript} from 'lightning/platformResourceLoader';
-import {registerComponentForInit, initializeWithHeadless} from 'c/headlessLoader';
+import { registerComponentForInit, initializeWithHeadless } from 'c/headlessLoader';
+
+const ENTER = 13;
+const ARROWUP = 38;
+const ARROWDOWN = 40;
 
 export default class SearchBox extends LightningElement {
   /** @type {import("coveo").SearchBoxState} */
   @track state = {
-    // @ts-ignore TODO: Check SearchBoxState typing and integration with LWC/Quantic
     redirectTo: '',
     suggestions: [],
     value: '',
   };
+
   /** @type {any} */
-  @track suggestions = [];
+  get suggestions() {
+    return this.state.suggestions.map((s, index) => ({ key: index, value: s.rawValue }));
+  }
 
   /** @type {boolean} */
   @api sample = false;
   /** @type {string} */
   @api engineId;
+  /** @type {string} */
+  @track placeholderText = 'Search';
 
   /** @type {import("coveo").SearchBox} */
   searchBox;
   /** @type {import("coveo").Unsubscribe} */
   unsubscribe;
-  /** @type {any} */
-  tribute;
-  tributeLoaded = false;
+  /** @type {number} */
+  selectionIndex = -1;
 
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
+  }
 
-    if (this.tributeLoaded) {
-      return;
-    }
-
-    loadScript(this, TributePath + '/tribute.js').then(
-      () => (this.tributeLoaded = true)
-    );
+  renderedCallback() {
+    initializeWithHeadless(this, this.engineId, this.initialize.bind(this));
   }
 
   disconnectedCallback() {
@@ -46,65 +47,37 @@ export default class SearchBox extends LightningElement {
     }
   }
 
-  renderedCallback() {
-    initializeWithHeadless(this, this.engineId, this.initialize.bind(this));
-
-    // @ts-ignore
-    const input = this.template.querySelector('input');
-    // @ts-ignore
-    const wrapper = this.template.querySelector('.slds-dropdown');
-    // @ts-ignore
+  showSuggestions() {
     const combobox = this.template.querySelector('.slds-combobox');
-
-    if (!input || !wrapper || !this.tributeLoaded || this.tribute) {
-      return;
-    }
-
-    this.configureTributeJS(input, wrapper, combobox);
+    combobox.classList.add('slds-is-open');
+    combobox.setAttribute("aria-expanded", true);
   }
 
-  /**
-   * @param {import("lwc").HTMLElementTheGoodPart} input
-   * @param {import("lwc").HTMLElementTheGoodPart} wrapper
-   * @param {import("lwc").HTMLElementTheGoodPart} combobox
-   */
-  configureTributeJS(input, wrapper, combobox) {
-    const tributeOptions = {
-      values: [],
-      searchOpts: {
-        skip: true,
-      },
-      selectTemplate: (item) => item.string,
-      menuContainer: wrapper,
-      positionMenu: false,
-      autocompleteMode: true,
-      replaceTextSuffix: '',
-      containerClass: 'slds-listbox slds-listbox_vertical',
-      itemClass:
-        'slds-listbox__item slds-media slds-listbox__option slds-listbox__option_plain slds-media_small',
-      noMatchTemplate: '',
-    };
-    // @ts-ignore
-    this.tribute = new Tribute(tributeOptions);
-    this.tribute.attach(input);
+  hideSuggestions() {
+    const combobox = this.template.querySelector('.slds-combobox');
+    combobox.classList.remove('slds-is-open');
+    combobox.setAttribute('aria-expanded', false);
+    this.resetHighlighted();
+    this.selectionIndex = -1;
+  }
 
-    input.addEventListener(
-      'tribute-replaced',
-      /**
-       * @param {CustomEvent} e
-       */
-      (e) => {
-        this.searchBox.updateText(e.detail.item.string);
-        this.searchBox.submit();
+  setHighlighted() {
+    this.resetHighlighted();
+    const options = this.template.querySelectorAll('.slds-listbox__option');
+    options.forEach((element, index) => {
+      if (index === this.selectionIndex) {
+        element.setAttribute('aria-selected', true);
+        element.classList.add('slds-has-focus');
+        this.placeholderText = element.textContent;
       }
-    );
-
-    input.addEventListener('tribute-active-true', () => {
-      combobox.classList.add('slds-is-open');
     });
+  }
 
-    input.addEventListener('tribute-active-false', () => {
-      combobox.classList.remove('slds-is-open');
+  resetHighlighted() {
+    const options = this.template.querySelectorAll('.slds-listbox__option');
+    options.forEach((element) => {
+      element.setAttribute('aria-selected', false);
+      element.classList.remove('slds-has-focus');
     });
   }
 
@@ -117,39 +90,80 @@ export default class SearchBox extends LightningElement {
     this.unsubscribe = this.searchBox.subscribe(() => this.updateState());
   }
 
+  updateState() {
+    this.state = this.searchBox.state;
+  }
+
   /**
-   * @param {InputEvent & {target: {value : string}}} event
+   * @param {string} textValue
    */
-  onChange(event) {
-    this.searchBox.updateText(event.target.value);
+  updateSearchboxText(textValue) {
+    this.template.querySelector('input').value = textValue;
+    this.searchBox.updateText(textValue);
+  }
+
+  handleEnter() {
+    if (this.selectionIndex >= 0) {
+      this.updateSearchboxText(this.placeholderText);
+      this.hideSuggestions();
+    }
+    this.searchBox.submit();
+  }
+
+  handleArrowUp() {
+    this.selectionIndex--;
+    if (this.selectionIndex < 0) {
+      this.selectionIndex = this.suggestions.length - 1;
+    }
+    this.setHighlighted();
+  }
+
+  handleArrowDown() {
+    this.selectionIndex++;
+      if (this.selectionIndex > this.suggestions.length - 1) {
+        this.selectionIndex = 0;
+      }
+      this.setHighlighted();
   }
 
   /**
    * @param {KeyboardEvent & {target: {value : string}}} event
    */
   onKeyup(event) {
-    if (event.which === 13) {
-      this.searchBox.submit();
+    switch (event.which) {
+      case ENTER:
+        this.handleEnter();
+        break;
+      case ARROWUP:
+        this.handleArrowUp();
+        break;
+      case ARROWDOWN:
+        this.handleArrowDown();
+        break;
+      default:
+        break;
     }
     this.searchBox.updateText(event.target.value);
   }
 
-  updateState() {
-    this.state = this.searchBox.state;
-
-    this.suggestions = this.state.suggestions.map((s) => s.rawValue);
-    if (!this.tribute) {
-      return;
-    }
-
-    this.tribute.append(
-      0,
-      this.state.suggestions.map((s) => ({key: s.rawValue, value: s.rawValue})),
-      true
-    );
-  }
-
   onFocus() {
     this.searchBox.showSuggestions();
+    this.showSuggestions();
+  }
+
+  onBlur() {
+    this.hideSuggestions();
+  }
+
+  preventDefault(event) {
+    event.preventDefault();
+  }
+
+  handleSuggestionSelection(event) {
+    const textValue = event.target.textContent;
+
+    this.updateSearchboxText(textValue);
+    this.searchBox.submit();
+    this.hideSuggestions();
   }
 }

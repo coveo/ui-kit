@@ -1,32 +1,54 @@
 <template>
-  <div class="slds-form-element__control">
-    <div class="slds-combobox_container">
-      <div
-        class="slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click"
-        aria-expanded="true"
-        aria-haspopup="listbox"
-        role="combobox"
-      >
-        <div class="slds-combobox__form-element slds-input-has-icon slds-input-has-icon_right" role="none">
-          <input
-            class="slds-input slds-combobox__input slds-has-focus slds-combobox__input-value"
-            placeholder="Search"
-            onfocus={onFocus}
-            type="search"
-            onkeyup={onKeyup}
-            onchange={onChange}
-            aria-autocomplete="list"
-            aria-controls="listbox-id-11"
-            role="textbox"
-          />
-          <input type="hidden" value={state.value} />
-        </div>
+  <div class="slds-form-element">
+    <div class="slds-form-element__control">
+      <div class="slds-combobox_container">
         <div
-          id="listbox-id-11"
-          class="slds-dropdown slds-dropdown_length-5 slds-dropdown_fluid"
-          lwc:dom="manual"
-          role="listbox"
-        ></div>
+          class="slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click"
+          aria-expanded="true"
+          aria-haspopup="listbox"
+          role="combobox"
+        >
+          <div class="slds-combobox__form-element" role="none">
+            <input
+              id="combobox-id"
+              class="slds-input slds-combobox__input"
+              placeholder={placeholderText}
+              type="search"
+              onkeyup={onKeyup}
+              onfocus={onFocus}
+              onblur={onBlur}
+              aria-autocomplete="list"
+              aria-controls="listbox-id-9"
+              autocomplete="off"
+              role="textbox"
+            />
+          </div>
+          <template if:true={state.suggestions.length}>
+            <div
+              id="listbox-id"
+              class="slds-dropdown slds-dropdown_length-5 slds-dropdown_fluid"
+              role="listbox"
+            >
+              <ul class="slds-listbox slds-listbox_vertical" role="presentation">
+                <template for:each={suggestions} for:item="suggestion">
+                  <li
+                    key={suggestion.key}
+                    role="presentation"
+                    class="slds-listbox__item"
+                    onclick={handleSuggestionSelection}
+                    onmousedown={preventDefault}>
+                    <div class="slds-media slds-listbox__option slds-listbox__option_plain slds-media_small" role="option">
+                      <span class="slds-media__figure slds-listbox__option-icon"></span>
+                      <span class="slds-media__body">
+                        <span class="slds-truncate" title={suggestion.value}>{suggestion.value}</span>
+                      </span>
+                    </div>
+                  </li>
+                </template>
+              </ul>
+            </div>
+          </template>
+        </div>
       </div>
     </div>
   </div>
