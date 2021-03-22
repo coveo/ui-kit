@@ -108,6 +108,7 @@ export class AtomicSearchInterface {
 
   public disconnectedCallback() {
     this.unsubscribeSearchParamsManager();
+    window.removeEventListener('hashchange', this.onUrlHashChange);
   }
 
   @Listen('atomic/initializeComponent')
@@ -229,8 +230,7 @@ export class AtomicSearchInterface {
       () => this.updateUrlSearchParams()
     );
 
-    // TODO: remove event listener on disconnectedCallback
-    window.addEventListener('hashchange', () => this.onUrlHashChange());
+    window.addEventListener('hashchange', this.onUrlHashChange);
   }
 
   private updateUrlSearchParams() {
@@ -248,7 +248,7 @@ export class AtomicSearchInterface {
     window.location.hash = state;
   }
 
-  private async onUrlHashChange() {
+  private onUrlHashChange = async () => {
     if (this.searchParamsUpdating) {
       return;
     }
@@ -261,7 +261,7 @@ export class AtomicSearchInterface {
       params
     );
     this.searchParamsManager.updateParameters(params);
-  }
+  };
 
   public render() {
     if (this.error) {
