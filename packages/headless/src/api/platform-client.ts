@@ -99,7 +99,19 @@ export class PlatformClient {
         return error;
       }
 
-      throw error;
+      if (error.name === 'AbortError') {
+        throw error;
+      }
+
+      // Transform an error to an object https://stackoverflow.com/a/26199752
+      const errorObj = JSON.parse(
+        JSON.stringify(error, Object.getOwnPropertyNames(error))
+      );
+
+      return {
+        response: error,
+        body: errorObj,
+      };
     }
   }
 }

@@ -81,7 +81,7 @@ export class AtomicQuerySummary implements InitializableComponent {
     if (this.enableDuration && this.querySummaryState.hasDuration) {
       return (
         <span part="duration">
-          &nbsp;{' '}
+          {' '}
           {this.strings.inSeconds(this.querySummaryState.durationInSeconds)}
         </span>
       );
@@ -127,6 +127,10 @@ export class AtomicQuerySummary implements InitializableComponent {
   }
 
   public render() {
+    if (this.querySummaryState.hasError) {
+      return;
+    }
+
     if (!this.querySummaryState.firstSearchExecuted) {
       return (
         <div

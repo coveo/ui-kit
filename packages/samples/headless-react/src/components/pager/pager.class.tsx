@@ -1,27 +1,25 @@
-import {Component} from 'react';
+import {Component, ContextType} from 'react';
 import {
   buildPager,
   Pager as HeadlessPager,
-  PagerOptions,
   PagerState,
   Unsubscribe,
 } from '@coveo/headless';
-import {engine} from '../../engine';
+import {AppContext} from '../../context/engine';
 
-export class Pager extends Component {
-  private controller: HeadlessPager;
-  public state: PagerState;
+export class Pager extends Component<{}, PagerState> {
+  static contextType = AppContext;
+  context!: ContextType<typeof AppContext>;
+
+  private controller!: HeadlessPager;
   private unsubscribe: Unsubscribe = () => {};
 
-  constructor(props: {}) {
-    super(props);
-
-    const options: PagerOptions = {numberOfPages: 6};
-    this.controller = buildPager(engine, {options});
-    this.state = this.controller.state;
-  }
-
   componentDidMount() {
+    this.controller = buildPager(this.context.engine!, {
+      options: {numberOfPages: 6},
+    });
+    this.updateState();
+
     this.unsubscribe = this.controller.subscribe(() => this.updateState());
   }
 
@@ -34,6 +32,10 @@ export class Pager extends Component {
   }
 
   render() {
+    if (!this.state) {
+      return null;
+    }
+
     return (
       <nav>
         <button

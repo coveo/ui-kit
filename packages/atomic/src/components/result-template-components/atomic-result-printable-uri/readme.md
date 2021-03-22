@@ -36,6 +36,8 @@ graph TD;
   atomic-result-printable-uri --> atomic-result-text
   atomic-result-printable-uri --> atomic-component-error
   atomic-result-text --> atomic-component-error
+  atomic-result-text --> atomic-text
+  atomic-text --> atomic-component-error
   style atomic-result-printable-uri fill:#f9f,stroke:#333,stroke-width:4px
 ```
 

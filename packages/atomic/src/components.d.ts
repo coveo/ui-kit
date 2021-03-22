@@ -52,15 +52,15 @@ export namespace Components {
         "error": Error;
     }
     interface AtomicDateFacet {
+        /**
+          * The format that the date will be displayed in. See https://day.js.org/docs/en/display/format for formatting details.
+         */
+        "dateFormat": string;
         "facetId": string;
         /**
           * Specifies the index field whose values the facet should use
          */
         "field": string;
-        /**
-          * Whether or not the index should automatically generate options for the facet
-         */
-        "generateAutomaticRanges": boolean;
         /**
           * The non-localized label for the facet
          */
@@ -137,10 +137,6 @@ export namespace Components {
          */
         "field": string;
         /**
-          * Whether or not the index should automatically generate options for the facet.
-         */
-        "generateAutomaticRanges": boolean;
-        /**
           * The non-localized label for the facet.
          */
         "label": string;
@@ -207,7 +203,23 @@ export namespace Components {
          */
         "format": string;
     }
+    interface AtomicResultIcon {
+        /**
+          * Allow to specify the icon to display from the list of available icons.  By default, will parse the `objecttype` field and the `filetype` field to find a matching icon. If none are available, will use the `custom` icon.
+         */
+        "icon"?: string;
+    }
+    interface AtomicResultImage {
+        /**
+          * The result field which the component should use. Will look in the Result object first and then in the Result.raw object for the fields. It is important to include the necessary fields in the ResultList component.
+         */
+        "field": string;
+    }
     interface AtomicResultLink {
+        /**
+          * Where to display the linked URL, as the name for a browsing context (a tab, window, or <iframe>).  The following keywords have special meanings for where to load the URL: - _self: the current browsing context. (Default) - _blank: usually a new tab, but users can configure browsers to open a new window instead. - _parent: the parent browsing context of the current one. If no parent, behaves as _self. - _top: the topmost browsing context (the "highest" context that’s an ancestor of the current one). If no ancestors, behaves as _self.
+         */
+        "target": string;
     }
     interface AtomicResultList {
         /**
@@ -267,6 +279,10 @@ export namespace Components {
         "getTemplate": () => Promise<ResultTemplate<string> | null>;
     }
     interface AtomicResultText {
+        /**
+          * The locale key for the text to display when the configured field has no value.
+         */
+        "default"?: string;
         /**
           * The result field which the component should use. Will look in the Result object first and then in the Result.raw object for the fields. It is important to include the necessary fields in the ResultList component.
          */
@@ -330,17 +346,17 @@ export namespace Components {
          */
         "searchHub": string;
     }
-    interface AtomicSortCriteria {
+    interface AtomicSortDropdown {
+    }
+    interface AtomicSortExpression {
         /**
-          * The non-localized caption to display for this criteria.
+          * The non-localized caption to display for this expression.
          */
         "caption": string;
         /**
-          * The sort criterion/criteria the end user can select/toggle between.  The available sort criteria are: - `relevancy` - `date ascending`/`date descending` - `qre` - `field ascending`/`field descending`, where you must replace `field` with the name of a sortable field in your index (e.g., `criteria="size ascending"`).  You can specify multiple sort criteria to be used in the same request by separating them with a comma (e.g., `criteria="size ascending, date ascending"` ).
+          * The sort criterion/criteria expression the end user can select/toggle between.  The available sort criteria are: - `relevancy` - `date ascending`/`date descending` - `qre` - `field ascending`/`field descending`, where you must replace `field` with the name of a sortable field in your index (e.g., `criteria="size ascending"`).  You can specify multiple sort criteria to be used in the same request by separating them with a comma (e.g., `criteria="size ascending, date ascending"` ).
          */
-        "criteria": string;
-    }
-    interface AtomicSortDropdown {
+        "expression": string;
     }
     interface AtomicTab {
         /**
@@ -484,6 +500,18 @@ declare global {
         prototype: HTMLAtomicResultDateElement;
         new (): HTMLAtomicResultDateElement;
     };
+    interface HTMLAtomicResultIconElement extends Components.AtomicResultIcon, HTMLStencilElement {
+    }
+    var HTMLAtomicResultIconElement: {
+        prototype: HTMLAtomicResultIconElement;
+        new (): HTMLAtomicResultIconElement;
+    };
+    interface HTMLAtomicResultImageElement extends Components.AtomicResultImage, HTMLStencilElement {
+    }
+    var HTMLAtomicResultImageElement: {
+        prototype: HTMLAtomicResultImageElement;
+        new (): HTMLAtomicResultImageElement;
+    };
     interface HTMLAtomicResultLinkElement extends Components.AtomicResultLink, HTMLStencilElement {
     }
     var HTMLAtomicResultLinkElement: {
@@ -550,17 +578,17 @@ declare global {
         prototype: HTMLAtomicSearchInterfaceElement;
         new (): HTMLAtomicSearchInterfaceElement;
     };
-    interface HTMLAtomicSortCriteriaElement extends Components.AtomicSortCriteria, HTMLStencilElement {
-    }
-    var HTMLAtomicSortCriteriaElement: {
-        prototype: HTMLAtomicSortCriteriaElement;
-        new (): HTMLAtomicSortCriteriaElement;
-    };
     interface HTMLAtomicSortDropdownElement extends Components.AtomicSortDropdown, HTMLStencilElement {
     }
     var HTMLAtomicSortDropdownElement: {
         prototype: HTMLAtomicSortDropdownElement;
         new (): HTMLAtomicSortDropdownElement;
+    };
+    interface HTMLAtomicSortExpressionElement extends Components.AtomicSortExpression, HTMLStencilElement {
+    }
+    var HTMLAtomicSortExpressionElement: {
+        prototype: HTMLAtomicSortExpressionElement;
+        new (): HTMLAtomicSortExpressionElement;
     };
     interface HTMLAtomicTabElement extends Components.AtomicTab, HTMLStencilElement {
     }
@@ -595,6 +623,8 @@ declare global {
         "atomic-relevance-inspector": HTMLAtomicRelevanceInspectorElement;
         "atomic-result": HTMLAtomicResultElement;
         "atomic-result-date": HTMLAtomicResultDateElement;
+        "atomic-result-icon": HTMLAtomicResultIconElement;
+        "atomic-result-image": HTMLAtomicResultImageElement;
         "atomic-result-link": HTMLAtomicResultLinkElement;
         "atomic-result-list": HTMLAtomicResultListElement;
         "atomic-result-list-placeholder": HTMLAtomicResultListPlaceholderElement;
@@ -606,8 +636,8 @@ declare global {
         "atomic-results-per-page": HTMLAtomicResultsPerPageElement;
         "atomic-search-box": HTMLAtomicSearchBoxElement;
         "atomic-search-interface": HTMLAtomicSearchInterfaceElement;
-        "atomic-sort-criteria": HTMLAtomicSortCriteriaElement;
         "atomic-sort-dropdown": HTMLAtomicSortDropdownElement;
+        "atomic-sort-expression": HTMLAtomicSortExpressionElement;
         "atomic-tab": HTMLAtomicTabElement;
         "atomic-text": HTMLAtomicTextElement;
     }
@@ -655,15 +685,15 @@ declare namespace LocalJSX {
         "error": Error;
     }
     interface AtomicDateFacet {
+        /**
+          * The format that the date will be displayed in. See https://day.js.org/docs/en/display/format for formatting details.
+         */
+        "dateFormat"?: string;
         "facetId"?: string;
         /**
           * Specifies the index field whose values the facet should use
          */
         "field"?: string;
-        /**
-          * Whether or not the index should automatically generate options for the facet
-         */
-        "generateAutomaticRanges"?: boolean;
         /**
           * The non-localized label for the facet
          */
@@ -740,10 +770,6 @@ declare namespace LocalJSX {
          */
         "field"?: string;
         /**
-          * Whether or not the index should automatically generate options for the facet.
-         */
-        "generateAutomaticRanges"?: boolean;
-        /**
           * The non-localized label for the facet.
          */
         "label"?: string;
@@ -810,7 +836,23 @@ declare namespace LocalJSX {
          */
         "format"?: string;
     }
+    interface AtomicResultIcon {
+        /**
+          * Allow to specify the icon to display from the list of available icons.  By default, will parse the `objecttype` field and the `filetype` field to find a matching icon. If none are available, will use the `custom` icon.
+         */
+        "icon"?: string;
+    }
+    interface AtomicResultImage {
+        /**
+          * The result field which the component should use. Will look in the Result object first and then in the Result.raw object for the fields. It is important to include the necessary fields in the ResultList component.
+         */
+        "field": string;
+    }
     interface AtomicResultLink {
+        /**
+          * Where to display the linked URL, as the name for a browsing context (a tab, window, or <iframe>).  The following keywords have special meanings for where to load the URL: - _self: the current browsing context. (Default) - _blank: usually a new tab, but users can configure browsers to open a new window instead. - _parent: the parent browsing context of the current one. If no parent, behaves as _self. - _top: the topmost browsing context (the "highest" context that’s an ancestor of the current one). If no ancestors, behaves as _self.
+         */
+        "target"?: string;
     }
     interface AtomicResultList {
         /**
@@ -869,6 +911,10 @@ declare namespace LocalJSX {
         "conditions"?: ResultTemplateCondition[];
     }
     interface AtomicResultText {
+        /**
+          * The locale key for the text to display when the configured field has no value.
+         */
+        "default"?: string;
         /**
           * The result field which the component should use. Will look in the Result object first and then in the Result.raw object for the fields. It is important to include the necessary fields in the ResultList component.
          */
@@ -930,17 +976,17 @@ declare namespace LocalJSX {
          */
         "searchHub"?: string;
     }
-    interface AtomicSortCriteria {
+    interface AtomicSortDropdown {
+    }
+    interface AtomicSortExpression {
         /**
-          * The non-localized caption to display for this criteria.
+          * The non-localized caption to display for this expression.
          */
         "caption": string;
         /**
-          * The sort criterion/criteria the end user can select/toggle between.  The available sort criteria are: - `relevancy` - `date ascending`/`date descending` - `qre` - `field ascending`/`field descending`, where you must replace `field` with the name of a sortable field in your index (e.g., `criteria="size ascending"`).  You can specify multiple sort criteria to be used in the same request by separating them with a comma (e.g., `criteria="size ascending, date ascending"` ).
+          * The sort criterion/criteria expression the end user can select/toggle between.  The available sort criteria are: - `relevancy` - `date ascending`/`date descending` - `qre` - `field ascending`/`field descending`, where you must replace `field` with the name of a sortable field in your index (e.g., `criteria="size ascending"`).  You can specify multiple sort criteria to be used in the same request by separating them with a comma (e.g., `criteria="size ascending, date ascending"` ).
          */
-        "criteria": string;
-    }
-    interface AtomicSortDropdown {
+        "expression": string;
     }
     interface AtomicTab {
         /**
@@ -983,6 +1029,8 @@ declare namespace LocalJSX {
         "atomic-relevance-inspector": AtomicRelevanceInspector;
         "atomic-result": AtomicResult;
         "atomic-result-date": AtomicResultDate;
+        "atomic-result-icon": AtomicResultIcon;
+        "atomic-result-image": AtomicResultImage;
         "atomic-result-link": AtomicResultLink;
         "atomic-result-list": AtomicResultList;
         "atomic-result-list-placeholder": AtomicResultListPlaceholder;
@@ -994,8 +1042,8 @@ declare namespace LocalJSX {
         "atomic-results-per-page": AtomicResultsPerPage;
         "atomic-search-box": AtomicSearchBox;
         "atomic-search-interface": AtomicSearchInterface;
-        "atomic-sort-criteria": AtomicSortCriteria;
         "atomic-sort-dropdown": AtomicSortDropdown;
+        "atomic-sort-expression": AtomicSortExpression;
         "atomic-tab": AtomicTab;
         "atomic-text": AtomicText;
     }
@@ -1024,6 +1072,8 @@ declare module "@stencil/core" {
             "atomic-relevance-inspector": LocalJSX.AtomicRelevanceInspector & JSXBase.HTMLAttributes<HTMLAtomicRelevanceInspectorElement>;
             "atomic-result": LocalJSX.AtomicResult & JSXBase.HTMLAttributes<HTMLAtomicResultElement>;
             "atomic-result-date": LocalJSX.AtomicResultDate & JSXBase.HTMLAttributes<HTMLAtomicResultDateElement>;
+            "atomic-result-icon": LocalJSX.AtomicResultIcon & JSXBase.HTMLAttributes<HTMLAtomicResultIconElement>;
+            "atomic-result-image": LocalJSX.AtomicResultImage & JSXBase.HTMLAttributes<HTMLAtomicResultImageElement>;
             "atomic-result-link": LocalJSX.AtomicResultLink & JSXBase.HTMLAttributes<HTMLAtomicResultLinkElement>;
             "atomic-result-list": LocalJSX.AtomicResultList & JSXBase.HTMLAttributes<HTMLAtomicResultListElement>;
             "atomic-result-list-placeholder": LocalJSX.AtomicResultListPlaceholder & JSXBase.HTMLAttributes<HTMLAtomicResultListPlaceholderElement>;
@@ -1035,8 +1085,8 @@ declare module "@stencil/core" {
             "atomic-results-per-page": LocalJSX.AtomicResultsPerPage & JSXBase.HTMLAttributes<HTMLAtomicResultsPerPageElement>;
             "atomic-search-box": LocalJSX.AtomicSearchBox & JSXBase.HTMLAttributes<HTMLAtomicSearchBoxElement>;
             "atomic-search-interface": LocalJSX.AtomicSearchInterface & JSXBase.HTMLAttributes<HTMLAtomicSearchInterfaceElement>;
-            "atomic-sort-criteria": LocalJSX.AtomicSortCriteria & JSXBase.HTMLAttributes<HTMLAtomicSortCriteriaElement>;
             "atomic-sort-dropdown": LocalJSX.AtomicSortDropdown & JSXBase.HTMLAttributes<HTMLAtomicSortDropdownElement>;
+            "atomic-sort-expression": LocalJSX.AtomicSortExpression & JSXBase.HTMLAttributes<HTMLAtomicSortExpressionElement>;
             "atomic-tab": LocalJSX.AtomicTab & JSXBase.HTMLAttributes<HTMLAtomicTabElement>;
             "atomic-text": LocalJSX.AtomicText & JSXBase.HTMLAttributes<HTMLAtomicTextElement>;
         }

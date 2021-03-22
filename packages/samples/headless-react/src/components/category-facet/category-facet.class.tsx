@@ -1,34 +1,35 @@
-import {Component} from 'react';
+import {Component, ContextType} from 'react';
 import {
   buildCategoryFacet,
   CategoryFacet as HeadlessCategoryFacet,
+  CategoryFacetOptions,
   CategoryFacetState,
   CategoryFacetValue,
   Unsubscribe,
 } from '@coveo/headless';
-import {engine} from '../../engine';
 import {CategoryFacetSearch} from './category-facet-search';
+import {AppContext} from '../../context/engine';
 
-interface CategoryFacetProps {
-  field: string;
+interface CategoryFacetProps extends CategoryFacetOptions {
   facetId: string;
 }
 
-export class CategoryFacet extends Component<CategoryFacetProps> {
-  private controller: HeadlessCategoryFacet;
-  public state: CategoryFacetState;
+export class CategoryFacet extends Component<
+  CategoryFacetProps,
+  CategoryFacetState
+> {
+  static contextType = AppContext;
+  context!: ContextType<typeof AppContext>;
+
+  private controller!: HeadlessCategoryFacet;
   private unsubscribe: Unsubscribe = () => {};
 
-  constructor(props: CategoryFacetProps) {
-    super(props);
-
-    this.controller = buildCategoryFacet(engine, {
-      options: {field: props.field, facetId: props.facetId},
-    });
-    this.state = this.controller.state;
-  }
-
   componentDidMount() {
+    this.controller = buildCategoryFacet(this.context.engine!, {
+      options: this.props,
+    });
+    this.updateState();
+
     this.unsubscribe = this.controller.subscribe(() => this.updateState());
   }
 
@@ -122,6 +123,10 @@ export class CategoryFacet extends Component<CategoryFacetProps> {
   }
 
   render() {
+    if (!this.state) {
+      return null;
+    }
+
     if (!this.state.hasActiveValues && this.state.values.length === 0) {
       return <div>No facet values</div>;
     }

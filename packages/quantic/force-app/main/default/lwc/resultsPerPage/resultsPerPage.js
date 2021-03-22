@@ -1,5 +1,5 @@
 import {LightningElement, api} from 'lwc';
-import {initializeComponent} from 'c/initialization';
+import {registerComponentForInit, initializeWithHeadless} from 'c/headlessLoader';
 
 export default class ResultsPerPage extends LightningElement {
   /** @type {import("coveo").ResultsPerPage} */
@@ -11,8 +11,15 @@ export default class ResultsPerPage extends LightningElement {
   /** @type {()=> void} */
   unsubscribe;
 
+  /** @type {string} */
+  @api engineId;
+  
   connectedCallback() {
-    initializeComponent(this);
+    registerComponentForInit(this, this.engineId);
+  }
+
+  renderedCallback() {
+    initializeWithHeadless(this, this.engineId, this.initialize.bind(this));
   }
 
   /**

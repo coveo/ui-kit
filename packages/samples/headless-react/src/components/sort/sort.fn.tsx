@@ -1,15 +1,9 @@
 import {useEffect, useState, FunctionComponent} from 'react';
 import {
   buildCriterionExpression,
-  buildDateSortCriterion,
-  buildFieldSortCriterion,
-  buildRelevanceSortCriterion,
-  buildSort,
   Sort as HeadlessSort,
   SortCriterion,
-  SortOrder,
 } from '@coveo/headless';
-import {engine} from '../../engine';
 
 interface SortProps {
   controller: HeadlessSort;
@@ -49,16 +43,20 @@ export const Sort: FunctionComponent<SortProps> = (props) => {
 
 // usage
 
-const criteria: [string, SortCriterion][] = [
-  ['Relevance', buildRelevanceSortCriterion()],
-  ['Date (Ascending)', buildDateSortCriterion(SortOrder.Ascending)],
-  ['Date (Descending)', buildDateSortCriterion(SortOrder.Descending)],
-  ['Size (Ascending)', buildFieldSortCriterion('size', SortOrder.Ascending)],
-  ['Size (Descending)', buildFieldSortCriterion('size', SortOrder.Descending)],
-];
-const initialCriterion = criteria[0][1];
-const controller = buildSort(engine, {
-  initialState: {criterion: initialCriterion},
-});
-
-<Sort controller={controller} criteria={criteria} />;
+/**
+ * ```tsx
+ * const criteria: [string, SortCriterion][] = [
+ *   ['Relevance', buildRelevanceSortCriterion()],
+ *   ['Date (Ascending)', buildDateSortCriterion(SortOrder.Ascending)],
+ *   ['Date (Descending)', buildDateSortCriterion(SortOrder.Descending)],
+ *   ['Size (Ascending)', buildFieldSortCriterion('size', SortOrder.Ascending)],
+ *   ['Size (Descending)', buildFieldSortCriterion('size', SortOrder.Descending)],
+ * ];
+ * const initialCriterion = criteria[0][1];
+ * const controller = buildSort(engine, {
+ *   initialState: {criterion: initialCriterion},
+ * });
+ *
+ * <Sort controller={controller} criteria={criteria} />;
+ * ```
+ */

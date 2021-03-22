@@ -1,8 +1,14 @@
 import {render} from '@testing-library/react';
 import App from './App';
 
-test('renders react logo', () => {
-  const page = render(<App />);
-  const logo = page.getByAltText('logo');
-  expect(logo).toBeTruthy();
+let errorSpy: jest.SpyInstance;
+
+beforeEach(() => {
+  errorSpy = jest.spyOn(global.console, 'error');
+});
+
+test('renders without error', () => {
+  render(<App />);
+
+  expect(errorSpy).not.toHaveBeenCalled();
 });

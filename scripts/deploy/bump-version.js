@@ -32,6 +32,9 @@ async function checkoutLatestMaster() {
   await exec('git pull origin master');
 }
 
+/**
+ * @param {'pre' | 'graduate'} versionType
+ */
 async function bumpVersionAndPush(versionType) {
   try {
     await exec(`npm run version:${versionType} -- --yes`);

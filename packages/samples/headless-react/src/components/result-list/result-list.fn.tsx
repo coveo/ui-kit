@@ -1,9 +1,5 @@
 import {useEffect, useState, FunctionComponent} from 'react';
-import {
-  buildResultList,
-  ResultList as HeadlessResultList,
-} from '@coveo/headless';
-import {engine} from '../../engine';
+import {ResultList as HeadlessResultList} from '@coveo/headless';
 import {ResultLink} from './result-link';
 
 interface ResultListProps {
@@ -41,6 +37,10 @@ export const ResultList: FunctionComponent<ResultListProps> = (props) => {
 
 // usage
 
-const controller = buildResultList(engine);
-
-<ResultList controller={controller} />;
+/**
+ * ```tsx
+ * const controller = buildResultList(engine);
+ *
+ * <ResultList controller={controller} />;
+ * ```
+ */

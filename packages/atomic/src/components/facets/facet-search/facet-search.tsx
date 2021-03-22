@@ -13,6 +13,8 @@ import {BaseFacetSearchResult} from '@coveo/headless/dist/api/search/facet-searc
 import {randomID} from '../../../utils/utils';
 import {CategoryFacetSearchResult} from '@coveo/headless/dist/api/search/facet-search/category-facet-search/category-facet-search-response';
 import SearchIcon from 'coveo-styleguide/resources/icons/svg/search.svg';
+import {sanitize} from '../../../utils/xss-utils';
+import {regexEncode} from '../../../utils/string-utils';
 
 export interface FacetSearchState {
   strings: I18nState;
@@ -49,6 +51,7 @@ export type FacetSearchProps = {
 };
 
 export class FacetSearch {
+  private static ShowMoreResultsValue = -1;
   private inputRef!: HTMLInputElement;
   private valuesRef!: HTMLElement;
   private containerRef!: HTMLElement;
@@ -66,9 +69,12 @@ export class FacetSearch {
       },
       onSubmit: () => props.controller.facetSearch.search(),
       onSelectValue: (element) => {
-        const index = (element as HTMLLIElement).value;
+        const value = (element as HTMLLIElement).value;
+        if (value === FacetSearch.ShowMoreResultsValue) {
+          return this.props.controller.facetSearch.showMoreResults();
+        }
         this.onSelectValue(
-          this.props.controller.facetSearchState.values[index]
+          this.props.controller.facetSearchState.values[value]
         );
       },
       onBlur: () => {
@@ -139,6 +145,12 @@ export class FacetSearch {
     );
   }
 
+  private highlightSuggestion(suggestion: string) {
+    const search = regexEncode(this.props.controller.state.facetSearchQuery);
+    const regex = new RegExp(`(${search})`, 'ig');
+    return sanitize(suggestion).replace(regex, '<b>$1</b>');
+  }
+
   private get suggestions() {
     return (this.props.controller.facetSearchState
       .values as BaseFacetSearchResult[]).map((suggestion, index) => {
@@ -150,9 +162,10 @@ export class FacetSearch {
           class="suggestion cursor-pointer flex flex-row items-center px-2 text-sm"
           value={index}
         >
-          <span class="label whitespace-nowrap overflow-ellipsis overflow-hidden">
-            {suggestion.rawValue}
-          </span>
+          <span
+            class="label whitespace-nowrap overflow-ellipsis overflow-hidden"
+            innerHTML={this.highlightSuggestion(suggestion.displayValue)}
+          />
           <span class="number-of-values ml-auto text-on-background-variant">
             {suggestion.count}
           </span>
@@ -162,18 +175,22 @@ export class FacetSearch {
   }
 
   private get showMoreSearchResults() {
-    if (this.props.controller.facetSearchState.values.length === 0) {
+    if (!this.props.controller.facetSearchState.moreValuesAvailable) {
       return null;
     }
 
     return (
-      <button
-        class="px-1 text-primary"
-        onMouseDown={(e) => e.preventDefault()}
+      <li
         onClick={() => this.props.controller.facetSearch.showMoreResults()}
+        onMouseDown={(e) => e.preventDefault()}
+        part="suggestion"
+        class="suggestion cursor-pointer flex flex-row items-center px-2 text-sm text-primary"
+        value={FacetSearch.ShowMoreResultsValue}
       >
-        show more
-      </button>
+        <button onMouseDown={(e) => e.preventDefault()}>
+          {this.props.controller.strings.showMore()}
+        </button>
+      </li>
     );
   }
 
@@ -183,7 +200,7 @@ export class FacetSearch {
       <ul
         part="suggestions"
         class={
-          'suggestions z-10 absolute w-full bg-background border-divider apply-border-on-background empty:border-none rounded-b border-t-0 ' +
+          'suggestions z-10 absolute w-full bg-background border-divider-t-0 empty:border-none rounded-b ' +
           (showResults ? 'block' : 'hidden')
         }
         ref={(el) => (this.valuesRef = el as HTMLElement)}
@@ -200,7 +217,7 @@ export class FacetSearch {
       this.props.controller.state.showFacetSearchResults;
 
     return (
-      'input-wrapper flex flex-grow items-center border-divider apply-border-on-background rounded ' +
+      'input-wrapper flex flex-grow items-center apply-border-divider rounded ' +
       (hasValues ? 'has-values' : '')
     );
   }
