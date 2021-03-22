@@ -1,6 +1,7 @@
 import {Action} from '@reduxjs/toolkit';
 import {
   getClassifications,
+  getDocumentSuggestions,
   setCaseAssistId,
   setCaseInformationValue,
   setUserContextValue,
@@ -110,5 +111,45 @@ describe('case assist slice', () => {
 
     expect(finalState.classifications.error).toEqual(expectedError);
     expect(finalState.classifications.loading).toBe(false);
+  });
+
+  it('getDocumentSuggestions.pending raises the loading flag', () => {
+    const action = getDocumentSuggestions.pending('some request id');
+    const finalState = caseAssistReducer(state, action);
+
+    expect(finalState.documentSuggestions.loading).toBe(true);
+  });
+
+  it('getDocumentSuggestions.fulfilled updates document suggestions', () => {
+    const documentSuggestions = {
+      documents: [],
+      totalCount: 0,
+      responseId: '94e4f770-c533-41a9-bb92-4463eaa83ba4',
+    };
+    const action = getDocumentSuggestions.fulfilled(
+      documentSuggestions,
+      'some request id'
+    );
+    const finalState = caseAssistReducer(state, action);
+
+    expect(finalState.documentSuggestions.loading).toBe(false);
+    expect(finalState.documentSuggestions).toMatchObject(documentSuggestions);
+    expect(finalState.documentSuggestions.error).toBe(null);
+  });
+
+  it('getDocumentSuggestions.rejected stores the error', () => {
+    const expectedError = {
+      statusCode: 400,
+      message: 'some value is missing',
+      type: 'invalid request',
+    };
+    const action = rejectWithValue(getDocumentSuggestions.rejected, {
+      error: expectedError,
+    });
+
+    const finalState = caseAssistReducer(state, action);
+
+    expect(finalState.documentSuggestions.loading).toBe(false);
+    expect(finalState.documentSuggestions.error).toEqual(expectedError);
   });
 });

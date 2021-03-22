@@ -1,6 +1,7 @@
 import {Action} from '@reduxjs/toolkit';
 import {
   getClassifications,
+  getDocumentSuggestions,
   setCaseAssistId,
   setCaseInformationValue,
   setUserContextValue,
@@ -58,5 +59,11 @@ describe('Case Assist', () => {
     caseAssist.getClassifications();
 
     expectActionMatching(getClassifications.pending);
+  });
+
+  it('getDocumentSuggestions dispatches a getDocumentSuggestions action', () => {
+    caseAssist.getDocumentSuggestions();
+
+    expectActionMatching(getDocumentSuggestions.pending);
   });
 });

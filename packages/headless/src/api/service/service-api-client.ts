@@ -54,6 +54,18 @@ export interface SuggestDocumentsSuccessContent {
 }
 
 export class ServiceAPIClient {
+  private caseAssistApi: CaseAssistAPIClient;
+
+  constructor(options: ServiceAPIClientOptions) {
+    this.caseAssistApi = new CaseAssistAPIClient(options);
+  }
+
+  get caseAssist(): CaseAssistAPIClient {
+    return this.caseAssistApi;
+  }
+}
+
+export class CaseAssistAPIClient {
   private defaultClientHooks = {
     preprocessRequest: NoopPreprocessRequest,
     deprecatedPreprocessRequest: NoopPreprocessRequestMiddleware,

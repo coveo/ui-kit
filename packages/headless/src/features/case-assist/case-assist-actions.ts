@@ -116,7 +116,7 @@ export const getClassifications = createAsyncThunk<
   'caseAssist/getClassifications',
   async (_, {getState, rejectWithValue, extra: {serviceAPIClient}}) => {
     const state = getState();
-    const response = await serviceAPIClient.classify(
+    const response = await serviceAPIClient.caseAssist.classify(
       buildGetClassificationsRequest(state)
     );
 
@@ -154,7 +154,7 @@ export const getDocumentSuggestions = createAsyncThunk<
   'caseAssist/getDocumentSuggestions',
   async (_, {getState, rejectWithValue, extra: {serviceAPIClient}}) => {
     const state = getState();
-    const response = await serviceAPIClient.suggestDocuments(
+    const response = await serviceAPIClient.caseAssist.suggestDocuments(
       buildGetDocumentSuggestionsRequest(state)
     );
 

@@ -1,11 +1,10 @@
-import {GetClassificationsRequest} from '../../features/case-assist/case-assist-actions';
 import {getCaseAssistInitialState} from '../../features/case-assist/case-assist-state';
 import {getConfigurationInitialState} from '../../features/configuration/configuration-state';
 import {CaseAssistAppState} from '../../state/case-assist-app-state';
 import {buildMockServiceAPIClient} from '../../test/mock-service-api-client';
 import {PlatformClient} from '../platform-client';
 import {ServiceAPIClient} from './service-api-client';
-import {ClassifyParam} from './service-api-params';
+import {ClassifyParam, SuggestDocumentsParam} from './service-api-params';
 
 describe('service api client', () => {
   const expectedOrgId = 'some org id';
@@ -26,49 +25,41 @@ describe('service api client', () => {
     jest.clearAllMocks();
   });
 
+  const mockPlatformCall = (fakeResponse: any) => {
+    platformCallMock = jest.fn();
+
+    platformCallMock.mockReturnValue(fakeResponse);
+    PlatformClient.call = platformCallMock;
+  };
+
   const buildDefaultState = (): CaseAssistAppState => ({
     configuration: {
       ...getConfigurationInitialState(),
       organizationId: expectedOrgId,
       accessToken: expectedAccessToken,
-      caseAssist: {
-        caseAssistId: expectedCaseAssistId,
-        visitorId: expectedVisitorId,
-      },
     },
-    caseAssist: getCaseAssistInitialState(),
+    caseAssist: {
+      ...getCaseAssistInitialState(),
+      caseAssistId: expectedCaseAssistId,
+    },
   });
 
   describe('classify', () => {
     const buildClassifyRequest = (
-      caseInformation: GetClassificationsRequest,
       state: CaseAssistAppState
     ): ClassifyParam => ({
       url: state.configuration.platformUrl,
       organizationId: state.configuration.organizationId,
       accessToken: state.configuration.accessToken,
-      caseAssistId: state.configuration.caseAssist.caseAssistId ?? '',
-      visitorId: state.configuration.caseAssist.visitorId ?? '',
+      caseAssistId: state.caseAssist.caseAssistId,
+      visitorId: expectedVisitorId,
       locale: state.configuration.search.locale,
-      fields: caseInformation.fields,
+      fields: state.caseAssist.caseInformation,
     });
 
-    const mockPlatformCall = (fakeResponse: any) => {
-      platformCallMock = jest.fn();
-
-      platformCallMock.mockReturnValue(fakeResponse);
-      PlatformClient.call = platformCallMock;
-    };
-
     it('should call the platform endpoint with the correct arguments', async () => {
-      const request = buildClassifyRequest(
-        {
-          fields: {
-            subject: 'some subject',
-          },
-        },
-        state
-      );
+      state.caseAssist.caseInformation = {subject: 'some case subject'};
+      const request = buildClassifyRequest(state);
 
       mockPlatformCall({
         body: 'some content',
@@ -77,7 +68,7 @@ describe('service api client', () => {
         },
       });
 
-      await client.classify(request);
+      await client.caseAssist.classify(request);
 
       expect(platformCallMock).toBeCalled();
       const mockRequest = platformCallMock.mock.calls[0][0];
@@ -97,7 +88,7 @@ describe('service api client', () => {
     });
 
     it('should return error response on failure', async () => {
-      const request = buildClassifyRequest({fields: {}}, state);
+      const request = buildClassifyRequest(state);
 
       const expectedError = {
         statusCode: 401,
@@ -112,7 +103,7 @@ describe('service api client', () => {
         },
       });
 
-      const response = await client.classify(request);
+      const response = await client.caseAssist.classify(request);
 
       expect(response).toMatchObject({
         error: expectedError,
@@ -120,7 +111,7 @@ describe('service api client', () => {
     });
 
     it('should return success response on success', async () => {
-      const request = buildClassifyRequest({fields: {}}, state);
+      const request = buildClassifyRequest(state);
 
       const expectedBody = {
         fields: {
@@ -144,7 +135,102 @@ describe('service api client', () => {
         },
       });
 
-      const response = await client.classify(request);
+      const response = await client.caseAssist.classify(request);
+
+      expect(response).toMatchObject({
+        success: expectedBody,
+      });
+    });
+  });
+
+  describe('suggestDocuments', () => {
+    const buildSuggestDocumentsRequest = (
+      state: CaseAssistAppState
+    ): SuggestDocumentsParam => ({
+      url: state.configuration.platformUrl,
+      organizationId: state.configuration.organizationId,
+      accessToken: state.configuration.accessToken,
+      caseAssistId: state.caseAssist.caseAssistId,
+      visitorId: expectedVisitorId,
+      locale: state.configuration.search.locale,
+      fields: state.caseAssist.caseInformation,
+      context: state.caseAssist.userContext,
+    });
+
+    it('should call the platform endpoint with the correct arguments', async () => {
+      state.caseAssist.caseInformation = {subject: 'some case subject'};
+      state.caseAssist.userContext = {occupation: 'marketer'};
+      const request = buildSuggestDocumentsRequest(state);
+
+      mockPlatformCall({
+        body: 'some content',
+        response: {
+          ok: true,
+        },
+      });
+
+      await client.caseAssist.suggestDocuments(request);
+
+      expect(platformCallMock).toBeCalled();
+      const mockRequest = platformCallMock.mock.calls[0][0];
+      expect(mockRequest).toMatchObject({
+        url: `${request.url}/rest/organizations/${request.organizationId}/caseassists/${request.caseAssistId}/documents/suggest`,
+        accessToken: request.accessToken,
+        requestParams: {
+          visitorId: request.visitorId,
+          locale: request.locale,
+          fields: {
+            subject: {
+              value: request.fields.subject,
+            },
+          },
+          context: {
+            occupation: request.context?.occupation,
+          },
+        },
+      });
+    });
+
+    it('should return error response on failure', async () => {
+      const request = buildSuggestDocumentsRequest(state);
+
+      const expectedError = {
+        statusCode: 401,
+        message: 'Unauthorized',
+        type: 'authorization',
+      };
+
+      mockPlatformCall({
+        body: expectedError,
+        response: {
+          ok: false,
+        },
+      });
+
+      const response = await client.caseAssist.suggestDocuments(request);
+
+      expect(response).toMatchObject({
+        error: expectedError,
+      });
+    });
+
+    it('should return success response on success', async () => {
+      const request = buildSuggestDocumentsRequest(state);
+
+      const expectedBody = {
+        documents: [],
+        totalCount: 0,
+        responseId: '071f5936-3105-45d8-92ef-f4adda584d46',
+      };
+
+      mockPlatformCall({
+        body: expectedBody,
+        response: {
+          ok: true,
+        },
+      });
+
+      const response = await client.caseAssist.suggestDocuments(request);
 
       expect(response).toMatchObject({
         success: expectedBody,
