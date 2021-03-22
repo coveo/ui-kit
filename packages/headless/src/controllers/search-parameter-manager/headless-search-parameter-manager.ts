@@ -24,6 +24,11 @@ import {
   makeNoopAnalyticsAction,
 } from '../../features/analytics/analytics-utils';
 import {logResultsSort} from '../../features/sort-criteria/sort-criteria-analytics-actions';
+import {
+  logFacetClearAll,
+  logFacetDeselect,
+  logFacetSelect,
+} from '../../features/facets/facet-set/facet-set-analytics-actions';
 
 export {SearchParameters};
 
@@ -145,7 +150,7 @@ export function buildSearchParameterManager(
       dispatch(restoreSearchParameters(newParameters));
       dispatch(
         executeSearch(
-          getRelevantAnalyticsAction(previousParameters, newParameters)()
+          getRelevantAnalyticsAction(previousParameters, newParameters)
         )
       );
     },
@@ -311,14 +316,50 @@ function getRelevantAnalyticsAction(
   newParameters: SearchParameters
 ) {
   if (previousParameters.q !== newParameters.q) {
-    return logSearchboxSubmit;
+    return logSearchboxSubmit();
   }
 
   if (previousParameters.sortCriteria !== newParameters.sortCriteria) {
-    return logResultsSort;
+    return logResultsSort();
   }
 
-  // TODO: handle facets
+  if (
+    JSON.stringify(previousParameters.f) !== JSON.stringify(newParameters.f)
+  ) {
+    return logFacetAnalyticsAction(
+      previousParameters.f ?? {},
+      newParameters.f ?? {}
+    );
+  }
 
-  return makeNoopAnalyticsAction(AnalyticsType.Search);
+  // TODO: handle range facets (nf,df)
+  // TODO: handle category facets (cf)
+
+  return makeNoopAnalyticsAction(AnalyticsType.Search)();
+}
+
+function logFacetAnalyticsAction(
+  previousFacets: Record<string, string[]>,
+  newFacets: Record<string, string[]>
+) {
+  const previousKeys = Object.keys(previousFacets);
+  const newKeys = Object.keys(newFacets);
+
+  const removedKeys = previousKeys.filter((key) => !newKeys.includes(key));
+  if (removedKeys.length) {
+    const facetId = removedKeys[0];
+    return previousFacets[facetId].length > 1
+      ? logFacetClearAll(facetId)
+      : logFacetDeselect({facetId, facetValue: previousFacets[facetId][0]});
+  }
+
+  const addedKeys = newKeys.filter((key) => !previousKeys.includes(key));
+  if (addedKeys.length) {
+    const facetId = addedKeys[0];
+    return logFacetSelect({facetId, facetValue: newFacets[facetId][0]});
+  }
+
+  // TODO: handle differences
+
+  return makeNoopAnalyticsAction(AnalyticsType.Search)();
 }
