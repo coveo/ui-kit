@@ -46,7 +46,8 @@ describe('service api client', () => {
 
   describe('classify', () => {
     const buildClassifyRequest = (
-      state: CaseAssistAppState
+      state: CaseAssistAppState,
+      debug = false
     ): ClassifyParam => ({
       url: state.configuration.platformUrl,
       organizationId: state.configuration.organizationId,
@@ -55,6 +56,7 @@ describe('service api client', () => {
       visitorId: expectedVisitorId,
       locale: state.configuration.search.locale,
       fields: state.caseAssist.caseInformation,
+      debug,
     });
 
     it('should call the platform endpoint with the correct arguments', async () => {
@@ -85,6 +87,20 @@ describe('service api client', () => {
           },
         },
       });
+    });
+
+    it('should call the platform endpoint with debug=1 when debug is enabled', async () => {
+      const request = buildClassifyRequest(state, true);
+
+      mockPlatformCall({
+        body: 'some content',
+        response: {ok: true},
+      });
+
+      await client.caseAssist.classify(request);
+
+      const expectedUrl = `${request.url}/rest/organizations/${request.organizationId}/caseassists/${request.caseAssistId}/classify?debug=1`;
+      expect(platformCallMock.mock.calls[0][0].url).toBe(expectedUrl);
     });
 
     it('should return error response on failure', async () => {
@@ -145,7 +161,8 @@ describe('service api client', () => {
 
   describe('suggestDocuments', () => {
     const buildSuggestDocumentsRequest = (
-      state: CaseAssistAppState
+      state: CaseAssistAppState,
+      debug = false
     ): SuggestDocumentsParam => ({
       url: state.configuration.platformUrl,
       organizationId: state.configuration.organizationId,
@@ -155,6 +172,7 @@ describe('service api client', () => {
       locale: state.configuration.search.locale,
       fields: state.caseAssist.caseInformation,
       context: state.caseAssist.userContext,
+      debug,
     });
 
     it('should call the platform endpoint with the correct arguments', async () => {
@@ -189,6 +207,20 @@ describe('service api client', () => {
           },
         },
       });
+    });
+
+    it('should call the platform endpoint with debug=1 when debug is enabled', async () => {
+      const request = buildSuggestDocumentsRequest(state, true);
+
+      mockPlatformCall({
+        body: 'some content',
+        response: {ok: true},
+      });
+
+      await client.caseAssist.suggestDocuments(request);
+
+      const expectedUrl = `${request.url}/rest/organizations/${request.organizationId}/caseassists/${request.caseAssistId}/documents/suggest?debug=1`;
+      expect(platformCallMock.mock.calls[0][0].url).toBe(expectedUrl);
     });
 
     it('should return error response on failure', async () => {

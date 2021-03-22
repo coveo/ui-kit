@@ -4,6 +4,7 @@ import {
   getDocumentSuggestions,
   setCaseAssistId,
   setCaseInformationValue,
+  setDebug,
   setUserContextValue,
 } from './case-assist-actions';
 import {getCaseAssistInitialState} from './case-assist-state';
@@ -21,6 +22,9 @@ export const caseAssistReducer = createReducer(
       })
       .addCase(setUserContextValue, (state, action) => {
         state.userContext[action.payload.key] = action.payload.value;
+      })
+      .addCase(setDebug, (state, action) => {
+        state.debug = action.payload.debug;
       })
       .addCase(getClassifications.pending, (state) => {
         state.classifications.loading = true;

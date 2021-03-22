@@ -4,6 +4,7 @@ import {
   getDocumentSuggestions,
   setCaseAssistId,
   setCaseInformationValue,
+  setDebug,
   setUserContextValue,
 } from '../../features/case-assist/case-assist-actions';
 import {CaseAssistAppState} from '../../state/case-assist-app-state';
@@ -53,6 +54,12 @@ describe('Case Assist', () => {
       key: 'occupation',
       value: 'marketer',
     });
+  });
+
+  it('setDebug dispatches a setDebug action', () => {
+    caseAssist.setDebug(true);
+
+    expectActionMatching(setDebug, {debug: true});
   });
 
   it('getClassifications dispatches a getClassifications action', () => {

@@ -77,7 +77,13 @@ export class CaseAssistAPIClient {
     req: ClassifyParam
   ): Promise<ServiceAPIResponse<ClassifySuccessContent>> {
     const platformResponse = await PlatformClient.call<any>({
-      ...baseCaseAssistRequest(req, 'POST', 'application/json', '/classify'),
+      ...baseCaseAssistRequest(
+        req,
+        'POST',
+        'application/json',
+        '/classify',
+        req.debug
+      ),
       requestParams: prepareClassifyRequestParams(req),
       ...this.options,
       ...this.defaultClientHooks,
@@ -96,7 +102,8 @@ export class CaseAssistAPIClient {
         req,
         'POST',
         'application/json',
-        '/documents/suggest'
+        '/documents/suggest',
+        req.debug
       ),
       requestParams: prepareSuggestDocumentsRequestParams(req),
       ...this.options,
@@ -113,7 +120,6 @@ const prepareClassifyRequestParams = (req: ClassifyParam) => ({
   visitorId: req.visitorId,
   locale: req.locale,
   fields: prepareSuggestionRequestFields(req.fields),
-  debug: req.debug,
 });
 
 const prepareSuggestDocumentsRequestParams = (req: SuggestDocumentsParam) => ({
@@ -121,7 +127,6 @@ const prepareSuggestDocumentsRequestParams = (req: SuggestDocumentsParam) => ({
   locale: req.locale,
   fields: prepareSuggestionRequestFields(req.fields),
   context: req.context,
-  debug: req.debug,
 });
 
 const prepareSuggestionRequestFields = (fields: any) => {

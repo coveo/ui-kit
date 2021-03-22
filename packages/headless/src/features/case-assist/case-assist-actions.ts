@@ -1,6 +1,7 @@
-import {StringValue} from '@coveo/bueno';
+import {BooleanValue, StringValue} from '@coveo/bueno';
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 import {getVisitorID} from '../../api/analytics/analytics';
+import {ExecutionReport} from '../../api/search/search/execution-report';
 import {Result} from '../../api/search/search/result';
 import {
   ServiceAPIResponse,
@@ -28,6 +29,7 @@ export interface GetClassificationsResponse {
   classifications: {
     fields: GetClassificationsFieldResponse[];
     responseId: string;
+    executionReport?: ExecutionReport;
   };
 }
 
@@ -35,6 +37,7 @@ export interface GetDocumentSuggestionsResponse {
   documents: Result[];
   totalCount: number;
   responseId: string;
+  executionReport?: ExecutionReport;
 }
 
 export interface AsyncThunkOptions {
@@ -83,6 +86,18 @@ export const setUserContextValue = createAction(
     })
 );
 
+export interface SetDebugPayload {
+  debug: boolean;
+}
+
+export const setDebug = createAction(
+  'caseAssist/setDebug',
+  (payload: SetDebugPayload) =>
+    validatePayload(payload, {
+      debug: new BooleanValue({required: true, default: false}),
+    })
+);
+
 const buildGetClassificationsRequest = (
   s: CaseAssistAppState
 ): ClassifyParam => ({
@@ -93,6 +108,7 @@ const buildGetClassificationsRequest = (
   caseAssistId: s.caseAssist.caseAssistId,
   visitorId: getVisitorID() || 'foo',
   fields: s.caseAssist.caseInformation,
+  debug: s.caseAssist.debug,
 });
 
 const buildGetDocumentSuggestionsRequest = (
@@ -106,6 +122,7 @@ const buildGetDocumentSuggestionsRequest = (
   visitorId: getVisitorID() || 'foo',
   fields: s.caseAssist.caseInformation,
   context: s.caseAssist.userContext,
+  debug: s.caseAssist.debug,
 });
 
 export const getClassifications = createAsyncThunk<

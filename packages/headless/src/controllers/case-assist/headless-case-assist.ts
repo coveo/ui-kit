@@ -5,6 +5,7 @@ import {
   getDocumentSuggestions,
   setCaseAssistId,
   setCaseInformationValue,
+  setDebug,
   setUserContextValue,
 } from '../../features/case-assist/case-assist-actions';
 import {CaseAssistState} from '../../features/case-assist/case-assist-state';
@@ -37,6 +38,7 @@ export interface CaseAssist extends Controller {
   setCaseAssistId(id: string): void;
   setCaseInformationValue(fieldName: string, fieldValue: string): void;
   setUserContextValue(key: string, value: string): void;
+  setDebug(debug: boolean): void;
   getClassifications(): void;
   getDocumentSuggestions(): void;
 
@@ -80,6 +82,9 @@ export function buildCaseAssist(
     },
     setUserContextValue(key, value) {
       dispatch(setUserContextValue({key, value}));
+    },
+    setDebug(debug) {
+      dispatch(setDebug({debug}));
     },
     getClassifications() {
       dispatch(getClassifications());

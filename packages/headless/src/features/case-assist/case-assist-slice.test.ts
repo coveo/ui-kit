@@ -4,6 +4,7 @@ import {
   getDocumentSuggestions,
   setCaseAssistId,
   setCaseInformationValue,
+  setDebug,
   setUserContextValue,
 } from './case-assist-actions';
 import {caseAssistReducer} from './case-assist-slice';
@@ -59,6 +60,13 @@ describe('case assist slice', () => {
     const finalState = caseAssistReducer(state, action);
 
     expect(finalState.userContext[expected.key]).toBe(expected.value);
+  });
+
+  it('setDebug sets the value in the state', () => {
+    const action = setDebug({debug: true});
+    const finalState = caseAssistReducer(state, action);
+
+    expect(finalState.debug).toBe(true);
   });
 
   it('getClassifications.pending raises the loading flag', () => {

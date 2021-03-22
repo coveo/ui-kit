@@ -32,6 +32,7 @@ export interface CaseAssistState {
   caseAssistId: string;
   caseInformation: Record<string, string>;
   userContext: Record<string, string>;
+  debug: boolean;
 
   classifications: ClassificationsState;
   documentSuggestions: DocumentSuggestionsState;
@@ -42,6 +43,7 @@ export function getCaseAssistInitialState(): CaseAssistState {
     caseAssistId: '',
     caseInformation: {},
     userContext: {},
+    debug: false,
 
     classifications: {
       fields: [],
