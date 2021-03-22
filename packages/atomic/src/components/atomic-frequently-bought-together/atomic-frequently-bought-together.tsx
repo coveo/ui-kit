@@ -61,7 +61,7 @@ export class AtomicProductRecommendations {
         FREQUENTLY BOUGHT TOGETHER:
         <ul>
           {this.state.recommendations.map((p) => (
-            <li>{p.name}</li>
+            <li>{p.ec_name}</li>
           ))}
         </ul>
       </div>

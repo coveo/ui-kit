@@ -1,31 +1,32 @@
-import {Component} from 'react';
+import {Component, ContextType} from 'react';
 import {
   buildResultsPerPage,
   ResultsPerPage as HeadlessResultsPerPage,
   ResultsPerPageState,
   Unsubscribe,
 } from '@coveo/headless';
-import {engine} from '../../engine';
+import {AppContext} from '../../context/engine';
 
 interface ResultsPerPageProps {
   options: number[];
 }
 
-export class ResultsPerPage extends Component<ResultsPerPageProps> {
-  private controller: HeadlessResultsPerPage;
-  public state: ResultsPerPageState;
+export class ResultsPerPage extends Component<
+  ResultsPerPageProps,
+  ResultsPerPageState
+> {
+  static contextType = AppContext;
+  context!: ContextType<typeof AppContext>;
+
+  private controller!: HeadlessResultsPerPage;
   private unsubscribe: Unsubscribe = () => {};
 
-  constructor(props: ResultsPerPageProps) {
-    super(props);
-
-    this.controller = buildResultsPerPage(engine, {
-      initialState: {numberOfResults: props.options[0]},
-    });
-    this.state = this.controller.state;
-  }
-
   componentDidMount() {
+    this.controller = buildResultsPerPage(this.context.engine!, {
+      initialState: {numberOfResults: this.props.options[0]},
+    });
+    this.updateState();
+
     this.unsubscribe = this.controller.subscribe(() => this.updateState());
   }
 
@@ -38,6 +39,10 @@ export class ResultsPerPage extends Component<ResultsPerPageProps> {
   }
 
   render() {
+    if (!this.state) {
+      return null;
+    }
+
     return (
       <ul>
         {this.props.options.map((numberOfResults) => (

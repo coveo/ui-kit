@@ -172,13 +172,31 @@ describe('PlatformClient call', () => {
     done();
   });
 
-  it('should throw when fetch throws an error', async (done) => {
-    const testError = new Error('Test');
+  it('should not throw when fetch throws a common error', async (done) => {
+    const fetchError = new Error('Could not fetch');
+    fetchError.name = 'FetchError';
+
+    mockFetch.mockRejectedValue(fetchError);
+    const response = await platformCall();
+
+    expect(response.response).toBe(fetchError);
+    expect(response.body).toEqual({
+      name: fetchError.name,
+      message: fetchError.message,
+      stack: fetchError.stack,
+    });
+    done();
+  });
+
+  it('should throw when there is an AbortError', async (done) => {
+    const abortError = new Error();
+    abortError.name = 'AbortError';
+
     try {
-      mockFetch.mockRejectedValue(testError);
+      mockFetch.mockRejectedValue(abortError);
       await platformCall();
     } catch (error) {
-      expect(error).toBe(testError);
+      expect(error).toBe(abortError);
       done();
     }
   });

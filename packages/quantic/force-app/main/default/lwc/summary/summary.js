@@ -1,8 +1,11 @@
 import {LightningElement, track, api} from 'lwc';
-import {initializeComponent} from 'c/initialization';
+import {registerComponentForInit, initializeWithHeadless} from 'c/headlessLoader';
 
 export default class Summary extends LightningElement {
   @track state = {};
+
+  /** @type {string} */
+  @api engineId;
 
   /** @type {import("coveo").QuerySummary} */
   querySummary;
@@ -10,7 +13,11 @@ export default class Summary extends LightningElement {
   unsubscribe;
 
   connectedCallback() {
-    initializeComponent(this);
+    registerComponentForInit(this, this.engineId);
+  }
+
+  renderedCallback() {
+    initializeWithHeadless(this, this.engineId, this.initialize.bind(this));
   }
 
   /**

@@ -67,7 +67,7 @@ export class AtomicResultList implements InitializableComponent {
       'ec_category',
       'ec_item_group_id',
       'ec_shortdesc',
-      'ec_image',
+      'ec_thumbnails',
       'ec_images',
       'ec_promo_price',
       'ec_in_stock',
@@ -140,6 +140,10 @@ export class AtomicResultList implements InitializableComponent {
   }
 
   public render() {
+    if (this.resultListState.hasError) {
+      return;
+    }
+
     if (!this.resultListState.firstSearchExecuted) {
       return <atomic-result-list-placeholder></atomic-result-list-placeholder>;
     }

@@ -1,20 +1,25 @@
 import {LightningElement, api, track} from 'lwc';
-import {initializeComponent} from 'c/initialization';
+import {registerComponentForInit, initializeWithHeadless} from 'c/headlessLoader';
 
 export default class ResultList extends LightningElement {
   @track state = {};
 
   /** @type {import("coveo").ResultList} */
   resultList;
-
   /** @type {import("coveo").Unsubscribe} */
   unsubscribe;
-
   /** @type {import("coveo").ResultTemplatesManager} */
   resultTemplatesManager;
 
+  /** @type {string} */
+  @api engineId;
+
   connectedCallback() {
-    initializeComponent(this);
+    registerComponentForInit(this, this.engineId);
+  }
+
+  renderedCallback() {
+    initializeWithHeadless(this, this.engineId, this.initialize.bind(this));
   }
 
   /**

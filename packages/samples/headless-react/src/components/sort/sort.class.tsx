@@ -1,4 +1,4 @@
-import {Component} from 'react';
+import {Component, ContextType} from 'react';
 import {
   buildCriterionExpression,
   buildSort,
@@ -7,28 +7,26 @@ import {
   SortState,
   Unsubscribe,
 } from '@coveo/headless';
-import {engine} from '../../engine';
+import {AppContext} from '../../context/engine';
 
 interface SortProps {
   criteria: [string, SortCriterion][];
   initialCriterion: SortCriterion;
 }
 
-export class Sort extends Component<SortProps> {
-  private controller: HeadlessSort;
-  public state: SortState;
+export class Sort extends Component<SortProps, SortState> {
+  static contextType = AppContext;
+  context!: ContextType<typeof AppContext>;
+
+  private controller!: HeadlessSort;
   private unsubscribe: Unsubscribe = () => {};
 
-  constructor(props: SortProps) {
-    super(props);
-
-    this.controller = buildSort(engine, {
-      initialState: {criterion: props.initialCriterion},
-    });
-    this.state = this.controller.state;
-  }
-
   componentDidMount() {
+    this.controller = buildSort(this.context.engine!, {
+      initialState: {criterion: this.props.initialCriterion},
+    });
+    this.updateState();
+
     this.unsubscribe = this.controller.subscribe(() => this.updateState());
   }
 
@@ -54,6 +52,10 @@ export class Sort extends Component<SortProps> {
   }
 
   render() {
+    if (!this.state) {
+      return null;
+    }
+
     return (
       <select
         value={this.currentCriterion[0]}

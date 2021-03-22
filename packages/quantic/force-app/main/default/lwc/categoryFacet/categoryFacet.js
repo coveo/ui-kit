@@ -1,5 +1,5 @@
 import {api, LightningElement, track} from 'lwc';
-import {initializeComponent} from 'c/initialization';
+import {registerComponentForInit, initializeWithHeadless} from 'c/headlessLoader';
 
 export default class CategoryFacet extends LightningElement {
   /** @type {import("coveo").CategoryFacetState} */
@@ -12,6 +12,8 @@ export default class CategoryFacet extends LightningElement {
   @api field;
   /** @type {string} */
   @api label;
+  /** @type {string} */
+  @api engineId;
 
   /** @type {import("coveo").CategoryFacet}} */
   facet;
@@ -19,7 +21,11 @@ export default class CategoryFacet extends LightningElement {
   unsubscribe;
 
   connectedCallback() {
-    initializeComponent(this);
+    registerComponentForInit(this, this.engineId);
+  }
+
+  renderedCallback() {
+    initializeWithHeadless(this, this.engineId, this.initialize.bind(this));
   }
 
   /**
