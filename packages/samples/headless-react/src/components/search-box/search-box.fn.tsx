@@ -1,10 +1,5 @@
 import {useEffect, useState, FunctionComponent} from 'react';
-import {
-  buildSearchBox,
-  SearchBox as HeadlessSearchBox,
-  SearchBoxOptions,
-} from '@coveo/headless';
-import {engine} from '../../engine';
+import {SearchBox as HeadlessSearchBox} from '@coveo/headless';
 
 interface SearchBoxProps {
   controller: HeadlessSearchBox;
@@ -41,7 +36,11 @@ export const SearchBox: FunctionComponent<SearchBoxProps> = (props) => {
 
 // usage
 
-const options: SearchBoxOptions = {numberOfSuggestions: 8};
-const controller = buildSearchBox(engine, {options});
-
-<SearchBox controller={controller} />;
+/**
+ * ```tsx
+ * const options: SearchBoxOptions = {numberOfSuggestions: 8};
+ * const controller = buildSearchBox(engine, {options});
+ *
+ * <SearchBox controller={controller} />;
+ * ```
+ */

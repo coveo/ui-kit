@@ -41,7 +41,7 @@ export const config: Config = {
     transformIgnorePatterns: [],
   },
   devServer: {
-    reloadStrategy: 'hmr',
+    reloadStrategy: 'pageReload',
   },
   plugins: [
     inlineSvg(),

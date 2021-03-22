@@ -1,9 +1,5 @@
 import {useEffect, useState, FunctionComponent} from 'react';
-import {
-  buildRelevanceInspector,
-  RelevanceInspector as HeadlessRelevanceInspector,
-} from '@coveo/headless';
-import {engine} from '../../engine';
+import {RelevanceInspector as HeadlessRelevanceInspector} from '@coveo/headless';
 
 interface RelevanceInspectorProps {
   controller: HeadlessRelevanceInspector;
@@ -42,6 +38,10 @@ export const RelevanceInspector: FunctionComponent<RelevanceInspectorProps> = (
 
 // usage
 
-const controller = buildRelevanceInspector(engine);
-
-<RelevanceInspector controller={controller} />;
+/**
+ * ```tsx
+ * const controller = buildRelevanceInspector(engine);
+ *
+ * <RelevanceInspector controller={controller} />;
+ * ```
+ */

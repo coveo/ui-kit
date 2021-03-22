@@ -3,6 +3,79 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.9.0-alpha.0](https://github.com/coveo/ui-kit/compare/v0.8.1-alpha.0...v0.9.0-alpha.0) (2021-03-18)
+
+
+### Features
+
+* **productrecommendations:** allow adding additional fields ([#630](https://github.com/coveo/ui-kit/issues/630)) ([a403931](https://github.com/coveo/ui-kit/commit/a40393150f48a60042833c67b7b79a358086423f))
+
+
+
+
+
+## [0.8.1-alpha.0](https://github.com/coveo/ui-kit/compare/v0.8.0...v0.8.1-alpha.0) (2021-03-17)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+# [0.8.0](https://github.com/coveo/ui-kit/compare/v0.8.0-alpha.26...v0.8.0) (2021-03-17)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+# [0.8.0-alpha.20](https://github.com/coveo/ui-kit/compare/v0.8.0-alpha.19...v0.8.0-alpha.20) (2021-03-15)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+# [0.8.0-alpha.19](https://github.com/coveo/ui-kit/compare/v0.8.0-alpha.18...v0.8.0-alpha.19) (2021-03-15)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+# [0.8.0-alpha.17](https://github.com/coveo/ui-kit/compare/v0.8.0-alpha.16...v0.8.0-alpha.17) (2021-03-15)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+# [0.8.0-alpha.16](https://github.com/coveo/ui-kit/compare/v0.8.0-alpha.15...v0.8.0-alpha.16) (2021-03-12)
+
+
+### Features
+
+* **headless:** add moreResultsAvailable to ResultList state ([#611](https://github.com/coveo/ui-kit/issues/611)) ([fa85a5c](https://github.com/coveo/ui-kit/commit/fa85a5cda5087adb3d451048c2a4e0534e627f9d))
+
+
+
+
+
+# [0.8.0-alpha.15](https://github.com/coveo/ui-kit/compare/v0.8.0-alpha.14...v0.8.0-alpha.15) (2021-03-12)
+
+
+### Features
+
+* **atomic,headless:** complete atomic-query-error & return generic platform errors ([#605](https://github.com/coveo/ui-kit/issues/605)) ([dee98b8](https://github.com/coveo/ui-kit/commit/dee98b831c09e993f7c0e68787d3da1c8a8edbd4))
+
+
+
+
+
 # [0.8.0-alpha.12](https://github.com/coveo/ui-kit/compare/v0.8.0-alpha.11...v0.8.0-alpha.12) (2021-03-11)
 
 **Note:** Version bump only for package @coveo/headless

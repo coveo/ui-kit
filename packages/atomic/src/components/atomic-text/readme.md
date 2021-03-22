@@ -15,6 +15,10 @@
 
 ## Dependencies
 
+### Used by
+
+ - [atomic-result-text](../result-template-components/atomic-result-text)
+
 ### Depends on
 
 - [atomic-component-error](../atomic-component-error)
@@ -23,6 +27,7 @@
 ```mermaid
 graph TD;
   atomic-text --> atomic-component-error
+  atomic-result-text --> atomic-text
   style atomic-text fill:#f9f,stroke:#333,stroke-width:4px
 ```
 

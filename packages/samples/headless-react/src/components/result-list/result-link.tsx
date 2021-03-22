@@ -1,6 +1,6 @@
 import {buildInteractiveResult, Result} from '@coveo/headless';
-import {FunctionComponent, useEffect} from 'react';
-import {engine} from '../../engine';
+import {FunctionComponent, useContext, useEffect} from 'react';
+import {AppContext} from '../../context/engine';
 
 function filterProtocol(uri: string) {
   // Filters out dangerous URIs that can create XSS attacks such as `javascript:`.
@@ -15,7 +15,9 @@ interface LinkProps {
 }
 
 export const ResultLink: FunctionComponent<LinkProps> = (props) => {
-  const interactiveResult = buildInteractiveResult(engine, {
+  const {engine} = useContext(AppContext);
+
+  const interactiveResult = buildInteractiveResult(engine!, {
     options: {result: props.result},
   });
 

@@ -2,6 +2,7 @@ import {buildMockProductRecommendations} from '../../test/mock-product-recommend
 import {buildMockProductRecommendation} from '../../test/mock-product-recommendation';
 import {
   getProductRecommendations,
+  setProductRecommendationsAdditionalFields,
   setProductRecommendationsSkus,
 } from './product-recommendations-actions';
 import {productRecommendationsReducer} from './product-recommendations-slice';
@@ -10,7 +11,7 @@ import {
   ProductRecommendationsState,
 } from './product-recommendations-state';
 
-describe('frequently-bought-together slice', () => {
+describe('product-recommendations-slice', () => {
   let state: ProductRecommendationsState;
   beforeEach(() => {
     state = getProductRecommendationsInitialState();
@@ -28,6 +29,17 @@ describe('frequently-bought-together slice', () => {
         setProductRecommendationsSkus({skus: ['foo']})
       ).skus
     ).toEqual(['foo']);
+  });
+
+  it('should allow to set the additional fields', () => {
+    expect(
+      productRecommendationsReducer(
+        state,
+        setProductRecommendationsAdditionalFields({
+          additionalFields: ['somefield'],
+        })
+      ).additionalFields
+    ).toEqual(['somefield']);
   });
 
   it('when a getProductRecommendations fulfilled is received, it updates the state to the received payload', () => {

@@ -1,9 +1,5 @@
 import {useEffect, useState, FunctionComponent} from 'react';
-import {
-  buildQueryError,
-  QueryError as HeadlessQueryError,
-} from '@coveo/headless';
-import {engine} from '../../engine';
+import {QueryError as HeadlessQueryError} from '@coveo/headless';
 
 interface QueryErrorProps {
   controller: HeadlessQueryError;
@@ -29,6 +25,10 @@ export const QueryError: FunctionComponent<QueryErrorProps> = (props) => {
 
 // usage
 
-const controller = buildQueryError(engine);
-
-<QueryError controller={controller} />;
+/**
+ * ```ts
+ * const controller = buildQueryError(engine);
+ *
+ * <QueryError controller={controller} />;
+ * ```
+ */

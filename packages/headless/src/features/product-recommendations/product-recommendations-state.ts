@@ -10,6 +10,7 @@ export type ProductRecommendationsState = {
     brand: string;
     category: string;
   };
+  additionalFields: string[];
   recommendations: ProductRecommendation[];
   error: SearchAPIErrorWithStatusCode | null;
   isLoading: boolean;
@@ -25,6 +26,7 @@ export const getProductRecommendationsInitialState = (): ProductRecommendationsS
     brand: '',
     category: '',
   },
+  additionalFields: [],
   recommendations: [],
   error: null,
   isLoading: false,

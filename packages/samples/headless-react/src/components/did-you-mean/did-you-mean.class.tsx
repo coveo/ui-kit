@@ -1,25 +1,23 @@
-import {Component} from 'react';
+import {Component, ContextType} from 'react';
 import {
   buildDidYouMean,
   DidYouMean as HeadlessDidYouMean,
   DidYouMeanState,
   Unsubscribe,
 } from '@coveo/headless';
-import {engine} from '../../engine';
+import {AppContext} from '../../context/engine';
 
-export class DidYouMean extends Component {
-  private controller: HeadlessDidYouMean;
-  public state: DidYouMeanState;
+export class DidYouMean extends Component<{}, DidYouMeanState> {
+  static contextType = AppContext;
+  context!: ContextType<typeof AppContext>;
+
+  private controller!: HeadlessDidYouMean;
   private unsubscribe: Unsubscribe = () => {};
 
-  constructor(props: {}) {
-    super(props);
-
-    this.controller = buildDidYouMean(engine);
-    this.state = this.controller.state;
-  }
-
   componentDidMount() {
+    this.controller = buildDidYouMean(this.context.engine!);
+    this.updateState();
+
     this.unsubscribe = this.controller.subscribe(() => this.updateState());
   }
 
@@ -32,8 +30,8 @@ export class DidYouMean extends Component {
   }
 
   render() {
-    if (!this.state.hasQueryCorrection) {
-      return '';
+    if (!this.state?.hasQueryCorrection) {
+      return null;
     }
 
     if (this.state.wasAutomaticallyCorrected) {

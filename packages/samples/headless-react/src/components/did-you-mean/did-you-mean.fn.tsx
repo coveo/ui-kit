@@ -1,9 +1,5 @@
 import {useEffect, useState, FunctionComponent} from 'react';
-import {
-  buildDidYouMean,
-  DidYouMean as HeadlessDidYouMean,
-} from '@coveo/headless';
-import {engine} from '../../engine';
+import {DidYouMean as HeadlessDidYouMean} from '@coveo/headless';
 
 interface DidYouMeanProps {
   controller: HeadlessDidYouMean;
@@ -42,6 +38,10 @@ export const DidYouMean: FunctionComponent<DidYouMeanProps> = (props) => {
 
 // usage
 
-const controller = buildDidYouMean(engine);
-
-<DidYouMean controller={controller} />;
+/**
+ * ```tsx
+ * const controller = buildDidYouMean(engine);
+ *
+ * <DidYouMean controller={controller} />;
+ * ```
+ */
