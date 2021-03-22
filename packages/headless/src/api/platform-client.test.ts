@@ -1,8 +1,8 @@
 import {
   platformUrl,
   PlatformClient,
-  PreprocessRequestMiddleware,
   NoopPreprocessRequestMiddleware,
+  PlatformClientCallOptions,
 } from './platform-client';
 import pino from 'pino';
 import * as BackOff from 'exponential-backoff';
@@ -48,7 +48,7 @@ describe('platformUrl helper', () => {
 });
 
 describe('PlatformClient call', () => {
-  function platformCall(middleware?: PreprocessRequestMiddleware) {
+  function platformCall(options: Partial<PlatformClientCallOptions> = {}) {
     return PlatformClient.call({
       accessToken: 'accessToken1',
       contentType: 'application/json',
@@ -58,10 +58,10 @@ describe('PlatformClient call', () => {
       },
       url: platformUrl(),
       renewAccessToken: async () => 'accessToken2',
-      deprecatedPreprocessRequest:
-        middleware || NoopPreprocessRequestMiddleware,
+      deprecatedPreprocessRequest: NoopPreprocessRequestMiddleware,
       preprocessRequest: NoopPreprocessRequest,
       logger: pino({level: 'silent'}),
+      ...options,
     });
   }
 
@@ -93,15 +93,15 @@ describe('PlatformClient call', () => {
     mockFetch.mockReturnValue(
       Promise.resolve(new Response(JSON.stringify({})))
     );
-
-    await platformCall((request) => {
+    const middleware = (request: PlatformClientCallOptions) => {
       return {
         ...request,
         headers: {
           test: 'header',
         },
       };
-    });
+    };
+    await platformCall({deprecatedPreprocessRequest: middleware});
 
     expect(mockFetch).toHaveBeenCalledWith(platformUrl(), {
       body: JSON.stringify({
@@ -115,6 +115,42 @@ describe('PlatformClient call', () => {
       method: 'POST',
     });
     done();
+  });
+
+  it(`when the contentType is www-url-form-encoded and the #requestParams can be encoded,
+  it encodes the body as a url`, async () => {
+    await platformCall({
+      contentType: 'application/x-www-form-urlencoded',
+      requestParams: {q: 'hello', page: 5},
+    });
+
+    expect(mockFetch).toHaveBeenCalledWith(
+      platformUrl(),
+      expect.objectContaining({body: 'q=hello&page=5'})
+    );
+  });
+
+  it(`when the contentType is www-url-form-encoded and the #requestParams cannot be encoded,
+  it sends an empty string`, async () => {
+    await platformCall({
+      contentType: 'application/x-www-form-urlencoded',
+      requestParams: {q: {}},
+    });
+
+    expect(mockFetch).toHaveBeenCalledWith(
+      platformUrl(),
+      expect.objectContaining({body: ''})
+    );
+  });
+
+  it('when the contentType is unrecognized, it encodes the request params as JSON', async () => {
+    const requestParams = {q: 'a'};
+    await platformCall({contentType: undefined, requestParams});
+
+    expect(mockFetch).toHaveBeenCalledWith(
+      platformUrl(),
+      expect.objectContaining({body: JSON.stringify(requestParams)})
+    );
   });
 
   it(`when status is 419

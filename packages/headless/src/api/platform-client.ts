@@ -150,13 +150,9 @@ function buildDefaultRequestOptions(
 }
 
 function encodeBody(body: unknown, contentType: HTTPContentType) {
-  if (contentType === 'application/json') {
-    return JSON.stringify(body);
-  }
-
   if (contentType === 'application/x-www-form-urlencoded') {
     return canBeFormUrlEncoded(body) ? encodeAsFormUrl(body) : '';
   }
 
-  return '';
+  return JSON.stringify(body);
 }
