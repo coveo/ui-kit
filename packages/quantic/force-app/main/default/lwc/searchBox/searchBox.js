@@ -5,6 +5,7 @@ import { registerComponentForInit, initializeWithHeadless } from 'c/headlessLoad
 const ENTER = 13;
 const ARROWUP = 38;
 const ARROWDOWN = 40;
+const DEAFULT_PLACEHOLDER = 'Search';
 
 export default class SearchBox extends LightningElement {
   /** @type {import("coveo").SearchBoxState} */
@@ -24,14 +25,18 @@ export default class SearchBox extends LightningElement {
   /** @type {string} */
   @api engineId;
   /** @type {string} */
-  @track placeholderText = 'Search';
+  @track placeholderText = DEAFULT_PLACEHOLDER;
 
   /** @type {import("coveo").SearchBox} */
   searchBox;
   /** @type {import("coveo").Unsubscribe} */
   unsubscribe;
+  /** @type {boolean} */
+  areSuggestionsShown = () => (this.template.querySelector('.slds-combobox').classList.contains('slds-is-open'));
   /** @type {number} */
   selectionIndex = -1;
+
+  resetSelectionIndex = () => (this.selectionIndex = -1);
 
   connectedCallback() {
     registerComponentForInit(this, this.engineId);
@@ -58,7 +63,7 @@ export default class SearchBox extends LightningElement {
     combobox.classList.remove('slds-is-open');
     combobox.setAttribute('aria-expanded', false);
     this.resetHighlighted();
-    this.selectionIndex = -1;
+    this.resetSelectionIndex();
   }
 
   setHighlighted() {
@@ -79,6 +84,7 @@ export default class SearchBox extends LightningElement {
       element.setAttribute('aria-selected', false);
       element.classList.remove('slds-has-focus');
     });
+    this.placeholderText = DEAFULT_PLACEHOLDER;
   }
 
   /**
@@ -120,28 +126,25 @@ export default class SearchBox extends LightningElement {
 
   handleArrowDown() {
     this.selectionIndex++;
-      if (this.selectionIndex > this.suggestions.length - 1) {
-        this.selectionIndex = 0;
-      }
-      this.setHighlighted();
+    if (this.selectionIndex > this.suggestions.length - 1) {
+      this.selectionIndex = 0;
+    }
+    this.setHighlighted();
   }
 
   /**
    * @param {KeyboardEvent & {target: {value : string}}} event
    */
   onKeyup(event) {
-    switch (event.which) {
-      case ENTER:
-        this.handleEnter();
-        break;
-      case ARROWUP:
-        this.handleArrowUp();
-        break;
-      case ARROWDOWN:
-        this.handleArrowDown();
-        break;
-      default:
-        break;
+    if (event.which === ENTER) {
+      this.handleEnter();
+    } else if (this.areSuggestionsShown() && event.which === ARROWUP) {
+      this.handleArrowUp();
+    } else if (this.areSuggestionsShown() && event.which === ARROWDOWN) {
+      this.handleArrowDown();
+    } else {
+      this.resetSelectionIndex();
+      this.resetHighlighted();
     }
     this.searchBox.updateText(event.target.value);
   }
@@ -159,6 +162,9 @@ export default class SearchBox extends LightningElement {
     event.preventDefault();
   }
 
+  /**
+   * @param {KeyboardEvent & {target: {value : string}}} event
+   */
   handleSuggestionSelection(event) {
     const textValue = event.target.textContent;
 
