@@ -179,12 +179,7 @@ describe('PlatformClient call', () => {
     mockFetch.mockRejectedValue(fetchError);
     const response = await platformCall();
 
-    expect(response.response).toBe(fetchError);
-    expect(response.body).toEqual({
-      name: fetchError.name,
-      message: fetchError.message,
-      stack: fetchError.stack,
-    });
+    expect(response).toBe(fetchError);
     done();
   });
 

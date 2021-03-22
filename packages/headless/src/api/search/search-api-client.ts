@@ -198,7 +198,7 @@ export class SearchAPIClient {
 
     const body = await response.json();
 
-    if (isSuccessSearchResponse(response)) {
+    if (isSuccessSearchResponse(body)) {
       return {success: body};
     }
 
@@ -225,16 +225,36 @@ export class SearchAPIClient {
 }
 
 const unwrapError = (
-  res: PlatformResponse<AllSearchAPIResponse>
+  payload: PlatformResponse<AllSearchAPIResponse>
 ): SearchAPIErrorWithStatusCode => {
-  if (isSearchAPIException(res)) {
-    return unwrapErrorByException(res);
-  }
-  if (isSearchAPIErrorWithStatusCode(res)) {
-    return res.body;
+  const {response} = payload;
+
+  if (response.body) {
+    return unwrapSearchApiError(payload);
   }
 
-  const body = (res.body as unknown) as Error;
+  return unwrapClientError(response);
+};
+
+const unwrapSearchApiError = (
+  payload: PlatformResponse<AllSearchAPIResponse>
+) => {
+  if (isSearchAPIException(payload)) {
+    return unwrapErrorByException(payload);
+  }
+
+  if (isSearchAPIErrorWithStatusCode(payload)) {
+    return payload.body;
+  }
+
+  return {message: 'unknown', statusCode: 0, type: 'unknown'};
+};
+
+const unwrapClientError = (response: Response) => {
+  // Transform an error to an object https://stackoverflow.com/a/26199752
+  const body = JSON.parse(
+    JSON.stringify(response, Object.getOwnPropertyNames(response))
+  ) as Error;
 
   return {
     ...body,
