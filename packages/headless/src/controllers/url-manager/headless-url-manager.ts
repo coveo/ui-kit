@@ -31,7 +31,6 @@ export interface UrlManagerProps {
    * The initial state that should be applied to the `UrlManager` controller.
    */
   initialState: UrlManagerInitialState;
-  // TODO: add serialize/deserialize options
 }
 
 export interface UrlManagerInitialState {
