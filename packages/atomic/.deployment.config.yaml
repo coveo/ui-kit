@@ -1,0 +1,23 @@
+product: atomic-example
+team_name: searchui
+general:
+    environments_order:
+        sequential:
+          - dev
+    aws_regions:
+        concurrent:
+          - ACTIVE_REGIONS_INFRA
+snyk:
+    no_dependencies: true
+    no_container_images: true
+veracode:
+    no_scan: true
+observatory:
+    no_endpoint: true
+phases:
+    terraform:
+        terragrunt_path: cloudfront
+        auto_approve: false
+        dev:
+            auto_approve: true
+deployment_config_version: 2

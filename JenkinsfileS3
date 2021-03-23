@@ -1,0 +1,23 @@
+node('linux && docker') {
+  checkout scm
+  def commitHash = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
+  dir('packages/atomic') {
+    withEnv(['npm_config_cache=npm-cache', 'CI=true']) {
+        withDockerContainer(image: 'node:14', args: '-u=root') {
+          stage('Setup') {
+            sh 'npm run setup'
+          }
+
+          stage('Build') {
+            sh 'npm run build'
+          }
+        }
+
+        withDockerContainer(image: '458176070654.dkr.ecr.us-east-1.amazonaws.com/jenkins/deployment_package:v7') {
+          stage('Deployment pipeline upload') {
+            sh "deployment-package package create --with-deploy"
+          }
+        }
+      }
+  }
+}

@@ -1,0 +1,1 @@
+website_bucket_name = "atomic-demo-@env" # this gotemplate syntax (razor) will translate into mywebsite-<env> (e.g. mywebsite-dev, mywebsite-qa, mywebsite-prd)
