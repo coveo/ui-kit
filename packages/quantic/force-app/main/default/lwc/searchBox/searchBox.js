@@ -20,8 +20,6 @@ export default class SearchBox extends LightningElement {
     return this.state.suggestions.map((s, index) => ({ key: index, value: s.rawValue }));
   }
 
-  /** @type {boolean} */
-  @api sample = false;
   /** @type {string} */
   @api engineId;
   /** @type {string} */
