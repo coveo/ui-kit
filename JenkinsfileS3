@@ -7,10 +7,8 @@ node('linux && docker') {
           sh 'npm run setup'
         }
 
-        dir('packages/atomic') {
-            stage('Build') {
-               sh 'npm run build'
-             }
+        stage('Build') {
+           sh 'npm run build'
          }
       }
 
