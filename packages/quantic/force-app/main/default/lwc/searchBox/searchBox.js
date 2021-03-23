@@ -124,7 +124,6 @@ export default class SearchBox extends LightningElement {
   handleEnter() {
     if (this.selectionIndex >= 0) {
       this.searchBox.updateText(this.input.value);
-      this.hideSuggestions();
     }
     this.searchBox.submit();
     this.input.blur();
@@ -184,6 +183,6 @@ export default class SearchBox extends LightningElement {
 
     this.updateSearchboxText(textValue);
     this.searchBox.submit();
-    this.hideSuggestions();
+    this.input.blur();
   }
 }
