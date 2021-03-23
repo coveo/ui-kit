@@ -120,13 +120,9 @@
           </div>
 
           <atomic-no-results></atomic-no-results>
-
-          <atomic-result-list fields-to-include="liboardinteractionstyle">
+          <atomic-result-list fields-to-include="liboardinteractionstyle,ytthumbnailurl">
             <!-- Custom result templates examples -->
-            <atomic-result-template
-              must-match-filetype="lithiummessage"
-              must-not-match-liboardinteractionstyle="contest"
-            >
+            <atomic-result-template must-match-filetype="youtubevideo" must-not-match-liboardinteractionstyle="contest">
               <template>
                 <!-- Styling result template internaly -->
                 <style>
@@ -134,9 +130,25 @@
                     font-weight: bold;
                     color: var(--atomic-secondary);
                   }
+
+                  atomic-result-image[field='ytthumbnailurl'] {
+                    display: block;
+                    width: 200px;
+                  }
+
+                  .youtubevideo-container {
+                    display: flex;
+                  }
                 </style>
-                <h3>Contest message</h3>
-                <atomic-result-link></atomic-result-link>
+                <div class="youtubevideo-container">
+                  <atomic-result-link>
+                    <atomic-result-image field="ytthumbnailurl"></atomic-result-image>
+                  </atomic-result-link>
+                  <div>
+                    <atomic-result-link></atomic-result-link>
+                    <atomic-result-text field="excerpt"></atomic-result-text>
+                  </div>
+                </div>
               </template>
             </atomic-result-template>
             <atomic-result-template id="singaporeTitle">

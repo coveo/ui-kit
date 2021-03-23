@@ -9,4 +9,8 @@ export interface CartRecommendationsListOptions {
    * @default 5
    */
   maxNumberOfRecommendations?: number;
+  /**
+   * Additional fields to fetch in the results.
+   */
+  additionalFields?: string[];
 }

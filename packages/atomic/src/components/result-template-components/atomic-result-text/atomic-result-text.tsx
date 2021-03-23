@@ -29,6 +29,11 @@ export class AtomicResultText {
    */
   @Prop() public shouldHighlight = true;
 
+  /**
+   * The locale key for the text to display when the configured field has no value.
+   */
+  @Prop() public default?: string;
+
   private renderWithHighlights(
     value: string,
     highlights: HighlightUtils.HighlightKeyword[]
@@ -51,6 +56,19 @@ export class AtomicResultText {
     }
   }
 
+  private get resultValue() {
+    const value = ResultTemplatesHelpers.getResultProperty(
+      this.result,
+      this.field
+    );
+
+    if (typeof value !== 'string' || value.trim() === '') {
+      return null;
+    }
+
+    return value;
+  }
+
   public render() {
     if (this.error) {
       return (
@@ -60,23 +78,24 @@ export class AtomicResultText {
         ></atomic-component-error>
       );
     }
-    const value = ResultTemplatesHelpers.getResultProperty(
-      this.result,
-      this.field
-    );
 
-    if (value === null) {
+    const resultValue = this.resultValue;
+    if (!resultValue && !this.default) {
       this.host.remove();
       return;
     }
 
-    const textValue = `${value}`;
+    if (!resultValue && this.default) {
+      return <atomic-text value={this.default}></atomic-text>;
+    }
+
+    const textValue = `${resultValue}`;
     const highlightsValue = ResultTemplatesHelpers.getResultProperty(
       this.result,
       `${this.field}Highlights`
     ) as HighlightUtils.HighlightKeyword[];
 
-    if (this.shouldHighlight && highlightsValue !== null) {
+    if (this.shouldHighlight && highlightsValue) {
       return this.renderWithHighlights(textValue, highlightsValue);
     }
 
