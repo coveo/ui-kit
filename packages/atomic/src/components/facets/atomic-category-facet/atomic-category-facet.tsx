@@ -146,13 +146,13 @@ export class AtomicCategoryFacet
               class="arrow-size text-secondary fill-current"
             />
           ) : null}
-          {isLast ? (
-            <b class="ml-8 lg:ml-6">
-              {parent.value} ({parent.numberOfResults})
-            </b>
-          ) : (
-            <span class="ml-2">{parent.value}</span>
-          )}
+          <label>
+            {isLast ? (
+              <b class="ml-8 lg:ml-6">{parent.value}</b>
+            ) : (
+              <span class="ml-2">{parent.value}</span>
+            )}
+          </label>
         </button>
       </li>
     );
