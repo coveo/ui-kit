@@ -1,47 +1,54 @@
-import {Action} from 'redux';
+import {PlatformClient} from '../../api/platform-client';
+import {SearchAction} from '../../features/analytics/analytics-utils';
 import {
   logFacetClearAll,
   logFacetDeselect,
   logFacetSelect,
 } from '../../features/facets/facet-set/facet-set-analytics-actions';
 import {logSearchboxSubmit} from '../../features/query/query-analytics-actions';
-import {restoreSearchParameters} from '../../features/search-parameters/search-parameter-actions';
-import {executeSearch} from '../../features/search/search-actions';
+import {
+  restoreSearchParameters,
+  SearchParameters,
+} from '../../features/search-parameters/search-parameter-actions';
 import {logResultsSort} from '../../features/sort-criteria/sort-criteria-analytics-actions';
 import {SearchAppState} from '../../state/search-app-state';
 import {buildMockSearchAppEngine, MockEngine} from '../../test';
+import {buildMockSearchResponse} from '../../test/mock-search-response';
 import {getInitialSearchParameterState} from '../search-parameter-manager/headless-search-parameter-manager';
-import {
-  UrlManagerProps,
-  UrlManager,
-  buildUrlManager,
-} from './headless-url-manager';
+import {UrlManager, buildUrlManager} from './headless-url-manager';
 
 describe('url manager', () => {
   let engine: MockEngine<SearchAppState>;
-  let props: UrlManagerProps;
   let manager: UrlManager;
 
-  function initUrlManager() {
-    manager = buildUrlManager(engine, props);
+  function initUrlManager(fragment = '') {
+    manager = buildUrlManager(engine, {
+      initialState: {
+        fragment,
+      },
+    });
   }
 
   beforeEach(() => {
     engine = buildMockSearchAppEngine();
-    props = {
-      initialState: {
-        fragment: '',
-      },
-    };
-
     initUrlManager();
+    PlatformClient.call = jest.fn().mockImplementation(() =>
+      Promise.resolve({
+        body: buildMockSearchResponse(),
+      })
+    );
   });
 
-  function searchAnalyticsAction() {
-    return engine.findAsyncAction(executeSearch.pending)!.meta.arg.toString();
+  function testAnalyticsAction(action: SearchAction) {
+    // TODO: add helper to fnd analytics actions
   }
 
-  function expectLatestRestoreSearchParametersActionToBe(action: Action) {
+  function testRestoreSearchParams(newParams: SearchParameters = {}) {
+    const action = restoreSearchParameters({
+      ...getInitialSearchParameterState(engine),
+      ...newParams,
+    });
+
     const restoreSearchParametersActions = engine.actions.filter(
       (action) => action.type === restoreSearchParameters.type
     );
@@ -51,108 +58,110 @@ describe('url manager', () => {
   }
 
   it('dispatches #restoreSearchParameters on registration', () => {
-    const action = restoreSearchParameters(
-      getInitialSearchParameterState(engine)
-    );
-    expectLatestRestoreSearchParametersActionToBe(action);
+    testRestoreSearchParams();
   });
 
   describe('submitChanges with query parameter', () => {
     it(`when adding a q parameter
     should restore the right parameters and log the right analytics`, () => {
-      const action = restoreSearchParameters({
-        ...getInitialSearchParameterState(engine),
-        q: 'test',
-      });
       manager.submitChanges('q=test');
-      expectLatestRestoreSearchParametersActionToBe(action);
-      expect(searchAnalyticsAction()).toBe(logSearchboxSubmit().toString());
+
+      testRestoreSearchParams({q: 'test'});
+      testAnalyticsAction(logSearchboxSubmit());
     });
 
     it(`when removing a q parameter
     should restore the right parameters and log the right analytics`, () => {
-      engine.state.query.q = 'test';
-      const action = restoreSearchParameters(
-        getInitialSearchParameterState(engine)
-      );
+      initUrlManager('q=test');
 
       manager.submitChanges('');
-      expectLatestRestoreSearchParametersActionToBe(action);
-      expect(searchAnalyticsAction()).toBe(logSearchboxSubmit().toString());
+      testRestoreSearchParams();
+      testAnalyticsAction(logSearchboxSubmit());
     });
   });
 
   describe('submitChanges with sort criteria parameter', () => {
     it(`when adding a sortCriteria parameter
     should restore the right parameters and log the right analytics`, () => {
-      const action = restoreSearchParameters({
-        ...getInitialSearchParameterState(engine),
-        sortCriteria: 'size ascending',
-      });
       manager.submitChanges('sortCriteria=size ascending');
-      expectLatestRestoreSearchParametersActionToBe(action);
-      expect(searchAnalyticsAction()).toBe(logResultsSort().toString());
+      testRestoreSearchParams({sortCriteria: 'size ascending'});
+      testAnalyticsAction(logResultsSort());
     });
 
     it(`when removing a sortCriteria parameter
     should restore the right parameters and log the right analytics`, () => {
-      engine.state.sortCriteria = 'size ascending';
-      const action = restoreSearchParameters(
-        getInitialSearchParameterState(engine)
-      );
+      initUrlManager('sortCriteria=size ascending');
 
       manager.submitChanges('');
-      expectLatestRestoreSearchParametersActionToBe(action);
-      expect(searchAnalyticsAction()).toBe(logResultsSort().toString());
+      testRestoreSearchParams();
+      testAnalyticsAction(logResultsSort());
     });
   });
 
   describe('submitChanges with facet parameter', () => {
     it(`when adding a f parameter
     should restore the right parameters and log the right analytics`, () => {
-      const action = restoreSearchParameters({
-        ...getInitialSearchParameterState(engine),
-        f: {author: ['Cervantes']},
-      });
-
       manager.submitChanges('f[author]=Cervantes');
-      expectLatestRestoreSearchParametersActionToBe(action);
-      expect(searchAnalyticsAction()).toBe(
-        logFacetSelect({facetId: 'author', facetValue: 'Cervantes'}).toString()
+      testRestoreSearchParams({f: {author: ['Cervantes']}});
+      testAnalyticsAction(
+        logFacetSelect({facetId: 'author', facetValue: 'Cervantes'})
       );
     });
 
     it(`when removing a f parameter
     when there was a single value selected
     should restore the right parameters and log the right analytics`, () => {
-      manager.submitChanges('f[author]=Cervantes');
-      const action = restoreSearchParameters(
-        getInitialSearchParameterState(engine)
-      );
+      initUrlManager('f[author]=Cervantes');
+
       manager.submitChanges('');
-      expectLatestRestoreSearchParametersActionToBe(action);
-      expect(searchAnalyticsAction()).toBe(
+      testRestoreSearchParams();
+      testAnalyticsAction(
         logFacetDeselect({
           facetId: 'author',
           facetValue: 'Cervantes',
-        }).toString()
+        })
       );
     });
 
     it(`when removing a f parameter
     when there was multiple values selected
     should restore the right parameters and log the right analytics`, () => {
-      manager.submitChanges('f[author]=Cervantes');
-      const action = restoreSearchParameters(
-        getInitialSearchParameterState(engine)
-      );
+      initUrlManager('f[author]=Cervantes');
+
       manager.submitChanges('');
-      expectLatestRestoreSearchParametersActionToBe(action);
-      expect(searchAnalyticsAction()).toBe(
-        logFacetClearAll('author').toString()
+      testRestoreSearchParams();
+      testAnalyticsAction(logFacetClearAll('author'));
+    });
+
+    it(`when editing a f parameter
+    when a value is removed
+    should restore the right parameters and log the right analytics`, () => {
+      initUrlManager('f[author]=Cervantes,Orwell');
+
+      manager.submitChanges('f[author]=Orwell');
+      testRestoreSearchParams({f: {author: ['Orwell']}});
+      testAnalyticsAction(
+        logFacetDeselect({
+          facetId: 'author',
+          facetValue: 'Cervantes',
+        })
       );
     });
 
-    // TODO: add more tests
+    it(`when editing a f parameter
+    when a value is added
+    should restore the right parameters and log the right analytics`, () => {
+      initUrlManager('f[author]=Cervantes');
+      spyOn(engine.store, 'dispatch');
+
+      manager.submitChanges('f[author]=Cervantes,Orwell');
+      testRestoreSearchParams({f: {author: ['Cervantes', 'Orwell']}});
+      testAnalyticsAction(
+        logFacetDeselect({
+          facetId: 'author',
+          facetValue: 'Orwell',
+        })
+      );
+    });
   });
 });
