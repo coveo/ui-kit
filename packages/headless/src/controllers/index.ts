@@ -263,12 +263,12 @@ export {
 } from './search-parameter-manager/headless-search-parameter-manager';
 
 export {
-  UrlHashManagerProps,
-  UrlHashManagerInitialState,
-  UrlHashManagerState,
-  UrlHashManager,
-  buildUrlHashManager,
-} from './url-hash-manager/headless-url-hash-manager';
+  UrlManagerProps,
+  UrlManagerInitialState,
+  UrlManagerState,
+  UrlManager,
+  buildUrlManager,
+} from './url-manager/headless-url-manager';
 
 export {
   SearchStatus,

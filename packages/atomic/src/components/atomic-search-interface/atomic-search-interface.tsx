@@ -19,8 +19,8 @@ import {
   ConfigurationActions,
   LogLevel,
   Unsubscribe,
-  buildUrlHashManager,
-  UrlHashManager,
+  buildUrlManager,
+  UrlManager,
 } from '@coveo/headless';
 import {
   AtomicStore,
@@ -44,8 +44,8 @@ export type InitializationOptions = Pick<
 })
 export class AtomicSearchInterface {
   private updatingHash = false;
-  private urlHashManager!: UrlHashManager;
-  private unsubscribeUrlHashManager: Unsubscribe = () => {};
+  private urlManager!: UrlManager;
+  private unsubscribeUrlManager: Unsubscribe = () => {};
   private hangingComponentsInitialization: InitializeEvent[] = [];
   private initialized = false;
   private store = createStore<AtomicStore>({facets: {}});
@@ -106,8 +106,8 @@ export class AtomicSearchInterface {
   }
 
   public disconnectedCallback() {
-    this.unsubscribeUrlHashManager();
-    window.removeEventListener('hashchange', this.onUrlHashChange);
+    this.unsubscribeUrlManager();
+    window.removeEventListener('hashchange', this.onHashChange);
   }
 
   @Listen('atomic/initializeComponent')
@@ -204,36 +204,39 @@ export class AtomicSearchInterface {
     );
   }
 
+  private get hash() {
+    return window.location.hash.slice(1);
+  }
+
   private initSearchParameterManager() {
     if (!this.reflectStateInUrl) {
       return;
     }
 
-    this.urlHashManager = buildUrlHashManager(this.engine!, {
-      initialState: {urlHash: window.location.hash},
+    this.urlManager = buildUrlManager(this.engine!, {
+      initialState: {url: this.hash},
     });
 
-    this.unsubscribeUrlHashManager = this.urlHashManager.subscribe(() =>
-      this.updateUrlSearchParams()
+    this.unsubscribeUrlManager = this.urlManager.subscribe(() =>
+      this.updateHash()
     );
 
-    window.addEventListener('hashchange', this.onUrlHashChange);
+    window.addEventListener('hashchange', this.onHashChange);
   }
 
-  private updateUrlSearchParams() {
+  private updateHash() {
     this.updatingHash = true;
     defer(() => (this.updatingHash = false));
-    const hash = this.urlHashManager.state.urlHash;
+    const hash = this.urlManager.state.url;
     window.location.hash = hash;
   }
 
-  private onUrlHashChange = async () => {
+  private onHashChange = async () => {
     if (this.updatingHash) {
       return;
     }
 
-    const hash = window.location.hash;
-    this.urlHashManager.updateUrlHash(hash);
+    this.urlManager.update(this.hash);
   };
 
   public render() {

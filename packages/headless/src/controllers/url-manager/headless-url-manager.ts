@@ -26,58 +26,58 @@ import {
   getInitialSearchParameterState,
 } from '../search-parameter-manager/headless-search-parameter-manager';
 
-export interface UrlHashManagerProps {
+export interface UrlManagerProps {
   /**
-   * The initial state that should be applied to the `UrlHashManager` controller.
+   * The initial state that should be applied to the `UrlManager` controller.
    */
-  initialState: UrlHashManagerInitialState;
+  initialState: UrlManagerInitialState;
+  // TODO: add serialize/deserialize options
 }
 
-export interface UrlHashManagerInitialState {
+export interface UrlManagerInitialState {
   /**
-   * The url hash containing the parameters affecting the search response.
+   * The part of the url containing the parameters affecting the search response.
    */
-  urlHash: string;
+  url: string;
 }
 
-const urlHashValue = new StringValue({regex: /^#|^$/});
-const initialStateSchema = new Schema<Required<UrlHashManagerInitialState>>({
-  urlHash: urlHashValue,
+const initialStateSchema = new Schema<Required<UrlManagerInitialState>>({
+  url: new StringValue(),
 });
 
 /**
- * The `UrlHashManager` controller allows managing an url hash which affect the search response.
+ * The `UrlManager` controller allows managing an url which affect the search response.
  * */
-export interface UrlHashManager extends Controller {
+export interface UrlManager extends Controller {
   /**
-   * The state relevant to the `UrlHashManager` controller.
+   * The state relevant to the `UrlManager` controller.
    * */
-  state: UrlHashManagerState;
+  state: UrlManagerState;
   /**
-   * Updates the search parameters from the url hash & launches a search.
-   * @param urlHash The url hash containing the parameters affecting the search.
+   * Updates the search parameters from the url & launches a search.
+   * @param url The part of the url containing the parameters affecting the search.
    */
-  updateUrlHash(urlHash: string): void;
+  update(url: string): void;
 }
 
-export interface UrlHashManagerState {
+export interface UrlManagerState {
   /**
-   * The url hash containing the parameters affecting the search response.
+   * The part of the url containing the parameters affecting the search.
    */
-  urlHash: string;
+  url: string;
 }
 
 /**
- * Creates a `UrlHashManager` controller instance.
+ * Creates a `UrlManager` controller instance.
  *
  * @param engine - The headless engine.
- * @param props - The configurable `UrlHashManager` properties.
- * @returns A `UrlHashManager` controller instance.
+ * @param props - The configurable `UrlManager` properties.
+ * @returns A `UrlManager` controller instance.
  */
-export function buildUrlHashManager(
+export function buildUrlManager(
   engine: Engine<Partial<SearchParametersState> & ConfigurationSection>,
-  props: UrlHashManagerProps
-): UrlHashManager {
+  props: UrlManagerProps
+): UrlManager {
   const {dispatch} = engine;
   const controller = buildController(engine);
 
@@ -85,12 +85,12 @@ export function buildUrlHashManager(
     engine,
     initialStateSchema,
     props.initialState,
-    'buildUrlHashManager'
+    'buildUrlManager'
   );
 
   const parameters = {
     ...getInitialSearchParameterState(engine),
-    ...getSearchParameterStateFromUrlHash(props.initialState.urlHash),
+    ...getSearchParameterStateFromUrl(props.initialState.url),
   };
   const searchParameterManager = buildSearchParameterManager(engine, {
     initialState: {
@@ -103,19 +103,13 @@ export function buildUrlHashManager(
 
     get state() {
       return {
-        urlHash: buildSearchParameterSerializer().serialize(
+        url: buildSearchParameterSerializer().serialize(
           searchParameterManager.state.parameters
         ),
       };
     },
 
-    updateUrlHash(urlHash: string) {
-      const validation = urlHashValue.validate(urlHash);
-      if (validation) {
-        engine.logger.error(validation, urlHash, 'updateUrlHash');
-        return;
-      }
-
+    update(url: string) {
       const initialParameters = getInitialSearchParameterState(engine);
       const previousParameters = {
         ...initialParameters,
@@ -123,7 +117,7 @@ export function buildUrlHashManager(
       };
       const newParameters = {
         ...initialParameters,
-        ...getSearchParameterStateFromUrlHash(urlHash),
+        ...getSearchParameterStateFromUrl(url),
       };
       dispatch(restoreSearchParameters(newParameters));
       dispatch(
@@ -135,9 +129,8 @@ export function buildUrlHashManager(
   };
 }
 
-function getSearchParameterStateFromUrlHash(urlHash: string) {
-  const urlWithoutHash = urlHash.slice(1);
-  const decodedState = decodeURIComponent(urlWithoutHash);
+function getSearchParameterStateFromUrl(url: string) {
+  const decodedState = decodeURIComponent(url);
   return buildSearchParameterSerializer().deserialize(decodedState);
 }
 

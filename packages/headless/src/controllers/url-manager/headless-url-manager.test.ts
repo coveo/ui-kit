@@ -12,29 +12,29 @@ import {SearchAppState} from '../../state/search-app-state';
 import {buildMockSearchAppEngine, MockEngine} from '../../test';
 import {getInitialSearchParameterState} from '../search-parameter-manager/headless-search-parameter-manager';
 import {
-  UrlHashManagerProps,
-  UrlHashManager,
-  buildUrlHashManager,
-} from './headless-url-hash-manager';
+  UrlManagerProps,
+  UrlManager,
+  buildUrlManager,
+} from './headless-url-manager';
 
-describe('url hash manager', () => {
+describe('url manager', () => {
   let engine: MockEngine<SearchAppState>;
-  let props: UrlHashManagerProps;
-  let manager: UrlHashManager;
+  let props: UrlManagerProps;
+  let manager: UrlManager;
 
-  function initUrlHashManager() {
-    manager = buildUrlHashManager(engine, props);
+  function initUrlManager() {
+    manager = buildUrlManager(engine, props);
   }
 
   beforeEach(() => {
     engine = buildMockSearchAppEngine();
     props = {
       initialState: {
-        urlHash: '#',
+        url: '',
       },
     };
 
-    initUrlHashManager();
+    initUrlManager();
   });
 
   function searchAnalyticsAction() {
@@ -50,30 +50,21 @@ describe('url hash manager', () => {
     ).toEqual(action);
   }
 
-  describe('initialization', () => {
-    it('dispatches #restoreSearchParameters on registration', () => {
-      const action = restoreSearchParameters(
-        getInitialSearchParameterState(engine)
-      );
-      expectLatestRestoreSearchParametersActionToBe(action);
-    });
-
-    it('when #parameters is not an object, it throws an error', () => {
-      props.initialState.urlHash = 'not an hash';
-      expect(() => initUrlHashManager()).toThrow(
-        'Check the initialState of buildUrlHashManager'
-      );
-    });
+  it('dispatches #restoreSearchParameters on registration', () => {
+    const action = restoreSearchParameters(
+      getInitialSearchParameterState(engine)
+    );
+    expectLatestRestoreSearchParametersActionToBe(action);
   });
 
-  describe('#updateUrlHash with query parameter', () => {
+  describe('updateUrl with query parameter', () => {
     it(`when adding a q parameter
     should restore the right parameters and log the right analytics`, () => {
       const action = restoreSearchParameters({
         ...getInitialSearchParameterState(engine),
         q: 'test',
       });
-      manager.updateUrlHash('#q=test');
+      manager.update('q=test');
       expectLatestRestoreSearchParametersActionToBe(action);
       expect(searchAnalyticsAction()).toBe(logSearchboxSubmit().toString());
     });
@@ -85,20 +76,20 @@ describe('url hash manager', () => {
         getInitialSearchParameterState(engine)
       );
 
-      manager.updateUrlHash('#');
+      manager.update('');
       expectLatestRestoreSearchParametersActionToBe(action);
       expect(searchAnalyticsAction()).toBe(logSearchboxSubmit().toString());
     });
   });
 
-  describe('#updateUrlHash with sort criteria parameter', () => {
+  describe('updateUrl with sort criteria parameter', () => {
     it(`when adding a sortCriteria parameter
     should restore the right parameters and log the right analytics`, () => {
       const action = restoreSearchParameters({
         ...getInitialSearchParameterState(engine),
         sortCriteria: 'size ascending',
       });
-      manager.updateUrlHash('#sortCriteria=size ascending');
+      manager.update('sortCriteria=size ascending');
       expectLatestRestoreSearchParametersActionToBe(action);
       expect(searchAnalyticsAction()).toBe(logResultsSort().toString());
     });
@@ -110,13 +101,13 @@ describe('url hash manager', () => {
         getInitialSearchParameterState(engine)
       );
 
-      manager.updateUrlHash('#');
+      manager.update('');
       expectLatestRestoreSearchParametersActionToBe(action);
       expect(searchAnalyticsAction()).toBe(logResultsSort().toString());
     });
   });
 
-  describe('#updateUrlHash with facet parameter', () => {
+  describe('updateUrl with facet parameter', () => {
     it(`when adding a f parameter
     should restore the right parameters and log the right analytics`, () => {
       const action = restoreSearchParameters({
@@ -124,7 +115,7 @@ describe('url hash manager', () => {
         f: {author: ['Cervantes']},
       });
 
-      manager.updateUrlHash('#f[author]=Cervantes');
+      manager.update('f[author]=Cervantes');
       expectLatestRestoreSearchParametersActionToBe(action);
       expect(searchAnalyticsAction()).toBe(
         logFacetSelect({facetId: 'author', facetValue: 'Cervantes'}).toString()
@@ -134,11 +125,11 @@ describe('url hash manager', () => {
     it(`when removing a f parameter
     when there was a single value selected
     should restore the right parameters and log the right analytics`, () => {
-      manager.updateUrlHash('#f[author]=Cervantes');
+      manager.update('f[author]=Cervantes');
       const action = restoreSearchParameters(
         getInitialSearchParameterState(engine)
       );
-      manager.updateUrlHash('#');
+      manager.update('');
       expectLatestRestoreSearchParametersActionToBe(action);
       expect(searchAnalyticsAction()).toBe(
         logFacetDeselect({
@@ -151,11 +142,11 @@ describe('url hash manager', () => {
     it(`when removing a f parameter
     when there was multiple values selected
     should restore the right parameters and log the right analytics`, () => {
-      manager.updateUrlHash('#f[author]=Cervantes');
+      manager.update('f[author]=Cervantes');
       const action = restoreSearchParameters(
         getInitialSearchParameterState(engine)
       );
-      manager.updateUrlHash('#');
+      manager.update('');
       expectLatestRestoreSearchParametersActionToBe(action);
       expect(searchAnalyticsAction()).toBe(
         logFacetClearAll('author').toString()
