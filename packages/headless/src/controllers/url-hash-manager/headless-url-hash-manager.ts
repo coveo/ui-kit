@@ -40,7 +40,7 @@ export interface UrlHashManagerInitialState {
   urlHash: string;
 }
 
-const urlHashValue = new StringValue({regex: /^#/});
+const urlHashValue = new StringValue({regex: /^#|^$/});
 const initialStateSchema = new Schema<Required<UrlHashManagerInitialState>>({
   urlHash: urlHashValue,
 });
@@ -190,7 +190,39 @@ function logFacetAnalyticsAction(
     return logFacetSelect({facetId, facetValue: newFacets[facetId][0]});
   }
 
-  // TODO: handle value differences
+  const facetIdWithDifferentValues = newKeys.find((key) =>
+    newFacets[key].filter((facetValue) =>
+      previousFacets[key].includes(facetValue)
+    )
+  );
+
+  if (!facetIdWithDifferentValues) {
+    return makeNoopAnalyticsAction(AnalyticsType.Search)();
+  }
+
+  const previousValues = previousFacets[facetIdWithDifferentValues];
+  const newValues = newFacets[facetIdWithDifferentValues];
+  const addedValues = newValues.filter(
+    (value) => !previousValues.includes(value)
+  );
+
+  if (addedValues.length) {
+    return logFacetSelect({
+      facetId: facetIdWithDifferentValues,
+      facetValue: addedValues[0],
+    });
+  }
+
+  const removedValues = previousValues.filter(
+    (value) => !newValues.includes(value)
+  );
+
+  if (removedValues.length) {
+    return logFacetDeselect({
+      facetId: facetIdWithDifferentValues,
+      facetValue: removedValues[0],
+    });
+  }
 
   return makeNoopAnalyticsAction(AnalyticsType.Search)();
 }
