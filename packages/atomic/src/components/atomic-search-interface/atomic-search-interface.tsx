@@ -18,10 +18,9 @@ import {
   AnalyticsActions,
   ConfigurationActions,
   LogLevel,
-  buildSearchParameterManager,
-  buildSearchParameterSerializer,
   Unsubscribe,
-  SearchParameterManager,
+  buildUrlHashManager,
+  UrlHashManager,
 } from '@coveo/headless';
 import {
   AtomicStore,
@@ -44,9 +43,9 @@ export type InitializationOptions = Pick<
   assetsDirs: ['lang'],
 })
 export class AtomicSearchInterface {
-  private searchParamsManager!: SearchParameterManager;
-  private searchParamsUpdating = false;
-  private unsubscribeSearchParamsManager: Unsubscribe = () => {};
+  private updatingHash = false;
+  private urlHashManager!: UrlHashManager;
+  private unsubscribeUrlHashManager: Unsubscribe = () => {};
   private hangingComponentsInitialization: InitializeEvent[] = [];
   private initialized = false;
   private store = createStore<AtomicStore>({facets: {}});
@@ -107,7 +106,7 @@ export class AtomicSearchInterface {
   }
 
   public disconnectedCallback() {
-    this.unsubscribeSearchParamsManager();
+    this.unsubscribeUrlHashManager();
     window.removeEventListener('hashchange', this.onUrlHashChange);
   }
 
@@ -205,62 +204,36 @@ export class AtomicSearchInterface {
     );
   }
 
-  private get urlSearchParams() {
-    const stateWithoutHash = window.location.hash.slice(1);
-    const decodedState = decodeURIComponent(stateWithoutHash);
-    return buildSearchParameterSerializer().deserialize(decodedState);
-  }
-
-  private get stateSearchParams() {
-    return buildSearchParameterSerializer().serialize(
-      this.searchParamsManager.state.parameters
-    );
-  }
-
   private initSearchParameterManager() {
     if (!this.reflectStateInUrl) {
       return;
     }
 
-    this.searchParamsManager = buildSearchParameterManager(this.engine!, {
-      initialState: {parameters: this.urlSearchParams},
+    this.urlHashManager = buildUrlHashManager(this.engine!, {
+      initialState: {urlHash: window.location.hash},
     });
 
-    this.unsubscribeSearchParamsManager = this.searchParamsManager.subscribe(
-      () => this.updateUrlSearchParams()
+    this.unsubscribeUrlHashManager = this.urlHashManager.subscribe(() =>
+      this.updateUrlSearchParams()
     );
 
     window.addEventListener('hashchange', this.onUrlHashChange);
   }
 
   private updateUrlSearchParams() {
-    if (this.searchParamsUpdating) {
-      return;
-    }
-    defer(() => (this.searchParamsUpdating = false));
-    this.searchParamsUpdating = true;
-
-    const state = this.stateSearchParams;
-    this.bindings.engine.logger.debug(
-      'Updating url parameters from state',
-      state
-    );
-    window.location.hash = state;
+    this.updatingHash = true;
+    defer(() => (this.updatingHash = false));
+    const hash = this.urlHashManager.state.urlHash;
+    window.location.hash = hash;
   }
 
   private onUrlHashChange = async () => {
-    if (this.searchParamsUpdating) {
+    if (this.updatingHash) {
       return;
     }
-    defer(() => (this.searchParamsUpdating = false));
-    this.searchParamsUpdating = true;
 
-    const params = this.urlSearchParams;
-    this.bindings.engine.logger.debug(
-      'Updating state from url parameters',
-      params
-    );
-    this.searchParamsManager.updateParameters(params);
+    const hash = window.location.hash;
+    this.urlHashManager.updateUrlHash(hash);
   };
 
   public render() {

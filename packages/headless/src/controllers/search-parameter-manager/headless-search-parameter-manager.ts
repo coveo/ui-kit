@@ -16,19 +16,6 @@ import {validateInitialState} from '../../utils/validate-payload';
 import {buildController, Controller} from '../controller/headless-controller';
 import {RangeValueRequest} from '../../features/facets/range-facets/generic/interfaces/range-facet';
 import {getAdvancedSearchQueriesInitialState} from '../../features/advanced-search-queries/advanced-search-queries-state';
-import {executeSearch} from '../../features/search/search-actions';
-import {ConfigurationSection} from '../../state/state-sections';
-import {logSearchboxSubmit} from '../../features/query/query-analytics-actions';
-import {
-  AnalyticsType,
-  makeNoopAnalyticsAction,
-} from '../../features/analytics/analytics-utils';
-import {logResultsSort} from '../../features/sort-criteria/sort-criteria-analytics-actions';
-import {
-  logFacetClearAll,
-  logFacetDeselect,
-  logFacetSelect,
-} from '../../features/facets/facet-set/facet-set-analytics-actions';
 
 export {SearchParameters};
 
@@ -63,11 +50,6 @@ export interface SearchParameterManager extends Controller {
    * The state relevant to the `SearchParameterManager` controller.
    * */
   state: SearchParameterManagerState;
-  /**
-   * Updates the search parameters & launches a search.
-   * @param parameters The parameters affecting the search response.
-   */
-  updateParameters(parameters: SearchParameters): void;
 }
 
 export interface SearchParameterManagerState {
@@ -85,7 +67,7 @@ export interface SearchParameterManagerState {
  * @returns A `SearchParameterManager` controller instance.
  */
 export function buildSearchParameterManager(
-  engine: Engine<Partial<SearchParametersState> & ConfigurationSection>,
+  engine: Engine<Partial<SearchParametersState>>,
   props: SearchParameterManagerProps
 ): SearchParameterManager {
   const {dispatch} = engine;
@@ -121,39 +103,29 @@ export function buildSearchParameterManager(
 
       return {parameters};
     },
+  };
+}
 
-    updateParameters(parameters: SearchParameters) {
-      const state = engine.state;
-      const initialParameters: Required<SearchParameters> = {
-        q: getQueryInitialState().q,
-        enableQuerySyntax: getQueryInitialState().enableQuerySyntax,
-        aq:
-          state.advancedSearchQueries?.defaultFilters.aq ??
-          getAdvancedSearchQueriesInitialState().defaultFilters.aq,
-        cq:
-          state.advancedSearchQueries?.defaultFilters.cq ??
-          getAdvancedSearchQueriesInitialState().defaultFilters.cq,
-        firstResult: getPaginationInitialState().firstResult,
-        numberOfResults: getPaginationInitialState().numberOfResults,
-        sortCriteria: getSortCriteriaInitialState(),
-        f: {},
-        cf: {},
-        nf: {},
-        df: {},
-        debug: getDebugInitialState(),
-      };
-      const previousParameters = {
-        ...initialParameters,
-        ...this.state.parameters,
-      };
-      const newParameters = {...initialParameters, ...parameters};
-      dispatch(restoreSearchParameters(newParameters));
-      dispatch(
-        executeSearch(
-          getRelevantAnalyticsAction(previousParameters, newParameters)
-        )
-      );
-    },
+export function getInitialSearchParameterState({
+  state,
+}: Engine<Partial<SearchParametersState>>): Required<SearchParameters> {
+  return {
+    q: getQueryInitialState().q,
+    enableQuerySyntax: getQueryInitialState().enableQuerySyntax,
+    aq:
+      state.advancedSearchQueries?.defaultFilters.aq ??
+      getAdvancedSearchQueriesInitialState().defaultFilters.aq,
+    cq:
+      state.advancedSearchQueries?.defaultFilters.cq ??
+      getAdvancedSearchQueriesInitialState().defaultFilters.cq,
+    firstResult: getPaginationInitialState().firstResult,
+    numberOfResults: getPaginationInitialState().numberOfResults,
+    sortCriteria: getSortCriteriaInitialState(),
+    f: {},
+    cf: {},
+    nf: {},
+    df: {},
+    debug: getDebugInitialState(),
   };
 }
 
@@ -309,57 +281,4 @@ function getDebug(state: Partial<SearchParametersState>) {
   const debug = state.debug;
   const shouldInclude = debug !== getDebugInitialState();
   return shouldInclude ? {debug} : {};
-}
-
-function getRelevantAnalyticsAction(
-  previousParameters: SearchParameters,
-  newParameters: SearchParameters
-) {
-  if (previousParameters.q !== newParameters.q) {
-    return logSearchboxSubmit();
-  }
-
-  if (previousParameters.sortCriteria !== newParameters.sortCriteria) {
-    return logResultsSort();
-  }
-
-  if (
-    JSON.stringify(previousParameters.f) !== JSON.stringify(newParameters.f)
-  ) {
-    return logFacetAnalyticsAction(
-      previousParameters.f ?? {},
-      newParameters.f ?? {}
-    );
-  }
-
-  // TODO: handle range facets (nf,df)
-  // TODO: handle category facets (cf)
-
-  return makeNoopAnalyticsAction(AnalyticsType.Search)();
-}
-
-function logFacetAnalyticsAction(
-  previousFacets: Record<string, string[]>,
-  newFacets: Record<string, string[]>
-) {
-  const previousKeys = Object.keys(previousFacets);
-  const newKeys = Object.keys(newFacets);
-
-  const removedKeys = previousKeys.filter((key) => !newKeys.includes(key));
-  if (removedKeys.length) {
-    const facetId = removedKeys[0];
-    return previousFacets[facetId].length > 1
-      ? logFacetClearAll(facetId)
-      : logFacetDeselect({facetId, facetValue: previousFacets[facetId][0]});
-  }
-
-  const addedKeys = newKeys.filter((key) => !previousKeys.includes(key));
-  if (addedKeys.length) {
-    const facetId = addedKeys[0];
-    return logFacetSelect({facetId, facetValue: newFacets[facetId][0]});
-  }
-
-  // TODO: handle differences
-
-  return makeNoopAnalyticsAction(AnalyticsType.Search)();
 }
