@@ -231,7 +231,7 @@ export class AtomicSearchInterface {
     window.location.hash = hash;
   }
 
-  private onHashChange = async () => {
+  private onHashChange = () => {
     if (this.updatingHash) {
       return;
     }
