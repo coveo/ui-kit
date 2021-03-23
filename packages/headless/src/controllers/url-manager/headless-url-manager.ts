@@ -37,11 +37,11 @@ export interface UrlManagerInitialState {
   /**
    * The part of the url containing the parameters affecting the search response.
    */
-  url: string;
+  fragment: string;
 }
 
 const initialStateSchema = new Schema<Required<UrlManagerInitialState>>({
-  url: new StringValue(),
+  fragment: new StringValue(),
 });
 
 /**
@@ -54,9 +54,9 @@ export interface UrlManager extends Controller {
   state: UrlManagerState;
   /**
    * Updates the search parameters from the url & launches a search.
-   * @param url The part of the url containing the parameters affecting the search.
+   * @param fragment The part of the url containing the parameters affecting the search.
    */
-  update(url: string): void;
+  submitChanges(fragment: string): void;
 }
 
 export interface UrlManagerState {
@@ -89,7 +89,7 @@ export function buildUrlManager(
 
   const parameters = {
     ...getInitialSearchParameterState(engine),
-    ...getSearchParameterStateFromUrl(props.initialState.url),
+    ...getSearchParameterStateFromFragment(props.initialState.fragment),
   };
   const searchParameterManager = buildSearchParameterManager(engine, {
     initialState: {
@@ -108,7 +108,7 @@ export function buildUrlManager(
       };
     },
 
-    update(url: string) {
+    submitChanges(fragment: string) {
       const initialParameters = getInitialSearchParameterState(engine);
       const previousParameters = {
         ...initialParameters,
@@ -116,7 +116,7 @@ export function buildUrlManager(
       };
       const newParameters = {
         ...initialParameters,
-        ...getSearchParameterStateFromUrl(url),
+        ...getSearchParameterStateFromFragment(fragment),
       };
       dispatch(restoreSearchParameters(newParameters));
       dispatch(
@@ -128,8 +128,8 @@ export function buildUrlManager(
   };
 }
 
-function getSearchParameterStateFromUrl(url: string) {
-  const decodedState = decodeURIComponent(url);
+function getSearchParameterStateFromFragment(fragment: string) {
+  const decodedState = decodeURIComponent(fragment);
   return buildSearchParameterSerializer().deserialize(decodedState);
 }
 

@@ -214,7 +214,7 @@ export class AtomicSearchInterface {
     }
 
     this.urlManager = buildUrlManager(this.engine!, {
-      initialState: {url: this.hash},
+      initialState: {fragment: this.hash},
     });
 
     this.unsubscribeUrlManager = this.urlManager.subscribe(() =>
@@ -236,7 +236,7 @@ export class AtomicSearchInterface {
       return;
     }
 
-    this.urlManager.update(this.hash);
+    this.urlManager.submitChanges(this.hash);
   };
 
   public render() {

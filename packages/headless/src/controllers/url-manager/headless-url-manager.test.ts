@@ -30,7 +30,7 @@ describe('url manager', () => {
     engine = buildMockSearchAppEngine();
     props = {
       initialState: {
-        url: '',
+        fragment: '',
       },
     };
 
@@ -57,14 +57,14 @@ describe('url manager', () => {
     expectLatestRestoreSearchParametersActionToBe(action);
   });
 
-  describe('updateUrl with query parameter', () => {
+  describe('submitChanges with query parameter', () => {
     it(`when adding a q parameter
     should restore the right parameters and log the right analytics`, () => {
       const action = restoreSearchParameters({
         ...getInitialSearchParameterState(engine),
         q: 'test',
       });
-      manager.update('q=test');
+      manager.submitChanges('q=test');
       expectLatestRestoreSearchParametersActionToBe(action);
       expect(searchAnalyticsAction()).toBe(logSearchboxSubmit().toString());
     });
@@ -76,20 +76,20 @@ describe('url manager', () => {
         getInitialSearchParameterState(engine)
       );
 
-      manager.update('');
+      manager.submitChanges('');
       expectLatestRestoreSearchParametersActionToBe(action);
       expect(searchAnalyticsAction()).toBe(logSearchboxSubmit().toString());
     });
   });
 
-  describe('updateUrl with sort criteria parameter', () => {
+  describe('submitChanges with sort criteria parameter', () => {
     it(`when adding a sortCriteria parameter
     should restore the right parameters and log the right analytics`, () => {
       const action = restoreSearchParameters({
         ...getInitialSearchParameterState(engine),
         sortCriteria: 'size ascending',
       });
-      manager.update('sortCriteria=size ascending');
+      manager.submitChanges('sortCriteria=size ascending');
       expectLatestRestoreSearchParametersActionToBe(action);
       expect(searchAnalyticsAction()).toBe(logResultsSort().toString());
     });
@@ -101,13 +101,13 @@ describe('url manager', () => {
         getInitialSearchParameterState(engine)
       );
 
-      manager.update('');
+      manager.submitChanges('');
       expectLatestRestoreSearchParametersActionToBe(action);
       expect(searchAnalyticsAction()).toBe(logResultsSort().toString());
     });
   });
 
-  describe('updateUrl with facet parameter', () => {
+  describe('submitChanges with facet parameter', () => {
     it(`when adding a f parameter
     should restore the right parameters and log the right analytics`, () => {
       const action = restoreSearchParameters({
@@ -115,7 +115,7 @@ describe('url manager', () => {
         f: {author: ['Cervantes']},
       });
 
-      manager.update('f[author]=Cervantes');
+      manager.submitChanges('f[author]=Cervantes');
       expectLatestRestoreSearchParametersActionToBe(action);
       expect(searchAnalyticsAction()).toBe(
         logFacetSelect({facetId: 'author', facetValue: 'Cervantes'}).toString()
@@ -125,11 +125,11 @@ describe('url manager', () => {
     it(`when removing a f parameter
     when there was a single value selected
     should restore the right parameters and log the right analytics`, () => {
-      manager.update('f[author]=Cervantes');
+      manager.submitChanges('f[author]=Cervantes');
       const action = restoreSearchParameters(
         getInitialSearchParameterState(engine)
       );
-      manager.update('');
+      manager.submitChanges('');
       expectLatestRestoreSearchParametersActionToBe(action);
       expect(searchAnalyticsAction()).toBe(
         logFacetDeselect({
@@ -142,11 +142,11 @@ describe('url manager', () => {
     it(`when removing a f parameter
     when there was multiple values selected
     should restore the right parameters and log the right analytics`, () => {
-      manager.update('f[author]=Cervantes');
+      manager.submitChanges('f[author]=Cervantes');
       const action = restoreSearchParameters(
         getInitialSearchParameterState(engine)
       );
-      manager.update('');
+      manager.submitChanges('');
       expectLatestRestoreSearchParametersActionToBe(action);
       expect(searchAnalyticsAction()).toBe(
         logFacetClearAll('author').toString()
