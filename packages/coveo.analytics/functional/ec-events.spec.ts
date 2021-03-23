@@ -510,8 +510,8 @@ describe('ec events', () => {
                 ...defaultContextValues,
                 pa: 'quote',
                 t: 'event',
-                id: 'something',
-                affiliation: 'my super store',
+                quoteId: 'something',
+                quoteAffiliation: 'my super store',
             });
         });
 
@@ -526,7 +526,7 @@ describe('ec events', () => {
                 ...defaultContextValues,
                 pa: 'quote',
                 t: 'event',
-                affiliation: 'super store',
+                quoteAffiliation: 'super store',
             });
         });
 
@@ -543,7 +543,7 @@ describe('ec events', () => {
                 ...defaultContextValues,
                 pa: 'review',
                 t: 'event',
-                id: 'something',
+                reviewId: 'something',
                 reviewRating: 5,
             });
         });

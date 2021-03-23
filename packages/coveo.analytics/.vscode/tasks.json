@@ -14,10 +14,10 @@
                     "background": {
                         "activeOnStart": true,
                         "beginsPattern": {
-                            "regexp": "^.*Compiling....*$"
+                            "regexp": "^.*bundles./src/coveoua.*$"
                         },
                         "endsPattern": {
-                            "regexp": "^.*Compiled successfully.*$"
+                            "regexp": "^.*created dist/coveoua.*$"
                         }
                     }
                 },
