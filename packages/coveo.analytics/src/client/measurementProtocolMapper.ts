@@ -1,6 +1,7 @@
 import {isServiceKey, serviceActionsKeysMapping} from './measurementProtocolMapping/serviceMeasurementProtocolMapper';
 import {
-    commerceActionKeysMapping,
+    allCommerceActionKeysMapping,
+    commerceActionKeysMappingPerAction,
     isCommerceKey,
     isCustomCommerceKey,
 } from './measurementProtocolMapping/commerceMeasurementProtocolMapper';
@@ -9,13 +10,14 @@ import {baseMeasurementProtocolKeysMapping} from './measurementProtocolMapping/b
 
 const measurementProtocolKeysMapping: {[name: string]: string} = {
     ...baseMeasurementProtocolKeysMapping,
-    ...commerceActionKeysMapping,
+    ...allCommerceActionKeysMapping,
     ...serviceActionsKeysMapping,
 };
 
 export const convertKeysToMeasurementProtocol = (params: any) => {
     return keysOf(params).reduce((mappedKeys, key) => {
-        const newKey = measurementProtocolKeysMapping[key] || key;
+        const actionKey = !!params.action ? commerceActionKeysMappingPerAction[params.action]?.[key] : '';
+        const newKey = actionKey || measurementProtocolKeysMapping[key] || key;
         return {
             ...mappedKeys,
             [newKey]: params[key],

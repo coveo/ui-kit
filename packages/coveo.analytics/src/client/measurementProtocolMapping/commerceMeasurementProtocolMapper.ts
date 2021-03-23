@@ -12,6 +12,8 @@ const productKeysMapping: {[key in keyof Product]: string} = {
     quantity: 'qt',
     coupon: 'cc',
     position: 'ps',
+    // Below are keys that were extended for Coveo
+    group: 'group',
 };
 
 const impressionKeysMapping: {[key in keyof BaseImpression]: string} = {
@@ -41,9 +43,58 @@ const transactionActionsKeysMapping: {[name: string]: string} = {
     option: 'col',
 };
 
-export const commerceActionKeysMapping: {[name: string]: string} = {
+const coveoCommerceExtensionKeys: string[] = [
+    'loyaltyCardNumber',
+    'loyaltyTier',
+    'thirdPartyPersona',
+    'companyName',
+    'favoriteStore',
+    'storeName',
+    'userIndustry',
+    'userRole',
+    'userDepartment',
+    'businessUnit',
+];
+
+const quoteActionsKeysMapping: {[name: string]: string} = {
+    id: 'id',
+    affiliation: 'affiliation',
+};
+
+const reviewActionsKeysMapping: {[name: string]: string} = {
+    id: 'id',
+    reviewRating: 'reviewRating',
+    reviewComment: 'reviewComment',
+};
+
+export const allCommerceActionKeysMapping: {[name: string]: string} = {
     ...productActionsKeysMapping,
     ...transactionActionsKeysMapping,
+};
+
+export const commerceActionKeysMappingPerAction: Record<string, {[name: string]: string}> = {
+    add: productActionsKeysMapping,
+    click: productActionsKeysMapping,
+    checkout: productActionsKeysMapping,
+    checkout_option: productActionsKeysMapping,
+    detail: productActionsKeysMapping,
+    remove: productActionsKeysMapping,
+    refund: {
+        ...productActionsKeysMapping,
+        ...transactionActionsKeysMapping,
+    },
+    purchase: {
+        ...productActionsKeysMapping,
+        ...transactionActionsKeysMapping,
+    },
+    quote: {
+        ...productActionsKeysMapping,
+        ...quoteActionsKeysMapping,
+    },
+    review: {
+        ...productActionsKeysMapping,
+        ...reviewActionsKeysMapping,
+    },
 };
 
 export const convertProductToMeasurementProtocol = (product: Product, index: number) => {
@@ -95,6 +146,8 @@ const convertImpressionToMeasurementProtocol = (
 
 const productKeysMappingValues = keysOf(productKeysMapping).map((key) => productKeysMapping[key]);
 const impressionKeysMappingValues = keysOf(impressionKeysMapping).map((key) => impressionKeysMapping[key]);
+const reviewKeysMappingValues = keysOf(reviewActionsKeysMapping).map((key) => reviewActionsKeysMapping[key]);
+const quoteKeysMappingValues = keysOf(quoteActionsKeysMapping).map((key) => quoteActionsKeysMapping[key]);
 
 const productSubKeysMatchGroup = [...productKeysMappingValues, 'custom'].join('|');
 const impressionSubKeysMatchGroup = [...impressionKeysMappingValues, 'custom'].join('|');
@@ -104,9 +157,13 @@ const productKeyRegex = new RegExp(`^${productPrefixMatchGroup}(${productSubKeys
 const impressionKeyRegex = new RegExp(`^(${impressionPrefixMatchGroup}(${impressionSubKeysMatchGroup}))|(il[0-9]+nm)$`);
 const customProductKeyRegex = new RegExp(`^${productPrefixMatchGroup}custom$`);
 const customImpressionKeyRegex = new RegExp(`^${impressionPrefixMatchGroup}custom$`);
+const coveoCommerceExtensionKeysRegex = new RegExp(
+    `^(${[...coveoCommerceExtensionKeys, ...reviewKeysMappingValues, ...quoteKeysMappingValues].join('|')})$`
+);
 
 const isProductKey = (key: string) => productKeyRegex.test(key);
 const isImpressionKey = (key: string) => impressionKeyRegex.test(key);
+const isCoveoCommerceExtensionKey = (key: string) => coveoCommerceExtensionKeysRegex.test(key);
 
-export const isCommerceKey = [isImpressionKey, isProductKey];
+export const isCommerceKey = [isImpressionKey, isProductKey, isCoveoCommerceExtensionKey];
 export const isCustomCommerceKey = [customProductKeyRegex, customImpressionKeyRegex];
