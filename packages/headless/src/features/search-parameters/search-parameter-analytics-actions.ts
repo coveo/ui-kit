@@ -102,17 +102,17 @@ function logFacetAnalyticsAction(
     });
   }
 
-  const facetId = newIds.find((key) =>
+  const facetIdWithDifferentValues = newIds.find((key) =>
     newFacets[key].filter((facetValue) =>
       previousFacets[key].includes(facetValue)
     )
   );
-  if (!facetId) {
+  if (!facetIdWithDifferentValues) {
     return makeNoopAnalyticsAction(AnalyticsType.Search)();
   }
 
-  const previousValues = previousFacets[facetId];
-  const newValues = newFacets[facetId];
+  const previousValues = previousFacets[facetIdWithDifferentValues];
+  const newValues = newFacets[facetIdWithDifferentValues];
 
   const addedValues = newValues.filter(
     (value) => !previousValues.includes(value)
@@ -120,7 +120,7 @@ function logFacetAnalyticsAction(
 
   if (addedValues.length) {
     return logFacetSelect({
-      facetId,
+      facetId: facetIdWithDifferentValues,
       facetValue: addedValues[0],
     });
   }
@@ -131,7 +131,7 @@ function logFacetAnalyticsAction(
 
   if (removedValues.length) {
     return logFacetDeselect({
-      facetId,
+      facetId: facetIdWithDifferentValues,
       facetValue: removedValues[0],
     });
   }
