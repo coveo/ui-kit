@@ -72,10 +72,6 @@ export namespace Components {
          */
         "end": Date | string | number;
         /**
-          * Specifies whether or not the end date should be included in the range.
-         */
-        "endInclusive": boolean;
-        /**
           * The starting date for the range. It can be expressed as a Javascript date, as a number using epoch time or as a string using the ISO 8601 format.
          */
         "start": Date | string | number;
@@ -704,10 +700,6 @@ declare namespace LocalJSX {
           * The ending date for the range. It can be expressed as a Javascript date, as a number using epoch time or as a string using the ISO 8601 format.
          */
         "end": Date | string | number;
-        /**
-          * Specifies whether or not the end date should be included in the range.
-         */
-        "endInclusive"?: boolean;
         /**
           * The starting date for the range. It can be expressed as a Javascript date, as a number using epoch time or as a string using the ISO 8601 format.
          */
