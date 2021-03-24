@@ -2,10 +2,10 @@ import {
   restoreSearchParameters,
   SearchParameters,
 } from '../../features/search-parameters/search-parameter-actions';
+import {initialSearchParameterSelector} from '../../features/search-parameters/search-parameter-selectors';
 import {executeSearch} from '../../features/search/search-actions';
 import {SearchAppState} from '../../state/search-app-state';
 import {buildMockSearchAppEngine, MockEngine} from '../../test';
-import {getInitialSearchParameterState} from '../search-parameter-manager/headless-search-parameter-manager';
 import {UrlManager, buildUrlManager} from './headless-url-manager';
 
 describe('url manager', () => {
@@ -36,7 +36,7 @@ describe('url manager', () => {
 
   function testLatestRestoreSearchParameters(newParams: SearchParameters = {}) {
     const action = restoreSearchParameters({
-      ...getInitialSearchParameterState(engine),
+      ...initialSearchParameterSelector(engine.state),
       ...newParams,
     });
     expect(getLastestRestoreSearchParametersAction()).toEqual(action);
