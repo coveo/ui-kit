@@ -496,6 +496,93 @@ describe('ec events', () => {
         });
     });
 
+    it('ignores properties that are specific to another action', async () => {
+        await coveoua('ec:setAction', 'purchase', {
+            id: 'something',
+            rating: '5/7',
+        });
+        await coveoua('send', 'event');
+
+        const [body] = getParsedBody();
+
+        expect(body).toEqual({
+            ...defaultContextValues,
+            pa: 'purchase',
+            t: 'event',
+            ti: 'something',
+        });
+    });
+
+    describe('with the coveo extensions', () => {
+        it('can send a quote event with a specific id and affiliation', async () => {
+            await coveoua('ec:setAction', 'quote', {
+                id: 'something',
+                affiliation: 'my super store',
+            });
+            await coveoua('send', 'event');
+
+            const [body] = getParsedBody();
+
+            expect(body).toEqual({
+                ...defaultContextValues,
+                pa: 'quote',
+                t: 'event',
+                quoteId: 'something',
+                quoteAffiliation: 'my super store',
+            });
+        });
+
+        it('can set an affiliation before defining the quote action', async () => {
+            coveoua('set', 'affiliation', 'super store');
+            await coveoua('ec:setAction', 'quote');
+            await coveoua('send', 'event');
+
+            const [body] = getParsedBody();
+
+            expect(body).toEqual({
+                ...defaultContextValues,
+                pa: 'quote',
+                t: 'event',
+                quoteAffiliation: 'super store',
+            });
+        });
+
+        it('can send a review event with a specific id and reviewRating', async () => {
+            await coveoua('ec:setAction', 'review', {
+                id: 'something',
+                reviewRating: 5,
+            });
+            await coveoua('send', 'event');
+
+            const [body] = getParsedBody();
+
+            expect(body).toEqual({
+                ...defaultContextValues,
+                pa: 'review',
+                t: 'event',
+                reviewId: 'something',
+                reviewRating: 5,
+            });
+        });
+
+        it('can send a product with the group property', async () => {
+            await coveoua('ec:addProduct', {
+                id: 'something',
+                group: 'nsync',
+            });
+            await coveoua('send', 'event');
+
+            const [body] = getParsedBody();
+
+            expect(body).toEqual({
+                ...defaultContextValues,
+                t: 'event',
+                pr1id: 'something',
+                pr1group: 'nsync',
+            });
+        });
+    });
+
     const getParsedBody = (): any[] => {
         return fetchMock.calls().map(([, {body}]) => JSON.parse(body.toString()));
     };

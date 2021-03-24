@@ -9,14 +9,10 @@
             "request": "launch",
             "name": "Launch Chrome against localhost",
             "url": "localhost:9001",
-            "webRoot": "${workspaceFolder}",
+            "webRoot": "${workspaceFolder}/src",
             "preLaunchTask": "dev",
             "sourceMapPathOverrides": {
-                "webpack:///./*": "${webRoot}/*",
-                "webpack:///src/*": "${webRoot}/*",
-                "webpack:///*": "*",
-                "webpack:///./~/*": "${webRoot}/node_modules/*",
-                "meteor://💻app/*": "${webRoot}/*"
+                "../src/*": "${webRoot}/*"
             }
         },
         {

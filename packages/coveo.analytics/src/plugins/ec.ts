@@ -24,7 +24,11 @@ export type CustomValues = {
     [key: string]: string | number | boolean;
 };
 
-export interface ProductProperties {
+export interface ProductCoveoExtensionProperties {
+    group?: string;
+}
+
+export interface ProductProperties extends ProductCoveoExtensionProperties {
     id?: string;
     name?: string;
     brand?: string;
