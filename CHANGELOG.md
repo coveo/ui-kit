@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.9.0-alpha.5](https://github.com/coveo/ui-kit/compare/v0.9.0-alpha.4...v0.9.0-alpha.5) (2021-03-24)
+
+
+### Features
+
+* **quantic:** searchbox without tributejs dependency ([#644](https://github.com/coveo/ui-kit/issues/644)) ([3ca96f3](https://github.com/coveo/ui-kit/commit/3ca96f3d88e030f0b275abf809184f820821ee17))
+
+
+
+
+
 # [0.9.0-alpha.4](https://github.com/coveo/ui-kit/compare/v0.9.0-alpha.3...v0.9.0-alpha.4) (2021-03-24)
 
 
