@@ -496,6 +496,23 @@ describe('ec events', () => {
         });
     });
 
+    it('ignores properties that are specific to another action', async () => {
+        await coveoua('ec:setAction', 'purchase', {
+            id: 'something',
+            rating: '5/7',
+        });
+        await coveoua('send', 'event');
+
+        const [body] = getParsedBody();
+
+        expect(body).toEqual({
+            ...defaultContextValues,
+            pa: 'purchase',
+            t: 'event',
+            ti: 'something',
+        });
+    });
+
     describe('with the coveo extensions', () => {
         it('can send a quote event with a specific id and affiliation', async () => {
             await coveoua('ec:setAction', 'quote', {
@@ -515,7 +532,7 @@ describe('ec events', () => {
             });
         });
 
-        it('can send set an affiliation before defining the quote action', async () => {
+        it('can set an affiliation before defining the quote action', async () => {
             coveoua('set', 'affiliation', 'super store');
             await coveoua('ec:setAction', 'quote');
             await coveoua('send', 'event');

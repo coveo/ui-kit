@@ -45,7 +45,7 @@ const transactionActionsKeysMapping: {[name: string]: string} = {
 
 // These extension keys do not have direct mappings, we are sending them as-is, thus only requiring an array.
 const coveoCommerceExtensionKeys: string[] = [
-    'loyaltyCardNumber',
+    'loyaltyCardId',
     'loyaltyTier',
     'thirdPartyPersona',
     'companyName',
@@ -64,8 +64,8 @@ const quoteActionsKeysMapping: {[name: string]: string} = {
 
 const reviewActionsKeysMapping: {[name: string]: string} = {
     id: 'reviewId',
-    reviewRating: 'reviewRating',
-    reviewComment: 'reviewComment',
+    rating: 'reviewRating',
+    comment: 'reviewComment',
 };
 
 export const commerceActionKeysMappingPerAction: Record<string, {[name: string]: string}> = {
@@ -143,6 +143,9 @@ const convertImpressionToMeasurementProtocol = (
 const productKeysMappingValues = keysOf(productKeysMapping).map((key) => productKeysMapping[key]);
 const impressionKeysMappingValues = keysOf(impressionKeysMapping).map((key) => impressionKeysMapping[key]);
 const productActionsKeysMappingValues = keysOf(productActionsKeysMapping).map((key) => productActionsKeysMapping[key]);
+const transactionActionsKeysMappingValues = keysOf(transactionActionsKeysMapping).map(
+    (key) => transactionActionsKeysMapping[key]
+);
 const reviewKeysMappingValues = keysOf(reviewActionsKeysMapping).map((key) => reviewActionsKeysMapping[key]);
 const quoteKeysMappingValues = keysOf(quoteActionsKeysMapping).map((key) => quoteActionsKeysMapping[key]);
 
@@ -153,6 +156,7 @@ const impressionPrefixMatchGroup = '(il[0-9]+pi[0-9]+)';
 const productKeyRegex = new RegExp(`^${productPrefixMatchGroup}(${productSubKeysMatchGroup})$`);
 const impressionKeyRegex = new RegExp(`^(${impressionPrefixMatchGroup}(${impressionSubKeysMatchGroup}))|(il[0-9]+nm)$`);
 const productActionsKeyRegex = new RegExp(`^(${productActionsKeysMappingValues.join('|')})$`);
+const transactionActionsKeyRegex = new RegExp(`^(${transactionActionsKeysMappingValues.join('|')})$`);
 const customProductKeyRegex = new RegExp(`^${productPrefixMatchGroup}custom$`);
 const customImpressionKeyRegex = new RegExp(`^${impressionPrefixMatchGroup}custom$`);
 const coveoCommerceExtensionKeysRegex = new RegExp(
@@ -162,7 +166,14 @@ const coveoCommerceExtensionKeysRegex = new RegExp(
 const isProductKey = (key: string) => productKeyRegex.test(key);
 const isImpressionKey = (key: string) => impressionKeyRegex.test(key);
 const isProductActionsKey = (key: string) => productActionsKeyRegex.test(key);
+const isTransactionActionsKeyRegex = (key: string) => transactionActionsKeyRegex.test(key);
 const isCoveoCommerceExtensionKey = (key: string) => coveoCommerceExtensionKeysRegex.test(key);
 
-export const isCommerceKey = [isImpressionKey, isProductKey, isProductActionsKey, isCoveoCommerceExtensionKey];
+export const isCommerceKey = [
+    isImpressionKey,
+    isProductKey,
+    isProductActionsKey,
+    isTransactionActionsKeyRegex,
+    isCoveoCommerceExtensionKey,
+];
 export const isCustomCommerceKey = [customProductKeyRegex, customImpressionKeyRegex];
