@@ -32,19 +32,19 @@ export type SearchAction = AsyncThunkAction<
   {analyticsType: AnalyticsType.Search},
   void | {},
   AsyncThunkAnalyticsOptions<StateNeededByAnalyticsProvider>
->;
+> & {name: string};
 
 export type CustomAction = AsyncThunkAction<
   {analyticsType: AnalyticsType.Custom},
   {},
   {}
->;
+> & {name: string};
 
 export type ClickAction = AsyncThunkAction<
   {analyticsType: AnalyticsType.Click},
   {},
   {}
->;
+> & {name: string};
 
 const searchPageState = (getState: () => unknown) =>
   getState() as SearchAppState;

@@ -1,5 +1,6 @@
 import {ApiModel} from '@microsoft/api-extractor-model';
 import {writeFileSync} from 'fs';
+import {resolveActionNamespaces} from './src/actions-resolver';
 import {
   ControllerConfiguration,
   resolveController,
@@ -265,8 +266,11 @@ const controllers: ControllerConfiguration[] = [
   },
 ];
 
-const result = controllers.map((controller) =>
-  resolveController(entryPoint, controller)
-);
+const result = {
+  controllers: controllers.map((controller) =>
+    resolveController(entryPoint, controller)
+  ),
+  actions: resolveActionNamespaces(entryPoint),
+};
 
 writeFileSync('dist/parsed_doc.json', JSON.stringify(result, null, 2));

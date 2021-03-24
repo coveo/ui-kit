@@ -44,6 +44,7 @@ import {extractHistory} from '../history/history-state';
 import {sortFacets} from '../../utils/facet-utils';
 import {getSearchInitialState} from './search-state';
 import {logFetchMoreResults, logQueryError} from './search-analytics-actions';
+import {AsyncThunkDefinition} from '../../utils/action';
 
 export type StateNeededByExecuteSearch = ConfigurationSection &
   Partial<
@@ -94,18 +95,16 @@ const fetchFromAPI = async (
 
 /**
  * Executes a search query.
- * @param analyticsAction (SearchAction) The analytics action to log after a successful query.
+ * @param analyticsAction - The analytics action to log after a successful query.
  */
-export const executeSearch = createAsyncThunk<
+export const executeSearch: AsyncThunkDefinition<
+  'search/executeSearch',
   ExecuteSearchThunkReturn,
   SearchAction,
   AsyncThunkSearchOptions<StateNeededByExecuteSearch>
->(
+> = createAsyncThunk(
   'search/executeSearch',
-  async (
-    analyticsAction: SearchAction,
-    {getState, dispatch, rejectWithValue, extra}
-  ) => {
+  async (analyticsAction, {getState, dispatch, rejectWithValue, extra}) => {
     const state = getState();
     addEntryInActionsHistory(state);
     const fetched = await fetchFromAPI(
@@ -158,7 +157,7 @@ export const executeSearch = createAsyncThunk<
     );
     dispatch(snapshot(extractHistory(getState())));
 
-    return {
+    return <ExecuteSearchThunkReturn>{
       ...retried,
       response: {
         ...retried.response.success,
@@ -170,11 +169,15 @@ export const executeSearch = createAsyncThunk<
   }
 );
 
-export const fetchMoreResults = createAsyncThunk<
+/**
+ * Executes a search query and appends the results after the existing ones.
+ */
+export const fetchMoreResults: AsyncThunkDefinition<
+  'search/fetchMoreResults',
   ExecuteSearchThunkReturn,
   void,
   AsyncThunkSearchOptions<StateNeededByExecuteSearch>
->(
+> = createAsyncThunk(
   'search/fetchMoreResults',
   async (
     _,
@@ -194,7 +197,7 @@ export const fetchMoreResults = createAsyncThunk<
 
     dispatch(snapshot(extractHistory(state)));
 
-    return {
+    return <ExecuteSearchThunkReturn>{
       ...fetched,
       response: fetched.response.success,
       automaticallyCorrected: false,

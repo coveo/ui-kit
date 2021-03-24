@@ -196,18 +196,26 @@ export namespace RedirectionActions {
   export const buildPlanRequest = buildPlanRequestAlias;
 }
 
+export {
+  StateNeededByExecuteSearch,
+  ExecuteSearchThunkReturn,
+} from './search/search-actions';
+
 import {
-  StateNeededByExecuteSearch as StateNeededByExecuteSearchAlias,
-  ExecuteSearchThunkReturn as ExecuteSearchThunkReturnAlias,
-  executeSearch as executeSearchAlias,
   buildSearchRequest as buildSearchRequestAlias,
+  executeSearch as executeSearchAlias,
   fetchMoreResults as fetchMoreResultsAlias,
 } from './search/search-actions';
 export namespace SearchActions {
-  export type StateNeededByExecuteSearch = StateNeededByExecuteSearchAlias;
-  export type ExecuteSearchThunkReturn = ExecuteSearchThunkReturnAlias;
-  export const executeSearch = executeSearchAlias;
   export const buildSearchRequest = buildSearchRequestAlias;
+  /**
+   * Executes a search query.
+   * @param analyticsAction - The analytics action to log after a successful query.
+   */
+  export const executeSearch = executeSearchAlias;
+  /**
+   * Executes a search query and appends the results after the existing ones.
+   */
   export const fetchMoreResults = fetchMoreResultsAlias;
 }
 
@@ -282,3 +290,5 @@ export namespace ResultTemplatesHelpers {
   export const fieldMustMatch = fieldMustMatchAlias;
   export const fieldMustNotMatch = fieldMustNotMatchAlias;
 }
+
+export {SearchAction} from './analytics/analytics-utils';

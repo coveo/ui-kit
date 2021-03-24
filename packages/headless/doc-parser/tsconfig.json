@@ -1,8 +1,10 @@
 {
   "extends": "../tsconfig.json",
+  
   "compilerOptions": {
     "outDir": "build",
-    "module": "CommonJS"
+    "module": "CommonJS",
+    "lib": ["es2019"]
   },
   "exclude": [
     "./**/*.test.ts"
