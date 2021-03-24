@@ -22,13 +22,6 @@ const main = async () => {
   );
 
   console.info('Atomic copied.');
-
-  await copy(
-    './node_modules/tributejs/dist',
-    './force-app/main/default/staticresources/tributejs'
-  );
-
-  console.info('Tributejs copied.');
   return;
 };
 
