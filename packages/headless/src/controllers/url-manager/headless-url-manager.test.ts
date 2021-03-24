@@ -65,13 +65,15 @@ describe('url manager', () => {
   it('returns the serialized fragment of the search parameters state', () => {
     engine.state.query.q = 'books';
     engine.state.sortCriteria = 'author ascending';
-    expect(manager.state.url).toBe('q=books&sortCriteria=author ascending');
+    expect(manager.state.fragment).toBe(
+      'q=books&sortCriteria=author ascending'
+    );
   });
 
-  describe('submitChanges with parameter', () => {
+  describe('synchronize with parameter', () => {
     it(`when adding any parameter
     should restore the right parameters and execute a search`, () => {
-      manager.submitChanges('q=test');
+      manager.synchronize('q=test');
 
       testLatestRestoreSearchParameters({q: 'test'});
       testExecuteSearch();
@@ -81,7 +83,7 @@ describe('url manager', () => {
     should restore the right parameters and execute a search`, () => {
       initUrlManager('q=test');
 
-      manager.submitChanges('');
+      manager.synchronize('');
       testLatestRestoreSearchParameters();
       testExecuteSearch();
     });

@@ -10,10 +10,9 @@ import {
   logFacetDeselect,
   logFacetSelect,
 } from '../../features/facets/facet-set/facet-set-analytics-actions';
-import {NumericRangeRequest} from '../facets/range-facet/numeric-facet/headless-numeric-facet';
-import {DateRangeRequest} from '../facets/range-facet/date-facet/headless-date-facet';
+import {DateRangeRequest, NumericRangeRequest} from '../../controllers';
 
-export function getParametersChangeAnalyticsAction(
+export function logParametersChange(
   previousParameters: SearchParameters,
   newParameters: SearchParameters
 ) {

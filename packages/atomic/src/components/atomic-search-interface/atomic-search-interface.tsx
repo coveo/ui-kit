@@ -135,7 +135,7 @@ export class AtomicSearchInterface {
     this.initEngine(options);
     await this.initI18n();
     this.initComponents();
-    this.initSearchParameterManager();
+    this.initUrlManager();
 
     this.initialized = true;
   }
@@ -208,7 +208,7 @@ export class AtomicSearchInterface {
     return window.location.hash.slice(1);
   }
 
-  private initSearchParameterManager() {
+  private initUrlManager() {
     if (!this.reflectStateInUrl) {
       return;
     }
@@ -227,7 +227,7 @@ export class AtomicSearchInterface {
   private updateHash() {
     this.updatingHash = true;
     defer(() => (this.updatingHash = false));
-    const hash = this.urlManager.state.url;
+    const hash = this.urlManager.state.fragment;
     window.location.hash = hash;
   }
 
@@ -236,7 +236,7 @@ export class AtomicSearchInterface {
       return;
     }
 
-    this.urlManager.submitChanges(this.hash);
+    this.urlManager.synchronize(this.hash);
   };
 
   public render() {

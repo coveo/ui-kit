@@ -15,7 +15,6 @@ import {SearchParametersState} from '../../state/search-app-state';
 import {validateInitialState} from '../../utils/validate-payload';
 import {buildController, Controller} from '../controller/headless-controller';
 import {RangeValueRequest} from '../../features/facets/range-facets/generic/interfaces/range-facet';
-import {getAdvancedSearchQueriesInitialState} from '../../features/advanced-search-queries/advanced-search-queries-state';
 
 export {SearchParameters};
 
@@ -103,29 +102,6 @@ export function buildSearchParameterManager(
 
       return {parameters};
     },
-  };
-}
-
-export function getInitialSearchParameterState({
-  state,
-}: Engine<Partial<SearchParametersState>>): Required<SearchParameters> {
-  return {
-    q: getQueryInitialState().q,
-    enableQuerySyntax: getQueryInitialState().enableQuerySyntax,
-    aq:
-      state.advancedSearchQueries?.defaultFilters.aq ??
-      getAdvancedSearchQueriesInitialState().defaultFilters.aq,
-    cq:
-      state.advancedSearchQueries?.defaultFilters.cq ??
-      getAdvancedSearchQueriesInitialState().defaultFilters.cq,
-    firstResult: getPaginationInitialState().firstResult,
-    numberOfResults: getPaginationInitialState().numberOfResults,
-    sortCriteria: getSortCriteriaInitialState(),
-    f: {},
-    cf: {},
-    nf: {},
-    df: {},
-    debug: getDebugInitialState(),
   };
 }
 

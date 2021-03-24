@@ -7,11 +7,9 @@ import {buildController, Controller} from '../controller/headless-controller';
 import {executeSearch} from '../../features/search/search-actions';
 import {ConfigurationSection} from '../../state/state-sections';
 import {buildSearchParameterSerializer} from '../../features/search-parameters/search-parameter-serializer';
-import {
-  buildSearchParameterManager,
-  getInitialSearchParameterState,
-} from '../search-parameter-manager/headless-search-parameter-manager';
-import {getParametersChangeAnalyticsAction} from './headless-url-manager-analytics';
+import {buildSearchParameterManager} from '../search-parameter-manager/headless-search-parameter-manager';
+import {logParametersChange} from '../../features/search-parameters/search-parameter-analytics-actions';
+import {initialSearchParameterSelector} from '../../features/search-parameters/search-parameter-selectors';
 
 export interface UrlManagerProps {
   /**
@@ -43,14 +41,14 @@ export interface UrlManager extends Controller {
    * Updates the search parameters from the url & launches a search.
    * @param fragment The part of the url containing the parameters affecting the search.
    */
-  submitChanges(fragment: string): void;
+  synchronize(fragment: string): void;
 }
 
 export interface UrlManagerState {
   /**
    * The part of the url containing the parameters affecting the search.
    */
-  url: string;
+  fragment: string;
 }
 
 /**
@@ -75,7 +73,7 @@ export function buildUrlManager(
   );
 
   const parameters = {
-    ...getInitialSearchParameterState(engine),
+    ...initialSearchParameterSelector(engine.state),
     ...getSearchParameterStateFromFragment(props.initialState.fragment),
   };
   const searchParameterManager = buildSearchParameterManager(engine, {
@@ -89,14 +87,14 @@ export function buildUrlManager(
 
     get state() {
       return {
-        url: buildSearchParameterSerializer().serialize(
+        fragment: buildSearchParameterSerializer().serialize(
           searchParameterManager.state.parameters
         ),
       };
     },
 
-    submitChanges(fragment: string) {
-      const initialParameters = getInitialSearchParameterState(engine);
+    synchronize(fragment: string) {
+      const initialParameters = initialSearchParameterSelector(engine.state);
       const previousParameters = {
         ...initialParameters,
         ...searchParameterManager.state.parameters,
@@ -107,9 +105,7 @@ export function buildUrlManager(
       };
       dispatch(restoreSearchParameters(newParameters));
       dispatch(
-        executeSearch(
-          getParametersChangeAnalyticsAction(previousParameters, newParameters)
-        )
+        executeSearch(logParametersChange(previousParameters, newParameters))
       );
     },
   };
