@@ -66,8 +66,9 @@ pipeline {
         script {
           gitUtils.withCredentialHelper() {
             gitUtils.setUser()
-            sh "git pull"
+            sh "git fetch"
             sh "git checkout master"
+            sh "git pull"
             sh "npm version patch -m \"[version bump] Automated release to v%s\""
           }
         }
