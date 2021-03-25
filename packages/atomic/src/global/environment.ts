@@ -16,7 +16,7 @@ function getAtomicEnvironment(): AtomicEnvironment {
   };
 }
 
-export default function () {
+export function setCoveoGlobal() {
   if (getWindow().CoveoAtomic) {
     return;
   }

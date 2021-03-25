@@ -30,6 +30,7 @@ import {
 import i18next, {i18n} from 'i18next';
 import Backend, {BackendOptions} from 'i18next-http-backend';
 import {createStore} from '@stencil/store';
+import {setCoveoGlobal} from '../../global/environment';
 
 export type InitializationOptions = Pick<
   HeadlessConfigurationOptions,
@@ -124,6 +125,7 @@ export class AtomicSearchInterface {
       return;
     }
 
+    setCoveoGlobal();
     this.initEngine(options);
     await this.initI18n();
     this.initComponents();
