@@ -35,40 +35,52 @@
         {
             "id": "deploy-major-minor-patch",
             "s3": {
-                "bucket": "coveo-ndev-coveoanalytics",
-                "directory": "coveo.analytics.js/$[PACKAGE_JSON_MAJOR_MINOR_PATCH_VERSION]",
+                "bucket": "coveo-ndev-binaries",
+                "directory": "proda/StaticCDN/coveo.analytics.js/$[PACKAGE_JSON_MAJOR_MINOR_PATCH_VERSION]",
                 "parameters": {
                     "include": ".*",
-                    "metadata": "X-Frame-Options=deny,X-Content-Type-Options=nosniff"
+                    "metadata": "X-Frame-Options=deny,X-Content-Type-Options=nosniff",
+                    "acl": "public-read"
                 },
                 "source": "deploy",
                 "prd": {
                     "bucket": "coveo-public-content",
-                    "parameters": {
-                        "include": ".*",
-                        "metadata": "X-Frame-Options=deny,X-Content-Type-Options=nosniff",
-                        "acl": "public-read"
-                    }
+                    "directory": "coveo.analytics.js/$[PACKAGE_JSON_MAJOR_MINOR_PATCH_VERSION]"
                 }
             }
         },
         {
             "id": "deploy-major-minor",
             "s3": {
-                "bucket": "coveo-ndev-coveoanalytics",
-                "directory": "coveo.analytics.js/$[PACKAGE_JSON_MAJOR_MINOR_VERSION]",
+                "bucket": "coveo-ndev-binaries",
+                "directory": "proda/StaticCDN/coveo.analytics.js/$[PACKAGE_JSON_MAJOR_MINOR_VERSION]",
                 "parameters": {
                     "include": ".*",
-                    "metadata": "X-Frame-Options=deny,X-Content-Type-Options=nosniff"
+                    "metadata": "X-Frame-Options=deny,X-Content-Type-Options=nosniff",
+                    "acl": "public-read"
                 },
                 "source": "deploy",
                 "prd": {
                     "bucket": "coveo-public-content",
-                    "parameters": {
-                        "include": ".*",
-                        "metadata": "X-Frame-Options=deny,X-Content-Type-Options=nosniff",
-                        "acl": "public-read"
-                    }
+                    "directory": "coveo.analytics.js/$[PACKAGE_JSON_MAJOR_MINOR_VERSION]"
+                }
+            }
+        },
+        {
+            "id": "deploy-major",
+            "s3": {
+                "bucket": "coveo-ndev-binaries",
+                "directory": "proda/StaticCDN/coveo.analytics.js/$[PACKAGE_JSON_MAJOR_VERSION]",
+                "parameters": {
+                    "include": ".*",
+                    "metadata": "X-Frame-Options=deny,X-Content-Type-Options=nosniff",
+                    "acl": "public-read"
+                },
+                "source": "deploy",
+                "prd": {
+                    "disabled": true,
+                    "bucket": "coveo-public-content",
+                    "directory": "coveo.analytics.js/$[PACKAGE_JSON_MAJOR_VERSION]"
                 }
             }
         }
