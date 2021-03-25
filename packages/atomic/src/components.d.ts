@@ -339,7 +339,7 @@ export namespace Components {
          */
         "pipeline": string;
         /**
-          * Whether the state should be reflected in the url parameters
+          * Whether the state should be reflected in the url parameters.
          */
         "reflectStateInUrl": boolean;
         /**
@@ -963,7 +963,7 @@ declare namespace LocalJSX {
          */
         "pipeline"?: string;
         /**
-          * Whether the state should be reflected in the url parameters
+          * Whether the state should be reflected in the url parameters.
          */
         "reflectStateInUrl"?: boolean;
         /**
