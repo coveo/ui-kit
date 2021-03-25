@@ -1,9 +1,5 @@
 import {SearchParameters} from '../../features/search-parameters/search-parameter-actions';
 import {logSearchboxSubmit} from '../../features/query/query-analytics-actions';
-import {
-  AnalyticsType,
-  makeNoopAnalyticsAction,
-} from '../../features/analytics/analytics-utils';
 import {logResultsSort} from '../../features/sort-criteria/sort-criteria-analytics-actions';
 import {
   logFacetClearAll,
@@ -11,6 +7,11 @@ import {
   logFacetSelect,
 } from '../../features/facets/facet-set/facet-set-analytics-actions';
 import {DateRangeRequest, NumericRangeRequest} from '../../controllers';
+import {logInterfaceChange} from '../analytics/analytics-actions';
+import {
+  logPageNumber,
+  logPagerResize,
+} from '../pagination/pagination-analytics-actions';
 
 export function logParametersChange(
   previousParameters: SearchParameters,
@@ -22,6 +23,14 @@ export function logParametersChange(
 
   if (previousParameters.sortCriteria !== newParameters.sortCriteria) {
     return logResultsSort();
+  }
+
+  if (previousParameters.firstResult !== newParameters.firstResult) {
+    return logPageNumber();
+  }
+
+  if (previousParameters.numberOfResults !== newParameters.numberOfResults) {
+    return logPagerResize();
   }
 
   if (areFacetParamsEqual(previousParameters.f, newParameters.f)) {
@@ -46,9 +55,7 @@ export function logParametersChange(
     );
   }
 
-  // TODO: handle other possible parameters e.g. firstResult, numberOfResults
-
-  return makeNoopAnalyticsAction(AnalyticsType.Search)();
+  return logInterfaceChange();
 }
 
 type AnyFacetParameters = FacetParameters | RangeFacetParameters;
@@ -108,7 +115,7 @@ function logFacetAnalyticsAction(
     )
   );
   if (!facetIdWithDifferentValues) {
-    return makeNoopAnalyticsAction(AnalyticsType.Search)();
+    return logInterfaceChange();
   }
 
   const previousValues = previousFacets[facetIdWithDifferentValues];
@@ -136,7 +143,7 @@ function logFacetAnalyticsAction(
     });
   }
 
-  return makeNoopAnalyticsAction(AnalyticsType.Search)();
+  return logInterfaceChange();
 }
 
 function logRangeFacetAnalyticsAction(

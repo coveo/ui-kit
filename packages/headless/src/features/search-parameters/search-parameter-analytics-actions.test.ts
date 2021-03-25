@@ -1,10 +1,15 @@
 import {buildMockSearchAppEngine} from '../../test';
+import {logInterfaceChange} from '../analytics/analytics-actions';
 import {SearchAction} from '../analytics/analytics-utils';
 import {
   logFacetClearAll,
   logFacetDeselect,
   logFacetSelect,
 } from '../facets/facet-set/facet-set-analytics-actions';
+import {
+  logPageNumber,
+  logPagerResize,
+} from '../pagination/pagination-analytics-actions';
 import {logSearchboxSubmit} from '../query/query-analytics-actions';
 import {logResultsSort} from '../sort-criteria/sort-criteria-analytics-actions';
 import {logParametersChange} from './search-parameter-analytics-actions';
@@ -31,6 +36,20 @@ describe('logParametersChange', () => {
     expectIdenticalActionType(
       logParametersChange({}, {sortCriteria: 'size ascending'}),
       logResultsSort()
+    );
+  });
+
+  it('should log #logPageNumber when #firstResult parameter changes', () => {
+    expectIdenticalActionType(
+      logParametersChange({}, {firstResult: 10}),
+      logPageNumber()
+    );
+  });
+
+  it('should log #logPagerResize when #firstResult parameter changes', () => {
+    expectIdenticalActionType(
+      logParametersChange({}, {numberOfResults: 25}),
+      logPagerResize()
     );
   });
 
@@ -72,6 +91,13 @@ describe('logParametersChange', () => {
         {f: {author: ['Cervantes']}}
       ),
       logFacetDeselect({facetId: 'author', facetValue: 'Orwell'})
+    );
+  });
+
+  it('should log a generic #logInterfaceChange when an unmanaged parameter', () => {
+    expectIdenticalActionType(
+      logParametersChange({}, {cq: 'hello'}),
+      logInterfaceChange()
     );
   });
 });
