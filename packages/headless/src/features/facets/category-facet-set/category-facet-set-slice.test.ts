@@ -541,19 +541,19 @@ describe('category facet slice', () => {
 
     it('when the result is at the base path, currentValues only contains the selected value', () => {
       const spy = jest.spyOn(CategoryFacetReducerHelpers, 'selectPath');
+      state[facetId]!.initialNumberOfValues = 10;
 
       const value = buildMockCategoryFacetSearchResult();
       const action = selectCategoryFacetSearchResult({
         facetId,
         value,
-        retrieveCount,
       });
       const nextState = categoryFacetSetReducer(state, action);
 
       const expectedRequest = buildMockCategoryFacetValueRequest({
         retrieveChildren: true,
         state: 'selected',
-        retrieveCount,
+        retrieveCount: 10,
       });
 
       expect(nextState[facetId]?.request.currentValues.length).toEqual(1);

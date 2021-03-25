@@ -58,11 +58,7 @@ export const categoryFacetSetReducer = createReducer(
         Object.keys(state).forEach((id) => {
           const request = state[id]!.request;
           const path = cf[id] || [];
-          const numberOfValues = state[id]!.initialNumberOfValues;
-          if (!path.length) {
-            request.numberOfValues = numberOfValues;
-          }
-          selectPath(request, path, numberOfValues);
+          selectPath(request, path, state[id]!.initialNumberOfValues);
         });
       })
       .addCase(updateCategoryFacetSortCriterion, (state, action) => {
@@ -139,15 +135,15 @@ export const categoryFacetSetReducer = createReducer(
         handleCategoryFacetNestedNumberOfValuesUpdate(state, action.payload);
       })
       .addCase(selectCategoryFacetSearchResult, (state, action) => {
-        const {facetId, value, retrieveCount} = action.payload;
-        const request = state[facetId]?.request;
+        const {facetId, value} = action.payload;
+        const facet = state[facetId];
 
-        if (!request) {
+        if (!facet) {
           return;
         }
 
         const path = [...value.path, value.rawValue];
-        selectPath(request, path, retrieveCount);
+        selectPath(facet.request, path, facet.initialNumberOfValues);
       })
       .addCase(executeSearch.fulfilled, (state, action) => {
         const {facets} = action.payload.response;
