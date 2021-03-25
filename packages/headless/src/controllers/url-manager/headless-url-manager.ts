@@ -74,13 +74,9 @@ export function buildUrlManager(
     'buildUrlManager'
   );
 
-  const parameters = {
-    ...initialSearchParameterSelector(engine.state),
-    ...getSearchParameterStateFromFragment(props.initialState.fragment),
-  };
   const searchParameterManager = buildSearchParameterManager(engine, {
     initialState: {
-      parameters,
+      parameters: fragmentActiveSearchParameters(props.initialState.fragment),
     },
   });
 
@@ -103,7 +99,7 @@ export function buildUrlManager(
       };
       const newParameters = {
         ...initialParameters,
-        ...getSearchParameterStateFromFragment(fragment),
+        ...fragmentActiveSearchParameters(fragment),
       };
       dispatch(restoreSearchParameters(newParameters));
       dispatch(
@@ -113,7 +109,7 @@ export function buildUrlManager(
   };
 }
 
-function getSearchParameterStateFromFragment(fragment: string) {
+function fragmentActiveSearchParameters(fragment: string) {
   const decodedState = decodeURIComponent(fragment);
   return buildSearchParameterSerializer().deserialize(decodedState);
 }

@@ -34,11 +34,8 @@ describe('url manager', () => {
     ];
   }
 
-  function testLatestRestoreSearchParameters(newParams: SearchParameters = {}) {
-    const action = restoreSearchParameters({
-      ...initialSearchParameterSelector(engine.state),
-      ...newParams,
-    });
+  function testLatestRestoreSearchParameters(params: SearchParameters) {
+    const action = restoreSearchParameters(params);
     expect(getLastestRestoreSearchParametersAction()).toEqual(action);
   }
 
@@ -54,7 +51,7 @@ describe('url manager', () => {
     expect(engine.findAsyncAction(executeSearch.pending)).toBeFalsy();
   });
 
-  it('initial #restoreSearchParameters should parse the fragment', () => {
+  it('initial #restoreSearchParameters should parse the "active" fragment', () => {
     initUrlManager('q=windmill&f[author]=Cervantes');
     testLatestRestoreSearchParameters({
       q: 'windmill',
@@ -75,7 +72,10 @@ describe('url manager', () => {
     should restore the right parameters and execute a search`, () => {
       manager.synchronize('q=test');
 
-      testLatestRestoreSearchParameters({q: 'test'});
+      testLatestRestoreSearchParameters({
+        ...initialSearchParameterSelector(engine.state),
+        q: 'test',
+      });
       testExecuteSearch();
     });
 
@@ -84,7 +84,9 @@ describe('url manager', () => {
       initUrlManager('q=test');
 
       manager.synchronize('');
-      testLatestRestoreSearchParameters();
+      testLatestRestoreSearchParameters(
+        initialSearchParameterSelector(engine.state)
+      );
       testExecuteSearch();
     });
   });
