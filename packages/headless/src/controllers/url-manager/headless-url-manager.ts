@@ -20,7 +20,8 @@ export interface UrlManagerProps {
 
 export interface UrlManagerInitialState {
   /**
-   * The part of the url containing the parameters affecting the search response.
+   * The part of the url that contains search parameters.
+   * E.g., `q=windmill&f[author]=Cervantes`
    */
   fragment: string;
 }
@@ -30,7 +31,7 @@ const initialStateSchema = new Schema<Required<UrlManagerInitialState>>({
 });
 
 /**
- * The `UrlManager` controller allows managing an url which affect the search response.
+ * The `UrlManager` controller can parse an url fragment to extract search parameters which affect the search response.
  * */
 export interface UrlManager extends Controller {
   /**
@@ -38,15 +39,16 @@ export interface UrlManager extends Controller {
    * */
   state: UrlManagerState;
   /**
-   * Updates the search parameters from the url & launches a search.
-   * @param fragment The part of the url containing the parameters affecting the search.
+   * Updates the search parameters in state with those from the url & launches a search.
+   * @param fragment The part of the url that contains search parameters.  E.g., `q=windmill&f[author]=Cervantes`
    */
   synchronize(fragment: string): void;
 }
 
 export interface UrlManagerState {
   /**
-   * The part of the url containing the parameters affecting the search.
+   * The part of the url that contains search parameters.
+   * E.g., `q=windmill&f[author]=Cervantes`
    */
   fragment: string;
 }

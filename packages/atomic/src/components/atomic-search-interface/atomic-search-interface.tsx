@@ -85,7 +85,7 @@ export class AtomicSearchInterface {
   @Prop({mutable: true}) public engine?: Engine;
 
   /**
-   * Whether the state should be reflected in the url parameters
+   * Whether the state should be reflected in the url parameters.
    */
   @Prop() public reflectStateInUrl = true;
 
