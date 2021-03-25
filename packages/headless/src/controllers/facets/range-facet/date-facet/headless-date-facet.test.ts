@@ -2,6 +2,7 @@ import {
   DateFacet,
   buildDateFacet,
   DateFacetOptions,
+  buildDateRange,
 } from './headless-date-facet';
 import {
   MockEngine,
@@ -42,6 +43,15 @@ describe('date facet', () => {
     state.dateFacetSet[facetId] = buildMockDateFacetRequest();
 
     initDateFacet();
+  });
+
+  it('#initDateFacet throws an error when an manual range in the options is invalid', () => {
+    options.currentValues = [
+      buildDateRange({start: 1616679091000, end: 1616592691000}),
+    ];
+    expect(() => initDateFacet()).toThrow(
+      'The start value is greater than the end value for the date range 2021/03/25@13:31:31 to 2021/03/24@13:31:31'
+    );
   });
 
   it('calls #determineFacetId with the correct params', () => {

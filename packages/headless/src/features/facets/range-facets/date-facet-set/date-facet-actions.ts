@@ -17,6 +17,7 @@ import {
 import {facetIdDefinition} from '../../generic/facet-actions-validation';
 import {RangeFacetSortCriterion} from '../generic/interfaces/request';
 import {dateFacetValueDefinition} from '../generic/range-facet-validate-payload';
+import {validateManualDateRanges} from '../../../../controllers/facets/range-facet/date-facet/headless-date-facet-options';
 
 const dateRangeRequestDefinition = {
   start: requiredNonEmptyString,
@@ -45,8 +46,10 @@ const dateFacetRegistrationOptionsDefinition = {
  */
 export const registerDateFacet = createAction(
   'dateFacet/register',
-  (payload: DateFacetRegistrationOptions) =>
-    validatePayload(payload, dateFacetRegistrationOptionsDefinition)
+  (payload: DateFacetRegistrationOptions) => {
+    validateManualDateRanges(payload);
+    return validatePayload(payload, dateFacetRegistrationOptionsDefinition);
+  }
 );
 
 /**

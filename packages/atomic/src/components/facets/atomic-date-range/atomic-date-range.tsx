@@ -1,5 +1,4 @@
 import {Component, Element, Prop} from '@stencil/core';
-import dayjs from 'dayjs';
 
 /**
  * Component that defines a date facet range.
@@ -26,12 +25,4 @@ export class AtomicDateRange {
    * Specifies whether or not the end date should be included in the range.
    */
   @Prop() public endInclusive = false;
-
-  public componentWillLoad() {
-    if (dayjs(this.start).isAfter(dayjs(this.end))) {
-      console.error(
-        `Start of date range is after end for ${this.start} to ${this.end}`
-      );
-    }
-  }
 }

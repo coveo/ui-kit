@@ -20,6 +20,14 @@ import {
   injectionDepth,
   numberOfValues,
 } from '../../_common/facet-option-definitions';
+import {Engine} from '../../../../app/headless-engine';
+import {validateOptions} from '../../../../utils/validate-payload';
+import dayjs from 'dayjs';
+import {
+  ConfigurationSection,
+  DateFacetSection,
+  SearchSection,
+} from '../../../../state/state-sections';
 
 export interface DateFacetOptions {
   /**
@@ -103,3 +111,21 @@ export const dateFacetOptionsSchema = new Schema<Required<DateFacetOptions>>({
   }),
   sortCriteria: new StringValue({constrainTo: rangeFacetSortCriteria}),
 });
+
+export function validateManualDateRanges(options: DateFacetOptions) {
+  options.currentValues?.forEach((value) => {
+    if (dayjs(value.start).isAfter(dayjs(value.end))) {
+      throw new Error(
+        `The start value is greater than the end value for the date range ${value.start} to ${value.end}`
+      );
+    }
+  });
+}
+
+export function validateDateFacetOptions(
+  engine: Engine<ConfigurationSection & SearchSection & DateFacetSection>,
+  options: DateFacetOptions
+) {
+  validateOptions(engine, dateFacetOptionsSchema, options, 'buildDateFacet');
+  validateManualDateRanges(options);
+}

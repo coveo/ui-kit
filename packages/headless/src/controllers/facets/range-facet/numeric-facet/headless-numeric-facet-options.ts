@@ -21,6 +21,13 @@ import {
   injectionDepth,
   numberOfValues,
 } from '../../_common/facet-option-definitions';
+import {validateOptions} from '../../../../utils/validate-payload';
+import {Engine} from '../../../../app/headless-engine';
+import {
+  ConfigurationSection,
+  NumericFacetSection,
+  SearchSection,
+} from '../../../../state/state-sections';
 
 /**
  * The options defining a `NumericFacet`.
@@ -109,3 +116,26 @@ export const numericFacetOptionsSchema = new Schema<
   }),
   sortCriteria: new StringValue({constrainTo: rangeFacetSortCriteria}),
 });
+
+export function validateManualNumericValues(options: NumericFacetOptions) {
+  options.currentValues?.forEach((value) => {
+    if (value.start > value.end) {
+      throw new Error(
+        `The start value is greater than the end value for the numeric range ${value.start} to ${value.end}`
+      );
+    }
+  });
+}
+
+export function validateNumericFacetOptions(
+  engine: Engine<NumericFacetSection & ConfigurationSection & SearchSection>,
+  options: NumericFacetOptions
+) {
+  validateOptions(
+    engine,
+    numericFacetOptionsSchema,
+    options,
+    'buildNumericFacet'
+  );
+  validateManualNumericValues(options);
+}

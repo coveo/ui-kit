@@ -17,6 +17,7 @@ import {
 } from '@coveo/bueno';
 import {RangeFacetSortCriterion} from '../generic/interfaces/request';
 import {numericFacetValueDefinition} from '../generic/range-facet-validate-payload';
+import {validateManualNumericValues} from '../../../../controllers/facets/range-facet/numeric-facet/headless-numeric-facet-options';
 const numericFacetRequestDefinition = {
   state: requiredNonEmptyString,
   start: new NumberValue({required: true}),
@@ -44,8 +45,10 @@ const numericFacetRegistrationOptionsDefinition = {
  */
 export const registerNumericFacet = createAction(
   'numericFacet/register',
-  (payload: NumericFacetRegistrationOptions) =>
-    validatePayload(payload, numericFacetRegistrationOptionsDefinition)
+  (payload: NumericFacetRegistrationOptions) => {
+    validateManualNumericValues(payload);
+    return validatePayload(payload, numericFacetRegistrationOptionsDefinition);
+  }
 );
 
 /**
