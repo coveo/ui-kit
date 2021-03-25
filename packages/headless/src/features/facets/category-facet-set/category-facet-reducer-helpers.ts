@@ -6,10 +6,13 @@ import {
 export function selectPath(
   request: CategoryFacetRequest,
   path: string[],
-  retrieveCount: number
+  initialNumberOfValues: number
 ) {
-  request.currentValues = buildCurrentValuesFromPath(path, retrieveCount);
-  request.numberOfValues = path.length ? 1 : request.numberOfValues;
+  request.currentValues = buildCurrentValuesFromPath(
+    path,
+    initialNumberOfValues
+  );
+  request.numberOfValues = path.length ? 1 : initialNumberOfValues;
   request.preventAutoSelect = true;
 }
 
