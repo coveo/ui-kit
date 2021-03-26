@@ -83,6 +83,10 @@ export class AtomicSearchInterface {
    */
   @Prop({mutable: true}) public engine?: Engine;
 
+  public constructor() {
+    setCoveoGlobal();
+  }
+
   @Watch('searchHub')
   @Watch('pipeline')
   public updateSearchConfiguration() {
@@ -125,7 +129,6 @@ export class AtomicSearchInterface {
       return;
     }
 
-    setCoveoGlobal();
     this.initEngine(options);
     await this.initI18n();
     this.initComponents();
