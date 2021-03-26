@@ -20,6 +20,7 @@ export function createMockRecommendationState(
     pipeline: getPipelineInitialState(),
     recommendation: getRecommendationInitialState(),
     debug: getDebugInitialState(),
+    version: 'unit-testing-version',
     ...config,
   };
 }

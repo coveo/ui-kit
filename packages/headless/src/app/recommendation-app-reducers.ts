@@ -3,6 +3,7 @@ import {advancedSearchQueriesReducer} from '../features/advanced-search-queries/
 import {configurationReducer} from '../features/configuration/configuration-slice';
 import {contextReducer} from '../features/context/context-slice';
 import {debugReducer} from '../features/debug/debug-slice';
+import {versionReducer} from '../features/debug/version-slice';
 import {fieldsReducer} from '../features/fields/fields-slice';
 import {pipelineReducer} from '../features/pipeline/pipeline-slice';
 import {recommendationReducer} from '../features/recommendation/recommendation-slice';
@@ -21,4 +22,5 @@ export const recommendationAppReducers: ReducersMapObject<RecommendationAppState
   searchHub: searchHubReducer,
   debug: debugReducer,
   recommendation: recommendationReducer,
+  version: versionReducer,
 };

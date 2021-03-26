@@ -65,6 +65,7 @@ export class FacetSearch {
       inputRef: () => this.inputRef,
       valuesRef: () => this.valuesRef,
       onChange: (value) => {
+        this.props.controller.state.showFacetSearchResults = true;
         this.props.controller.text = value;
       },
       onSubmit: () => props.controller.facetSearch.search(),
@@ -89,6 +90,7 @@ export class FacetSearch {
     this.props.controller.facetSearch.select(
       value as CategoryFacetSearchResult
     );
+    this.props.controller.text = '';
     this.combobox.onInputBlur();
   }
 
@@ -223,6 +225,7 @@ export class FacetSearch {
   }
 
   public render() {
+    console.log(this.props.controller.facetSearchState);
     return (
       <div class="combobox relative flex flex-grow">
         <div

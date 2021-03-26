@@ -12,6 +12,7 @@ export function buildMockProductRecommendationsState(
     context: getContextInitialState(),
     searchHub: getSearchHubInitialState(),
     productRecommendations: getProductRecommendationsInitialState(),
+    version: 'unit-testing-version',
     ...config,
   };
 }
