@@ -30,6 +30,7 @@ import {
 import i18next, {i18n} from 'i18next';
 import Backend, {BackendOptions} from 'i18next-http-backend';
 import {createStore} from '@stencil/store';
+import {setCoveoGlobal} from '../../global/environment';
 import {defer} from '../../utils/utils';
 
 export type InitializationOptions = Pick<
@@ -88,6 +89,10 @@ export class AtomicSearchInterface {
    * Whether the state should be reflected in the url parameters.
    */
   @Prop() public reflectStateInUrl = true;
+
+  public constructor() {
+    setCoveoGlobal();
+  }
 
   @Watch('searchHub')
   @Watch('pipeline')
