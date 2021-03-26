@@ -23,7 +23,6 @@
  - [atomic-did-you-mean](../atomic-did-you-mean)
  - [atomic-facet](../facets/atomic-facet)
  - [atomic-facet-manager](../atomic-facet-manager)
- - [atomic-history](../atomic-history)
  - [atomic-no-results](../atomic-no-results)
  - [atomic-numeric-facet](../facets/atomic-numeric-facet)
  - [atomic-pager](../atomic-pager)
@@ -53,7 +52,6 @@ graph TD;
   atomic-did-you-mean --> atomic-component-error
   atomic-facet --> atomic-component-error
   atomic-facet-manager --> atomic-component-error
-  atomic-history --> atomic-component-error
   atomic-no-results --> atomic-component-error
   atomic-numeric-facet --> atomic-component-error
   atomic-pager --> atomic-component-error

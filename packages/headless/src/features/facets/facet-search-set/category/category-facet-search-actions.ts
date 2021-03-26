@@ -27,13 +27,17 @@ export const selectCategoryFacetSearchResult = createAction(
   (payload: {
     facetId: string;
     value: CategoryFacetSearchResult;
-    retrieveCount: number;
+    /**
+     * @deprecated
+     */
+    retrieveCount?: number;
   }) =>
     validatePayload(payload, {
       facetId: facetIdDefinition,
       value: new RecordValue({values: categoryFacetSearchResultDefinition}),
       retrieveCount: new NumberValue({
         min: 1,
+        required: false,
       }),
     })
 );

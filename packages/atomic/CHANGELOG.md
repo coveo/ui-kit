@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.9.0-alpha.8](https://github.com/coveo/ui-kit/compare/v0.9.0-alpha.7...v0.9.0-alpha.8) (2021-03-26)
+
+
+### Bug Fixes
+
+* **atomic:** show facet search results on consecutive searches ([#640](https://github.com/coveo/ui-kit/issues/640)) ([293db04](https://github.com/coveo/ui-kit/commit/293db04161b12d2b10f0a5ab1c08f06095ff7da5))
+
+
+
+
+
+# [0.9.0-alpha.7](https://github.com/coveo/ui-kit/compare/v0.9.0-alpha.6...v0.9.0-alpha.7) (2021-03-25)
+
+
+### Features
+
+* **atomic,headless:** add UrlHashManager controller & handle hash change in atomic ([#645](https://github.com/coveo/ui-kit/issues/645)) ([a3af1a3](https://github.com/coveo/ui-kit/commit/a3af1a33ebb544e5e4da55e373c6af89a148a15f))
+
+
+
+
+
 # [0.9.0-alpha.6](https://github.com/coveo/ui-kit/compare/v0.9.0-alpha.5...v0.9.0-alpha.6) (2021-03-25)
 
 
