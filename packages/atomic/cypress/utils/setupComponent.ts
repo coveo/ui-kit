@@ -33,6 +33,15 @@ export function setUpPage(htmlCode: string) {
   cy.wait(500);
 }
 
+export function setUpPageNoSearch(htmlCode: string) {
+  setupIntercept();
+  // Setup page with new component
+  cy.visit('http://localhost:3333/pages/test-no-search.html');
+  cy.injectAxe();
+  injectComponent(htmlCode);
+  cy.wait(500);
+}
+
 export function shouldRenderErrorComponent(selector: string) {
   cy.get(selector).shadow().find('atomic-component-error').should('exist');
 }
