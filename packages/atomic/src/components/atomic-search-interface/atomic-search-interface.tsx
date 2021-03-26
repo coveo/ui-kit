@@ -84,7 +84,7 @@ export class AtomicSearchInterface {
    * The search interface Headless engine.
    */
   @Prop({mutable: true}) public engine?: Engine;
-  
+
   /**
    * Whether the state should be reflected in the url parameters.
    */
