@@ -44,7 +44,7 @@ export interface QuickviewState {
   /**
    * `true` if the configured result has a preview, and `false` otherwise.
    */
-  canFetchPreview: boolean;
+  resultHasPreview: boolean;
 }
 
 /**
@@ -71,13 +71,13 @@ export function buildQuickview(
     },
 
     get state() {
-      const canFetchPreview = result.hasHtmlVersion;
+      const resultHasPreview = result.hasHtmlVersion;
       const preview = engine.state.resultPreview;
       const content = uniqueId === preview.uniqueId ? preview.content : '';
 
       return {
         content,
-        canFetchPreview,
+        resultHasPreview,
       };
     },
   };
