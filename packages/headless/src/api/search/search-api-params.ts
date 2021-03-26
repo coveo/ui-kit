@@ -1,7 +1,7 @@
 import {history} from 'coveo.analytics';
 import {FacetOptions} from '../../features/facet-options/facet-options';
 import {AnyFacetRequest} from '../../features/facets/generic/interfaces/generic-facet-request';
-import {HTTPContentTypes, HttpMethods} from '../platform-client';
+import {HTTPContentType, HttpMethods} from '../platform-client';
 
 export interface BaseParam {
   url: string;
@@ -105,7 +105,7 @@ export interface ActionsHistoryParam {
 export const baseSearchRequest = (
   req: BaseParam,
   method: HttpMethods,
-  contentType: HTTPContentTypes,
+  contentType: HTTPContentType,
   path: string
 ) => ({
   accessToken: req.accessToken,
