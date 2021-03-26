@@ -69,4 +69,20 @@ describe('Quickview', () => {
 
     expect(quickview.state.content).toEqual('');
   });
+
+  it(`when the result #hasHtmlVersion is true,
+  #state.canFetchPreview is true`, () => {
+    options.result = buildMockResult({hasHtmlVersion: true});
+    initQuickview();
+
+    expect(quickview.state.canFetchPreview).toBe(true);
+  });
+
+  it(`when the result #hasHtmlVersion is false,
+  #state.canFetchPreview is false`, () => {
+    options.result = buildMockResult({hasHtmlVersion: false});
+    initQuickview();
+
+    expect(quickview.state.canFetchPreview).toBe(false);
+  });
 });
