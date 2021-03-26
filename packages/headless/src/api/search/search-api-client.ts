@@ -175,7 +175,12 @@ export class SearchAPIClient {
 
   async html(req: HtmlRequest) {
     const response = await PlatformClient.call({
-      ...baseSearchRequest(req, 'POST', 'application/json', '/html'),
+      ...baseSearchRequest(
+        req,
+        'POST',
+        'application/x-www-form-urlencoded',
+        '/html'
+      ),
       requestParams: pickNonBaseParams(req),
       ...this.options,
     });

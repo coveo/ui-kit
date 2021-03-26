@@ -1,8 +1,12 @@
 import fetch from 'cross-fetch';
 export type HttpMethods = 'POST' | 'GET' | 'DELETE' | 'PUT';
-export type HTTPContentTypes = 'application/json' | 'text/html';
+export type HTTPContentType =
+  | 'application/json'
+  | 'application/x-www-form-urlencoded'
+  | 'text/html';
 import {backOff} from 'exponential-backoff';
 import {Logger} from 'pino';
+import {canBeFormUrlEncoded, encodeAsFormUrl} from './form-url-encoder';
 import {PlatformRequestOptions, PreprocessRequest} from './preprocess-request';
 
 function isThrottled(status: number): boolean {
@@ -12,7 +16,7 @@ function isThrottled(status: number): boolean {
 export interface PlatformClientCallOptions {
   url: string;
   method: HttpMethods;
-  contentType: HTTPContentTypes;
+  contentType: HTTPContentType;
   headers?: Record<string, string>;
   requestParams: unknown;
   accessToken: string;
@@ -44,18 +48,8 @@ export class PlatformClient {
       ...(await options.deprecatedPreprocessRequest(options)),
     };
 
+    const defaultRequestOptions = buildDefaultRequestOptions(processedOptions);
     const {preprocessRequest, logger} = options;
-    const defaultRequestOptions: PlatformRequestOptions = {
-      url: processedOptions.url,
-      method: processedOptions.method,
-      headers: {
-        'Content-Type': processedOptions.contentType,
-        Authorization: `Bearer ${processedOptions.accessToken}`,
-        ...processedOptions.headers,
-      },
-      body: JSON.stringify(processedOptions.requestParams),
-      signal: processedOptions.signal,
-    };
 
     const requestInfo: PlatformRequestOptions = {
       ...defaultRequestOptions,
@@ -63,6 +57,7 @@ export class PlatformClient {
         ? await preprocessRequest(defaultRequestOptions, 'searchApiFetch')
         : {}),
     };
+
     logger.info(requestInfo, 'Platform request');
 
     const {url, ...requestData} = requestInfo;
@@ -126,4 +121,38 @@ export function platformUrl<E extends PlatformEnvironment = 'prod'>(options?: {
       : `-${options.region}`;
 
   return `https://platform${urlEnv}${urlRegion}.cloud.coveo.com`;
+}
+
+function buildDefaultRequestOptions(
+  options: PlatformClientCallOptions
+): PlatformRequestOptions {
+  const {
+    url,
+    method,
+    requestParams,
+    contentType,
+    accessToken,
+    signal,
+  } = options;
+  const body = encodeBody(requestParams, contentType);
+
+  return {
+    url,
+    method,
+    headers: {
+      'Content-Type': contentType,
+      Authorization: `Bearer ${accessToken}`,
+      ...options.headers,
+    },
+    body,
+    signal,
+  };
+}
+
+function encodeBody(body: unknown, contentType: HTTPContentType) {
+  if (contentType === 'application/x-www-form-urlencoded') {
+    return canBeFormUrlEncoded(body) ? encodeAsFormUrl(body) : '';
+  }
+
+  return JSON.stringify(body);
 }
