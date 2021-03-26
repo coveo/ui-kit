@@ -16,7 +16,7 @@ export interface QuickviewProps {
 
 export interface QuickviewOptions {
   /**
-   *
+   * The result to retrieve a quickview for.
    */
   result: Result;
 }
