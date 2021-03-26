@@ -72,10 +72,6 @@ export namespace Components {
          */
         "end": Date | string | number;
         /**
-          * Specifies whether or not the end date should be included in the range.
-         */
-        "endInclusive": boolean;
-        /**
           * The starting date for the range. It can be expressed as a Javascript date, as a number using epoch time or as a string using the ISO 8601 format.
          */
         "start": Date | string | number;
@@ -117,8 +113,6 @@ export namespace Components {
         "ifNotDefined"?: string;
     }
     interface AtomicFrequentlyBoughtTogether {
-    }
-    interface AtomicHistory {
     }
     interface AtomicNoResults {
         /**
@@ -340,6 +334,9 @@ export namespace Components {
           * The search interface [query pipeline](https://docs.coveo.com/en/180/).
          */
         "pipeline": string;
+        /**
+          * Whether the state should be reflected in the url parameters.
+         */
         "reflectStateInUrl": boolean;
         /**
           * The search interface [search hub](https://docs.coveo.com/en/1342/).
@@ -439,12 +436,6 @@ declare global {
     var HTMLAtomicFrequentlyBoughtTogetherElement: {
         prototype: HTMLAtomicFrequentlyBoughtTogetherElement;
         new (): HTMLAtomicFrequentlyBoughtTogetherElement;
-    };
-    interface HTMLAtomicHistoryElement extends Components.AtomicHistory, HTMLStencilElement {
-    }
-    var HTMLAtomicHistoryElement: {
-        prototype: HTMLAtomicHistoryElement;
-        new (): HTMLAtomicHistoryElement;
     };
     interface HTMLAtomicNoResultsElement extends Components.AtomicNoResults, HTMLStencilElement {
     }
@@ -613,7 +604,6 @@ declare global {
         "atomic-facet-manager": HTMLAtomicFacetManagerElement;
         "atomic-field-condition": HTMLAtomicFieldConditionElement;
         "atomic-frequently-bought-together": HTMLAtomicFrequentlyBoughtTogetherElement;
-        "atomic-history": HTMLAtomicHistoryElement;
         "atomic-no-results": HTMLAtomicNoResultsElement;
         "atomic-numeric-facet": HTMLAtomicNumericFacetElement;
         "atomic-numeric-range": HTMLAtomicNumericRangeElement;
@@ -705,10 +695,6 @@ declare namespace LocalJSX {
          */
         "end": Date | string | number;
         /**
-          * Specifies whether or not the end date should be included in the range.
-         */
-        "endInclusive"?: boolean;
-        /**
           * The starting date for the range. It can be expressed as a Javascript date, as a number using epoch time or as a string using the ISO 8601 format.
          */
         "start": Date | string | number;
@@ -750,8 +736,6 @@ declare namespace LocalJSX {
         "ifNotDefined"?: string;
     }
     interface AtomicFrequentlyBoughtTogether {
-    }
-    interface AtomicHistory {
     }
     interface AtomicNoResults {
         /**
@@ -970,6 +954,9 @@ declare namespace LocalJSX {
           * The search interface [query pipeline](https://docs.coveo.com/en/180/).
          */
         "pipeline"?: string;
+        /**
+          * Whether the state should be reflected in the url parameters.
+         */
         "reflectStateInUrl"?: boolean;
         /**
           * The search interface [search hub](https://docs.coveo.com/en/1342/).
@@ -1019,7 +1006,6 @@ declare namespace LocalJSX {
         "atomic-facet-manager": AtomicFacetManager;
         "atomic-field-condition": AtomicFieldCondition;
         "atomic-frequently-bought-together": AtomicFrequentlyBoughtTogether;
-        "atomic-history": AtomicHistory;
         "atomic-no-results": AtomicNoResults;
         "atomic-numeric-facet": AtomicNumericFacet;
         "atomic-numeric-range": AtomicNumericRange;
@@ -1062,7 +1048,6 @@ declare module "@stencil/core" {
             "atomic-facet-manager": LocalJSX.AtomicFacetManager & JSXBase.HTMLAttributes<HTMLAtomicFacetManagerElement>;
             "atomic-field-condition": LocalJSX.AtomicFieldCondition & JSXBase.HTMLAttributes<HTMLAtomicFieldConditionElement>;
             "atomic-frequently-bought-together": LocalJSX.AtomicFrequentlyBoughtTogether & JSXBase.HTMLAttributes<HTMLAtomicFrequentlyBoughtTogetherElement>;
-            "atomic-history": LocalJSX.AtomicHistory & JSXBase.HTMLAttributes<HTMLAtomicHistoryElement>;
             "atomic-no-results": LocalJSX.AtomicNoResults & JSXBase.HTMLAttributes<HTMLAtomicNoResultsElement>;
             "atomic-numeric-facet": LocalJSX.AtomicNumericFacet & JSXBase.HTMLAttributes<HTMLAtomicNumericFacetElement>;
             "atomic-numeric-range": LocalJSX.AtomicNumericRange & JSXBase.HTMLAttributes<HTMLAtomicNumericRangeElement>;

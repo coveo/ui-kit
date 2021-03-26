@@ -192,6 +192,13 @@ export interface FacetOrderSection {
   facetOrder: FacetOrderState;
 }
 
+export interface VersionSection {
+  /**
+   * The current version of headless.
+   */
+  version: string;
+}
+
 export interface RecommendationSection {
   /**
    * The information related to the recommendation endpoint.

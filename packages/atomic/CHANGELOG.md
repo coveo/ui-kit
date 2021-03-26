@@ -3,6 +3,66 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.9.0](https://github.com/coveo/ui-kit/compare/v0.9.0-alpha.9...v0.9.0) (2021-03-26)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [0.9.0-alpha.9](https://github.com/coveo/ui-kit/compare/v0.9.0-alpha.8...v0.9.0-alpha.9) (2021-03-26)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [0.9.0-alpha.8](https://github.com/coveo/ui-kit/compare/v0.9.0-alpha.7...v0.9.0-alpha.8) (2021-03-26)
+
+
+### Bug Fixes
+
+* **atomic:** show facet search results on consecutive searches ([#640](https://github.com/coveo/ui-kit/issues/640)) ([293db04](https://github.com/coveo/ui-kit/commit/293db04161b12d2b10f0a5ab1c08f06095ff7da5))
+
+
+
+
+
+# [0.9.0-alpha.7](https://github.com/coveo/ui-kit/compare/v0.9.0-alpha.6...v0.9.0-alpha.7) (2021-03-25)
+
+
+### Features
+
+* **atomic,headless:** add UrlHashManager controller & handle hash change in atomic ([#645](https://github.com/coveo/ui-kit/issues/645)) ([a3af1a3](https://github.com/coveo/ui-kit/commit/a3af1a33ebb544e5e4da55e373c6af89a148a15f))
+
+
+
+
+
+# [0.9.0-alpha.6](https://github.com/coveo/ui-kit/compare/v0.9.0-alpha.5...v0.9.0-alpha.6) (2021-03-25)
+
+
+### Features
+
+* **atomic:** add number of values to last parent in category facet ([#641](https://github.com/coveo/ui-kit/issues/641)) ([9697c15](https://github.com/coveo/ui-kit/commit/9697c15734dbe5bb593f629de37b41bbf18bb31d))
+
+
+
+
+
+# [0.9.0-alpha.4](https://github.com/coveo/ui-kit/compare/v0.9.0-alpha.3...v0.9.0-alpha.4) (2021-03-24)
+
+
+### Bug Fixes
+
+* **atomic:** remove end-inclusive option on date range ([#642](https://github.com/coveo/ui-kit/issues/642)) ([22f6c34](https://github.com/coveo/ui-kit/commit/22f6c34761b83207c7d54df6c27b12f460e53c9c))
+
+
+
+
+
 # [0.9.0-alpha.3](https://github.com/coveo/ui-kit/compare/v0.9.0-alpha.2...v0.9.0-alpha.3) (2021-03-19)
 
 

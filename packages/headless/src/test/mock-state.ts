@@ -54,6 +54,7 @@ export function createMockState(
     searchHub: getSearchHubInitialState(),
     debug: getDebugInitialState(),
     resultPreview: getResultPreviewInitialState(),
+    version: 'unit-testing-version',
     ...config,
   };
 }

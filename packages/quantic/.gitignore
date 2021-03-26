@@ -31,7 +31,6 @@ $RECYCLE.BIN/
 # Static resources copied from node_modules
 force-app/main/default/staticresources/atomicutils
 force-app/main/default/staticresources/coveoheadless
-force-app/main/default/staticresources/tributejs
 
 # Test Coverage & Report
 coverage
