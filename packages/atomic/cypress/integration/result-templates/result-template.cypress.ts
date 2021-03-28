@@ -9,9 +9,6 @@ import {
   ResultTemplateSelectors,
 } from './result-template-selectors';
 
-const resultTemplateInResultList = (slot = '') =>
-  resultListComponent(resultTemplateComponent(slot));
-
 describe('Result Template Component', () => {
   describe(`when not a child of an "${ResultListSelectors.component}" component`, () => {
     it(`should render an "${ComponentErrorSelectors.component}" component`, () => {
@@ -25,7 +22,7 @@ describe('Result Template Component', () => {
 
   describe('when it does not have a "template" element has a child', () => {
     it(`should render an "${ComponentErrorSelectors.component}" component (in the result list)`, () => {
-      setUpPage(resultTemplateInResultList('<p>test</p>'));
+      setUpPage(resultListComponent(resultTemplateComponent('<p>test</p>')));
       cy.get(ResultListSelectors.component)
         .find(ResultTemplateSelectors.component)
         .shadow()
@@ -36,7 +33,11 @@ describe('Result Template Component', () => {
 
   it('should save the template content in order to render', () => {
     const content = '<h3>template content</h3>';
-    setUpPage(resultTemplateInResultList(`<template>${content}</template>`));
+    setUpPage(
+      resultListComponent(
+        resultTemplateComponent(`<template>${content}</template>`)
+      )
+    );
     cy.get(ResultListSelectors.component)
       .find('atomic-result')
       .first()
@@ -46,9 +47,64 @@ describe('Result Template Component', () => {
       });
   });
 
-  it.skip('the "must-match-x" prop should add a condition to the template');
+  const customTemplate = '<template>Custom template</template>';
 
-  it.skip('the "must-not-match-x" prop should add a condition to the template');
+  function firstResultShouldUseCustomTemplate() {
+    cy.get(ResultListSelectors.component)
+      .find('atomic-result')
+      .first()
+      .shadow()
+      .then((firstResult) => {
+        expect(firstResult[0].innerHTML).contain('Custom template');
+      });
+  }
 
-  it.skip('the "conditions" prop should add a condition(s) to the template');
+  it('the "must-match-x" prop should add a condition to the template', () => {
+    const filetype = 'YouTubeVideo';
+    setUpPage(
+      resultListComponent(
+        resultTemplateComponent(
+          customTemplate,
+          `must-match-filetype="${filetype}"`
+        )
+      ),
+      `aq=@filetype=${filetype}`
+    );
+
+    firstResultShouldUseCustomTemplate();
+  });
+
+  it('the "must-not-match-x" prop should add a condition to the template', () => {
+    const filetype = 'YouTubeVideo';
+    setUpPage(
+      resultListComponent(
+        resultTemplateComponent(
+          customTemplate,
+          `must-not-match-filetype="${filetype}"`
+        )
+      ),
+      'aq=@filetype=pdf'
+    );
+
+    firstResultShouldUseCustomTemplate();
+  });
+
+  it('the "conditions" prop should add a condition(s) to the template', () => {
+    setUpPage(
+      resultListComponent(
+        resultTemplateComponent(
+          `${customTemplate}
+          <script>
+              document.querySelector('atomic-result-template#singaporeTitle').conditions = [
+                  (result) => /singapore/i.test(result.title),
+              ];
+          </script>`,
+          'id="singaporeTitle"'
+        )
+      ),
+      'q=singapore'
+    );
+
+    firstResultShouldUseCustomTemplate();
+  });
 });

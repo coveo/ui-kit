@@ -24,10 +24,10 @@ export function setupIntercept() {
   }).as('coveoSearch');
 }
 
-export function setUpPage(htmlCode: string) {
+export function setUpPage(htmlCode: string, urlHash = '') {
   setupIntercept();
   // Setup page with new component
-  cy.visit('http://localhost:3333/pages/test.html');
+  cy.visit(`http://localhost:3333/pages/test.html#${urlHash}`);
   cy.injectAxe();
   injectComponent(htmlCode);
   cy.wait(1000);
