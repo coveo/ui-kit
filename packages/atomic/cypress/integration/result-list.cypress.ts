@@ -1,14 +1,9 @@
 import {setUpPage, setUpPageNoSearch} from '../utils/setupComponent';
-import {createAliasNavigation} from './pager-selectors';
-
-export const ResultListSelectors = {
-  component: 'atomic-result-list',
-  placeholder: 'atomic-result-list-placeholder',
-  result: 'atomic-result',
-};
-
-const resultListComponent = (slot = '') =>
-  `<atomic-result-list>${slot}</atomic-result-list>`;
+import {createAliasNavigation, PagerSelectors} from './pager-selectors';
+import {
+  ResultListSelectors,
+  resultListComponent,
+} from './result-list-selectors';
 
 describe('Result List Component', () => {
   function getFirstResult() {
@@ -48,7 +43,11 @@ describe('Result List Component', () => {
   describe('when multiple searches are executed', () => {
     it('should update the results', () => {
       let firstResultHtml: string;
-      setUpPage(`${resultListComponent()}<atomic-pager></atomic-pager>`);
+      setUpPage(
+        `${resultListComponent()}<${PagerSelectors.pager}></${
+          PagerSelectors.pager
+        }>`
+      );
       createAliasNavigation();
 
       getFirstResult().then((element) => {
@@ -62,23 +61,6 @@ describe('Result List Component', () => {
         const secondResultHtml = element[0].innerHTML;
         expect(secondResultHtml).not.to.equal(firstResultHtml);
       });
-    });
-  });
-
-  describe('when a result template contains an error', () => {
-    it('should render an "atomic-component-error" component', () => {
-      setUpPage(
-        resultListComponent(
-          `<atomic-result-template>
-            <b>i have no template element</b>
-          </atomic-result-template>`
-        )
-      );
-      cy.get(ResultListSelectors.component)
-        .find('atomic-result-template')
-        .shadow()
-        .find('atomic-component-error')
-        .should('be.visible');
     });
   });
 });

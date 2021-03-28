@@ -30,7 +30,7 @@ export function setUpPage(htmlCode: string) {
   cy.visit('http://localhost:3333/pages/test.html');
   cy.injectAxe();
   injectComponent(htmlCode);
-  cy.wait(500);
+  cy.wait(1000);
 }
 
 export function setUpPageNoSearch(htmlCode: string) {
@@ -39,7 +39,7 @@ export function setUpPageNoSearch(htmlCode: string) {
   cy.visit('http://localhost:3333/pages/test-no-search.html');
   cy.injectAxe();
   injectComponent(htmlCode);
-  cy.wait(500);
+  cy.wait(1000);
 }
 
 export function shouldRenderErrorComponent(selector: string) {
