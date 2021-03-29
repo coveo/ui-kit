@@ -15,7 +15,7 @@ import {
 } from '@microsoft/api-extractor-model';
 import {DocComment} from '@microsoft/tsdoc';
 import {findApi} from './api-finder';
-import {AnyEntity, EntityWithTypeAlias} from './entity';
+import {AnyEntity, EntityKind, EntityWithTypeAlias} from './entity';
 import {
   buildEntity,
   buildFuncEntity,
@@ -62,12 +62,36 @@ function filterOverridesAndCombine(
   return members.concat(filtered);
 }
 
+function sortEntities(entities: AnyEntity[]) {
+  const kindOrder: Record<EntityKind, number> = {
+    primitive: 0,
+    'primitive-with-type-alias': 0,
+    object: 0,
+    function: 1,
+  };
+
+  return entities.sort((a, b) => {
+    // Sort by kind (primitives & objects, then functions)
+    let order = kindOrder[a.kind] - kindOrder[b.kind];
+
+    // Sort by optional (mandatory then optional)
+    if (a.kind !== 'function' && b.kind !== 'function') {
+      order += ((a.isOptional ? 1 : 0) - (b.isOptional ? 1 : 0)) / 2;
+    }
+
+    // Sort alphabetically
+    order += a.name.localeCompare(b.name) / 4;
+
+    return order;
+  });
+}
+
 function resolveMembers(
   entry: ApiEntryPoint,
   apiInterface: ApiInterface,
   ancestorNames: string[]
 ) {
-  return apiInterface.members.map((m) => {
+  const members = apiInterface.members.map((m) => {
     if (isPropertySignature(m)) {
       return resolvePropertySignature(entry, m, ancestorNames);
     }
@@ -86,6 +110,8 @@ function resolveMembers(
 
     throw new Error(`Unsupported member: ${m.displayName}`);
   });
+
+  return sortEntities(members);
 }
 
 function resolveInheritedMembers(
