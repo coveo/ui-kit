@@ -1,4 +1,4 @@
-import {Result} from '../../api/search/search/result';
+import {Result} from '../../api/service/service-api-client';
 
 export interface ClassificationFieldState {
   name: string;

@@ -9,7 +9,6 @@ import {
   ClassifyParam,
   SuggestDocumentsParam,
 } from './service-api-params';
-import {Result} from '../search/search/result';
 
 export interface ServiceAPIClientOptions {
   renewAccessToken: () => Promise<string>;
@@ -45,6 +44,15 @@ export interface ClassifySuccessContent {
     };
   };
   responseId: string;
+}
+
+export interface Result {
+  clickUri: string;
+  excerpt: string;
+  fields: Record<string, unknown>;
+  hasHtmlVersion: boolean;
+  title: string;
+  uniqueId: string;
 }
 
 export interface SuggestDocumentsSuccessContent {

@@ -60,28 +60,13 @@ export const logTicketClassificationClick = createAsyncThunk<
   AsyncThunkOptions
 >('analytics/caseAssist/ticketClassificationClick', (payload, {getState}) => {
   const state = getState();
-
-  console.log(
-    `analytics/caseAssist/ticketClassificationClick: ${payload.predictionId}`
-  );
   const prediction = getClassificationById(
     state.caseAssist,
     payload.predictionId
   );
-  console.log(
-    `analytics/caseAssist/ticketClassificationClick: prediction found: ${
-      prediction !== undefined
-    }`
-  );
   if (!prediction) {
     return;
   }
-
-  console.log(
-    `analytics/caseAssist/ticketClassificationClick: prediction: ${JSON.stringify(
-      prediction
-    )}`
-  );
 
   updateWithCaseInformation(state.caseAssist.caseInformation);
   handleOneAnalyticsEvent('svc:setAction', 'ticket_classification_click', {
@@ -130,10 +115,10 @@ export const logTicketDocumentSuggestionClick = createAsyncThunk<
       suggestionId,
       responseId: state.caseAssist.documentSuggestions.responseId,
       suggestion: {
-        documentUri: suggestion.result.clickUri,
-        documentUriHash: suggestion.result.raw.urihash,
-        documentTitle: suggestion.result.title,
-        documentUrl: suggestion.result.uri,
+        documentUri: suggestion.document.clickUri,
+        documentUriHash: suggestion.document.fields['urihash'] ?? '',
+        documentTitle: suggestion.document.title,
+        documentUrl: suggestion.document.fields['uri'] ?? '',
         documentPosition: suggestion.position,
       },
     });
@@ -162,10 +147,10 @@ export const logTicketDocumentSuggestionUpvote = createAsyncThunk<
       suggestionId,
       responseId: state.caseAssist.documentSuggestions.responseId,
       suggestion: {
-        documentUri: suggestion.result.clickUri,
-        documentUriHash: suggestion.result.raw.urihash,
-        documentTitle: suggestion.result.title,
-        documentUrl: suggestion.result.uri,
+        documentUri: suggestion.document.clickUri,
+        documentUriHash: suggestion.document.fields['urihash'] ?? '',
+        documentTitle: suggestion.document.title,
+        documentUrl: suggestion.document.fields['uri'] ?? '',
         documentPosition: suggestion.position,
       },
     });
@@ -194,10 +179,10 @@ export const logTicketDocumentSuggestionDownvote = createAsyncThunk<
       suggestionId,
       responseId: state.caseAssist.documentSuggestions.responseId,
       suggestion: {
-        documentUri: suggestion.result.clickUri,
-        documentUriHash: suggestion.result.raw.urihash,
-        documentTitle: suggestion.result.title,
-        documentUrl: suggestion.result.uri,
+        documentUri: suggestion.document.clickUri,
+        documentUriHash: suggestion.document.fields['urihash'] ?? '',
+        documentTitle: suggestion.document.title,
+        documentUrl: suggestion.document.fields['uri'] ?? '',
         documentPosition: suggestion.position,
       },
     });

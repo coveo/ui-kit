@@ -1,5 +1,5 @@
-import {Result} from '../../api/search/search/result';
 import {CaseAssistState} from './case-assist-state';
+import {Result} from '../../api/service/service-api-client';
 
 export interface FieldClassification {
   fieldName: string;
@@ -30,19 +30,21 @@ export const getClassificationById = (
   return result;
 };
 
-export interface RankedResult {
-  result: Result;
+export interface RankedDocument {
+  document: Result;
   position: number;
 }
 
 export const getDocumentSuggestionById = (
   state: CaseAssistState,
   suggestionId: string
-): RankedResult | undefined => {
+): RankedDocument | undefined => {
   return state.documentSuggestions.documents
     .map((document, index) => ({
-      result: document,
+      document,
       position: index + 1,
     }))
-    .find((rankedResult) => rankedResult.result.uniqueId === suggestionId);
+    .find(
+      (rankedDocument) => rankedDocument.document.uniqueId === suggestionId
+    );
 };

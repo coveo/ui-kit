@@ -2,11 +2,11 @@ import {BooleanValue, StringValue} from '@coveo/bueno';
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 import {getVisitorID} from '../../api/analytics/analytics';
 import {ExecutionReport} from '../../api/search/search/execution-report';
-import {Result} from '../../api/search/search/result';
 import {
   ServiceAPIResponse,
   ServiceAPIErrorResponse,
   ClassifySuccessContent,
+  Result,
 } from '../../api/service/service-api-client';
 import {
   ClassifyParam,
