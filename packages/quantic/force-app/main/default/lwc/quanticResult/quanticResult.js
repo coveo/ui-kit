@@ -1,5 +1,5 @@
 // @ts-ignore
-import defaultTemplate from './result.html';
+import defaultTemplate from './quanticResult.html';
 import { LightningElement, api } from "lwc";
 
 export default class QuanticResult extends LightningElement {
