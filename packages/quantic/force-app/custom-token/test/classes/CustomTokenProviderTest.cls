@@ -31,7 +31,7 @@ private class CustomTokenProviderTest {
         return settings;
     }
     
-    static final String sampleHeadlessConfiguration = '{"platformUrl":"https://platform.cloud.coveo.com","accessToken":"xx564559b1-0045-48e1-953c-3addd1ee4457","organizationId":"searchuisamples"}';
+    static final String sampleHeadlessConfiguration = '{"platformUrl":"https://platform.cloud.coveo.com","accessToken":"xx063ae2d5-2810-4f15-ba0c-1fd6a0b90a9a","organizationId":"searchuisamples"}';
     static final String invalidTokenSettingsExceptionMessage = 'TokenSettings invalid. Defaulting to sample organization settings.';
 
     static void assertExceptionIsInvalidTokenSettingsException(Exception e) {
