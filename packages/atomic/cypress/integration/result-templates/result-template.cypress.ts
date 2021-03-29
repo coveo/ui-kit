@@ -1,3 +1,4 @@
+import {modifySearchResultAt} from '../../utils/network';
 import {setUpPage} from '../../utils/setupComponent';
 import {ComponentErrorSelectors} from '../component-error-selectors';
 import {
@@ -60,49 +61,59 @@ describe('Result Template Component', () => {
   }
 
   it('the "must-match-x" prop should add a condition to the template', () => {
-    const filetype = 'YouTubeVideo';
+    const filetype = 'veryspecificfiletype';
+    modifySearchResultAt((result) => {
+      result.raw.filetype = filetype;
+      return result;
+    });
     setUpPage(
       resultListComponent(
         resultTemplateComponent(
           customTemplate,
           `must-match-filetype="${filetype}"`
         )
-      ),
-      `aq=@filetype=${filetype}`
+      )
     );
 
     firstResultShouldUseCustomTemplate();
   });
 
   it('the "must-not-match-x" prop should add a condition to the template', () => {
-    const filetype = 'YouTubeVideo';
+    const filetype = 'veryspecificfiletype';
+    modifySearchResultAt((result) => {
+      result.raw.filetype = 'anotherfiletype';
+      return result;
+    });
     setUpPage(
       resultListComponent(
         resultTemplateComponent(
           customTemplate,
           `must-not-match-filetype="${filetype}"`
         )
-      ),
-      'aq=@filetype=pdf'
+      )
     );
 
     firstResultShouldUseCustomTemplate();
   });
 
   it('the "conditions" prop should add a condition(s) to the template', () => {
+    const title = 'averyspecifictitle';
+    modifySearchResultAt((result) => {
+      result.title = title;
+      return result;
+    });
     setUpPage(
       resultListComponent(
         resultTemplateComponent(
           `${customTemplate}
           <script>
-              document.querySelector('atomic-result-template#singaporeTitle').conditions = [
-                  (result) => /singapore/i.test(result.title),
+              document.querySelector('atomic-result-template#mytemplate').conditions = [
+                  (result) => /${title}/i.test(result.title),
               ];
           </script>`,
-          'id="singaporeTitle"'
+          'id="mytemplate"'
         )
-      ),
-      'q=singapore'
+      )
     );
 
     firstResultShouldUseCustomTemplate();
