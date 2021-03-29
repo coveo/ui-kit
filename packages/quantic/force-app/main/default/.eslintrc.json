@@ -3,8 +3,6 @@
   "extends": ["@salesforce/eslint-config-lwc/recommended"],
   "root": true,
   "globals": {
-    "CoveoHeadless": "readonly",
-    "CoveoAtomicUtils": "readonly",
-    "Tribute": "readonly"
+    "CoveoHeadless": "readonly"
   }
 }

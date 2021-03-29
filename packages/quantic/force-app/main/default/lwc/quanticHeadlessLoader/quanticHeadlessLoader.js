@@ -1,5 +1,4 @@
 import HeadlessPath from '@salesforce/resourceUrl/coveoheadless';
-import AtomicPath from '@salesforce/resourceUrl/atomicutils';
 // @ts-ignore
 import {loadScript} from 'lightning/platformResourceLoader';
 // @ts-ignore
@@ -16,7 +15,6 @@ let dependencyPromises = [];
 const loadDependencies = (element) => {
   dependencyPromises = [
     loadScript(element, HeadlessPath + '/browser/headless.js'),
-    loadScript(element, AtomicPath + '/atomic-utils.js')
   ]
 }
 
