@@ -26,7 +26,7 @@ pipeline {
   environment {
     CYPRESS_version = "${env.VERSION}"
     CYPRESS_endpoint = "${env.ENDPOINT}"
-    CYPRESS_targetEnv = targetEnv
+    CYPRESS_targetEnv = "${targetEnv}"
     BUILD_NODE_VERSION = 'NodeJS Latest'
     HOME = "${env.WORKSPACE}"
   }
