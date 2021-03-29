@@ -126,13 +126,18 @@ export const logTicketDocumentSuggestionClick = createAsyncThunk<
   }
 );
 
-export const logTicketDocumentSuggestionUpvote = createAsyncThunk<
+export interface LogTicketDocumentSuggestionRatingPayload {
+  suggestionId: string;
+  rating: number;
+}
+
+export const logTicketDocumentSuggestionRating = createAsyncThunk<
   void,
-  LogTicketDocumentSuggestionPayload,
+  LogTicketDocumentSuggestionRatingPayload,
   AsyncThunkOptions
 >(
-  'analytics/caseAssist/ticketDocumentSuggestionUpvote',
-  ({suggestionId}, {getState}) => {
+  'analytics/caseAssist/ticketDocumentSuggestionRating',
+  ({suggestionId, rating}, {getState}) => {
     const state = getState();
     const suggestion = getDocumentSuggestionById(
       state.caseAssist,
@@ -143,39 +148,7 @@ export const logTicketDocumentSuggestionUpvote = createAsyncThunk<
     }
 
     handleOneAnalyticsEvent('svc:setAction', 'suggestion_rate', {
-      rate: 1,
-      suggestionId,
-      responseId: state.caseAssist.documentSuggestions.responseId,
-      suggestion: {
-        documentUri: suggestion.document.clickUri,
-        documentUriHash: suggestion.document.fields['urihash'] ?? '',
-        documentTitle: suggestion.document.title,
-        documentUrl: suggestion.document.fields['uri'] ?? '',
-        documentPosition: suggestion.position,
-      },
-    });
-    handleOneAnalyticsEvent('send', 'event', 'svc', 'click');
-  }
-);
-
-export const logTicketDocumentSuggestionDownvote = createAsyncThunk<
-  void,
-  LogTicketDocumentSuggestionPayload,
-  AsyncThunkOptions
->(
-  'analytics/caseAssist/ticketDocumentSuggestionDownvote',
-  ({suggestionId}, {getState}) => {
-    const state = getState();
-    const suggestion = getDocumentSuggestionById(
-      state.caseAssist,
-      suggestionId
-    );
-    if (!suggestion) {
-      return;
-    }
-
-    handleOneAnalyticsEvent('svc:setAction', 'suggestion_rate', {
-      rate: 0,
+      rate: rating,
       suggestionId,
       responseId: state.caseAssist.documentSuggestions.responseId,
       suggestion: {
@@ -193,7 +166,9 @@ export const logTicketDocumentSuggestionDownvote = createAsyncThunk<
 export const logTicketSolved = createAsyncThunk<void, void, AsyncThunkOptions>(
   'analytics/caseAssist/ticketSolved',
   () => {
-    handleOneAnalyticsEvent('svc:setAction', 'ticket_cancel');
+    handleOneAnalyticsEvent('svc:setAction', 'ticket_cancel', {
+      reason: 'Solved',
+    });
     handleOneAnalyticsEvent('send', 'event', 'svc', 'click');
   }
 );
@@ -227,10 +202,18 @@ const updateWithCaseInformation = (
 ) => {
   const {subject, description, ...rest} = caseInformation;
 
-  handleOneAnalyticsEvent('svc:setTicket', {
+  let data: Record<string, unknown> = {
     subject,
     description,
     ticketId,
-    custom: {...rest},
-  });
+  };
+
+  if (Object.keys(rest).length > 0) {
+    data = {
+      ...data,
+      custom: {...rest},
+    };
+  }
+
+  handleOneAnalyticsEvent('svc:setTicket', data);
 };

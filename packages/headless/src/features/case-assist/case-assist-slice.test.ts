@@ -54,6 +54,39 @@ describe('case assist slice', () => {
     expect(finalState.caseInformation[expected.field]).toBe(expected.value);
   });
 
+  it('setCaseInformationValue can set many values in the state', () => {
+    const actions = [
+      setCaseInformationValue({
+        fieldName: 'primaryColor',
+        fieldValue: 'purple',
+      }),
+      setCaseInformationValue({
+        fieldName: 'description',
+        fieldValue: 'some description',
+      }),
+      setCaseInformationValue({
+        fieldName: 'subject',
+        fieldValue: 'some subject',
+      }),
+      setCaseInformationValue({
+        fieldName: 'secondaryColor',
+        fieldValue: 'teal',
+      }),
+    ];
+    let finalState = state;
+
+    actions.forEach((action) => {
+      finalState = caseAssistReducer(finalState, action);
+    });
+
+    expect(finalState.caseInformation).toEqual({
+      subject: 'some subject',
+      description: 'some description',
+      primaryColor: 'purple',
+      secondaryColor: 'teal',
+    });
+  });
+
   it('setUserContextValue sets the value in the state', () => {
     const expected = {key: 'occupation', value: 'marketer'};
     const action = setUserContextValue(expected);
