@@ -51,7 +51,7 @@ export interface NumericFacetOptions {
    * If `generateAutomaticRanges` is false, values must be specified.
    * If `generateAutomaticRanges` is true, automatic ranges are going to be appended after the specified values.
    *
-   * @default []
+   * @defaultValue `[]`
    */
   currentValues?: NumericRangeRequest[];
 
@@ -64,7 +64,7 @@ export interface NumericFacetOptions {
   /**
    * Whether to exclude folded result parents when estimating the result count for each facet value.
    *
-   * @default true
+   * @defaultValue `true`
    */
   filterFacetCount?: boolean;
 
@@ -73,8 +73,9 @@ export interface NumericFacetOptions {
    *
    * Note: A high injectionDepth may negatively impact the facet request performance.
    *
-   * @default 1000
-   * @minimum 0
+   * Minimum: `0`
+   *
+   * @defaultValue `1000`
    */
   injectionDepth?: number;
 
@@ -82,15 +83,16 @@ export interface NumericFacetOptions {
    * The number of values to request for this facet.
    * Also determines the number of additional values to request each time this facet is expanded, and the number of values to display when this facet is collapsed.
    *
-   * @minimum 1
-   * @default 8
+   * Minimum: `1`
+   *
+   * @defaultValue `8`
    */
   numberOfValues?: number;
 
   /**
    * The sort criterion to apply to the returned facet values.
    *
-   * @default "ascending"
+   * @defaultValue `ascending`
    */
   sortCriteria?: RangeFacetSortCriterion;
 }

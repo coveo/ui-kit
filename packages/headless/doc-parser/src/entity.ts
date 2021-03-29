@@ -29,7 +29,9 @@ export interface Entity
     Name,
     Description,
     Type,
-    Optional {}
+    Optional {
+  defaultValue?: string;
+}
 
 export interface EntityWithTypeAlias
   extends Kind<'primitive-with-type-alias'>,

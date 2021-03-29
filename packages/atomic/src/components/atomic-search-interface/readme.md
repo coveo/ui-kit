@@ -14,7 +14,7 @@
 | `language`          | `language`             | The search interface language.                                         | `string`                                                                                | `'en'`                     |
 | `logLevel`          | `log-level`            | The level of messages you want to be logged in the console.            | `"debug" \| "error" \| "fatal" \| "info" \| "silent" \| "trace" \| "warn" \| undefined` | `undefined`                |
 | `pipeline`          | `pipeline`             | The search interface [query pipeline](https://docs.coveo.com/en/180/). | `string`                                                                                | `'default'`                |
-| `reflectStateInUrl` | `reflect-state-in-url` |                                                                        | `boolean`                                                                               | `true`                     |
+| `reflectStateInUrl` | `reflect-state-in-url` | Whether the state should be reflected in the url parameters.           | `boolean`                                                                               | `true`                     |
 | `searchHub`         | `search-hub`           | The search interface [search hub](https://docs.coveo.com/en/1342/).    | `string`                                                                                | `'default'`                |
 
 

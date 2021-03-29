@@ -11,7 +11,6 @@ import {MapProp} from '../../utils/props-utils';
   shadow: true,
 })
 export class AtomicResultTemplate {
-  private fields: string[] = [];
   private matchConditions: ResultTemplateCondition[] = [];
 
   @Element() private host!: HTMLDivElement;
@@ -67,7 +66,6 @@ export class AtomicResultTemplate {
       this.matchConditions.push(
         ResultTemplatesHelpers.fieldMustMatch(field, this.mustMatch[field])
       );
-      this.fields.push(field);
     }
 
     for (const field in this.mustNotMatch) {
@@ -77,7 +75,6 @@ export class AtomicResultTemplate {
           this.mustNotMatch[field]
         )
       );
-      this.fields.push(field);
     }
   }
 

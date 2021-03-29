@@ -75,9 +75,7 @@ export class AtomicDateFacet implements InitializableComponent, BaseFacetState {
 
   private buildManualRanges() {
     const options = Array.from(this.host.querySelectorAll('atomic-date-range'));
-    return options.map(({start, end, endInclusive}) =>
-      buildDateRange({start, end, endInclusive})
-    );
+    return options.map(({start, end}) => buildDateRange({start, end}));
   }
 
   public initialize() {

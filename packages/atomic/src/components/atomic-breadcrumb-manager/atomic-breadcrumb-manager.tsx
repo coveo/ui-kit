@@ -82,7 +82,7 @@ export class AtomicBreadcrumbManager implements InitializableComponent {
     return (
       <button
         part="breadcrumb-button"
-        class="text-on-background-variant breadcrumb-button flex items-center hover:text-primary-variant"
+        class="text-on-background-variant breadcrumb-button flex items-center hover:text-primary-variant w-full"
         aria-label={this.strings.breadcrumb({value})}
         onClick={() =>
           this.breadcrumbManager.deselectBreadcrumb(breadcrumbValue)

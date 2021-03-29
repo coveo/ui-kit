@@ -128,12 +128,16 @@ describe('category facet slice', () => {
   describe('#restoreSearchParameters', () => {
     it('when a facet is found in the #cf payload, it sets #currentValues to a value built from the path', () => {
       const spy = jest.spyOn(CategoryFacetReducerHelpers, 'selectPath');
+      const initialNumberOfValues = 5;
 
       const path = ['a'];
       const request = buildMockCategoryFacetRequest();
 
       const cf = {geography: path};
-      state['geography'] = buildMockCategoryFacetSlice({request});
+      state['geography'] = buildMockCategoryFacetSlice({
+        request,
+        initialNumberOfValues,
+      });
 
       const finalState = categoryFacetSetReducer(
         state,
@@ -143,7 +147,7 @@ describe('category facet slice', () => {
         value: 'a',
         state: 'selected',
         retrieveChildren: true,
-        retrieveCount: 5,
+        retrieveCount: initialNumberOfValues,
       });
 
       expect(finalState['geography']?.request.currentValues).toEqual([a]);
@@ -152,10 +156,14 @@ describe('category facet slice', () => {
 
     it('when a facet is not found in the #cf payload, it sets #currentValues to an empty array', () => {
       const spy = jest.spyOn(CategoryFacetReducerHelpers, 'selectPath');
+      const initialNumberOfValues = 5;
 
       const cf = {};
       const request = buildMockCategoryFacetRequest();
-      state['geography'] = buildMockCategoryFacetSlice({request});
+      state['geography'] = buildMockCategoryFacetSlice({
+        request,
+        initialNumberOfValues,
+      });
 
       const finalState = categoryFacetSetReducer(
         state,
@@ -163,6 +171,9 @@ describe('category facet slice', () => {
       );
 
       expect(finalState['geography']?.request.currentValues).toEqual([]);
+      expect(finalState['geography']?.request.numberOfValues).toEqual(
+        initialNumberOfValues
+      );
       expect(spy).toHaveBeenCalled();
     });
   });
@@ -530,19 +541,19 @@ describe('category facet slice', () => {
 
     it('when the result is at the base path, currentValues only contains the selected value', () => {
       const spy = jest.spyOn(CategoryFacetReducerHelpers, 'selectPath');
+      state[facetId]!.initialNumberOfValues = 10;
 
       const value = buildMockCategoryFacetSearchResult();
       const action = selectCategoryFacetSearchResult({
         facetId,
         value,
-        retrieveCount,
       });
       const nextState = categoryFacetSetReducer(state, action);
 
       const expectedRequest = buildMockCategoryFacetValueRequest({
         retrieveChildren: true,
         state: 'selected',
-        retrieveCount,
+        retrieveCount: 10,
       });
 
       expect(nextState[facetId]?.request.currentValues.length).toEqual(1);
