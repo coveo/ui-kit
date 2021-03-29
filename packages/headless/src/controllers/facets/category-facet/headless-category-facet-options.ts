@@ -24,14 +24,14 @@ export interface CategoryFacetOptions {
   /**
    * The base path shared by all values for the facet.
    *
-   * @default []
+   * @defaultValue `[]`
    */
   basePath?: string[];
 
   /**
    * The character that specifies the hierarchical dependency.
    *
-   * @default ";"
+   * @defaultValue `;`
    */
   delimitingCharacter?: string;
 
@@ -48,14 +48,14 @@ export interface CategoryFacetOptions {
   /**
    * Whether to use basePath as a filter for the results.
    *
-   * @default true
+   * @defaultValue `true`
    */
   filterByBasePath?: boolean;
 
   /**
    * Whether to exclude the parents of folded results when estimating the result count for each facet value.
    *
-   * @default true
+   * @defaultValue `true`
    */
   filterFacetCount?: boolean;
 
@@ -64,23 +64,25 @@ export interface CategoryFacetOptions {
    *
    * Note: A high injectionDepth may negatively impact the facet request performance.
    *
-   * @default 1000
-   * @minimum 0
+   * Minimum: `0`
+   *
+   * @defaultValue `1000`
    * */
   injectionDepth?: number;
 
   /**
    * The number of values to request for this facet. Also determines the number of additional values to request each time this facet is expanded, and the number of values to display when this facet is collapsed.
    *
-   * @default 5
-   * @minimum 1
+   * Minimum: `1`
+   *
+   * @defaultValue `5`
    */
   numberOfValues?: number;
 
   /**
    * The criterion to use for sorting returned facet values.
    *
-   * @default "occurences"
+   * @defaultValue `occurences`
    */
   sortCriteria?: CategoryFacetSortCriterion;
 }
@@ -94,7 +96,7 @@ export interface CategoryFacetSearchOptions {
   /**
    * The maximum number of values to fetch.
    *
-   * @default 10
+   * @defaultValue `10`
    */
   numberOfValues?: number;
 

@@ -72,10 +72,6 @@ export namespace Components {
          */
         "end": Date | string | number;
         /**
-          * Specifies whether or not the end date should be included in the range.
-         */
-        "endInclusive": boolean;
-        /**
           * The starting date for the range. It can be expressed as a Javascript date, as a number using epoch time or as a string using the ISO 8601 format.
          */
         "start": Date | string | number;
@@ -117,8 +113,6 @@ export namespace Components {
         "ifNotDefined"?: string;
     }
     interface AtomicFrequentlyBoughtTogether {
-    }
-    interface AtomicHistory {
     }
     interface AtomicNoResults {
         /**
@@ -203,7 +197,23 @@ export namespace Components {
          */
         "format": string;
     }
+    interface AtomicResultIcon {
+        /**
+          * Allow to specify the icon to display from the list of available icons.  By default, will parse the `objecttype` field and the `filetype` field to find a matching icon. If none are available, will use the `custom` icon.
+         */
+        "icon"?: string;
+    }
+    interface AtomicResultImage {
+        /**
+          * The result field which the component should use. Will look in the Result object first and then in the Result.raw object for the fields. It is important to include the necessary fields in the ResultList component.
+         */
+        "field": string;
+    }
     interface AtomicResultLink {
+        /**
+          * Where to display the linked URL, as the name for a browsing context (a tab, window, or <iframe>).  The following keywords have special meanings for where to load the URL: - _self: the current browsing context. (Default) - _blank: usually a new tab, but users can configure browsers to open a new window instead. - _parent: the parent browsing context of the current one. If no parent, behaves as _self. - _top: the topmost browsing context (the "highest" context that’s an ancestor of the current one). If no ancestors, behaves as _self.
+         */
+        "target": string;
     }
     interface AtomicResultList {
         /**
@@ -264,6 +274,10 @@ export namespace Components {
     }
     interface AtomicResultText {
         /**
+          * The locale key for the text to display when the configured field has no value.
+         */
+        "default"?: string;
+        /**
           * The result field which the component should use. Will look in the Result object first and then in the Result.raw object for the fields. It is important to include the necessary fields in the ResultList component.
          */
         "field": string;
@@ -320,6 +334,9 @@ export namespace Components {
           * The search interface [query pipeline](https://docs.coveo.com/en/180/).
          */
         "pipeline": string;
+        /**
+          * Whether the state should be reflected in the url parameters.
+         */
         "reflectStateInUrl": boolean;
         /**
           * The search interface [search hub](https://docs.coveo.com/en/1342/).
@@ -420,12 +437,6 @@ declare global {
         prototype: HTMLAtomicFrequentlyBoughtTogetherElement;
         new (): HTMLAtomicFrequentlyBoughtTogetherElement;
     };
-    interface HTMLAtomicHistoryElement extends Components.AtomicHistory, HTMLStencilElement {
-    }
-    var HTMLAtomicHistoryElement: {
-        prototype: HTMLAtomicHistoryElement;
-        new (): HTMLAtomicHistoryElement;
-    };
     interface HTMLAtomicNoResultsElement extends Components.AtomicNoResults, HTMLStencilElement {
     }
     var HTMLAtomicNoResultsElement: {
@@ -479,6 +490,18 @@ declare global {
     var HTMLAtomicResultDateElement: {
         prototype: HTMLAtomicResultDateElement;
         new (): HTMLAtomicResultDateElement;
+    };
+    interface HTMLAtomicResultIconElement extends Components.AtomicResultIcon, HTMLStencilElement {
+    }
+    var HTMLAtomicResultIconElement: {
+        prototype: HTMLAtomicResultIconElement;
+        new (): HTMLAtomicResultIconElement;
+    };
+    interface HTMLAtomicResultImageElement extends Components.AtomicResultImage, HTMLStencilElement {
+    }
+    var HTMLAtomicResultImageElement: {
+        prototype: HTMLAtomicResultImageElement;
+        new (): HTMLAtomicResultImageElement;
     };
     interface HTMLAtomicResultLinkElement extends Components.AtomicResultLink, HTMLStencilElement {
     }
@@ -581,7 +604,6 @@ declare global {
         "atomic-facet-manager": HTMLAtomicFacetManagerElement;
         "atomic-field-condition": HTMLAtomicFieldConditionElement;
         "atomic-frequently-bought-together": HTMLAtomicFrequentlyBoughtTogetherElement;
-        "atomic-history": HTMLAtomicHistoryElement;
         "atomic-no-results": HTMLAtomicNoResultsElement;
         "atomic-numeric-facet": HTMLAtomicNumericFacetElement;
         "atomic-numeric-range": HTMLAtomicNumericRangeElement;
@@ -591,6 +613,8 @@ declare global {
         "atomic-relevance-inspector": HTMLAtomicRelevanceInspectorElement;
         "atomic-result": HTMLAtomicResultElement;
         "atomic-result-date": HTMLAtomicResultDateElement;
+        "atomic-result-icon": HTMLAtomicResultIconElement;
+        "atomic-result-image": HTMLAtomicResultImageElement;
         "atomic-result-link": HTMLAtomicResultLinkElement;
         "atomic-result-list": HTMLAtomicResultListElement;
         "atomic-result-list-placeholder": HTMLAtomicResultListPlaceholderElement;
@@ -671,10 +695,6 @@ declare namespace LocalJSX {
          */
         "end": Date | string | number;
         /**
-          * Specifies whether or not the end date should be included in the range.
-         */
-        "endInclusive"?: boolean;
-        /**
           * The starting date for the range. It can be expressed as a Javascript date, as a number using epoch time or as a string using the ISO 8601 format.
          */
         "start": Date | string | number;
@@ -716,8 +736,6 @@ declare namespace LocalJSX {
         "ifNotDefined"?: string;
     }
     interface AtomicFrequentlyBoughtTogether {
-    }
-    interface AtomicHistory {
     }
     interface AtomicNoResults {
         /**
@@ -802,7 +820,23 @@ declare namespace LocalJSX {
          */
         "format"?: string;
     }
+    interface AtomicResultIcon {
+        /**
+          * Allow to specify the icon to display from the list of available icons.  By default, will parse the `objecttype` field and the `filetype` field to find a matching icon. If none are available, will use the `custom` icon.
+         */
+        "icon"?: string;
+    }
+    interface AtomicResultImage {
+        /**
+          * The result field which the component should use. Will look in the Result object first and then in the Result.raw object for the fields. It is important to include the necessary fields in the ResultList component.
+         */
+        "field": string;
+    }
     interface AtomicResultLink {
+        /**
+          * Where to display the linked URL, as the name for a browsing context (a tab, window, or <iframe>).  The following keywords have special meanings for where to load the URL: - _self: the current browsing context. (Default) - _blank: usually a new tab, but users can configure browsers to open a new window instead. - _parent: the parent browsing context of the current one. If no parent, behaves as _self. - _top: the topmost browsing context (the "highest" context that’s an ancestor of the current one). If no ancestors, behaves as _self.
+         */
+        "target"?: string;
     }
     interface AtomicResultList {
         /**
@@ -862,6 +896,10 @@ declare namespace LocalJSX {
     }
     interface AtomicResultText {
         /**
+          * The locale key for the text to display when the configured field has no value.
+         */
+        "default"?: string;
+        /**
           * The result field which the component should use. Will look in the Result object first and then in the Result.raw object for the fields. It is important to include the necessary fields in the ResultList component.
          */
         "field": string;
@@ -916,6 +954,9 @@ declare namespace LocalJSX {
           * The search interface [query pipeline](https://docs.coveo.com/en/180/).
          */
         "pipeline"?: string;
+        /**
+          * Whether the state should be reflected in the url parameters.
+         */
         "reflectStateInUrl"?: boolean;
         /**
           * The search interface [search hub](https://docs.coveo.com/en/1342/).
@@ -965,7 +1006,6 @@ declare namespace LocalJSX {
         "atomic-facet-manager": AtomicFacetManager;
         "atomic-field-condition": AtomicFieldCondition;
         "atomic-frequently-bought-together": AtomicFrequentlyBoughtTogether;
-        "atomic-history": AtomicHistory;
         "atomic-no-results": AtomicNoResults;
         "atomic-numeric-facet": AtomicNumericFacet;
         "atomic-numeric-range": AtomicNumericRange;
@@ -975,6 +1015,8 @@ declare namespace LocalJSX {
         "atomic-relevance-inspector": AtomicRelevanceInspector;
         "atomic-result": AtomicResult;
         "atomic-result-date": AtomicResultDate;
+        "atomic-result-icon": AtomicResultIcon;
+        "atomic-result-image": AtomicResultImage;
         "atomic-result-link": AtomicResultLink;
         "atomic-result-list": AtomicResultList;
         "atomic-result-list-placeholder": AtomicResultListPlaceholder;
@@ -1006,7 +1048,6 @@ declare module "@stencil/core" {
             "atomic-facet-manager": LocalJSX.AtomicFacetManager & JSXBase.HTMLAttributes<HTMLAtomicFacetManagerElement>;
             "atomic-field-condition": LocalJSX.AtomicFieldCondition & JSXBase.HTMLAttributes<HTMLAtomicFieldConditionElement>;
             "atomic-frequently-bought-together": LocalJSX.AtomicFrequentlyBoughtTogether & JSXBase.HTMLAttributes<HTMLAtomicFrequentlyBoughtTogetherElement>;
-            "atomic-history": LocalJSX.AtomicHistory & JSXBase.HTMLAttributes<HTMLAtomicHistoryElement>;
             "atomic-no-results": LocalJSX.AtomicNoResults & JSXBase.HTMLAttributes<HTMLAtomicNoResultsElement>;
             "atomic-numeric-facet": LocalJSX.AtomicNumericFacet & JSXBase.HTMLAttributes<HTMLAtomicNumericFacetElement>;
             "atomic-numeric-range": LocalJSX.AtomicNumericRange & JSXBase.HTMLAttributes<HTMLAtomicNumericRangeElement>;
@@ -1016,6 +1057,8 @@ declare module "@stencil/core" {
             "atomic-relevance-inspector": LocalJSX.AtomicRelevanceInspector & JSXBase.HTMLAttributes<HTMLAtomicRelevanceInspectorElement>;
             "atomic-result": LocalJSX.AtomicResult & JSXBase.HTMLAttributes<HTMLAtomicResultElement>;
             "atomic-result-date": LocalJSX.AtomicResultDate & JSXBase.HTMLAttributes<HTMLAtomicResultDateElement>;
+            "atomic-result-icon": LocalJSX.AtomicResultIcon & JSXBase.HTMLAttributes<HTMLAtomicResultIconElement>;
+            "atomic-result-image": LocalJSX.AtomicResultImage & JSXBase.HTMLAttributes<HTMLAtomicResultImageElement>;
             "atomic-result-link": LocalJSX.AtomicResultLink & JSXBase.HTMLAttributes<HTMLAtomicResultLinkElement>;
             "atomic-result-list": LocalJSX.AtomicResultList & JSXBase.HTMLAttributes<HTMLAtomicResultListElement>;
             "atomic-result-list-placeholder": LocalJSX.AtomicResultListPlaceholder & JSXBase.HTMLAttributes<HTMLAtomicResultListPlaceholderElement>;

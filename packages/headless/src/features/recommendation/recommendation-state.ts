@@ -13,7 +13,7 @@ export const getRecommendationInitialState = (): RecommendationState => ({
 export interface RecommendationState {
   /**
    * Specifies the ID of the recommendation interface.
-   * @default Recommendation
+   * @defaultValue `Recommendation`
    */
   id: string;
   /**

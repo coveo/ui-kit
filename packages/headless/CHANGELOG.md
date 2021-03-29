@@ -3,6 +3,52 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.9.0](https://github.com/coveo/ui-kit/compare/v0.9.0-alpha.9...v0.9.0) (2021-03-26)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+# [0.9.0-alpha.9](https://github.com/coveo/ui-kit/compare/v0.9.0-alpha.8...v0.9.0-alpha.9) (2021-03-26)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+# [0.9.0-alpha.7](https://github.com/coveo/ui-kit/compare/v0.9.0-alpha.6...v0.9.0-alpha.7) (2021-03-25)
+
+
+### Features
+
+* **atomic,headless:** add UrlHashManager controller & handle hash change in atomic ([#645](https://github.com/coveo/ui-kit/issues/645)) ([a3af1a3](https://github.com/coveo/ui-kit/commit/a3af1a33ebb544e5e4da55e373c6af89a148a15f))
+
+
+
+
+
+# [0.9.0-alpha.0](https://github.com/coveo/ui-kit/compare/v0.8.1-alpha.0...v0.9.0-alpha.0) (2021-03-18)
+
+
+### Features
+
+* **productrecommendations:** allow adding additional fields ([#630](https://github.com/coveo/ui-kit/issues/630)) ([a403931](https://github.com/coveo/ui-kit/commit/a40393150f48a60042833c67b7b79a358086423f))
+
+
+
+
+
+## [0.8.1-alpha.0](https://github.com/coveo/ui-kit/compare/v0.8.0...v0.8.1-alpha.0) (2021-03-17)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
 # [0.8.0](https://github.com/coveo/ui-kit/compare/v0.8.0-alpha.26...v0.8.0) (2021-03-17)
 
 **Note:** Version bump only for package @coveo/headless

@@ -25,7 +25,7 @@ export interface RangeRequest<T extends string | number>
   /** The end value of the range.*/
   end: T;
   /** Whether to include the `end` value in the range.
-   * @default false
+   * @defaultValue `false`
    */
   endInclusive: boolean;
 }
@@ -34,6 +34,6 @@ export interface BaseRangeFacetRequest
   extends BaseFacetRequest,
     AutomaticRanges<boolean>,
     SortCriteria<RangeFacetSortCriterion> {
-  /** @default "ascending" */
+  /** @defaultValue `ascending` */
   sortCriteria: RangeFacetSortCriterion;
 }

@@ -14,6 +14,11 @@ describe('ResultList', () => {
     const results = new Array(10).fill(buildMockResult());
     engine.state.search.results = results;
     engine.state.search.response.totalCountFiltered = 1000;
+    jest.useFakeTimers('modern');
+  });
+
+  afterEach(() => {
+    jest.useRealTimers();
   });
 
   it('initializes correctly with no fields to include', () => {
@@ -80,7 +85,9 @@ describe('ResultList', () => {
     ) => {
       for (let i = 0; i < iterations; i++) {
         resultList.fetchMoreResults();
-        await new Promise((resolve) => setTimeout(resolve, delay));
+        await Promise.resolve();
+        jest.advanceTimersByTime(delay);
+        await Promise.resolve();
       }
     };
 

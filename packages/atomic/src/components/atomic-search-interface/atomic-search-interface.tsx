@@ -18,9 +18,9 @@ import {
   AnalyticsActions,
   ConfigurationActions,
   LogLevel,
-  buildSearchParameterManager,
-  buildSearchParameterSerializer,
   Unsubscribe,
+  buildUrlManager,
+  UrlManager,
 } from '@coveo/headless';
 import {
   AtomicStore,
@@ -30,6 +30,8 @@ import {
 import i18next, {i18n} from 'i18next';
 import Backend, {BackendOptions} from 'i18next-http-backend';
 import {createStore} from '@stencil/store';
+import {setCoveoGlobal} from '../../global/environment';
+import {defer} from '../../utils/utils';
 
 export type InitializationOptions = Pick<
   HeadlessConfigurationOptions,
@@ -42,8 +44,9 @@ export type InitializationOptions = Pick<
   assetsDirs: ['lang'],
 })
 export class AtomicSearchInterface {
-  @Prop() reflectStateInUrl = true;
-  private unsubscribe: Unsubscribe = () => {};
+  private updatingHash = false;
+  private urlManager!: UrlManager;
+  private unsubscribeUrlManager: Unsubscribe = () => {};
   private hangingComponentsInitialization: InitializeEvent[] = [];
   private initialized = false;
   private store = createStore<AtomicStore>({facets: {}});
@@ -82,6 +85,15 @@ export class AtomicSearchInterface {
    */
   @Prop({mutable: true}) public engine?: Engine;
 
+  /**
+   * Whether the state should be reflected in the url parameters.
+   */
+  @Prop() public reflectStateInUrl = true;
+
+  public constructor() {
+    setCoveoGlobal();
+  }
+
   @Watch('searchHub')
   @Watch('pipeline')
   public updateSearchConfiguration() {
@@ -99,7 +111,8 @@ export class AtomicSearchInterface {
   }
 
   public disconnectedCallback() {
-    this.unsubscribe();
+    this.unsubscribeUrlManager();
+    window.removeEventListener('hashchange', this.onHashChange);
   }
 
   @Listen('atomic/initializeComponent')
@@ -127,7 +140,7 @@ export class AtomicSearchInterface {
     this.initEngine(options);
     await this.initI18n();
     this.initComponents();
-    this.initSearchParameterManager();
+    this.initUrlManager();
 
     this.initialized = true;
   }
@@ -196,22 +209,40 @@ export class AtomicSearchInterface {
     );
   }
 
-  private initSearchParameterManager() {
-    if (this.reflectStateInUrl) {
-      const stateWithoutHash = window.location.hash.slice(1);
-      const decodedState = decodeURIComponent(stateWithoutHash);
-      const {serialize, deserialize} = buildSearchParameterSerializer();
-      const params = deserialize(decodedState);
-
-      const manager = buildSearchParameterManager(this.engine!, {
-        initialState: {parameters: params},
-      });
-
-      this.unsubscribe = manager.subscribe(() => {
-        window.location.hash = serialize(manager.state.parameters);
-      });
-    }
+  private get hash() {
+    return window.location.hash.slice(1);
   }
+
+  private initUrlManager() {
+    if (!this.reflectStateInUrl) {
+      return;
+    }
+
+    this.urlManager = buildUrlManager(this.engine!, {
+      initialState: {fragment: this.hash},
+    });
+
+    this.unsubscribeUrlManager = this.urlManager.subscribe(() =>
+      this.updateHash()
+    );
+
+    window.addEventListener('hashchange', this.onHashChange);
+  }
+
+  private updateHash() {
+    this.updatingHash = true;
+    defer(() => (this.updatingHash = false));
+    const hash = this.urlManager.state.fragment;
+    window.location.hash = hash;
+  }
+
+  private onHashChange = () => {
+    if (this.updatingHash) {
+      return;
+    }
+
+    this.urlManager.synchronize(this.hash);
+  };
 
   public render() {
     if (this.error) {

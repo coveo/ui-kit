@@ -17,7 +17,7 @@ import {
   SearchParameterManagerProps,
 } from './headless-search-parameter-manager';
 
-describe('state manager', () => {
+describe('search parameter manager', () => {
   let engine: MockEngine<SearchAppState>;
   let props: SearchParameterManagerProps;
   let manager: SearchParameterManager;

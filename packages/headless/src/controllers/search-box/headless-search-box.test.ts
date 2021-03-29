@@ -22,7 +22,6 @@ import {buildMockQuerySuggest} from '../../test/mock-query-suggest';
 import {buildMockSearchAppEngine, MockEngine} from '../../test/mock-engine';
 import {updatePage} from '../../features/pagination/pagination-actions';
 import {SearchAppState} from '../../state/search-app-state';
-import {logQuerySuggestionClick} from '../../features/query-suggest/query-suggest-analytics-actions';
 
 describe('headless searchBox', () => {
   const id = 'search-box-123';
@@ -209,14 +208,11 @@ describe('headless searchBox', () => {
       );
     });
 
-    it('dispatches executeSearch with a logQuerySuggestionClick search event', () => {
+    it('dispatches executeSearch', () => {
       const suggestion = 'a';
       searchBox.selectSuggestion(suggestion);
 
-      const action = engine.findAsyncAction(executeSearch.pending);
-      expect(action!.meta.arg.toString()).toBe(
-        logQuerySuggestionClick({id, suggestion}).toString()
-      );
+      expect(engine.findAsyncAction(executeSearch.pending)).toBeTruthy();
     });
   });
 

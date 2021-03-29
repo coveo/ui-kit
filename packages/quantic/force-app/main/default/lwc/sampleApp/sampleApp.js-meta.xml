@@ -3,10 +3,18 @@
     <apiVersion>49.0</apiVersion>
     <isExposed>true</isExposed>
     <targets>
-      <target>lightning__RecordPage</target>
-      <target>lightning__AppPage</target>
-      <target>lightning__HomePage</target>
-      <target>lightningCommunity__Page</target>
-      <target>lightningCommunity__Default</target>
+        <target>lightning__RecordPage</target>
+        <target>lightning__AppPage</target>
+        <target>lightning__HomePage</target>
+        <target>lightningCommunity__Page</target>
+        <target>lightningCommunity__Default</target>
     </targets>
+    <targetConfigs>
+        <targetConfig targets="lightningCommunity__Default">
+            <property name="engineId" type="String" default="sample-app" label="Enter Coveo Headless engine ID"/>
+        </targetConfig>
+        <targetConfig targets="lightning__AppPage, lightning__RecordPage, lightning__HomePage">
+            <property name="engineId" type="String" default="sample-app" label="Enter Coveo Headless engine ID"/>
+        </targetConfig>
+    </targetConfigs>
 </LightningComponentBundle>

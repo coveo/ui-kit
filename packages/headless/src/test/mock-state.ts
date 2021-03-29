@@ -52,6 +52,7 @@ export function createMockState(
     facetOrder: getFacetOrderInitialState(),
     searchHub: getSearchHubInitialState(),
     debug: getDebugInitialState(),
+    version: 'unit-testing-version',
     ...config,
   };
 }

@@ -3,6 +3,136 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.9.0](https://github.com/coveo/ui-kit/compare/v0.9.0-alpha.9...v0.9.0) (2021-03-26)
+
+**Note:** Version bump only for package ui-kit
+
+
+
+
+
+# [0.9.0-alpha.9](https://github.com/coveo/ui-kit/compare/v0.9.0-alpha.8...v0.9.0-alpha.9) (2021-03-26)
+
+**Note:** Version bump only for package ui-kit
+
+
+
+
+
+# [0.9.0-alpha.8](https://github.com/coveo/ui-kit/compare/v0.9.0-alpha.7...v0.9.0-alpha.8) (2021-03-26)
+
+
+### Bug Fixes
+
+* **atomic:** show facet search results on consecutive searches ([#640](https://github.com/coveo/ui-kit/issues/640)) ([293db04](https://github.com/coveo/ui-kit/commit/293db04161b12d2b10f0a5ab1c08f06095ff7da5))
+
+
+
+
+
+# [0.9.0-alpha.7](https://github.com/coveo/ui-kit/compare/v0.9.0-alpha.6...v0.9.0-alpha.7) (2021-03-25)
+
+
+### Features
+
+* **atomic,headless:** add UrlHashManager controller & handle hash change in atomic ([#645](https://github.com/coveo/ui-kit/issues/645)) ([a3af1a3](https://github.com/coveo/ui-kit/commit/a3af1a33ebb544e5e4da55e373c6af89a148a15f))
+
+
+
+
+
+# [0.9.0-alpha.6](https://github.com/coveo/ui-kit/compare/v0.9.0-alpha.5...v0.9.0-alpha.6) (2021-03-25)
+
+
+### Features
+
+* **atomic:** add number of values to last parent in category facet ([#641](https://github.com/coveo/ui-kit/issues/641)) ([9697c15](https://github.com/coveo/ui-kit/commit/9697c15734dbe5bb593f629de37b41bbf18bb31d))
+
+
+
+
+
+# [0.9.0-alpha.5](https://github.com/coveo/ui-kit/compare/v0.9.0-alpha.4...v0.9.0-alpha.5) (2021-03-24)
+
+
+### Features
+
+* **quantic:** searchbox without tributejs dependency ([#644](https://github.com/coveo/ui-kit/issues/644)) ([3ca96f3](https://github.com/coveo/ui-kit/commit/3ca96f3d88e030f0b275abf809184f820821ee17))
+
+
+
+
+
+# [0.9.0-alpha.4](https://github.com/coveo/ui-kit/compare/v0.9.0-alpha.3...v0.9.0-alpha.4) (2021-03-24)
+
+
+### Bug Fixes
+
+* **atomic:** remove end-inclusive option on date range ([#642](https://github.com/coveo/ui-kit/issues/642)) ([22f6c34](https://github.com/coveo/ui-kit/commit/22f6c34761b83207c7d54df6c27b12f460e53c9c))
+
+
+
+
+
+# [0.9.0-alpha.3](https://github.com/coveo/ui-kit/compare/v0.9.0-alpha.2...v0.9.0-alpha.3) (2021-03-19)
+
+
+### Bug Fixes
+
+* **atomic:** allow default value on atomic-result-text & add noTitle to atomic-result-link ([#636](https://github.com/coveo/ui-kit/issues/636)) ([73fc748](https://github.com/coveo/ui-kit/commit/73fc748f9f9f10231eaa5ecf66dfb8f4522c6b79))
+* **atomic:** fixed overflow on breadcrumbs ([#638](https://github.com/coveo/ui-kit/issues/638)) ([0bf9598](https://github.com/coveo/ui-kit/commit/0bf9598294d0ce8fbfba12838bd02e01c8afea80))
+
+
+### Features
+
+* **atomic:** facet-search highlighting ([#620](https://github.com/coveo/ui-kit/issues/620)) ([b235adb](https://github.com/coveo/ui-kit/commit/b235adb666737714988aae5499c62a3efec5dde9))
+
+
+
+
+
+# [0.9.0-alpha.2](https://github.com/coveo/ui-kit/compare/v0.9.0-alpha.1...v0.9.0-alpha.2) (2021-03-18)
+
+
+### Features
+
+* **atomic:** add atomic-result-image component ([#635](https://github.com/coveo/ui-kit/issues/635)) ([c2b0f30](https://github.com/coveo/ui-kit/commit/c2b0f307a4054f34d72cdcb06b8e1d2eeb8882e3))
+
+
+
+
+
+# [0.9.0-alpha.1](https://github.com/coveo/ui-kit/compare/v0.9.0-alpha.0...v0.9.0-alpha.1) (2021-03-18)
+
+
+### Features
+
+* **atomic:** add atomic-result-icon component ([#626](https://github.com/coveo/ui-kit/issues/626)) ([99638a0](https://github.com/coveo/ui-kit/commit/99638a0c0ac6c1cd218a249f2b163fb5abd192ca))
+
+
+
+
+
+# [0.9.0-alpha.0](https://github.com/coveo/ui-kit/compare/v0.8.1-alpha.0...v0.9.0-alpha.0) (2021-03-18)
+
+
+### Features
+
+* **productrecommendations:** allow adding additional fields ([#630](https://github.com/coveo/ui-kit/issues/630)) ([a403931](https://github.com/coveo/ui-kit/commit/a40393150f48a60042833c67b7b79a358086423f))
+* **quantic:** enabled sibling components ([#572](https://github.com/coveo/ui-kit/issues/572)) ([60c31c8](https://github.com/coveo/ui-kit/commit/60c31c8d7d95cd06d5ccedde099a8c31c838ec70))
+
+
+
+
+
+## [0.8.1-alpha.0](https://github.com/coveo/ui-kit/compare/v0.8.0...v0.8.1-alpha.0) (2021-03-17)
+
+**Note:** Version bump only for package ui-kit
+
+
+
+
+
 # [0.8.0](https://github.com/coveo/ui-kit/compare/v0.8.0-alpha.26...v0.8.0) (2021-03-17)
 
 **Note:** Version bump only for package ui-kit
