@@ -15,14 +15,6 @@ const main = async () => {
   );
 
   console.info('Headless copied.');
-
-  await copy(
-    './node_modules/@coveo/atomic/dist',
-    './force-app/main/default/staticresources/atomicutils'
-  );
-
-  console.info('Atomic copied.');
-  return;
 };
 
 main().then(() => {
