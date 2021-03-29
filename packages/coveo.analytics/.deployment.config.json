@@ -8,7 +8,7 @@
         "notifications": {
             "slack_channels": ["commerceteambuilds"]
         },
-        "team_jenkins": "commerceteambuilds"
+        "team_jenkins": "commercebuilds"
     },
     "package_rollout": {
         "only_consider_changesets_after": "688b6873442721d61e2a0ac492b9da808ddb0ef0"
