@@ -6,7 +6,7 @@ export interface CartRecommendationsListOptions {
   /**
    * The maximum number of recommendations, from 1 to 50.
    *
-   * @default 5
+   * @defaultValue `5`
    */
   maxNumberOfRecommendations?: number;
   /**

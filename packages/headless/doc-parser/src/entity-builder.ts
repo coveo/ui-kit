@@ -28,6 +28,7 @@ interface FuncEntityOptions extends Comment {
 export function buildEntity(config: EntityOptions): Entity {
   const type = sanitizeType(config.type);
   const desc = getSummary(config.comment);
+  const defaultValue = getCustomTagValue(config.comment, '@defaultValue');
 
   return {
     kind: 'primitive',
@@ -35,6 +36,7 @@ export function buildEntity(config: EntityOptions): Entity {
     isOptional: config.isOptional,
     type,
     desc,
+    ...(defaultValue ? {defaultValue} : {}),
   };
 }
 
@@ -102,6 +104,30 @@ function getSummary(comment: DocComment | undefined) {
     return emitAsTsDoc(nodes);
   } catch (e) {
     const message = `failed to get summary for comment:\n\n${comment.emitAsTsdoc()}\n${e}`;
+    throw new Error(message);
+  }
+}
+
+function getCustomTagValue(comment: DocComment | undefined, customTag: string) {
+  if (!comment) {
+    return '';
+  }
+
+  const block = comment.customBlocks.find(
+    (block) => block.blockTag.tagNameWithUpperCase === customTag.toUpperCase()
+  );
+  if (!block) {
+    return '';
+  }
+
+  try {
+    const sections = removeBlockTagNodes(block.getChildNodes());
+    const nodes = sections
+      .map((section) => section.getChildNodes())
+      .reduce((acc, curr) => acc.concat(curr), []);
+    return emitAsTsDoc(nodes);
+  } catch (e) {
+    const message = `failed to get custom tag ${customTag} for comment:\n\n${comment.emitAsTsdoc()}\n${e}`;
     throw new Error(message);
   }
 }
