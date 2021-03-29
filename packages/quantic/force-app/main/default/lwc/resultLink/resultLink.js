@@ -57,6 +57,7 @@ export default class ResultLink extends LightningElement {
       touchstart: () => interactiveResult.beginDelayedSelect(),
       touchend: () => interactiveResult.cancelPendingSelect(),
     };
+    // @ts-ignore
     const elements = resultElement.querySelectorAll(selector || 'a');
 
     elements.forEach((element) => {
