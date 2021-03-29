@@ -15,7 +15,12 @@ node('linux && docker') {
          * to expose the correct versions in headless and atomic.
          */
         stage('Bump build version') {
-          sh 'npx lerna version --conventional-prerelease --amend'
+          sh 'git checkout -- .'
+          sh 'git clean -f'
+          withCredentials([
+          usernameColonPassword(credentialsId: 'github-commit-token', variable: 'GH_CREDENTIALS')]) {
+            sh 'npm run bump:version:pre:amend'
+          }
         }
       }
 
