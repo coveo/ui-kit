@@ -26,18 +26,18 @@ export interface CategoryFacetRequest
     Delimitable,
     Type<'hierarchical'>,
     SortCriteria<CategoryFacetSortCriterion> {
-  /** @default 5 */
+  /** @defaultValue `5` */
   numberOfValues: number;
-  /** @default ";" */
+  /** @defaultValue `;` */
   delimitingCharacter: string;
-  /** @default "occurrences" */
+  /** @defaultValue `occurrences` */
   sortCriteria: CategoryFacetSortCriterion;
   /** The base path shared by all values for the facet.
-   * @default []
+   * @defaultValue `[]`
    */
   basePath: string[];
   /** Whether to use basePath as a filter for the results.
-   * @default true
+   * @defaultValue `true`
    */
   filterByBasePath: boolean;
 }

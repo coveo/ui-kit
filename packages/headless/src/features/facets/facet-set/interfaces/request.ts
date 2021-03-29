@@ -33,6 +33,6 @@ export interface FacetRequest
     Delimitable,
     Type<'specific'>,
     SortCriteria<FacetSortCriterion> {
-  /** @default "automatic" */
+  /** @defaultValue `automatic` */
   sortCriteria: FacetSortCriterion;
 }

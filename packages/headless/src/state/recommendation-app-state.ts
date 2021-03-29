@@ -7,6 +7,7 @@ import {
   PipelineSection,
   RecommendationSection,
   SearchHubSection,
+  VersionSection,
 } from './state-sections';
 
 export type RecommendationAppState = ConfigurationSection &
@@ -16,4 +17,5 @@ export type RecommendationAppState = ConfigurationSection &
   PipelineSection &
   SearchHubSection &
   DebugSection &
-  RecommendationSection;
+  RecommendationSection &
+  VersionSection;
