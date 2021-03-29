@@ -11,10 +11,12 @@ export function ResultContext() {
         !parentResultComponent ||
         parentResultComponent.nodeName !== 'ATOMIC-RESULT'
       ) {
-        throw new Error(
+        console.error(
           `The "${element.nodeName.toLowerCase()}" component has to be used inside a template element 
           https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template`
         );
+        element.remove();
+        return null;
       }
       component[resultVariable] = parentResultComponent.result;
       return render && render.call(this);
