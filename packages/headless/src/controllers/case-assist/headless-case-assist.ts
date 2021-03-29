@@ -8,6 +8,19 @@ import {
   setDebug,
   setUserContextValue,
 } from '../../features/case-assist/case-assist-actions';
+import {
+  initializeTicketLogging,
+  logTicketCancelled,
+  logTicketClassificationClick,
+  logTicketCreated,
+  logTicketCreateStart,
+  logTicketDocumentSuggestionClick,
+  logTicketDocumentSuggestionDownvote,
+  logTicketDocumentSuggestionUpvote,
+  logTicketFieldUpdated,
+  logTicketNextStage,
+  logTicketSolved,
+} from '../../features/case-assist/case-assist-analytics-actions';
 import {CaseAssistState} from '../../features/case-assist/case-assist-state';
 import {
   CaseAssistSection,
@@ -41,6 +54,18 @@ export interface CaseAssist extends Controller {
   setDebug(debug: boolean): void;
   getClassifications(): void;
   getDocumentSuggestions(): void;
+
+  initializeTicketLogging(): void;
+  logTicketCreateStart(): void;
+  logTicketFieldUpdated(fieldName: string): void;
+  logTicketClassificationClick(predictionId: string): void;
+  logTicketNextStage(): void;
+  logTicketDocumentSuggestionClick(suggestionId: string): void;
+  logTicketDocumentSuggestionUpvote(suggestionId: string): void;
+  logTicketDocumentSuggestionDownvote(suggestionId: string): void;
+  logTicketSolved(): void;
+  logTicketCancelled(): void;
+  logTicketCreated(ticketId: string): void;
 
   /**
    * The state of the `CaseAssist` controller.
@@ -91,6 +116,39 @@ export function buildCaseAssist(
     },
     getDocumentSuggestions() {
       dispatch(getDocumentSuggestions());
+    },
+    initializeTicketLogging() {
+      dispatch(initializeTicketLogging());
+    },
+    logTicketCreateStart() {
+      dispatch(logTicketCreateStart());
+    },
+    logTicketFieldUpdated(fieldName: string) {
+      dispatch(logTicketFieldUpdated({fieldName}));
+    },
+    logTicketClassificationClick(predictionId: string) {
+      dispatch(logTicketClassificationClick({predictionId}));
+    },
+    logTicketNextStage() {
+      dispatch(logTicketNextStage());
+    },
+    logTicketDocumentSuggestionClick(suggestionId: string) {
+      dispatch(logTicketDocumentSuggestionClick({suggestionId}));
+    },
+    logTicketDocumentSuggestionUpvote(suggestionId: string) {
+      dispatch(logTicketDocumentSuggestionUpvote({suggestionId}));
+    },
+    logTicketDocumentSuggestionDownvote(suggestionId: string) {
+      dispatch(logTicketDocumentSuggestionDownvote({suggestionId}));
+    },
+    logTicketSolved() {
+      dispatch(logTicketSolved());
+    },
+    logTicketCancelled() {
+      dispatch(logTicketCancelled());
+    },
+    logTicketCreated(ticketId: string) {
+      dispatch(logTicketCreated({ticketId}));
     },
   };
 }

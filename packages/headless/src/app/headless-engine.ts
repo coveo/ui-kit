@@ -40,6 +40,7 @@ import {
 } from '../api/search/search-api-client-middleware';
 import {
   AnalyticsClientSendEventHook,
+  handleOneAnalyticsEvent,
   IRuntimeEnvironment,
 } from 'coveo.analytics';
 import {ServiceAPIClient} from '../api/service/service-api-client';
@@ -361,6 +362,14 @@ export class HeadlessEngine<Reducers extends ReducersMapObject>
     const {search} = this.options.configuration;
     const preprocessRequest =
       this.options.configuration.preprocessRequest || NoopPreprocessRequest;
+
+    console.log('initStore: before initializing analytics');
+    // TODO: Move the init to a Case Assist action. This way we'd be able to access the base Analytics API URL from the state configuration.
+    handleOneAnalyticsEvent('init', this.options.configuration.accessToken, {
+      plugins: ['svc'],
+      endpoint: 'https://usageanalyticsdev.coveo.com',
+    });
+
     this.reduxStore = configureStore({
       preloadedState: this.options.preloadedState,
       reducers: this.options.reducers,
