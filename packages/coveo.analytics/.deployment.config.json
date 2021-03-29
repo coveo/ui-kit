@@ -85,5 +85,16 @@
             }
         }
     ],
-    "deployment_config_version": 1
+    "deployment_config_version": 1,
+    "certifiers": {
+        "dev": [
+            {
+                "job_name": "coveoanalyticsjs_fts",
+                "tag_suffix": "FTs",
+                "extra_parameters": {
+                    "VERSION": "$[PACKAGE_JSON_MAJOR_MINOR_PATCH_VERSION]"
+                }
+            }
+        ]
+    }
 }

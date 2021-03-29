@@ -8,10 +8,14 @@
             return localStorage.getItem(key);
         };
 
+        var urlPerEnv = {
+            dev: 'https://coveo-ndev-binaries.s3.amazonaws.com/proda/StaticCDN/coveo.analytics.js/',
+            prd: 'https://static.cloud.coveo.com/coveo.analytics.js/',
+        };
+
+        var env = (keepQueryParamIfDefined('targetEnv') || 'prd').toLowerCase();
         var scriptVersion = keepQueryParamIfDefined('version') || '2';
-        var scriptUrl =
-            keepQueryParamIfDefined('staticurl') ||
-            'https://static.cloud.coveo.com/coveo.analytics.js/' + scriptVersion + '/coveoua.js';
+        var scriptUrl = keepQueryParamIfDefined('staticurl') || urlPerEnv[env] + scriptVersion + '/coveoua.js';
         var analyticsToken = keepQueryParamIfDefined('token');
         var endpoint = keepQueryParamIfDefined('endpoint');
 

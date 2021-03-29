@@ -20,11 +20,13 @@ pipeline {
     string(name: 'VERSION', defaultValue: '2', description: 'The version to test')
     string(name: 'TOKEN_ID', defaultValue: 'coveo-analytics-send-to-dev-commercestore-api-key', description: 'The API Key used to push analytics')
     string(name: 'ENDPOINT', defaultValue: 'https://platformdev.cloud.coveo.com/rest/ua', description: 'The endpoint on which to send the analytics')
+    choice(name: 'targetEnv', choices: ['dev', 'prd'], description: 'The target environment')
   }
 
   environment {
     CYPRESS_version = "${env.VERSION}"
     CYPRESS_endpoint = "${env.ENDPOINT}"
+    CYPRESS_targetEnv = targetEnv
     BUILD_NODE_VERSION = 'NodeJS Latest'
     HOME = "${env.WORKSPACE}"
   }
