@@ -1,0 +1,7 @@
+<template>
+    <div class="slds-float_right">
+        <template for:each={resultsPerPageOptions} for:item="option">
+            <c-quantic-number-button key={option} number={option} current={currentResultsPerPageValue} ongoto={goto}></c-quantic-number-button>
+        </template>
+    </div>
+</template>
