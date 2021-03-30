@@ -14,7 +14,6 @@
     "cypress:test": "lerna run cypress:test",
     "commit": "git-cz",
     "bump:version:pre": "node ./scripts/deploy/bump-version.js",
-    "bump:version:pre:amend": "node ./scripts/deploy/bump-version.js --amend",
     "bump:version:graduate": "node ./scripts/deploy/bump-version.js --graduate",
     "version": "lerna version --conventional-commits",
     "version:pre": "lerna version --conventional-commits --conventional-prerelease",

@@ -34,13 +34,10 @@ async function checkoutLatestMaster() {
 
 /**
  * @param {'pre' | 'graduate'} versionType
- * @param {boolean} [amend]
  */
-async function bumpVersionAndPush(versionType, amend = false) {
+async function bumpVersionAndPush(versionType) {
   try {
-    const flags = ['--yes'];
-    amend && flags.push('--amend')
-    await exec(`npm run version:${versionType} -- ${flags.join(' ')}`);
+    await exec(`npm run version:${versionType} -- --yes`);
   } catch (e) {
     console.error(
       'Failed to bump version. Exiting to not publish local changes.',
@@ -50,22 +47,9 @@ async function bumpVersionAndPush(versionType, amend = false) {
   }
 }
 
-/**
- * @returns {Record<string, boolean>}
- */
-function getFlags() {
-  return process.argv.reduce(
-    (flags, flag) => flag.startsWith('--')
-      ? {...flags, [flag.slice(2)]: true}
-      : flags,
-    {}
-  );
-}
-
 async function main() {
   try {
-    const flags = getFlags();
-
+    const doGraduate = process.argv[2] === '--graduate';
     await authenticateGitClient();
 
     const buildCommitHash = await getHeadCommitHash();
@@ -81,11 +65,11 @@ async function main() {
 
     const headCommitTag = await getHeadCommitTag();
 
-    if (flags.graduate) {
-      return await bumpVersionAndPush('graduate', !!flags.amend);
+    if (doGraduate) {
+      return await bumpVersionAndPush('graduate');
     }
     if (!headCommitTag) {
-      return await bumpVersionAndPush('pre', !!flags.amend);
+      return await bumpVersionAndPush('pre');
     }
 
     console.log('Build commit is tagged and not being graduated. Skipping version bump.');
