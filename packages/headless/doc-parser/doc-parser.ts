@@ -266,11 +266,13 @@ const controllers: ControllerConfiguration[] = [
   },
 ];
 
+const actionNamespaces = ['SearchActions'];
+
 const result = {
   controllers: controllers.map((controller) =>
     resolveController(entryPoint, controller)
   ),
-  actions: resolveActionNamespaces(entryPoint),
+  actions: resolveActionNamespaces(entryPoint, actionNamespaces),
 };
 
 writeFileSync('dist/parsed_doc.json', JSON.stringify(result, null, 2));

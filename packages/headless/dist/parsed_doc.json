@@ -2,147 +2,11 @@
   "controllers": [ "Hidden for this PR" ],
   "actions": [
     {
-      "name": "AdvancedSearchQueriesActions",
-      "members": []
-    },
-    {
-      "name": "AnalyticsActions",
-      "members": []
-    },
-    {
-      "name": "BreadcrumbActions",
-      "members": []
-    },
-    {
-      "name": "CategoryFacetAnalyticsActions",
-      "members": []
-    },
-    {
-      "name": "CategoryFacetSetActions",
-      "members": []
-    },
-    {
-      "name": "ConfigurationActions",
-      "members": []
-    },
-    {
-      "name": "ContextActions",
-      "members": []
-    },
-    {
-      "name": "DateFacetActions",
-      "members": []
-    },
-    {
-      "name": "DateFacetAnalyticsActions",
-      "members": []
-    },
-    {
-      "name": "DidYouMeanActions",
-      "members": []
-    },
-    {
-      "name": "DidYouMeanAnalyticsActions",
-      "members": []
-    },
-    {
-      "name": "FacetActions",
-      "members": []
-    },
-    {
-      "name": "FacetAnalyticsActions",
-      "members": []
-    },
-    {
-      "name": "FacetGenericAnalyticsActions",
-      "members": []
-    },
-    {
-      "name": "FieldActions",
-      "members": []
-    },
-    {
-      "name": "HistoryActions",
-      "members": []
-    },
-    {
-      "name": "HistoryAnalyticsActions",
-      "members": []
-    },
-    {
-      "name": "NumericFacetActions",
-      "members": []
-    },
-    {
-      "name": "NumericFacetAnalyticsActions",
-      "members": []
-    },
-    {
-      "name": "PaginationActions",
-      "members": []
-    },
-    {
-      "name": "PaginationAnalyticsActions",
-      "members": []
-    },
-    {
-      "name": "PipelineActions",
-      "members": []
-    },
-    {
-      "name": "ProductRecommendationAnalyticsActions",
-      "members": []
-    },
-    {
-      "name": "ProductRecommendationsActions",
-      "members": []
-    },
-    {
-      "name": "QueryActions",
-      "members": []
-    },
-    {
-      "name": "QueryAnalyticsActions",
-      "members": []
-    },
-    {
-      "name": "QuerySetActions",
-      "members": []
-    },
-    {
-      "name": "QuerySuggestActions",
-      "members": []
-    },
-    {
-      "name": "QuerySuggestAnalyticsActions",
-      "members": []
-    },
-    {
-      "name": "RecommendationActions",
-      "members": []
-    },
-    {
-      "name": "RecommendationAnalyticsActions",
-      "members": []
-    },
-    {
-      "name": "RedirectionActions",
-      "members": []
-    },
-    {
-      "name": "RedirectionAnalyticsActions",
-      "members": []
-    },
-    {
-      "name": "ResultAnalyticsActions",
-      "members": []
-    },
-    {
       "name": "SearchActions",
       "members": [
         {
           "actionKind": "asyncThunk",
-          "fullName": "search/executeSearch",
+          "name": "executeSearch",
           "desc": "Executes a search query.",
           "parameter": {
             "name": "analyticsAction",
@@ -154,27 +18,11 @@
         },
         {
           "actionKind": "asyncThunk",
-          "fullName": "search/fetchMoreResults",
+          "name": "fetchMoreResults",
           "desc": "Executes a search query and appends the results after the existing ones.",
           "parameter": null
         }
       ]
-    },
-    {
-      "name": "SearchAnalyticsActions",
-      "members": []
-    },
-    {
-      "name": "SearchHubActions",
-      "members": []
-    },
-    {
-      "name": "SortCriterionActions",
-      "members": []
-    },
-    {
-      "name": "SortCriterionAnalyticsActions",
-      "members": []
     }
   ]
 }

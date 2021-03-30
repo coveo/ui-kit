@@ -4,6 +4,7 @@ import {
   ApiVariable,
 } from '@microsoft/api-extractor-model';
 import {DocNode, DocParamBlock} from '@microsoft/tsdoc';
+import {findApi} from './api-finder';
 import {AnyEntity, Entity} from './entity';
 import {emitAsTsDoc} from './tsdoc-emitter';
 
@@ -19,21 +20,18 @@ enum ActionKind {
 }
 
 interface Action {
+  name: string;
   desc: string;
-  fullName: string;
   parameter: AnyEntity | null;
   actionKind: ActionKind;
 }
 
 export function resolveActionNamespaces(
-  entry: ApiEntryPoint
+  entry: ApiEntryPoint,
+  names: string[]
 ): ActionsNamespace[] {
-  return entry.members
-    .filter(
-      (member) =>
-        member.kind === ApiItemKind.Namespace &&
-        member.displayName.endsWith('Actions')
-    )
+  return names
+    .map((name) => findApi(entry, name))
     .map((namespace) => ({
       name: namespace.displayName,
       members: namespace.members
@@ -44,29 +42,32 @@ export function resolveActionNamespaces(
 }
 
 function resolveAction(variable: ApiVariable): Action | null {
-  const tokens = variable.excerpt.tokens.map(({text}) => text);
-
-  if (tokens[1] === 'AsyncThunkDefinition') {
-    const actionNameToken = tokens[2];
-    const [, actionName] = /"([^"]*)"/.exec(actionNameToken)!;
-    const parameterTypeName = tokens[4].trim() === ',' ? tokens[5] : null;
+  const tokens = variable.excerpt.tokens.flatMap(({text}) =>
+    tokenizePrimitives(text)
+  );
+  if (tokens[1] === 'AsyncThunk') {
+    const indexOfFirstComma = tokens.findIndex((token) =>
+      token.trim().endsWith(',')
+    );
+    const parameterTypeName = tokens[indexOfFirstComma + 1];
 
     return {
       actionKind: ActionKind.AsyncAction,
-      fullName: actionName,
+      name: variable.displayName,
       desc: variable.tsdocComment
         ? emitAsTsDoc(
             (variable.tsdocComment.summarySection
               .nodes as unknown) as readonly DocNode[]
           )
         : '',
-      parameter: parameterTypeName
-        ? resolveActionParameter(
-            parameterTypeName,
-            (variable.tsdocComment?.params?.blocks[0] ??
-              null) as DocParamBlock | null
-          )
-        : null,
+      parameter:
+        parameterTypeName !== 'void'
+          ? resolveActionParameter(
+              parameterTypeName,
+              (variable.tsdocComment?.params?.blocks[0] ??
+                null) as DocParamBlock | null
+            )
+          : null,
     };
   }
 
@@ -84,4 +85,22 @@ function resolveActionParameter(
     isOptional: false,
     kind: 'primitive',
   };
+}
+
+function tokenizePrimitives(text: string) {
+  const expression = /(?:(?<!\w)(void|never|undefined|null|string|number|{})(?!\w))/g;
+  let expressionResult: RegExpExecArray | null;
+  let nextIndex = 0;
+  const tokens: string[] = [];
+  while ((expressionResult = expression.exec(text)) !== null) {
+    if (expressionResult.index > 0) {
+      tokens.push(text.substr(nextIndex, expressionResult.index - nextIndex));
+    }
+    tokens.push(expressionResult[1]);
+    nextIndex = expressionResult.index + expressionResult[1].length;
+  }
+  tokens.push(
+    tokens.length === 0 ? text : text.substr(nextIndex, text.length - nextIndex)
+  );
+  return tokens;
 }

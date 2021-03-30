@@ -1,4 +1,9 @@
-import {createAsyncThunk, ThunkDispatch, AnyAction} from '@reduxjs/toolkit';
+import {
+  createAsyncThunk,
+  ThunkDispatch,
+  AnyAction,
+  AsyncThunk,
+} from '@reduxjs/toolkit';
 import {
   SearchAPIClient,
   isErrorResponse,
@@ -44,7 +49,6 @@ import {extractHistory} from '../history/history-state';
 import {sortFacets} from '../../utils/facet-utils';
 import {getSearchInitialState} from './search-state';
 import {logFetchMoreResults, logQueryError} from './search-analytics-actions';
-import {AsyncThunkDefinition} from '../../utils/action';
 
 export type StateNeededByExecuteSearch = ConfigurationSection &
   Partial<
@@ -97,8 +101,7 @@ const fetchFromAPI = async (
  * Executes a search query.
  * @param analyticsAction - The analytics action to log after a successful query.
  */
-export const executeSearch: AsyncThunkDefinition<
-  'search/executeSearch',
+export const executeSearch: AsyncThunk<
   ExecuteSearchThunkReturn,
   SearchAction,
   AsyncThunkSearchOptions<StateNeededByExecuteSearch>
@@ -172,8 +175,7 @@ export const executeSearch: AsyncThunkDefinition<
 /**
  * Executes a search query and appends the results after the existing ones.
  */
-export const fetchMoreResults: AsyncThunkDefinition<
-  'search/fetchMoreResults',
+export const fetchMoreResults: AsyncThunk<
   ExecuteSearchThunkReturn,
   void,
   AsyncThunkSearchOptions<StateNeededByExecuteSearch>

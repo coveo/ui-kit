@@ -26,7 +26,7 @@
     "npm:publish": "npm publish --access public",
     "doc:generate": "npm run doc:extract && npm run doc:parse",
     "doc:extract": "api-extractor run --local --verbose",
-    "doc:parse": "ts-node --project ./doc-parser/tsconfig.json ./doc-parser/doc-parser.ts"
+    "doc:parse": "ts-node --project ./doc-parser/tsconfig.build.json ./doc-parser/doc-parser.ts"
   },
   "dependencies": {
     "@coveo/bueno": "^0.8.0",
