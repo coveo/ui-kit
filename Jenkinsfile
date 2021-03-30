@@ -1,5 +1,7 @@
 node('linux && docker') {
   checkout scm
+  def tag = sh(returnStdout: true, script: "git tag --contains").trim()
+  def isBump = tag ==~ /^\[Version Bump\]\s.*/
   def isMaster = env.BRANCH_NAME == 'master'
   def commitHash = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
 
@@ -7,16 +9,6 @@ node('linux && docker') {
     withDockerContainer(image: 'node:14', args: '-u=root') {
       stage('Setup') {
         sh 'npm run setup'
-      }
-
-      if (isMaster) {
-        /**
-         * The build versions must be bumped before building ui-kit in order
-         * to expose the correct versions in headless and atomic.
-         */
-        stage('Bump build version') {
-          sh 'npx lerna version --conventional-prerelease --amend'
-        }
       }
 
       stage('Build') {
@@ -63,35 +55,39 @@ node('linux && docker') {
     }
 
     withDockerContainer(image: 'node:14', args: '-u=root') {
-      stage('Commit bumped version') {
-        withCredentials([
-        usernameColonPassword(credentialsId: 'github-commit-token', variable: 'GH_CREDENTIALS')]) {
-          sh 'npm run bump:version:pre'
+      if (!isBump) {
+        stage('Commit bumped version') {
+            withCredentials([
+            usernameColonPassword(credentialsId: 'github-commit-token', variable: 'GH_CREDENTIALS')]) {
+              sh 'npm run bump:version:pre'
+            }
         }
-      }
-
-      stage('Npm publish') {
-        withCredentials([
-        string(credentialsId: 'NPM_TOKEN', variable: 'NPM_TOKEN')]) {
-          sh "echo //registry.npmjs.org/:_authToken=${NPM_TOKEN} > ~/.npmrc"
-          sh 'npm run npm:publish:alpha || true'
+      } else {
+        stage('Npm publish') {
+          withCredentials([
+          string(credentialsId: 'NPM_TOKEN', variable: 'NPM_TOKEN')]) {
+            sh "echo //registry.npmjs.org/:_authToken=${NPM_TOKEN} > ~/.npmrc"
+            sh 'npm run npm:publish:alpha || true'
+          }
         }
       }
     }
 
     withDockerContainer(image: '458176070654.dkr.ecr.us-east-1.amazonaws.com/jenkins/deployment_package:v7') {
-      stage('Veracode package') {
-        sh 'rm -rf veracode && mkdir veracode'
+      if (isBump) {
+        stage('Veracode package') {
+          sh 'rm -rf veracode && mkdir veracode'
 
-        sh 'mkdir veracode/headless'
-        sh 'cp -R packages/headless/src packages/headless/package.json packages/headless/package-lock.json veracode/headless'
-      }
+          sh 'mkdir veracode/headless'
+          sh 'cp -R packages/headless/src packages/headless/package.json packages/headless/package-lock.json veracode/headless'
+        }
 
-      stage('Deployment pipeline upload') {
-        lerna = readJSON file: 'lerna.json'
-        prereleaseVersion = lerna.version
-        version = prereleaseVersion.split('-alpha')[0]
-        sh "deployment-package package create --with-deploy --resolve COMMIT_HASH=${commitHash} --resolve VERSION=${version} --resolve PRERELEASE=${prereleaseVersion}  || true"
+        stage('Deployment pipeline upload') {
+          lerna = readJSON file: 'lerna.json'
+          prereleaseVersion = lerna.version
+          version = prereleaseVersion.split('-alpha')[0]
+          sh "deployment-package package create --with-deploy --resolve COMMIT_HASH=${commitHash} --resolve VERSION=${version} --resolve PRERELEASE=${prereleaseVersion}  || true"
+        }
       }
     }
   }
