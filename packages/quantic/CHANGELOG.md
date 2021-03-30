@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.10.0-alpha.0](https://bitbucket.org/coveord/ui-kit/compare/v0.9.0...v0.10.0-alpha.0) (2021-03-30)
+
+
+### Features
+
+* **quantic:** removed atomic dependency ([#652](https://bitbucket.org/coveord/ui-kit/issues/652)) ([0814a26](https://bitbucket.org/coveord/ui-kit/commits/0814a267c0236e10d5c545a77850943b14094f98))
+
+
+
+
+
 # [0.9.0](https://bitbucket.org/coveord/ui-kit/compare/v0.9.0-alpha.9...v0.9.0) (2021-03-26)
 
 **Note:** Version bump only for package @coveo/quantic
