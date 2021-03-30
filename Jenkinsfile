@@ -1,5 +1,7 @@
 node('linux && docker') {
   checkout scm
+  def tag = sh(returnStdout: true, script: "git tag --contains").trim()
+  def isBump = tag ==~ /^\[Version Bump\]\s.*/
   def isMaster = env.BRANCH_NAME == 'master'
   def commitHash = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
 
@@ -7,16 +9,6 @@ node('linux && docker') {
     withDockerContainer(image: 'node:14', args: '-u=root') {
       stage('Setup') {
         sh 'npm run setup'
-      }
-
-      if (isMaster) {
-        /**
-         * The build versions must be bumped before building ui-kit in order
-         * to expose the correct versions in headless and atomic.
-         */
-        stage('Bump build version') {
-          sh 'npx lerna version --conventional-prerelease --amend'
-        }
       }
 
       stage('Build') {
@@ -62,14 +54,19 @@ node('linux && docker') {
       sh 'git clean -f'
     }
 
-    withDockerContainer(image: 'node:14', args: '-u=root') {
-      stage('Commit bumped version') {
-        withCredentials([
-        usernameColonPassword(credentialsId: 'github-commit-token', variable: 'GH_CREDENTIALS')]) {
-          sh 'npm run bump:version:pre'
+    if (!isBump) {
+      withDockerContainer(image: 'node:14', args: '-u=root') {
+        stage('Commit bumped version') {
+            withCredentials([
+            usernameColonPassword(credentialsId: 'github-commit-token', variable: 'GH_CREDENTIALS')]) {
+              sh 'npm run bump:version:pre'
+            }
         }
       }
+      return
+    }
 
+    withDockerContainer(image: 'node:14', args: '-u=root') {
       stage('Npm publish') {
         withCredentials([
         string(credentialsId: 'NPM_TOKEN', variable: 'NPM_TOKEN')]) {
