@@ -54,40 +54,41 @@ node('linux && docker') {
       sh 'git clean -f'
     }
 
-    withDockerContainer(image: 'node:14', args: '-u=root') {
-      if (!isBump) {
+    if (!isBump) {
+      withDockerContainer(image: 'node:14', args: '-u=root') {
         stage('Commit bumped version') {
             withCredentials([
             usernameColonPassword(credentialsId: 'github-commit-token', variable: 'GH_CREDENTIALS')]) {
               sh 'npm run bump:version:pre'
             }
         }
-      } else {
-        stage('Npm publish') {
-          withCredentials([
-          string(credentialsId: 'NPM_TOKEN', variable: 'NPM_TOKEN')]) {
-            sh "echo //registry.npmjs.org/:_authToken=${NPM_TOKEN} > ~/.npmrc"
-            sh 'npm run npm:publish:alpha || true'
-          }
+      }
+      return
+    }
+
+    withDockerContainer(image: 'node:14', args: '-u=root') {
+      stage('Npm publish') {
+        withCredentials([
+        string(credentialsId: 'NPM_TOKEN', variable: 'NPM_TOKEN')]) {
+          sh "echo //registry.npmjs.org/:_authToken=${NPM_TOKEN} > ~/.npmrc"
+          sh 'npm run npm:publish:alpha || true'
         }
       }
     }
 
     withDockerContainer(image: '458176070654.dkr.ecr.us-east-1.amazonaws.com/jenkins/deployment_package:v7') {
-      if (isBump) {
-        stage('Veracode package') {
-          sh 'rm -rf veracode && mkdir veracode'
+      stage('Veracode package') {
+        sh 'rm -rf veracode && mkdir veracode'
 
-          sh 'mkdir veracode/headless'
-          sh 'cp -R packages/headless/src packages/headless/package.json packages/headless/package-lock.json veracode/headless'
-        }
+        sh 'mkdir veracode/headless'
+        sh 'cp -R packages/headless/src packages/headless/package.json packages/headless/package-lock.json veracode/headless'
+      }
 
-        stage('Deployment pipeline upload') {
-          lerna = readJSON file: 'lerna.json'
-          prereleaseVersion = lerna.version
-          version = prereleaseVersion.split('-alpha')[0]
-          sh "deployment-package package create --with-deploy --resolve COMMIT_HASH=${commitHash} --resolve VERSION=${version} --resolve PRERELEASE=${prereleaseVersion}  || true"
-        }
+      stage('Deployment pipeline upload') {
+        lerna = readJSON file: 'lerna.json'
+        prereleaseVersion = lerna.version
+        version = prereleaseVersion.split('-alpha')[0]
+        sh "deployment-package package create --with-deploy --resolve COMMIT_HASH=${commitHash} --resolve VERSION=${version} --resolve PRERELEASE=${prereleaseVersion}  || true"
       }
     }
   }
