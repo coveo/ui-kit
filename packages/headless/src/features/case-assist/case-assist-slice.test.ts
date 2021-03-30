@@ -126,7 +126,7 @@ describe('case assist slice', () => {
       responseId: 'a43ef97e-85f0-4328-a1b4-b4bb791deb6e',
     };
     const action = getClassifications.fulfilled(
-      {classifications},
+      classifications,
       'some request id'
     );
     const finalState = caseAssistReducer(state, action);

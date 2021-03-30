@@ -14,7 +14,7 @@ describe('service api client', () => {
 
   let state: CaseAssistAppState;
   let client: ServiceAPIClient;
-  let platformCallMock: jest.Mock<any, any>;
+  let platformCallMock: jest.Mock;
 
   beforeEach(() => {
     state = buildDefaultState();

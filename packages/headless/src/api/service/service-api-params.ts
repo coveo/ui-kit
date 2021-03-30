@@ -13,15 +13,15 @@ export interface BaseCaseAssistParam extends BaseParam {
 export interface ClassifyParam extends BaseCaseAssistParam {
   visitorId: string;
   locale?: string;
-  fields: {[name: string]: string};
+  fields: Record<string, string>;
   debug: boolean;
 }
 
 export interface SuggestDocumentsParam extends BaseCaseAssistParam {
   visitorId: string;
   locale?: string;
-  fields: {[name: string]: string};
-  context?: {[key: string]: any};
+  fields: Record<string, string>;
+  context?: Record<string, string>;
   debug: boolean;
 }
 

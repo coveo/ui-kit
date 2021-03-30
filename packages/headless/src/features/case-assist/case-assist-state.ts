@@ -14,7 +14,6 @@ export interface ClassificationPredictionState {
 export interface ClassificationsState {
   fields: ClassificationFieldState[];
   responseId: string;
-
   loading: boolean;
   error: any;
 }
@@ -23,7 +22,6 @@ export interface DocumentSuggestionsState {
   documents: Result[];
   totalCount: number;
   responseId: string;
-
   loading: boolean;
   error: any;
 }
@@ -33,7 +31,6 @@ export interface CaseAssistState {
   caseInformation: Record<string, string>;
   userContext: Record<string, string>;
   debug: boolean;
-
   classifications: ClassificationsState;
   documentSuggestions: DocumentSuggestionsState;
 }

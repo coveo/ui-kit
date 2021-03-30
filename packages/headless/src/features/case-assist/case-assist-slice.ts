@@ -31,8 +31,8 @@ export const caseAssistReducer = createReducer(
       })
       .addCase(getClassifications.fulfilled, (state, action) => {
         state.classifications = {
-          fields: action.payload.classifications.fields,
-          responseId: action.payload.classifications.responseId,
+          fields: action.payload.fields,
+          responseId: action.payload.responseId,
           loading: false,
           error: null,
         };

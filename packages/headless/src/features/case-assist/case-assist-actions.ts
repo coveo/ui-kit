@@ -26,11 +26,9 @@ export interface GetClassificationsFieldResponse {
 }
 
 export interface GetClassificationsResponse {
-  classifications: {
-    fields: GetClassificationsFieldResponse[];
-    responseId: string;
-    executionReport?: ExecutionReport;
-  };
+  fields: GetClassificationsFieldResponse[];
+  responseId: string;
+  executionReport?: ExecutionReport;
 }
 
 export interface GetDocumentSuggestionsResponse {
@@ -156,10 +154,8 @@ const parseGetClassificationsResponse = (response: ClassifySuccessContent) => {
   });
 
   return {
-    classifications: {
-      fields: fields,
-      responseId: response.responseId,
-    },
+    fields: fields,
+    responseId: response.responseId,
   };
 };
 

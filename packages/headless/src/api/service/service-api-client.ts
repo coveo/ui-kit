@@ -84,7 +84,7 @@ export class CaseAssistAPIClient {
   async classify(
     req: ClassifyParam
   ): Promise<ServiceAPIResponse<ClassifySuccessContent>> {
-    const platformResponse = await PlatformClient.call<any>({
+    const platformResponse = await PlatformClient.call<unknown>({
       ...baseCaseAssistRequest(
         req,
         'POST',
@@ -98,14 +98,14 @@ export class CaseAssistAPIClient {
     });
 
     return platformResponse.response.ok
-      ? {success: platformResponse.body}
-      : {error: platformResponse.body};
+      ? {success: platformResponse.body as ClassifySuccessContent}
+      : ({error: platformResponse.body} as ServiceAPIErrorResponse);
   }
 
   async suggestDocuments(
     req: SuggestDocumentsParam
   ): Promise<ServiceAPIResponse<SuggestDocumentsSuccessContent>> {
-    const platformResponse = await PlatformClient.call<any>({
+    const platformResponse = await PlatformClient.call<unknown>({
       ...baseCaseAssistRequest(
         req,
         'POST',
@@ -119,8 +119,8 @@ export class CaseAssistAPIClient {
     });
 
     return platformResponse.response.ok
-      ? {success: platformResponse.body}
-      : {error: platformResponse.body};
+      ? {success: platformResponse.body as SuggestDocumentsSuccessContent}
+      : ({error: platformResponse.body} as ServiceAPIErrorResponse);
   }
 }
 
@@ -137,16 +137,15 @@ const prepareSuggestDocumentsRequestParams = (req: SuggestDocumentsParam) => ({
   context: req.context,
 });
 
-const prepareSuggestionRequestFields = (fields: any) => {
-  const payload: {[key: string]: {value: string}} = {};
-
-  Object.keys(fields).forEach((fieldName) => {
-    const fieldValue = fields[fieldName];
-    if (fieldValue)
-      payload[fieldName] = {
-        value: fieldValue,
-      };
-  });
-
-  return payload;
-};
+const prepareSuggestionRequestFields = (fields: Record<string, string>) =>
+  Object.keys(fields)
+    .filter((fieldName) => new Boolean(fields[fieldName]))
+    .reduce(
+      (result, fieldName) => ({
+        ...result,
+        [fieldName]: {
+          value: fields[fieldName],
+        },
+      }),
+      {} as Record<string, unknown>
+    );

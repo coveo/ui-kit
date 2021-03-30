@@ -6,6 +6,8 @@ import {
   getClassificationById,
   getDocumentSuggestionById,
 } from './case-assist-selectors';
+import {validatePayload} from '../../utils/validate-payload';
+import {NumberValue, StringValue} from '@coveo/bueno';
 
 export interface AsyncThunkOptions {
   state: CaseAssistAppState;
@@ -43,9 +45,13 @@ export const logTicketFieldUpdated = createAsyncThunk<
   LogTicketFieldUpdatedPayload,
   AsyncThunkOptions
 >('analytics/caseAssist/ticketFieldUpdated', (payload, {getState}) => {
+  const validated = validatePayload(payload, {
+    fieldName: new StringValue({required: true, emptyAllowed: false}),
+  });
+
   updateWithCaseInformation(getState().caseAssist.caseInformation);
   handleOneAnalyticsEvent('svc:setAction', 'ticket_field_update', {
-    fieldName: payload.fieldName,
+    fieldName: validated.payload.fieldName,
   });
   handleOneAnalyticsEvent('send', 'event', 'svc', 'click');
 });
@@ -59,10 +65,13 @@ export const logTicketClassificationClick = createAsyncThunk<
   LogTicketClassificationClickPayload,
   AsyncThunkOptions
 >('analytics/caseAssist/ticketClassificationClick', (payload, {getState}) => {
+  const validated = validatePayload(payload, {
+    predictionId: new StringValue({required: true, emptyAllowed: false}),
+  });
   const state = getState();
   const prediction = getClassificationById(
     state.caseAssist,
-    payload.predictionId
+    validated.payload.predictionId
   );
   if (!prediction) {
     return;
@@ -101,18 +110,22 @@ export const logTicketDocumentSuggestionClick = createAsyncThunk<
   AsyncThunkOptions
 >(
   'analytics/caseAssist/ticketDocumentSuggestionClick',
-  ({suggestionId}, {getState}) => {
+  (payload, {getState}) => {
+    const validated = validatePayload(payload, {
+      suggestionId: new StringValue({required: true, emptyAllowed: false}),
+    });
+
     const state = getState();
     const suggestion = getDocumentSuggestionById(
       state.caseAssist,
-      suggestionId
+      validated.payload.suggestionId
     );
     if (!suggestion) {
       return;
     }
 
     handleOneAnalyticsEvent('svc:setAction', 'suggestion_click', {
-      suggestionId,
+      suggestionId: validated.payload.suggestionId,
       responseId: state.caseAssist.documentSuggestions.responseId,
       suggestion: {
         documentUri: suggestion.document.clickUri,
@@ -137,19 +150,23 @@ export const logTicketDocumentSuggestionRating = createAsyncThunk<
   AsyncThunkOptions
 >(
   'analytics/caseAssist/ticketDocumentSuggestionRating',
-  ({suggestionId, rating}, {getState}) => {
+  (payload, {getState}) => {
+    const validated = validatePayload(payload, {
+      suggestionId: new StringValue({required: true, emptyAllowed: false}),
+      rating: new NumberValue({required: true, min: 0, max: 1}),
+    });
     const state = getState();
     const suggestion = getDocumentSuggestionById(
       state.caseAssist,
-      suggestionId
+      validated.payload.suggestionId
     );
     if (!suggestion) {
       return;
     }
 
     handleOneAnalyticsEvent('svc:setAction', 'suggestion_rate', {
-      rate: rating,
-      suggestionId,
+      rate: validated.payload.rating,
+      suggestionId: validated.payload.suggestionId,
       responseId: state.caseAssist.documentSuggestions.responseId,
       suggestion: {
         documentUri: suggestion.document.clickUri,
@@ -190,8 +207,15 @@ export const logTicketCreated = createAsyncThunk<
   void,
   LogTicketCreatedPayload,
   AsyncThunkOptions
->('analytics/caseAssist/ticketCreated', ({ticketId}, {getState}) => {
-  updateWithCaseInformation(getState().caseAssist.caseInformation, ticketId);
+>('analytics/caseAssist/ticketCreated', (payload, {getState}) => {
+  const validated = validatePayload(payload, {
+    ticketId: new StringValue({required: true, emptyAllowed: false}),
+  });
+
+  updateWithCaseInformation(
+    getState().caseAssist.caseInformation,
+    validated.payload.ticketId
+  );
   handleOneAnalyticsEvent('svc:setAction', 'ticket_create');
   handleOneAnalyticsEvent('send', 'event', 'svc', 'click');
 });
