@@ -1,6 +1,6 @@
 import {BooleanValue, StringValue} from '@coveo/bueno';
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
-import {getVisitorID} from '../../api/analytics/analytics';
+import {CoveoAnalyticsClient} from 'coveo.analytics';
 import {ExecutionReport} from '../../api/search/search/execution-report';
 import {
   ServiceAPIResponse,
@@ -98,28 +98,28 @@ export const setDebug = createAction(
     })
 );
 
-const buildGetClassificationsRequest = (
+const buildGetClassificationsRequest = async (
   s: CaseAssistAppState
-): ClassifyParam => ({
+): Promise<ClassifyParam> => ({
   url: s.configuration.platformUrl,
   accessToken: s.configuration.accessToken,
   organizationId: s.configuration.organizationId,
   locale: s.configuration.search.locale,
   caseAssistId: s.caseAssist.caseAssistId,
-  visitorId: getVisitorID() || 'foo',
+  visitorId: await getVisitorId(),
   fields: s.caseAssist.caseInformation,
   debug: s.caseAssist.debug,
 });
 
-const buildGetDocumentSuggestionsRequest = (
+const buildGetDocumentSuggestionsRequest = async (
   s: CaseAssistAppState
-): SuggestDocumentsParam => ({
+): Promise<SuggestDocumentsParam> => ({
   url: s.configuration.platformUrl,
   accessToken: s.configuration.accessToken,
   organizationId: s.configuration.organizationId,
   locale: s.configuration.search.locale,
   caseAssistId: s.caseAssist.caseAssistId,
-  visitorId: getVisitorID() || 'foo',
+  visitorId: await getVisitorId(),
   fields: s.caseAssist.caseInformation,
   context: s.caseAssist.userContext,
   debug: s.caseAssist.debug,
@@ -134,7 +134,7 @@ export const getClassifications = createAsyncThunk<
   async (_, {getState, rejectWithValue, extra: {serviceAPIClient}}) => {
     const state = getState();
     const response = await serviceAPIClient.caseAssist.classify(
-      buildGetClassificationsRequest(state)
+      await buildGetClassificationsRequest(state)
     );
 
     if (isErrorResponse(response)) {
@@ -172,7 +172,7 @@ export const getDocumentSuggestions = createAsyncThunk<
   async (_, {getState, rejectWithValue, extra: {serviceAPIClient}}) => {
     const state = getState();
     const response = await serviceAPIClient.caseAssist.suggestDocuments(
-      buildGetDocumentSuggestionsRequest(state)
+      await buildGetDocumentSuggestionsRequest(state)
     );
 
     if (isErrorResponse(response)) {
@@ -187,4 +187,9 @@ const isErrorResponse = (
   response: ServiceAPIResponse<any>
 ): response is ServiceAPIErrorResponse => {
   return (response as ServiceAPIErrorResponse).error !== undefined;
+};
+
+const getVisitorId = async () => {
+  const client = new CoveoAnalyticsClient({});
+  return await client.getCurrentVisitorId();
 };

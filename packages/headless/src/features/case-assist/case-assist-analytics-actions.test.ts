@@ -45,12 +45,7 @@ describe('case assist analytics actions', () => {
   };
   const suggestDocumentsResponseId = 'documents suggest response id';
 
-  const initialTicketData = {
-    custom: {},
-    description: undefined,
-    subject: undefined,
-    ticketId: undefined,
-  };
+  const initialTicketData = {};
 
   let state: CaseAssistAppState;
   let engine: MockEngine<CaseAssistAppState>;
@@ -278,7 +273,7 @@ describe('case assist analytics actions', () => {
       expect(uaMock.mock.calls).toEqual([
         getSetTicketArgs({
           ...initialTicketData,
-          ticketId,
+          id: ticketId,
         }),
         getSetActionArgs('ticket_create'),
         getSendEventArgs('click'),

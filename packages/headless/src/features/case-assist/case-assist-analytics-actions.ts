@@ -203,9 +203,9 @@ const updateWithCaseInformation = (
   const {subject, description, ...rest} = caseInformation;
 
   let data: Record<string, unknown> = {
+    id: ticketId,
     subject,
     description,
-    ticketId,
   };
 
   if (Object.keys(rest).length > 0) {
