@@ -28,6 +28,7 @@ import {
   NumericFacetSection,
   SearchSection,
 } from '../../../../state/state-sections';
+import {validateManualNumericRanges} from '../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions';
 
 /**
  * The options defining a `NumericFacet`.
@@ -119,16 +120,6 @@ export const numericFacetOptionsSchema = new Schema<
   sortCriteria: new StringValue({constrainTo: rangeFacetSortCriteria}),
 });
 
-export function validateManualNumericValues(options: NumericFacetOptions) {
-  options.currentValues?.forEach((value) => {
-    if (value.start > value.end) {
-      throw new Error(
-        `The start value is greater than the end value for the numeric range ${value.start} to ${value.end}`
-      );
-    }
-  });
-}
-
 export function validateNumericFacetOptions(
   engine: Engine<NumericFacetSection & ConfigurationSection & SearchSection>,
   options: NumericFacetOptions
@@ -139,5 +130,5 @@ export function validateNumericFacetOptions(
     options,
     'buildNumericFacet'
   );
-  validateManualNumericValues(options);
+  validateManualNumericRanges(options);
 }

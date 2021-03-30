@@ -6,6 +6,7 @@ import {deselectAllFacetValues} from '../../facet-set/facet-set-actions';
 import {
   validatePayload,
   requiredNonEmptyString,
+  serializeSchemaValidationError,
 } from '../../../../utils/validate-payload';
 import {facetIdDefinition} from '../../generic/facet-actions-validation';
 import {
@@ -17,7 +18,6 @@ import {
 } from '@coveo/bueno';
 import {RangeFacetSortCriterion} from '../generic/interfaces/request';
 import {numericFacetValueDefinition} from '../generic/range-facet-validate-payload';
-import {validateManualNumericValues} from '../../../../controllers/facets/range-facet/numeric-facet/headless-numeric-facet-options';
 const numericFacetRequestDefinition = {
   state: requiredNonEmptyString,
   start: new NumberValue({required: true}),
@@ -39,6 +39,22 @@ const numericFacetRegistrationOptionsDefinition = {
   sortCriteria: new Value<RangeFacetSortCriterion>({required: false}),
 };
 
+export function validateManualNumericRanges(
+  options: Pick<NumericFacetRegistrationOptions, 'currentValues'>
+) {
+  if (!options.currentValues) {
+    return;
+  }
+
+  options.currentValues.forEach(({start, end}) => {
+    if (start > end) {
+      throw new Error(
+        `The start value is greater than the end value for the numeric range ${start} to ${end}`
+      );
+    }
+  });
+}
+
 /**
  * Registers a numeric facet.
  * @param (NumericFacetRegistrationOptions) The options to register the facet with.
@@ -46,8 +62,13 @@ const numericFacetRegistrationOptionsDefinition = {
 export const registerNumericFacet = createAction(
   'numericFacet/register',
   (payload: NumericFacetRegistrationOptions) => {
-    validateManualNumericValues(payload);
-    return validatePayload(payload, numericFacetRegistrationOptionsDefinition);
+    try {
+      validatePayload(payload, numericFacetRegistrationOptionsDefinition);
+      validateManualNumericRanges(payload);
+      return {payload, error: null};
+    } catch (error) {
+      return {payload, error: serializeSchemaValidationError(error)};
+    }
   }
 );
 
