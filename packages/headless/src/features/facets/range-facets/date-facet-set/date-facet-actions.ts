@@ -20,7 +20,7 @@ import {
 import {facetIdDefinition} from '../../generic/facet-actions-validation';
 import {RangeFacetSortCriterion} from '../generic/interfaces/request';
 import {dateFacetValueDefinition} from '../generic/range-facet-validate-payload';
-import {buildDateRange} from '../../../../controllers';
+import {buildDateRange} from '../../../../controllers/facets/range-facet/date-facet/date-range';
 
 const dateRangeRequestDefinition = {
   start: requiredNonEmptyString,
