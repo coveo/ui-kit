@@ -1,9 +1,9 @@
 node('linux && docker') {
   checkout scm
-  def tag = sh(returnStdout: true, script: "git tag --contains").trim()
-  def isBump = tag ==~ /^\[Version Bump\]\s.*/
-  def isMaster = env.BRANCH_NAME == 'master'
   def commitHash = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
+  def tag = sh(script: "git tag --contains", returnStdout: true).trim()
+  def isBump = tag ==~ /^v[0-9].*$/
+  def isMaster = env.BRANCH_NAME == 'master'
 
   withEnv(['npm_config_cache=npm-cache', 'CI=true']) {
     withDockerContainer(image: 'node:14', args: '-u=root') {
