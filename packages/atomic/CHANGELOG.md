@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.10.0-alpha.1](https://github.com/coveo/ui-kit/compare/v0.10.0-alpha.0...v0.10.0-alpha.1) (2021-03-30)
+
+
+### Bug Fixes
+
+* **atomic:** improve breadcrumb display when many are selected ([#656](https://github.com/coveo/ui-kit/issues/656)) ([4fdb529](https://github.com/coveo/ui-kit/commit/4fdb5296725d08c9a76c1b592bab36cd90032d75))
+
+
+
+
+
 # [0.10.0-alpha.0](https://github.com/coveo/ui-kit/compare/v0.9.0...v0.10.0-alpha.0) (2021-03-30)
 
 
