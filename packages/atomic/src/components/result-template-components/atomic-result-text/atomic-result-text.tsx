@@ -57,10 +57,14 @@ export class AtomicResultText {
   }
 
   private get resultValue() {
-    const value = ResultTemplatesHelpers.getResultProperty(
+    let value = ResultTemplatesHelpers.getResultProperty(
       this.result,
       this.field
     );
+
+    if (Array.isArray(value)) {
+      value = value.toString();
+    }
 
     if (typeof value !== 'string' || value.trim() === '') {
       return null;
