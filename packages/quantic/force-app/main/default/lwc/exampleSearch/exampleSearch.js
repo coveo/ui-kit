@@ -2,11 +2,11 @@
 import template1 from './resultTemplates/template1.html';
 // @ts-ignore
 import template2 from './resultTemplates/template2.html';
-import { LightningElement, api } from 'lwc';
+import {LightningElement, api} from 'lwc';
 
-export default class SampleApp extends LightningElement {
+export default class ExampleSearch extends LightningElement {
   /** @type {String} */
-  @api engineId = 'sample-app';
+  @api engineId = 'example-search';
   
   handleResultTemplateRegistration(event) {
     event.stopPropagation();

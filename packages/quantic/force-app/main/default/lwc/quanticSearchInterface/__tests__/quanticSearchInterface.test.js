@@ -1,5 +1,5 @@
 import {createElement} from 'lwc';
-import QuanticSearchInterface from 'quanticSearchInterface/quanticSearchInterface';
+import QuanticSearchInterface from 'c/quanticSearchInterface';
 import {cleanup} from 'c/testUtils';
 
 describe('c-quantic-search-interface', () => {

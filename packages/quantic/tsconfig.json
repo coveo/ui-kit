@@ -63,6 +63,9 @@
             "c/quanticHeadlessLoader": [
                 "quanticHeadlessLoader/quanticHeadlessLoader.js"
             ],
+            "c/quanticUtils": [
+              "quanticUtils/quanticUtils.js"
+            ],
         }
     },
     "include": [
