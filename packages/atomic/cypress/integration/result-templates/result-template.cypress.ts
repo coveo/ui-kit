@@ -10,6 +10,18 @@ import {
   ResultTemplateSelectors,
 } from './result-template-selectors';
 
+const customTemplate = '<template>Custom template</template>';
+
+function firstResultShouldUseCustomTemplate() {
+  cy.get(ResultListSelectors.component)
+    .find('atomic-result')
+    .first()
+    .shadow()
+    .then((firstResult) => {
+      expect(firstResult[0].innerHTML).contain('Custom template');
+    });
+}
+
 describe('Result Template Component', () => {
   describe(`when not a child of an "${ResultListSelectors.component}" component`, () => {
     it(`should render an "${ComponentErrorSelectors.component}" component`, () => {
@@ -33,32 +45,9 @@ describe('Result Template Component', () => {
   });
 
   it('should save the template content in order to render', () => {
-    const content = '<h3>template content</h3>';
-    setUpPage(
-      resultListComponent(
-        resultTemplateComponent(`<template>${content}</template>`)
-      )
-    );
-    cy.get(ResultListSelectors.component)
-      .find('atomic-result')
-      .first()
-      .shadow()
-      .then((firstResult) => {
-        expect(firstResult[0].innerHTML).contain(content);
-      });
+    setUpPage(resultListComponent(resultTemplateComponent(customTemplate)));
+    firstResultShouldUseCustomTemplate();
   });
-
-  const customTemplate = '<template>Custom template</template>';
-
-  function firstResultShouldUseCustomTemplate() {
-    cy.get(ResultListSelectors.component)
-      .find('atomic-result')
-      .first()
-      .shadow()
-      .then((firstResult) => {
-        expect(firstResult[0].innerHTML).contain('Custom template');
-      });
-  }
 
   it('the "must-match-x" prop should add a condition to the template', () => {
     const filetype = 'veryspecificfiletype';
