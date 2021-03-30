@@ -62,7 +62,10 @@
             ],
             "c/quanticUtils": [
                 "quanticUtils/quanticUtils.js"
-            ]
+            ],
+            "c/testUtils": [
+                "testUtils/testUtils.js"
+            ],
         }
     },
     "include": [
