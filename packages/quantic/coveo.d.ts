@@ -3,6 +3,7 @@ import * as HeadlessTypes from './force-app/main/default/staticresources/coveohe
 export * from './force-app/main/default/staticresources/coveoheadless/index';
 import {LightningElement} from 'lwc';
 import {HeadlessEngine} from '../headless/dist/index';
+import {Deferred} from 'utils';
 declare global {
   // eslint-disable-next-line no-undef
   const CoveoHeadless: typeof HeadlessTypes;
@@ -14,8 +15,14 @@ declare global {
           element: LightningElement;
           initialized: boolean;
         }[];
-        config: HeadlessConfigurationOptions;
+        options:
+          | Deferred
+          | {
+              configuration: HeadlessConfigurationOptions;
+              reducers: Reducers;
+            };
         engine: HeadlessEngine;
+        initializedCallback?: Function;
       };
     };
   }
