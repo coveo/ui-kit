@@ -55,11 +55,11 @@ describe('Standard Facet', () => {
   });
 
   describe('When page is loaded', () => {
-    it('Facet should load, pass accessibility test and have correct label', () => {
+    it.skip('Facet should load, pass accessibility test and have correct label', () => {
       validateFacetComponentLoaded(facetProp.label);
     });
 
-    it('Facet should contain Searchbox, ShowMore button and 10 facetValue', () => {
+    it.skip('Facet should contain Searchbox, ShowMore button and 10 facetValue', () => {
       cy.get(FacetAlias.facetShadow)
         .find(FacetSelectors.facetSearchbox)
         .should('be.visible');
@@ -69,7 +69,7 @@ describe('Standard Facet', () => {
       validateFacetNumberofValueEqual(10);
     });
 
-    it('FacetValue list should not in Alphanumeric order', () => {
+    it.skip('FacetValue list should not in Alphanumeric order', () => {
       cy.getTextOfAllElements(FacetAlias.facetAllValueLabel).then(
         (originalValues) => {
           expect(originalValues).not.to.eql(doSortAlphanumeric(originalValues));
@@ -79,14 +79,14 @@ describe('Standard Facet', () => {
   });
 
   describe('When select 1 facetValue checkbox', () => {
-    it('Should active checkbox and log UA', () => {
+    it.skip('Should active checkbox and log UA', () => {
       assertBasicFacetFunctionality(
         FacetAlias.facetFirstValueLabel,
         facetProp.field
       );
     });
 
-    it('Should trigger breadcrumb and display correctly', () => {
+    it.skip('Should trigger breadcrumb and display correctly', () => {
       cy.get(FacetAlias.facetFirstValueLabel).click();
       createBreadcrumbShadowAlias();
       cy.get(BreadcrumbAlias.breadcrumbClearAllFilter).should('be.visible');
@@ -96,7 +96,7 @@ describe('Standard Facet', () => {
       );
     });
 
-    it('Should reflect selected facetValue on URL', () => {
+    it.skip('Should reflect selected facetValue on URL', () => {
       cy.get(FacetAlias.facetFirstValueLabel)
         .click()
         .find('label span:nth-child(1)')
@@ -109,13 +109,13 @@ describe('Standard Facet', () => {
   });
 
   describe('When deselect 1 selected facetValue checkbox', () => {
-    it('should clear the checkbox and log UA', () => {
+    it.skip('should clear the checkbox and log UA', () => {
       assertDeselectFacet(facetProp.field);
     });
   });
 
   describe('When select 2 facetValue checkboxes', () => {
-    it('Two checkboxes should selected and should record UA correctly', () => {
+    it.skip('Two checkboxes should selected and should record UA correctly', () => {
       cy.get(FacetAlias.facetFirstValueLabel).click();
       cy.get(FacetAlias.facetSecondValueLabel).click();
       cy.get(FacetAlias.facetFirstValueLabel)
@@ -130,7 +130,7 @@ describe('Standard Facet', () => {
       });
     });
 
-    it('Should trigger breadcrumb and display correctly', () => {
+    it.skip('Should trigger breadcrumb and display correctly', () => {
       cy.get(FacetAlias.facetFirstValueLabel).click();
       cy.get(FacetAlias.facetSecondValueLabel).click();
       createBreadcrumbShadowAlias();
@@ -145,7 +145,7 @@ describe('Standard Facet', () => {
       );
     });
 
-    it('Should reflect selected facetValue on URL', () => {
+    it.skip('Should reflect selected facetValue on URL', () => {
       cy.get(FacetAlias.facetFirstValueLabel).click();
       cy.get(FacetAlias.facetSecondValueLabel).click();
       cy.get(FacetAlias.facetFirstValueLabel)
@@ -167,7 +167,7 @@ describe('Standard Facet', () => {
   });
 
   describe('When click on ShowMore button', () => {
-    it('Should display double NumberOfValue and ShowLessButton should be visible', () => {
+    it.skip('Should display double NumberOfValue and ShowLessButton should be visible', () => {
       validateFacetNumberofValueEqual(10);
       cy.get(FacetAlias.facetShadow)
         .find(FacetSelectors.showMoreButton)
@@ -178,7 +178,7 @@ describe('Standard Facet', () => {
         .should('be.visible');
     });
 
-    it('Should log UA', () => {
+    it.skip('Should log UA', () => {
       cy.get(FacetAlias.facetShadow)
         .find(FacetSelectors.showMoreButton)
         .click();
@@ -190,7 +190,7 @@ describe('Standard Facet', () => {
       });
     });
 
-    it('Should sort facetValue in alphanumeric order', () => {
+    it.skip('Should sort facetValue in alphanumeric order', () => {
       cy.get(FacetAlias.facetShadow)
         .find(FacetSelectors.showMoreButton)
         .click();
@@ -204,7 +204,7 @@ describe('Standard Facet', () => {
   });
 
   describe('When click on ShowLess button', () => {
-    it('Should display original numberOfValue and ShowLessButton should not be visible', () => {
+    it.skip('Should display original numberOfValue and ShowLessButton should not be visible', () => {
       cy.get(FacetAlias.facetShadow)
         .find(FacetSelectors.showMoreButton)
         .click();
@@ -218,7 +218,7 @@ describe('Standard Facet', () => {
         .should('not.exist');
     });
 
-    it('Should log UA', () => {
+    it.skip('Should log UA', () => {
       cy.get(FacetAlias.facetShadow)
         .find(FacetSelectors.showMoreButton)
         .click();
@@ -235,7 +235,7 @@ describe('Standard Facet', () => {
   });
 
   describe('When click ClearAll facet', () => {
-    it('Should clear all checkboxes and log UA', () => {
+    it.skip('Should clear all checkboxes and log UA', () => {
       assertClearAllFacet();
     });
   });
@@ -252,7 +252,7 @@ describe('Facet with no facetSearch, and numberOfValues is 5 ', () => {
     createAliasFacetUL(facetProp.field);
   });
 
-  it('Facet should load without facet search and 5 facet values', () => {
+  it.skip('Facet should load without facet search and 5 facet values', () => {
     validateFacetComponentLoaded(facetProp.label);
     cy.get(FacetAlias.facetShadow)
       .find(FacetSelectors.facetSearchbox)
@@ -260,7 +260,7 @@ describe('Facet with no facetSearch, and numberOfValues is 5 ', () => {
     validateFacetNumberofValueEqual(5);
   });
 
-  it('Should active checkbox and log UA', () => {
+  it.skip('Should active checkbox and log UA', () => {
     assertBasicFacetFunctionality(
       FacetAlias.facetFirstValueLabel,
       facetProp.field
@@ -269,12 +269,12 @@ describe('Facet with no facetSearch, and numberOfValues is 5 ', () => {
 });
 
 describe('Facet with different sort-criteria options', () => {
-  it('Should using "automatic" sort for default setting', async () => {
+  it.skip('Should using "automatic" sort for default setting', async () => {
     setupFacet(facetProp.field, facetProp.label);
     await assertSortCriteria(sortCriteriaOption.automatic, 0);
   });
 
-  it('Should using "alphanumeric" sort for custom setting', async () => {
+  it.skip('Should using "alphanumeric" sort for custom setting', async () => {
     setupFacet(
       facetProp.field,
       facetProp.label,
@@ -283,23 +283,23 @@ describe('Facet with different sort-criteria options', () => {
     await assertSortCriteria(sortCriteriaOption.alphanumeric, 0);
   });
 
-  it('Should using "occurrences" sort for custom setting', async () => {
+  it.skip('Should using "occurrences" sort for custom setting', async () => {
     setupFacet(facetProp.field, facetProp.label, 'sort-criteria="occurrences"');
     await assertSortCriteria(sortCriteriaOption.occurrences, 0);
   });
 
-  it('Should using "score" sort for custom setting', async () => {
+  it.skip('Should using "score" sort for custom setting', async () => {
     setupFacet(facetProp.field, facetProp.label, 'sort-criteria="score"');
     await assertSortCriteria(sortCriteriaOption.score, 0);
   });
 
-  it('Should using "automatic" sort for custom setting', async () => {
+  it.skip('Should using "automatic" sort for custom setting', async () => {
     setupFacet(facetProp.field, facetProp.label, 'sort-criteria="automatic"');
     await assertSortCriteria(sortCriteriaOption.automatic, 0);
   });
 
   describe('Trigger ShowMore on a facet with sort-criteria other than "automatic"', () => {
-    it('Should not change the sort order', async () => {
+    it.skip('Should not change the sort order', async () => {
       setupFacet(
         facetProp.field,
         facetProp.label,
@@ -317,7 +317,7 @@ describe('Facet with different sort-criteria options', () => {
 
 describe('Facet with invalid options', () => {
   describe('Facet with invalid field', () => {
-    it('Should render an error when field is invalid', () => {
+    it.skip('Should render an error when field is invalid', () => {
       setupFacet('@test', facetProp.label);
       shouldRenderErrorComponent(FacetSelectors.facetStandard);
     });
@@ -328,19 +328,19 @@ describe('Facet with invalid options', () => {
   });
 
   describe('Facet with invalid numberOfValues', () => {
-    it('Should render an error when the prop is not in the list of numberOfValues', () => {
+    it.skip('Should render an error when the prop is not in the list of numberOfValues', () => {
       setupFacet(facetProp.field, facetProp.label, 'number-of-values=-5');
       shouldRenderErrorComponent(FacetSelectors.facetStandard);
     });
 
-    it('Should render an error when the prop is not a number ', () => {
+    it.skip('Should render an error when the prop is not a number ', () => {
       setupFacet(facetProp.field, facetProp.label, 'number-of-values="here"');
       shouldRenderErrorComponent(FacetSelectors.facetStandard);
     });
   });
 
   describe('Facet with invalid sort criteria', () => {
-    it('Should render an error when the prop is not in the list of sortCriteria', () => {
+    it.skip('Should render an error when the prop is not in the list of sortCriteria', () => {
       setupFacet(facetProp.field, facetProp.label, 'sort-criteria=test');
       shouldRenderErrorComponent(FacetSelectors.facetStandard);
     });
@@ -351,5 +351,5 @@ describe('Facet with custom delimitingCharacter', () => {
   beforeEach(() => {
     setupFacet(facetProp.field, facetProp.label, 'delimiting-character=","');
   });
-  it('Should generate Facet correctly');
+  it.skip('Should generate Facet correctly');
 });
