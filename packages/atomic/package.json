@@ -23,7 +23,7 @@
     "test": "stencil test --spec --e2e",
     "test:watch": "stencil test --spec --e2e --watchAll",
     "generate": "stencil generate",
-    "cypress:test": "npx cypress run --record --key 0e9d8bcc-a33a-4562-8604-c04e7bed0c7e",
+    "cypress:test": "npx cypress run --record --key 0e9d8bcc-a33a-4562-8604-c04e7bed0c7e --browser chrome",
     "cypress:open": "npx cypress open",
     "npm:publish": "npm publish --access public"
   },
