@@ -1,4 +1,4 @@
-export type EntityKind =
+type EntityKind =
   | 'primitive'
   | 'primitive-with-type-alias'
   | 'object'

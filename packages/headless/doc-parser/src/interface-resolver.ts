@@ -15,7 +15,7 @@ import {
 } from '@microsoft/api-extractor-model';
 import {DocComment} from '@microsoft/tsdoc';
 import {findApi} from './api-finder';
-import {AnyEntity, EntityKind, EntityWithTypeAlias} from './entity';
+import {AnyEntity, EntityWithTypeAlias} from './entity';
 import {
   buildEntity,
   buildFuncEntity,
@@ -23,6 +23,7 @@ import {
   buildParamEntity,
   buildReturnTypeEntity,
 } from './entity-builder';
+import {sortEntities} from './entity-sorter';
 
 export function resolveInterfaceMembers(
   entry: ApiEntryPoint,
@@ -60,30 +61,6 @@ function filterOverridesAndCombine(
   });
 
   return members.concat(filtered);
-}
-
-function sortEntities(entities: AnyEntity[]) {
-  const kindOrder: Record<EntityKind, number> = {
-    primitive: 0,
-    'primitive-with-type-alias': 0,
-    object: 0,
-    function: 1,
-  };
-
-  return entities.sort((a, b) => {
-    // Sort by kind (primitives & objects, then functions)
-    let order = kindOrder[a.kind] - kindOrder[b.kind];
-
-    // Sort by optional (mandatory then optional)
-    if (a.kind !== 'function' && b.kind !== 'function') {
-      order += ((a.isOptional ? 1 : 0) - (b.isOptional ? 1 : 0)) / 2;
-    }
-
-    // Sort alphabetically
-    order += a.name.localeCompare(b.name) / 4;
-
-    return order;
-  });
 }
 
 function resolveMembers(

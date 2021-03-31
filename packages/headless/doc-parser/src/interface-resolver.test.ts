@@ -1,5 +1,3 @@
-import {IApiMethodSignatureOptions} from '@microsoft/api-extractor-model';
-import {TSDocParser} from '@microsoft/tsdoc';
 import {buildMockApiCallSignature} from '../mocks/mock-api-call-signature';
 import {buildMockApiDocComment} from '../mocks/mock-api-doc-comment';
 import {buildMockApiIndexSignature} from '../mocks/mock-api-index-signature';
@@ -18,70 +16,6 @@ import {buildMockFuncEntity} from '../mocks/mock-func-entity';
 import {buildMockObjEntity} from '../mocks/mock-obj-entity';
 import {AnyEntity} from './entity';
 import {resolveInterfaceMembers} from './interface-resolver';
-
-function flatMap<T, U>(
-  values: T[],
-  predicate: (value: T, index: number) => U[]
-) {
-  return values.reduce(
-    (allValues, value, index) => [...allValues, ...predicate(value, index)],
-    <U[]>[]
-  );
-}
-
-function arrayJoin<T, U>(values: T[], separator: U): (T | U)[] {
-  return flatMap(values, (value, i) =>
-    i === 0 ? [value] : [separator, value]
-  );
-}
-
-function mockSimpleProp(name: string, type: string, isOptional: boolean) {
-  return buildMockApiPropertySignature({
-    name,
-    excerptTokens: [
-      buildContentExcerptToken(`${name}${isOptional ? '?' : ''}: `),
-      buildContentExcerptToken(type),
-      buildContentExcerptToken(';'),
-    ],
-    propertyTypeTokenRange: {startIndex: 1, endIndex: 2},
-    isOptional,
-  });
-}
-
-function mockSimpleMethod(
-  name: string,
-  parameters: Record<string, string>,
-  returnType: string,
-  comment: string
-) {
-  const parameterNames = Object.keys(parameters);
-  const parametersCount = parameterNames.length;
-  return buildMockApiMethodSignature({
-    name,
-    excerptTokens: [
-      buildContentExcerptToken(`${name}(`),
-      ...arrayJoin(
-        flatMap(parameterNames, (parameterName) => [
-          buildContentExcerptToken(`${parameterName}: `),
-          buildContentExcerptToken(parameters[parameterName]),
-        ]),
-        buildContentExcerptToken(', ')
-      ),
-      buildContentExcerptToken(': '),
-      buildContentExcerptToken(returnType),
-    ],
-    parameters: parameterNames.map((parameterName, i) => ({
-      parameterName,
-      parameterTypeTokenRange: {startIndex: 2 + i * 2, endIndex: 3 + i * 2},
-    })),
-    returnTypeTokenRange: {
-      startIndex: parametersCount + 2,
-      endIndex: parametersCount + 3,
-    },
-    docComment: (new TSDocParser().parseString(comment)
-      .docComment as unknown) as IApiMethodSignatureOptions['docComment'],
-  });
-}
 
 describe('#resolveInterfaceMembers', () => {
   it('resolves a property with a primitive type', () => {
@@ -862,53 +796,5 @@ describe('#resolveInterfaceMembers', () => {
     ];
 
     expect(result).toEqual(firstExpectedMembers);
-  });
-
-  it('resolves members in the correct order', () => {
-    const entryPoint = buildMockEntryPoint();
-
-    const testInterface = buildMockApiInterface({
-      name: 'HelloInterface',
-      members: [
-        mockSimpleProp('aab', 'string', true),
-        mockSimpleMethod(
-          'sayHello',
-          {message: 'string'},
-          'void',
-          `
-            /**
-             * Says hello
-             * @param message - The message to include
-             * @returns Nothing
-             */
-          `
-        ),
-        mockSimpleProp('aac', 'number', false),
-        mockSimpleMethod(
-          'getName',
-          {},
-          'string',
-          `
-            /**
-             * Gets the user's name
-             * @returns The user's name
-             */
-          `
-        ),
-        mockSimpleProp('aaa', 'string', false),
-      ],
-    });
-
-    entryPoint.addMember(testInterface);
-
-    const result = resolveInterfaceMembers(entryPoint, testInterface, []);
-
-    expect(result.map((entity) => entity.name)).toStrictEqual([
-      'aaa',
-      'aac',
-      'aab',
-      'getName',
-      'sayHello',
-    ]);
   });
 });
