@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.10.0-alpha.4](https://github.com/coveo/ui-kit/compare/v0.10.0-alpha.3...v0.10.0-alpha.4) (2021-03-31)
+
+
+### Features
+
+* **headless:** add Quickview controller ([#627](https://github.com/coveo/ui-kit/issues/627)) ([6e9fbf3](https://github.com/coveo/ui-kit/commit/6e9fbf3fb824f09d48b451e8d61523ba9a1127b4))
+
+
+
+
+
 # [0.10.0-alpha.3](https://github.com/coveo/ui-kit/compare/v0.10.0-alpha.2...v0.10.0-alpha.3) (2021-03-31)
 
 
