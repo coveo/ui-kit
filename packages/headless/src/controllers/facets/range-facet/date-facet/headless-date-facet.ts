@@ -19,10 +19,10 @@ import {
   SearchSection,
 } from '../../../../state/state-sections';
 import {executeToggleDateFacetSelect} from '../../../../features/facets/range-facets/date-facet-set/date-facet-controller-actions';
-import {validateOptions} from '../../../../utils/validate-payload';
+
 import {
   DateFacetOptions,
-  dateFacetOptionsSchema,
+  validateDateFacetOptions,
 } from './headless-date-facet-options';
 import {determineFacetId} from '../../_common/facet-id-determinor';
 import {DateRangeOptions, DateRangeInput, buildDateRange} from './date-range';
@@ -140,8 +140,7 @@ export function buildDateFacet(
     facetId,
   };
 
-  validateOptions(engine, dateFacetOptionsSchema, options, 'buildDateFacet');
-
+  validateDateFacetOptions(engine, options);
   dispatch(registerDateFacet(options));
 
   const rangeFacet = buildRangeFacet<DateFacetRequest, DateFacetResponse>(
