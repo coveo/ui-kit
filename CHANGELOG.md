@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.10.0-alpha.3](https://github.com/coveo/ui-kit/compare/v0.10.0-alpha.2...v0.10.0-alpha.3) (2021-03-31)
+
+
+### Bug Fixes
+
+* **atomic:** replace cypress server ([#661](https://github.com/coveo/ui-kit/issues/661)) ([ba4953a](https://github.com/coveo/ui-kit/commit/ba4953a68c6cf2a1d434cf463eab8b41c5f858d4))
+* **headless:** throw error when start of range is greater than the end of the range ([#639](https://github.com/coveo/ui-kit/issues/639)) ([0753563](https://github.com/coveo/ui-kit/commit/075356395387b701d01e8f52d17675655f3fbfdb))
+
+
+
+
+
 # [0.10.0-alpha.2](https://github.com/coveo/ui-kit/compare/v0.10.0-alpha.1...v0.10.0-alpha.2) (2021-03-31)
 
 
