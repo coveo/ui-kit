@@ -6,6 +6,10 @@ export function injectComponent(componentInCode: string) {
     ).innerHTML = componentInCode;
   });
 }
+
+export const searchEndpoint =
+  'https://platform.cloud.coveo.com/rest/search/v2?organizationId=searchuisamples';
+
 export function setupIntercept() {
   cy.intercept({
     method: 'POST',
@@ -19,8 +23,7 @@ export function setupIntercept() {
 
   cy.intercept({
     method: 'POST',
-    url:
-      'https://platform.cloud.coveo.com/rest/search/v2?organizationId=searchuisamples',
+    url: searchEndpoint,
   }).as('coveoSearch');
 }
 
@@ -30,7 +33,16 @@ export function setUpPage(htmlCode: string) {
   cy.visit('http://localhost:3333/pages/test.html');
   cy.injectAxe();
   injectComponent(htmlCode);
-  cy.wait(500);
+  cy.wait(1000);
+}
+
+export function setUpPageNoSearch(htmlCode: string) {
+  setupIntercept();
+  // Setup page with new component
+  cy.visit('http://localhost:3333/pages/test-no-search.html');
+  cy.injectAxe();
+  injectComponent(htmlCode);
+  cy.wait(1000);
 }
 
 export function shouldRenderErrorComponent(selector: string) {

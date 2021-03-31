@@ -9,61 +9,62 @@ export interface BaseFacetRequest {
   /** The field whose values you want to display in the facet.*/
   field: string;
   /** Whether to exclude folded result parents when estimating the result count for each facet value.
-   * @default true
+   * @defaultValue `true`
    */
   filterFacetCount: boolean;
   /** The maximum number of results to scan in the index to ensure that the facet lists all potential facet values.
    *
    * Note: A high injectionDepth may negatively impact the facet request performance.
    *
-   * @default 1000
-   * @minimum 0
+   * Minimum: `0`
+   *
+   * @defaultValue `1000`
    */
   injectionDepth: number;
   /**
    * The number of values to request for this facet.
    * Also determines the number of additional values to request each time this facet is expanded, and the number of values to display when this facet is collapsed.
-   * @minimum 1
-   * @default 8
+   * Minimum: `1`
+   * @defaultValue `8`
    */
   numberOfValues: number;
   /** Whether to prevent Coveo ML from automatically selecting values.
-   * @default false
+   * @defaultValue `false`
    */
   preventAutoSelect: boolean;
 }
 
 export interface BaseFacetValueRequest {
   /** The current facet value state.
-   * @default "idle"
+   * @defaultValue `idle`
    */
   state: FacetValueState;
 }
 
 export interface CurrentValues<T> {
   /** The values displayed by the facet in the search interface at the moment of the request.
-   * @default []
+   * @defaultValue `[]`
    */
   currentValues: T[];
 }
 
 export interface Freezable {
   /** Setting this to true is ensures that the facet does not move around while the end-user is interacting with it in the search interface.
-   * @default false
+   * @defaultValue `false`
    */
   freezeCurrentValues: boolean;
 }
 
 export interface Delimitable {
   /** The character that specifies the hierarchical dependency.
-   * @default ">"
+   * @defaultValue `>`
    */
   delimitingCharacter: string;
 }
 
 export interface Expandable {
   /** Whether the facet is expanded in the search interface at the moment of the request.
-   * @default false
+   * @defaultValue `false`
    */
   isFieldExpanded: boolean;
 }

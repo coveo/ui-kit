@@ -15,14 +15,14 @@ export interface NumericRangeOptions {
   /**
    * Whether to include the `end` value in the range.
    *
-   * @default false
+   * @defaultValue `false`
    */
   endInclusive?: boolean;
 
   /**
    * The current facet value state.
    *
-   * @default "idle"
+   * @defaultValue `idle`
    */
   state?: FacetValueState;
 }

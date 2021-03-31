@@ -5,7 +5,7 @@ export interface FacetSearchRequestOptions {
   /** A dictionary that maps index field values to facet value display names. */
   captions: Record<string, string>;
   /** The maximum number of values to fetch.
-   * @default 10
+   * @defaultValue `10`
    */
   numberOfValues: number;
   /** The string to match.*/

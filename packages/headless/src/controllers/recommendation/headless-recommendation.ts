@@ -25,7 +25,7 @@ export interface RecommendationListOptions {
   /**
    * The Recommendation identifier used by the Coveo platform to retrieve recommended documents.
    *
-   * @default "Recommendation".
+   * @defaultValue `Recommendation`
    */
   id?: string;
 }

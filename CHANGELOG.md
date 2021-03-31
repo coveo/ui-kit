@@ -3,6 +3,52 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.10.0-alpha.3](https://github.com/coveo/ui-kit/compare/v0.10.0-alpha.2...v0.10.0-alpha.3) (2021-03-31)
+
+
+### Bug Fixes
+
+* **atomic:** replace cypress server ([#661](https://github.com/coveo/ui-kit/issues/661)) ([ba4953a](https://github.com/coveo/ui-kit/commit/ba4953a68c6cf2a1d434cf463eab8b41c5f858d4))
+* **headless:** throw error when start of range is greater than the end of the range ([#639](https://github.com/coveo/ui-kit/issues/639)) ([0753563](https://github.com/coveo/ui-kit/commit/075356395387b701d01e8f52d17675655f3fbfdb))
+
+
+
+
+
+# [0.10.0-alpha.2](https://github.com/coveo/ui-kit/compare/v0.10.0-alpha.1...v0.10.0-alpha.2) (2021-03-31)
+
+
+### Features
+
+* **quantic:** renamed quantic components to avoid naming conflicts ([#657](https://github.com/coveo/ui-kit/issues/657)) ([2ea04ea](https://github.com/coveo/ui-kit/commit/2ea04eaf04ea8a2cbc550231b15084f0265684c0))
+
+
+
+
+
+# [0.10.0-alpha.1](https://github.com/coveo/ui-kit/compare/v0.10.0-alpha.0...v0.10.0-alpha.1) (2021-03-30)
+
+
+### Bug Fixes
+
+* **atomic:** improve breadcrumb display when many are selected ([#656](https://github.com/coveo/ui-kit/issues/656)) ([4fdb529](https://github.com/coveo/ui-kit/commit/4fdb5296725d08c9a76c1b592bab36cd90032d75))
+
+
+
+
+
+# [0.10.0-alpha.0](https://github.com/coveo/ui-kit/compare/v0.9.0...v0.10.0-alpha.0) (2021-03-30)
+
+
+### Features
+
+* **headless,atomic:** exposed build version ([#633](https://github.com/coveo/ui-kit/issues/633)) ([9878a98](https://github.com/coveo/ui-kit/commit/9878a98a66d2b31dac453f90d501beff4a003d82))
+* **quantic:** removed atomic dependency ([#652](https://github.com/coveo/ui-kit/issues/652)) ([0814a26](https://github.com/coveo/ui-kit/commit/0814a267c0236e10d5c545a77850943b14094f98))
+
+
+
+
+
 # [0.9.0](https://github.com/coveo/ui-kit/compare/v0.9.0-alpha.9...v0.9.0) (2021-03-26)
 
 **Note:** Version bump only for package ui-kit
