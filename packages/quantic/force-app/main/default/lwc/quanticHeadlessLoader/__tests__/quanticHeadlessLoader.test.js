@@ -1,5 +1,6 @@
 /* eslint-disable jest/expect-expect */
 import {
+  setInitializedCallback,
   setEngineConfiguration,
   registerComponentForInit,
   setComponentInitialized,
@@ -11,16 +12,19 @@ import {Deferred} from '../../quanticUtils/quanticUtils';
 
 describe('c/quanticHeadlessLoader', () => {
   const dispatchMock = jest.fn();
-  const testConfig = {
-    organizationId: 'testOrganization',
-    accessToken: 'bogus-token-xxxxx-xxxxx',
-    search: {
-      pipeline: 'default',
-      searchHub: 'default',
-    }
+  const testOptions = {
+    configuration: {
+      organizationId: 'testOrganization',
+      accessToken: 'bogus-token-xxxxx-xxxxx',
+      search: {
+        pipeline: 'default',
+        searchHub: 'default',
+      }
+    },
+    reducers: {}
   };
 
-  let resolvedTestConfig;
+  let resolvedTestOptions;
   let mockedConsoleError;
   let initialize;
   let testId = 'search-page-1';
@@ -46,8 +50,8 @@ describe('c/quanticHeadlessLoader', () => {
     console.error = mockedConsoleError;
     global.CoveoHeadless = CoveoHeadlessStub;
     testElement = document.createElement('div');
-    resolvedTestConfig = new Deferred();
-    resolvedTestConfig.resolve(testConfig);
+    resolvedTestOptions = new Deferred();
+    resolvedTestOptions.resolve(testOptions);
   });
 
   afterEach(() => {
@@ -56,12 +60,27 @@ describe('c/quanticHeadlessLoader', () => {
     jest.restoreAllMocks();
   });
 
+  describe('setInitializedCallback', () => {
+    beforeEach(() => {
+      window.coveoHeadless = {
+        [testId]: {}
+      };
+    });
+
+    it('should define callback for specified engine', async () => {
+      const testCallback = () => {};
+      setInitializedCallback(testCallback, testId);
+
+      expect(await window.coveoHeadless[testId].initializedCallback).toBe(testCallback);
+    });
+  });
+
   describe('setEngineConfiguration', () => {
     describe('when coveoHeadless is undefined', () => {
-      it('should define coveoHeadless and set config', async () => {
-        setEngineConfiguration(testConfig, testId, testElement);
+      it('should define coveoHeadless and set options', async () => {
+        setEngineConfiguration(testOptions, testId, testElement);
 
-        expect(await window.coveoHeadless[testId].config.promise).toBe(testConfig);
+        expect(await window.coveoHeadless[testId].options.promise).toBe(testOptions);
       });
     });
 
@@ -70,16 +89,16 @@ describe('c/quanticHeadlessLoader', () => {
         window.coveoHeadless = {};
       });
 
-      it('should set config', async () => {
-        setEngineConfiguration(testConfig, testId, testElement);
+      it('should set options', async () => {
+        setEngineConfiguration(testOptions, testId, testElement);
 
-        expect(await window.coveoHeadless[testId].config.promise).toBe(testConfig);
+        expect(await window.coveoHeadless[testId].options.promise).toBe(testOptions);
       });
 
-      describe('when a config is already preset', () => {
+      describe('when a options is already preset', () => {
         beforeEach(() => {
           window.coveoHeadless[testId] = {
-            config: resolvedTestConfig
+            options: resolvedTestOptions
           }
         });
 
@@ -167,7 +186,7 @@ describe('c/quanticHeadlessLoader', () => {
             engine: Promise.resolve({
               dispatch: dispatchMock
             }),
-            config: new Deferred()
+            options: new Deferred()
           }
         }
       });
@@ -203,25 +222,38 @@ describe('c/quanticHeadlessLoader', () => {
           ];
         });
 
-        it('should set the component to initialized and start delayed search', async () => {
+        it('should set the component to initialized', async () => {
           setComponentInitialized(testElement, testId);
   
           assertComponentIsSetInitialized(testElement, testId);
-          jest.runAllTimers();
-          await window.coveoHeadless.engine;
-          expect(dispatchMock).toBeCalled();
+        });
+
+        describe('when initialized callback is set', () => {
+          const callbackMock = jest.fn();
+          beforeEach(() => {
+            window.coveoHeadless[testId].initializedCallback = callbackMock;
+          })
+  
+          it('should set the component to initialized and execute delayed initalized callback', async () => {
+            setComponentInitialized(testElement, testId);
+    
+            assertComponentIsSetInitialized(testElement, testId);
+            jest.runAllTimers();
+            await window.coveoHeadless.engine;
+            expect(callbackMock).toBeCalled();
+          });
         });
       });
     });
   });
 
   describe('getHeadlessEngine', () => {
-    describe('when the engine is undefined with a set config', () => {      
+    describe('when the engine is undefined with a set options', () => {      
       beforeEach(() => {
         window.coveoHeadless = {
           [testId]: {
             components: [],
-            config: resolvedTestConfig,
+            options: resolvedTestOptions,
           }
         }
       });
@@ -233,7 +265,7 @@ describe('c/quanticHeadlessLoader', () => {
       });
     });
 
-    describe('when the engine is undefined without a set config', () => {      
+    describe('when the engine is undefined without a set options', () => {      
       beforeEach(() => {
         window.coveoHeadless = {
           [testId]: {
@@ -285,7 +317,7 @@ describe('c/quanticHeadlessLoader', () => {
               element: testElement,
               initialized: false,
             }],
-            config: resolvedTestConfig,
+            options: resolvedTestOptions,
           }
         }
       });
@@ -302,8 +334,8 @@ describe('c/quanticHeadlessLoader', () => {
       describe('when initializing the engine fails', () => {
         const errorMessage = 'simulating failure';
         beforeEach(() => {
-          window.coveoHeadless[testId].config = new Deferred();
-          window.coveoHeadless[testId].config.reject(errorMessage);
+          window.coveoHeadless[testId].options = new Deferred();
+          window.coveoHeadless[testId].options.reject(errorMessage);
         });
         
         it ('should throw an error', async () => {
@@ -331,7 +363,7 @@ describe('c/quanticHeadlessLoader', () => {
               element: testElement,
               initialized: false
             }],
-            config: resolvedTestConfig,
+            options: resolvedTestOptions,
             engine: Promise.resolve(definedEngine),
           }
         }

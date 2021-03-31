@@ -1,5 +1,5 @@
 import {LightningElement, api, wire} from 'lwc';
-import {getHeadlessEngine, setEngineConfiguration, setInitializedCallback} from 'c/headlessLoader';
+import {getHeadlessEngine, setEngineConfiguration, setInitializedCallback} from 'c/quanticHeadlessLoader';
 // @ts-ignore
 import getHeadlessConfiguration from '@salesforce/apex/HeadlessController.getHeadlessConfiguration';
 
