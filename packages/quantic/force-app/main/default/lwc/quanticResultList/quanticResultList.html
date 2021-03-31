@@ -1,0 +1,9 @@
+<template>
+  <div>
+    <template for:each={results} for:item="result">
+      <c-quantic-result key={result.uniqueId} result={result} result-templates-manager={resultTemplatesManager} engine-id={engineId}>
+        <p></p>
+      </c-quantic-result>
+    </template>
+  </div>
+</template>
