@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.10.0-alpha.2](https://github.com/coveo/ui-kit/compare/v0.10.0-alpha.1...v0.10.0-alpha.2) (2021-03-31)
+
+
+### Features
+
+* **quantic:** renamed quantic components to avoid naming conflicts ([#657](https://github.com/coveo/ui-kit/issues/657)) ([2ea04ea](https://github.com/coveo/ui-kit/commit/2ea04eaf04ea8a2cbc550231b15084f0265684c0))
+
+
+
+
+
 # [0.10.0-alpha.1](https://github.com/coveo/ui-kit/compare/v0.10.0-alpha.0...v0.10.0-alpha.1) (2021-03-30)
 
 
