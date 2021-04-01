@@ -48,6 +48,9 @@ export interface SetCaseAssistIdPayload {
   id: string;
 }
 
+/**
+ * Sets the ID of the Case Assist configuration to use in the state.
+ */
 export const setCaseAssistId = createAction(
   'caseAssist/setCaseAssistId',
   (payload: SetCaseAssistIdPayload) =>
@@ -61,6 +64,9 @@ export interface SetCaseInformationValuePayload {
   fieldValue: string;
 }
 
+/**
+ * Sets the provided value in the case information.
+ */
 export const setCaseInformationValue = createAction(
   'caseAssist/setCaseInformationValue',
   (payload: SetCaseInformationValuePayload) =>
@@ -75,6 +81,9 @@ export interface SetUserContextValuePayload {
   value: string;
 }
 
+/**
+ * Sets the provided value in the user context.
+ */
 export const setUserContextValue = createAction(
   'caseAssist/setUserContextValue',
   (payload: SetUserContextValuePayload) =>
@@ -88,6 +97,9 @@ export interface SetDebugPayload {
   debug: boolean;
 }
 
+/**
+ * Sets whether debug information should be retrieved with suggestions.
+ */
 export const setDebug = createAction(
   'caseAssist/setDebug',
   (payload: SetDebugPayload) =>
@@ -123,6 +135,9 @@ const buildGetDocumentSuggestionsRequest = async (
   debug: s.caseAssist.debug,
 });
 
+/**
+ * Retrieves the case classifications given the current case information.
+ */
 export const getClassifications = createAsyncThunk<
   GetClassificationsResponse,
   void,
@@ -159,6 +174,10 @@ const parseGetClassificationsResponse = (response: ClassifySuccessContent) => {
   };
 };
 
+/**
+ * Retrieves the document suggestions given the current case information
+ * and user context.
+ */
 export const getDocumentSuggestions = createAsyncThunk<
   GetDocumentSuggestionsResponse,
   void,

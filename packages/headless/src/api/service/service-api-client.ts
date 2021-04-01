@@ -10,19 +10,31 @@ import {
   SuggestDocumentsParam,
 } from './service-api-params';
 
+/**
+ * Initialization options for the `ServiceAPIClient`.
+ */
 export interface ServiceAPIClientOptions {
   renewAccessToken: () => Promise<string>;
   logger: Logger;
 }
 
+/**
+ * Defines a Service API response. It can represent an error or a successful response.
+ */
 export type ServiceAPIResponse<TSuccessContent> =
   | ServiceAPISuccessResponse<TSuccessContent>
   | ServiceAPIErrorResponse;
 
+/**
+ * Defines a Service API successful response.
+ */
 export interface ServiceAPISuccessResponse<TContent> {
   success: TContent;
 }
 
+/**
+ * Defines a Service API error response.
+ */
 export interface ServiceAPIErrorResponse {
   error: {
     statusCode: number;
@@ -31,6 +43,11 @@ export interface ServiceAPIErrorResponse {
   };
 }
 
+/**
+ * Defines the content of a successful response from the `/classify` call.
+ *
+ * See  https://platform.cloud.coveo.com/docs?urls.primaryName=Customer%20Service#/Suggestions/postClassify
+ */
 export interface ClassifySuccessContent {
   fields: {
     [fieldName: string]: {
@@ -46,6 +63,9 @@ export interface ClassifySuccessContent {
   responseId: string;
 }
 
+/**
+ * Defines document suggestion result.
+ */
 export interface Result {
   clickUri: string;
   excerpt: string;
@@ -55,12 +75,20 @@ export interface Result {
   uniqueId: string;
 }
 
+/**
+ * Defines the content of a successful response from the `/documents/suggest` API call.
+ *
+ * See https://platform.cloud.coveo.com/docs?urls.primaryName=Customer%20Service#/Suggestions/getSuggestDocument
+ */
 export interface SuggestDocumentsSuccessContent {
   documents: Result[];
   totalCount: number;
   responseId: string;
 }
 
+/**
+ * The client to use to interact with the Customer Service API.
+ */
 export class ServiceAPIClient {
   private caseAssistApi: CaseAssistAPIClient;
 
@@ -68,11 +96,17 @@ export class ServiceAPIClient {
     this.caseAssistApi = new CaseAssistAPIClient(options);
   }
 
+  /**
+   * Gets the client for Case Assist specific calls.
+   */
   get caseAssist(): CaseAssistAPIClient {
     return this.caseAssistApi;
   }
 }
 
+/**
+ * The client to use to interface with the Case Assist API.
+ */
 export class CaseAssistAPIClient {
   private defaultClientHooks = {
     preprocessRequest: NoopPreprocessRequest,
@@ -81,6 +115,14 @@ export class CaseAssistAPIClient {
 
   constructor(private options: ServiceAPIClientOptions) {}
 
+  /**
+   * Retrieves the case classifications from the API.
+   *
+   * See https://platform.cloud.coveo.com/docs?urls.primaryName=Customer%20Service#/Suggestions/postClassify
+   *
+   * @param req - The request parameters.
+   * @returns The case classifications grouped by fields for the given case information.
+   */
   async classify(
     req: ClassifyParam
   ): Promise<ServiceAPIResponse<ClassifySuccessContent>> {
@@ -102,6 +144,14 @@ export class CaseAssistAPIClient {
       : ({error: platformResponse.body} as ServiceAPIErrorResponse);
   }
 
+  /**
+   * Retrieves the document suggestions from the API.
+   *
+   * See https://platform.cloud.coveo.com/docs?urls.primaryName=Customer%20Service#/Suggestions/getSuggestDocument
+   *
+   * @param req - The request parameters.
+   * @returns The document suggestions for the given case information and context.
+   */
   async suggestDocuments(
     req: SuggestDocumentsParam
   ): Promise<ServiceAPIResponse<SuggestDocumentsSuccessContent>> {

@@ -8,6 +8,13 @@ export interface FieldClassification {
   confidence: number;
 }
 
+/**
+ * Gets the specified field classification from the state.
+ *
+ * @param state - The current state.
+ * @param predictionId - The field classification ID.
+ * @returns - The field classification, or `undefined` when not found.
+ */
 export const getClassificationById = (
   state: CaseAssistState,
   predictionId: string
@@ -35,6 +42,13 @@ export interface RankedDocument {
   position: number;
 }
 
+/**
+ * Gets the specified document suggestion from the state.
+ *
+ * @param state - The current state.
+ * @param suggestionId - The `uniqueId` of the suggested document.
+ * @returns - The document suggestion with its 1-based position in the suggested documents list, or undefined when not found.
+ */
 export const getDocumentSuggestionById = (
   state: CaseAssistState,
   suggestionId: string

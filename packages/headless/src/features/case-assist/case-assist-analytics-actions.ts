@@ -14,6 +14,10 @@ export interface AsyncThunkOptions {
   extra: ThunkExtraArguments;
 }
 
+/**
+ * Initializes the logger used for reporting ticket-related Usage Analytics events.
+ * This action must be dispatched before any other ticket logging action.
+ */
 export const initializeTicketLogging = createAsyncThunk<
   void,
   void,
@@ -27,6 +31,9 @@ export const initializeTicketLogging = createAsyncThunk<
   );
 });
 
+/**
+ * Logs the `ticket_create_start` event.
+ */
 export const logTicketCreateStart = createAsyncThunk<
   void,
   void,
@@ -40,6 +47,9 @@ export interface LogTicketFieldUpdatedPayload {
   fieldName: string;
 }
 
+/**
+ * Logs a `ticket_field_update` event.
+ */
 export const logTicketFieldUpdated = createAsyncThunk<
   void,
   LogTicketFieldUpdatedPayload,
@@ -60,6 +70,9 @@ export interface LogTicketClassificationClickPayload {
   predictionId: string;
 }
 
+/**
+ * Logs a `ticket_classification_click` event.
+ */
 export const logTicketClassificationClick = createAsyncThunk<
   void,
   LogTicketClassificationClickPayload,
@@ -90,6 +103,9 @@ export const logTicketClassificationClick = createAsyncThunk<
   handleOneAnalyticsEvent('send', 'event', 'svc', 'click');
 });
 
+/**
+ * Logs a `ticket_next_stage` event.
+ */
 export const logTicketNextStage = createAsyncThunk<
   void,
   void,
@@ -104,6 +120,9 @@ export interface LogTicketDocumentSuggestionPayload {
   suggestionId: string;
 }
 
+/**
+ * Logs a `suggestion_click` event.
+ */
 export const logTicketDocumentSuggestionClick = createAsyncThunk<
   void,
   LogTicketDocumentSuggestionPayload,
@@ -144,6 +163,9 @@ export interface LogTicketDocumentSuggestionRatingPayload {
   rating: number;
 }
 
+/**
+ * Logs a `suggestion_rate` event.
+ */
 export const logTicketDocumentSuggestionRating = createAsyncThunk<
   void,
   LogTicketDocumentSuggestionRatingPayload,
@@ -180,6 +202,9 @@ export const logTicketDocumentSuggestionRating = createAsyncThunk<
   }
 );
 
+/**
+ * Logs a `ticket_cancel` event with the `Solved` reason.
+ */
 export const logTicketSolved = createAsyncThunk<void, void, AsyncThunkOptions>(
   'analytics/caseAssist/ticketSolved',
   () => {
@@ -190,6 +215,9 @@ export const logTicketSolved = createAsyncThunk<void, void, AsyncThunkOptions>(
   }
 );
 
+/**
+ * Logs a `ticket_cancel` event with the `Quit` reason.
+ */
 export const logTicketCancelled = createAsyncThunk<
   void,
   void,
@@ -203,6 +231,9 @@ export interface LogTicketCreatedPayload {
   ticketId: string;
 }
 
+/**
+ * Logs a `ticket_create` event.
+ */
 export const logTicketCreated = createAsyncThunk<
   void,
   LogTicketCreatedPayload,
