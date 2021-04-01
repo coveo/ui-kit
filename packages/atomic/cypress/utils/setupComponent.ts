@@ -1,5 +1,3 @@
-import {Interception} from 'cypress/types/net-stubbing';
-
 export const searchEndpoint = '**/rest/search/v2?*';
 
 export function setupIntercept() {
@@ -37,11 +35,9 @@ export function setupPage(options: PageSetupOptions) {
   setupIntercept();
   cy.visit('http://localhost:3333/pages/test.html#' + opts.urlHash);
   cy.injectAxe();
-  cy.injectComponent(opts.html);
-  cy.initSearchInterface(opts.shouldExecuteSearch!);
+  cy.initSearchInterface(opts.html, opts.shouldExecuteSearch!);
   if (opts.shouldWait) {
     opts.shouldExecuteSearch && cy.wait('@coveoSearch');
-    cy.wait(300); // rendering grace period
   }
 }
 

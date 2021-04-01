@@ -6,8 +6,10 @@ declare global {
     interface Chainable<Subject> {
       getAnalyticsAt(selector: string, order: number): Chainable<any>;
       getTextOfAllElements(selector: string): Chainable<any>;
-      injectComponent(componentInCode: string): Chainable<any>;
-      initSearchInterface(executeSearch: boolean): Chainable<any>;
+      initSearchInterface(
+        componentInCode: string,
+        executeSearch: boolean
+      ): Chainable<any>;
     }
   }
 }
@@ -29,31 +31,27 @@ Cypress.Commands.add('getTextOfAllElements', (selector: string) => {
 });
 
 const searchInterfaceComponent = 'atomic-search-interface';
-
-Cypress.Commands.add('injectComponent', (componentInCode: string) => {
-  cy.get(searchInterfaceComponent).should('exist');
-  cy.document().then((document) => {
-    document.querySelector(
-      searchInterfaceComponent
-    )!.innerHTML = componentInCode;
-  });
-});
-
-Cypress.Commands.add('initSearchInterface', (executeSearch: boolean) => {
-  let searchInterface: any;
-  cy.window()
-    .then((window) => {
-      searchInterface = window.document.querySelector(searchInterfaceComponent);
-      return window.customElements.whenDefined(searchInterfaceComponent);
-    })
-    .then(() =>
-      searchInterface.initialize({
+Cypress.Commands.add(
+  'initSearchInterface',
+  (componentInCode: string, executeSearch: boolean) => {
+    cy.window().then(async (window) => {
+      await window.customElements.whenDefined(searchInterfaceComponent);
+      const searchInterface: any = window.document.querySelector(
+        searchInterfaceComponent
+      );
+      searchInterface.innerHTML = componentInCode;
+      console.log(Date.now());
+      await searchInterface.initialize({
         accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
         organizationId: 'searchuisamples',
-      })
-    )
-    .then(() => executeSearch && searchInterface.executeFirstSearch());
-});
+      });
+
+      cy.wait(300).then(() => {
+        executeSearch && searchInterface.executeFirstSearch();
+      });
+    });
+  }
+);
 
 // Convert this to a module instead of script (allows import/export)
 export {};
