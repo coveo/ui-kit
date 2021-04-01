@@ -1,14 +1,6 @@
-export function injectComponent(componentInCode: string) {
-  cy.get('atomic-search-interface').should('exist');
-  cy.document().then((document: any) => {
-    document.querySelector(
-      'atomic-search-interface'
-    ).innerHTML = componentInCode;
-  });
-}
+import {Interception} from 'cypress/types/net-stubbing';
 
-export const searchEndpoint =
-  'https://platform.cloud.coveo.com/rest/search/v2?organizationId=searchuisamples';
+export const searchEndpoint = '**/rest/search/v2?*';
 
 export function setupIntercept() {
   cy.intercept({
@@ -27,22 +19,34 @@ export function setupIntercept() {
   }).as('coveoSearch');
 }
 
-export function setUpPage(htmlCode: string) {
-  setupIntercept();
-  // Setup page with new component
-  cy.visit('http://localhost:3333/pages/test.html');
-  cy.injectAxe();
-  injectComponent(htmlCode);
-  cy.wait(1000);
+export interface PageSetupOptions {
+  html?: string;
+  shouldExecuteSearch?: boolean;
+  urlHash?: string;
+  cyWaitSearch?: () => Cypress.Chainable<Interception>;
 }
 
-export function setUpPageNoSearch(htmlCode: string) {
+export function setupPage(options: PageSetupOptions) {
+  const opts: Required<PageSetupOptions> = {
+    html: '',
+    urlHash: '',
+    shouldExecuteSearch: true,
+    // Allows to intercept first search
+    cyWaitSearch: () => cy.wait('@coveoSearch'),
+    ...options,
+  };
+
   setupIntercept();
-  // Setup page with new component
-  cy.visit('http://localhost:3333/pages/test-no-search.html');
+  cy.visit('http://localhost:3333/pages/test.html#' + opts.urlHash);
   cy.injectAxe();
-  injectComponent(htmlCode);
-  cy.wait(1000);
+  cy.injectComponent(opts.html);
+  cy.initSearchInterface(opts.shouldExecuteSearch!);
+  if (opts.shouldExecuteSearch) {
+    opts.cyWaitSearch();
+    return;
+  }
+
+  cy.wait(500);
 }
 
 export function shouldRenderErrorComponent(selector: string) {

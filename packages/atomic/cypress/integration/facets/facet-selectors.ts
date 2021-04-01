@@ -55,7 +55,6 @@ export function createAliasShadow(field: string, facetMainSelector?: string) {
 
 export function createAliasFacetUL(field: string, facetMainSelector?: string) {
   createAliasShadow(field, facetMainSelector);
-  console.log(FacetAlias.facetShadow);
   cy.get(FacetAlias.facetShadow).find('ul').as(FacetAliasNoAtSign.facetUL);
   cy.get(FacetAlias.facetUL)
     .find('li:nth-child(1)')

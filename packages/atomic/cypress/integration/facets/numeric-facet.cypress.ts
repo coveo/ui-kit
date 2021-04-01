@@ -1,5 +1,5 @@
 import {
-  setUpPage,
+  setupPage,
   shouldRenderErrorComponent,
 } from '../../utils/setupComponent';
 import {
@@ -47,9 +47,11 @@ const numericRanges: NumericRange[] = [
 ];
 
 function setupAutoNumericFacet(field: string, label: string, option?: string) {
-  setUpPage(`
+  setupPage({
+    html: `
   <atomic-breadcrumb-manager></atomic-breadcrumb-manager>
-  <atomic-numeric-facet field="${field}" label="${label}" ${option}></atomic-numeric-facet>`);
+  <atomic-numeric-facet field="${field}" label="${label}" ${option}></atomic-numeric-facet>`,
+  });
 }
 
 function setupCustomNumericFacet(
@@ -67,7 +69,7 @@ function setupCustomNumericFacet(
   <atomic-breadcrumb-manager></atomic-breadcrumb-manager>
   <atomic-numeric-facet field="${field}" label="${label}">${ranges}</atomic-numeric-facet>`;
 
-  setUpPage(html);
+  setupPage({html});
 }
 
 describe('Standard Numeric Facet with automatic ranges generated', () => {
@@ -228,7 +230,7 @@ describe('Numeric with invalid options', () => {
           end: 100000,
         },
         {
-          start: 'x1000000',
+          start: ('x1000000' as unknown) as number,
           end: 1000000,
         },
       ];

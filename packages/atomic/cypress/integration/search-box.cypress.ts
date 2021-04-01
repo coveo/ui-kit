@@ -1,5 +1,5 @@
 import {getApiResponseBody, getAnalyticsAt} from '../utils/network';
-import {setUpPage} from '../utils/setupComponent';
+import {setupPage} from '../utils/setupComponent';
 import {
   SearchBoxSelectors,
   generateAliasForSearchBox,
@@ -8,6 +8,9 @@ import {
 const queryText = 'test';
 
 describe('Search Box Test Suites', () => {
+  const tag = 'atomic-search-box';
+  const component = (attributes = '') => `<${tag} ${attributes}></${tag}>`;
+
   function testLoad() {
     cy.get(SearchBoxSelectors.component).should('be.visible');
     cy.get('@searchBoxFirstDiv').find('.search-input').should('be.visible');
@@ -32,9 +35,8 @@ describe('Search Box Test Suites', () => {
   }
 
   describe('default search box', () => {
-    const htmlCode = '<atomic-search-box></atomic-search-box>';
     beforeEach(() => {
-      setUpPage(htmlCode);
+      setupPage({html: component()});
       generateAliasForSearchBox();
     });
 
@@ -102,10 +104,8 @@ describe('Search Box Test Suites', () => {
   });
 
   describe('search box with number of values set to 3', () => {
-    const htmlCode =
-      '<atomic-search-box number-of-suggestions="3"></atomic-search-box>';
     beforeEach(() => {
-      setUpPage(htmlCode);
+      setupPage({html: component('number-of-suggestions="3"')});
       generateAliasForSearchBox();
     });
 
@@ -126,10 +126,8 @@ describe('Search Box Test Suites', () => {
   });
 
   describe('search box with number of values set to 0', () => {
-    const htmlCode =
-      '<atomic-search-box number-of-suggestions="0"></atomic-search-box>';
     beforeEach(() => {
-      setUpPage(htmlCode);
+      setupPage({html: component('number-of-suggestions="3"')});
       generateAliasForSearchBox();
     });
 
@@ -146,10 +144,8 @@ describe('Search Box Test Suites', () => {
   });
 
   describe('search box with leading submit button', () => {
-    const htmlCode =
-      '<atomic-search-box leading-submit-button></atomic-search-box>';
     beforeEach(() => {
-      setUpPage(htmlCode);
+      setupPage({html: component('leading-submit-button')});
       generateAliasForSearchBox();
     });
 

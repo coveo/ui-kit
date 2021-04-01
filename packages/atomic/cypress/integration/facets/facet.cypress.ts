@@ -1,5 +1,5 @@
 import {
-  setUpPage,
+  setupPage,
   shouldRenderErrorComponent,
 } from '../../utils/setupComponent';
 import {doSortAlphanumeric} from '../../utils/componentUtils';
@@ -42,9 +42,11 @@ const sortCriteriaOption = {
 };
 
 function setupFacet(field: string, label: string, option?: string) {
-  setUpPage(`
+  setupPage({
+    html: `
   <atomic-breadcrumb-manager></atomic-breadcrumb-manager>
-  <atomic-facet field="${field}" label="${label}" ${option}></atomic-facet>`);
+  <atomic-facet field="${field}" label="${label}" ${option}></atomic-facet>`,
+  });
 }
 
 describe('Standard Facet', () => {
@@ -159,7 +161,6 @@ describe('Standard Facet', () => {
               const urlHash = `#f[author]=${encodeURI(
                 `${txtFacet1},${txtFacet2}`
               )}`;
-              console.log(urlHash);
               cy.url().should('include', urlHash);
             });
         });

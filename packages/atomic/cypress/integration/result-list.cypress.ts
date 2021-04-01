@@ -1,4 +1,4 @@
-import {setUpPage, setUpPageNoSearch} from '../utils/setupComponent';
+import {setupPage} from '../utils/setupComponent';
 import {createAliasNavigation, PagerSelectors} from './pager-selectors';
 import {
   ResultListSelectors,
@@ -14,14 +14,18 @@ describe('Result List Component', () => {
       .shadow();
   }
 
+  function setupResultList(html = resultListComponent()) {
+    setupPage({html});
+  }
+
   it('should load', () => {
-    setUpPage(resultListComponent());
+    setupResultList();
     cy.get(ResultListSelectors.component).should('be.visible');
   });
 
   describe('when no first search has yet been executed', () => {
     beforeEach(() => {
-      setUpPageNoSearch(resultListComponent());
+      setupPage({html: resultListComponent(), shouldExecuteSearch: false});
     });
 
     it('should render a placeholder component', () => {
@@ -33,7 +37,7 @@ describe('Result List Component', () => {
 
   describe('when an initial search is executed', () => {
     it('should render the correct number of results', () => {
-      setUpPage(resultListComponent());
+      setupResultList();
       cy.get(ResultListSelectors.component)
         .find(ResultListSelectors.result)
         .should('have.length', 10);
@@ -43,7 +47,7 @@ describe('Result List Component', () => {
   describe('when multiple searches are executed', () => {
     it('should update the results', () => {
       let firstResultHtml: string;
-      setUpPage(
+      setupResultList(
         `${resultListComponent()}<${PagerSelectors.pager}></${
           PagerSelectors.pager
         }>`

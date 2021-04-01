@@ -112,7 +112,7 @@ export function convertFacetValueToAPIformat(
 }
 
 export interface NumericRange {
-  start: number | string;
+  start: number;
   end: number;
 }
 export interface DateRange {
@@ -177,7 +177,6 @@ export function assertNonZeroFacetCount(selector?: string) {
 
 export function convertDateFormatLabel(date: string, formatType?: string) {
   formatType = formatType ? formatType : 'DD/MM/YYYY';
-  console.log(formatType);
   const splitDate = date.split('/');
   const year = splitDate[2];
   let month = splitDate[1];

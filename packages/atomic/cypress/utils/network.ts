@@ -59,11 +59,17 @@ export function modifySearchResultAt(
   resultModifier: (result: Result) => Result,
   position = 0
 ) {
-  cy.intercept(searchEndpoint, (req) => {
-    req.reply((res) => {
-      res.body!['results'][position] = resultModifier(
-        res.body!['results'][position]
-      );
-    });
-  });
+  cy.intercept(
+    {
+      method: 'POST',
+      url: searchEndpoint,
+    },
+    (req) => {
+      req.reply((res) => {
+        res.body!['results'][position] = resultModifier(
+          res.body!['results'][position]
+        );
+      });
+    }
+  ).as('coveoSearch');
 }

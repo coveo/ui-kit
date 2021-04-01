@@ -1,5 +1,5 @@
 import {modifySearchResultAt} from '../../utils/network';
-import {setUpPage} from '../../utils/setupComponent';
+import {setupPage} from '../../utils/setupComponent';
 import {ComponentErrorSelectors} from '../component-error-selectors';
 import {
   resultListComponent,
@@ -25,7 +25,7 @@ function firstResultShouldUseCustomTemplate() {
 describe('Result Template Component', () => {
   describe(`when not a child of an "${ResultListSelectors.component}" component`, () => {
     it(`should render an "${ComponentErrorSelectors.component}" component`, () => {
-      setUpPage(resultTemplateComponent());
+      setupPage({html: resultTemplateComponent()});
       cy.get(ResultTemplateSelectors.component)
         .shadow()
         .find(ComponentErrorSelectors.component)
@@ -35,7 +35,9 @@ describe('Result Template Component', () => {
 
   describe('when it does not have a "template" element has a child', () => {
     it(`should render an "${ComponentErrorSelectors.component}" component (in the result list)`, () => {
-      setUpPage(resultListComponent(resultTemplateComponent('<p>test</p>')));
+      setupPage({
+        html: resultListComponent(resultTemplateComponent('<p>test</p>')),
+      });
       cy.get(ResultListSelectors.component)
         .find(ResultTemplateSelectors.component)
         .shadow()
@@ -45,7 +47,9 @@ describe('Result Template Component', () => {
   });
 
   it('should save the template content in order to render', () => {
-    setUpPage(resultListComponent(resultTemplateComponent(customTemplate)));
+    setupPage({
+      html: resultListComponent(resultTemplateComponent(customTemplate)),
+    });
     firstResultShouldUseCustomTemplate();
   });
 
@@ -55,14 +59,15 @@ describe('Result Template Component', () => {
       result.raw.filetype = filetype;
       return result;
     });
-    setUpPage(
-      resultListComponent(
+
+    setupPage({
+      html: resultListComponent(
         resultTemplateComponent(
           customTemplate,
           `must-match-filetype="${filetype}"`
         )
-      )
-    );
+      ),
+    });
 
     firstResultShouldUseCustomTemplate();
   });
@@ -73,14 +78,14 @@ describe('Result Template Component', () => {
       result.raw.filetype = 'anotherfiletype';
       return result;
     });
-    setUpPage(
-      resultListComponent(
+    setupPage({
+      html: resultListComponent(
         resultTemplateComponent(
           customTemplate,
           `must-not-match-filetype="${filetype}"`
         )
-      )
-    );
+      ),
+    });
 
     firstResultShouldUseCustomTemplate();
   });
@@ -91,8 +96,8 @@ describe('Result Template Component', () => {
       result.title = title;
       return result;
     });
-    setUpPage(
-      resultListComponent(
+    setupPage({
+      html: resultListComponent(
         resultTemplateComponent(
           `${customTemplate}
           <script>
@@ -102,8 +107,8 @@ describe('Result Template Component', () => {
           </script>`,
           'id="mytemplate"'
         )
-      )
-    );
+      ),
+    });
 
     firstResultShouldUseCustomTemplate();
   });

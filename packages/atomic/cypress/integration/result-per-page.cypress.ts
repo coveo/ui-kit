@@ -1,13 +1,13 @@
 import {getApiResponseBodyAt, getAnalyticsAt} from '../utils/network';
-import {setUpPage, shouldRenderErrorComponent} from '../utils/setupComponent';
+import {setupPage, shouldRenderErrorComponent} from '../utils/setupComponent';
 
 const resultPerPage = 'atomic-results-per-page';
 
 describe('Result Per Page Component', () => {
-  function setup(attributes = '') {
-    setUpPage(
-      `<atomic-results-per-page ${attributes}></atomic-results-per-page>`
-    );
+  function setupResultPerPage(attributes = '') {
+    setupPage({
+      html: `<atomic-results-per-page ${attributes}></atomic-results-per-page>`,
+    });
   }
 
   function clickButton(position: number) {
@@ -15,20 +15,20 @@ describe('Result Per Page Component', () => {
   }
 
   it('should load', () => {
-    setup();
+    setupResultPerPage();
     cy.get(resultPerPage).should('be.visible');
   });
 
   it('should execute a query with a different number of results on button click', async () => {
-    setup();
+    setupResultPerPage();
     clickButton(1);
-    const jsonResponse = await getApiResponseBodyAt('@coveoSearch', 1);
+    const jsonResponse = await getApiResponseBodyAt('@coveoSearch', 0);
     expect(jsonResponse).to.have.property('results');
     expect(jsonResponse.results.length).to.be.eq(25);
   });
 
   it('should log the right analytics on button click', async () => {
-    setup();
+    setupResultPerPage();
     clickButton(1);
     const analytics = await getAnalyticsAt('@coveoAnalytics', 1);
 
@@ -39,19 +39,19 @@ describe('Result Per Page Component', () => {
   });
 
   it('passes automated accessibility', () => {
-    setup();
+    setupResultPerPage();
     cy.checkA11y(resultPerPage);
   });
 
   describe('choicesDisplayed option', () => {
     it(`when the prop is not of the right type/format
     should render an error`, () => {
-      setup('choices-displayed="hello"');
+      setupResultPerPage('choices-displayed="hello"');
       shouldRenderErrorComponent(resultPerPage);
     });
 
     it('should render the choices in the component', () => {
-      setup('choices-displayed="10,13"');
+      setupResultPerPage('choices-displayed="10,13"');
       cy.get(resultPerPage).shadow().find('button').eq(1).contains(13);
     });
   });
@@ -59,18 +59,18 @@ describe('Result Per Page Component', () => {
   describe('initialChoice option', () => {
     it(`when the prop is not valid
     should render an error`, () => {
-      setup('initial-choice=-1');
+      setupResultPerPage('initial-choice=-1');
       shouldRenderErrorComponent(resultPerPage);
     });
 
     it(`when the prop is not in the list of choicesDisplayed
     should render an error`, () => {
-      setup('initial-choice=59');
+      setupResultPerPage('initial-choice=59');
       shouldRenderErrorComponent(resultPerPage);
     });
 
     it('should select the initialChoice correctly', () => {
-      setup('initial-choice=25');
+      setupResultPerPage('initial-choice=25');
       cy.get(resultPerPage)
         .shadow()
         .find('button')

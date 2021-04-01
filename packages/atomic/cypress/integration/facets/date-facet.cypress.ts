@@ -1,5 +1,5 @@
 import {
-  setUpPage,
+  setupPage,
   shouldRenderErrorComponent,
 } from '../../utils/setupComponent';
 import {
@@ -47,9 +47,11 @@ const dateRanges: DateRange[] = [
 ];
 
 function setupAutoDateFacet(field: string, label: string, option?: string) {
-  setUpPage(`
+  setupPage({
+    html: `
   <atomic-breadcrumb-manager></atomic-breadcrumb-manager>    
-  <atomic-date-facet field="${field}" label="${label}" ${option}></atomic-date-facet>`);
+  <atomic-date-facet field="${field}" label="${label}" ${option}></atomic-date-facet>`,
+  });
 }
 
 function setupCustomDateFacet(
@@ -68,7 +70,7 @@ function setupCustomDateFacet(
   <atomic-breadcrumb-manager></atomic-breadcrumb-manager>
   <atomic-date-facet field="${field}" label="${label}" ${option}>${ranges}</atomic-date-facet>`;
 
-  setUpPage(html);
+  setupPage({html});
 }
 
 describe('Date Facet with automatic ranges generated', () => {

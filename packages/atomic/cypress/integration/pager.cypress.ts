@@ -1,9 +1,5 @@
 import {getAnalyticsAt} from '../utils/network';
-import {
-  setUpPage,
-  injectComponent,
-  shouldRenderErrorComponent,
-} from '../utils/setupComponent';
+import {setupPage, shouldRenderErrorComponent} from '../utils/setupComponent';
 import {
   createAliasLi,
   createAliasNavigation,
@@ -12,7 +8,7 @@ import {
 
 describe('Pager Test Suites', () => {
   function setupPager(attributes = '') {
-    setUpPage(`<atomic-pager ${attributes}></atomic-pager>`);
+    setupPage({html: `<atomic-pager ${attributes}></atomic-pager>`});
   }
 
   function componentLoaded(numberOfPages: number) {
@@ -105,9 +101,10 @@ describe('Pager Test Suites', () => {
 
   describe('Pager should load from url', () => {
     it('should activate correct page number', async () => {
-      cy.visit('http://localhost:3333/pages/test.html#firstResult=20');
-      injectComponent('<atomic-pager></atomic-pager>');
-      cy.wait(1000);
+      setupPage({
+        html: '<atomic-pager></atomic-pager>',
+        urlHash: 'firstResult=20',
+      });
       createAliasNavigation();
       cy.get('@pagerLi').get(PagerSelectors.pager).should('be.visible');
       checkPagerSelected('3', true);
