@@ -277,3 +277,9 @@ export {
 } from './search-status/headless-search-status';
 
 export {ErrorPayload} from './controller/error-payload';
+
+export {
+  UserActionsProps,
+  UserActionsState,
+  buildUserActions,
+} from './user-actions/headless-user-actions';

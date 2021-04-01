@@ -14,6 +14,8 @@ import {RecommendationAppState} from '../state/recommendation-app-state';
 import {createMockRecommendationState} from './mock-recommendation-state';
 import {ProductRecommendationsAppState} from '../state/product-recommendations-app-state';
 import {buildMockProductRecommendationsState} from './mock-product-recommendations-state';
+import {UserProfileAppState} from '../state/user-profile-app-state';
+import {createMockUserProfileState} from './mock-user-profile-state';
 import pino, {Logger} from 'pino';
 import {
   logActionErrorMiddleware,
@@ -33,7 +35,8 @@ type AsyncActionCreator<ThunkArg> = ActionCreatorWithPreparedPayload<
 export type AppState =
   | SearchAppState
   | RecommendationAppState
-  | ProductRecommendationsAppState;
+  | ProductRecommendationsAppState
+  | UserProfileAppState;
 
 export interface MockEngine<T extends AppState> extends Engine<T> {
   mockStore: MockStore;
@@ -64,6 +67,12 @@ export function buildMockProductRecommendationsAppEngine(
   config: Partial<Engine<ProductRecommendationsAppState>> = {}
 ): MockEngine<ProductRecommendationsAppState> {
   return buildMockEngine(config, buildMockProductRecommendationsState);
+}
+
+export function buildMockUserProfileAppEngine(
+  config: Partial<Engine<UserProfileAppState>> = {}
+): MockEngine<UserProfileAppState> {
+  return buildMockEngine(config, createMockUserProfileState);
 }
 
 function buildMockEngine<T extends AppState>(

@@ -1,11 +1,11 @@
 import {createReducer} from '@reduxjs/toolkit';
 import {
-  renewAccessToken,
   updateBasicConfiguration,
   updateSearchConfiguration,
+  updateAnalyticsConfiguration,
+  renewAccessToken,
   disableAnalytics,
   enableAnalytics,
-  updateAnalyticsConfiguration,
   setOriginLevel2,
   setOriginLevel3,
 } from './configuration-actions';

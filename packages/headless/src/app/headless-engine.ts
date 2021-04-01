@@ -17,6 +17,7 @@ import {
 } from '../features/configuration/configuration-actions';
 import {configureStore, Store, ThunkExtraArguments} from './store';
 import {SearchAPIClient} from '../api/search/search-api-client';
+import {MLAPIClient} from '../api/machine-learning/ml-api-client';
 import {debounce} from 'ts-debounce';
 import {SearchAppState} from '../state/search-app-state';
 import pino, {Logger, LogEvent, LevelWithSilent} from 'pino';
@@ -381,6 +382,10 @@ export class HeadlessEngine<Reducers extends ReducersMapObject>
           postprocessQuerySuggestResponseMiddleware:
             search?.preprocessQuerySuggestResponseMiddleware ||
             NoopPostprocessQuerySuggestResponseMiddleware,
+        }),
+        mlAPIClient: new MLAPIClient({
+          logger: this.logger,
+          renewAccessToken: () => this.renewAccessToken(),
         }),
         analyticsClientMiddleware: this.analyticsClientMiddleware(this.options),
         logger: this.logger,

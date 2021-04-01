@@ -15,10 +15,12 @@ import {
 } from './logger-middlewares';
 import {validatePayloadAndThrow} from '../utils/validate-payload';
 import {PreprocessRequest} from '../api/preprocess-request';
+import {MLAPIClient} from '../api/machine-learning/ml-api-client';
 
 export interface ThunkExtraArguments {
   preprocessRequest?: PreprocessRequest;
   searchAPIClient: SearchAPIClient;
+  mlAPIClient: MLAPIClient;
   analyticsClientMiddleware: AnalyticsClientSendEventHook;
   logger: Logger;
   validatePayload: typeof validatePayloadAndThrow;

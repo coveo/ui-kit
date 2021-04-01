@@ -21,6 +21,7 @@ import {SearchState} from '../features/search/search-state';
 import {SortCriteriaState} from '../features/sort-criteria/sort-criteria-state';
 import {FacetOrderState} from '../features/facets/facet-order/facet-order-state';
 import {ResultPreviewState} from '../features/result-preview/result-preview-state';
+import {UserProfileState} from '../features/user-profile/user-profile-state';
 
 export interface QuerySection {
   /**
@@ -211,4 +212,11 @@ export interface ProductRecommendationsSection {
    * The information related to the product recommendations endpoint.
    */
   productRecommendations: ProductRecommendationsState;
+}
+
+export interface UserProfileSection {
+  /**
+   * The information the machine learning user actions endpoint
+   */
+  userProfile: UserProfileState;
 }
