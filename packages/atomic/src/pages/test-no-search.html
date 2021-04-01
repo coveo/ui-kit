@@ -10,8 +10,6 @@
     <link rel="stylesheet" href="/themes/default.css" />
     <script>
       (async () => {
-        console.log('loading');
-
         await customElements.whenDefined('atomic-search-interface');
         const searchInterface = document.querySelector('#search');
         await searchInterface.initialize({

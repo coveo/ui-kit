@@ -42,7 +42,7 @@ export function setUpPageNoSearch(htmlCode: string) {
   cy.visit('http://localhost:3333/pages/test-no-search.html');
   cy.injectAxe();
   injectComponent(htmlCode);
-  cy.wait(1000);
+  cy.wait(300);
 }
 
 export function shouldRenderErrorComponent(selector: string) {

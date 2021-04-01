@@ -77,26 +77,26 @@ describe('Standard Numeric Facet with automatic ranges generated', () => {
     createAliasFacetUL(numericFacetProp.field, FacetSelectors.numericFacet);
   });
 
-  it.skip('Numeric facet should load, pass accessibility test and have correct label', () => {
+  it('Numeric facet should load, pass accessibility test and have correct label', () => {
     validateFacetComponentLoaded(
       numericFacetProp.label,
       FacetSelectors.numericFacet
     );
   });
 
-  it.skip('Should contains more than 1 checkboxes', () => {
+  it('Should contains more than 1 checkboxes', () => {
     validateFacetNumberofValueGreaterThan(1);
   });
 
   describe('When select 1 facetValue checkbox', () => {
-    it.skip('Should activate checkbox and log UA', () => {
+    it('Should activate checkbox and log UA', () => {
       assertBasicFacetFunctionality(
         FacetAlias.facetFirstValueLabel,
         numericFacetProp.field
       );
     });
 
-    it.skip('Should trigger breadcrumb and display correctly', () => {
+    it('Should trigger breadcrumb and display correctly', () => {
       cy.get(FacetAlias.facetFirstValueLabel).click();
       createBreadcrumbShadowAlias();
       cy.get(BreadcrumbAlias.breadcrumbClearAllFilter).should('be.visible');
@@ -106,7 +106,7 @@ describe('Standard Numeric Facet with automatic ranges generated', () => {
       );
     });
 
-    it.skip('Should reflect selected facetValue on URL', () => {
+    it('Should reflect selected facetValue on URL', () => {
       cy.get(FacetAlias.facetFirstValueLabel)
         .click()
         .find('label span:nth-child(1)')
@@ -125,13 +125,13 @@ describe('Standard Numeric Facet with automatic ranges generated', () => {
   });
 
   describe('When deselect 1 selected facetValue checkbox', () => {
-    it.skip('should clear the checkbox and log UA', () => {
+    it('should clear the checkbox and log UA', () => {
       assertDeselectFacet(numericFacetProp.field);
     });
   });
 
   describe('When click ClearAll facet', () => {
-    it.skip('Should clear all checkboxes and log UA', () => {
+    it('Should clear all checkboxes and log UA', () => {
       assertClearAllFacet();
     });
   });
@@ -149,14 +149,14 @@ describe('Numeric facet with manually specified ranges', () => {
   });
 
   describe('When page is loaded', () => {
-    it.skip('Numeric facet should load, pass accessibility test and have correct label', () => {
+    it('Numeric facet should load, pass accessibility test and have correct label', () => {
       validateFacetComponentLoaded(
         numericFacetProp.label,
         FacetSelectors.numericFacet
       );
     });
 
-    it.skip('Should generate all manually specified ranges', () => {
+    it('Should generate all manually specified ranges', () => {
       cy.getTextOfAllElements(FacetAlias.facetAllValueLabel).then(
         (elements) => {
           numericRanges.forEach((r: NumericRange) => {
@@ -167,13 +167,13 @@ describe('Numeric facet with manually specified ranges', () => {
       );
     });
 
-    it.skip('Should generate correct number of manually specified ranges', () => {
+    it('Should generate correct number of manually specified ranges', () => {
       const totalCustomRangeLength = numericRanges.length;
       validateFacetNumberofValueEqual(totalCustomRangeLength);
     });
 
     describe('When select 1 facetValue checkbox', () => {
-      it.skip('Should activate checkbox and log UA', () => {
+      it('Should activate checkbox and log UA', () => {
         assertBasicFacetFunctionality(
           FacetAlias.facetFirstValueLabel,
           numericFacetProp.field
@@ -184,7 +184,7 @@ describe('Numeric facet with manually specified ranges', () => {
 });
 
 describe('Numeric facet contains range returns 0 result', () => {
-  it.skip('Should hide the range automatically', () => {
+  it('Should hide the range automatically', () => {
     const noResultnumericRanges: NumericRange[] = [
       {
         start: 0,
@@ -211,7 +211,7 @@ describe('Numeric facet contains range returns 0 result', () => {
 
 describe('Numeric with invalid options', () => {
   describe('When numeric facet uses invalid field/field returns no result', () => {
-    it.skip('Should hide the facet', () => {
+    it('Should hide the facet', () => {
       setupAutoNumericFacet('author', numericFacetProp.label);
       cy.get(FacetSelectors.numericFacet).should('exist');
       cy.get(FacetSelectors.numericFacet)
@@ -221,7 +221,7 @@ describe('Numeric with invalid options', () => {
     });
   });
   describe('When numeric facet uses invalid range', () => {
-    it.skip('Should render a warning message when range start with non-number', () => {
+    it('Should render a warning message when range start with non-number', () => {
       const invalidNumericRanges: NumericRange[] = [
         {
           start: 10000,

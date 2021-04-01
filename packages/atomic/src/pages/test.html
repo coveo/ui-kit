@@ -10,15 +10,14 @@
     <link rel="stylesheet" href="/themes/default.css" />
     <script>
       (async () => {
-        console.log('loading');
-
         await customElements.whenDefined('atomic-search-interface');
         const searchInterface = document.querySelector('#search');
         await searchInterface.initialize({
           accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
           organizationId: 'searchuisamples',
         });
-        searchInterface.executeFirstSearch();
+        // Cypress requires a bit more delay between initialization and first search
+        setTimeout(() => searchInterface.executeFirstSearch(), 300);
       })();
     </script>
   </head>
