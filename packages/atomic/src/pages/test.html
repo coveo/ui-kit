@@ -8,23 +8,6 @@
     <script type="module" src="/build/atomic.esm.js"></script>
     <script nomodule src="/build/atomic.js"></script>
     <link rel="stylesheet" href="/themes/default.css" />
-    <script>
-      (async () => {
-        await customElements.whenDefined('atomic-search-interface');
-        const searchInterface = document.querySelector('#search');
-        await searchInterface.initialize({
-          accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
-          organizationId: 'searchuisamples',
-        });
-        // Cypress requires a bit more delay between initialization and first search
-        setTimeout(() => searchInterface.executeFirstSearch(), 300);
-      })();
-    </script>
   </head>
-
-  <body>
-    <atomic-search-interface id="search">
-      <h1>Content for Integration Test will be replaced here.</h1>
-    </atomic-search-interface>
-  </body>
+  <body></body>
 </html>
