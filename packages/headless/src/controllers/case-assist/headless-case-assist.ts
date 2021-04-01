@@ -2,7 +2,6 @@ import {Engine} from '../../app/headless-engine';
 import {
   getClassifications,
   getDocumentSuggestions,
-  setCaseAssistId,
   setCaseInformationValue,
   setDebug,
   setUserContextValue,
@@ -30,14 +29,6 @@ import {buildController, Controller} from '../controller/headless-controller';
  * Provides methods for interacting with the Case Assist.
  */
 export interface CaseAssist extends Controller {
-  /**
-   * Sets the ID of the Case Assist configuration to use.
-   * Note: This must be set before calling `getClassifications` or `getDocumentSuggestions`.
-   *
-   * @param id The ID of the Case Assist configuration.
-   */
-  setCaseAssistId(id: string): void;
-
   /**
    * Sets a case information value in the state. Case information values are used by
    * Coveo Relevance Platform to retrieve relevant field classifications and document suggestions.
@@ -195,9 +186,6 @@ export function buildCaseAssist(
       };
     },
 
-    setCaseAssistId(id) {
-      dispatch(setCaseAssistId({id}));
-    },
     setCaseInformationValue(fieldName, fieldValue) {
       dispatch(setCaseInformationValue({fieldName, fieldValue}));
     },

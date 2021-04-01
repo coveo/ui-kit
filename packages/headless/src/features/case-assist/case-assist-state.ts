@@ -27,7 +27,6 @@ export interface DocumentSuggestionsState {
 }
 
 export interface CaseAssistState {
-  caseAssistId: string;
   caseInformation: Record<string, string>;
   userContext: Record<string, string>;
   debug: boolean;
@@ -37,7 +36,6 @@ export interface CaseAssistState {
 
 export function getCaseAssistInitialState(): CaseAssistState {
   return {
-    caseAssistId: '',
     caseInformation: {},
     userContext: {},
     debug: false,

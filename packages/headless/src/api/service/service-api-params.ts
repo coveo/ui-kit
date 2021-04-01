@@ -54,6 +54,7 @@ export const baseCaseAssistRequest = (
   path: string,
   debug: boolean
 ) => {
+  validateCaseAssistRequestParams(req);
   let callUrl = `${req.url}/rest/organizations/${req.organizationId}/caseassists/${req.caseAssistId}${path}`;
   if (debug) {
     callUrl += '?debug=1';
@@ -65,4 +66,25 @@ export const baseCaseAssistRequest = (
     contentType,
     url: callUrl,
   };
+};
+
+const validateCaseAssistRequestParams = (req: BaseCaseAssistParam) => {
+  if (!req.url) {
+    throw new Error("The 'url' attribute must contain a valid platform URL.");
+  }
+  if (!req.organizationId) {
+    throw new Error(
+      "The 'organizationId' attribute must contain a valid organization ID."
+    );
+  }
+  if (!req.accessToken) {
+    throw new Error(
+      "The 'accessToken' attribute must contain a valid platform access token."
+    );
+  }
+  if (!req.caseAssistId) {
+    throw new Error(
+      "The 'caseAssistId' attribute must contain a valid Case Assist configuration ID."
+    );
+  }
 };

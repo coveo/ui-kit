@@ -2,7 +2,6 @@ import {Action} from '@reduxjs/toolkit';
 import {
   getClassifications,
   getDocumentSuggestions,
-  setCaseAssistId,
   setCaseInformationValue,
   setDebug,
   setUserContextValue,
@@ -42,12 +41,6 @@ describe('Case Assist', () => {
 
   it('initializes', () => {
     expect(caseAssist).toBeTruthy();
-  });
-
-  it('setCaseAssistId dispatches a setCaseAssistId action', () => {
-    caseAssist.setCaseAssistId('some id');
-
-    expectActionMatching(setCaseAssistId, {id: 'some id'});
   });
 
   it('setCaseInformationValue dispatches a setCaseInformationValue action', () => {

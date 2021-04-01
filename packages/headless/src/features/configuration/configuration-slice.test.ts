@@ -8,6 +8,7 @@ import {
   updateAnalyticsConfiguration,
   setOriginLevel3,
   setOriginLevel2,
+  updateCaseAssistConfiguration,
 } from './configuration-actions';
 import {platformUrl} from '../../api/platform-client';
 import {
@@ -120,6 +121,41 @@ describe('configuration slice', () => {
             originLevel2: 'bar',
             originLevel3: 'buzz',
             apiBaseUrl: 'http://test.com/analytics',
+          })
+        )
+      ).toEqual(expectedState);
+    });
+  });
+
+  describe('updateCaseAssistConfiguration', () => {
+    it('works on initial state', () => {
+      const expectedState: ConfigurationState = {
+        ...getConfigurationInitialState(),
+        caseAssist: {
+          caseAssistId: 'some case assist id',
+        },
+      };
+      expect(
+        configurationReducer(
+          undefined,
+          updateCaseAssistConfiguration({caseAssistId: 'some case assist id'})
+        )
+      ).toEqual(expectedState);
+    });
+
+    it('works on existing state', () => {
+      const expectedState: ConfigurationState = {
+        ...existingState,
+        caseAssist: {
+          caseAssistId: 'some case assist id',
+        },
+      };
+
+      expect(
+        configurationReducer(
+          existingState,
+          updateCaseAssistConfiguration({
+            caseAssistId: 'some case assist id',
           })
         )
       ).toEqual(expectedState);

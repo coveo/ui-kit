@@ -8,6 +8,7 @@ import {
   updateAnalyticsConfiguration,
   setOriginLevel2,
   setOriginLevel3,
+  updateCaseAssistConfiguration,
 } from './configuration-actions';
 import {
   getConfigurationInitialState,
@@ -56,6 +57,11 @@ export const configurationReducer = createReducer(
         if (action.payload.runtimeEnvironment !== undefined) {
           state.analytics.runtimeEnvironment =
             action.payload.runtimeEnvironment;
+        }
+      })
+      .addCase(updateCaseAssistConfiguration, (state, action) => {
+        if (action.payload.caseAssistId !== undefined) {
+          state.caseAssist.caseAssistId = action.payload.caseAssistId;
         }
       })
       .addCase(renewAccessToken.fulfilled, (state, action) => {

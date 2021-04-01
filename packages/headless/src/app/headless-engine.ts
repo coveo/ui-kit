@@ -14,6 +14,7 @@ import {
   enableAnalytics,
   updateAnalyticsConfiguration,
   localeValidation,
+  updateCaseAssistConfiguration,
 } from '../features/configuration/configuration-actions';
 import {configureStore, Store, ThunkExtraArguments} from './store';
 import {SearchAPIClient} from '../api/search/search-api-client';
@@ -203,6 +204,16 @@ export interface HeadlessConfigurationOptions {
      */
     runtimeEnvironment?: IRuntimeEnvironment;
   };
+
+  /**
+   * Specifies the Case Assist engine options.
+   */
+  caseAssist?: {
+    /**
+     * Specifies the ID of the Case Assist configuration to use for interacting with the Case Assist API.
+     */
+    caseAssistId?: string;
+  };
 }
 
 type EngineDispatch<State> = ThunkDispatch<
@@ -280,6 +291,11 @@ export class HeadlessEngine<Reducers extends ReducersMapObject>
       } = options.configuration.analytics;
       this.reduxStore.dispatch(updateAnalyticsConfiguration(rest));
     }
+    if (options.configuration.caseAssist) {
+      this.reduxStore.dispatch(
+        updateCaseAssistConfiguration(options.configuration.caseAssist)
+      );
+    }
   }
 
   private validateConfiguration(options: HeadlessOptions<Reducers>) {
@@ -329,6 +345,16 @@ export class HeadlessEngine<Reducers extends ReducersMapObject>
             required: false,
           }),
           originLevel3: new StringValue({
+            required: false,
+          }),
+        },
+      }),
+      caseAssist: new RecordValue({
+        options: {
+          required: false,
+        },
+        values: {
+          caseAssistId: new StringValue({
             required: false,
           }),
         },

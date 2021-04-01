@@ -2,7 +2,6 @@ import {Action} from '@reduxjs/toolkit';
 import {
   getClassifications,
   getDocumentSuggestions,
-  setCaseAssistId,
   setCaseInformationValue,
   setDebug,
   setUserContextValue,
@@ -33,14 +32,6 @@ describe('case assist slice', () => {
     const finalState = caseAssistReducer(undefined, {type: ''});
 
     expect(finalState).toEqual(getCaseAssistInitialState());
-  });
-
-  it('setCaseAssistId sets the id in the state', () => {
-    const expectedId = 'some id';
-    const action = setCaseAssistId({id: expectedId});
-    const finalState = caseAssistReducer(state, action);
-
-    expect(finalState.caseAssistId).toBe(expectedId);
   });
 
   it('setCaseInformationValue sets the value in the state', () => {

@@ -2,7 +2,6 @@ import {createReducer} from '@reduxjs/toolkit';
 import {
   getClassifications,
   getDocumentSuggestions,
-  setCaseAssistId,
   setCaseInformationValue,
   setDebug,
   setUserContextValue,
@@ -13,9 +12,6 @@ export const caseAssistReducer = createReducer(
   getCaseAssistInitialState(),
   (builder) => {
     builder
-      .addCase(setCaseAssistId, (state, action) => {
-        state.caseAssistId = action.payload.id;
-      })
       .addCase(setCaseInformationValue, (state, action) => {
         state.caseInformation[action.payload.fieldName] =
           action.payload.fieldValue;

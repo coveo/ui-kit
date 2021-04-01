@@ -85,6 +85,19 @@ export const updateAnalyticsConfiguration = createAction(
 );
 
 /**
+ * Updates the Case Assist configuration.
+ *
+ * @param caseAssistId (string) The ID of the Case Assist configuration to use for interacting with the Case Assist API.
+ */
+export const updateCaseAssistConfiguration = createAction(
+  'configuration/updateCaseAssistConfiguration',
+  (payload: {caseAssistId?: string}) =>
+    validatePayload(payload, {
+      caseAssistId: new StringValue({required: true, emptyAllowed: false}),
+    })
+);
+
+/**
  * Renews the accessToken specified in the global headless engine configuration.
  * @param renew (`() => Promise<string>`) A function that fetches a new access token. The function must return a Promise that resolves to a string (the new access token).
  */

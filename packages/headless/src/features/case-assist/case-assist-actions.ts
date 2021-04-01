@@ -44,21 +44,6 @@ export interface AsyncThunkOptions {
   extra: ThunkExtraArguments;
 }
 
-export interface SetCaseAssistIdPayload {
-  id: string;
-}
-
-/**
- * Sets the ID of the Case Assist configuration to use in the state.
- */
-export const setCaseAssistId = createAction(
-  'caseAssist/setCaseAssistId',
-  (payload: SetCaseAssistIdPayload) =>
-    validatePayload(payload, {
-      id: new StringValue({required: true, emptyAllowed: false}),
-    })
-);
-
 export interface SetCaseInformationValuePayload {
   fieldName: string;
   fieldValue: string;
@@ -115,7 +100,7 @@ const buildGetClassificationsRequest = async (
   accessToken: s.configuration.accessToken,
   organizationId: s.configuration.organizationId,
   locale: s.configuration.search.locale,
-  caseAssistId: s.caseAssist.caseAssistId,
+  caseAssistId: s.configuration.caseAssist.caseAssistId,
   visitorId: await getVisitorId(),
   fields: s.caseAssist.caseInformation,
   debug: s.caseAssist.debug,
@@ -128,7 +113,7 @@ const buildGetDocumentSuggestionsRequest = async (
   accessToken: s.configuration.accessToken,
   organizationId: s.configuration.organizationId,
   locale: s.configuration.search.locale,
-  caseAssistId: s.caseAssist.caseAssistId,
+  caseAssistId: s.configuration.caseAssist.caseAssistId,
   visitorId: await getVisitorId(),
   fields: s.caseAssist.caseInformation,
   context: s.caseAssist.userContext,
