@@ -1,4 +1,4 @@
-import {getApiResponseBodyAt, getAnalyticsAt} from '../utils/network';
+import {getAnalyticsAt} from '../utils/network';
 import {setupPage, shouldRenderErrorComponent} from '../utils/setupComponent';
 
 const resultPerPage = 'atomic-results-per-page';
@@ -19,12 +19,12 @@ describe('Result Per Page Component', () => {
     cy.get(resultPerPage).should('be.visible');
   });
 
-  it('should execute a query with a different number of results on button click', async () => {
+  it('should execute a query with a different number of results on button click', () => {
     setupResultPerPage();
     clickButton(1);
-    const jsonResponse = await getApiResponseBodyAt('@coveoSearch', 0);
-    expect(jsonResponse).to.have.property('results');
-    expect(jsonResponse.results.length).to.be.eq(25);
+    cy.wait('@coveoSearch')
+      .its('response.body.results')
+      .should('have.length', 25);
   });
 
   it('should log the right analytics on button click', async () => {

@@ -34,20 +34,6 @@ function getAnalytics(selector: string): Promise<any> {
   });
 }
 
-export function getApiResponseBodyAt(selector: string, order: number) {
-  for (let i = 0; i < order; i++) {
-    getApiResponseBody(selector);
-  }
-  return getApiResponseBody(selector);
-}
-
-export async function getApiRequestBodyAt(selector: string, order: number) {
-  for (let i = 0; i < order; i++) {
-    getApiRequestBody(selector);
-  }
-  return getApiRequestBody(selector);
-}
-
 export function getAnalyticsAt(selector: string, order: number) {
   for (let i = 0; i < order; i++) {
     getAnalytics(selector);

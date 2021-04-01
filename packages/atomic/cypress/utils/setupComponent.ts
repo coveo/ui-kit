@@ -20,19 +20,17 @@ export function setupIntercept() {
 }
 
 export interface PageSetupOptions {
-  html?: string;
+  html: string;
   shouldExecuteSearch?: boolean;
+  shouldWait?: boolean;
   urlHash?: string;
-  cyWaitSearch?: () => Cypress.Chainable<Interception>;
 }
 
 export function setupPage(options: PageSetupOptions) {
-  const opts: Required<PageSetupOptions> = {
-    html: '',
+  const opts: PageSetupOptions = {
     urlHash: '',
     shouldExecuteSearch: true,
-    // Allows to intercept first search
-    cyWaitSearch: () => cy.wait('@coveoSearch'),
+    shouldWait: true,
     ...options,
   };
 
@@ -41,12 +39,10 @@ export function setupPage(options: PageSetupOptions) {
   cy.injectAxe();
   cy.injectComponent(opts.html);
   cy.initSearchInterface(opts.shouldExecuteSearch!);
-  if (opts.shouldExecuteSearch) {
-    opts.cyWaitSearch();
-    return;
+  if (opts.shouldWait) {
+    opts.shouldExecuteSearch && cy.wait('@coveoSearch');
+    cy.wait(300); // rendering grace period
   }
-
-  cy.wait(500);
 }
 
 export function shouldRenderErrorComponent(selector: string) {

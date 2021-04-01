@@ -41,11 +41,17 @@ const sortCriteriaOption = {
   score: 'score',
 };
 
-function setupFacet(field: string, label: string, option?: string) {
+function setupFacet(
+  field: string,
+  label: string,
+  option = '',
+  shouldWait = true
+) {
   setupPage({
     html: `
   <atomic-breadcrumb-manager></atomic-breadcrumb-manager>
   <atomic-facet field="${field}" label="${label}" ${option}></atomic-facet>`,
+    shouldWait,
   });
 }
 
@@ -117,24 +123,34 @@ describe('Standard Facet', () => {
   });
 
   describe('When select 2 facetValue checkboxes', () => {
-    it('Two checkboxes should selected and should record UA correctly', () => {
+    it('Two checkboxes should be selected and should record UA correctly', () => {
+      cy.wait('@coveoAnalytics');
+
       cy.get(FacetAlias.facetFirstValueLabel).click();
+      cy.wait('@coveoAnalytics');
+
       cy.get(FacetAlias.facetSecondValueLabel).click();
+      cy.wait('@coveoAnalytics').then((intercept) => {
+        const analyticsBody = intercept.request.body;
+        expect(analyticsBody).to.have.property('actionCause', 'facetSelect');
+        expect(analyticsBody.facetState).to.have.lengthOf(2);
+      });
+
       cy.get(FacetAlias.facetFirstValueLabel)
         .find(FacetSelectors.checkbox)
         .should('be.checked');
       cy.get(FacetAlias.facetSecondValueLabel)
         .find(FacetSelectors.checkbox)
         .should('be.checked');
-      cy.getAnalyticsAt('@coveoAnalytics', 2).then((analyticsBody) => {
-        expect(analyticsBody).to.have.property('actionCause', 'facetSelect');
-        expect(analyticsBody.facetState).to.have.lengthOf(2);
-      });
     });
 
     it('Should trigger breadcrumb and display correctly', () => {
       cy.get(FacetAlias.facetFirstValueLabel).click();
+      cy.wait('@coveoSearch');
+
       cy.get(FacetAlias.facetSecondValueLabel).click();
+      cy.wait('@coveoSearch');
+
       createBreadcrumbShadowAlias();
       cy.get(BreadcrumbAlias.breadcrumbClearAllFilter).should('be.visible');
       facetValueShouldDisplayInBreadcrumb(
@@ -149,7 +165,11 @@ describe('Standard Facet', () => {
 
     it('Should reflect selected facetValue on URL', () => {
       cy.get(FacetAlias.facetFirstValueLabel).click();
+      cy.wait('@coveoSearch');
+
       cy.get(FacetAlias.facetSecondValueLabel).click();
+      cy.wait('@coveoSearch');
+
       cy.get(FacetAlias.facetFirstValueLabel)
         .find('label span:nth-child(1)')
         .invoke('text')
@@ -270,37 +290,53 @@ describe('Facet with no facetSearch, and numberOfValues is 5 ', () => {
 });
 
 describe('Facet with different sort-criteria options', () => {
-  it('Should using "automatic" sort for default setting', async () => {
-    setupFacet(facetProp.field, facetProp.label);
-    await assertSortCriteria(sortCriteriaOption.automatic, 0);
+  it('Should using "automatic" sort for default setting', () => {
+    setupFacet(facetProp.field, facetProp.label, '', false);
+    assertSortCriteria(sortCriteriaOption.automatic);
   });
 
-  it('Should using "alphanumeric" sort for custom setting', async () => {
+  it('Should using "alphanumeric" sort for custom setting', () => {
     setupFacet(
       facetProp.field,
       facetProp.label,
-      'sort-criteria="alphanumeric"'
+      'sort-criteria="alphanumeric"',
+      false
     );
-    await assertSortCriteria(sortCriteriaOption.alphanumeric, 0);
+    assertSortCriteria(sortCriteriaOption.alphanumeric);
   });
 
-  it('Should using "occurrences" sort for custom setting', async () => {
-    setupFacet(facetProp.field, facetProp.label, 'sort-criteria="occurrences"');
-    await assertSortCriteria(sortCriteriaOption.occurrences, 0);
+  it('Should using "occurrences" sort for custom setting', () => {
+    setupFacet(
+      facetProp.field,
+      facetProp.label,
+      'sort-criteria="occurrences"',
+      false
+    );
+    assertSortCriteria(sortCriteriaOption.occurrences);
   });
 
-  it('Should using "score" sort for custom setting', async () => {
-    setupFacet(facetProp.field, facetProp.label, 'sort-criteria="score"');
-    await assertSortCriteria(sortCriteriaOption.score, 0);
+  it('Should using "score" sort for custom setting', () => {
+    setupFacet(
+      facetProp.field,
+      facetProp.label,
+      'sort-criteria="score"',
+      false
+    );
+    assertSortCriteria(sortCriteriaOption.score);
   });
 
-  it('Should using "automatic" sort for custom setting', async () => {
-    setupFacet(facetProp.field, facetProp.label, 'sort-criteria="automatic"');
-    await assertSortCriteria(sortCriteriaOption.automatic, 0);
+  it('Should using "automatic" sort for custom setting', () => {
+    setupFacet(
+      facetProp.field,
+      facetProp.label,
+      'sort-criteria="automatic"',
+      false
+    );
+    assertSortCriteria(sortCriteriaOption.automatic);
   });
 
   describe('Trigger ShowMore on a facet with sort-criteria other than "automatic"', () => {
-    it('Should not change the sort order', async () => {
+    it('Should not change the sort order', () => {
       setupFacet(
         facetProp.field,
         facetProp.label,
@@ -311,7 +347,7 @@ describe('Facet with different sort-criteria options', () => {
       cy.get(FacetAlias.facetShadow)
         .find(FacetSelectors.showMoreButton)
         .click();
-      await assertSortCriteria(sortCriteriaOption.occurrences, 1);
+      assertSortCriteria(sortCriteriaOption.occurrences);
     });
   });
 });
@@ -348,7 +384,7 @@ describe('Facet with invalid options', () => {
   });
 });
 
-describe('Facet with custom delimitingCharacter', () => {
+describe.skip('Facet with custom delimitingCharacter', () => {
   beforeEach(() => {
     setupFacet(facetProp.field, facetProp.label, 'delimiting-character=","');
   });

@@ -1,4 +1,3 @@
-import {getApiRequestBodyAt} from '../../utils/network';
 import {FacetSelectors, FacetAlias, BreadcrumbAlias} from './facet-selectors';
 
 export const FacetType = {
@@ -48,40 +47,34 @@ export function facetValueShouldDisplayInBreadcrumb(
 }
 
 export function assertBasicFacetFunctionality(selector: string, field: string) {
+  cy.wait('@coveoAnalytics');
+
   cy.get(selector).click();
-  cy.get(selector).find(FacetSelectors.checkbox).should('be.checked');
-  assertNonZeroFacetCount();
-  cy.get(selector)
-    .find('label span:nth-child(1)')
-    .invoke('text')
-    .then((txt) => {
-      cy.getAnalyticsAt('@coveoAnalytics', 1).then((analyticsBody: any) => {
+  cy.wait('@coveoAnalytics').then(({request}) => {
+    const analyticsBody = request.body;
+    expect(analyticsBody).to.have.property('actionCause', 'facetSelect');
+    expect(analyticsBody.customData).to.have.property('facetField', field);
+    expect(analyticsBody.facetState[0]).to.have.property('state', 'selected');
+    expect(analyticsBody.facetState[0]).to.have.property('field', field);
+
+    cy.get(selector)
+      .find('label span:nth-child(1)')
+      .invoke('text')
+      .then((txt) => {
         const facetTypeDetected = analyticsBody.facetState[0].facetType;
         txt = convertFacetValueToAPIformat(txt.trim(), facetTypeDetected);
-
         expect(analyticsBody.customData).to.have.property('facetValue', txt);
-        expect(analyticsBody).to.have.property('actionCause', 'facetSelect');
-        expect(analyticsBody.customData).to.have.property('facetField', field);
-        expect(analyticsBody.facetState[0]).to.have.property(
-          'state',
-          'selected'
-        );
-        expect(analyticsBody.facetState[0]).to.have.property('field', field);
       });
-    });
+  });
+
+  cy.get(selector).find(FacetSelectors.checkbox).should('be.checked');
+  assertNonZeroFacetCount();
 }
 
-export async function assertSortCriteria(
-  sortOption: string,
-  requestBodyOrder: number
-) {
-  const requestBody = await getApiRequestBodyAt(
-    '@coveoSearch',
-    requestBodyOrder
-  );
-  const firstRequestBodyFacets = (requestBody.facets as any)[0];
-
-  expect(firstRequestBodyFacets).to.have.property('sortCriteria', sortOption);
+export function assertSortCriteria(sortOption: string) {
+  cy.wait('@coveoSearch').then(({request}) => {
+    expect(request.body.facets[0].sortCriteria).to.equal(sortOption);
+  });
 }
 
 export function convertFacetValueToAPIformat(
@@ -140,32 +133,43 @@ export function convertDateToFacetValue(
 }
 
 export function assertDeselectFacet(field: string) {
+  cy.wait('@coveoAnalytics');
+
   cy.get(FacetAlias.facetFirstValueLabel).click();
-  cy.wait(500);
+  cy.wait('@coveoAnalytics');
+
   cy.get(FacetAlias.facetFirstValueLabel)
     .click()
     .find(FacetSelectors.checkbox)
     .should('not.be.checked');
-  cy.getAnalyticsAt('@coveoAnalytics', 2).then((analyticsBody: any) => {
-    expect(analyticsBody).to.have.property('actionCause', 'facetDeselect');
-    expect(analyticsBody.customData).to.have.property('facetField', field);
+
+  cy.wait('@coveoAnalytics').then(({request}) => {
+    expect(request.body).to.have.property('actionCause', 'facetDeselect');
+    expect(request.body.customData).to.have.property('facetField', field);
   });
 }
 
 export function assertClearAllFacet() {
+  cy.wait('@coveoAnalytics');
+
   cy.get(FacetAlias.facetFirstValueLabel).click();
+  cy.wait('@coveoAnalytics');
+
   cy.get(FacetAlias.facetSecondValueLabel).click();
+  cy.wait('@coveoAnalytics');
+
   cy.get(FacetAlias.facetShadow).find(FacetSelectors.clearAllButton).click();
+  cy.wait('@coveoAnalytics').then(({request}) => {
+    expect(request.body).to.have.property('actionCause', 'facetClearAll');
+    expect(request.body.facetState).to.have.lengthOf(0);
+  });
+
   cy.get(FacetAlias.facetFirstValueLabel)
     .find(FacetSelectors.checkbox)
     .should('not.be.checked');
   cy.get(FacetAlias.facetSecondValueLabel)
     .find(FacetSelectors.checkbox)
     .should('not.be.checked');
-  cy.getAnalyticsAt('@coveoAnalytics', 3).then((analyticsBody) => {
-    expect(analyticsBody).to.have.property('actionCause', 'facetClearAll');
-    expect(analyticsBody.facetState).to.have.lengthOf(0);
-  });
 }
 
 export function assertNonZeroFacetCount(selector?: string) {
