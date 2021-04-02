@@ -3,8 +3,6 @@ import {
   getClassifications,
   getDocumentSuggestions,
   setCaseInformationValue,
-  setDebug,
-  setUserContextValue,
 } from '../../features/case-assist/case-assist-actions';
 import {
   initializeTicketLogging,
@@ -22,6 +20,8 @@ import {CaseAssistState} from '../../features/case-assist/case-assist-state';
 import {
   CaseAssistSection,
   ConfigurationSection,
+  ContextSection,
+  DebugSection,
 } from '../../state/state-sections';
 import {buildController, Controller} from '../controller/headless-controller';
 
@@ -37,22 +37,6 @@ export interface CaseAssist extends Controller {
    * @param fieldValue - The actual field value.
    */
   setCaseInformationValue(fieldName: string, fieldValue: string): void;
-
-  /**
-   * Sets a user context value in the state. User context values are used by
-   * Coveo Relevance Platform to return relevant document suggestions.
-   *
-   * @param key - The context key.
-   * @param value - The context value.
-   */
-  setUserContextValue(key: string, value: string): void;
-
-  /**
-   * Sets whether to retrieve debug information when getting suggestions.
-   *
-   * @param debug Whether to retrieve debug information.
-   */
-  setDebug(debug: boolean): void;
 
   /**
    * Gets the field classifications for the given Case Assist configuration.
@@ -170,7 +154,9 @@ export interface CaseAssist extends Controller {
  * @returns - The newly created Case Assist controller.
  */
 export function buildCaseAssist(
-  engine: Engine<CaseAssistSection & ConfigurationSection>
+  engine: Engine<
+    CaseAssistSection & ConfigurationSection & ContextSection & DebugSection
+  >
 ): CaseAssist {
   const controller = buildController(engine);
   const {dispatch} = engine;
@@ -188,12 +174,6 @@ export function buildCaseAssist(
 
     setCaseInformationValue(fieldName, fieldValue) {
       dispatch(setCaseInformationValue({fieldName, fieldValue}));
-    },
-    setUserContextValue(key, value) {
-      dispatch(setUserContextValue({key, value}));
-    },
-    setDebug(debug) {
-      dispatch(setDebug({debug}));
     },
     getClassifications() {
       dispatch(getClassifications());

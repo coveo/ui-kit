@@ -1,4 +1,4 @@
-import {BooleanValue, StringValue} from '@coveo/bueno';
+import {StringValue} from '@coveo/bueno';
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 import {CoveoAnalyticsClient} from 'coveo.analytics';
 import {ExecutionReport} from '../../api/search/search/execution-report';
@@ -61,38 +61,6 @@ export const setCaseInformationValue = createAction(
     })
 );
 
-export interface SetUserContextValuePayload {
-  key: string;
-  value: string;
-}
-
-/**
- * Sets the provided value in the user context.
- */
-export const setUserContextValue = createAction(
-  'caseAssist/setUserContextValue',
-  (payload: SetUserContextValuePayload) =>
-    validatePayload(payload, {
-      key: new StringValue({required: true, emptyAllowed: false}),
-      value: new StringValue({required: true, emptyAllowed: true}),
-    })
-);
-
-export interface SetDebugPayload {
-  debug: boolean;
-}
-
-/**
- * Sets whether debug information should be retrieved with suggestions.
- */
-export const setDebug = createAction(
-  'caseAssist/setDebug',
-  (payload: SetDebugPayload) =>
-    validatePayload(payload, {
-      debug: new BooleanValue({required: true, default: false}),
-    })
-);
-
 const buildGetClassificationsRequest = async (
   s: CaseAssistAppState
 ): Promise<ClassifyParam> => ({
@@ -103,7 +71,7 @@ const buildGetClassificationsRequest = async (
   caseAssistId: s.configuration.caseAssist.caseAssistId,
   visitorId: await getVisitorId(),
   fields: s.caseAssist.caseInformation,
-  debug: s.caseAssist.debug,
+  debug: s.debug,
 });
 
 const buildGetDocumentSuggestionsRequest = async (
@@ -116,8 +84,8 @@ const buildGetDocumentSuggestionsRequest = async (
   caseAssistId: s.configuration.caseAssist.caseAssistId,
   visitorId: await getVisitorId(),
   fields: s.caseAssist.caseInformation,
-  context: s.caseAssist.userContext,
-  debug: s.caseAssist.debug,
+  context: s.context.contextValues,
+  debug: s.debug,
 });
 
 /**

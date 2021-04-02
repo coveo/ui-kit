@@ -27,6 +27,8 @@ export {
   buildContext,
 } from './context/headless-context';
 
+export {Debug, buildDebug} from './debug/headless-debug';
+
 export {
   DidYouMean,
   DidYouMeanState,
@@ -152,7 +154,7 @@ export {
   buildSearchBox,
 } from './search-box/headless-search-box';
 
-export {buildCaseAssist} from './case-assist/headless-case-assist';
+export {CaseAssist, buildCaseAssist} from './case-assist/headless-case-assist';
 
 export {
   SortInitialState,

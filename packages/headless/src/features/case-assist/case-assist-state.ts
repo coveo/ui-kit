@@ -28,8 +28,6 @@ export interface DocumentSuggestionsState {
 
 export interface CaseAssistState {
   caseInformation: Record<string, string>;
-  userContext: Record<string, string>;
-  debug: boolean;
   classifications: ClassificationsState;
   documentSuggestions: DocumentSuggestionsState;
 }
@@ -37,8 +35,6 @@ export interface CaseAssistState {
 export function getCaseAssistInitialState(): CaseAssistState {
   return {
     caseInformation: {},
-    userContext: {},
-    debug: false,
 
     classifications: {
       fields: [],

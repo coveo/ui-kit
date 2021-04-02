@@ -3,6 +3,8 @@ import {handleOneAnalyticsEvent} from 'coveo.analytics';
 import {CaseAssistAppState} from '../../state/case-assist-app-state';
 import {buildMockCaseAssistAppEngine, MockEngine} from '../../test/mock-engine';
 import {getConfigurationInitialState} from '../configuration/configuration-state';
+import {getContextInitialState} from '../context/context-state';
+import {getDebugInitialState} from '../debug/debug-state';
 import {
   initializeTicketLogging,
   logTicketCancelled,
@@ -65,6 +67,8 @@ describe('case assist analytics actions', () => {
     const initial = {
       configuration: getConfigurationInitialState(),
       caseAssist: getCaseAssistInitialState(),
+      context: getContextInitialState(),
+      debug: getDebugInitialState(),
     };
 
     initial.configuration.accessToken = 'some token';

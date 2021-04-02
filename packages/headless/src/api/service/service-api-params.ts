@@ -33,7 +33,7 @@ export interface SuggestDocumentsParam extends BaseCaseAssistParam {
   visitorId: string;
   locale?: string;
   fields: Record<string, string>;
-  context?: Record<string, string>;
+  context?: Record<string, string | string[]>;
   debug: boolean;
 }
 

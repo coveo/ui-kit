@@ -3,8 +3,6 @@ import {
   getClassifications,
   getDocumentSuggestions,
   setCaseInformationValue,
-  setDebug,
-  setUserContextValue,
 } from '../../features/case-assist/case-assist-actions';
 import {
   initializeTicketLogging,
@@ -50,21 +48,6 @@ describe('Case Assist', () => {
       fieldName: 'subject',
       fieldValue: 'some case subject',
     });
-  });
-
-  it('setUserContextValue dispatches a setUserContextValue action', () => {
-    caseAssist.setUserContextValue('occupation', 'marketer');
-
-    expectActionMatching(setUserContextValue, {
-      key: 'occupation',
-      value: 'marketer',
-    });
-  });
-
-  it('setDebug dispatches a setDebug action', () => {
-    caseAssist.setDebug(true);
-
-    expectActionMatching(setDebug, {debug: true});
   });
 
   it('getClassifications dispatches a getClassifications action', () => {

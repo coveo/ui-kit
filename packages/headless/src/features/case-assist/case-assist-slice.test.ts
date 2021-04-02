@@ -3,8 +3,6 @@ import {
   getClassifications,
   getDocumentSuggestions,
   setCaseInformationValue,
-  setDebug,
-  setUserContextValue,
 } from './case-assist-actions';
 import {caseAssistReducer} from './case-assist-slice';
 import {CaseAssistState, getCaseAssistInitialState} from './case-assist-state';
@@ -76,21 +74,6 @@ describe('case assist slice', () => {
       primaryColor: 'purple',
       secondaryColor: 'teal',
     });
-  });
-
-  it('setUserContextValue sets the value in the state', () => {
-    const expected = {key: 'occupation', value: 'marketer'};
-    const action = setUserContextValue(expected);
-    const finalState = caseAssistReducer(state, action);
-
-    expect(finalState.userContext[expected.key]).toBe(expected.value);
-  });
-
-  it('setDebug sets the value in the state', () => {
-    const action = setDebug({debug: true});
-    const finalState = caseAssistReducer(state, action);
-
-    expect(finalState.debug).toBe(true);
   });
 
   it('getClassifications.pending raises the loading flag', () => {

@@ -1,5 +1,7 @@
 import {getCaseAssistInitialState} from '../../features/case-assist/case-assist-state';
 import {getConfigurationInitialState} from '../../features/configuration/configuration-state';
+import {getContextInitialState} from '../../features/context/context-state';
+import {getDebugInitialState} from '../../features/debug/debug-state';
 import {CaseAssistAppState} from '../../state/case-assist-app-state';
 import {buildMockServiceAPIClient} from '../../test/mock-service-api-client';
 import {PlatformClient} from '../platform-client';
@@ -37,11 +39,13 @@ describe('service api client', () => {
       ...getConfigurationInitialState(),
       organizationId: expectedOrgId,
       accessToken: expectedAccessToken,
+      caseAssist: {
+        caseAssistId: expectedCaseAssistId,
+      },
     },
-    caseAssist: {
-      ...getCaseAssistInitialState(),
-      caseAssistId: expectedCaseAssistId,
-    },
+    caseAssist: getCaseAssistInitialState(),
+    context: getContextInitialState(),
+    debug: getDebugInitialState(),
   });
 
   describe('classify', () => {
@@ -52,7 +56,7 @@ describe('service api client', () => {
       url: state.configuration.platformUrl,
       organizationId: state.configuration.organizationId,
       accessToken: state.configuration.accessToken,
-      caseAssistId: state.caseAssist.caseAssistId,
+      caseAssistId: state.configuration.caseAssist.caseAssistId,
       visitorId: expectedVisitorId,
       locale: state.configuration.search.locale,
       fields: state.caseAssist.caseInformation,
@@ -167,17 +171,17 @@ describe('service api client', () => {
       url: state.configuration.platformUrl,
       organizationId: state.configuration.organizationId,
       accessToken: state.configuration.accessToken,
-      caseAssistId: state.caseAssist.caseAssistId,
+      caseAssistId: state.configuration.caseAssist.caseAssistId,
       visitorId: expectedVisitorId,
       locale: state.configuration.search.locale,
       fields: state.caseAssist.caseInformation,
-      context: state.caseAssist.userContext,
+      context: state.context.contextValues,
       debug,
     });
 
     it('should call the platform endpoint with the correct arguments', async () => {
       state.caseAssist.caseInformation = {subject: 'some case subject'};
-      state.caseAssist.userContext = {occupation: 'marketer'};
+      state.context.contextValues = {occupation: 'marketer'};
       const request = buildSuggestDocumentsRequest(state);
 
       mockPlatformCall({
