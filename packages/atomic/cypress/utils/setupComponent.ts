@@ -34,19 +34,14 @@ export function setupIntercept() {
   }).as('coveoSearch');
 }
 
-export function setUpPage(htmlCode: string) {
+// TODO: rename to setupPage (typo)
+// TODO: add options object for arguments (with urlHash, wait options)
+export function setUpPage(htmlCode: string, executeFirstSearch = true) {
   setupIntercept();
   cy.visit('http://localhost:3333/pages/test.html');
   cy.injectAxe();
-  injectComponent(htmlCode);
-  cy.wait(500); // TODO: waiting for @coveoSearch is less flaky
-}
-
-export function setUpPageNoSearch(htmlCode: string) {
-  setupIntercept();
-  cy.visit('http://localhost:3333/pages/test.html');
-  cy.injectAxe();
-  injectComponent(htmlCode, false);
+  injectComponent(htmlCode, executeFirstSearch);
+  // TODO: when executeFirstSearch = true, waiting for @coveoSearch would be less flaky
   cy.wait(300);
 }
 
