@@ -7,7 +7,6 @@ import {
   NoopPreprocessRequestMiddleware,
   PlatformClient,
   PlatformClientCallOptions,
-  PlatformResponse,
 } from '../platform-client';
 import {createMockState} from '../../test/mock-state';
 import {createMockRecommendationState} from '../../test/mock-recommendation-state';
@@ -30,12 +29,11 @@ import pino from 'pino';
 import {buildMockSearchResponse} from '../../test/mock-search-response';
 import {buildMockQuerySuggestCompletion} from '../../test/mock-query-suggest-completion';
 import {buildMockFacetSearchResponse} from '../../test/mock-facet-search-response';
-import {SearchResponseSuccess} from './search/search-response';
-import {QuerySuggestSuccessResponse} from './query-suggest/query-suggest-response';
 import {buildMockCategoryFacetSlice} from '../../test/mock-category-facet-slice';
 import {buildSearchRequest} from '../../features/search/search-actions';
 import {buildMockSearchAPIClient} from '../../test/mock-search-api-client';
 import {NoopPreprocessRequest} from '../preprocess-request';
+import {Response} from 'cross-fetch';
 
 jest.mock('../platform-client');
 describe('search api client', () => {
@@ -61,21 +59,18 @@ describe('search api client', () => {
   });
 
   describe('middleware', () => {
-    function mockPlatformCall(
-      returnValue:
-        | PlatformResponse<SearchResponseSuccess | QuerySuggestSuccessResponse>
-        | {}
-    ) {
+    function mockPlatformCall(returnValue: Response) {
       const mockPlatformCall = jest.fn();
 
       mockPlatformCall.mockReturnValue(returnValue);
       PlatformClient.call = mockPlatformCall;
     }
     it('should preprocess search responses if appropriate middleware is provided', async () => {
-      mockPlatformCall({
-        body: buildMockSearchResponse(),
-        response: {},
-      });
+      const body = JSON.stringify(buildMockSearchResponse());
+      const response = new Response(body);
+
+      mockPlatformCall(response);
+
       const newId = 'notInitialID';
       buildSearchAPIClient({
         postprocessSearchResponseMiddleware: (response) => {
@@ -101,10 +96,12 @@ describe('search api client', () => {
           test: buildMockQuerySuggest(),
         },
       });
-      mockPlatformCall({
-        body: buildMockQuerySuggestCompletion(),
-        response: {},
-      });
+
+      const body = JSON.stringify(buildMockQuerySuggestCompletion());
+      const response = new Response(body);
+
+      mockPlatformCall(response);
+
       const completions = [
         buildMockQuerySuggestCompletion({expression: 'hello world'}),
       ];
@@ -135,10 +132,11 @@ describe('search api client', () => {
           test: buildMockFacetRequest(),
         },
       });
-      mockPlatformCall({
-        body: buildMockFacetSearchResponse(),
-        response: {},
-      });
+
+      const body = JSON.stringify(buildMockFacetSearchResponse());
+      const response = new Response(body);
+
+      mockPlatformCall(response);
 
       buildSearchAPIClient({
         postprocessFacetSearchResponseMiddleware: (response) => {

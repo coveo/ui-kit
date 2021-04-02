@@ -45,6 +45,18 @@ describe('numeric facet', () => {
     initNumericFacet();
   });
 
+  it('#initNumericFacet throws an error when an manual range is invalid', () => {
+    options.currentValues = [
+      buildNumericRange({
+        start: 10,
+        end: 0,
+      }),
+    ];
+    expect(() => initNumericFacet()).toThrow(
+      'The start value is greater than the end value for the numeric range 10 to 0'
+    );
+  });
+
   it('calls #determineFacetId with the correct params', () => {
     jest.spyOn(FacetIdDeterminor, 'determineFacetId');
 

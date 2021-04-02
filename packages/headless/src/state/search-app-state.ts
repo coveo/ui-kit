@@ -24,6 +24,7 @@ import {
   FacetOptionsSection,
   DebugSection,
   FacetOrderSection,
+  ResultPreviewSection,
   VersionSection,
 } from './state-sections';
 
@@ -49,6 +50,7 @@ export type SearchAppState = SearchParametersState &
   RedirectionSection &
   QuerySuggestionSection &
   SearchSection &
+  ResultPreviewSection &
   DidYouMeanSection &
   FieldsSection &
   FacetOrderSection &

@@ -322,7 +322,7 @@ describe('Facet with invalid options', () => {
       shouldRenderErrorComponent(FacetSelectors.facetStandard);
     });
 
-    it.skip('Should not render when field returns no result', () => {
+    it('Should not render when field returns no result', () => {
       setupFacet('author2', facetProp.label);
     });
   });
