@@ -4,18 +4,6 @@ import {
   getDocumentSuggestions,
   setCaseInformationValue,
 } from '../../features/case-assist/case-assist-actions';
-import {
-  initializeTicketLogging,
-  logTicketCancelled,
-  logTicketClassificationClick,
-  logTicketCreated,
-  logTicketCreateStart,
-  logTicketDocumentSuggestionClick,
-  logTicketDocumentSuggestionRating,
-  logTicketFieldUpdated,
-  logTicketNextStage,
-  logTicketSolved,
-} from '../../features/case-assist/case-assist-analytics-actions';
 import {CaseAssistState} from '../../features/case-assist/case-assist-state';
 import {
   CaseAssistSection,
@@ -46,100 +34,9 @@ export interface CaseAssist extends Controller {
 
   /**
    * Gets the document suggestions for the given Case Assist configuration.
-   * Document suggestions depend on the current case information, and user context.
+   * Document suggestions depend on the current case information, and context.
    */
   getDocumentSuggestions(): void;
-
-  /**
-   * Initializes the logger for the ticket-related Usage Analytics events.
-   * This method must be invoked before any other ticket logging method.
-   */
-  initializeTicketLogging(): void;
-
-  /**
-   * Logs a `ticket_create_start` event. This method is usually invoked when
-   * the user enters the case creation form.
-   *
-   * See https://docs.coveo.com/en/3437/service/log-case-assist-events#enter-interface
-   */
-  logTicketCreateStart(): void;
-
-  /**
-   * Logs a `ticket_field_update` event. This method is usually invoked each
-   * time a user modifies the case information.
-   *
-   * See https://docs.coveo.com/en/3437/service/log-case-assist-events#fill-a-field
-   *
-   * @param fieldName - The name of the modified field.
-   */
-  logTicketFieldUpdated(fieldName: string): void;
-
-  /**
-   * Logs a `ticket_classification_click` event. This method is usually invoked
-   * when the user confirms one of the suggested field classifications.
-   *
-   * See https://docs.coveo.com/en/3437/service/log-case-assist-events#select-a-case-classification
-   *
-   * @param predictionId - The ID of the field classification.
-   */
-  logTicketClassificationClick(predictionId: string): void;
-
-  /**
-   * Logs a `ticket_next_stage` event. This method should be invoked when
-   * the user moves to the next page of your case creation flow.
-   *
-   * See https://docs.coveo.com/en/3437/service/log-case-assist-events#move-to-the-next-step
-   */
-  logTicketNextStage(): void;
-
-  /**
-   * Logs a `suggestion_click` event. This method is usually invoked when
-   * the user clicks on a suggested document to consult it. It is a key
-   * indicator for computing case deflection rate.
-   *
-   * See https://docs.coveo.com/en/3437/service/log-case-assist-events#select-a-document-suggestion
-   *
-   * @param suggestionId - The `uniqueId` of the suggested document.
-   */
-  logTicketDocumentSuggestionClick(suggestionId: string): void;
-
-  /**
-   * Logs a `suggestion_rate` event. This method should be invoked when the user
-   * rates a document suggestion. The most common ways of rating document suggestions
-   * are by using a 5 stars rating, or helpful/not helpful buttons.
-   *
-   * See https://docs.coveo.com/en/3437/service/log-case-assist-events#rate-a-document-suggestion
-   *
-   * @param suggestionId - The `uniqueId` of the suggested document.
-   * @param rating - The rating value as a floating point number where `0.0` means
-   * "not relevant", and `1.0` means "highly relevant".
-   */
-  logTicketDocumentSuggestionRating(suggestionId: string, rating: number): void;
-
-  /**
-   * Logs a `ticket_cancel` event (with the `Solved` reason). This method should be invoked when the user
-   * quits the case creation form because he found an appropriate solution.
-   *
-   * See https://docs.coveo.com/en/3437/service/log-case-assist-events#cancel-a-ticket
-   */
-  logTicketSolved(): void;
-
-  /**
-   * Logs a `ticket_cancel` event (with the `Quit` reason). This method should be invoked when the user
-   * quits the case creation form, but an appropriate solution might not have been suggested.
-   *
-   * See https://docs.coveo.com/en/3437/service/log-case-assist-events#cancel-a-ticket
-   */
-  logTicketCancelled(): void;
-
-  /**
-   * Logs a `ticket_create` event. This method should be invoked when the user submits the
-   * case to the CRM platform.
-   *
-   * See https://docs.coveo.com/en/3437/service/log-case-assist-events#submit-a-ticket
-   * @param ticketId - The ID of the created case.
-   */
-  logTicketCreated(ticketId: string): void;
 
   /**
    * The state of the `CaseAssist` controller.
@@ -180,36 +77,6 @@ export function buildCaseAssist(
     },
     getDocumentSuggestions() {
       dispatch(getDocumentSuggestions());
-    },
-    initializeTicketLogging() {
-      dispatch(initializeTicketLogging());
-    },
-    logTicketCreateStart() {
-      dispatch(logTicketCreateStart());
-    },
-    logTicketFieldUpdated(fieldName: string) {
-      dispatch(logTicketFieldUpdated({fieldName}));
-    },
-    logTicketClassificationClick(predictionId: string) {
-      dispatch(logTicketClassificationClick({predictionId}));
-    },
-    logTicketNextStage() {
-      dispatch(logTicketNextStage());
-    },
-    logTicketDocumentSuggestionClick(suggestionId: string) {
-      dispatch(logTicketDocumentSuggestionClick({suggestionId}));
-    },
-    logTicketDocumentSuggestionRating(suggestionId: string, rating: number) {
-      dispatch(logTicketDocumentSuggestionRating({suggestionId, rating}));
-    },
-    logTicketSolved() {
-      dispatch(logTicketSolved());
-    },
-    logTicketCancelled() {
-      dispatch(logTicketCancelled());
-    },
-    logTicketCreated(ticketId: string) {
-      dispatch(logTicketCreated({ticketId}));
     },
   };
 }
