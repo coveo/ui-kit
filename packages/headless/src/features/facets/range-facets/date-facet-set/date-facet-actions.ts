@@ -1,3 +1,4 @@
+import dayjs from 'dayjs';
 import {createAction} from '@reduxjs/toolkit';
 import {DateFacetRegistrationOptions} from './interfaces/options';
 import {DateFacetValue} from './interfaces/response';
@@ -6,6 +7,8 @@ import {deselectAllFacetValues} from '../../facet-set/facet-set-actions';
 import {
   validatePayload,
   requiredNonEmptyString,
+  validatePayloadAndThrow,
+  serializeSchemaValidationError,
 } from '../../../../utils/validate-payload';
 import {
   NumberValue,
@@ -17,6 +20,7 @@ import {
 import {facetIdDefinition} from '../../generic/facet-actions-validation';
 import {RangeFacetSortCriterion} from '../generic/interfaces/request';
 import {dateFacetValueDefinition} from '../generic/range-facet-validate-payload';
+import {buildDateRange} from '../../../../controllers/facets/range-facet/date-facet/date-range';
 
 const dateRangeRequestDefinition = {
   start: requiredNonEmptyString,
@@ -39,14 +43,38 @@ const dateFacetRegistrationOptionsDefinition = {
   sortCriteria: new Value<RangeFacetSortCriterion>({required: false}),
 };
 
+export function validateManualDateRanges(
+  options: Pick<DateFacetRegistrationOptions, 'currentValues'>
+) {
+  if (!options.currentValues) {
+    return;
+  }
+
+  options.currentValues.forEach((value) => {
+    const {start, end} = buildDateRange(value);
+    if (dayjs(start).isAfter(dayjs(end))) {
+      throw new Error(
+        `The start value is greater than the end value for the date range ${value.start} to ${value.end}`
+      );
+    }
+  });
+}
+
 /**
  * Registers a date facet.
  * @param (DateFacetRegistrationOptions) The options to register the facet with.
  */
 export const registerDateFacet = createAction(
   'dateFacet/register',
-  (payload: DateFacetRegistrationOptions) =>
-    validatePayload(payload, dateFacetRegistrationOptionsDefinition)
+  (payload: DateFacetRegistrationOptions) => {
+    try {
+      validatePayloadAndThrow(payload, dateFacetRegistrationOptionsDefinition);
+      validateManualDateRanges(payload);
+      return {payload, error: null};
+    } catch (error) {
+      return {payload, error: serializeSchemaValidationError(error)};
+    }
+  }
 );
 
 /**

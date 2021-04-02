@@ -17,10 +17,8 @@ import {
 import {PlanRequest} from './plan/plan-request';
 import {QuerySuggestRequest} from './query-suggest/query-suggest-request';
 import {FacetSearchRequest} from './facet-search/facet-search-request';
-import {FacetSearchResponse} from './facet-search/facet-search-response';
 import {SearchAppState} from '../../state/search-app-state';
 import {BaseParam, baseSearchRequest} from './search-api-params';
-import {CategoryFacetSearchRequest} from './facet-search/category-facet-search/category-facet-search-request';
 import {RecommendationRequest} from './recommendation/recommendation-request';
 import {ProductRecommendationsRequest} from './product-recommendations/product-recommendations-request';
 import {Logger} from 'pino';
@@ -31,6 +29,7 @@ import {
   PostprocessSearchResponseMiddleware,
 } from './search-api-client-middleware';
 import {PreprocessRequest} from '../preprocess-request';
+import {HtmlRequest} from './html/html-request';
 
 export type AllSearchAPIResponse = Plan | Search | QuerySuggest;
 
@@ -60,40 +59,45 @@ export class SearchAPIClient {
   async plan(
     req: PlanRequest
   ): Promise<SearchAPIClientResponse<PlanResponseSuccess>> {
-    const platformResponse = await PlatformClient.call<PlanResponseSuccess>({
+    const response = await PlatformClient.call({
       ...baseSearchRequest(req, 'POST', 'application/json', '/plan'),
       requestParams: pickNonBaseParams(req),
       ...this.options,
     });
 
-    if (isSuccessPlanResponse(platformResponse)) {
-      return {success: platformResponse.body};
+    const body = await response.json();
+
+    if (isSuccessPlanResponse(body)) {
+      return {success: body};
     }
+
     return {
-      error: unwrapError(platformResponse)!,
+      error: unwrapError({response, body}),
     };
   }
 
   async querySuggest(
     req: QuerySuggestRequest
   ): Promise<SearchAPIClientResponse<QuerySuggestSuccessResponse>> {
-    const platformResponse = await PlatformClient.call<
-      QuerySuggestSuccessResponse
-    >({
+    const response = await PlatformClient.call({
       ...baseSearchRequest(req, 'POST', 'application/json', '/querySuggest'),
       requestParams: pickNonBaseParams(req),
       ...this.options,
     });
-    if (isSuccessQuerySuggestionsResponse(platformResponse)) {
+
+    const body = await response.json();
+    const payload = {response, body};
+
+    if (isSuccessQuerySuggestionsResponse(body)) {
       const processedResponse = await this.options.postprocessQuerySuggestResponseMiddleware(
-        platformResponse
+        payload
       );
       return {
         success: processedResponse.body,
       };
     }
     return {
-      error: unwrapError(platformResponse),
+      error: unwrapError(payload),
     };
   }
 
@@ -108,7 +112,7 @@ export class SearchAPIClient {
     }
     this.searchAbortController = this.getAbortControllerInstanceIfAvailable();
 
-    const platformResponse = await PlatformClient.call<Search>({
+    const response = await PlatformClient.call({
       ...baseSearchRequest(req, 'POST', 'application/json', ''),
       requestParams: pickNonBaseParams(req),
       ...this.options,
@@ -117,9 +121,12 @@ export class SearchAPIClient {
 
     this.searchAbortController = null;
 
-    if (isSuccessSearchResponse(platformResponse)) {
+    const body = await response.json();
+    const payload = {response, body};
+
+    if (isSuccessSearchResponse(body)) {
       const processedResponse = await this.options.postprocessSearchResponseMiddleware(
-        platformResponse
+        payload
       );
       return {
         success: processedResponse.body,
@@ -127,56 +134,81 @@ export class SearchAPIClient {
     }
 
     return {
-      error: unwrapError(platformResponse),
+      error: unwrapError(payload),
     };
   }
 
-  async facetSearch(req: FacetSearchRequest | CategoryFacetSearchRequest) {
-    const platformResponse = await PlatformClient.call<FacetSearchResponse>({
+  async facetSearch(req: FacetSearchRequest) {
+    const response = await PlatformClient.call({
       ...baseSearchRequest(req, 'POST', 'application/json', '/facet'),
       requestParams: pickNonBaseParams(req),
       ...this.options,
     });
+
+    const body = await response.json();
+    const payload = {response, body};
+
     const processedResponse = await this.options.postprocessFacetSearchResponseMiddleware(
-      platformResponse
+      payload
     );
 
     return processedResponse.body;
   }
 
   async recommendations(req: RecommendationRequest) {
-    const platformResponse = await PlatformClient.call<Search>({
+    const response = await PlatformClient.call({
       ...baseSearchRequest(req, 'POST', 'application/json', ''),
       requestParams: pickNonBaseParams(req),
       ...this.options,
     });
 
-    if (isSuccessSearchResponse(platformResponse)) {
-      return {
-        success: platformResponse.body,
-      };
+    const body = await response.json();
+
+    if (isSuccessSearchResponse(body)) {
+      return {success: body};
     }
 
     return {
-      error: unwrapError(platformResponse),
+      error: unwrapError({response, body}),
     };
   }
 
+  async html(req: HtmlRequest) {
+    const response = await PlatformClient.call({
+      ...baseSearchRequest(
+        req,
+        'POST',
+        'application/x-www-form-urlencoded',
+        '/html'
+      ),
+      requestParams: pickNonBaseParams(req),
+      ...this.options,
+    });
+
+    const body = await response.text();
+
+    if (isSuccessHtmlResponse(body)) {
+      return {success: body};
+    }
+
+    return {error: unwrapError({response, body})};
+  }
+
   async productRecommendations(req: ProductRecommendationsRequest) {
-    const platformResponse = await PlatformClient.call<Search>({
+    const response = await PlatformClient.call({
       ...baseSearchRequest(req, 'POST', 'application/json', ''),
       requestParams: pickNonBaseParams(req),
       ...this.options,
     });
 
-    if (isSuccessSearchResponse(platformResponse)) {
-      return {
-        success: platformResponse.body,
-      };
+    const body = await response.json();
+
+    if (isSuccessSearchResponse(body)) {
+      return {success: body};
     }
 
     return {
-      error: unwrapError(platformResponse),
+      error: unwrapError({response, body}),
     };
   }
 
@@ -198,16 +230,36 @@ export class SearchAPIClient {
 }
 
 const unwrapError = (
-  res: PlatformResponse<AllSearchAPIResponse>
+  payload: PlatformResponse<AllSearchAPIResponse>
 ): SearchAPIErrorWithStatusCode => {
-  if (isSearchAPIException(res)) {
-    return unwrapErrorByException(res);
-  }
-  if (isSearchAPIErrorWithStatusCode(res)) {
-    return res.body;
+  const {response} = payload;
+
+  if (response.body) {
+    return unwrapSearchApiError(payload);
   }
 
-  const body = (res.body as unknown) as Error;
+  return unwrapClientError(response);
+};
+
+const unwrapSearchApiError = (
+  payload: PlatformResponse<AllSearchAPIResponse>
+) => {
+  if (isSearchAPIException(payload)) {
+    return unwrapErrorByException(payload);
+  }
+
+  if (isSearchAPIErrorWithStatusCode(payload)) {
+    return payload.body;
+  }
+
+  return {message: 'unknown', statusCode: 0, type: 'unknown'};
+};
+
+const unwrapClientError = (response: Response) => {
+  // Transform an error to an object https://stackoverflow.com/a/26199752
+  const body = JSON.parse(
+    JSON.stringify(response, Object.getOwnPropertyNames(response))
+  ) as Error;
 
   return {
     ...body,
@@ -238,29 +290,21 @@ export const isErrorResponse = <T>(
 };
 
 function isSuccessQuerySuggestionsResponse(
-  r: PlatformResponse<QuerySuggest>
-): r is PlatformResponse<QuerySuggestSuccessResponse> {
-  return (
-    (r as PlatformResponse<QuerySuggestSuccessResponse>).body.completions !==
-    undefined
-  );
+  body: unknown
+): body is QuerySuggestSuccessResponse {
+  return (body as QuerySuggestSuccessResponse).completions !== undefined;
 }
 
-function isSuccessPlanResponse(
-  r: PlatformResponse<Plan>
-): r is PlatformResponse<PlanResponseSuccess> {
-  return (
-    (r as PlatformResponse<PlanResponseSuccess>).body.preprocessingOutput !==
-    undefined
-  );
+function isSuccessPlanResponse(body: unknown): body is PlanResponseSuccess {
+  return (body as PlanResponseSuccess).preprocessingOutput !== undefined;
 }
 
-function isSuccessSearchResponse(
-  r: PlatformResponse<Search>
-): r is PlatformResponse<SearchResponseSuccess> {
-  return (
-    (r as PlatformResponse<SearchResponseSuccess>).body.results !== undefined
-  );
+function isSuccessHtmlResponse(body: unknown): body is string {
+  return typeof body === 'string';
+}
+
+function isSuccessSearchResponse(body: unknown): body is SearchResponseSuccess {
+  return (body as SearchResponseSuccess).results !== undefined;
 }
 
 function isSearchAPIErrorWithStatusCode(

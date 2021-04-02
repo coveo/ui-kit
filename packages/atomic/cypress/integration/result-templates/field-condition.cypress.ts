@@ -1,6 +1,7 @@
 describe('Field Condition Component', () => {
-  describe('when not a child of an "template" element', () => {
-    it.skip('should render an "atomic-component-error" component');
+  describe('when not used inside a result template', () => {
+    it.skip('should remove the component from the DOM');
+    it.skip('should log a console error');
   });
 
   it.skip('the "if-defined" prop should add a condition to the component');

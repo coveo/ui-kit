@@ -6,66 +6,66 @@
         "target": "es2016",
         "module": "esnext",
         "paths": {
-            "c/dateFacet": [
-                "dateFacet/dateFacet.js"
+            "c/exampleSearch": [
+                "exampleSearch/exampleSearch"
             ],
-            "c/dateFacetValue": [
-                "dateFacetValue/dateFacetValue.js"
+            "c/quanticDateFacet": [
+                "quanticDateFacet/quanticDateFacet.js"
             ],
-            "c/categoryFacet": [
-                "categoryFacet/categoryFacet.js"
+            "c/quanticDateFacetValue": [
+                "quanticDateFacetValue/quanticDateFacetValue.js"
             ],
-            "c/categoryFacetValue": [
-                "categoryFacetValue/categoryFacetValue.js"
+            "c/quanticCategoryFacet": [
+                "quanticCategoryFacet/quanticCategoryFacet.js"
             ],
-            "c/facet": [
-                "facet/facet.js"
+            "c/quanticCategoryFacetValue": [
+                "quanticCategoryFacetValue/quanticCategoryFacetValue.js"
             ],
-            "c/pager": [
-                "pager/pager.js"
+            "c/quanticFacet": [
+                "quanticFacet/quanticFacet.js"
             ],
-            "c/result": [
-                "result/result.js"
+            "c/quanticPager": [
+                "quanticPager/quanticPager.js"
             ],
-            "c/resultList": [
-                "resultList/resultList.js"
+            "c/quanticResult": [
+                "quanticResult/quanticResult.js"
             ],
-            "c/sort": [
-                "sort/sort.js"
+            "c/quanticResultList": [
+                "quanticResultList/quanticResultList.js"
             ],
-            "c/summary": [
-                "summary/summary.js"
+            "c/quanticSort": [
+                "quanticSort/quanticSort.js"
             ],
-            "c/facetValue": [
-                "facetValue/facetValue.js"
+            "c/quanticSummary": [
+                "quanticSummary/quanticSummary.js"
             ],
-            "c/numericFacet": [
-                "numericFacet/numericFacet.js"
+            "c/quanticFacetValue": [
+                "quanticFacetValue/quanticFacetValue.js"
             ],
-            "c/numericFacetValue": [
-                "numericFacetValue/numericFacetValue.js"
+            "c/quanticNumericFacet": [
+                "quanticNumericFacet/quanticNumericFacet.js"
             ],
-            "c/resultsPerPage": [
-                "resultsPerPage/resultsPerPage.js"
+            "c/quanticNumericFacetValue": [
+                "quanticNumericFacetValue/quanticNumericFacetValue.js"
             ],
-            "c/searchBox": [
-                "searchBox/searchBox.js"
+            "c/quanticResultsPerPage": [
+                "quanticResultsPerPage/quanticResultsPerPage.js"
             ],
-            "c/searchInterface": [
-                "searchInterface/searchInterface.js"
+            "c/quanticSearchBox": [
+                "quanticSearchBox/quanticSearchBox.js"
             ],
-            "c/numberButton": [
-                "numberButton/numberButton.js"
+            "c/quanticSearchInterface": [
+                "quanticSearchInterface/quanticSearchInterface.js"
             ],
-            "c/initialization": [
-                "initialization/initialization.js"
+            "c/quanticNumberButton": [
+                "quanticNumberButton/quanticNumberButton.js"
+            ],
+            "c/quanticUtils": [
+                "quanticUtils/quanticUtils.js"
             ],
             "c/testUtils": [
                 "testUtils/testUtils.js"
             ],
-            "c/utils": [
-                "utils/utils.js"
-            ]
         }
     },
     "include": [
@@ -81,6 +81,6 @@
     "paths": {
         "c/*": [
             "*"
-        ]
+        ],
     }
 }

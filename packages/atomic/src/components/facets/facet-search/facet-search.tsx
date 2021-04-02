@@ -225,7 +225,6 @@ export class FacetSearch {
   }
 
   public render() {
-    console.log(this.props.controller.facetSearchState);
     return (
       <div class="combobox relative flex flex-grow">
         <div

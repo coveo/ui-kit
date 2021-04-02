@@ -21,6 +21,7 @@ import {SearchState} from '../features/search/search-state';
 import {SortCriteriaState} from '../features/sort-criteria/sort-criteria-state';
 import {FacetOrderState} from '../features/facets/facet-order/facet-order-state';
 import {CaseAssistState} from '../features/case-assist/case-assist-state';
+import {ResultPreviewState} from '../features/result-preview/result-preview-state';
 
 export interface QuerySection {
   /**
@@ -74,6 +75,13 @@ export interface PaginationSection {
    * The properties related to pagination.
    */
   pagination: PaginationState;
+}
+
+export interface ResultPreviewSection {
+  /**
+   * The properties related to the previewed result.
+   */
+  resultPreview: ResultPreviewState;
 }
 
 export interface ContextSection {

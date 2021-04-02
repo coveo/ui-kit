@@ -21,6 +21,14 @@ import {
   injectionDepth,
   numberOfValues,
 } from '../../_common/facet-option-definitions';
+import {validateOptions} from '../../../../utils/validate-payload';
+import {Engine} from '../../../../app/headless-engine';
+import {
+  ConfigurationSection,
+  NumericFacetSection,
+  SearchSection,
+} from '../../../../state/state-sections';
+import {validateManualNumericRanges} from '../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions';
 
 /**
  * The options defining a `NumericFacet`.
@@ -111,3 +119,16 @@ export const numericFacetOptionsSchema = new Schema<
   }),
   sortCriteria: new StringValue({constrainTo: rangeFacetSortCriteria}),
 });
+
+export function validateNumericFacetOptions(
+  engine: Engine<NumericFacetSection & ConfigurationSection & SearchSection>,
+  options: NumericFacetOptions
+) {
+  validateOptions(
+    engine,
+    numericFacetOptionsSchema,
+    options,
+    'buildNumericFacet'
+  );
+  validateManualNumericRanges(options);
+}

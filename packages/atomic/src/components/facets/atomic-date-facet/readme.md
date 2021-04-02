@@ -8,12 +8,12 @@ a button which opens a facet modal in mobile browsers.
 
 ## Properties
 
-| Property                  | Attribute                   | Description                                                                  | Type      | Default      |
-| ------------------------- | --------------------------- | ---------------------------------------------------------------------------- | --------- | ------------ |
-| `facetId`                 | `facet-id`                  |                                                                              | `string`  | `''`         |
-| `field`                   | `field`                     | Specifies the index field whose values the facet should use                  | `string`  | `''`         |
-| `generateAutomaticRanges` | `generate-automatic-ranges` | Whether or not the index should automatically generate options for the facet | `boolean` | `true`       |
-| `label`                   | `label`                     | The non-localized label for the facet                                        | `string`  | `'No label'` |
+| Property     | Attribute     | Description                                                                                                          | Type     | Default        |
+| ------------ | ------------- | -------------------------------------------------------------------------------------------------------------------- | -------- | -------------- |
+| `dateFormat` | `date-format` | The format that the date will be displayed in. See https://day.js.org/docs/en/display/format for formatting details. | `string` | `'DD/MM/YYYY'` |
+| `facetId`    | `facet-id`    |                                                                                                                      | `string` | `''`           |
+| `field`      | `field`       | Specifies the index field whose values the facet should use                                                          | `string` | `''`           |
+| `label`      | `label`       | The non-localized label for the facet                                                                                | `string` | `'No label'`   |
 
 
 ## Shadow Parts
