@@ -126,7 +126,9 @@ export function convertRangeToFacetValue(
   valueSeparator?: string
 ) {
   valueSeparator = valueSeparator ? valueSeparator : ' to ';
-  const formatedStartValue = new Intl.NumberFormat().format(range.start);
+  const formatedStartValue = new Intl.NumberFormat().format(
+    Number(range.start)
+  );
   const formatedEndValue = new Intl.NumberFormat().format(range.end);
 
   return `${formatedStartValue}${valueSeparator}${formatedEndValue}`;
@@ -180,7 +182,7 @@ export function assertClearAllFacet() {
 }
 
 export function assertNonZeroFacetCount(selector?: string) {
-  selector = selector ? selector : FacetAlias.facetAllValueLabel;
+  selector = selector ? selector : FacetAlias.facetAllValueCount;
   cy.getTextOfAllElements(selector).then((counts) => {
     expect(counts).not.to.include('0');
   });
@@ -214,4 +216,57 @@ export function revertFormatedDateFacet(date: string) {
   const month = splitDate[1];
   const day = splitDate[0];
   return `${year}/${month}/${day}`;
+}
+
+export function assertClickShowMore(
+  totalFacetValueBefore: number,
+  totalFacetValueAfter = totalFacetValueBefore * 2
+) {
+  validateFacetNumberofValueEqual(totalFacetValueBefore);
+  cy.get(FacetAlias.facetShadow).find(FacetSelectors.showMoreButton).click();
+  validateFacetNumberofValueEqual(totalFacetValueAfter);
+  cy.get(FacetAlias.facetShadow)
+    .find(FacetSelectors.showLessButton)
+    .should('be.visible');
+}
+
+export function assertShowMoreUA(field: string) {
+  cy.get(FacetAlias.facetShadow).find(FacetSelectors.showMoreButton).click();
+  cy.wait('@coveoAnalytics').then((intercept: any) => {
+    const analyticsBody = intercept.request.body;
+    expect(analyticsBody).to.have.property('eventType', 'facet');
+    expect(analyticsBody).to.have.property(
+      'eventValue',
+      'showMoreFacetResults'
+    );
+    expect(analyticsBody.customData).to.have.property('facetField', field);
+  });
+}
+
+export function assertClickShowLess(
+  totalFacetValueBefore: number,
+  totalFacetValueAfter = totalFacetValueBefore / 2
+) {
+  cy.get(FacetAlias.facetShadow).find(FacetSelectors.showMoreButton).click();
+  validateFacetNumberofValueEqual(totalFacetValueBefore);
+  cy.get(FacetAlias.facetShadow).find(FacetSelectors.showLessButton).click();
+  validateFacetNumberofValueEqual(totalFacetValueAfter);
+  cy.get(FacetAlias.facetShadow)
+    .find(FacetSelectors.showLessButton)
+    .should('not.exist');
+}
+
+export function assertShowLessUA(field: string) {
+  cy.get(FacetAlias.facetShadow).find(FacetSelectors.showMoreButton).click();
+  cy.wait('@coveoAnalytics');
+  cy.get(FacetAlias.facetShadow).find(FacetSelectors.showLessButton).click();
+  cy.wait('@coveoAnalytics').then((intercept: any) => {
+    const analyticsBody = intercept.request.body;
+    expect(analyticsBody).to.have.property('eventType', 'facet');
+    expect(analyticsBody).to.have.property(
+      'eventValue',
+      'showLessFacetResults'
+    );
+    expect(analyticsBody.customData).to.have.property('facetField', field);
+  });
 }
