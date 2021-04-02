@@ -78,7 +78,6 @@
                 },
                 "source": "deploy",
                 "prd": {
-                    "disabled": true,
                     "bucket": "coveo-public-content",
                     "directory": "coveo.analytics.js/$[PACKAGE_JSON_MAJOR_VERSION]"
                 }
