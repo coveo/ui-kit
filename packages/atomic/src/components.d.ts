@@ -114,6 +114,9 @@ export namespace Components {
     }
     interface AtomicFrequentlyBoughtTogether {
     }
+    interface AtomicModal {
+        "close": () => void;
+    }
     interface AtomicNoResults {
         /**
           * Whether to display a button which cancels the last available action.
@@ -439,6 +442,12 @@ declare global {
         prototype: HTMLAtomicFrequentlyBoughtTogetherElement;
         new (): HTMLAtomicFrequentlyBoughtTogetherElement;
     };
+    interface HTMLAtomicModalElement extends Components.AtomicModal, HTMLStencilElement {
+    }
+    var HTMLAtomicModalElement: {
+        prototype: HTMLAtomicModalElement;
+        new (): HTMLAtomicModalElement;
+    };
     interface HTMLAtomicNoResultsElement extends Components.AtomicNoResults, HTMLStencilElement {
     }
     var HTMLAtomicNoResultsElement: {
@@ -612,6 +621,7 @@ declare global {
         "atomic-facet-manager": HTMLAtomicFacetManagerElement;
         "atomic-field-condition": HTMLAtomicFieldConditionElement;
         "atomic-frequently-bought-together": HTMLAtomicFrequentlyBoughtTogetherElement;
+        "atomic-modal": HTMLAtomicModalElement;
         "atomic-no-results": HTMLAtomicNoResultsElement;
         "atomic-numeric-facet": HTMLAtomicNumericFacetElement;
         "atomic-numeric-range": HTMLAtomicNumericRangeElement;
@@ -745,6 +755,9 @@ declare namespace LocalJSX {
         "ifNotDefined"?: string;
     }
     interface AtomicFrequentlyBoughtTogether {
+    }
+    interface AtomicModal {
+        "close": () => void;
     }
     interface AtomicNoResults {
         /**
@@ -1017,6 +1030,7 @@ declare namespace LocalJSX {
         "atomic-facet-manager": AtomicFacetManager;
         "atomic-field-condition": AtomicFieldCondition;
         "atomic-frequently-bought-together": AtomicFrequentlyBoughtTogether;
+        "atomic-modal": AtomicModal;
         "atomic-no-results": AtomicNoResults;
         "atomic-numeric-facet": AtomicNumericFacet;
         "atomic-numeric-range": AtomicNumericRange;
@@ -1060,6 +1074,7 @@ declare module "@stencil/core" {
             "atomic-facet-manager": LocalJSX.AtomicFacetManager & JSXBase.HTMLAttributes<HTMLAtomicFacetManagerElement>;
             "atomic-field-condition": LocalJSX.AtomicFieldCondition & JSXBase.HTMLAttributes<HTMLAtomicFieldConditionElement>;
             "atomic-frequently-bought-together": LocalJSX.AtomicFrequentlyBoughtTogether & JSXBase.HTMLAttributes<HTMLAtomicFrequentlyBoughtTogetherElement>;
+            "atomic-modal": LocalJSX.AtomicModal & JSXBase.HTMLAttributes<HTMLAtomicModalElement>;
             "atomic-no-results": LocalJSX.AtomicNoResults & JSXBase.HTMLAttributes<HTMLAtomicNoResultsElement>;
             "atomic-numeric-facet": LocalJSX.AtomicNumericFacet & JSXBase.HTMLAttributes<HTMLAtomicNumericFacetElement>;
             "atomic-numeric-range": LocalJSX.AtomicNumericRange & JSXBase.HTMLAttributes<HTMLAtomicNumericRangeElement>;

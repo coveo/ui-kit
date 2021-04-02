@@ -18,6 +18,7 @@ import {
  */
 @Component({
   tag: 'atomic-result-quickview',
+  styleUrl: 'atomic-result-quickview.pcss',
   shadow: false,
 })
 export class AtomicResultQuickview implements InitializableComponent {
@@ -29,6 +30,8 @@ export class AtomicResultQuickview implements InitializableComponent {
   @BindStateToController('quickview')
   @State()
   private quickviewState!: QuickviewState;
+
+  @State() private isModalOpen = false;
 
   @ResultContext() private result!: Result;
 
@@ -47,19 +50,38 @@ export class AtomicResultQuickview implements InitializableComponent {
     this.host.remove();
   }
 
+  private openModal() {
+    this.quickview.fetchResultContent();
+    this.isModalOpen = true;
+  }
+
+  private closeModal() {
+    this.isModalOpen = false;
+  }
+
+  private get modal() {
+    return (
+      <atomic-modal close={() => this.closeModal()}>
+        <iframe
+          class="w-full h-full"
+          srcDoc={this.quickviewState.content}
+        ></iframe>
+        ;
+      </atomic-modal>
+    );
+  }
+
   public render() {
     if (!this.quickviewState.resultHasPreview) {
       return this.removeComponent();
     }
 
-    if (!this.quickviewState.content) {
-      return (
-        <button onClick={() => this.quickview.fetchResultContent()}>
-          Open Quickview
-        </button>
-      );
+    const button = <button onClick={() => this.openModal()}>view</button>;
+
+    if (this.isModalOpen && this.quickviewState.content) {
+      return [button, this.modal];
     }
 
-    return <iframe srcDoc={this.quickviewState.content}></iframe>;
+    return button;
   }
 }
