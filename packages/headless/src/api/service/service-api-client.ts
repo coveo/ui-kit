@@ -126,7 +126,7 @@ export class CaseAssistAPIClient {
   async classify(
     req: ClassifyParam
   ): Promise<ServiceAPIResponse<ClassifySuccessContent>> {
-    const platformResponse = await PlatformClient.call<unknown>({
+    const platformResponse = await PlatformClient.call({
       ...baseCaseAssistRequest(
         req,
         'POST',
@@ -139,9 +139,9 @@ export class CaseAssistAPIClient {
       ...this.defaultClientHooks,
     });
 
-    return platformResponse.response.ok
-      ? {success: platformResponse.body as ClassifySuccessContent}
-      : ({error: platformResponse.body} as ServiceAPIErrorResponse);
+    return platformResponse.ok
+      ? {success: (await platformResponse.json()) as ClassifySuccessContent}
+      : ({error: await platformResponse.json()} as ServiceAPIErrorResponse);
   }
 
   /**
@@ -155,7 +155,7 @@ export class CaseAssistAPIClient {
   async suggestDocuments(
     req: SuggestDocumentsParam
   ): Promise<ServiceAPIResponse<SuggestDocumentsSuccessContent>> {
-    const platformResponse = await PlatformClient.call<unknown>({
+    const platformResponse = await PlatformClient.call({
       ...baseCaseAssistRequest(
         req,
         'POST',
@@ -168,9 +168,11 @@ export class CaseAssistAPIClient {
       ...this.defaultClientHooks,
     });
 
-    return platformResponse.response.ok
-      ? {success: platformResponse.body as SuggestDocumentsSuccessContent}
-      : ({error: platformResponse.body} as ServiceAPIErrorResponse);
+    return platformResponse.ok
+      ? {
+          success: (await platformResponse.json()) as SuggestDocumentsSuccessContent,
+        }
+      : ({error: await platformResponse.json()} as ServiceAPIErrorResponse);
   }
 }
 

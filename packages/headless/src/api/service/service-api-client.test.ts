@@ -68,10 +68,8 @@ describe('service api client', () => {
       const request = buildClassifyRequest(state);
 
       mockPlatformCall({
-        body: 'some content',
-        response: {
-          ok: true,
-        },
+        ok: true,
+        json: () => Promise.resolve('some content'),
       });
 
       await client.caseAssist.classify(request);
@@ -97,8 +95,8 @@ describe('service api client', () => {
       const request = buildClassifyRequest(state, true);
 
       mockPlatformCall({
-        body: 'some content',
-        response: {ok: true},
+        ok: true,
+        json: () => Promise.resolve('some content'),
       });
 
       await client.caseAssist.classify(request);
@@ -117,10 +115,8 @@ describe('service api client', () => {
       };
 
       mockPlatformCall({
-        body: expectedError,
-        response: {
-          ok: false,
-        },
+        ok: false,
+        json: () => Promise.resolve(expectedError),
       });
 
       const response = await client.caseAssist.classify(request);
@@ -149,10 +145,8 @@ describe('service api client', () => {
       };
 
       mockPlatformCall({
-        body: expectedBody,
-        response: {
-          ok: true,
-        },
+        ok: true,
+        json: () => Promise.resolve(expectedBody),
       });
 
       const response = await client.caseAssist.classify(request);
@@ -185,10 +179,8 @@ describe('service api client', () => {
       const request = buildSuggestDocumentsRequest(state);
 
       mockPlatformCall({
-        body: 'some content',
-        response: {
-          ok: true,
-        },
+        ok: true,
+        json: () => Promise.resolve('some content'),
       });
 
       await client.caseAssist.suggestDocuments(request);
@@ -217,8 +209,8 @@ describe('service api client', () => {
       const request = buildSuggestDocumentsRequest(state, true);
 
       mockPlatformCall({
-        body: 'some content',
-        response: {ok: true},
+        ok: true,
+        json: () => Promise.resolve('some content'),
       });
 
       await client.caseAssist.suggestDocuments(request);
@@ -237,10 +229,8 @@ describe('service api client', () => {
       };
 
       mockPlatformCall({
-        body: expectedError,
-        response: {
-          ok: false,
-        },
+        ok: false,
+        json: () => Promise.resolve(expectedError),
       });
 
       const response = await client.caseAssist.suggestDocuments(request);
@@ -260,10 +250,8 @@ describe('service api client', () => {
       };
 
       mockPlatformCall({
-        body: expectedBody,
-        response: {
-          ok: true,
-        },
+        ok: true,
+        json: () => Promise.resolve(expectedBody),
       });
 
       const response = await client.caseAssist.suggestDocuments(request);

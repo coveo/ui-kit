@@ -1,4 +1,4 @@
-import {HTTPContentTypes, HttpMethods} from '../platform-client';
+import {HTTPContentType, HttpMethods} from '../platform-client';
 
 /**
  * Defines the request parameters required for all Customer Service API calls.
@@ -50,7 +50,7 @@ export interface SuggestDocumentsParam extends BaseCaseAssistParam {
 export const baseCaseAssistRequest = (
   req: BaseCaseAssistParam,
   method: HttpMethods,
-  contentType: HTTPContentTypes,
+  contentType: HTTPContentType,
   path: string,
   debug: boolean
 ) => {
