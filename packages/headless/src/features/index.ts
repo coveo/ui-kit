@@ -282,3 +282,16 @@ export namespace ResultTemplatesHelpers {
   export const fieldMustMatch = fieldMustMatchAlias;
   export const fieldMustNotMatch = fieldMustNotMatchAlias;
 }
+
+import {
+  StateNeededByExecuteGetUserActions as StateNeededByExecuteGetUserActionsAlias,
+  ExecuteGetUserActionsThunkReturn as ExecuteGetUserActionsThunkReturnAlias,
+  updateUserProfileUserId as updateUserProfileUserIdAlias,
+  executeGetUserActions as executeGetUserActionsAlias,
+} from './user-profile/user-profile-actions';
+export namespace UserProfileActions {
+  export type StateNeededByExecuteGetUserActions = StateNeededByExecuteGetUserActionsAlias;
+  export type ExecuteGetUserActionsThunkReturn = ExecuteGetUserActionsThunkReturnAlias;
+  export const updateUserProfileUserId = updateUserProfileUserIdAlias;
+  export const executeGetUserActions = executeGetUserActionsAlias;
+}

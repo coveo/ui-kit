@@ -14,7 +14,7 @@ export interface AsyncThunkMLRequestOptions<
   T extends Partial<UserProfileAppState>
 > {
   state: T;
-  rejectValue: MLAPIErrorWithStatusCode;
+  rejectValue: MLAPIErrorResponse;
   extra: {
     mlAPIClient: MLAPIClient;
     searchAPIClient: SearchAPIClient;
@@ -65,7 +65,7 @@ export class MLAPIClient {
     const body = await platformResponse.json();
     return platformResponse.ok
       ? {success: body as UserActionsSuccessContent}
-      : ({error: body} as MLAPIErrorResponse);
+      : {error: body as MLAPIErrorWithStatusCode};
   }
 }
 

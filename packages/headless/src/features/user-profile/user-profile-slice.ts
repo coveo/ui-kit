@@ -8,11 +8,23 @@ import {
   UserProfileState,
 } from './user-profile-state';
 
-function handleRejectedRequest(
+type UserProfileAction = typeof executeGetUserActions;
+
+function handleFulfilledUserActionsRequest(
   state: UserProfileState,
-  action: ReturnType<typeof executeGetUserActions['rejected']>
+  action: ReturnType<UserProfileAction['fulfilled']>
 ) {
-  state.userActions.error = action.payload ? action.payload : null;
+  state.userActions.error = null;
+  state.userActions.actions = action.payload.userActions;
+  state.userActions.duration = action.payload.duration;
+  state.userActions.isLoading = false;
+}
+
+function handleRejectedUserActionsRequest(
+  state: UserProfileState,
+  action: ReturnType<UserProfileAction['rejected']>
+) {
+  state.userActions.error = action.payload ? action.payload.error : null;
   state.userActions.isLoading = false;
 }
 
@@ -24,13 +36,14 @@ export const userProfileReducer = createReducer(
         state.userId = action.payload.userId;
       }
     });
-    builder.addCase(executeGetUserActions.rejected, handleRejectedRequest);
-    builder.addCase(executeGetUserActions.fulfilled, (state, action) => {
-      state.userActions.error = null;
-      state.userActions.actions = action.payload.userActions;
-      state.userActions.duration = action.payload.duration;
-      state.userActions.isLoading = false;
-    });
+    builder.addCase(
+      executeGetUserActions.rejected,
+      handleRejectedUserActionsRequest
+    );
+    builder.addCase(
+      executeGetUserActions.fulfilled,
+      handleFulfilledUserActionsRequest
+    );
     builder.addCase(executeGetUserActions.pending, (state) => {
       state.userActions.isLoading = true;
     });

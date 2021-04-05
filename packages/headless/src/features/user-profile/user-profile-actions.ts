@@ -106,7 +106,7 @@ export const executeGetUserActions = createAsyncThunk<
     const fetched = await fetchUserActionsFromAPI(mlAPIClient, state);
 
     if (isErrorResponse(fetched.response)) {
-      return rejectWithValue(fetched.response.error);
+      return rejectWithValue(fetched.response);
     }
 
     const actionHistory = parseResponse(fetched.response.success);
