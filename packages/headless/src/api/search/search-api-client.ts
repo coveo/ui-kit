@@ -30,6 +30,8 @@ import {
 } from './search-api-client-middleware';
 import {PreprocessRequest} from '../preprocess-request';
 import {HtmlRequest} from './html/html-request';
+import {determineEncoding} from './encoding-determinor';
+import {TextDecoder} from 'web-encoding';
 
 export type AllSearchAPIResponse = Plan | Search | QuerySuggest;
 
@@ -185,7 +187,10 @@ export class SearchAPIClient {
       ...this.options,
     });
 
-    const body = await response.text();
+    const encoding = determineEncoding(response);
+    const buffer = await response.arrayBuffer();
+    const decoder = new TextDecoder(encoding);
+    const body = decoder.decode(buffer);
 
     if (isSuccessHtmlResponse(body)) {
       return {success: body};

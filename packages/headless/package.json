@@ -42,7 +42,8 @@
     "redux": "^4.0.5",
     "redux-mock-store": "^1.5.4",
     "redux-thunk": "^2.3.0",
-    "ts-debounce": "^2.0.1"
+    "ts-debounce": "^2.0.1",
+    "web-encoding": "^1.1.4"
   },
   "devDependencies": {
     "@microsoft/api-extractor": "^7.13.0",
