@@ -61,7 +61,7 @@ export class AtomicResultQuickview implements InitializableComponent {
 
   private get modal() {
     return (
-      <atomic-modal close={() => this.closeModal()}>
+      <atomic-modal onClose={() => this.closeModal()}>
         <iframe
           class="w-full h-full"
           srcDoc={this.quickviewState.content}
