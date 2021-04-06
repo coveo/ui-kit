@@ -4,6 +4,7 @@
   "scripts": {
     "setup": "npm i && husky install && lerna bootstrap",
     "start": "lerna run --parallel start",
+    "dev": "npm run start -- --scope @coveo/headless --scope @coveo/atomic",
     "build": "lerna run build",
     "test": "lerna run test",
     "test:watch": "lerna run --parallel test:watch --no-prefix",
@@ -34,7 +35,6 @@
     "@types/node": "^14.14.11",
     "@typescript-eslint/eslint-plugin": "^4.6.1",
     "@typescript-eslint/parser": "^4.6.1",
-    "concurrently": "^5.3.0",
     "cross-fetch": "^3.0.6",
     "cz-conventional-changelog": "^3.2.0",
     "eslint": "^7.12.1",

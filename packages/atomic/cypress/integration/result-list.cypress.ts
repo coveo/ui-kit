@@ -1,4 +1,4 @@
-import {setUpPage, setUpPageNoSearch} from '../utils/setupComponent';
+import {setUpPage} from '../utils/setupComponent';
 import {createAliasNavigation, PagerSelectors} from './pager-selectors';
 import {
   ResultListSelectors,
@@ -21,7 +21,7 @@ describe('Result List Component', () => {
 
   describe('when no first search has yet been executed', () => {
     beforeEach(() => {
-      setUpPageNoSearch(resultListComponent());
+      setUpPage(resultListComponent(), false);
     });
 
     it('should render a placeholder component', () => {

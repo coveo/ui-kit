@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.10.0-alpha.6](https://github.com/coveo/ui-kit/compare/v0.10.0-alpha.5...v0.10.0-alpha.6) (2021-04-06)
+
+**Note:** Version bump only for package ui-kit
+
+
+
+
+
+# [0.10.0-alpha.5](https://github.com/coveo/ui-kit/compare/v0.10.0-alpha.4...v0.10.0-alpha.5) (2021-04-02)
+
+
+### Bug Fixes
+
+* **atomic:** unskip facet tests & fix test initialization ([#668](https://github.com/coveo/ui-kit/issues/668)) ([42c3d89](https://github.com/coveo/ui-kit/commit/42c3d8929b9980505c61d53f5bcd1ae493cf0094))
+
+
+
+
+
 # [0.10.0-alpha.4](https://github.com/coveo/ui-kit/compare/v0.10.0-alpha.3...v0.10.0-alpha.4) (2021-03-31)
 
 
