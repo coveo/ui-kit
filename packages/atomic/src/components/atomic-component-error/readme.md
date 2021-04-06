@@ -33,6 +33,7 @@
  - [atomic-result-number](../result-template-components/atomic-result-number)
  - [atomic-result-price](../result-template-components/atomic-result-price)
  - [atomic-result-printable-uri](../result-template-components/atomic-result-printable-uri)
+ - [atomic-result-quickview](../result-template-components/atomic-result-quickview)
  - [atomic-result-template](../atomic-result-template)
  - [atomic-result-text](../result-template-components/atomic-result-text)
  - [atomic-results-per-page](../atomic-results-per-page)
@@ -62,6 +63,7 @@ graph TD;
   atomic-result-number --> atomic-component-error
   atomic-result-price --> atomic-component-error
   atomic-result-printable-uri --> atomic-component-error
+  atomic-result-quickview --> atomic-component-error
   atomic-result-template --> atomic-component-error
   atomic-result-text --> atomic-component-error
   atomic-results-per-page --> atomic-component-error
