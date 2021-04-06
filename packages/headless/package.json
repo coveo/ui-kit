@@ -14,7 +14,7 @@
     "dist/"
   ],
   "scripts": {
-    "start": "npx concurrently \"npm run typedefinitions -- -w\" \"rollup -c -w\"",
+    "start": "concurrently \"npm run typedefinitions -- -w\" \"rollup -c -w\"",
     "build": "npm run clean && npm run build:prod",
     "build:prod": "npm run typedefinitions && rollup -c --environment BUILD:production",
     "typedefinitions": "tsc -p src/tsconfig.build.json -d --emitDeclarationOnly --declarationDir dist",

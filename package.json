@@ -4,6 +4,7 @@
   "scripts": {
     "setup": "npm i && husky install && lerna bootstrap",
     "start": "lerna run --parallel start",
+    "dev": "npm run start -- --scope @coveo/headless --scope @coveo/atomic",
     "build": "lerna run build",
     "test": "lerna run test",
     "test:watch": "lerna run --parallel test:watch --no-prefix",
