@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.10.0-alpha.9](https://github.com/coveo/ui-kit/compare/v0.10.0-alpha.8...v0.10.0-alpha.9) (2021-04-07)
+
+
+### Bug Fixes
+
+* **atomic:** make category facet active value non clickable ([#674](https://github.com/coveo/ui-kit/issues/674)) ([b16a9e9](https://github.com/coveo/ui-kit/commit/b16a9e94ac6667e2d00dd41811fcc3d1310fe66a))
+
+
+### Features
+
+* **atomic:** add ellipsis & title to facet labels (button, breadcrumb, header) ([#673](https://github.com/coveo/ui-kit/issues/673)) ([3192b29](https://github.com/coveo/ui-kit/commit/3192b2921f9489486d0f6fc57b82da9baf61caa6))
+
+
+
+
+
 # [0.10.0-alpha.8](https://github.com/coveo/ui-kit/compare/v0.10.0-alpha.7...v0.10.0-alpha.8) (2021-04-07)
 
 
