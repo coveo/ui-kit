@@ -9,6 +9,7 @@ import {executeSearch} from '../../features/search/search-actions';
 import {
   ConfigurationSection,
   DidYouMeanSection,
+  QuerySection,
 } from '../../state/state-sections';
 import {
   QueryCorrection,
@@ -34,7 +35,10 @@ export interface DidYouMeanState {
    * The correction that was applied to the query. If no correction was applied, will default to an empty string.
    */
   wasCorrectedTo: string;
-
+  /**
+   * The original query that was performed, without any automatic correction applied.
+   */
+  originalQuery: string;
   /**
    * Specifies if the query was automatically corrected by Headless.
    *
@@ -61,12 +65,25 @@ export interface DidYouMeanState {
  * @param engine - The headless engine.
  */
 export function buildDidYouMean(
-  engine: Engine<ConfigurationSection & DidYouMeanSection>
+  engine: Engine<ConfigurationSection & DidYouMeanSection & QuerySection>
 ): DidYouMean {
   const controller = buildController(engine);
   const {dispatch} = engine;
 
   dispatch(enableDidYouMean());
+
+  const rebuildOriginalQuery = (state: DidYouMeanSection & QuerySection) => {
+    return state.didYouMean.queryCorrection.correctedQuery
+      .split(' ')
+      .reduce((current, possiblyCorrected, idx) => {
+        const correctionFound = state.didYouMean.queryCorrection.wordCorrections.find(
+          (correction) => correction.correctedWord === possiblyCorrected
+        );
+        return `${current}${idx === 0 ? '' : ' '}${
+          correctionFound ? correctionFound.originalWord : possiblyCorrected
+        }`;
+      }, '');
+  };
 
   return {
     ...controller,
@@ -75,6 +92,7 @@ export function buildDidYouMean(
       const state = engine.state;
 
       return {
+        originalQuery: rebuildOriginalQuery(state),
         wasCorrectedTo: state.didYouMean.wasCorrectedTo,
         wasAutomaticallyCorrected: state.didYouMean.wasAutomaticallyCorrected,
         queryCorrection: state.didYouMean.queryCorrection,
