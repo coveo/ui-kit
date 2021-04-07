@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.10.0-alpha.8](https://github.com/coveo/ui-kit/compare/v0.10.0-alpha.7...v0.10.0-alpha.8) (2021-04-07)
+
+
+### Bug Fixes
+
+* **atomic:** fix breadcrumb label overflow ([#671](https://github.com/coveo/ui-kit/issues/671)) ([6239d0f](https://github.com/coveo/ui-kit/commit/6239d0f9da52bd681ef85e069acb026660a90a57))
+
+
+
+
+
 # [0.10.0-alpha.7](https://github.com/coveo/ui-kit/compare/v0.10.0-alpha.6...v0.10.0-alpha.7) (2021-04-06)
 
 **Note:** Version bump only for package ui-kit
