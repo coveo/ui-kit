@@ -6,6 +6,7 @@ import {
 } from '../../features/user-profile/user-profile-actions';
 import {buildController} from '../controller/headless-controller';
 import {UserProfileAppState} from '../../state/user-profile-app-state';
+import {Result} from '../../api/search/search/result';
 
 const optionsSchema = new Schema({
   /**
@@ -55,6 +56,18 @@ export function buildUserActions(
      */
     update() {
       dispatch(executeGetUserActions());
+    },
+
+    get recentlyClickedDocuments(): Result[] {
+      return this.state.actions
+        .filter((action) => Boolean(action.document))
+        .map((action) => action.document) as Result[];
+    },
+
+    get recentQueries(): string[] {
+      return this.state.actions
+        .filter((action) => Boolean(action.query))
+        .map((action) => action.query) as string[];
     },
 
     /**
