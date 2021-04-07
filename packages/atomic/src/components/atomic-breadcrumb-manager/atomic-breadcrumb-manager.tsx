@@ -110,13 +110,15 @@ export class AtomicBreadcrumbManager implements InitializableComponent {
     field: string,
     children: VNode[]
   ) {
+    const label = this.bindings.store.state.facets[facetId].label || field;
     return (
       <div class="flex text-sm" part="breadcrumb-wrapper">
         <span
-          class="text-on-background mr-2 flex-shrink-0"
+          title={label}
+          class="breadcrumb-label text-on-background mr-2 flex-shrink-0 overflow-ellipsis overflow-hidden"
           part="breadcrumb-label"
         >
-          {this.bindings.store.state.facets[facetId].label || field}:
+          {label}:
         </span>
         {children}
       </div>
