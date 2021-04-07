@@ -115,9 +115,12 @@ export const buildFacetStateMetadata = (
       return;
     }
 
-    (facetResponse.values as Array<AnyFacetValue>)
-      .filter((value) => value.state === 'selected')
-      .forEach((facetValue, facetValuePosition) => {
+    (facetResponse.values as Array<AnyFacetValue>).forEach(
+      (facetValue, facetValuePosition) => {
+        if (facetValue.state === 'idle') {
+          return;
+        }
+
         const facetValueAnalytics = mapFacetValueToAnalytics(
           facetValue,
           facetValuePosition + 1,
@@ -136,7 +139,8 @@ export const buildFacetStateMetadata = (
           ...facetValueAnalytics,
           ...facetDisplayValueAnalytics,
         });
-      });
+      }
+    );
   });
 
   return facetState;
