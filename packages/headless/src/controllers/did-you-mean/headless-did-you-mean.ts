@@ -9,7 +9,6 @@ import {executeSearch} from '../../features/search/search-actions';
 import {
   ConfigurationSection,
   DidYouMeanSection,
-  QuerySection,
 } from '../../state/state-sections';
 import {
   QueryCorrection,
@@ -65,14 +64,14 @@ export interface DidYouMeanState {
  * @param engine - The headless engine.
  */
 export function buildDidYouMean(
-  engine: Engine<ConfigurationSection & DidYouMeanSection & QuerySection>
+  engine: Engine<ConfigurationSection & DidYouMeanSection>
 ): DidYouMean {
   const controller = buildController(engine);
   const {dispatch} = engine;
 
   dispatch(enableDidYouMean());
 
-  const rebuildOriginalQuery = (state: DidYouMeanSection & QuerySection) => {
+  const rebuildOriginalQuery = (state: DidYouMeanSection) => {
     return state.didYouMean.queryCorrection.correctedQuery
       .split(' ')
       .reduce((current, possiblyCorrected, idx) => {
