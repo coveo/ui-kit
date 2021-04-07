@@ -27,13 +27,14 @@ export const FacetValue = (props: FacetValueProps) => {
       />
       <label
         htmlFor={id}
-        class="ml-3 flex flex-row text-on-background flex-grow cursor-pointer"
+        class="ml-3 text-on-background cursor-pointer flex-shrink whitespace-nowrap overflow-ellipsis overflow-hidden"
+        title={props.label}
       >
-        <span class="my-auto">{props.label}</span>
-        <span class="ml-auto my-auto self-end text-on-background-variant">
-          {props.numberOfResults}
-        </span>
+        {props.label}
       </label>
+      <span class="ml-auto my-auto self-end text-on-background-variant">
+        {props.numberOfResults}
+      </span>
     </li>
   );
 };
