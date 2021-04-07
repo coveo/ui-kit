@@ -11,7 +11,7 @@ export function validateFacetComponentLoaded(
   facetSelector?: string
 ) {
   facetSelector = facetSelector ? facetSelector : FacetSelectors.facetStandard;
-  cy.get(`${facetSelector}[label=${label}]`).should('be.visible');
+  cy.get(`${facetSelector}[label="${label}"]`).should('be.visible');
   cy.get(FacetAlias.facetShadow)
     .find('div:nth-child(1)')
     .should('contain.text', label);
