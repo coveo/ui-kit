@@ -1,3 +1,9 @@
-import {UserProfileSection, ConfigurationSection} from './state-sections';
+import {
+  UserProfileSection,
+  ConfigurationSection,
+  DebugSection,
+} from './state-sections';
 
-export type UserProfileAppState = ConfigurationSection & UserProfileSection;
+export type UserProfileAppState = ConfigurationSection &
+  UserProfileSection &
+  DebugSection;

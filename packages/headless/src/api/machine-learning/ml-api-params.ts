@@ -10,14 +10,19 @@ export interface BaseParam {
   organizationId: string;
 }
 
+export interface DebugParam {
+  debug: boolean;
+}
+
 export const baseMLRequest = (
   req: BaseParam,
   method: HttpMethods,
   contentType: HTTPContentType,
-  path: string
+  path: string,
+  debug: boolean
 ) => ({
   accessToken: req.accessToken,
   method,
   contentType,
-  url: `${req.url}${path}`,
+  url: `${req.url}${path}${debug ? '?debug=1' : ''}`,
 });

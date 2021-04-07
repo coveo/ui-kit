@@ -50,6 +50,24 @@ fdescribe('machine learning api client', () => {
       });
     });
 
+    it('should call the platform endpoint with debug=1 when debug is enabled', async () => {
+      state.debug = true;
+      const request = buildUserActionsRequest(state);
+      const url = `${platformUrl()}/rest/organizations/${
+        request.organizationId
+      }/machinelearning/user/actions`;
+
+      mockPlatformCall({
+        ok: true,
+        json: () => Promise.resolve('some content'),
+      });
+
+      await client.userActions(request);
+
+      const expectedUrl = `${url}?debug=1`;
+      expect(platformCallMock.mock.calls[0][0].url).toBe(expectedUrl);
+    });
+
     it('should return error response on failure', async () => {
       const request = buildUserActionsRequest(state);
 

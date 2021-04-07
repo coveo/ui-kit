@@ -1,3 +1,3 @@
-import {BaseParam, ObjectIdParam} from '../ml-api-params';
+import {BaseParam, DebugParam, ObjectIdParam} from '../ml-api-params';
 
-export type UserActionsRequest = BaseParam & ObjectIdParam;
+export type UserActionsRequest = BaseParam & ObjectIdParam & DebugParam;

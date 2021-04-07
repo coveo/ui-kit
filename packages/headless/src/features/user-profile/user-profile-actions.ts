@@ -1,8 +1,6 @@
+import {StringValue} from '@coveo/bueno';
 import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
-import {
-  ConfigurationSection,
-  UserProfileSection,
-} from '../../state/state-sections';
+
 import {UserActionsRequest} from '../../api/machine-learning/user-profiles/user-actions-request';
 import {
   AsyncThunkMLRequestOptions,
@@ -16,13 +14,11 @@ import {
   isSuccessResponse,
   SearchAPIClient,
 } from '../../api/search/search-api-client';
-import {StringValue} from '@coveo/bueno';
 import {validatePayload} from '../../utils/validate-payload';
 import {ThunkExtraArguments} from '../../app/store';
 import {UserProfileAppState} from '../../state/user-profile-app-state';
 
-export type StateNeededByExecuteGetUserActions = ConfigurationSection &
-  Partial<UserProfileSection>;
+export type StateNeededByExecuteGetUserActions = UserProfileAppState;
 
 export interface ExecuteGetUserActionsThunkReturn {
   /** The retrieved user actions */
@@ -73,6 +69,7 @@ export const buildUserActionsRequest = (
     accessToken: state.configuration.accessToken,
     organizationId: state.configuration.organizationId,
     objectId: state.userProfile?.userId,
+    debug: state.debug,
   };
 };
 

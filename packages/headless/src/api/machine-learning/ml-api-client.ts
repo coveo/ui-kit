@@ -56,7 +56,13 @@ export class MLAPIClient {
     req: UserActionsRequest
   ): Promise<MLAPIResponse<UserActionsSuccessContent>> {
     const platformResponse = await PlatformClient.call({
-      ...baseMLRequest(req, 'POST', 'application/json', '/user/actions'),
+      ...baseMLRequest(
+        req,
+        'POST',
+        'application/json',
+        '/user/actions',
+        req.debug
+      ),
       requestParams: pickNonBaseParams(req),
       ...this.options,
       ...this.defaultClientHooks,

@@ -63,7 +63,7 @@ export function buildUserActions(
     get state() {
       const state = engine.state;
       return {
-        ...state.userProfile,
+        ...state.userProfile.userActions,
       };
     },
   };
