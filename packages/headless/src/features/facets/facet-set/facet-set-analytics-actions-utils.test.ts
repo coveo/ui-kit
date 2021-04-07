@@ -68,12 +68,20 @@ describe('facet-set-analytics-action-utils', () => {
         const facetResponse = buildMockCategoryFacetResponse({
           values: [
             buildMockCategoryFacetValue({
-              state: 'idle',
-              value: 'should not appear',
-            }),
-            buildMockCategoryFacetValue({
               state: 'selected',
               value: 'should appear',
+              children: [
+                buildMockCategoryFacetValue({
+                  state: 'selected',
+                  value: 'should appear too',
+                  children: [
+                    buildMockCategoryFacetValue({
+                      state: 'idle',
+                      value: 'should not appear',
+                    }),
+                  ],
+                }),
+              ],
             }),
           ],
         });
@@ -84,35 +92,22 @@ describe('facet-set-analytics-action-utils', () => {
         return {state, facetResponse};
       };
 
-      it('includes #selected values', () => {
+      it('includes only #selected values', () => {
         const {state, facetResponse} = getState();
-        expect(buildFacetStateMetadata(state)).toEqual(
-          expect.arrayContaining([
-            expect.objectContaining({
-              field: facetResponse.field,
-              id: facetResponse.facetId,
-              value: facetResponse.values[1].value,
-              valuePosition: 2,
-              displayValue: facetResponse.values[1].value,
-              facetType: 'hierarchical',
-              state: 'selected',
-              facetPosition: 1,
-              title: facetResponse.field,
-            }),
-          ])
-        );
-      });
-
-      it('does not include #idle values', () => {
-        const {state, facetResponse} = getState();
-
-        expect(buildFacetStateMetadata(state)).not.toEqual(
-          expect.arrayContaining([
-            expect.objectContaining({
-              value: facetResponse.values[0].value,
-            }),
-          ])
-        );
+        const value = `${facetResponse.values[0].value};${facetResponse.values[0].children[0].value}`;
+        expect(buildFacetStateMetadata(state)).toEqual([
+          expect.objectContaining({
+            field: facetResponse.field,
+            id: facetResponse.facetId,
+            value,
+            valuePosition: 1,
+            displayValue: value,
+            facetType: 'hierarchical',
+            state: 'selected',
+            facetPosition: 1,
+            title: facetResponse.field,
+          }),
+        ]);
       });
     });
 

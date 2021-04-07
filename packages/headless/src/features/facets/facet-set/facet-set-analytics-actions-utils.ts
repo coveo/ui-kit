@@ -88,11 +88,11 @@ export const buildFacetStateMetadata = (
 ) => {
   const facetState: FacetStateMetadata[] = [];
 
-  state.search.response.facets.forEach((facetResponse, facetPosition) => {
+  state.search.response.facets.forEach((facetResponse, facetIndex) => {
     const facetType = getFacetType(state, facetResponse.facetId);
     const facetResponseAnalytics = mapFacetResponseToAnalytics(
       facetResponse,
-      facetPosition + 1
+      facetIndex + 1
     );
 
     if (facetType === 'hierarchical') {
@@ -116,14 +116,14 @@ export const buildFacetStateMetadata = (
     }
 
     (facetResponse.values as Array<AnyFacetValue>).forEach(
-      (facetValue, facetValuePosition) => {
+      (facetValue, facetValueIndex) => {
         if (facetValue.state === 'idle') {
           return;
         }
 
         const facetValueAnalytics = mapFacetValueToAnalytics(
           facetValue,
-          facetValuePosition + 1,
+          facetValueIndex + 1,
           facetType
         );
 
