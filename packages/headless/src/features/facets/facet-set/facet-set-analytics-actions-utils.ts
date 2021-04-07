@@ -208,7 +208,7 @@ const mapFacetResponseToAnalytics = (
   facetPosition: number
 ) => {
   return {
-    title: response.facetId,
+    title: `${response.field}_${response.facetId}`,
     field: response.field,
     id: response.facetId,
     facetPosition,
