@@ -134,25 +134,28 @@ export class AtomicCategoryFacet
   }
 
   private buildParent(parent: CategoryFacetValue, isLast: boolean) {
+    const listClass = ' text-lg lg:text-base py-1 lg:py-0.5';
+    if (isLast) {
+      return (
+        <li class={listClass}>
+          <b class="ml-8 lg:ml-6">
+            {parent.value} ({parent.numberOfResults})
+          </b>
+        </li>
+      );
+    }
+
     return (
-      <li>
+      <li class={listClass}>
         <button
-          class="w-full flex items-center text-lg lg:text-base py-1 lg:py-0.5"
-          onClick={() => !isLast && this.facet.toggleSelect(parent)}
+          class="w-full flex items-center"
+          onClick={() => this.facet.toggleSelect(parent)}
         >
-          {!isLast ? (
-            <div
-              innerHTML={LeftArrow}
-              class="arrow-size text-secondary fill-current"
-            />
-          ) : null}
-          {isLast ? (
-            <b class="ml-8 lg:ml-6">
-              {parent.value} ({parent.numberOfResults})
-            </b>
-          ) : (
-            <span class="ml-2">{parent.value}</span>
-          )}
+          <div
+            innerHTML={LeftArrow}
+            class="arrow-size text-secondary fill-current"
+          />
+          <span class="ml-2">{parent.value}</span>
         </button>
       </li>
     );
