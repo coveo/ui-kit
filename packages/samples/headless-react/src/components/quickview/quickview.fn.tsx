@@ -1,12 +1,17 @@
-import {useEffect, useState, FunctionComponent} from 'react';
-import {Quickview as HeadlessQuickview} from '@coveo/headless';
+import {useEffect, useState, useContext, FunctionComponent} from 'react';
+import {buildQuickview, Result} from '@coveo/headless';
+import {AppContext} from '../../context/engine';
 
 interface QuickviewProps {
-  controller: HeadlessQuickview;
+  result: Result;
 }
 
 export const Quickview: FunctionComponent<QuickviewProps> = (props) => {
-  const {controller} = props;
+  const {result} = props;
+  const {engine} = useContext(AppContext);
+
+  const controller = buildQuickview(engine!, {options: {result}});
+
   const [state, setState] = useState(controller.state);
   const [isModalOpen, toggleModal] = useState(false);
 
@@ -39,10 +44,6 @@ export const Quickview: FunctionComponent<QuickviewProps> = (props) => {
 
 /**
  * ```tsx
- * const controller = buildQuickview(engine, {
- *   options: {result}
- * });
- *
- * <Quickview controller={controller} />;
+ * <Quickview result={result} />;
  * ```
  */
