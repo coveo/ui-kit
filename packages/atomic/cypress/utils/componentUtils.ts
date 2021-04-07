@@ -15,7 +15,3 @@ export const aliasNoAtSignBuilder = (alaisWithAtSign: IAlias) => {
   });
   return alaisNoAtSign;
 };
-
-export function convertArrayToString(category: string[], delimiting = ';') {
-  return category.join(delimiting);
-}

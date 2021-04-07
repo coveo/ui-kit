@@ -11,12 +11,21 @@ export function validateFacetComponentLoaded(
   facetSelector?: string
 ) {
   facetSelector = facetSelector ? facetSelector : FacetSelectors.facetStandard;
-  cy.get(facetSelector).should('be.visible');
+  cy.get(`${facetSelector}[label=${label}]`).should('be.visible');
   cy.get(FacetAlias.facetShadow)
     .find('div:nth-child(1)')
     .should('contain.text', label);
   cy.checkA11y(facetSelector);
   assertNonZeroFacetCount();
+}
+
+export function validateFacetComponentVisible(
+  label: string,
+  facetSelector?: string
+) {
+  facetSelector = facetSelector ? facetSelector : FacetSelectors.facetStandard;
+  cy.get(`${facetSelector}[label=${label}]`).should('exist');
+  cy.get(`${facetSelector}[label=${label}]`).should('not.be.visible');
 }
 
 export function validateFacetNumberofValueEqual(totalNumber: number) {

@@ -1,6 +1,7 @@
 import {
   setUpPage,
   shouldRenderErrorComponent,
+  injectComponent,
 } from '../../utils/setupComponent';
 import {
   FacetSelectors,
@@ -11,6 +12,7 @@ import {
 } from './facet-selectors';
 import {
   validateFacetComponentLoaded,
+  validateFacetComponentVisible,
   validateFacetNumberofValueEqual,
   assertNonZeroFacetCount,
   assertClickShowMore,
@@ -18,10 +20,7 @@ import {
   assertClickShowLess,
   assertShowLessUA,
 } from './facet-utils';
-import {
-  convertArrayToString,
-  doSortAlphanumeric,
-} from '../../utils/componentUtils';
+import {doSortAlphanumeric} from '../../utils/componentUtils';
 
 const categoryFacetProp = {
   field: 'geographicalhierarchy',
@@ -70,6 +69,7 @@ function clickOnCategoryFacetWithValue(value: string) {
 describe('Category Facet with default setting', () => {
   beforeEach(() => {
     setupCategoryFacet(categoryFacetProp.field, categoryFacetProp.label);
+    cy.wait('@coveoSearch');
     createAliasShadow(categoryFacetProp.field, FacetSelectors.categoryFacet);
     createAliasFacetUL(categoryFacetProp.field, FacetSelectors.categoryFacet);
     cy.wait('@coveoAnalytics');
@@ -105,7 +105,7 @@ describe('Category Facet with default setting', () => {
   describe('When user clicks on Arrow to go to next level', () => {
     beforeEach(() => {
       clickOnCategoryFacetWithValue(canadaHierarchy[0]);
-      cy.wait(500);
+      cy.wait('@coveoSearch');
       cy.get(FacetAlias.facetShadow)
         .find(FacetSelectors.categoryFacetClearLevelButton)
         .as('categoryClearAllButton');
@@ -210,11 +210,13 @@ describe('Category Facet with default setting', () => {
   describe('When user goes to last child on level 3', () => {
     beforeEach(() => {
       clickOnCategoryFacetWithValue(canadaHierarchy[0]);
+      cy.wait('@coveoSearch');
       cy.wait('@coveoAnalytics');
       clickOnCategoryFacetWithValue(canadaHierarchy[1]);
+      cy.wait('@coveoSearch');
       cy.wait('@coveoAnalytics');
       clickOnCategoryFacetWithValue(canadaHierarchy[2]);
-      cy.wait(500);
+      cy.wait('@coveoSearch');
     });
 
     it('Should have correct 3 parents level up and default Category Label', () => {
@@ -235,7 +237,7 @@ describe('Category Facet with default setting', () => {
         );
         expect(analyticsBody.customData).to.have.property(
           'facetValue',
-          convertArrayToString(canadaHierarchy)
+          canadaHierarchy.join()
         );
       });
     });
@@ -250,7 +252,7 @@ describe('Category Facet with default setting', () => {
     });
 
     it('Should display correctly in URL hash', () => {
-      const categoryFacetListinUrl = convertArrayToString(canadaHierarchy, ',');
+      const categoryFacetListinUrl = canadaHierarchy.join(',');
       const urlHash = `#cf[${categoryFacetProp.field}]=${encodeURI(
         categoryFacetListinUrl
       )}`;
@@ -258,7 +260,7 @@ describe('Category Facet with default setting', () => {
     });
 
     it('Should trigger breadcrumb and display correctly', () => {
-      const text = convertArrayToString(canadaHierarchy, ' / ');
+      const text = canadaHierarchy.join(' / ');
       cy.get(BreadcrumbSelectors.breadcrumb)
         .shadow()
         .find('div[part="breadcrumb-wrapper"]')
@@ -333,11 +335,14 @@ describe('Category Facet with facetSearchEnable', () => {
     cy.wait('@coveoAnalytics');
   });
 
-  it('Should load, pass accessibility test, have correct label, facetCount and have facet searchbox', () => {
+  it('Should load, pass accessibility test, have correct label, and facetCount', () => {
     validateFacetComponentLoaded(
       categoryFacetProp.label,
       FacetSelectors.categoryFacet
     );
+  });
+
+  it('Should have facet searchbox', () => {
     cy.get(FacetAlias.facetShadow)
       .find(FacetSelectors.facetSearchbox)
       .should('be.visible');
@@ -419,6 +424,10 @@ describe('Category Facet with invalid option', () => {
 
     it('Should not render when field returns no result', () => {
       setupCategoryFacet('test', categoryFacetProp.label);
+      validateFacetComponentVisible(
+        categoryFacetProp.label,
+        FacetSelectors.categoryFacet
+      );
     });
   });
 
@@ -452,5 +461,27 @@ describe('Category Facet with invalid option', () => {
       );
       shouldRenderErrorComponent(FacetSelectors.categoryFacet);
     });
+  });
+});
+
+describe('When URL contains a selected path of category facet', () => {
+  it('Category Facet should load with correct path', () => {
+    cy.visit(
+      'http://localhost:3333/pages/test.html#cf[geographicalhierarchy]=North%20America,Canada,Alberta'
+    );
+    injectComponent(`
+    <atomic-breadcrumb-manager></atomic-breadcrumb-manager>    
+    <atomic-category-facet field="${categoryFacetProp.field}" label="${categoryFacetProp.label}"></atomic-category-facet>`);
+    createAliasShadow(categoryFacetProp.field, FacetSelectors.categoryFacet);
+    assertClearAllTitleAndTotalParents(
+      categoryFacetProp.defaultCategoryLabel,
+      3
+    );
+    cy.get(FacetAlias.facetShadow)
+      .find('ul[part="parents"]')
+      .find('li')
+      .last()
+      .find('b')
+      .contains('Alberta');
   });
 });
