@@ -100,12 +100,30 @@ export class AtomicCategoryFacet
    * The sort criterion to apply to the returned facet values. Possible values are 'alphanumeric', and 'occurrences''.
    */
   @Prop() public sortCriteria: CategoryFacetSortCriterion = 'occurrences';
+  /**
+   * The base path shared by all values for the facet, separated by commas.
+   */
+  @Prop() public basePath = '';
+  /**
+   * Whether to use basePath as a filter for the results.
+   */
+  @Prop() public filterByBasePath = true;
+
+  private get formattedBasePath() {
+    return this.basePath
+      .split(',')
+      .map((pathFragment) => pathFragment.trim())
+      .filter((pathFragment) => pathFragment !== '');
+  }
 
   public initialize() {
     const options: CategoryFacetOptions = {
       field: this.field,
       delimitingCharacter: this.delimitingCharacter,
       sortCriteria: this.sortCriteria,
+      numberOfValues: this.numberOfValues,
+      basePath: this.formattedBasePath,
+      filterByBasePath: this.filterByBasePath,
     };
     this.facet = buildCategoryFacet(this.bindings.engine, {options});
     this.strings[this.label] = () => this.bindings.i18n.t(this.label);
