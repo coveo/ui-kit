@@ -12,6 +12,7 @@ import {
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
+import DetailsIcon from 'coveo-styleguide/resources/icons/svg/details.svg';
 
 /**
  * The ResultQuickview component renders a preview of the result.
@@ -30,6 +31,11 @@ export class AtomicResultQuickview implements InitializableComponent {
   @BindStateToController('quickview')
   @State()
   private quickviewState!: QuickviewState;
+
+  @State()
+  private strings = {
+    previewResult: () => this.bindings.i18n.t('previewResult'),
+  };
 
   @State() private isModalOpen = false;
 
@@ -76,7 +82,18 @@ export class AtomicResultQuickview implements InitializableComponent {
       return this.removeComponent();
     }
 
-    const button = <button onClick={() => this.openModal()}>view</button>;
+    const button = (
+      <button
+        class="block w-full text-secondary"
+        aria-label={this.strings.previewResult()}
+        onClick={() => this.openModal()}
+      >
+        <span
+          class="block h-5 w-5 fill-current mx-auto my-2"
+          innerHTML={DetailsIcon}
+        ></span>
+      </button>
+    );
 
     if (this.isModalOpen && this.quickviewState.content) {
       return [button, this.modal];
