@@ -2,6 +2,7 @@ import {getApiRequestBodyAt, getAnalyticsAt} from '../utils/network';
 import {setUpPage, shouldRenderErrorComponent} from '../utils/setupComponent';
 
 const sortDropdown = 'atomic-sort-dropdown';
+const searchbox = 'atomic-search-box';
 const expressions = [
   'relevancy',
   'date descending',
@@ -16,6 +17,7 @@ function selectOption(value: string) {
 describe('Sort Dropdown Component', () => {
   function setup(attributes = '') {
     setUpPage(`
+      <atomic-search-box></atomic-search-box>
       <atomic-sort-dropdown ${attributes}>
         <atomic-sort-expression caption="Relevance" expression="${expressions[0]}"></atomic-sort-expression>
         <atomic-sort-expression caption="Most Recent" expression="${expressions[1]}"></atomic-sort-expression>
@@ -71,6 +73,15 @@ describe('Sort Dropdown Component', () => {
     selectOption(expressions[1]);
     const urlHash = `sortCriteria=${encodeURIComponent(expressions[1])}`;
     cy.url().should('include', urlHash);
+  });
+
+  it('should be invisible when there is no result', () => {
+    cy.get(searchbox)
+      .shadow()
+      .find('.search-input')
+      .type('lskdfjghsjdgfjsdgfhkjsdhfgkjsdgfksjdhgfkjsdgkjgdsfjh');
+    cy.get(searchbox).shadow().find('.submit-button').click();
+    cy.get(sortDropdown).should('not.be.visible');
   });
 });
 
