@@ -21,6 +21,7 @@ describe('Breadcrumb Manager Test Suites', () => {
     it.skip('should initially not display any breadcrumbs');
 
     it('should display one breadcrumb when a regular facet is selected.', () => {
+      console.log(cy.get(FacetAlias.facetFirstValueLabel));
       cy.get(FacetAlias.facetFirstValueLabel).click();
       cy.get('@breadcrumbLi').should('be.visible');
     });
