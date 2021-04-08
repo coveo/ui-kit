@@ -15,12 +15,7 @@ describe('Search Interface Component', () => {
     cb: (searchInterface: SearchInterface) => void
   ) => {
     cy.get('atomic-search-interface').then(($el) => {
-      cb(
-        $el.get(0) as HTMLElement & {
-          language: string;
-          i18n: i18n;
-        }
-      );
+      cb($el.get(0) as SearchInterface);
     });
   };
 
