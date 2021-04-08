@@ -1,9 +1,5 @@
 import {CategoryFacetValueRequest} from './interfaces/request';
 import {CategoryFacetValue} from './interfaces/response';
-import {
-  logFacetDeselect,
-  logFacetSelect,
-} from '../facet-set/facet-set-analytics-actions';
 
 type GenericCategoryFacetValue = CategoryFacetValueRequest | CategoryFacetValue;
 
@@ -36,16 +32,3 @@ export function partitionIntoParentsAndValues<
 
   return {parents, values};
 }
-
-export const getAnalyticsActionForCategoryFacetToggleSelect = (
-  facetId: string,
-  selection: CategoryFacetValue
-) => {
-  const payload = {
-    facetId,
-    facetValue: selection.value,
-  };
-
-  const isSelected = selection.state === 'selected';
-  return isSelected ? logFacetDeselect(payload) : logFacetSelect(payload);
-};

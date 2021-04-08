@@ -100,12 +100,30 @@ export class AtomicCategoryFacet
    * The sort criterion to apply to the returned facet values. Possible values are 'alphanumeric', and 'occurrences''.
    */
   @Prop() public sortCriteria: CategoryFacetSortCriterion = 'occurrences';
+  /**
+   * The base path shared by all values for the facet, separated by commas.
+   */
+  @Prop() public basePath = '';
+  /**
+   * Whether to use basePath as a filter for the results.
+   */
+  @Prop() public filterByBasePath = true;
+
+  private get formattedBasePath() {
+    return this.basePath
+      .split(',')
+      .map((pathFragment) => pathFragment.trim())
+      .filter((pathFragment) => pathFragment !== '');
+  }
 
   public initialize() {
     const options: CategoryFacetOptions = {
       field: this.field,
       delimitingCharacter: this.delimitingCharacter,
       sortCriteria: this.sortCriteria,
+      numberOfValues: this.numberOfValues,
+      basePath: this.formattedBasePath,
+      filterByBasePath: this.filterByBasePath,
     };
     this.facet = buildCategoryFacet(this.bindings.engine, {options});
     this.strings[this.label] = () => this.bindings.i18n.t(this.label);
@@ -134,25 +152,28 @@ export class AtomicCategoryFacet
   }
 
   private buildParent(parent: CategoryFacetValue, isLast: boolean) {
+    const listClass = ' text-lg lg:text-base py-1 lg:py-0.5';
+    if (isLast) {
+      return (
+        <li class={listClass}>
+          <b class="ml-8 lg:ml-6">
+            {parent.value} ({parent.numberOfResults})
+          </b>
+        </li>
+      );
+    }
+
     return (
-      <li>
+      <li class={listClass}>
         <button
-          class="w-full flex items-center text-lg lg:text-base py-1 lg:py-0.5"
-          onClick={() => !isLast && this.facet.toggleSelect(parent)}
+          class="w-full flex items-center"
+          onClick={() => this.facet.toggleSelect(parent)}
         >
-          {!isLast ? (
-            <div
-              innerHTML={LeftArrow}
-              class="arrow-size text-secondary fill-current"
-            />
-          ) : null}
-          {isLast ? (
-            <b class="ml-8 lg:ml-6">
-              {parent.value} ({parent.numberOfResults})
-            </b>
-          ) : (
-            <span class="ml-2">{parent.value}</span>
-          )}
+          <div
+            innerHTML={LeftArrow}
+            class="arrow-size text-secondary fill-current"
+          />
+          <span class="ml-2">{parent.value}</span>
         </button>
       </li>
     );
