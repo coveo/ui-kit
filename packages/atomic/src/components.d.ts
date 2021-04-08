@@ -115,7 +115,7 @@ export namespace Components {
     interface AtomicFrequentlyBoughtTogether {
     }
     interface AtomicModal {
-        "onClose": () => void;
+        "handleClose": () => void;
     }
     interface AtomicNoResults {
         /**
@@ -757,7 +757,7 @@ declare namespace LocalJSX {
     interface AtomicFrequentlyBoughtTogether {
     }
     interface AtomicModal {
-        "onClose": () => void;
+        "handleClose": () => void;
     }
     interface AtomicNoResults {
         /**
