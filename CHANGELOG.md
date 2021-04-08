@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.10.0-alpha.10](https://github.com/coveo/ui-kit/compare/v0.10.0-alpha.9...v0.10.0-alpha.10) (2021-04-08)
+
+
+### Bug Fixes
+
+* **headless:** add full path as UA category facet value ([#677](https://github.com/coveo/ui-kit/issues/677)) ([800c7c7](https://github.com/coveo/ui-kit/commit/800c7c709344b2b180c2f36abad196297017ceaa))
+
+
+### Features
+
+* **atomic:** add basePath options to the category facet ([#683](https://github.com/coveo/ui-kit/issues/683)) ([f999b99](https://github.com/coveo/ui-kit/commit/f999b9955db053eb164433b63f17b5d59dc8db8c))
+
+
+
+
+
 # [0.10.0-alpha.9](https://github.com/coveo/ui-kit/compare/v0.10.0-alpha.8...v0.10.0-alpha.9) (2021-04-07)
 
 
