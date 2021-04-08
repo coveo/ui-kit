@@ -51,7 +51,7 @@ const nodeConfig = {
     typescript(),
     replace(),
   ],
-  external: ['cross-fetch'],
+  external: ['cross-fetch', 'web-encoding'],
   onwarn: onWarn,
 };
 
