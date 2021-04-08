@@ -86,6 +86,10 @@ const browserConfig = {
           find: 'cross-fetch',
           replacement: pathResolve(__dirname, './fetch-ponyfill.js'),
         },
+        {
+          find: 'web-encoding',
+          replacement: pathResolve(__dirname, './node_modules/web-encoding/src/lib.js'),
+        }
       ],
     }),
     resolve({browser: true}),
