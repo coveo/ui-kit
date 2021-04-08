@@ -78,7 +78,7 @@ export class AtomicResultQuickview implements InitializableComponent {
 
     const button = <button onClick={() => this.openModal()}>view</button>;
 
-    if (this.isModalOpen && this.quickviewState.content) {
+    if (this.isModalOpen) {
       return [button, this.modal];
     }
 
