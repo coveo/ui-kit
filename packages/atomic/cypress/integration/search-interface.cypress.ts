@@ -52,11 +52,7 @@ describe('Search Interface Component', () => {
     cy.get('atomic-query-summary')
       .shadow()
       .invoke('text')
-      .should('contain', 'patate');
-
-    cy.get('atomic-query-summary')
-      .shadow()
-      .invoke('text')
+      .should('contain', 'patate')
       .should('contain', 'seconde');
   });
 });
