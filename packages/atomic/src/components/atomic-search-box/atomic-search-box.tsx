@@ -204,9 +204,10 @@ export class AtomicSearchBox {
           part="suggestion"
           id={id}
           class="suggestion h-9 px-2 cursor-pointer text-left text-sm bg-transparent border-none shadow-none flex flex-row items-center"
-          innerHTML={suggestion.highlightedValue}
           value={index}
-        />
+        >
+          <pre class="font-sans" innerHTML={suggestion.highlightedValue}></pre>
+        </li>
       );
     });
   }
