@@ -22,6 +22,10 @@ export namespace Components {
     }
     interface AtomicCategoryFacet {
         /**
+          * The base path shared by all values for the facet, separated by commas.
+         */
+        "basePath": string;
+        /**
           * The character that separates values of a multi-value field
          */
         "delimitingCharacter": string;
@@ -34,6 +38,10 @@ export namespace Components {
           * Specifies the index field whose values the facet should use
          */
         "field": string;
+        /**
+          * Whether to use basePath as a filter for the results.
+         */
+        "filterByBasePath": boolean;
         /**
           * The non-localized label for the facet
          */
@@ -664,6 +672,10 @@ declare namespace LocalJSX {
     }
     interface AtomicCategoryFacet {
         /**
+          * The base path shared by all values for the facet, separated by commas.
+         */
+        "basePath"?: string;
+        /**
           * The character that separates values of a multi-value field
          */
         "delimitingCharacter"?: string;
@@ -676,6 +688,10 @@ declare namespace LocalJSX {
           * Specifies the index field whose values the facet should use
          */
         "field"?: string;
+        /**
+          * Whether to use basePath as a filter for the results.
+         */
+        "filterByBasePath"?: boolean;
         /**
           * The non-localized label for the facet
          */

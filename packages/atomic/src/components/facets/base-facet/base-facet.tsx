@@ -59,8 +59,9 @@ export const BaseFacet: FunctionalComponent<BaseFacetProps> = (
   return (
     <div class="facet mb-4" part="facet">
       <button
+        title={props.label}
         class={
-          'facet-button border-solid bg-transparent px-4 h-9 outline-none focus:outline-none lg:hidden cursor-pointer ' +
+          'facet-button overflow-ellipsis overflow-hidden w-full border-solid bg-background px-4 h-9 outline-none focus:outline-none lg:hidden cursor-pointer ' +
           (props.hasActiveValues
             ? 'border-2 border-primary text-primary'
             : 'border border-divider text-on-background-variant')
@@ -76,7 +77,10 @@ export const BaseFacet: FunctionalComponent<BaseFacetProps> = (
         }
       >
         <div class="flex flex-row items-center pb-2 mb-2 border-b border-solid border-divider">
-          <span class="font-semibold text-on-background-variant text-base lg:text-sm">
+          <span
+            title={props.label}
+            class="font-semibold text-on-background-variant text-base lg:text-sm overflow-ellipsis overflow-hidden w-full"
+          >
             {props.label}
           </span>
           <span class="flex flex-row ml-auto">

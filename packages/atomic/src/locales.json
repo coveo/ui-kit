@@ -854,5 +854,9 @@
   "to": {
     "en": "{{- start}} to {{- end}}",
     "fr": "{{- start}} à {{- end}}"
+  },
+  "previewResult": {
+    "en": "Preview the result",
+    "fr": "Prévisualiser le résultat"
   }
 }
