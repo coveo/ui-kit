@@ -51,7 +51,7 @@ export class Quickview extends Component<QuickviewProps, QuickviewState> {
   }
 
   render() {
-    if (!this.state || !this.state.quickview.resultHasPreview) {
+    if (!this.state?.quickview.resultHasPreview) {
       return null;
     }
 
