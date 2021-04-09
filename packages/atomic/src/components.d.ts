@@ -310,7 +310,6 @@ export namespace Components {
         "initialChoice"?: number;
     }
     interface AtomicSearchBox {
-        "_id": string;
         /**
           * Whether the submit button should be placed before the input.
          */
@@ -959,7 +958,6 @@ declare namespace LocalJSX {
         "initialChoice"?: number;
     }
     interface AtomicSearchBox {
-        "_id"?: string;
         /**
           * Whether the submit button should be placed before the input.
          */
