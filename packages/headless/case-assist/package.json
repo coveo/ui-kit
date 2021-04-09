@@ -1,0 +1,11 @@
+{
+  "name": "case-assist",
+  "version": "1.0.0",
+  "description": "",
+  "main": "../dist/case-assist/headless-case-assist.esm.js",
+  "types": "../dist/case-assist.index.d.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "license": "Apache-2.0"
+}

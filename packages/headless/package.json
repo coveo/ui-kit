@@ -11,7 +11,8 @@
   "license": "Apache-2.0",
   "version": "0.10.0-alpha.12",
   "files": [
-    "dist/"
+    "dist/",
+    "case-assist/"
   ],
   "scripts": {
     "start": "concurrently \"npm run typedefinitions -- -w\" \"rollup -c -w\"",

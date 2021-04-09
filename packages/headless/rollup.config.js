@@ -55,6 +55,26 @@ const nodeConfig = {
   onwarn: onWarn,
 };
 
+const caseAssistEsm = {
+  input: 'src/case-assist.index.ts',
+  output: [
+    {file: 'dist/case-assist/headless-case-assist.esm.js', format: 'es'},
+  ],
+  plugins: [
+    resolve({modulesOnly: true}),
+    commonjs({
+      // https://github.com/pinojs/pino/issues/688
+      ignore: ['pino-pretty'],
+    }),
+    typescript(),
+    replace(),
+  ],
+  external: ['cross-fetch', 'web-encoding'],
+  onwarn: onWarn,
+};
+
+
+
 const browserConfig = {
   input: 'src/index.ts',
   output: [
@@ -111,6 +131,6 @@ const typeDefinitions = {
   plugins: [dts()]
 }
 
-const config = isProduction ? [nodeConfig, typeDefinitions, browserConfig] : [browserConfig];
+const config = isProduction ? [nodeConfig, typeDefinitions, browserConfig, caseAssistEsm] : [browserConfig];
 
 export default config;
