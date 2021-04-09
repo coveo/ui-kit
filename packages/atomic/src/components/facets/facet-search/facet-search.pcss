@@ -1,14 +1,9 @@
-.combobox, .suggestion {
+.combobox {
   height: var(--atomic-facet-search-height, 30px);
 }
 
-.input-wrapper.has-values {
-  border-bottom-right-radius: 0;
-  border-bottom-left-radius: 0;
-}
-
 .suggestions {
-  max-height: 250px;
+  max-height: var(--atomic-facet-search-max-height, 250px);
   overflow-y: scroll;
   top: var(--atomic-facet-search-height, 30px);
   left: 0;
