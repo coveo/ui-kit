@@ -16,6 +16,10 @@ import {regexEncode} from '../../../utils/string-utils';
 type FacetSearchResult = SpecificFacetSearchResult &
   Partial<Pick<CategoryFacetSearchResult, 'path'>>;
 
+const SEPARATOR = '/';
+const ELLIPSIS = '...';
+const PATH_MAX_LENGTH = 3;
+
 export interface FacetSearchComponent {
   bindings: Bindings;
   strings: I18nState;
@@ -154,39 +158,91 @@ export class FacetSearch {
   }
 
   private get suggestions() {
-    return this.values.map((suggestion, index) => {
-      return (
-        <li
-          onClick={() => this.onSelectValue(suggestion)}
-          onMouseDown={(e) => e.preventDefault()}
-          part="suggestion"
-          class={`${this.suggestionClasses} flex flex-col justify-center`}
-          value={index}
-        >
-          <div class="flex">
-            <span
-              class="label whitespace-nowrap overflow-ellipsis overflow-hidden"
-              innerHTML={this.highlightSuggestion(suggestion.displayValue)}
-            />
-            <span class="number-of-values ml-1 text-on-background-variant">
-              (
-              {suggestion.count.toLocaleString(
-                this.component.bindings.i18n.language
-              )}
-              )
-            </span>
+    return this.values.map((suggestion, index) => (
+      <li
+        onClick={() => this.onSelectValue(suggestion)}
+        onMouseDown={(e) => e.preventDefault()}
+        part="suggestion"
+        class={`${this.suggestionClasses} flex flex-col justify-center`}
+        value={index}
+        aria-label={this.suggestionLabel(suggestion)}
+      >
+        <div class="flex" aria-hidden>
+          <span
+            class="whitespace-nowrap overflow-ellipsis overflow-hidden"
+            innerHTML={this.highlightSuggestion(suggestion.displayValue)}
+          />
+          <span class="number-of-values ml-1 text-on-background-variant">
+            (
+            {suggestion.count.toLocaleString(
+              this.component.bindings.i18n.language
+            )}
+            )
+          </span>
+        </div>
+        {suggestion.path && (
+          <div
+            class="flex text-on-background-variant"
+            aria-hidden
+            title={suggestion.path.join(SEPARATOR)}
+          >
+            {this.renderPath(suggestion.path)}
           </div>
-          <div>{suggestion.path && this.renderPath(suggestion.path)}</div>
-        </li>
-      );
+        )}
+      </li>
+    ));
+  }
+
+  private suggestionLabel(suggestion: FacetSearchResult) {
+    const facetValue = this.strings.facetValue({
+      numberOfResults: suggestion.count,
+      value: suggestion.displayValue,
+    });
+
+    if (!suggestion.path) {
+      return facetValue;
+    }
+
+    return this.strings.under({
+      child: facetValue,
+      parent: suggestion.path.length
+        ? suggestion.path.join(', ')
+        : this.strings.allCategories(),
     });
   }
 
   private renderPath(path: string[]) {
-    // TODO: show in ALl categories
-    // TODO: add in in front
-    // TODO: ellipse path at the right index
-    return path.join(' / ');
+    const ellipsisClasses =
+      'whitespace-nowrap overflow-ellipsis overflow-hidden';
+
+    if (!path.length) {
+      return (
+        <span
+          class={ellipsisClasses}
+        >{`${this.strings.pathPrefix()} ${this.strings.allCategories()}`}</span>
+      );
+    }
+
+    return [
+      <span class="mr-1">{this.strings.pathPrefix()}</span>,
+      this.pathToRender(path).map((part, index) => [
+        index > 0 && <span>{SEPARATOR}</span>,
+        <span
+          class={part === ELLIPSIS ? '' : `${ellipsisClasses} flex-1 max-w-max`}
+        >
+          {part}
+        </span>,
+      ]),
+    ];
+  }
+
+  private pathToRender(path: string[]) {
+    if (path.length <= PATH_MAX_LENGTH) {
+      return path;
+    }
+    const firstPart = path.slice(0, 1);
+    const lastParts = path.slice(-PATH_MAX_LENGTH + 1);
+    return firstPart.concat(ELLIPSIS, ...lastParts);
   }
 
   private get showMoreSearchResults() {

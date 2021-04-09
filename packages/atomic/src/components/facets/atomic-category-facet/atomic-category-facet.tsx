@@ -65,6 +65,8 @@ export class AtomicCategoryFacet
     showLess: () => this.bindings.i18n.t('showLess'),
     facetValue: (variables) => this.bindings.i18n.t('facetValue', variables),
     allCategories: () => this.bindings.i18n.t('allCategories'),
+    pathPrefix: () => this.bindings.i18n.t('in'),
+    under: (variables) => this.bindings.i18n.t('under', variables),
   };
 
   @State() public isExpanded = false;
