@@ -71,6 +71,7 @@ export class AtomicResultQuickview implements InitializableComponent {
         <iframe
           class="w-full h-full"
           srcDoc={this.quickviewState.content}
+          sandbox=""
         ></iframe>
         ;
       </atomic-modal>
