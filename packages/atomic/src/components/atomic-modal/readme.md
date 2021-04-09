@@ -7,9 +7,9 @@
 
 ## Properties
 
-| Property             | Attribute | Description | Type         | Default     |
-| -------------------- | --------- | ----------- | ------------ | ----------- |
-| `close` _(required)_ | --        |             | `() => void` | `undefined` |
+| Property                   | Attribute | Description | Type         | Default     |
+| -------------------------- | --------- | ----------- | ------------ | ----------- |
+| `handleClose` _(required)_ | --        |             | `() => void` | `undefined` |
 
 
 ## Dependencies
