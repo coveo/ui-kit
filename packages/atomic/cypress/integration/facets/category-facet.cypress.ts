@@ -226,8 +226,7 @@ describe('Category Facet with default setting', () => {
       );
     });
 
-    it.skip('Should log UA correctly', () => {
-      //TODO: Enable it when UA log facetValue correctly
+    it('Should log UA correctly', () => {
       cy.wait('@coveoAnalytics').then((intercept: any) => {
         const analyticsBody = intercept.request.body;
         expect(analyticsBody).to.have.property('actionCause', 'facetSelect');
@@ -237,7 +236,7 @@ describe('Category Facet with default setting', () => {
         );
         expect(analyticsBody.customData).to.have.property(
           'facetValue',
-          canadaHierarchy.join()
+          canadaHierarchy.join(';')
         );
       });
     });
@@ -252,9 +251,9 @@ describe('Category Facet with default setting', () => {
     });
 
     it('Should display correctly in URL hash', () => {
-      const categoryFacetListinUrl = canadaHierarchy.join(',');
+      const categoryFacetListInUrl = canadaHierarchy.join(',');
       const urlHash = `#cf[${categoryFacetProp.field}]=${encodeURI(
-        categoryFacetListinUrl
+        categoryFacetListInUrl
       )}`;
       cy.url().should('include', urlHash);
     });
@@ -297,7 +296,7 @@ describe('Category Facet with default setting', () => {
   });
 });
 
-describe.skip('Category Facet with custom numberOfValues', () => {
+describe('Category Facet with custom numberOfValues', () => {
   //TODO: enable this test when numberOfValues is supported properly in categoryFacet
   const numberOfValues = 6;
   beforeEach(() => {
@@ -431,8 +430,7 @@ describe('Category Facet with invalid option', () => {
     });
   });
 
-  describe.skip('Facet with invalid numberOfValues', () => {
-    //TODO: enable this test when numberOfValues is supported properly in categoryFacet
+  describe('Facet with invalid numberOfValues', () => {
     it('Should render an error when the prop is not in the list of numberOfValues', () => {
       setupCategoryFacet(
         categoryFacetProp.field,
