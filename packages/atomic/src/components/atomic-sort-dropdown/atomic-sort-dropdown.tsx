@@ -154,6 +154,10 @@ export class AtomicSortDropdown implements InitializableComponent {
       );
     }
 
+    if (!this.searchStatusState.hasResults) {
+      return;
+    }
+
     return [
       <div class="flex items-center relative">
         {this.renderLabel()}

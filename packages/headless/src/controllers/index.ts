@@ -277,3 +277,11 @@ export {
 } from './search-status/headless-search-status';
 
 export {ErrorPayload} from './controller/error-payload';
+
+export {
+  Quickview,
+  QuickviewOptions,
+  QuickviewProps,
+  QuickviewState,
+  buildQuickview,
+} from './quickview/headless-quickview';

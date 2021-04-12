@@ -6,6 +6,7 @@ import {doSortAlphanumeric} from '../../utils/componentUtils';
 
 import {
   validateFacetComponentLoaded,
+  validateFacetComponentVisible,
   validateFacetNumberofValueEqual,
   assertBasicFacetFunctionality,
   assertSortCriteria,
@@ -324,6 +325,10 @@ describe('Facet with invalid options', () => {
 
     it('Should not render when field returns no result', () => {
       setupFacet('author2', facetProp.label);
+      validateFacetComponentVisible(
+        facetProp.label,
+        FacetSelectors.facetStandard
+      );
     });
   });
 

@@ -5,6 +5,7 @@ import {
   buildMockSearchAppEngine,
   MockEngine,
 } from '../../test';
+import {buildMockResultPreviewState} from '../../test/mock-result-preview-state';
 import {
   buildQuickview,
   QuickviewOptions,
@@ -54,7 +55,10 @@ describe('Quickview', () => {
     const uniqueId = '1';
     const content = '<div></div>';
 
-    engine.state.resultPreview = {uniqueId, content};
+    engine.state.resultPreview = buildMockResultPreviewState({
+      uniqueId,
+      content,
+    });
     options.result = buildMockResult({uniqueId});
     initQuickview();
 
@@ -63,7 +67,10 @@ describe('Quickview', () => {
 
   it(`when configured result uniqueId matches the uniqueId in state,
   #state.content returns an empty string`, () => {
-    engine.state.resultPreview = {uniqueId: '1', content: '<div></div>'};
+    engine.state.resultPreview = buildMockResultPreviewState({
+      uniqueId: '1',
+      content: '<div></div>',
+    });
     options.result = buildMockResult({uniqueId: '2'});
     initQuickview();
 
@@ -84,5 +91,23 @@ describe('Quickview', () => {
     initQuickview();
 
     expect(quickview.state.resultHasPreview).toBe(false);
+  });
+
+  it(`when the resultPreview state #isLoading is true,
+  #state.isLoading is true`, () => {
+    engine.state.resultPreview = buildMockResultPreviewState({isLoading: true});
+    initQuickview();
+
+    expect(quickview.state.isLoading).toBe(true);
+  });
+
+  it(`when the resultPreview state #isLoading is false,
+  #state.isLoading is false`, () => {
+    engine.state.resultPreview = buildMockResultPreviewState({
+      isLoading: false,
+    });
+    initQuickview();
+
+    expect(quickview.state.isLoading).toBe(false);
   });
 });

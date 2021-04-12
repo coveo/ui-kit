@@ -45,6 +45,11 @@ export interface QuickviewState {
    * `true` if the configured result has a preview, and `false` otherwise.
    */
   resultHasPreview: boolean;
+
+  /**
+   * `true` if content is being fetched, and `false` otherwise.
+   */
+  isLoading: boolean;
 }
 
 /**
@@ -74,10 +79,12 @@ export function buildQuickview(
       const resultHasPreview = result.hasHtmlVersion;
       const preview = engine.state.resultPreview;
       const content = uniqueId === preview.uniqueId ? preview.content : '';
+      const isLoading = preview.isLoading;
 
       return {
         content,
         resultHasPreview,
+        isLoading,
       };
     },
   };

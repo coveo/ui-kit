@@ -2,8 +2,8 @@ import {ComponentInterface, getElement} from '@stencil/core';
 
 export function ResultContext() {
   return (component: ComponentInterface, resultVariable: string) => {
-    const {render} = component;
-    component.render = function () {
+    const {componentWillLoad} = component;
+    component.componentWillLoad = function () {
       const element = getElement(this);
       const parentResultComponent = (element.getRootNode() as ShadowRoot)
         .host as HTMLAtomicResultElement;
@@ -16,10 +16,10 @@ export function ResultContext() {
           https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template`
         );
         element.remove();
-        return null;
+        return undefined;
       }
       component[resultVariable] = parentResultComponent.result;
-      return render && render.call(this);
+      return componentWillLoad && componentWillLoad.call(this);
     };
   };
 }
