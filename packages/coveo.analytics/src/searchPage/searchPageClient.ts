@@ -104,7 +104,7 @@ export class CoveoSearchPageClient {
     }
 
     public logBreadcrumbFacet(metadata: FacetMetadata | FacetRangeMetadata | CategoryFacetMetadata) {
-        return this.logFacetSearchEvent(SearchPageEvents.breadcrumbFacet, metadata);
+        return this.logSearchEvent(SearchPageEvents.breadcrumbFacet, metadata);
     }
 
     public logBreadcrumbResetAll() {
@@ -166,35 +166,35 @@ export class CoveoSearchPageClient {
     }
 
     public logFacetClearAll(meta: FacetBaseMeta) {
-        return this.logFacetSearchEvent(SearchPageEvents.facetClearAll, meta);
+        return this.logSearchEvent(SearchPageEvents.facetClearAll, meta);
     }
 
     public logFacetSearch(meta: FacetBaseMeta) {
-        return this.logFacetSearchEvent(SearchPageEvents.facetSearch, meta);
+        return this.logSearchEvent(SearchPageEvents.facetSearch, meta);
     }
 
     public logFacetSelect(meta: FacetMetadata) {
-        return this.logFacetSearchEvent(SearchPageEvents.facetSelect, meta);
+        return this.logSearchEvent(SearchPageEvents.facetSelect, meta);
     }
 
     public logFacetDeselect(meta: FacetMetadata) {
-        return this.logFacetSearchEvent(SearchPageEvents.facetDeselect, meta);
+        return this.logSearchEvent(SearchPageEvents.facetDeselect, meta);
     }
 
     public logFacetExclude(meta: FacetMetadata) {
-        return this.logFacetSearchEvent(SearchPageEvents.facetExclude, meta);
+        return this.logSearchEvent(SearchPageEvents.facetExclude, meta);
     }
 
     public logFacetUnexclude(meta: FacetMetadata) {
-        return this.logFacetSearchEvent(SearchPageEvents.facetUnexclude, meta);
+        return this.logSearchEvent(SearchPageEvents.facetUnexclude, meta);
     }
 
     public logFacetSelectAll(meta: FacetBaseMeta) {
-        return this.logFacetSearchEvent(SearchPageEvents.facetSelectAll, meta);
+        return this.logSearchEvent(SearchPageEvents.facetSelectAll, meta);
     }
 
     public logFacetUpdateSort(meta: FacetSortMeta) {
-        return this.logFacetSearchEvent(SearchPageEvents.facetUpdateSort, meta);
+        return this.logSearchEvent(SearchPageEvents.facetUpdateSort, meta);
     }
 
     public logFacetShowMore(meta: FacetBaseMeta) {
@@ -266,10 +266,6 @@ export class CoveoSearchPageClient {
         };
 
         return this.coveoAnalyticsClient.sendClickEvent(payload);
-    }
-
-    public logFacetSearchEvent(event: SearchPageEvents, metadata: Record<string, any>) {
-        return this.coveoAnalyticsClient.sendSearchEvent(this.getBaseSearchEventRequest(event, metadata));
     }
 
     private getBaseSearchEventRequest(event: SearchPageEvents, metadata?: Record<string, any>): SearchEventRequest {
