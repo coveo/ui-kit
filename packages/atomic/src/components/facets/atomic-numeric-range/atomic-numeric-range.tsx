@@ -2,7 +2,7 @@ import {Component, Element, Prop} from '@stencil/core';
 
 /**
  * The `atomic-numeric-range` component defines the range of an `atomic-numeric-facet`,
- * and therefore must be used inside an `atomic-numeric-facet` component.
+ * and therefore must be defined within an `atomic-numeric-facet` component.
  */
 @Component({
   tag: 'atomic-numeric-range',

@@ -8,8 +8,8 @@ import {
 import {Bindings} from '../../utils/initialization-utils';
 
 /**
- * The `atomic-relevance-inspector` allows for the display of debugging information.
- *
+ * The `atomic-relevance-inspector` component is used internally to offer insight on search page relevance,
+ * as well as information to help troubleshoot issues during development.
  */
 @Component({
   tag: 'atomic-relevance-inspector',

@@ -1,7 +1,7 @@
 import {Component, Element, Prop} from '@stencil/core';
 
 /**
- * The `atomic-date-range` component defines the range of an `atomic-date-facet`, and therefore must be used inside an `atomic-date-facet` component.
+ * The `atomic-date-range` component defines the range of an `atomic-date-facet`, and therefore must be defined within an `atomic-date-facet` component.
  */
 @Component({
   tag: 'atomic-date-range',

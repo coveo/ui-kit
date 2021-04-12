@@ -16,9 +16,8 @@ interface FacetElement extends HTMLElement {
 }
 
 /**
- * The `atomic-facet-manager` component acts as a parent of all facet components. Any instances of atomic facets components, as well as
- * components that define value ranges in facets must be nested within the `atomic-facet-manager` component.
- *
+ * The `atomic-facet-manager` reorders facets and their values to match the most recent search response with the most relevant results.
+ * A facet component must be defined within the opening and closing tags of an `atomic-facet-manager` to leverage this functionality.
  */
 @Component({
   tag: 'atomic-facet-manager',

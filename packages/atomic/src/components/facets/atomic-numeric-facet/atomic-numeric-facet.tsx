@@ -23,7 +23,7 @@ import {
 } from '../base-facet/base-facet';
 
 /**
- * The `atomic-date-facet` component displays values as numeric ranges.
+ * The `atomic-numeric-facet` component displays values as numeric ranges.
  * In mobile browsers, this is rendered as a button which opens a facet modal.
  *
  * @part facet - The wrapping div for the entire facet
