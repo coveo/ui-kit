@@ -27,8 +27,6 @@ export {
   buildContext,
 } from './context/headless-context';
 
-export {buildDebug} from './debug/headless-debug';
-
 export {
   DidYouMean,
   DidYouMeanState,
