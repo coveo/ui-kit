@@ -1,20 +1,15 @@
-import {AnyEntity, FuncEntity, isFunctionEntity} from './entity';
+import {AnyEntity, isFunctionEntity} from './entity';
+import {inverseTypeGuard} from './utils';
 
 export function sortEntities(entities: AnyEntity[]) {
-  const [methods, attributes] = mapIntoGroups<
-    AnyEntity,
-    FuncEntity,
-    Exclude<AnyEntity, FuncEntity>
-  >(entities, (entity, addMethod, addAttribute) =>
-    isFunctionEntity(entity) ? addMethod(entity) : addAttribute(entity)
-  );
+  const methods = entities.filter(isFunctionEntity);
+  const attributes = entities.filter(inverseTypeGuard(isFunctionEntity));
 
-  const [optionalAttributes, mandatoryAttributes] = mapIntoGroups(
-    attributes,
-    (entity, addOptionalAttribute, addMandatoryAttribute) =>
-      entity.isOptional
-        ? addOptionalAttribute(entity)
-        : addMandatoryAttribute(entity)
+  const optionalAttributes = attributes.filter(
+    (attribute) => attribute.isOptional
+  );
+  const mandatoryAttributes = attributes.filter(
+    (attribute) => !attribute.isOptional
   );
 
   const sortedMandatoryAttributes = alphabeticallySortEntities(
@@ -30,26 +25,6 @@ export function sortEntities(entities: AnyEntity[]) {
     ...sortedOptionalAttributes,
     ...sortedMethods,
   ];
-}
-
-function mapIntoGroups<T, A = T, B = T>(
-  values: T[],
-  predicate: (
-    value: T,
-    pushToFirstGroup: (v: A) => void,
-    pushToSecondGroup: (v: B) => void
-  ) => void
-): [A[], B[]] {
-  const firstGroup: A[] = [];
-  const secondGroup: B[] = [];
-  values.forEach((value) =>
-    predicate(
-      value,
-      (v) => firstGroup.push(v),
-      (v) => secondGroup.push(v)
-    )
-  );
-  return [firstGroup, secondGroup];
 }
 
 function alphabeticallySortEntities<T extends AnyEntity>(entities: T[]) {
