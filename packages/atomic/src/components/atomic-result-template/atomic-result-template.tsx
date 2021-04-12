@@ -7,7 +7,7 @@ import {
 import {MapProp} from '../../utils/props-utils';
 
 /**
- * The `atomic-result-template` component can is used to determine the format of query results depending on
+ * The `atomic-result-template` component is used to determine the format of query results depending on
  * defined conditions. A `template` element must be a child of an `atomic-result-template` and an `atomic-result-list` must be
  * the parent of each `atomic-result-template`.
  */
