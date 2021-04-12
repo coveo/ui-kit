@@ -1,6 +1,8 @@
 import {Interception} from 'cypress/types/net-stubbing';
+import {Result} from '../../../headless/dist/api/search/search/result';
 import {SearchRequest} from '../../../headless/dist/api/search/search/search-request';
 import {SearchResponseSuccess} from '../../../headless/dist/api/search/search/search-response';
+import {searchEndpoint} from './setupComponent';
 
 function getApiCall(selector: string): Promise<Interception> {
   return new Promise((resolve) => {
@@ -51,4 +53,17 @@ export function getAnalyticsAt(selector: string, order: number) {
     getAnalytics(selector);
   }
   return getAnalytics(selector);
+}
+
+export function modifySearchResultAt(
+  resultModifier: (result: Result) => Result,
+  position = 0
+) {
+  cy.intercept(searchEndpoint, (req) => {
+    req.reply((res) => {
+      res.body!['results'][position] = resultModifier(
+        res.body!['results'][position]
+      );
+    });
+  });
 }

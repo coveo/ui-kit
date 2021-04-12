@@ -68,7 +68,7 @@
       .side-by-side-container {
         display: flex;
         justify-content: space-between;
-        align-items: flex-end;
+        align-items: center;
       }
 
       atomic-facet-manager {
@@ -80,30 +80,27 @@
         margin-top: 10px;
       }
 
-      atomic-result::part(result-printable-uri-list-element) {
-        text-transform: capitalize;
-      }
-
       atomic-breadcrumb-manager {
         margin: 10px 0;
       }
     </style>
   </head>
+
   <body>
     <atomic-search-interface id="search">
       <div class="interface-container">
-        <!--
-          <atomic-tab expression="">All Files</atomic-tab>
-          <atomic-tab expression='@author *= "BBC News"'>BBC News</atomic-tab>
-        -->
         <atomic-search-box class="search-box-item"></atomic-search-box>
 
         <atomic-facet-manager>
           <atomic-facet field="author" label="Authors"></atomic-facet>
           <atomic-numeric-facet field="size" label="File sizes">
-            <atomic-numeric-range start="0" end="10" end-inclusive="true"></atomic-numeric-range>
+            <atomic-numeric-range start="0" end="10"></atomic-numeric-range>
+            <atomic-numeric-range start="10" end="20"></atomic-numeric-range>
+            <atomic-numeric-range start="20" end="30"></atomic-numeric-range>
+            <atomic-numeric-range start="30" end="40"></atomic-numeric-range>
+            <atomic-numeric-range start="40" end="50"></atomic-numeric-range>
           </atomic-numeric-facet>
-          <atomic-date-facet field="created" label="Created"></atomic-date-facet>
+          <atomic-date-facet field="date" label="Date"></atomic-date-facet>
           <atomic-category-facet field="geographicalhierarchy" label="World Atlas"></atomic-category-facet>
         </atomic-facet-manager>
 
@@ -120,47 +117,7 @@
           </div>
 
           <atomic-no-results></atomic-no-results>
-          <atomic-result-list fields-to-include="liboardinteractionstyle,ytthumbnailurl">
-            <!-- Custom result templates examples -->
-            <atomic-result-template must-match-filetype="youtubevideo" must-not-match-liboardinteractionstyle="contest">
-              <template>
-                <!-- Styling result template internaly -->
-                <style>
-                  h3 {
-                    font-weight: bold;
-                    color: var(--atomic-secondary);
-                  }
-
-                  atomic-result-image[field='ytthumbnailurl'] {
-                    display: block;
-                    width: 200px;
-                  }
-
-                  .youtubevideo-container {
-                    display: flex;
-                  }
-                </style>
-                <div class="youtubevideo-container">
-                  <atomic-result-link>
-                    <atomic-result-image field="ytthumbnailurl"></atomic-result-image>
-                  </atomic-result-link>
-                  <div>
-                    <atomic-result-link></atomic-result-link>
-                    <atomic-result-text field="excerpt"></atomic-result-text>
-                  </div>
-                </div>
-              </template>
-            </atomic-result-template>
-            <atomic-result-template id="singaporeTitle">
-              <template> 🇸🇬 <atomic-result-link></atomic-result-link> </template>
-              <!-- Adding Javascript conditions -->
-              <script>
-                document.querySelector('atomic-result-template#singaporeTitle').conditions = [
-                  (result) => /singapore/i.test(result.title),
-                ];
-              </script>
-            </atomic-result-template>
-          </atomic-result-list>
+          <atomic-result-list></atomic-result-list>
         </div>
         <div class="footer-item side-by-side-container">
           <atomic-pager></atomic-pager>
@@ -168,7 +125,5 @@
         </div>
       </div>
     </atomic-search-interface>
-    <!-- <atomic-recommendation></atomic-recommendation> -->
-    <!-- <atomic-frequently-bought-together></atomic-frequently-bought-together> -->
   </body>
 </html>

@@ -7,7 +7,6 @@ import {
   NoopPreprocessRequestMiddleware,
   PlatformClient,
   PlatformClientCallOptions,
-  PlatformResponse,
 } from '../platform-client';
 import {createMockState} from '../../test/mock-state';
 import {createMockRecommendationState} from '../../test/mock-recommendation-state';
@@ -30,12 +29,12 @@ import pino from 'pino';
 import {buildMockSearchResponse} from '../../test/mock-search-response';
 import {buildMockQuerySuggestCompletion} from '../../test/mock-query-suggest-completion';
 import {buildMockFacetSearchResponse} from '../../test/mock-facet-search-response';
-import {SearchResponseSuccess} from './search/search-response';
-import {QuerySuggestSuccessResponse} from './query-suggest/query-suggest-response';
 import {buildMockCategoryFacetSlice} from '../../test/mock-category-facet-slice';
 import {buildSearchRequest} from '../../features/search/search-actions';
 import {buildMockSearchAPIClient} from '../../test/mock-search-api-client';
 import {NoopPreprocessRequest} from '../preprocess-request';
+import {Response} from 'cross-fetch';
+import {buildResultPreviewRequest} from '../../features/result-preview/result-preview-request-builder';
 
 jest.mock('../platform-client');
 describe('search api client', () => {
@@ -61,21 +60,18 @@ describe('search api client', () => {
   });
 
   describe('middleware', () => {
-    function mockPlatformCall(
-      returnValue:
-        | PlatformResponse<SearchResponseSuccess | QuerySuggestSuccessResponse>
-        | {}
-    ) {
+    function mockPlatformCall(returnValue: Response) {
       const mockPlatformCall = jest.fn();
 
       mockPlatformCall.mockReturnValue(returnValue);
       PlatformClient.call = mockPlatformCall;
     }
     it('should preprocess search responses if appropriate middleware is provided', async () => {
-      mockPlatformCall({
-        body: buildMockSearchResponse(),
-        response: {},
-      });
+      const body = JSON.stringify(buildMockSearchResponse());
+      const response = new Response(body);
+
+      mockPlatformCall(response);
+
       const newId = 'notInitialID';
       buildSearchAPIClient({
         postprocessSearchResponseMiddleware: (response) => {
@@ -101,10 +97,12 @@ describe('search api client', () => {
           test: buildMockQuerySuggest(),
         },
       });
-      mockPlatformCall({
-        body: buildMockQuerySuggestCompletion(),
-        response: {},
-      });
+
+      const body = JSON.stringify(buildMockQuerySuggestCompletion());
+      const response = new Response(body);
+
+      mockPlatformCall(response);
+
       const completions = [
         buildMockQuerySuggestCompletion({expression: 'hello world'}),
       ];
@@ -135,10 +133,11 @@ describe('search api client', () => {
           test: buildMockFacetRequest(),
         },
       });
-      mockPlatformCall({
-        body: buildMockFacetSearchResponse(),
-        response: {},
-      });
+
+      const body = JSON.stringify(buildMockFacetSearchResponse());
+      const response = new Response(body);
+
+      mockPlatformCall(response);
 
       buildSearchAPIClient({
         postprocessFacetSearchResponseMiddleware: (response) => {
@@ -163,7 +162,7 @@ describe('search api client', () => {
     });
 
     it(`when calling SearchAPIClient.search
-  should call PlatformClient.call with the right options`, () => {
+    should call PlatformClient.call with the right options`, () => {
       const req = buildSearchRequest(state);
       searchAPIClient.search(req);
       const request = (PlatformClient.call as jest.Mock).mock.calls[0][0];
@@ -218,7 +217,7 @@ describe('search api client', () => {
     });
 
     it(`when calling SearchAPIClient.plan
-  should call PlatformClient.call with the right options`, () => {
+    should call PlatformClient.call with the right options`, () => {
       const req = buildPlanRequest(state);
       searchAPIClient.plan(req);
       const request = (PlatformClient.call as jest.Mock).mock.calls[0][0];
@@ -246,7 +245,7 @@ describe('search api client', () => {
     });
 
     it(`when calling SearchAPIClient.querySuggest
-  should call PlatformClient.call with the right options`, () => {
+    should call PlatformClient.call with the right options`, () => {
       const id = 'someid123';
       const qs = buildMockQuerySuggest({id, q: 'some query', count: 11});
       state.querySuggest[id] = qs;
@@ -305,7 +304,7 @@ describe('search api client', () => {
       });
 
       it(`when the id is on the facetSearchSet,
-    it calls PlatformClient.call with the facet search params`, () => {
+      it calls PlatformClient.call with the facet search params`, () => {
         const id = 'someid123';
         const facetSearchState = buildMockFacetSearch();
         const facetState = buildMockFacetRequest();
@@ -336,7 +335,7 @@ describe('search api client', () => {
       });
 
       it(`when the id is on the categoryFacetSearchSet,
-    it calls PlatformClient.call with the category facet search params`, () => {
+      it calls PlatformClient.call with the category facet search params`, () => {
         const id = '1';
         const categoryFacetSearch = buildMockCategoryFacetSearch();
         const categoryFacet = buildMockCategoryFacetRequest();
@@ -371,7 +370,7 @@ describe('search api client', () => {
       });
 
       it(`when calling SearchAPIClient.recommendations
-  should call PlatformClient.call with the right options`, () => {
+      should call PlatformClient.call with the right options`, () => {
         const recommendationState = createMockRecommendationState();
         const req = buildRecommendationRequest(recommendationState);
 
@@ -405,7 +404,7 @@ describe('search api client', () => {
       });
 
       it(`when calling SearchAPIClient.productRecommendations
-  should call PlatformClient.call with the right options`, () => {
+      should call PlatformClient.call with the right options`, () => {
         const productRecommendationsState = buildMockProductRecommendationsState(
           {
             productRecommendations: {
@@ -459,6 +458,31 @@ describe('search api client', () => {
         };
 
         expect(request).toMatchObject(expectedRequest);
+      });
+    });
+
+    describe('SearchAPIClient.html', () => {
+      function encodeUTF16(str: string) {
+        const buf = new ArrayBuffer(str.length * 2);
+        const bufView = new Uint16Array(buf);
+
+        for (let i = 0, strLen = str.length; i < strLen; i++) {
+          bufView[i] = str.charCodeAt(i);
+        }
+
+        return bufView;
+      }
+
+      it('when the response is UTF-16 encoded, it decodes the response correctly', async () => {
+        const payload = encodeUTF16('hello');
+        const headers = {'content-type': 'text/html; charset=UTF-16'};
+        const response = new Response(payload, {headers});
+        PlatformClient.call = () => Promise.resolve(response);
+
+        const req = buildResultPreviewRequest(state, {uniqueId: '1'});
+        const res = await searchAPIClient.html(req);
+
+        expect(res.success).toBe('hello');
       });
     });
   });

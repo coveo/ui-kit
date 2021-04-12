@@ -228,7 +228,7 @@ describe('Numeric with invalid options', () => {
           end: 100000,
         },
         {
-          start: 'x1000000',
+          start: ('x1000000' as unknown) as number,
           end: 1000000,
         },
       ];

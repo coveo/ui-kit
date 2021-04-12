@@ -3,6 +3,88 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.10.0-alpha.12](https://github.com/coveo/ui-kit/compare/v0.10.0-alpha.11...v0.10.0-alpha.12) (2021-04-09)
+
+
+### Features
+
+* **headless:** add isLoading to Quickview controller ([#686](https://github.com/coveo/ui-kit/issues/686)) ([8596c33](https://github.com/coveo/ui-kit/commit/8596c337545ad96e25d13c77e7057f22ca300af9))
+
+
+
+
+
+# [0.10.0-alpha.11](https://github.com/coveo/ui-kit/compare/v0.10.0-alpha.10...v0.10.0-alpha.11) (2021-04-09)
+
+
+### Features
+
+* **atomic:** Add quickview and modal components ([#672](https://github.com/coveo/ui-kit/issues/672)) ([4c7d99b](https://github.com/coveo/ui-kit/commit/4c7d99bd9e7e29f01d1b4c33f1262543101322c7))
+
+
+
+
+
+# [0.10.0-alpha.10](https://github.com/coveo/ui-kit/compare/v0.10.0-alpha.9...v0.10.0-alpha.10) (2021-04-08)
+
+
+### Bug Fixes
+
+* **headless:** add full path as UA category facet value ([#677](https://github.com/coveo/ui-kit/issues/677)) ([800c7c7](https://github.com/coveo/ui-kit/commit/800c7c709344b2b180c2f36abad196297017ceaa))
+
+
+
+
+
+# [0.10.0-alpha.7](https://github.com/coveo/ui-kit/compare/v0.10.0-alpha.6...v0.10.0-alpha.7) (2021-04-06)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+# [0.10.0-alpha.6](https://github.com/coveo/ui-kit/compare/v0.10.0-alpha.5...v0.10.0-alpha.6) (2021-04-06)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+# [0.10.0-alpha.4](https://github.com/coveo/ui-kit/compare/v0.10.0-alpha.3...v0.10.0-alpha.4) (2021-03-31)
+
+
+### Features
+
+* **headless:** add Quickview controller ([#627](https://github.com/coveo/ui-kit/issues/627)) ([6e9fbf3](https://github.com/coveo/ui-kit/commit/6e9fbf3fb824f09d48b451e8d61523ba9a1127b4))
+
+
+
+
+
+# [0.10.0-alpha.3](https://github.com/coveo/ui-kit/compare/v0.10.0-alpha.2...v0.10.0-alpha.3) (2021-03-31)
+
+
+### Bug Fixes
+
+* **headless:** throw error when start of range is greater than the end of the range ([#639](https://github.com/coveo/ui-kit/issues/639)) ([0753563](https://github.com/coveo/ui-kit/commit/075356395387b701d01e8f52d17675655f3fbfdb))
+
+
+
+
+
+# [0.10.0-alpha.0](https://github.com/coveo/ui-kit/compare/v0.9.0...v0.10.0-alpha.0) (2021-03-30)
+
+
+### Features
+
+* **headless,atomic:** exposed build version ([#633](https://github.com/coveo/ui-kit/issues/633)) ([9878a98](https://github.com/coveo/ui-kit/commit/9878a98a66d2b31dac453f90d501beff4a003d82))
+
+
+
+
+
 # [0.9.0](https://github.com/coveo/ui-kit/compare/v0.9.0-alpha.9...v0.9.0) (2021-03-26)
 
 **Note:** Version bump only for package @coveo/headless
