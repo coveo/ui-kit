@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.10.0-alpha.15](https://github.com/coveo/ui-kit/compare/v0.10.0-alpha.14...v0.10.0-alpha.15) (2021-04-12)
+
+
+### Bug Fixes
+
+* **atomic:** facet button always on single line & align text left ([#693](https://github.com/coveo/ui-kit/issues/693)) ([09439fe](https://github.com/coveo/ui-kit/commit/09439fe8a97a5a14a16e128f7b0ae45b90ee3147))
+
+
+### Features
+
+* **atomic:** add path to CategoryFacet search ([#690](https://github.com/coveo/ui-kit/issues/690)) ([9b7b002](https://github.com/coveo/ui-kit/commit/9b7b0028c510bf61950206e6d81421ed6e9282d3))
+
+
+
+
+
 # [0.10.0-alpha.14](https://github.com/coveo/ui-kit/compare/v0.10.0-alpha.13...v0.10.0-alpha.14) (2021-04-12)
 
 
