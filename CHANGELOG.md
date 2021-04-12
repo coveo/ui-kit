@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.10.0-alpha.13](https://github.com/coveo/ui-kit/compare/v0.10.0-alpha.12...v0.10.0-alpha.13) (2021-04-12)
+
+
+### Features
+
+* **headless:** expose debug actions ([#692](https://github.com/coveo/ui-kit/issues/692)) ([dc156d0](https://github.com/coveo/ui-kit/commit/dc156d0d507a8568b41557ee5e98d856b156320d))
+
+
+
+
+
 # [0.10.0-alpha.12](https://github.com/coveo/ui-kit/compare/v0.10.0-alpha.11...v0.10.0-alpha.12) (2021-04-09)
 
 
