@@ -862,5 +862,9 @@
   "under": {
     "en": "{{child}} under {{parent}}",
     "fr": "{{child}} sous {{parent}}"
+  },
+  "previewResult": {
+    "en": "Preview the result",
+    "fr": "Prévisualiser le résultat"
   }
 }
