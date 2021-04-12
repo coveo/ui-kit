@@ -1,12 +1,6 @@
 import * as fetchMock from 'fetch-mock';
-import {CoveoSearchPageClient} from './searchPageClient';
-import {
-    SearchPageEvents,
-    PartialDocumentInformation,
-    DocumentIdentifier,
-    CustomEventsTypes,
-    FacetStateMetadata,
-} from './searchPageEvents';
+import {CoveoSearchPageClient, SearchPageClientProvider} from './searchPageClient';
+import {SearchPageEvents, PartialDocumentInformation, CustomEventsTypes, FacetStateMetadata} from './searchPageEvents';
 import CoveoAnalyticsClient from '../client/analytics';
 import {NoopAnalytics} from '../client/noopAnalytics';
 
@@ -45,7 +39,7 @@ describe('SearchPageClient', () => {
 
     let client: CoveoSearchPageClient;
 
-    const provider = {
+    const provider: SearchPageClientProvider = {
         getBaseMetadata: () => ({foo: 'bar'}),
         getSearchEventRequestPayload: () => ({
             queryText: 'queryText',
@@ -57,6 +51,7 @@ describe('SearchPageClient', () => {
         getOriginLevel2: () => 'origin-level-2',
         getOriginLevel3: () => 'origin-level-3',
         getLanguage: () => 'en',
+        getFacetState: () => fakeFacetState,
     };
 
     beforeEach(() => {
@@ -297,7 +292,7 @@ describe('SearchPageClient', () => {
             facetId: 'bar',
             facetTitle: 'title',
         };
-        await client.logFacetSearch(meta, fakeFacetState);
+        await client.logFacetSearch(meta);
         expectMatchFacetPayload(SearchPageEvents.facetSearch, meta, fakeFacetState);
     });
 
@@ -309,7 +304,7 @@ describe('SearchPageClient', () => {
             facetValue: 'qwerty',
         };
 
-        await client.logFacetSelect(meta, fakeFacetState);
+        await client.logFacetSelect(meta);
         expectMatchFacetPayload(SearchPageEvents.facetSelect, meta, fakeFacetState);
     });
 
@@ -321,7 +316,7 @@ describe('SearchPageClient', () => {
             facetValue: 'qwerty',
         };
 
-        await client.logFacetDeselect(meta, fakeFacetState);
+        await client.logFacetDeselect(meta);
         expectMatchFacetPayload(SearchPageEvents.facetDeselect, meta, fakeFacetState);
     });
 
@@ -332,7 +327,7 @@ describe('SearchPageClient', () => {
             facetTitle: 'title',
             facetValue: 'qwerty',
         };
-        await client.logFacetExclude(meta, fakeFacetState);
+        await client.logFacetExclude(meta);
         expectMatchFacetPayload(SearchPageEvents.facetExclude, meta, fakeFacetState);
     });
 
@@ -343,7 +338,7 @@ describe('SearchPageClient', () => {
             facetTitle: 'title',
             facetValue: 'qwerty',
         };
-        await client.logFacetUnexclude(meta, fakeFacetState);
+        await client.logFacetUnexclude(meta);
         expectMatchFacetPayload(SearchPageEvents.facetUnexclude, meta, fakeFacetState);
     });
 
@@ -353,7 +348,7 @@ describe('SearchPageClient', () => {
             facetId: 'bar',
             facetTitle: 'title',
         };
-        await client.logFacetSelectAll(meta, fakeFacetState);
+        await client.logFacetSelectAll(meta);
         expectMatchFacetPayload(SearchPageEvents.facetSelectAll, meta, fakeFacetState);
     });
 
@@ -364,7 +359,7 @@ describe('SearchPageClient', () => {
             facetTitle: 'title',
             criteria: 'bazz',
         };
-        await client.logFacetUpdateSort(meta, fakeFacetState);
+        await client.logFacetUpdateSort(meta);
         expectMatchFacetPayload(SearchPageEvents.facetUpdateSort, meta, fakeFacetState);
     });
 
