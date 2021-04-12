@@ -1,19 +1,20 @@
-import {
-  AnyEntity,
-  Entity,
-  EntityWithTypeAlias,
-  FuncEntity,
-  ObjEntity,
-} from './entity';
+import {AnyEntity, FuncEntity, isFunctionEntity} from './entity';
 
 export function sortEntities(entities: AnyEntity[]) {
-  const [methods, attributes] = divideIntoGroups(entities, (entity) =>
-    entity.kind === 'function' ? SortGroup.First : SortGroup.Second
-  ) as [FuncEntity[], (Entity | EntityWithTypeAlias | ObjEntity)[]];
+  const [methods, attributes] = mapIntoGroups<
+    AnyEntity,
+    FuncEntity,
+    Exclude<AnyEntity, FuncEntity>
+  >(entities, (entity, addMethod, addAttribute) =>
+    isFunctionEntity(entity) ? addMethod(entity) : addAttribute(entity)
+  );
 
-  const [optionalAttributes, mandatoryAttributes] = divideIntoGroups(
+  const [optionalAttributes, mandatoryAttributes] = mapIntoGroups(
     attributes,
-    (entity) => (entity.isOptional ? SortGroup.First : SortGroup.Second)
+    (entity, addOptionalAttribute, addMandatoryAttribute) =>
+      entity.isOptional
+        ? addOptionalAttribute(entity)
+        : addMandatoryAttribute(entity)
   );
 
   const sortedMandatoryAttributes = alphabeticallySortEntities(
@@ -31,21 +32,22 @@ export function sortEntities(entities: AnyEntity[]) {
   ];
 }
 
-enum SortGroup {
-  First,
-  Second,
-}
-
-function divideIntoGroups<T>(
+function mapIntoGroups<T, A = T, B = T>(
   values: T[],
-  predicate: (value: T) => SortGroup
-): [T[], T[]] {
-  const firstGroup: T[] = [];
-  const secondGroup: T[] = [];
+  predicate: (
+    value: T,
+    pushToFirstGroup: (v: A) => void,
+    pushToSecondGroup: (v: B) => void
+  ) => void
+): [A[], B[]] {
+  const firstGroup: A[] = [];
+  const secondGroup: B[] = [];
   values.forEach((value) =>
-    predicate(value) === SortGroup.First
-      ? firstGroup.push(value)
-      : secondGroup.push(value)
+    predicate(
+      value,
+      (v) => firstGroup.push(v),
+      (v) => secondGroup.push(v)
+    )
   );
   return [firstGroup, secondGroup];
 }
