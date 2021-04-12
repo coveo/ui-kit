@@ -7,6 +7,10 @@ import {
 } from '@coveo/headless';
 import {Bindings} from '../../utils/initialization-utils';
 
+/**
+ * The `atomic-relevance-inspector` allows for the display of debugging information.
+ *
+ */
 @Component({
   tag: 'atomic-relevance-inspector',
   shadow: true,

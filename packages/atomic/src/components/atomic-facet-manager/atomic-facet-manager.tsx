@@ -15,6 +15,11 @@ interface FacetElement extends HTMLElement {
   facetId: string;
 }
 
+/**
+ * The `atomic-facet-manager` component acts as a parent of all facet components. Any instances of atomic facets components, as well as
+ * components that define value ranges in facets must be nested within the `atomic-facet-manager` component.
+ *
+ */
 @Component({
   tag: 'atomic-facet-manager',
   styleUrl: 'atomic-facet-manager.pcss',

@@ -7,6 +7,12 @@ import {
 import {ResultContext} from '../result-template-decorators';
 import {MapProp} from '../../../utils/props-utils';
 
+/**
+ * The `atomic-field-condition` component takes a list of conditions that, if fulfilled, apply the
+ * template in which it is defined.
+ * @MapProp name: mustMatch, attr: must-match, docs: , type: Record<string, string[]> , default: {}
+ * @MapProp name: mustNotMatch, attr: must-not-match, docs: , Record<string, string[]> , default: {}
+ */
 @Component({
   tag: 'atomic-field-condition',
   shadow: false,

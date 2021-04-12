@@ -12,7 +12,7 @@ import {
 } from '../../utils/initialization-utils';
 
 /**
- * The ResultListPlaceholder provides an intermediate visual state that is rendered before the first results are available.
+ * The `atomic-result-list-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
  * @part result - The placeholder for a single result
  */
 @Component({

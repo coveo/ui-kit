@@ -23,13 +23,13 @@ import {
 } from '../base-facet/base-facet';
 
 /**
- * A facet who's values are expressed as numeric ranges. It is displayed as a regular facet in desktop browsers and as
- * a button which opens a facet modal in mobile browsers.
+ * The `atomic-date-facet` component displays values as numeric ranges.
+ * In mobile browsers, this is rendered as a button which opens a facet modal.
  *
  * @part facet - The wrapping div for the entire facet
  * @part facet-values - The list of facet values
  * @part facet-value - A single facet value
- * @part close-button - The button to close the facet when displayed modally (mobile only)
+ * @part close-button - The button to close the facet when displayed modally _(mobile only)_
  * @part reset-button - The button that resets the actively selected facet values
  *
  */

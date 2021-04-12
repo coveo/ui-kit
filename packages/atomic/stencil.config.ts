@@ -44,6 +44,10 @@ export const config: Config = {
       type: 'docs-readme',
     },
     {
+      type: 'docs-json',
+      file: './atomic-docs.json',
+    },
+    {
       type: 'www',
       serviceWorker: null, // disable service workers
       copy: [{src: 'pages'}, {src: 'themes'}],

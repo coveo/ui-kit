@@ -7,6 +7,8 @@ import {
   InitializeBindings,
 } from '../../utils/initialization-utils';
 /**
+ * The `atomic-tab` component renders a widget that allows the end user to select a specific search interface based on a constant expression
+ * applied to the outgoing query.
  * @part tab-button - The tab button
  * @part active-tab - The active tab
  */

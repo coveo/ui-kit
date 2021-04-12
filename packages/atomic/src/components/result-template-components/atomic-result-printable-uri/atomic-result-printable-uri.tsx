@@ -11,7 +11,7 @@ import {Schema, NumberValue} from '@coveo/bueno';
 import {filterProtocol} from '../../../utils/xss-utils';
 
 /**
- * The ResultUri component displays the URI, or path, to access a result.
+ * The `atomic-result-printable-uri` component displays the URI, or path, to access a result.
  * @part result-printable-uri-list - The result printable uri list
  * @part result-printable-uri-list-expanded - The expanded result printable uri list
  * @part result-printable-uri-list-element - A result printable uri list element
