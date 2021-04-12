@@ -28,10 +28,8 @@ import {
 } from '../facet-search/facet-search';
 
 /**
- * A facet is a list of values for a certain field occurring in the results,
- * ordered using a configurable criteria (e.g., number of occurrences).
- * An `atomic-facet` displays a facet of the results for the current query.
- * In mobile browsers, this is rendered as a button which opens a facet modal.
+ * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
+ * An `atomic-facet` displays a facet of the results for the current query. In mobile browsers, this is rendered as a button which opens a facet modal.
  *
  * @part facet - The wrapping div for the entire facet
  * @part facet-values - The list of facet values

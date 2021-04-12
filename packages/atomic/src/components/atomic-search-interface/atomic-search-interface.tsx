@@ -39,8 +39,7 @@ export type InitializationOptions = Pick<
 >;
 
 /**
- * The `atomic-search-interface` component is parent to all other atomic components in a search page. This component
- * handles the headless engine, i18next, language, message logging, query pipeline, search hub and state display configurations.
+ * The `atomic-search-interface` component is parent to all other atomic components in a search page. This component handles the headless engine and localization configurations.
  */
 @Component({
   tag: 'atomic-search-interface',

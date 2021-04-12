@@ -25,8 +25,7 @@ import {
 } from '../base-facet/base-facet';
 
 /**
- * The `atomic-date-facet` component displays facet values as date ranges.
- * In mobile browsers, this is rendered as a button that opens a facet modal.
+ * The `atomic-date-facet` component displays facet values as date ranges. In mobile browsers, this is rendered as a button that opens a facet modal.
  *
  * @part facet - The wrapping div for the entire facet
  * @part facet-values - The list of facet values

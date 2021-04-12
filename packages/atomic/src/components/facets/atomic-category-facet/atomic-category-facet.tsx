@@ -30,8 +30,7 @@ import {
 } from '../facet-search/facet-search';
 
 /**
- * The `atomic-category-facet` displays a facet of values in a hierarchical fashion.
- * In mobile browsers, this is rendered as a button which opens a facet modal.
+ * The `atomic-category-facet` displays a facet of values in a hierarchical fashion. In mobile browsers, this is rendered as a button which opens a facet modal.
  *
  * @part facet - The wrapping div for the entire facet
  * @part facet-values - The list of facet values (children)
