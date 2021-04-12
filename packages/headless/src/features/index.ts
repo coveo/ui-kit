@@ -73,7 +73,7 @@ import {
   enableDebug as enableDebugAlias,
   disableDebug as disableDebugAlias,
 } from './debug/debug-actions';
-export namespace Debug {
+export namespace DebugActions {
   export const enableDebug = enableDebugAlias;
   export const disableDebug = disableDebugAlias;
 }
