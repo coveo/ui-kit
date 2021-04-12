@@ -10,7 +10,7 @@ import {
 import {sanitize} from '../../utils/xss-utils';
 
 /**
- * The `atomic-did-you-mean component` is responsible for handling query corrections.
+ * The `atomic-did-you-mean` component is responsible for handling query corrections.
  * When a query returns no result but finds a possible query correction,
  * the component either suggests the correction or automatically triggers a new query with the suggested term.
  *
