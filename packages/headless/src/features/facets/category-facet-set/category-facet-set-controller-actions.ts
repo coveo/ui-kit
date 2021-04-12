@@ -5,10 +5,13 @@ import {
   CategoryFacetSection,
   ConfigurationSection,
 } from '../../../state/state-sections';
-import {getAnalyticsActionForCategoryFacetToggleSelect} from './category-facet-utils';
 import {updateFacetOptions} from '../../facet-options/facet-options-actions';
 import {executeSearch} from '../../search/search-actions';
-import {logFacetClearAll} from '../facet-set/facet-set-analytics-actions';
+import {
+  logFacetClearAll,
+  logFacetDeselect,
+  logFacetSelect,
+} from '../facet-set/facet-set-analytics-actions';
 import {
   deselectAllCategoryFacetValues,
   toggleSelectCategoryFacetValue,
@@ -16,6 +19,19 @@ import {
 import {facetIdDefinition} from '../generic/facet-actions-validation';
 import {validateCategoryFacetValue} from './category-facet-validate-payload';
 import {requiredNonEmptyString} from '../../../utils/validate-payload';
+
+const getAnalyticsActionForCategoryFacetToggleSelect = (
+  facetId: string,
+  selection: CategoryFacetValue
+) => {
+  const payload = {
+    facetId,
+    facetValue: selection.value,
+  };
+
+  const isSelected = selection.state === 'selected';
+  return isSelected ? logFacetDeselect(payload) : logFacetSelect(payload);
+};
 
 /**
  * Toggles the facet value and then executes a search with the appropriate analytics tag.

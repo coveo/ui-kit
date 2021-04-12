@@ -1,3 +1,4 @@
+import {buildMockCategoryFacetRequest} from '../../../test/mock-category-facet-request';
 import {buildMockCategoryFacetResponse} from '../../../test/mock-category-facet-response';
 import {buildMockCategoryFacetSlice} from '../../../test/mock-category-facet-slice';
 import {buildMockCategoryFacetValue} from '../../../test/mock-category-facet-value';
@@ -10,14 +11,21 @@ import {buildMockNumericFacetRequest} from '../../../test/mock-numeric-facet-req
 import {buildMockNumericFacetResponse} from '../../../test/mock-numeric-facet-response';
 import {buildMockNumericFacetValue} from '../../../test/mock-numeric-facet-value';
 import {createMockState} from '../../../test/mock-state';
-import {buildFacetStateMetadata} from './facet-set-analytics-actions-utils';
+import {
+  buildFacetSelectionChangeMetadata,
+  buildFacetStateMetadata,
+} from './facet-set-analytics-actions-utils';
 
 describe('facet-set-analytics-action-utils', () => {
-  describe('#buildFacetStateMetadata', () => {
+  describe('#buildFacetStateMetadata & #buildFacetSelectionChangeMetadata', () => {
     describe('#specific facet', () => {
+      const facetId = 'myfacet';
+      const field = 'myfield';
       const getState = () => {
         const state = createMockState();
         const facetResponse = buildMockFacetResponse({
+          facetId,
+          field,
           values: [
             {numberOfResults: 1, value: 'should not appear', state: 'idle'},
             {numberOfResults: 1, value: 'should appear', state: 'selected'},
@@ -25,12 +33,12 @@ describe('facet-set-analytics-action-utils', () => {
         });
         state.search.response.facets = [facetResponse];
         state.facetSet = {
-          [facetResponse.facetId]: buildMockFacetRequest(),
+          [facetResponse.facetId]: buildMockFacetRequest({facetId, field}),
         };
         return {state, facetResponse};
       };
 
-      it('includes #selected values', () => {
+      it('includes #selected values in the facet state', () => {
         const {state, facetResponse} = getState();
         expect(buildFacetStateMetadata(state)).toEqual(
           expect.arrayContaining([
@@ -43,13 +51,13 @@ describe('facet-set-analytics-action-utils', () => {
               facetType: 'specific',
               state: 'selected',
               facetPosition: 1,
-              title: facetResponse.field,
+              title: `${facetResponse.field}_${facetResponse.facetId}`,
             }),
           ])
         );
       });
 
-      it('does not include #idle values', () => {
+      it('does not include #idle values in the facet state', () => {
         const {state, facetResponse} = getState();
 
         expect(buildFacetStateMetadata(state)).not.toEqual(
@@ -58,60 +66,97 @@ describe('facet-set-analytics-action-utils', () => {
               value: facetResponse.values[0].value,
             }),
           ])
+        );
+      });
+
+      it('should include the correct metadata', () => {
+        const {state, facetResponse} = getState();
+        const facetValue = facetResponse.values[1].value;
+        expect(
+          buildFacetSelectionChangeMetadata(
+            {facetId: facetResponse.facetId, facetValue},
+            state
+          )
+        ).toEqual(
+          expect.objectContaining({
+            facetField: facetResponse.field,
+            facetId: facetResponse.facetId,
+            facetTitle: `${facetResponse.field}_${facetResponse.facetId}`,
+            facetValue: facetResponse.values[1].value,
+          })
         );
       });
     });
 
     describe('#hierarchical facet', () => {
       const getState = () => {
+        const facetId = 'myfacet';
+        const field = 'myfield';
         const state = createMockState();
         const facetResponse = buildMockCategoryFacetResponse({
+          facetId,
+          field,
           values: [
-            buildMockCategoryFacetValue({
-              state: 'idle',
-              value: 'should not appear',
-            }),
             buildMockCategoryFacetValue({
               state: 'selected',
               value: 'should appear',
+              children: [
+                buildMockCategoryFacetValue({
+                  state: 'selected',
+                  value: 'should appear too',
+                  children: [
+                    buildMockCategoryFacetValue({
+                      state: 'idle',
+                      value: 'should not appear',
+                    }),
+                  ],
+                }),
+              ],
             }),
           ],
         });
         state.search.response.facets = [facetResponse];
         state.categoryFacetSet = {
-          [facetResponse.facetId]: buildMockCategoryFacetSlice(),
+          [facetResponse.facetId]: buildMockCategoryFacetSlice({
+            request: buildMockCategoryFacetRequest({facetId, field}),
+          }),
         };
         return {state, facetResponse};
       };
 
-      it('includes #selected values', () => {
+      it('includes only #selected values', () => {
         const {state, facetResponse} = getState();
-        expect(buildFacetStateMetadata(state)).toEqual(
-          expect.arrayContaining([
-            expect.objectContaining({
-              field: facetResponse.field,
-              id: facetResponse.facetId,
-              value: facetResponse.values[1].value,
-              valuePosition: 2,
-              displayValue: facetResponse.values[1].value,
-              facetType: 'hierarchical',
-              state: 'selected',
-              facetPosition: 1,
-              title: facetResponse.field,
-            }),
-          ])
-        );
+        const value = `${facetResponse.values[0].value};${facetResponse.values[0].children[0].value}`;
+        expect(buildFacetStateMetadata(state)).toEqual([
+          expect.objectContaining({
+            field: facetResponse.field,
+            id: facetResponse.facetId,
+            value,
+            valuePosition: 1,
+            displayValue: value,
+            facetType: 'hierarchical',
+            state: 'selected',
+            facetPosition: 1,
+            title: `${facetResponse.field}_${facetResponse.facetId}`,
+          }),
+        ]);
       });
 
-      it('does not include #idle values', () => {
+      it('should include the correct metadata', () => {
         const {state, facetResponse} = getState();
-
-        expect(buildFacetStateMetadata(state)).not.toEqual(
-          expect.arrayContaining([
-            expect.objectContaining({
-              value: facetResponse.values[0].value,
-            }),
-          ])
+        const facetValue = facetResponse.values[0].value;
+        expect(
+          buildFacetSelectionChangeMetadata(
+            {facetId: facetResponse.facetId, facetValue},
+            state
+          )
+        ).toEqual(
+          expect.objectContaining({
+            facetField: facetResponse.field,
+            facetId: facetResponse.facetId,
+            facetTitle: `${facetResponse.field}_${facetResponse.facetId}`,
+            facetValue: `${facetResponse.values[0].value};${facetResponse.values[0].children[0].value}`,
+          })
         );
       });
     });
@@ -155,7 +200,7 @@ describe('facet-set-analytics-action-utils', () => {
               facetType: 'numericalRange',
               state: 'selected',
               facetPosition: 1,
-              title: facetResponse.field,
+              title: `${facetResponse.field}_${facetResponse.facetId}`,
             }),
           ])
         );
@@ -213,7 +258,7 @@ describe('facet-set-analytics-action-utils', () => {
               facetType: 'dateRange',
               state: 'selected',
               facetPosition: 1,
-              title: facetResponse.field,
+              title: `${facetResponse.field}_${facetResponse.facetId}`,
             }),
           ])
         );

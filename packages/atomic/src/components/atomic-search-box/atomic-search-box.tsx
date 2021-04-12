@@ -51,15 +51,13 @@ export class AtomicSearchBox {
    * Whether the submit button should be placed before the input.
    */
   @Prop() leadingSubmitButton = false;
-  @Prop({reflect: true, attribute: 'data-id'}) public _id = randomID(
-    'atomic-search-box-'
-  );
 
   private searchBox!: SearchBox;
   private inputRef!: HTMLInputElement;
   private valuesRef!: HTMLElement;
   private containerRef!: HTMLElement;
   private combobox!: Combobox;
+  private searchboxID: string;
 
   @BindStateToController('searchBox')
   @State()
@@ -68,8 +66,9 @@ export class AtomicSearchBox {
   @State() shouldShowSuggestions = false;
 
   constructor() {
+    this.searchboxID = randomID('atomic-search-box-');
     this.combobox = new Combobox({
-      id: this._id,
+      id: this.searchboxID,
       strings: this.strings,
       containerRef: () => this.containerRef,
       inputRef: () => this.inputRef,
@@ -195,7 +194,7 @@ export class AtomicSearchBox {
 
   private get suggestions() {
     return this.searchBoxState.suggestions.map((suggestion, index) => {
-      const id = `${this._id}-suggestion-${index}`;
+      const id = `${this.searchboxID}-suggestion-${index}`;
       return (
         <li
           onClick={() => {
@@ -205,9 +204,10 @@ export class AtomicSearchBox {
           part="suggestion"
           id={id}
           class="suggestion h-9 px-2 cursor-pointer text-left text-sm bg-transparent border-none shadow-none flex flex-row items-center"
-          innerHTML={suggestion.highlightedValue}
           value={index}
-        />
+        >
+          <pre class="font-sans" innerHTML={suggestion.highlightedValue}></pre>
+        </li>
       );
     });
   }

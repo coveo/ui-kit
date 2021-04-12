@@ -1,6 +1,7 @@
 import {useEffect, useState, FunctionComponent} from 'react';
 import {ResultList as HeadlessResultList} from '@coveo/headless';
 import {ResultLink} from './result-link';
+import {Quickview} from '../quickview/quickview.fn';
 
 interface ResultListProps {
   controller: HeadlessResultList;
@@ -22,11 +23,14 @@ export const ResultList: FunctionComponent<ResultListProps> = (props) => {
         {state.results.map((result) => (
           <li key={result.uniqueId}>
             <article>
-              <h2>
+              <h3>
                 {/* Make sure to log analytics when the result link is clicked. */}
                 <ResultLink result={result}>{result.title}</ResultLink>
-              </h2>
+              </h3>
               <p>{result.excerpt}</p>
+              <div>
+                <Quickview result={result} />
+              </div>
             </article>
           </li>
         ))}
