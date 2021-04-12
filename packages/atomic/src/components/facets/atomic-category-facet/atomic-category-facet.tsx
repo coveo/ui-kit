@@ -23,11 +23,7 @@ import {
 
 import RightArrow from 'coveo-styleguide/resources/icons/svg/arrow-right-rounded.svg';
 import LeftArrow from 'coveo-styleguide/resources/icons/svg/arrow-left-rounded.svg';
-import {
-  FacetSearch,
-  FacetSearchController,
-  FacetSearchState,
-} from '../facet-search/facet-search';
+import {FacetSearch, FacetSearchComponent} from '../facet-search/facet-search';
 
 /**
  * A hierarchical category facet component. It is displayed as a facet in desktop browsers and as
@@ -46,7 +42,7 @@ import {
   shadow: true,
 })
 export class AtomicCategoryFacet
-  implements InitializableComponent, FacetSearchState, BaseFacetState {
+  implements InitializableComponent, FacetSearchComponent, BaseFacetState {
   @InitializeBindings() public bindings!: Bindings;
   public facet!: CategoryFacet;
 
@@ -69,6 +65,8 @@ export class AtomicCategoryFacet
     showLess: () => this.bindings.i18n.t('showLess'),
     facetValue: (variables) => this.bindings.i18n.t('facetValue', variables),
     allCategories: () => this.bindings.i18n.t('allCategories'),
+    pathPrefix: () => this.bindings.i18n.t('in'),
+    under: (variables) => this.bindings.i18n.t('under', variables),
   };
 
   @State() public isExpanded = false;
@@ -128,9 +126,7 @@ export class AtomicCategoryFacet
     this.facet = buildCategoryFacet(this.bindings.engine, {options});
     this.strings[this.label] = () => this.bindings.i18n.t(this.label);
     if (this.enableFacetSearch) {
-      this.facetSearch = new FacetSearch({
-        controller: new FacetSearchController(this),
-      });
+      this.facetSearch = new FacetSearch(this);
     }
     this.facetId = this.facet.state.facetId;
     this.bindings.store.state.facets[this.facetId] = {

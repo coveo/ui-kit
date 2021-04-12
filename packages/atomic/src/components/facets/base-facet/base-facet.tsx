@@ -37,7 +37,7 @@ export const BaseFacet: FunctionalComponent<BaseFacetProps> = (
     <button
       part="close-button"
       onClick={() => props.controller.closeModal()}
-      class="ml-2"
+      class="ml-2 lg:hidden"
     >
       <div
         class="h-5 w-5 text-on-background fill-current"
