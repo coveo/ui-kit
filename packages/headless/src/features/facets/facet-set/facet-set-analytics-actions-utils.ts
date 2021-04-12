@@ -1,5 +1,4 @@
 import {FacetStateMetadata} from 'coveo.analytics/dist/definitions/searchPage/searchPageEvents';
-import {SearchAppState} from '../../../state/search-app-state';
 import {
   CategoryFacetSection,
   DateFacetSection,
@@ -72,7 +71,7 @@ export function buildFacetSelectionChangeMetadata(
 }
 
 export function getStateNeededForFacetMetadata(
-  s: Partial<SearchAppState>
+  s: Partial<SectionNeededForFacetMetadata>
 ): SectionNeededForFacetMetadata {
   return {
     facetSet: s.facetSet || getFacetSetInitialState(),
