@@ -3,6 +3,51 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.10.0-alpha.14](https://github.com/coveo/ui-kit/compare/v0.10.0-alpha.13...v0.10.0-alpha.14) (2021-04-12)
+
+
+### Bug Fixes
+
+* **atomic:** facet value label should not wrap ([#678](https://github.com/coveo/ui-kit/issues/678)) ([c525d33](https://github.com/coveo/ui-kit/commit/c525d33d17c725565bc6cb8c288c4f9e7783f6f3))
+* **atomic:** sort dropdown should hide on no results ([#684](https://github.com/coveo/ui-kit/issues/684)) ([0624788](https://github.com/coveo/ui-kit/commit/062478856301d6db76bd7d00971883eb015fcd3b))
+
+
+
+
+
+# [0.10.0-alpha.13](https://github.com/coveo/ui-kit/compare/v0.10.0-alpha.12...v0.10.0-alpha.13) (2021-04-12)
+
+
+### Features
+
+* **headless:** expose debug actions ([#692](https://github.com/coveo/ui-kit/issues/692)) ([dc156d0](https://github.com/coveo/ui-kit/commit/dc156d0d507a8568b41557ee5e98d856b156320d))
+
+
+
+
+
+# [0.10.0-alpha.12](https://github.com/coveo/ui-kit/compare/v0.10.0-alpha.11...v0.10.0-alpha.12) (2021-04-09)
+
+
+### Bug Fixes
+
+* **atomic:** cleanup end-inclusive for facet range in index.html ([#681](https://github.com/coveo/ui-kit/issues/681)) ([72bdd4b](https://github.com/coveo/ui-kit/commit/72bdd4b16c90bb6caec21250bbbf72eab87f222e))
+* **atomic:** cleanup index.html capitalize CSS rule ([#680](https://github.com/coveo/ui-kit/issues/680)) ([bbaef92](https://github.com/coveo/ui-kit/commit/bbaef927497999d1c55821ef07648cfb9b4d171d))
+* **atomic:** cleanup index.html templates ([#688](https://github.com/coveo/ui-kit/issues/688)) ([cb8b0d6](https://github.com/coveo/ui-kit/commit/cb8b0d6a2fd7160a8b52cf0d385cb94dd4809f17))
+* **atomic:** fix .side-by-side container alignment ([#679](https://github.com/coveo/ui-kit/issues/679)) ([e56847f](https://github.com/coveo/ui-kit/commit/e56847fe03036348367047e2e2d6f43c21fab88f))
+* **atomic:** fix query suggestions whitespace ([#685](https://github.com/coveo/ui-kit/issues/685)) ([001a6ac](https://github.com/coveo/ui-kit/commit/001a6acc16749f18038ccde981d604ef7a1b9d33))
+* **atomic:** remove id prop from search box ([#687](https://github.com/coveo/ui-kit/issues/687)) ([349f12b](https://github.com/coveo/ui-kit/commit/349f12be9b8a6110a8cc6acca7e7e927dba3c90d))
+* **atomic:** remove tab ([#691](https://github.com/coveo/ui-kit/issues/691)) ([d190106](https://github.com/coveo/ui-kit/commit/d190106eb9263b57a36734f26c82cc65d5581e80))
+
+
+### Features
+
+* **headless:** add isLoading to Quickview controller ([#686](https://github.com/coveo/ui-kit/issues/686)) ([8596c33](https://github.com/coveo/ui-kit/commit/8596c337545ad96e25d13c77e7057f22ca300af9))
+
+
+
+
+
 # [0.10.0-alpha.11](https://github.com/coveo/ui-kit/compare/v0.10.0-alpha.10...v0.10.0-alpha.11) (2021-04-09)
 
 

@@ -41,7 +41,6 @@
  - [atomic-search-interface](../atomic-search-interface)
  - [atomic-sort-dropdown](../atomic-sort-dropdown)
  - [atomic-sort-expression](../atomic-sort-expression)
- - [atomic-tab](../atomic-tab)
  - [atomic-text](../atomic-text)
 
 ### Graph
@@ -71,7 +70,6 @@ graph TD;
   atomic-search-interface --> atomic-component-error
   atomic-sort-dropdown --> atomic-component-error
   atomic-sort-expression --> atomic-component-error
-  atomic-tab --> atomic-component-error
   atomic-text --> atomic-component-error
   style atomic-component-error fill:#f9f,stroke:#333,stroke-width:4px
 ```
