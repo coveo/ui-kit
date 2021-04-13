@@ -4,11 +4,7 @@ import {
   injectComponent,
   shouldRenderErrorComponent,
 } from '../utils/setupComponent';
-import {
-  createAliasLi,
-  createAliasNavigation,
-  PagerSelectors,
-} from './pager-selectors';
+import {createAliasNavigation, PagerSelectors} from './pager-selectors';
 
 describe('Pager Test Suites', () => {
   function setupPager(attributes = '') {
