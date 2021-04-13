@@ -2,10 +2,12 @@ import {h} from '@stencil/core';
 import SearchIcon from 'coveo-styleguide/resources/icons/svg/search.svg';
 import ClearIcon from 'coveo-styleguide/resources/icons/svg/clear.svg';
 import {Combobox, ComboboxStrings} from '../../../utils/combobox';
-import {Facet, CategoryFacet} from '@coveo/headless';
+import {Facet, CategoryFacet, CategoryFacetSearchResult} from '@coveo/headless';
 import {randomID} from '../../../utils/utils';
 import {sanitize} from '../../../utils/xss-utils';
 import {regexEncode} from '../../../utils/string-utils';
+
+type FacetSearchResult = CategoryFacetSearchResult;
 
 export interface FacetSearchStrings extends ComboboxStrings {
   placeholder: () => string;
@@ -17,7 +19,8 @@ export interface FacetSearchComponent {
   facetSearchQuery: string;
   showFacetSearchResults: boolean;
   facet: Facet | CategoryFacet;
-  renderSearchResults: () => HTMLLIElement[];
+  renderSearchResult: (searchResult: FacetSearchResult) => HTMLLIElement[];
+  ariaLabelForSearchResult: (searchResult: FacetSearchResult) => string;
 }
 
 export class FacetSearch {
@@ -80,7 +83,7 @@ export class FacetSearch {
   }
 
   private get facetSearchResults() {
-    return this.component.facet.state.facetSearch.values;
+    return this.component.facet.state.facetSearch.values as FacetSearchResult[];
   }
 
   private get strings() {
@@ -94,7 +97,7 @@ export class FacetSearch {
   }
 
   public onSelectValue(index: number) {
-    this.facetSearchController.select(this.facetSearchResults[index] as any);
+    this.facetSearchController.select(this.facetSearchResults[index]);
     this.text = '';
     this.combobox.onInputBlur();
   }
@@ -169,6 +172,21 @@ export class FacetSearch {
     );
   }
 
+  private get resultList() {
+    return this.facetSearchResults.map((searchResult, index) => (
+      <li
+        onClick={() => this.onSelectValue(index)}
+        onMouseDown={(e) => e.preventDefault()}
+        part="search-result"
+        class={FacetSearch.searchResultClasses}
+        value={index}
+        aria-label={this.component.ariaLabelForSearchResult(searchResult)}
+      >
+        {this.component.renderSearchResult(searchResult)}
+      </li>
+    ));
+  }
+
   private get searchResults() {
     const showResults = this.component.showFacetSearchResults;
     return (
@@ -180,7 +198,7 @@ export class FacetSearch {
         }
         ref={(el) => (this.valuesRef = el as HTMLElement)}
       >
-        {this.component.renderSearchResults()}
+        {this.resultList}
         {this.showMoreSearchResults}
       </ul>
     );
