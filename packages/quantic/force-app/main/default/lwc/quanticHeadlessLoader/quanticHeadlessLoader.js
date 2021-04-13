@@ -44,7 +44,7 @@ const setInitializedCallback = (callback, engineId) => {
  * @param {string} engineId The id of the engine. 
  */
 const executeInitializedCallback = (engineId) => {
-  window.coveoHeadless[engineId].initializedCallback();
+  window.coveoHeadless[engineId].initializedCallback(window.coveoHeadless[engineId].engine);
 };
 
 /**

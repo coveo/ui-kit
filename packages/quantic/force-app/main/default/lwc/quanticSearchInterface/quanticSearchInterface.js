@@ -39,8 +39,8 @@ export default class QuanticSearchInterface extends LightningElement {
     }
   }
 
-  performInitialQuery = async () => {
-    (await getHeadlessEngine(this.engineId)).dispatch(
+  performInitialQuery = async (engine) => {
+    engine.dispatch(
       CoveoHeadless.SearchActions.executeSearch(
         CoveoHeadless.AnalyticsActions.logInterfaceLoad()
       )
