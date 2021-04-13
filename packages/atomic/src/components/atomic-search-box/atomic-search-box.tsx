@@ -240,7 +240,7 @@ export class AtomicSearchBox {
       <div
         part="input-wrapper"
         ref={(el) => (this.containerRef = el as HTMLElement)}
-        class={`input-wrapper flex flex-grow items-center border border-divider ${roundedClasses}`}
+        class={`input-wrapper flex flex-grow items-center border border-divider bg-white ${roundedClasses}`}
       >
         {this.input}
         {this.clearButton}
