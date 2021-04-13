@@ -140,7 +140,7 @@ export function buildPager(
   engine: Engine<unknown>,
   props: PagerProps = {}
 ): Pager {
-  if (!loadPagination(engine)) {
+  if (!loadPagerReducers(engine)) {
     throw new Error();
   }
 
@@ -217,7 +217,7 @@ export function buildPager(
   };
 }
 
-function loadPagination(
+function loadPagerReducers(
   engine: Engine<unknown>
 ): engine is Engine<PaginationSection & ConfigurationSection> {
   engine.addReducers({configuration, pagination});
