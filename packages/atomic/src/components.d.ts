@@ -367,16 +367,6 @@ export namespace Components {
          */
         "expression": string;
     }
-    interface AtomicTab {
-        /**
-          * The constant query expression that the Tab should add to any outgoing query.  Example: `@objecttype==Message`
-         */
-        "expression": string;
-        /**
-          * Whether the tab is set to active.
-         */
-        "isActive": boolean;
-    }
     interface AtomicText {
         /**
           * Count value used for plurals
@@ -605,12 +595,6 @@ declare global {
         prototype: HTMLAtomicSortExpressionElement;
         new (): HTMLAtomicSortExpressionElement;
     };
-    interface HTMLAtomicTabElement extends Components.AtomicTab, HTMLStencilElement {
-    }
-    var HTMLAtomicTabElement: {
-        prototype: HTMLAtomicTabElement;
-        new (): HTMLAtomicTabElement;
-    };
     interface HTMLAtomicTextElement extends Components.AtomicText, HTMLStencilElement {
     }
     var HTMLAtomicTextElement: {
@@ -654,7 +638,6 @@ declare global {
         "atomic-search-interface": HTMLAtomicSearchInterfaceElement;
         "atomic-sort-dropdown": HTMLAtomicSortDropdownElement;
         "atomic-sort-expression": HTMLAtomicSortExpressionElement;
-        "atomic-tab": HTMLAtomicTabElement;
         "atomic-text": HTMLAtomicTextElement;
     }
 }
@@ -1013,16 +996,6 @@ declare namespace LocalJSX {
          */
         "expression": string;
     }
-    interface AtomicTab {
-        /**
-          * The constant query expression that the Tab should add to any outgoing query.  Example: `@objecttype==Message`
-         */
-        "expression"?: string;
-        /**
-          * Whether the tab is set to active.
-         */
-        "isActive"?: boolean;
-    }
     interface AtomicText {
         /**
           * Count value used for plurals
@@ -1070,7 +1043,6 @@ declare namespace LocalJSX {
         "atomic-search-interface": AtomicSearchInterface;
         "atomic-sort-dropdown": AtomicSortDropdown;
         "atomic-sort-expression": AtomicSortExpression;
-        "atomic-tab": AtomicTab;
         "atomic-text": AtomicText;
     }
 }
@@ -1114,7 +1086,6 @@ declare module "@stencil/core" {
             "atomic-search-interface": LocalJSX.AtomicSearchInterface & JSXBase.HTMLAttributes<HTMLAtomicSearchInterfaceElement>;
             "atomic-sort-dropdown": LocalJSX.AtomicSortDropdown & JSXBase.HTMLAttributes<HTMLAtomicSortDropdownElement>;
             "atomic-sort-expression": LocalJSX.AtomicSortExpression & JSXBase.HTMLAttributes<HTMLAtomicSortExpressionElement>;
-            "atomic-tab": LocalJSX.AtomicTab & JSXBase.HTMLAttributes<HTMLAtomicTabElement>;
             "atomic-text": LocalJSX.AtomicText & JSXBase.HTMLAttributes<HTMLAtomicTextElement>;
         }
     }
