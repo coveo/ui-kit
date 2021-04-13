@@ -25,6 +25,9 @@ module.exports = {
         "error": "var(--atomic-error)",
         "on-error": "var(--atomic-on-error)",
         "visited": "var(--atomic-visited)",
+      },
+      borderRadius: {
+        "DEFAULT": "var(--atomic-border-radius)"
       }
     },
     backgroundColor: (theme) => ({

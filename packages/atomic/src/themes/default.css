@@ -15,6 +15,14 @@
   --atomic-on-error: #ffffff;
   --atomic-visited: #9333ea;
 
+  /* Border */
+  --atomic-border-radius-sm: 0.125rem;
+  --atomic-border-radius: 0.25rem;
+  --atomic-border-radius-md: 0.375rem;
+  --atomic-border-radius-lg: 0.5rem;
+  --atomic-border-radius-full: 100%;
+  --atomic-divider: #c5cacf;
+
   /* Others */
   --atomic-font-family: Lato, Arial, Helvetica, sans-serif;
   --atomic-separator: ' > ';
