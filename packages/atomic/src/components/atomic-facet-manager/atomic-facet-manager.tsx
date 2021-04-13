@@ -16,8 +16,7 @@ interface FacetElement extends HTMLElement {
 }
 
 /**
- * The `atomic-facet-manager` reorders facets and their values to match the most recent search response with the most relevant results.
- * A facet component must be defined within the opening and closing tags of an `atomic-facet-manager` to leverage this functionality.
+ * The `atomic-facet-manager` helps reorder facets and their values to match the most recent search response with the most relevant results. A facet component is slotted within an `atomic-facet-manager` to leverage this functionality.
  */
 @Component({
   tag: 'atomic-facet-manager',
