@@ -148,8 +148,8 @@ export class AtomicPager implements InitializableComponent {
     }
 
     return (
-      <nav aria-label={this.strings.pagination()} class="items-center ">
-        <ul part="buttons" class="flex justify-between space-x-2">
+      <nav aria-label={this.strings.pagination()} class="items-center">
+        <ul part="buttons" class="flex space-x-2 flex-wrap">
           {this.previousButton}
           {this.pages}
           {this.nextButton}
