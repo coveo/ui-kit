@@ -56,10 +56,6 @@ export class AtomicPager implements InitializableComponent {
    * Specifies how many page buttons to display in the pager.
    */
   @Prop() numberOfPages = 5;
-  /**
-   * Specifies whether the **Previous** and **Next** buttons should appear at each end of the pager when appropriate.
-   */
-  @Prop() enableNavigationButtons = true;
 
   public initialize() {
     this.searchStatus = buildSearchStatus(this.bindings.engine);
@@ -154,9 +150,9 @@ export class AtomicPager implements InitializableComponent {
     return (
       <nav aria-label={this.strings.pagination()} class="items-center ">
         <ul part="buttons" class="flex justify-between space-x-2">
-          {this.enableNavigationButtons && this.previousButton}
+          {this.previousButton}
           {this.pages}
-          {this.enableNavigationButtons && this.nextButton}
+          {this.nextButton}
         </ul>
       </nav>
     );

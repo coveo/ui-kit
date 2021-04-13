@@ -3,6 +3,29 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.10.0-alpha.18](https://github.com/coveo/ui-kit/compare/v0.10.0-alpha.17...v0.10.0-alpha.18) (2021-04-13)
+
+
+### Features
+
+* **atomic:** change style of field value in default template ([#702](https://github.com/coveo/ui-kit/issues/702)) ([61b9ebc](https://github.com/coveo/ui-kit/commit/61b9ebc1c7d1e3238986995717229aa2df4b0cd7))
+* **atomic:** remove enableNavigationButtons prop for Pager ([#704](https://github.com/coveo/ui-kit/issues/704)) ([1ac1c61](https://github.com/coveo/ui-kit/commit/1ac1c613cb65648df4cb52daef2d348b844ab02f))
+
+
+
+
+
+# [0.10.0-alpha.17](https://github.com/coveo/ui-kit/compare/v0.10.0-alpha.16...v0.10.0-alpha.17) (2021-04-13)
+
+
+### Features
+
+* **atomic:** use the getFacetState method of the SearchPageClientProvider ([#696](https://github.com/coveo/ui-kit/issues/696)) ([729163e](https://github.com/coveo/ui-kit/commit/729163eb111e4e1d65755db96b7e850163f82319))
+
+
+
+
+
 # [0.10.0-alpha.16](https://github.com/coveo/ui-kit/compare/v0.10.0-alpha.15...v0.10.0-alpha.16) (2021-04-13)
 
 **Note:** Version bump only for package ui-kit
