@@ -1,4 +1,4 @@
-import {BaseParam} from '../../search-api-params';
+import {BaseParam} from '../../../platform-service-params';
 import {SearchRequest} from '../../search/search-request';
 
 export interface FacetSearchRequestOptions {

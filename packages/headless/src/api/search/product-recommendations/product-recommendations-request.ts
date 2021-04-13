@@ -1,14 +1,16 @@
 import {
-  ActionsHistoryParam,
   BaseParam,
   ContextParam,
-  FieldsToIncludeParam,
   LocaleParam,
-  MachineLearningParam,
   NumberOfResultsParam,
+  VisitorIDParam,
+} from '../../platform-service-params';
+import {
+  ActionsHistoryParam,
+  FieldsToIncludeParam,
+  MachineLearningParam,
   RecommendationParam,
   SearchHubParam,
-  VisitorIDParam,
 } from '../search-api-params';
 
 export type ProductRecommendationsRequest = BaseParam &

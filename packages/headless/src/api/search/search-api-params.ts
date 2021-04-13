@@ -2,16 +2,7 @@ import {history} from 'coveo.analytics';
 import {FacetOptions} from '../../features/facet-options/facet-options';
 import {AnyFacetRequest} from '../../features/facets/generic/interfaces/generic-facet-request';
 import {HTTPContentType, HttpMethods} from '../platform-client';
-
-export interface BaseParam {
-  url: string;
-  accessToken: string;
-  organizationId: string;
-}
-
-export interface ContextParam {
-  context?: Record<string, string | string[]>;
-}
+import {BaseParam} from '../platform-service-params';
 
 export interface QueryParam {
   q?: string;
@@ -31,10 +22,6 @@ export interface AdvancedQueryParam {
 
 export interface ConstantQueryParam {
   cq?: string;
-}
-
-export interface NumberOfResultsParam {
-  numberOfResults?: number;
 }
 
 export interface SortCriteriaParam {
@@ -61,10 +48,6 @@ export interface FieldsToIncludeParam {
   fieldsToInclude?: string[];
 }
 
-export interface VisitorIDParam {
-  visitorId?: string;
-}
-
 export interface FacetOptionsParam {
   facetOptions?: FacetOptions;
 }
@@ -75,14 +58,6 @@ export interface RecommendationParam {
 
 export interface MachineLearningParam {
   mlParameters: MachineLearningECommerceParameters;
-}
-
-export interface DebugParam {
-  debug?: boolean;
-}
-
-export interface LocaleParam {
-  locale?: string;
 }
 
 export interface MachineLearningECommerceParameters {
