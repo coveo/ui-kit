@@ -28,6 +28,7 @@ import {
   validateOptions,
 } from '../../utils/validate-payload';
 import {configuration, pagination} from '../../app/reducers';
+import {failedToLoadReducers} from '../../utils/errors';
 
 export interface PagerInitialState {
   /**
@@ -141,7 +142,7 @@ export function buildPager(
   props: PagerProps = {}
 ): Pager {
   if (!loadPagerReducers(engine)) {
-    throw new Error();
+    throw failedToLoadReducers;
   }
 
   const controller = buildController(engine);
