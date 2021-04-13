@@ -6,6 +6,7 @@ import {
   FacetOptions,
   FacetValue,
   FacetSortCriterion,
+  SpecificFacetSearchResult,
 } from '@coveo/headless';
 import {
   Bindings,
@@ -166,6 +167,39 @@ export class AtomicFacet
         {this.strings.showLess()}
       </button>
     );
+  }
+
+  public renderSearchResults() {
+    return this.facetState.facetSearch.values.map((searchResult, index) => (
+      <li
+        onClick={() => this.facetSearch!.onSelectValue(index)}
+        onMouseDown={(e) => e.preventDefault()}
+        part="search-result"
+        class={FacetSearch.searchResultClasses}
+        value={index}
+        aria-label={this.ariaLabelForSearchResult(searchResult)}
+      >
+        <div class="flex" aria-hidden>
+          <span
+            class="whitespace-nowrap overflow-ellipsis overflow-hidden"
+            innerHTML={FacetSearch.highlightSearchResult(
+              searchResult.displayValue,
+              this.facetSearchQuery
+            )}
+          />
+          <span class="number-of-values ml-1 text-on-background-variant">
+            ({searchResult.count.toLocaleString(this.bindings.i18n.language)})
+          </span>
+        </div>
+      </li>
+    ));
+  }
+
+  public ariaLabelForSearchResult(searchResult: SpecificFacetSearchResult) {
+    return this.strings.facetValue({
+      numberOfResults: searchResult.count,
+      value: searchResult.displayValue,
+    });
   }
 
   public render() {
