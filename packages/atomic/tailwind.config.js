@@ -27,7 +27,11 @@ module.exports = {
         "visited": "var(--atomic-visited)",
       },
       borderRadius: {
-        "DEFAULT": "var(--atomic-border-radius)"
+        "sm": "var(--atomic-border-radius-sm)",
+        "DEFAULT": "var(--atomic-border-radius)",
+        "md": "var(--atomic-border-radius-md)",
+        "lg": "var(--atomic-border-radius-lg)",
+        "full": "var(--atomic-border-radius-full)",
       }
     },
     backgroundColor: (theme) => ({
