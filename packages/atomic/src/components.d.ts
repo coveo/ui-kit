@@ -162,10 +162,6 @@ export namespace Components {
     }
     interface AtomicPager {
         /**
-          * Specifies whether the **Previous** and **Next** buttons should appear at each end of the pager when appropriate.
-         */
-        "enableNavigationButtons": boolean;
-        /**
           * Specifies how many page buttons to display in the pager.
          */
         "numberOfPages": number;
@@ -793,10 +789,6 @@ declare namespace LocalJSX {
         "start": number;
     }
     interface AtomicPager {
-        /**
-          * Specifies whether the **Previous** and **Next** buttons should appear at each end of the pager when appropriate.
-         */
-        "enableNavigationButtons"?: boolean;
         /**
           * Specifies how many page buttons to display in the pager.
          */
