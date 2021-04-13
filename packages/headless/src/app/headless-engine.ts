@@ -292,8 +292,8 @@ export class HeadlessEngine<Reducers extends ReducersMapObject>
   }
 
   public addReducers(reducers: ReducersMapObject) {
-    const reducer = this.reducerManager.combine(reducers);
-    this.reduxStore.replaceReducer(reducer);
+    this.reducerManager.add(reducers);
+    this.reduxStore.replaceReducer(this.reducerManager.reducer);
   }
 
   private validateConfiguration(options: HeadlessOptions<Reducers>) {
