@@ -1,4 +1,7 @@
 import {
+  buildTestUrl,
+  injectComponent,
+  setupIntercept,
   setUpPage,
   shouldRenderErrorComponent,
 } from '../../utils/setupComponent';
@@ -357,4 +360,23 @@ describe('Facet with custom delimitingCharacter', () => {
     setupFacet(facetProp.field, facetProp.label, 'delimiting-character=","');
   });
   it('Should generate Facet correctly');
+});
+
+describe('Facet with selected value on initialization', () => {
+  const field = 'author';
+  beforeEach(() => {
+    setupIntercept();
+    cy.visit(buildTestUrl(`f[${field}]=Cervantes`));
+    injectComponent(`<atomic-facet field="${field}"></atomic-facet>`, true);
+  });
+
+  it('Facet state should be included in UA interfaceLoad event', () => {
+    cy.wait('@coveoAnalytics').then(({request}) => {
+      const analyticsBody = request.body;
+      console.log('analyticsBody', analyticsBody);
+      expect(analyticsBody).to.have.property('actionCause', 'interfaceLoad');
+      expect(analyticsBody.facetState[0]).to.have.property('state', 'selected');
+      expect(analyticsBody.facetState[0]).to.have.property('field', field);
+    });
+  });
 });
