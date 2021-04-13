@@ -7,7 +7,10 @@ import {
 import {SearchResponseSuccess} from '../../api/search/search/search-response';
 import {snapshot} from '../history/history-actions';
 import {logDidYouMeanAutomatic} from '../did-you-mean/did-you-mean-analytics-actions';
-import {applyDidYouMeanCorrection} from '../did-you-mean/did-you-mean-actions';
+import {
+  applyDidYouMeanCorrection,
+  didYouMeanCorrectionReceived,
+} from '../did-you-mean/did-you-mean-actions';
 import {updateQuery} from '../query/query-actions';
 import {
   AdvancedSearchQueriesSection,
@@ -131,6 +134,9 @@ export const executeSearch = createAsyncThunk<
       };
     }
 
+    if (state.query?.q) {
+      dispatch(didYouMeanCorrectionReceived(state.query?.q));
+    }
     const {correctedQuery} = fetched.response.success.queryCorrections[0];
     const retried = await automaticallyRetryQueryWithCorrection(
       extra.searchAPIClient,

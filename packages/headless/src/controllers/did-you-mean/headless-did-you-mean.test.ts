@@ -20,25 +20,4 @@ describe('did you mean', () => {
     buildDidYouMean(e).applyCorrection();
     expect(e.actions).toContainEqual(applyDidYouMeanCorrection('bar'));
   });
-
-  [
-    {corrected: 'university sports', expected: 'university sports1'},
-    {corrected: 'sports', expected: 'sports1'},
-    {corrected: 'sports university', expected: 'sports1 university'},
-    {corrected: 'foo bar', expected: 'foo bar'},
-  ].forEach((testCase) => {
-    it('should have a state property containing the original performed query', () => {
-      const e = buildMockSearchAppEngine();
-      e.state.didYouMean.queryCorrection.correctedQuery = testCase.corrected;
-      e.state.didYouMean.queryCorrection.wordCorrections = [
-        {
-          correctedWord: 'sports',
-          length: 6,
-          offset: 11,
-          originalWord: 'sports1',
-        },
-      ];
-      expect(buildDidYouMean(e).state.originalQuery).toBe(testCase.expected);
-    });
-  });
 });

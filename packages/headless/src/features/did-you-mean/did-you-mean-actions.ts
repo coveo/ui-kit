@@ -21,3 +21,11 @@ export const applyDidYouMeanCorrection = createAction(
   'didYouMean/correction',
   (payload: string) => validatePayload(payload, requiredNonEmptyString)
 );
+
+/**
+ * Set the original query performed when a query correction is applied
+ */
+export const didYouMeanCorrectionReceived = createAction(
+  'didYouMean/correctionReceived',
+  (payload: string) => validatePayload(payload, requiredNonEmptyString)
+);

@@ -71,19 +71,6 @@ export function buildDidYouMean(
 
   dispatch(enableDidYouMean());
 
-  const rebuildOriginalQuery = (state: DidYouMeanSection) => {
-    return state.didYouMean.queryCorrection.correctedQuery
-      .split(' ')
-      .reduce((current, possiblyCorrected, idx) => {
-        const correctionFound = state.didYouMean.queryCorrection.wordCorrections.find(
-          (correction) => correction.correctedWord === possiblyCorrected
-        );
-        return `${current}${idx === 0 ? '' : ' '}${
-          correctionFound ? correctionFound.originalWord : possiblyCorrected
-        }`;
-      }, '');
-  };
-
   return {
     ...controller,
 
@@ -91,7 +78,7 @@ export function buildDidYouMean(
       const state = engine.state;
 
       return {
-        originalQuery: rebuildOriginalQuery(state),
+        originalQuery: state.didYouMean.originalQuery,
         wasCorrectedTo: state.didYouMean.wasCorrectedTo,
         wasAutomaticallyCorrected: state.didYouMean.wasAutomaticallyCorrected,
         queryCorrection: state.didYouMean.queryCorrection,

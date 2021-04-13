@@ -1,5 +1,9 @@
 import {didYouMeanReducer} from './did-you-mean-slice';
-import {enableDidYouMean, disableDidYouMean} from './did-you-mean-actions';
+import {
+  enableDidYouMean,
+  disableDidYouMean,
+  didYouMeanCorrectionReceived,
+} from './did-you-mean-actions';
 import {executeSearch} from '../search/search-actions';
 import {buildMockSearchResponse} from '../../test/mock-search-response';
 import {buildMockSearch} from '../../test/mock-search';
@@ -20,6 +24,14 @@ describe('did you mean slice', () => {
     expect(didYouMeanReducer(state, enableDidYouMean).enableDidYouMean).toBe(
       true
     );
+  });
+
+  it('should handle didYouMeanCorrectionReceived', () => {
+    const newState = didYouMeanReducer(
+      state,
+      didYouMeanCorrectionReceived('foo')
+    );
+    expect(newState.originalQuery).toBe('foo');
   });
 
   it('should handle disable did you mean', () => {
@@ -75,5 +87,20 @@ describe('did you mean slice', () => {
     expect(
       didYouMeanReducer(state, searchAction).queryCorrection.correctedQuery
     ).toBe('');
+  });
+
+  it('should set originalQuery to empty if no corrections are returned by the API on search fulfilled', () => {
+    state.originalQuery = 'foo';
+    const searchAction = executeSearch.fulfilled(
+      buildMockSearch({
+        response: buildMockSearchResponse({
+          queryCorrections: [],
+        }),
+      }),
+      '',
+      logSearchEvent({evt: 'foo'})
+    );
+
+    expect(didYouMeanReducer(state, searchAction).originalQuery).toBe('');
   });
 });

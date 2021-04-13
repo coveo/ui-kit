@@ -19,6 +19,10 @@ export interface DidYouMeanState {
    * The query correction that is currently applied by the "did you mean" module.
    */
   queryCorrection: QueryCorrection;
+  /**
+   * The original query that was originally performed when an automatic correction is executed.
+   */
+  originalQuery: string;
 }
 
 export const emptyCorrection = () => ({
@@ -32,5 +36,6 @@ export function getDidYouMeanInitialState(): DidYouMeanState {
     wasCorrectedTo: '',
     wasAutomaticallyCorrected: false,
     queryCorrection: emptyCorrection(),
+    originalQuery: '',
   };
 }
