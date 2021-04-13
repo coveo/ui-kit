@@ -1,20 +1,23 @@
 import {h} from '@stencil/core';
 import SearchIcon from 'coveo-styleguide/resources/icons/svg/search.svg';
 import ClearIcon from 'coveo-styleguide/resources/icons/svg/clear.svg';
-import {Combobox} from '../../../utils/combobox';
-import {Bindings, I18nState} from '../../../utils/initialization-utils';
+import {Combobox, ComboboxStrings} from '../../../utils/combobox';
 import {Facet, CategoryFacet} from '@coveo/headless';
 import {randomID} from '../../../utils/utils';
 import {sanitize} from '../../../utils/xss-utils';
 import {regexEncode} from '../../../utils/string-utils';
 
+export interface FacetSearchStrings extends ComboboxStrings {
+  placeholder: () => string;
+  showMore: () => string;
+}
+
 export interface FacetSearchComponent {
-  bindings: Bindings;
-  strings: I18nState;
+  strings: FacetSearchStrings;
   facetSearchQuery: string;
   showFacetSearchResults: boolean;
   facet: Facet | CategoryFacet;
-  renderSearchResults: () => HTMLLinkElement[];
+  renderSearchResults: () => HTMLLIElement[];
 }
 
 export class FacetSearch {

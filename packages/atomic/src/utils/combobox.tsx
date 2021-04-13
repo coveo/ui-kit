@@ -1,8 +1,13 @@
 import {I18nState} from './initialization-utils';
 
+export interface ComboboxStrings extends I18nState {
+  searchBox: () => string;
+  querySuggestionList: () => string;
+}
+
 export interface ComboboxOptions {
   id: string;
-  strings: I18nState;
+  strings: ComboboxStrings;
   containerRef: () => HTMLElement;
   inputRef: () => HTMLInputElement;
   valuesRef: () => HTMLElement;

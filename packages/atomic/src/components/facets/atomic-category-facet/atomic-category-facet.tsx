@@ -12,7 +12,6 @@ import {
   Bindings,
   BindStateToController,
   BindStateToI18n,
-  I18nState,
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
@@ -24,7 +23,11 @@ import {
 
 import RightArrow from 'coveo-styleguide/resources/icons/svg/arrow-right-rounded.svg';
 import LeftArrow from 'coveo-styleguide/resources/icons/svg/arrow-left-rounded.svg';
-import {FacetSearch, FacetSearchComponent} from '../facet-search/facet-search';
+import {
+  FacetSearch,
+  FacetSearchComponent,
+  FacetSearchStrings,
+} from '../facet-search/facet-search';
 
 const SEPARATOR = '/';
 const ELLIPSIS = '...';
@@ -60,7 +63,7 @@ export class AtomicCategoryFacet
 
   @BindStateToI18n()
   @State()
-  public strings: I18nState = {
+  public strings: FacetSearchStrings = {
     clear: () => this.bindings.i18n.t('clear'),
     placeholder: () => this.bindings.i18n.t('search'),
     searchBox: () =>
