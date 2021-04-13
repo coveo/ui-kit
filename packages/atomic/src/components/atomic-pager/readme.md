@@ -7,10 +7,9 @@
 
 ## Properties
 
-| Property                  | Attribute                   | Description                                                                                                      | Type      | Default |
-| ------------------------- | --------------------------- | ---------------------------------------------------------------------------------------------------------------- | --------- | ------- |
-| `enableNavigationButtons` | `enable-navigation-buttons` | Specifies whether the **Previous** and **Next** buttons should appear at each end of the pager when appropriate. | `boolean` | `true`  |
-| `numberOfPages`           | `number-of-pages`           | Specifies how many page buttons to display in the pager.                                                         | `number`  | `5`     |
+| Property        | Attribute         | Description                                              | Type     | Default |
+| --------------- | ----------------- | -------------------------------------------------------- | -------- | ------- |
+| `numberOfPages` | `number-of-pages` | Specifies how many page buttons to display in the pager. | `number` | `5`     |
 
 
 ## Shadow Parts
