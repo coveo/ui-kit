@@ -42,6 +42,7 @@ import {
   AnalyticsClientSendEventHook,
   IRuntimeEnvironment,
 } from 'coveo.analytics';
+import {CaseAssistAPIClient} from '../api/service/case-assist/case-assist-api-client';
 
 export type LogLevel = LevelWithSilent;
 
@@ -201,6 +202,16 @@ export interface HeadlessConfigurationOptions {
      * See https://github.com/coveo/coveo.analytics.js for more info.
      */
     runtimeEnvironment?: IRuntimeEnvironment;
+  };
+
+  /**
+   * The global headless engine configuration options specific to the Case Assist API.
+   */
+  caseAssist?: {
+    /**
+     * Specifies the ID of the Case Assist configuration used to perform API calls.
+     */
+    caseAssistId: string;
   };
 }
 
@@ -381,6 +392,10 @@ export class HeadlessEngine<Reducers extends ReducersMapObject>
           postprocessQuerySuggestResponseMiddleware:
             search?.preprocessQuerySuggestResponseMiddleware ||
             NoopPostprocessQuerySuggestResponseMiddleware,
+        }),
+        caseAssistAPIClient: new CaseAssistAPIClient({
+          logger: this.logger,
+          renewAccessToken: () => this.renewAccessToken(),
         }),
         analyticsClientMiddleware: this.analyticsClientMiddleware(this.options),
         logger: this.logger,
