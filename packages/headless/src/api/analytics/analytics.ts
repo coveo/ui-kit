@@ -22,6 +22,11 @@ import {
 import {ContextPayload} from '../../features/context/context-state';
 import {PreprocessRequest} from '../preprocess-request';
 import {getLanguage} from './shared-analytics';
+import {
+  buildFacetStateMetadata,
+  SectionNeededForFacetMetadata,
+  getStateNeededForFacetMetadata,
+} from '../../features/facets/facet-set/facet-set-analytics-actions-utils';
 
 export type StateNeededByAnalyticsProvider = ConfigurationSection &
   Partial<
@@ -30,7 +35,8 @@ export type StateNeededByAnalyticsProvider = ConfigurationSection &
       PipelineSection &
       QuerySection &
       ContextSection &
-      RecommendationSection
+      RecommendationSection &
+      SectionNeededForFacetMetadata
   >;
 
 export class AnalyticsProvider implements SearchPageClientProvider {
@@ -92,6 +98,10 @@ export class AnalyticsProvider implements SearchPageClientProvider {
     // If not specified at config time, need to fallback to use current referrer parameter for search API, if any
     // Otherwise: fallback to `default`;
     return this.state.configuration.analytics.originLevel3 || 'default';
+  }
+
+  public getFacetState() {
+    return buildFacetStateMetadata(getStateNeededForFacetMetadata(this.state));
   }
 
   private mapResultsToAnalyticsDocument() {
