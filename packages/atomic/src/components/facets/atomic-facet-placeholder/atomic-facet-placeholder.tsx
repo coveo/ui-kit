@@ -1,10 +1,10 @@
 import {FunctionalComponent, h, Host} from '@stencil/core';
 
-export interface FacetPlaceholerProps {
+export interface FacetPlaceholderProps {
   numberOfValues: number;
 }
 
-export const FacetPlaceholer: FunctionalComponent<FacetPlaceholerProps> = ({
+export const FacetPlaceholder: FunctionalComponent<FacetPlaceholderProps> = ({
   numberOfValues,
 }) => {
   const facetValues = [];

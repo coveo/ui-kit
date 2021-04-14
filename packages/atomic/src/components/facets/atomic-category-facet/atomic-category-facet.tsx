@@ -31,7 +31,7 @@ import {
   FacetSearchComponent,
   FacetSearchStrings,
 } from '../facet-search/facet-search';
-import {FacetPlaceholer} from '../atomic-facet-placeholder/atomic-facet-placeholder';
+import {FacetPlaceholder} from '../atomic-facet-placeholder/atomic-facet-placeholder';
 
 const SEPARATOR = '/';
 const ELLIPSIS = '...';
@@ -345,7 +345,9 @@ export class AtomicCategoryFacet
 
     if (!this.searchStatusState.firstSearchExecuted) {
       return (
-        <FacetPlaceholer numberOfValues={this.numberOfValues}></FacetPlaceholer>
+        <FacetPlaceholder
+          numberOfValues={this.numberOfValues}
+        ></FacetPlaceholder>
       );
     }
 
