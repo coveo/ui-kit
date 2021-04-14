@@ -21,11 +21,7 @@ import {
   BaseFacetController,
   BaseFacetState,
 } from '../base-facet/base-facet';
-import {
-  FacetSearch,
-  FacetSearchController,
-  FacetSearchState,
-} from '../facet-search/facet-search';
+import {FacetSearch, FacetSearchComponent} from '../facet-search/facet-search';
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
@@ -45,7 +41,7 @@ import {
   shadow: true,
 })
 export class AtomicFacet
-  implements InitializableComponent, FacetSearchState, BaseFacetState {
+  implements InitializableComponent, FacetSearchComponent, BaseFacetState {
   @InitializeBindings() public bindings!: Bindings;
   public facet!: Facet;
   private facetSearch?: FacetSearch;
@@ -107,9 +103,7 @@ export class AtomicFacet
     this.facet = buildFacet(this.bindings.engine, {options});
     this.strings[this.label] = () => this.bindings.i18n.t(this.label);
     if (this.enableFacetSearch) {
-      this.facetSearch = new FacetSearch({
-        controller: new FacetSearchController(this),
-      });
+      this.facetSearch = new FacetSearch(this);
     }
     this.facetId = this.facet.state.facetId;
     this.bindings.store.state.facets[this.facetId] = {

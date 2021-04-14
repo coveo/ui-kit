@@ -18,7 +18,8 @@ import {
   InitializeBindings,
 } from '../../utils/initialization-utils';
 import {randomID} from '../../utils/utils';
-import ArrowBottomIcon from 'coveo-styleguide/resources/icons/svg/arrow-bottom-rounded.svg';
+import Arrow from '../../images/arrow-down.svg';
+
 import {Schema, StringValue} from '@coveo/bueno';
 
 interface SortDropdownOption {
@@ -125,7 +126,7 @@ export class AtomicSortDropdown implements InitializableComponent {
     return [
       <select
         id={this.id}
-        class="flex-grow appearance-none rounded bg-background text-secondary font-bold border border-divider py-1.5 pl-2 pr-8"
+        class="flex-grow appearance-none rounded bg-background text-secondary font-bold border border-divider py-3 pl-4 pr-24"
         part="select"
         aria-label={this.strings.sortBy()}
         onChange={(option) => this.select(option)}
@@ -134,7 +135,7 @@ export class AtomicSortDropdown implements InitializableComponent {
       </select>,
       <div
         class="absolute pointer-events-none right-3 fill-current w-3"
-        innerHTML={ArrowBottomIcon}
+        innerHTML={Arrow}
       ></div>,
     ];
   }
@@ -152,6 +153,10 @@ export class AtomicSortDropdown implements InitializableComponent {
           class="h-6 my-2 w-44 bg-divider animate-pulse"
         ></div>
       );
+    }
+
+    if (!this.searchStatusState.hasResults) {
+      return;
     }
 
     return [

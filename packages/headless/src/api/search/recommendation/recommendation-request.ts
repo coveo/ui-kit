@@ -1,9 +1,8 @@
+import {BaseParam, ContextParam} from '../../platform-service-params';
 import {
   ActionsHistoryParam,
   AdvancedQueryParam,
-  BaseParam,
   ConstantQueryParam,
-  ContextParam,
   FieldsToIncludeParam,
   PipelineParam,
   RecommendationParam,

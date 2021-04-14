@@ -1,8 +1,10 @@
 import {
-  ActionsHistoryParam,
   BaseParam,
   ContextParam,
   LocaleParam,
+} from '../../platform-service-params';
+import {
+  ActionsHistoryParam,
   PipelineParam,
   QueryParam,
   SearchHubParam,

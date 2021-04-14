@@ -1,10 +1,12 @@
 import {fetchResultContent} from '../../features/result-preview/result-preview-actions';
+import {buildDocumentQuickviewThunk} from '../../features/result-preview/result-preview-analytics-actions';
 import {SearchAppState} from '../../state/search-app-state';
 import {
   buildMockResult,
   buildMockSearchAppEngine,
   MockEngine,
 } from '../../test';
+import {buildMockResultPreviewState} from '../../test/mock-result-preview-state';
 import {
   buildQuickview,
   QuickviewOptions,
@@ -37,16 +39,28 @@ describe('Quickview', () => {
     expect(quickview.subscribe).toBeTruthy();
   });
 
-  it('#fetchResultContent dispatches a #fetchResultContent action with the result uniqueId', () => {
+  describe('#fetchResultContent', () => {
     const uniqueId = '1';
-    options.result = buildMockResult({uniqueId});
-    initQuickview();
 
-    quickview.fetchResultContent();
+    beforeEach(() => {
+      options.result = buildMockResult({uniqueId});
+      initQuickview();
 
-    const action = engine.findAsyncAction(fetchResultContent.pending);
+      quickview.fetchResultContent();
+    });
 
-    expect(action?.meta.arg).toEqual({uniqueId});
+    it('dispatches a #fetchResultContent action with the result uniqueId', () => {
+      const action = engine.findAsyncAction(fetchResultContent.pending);
+      expect(action?.meta.arg).toEqual({uniqueId});
+    });
+
+    it('dispatches a document quickview click event', () => {
+      const result = buildMockResult();
+      const thunk = buildDocumentQuickviewThunk(result);
+      const action = engine.findAsyncAction(thunk.pending);
+
+      expect(action).toBeTruthy();
+    });
   });
 
   it(`when configured result uniqueId matches the uniqueId in state,
@@ -54,7 +68,10 @@ describe('Quickview', () => {
     const uniqueId = '1';
     const content = '<div></div>';
 
-    engine.state.resultPreview = {uniqueId, content};
+    engine.state.resultPreview = buildMockResultPreviewState({
+      uniqueId,
+      content,
+    });
     options.result = buildMockResult({uniqueId});
     initQuickview();
 
@@ -63,7 +80,10 @@ describe('Quickview', () => {
 
   it(`when configured result uniqueId matches the uniqueId in state,
   #state.content returns an empty string`, () => {
-    engine.state.resultPreview = {uniqueId: '1', content: '<div></div>'};
+    engine.state.resultPreview = buildMockResultPreviewState({
+      uniqueId: '1',
+      content: '<div></div>',
+    });
     options.result = buildMockResult({uniqueId: '2'});
     initQuickview();
 
@@ -84,5 +104,23 @@ describe('Quickview', () => {
     initQuickview();
 
     expect(quickview.state.resultHasPreview).toBe(false);
+  });
+
+  it(`when the resultPreview state #isLoading is true,
+  #state.isLoading is true`, () => {
+    engine.state.resultPreview = buildMockResultPreviewState({isLoading: true});
+    initQuickview();
+
+    expect(quickview.state.isLoading).toBe(true);
+  });
+
+  it(`when the resultPreview state #isLoading is false,
+  #state.isLoading is false`, () => {
+    engine.state.resultPreview = buildMockResultPreviewState({
+      isLoading: false,
+    });
+    initQuickview();
+
+    expect(quickview.state.isLoading).toBe(false);
   });
 });

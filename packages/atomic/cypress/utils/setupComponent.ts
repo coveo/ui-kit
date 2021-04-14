@@ -1,3 +1,6 @@
+export const buildTestUrl = (hash = '') =>
+  `http://localhost:3333/pages/test.html#${hash}`;
+
 const searchInterfaceTag = 'atomic-search-interface';
 export function injectComponent(
   componentHtml: string,
@@ -38,7 +41,7 @@ export function setupIntercept() {
 // TODO: add options object for arguments (with urlHash, wait options)
 export function setUpPage(htmlCode: string, executeFirstSearch = true) {
   setupIntercept();
-  cy.visit('http://localhost:3333/pages/test.html');
+  cy.visit(buildTestUrl());
   cy.injectAxe();
   injectComponent(htmlCode, executeFirstSearch);
   // TODO: when executeFirstSearch = true, waiting for @coveoSearch would be less flaky

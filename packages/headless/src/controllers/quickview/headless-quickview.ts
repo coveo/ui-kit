@@ -1,6 +1,7 @@
 import {Result} from '../../api/search/search/result';
 import {Engine} from '../../app/headless-engine';
 import {fetchResultContent} from '../../features/result-preview/result-preview-actions';
+import {logDocumentQuickview} from '../../features/result-preview/result-preview-analytics-actions';
 import {
   ConfigurationSection,
   ResultPreviewSection,
@@ -45,6 +46,11 @@ export interface QuickviewState {
    * `true` if the configured result has a preview, and `false` otherwise.
    */
   resultHasPreview: boolean;
+
+  /**
+   * `true` if content is being fetched, and `false` otherwise.
+   */
+  isLoading: boolean;
 }
 
 /**
@@ -68,16 +74,19 @@ export function buildQuickview(
 
     fetchResultContent() {
       dispatch(fetchResultContent({uniqueId}));
+      dispatch(logDocumentQuickview(result));
     },
 
     get state() {
       const resultHasPreview = result.hasHtmlVersion;
       const preview = engine.state.resultPreview;
       const content = uniqueId === preview.uniqueId ? preview.content : '';
+      const isLoading = preview.isLoading;
 
       return {
         content,
         resultHasPreview,
+        isLoading,
       };
     },
   };
