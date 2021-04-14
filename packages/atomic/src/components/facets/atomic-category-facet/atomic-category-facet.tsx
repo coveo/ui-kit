@@ -6,12 +6,12 @@ import {
   CategoryFacetOptions,
   CategoryFacetValue,
   CategoryFacetSortCriterion,
+  CategoryFacetSearchResult,
 } from '@coveo/headless';
 import {
   Bindings,
   BindStateToController,
   BindStateToI18n,
-  I18nState,
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
@@ -23,7 +23,15 @@ import {
 
 import RightArrow from 'coveo-styleguide/resources/icons/svg/arrow-right-rounded.svg';
 import LeftArrow from 'coveo-styleguide/resources/icons/svg/arrow-left-rounded.svg';
-import {FacetSearch, FacetSearchComponent} from '../facet-search/facet-search';
+import {
+  FacetSearch,
+  FacetSearchComponent,
+  FacetSearchStrings,
+} from '../facet-search/facet-search';
+
+const SEPARATOR = '/';
+const ELLIPSIS = '...';
+const PATH_MAX_LENGTH = 3;
 
 /**
  * A hierarchical category facet component. It is displayed as a facet in desktop browsers and as
@@ -55,7 +63,7 @@ export class AtomicCategoryFacet
 
   @BindStateToI18n()
   @State()
-  public strings: I18nState = {
+  public strings: FacetSearchStrings = {
     clear: () => this.bindings.i18n.t('clear'),
     placeholder: () => this.bindings.i18n.t('search'),
     searchBox: () =>
@@ -245,6 +253,78 @@ export class AtomicCategoryFacet
         {this.strings.showLess()}
       </button>
     );
+  }
+
+  public ariaLabelForSearchResult(searchResult: CategoryFacetSearchResult) {
+    const facetValue = this.strings.facetValue({
+      numberOfResults: searchResult.count,
+      value: searchResult.displayValue,
+    });
+
+    return this.strings.under({
+      child: facetValue,
+      parent: searchResult.path.length
+        ? searchResult.path.join(', ')
+        : this.strings.allCategories(),
+    });
+  }
+
+  private ellipsedPath(path: string[]) {
+    if (path.length <= PATH_MAX_LENGTH) {
+      return path;
+    }
+    const firstPart = path.slice(0, 1);
+    const lastParts = path.slice(-PATH_MAX_LENGTH + 1);
+    return firstPart.concat(ELLIPSIS, ...lastParts);
+  }
+
+  private renderPath(path: string[]) {
+    const ellipsisClasses =
+      'whitespace-nowrap overflow-ellipsis overflow-hidden';
+
+    if (!path.length) {
+      return (
+        <span
+          class={ellipsisClasses}
+        >{`${this.strings.pathPrefix()} ${this.strings.allCategories()}`}</span>
+      );
+    }
+
+    return [
+      <span class="mr-1">{this.strings.pathPrefix()}</span>,
+      this.ellipsedPath(path).map((part, index) => [
+        index > 0 && <span>{SEPARATOR}</span>,
+        <span
+          class={part === ELLIPSIS ? '' : `${ellipsisClasses} flex-1 max-w-max`}
+        >
+          {part}
+        </span>,
+      ]),
+    ];
+  }
+
+  public renderSearchResult(searchResult: CategoryFacetSearchResult) {
+    return [
+      <div class="flex" aria-hidden>
+        <span
+          class="whitespace-nowrap overflow-ellipsis overflow-hidden"
+          innerHTML={FacetSearch.highlightSearchResult(
+            searchResult.displayValue,
+            this.facetSearchQuery
+          )}
+        />
+        <span class="number-of-values ml-1 text-on-background-variant">
+          ({searchResult.count.toLocaleString(this.bindings.i18n.language)})
+        </span>
+      </div>,
+      <div
+        class="flex text-on-background-variant"
+        aria-hidden
+        title={searchResult.path.join(SEPARATOR)}
+      >
+        {this.renderPath(searchResult.path)}
+      </div>,
+    ];
   }
 
   public render() {

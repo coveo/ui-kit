@@ -6,12 +6,12 @@ import {
   FacetOptions,
   FacetValue,
   FacetSortCriterion,
+  SpecificFacetSearchResult,
 } from '@coveo/headless';
 import {
   Bindings,
   BindStateToController,
   BindStateToI18n,
-  I18nState,
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
@@ -21,7 +21,11 @@ import {
   BaseFacetController,
   BaseFacetState,
 } from '../base-facet/base-facet';
-import {FacetSearch, FacetSearchComponent} from '../facet-search/facet-search';
+import {
+  FacetSearch,
+  FacetSearchComponent,
+  FacetSearchStrings,
+} from '../facet-search/facet-search';
 
 /**
  * A facet component. It is displayed as a facet in desktop browsers and as
@@ -52,7 +56,7 @@ export class AtomicFacet
 
   @BindStateToI18n()
   @State()
-  public strings: I18nState = {
+  public strings: FacetSearchStrings = {
     clear: () => this.bindings.i18n.t('clear'),
     searchBox: () =>
       this.bindings.i18n.t('facetSearch', {label: this.strings[this.label]()}),
@@ -166,6 +170,30 @@ export class AtomicFacet
         {this.strings.showLess()}
       </button>
     );
+  }
+
+  public renderSearchResult(searchResult: SpecificFacetSearchResult) {
+    return (
+      <div class="flex" aria-hidden>
+        <span
+          class="whitespace-nowrap overflow-ellipsis overflow-hidden"
+          innerHTML={FacetSearch.highlightSearchResult(
+            searchResult.displayValue,
+            this.facetSearchQuery
+          )}
+        />
+        <span class="number-of-values ml-1 text-on-background-variant">
+          ({searchResult.count.toLocaleString(this.bindings.i18n.language)})
+        </span>
+      </div>
+    );
+  }
+
+  public ariaLabelForSearchResult(searchResult: SpecificFacetSearchResult) {
+    return this.strings.facetValue({
+      numberOfResults: searchResult.count,
+      value: searchResult.displayValue,
+    });
   }
 
   public render() {
