@@ -2,7 +2,7 @@
   height: var(--atomic-facet-search-height, 30px);
 }
 
-.suggestions {
+.search-results {
   max-height: var(--atomic-facet-search-max-height, 250px);
   overflow-y: scroll;
   top: var(--atomic-facet-search-height, 30px);
@@ -13,10 +13,10 @@
   @apply border-solid border-divider border-l border-r border-b border-t-0;
 }
 
-.suggestion.active, .suggestion:hover {
+.search-result.active, .search-result:hover {
   @apply bg-primary;
 }
 
-.suggestion.active *, .suggestion:hover * {
+.search-result.active *, .search-result:hover * {
   @apply text-on-primary;
 }

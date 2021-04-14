@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.10.0](https://github.com/coveo/ui-kit/compare/v0.10.0-alpha.20...v0.10.0) (2021-04-14)
+
+**Note:** Version bump only for package ui-kit
+
+
+
+
+
+# [0.10.0-alpha.20](https://github.com/coveo/ui-kit/compare/v0.10.0-alpha.19...v0.10.0-alpha.20) (2021-04-14)
+
+
+### Bug Fixes
+
+* **atomic:** make pager & result-per-page responsive with many elements ([#707](https://github.com/coveo/ui-kit/issues/707)) ([bac3e86](https://github.com/coveo/ui-kit/commit/bac3e86e1c6f9c3475741746a310a3d0dec590fb))
+
+
+
+
+
 # [0.10.0-alpha.19](https://github.com/coveo/ui-kit/compare/v0.10.0-alpha.18...v0.10.0-alpha.19) (2021-04-13)
 
 
