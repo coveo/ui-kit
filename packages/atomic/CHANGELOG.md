@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.11.0-alpha.0](https://github.com/coveo/ui-kit/compare/v0.10.1-alpha.0...v0.11.0-alpha.0) (2021-04-14)
+
+
+### Features
+
+* **atomic:** add atomic-facet-placeholder for loading state ([#710](https://github.com/coveo/ui-kit/issues/710)) ([981fa6f](https://github.com/coveo/ui-kit/commit/981fa6fafe537386e82fe21f22cc21ef03114fff))
+
+
+
+
+
 ## [0.10.1-alpha.0](https://github.com/coveo/ui-kit/compare/v0.10.0...v0.10.1-alpha.0) (2021-04-14)
 
 **Note:** Version bump only for package @coveo/atomic
