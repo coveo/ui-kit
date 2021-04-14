@@ -1,7 +1,7 @@
 import {combineReducers, ReducersMapObject, Reducer} from '@reduxjs/toolkit';
 
 export interface ReducerManager {
-  reducer: Reducer;
+  combinedReducer: Reducer;
   add: (newReducers: ReducersMapObject) => void;
 }
 
@@ -11,7 +11,7 @@ export function createReducerManager(
   const reducers = {...initialReducers};
 
   return {
-    get reducer() {
+    combinedReducer() {
       return combineReducers(reducers);
     },
 

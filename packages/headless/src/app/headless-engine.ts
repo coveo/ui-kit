@@ -293,7 +293,7 @@ export class HeadlessEngine<Reducers extends ReducersMapObject>
 
   public addReducers(reducers: ReducersMapObject) {
     this.reducerManager.add(reducers);
-    this.reduxStore.replaceReducer(this.reducerManager.reducer);
+    this.reduxStore.replaceReducer(this.reducerManager.combinedReducer);
   }
 
   private validateConfiguration(options: HeadlessOptions<Reducers>) {
@@ -381,7 +381,7 @@ export class HeadlessEngine<Reducers extends ReducersMapObject>
       this.options.configuration.preprocessRequest || NoopPreprocessRequest;
     this.reduxStore = configureStore({
       preloadedState: this.options.preloadedState,
-      reducer: this.reducerManager.reducer,
+      reducer: this.reducerManager.combinedReducer,
       middlewares: this.options.middlewares,
       thunkExtraArguments: {
         searchAPIClient: new SearchAPIClient({

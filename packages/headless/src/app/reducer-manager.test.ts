@@ -7,7 +7,7 @@ describe('ReducerManager', () => {
     const manager = createReducerManager({});
     manager.add({pagination});
 
-    const state = manager.reducer(undefined, {type: ''});
+    const state = manager.combinedReducer(undefined, {type: ''});
     expect(state).toEqual({pagination: getPaginationInitialState()});
   });
 
@@ -15,7 +15,7 @@ describe('ReducerManager', () => {
     const manager = createReducerManager({pagination});
     manager.add({pagination: search});
 
-    const state = manager.reducer(undefined, {type: ''});
+    const state = manager.combinedReducer(undefined, {type: ''});
     expect(state).toEqual({pagination: getPaginationInitialState()});
   });
 });
