@@ -1,8 +1,13 @@
 import {I18nState} from './initialization-utils';
 
+export interface ComboboxStrings extends I18nState {
+  searchBox: () => string;
+  querySuggestionList: () => string;
+}
+
 export interface ComboboxOptions {
   id: string;
-  strings: I18nState;
+  strings: ComboboxStrings;
   containerRef: () => HTMLElement;
   inputRef: () => HTMLInputElement;
   valuesRef: () => HTMLElement;
@@ -150,7 +155,15 @@ export class Combobox {
     return this.options.valuesRef().children;
   }
 
+  private get isRendered() {
+    return this.container && this.textbox && this.listbox;
+  }
+
   public updateAccessibilityAttributes() {
+    if (!this.isRendered) {
+      return;
+    }
+
     this.setAttributes(this.containerAttributes, this.container);
     this.setAttributes(this.textboxAttributes, this.textbox);
     this.setAttributes(this.listboxAttributes, this.listbox);

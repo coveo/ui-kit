@@ -1,6 +1,5 @@
 import {Component, Prop, State, h, Element} from '@stencil/core';
 import dayjs from 'dayjs';
-
 import {
   DateFacet,
   buildDateFacet,
@@ -8,6 +7,9 @@ import {
   DateFacetOptions,
   DateFacetValue,
   buildDateRange,
+  SearchStatusState,
+  SearchStatus,
+  buildSearchStatus,
 } from '@coveo/headless';
 import {
   Bindings,
@@ -23,6 +25,7 @@ import {
   BaseFacetController,
   BaseFacetState,
 } from '../base-facet/base-facet';
+import {FacetPlaceholder} from '../atomic-facet-placeholder/atomic-facet-placeholder';
 
 /**
  * A facet who's values are expressed as date ranges. It is displayed as a regular facet in desktop browsers and as
@@ -33,6 +36,7 @@ import {
  * @part facet-value - A single facet value
  * @part close-button - The button to close the facet when displayed modally (mobile only)
  * @part reset-button - The button that resets the actively selected facet values
+ * @part placeholder - The placeholder shown before the first search is executed.
  *
  */
 @Component({
@@ -44,11 +48,15 @@ export class AtomicDateFacet implements InitializableComponent, BaseFacetState {
   @Element() host!: HTMLElement;
   @InitializeBindings() public bindings!: Bindings;
   private facet!: DateFacet;
+  public searchStatus!: SearchStatus;
 
   @BindStateToController('facet', {subscribeOnConnectedCallback: true})
   @State()
   private facetState!: DateFacetState;
   @State() public error!: Error;
+  @BindStateToController('searchStatus')
+  @State()
+  private searchStatusState!: SearchStatusState;
 
   @BindStateToI18n()
   @State()
@@ -72,6 +80,10 @@ export class AtomicDateFacet implements InitializableComponent, BaseFacetState {
    * The format that the date will be displayed in. See https://day.js.org/docs/en/display/format for formatting details.
    */
   @Prop() public dateFormat = 'DD/MM/YYYY';
+  /**
+   * The number of values to request for this facet, when there are no manual ranges.
+   */
+  @Prop({mutable: true}) public numberOfValues = 10;
 
   private buildManualRanges() {
     const options = Array.from(this.host.querySelectorAll('atomic-date-range'));
@@ -79,12 +91,18 @@ export class AtomicDateFacet implements InitializableComponent, BaseFacetState {
   }
 
   public initialize() {
+    this.searchStatus = buildSearchStatus(this.bindings.engine);
     const manualRanges = this.buildManualRanges();
+    if (manualRanges.length) {
+      this.numberOfValues = manualRanges.length;
+    }
+
     const options: DateFacetOptions = {
       facetId: this.facetId,
       field: this.field,
       generateAutomaticRanges: manualRanges.length === 0,
       currentValues: manualRanges,
+      numberOfValues: this.numberOfValues,
     };
     this.strings[this.label] = () => this.bindings.i18n.t(this.label);
     this.facet = buildDateFacet(this.bindings.engine, {options});
@@ -133,8 +151,20 @@ export class AtomicDateFacet implements InitializableComponent, BaseFacetState {
   }
 
   public render() {
+    if (this.searchStatusState.hasError) {
+      return;
+    }
+
+    if (!this.searchStatusState.firstSearchExecuted) {
+      return (
+        <FacetPlaceholder
+          numberOfValues={this.numberOfValues}
+        ></FacetPlaceholder>
+      );
+    }
+
     if (!this.facetState.hasActiveValues && this.totalNumberOfResults === 0) {
-      return null;
+      return;
     }
 
     return (

@@ -29,6 +29,7 @@ A hierarchical category facet component. It is displayed as a facet in desktop b
 | `"facet-value"`  | A single facet value                                               |
 | `"facet-values"` | The list of facet values (children)                                |
 | `"parents"`      |                                                                    |
+| `"placeholder"`  | The placeholder shown before the first search is executed.         |
 | `"reset-button"` | The button that resets the actively selected facet values          |
 | `"show-less"`    | The show less button                                               |
 | `"show-more"`    | The show more results button                                       |

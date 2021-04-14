@@ -242,3 +242,19 @@ describe('Numeric with invalid options', () => {
     });
   });
 });
+
+describe('when no first search has yet been executed', () => {
+  beforeEach(() => {
+    setUpPage(
+      ` <atomic-numeric-facet field="${numericFacetProp.field}"></atomic-numeric-facet>`,
+      false
+    );
+  });
+
+  it('should render a placeholder', () => {
+    cy.get(FacetSelectors.numericFacet)
+      .shadow()
+      .find('div[part="placeholder"]')
+      .should('be.visible');
+  });
+});

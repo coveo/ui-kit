@@ -46,7 +46,15 @@ export function buildFacetSearch(
     },
 
     get state() {
-      return genericFacetSearch.state;
+      const {values} = genericFacetSearch.state;
+      return {
+        ...genericFacetSearch.state,
+        values: values.map(({count, displayValue, rawValue}) => ({
+          count,
+          displayValue,
+          rawValue,
+        })),
+      };
     },
   };
 }

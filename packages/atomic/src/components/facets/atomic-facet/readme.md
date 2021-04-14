@@ -26,6 +26,7 @@ A facet component. It is displayed as a facet in desktop browsers and as a butto
 | `"facet"`        | The wrapping div for the entire facet                              |
 | `"facet-value"`  | A single facet value                                               |
 | `"facet-values"` | The list of facet values                                           |
+| `"placeholder"`  | The placeholder shown before the first search is executed.         |
 | `"reset-button"` | The button that resets the actively selected facet values          |
 | `"show-less"`    | The show less button                                               |
 | `"show-more"`    | The show more results button                                       |

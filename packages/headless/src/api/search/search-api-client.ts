@@ -18,7 +18,7 @@ import {PlanRequest} from './plan/plan-request';
 import {QuerySuggestRequest} from './query-suggest/query-suggest-request';
 import {FacetSearchRequest} from './facet-search/facet-search-request';
 import {SearchAppState} from '../../state/search-app-state';
-import {BaseParam, baseSearchRequest} from './search-api-params';
+import {baseSearchRequest} from './search-api-params';
 import {RecommendationRequest} from './recommendation/recommendation-request';
 import {ProductRecommendationsRequest} from './product-recommendations/product-recommendations-request';
 import {Logger} from 'pino';
@@ -32,6 +32,7 @@ import {PreprocessRequest} from '../preprocess-request';
 import {HtmlRequest} from './html/html-request';
 import {findEncoding} from './encoding-finder';
 import {TextDecoder} from 'web-encoding';
+import {BaseParam} from '../platform-service-params';
 
 export type AllSearchAPIResponse = Plan | Search | QuerySuggest;
 

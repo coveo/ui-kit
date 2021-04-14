@@ -15,6 +15,7 @@ import {
 import {executeSearch} from '../../../../features/search/search-actions';
 import {buildMockFacetSearchResult} from '../../../../test/mock-facet-search-result';
 import {SearchAppState} from '../../../../state/search-app-state';
+import {CategoryFacetSearchResult} from '../../category-facet/headless-category-facet';
 
 describe('FacetSearch', () => {
   const facetId = '1';
@@ -47,6 +48,14 @@ describe('FacetSearch', () => {
   it('calling #state returns the latest state', () => {
     engine.state.facetSearchSet[facetId].isLoading = true;
     expect(controller.state.isLoading).toBe(true);
+  });
+
+  it(`althought the API returns an empty path for specific facet
+  calling #state returns the values with only the relevant keys`, () => {
+    const expectedValue = {count: 10, displayValue: 'Hello', rawValue: 'hello'};
+    (engine.state.facetSearchSet[facetId].response
+      .values as CategoryFacetSearchResult[]) = [{...expectedValue, path: []}];
+    expect(controller.state.values[0]).toEqual(expectedValue);
   });
 
   describe('#select', () => {

@@ -9,7 +9,7 @@
   },
   "types": "./dist/index.d.ts",
   "license": "Apache-2.0",
-  "version": "0.10.0-alpha.12",
+  "version": "0.10.0",
   "files": [
     "dist/",
     "case-assist/"
@@ -34,7 +34,7 @@
     "@reduxjs/toolkit": "^1.5.0",
     "@types/pino": "^6.3.4",
     "@types/redux-mock-store": "^1.0.2",
-    "coveo.analytics": "^2.18.7",
+    "coveo.analytics": "^2.18.19",
     "cross-fetch": "^3.0.6",
     "dayjs": "^1.9.6",
     "exponential-backoff": "^3.1.0",
