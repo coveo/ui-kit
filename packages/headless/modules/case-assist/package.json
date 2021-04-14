@@ -1,0 +1,9 @@
+{
+  "name": "case-assist",
+  "version": "1.0.0",
+  "description": "Headless Case Assist Module",
+  "main": "../../dist/case-assist/headless-case-assist.esm.js",
+  "module": "",
+  "types": "../dist/case-assist.d.ts",
+  "license": "Apache-2.0"
+}
