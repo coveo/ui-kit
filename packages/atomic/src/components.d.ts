@@ -119,9 +119,6 @@ export namespace Components {
     }
     interface AtomicFacetManager {
     }
-    interface AtomicFacetPlaceholder {
-        "numberOfValues": number;
-    }
     interface AtomicFieldCondition {
         "conditions": ResultTemplateCondition[];
         "ifDefined"?: string;
@@ -434,12 +431,6 @@ declare global {
         prototype: HTMLAtomicFacetManagerElement;
         new (): HTMLAtomicFacetManagerElement;
     };
-    interface HTMLAtomicFacetPlaceholderElement extends Components.AtomicFacetPlaceholder, HTMLStencilElement {
-    }
-    var HTMLAtomicFacetPlaceholderElement: {
-        prototype: HTMLAtomicFacetPlaceholderElement;
-        new (): HTMLAtomicFacetPlaceholderElement;
-    };
     interface HTMLAtomicFieldConditionElement extends Components.AtomicFieldCondition, HTMLStencilElement {
     }
     var HTMLAtomicFieldConditionElement: {
@@ -623,7 +614,6 @@ declare global {
         "atomic-did-you-mean": HTMLAtomicDidYouMeanElement;
         "atomic-facet": HTMLAtomicFacetElement;
         "atomic-facet-manager": HTMLAtomicFacetManagerElement;
-        "atomic-facet-placeholder": HTMLAtomicFacetPlaceholderElement;
         "atomic-field-condition": HTMLAtomicFieldConditionElement;
         "atomic-frequently-bought-together": HTMLAtomicFrequentlyBoughtTogetherElement;
         "atomic-modal": HTMLAtomicModalElement;
@@ -764,9 +754,6 @@ declare namespace LocalJSX {
         "sortCriteria"?: FacetSortCriterion;
     }
     interface AtomicFacetManager {
-    }
-    interface AtomicFacetPlaceholder {
-        "numberOfValues"?: number;
     }
     interface AtomicFieldCondition {
         "conditions"?: ResultTemplateCondition[];
@@ -1036,7 +1023,6 @@ declare namespace LocalJSX {
         "atomic-did-you-mean": AtomicDidYouMean;
         "atomic-facet": AtomicFacet;
         "atomic-facet-manager": AtomicFacetManager;
-        "atomic-facet-placeholder": AtomicFacetPlaceholder;
         "atomic-field-condition": AtomicFieldCondition;
         "atomic-frequently-bought-together": AtomicFrequentlyBoughtTogether;
         "atomic-modal": AtomicModal;
@@ -1080,7 +1066,6 @@ declare module "@stencil/core" {
             "atomic-did-you-mean": LocalJSX.AtomicDidYouMean & JSXBase.HTMLAttributes<HTMLAtomicDidYouMeanElement>;
             "atomic-facet": LocalJSX.AtomicFacet & JSXBase.HTMLAttributes<HTMLAtomicFacetElement>;
             "atomic-facet-manager": LocalJSX.AtomicFacetManager & JSXBase.HTMLAttributes<HTMLAtomicFacetManagerElement>;
-            "atomic-facet-placeholder": LocalJSX.AtomicFacetPlaceholder & JSXBase.HTMLAttributes<HTMLAtomicFacetPlaceholderElement>;
             "atomic-field-condition": LocalJSX.AtomicFieldCondition & JSXBase.HTMLAttributes<HTMLAtomicFieldConditionElement>;
             "atomic-frequently-bought-together": LocalJSX.AtomicFrequentlyBoughtTogether & JSXBase.HTMLAttributes<HTMLAtomicFrequentlyBoughtTogetherElement>;
             "atomic-modal": LocalJSX.AtomicModal & JSXBase.HTMLAttributes<HTMLAtomicModalElement>;

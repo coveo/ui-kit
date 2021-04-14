@@ -25,6 +25,7 @@ import {
   BaseFacetController,
   BaseFacetState,
 } from '../base-facet/base-facet';
+import {FacetPlaceholer} from '../atomic-facet-placeholder/atomic-facet-placeholder';
 
 /**
  * A facet who's values are expressed as date ranges. It is displayed as a regular facet in desktop browsers and as
@@ -155,9 +156,7 @@ export class AtomicDateFacet implements InitializableComponent, BaseFacetState {
 
     if (!this.searchStatusState.firstSearchExecuted) {
       return (
-        <atomic-facet-placeholder
-          numberOfValues={this.numberOfValues}
-        ></atomic-facet-placeholder>
+        <FacetPlaceholer numberOfValues={this.numberOfValues}></FacetPlaceholer>
       );
     }
 

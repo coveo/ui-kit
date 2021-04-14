@@ -25,6 +25,7 @@ import {
   BaseFacetState,
 } from '../base-facet/base-facet';
 import {FacetSearch, FacetSearchComponent} from '../facet-search/facet-search';
+import {FacetPlaceholer} from '../atomic-facet-placeholder/atomic-facet-placeholder';
 
 /**
  * A facet component. It is displayed as a facet in desktop browsers and as
@@ -184,9 +185,7 @@ export class AtomicFacet
 
     if (!this.searchStatusState.firstSearchExecuted) {
       return (
-        <atomic-facet-placeholder
-          numberOfValues={this.numberOfValues}
-        ></atomic-facet-placeholder>
+        <FacetPlaceholer numberOfValues={this.numberOfValues}></FacetPlaceholer>
       );
     }
 
