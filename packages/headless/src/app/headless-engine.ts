@@ -250,7 +250,7 @@ export interface Engine<State = SearchAppState> {
   /**
    * Adds the specified reducers to the store.
    */
-  addReducers(reducerMap: ReducersMapObject): void;
+  addReducers(reducers: ReducersMapObject): void;
 }
 
 /**
@@ -267,7 +267,7 @@ export class HeadlessEngine<Reducers extends ReducersMapObject>
   constructor(private options: HeadlessOptions<Reducers>) {
     this.initLogger();
     this.validateConfiguration(options);
-    this.initReducerManger();
+    this.initReducerManager();
     this.initStore();
 
     this.reduxStore.dispatch(
@@ -371,7 +371,7 @@ export class HeadlessEngine<Reducers extends ReducersMapObject>
     });
   }
 
-  private initReducerManger() {
+  private initReducerManager() {
     this.reducerManager = createReducerManager(this.options.reducers);
   }
 
