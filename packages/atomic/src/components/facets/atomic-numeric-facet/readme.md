@@ -17,13 +17,13 @@ It is displayed as a regular facet in desktop browsers and as a button which ope
 
 ## Shadow Parts
 
-| Part             | Description                                                        |
-| ---------------- | ------------------------------------------------------------------ |
-| `"close-button"` | The button to close the facet when displayed modally (mobile only) |
-| `"facet"`        | The wrapping div for the entire facet                              |
-| `"facet-value"`  | A single facet value                                               |
-| `"facet-values"` | The list of facet values                                           |
-| `"reset-button"` | The button that resets the actively selected facet values          |
+| Part             | Description                                                          |
+| ---------------- | -------------------------------------------------------------------- |
+| `"close-button"` | The button to close the facet when displayed modally _(mobile only)_ |
+| `"facet"`        | The wrapping div for the entire facet                                |
+| `"facet-value"`  | A single facet value                                                 |
+| `"facet-values"` | The list of facet values                                             |
+| `"reset-button"` | The button that resets the actively selected facet values            |
 
 
 ## Dependencies

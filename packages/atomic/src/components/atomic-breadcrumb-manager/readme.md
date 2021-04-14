@@ -15,18 +15,18 @@ A component that creates breadcrumbs that display the currently active facet val
 
 ## Shadow Parts
 
-| Part                                                               | Description                                       |
-| ------------------------------------------------------------------ | ------------------------------------------------- |
-| `"breadcrumb"`                                                     | An individual breadcrumb                          |
-| `"breadcrumb-button"`                                              | Button element for all types of breadcrumb values |
-| `"breadcrumb-clear"`                                               | The clear button for a single breadcrumb value    |
-| `"breadcrumb-clear-all"`                                           | The clear all breadcrumbs button                  |
-| `"breadcrumb-label"`                                               | Label for the breadcrumb's title                  |
-| `"breadcrumb-value"`                                               |                                                   |
-| `"breadcrumb-value-label"`                                         | The label for a single breadcrumb value           |
-| `"breadcrumb-wrapper"`                                             |                                                   |
-| `"breadcrumb-wrapper = The wrapper for a single breadcrumb value"` |                                                   |
-| `"breadcrumbs"`                                                    | Container for all types of breadcrumbs            |
+| Part                                                               | Description                                         |
+| ------------------------------------------------------------------ | --------------------------------------------------- |
+| `"breadcrumb"`                                                     | An individual breadcrumb                            |
+| `"breadcrumb-button"`                                              | A button element for all types of breadcrumb values |
+| `"breadcrumb-clear"`                                               | The clear button for a single breadcrumb value      |
+| `"breadcrumb-clear-all"`                                           | The clear all breadcrumbs button                    |
+| `"breadcrumb-label"`                                               | The label for the breadcrumb's title                |
+| `"breadcrumb-value"`                                               |                                                     |
+| `"breadcrumb-value-label"`                                         | The label for a single breadcrumb value             |
+| `"breadcrumb-wrapper"`                                             |                                                     |
+| `"breadcrumb-wrapper = The wrapper for a single breadcrumb value"` |                                                     |
+| `"breadcrumbs"`                                                    | The container for all types of breadcrumbs          |
 
 
 ## CSS Custom Properties

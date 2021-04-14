@@ -45,7 +45,7 @@ export const config: Config = {
     },
     {
       type: 'docs-json',
-      file: './atomic-docs.json',
+      file: './docs/atomic.json',
     },
     {
       type: 'www',

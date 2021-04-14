@@ -9,7 +9,8 @@
     "src/external-builds/**/*",
     "dist/**/*",
     "www/**/*",
-    "loader/**/*"
+    "loader/**/*",
+    "docs/**/*"
   ],
   "overrides": [
     {"files": "**/*.config.js", "parserOptions": {"sourceType": "module"}}
