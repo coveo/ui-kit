@@ -150,7 +150,15 @@ export class Combobox {
     return this.options.valuesRef().children;
   }
 
+  private get isRendered() {
+    return this.container && this.textbox && this.listbox;
+  }
+
   public updateAccessibilityAttributes() {
+    if (!this.isRendered) {
+      return;
+    }
+
     this.setAttributes(this.containerAttributes, this.container);
     this.setAttributes(this.textboxAttributes, this.textbox);
     this.setAttributes(this.listboxAttributes, this.listbox);

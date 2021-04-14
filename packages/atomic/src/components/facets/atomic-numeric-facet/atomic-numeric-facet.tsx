@@ -6,6 +6,9 @@ import {
   NumericFacetState,
   NumericFacetOptions,
   NumericFacetValue,
+  SearchStatusState,
+  SearchStatus,
+  buildSearchStatus,
 } from '@coveo/headless';
 import {
   Bindings,
@@ -43,10 +46,14 @@ export class AtomicNumericFacet
   @Element() host!: HTMLElement;
   @InitializeBindings() public bindings!: Bindings;
   private facet!: NumericFacet;
+  public searchStatus!: SearchStatus;
 
   @BindStateToController('facet', {subscribeOnConnectedCallback: true})
   @State()
   private facetState!: NumericFacetState;
+  @BindStateToController('searchStatus')
+  @State()
+  private searchStatusState!: SearchStatusState;
   @State() public error!: Error;
 
   @BindStateToI18n()
@@ -67,6 +74,10 @@ export class AtomicNumericFacet
    * The non-localized label for the facet.
    */
   @Prop() public label = 'No label';
+  /**
+   * The number of values to request for this facet, when there are no manual ranges.
+   */
+  @Prop({mutable: true}) public numberOfValues = 10;
 
   private buildManualRanges() {
     const options = Array.from(
@@ -78,12 +89,18 @@ export class AtomicNumericFacet
   }
 
   public initialize() {
+    this.searchStatus = buildSearchStatus(this.bindings.engine);
     const manualRanges = this.buildManualRanges();
+    if (manualRanges.length) {
+      this.numberOfValues = manualRanges.length;
+    }
+
     const options: NumericFacetOptions = {
       facetId: this.facetId,
       field: this.field,
       generateAutomaticRanges: manualRanges.length === 0,
       currentValues: manualRanges,
+      numberOfValues: this.numberOfValues,
     };
 
     this.facet = buildNumericFacet(this.bindings.engine, {options});
@@ -134,9 +151,22 @@ export class AtomicNumericFacet
   }
 
   public render() {
-    if (!this.facetState.hasActiveValues && this.totalNumberOfResults === 0) {
-      return null;
+    if (this.searchStatusState.hasError) {
+      return;
     }
+
+    if (!this.searchStatusState.firstSearchExecuted) {
+      return (
+        <atomic-facet-placeholder
+          numberOfValues={this.numberOfValues}
+        ></atomic-facet-placeholder>
+      );
+    }
+
+    if (!this.facetState.hasActiveValues && this.totalNumberOfResults === 0) {
+      return;
+    }
+
     return (
       <BaseFacet
         controller={new BaseFacetController(this)}

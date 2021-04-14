@@ -73,6 +73,10 @@ export namespace Components {
           * The non-localized label for the facet
          */
         "label": string;
+        /**
+          * The number of values to request for this facet, when there are no manual ranges.
+         */
+        "numberOfValues": number;
     }
     interface AtomicDateRange {
         /**
@@ -115,6 +119,9 @@ export namespace Components {
     }
     interface AtomicFacetManager {
     }
+    interface AtomicFacetPlaceholder {
+        "numberOfValues": number;
+    }
     interface AtomicFieldCondition {
         "conditions": ResultTemplateCondition[];
         "ifDefined"?: string;
@@ -145,6 +152,10 @@ export namespace Components {
           * The non-localized label for the facet.
          */
         "label": string;
+        /**
+          * The number of values to request for this facet, when there are no manual ranges.
+         */
+        "numberOfValues": number;
     }
     interface AtomicNumericRange {
         /**
@@ -423,6 +434,12 @@ declare global {
         prototype: HTMLAtomicFacetManagerElement;
         new (): HTMLAtomicFacetManagerElement;
     };
+    interface HTMLAtomicFacetPlaceholderElement extends Components.AtomicFacetPlaceholder, HTMLStencilElement {
+    }
+    var HTMLAtomicFacetPlaceholderElement: {
+        prototype: HTMLAtomicFacetPlaceholderElement;
+        new (): HTMLAtomicFacetPlaceholderElement;
+    };
     interface HTMLAtomicFieldConditionElement extends Components.AtomicFieldCondition, HTMLStencilElement {
     }
     var HTMLAtomicFieldConditionElement: {
@@ -606,6 +623,7 @@ declare global {
         "atomic-did-you-mean": HTMLAtomicDidYouMeanElement;
         "atomic-facet": HTMLAtomicFacetElement;
         "atomic-facet-manager": HTMLAtomicFacetManagerElement;
+        "atomic-facet-placeholder": HTMLAtomicFacetPlaceholderElement;
         "atomic-field-condition": HTMLAtomicFieldConditionElement;
         "atomic-frequently-bought-together": HTMLAtomicFrequentlyBoughtTogetherElement;
         "atomic-modal": HTMLAtomicModalElement;
@@ -701,6 +719,10 @@ declare namespace LocalJSX {
           * The non-localized label for the facet
          */
         "label"?: string;
+        /**
+          * The number of values to request for this facet, when there are no manual ranges.
+         */
+        "numberOfValues"?: number;
     }
     interface AtomicDateRange {
         /**
@@ -743,6 +765,9 @@ declare namespace LocalJSX {
     }
     interface AtomicFacetManager {
     }
+    interface AtomicFacetPlaceholder {
+        "numberOfValues"?: number;
+    }
     interface AtomicFieldCondition {
         "conditions"?: ResultTemplateCondition[];
         "ifDefined"?: string;
@@ -773,6 +798,10 @@ declare namespace LocalJSX {
           * The non-localized label for the facet.
          */
         "label"?: string;
+        /**
+          * The number of values to request for this facet, when there are no manual ranges.
+         */
+        "numberOfValues"?: number;
     }
     interface AtomicNumericRange {
         /**
@@ -1007,6 +1036,7 @@ declare namespace LocalJSX {
         "atomic-did-you-mean": AtomicDidYouMean;
         "atomic-facet": AtomicFacet;
         "atomic-facet-manager": AtomicFacetManager;
+        "atomic-facet-placeholder": AtomicFacetPlaceholder;
         "atomic-field-condition": AtomicFieldCondition;
         "atomic-frequently-bought-together": AtomicFrequentlyBoughtTogether;
         "atomic-modal": AtomicModal;
@@ -1050,6 +1080,7 @@ declare module "@stencil/core" {
             "atomic-did-you-mean": LocalJSX.AtomicDidYouMean & JSXBase.HTMLAttributes<HTMLAtomicDidYouMeanElement>;
             "atomic-facet": LocalJSX.AtomicFacet & JSXBase.HTMLAttributes<HTMLAtomicFacetElement>;
             "atomic-facet-manager": LocalJSX.AtomicFacetManager & JSXBase.HTMLAttributes<HTMLAtomicFacetManagerElement>;
+            "atomic-facet-placeholder": LocalJSX.AtomicFacetPlaceholder & JSXBase.HTMLAttributes<HTMLAtomicFacetPlaceholderElement>;
             "atomic-field-condition": LocalJSX.AtomicFieldCondition & JSXBase.HTMLAttributes<HTMLAtomicFieldConditionElement>;
             "atomic-frequently-bought-together": LocalJSX.AtomicFrequentlyBoughtTogether & JSXBase.HTMLAttributes<HTMLAtomicFrequentlyBoughtTogetherElement>;
             "atomic-modal": LocalJSX.AtomicModal & JSXBase.HTMLAttributes<HTMLAtomicModalElement>;
