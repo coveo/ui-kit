@@ -72,9 +72,9 @@ function clickOnCategoryFacetWithValue(value: string) {
 describe('Category Facet with default setting', () => {
   beforeEach(() => {
     setupCategoryFacet(categoryFacetProp.field, categoryFacetProp.label);
-    cy.wait('@coveoSearch');
     createAliasShadow(categoryFacetProp.field, FacetSelectors.categoryFacet);
     createAliasFacetUL(categoryFacetProp.field, FacetSelectors.categoryFacet);
+    cy.wait('@coveoSearch');
     cy.wait('@coveoAnalytics');
   });
 
@@ -365,7 +365,7 @@ describe('Category Facet with facetSearchEnable', () => {
     it('Should display suggestion when click on searchbox', () => {
       cy.get('@facetSearchbox').click();
       cy.get(FacetAlias.facetShadow)
-        .find('ul[part="suggestions"]')
+        .find('ul[part="search-results"]')
         .should('be.visible');
     });
 
@@ -384,7 +384,9 @@ describe('Category Facet with facetSearchEnable', () => {
 
     it('Should display search results with parentPath correctly', () => {
       cy.get(FacetAlias.facetShadow)
-        .find('ul[part="suggestions"] li[part="suggestion"] div:nth-child(2)')
+        .find(
+          'ul[part="search-results"] li[part="search-result"] div:nth-child(2)'
+        )
         .as('parentPaths');
       cy.getTextOfAllElements('@parentPaths').then((parentPathLabels) => {
         expect(parentPathLabels[0]).to.equal('inNorth America/Canada');
@@ -394,7 +396,7 @@ describe('Category Facet with facetSearchEnable', () => {
 
     it('Should trigger new filter when selected result from dropdown box', () => {
       cy.get(FacetAlias.facetShadow)
-        .find('ul[part="suggestions"] li:nth-child(1)')
+        .find('ul[part="search-results"] li:nth-child(1)')
         .click();
       cy.get(FacetAlias.facetShadow)
         .find('ul[part="parents"]')
@@ -405,7 +407,7 @@ describe('Category Facet with facetSearchEnable', () => {
 
     it.skip('Should log UA when selected result from dropdown box', () => {
       cy.get(FacetAlias.facetShadow)
-        .find('ul[part="suggestions"] li:nth-child(1)')
+        .find('ul[part="search-results"] li:nth-child(1)')
         .click();
       //TODO: enable it when UA for facetSearch works properly
       cy.wait('@coveoAnalytics').then((intercept) => {

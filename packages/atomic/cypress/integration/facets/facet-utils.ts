@@ -290,7 +290,7 @@ export function typeQueryAndWaitUA(searchboxSelector: string, query: string) {
 
 export function assertHightlightedText(text: string) {
   cy.get(FacetAlias.facetShadow)
-    .find('ul[part="suggestions"] li[part="suggestion"] b')
+    .find('ul[part="search-results"] li[part="search-result"] b')
     .as('textHightlight');
   cy.getTextOfAllElements('@textHightlight').then((labels) => {
     labels.forEach((i: string) => {
