@@ -11,7 +11,7 @@ export function createReducerManager(
   const reducers = {...initialReducers};
 
   return {
-    combinedReducer() {
+    get combinedReducer() {
       return combineReducers(reducers);
     },
 
