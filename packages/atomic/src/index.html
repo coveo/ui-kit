@@ -48,6 +48,10 @@
     </style>
     <style>
       /* Example of generic layout styling  */
+      body {
+        margin: 0;
+      }
+
       .interface-container {
         width: 100%;
         max-width: 1250px;
@@ -57,8 +61,9 @@
         gap: 20px;
       }
 
-      .search-box-item {
-        grid-column-start: 2;
+      .search-box-container {
+        background-color: var(--atomic-background-variant);
+        padding: 22px 50px;
       }
 
       .footer-item {
@@ -74,6 +79,11 @@
 
       atomic-facet-manager {
         padding-top: 13px;
+      }
+
+      atomic-search-box {
+        margin: auto;
+        max-width: 1250px;
       }
 
       atomic-result-list {
@@ -93,9 +103,10 @@
 
   <body>
     <atomic-search-interface id="search">
+      <div class="search-box-container">
+        <atomic-search-box></atomic-search-box>
+      </div>
       <div class="interface-container">
-        <atomic-search-box class="search-box-item"></atomic-search-box>
-
         <atomic-facet-manager>
           <atomic-facet field="author" label="Authors"></atomic-facet>
           <atomic-numeric-facet field="size" label="File sizes">
@@ -112,7 +123,6 @@
             enable-facet-search
           ></atomic-category-facet>
         </atomic-facet-manager>
-
         <div class="results-container">
           <atomic-breadcrumb-manager></atomic-breadcrumb-manager>
           <atomic-did-you-mean></atomic-did-you-mean>
@@ -124,7 +134,6 @@
               <atomic-sort-expression caption="mostRecent" expression="date descending"></atomic-sort-expression>
             </atomic-sort-dropdown>
           </div>
-
           <atomic-no-results></atomic-no-results>
           <atomic-result-list></atomic-result-list>
         </div>
