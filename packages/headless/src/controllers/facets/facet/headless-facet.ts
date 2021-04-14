@@ -48,7 +48,7 @@ import {
   facetSet,
   search,
 } from '../../../app/reducers';
-import {failedToLoadReducers} from '../../../utils/errors';
+import {loadReducerError} from '../../../utils/errors';
 
 export {FacetOptions, FacetSearchOptions, FacetValueState};
 
@@ -235,7 +235,7 @@ export interface FacetValue {
  * */
 export function buildFacet(engine: Engine<unknown>, props: FacetProps): Facet {
   if (!loadFacetReducers(engine)) {
-    throw failedToLoadReducers;
+    throw loadReducerError;
   }
 
   const {dispatch} = engine;

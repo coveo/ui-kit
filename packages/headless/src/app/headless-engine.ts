@@ -438,11 +438,7 @@ export class HeadlessEngine<Reducers extends ReducersMapObject>
   }
 
   get store() {
-    const replaceReducer = () =>
-      this.logger.warn(
-        'Please use the "addReducers" method on the engine instead.'
-      );
-    return {...this.reduxStore, replaceReducer};
+    return this.reduxStore;
   }
 
   get dispatch(): EngineDispatch<StateFromReducersMapObject<Reducers>> {
