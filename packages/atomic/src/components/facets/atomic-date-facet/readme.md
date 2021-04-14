@@ -25,6 +25,7 @@ a button which opens a facet modal in mobile browsers.
 | `"facet"`        | The wrapping div for the entire facet                              |
 | `"facet-value"`  | A single facet value                                               |
 | `"facet-values"` | The list of facet values                                           |
+| `"placeholder"`  | The placeholder shown before the first search is executed.         |
 | `"reset-button"` | The button that resets the actively selected facet values          |
 
 

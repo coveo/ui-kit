@@ -47,6 +47,8 @@ const PATH_MAX_LENGTH = 3;
  * @part reset-button - The button that resets the actively selected facet values
  * @part show-more - The show more results button
  * @part show-less - The show less button
+ * @part placeholder - The placeholder shown before the first search is executed.
+ *
  */
 @Component({
   tag: 'atomic-category-facet',

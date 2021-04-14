@@ -42,6 +42,7 @@ import {FacetPlaceholder} from '../atomic-facet-placeholder/atomic-facet-placeho
  * @part reset-button - The button that resets the actively selected facet values
  * @part show-more - The show more results button
  * @part show-less - The show less button
+ * @part placeholder - The placeholder shown before the first search is executed.
  */
 @Component({
   tag: 'atomic-facet',

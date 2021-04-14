@@ -380,3 +380,19 @@ describe('Facet with selected value on initialization', () => {
     });
   });
 });
+
+describe('when no first search has yet been executed', () => {
+  beforeEach(() => {
+    setUpPage(
+      ` <atomic-facet field="${facetProp.field}"></atomic-facet>`,
+      false
+    );
+  });
+
+  it('should render a placeholder', () => {
+    cy.get(FacetSelectors.facetStandard)
+      .shadow()
+      .find('div[part="placeholder"]')
+      .should('be.visible');
+  });
+});

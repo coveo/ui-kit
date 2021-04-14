@@ -36,6 +36,7 @@ import {FacetPlaceholder} from '../atomic-facet-placeholder/atomic-facet-placeho
  * @part facet-value - A single facet value
  * @part close-button - The button to close the facet when displayed modally (mobile only)
  * @part reset-button - The button that resets the actively selected facet values
+ * @part placeholder - The placeholder shown before the first search is executed.
  *
  */
 @Component({
