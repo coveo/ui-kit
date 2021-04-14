@@ -6,6 +6,9 @@ import {
   NumericFacetState,
   NumericFacetOptions,
   NumericFacetValue,
+  SearchStatusState,
+  SearchStatus,
+  buildSearchStatus,
 } from '@coveo/headless';
 import {
   Bindings,
@@ -21,6 +24,7 @@ import {
   BaseFacetController,
   BaseFacetState,
 } from '../base-facet/base-facet';
+import {FacetPlaceholder} from '../atomic-facet-placeholder/atomic-facet-placeholder';
 
 /**
  * A facet who's values are expressed as numeric ranges. It is displayed as a regular facet in desktop browsers and as
@@ -31,6 +35,7 @@ import {
  * @part facet-value - A single facet value
  * @part close-button - The button to close the facet when displayed modally (mobile only)
  * @part reset-button - The button that resets the actively selected facet values
+ * @part placeholder - The placeholder shown before the first search is executed.
  *
  */
 @Component({
@@ -43,10 +48,14 @@ export class AtomicNumericFacet
   @Element() host!: HTMLElement;
   @InitializeBindings() public bindings!: Bindings;
   private facet!: NumericFacet;
+  public searchStatus!: SearchStatus;
 
   @BindStateToController('facet', {subscribeOnConnectedCallback: true})
   @State()
   private facetState!: NumericFacetState;
+  @BindStateToController('searchStatus')
+  @State()
+  private searchStatusState!: SearchStatusState;
   @State() public error!: Error;
 
   @BindStateToI18n()
@@ -67,6 +76,10 @@ export class AtomicNumericFacet
    * The non-localized label for the facet.
    */
   @Prop() public label = 'No label';
+  /**
+   * The number of values to request for this facet, when there are no manual ranges.
+   */
+  @Prop({mutable: true}) public numberOfValues = 10;
 
   private buildManualRanges() {
     const options = Array.from(
@@ -78,12 +91,18 @@ export class AtomicNumericFacet
   }
 
   public initialize() {
+    this.searchStatus = buildSearchStatus(this.bindings.engine);
     const manualRanges = this.buildManualRanges();
+    if (manualRanges.length) {
+      this.numberOfValues = manualRanges.length;
+    }
+
     const options: NumericFacetOptions = {
       facetId: this.facetId,
       field: this.field,
       generateAutomaticRanges: manualRanges.length === 0,
       currentValues: manualRanges,
+      numberOfValues: this.numberOfValues,
     };
 
     this.facet = buildNumericFacet(this.bindings.engine, {options});
@@ -134,9 +153,22 @@ export class AtomicNumericFacet
   }
 
   public render() {
-    if (!this.facetState.hasActiveValues && this.totalNumberOfResults === 0) {
-      return null;
+    if (this.searchStatusState.hasError) {
+      return;
     }
+
+    if (!this.searchStatusState.firstSearchExecuted) {
+      return (
+        <FacetPlaceholder
+          numberOfValues={this.numberOfValues}
+        ></FacetPlaceholder>
+      );
+    }
+
+    if (!this.facetState.hasActiveValues && this.totalNumberOfResults === 0) {
+      return;
+    }
+
     return (
       <BaseFacet
         controller={new BaseFacetController(this)}

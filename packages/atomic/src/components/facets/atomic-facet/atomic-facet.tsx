@@ -7,6 +7,9 @@ import {
   FacetValue,
   FacetSortCriterion,
   SpecificFacetSearchResult,
+  SearchStatus,
+  SearchStatusState,
+  buildSearchStatus,
 } from '@coveo/headless';
 import {
   Bindings,
@@ -26,6 +29,7 @@ import {
   FacetSearchComponent,
   FacetSearchStrings,
 } from '../facet-search/facet-search';
+import {FacetPlaceholder} from '../atomic-facet-placeholder/atomic-facet-placeholder';
 
 /**
  * A facet component. It is displayed as a facet in desktop browsers and as
@@ -38,6 +42,7 @@ import {
  * @part reset-button - The button that resets the actively selected facet values
  * @part show-more - The show more results button
  * @part show-less - The show less button
+ * @part placeholder - The placeholder shown before the first search is executed.
  */
 @Component({
   tag: 'atomic-facet',
@@ -48,10 +53,15 @@ export class AtomicFacet
   implements InitializableComponent, FacetSearchComponent, BaseFacetState {
   @InitializeBindings() public bindings!: Bindings;
   public facet!: Facet;
+  public searchStatus!: SearchStatus;
   private facetSearch?: FacetSearch;
+
   @BindStateToController('facet', {subscribeOnConnectedCallback: true})
   @State()
   public facetState!: FacetState;
+  @BindStateToController('searchStatus')
+  @State()
+  private searchStatusState!: SearchStatusState;
   @State() public error!: Error;
 
   @BindStateToI18n()
@@ -98,6 +108,7 @@ export class AtomicFacet
   @Prop() public sortCriteria: FacetSortCriterion = 'automatic';
 
   public initialize() {
+    this.searchStatus = buildSearchStatus(this.bindings.engine);
     const options: FacetOptions = {
       field: this.field,
       delimitingCharacter: this.delimitingCharacter,
@@ -113,10 +124,6 @@ export class AtomicFacet
     this.bindings.store.state.facets[this.facetId] = {
       label: this.label,
     };
-  }
-
-  public componentDidRender() {
-    this.facetState.canShowMoreValues && this.facetSearch?.updateCombobox();
   }
 
   private get values() {
@@ -142,7 +149,7 @@ export class AtomicFacet
 
   private get showMoreButton() {
     if (!this.facetState.canShowMoreValues) {
-      return null;
+      return;
     }
 
     return (
@@ -158,7 +165,7 @@ export class AtomicFacet
 
   private get showLessButton() {
     if (!this.facetState.canShowLessValues) {
-      return null;
+      return;
     }
 
     return (
@@ -196,9 +203,25 @@ export class AtomicFacet
     });
   }
 
+  public componentDidRender() {
+    this.facetSearch?.updateCombobox();
+  }
+
   public render() {
+    if (this.searchStatusState.hasError) {
+      return;
+    }
+
+    if (!this.searchStatusState.firstSearchExecuted) {
+      return (
+        <FacetPlaceholder
+          numberOfValues={this.numberOfValues}
+        ></FacetPlaceholder>
+      );
+    }
+
     if (this.facetState.values.length === 0) {
-      return null;
+      return;
     }
 
     return (
