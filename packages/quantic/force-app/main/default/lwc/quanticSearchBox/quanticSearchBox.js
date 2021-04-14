@@ -94,6 +94,9 @@ export default class QuanticSearchBox extends LightningElement {
 
   setHighlighted() {
     const options = this.getSuggestionElements();
+    if (!options.length) {
+      return;
+    }
     const option = options[this.selectionIndex];
 
     this.resetHighlighted();

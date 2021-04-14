@@ -43,8 +43,8 @@ const setInitializedCallback = (callback, engineId) => {
  * Dispatches search request.
  * @param {string} engineId The id of the engine. 
  */
-const executeInitializedCallback = (engineId) => {
-  window.coveoHeadless[engineId].initializedCallback(window.coveoHeadless[engineId].engine);
+const executeInitializedCallback = async (engineId) => {
+  window.coveoHeadless[engineId].initializedCallback(await window.coveoHeadless[engineId].engine);
 };
 
 /**
