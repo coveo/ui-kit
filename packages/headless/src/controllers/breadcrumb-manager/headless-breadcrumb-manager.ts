@@ -32,6 +32,15 @@ import {deselectAllCategoryFacetValues} from '../../features/facets/category-fac
 import {logCategoryFacetBreadcrumb} from '../../features/facets/category-facet-set/category-facet-set-analytics-actions';
 import {logNumericFacetBreadcrumb} from '../../features/facets/range-facets/numeric-facet-set/numeric-facet-analytics-actions';
 import {logDateFacetBreadcrumb} from '../../features/facets/range-facets/date-facet-set/date-facet-analytics-actions';
+import {
+  configuration,
+  search,
+  facetSet,
+  numericFacetSet,
+  dateFacetSet,
+  categoryFacetSet,
+} from '../../app/reducers';
+import {loadReducerError} from '../../utils/errors';
 
 /**
  * The `BreadcrumbManager` headless controller manages a summary of the currently active facet filters.
@@ -164,26 +173,23 @@ export interface BreadcrumbValue<T extends BaseFacetValue> {
  * @returns A `BreadcrumbManager` controller instance.
  */
 export function buildBreadcrumbManager(
-  engine: Engine<
-    ConfigurationSection &
-      SearchSection &
-      FacetSection &
-      NumericFacetSection &
-      DateFacetSection &
-      CategoryFacetSection
-  >
+  engine: Engine<unknown>
 ): BreadcrumbManager {
+  if (!loadBreadcrumbManagerReducers(engine)) {
+    throw loadReducerError;
+  }
+
   const controller = buildController(engine);
   const {dispatch} = engine;
 
-  function getBreadcrumbs<T extends BaseFacetValue>(
+  const getBreadcrumbs = <T extends BaseFacetValue>(
     facetSet: Record<string, BaseFacetRequest>,
     executeToggleSelect: (payload: {facetId: string; selection: T}) => void,
     facetValuesSelector:
       | ((state: SearchSection & FacetSection, facetId: string) => T[])
       | ((state: SearchSection & NumericFacetSection, facetId: string) => T[])
       | ((state: SearchSection & DateFacetSection, facetId: string) => T[])
-  ) {
+  ) => {
     return Object.keys(facetSet)
       .map((facetId) => {
         const values = facetValuesSelector(engine.state, facetId).map(
@@ -200,9 +206,9 @@ export function buildBreadcrumbManager(
         };
       })
       .filter((breadcrumb) => breadcrumb.values.length);
-  }
+  };
 
-  function getFacetBreadcrumbs(): FacetBreadcrumb[] {
+  const getFacetBreadcrumbs = (): FacetBreadcrumb[] => {
     return getBreadcrumbs<FacetValue>(
       engine.state.facetSet,
       ({facetId, selection}) => {
@@ -218,9 +224,9 @@ export function buildBreadcrumbManager(
       },
       facetResponseSelectedValuesSelector
     );
-  }
+  };
 
-  function getNumericFacetBreadcrumbs(): NumericFacetBreadcrumb[] {
+  const getNumericFacetBreadcrumbs = (): NumericFacetBreadcrumb[] => {
     return getBreadcrumbs<NumericFacetValue>(
       engine.state.numericFacetSet,
       (payload) => {
@@ -229,9 +235,9 @@ export function buildBreadcrumbManager(
       },
       numericFacetSelectedValuesSelector
     );
-  }
+  };
 
-  function getDateFacetBreadcrumbs(): DateFacetBreadcrumb[] {
+  const getDateFacetBreadcrumbs = (): DateFacetBreadcrumb[] => {
     return getBreadcrumbs<DateFacetValue>(
       engine.state.dateFacetSet,
       (payload) => {
@@ -240,9 +246,9 @@ export function buildBreadcrumbManager(
       },
       dateFacetSelectedValuesSelector
     );
-  }
+  };
 
-  function buildCategoryFacetBreadcrumb(facetId: string) {
+  const buildCategoryFacetBreadcrumb = (facetId: string) => {
     const path = categoryFacetSelectedValuesSelector(engine.state, facetId);
     return {
       facetId,
@@ -262,13 +268,13 @@ export function buildBreadcrumbManager(
         );
       },
     };
-  }
+  };
 
-  function getCategoryFacetBreadcrumbs(): CategoryFacetBreadcrumb[] {
+  const getCategoryFacetBreadcrumbs = (): CategoryFacetBreadcrumb[] => {
     return Object.keys(engine.state.categoryFacetSet)
       .map(buildCategoryFacetBreadcrumb)
       .filter((breadcrumb) => breadcrumb.path.length);
-  }
+  };
 
   function hasBreadcrumbs() {
     return !![
@@ -303,4 +309,26 @@ export function buildBreadcrumbManager(
       value.deselect();
     },
   };
+}
+
+function loadBreadcrumbManagerReducers(
+  engine: Engine<unknown>
+): engine is Engine<
+  ConfigurationSection &
+    SearchSection &
+    FacetSection &
+    NumericFacetSection &
+    DateFacetSection &
+    CategoryFacetSection
+> {
+  engine.addReducers({
+    configuration,
+    search,
+    facetSet,
+    numericFacetSet,
+    dateFacetSet,
+    categoryFacetSet,
+  });
+
+  return true;
 }
