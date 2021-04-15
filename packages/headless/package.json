@@ -12,7 +12,7 @@
   "version": "0.10.0",
   "files": [
     "dist/",
-    "modules/"
+    "pkg/"
   ],
   "scripts": {
     "start": "concurrently \"npm run typedefinitions -- -w\" \"rollup -c -w\"",
