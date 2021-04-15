@@ -21,8 +21,8 @@ export const BreadcrumbSelectors = {
 export const FacetAlias: IAlias = {
   facetShadow: '@facetShadow',
   facetUL: '@facetUL',
-  facetFirstValueLabel: '@facetFirstValueLabel',
-  facetSecondValueLabel: '@facetSecondValueLabel',
+  facetFirstValue: '@facetFirstValue',
+  facetSecondValue: '@facetSecondValue',
   facetAllValueLabel: '@facetAllValueLabel',
   facetAllValueCount: '@facetAllValueCount',
 };
@@ -64,10 +64,10 @@ export function createAliasFacetUL(field: string, facetMainSelector?: string) {
     .as(FacetAliasNoAtSign.facetUL);
   cy.get(FacetAlias.facetUL)
     .find('li:nth-child(1)')
-    .as(FacetAliasNoAtSign.facetFirstValueLabel);
+    .as(FacetAliasNoAtSign.facetFirstValue);
   cy.get(FacetAlias.facetUL)
     .find('li:nth-child(2)')
-    .as(FacetAliasNoAtSign.facetSecondValueLabel);
+    .as(FacetAliasNoAtSign.facetSecondValue);
 
   const facetValueLabelCSS =
     facetMainSelector === FacetSelectors.categoryFacet ? 'button' : 'label';

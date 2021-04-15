@@ -89,23 +89,23 @@ describe('Date Facet with automatic ranges generated', () => {
   describe('When select 1 facetValue checkbox', () => {
     it('Should activate checkbox, have valid facetCount and log UA', () => {
       assertBasicFacetFunctionality(
-        FacetAlias.facetFirstValueLabel,
+        FacetAlias.facetFirstValue,
         dateFacetProp.field
       );
     });
 
     it('Should trigger breadcrumb and display correctly', () => {
-      cy.get(FacetAlias.facetFirstValueLabel).click();
+      cy.get(FacetAlias.facetFirstValue).click();
       createBreadcrumbShadowAlias();
       cy.get('@breadcrumbClearAllFilter').should('be.visible');
       facetValueShouldDisplayInBreadcrumb(
-        FacetAlias.facetFirstValueLabel,
+        FacetAlias.facetFirstValue,
         '.breadcrumb:nth-child(1) button span'
       );
     });
 
     it('Should reflect selected facetValue on URL', () => {
-      cy.get(FacetAlias.facetFirstValueLabel)
+      cy.get(FacetAlias.facetFirstValue)
         .click()
         .find('label span:nth-child(1)')
         .invoke('text')
@@ -169,7 +169,7 @@ describe('Date facet with manually specified ranges', () => {
     describe.skip('When select 1 facetValue checkbox', () => {
       it('Should activate checkbox and log UA', () => {
         assertBasicFacetFunctionality(
-          FacetAlias.facetFirstValueLabel,
+          FacetAlias.facetFirstValue,
           dateFacetProp.field
         );
       });
@@ -231,7 +231,7 @@ describe('Date with custom date-format', () => {
     const formatedEnd = convertDateFormatLabel('01/01/2014', 'DD/MMM/YYYY');
     const formatedLabel = `${formatedStart} to ${formatedEnd}`;
 
-    cy.get(FacetAlias.facetFirstValueLabel)
+    cy.get(FacetAlias.facetFirstValue)
       .find('label span:nth-child(1)')
       .should('contain.text', formatedLabel);
   });

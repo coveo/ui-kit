@@ -154,10 +154,10 @@ export function convertDateToFacetValue(
 export function assertDeselectFacet(field: string) {
   cy.wait('@coveoAnalytics');
 
-  cy.get(FacetAlias.facetFirstValueLabel).click();
+  cy.get(FacetAlias.facetFirstValue).click();
   cy.wait('@coveoAnalytics');
 
-  cy.get(FacetAlias.facetFirstValueLabel)
+  cy.get(FacetAlias.facetFirstValue)
     .click()
     .find(FacetSelectors.checkbox)
     .should('not.be.checked');
@@ -170,10 +170,10 @@ export function assertDeselectFacet(field: string) {
 export function assertClearAllFacet() {
   cy.wait('@coveoAnalytics');
 
-  cy.get(FacetAlias.facetFirstValueLabel).click();
+  cy.get(FacetAlias.facetFirstValue).click();
   cy.wait('@coveoAnalytics');
 
-  cy.get(FacetAlias.facetSecondValueLabel).click();
+  cy.get(FacetAlias.facetSecondValue).click();
   cy.wait('@coveoAnalytics');
 
   cy.get(FacetAlias.facetShadow).find(FacetSelectors.clearAllButton).click();
@@ -182,10 +182,10 @@ export function assertClearAllFacet() {
     expect(request.body.facetState).to.have.lengthOf(0);
   });
 
-  cy.get(FacetAlias.facetFirstValueLabel)
+  cy.get(FacetAlias.facetFirstValue)
     .find(FacetSelectors.checkbox)
     .should('not.be.checked');
-  cy.get(FacetAlias.facetSecondValueLabel)
+  cy.get(FacetAlias.facetSecondValue)
     .find(FacetSelectors.checkbox)
     .should('not.be.checked');
 }
