@@ -236,7 +236,7 @@ export class AtomicBreadcrumbManager implements InitializableComponent {
     return (
       <button
         part="breadcrumb-clear-all"
-        class="text-primary ml-2 flex-shrink-0"
+        class="text-primary ml-2 flex-shrink-0 self-start"
         onClick={() => this.breadcrumbManager.deselectAll()}
       >
         {this.strings.clearAllFilters()}
@@ -303,7 +303,7 @@ export class AtomicBreadcrumbManager implements InitializableComponent {
       return;
     }
     return (
-      <div class="flex text-sm">
+      <div class="flex justify-between text-sm">
         <ul class="flex flex-col">
           {this.facetBreadcrumbs}
           {this.numericFacetBreadcrumbs}
