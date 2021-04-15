@@ -5,10 +5,10 @@ import {
 } from '../../platform-client';
 import {PreprocessRequest} from '../../preprocess-request';
 import {
-  buildClassifyRequest,
-  ClassifyRequest,
-} from './classify/classify-request';
-import {ClassifyResponse} from './classify/classify-response';
+  buildGetCaseClassificationsRequest,
+  GetCaseClassificationsRequest,
+} from './get-case-classifications/get-case-classifications-request';
+import {GetCaseClassificationsResponse} from './get-case-classifications/get-case-classifications-response';
 import {
   buildSuggestDocumentsRequest,
   SuggestDocumentsRequest,
@@ -72,18 +72,18 @@ export class CaseAssistAPIClient {
    * @param req - The request parameters.
    * @returns The case classifications grouped by fields for the given case information.
    */
-  async classify(
-    req: ClassifyRequest
-  ): Promise<CaseAssistAPIResponse<ClassifyResponse>> {
+  async getCaseClassifications(
+    req: GetCaseClassificationsRequest
+  ): Promise<CaseAssistAPIResponse<GetCaseClassificationsResponse>> {
     const response = await PlatformClient.call({
-      ...buildClassifyRequest(req),
+      ...buildGetCaseClassificationsRequest(req),
       ...this.options,
       ...this.defaultClientHooks,
     });
 
     const body = await response.json();
     return response.ok
-      ? {success: body as ClassifyResponse}
+      ? {success: body as GetCaseClassificationsResponse}
       : {error: body as CaseAssistAPIErrorStatusResponse};
   }
 

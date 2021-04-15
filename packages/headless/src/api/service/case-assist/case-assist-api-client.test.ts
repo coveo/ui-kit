@@ -1,8 +1,8 @@
 import {buildMockCaseAssistAPIClient} from '../../../test/mock-case-assist-api-client';
 import {PlatformClient} from '../../platform-client';
 import {CaseAssistAPIClient} from './case-assist-api-client';
-import {ClassifyParam} from './classify/classify-request';
-import {SuggestDocumentsParam} from './suggest-documents/suggest-documents-request';
+import {GetCaseClassificationsRequest} from './get-case-classifications/get-case-classifications-request';
+import {SuggestDocumentsRequest} from './suggest-documents/suggest-documents-request';
 
 describe('case assist api client', () => {
   const platformUrl = 'https://platformdev.cloud.coveo.com';
@@ -30,10 +30,10 @@ describe('case assist api client', () => {
     PlatformClient.call = platformCallMock;
   };
 
-  describe('classify', () => {
-    const buildClassifyRequest = (
-      req: Partial<ClassifyParam> = {}
-    ): ClassifyParam => ({
+  describe('getCaseClassifications', () => {
+    const buildGetCaseClassificationsRequest = (
+      req: Partial<GetCaseClassificationsRequest> = {}
+    ): GetCaseClassificationsRequest => ({
       url: platformUrl,
       organizationId: orgId,
       accessToken: accessToken,
@@ -46,7 +46,7 @@ describe('case assist api client', () => {
     });
 
     it('should call the platform endpoint with the correct arguments', async () => {
-      const request = buildClassifyRequest({
+      const request = buildGetCaseClassificationsRequest({
         fields: {
           subject: 'some case subject',
         },
@@ -57,7 +57,7 @@ describe('case assist api client', () => {
         json: () => Promise.resolve('some content'),
       });
 
-      await client.classify(request);
+      await client.getCaseClassifications(request);
 
       expect(platformCallMock).toBeCalled();
       const mockRequest = platformCallMock.mock.calls[0][0];
@@ -79,7 +79,7 @@ describe('case assist api client', () => {
     });
 
     it('should call the platform endpoint with debug=1 when debug is enabled', async () => {
-      const request = buildClassifyRequest({
+      const request = buildGetCaseClassificationsRequest({
         debug: true,
       });
 
@@ -88,14 +88,14 @@ describe('case assist api client', () => {
         json: () => Promise.resolve('some content'),
       });
 
-      await client.classify(request);
+      await client.getCaseClassifications(request);
 
       const expectedUrl = `${request.url}/rest/organizations/${request.organizationId}/caseassists/${request.caseAssistId}/classify?debug=1`;
       expect(platformCallMock.mock.calls[0][0].url).toBe(expectedUrl);
     });
 
     it('should return error response on failure', async () => {
-      const request = buildClassifyRequest();
+      const request = buildGetCaseClassificationsRequest();
 
       const expectedError = {
         statusCode: 401,
@@ -108,7 +108,7 @@ describe('case assist api client', () => {
         json: () => Promise.resolve(expectedError),
       });
 
-      const response = await client.classify(request);
+      const response = await client.getCaseClassifications(request);
 
       expect(response).toMatchObject({
         error: expectedError,
@@ -116,7 +116,7 @@ describe('case assist api client', () => {
     });
 
     it('should return success response on success', async () => {
-      const request = buildClassifyRequest();
+      const request = buildGetCaseClassificationsRequest();
 
       const expectedBody = {
         fields: {
@@ -138,7 +138,7 @@ describe('case assist api client', () => {
         json: () => Promise.resolve(expectedBody),
       });
 
-      const response = await client.classify(request);
+      const response = await client.getCaseClassifications(request);
 
       expect(response).toMatchObject({
         success: expectedBody,
@@ -148,8 +148,8 @@ describe('case assist api client', () => {
 
   describe('suggestDocuments', () => {
     const buildSuggestDocumentsRequest = (
-      req: Partial<SuggestDocumentsParam> = {}
-    ): SuggestDocumentsParam => ({
+      req: Partial<SuggestDocumentsRequest> = {}
+    ): SuggestDocumentsRequest => ({
       url: platformUrl,
       organizationId: orgId,
       accessToken: accessToken,
