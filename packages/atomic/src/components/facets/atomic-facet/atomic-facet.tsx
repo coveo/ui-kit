@@ -139,7 +139,9 @@ export class AtomicFacet
         label={`${item.value}`}
         ariaLabel={this.strings.facetValue(item)}
         isSelected={isSelected}
-        numberOfResults={item.numberOfResults}
+        numberOfResults={item.numberOfResults.toLocaleString(
+          this.bindings.i18n.language
+        )}
         facetValueSelected={() => {
           this.facet.toggleSelect(item);
         }}
@@ -183,7 +185,7 @@ export class AtomicFacet
     return (
       <div class="flex" aria-hidden>
         <span
-          class="whitespace-nowrap overflow-ellipsis overflow-hidden"
+          class="ellipsed"
           innerHTML={FacetSearch.highlightSearchResult(
             searchResult.displayValue,
             this.facetSearchQuery

@@ -163,13 +163,16 @@ export class AtomicCategoryFacet
   }
 
   private buildParent(parent: CategoryFacetValue, isLast: boolean) {
-    const listClass = ' text-lg lg:text-base py-1 lg:py-0.5';
+    const listClass = 'text-lg lg:text-base py-1 lg:py-0.5';
     if (isLast) {
       return (
-        <li class={listClass}>
-          <b class="ml-8 lg:ml-6">
-            {parent.value} ({parent.numberOfResults})
-          </b>
+        <li class={`${listClass} flex font-bold`}>
+          <span class="ml-8 lg:ml-6 ellipsed">{parent.value}</span>
+          <span class="ml-1.5 text-on-background-variant">
+            (
+            {parent.numberOfResults.toLocaleString(this.bindings.i18n.language)}
+            )
+          </span>
         </li>
       );
     }
@@ -184,7 +187,7 @@ export class AtomicCategoryFacet
             innerHTML={LeftArrow}
             class="arrow-size text-secondary fill-current"
           />
-          <span class="ml-2">{parent.value}</span>
+          <span class="ml-2 ellipsed">{parent.value}</span>
         </button>
       </li>
     );
@@ -201,13 +204,13 @@ export class AtomicCategoryFacet
           class="w-full flex items-center text-left text-lg lg:text-base py-1 lg:py-0.5"
           onClick={() => this.facet.toggleSelect(item)}
         >
-          <span class="my-auto">{item.value}</span>
-          <span class="ml-auto my-auto self-end text-on-background-variant">
-            {item.numberOfResults}
+          <span class="ellipsed">{item.value}</span>
+          <span class="ml-1.5 text-on-background-variant">
+            ({item.numberOfResults.toLocaleString(this.bindings.i18n.language)})
           </span>
           <div
             innerHTML={RightArrow}
-            class="ml-2 arrow-size text-secondary fill-current"
+            class="ml-1.5 arrow-size text-secondary fill-current"
           />
         </button>
       </li>
@@ -288,14 +291,9 @@ export class AtomicCategoryFacet
   }
 
   private renderPath(path: string[]) {
-    const ellipsisClasses =
-      'whitespace-nowrap overflow-ellipsis overflow-hidden';
-
     if (!path.length) {
       return (
-        <span
-          class={ellipsisClasses}
-        >{`${this.strings.pathPrefix()} ${this.strings.allCategories()}`}</span>
+        <span class="ellipsed">{`${this.strings.pathPrefix()} ${this.strings.allCategories()}`}</span>
       );
     }
 
@@ -303,9 +301,7 @@ export class AtomicCategoryFacet
       <span class="mr-1">{this.strings.pathPrefix()}</span>,
       this.ellipsedPath(path).map((part, index) => [
         index > 0 && <span>{SEPARATOR}</span>,
-        <span
-          class={part === ELLIPSIS ? '' : `${ellipsisClasses} flex-1 max-w-max`}
-        >
+        <span class={part === ELLIPSIS ? '' : 'ellipsed flex-1 max-w-max'}>
           {part}
         </span>,
       ]),
@@ -316,7 +312,7 @@ export class AtomicCategoryFacet
     return [
       <div class="flex" aria-hidden>
         <span
-          class="whitespace-nowrap overflow-ellipsis overflow-hidden"
+          class="ellipsed"
           innerHTML={FacetSearch.highlightSearchResult(
             searchResult.displayValue,
             this.facetSearchQuery
