@@ -148,7 +148,7 @@ function buildEsmOutput(outDir) {
 const dev = buildBrowserConfiguration({
   input: 'src/index.ts',
   output: [
-    buildEsmOutput('../atomic/src/external-builds/headless.esm.js')
+    buildEsmOutput('../atomic/src/external-builds')
   ]
 });
 
