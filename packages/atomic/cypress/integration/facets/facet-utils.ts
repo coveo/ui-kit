@@ -56,10 +56,10 @@ export function facetValueShouldDisplayInBreadcrumb(
     });
 }
 
-export function assertBasicFacetFunctionality(selector: string, field: string) {
+export function assertBasicFacetFunctionality(field: string) {
   cy.wait('@coveoAnalytics');
 
-  cy.get(selector).click();
+  cy.get(FacetAlias.facetFirstValue).find(FacetSelectors.label).click();
   cy.wait('@coveoAnalytics').then(({request}) => {
     const analyticsBody = request.body;
     expect(analyticsBody).to.have.property('actionCause', 'facetSelect');
@@ -67,8 +67,8 @@ export function assertBasicFacetFunctionality(selector: string, field: string) {
     expect(analyticsBody.facetState[0]).to.have.property('state', 'selected');
     expect(analyticsBody.facetState[0]).to.have.property('field', field);
 
-    cy.get(selector)
-      .find('label span:nth-child(1)')
+    cy.get(FacetAlias.facetFirstValue)
+      .find(FacetSelectors.labelText)
       .invoke('text')
       .then((txt) => {
         const facetTypeDetected = analyticsBody.facetState[0].facetType;
@@ -77,7 +77,9 @@ export function assertBasicFacetFunctionality(selector: string, field: string) {
       });
   });
 
-  cy.get(selector).find(FacetSelectors.checkbox).should('be.checked');
+  cy.get(FacetAlias.facetFirstValue)
+    .find(FacetSelectors.checkbox)
+    .should('be.checked');
   assertNonZeroFacetCount();
 }
 
@@ -154,11 +156,11 @@ export function convertDateToFacetValue(
 export function assertDeselectFacet(field: string) {
   cy.wait('@coveoAnalytics');
 
-  cy.get(FacetAlias.facetFirstValue).click();
+  cy.get(FacetAlias.facetFirstValue).find(FacetSelectors.label).click();
   cy.wait('@coveoAnalytics');
 
+  cy.get(FacetAlias.facetFirstValue).find(FacetSelectors.label).click();
   cy.get(FacetAlias.facetFirstValue)
-    .click()
     .find(FacetSelectors.checkbox)
     .should('not.be.checked');
   cy.wait('@coveoAnalytics').then(({request}) => {
@@ -170,10 +172,10 @@ export function assertDeselectFacet(field: string) {
 export function assertClearAllFacet() {
   cy.wait('@coveoAnalytics');
 
-  cy.get(FacetAlias.facetFirstValue).click();
+  cy.get(FacetAlias.facetFirstValue).find(FacetSelectors.label).click();
   cy.wait('@coveoAnalytics');
 
-  cy.get(FacetAlias.facetSecondValue).click();
+  cy.get(FacetAlias.facetSecondValue).find(FacetSelectors.label).click();
   cy.wait('@coveoAnalytics');
 
   cy.get(FacetAlias.facetShadow).find(FacetSelectors.clearAllButton).click();

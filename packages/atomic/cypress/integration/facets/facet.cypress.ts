@@ -84,14 +84,11 @@ describe('Standard Facet', () => {
 
   describe('When select 1 facetValue checkbox', () => {
     it('Should active checkbox and log UA', () => {
-      assertBasicFacetFunctionality(
-        FacetAlias.facetFirstValue,
-        facetProp.field
-      );
+      assertBasicFacetFunctionality(facetProp.field);
     });
 
     it('Should trigger breadcrumb and display correctly', () => {
-      cy.get(FacetAlias.facetFirstValue).click();
+      cy.get(FacetAlias.facetFirstValue).find(FacetSelectors.label).click();
       createBreadcrumbShadowAlias();
       cy.get(BreadcrumbAlias.breadcrumbClearAllFilter).should('be.visible');
       facetValueShouldDisplayInBreadcrumb(
@@ -101,9 +98,9 @@ describe('Standard Facet', () => {
     });
 
     it('Should reflect selected facetValue on URL', () => {
+      cy.get(FacetAlias.facetFirstValue).find(FacetSelectors.label).click();
       cy.get(FacetAlias.facetFirstValue)
-        .click()
-        .find('label span:nth-child(1)')
+        .find(FacetSelectors.labelText)
         .invoke('text')
         .then((txt) => {
           const urlHash = `#f[author]=${encodeURI(txt)}`;
@@ -120,8 +117,8 @@ describe('Standard Facet', () => {
 
   describe('When select 2 facetValue checkboxes', () => {
     it('Two checkboxes should selected and should record UA correctly', () => {
-      cy.get(FacetAlias.facetFirstValue).click();
-      cy.get(FacetAlias.facetSecondValue).click();
+      cy.get(FacetAlias.facetFirstValue).find(FacetSelectors.label).click();
+      cy.get(FacetAlias.facetSecondValue).find(FacetSelectors.label).click();
       cy.get(FacetAlias.facetFirstValue)
         .find(FacetSelectors.checkbox)
         .should('be.checked');
@@ -135,8 +132,8 @@ describe('Standard Facet', () => {
     });
 
     it('Should trigger breadcrumb and display correctly', () => {
-      cy.get(FacetAlias.facetFirstValue).click();
-      cy.get(FacetAlias.facetSecondValue).click();
+      cy.get(FacetAlias.facetFirstValue).find(FacetSelectors.label).click();
+      cy.get(FacetAlias.facetSecondValue).find(FacetSelectors.label).click();
       createBreadcrumbShadowAlias();
       cy.get(BreadcrumbAlias.breadcrumbClearAllFilter).should('be.visible');
       facetValueShouldDisplayInBreadcrumb(
@@ -150,14 +147,14 @@ describe('Standard Facet', () => {
     });
 
     it('Should reflect selected facetValue on URL', () => {
-      cy.get(FacetAlias.facetFirstValue).click();
-      cy.get(FacetAlias.facetSecondValue).click();
+      cy.get(FacetAlias.facetFirstValue).find(FacetSelectors.label).click();
+      cy.get(FacetAlias.facetSecondValue).find(FacetSelectors.label).click();
       cy.get(FacetAlias.facetFirstValue)
-        .find('label span:nth-child(1)')
+        .find(FacetSelectors.labelText)
         .invoke('text')
         .then((txtFacet1) => {
           cy.get(FacetAlias.facetSecondValue)
-            .find('label span:nth-child(1)')
+            .find(FacetSelectors.labelText)
             .invoke('text')
             .then((txtFacet2) => {
               const urlHash = `#f[author]=${encodeURI(
@@ -265,7 +262,7 @@ describe('Facet with no facetSearch, and numberOfValues is 5 ', () => {
   });
 
   it('Should active checkbox and log UA', () => {
-    assertBasicFacetFunctionality(FacetAlias.facetFirstValue, facetProp.field);
+    assertBasicFacetFunctionality(facetProp.field);
   });
 });
 

@@ -90,14 +90,11 @@ describe('Standard Numeric Facet with automatic ranges generated', () => {
 
   describe('When select 1 facetValue checkbox', () => {
     it('Should activate checkbox and log UA', () => {
-      assertBasicFacetFunctionality(
-        FacetAlias.facetFirstValue,
-        numericFacetProp.field
-      );
+      assertBasicFacetFunctionality(numericFacetProp.field);
     });
 
     it('Should trigger breadcrumb and display correctly', () => {
-      cy.get(FacetAlias.facetFirstValue).click();
+      cy.get(FacetAlias.facetFirstValue).find(FacetSelectors.label).click();
       createBreadcrumbShadowAlias();
       cy.get(BreadcrumbAlias.breadcrumbClearAllFilter).should('be.visible');
       facetValueShouldDisplayInBreadcrumb(
@@ -107,9 +104,9 @@ describe('Standard Numeric Facet with automatic ranges generated', () => {
     });
 
     it('Should reflect selected facetValue on URL', () => {
+      cy.get(FacetAlias.facetFirstValue).find(FacetSelectors.label).click();
       cy.get(FacetAlias.facetFirstValue)
-        .click()
-        .find('label span:nth-child(1)')
+        .find(FacetSelectors.labelText)
         .invoke('text')
         .then((txt) => {
           const facetValueInApiFormat = convertFacetValueToAPIformat(
@@ -174,10 +171,7 @@ describe('Numeric facet with manually specified ranges', () => {
 
     describe('When select 1 facetValue checkbox', () => {
       it('Should activate checkbox and log UA', () => {
-        assertBasicFacetFunctionality(
-          FacetAlias.facetFirstValue,
-          numericFacetProp.field
-        );
+        assertBasicFacetFunctionality(numericFacetProp.field);
       });
     });
   });
