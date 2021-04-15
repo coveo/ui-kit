@@ -11,14 +11,14 @@ import {
   prepareSuggestionRequestFields,
 } from '../case-assist-params';
 
-export type ClassifyParam = BaseParam &
+export type ClassifyRequest = BaseParam &
   CaseAssistIdParam &
   VisitorIDParam &
   LocaleParam &
   FieldsParam &
   DebugParam;
 
-export const buildClassifyRequest = (req: ClassifyParam) => {
+export const buildClassifyRequest = (req: ClassifyRequest) => {
   const queryStringArguments: Record<string, string> = req.debug
     ? {debug: '1'}
     : {};
@@ -35,7 +35,7 @@ export const buildClassifyRequest = (req: ClassifyParam) => {
   };
 };
 
-export const prepareClassifyRequestParams = (req: ClassifyParam) => ({
+const prepareClassifyRequestParams = (req: ClassifyRequest) => ({
   visitorId: req.visitorId,
   locale: req.locale,
   fields: prepareSuggestionRequestFields(req.fields),

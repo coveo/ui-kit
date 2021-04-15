@@ -3,7 +3,7 @@
  *
  * See  https://platform.cloud.coveo.com/docs?urls.primaryName=Customer%20Service#/Suggestions/postClassify
  */
-export interface ClassifySuccessContent {
+export interface ClassifyResponse {
   fields: {
     [fieldName: string]: {
       predictions: [

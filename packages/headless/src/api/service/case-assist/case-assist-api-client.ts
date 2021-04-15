@@ -3,20 +3,24 @@ import {
   NoopPreprocessRequestMiddleware,
   PlatformClient,
 } from '../../platform-client';
-import {NoopPreprocessRequest} from '../../preprocess-request';
-import {buildClassifyRequest, ClassifyParam} from './classify/classify-request';
-import {ClassifySuccessContent} from './classify/classify-response';
+import {PreprocessRequest} from '../../preprocess-request';
+import {
+  buildClassifyRequest,
+  ClassifyRequest,
+} from './classify/classify-request';
+import {ClassifyResponse} from './classify/classify-response';
 import {
   buildSuggestDocumentsRequest,
-  SuggestDocumentsParam,
+  SuggestDocumentsRequest,
 } from './suggest-documents/suggest-documents-request';
-import {SuggestDocumentsSuccessContent} from './suggest-documents/suggest-documents-response';
+import {SuggestDocumentsResponse} from './suggest-documents/suggest-documents-response';
 
 /**
  * Initialization options for the `CaseAssistAPIClient`.
  */
 export interface CaseAssistAPIClientOptions {
   logger: Logger;
+  preprocessRequest: PreprocessRequest;
   renewAccessToken: () => Promise<string>;
 }
 
@@ -55,7 +59,6 @@ export interface CaseAssistAPIErrorResponse {
  */
 export class CaseAssistAPIClient {
   private defaultClientHooks = {
-    preprocessRequest: NoopPreprocessRequest,
     deprecatedPreprocessRequest: NoopPreprocessRequestMiddleware,
   };
 
@@ -70,8 +73,8 @@ export class CaseAssistAPIClient {
    * @returns The case classifications grouped by fields for the given case information.
    */
   async classify(
-    req: ClassifyParam
-  ): Promise<CaseAssistAPIResponse<ClassifySuccessContent>> {
+    req: ClassifyRequest
+  ): Promise<CaseAssistAPIResponse<ClassifyResponse>> {
     const response = await PlatformClient.call({
       ...buildClassifyRequest(req),
       ...this.options,
@@ -80,7 +83,7 @@ export class CaseAssistAPIClient {
 
     const body = await response.json();
     return response.ok
-      ? {success: body as ClassifySuccessContent}
+      ? {success: body as ClassifyResponse}
       : {error: body as CaseAssistAPIErrorStatusResponse};
   }
 
@@ -93,8 +96,8 @@ export class CaseAssistAPIClient {
    * @returns The document suggestions for the given case information and context.
    */
   async suggestDocuments(
-    req: SuggestDocumentsParam
-  ): Promise<CaseAssistAPIResponse<SuggestDocumentsSuccessContent>> {
+    req: SuggestDocumentsRequest
+  ): Promise<CaseAssistAPIResponse<SuggestDocumentsResponse>> {
     const response = await PlatformClient.call({
       ...buildSuggestDocumentsRequest(req),
       ...this.options,
@@ -104,7 +107,7 @@ export class CaseAssistAPIClient {
     const body = await response.json();
     return response.ok
       ? {
-          success: body as SuggestDocumentsSuccessContent,
+          success: body as SuggestDocumentsResponse,
         }
       : {error: body as CaseAssistAPIErrorStatusResponse};
   }
