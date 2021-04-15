@@ -28,3 +28,10 @@ export function randomID(prepend?: string, length = 5) {
 export function parseXML(string: string) {
   return new window.DOMParser().parseFromString(string, 'text/xml');
 }
+
+// http://underscorejs.org/docs/modules/defer.html
+export function defer(func: Function) {
+  return setTimeout(() => {
+    return func.apply(null);
+  }, 1);
+}

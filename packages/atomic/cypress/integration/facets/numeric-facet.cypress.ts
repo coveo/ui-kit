@@ -228,7 +228,7 @@ describe('Numeric with invalid options', () => {
           end: 100000,
         },
         {
-          start: 'x1000000',
+          start: ('x1000000' as unknown) as number,
           end: 1000000,
         },
       ];
@@ -240,5 +240,21 @@ describe('Numeric with invalid options', () => {
       );
       shouldRenderErrorComponent(FacetSelectors.numericFacet);
     });
+  });
+});
+
+describe('when no first search has yet been executed', () => {
+  beforeEach(() => {
+    setUpPage(
+      ` <atomic-numeric-facet field="${numericFacetProp.field}"></atomic-numeric-facet>`,
+      false
+    );
+  });
+
+  it('should render a placeholder', () => {
+    cy.get(FacetSelectors.numericFacet)
+      .shadow()
+      .find('div[part="placeholder"]')
+      .should('be.visible');
   });
 });

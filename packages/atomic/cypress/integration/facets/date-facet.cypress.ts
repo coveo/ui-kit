@@ -271,3 +271,19 @@ describe('Date with invalid options', () => {
     });
   });
 });
+
+describe('when no first search has yet been executed', () => {
+  beforeEach(() => {
+    setUpPage(
+      ` <atomic-date-facet field="${dateFacetProp.field}"></atomic-date-facet>`,
+      false
+    );
+  });
+
+  it('should render a placeholder', () => {
+    cy.get(FacetSelectors.dateFacet)
+      .shadow()
+      .find('div[part="placeholder"]')
+      .should('be.visible');
+  });
+});

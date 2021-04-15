@@ -6,6 +6,7 @@ import {deselectAllFacetValues} from '../../facet-set/facet-set-actions';
 import {
   validatePayload,
   requiredNonEmptyString,
+  serializeSchemaValidationError,
 } from '../../../../utils/validate-payload';
 import {facetIdDefinition} from '../../generic/facet-actions-validation';
 import {
@@ -38,14 +39,37 @@ const numericFacetRegistrationOptionsDefinition = {
   sortCriteria: new Value<RangeFacetSortCriterion>({required: false}),
 };
 
+export function validateManualNumericRanges(
+  options: Pick<NumericFacetRegistrationOptions, 'currentValues'>
+) {
+  if (!options.currentValues) {
+    return;
+  }
+
+  options.currentValues.forEach(({start, end}) => {
+    if (start > end) {
+      throw new Error(
+        `The start value is greater than the end value for the numeric range ${start} to ${end}`
+      );
+    }
+  });
+}
+
 /**
  * Registers a numeric facet.
  * @param (NumericFacetRegistrationOptions) The options to register the facet with.
  */
 export const registerNumericFacet = createAction(
   'numericFacet/register',
-  (payload: NumericFacetRegistrationOptions) =>
-    validatePayload(payload, numericFacetRegistrationOptionsDefinition)
+  (payload: NumericFacetRegistrationOptions) => {
+    try {
+      validatePayload(payload, numericFacetRegistrationOptionsDefinition);
+      validateManualNumericRanges(payload);
+      return {payload, error: null};
+    } catch (error) {
+      return {payload, error: serializeSchemaValidationError(error)};
+    }
+  }
 );
 
 /**

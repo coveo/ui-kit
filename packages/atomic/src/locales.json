@@ -854,5 +854,17 @@
   "to": {
     "en": "{{- start}} to {{- end}}",
     "fr": "{{- start}} à {{- end}}"
+  },
+  "in": {
+    "en": "in",
+    "fr": "dans"
+  },
+  "under": {
+    "en": "{{child}} under {{parent}}",
+    "fr": "{{child}} sous {{parent}}"
+  },
+  "previewResult": {
+    "en": "Preview the result",
+    "fr": "Prévisualiser le résultat"
   }
 }

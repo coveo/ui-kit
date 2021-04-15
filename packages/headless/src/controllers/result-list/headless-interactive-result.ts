@@ -12,7 +12,7 @@ export interface InteractiveResultOptions {
   /**
    * The amount of time to wait before selecting the result after calling `beginDelayedSelect`.
    *
-   * @default 1000
+   * @defaultValue `1000`
    */
   selectionDelay?: number;
 }

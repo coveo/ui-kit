@@ -1,7 +1,9 @@
 node('linux && docker') {
   checkout scm
-  def isMaster = env.BRANCH_NAME == 'master'
   def commitHash = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
+  def tag = sh(script: "git tag --contains", returnStdout: true).trim()
+  def isBump = tag ==~ /^v[0-9].*$/
+  def isMaster = env.BRANCH_NAME == 'master'
 
   withEnv(['npm_config_cache=npm-cache', 'CI=true']) {
     withDockerContainer(image: 'node:14', args: '-u=root') {
@@ -31,11 +33,11 @@ node('linux && docker') {
       }
 
       stage('Cypress Test') {
-       sh 'apt-get -y install libgtk2.0-0 libgtk-3-0 libnotify-dev libgconf-2-4 libgbm-dev libnss3 libasound2 xauth xvfb'
-       sh 'rm -rf /var/lib/apt/lists/*'
-       sh 'cd packages/atomic && npx cypress install'
-       sh 'cd packages/atomic && npm start & npx wait-on http://localhost:3333'
-       sh 'NO_COLOR=1 npm run cypress:test'
+        sh 'apt-get -y install libgtk2.0-0 libgtk-3-0 libnotify-dev libgconf-2-4 libgbm-dev libnss3 libasound2 xauth xvfb'
+        sh 'rm -rf /var/lib/apt/lists/*'
+        sh 'cd packages/atomic && npx cypress install'
+        sh 'cd packages/atomic && npm run start:prod & npx wait-on http://localhost:3333'
+        sh 'NO_COLOR=1 npm run cypress:test'
       }
 
       stage('Generate Docs') {
@@ -52,14 +54,19 @@ node('linux && docker') {
       sh 'git clean -f'
     }
 
-    withDockerContainer(image: 'node:14', args: '-u=root') {
-      stage('Bump version') {
-        withCredentials([
-        usernameColonPassword(credentialsId: 'github-commit-token', variable: 'GH_CREDENTIALS')]) {
-          sh 'npm run bump:version:pre'
+    if (!isBump) {
+      withDockerContainer(image: 'node:14', args: '-u=root') {
+        stage('Commit bumped version') {
+            withCredentials([
+            usernameColonPassword(credentialsId: 'github-commit-token', variable: 'GH_CREDENTIALS')]) {
+              sh 'npm run bump:version:pre'
+            }
         }
-     }
+      }
+      return
+    }
 
+    withDockerContainer(image: 'node:14', args: '-u=root') {
       stage('Npm publish') {
         withCredentials([
         string(credentialsId: 'NPM_TOKEN', variable: 'NPM_TOKEN')]) {

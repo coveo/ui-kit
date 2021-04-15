@@ -263,9 +263,25 @@ export {
 } from './search-parameter-manager/headless-search-parameter-manager';
 
 export {
+  UrlManagerProps,
+  UrlManagerInitialState,
+  UrlManagerState,
+  UrlManager,
+  buildUrlManager,
+} from './url-manager/headless-url-manager';
+
+export {
   SearchStatus,
   SearchStatusState,
   buildSearchStatus,
 } from './search-status/headless-search-status';
 
 export {ErrorPayload} from './controller/error-payload';
+
+export {
+  Quickview,
+  QuickviewOptions,
+  QuickviewProps,
+  QuickviewState,
+  buildQuickview,
+} from './quickview/headless-quickview';

@@ -19,10 +19,9 @@ import {
   SearchSection,
 } from '../../../../state/state-sections';
 import {executeToggleNumericFacetSelect} from '../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-controller-actions';
-import {validateOptions} from '../../../../utils/validate-payload';
 import {
   NumericFacetOptions,
-  numericFacetOptionsSchema,
+  validateNumericFacetOptions,
 } from './headless-numeric-facet-options';
 import {determineFacetId} from '../../_common/facet-id-determinor';
 import {buildNumericRange, NumericRangeOptions} from './numeric-range';
@@ -140,13 +139,7 @@ export function buildNumericFacet(
     facetId,
   };
 
-  validateOptions(
-    engine,
-    numericFacetOptionsSchema,
-    options,
-    'buildNumericFacet'
-  );
-
+  validateNumericFacetOptions(engine, options);
   dispatch(registerNumericFacet(options));
 
   const rangeFacet = buildRangeFacet<NumericFacetRequest, NumericFacetResponse>(

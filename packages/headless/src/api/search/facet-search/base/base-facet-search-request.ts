@@ -1,11 +1,11 @@
-import {BaseParam} from '../../search-api-params';
+import {BaseParam} from '../../../platform-service-params';
 import {SearchRequest} from '../../search/search-request';
 
 export interface FacetSearchRequestOptions {
   /** A dictionary that maps index field values to facet value display names. */
   captions: Record<string, string>;
   /** The maximum number of values to fetch.
-   * @default 10
+   * @defaultValue `10`
    */
   numberOfValues: number;
   /** The string to match.*/

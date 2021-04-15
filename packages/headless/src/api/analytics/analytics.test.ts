@@ -12,6 +12,7 @@ import {buildMockSearchState} from '../../test/mock-search-state';
 import {getSearchInitialState} from '../../features/search/search-state';
 import {getPipelineInitialState} from '../../features/pipeline/pipeline-state';
 import {getSearchHubInitialState} from '../../features/search-hub/search-hub-state';
+import {buildMockFacetResponse} from '../../test/mock-facet-response';
 
 describe('analytics', () => {
   const logger = pino({level: 'silent'});
@@ -98,6 +99,34 @@ describe('analytics', () => {
       };
       const provider = new AnalyticsProvider(state);
       expect(provider.getPipeline()).toEqual(pipeline);
+    });
+
+    it('when facets are provided, #getFacetState returns the facet state', () => {
+      const state: StateNeededByAnalyticsProvider = {
+        ...baseState,
+        search: {
+          ...getSearchInitialState(),
+          response: buildMockSearchResponse({
+            facets: [
+              buildMockFacetResponse({
+                values: [
+                  {numberOfResults: 1, value: 'helloooo', state: 'selected'},
+                ],
+              }),
+            ],
+          }),
+        },
+      };
+      const provider = new AnalyticsProvider(state);
+      expect(provider.getFacetState().length).toBe(1);
+    });
+
+    it('when facets are not provided, #getFacetState returns an empty facet state', () => {
+      const state: StateNeededByAnalyticsProvider = {
+        ...baseState,
+      };
+      const provider = new AnalyticsProvider(state);
+      expect(provider.getFacetState()).toEqual([]);
     });
 
     it('when a searchHub is not provided, #getOriginLevel1 returns the default searchHub', () => {

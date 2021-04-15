@@ -6,10 +6,6 @@ import {
   makeAnalyticsAction,
 } from '../../../analytics/analytics-utils';
 import {
-  buildFacetStateMetadata,
-  getStateNeededForFacetMetadata,
-} from '../../facet-set/facet-set-analytics-actions-utils';
-import {
   RangeFacetSelectionPayload,
   rangeFacetSelectionPayloadDefinition,
 } from './range-facet-validate-payload';
@@ -45,10 +41,7 @@ export const logRangeFacetBreadcrumb = (payload: RangeFacetSelectionPayload) =>
         rangeFacetSelectionPayloadDefinition(payload.selection)
       );
       const metadata = getRangeFacetMetadata(state, payload);
-      const facetState = buildFacetStateMetadata(
-        getStateNeededForFacetMetadata(state)
-      );
 
-      return client.logBreadcrumbFacet(metadata, facetState);
+      return client.logBreadcrumbFacet(metadata);
     }
   )();

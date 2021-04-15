@@ -23,7 +23,6 @@
  - [atomic-did-you-mean](../atomic-did-you-mean)
  - [atomic-facet](../facets/atomic-facet)
  - [atomic-facet-manager](../atomic-facet-manager)
- - [atomic-history](../atomic-history)
  - [atomic-no-results](../atomic-no-results)
  - [atomic-numeric-facet](../facets/atomic-numeric-facet)
  - [atomic-pager](../atomic-pager)
@@ -34,6 +33,7 @@
  - [atomic-result-number](../result-template-components/atomic-result-number)
  - [atomic-result-price](../result-template-components/atomic-result-price)
  - [atomic-result-printable-uri](../result-template-components/atomic-result-printable-uri)
+ - [atomic-result-quickview](../result-template-components/atomic-result-quickview)
  - [atomic-result-template](../atomic-result-template)
  - [atomic-result-text](../result-template-components/atomic-result-text)
  - [atomic-results-per-page](../atomic-results-per-page)
@@ -41,7 +41,6 @@
  - [atomic-search-interface](../atomic-search-interface)
  - [atomic-sort-dropdown](../atomic-sort-dropdown)
  - [atomic-sort-expression](../atomic-sort-expression)
- - [atomic-tab](../atomic-tab)
  - [atomic-text](../atomic-text)
 
 ### Graph
@@ -53,7 +52,6 @@ graph TD;
   atomic-did-you-mean --> atomic-component-error
   atomic-facet --> atomic-component-error
   atomic-facet-manager --> atomic-component-error
-  atomic-history --> atomic-component-error
   atomic-no-results --> atomic-component-error
   atomic-numeric-facet --> atomic-component-error
   atomic-pager --> atomic-component-error
@@ -64,6 +62,7 @@ graph TD;
   atomic-result-number --> atomic-component-error
   atomic-result-price --> atomic-component-error
   atomic-result-printable-uri --> atomic-component-error
+  atomic-result-quickview --> atomic-component-error
   atomic-result-template --> atomic-component-error
   atomic-result-text --> atomic-component-error
   atomic-results-per-page --> atomic-component-error
@@ -71,7 +70,6 @@ graph TD;
   atomic-search-interface --> atomic-component-error
   atomic-sort-dropdown --> atomic-component-error
   atomic-sort-expression --> atomic-component-error
-  atomic-tab --> atomic-component-error
   atomic-text --> atomic-component-error
   style atomic-component-error fill:#f9f,stroke:#333,stroke-width:4px
 ```

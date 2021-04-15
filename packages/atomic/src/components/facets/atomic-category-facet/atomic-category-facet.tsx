@@ -6,12 +6,15 @@ import {
   CategoryFacetOptions,
   CategoryFacetValue,
   CategoryFacetSortCriterion,
+  CategoryFacetSearchResult,
+  SearchStatus,
+  SearchStatusState,
+  buildSearchStatus,
 } from '@coveo/headless';
 import {
   Bindings,
   BindStateToController,
   BindStateToI18n,
-  I18nState,
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
@@ -25,9 +28,14 @@ import RightArrow from 'coveo-styleguide/resources/icons/svg/arrow-right-rounded
 import LeftArrow from 'coveo-styleguide/resources/icons/svg/arrow-left-rounded.svg';
 import {
   FacetSearch,
-  FacetSearchController,
-  FacetSearchState,
+  FacetSearchComponent,
+  FacetSearchStrings,
 } from '../facet-search/facet-search';
+import {FacetPlaceholder} from '../atomic-facet-placeholder/atomic-facet-placeholder';
+
+const SEPARATOR = '/';
+const ELLIPSIS = '...';
+const PATH_MAX_LENGTH = 3;
 
 /**
  * A hierarchical category facet component. It is displayed as a facet in desktop browsers and as
@@ -39,6 +47,8 @@ import {
  * @part reset-button - The button that resets the actively selected facet values
  * @part show-more - The show more results button
  * @part show-less - The show less button
+ * @part placeholder - The placeholder shown before the first search is executed.
+ *
  */
 @Component({
   tag: 'atomic-category-facet',
@@ -46,20 +56,24 @@ import {
   shadow: true,
 })
 export class AtomicCategoryFacet
-  implements InitializableComponent, FacetSearchState, BaseFacetState {
+  implements InitializableComponent, FacetSearchComponent, BaseFacetState {
   @InitializeBindings() public bindings!: Bindings;
   public facet!: CategoryFacet;
+  public searchStatus!: SearchStatus;
 
   @BindStateToController('facet', {subscribeOnConnectedCallback: true})
   @State()
   public facetState!: CategoryFacetState;
+  @BindStateToController('searchStatus')
+  @State()
+  private searchStatusState!: SearchStatusState;
   @State() public error!: Error;
 
   private facetSearch?: FacetSearch;
 
   @BindStateToI18n()
   @State()
-  public strings: I18nState = {
+  public strings: FacetSearchStrings = {
     clear: () => this.bindings.i18n.t('clear'),
     placeholder: () => this.bindings.i18n.t('search'),
     searchBox: () =>
@@ -69,6 +83,8 @@ export class AtomicCategoryFacet
     showLess: () => this.bindings.i18n.t('showLess'),
     facetValue: (variables) => this.bindings.i18n.t('facetValue', variables),
     allCategories: () => this.bindings.i18n.t('allCategories'),
+    pathPrefix: () => this.bindings.i18n.t('in'),
+    under: (variables) => this.bindings.i18n.t('under', variables),
   };
 
   @State() public isExpanded = false;
@@ -100,28 +116,41 @@ export class AtomicCategoryFacet
    * The sort criterion to apply to the returned facet values. Possible values are 'alphanumeric', and 'occurrences''.
    */
   @Prop() public sortCriteria: CategoryFacetSortCriterion = 'occurrences';
+  /**
+   * The base path shared by all values for the facet, separated by commas.
+   */
+  @Prop() public basePath = '';
+  /**
+   * Whether to use basePath as a filter for the results.
+   */
+  @Prop() public filterByBasePath = true;
+
+  private get formattedBasePath() {
+    return this.basePath
+      .split(',')
+      .map((pathFragment) => pathFragment.trim())
+      .filter((pathFragment) => pathFragment !== '');
+  }
 
   public initialize() {
+    this.searchStatus = buildSearchStatus(this.bindings.engine);
     const options: CategoryFacetOptions = {
       field: this.field,
       delimitingCharacter: this.delimitingCharacter,
       sortCriteria: this.sortCriteria,
+      numberOfValues: this.numberOfValues,
+      basePath: this.formattedBasePath,
+      filterByBasePath: this.filterByBasePath,
     };
     this.facet = buildCategoryFacet(this.bindings.engine, {options});
     this.strings[this.label] = () => this.bindings.i18n.t(this.label);
     if (this.enableFacetSearch) {
-      this.facetSearch = new FacetSearch({
-        controller: new FacetSearchController(this),
-      });
+      this.facetSearch = new FacetSearch(this);
     }
     this.facetId = this.facet.state.facetId;
     this.bindings.store.state.facets[this.facetId] = {
       label: this.label,
     };
-  }
-
-  public componentDidRender() {
-    this.facetSearch?.updateCombobox();
   }
 
   private get parents() {
@@ -134,25 +163,28 @@ export class AtomicCategoryFacet
   }
 
   private buildParent(parent: CategoryFacetValue, isLast: boolean) {
+    const listClass = ' text-lg lg:text-base py-1 lg:py-0.5';
+    if (isLast) {
+      return (
+        <li class={listClass}>
+          <b class="ml-8 lg:ml-6">
+            {parent.value} ({parent.numberOfResults})
+          </b>
+        </li>
+      );
+    }
+
     return (
-      <li>
+      <li class={listClass}>
         <button
-          class="w-full flex items-center text-lg lg:text-base py-1 lg:py-0.5"
-          onClick={() => !isLast && this.facet.toggleSelect(parent)}
+          class="w-full flex items-center"
+          onClick={() => this.facet.toggleSelect(parent)}
         >
-          {!isLast ? (
-            <div
-              innerHTML={LeftArrow}
-              class="arrow-size text-secondary fill-current"
-            />
-          ) : null}
-          <label>
-            {isLast ? (
-              <b class="ml-8 lg:ml-6">{parent.value}</b>
-            ) : (
-              <span class="ml-2">{parent.value}</span>
-            )}
-          </label>
+          <div
+            innerHTML={LeftArrow}
+            class="arrow-size text-secondary fill-current"
+          />
+          <span class="ml-2">{parent.value}</span>
         </button>
       </li>
     );
@@ -184,7 +216,7 @@ export class AtomicCategoryFacet
 
   private get resetButton() {
     if (!this.facetState.hasActiveValues) {
-      return null;
+      return;
     }
 
     return (
@@ -202,8 +234,9 @@ export class AtomicCategoryFacet
 
   private get showMoreButton() {
     if (!this.facetState.canShowMoreValues) {
-      return null;
+      return;
     }
+
     return (
       <button
         class="text-primary"
@@ -217,8 +250,9 @@ export class AtomicCategoryFacet
 
   private get showLessButton() {
     if (!this.facetState.canShowLessValues) {
-      return null;
+      return;
     }
+
     return (
       <button
         class="text-primary"
@@ -230,12 +264,100 @@ export class AtomicCategoryFacet
     );
   }
 
+  public ariaLabelForSearchResult(searchResult: CategoryFacetSearchResult) {
+    const facetValue = this.strings.facetValue({
+      numberOfResults: searchResult.count,
+      value: searchResult.displayValue,
+    });
+
+    return this.strings.under({
+      child: facetValue,
+      parent: searchResult.path.length
+        ? searchResult.path.join(', ')
+        : this.strings.allCategories(),
+    });
+  }
+
+  private ellipsedPath(path: string[]) {
+    if (path.length <= PATH_MAX_LENGTH) {
+      return path;
+    }
+    const firstPart = path.slice(0, 1);
+    const lastParts = path.slice(-PATH_MAX_LENGTH + 1);
+    return firstPart.concat(ELLIPSIS, ...lastParts);
+  }
+
+  private renderPath(path: string[]) {
+    const ellipsisClasses =
+      'whitespace-nowrap overflow-ellipsis overflow-hidden';
+
+    if (!path.length) {
+      return (
+        <span
+          class={ellipsisClasses}
+        >{`${this.strings.pathPrefix()} ${this.strings.allCategories()}`}</span>
+      );
+    }
+
+    return [
+      <span class="mr-1">{this.strings.pathPrefix()}</span>,
+      this.ellipsedPath(path).map((part, index) => [
+        index > 0 && <span>{SEPARATOR}</span>,
+        <span
+          class={part === ELLIPSIS ? '' : `${ellipsisClasses} flex-1 max-w-max`}
+        >
+          {part}
+        </span>,
+      ]),
+    ];
+  }
+
+  public renderSearchResult(searchResult: CategoryFacetSearchResult) {
+    return [
+      <div class="flex" aria-hidden>
+        <span
+          class="whitespace-nowrap overflow-ellipsis overflow-hidden"
+          innerHTML={FacetSearch.highlightSearchResult(
+            searchResult.displayValue,
+            this.facetSearchQuery
+          )}
+        />
+        <span class="number-of-values ml-1 text-on-background-variant">
+          ({searchResult.count.toLocaleString(this.bindings.i18n.language)})
+        </span>
+      </div>,
+      <div
+        class="flex text-on-background-variant"
+        aria-hidden
+        title={searchResult.path.join(SEPARATOR)}
+      >
+        {this.renderPath(searchResult.path)}
+      </div>,
+    ];
+  }
+
+  public componentDidRender() {
+    this.facetSearch?.updateCombobox();
+  }
+
   public render() {
+    if (this.searchStatusState.hasError) {
+      return;
+    }
+
+    if (!this.searchStatusState.firstSearchExecuted) {
+      return (
+        <FacetPlaceholder
+          numberOfValues={this.numberOfValues}
+        ></FacetPlaceholder>
+      );
+    }
+
     if (
       this.facetState.values.length === 0 &&
       this.facetState.parents.length === 0
     ) {
-      return null;
+      return;
     }
 
     return (

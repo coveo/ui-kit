@@ -84,6 +84,7 @@ export class AtomicBreadcrumbManager implements InitializableComponent {
         part="breadcrumb-button"
         class="text-on-background-variant breadcrumb-button flex items-center hover:text-primary-variant w-full"
         aria-label={this.strings.breadcrumb({value})}
+        title={value}
         onClick={() =>
           this.breadcrumbManager.deselectBreadcrumb(breadcrumbValue)
         }
@@ -109,10 +110,15 @@ export class AtomicBreadcrumbManager implements InitializableComponent {
     field: string,
     children: VNode[]
   ) {
+    const label = this.bindings.store.state.facets[facetId].label || field;
     return (
-      <div class="flex items-center text-sm" part="breadcrumb-wrapper">
-        <span class="text-on-background" part="breadcrumb-label">
-          {this.bindings.store.state.facets[facetId].label || field}:&nbsp;
+      <div class="flex text-sm" part="breadcrumb-wrapper">
+        <span
+          title={label}
+          class="breadcrumb-label text-on-background mr-2 flex-shrink-0 overflow-ellipsis overflow-hidden"
+          part="breadcrumb-label"
+        >
+          {label}:
         </span>
         {children}
       </div>
@@ -126,7 +132,7 @@ export class AtomicBreadcrumbManager implements InitializableComponent {
       breadcrumb
     );
     const renderedBreadcrumbs = breadcrumbsToShow.map((breadcrumbValue) => (
-      <li class="breadcrumb" part="breadcrumb">
+      <li class="breadcrumb mr-2.5" part="breadcrumb">
         {this.getBreadcrumbValue(breadcrumbValue.value.value, breadcrumbValue)}
       </li>
     ));
@@ -134,7 +140,7 @@ export class AtomicBreadcrumbManager implements InitializableComponent {
     return this.getBreadcrumbWrapper(
       breadcrumb.facetId,
       breadcrumb.field,
-      <ul class="breadcrumbs flex space-x-2.5">
+      <ul class="breadcrumbs flex flex-wrap">
         {moreButton
           ? [...renderedBreadcrumbs, moreButton]
           : renderedBreadcrumbs}
@@ -235,6 +241,7 @@ export class AtomicBreadcrumbManager implements InitializableComponent {
     return (
       <button
         part="breadcrumb-clear-all"
+        class="text-primary text-sm ml-2 flex-shrink-0 self-start"
         onClick={() => this.breadcrumbManager.deselectAll()}
       >
         {this.strings.clearAllFilters()}
@@ -271,7 +278,7 @@ export class AtomicBreadcrumbManager implements InitializableComponent {
   private getMoreButton(collapsedBreadcrumbNumber: number, field: string) {
     if (collapsedBreadcrumbNumber <= 0) return undefined;
     return (
-      <li class="text-primary-variant" part="breadcrumb-value">
+      <li class="text-primary-variant mr-2.5" part="breadcrumb-value">
         <button
           part="breadcrumb-button"
           class="flex"
@@ -300,16 +307,14 @@ export class AtomicBreadcrumbManager implements InitializableComponent {
       return;
     }
     return (
-      <div class="flex">
+      <div class="flex justify-between">
         <span part="breadcrumbs">
           {this.facetBreadcrumbs}
           {this.numericFacetBreadcrumbs}
           {this.dateFacetBreadcrumbs}
           {this.categoryFacetBreadcrumbs}
         </span>
-        <span class="text-primary text-sm ml-auto">
-          {this.getClearAllFiltersButton()}
-        </span>
+        {this.getClearAllFiltersButton()}
       </div>
     );
   }

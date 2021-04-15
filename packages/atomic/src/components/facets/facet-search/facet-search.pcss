@@ -1,14 +1,9 @@
-.combobox, .suggestion {
+.combobox {
   height: var(--atomic-facet-search-height, 30px);
 }
 
-.input-wrapper.has-values {
-  border-bottom-right-radius: 0;
-  border-bottom-left-radius: 0;
-}
-
-.suggestions {
-  max-height: 250px;
+.search-results {
+  max-height: var(--atomic-facet-search-max-height, 250px);
   overflow-y: scroll;
   top: var(--atomic-facet-search-height, 30px);
   left: 0;
@@ -18,12 +13,10 @@
   @apply border-solid border-divider border-l border-r border-b border-t-0;
 }
 
-.suggestion.active, .suggestion:hover {
-  @apply bg-primary text-on-primary;
+.search-result.active, .search-result:hover {
+  @apply bg-primary;
 }
 
-.suggestion.active .number-of-values, .suggestion:hover .number-of-values {
+.search-result.active *, .search-result:hover * {
   @apply text-on-primary;
 }
-
-

@@ -7,14 +7,23 @@ import {sizeSnapshot} from 'rollup-plugin-size-snapshot';
 import alias from '@rollup/plugin-alias';
 import {resolve as pathResolve} from 'path';
 import dts from "rollup-plugin-dts";
+import {readFileSync} from 'fs';
 
 const typescript = () => tsPlugin({tsconfig: './src/tsconfig.build.json'});
 const isCI = process.env.CI === 'true';
 const isProduction = process.env.BUILD === 'production';
 
+/**
+ * @returns {string}
+ */
+function getPackageVersion() {
+  return JSON.parse(readFileSync('package.json', 'utf-8')).version;
+}
+
 function replace() {
   const env = isProduction ? 'production' : 'development';
-  return replacePlugin({'process.env.NODE_ENV': JSON.stringify(env)});
+  const version = getPackageVersion();
+  return replacePlugin({'process.env.NODE_ENV': JSON.stringify(env), 'process.env.VERSION': JSON.stringify(version)});
 }
 
 function onWarn(warning, warn) {
@@ -42,7 +51,7 @@ const nodeConfig = {
     typescript(),
     replace(),
   ],
-  external: ['cross-fetch'],
+  external: ['cross-fetch', 'web-encoding'],
   onwarn: onWarn,
 };
 
@@ -77,6 +86,10 @@ const browserConfig = {
           find: 'cross-fetch',
           replacement: pathResolve(__dirname, './fetch-ponyfill.js'),
         },
+        {
+          find: 'web-encoding',
+          replacement: pathResolve(__dirname, './node_modules/web-encoding/src/lib.js'),
+        }
       ],
     }),
     resolve({browser: true}),

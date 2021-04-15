@@ -13,9 +13,9 @@ import {MapProp} from '../../../utils/props-utils';
 })
 export class AtomicFieldCondition {
   @Element() host!: HTMLElement;
+
   @Prop() ifDefined?: string;
   @Prop() ifNotDefined?: string;
-
   @Prop() conditions: ResultTemplateCondition[] = [];
   @MapProp() mustMatch: Record<string, string[]> = {};
   @MapProp() mustNotMatch: Record<string, string[]> = {};
