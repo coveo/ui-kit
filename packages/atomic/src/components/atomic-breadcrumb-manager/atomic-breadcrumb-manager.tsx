@@ -84,9 +84,7 @@ export class AtomicBreadcrumbManager implements InitializableComponent {
           this.breadcrumbManager.deselectBreadcrumb(breadcrumbValue)
         }
       >
-        <span class="whitespace-nowrap overflow-ellipsis overflow-hidden">
-          {value}
-        </span>
+        <span class="ellipsed">{value}</span>
         <div
           role="button"
           class="pt-1 w-2.5 ml-1.5 flex-shrink-0"

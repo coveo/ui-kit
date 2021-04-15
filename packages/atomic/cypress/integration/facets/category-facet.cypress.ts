@@ -479,7 +479,6 @@ describe('When URL contains a selected path of category facet', () => {
       .find('ul[part="parents"]')
       .find('li')
       .last()
-      .find('b')
       .contains('Alberta');
   });
 });
