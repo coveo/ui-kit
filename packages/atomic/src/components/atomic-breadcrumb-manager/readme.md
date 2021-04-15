@@ -29,6 +29,13 @@ A component that creates breadcrumbs that display the currently active facet val
 | `"breadcrumbs"`                                                    | Container for all types of breadcrumbs            |
 
 
+## CSS Custom Properties
+
+| Name                     | Description                                                |
+| ------------------------ | ---------------------------------------------------------- |
+| `--max-breadcrumb-width` | Maximum width of a breadcrumb before the text is truncated |
+
+
 ## Dependencies
 
 ### Depends on
