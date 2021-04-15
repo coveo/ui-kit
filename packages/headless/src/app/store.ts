@@ -15,12 +15,10 @@ import {
 } from './logger-middlewares';
 import {validatePayloadAndThrow} from '../utils/validate-payload';
 import {PreprocessRequest} from '../api/preprocess-request';
-import {CaseAssistAPIClient} from '../api/service/case-assist/case-assist-api-client';
 
 export interface ThunkExtraArguments {
   preprocessRequest?: PreprocessRequest;
   searchAPIClient: SearchAPIClient;
-  caseAssistAPIClient: CaseAssistAPIClient;
   analyticsClientMiddleware: AnalyticsClientSendEventHook;
   logger: Logger;
   validatePayload: typeof validatePayloadAndThrow;

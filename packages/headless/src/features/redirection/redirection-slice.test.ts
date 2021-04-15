@@ -15,7 +15,6 @@ import {SearchAppState} from '../../state/search-app-state';
 import pino from 'pino';
 import {validatePayloadAndThrow} from '../../utils/validate-payload';
 import {buildMockSearchAPIClient} from '../../test/mock-search-api-client';
-import {buildMockCaseAssistAPIClient} from '../../test/mock-case-assist-api-client';
 
 describe('redirection slice', () => {
   it('should have initial state', () => {
@@ -69,7 +68,6 @@ describe('redirection slice', () => {
       defaultRedirectionUrl: 'https://www.test.com',
     })(engine.dispatch, () => createMockState(), {
       searchAPIClient: apiClient,
-      caseAssistAPIClient: buildMockCaseAssistAPIClient(),
       analyticsClientMiddleware: (_, p) => p,
       logger: pino({level: 'silent'}),
       validatePayload: validatePayloadAndThrow,

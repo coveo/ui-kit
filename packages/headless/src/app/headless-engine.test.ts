@@ -9,7 +9,6 @@ import {AnalyticsClientSendEventHook} from 'coveo.analytics/dist/definitions/cli
 import pino from 'pino';
 import {validatePayloadAndThrow} from '../utils/validate-payload';
 import {buildMockSearchAPIClient} from '../test/mock-search-api-client';
-import {buildMockCaseAssistAPIClient} from '../test/mock-case-assist-api-client';
 
 describe('headless engine', () => {
   let options: HeadlessOptions<typeof searchAppReducers>;
@@ -22,7 +21,6 @@ describe('headless engine', () => {
       reducers: searchAppReducers,
       thunkExtraArguments: {
         searchAPIClient: buildMockSearchAPIClient(),
-        caseAssistAPIClient: buildMockCaseAssistAPIClient(),
         analyticsClientMiddleware: {} as AnalyticsClientSendEventHook,
         logger: pino({level: 'silent'}),
         validatePayload: validatePayloadAndThrow,
