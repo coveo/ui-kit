@@ -24,7 +24,8 @@ import dayjs from 'dayjs';
  * A component that creates breadcrumbs that display the currently active facet values
  *
  * @part breadcrumb-clear-all - The clear all breadcrumbs button
- * @part breadcrumb-label - Label for the breadcrumb's title
+ * @part breadcrumb-label - Label for the breadcrumb's label
+ * @part breadcrumbs - The list of breadcrumb values following the label
  * @part breadcrumb - An individual breadcrumb
  */
 
@@ -104,7 +105,7 @@ export class AtomicBreadcrumbManager implements InitializableComponent {
       <li class="mb-1 flex">
         <span
           title={label}
-          class="breadcrumb-label text-on-background mr-2"
+          class="text-on-background mr-2"
           part="breadcrumb-label"
         >
           {label}:
@@ -137,7 +138,9 @@ export class AtomicBreadcrumbManager implements InitializableComponent {
     return this.getBreadcrumbWrapper(
       breadcrumb.facetId,
       breadcrumb.field,
-      <ul class="flex flex-wrap">{[...renderedBreadcrumbs, moreButton]}</ul>
+      <ul part="breadcrumbs" class="flex flex-wrap">
+        {[...renderedBreadcrumbs, moreButton]}
+      </ul>
     );
   }
 
