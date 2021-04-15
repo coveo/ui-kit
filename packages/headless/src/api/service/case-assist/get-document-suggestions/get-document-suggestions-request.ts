@@ -13,7 +13,7 @@ import {
   prepareSuggestionRequestFields,
 } from '../case-assist-params';
 
-export type SuggestDocumentsRequest = BaseParam &
+export type GetDocumentSuggestionsRequest = BaseParam &
   CaseAssistIdParam &
   VisitorIDParam &
   LocaleParam &
@@ -22,7 +22,9 @@ export type SuggestDocumentsRequest = BaseParam &
   NumberOfResultsParam &
   DebugParam;
 
-export const buildSuggestDocumentsRequest = (req: SuggestDocumentsRequest) => {
+export const buildGetDocumentSuggestionsRequest = (
+  req: GetDocumentSuggestionsRequest
+) => {
   const queryStringArguments: Record<string, string> = {};
   if (req.debug) {
     queryStringArguments['debug'] = '1';
@@ -39,13 +41,11 @@ export const buildSuggestDocumentsRequest = (req: SuggestDocumentsRequest) => {
       '/documents/suggest',
       queryStringArguments
     ),
-    requestParams: prepareSuggestDocumentsRequestParams(req),
+    requestParams: prepareRequestParams(req),
   };
 };
 
-export const prepareSuggestDocumentsRequestParams = (
-  req: SuggestDocumentsRequest
-) => ({
+const prepareRequestParams = (req: GetDocumentSuggestionsRequest) => ({
   visitorId: req.visitorId,
   locale: req.locale,
   fields: prepareSuggestionRequestFields(req.fields),

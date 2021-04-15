@@ -2,7 +2,7 @@ import {buildMockCaseAssistAPIClient} from '../../../test/mock-case-assist-api-c
 import {PlatformClient} from '../../platform-client';
 import {CaseAssistAPIClient} from './case-assist-api-client';
 import {GetCaseClassificationsRequest} from './get-case-classifications/get-case-classifications-request';
-import {SuggestDocumentsRequest} from './suggest-documents/suggest-documents-request';
+import {GetDocumentSuggestionsRequest} from './get-document-suggestions/get-document-suggestions-request';
 
 describe('case assist api client', () => {
   const platformUrl = 'https://platformdev.cloud.coveo.com';
@@ -146,10 +146,10 @@ describe('case assist api client', () => {
     });
   });
 
-  describe('suggestDocuments', () => {
-    const buildSuggestDocumentsRequest = (
-      req: Partial<SuggestDocumentsRequest> = {}
-    ): SuggestDocumentsRequest => ({
+  describe('getDocumentSuggestions', () => {
+    const buildGetDocumentSuggestionsRequest = (
+      req: Partial<GetDocumentSuggestionsRequest> = {}
+    ): GetDocumentSuggestionsRequest => ({
       url: platformUrl,
       organizationId: orgId,
       accessToken: accessToken,
@@ -162,7 +162,7 @@ describe('case assist api client', () => {
     });
 
     it('should call the platform endpoint with the correct arguments', async () => {
-      const request = buildSuggestDocumentsRequest({
+      const request = buildGetDocumentSuggestionsRequest({
         fields: {
           subject: 'some case subject',
         },
@@ -176,7 +176,7 @@ describe('case assist api client', () => {
         json: () => Promise.resolve('some content'),
       });
 
-      await client.suggestDocuments(request);
+      await client.getDocumentSuggestions(request);
 
       expect(platformCallMock).toBeCalled();
       const mockRequest = platformCallMock.mock.calls[0][0];
@@ -201,21 +201,21 @@ describe('case assist api client', () => {
     });
 
     it('should call the platform endpoint with debug=1 when debug is enabled', async () => {
-      const request = buildSuggestDocumentsRequest({debug: true});
+      const request = buildGetDocumentSuggestionsRequest({debug: true});
 
       mockPlatformCall({
         ok: true,
         json: () => Promise.resolve('some content'),
       });
 
-      await client.suggestDocuments(request);
+      await client.getDocumentSuggestions(request);
 
       const expectedUrl = `${request.url}/rest/organizations/${request.organizationId}/caseassists/${request.caseAssistId}/documents/suggest?debug=1`;
       expect(platformCallMock.mock.calls[0][0].url).toBe(expectedUrl);
     });
 
     it('should call the platform endpoint with numberOfResults argument when specified', async () => {
-      const request = buildSuggestDocumentsRequest({
+      const request = buildGetDocumentSuggestionsRequest({
         numberOfResults: 12,
       });
 
@@ -224,14 +224,14 @@ describe('case assist api client', () => {
         json: () => Promise.resolve('some content'),
       });
 
-      await client.suggestDocuments(request);
+      await client.getDocumentSuggestions(request);
 
       const expectedUrl = `${request.url}/rest/organizations/${request.organizationId}/caseassists/${request.caseAssistId}/documents/suggest?numberOfResults=12`;
       expect(platformCallMock.mock.calls[0][0].url).toBe(expectedUrl);
     });
 
     it('should return error response on failure', async () => {
-      const request = buildSuggestDocumentsRequest();
+      const request = buildGetDocumentSuggestionsRequest();
 
       const expectedError = {
         statusCode: 401,
@@ -244,7 +244,7 @@ describe('case assist api client', () => {
         json: () => Promise.resolve(expectedError),
       });
 
-      const response = await client.suggestDocuments(request);
+      const response = await client.getDocumentSuggestions(request);
 
       expect(response).toMatchObject({
         error: expectedError,
@@ -252,7 +252,7 @@ describe('case assist api client', () => {
     });
 
     it('should return success response on success', async () => {
-      const request = buildSuggestDocumentsRequest();
+      const request = buildGetDocumentSuggestionsRequest();
 
       const expectedBody = {
         documents: [],
@@ -265,7 +265,7 @@ describe('case assist api client', () => {
         json: () => Promise.resolve(expectedBody),
       });
 
-      const response = await client.suggestDocuments(request);
+      const response = await client.getDocumentSuggestions(request);
 
       expect(response).toMatchObject({
         success: expectedBody,

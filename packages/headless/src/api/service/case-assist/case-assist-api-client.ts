@@ -10,10 +10,10 @@ import {
 } from './get-case-classifications/get-case-classifications-request';
 import {GetCaseClassificationsResponse} from './get-case-classifications/get-case-classifications-response';
 import {
-  buildSuggestDocumentsRequest,
-  SuggestDocumentsRequest,
-} from './suggest-documents/suggest-documents-request';
-import {SuggestDocumentsResponse} from './suggest-documents/suggest-documents-response';
+  buildGetDocumentSuggestionsRequest,
+  GetDocumentSuggestionsRequest,
+} from './get-document-suggestions/get-document-suggestions-request';
+import {GetDocumentSuggestionsResponse} from './get-document-suggestions/get-document-suggestions-response';
 
 /**
  * Initialization options for the `CaseAssistAPIClient`.
@@ -95,11 +95,11 @@ export class CaseAssistAPIClient {
    * @param req - The request parameters.
    * @returns The document suggestions for the given case information and context.
    */
-  async suggestDocuments(
-    req: SuggestDocumentsRequest
-  ): Promise<CaseAssistAPIResponse<SuggestDocumentsResponse>> {
+  async getDocumentSuggestions(
+    req: GetDocumentSuggestionsRequest
+  ): Promise<CaseAssistAPIResponse<GetDocumentSuggestionsResponse>> {
     const response = await PlatformClient.call({
-      ...buildSuggestDocumentsRequest(req),
+      ...buildGetDocumentSuggestionsRequest(req),
       ...this.options,
       ...this.defaultClientHooks,
     });
@@ -107,7 +107,7 @@ export class CaseAssistAPIClient {
     const body = await response.json();
     return response.ok
       ? {
-          success: body as SuggestDocumentsResponse,
+          success: body as GetDocumentSuggestionsResponse,
         }
       : {error: body as CaseAssistAPIErrorStatusResponse};
   }
