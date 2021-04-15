@@ -7,7 +7,7 @@
     "./dist/headless.js": "./dist/browser/headless.js",
     "./dist/headless.esm.js": "./dist/browser/headless.esm.js"
   },
-  "types": "./dist/index.d.ts",
+  "types": "./dist/definitions/index.d.ts",
   "license": "Apache-2.0",
   "version": "0.10.0",
   "files": [
@@ -18,7 +18,7 @@
     "start": "concurrently \"npm run typedefinitions -- -w\" \"rollup -c -w\"",
     "build": "npm run clean && npm run build:prod",
     "build:prod": "npm run typedefinitions && rollup -c --environment BUILD:production",
-    "typedefinitions": "tsc -p src/tsconfig.build.json -d --emitDeclarationOnly --declarationDir dist",
+    "typedefinitions": "tsc -p src/tsconfig.build.json -d --emitDeclarationOnly --declarationDir dist/definitions",
     "clean": "rimraf -f -r dist/*",
     "test": "jest",
     "test:watch": "jest --watch --colors --no-cache --silent=false",
