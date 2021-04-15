@@ -40,15 +40,15 @@ function onWarn(warning, warn) {
 // Node Bundles
 
 const nodejs = [
-  buildNodeConfiguration({
+  {
     input: 'src/index.ts',
     outDir: 'dist',
-  }),
-  buildNodeConfiguration({
+  },
+  {
     input: 'src/case-assist.ts',
     outDir: 'dist/case-assist'
-  })
-];
+  }
+].map(buildNodeConfiguration);
 
 function buildNodeConfiguration({input, outDir}) {
   return {
@@ -75,21 +75,21 @@ function buildNodeConfiguration({input, outDir}) {
 // Browser Bundles
 
 const browser = [
-  buildBrowserConfiguration({
+  {
     input: 'src/index.ts',
     output: [
       buildUmdOutput('dist/browser', 'CoveoHeadless'),
       buildEsmOutput('dist/browser')
     ]
-  }),
-  buildBrowserConfiguration({
+  },
+  {
     input: 'src/case-assist.ts',
     output: [
       buildUmdOutput('dist/browser/case-assist', 'CoveoHeadlessCaseAssist'),
       buildEsmOutput('dist/browser/case-assist')
     ]
-  })
-];
+  }
+].map(buildBrowserConfiguration);
 
 function buildBrowserConfiguration({input, output}) {
   return {
