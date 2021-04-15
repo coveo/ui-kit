@@ -2,7 +2,7 @@
 import * as HeadlessTypes from './force-app/main/default/staticresources/coveoheadless/index';
 export * from './force-app/main/default/staticresources/coveoheadless/index';
 import {LightningElement} from 'lwc';
-import {HeadlessEngine} from '../headless/dist/index';
+import {HeadlessEngine} from '../headless/dist/definitions/index';
 declare global {
   // eslint-disable-next-line no-undef
   const CoveoHeadless: typeof HeadlessTypes;

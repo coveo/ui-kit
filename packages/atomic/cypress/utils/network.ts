@@ -1,7 +1,7 @@
 import {Interception} from 'cypress/types/net-stubbing';
-import {Result} from '../../../headless/dist/api/search/search/result';
-import {SearchRequest} from '../../../headless/dist/api/search/search/search-request';
-import {SearchResponseSuccess} from '../../../headless/dist/api/search/search/search-response';
+import {Result} from '../../../headless/dist/definitions/api/search/search/result';
+import {SearchRequest} from '../../../headless/dist/definitions/api/search/search/search-request';
+import {SearchResponseSuccess} from '../../../headless/dist/definitions/api/search/search/search-response';
 import {searchEndpoint} from './setupComponent';
 
 function getApiCall(selector: string): Promise<Interception> {
