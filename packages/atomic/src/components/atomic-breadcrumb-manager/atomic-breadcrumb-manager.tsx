@@ -77,7 +77,7 @@ export class AtomicBreadcrumbManager implements InitializableComponent {
     return (
       <button
         part="breadcrumb"
-        class="flex items-baseline"
+        class="inline-grid grid-flow-col"
         aria-label={this.strings.breadcrumb({value})}
         title={value}
         onClick={() =>
@@ -89,7 +89,7 @@ export class AtomicBreadcrumbManager implements InitializableComponent {
         </span>
         <div
           role="button"
-          class="breadcrumb-clear w-2.5 ml-1.5 flex-shrink-0"
+          class="pt-1 w-2.5 ml-1.5 flex-shrink-0"
           innerHTML={mainclear}
         />
       </button>
