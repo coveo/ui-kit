@@ -27,6 +27,8 @@ import {determineFacetId} from '../../_common/facet-id-determinor';
 import {buildNumericRange, NumericRangeOptions} from './numeric-range';
 import {Controller} from '../../../controller/headless-controller';
 import {RangeFacetSortCriterion} from '../../../../features/facets/range-facets/generic/interfaces/request';
+import {configuration, numericFacetSet, search} from '../../../../app/reducers';
+import {loadReducerError} from '../../../../utils/errors';
 
 export {
   buildNumericRange,
@@ -125,9 +127,13 @@ export interface NumericFacetState {
  * @returns A `NumericFacet` controller instance.
  */
 export function buildNumericFacet(
-  engine: Engine<NumericFacetSection & ConfigurationSection & SearchSection>,
+  engine: Engine<unknown>,
   props: NumericFacetProps
 ): NumericFacet {
+  if (!loadNumericFacetReducers(engine)) {
+    throw loadReducerError;
+  }
+
   assertRangeFacetOptions(props.options, 'buildNumericFacet');
 
   const dispatch = engine.dispatch;
@@ -159,4 +165,13 @@ export function buildNumericFacet(
       return rangeFacet.state;
     },
   };
+}
+
+function loadNumericFacetReducers(
+  engine: Engine<unknown>
+): engine is Engine<
+  NumericFacetSection & ConfigurationSection & SearchSection
+> {
+  engine.addReducers({numericFacetSet, configuration, search});
+  return true;
 }
