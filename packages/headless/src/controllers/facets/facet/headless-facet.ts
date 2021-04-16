@@ -274,7 +274,7 @@ export function buildFacet(engine: Engine<unknown>, props: FacetProps): Facet {
     return initialNumberOfValues < currentValues.length && hasIdleValues;
   };
 
-  const getIsLoading = () => engine.state.search.isLoading;
+  const getState = () => engine.state;
 
   dispatch(registerFacet(options));
   const facetSearch = createFacetSearch();
@@ -338,7 +338,7 @@ export function buildFacet(engine: Engine<unknown>, props: FacetProps): Facet {
       const request = getRequest();
       const response = getResponse();
 
-      const isLoading = getIsLoading();
+      const isLoading = getState().search.isLoading;
       const sortCriterion = request.sortCriteria;
       const values = response ? response.values : [];
       const hasActiveValues = values.some(
