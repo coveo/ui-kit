@@ -1,3 +1,4 @@
+import {facetOptions, search} from '../../app/reducers';
 import {SearchAppState} from '../../state/search-app-state';
 import {buildMockSearchAppEngine, MockEngine} from '../../test';
 import {buildMockFacetResponse} from '../../test/mock-facet-response';
@@ -18,6 +19,13 @@ describe('facet manager', () => {
 
   it('exposes a #subscribe method', () => {
     expect(facetManager.subscribe).toBeTruthy();
+  });
+
+  it('it adds the correct reducers to engine', () => {
+    expect(engine.addReducers).toHaveBeenCalledWith({
+      search,
+      facetOptions,
+    });
   });
 
   it('when #response.facets is empty, #state.facetIds returns an empty array', () => {

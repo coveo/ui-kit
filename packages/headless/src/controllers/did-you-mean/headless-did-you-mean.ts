@@ -72,21 +72,21 @@ export function buildDidYouMean(engine: Engine<unknown>): DidYouMean {
 
   dispatch(enableDidYouMean());
 
-  const getDidYouMeanState = () => engine.state.didYouMean;
+  const getState = () => engine.state;
 
   return {
     ...controller,
 
     get state() {
-      const state = getDidYouMeanState();
+      const state = getState();
 
       return {
-        wasCorrectedTo: state.wasCorrectedTo,
-        wasAutomaticallyCorrected: state.wasAutomaticallyCorrected,
-        queryCorrection: state.queryCorrection,
+        wasCorrectedTo: state.didYouMean.wasCorrectedTo,
+        wasAutomaticallyCorrected: state.didYouMean.wasAutomaticallyCorrected,
+        queryCorrection: state.didYouMean.queryCorrection,
         hasQueryCorrection:
-          state.queryCorrection.correctedQuery !== '' ||
-          state.wasCorrectedTo !== '',
+          state.didYouMean.queryCorrection.correctedQuery !== '' ||
+          state.didYouMean.wasCorrectedTo !== '',
       };
     },
 
