@@ -1,4 +1,5 @@
 import {Result} from '../../api/search/search/result';
+import {configuration} from '../../app/reducers';
 import {logDocumentOpenThunk} from '../../features/result/result-analytics-actions';
 import {SearchAppState} from '../../state/search-app-state';
 import {buildMockResult} from '../../test';
@@ -9,7 +10,7 @@ import {
 } from './headless-interactive-result';
 
 describe('InteractiveResult', () => {
-  let mockEngine: MockEngine<SearchAppState>;
+  let engine: MockEngine<SearchAppState>;
   let mockResult: Result;
   let interactiveResult: InteractiveResult;
   let logDocumentOpenPendingActionType: string;
@@ -17,14 +18,14 @@ describe('InteractiveResult', () => {
     const result = (mockResult = buildMockResult());
     logDocumentOpenPendingActionType = logDocumentOpenThunk(mockResult).pending
       .type;
-    interactiveResult = buildInteractiveResult(mockEngine, {
+    interactiveResult = buildInteractiveResult(engine, {
       options: {result, selectionDelay: delay},
     });
   }
 
   function findLogDocumentAction() {
     return (
-      mockEngine.actions.find(
+      engine.actions.find(
         (action) => action.type === logDocumentOpenPendingActionType
       ) ?? null
     );
@@ -43,13 +44,17 @@ describe('InteractiveResult', () => {
   }
 
   beforeEach(() => {
-    mockEngine = buildMockSearchAppEngine();
+    engine = buildMockSearchAppEngine();
     initializeInteractiveResult();
     jest.useFakeTimers();
   });
 
   afterEach(() => {
     jest.useRealTimers();
+  });
+
+  it('it adds the correct reducers to engine', () => {
+    expect(engine.addReducers).toHaveBeenCalledWith({configuration});
   });
 
   it('when calling select(), logs documentOpen', () => {
