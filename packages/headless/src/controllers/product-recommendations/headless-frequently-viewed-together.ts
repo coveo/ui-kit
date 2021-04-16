@@ -1,8 +1,4 @@
 import {Engine} from '../../app/headless-engine';
-import {
-  ConfigurationSection,
-  ProductRecommendationsSection,
-} from '../../state/state-sections';
 import {Schema, SchemaValues} from '@coveo/bueno';
 import {
   baseProductRecommendationsOptionsSchema,
@@ -28,7 +24,7 @@ export type FrequentlyViewedTogetherList = ReturnType<
 export type FrequentlyViewedTogetherListState = FrequentlyViewedTogetherList['state'];
 
 export const buildFrequentlyViewedTogetherList = (
-  engine: Engine<ProductRecommendationsSection & ConfigurationSection>,
+  engine: Engine<unknown>,
   props: FrequentlyViewedTogetherListProps
 ) => {
   const options = validateOptions(
