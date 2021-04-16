@@ -69,14 +69,14 @@ export function buildContext(engine: Engine<unknown>): Context {
   const controller = buildController(engine);
   const {dispatch} = engine;
 
-  const getContext = () => engine.state.context;
+  const getContextState = () => engine.state.context;
 
   return {
     ...controller,
 
     get state() {
       return {
-        values: getContext().contextValues,
+        values: getContextState().contextValues,
       };
     },
 

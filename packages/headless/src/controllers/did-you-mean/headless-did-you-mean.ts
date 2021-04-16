@@ -14,6 +14,8 @@ import {
   QueryCorrection,
   WordCorrection,
 } from '../../api/search/search/query-corrections';
+import {loadReducerError} from '../../utils/errors';
+import {configuration, didYouMean} from '../../app/reducers';
 
 export {QueryCorrection, WordCorrection};
 
@@ -60,27 +62,31 @@ export interface DidYouMeanState {
  *
  * @param engine - The headless engine.
  */
-export function buildDidYouMean(
-  engine: Engine<ConfigurationSection & DidYouMeanSection>
-): DidYouMean {
+export function buildDidYouMean(engine: Engine<unknown>): DidYouMean {
+  if (!loadDidYouMeanReducers(engine)) {
+    throw loadReducerError;
+  }
+
   const controller = buildController(engine);
   const {dispatch} = engine;
 
   dispatch(enableDidYouMean());
 
+  const getDidYouMeanState = () => engine.state.didYouMean;
+
   return {
     ...controller,
 
     get state() {
-      const state = engine.state;
+      const state = getDidYouMeanState();
 
       return {
-        wasCorrectedTo: state.didYouMean.wasCorrectedTo,
-        wasAutomaticallyCorrected: state.didYouMean.wasAutomaticallyCorrected,
-        queryCorrection: state.didYouMean.queryCorrection,
+        wasCorrectedTo: state.wasCorrectedTo,
+        wasAutomaticallyCorrected: state.wasAutomaticallyCorrected,
+        queryCorrection: state.queryCorrection,
         hasQueryCorrection:
-          state.didYouMean.queryCorrection.correctedQuery !== '' ||
-          state.didYouMean.wasCorrectedTo !== '',
+          state.queryCorrection.correctedQuery !== '' ||
+          state.wasCorrectedTo !== '',
       };
     },
 
@@ -91,4 +97,11 @@ export function buildDidYouMean(
       dispatch(executeSearch(logDidYouMeanClick()));
     },
   };
+}
+
+function loadDidYouMeanReducers(
+  engine: Engine<unknown>
+): engine is Engine<ConfigurationSection & DidYouMeanSection> {
+  engine.addReducers({configuration, didYouMean});
+  return true;
 }
