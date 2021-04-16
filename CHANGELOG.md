@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.11.0-alpha.3](https://github.com/coveo/ui-kit/compare/v0.11.0-alpha.2...v0.11.0-alpha.3) (2021-04-16)
+
+
+### Bug Fixes
+
+* **atomic:** fix default template wrap issue for field values ([#716](https://github.com/coveo/ui-kit/issues/716)) ([d6d0f31](https://github.com/coveo/ui-kit/commit/d6d0f3126872d794f5d18ede31d5cd77a23fcca0))
+* **atomic:** make facet count visually consistent ([#715](https://github.com/coveo/ui-kit/issues/715)) ([1ea20cf](https://github.com/coveo/ui-kit/commit/1ea20cf87fa771ac7181d6c4b778846574d137be))
+* **headless:** add wildcards in facet search initially query ([#714](https://github.com/coveo/ui-kit/issues/714)) ([f703d4e](https://github.com/coveo/ui-kit/commit/f703d4ec4a16d11d251572ceae454a463c55dd9d))
+
+
+
+
+
 # [0.11.0-alpha.2](https://github.com/coveo/ui-kit/compare/v0.11.0-alpha.1...v0.11.0-alpha.2) (2021-04-15)
 
 **Note:** Version bump only for package ui-kit
