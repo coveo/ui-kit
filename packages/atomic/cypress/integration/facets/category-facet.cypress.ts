@@ -23,6 +23,7 @@ import {
   assertHightlightedText,
 } from './facet-utils';
 import {doSortAlphanumeric} from '../../utils/componentUtils';
+import {ResultListSelectors} from '../result-list-selectors';
 
 const categoryFacetProp = {
   field: 'geographicalhierarchy',
@@ -32,12 +33,12 @@ const categoryFacetProp = {
   numberOfFacetValueAfterExpand: 7,
 };
 
-const canadaHierarchy = ['North America', 'Canada', 'Alberta'];
+const canadaHierarchy = ['North America', 'Canada', 'British Columbia'];
 function setupCategoryFacet(field: string, label: string, option?: {}) {
   setUpPage(`
-    <atomic-breadcrumb-manager></atomic-breadcrumb-manager>   
-    <atomic-facet field="source" label="Sources"></atomic-facet>    
-    <atomic-category-facet field="${field}" label="${label}" ${option}></atomic-category-facet>`);
+    <atomic-breadcrumb-manager></atomic-breadcrumb-manager>     
+    <atomic-category-facet field="${field}" label="${label}" ${option}></atomic-category-facet>
+    <atomic-result-list></atomic-result-list>`);
 }
 
 function assertClearAllTitleAndTotalParents(
@@ -440,7 +441,7 @@ describe('Category Facet with custom delimiting character', () => {
   //temporary checking like this before setting up the source
   it('Should send custom delimiting character to api', () => {
     cy.wait('@coveoSearch').then((intercept) => {
-      const firstRequestBodyFacets = (intercept.request.body.facets as any)[1];
+      const firstRequestBodyFacets = (intercept.request.body.facets as any)[0];
 
       expect(firstRequestBodyFacets).to.have.property(
         'delimitingCharacter',
@@ -549,11 +550,12 @@ describe('When URL contains a selected path of category facet', () => {
 });
 
 describe('Category Facet with custom basePath and default filterByBasePath', () => {
+  const basePath = 'North America;Canada;Alberta';
   beforeEach(() => {
     setupCategoryFacet(
       categoryFacetProp.field,
       categoryFacetProp.label,
-      `base-path="${canadaHierarchy[0]}"`
+      `base-path="${basePath}"`
     );
     cy.wait('@coveoSearch');
     createAliasShadow(categoryFacetProp.field, FacetSelectors.categoryFacet);
@@ -571,29 +573,24 @@ describe('Category Facet with custom basePath and default filterByBasePath', () 
   it('Should contains Canada country, but not contain Europe continent', () => {
     cy.getTextOfAllElements(FacetAlias.facetAllValueLabel).then((labels) => {
       expect(labels).not.to.include('Europe');
-      expect(labels).to.include(canadaHierarchy[1]);
+      expect(labels).to.include('Calgary');
     });
   });
 
-  it('Should load and filter results based on the basePath', () => {
-    cy.get(`${FacetSelectors.facetStandard}[field="source"]`)
-      .shadow()
-      .find('div.facet div')
-      .find('ul')
-      .find('label span:nth-child(1)')
-      .as('StandardFacetAllValues');
-    cy.getTextOfAllElements('@StandardFacetAllValues').then((labels) => {
-      expect(labels.length).to.equal(1);
-    });
+  it('Results should be filtered and contain only 3 documents', () => {
+    cy.get(ResultListSelectors.component)
+      .find(ResultListSelectors.result)
+      .should('have.length', 3);
   });
 });
 
 describe('Category Facet with custom basePath and custom filterByBasePath', () => {
+  const basePath = 'North America;Canada;Alberta';
   beforeEach(() => {
     setupCategoryFacet(
       categoryFacetProp.field,
       categoryFacetProp.label,
-      `base-path="${canadaHierarchy[0]}" filter-by-base-path="false"`
+      `base-path="${basePath}" filter-by-base-path="false"`
     );
     cy.wait('@coveoSearch');
     createAliasShadow(categoryFacetProp.field, FacetSelectors.categoryFacet);
@@ -608,16 +605,10 @@ describe('Category Facet with custom basePath and custom filterByBasePath', () =
     );
   });
 
-  it('Should load and not filter results based on the basePath', () => {
-    cy.get(`${FacetSelectors.facetStandard}[field="source"]`)
-      .shadow()
-      .find('div.facet div')
-      .find('ul')
-      .find('label span:nth-child(1)')
-      .as('StandardFacetAllValues');
-    cy.getTextOfAllElements('@StandardFacetAllValues').then((labels) => {
-      expect(labels.length).to.greaterThan(1);
-    });
+  it('Results should be filtered and contain more than 3 documents', () => {
+    cy.get(ResultListSelectors.component)
+      .find(ResultListSelectors.result)
+      .should('have.length.greaterThan', 3);
   });
 });
 
