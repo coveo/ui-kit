@@ -1,5 +1,3 @@
-import {StateWithHistory} from '../app/undoable';
-import {HistoryState} from '../features/history/history-state';
 import {
   CategoryFacetSearchSection,
   CategoryFacetSection,
