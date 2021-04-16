@@ -6,12 +6,15 @@ import {
   FacetOptions,
   FacetValue,
   FacetSortCriterion,
+  SpecificFacetSearchResult,
+  SearchStatus,
+  SearchStatusState,
+  buildSearchStatus,
 } from '@coveo/headless';
 import {
   Bindings,
   BindStateToController,
   BindStateToI18n,
-  I18nState,
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
@@ -23,9 +26,10 @@ import {
 } from '../base-facet/base-facet';
 import {
   FacetSearch,
-  FacetSearchController,
-  FacetSearchState,
+  FacetSearchComponent,
+  FacetSearchStrings,
 } from '../facet-search/facet-search';
+import {FacetPlaceholder} from '../atomic-facet-placeholder/atomic-facet-placeholder';
 
 /**
  * A facet component. It is displayed as a facet in desktop browsers and as
@@ -38,6 +42,7 @@ import {
  * @part reset-button - The button that resets the actively selected facet values
  * @part show-more - The show more results button
  * @part show-less - The show less button
+ * @part placeholder - The placeholder shown before the first search is executed.
  */
 @Component({
   tag: 'atomic-facet',
@@ -45,18 +50,23 @@ import {
   shadow: true,
 })
 export class AtomicFacet
-  implements InitializableComponent, FacetSearchState, BaseFacetState {
+  implements InitializableComponent, FacetSearchComponent, BaseFacetState {
   @InitializeBindings() public bindings!: Bindings;
   public facet!: Facet;
+  public searchStatus!: SearchStatus;
   private facetSearch?: FacetSearch;
+
   @BindStateToController('facet', {subscribeOnConnectedCallback: true})
   @State()
   public facetState!: FacetState;
+  @BindStateToController('searchStatus')
+  @State()
+  private searchStatusState!: SearchStatusState;
   @State() public error!: Error;
 
   @BindStateToI18n()
   @State()
-  public strings: I18nState = {
+  public strings: FacetSearchStrings = {
     clear: () => this.bindings.i18n.t('clear'),
     searchBox: () =>
       this.bindings.i18n.t('facetSearch', {label: this.strings[this.label]()}),
@@ -98,6 +108,7 @@ export class AtomicFacet
   @Prop() public sortCriteria: FacetSortCriterion = 'automatic';
 
   public initialize() {
+    this.searchStatus = buildSearchStatus(this.bindings.engine);
     const options: FacetOptions = {
       field: this.field,
       delimitingCharacter: this.delimitingCharacter,
@@ -107,18 +118,12 @@ export class AtomicFacet
     this.facet = buildFacet(this.bindings.engine, {options});
     this.strings[this.label] = () => this.bindings.i18n.t(this.label);
     if (this.enableFacetSearch) {
-      this.facetSearch = new FacetSearch({
-        controller: new FacetSearchController(this),
-      });
+      this.facetSearch = new FacetSearch(this);
     }
     this.facetId = this.facet.state.facetId;
     this.bindings.store.state.facets[this.facetId] = {
       label: this.label,
     };
-  }
-
-  public componentDidRender() {
-    this.facetState.canShowMoreValues && this.facetSearch?.updateCombobox();
   }
 
   private get values() {
@@ -134,7 +139,9 @@ export class AtomicFacet
         label={`${item.value}`}
         ariaLabel={this.strings.facetValue(item)}
         isSelected={isSelected}
-        numberOfResults={item.numberOfResults}
+        numberOfResults={item.numberOfResults.toLocaleString(
+          this.bindings.i18n.language
+        )}
         facetValueSelected={() => {
           this.facet.toggleSelect(item);
         }}
@@ -144,7 +151,7 @@ export class AtomicFacet
 
   private get showMoreButton() {
     if (!this.facetState.canShowMoreValues) {
-      return null;
+      return;
     }
 
     return (
@@ -160,7 +167,7 @@ export class AtomicFacet
 
   private get showLessButton() {
     if (!this.facetState.canShowLessValues) {
-      return null;
+      return;
     }
 
     return (
@@ -174,9 +181,49 @@ export class AtomicFacet
     );
   }
 
+  public renderSearchResult(searchResult: SpecificFacetSearchResult) {
+    return (
+      <div class="flex" aria-hidden>
+        <span
+          class="ellipsed"
+          innerHTML={FacetSearch.highlightSearchResult(
+            searchResult.displayValue,
+            this.facetSearchQuery
+          )}
+        />
+        <span class="number-of-values ml-1 text-on-background-variant">
+          ({searchResult.count.toLocaleString(this.bindings.i18n.language)})
+        </span>
+      </div>
+    );
+  }
+
+  public ariaLabelForSearchResult(searchResult: SpecificFacetSearchResult) {
+    return this.strings.facetValue({
+      numberOfResults: searchResult.count,
+      value: searchResult.displayValue,
+    });
+  }
+
+  public componentDidRender() {
+    this.facetSearch?.updateCombobox();
+  }
+
   public render() {
+    if (this.searchStatusState.hasError) {
+      return;
+    }
+
+    if (!this.searchStatusState.firstSearchExecuted) {
+      return (
+        <FacetPlaceholder
+          numberOfValues={this.numberOfValues}
+        ></FacetPlaceholder>
+      );
+    }
+
     if (this.facetState.values.length === 0) {
-      return null;
+      return;
     }
 
     return (

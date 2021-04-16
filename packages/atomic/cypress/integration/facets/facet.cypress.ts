@@ -1,4 +1,7 @@
 import {
+  buildTestUrl,
+  injectComponent,
+  setupIntercept,
   setUpPage,
   shouldRenderErrorComponent,
 } from '../../utils/setupComponent';
@@ -81,26 +84,23 @@ describe('Standard Facet', () => {
 
   describe('When select 1 facetValue checkbox', () => {
     it('Should active checkbox and log UA', () => {
-      assertBasicFacetFunctionality(
-        FacetAlias.facetFirstValueLabel,
-        facetProp.field
-      );
+      assertBasicFacetFunctionality(facetProp.field);
     });
 
     it('Should trigger breadcrumb and display correctly', () => {
-      cy.get(FacetAlias.facetFirstValueLabel).click();
+      cy.get(FacetAlias.facetFirstValue).find(FacetSelectors.label).click();
       createBreadcrumbShadowAlias();
       cy.get(BreadcrumbAlias.breadcrumbClearAllFilter).should('be.visible');
       facetValueShouldDisplayInBreadcrumb(
-        FacetAlias.facetFirstValueLabel,
+        FacetAlias.facetFirstValue,
         '.breadcrumb:nth-child(1) button span'
       );
     });
 
     it('Should reflect selected facetValue on URL', () => {
-      cy.get(FacetAlias.facetFirstValueLabel)
-        .click()
-        .find('label span:nth-child(1)')
+      cy.get(FacetAlias.facetFirstValue).find(FacetSelectors.label).click();
+      cy.get(FacetAlias.facetFirstValue)
+        .find(FacetSelectors.labelText)
         .invoke('text')
         .then((txt) => {
           const urlHash = `#f[author]=${encodeURI(txt)}`;
@@ -117,12 +117,12 @@ describe('Standard Facet', () => {
 
   describe('When select 2 facetValue checkboxes', () => {
     it('Two checkboxes should selected and should record UA correctly', () => {
-      cy.get(FacetAlias.facetFirstValueLabel).click();
-      cy.get(FacetAlias.facetSecondValueLabel).click();
-      cy.get(FacetAlias.facetFirstValueLabel)
+      cy.get(FacetAlias.facetFirstValue).find(FacetSelectors.label).click();
+      cy.get(FacetAlias.facetSecondValue).find(FacetSelectors.label).click();
+      cy.get(FacetAlias.facetFirstValue)
         .find(FacetSelectors.checkbox)
         .should('be.checked');
-      cy.get(FacetAlias.facetSecondValueLabel)
+      cy.get(FacetAlias.facetSecondValue)
         .find(FacetSelectors.checkbox)
         .should('be.checked');
       cy.getAnalyticsAt('@coveoAnalytics', 2).then((analyticsBody) => {
@@ -132,29 +132,29 @@ describe('Standard Facet', () => {
     });
 
     it('Should trigger breadcrumb and display correctly', () => {
-      cy.get(FacetAlias.facetFirstValueLabel).click();
-      cy.get(FacetAlias.facetSecondValueLabel).click();
+      cy.get(FacetAlias.facetFirstValue).find(FacetSelectors.label).click();
+      cy.get(FacetAlias.facetSecondValue).find(FacetSelectors.label).click();
       createBreadcrumbShadowAlias();
       cy.get(BreadcrumbAlias.breadcrumbClearAllFilter).should('be.visible');
       facetValueShouldDisplayInBreadcrumb(
-        FacetAlias.facetFirstValueLabel,
+        FacetAlias.facetFirstValue,
         '.breadcrumb:nth-child(1) button span'
       );
       facetValueShouldDisplayInBreadcrumb(
-        FacetAlias.facetSecondValueLabel,
+        FacetAlias.facetSecondValue,
         '.breadcrumb:nth-child(2) button span'
       );
     });
 
     it('Should reflect selected facetValue on URL', () => {
-      cy.get(FacetAlias.facetFirstValueLabel).click();
-      cy.get(FacetAlias.facetSecondValueLabel).click();
-      cy.get(FacetAlias.facetFirstValueLabel)
-        .find('label span:nth-child(1)')
+      cy.get(FacetAlias.facetFirstValue).find(FacetSelectors.label).click();
+      cy.get(FacetAlias.facetSecondValue).find(FacetSelectors.label).click();
+      cy.get(FacetAlias.facetFirstValue)
+        .find(FacetSelectors.labelText)
         .invoke('text')
         .then((txtFacet1) => {
-          cy.get(FacetAlias.facetSecondValueLabel)
-            .find('label span:nth-child(1)')
+          cy.get(FacetAlias.facetSecondValue)
+            .find(FacetSelectors.labelText)
             .invoke('text')
             .then((txtFacet2) => {
               const urlHash = `#f[author]=${encodeURI(
@@ -262,10 +262,7 @@ describe('Facet with no facetSearch, and numberOfValues is 5 ', () => {
   });
 
   it('Should active checkbox and log UA', () => {
-    assertBasicFacetFunctionality(
-      FacetAlias.facetFirstValueLabel,
-      facetProp.field
-    );
+    assertBasicFacetFunctionality(facetProp.field);
   });
 });
 
@@ -357,4 +354,39 @@ describe('Facet with custom delimitingCharacter', () => {
     setupFacet(facetProp.field, facetProp.label, 'delimiting-character=","');
   });
   it('Should generate Facet correctly');
+});
+
+describe('Facet with selected value on initialization', () => {
+  const field = 'author';
+  beforeEach(() => {
+    setupIntercept();
+    cy.visit(buildTestUrl(`f[${field}]=Cervantes`));
+    injectComponent(`<atomic-facet field="${field}"></atomic-facet>`, true);
+  });
+
+  it('Facet state should be included in UA interfaceLoad event', () => {
+    cy.wait('@coveoAnalytics').then(({request}) => {
+      const analyticsBody = request.body;
+      console.log('analyticsBody', analyticsBody);
+      expect(analyticsBody).to.have.property('actionCause', 'interfaceLoad');
+      expect(analyticsBody.facetState[0]).to.have.property('state', 'selected');
+      expect(analyticsBody.facetState[0]).to.have.property('field', field);
+    });
+  });
+});
+
+describe('when no first search has yet been executed', () => {
+  beforeEach(() => {
+    setUpPage(
+      ` <atomic-facet field="${facetProp.field}"></atomic-facet>`,
+      false
+    );
+  });
+
+  it('should render a placeholder', () => {
+    cy.get(FacetSelectors.facetStandard)
+      .shadow()
+      .find('div[part="placeholder"]')
+      .should('be.visible');
+  });
 });

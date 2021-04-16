@@ -479,7 +479,22 @@ describe('When URL contains a selected path of category facet', () => {
       .find('ul[part="parents"]')
       .find('li')
       .last()
-      .find('b')
       .contains('Alberta');
+  });
+});
+
+describe('when no first search has yet been executed', () => {
+  beforeEach(() => {
+    setUpPage(
+      ` <atomic-category-facet field="${categoryFacetProp.field}"></atomic-category-facet>`,
+      false
+    );
+  });
+
+  it('should render a placeholder', () => {
+    cy.get(FacetSelectors.categoryFacet)
+      .shadow()
+      .find('div[part="placeholder"]')
+      .should('be.visible');
   });
 });

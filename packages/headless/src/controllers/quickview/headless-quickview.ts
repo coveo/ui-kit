@@ -1,6 +1,7 @@
 import {Result} from '../../api/search/search/result';
 import {Engine} from '../../app/headless-engine';
 import {fetchResultContent} from '../../features/result-preview/result-preview-actions';
+import {logDocumentQuickview} from '../../features/result-preview/result-preview-analytics-actions';
 import {
   ConfigurationSection,
   ResultPreviewSection,
@@ -73,6 +74,7 @@ export function buildQuickview(
 
     fetchResultContent() {
       dispatch(fetchResultContent({uniqueId}));
+      dispatch(logDocumentQuickview(result));
     },
 
     get state() {

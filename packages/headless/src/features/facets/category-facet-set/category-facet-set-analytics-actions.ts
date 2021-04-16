@@ -9,10 +9,6 @@ import {
   AnalyticsType,
   makeAnalyticsAction,
 } from '../../analytics/analytics-utils';
-import {
-  buildFacetStateMetadata,
-  getStateNeededForFacetMetadata,
-} from '../facet-set/facet-set-analytics-actions-utils';
 import {facetIdDefinition} from '../generic/facet-actions-validation';
 
 export interface CategoryFacetBreadcrumbPayload {
@@ -56,13 +52,8 @@ export const logCategoryFacetBreadcrumb = (
     (client, state) => {
       validatePayload(payload, categoryFacetBreadcrumbPayloadDefinition);
 
-      const facetState = buildFacetStateMetadata(
-        getStateNeededForFacetMetadata(state)
-      );
-
       return client.logBreadcrumbFacet(
-        getCategoryFacetMetadata(state, payload),
-        facetState
+        getCategoryFacetMetadata(state, payload)
       );
     }
   )();

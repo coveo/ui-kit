@@ -73,6 +73,10 @@ export namespace Components {
           * The non-localized label for the facet
          */
         "label": string;
+        /**
+          * The number of values to request for this facet, when there are no manual ranges.
+         */
+        "numberOfValues": number;
     }
     interface AtomicDateRange {
         /**
@@ -145,6 +149,10 @@ export namespace Components {
           * The non-localized label for the facet.
          */
         "label": string;
+        /**
+          * The number of values to request for this facet, when there are no manual ranges.
+         */
+        "numberOfValues": number;
     }
     interface AtomicNumericRange {
         /**
@@ -161,10 +169,6 @@ export namespace Components {
         "start": number;
     }
     interface AtomicPager {
-        /**
-          * Specifies whether the **Previous** and **Next** buttons should appear at each end of the pager when appropriate.
-         */
-        "enableNavigationButtons": boolean;
         /**
           * Specifies how many page buttons to display in the pager.
          */
@@ -705,6 +709,10 @@ declare namespace LocalJSX {
           * The non-localized label for the facet
          */
         "label"?: string;
+        /**
+          * The number of values to request for this facet, when there are no manual ranges.
+         */
+        "numberOfValues"?: number;
     }
     interface AtomicDateRange {
         /**
@@ -777,6 +785,10 @@ declare namespace LocalJSX {
           * The non-localized label for the facet.
          */
         "label"?: string;
+        /**
+          * The number of values to request for this facet, when there are no manual ranges.
+         */
+        "numberOfValues"?: number;
     }
     interface AtomicNumericRange {
         /**
@@ -793,10 +805,6 @@ declare namespace LocalJSX {
         "start": number;
     }
     interface AtomicPager {
-        /**
-          * Specifies whether the **Previous** and **Next** buttons should appear at each end of the pager when appropriate.
-         */
-        "enableNavigationButtons"?: boolean;
         /**
           * Specifies how many page buttons to display in the pager.
          */

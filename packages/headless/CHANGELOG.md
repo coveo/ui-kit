@@ -3,6 +3,61 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.11.0-alpha.2](https://github.com/coveo/ui-kit/compare/v0.11.0-alpha.1...v0.11.0-alpha.2) (2021-04-15)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+# [0.10.0](https://github.com/coveo/ui-kit/compare/v0.10.0-alpha.20...v0.10.0) (2021-04-14)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+# [0.10.0-alpha.17](https://github.com/coveo/ui-kit/compare/v0.10.0-alpha.16...v0.10.0-alpha.17) (2021-04-13)
+
+
+### Features
+
+* **atomic:** use the getFacetState method of the SearchPageClientProvider ([#696](https://github.com/coveo/ui-kit/issues/696)) ([729163e](https://github.com/coveo/ui-kit/commit/729163eb111e4e1d65755db96b7e850163f82319))
+
+
+
+
+
+# [0.10.0-alpha.16](https://github.com/coveo/ui-kit/compare/v0.10.0-alpha.15...v0.10.0-alpha.16) (2021-04-13)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+# [0.10.0-alpha.15](https://github.com/coveo/ui-kit/compare/v0.10.0-alpha.14...v0.10.0-alpha.15) (2021-04-12)
+
+
+### Features
+
+* **atomic:** add path to CategoryFacet search ([#690](https://github.com/coveo/ui-kit/issues/690)) ([9b7b002](https://github.com/coveo/ui-kit/commit/9b7b0028c510bf61950206e6d81421ed6e9282d3))
+* **headless:** log document quickview event ([#694](https://github.com/coveo/ui-kit/issues/694)) ([14227e8](https://github.com/coveo/ui-kit/commit/14227e8e20a966c3f4a96e59eb1227b312f833cf))
+
+
+
+
+
+# [0.10.0-alpha.14](https://github.com/coveo/ui-kit/compare/v0.10.0-alpha.13...v0.10.0-alpha.14) (2021-04-12)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
 # [0.10.0-alpha.13](https://github.com/coveo/ui-kit/compare/v0.10.0-alpha.12...v0.10.0-alpha.13) (2021-04-12)
 
 

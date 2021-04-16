@@ -6,12 +6,15 @@ import {
   CategoryFacetOptions,
   CategoryFacetValue,
   CategoryFacetSortCriterion,
+  CategoryFacetSearchResult,
+  SearchStatus,
+  SearchStatusState,
+  buildSearchStatus,
 } from '@coveo/headless';
 import {
   Bindings,
   BindStateToController,
   BindStateToI18n,
-  I18nState,
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
@@ -25,9 +28,14 @@ import RightArrow from 'coveo-styleguide/resources/icons/svg/arrow-right-rounded
 import LeftArrow from 'coveo-styleguide/resources/icons/svg/arrow-left-rounded.svg';
 import {
   FacetSearch,
-  FacetSearchController,
-  FacetSearchState,
+  FacetSearchComponent,
+  FacetSearchStrings,
 } from '../facet-search/facet-search';
+import {FacetPlaceholder} from '../atomic-facet-placeholder/atomic-facet-placeholder';
+
+const SEPARATOR = '/';
+const ELLIPSIS = '...';
+const PATH_MAX_LENGTH = 3;
 
 /**
  * A hierarchical category facet component. It is displayed as a facet in desktop browsers and as
@@ -39,6 +47,8 @@ import {
  * @part reset-button - The button that resets the actively selected facet values
  * @part show-more - The show more results button
  * @part show-less - The show less button
+ * @part placeholder - The placeholder shown before the first search is executed.
+ *
  */
 @Component({
   tag: 'atomic-category-facet',
@@ -46,20 +56,24 @@ import {
   shadow: true,
 })
 export class AtomicCategoryFacet
-  implements InitializableComponent, FacetSearchState, BaseFacetState {
+  implements InitializableComponent, FacetSearchComponent, BaseFacetState {
   @InitializeBindings() public bindings!: Bindings;
   public facet!: CategoryFacet;
+  public searchStatus!: SearchStatus;
 
   @BindStateToController('facet', {subscribeOnConnectedCallback: true})
   @State()
   public facetState!: CategoryFacetState;
+  @BindStateToController('searchStatus')
+  @State()
+  private searchStatusState!: SearchStatusState;
   @State() public error!: Error;
 
   private facetSearch?: FacetSearch;
 
   @BindStateToI18n()
   @State()
-  public strings: I18nState = {
+  public strings: FacetSearchStrings = {
     clear: () => this.bindings.i18n.t('clear'),
     placeholder: () => this.bindings.i18n.t('search'),
     searchBox: () =>
@@ -69,6 +83,8 @@ export class AtomicCategoryFacet
     showLess: () => this.bindings.i18n.t('showLess'),
     facetValue: (variables) => this.bindings.i18n.t('facetValue', variables),
     allCategories: () => this.bindings.i18n.t('allCategories'),
+    pathPrefix: () => this.bindings.i18n.t('in'),
+    under: (variables) => this.bindings.i18n.t('under', variables),
   };
 
   @State() public isExpanded = false;
@@ -117,6 +133,7 @@ export class AtomicCategoryFacet
   }
 
   public initialize() {
+    this.searchStatus = buildSearchStatus(this.bindings.engine);
     const options: CategoryFacetOptions = {
       field: this.field,
       delimitingCharacter: this.delimitingCharacter,
@@ -128,18 +145,12 @@ export class AtomicCategoryFacet
     this.facet = buildCategoryFacet(this.bindings.engine, {options});
     this.strings[this.label] = () => this.bindings.i18n.t(this.label);
     if (this.enableFacetSearch) {
-      this.facetSearch = new FacetSearch({
-        controller: new FacetSearchController(this),
-      });
+      this.facetSearch = new FacetSearch(this);
     }
     this.facetId = this.facet.state.facetId;
     this.bindings.store.state.facets[this.facetId] = {
       label: this.label,
     };
-  }
-
-  public componentDidRender() {
-    this.facetSearch?.updateCombobox();
   }
 
   private get parents() {
@@ -152,13 +163,16 @@ export class AtomicCategoryFacet
   }
 
   private buildParent(parent: CategoryFacetValue, isLast: boolean) {
-    const listClass = ' text-lg lg:text-base py-1 lg:py-0.5';
+    const listClass = 'text-lg lg:text-base py-1 lg:py-0.5';
     if (isLast) {
       return (
-        <li class={listClass}>
-          <b class="ml-8 lg:ml-6">
-            {parent.value} ({parent.numberOfResults})
-          </b>
+        <li class={`${listClass} flex font-bold`}>
+          <span class="ml-8 lg:ml-6 ellipsed">{parent.value}</span>
+          <span class="ml-1.5 text-on-background-variant">
+            (
+            {parent.numberOfResults.toLocaleString(this.bindings.i18n.language)}
+            )
+          </span>
         </li>
       );
     }
@@ -173,7 +187,7 @@ export class AtomicCategoryFacet
             innerHTML={LeftArrow}
             class="arrow-size text-secondary fill-current"
           />
-          <span class="ml-2">{parent.value}</span>
+          <span class="ml-2 ellipsed">{parent.value}</span>
         </button>
       </li>
     );
@@ -190,13 +204,13 @@ export class AtomicCategoryFacet
           class="w-full flex items-center text-left text-lg lg:text-base py-1 lg:py-0.5"
           onClick={() => this.facet.toggleSelect(item)}
         >
-          <span class="my-auto">{item.value}</span>
-          <span class="ml-auto my-auto self-end text-on-background-variant">
-            {item.numberOfResults}
+          <span class="ellipsed">{item.value}</span>
+          <span class="ml-1.5 text-on-background-variant">
+            ({item.numberOfResults.toLocaleString(this.bindings.i18n.language)})
           </span>
           <div
             innerHTML={RightArrow}
-            class="ml-2 arrow-size text-secondary fill-current"
+            class="ml-1.5 arrow-size text-secondary fill-current"
           />
         </button>
       </li>
@@ -205,7 +219,7 @@ export class AtomicCategoryFacet
 
   private get resetButton() {
     if (!this.facetState.hasActiveValues) {
-      return null;
+      return;
     }
 
     return (
@@ -223,8 +237,9 @@ export class AtomicCategoryFacet
 
   private get showMoreButton() {
     if (!this.facetState.canShowMoreValues) {
-      return null;
+      return;
     }
+
     return (
       <button
         class="text-primary"
@@ -238,8 +253,9 @@ export class AtomicCategoryFacet
 
   private get showLessButton() {
     if (!this.facetState.canShowLessValues) {
-      return null;
+      return;
     }
+
     return (
       <button
         class="text-primary"
@@ -251,12 +267,93 @@ export class AtomicCategoryFacet
     );
   }
 
+  public ariaLabelForSearchResult(searchResult: CategoryFacetSearchResult) {
+    const facetValue = this.strings.facetValue({
+      numberOfResults: searchResult.count,
+      value: searchResult.displayValue,
+    });
+
+    return this.strings.under({
+      child: facetValue,
+      parent: searchResult.path.length
+        ? searchResult.path.join(', ')
+        : this.strings.allCategories(),
+    });
+  }
+
+  private ellipsedPath(path: string[]) {
+    if (path.length <= PATH_MAX_LENGTH) {
+      return path;
+    }
+    const firstPart = path.slice(0, 1);
+    const lastParts = path.slice(-PATH_MAX_LENGTH + 1);
+    return firstPart.concat(ELLIPSIS, ...lastParts);
+  }
+
+  private renderPath(path: string[]) {
+    if (!path.length) {
+      return (
+        <span class="ellipsed">{`${this.strings.pathPrefix()} ${this.strings.allCategories()}`}</span>
+      );
+    }
+
+    return [
+      <span class="mr-1">{this.strings.pathPrefix()}</span>,
+      this.ellipsedPath(path).map((part, index) => [
+        index > 0 && <span>{SEPARATOR}</span>,
+        <span class={part === ELLIPSIS ? '' : 'ellipsed flex-1 max-w-max'}>
+          {part}
+        </span>,
+      ]),
+    ];
+  }
+
+  public renderSearchResult(searchResult: CategoryFacetSearchResult) {
+    return [
+      <div class="flex" aria-hidden>
+        <span
+          class="ellipsed"
+          innerHTML={FacetSearch.highlightSearchResult(
+            searchResult.displayValue,
+            this.facetSearchQuery
+          )}
+        />
+        <span class="number-of-values ml-1 text-on-background-variant">
+          ({searchResult.count.toLocaleString(this.bindings.i18n.language)})
+        </span>
+      </div>,
+      <div
+        class="flex text-on-background-variant"
+        aria-hidden
+        title={searchResult.path.join(SEPARATOR)}
+      >
+        {this.renderPath(searchResult.path)}
+      </div>,
+    ];
+  }
+
+  public componentDidRender() {
+    this.facetSearch?.updateCombobox();
+  }
+
   public render() {
+    if (this.searchStatusState.hasError) {
+      return;
+    }
+
+    if (!this.searchStatusState.firstSearchExecuted) {
+      return (
+        <FacetPlaceholder
+          numberOfValues={this.numberOfValues}
+        ></FacetPlaceholder>
+      );
+    }
+
     if (
       this.facetState.values.length === 0 &&
       this.facetState.parents.length === 0
     ) {
-      return null;
+      return;
     }
 
     return (

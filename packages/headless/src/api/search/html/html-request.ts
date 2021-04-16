@@ -1,4 +1,4 @@
-import {BaseParam} from '../search-api-params';
+import {BaseParam} from '../../platform-service-params';
 
 export interface HtmlRequestOptions {
   uniqueId: string;
