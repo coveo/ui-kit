@@ -10,6 +10,8 @@ import {
   removeContext,
 } from '../../features/context/context-actions';
 import {ContextSection} from '../../state/state-sections';
+import {context} from '../../app/reducers';
+import {loadReducerError} from '../../utils/errors';
 
 export {ContextPayload, ContextValue};
 
@@ -59,16 +61,22 @@ export interface ContextState {
  * @param engine - The headless engine.
  * @returns A `Context` controller instance.
  */
-export function buildContext(engine: Engine<ContextSection>): Context {
+export function buildContext(engine: Engine<unknown>): Context {
+  if (!loadContextReducers(engine)) {
+    throw loadReducerError;
+  }
+
   const controller = buildController(engine);
   const {dispatch} = engine;
+
+  const getContext = () => engine.state.context;
 
   return {
     ...controller,
 
     get state() {
       return {
-        values: engine.state.context.contextValues,
+        values: getContext().contextValues,
       };
     },
 
@@ -84,4 +92,11 @@ export function buildContext(engine: Engine<ContextSection>): Context {
       dispatch(removeContext(key));
     },
   };
+}
+
+function loadContextReducers(
+  engine: Engine<unknown>
+): engine is Engine<ContextSection> {
+  engine.addReducers({context});
+  return true;
 }
