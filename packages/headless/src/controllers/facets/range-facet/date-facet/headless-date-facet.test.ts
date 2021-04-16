@@ -19,6 +19,7 @@ import {buildMockDateFacetResponse} from '../../../../test/mock-date-facet-respo
 import {SearchAppState} from '../../../../state/search-app-state';
 import * as FacetIdDeterminor from '../../_common/facet-id-determinor';
 import {buildMockDateFacetRequest} from '../../../../test/mock-date-facet-request';
+import {configuration, dateFacetSet, search} from '../../../../app/reducers';
 
 describe('date facet', () => {
   const facetId = '1';
@@ -52,6 +53,14 @@ describe('date facet', () => {
     expect(() => initDateFacet()).toThrow(
       'The start value is greater than the end value for the date range 2021/03/25@13:31:31 to 2021/03/24@13:31:31'
     );
+  });
+
+  it('it adds the correct reducers to engine', () => {
+    expect(engine.addReducers).toHaveBeenCalledWith({
+      dateFacetSet,
+      configuration,
+      search,
+    });
   });
 
   it('calls #determineFacetId with the correct params', () => {
