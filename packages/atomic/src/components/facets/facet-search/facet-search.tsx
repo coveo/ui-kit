@@ -210,7 +210,7 @@ export class FacetSearch {
       this.component.showFacetSearchResults;
 
     return (
-      'input-wrapper flex flex-grow items-center apply-border-divider rounded ' +
+      'input-wrapper flex flex-grow items-center border border-divider rounded ' +
       (hasValues ? 'rounded-br-none	rounded-bl-none' : '')
     );
   }

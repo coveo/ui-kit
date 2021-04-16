@@ -8,11 +8,12 @@ It is displayed as a regular facet in desktop browsers and as a button which ope
 
 ## Properties
 
-| Property  | Attribute  | Description                                                  | Type     | Default      |
-| --------- | ---------- | ------------------------------------------------------------ | -------- | ------------ |
-| `facetId` | `facet-id` |                                                              | `string` | `''`         |
-| `field`   | `field`    | Specifies the index field whose values the facet should use. | `string` | `''`         |
-| `label`   | `label`    | The non-localized label for the facet.                       | `string` | `'No label'` |
+| Property         | Attribute          | Description                                                                      | Type     | Default      |
+| ---------------- | ------------------ | -------------------------------------------------------------------------------- | -------- | ------------ |
+| `facetId`        | `facet-id`         |                                                                                  | `string` | `''`         |
+| `field`          | `field`            | Specifies the index field whose values the facet should use.                     | `string` | `''`         |
+| `label`          | `label`            | The non-localized label for the facet.                                           | `string` | `'No label'` |
+| `numberOfValues` | `number-of-values` | The number of values to request for this facet, when there are no manual ranges. | `number` | `10`         |
 
 
 ## Shadow Parts
@@ -23,6 +24,7 @@ It is displayed as a regular facet in desktop browsers and as a button which ope
 | `"facet"`        | The wrapping div for the entire facet                              |
 | `"facet-value"`  | A single facet value                                               |
 | `"facet-values"` | The list of facet values                                           |
+| `"placeholder"`  | The placeholder shown before the first search is executed.         |
 | `"reset-button"` | The button that resets the actively selected facet values          |
 
 

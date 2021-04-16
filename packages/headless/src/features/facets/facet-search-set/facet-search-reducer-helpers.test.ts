@@ -35,7 +35,7 @@ describe('FacetSearch slice', () => {
         facetId,
         captions: {},
         numberOfValues: 10,
-        query: '',
+        query: '**',
       });
     });
 

@@ -9,6 +9,7 @@ import {
 } from '../../../utils/initialization-utils';
 import {Schema, NumberValue} from '@coveo/bueno';
 import {filterProtocol} from '../../../utils/xss-utils';
+import Arrow from '../../../images/arrow-right.svg';
 
 /**
  * The ResultUri component displays the URI, or path, to access a result.
@@ -17,6 +18,7 @@ import {filterProtocol} from '../../../utils/xss-utils';
  * @part result-printable-uri-list-element - A result printable uri list element
  * @part result-printable-uri-link - A result printable uri clickable link
  * @part result-printable-uri-list-ellipsis - The clickable ellipsis of a result uri
+ * @part result-printable-uri-list-separator - The visual separator between each part of the uri
  */
 @Component({
   tag: 'atomic-result-printable-uri',
@@ -54,12 +56,13 @@ export class AtomicResultPrintableUri {
     return (
       <li part="result-printable-uri-list-element">
         <button
-          part="result-printable-uri-list-ellipsis"
+          part="result-printable-uri-list-ellipsis align-middle"
           aria-label={this.strings.collapsedUriParts()}
           onClick={() => (this.listExpanded = true)}
         >
           ...
         </button>
+        {this.renderSeparator()}
       </li>
     );
   }
@@ -67,17 +70,32 @@ export class AtomicResultPrintableUri {
   private get allParents() {
     const parentsXml = parseXML(`${this.result.raw.parents}`);
     const parents = Array.from(parentsXml.getElementsByTagName('parent'));
-    return parents.map((parent) => {
+    return parents.map((parent, i) => {
       const name = parent.getAttribute('name');
       const uri = parent.getAttribute('uri')!;
       return (
         <li part="result-printable-uri-list-element">
-          <a part="result-printable-uri-link" href={filterProtocol(uri)}>
+          <a
+            part="result-printable-uri-link"
+            class="text-sm inline-block align-middle"
+            href={filterProtocol(uri)}
+          >
             {name}
           </a>
+          {i === parents.length - 1 ? null : this.renderSeparator()}
         </li>
       );
     });
+  }
+
+  private renderSeparator() {
+    return (
+      <span
+        part="result-printable-uri-list-separator"
+        class="w-3 h-3 inline-block mx-2 align-middle"
+        innerHTML={Arrow}
+      ></span>
+    );
   }
 
   private renderParents() {
@@ -100,7 +118,7 @@ export class AtomicResultPrintableUri {
   public render() {
     const parents = this.renderParents();
     if (parents.length) {
-      const parts = `result-printable-uri-list${
+      const parts = `result-printable-uri-list ${
         this.listExpanded ? ' result-printable-uri-list-expanded' : ''
       }`;
 
@@ -110,6 +128,7 @@ export class AtomicResultPrintableUri {
     return (
       <a
         part="result-printable-uri-link"
+        class="text-sm"
         href={filterProtocol(this.result.clickUri)}
       >
         <atomic-result-text field="printableUri"></atomic-result-text>

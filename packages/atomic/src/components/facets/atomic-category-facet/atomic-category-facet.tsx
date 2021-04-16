@@ -7,6 +7,9 @@ import {
   CategoryFacetValue,
   CategoryFacetSortCriterion,
   CategoryFacetSearchResult,
+  SearchStatus,
+  SearchStatusState,
+  buildSearchStatus,
 } from '@coveo/headless';
 import {
   Bindings,
@@ -28,6 +31,7 @@ import {
   FacetSearchComponent,
   FacetSearchStrings,
 } from '../facet-search/facet-search';
+import {FacetPlaceholder} from '../atomic-facet-placeholder/atomic-facet-placeholder';
 
 const SEPARATOR = '/';
 const ELLIPSIS = '...';
@@ -43,6 +47,8 @@ const PATH_MAX_LENGTH = 3;
  * @part reset-button - The button that resets the actively selected facet values
  * @part show-more - The show more results button
  * @part show-less - The show less button
+ * @part placeholder - The placeholder shown before the first search is executed.
+ *
  */
 @Component({
   tag: 'atomic-category-facet',
@@ -53,10 +59,14 @@ export class AtomicCategoryFacet
   implements InitializableComponent, FacetSearchComponent, BaseFacetState {
   @InitializeBindings() public bindings!: Bindings;
   public facet!: CategoryFacet;
+  public searchStatus!: SearchStatus;
 
   @BindStateToController('facet', {subscribeOnConnectedCallback: true})
   @State()
   public facetState!: CategoryFacetState;
+  @BindStateToController('searchStatus')
+  @State()
+  private searchStatusState!: SearchStatusState;
   @State() public error!: Error;
 
   private facetSearch?: FacetSearch;
@@ -123,6 +133,7 @@ export class AtomicCategoryFacet
   }
 
   public initialize() {
+    this.searchStatus = buildSearchStatus(this.bindings.engine);
     const options: CategoryFacetOptions = {
       field: this.field,
       delimitingCharacter: this.delimitingCharacter,
@@ -142,10 +153,6 @@ export class AtomicCategoryFacet
     };
   }
 
-  public componentDidRender() {
-    this.facetSearch?.updateCombobox();
-  }
-
   private get parents() {
     const parents = this.facetState.parents;
 
@@ -156,13 +163,16 @@ export class AtomicCategoryFacet
   }
 
   private buildParent(parent: CategoryFacetValue, isLast: boolean) {
-    const listClass = ' text-lg lg:text-base py-1 lg:py-0.5';
+    const listClass = 'text-lg lg:text-base py-1 lg:py-0.5';
     if (isLast) {
       return (
-        <li class={listClass}>
-          <b class="ml-8 lg:ml-6">
-            {parent.value} ({parent.numberOfResults})
-          </b>
+        <li class={`${listClass} flex font-bold`}>
+          <span class="ml-8 lg:ml-6 ellipsed">{parent.value}</span>
+          <span class="ml-1.5 text-on-background-variant">
+            (
+            {parent.numberOfResults.toLocaleString(this.bindings.i18n.language)}
+            )
+          </span>
         </li>
       );
     }
@@ -177,7 +187,7 @@ export class AtomicCategoryFacet
             innerHTML={LeftArrow}
             class="arrow-size text-secondary fill-current"
           />
-          <span class="ml-2">{parent.value}</span>
+          <span class="ml-2 ellipsed">{parent.value}</span>
         </button>
       </li>
     );
@@ -194,13 +204,13 @@ export class AtomicCategoryFacet
           class="w-full flex items-center text-left text-lg lg:text-base py-1 lg:py-0.5"
           onClick={() => this.facet.toggleSelect(item)}
         >
-          <span class="my-auto">{item.value}</span>
-          <span class="ml-auto my-auto self-end text-on-background-variant">
-            {item.numberOfResults}
+          <span class="ellipsed">{item.value}</span>
+          <span class="ml-1.5 text-on-background-variant">
+            ({item.numberOfResults.toLocaleString(this.bindings.i18n.language)})
           </span>
           <div
             innerHTML={RightArrow}
-            class="ml-2 arrow-size text-secondary fill-current"
+            class="ml-1.5 arrow-size text-secondary fill-current"
           />
         </button>
       </li>
@@ -209,7 +219,7 @@ export class AtomicCategoryFacet
 
   private get resetButton() {
     if (!this.facetState.hasActiveValues) {
-      return null;
+      return;
     }
 
     return (
@@ -227,8 +237,9 @@ export class AtomicCategoryFacet
 
   private get showMoreButton() {
     if (!this.facetState.canShowMoreValues) {
-      return null;
+      return;
     }
+
     return (
       <button
         class="text-primary"
@@ -242,8 +253,9 @@ export class AtomicCategoryFacet
 
   private get showLessButton() {
     if (!this.facetState.canShowLessValues) {
-      return null;
+      return;
     }
+
     return (
       <button
         class="text-primary"
@@ -279,14 +291,9 @@ export class AtomicCategoryFacet
   }
 
   private renderPath(path: string[]) {
-    const ellipsisClasses =
-      'whitespace-nowrap overflow-ellipsis overflow-hidden';
-
     if (!path.length) {
       return (
-        <span
-          class={ellipsisClasses}
-        >{`${this.strings.pathPrefix()} ${this.strings.allCategories()}`}</span>
+        <span class="ellipsed">{`${this.strings.pathPrefix()} ${this.strings.allCategories()}`}</span>
       );
     }
 
@@ -294,9 +301,7 @@ export class AtomicCategoryFacet
       <span class="mr-1">{this.strings.pathPrefix()}</span>,
       this.ellipsedPath(path).map((part, index) => [
         index > 0 && <span>{SEPARATOR}</span>,
-        <span
-          class={part === ELLIPSIS ? '' : `${ellipsisClasses} flex-1 max-w-max`}
-        >
+        <span class={part === ELLIPSIS ? '' : 'ellipsed flex-1 max-w-max'}>
           {part}
         </span>,
       ]),
@@ -307,7 +312,7 @@ export class AtomicCategoryFacet
     return [
       <div class="flex" aria-hidden>
         <span
-          class="whitespace-nowrap overflow-ellipsis overflow-hidden"
+          class="ellipsed"
           innerHTML={FacetSearch.highlightSearchResult(
             searchResult.displayValue,
             this.facetSearchQuery
@@ -327,12 +332,28 @@ export class AtomicCategoryFacet
     ];
   }
 
+  public componentDidRender() {
+    this.facetSearch?.updateCombobox();
+  }
+
   public render() {
+    if (this.searchStatusState.hasError) {
+      return;
+    }
+
+    if (!this.searchStatusState.firstSearchExecuted) {
+      return (
+        <FacetPlaceholder
+          numberOfValues={this.numberOfValues}
+        ></FacetPlaceholder>
+      );
+    }
+
     if (
       this.facetState.values.length === 0 &&
       this.facetState.parents.length === 0
     ) {
-      return null;
+      return;
     }
 
     return (

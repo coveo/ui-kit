@@ -3,6 +3,37 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.11.0-alpha.2](https://github.com/coveo/ui-kit/compare/v0.11.0-alpha.1...v0.11.0-alpha.2) (2021-04-15)
+
+**Note:** Version bump only for package ui-kit
+
+
+
+
+
+# [0.11.0-alpha.1](https://github.com/coveo/ui-kit/compare/v0.11.0-alpha.0...v0.11.0-alpha.1) (2021-04-15)
+
+
+### Features
+
+* **atomic:** styling changes for printable uri ([#708](https://github.com/coveo/ui-kit/issues/708)) ([cf2b75b](https://github.com/coveo/ui-kit/commit/cf2b75b6c231a40938421038c2d10b47cfdd8c31))
+* **atomic:** styling default page search box alignment with results ([#713](https://github.com/coveo/ui-kit/issues/713)) ([613035c](https://github.com/coveo/ui-kit/commit/613035cf79e0f06d9ca5f8d45db83f881513ebd5))
+
+
+
+
+
+# [0.11.0-alpha.0](https://github.com/coveo/ui-kit/compare/v0.10.1-alpha.0...v0.11.0-alpha.0) (2021-04-14)
+
+
+### Features
+
+* **atomic:** add atomic-facet-placeholder for loading state ([#710](https://github.com/coveo/ui-kit/issues/710)) ([981fa6f](https://github.com/coveo/ui-kit/commit/981fa6fafe537386e82fe21f22cc21ef03114fff))
+
+
+
+
+
 ## [0.10.1-alpha.0](https://github.com/coveo/ui-kit/compare/v0.10.0...v0.10.1-alpha.0) (2021-04-14)
 
 **Note:** Version bump only for package ui-kit

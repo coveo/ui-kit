@@ -1,9 +1,9 @@
 import {
   configureStore as configureStoreToolkit,
   ReducersMapObject,
-  combineReducers,
   StateFromReducersMapObject,
   Middleware,
+  Reducer,
 } from '@reduxjs/toolkit';
 import {AnalyticsClientSendEventHook} from 'coveo.analytics';
 import {SearchAPIClient} from '../api/search/search-api-client';
@@ -25,20 +25,20 @@ export interface ThunkExtraArguments {
 }
 
 interface ConfigureStoreOptions<Reducers extends ReducersMapObject> {
-  reducers: Reducers;
+  reducer: Reducer;
   preloadedState?: StateFromReducersMapObject<Reducers>;
   middlewares?: Middleware[];
   thunkExtraArguments: ThunkExtraArguments;
 }
 
 export function configureStore<Reducers extends ReducersMapObject>({
-  reducers,
+  reducer,
   preloadedState,
   middlewares = [],
   thunkExtraArguments,
 }: ConfigureStoreOptions<Reducers>) {
   return configureStoreToolkit({
-    reducer: combineReducers(reducers),
+    reducer,
     preloadedState,
     devTools: {
       stateSanitizer: (state) =>

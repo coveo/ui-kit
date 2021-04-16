@@ -42,6 +42,7 @@ import {
   AnalyticsClientSendEventHook,
   IRuntimeEnvironment,
 } from 'coveo.analytics';
+import {createReducerManager, ReducerManager} from './reducer-manager';
 
 export type LogLevel = LevelWithSilent;
 
@@ -238,11 +239,18 @@ export interface Engine<State = SearchAppState> {
    * The redux store.
    */
   store: Store;
+  /**
+   * A function for headless to call to retrieve a refreshed access token.
+   */
   renewAccessToken: () => Promise<string>;
   /**
    * The logger instance used by headless.
    * */
   logger: Logger;
+  /**
+   * Adds the specified reducers to the store.
+   */
+  addReducers(reducers: ReducersMapObject): void;
 }
 
 /**
@@ -254,10 +262,12 @@ export class HeadlessEngine<Reducers extends ReducersMapObject>
   implements Engine<StateFromReducersMapObject<Reducers>> {
   private reduxStore!: Store;
   public logger!: Logger;
+  private reducerManager!: ReducerManager;
 
   constructor(private options: HeadlessOptions<Reducers>) {
     this.initLogger();
     this.validateConfiguration(options);
+    this.initReducerManager();
     this.initStore();
 
     this.reduxStore.dispatch(
@@ -279,6 +289,11 @@ export class HeadlessEngine<Reducers extends ReducersMapObject>
       } = options.configuration.analytics;
       this.reduxStore.dispatch(updateAnalyticsConfiguration(rest));
     }
+  }
+
+  public addReducers(reducers: ReducersMapObject) {
+    this.reducerManager.add(reducers);
+    this.reduxStore.replaceReducer(this.reducerManager.combinedReducer);
   }
 
   private validateConfiguration(options: HeadlessOptions<Reducers>) {
@@ -356,13 +371,17 @@ export class HeadlessEngine<Reducers extends ReducersMapObject>
     });
   }
 
+  private initReducerManager() {
+    this.reducerManager = createReducerManager(this.options.reducers);
+  }
+
   private initStore() {
     const {search} = this.options.configuration;
     const preprocessRequest =
       this.options.configuration.preprocessRequest || NoopPreprocessRequest;
     this.reduxStore = configureStore({
       preloadedState: this.options.preloadedState,
-      reducers: this.options.reducers,
+      reducer: this.reducerManager.combinedReducer,
       middlewares: this.options.middlewares,
       thunkExtraArguments: {
         searchAPIClient: new SearchAPIClient({
