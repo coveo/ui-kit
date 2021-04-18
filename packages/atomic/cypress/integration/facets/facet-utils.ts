@@ -42,15 +42,15 @@ export function validateFacetNumberofValueGreaterThan(totalNumber: number) {
 
 export function facetValueShouldDisplayInBreadcrumb(
   facetValueSelector: string,
-  valueDisplayInBreadcrumbSelector: string
+  nthBreadcrumb: number
 ) {
   cy.get(facetValueSelector)
-    .find('label span:nth-child(1)')
+    .find(FacetSelectors.labelText)
     .invoke('text')
     .then((text) => {
       cy.get(BreadcrumbAlias.breadcrumbFacet)
         .first()
-        .find(valueDisplayInBreadcrumbSelector)
+        .find(`li:nth-child(${nthBreadcrumb})`)
         .should('be.visible')
         .contains(text);
     });

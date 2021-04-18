@@ -27,7 +27,7 @@ export const FacetValue: FunctionalComponent<FacetValueProps> = (props) => {
       />
       <label
         htmlFor={id}
-        class="flex ml-3 text-on-background cursor-pointer ellipsed"
+        class="flex pl-3 text-on-background cursor-pointer ellipsed"
         title={props.label}
       >
         <span class="ellipsed">{props.label}</span>
