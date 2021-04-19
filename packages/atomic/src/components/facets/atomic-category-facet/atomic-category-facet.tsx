@@ -60,7 +60,6 @@ const PATH_MAX_LENGTH = 3;
  * @part show-more - The show more results button
  * @part show-less - The show less button
  * @part placeholder - The placeholder shown before the first search is executed.
- * parent
  *
  */
 @Component({

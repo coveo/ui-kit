@@ -31,7 +31,7 @@ A hierarchical category facet component. It is displayed as a facet in desktop b
 | `"close-button"`              | The button to close the facet when displayed modally (mobile only) |
 | `"facet"`                     | The wrapper for the entire facet                                   |
 | `"parent"`                    | A parent element                                                   |
-| `"placeholder"`               | The placeholder shown before the first search is executed. parent  |
+| `"placeholder"`               | The placeholder shown before the first search is executed.         |
 | `"search-icon"`               | The magnifier icon of the input                                    |
 | `"search-input"`              | The search input                                                   |
 | `"search-input-clear-button"` | The clear button of the input                                      |
