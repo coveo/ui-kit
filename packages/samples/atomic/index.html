@@ -46,7 +46,7 @@
     </style>
     <style>
       /* Example of generic layout styling  */
-      .interface-container {
+      .main {
         width: 100%;
         max-width: 1250px;
         margin: 0 auto;
@@ -86,7 +86,7 @@
   </head>
   <body>
     <atomic-search-interface id="search">
-      <div class="interface-container">
+      <div class="main">
         <atomic-search-box class="search-box-item"></atomic-search-box>
 
         <atomic-facet-manager>
@@ -98,17 +98,17 @@
           <atomic-category-facet field="geographicalhierarchy" label="World Atlas"></atomic-category-facet>
         </atomic-facet-manager>
 
-        <div class="results-container">
+        <section id="results-container">
           <atomic-breadcrumb-manager></atomic-breadcrumb-manager>
           <atomic-did-you-mean></atomic-did-you-mean>
           <atomic-query-error></atomic-query-error>
-          <div class="side-by-side-container">
+          <section id="side-by-side-container">
             <atomic-query-summary></atomic-query-summary>
             <atomic-sort-dropdown>
               <atomic-sort-criteria caption="relevance" criteria="relevancy"></atomic-sort-criteria>
               <atomic-sort-criteria caption="mostRecent" criteria="date descending"></atomic-sort-criteria>
             </atomic-sort-dropdown>
-          </div>
+          </section>
 
           <atomic-no-results></atomic-no-results>
 
@@ -140,11 +140,11 @@
               </script>
             </atomic-result-template>
           </atomic-result-list>
-        </div>
-        <div class="footer-item side-by-side-container">
+        </section>
+        <section id="footer-item side-by-side-container">
           <atomic-pager></atomic-pager>
           <atomic-results-per-page></atomic-results-per-page>
-        </div>
+        </section>
       </div>
     </atomic-search-interface>
   </body>
