@@ -14,13 +14,15 @@
 
 ## Shadow Parts
 
-| Part                                   | Description                            |
-| -------------------------------------- | -------------------------------------- |
-| `"result-printable-uri-link"`          | A result printable uri clickable link  |
-| `"result-printable-uri-list"`          | The result printable uri list          |
-| `"result-printable-uri-list-element"`  | A result printable uri list element    |
-| `"result-printable-uri-list-ellipsis"` | The clickable ellipsis of a result uri |
-| `"result-printable-uri-list-expanded"` | The expanded result printable uri list |
+| Part                                    | Description                                       |
+| --------------------------------------- | ------------------------------------------------- |
+| `"align-middle"`                        |                                                   |
+| `"result-printable-uri-link"`           | A result printable uri clickable link             |
+| `"result-printable-uri-list"`           | The result printable uri list                     |
+| `"result-printable-uri-list-element"`   | A result printable uri list element               |
+| `"result-printable-uri-list-ellipsis"`  | The clickable ellipsis of a result uri            |
+| `"result-printable-uri-list-expanded"`  | The expanded result printable uri list            |
+| `"result-printable-uri-list-separator"` | The visual separator between each part of the uri |
 
 
 ## Dependencies

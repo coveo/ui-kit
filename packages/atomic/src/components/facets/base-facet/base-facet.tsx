@@ -29,6 +29,11 @@ type BaseFacetProps = {
   hasActiveValues: boolean;
 };
 
+/**
+ * @part facet - The wrapper for the entire facet
+ * @part close-button - The button to close the facet when displayed modally (mobile only)
+ * @part clear-button - The button that resets the actively selected facet values
+ */
 export const BaseFacet: FunctionalComponent<BaseFacetProps> = (
   props: BaseFacetProps,
   children
@@ -46,9 +51,9 @@ export const BaseFacet: FunctionalComponent<BaseFacetProps> = (
     </button>
   ) : null;
 
-  const resetButton = props.hasActiveValues ? (
+  const clearButton = props.hasActiveValues ? (
     <button
-      part="reset-button"
+      part="clear-button"
       onClick={() => props.deselectAll()}
       class="block text-primary mr-2 lg:mr-0 text-sm"
     >
@@ -82,7 +87,7 @@ export const BaseFacet: FunctionalComponent<BaseFacetProps> = (
             {props.label}
           </span>
           <span class="flex flex-row ml-auto">
-            {resetButton}
+            {clearButton}
             {closeButton}
           </span>
         </div>

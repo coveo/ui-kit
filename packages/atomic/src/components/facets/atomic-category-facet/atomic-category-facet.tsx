@@ -40,14 +40,27 @@ const PATH_MAX_LENGTH = 3;
 /**
  * A hierarchical category facet component. It is displayed as a facet in desktop browsers and as
  * a button which opens a facet modal in mobile browsers.
- * @part facet - The wrapping div for the entire facet
- * @part facet-values - The list of facet values (children)
- * @part facet-value - A single facet value
+ *
+ * @part facet - The wrapper for the entire facet
  * @part close-button - The button to close the facet when displayed modally (mobile only)
- * @part reset-button - The button that resets the actively selected facet values
+ * @part clear-button - The button that resets the actively selected facet values
+ *
+ * @part search-input - The search input
+ * @part search-icon - The magnifier icon of the input
+ * @part search-input-clear-button - The clear button of the input
+ * @part search-results - The list of search results
+ * @part search-result - A search result
+ * @part active-search-result - The currently active search result
+ *
+ * @part parent - A parent element
+ * @part active-parent - The currently active parent element
+ * @part child - A child element
+ * @part value-label - The facet value label
+ * @part value-count - The facet value count
  * @part show-more - The show more results button
  * @part show-less - The show less button
  * @part placeholder - The placeholder shown before the first search is executed.
+ * parent
  *
  */
 @Component({
@@ -99,7 +112,7 @@ export class AtomicCategoryFacet
   /**
    * The non-localized label for the facet
    */
-  @Prop() public label = 'No label';
+  @Prop() public label = 'noLabel';
   /**
    * The character that separates values of a multi-value field
    */
@@ -157,81 +170,81 @@ export class AtomicCategoryFacet
     const parents = this.facetState.parents;
 
     return parents.map((parent, i) => {
-      const isLast = i === parents.length - 1;
-      return this.buildParent(parent, isLast);
+      const isActive = i === parents.length - 1;
+      if (isActive) {
+        return this.buildActiveParent(parent);
+      }
+      return this.buildParent(parent);
     });
   }
 
-  private buildParent(parent: CategoryFacetValue, isLast: boolean) {
-    const listClass = 'text-lg lg:text-base py-1 lg:py-0.5';
-    if (isLast) {
-      return (
-        <li class={`${listClass} flex font-bold`}>
-          <span class="ml-8 lg:ml-6 ellipsed">{parent.value}</span>
-          <span class="ml-1.5 text-on-background-variant">
+  private buildParent(parent: CategoryFacetValue) {
+    return (
+      <li>
+        <button
+          part="parent"
+          class="value-button"
+          onClick={() => this.facet.toggleSelect(parent)}
+        >
+          <div innerHTML={LeftArrow} class="facet-arrow mr-1.5" />
+          <span class="ellipsed">{parent.value}</span>
+        </button>
+      </li>
+    );
+  }
+
+  private buildActiveParent(parent: CategoryFacetValue) {
+    return (
+      <li>
+        <div part="active-parent" class="value-button font-bold ml-6">
+          <span part="value-label" class="ellipsed">
+            {parent.value}
+          </span>
+          <span part="value-count" class="value-count">
             (
             {parent.numberOfResults.toLocaleString(this.bindings.i18n.language)}
             )
           </span>
-        </li>
-      );
-    }
-
-    return (
-      <li class={listClass}>
-        <button
-          class="w-full flex items-center"
-          onClick={() => this.facet.toggleSelect(parent)}
-        >
-          <div
-            innerHTML={LeftArrow}
-            class="arrow-size text-secondary fill-current"
-          />
-          <span class="ml-2 ellipsed">{parent.value}</span>
-        </button>
+        </div>
       </li>
     );
   }
 
-  private get values() {
-    return this.facetState.values.map((value) => this.buildValue(value));
+  private get children() {
+    return this.facetState.values.map((value) => this.buildChildValue(value));
   }
 
-  private buildValue(item: CategoryFacetValue) {
+  private buildChildValue(item: CategoryFacetValue) {
     return (
-      <li aria-label={this.strings.facetValue(item)}>
+      <li>
         <button
-          class="w-full flex items-center text-left text-lg lg:text-base py-1 lg:py-0.5"
+          part="child"
+          class="value-button"
           onClick={() => this.facet.toggleSelect(item)}
+          aria-label={this.strings.facetValue(item)}
         >
-          <span class="ellipsed">{item.value}</span>
-          <span class="ml-1.5 text-on-background-variant">
+          <span part="value-label" class="ellipsed">
+            {item.value}
+          </span>
+          <span part="value-count" class="value-count">
             ({item.numberOfResults.toLocaleString(this.bindings.i18n.language)})
           </span>
-          <div
-            innerHTML={RightArrow}
-            class="ml-1.5 arrow-size text-secondary fill-current"
-          />
+          <div innerHTML={RightArrow} class="facet-arrow ml-1.5" />
         </button>
       </li>
     );
   }
 
-  private get resetButton() {
+  private get allCategoriesButton() {
     if (!this.facetState.hasActiveValues) {
       return;
     }
 
     return (
-      <div class="text-lg lg:text-base flex items-center">
-        <div
-          innerHTML={LeftArrow}
-          class="mr-2 arrow-size text-secondary fill-current"
-        />
-        <button onClick={() => this.facet.deselectAll()}>
-          {this.strings.allCategories()}
-        </button>
-      </div>
+      <button onClick={() => this.facet.deselectAll()} class="value-button">
+        <div innerHTML={LeftArrow} class="facet-arrow mr-1.5" />
+        {this.strings.allCategories()}
+      </button>
     );
   }
 
@@ -242,7 +255,7 @@ export class AtomicCategoryFacet
 
     return (
       <button
-        class="text-primary"
+        class="value-button text-primary"
         part="show-more"
         onClick={() => this.facet.showMoreValues()}
       >
@@ -258,7 +271,7 @@ export class AtomicCategoryFacet
 
     return (
       <button
-        class="text-primary"
+        class="value-button text-primary"
         part="show-less"
         onClick={() => this.facet.showLessValues()}
       >
@@ -312,13 +325,14 @@ export class AtomicCategoryFacet
     return [
       <div class="flex" aria-hidden>
         <span
+          part="value-label"
           class="ellipsed"
           innerHTML={FacetSearch.highlightSearchResult(
             searchResult.displayValue,
             this.facetSearchQuery
           )}
         />
-        <span class="number-of-values ml-1 text-on-background-variant">
+        <span part="value-count" class="value-count">
           ({searchResult.count.toLocaleString(this.bindings.i18n.language)})
         </span>
       </div>,
@@ -365,12 +379,10 @@ export class AtomicCategoryFacet
       >
         {this.facetSearch?.render()}
         <div class="mt-1">
-          <div>{this.resetButton}</div>
-          <ul part="parents" class="list-none p-0">
-            {this.parents}
-          </ul>
-          <div class={this.parents.length > 0 ? 'pl-11 lg:pl-9' : 'pl-0'}>
-            <ul class="list-none p-0">{this.values}</ul>
+          {this.allCategoriesButton}
+          <ul>{this.parents}</ul>
+          <div class={this.parents.length ? 'pl-9' : 'pl-0'}>
+            <ul>{this.children}</ul>
             <div class="flex flex-col items-start space-y-1">
               {this.showLessButton}
               {this.showMoreButton}
