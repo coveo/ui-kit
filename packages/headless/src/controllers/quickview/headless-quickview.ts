@@ -63,7 +63,7 @@ export interface QuickviewState {
  * @returns A `Quickview` controller instance.
  */
 export function buildQuickview(
-  engine: Engine<unknown>,
+  engine: Engine<object>,
   props: QuickviewProps
 ): Quickview {
   if (!loadQuickviewReducers(engine)) {
@@ -100,7 +100,7 @@ export function buildQuickview(
 }
 
 function loadQuickviewReducers(
-  engine: Engine<unknown>
+  engine: Engine<object>
 ): engine is Engine<ConfigurationSection & ResultPreviewSection> {
   engine.addReducers({configuration, resultPreview});
   return true;

@@ -64,7 +64,7 @@ export interface QuerySummaryState extends SearchStatusState {
  *
  * @param engine - The headless engine instance.
  */
-export function buildQuerySummary(engine: Engine<unknown>): QuerySummary {
+export function buildQuerySummary(engine: Engine<object>): QuerySummary {
   if (!loadQuerySummaryReducers(engine)) {
     throw loadReducerError;
   }
@@ -101,7 +101,7 @@ export function buildQuerySummary(engine: Engine<unknown>): QuerySummary {
 }
 
 function loadQuerySummaryReducers(
-  engine: Engine<unknown>
+  engine: Engine<object>
 ): engine is Engine<SearchSection & PaginationSection> {
   engine.addReducers({search, pagination});
   return true;

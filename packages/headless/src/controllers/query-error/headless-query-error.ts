@@ -35,7 +35,7 @@ export interface QueryErrorState {
  *
  * @param engine - The headless engine.
  */
-export function buildQueryError(engine: Engine<unknown>): QueryError {
+export function buildQueryError(engine: Engine<object>): QueryError {
   if (!loadQueryErrorReducers(engine)) {
     throw loadReducerError;
   }
@@ -56,7 +56,7 @@ export function buildQueryError(engine: Engine<unknown>): QueryError {
 }
 
 function loadQueryErrorReducers(
-  engine: Engine<unknown>
+  engine: Engine<object>
 ): engine is Engine<SearchSection> {
   engine.addReducers({search});
   return true;

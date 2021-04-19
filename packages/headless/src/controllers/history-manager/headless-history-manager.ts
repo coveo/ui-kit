@@ -44,7 +44,7 @@ export type HistoryManagerState = StateWithHistory<HistoryState>;
  * @param engine - The headless engine.
  * @returns A `HistoryManager` controller instance.
  */
-export function buildHistoryManager(engine: Engine<unknown>): HistoryManager {
+export function buildHistoryManager(engine: Engine<object>): HistoryManager {
   if (!loadHistoryManagerReducers(engine)) {
     throw loadReducerError;
   }
@@ -78,7 +78,7 @@ export function buildHistoryManager(engine: Engine<unknown>): HistoryManager {
 }
 
 function loadHistoryManagerReducers(
-  engine: Engine<unknown>
+  engine: Engine<object>
 ): engine is Engine<HistorySection & ConfigurationSection> {
   engine.addReducers({history, configuration});
   return true;

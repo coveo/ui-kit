@@ -214,7 +214,7 @@ export interface CategoryFacetSearchResult {
  * @returns A `CategoryFacet` controller instance.
  * */
 export function buildCategoryFacet(
-  engine: Engine<unknown>,
+  engine: Engine<object>,
   props: CategoryFacetProps
 ): CategoryFacet {
   if (!loadCategoryFacetReducers(engine)) {
@@ -338,7 +338,7 @@ export function buildCategoryFacet(
 }
 
 function loadCategoryFacetReducers(
-  engine: Engine<unknown>
+  engine: Engine<object>
 ): engine is Engine<
   CategoryFacetSection &
     CategoryFacetSearchSection &

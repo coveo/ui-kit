@@ -173,7 +173,7 @@ export interface QueryExpressions {
  * @returns A `RelevanceInspector` controller instance.
  */
 export function buildRelevanceInspector(
-  engine: Engine<unknown>,
+  engine: Engine<object>,
   props: RelevanceInspectorProps = {}
 ): RelevanceInspector {
   if (!loadRelevanceInspectorReducers(engine)) {
@@ -300,7 +300,7 @@ export function buildRelevanceInspector(
 }
 
 function loadRelevanceInspectorReducers(
-  engine: Engine<unknown>
+  engine: Engine<object>
 ): engine is Engine<DebugSection & SearchSection & ConfigurationSection> {
   engine.addReducers({
     debug,

@@ -127,7 +127,7 @@ export interface NumericFacetState {
  * @returns A `NumericFacet` controller instance.
  */
 export function buildNumericFacet(
-  engine: Engine<unknown>,
+  engine: Engine<object>,
   props: NumericFacetProps
 ): NumericFacet {
   if (!loadNumericFacetReducers(engine)) {
@@ -168,7 +168,7 @@ export function buildNumericFacet(
 }
 
 function loadNumericFacetReducers(
-  engine: Engine<unknown>
+  engine: Engine<object>
 ): engine is Engine<
   NumericFacetSection & ConfigurationSection & SearchSection
 > {
