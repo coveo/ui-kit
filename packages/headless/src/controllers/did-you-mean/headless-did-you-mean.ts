@@ -62,7 +62,7 @@ export interface DidYouMeanState {
  *
  * @param engine - The headless engine.
  */
-export function buildDidYouMean(engine: Engine<unknown>): DidYouMean {
+export function buildDidYouMean(engine: Engine<object>): DidYouMean {
   if (!loadDidYouMeanReducers(engine)) {
     throw loadReducerError;
   }
@@ -100,7 +100,7 @@ export function buildDidYouMean(engine: Engine<unknown>): DidYouMean {
 }
 
 function loadDidYouMeanReducers(
-  engine: Engine<unknown>
+  engine: Engine<object>
 ): engine is Engine<ConfigurationSection & DidYouMeanSection> {
   engine.addReducers({configuration, didYouMean});
   return true;

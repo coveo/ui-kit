@@ -173,7 +173,7 @@ export interface BreadcrumbValue<T extends BaseFacetValue> {
  * @returns A `BreadcrumbManager` controller instance.
  */
 export function buildBreadcrumbManager(
-  engine: Engine<unknown>
+  engine: Engine<object>
 ): BreadcrumbManager {
   if (!loadBreadcrumbManagerReducers(engine)) {
     throw loadReducerError;
@@ -312,7 +312,7 @@ export function buildBreadcrumbManager(
 }
 
 function loadBreadcrumbManagerReducers(
-  engine: Engine<unknown>
+  engine: Engine<object>
 ): engine is Engine<
   ConfigurationSection &
     SearchSection &
