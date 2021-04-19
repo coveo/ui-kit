@@ -34,9 +34,7 @@ export const pagination = paginationReducer;
 export const facetSet = facetSetReducer;
 export const facetSearchSet = specificFacetSearchSetReducer;
 export const search = searchReducer;
-
 export const dateFacetSet = dateFacetSetReducer;
-export const facetOrder = facetOrderReducer;
 export const numericFacetSet = numericFacetSetReducer;
 export const categoryFacetSet = categoryFacetSetReducer;
 export const facetOptions = facetOptionsReducer;
@@ -49,11 +47,13 @@ export const querySuggest = querySuggestReducer;
 export const sortCriteria = sortCriteriaReducer;
 export const context = contextReducer;
 export const didYouMean = didYouMeanReducer;
+export const resultPreview = resultPreviewReducer;
+
+export const debug = debugReducer;
+export const facetOrder = facetOrderReducer;
 export const fields = fieldsReducer;
 export const pipeline = pipelineReducer;
 export const searchHub = searchHubReducer;
-export const debug = debugReducer;
-export const resultPreview = resultPreviewReducer;
 export const version = versionReducer;
 
 export const history = undoable({
@@ -64,6 +64,5 @@ export const history = undoable({
   },
   reducer: historyReducer,
 });
-
 export const recommendation = recommendationReducer;
 export const productRecommendations = productRecommendationsReducer;
