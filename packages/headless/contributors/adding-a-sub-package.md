@@ -19,7 +19,7 @@ pkg/case-assist/package.json
   "main": "../../dist/case-assist/headless.js",
   "module": "../../dist/case-assist/headless.esm.js",
   "browser": "../../dist/browser/case-assist/headless.esm.js",
-  "types": "../../dist/definitions/case-assist.d.ts",
+  "types": "../../dist/definitions/case-assist.index.d.ts",
   "license": "Apache-2.0"
 }
 ```

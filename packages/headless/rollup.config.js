@@ -45,7 +45,7 @@ const nodejs = [
     outDir: 'dist',
   },
   {
-    input: 'src/case-assist.ts',
+    input: 'src/case-assist.index.ts',
     outDir: 'dist/case-assist'
   }
 ].map(buildNodeConfiguration);
@@ -83,7 +83,7 @@ const browser = [
     ]
   },
   {
-    input: 'src/case-assist.ts',
+    input: 'src/case-assist.index.ts',
     output: [
       buildUmdOutput('dist/browser/case-assist', 'CoveoHeadlessCaseAssist'),
       buildEsmOutput('dist/browser/case-assist')
