@@ -801,6 +801,10 @@
     "zh-cn": "{{value}} 更多...",
     "zh-tw": "{{value}} 更多..."
   },
+  "showNMoreFilters": {
+    "en": "Show {{value}} more filters",
+    "fr": "Montrer {{value}} filtres de plus"
+  },
   "queryAutoCorrectedTo": {
     "en": "Query was automatically corrected to {{query}}",
     "fr": "La requête a été corrigée automatiquement à {{query}}",
