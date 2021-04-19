@@ -42,7 +42,7 @@ export interface SearchStatusState {
  * @param engine - The headless engine.
  * @returns A `SearchStatus` controller instance.
  * */
-export function buildSearchStatus(engine: Engine<unknown>): SearchStatus {
+export function buildSearchStatus(engine: Engine<object>): SearchStatus {
   if (!loadSearchStateReducers(engine)) {
     throw loadReducerError;
   }
@@ -67,7 +67,7 @@ export function buildSearchStatus(engine: Engine<unknown>): SearchStatus {
 }
 
 function loadSearchStateReducers(
-  engine: Engine<unknown>
+  engine: Engine<object>
 ): engine is Engine<SearchSection> {
   engine.addReducers({search});
   return true;

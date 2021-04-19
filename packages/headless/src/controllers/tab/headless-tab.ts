@@ -89,7 +89,7 @@ export interface TabState {
  * @param props - The configurable `Tab` properties.
  * @returns A `Tab` controller instance.
  */
-export function buildTab(engine: Engine<unknown>, props: TabProps): Tab {
+export function buildTab(engine: Engine<object>, props: TabProps): Tab {
   if (!loadTabReducers(engine)) {
     throw loadReducerError;
   }
@@ -134,7 +134,7 @@ export function buildTab(engine: Engine<unknown>, props: TabProps): Tab {
 }
 
 function loadTabReducers(
-  engine: Engine<unknown>
+  engine: Engine<object>
 ): engine is Engine<ConfigurationSection & AdvancedSearchQueriesSection> {
   engine.addReducers({configuration, advancedSearchQueries});
   return true;

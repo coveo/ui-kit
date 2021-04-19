@@ -85,7 +85,7 @@ export interface ResultListState extends SearchStatusState {
  * @returns A `ResultList` controller instance.
  */
 export function buildResultList(
-  engine: Engine<unknown>,
+  engine: Engine<object>,
   props?: ResultListProps
 ): ResultList {
   if (!loadResultListReducers(engine)) {
@@ -169,7 +169,7 @@ export function buildResultList(
 }
 
 function loadResultListReducers(
-  engine: Engine<unknown>
+  engine: Engine<object>
 ): engine is Engine<SearchSection & ConfigurationSection> {
   engine.addReducers({search, configuration});
   return true;

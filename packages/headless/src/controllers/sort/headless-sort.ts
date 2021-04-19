@@ -96,10 +96,7 @@ export interface SortState {
  * @param props - The configurable `Sort` controller properties.
  * @returns A `Sort` controller instance.
  */
-export function buildSort(
-  engine: Engine<unknown>,
-  props: SortProps = {}
-): Sort {
+export function buildSort(engine: Engine<object>, props: SortProps = {}): Sort {
   if (!loadSortReducers(engine)) {
     throw loadReducerError;
   }
@@ -139,7 +136,7 @@ export function buildSort(
 }
 
 function loadSortReducers(
-  engine: Engine<unknown>
+  engine: Engine<object>
 ): engine is Engine<ConfigurationSection & SortSection> {
   engine.addReducers({configuration, sortCriteria});
   return true;

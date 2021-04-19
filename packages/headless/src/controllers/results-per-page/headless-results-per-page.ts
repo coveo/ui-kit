@@ -75,7 +75,7 @@ export interface ResultsPerPageState {
  * @returns A `ResultsPerPage` controller instance.
  */
 export function buildResultsPerPage(
-  engine: Engine<unknown>,
+  engine: Engine<object>,
   props: ResultsPerPageProps = {}
 ): ResultsPerPage {
   if (!loadResultsPerPageReducers(engine)) {
@@ -120,7 +120,7 @@ export function buildResultsPerPage(
 }
 
 function loadResultsPerPageReducers(
-  engine: Engine<unknown>
+  engine: Engine<object>
 ): engine is Engine<PaginationSection & ConfigurationSection> {
   engine.addReducers({pagination, configuration});
   return true;

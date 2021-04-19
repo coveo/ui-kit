@@ -64,7 +64,7 @@ export interface InteractiveResult {
  * @returns An `InteractiveResult` controller instance.
  */
 export function buildInteractiveResult(
-  engine: Engine<unknown>,
+  engine: Engine<object>,
   props: InteractiveResultProps
 ): InteractiveResult {
   if (!loadInteractiveResultReducers(engine)) {
@@ -106,7 +106,7 @@ export function buildInteractiveResult(
 }
 
 function loadInteractiveResultReducers(
-  engine: Engine<unknown>
+  engine: Engine<object>
 ): engine is Engine<ConfigurationSection> {
   engine.addReducers({configuration});
   return true;

@@ -59,7 +59,7 @@ export interface StandaloneSearchBoxState extends SearchBoxState {
  * @returns A `StandaloneSearchBox` instance.
  */
 export function buildStandaloneSearchBox(
-  engine: Engine<unknown>,
+  engine: Engine<object>,
   props: StandaloneSearchBoxProps
 ): StandaloneSearchBox {
   if (!loadStandaloneSearchBoxReducers(engine)) {
@@ -117,7 +117,7 @@ export function buildStandaloneSearchBox(
 }
 
 function loadStandaloneSearchBoxReducers(
-  engine: Engine<unknown>
+  engine: Engine<object>
 ): engine is Engine<RedirectionSection & ConfigurationSection & QuerySection> {
   engine.addReducers({redirection, configuration, query});
   return true;

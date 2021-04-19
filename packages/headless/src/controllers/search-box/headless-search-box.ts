@@ -138,7 +138,7 @@ export interface Suggestion {
  * @returns A `SearchBox` controller instance.
  */
 export function buildSearchBox(
-  engine: Engine<unknown>,
+  engine: Engine<object>,
   props: SearchBoxProps = {}
 ): SearchBox {
   if (!loadSearchBoxReducers(engine)) {
@@ -245,7 +245,7 @@ function getSuggestions(
 }
 
 function loadSearchBoxReducers(
-  engine: Engine<unknown>
+  engine: Engine<object>
 ): engine is Engine<
   QuerySection &
     QuerySuggestionSection &
