@@ -79,7 +79,7 @@ export class AtomicDidYouMean implements InitializableComponent {
   private renderCorrection() {
     const didYouMean = this.strings.withQuery(
       'didYouMean',
-      this.didYouMeanState.originalQuery
+      this.didYouMeanState.queryCorrection.correctedQuery
     );
     return (
       <button
