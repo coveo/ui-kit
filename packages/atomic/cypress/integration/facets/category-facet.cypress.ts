@@ -42,7 +42,7 @@ function assertClearAllTitleAndTotalParents(
   totalParents: number
 ) {
   cy.get(FacetAlias.facetShadow)
-    .find(FacetSelectors.categoryFacetClearLevelButton)
+    .find(FacetSelectors.clearAllButton)
     .should('contain.text', clearAllTitle);
   cy.get(FacetAlias.facetShadow)
     .find('[part*="parent"]')
@@ -85,7 +85,7 @@ describe('Category Facet with default setting', () => {
 
   it('Should contain ShowMore buttons but should not contain "All Categories" button', () => {
     cy.get(FacetAlias.facetShadow)
-      .find(FacetSelectors.categoryFacetClearLevelButton)
+      .find(FacetSelectors.clearAllButton)
       .should('not.exist');
     cy.get(FacetAlias.facetShadow)
       .find(FacetSelectors.showMoreButton)
@@ -105,7 +105,7 @@ describe('Category Facet with default setting', () => {
       clickOnCategoryFacetWithValue(canadaHierarchy[0]);
       cy.wait('@coveoSearch');
       cy.get(FacetAlias.facetShadow)
-        .find(FacetSelectors.categoryFacetClearLevelButton)
+        .find(FacetSelectors.clearAllButton)
         .as('categoryClearAllButton');
     });
 

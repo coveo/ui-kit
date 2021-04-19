@@ -14,7 +14,6 @@ export const FacetSelectors = {
   dateFacet: 'atomic-date-facet',
   categoryFacet: 'atomic-category-facet',
   categoryFacetNextLevelButton: 'button[part="child"]',
-  categoryFacetClearLevelButton: 'button[part="clear-button"]',
 };
 
 export const BreadcrumbSelectors = {

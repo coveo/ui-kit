@@ -166,7 +166,7 @@ export class AtomicFacet
 
     return (
       <button
-        class="value-button"
+        class="value-button text-primary"
         part="show-more"
         onClick={() => this.facet.showMoreValues()}
       >
@@ -182,7 +182,7 @@ export class AtomicFacet
 
     return (
       <button
-        class="show-more-less-button"
+        class="value-button text-primary"
         part="show-less"
         onClick={() => this.facet.showLessValues()}
       >
@@ -242,6 +242,7 @@ export class AtomicFacet
         controller={new BaseFacetController(this)}
         label={this.strings[this.label]()}
         hasActiveValues={this.facetState.hasActiveValues}
+        clearAll={() => this.facet.deselectAll()}
       >
         {this.facetState.canShowMoreValues && this.facetSearch?.render()}
         <div class="mt-1">
