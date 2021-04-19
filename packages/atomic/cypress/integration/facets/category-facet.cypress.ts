@@ -243,9 +243,7 @@ describe('Category Facet with default setting', () => {
     });
 
     it('Should not contain any other level', () => {
-      cy.get(FacetAlias.facetShadow)
-        .find('[part*="parent"]')
-        .should('not.exist');
+      cy.get(FacetAlias.facetShadow).find('[part="child"]').should('not.exist');
     });
 
     it('Last level should not be a button', () => {
@@ -392,8 +390,7 @@ describe('Category Facet with facetSearchEnable', () => {
         .find('ul[part="search-results"] li:nth-child(1)')
         .click();
       cy.get(FacetAlias.facetShadow)
-        .find('ul[part="parents"]')
-        .find('li')
+        .find('[part*="parent"]')
         .last()
         .should('contain.text', query);
     });
