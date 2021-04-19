@@ -7,10 +7,7 @@ import {
 import {SearchResponseSuccess} from '../../api/search/search/search-response';
 import {snapshot} from '../history/history-actions';
 import {logDidYouMeanAutomatic} from '../did-you-mean/did-you-mean-analytics-actions';
-import {
-  applyDidYouMeanCorrection,
-  didYouMeanCorrectionReceived,
-} from '../did-you-mean/did-you-mean-actions';
+import {applyDidYouMeanCorrection} from '../did-you-mean/did-you-mean-actions';
 import {updateQuery} from '../query/query-actions';
 import {
   AdvancedSearchQueriesSection,
@@ -79,6 +76,8 @@ export interface ExecuteSearchThunkReturn {
   queryExecuted: string;
   /** Whether the query was automatically corrected. */
   automaticallyCorrected: boolean;
+  /** The original query that was performed when an automatic correction is executed.*/
+  originalQuery: string;
   /** The analytics action to log after the query. */
   analyticsAction: SearchAction;
 }
@@ -130,12 +129,9 @@ export const executeSearch = createAsyncThunk<
         ...fetched,
         response: fetched.response.success,
         automaticallyCorrected: false,
+        originalQuery: getOriginalQuery(state),
         analyticsAction,
       };
-    }
-
-    if (state.query?.q) {
-      dispatch(didYouMeanCorrectionReceived(state.query?.q));
     }
     const {correctedQuery} = fetched.response.success.queryCorrections[0];
     const retried = await automaticallyRetryQueryWithCorrection(
@@ -171,6 +167,7 @@ export const executeSearch = createAsyncThunk<
         queryCorrections: fetched.response.success.queryCorrections,
       },
       automaticallyCorrected: true,
+      originalQuery: getOriginalQuery(state),
       analyticsAction: logDidYouMeanAutomatic(),
     };
   }
@@ -204,6 +201,7 @@ export const fetchMoreResults = createAsyncThunk<
       ...fetched,
       response: fetched.response.success,
       automaticallyCorrected: false,
+      originalQuery: getOriginalQuery(state),
       analyticsAction: logFetchMoreResults(),
     };
   }
@@ -360,3 +358,6 @@ const addEntryInActionsHistory = (state: StateNeededByExecuteSearch) => {
     });
   }
 };
+
+const getOriginalQuery = (state: StateNeededByExecuteSearch) =>
+  state.query?.q !== undefined ? state.query.q : '';

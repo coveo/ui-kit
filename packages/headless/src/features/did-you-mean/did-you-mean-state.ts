@@ -28,6 +28,7 @@ export interface DidYouMeanState {
 export const emptyCorrection = () => ({
   correctedQuery: '',
   wordCorrections: [],
+  originalQuery: '',
 });
 
 export function getDidYouMeanInitialState(): DidYouMeanState {
