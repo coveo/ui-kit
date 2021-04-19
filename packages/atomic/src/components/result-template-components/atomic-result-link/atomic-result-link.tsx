@@ -41,7 +41,7 @@ export class AtomicResultValue {
         part="result-link"
         href={filterProtocol(this.result.clickUri)}
         target={this.target}
-        class="text-lg"
+        class="result-link"
       >
         {this.hasSlot ? (
           <slot></slot>
