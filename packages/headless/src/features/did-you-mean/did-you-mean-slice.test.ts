@@ -76,4 +76,19 @@ describe('did you mean slice', () => {
       didYouMeanReducer(state, searchAction).queryCorrection.correctedQuery
     ).toBe('');
   });
+
+  it('should set originalQuery to empty if no corrections are returned by the API on search fulfilled', () => {
+    state.originalQuery = 'foo';
+    const searchAction = executeSearch.fulfilled(
+      buildMockSearch({
+        response: buildMockSearchResponse({
+          queryCorrections: [],
+        }),
+      }),
+      '',
+      logSearchEvent({evt: 'foo'})
+    );
+
+    expect(didYouMeanReducer(state, searchAction).originalQuery).toBe('');
+  });
 });
