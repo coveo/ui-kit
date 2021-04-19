@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.11.0-alpha.7](https://github.com/coveo/ui-kit/compare/v0.11.0-alpha.6...v0.11.0-alpha.7) (2021-04-19)
+
+
+### Features
+
+* **atomic:** manage display & localize show more breadcrumb ([#722](https://github.com/coveo/ui-kit/issues/722)) ([6938080](https://github.com/coveo/ui-kit/commit/6938080c581db189405c2e8614f25b1e441c2550))
+
+
+
+
+
 # [0.11.0-alpha.6](https://github.com/coveo/ui-kit/compare/v0.11.0-alpha.5...v0.11.0-alpha.6) (2021-04-19)
 
 **Note:** Version bump only for package ui-kit
