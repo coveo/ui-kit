@@ -19,8 +19,11 @@ import {
   assertShowMoreUA,
   assertClickShowLess,
   assertShowLessUA,
+  typeQueryAndWaitUA,
+  assertHightlightedText,
 } from './facet-utils';
 import {doSortAlphanumeric} from '../../utils/componentUtils';
+import {ResultListSelectors} from '../result-list-selectors';
 
 const categoryFacetProp = {
   field: 'geographicalhierarchy',
@@ -30,11 +33,12 @@ const categoryFacetProp = {
   numberOfFacetValueAfterExpand: 7,
 };
 
-const canadaHierarchy = ['North America', 'Canada', 'Alberta'];
+const canadaHierarchy = ['North America', 'Canada', 'British Columbia'];
 function setupCategoryFacet(field: string, label: string, option?: {}) {
   setUpPage(`
-    <atomic-breadcrumb-manager></atomic-breadcrumb-manager>    
-    <atomic-category-facet field="${field}" label="${label}" ${option}></atomic-category-facet>`);
+    <atomic-breadcrumb-manager></atomic-breadcrumb-manager>     
+    <atomic-category-facet field="${field}" label="${label}" ${option}></atomic-category-facet>
+    <atomic-result-list></atomic-result-list>`);
 }
 
 function assertClearAllTitleAndTotalParents(
@@ -69,9 +73,9 @@ function clickOnCategoryFacetWithValue(value: string) {
 describe('Category Facet with default setting', () => {
   beforeEach(() => {
     setupCategoryFacet(categoryFacetProp.field, categoryFacetProp.label);
-    cy.wait('@coveoSearch');
     createAliasShadow(categoryFacetProp.field, FacetSelectors.categoryFacet);
     createAliasFacetUL(categoryFacetProp.field, FacetSelectors.categoryFacet);
+    cy.wait('@coveoSearch');
     cy.wait('@coveoAnalytics');
   });
 
@@ -242,10 +246,18 @@ describe('Category Facet with default setting', () => {
 
     it('Should not contain any other level', () => {
       cy.get(FacetAlias.facetShadow)
+        .find('ul')
+        .not('[part="parents"]')
+        .find('li')
+        .should('not.exist');
+    });
+
+    it('Last level should not be a button', () => {
+      cy.get(FacetAlias.facetShadow)
         .find('ul[part="parents"]')
         .find('li')
-        .contains(canadaHierarchy[2])
-        .find('div.arrow-size')
+        .last()
+        .find('button')
         .should('not.exist');
     });
 
@@ -295,7 +307,6 @@ describe('Category Facet with default setting', () => {
 });
 
 describe('Category Facet with custom numberOfValues', () => {
-  //TODO: enable this test when numberOfValues is supported properly in categoryFacet
   const numberOfValues = 6;
   beforeEach(() => {
     setupCategoryFacet(
@@ -330,6 +341,9 @@ describe('Category Facet with facetSearchEnable', () => {
     createAliasShadow(categoryFacetProp.field, FacetSelectors.categoryFacet);
     createAliasFacetUL(categoryFacetProp.field, FacetSelectors.categoryFacet);
     cy.wait('@coveoAnalytics');
+    cy.get(FacetAlias.facetShadow)
+      .find(FacetSelectors.facetSearchbox)
+      .as('facetSearchbox');
   });
 
   it('Should load, pass accessibility test, have correct label, and facetCount', () => {
@@ -345,9 +359,60 @@ describe('Category Facet with facetSearchEnable', () => {
       .should('be.visible');
   });
 
-  describe('When user starts typing on facet searchbox', () => {
-    it('Should display search results correctly');
-    it('Should trigger new filter when item is selected from search dropdown');
+  describe('When user interacts with category facet searchbox', () => {
+    it('Should display suggestion when click on searchbox', () => {
+      cy.get('@facetSearchbox').click();
+      cy.get(FacetAlias.facetShadow)
+        .find('ul[part="search-results"]')
+        .should('be.visible');
+    });
+
+    it.skip('Should highlight recommendation correctly when entering a query', () => {
+      const query = 'Ca';
+      typeQueryAndWaitUA('@facetSearchbox', query);
+      assertHightlightedText(query);
+    });
+  });
+
+  describe('When user types "Quebec" on category facet searchbox', () => {
+    const query = 'Quebec';
+    beforeEach(() => {
+      typeQueryAndWaitUA('@facetSearchbox', query);
+    });
+
+    it('Should display search results with parentPath correctly', () => {
+      cy.get(FacetAlias.facetShadow)
+        .find(
+          'ul[part="search-results"] li[part="search-result"] div:nth-child(2)'
+        )
+        .as('parentPaths');
+      cy.getTextOfAllElements('@parentPaths').then((parentPathLabels) => {
+        expect(parentPathLabels[0]).to.equal('inNorth America/Canada');
+        expect(parentPathLabels[1]).to.equal('inNorth America/Canada/Quebec');
+      });
+    });
+
+    it('Should trigger new filter when selected result from dropdown box', () => {
+      cy.get(FacetAlias.facetShadow)
+        .find('ul[part="search-results"] li:nth-child(1)')
+        .click();
+      cy.get(FacetAlias.facetShadow)
+        .find('ul[part="parents"]')
+        .find('li')
+        .last()
+        .should('contain.text', query);
+    });
+
+    it.skip('Should log UA when selected result from dropdown box', () => {
+      cy.get(FacetAlias.facetShadow)
+        .find('ul[part="search-results"] li:nth-child(1)')
+        .click();
+      //TODO: enable it when UA for facetSearch works properly
+      cy.wait('@coveoAnalytics').then((intercept) => {
+        const analyticsBody = intercept.request.body;
+        expect(analyticsBody).to.have.property('actionCause', 'facetSelect');
+      });
+    });
   });
 });
 
@@ -466,7 +531,7 @@ describe('When URL contains a selected path of category facet', () => {
       'http://localhost:3333/pages/test.html#cf[geographicalhierarchy]=North%20America,Canada,Alberta'
     );
     injectComponent(`
-    <atomic-breadcrumb-manager></atomic-breadcrumb-manager>    
+    <atomic-breadcrumb-manager></atomic-breadcrumb-manager>
     <atomic-category-facet field="${categoryFacetProp.field}" label="${categoryFacetProp.label}"></atomic-category-facet>`);
     createAliasShadow(categoryFacetProp.field, FacetSelectors.categoryFacet);
     assertClearAllTitleAndTotalParents(
@@ -478,6 +543,69 @@ describe('When URL contains a selected path of category facet', () => {
       .find('li')
       .last()
       .contains('Alberta');
+  });
+});
+
+describe('Category Facet with custom basePath and default filterByBasePath', () => {
+  const basePath = 'North America;Canada;Alberta';
+  beforeEach(() => {
+    setupCategoryFacet(
+      categoryFacetProp.field,
+      categoryFacetProp.label,
+      `base-path="${basePath}"`
+    );
+    cy.wait('@coveoSearch');
+    createAliasShadow(categoryFacetProp.field, FacetSelectors.categoryFacet);
+    createAliasFacetUL(categoryFacetProp.field, FacetSelectors.categoryFacet);
+    cy.wait('@coveoAnalytics');
+  });
+
+  it('Category facet should load properly', () => {
+    validateFacetComponentLoaded(
+      categoryFacetProp.label,
+      FacetSelectors.categoryFacet
+    );
+  });
+
+  it('Should contains Canada country, but not contain Europe continent', () => {
+    cy.getTextOfAllElements(FacetAlias.facetAllValueLabel).then((labels) => {
+      expect(labels).not.to.include('Europe');
+      expect(labels).to.include('Calgary');
+    });
+  });
+
+  it('Results should be filtered and contain only 3 documents', () => {
+    cy.get(ResultListSelectors.component)
+      .find(ResultListSelectors.result)
+      .should('have.length', 3);
+  });
+});
+
+describe('Category Facet with custom basePath and custom filterByBasePath', () => {
+  const basePath = 'North America;Canada;Alberta';
+  beforeEach(() => {
+    setupCategoryFacet(
+      categoryFacetProp.field,
+      categoryFacetProp.label,
+      `base-path="${basePath}" filter-by-base-path="false"`
+    );
+    cy.wait('@coveoSearch');
+    createAliasShadow(categoryFacetProp.field, FacetSelectors.categoryFacet);
+    createAliasFacetUL(categoryFacetProp.field, FacetSelectors.categoryFacet);
+    cy.wait('@coveoAnalytics');
+  });
+
+  it('Category facet should load properly', () => {
+    validateFacetComponentLoaded(
+      categoryFacetProp.label,
+      FacetSelectors.categoryFacet
+    );
+  });
+
+  it('Results should be filtered and contain more than 3 documents', () => {
+    cy.get(ResultListSelectors.component)
+      .find(ResultListSelectors.result)
+      .should('have.length.greaterThan', 3);
   });
 });
 
