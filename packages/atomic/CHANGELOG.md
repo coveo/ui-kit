@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.11.0-alpha.5](https://github.com/coveo/ui-kit/compare/v0.11.0-alpha.4...v0.11.0-alpha.5) (2021-04-19)
+
+
+### Bug Fixes
+
+* **atomic:** add original query to did you mean controller ([#675](https://github.com/coveo/ui-kit/issues/675)) ([abe9f22](https://github.com/coveo/ui-kit/commit/abe9f22b25aaf6769247e978864beb7c95a5e000))
+
+
+### Features
+
+* **atomic:** increase result title font size ([#718](https://github.com/coveo/ui-kit/issues/718)) ([1b9ca8c](https://github.com/coveo/ui-kit/commit/1b9ca8cadcfdc663d3391fc2f33127f259bcc01f))
+
+
+
+
+
 # [0.11.0-alpha.4](https://github.com/coveo/ui-kit/compare/v0.11.0-alpha.3...v0.11.0-alpha.4) (2021-04-18)
 
 
