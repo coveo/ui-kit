@@ -15,7 +15,6 @@ pkg/case-assist/package.json
 
 {
   "name": "case-assist",
-  "version": "1.0.0",
   "description": "Headless Case Assist Module",
   "main": "../../dist/case-assist/headless.js",
   "module": "../../dist/case-assist/headless.esm.js",
