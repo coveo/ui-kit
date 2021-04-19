@@ -46,19 +46,17 @@ function assertClearAllTitleAndTotalParents(
   totalParents: number
 ) {
   cy.get(FacetAlias.facetShadow)
-    .find(FacetSelectors.categoryFacetClearLevelButton)
+    .find(FacetSelectors.clearAllButton)
     .should('contain.text', clearAllTitle);
   cy.get(FacetAlias.facetShadow)
-    .find('ul[part="parents"] li')
+    .find('[part*="parent"]')
     .its('length')
     .should('eq', totalParents);
 }
 
 function assertTotalChildrentMoreThan(value: number) {
   cy.get(FacetAlias.facetShadow)
-    .find('ul')
-    .not('[part="parents"]')
-    .find('li')
+    .find('[part="child"]')
     .its('length')
     .should('be.gt', value);
 }
@@ -91,7 +89,7 @@ describe('Category Facet with default setting', () => {
 
   it('Should contain ShowMore buttons but should not contain "All Categories" button', () => {
     cy.get(FacetAlias.facetShadow)
-      .find(FacetSelectors.categoryFacetClearLevelButton)
+      .find(FacetSelectors.clearAllButton)
       .should('not.exist');
     cy.get(FacetAlias.facetShadow)
       .find(FacetSelectors.showMoreButton)
@@ -111,7 +109,7 @@ describe('Category Facet with default setting', () => {
       clickOnCategoryFacetWithValue(canadaHierarchy[0]);
       cy.wait('@coveoSearch');
       cy.get(FacetAlias.facetShadow)
-        .find(FacetSelectors.categoryFacetClearLevelButton)
+        .find(FacetSelectors.clearAllButton)
         .as('categoryClearAllButton');
     });
 
@@ -156,7 +154,7 @@ describe('Category Facet with default setting', () => {
     it('Should trigger breadcrumb and display correctly', () => {
       cy.get(BreadcrumbSelectors.breadcrumb)
         .shadow()
-        .find('button[part="breadcrumb"]')
+        .find('[part="breadcrumb"]')
         .should('be.visible')
         .contains(canadaHierarchy[0]);
     });
@@ -245,17 +243,12 @@ describe('Category Facet with default setting', () => {
     });
 
     it('Should not contain any other level', () => {
-      cy.get(FacetAlias.facetShadow)
-        .find('ul')
-        .not('[part="parents"]')
-        .find('li')
-        .should('not.exist');
+      cy.get(FacetAlias.facetShadow).find('[part="child"]').should('not.exist');
     });
 
     it('Last level should not be a button', () => {
       cy.get(FacetAlias.facetShadow)
-        .find('ul[part="parents"]')
-        .find('li')
+        .find('[part*="parent"]')
         .last()
         .find('button')
         .should('not.exist');
@@ -273,7 +266,7 @@ describe('Category Facet with default setting', () => {
       const text = canadaHierarchy.join(' / ');
       cy.get(BreadcrumbSelectors.breadcrumb)
         .shadow()
-        .find('button[part="breadcrumb"]')
+        .find('[part="breadcrumb"]')
         .should('be.visible')
         .contains(text);
     });
@@ -397,8 +390,7 @@ describe('Category Facet with facetSearchEnable', () => {
         .find('ul[part="search-results"] li:nth-child(1)')
         .click();
       cy.get(FacetAlias.facetShadow)
-        .find('ul[part="parents"]')
-        .find('li')
+        .find('[part*="parent"]')
         .last()
         .should('contain.text', query);
     });
@@ -539,8 +531,7 @@ describe('When URL contains a selected path of category facet', () => {
       3
     );
     cy.get(FacetAlias.facetShadow)
-      .find('ul[part="parents"]')
-      .find('li')
+      .find('[part*="parent"]')
       .last()
       .contains('Alberta');
   });
@@ -620,7 +611,7 @@ describe('when no first search has yet been executed', () => {
   it('should render a placeholder', () => {
     cy.get(FacetSelectors.categoryFacet)
       .shadow()
-      .find('div[part="placeholder"]')
+      .find('[part="placeholder"]')
       .should('be.visible');
   });
 });

@@ -24,7 +24,7 @@ export class BaseFacetController {
 
 type BaseFacetProps = {
   controller: BaseFacetController;
-  deselectAll: VoidFunction;
+  clearAll?: VoidFunction;
   label: string;
   hasActiveValues: boolean;
 };
@@ -46,21 +46,22 @@ export const BaseFacet: FunctionalComponent<BaseFacetProps> = (
     </button>
   ) : null;
 
-  const resetButton = props.hasActiveValues ? (
-    <button
-      part="reset-button"
-      onClick={() => props.deselectAll()}
-      class="block text-primary mr-2 lg:mr-0 text-sm"
-    >
-      {props.controller.state.strings.clear()}
-    </button>
-  ) : null;
+  const clearButton =
+    props.clearAll && props.hasActiveValues ? (
+      <button
+        part="clear-button"
+        onClick={() => props.clearAll!()}
+        class="block text-primary mr-2 lg:mr-0 text-sm"
+      >
+        {props.controller.state.strings.clear()}
+      </button>
+    ) : null;
 
   return (
     <div class="facet mb-4" part="facet">
       <button
         title={props.label}
-        class={`facet-button text-left border-solid bg-background px-4 h-9 outline-none focus:outline-none lg:hidden cursor-pointer ellipsed w-full ${
+        class={`rounded-3xl text-left border-solid bg-background px-4 h-9 outline-none focus:outline-none lg:hidden cursor-pointer ellipsed w-full ${
           props.hasActiveValues
             ? 'border-2 border-primary text-primary'
             : 'border border-divider text-on-background-variant'
@@ -70,7 +71,7 @@ export const BaseFacet: FunctionalComponent<BaseFacetProps> = (
         {props.label}
       </button>
       <div
-        class={`content box-border p-3 lg:p-0 lg:block h-screen w-screen lg:h-auto lg:w-auto fixed object-left-top bg-background top-0 left-0 lg:static z-10 ${
+        class={`box-border p-3 lg:p-0 lg:block h-screen w-screen lg:h-auto lg:w-auto fixed object-left-top bg-background top-0 left-0 lg:static z-10 ${
           props.controller.state.isExpanded ? 'block' : 'hidden'
         }`}
       >
@@ -82,7 +83,7 @@ export const BaseFacet: FunctionalComponent<BaseFacetProps> = (
             {props.label}
           </span>
           <span class="flex flex-row ml-auto">
-            {resetButton}
+            {clearButton}
             {closeButton}
           </span>
         </div>

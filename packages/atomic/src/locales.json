@@ -855,6 +855,10 @@
     "zh-cn": "您要找的是不是： {{query}}",
     "zh-tw": "您要找的是不是： {{query}}"
   },
+  "noLabel": {
+    "en": "No label",
+    "fr": "Sans titre"
+  },
   "to": {
     "en": "{{- start}} to {{- end}}",
     "fr": "{{- start}} à {{- end}}"
