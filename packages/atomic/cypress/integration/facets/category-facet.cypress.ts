@@ -359,8 +359,7 @@ describe('Category Facet with facetSearchEnable', () => {
       .should('be.visible');
   });
 
-  describe.skip('When user interacts with category facet searchbox', () => {
-    //TODO: enable this test when facetSearch works properly
+  describe('When user interacts with category facet searchbox', () => {
     it('Should display suggestion when click on searchbox', () => {
       cy.get('@facetSearchbox').click();
       cy.get(FacetAlias.facetShadow)
@@ -368,7 +367,7 @@ describe('Category Facet with facetSearchEnable', () => {
         .should('be.visible');
     });
 
-    it('Should highlight recommendation correctly when entering a query', () => {
+    it.skip('Should highlight recommendation correctly when entering a query', () => {
       const query = 'Ca';
       typeQueryAndWaitUA('@facetSearchbox', query);
       assertHightlightedText(query);
