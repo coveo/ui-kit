@@ -1,11 +1,9 @@
 import {getApiResponseBody, getAnalyticsAt} from '../utils/network';
-import {searchBox, searchBoxAlias, TestFixture} from '../fixtures/test-fixture';
-import {
-  SearchBoxSelectors,
-  generateAliasForSearchBox,
-} from './search-box-selectors';
+import {TestFixture} from '../fixtures/test-fixture';
+import {addSearchBox, searchBoxAlias} from '../fixtures/test-fixture-searchbox';
+import {SearchBoxSelectors} from './search-box-selectors';
 
-const queryText = 'test';
+const queryText = 't';
 
 describe('Search Box Test Suites', () => {
   function testLoad() {
@@ -33,20 +31,18 @@ describe('Search Box Test Suites', () => {
 
   describe('default search box', () => {
     beforeEach(() => {
-      const fix = new TestFixture();
-      fix.with(searchBox()).init();
-      fix.with(searchBoxAlias());
+      new TestFixture().with(addSearchBox()).withAlias(searchBoxAlias()).init();
     });
 
     it('should load', () => {
       testLoad();
     });
 
-    it('should show query suggestions', async () => {
-      //await testQuerySuggestionsShown(5);
+    it('should show query suggestions', () => {
+      testQuerySuggestionsShown(5);
     });
 
-    /*it('should execute a query on button click', async () => {
+    it('should execute a query on button click', async () => {
       cy.get('@searchBoxFirstDiv').find('.search-input').type(queryText);
       cy.get('@searchBoxFirstDiv').find('.submit-button').click();
 
@@ -102,11 +98,11 @@ describe('Search Box Test Suites', () => {
   });
 
   describe('search box with number of values set to 3', () => {
-    const htmlCode =
-      '<atomic-search-box number-of-suggestions="3"></atomic-search-box>';
     beforeEach(() => {
-      setUpPage(htmlCode);
-      generateAliasForSearchBox();
+      new TestFixture()
+        .with(addSearchBox({'number-of-suggestions': '3'}))
+        .withAlias(searchBoxAlias())
+        .init();
     });
 
     it('should load', () => {
@@ -126,11 +122,11 @@ describe('Search Box Test Suites', () => {
   });
 
   describe('search box with number of values set to 0', () => {
-    const htmlCode =
-      '<atomic-search-box number-of-suggestions="0"></atomic-search-box>';
     beforeEach(() => {
-      setUpPage(htmlCode);
-      generateAliasForSearchBox();
+      new TestFixture()
+        .with(addSearchBox({'number-of-suggestions': '0'}))
+        .withAlias(searchBoxAlias())
+        .init();
     });
 
     it('should load', () => {
@@ -146,11 +142,11 @@ describe('Search Box Test Suites', () => {
   });
 
   describe('search box with leading submit button', () => {
-    const htmlCode =
-      '<atomic-search-box leading-submit-button></atomic-search-box>';
     beforeEach(() => {
-      setUpPage(htmlCode);
-      generateAliasForSearchBox();
+      new TestFixture()
+        .with(addSearchBox({'leading-submit-button': 'true'}))
+        .withAlias(searchBoxAlias())
+        .init();
     });
 
     it('should load', () => {
@@ -175,6 +171,6 @@ describe('Search Box Test Suites', () => {
         .find('.search-input')
         .type(queryText, {force: true});
       cy.checkA11y(SearchBoxSelectors.component);
-    });*/
+    });
   });
 });

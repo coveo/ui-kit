@@ -1,5 +1,3 @@
-import {SearchBoxSelectors} from '../integration/search-box-selectors';
-
 type SearchInterface = HTMLElement & {
   initialize: (opts: {
     accessToken: string;
@@ -8,29 +6,31 @@ type SearchInterface = HTMLElement & {
   executeFirstSearch: () => void;
 };
 
-export type FeatureEnvironment = {
-  searchInterface: SearchInterface;
-};
+export type TestFeature = (e: TestFixture) => void | Promise<void>;
 
-export type TestFeature = (e: FeatureEnvironment) => void | Promise<void>;
+export type TagProps = Record<string, string>;
 
 export class TestFixture {
-  private searchInterface: SearchInterface;
   private urlParams: {key: string; value: string}[] = [];
+  private aliases: TestFeature[] = [];
   private testURL = 'http://localhost:3333/pages/test.html';
   private execFirstSearch = true;
 
   constructor() {
-    cy.visit(this.testURL);
-    this.searchInterface = document.createElement(
-      'atomic-search-interface'
-    ) as SearchInterface;
+    cy.visit(this.testURL).injectAxe();
+    this.intercept();
 
-    document.body.appendChild(this.searchInterface);
+    cy.document().then((doc) => {
+      const searchInterface = doc.createElement(
+        'atomic-search-interface'
+      ) as SearchInterface;
+      doc.body.appendChild(searchInterface);
+      cy.get('atomic-search-interface').as(this.elementAliases.SearchInterface);
+    });
   }
 
   public with(feat: TestFeature) {
-    feat(this.testEnvironment);
+    feat(this);
     return this;
   }
 
@@ -44,7 +44,12 @@ export class TestFixture {
     return this;
   }
 
-  public async init() {
+  public withAlias(aliasFn: TestFeature) {
+    this.aliases.push(aliasFn);
+    return this;
+  }
+
+  public init() {
     document.location.hash = `#${this.urlParams.reduce(
       (hash, param, i) =>
         `${hash}${i === 0 ? '' : '&'}${param.key}=${encodeURIComponent(
@@ -53,39 +58,72 @@ export class TestFixture {
       ''
     )}`;
 
-    await customElements.whenDefined('atomic-search-interface');
-    await this.searchInterface.initialize({
-      accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
-      organizationId: 'searchuisamples',
+    cy.get(`@${this.elementAliases.SearchInterface}`).then(($si) => {
+      const searchInterfaceComponent = $si.get()[0] as SearchInterface;
+
+      searchInterfaceComponent
+        .initialize({
+          accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
+          organizationId: 'searchuisamples',
+        })
+        .then(() => {
+          if (this.execFirstSearch) {
+            searchInterfaceComponent.executeFirstSearch();
+          }
+        });
     });
 
     if (this.execFirstSearch) {
-      this.searchInterface.executeFirstSearch();
+      cy.wait(`@${this.interceptAliases.Search}`);
     }
+
+    this.aliases.forEach((alias) => alias(this));
 
     return this;
   }
 
-  private get testEnvironment(): FeatureEnvironment {
+  public get interceptAliases() {
     return {
-      searchInterface: this.searchInterface,
+      UA: 'coveoAnalytics',
+      QuerySuggestions: 'coveoQuerySuggest',
+      Search: 'coveoSearch',
     };
+  }
+
+  public get elementAliases() {
+    return {
+      SearchInterface: 'searchInterface',
+    };
+  }
+
+  private intercept() {
+    cy.intercept({
+      method: 'POST',
+      path: '**/rest/ua/v15/analytics/*',
+    }).as(this.interceptAliases.UA);
+
+    cy.intercept({
+      method: 'POST',
+      path: '**/rest/search/v2/querySuggest?*',
+    }).as(this.interceptAliases.QuerySuggestions);
+
+    cy.intercept({
+      method: 'POST',
+      url: '**/rest/search/v2?*',
+    }).as(this.interceptAliases.Search);
   }
 }
 
-const addElement = (env: FeatureEnvironment, e: HTMLElement) => {
-  env.searchInterface.appendChild(e);
+export const addElement = (env: TestFixture, e: HTMLElement) => {
+  cy.get(`@${env.elementAliases.SearchInterface}`).then(($si) => {
+    $si.append(e);
+  });
 };
 
-const addTag = (env: FeatureEnvironment, tag: string) => {
-  addElement(env, document.createElement(tag));
-};
-
-export const searchBox = () => (env: FeatureEnvironment) =>
-  addTag(env, 'atomic-search-box');
-
-export const searchBoxAlias = (alias = 'searchBoxFirstDiv') => (
-  env: FeatureEnvironment
-) => {
-  cy.get(SearchBoxSelectors.component).shadow().find('div').first().as(alias);
+export const addTag = (env: TestFixture, tag: string, props: TagProps) => {
+  const e = document.createElement(tag);
+  for (const [k, v] of Object.entries(props)) {
+    e.setAttribute(k, v);
+  }
+  addElement(env, e);
 };
