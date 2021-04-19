@@ -1,1 +1,3 @@
-// case-assist package
+export function test() {
+  return 'test';
+}
