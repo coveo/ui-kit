@@ -5,7 +5,7 @@
       "name": "SearchActions",
       "members": [
         {
-          "actionKind": "asyncThunk",
+          "actionKind": "normalAction",
           "name": "executeSearch",
           "desc": "Executes a search query.",
           "parameter": {
@@ -17,10 +17,191 @@
           }
         },
         {
-          "actionKind": "asyncThunk",
+          "actionKind": "normalAction",
           "name": "fetchMoreResults",
           "desc": "Executes a search query and appends the results after the existing ones.",
           "parameter": null
+        }
+      ]
+    },
+    {
+      "name": "FacetAnalyticsActions",
+      "members": [
+        {
+          "actionKind": "analyticsAction",
+          "name": "logFacetBreadcrumb",
+          "desc": "Logs a facet breadcrumb event.",
+          "parameter": {
+            "name": "payload",
+            "type": "FacetValueAnalyticPayload",
+            "desc": "Object specifying the target facet and value.",
+            "isOptional": false,
+            "kind": "object",
+            "members": [
+              {
+                "kind": "primitive",
+                "name": "facetId",
+                "isOptional": false,
+                "type": "string",
+                "desc": "The ID of the event's target facet."
+              },
+              {
+                "kind": "primitive",
+                "name": "facetValue",
+                "isOptional": false,
+                "type": "string",
+                "desc": "The target value of the event."
+              }
+            ],
+            "isTypeExtracted": false,
+            "typeName": "FacetValueAnalyticPayload"
+          },
+          "analyticsKind": "search"
+        },
+        {
+          "actionKind": "analyticsAction",
+          "name": "logFacetClearAll",
+          "desc": "Logs a facet clear all event.",
+          "parameter": {
+            "name": "facetId",
+            "type": "string",
+            "desc": "The unique identifier of the facet (e.g., `\"1\"`).",
+            "isOptional": false,
+            "kind": "primitive"
+          },
+          "analyticsKind": "search"
+        },
+        {
+          "actionKind": "analyticsAction",
+          "name": "logFacetDeselect",
+          "desc": "Logs a facet deselect event.",
+          "parameter": {
+            "name": "payload",
+            "type": "FacetValueAnalyticPayload",
+            "desc": "Object specifying the target facet and value.",
+            "isOptional": false,
+            "kind": "object",
+            "members": [
+              {
+                "kind": "primitive",
+                "name": "facetId",
+                "isOptional": false,
+                "type": "string",
+                "desc": "The ID of the event's target facet."
+              },
+              {
+                "kind": "primitive",
+                "name": "facetValue",
+                "isOptional": false,
+                "type": "string",
+                "desc": "The target value of the event."
+              }
+            ],
+            "isTypeExtracted": false,
+            "typeName": "FacetValueAnalyticPayload"
+          },
+          "analyticsKind": "search"
+        },
+        {
+          "actionKind": "analyticsAction",
+          "name": "logFacetSearch",
+          "desc": "Logs a facet search event.",
+          "parameter": {
+            "name": "facetId",
+            "type": "string",
+            "desc": "The unique identifier of the facet (e.g., `\"1\"`).",
+            "isOptional": false,
+            "kind": "primitive"
+          },
+          "analyticsKind": "search"
+        },
+        {
+          "actionKind": "analyticsAction",
+          "name": "logFacetSelect",
+          "desc": "Logs a facet value selection event.",
+          "parameter": {
+            "name": "payload",
+            "type": "FacetValueAnalyticPayload",
+            "desc": "Object specifying the target facet and value.",
+            "isOptional": false,
+            "kind": "object",
+            "members": [
+              {
+                "kind": "primitive",
+                "name": "facetId",
+                "isOptional": false,
+                "type": "string",
+                "desc": "The ID of the event's target facet."
+              },
+              {
+                "kind": "primitive",
+                "name": "facetValue",
+                "isOptional": false,
+                "type": "string",
+                "desc": "The target value of the event."
+              }
+            ],
+            "isTypeExtracted": false,
+            "typeName": "FacetValueAnalyticPayload"
+          },
+          "analyticsKind": "search"
+        },
+        {
+          "actionKind": "analyticsAction",
+          "name": "logFacetShowLess",
+          "desc": "Logs a facet show less event.",
+          "parameter": {
+            "name": "facetId",
+            "type": "string",
+            "desc": "The unique identifier of the facet (e.g., `\"1\"`).",
+            "isOptional": false,
+            "kind": "primitive"
+          },
+          "analyticsKind": "search"
+        },
+        {
+          "actionKind": "analyticsAction",
+          "name": "logFacetShowMore",
+          "desc": "Logs a facet show more event.",
+          "parameter": {
+            "name": "facetId",
+            "type": "string",
+            "desc": "The unique identifier of the facet (e.g., `\"1\"`).",
+            "isOptional": false,
+            "kind": "primitive"
+          },
+          "analyticsKind": "search"
+        },
+        {
+          "actionKind": "analyticsAction",
+          "name": "logFacetUpdateSort",
+          "desc": "Logs a facet sort event.",
+          "parameter": {
+            "name": "payload",
+            "type": "FacetUpdateSortAnalyticPayload",
+            "desc": "Object specifying the facet and sort criterion.",
+            "isOptional": false,
+            "kind": "object",
+            "members": [
+              {
+                "kind": "primitive",
+                "name": "criterion",
+                "isOptional": false,
+                "type": "FacetSortCriterion | RangeFacetSortCriterion",
+                "desc": "The new criterion of the target facet."
+              },
+              {
+                "kind": "primitive",
+                "name": "facetId",
+                "isOptional": false,
+                "type": "string",
+                "desc": "The ID of the event's target facet."
+              }
+            ],
+            "isTypeExtracted": false,
+            "typeName": "FacetUpdateSortAnalyticPayload"
+          },
+          "analyticsKind": "search"
         }
       ]
     }

@@ -12,15 +12,35 @@ import {
 } from '../../analytics/analytics-utils';
 import {
   buildFacetBaseMetadata,
-  FacetSelectionChangeMetadata,
-  FacetUpdateSortMetadata,
   getStateNeededForFacetMetadata,
   buildFacetSelectionChangeMetadata,
 } from './facet-set-analytics-actions-utils';
 
+export interface FacetValueAnalyticPayload {
+  /**
+   * The ID of the event's target facet.
+   */
+  facetId: string;
+  /**
+   * The target value of the event.
+   */
+  facetValue: string;
+}
+
+export interface FacetUpdateSortAnalyticPayload {
+  /**
+   * The ID of the event's target facet.
+   */
+  facetId: string;
+  /**
+   * The new criterion of the target facet.
+   */
+  criterion: FacetSortCriterion | RangeFacetSortCriterion;
+}
+
 /**
  * Logs a facet show more event.
- * @param facetId (string) The unique identifier of the facet (e.g., `"1"`).
+ * @param facetId - The unique identifier of the facet (e.g., `"1"`).
  */
 export const logFacetShowMore = (facetId: string) =>
   makeAnalyticsAction(
@@ -37,7 +57,7 @@ export const logFacetShowMore = (facetId: string) =>
   )();
 /**
  * Logs a facet show less event.
- * @param facetId (string) The unique identifier of the facet (e.g., `"1"`).
+ * @param facetId - The unique identifier of the facet (e.g., `"1"`).
  */
 export const logFacetShowLess = (facetId: string) =>
   makeAnalyticsAction(
@@ -56,7 +76,7 @@ export const logFacetShowLess = (facetId: string) =>
 
 /**
  * Logs a facet search event.
- * @param facetId (string) The unique identifier of the facet (e.g., `"1"`).
+ * @param facetId - The unique identifier of the facet (e.g., `"1"`).
  */
 export const logFacetSearch = (facetId: string) =>
   makeAnalyticsAction(
@@ -72,9 +92,9 @@ export const logFacetSearch = (facetId: string) =>
   )();
 /**
  * Logs a facet sort event.
- * @param payload (FacetUpdateSortMetadata) Object specifying the facet and sort criterion.
+ * @param payload - Object specifying the facet and sort criterion.
  */
-export const logFacetUpdateSort = (payload: FacetUpdateSortMetadata) =>
+export const logFacetUpdateSort = (payload: FacetUpdateSortAnalyticPayload) =>
   makeAnalyticsAction(
     'analytics/facet/sortChange',
     AnalyticsType.Search,
@@ -98,7 +118,7 @@ export const logFacetUpdateSort = (payload: FacetUpdateSortMetadata) =>
 
 /**
  * Logs a facet clear all event.
- * @param facetId (string) The unique identifier of the facet (e.g., `"1"`).
+ * @param facetId - The unique identifier of the facet (e.g., `"1"`).
  */
 export const logFacetClearAll = (facetId: string) =>
   makeAnalyticsAction(
@@ -116,9 +136,9 @@ export const logFacetClearAll = (facetId: string) =>
 
 /**
  * Logs a facet value selection event.
- * @param payload (FacetSelectionChangeMetadata) Object specifying the target facet and value.
+ * @param payload - Object specifying the target facet and value.
  */
-export const logFacetSelect = (payload: FacetSelectionChangeMetadata) =>
+export const logFacetSelect = (payload: FacetValueAnalyticPayload) =>
   makeAnalyticsAction(
     'analytics/facet/select',
     AnalyticsType.Search,
@@ -140,9 +160,9 @@ export const logFacetSelect = (payload: FacetSelectionChangeMetadata) =>
 
 /**
  * Logs a facet deselect event.
- * @param payload (FacetSelectionChangeMetadata) Object specifying the target facet and value.
+ * @param payload - Object specifying the target facet and value.
  */
-export const logFacetDeselect = (payload: FacetSelectionChangeMetadata) =>
+export const logFacetDeselect = (payload: FacetValueAnalyticPayload) =>
   makeAnalyticsAction(
     'analytics/facet/deselect',
     AnalyticsType.Search,
@@ -163,9 +183,9 @@ export const logFacetDeselect = (payload: FacetSelectionChangeMetadata) =>
 
 /**
  * Logs a facet breadcrumb event.
- * @param payload (FacetSelectionChangeMetadata) Object specifying the target facet and value.
+ * @param payload - Object specifying the target facet and value.
  */
-export const logFacetBreadcrumb = (payload: FacetSelectionChangeMetadata) =>
+export const logFacetBreadcrumb = (payload: FacetValueAnalyticPayload) =>
   makeAnalyticsAction(
     'analytics/facet/breadcrumb',
     AnalyticsType.Search,

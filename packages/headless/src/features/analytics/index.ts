@@ -38,14 +38,50 @@ import {
   logFacetUpdateSort as logFacetUpdateSortAlias,
   logFacetBreadcrumb as logFacetBreadcrumbAlias,
 } from '../facets/facet-set/facet-set-analytics-actions';
+export {
+  FacetValueAnalyticPayload,
+  FacetUpdateSortAnalyticPayload,
+} from '../facets/facet-set/facet-set-analytics-actions';
 export namespace FacetAnalyticsActions {
+  /**
+   * Logs a facet show more event.
+   * @param facetId - The unique identifier of the facet (e.g., `"1"`).
+   */
   export const logFacetShowMore = logFacetShowMoreAlias;
+  /**
+   * Logs a facet show less event.
+   * @param facetId - The unique identifier of the facet (e.g., `"1"`).
+   */
   export const logFacetShowLess = logFacetShowLessAlias;
+  /**
+   * Logs a facet value selection event.
+   * @param payload - Object specifying the target facet and value.
+   */
   export const logFacetSelect = logFacetSelectAlias;
+  /**
+   * Logs a facet deselect event.
+   * @param payload - Object specifying the target facet and value.
+   */
   export const logFacetDeselect = logFacetDeselectAlias;
+  /**
+   * Logs a facet clear all event.
+   * @param facetId - The unique identifier of the facet (e.g., `"1"`).
+   */
   export const logFacetClearAll = logFacetClearAllAlias;
+  /**
+   * Logs a facet search event.
+   * @param facetId - The unique identifier of the facet (e.g., `"1"`).
+   */
   export const logFacetSearch = logFacetSearchAlias;
+  /**
+   * Logs a facet sort event.
+   * @param payload - Object specifying the facet and sort criterion.
+   */
   export const logFacetUpdateSort = logFacetUpdateSortAlias;
+  /**
+   * Logs a facet breadcrumb event.
+   * @param payload - Object specifying the target facet and value.
+   */
   export const logFacetBreadcrumb = logFacetBreadcrumbAlias;
 }
 
