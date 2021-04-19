@@ -30,8 +30,8 @@ export const FacetValue: FunctionalComponent<FacetValueProps> = (props) => {
         <span part="value-label" class="ellipsed">
           {props.label}
         </span>
-        <span part="value-count" class="text-on-background-variant ml-1.5">
-          ({props.numberOfResults})
+        <span part="value-count" class="value-count">
+          {props.numberOfResults}
         </span>
       </label>
     </li>

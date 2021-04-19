@@ -200,9 +200,7 @@ export class AtomicCategoryFacet
             {parent.value}
           </span>
           <span part="value-count" class="value-count">
-            (
             {parent.numberOfResults.toLocaleString(this.bindings.i18n.language)}
-            )
           </span>
         </div>
       </li>
@@ -226,7 +224,7 @@ export class AtomicCategoryFacet
             {item.value}
           </span>
           <span part="value-count" class="value-count">
-            ({item.numberOfResults.toLocaleString(this.bindings.i18n.language)})
+            {item.numberOfResults.toLocaleString(this.bindings.i18n.language)}
           </span>
           <div innerHTML={RightArrow} class="facet-arrow ml-1.5" />
         </button>
@@ -332,7 +330,7 @@ export class AtomicCategoryFacet
           )}
         />
         <span part="value-count" class="value-count">
-          ({searchResult.count.toLocaleString(this.bindings.i18n.language)})
+          {searchResult.count.toLocaleString(this.bindings.i18n.language)}
         </span>
       </div>,
       <div

@@ -166,7 +166,7 @@ export class AtomicFacet
 
     return (
       <button
-        class="show-more-less-button"
+        class="value-button"
         part="show-more"
         onClick={() => this.facet.showMoreValues()}
       >
@@ -202,8 +202,8 @@ export class AtomicFacet
             this.facetSearchQuery
           )}
         />
-        <span part="value-count" class="ml-1 text-on-background-variant">
-          ({searchResult.count.toLocaleString(this.bindings.i18n.language)})
+        <span part="value-count" class="value-count">
+          {searchResult.count.toLocaleString(this.bindings.i18n.language)}
         </span>
       </div>
     );
