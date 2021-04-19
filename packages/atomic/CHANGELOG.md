@@ -3,6 +3,29 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.11.0-alpha.4](https://github.com/coveo/ui-kit/compare/v0.11.0-alpha.3...v0.11.0-alpha.4) (2021-04-18)
+
+
+### Bug Fixes
+
+* **atomic:** remove max-with for breadcrumbs and ellipse the content ([#719](https://github.com/coveo/ui-kit/issues/719)) ([afcb583](https://github.com/coveo/ui-kit/commit/afcb5831fb340eff6e129ded811de175a13112b4))
+
+
+
+
+
+# [0.11.0-alpha.3](https://github.com/coveo/ui-kit/compare/v0.11.0-alpha.2...v0.11.0-alpha.3) (2021-04-16)
+
+
+### Bug Fixes
+
+* **atomic:** fix default template wrap issue for field values ([#716](https://github.com/coveo/ui-kit/issues/716)) ([d6d0f31](https://github.com/coveo/ui-kit/commit/d6d0f3126872d794f5d18ede31d5cd77a23fcca0))
+* **atomic:** make facet count visually consistent ([#715](https://github.com/coveo/ui-kit/issues/715)) ([1ea20cf](https://github.com/coveo/ui-kit/commit/1ea20cf87fa771ac7181d6c4b778846574d137be))
+
+
+
+
+
 # [0.11.0-alpha.2](https://github.com/coveo/ui-kit/compare/v0.11.0-alpha.1...v0.11.0-alpha.2) (2021-04-15)
 
 **Note:** Version bump only for package @coveo/atomic

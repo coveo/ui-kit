@@ -156,8 +156,7 @@ describe('Category Facet with default setting', () => {
     it('Should trigger breadcrumb and display correctly', () => {
       cy.get(BreadcrumbSelectors.breadcrumb)
         .shadow()
-        .find('div[part="breadcrumb-wrapper"]')
-        .find('button[part="breadcrumb-button"]')
+        .find('button[part="breadcrumb"]')
         .should('be.visible')
         .contains(canadaHierarchy[0]);
     });
@@ -274,8 +273,7 @@ describe('Category Facet with default setting', () => {
       const text = canadaHierarchy.join(' / ');
       cy.get(BreadcrumbSelectors.breadcrumb)
         .shadow()
-        .find('div[part="breadcrumb-wrapper"]')
-        .find('button[part="breadcrumb-button"]')
+        .find('button[part="breadcrumb"]')
         .should('be.visible')
         .contains(text);
     });

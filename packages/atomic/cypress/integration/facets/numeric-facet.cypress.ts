@@ -97,10 +97,7 @@ describe('Standard Numeric Facet with automatic ranges generated', () => {
       cy.get(FacetAlias.facetFirstValue).find(FacetSelectors.label).click();
       createBreadcrumbShadowAlias();
       cy.get(BreadcrumbAlias.breadcrumbClearAllFilter).should('be.visible');
-      facetValueShouldDisplayInBreadcrumb(
-        FacetAlias.facetFirstValue,
-        '.breadcrumb:nth-child(1) button span'
-      );
+      facetValueShouldDisplayInBreadcrumb(FacetAlias.facetFirstValue, 1);
     });
 
     it('Should reflect selected facetValue on URL', () => {

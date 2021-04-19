@@ -41,11 +41,11 @@ const BreadcrumbAliasNoAtSign = aliasNoAtSignBuilder(BreadcrumbAlias);
 export function createBreadcrumbShadowAlias() {
   cy.get(BreadcrumbSelectors.breadcrumb)
     .shadow()
-    .find('.breadcrumbs')
+    .find('ul[part="breadcrumbs"]')
     .as(BreadcrumbAliasNoAtSign.breadcrumbFacet);
   cy.get(BreadcrumbSelectors.breadcrumb)
     .shadow()
-    .find('.breadcrumb-clear')
+    .find('button[part="breadcrumb-clear-all"]')
     .as(BreadcrumbAliasNoAtSign.breadcrumbClearAllFilter);
 }
 export function createAliasShadow(field: string, facetMainSelector?: string) {
