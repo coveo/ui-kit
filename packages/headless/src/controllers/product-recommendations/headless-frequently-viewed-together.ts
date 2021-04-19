@@ -24,7 +24,7 @@ export type FrequentlyViewedTogetherList = ReturnType<
 export type FrequentlyViewedTogetherListState = FrequentlyViewedTogetherList['state'];
 
 export const buildFrequentlyViewedTogetherList = (
-  engine: Engine<unknown>,
+  engine: Engine<object>,
   props: FrequentlyViewedTogetherListProps
 ) => {
   const options = validateOptions(

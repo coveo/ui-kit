@@ -50,7 +50,7 @@ export interface FacetManagerState {
  *
  * @param engine - The headless engine.
  */
-export function buildFacetManager(engine: Engine<unknown>): FacetManager {
+export function buildFacetManager(engine: Engine<object>): FacetManager {
   if (!loadFacetManagerReducers(engine)) {
     throw loadReducerError;
   }
@@ -75,7 +75,7 @@ export function buildFacetManager(engine: Engine<unknown>): FacetManager {
 }
 
 function loadFacetManagerReducers(
-  engine: Engine<unknown>
+  engine: Engine<object>
 ): engine is Engine<SearchSection> {
   engine.addReducers({search, facetOptions});
   return true;

@@ -128,7 +128,7 @@ export interface DateFacetState {
  * @returns A `DateFacet` controller instance.
  */
 export function buildDateFacet(
-  engine: Engine<unknown>,
+  engine: Engine<object>,
   props: DateFacetProps
 ): DateFacet {
   if (!loadDateFacetReducers(engine)) {
@@ -171,7 +171,7 @@ export function buildDateFacet(
 }
 
 function loadDateFacetReducers(
-  engine: Engine<unknown>
+  engine: Engine<object>
 ): engine is Engine<ConfigurationSection & SearchSection & DateFacetSection> {
   engine.addReducers({configuration, search, dateFacetSet});
   return true;

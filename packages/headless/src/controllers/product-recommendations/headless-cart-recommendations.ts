@@ -74,7 +74,7 @@ export interface CartRecommendationsListState {
  * @returns A `CartRecommendationsList` controller instance.
  */
 export function buildCartRecommendationsList(
-  engine: Engine<unknown>,
+  engine: Engine<object>,
   props: CartRecommendationsListProps
 ): CartRecommendationsList {
   const options = validateOptions(

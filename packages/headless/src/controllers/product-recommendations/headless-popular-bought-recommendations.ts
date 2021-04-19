@@ -26,7 +26,7 @@ export type PopularBoughtRecommendationsList = ReturnType<
 export type PopularBoughtRecommendationsListState = PopularBoughtRecommendationsList['state'];
 
 export const buildPopularBoughtRecommendationsList = (
-  engine: Engine<unknown>,
+  engine: Engine<object>,
   props: PopularBoughtRecommendationsListProps = {}
 ) => {
   const options = validateOptions(

@@ -61,7 +61,7 @@ export type ProductRecommendationsList = ReturnType<
 export type ProductRecommendationsListState = ProductRecommendationsList['state'];
 
 export const buildBaseProductRecommendationsList = (
-  engine: Engine<unknown>,
+  engine: Engine<object>,
   props: ProductRecommendationsListProps = {}
 ) => {
   if (!loadBaseProductRecommendationsReducers(engine)) {
@@ -133,7 +133,7 @@ export const buildBaseProductRecommendationsList = (
 };
 
 function loadBaseProductRecommendationsReducers(
-  engine: Engine<unknown>
+  engine: Engine<object>
 ): engine is Engine<ProductRecommendationsSection & ConfigurationSection> {
   engine.addReducers({productRecommendations, configuration});
   return true;

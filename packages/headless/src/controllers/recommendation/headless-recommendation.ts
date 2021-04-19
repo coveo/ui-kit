@@ -76,7 +76,7 @@ export interface RecommendationListState {
  * @returns A `RecommendationList` controller instance.
  */
 export function buildRecommendationList(
-  engine: Engine<unknown>,
+  engine: Engine<object>,
   props: RecommendationListProps = {}
 ): RecommendationList {
   if (!loadRecommendationListReducers(engine)) {
@@ -118,7 +118,7 @@ export function buildRecommendationList(
 }
 
 function loadRecommendationListReducers(
-  engine: Engine<unknown>
+  engine: Engine<object>
 ): engine is Engine<RecommendationSection & ConfigurationSection> {
   engine.addReducers({recommendation, configuration});
   return true;

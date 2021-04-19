@@ -26,7 +26,7 @@ export type UserInterestRecommendationsList = ReturnType<
 export type UserInterestRecommendationsListState = UserInterestRecommendationsList['state'];
 
 export function buildUserInterestRecommendationsList(
-  engine: Engine<unknown>,
+  engine: Engine<object>,
   props: UserInterestRecommendationsListProps
 ) {
   const options = validateOptions(

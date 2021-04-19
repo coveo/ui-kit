@@ -233,7 +233,7 @@ export interface FacetValue {
  * @param props - The configurable `Facet` properties.
  * @returns A `Facet` controller instance.
  * */
-export function buildFacet(engine: Engine<unknown>, props: FacetProps): Facet {
+export function buildFacet(engine: Engine<object>, props: FacetProps): Facet {
   if (!loadFacetReducers(engine)) {
     throw loadReducerError;
   }
@@ -361,7 +361,7 @@ export function buildFacet(engine: Engine<unknown>, props: FacetProps): Facet {
 }
 
 function loadFacetReducers(
-  engine: Engine<unknown>
+  engine: Engine<object>
 ): engine is Engine<
   FacetSection & ConfigurationSection & FacetSearchSection & SearchSection
 > {
