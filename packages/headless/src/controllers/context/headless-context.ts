@@ -61,7 +61,7 @@ export interface ContextState {
  * @param engine - The headless engine.
  * @returns A `Context` controller instance.
  */
-export function buildContext(engine: Engine<unknown>): Context {
+export function buildContext(engine: Engine<object>): Context {
   if (!loadContextReducers(engine)) {
     throw loadReducerError;
   }
@@ -94,7 +94,7 @@ export function buildContext(engine: Engine<unknown>): Context {
 }
 
 function loadContextReducers(
-  engine: Engine<unknown>
+  engine: Engine<object>
 ): engine is Engine<ContextSection> {
   engine.addReducers({context});
   return true;
