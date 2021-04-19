@@ -88,26 +88,20 @@ describe('Date Facet with automatic ranges generated', () => {
 
   describe('When select 1 facetValue checkbox', () => {
     it('Should activate checkbox, have valid facetCount and log UA', () => {
-      assertBasicFacetFunctionality(
-        FacetAlias.facetFirstValueLabel,
-        dateFacetProp.field
-      );
+      assertBasicFacetFunctionality(dateFacetProp.field);
     });
 
     it('Should trigger breadcrumb and display correctly', () => {
-      cy.get(FacetAlias.facetFirstValueLabel).click();
+      cy.get(FacetAlias.facetFirstValue).find(FacetSelectors.label).click();
       createBreadcrumbShadowAlias();
       cy.get('@breadcrumbClearAllFilter').should('be.visible');
-      facetValueShouldDisplayInBreadcrumb(
-        FacetAlias.facetFirstValueLabel,
-        '.breadcrumb:nth-child(1) button span'
-      );
+      facetValueShouldDisplayInBreadcrumb(FacetAlias.facetFirstValue, 1);
     });
 
     it('Should reflect selected facetValue on URL', () => {
-      cy.get(FacetAlias.facetFirstValueLabel)
-        .click()
-        .find('label span:nth-child(1)')
+      cy.get(FacetAlias.facetFirstValue).find(FacetSelectors.label).click();
+      cy.get(FacetAlias.facetFirstValue)
+        .find(FacetSelectors.labelText)
         .invoke('text')
         .then((txt) => {
           const facetValueInApiFormat = convertFacetValueToAPIformat(
@@ -168,10 +162,7 @@ describe('Date facet with manually specified ranges', () => {
 
     describe.skip('When select 1 facetValue checkbox', () => {
       it('Should activate checkbox and log UA', () => {
-        assertBasicFacetFunctionality(
-          FacetAlias.facetFirstValueLabel,
-          dateFacetProp.field
-        );
+        assertBasicFacetFunctionality(dateFacetProp.field);
       });
     });
   });
@@ -231,7 +222,7 @@ describe('Date with custom date-format', () => {
     const formatedEnd = convertDateFormatLabel('01/01/2014', 'DD/MMM/YYYY');
     const formatedLabel = `${formatedStart} to ${formatedEnd}`;
 
-    cy.get(FacetAlias.facetFirstValueLabel)
+    cy.get(FacetAlias.facetFirstValue)
       .find('label span:nth-child(1)')
       .should('contain.text', formatedLabel);
   });

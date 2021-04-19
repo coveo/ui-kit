@@ -1,16 +1,16 @@
-import {h} from '@stencil/core';
+import {h, FunctionalComponent} from '@stencil/core';
 import {randomID} from '../../../utils/utils';
 
 export type FacetValueProps = {
   facetValueSelected: VoidFunction;
   label: string;
-  numberOfResults: number;
+  numberOfResults: string;
   isSelected: boolean;
   ariaLabel: string;
 };
 
-export const FacetValue = (props: FacetValueProps) => {
-  const id = randomID('input');
+export const FacetValue: FunctionalComponent<FacetValueProps> = (props) => {
+  const id = randomID('facet-value-');
   return (
     <li
       part="facet-value"
@@ -20,21 +20,19 @@ export const FacetValue = (props: FacetValueProps) => {
       <input
         type="checkbox"
         checked={props.isSelected}
-        class="facet-value-checkbox w-5 h-5"
+        class="w-5 h-5 flex-none"
         id={id}
         name={id}
         onClick={() => props.facetValueSelected()}
       />
       <label
         htmlFor={id}
-        class="ml-3 text-on-background cursor-pointer flex-shrink whitespace-nowrap overflow-ellipsis overflow-hidden flex flex-auto"
+        class="flex pl-3 text-on-background cursor-pointer ellipsed"
         title={props.label}
       >
-        <span class="whitespace-nowrap overflow-ellipsis overflow-hidden flex-auto">
-          {props.label}
-        </span>
-        <span class="text-on-background-variant flex-shrink-0">
-          {props.numberOfResults}
+        <span class="ellipsed">{props.label}</span>
+        <span class="text-on-background-variant ml-1.5">
+          ({props.numberOfResults})
         </span>
       </label>
     </li>

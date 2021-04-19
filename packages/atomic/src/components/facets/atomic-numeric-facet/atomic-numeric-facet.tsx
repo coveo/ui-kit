@@ -133,7 +133,9 @@ export class AtomicNumericFacet
       <FacetValue
         label={value}
         isSelected={isSelected}
-        numberOfResults={item.numberOfResults}
+        numberOfResults={item.numberOfResults.toLocaleString(
+          this.bindings.i18n.language
+        )}
         facetValueSelected={() => {
           this.facet.toggleSelect(item);
         }}
