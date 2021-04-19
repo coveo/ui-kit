@@ -23,11 +23,8 @@ export const didYouMeanReducer = createReducer(
         state.wasCorrectedTo = '';
       })
       .addCase(executeSearch.fulfilled, (state, action) => {
-        if (action.payload.response.queryCorrections[0]) {
-          state.queryCorrection = action.payload.response.queryCorrections[0];
-        } else {
-          state.queryCorrection = emptyCorrection();
-        }
+        state.queryCorrection =
+          action.payload.response.queryCorrections[0] || emptyCorrection();
         state.originalQuery = action.payload.originalQuery;
         state.wasAutomaticallyCorrected = action.payload.automaticallyCorrected;
       })
