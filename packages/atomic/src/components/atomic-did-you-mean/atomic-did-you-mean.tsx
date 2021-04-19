@@ -56,7 +56,7 @@ export class AtomicDidYouMean implements InitializableComponent {
   private renderAutomaticallyCorrected() {
     const noResults = this.strings.withQuery(
       'noResultsFor',
-      this.didYouMeanState.queryCorrection.wordCorrections[0].originalWord
+      this.didYouMeanState.originalQuery
     );
     const queryAutoCorrectedTo = this.strings.withQuery(
       'queryAutoCorrectedTo',
