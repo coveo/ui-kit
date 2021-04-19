@@ -76,6 +76,8 @@ export interface ExecuteSearchThunkReturn {
   queryExecuted: string;
   /** Whether the query was automatically corrected. */
   automaticallyCorrected: boolean;
+  /** The original query that was performed when an automatic correction is executed.*/
+  originalQuery: string;
   /** The analytics action to log after the query. */
   analyticsAction: SearchAction;
 }
@@ -127,10 +129,10 @@ export const executeSearch = createAsyncThunk<
         ...fetched,
         response: fetched.response.success,
         automaticallyCorrected: false,
+        originalQuery: getOriginalQuery(state),
         analyticsAction,
       };
     }
-
     const {correctedQuery} = fetched.response.success.queryCorrections[0];
     const retried = await automaticallyRetryQueryWithCorrection(
       extra.searchAPIClient,
@@ -165,6 +167,7 @@ export const executeSearch = createAsyncThunk<
         queryCorrections: fetched.response.success.queryCorrections,
       },
       automaticallyCorrected: true,
+      originalQuery: getOriginalQuery(state),
       analyticsAction: logDidYouMeanAutomatic(),
     };
   }
@@ -198,6 +201,7 @@ export const fetchMoreResults = createAsyncThunk<
       ...fetched,
       response: fetched.response.success,
       automaticallyCorrected: false,
+      originalQuery: getOriginalQuery(state),
       analyticsAction: logFetchMoreResults(),
     };
   }
@@ -354,3 +358,6 @@ const addEntryInActionsHistory = (state: StateNeededByExecuteSearch) => {
     });
   }
 };
+
+const getOriginalQuery = (state: StateNeededByExecuteSearch) =>
+  state.query?.q !== undefined ? state.query.q : '';
