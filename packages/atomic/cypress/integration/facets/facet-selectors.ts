@@ -4,6 +4,9 @@ export const FacetSelectors = {
   facetStandard: 'atomic-facet',
   facetSearchbox: 'input[part="search-input"]',
   checkbox: 'input[type="checkbox"]',
+  label: 'label',
+  labelText: 'label span:nth-child(1)',
+  labelCount: 'label span:nth-child(2)',
   showMoreButton: 'button[part="show-more"]',
   showLessButton: 'button[part="show-less"]',
   clearAllButton: 'button[part="reset-button"]',
@@ -21,8 +24,8 @@ export const BreadcrumbSelectors = {
 export const FacetAlias: IAlias = {
   facetShadow: '@facetShadow',
   facetUL: '@facetUL',
-  facetFirstValueLabel: '@facetFirstValueLabel',
-  facetSecondValueLabel: '@facetSecondValueLabel',
+  facetFirstValue: '@facetFirstValue',
+  facetSecondValue: '@facetSecondValue',
   facetAllValueLabel: '@facetAllValueLabel',
   facetAllValueCount: '@facetAllValueCount',
 };
@@ -38,11 +41,11 @@ const BreadcrumbAliasNoAtSign = aliasNoAtSignBuilder(BreadcrumbAlias);
 export function createBreadcrumbShadowAlias() {
   cy.get(BreadcrumbSelectors.breadcrumb)
     .shadow()
-    .find('.breadcrumbs')
+    .find('ul[part="breadcrumbs"]')
     .as(BreadcrumbAliasNoAtSign.breadcrumbFacet);
   cy.get(BreadcrumbSelectors.breadcrumb)
     .shadow()
-    .find('.breadcrumb-clear')
+    .find('button[part="breadcrumb-clear-all"]')
     .as(BreadcrumbAliasNoAtSign.breadcrumbClearAllFilter);
 }
 export function createAliasShadow(field: string, facetMainSelector?: string) {
@@ -64,10 +67,10 @@ export function createAliasFacetUL(field: string, facetMainSelector?: string) {
     .as(FacetAliasNoAtSign.facetUL);
   cy.get(FacetAlias.facetUL)
     .find('li:nth-child(1)')
-    .as(FacetAliasNoAtSign.facetFirstValueLabel);
+    .as(FacetAliasNoAtSign.facetFirstValue);
   cy.get(FacetAlias.facetUL)
     .find('li:nth-child(2)')
-    .as(FacetAliasNoAtSign.facetSecondValueLabel);
+    .as(FacetAliasNoAtSign.facetSecondValue);
 
   const facetValueLabelCSS =
     facetMainSelector === FacetSelectors.categoryFacet ? 'button' : 'label';
