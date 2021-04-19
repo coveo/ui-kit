@@ -185,14 +185,10 @@ export class FacetSearch {
 
   private get searchResults() {
     const showResults = this.component.showFacetSearchResults;
-    const searchResultsClasses =
-      'search-results z-10 absolute w-full bg-background border-divider-t-0 empty:border-none rounded-b overflow-y-scroll left-0 ' +
-      (showResults ? 'block' : 'hidden');
-
     return (
       <ul
         part="search-results"
-        class={searchResultsClasses}
+        class={'search-results ' + (showResults ? 'block' : 'hidden')}
         ref={(el) => (this.valuesRef = el as HTMLElement)}
       >
         {this.resultList}

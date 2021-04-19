@@ -3,6 +3,7 @@
 }
 
 .search-results {
+  @apply z-10 absolute w-full bg-background border-divider-t-0 empty:border-none rounded-b overflow-y-scroll left-0;
   max-height: var(--atomic-facet-search-max-height, 250px);
   top: var(--atomic-facet-search-height, 30px);
 }
