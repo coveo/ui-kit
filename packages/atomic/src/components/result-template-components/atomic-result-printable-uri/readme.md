@@ -16,7 +16,6 @@
 
 | Part                                    | Description                                       |
 | --------------------------------------- | ------------------------------------------------- |
-| `"align-middle"`                        |                                                   |
 | `"result-printable-uri-link"`           | A result printable uri clickable link             |
 | `"result-printable-uri-list"`           | The result printable uri list                     |
 | `"result-printable-uri-list-element"`   | A result printable uri list element               |
