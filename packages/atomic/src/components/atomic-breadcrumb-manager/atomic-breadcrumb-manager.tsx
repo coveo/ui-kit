@@ -27,7 +27,7 @@ import dayjs from 'dayjs';
  * @part breadcrumb-clear-all - The clear all breadcrumbs button
  * @part breadcrumb - An individual breadcrumb
  * @part breadcrumb-button - A button element for all types of breadcrumb values
- * @part breadcrumb-wrapper = The wrapper for a single breadcrumb value
+ * @part breadcrumb-wrapper - The wrapper for a single breadcrumb value
  * @part breadcrumb-clear - The clear button for a single breadcrumb value
  * @part breadcrumb-value-label - The label for a single breadcrumb value
  * @part breadcrumb-label - The label for the breadcrumb's title
