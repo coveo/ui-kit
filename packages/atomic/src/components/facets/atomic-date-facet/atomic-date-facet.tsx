@@ -176,7 +176,7 @@ export class AtomicDateFacet implements InitializableComponent, BaseFacetState {
         controller={new BaseFacetController(this)}
         label={this.strings[this.label]()}
         hasActiveValues={this.facetState.hasActiveValues}
-        deselectAll={() => this.facet.deselectAll()}
+        clearAll={() => this.facet.deselectAll()}
       >
         <ul>{this.values}</ul>
       </BaseFacet>

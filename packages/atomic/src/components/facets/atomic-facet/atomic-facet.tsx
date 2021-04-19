@@ -242,7 +242,6 @@ export class AtomicFacet
         controller={new BaseFacetController(this)}
         label={this.strings[this.label]()}
         hasActiveValues={this.facetState.hasActiveValues}
-        deselectAll={() => this.facet.deselectAll()}
       >
         {this.facetState.canShowMoreValues && this.facetSearch?.render()}
         <div class="mt-1">

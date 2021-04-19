@@ -24,7 +24,7 @@ export class BaseFacetController {
 
 type BaseFacetProps = {
   controller: BaseFacetController;
-  deselectAll: VoidFunction;
+  clearAll?: VoidFunction;
   label: string;
   hasActiveValues: boolean;
 };
@@ -46,15 +46,16 @@ export const BaseFacet: FunctionalComponent<BaseFacetProps> = (
     </button>
   ) : null;
 
-  const clearButton = props.hasActiveValues ? (
-    <button
-      part="clear-button"
-      onClick={() => props.deselectAll()}
-      class="block text-primary mr-2 lg:mr-0 text-sm"
-    >
-      {props.controller.state.strings.clear()}
-    </button>
-  ) : null;
+  const clearButton =
+    props.clearAll && props.hasActiveValues ? (
+      <button
+        part="clear-button"
+        onClick={() => props.clearAll!()}
+        class="block text-primary mr-2 lg:mr-0 text-sm"
+      >
+        {props.controller.state.strings.clear()}
+      </button>
+    ) : null;
 
   return (
     <div class="facet mb-4" part="facet">

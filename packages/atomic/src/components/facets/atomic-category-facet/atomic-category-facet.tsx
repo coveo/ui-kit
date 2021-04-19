@@ -179,31 +179,27 @@ export class AtomicCategoryFacet
 
   private buildParent(parent: CategoryFacetValue) {
     return (
-      <li>
-        <button
-          part="parent"
-          class="value-button"
-          onClick={() => this.facet.toggleSelect(parent)}
-        >
-          <div innerHTML={LeftArrow} class="facet-arrow mr-1.5" />
-          <span class="ellipsed">{parent.value}</span>
-        </button>
-      </li>
+      <button
+        part="parent"
+        class="value-button"
+        onClick={() => this.facet.toggleSelect(parent)}
+      >
+        <div innerHTML={LeftArrow} class="facet-arrow mr-1.5" />
+        <span class="ellipsed">{parent.value}</span>
+      </button>
     );
   }
 
   private buildActiveParent(parent: CategoryFacetValue) {
     return (
-      <li>
-        <div part="active-parent" class="value-button font-bold ml-6">
-          <span part="value-label" class="ellipsed">
-            {parent.value}
-          </span>
-          <span part="value-count" class="value-count">
-            {parent.numberOfResults.toLocaleString(this.bindings.i18n.language)}
-          </span>
-        </div>
-      </li>
+      <div part="parent active-parent" class="value-button font-bold ml-6">
+        <span part="value-label" class="ellipsed">
+          {parent.value}
+        </span>
+        <span part="value-count" class="value-count">
+          {parent.numberOfResults.toLocaleString(this.bindings.i18n.language)}
+        </span>
+      </div>
     );
   }
 
@@ -238,7 +234,11 @@ export class AtomicCategoryFacet
     }
 
     return (
-      <button onClick={() => this.facet.deselectAll()} class="value-button">
+      <button
+        part="clear-button"
+        onClick={() => this.facet.deselectAll()}
+        class="value-button"
+      >
         <div innerHTML={LeftArrow} class="facet-arrow mr-1.5" />
         {this.strings.allCategories()}
       </button>
@@ -372,12 +372,11 @@ export class AtomicCategoryFacet
         controller={new BaseFacetController(this)}
         label={this.strings[this.label]()}
         hasActiveValues={this.facetState.hasActiveValues}
-        deselectAll={() => this.facet.deselectAll()}
       >
         {this.facetSearch?.render()}
         <div class="mt-1">
           {this.allCategoriesButton}
-          <ul>{this.parents}</ul>
+          <div>{this.parents}</div>
           <div class={this.parents.length ? 'pl-9' : 'pl-0'}>
             <ul>{this.children}</ul>
             <div class="flex flex-col items-start space-y-1">

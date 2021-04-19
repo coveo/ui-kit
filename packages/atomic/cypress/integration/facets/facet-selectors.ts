@@ -9,12 +9,12 @@ export const FacetSelectors = {
   labelCount: 'label span:nth-child(2)',
   showMoreButton: 'button[part="show-more"]',
   showLessButton: 'button[part="show-less"]',
-  clearAllButton: 'button[part="reset-button"]',
+  clearAllButton: 'button[part="clear-button"]',
   numericFacet: 'atomic-numeric-facet',
   dateFacet: 'atomic-date-facet',
   categoryFacet: 'atomic-category-facet',
-  categoryFacetNextLevelButton: 'button',
-  categoryFacetClearLevelButton: 'div:nth-child(2) div:nth-child(1) button',
+  categoryFacetNextLevelButton: 'button[part="child"]',
+  categoryFacetClearLevelButton: 'button[part="clear-button"]',
 };
 
 export const BreadcrumbSelectors = {

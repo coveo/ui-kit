@@ -45,16 +45,14 @@ function assertClearAllTitleAndTotalParents(
     .find(FacetSelectors.categoryFacetClearLevelButton)
     .should('contain.text', clearAllTitle);
   cy.get(FacetAlias.facetShadow)
-    .find('ul[part="parents"] li')
+    .find('[part*="parent"]')
     .its('length')
     .should('eq', totalParents);
 }
 
 function assertTotalChildrentMoreThan(value: number) {
   cy.get(FacetAlias.facetShadow)
-    .find('ul')
-    .not('[part="parents"]')
-    .find('li')
+    .find('[part="child"]')
     .its('length')
     .should('be.gt', value);
 }
@@ -152,7 +150,7 @@ describe('Category Facet with default setting', () => {
     it('Should trigger breadcrumb and display correctly', () => {
       cy.get(BreadcrumbSelectors.breadcrumb)
         .shadow()
-        .find('button[part="breadcrumb"]')
+        .find('[part="breadcrumb"]')
         .should('be.visible')
         .contains(canadaHierarchy[0]);
     });
@@ -242,10 +240,9 @@ describe('Category Facet with default setting', () => {
 
     it('Should not contain any other level', () => {
       cy.get(FacetAlias.facetShadow)
-        .find('ul[part="parents"]')
-        .find('li')
+        .find('[part*="parent"]')
         .contains(canadaHierarchy[2])
-        .find('div.arrow-size')
+        .find('.facet-arrow')
         .should('not.exist');
     });
 
@@ -261,7 +258,7 @@ describe('Category Facet with default setting', () => {
       const text = canadaHierarchy.join(' / ');
       cy.get(BreadcrumbSelectors.breadcrumb)
         .shadow()
-        .find('button[part="breadcrumb"]')
+        .find('[part="breadcrumb"]')
         .should('be.visible')
         .contains(text);
     });
@@ -474,8 +471,7 @@ describe('When URL contains a selected path of category facet', () => {
       3
     );
     cy.get(FacetAlias.facetShadow)
-      .find('ul[part="parents"]')
-      .find('li')
+      .find('[part*="parent"]')
       .last()
       .contains('Alberta');
   });
@@ -492,7 +488,7 @@ describe('when no first search has yet been executed', () => {
   it('should render a placeholder', () => {
     cy.get(FacetSelectors.categoryFacet)
       .shadow()
-      .find('div[part="placeholder"]')
+      .find('[part="placeholder"]')
       .should('be.visible');
   });
 });
