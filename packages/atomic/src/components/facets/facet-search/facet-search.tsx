@@ -105,9 +105,10 @@ export class FacetSearch {
   }
 
   private onValuesScroll() {
+    const scrollPixelBuffer = 50;
     const scrollEndReached =
       this.valuesRef.scrollTop + this.valuesRef.clientHeight >=
-      this.valuesRef.scrollHeight;
+      this.valuesRef.scrollHeight - scrollPixelBuffer;
 
     if (this.facetSearchState.moreValuesAvailable && scrollEndReached) {
       this.facetSearchController.showMoreResults();
