@@ -59,6 +59,7 @@ const PATH_MAX_LENGTH = 3;
  * @part value-count - The facet value count
  * @part show-more - The show more results button
  * @part show-less - The show less button
+ * @part search-no-results - The label displayed when a search returns no results
  * @part placeholder - The placeholder shown before the first search is executed.
  *
  */
@@ -93,6 +94,7 @@ export class AtomicCategoryFacet
     querySuggestionList: () => this.bindings.i18n.t('querySuggestionList'),
     showMore: () => this.bindings.i18n.t('showMore'),
     showLess: () => this.bindings.i18n.t('showLess'),
+    noValuesFound: () => this.bindings.i18n.t('noValuesFound'),
     facetValue: (variables) => this.bindings.i18n.t('facetValue', variables),
     allCategories: () => this.bindings.i18n.t('allCategories'),
     pathPrefix: () => this.bindings.i18n.t('in'),

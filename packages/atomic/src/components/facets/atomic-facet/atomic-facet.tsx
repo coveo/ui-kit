@@ -44,6 +44,7 @@ import {FacetPlaceholder} from '../atomic-facet-placeholder/atomic-facet-placeho
  * @part search-input-clear-button - The clear button of the input
  * @part search-results - The list of search results
  * @part search-result - A search result
+ * @part search-no-results - The label displayed when a search returns no results
  * @part active-search-result - The currently active search result
 
  * @part placeholder - The placeholder shown before the first search is executed.
@@ -84,6 +85,7 @@ export class AtomicFacet
     querySuggestionList: () => this.bindings.i18n.t('querySuggestionList'),
     showMore: () => this.bindings.i18n.t('showMore'),
     showLess: () => this.bindings.i18n.t('showLess'),
+    noValuesFound: () => this.bindings.i18n.t('noValuesFound'),
     facetValue: (variables) => this.bindings.i18n.t('facetValue', variables),
   };
 
