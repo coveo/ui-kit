@@ -26,6 +26,8 @@ export class Combobox {
   public onInputChange(e: Event) {
     const value = (e.target as HTMLInputElement).value;
     this.options.onChange(value);
+    this.updateActiveDescendant();
+    this.listbox.scrollTo({top: 0});
   }
 
   public onInputKeyup(e: KeyboardEvent) {
