@@ -11,7 +11,6 @@ type FacetSearchResult = CategoryFacetSearchResult;
 
 export interface FacetSearchStrings extends ComboboxStrings {
   placeholder: () => string;
-  showMore: () => string;
 }
 
 export interface FacetSearchComponent {
@@ -105,6 +104,16 @@ export class FacetSearch {
     }
   }
 
+  private onValuesScroll() {
+    const scrollEndReached =
+      this.valuesRef.scrollTop + this.valuesRef.clientHeight >=
+      this.valuesRef.scrollHeight;
+
+    if (this.facetSearchState.moreValuesAvailable && scrollEndReached) {
+      this.facetSearchController.showMoreResults();
+    }
+  }
+
   private get clearButton() {
     if (this.component.facetSearchQuery === '') {
       return;
@@ -171,6 +180,7 @@ export class FacetSearch {
         part="search-results"
         class={'search-results ' + (showResults ? 'block' : 'hidden')}
         ref={(el) => (this.valuesRef = el as HTMLElement)}
+        onScroll={() => this.onValuesScroll()}
       >
         {this.resultList}
       </ul>
