@@ -18,7 +18,7 @@ export interface LoggerOptions {
   browserPostLogHook?: (level: LogLevel, logEvent: LogEvent) => void;
 }
 
-export function createLogger(options: LoggerOptions | undefined) {
+export function buildLogger(options: LoggerOptions | undefined) {
   return pino({
     name: '@coveo/headless',
     level: options?.level || 'warn',

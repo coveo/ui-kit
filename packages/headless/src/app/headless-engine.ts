@@ -28,7 +28,7 @@ import {
   engineConfigurationOptionDefinitions,
   EngineConfigurationOptions,
 } from './engine-configuration-options';
-import {createLogger} from './logger';
+import {buildLogger} from './logger';
 
 /**
  * The global headless engine options.
@@ -103,7 +103,7 @@ export class HeadlessEngine<Reducers extends ReducersMapObject>
   constructor(private options: HeadlessOptions<Reducers>) {
     this.validateConfiguration(options);
 
-    this.logger = createLogger(options.loggerOptions);
+    this.logger = buildLogger(options.loggerOptions);
     const searchAPIClient = this.createSearchAPIClient();
     this.engine = buildEngine(options, {searchAPIClient}, this.logger);
 
