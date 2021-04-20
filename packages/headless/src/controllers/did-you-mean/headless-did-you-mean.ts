@@ -36,7 +36,10 @@ export interface DidYouMeanState {
    * The correction that was applied to the query. If no correction was applied, will default to an empty string.
    */
   wasCorrectedTo: string;
-
+  /**
+   * The original query that was performed, without any automatic correction applied.
+   */
+  originalQuery: string;
   /**
    * Specifies if the query was automatically corrected by Headless.
    *
@@ -81,6 +84,7 @@ export function buildDidYouMean(engine: Engine<object>): DidYouMean {
       const state = getState();
 
       return {
+        originalQuery: state.didYouMean.originalQuery,
         wasCorrectedTo: state.didYouMean.wasCorrectedTo,
         wasAutomaticallyCorrected: state.didYouMean.wasAutomaticallyCorrected,
         queryCorrection: state.didYouMean.queryCorrection,

@@ -56,7 +56,7 @@ export class AtomicResultPrintableUri {
     return (
       <li part="result-printable-uri-list-element">
         <button
-          part="result-printable-uri-list-ellipsis align-middle"
+          part="result-printable-uri-list-ellipsis"
           aria-label={this.strings.collapsedUriParts()}
           onClick={() => (this.listExpanded = true)}
         >
@@ -75,11 +75,7 @@ export class AtomicResultPrintableUri {
       const uri = parent.getAttribute('uri')!;
       return (
         <li part="result-printable-uri-list-element">
-          <a
-            part="result-printable-uri-link"
-            class="text-sm inline-block align-middle"
-            href={filterProtocol(uri)}
-          >
+          <a part="result-printable-uri-link" href={filterProtocol(uri)}>
             {name}
           </a>
           {i === parents.length - 1 ? null : this.renderSeparator()}
@@ -92,7 +88,7 @@ export class AtomicResultPrintableUri {
     return (
       <span
         part="result-printable-uri-list-separator"
-        class="w-3 h-3 inline-block mx-2 align-middle"
+        class="result-printable-uri-separator"
         innerHTML={Arrow}
       ></span>
     );
@@ -128,7 +124,6 @@ export class AtomicResultPrintableUri {
     return (
       <a
         part="result-printable-uri-link"
-        class="text-sm"
         href={filterProtocol(this.result.clickUri)}
       >
         <atomic-result-text field="printableUri"></atomic-result-text>
