@@ -11,7 +11,10 @@ import {AnalyticsClientSendEventHook} from 'coveo.analytics';
 import {debounce} from 'ts-debounce';
 import {NoopPreprocessRequest} from '../api/preprocess-request';
 import {SearchAPIClient} from '../api/search/search-api-client';
-import {updateBasicConfiguration} from '../features/configuration/configuration-actions';
+import {
+  updateAnalyticsConfiguration,
+  updateBasicConfiguration,
+} from '../features/configuration/configuration-actions';
 import {SearchAppState} from '../state/search-app-state';
 import {validatePayloadAndThrow} from '../utils/validate-payload';
 import {EngineConfigurationOptions} from './engine-configuration-options';
@@ -120,36 +123,44 @@ export function buildEngine<Reducers extends ReducersMapObject>(
     logger,
     reducerManager
   );
-  const renewAccessToken = createRenewAccessTokenFunction(
-    configuration,
-    store.dispatch
+
+  const {accessToken, organizationId, platformUrl, analytics} = configuration;
+
+  store.dispatch(
+    updateBasicConfiguration({
+      accessToken,
+      organizationId,
+      platformUrl,
+    })
   );
 
-  return {
-    logger,
+  if (analytics) {
+    const {analyticsClientMiddleware, ...rest} = analytics;
+    store.dispatch(updateAnalyticsConfiguration(rest));
+  }
 
-    renewAccessToken,
+  return {
+    renewAccessToken: createRenewAccessTokenFunction(
+      configuration,
+      store.dispatch
+    ),
 
     addReducers(reducers: ReducersMapObject) {
       reducerManager.add(reducers);
       store.replaceReducer(reducerManager.combinedReducer);
     },
 
-    get dispatch(): EngineDispatch<StateFromReducersMapObject<Reducers>> {
-      return store.dispatch;
-    },
+    dispatch: store.dispatch,
+
+    subscribe: store.subscribe,
 
     get state() {
       return store.getState();
     },
 
-    get store() {
-      return store;
-    },
+    logger,
 
-    get subscribe() {
-      return store.subscribe;
-    },
+    store,
   };
 }
 

@@ -1,10 +1,8 @@
 import {ReducersMapObject, StateFromReducersMapObject} from '@reduxjs/toolkit';
 import {
-  updateBasicConfiguration,
   updateSearchConfiguration,
   disableAnalytics,
   enableAnalytics,
-  updateAnalyticsConfiguration,
   localeValidation,
 } from '../features/configuration/configuration-actions';
 import {SearchAPIClient} from '../api/search/search-api-client';
@@ -107,24 +105,10 @@ export class HeadlessEngine<Reducers extends ReducersMapObject>
     const searchAPIClient = this.createSearchAPIClient();
     this.engine = buildEngine(options, {searchAPIClient}, this.logger);
 
-    this.engine.dispatch(
-      updateBasicConfiguration({
-        accessToken: options.configuration.accessToken,
-        platformUrl: options.configuration.platformUrl,
-        organizationId: options.configuration.organizationId,
-      })
-    );
     if (options.configuration.search) {
       this.engine.dispatch(
         updateSearchConfiguration(options.configuration.search)
       );
-    }
-    if (options.configuration.analytics) {
-      const {
-        analyticsClientMiddleware,
-        ...rest
-      } = options.configuration.analytics;
-      this.engine.dispatch(updateAnalyticsConfiguration(rest));
     }
   }
 
