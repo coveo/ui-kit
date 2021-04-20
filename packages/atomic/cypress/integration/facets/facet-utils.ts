@@ -42,24 +42,24 @@ export function validateFacetNumberofValueGreaterThan(totalNumber: number) {
 
 export function facetValueShouldDisplayInBreadcrumb(
   facetValueSelector: string,
-  valueDisplayInBreadcrumbSelector: string
+  nthBreadcrumb: number
 ) {
   cy.get(facetValueSelector)
-    .find('label span:nth-child(1)')
+    .find(FacetSelectors.labelText)
     .invoke('text')
     .then((text) => {
       cy.get(BreadcrumbAlias.breadcrumbFacet)
         .first()
-        .find(valueDisplayInBreadcrumbSelector)
+        .find(`li:nth-child(${nthBreadcrumb})`)
         .should('be.visible')
         .contains(text);
     });
 }
 
-export function assertBasicFacetFunctionality(selector: string, field: string) {
+export function assertBasicFacetFunctionality(field: string) {
   cy.wait('@coveoAnalytics');
 
-  cy.get(selector).click();
+  cy.get(FacetAlias.facetFirstValue).find(FacetSelectors.label).click();
   cy.wait('@coveoAnalytics').then(({request}) => {
     const analyticsBody = request.body;
     expect(analyticsBody).to.have.property('actionCause', 'facetSelect');
@@ -67,8 +67,8 @@ export function assertBasicFacetFunctionality(selector: string, field: string) {
     expect(analyticsBody.facetState[0]).to.have.property('state', 'selected');
     expect(analyticsBody.facetState[0]).to.have.property('field', field);
 
-    cy.get(selector)
-      .find('label span:nth-child(1)')
+    cy.get(FacetAlias.facetFirstValue)
+      .find(FacetSelectors.labelText)
       .invoke('text')
       .then((txt) => {
         const facetTypeDetected = analyticsBody.facetState[0].facetType;
@@ -77,7 +77,9 @@ export function assertBasicFacetFunctionality(selector: string, field: string) {
       });
   });
 
-  cy.get(selector).find(FacetSelectors.checkbox).should('be.checked');
+  cy.get(FacetAlias.facetFirstValue)
+    .find(FacetSelectors.checkbox)
+    .should('be.checked');
   assertNonZeroFacetCount();
 }
 
@@ -154,11 +156,11 @@ export function convertDateToFacetValue(
 export function assertDeselectFacet(field: string) {
   cy.wait('@coveoAnalytics');
 
-  cy.get(FacetAlias.facetFirstValueLabel).click();
+  cy.get(FacetAlias.facetFirstValue).find(FacetSelectors.label).click();
   cy.wait('@coveoAnalytics');
 
-  cy.get(FacetAlias.facetFirstValueLabel)
-    .click()
+  cy.get(FacetAlias.facetFirstValue).find(FacetSelectors.label).click();
+  cy.get(FacetAlias.facetFirstValue)
     .find(FacetSelectors.checkbox)
     .should('not.be.checked');
   cy.wait('@coveoAnalytics').then(({request}) => {
@@ -170,10 +172,10 @@ export function assertDeselectFacet(field: string) {
 export function assertClearAllFacet() {
   cy.wait('@coveoAnalytics');
 
-  cy.get(FacetAlias.facetFirstValueLabel).click();
+  cy.get(FacetAlias.facetFirstValue).find(FacetSelectors.label).click();
   cy.wait('@coveoAnalytics');
 
-  cy.get(FacetAlias.facetSecondValueLabel).click();
+  cy.get(FacetAlias.facetSecondValue).find(FacetSelectors.label).click();
   cy.wait('@coveoAnalytics');
 
   cy.get(FacetAlias.facetShadow).find(FacetSelectors.clearAllButton).click();
@@ -182,10 +184,10 @@ export function assertClearAllFacet() {
     expect(request.body.facetState).to.have.lengthOf(0);
   });
 
-  cy.get(FacetAlias.facetFirstValueLabel)
+  cy.get(FacetAlias.facetFirstValue)
     .find(FacetSelectors.checkbox)
     .should('not.be.checked');
-  cy.get(FacetAlias.facetSecondValueLabel)
+  cy.get(FacetAlias.facetSecondValue)
     .find(FacetSelectors.checkbox)
     .should('not.be.checked');
 }
@@ -277,5 +279,24 @@ export function assertShowLessUA(field: string) {
       'showLessFacetResults'
     );
     expect(analyticsBody.customData).to.have.property('facetField', field);
+  });
+}
+
+export function typeQueryAndWaitUA(searchboxSelector: string, query: string) {
+  for (let i = 0; i < query.length; i++) {
+    const charac = query.charAt(i);
+    cy.get(searchboxSelector).type(charac, {force: true});
+    cy.wait('@coveoAnalytics');
+  }
+}
+
+export function assertHightlightedText(text: string) {
+  cy.get(FacetAlias.facetShadow)
+    .find('ul[part="search-results"] li[part="search-result"] b')
+    .as('textHightlight');
+  cy.getTextOfAllElements('@textHightlight').then((labels) => {
+    labels.forEach((i: string) => {
+      expect(i.toLowerCase()).not.to.contains(text.toLowerCase());
+    });
   });
 }

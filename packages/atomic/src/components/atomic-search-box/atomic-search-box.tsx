@@ -4,11 +4,10 @@ import {
   Bindings,
   BindStateToController,
   BindStateToI18n,
-  I18nState,
   InitializeBindings,
 } from '../../utils/initialization-utils';
 import {randomID} from '../../utils/utils';
-import {Combobox} from '../../utils/combobox';
+import {Combobox, ComboboxStrings} from '../../utils/combobox';
 import ClearIcon from 'coveo-styleguide/resources/icons/svg/clear.svg';
 import SearchIcon from 'coveo-styleguide/resources/icons/svg/search.svg';
 
@@ -33,7 +32,7 @@ export class AtomicSearchBox {
 
   @BindStateToI18n()
   @State()
-  public strings: I18nState = {
+  public strings: ComboboxStrings = {
     clear: () => this.bindings.i18n.t('clear'),
     search: () => this.bindings.i18n.t('search'),
     searchBox: () => this.bindings.i18n.t('searchBox'),

@@ -31,6 +31,7 @@ module.exports = {
         "DEFAULT": "var(--atomic-border-radius)",
         "md": "var(--atomic-border-radius-md)",
         "lg": "var(--atomic-border-radius-lg)",
+        "xl": "var(--atomic-border-radius-xl)",
         "full": "var(--atomic-border-radius-full)",
       }
     },

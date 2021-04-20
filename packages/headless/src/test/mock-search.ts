@@ -12,6 +12,7 @@ export function buildMockSearch(
     queryExecuted: '',
     error: null,
     automaticallyCorrected: false,
+    originalQuery: '',
     analyticsAction: logSearchboxSubmit(),
     ...config,
   };
