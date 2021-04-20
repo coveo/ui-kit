@@ -16,7 +16,7 @@ import {
 } from '../../utils/initialization-utils';
 
 /**
- * The ResultsPerPage component allows the end user to choose how many results to display per page.
+ * The `atomic-results-per-page` component allows the customization of how many results to display per page.
  *
  * @part label - The "Results per page" label
  * @part buttons - The list of buttons

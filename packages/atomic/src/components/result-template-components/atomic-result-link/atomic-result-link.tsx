@@ -4,8 +4,8 @@ import {ResultContext} from '../result-template-decorators';
 import {filterProtocol} from '../../../utils/xss-utils';
 
 /**
- * The ResultLink component automatically transform a search result title into a clickable link pointing to the
- * original item.
+ * The `atomic-result-link` component automatically transforms a search result title into a clickable link
+ * that points to the original item.
  * @part result-link - The result link
  * @slot default - Allow to display alternative content inside the link
  */

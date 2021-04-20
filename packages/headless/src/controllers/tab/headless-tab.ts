@@ -15,6 +15,8 @@ import {
   validateInitialState,
   validateOptions,
 } from '../../utils/validate-payload';
+import {advancedSearchQueries, configuration} from '../../app/reducers';
+import {loadReducerError} from '../../utils/errors';
 
 export interface TabOptions {
   /**
@@ -87,12 +89,14 @@ export interface TabState {
  * @param props - The configurable `Tab` properties.
  * @returns A `Tab` controller instance.
  */
-export function buildTab(
-  engine: Engine<ConfigurationSection & AdvancedSearchQueriesSection>,
-  props: TabProps
-): Tab {
+export function buildTab(engine: Engine<object>, props: TabProps): Tab {
+  if (!loadTabReducers(engine)) {
+    throw loadReducerError;
+  }
+
   const controller = buildController(engine);
   const {dispatch} = engine;
+  const getState = () => engine.state;
 
   const options = validateOptions(
     engine,
@@ -121,10 +125,17 @@ export function buildTab(
 
     get state() {
       const isActive =
-        engine.state.advancedSearchQueries.cq === options.expression;
+        getState().advancedSearchQueries.cq === options.expression;
       return {
         isActive,
       };
     },
   };
+}
+
+function loadTabReducers(
+  engine: Engine<object>
+): engine is Engine<ConfigurationSection & AdvancedSearchQueriesSection> {
+  engine.addReducers({configuration, advancedSearchQueries});
+  return true;
 }

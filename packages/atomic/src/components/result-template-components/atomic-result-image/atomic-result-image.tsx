@@ -4,7 +4,7 @@ import {ResultContext} from '../result-template-decorators';
 import {filterProtocol} from '../../../utils/xss-utils';
 
 /**
- * The ResultImage component renders an image from  a result field.
+ * The `atomic-result-image` component renders an image from a result field.
  *
  *  @part result-image - The img element.
  */

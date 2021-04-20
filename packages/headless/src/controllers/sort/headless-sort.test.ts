@@ -16,6 +16,7 @@ import {executeSearch} from '../../features/search/search-actions';
 import {createMockState} from '../../test/mock-state';
 import {updatePage} from '../../features/pagination/pagination-actions';
 import {SearchAppState} from '../../state/search-app-state';
+import {configuration, sortCriteria} from '../../app/reducers';
 
 describe('Sort', () => {
   let engine: MockEngine<SearchAppState>;
@@ -33,6 +34,13 @@ describe('Sort', () => {
     };
 
     initSort();
+  });
+
+  it('it adds the correct reducers to engine', () => {
+    expect(engine.addReducers).toHaveBeenCalledWith({
+      configuration,
+      sortCriteria,
+    });
   });
 
   it('when the #criterion option is not specified, it does not dispatch a registration action', () => {

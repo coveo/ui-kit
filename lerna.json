@@ -7,5 +7,5 @@
       "message": "[Version Bump]: publish %s\nlerna.json\nCHANGELOG.md\n**/CHANGELOG.md"
     }
   },
-  "version": "1.1.0-alpha.0"
+  "version": "1.1.0-alpha.2"
 }
