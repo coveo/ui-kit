@@ -11,7 +11,7 @@ describe('EC plugin', () => {
         pageViewId: someUUID,
         encoding: document.characterSet,
         location: 'http://localhost/',
-        referrer: 'http://somewhere.over/therainbow',
+        referrer: 'http://somewhere.over/thereferrer',
         title: 'MAH PAGE',
         screenColor: '24-bit',
         screenResolution: '0x0',
@@ -474,13 +474,13 @@ describe('EC plugin', () => {
         expect(someUUIDGenerator).toHaveBeenCalledTimes(1 + 3);
     });
 
-    it('should update the location when sending a pageview with the page parameter', async () => {
+    it('should update the location when sending a pageview with the page parameter', () => {
         const payload = {
             page: '/somepage',
         };
 
-        const pageview = await executeRegisteredHook(ECPluginEventTypes.pageview, payload);
-        const event = await executeRegisteredHook(ECPluginEventTypes.event, {});
+        const pageview = executeRegisteredHook(ECPluginEventTypes.pageview, payload);
+        const event = executeRegisteredHook(ECPluginEventTypes.event, {});
 
         expect(pageview).toEqual({
             ...defaultResult,
@@ -496,7 +496,10 @@ describe('EC plugin', () => {
     });
 
     const executeRegisteredHook = (eventType: string, payload: any) => {
-        const [hook] = client.registerBeforeSendEventHook.mock.calls[0];
-        return hook(eventType, payload);
+        const [beforeHook] = client.registerBeforeSendEventHook.mock.calls[0];
+        const [afterHook] = client.registerAfterSendEventHook.mock.calls[0];
+        const result = beforeHook(eventType, payload);
+        afterHook(eventType, result);
+        return result;
     };
 });

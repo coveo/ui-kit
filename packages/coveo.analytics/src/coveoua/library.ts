@@ -6,7 +6,7 @@ import * as storage from '../storage';
 export {CoveoAnalyticsClient, AnalyticsClientSendEventHook} from '../client/analytics';
 export {PreprocessAnalyticsRequest} from '../client/analyticsRequestClient';
 export {IRuntimeEnvironment} from '../client/runtimeEnvironment';
-export {CoveoUA, handleOneAnalyticsEvent} from './simpleanalytics';
+export {CoveoUA, getCurrentClient, handleOneAnalyticsEvent} from './simpleanalytics';
 export {CoveoSearchPageClient, SearchPageClientProvider} from '../searchPage/searchPageClient';
 
 export {analytics, donottrack, history, SimpleAnalytics, storage};

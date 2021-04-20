@@ -4,7 +4,7 @@ global.crypto = {
 };
 
 const documentMock = {
-    referrer: 'http://somewhere.over/therainbow',
+    referrer: 'http://somewhere.over/thereferrer',
     title: 'MAH PAGE',
     characterSet: 'UTF-8',
 };

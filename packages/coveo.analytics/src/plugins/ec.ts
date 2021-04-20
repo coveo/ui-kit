@@ -94,6 +94,12 @@ export class ECPlugin extends BasePlugin {
         this.client.registerBeforeSendEventHook((eventType, ...[payload]) => {
             return allECEventTypes.indexOf(eventType) !== -1 ? this.addECDataToPayload(eventType, payload) : payload;
         });
+        this.client.registerAfterSendEventHook((eventType, ...[payload]) => {
+            if (allECEventTypes.indexOf(eventType) !== -1) {
+                this.updateLocationInformation(eventType, payload);
+            };
+            return payload;
+        });
     }
 
     private addHooksForPageView() {
