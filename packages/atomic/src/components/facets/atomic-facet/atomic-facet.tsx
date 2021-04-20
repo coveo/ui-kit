@@ -196,7 +196,7 @@ export class AtomicFacet
       <div class="flex" aria-hidden>
         <span
           part="value-label"
-          class="ellipsed"
+          class="ellipsed search-result-highlight"
           innerHTML={FacetSearch.highlightSearchResult(
             searchResult.displayValue,
             this.facetSearchQuery
