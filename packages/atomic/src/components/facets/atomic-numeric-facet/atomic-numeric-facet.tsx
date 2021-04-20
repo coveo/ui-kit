@@ -25,11 +25,15 @@ import {
 /**
  * The `atomic-numeric-facet` component displays values as numeric ranges. In mobile browsers, this is rendered as a button which opens a facet modal.
  *
- * @part facet - The wrapping div for the entire facet
- * @part facet-values - The list of facet values
- * @part facet-value - A single facet value
- * @part close-button - The button to close the facet when displayed modally _(mobile only)_
- * @part reset-button - The button that resets the actively selected facet values
+ *
+ * @part facet - The wrapper for the entire facet
+ * @part close-button - The button to close the facet when displayed modally (mobile only)
+ * @part clear-button - The button that resets the actively selected facet values
+ *
+ * @part placeholder - The placeholder shown before the first search is executed.
+ * @part value - A single facet value
+ * @part value-label - The facet value label
+ * @part value-count - The facet value count
  *
  */
 @Component({
