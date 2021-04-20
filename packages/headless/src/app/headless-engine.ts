@@ -16,7 +16,7 @@ import {
   PreprocessRequestMiddleware,
 } from '../api/platform-client';
 import {NoopPreprocessRequest} from '../api/preprocess-request';
-import {BooleanValue, RecordValue, Schema, StringValue} from '@coveo/bueno';
+import {RecordValue, Schema, StringValue} from '@coveo/bueno';
 import {validatePayloadAndThrow} from '../utils/validate-payload';
 import {
   NoopPostprocessFacetSearchResponseMiddleware,
@@ -28,13 +28,17 @@ import {
 } from '../api/search/search-api-client-middleware';
 import {AnalyticsClientSendEventHook} from 'coveo.analytics';
 import {createReducerManager, ReducerManager} from './reducer-manager';
-import {Engine, CoreOptions, CoreConfigurationOptions} from './core-engine';
+import {Engine, EngineOptions} from './engine';
+import {
+  engineConfigurationOptionDefinitions,
+  EngineConfigurationOptions,
+} from './engine-configuration-options';
 
 /**
  * The global headless engine options.
  */
 export interface HeadlessOptions<Reducers extends ReducersMapObject>
-  extends CoreOptions<Reducers> {
+  extends EngineOptions<Reducers> {
   /**
    * The global headless engine configuration options.
    */
@@ -44,7 +48,8 @@ export interface HeadlessOptions<Reducers extends ReducersMapObject>
 /**
  * The global headless engine configuration options.
  */
-export interface HeadlessConfigurationOptions extends CoreConfigurationOptions {
+export interface HeadlessConfigurationOptions
+  extends EngineConfigurationOptions {
   /**
    * The global headless engine configuration options specific to the SearchAPI.
    */
@@ -139,18 +144,7 @@ export class HeadlessEngine<Reducers extends ReducersMapObject>
       Please use the "preprocessRequest" option instead, which works for both the Search and Analytics API requests.`);
     }
     const configurationSchema = new Schema<HeadlessConfigurationOptions>({
-      organizationId: new StringValue({
-        required: true,
-        emptyAllowed: false,
-      }),
-      accessToken: new StringValue({
-        required: true,
-        emptyAllowed: false,
-      }),
-      platformUrl: new StringValue({
-        required: false,
-        emptyAllowed: false,
-      }),
+      ...engineConfigurationOptionDefinitions,
       search: new RecordValue({
         options: {
           required: false,
@@ -165,22 +159,6 @@ export class HeadlessEngine<Reducers extends ReducersMapObject>
             emptyAllowed: false,
           }),
           locale: localeValidation,
-        },
-      }),
-      analytics: new RecordValue({
-        options: {
-          required: false,
-        },
-        values: {
-          enabled: new BooleanValue({
-            required: false,
-          }),
-          originLevel2: new StringValue({
-            required: false,
-          }),
-          originLevel3: new StringValue({
-            required: false,
-          }),
         },
       }),
     });
