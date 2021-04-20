@@ -28,13 +28,27 @@ import {FacetSearch, FacetSearchComponent} from '../facet-search/facet-search';
 /**
  * The `atomic-category-facet` displays a facet of values in a hierarchical fashion. In mobile browsers, this is rendered as a button which opens a facet modal.
  *
- * @part facet - The wrapping div for the entire facet
- * @part facet-values - The list of facet values (children)
- * @part facet-value - A single facet value
+ *
+ * @part facet - The wrapper for the entire facet
  * @part close-button - The button to close the facet when displayed modally (mobile only)
- * @part reset-button - The button that resets the actively selected facet values
+ * @part clear-button - The button that resets the actively selected facet values
+ *
+ * @part search-input - The search input
+ * @part search-icon - The magnifier icon of the input
+ * @part search-input-clear-button - The clear button of the input
+ * @part search-results - The list of search results
+ * @part search-result - A search result
+ * @part active-search-result - The currently active search result
+ *
+ * @part parent - A parent element
+ * @part active-parent - The currently active parent element
+ * @part child - A child element
+ * @part value-label - The facet value label
+ * @part value-count - The facet value count
  * @part show-more - The show more results button
  * @part show-less - The show less button
+ * @part placeholder - The placeholder shown before the first search is executed
+ *
  */
 @Component({
   tag: 'atomic-category-facet',
