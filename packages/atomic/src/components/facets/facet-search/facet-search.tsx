@@ -23,7 +23,6 @@ export interface FacetSearchComponent {
 }
 
 export class FacetSearch {
-  private static ShowMoreResultsValue = -1;
   private inputRef!: HTMLInputElement;
   private valuesRef!: HTMLElement;
   private containerRef!: HTMLElement;
@@ -36,19 +35,13 @@ export class FacetSearch {
       containerRef: () => this.containerRef,
       inputRef: () => this.inputRef,
       valuesRef: () => this.valuesRef,
-      onChange: (value) => {
-        this.component.showFacetSearchResults = true;
-        this.text = value;
-      },
+      onChange: (value) => this.onChange(value),
       onSubmit: () => {},
       onSelectValue: (element) => {
         const value = (element as HTMLLIElement).value;
-        if (value === FacetSearch.ShowMoreResultsValue) {
-          return this.facetSearchController.showMoreResults();
-        }
         this.onSelectValue(value);
       },
-      onBlur: () => (this.component.showFacetSearchResults = false),
+      onBlur: () => this.onBlur(),
       activeClass: 'active-search-result',
       activePartName: 'active-search-result',
     });
@@ -88,20 +81,31 @@ export class FacetSearch {
   private set text(text: string) {
     this.component.facetSearchQuery = text;
     this.facetSearchController.updateText(text);
+  }
+
+  private triggerSearch() {
     this.facetSearchController.search();
+  }
+
+  private onChange(value: string) {
+    this.text = value;
+    this.triggerSearch();
   }
 
   public onSelectValue(index: number) {
     this.facetSearchController.select(this.facetSearchResults[index]);
     this.text = '';
-    this.combobox.onInputBlur();
+    this.inputRef.blur();
   }
 
   private onFocus() {
     this.component.showFacetSearchResults = true;
-    if (this.facetSearchState.values.length === 0) {
-      this.facetSearchController.search();
-    }
+    this.triggerSearch();
+  }
+
+  private onBlur() {
+    this.component.showFacetSearchResults = false;
+    this.text = '';
   }
 
   private onValuesScroll() {
@@ -128,6 +132,7 @@ export class FacetSearch {
         onClick={() => {
           this.text = '';
           this.inputRef.focus();
+          this.triggerSearch();
         }}
       >
         <div
@@ -175,7 +180,8 @@ export class FacetSearch {
   }
 
   private get searchResults() {
-    const showResults = this.component.showFacetSearchResults;
+    const showResults =
+      this.component.showFacetSearchResults && !this.facetSearchState.isLoading;
     return (
       <ul
         part="search-results"
