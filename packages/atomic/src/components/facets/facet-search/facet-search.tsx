@@ -169,7 +169,11 @@ export class FacetSearch {
   }
 
   private get resultList() {
-    if (!this.facetSearchResults.length && !this.facetSearchState.isLoading) {
+    if (
+      this.component.showFacetSearchResults &&
+      !this.facetSearchResults.length &&
+      !this.facetSearchState.isLoading
+    ) {
       return (
         <li part="search-no-results" class="search-result">
           {this.strings.noValuesFound()}
