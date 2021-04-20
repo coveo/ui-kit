@@ -1,5 +1,5 @@
 import {RecordValue, Schema} from '@coveo/bueno';
-import {Engine} from '../../app/headless-engine';
+import {Engine} from '../../app/engine';
 import {partitionIntoParentsAndValues} from '../../features/facets/category-facet-set/category-facet-utils';
 import {FacetValueRequest} from '../../features/facets/facet-set/interfaces/request';
 import {getDebugInitialState} from '../../features/debug/debug-state';

@@ -1,5 +1,5 @@
 import {NumberValue, Schema} from '@coveo/bueno';
-import {Engine} from '../../app/headless-engine';
+import {Engine} from '../../app/engine';
 import {
   registerNumberOfResults,
   updateNumberOfResults,

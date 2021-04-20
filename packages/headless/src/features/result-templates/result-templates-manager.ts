@@ -7,7 +7,7 @@ import {
   SchemaValidationError,
   StringValue,
 } from '@coveo/bueno';
-import {Engine} from '../../app/headless-engine';
+import {Engine} from '../../app/engine';
 import {registerFieldsToInclude} from '../fields/fields-actions';
 import {SearchAppState} from '../../state/search-app-state';
 

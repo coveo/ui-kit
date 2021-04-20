@@ -1,4 +1,4 @@
-import {Engine} from '../../app/headless-engine';
+import {Engine} from '../../app/engine';
 import {selectQuerySuggestion} from '../../features/query-suggest/query-suggest-actions';
 import {updateQuery} from '../../features/query/query-actions';
 import {checkForRedirection} from '../../features/redirection/redirection-actions';

@@ -2,7 +2,7 @@ import {
   buildController,
   Controller,
 } from '../../controller/headless-controller';
-import {Engine} from '../../../app/headless-engine';
+import {Engine} from '../../../app/engine';
 import {
   registerFacet,
   deselectAllFacetValues,

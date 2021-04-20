@@ -1,4 +1,4 @@
-import {Engine} from '../../app/headless-engine';
+import {Engine} from '../../app/engine';
 import {buildController, Controller} from '../controller/headless-controller';
 import {executeSearch} from '../../features/search/search-actions';
 import {logInterfaceChange} from '../../features/analytics/analytics-actions';

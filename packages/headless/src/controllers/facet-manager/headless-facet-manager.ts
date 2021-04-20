@@ -1,4 +1,4 @@
-import {Engine} from '../../app/headless-engine';
+import {Engine} from '../../app/engine';
 import {SearchSection} from '../../state/state-sections';
 import {sortFacets} from '../../utils/facet-utils';
 import {buildController, Controller} from '../controller/headless-controller';
