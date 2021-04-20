@@ -148,25 +148,6 @@ export class FacetSearch {
     );
   }
 
-  // TODO: remove show more
-  private get showMoreSearchResults() {
-    if (!this.facetSearchState.moreValuesAvailable) {
-      return null;
-    }
-
-    return (
-      <li class="search-result text-primary">
-        <button
-          onClick={() => this.facetSearchController.showMoreResults()}
-          onMouseDown={(e) => e.preventDefault()}
-          value={FacetSearch.ShowMoreResultsValue}
-        >
-          {this.strings.showMore()}
-        </button>
-      </li>
-    );
-  }
-
   private get resultList() {
     return this.facetSearchResults.map((searchResult, index) => (
       <li part="search-result" class="search-result">
@@ -192,7 +173,6 @@ export class FacetSearch {
         ref={(el) => (this.valuesRef = el as HTMLElement)}
       >
         {this.resultList}
-        {this.showMoreSearchResults}
       </ul>
     );
   }
