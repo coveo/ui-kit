@@ -115,18 +115,15 @@ export function buildEngine<Reducers extends ReducersMapObject>(
   thunkExtraArguments: SearchAPIClientArgument,
   logger: Logger
 ): Engine<StateFromReducersMapObject<Reducers>> {
-  const {configuration, reducers} = options;
-  const reducerManager = createReducerManager(reducers);
-  const store = createStore(
-    options,
-    thunkExtraArguments,
-    logger,
-    reducerManager
-  );
+  const engine = buildCoreEngine(options, thunkExtraArguments, logger);
+  const {
+    accessToken,
+    organizationId,
+    platformUrl,
+    analytics,
+  } = options.configuration;
 
-  const {accessToken, organizationId, platformUrl, analytics} = configuration;
-
-  store.dispatch(
+  engine.dispatch(
     updateBasicConfiguration({
       accessToken,
       organizationId,
@@ -136,8 +133,25 @@ export function buildEngine<Reducers extends ReducersMapObject>(
 
   if (analytics) {
     const {analyticsClientMiddleware, ...rest} = analytics;
-    store.dispatch(updateAnalyticsConfiguration(rest));
+    engine.dispatch(updateAnalyticsConfiguration(rest));
   }
+
+  return engine;
+}
+
+function buildCoreEngine<Reducers extends ReducersMapObject>(
+  options: EngineOptions<Reducers>,
+  thunkExtraArguments: SearchAPIClientArgument,
+  logger: Logger
+): Engine<StateFromReducersMapObject<Reducers>> {
+  const {configuration, reducers} = options;
+  const reducerManager = createReducerManager(reducers);
+  const store = createStore(
+    options,
+    thunkExtraArguments,
+    logger,
+    reducerManager
+  );
 
   return {
     renewAccessToken: createRenewAccessTokenFunction(
