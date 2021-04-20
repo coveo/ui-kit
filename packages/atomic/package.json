@@ -9,7 +9,7 @@
   "types": "dist/types/index.d.ts",
   "collection": "dist/collection/collection-manifest.json",
   "collection:main": "dist/collection/index.js",
-  "unpkg": "dist/atomic/atomic.js",
+  "unpkg": "dist/atomic/atomic.esm.js",
   "files": [
     "dist/",
     "loader/"
