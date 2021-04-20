@@ -13,7 +13,7 @@ const measurementProtocolKeysMapping: {[name: string]: string} = {
 };
 
 export const convertKeysToMeasurementProtocol = (params: any) => {
-    const keysMappingForAction = !!params.action ? commerceActionKeysMappingPerAction[params.action] : {};
+    const keysMappingForAction = (!!params.action && commerceActionKeysMappingPerAction[params.action]) || {};
     return keysOf(params).reduce((mappedKeys, key) => {
         const newKey = keysMappingForAction[key] || measurementProtocolKeysMapping[key] || key;
         return {

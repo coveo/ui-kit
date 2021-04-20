@@ -115,6 +115,23 @@ describe('ec events', () => {
         });
     });
 
+    it('can send a product impression event', async () => {
+        coveoua('ec:addProduct', {name: 'wow', id: 'something', brand: 'brand', unknown: 'ok'});
+        coveoua('ec:setAction', 'impression');
+        await coveoua('send', 'event');
+
+        const [body] = getParsedBody();
+
+        expect(body).toEqual({
+            ...defaultContextValues,
+            t: 'event',
+            pr1nm: 'wow',
+            pr1id: 'something',
+            pr1br: 'brand',
+            pa: 'impression',
+        });
+    });
+
     it('can send a pageview event with options', async () => {
         await coveoua('send', 'pageview', 'page', {
             title: 'wow',
@@ -150,6 +167,22 @@ describe('ec events', () => {
             dt: 'wow',
             dl: 'http://right.here',
             verycustom: 'value',
+        });
+    });
+
+    it("doesn't crash when sending an unknown action", async () => {
+        coveoua('ec:addProduct', {name: 'wow', id: 'something', brand: 'brand', unknown: 'ok'});
+        coveoua('ec:setAction', 'bloup');
+        await coveoua('send', 'event');
+
+        const [body] = getParsedBody();
+
+        expect(body).toEqual({
+            ...defaultContextValues,
+            t: 'event',
+            pr1nm: 'wow',
+            pr1id: 'something',
+            pr1br: 'brand',
         });
     });
 
