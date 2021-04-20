@@ -66,11 +66,12 @@ export interface SearchParameterManagerState {
  * @returns A `SearchParameterManager` controller instance.
  */
 export function buildSearchParameterManager(
-  engine: Engine<Partial<SearchParametersState>>,
+  engine: Engine<object>,
   props: SearchParameterManagerProps
 ): SearchParameterManager {
   const {dispatch} = engine;
   const controller = buildController(engine);
+  const getState = () => engine.state;
 
   validateInitialState(
     engine,
@@ -84,7 +85,7 @@ export function buildSearchParameterManager(
     ...controller,
 
     get state() {
-      const state = engine.state;
+      const state = getState();
       const parameters: SearchParameters = {
         ...getQ(state),
         ...getEnableQuerySyntax(state),
