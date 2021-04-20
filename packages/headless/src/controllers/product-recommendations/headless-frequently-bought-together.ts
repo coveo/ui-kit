@@ -1,8 +1,4 @@
 import {Engine} from '../../app/engine';
-import {
-  ConfigurationSection,
-  ProductRecommendationsSection,
-} from '../../state/state-sections';
 import {Schema, SchemaValues, StringValue} from '@coveo/bueno';
 import {
   baseProductRecommendationsOptionsSchema,
@@ -31,7 +27,7 @@ export type FrequentlyBoughtTogetherList = ReturnType<
 export type FrequentlyBoughtTogetherListState = FrequentlyBoughtTogetherList['state'];
 
 export const buildFrequentlyBoughtTogetherList = (
-  engine: Engine<ProductRecommendationsSection & ConfigurationSection>,
+  engine: Engine<object>,
   props: FrequentlyBoughtTogetherListProps
 ) => {
   const options = validateOptions(

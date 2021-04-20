@@ -1,5 +1,7 @@
 import {Engine} from '../../app/engine';
+import {pagination, search} from '../../app/reducers';
 import {PaginationSection, SearchSection} from '../../state/state-sections';
+import {loadReducerError} from '../../utils/errors';
 import {buildController, Controller} from '../controller/headless-controller';
 import {
   buildSearchStatus,
@@ -62,11 +64,14 @@ export interface QuerySummaryState extends SearchStatusState {
  *
  * @param engine - The headless engine instance.
  */
-export function buildQuerySummary(
-  engine: Engine<SearchSection & PaginationSection>
-): QuerySummary {
+export function buildQuerySummary(engine: Engine<object>): QuerySummary {
+  if (!loadQuerySummaryReducers(engine)) {
+    throw loadReducerError;
+  }
+
   const controller = buildController(engine);
   const searchStatus = buildSearchStatus(engine);
+  const getState = () => engine.state;
 
   const durationInSeconds = () => {
     const state = engine.state;
@@ -78,7 +83,8 @@ export function buildQuerySummary(
     ...controller,
 
     get state() {
-      const state = engine.state;
+      const state = getState();
+
       return {
         ...searchStatus.state,
         durationInMilliseconds: state.search.duration,
@@ -92,4 +98,11 @@ export function buildQuerySummary(
       };
     },
   };
+}
+
+function loadQuerySummaryReducers(
+  engine: Engine<object>
+): engine is Engine<SearchSection & PaginationSection> {
+  engine.addReducers({search, pagination});
+  return true;
 }

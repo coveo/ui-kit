@@ -38,6 +38,14 @@ import {
 import {toggleSelectDateFacetValue} from '../../features/facets/range-facets/date-facet-set/date-facet-actions';
 import {toggleSelectNumericFacetValue} from '../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions';
 import {deselectAllCategoryFacetValues} from '../../features/facets/category-facet-set/category-facet-set-actions';
+import {
+  configuration,
+  search,
+  facetSet,
+  numericFacetSet,
+  dateFacetSet,
+  categoryFacetSet,
+} from '../../app/reducers';
 
 describe('headless breadcrumb manager', () => {
   const facetId = 'abc123';
@@ -53,6 +61,17 @@ describe('headless breadcrumb manager', () => {
   beforeEach(() => {
     state = createMockState();
     initController();
+  });
+
+  it('it adds the correct reducers to engine', () => {
+    expect(engine.addReducers).toHaveBeenCalledWith({
+      configuration,
+      search,
+      facetSet,
+      numericFacetSet,
+      dateFacetSet,
+      categoryFacetSet,
+    });
   });
 
   describe('facet breadcrumbs', () => {

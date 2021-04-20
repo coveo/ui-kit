@@ -138,7 +138,7 @@ export interface PagerState {
  * @returns A `Pager` controller instance.
  * */
 export function buildPager(
-  engine: Engine<unknown>,
+  engine: Engine<object>,
   props: PagerProps = {}
 ): Pager {
   if (!loadPagerReducers(engine)) {
@@ -219,7 +219,7 @@ export function buildPager(
 }
 
 function loadPagerReducers(
-  engine: Engine<unknown>
+  engine: Engine<object>
 ): engine is Engine<PaginationSection & ConfigurationSection> {
   engine.addReducers({configuration, pagination});
   return true;

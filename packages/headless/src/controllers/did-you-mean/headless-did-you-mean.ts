@@ -14,6 +14,8 @@ import {
   QueryCorrection,
   WordCorrection,
 } from '../../api/search/search/query-corrections';
+import {loadReducerError} from '../../utils/errors';
+import {configuration, didYouMean} from '../../app/reducers';
 
 export {QueryCorrection, WordCorrection};
 
@@ -63,19 +65,23 @@ export interface DidYouMeanState {
  *
  * @param engine - The headless engine.
  */
-export function buildDidYouMean(
-  engine: Engine<ConfigurationSection & DidYouMeanSection>
-): DidYouMean {
+export function buildDidYouMean(engine: Engine<object>): DidYouMean {
+  if (!loadDidYouMeanReducers(engine)) {
+    throw loadReducerError;
+  }
+
   const controller = buildController(engine);
   const {dispatch} = engine;
 
   dispatch(enableDidYouMean());
 
+  const getState = () => engine.state;
+
   return {
     ...controller,
 
     get state() {
-      const state = engine.state;
+      const state = getState();
 
       return {
         originalQuery: state.didYouMean.originalQuery,
@@ -95,4 +101,11 @@ export function buildDidYouMean(
       dispatch(executeSearch(logDidYouMeanClick()));
     },
   };
+}
+
+function loadDidYouMeanReducers(
+  engine: Engine<object>
+): engine is Engine<ConfigurationSection & DidYouMeanSection> {
+  engine.addReducers({configuration, didYouMean});
+  return true;
 }

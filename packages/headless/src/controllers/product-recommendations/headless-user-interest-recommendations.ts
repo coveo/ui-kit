@@ -1,8 +1,4 @@
 import {Engine} from '../../app/engine';
-import {
-  ConfigurationSection,
-  ProductRecommendationsSection,
-} from '../../state/state-sections';
 import {Schema, SchemaValues} from '@coveo/bueno';
 import {
   baseProductRecommendationsOptionsSchema,
@@ -30,7 +26,7 @@ export type UserInterestRecommendationsList = ReturnType<
 export type UserInterestRecommendationsListState = UserInterestRecommendationsList['state'];
 
 export function buildUserInterestRecommendationsList(
-  engine: Engine<ProductRecommendationsSection & ConfigurationSection>,
+  engine: Engine<object>,
   props: UserInterestRecommendationsListProps
 ) {
   const options = validateOptions(
