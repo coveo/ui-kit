@@ -8,15 +8,17 @@ import {
   Middleware,
 } from '@reduxjs/toolkit';
 import {AnalyticsClientSendEventHook} from 'coveo.analytics';
-import pino, {LevelWithSilent, Logger, LogEvent} from 'pino';
 import {debounce} from 'ts-debounce';
 import {NoopPreprocessRequest} from '../api/preprocess-request';
+import {SearchAPIClient} from '../api/search/search-api-client';
 import {updateBasicConfiguration} from '../features/configuration/configuration-actions';
 import {SearchAppState} from '../state/search-app-state';
 import {validatePayloadAndThrow} from '../utils/validate-payload';
 import {EngineConfigurationOptions} from './engine-configuration-options';
 import {createReducerManager, ReducerManager} from './reducer-manager';
 import {ThunkExtraArguments, Store, configureStore} from './store';
+import {LoggerOptions} from './logger';
+import {Logger} from 'pino';
 
 type EngineDispatch<State> = ThunkDispatch<
   State,
@@ -66,8 +68,6 @@ export interface Engine<State = SearchAppState> {
   addReducers(reducers: ReducersMapObject): void;
 }
 
-export type LogLevel = LevelWithSilent;
-
 export interface EngineOptions<Reducers extends ReducersMapObject> {
   /**
    * The global headless engine configuration options.
@@ -103,28 +103,16 @@ export interface EngineOptions<Reducers extends ReducersMapObject> {
   loggerOptions?: LoggerOptions;
 }
 
-interface LoggerOptions {
-  /**
-   * By default, is set to `warn`.
-   */
-  level?: LogLevel;
-  /**
-   * Changes the shape of the log object. This function will be called every time one of the log methods (such as `.info`) is called.
-   * All arguments passed to the log method, except the message, will be pass to this function. By default it does not change the shape of the log object.
-   */
-  logFormatter?: (object: object) => object;
-  /**
-   * Function which will be called after writing the log message in the browser.
-   */
-  browserPostLogHook?: (level: LogLevel, logEvent: LogEvent) => void;
+interface SearchAPIClientArgument {
+  searchAPIClient: SearchAPIClient;
 }
 
 export function buildEngine<Reducers extends ReducersMapObject>(
   options: EngineOptions<Reducers>,
-  thunkExtraArguments: ThunkExtraArguments
-): Engine {
-  const {configuration, loggerOptions, reducers} = options;
-  const logger = createLogger(loggerOptions);
+  thunkExtraArguments: SearchAPIClientArgument,
+  logger: Logger
+): Engine<StateFromReducersMapObject<Reducers>> {
+  const {configuration, reducers} = options;
   const reducerManager = createReducerManager(reducers);
   const store = createStore(
     options,
@@ -165,24 +153,9 @@ export function buildEngine<Reducers extends ReducersMapObject>(
   };
 }
 
-function createLogger(options: LoggerOptions | undefined) {
-  return pino({
-    name: '@coveo/headless',
-    level: options?.level || 'warn',
-    formatters: {
-      log: options?.logFormatter,
-    },
-    browser: {
-      transmit: {
-        send: options?.browserPostLogHook || (() => {}),
-      },
-    },
-  });
-}
-
 function createStore<Reducers extends ReducersMapObject>(
   options: EngineOptions<Reducers>,
-  thunkExtraArguments: ThunkExtraArguments,
+  thunkExtraArguments: SearchAPIClientArgument,
   logger: Logger,
   reducerManager: ReducerManager
 ) {
@@ -201,6 +174,7 @@ function createStore<Reducers extends ReducersMapObject>(
       analyticsClientMiddleware,
       validatePayload,
       preprocessRequest,
+      ...thunkExtraArguments,
     },
   });
 }

@@ -1,4 +1,4 @@
-import {HeadlessEngine, HeadlessOptions, Engine} from './headless-engine';
+import {HeadlessEngine, HeadlessOptions} from './headless-engine';
 import {
   updateBasicConfiguration,
   updateSearchConfiguration,
@@ -10,6 +10,7 @@ import pino from 'pino';
 import {validatePayloadAndThrow} from '../utils/validate-payload';
 import {buildMockSearchAPIClient} from '../test/mock-search-api-client';
 import {combineReducers} from '@reduxjs/toolkit';
+import {Engine} from './engine';
 
 describe('headless engine', () => {
   let options: HeadlessOptions<typeof searchAppReducers>;

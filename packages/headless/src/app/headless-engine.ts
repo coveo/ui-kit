@@ -7,17 +7,14 @@ import {
   updateAnalyticsConfiguration,
   localeValidation,
 } from '../features/configuration/configuration-actions';
-import {configureStore, Store} from './store';
 import {SearchAPIClient} from '../api/search/search-api-client';
-import {debounce} from 'ts-debounce';
-import pino, {Logger} from 'pino';
+import {Logger} from 'pino';
 import {
   NoopPreprocessRequestMiddleware,
   PreprocessRequestMiddleware,
 } from '../api/platform-client';
 import {NoopPreprocessRequest} from '../api/preprocess-request';
 import {RecordValue, Schema, StringValue} from '@coveo/bueno';
-import {validatePayloadAndThrow} from '../utils/validate-payload';
 import {
   NoopPostprocessFacetSearchResponseMiddleware,
   NoopPostprocessQuerySuggestResponseMiddleware,
@@ -26,13 +23,12 @@ import {
   PostprocessQuerySuggestResponseMiddleware,
   PostprocessSearchResponseMiddleware,
 } from '../api/search/search-api-client-middleware';
-import {AnalyticsClientSendEventHook} from 'coveo.analytics';
-import {createReducerManager, ReducerManager} from './reducer-manager';
-import {Engine, EngineOptions} from './engine';
+import {buildEngine, Engine, EngineOptions} from './engine';
 import {
   engineConfigurationOptionDefinitions,
   EngineConfigurationOptions,
 } from './engine-configuration-options';
+import {createLogger} from './logger';
 
 /**
  * The global headless engine options.
@@ -101,17 +97,17 @@ export interface HeadlessConfigurationOptions
  */
 export class HeadlessEngine<Reducers extends ReducersMapObject>
   implements Engine<StateFromReducersMapObject<Reducers>> {
-  private reduxStore!: Store;
   public logger!: Logger;
-  private reducerManager!: ReducerManager;
+  private engine: Engine<StateFromReducersMapObject<Reducers>>;
 
   constructor(private options: HeadlessOptions<Reducers>) {
-    this.initLogger();
     this.validateConfiguration(options);
-    this.initReducerManager();
-    this.initStore();
 
-    this.reduxStore.dispatch(
+    this.logger = createLogger(options.loggerOptions);
+    const searchAPIClient = this.createSearchAPIClient();
+    this.engine = buildEngine(options, {searchAPIClient}, this.logger);
+
+    this.engine.dispatch(
       updateBasicConfiguration({
         accessToken: options.configuration.accessToken,
         platformUrl: options.configuration.platformUrl,
@@ -119,7 +115,7 @@ export class HeadlessEngine<Reducers extends ReducersMapObject>
       })
     );
     if (options.configuration.search) {
-      this.reduxStore.dispatch(
+      this.engine.dispatch(
         updateSearchConfiguration(options.configuration.search)
       );
     }
@@ -128,13 +124,12 @@ export class HeadlessEngine<Reducers extends ReducersMapObject>
         analyticsClientMiddleware,
         ...rest
       } = options.configuration.analytics;
-      this.reduxStore.dispatch(updateAnalyticsConfiguration(rest));
+      this.engine.dispatch(updateAnalyticsConfiguration(rest));
     }
   }
 
   public addReducers(reducers: ReducersMapObject) {
-    this.reducerManager.add(reducers);
-    this.reduxStore.replaceReducer(this.reducerManager.combinedReducer);
+    this.engine.addReducers(reducers);
   }
 
   private validateConfiguration(options: HeadlessOptions<Reducers>) {
@@ -170,56 +165,26 @@ export class HeadlessEngine<Reducers extends ReducersMapObject>
     }
   }
 
-  private initLogger() {
-    this.logger = pino({
-      name: '@coveo/headless',
-      level: this.options.loggerOptions?.level || 'warn',
-      formatters: {
-        log: this.options.loggerOptions?.logFormatter,
-      },
-      browser: {
-        transmit: {
-          send: this.options.loggerOptions?.browserPostLogHook || (() => {}),
-        },
-      },
-    });
-  }
-
-  private initReducerManager() {
-    this.reducerManager = createReducerManager(this.options.reducers);
-  }
-
-  private initStore() {
+  private createSearchAPIClient() {
     const {search} = this.options.configuration;
     const preprocessRequest =
       this.options.configuration.preprocessRequest || NoopPreprocessRequest;
-    this.reduxStore = configureStore({
-      preloadedState: this.options.preloadedState,
-      reducer: this.reducerManager.combinedReducer,
-      middlewares: this.options.middlewares,
-      thunkExtraArguments: {
-        searchAPIClient: new SearchAPIClient({
-          logger: this.logger,
-          renewAccessToken: () => this.renewAccessToken(),
-          preprocessRequest,
-          deprecatedPreprocessRequest:
-            search?.preprocessRequestMiddleware ||
-            NoopPreprocessRequestMiddleware,
-          postprocessSearchResponseMiddleware:
-            search?.preprocessSearchResponseMiddleware ||
-            NoopPostprocessSearchResponseMiddleware,
-          postprocessFacetSearchResponseMiddleware:
-            search?.preprocessFacetSearchResponseMiddleware ||
-            NoopPostprocessFacetSearchResponseMiddleware,
-          postprocessQuerySuggestResponseMiddleware:
-            search?.preprocessQuerySuggestResponseMiddleware ||
-            NoopPostprocessQuerySuggestResponseMiddleware,
-        }),
-        analyticsClientMiddleware: this.analyticsClientMiddleware(this.options),
-        logger: this.logger,
-        validatePayload: validatePayloadAndThrow,
-        preprocessRequest,
-      },
+
+    return new SearchAPIClient({
+      logger: this.logger,
+      renewAccessToken: () => this.renewAccessToken(),
+      preprocessRequest,
+      deprecatedPreprocessRequest:
+        search?.preprocessRequestMiddleware || NoopPreprocessRequestMiddleware,
+      postprocessSearchResponseMiddleware:
+        search?.preprocessSearchResponseMiddleware ||
+        NoopPostprocessSearchResponseMiddleware,
+      postprocessFacetSearchResponseMiddleware:
+        search?.preprocessFacetSearchResponseMiddleware ||
+        NoopPostprocessFacetSearchResponseMiddleware,
+      postprocessQuerySuggestResponseMiddleware:
+        search?.preprocessQuerySuggestResponseMiddleware ||
+        NoopPostprocessQuerySuggestResponseMiddleware,
     });
   }
 
@@ -252,54 +217,22 @@ export class HeadlessEngine<Reducers extends ReducersMapObject>
   }
 
   get store() {
-    return this.reduxStore;
+    return this.engine.store;
   }
 
-  get dispatch(): EngineDispatch<StateFromReducersMapObject<Reducers>> {
-    return this.reduxStore.dispatch;
+  get dispatch() {
+    return this.engine.dispatch;
   }
 
   get subscribe() {
-    return this.reduxStore.subscribe;
+    return this.engine.subscribe;
   }
 
   get state() {
-    return this.reduxStore.getState() as StateFromReducersMapObject<Reducers>;
+    return this.engine.state;
   }
-
-  private accessTokenRenewalsAttempts = 0;
-
-  private resetRenewalTriesAfterDelay = debounce(
-    () => (this.accessTokenRenewalsAttempts = 0),
-    500
-  );
 
   public async renewAccessToken() {
-    if (!this.options.configuration.renewAccessToken) {
-      return '';
-    }
-
-    this.accessTokenRenewalsAttempts++;
-    this.resetRenewalTriesAfterDelay();
-    if (this.accessTokenRenewalsAttempts > 5) {
-      return '';
-    }
-
-    try {
-      const accessToken = await this.options.configuration.renewAccessToken();
-      this.dispatch(updateBasicConfiguration({accessToken}));
-      return accessToken;
-    } catch (error) {
-      return '';
-    }
-  }
-
-  private analyticsClientMiddleware(
-    options: HeadlessOptions<Reducers>
-  ): AnalyticsClientSendEventHook {
-    return (
-      options.configuration.analytics?.analyticsClientMiddleware ||
-      ((_, p) => p)
-    );
+    return await this.engine.renewAccessToken();
   }
 }
