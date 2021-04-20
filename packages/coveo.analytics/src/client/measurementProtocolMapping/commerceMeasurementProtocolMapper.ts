@@ -74,6 +74,7 @@ export const commerceActionKeysMappingPerAction: Record<string, {[name: string]:
     checkout: productActionsKeysMapping,
     checkout_option: productActionsKeysMapping,
     detail: productActionsKeysMapping,
+    impression: productActionsKeysMapping,
     remove: productActionsKeysMapping,
     refund: {
         ...productActionsKeysMapping,
