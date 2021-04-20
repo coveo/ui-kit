@@ -96,6 +96,10 @@ export class Combobox {
     return !!this.listbox.childElementCount;
   }
 
+  private scrollActiveDescendantIntoView() {
+    this.activeDescendantElement?.scrollIntoView(false);
+  }
+
   private focusNextValue() {
     if (!this.hasValues) {
       return;
@@ -103,6 +107,7 @@ export class Combobox {
 
     this.updateActiveDescendantElement(this.nextOfFirstValue);
     this.updateAccessibilityAttributes();
+    this.scrollActiveDescendantIntoView();
   }
 
   private get firstValue() {
@@ -124,6 +129,7 @@ export class Combobox {
 
     this.updateActiveDescendantElement(this.previousOrLastValue);
     this.updateAccessibilityAttributes();
+    this.scrollActiveDescendantIntoView();
   }
 
   private get lastValue() {
