@@ -7,6 +7,7 @@ import {
   removeContext,
 } from '../../features/context/context-actions';
 import {SearchAppState} from '../../state/search-app-state';
+import {contextReducer} from '../../features/context/context-slice';
 
 describe('Context', () => {
   let context: Context;
@@ -24,6 +25,12 @@ describe('Context', () => {
 
   it('initializes properly', () => {
     expect(context.state.values).toEqual({});
+  });
+
+  it('it adds the correct reducers to engine', () => {
+    expect(engine.addReducers).toHaveBeenCalledWith({
+      context: contextReducer,
+    });
   });
 
   it('setContext dispatches #setContext', () => {
