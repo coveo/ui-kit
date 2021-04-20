@@ -4,7 +4,7 @@ import {ResultContext} from '../result-template-decorators';
 import {sanitize} from '../../../utils/xss-utils';
 
 /**
- * The ResultText component renders the value of a string result field.
+ * The `atomic-result-text` component renders the value of a string result field.
  * @part result-text-highlight - The highlighted elements from the text value.
  */
 @Component({

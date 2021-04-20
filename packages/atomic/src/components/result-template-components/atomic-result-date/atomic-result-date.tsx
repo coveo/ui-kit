@@ -4,7 +4,7 @@ import dayjs from 'dayjs';
 import {ResultContext} from '../result-template-decorators';
 
 /**
- * The ResulDate component renders the value of a date result field.
+ * The `atomic-result-date` component renders the value of a date result field.
  */
 @Component({
   tag: 'atomic-result-date',
