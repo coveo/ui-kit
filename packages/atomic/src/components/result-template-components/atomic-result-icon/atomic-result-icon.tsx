@@ -5,9 +5,8 @@ import {objectTypeIcons} from './object-type-icons';
 import {fileTypeIcons} from './file-type-icons';
 
 /**
- * The ResultIcon component outputs the corresponding icon for a given file type.
- *
- * The component searches for a suitable icon or outputs a generic icon if none is found.
+ * The `atomic-result-icon` component outputs the corresponding icon for a given file type.
+ * The component searches for a suitable icon, or outputs a generic icon if the search is unsuccessful.
  */
 @Component({
   tag: 'atomic-result-icon',

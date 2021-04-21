@@ -7,7 +7,7 @@ import {
 } from '../../../utils/initialization-utils';
 
 /**
- * The ResultPrice component renders the value of a price result field.
+ * The `atomic-result-price` component renders the value of a price result field.
  */
 @Component({
   tag: 'atomic-result-price',

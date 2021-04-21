@@ -120,8 +120,17 @@ export namespace Components {
     interface AtomicFacetManager {
     }
     interface AtomicFieldCondition {
+        /**
+          * A list of conditions that must be fulfilled for this template to be selected
+         */
         "conditions": ResultTemplateCondition[];
+        /**
+          * Verifies if the specified fields are defined
+         */
         "ifDefined"?: string;
+        /**
+          * Verifies if the specified fields are not defined
+         */
         "ifNotDefined"?: string;
     }
     interface AtomicFrequentlyBoughtTogether {
@@ -756,8 +765,17 @@ declare namespace LocalJSX {
     interface AtomicFacetManager {
     }
     interface AtomicFieldCondition {
+        /**
+          * A list of conditions that must be fulfilled for this template to be selected
+         */
         "conditions"?: ResultTemplateCondition[];
+        /**
+          * Verifies if the specified fields are defined
+         */
         "ifDefined"?: string;
+        /**
+          * Verifies if the specified fields are not defined
+         */
         "ifNotDefined"?: string;
     }
     interface AtomicFrequentlyBoughtTogether {

@@ -11,6 +11,7 @@ import {buildMockSearchAppEngine, MockEngine} from '../../test/mock-engine';
 import {SearchAppState} from '../../state/search-app-state';
 import {registerQuerySetQuery} from '../../features/query-set/query-set-actions';
 import {selectQuerySuggestion} from '../../features/query-suggest/query-suggest-actions';
+import {configuration, query, redirection} from '../../app/reducers';
 
 describe('headless standalone searchBox', () => {
   const id = 'search-box-123';
@@ -41,6 +42,14 @@ describe('headless standalone searchBox', () => {
     engine = buildMockSearchAppEngine({state});
     searchBox = buildStandaloneSearchBox(engine, {options});
   }
+
+  it('it adds the correct reducers to engine', () => {
+    expect(engine.addReducers).toHaveBeenCalledWith({
+      redirection,
+      configuration,
+      query,
+    });
+  });
 
   it('when no id is passed, it creates an id prefixed with standalone_search_box', () => {
     options = {redirectionUrl: 'https://www.coveo.com/en/search'};

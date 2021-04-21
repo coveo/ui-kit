@@ -6,6 +6,9 @@ import {
   BindStateToI18n,
 } from '../../utils/initialization-utils';
 
+/**
+ * The `atomic-text` component leverages the I18n translation module through the atomic-search-interface.
+ */
 @Component({
   tag: 'atomic-text',
   shadow: true,

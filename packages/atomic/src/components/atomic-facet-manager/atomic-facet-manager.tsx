@@ -15,6 +15,9 @@ interface FacetElement extends HTMLElement {
   facetId: string;
 }
 
+/**
+ * The `atomic-facet-manager` helps reorder facets and their values to match the most recent search response with the most relevant results. A facet component is slotted within an `atomic-facet-manager` to leverage this functionality.
+ */
 @Component({
   tag: 'atomic-facet-manager',
   styleUrl: 'atomic-facet-manager.pcss',

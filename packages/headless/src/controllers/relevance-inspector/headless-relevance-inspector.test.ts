@@ -10,6 +10,7 @@ import {createMockState} from '../../test';
 import {buildMockSearchResponseWithDebugInfo} from '../../test/mock-search-response';
 import {rankingInformationSelector} from '../../features/debug/debug-selectors';
 import {executeSearch} from '../../features/search/search-actions';
+import {configuration, debug, search} from '../../app/reducers';
 
 describe('RelevanceInspector', () => {
   let engine: MockEngine<SearchAppState>;
@@ -26,6 +27,14 @@ describe('RelevanceInspector', () => {
 
   it('initializes correctly', () => {
     expect(buildRelevanceInspector(engine)).toBeTruthy();
+  });
+
+  it('it adds the correct reducers to engine', () => {
+    expect(engine.addReducers).toHaveBeenCalledWith({
+      debug,
+      search,
+      configuration,
+    });
   });
 
   it('when enabling debug, should call the listener', () => {

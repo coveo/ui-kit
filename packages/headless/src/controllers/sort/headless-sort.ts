@@ -15,6 +15,8 @@ import {logResultsSort} from '../../features/sort-criteria/sort-criteria-analyti
 import {ConfigurationSection, SortSection} from '../../state/state-sections';
 import {ArrayValue, isArray, Schema} from '@coveo/bueno';
 import {validateInitialState} from '../../utils/validate-payload';
+import {configuration, sortCriteria} from '../../app/reducers';
+import {loadReducerError} from '../../utils/errors';
 
 export interface SortProps {
   /**
@@ -94,12 +96,14 @@ export interface SortState {
  * @param props - The configurable `Sort` controller properties.
  * @returns A `Sort` controller instance.
  */
-export function buildSort(
-  engine: Engine<ConfigurationSection & SortSection>,
-  props: SortProps = {}
-): Sort {
+export function buildSort(engine: Engine<object>, props: SortProps = {}): Sort {
+  if (!loadSortReducers(engine)) {
+    throw loadReducerError;
+  }
+
   const controller = buildController(engine);
   const {dispatch} = engine;
+  const getState = () => engine.state;
 
   validateSortInitialState(engine, props.initialState);
 
@@ -125,8 +129,15 @@ export function buildSort(
 
     get state() {
       return {
-        sortCriteria: engine.state.sortCriteria,
+        sortCriteria: getState().sortCriteria,
       };
     },
   };
+}
+
+function loadSortReducers(
+  engine: Engine<object>
+): engine is Engine<ConfigurationSection & SortSection> {
+  engine.addReducers({configuration, sortCriteria});
+  return true;
 }
