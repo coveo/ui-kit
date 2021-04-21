@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.1.0-alpha.4](https://github.com/coveo/ui-kit/compare/v1.1.0-alpha.3...v1.1.0-alpha.4) (2021-04-21)
+
+
+### Features
+
+* **atomic:** add facet search "No values found." result ([#727](https://github.com/coveo/ui-kit/issues/727)) ([8bc2f6d](https://github.com/coveo/ui-kit/commit/8bc2f6d5a9d7f03bfd24be7a16eed72ac6300944))
+
+
+
+
+
 # [1.1.0-alpha.3](https://github.com/coveo/ui-kit/compare/v1.1.0-alpha.2...v1.1.0-alpha.3) (2021-04-20)
 
 **Note:** Version bump only for package ui-kit
