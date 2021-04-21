@@ -1,3 +1,4 @@
+import {configuration, resultPreview} from '../../app/reducers';
 import {fetchResultContent} from '../../features/result-preview/result-preview-actions';
 import {buildDocumentQuickviewThunk} from '../../features/result-preview/result-preview-analytics-actions';
 import {SearchAppState} from '../../state/search-app-state';
@@ -33,6 +34,13 @@ describe('Quickview', () => {
 
   it('initializes', () => {
     expect(quickview).toBeTruthy();
+  });
+
+  it('it adds the correct reducers to engine', () => {
+    expect(engine.addReducers).toHaveBeenCalledWith({
+      configuration,
+      resultPreview,
+    });
   });
 
   it('exposes a subscribe method', () => {

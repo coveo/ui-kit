@@ -17,6 +17,8 @@ import {
   setProductRecommendationsRecommenderId,
   setProductRecommendationsSkus,
 } from '../../features/product-recommendations/product-recommendations-actions';
+import {configuration} from '../../app/reducers';
+import {productRecommendationsReducer} from '../../features/product-recommendations/product-recommendations-slice';
 
 describe('headless product-recommendations', () => {
   let state: ProductRecommendationsAppState;
@@ -44,6 +46,13 @@ describe('headless product-recommendations', () => {
     const found = engine.actions.find((a) => a.type === action.type);
     expect(engine.actions).not.toContainEqual(found);
   };
+
+  it('it adds the correct reducers to engine', () => {
+    expect(engine.addReducers).toHaveBeenCalledWith({
+      productRecommendations: productRecommendationsReducer,
+      configuration,
+    });
+  });
 
   it('when options.id is set to a non empty value, it dispatches #setProductRecommendationsRecommenderId', () => {
     productRecommendations = buildBaseProductRecommendationsList(engine, {

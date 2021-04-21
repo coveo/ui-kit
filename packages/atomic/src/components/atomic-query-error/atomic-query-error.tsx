@@ -13,10 +13,7 @@ const noEndpointsException = 'NoEndpointsException';
 const invalidTokenException = 'InvalidTokenException';
 
 /**
- * The QueryError component takes care of handling fatal error when doing a query on the index / Search API.
- *
- * When the error is known, it displays a relevant documentation link for debugging purposes. When the error is unknown,
- * it displays a small text area with the JSON content of the error.
+ * The `atomic-query-error` component handlies fatal errors when doing a query on the index / Search API. When the error is known, it displays a relevant documentation link for debugging purposes. When the error is unknown, it displays a small text area with the JSON content of the error.
  *
  * @part title - The title of the error.
  * @part description - A description of the error.
