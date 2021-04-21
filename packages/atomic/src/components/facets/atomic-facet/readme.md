@@ -30,6 +30,7 @@ A facet component. It is displayed as a facet in desktop browsers and as a butto
 | `"search-icon"`               | The magnifier icon of the input                                    |
 | `"search-input"`              | The search input                                                   |
 | `"search-input-clear-button"` | The clear button of the input                                      |
+| `"search-no-results"`         | The label displayed when a search returns no results               |
 | `"search-result"`             | A search result                                                    |
 | `"search-results"`            | The list of search results                                         |
 | `"show-less"`                 | The show less button                                               |
