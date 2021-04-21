@@ -18,7 +18,7 @@ import ArrowRightIcon from 'coveo-styleguide/resources/icons/svg/arrow-right-rou
 import ArrowLeftIcon from 'coveo-styleguide/resources/icons/svg/arrow-left-rounded.svg';
 
 /**
- * The Pager provides buttons that allow the end user to navigate through the different result pages.
+ * The `atomic-pager` provides buttons that allow the end user to navigate through the different result pages.
  *
  * @part buttons - The list of buttons
  * @part previous-button - The previous button

@@ -11,6 +11,7 @@ type FacetSearchResult = CategoryFacetSearchResult;
 
 export interface FacetSearchStrings extends ComboboxStrings {
   placeholder: () => string;
+  noValuesFound: () => string;
 }
 
 export interface FacetSearchComponent {
@@ -164,6 +165,18 @@ export class FacetSearch {
   }
 
   private get resultList() {
+    if (
+      this.component.showFacetSearchResults &&
+      !this.facetSearchResults.length &&
+      !this.facetSearchState.isLoading
+    ) {
+      return (
+        <li part="search-no-results" class="search-result">
+          {this.strings.noValuesFound()}
+        </li>
+      );
+    }
+
     return this.facetSearchResults.map((searchResult, index) => (
       <li part="search-result" class="search-result">
         <button

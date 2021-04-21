@@ -1,16 +1,26 @@
 import {createMockState} from '../../test/mock-state';
-import {buildMockSearchAppEngine} from '../../test/mock-engine';
+import {buildMockSearchAppEngine, MockEngine} from '../../test/mock-engine';
 import {QuerySummary, buildQuerySummary} from './headless-query-summary';
 import {buildMockResult} from '../../test/mock-result';
 import {SearchAppState} from '../../state/search-app-state';
+import {pagination, search} from '../../app/reducers';
 
 describe('headless query summary', () => {
+  let engine: MockEngine<SearchAppState>;
   let state: SearchAppState;
   let querySummary: QuerySummary;
 
   beforeEach(() => {
     state = createMockState();
-    querySummary = buildQuerySummary(buildMockSearchAppEngine({state}));
+    engine = buildMockSearchAppEngine({state});
+    querySummary = buildQuerySummary(engine);
+  });
+
+  it('it adds the correct reducers to engine', () => {
+    expect(engine.addReducers).toHaveBeenCalledWith({
+      search,
+      pagination,
+    });
   });
 
   it('should return the executed query and not the query being executed', () => {

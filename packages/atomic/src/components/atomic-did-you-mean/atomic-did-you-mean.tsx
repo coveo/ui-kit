@@ -10,9 +10,7 @@ import {
 import {sanitize} from '../../utils/xss-utils';
 
 /**
- * The DidYouMean component is responsible for handling query corrections.
- * When a query returns no result but finds a possible query correction, the component either suggests the correction or
- * automatically triggers a new query with the suggested term.
+ * The `atomic-did-you-mean` component is responsible for handling query corrections. When a query returns no result but finds a possible query correction, the component either suggests the correction or automatically triggers a new query with the suggested term.
  *
  * @part no-results - The text displayed for no results
  * @part auto-corrected - The text displayed for the automatically corrected query

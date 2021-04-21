@@ -32,8 +32,8 @@ import {
 import {FacetPlaceholder} from '../atomic-facet-placeholder/atomic-facet-placeholder';
 
 /**
- * A facet component. It is displayed as a facet in desktop browsers and as
- * a button which opens a facet modal in mobile browsers.
+ * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
+ * An `atomic-facet` displays a facet of the results for the current query. In mobile browsers, this is rendered as a button which opens a facet modal.
  *
  * @part facet - The wrapper for the entire facet
  * @part close-button - The button to close the facet when displayed modally (mobile only)
@@ -44,6 +44,7 @@ import {FacetPlaceholder} from '../atomic-facet-placeholder/atomic-facet-placeho
  * @part search-input-clear-button - The clear button of the input
  * @part search-results - The list of search results
  * @part search-result - A search result
+ * @part search-no-results - The label displayed when a search returns no results
  * @part active-search-result - The currently active search result
 
  * @part placeholder - The placeholder shown before the first search is executed.
@@ -84,6 +85,7 @@ export class AtomicFacet
     querySuggestionList: () => this.bindings.i18n.t('querySuggestionList'),
     showMore: () => this.bindings.i18n.t('showMore'),
     showLess: () => this.bindings.i18n.t('showLess'),
+    noValuesFound: () => this.bindings.i18n.t('noValuesFound'),
     facetValue: (variables) => this.bindings.i18n.t('facetValue', variables),
   };
 

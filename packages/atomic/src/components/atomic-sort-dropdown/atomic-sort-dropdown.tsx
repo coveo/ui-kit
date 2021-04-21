@@ -29,7 +29,7 @@ interface SortDropdownOption {
 }
 
 /**
- * The Sort Dropdown allows the end user to select the criteria to use when sorting query results.
+ * The `atomic-sort-dropdown` component renders a dropdown that the end user can interact with to select the criteria to use when sorting query results.
  *
  * @part label - The "Sort by" label
  * @part select - The select element

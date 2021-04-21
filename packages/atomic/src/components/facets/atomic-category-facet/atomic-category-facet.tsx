@@ -38,8 +38,7 @@ const ELLIPSIS = '...';
 const PATH_MAX_LENGTH = 3;
 
 /**
- * A hierarchical category facet component. It is displayed as a facet in desktop browsers and as
- * a button which opens a facet modal in mobile browsers.
+ * The `atomic-category-facet` displays a facet of values in a hierarchical fashion. In mobile browsers, this is rendered as a button which opens a facet modal.
  *
  * @part facet - The wrapper for the entire facet
  * @part close-button - The button to close the facet when displayed modally (mobile only)
@@ -59,9 +58,11 @@ const PATH_MAX_LENGTH = 3;
  * @part value-count - The facet value count
  * @part show-more - The show more results button
  * @part show-less - The show less button
+ * @part search-no-results - The label displayed when a search returns no results
  * @part placeholder - The placeholder shown before the first search is executed.
  *
  */
+
 @Component({
   tag: 'atomic-category-facet',
   styleUrl: 'atomic-category-facet.pcss',
@@ -93,6 +94,7 @@ export class AtomicCategoryFacet
     querySuggestionList: () => this.bindings.i18n.t('querySuggestionList'),
     showMore: () => this.bindings.i18n.t('showMore'),
     showLess: () => this.bindings.i18n.t('showLess'),
+    noValuesFound: () => this.bindings.i18n.t('noValuesFound'),
     facetValue: (variables) => this.bindings.i18n.t('facetValue', variables),
     allCategories: () => this.bindings.i18n.t('allCategories'),
     pathPrefix: () => this.bindings.i18n.t('in'),

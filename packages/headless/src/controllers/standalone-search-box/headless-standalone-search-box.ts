@@ -1,15 +1,14 @@
 import {Engine} from '../../app/headless-engine';
+import {configuration, query, redirection} from '../../app/reducers';
 import {selectQuerySuggestion} from '../../features/query-suggest/query-suggest-actions';
 import {updateQuery} from '../../features/query/query-actions';
 import {checkForRedirection} from '../../features/redirection/redirection-actions';
 import {
   ConfigurationSection,
   QuerySection,
-  QuerySetSection,
-  QuerySuggestionSection,
   RedirectionSection,
-  SearchSection,
 } from '../../state/state-sections';
+import {loadReducerError} from '../../utils/errors';
 import {randomID} from '../../utils/utils';
 import {validateOptions} from '../../utils/validate-payload';
 import {
@@ -60,17 +59,16 @@ export interface StandaloneSearchBoxState extends SearchBoxState {
  * @returns A `StandaloneSearchBox` instance.
  */
 export function buildStandaloneSearchBox(
-  engine: Engine<
-    ConfigurationSection &
-      RedirectionSection &
-      QuerySection &
-      QuerySuggestionSection &
-      QuerySetSection &
-      SearchSection
-  >,
+  engine: Engine<object>,
   props: StandaloneSearchBoxProps
 ): StandaloneSearchBox {
+  if (!loadStandaloneSearchBoxReducers(engine)) {
+    throw loadReducerError;
+  }
+
   const {dispatch} = engine;
+  const getState = () => engine.state;
+
   const id = props.options.id || randomID('standalone_search_box');
   const options: Required<StandaloneSearchBoxOptions> = {
     id,
@@ -109,11 +107,18 @@ export function buildStandaloneSearchBox(
     },
 
     get state() {
-      const state = engine.state;
+      const state = getState();
       return {
         ...searchBox.state,
         redirectTo: state.redirection.redirectTo,
       };
     },
   };
+}
+
+function loadStandaloneSearchBoxReducers(
+  engine: Engine<object>
+): engine is Engine<RedirectionSection & ConfigurationSection & QuerySection> {
+  engine.addReducers({redirection, configuration, query});
+  return true;
 }

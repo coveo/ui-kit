@@ -7,7 +7,7 @@ import {
 } from '../../../utils/initialization-utils';
 
 /**
- * The ResultNumber component renders the value of a number result field.
+ * The `atomic-result-number` component renders the value of a number result field.
  */
 @Component({
   tag: 'atomic-result-number',

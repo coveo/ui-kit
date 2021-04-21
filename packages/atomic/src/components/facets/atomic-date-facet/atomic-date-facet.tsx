@@ -28,8 +28,7 @@ import {
 import {FacetPlaceholder} from '../atomic-facet-placeholder/atomic-facet-placeholder';
 
 /**
- * A facet who's values are expressed as date ranges. It is displayed as a regular facet in desktop browsers and as
- * a button which opens a facet modal in mobile browsers.
+ * The `atomic-date-facet` component displays facet values as date ranges. In mobile browsers, this is rendered as a button that opens a facet modal.
  *
  * @part facet - The wrapper for the entire facet
  * @part close-button - The button to close the facet when displayed modally (mobile only)

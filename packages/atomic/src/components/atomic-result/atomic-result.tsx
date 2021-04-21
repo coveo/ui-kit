@@ -2,6 +2,9 @@ import {Component, h, Prop, Element} from '@stencil/core';
 import {Result, Engine} from '@coveo/headless';
 import {bindLogDocumentOpenOnResult} from '../../utils/result-utils';
 
+/**
+ * The `atomic-result` component is used internally by the `atomic-result-list` component.
+ */
 @Component({
   tag: 'atomic-result',
   styleUrl: 'atomic-result.pcss',

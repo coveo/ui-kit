@@ -1,5 +1,6 @@
 import {Component, Prop, h} from '@stencil/core';
 
+/** The `atomic-component-error` is used by other components to return errors. This doesn't require any configuration.*/
 @Component({
   tag: 'atomic-component-error',
   styleUrl: 'atomic-component-error.pcss',
