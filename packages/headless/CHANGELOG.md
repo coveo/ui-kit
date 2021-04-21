@@ -3,33 +3,6 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-# [1.1.0-alpha.3](https://github.com/coveo/ui-kit/compare/v1.1.0-alpha.2...v1.1.0-alpha.3) (2021-04-20)
-
-**Note:** Version bump only for package @coveo/headless
-
-
-
-
-
-# [1.1.0-alpha.1](https://github.com/coveo/ui-kit/compare/v1.1.0-alpha.0...v1.1.0-alpha.1) (2021-04-20)
-
-**Note:** Version bump only for package @coveo/headless
-
-
-
-
-
-# [1.1.0-alpha.0](https://github.com/coveo/ui-kit/compare/v1.0.1-alpha.1...v1.1.0-alpha.0) (2021-04-20)
-
-
-### Features
-
-* **headless:** add case assist API client ([#711](https://github.com/coveo/ui-kit/issues/711)) ([f632af1](https://github.com/coveo/ui-kit/commit/f632af1207794f038444431fef27c751d8a11556))
-
-
-
-
-
 # [0.11.0-alpha.5](https://github.com/coveo/ui-kit/compare/v0.11.0-alpha.4...v0.11.0-alpha.5) (2021-04-19)
 
 

@@ -3,60 +3,6 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-# [1.1.0-alpha.4](https://github.com/coveo/ui-kit/compare/v1.1.0-alpha.3...v1.1.0-alpha.4) (2021-04-21)
-
-
-### Features
-
-* **atomic:** add facet search "No values found." result ([#727](https://github.com/coveo/ui-kit/issues/727)) ([8bc2f6d](https://github.com/coveo/ui-kit/commit/8bc2f6d5a9d7f03bfd24be7a16eed72ac6300944))
-
-
-
-
-
-# [1.1.0-alpha.3](https://github.com/coveo/ui-kit/compare/v1.1.0-alpha.2...v1.1.0-alpha.3) (2021-04-20)
-
-**Note:** Version bump only for package @coveo/atomic
-
-
-
-
-
-# [1.1.0-alpha.2](https://github.com/coveo/ui-kit/compare/v1.1.0-alpha.1...v1.1.0-alpha.2) (2021-04-20)
-
-**Note:** Version bump only for package @coveo/atomic
-
-
-
-
-
-# [1.1.0-alpha.1](https://github.com/coveo/ui-kit/compare/v1.1.0-alpha.0...v1.1.0-alpha.1) (2021-04-20)
-
-**Note:** Version bump only for package @coveo/atomic
-
-
-
-
-
-# [1.1.0-alpha.0](https://github.com/coveo/ui-kit/compare/v1.0.1-alpha.1...v1.1.0-alpha.0) (2021-04-20)
-
-**Note:** Version bump only for package @coveo/atomic
-
-
-
-
-
-## [1.0.1-alpha.1](https://github.com/coveo/ui-kit/compare/v1.0.1-alpha.0...v1.0.1-alpha.1) (2021-04-19)
-
-
-### Bug Fixes
-
-* **atomic:** organize facet parts & css ([#723](https://github.com/coveo/ui-kit/issues/723)) ([130621d](https://github.com/coveo/ui-kit/commit/130621d5d75cb721ca69a3a5bf82fc2c0e7b33f4))
-
-
-
-
-
 # [0.11.0-alpha.7](https://github.com/coveo/ui-kit/compare/v0.11.0-alpha.6...v0.11.0-alpha.7) (2021-04-19)
 
 
