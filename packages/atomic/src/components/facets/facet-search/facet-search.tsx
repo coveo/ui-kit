@@ -55,8 +55,11 @@ export class FacetSearch {
     }
 
     const search = regexEncode(query);
-    const regex = new RegExp(`(${search})`, 'ig');
-    return sanitize(resultValue).replace(regex, '<b>$1</b>');
+    const regex = new RegExp(`(${search})`, 'i');
+    return sanitize(resultValue).replace(
+      regex,
+      '<span class="font-normal">$1</span>'
+    );
   }
 
   public updateCombobox() {
