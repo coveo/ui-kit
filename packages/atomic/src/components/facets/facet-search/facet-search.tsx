@@ -12,6 +12,7 @@ type FacetSearchResult = CategoryFacetSearchResult;
 export interface FacetSearchStrings extends ComboboxStrings {
   placeholder: () => string;
   showMore: () => string;
+  noValuesFound: () => string;
 }
 
 export interface FacetSearchComponent {
@@ -50,7 +51,7 @@ export class FacetSearch {
         this.onSelectValue(value);
       },
       onBlur: () => (this.component.showFacetSearchResults = false),
-      activeClass: 'active',
+      activeClass: 'active-search-result',
       activePartName: 'active-search-result',
     });
   }
@@ -62,12 +63,11 @@ export class FacetSearch {
     }
 
     const search = regexEncode(query);
-    const regex = new RegExp(`(${search})`, 'ig');
-    return sanitize(resultValue).replace(regex, '<b>$1</b>');
-  }
-
-  public static get searchResultClasses() {
-    return 'search-result cursor-pointer px-2 py-1 text-sm flex flex-col justify-center';
+    const regex = new RegExp(`(${search})`, 'i');
+    return sanitize(resultValue).replace(
+      regex,
+      '<span class="font-normal">$1</span>'
+    );
   }
 
   public updateCombobox() {
@@ -111,7 +111,7 @@ export class FacetSearch {
 
   private get clearButton() {
     if (this.component.facetSearchQuery === '') {
-      return null;
+      return;
     }
 
     return (
@@ -144,7 +144,7 @@ export class FacetSearch {
         onKeyDown={(e) => this.combobox.onInputKeydown(e)}
         type="text"
         class={
-          'search-input placeholder-on-background-variant flex-grow outline-none focus:outline-none mx-2'
+          'placeholder-on-background-variant flex-grow outline-none focus:outline-none mx-2'
         }
         placeholder={this.strings.placeholder()}
         value={this.component.facetSearchQuery}
@@ -152,20 +152,19 @@ export class FacetSearch {
     );
   }
 
+  // TODO: remove show more
   private get showMoreSearchResults() {
     if (!this.facetSearchState.moreValuesAvailable) {
       return null;
     }
 
     return (
-      <li
-        onClick={() => this.facetSearchController.showMoreResults()}
-        onMouseDown={(e) => e.preventDefault()}
-        part="show-more"
-        class={`${FacetSearch.searchResultClasses} text-primary`}
-        value={FacetSearch.ShowMoreResultsValue}
-      >
-        <button onMouseDown={(e) => e.preventDefault()}>
+      <li class="search-result text-primary">
+        <button
+          onClick={() => this.facetSearchController.showMoreResults()}
+          onMouseDown={(e) => e.preventDefault()}
+          value={FacetSearch.ShowMoreResultsValue}
+        >
           {this.strings.showMore()}
         </button>
       </li>
@@ -173,16 +172,29 @@ export class FacetSearch {
   }
 
   private get resultList() {
+    if (
+      this.component.showFacetSearchResults &&
+      !this.facetSearchResults.length &&
+      !this.facetSearchState.isLoading
+    ) {
+      return (
+        <li part="search-no-results" class="search-result">
+          {this.strings.noValuesFound()}
+        </li>
+      );
+    }
+
     return this.facetSearchResults.map((searchResult, index) => (
-      <li
-        onClick={() => this.onSelectValue(index)}
-        onMouseDown={(e) => e.preventDefault()}
-        part="search-result"
-        class={FacetSearch.searchResultClasses}
-        value={index}
-        aria-label={this.component.ariaLabelForSearchResult(searchResult)}
-      >
-        {this.component.renderSearchResult(searchResult)}
+      <li part="search-result" class="search-result">
+        <button
+          onClick={() => this.onSelectValue(index)}
+          onMouseDown={(e) => e.preventDefault()}
+          part="search-result-button"
+          value={index}
+          aria-label={this.component.ariaLabelForSearchResult(searchResult)}
+        >
+          {this.component.renderSearchResult(searchResult)}
+        </button>
       </li>
     ));
   }
@@ -192,10 +204,7 @@ export class FacetSearch {
     return (
       <ul
         part="search-results"
-        class={
-          'search-results z-10 absolute w-full bg-background border-divider-t-0 empty:border-none rounded-b ' +
-          (showResults ? 'block' : 'hidden')
-        }
+        class={'search-results ' + (showResults ? 'block' : 'hidden')}
         ref={(el) => (this.valuesRef = el as HTMLElement)}
       >
         {this.resultList}
@@ -210,7 +219,7 @@ export class FacetSearch {
       this.component.showFacetSearchResults;
 
     return (
-      'input-wrapper flex flex-grow items-center apply-border-divider rounded ' +
+      'input-wrapper flex flex-grow items-center border border-divider rounded ' +
       (hasValues ? 'rounded-br-none	rounded-bl-none' : '')
     );
   }
@@ -223,6 +232,7 @@ export class FacetSearch {
           ref={(el) => (this.containerRef = el as HTMLElement)}
         >
           <div
+            part="search-icon"
             class={'ml-2 w-3 h-3 text-on-background-variant fill-current'}
             innerHTML={SearchIcon}
           />

@@ -19,6 +19,7 @@ import {buildMockNumericFacetResponse} from '../../../../test/mock-numeric-facet
 import {buildMockNumericFacetRequest} from '../../../../test/mock-numeric-facet-request';
 import {SearchAppState} from '../../../../state/search-app-state';
 import * as FacetIdDeterminor from '../../_common/facet-id-determinor';
+import {configuration, numericFacetSet, search} from '../../../../app/reducers';
 
 describe('numeric facet', () => {
   const facetId = '1';
@@ -55,6 +56,14 @@ describe('numeric facet', () => {
     expect(() => initNumericFacet()).toThrow(
       'The start value is greater than the end value for the numeric range 10 to 0'
     );
+  });
+
+  it('it adds the correct reducers to engine', () => {
+    expect(engine.addReducers).toHaveBeenCalledWith({
+      numericFacetSet,
+      configuration,
+      search,
+    });
   });
 
   it('calls #determineFacetId with the correct params', () => {

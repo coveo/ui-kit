@@ -1,3 +1,4 @@
+import {configuration} from '../../app/reducers';
 import {
   restoreSearchParameters,
   SearchParameters,
@@ -42,6 +43,10 @@ describe('url manager', () => {
   function testExecuteSearch() {
     expect(engine.findAsyncAction(executeSearch.pending)).toBeTruthy();
   }
+
+  it('it adds the correct reducers to engine', () => {
+    expect(engine.addReducers).toHaveBeenCalledWith({configuration});
+  });
 
   it('dispatches #restoreSearchParameters on registration', () => {
     expect(getLastestRestoreSearchParametersAction()).toBeTruthy();

@@ -2,12 +2,20 @@ atomic-result-printable-uri li {
   display: inline;
 }
 
+atomic-result-printable-uri li a {
+  display: inline-block;
+  vertical-align: middle;
+}
+
 atomic-result-printable-uri button {
   color: var(--atomic-primary);
 }
 
-atomic-result-printable-uri li::after {
-  content: var(--atomic-separator);
+atomic-result-printable-uri svg {
+  display: inline-block;
+  width: 100%;
+  height: 100%;
+  vertical-align: top;
 }
 
 atomic-result-printable-uri li:last-child::after {
@@ -16,4 +24,12 @@ atomic-result-printable-uri li:last-child::after {
 
 atomic-result-printable-uri atomic-result-text {
   overflow-wrap: anywhere;
+}
+
+.result-printable-uri-separator {
+  display: inline-block;
+  margin: 0 0.5rem;
+  vertical-align: middle;
+  width: 0.75rem;
+  height: 0.75rem;
 }

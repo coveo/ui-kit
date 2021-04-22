@@ -9,6 +9,7 @@ import {AnalyticsClientSendEventHook} from 'coveo.analytics/dist/definitions/cli
 import pino from 'pino';
 import {validatePayloadAndThrow} from '../utils/validate-payload';
 import {buildMockSearchAPIClient} from '../test/mock-search-api-client';
+import {combineReducers} from '@reduxjs/toolkit';
 
 describe('headless engine', () => {
   let options: HeadlessOptions<typeof searchAppReducers>;
@@ -18,7 +19,7 @@ describe('headless engine', () => {
 
   beforeEach(() => {
     store = storeConfig.configureStore({
-      reducers: searchAppReducers,
+      reducer: combineReducers(searchAppReducers),
       thunkExtraArguments: {
         searchAPIClient: buildMockSearchAPIClient(),
         analyticsClientMiddleware: {} as AnalyticsClientSendEventHook,

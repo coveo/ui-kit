@@ -28,15 +28,16 @@ import {
 import {FacetPlaceholder} from '../atomic-facet-placeholder/atomic-facet-placeholder';
 
 /**
- * A facet who's values are expressed as date ranges. It is displayed as a regular facet in desktop browsers and as
- * a button which opens a facet modal in mobile browsers.
+ * The `atomic-date-facet` component displays facet values as date ranges. In mobile browsers, this is rendered as a button that opens a facet modal.
  *
- * @part facet - The wrapping div for the entire facet
- * @part facet-values - The list of facet values
- * @part facet-value - A single facet value
+ * @part facet - The wrapper for the entire facet
  * @part close-button - The button to close the facet when displayed modally (mobile only)
- * @part reset-button - The button that resets the actively selected facet values
+ * @part clear-button - The button that resets the actively selected facet values
+ *
  * @part placeholder - The placeholder shown before the first search is executed.
+ * @part value - A single facet value
+ * @part value-label - The facet value label
+ * @part value-count - The facet value count
  *
  */
 @Component({
@@ -75,7 +76,7 @@ export class AtomicDateFacet implements InitializableComponent, BaseFacetState {
   /**
    * The non-localized label for the facet
    */
-  @Prop() public label = 'No label';
+  @Prop() public label = 'noLabel';
   /**
    * The format that the date will be displayed in. See https://day.js.org/docs/en/display/format for formatting details.
    */
@@ -131,7 +132,9 @@ export class AtomicDateFacet implements InitializableComponent, BaseFacetState {
       <FacetValue
         label={value}
         isSelected={isSelected}
-        numberOfResults={item.numberOfResults}
+        numberOfResults={item.numberOfResults.toLocaleString(
+          this.bindings.i18n.language
+        )}
         facetValueSelected={() => {
           this.facet.toggleSelect(item);
         }}
@@ -172,9 +175,9 @@ export class AtomicDateFacet implements InitializableComponent, BaseFacetState {
         controller={new BaseFacetController(this)}
         label={this.strings[this.label]()}
         hasActiveValues={this.facetState.hasActiveValues}
-        deselectAll={() => this.facet.deselectAll()}
+        clearAll={() => this.facet.deselectAll()}
       >
-        <ul class="list-none p-0">{this.values}</ul>
+        <ul>{this.values}</ul>
       </BaseFacet>
     );
   }

@@ -1,0 +1,15 @@
+{
+  "name": "coveo-atomic-example-070-alpha33",
+  "version": "1.1.0-alpha.5",
+  "description": "",
+  "keywords": [],
+  "author": "Coveo",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/codesandbox-app/static-template/issues"
+  },
+  "homepage": "https://github.com/codesandbox-app/static-template#readme",
+  "devDependencies": {
+    "serve": "^11.2.0"
+  }
+}

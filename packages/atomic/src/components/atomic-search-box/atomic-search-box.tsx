@@ -12,12 +12,12 @@ import ClearIcon from 'coveo-styleguide/resources/icons/svg/clear.svg';
 import SearchIcon from 'coveo-styleguide/resources/icons/svg/search.svg';
 
 /**
- * A search box with built in support for query suggestions.
+ * The `atomic-search-box` component creates a search box with built-in support for query suggestions.
  *
  * @part submit-button - The search box submit button
  * @part search-input - The search box input
  * @part input-wrapper - The wrapper for the searchbox input
- * @part clear-button - The search box input's clear button
+ * @part clear-button - The clear button for the input of the searchbox
  * @part suggestions - The list of suggestions
  * @part suggestion - The suggestion
  * @part active-suggestion - The currently active suggestion
@@ -103,12 +103,12 @@ export class AtomicSearchBox {
         numberOfSuggestions: this.numberOfSuggestions,
         highlightOptions: {
           notMatchDelimiters: {
-            open: '<strong>',
-            close: '</strong>',
+            open: '<span class="font-bold">',
+            close: '</span>',
           },
           correctionDelimiters: {
-            open: '<i>',
-            close: '</i>',
+            open: '<span class="font-normal">',
+            close: '</span>',
           },
         },
       },

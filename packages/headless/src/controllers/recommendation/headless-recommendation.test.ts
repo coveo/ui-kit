@@ -13,6 +13,8 @@ import {
   getRecommendations,
   setRecommendationId,
 } from '../../features/recommendation/recommendation-actions';
+import {configuration} from '../../app/reducers';
+import {recommendationReducer} from '../../features/recommendation/recommendation-slice';
 
 describe('headless recommendation', () => {
   let state: RecommendationAppState;
@@ -34,6 +36,13 @@ describe('headless recommendation', () => {
     const found = engine.actions.find((a) => a.type === action.type);
     expect(engine.actions).not.toContainEqual(found);
   };
+
+  it('it adds the correct reducers to engine', () => {
+    expect(engine.addReducers).toHaveBeenCalledWith({
+      configuration,
+      recommendation: recommendationReducer,
+    });
+  });
 
   it('when #options.id is set to a non empty value, it dispatches #setRecommendationId', () => {
     recommendation = buildRecommendationList(engine, {options: {id: 'foo'}});

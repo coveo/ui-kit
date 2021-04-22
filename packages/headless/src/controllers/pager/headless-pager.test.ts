@@ -13,6 +13,7 @@ import {
 } from '../../features/pagination/pagination-actions';
 import {executeSearch} from '../../features/search/search-actions';
 import {SearchAppState} from '../../state/search-app-state';
+import {pagination, configuration} from '../../app/reducers';
 
 describe('Pager', () => {
   let engine: MockEngine<SearchAppState>;
@@ -43,6 +44,13 @@ describe('Pager', () => {
 
   it('initializes', () => {
     expect(pager).toBeTruthy();
+  });
+
+  it('it adds the correct reducers to engine', () => {
+    expect(engine.addReducers).toHaveBeenCalledWith({
+      pagination,
+      configuration,
+    });
   });
 
   it('exposes a #subscribe method', () => {

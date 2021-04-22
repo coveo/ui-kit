@@ -6,6 +6,7 @@ import {
 } from '../../features/advanced-search-queries/advanced-search-queries-actions';
 import {SearchAppState} from '../../state/search-app-state';
 import {buildMockAdvancedSearchQueriesState} from '../../test/mock-advanced-search-queries-state';
+import {advancedSearchQueries, configuration} from '../../app/reducers';
 
 describe('Tab', () => {
   const expression = 'abc123';
@@ -28,6 +29,15 @@ describe('Tab', () => {
         isActive: false,
       },
     };
+  });
+
+  it('it adds the correct reducers to engine', () => {
+    initTab();
+
+    expect(engine.addReducers).toHaveBeenCalledWith({
+      configuration,
+      advancedSearchQueries,
+    });
   });
 
   describe('initalization', () => {
