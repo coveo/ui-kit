@@ -1,4 +1,7 @@
-import {updateBasicConfiguration} from '../features/configuration/configuration-actions';
+import {
+  updateAnalyticsConfiguration,
+  updateBasicConfiguration,
+} from '../features/configuration/configuration-actions';
 import {buildMockSearchAPIClient} from '../test/mock-search-api-client';
 import {buildMockStore} from '../test/mock-store';
 import {buildEngine, Engine, EngineOptions} from './engine';
@@ -11,6 +14,8 @@ describe('engine', () => {
   let engine: Engine;
 
   function initEngine() {
+    jest.spyOn(Store, 'configureStore').mockReturnValue(buildMockStore());
+
     const searchAPIClient = buildMockSearchAPIClient();
     const logger = buildLogger({level: 'silent'});
     engine = buildEngine(options, {searchAPIClient}, logger);
@@ -26,8 +31,6 @@ describe('engine', () => {
       reducers: searchAppReducers,
     };
 
-    jest.spyOn(Store, 'configureStore').mockReturnValue(buildMockStore());
-
     initEngine();
   });
 
@@ -38,6 +41,23 @@ describe('engine', () => {
         organizationId: options.configuration.organizationId,
         platformUrl: options.configuration.platformUrl,
       })
+    );
+  });
+
+  it(`when no #analytics configuration is specified,
+  it does not dispatch #updateAnalyticsConfiguration`, () => {
+    expect(engine.dispatch).not.toHaveBeenCalledWith(
+      updateAnalyticsConfiguration({})
+    );
+  });
+
+  it(`when an #analytics configuration is specified,
+  it dispatches #updateAnalyticsConfiguration`, () => {
+    options.configuration.analytics = {enabled: true};
+    initEngine();
+
+    expect(engine.dispatch).toHaveBeenLastCalledWith(
+      updateAnalyticsConfiguration({enabled: true})
     );
   });
 
