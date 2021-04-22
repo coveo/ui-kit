@@ -1,8 +1,5 @@
 import {HeadlessEngine, HeadlessOptions} from './headless-engine';
-import {
-  updateBasicConfiguration,
-  updateSearchConfiguration,
-} from '../features/configuration/configuration-actions';
+import {updateSearchConfiguration} from '../features/configuration/configuration-actions';
 import * as storeConfig from './store';
 import {searchAppReducers} from './search-app-reducers';
 import {AnalyticsClientSendEventHook} from 'coveo.analytics/dist/definitions/client/analytics';
@@ -15,11 +12,10 @@ import {Engine} from './engine';
 describe('headless engine', () => {
   let options: HeadlessOptions<typeof searchAppReducers>;
   let configureStoreSpy: jest.SpyInstance;
-  let store: storeConfig.Store;
   let engine: Engine;
 
   beforeEach(() => {
-    store = storeConfig.configureStore({
+    const store = storeConfig.configureStore({
       reducer: combineReducers(searchAppReducers),
       thunkExtraArguments: {
         searchAPIClient: buildMockSearchAPIClient(),
@@ -56,19 +52,9 @@ describe('headless engine', () => {
     expect(configureStoreSpy).toHaveBeenCalled();
   });
 
-  it('should dispatch updateBasicConfiguration with the right configuration', () => {
-    expect(store.dispatch).toHaveBeenCalledWith(
-      updateBasicConfiguration({
-        accessToken: options.configuration.accessToken,
-        platformUrl: options.configuration.platformUrl,
-        organizationId: options.configuration.organizationId,
-      })
-    );
-  });
-
   it(`when there is a search param in the configuration
   should dispatch updateSearchConfiguration`, () => {
-    expect(store.dispatch).toHaveBeenCalledWith(
+    expect(engine.dispatch).toHaveBeenCalledWith(
       updateSearchConfiguration(options.configuration.search!)
     );
   });
@@ -84,50 +70,9 @@ describe('headless engine', () => {
       reducers: searchAppReducers,
     };
 
-    new HeadlessEngine(options);
-    expect(store.dispatch).not.toHaveBeenCalledWith(
+    engine = new HeadlessEngine(options);
+    expect(engine.dispatch).not.toHaveBeenCalledWith(
       updateSearchConfiguration(options.configuration.search!)
     );
-  });
-
-  it(`when renewAccessToken is not defined in the config
-  renewAccessToken should return an empty string`, async (done) => {
-    expect(await engine.renewAccessToken()).toBe('');
-    done();
-  });
-
-  it(`when renewAccessToken is defined in the config
-  renewAccessToken should return a new token`, async (done) => {
-    options.configuration.renewAccessToken = async () => 'newToken';
-    expect(await engine.renewAccessToken()).toBe('newToken');
-    done();
-  });
-
-  it(`after calling renewAccessToken more than 5 times in a row
-  it should return an empty string`, async (done) => {
-    options.configuration.renewAccessToken = async () => 'newToken';
-
-    engine.renewAccessToken();
-    engine.renewAccessToken();
-    engine.renewAccessToken();
-    engine.renewAccessToken();
-    engine.renewAccessToken();
-    expect(await engine.renewAccessToken()).toBe('');
-    done();
-  });
-
-  it(`after calling renewAccessToken more than 5 times in a row then waiting at least 500ms
-  it should return a new token`, async (done) => {
-    jest.useFakeTimers();
-    options.configuration.renewAccessToken = async () => 'newToken';
-
-    engine.renewAccessToken();
-    engine.renewAccessToken();
-    engine.renewAccessToken();
-    engine.renewAccessToken();
-    engine.renewAccessToken();
-    jest.advanceTimersByTime(1000);
-    expect(await engine.renewAccessToken()).toBe('newToken');
-    done();
   });
 });

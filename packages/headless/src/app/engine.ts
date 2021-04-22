@@ -103,6 +103,9 @@ export interface EngineOptions<Reducers extends ReducersMapObject> {
    * [Redux documentation on middlewares.](https://redux.js.org/glossary#middleware)
    */
   middlewares?: Middleware<{}, StateFromReducersMapObject<Reducers>>[];
+  /**
+   * The logger options.
+   */
   loggerOptions?: LoggerOptions;
 }
 
@@ -208,7 +211,8 @@ function getAnalyticsClientMiddleware(
   configuration: EngineConfigurationOptions
 ): AnalyticsClientSendEventHook {
   const {analytics} = configuration;
-  return analytics?.analyticsClientMiddleware || ((_, p) => p);
+  const NoopAnalyticsMiddleware = (_: string, p: any) => p;
+  return analytics?.analyticsClientMiddleware || NoopAnalyticsMiddleware;
 }
 
 function getPreprocessRequest(configuration: EngineConfigurationOptions) {
