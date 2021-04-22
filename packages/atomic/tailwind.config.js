@@ -35,7 +35,7 @@ module.exports = {
         "full": "var(--atomic-border-radius-full)",
       },
       fontWeight: {
-        "bold": "var(--atomic-bold)",
+        "bold": "var(--atomic-font-bold)",
       },
     },
     backgroundColor: (theme) => ({
