@@ -12,7 +12,7 @@
   "version": "1.1.0-alpha.5",
   "files": [
     "dist/",
-    "pkg/"
+    "case-assist/"
   ],
   "scripts": {
     "start": "concurrently \"npm run typedefinitions -- -w\" \"rollup -c -w\"",
