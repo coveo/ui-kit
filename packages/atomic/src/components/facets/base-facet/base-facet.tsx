@@ -78,7 +78,7 @@ export const BaseFacet: FunctionalComponent<BaseFacetProps> = (
         <div class="flex flex-row items-center pb-2 mb-2 border-b border-solid border-divider">
           <span
             title={props.label}
-            class="font-semibold text-on-background-variant text-base lg:text-sm ellipsed w-full"
+            class="font-bold text-on-background-variant text-base lg:text-sm ellipsed w-full"
           >
             {props.label}
           </span>

@@ -33,7 +33,10 @@ module.exports = {
         "lg": "var(--atomic-border-radius-lg)",
         "xl": "var(--atomic-border-radius-xl)",
         "full": "var(--atomic-border-radius-full)",
-      }
+      },
+      fontWeight: {
+        "bold": "var(--atomic-bold)",
+      },
     },
     backgroundColor: (theme) => ({
       ...theme('colors'),
