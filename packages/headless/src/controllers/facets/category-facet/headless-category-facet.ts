@@ -164,6 +164,11 @@ export interface CategoryFacetSearch {
    * @param value - The search result to select.
    * */
   select(value: CategoryFacetSearchResult): void;
+
+  /**
+   * Resets the query and empties the values.
+   * */
+  clear(): void;
 }
 
 export interface CategoryFacetSearchState {

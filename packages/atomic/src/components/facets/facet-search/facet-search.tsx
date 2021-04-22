@@ -17,7 +17,6 @@ export interface FacetSearchStrings extends ComboboxStrings {
 export interface FacetSearchComponent {
   strings: FacetSearchStrings;
   facetSearchQuery: string;
-  showFacetSearchResults: boolean;
   facet: Facet | CategoryFacet;
   renderSearchResult: (searchResult: FacetSearchResult) => HTMLLIElement[];
   ariaLabelForSearchResult: (searchResult: FacetSearchResult) => string;
@@ -104,12 +103,11 @@ export class FacetSearch {
   }
 
   private onFocus() {
-    this.component.showFacetSearchResults = true;
     this.triggerSearch();
   }
 
   private onBlur() {
-    this.component.showFacetSearchResults = false;
+    this.facetSearchController.clear();
     this.text = '';
   }
 
@@ -173,18 +171,6 @@ export class FacetSearch {
   }
 
   private get resultList() {
-    if (
-      this.component.showFacetSearchResults &&
-      !this.facetSearchResults.length &&
-      !this.facetSearchState.isLoading
-    ) {
-      return (
-        <li part="search-no-results" class="search-result">
-          {this.strings.noValuesFound()}
-        </li>
-      );
-    }
-
     return this.facetSearchResults.map((searchResult, index) => (
       <li part="search-result" class="search-result">
         <button
@@ -200,13 +186,29 @@ export class FacetSearch {
     ));
   }
 
+  private get showNoValuesFound() {
+    return (
+      this.component.facetSearchQuery !== '' &&
+      !this.facetSearchResults.length &&
+      !this.facetSearchState.isLoading
+    );
+  }
+
+  private get noValuesFound() {
+    if (this.showNoValuesFound) {
+      return (
+        <div part="search-no-results" class="search-results px-2 py-1 text-sm">
+          {this.strings.noValuesFound()}
+        </div>
+      );
+    }
+  }
+
   private get searchResults() {
-    const showResults =
-      this.component.showFacetSearchResults && !this.facetSearchState.isLoading;
     return (
       <ul
         part="search-results"
-        class={'search-results ' + (showResults ? 'block' : 'hidden')}
+        class="search-results"
         ref={(el) => (this.valuesRef = el as HTMLElement)}
         onScroll={() => this.onScroll()}
       >
@@ -216,13 +218,11 @@ export class FacetSearch {
   }
 
   private get inputWrapperClasses() {
-    const hasValues =
-      this.facetSearchState.values.length > 0 &&
-      this.component.showFacetSearchResults;
-
+    const isOpen =
+      this.showNoValuesFound || this.facetSearchState.values.length;
     return (
       'input-wrapper flex flex-grow items-center border border-divider rounded ' +
-      (hasValues ? 'rounded-br-none	rounded-bl-none' : '')
+      (isOpen ? 'rounded-br-none	rounded-bl-none' : '')
     );
   }
 
@@ -241,6 +241,7 @@ export class FacetSearch {
           {this.input}
           {this.clearButton}
         </div>
+        {this.noValuesFound}
         {this.searchResults}
       </div>
     );
