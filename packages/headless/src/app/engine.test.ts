@@ -1,8 +1,10 @@
 import {updateBasicConfiguration} from '../features/configuration/configuration-actions';
 import {buildMockSearchAPIClient} from '../test/mock-search-api-client';
+import {buildMockStore} from '../test/mock-store';
 import {buildEngine, Engine, EngineOptions} from './engine';
 import {buildLogger} from './logger';
 import {searchAppReducers} from './search-app-reducers';
+import * as Store from './store';
 
 describe('engine', () => {
   let options: EngineOptions<typeof searchAppReducers>;
@@ -17,22 +19,24 @@ describe('engine', () => {
   beforeEach(() => {
     options = {
       configuration: {
+        organizationId: 'orgId',
         accessToken: 'token',
-        organizationId: 'orgID',
-        platformUrl: 'url',
+        platformUrl: 'https://www.coveo.com/',
       },
       reducers: searchAppReducers,
     };
 
+    jest.spyOn(Store, 'configureStore').mockReturnValue(buildMockStore());
+
     initEngine();
   });
 
-  it('should dispatch updateBasicConfiguration with the right configuration', () => {
+  it('dispatches #updateBasicConfiguration with the correct params', () => {
     expect(engine.dispatch).toHaveBeenCalledWith(
       updateBasicConfiguration({
         accessToken: options.configuration.accessToken,
-        platformUrl: options.configuration.platformUrl,
         organizationId: options.configuration.organizationId,
+        platformUrl: options.configuration.platformUrl,
       })
     );
   });
