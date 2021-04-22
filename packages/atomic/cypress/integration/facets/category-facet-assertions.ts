@@ -148,7 +148,6 @@ export function assertNoPathInUrl() {
 export function assertLogFacetSelect(path: string[]) {
   it('should log the facet selection to UA', () => {
     cy.wait(RouteAlias.analytics).then((intercept) => {
-      // TODO: extract
       const analyticsBody = intercept.request.body;
       expect(analyticsBody).to.have.property('actionCause', 'facetSelect');
       expect(analyticsBody.customData).to.have.property(
