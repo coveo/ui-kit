@@ -185,6 +185,10 @@
     "en": "Page {{page}}",
     "fr": "Page {{page}}"
   },
+  "noValuesFound": {
+    "en": "No values found.",
+    "fr": "Aucune valeur trouvée."
+  },
   "resultsPerPage": {
     "en": "Results per page",
     "fr": "Résultats par page",

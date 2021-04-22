@@ -82,6 +82,9 @@ node('linux && docker') {
 
         sh 'mkdir veracode/headless'
         sh 'cp -R packages/headless/src packages/headless/package.json packages/headless/package-lock.json veracode/headless'
+
+        sh 'mkdir veracode/atomic'
+        sh 'cp -R packages/atomic/src packages/atomic/package.json packages/atomic/package-lock.json veracode/atomic'
       }
 
       stage('Deployment pipeline upload') {

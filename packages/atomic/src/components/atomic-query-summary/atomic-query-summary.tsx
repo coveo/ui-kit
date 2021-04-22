@@ -88,7 +88,7 @@ export class AtomicQuerySummary implements InitializableComponent {
   }
 
   private wrapHighlight(content: string) {
-    return `<b part="highlight">${content}</b>`;
+    return `<span class="font-bold" part="highlight">${content}</span>`;
   }
 
   private renderNoResults() {

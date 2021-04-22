@@ -12,6 +12,7 @@ type FacetSearchResult = CategoryFacetSearchResult;
 export interface FacetSearchStrings extends ComboboxStrings {
   placeholder: () => string;
   showMore: () => string;
+  noValuesFound: () => string;
 }
 
 export interface FacetSearchComponent {
@@ -62,8 +63,11 @@ export class FacetSearch {
     }
 
     const search = regexEncode(query);
-    const regex = new RegExp(`(${search})`, 'ig');
-    return sanitize(resultValue).replace(regex, '<b>$1</b>');
+    const regex = new RegExp(`(${search})`, 'i');
+    return sanitize(resultValue).replace(
+      regex,
+      '<span class="font-normal">$1</span>'
+    );
   }
 
   public updateCombobox() {
@@ -168,6 +172,18 @@ export class FacetSearch {
   }
 
   private get resultList() {
+    if (
+      this.component.showFacetSearchResults &&
+      !this.facetSearchResults.length &&
+      !this.facetSearchState.isLoading
+    ) {
+      return (
+        <li part="search-no-results" class="search-result">
+          {this.strings.noValuesFound()}
+        </li>
+      );
+    }
+
     return this.facetSearchResults.map((searchResult, index) => (
       <li part="search-result" class="search-result">
         <button

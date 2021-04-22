@@ -103,12 +103,12 @@ export class AtomicSearchBox {
         numberOfSuggestions: this.numberOfSuggestions,
         highlightOptions: {
           notMatchDelimiters: {
-            open: '<strong>',
-            close: '</strong>',
+            open: '<span class="font-bold">',
+            close: '</span>',
           },
           correctionDelimiters: {
-            open: '<i>',
-            close: '</i>',
+            open: '<span class="font-normal">',
+            close: '</span>',
           },
         },
       },
