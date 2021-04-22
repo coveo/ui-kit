@@ -89,6 +89,7 @@ export class FacetSearch {
 
   private triggerSearch() {
     this.facetSearchController.search();
+    this.scrollTop();
   }
 
   private onChange(value: string) {
@@ -112,7 +113,11 @@ export class FacetSearch {
     this.text = '';
   }
 
-  private onValuesScroll() {
+  private scrollTop() {
+    this.valuesRef.scrollTo({top: 0});
+  }
+
+  private onScroll() {
     const scrollPixelBuffer = 50;
     const scrollEndReached =
       this.valuesRef.scrollTop + this.valuesRef.clientHeight >=
@@ -203,7 +208,7 @@ export class FacetSearch {
         part="search-results"
         class={'search-results ' + (showResults ? 'block' : 'hidden')}
         ref={(el) => (this.valuesRef = el as HTMLElement)}
-        onScroll={() => this.onValuesScroll()}
+        onScroll={() => this.onScroll()}
       >
         {this.resultList}
       </ul>

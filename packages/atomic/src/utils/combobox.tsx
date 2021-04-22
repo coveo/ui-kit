@@ -27,7 +27,6 @@ export class Combobox {
     const value = (e.target as HTMLInputElement).value;
     this.options.onChange(value);
     this.updateActiveDescendant();
-    this.listbox.scrollTo({top: 0});
   }
 
   public onInputKeyup(e: KeyboardEvent) {
@@ -99,7 +98,9 @@ export class Combobox {
   }
 
   private scrollActiveDescendantIntoView() {
-    this.activeDescendantElement?.scrollIntoView(false);
+    this.activeDescendantElement?.scrollIntoView({
+      block: 'nearest',
+    });
   }
 
   private focusNextValue() {
