@@ -41,6 +41,8 @@ const PATH_MAX_LENGTH = 3;
  * The `atomic-category-facet` displays a facet of values in a hierarchical fashion. In mobile browsers, this is rendered as a button which opens a facet modal.
  *
  * @part facet - The wrapper for the entire facet
+ * @part label - The label of the facet
+ * @part modal-button - The button to open the facet modal (mobile only)
  * @part close-button - The button to close the facet when displayed modally (mobile only)
  * @part clear-button - The button that resets the actively selected facet values
  *
@@ -194,7 +196,7 @@ export class AtomicCategoryFacet
 
   private buildActiveParent(parent: CategoryFacetValue) {
     return (
-      <div part="parent active-parent" class="value-button font-bold ml-6">
+      <div part="active-parent" class="value-button font-bold ml-6">
         <span part="value-label" class="ellipsed">
           {parent.value}
         </span>
