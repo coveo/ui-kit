@@ -30,7 +30,7 @@ pkg/case-assist/package.json
 1. Build the headless project: `npm run build`.
 2. Create a tarball: `npm pack`.
 3. Install the tarball as a dependency of a different project: `npm i <path to the tarball>`.
-4. Import an export from your sub-package: `import {...} from '@coveo/headless/pkg/<sub-package>'`
+4. Import an export from your sub-package: `import {...} from '@coveo/headless/<sub-package>'`
 
 
 That's all!
