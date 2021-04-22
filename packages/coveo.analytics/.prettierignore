@@ -21,3 +21,6 @@ Jenkinsfile
 Jenkinsfile_FT
 Dockerfile
 *.sh
+
+# Deploy files
+terraform

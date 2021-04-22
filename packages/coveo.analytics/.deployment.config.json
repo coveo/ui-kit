@@ -82,6 +82,18 @@
                     "directory": "coveo.analytics.js/$[PACKAGE_JSON_MAJOR_VERSION]"
                 }
             }
+        },
+        {
+            "id": "invalidate-cloudfront",
+            "terraform": {
+                "disabled": true,
+                "source": "terraform",
+                "prd": {
+                    "auto_approve": true,
+                    "auto_approve_in_production": true,
+                    "disabled": false
+                }
+            }
         }
     ],
     "deployment_config_version": 1,
