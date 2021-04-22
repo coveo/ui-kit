@@ -9,7 +9,6 @@ import {
   BreadcrumbSelectors,
 } from './category-facet-selectors';
 
-// TODO: move util out
 function should(should: boolean) {
   return should ? 'should' : 'should not';
 }
