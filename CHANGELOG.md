@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.11.0-alpha.9](https://github.com/coveo/ui-kit/compare/v0.11.0-alpha.8...v0.11.0-alpha.9) (2021-04-22)
+
+
+### Bug Fixes
+
+* **atomic:** add support for bold font weight variable ([#735](https://github.com/coveo/ui-kit/issues/735)) ([725d956](https://github.com/coveo/ui-kit/commit/725d95649423f2dfade7ae6a69c69aa5fabb0ec3))
+
+
+
+
+
 # [0.11.0-alpha.8](https://github.com/coveo/ui-kit/compare/v0.11.0-alpha.7...v0.11.0-alpha.8) (2021-04-21)
 
 
