@@ -8,7 +8,7 @@ Headless provides exports through multiple sub packages. A sub-package groups to
 1. Create an entry file for your sub-package inside the `src` directory (e.g. case-assist.ts).
 2. Configure nodejs and browser bundles inside `rollup.config.js` for your entry file.
 3. Create a new directory with the name of your sub-package at the project root.
-4. Inside the new directory, add a `package.json` file. Add the paths to your bundled files and type definitions. Mark the package `private` so that `lerna` does not bump it's version.
+4. Inside the new directory, add a `package.json` file. Add the paths to your bundled files and type definitions. Mark the package `private` to prevent `lerna` from bumping it's version.
 5. Add the directory name to the `files` array in the project root `package.json` file.
 
 ```json
