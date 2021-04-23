@@ -4,7 +4,7 @@ import {buildMockFacetSearchResponse} from '../../../test/mock-facet-search-resp
 import {buildMockFacetSearch} from '../../../test/mock-facet-search';
 import {buildMockFacetSearchResult} from '../../../test/mock-facet-search-result';
 import {executeSearch} from '../../../features/search/search-actions';
-import {buildMockFacetSearchRequestOptions} from '../../../test/mock-facet-search-request-options';
+import {buildMockFacetSearchStateOptions} from '../../../test/mock-facet-search-state-options';
 import {
   buildGenericFacetSearch,
   GenericFacetSearch,
@@ -21,6 +21,7 @@ import {defaultFacetSearchOptions} from '../../../features/facets/facet-search-s
 
 describe('FacetSearch', () => {
   const facetId = '1';
+  const numberOfValues = 7;
   let props: GenericFacetSearchProps<SpecificFacetSearchState>;
   let engine: MockEngine<SearchAppState>;
   let controller: GenericFacetSearch;
@@ -30,7 +31,10 @@ describe('FacetSearch', () => {
   }
 
   function getFacetSearch() {
-    const options = buildMockFacetSearchRequestOptions({numberOfValues: 5});
+    const options = buildMockFacetSearchStateOptions({
+      numberOfValues,
+      initialNumberOfValues: numberOfValues,
+    });
     return buildMockFacetSearch({options});
   }
 
@@ -51,7 +55,7 @@ describe('FacetSearch', () => {
     const action = updateFacetSearch({
       facetId,
       query: `*${text}*`,
-      numberOfValues: 10,
+      numberOfValues,
     });
 
     expect(engine.actions).toContainEqual(action);
@@ -59,15 +63,19 @@ describe('FacetSearch', () => {
 
   describe('#showMoreResults', () => {
     beforeEach(() => {
-      const options = buildMockFacetSearchRequestOptions({numberOfValues: 5});
-      engine.state.facetSearchSet[facetId] = buildMockFacetSearch({options});
+      const options = buildMockFacetSearchStateOptions({
+        numberOfValues,
+      });
+      engine.state.facetSearchSet[facetId] = buildMockFacetSearch({
+        options,
+      });
       controller.showMoreResults();
     });
 
     it('#showMoreResults dispatches #updateFacetSearch', () => {
       const incrementAction = updateFacetSearch({
         facetId,
-        numberOfValues: 15,
+        numberOfValues: numberOfValues * 2,
       });
 
       expect(engine.actions).toContainEqual(incrementAction);
@@ -113,15 +121,16 @@ describe('FacetSearch', () => {
 
   describe('#clear', () => {
     beforeEach(() => {
-      const options = buildMockFacetSearchRequestOptions();
-      engine.state.facetSearchSet[facetId] = buildMockFacetSearch({options});
+      const options = buildMockFacetSearchStateOptions();
+      engine.state.facetSearchSet[facetId] = buildMockFacetSearch({
+        options,
+      });
       controller.clear();
     });
 
     it('#clear dispatches #updateFacetSearch', () => {
       const updateFacetSearchAction = updateFacetSearch({
         facetId,
-        numberOfValues: defaultFacetSearchOptions.numberOfValues,
         query: defaultFacetSearchOptions.query,
       });
 

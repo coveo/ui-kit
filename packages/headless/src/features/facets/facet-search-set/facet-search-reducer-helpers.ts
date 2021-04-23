@@ -2,11 +2,18 @@ import {FacetSearchOptions} from './facet-search-request-options';
 import {FacetSearchResponse} from '../../../api/search/facet-search/facet-search-response';
 import {FacetSearchRequestOptions} from '../../../api/search/facet-search/base/base-facet-search-request';
 
+export interface FacetSearchStateOptions extends FacetSearchRequestOptions {
+  /** The initial maximum number of values to fetch.
+   * @defaultValue `10`
+   */
+  initialNumberOfValues: number;
+}
+
 export type FacetSearchState<T extends FacetSearchResponse> = {
   /**
    * The options used to perform a facet search request.
    */
-  options: FacetSearchRequestOptions;
+  options: FacetSearchStateOptions;
   /**
    * `true` if the facet search request is currently being executed against the Coveo platform, `false` otherwise.
    */
@@ -34,7 +41,11 @@ export function handleFacetSearchRegistration<T extends FacetSearchResponse>(
   }
 
   const isLoading = false;
-  const options = buildFacetSearchOptions(payload);
+  const baseOptions = {...defaultFacetSearchOptions, ...payload};
+  const options: FacetSearchStateOptions = {
+    ...baseOptions,
+    initialNumberOfValues: baseOptions.numberOfValues,
+  };
   const response = buildEmptyResponse();
 
   state[facetId] = {options, isLoading, response};
@@ -94,17 +105,34 @@ export function handleFacetSearchFulfilled<T extends FacetSearchResponse>(
   search.response = response;
 }
 
+export function handleFacetSearchClearResults<T extends FacetSearchResponse>(
+  state: FacetSearchSetState<T>,
+  payload: FacetSearchOptions,
+  buildEmptyResponse: () => T
+) {
+  const {facetId} = payload;
+  const search = state[facetId];
+
+  if (!search) {
+    return;
+  }
+
+  search.isLoading = false;
+  search.response = buildEmptyResponse();
+  search.options.numberOfValues = search.options.initialNumberOfValues;
+}
+
+export function handleFacetSearchSetClearResults<T extends FacetSearchResponse>(
+  state: FacetSearchSetState<T>,
+  buildEmptyResponse: () => T
+) {
+  Object.keys(state).forEach((facetId) =>
+    handleFacetSearchClearResults(state, {facetId}, buildEmptyResponse)
+  );
+}
+
 export const defaultFacetSearchOptions: FacetSearchRequestOptions = {
   captions: {},
   numberOfValues: 10,
   query: '**',
 };
-
-function buildFacetSearchOptions(
-  config: Partial<FacetSearchRequestOptions> = {}
-): FacetSearchRequestOptions {
-  return {
-    ...defaultFacetSearchOptions,
-    ...config,
-  };
-}

@@ -11,6 +11,10 @@ import {
   clearFacetSearchResults,
   executeFacetSearch,
 } from '../generic/generic-facet-search-actions';
+import {
+  executeSearch,
+  ExecuteSearchThunkReturn,
+} from '../../../search/search-actions';
 
 describe('FacetSearch slice', () => {
   const facetId = '1';
@@ -83,11 +87,25 @@ describe('FacetSearch slice', () => {
   });
 
   it('#clearFacetSearchResults calls #handleFacetSearchFulfilled', () => {
-    jest.spyOn(FacetSearchReducerHelpers, 'handleFacetSearchFulfilled');
+    jest.spyOn(FacetSearchReducerHelpers, 'handleFacetSearchClearResults');
     facetSearchSetReducer(state, clearFacetSearchResults({facetId}));
 
     expect(
-      FacetSearchReducerHelpers.handleFacetSearchFulfilled
+      FacetSearchReducerHelpers.handleFacetSearchClearResults
+    ).toHaveBeenCalledTimes(1);
+  });
+
+  it('#executeFacetSearch.fulfilled calls #handleFacetSearchSetClearResults', () => {
+    jest.spyOn(FacetSearchReducerHelpers, 'handleFacetSearchSetClearResults');
+    const action = executeSearch.fulfilled(
+      {} as ExecuteSearchThunkReturn,
+      '',
+      null as never
+    );
+    facetSearchSetReducer(state, action);
+
+    expect(
+      FacetSearchReducerHelpers.handleFacetSearchSetClearResults
     ).toHaveBeenCalledTimes(1);
   });
 });

@@ -37,16 +37,14 @@ export function buildGenericFacetSearch<T extends FacetSearchState>(
 
   const dispatch = engine.dispatch;
   const {options, getFacetSearch} = props;
-
-  const facetId = options.facetId;
-  const initialNumberOfValues =
-    options.numberOfValues || defaultFacetSearchOptions.numberOfValues;
+  const {facetId} = options;
 
   return {
     /** Updates the facet search query.
      * @param text The new query.
      */
     updateText(text: string) {
+      const {initialNumberOfValues} = getFacetSearch().options;
       const query = `*${text}*`;
       dispatch(
         updateFacetSearch({
@@ -59,7 +57,7 @@ export function buildGenericFacetSearch<T extends FacetSearchState>(
 
     /** Increases number of results returned by numberOfResults */
     showMoreResults() {
-      const {numberOfValues} = getFacetSearch().options;
+      const {numberOfValues, initialNumberOfValues} = getFacetSearch().options;
       dispatch(
         updateFacetSearch({
           facetId,
@@ -88,7 +86,6 @@ export function buildGenericFacetSearch<T extends FacetSearchState>(
         updateFacetSearch({
           facetId,
           query: defaultFacetSearchOptions.query,
-          numberOfValues: initialNumberOfValues,
         })
       );
       dispatch(clearFacetSearchResults({facetId}));

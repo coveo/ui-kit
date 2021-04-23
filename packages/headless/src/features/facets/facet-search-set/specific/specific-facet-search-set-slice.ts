@@ -4,6 +4,8 @@ import {
   handleFacetSearchPending,
   handleFacetSearchRejected,
   handleFacetSearchFulfilled,
+  handleFacetSearchClearResults,
+  handleFacetSearchSetClearResults,
 } from '../facet-search-reducer-helpers';
 import {SpecificFacetSearchResponse} from '../../../../api/search/facet-search/specific-facet-search/specific-facet-search-response';
 import {registerFacetSearch} from './specific-facet-search-actions';
@@ -14,6 +16,7 @@ import {
   clearFacetSearchResults,
   executeFacetSearch,
 } from '../generic/generic-facet-search-actions';
+import {executeSearch} from '../../../search/search-actions';
 
 export const specificFacetSearchSetReducer = createReducer(
   getFacetSearchSetInitialState(),
@@ -38,10 +41,10 @@ export const specificFacetSearchSetReducer = createReducer(
         handleFacetSearchFulfilled(state, action.payload);
       })
       .addCase(clearFacetSearchResults, (state, {payload}) => {
-        handleFacetSearchFulfilled(state, {
-          facetId: payload.facetId,
-          response: buildEmptyResponse(),
-        });
+        handleFacetSearchClearResults(state, payload, buildEmptyResponse);
+      })
+      .addCase(executeSearch.fulfilled, (state) => {
+        handleFacetSearchSetClearResults(state, buildEmptyResponse);
       });
   }
 );

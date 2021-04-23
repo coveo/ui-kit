@@ -8,7 +8,7 @@ import {
 import {buildMockFacetSearchResponse} from '../../../test/mock-facet-search-response';
 import {buildMockFacetSearchResult} from '../../../test/mock-facet-search-result';
 import {buildMockFacetSearch} from '../../../test/mock-facet-search';
-import {buildMockFacetSearchRequestOptions} from '../../../test/mock-facet-search-request-options';
+import {buildMockFacetSearchStateOptions} from '../../../test/mock-facet-search-state-options';
 import {SpecificFacetSearchResponse} from '../../../api/search/facet-search/specific-facet-search/specific-facet-search-response';
 import {
   SpecificFacetSearchSetState,
@@ -32,10 +32,8 @@ describe('FacetSearch slice', () => {
     it('when the id is unregistered, it registers a facet search with the passed id and options', () => {
       handleFacetSearchRegistration(state, {facetId}, buildEmptyResponse);
       expect(state[facetId].options).toEqual({
+        ...buildMockFacetSearch().options,
         facetId,
-        captions: {},
-        numberOfValues: 10,
-        query: '**',
       });
     });
 
@@ -46,7 +44,10 @@ describe('FacetSearch slice', () => {
 
     it('when the id already exists, it does not overwrite the existing facet', () => {
       state[facetId] = buildMockFacetSearch();
-      const options = buildMockFacetSearchRequestOptions({numberOfValues: 5});
+      const options = buildMockFacetSearchStateOptions({
+        numberOfValues: 5,
+        initialNumberOfValues: 5,
+      });
 
       handleFacetSearchRegistration(
         state,
@@ -61,14 +62,14 @@ describe('FacetSearch slice', () => {
     it('when passing an id that is registered, #updateFacetSearch updates the options', () => {
       state[facetId] = buildMockFacetSearch();
 
-      const options = buildMockFacetSearchRequestOptions();
+      const options = buildMockFacetSearchStateOptions();
       handleFacetSearchUpdate(state, {facetId, ...options});
 
       expect(state[facetId].options).toEqual(options);
     });
 
     it('when passing an id that is not registered, #updateFacetSearch does not register the options', () => {
-      const options = buildMockFacetSearchRequestOptions();
+      const options = buildMockFacetSearchStateOptions();
       handleFacetSearchUpdate(state, {facetId, ...options});
 
       expect(state[facetId]).toBe(undefined);
@@ -128,3 +129,7 @@ describe('FacetSearch slice', () => {
     });
   });
 });
+
+// TODO: add tests
+describe.skip('#handleFacetSearchClearResults', () => {});
+describe.skip('#handleFacetSearchSetClearResults', () => {});
