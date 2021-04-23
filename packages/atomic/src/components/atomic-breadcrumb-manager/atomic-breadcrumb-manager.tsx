@@ -15,8 +15,8 @@ import {
   Breadcrumb,
   BreadcrumbValue,
 } from '@coveo/headless';
-import {RangeFacetValue} from '@coveo/headless/dist/features/facets/range-facets/generic/interfaces/range-facet';
-import {BaseFacetValue} from '@coveo/headless/dist/features/facets/facet-api/response';
+import {RangeFacetValue} from '@coveo/headless/dist/definitions/features/facets/range-facets/generic/interfaces/range-facet';
+import {BaseFacetValue} from '@coveo/headless/dist/definitions/features/facets/facet-api/response';
 import mainclear from '../../images/main-clear.svg';
 import dayjs from 'dayjs';
 

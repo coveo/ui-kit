@@ -5,7 +5,7 @@ import {
   registerQuerySuggest,
   selectQuerySuggestion,
 } from '../../features/query-suggest/query-suggest-actions';
-import {Engine} from '../../app/headless-engine';
+import {Engine} from '../../app/engine';
 import {updateQuery} from '../../features/query/query-actions';
 import {
   registerQuerySetQuery,

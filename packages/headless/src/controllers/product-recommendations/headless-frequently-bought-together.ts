@@ -1,4 +1,4 @@
-import {Engine} from '../../app/headless-engine';
+import {Engine} from '../../app/engine';
 import {Schema, SchemaValues, StringValue} from '@coveo/bueno';
 import {
   baseProductRecommendationsOptionsSchema,

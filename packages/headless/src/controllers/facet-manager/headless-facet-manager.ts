@@ -1,4 +1,4 @@
-import {Engine} from '../../app/headless-engine';
+import {Engine} from '../../app/engine';
 import {facetOptions, search} from '../../app/reducers';
 import {SearchSection} from '../../state/state-sections';
 import {loadReducerError} from '../../utils/errors';

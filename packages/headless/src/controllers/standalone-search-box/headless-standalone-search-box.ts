@@ -1,4 +1,4 @@
-import {Engine} from '../../app/headless-engine';
+import {Engine} from '../../app/engine';
 import {configuration, query, redirection} from '../../app/reducers';
 import {selectQuerySuggestion} from '../../features/query-suggest/query-suggest-actions';
 import {updateQuery} from '../../features/query/query-actions';

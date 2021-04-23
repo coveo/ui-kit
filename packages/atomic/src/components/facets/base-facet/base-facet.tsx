@@ -80,7 +80,7 @@ export const BaseFacet: FunctionalComponent<BaseFacetProps> = (
           <span
             title={props.label}
             part="label"
-            class="font-semibold text-on-background-variant text-base lg:text-sm ellipsed w-full"
+            class="font-bold text-on-background-variant text-base lg:text-sm ellipsed w-full"
           >
             {props.label}
           </span>
