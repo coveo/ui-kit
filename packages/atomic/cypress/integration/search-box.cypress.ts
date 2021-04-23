@@ -1,6 +1,9 @@
 import {getApiResponseBody, getAnalyticsAt} from '../utils/network';
 import {TestFixture} from '../fixtures/test-fixture';
-import {addSearchBox, searchBoxAlias} from '../fixtures/test-fixture-searchbox';
+import {
+  addSearchBox,
+  searchBoxAlias,
+} from '../fixtures/test-fixture-search-box';
 import {SearchBoxSelectors} from './search-box-selectors';
 
 const queryText = 't';

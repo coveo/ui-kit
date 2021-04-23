@@ -11,7 +11,6 @@ export type TestFeature = (e: TestFixture) => void | Promise<void>;
 export type TagProps = Record<string, string>;
 
 export class TestFixture {
-  private urlParams: {key: string; value: string}[] = [];
   private aliases: TestFeature[] = [];
   private testURL = 'http://localhost:3333/pages/test.html';
   private execFirstSearch = true;
@@ -34,11 +33,6 @@ export class TestFixture {
     return this;
   }
 
-  public withURLParam(key: string, value: string) {
-    this.urlParams.push({key, value});
-    return this;
-  }
-
   public withoutFirstAutomaticSearch() {
     this.execFirstSearch = false;
     return this;
@@ -50,14 +44,6 @@ export class TestFixture {
   }
 
   public init() {
-    document.location.hash = `#${this.urlParams.reduce(
-      (hash, param, i) =>
-        `${hash}${i === 0 ? '' : '&'}${param.key}=${encodeURIComponent(
-          param.value
-        )}`,
-      ''
-    )}`;
-
     cy.get(`@${this.elementAliases.SearchInterface}`).then(($si) => {
       const searchInterfaceComponent = $si.get()[0] as SearchInterface;
 

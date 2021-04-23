@@ -1,6 +1,6 @@
 import {addTag, TagProps, TestFixture} from './test-fixture';
 
-export const Selectors = {
+export const SearchBoxSelectors = {
   component: 'atomic-search-box',
   inputBox: 'input',
   querySuggestionList: 'ul',
@@ -19,7 +19,7 @@ export const addSearchBox = (props: TagProps = {}) => (env: TestFixture) =>
   addTag(env, 'atomic-search-box', props);
 
 export const searchBoxAlias = () => (env: TestFixture) => {
-  cy.get(Selectors.component)
+  cy.get(SearchBoxSelectors.component)
     .shadow()
     .find('div')
     .first()
