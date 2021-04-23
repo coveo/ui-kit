@@ -12,7 +12,7 @@ import {filterProtocol} from '../../../utils/xss-utils';
 import Arrow from '../../../images/arrow-right.svg';
 
 /**
- * The ResultUri component displays the URI, or path, to access a result.
+ * The `atomic-result-printable-uri` component displays the URI, or path, to access a result.
  * @part result-printable-uri-list - The result printable uri list
  * @part result-printable-uri-list-expanded - The expanded result printable uri list
  * @part result-printable-uri-list-element - A result printable uri list element

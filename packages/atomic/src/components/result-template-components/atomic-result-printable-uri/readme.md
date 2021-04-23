@@ -1,7 +1,5 @@
 # atomic-result-uri
 
-
-
 <!-- Auto Generated Below -->
 
 

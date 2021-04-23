@@ -3,6 +3,53 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.11.0-alpha.9](https://github.com/coveo/ui-kit/compare/v0.11.0-alpha.8...v0.11.0-alpha.9) (2021-04-22)
+
+
+### Bug Fixes
+
+* **atomic:** add support for bold font weight variable ([#735](https://github.com/coveo/ui-kit/issues/735)) ([725d956](https://github.com/coveo/ui-kit/commit/725d95649423f2dfade7ae6a69c69aa5fabb0ec3))
+
+
+
+
+
+# [0.11.0-alpha.8](https://github.com/coveo/ui-kit/compare/v0.11.0-alpha.7...v0.11.0-alpha.8) (2021-04-21)
+
+
+### Bug Fixes
+
+* **atomic:** organize facet parts & css ([#723](https://github.com/coveo/ui-kit/issues/723)) ([130621d](https://github.com/coveo/ui-kit/commit/130621d5d75cb721ca69a3a5bf82fc2c0e7b33f4))
+* **atomic:** reverse facet search highlighting and only match once ([#728](https://github.com/coveo/ui-kit/issues/728)) ([af3ad70](https://github.com/coveo/ui-kit/commit/af3ad70b7511d78f98ca345301cd684dcdcfeb3b))
+
+
+### Features
+
+* **atomic:** add facet search "No values found." result ([#727](https://github.com/coveo/ui-kit/issues/727)) ([8bc2f6d](https://github.com/coveo/ui-kit/commit/8bc2f6d5a9d7f03bfd24be7a16eed72ac6300944))
+
+
+
+
+
+# [0.11.0-alpha.7](https://github.com/coveo/ui-kit/compare/v0.11.0-alpha.6...v0.11.0-alpha.7) (2021-04-19)
+
+
+### Features
+
+* **atomic:** manage display & localize show more breadcrumb ([#722](https://github.com/coveo/ui-kit/issues/722)) ([6938080](https://github.com/coveo/ui-kit/commit/6938080c581db189405c2e8614f25b1e441c2550))
+
+
+
+
+
+# [0.11.0-alpha.6](https://github.com/coveo/ui-kit/compare/v0.11.0-alpha.5...v0.11.0-alpha.6) (2021-04-19)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
 # [0.11.0-alpha.5](https://github.com/coveo/ui-kit/compare/v0.11.0-alpha.4...v0.11.0-alpha.5) (2021-04-19)
 
 

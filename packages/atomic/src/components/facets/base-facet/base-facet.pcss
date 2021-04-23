@@ -1,3 +1,15 @@
-.facet-button {
-  border-radius: var(--facet-button-radius, 30px);
+.value-count {
+  @apply text-on-background-variant ml-1.5;
+}
+
+.value-count::before {
+  content: '(';
+}
+
+.value-count::after {
+  content: ')';
+}
+
+.value-button {
+  @apply w-full flex items-center text-left py-1;
 }

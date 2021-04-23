@@ -27,17 +27,19 @@ import {
 import {FacetPlaceholder} from '../atomic-facet-placeholder/atomic-facet-placeholder';
 
 /**
- * A facet who's values are expressed as numeric ranges. It is displayed as a regular facet in desktop browsers and as
- * a button which opens a facet modal in mobile browsers.
+ * The `atomic-numeric-facet` component displays values as numeric ranges. In mobile browsers, this is rendered as a button which opens a facet modal.
  *
- * @part facet - The wrapping div for the entire facet
- * @part facet-values - The list of facet values
- * @part facet-value - A single facet value
+ * @part facet - The wrapper for the entire facet
  * @part close-button - The button to close the facet when displayed modally (mobile only)
- * @part reset-button - The button that resets the actively selected facet values
+ * @part clear-button - The button that resets the actively selected facet values
+ *
  * @part placeholder - The placeholder shown before the first search is executed.
+ * @part value - A single facet value
+ * @part value-label - The facet value label
+ * @part value-count - The facet value count
  *
  */
+
 @Component({
   tag: 'atomic-numeric-facet',
   styleUrl: 'atomic-numeric-facet.pcss',
@@ -75,7 +77,7 @@ export class AtomicNumericFacet
   /**
    * The non-localized label for the facet.
    */
-  @Prop() public label = 'No label';
+  @Prop() public label = 'noLabel';
   /**
    * The number of values to request for this facet, when there are no manual ranges.
    */
@@ -176,11 +178,9 @@ export class AtomicNumericFacet
         controller={new BaseFacetController(this)}
         label={this.strings[this.label]()}
         hasActiveValues={this.facetState.hasActiveValues}
-        deselectAll={() => this.facet.deselectAll()}
+        clearAll={() => this.facet.deselectAll()}
       >
-        <ul part="facet-values" class="list-none p-0">
-          {this.values}
-        </ul>
+        <ul>{this.values}</ul>
       </BaseFacet>
     );
   }

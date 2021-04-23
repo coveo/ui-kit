@@ -1,4 +1,5 @@
 import {Engine} from '../../app/headless-engine';
+import {configuration, history} from '../../app/reducers';
 import {StateWithHistory} from '../../app/undoable';
 import {back, forward} from '../../features/history/history-actions';
 import {
@@ -7,6 +8,8 @@ import {
 } from '../../features/history/history-analytics-actions';
 import {HistoryState} from '../../features/history/history-state';
 import {executeSearch} from '../../features/search/search-actions';
+import {ConfigurationSection, HistorySection} from '../../state/state-sections';
+import {loadReducerError} from '../../utils/errors';
 import {buildController, Controller} from '../controller/headless-controller';
 
 /**
@@ -41,14 +44,19 @@ export type HistoryManagerState = StateWithHistory<HistoryState>;
  * @param engine - The headless engine.
  * @returns A `HistoryManager` controller instance.
  */
-export function buildHistoryManager(engine: Engine): HistoryManager {
+export function buildHistoryManager(engine: Engine<object>): HistoryManager {
+  if (!loadHistoryManagerReducers(engine)) {
+    throw loadReducerError;
+  }
+
   const controller = buildController(engine);
   const {dispatch} = engine;
+  const getState = () => engine.state;
 
   return {
     ...controller,
     get state() {
-      return engine.state.history;
+      return getState().history;
     },
 
     async back() {
@@ -67,4 +75,11 @@ export function buildHistoryManager(engine: Engine): HistoryManager {
       dispatch(executeSearch(logNavigateForward()));
     },
   };
+}
+
+function loadHistoryManagerReducers(
+  engine: Engine<object>
+): engine is Engine<HistorySection & ConfigurationSection> {
+  engine.addReducers({history, configuration});
+  return true;
 }

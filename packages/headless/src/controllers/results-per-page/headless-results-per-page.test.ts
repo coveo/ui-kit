@@ -12,6 +12,7 @@ import {executeSearch} from '../../features/search/search-actions';
 import {createMockState} from '../../test/mock-state';
 import {buildMockPagination} from '../../test/mock-pagination';
 import {SearchAppState} from '../../state/search-app-state';
+import {configuration, pagination} from '../../app/reducers';
 
 describe('ResultsPerPage', () => {
   let engine: MockEngine<SearchAppState>;
@@ -29,6 +30,13 @@ describe('ResultsPerPage', () => {
     };
 
     initResultsPerPage();
+  });
+
+  it('it adds the correct reducers to engine', () => {
+    expect(engine.addReducers).toHaveBeenCalledWith({
+      pagination,
+      configuration,
+    });
   });
 
   it('when the #numberOfResults option is specified to 10, it dispatches a register action with the value', () => {

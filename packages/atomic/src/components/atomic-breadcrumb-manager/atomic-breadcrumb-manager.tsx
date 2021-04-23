@@ -15,13 +15,13 @@ import {
   Breadcrumb,
   BreadcrumbValue,
 } from '@coveo/headless';
-import {RangeFacetValue} from '@coveo/headless/dist/features/facets/range-facets/generic/interfaces/range-facet';
-import {BaseFacetValue} from '@coveo/headless/dist/features/facets/facet-api/response';
+import {RangeFacetValue} from '@coveo/headless/dist/definitions/features/facets/range-facets/generic/interfaces/range-facet';
+import {BaseFacetValue} from '@coveo/headless/dist/definitions/features/facets/facet-api/response';
 import mainclear from '../../images/main-clear.svg';
 import dayjs from 'dayjs';
 
 /**
- * A component that creates breadcrumbs that display the currently active facet values
+ * The `atomic-breadcrumb-manager` component creates breadcrumbs which display a summary of the currently active facet values.
  *
  * @part breadcrumb-clear-all - The clear all breadcrumbs button
  * @part breadcrumb-label - Label for the breadcrumb's label
@@ -60,6 +60,8 @@ export class AtomicBreadcrumbManager implements InitializableComponent {
       this.bindings.i18n.t('removeFilterOn', variables),
     clearAllFilters: () => this.bindings.i18n.t('clearAllFilters'),
     nMore: (variables) => this.bindings.i18n.t('nMore', variables),
+    showNMoreFilters: (variables) =>
+      this.bindings.i18n.t('showNMoreFilters', variables),
     to: (variables) => this.bindings.i18n.t('to', variables),
   };
 
@@ -252,37 +254,41 @@ export class AtomicBreadcrumbManager implements InitializableComponent {
 
   private collapsedBreadcrumbsHandler<T extends BaseFacetValue>(
     breadcrumb: Breadcrumb<T>
-  ): {breadcrumbsToShow: BreadcrumbValue<T>[]; moreButton: string | undefined} {
+  ): {breadcrumbsToShow: BreadcrumbValue<T>[]; moreButton?: string} {
     if (this.collapsedBreadcrumbsState.indexOf(breadcrumb.field) !== -1) {
       const breadcrumbsToShow = breadcrumb.values;
       this.resetCollapsedBreadcrumbs(
         breadcrumbsToShow.length,
         breadcrumb.field
       );
-      return {breadcrumbsToShow, moreButton: undefined};
+      return {breadcrumbsToShow};
+    }
+
+    const collapsedNumberOfBreadcrumbs =
+      breadcrumb.values.length - this.collapseThreshold;
+
+    if (collapsedNumberOfBreadcrumbs <= 1) {
+      return {
+        breadcrumbsToShow: breadcrumb.values,
+      };
     }
 
     return {
       breadcrumbsToShow: breadcrumb.values.slice(0, this.collapseThreshold),
       moreButton: this.getMoreButton(
-        breadcrumb.values.length - this.collapseThreshold,
+        collapsedNumberOfBreadcrumbs,
         breadcrumb.field
       ),
     };
   }
 
   private getMoreButton(collapsedBreadcrumbNumber: number, field: string) {
-    if (collapsedBreadcrumbNumber < 1) {
-      return;
-    }
-
     return this.getBreadcrumbValueWrapper(
       <button
         part="breadcrumb"
-        // TODO: localize
-        aria-label={`Show ${collapsedBreadcrumbNumber} more ${
-          collapsedBreadcrumbNumber > 1 ? 'filters' : 'filter'
-        }`}
+        aria-label={this.strings.showNMoreFilters({
+          value: collapsedBreadcrumbNumber,
+        })}
         onClick={() => this.showFacetCollapsedBreadcrumbs(field)}
       >
         {this.strings.nMore({value: collapsedBreadcrumbNumber})}

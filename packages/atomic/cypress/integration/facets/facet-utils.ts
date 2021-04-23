@@ -281,3 +281,22 @@ export function assertShowLessUA(field: string) {
     expect(analyticsBody.customData).to.have.property('facetField', field);
   });
 }
+
+export function typeQueryAndWaitUA(searchboxSelector: string, query: string) {
+  for (let i = 0; i < query.length; i++) {
+    const charac = query.charAt(i);
+    cy.get(searchboxSelector).type(charac, {force: true});
+    cy.wait('@coveoAnalytics');
+  }
+}
+
+export function assertHightlightedText(text: string) {
+  cy.get(FacetAlias.facetShadow)
+    .find('ul[part="search-results"] li[part="search-result"] b')
+    .as('textHightlight');
+  cy.getTextOfAllElements('@textHightlight').then((labels) => {
+    labels.forEach((i: string) => {
+      expect(i.toLowerCase()).not.to.contains(text.toLowerCase());
+    });
+  });
+}
