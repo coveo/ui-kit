@@ -2,10 +2,9 @@ import {
   updateAnalyticsConfiguration,
   updateBasicConfiguration,
 } from '../features/configuration/configuration-actions';
-import {buildMockSearchAPIClient} from '../test/mock-search-api-client';
 import {buildMockStore} from '../test/mock-store';
+import {buildMockThunkExtraArguments} from '../test/mock-thunk-extra-arguments';
 import {buildEngine, Engine, EngineOptions} from './engine';
-import {buildLogger} from './logger';
 import {searchAppReducers} from './search-app-reducers';
 import * as Store from './store';
 
@@ -16,9 +15,8 @@ describe('engine', () => {
   function initEngine() {
     jest.spyOn(Store, 'configureStore').mockReturnValue(buildMockStore());
 
-    const searchAPIClient = buildMockSearchAPIClient();
-    const logger = buildLogger({level: 'silent'});
-    engine = buildEngine(options, {searchAPIClient}, logger);
+    const thunkArguments = buildMockThunkExtraArguments();
+    engine = buildEngine(options, thunkArguments);
   }
 
   beforeEach(() => {

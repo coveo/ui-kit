@@ -92,7 +92,7 @@ export interface HeadlessConfigurationOptions
   };
 }
 
-export type SearchEngine<State extends object> = Engine<
+export type SearchEngine<State extends object = {}> = Engine<
   State,
   SearchThunkExtraArguments
 >;

@@ -24,7 +24,10 @@ type EngineDispatch<
   ExtraArguments extends ThunkExtraArguments
 > = ThunkDispatch<State, ExtraArguments, AnyAction> & Dispatch<AnyAction>;
 
-export interface Engine<State, ExtraArguments extends ThunkExtraArguments> {
+export interface Engine<
+  State extends object = {},
+  ExtraArguments extends ThunkExtraArguments = ThunkExtraArguments
+> {
   /**
    * Dispatches an action directly. This is the only way to trigger a state change.
    * Each headless controller dispatches its own actions.

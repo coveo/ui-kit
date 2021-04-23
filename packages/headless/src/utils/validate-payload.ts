@@ -69,7 +69,7 @@ export const validatePayload = <P>(
 };
 
 export const validateInitialState = <T extends object>(
-  engine: Engine<unknown>,
+  engine: Engine,
   schema: Schema<T>,
   obj: T | undefined,
   functionName: string
@@ -85,7 +85,7 @@ export const validateInitialState = <T extends object>(
 };
 
 export const validateOptions = <T extends object>(
-  engine: Engine<unknown>,
+  engine: Engine,
   schema: Schema<T>,
   obj: Partial<T> | undefined,
   functionName: string
@@ -101,7 +101,7 @@ export const validateOptions = <T extends object>(
 };
 
 const validateObject = <T extends object>(
-  engine: Engine<unknown>,
+  engine: Engine,
   schema: Schema<T>,
   obj: T | undefined,
   validationMessage: string,

@@ -1,13 +1,12 @@
-import {HeadlessEngine, HeadlessOptions} from './headless-engine';
+import {HeadlessEngine, HeadlessOptions, SearchEngine} from './headless-engine';
 import {updateSearchConfiguration} from '../features/configuration/configuration-actions';
 import * as Store from './store';
 import {searchAppReducers} from './search-app-reducers';
-import {Engine} from './engine';
 import {buildMockStore} from '../test/mock-store';
 
 describe('headless engine', () => {
   let options: HeadlessOptions<typeof searchAppReducers>;
-  let engine: Engine;
+  let engine: SearchEngine;
 
   beforeEach(() => {
     jest.spyOn(Store, 'configureStore').mockReturnValue(buildMockStore());
