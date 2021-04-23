@@ -31,6 +31,7 @@ import {
   buildThunkExtraArguments,
   ThunkExtraArguments,
 } from './thunk-extra-arguments';
+import {SearchAppState} from '../state/search-app-state';
 
 /**
  * The global headless engine options.
@@ -92,7 +93,7 @@ export interface HeadlessConfigurationOptions
   };
 }
 
-export type Engine<State extends object = {}> = CoreEngine<
+export type Engine<State extends object = SearchAppState> = CoreEngine<
   State,
   SearchThunkExtraArguments
 >;
