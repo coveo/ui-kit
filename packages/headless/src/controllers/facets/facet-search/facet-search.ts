@@ -1,4 +1,4 @@
-import {Engine} from '../../../app/headless-engine';
+import {Engine} from '../../../app/engine';
 import {updateFacetSearch} from '../../../features/facets/facet-search-set/specific/specific-facet-search-actions';
 import {executeSearch} from '../../../features/search/search-actions';
 import {logFacetSelect} from '../../../features/facets/facet-set/facet-set-analytics-actions';

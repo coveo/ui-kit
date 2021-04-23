@@ -15,8 +15,8 @@ import {
   Breadcrumb,
   BreadcrumbValue,
 } from '@coveo/headless';
-import {RangeFacetValue} from '@coveo/headless/dist/features/facets/range-facets/generic/interfaces/range-facet';
-import {BaseFacetValue} from '@coveo/headless/dist/features/facets/facet-api/response';
+import {RangeFacetValue} from '@coveo/headless/dist/definitions/features/facets/range-facets/generic/interfaces/range-facet';
+import {BaseFacetValue} from '@coveo/headless/dist/definitions/features/facets/facet-api/response';
 import mainclear from '../../images/main-clear.svg';
 import dayjs from 'dayjs';
 
@@ -80,7 +80,7 @@ export class AtomicBreadcrumbManager implements InitializableComponent {
     return (
       <button
         part="breadcrumb"
-        class="inline-grid grid-flow-col"
+        class="inline-grid grid-flow-col text-on-background-variant hover:text-primary-variant"
         aria-label={this.strings.breadcrumb({value})}
         title={value}
         onClick={() =>
@@ -118,11 +118,7 @@ export class AtomicBreadcrumbManager implements InitializableComponent {
   }
 
   private getBreadcrumbValueWrapper(children: VNode[]) {
-    return (
-      <li class="mr-3 text-on-background-variant hover:text-primary-variant">
-        {children}
-      </li>
-    );
+    return <li class="mr-3">{children}</li>;
   }
 
   private getBreadcrumbValues(

@@ -23,6 +23,8 @@ It is displayed as a regular facet in desktop browsers and as a button which ope
 | `"clear-button"` | The button that resets the actively selected facet values          |
 | `"close-button"` | The button to close the facet when displayed modally (mobile only) |
 | `"facet"`        | The wrapper for the entire facet                                   |
+| `"label"`        | The label of the facet                                             |
+| `"modal-button"` | The button to open the facet modal (mobile only)                   |
 | `"placeholder"`  | The placeholder shown before the first search is executed.         |
 | `"value"`        | A single facet value                                               |
 | `"value-count"`  | The facet value count                                              |

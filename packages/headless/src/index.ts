@@ -12,10 +12,11 @@ export {productRecommendationsAppReducers} from './app/frequently-bought-togethe
 export {
   HeadlessOptions,
   HeadlessConfigurationOptions,
-  Engine,
   HeadlessEngine,
-  LogLevel,
 } from './app/headless-engine';
+export {Engine} from './app/engine';
+export {LogLevel} from './app/logger';
+
 export {searchAppReducers} from './app/search-app-reducers';
 export {recommendationAppReducers} from './app/recommendation-app-reducers';
 

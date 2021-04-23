@@ -29,7 +29,7 @@
     margin-right: 15px;
     background: var(--atomic-background-variant);
     padding: 4px 8px;
-    font-size: small;
+    font-size: 0.8rem;
     border-radius: 32px;
     color: var(--atomic-on-background-variant);
     white-space: nowrap;
@@ -39,16 +39,25 @@
     border-right: 1px solid #e5e8e8;
     padding: 0 8px;
   }
+
   .fields-container > atomic-field-condition > atomic-result-text {
     margin: 0 8px;
   }
 
   a[part='result-link'] {
-    font-size: 18px;
+    font-size: 1.25rem;
+  }
+
+  atomic-result-text[field='excerpt'] {
+    line-height: 1.5rem;
   }
 
   a[part='result-printable-uri-link'] {
-    font-size: 12px;
+    font-size: 0.8rem;
+  }
+
+  .template-container b {
+    font-weight: var(--atomic-font-bold);
   }
 </style>
 <div class="template-container">

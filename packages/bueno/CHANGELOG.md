@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.11.0-alpha.8](https://github.com/coveo/ui-kit/compare/v0.11.0-alpha.7...v0.11.0-alpha.8) (2021-04-21)
+
+**Note:** Version bump only for package @coveo/bueno
+
+
+
+
+
 # [0.8.0](https://github.com/coveo/ui-kit/compare/v0.8.0-alpha.26...v0.8.0) (2021-03-17)
 
 **Note:** Version bump only for package @coveo/bueno

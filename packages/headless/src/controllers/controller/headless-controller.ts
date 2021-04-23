@@ -1,5 +1,5 @@
 import {Unsubscribe} from '@reduxjs/toolkit';
-import {Engine} from '../../app/headless-engine';
+import {Engine} from '../../app/engine';
 
 export interface Controller {
   /**
