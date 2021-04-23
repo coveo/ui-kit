@@ -1,8 +1,7 @@
 import {Component, Prop, Element, h} from '@stencil/core';
 
 /**
- * Component that defines a sort expression.
- * Has to be used inside an `atomic-sort-dropdown` component.
+ * The `atomic-sort-expression` component defines a sort expression. This component must be inside an `atomic-sort-dropdown` component.
  */
 @Component({
   tag: 'atomic-sort-expression',

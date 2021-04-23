@@ -1,4 +1,4 @@
-import {Engine} from '../../app/headless-engine';
+import {Engine} from '../../app/engine';
 import {
   getProductRecommendations as updateProductRecommendations,
   setProductRecommendationsSkus,
@@ -19,6 +19,8 @@ import {
   StringValue,
 } from '@coveo/bueno';
 import {validateOptions} from '../../utils/validate-payload';
+import {configuration, productRecommendations} from '../../app/reducers';
+import {loadReducerError} from '../../utils/errors';
 
 export const baseProductRecommendationsOptionsSchema = {
   additionalFields: new ArrayValue<string>({
@@ -59,11 +61,17 @@ export type ProductRecommendationsList = ReturnType<
 export type ProductRecommendationsListState = ProductRecommendationsList['state'];
 
 export const buildBaseProductRecommendationsList = (
-  engine: Engine<ProductRecommendationsSection & ConfigurationSection>,
+  engine: Engine<object>,
   props: ProductRecommendationsListProps = {}
 ) => {
+  if (!loadBaseProductRecommendationsReducers(engine)) {
+    throw loadReducerError;
+  }
+
   const controller = buildController(engine);
   const {dispatch} = engine;
+  const getState = () => engine.state;
+
   const options = validateOptions(
     engine,
     optionsSchema,
@@ -112,7 +120,7 @@ export const buildBaseProductRecommendationsList = (
         recommendations,
         error,
         isLoading,
-      } = engine.state.productRecommendations;
+      } = getState().productRecommendations;
       return {
         skus,
         maxNumberOfRecommendations,
@@ -123,3 +131,10 @@ export const buildBaseProductRecommendationsList = (
     },
   };
 };
+
+function loadBaseProductRecommendationsReducers(
+  engine: Engine<object>
+): engine is Engine<ProductRecommendationsSection & ConfigurationSection> {
+  engine.addReducers({productRecommendations, configuration});
+  return true;
+}

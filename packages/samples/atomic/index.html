@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
+    <title>Atomic Components</title>
+
+    <script type="module" src="https://unpkg.com/@coveo/atomic@0.7.0-alpha.33/dist/atomic/atomic.esm.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/@coveo/atomic@0.7.0-alpha.33/dist/atomic/themes/default.css" />
+    <script>
+      (async () => {
+        await customElements.whenDefined('atomic-search-interface');
+        const searchInterface = document.querySelector('atomic-search-interface');
+
+        // Initialization
+        await searchInterface.initialize({
+          accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
+          organizationId: 'searchuisamples',
+        });
+
+        // Trigger a first search
+        searchInterface.executeFirstSearch();
+
+        // Add/modify a translation
+        // searchInterface.i18n.addResource('en', 'translation', 'search', 'Make me feel lucky!');
+        // Change the language of the interface dynamically
+        // searchInterface.language = 'fr';
+        // Interact with the engine
+        // searchInterface.engine.dispatch(...);
+        // Get all strings for a language/namespace
+        // const allStrings = searchInterface.i18n.getResourceBundle('en', 'translation');
+      })();
+    </script>
+    <style>
+      /* Example of CSS variables customiætion */
+      :root {
+        --atomic-primary: blue;
+        --atomic-secondary: blue;
+        --atomic-separator: ' - ';
+      }
+
+      /* Example of result templates CSS parts customization */
+      /* atomic-result::part(result-link):hover {
+        color: orange;
+      } */
+    </style>
+    <style>
+      /* Example of generic layout styling  */
+      .main {
+        width: 100%;
+        max-width: 1250px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 25% 1fr;
+        gap: 20px;
+      }
+
+      .search-box-item {
+        grid-column-start: 2;
+      }
+
+      .footer-item {
+        grid-column-start: 2;
+        grid-row-start: 3;
+      }
+
+      .side-by-side-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+      }
+
+      atomic-facet-manager {
+        padding-top: 13px;
+      }
+
+      atomic-result-list {
+        display: block;
+        margin-top: 10px;
+      }
+
+      atomic-result::part(result-printable-uri-list-element) {
+        text-transform: capitalize;
+      }
+    </style>
+  </head>
+  <body>
+    <atomic-search-interface id="search">
+      <div class="main">
+        <atomic-search-box class="search-box-item"></atomic-search-box>
+
+        <atomic-facet-manager>
+          <atomic-facet field="author" label="Authors"></atomic-facet>
+          <atomic-numeric-facet field="size" label="File sizes">
+            <atomic-numeric-range start="0" end="10" end-inclusive="true"></atomic-numeric-range>
+          </atomic-numeric-facet>
+          <atomic-date-facet field="created" label="Created"></atomic-date-facet>
+          <atomic-category-facet field="geographicalhierarchy" label="World Atlas"></atomic-category-facet>
+        </atomic-facet-manager>
+
+        <section id="results-container">
+          <atomic-breadcrumb-manager></atomic-breadcrumb-manager>
+          <atomic-did-you-mean></atomic-did-you-mean>
+          <atomic-query-error></atomic-query-error>
+          <section id="side-by-side-container">
+            <atomic-query-summary></atomic-query-summary>
+            <atomic-sort-dropdown>
+              <atomic-sort-criteria caption="relevance" criteria="relevancy"></atomic-sort-criteria>
+              <atomic-sort-criteria caption="mostRecent" criteria="date descending"></atomic-sort-criteria>
+            </atomic-sort-dropdown>
+          </section>
+
+          <atomic-no-results></atomic-no-results>
+
+          <atomic-result-list fields-to-include="filetype,liboardinteractionstyle">
+            <!-- Custom result template examples -->
+            <atomic-result-template
+              must-match-filetype="lithiummessage"
+              must-not-match-liboardinteractionstyle="contest"
+            >
+              <template>
+                <!-- Styling result template internaly -->
+                <style>
+                  h3 {
+                    font-weight: bold;
+                    color: var(--atomic-secondary);
+                  }
+                </style>
+                <h3>Contest message</h3>
+                <atomic-result-link></atomic-result-link>
+              </template>
+            </atomic-result-template>
+            <atomic-result-template id="singaporeTitle">
+              <template> 🇸🇬 <atomic-result-link></atomic-result-link> </template>
+              <!-- Adding Javascript conditions -->
+              <script>
+                document.querySelector('atomic-result-template#singaporeTitle').conditions = [
+                  (result) => /singapore/i.test(result.title),
+                ];
+              </script>
+            </atomic-result-template>
+          </atomic-result-list>
+        </section>
+        <section id="footer-item side-by-side-container">
+          <atomic-pager></atomic-pager>
+          <atomic-results-per-page></atomic-results-per-page>
+        </section>
+      </div>
+    </atomic-search-interface>
+  </body>
+</html>

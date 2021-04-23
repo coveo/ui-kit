@@ -2,7 +2,7 @@ import {
   DateFacetRequest,
   DateRangeRequest,
 } from '../../../../features/facets/range-facets/date-facet-set/interfaces/request';
-import {Engine} from '../../../../app/headless-engine';
+import {Engine} from '../../../../app/engine';
 import {DateFacetRegistrationOptions} from '../../../../features/facets/range-facets/date-facet-set/interfaces/options';
 import {
   DateFacetResponse,
@@ -19,15 +19,17 @@ import {
   SearchSection,
 } from '../../../../state/state-sections';
 import {executeToggleDateFacetSelect} from '../../../../features/facets/range-facets/date-facet-set/date-facet-controller-actions';
-import {validateOptions} from '../../../../utils/validate-payload';
+
 import {
   DateFacetOptions,
-  dateFacetOptionsSchema,
+  validateDateFacetOptions,
 } from './headless-date-facet-options';
 import {determineFacetId} from '../../_common/facet-id-determinor';
 import {DateRangeOptions, DateRangeInput, buildDateRange} from './date-range';
 import {Controller} from '../../../controller/headless-controller';
 import {RangeFacetSortCriterion} from '../../../../features/facets/range-facets/generic/interfaces/request';
+import {configuration, dateFacetSet, search} from '../../../../app/reducers';
+import {loadReducerError} from '../../../../utils/errors';
 
 export {
   DateFacetOptions,
@@ -126,9 +128,13 @@ export interface DateFacetState {
  * @returns A `DateFacet` controller instance.
  */
 export function buildDateFacet(
-  engine: Engine<ConfigurationSection & SearchSection & DateFacetSection>,
+  engine: Engine<object>,
   props: DateFacetProps
 ): DateFacet {
+  if (!loadDateFacetReducers(engine)) {
+    throw loadReducerError;
+  }
+
   assertRangeFacetOptions(props.options, 'buildDateFacet');
 
   const dispatch = engine.dispatch;
@@ -140,8 +146,7 @@ export function buildDateFacet(
     facetId,
   };
 
-  validateOptions(engine, dateFacetOptionsSchema, options, 'buildDateFacet');
-
+  validateDateFacetOptions(engine, options);
   dispatch(registerDateFacet(options));
 
   const rangeFacet = buildRangeFacet<DateFacetRequest, DateFacetResponse>(
@@ -163,4 +168,11 @@ export function buildDateFacet(
       return rangeFacet.state;
     },
   };
+}
+
+function loadDateFacetReducers(
+  engine: Engine<object>
+): engine is Engine<ConfigurationSection & SearchSection & DateFacetSection> {
+  engine.addReducers({configuration, search, dateFacetSet});
+  return true;
 }

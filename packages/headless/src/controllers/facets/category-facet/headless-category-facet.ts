@@ -1,4 +1,4 @@
-import {Engine} from '../../../app/headless-engine';
+import {Engine} from '../../../app/engine';
 import {
   buildController,
   Controller,
@@ -41,6 +41,13 @@ import {
 } from './headless-category-facet-options';
 import {determineFacetId} from '../_common/facet-id-determinor';
 import {CategoryFacetValue} from '../../../features/facets/category-facet-set/interfaces/response';
+import {
+  categoryFacetSearchSet,
+  categoryFacetSet,
+  configuration,
+  search,
+} from '../../../app/reducers';
+import {loadReducerError} from '../../../utils/errors';
 
 export {CategoryFacetValue, CategoryFacetOptions, CategoryFacetSearchOptions};
 
@@ -207,16 +214,16 @@ export interface CategoryFacetSearchResult {
  * @returns A `CategoryFacet` controller instance.
  * */
 export function buildCategoryFacet(
-  engine: Engine<
-    CategoryFacetSection &
-      SearchSection &
-      ConfigurationSection &
-      CategoryFacetSearchSection
-  >,
+  engine: Engine<object>,
   props: CategoryFacetProps
 ): CategoryFacet {
+  if (!loadCategoryFacetReducers(engine)) {
+    throw loadReducerError;
+  }
+
   const controller = buildController(engine);
   const {dispatch} = engine;
+  const getState = () => engine.state;
 
   const facetId = determineFacetId(engine, props.options);
   const options: Required<CategoryFacetRegistrationOptions> = {
@@ -307,7 +314,7 @@ export function buildCategoryFacet(
       const response = getResponse();
 
       const {parents, values} = partitionIntoParentsAndValues(response?.values);
-      const isLoading = engine.state.search.isLoading;
+      const isLoading = getState().search.isLoading;
       const hasActiveValues = parents.length !== 0;
       const canShowMoreValues =
         parents.length > 0
@@ -328,4 +335,21 @@ export function buildCategoryFacet(
       };
     },
   };
+}
+
+function loadCategoryFacetReducers(
+  engine: Engine<object>
+): engine is Engine<
+  CategoryFacetSection &
+    CategoryFacetSearchSection &
+    ConfigurationSection &
+    SearchSection
+> {
+  engine.addReducers({
+    categoryFacetSet,
+    categoryFacetSearchSet,
+    configuration,
+    search,
+  });
+  return true;
 }

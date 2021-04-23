@@ -263,6 +263,17 @@ const controllers: ControllerConfiguration[] = [
       ],
     },
   },
+  {
+    initializer: 'buildQuickview',
+    samplePaths: {
+      react_class: [
+        'packages/samples/headless-react/src/components/quickview/quickview.class.tsx',
+      ],
+      react_fn: [
+        'packages/samples/headless-react/src/components/quickview/quickview.fn.tsx',
+      ],
+    },
+  },
 ];
 
 const result = controllers.map((controller) =>

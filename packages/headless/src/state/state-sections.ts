@@ -20,6 +20,9 @@ import {RedirectionState} from '../features/redirection/redirection-state';
 import {SearchState} from '../features/search/search-state';
 import {SortCriteriaState} from '../features/sort-criteria/sort-criteria-state';
 import {FacetOrderState} from '../features/facets/facet-order/facet-order-state';
+import {ResultPreviewState} from '../features/result-preview/result-preview-state';
+import {StateWithHistory} from '../app/undoable';
+import {HistoryState} from '../features/history/history-state';
 
 export interface QuerySection {
   /**
@@ -73,6 +76,13 @@ export interface PaginationSection {
    * The properties related to pagination.
    */
   pagination: PaginationState;
+}
+
+export interface ResultPreviewSection {
+  /**
+   * The properties related to the previewed result.
+   */
+  resultPreview: ResultPreviewState;
 }
 
 export interface ContextSection {
@@ -182,6 +192,13 @@ export interface FacetOrderSection {
    * The order of facets.
    */
   facetOrder: FacetOrderState;
+}
+
+export interface HistorySection {
+  /**
+   * The snapshots of state.
+   */
+  history: StateWithHistory<HistoryState>;
 }
 
 export interface VersionSection {

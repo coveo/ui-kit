@@ -1,5 +1,3 @@
-import {StateWithHistory} from '../app/undoable';
-import {HistoryState} from '../features/history/history-state';
 import {
   CategoryFacetSearchSection,
   CategoryFacetSection,
@@ -24,7 +22,9 @@ import {
   FacetOptionsSection,
   DebugSection,
   FacetOrderSection,
+  ResultPreviewSection,
   VersionSection,
+  HistorySection,
 } from './state-sections';
 
 export type SearchParametersState = FacetSection &
@@ -49,7 +49,9 @@ export type SearchAppState = SearchParametersState &
   RedirectionSection &
   QuerySuggestionSection &
   SearchSection &
+  ResultPreviewSection &
   DidYouMeanSection &
   FieldsSection &
   FacetOrderSection &
-  VersionSection & {history: StateWithHistory<HistoryState>};
+  VersionSection &
+  HistorySection;

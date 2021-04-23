@@ -14,7 +14,6 @@ import {
   buildFacetBaseMetadata,
   FacetSelectionChangeMetadata,
   FacetUpdateSortMetadata,
-  buildFacetStateMetadata,
   getStateNeededForFacetMetadata,
   buildFacetSelectionChangeMetadata,
 } from './facet-set-analytics-actions-utils';
@@ -67,8 +66,8 @@ export const logFacetSearch = (facetId: string) =>
       validatePayload(facetId, facetIdDefinition);
       const stateForAnalytics = getStateNeededForFacetMetadata(state);
       const metadata = buildFacetBaseMetadata(facetId, stateForAnalytics);
-      const facetState = buildFacetStateMetadata(stateForAnalytics);
-      return client.logFacetSearch(metadata, facetState);
+
+      return client.logFacetSearch(metadata);
     }
   )();
 /**
@@ -92,9 +91,8 @@ export const logFacetUpdateSort = (payload: FacetUpdateSortMetadata) =>
 
       const base = buildFacetBaseMetadata(facetId, stateForAnalytics);
       const metadata = {...base, criteria: criterion};
-      const facetState = buildFacetStateMetadata(stateForAnalytics);
 
-      return client.logFacetUpdateSort(metadata, facetState);
+      return client.logFacetUpdateSort(metadata);
     }
   )();
 
@@ -111,9 +109,8 @@ export const logFacetClearAll = (facetId: string) =>
 
       const stateForAnalytics = getStateNeededForFacetMetadata(state);
       const metadata = buildFacetBaseMetadata(facetId, stateForAnalytics);
-      const facetState = buildFacetStateMetadata(stateForAnalytics);
 
-      return client.logFacetClearAll(metadata, facetState);
+      return client.logFacetClearAll(metadata);
     }
   )();
 
@@ -136,9 +133,8 @@ export const logFacetSelect = (payload: FacetSelectionChangeMetadata) =>
         payload,
         stateForAnalytics
       );
-      const facetState = buildFacetStateMetadata(stateForAnalytics);
 
-      return client.logFacetSelect(metadata, facetState);
+      return client.logFacetSelect(metadata);
     }
   )();
 
@@ -160,9 +156,8 @@ export const logFacetDeselect = (payload: FacetSelectionChangeMetadata) =>
         payload,
         stateForAnalytics
       );
-      const facetState = buildFacetStateMetadata(stateForAnalytics);
 
-      return client.logFacetDeselect(metadata, facetState);
+      return client.logFacetDeselect(metadata);
     }
   )();
 
@@ -179,13 +174,11 @@ export const logFacetBreadcrumb = (payload: FacetSelectionChangeMetadata) =>
         facetId: facetIdDefinition,
         facetValue: requiredNonEmptyString,
       });
-      const stateForAnalytics = getStateNeededForFacetMetadata(state);
       const metadata = buildFacetSelectionChangeMetadata(
         payload,
         getStateNeededForFacetMetadata(state)
       );
-      const facetState = buildFacetStateMetadata(stateForAnalytics);
 
-      return client.logBreadcrumbFacet(metadata, facetState);
+      return client.logBreadcrumbFacet(metadata);
     }
   )();

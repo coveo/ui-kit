@@ -90,26 +90,20 @@ describe('Standard Numeric Facet with automatic ranges generated', () => {
 
   describe('When select 1 facetValue checkbox', () => {
     it('Should activate checkbox and log UA', () => {
-      assertBasicFacetFunctionality(
-        FacetAlias.facetFirstValueLabel,
-        numericFacetProp.field
-      );
+      assertBasicFacetFunctionality(numericFacetProp.field);
     });
 
     it('Should trigger breadcrumb and display correctly', () => {
-      cy.get(FacetAlias.facetFirstValueLabel).click();
+      cy.get(FacetAlias.facetFirstValue).find(FacetSelectors.label).click();
       createBreadcrumbShadowAlias();
       cy.get(BreadcrumbAlias.breadcrumbClearAllFilter).should('be.visible');
-      facetValueShouldDisplayInBreadcrumb(
-        FacetAlias.facetFirstValueLabel,
-        '.breadcrumb:nth-child(1) button span'
-      );
+      facetValueShouldDisplayInBreadcrumb(FacetAlias.facetFirstValue, 1);
     });
 
     it('Should reflect selected facetValue on URL', () => {
-      cy.get(FacetAlias.facetFirstValueLabel)
-        .click()
-        .find('label span:nth-child(1)')
+      cy.get(FacetAlias.facetFirstValue).find(FacetSelectors.label).click();
+      cy.get(FacetAlias.facetFirstValue)
+        .find(FacetSelectors.labelText)
         .invoke('text')
         .then((txt) => {
           const facetValueInApiFormat = convertFacetValueToAPIformat(
@@ -174,10 +168,7 @@ describe('Numeric facet with manually specified ranges', () => {
 
     describe('When select 1 facetValue checkbox', () => {
       it('Should activate checkbox and log UA', () => {
-        assertBasicFacetFunctionality(
-          FacetAlias.facetFirstValueLabel,
-          numericFacetProp.field
-        );
+        assertBasicFacetFunctionality(numericFacetProp.field);
       });
     });
   });
@@ -228,7 +219,7 @@ describe('Numeric with invalid options', () => {
           end: 100000,
         },
         {
-          start: 'x1000000',
+          start: ('x1000000' as unknown) as number,
           end: 1000000,
         },
       ];
@@ -240,5 +231,21 @@ describe('Numeric with invalid options', () => {
       );
       shouldRenderErrorComponent(FacetSelectors.numericFacet);
     });
+  });
+});
+
+describe('when no first search has yet been executed', () => {
+  beforeEach(() => {
+    setUpPage(
+      ` <atomic-numeric-facet field="${numericFacetProp.field}"></atomic-numeric-facet>`,
+      false
+    );
+  });
+
+  it('should render a placeholder', () => {
+    cy.get(FacetSelectors.numericFacet)
+      .shadow()
+      .find('div[part="placeholder"]')
+      .should('be.visible');
   });
 });

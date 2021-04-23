@@ -36,7 +36,7 @@ node('linux && docker') {
         sh 'apt-get -y install libgtk2.0-0 libgtk-3-0 libnotify-dev libgconf-2-4 libgbm-dev libnss3 libasound2 xauth xvfb'
         sh 'rm -rf /var/lib/apt/lists/*'
         sh 'cd packages/atomic && npx cypress install'
-        sh 'cd packages/atomic && npm start & npx wait-on http://localhost:3333'
+        sh 'cd packages/atomic && npm run start:prod & npx wait-on http://localhost:3333'
         sh 'NO_COLOR=1 npm run cypress:test'
       }
 
@@ -82,6 +82,9 @@ node('linux && docker') {
 
         sh 'mkdir veracode/headless'
         sh 'cp -R packages/headless/src packages/headless/package.json packages/headless/package-lock.json veracode/headless'
+
+        sh 'mkdir veracode/atomic'
+        sh 'cp -R packages/atomic/src packages/atomic/package.json packages/atomic/package-lock.json veracode/atomic'
       }
 
       stage('Deployment pipeline upload') {

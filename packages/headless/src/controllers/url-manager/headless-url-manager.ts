@@ -1,5 +1,5 @@
 import {Schema, StringValue} from '@coveo/bueno';
-import {Engine} from '../../app/headless-engine';
+import {Engine} from '../../app/engine';
 import {restoreSearchParameters} from '../../features/search-parameters/search-parameter-actions';
 import {SearchParametersState} from '../../state/search-app-state';
 import {validateInitialState} from '../../utils/validate-payload';
@@ -10,6 +10,8 @@ import {buildSearchParameterSerializer} from '../../features/search-parameters/s
 import {buildSearchParameterManager} from '../search-parameter-manager/headless-search-parameter-manager';
 import {logParametersChange} from '../../features/search-parameters/search-parameter-analytics-actions';
 import {initialSearchParameterSelector} from '../../features/search-parameters/search-parameter-selectors';
+import {configuration} from '../../app/reducers';
+import {loadReducerError} from '../../utils/errors';
 
 export interface UrlManagerProps {
   /**
@@ -61,9 +63,13 @@ export interface UrlManagerState {
  * @returns A `UrlManager` controller instance.
  */
 export function buildUrlManager(
-  engine: Engine<Partial<SearchParametersState> & ConfigurationSection>,
+  engine: Engine<object>,
   props: UrlManagerProps
 ): UrlManager {
+  if (!loadUrlManagerReducers(engine)) {
+    throw loadReducerError;
+  }
+
   const {dispatch} = engine;
   const controller = buildController(engine);
 
@@ -112,4 +118,11 @@ export function buildUrlManager(
 function fragmentActiveSearchParameters(fragment: string) {
   const decodedState = decodeURIComponent(fragment);
   return buildSearchParameterSerializer().deserialize(decodedState);
+}
+
+function loadUrlManagerReducers(
+  engine: Engine<object>
+): engine is Engine<Partial<SearchParametersState> & ConfigurationSection> {
+  engine.addReducers({configuration});
+  return true;
 }

@@ -25,7 +25,18 @@ module.exports = {
         "error": "var(--atomic-error)",
         "on-error": "var(--atomic-on-error)",
         "visited": "var(--atomic-visited)",
-      }
+      },
+      borderRadius: {
+        "sm": "var(--atomic-border-radius-sm)",
+        "DEFAULT": "var(--atomic-border-radius)",
+        "md": "var(--atomic-border-radius-md)",
+        "lg": "var(--atomic-border-radius-lg)",
+        "xl": "var(--atomic-border-radius-xl)",
+        "full": "var(--atomic-border-radius-full)",
+      },
+      fontWeight: {
+        "bold": "var(--atomic-font-bold)",
+      },
     },
     backgroundColor: (theme) => ({
       ...theme('colors'),

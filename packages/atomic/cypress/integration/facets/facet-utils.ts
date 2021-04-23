@@ -11,12 +11,21 @@ export function validateFacetComponentLoaded(
   facetSelector?: string
 ) {
   facetSelector = facetSelector ? facetSelector : FacetSelectors.facetStandard;
-  cy.get(facetSelector).should('be.visible');
+  cy.get(`${facetSelector}[label="${label}"]`).should('be.visible');
   cy.get(FacetAlias.facetShadow)
     .find('div:nth-child(1)')
     .should('contain.text', label);
   cy.checkA11y(facetSelector);
   assertNonZeroFacetCount();
+}
+
+export function validateFacetComponentVisible(
+  label: string,
+  facetSelector?: string
+) {
+  facetSelector = facetSelector ? facetSelector : FacetSelectors.facetStandard;
+  cy.get(`${facetSelector}[label=${label}]`).should('exist');
+  cy.get(`${facetSelector}[label=${label}]`).should('not.be.visible');
 }
 
 export function validateFacetNumberofValueEqual(totalNumber: number) {
@@ -33,42 +42,45 @@ export function validateFacetNumberofValueGreaterThan(totalNumber: number) {
 
 export function facetValueShouldDisplayInBreadcrumb(
   facetValueSelector: string,
-  valueDisplayInBreadcrumbSelector: string
+  nthBreadcrumb: number
 ) {
   cy.get(facetValueSelector)
-    .find('label span:nth-child(1)')
+    .find(FacetSelectors.labelText)
     .invoke('text')
     .then((text) => {
       cy.get(BreadcrumbAlias.breadcrumbFacet)
         .first()
-        .find(valueDisplayInBreadcrumbSelector)
+        .find(`li:nth-child(${nthBreadcrumb})`)
         .should('be.visible')
         .contains(text);
     });
 }
 
-export function assertBasicFacetFunctionality(selector: string, field: string) {
-  cy.get(selector).click();
-  cy.get(selector).find(FacetSelectors.checkbox).should('be.checked');
-  assertNonZeroFacetCount();
-  cy.get(selector)
-    .find('label span:nth-child(1)')
-    .invoke('text')
-    .then((txt) => {
-      cy.getAnalyticsAt('@coveoAnalytics', 1).then((analyticsBody: any) => {
+export function assertBasicFacetFunctionality(field: string) {
+  cy.wait('@coveoAnalytics');
+
+  cy.get(FacetAlias.facetFirstValue).find(FacetSelectors.label).click();
+  cy.wait('@coveoAnalytics').then(({request}) => {
+    const analyticsBody = request.body;
+    expect(analyticsBody).to.have.property('actionCause', 'facetSelect');
+    expect(analyticsBody.customData).to.have.property('facetField', field);
+    expect(analyticsBody.facetState[0]).to.have.property('state', 'selected');
+    expect(analyticsBody.facetState[0]).to.have.property('field', field);
+
+    cy.get(FacetAlias.facetFirstValue)
+      .find(FacetSelectors.labelText)
+      .invoke('text')
+      .then((txt) => {
         const facetTypeDetected = analyticsBody.facetState[0].facetType;
         txt = convertFacetValueToAPIformat(txt.trim(), facetTypeDetected);
-
         expect(analyticsBody.customData).to.have.property('facetValue', txt);
-        expect(analyticsBody).to.have.property('actionCause', 'facetSelect');
-        expect(analyticsBody.customData).to.have.property('facetField', field);
-        expect(analyticsBody.facetState[0]).to.have.property(
-          'state',
-          'selected'
-        );
-        expect(analyticsBody.facetState[0]).to.have.property('field', field);
       });
-    });
+  });
+
+  cy.get(FacetAlias.facetFirstValue)
+    .find(FacetSelectors.checkbox)
+    .should('be.checked');
+  assertNonZeroFacetCount();
 }
 
 export async function assertSortCriteria(
@@ -112,7 +124,7 @@ export function convertFacetValueToAPIformat(
 }
 
 export interface NumericRange {
-  start: number | string;
+  start: number;
   end: number;
 }
 export interface DateRange {
@@ -125,7 +137,9 @@ export function convertRangeToFacetValue(
   valueSeparator?: string
 ) {
   valueSeparator = valueSeparator ? valueSeparator : ' to ';
-  const formatedStartValue = new Intl.NumberFormat().format(range.start);
+  const formatedStartValue = new Intl.NumberFormat().format(
+    Number(range.start)
+  );
   const formatedEndValue = new Intl.NumberFormat().format(range.end);
 
   return `${formatedStartValue}${valueSeparator}${formatedEndValue}`;
@@ -140,36 +154,46 @@ export function convertDateToFacetValue(
 }
 
 export function assertDeselectFacet(field: string) {
-  cy.get(FacetAlias.facetFirstValueLabel).click();
-  cy.wait(500);
-  cy.get(FacetAlias.facetFirstValueLabel)
-    .click()
+  cy.wait('@coveoAnalytics');
+
+  cy.get(FacetAlias.facetFirstValue).find(FacetSelectors.label).click();
+  cy.wait('@coveoAnalytics');
+
+  cy.get(FacetAlias.facetFirstValue).find(FacetSelectors.label).click();
+  cy.get(FacetAlias.facetFirstValue)
     .find(FacetSelectors.checkbox)
     .should('not.be.checked');
-  cy.getAnalyticsAt('@coveoAnalytics', 2).then((analyticsBody: any) => {
-    expect(analyticsBody).to.have.property('actionCause', 'facetDeselect');
-    expect(analyticsBody.customData).to.have.property('facetField', field);
+  cy.wait('@coveoAnalytics').then(({request}) => {
+    expect(request.body).to.have.property('actionCause', 'facetDeselect');
+    expect(request.body.customData).to.have.property('facetField', field);
   });
 }
 
 export function assertClearAllFacet() {
-  cy.get(FacetAlias.facetFirstValueLabel).click();
-  cy.get(FacetAlias.facetSecondValueLabel).click();
+  cy.wait('@coveoAnalytics');
+
+  cy.get(FacetAlias.facetFirstValue).find(FacetSelectors.label).click();
+  cy.wait('@coveoAnalytics');
+
+  cy.get(FacetAlias.facetSecondValue).find(FacetSelectors.label).click();
+  cy.wait('@coveoAnalytics');
+
   cy.get(FacetAlias.facetShadow).find(FacetSelectors.clearAllButton).click();
-  cy.get(FacetAlias.facetFirstValueLabel)
-    .find(FacetSelectors.checkbox)
-    .should('not.be.checked');
-  cy.get(FacetAlias.facetSecondValueLabel)
-    .find(FacetSelectors.checkbox)
-    .should('not.be.checked');
-  cy.getAnalyticsAt('@coveoAnalytics', 3).then((analyticsBody) => {
-    expect(analyticsBody).to.have.property('actionCause', 'facetClearAll');
-    expect(analyticsBody.facetState).to.have.lengthOf(0);
+  cy.wait('@coveoAnalytics').then(({request}) => {
+    expect(request.body).to.have.property('actionCause', 'facetClearAll');
+    expect(request.body.facetState).to.have.lengthOf(0);
   });
+
+  cy.get(FacetAlias.facetFirstValue)
+    .find(FacetSelectors.checkbox)
+    .should('not.be.checked');
+  cy.get(FacetAlias.facetSecondValue)
+    .find(FacetSelectors.checkbox)
+    .should('not.be.checked');
 }
 
 export function assertNonZeroFacetCount(selector?: string) {
-  selector = selector ? selector : FacetAlias.facetAllValueLabel;
+  selector = selector ? selector : FacetAlias.facetAllValueCount;
   cy.getTextOfAllElements(selector).then((counts) => {
     expect(counts).not.to.include('0');
   });
@@ -203,4 +227,76 @@ export function revertFormatedDateFacet(date: string) {
   const month = splitDate[1];
   const day = splitDate[0];
   return `${year}/${month}/${day}`;
+}
+
+export function assertClickShowMore(
+  totalFacetValueBefore: number,
+  totalFacetValueAfter = totalFacetValueBefore * 2
+) {
+  validateFacetNumberofValueEqual(totalFacetValueBefore);
+  cy.get(FacetAlias.facetShadow).find(FacetSelectors.showMoreButton).click();
+  validateFacetNumberofValueEqual(totalFacetValueAfter);
+  cy.get(FacetAlias.facetShadow)
+    .find(FacetSelectors.showLessButton)
+    .should('be.visible');
+}
+
+export function assertShowMoreUA(field: string) {
+  cy.get(FacetAlias.facetShadow).find(FacetSelectors.showMoreButton).click();
+  cy.wait('@coveoAnalytics').then((intercept: any) => {
+    const analyticsBody = intercept.request.body;
+    expect(analyticsBody).to.have.property('eventType', 'facet');
+    expect(analyticsBody).to.have.property(
+      'eventValue',
+      'showMoreFacetResults'
+    );
+    expect(analyticsBody.customData).to.have.property('facetField', field);
+  });
+}
+
+export function assertClickShowLess(
+  totalFacetValueBefore: number,
+  totalFacetValueAfter = totalFacetValueBefore / 2
+) {
+  cy.get(FacetAlias.facetShadow).find(FacetSelectors.showMoreButton).click();
+  validateFacetNumberofValueEqual(totalFacetValueBefore);
+  cy.get(FacetAlias.facetShadow).find(FacetSelectors.showLessButton).click();
+  validateFacetNumberofValueEqual(totalFacetValueAfter);
+  cy.get(FacetAlias.facetShadow)
+    .find(FacetSelectors.showLessButton)
+    .should('not.exist');
+}
+
+export function assertShowLessUA(field: string) {
+  cy.get(FacetAlias.facetShadow).find(FacetSelectors.showMoreButton).click();
+  cy.wait('@coveoAnalytics');
+  cy.get(FacetAlias.facetShadow).find(FacetSelectors.showLessButton).click();
+  cy.wait('@coveoAnalytics').then((intercept: any) => {
+    const analyticsBody = intercept.request.body;
+    expect(analyticsBody).to.have.property('eventType', 'facet');
+    expect(analyticsBody).to.have.property(
+      'eventValue',
+      'showLessFacetResults'
+    );
+    expect(analyticsBody.customData).to.have.property('facetField', field);
+  });
+}
+
+export function typeQueryAndWaitUA(searchboxSelector: string, query: string) {
+  for (let i = 0; i < query.length; i++) {
+    const charac = query.charAt(i);
+    cy.get(searchboxSelector).type(charac, {force: true});
+    cy.wait('@coveoAnalytics');
+  }
+}
+
+export function assertHightlightedText(text: string) {
+  cy.get(FacetAlias.facetShadow)
+    .find('ul[part="search-results"] li[part="search-result"] b')
+    .as('textHightlight');
+  cy.getTextOfAllElements('@textHightlight').then((labels) => {
+    labels.forEach((i: string) => {
+      expect(i.toLowerCase()).not.to.contains(text.toLowerCase());
+    });
+  });
 }

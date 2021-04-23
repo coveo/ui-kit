@@ -7,7 +7,8 @@ import {QueryRankingExpression} from '../../api/search/search/query-ranking-expr
 import {Result} from '../../api/search/search/result';
 import {SearchResponseSuccessWithDebugInfo} from '../../api/search/search/search-response';
 import {SecurityIdentity} from '../../api/search/search/security-identity';
-import {Engine} from '../../app/headless-engine';
+import {Engine} from '../../app/engine';
+import {configuration, debug, search} from '../../app/reducers';
 import {
   AnalyticsType,
   makeNoopAnalyticsAction,
@@ -26,6 +27,7 @@ import {
   DebugSection,
   SearchSection,
 } from '../../state/state-sections';
+import {loadReducerError} from '../../utils/errors';
 import {
   validateInitialState,
   validateOptions,
@@ -171,12 +173,18 @@ export interface QueryExpressions {
  * @returns A `RelevanceInspector` controller instance.
  */
 export function buildRelevanceInspector(
-  engine: Engine<DebugSection & SearchSection & ConfigurationSection>,
+  engine: Engine<object>,
   props: RelevanceInspectorProps = {}
 ): RelevanceInspector {
+  if (!loadRelevanceInspectorReducers(engine)) {
+    throw loadReducerError;
+  }
+
   let prevSearchUid = '';
   const controller = buildController(engine);
   const {dispatch} = engine;
+  const getState = () => engine.state;
+
   const initialState = validateInitialState(
     engine,
     initialStateSchema,
@@ -206,8 +214,10 @@ export function buildRelevanceInspector(
     ...controller,
 
     get state() {
-      const isEnabled = engine.state.debug;
-      if (!engine.state.debug) {
+      const state = getState();
+      const isEnabled = state.debug;
+
+      if (!state.debug) {
         return {isEnabled};
       }
 
@@ -218,11 +228,11 @@ export function buildRelevanceInspector(
         constantExpression,
         userIdentities,
         rankingExpressions,
-      } = engine.state.search.response as SearchResponseSuccessWithDebugInfo;
+      } = state.search.response as SearchResponseSuccessWithDebugInfo;
 
       return {
         isEnabled,
-        rankingInformation: rankingInformationSelector(engine.state),
+        rankingInformation: rankingInformationSelector(state),
         executionReport,
         expressions: {
           basicExpression,
@@ -287,4 +297,15 @@ export function buildRelevanceInspector(
       };
     },
   };
+}
+
+function loadRelevanceInspectorReducers(
+  engine: Engine<object>
+): engine is Engine<DebugSection & SearchSection & ConfigurationSection> {
+  engine.addReducers({
+    debug,
+    search,
+    configuration,
+  });
+  return true;
 }

@@ -1,8 +1,4 @@
-import {Engine} from '../../app/headless-engine';
-import {
-  ConfigurationSection,
-  ProductRecommendationsSection,
-} from '../../state/state-sections';
+import {Engine} from '../../app/engine';
 import {Schema} from '@coveo/bueno';
 import {
   baseProductRecommendationsOptionsSchema,
@@ -78,7 +74,7 @@ export interface CartRecommendationsListState {
  * @returns A `CartRecommendationsList` controller instance.
  */
 export function buildCartRecommendationsList(
-  engine: Engine<ProductRecommendationsSection & ConfigurationSection>,
+  engine: Engine<object>,
   props: CartRecommendationsListProps
 ): CartRecommendationsList {
   const options = validateOptions(

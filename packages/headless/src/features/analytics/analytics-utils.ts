@@ -21,6 +21,7 @@ import {CoveoSearchPageClient, SearchPageClientProvider} from 'coveo.analytics';
 import {SearchEventResponse} from 'coveo.analytics/dist/definitions/events';
 import {AsyncThunkAction, createAsyncThunk} from '@reduxjs/toolkit';
 import {ThunkExtraArguments} from '../../app/store';
+import {requiredNonEmptyString} from '../../utils/validate-payload';
 
 export enum AnalyticsType {
   Search,
@@ -140,11 +141,6 @@ export const documentIdentifier = (result: Result): DocumentIdentifier => {
     contentIDValue: result.raw.permanentid || '',
   };
 };
-
-const requiredNonEmptyString = new StringValue({
-  required: true,
-  emptyAllowed: false,
-});
 
 const rawPartialDefinition = {
   urihash: new StringValue(),

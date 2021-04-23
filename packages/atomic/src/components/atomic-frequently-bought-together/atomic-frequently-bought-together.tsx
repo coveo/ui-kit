@@ -10,6 +10,9 @@ import {
   productRecommendationsAppReducers,
 } from '@coveo/headless';
 
+/**
+ * The `atomic-frequently-bought-together` component suggests products frequently bought with the current product based on the shopping cart of other users.
+ */
 @Component({
   tag: 'atomic-frequently-bought-together',
   shadow: true,

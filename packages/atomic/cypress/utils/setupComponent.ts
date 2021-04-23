@@ -1,9 +1,19 @@
-export function injectComponent(componentInCode: string) {
-  cy.get('atomic-search-interface').should('exist');
-  cy.document().then((document: any) => {
-    document.querySelector(
-      'atomic-search-interface'
-    ).innerHTML = componentInCode;
+export const buildTestUrl = (hash = '') =>
+  `http://localhost:3333/pages/test.html#${hash}`;
+
+const searchInterfaceTag = 'atomic-search-interface';
+export function injectComponent(
+  componentHtml: string,
+  executeFirstSearch = true
+) {
+  cy.document().then(async (document) => {
+    document.body.innerHTML = `<${searchInterfaceTag}>${componentHtml}</${searchInterfaceTag}>`;
+    const searchInterface: any = document.querySelector(searchInterfaceTag);
+    await searchInterface.initialize({
+      accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
+      organizationId: 'searchuisamples',
+    });
+    executeFirstSearch && searchInterface.executeFirstSearch();
   });
 }
 
@@ -27,22 +37,15 @@ export function setupIntercept() {
   }).as('coveoSearch');
 }
 
-export function setUpPage(htmlCode: string) {
+// TODO: rename to setupPage (typo)
+// TODO: add options object for arguments (with urlHash, wait options)
+export function setUpPage(htmlCode: string, executeFirstSearch = true) {
   setupIntercept();
-  // Setup page with new component
-  cy.visit('http://localhost:3333/pages/test.html');
+  cy.visit(buildTestUrl());
   cy.injectAxe();
-  injectComponent(htmlCode);
-  cy.wait(1000);
-}
-
-export function setUpPageNoSearch(htmlCode: string) {
-  setupIntercept();
-  // Setup page with new component
-  cy.visit('http://localhost:3333/pages/test-no-search.html');
-  cy.injectAxe();
-  injectComponent(htmlCode);
-  cy.wait(1000);
+  injectComponent(htmlCode, executeFirstSearch);
+  // TODO: when executeFirstSearch = true, waiting for @coveoSearch would be less flaky
+  cy.wait(300);
 }
 
 export function shouldRenderErrorComponent(selector: string) {

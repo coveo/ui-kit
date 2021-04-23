@@ -1,5 +1,4 @@
 import {FacetStateMetadata} from 'coveo.analytics/dist/definitions/searchPage/searchPageEvents';
-import {SearchAppState} from '../../../state/search-app-state';
 import {
   CategoryFacetSection,
   DateFacetSection,
@@ -10,7 +9,6 @@ import {
 import {getSearchInitialState} from '../../search/search-state';
 import {getCategoryFacetSetInitialState} from '../category-facet-set/category-facet-set-state';
 import {CategoryFacetRequest} from '../category-facet-set/interfaces/request';
-import {CategoryFacetValue} from '../category-facet-set/interfaces/response';
 import {FacetType} from '../facet-api/request';
 import {
   AnyFacetResponse,
@@ -26,6 +24,7 @@ import {getNumericFacetSetInitialState} from '../range-facets/numeric-facet-set/
 import {getFacetSetInitialState} from './facet-set-state';
 import {FacetRequest, FacetSortCriterion} from './interfaces/request';
 import {FacetValue} from './interfaces/response';
+import {categoryFacetSelectedValuesSelector} from '../category-facet-set/category-facet-set-selectors';
 
 export type SectionNeededForFacetMetadata = FacetSection &
   CategoryFacetSection &
@@ -61,12 +60,18 @@ export function buildFacetSelectionChangeMetadata(
 ) {
   const {facetId, facetValue} = payload;
   const base = buildFacetBaseMetadata(facetId, state);
-
-  return {...base, facetValue};
+  const facetType = getFacetType(state, facetId);
+  return {
+    ...base,
+    facetValue:
+      facetType === 'hierarchical'
+        ? getCategoryFacetSelectedValue(state, facetId)
+        : facetValue,
+  };
 }
 
 export function getStateNeededForFacetMetadata(
-  s: Partial<SearchAppState>
+  s: Partial<SectionNeededForFacetMetadata>
 ): SectionNeededForFacetMetadata {
   return {
     facetSet: s.facetSet || getFacetSetInitialState(),
@@ -82,38 +87,57 @@ export const buildFacetStateMetadata = (
 ) => {
   const facetState: FacetStateMetadata[] = [];
 
-  state.search.response.facets.forEach((facetResponse, facetPosition) => {
+  state.search.response.facets.forEach((facetResponse, facetIndex) => {
+    const facetType = getFacetType(state, facetResponse.facetId);
+    const facetResponseAnalytics = mapFacetResponseToAnalytics(
+      facetResponse,
+      facetIndex + 1
+    );
+
+    if (facetType === 'hierarchical') {
+      const hasSelectedValue = !!categoryFacetSelectedValuesSelector(
+        state,
+        facetResponse.facetId
+      ).length;
+
+      if (!hasSelectedValue) {
+        return;
+      }
+
+      facetState.push({
+        ...facetResponseAnalytics,
+        ...mapCategoryFacetValueToAnalytics(state, facetResponse.facetId),
+        facetType,
+        state: 'selected',
+      });
+
+      return;
+    }
+
     (facetResponse.values as Array<AnyFacetValue>).forEach(
-      (facetValue, facetValuePosition) => {
-        if (facetValue.state === 'selected') {
-          const facetType = getFacetType(state, facetResponse.facetId);
-
-          const facetResponseAnalytics = mapFacetResponseToAnalytics(
-            facetResponse,
-            facetPosition + 1
-          );
-
-          const facetValueAnalytics = mapFacetValueToAnalytics(
-            facetValue,
-            facetValuePosition + 1,
-            facetType
-          );
-
-          const facetDisplayValueAnalytics =
-            facetType === 'hierarchical' || facetType === 'specific'
-              ? mapFacetDisplayValueToAnalytics(
-                  facetValue as CategoryFacetValue | FacetValue
-                )
-              : mapRangeDisplayFacetValueToAnalytics(
-                  facetValue as NumericFacetValue | DateFacetValue
-                );
-
-          facetState.push({
-            ...facetResponseAnalytics,
-            ...facetValueAnalytics,
-            ...facetDisplayValueAnalytics,
-          });
+      (facetValue, facetValueIndex) => {
+        if (facetValue.state === 'idle') {
+          return;
         }
+
+        const facetValueAnalytics = mapFacetValueToAnalytics(
+          facetValue,
+          facetValueIndex + 1,
+          facetType
+        );
+
+        const facetDisplayValueAnalytics =
+          facetType === 'specific'
+            ? mapFacetDisplayValueToAnalytics(facetValue as FacetValue)
+            : mapRangeDisplayFacetValueToAnalytics(
+                facetValue as NumericFacetValue | DateFacetValue
+              );
+
+        facetState.push({
+          ...facetResponseAnalytics,
+          ...facetValueAnalytics,
+          ...facetDisplayValueAnalytics,
+        });
       }
     );
   });
@@ -145,12 +169,36 @@ const mapRangeDisplayFacetValueToAnalytics = (
   };
 };
 
-const mapFacetDisplayValueToAnalytics = (
-  facetValue: CategoryFacetValue | FacetValue
-) => {
+const mapFacetDisplayValueToAnalytics = (facetValue: FacetValue) => {
   return {
     displayValue: facetValue.value,
     value: facetValue.value,
+  };
+};
+
+const getCategoryFacetSelectedValue = (
+  state: SectionNeededForFacetMetadata,
+  facetId: string
+) => {
+  const selectedCategoryFacetValues = categoryFacetSelectedValuesSelector(
+    state,
+    facetId
+  );
+  return selectedCategoryFacetValues
+    .map((selectedCategoryFacetValue) => selectedCategoryFacetValue.value)
+    .join(';');
+};
+
+const mapCategoryFacetValueToAnalytics = (
+  state: SectionNeededForFacetMetadata,
+  facetId: string
+) => {
+  const valuePosition = 1;
+  const value = getCategoryFacetSelectedValue(state, facetId);
+  return {
+    value,
+    valuePosition,
+    displayValue: value,
   };
 };
 
@@ -159,7 +207,7 @@ const mapFacetResponseToAnalytics = (
   facetPosition: number
 ) => {
   return {
-    title: response.facetId,
+    title: `${response.field}_${response.facetId}`,
     field: response.field,
     id: response.facetId,
     facetPosition,

@@ -16,7 +16,7 @@ import {
 } from '../../utils/initialization-utils';
 
 /**
- * The `ResultList` component is responsible for displaying query results by applying one or several result templates.
+ * The `atomic-result-list` component is responsible for displaying query results by applying one or several result templates.
  */
 @Component({
   tag: 'atomic-result-list',
