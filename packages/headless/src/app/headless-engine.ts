@@ -27,6 +27,10 @@ import {
   EngineConfigurationOptions,
 } from './engine-configuration-options';
 import {buildLogger} from './logger';
+import {
+  buildThunkExtraArguments,
+  ThunkExtraArguments,
+} from './thunk-extra-arguments';
 
 /**
  * The global headless engine options.
@@ -88,22 +92,36 @@ export interface HeadlessConfigurationOptions
   };
 }
 
+export type SearchEngine<State extends object> = Engine<
+  State,
+  SearchThunkExtraArguments
+>;
+
+export interface SearchThunkExtraArguments extends ThunkExtraArguments {
+  searchAPIClient: SearchAPIClient;
+}
+
 /**
  * The global headless engine.
  * You should instantiate one `HeadlessEngine` class per application and share it.
  * Every headless controller requires an instance of `Engine` as a parameter.
  */
 export class HeadlessEngine<Reducers extends ReducersMapObject>
-  implements Engine<StateFromReducersMapObject<Reducers>> {
+  implements SearchEngine<StateFromReducersMapObject<Reducers>> {
   public logger!: Logger;
-  private engine: Engine<StateFromReducersMapObject<Reducers>>;
+  private engine: SearchEngine<StateFromReducersMapObject<Reducers>>;
 
   constructor(private options: HeadlessOptions<Reducers>) {
     this.validateConfiguration(options);
 
     this.logger = buildLogger(options.loggerOptions);
-    const searchAPIClient = this.createSearchAPIClient();
-    this.engine = buildEngine(options, {searchAPIClient}, this.logger);
+
+    const thunkArguments = {
+      ...buildThunkExtraArguments(options.configuration, this.logger),
+      searchAPIClient: this.createSearchAPIClient(),
+    };
+
+    this.engine = buildEngine(options, thunkArguments);
 
     if (options.configuration.search) {
       this.engine.dispatch(

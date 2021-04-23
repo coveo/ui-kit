@@ -7,30 +7,24 @@ import {
   StateFromReducersMapObject,
   Middleware,
 } from '@reduxjs/toolkit';
-import {AnalyticsClientSendEventHook} from 'coveo.analytics';
 import {debounce} from 'ts-debounce';
-import {NoopPreprocessRequest} from '../api/preprocess-request';
-import {SearchAPIClient} from '../api/search/search-api-client';
 import {
   updateAnalyticsConfiguration,
   updateBasicConfiguration,
 } from '../features/configuration/configuration-actions';
-import {SearchAppState} from '../state/search-app-state';
-import {validatePayloadAndThrow} from '../utils/validate-payload';
 import {EngineConfigurationOptions} from './engine-configuration-options';
 import {createReducerManager, ReducerManager} from './reducer-manager';
-import {ThunkExtraArguments, Store, configureStore} from './store';
+import {Store, configureStore} from './store';
 import {LoggerOptions} from './logger';
 import {Logger} from 'pino';
+import {ThunkExtraArguments} from './thunk-extra-arguments';
 
-type EngineDispatch<State> = ThunkDispatch<
+type EngineDispatch<
   State,
-  ThunkExtraArguments,
-  AnyAction
-> &
-  Dispatch<AnyAction>;
+  ExtraArguments extends ThunkExtraArguments
+> = ThunkDispatch<State, ExtraArguments, AnyAction> & Dispatch<AnyAction>;
 
-export interface Engine<State = SearchAppState> {
+export interface Engine<State, ExtraArguments extends ThunkExtraArguments> {
   /**
    * Dispatches an action directly. This is the only way to trigger a state change.
    * Each headless controller dispatches its own actions.
@@ -39,7 +33,7 @@ export interface Engine<State = SearchAppState> {
    *
    * @returns For convenience, the action object that was just dispatched.
    */
-  dispatch: EngineDispatch<State>;
+  dispatch: EngineDispatch<State, ExtraArguments>;
   /**
    * Adds a change listener. It will be called any time an action is
    * dispatched, and some part of the state tree may potentially have changed.
@@ -109,16 +103,14 @@ export interface EngineOptions<Reducers extends ReducersMapObject> {
   loggerOptions?: LoggerOptions;
 }
 
-interface SearchAPIClientArgument {
-  searchAPIClient: SearchAPIClient;
-}
-
-export function buildEngine<Reducers extends ReducersMapObject>(
+export function buildEngine<
+  Reducers extends ReducersMapObject,
+  ExtraArguments extends ThunkExtraArguments
+>(
   options: EngineOptions<Reducers>,
-  thunkExtraArguments: SearchAPIClientArgument,
-  logger: Logger
-): Engine<StateFromReducersMapObject<Reducers>> {
-  const engine = buildCoreEngine(options, thunkExtraArguments, logger);
+  thunkExtraArguments: ExtraArguments
+): Engine<StateFromReducersMapObject<Reducers>, ExtraArguments> {
+  const engine = buildCoreEngine(options, thunkExtraArguments);
   const {
     accessToken,
     organizationId,
@@ -142,19 +134,17 @@ export function buildEngine<Reducers extends ReducersMapObject>(
   return engine;
 }
 
-function buildCoreEngine<Reducers extends ReducersMapObject>(
+function buildCoreEngine<
+  Reducers extends ReducersMapObject,
+  ExtraArguments extends ThunkExtraArguments
+>(
   options: EngineOptions<Reducers>,
-  thunkExtraArguments: SearchAPIClientArgument,
-  logger: Logger
-): Engine<StateFromReducersMapObject<Reducers>> {
+  thunkExtraArguments: ExtraArguments
+): Engine<StateFromReducersMapObject<Reducers>, ExtraArguments> {
   const {configuration, reducers} = options;
   const reducerManager = createReducerManager(reducers);
-  const store = createStore(
-    options,
-    thunkExtraArguments,
-    logger,
-    reducerManager
-  );
+  const logger = thunkExtraArguments.logger;
+  const store = createStore(options, thunkExtraArguments, reducerManager);
 
   return {
     renewAccessToken: createRenewAccessTokenFunction(
@@ -181,42 +171,22 @@ function buildCoreEngine<Reducers extends ReducersMapObject>(
   };
 }
 
-function createStore<Reducers extends ReducersMapObject>(
+function createStore<
+  Reducers extends ReducersMapObject,
+  ExtraArguments extends ThunkExtraArguments
+>(
   options: EngineOptions<Reducers>,
-  thunkExtraArguments: SearchAPIClientArgument,
-  logger: Logger,
+  thunkExtraArguments: ExtraArguments,
   reducerManager: ReducerManager
 ) {
-  const {preloadedState, middlewares, configuration} = options;
-
-  const analyticsClientMiddleware = getAnalyticsClientMiddleware(configuration);
-  const validatePayload = validatePayloadAndThrow;
-  const preprocessRequest = getPreprocessRequest(configuration);
+  const {preloadedState, middlewares} = options;
 
   return configureStore({
     preloadedState,
     reducer: reducerManager.combinedReducer,
     middlewares,
-    thunkExtraArguments: {
-      logger,
-      analyticsClientMiddleware,
-      validatePayload,
-      preprocessRequest,
-      ...thunkExtraArguments,
-    },
+    thunkExtraArguments,
   });
-}
-
-function getAnalyticsClientMiddleware(
-  configuration: EngineConfigurationOptions
-): AnalyticsClientSendEventHook {
-  const {analytics} = configuration;
-  const NoopAnalyticsMiddleware = (_: string, p: any) => p;
-  return analytics?.analyticsClientMiddleware || NoopAnalyticsMiddleware;
-}
-
-function getPreprocessRequest(configuration: EngineConfigurationOptions) {
-  return configuration.preprocessRequest || NoopPreprocessRequest;
 }
 
 function createRenewAccessTokenFunction(
