@@ -38,6 +38,9 @@ export type InitializationOptions = Pick<
   'accessToken' | 'organizationId' | 'renewAccessToken' | 'platformUrl'
 >;
 
+/**
+ * The `atomic-search-interface` component is parent to all other atomic components in a search page. This component handles the headless engine and localization configurations.
+ */
 @Component({
   tag: 'atomic-search-interface',
   shadow: true,
@@ -107,7 +110,20 @@ export class AtomicSearchInterface {
 
   @Watch('language')
   public updateLanguage() {
-    this.i18n.changeLanguage(this.language);
+    new Backend(this.i18n.services, this.i18nBackendOptions).read(
+      this.language,
+      'translation',
+      (_, data) => {
+        this.i18n.addResourceBundle(
+          this.language,
+          'translation',
+          data,
+          true,
+          false
+        );
+        this.i18n.changeLanguage(this.language);
+      }
+    );
   }
 
   public disconnectedCallback() {
@@ -193,9 +209,7 @@ export class AtomicSearchInterface {
       debug: this.logLevel === 'debug',
       lng: this.language,
       fallbackLng: ['en'],
-      backend: {
-        loadPath: `${getAssetPath('./lang/')}{{lng}}.json`,
-      } as BackendOptions,
+      backend: this.i18nBackendOptions,
     });
   }
 
@@ -262,5 +276,11 @@ export class AtomicSearchInterface {
       ),
       <slot></slot>,
     ];
+  }
+
+  private get i18nBackendOptions(): BackendOptions {
+    return {
+      loadPath: `${getAssetPath('./lang/')}{{lng}}.json`,
+    };
   }
 }

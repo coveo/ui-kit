@@ -27,6 +27,17 @@
       }
     },
     {
+      "id": "deploy-atomic-to-s3-latest",
+      "s3": {
+        "bucket": "{terraform.infra.infra.bucket_binaries}",
+        "directory": "proda/StaticCDN/atomic/latest",
+        "source": "packages/atomic/dist/atomic",
+        "parameters": {
+          "acl": "public-read"
+        }
+      }
+    },
+    {
       "id": "deploy-headless-to-s3-version",
       "s3": {
         "bucket": "{terraform.infra.infra.bucket_binaries}",
@@ -37,6 +48,20 @@
         },
         "prd": {
           "directory": "proda/StaticCDN/headless/v$[VERSION]"
+        }
+      }
+    },
+    {
+      "id": "deploy-atomic-to-s3-version",
+      "s3": {
+        "bucket": "{terraform.infra.infra.bucket_binaries}",
+        "directory": "proda/StaticCDN/atomic/v$[PRERELEASE]",
+        "source": "packages/atomic/dist/atomic",
+        "parameters": {
+          "acl": "public-read"
+        },
+        "prd": {
+          "directory": "proda/StaticCDN/atomic/v$[VERSION]"
         }
       }
     },
@@ -71,6 +96,10 @@
       {
         "directory": "packages/headless",
         "project_name": "headless-engine"
+      },
+      {
+        "directory": "packages/atomic",
+        "project_name": "atomic"
       }
     ]
   },

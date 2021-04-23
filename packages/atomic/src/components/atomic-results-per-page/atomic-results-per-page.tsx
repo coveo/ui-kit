@@ -16,7 +16,7 @@ import {
 } from '../../utils/initialization-utils';
 
 /**
- * The ResultsPerPage component allows the end user to choose how many results to display per page.
+ * The `atomic-results-per-page` component allows the customization of how many results to display per page.
  *
  * @part label - The "Results per page" label
  * @part buttons - The list of buttons
@@ -120,7 +120,7 @@ export class AtomicResultsPerPage implements InitializableComponent {
     }
 
     return (
-      <div class="flex justify-between items-center">
+      <div class="flex items-center">
         <span part="label" class="text-on-background pr-4 text-sm">
           {this.strings.resultsPerPage()}
         </span>
@@ -128,7 +128,7 @@ export class AtomicResultsPerPage implements InitializableComponent {
           part="buttons"
           role="radiogroup"
           aria-label={this.strings.resultsPerPage()}
-          class="flex justify-between flex-grow	space-x-2"
+          class="flex flex-wrap flex-grow	mr-2"
         >
           {this.choices.map((choice) => this.buildChoice(choice))}
         </div>

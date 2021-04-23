@@ -3,6 +3,154 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.11.0-alpha.8](https://github.com/coveo/ui-kit/compare/v0.11.0-alpha.7...v0.11.0-alpha.8) (2021-04-21)
+
+
+### Features
+
+* **headless:** add case assist API client ([#711](https://github.com/coveo/ui-kit/issues/711)) ([f632af1](https://github.com/coveo/ui-kit/commit/f632af1207794f038444431fef27c751d8a11556))
+
+
+
+
+
+# [0.11.0-alpha.5](https://github.com/coveo/ui-kit/compare/v0.11.0-alpha.4...v0.11.0-alpha.5) (2021-04-19)
+
+
+### Bug Fixes
+
+* **atomic:** add original query to did you mean controller ([#675](https://github.com/coveo/ui-kit/issues/675)) ([abe9f22](https://github.com/coveo/ui-kit/commit/abe9f22b25aaf6769247e978864beb7c95a5e000))
+
+
+
+
+
+# [0.11.0-alpha.3](https://github.com/coveo/ui-kit/compare/v0.11.0-alpha.2...v0.11.0-alpha.3) (2021-04-16)
+
+
+### Bug Fixes
+
+* **headless:** add wildcards in facet search initially query ([#714](https://github.com/coveo/ui-kit/issues/714)) ([f703d4e](https://github.com/coveo/ui-kit/commit/f703d4ec4a16d11d251572ceae454a463c55dd9d))
+
+
+
+
+
+# [0.11.0-alpha.2](https://github.com/coveo/ui-kit/compare/v0.11.0-alpha.1...v0.11.0-alpha.2) (2021-04-15)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+# [0.10.0](https://github.com/coveo/ui-kit/compare/v0.10.0-alpha.20...v0.10.0) (2021-04-14)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+# [0.10.0-alpha.17](https://github.com/coveo/ui-kit/compare/v0.10.0-alpha.16...v0.10.0-alpha.17) (2021-04-13)
+
+
+### Features
+
+* **atomic:** use the getFacetState method of the SearchPageClientProvider ([#696](https://github.com/coveo/ui-kit/issues/696)) ([729163e](https://github.com/coveo/ui-kit/commit/729163eb111e4e1d65755db96b7e850163f82319))
+
+
+
+
+
+# [0.10.0-alpha.16](https://github.com/coveo/ui-kit/compare/v0.10.0-alpha.15...v0.10.0-alpha.16) (2021-04-13)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+# [0.10.0-alpha.15](https://github.com/coveo/ui-kit/compare/v0.10.0-alpha.14...v0.10.0-alpha.15) (2021-04-12)
+
+
+### Features
+
+* **atomic:** add path to CategoryFacet search ([#690](https://github.com/coveo/ui-kit/issues/690)) ([9b7b002](https://github.com/coveo/ui-kit/commit/9b7b0028c510bf61950206e6d81421ed6e9282d3))
+* **headless:** log document quickview event ([#694](https://github.com/coveo/ui-kit/issues/694)) ([14227e8](https://github.com/coveo/ui-kit/commit/14227e8e20a966c3f4a96e59eb1227b312f833cf))
+
+
+
+
+
+# [0.10.0-alpha.14](https://github.com/coveo/ui-kit/compare/v0.10.0-alpha.13...v0.10.0-alpha.14) (2021-04-12)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+# [0.10.0-alpha.13](https://github.com/coveo/ui-kit/compare/v0.10.0-alpha.12...v0.10.0-alpha.13) (2021-04-12)
+
+
+### Features
+
+* **headless:** expose debug actions ([#692](https://github.com/coveo/ui-kit/issues/692)) ([dc156d0](https://github.com/coveo/ui-kit/commit/dc156d0d507a8568b41557ee5e98d856b156320d))
+
+
+
+
+
+# [0.10.0-alpha.12](https://github.com/coveo/ui-kit/compare/v0.10.0-alpha.11...v0.10.0-alpha.12) (2021-04-09)
+
+
+### Features
+
+* **headless:** add isLoading to Quickview controller ([#686](https://github.com/coveo/ui-kit/issues/686)) ([8596c33](https://github.com/coveo/ui-kit/commit/8596c337545ad96e25d13c77e7057f22ca300af9))
+
+
+
+
+
+# [0.10.0-alpha.11](https://github.com/coveo/ui-kit/compare/v0.10.0-alpha.10...v0.10.0-alpha.11) (2021-04-09)
+
+
+### Features
+
+* **atomic:** Add quickview and modal components ([#672](https://github.com/coveo/ui-kit/issues/672)) ([4c7d99b](https://github.com/coveo/ui-kit/commit/4c7d99bd9e7e29f01d1b4c33f1262543101322c7))
+
+
+
+
+
+# [0.10.0-alpha.10](https://github.com/coveo/ui-kit/compare/v0.10.0-alpha.9...v0.10.0-alpha.10) (2021-04-08)
+
+
+### Bug Fixes
+
+* **headless:** add full path as UA category facet value ([#677](https://github.com/coveo/ui-kit/issues/677)) ([800c7c7](https://github.com/coveo/ui-kit/commit/800c7c709344b2b180c2f36abad196297017ceaa))
+
+
+
+
+
+# [0.10.0-alpha.7](https://github.com/coveo/ui-kit/compare/v0.10.0-alpha.6...v0.10.0-alpha.7) (2021-04-06)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+# [0.10.0-alpha.6](https://github.com/coveo/ui-kit/compare/v0.10.0-alpha.5...v0.10.0-alpha.6) (2021-04-06)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
 # [0.10.0-alpha.4](https://github.com/coveo/ui-kit/compare/v0.10.0-alpha.3...v0.10.0-alpha.4) (2021-03-31)
 
 

@@ -10,13 +10,21 @@
   --atomic-background-variant: #f6f7f9;
   --atomic-on-background: #282829;
   --atomic-on-background-variant: #6b6b6b;
-  --atomic-divider: #bcc3ca;
   --atomic-error: #ce3f00;
   --atomic-on-error: #ffffff;
   --atomic-visited: #9333ea;
 
+  /* Border */
+  --atomic-border-radius-sm: 0.125rem;
+  --atomic-border-radius: 0.25rem;
+  --atomic-border-radius-md: 0.375rem;
+  --atomic-border-radius-lg: 0.5rem;
+  --atomic-border-radius-xl: 0.75rem;
+  --atomic-border-radius-full: 100%;
+  --atomic-divider: #c5cacf;
+
   /* Others */
   --atomic-font-family: Lato, Arial, Helvetica, sans-serif;
-  --atomic-separator: ' > ';
   --atomic-icon-size: 30px;
+  --atomic-font-bold: 700;
 }

@@ -22,8 +22,7 @@ interface Summary {
 }
 
 /**
- * The QuerySummary displays information about the current range of results and the request duration (e.g., "Results
- * 1-10 of 123 in 0.47 seconds").
+ * The `atomic-query-summary` component displays information about the current range of results, and the request duration (e.g., "Results 1-10 of 123 in 0.47 seconds").
  *
  * @part container - The container of the whole summary
  * @part results - The results container
@@ -89,7 +88,7 @@ export class AtomicQuerySummary implements InitializableComponent {
   }
 
   private wrapHighlight(content: string) {
-    return `<b part="highlight">${content}</b>`;
+    return `<span class="font-bold" part="highlight">${content}</span>`;
   }
 
   private renderNoResults() {

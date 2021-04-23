@@ -97,7 +97,7 @@ export function handleFacetSearchFulfilled<T extends FacetSearchResponse>(
 export const defaultFacetSearchOptions: FacetSearchRequestOptions = {
   captions: {},
   numberOfValues: 10,
-  query: '',
+  query: '**',
 };
 
 function buildFacetSearchOptions(

@@ -36,77 +36,132 @@ function onWarn(warning, warn) {
   warn(warning);
 }
 
-const nodeConfig = {
-  input: 'src/index.ts',
-  output: [
-    {file: 'dist/headless.js', format: 'cjs'},
-    {file: 'dist/headless.esm.js', format: 'es'},
-  ],
-  plugins: [
-    resolve({modulesOnly: true}),
-    commonjs({
-      // https://github.com/pinojs/pino/issues/688
-      ignore: ['pino-pretty'],
-    }),
-    typescript(),
-    replace(),
-  ],
-  external: ['cross-fetch'],
-  onwarn: onWarn,
-};
 
-const browserConfig = {
+// Node Bundles
+
+const nodejs = [
+  {
+    input: 'src/index.ts',
+    outDir: 'dist',
+  },
+  {
+    input: 'src/case-assist.index.ts',
+    outDir: 'dist/case-assist'
+  }
+].map(buildNodeConfiguration);
+
+function buildNodeConfiguration({input, outDir}) {
+  return {
+    input,
+    output: [
+      {file: `${outDir}/headless.js`, format: 'cjs'},
+      {file: `${outDir}/headless.esm.js`, format: 'es'},
+    ],
+    plugins: [
+      resolve({modulesOnly: true}),
+      commonjs({
+        // https://github.com/pinojs/pino/issues/688
+        ignore: ['pino-pretty'],
+      }),
+      typescript(),
+      replace(),
+    ],
+    external: ['cross-fetch', 'web-encoding'],
+    onwarn: onWarn,
+  };
+}
+
+
+// Browser Bundles
+
+const browser = [
+  {
+    input: 'src/index.ts',
+    output: [
+      buildUmdOutput('dist/browser', 'CoveoHeadless'),
+      buildEsmOutput('dist/browser')
+    ]
+  },
+  {
+    input: 'src/case-assist.index.ts',
+    output: [
+      buildUmdOutput('dist/browser/case-assist', 'CoveoHeadlessCaseAssist'),
+      buildEsmOutput('dist/browser/case-assist')
+    ]
+  }
+].map(buildBrowserConfiguration);
+
+function buildBrowserConfiguration({input, output}) {
+  return {
+    input,
+    output,
+    plugins: [
+      alias({
+        entries: [
+          {
+            find: 'coveo.analytics',
+            replacement: pathResolve(
+              __dirname,
+              './node_modules/coveo.analytics/dist/library.es.js'
+            ),
+          },
+          {
+            find: 'cross-fetch',
+            replacement: pathResolve(__dirname, './fetch-ponyfill.js'),
+          },
+          {
+            find: 'web-encoding',
+            replacement: pathResolve(__dirname, './node_modules/web-encoding/src/lib.js'),
+          }
+        ],
+      }),
+      resolve({browser: true}),
+      commonjs(),
+      typescript(),
+      replace(),
+      isProduction && sizeSnapshot(),
+      isProduction && terser(),
+    ],
+  }
+}
+
+function buildUmdOutput(outDir, name) {
+  return {
+    file: `${outDir}/headless.js`,
+    format: 'umd',
+    name,
+    sourcemap: isProduction
+  }
+}
+
+function buildEsmOutput(outDir) {
+  return {
+    file: `${outDir}/headless.esm.js`,
+    format: 'es',
+    sourcemap: isProduction,
+  }
+}
+
+
+
+// For Atomic's development purposes only
+const dev = buildBrowserConfiguration({
   input: 'src/index.ts',
   output: [
-    {
-      file: 'dist/browser/headless.js',
-      format: 'umd',
-      name: 'CoveoHeadless',
-      sourcemap: isProduction,
-    },
-    {
-      file: 'dist/browser/headless.esm.js',
-      format: 'es',
-      sourcemap: isProduction,
-    },
-    // For Atomic's development purposes only
-    {file: '../atomic/src/external-builds/headless.esm.js', format: 'es'},
-  ],
-  plugins: [
-    alias({
-      entries: [
-        {
-          find: 'coveo.analytics',
-          replacement: pathResolve(
-            __dirname,
-            './node_modules/coveo.analytics/dist/library.es.js'
-          ),
-        },
-        {
-          find: 'cross-fetch',
-          replacement: pathResolve(__dirname, './fetch-ponyfill.js'),
-        },
-      ],
-    }),
-    resolve({browser: true}),
-    commonjs(),
-    typescript(),
-    replace(),
-    isProduction && sizeSnapshot(),
-    isProduction && terser(),
-  ],
-};
+    buildEsmOutput('../atomic/src/external-builds')
+  ]
+});
 
 
 // Api-extractor cannot resolve import() types, so we use dts to create a file that api-extractor
 // can consume. When the api-extractor limitation is resolved, this step will not be necessary.
 // [https://github.com/microsoft/rushstack/issues/1050]
 const typeDefinitions = {
-  input: "./dist/index.d.ts",
+  input: "./dist/definitions/index.d.ts",
   output: [{file: "temp/headless.d.ts", format: "es"}],
   plugins: [dts()]
 }
 
-const config = isProduction ? [nodeConfig, typeDefinitions, browserConfig] : [browserConfig];
+const config = isProduction ? [...nodejs, typeDefinitions, ...browser] : [dev];
 
 export default config;

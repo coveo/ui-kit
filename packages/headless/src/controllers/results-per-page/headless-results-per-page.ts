@@ -1,5 +1,6 @@
 import {NumberValue, Schema} from '@coveo/bueno';
-import {Engine} from '../../app/headless-engine';
+import {Engine} from '../../app/engine';
+import {configuration, pagination} from '../../app/reducers';
 import {
   registerNumberOfResults,
   updateNumberOfResults,
@@ -10,6 +11,7 @@ import {
   ConfigurationSection,
   PaginationSection,
 } from '../../state/state-sections';
+import {loadReducerError} from '../../utils/errors';
 import {validateInitialState} from '../../utils/validate-payload';
 import {buildController, Controller} from '../controller/headless-controller';
 
@@ -73,11 +75,16 @@ export interface ResultsPerPageState {
  * @returns A `ResultsPerPage` controller instance.
  */
 export function buildResultsPerPage(
-  engine: Engine<PaginationSection & ConfigurationSection>,
+  engine: Engine<object>,
   props: ResultsPerPageProps = {}
 ): ResultsPerPage {
+  if (!loadResultsPerPageReducers(engine)) {
+    throw loadReducerError;
+  }
+
   const controller = buildController(engine);
   const {dispatch} = engine;
+  const getState = () => engine.state;
 
   const validated = validateInitialState(
     engine,
@@ -97,7 +104,7 @@ export function buildResultsPerPage(
 
     get state() {
       return {
-        numberOfResults: engine.state.pagination.numberOfResults,
+        numberOfResults: getState().pagination.numberOfResults,
       };
     },
 
@@ -110,4 +117,11 @@ export function buildResultsPerPage(
       return num === this.state.numberOfResults;
     },
   };
+}
+
+function loadResultsPerPageReducers(
+  engine: Engine<object>
+): engine is Engine<PaginationSection & ConfigurationSection> {
+  engine.addReducers({pagination, configuration});
+  return true;
 }

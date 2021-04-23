@@ -1,10 +1,13 @@
 import {Result} from '../../api/search/search/result';
-import {Engine} from '../../app/headless-engine';
+import {Engine} from '../../app/engine';
+import {configuration, resultPreview} from '../../app/reducers';
 import {fetchResultContent} from '../../features/result-preview/result-preview-actions';
+import {logDocumentQuickview} from '../../features/result-preview/result-preview-analytics-actions';
 import {
   ConfigurationSection,
   ResultPreviewSection,
 } from '../../state/state-sections';
+import {loadReducerError} from '../../utils/errors';
 import {buildController, Controller} from '../controller/headless-controller';
 
 export interface QuickviewProps {
@@ -45,6 +48,11 @@ export interface QuickviewState {
    * `true` if the configured result has a preview, and `false` otherwise.
    */
   resultHasPreview: boolean;
+
+  /**
+   * `true` if content is being fetched, and `false` otherwise.
+   */
+  isLoading: boolean;
 }
 
 /**
@@ -55,10 +63,15 @@ export interface QuickviewState {
  * @returns A `Quickview` controller instance.
  */
 export function buildQuickview(
-  engine: Engine<ConfigurationSection & ResultPreviewSection>,
+  engine: Engine<object>,
   props: QuickviewProps
 ): Quickview {
+  if (!loadQuickviewReducers(engine)) {
+    throw loadReducerError;
+  }
+
   const {dispatch} = engine;
+  const getState = () => engine.state;
   const controller = buildController(engine);
   const result = props.options.result;
   const uniqueId = result.uniqueId;
@@ -68,17 +81,27 @@ export function buildQuickview(
 
     fetchResultContent() {
       dispatch(fetchResultContent({uniqueId}));
+      dispatch(logDocumentQuickview(result));
     },
 
     get state() {
       const resultHasPreview = result.hasHtmlVersion;
-      const preview = engine.state.resultPreview;
+      const preview = getState().resultPreview;
       const content = uniqueId === preview.uniqueId ? preview.content : '';
+      const isLoading = preview.isLoading;
 
       return {
         content,
         resultHasPreview,
+        isLoading,
       };
     },
   };
+}
+
+function loadQuickviewReducers(
+  engine: Engine<object>
+): engine is Engine<ConfigurationSection & ResultPreviewSection> {
+  engine.addReducers({configuration, resultPreview});
+  return true;
 }

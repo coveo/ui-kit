@@ -1,7 +1,9 @@
 import {Result} from '../../api/search/search/result';
-import {Engine} from '../../app/headless-engine';
+import {Engine} from '../../app/engine';
+import {configuration} from '../../app/reducers';
 import {logDocumentOpen} from '../../features/result/result-analytics-actions';
 import {ConfigurationSection} from '../../state/state-sections';
+import {loadReducerError} from '../../utils/errors';
 
 export interface InteractiveResultOptions {
   /**
@@ -62,9 +64,13 @@ export interface InteractiveResult {
  * @returns An `InteractiveResult` controller instance.
  */
 export function buildInteractiveResult(
-  engine: Engine<ConfigurationSection>,
+  engine: Engine<object>,
   props: InteractiveResultProps
 ): InteractiveResult {
+  if (!loadInteractiveResultReducers(engine)) {
+    throw loadReducerError;
+  }
+
   // 1 second is a reasonable amount of time to catch most longpress actions
   const defaultDelay = 1000;
   const options: Required<InteractiveResultOptions> = {
@@ -97,4 +103,11 @@ export function buildInteractiveResult(
       longPressTimer && clearTimeout(longPressTimer);
     },
   };
+}
+
+function loadInteractiveResultReducers(
+  engine: Engine<object>
+): engine is Engine<ConfigurationSection> {
+  engine.addReducers({configuration});
+  return true;
 }

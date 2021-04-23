@@ -3,6 +3,331 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.11.0-alpha.9](https://github.com/coveo/ui-kit/compare/v0.11.0-alpha.8...v0.11.0-alpha.9) (2021-04-22)
+
+
+### Bug Fixes
+
+* **atomic:** add support for bold font weight variable ([#735](https://github.com/coveo/ui-kit/issues/735)) ([725d956](https://github.com/coveo/ui-kit/commit/725d95649423f2dfade7ae6a69c69aa5fabb0ec3))
+
+
+
+
+
+# [0.11.0-alpha.8](https://github.com/coveo/ui-kit/compare/v0.11.0-alpha.7...v0.11.0-alpha.8) (2021-04-21)
+
+
+### Bug Fixes
+
+* **atomic:** organize facet parts & css ([#723](https://github.com/coveo/ui-kit/issues/723)) ([130621d](https://github.com/coveo/ui-kit/commit/130621d5d75cb721ca69a3a5bf82fc2c0e7b33f4))
+* **atomic:** reverse facet search highlighting and only match once ([#728](https://github.com/coveo/ui-kit/issues/728)) ([af3ad70](https://github.com/coveo/ui-kit/commit/af3ad70b7511d78f98ca345301cd684dcdcfeb3b))
+
+
+### Features
+
+* **atomic:** add facet search "No values found." result ([#727](https://github.com/coveo/ui-kit/issues/727)) ([8bc2f6d](https://github.com/coveo/ui-kit/commit/8bc2f6d5a9d7f03bfd24be7a16eed72ac6300944))
+* **headless:** add case assist API client ([#711](https://github.com/coveo/ui-kit/issues/711)) ([f632af1](https://github.com/coveo/ui-kit/commit/f632af1207794f038444431fef27c751d8a11556))
+
+
+
+
+
+# [0.11.0-alpha.7](https://github.com/coveo/ui-kit/compare/v0.11.0-alpha.6...v0.11.0-alpha.7) (2021-04-19)
+
+
+### Features
+
+* **atomic:** manage display & localize show more breadcrumb ([#722](https://github.com/coveo/ui-kit/issues/722)) ([6938080](https://github.com/coveo/ui-kit/commit/6938080c581db189405c2e8614f25b1e441c2550))
+
+
+
+
+
+# [0.11.0-alpha.6](https://github.com/coveo/ui-kit/compare/v0.11.0-alpha.5...v0.11.0-alpha.6) (2021-04-19)
+
+**Note:** Version bump only for package ui-kit
+
+
+
+
+
+# [0.11.0-alpha.5](https://github.com/coveo/ui-kit/compare/v0.11.0-alpha.4...v0.11.0-alpha.5) (2021-04-19)
+
+
+### Bug Fixes
+
+* **atomic:** add original query to did you mean controller ([#675](https://github.com/coveo/ui-kit/issues/675)) ([abe9f22](https://github.com/coveo/ui-kit/commit/abe9f22b25aaf6769247e978864beb7c95a5e000))
+
+
+### Features
+
+* **atomic:** increase result title font size ([#718](https://github.com/coveo/ui-kit/issues/718)) ([1b9ca8c](https://github.com/coveo/ui-kit/commit/1b9ca8cadcfdc663d3391fc2f33127f259bcc01f))
+
+
+
+
+
+# [0.11.0-alpha.4](https://github.com/coveo/ui-kit/compare/v0.11.0-alpha.3...v0.11.0-alpha.4) (2021-04-18)
+
+
+### Bug Fixes
+
+* **atomic:** remove max-with for breadcrumbs and ellipse the content ([#719](https://github.com/coveo/ui-kit/issues/719)) ([afcb583](https://github.com/coveo/ui-kit/commit/afcb5831fb340eff6e129ded811de175a13112b4))
+
+
+
+
+
+# [0.11.0-alpha.3](https://github.com/coveo/ui-kit/compare/v0.11.0-alpha.2...v0.11.0-alpha.3) (2021-04-16)
+
+
+### Bug Fixes
+
+* **atomic:** fix default template wrap issue for field values ([#716](https://github.com/coveo/ui-kit/issues/716)) ([d6d0f31](https://github.com/coveo/ui-kit/commit/d6d0f3126872d794f5d18ede31d5cd77a23fcca0))
+* **atomic:** make facet count visually consistent ([#715](https://github.com/coveo/ui-kit/issues/715)) ([1ea20cf](https://github.com/coveo/ui-kit/commit/1ea20cf87fa771ac7181d6c4b778846574d137be))
+* **headless:** add wildcards in facet search initially query ([#714](https://github.com/coveo/ui-kit/issues/714)) ([f703d4e](https://github.com/coveo/ui-kit/commit/f703d4ec4a16d11d251572ceae454a463c55dd9d))
+
+
+
+
+
+# [0.11.0-alpha.2](https://github.com/coveo/ui-kit/compare/v0.11.0-alpha.1...v0.11.0-alpha.2) (2021-04-15)
+
+**Note:** Version bump only for package ui-kit
+
+
+
+
+
+# [0.11.0-alpha.1](https://github.com/coveo/ui-kit/compare/v0.11.0-alpha.0...v0.11.0-alpha.1) (2021-04-15)
+
+
+### Features
+
+* **atomic:** styling changes for printable uri ([#708](https://github.com/coveo/ui-kit/issues/708)) ([cf2b75b](https://github.com/coveo/ui-kit/commit/cf2b75b6c231a40938421038c2d10b47cfdd8c31))
+* **atomic:** styling default page search box alignment with results ([#713](https://github.com/coveo/ui-kit/issues/713)) ([613035c](https://github.com/coveo/ui-kit/commit/613035cf79e0f06d9ca5f8d45db83f881513ebd5))
+
+
+
+
+
+# [0.11.0-alpha.0](https://github.com/coveo/ui-kit/compare/v0.10.1-alpha.0...v0.11.0-alpha.0) (2021-04-14)
+
+
+### Features
+
+* **atomic:** add atomic-facet-placeholder for loading state ([#710](https://github.com/coveo/ui-kit/issues/710)) ([981fa6f](https://github.com/coveo/ui-kit/commit/981fa6fafe537386e82fe21f22cc21ef03114fff))
+
+
+
+
+
+## [0.10.1-alpha.0](https://github.com/coveo/ui-kit/compare/v0.10.0...v0.10.1-alpha.0) (2021-04-14)
+
+**Note:** Version bump only for package ui-kit
+
+
+
+
+
+# [0.10.0](https://github.com/coveo/ui-kit/compare/v0.10.0-alpha.20...v0.10.0) (2021-04-14)
+
+**Note:** Version bump only for package ui-kit
+
+
+
+
+
+# [0.10.0-alpha.20](https://github.com/coveo/ui-kit/compare/v0.10.0-alpha.19...v0.10.0-alpha.20) (2021-04-14)
+
+
+### Bug Fixes
+
+* **atomic:** make pager & result-per-page responsive with many elements ([#707](https://github.com/coveo/ui-kit/issues/707)) ([bac3e86](https://github.com/coveo/ui-kit/commit/bac3e86e1c6f9c3475741746a310a3d0dec590fb))
+
+
+
+
+
+# [0.10.0-alpha.19](https://github.com/coveo/ui-kit/compare/v0.10.0-alpha.18...v0.10.0-alpha.19) (2021-04-13)
+
+
+### Features
+
+* **atomic:** styling changes for sort dropdown ([#703](https://github.com/coveo/ui-kit/issues/703)) ([c1f0722](https://github.com/coveo/ui-kit/commit/c1f072224eec76b5d718ccb2a9992aac4ed58033))
+
+
+
+
+
+# [0.10.0-alpha.18](https://github.com/coveo/ui-kit/compare/v0.10.0-alpha.17...v0.10.0-alpha.18) (2021-04-13)
+
+
+### Features
+
+* **atomic:** change style of field value in default template ([#702](https://github.com/coveo/ui-kit/issues/702)) ([61b9ebc](https://github.com/coveo/ui-kit/commit/61b9ebc1c7d1e3238986995717229aa2df4b0cd7))
+* **atomic:** remove enableNavigationButtons prop for Pager ([#704](https://github.com/coveo/ui-kit/issues/704)) ([1ac1c61](https://github.com/coveo/ui-kit/commit/1ac1c613cb65648df4cb52daef2d348b844ab02f))
+
+
+
+
+
+# [0.10.0-alpha.17](https://github.com/coveo/ui-kit/compare/v0.10.0-alpha.16...v0.10.0-alpha.17) (2021-04-13)
+
+
+### Features
+
+* **atomic:** use the getFacetState method of the SearchPageClientProvider ([#696](https://github.com/coveo/ui-kit/issues/696)) ([729163e](https://github.com/coveo/ui-kit/commit/729163eb111e4e1d65755db96b7e850163f82319))
+
+
+
+
+
+# [0.10.0-alpha.16](https://github.com/coveo/ui-kit/compare/v0.10.0-alpha.15...v0.10.0-alpha.16) (2021-04-13)
+
+**Note:** Version bump only for package ui-kit
+
+
+
+
+
+# [0.10.0-alpha.15](https://github.com/coveo/ui-kit/compare/v0.10.0-alpha.14...v0.10.0-alpha.15) (2021-04-12)
+
+
+### Bug Fixes
+
+* **atomic:** facet button always on single line & align text left ([#693](https://github.com/coveo/ui-kit/issues/693)) ([09439fe](https://github.com/coveo/ui-kit/commit/09439fe8a97a5a14a16e128f7b0ae45b90ee3147))
+
+
+### Features
+
+* **atomic:** add path to CategoryFacet search ([#690](https://github.com/coveo/ui-kit/issues/690)) ([9b7b002](https://github.com/coveo/ui-kit/commit/9b7b0028c510bf61950206e6d81421ed6e9282d3))
+* **headless:** log document quickview event ([#694](https://github.com/coveo/ui-kit/issues/694)) ([14227e8](https://github.com/coveo/ui-kit/commit/14227e8e20a966c3f4a96e59eb1227b312f833cf))
+
+
+
+
+
+# [0.10.0-alpha.14](https://github.com/coveo/ui-kit/compare/v0.10.0-alpha.13...v0.10.0-alpha.14) (2021-04-12)
+
+
+### Bug Fixes
+
+* **atomic:** facet value label should not wrap ([#678](https://github.com/coveo/ui-kit/issues/678)) ([c525d33](https://github.com/coveo/ui-kit/commit/c525d33d17c725565bc6cb8c288c4f9e7783f6f3))
+* **atomic:** sort dropdown should hide on no results ([#684](https://github.com/coveo/ui-kit/issues/684)) ([0624788](https://github.com/coveo/ui-kit/commit/062478856301d6db76bd7d00971883eb015fcd3b))
+
+
+
+
+
+# [0.10.0-alpha.13](https://github.com/coveo/ui-kit/compare/v0.10.0-alpha.12...v0.10.0-alpha.13) (2021-04-12)
+
+
+### Features
+
+* **headless:** expose debug actions ([#692](https://github.com/coveo/ui-kit/issues/692)) ([dc156d0](https://github.com/coveo/ui-kit/commit/dc156d0d507a8568b41557ee5e98d856b156320d))
+
+
+
+
+
+# [0.10.0-alpha.12](https://github.com/coveo/ui-kit/compare/v0.10.0-alpha.11...v0.10.0-alpha.12) (2021-04-09)
+
+
+### Bug Fixes
+
+* **atomic:** cleanup end-inclusive for facet range in index.html ([#681](https://github.com/coveo/ui-kit/issues/681)) ([72bdd4b](https://github.com/coveo/ui-kit/commit/72bdd4b16c90bb6caec21250bbbf72eab87f222e))
+* **atomic:** cleanup index.html capitalize CSS rule ([#680](https://github.com/coveo/ui-kit/issues/680)) ([bbaef92](https://github.com/coveo/ui-kit/commit/bbaef927497999d1c55821ef07648cfb9b4d171d))
+* **atomic:** cleanup index.html templates ([#688](https://github.com/coveo/ui-kit/issues/688)) ([cb8b0d6](https://github.com/coveo/ui-kit/commit/cb8b0d6a2fd7160a8b52cf0d385cb94dd4809f17))
+* **atomic:** fix .side-by-side container alignment ([#679](https://github.com/coveo/ui-kit/issues/679)) ([e56847f](https://github.com/coveo/ui-kit/commit/e56847fe03036348367047e2e2d6f43c21fab88f))
+* **atomic:** fix query suggestions whitespace ([#685](https://github.com/coveo/ui-kit/issues/685)) ([001a6ac](https://github.com/coveo/ui-kit/commit/001a6acc16749f18038ccde981d604ef7a1b9d33))
+* **atomic:** remove id prop from search box ([#687](https://github.com/coveo/ui-kit/issues/687)) ([349f12b](https://github.com/coveo/ui-kit/commit/349f12be9b8a6110a8cc6acca7e7e927dba3c90d))
+* **atomic:** remove tab ([#691](https://github.com/coveo/ui-kit/issues/691)) ([d190106](https://github.com/coveo/ui-kit/commit/d190106eb9263b57a36734f26c82cc65d5581e80))
+
+
+### Features
+
+* **headless:** add isLoading to Quickview controller ([#686](https://github.com/coveo/ui-kit/issues/686)) ([8596c33](https://github.com/coveo/ui-kit/commit/8596c337545ad96e25d13c77e7057f22ca300af9))
+
+
+
+
+
+# [0.10.0-alpha.11](https://github.com/coveo/ui-kit/compare/v0.10.0-alpha.10...v0.10.0-alpha.11) (2021-04-09)
+
+
+### Bug Fixes
+
+* **atomic:** merge i18n resource bundle on language change ([#689](https://github.com/coveo/ui-kit/issues/689)) ([93323a9](https://github.com/coveo/ui-kit/commit/93323a995100237627c0e1e53789d0d1ce8a9a9b))
+
+
+### Features
+
+* **atomic:** Add quickview and modal components ([#672](https://github.com/coveo/ui-kit/issues/672)) ([4c7d99b](https://github.com/coveo/ui-kit/commit/4c7d99bd9e7e29f01d1b4c33f1262543101322c7))
+
+
+
+
+
+# [0.10.0-alpha.10](https://github.com/coveo/ui-kit/compare/v0.10.0-alpha.9...v0.10.0-alpha.10) (2021-04-08)
+
+
+### Bug Fixes
+
+* **headless:** add full path as UA category facet value ([#677](https://github.com/coveo/ui-kit/issues/677)) ([800c7c7](https://github.com/coveo/ui-kit/commit/800c7c709344b2b180c2f36abad196297017ceaa))
+
+
+### Features
+
+* **atomic:** add basePath options to the category facet ([#683](https://github.com/coveo/ui-kit/issues/683)) ([f999b99](https://github.com/coveo/ui-kit/commit/f999b9955db053eb164433b63f17b5d59dc8db8c))
+
+
+
+
+
+# [0.10.0-alpha.9](https://github.com/coveo/ui-kit/compare/v0.10.0-alpha.8...v0.10.0-alpha.9) (2021-04-07)
+
+
+### Bug Fixes
+
+* **atomic:** make category facet active value non clickable ([#674](https://github.com/coveo/ui-kit/issues/674)) ([b16a9e9](https://github.com/coveo/ui-kit/commit/b16a9e94ac6667e2d00dd41811fcc3d1310fe66a))
+
+
+### Features
+
+* **atomic:** add ellipsis & title to facet labels (button, breadcrumb, header) ([#673](https://github.com/coveo/ui-kit/issues/673)) ([3192b29](https://github.com/coveo/ui-kit/commit/3192b2921f9489486d0f6fc57b82da9baf61caa6))
+
+
+
+
+
+# [0.10.0-alpha.8](https://github.com/coveo/ui-kit/compare/v0.10.0-alpha.7...v0.10.0-alpha.8) (2021-04-07)
+
+
+### Bug Fixes
+
+* **atomic:** fix breadcrumb label overflow ([#671](https://github.com/coveo/ui-kit/issues/671)) ([6239d0f](https://github.com/coveo/ui-kit/commit/6239d0f9da52bd681ef85e069acb026660a90a57))
+
+
+
+
+
+# [0.10.0-alpha.7](https://github.com/coveo/ui-kit/compare/v0.10.0-alpha.6...v0.10.0-alpha.7) (2021-04-06)
+
+**Note:** Version bump only for package ui-kit
+
+
+
+
+
+# [0.10.0-alpha.6](https://github.com/coveo/ui-kit/compare/v0.10.0-alpha.5...v0.10.0-alpha.6) (2021-04-06)
+
+**Note:** Version bump only for package ui-kit
+
+
+
+
+
 # [0.10.0-alpha.5](https://github.com/coveo/ui-kit/compare/v0.10.0-alpha.4...v0.10.0-alpha.5) (2021-04-02)
 
 

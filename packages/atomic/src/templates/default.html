@@ -27,11 +27,43 @@
 
   .fields-container > atomic-field-condition {
     margin-right: 15px;
+    background: var(--atomic-background-variant);
+    padding: 4px 8px;
+    font-size: 0.8rem;
+    border-radius: 32px;
+    color: var(--atomic-on-background-variant);
+    white-space: nowrap;
+  }
+
+  .fields-container > atomic-field-condition > atomic-text {
+    border-right: 1px solid #e5e8e8;
+    padding: 0 8px;
+  }
+
+  .fields-container > atomic-field-condition > atomic-result-text {
+    margin: 0 8px;
+  }
+
+  a[part='result-link'] {
+    font-size: 1.25rem;
+  }
+
+  atomic-result-text[field='excerpt'] {
+    line-height: 1.5rem;
+  }
+
+  a[part='result-printable-uri-link'] {
+    font-size: 0.8rem;
+  }
+
+  .template-container b {
+    font-weight: var(--atomic-font-bold);
   }
 </style>
 <div class="template-container">
   <div>
     <atomic-result-icon></atomic-result-icon>
+    <atomic-result-quickview></atomic-result-quickview>
   </div>
 
   <div class="content-container">
@@ -44,30 +76,22 @@
 
     <div class="fields-container">
       <atomic-field-condition if-defined="author">
-        <b>
-          <atomic-text value="author"></atomic-text>
-        </b>
+        <atomic-text value="author"></atomic-text>
         <atomic-result-text field="author"></atomic-result-text>
       </atomic-field-condition>
 
       <atomic-field-condition if-defined="source">
-        <b>
-          <atomic-text value="source"></atomic-text>
-        </b>
+        <atomic-text value="source"></atomic-text>
         <atomic-result-text field="source"></atomic-result-text>
       </atomic-field-condition>
 
       <atomic-field-condition if-defined="language">
-        <b>
-          <atomic-text value="language"></atomic-text>
-        </b>
+        <atomic-text value="language"></atomic-text>
         <atomic-result-text field="language"></atomic-result-text>
       </atomic-field-condition>
 
       <atomic-field-condition if-defined="filetype">
-        <b>
-          <atomic-text value="fileType"></atomic-text>
-        </b>
+        <atomic-text value="fileType"></atomic-text>
         <atomic-result-text field="filetype"></atomic-result-text>
       </atomic-field-condition>
     </div>

@@ -1,4 +1,4 @@
-import {Engine} from '../app/headless-engine';
+import {Engine} from '../app/engine';
 import {createMockState} from './mock-state';
 import configureStore, {MockStoreEnhanced} from 'redux-mock-store';
 import {
@@ -93,6 +93,7 @@ function buildMockEngine<T extends AppState>(
     ...config,
     renewAccessToken: mockRenewAccessToken,
     logger,
+    addReducers: jest.fn(),
   };
 }
 

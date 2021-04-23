@@ -23,6 +23,7 @@ import {
   buildParamEntity,
   buildReturnTypeEntity,
 } from './entity-builder';
+import {sortEntities} from './entity-sorter';
 
 export function resolveInterfaceMembers(
   entry: ApiEntryPoint,
@@ -67,7 +68,7 @@ function resolveMembers(
   apiInterface: ApiInterface,
   ancestorNames: string[]
 ) {
-  return apiInterface.members.map((m) => {
+  const members = apiInterface.members.map((m) => {
     if (isPropertySignature(m)) {
       return resolvePropertySignature(entry, m, ancestorNames);
     }
@@ -86,6 +87,8 @@ function resolveMembers(
 
     throw new Error(`Unsupported member: ${m.displayName}`);
   });
+
+  return sortEntities(members);
 }
 
 function resolveInheritedMembers(

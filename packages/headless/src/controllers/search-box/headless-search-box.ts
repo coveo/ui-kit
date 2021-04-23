@@ -5,7 +5,7 @@ import {
   registerQuerySuggest,
   selectQuerySuggestion,
 } from '../../features/query-suggest/query-suggest-actions';
-import {Engine} from '../../app/headless-engine';
+import {Engine} from '../../app/engine';
 import {updateQuery} from '../../features/query/query-actions';
 import {
   registerQuerySetQuery,
@@ -37,6 +37,14 @@ import {
   SuggestionHighlightingOptions,
   Delimiters,
 } from '../../utils/highlight';
+import {
+  configuration,
+  query,
+  querySet,
+  querySuggest,
+  search,
+} from '../../app/reducers';
+import {loadReducerError} from '../../utils/errors';
 
 export {SearchBoxOptions, SuggestionHighlightingOptions, Delimiters};
 
@@ -130,17 +138,16 @@ export interface Suggestion {
  * @returns A `SearchBox` controller instance.
  */
 export function buildSearchBox(
-  engine: Engine<
-    QuerySection &
-      QuerySuggestionSection &
-      ConfigurationSection &
-      QuerySetSection &
-      SearchSection
-  >,
+  engine: Engine<object>,
   props: SearchBoxProps = {}
 ): SearchBox {
+  if (!loadSearchBoxReducers(engine)) {
+    throw loadReducerError;
+  }
+
   const controller = buildController(engine);
   const {dispatch} = engine;
+  const getState = () => engine.state;
 
   const id = props.options?.id || randomID('search_box');
   const options: Required<SearchBoxOptions> = {
@@ -204,7 +211,7 @@ export function buildSearchBox(
     },
 
     get state() {
-      const state = engine.state;
+      const state = getState();
       const querySuggestState = state.querySuggest[options.id];
       const suggestions = getSuggestions(
         querySuggestState,
@@ -235,4 +242,17 @@ function getSuggestions(
     ),
     rawValue: completion.expression,
   }));
+}
+
+function loadSearchBoxReducers(
+  engine: Engine<object>
+): engine is Engine<
+  QuerySection &
+    QuerySuggestionSection &
+    ConfigurationSection &
+    QuerySetSection &
+    SearchSection
+> {
+  engine.addReducers({query, querySuggest, configuration, querySet, search});
+  return true;
 }
