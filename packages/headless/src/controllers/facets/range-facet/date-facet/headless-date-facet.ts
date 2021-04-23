@@ -2,7 +2,7 @@ import {
   DateFacetRequest,
   DateRangeRequest,
 } from '../../../../features/facets/range-facets/date-facet-set/interfaces/request';
-import {Engine} from '../../../../app/headless-engine';
+import {Engine} from '../../../../app/engine';
 import {DateFacetRegistrationOptions} from '../../../../features/facets/range-facets/date-facet-set/interfaces/options';
 import {
   DateFacetResponse,

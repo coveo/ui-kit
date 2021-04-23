@@ -1,5 +1,5 @@
 import {NumberValue, Schema, SchemaValidationError} from '@coveo/bueno';
-import {Engine} from '../app/headless-engine';
+import {Engine} from '../app/engine';
 import {buildMockSearchAppEngine} from '../test';
 import {
   validatePayload,

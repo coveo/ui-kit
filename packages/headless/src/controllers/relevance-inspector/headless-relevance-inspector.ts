@@ -7,7 +7,7 @@ import {QueryRankingExpression} from '../../api/search/search/query-ranking-expr
 import {Result} from '../../api/search/search/result';
 import {SearchResponseSuccessWithDebugInfo} from '../../api/search/search/search-response';
 import {SecurityIdentity} from '../../api/search/search/security-identity';
-import {Engine} from '../../app/headless-engine';
+import {Engine} from '../../app/engine';
 import {configuration, debug, search} from '../../app/reducers';
 import {
   AnalyticsType,
