@@ -9,6 +9,7 @@ import {
   IRuntimeEnvironment,
 } from 'coveo.analytics';
 import {PreprocessRequest} from '../api/preprocess-request';
+import {requiredNonEmptyString} from '../utils/validate-payload';
 
 /**
  * The global headless engine configuration options.
@@ -78,14 +79,8 @@ export interface EngineConfigurationOptions {
 }
 
 export const engineConfigurationOptionDefinitions: SchemaDefinition<EngineConfigurationOptions> = {
-  organizationId: new StringValue({
-    required: true,
-    emptyAllowed: false,
-  }),
-  accessToken: new StringValue({
-    required: true,
-    emptyAllowed: false,
-  }),
+  organizationId: requiredNonEmptyString,
+  accessToken: requiredNonEmptyString,
   platformUrl: new StringValue({
     required: false,
     emptyAllowed: false,
