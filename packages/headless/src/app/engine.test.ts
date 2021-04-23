@@ -4,13 +4,13 @@ import {
 } from '../features/configuration/configuration-actions';
 import {buildMockStore} from '../test/mock-store';
 import {buildMockThunkExtraArguments} from '../test/mock-thunk-extra-arguments';
-import {buildEngine, Engine, EngineOptions} from './engine';
+import {buildEngine, CoreEngine, EngineOptions} from './engine';
 import {searchAppReducers} from './search-app-reducers';
 import * as Store from './store';
 
 describe('engine', () => {
   let options: EngineOptions<typeof searchAppReducers>;
-  let engine: Engine;
+  let engine: CoreEngine;
 
   function initEngine() {
     jest.spyOn(Store, 'configureStore').mockReturnValue(buildMockStore());
