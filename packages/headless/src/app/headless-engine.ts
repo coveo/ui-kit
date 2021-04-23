@@ -21,7 +21,7 @@ import {
   PostprocessQuerySuggestResponseMiddleware,
   PostprocessSearchResponseMiddleware,
 } from '../api/search/search-api-client-middleware';
-import {buildEngine, Engine, EngineOptions} from './engine';
+import {buildEngine, CoreEngine, EngineOptions} from './engine';
 import {
   engineConfigurationOptionDefinitions,
   EngineConfigurationOptions,
@@ -92,7 +92,7 @@ export interface HeadlessConfigurationOptions
   };
 }
 
-export type SearchEngine<State extends object = {}> = Engine<
+export type Engine<State extends object = {}> = CoreEngine<
   State,
   SearchThunkExtraArguments
 >;
@@ -107,9 +107,9 @@ export interface SearchThunkExtraArguments extends ThunkExtraArguments {
  * Every headless controller requires an instance of `Engine` as a parameter.
  */
 export class HeadlessEngine<Reducers extends ReducersMapObject>
-  implements SearchEngine<StateFromReducersMapObject<Reducers>> {
+  implements Engine<StateFromReducersMapObject<Reducers>> {
   public logger!: Logger;
-  private engine: SearchEngine<StateFromReducersMapObject<Reducers>>;
+  private engine: Engine<StateFromReducersMapObject<Reducers>>;
 
   constructor(private options: HeadlessOptions<Reducers>) {
     this.validateConfiguration(options);

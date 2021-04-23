@@ -13,8 +13,8 @@ export {
   HeadlessOptions,
   HeadlessConfigurationOptions,
   HeadlessEngine,
+  Engine,
 } from './app/headless-engine';
-export {Engine} from './app/engine';
 export {LogLevel} from './app/logger';
 
 export {searchAppReducers} from './app/search-app-reducers';

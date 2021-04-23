@@ -24,7 +24,7 @@ type EngineDispatch<
   ExtraArguments extends ThunkExtraArguments
 > = ThunkDispatch<State, ExtraArguments, AnyAction> & Dispatch<AnyAction>;
 
-export interface Engine<
+export interface CoreEngine<
   State extends object = {},
   ExtraArguments extends ThunkExtraArguments = ThunkExtraArguments
 > {
@@ -112,7 +112,7 @@ export function buildEngine<
 >(
   options: EngineOptions<Reducers>,
   thunkExtraArguments: ExtraArguments
-): Engine<StateFromReducersMapObject<Reducers>, ExtraArguments> {
+): CoreEngine<StateFromReducersMapObject<Reducers>, ExtraArguments> {
   const engine = buildCoreEngine(options, thunkExtraArguments);
   const {
     accessToken,
@@ -143,7 +143,7 @@ function buildCoreEngine<
 >(
   options: EngineOptions<Reducers>,
   thunkExtraArguments: ExtraArguments
-): Engine<StateFromReducersMapObject<Reducers>, ExtraArguments> {
+): CoreEngine<StateFromReducersMapObject<Reducers>, ExtraArguments> {
   const {configuration, reducers} = options;
   const reducerManager = createReducerManager(reducers);
   const logger = thunkExtraArguments.logger;
