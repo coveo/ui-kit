@@ -220,6 +220,8 @@ export namespace SearchActions {
   export const fetchMoreResults = fetchMoreResultsAlias;
 }
 
+export * from './search/search-actions-loader';
+
 import {setSearchHub as setSearchHubAlias} from './search-hub/search-hub-actions';
 export namespace SearchHubActions {
   export const setSearchHub = setSearchHubAlias;
