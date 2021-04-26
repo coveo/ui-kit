@@ -161,14 +161,25 @@ describe('FacetSearch slice', () => {
     });
   });
 
-  describe('#handleFacetSearchSetClearResults', () => {
+  describe('#handleFacetSearchSetClear', () => {
     it('it updates all facetSearch responses to an empty response', () => {
       const anotherFacetId = '2';
-      state[facetId] = buildMockFacetSearch();
-      state[anotherFacetId] = buildMockFacetSearch();
+      state[facetId] = buildMockFacetSearch({
+        options: buildMockFacetSearchRequestOptions({query: '*hello*'}),
+      });
+      state[anotherFacetId] = buildMockFacetSearch({
+        options: buildMockFacetSearchRequestOptions({query: '*bye*'}),
+      });
       handleFacetSearchSetClear(state, buildEmptyResponse);
 
       expect(state[facetId].response).toEqual(buildEmptyResponse());
+      expect(state[facetId].options.query).toEqual(
+        defaultFacetSearchOptions.query
+      );
+      expect(state[anotherFacetId].response).toEqual(buildEmptyResponse());
+      expect(state[anotherFacetId].options.query).toEqual(
+        defaultFacetSearchOptions.query
+      );
       expect(state[anotherFacetId].response).toEqual(buildEmptyResponse());
     });
   });
