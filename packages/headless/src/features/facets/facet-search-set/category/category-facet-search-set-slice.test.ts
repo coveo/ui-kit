@@ -8,7 +8,7 @@ import {
   getCategoryFacetSearchSetInitialState,
 } from './category-facet-search-set-state';
 import {
-  clearFacetSearchResults,
+  clearFacetSearch,
   executeFacetSearch,
 } from '../generic/generic-facet-search-actions';
 import {
@@ -86,17 +86,17 @@ describe('FacetSearch slice', () => {
     ).toHaveBeenCalledTimes(1);
   });
 
-  it('#clearFacetSearchResults calls #handleFacetSearchFulfilled', () => {
-    jest.spyOn(FacetSearchReducerHelpers, 'handleFacetSearchClearResults');
-    facetSearchSetReducer(state, clearFacetSearchResults({facetId}));
+  it('#handleFacetSearchClear calls #handleFacetSearchFulfilled', () => {
+    jest.spyOn(FacetSearchReducerHelpers, 'handleFacetSearchClear');
+    facetSearchSetReducer(state, clearFacetSearch({facetId}));
 
     expect(
-      FacetSearchReducerHelpers.handleFacetSearchClearResults
+      FacetSearchReducerHelpers.handleFacetSearchClear
     ).toHaveBeenCalledTimes(1);
   });
 
-  it('#executeFacetSearch.fulfilled calls #handleFacetSearchSetClearResults', () => {
-    jest.spyOn(FacetSearchReducerHelpers, 'handleFacetSearchSetClearResults');
+  it('#executeFacetSearch.fulfilled calls #handleFacetSearchSetClear', () => {
+    jest.spyOn(FacetSearchReducerHelpers, 'handleFacetSearchSetClear');
     const action = executeSearch.fulfilled(
       {} as ExecuteSearchThunkReturn,
       '',
@@ -105,7 +105,7 @@ describe('FacetSearch slice', () => {
     facetSearchSetReducer(state, action);
 
     expect(
-      FacetSearchReducerHelpers.handleFacetSearchSetClearResults
+      FacetSearchReducerHelpers.handleFacetSearchSetClear
     ).toHaveBeenCalledTimes(1);
   });
 });

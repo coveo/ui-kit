@@ -51,10 +51,10 @@ export const executeFacetSearch = createAsyncThunk<
 );
 
 /**
- * Registers a facet search box with the specified options.
+ * Resets the query and empties the values of the facet search.
  * @param facetId (string) The unique identifier of the facet for which to perform a facet search (e.g., `"1"`).
  */
-export const clearFacetSearchResults = createAction(
+export const clearFacetSearch = createAction(
   'facetSearch/ClearResults',
   (payload: {facetId: string}) =>
     validatePayload(payload, {facetId: facetIdDefinition})

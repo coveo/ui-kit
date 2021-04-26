@@ -4,8 +4,8 @@ import {
   handleFacetSearchPending,
   handleFacetSearchRejected,
   handleFacetSearchFulfilled,
-  handleFacetSearchClearResults,
-  handleFacetSearchSetClearResults,
+  handleFacetSearchClear,
+  handleFacetSearchSetClear,
 } from '../facet-search-reducer-helpers';
 import {SpecificFacetSearchResponse} from '../../../../api/search/facet-search/specific-facet-search/specific-facet-search-response';
 import {registerFacetSearch} from './specific-facet-search-actions';
@@ -13,7 +13,7 @@ import {createReducer} from '@reduxjs/toolkit';
 import {updateFacetSearch} from './specific-facet-search-actions';
 import {getFacetSearchSetInitialState} from './specific-facet-search-set-state';
 import {
-  clearFacetSearchResults,
+  clearFacetSearch,
   executeFacetSearch,
 } from '../generic/generic-facet-search-actions';
 import {executeSearch} from '../../../search/search-actions';
@@ -40,11 +40,11 @@ export const specificFacetSearchSetReducer = createReducer(
       .addCase(executeFacetSearch.fulfilled, (state, action) => {
         handleFacetSearchFulfilled(state, action.payload);
       })
-      .addCase(clearFacetSearchResults, (state, {payload}) => {
-        handleFacetSearchClearResults(state, payload, buildEmptyResponse);
+      .addCase(clearFacetSearch, (state, {payload}) => {
+        handleFacetSearchClear(state, payload, buildEmptyResponse);
       })
       .addCase(executeSearch.fulfilled, (state) => {
-        handleFacetSearchSetClearResults(state, buildEmptyResponse);
+        handleFacetSearchSetClear(state, buildEmptyResponse);
       });
   }
 );

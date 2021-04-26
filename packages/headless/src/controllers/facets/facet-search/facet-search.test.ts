@@ -13,11 +13,10 @@ import {
 import {SpecificFacetSearchState} from '../../../features/facets/facet-search-set/specific/specific-facet-search-set-state';
 import {updateFacetOptions} from '../../../features/facet-options/facet-options-actions';
 import {
-  clearFacetSearchResults,
+  clearFacetSearch,
   executeFacetSearch,
 } from '../../../features/facets/facet-search-set/generic/generic-facet-search-actions';
 import {SearchAppState} from '../../../state/search-app-state';
-import {defaultFacetSearchOptions} from '../../../features/facets/facet-search-set/facet-search-reducer-helpers';
 
 describe('FacetSearch', () => {
   const facetId = '1';
@@ -130,21 +129,12 @@ describe('FacetSearch', () => {
       controller.clear();
     });
 
-    it('#clear dispatches #updateFacetSearch', () => {
-      const updateFacetSearchAction = updateFacetSearch({
-        facetId,
-        query: defaultFacetSearchOptions.query,
-      });
-
-      expect(engine.actions).toContainEqual(updateFacetSearchAction);
-    });
-
-    it('#clear dispatches #clearFacetSearchResults', () => {
-      const clearFacetSearchResultsAction = clearFacetSearchResults({
+    it('#clear dispatches #clearFacetSearch', () => {
+      const clearFacetSearchAction = clearFacetSearch({
         facetId,
       });
 
-      expect(engine.actions).toContainEqual(clearFacetSearchResultsAction);
+      expect(engine.actions).toContainEqual(clearFacetSearchAction);
     });
   });
 

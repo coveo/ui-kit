@@ -103,7 +103,7 @@ export function handleFacetSearchFulfilled<T extends FacetSearchResponse>(
   search.response = response;
 }
 
-export function handleFacetSearchClearResults<T extends FacetSearchResponse>(
+export function handleFacetSearchClear<T extends FacetSearchResponse>(
   state: FacetSearchSetState<T>,
   payload: FacetSearchOptions,
   buildEmptyResponse: () => T
@@ -118,14 +118,15 @@ export function handleFacetSearchClearResults<T extends FacetSearchResponse>(
   search.isLoading = false;
   search.response = buildEmptyResponse();
   search.options.numberOfValues = search.initialNumberOfValues;
+  search.options.query = defaultFacetSearchOptions.query;
 }
 
-export function handleFacetSearchSetClearResults<T extends FacetSearchResponse>(
+export function handleFacetSearchSetClear<T extends FacetSearchResponse>(
   state: FacetSearchSetState<T>,
   buildEmptyResponse: () => T
 ) {
   Object.keys(state).forEach((facetId) =>
-    handleFacetSearchClearResults(state, {facetId}, buildEmptyResponse)
+    handleFacetSearchClear(state, {facetId}, buildEmptyResponse)
   );
 }
 

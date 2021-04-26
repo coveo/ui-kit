@@ -4,8 +4,9 @@ import {
   handleFacetSearchPending,
   handleFacetSearchRejected,
   handleFacetSearchFulfilled,
-  handleFacetSearchClearResults,
-  handleFacetSearchSetClearResults,
+  handleFacetSearchClear,
+  handleFacetSearchSetClear,
+  defaultFacetSearchOptions,
 } from './facet-search-reducer-helpers';
 import {buildMockFacetSearchResponse} from '../../../test/mock-facet-search-response';
 import {buildMockFacetSearchResult} from '../../../test/mock-facet-search-result';
@@ -132,19 +133,30 @@ describe('FacetSearch slice', () => {
   describe('#handleFacetSearchClearResults', () => {
     it('when the id is registered, it updates the facetSearch response to an empty response', () => {
       state[facetId] = buildMockFacetSearch();
-      handleFacetSearchClearResults(state, {facetId}, buildEmptyResponse);
+      handleFacetSearchClear(state, {facetId}, buildEmptyResponse);
       expect(state[facetId].response).toEqual(buildEmptyResponse());
     });
 
     it('when the id is registered, it sets isLoading state to false', () => {
       state[facetId] = buildMockFacetSearch({isLoading: true});
 
-      handleFacetSearchClearResults(state, {facetId}, buildEmptyResponse);
+      handleFacetSearchClear(state, {facetId}, buildEmptyResponse);
       expect(state[facetId].isLoading).toBe(false);
     });
 
+    it('when the id is registered, it resets the query', () => {
+      state[facetId] = buildMockFacetSearch({
+        options: buildMockFacetSearchRequestOptions({query: '*hello*'}),
+      });
+
+      handleFacetSearchClear(state, {facetId}, buildEmptyResponse);
+      expect(state[facetId].options.query).toBe(
+        defaultFacetSearchOptions.query
+      );
+    });
+
     it('when the id is unregistered, it does nothing', () => {
-      handleFacetSearchClearResults(state, {facetId}, buildEmptyResponse);
+      handleFacetSearchClear(state, {facetId}, buildEmptyResponse);
       expect(state[facetId]).toBe(undefined);
     });
   });
@@ -154,7 +166,7 @@ describe('FacetSearch slice', () => {
       const anotherFacetId = '2';
       state[facetId] = buildMockFacetSearch();
       state[anotherFacetId] = buildMockFacetSearch();
-      handleFacetSearchSetClearResults(state, buildEmptyResponse);
+      handleFacetSearchSetClear(state, buildEmptyResponse);
 
       expect(state[facetId].response).toEqual(buildEmptyResponse());
       expect(state[anotherFacetId].response).toEqual(buildEmptyResponse());
