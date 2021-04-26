@@ -11,6 +11,12 @@ import {
 import {NoopRuntime} from './runtimeEnvironment';
 
 export class NoopAnalytics implements AnalyticsClient {
+    getPayload(): Promise<any> {
+        return Promise.resolve();
+    }
+    getParameters(): Promise<any> {
+        return Promise.resolve();
+    }
     sendEvent(): Promise<AnyEventResponse | void> {
         return Promise.resolve();
     }
@@ -33,6 +39,7 @@ export class NoopAnalytics implements AnalyticsClient {
         return Promise.resolve({status: ''});
     }
     registerBeforeSendEventHook(): void {}
+    registerAfterSendEventHook(): void {}
     addEventTypeMapping(): void {}
     runtime = new NoopRuntime();
     currentVisitorId = '';

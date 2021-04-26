@@ -11,7 +11,7 @@ describe('SVC plugin', () => {
         pageViewId: someUUID,
         encoding: document.characterSet,
         location: 'http://localhost/',
-        referrer: 'http://somewhere.over/therainbow',
+        referrer: 'http://somewhere.over/thereferrer',
         title: 'MAH PAGE',
         screenColor: '24-bit',
         screenResolution: '0x0',
@@ -175,7 +175,10 @@ describe('SVC plugin', () => {
     });
 
     const executeRegisteredHook = (eventType: string, payload: any) => {
-        const [hook] = client.registerBeforeSendEventHook.mock.calls[0];
-        return hook(eventType, payload);
+        const [beforeHook] = client.registerBeforeSendEventHook.mock.calls[0];
+        const [afterHook] = client.registerAfterSendEventHook.mock.calls[0];
+        const result = beforeHook(eventType, payload);
+        afterHook(eventType, result);
+        return result;
     };
 });

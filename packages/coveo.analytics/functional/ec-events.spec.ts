@@ -1,7 +1,11 @@
 import 'isomorphic-fetch';
 import * as fetchMock from 'fetch-mock';
 import {DefaultEventResponse} from '../src/events';
+import type {getCurrentClient} from "../src/coveoua/library";
 import coveoua from '../src/coveoua/browser';
+
+declare const self: any;
+const getClient: typeof getCurrentClient = (self.coveoanalytics as any).getCurrentClient;
 
 describe('ec events', () => {
     const initialLocation = `${window.location}`;
@@ -28,6 +32,8 @@ describe('ec events', () => {
         z: expect.stringMatching(guidFormat),
     };
 
+    let client: ReturnType<typeof getClient>;
+
     beforeEach(() => {
         changeDocumentLocation(initialLocation);
         const address = `${anEndpoint}/rest/v15/analytics/collect`;
@@ -42,6 +48,7 @@ describe('ec events', () => {
         });
         coveoua('reset');
         coveoua('init', aToken, anEndpoint);
+        client = getClient();
     });
 
     it('can set custom data at the root level and send a page view event', async () => {
@@ -227,6 +234,174 @@ describe('ec events', () => {
         expect(secondPageView.dr).toBe(initialLocation);
         expect(afterSecond.dl).toBe(secondLocation);
         expect(afterSecond.dr).toBe(initialLocation);
+    });
+
+    it('should return the same payload', async () => {
+        const secondLocation = 'http://very.new/';
+
+        const firstPayload = await client.getPayload('pageview', {
+            title: 'wow',
+            custom: {
+                verycustom: 'value',
+            },
+        });
+        const secondPayload = await client.getPayload('pageview', {
+            title: 'wow',
+            custom: {
+                verycustom: 'value',
+            },
+        });
+        await coveoua('send', 'pageview');
+        changeDocumentLocation(secondLocation);
+        const firstAfterPayload = await client.getPayload('pageview', {
+            title: 'wow',
+            custom: {
+                verycustom: 'value',
+            },
+        });
+        const secondAfterPayload = await client.getPayload('pageview', {
+            title: 'wow',
+            custom: {
+                verycustom: 'value',
+            },
+        });
+
+        const firstPayloadToCompare = returnCommonAttributes(firstPayload, ["tm", "z"]);
+        const secondPayloadToCompare = returnCommonAttributes(secondPayload, ["tm", "z"]);
+        const firstAfterPayloadToCompare = returnCommonAttributes(firstAfterPayload, ["tm", "z"]);
+        const secondAfterPayloadToCompare = returnCommonAttributes(secondAfterPayload, ["tm", "z"]);
+
+        expect(firstPayloadToCompare).toEqual(secondPayloadToCompare);
+        expect(firstPayloadToCompare.dl).toBe(initialLocation);
+        expect(firstPayloadToCompare.dr).toBe(document.referrer);
+
+        expect(firstAfterPayloadToCompare).toEqual(secondAfterPayloadToCompare);
+        expect(firstAfterPayloadToCompare.dl).toBe(secondLocation);
+        expect(firstAfterPayloadToCompare.dr).toBe(initialLocation);
+    });
+
+    it('should return the same parameters', async () => {
+        const secondLocation = 'http://very.new/';
+
+        const firstParameters = await client.getParameters('pageview', {
+            title: 'wow',
+            custom: {
+                verycustom: 'value',
+            },
+        });
+        const secondParameters = await client.getParameters('pageview', {
+            title: 'wow',
+            custom: {
+                verycustom: 'value',
+            },
+        });
+        await coveoua('send', 'pageview');
+        changeDocumentLocation(secondLocation);
+        const firstAfterParameters = await client.getParameters('pageview', {
+            title: 'wow',
+            custom: {
+                verycustom: 'value',
+            },
+        });
+        const secondAfterParameters = await client.getParameters('pageview', {
+            title: 'wow',
+            custom: {
+                verycustom: 'value',
+            },
+        });
+
+        const firstParametersToCompare = returnCommonAttributes(firstParameters, ["time", "eventId"]);
+        const secondParametersToCompare = returnCommonAttributes(secondParameters, ["time", "eventId"]);
+        const firstAfterParametersToCompare = returnCommonAttributes(firstAfterParameters, ["time", "eventId"]);
+        const secondAfterParametersToCompare = returnCommonAttributes(secondAfterParameters, ["time", "eventId"]);
+
+        expect(firstParametersToCompare).toEqual(secondParametersToCompare);
+        expect(firstParametersToCompare.location).toBe(initialLocation);
+        expect(firstParametersToCompare.referrer).toBe(document.referrer);
+
+        expect(firstAfterParametersToCompare).toEqual(secondAfterParametersToCompare);
+        expect(firstAfterParametersToCompare.location).toBe(secondLocation);
+        expect(firstAfterParametersToCompare.referrer).toBe(initialLocation);
+    });
+
+    it('should return similar parameters and payload', async () => {
+        const parameters = await client.getParameters('pageview', {});
+        const payload = await client.getPayload('pageview', {});
+
+        const firstParametersToCompare = returnCommonAttributes(parameters, ["time", "eventId"]);
+
+        expect(firstParametersToCompare).toEqual({
+            hitType: payload.t,
+            pageViewId: payload.pid,
+            encoding: payload.de,
+            location: payload.dl,
+            referrer: payload.dr,
+            screenColor: payload.sd,
+            screenResolution: payload.sr,
+            title: payload.dt,
+            userAgent: payload.ua,
+            language: payload.ul,
+            visitorId: payload.cid
+        });
+    });
+
+    it('should return similar parameters and send', async () => {
+        const firstParameters = await client.getParameters('pageview', {});
+        await coveoua('send', 'pageview');
+        const secondParameters = await client.getParameters('pageview', {});
+        await coveoua('send', 'pageview');
+
+        const [pageView, secondPageView] = getParsedBody();
+
+        const firstParametersToCompare = returnCommonAttributes(firstParameters, ["time", "eventId"]);
+        const secondParametersToCompare = returnCommonAttributes(secondParameters, ["time", "eventId"]);
+
+        expect(firstParametersToCompare).toEqual({
+            hitType: pageView.t,
+            pageViewId: pageView.pid,
+            encoding: pageView.de,
+            location: pageView.dl,
+            referrer: pageView.dr,
+            screenColor: pageView.sd,
+            screenResolution: pageView.sr,
+            title: pageView.dt,
+            userAgent: pageView.ua,
+            language: pageView.ul,
+            visitorId: pageView.cid
+        });
+
+        expect(secondParametersToCompare).toEqual({
+            hitType: secondPageView.t,
+            pageViewId: secondPageView.pid,
+            encoding: secondPageView.de,
+            location: secondPageView.dl,
+            referrer: secondPageView.dr,
+            screenColor: secondPageView.sd,
+            screenResolution: secondPageView.sr,
+            title: secondPageView.dt,
+            userAgent: secondPageView.ua,
+            language: secondPageView.ul,
+            visitorId: secondPageView.cid
+        });
+    });
+
+    it('should return similar payload and send', async () => {
+        const firstPayload = await client.getPayload('pageview', {});
+        await coveoua('send', 'pageview');
+        const secondPayload = await client.getPayload('pageview', {});
+        await coveoua('send', 'pageview');
+
+        const [pageView, secondPageView] = getParsedBody();
+
+        const firstPayloadToCompare = returnCommonAttributes(firstPayload, ["tm", "z"]);
+        const secondPayloadToCompare = returnCommonAttributes(secondPayload, ["tm", "z"]);
+
+        const pageViewToCompare = returnCommonAttributes(pageView, ["tm", "z"]);
+
+        const secondPageViewToCompare = returnCommonAttributes(secondPageView, ["tm", "z"]);
+
+        expect(firstPayloadToCompare).toEqual(pageViewToCompare);
+        expect(secondPayloadToCompare).toEqual(secondPageViewToCompare);
     });
 
     it('should update the current location when a pageview is sent with the page parameter and keep it', async () => {
@@ -626,4 +801,9 @@ describe('ec events', () => {
         // Ooommmpf... JSDOM does not support any form of navigation, so let's overwrite the whole thing 💥.
         window.location = new URL(url);
     };
+
+    const returnCommonAttributes = <T>(payload: T, attributesToRemove: Array<keyof T>) => {
+        attributesToRemove.forEach(attribute => delete payload[attribute]);
+        return payload;
+    }
 });

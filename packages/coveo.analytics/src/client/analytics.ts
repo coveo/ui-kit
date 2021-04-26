@@ -45,6 +45,7 @@ export interface ClientOptions {
     version: string;
     runtimeEnvironment?: IRuntimeEnvironment;
     beforeSendHooks: AnalyticsClientSendEventHook[];
+    afterSendHooks: AnalyticsClientSendEventHook[];
     preprocessRequest?: PreprocessAnalyticsRequest;
 }
 
@@ -57,6 +58,8 @@ export type EventTypeConfig = {
 };
 
 export interface AnalyticsClient {
+    getPayload(eventType: string, ...payload: VariableArgumentsPayload): Promise<any>;
+    getParameters(eventType: string, ...payload: VariableArgumentsPayload): Promise<any>;
     sendEvent(eventType: string, ...payload: VariableArgumentsPayload): Promise<AnyEventResponse | void>;
     sendSearchEvent(request: SearchEventRequest): Promise<SearchEventResponse | void>;
     sendClickEvent(request: ClickEventRequest): Promise<ClickEventResponse | void>;
@@ -65,6 +68,7 @@ export interface AnalyticsClient {
     getVisit(): Promise<VisitResponse>;
     getHealth(): Promise<HealthResponse>;
     registerBeforeSendEventHook(hook: AnalyticsClientSendEventHook): void;
+    registerAfterSendEventHook(hook: AnalyticsClientSendEventHook): void;
     addEventTypeMapping(eventType: string, eventConfig: EventTypeConfig): void;
     runtime: IRuntimeEnvironment;
     readonly currentVisitorId: string;
@@ -76,6 +80,9 @@ interface BufferedRequest {
     handled: boolean;
 }
 
+type ProcessPayloadStep = (currentPayload: any) => any;
+type AsyncProcessPayloadStep = (currentPayload: any) => Promise<any>;
+
 export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider {
     private get defaultOptions(): ClientOptions {
         return {
@@ -83,6 +90,7 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
             token: '',
             version: Version,
             beforeSendHooks: [],
+            afterSendHooks: [],
         };
     }
 
@@ -91,6 +99,7 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
     private analyticsFetchClient: AnalyticsFetchClient;
     private bufferedRequests: BufferedRequest[];
     private beforeSendHooks: AnalyticsClientSendEventHook[];
+    private afterSendHooks: AnalyticsClientSendEventHook[];
     private eventTypeMapping: {[name: string]: EventTypeConfig};
     private options: ClientOptions;
 
@@ -107,6 +116,7 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
         this.visitorId = '';
         this.bufferedRequests = [];
         this.beforeSendHooks = [enhanceViewEvent, addDefaultValues].concat(this.options.beforeSendHooks);
+        this.afterSendHooks = this.options.afterSendHooks;
         this.eventTypeMapping = {};
 
         const clientsOptions: IAnalyticsFetchClientOptions = {
@@ -162,6 +172,15 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
         await this.storage.setItem('visitorId', visitorId);
     }
 
+    async getParameters(eventType: EventType | string, ...payload: VariableArgumentsPayload) {
+        return await this.resolveParameters(eventType, ...payload);
+    }
+
+    async getPayload(eventType: EventType | string, ...payload: VariableArgumentsPayload) {
+        const parametersToSend = await this.resolveParameters(eventType, ...payload);
+        return await this.resolvePayloadForParameters(eventType, parametersToSend);
+    }
+
     /**
      * @deprecated Synchronous method is deprecated, use getCurrentVisitorId instead. This method will NOT work with react-native.
      */
@@ -181,34 +200,48 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
         this.storage.setItem('visitorId', visitorId);
     }
 
-    async sendEvent(
-        eventType: EventType | string,
-        ...payload: VariableArgumentsPayload
-    ): Promise<AnyEventResponse | void> {
-        const {
-            newEventType: eventTypeToSend = eventType as EventType,
-            variableLengthArgumentsNames = [],
-            addVisitorIdParameter = false,
-            usesMeasurementProtocol = false,
-        } = this.eventTypeMapping[eventType] || {};
+    async resolveParameters(eventType: EventType | string,
+        ...payload: VariableArgumentsPayload) {
+            const {
+                variableLengthArgumentsNames = [],
+                addVisitorIdParameter = false,
+                usesMeasurementProtocol = false,
+            } = this.eventTypeMapping[eventType] || {};
 
-        type ProcessPayloadStep = (currentPayload: any) => any;
-        type AsyncProcessPayloadStep = (currentPayload: any) => Promise<any>;
-        const processVariableArgumentNamesStep: ProcessPayloadStep = (currentPayload) =>
+            const processVariableArgumentNamesStep: ProcessPayloadStep = (currentPayload) =>
             variableLengthArgumentsNames.length > 0
                 ? this.parseVariableArgumentsPayload(variableLengthArgumentsNames, currentPayload)
                 : currentPayload[0];
-        const addVisitorIdStep: AsyncProcessPayloadStep = async (currentPayload) => ({
-            visitorId: addVisitorIdParameter ? await this.getCurrentVisitorId() : '',
-            ...currentPayload,
-        });
-        const setAnonymousUserStep: ProcessPayloadStep = (currentPayload) =>
-            usesMeasurementProtocol ? this.ensureAnonymousUserWhenUsingApiKey(currentPayload) : currentPayload;
-        const processBeforeSendHooksStep: AsyncProcessPayloadStep = (currentPayload) =>
-            this.beforeSendHooks.reduce(async (promisePayload, current) => {
-                const payload = await promisePayload;
-                return await current(eventType, payload);
-            }, currentPayload);
+            const addVisitorIdStep: AsyncProcessPayloadStep = async (currentPayload) => ({
+                ...currentPayload,
+                visitorId: addVisitorIdParameter ? await this.getCurrentVisitorId() : '',
+            });
+            const setAnonymousUserStep: ProcessPayloadStep = (currentPayload) =>
+                usesMeasurementProtocol ? this.ensureAnonymousUserWhenUsingApiKey(currentPayload) : currentPayload;
+            const processBeforeSendHooksStep: AsyncProcessPayloadStep = (currentPayload) =>
+                this.beforeSendHooks.reduce(async (promisePayload, current) => {
+                    const payload = await promisePayload;
+                    return await current(eventType, payload);
+                }, currentPayload);
+
+            const parametersToSend = await [
+                processVariableArgumentNamesStep,
+                addVisitorIdStep,
+                setAnonymousUserStep,
+                processBeforeSendHooksStep,
+            ].reduce(async (payloadPromise, step) => {
+                const payload = await payloadPromise;
+                return await step(payload);
+            }, Promise.resolve(payload));
+
+            return parametersToSend;
+        }
+
+    async resolvePayloadForParameters(eventType: EventType | string, parameters: any) {
+        const {
+            usesMeasurementProtocol = false,
+        } = this.eventTypeMapping[eventType] || {};
+
         const cleanPayloadStep: ProcessPayloadStep = (currentPayload) =>
             this.removeEmptyPayloadValues(currentPayload, eventType);
         const validateParams: ProcessPayloadStep = (currentPayload) => this.validateParams(currentPayload);
@@ -220,10 +253,6 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
             usesMeasurementProtocol ? this.processCustomParameters(currentPayload) : currentPayload;
 
         const payloadToSend = await [
-            processVariableArgumentNamesStep,
-            addVisitorIdStep,
-            setAnonymousUserStep,
-            processBeforeSendHooksStep,
             cleanPayloadStep,
             validateParams,
             processMeasurementProtocolConversionStep,
@@ -232,7 +261,21 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
         ].reduce(async (payloadPromise, step) => {
             const payload = await payloadPromise;
             return await step(payload);
-        }, Promise.resolve(payload));
+        }, Promise.resolve(parameters));
+
+        return payloadToSend;
+    }
+
+    async sendEvent(
+        eventType: EventType | string,
+        ...payload: VariableArgumentsPayload
+    ): Promise<AnyEventResponse | void> {
+        const {
+            newEventType: eventTypeToSend = eventType as EventType,
+        } = this.eventTypeMapping[eventType] || {};
+
+        const parametersToSend = await this.resolveParameters(eventType, ...payload);
+        const payloadToSend = await this.resolvePayloadForParameters(eventType, parametersToSend);
 
         this.bufferedRequests.push({
             eventType: eventTypeToSend,
@@ -240,7 +283,10 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
             handled: false,
         });
 
+        await Promise.all(this.afterSendHooks.map((hook) => hook(eventType, parametersToSend)));
+        
         await this.deferExecution();
+
         return await this.sendFromBufferWithFetch();
     }
 
@@ -303,6 +349,10 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
 
     registerBeforeSendEventHook(hook: AnalyticsClientSendEventHook): void {
         this.beforeSendHooks.push(hook);
+    }
+
+    registerAfterSendEventHook(hook: AnalyticsClientSendEventHook): void {
+        this.afterSendHooks.push(hook);
     }
 
     addEventTypeMapping(eventType: string, eventConfig: EventTypeConfig): void {

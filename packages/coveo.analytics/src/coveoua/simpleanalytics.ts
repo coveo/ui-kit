@@ -13,7 +13,7 @@ export interface CoveoUAOptions {
 
 // CoveoUA mimics the GoogleAnalytics API.
 export class CoveoUA {
-    private client?: AnalyticsClient;
+    public client?: AnalyticsClient;
     private plugins: Plugins = new Plugins();
     private params: {[name: string]: string} = {};
 
@@ -139,6 +139,7 @@ export class CoveoUA {
 }
 
 export const coveoua = new CoveoUA();
+export const getCurrentClient = () => coveoua.client;
 
 export const handleOneAnalyticsEvent = (command: string, ...params: any[]) => {
     const [, trackerName, pluginName, fn] = /^(?:(\w+)\.)?(?:(\w+):)?(\w+)$/.exec(command)!;
