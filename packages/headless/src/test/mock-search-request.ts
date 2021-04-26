@@ -26,6 +26,10 @@ export function buildMockSearchRequest(
     accessToken: '',
     visitorId: '',
     debug: false,
+    filterField: undefined!,
+    parentField: undefined!,
+    childField: undefined!,
+    filterFieldRange: undefined!,
     ...config,
   };
 }

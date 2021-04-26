@@ -1,7 +1,14 @@
 import {Result} from '../api/search/search/result';
 import {buildMockRaw} from './mock-raw';
 
-export function buildMockResult(config: Partial<Result> = {}): Result {
+interface ResultWithFolding extends Result {
+  parentResult?: ResultWithFolding;
+  childResults?: ResultWithFolding[];
+}
+
+export function buildMockResult(
+  config: Partial<ResultWithFolding> = {}
+): ResultWithFolding {
   return {
     title: '',
     uri: '',

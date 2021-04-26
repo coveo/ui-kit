@@ -2,7 +2,7 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "declaration": false,
-    "lib": ["DOM"],
+    "lib": ["DOM", "ES2019"],
     "module": "ESNext",
     "moduleResolution": "node",
     "esModuleInterop": true,

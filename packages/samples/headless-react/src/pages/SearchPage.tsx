@@ -21,6 +21,8 @@ import {Sort} from '../components/sort/sort.class';
 import {Sort as SortFn} from '../components/sort/sort.fn';
 import {ResultList} from '../components/result-list/result-list.class';
 import {ResultList as ResultListFn} from '../components/result-list/result-list.fn';
+import {FoldedResultList} from '../components/folded-result-list/folded-result-list.class';
+import {FoldedResultList as FoldedResultListFn} from '../components/folded-result-list/folded-result-list.fn';
 import {Pager} from '../components/pager/pager.class';
 import {Pager as PagerFn} from '../components/pager/pager.fn';
 import {ResultsPerPage} from '../components/results-per-page/results-per-page.class';
@@ -71,6 +73,8 @@ import {
   buildQuerySummary,
   ResultList as HeadlessResultList,
   buildResultList,
+  Folding as HeadlessFolding,
+  buildFolding,
   FacetManager as HeadlessFacetManager,
   buildFacetManager,
   CategoryFacet as HeadlessCategoryFacet,
@@ -134,6 +138,7 @@ export class SearchPage extends Component {
   private readonly queryError: HeadlessQueryError;
   private readonly querySummary: HeadlessQuerySummary;
   private readonly resultList: HeadlessResultList;
+  private readonly folding: HeadlessFolding;
   private readonly facetManager: HeadlessFacetManager;
   private readonly geographyFacet: HeadlessCategoryFacet;
   private readonly objectTypeFacet: HeadlessFacet;
@@ -247,6 +252,8 @@ export class SearchPage extends Component {
     });
 
     this.resultList = buildResultList(this.engine);
+
+    this.folding = buildFolding(this.engine);
 
     this.resultsPerPage = buildResultsPerPage(this.engine, {
       initialState: {numberOfResults: resultsPerPageOptions[0]},
@@ -402,6 +409,10 @@ export class SearchPage extends Component {
           <Section title="result-list">
             <ResultList />
             <ResultListFn controller={this.resultList} />
+          </Section>
+          <Section title="folded-result-list">
+            <FoldedResultList />
+            <FoldedResultListFn controller={this.folding} />
           </Section>
           <Section title="results-per-page">
             <ResultsPerPage options={resultsPerPageOptions} />

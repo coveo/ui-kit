@@ -285,3 +285,12 @@ export {
   QuickviewState,
   buildQuickview,
 } from './quickview/headless-quickview';
+
+export {
+  FoldedResult,
+  Folding,
+  FoldingOptions,
+  FoldingProps,
+  FoldingState,
+  buildFolding,
+} from './folding/headless-folding';
