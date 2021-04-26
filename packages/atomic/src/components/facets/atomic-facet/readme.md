@@ -26,6 +26,8 @@ A facet component. It is displayed as a facet in desktop browsers and as a butto
 | `"clear-button"`              | The button that resets the actively selected facet values          |
 | `"close-button"`              | The button to close the facet when displayed modally (mobile only) |
 | `"facet"`                     | The wrapper for the entire facet                                   |
+| `"label"`                     | The label of the facet                                             |
+| `"modal-button"`              | The button to open the facet modal (mobile only)                   |
 | `"placeholder"`               | The placeholder shown before the first search is executed.         |
 | `"search-icon"`               | The magnifier icon of the input                                    |
 | `"search-input"`              | The search input                                                   |
