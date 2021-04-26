@@ -4,7 +4,7 @@ import {buildMockFacetSearchResponse} from '../../../test/mock-facet-search-resp
 import {buildMockFacetSearch} from '../../../test/mock-facet-search';
 import {buildMockFacetSearchResult} from '../../../test/mock-facet-search-result';
 import {executeSearch} from '../../../features/search/search-actions';
-import {buildMockFacetSearchStateOptions} from '../../../test/mock-facet-search-state-options';
+import {buildMockFacetSearchRequestOptions} from '../../../test/mock-facet-search-request-options';
 import {
   buildGenericFacetSearch,
   GenericFacetSearch,
@@ -31,11 +31,13 @@ describe('FacetSearch', () => {
   }
 
   function getFacetSearch() {
-    const options = buildMockFacetSearchStateOptions({
+    const options = buildMockFacetSearchRequestOptions({
       numberOfValues,
+    });
+    return buildMockFacetSearch({
+      options,
       initialNumberOfValues: numberOfValues,
     });
-    return buildMockFacetSearch({options});
   }
 
   beforeEach(() => {
@@ -63,7 +65,7 @@ describe('FacetSearch', () => {
 
   describe('#showMoreResults', () => {
     beforeEach(() => {
-      const options = buildMockFacetSearchStateOptions({
+      const options = buildMockFacetSearchRequestOptions({
         numberOfValues,
       });
       engine.state.facetSearchSet[facetId] = buildMockFacetSearch({
@@ -121,7 +123,7 @@ describe('FacetSearch', () => {
 
   describe('#clear', () => {
     beforeEach(() => {
-      const options = buildMockFacetSearchStateOptions();
+      const options = buildMockFacetSearchRequestOptions();
       engine.state.facetSearchSet[facetId] = buildMockFacetSearch({
         options,
       });

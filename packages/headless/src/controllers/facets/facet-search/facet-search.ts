@@ -44,24 +44,23 @@ export function buildGenericFacetSearch<T extends FacetSearchState>(
      * @param text The new query.
      */
     updateText(text: string) {
-      const {initialNumberOfValues} = getFacetSearch().options;
       const query = `*${text}*`;
       dispatch(
         updateFacetSearch({
           facetId,
           query,
-          numberOfValues: initialNumberOfValues,
+          numberOfValues: getFacetSearch().initialNumberOfValues,
         })
       );
     },
 
     /** Increases number of results returned by numberOfResults */
     showMoreResults() {
-      const {numberOfValues, initialNumberOfValues} = getFacetSearch().options;
+      const {initialNumberOfValues, options} = getFacetSearch();
       dispatch(
         updateFacetSearch({
           facetId,
-          numberOfValues: numberOfValues + initialNumberOfValues,
+          numberOfValues: options.numberOfValues + initialNumberOfValues,
         })
       );
       dispatch(executeFacetSearch(facetId));

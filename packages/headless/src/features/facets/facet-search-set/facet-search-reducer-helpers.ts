@@ -2,18 +2,11 @@ import {FacetSearchOptions} from './facet-search-request-options';
 import {FacetSearchResponse} from '../../../api/search/facet-search/facet-search-response';
 import {FacetSearchRequestOptions} from '../../../api/search/facet-search/base/base-facet-search-request';
 
-export interface FacetSearchStateOptions extends FacetSearchRequestOptions {
-  /** The initial maximum number of values to fetch.
-   * @defaultValue `10`
-   */
-  initialNumberOfValues: number;
-}
-
 export type FacetSearchState<T extends FacetSearchResponse> = {
   /**
    * The options used to perform a facet search request.
    */
-  options: FacetSearchStateOptions;
+  options: FacetSearchRequestOptions;
   /**
    * `true` if the facet search request is currently being executed against the Coveo platform, `false` otherwise.
    */
@@ -22,6 +15,10 @@ export type FacetSearchState<T extends FacetSearchResponse> = {
    * The facet search response.
    */
   response: T;
+  /** The initial maximum number of values to fetch.
+   * @defaultValue `10`
+   */
+  initialNumberOfValues: number;
 };
 
 export type FacetSearchSetState<T extends FacetSearchResponse> = Record<
@@ -41,14 +38,15 @@ export function handleFacetSearchRegistration<T extends FacetSearchResponse>(
   }
 
   const isLoading = false;
-  const baseOptions = {...defaultFacetSearchOptions, ...payload};
-  const options: FacetSearchStateOptions = {
-    ...baseOptions,
-    initialNumberOfValues: baseOptions.numberOfValues,
-  };
+  const options = {...defaultFacetSearchOptions, ...payload};
   const response = buildEmptyResponse();
 
-  state[facetId] = {options, isLoading, response};
+  state[facetId] = {
+    options,
+    isLoading,
+    response,
+    initialNumberOfValues: options.numberOfValues,
+  };
 }
 
 export function handleFacetSearchUpdate<T extends FacetSearchResponse>(
@@ -119,7 +117,7 @@ export function handleFacetSearchClearResults<T extends FacetSearchResponse>(
 
   search.isLoading = false;
   search.response = buildEmptyResponse();
-  search.options.numberOfValues = search.options.initialNumberOfValues;
+  search.options.numberOfValues = search.initialNumberOfValues;
 }
 
 export function handleFacetSearchSetClearResults<T extends FacetSearchResponse>(
