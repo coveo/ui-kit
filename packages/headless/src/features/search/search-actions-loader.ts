@@ -16,12 +16,12 @@ import {
 export interface ISearchActions {
   /**
    * Executes a search query.
-   * @param analyticsAction - The analytics action to log after a successful query.
+   * @param analyticsSearchAction - The analytics action to log after a successful query. See `loadAnalyticsSearchActions` for possible values.
    *
    * @returns A dispatchable action.
    */
   executeSearch(
-    analyticsAction: SearchAction
+    analyticsSearchAction: SearchAction
   ): AsyncThunkAction<
     ExecuteSearchThunkReturn,
     SearchAction,
