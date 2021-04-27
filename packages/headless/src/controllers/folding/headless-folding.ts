@@ -23,19 +23,19 @@ const optionsSchema = new Schema<Required<FoldingOptions>>({
 
 export interface FoldingOptions {
   /**
-   * The name of the field used to resolve what collection a result is part of.
+   * The name of the field on which to do the folding. The folding component will use the values of this field to resolve the collections of result items.
    *
    * @defaultValue `foldedcollection`
    */
   collectionField?: string;
   /**
-   * The name of the field used to reference which result is the parent of another one within a collection.
+   * The name of the field that determines whether a certain result is a top result containing other child results within a collection.
    *
    * @defaultValue `foldedparent`
    */
   parentField?: string;
   /**
-   * The name of the field used to uniquely identify a result within a collection.
+   * The name of the field that uniquely identifies a result within a collection.
    *
    * @defaultValue `foldedchild`
    */
