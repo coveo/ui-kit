@@ -93,7 +93,6 @@ export class AtomicFacet
 
   @State() public isExpanded = false;
   @State() public facetSearchQuery = '';
-  @State() public showFacetSearchResults = false;
 
   @Prop({mutable: true, reflect: true}) public facetId = '';
   /**
