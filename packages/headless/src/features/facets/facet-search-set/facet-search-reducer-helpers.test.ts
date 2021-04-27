@@ -34,8 +34,10 @@ describe('FacetSearch slice', () => {
     it('when the id is unregistered, it registers a facet search with the passed id and options', () => {
       handleFacetSearchRegistration(state, {facetId}, buildEmptyResponse);
       expect(state[facetId].options).toEqual({
-        ...buildMockFacetSearch().options,
         facetId,
+        captions: {},
+        numberOfValues: 10,
+        query: '**',
       });
     });
 

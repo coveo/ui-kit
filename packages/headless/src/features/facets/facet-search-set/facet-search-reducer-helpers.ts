@@ -16,7 +16,6 @@ export type FacetSearchState<T extends FacetSearchResponse> = {
    */
   response: T;
   /** The initial maximum number of values to fetch.
-   * @defaultValue `10`
    */
   initialNumberOfValues: number;
 };

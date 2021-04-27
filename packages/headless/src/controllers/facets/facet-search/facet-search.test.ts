@@ -120,22 +120,17 @@ describe('FacetSearch', () => {
     });
   });
 
-  describe('#clear', () => {
-    beforeEach(() => {
-      const options = buildMockFacetSearchRequestOptions();
-      engine.state.facetSearchSet[facetId] = buildMockFacetSearch({
-        options,
-      });
-      controller.clear();
+  it('#clear dispatches #clearFacetSearch', () => {
+    const options = buildMockFacetSearchRequestOptions();
+    engine.state.facetSearchSet[facetId] = buildMockFacetSearch({
+      options,
+    });
+    controller.clear();
+    const clearFacetSearchAction = clearFacetSearch({
+      facetId,
     });
 
-    it('#clear dispatches #clearFacetSearch', () => {
-      const clearFacetSearchAction = clearFacetSearch({
-        facetId,
-      });
-
-      expect(engine.actions).toContainEqual(clearFacetSearchAction);
-    });
+    expect(engine.actions).toContainEqual(clearFacetSearchAction);
   });
 
   it('calling #state returns the response', () => {

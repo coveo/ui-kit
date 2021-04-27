@@ -28,10 +28,6 @@ describe('FacetSearch slice', () => {
     state = getFacetSearchSetInitialState();
   });
 
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
-
   it('initializes the state correctly', () => {
     const finalState = facetSearchSetReducer(undefined, {type: ''});
     expect(finalState).toEqual({});

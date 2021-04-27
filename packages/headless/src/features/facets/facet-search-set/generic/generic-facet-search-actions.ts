@@ -55,7 +55,7 @@ export const executeFacetSearch = createAsyncThunk<
  * @param facetId (string) The unique identifier of the facet for which to perform a facet search (e.g., `"1"`).
  */
 export const clearFacetSearch = createAction(
-  'facetSearch/ClearResults',
+  'facetSearch/clearResults',
   (payload: {facetId: string}) =>
     validatePayload(payload, {facetId: facetIdDefinition})
 );
