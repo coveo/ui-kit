@@ -10,10 +10,15 @@ import {
   StateNeededByExecuteSearch,
 } from './search-actions';
 
+/**
+ * The search actions.
+ */
 export interface ISearchActions {
   /**
    * Executes a search query.
    * @param analyticsAction - The analytics action to log after a successful query.
+   *
+   * @returns A dispatchable action object.
    */
   executeSearch(
     analyticsAction: SearchAction
@@ -25,6 +30,8 @@ export interface ISearchActions {
 
   /**
    * Fetches more results.
+   *
+   * @returns A dispatchable action object.
    */
   fetchMoreResults(): AsyncThunkAction<
     ExecuteSearchThunkReturn,
@@ -33,6 +40,12 @@ export interface ISearchActions {
   >;
 }
 
+/**
+ * Loads the `search` reducer and returns the possible search actions.
+ *
+ * @param engine - The headless engine.
+ * @returns An object holding the search actions.
+ */
 export function loadSearchActions(engine: Engine<object>): ISearchActions {
   engine.addReducers({search});
   return {
