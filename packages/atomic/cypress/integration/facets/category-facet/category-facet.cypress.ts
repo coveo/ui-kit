@@ -9,7 +9,7 @@ import {
   defaultNumberOfValues,
   togoHierarchy,
   setupCategoryFacet,
-} from './category-facet.actions';
+} from './category-facet-actions';
 
 describe('Category Facet Test Suites', () => {
   describe('with default settings', () => {

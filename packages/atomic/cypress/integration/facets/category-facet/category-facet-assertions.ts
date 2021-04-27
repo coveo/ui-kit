@@ -10,7 +10,7 @@ import {
   categoryFacetComponent,
   BreadcrumbSelectors,
 } from './category-facet-selectors';
-import {hierarchicalField} from './category-facet.actions';
+import {hierarchicalField} from './category-facet-actions';
 
 function should(should: boolean) {
   return should ? 'should' : 'should not';
