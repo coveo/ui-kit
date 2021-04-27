@@ -1,49 +1,13 @@
-import {
-  buildTestUrl,
-  RouteAlias,
-  setUpPage,
-} from '../../../utils/setupComponent';
+import {buildTestUrl, RouteAlias} from '../../../utils/setupComponent';
 import {
   canadaHierarchy,
   canadaHierarchyIndex,
   CategoryFacetSelectors,
-  hierarchicalField,
   defaultNumberOfValues,
   togoHierarchy,
 } from './category-facet-selectors';
 import * as CategoryFacetAssertions from './category-facet-assertions';
-
-interface CategoryFacetSetupOptions {
-  field: string;
-  attributes: string;
-  executeFirstSearch: boolean;
-  withResultList: boolean;
-}
-
-// TODO: adapt new setup
-function setupCategoryFacet(options: Partial<CategoryFacetSetupOptions> = {}) {
-  const setupOptions: CategoryFacetSetupOptions = {
-    attributes: '',
-    executeFirstSearch: true,
-    field: hierarchicalField,
-    withResultList: false,
-    ...options,
-  };
-  setUpPage(
-    `<atomic-breadcrumb-manager></atomic-breadcrumb-manager>     
-    <atomic-category-facet field="${setupOptions.field}" label="Atlas" ${
-      setupOptions.attributes
-    }></atomic-category-facet>
-    ${
-      setupOptions.withResultList && '<atomic-result-list></atomic-result-list>'
-    }`,
-    setupOptions.executeFirstSearch
-  );
-}
-
-function selectChildValueAt(index: number) {
-  CategoryFacetSelectors.childValue().eq(index).click();
-}
+import {selectChildValueAt, setupCategoryFacet} from './category-facet.actions';
 
 describe('Category Facet Test Suites', () => {
   describe('with default settings', () => {
