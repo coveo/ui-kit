@@ -196,7 +196,7 @@ export class AtomicFacet
 
   public renderSearchResult(searchResult: SpecificFacetSearchResult) {
     return (
-      <div class="flex" aria-hidden>
+      <div class="flex" aria-hidden="true">
         <span
           part="value-label"
           class="ellipsed font-bold"

@@ -323,7 +323,7 @@ export class AtomicCategoryFacet
 
   public renderSearchResult(searchResult: CategoryFacetSearchResult) {
     return [
-      <div class="flex" aria-hidden>
+      <div class="flex" aria-hidden="true">
         <span
           part="value-label"
           class="ellipsed font-bold"
@@ -338,7 +338,7 @@ export class AtomicCategoryFacet
       </div>,
       <div
         class="flex text-on-background-variant"
-        aria-hidden
+        aria-hidden="true"
         title={searchResult.path.join(SEPARATOR)}
       >
         {this.renderPath(searchResult.path)}
