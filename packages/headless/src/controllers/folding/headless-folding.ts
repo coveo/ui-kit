@@ -1,5 +1,5 @@
 import {NumberValue, Schema, StringValue} from '@coveo/bueno';
-import {Engine} from '../../app/headless-engine';
+import {Engine} from '../../app/engine';
 import {search, configuration, folding} from '../../app/reducers';
 import {registerFolding} from '../../features/folding/folding-actions';
 import {FoldedResult} from '../../features/folding/folding-state';
