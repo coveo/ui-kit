@@ -224,6 +224,10 @@ function resolveMethodReturnType(
     return buildReturnTypeEntity(m);
   }
 
+  if (isTypeAlias(typeExcerpt)) {
+    return buildReturnTypeEntity(m);
+  }
+
   if (isReference(typeExcerpt)) {
     return buildObjEntityFromReturnType(entry, m, ancestorNames);
   }
