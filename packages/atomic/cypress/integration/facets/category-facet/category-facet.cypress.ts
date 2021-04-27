@@ -1,13 +1,15 @@
 import {buildTestUrl, RouteAlias} from '../../../utils/setupComponent';
+import {CategoryFacetSelectors} from './category-facet-selectors';
+import * as CategoryFacetAssertions from './category-facet-assertions';
+import * as CategoryFacetSearchAssertions from './category-facet-search-assertions';
 import {
-  canadaHierarchy,
+  selectChildValueAt,
   canadaHierarchyIndex,
-  CategoryFacetSelectors,
+  canadaHierarchy,
   defaultNumberOfValues,
   togoHierarchy,
-} from './category-facet-selectors';
-import * as CategoryFacetAssertions from './category-facet-assertions';
-import {selectChildValueAt, setupCategoryFacet} from './category-facet.actions';
+  setupCategoryFacet,
+} from './category-facet.actions';
 
 describe('Category Facet Test Suites', () => {
   describe('with default settings', () => {
@@ -27,7 +29,7 @@ describe('Category Facet Test Suites', () => {
       CategoryFacetAssertions.assertNumberOfParentValues(0);
       CategoryFacetAssertions.assertDisplayShowMoreButton(true);
       CategoryFacetAssertions.assertDisplayShowLessButton(false);
-      CategoryFacetAssertions.assertDisplaySearch(false);
+      CategoryFacetSearchAssertions.assertDisplaySearch(false);
       CategoryFacetAssertions.assertDisplayClearButton(false);
       CategoryFacetAssertions.assertLabelContains('Atlas');
       CategoryFacetAssertions.assertValuesSortedByOccurences();
@@ -335,6 +337,6 @@ describe('Category Facet Test Suites', () => {
     before(() => {
       setupCategoryFacet({attributes: 'enable-facet-search'});
     });
-    CategoryFacetAssertions.assertDisplaySearch(true);
+    CategoryFacetSearchAssertions.assertDisplaySearch(true);
   });
 });

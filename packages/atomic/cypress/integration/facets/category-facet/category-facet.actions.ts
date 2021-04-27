@@ -1,8 +1,16 @@
 import {setUpPage} from '../../../utils/setupComponent';
-import {
-  CategoryFacetSelectors,
-  hierarchicalField,
-} from './category-facet-selectors';
+import {CategoryFacetSelectors} from './category-facet-selectors';
+
+export const canadaHierarchy = [
+  'North America',
+  'Canada',
+  'Quebec',
+  'Montreal',
+];
+export const canadaHierarchyIndex = [0, 1, 0, 4];
+export const togoHierarchy = ['Africa', 'Togo', 'Lome'];
+export const hierarchicalField = 'geographicalhierarchy';
+export const defaultNumberOfValues = 5;
 
 export interface CategoryFacetSetupOptions {
   field: string;

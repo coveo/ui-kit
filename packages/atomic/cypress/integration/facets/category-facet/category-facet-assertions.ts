@@ -6,11 +6,11 @@ import {RouteAlias} from '../../../utils/setupComponent';
 import {ComponentErrorSelectors} from '../../component-error-selectors';
 import {ResultListSelectors} from '../../result-list-selectors';
 import {
-  hierarchicalField,
   CategoryFacetSelectors,
   categoryFacetComponent,
   BreadcrumbSelectors,
 } from './category-facet-selectors';
+import {hierarchicalField} from './category-facet.actions';
 
 function should(should: boolean) {
   return should ? 'should' : 'should not';
@@ -76,17 +76,6 @@ export function assertDisplayClearButton(display: boolean) {
   it(`${should(display)} display a "All Categories" button`, () => {
     CategoryFacetSelectors.clearButton().should(
       display ? 'be.visible' : 'not.exist'
-    );
-  });
-}
-
-export function assertDisplaySearch(display: boolean) {
-  it(`${should(display)} display a the facet search`, () => {
-    CategoryFacetSelectors.searchInput().should(
-      display ? 'be.visible' : 'not.exist'
-    );
-    CategoryFacetSelectors.searchResults().should(
-      display ? 'exist' : 'not.exist'
     );
   });
 }
