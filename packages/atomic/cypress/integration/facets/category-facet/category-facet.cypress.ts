@@ -1,4 +1,8 @@
-import {buildTestUrl, RouteAlias, setUpPage} from '../../utils/setupComponent';
+import {
+  buildTestUrl,
+  RouteAlias,
+  setUpPage,
+} from '../../../utils/setupComponent';
 import {
   canadaHierarchy,
   canadaHierarchyIndex,

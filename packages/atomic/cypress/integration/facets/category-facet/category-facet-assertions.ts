@@ -1,7 +1,10 @@
-import {doSortAlphanumeric, doSortOccurences} from '../../utils/componentUtils';
-import {RouteAlias} from '../../utils/setupComponent';
-import {ComponentErrorSelectors} from '../component-error-selectors';
-import {ResultListSelectors} from '../result-list-selectors';
+import {
+  doSortAlphanumeric,
+  doSortOccurences,
+} from '../../../utils/componentUtils';
+import {RouteAlias} from '../../../utils/setupComponent';
+import {ComponentErrorSelectors} from '../../component-error-selectors';
+import {ResultListSelectors} from '../../result-list-selectors';
 import {
   hierarchicalField,
   CategoryFacetSelectors,
