@@ -18,7 +18,7 @@ export interface ISearchActions {
    * Executes a search query.
    * @param analyticsAction - The analytics action to log after a successful query.
    *
-   * @returns A dispatchable action object.
+   * @returns A dispatchable action.
    */
   executeSearch(
     analyticsAction: SearchAction
@@ -31,7 +31,7 @@ export interface ISearchActions {
   /**
    * Fetches more results.
    *
-   * @returns A dispatchable action object.
+   * @returns A dispatchable action.
    */
   fetchMoreResults(): AsyncThunkAction<
     ExecuteSearchThunkReturn,
