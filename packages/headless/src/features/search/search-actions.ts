@@ -326,7 +326,7 @@ export const buildSearchRequest = (
       filterField: state.folding.fields.collection,
       childField: state.folding.fields.parent,
       parentField: state.folding.fields.child,
-      filterFieldRange: state.folding.numberOfFoldedResults,
+      filterFieldRange: state.folding.maximumFoldedResults,
     }),
   };
 };

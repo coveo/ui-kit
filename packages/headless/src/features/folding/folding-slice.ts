@@ -119,7 +119,7 @@ export const foldingReducer = createReducer(
           parent: payload.parentField ?? state.fields.parent,
           child: payload.childField ?? state.fields.child,
         },
-        numberOfFoldedResults:
-          payload.numberOfFoldedResults ?? state.numberOfFoldedResults,
+        maximumFoldedResults:
+          payload.maximumFoldedResults ?? state.maximumFoldedResults,
       }))
 );

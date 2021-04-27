@@ -6,7 +6,7 @@ export interface RegisterFoldingPayload {
   collectionField?: string;
   parentField?: string;
   childField?: string;
-  numberOfFoldedResults?: number;
+  maximumFoldedResults?: number;
 }
 
 const registerFoldingPayloadDefinition: SchemaDefinition<Required<
@@ -15,7 +15,7 @@ const registerFoldingPayloadDefinition: SchemaDefinition<Required<
   collectionField: new StringValue(),
   parentField: new StringValue(),
   childField: new StringValue(),
-  numberOfFoldedResults: new NumberValue(),
+  maximumFoldedResults: new NumberValue(),
 };
 
 export const registerFolding = createAction(

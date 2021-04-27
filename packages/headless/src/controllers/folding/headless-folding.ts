@@ -18,7 +18,7 @@ const optionsSchema = new Schema<Required<FoldingOptions>>({
   collectionField: new StringValue(),
   parentField: new StringValue(),
   childField: new StringValue(),
-  numberOfFoldedResults: new NumberValue(),
+  maximumFoldedResults: new NumberValue(),
 });
 
 export interface FoldingOptions {
@@ -41,12 +41,12 @@ export interface FoldingOptions {
    */
   childField?: string;
   /**
-   * The number of additional results to fetch from the same collection as
-   * the most relevant result, excluding the root result of the collection.
+   * The maximum number of additional results to fetch from the same collection
+   * as the most relevant result, excluding the root result of the collection.
    *
    * @defaultValue `2`
    */
-  numberOfFoldedResults?: number;
+  maximumFoldedResults?: number;
 }
 
 export interface FoldingProps {

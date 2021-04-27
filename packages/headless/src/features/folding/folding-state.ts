@@ -16,7 +16,7 @@ export interface FoldingFields {
 export interface FoldingState {
   enabled: boolean;
   fields: FoldingFields;
-  numberOfFoldedResults: number;
+  maximumFoldedResults: number;
   collections: FoldedResult[];
 }
 
@@ -27,6 +27,6 @@ export const getFoldingInitialState: () => FoldingState = () => ({
     parent: 'foldingparent',
     child: 'foldingchild',
   },
-  numberOfFoldedResults: 2,
+  maximumFoldedResults: 2,
   collections: [],
 });
