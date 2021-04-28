@@ -7,11 +7,11 @@
 
 ## Properties
 
-| Property               | Attribute | Description                    | Type                                                    | Default     |
-| ---------------------- | --------- | ------------------------------ | ------------------------------------------------------- | ----------- |
-| `content` _(required)_ | `content` | The result content to display. | `string`                                                | `undefined` |
-| `engine` _(required)_  | --        | The Headless Engine.           | `CoreEngine<SearchAppState, SearchThunkExtraArguments>` | `undefined` |
-| `result` _(required)_  | --        | The result item.               | `Result`                                                | `undefined` |
+| Property               | Attribute | Description                    | Type                     | Default     |
+| ---------------------- | --------- | ------------------------------ | ------------------------ | ----------- |
+| `content` _(required)_ | `content` | The result content to display. | `string`                 | `undefined` |
+| `engine` _(required)_  | --        | The Headless Engine.           | `Engine<SearchAppState>` | `undefined` |
+| `result` _(required)_  | --        | The result item.               | `Result`                 | `undefined` |
 
 
 ## Dependencies

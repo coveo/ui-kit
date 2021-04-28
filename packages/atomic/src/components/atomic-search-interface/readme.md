@@ -9,7 +9,7 @@
 
 | Property            | Attribute              | Description                                                            | Type                                                                                    | Default                    |
 | ------------------- | ---------------------- | ---------------------------------------------------------------------- | --------------------------------------------------------------------------------------- | -------------------------- |
-| `engine`            | --                     | The search interface Headless engine.                                  | `CoreEngine<SearchAppState, SearchThunkExtraArguments> \| undefined`                    | `undefined`                |
+| `engine`            | --                     | The search interface Headless engine.                                  | `Engine<SearchAppState> \| undefined`                                                   | `undefined`                |
 | `i18n`              | --                     | The search interface i18next instance.                                 | `i18n`                                                                                  | `i18next.createInstance()` |
 | `language`          | `language`             | The search interface language.                                         | `string`                                                                                | `'en'`                     |
 | `logLevel`          | `log-level`            | The level of messages you want to be logged in the console.            | `"debug" \| "error" \| "fatal" \| "info" \| "silent" \| "trace" \| "warn" \| undefined` | `undefined`                |
