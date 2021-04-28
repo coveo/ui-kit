@@ -11,6 +11,7 @@ import {
   BreadcrumbSelectors,
 } from './facet-selectors';
 import {
+  clickOnCategoryFacetWithValue,
   validateFacetComponentLoaded,
   validateFacetComponentVisible,
   validateFacetNumberofValueEqual,
@@ -59,13 +60,6 @@ function assertTotalChildrentMoreThan(value: number) {
     .find('[part="child"]')
     .its('length')
     .should('be.gt', value);
-}
-
-function clickOnCategoryFacetWithValue(value: string) {
-  cy.get(FacetAlias.facetUL)
-    .find(FacetSelectors.categoryFacetNextLevelButton)
-    .contains(value)
-    .click();
 }
 
 describe('Category Facet with default setting', () => {

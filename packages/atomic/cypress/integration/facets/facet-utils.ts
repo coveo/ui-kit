@@ -300,3 +300,21 @@ export function assertHightlightedText(text: string) {
     });
   });
 }
+
+export function clickOnCategoryFacetWithValue(value: string) {
+  cy.get(FacetAlias.facetUL)
+    .find(FacetSelectors.categoryFacetNextLevelButton)
+    .contains(value)
+    .click();
+}
+
+export function clickOnNthCategoryFacet(number: number) {
+  cy.get(FacetAlias.facetUL)
+    .find(FacetSelectors.categoryFacetNextLevelButton)
+    .eq(number)
+    .click();
+}
+
+export function clickOnNthFacet(number: number) {
+  cy.get(FacetAlias.facetUL).find(FacetSelectors.checkbox).eq(number).click();
+}
