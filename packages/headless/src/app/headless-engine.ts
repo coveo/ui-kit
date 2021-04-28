@@ -96,7 +96,7 @@ export interface HeadlessConfigurationOptions
 /**
  * The engine for powering search experiences.
  */
-export interface Engine<State extends object = SearchAppState>
+export interface Engine<State = SearchAppState>
   extends CoreEngine<State, SearchThunkExtraArguments> {}
 
 export interface SearchThunkExtraArguments extends ThunkExtraArguments {

@@ -25,7 +25,10 @@ type EngineDispatch<
 > = ThunkDispatch<State, ExtraArguments, AnyAction> & Dispatch<AnyAction>;
 
 export interface CoreEngine<
-  State extends object = {},
+  /**
+   * @deprecated For v1, restrict "State" generic by extending "object". e.g. State extends object = {}
+   */
+  State = {},
   ExtraArguments extends ThunkExtraArguments = ThunkExtraArguments
 > {
   /**
