@@ -127,6 +127,7 @@ export class AtomicFacet
       delimitingCharacter: this.delimitingCharacter,
       numberOfValues: this.numberOfValues,
       sortCriteria: this.sortCriteria,
+      facetSearch: {numberOfValues: this.numberOfValues * 2},
     };
     this.facet = buildFacet(this.bindings.engine, {options});
     this.strings[this.label] = () => this.bindings.i18n.t(this.label);

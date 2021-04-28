@@ -51,6 +51,7 @@ const PATH_MAX_LENGTH = 3;
  * @part search-input-clear-button - The clear button of the input
  * @part search-results - The list of search results
  * @part search-result - A search result
+ * @part search-result-path - The search result path
  * @part active-search-result - The currently active search result
  *
  * @part parent - A parent element
@@ -156,6 +157,7 @@ export class AtomicCategoryFacet
       numberOfValues: this.numberOfValues,
       basePath: this.formattedBasePath,
       filterByBasePath: this.filterByBasePath,
+      facetSearch: {numberOfValues: this.numberOfValues * 2},
     };
     this.facet = buildCategoryFacet(this.bindings.engine, {options});
     this.strings[this.label] = () => this.bindings.i18n.t(this.label);
@@ -340,6 +342,7 @@ export class AtomicCategoryFacet
         class="flex text-on-background-variant"
         aria-hidden="true"
         title={searchResult.path.join(SEPARATOR)}
+        part="search-result-path"
       >
         {this.renderPath(searchResult.path)}
       </div>,

@@ -106,7 +106,7 @@ describe('Category Facet Test Suites', () => {
         });
       });
 
-      describe('when selecting the "All categories" button', () => {
+      describe('when selecting the "All Categories" button', () => {
         function setupClear() {
           setupGoDeeperOneLevel();
           cy.wait(RouteAlias.analytics);

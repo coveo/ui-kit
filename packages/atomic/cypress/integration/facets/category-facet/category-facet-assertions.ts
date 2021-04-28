@@ -23,7 +23,7 @@ export function assertAccessibility() {
 }
 
 export function assertNumberOfChildValues(value: number) {
-  it('should display the right number of child values', () => {
+  it(`should display ${value} number of child values`, () => {
     if (value > 0) {
       CategoryFacetSelectors.childValue().its('length').should('eq', value);
       return;
@@ -34,7 +34,7 @@ export function assertNumberOfChildValues(value: number) {
 }
 
 export function assertNumberOfParentValues(value: number) {
-  it('should display the right number of parent values', () => {
+  it(`should display ${value} number of parent values`, () => {
     CategoryFacetSelectors.activeParentValue().should(
       value > 0 ? 'be.visible' : 'not.exist'
     );
@@ -51,7 +51,7 @@ export function assertNumberOfParentValues(value: number) {
 }
 
 export function assertLabelContains(label: string) {
-  it('should have the correct label', () => {
+  it(`should have the label ${label}`, () => {
     CategoryFacetSelectors.label().contains(label);
   });
 }
@@ -107,16 +107,15 @@ export function assertDisplayPlaceholder(display: boolean) {
 export function assertPathInBreadcrumb(path: string[]) {
   const ellipsedPath =
     path.length > 3 ? path.slice(0, 1).concat(['...'], path.slice(-2)) : path;
-  it('should display the selected path in the breadcrumbs', () => {
-    BreadcrumbSelectors.breadcrumbButton()
-      .first()
-      .contains(ellipsedPath.join(' / '));
+  const joinedPath = ellipsedPath.join(' / ');
+  it(`should display the selected path "${joinedPath}" in the breadcrumbs`, () => {
+    BreadcrumbSelectors.breadcrumbButton().first().contains(joinedPath);
   });
 }
 
 export function assertPathInUrl(path: string[]) {
-  it('should display the selected path in the url', () => {
-    const categoryFacetListInUrl = path.join(',');
+  const categoryFacetListInUrl = path.join(',');
+  it(`should display the selected path "${categoryFacetListInUrl}" in the url`, () => {
     const urlHash = `#cf[${hierarchicalField}]=${encodeURI(
       categoryFacetListInUrl
     )}`;
@@ -233,13 +232,13 @@ export function assertValuesSortedAlphanumerically() {
 }
 
 export function assertFirstChildContains(value: string) {
-  it('first child value should contain the proper value', () => {
+  it(`first child value should contain ${value}`, () => {
     CategoryFacetSelectors.childValue().first().contains(value);
   });
 }
 
 export function assertNumberOfSearchResults(numberOfResults: number) {
-  it('should have the correct number of search results', () => {
+  it(`should have ${numberOfResults} search results`, () => {
     cy.get(ResultListSelectors.component)
       .find(ResultListSelectors.result)
       .should('have.length', numberOfResults);
