@@ -93,10 +93,8 @@ export interface HeadlessConfigurationOptions
   };
 }
 
-export type Engine<State extends object = SearchAppState> = CoreEngine<
-  State,
-  SearchThunkExtraArguments
->;
+export interface Engine<State extends object = SearchAppState>
+  extends CoreEngine<State, SearchThunkExtraArguments> {}
 
 export interface SearchThunkExtraArguments extends ThunkExtraArguments {
   searchAPIClient: SearchAPIClient;
