@@ -5,15 +5,23 @@ import {
 import {buildMockStore} from '../test/mock-store';
 import {buildMockThunkExtraArguments} from '../test/mock-thunk-extra-arguments';
 import {buildEngine, CoreEngine, EngineOptions} from './engine';
-import {searchAppReducers} from './search-app-reducers';
+import {configuration, version} from './reducers';
 import * as Store from './store';
+import * as ReducerManagerUtils from './reducer-manager';
+import {buildMockReducerManager} from '../test/mock-reducer-manager';
 
 describe('engine', () => {
-  let options: EngineOptions<typeof searchAppReducers>;
+  let options: EngineOptions<{}>;
   let engine: CoreEngine;
+  let reducerManager: ReducerManagerUtils.ReducerManager;
 
   function initEngine() {
+    reducerManager = buildMockReducerManager();
+
     jest.spyOn(Store, 'configureStore').mockReturnValue(buildMockStore());
+    jest
+      .spyOn(ReducerManagerUtils, 'createReducerManager')
+      .mockReturnValue(reducerManager);
 
     const thunkArguments = buildMockThunkExtraArguments();
     engine = buildEngine(options, thunkArguments);
@@ -26,10 +34,17 @@ describe('engine', () => {
         accessToken: 'token',
         platformUrl: 'https://www.coveo.com/',
       },
-      reducers: searchAppReducers,
+      reducers: {},
     };
 
     initEngine();
+  });
+
+  it('when #reducers is an empty object, it still registers certain core reducers', () => {
+    options.reducers = {};
+    initEngine();
+
+    expect(reducerManager.add).toHaveBeenCalledWith({configuration, version});
   });
 
   it('dispatches #updateBasicConfiguration with the correct params', () => {

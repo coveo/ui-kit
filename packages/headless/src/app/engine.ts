@@ -18,6 +18,7 @@ import {Store, configureStore} from './store';
 import {LoggerOptions} from './logger';
 import {Logger} from 'pino';
 import {ThunkExtraArguments} from './thunk-extra-arguments';
+import {configuration, version} from './reducers';
 
 type EngineDispatch<
   State,
@@ -123,6 +124,8 @@ export function buildEngine<
     platformUrl,
     analytics,
   } = options.configuration;
+
+  engine.addReducers({configuration, version});
 
   engine.dispatch(
     updateBasicConfiguration({
