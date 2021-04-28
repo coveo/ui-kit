@@ -15,7 +15,8 @@ import {
  */
 export interface ISearchActions {
   /**
-   * Executes a search query.
+   * Creates an action that executes a search query.
+   *
    * @param analyticsSearchAction - The analytics action to log after a successful query. See `loadAnalyticsSearchActions` for possible values.
    *
    * @returns A dispatchable action.
@@ -29,7 +30,7 @@ export interface ISearchActions {
   >;
 
   /**
-   * Fetches more results.
+   * Creates an action that fetches more results.
    *
    * @returns A dispatchable action.
    */
@@ -41,7 +42,7 @@ export interface ISearchActions {
 }
 
 /**
- * Loads the `search` reducer and returns the possible search actions.
+ * Loads the `search` reducer and returns possible search actions.
  *
  * @param engine - The headless engine.
  * @returns An object holding the search actions.
