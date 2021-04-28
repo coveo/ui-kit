@@ -9,6 +9,7 @@ export function buildMockFacetSearch(
     options: buildMockFacetSearchRequestOptions(),
     isLoading: false,
     response: buildMockFacetSearchResponse(),
+    initialNumberOfValues: 0,
     ...config,
   };
 }

@@ -47,7 +47,7 @@ describe('facet', () => {
   beforeEach(() => {
     options = {
       facetId,
-      field: '',
+      field: 'author',
       sortCriteria: 'score',
       facetSearch: {},
     };
@@ -87,14 +87,6 @@ describe('facet', () => {
   });
 
   it('registers a facet with the passed options and the default values of unspecified options', () => {
-    options = {
-      facetId,
-      field: 'author',
-      sortCriteria: 'automatic',
-      facetSearch: {},
-    };
-    initFacet();
-
     const action = registerFacet({
       ...options,
       facetId,

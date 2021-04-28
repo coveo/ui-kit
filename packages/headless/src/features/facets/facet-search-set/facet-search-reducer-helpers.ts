@@ -15,6 +15,9 @@ export type FacetSearchState<T extends FacetSearchResponse> = {
    * The facet search response.
    */
   response: T;
+  /** The initial maximum number of values to fetch.
+   */
+  initialNumberOfValues: number;
 };
 
 export type FacetSearchSetState<T extends FacetSearchResponse> = Record<
@@ -34,10 +37,15 @@ export function handleFacetSearchRegistration<T extends FacetSearchResponse>(
   }
 
   const isLoading = false;
-  const options = buildFacetSearchOptions(payload);
+  const options = {...defaultFacetSearchOptions, ...payload};
   const response = buildEmptyResponse();
 
-  state[facetId] = {options, isLoading, response};
+  state[facetId] = {
+    options,
+    isLoading,
+    response,
+    initialNumberOfValues: options.numberOfValues,
+  };
 }
 
 export function handleFacetSearchUpdate<T extends FacetSearchResponse>(
@@ -94,17 +102,35 @@ export function handleFacetSearchFulfilled<T extends FacetSearchResponse>(
   search.response = response;
 }
 
+export function handleFacetSearchClear<T extends FacetSearchResponse>(
+  state: FacetSearchSetState<T>,
+  payload: FacetSearchOptions,
+  buildEmptyResponse: () => T
+) {
+  const {facetId} = payload;
+  const search = state[facetId];
+
+  if (!search) {
+    return;
+  }
+
+  search.isLoading = false;
+  search.response = buildEmptyResponse();
+  search.options.numberOfValues = search.initialNumberOfValues;
+  search.options.query = defaultFacetSearchOptions.query;
+}
+
+export function handleFacetSearchSetClear<T extends FacetSearchResponse>(
+  state: FacetSearchSetState<T>,
+  buildEmptyResponse: () => T
+) {
+  Object.keys(state).forEach((facetId) =>
+    handleFacetSearchClear(state, {facetId}, buildEmptyResponse)
+  );
+}
+
 export const defaultFacetSearchOptions: FacetSearchRequestOptions = {
   captions: {},
   numberOfValues: 10,
   query: '**',
 };
-
-function buildFacetSearchOptions(
-  config: Partial<FacetSearchRequestOptions> = {}
-): FacetSearchRequestOptions {
-  return {
-    ...defaultFacetSearchOptions,
-    ...config,
-  };
-}
