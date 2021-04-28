@@ -9,7 +9,14 @@ import {
   getFacetSearchSetInitialState,
   SpecificFacetSearchSetState,
 } from './specific-facet-search-set-state';
-import {executeFacetSearch} from '../generic/generic-facet-search-actions';
+import {
+  clearFacetSearch,
+  executeFacetSearch,
+} from '../generic/generic-facet-search-actions';
+import {
+  executeSearch,
+  ExecuteSearchThunkReturn,
+} from '../../../search/search-actions';
 
 describe('FacetSearch slice', () => {
   const facetId = '1';
@@ -74,6 +81,29 @@ describe('FacetSearch slice', () => {
     facetSearchSetReducer(state, action);
     expect(
       FacetSearchReducerHelpers.handleFacetSearchFulfilled
+    ).toHaveBeenCalledTimes(1);
+  });
+
+  it('#handleFacetSearchClear calls #handleFacetSearchFulfilled', () => {
+    jest.spyOn(FacetSearchReducerHelpers, 'handleFacetSearchClear');
+    facetSearchSetReducer(state, clearFacetSearch({facetId}));
+
+    expect(
+      FacetSearchReducerHelpers.handleFacetSearchClear
+    ).toHaveBeenCalledTimes(1);
+  });
+
+  it('#executeFacetSearch.fulfilled calls #handleFacetSearchSetClear', () => {
+    jest.spyOn(FacetSearchReducerHelpers, 'handleFacetSearchSetClear');
+    const action = executeSearch.fulfilled(
+      {} as ExecuteSearchThunkReturn,
+      '',
+      null as never
+    );
+    facetSearchSetReducer(state, action);
+
+    expect(
+      FacetSearchReducerHelpers.handleFacetSearchSetClear
     ).toHaveBeenCalledTimes(1);
   });
 });

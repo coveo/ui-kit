@@ -1,4 +1,4 @@
-import {createAsyncThunk} from '@reduxjs/toolkit';
+import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
 import {CategoryFacetSearchRequest} from '../../../../api/search/facet-search/category-facet-search/category-facet-search-request';
 import {FacetSearchResponse} from '../../../../api/search/facet-search/facet-search-response';
 import {SpecificFacetSearchRequest} from '../../../../api/search/facet-search/specific-facet-search/specific-facet-search-request';
@@ -11,7 +11,11 @@ import {
   StateNeededForFacetSearch,
   StateNeededForSpecificFacetSearch,
 } from './generic-facet-search-state';
-import {requiredNonEmptyString} from '../../../../utils/validate-payload';
+import {
+  requiredNonEmptyString,
+  validatePayload,
+} from '../../../../utils/validate-payload';
+import {facetIdDefinition} from '../../generic/facet-actions-validation';
 
 /**
  * Executes a facet search (i.e., a search for facet values in a facet search box).
@@ -44,6 +48,16 @@ export const executeFacetSearch = createAsyncThunk<
 
     return {facetId, response};
   }
+);
+
+/**
+ * Resets the query and empties the values of the facet search.
+ * @param facetId (string) The unique identifier of the facet for which to perform a facet search (e.g., `"1"`).
+ */
+export const clearFacetSearch = createAction(
+  'facetSearch/clearResults',
+  (payload: {facetId: string}) =>
+    validatePayload(payload, {facetId: facetIdDefinition})
 );
 
 const isSpecificFacetSearchState = (
