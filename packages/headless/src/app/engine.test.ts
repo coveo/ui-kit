@@ -40,10 +40,7 @@ describe('engine', () => {
     initEngine();
   });
 
-  it('when #reducers is an empty object, it still registers certain core reducers', () => {
-    options.reducers = {};
-    initEngine();
-
+  it('registers certain core reducers', () => {
     expect(reducerManager.add).toHaveBeenCalledWith({configuration, version});
   });
 

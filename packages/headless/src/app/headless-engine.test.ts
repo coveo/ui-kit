@@ -1,15 +1,23 @@
 import {HeadlessEngine, HeadlessOptions, Engine} from './headless-engine';
 import {updateSearchConfiguration} from '../features/configuration/configuration-actions';
 import * as Store from './store';
+import * as ReducerManagerUtils from './reducer-manager';
 import {searchAppReducers} from './search-app-reducers';
 import {buildMockStore} from '../test/mock-store';
+import {buildMockReducerManager} from '../test/mock-reducer-manager';
+import {debug, pipeline, searchHub} from './reducers';
 
 describe('headless engine', () => {
   let options: HeadlessOptions<typeof searchAppReducers>;
   let engine: Engine;
+  let reducerManager: ReducerManagerUtils.ReducerManager;
 
   beforeEach(() => {
+    reducerManager = buildMockReducerManager();
     jest.spyOn(Store, 'configureStore').mockReturnValue(buildMockStore());
+    jest
+      .spyOn(ReducerManagerUtils, 'createReducerManager')
+      .mockReturnValue(reducerManager);
 
     options = {
       configuration: HeadlessEngine.getSampleConfiguration(),
@@ -17,6 +25,14 @@ describe('headless engine', () => {
       loggerOptions: {level: 'silent'},
     };
     engine = new HeadlessEngine(options);
+  });
+
+  it('registers reducers needed to store the search configuration, permit debugging', () => {
+    expect(reducerManager.add).toHaveBeenCalledWith({
+      searchHub,
+      pipeline,
+      debug,
+    });
   });
 
   it('should thrown an error if the engine is constructed with invalid options', () => {

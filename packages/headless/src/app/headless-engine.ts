@@ -32,6 +32,7 @@ import {
   ThunkExtraArguments,
 } from './thunk-extra-arguments';
 import {SearchAppState} from '../state/search-app-state';
+import {debug, pipeline, searchHub} from './reducers';
 
 /**
  * The global headless engine options.
@@ -124,6 +125,8 @@ export class HeadlessEngine<Reducers extends ReducersMapObject>
     };
 
     this.engine = buildEngine(options, thunkArguments);
+
+    this.engine.addReducers({searchHub, pipeline, debug});
 
     if (options.configuration.search) {
       this.engine.dispatch(
