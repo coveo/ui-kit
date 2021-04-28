@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.11.0-alpha.10](https://github.com/coveo/ui-kit/compare/v0.11.0-alpha.9...v0.11.0-alpha.10) (2021-04-27)
+
+
+### Bug Fixes
+
+* **atomic:** fix facet search scrolling & focus issues ([#730](https://github.com/coveo/ui-kit/issues/730)) ([dd94ea6](https://github.com/coveo/ui-kit/commit/dd94ea6441fa4368516b659ff4d1765e0ca8f275))
+
+
+### Features
+
+* **headless:** add clear method to facet search  ([#738](https://github.com/coveo/ui-kit/issues/738)) ([795804e](https://github.com/coveo/ui-kit/commit/795804ebe555ee9842d3ec2eca2cb3fadcbd74b6))
+
+
+
+
+
 # [0.11.0-alpha.9](https://github.com/coveo/ui-kit/compare/v0.11.0-alpha.8...v0.11.0-alpha.9) (2021-04-22)
 
 

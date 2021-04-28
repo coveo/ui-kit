@@ -61,6 +61,7 @@ export const BaseFacet: FunctionalComponent<BaseFacetProps> = (
     <div class="facet mb-4" part="facet">
       <button
         title={props.label}
+        part="modal-button"
         class={`rounded-3xl text-left border-solid bg-background px-4 h-9 outline-none focus:outline-none lg:hidden cursor-pointer ellipsed w-full ${
           props.hasActiveValues
             ? 'border-2 border-primary text-primary'
@@ -78,6 +79,7 @@ export const BaseFacet: FunctionalComponent<BaseFacetProps> = (
         <div class="flex flex-row items-center pb-2 mb-2 border-b border-solid border-divider">
           <span
             title={props.label}
+            part="label"
             class="font-bold text-on-background-variant text-base lg:text-sm ellipsed w-full"
           >
             {props.label}

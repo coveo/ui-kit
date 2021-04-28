@@ -26,6 +26,7 @@ export class Combobox {
   public onInputChange(e: Event) {
     const value = (e.target as HTMLInputElement).value;
     this.options.onChange(value);
+    this.updateActiveDescendant();
   }
 
   public onInputKeyup(e: KeyboardEvent) {
@@ -96,6 +97,12 @@ export class Combobox {
     return !!this.listbox.childElementCount;
   }
 
+  private scrollActiveDescendantIntoView() {
+    this.activeDescendantElement?.scrollIntoView({
+      block: 'nearest',
+    });
+  }
+
   private focusNextValue() {
     if (!this.hasValues) {
       return;
@@ -103,6 +110,7 @@ export class Combobox {
 
     this.updateActiveDescendantElement(this.nextOfFirstValue);
     this.updateAccessibilityAttributes();
+    this.scrollActiveDescendantIntoView();
   }
 
   private get firstValue() {
@@ -124,6 +132,7 @@ export class Combobox {
 
     this.updateActiveDescendantElement(this.previousOrLastValue);
     this.updateAccessibilityAttributes();
+    this.scrollActiveDescendantIntoView();
   }
 
   private get lastValue() {
