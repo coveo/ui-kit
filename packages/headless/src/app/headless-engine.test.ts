@@ -22,7 +22,9 @@ describe('headless engine', () => {
 
   it('should thrown an error if the engine is constructed with invalid options', () => {
     options.configuration.organizationId = (123 as unknown) as string;
-    expect(() => new HeadlessEngine(options)).toThrow();
+    expect(() => new HeadlessEngine(options)).toThrow(
+      /The following properties are invalid/
+    );
   });
 
   it(`when there is a search param in the configuration
