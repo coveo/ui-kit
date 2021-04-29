@@ -11,14 +11,22 @@ import {
 } from './search-actions';
 
 /**
- * The search actions that can be created.
+ * The search action creators.
  */
 export interface SearchActionCreators {
   /**
    * Creates an action that executes a search query.
    *
-   * @param analyticsSearchAction - The analytics action to log after a successful query. See `loadAnalyticsSearchActions` for possible values.
+   * @example
    *
+   * ```js
+   * const {logInterfaceLoad} = loadAnalyticsSearchActions(engine);
+   * const {executeSearch} = loadSearchActions(engine);
+   *
+   * engine.dispatch(executeSearch(interfaceLoad()));
+   * ```
+   *
+   * @param analyticsSearchAction - The analytics action to log after a successful query. See `loadAnalyticsSearchActions` for possible values.
    * @returns A dispatchable action.
    */
   executeSearch(
@@ -42,12 +50,12 @@ export interface SearchActionCreators {
 }
 
 /**
- * Loads the `search` reducer and returns possible search actions that can be created.
+ * Loads the `search` reducer and returns possible search action creators.
  *
  * @param engine - The headless engine.
- * @returns An object holding the search actions that can be created.
+ * @returns An object holding the search action creators.
  */
-export function loadSearchActionCreators(
+export function loadSearchActions(
   engine: Engine<object>
 ): SearchActionCreators {
   engine.addReducers({search});
