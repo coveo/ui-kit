@@ -32,6 +32,8 @@ export const FacetAlias: IAlias = {
 export const BreadcrumbAlias: IAlias = {
   breadcrumbFacet: '@breadcrumbFacet',
   breadcrumbClearAllFilter: '@breadcrumbClearAllFilter',
+  breadcrumbs: '@breadcrumbs',
+  showMoreButton: '@showMoreButton',
 };
 
 const FacetAliasNoAtSign = aliasNoAtSignBuilder(FacetAlias);
@@ -42,11 +44,24 @@ export function createBreadcrumbShadowAlias() {
     .shadow()
     .find('ul[part="breadcrumbs"]')
     .as(BreadcrumbAliasNoAtSign.breadcrumbFacet);
+
   cy.get(BreadcrumbSelectors.breadcrumb)
     .shadow()
     .find('button[part="breadcrumb-clear-all"]')
     .as(BreadcrumbAliasNoAtSign.breadcrumbClearAllFilter);
+
+  cy.get(BreadcrumbSelectors.breadcrumb)
+    .shadow()
+    .find('button[part="breadcrumb"][title]')
+    .as(BreadcrumbAliasNoAtSign.breadcrumbs);
+
+  cy.get(BreadcrumbSelectors.breadcrumb)
+    .shadow()
+    .find('button[part="breadcrumb"]')
+    .last()
+    .as(BreadcrumbAliasNoAtSign.showMoreButton);
 }
+
 export function createAliasShadow(field: string, facetMainSelector?: string) {
   facetMainSelector = facetMainSelector
     ? facetMainSelector
@@ -64,9 +79,11 @@ export function createAliasFacetUL(field: string, facetMainSelector?: string) {
     .find('ul')
     .not('[part="parents"]')
     .as(FacetAliasNoAtSign.facetUL);
+
   cy.get(FacetAlias.facetUL)
     .find('li:nth-child(1)')
     .as(FacetAliasNoAtSign.facetFirstValue);
+
   cy.get(FacetAlias.facetUL)
     .find('li:nth-child(2)')
     .as(FacetAliasNoAtSign.facetSecondValue);
@@ -77,6 +94,7 @@ export function createAliasFacetUL(field: string, facetMainSelector?: string) {
   cy.get(FacetAlias.facetUL)
     .find(`${facetValueLabelCSS} span:nth-child(1)`)
     .as(FacetAliasNoAtSign.facetAllValueLabel);
+
   cy.get(FacetAlias.facetUL)
     .find(`${facetValueLabelCSS} span:nth-child(2)`)
     .as(FacetAliasNoAtSign.facetAllValueCount);
