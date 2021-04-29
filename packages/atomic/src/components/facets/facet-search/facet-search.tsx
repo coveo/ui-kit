@@ -12,6 +12,7 @@ type FacetSearchResult = CategoryFacetSearchResult;
 export interface FacetSearchStrings extends ComboboxStrings {
   placeholder: () => string;
   noValuesFound: () => string;
+  clear: () => string;
 }
 
 export interface FacetSearchComponent {
@@ -136,6 +137,7 @@ export class FacetSearch {
         type="button"
         part="search-input-clear-button"
         class="clear-button mr-2"
+        aria-label={this.strings.clear()}
         onClick={() => {
           this.text = '';
           this.inputRef.focus();

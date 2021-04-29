@@ -21,7 +21,7 @@ export const FacetPlaceholder: FunctionalComponent<FacetPlaceholderProps> = ({
     <div
       part="placeholder"
       class="p-7 animate-pulse border border-divider rounded-xl mb-4"
-      aria-hidden
+      aria-hidden="true"
     >
       <div class="h-3 mb-2 bg-divider w-5/6"></div>
       {facetValues}
