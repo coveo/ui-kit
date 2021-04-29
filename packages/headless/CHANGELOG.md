@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.11.0](https://github.com/coveo/ui-kit/compare/v0.11.0-alpha.13...v0.11.0) (2021-04-29)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+# [0.11.0-alpha.12](https://github.com/coveo/ui-kit/compare/v0.11.0-alpha.11...v0.11.0-alpha.12) (2021-04-29)
+
+
+### Bug Fixes
+
+* **headless:** fix create engine logger before validation ([#745](https://github.com/coveo/ui-kit/issues/745)) ([c02f9cb](https://github.com/coveo/ui-kit/commit/c02f9cbf6f3f5b5408b8b5c8038677f56da0a783))
+
+
+
+
+
 # [0.11.0-alpha.10](https://github.com/coveo/ui-kit/compare/v0.11.0-alpha.9...v0.11.0-alpha.10) (2021-04-27)
 
 

@@ -1,8 +1,7 @@
-import {HeadlessEngine, HeadlessOptions} from './headless-engine';
+import {HeadlessEngine, HeadlessOptions, Engine} from './headless-engine';
 import {updateSearchConfiguration} from '../features/configuration/configuration-actions';
 import * as Store from './store';
 import {searchAppReducers} from './search-app-reducers';
-import {Engine} from './engine';
 import {buildMockStore} from '../test/mock-store';
 
 describe('headless engine', () => {
@@ -22,7 +21,9 @@ describe('headless engine', () => {
 
   it('should thrown an error if the engine is constructed with invalid options', () => {
     options.configuration.organizationId = (123 as unknown) as string;
-    expect(() => new HeadlessEngine(options)).toThrow();
+    expect(() => new HeadlessEngine(options)).toThrow(
+      /The following properties are invalid/
+    );
   });
 
   it(`when there is a search param in the configuration

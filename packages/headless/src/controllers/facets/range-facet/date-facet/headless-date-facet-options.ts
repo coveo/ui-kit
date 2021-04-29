@@ -20,7 +20,7 @@ import {
   injectionDepth,
   numberOfValues,
 } from '../../_common/facet-option-definitions';
-import {Engine} from '../../../../app/engine';
+import {Engine} from '../../../../app/headless-engine';
 import {validateOptions} from '../../../../utils/validate-payload';
 import {
   ConfigurationSection,
