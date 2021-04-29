@@ -55,6 +55,6 @@ export class AtomicResultListPlaceholder implements InitializableComponent {
         </div>
       );
     }
-    return <Host aria-hidden>{placeholders}</Host>;
+    return <Host aria-hidden="true">{placeholders}</Host>;
   }
 }

@@ -1,5 +1,5 @@
 import {Result} from '../../api/search/search/result';
-import {Engine} from '../../app/engine';
+import {Engine} from '../../app/headless-engine';
 import {configuration} from '../../app/reducers';
 import {logDocumentOpen} from '../../features/result/result-analytics-actions';
 import {ConfigurationSection} from '../../state/state-sections';

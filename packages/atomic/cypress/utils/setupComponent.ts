@@ -24,6 +24,7 @@ export const RouteAlias = {
   analytics: '@coveoAnalytics',
   querySuggest: '@coveoQuerySuggest',
   search: '@coveoSearch',
+  facetSearch: '@coveoFacetSearch',
 };
 
 export function setupIntercept() {
@@ -36,6 +37,11 @@ export function setupIntercept() {
     method: 'POST',
     path: '**/rest/search/v2/querySuggest?*',
   }).as(RouteAlias.querySuggest.substring(1));
+
+  cy.intercept({
+    method: 'POST',
+    path: '**/rest/search/v2/facet?*',
+  }).as(RouteAlias.facetSearch.substring(1));
 
   cy.intercept({
     method: 'POST',

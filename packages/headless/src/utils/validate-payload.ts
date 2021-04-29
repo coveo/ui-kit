@@ -6,7 +6,7 @@ import {
   StringValue,
 } from '@coveo/bueno';
 import {SerializedError} from '@reduxjs/toolkit';
-import {Engine} from '../app/engine';
+import {Engine} from '../app/headless-engine';
 
 export const requiredNonEmptyString = new StringValue({
   required: true,
@@ -69,7 +69,7 @@ export const validatePayload = <P>(
 };
 
 export const validateInitialState = <T extends object>(
-  engine: Engine<unknown>,
+  engine: Engine<object>,
   schema: Schema<T>,
   obj: T | undefined,
   functionName: string
@@ -85,7 +85,7 @@ export const validateInitialState = <T extends object>(
 };
 
 export const validateOptions = <T extends object>(
-  engine: Engine<unknown>,
+  engine: Engine<object>,
   schema: Schema<T>,
   obj: Partial<T> | undefined,
   functionName: string
@@ -101,7 +101,7 @@ export const validateOptions = <T extends object>(
 };
 
 const validateObject = <T extends object>(
-  engine: Engine<unknown>,
+  engine: Engine<object>,
   schema: Schema<T>,
   obj: T | undefined,
   validationMessage: string,

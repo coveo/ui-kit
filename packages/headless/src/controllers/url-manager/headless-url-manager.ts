@@ -1,5 +1,5 @@
 import {Schema, StringValue} from '@coveo/bueno';
-import {Engine} from '../../app/engine';
+import {Engine} from '../../app/headless-engine';
 import {restoreSearchParameters} from '../../features/search-parameters/search-parameter-actions';
 import {SearchParametersState} from '../../state/search-app-state';
 import {validateInitialState} from '../../utils/validate-payload';

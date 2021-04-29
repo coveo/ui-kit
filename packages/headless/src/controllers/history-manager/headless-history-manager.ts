@@ -1,4 +1,4 @@
-import {Engine} from '../../app/engine';
+import {Engine} from '../../app/headless-engine';
 import {configuration, history} from '../../app/reducers';
 import {StateWithHistory} from '../../app/undoable';
 import {back, forward} from '../../features/history/history-actions';

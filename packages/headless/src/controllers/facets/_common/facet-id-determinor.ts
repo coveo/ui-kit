@@ -1,4 +1,4 @@
-import {Engine} from '../../../app/engine';
+import {Engine} from '../../../app/headless-engine';
 import {AllFacetSections} from '../../../features/facets/generic/interfaces/generic-facet-section';
 import {generateFacetId} from './facet-id-generator';
 

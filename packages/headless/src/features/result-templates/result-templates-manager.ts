@@ -7,7 +7,7 @@ import {
   SchemaValidationError,
   StringValue,
 } from '@coveo/bueno';
-import {Engine} from '../../app/engine';
+import {Engine} from '../../app/headless-engine';
 import {registerFieldsToInclude} from '../fields/fields-actions';
 import {SearchAppState} from '../../state/search-app-state';
 
@@ -44,7 +44,10 @@ export interface ResultTemplatesManager<Content = unknown> {
  */
 export function buildResultTemplatesManager<
   Content = unknown,
-  State = SearchAppState
+  /**
+   * @deprecated The "State" generic is no longer needed and will be removed in the next major version. Please do not specify it.
+   */
+  State extends object = SearchAppState
 >(engine: Engine<State>): ResultTemplatesManager<Content> {
   const templates: Required<ResultTemplate<Content>>[] = [];
   const validateTemplates = (templates: ResultTemplate<Content>[]) => {
