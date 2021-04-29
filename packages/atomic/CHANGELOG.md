@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.11.1-alpha.0](https://github.com/coveo/ui-kit/compare/v0.11.0...v0.11.1-alpha.0) (2021-04-29)
+
+
+### Bug Fixes
+
+* **atomic:** fix wrap for facet mobile ([#748](https://github.com/coveo/ui-kit/issues/748)) ([e9d8fcf](https://github.com/coveo/ui-kit/commit/e9d8fcf958c31ad84017c330c3177c280ed0c299))
+
+
+
+
+
 # [0.11.0](https://github.com/coveo/ui-kit/compare/v0.11.0-alpha.13...v0.11.0) (2021-04-29)
 
 **Note:** Version bump only for package @coveo/atomic
