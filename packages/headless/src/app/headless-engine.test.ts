@@ -33,6 +33,6 @@ describe('headless engine', () => {
 
   it('should throw an error if the engine is constructed with invalid options', () => {
     options.configuration.organizationId = (123 as unknown) as string;
-    expect(() => new HeadlessEngine(options)).toThrow();
+    expect(initEngine).toThrow();
   });
 });
