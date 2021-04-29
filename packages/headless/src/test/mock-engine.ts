@@ -21,6 +21,8 @@ import {
 } from '../app/logger-middlewares';
 import {validatePayloadAndThrow} from '../utils/validate-payload';
 import {buildMockSearchAPIClient} from './mock-search-api-client';
+import {getSearchHubInitialState} from '../features/search-hub/search-hub-state';
+import {getPipelineInitialState} from '../features/pipeline/pipeline-state';
 
 type AsyncActionCreator<ThunkArg> = ActionCreatorWithPreparedPayload<
   [string, ThunkArg],
@@ -78,7 +80,11 @@ function buildMockEngine<T extends AppState>(
   return {
     mockStore: store,
     store,
-    state: mockState(),
+    state: {
+      ...mockState(),
+      searchHub: getSearchHubInitialState(),
+      pipeline: getPipelineInitialState(),
+    },
     subscribe: jest.fn(() => unsubscribe),
     get dispatch() {
       return store.dispatch;
