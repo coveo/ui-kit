@@ -6,7 +6,6 @@ import {IRuntimeEnvironment} from 'coveo.analytics';
 export const localeValidation = new StringValue({
   emptyAllowed: false,
   required: false,
-  regex: /[a-z]{2}-[A-Z]{2}/,
 });
 
 const originSchemaOnConfigUpdate = () =>
