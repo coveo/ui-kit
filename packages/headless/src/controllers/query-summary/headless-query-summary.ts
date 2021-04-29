@@ -1,4 +1,4 @@
-import {Engine} from '../../app/engine';
+import {Engine} from '../../app/headless-engine';
 import {pagination, search} from '../../app/reducers';
 import {PaginationSection, SearchSection} from '../../state/state-sections';
 import {loadReducerError} from '../../utils/errors';

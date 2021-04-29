@@ -1,5 +1,5 @@
 import {NumberValue, Schema, SchemaValidationError} from '@coveo/bueno';
-import {Engine} from '../app/engine';
+import {Engine} from '../app/headless-engine';
 import {buildMockSearchAppEngine} from '../test';
 import {
   validatePayload,
@@ -57,7 +57,7 @@ describe('validatePayloadAndThrow', () => {
 });
 
 describe('validateOptions', () => {
-  let engine: Engine<unknown>;
+  let engine: Engine<object>;
   const schema = new Schema({
     id: new NumberValue({max: 10}),
   });
@@ -86,7 +86,7 @@ describe('validateOptions', () => {
 });
 
 describe('validateInitialState', () => {
-  let engine: Engine<unknown>;
+  let engine: Engine<object>;
   const schema = new Schema({
     id: new NumberValue({max: 10}),
   });

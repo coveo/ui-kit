@@ -1,8 +1,7 @@
-import {HeadlessEngine, HeadlessOptions} from './headless-engine';
+import {HeadlessEngine, HeadlessOptions, Engine} from './headless-engine';
 import {updateSearchConfiguration} from '../features/configuration/configuration-actions';
 import * as Store from './store';
 import {searchAppReducers} from './search-app-reducers';
-import {Engine} from './engine';
 import {buildMockStore} from '../test/mock-store';
 
 describe('headless engine', () => {

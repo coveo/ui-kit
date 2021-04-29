@@ -22,7 +22,6 @@ import {baseSearchRequest} from './search-api-params';
 import {RecommendationRequest} from './recommendation/recommendation-request';
 import {ProductRecommendationsRequest} from './product-recommendations/product-recommendations-request';
 import {Logger} from 'pino';
-import {ThunkExtraArguments} from '../../app/store';
 import {
   PostprocessFacetSearchResponseMiddleware,
   PostprocessQuerySuggestResponseMiddleware,
@@ -33,13 +32,14 @@ import {HtmlRequest} from './html/html-request';
 import {findEncoding} from './encoding-finder';
 import {TextDecoder} from 'web-encoding';
 import {BaseParam} from '../platform-service-params';
+import {SearchThunkExtraArguments} from '../../app/headless-engine';
 
 export type AllSearchAPIResponse = Plan | Search | QuerySuggest;
 
 export interface AsyncThunkSearchOptions<T extends Partial<SearchAppState>> {
   state: T;
   rejectValue: SearchAPIErrorWithStatusCode;
-  extra: ThunkExtraArguments;
+  extra: SearchThunkExtraArguments;
 }
 
 export interface SearchAPIClientOptions {
