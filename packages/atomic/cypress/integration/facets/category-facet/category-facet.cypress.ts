@@ -1,45 +1,15 @@
-import {buildTestUrl, RouteAlias, setUpPage} from '../../utils/setupComponent';
+import {buildTestUrl, RouteAlias} from '../../../utils/setupComponent';
+import {CategoryFacetSelectors} from './category-facet-selectors';
+import * as CategoryFacetAssertions from './category-facet-assertions';
+import * as CategoryFacetSearchAssertions from './category-facet-search-assertions';
 import {
-  canadaHierarchy,
+  selectChildValueAt,
   canadaHierarchyIndex,
-  CategoryFacetSelectors,
-  hierarchicalField,
+  canadaHierarchy,
   defaultNumberOfValues,
   togoHierarchy,
-} from './category-facet-selectors';
-import * as CategoryFacetAssertions from './category-facet-assertions';
-
-interface CategoryFacetSetupOptions {
-  field: string;
-  attributes: string;
-  executeFirstSearch: boolean;
-  withResultList: boolean;
-}
-
-// TODO: adapt new setup
-function setupCategoryFacet(options: Partial<CategoryFacetSetupOptions> = {}) {
-  const setupOptions: CategoryFacetSetupOptions = {
-    attributes: '',
-    executeFirstSearch: true,
-    field: hierarchicalField,
-    withResultList: false,
-    ...options,
-  };
-  setUpPage(
-    `<atomic-breadcrumb-manager></atomic-breadcrumb-manager>     
-    <atomic-category-facet field="${setupOptions.field}" label="Atlas" ${
-      setupOptions.attributes
-    }></atomic-category-facet>
-    ${
-      setupOptions.withResultList && '<atomic-result-list></atomic-result-list>'
-    }`,
-    setupOptions.executeFirstSearch
-  );
-}
-
-function selectChildValueAt(index: number) {
-  CategoryFacetSelectors.childValue().eq(index).click();
-}
+  setupCategoryFacet,
+} from './category-facet-actions';
 
 describe('Category Facet Test Suites', () => {
   describe('with default settings', () => {
@@ -59,7 +29,7 @@ describe('Category Facet Test Suites', () => {
       CategoryFacetAssertions.assertNumberOfParentValues(0);
       CategoryFacetAssertions.assertDisplayShowMoreButton(true);
       CategoryFacetAssertions.assertDisplayShowLessButton(false);
-      CategoryFacetAssertions.assertDisplaySearch(false);
+      CategoryFacetSearchAssertions.assertDisplaySearch(false);
       CategoryFacetAssertions.assertDisplayClearButton(false);
       CategoryFacetAssertions.assertLabelContains('Atlas');
       CategoryFacetAssertions.assertValuesSortedByOccurences();
@@ -136,7 +106,7 @@ describe('Category Facet Test Suites', () => {
         });
       });
 
-      describe('when selecting the "All categories" button', () => {
+      describe('when selecting the "All Categories" button', () => {
         function setupClear() {
           setupGoDeeperOneLevel();
           cy.wait(RouteAlias.analytics);
@@ -367,6 +337,6 @@ describe('Category Facet Test Suites', () => {
     before(() => {
       setupCategoryFacet({attributes: 'enable-facet-search'});
     });
-    CategoryFacetAssertions.assertDisplaySearch(true);
+    CategoryFacetSearchAssertions.assertDisplaySearch(true);
   });
 });
