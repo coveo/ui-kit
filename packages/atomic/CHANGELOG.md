@@ -3,6 +3,33 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.11.0-alpha.13](https://github.com/coveo/ui-kit/compare/v0.11.0-alpha.12...v0.11.0-alpha.13) (2021-04-29)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [0.11.0-alpha.12](https://github.com/coveo/ui-kit/compare/v0.11.0-alpha.11...v0.11.0-alpha.12) (2021-04-29)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [0.11.0-alpha.11](https://github.com/coveo/ui-kit/compare/v0.11.0-alpha.10...v0.11.0-alpha.11) (2021-04-28)
+
+
+### Features
+
+* **atomic:** v0 reponsive style ([#741](https://github.com/coveo/ui-kit/issues/741)) ([498169d](https://github.com/coveo/ui-kit/commit/498169da1422c84f3d0671b0ae73b07de06bee46))
+
+
+
+
+
 # [0.11.0-alpha.10](https://github.com/coveo/ui-kit/compare/v0.11.0-alpha.9...v0.11.0-alpha.10) (2021-04-27)
 
 

@@ -17,16 +17,18 @@
   .content-container {
     width: 100%;
     display: grid;
+    grid-template-columns: minmax(0, 1fr);
     margin-left: 15px;
     gap: 15px;
   }
 
   .fields-container {
     display: flex;
+    flex-wrap: wrap;
   }
 
   .fields-container > atomic-field-condition {
-    margin-right: 15px;
+    margin: 0 15px 10px 0;
     background: var(--atomic-background-variant);
     padding: 4px 8px;
     font-size: 0.8rem;
@@ -58,6 +60,10 @@
 
   .template-container b {
     font-weight: var(--atomic-font-bold);
+  }
+
+  atomic-result-printable-uri {
+    line-height: 1.25rem;
   }
 </style>
 <div class="template-container">
