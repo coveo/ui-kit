@@ -114,9 +114,8 @@ export class HeadlessEngine<Reducers extends ReducersMapObject>
   private engine: Engine<StateFromReducersMapObject<Reducers>>;
 
   constructor(private options: HeadlessOptions<Reducers>) {
-    this.validateConfiguration(options);
-
     this.logger = buildLogger(options.loggerOptions);
+    this.validateConfiguration(options);
 
     const thunkArguments = {
       ...buildThunkExtraArguments(options.configuration, this.logger),
