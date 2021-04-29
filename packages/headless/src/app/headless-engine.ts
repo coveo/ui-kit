@@ -99,9 +99,8 @@ export class HeadlessEngine<Reducers extends ReducersMapObject>
   private engine: Engine<StateFromReducersMapObject<Reducers>>;
 
   constructor(private options: HeadlessOptions<Reducers>) {
-    this.validateConfiguration(options);
-
     this.logger = buildLogger(options.loggerOptions);
+    this.validateConfiguration(options);
     const searchAPIClient = this.createSearchAPIClient();
     this.engine = buildEngine(options, {searchAPIClient}, this.logger);
 
