@@ -94,6 +94,9 @@ export class AtomicFacet
   @State() public isExpanded = false;
   @State() public facetSearchQuery = '';
 
+  /**
+   * Specifies a unique identifier for the facet
+   */
   @Prop({mutable: true, reflect: true}) public facetId = '';
   /**
    * The field whose values you want to display in the facet.

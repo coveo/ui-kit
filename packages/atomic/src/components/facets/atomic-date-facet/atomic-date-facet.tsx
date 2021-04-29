@@ -70,6 +70,10 @@ export class AtomicDateFacet implements InitializableComponent, BaseFacetState {
   };
 
   @State() public isExpanded = false;
+
+  /**
+   * Specifies a unique identifier for the facet
+   */
   @Prop({mutable: true, reflect: true}) public facetId = '';
   /**
    * Specifies the index field whose values the facet should use
