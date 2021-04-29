@@ -1,4 +1,4 @@
-import {setUpPage} from '../utils/setupComponent';
+import {RouteAlias, setUpPage} from '../utils/setupComponent';
 import {i18n} from 'i18next';
 import {getApiRequestBodyAt, getAnalyticsAt} from '../utils/network';
 
@@ -71,15 +71,18 @@ describe('Search Interface Component', () => {
     it('should set locale for search request', async () => {
       setLanguage('fr');
       execSearch();
-      const req = await getApiRequestBodyAt('@coveoSearch', 0);
-      expect(req.locale).to.be.eq('fr');
+      cy.wait(RouteAlias.search).then((intercept) => {
+        expect(intercept.request.body.locale).to.be.eq('fr');
+      });
     });
 
     it('should set language for analytics request', async () => {
       setLanguage('fr');
       execSearch();
-      const req = (await getAnalyticsAt('@coveoAnalytics', 0)).request.body;
-      expect(req.language).to.be.eq('fr');
+      cy.wait(RouteAlias.analytics).then((intercept) => {
+        const analyticsBody = intercept.request.body;
+        expect(analyticsBody).to.have.property('language', 'fr');
+      });
     });
   });
 });
