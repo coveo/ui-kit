@@ -14,16 +14,14 @@ describe('analytics middleware', () => {
 
   it('correctly pass through any action with no analytics payload', () => {
     const e = buildMockSearchAppEngine();
-    const {dispatch, mockStore: store} = e;
 
     const action = {type: 'foo'};
-    dispatch(action);
-    expect(store.getActions()).toContain(action);
+    e.dispatch(action);
+    expect(e.actions).toContain(action);
   });
 
   it('correctly pass through a search action with no analytics payload', () => {
     const e = buildMockSearchAppEngine();
-    const {dispatch, mockStore: store} = e;
     const {analyticsAction, ...mockSearchWithoutAnalytics} = buildMockSearch();
 
     const action = executeSearch.fulfilled(
@@ -31,13 +29,12 @@ describe('analytics middleware', () => {
       '',
       null as never
     );
-    dispatch(action);
-    expect(store.getActions()).toContain(action);
+    e.dispatch(action);
+    expect(e.actions).toContain(action);
   });
 
   it('correctly pass through a search action with an analytics payload', () => {
     const e = buildMockSearchAppEngine();
-    const {dispatch, mockStore: store} = e;
     const mockSearch = buildMockSearch();
 
     const action = executeSearch.fulfilled(
@@ -45,13 +42,12 @@ describe('analytics middleware', () => {
       '',
       logSearchboxSubmit()
     );
-    dispatch(action);
-    expect(store.getActions()).toContain(action);
+    e.dispatch(action);
+    expect(e.actions).toContain(action);
   });
 
   it('correctly queue log analytics after search action', () => {
     const e = buildMockSearchAppEngine();
-    const {dispatch, mockStore: store} = e;
     const mockSearch = buildMockSearch();
 
     const action = executeSearch.fulfilled(
@@ -59,14 +55,13 @@ describe('analytics middleware', () => {
       '',
       logSearchboxSubmit()
     );
-    dispatch(action);
-    expect(store.getActions()[0].type).toBe(executeSearch.fulfilled.type);
-    expect(store.getActions()[1].type).toBe(logSearchboxSubmit.pending.type);
+    e.dispatch(action);
+    expect(e.actions[0].type).toBe(executeSearch.fulfilled.type);
+    expect(e.actions[1].type).toBe(logSearchboxSubmit.pending.type);
   });
 
   it('correctly remove analytics payload from action', () => {
     const e = buildMockSearchAppEngine();
-    const {dispatch, mockStore: store} = e;
     const mockSearch = buildMockSearch();
 
     const action = executeSearch.fulfilled(
@@ -74,8 +69,8 @@ describe('analytics middleware', () => {
       '',
       logSearchboxSubmit()
     );
-    dispatch(action);
-    expect(store.getActions()[0].payload).toBeDefined();
-    expect(store.getActions()[0].payload.analyticsAction).not.toBeDefined();
+    e.dispatch(action);
+    expect(e.actions[0].payload).toBeDefined();
+    expect(e.actions[0].payload.analyticsAction).not.toBeDefined();
   });
 });
