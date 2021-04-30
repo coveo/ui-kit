@@ -12,11 +12,11 @@ export type FacetValueProps = {
 export const FacetValue: FunctionalComponent<FacetValueProps> = (props) => {
   const id = randomID('facet-value-');
   return (
-    <li part="value" class="flex flex-row items-center py-1.5">
+    <li part="value" class="flex flex-row items-center">
       <input
         type="checkbox"
         checked={props.isSelected}
-        class="w-5 h-5 flex-none rounded"
+        class="w-5 h-5 flex-none rounded cursor-pointer"
         id={id}
         name={id}
         onClick={() => props.facetValueSelected()}
@@ -24,7 +24,7 @@ export const FacetValue: FunctionalComponent<FacetValueProps> = (props) => {
       />
       <label
         htmlFor={id}
-        class="flex pl-3 text-on-background cursor-pointer ellipsed lg:text-sm"
+        class="w-full flex pl-3 text-on-background cursor-pointer ellipsed lg:text-sm py-1.5"
         title={props.label}
       >
         <span part="value-label" class="ellipsed">
