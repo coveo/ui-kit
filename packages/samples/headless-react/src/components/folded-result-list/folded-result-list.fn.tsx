@@ -39,12 +39,6 @@ export const FoldedResultList: FunctionComponent<FoldedResultListProps> = (
       <ul style={{textAlign: 'left'}}>
         {state.results.map((result) => renderFoldedResult(result))}
       </ul>
-      <button
-        disabled={state.isLoading}
-        onClick={() => controller.fetchMoreResults()}
-      >
-        Fetch
-      </button>
     </div>
   );
 };
