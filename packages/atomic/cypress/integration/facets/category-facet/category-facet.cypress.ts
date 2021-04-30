@@ -14,7 +14,9 @@ import {
 describe('Category Facet Test Suites', () => {
   describe('with default settings', () => {
     function setupWithDefaultSettings() {
-      setupCategoryFacet();
+      setupCategoryFacet({
+        attributes: `number-of-values=${defaultNumberOfValues}`,
+      });
       cy.wait(RouteAlias.search);
     }
 
@@ -75,7 +77,9 @@ describe('Category Facet Test Suites', () => {
 
         describe('verify rendering', () => {
           before(setupShowMore);
-          CategoryFacetAssertions.assertNumberOfChildValues(10);
+          CategoryFacetAssertions.assertNumberOfChildValues(
+            defaultNumberOfValues * 2
+          );
           CategoryFacetAssertions.assertDisplayShowLessButton(true);
         });
 
@@ -95,7 +99,9 @@ describe('Category Facet Test Suites', () => {
 
           describe('verify rendering', () => {
             before(setupShowLess);
-            CategoryFacetAssertions.assertNumberOfChildValues(5);
+            CategoryFacetAssertions.assertNumberOfChildValues(
+              defaultNumberOfValues
+            );
             CategoryFacetAssertions.assertDisplayShowLessButton(false);
           });
 
@@ -219,7 +225,9 @@ describe('Category Facet Test Suites', () => {
 
         describe('verify rendering', () => {
           before(setupShowLess);
-          CategoryFacetAssertions.assertNumberOfChildValues(5);
+          CategoryFacetAssertions.assertNumberOfChildValues(
+            defaultNumberOfValues
+          );
           CategoryFacetAssertions.assertDisplayShowLessButton(false);
           CategoryFacetAssertions.assertDisplayShowMoreButton(true);
         });
@@ -305,7 +313,9 @@ describe('Category Facet Test Suites', () => {
       });
     });
 
-    CategoryFacetAssertions.assertNumberOfSearchResults(10);
+    CategoryFacetAssertions.assertNumberOfSearchResults(
+      defaultNumberOfValues * 2
+    );
   });
 
   describe('when no search has yet been executed', () => {

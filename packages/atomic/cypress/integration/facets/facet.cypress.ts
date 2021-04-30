@@ -30,12 +30,14 @@ import {
 interface FacetProps {
   field: string;
   label: string;
+  numberOfValues: number;
   'sort-criteria'?: string;
 }
 
 const facetProp: FacetProps = {
   field: 'author',
   label: 'Authors',
+  numberOfValues: 8,
 };
 
 const sortCriteriaOption = {
@@ -63,14 +65,14 @@ describe('Standard Facet', () => {
       validateFacetComponentLoaded(facetProp.label);
     });
 
-    it('Facet should contain Searchbox, ShowMore button and 10 facetValue', () => {
+    it('Facet should contain Searchbox, ShowMore button and the correct number of values', () => {
       cy.get(FacetAlias.facetShadow)
         .find(FacetSelectors.facetSearchbox)
         .should('be.visible');
       cy.get(FacetAlias.facetShadow)
         .find(FacetSelectors.showMoreButton)
         .should('be.visible');
-      validateFacetNumberofValueEqual(10);
+      validateFacetNumberofValueEqual(facetProp.numberOfValues);
     });
 
     it('FacetValue list should not in Alphanumeric order', () => {
@@ -160,11 +162,11 @@ describe('Standard Facet', () => {
 
   describe('When click on ShowMore button', () => {
     it('Should display double NumberOfValue and ShowLessButton should be visible', () => {
-      validateFacetNumberofValueEqual(10);
+      validateFacetNumberofValueEqual(facetProp.numberOfValues);
       cy.get(FacetAlias.facetShadow)
         .find(FacetSelectors.showMoreButton)
         .click();
-      validateFacetNumberofValueEqual(20);
+      validateFacetNumberofValueEqual(facetProp.numberOfValues * 2);
       cy.get(FacetAlias.facetShadow)
         .find(FacetSelectors.showLessButton)
         .should('be.visible');
@@ -200,11 +202,11 @@ describe('Standard Facet', () => {
       cy.get(FacetAlias.facetShadow)
         .find(FacetSelectors.showMoreButton)
         .click();
-      validateFacetNumberofValueEqual(20);
+      validateFacetNumberofValueEqual(facetProp.numberOfValues * 2);
       cy.get(FacetAlias.facetShadow)
         .find(FacetSelectors.showLessButton)
         .click();
-      validateFacetNumberofValueEqual(10);
+      validateFacetNumberofValueEqual(facetProp.numberOfValues);
       cy.get(FacetAlias.facetShadow)
         .find(FacetSelectors.showLessButton)
         .should('not.exist');
