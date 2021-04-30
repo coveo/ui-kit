@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.13.0-alpha.0](https://github.com/coveo/ui-kit/compare/v0.12.0...v0.13.0-alpha.0) (2021-04-30)
+
+
+### Features
+
+* add loadSearchActions ([#742](https://github.com/coveo/ui-kit/issues/742)) ([68cd845](https://github.com/coveo/ui-kit/commit/68cd845307f7ac08befba455dfe6d7ec6bc6e11d))
+
+
+
+
+
 # [0.12.0](https://github.com/coveo/ui-kit/compare/v0.12.0-alpha.0...v0.12.0) (2021-04-29)
 
 **Note:** Version bump only for package @coveo/headless
