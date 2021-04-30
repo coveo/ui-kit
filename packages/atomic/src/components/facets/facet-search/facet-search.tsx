@@ -199,7 +199,7 @@ export class FacetSearch {
   private get noValuesFound() {
     if (this.showNoValuesFound) {
       return (
-        <div part="search-no-results" class="search-results px-2 py-1 text-sm">
+        <div part="search-no-results" class="search-results">
           {this.strings.noValuesFound()}
         </div>
       );
@@ -223,14 +223,14 @@ export class FacetSearch {
     const isOpen =
       this.showNoValuesFound || this.facetSearchState.values.length;
     return (
-      'input-wrapper flex flex-grow items-center border border-divider rounded ' +
+      'input-wrapper flex flex-grow items-center border border-divider rounded-md ' +
       (isOpen ? 'rounded-br-none	rounded-bl-none' : '')
     );
   }
 
   public render() {
     return (
-      <div class="combobox relative flex flex-grow">
+      <div class="combobox relative flex flex-grow mb-2 mt-3">
         <div
           class={this.inputWrapperClasses}
           ref={(el) => (this.containerRef = el as HTMLElement)}

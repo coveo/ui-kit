@@ -110,7 +110,7 @@ export class AtomicFacet
   /**
    * The number of values to request for this facet. Also determines the number of additional values to request each time this facet is expanded, and the number of values to display when this facet is collapsed.
    */
-  @Prop() public numberOfValues = 10;
+  @Prop() public numberOfValues = 8;
   /**
    * Whether this facet should contain a search box.
    */
@@ -170,7 +170,7 @@ export class AtomicFacet
 
     return (
       <button
-        class="value-button text-primary"
+        class="show-more"
         part="show-more"
         onClick={() => this.facet.showMoreValues()}
       >
@@ -186,7 +186,7 @@ export class AtomicFacet
 
     return (
       <button
-        class="value-button text-primary"
+        class="show-less"
         part="show-less"
         onClick={() => this.facet.showLessValues()}
       >

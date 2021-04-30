@@ -13,3 +13,19 @@
 .value-button {
   @apply w-full flex items-center text-left py-1;
 }
+
+.show-more, .show-less {
+  @apply w-full text-base text-left mt-1 text-primary;
+}
+
+.show-more::before, .show-less::before {
+  @apply text-lg w-4 inline-block;
+}
+
+.show-more::before {
+  content: '+';
+}
+
+.show-less::before {
+  content: '-';
+}

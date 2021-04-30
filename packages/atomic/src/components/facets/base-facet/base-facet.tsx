@@ -57,30 +57,39 @@ export const BaseFacet: FunctionalComponent<BaseFacetProps> = (
       </button>
     ) : null;
 
+  const modalButton = (
+    <button
+      title={props.label}
+      part="modal-button"
+      class={`rounded-3xl text-left border-solid bg-background px-4 h-9 outline-none focus:outline-none lg:hidden cursor-pointer ellipsed w-full ${
+        props.hasActiveValues
+          ? 'border-2 border-primary text-primary'
+          : 'border border-divider text-on-background'
+      }`}
+      onClick={() => props.controller.openModal()}
+    >
+      {props.label}
+    </button>
+  );
+
+  const facetWrapperDesktop =
+    'lg:h-auto lg:w-auto lg:p-0 lg:static lg:block lg:border lg:border-divider lg:rounded-xl lg:p-5';
+  const facetWrapperMobile =
+    'box-border p-3 h-screen w-screen fixed object-left-top bg-background top-0 left-0  z-10';
+
   return (
     <div class="facet mb-4" part="facet">
-      <button
-        title={props.label}
-        part="modal-button"
-        class={`rounded-3xl text-left border-solid bg-background px-4 h-9 outline-none focus:outline-none lg:hidden cursor-pointer ellipsed w-full ${
-          props.hasActiveValues
-            ? 'border-2 border-primary text-primary'
-            : 'border border-divider text-on-background-variant'
-        }`}
-        onClick={() => props.controller.openModal()}
-      >
-        {props.label}
-      </button>
+      {modalButton}
       <div
-        class={`box-border p-3 lg:p-0 lg:block h-screen w-screen lg:h-auto lg:w-auto fixed object-left-top bg-background top-0 left-0 lg:static z-10 ${
+        class={`${facetWrapperMobile} ${facetWrapperDesktop} ${
           props.controller.state.isExpanded ? 'block' : 'hidden'
         }`}
       >
-        <div class="flex flex-row items-center pb-2 mb-2 border-b border-solid border-divider">
+        <div class="flex flex-row items-center mb-2">
           <span
             title={props.label}
             part="label"
-            class="font-bold text-on-background-variant text-base lg:text-sm ellipsed w-full"
+            class="font-bold text-on-background ellipsed w-full"
           >
             {props.label}
           </span>
