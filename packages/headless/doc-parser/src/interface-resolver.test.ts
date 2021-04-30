@@ -330,6 +330,48 @@ describe('#resolveInterfaceMembers', () => {
     expect(result).toEqual([func]);
   });
 
+  it('resolves a method with a type alias return type', () => {
+    const entry = buildMockEntryPoint();
+    const searchActions = buildMockApiInterface({name: 'ISearchActions'});
+
+    const docComment = buildMockApiDocComment(
+      '/**\n * Fetches more results.\n *\n * @returns A dispatchable object.\n */\n'
+    );
+
+    const fetchMoreResults = buildMockApiMethodSignature({
+      name: 'fetchMoreResults',
+      docComment,
+      excerptTokens: [
+        buildContentExcerptToken('fetchMoreResults(): '),
+        buildReferenceExcerptToken(
+          'AsyncThunkAction',
+          '@coveo/headless!AsyncThunkAction:type'
+        ),
+        buildContentExcerptToken(';'),
+      ],
+      returnTypeTokenRange: {startIndex: 1, endIndex: 2},
+    });
+
+    searchActions.addMember(fetchMoreResults);
+    entry.addMember(searchActions);
+
+    const result = resolveInterfaceMembers(entry, searchActions, []);
+
+    const returnType = buildMockEntity({
+      name: 'returnType',
+      type: 'AsyncThunkAction',
+      desc: 'A dispatchable object.',
+    });
+
+    const func = buildMockFuncEntity({
+      desc: 'Fetches more results.',
+      name: 'fetchMoreResults',
+      returnType,
+    });
+
+    expect(result).toEqual([func]);
+  });
+
   it('resolves a call signature with primitive types', () => {
     const entryPoint = buildMockEntryPoint();
     const unsubscribeInterface = buildMockApiInterface({name: 'Unsubscribe'});
