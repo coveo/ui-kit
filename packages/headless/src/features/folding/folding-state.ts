@@ -1,8 +1,12 @@
 import {Result} from '../../api/search/search/result';
 
-export interface FoldedResult extends Result {
+export interface FoldedResult {
   /**
-   * The unsorted children of this result.
+   * The result.
+   */
+  result: Result;
+  /**
+   * The children of this result sorted in the same order as the search results.
    */
   children: FoldedResult[];
 }
@@ -16,7 +20,7 @@ export interface FoldingFields {
 export interface FoldingState {
   enabled: boolean;
   fields: FoldingFields;
-  maximumFoldedResults: number;
+  numberOfFoldedResults: number;
   collections: FoldedResult[];
 }
 
@@ -27,6 +31,6 @@ export const getFoldingInitialState: () => FoldingState = () => ({
     parent: 'foldingparent',
     child: 'foldingchild',
   },
-  maximumFoldedResults: 2,
+  numberOfFoldedResults: 2,
   collections: [],
 });

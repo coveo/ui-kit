@@ -31,7 +31,7 @@ export class FoldedResultList extends Component<{}, FoldingState> {
     this.setState(this.controller.state);
   }
 
-  private renderFoldedResult(result: FoldedResult) {
+  private renderFoldedResult({result, children}: FoldedResult) {
     return (
       <li key={result.uniqueId}>
         <article>
@@ -40,9 +40,7 @@ export class FoldedResultList extends Component<{}, FoldingState> {
             <ResultLink result={result}>{result.title}</ResultLink>
           </h3>
           <p>{result.excerpt}</p>
-          <ul>
-            {result.children.map((child) => this.renderFoldedResult(child))}
-          </ul>
+          <ul>{children.map((child) => this.renderFoldedResult(child))}</ul>
         </article>
       </li>
     );

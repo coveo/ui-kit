@@ -1,7 +1,10 @@
-import {NumberValue, Schema, StringValue} from '@coveo/bueno';
+import {Schema} from '@coveo/bueno';
 import {Engine} from '../../app/engine';
 import {search, configuration, folding} from '../../app/reducers';
-import {registerFolding} from '../../features/folding/folding-actions';
+import {
+  foldingOptionsSchema,
+  registerFolding,
+} from '../../features/folding/folding-actions';
 import {FoldedResult} from '../../features/folding/folding-state';
 import {
   ConfigurationSection,
@@ -14,39 +17,35 @@ import {buildController, Controller} from '../controller/headless-controller';
 
 export {FoldedResult};
 
-const optionsSchema = new Schema<Required<FoldingOptions>>({
-  collectionField: new StringValue(),
-  parentField: new StringValue(),
-  childField: new StringValue(),
-  maximumFoldedResults: new NumberValue(),
-});
+const optionsSchema = new Schema<Required<FoldingOptions>>(
+  foldingOptionsSchema
+);
 
 export interface FoldingOptions {
   /**
    * The name of the field on which to do the folding. The folding component will use the values of this field to resolve the collections of result items.
    *
-   * @defaultValue `foldedcollection`
+   * @defaultValue `foldingcollection`
    */
   collectionField?: string;
   /**
    * The name of the field that determines whether a certain result is a top result containing other child results within a collection.
    *
-   * @defaultValue `foldedparent`
+   * @defaultValue `foldingparent`
    */
   parentField?: string;
   /**
    * The name of the field that uniquely identifies a result within a collection.
    *
-   * @defaultValue `foldedchild`
+   * @defaultValue `foldingchild`
    */
   childField?: string;
   /**
-   * The maximum number of additional results to fetch from the same collection
-   * as the most relevant result, excluding the root result of the collection.
+   * The number of child results to fold under the root collection element, before expansion.
    *
    * @defaultValue `2`
    */
-  maximumFoldedResults?: number;
+  numberOfFoldedResults?: number;
 }
 
 export interface FoldingProps {
@@ -85,7 +84,7 @@ export interface FoldingState {
  */
 export function buildFolding(
   engine: Engine<object>,
-  props?: FoldingProps
+  props: FoldingProps = {}
 ): Folding {
   if (!loadFoldingReducer(engine)) {
     throw loadReducerError;
@@ -98,7 +97,7 @@ export function buildFolding(
   const options = validateOptions(
     engine,
     optionsSchema,
-    props?.options,
+    props.options,
     'buildFolding'
   );
 

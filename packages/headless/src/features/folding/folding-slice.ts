@@ -9,9 +9,9 @@ import {
   getFoldingInitialState,
 } from './folding-state';
 
-interface ResultWithFolding extends Result {
-  parentResult?: ResultWithFolding;
-  childResults?: ResultWithFolding[];
+export interface ResultWithFolding extends Result {
+  parentResult: ResultWithFolding | null;
+  childResults: ResultWithFolding[];
 }
 
 function getRawValue(result: ResultWithFolding, field: string) {
@@ -20,6 +20,14 @@ function getRawValue(result: ResultWithFolding, field: string) {
     return rawValue[0];
   }
   return rawValue;
+}
+
+function getParentField(result: ResultWithFolding, fields: FoldingFields) {
+  return getRawValue(result, fields.parent);
+}
+
+function getChildField(result: ResultWithFolding, fields: FoldingFields) {
+  return getRawValue(result, fields.child);
 }
 
 function areDefinedAndEqual<T>(
@@ -49,17 +57,18 @@ function foldResult(
   results: ResultWithFolding[],
   fields: FoldingFields
 ): FoldedResult {
-  const sourceChildValue = getRawValue(source, fields.child);
+  const sourceChildValue = getChildField(source, fields);
   return {
-    ...source,
+    result: source,
     children: sourceChildValue
       ? results
-          .filter(
-            (result) =>
-              getRawValue(result, fields.child) !==
-                getRawValue(source, fields.child) &&
-              getRawValue(result, fields.parent) === sourceChildValue
-          )
+          .filter((result) => {
+            const isSameResultAsSource =
+              getChildField(result, fields) === getChildField(source, fields);
+            const isChildOfSource =
+              getParentField(result, fields) === sourceChildValue;
+            return isChildOfSource && !isSameResultAsSource;
+          })
           .map((result) => foldResult(result, results, fields))
       : [],
   };
@@ -75,14 +84,14 @@ function createCollection(
   );
 
   const topLevelResult =
-    flattenedResults.find(
-      (result) =>
-        getRawValue(result, fields.parent) === undefined ||
-        areDefinedAndEqual(
-          getRawValue(result, fields.parent),
-          getRawValue(result, fields.child)
-        )
-    ) ?? relevantResult;
+    flattenedResults.find((result) => {
+      const hasNoParent = getParentField(result, fields) === undefined;
+      const isParentOfItself = areDefinedAndEqual(
+        getParentField(result, fields),
+        getChildField(result, fields)
+      );
+      return hasNoParent || isParentOfItself;
+    }) ?? relevantResult;
 
   return foldResult(topLevelResult, flattenedResults, fields);
 }
@@ -100,26 +109,36 @@ export const foldingReducer = createReducer(
     builder
       .addCase(executeSearch.fulfilled, (state, {payload}) => {
         state.collections = state.enabled
-          ? createCollections(payload.response.results, state.fields)
+          ? createCollections(
+              payload.response.results as ResultWithFolding[],
+              state.fields
+            )
           : [];
       })
       .addCase(fetchMoreResults.fulfilled, (state, {payload}) => {
         state.collections = state.enabled
           ? [
               ...state.collections,
-              ...createCollections(payload.response.results, state.fields),
+              ...createCollections(
+                payload.response.results as ResultWithFolding[],
+                state.fields
+              ),
             ]
           : [];
       })
-      .addCase(registerFolding, (state, {payload}) => ({
-        enabled: true,
-        collections: [],
-        fields: {
-          collection: payload.collectionField ?? state.fields.collection,
-          parent: payload.parentField ?? state.fields.parent,
-          child: payload.childField ?? state.fields.child,
-        },
-        maximumFoldedResults:
-          payload.maximumFoldedResults ?? state.maximumFoldedResults,
-      }))
+      .addCase(registerFolding, (state, {payload}) =>
+        state.enabled
+          ? state
+          : {
+              enabled: true,
+              collections: [],
+              fields: {
+                collection: payload.collectionField ?? state.fields.collection,
+                parent: payload.parentField ?? state.fields.parent,
+                child: payload.childField ?? state.fields.child,
+              },
+              numberOfFoldedResults:
+                payload.numberOfFoldedResults ?? state.numberOfFoldedResults,
+            }
+      )
 );

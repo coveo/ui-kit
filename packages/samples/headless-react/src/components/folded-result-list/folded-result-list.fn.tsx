@@ -12,7 +12,7 @@ export const FoldedResultList: FunctionComponent<FoldingProps> = (props) => {
 
   useEffect(() => controller.subscribe(() => setState(controller.state)), []);
 
-  const renderFoldedResult = (result: FoldedResult) => (
+  const renderFoldedResult = ({result, children}: FoldedResult) => (
     <li key={result.uniqueId}>
       <article>
         <h3>
@@ -20,7 +20,7 @@ export const FoldedResultList: FunctionComponent<FoldingProps> = (props) => {
           <ResultLink result={result}>{result.title}</ResultLink>
         </h3>
         <p>{result.excerpt}</p>
-        <ul>{result.children.map((child) => renderFoldedResult(child))}</ul>
+        <ul>{children.map((child) => renderFoldedResult(child))}</ul>
       </article>
     </li>
   );

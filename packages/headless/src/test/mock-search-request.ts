@@ -1,10 +1,11 @@
+import {FoldingParam} from '../api/platform-service-params';
 import {SearchRequest} from '../api/search/search/search-request';
 import {getFieldsInitialState} from '../features/fields/fields-state';
 import {buildMockFacetOptions} from './mock-facet-options';
 
 export function buildMockSearchRequest(
   config: Partial<SearchRequest> = {}
-): Required<SearchRequest> {
+): Required<Omit<SearchRequest, keyof FoldingParam>> & FoldingParam {
   return {
     context: {},
     enableDidYouMean: false,
@@ -26,10 +27,6 @@ export function buildMockSearchRequest(
     accessToken: '',
     visitorId: '',
     debug: false,
-    filterField: undefined!,
-    parentField: undefined!,
-    childField: undefined!,
-    filterFieldRange: undefined!,
     ...config,
   };
 }

@@ -1,4 +1,4 @@
-import {buildMockResult} from '../../test';
+import {buildMockResultWithFolding} from '../../test/mock-result-with-folding';
 import {buildMockSearch} from '../../test/mock-search';
 import {buildMockSearchResponse} from '../../test/mock-search-response';
 import {executeSearch, fetchMoreResults} from '../search/search-actions';
@@ -12,22 +12,22 @@ import {
 function getEncyclopediaCollection() {
   const collection = 'encyclopedia';
 
-  const animalsResult = buildMockResult({
+  const animalsResult = buildMockResultWithFolding({
     uniqueId: '_animals',
     raw: {urihash: '', collection, id: ['animals']},
   });
 
-  const ballPythonsResult = buildMockResult({
+  const ballPythonsResult = buildMockResultWithFolding({
     uniqueId: '_ballPythons',
     raw: {urihash: '', collection, parent: 'reptiles'},
   });
 
-  const geckosResult = buildMockResult({
+  const geckosResult = buildMockResultWithFolding({
     uniqueId: '_geckos',
     raw: {urihash: '', collection, parent: 'reptiles'},
   });
 
-  const mammalsResult = buildMockResult({
+  const mammalsResult = buildMockResultWithFolding({
     uniqueId: '_mammals',
     raw: {
       urihash: '',
@@ -37,7 +37,7 @@ function getEncyclopediaCollection() {
     parentResult: {...animalsResult},
   });
 
-  const relevantResult = buildMockResult({
+  const relevantResult = buildMockResultWithFolding({
     uniqueId: '_reptiles',
     raw: {
       urihash: '',
@@ -72,7 +72,7 @@ describe('folding slice', () => {
       mammalsResult,
     } = getEncyclopediaCollection();
 
-    const otherResult = buildMockResult();
+    const otherResult = buildMockResultWithFolding();
 
     const initialState: FoldingState = {
       ...getFoldingInitialState(),
@@ -91,20 +91,20 @@ describe('folding slice', () => {
     );
 
     const expectedHierarchy = {
-      ...animalsResult,
+      result: animalsResult,
       children: [
         {
-          ...relevantResult,
+          result: relevantResult,
           children: [
-            {...ballPythonsResult, children: []},
-            {...geckosResult, children: []},
+            {result: ballPythonsResult, children: []},
+            {result: geckosResult, children: []},
           ],
         },
-        {...mammalsResult, children: []},
+        {result: mammalsResult, children: []},
       ],
     };
 
-    const expectedOtherResult = {...otherResult, children: []};
+    const expectedOtherResult = {result: otherResult, children: []};
 
     const results = foldingReducer(initialState, action).collections;
 
@@ -121,7 +121,7 @@ describe('folding slice', () => {
     } = getEncyclopediaCollection();
 
     const foldedOtherResult: FoldedResult = {
-      ...buildMockResult(),
+      result: buildMockResultWithFolding(),
       children: [],
     };
 
@@ -143,16 +143,16 @@ describe('folding slice', () => {
     );
 
     const expectedHierarchy = {
-      ...animalsResult,
+      result: animalsResult,
       children: [
         {
-          ...relevantResult,
+          result: relevantResult,
           children: [
-            {...ballPythonsResult, children: []},
-            {...geckosResult, children: []},
+            {result: ballPythonsResult, children: []},
+            {result: geckosResult, children: []},
           ],
         },
-        {...mammalsResult, children: []},
+        {result: mammalsResult, children: []},
       ],
     };
 
