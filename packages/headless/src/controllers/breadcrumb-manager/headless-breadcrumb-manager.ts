@@ -286,7 +286,7 @@ export function buildBreadcrumbManager(
   }
 
   return {
-    ...controller,
+    subscribe: controller.subscribe,
 
     get state() {
       return {

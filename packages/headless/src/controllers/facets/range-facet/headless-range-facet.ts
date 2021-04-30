@@ -42,7 +42,7 @@ export function buildRangeFacet<
   const dispatch = engine.dispatch;
 
   return {
-    ...controller,
+    subscribe: controller.subscribe,
 
     toggleSelect: (selection: RangeFacetValue) =>
       dispatch(executeToggleRangeFacetSelect({facetId, selection})),

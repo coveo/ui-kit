@@ -103,7 +103,7 @@ export const buildBaseProductRecommendationsList = (
     );
   }
   return {
-    ...controller,
+    subscribe: controller.subscribe,
 
     setSkus(skus: string[]) {
       dispatch(setProductRecommendationsSkus({skus: skus}));

@@ -99,7 +99,7 @@ export function buildRecommendationList(
   }
 
   return {
-    ...controller,
+    subscribe: controller.subscribe,
 
     refresh() {
       dispatch(getRecommendations());

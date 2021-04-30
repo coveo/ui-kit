@@ -59,7 +59,7 @@ export function buildFacetManager(engine: Engine<object>): FacetManager {
   const getState = () => engine.state;
 
   return {
-    ...controller,
+    subscribe: controller.subscribe,
 
     sort<T>(facets: FacetManagerPayload<T>[]) {
       return sortFacets(facets, this.state.facetIds);

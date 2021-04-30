@@ -80,7 +80,7 @@ export function buildQuerySummary(engine: Engine<object>): QuerySummary {
   };
 
   return {
-    ...controller,
+    subscribe: controller.subscribe,
 
     get state() {
       const state = getState();

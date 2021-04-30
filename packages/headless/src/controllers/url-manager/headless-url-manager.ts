@@ -87,7 +87,7 @@ export function buildUrlManager(
   });
 
   return {
-    ...controller,
+    subscribe: controller.subscribe,
 
     get state() {
       return {

@@ -115,7 +115,7 @@ export function buildSort(engine: Engine<object>, props: SortProps = {}): Sort {
   }
 
   return {
-    ...controller,
+    subscribe: controller.subscribe,
 
     sortBy(criterion: SortCriterion | SortCriterion[]) {
       dispatch(updateSortCriterion(criterion));

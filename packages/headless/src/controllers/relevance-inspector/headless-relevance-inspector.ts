@@ -211,8 +211,6 @@ export function buildRelevanceInspector(
   }
 
   return {
-    ...controller,
-
     get state() {
       const state = getState();
       const isEnabled = state.debug;
@@ -285,7 +283,7 @@ export function buildRelevanceInspector(
       const getState = () => this.state;
 
       const unsubscribeStateListener = {
-        ...controller,
+        subscribe: controller.subscribe,
         get state() {
           return getState();
         },

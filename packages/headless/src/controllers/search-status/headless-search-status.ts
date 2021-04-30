@@ -51,7 +51,7 @@ export function buildSearchStatus(engine: Engine<object>): SearchStatus {
   const getState = () => engine.state;
 
   return {
-    ...controller,
+    subscribe: controller.subscribe,
 
     get state() {
       const state = getState();

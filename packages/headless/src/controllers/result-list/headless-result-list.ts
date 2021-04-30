@@ -151,7 +151,7 @@ export function buildResultList(
   };
 
   return {
-    ...controller,
+    subscribe: controller.subscribe,
 
     get state() {
       const state = getState();

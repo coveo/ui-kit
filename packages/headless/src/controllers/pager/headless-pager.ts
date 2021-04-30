@@ -180,7 +180,7 @@ export function buildPager(
   };
 
   return {
-    ...controller,
+    subscribe: controller.subscribe,
 
     get state() {
       const currentPage = getCurrentPage();

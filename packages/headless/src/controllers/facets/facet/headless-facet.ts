@@ -286,7 +286,7 @@ export function buildFacet(engine: Engine<object>, props: FacetProps): Facet {
   const {state, ...restOfFacetSearch} = facetSearch;
 
   return {
-    ...controller,
+    subscribe: controller.subscribe,
 
     facetSearch: restOfFacetSearch,
 

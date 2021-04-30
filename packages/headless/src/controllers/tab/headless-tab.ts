@@ -116,7 +116,7 @@ export function buildTab(engine: Engine<object>, props: TabProps): Tab {
   }
 
   return {
-    ...controller,
+    subscribe: controller.subscribe,
 
     select() {
       dispatch(updateAdvancedSearchQueries({cq: options.expression}));

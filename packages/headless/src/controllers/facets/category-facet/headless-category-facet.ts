@@ -265,7 +265,7 @@ export function buildCategoryFacet(
   const {state, ...restOfFacetSearch} = facetSearch;
 
   return {
-    ...controller,
+    subscribe: controller.subscribe,
     facetSearch: restOfFacetSearch,
 
     toggleSelect: (selection: CategoryFacetValue) =>

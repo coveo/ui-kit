@@ -100,7 +100,7 @@ export function buildResultsPerPage(
   }
 
   return {
-    ...controller,
+    subscribe: controller.subscribe,
 
     get state() {
       return {

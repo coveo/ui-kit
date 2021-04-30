@@ -71,7 +71,7 @@ export function buildContext(engine: Engine<object>): Context {
   const getState = () => engine.state;
 
   return {
-    ...controller,
+    subscribe: controller.subscribe,
 
     get state() {
       return {

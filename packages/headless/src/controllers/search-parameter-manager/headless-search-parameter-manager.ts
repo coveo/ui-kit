@@ -82,7 +82,7 @@ export function buildSearchParameterManager(
   dispatch(restoreSearchParameters(props.initialState.parameters));
 
   return {
-    ...controller,
+    subscribe: controller.subscribe,
 
     get state() {
       const state = getState();

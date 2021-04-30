@@ -179,7 +179,7 @@ export function buildSearchBox(
   };
 
   return {
-    ...controller,
+    subscribe: controller.subscribe,
 
     updateText(value: string) {
       dispatch(updateQuerySetQuery({id, query: value}));

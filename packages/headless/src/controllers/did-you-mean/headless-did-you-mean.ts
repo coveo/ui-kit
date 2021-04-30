@@ -78,7 +78,7 @@ export function buildDidYouMean(engine: Engine<object>): DidYouMean {
   const getState = () => engine.state;
 
   return {
-    ...controller,
+    subscribe: controller.subscribe,
 
     get state() {
       const state = getState();

@@ -54,7 +54,7 @@ export function buildHistoryManager(engine: Engine<object>): HistoryManager {
   const getState = () => engine.state;
 
   return {
-    ...controller,
+    subscribe: controller.subscribe,
     get state() {
       return getState().history;
     },

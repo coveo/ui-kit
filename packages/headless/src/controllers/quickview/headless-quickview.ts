@@ -77,7 +77,7 @@ export function buildQuickview(
   const uniqueId = result.uniqueId;
 
   return {
-    ...controller,
+    subscribe: controller.subscribe,
 
     fetchResultContent() {
       dispatch(fetchResultContent({uniqueId}));
