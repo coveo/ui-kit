@@ -73,8 +73,8 @@ import {
   buildQuerySummary,
   ResultList as HeadlessResultList,
   buildResultList,
-  Folding as HeadlessFolding,
-  buildFolding,
+  FoldedResultList as HeadlessFoldedResultList,
+  buildFoldedResultList,
   FacetManager as HeadlessFacetManager,
   buildFacetManager,
   CategoryFacet as HeadlessCategoryFacet,
@@ -138,7 +138,7 @@ export class SearchPage extends Component {
   private readonly queryError: HeadlessQueryError;
   private readonly querySummary: HeadlessQuerySummary;
   private readonly resultList: HeadlessResultList;
-  private readonly folding: HeadlessFolding;
+  private readonly foldedResultList: HeadlessFoldedResultList;
   private readonly facetManager: HeadlessFacetManager;
   private readonly geographyFacet: HeadlessCategoryFacet;
   private readonly objectTypeFacet: HeadlessFacet;
@@ -253,7 +253,7 @@ export class SearchPage extends Component {
 
     this.resultList = buildResultList(this.engine);
 
-    this.folding = buildFolding(this.engine);
+    this.foldedResultList = buildFoldedResultList(this.engine);
 
     this.resultsPerPage = buildResultsPerPage(this.engine, {
       initialState: {numberOfResults: resultsPerPageOptions[0]},
@@ -412,7 +412,7 @@ export class SearchPage extends Component {
           </Section>
           <Section title="folded-result-list">
             <FoldedResultList />
-            <FoldedResultListFn controller={this.folding} />
+            <FoldedResultListFn controller={this.foldedResultList} />
           </Section>
           <Section title="results-per-page">
             <ResultsPerPage options={resultsPerPageOptions} />

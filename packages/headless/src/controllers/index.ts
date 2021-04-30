@@ -288,9 +288,9 @@ export {
 
 export {
   FoldedResult,
-  Folding,
-  FoldingOptions,
-  FoldingProps,
-  FoldingState,
-  buildFolding,
-} from './folding/headless-folding';
+  FoldedResultList,
+  FoldedResultListOptions,
+  FoldedResultListProps,
+  FoldedResultListState,
+  buildFoldedResultList,
+} from './folded-result-list/headless-folded-result-list';

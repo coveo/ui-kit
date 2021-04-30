@@ -2,7 +2,7 @@ import {Schema} from '@coveo/bueno';
 import {Engine} from '../../app/engine';
 import {search, configuration, folding} from '../../app/reducers';
 import {
-  foldingOptionsSchema,
+  foldingOptionsSchemaDefinition,
   registerFolding,
 } from '../../features/folding/folding-actions';
 import {FoldedResult} from '../../features/folding/folding-state';
@@ -13,17 +13,24 @@ import {
 } from '../../state/state-sections';
 import {loadReducerError} from '../../utils/errors';
 import {validateOptions} from '../../utils/validate-payload';
-import {buildController, Controller} from '../controller/headless-controller';
+import {
+  buildResultList,
+  ResultList,
+  ResultListOptions,
+  resultListOptionsSchemaDefinition,
+  ResultListState,
+} from '../result-list/headless-result-list';
 
 export {FoldedResult};
 
-const optionsSchema = new Schema<Required<FoldingOptions>>(
-  foldingOptionsSchema
-);
+const optionsSchema = new Schema<Required<FoldedResultListOptions>>({
+  ...resultListOptionsSchemaDefinition,
+  ...foldingOptionsSchemaDefinition,
+});
 
-export interface FoldingOptions {
+export interface FoldedResultListOptions extends ResultListOptions {
   /**
-   * The name of the field on which to do the folding. The folding component will use the values of this field to resolve the collections of result items.
+   * The name of the field on which to do the folding. The folded result list component will use the values of this field to resolve the collections of result items.
    *
    * @defaultValue `foldingcollection`
    */
@@ -48,49 +55,49 @@ export interface FoldingOptions {
   numberOfFoldedResults?: number;
 }
 
-export interface FoldingProps {
+export interface FoldedResultListProps {
   /**
-   * The options for the `Folding` controller.
+   * The options for the `FoldedResultList` controller.
    * */
-  options?: FoldingOptions;
+  options?: FoldedResultListOptions;
 }
 
 /**
- * The `Folding` headless controller re-organizes results into hierarchical collections (a.k.a. threads).
+ * The `FoldedResultList` headless controller re-organizes results into hierarchical collections (a.k.a. threads).
  */
-export interface Folding extends Controller {
+export interface FoldedResultList extends ResultList {
   /**
-   * The state of the `Folding` controller.
+   * The state of the `FoldedResultList` controller.
    */
-  state: FoldingState;
+  state: FoldedResultListState;
 }
 
 /**
- * A scoped and simplified part of the headless state that is relevant to the `Folding` controller.
+ * A scoped and simplified part of the headless state that is relevant to the `FoldedResultList` controller.
  * */
-export interface FoldingState {
+export interface FoldedResultListState extends ResultListState {
   /**
    * The unsorted hierarchical collections of results.
    * */
-  collections: FoldedResult[];
+  results: FoldedResult[];
 }
 
 /**
- * Creates a `Folding` controller instance.
+ * Creates a `FoldedResultList` controller instance.
  *
  * @param engine - The headless engine.
- * @param props - The configurable `Folding` properties.
- * @returns A `Folding` controller instance.
+ * @param props - The configurable `FoldedResultList` properties.
+ * @returns A `FoldedResultList` controller instance.
  */
-export function buildFolding(
+export function buildFoldedResultList(
   engine: Engine<object>,
-  props: FoldingProps = {}
-): Folding {
+  props: FoldedResultListProps = {}
+): FoldedResultList {
   if (!loadFoldingReducer(engine)) {
     throw loadReducerError;
   }
 
-  const controller = buildController(engine);
+  const controller = buildResultList(engine, props);
   const {dispatch} = engine;
   const getState = () => engine.state;
 
@@ -98,7 +105,7 @@ export function buildFolding(
     engine,
     optionsSchema,
     props.options,
-    'buildFolding'
+    'buildFoldedResultList'
   );
 
   dispatch(registerFolding({...options}));
@@ -110,7 +117,8 @@ export function buildFolding(
       const state = getState();
 
       return {
-        collections: state.folding.collections,
+        ...controller.state,
+        results: state.folding.collections,
       };
     },
   };

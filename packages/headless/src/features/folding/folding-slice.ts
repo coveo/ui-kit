@@ -59,7 +59,7 @@ function foldResult(
 ): FoldedResult {
   const sourceChildValue = getChildField(source, fields);
   return {
-    result: source,
+    ...source,
     children: sourceChildValue
       ? results
           .filter((result) => {

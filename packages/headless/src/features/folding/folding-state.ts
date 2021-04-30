@@ -1,10 +1,6 @@
 import {Result} from '../../api/search/search/result';
 
-export interface FoldedResult {
-  /**
-   * The result.
-   */
-  result: Result;
+export interface FoldedResult extends Result {
   /**
    * The children of this result sorted in the same order as the search results.
    */

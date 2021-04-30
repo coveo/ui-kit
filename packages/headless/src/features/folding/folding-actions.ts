@@ -9,7 +9,7 @@ export interface RegisterFoldingPayload {
   numberOfFoldedResults?: number;
 }
 
-export const foldingOptionsSchema: SchemaDefinition<Required<
+export const foldingOptionsSchemaDefinition: SchemaDefinition<Required<
   RegisterFoldingPayload
 >> = {
   collectionField: new StringValue(),
@@ -21,5 +21,5 @@ export const foldingOptionsSchema: SchemaDefinition<Required<
 export const registerFolding = createAction(
   'folding/register',
   (payload: RegisterFoldingPayload) =>
-    validatePayload(payload, foldingOptionsSchema)
+    validatePayload(payload, foldingOptionsSchemaDefinition)
 );

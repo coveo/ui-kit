@@ -1,23 +1,23 @@
 import {Component, ContextType} from 'react';
 import {
-  buildFolding,
+  buildFoldedResultList,
   FoldedResult,
-  Folding as FoldingController,
-  FoldingState,
+  FoldedResultList as FoldedResultListController,
+  FoldedResultListState,
   Unsubscribe,
 } from '@coveo/headless';
 import {ResultLink} from '../result-list/result-link';
 import {AppContext} from '../../context/engine';
 
-export class FoldedResultList extends Component<{}, FoldingState> {
+export class FoldedResultList extends Component<{}, FoldedResultListState> {
   static contextType = AppContext;
   context!: ContextType<typeof AppContext>;
 
-  private controller!: FoldingController;
+  private controller!: FoldedResultListController;
   private unsubscribe: Unsubscribe = () => {};
 
   componentDidMount() {
-    this.controller = buildFolding(this.context.engine!);
+    this.controller = buildFoldedResultList(this.context.engine!);
     this.updateState();
 
     this.unsubscribe = this.controller.subscribe(() => this.updateState());
@@ -31,7 +31,7 @@ export class FoldedResultList extends Component<{}, FoldingState> {
     this.setState(this.controller.state);
   }
 
-  private renderFoldedResult({result, children}: FoldedResult) {
+  private renderFoldedResult(result: FoldedResult) {
     return (
       <li key={result.uniqueId}>
         <article>
@@ -40,7 +40,9 @@ export class FoldedResultList extends Component<{}, FoldingState> {
             <ResultLink result={result}>{result.title}</ResultLink>
           </h3>
           <p>{result.excerpt}</p>
-          <ul>{children.map((child) => this.renderFoldedResult(child))}</ul>
+          <ul>
+            {result.children.map((child) => this.renderFoldedResult(child))}
+          </ul>
         </article>
       </li>
     );
@@ -51,16 +53,14 @@ export class FoldedResultList extends Component<{}, FoldingState> {
       return null;
     }
 
-    if (!this.state.collections.length) {
+    if (!this.state.results.length) {
       return <div>No results</div>;
     }
 
     return (
       <div>
         <ul style={{textAlign: 'left'}}>
-          {this.state.collections.map((collection) =>
-            this.renderFoldedResult(collection)
-          )}
+          {this.state.results.map((result) => this.renderFoldedResult(result))}
         </ul>
       </div>
     );

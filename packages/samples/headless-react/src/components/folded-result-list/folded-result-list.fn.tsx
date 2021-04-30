@@ -1,18 +1,23 @@
 import {useEffect, useState, FunctionComponent} from 'react';
-import {FoldedResult, Folding as HeadlessFolding} from '@coveo/headless';
+import {
+  FoldedResult,
+  FoldedResultList as HeadlessFoldedResultList,
+} from '@coveo/headless';
 import {ResultLink} from '../result-list/result-link';
 
-interface FoldingProps {
-  controller: HeadlessFolding;
+interface FoldedResultListProps {
+  controller: HeadlessFoldedResultList;
 }
 
-export const FoldedResultList: FunctionComponent<FoldingProps> = (props) => {
+export const FoldedResultList: FunctionComponent<FoldedResultListProps> = (
+  props
+) => {
   const {controller} = props;
   const [state, setState] = useState(controller.state);
 
   useEffect(() => controller.subscribe(() => setState(controller.state)), []);
 
-  const renderFoldedResult = ({result, children}: FoldedResult) => (
+  const renderFoldedResult = (result: FoldedResult) => (
     <li key={result.uniqueId}>
       <article>
         <h3>
@@ -20,20 +25,26 @@ export const FoldedResultList: FunctionComponent<FoldingProps> = (props) => {
           <ResultLink result={result}>{result.title}</ResultLink>
         </h3>
         <p>{result.excerpt}</p>
-        <ul>{children.map((child) => renderFoldedResult(child))}</ul>
+        <ul>{result.children.map((child) => renderFoldedResult(child))}</ul>
       </article>
     </li>
   );
 
-  if (!state.collections.length) {
+  if (!state.results.length) {
     return <div>No results</div>;
   }
 
   return (
     <div>
       <ul style={{textAlign: 'left'}}>
-        {state.collections.map((collection) => renderFoldedResult(collection))}
+        {state.results.map((result) => renderFoldedResult(result))}
       </ul>
+      <button
+        disabled={state.isLoading}
+        onClick={() => controller.fetchMoreResults()}
+      >
+        Fetch
+      </button>
     </div>
   );
 };
@@ -42,8 +53,8 @@ export const FoldedResultList: FunctionComponent<FoldingProps> = (props) => {
 
 /**
  * ```tsx
- * const controller = buildFolding(engine);
+ * const controller = buildFoldedResultList(engine);
  *
- * <Folding controller={controller} />;
+ * <FoldedResultList controller={controller} />;
  * ```
  */

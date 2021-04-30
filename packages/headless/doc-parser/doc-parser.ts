@@ -275,7 +275,7 @@ const controllers: ControllerConfiguration[] = [
     },
   },
   {
-    initializer: 'buildFolding',
+    initializer: 'buildFoldedResultList',
     samplePaths: {
       react_class: [
         'packages/samples/headless-react/src/components/folded-result-list/folded-result-list.class.tsx',
