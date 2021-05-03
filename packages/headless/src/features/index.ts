@@ -84,6 +84,8 @@ export namespace DebugActions {
   export const disableDebug = disableDebugAlias;
 }
 
+export * from './debug/debug-actions-loader';
+
 import {
   registerDateFacet as registerDateFacetAlias,
   toggleSelectDateFacetValue as toggleSelectDateFacetValueAlias,
