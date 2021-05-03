@@ -3,6 +3,8 @@ export namespace AdvancedSearchQueriesActions {
   export const updateAdvancedSearchQueries = updateAdvancedSearchQueriesAlias;
 }
 
+export * from './advanced-search-queries/advanced-search-queries-action-loader';
+
 import {
   registerCategoryFacet as registerCategoryFacetAlias,
   toggleSelectCategoryFacetValue as toggleSelectCategoryFacetValueAlias,

@@ -284,6 +284,9 @@ const actionLoaderConfiguration: ActionLoaderConfiguration[] = [
   {
     initializer: 'loadSearchActions',
   },
+  {
+    initializer: 'loadAdvancedSearchQueryActions',
+  },
 ];
 
 const controllers = controllerConfiguration.map((controller) =>
