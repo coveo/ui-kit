@@ -24,7 +24,7 @@ const categoryFacetProp = {
   label: 'Atlas',
 };
 
-describe('Breadcrumb Manager Test Suites', () => {
+describe.skip('Breadcrumb Manager Test Suites', () => {
   function setupComponents(attributes: string) {
     setUpPage(`
       <atomic-breadcrumb-manager ${attributes}></atomic-breadcrumb-manager>

@@ -28,7 +28,9 @@ function typeQuery(query: string, keyboardInteractions = '') {
 
 describe('Category Facet Search Test Suites', () => {
   function setupWithFacetSearch() {
-    setupCategoryFacet({attributes: 'enable-facet-search'});
+    setupCategoryFacet({
+      attributes: `number-of-values=${defaultNumberOfValues} enable-facet-search`,
+    });
     cy.wait(RouteAlias.analytics);
   }
 
@@ -177,17 +179,7 @@ describe('Category Facet Search Test Suites', () => {
       CategoryFacetSearchAssertions.assertActiveResult('Gitega');
     });
 
-    describe('when bluring the input', () => {
-      before(() => {
-        setupWithFacetSearch();
-        typeQuery('a');
-        cy.focused().blur();
-      });
-
-      CategoryFacetSearchAssertions.assertSearchCleared();
-    });
-
-    describe('when pressing the escape key', () => {
+    describe('when bluring the input by pressing the escape key', () => {
       before(() => {
         setupWithFacetSearch();
         typeQuery('a', '{esc}');
