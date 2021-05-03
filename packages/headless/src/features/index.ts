@@ -73,6 +73,8 @@ export namespace ContextActions {
   export const removeContext = removeContextAlias;
 }
 
+export * from './context/context-actions-loader';
+
 import {
   enableDebug as enableDebugAlias,
   disableDebug as disableDebugAlias,

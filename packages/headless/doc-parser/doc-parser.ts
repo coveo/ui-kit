@@ -290,6 +290,9 @@ const actionLoaderConfiguration: ActionLoaderConfiguration[] = [
   {
     initializer: 'loadConfigurationActions',
   },
+  {
+    initializer: 'loadContextActions',
+  },
 ];
 
 const controllers = controllerConfiguration.map((controller) =>
