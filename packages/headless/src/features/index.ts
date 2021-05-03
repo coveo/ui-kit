@@ -60,6 +60,8 @@ export namespace ConfigurationActions {
   export const setOriginLevel3 = setOriginLevel3Alias;
 }
 
+export * from './configuration/configuration-actions-loader';
+
 import {
   setContext as setContextAlias,
   addContext as addContextAlias,
