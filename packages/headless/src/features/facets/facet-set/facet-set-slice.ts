@@ -8,15 +8,13 @@ import {
   updateFacetNumberOfValues,
   updateFacetIsFieldExpanded,
   updateFreezeCurrentValues,
+  FacetRegistrationOptions,
 } from './facet-set-actions';
 import {executeSearch} from '../../search/search-actions';
 import {selectFacetSearchResult} from '../facet-search-set/specific/specific-facet-search-actions';
 import {FacetRequest, FacetValueRequest} from './interfaces/request';
 import {FacetValue, FacetResponse} from './interfaces/response';
-import {
-  FacetOptionalParameters,
-  FacetRegistrationOptions,
-} from './interfaces/options';
+import {FacetOptionalParameters} from './interfaces/options';
 import {
   handleFacetSortCriterionUpdate,
   handleFacetDeselectAll,
