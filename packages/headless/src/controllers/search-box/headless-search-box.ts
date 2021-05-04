@@ -173,7 +173,10 @@ export function buildSearchBox(
 
   const performSearch = (analytics: SearchAction) => {
     const {enableQuerySyntax} = options;
-
+    const {clearFiltersOnNewQuery} = options;
+    if (clearFiltersOnNewQuery) {
+      dispatch(deselectAllFacets());
+    }
     dispatch(updateQuery({q: getValue(), enableQuerySyntax}));
     dispatch(updatePage(1));
     dispatch(executeSearch(analytics));
@@ -208,7 +211,6 @@ export function buildSearchBox(
     },
 
     submit() {
-      dispatch(deselectAllFacets());
       performSearch(logSearchboxSubmit());
     },
 
