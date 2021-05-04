@@ -3,12 +3,14 @@ import {
   DateRangeRequest,
 } from '../../../../features/facets/range-facets/date-facet-set/interfaces/request';
 import {Engine} from '../../../../app/headless-engine';
-import {DateFacetRegistrationOptions} from '../../../../features/facets/range-facets/date-facet-set/interfaces/options';
 import {
   DateFacetResponse,
   DateFacetValue,
 } from '../../../../features/facets/range-facets/date-facet-set/interfaces/response';
-import {registerDateFacet} from '../../../../features/facets/range-facets/date-facet-set/date-facet-actions';
+import {
+  DateFacetRegistrationOptions,
+  registerDateFacet,
+} from '../../../../features/facets/range-facets/date-facet-set/date-facet-actions';
 import {
   assertRangeFacetOptions,
   buildRangeFacet,

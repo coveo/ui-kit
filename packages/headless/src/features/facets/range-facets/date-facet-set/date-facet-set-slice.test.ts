@@ -4,8 +4,8 @@ import {
   toggleSelectDateFacetValue,
   updateDateFacetSortCriterion,
   deselectAllDateFacetValues,
+  DateFacetRegistrationOptions,
 } from './date-facet-actions';
-import {DateFacetRegistrationOptions} from './interfaces/options';
 import {buildMockDateFacetRequest} from '../../../../test/mock-date-facet-request';
 import {change} from '../../../history/history-actions';
 import * as RangeFacetReducers from '../generic/range-facet-reducers';
