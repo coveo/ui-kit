@@ -1,11 +1,11 @@
 import {categoryFacetSetReducer} from './category-facet-set-slice';
-import {CategoryFacetRegistrationOptions} from './interfaces/options';
 import {
   registerCategoryFacet,
   toggleSelectCategoryFacetValue,
   deselectAllCategoryFacetValues,
   updateCategoryFacetNumberOfValues,
   updateCategoryFacetSortCriterion,
+  CategoryFacetRegistrationOptions,
 } from './category-facet-set-actions';
 import {buildMockCategoryFacetRequest} from '../../../test/mock-category-facet-request';
 import {change} from '../../history/history-actions';

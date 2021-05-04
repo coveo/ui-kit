@@ -9,11 +9,9 @@ import {
   deselectAllCategoryFacetValues,
   updateCategoryFacetNumberOfValues,
   updateCategoryFacetSortCriterion,
-} from './category-facet-set-actions';
-import {
   CategoryFacetRegistrationOptions,
-  CategoryFacetOptionalParameters,
-} from './interfaces/options';
+} from './category-facet-set-actions';
+import {CategoryFacetOptionalParameters} from './interfaces/options';
 import {change} from '../../history/history-actions';
 import {CategoryFacetResponse, CategoryFacetValue} from './interfaces/response';
 import {

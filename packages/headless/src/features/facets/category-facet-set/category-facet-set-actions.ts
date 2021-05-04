@@ -1,5 +1,4 @@
 import {createAction} from '@reduxjs/toolkit';
-import {CategoryFacetRegistrationOptions} from './interfaces/options';
 import {CategoryFacetValue} from './interfaces/response';
 import {
   deselectAllFacetValues,
@@ -21,6 +20,73 @@ import {
   NumberValue,
 } from '@coveo/bueno';
 import {validateCategoryFacetValue} from './category-facet-validate-payload';
+
+export interface CategoryFacetRegistrationOptions {
+  /**
+   * A unique identifier for the controller. By default, a random unique identifier is generated.
+   * */
+  facetId: string;
+
+  /**
+   * The field whose values you want to display in the facet.
+   * */
+  field: string;
+
+  /**
+   * The base path shared by all values for the facet.
+   *
+   * @defaultValue `[]`
+   */
+  basePath?: string[];
+
+  /**
+   * The character that specifies the hierarchical dependency.
+   *
+   * @defaultValue `;`
+   */
+  delimitingCharacter?: string;
+
+  /**
+   * Whether to use basePath as a filter for the results.
+   *
+   * @defaultValue `true`
+   */
+  filterByBasePath?: boolean;
+
+  /**
+   * Whether to exclude the parents of folded results when estimating the result count for each facet value.
+   *
+   * @defaultValue `true`
+   */
+  filterFacetCount?: boolean;
+
+  /**
+   * The maximum number of results to scan in the index to ensure that the facet lists all potential facet values.
+   *
+   * Note: A high injectionDepth may negatively impact the facet request performance.
+   *
+   * Minimum: `0`
+   *
+   * @defaultValue `1000`
+   * */
+  injectionDepth?: number;
+
+  /**
+   * The number of values to request for this facet. Also determines the number of additional values to request each time this facet is expanded, and the number of values to display when this facet is collapsed.
+   *
+   * Minimum: `1`
+   *
+   * @defaultValue `5`
+   */
+  numberOfValues?: number;
+
+  /**
+   * The criterion to use for sorting returned facet values.
+   *
+   * @defaultValue `occurences`
+   */
+  sortCriteria?: CategoryFacetSortCriterion;
+}
 
 const categoryFacetRegistrationOptionsDefinition = {
   facetId: facetIdDefinition,
