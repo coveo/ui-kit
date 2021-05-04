@@ -41,6 +41,8 @@ export namespace FacetActions {
   export const deselectAllFacetValues = deselectAllFacetValuesAlias;
 }
 
+export * from './facets/facet-set/facet-set-actions-loader';
+
 import {
   updateBasicConfiguration as updateBasicConfigurationAlias,
   updateSearchConfiguration as updateSearchConfigurationAlias,

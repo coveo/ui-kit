@@ -84,6 +84,18 @@ export const registerFacet = createAction(
     validatePayload(payload, facetRegistrationOptionsDefinition)
 );
 
+export interface ToggleSelectFacetValueActionCreatorPayload {
+  /**
+   * The unique identifier of the facet (e.g., `"1"`).
+   */
+  facetId: string;
+
+  /**
+   * The target facet value.
+   */
+  selection: FacetValue;
+}
+
 /**
  * Toggles a facet value.
  * @param facetId (string) The unique identifier of the facet (e.g., `"1"`).
@@ -91,7 +103,7 @@ export const registerFacet = createAction(
  */
 export const toggleSelectFacetValue = createAction(
   'facet/toggleSelectValue',
-  (payload: {facetId: string; selection: FacetValue}) =>
+  (payload: ToggleSelectFacetValueActionCreatorPayload) =>
     validatePayload(payload, {
       facetId: facetIdDefinition,
       selection: new RecordValue({values: facetValueDefinition}),
@@ -107,6 +119,18 @@ export const deselectAllFacetValues = createAction(
   (payload: string) => validatePayload(payload, facetIdDefinition)
 );
 
+export interface UpdateFacetSortCriterionActionCreatorPayload {
+  /**
+   * The unique identifier of the facet (e.g., `"1"`).
+   */
+  facetId: string;
+
+  /**
+   * The criterion by which to sort the facet.
+   */
+  criterion: FacetSortCriterion;
+}
+
 /**
  * Updates the sort criterion of a facet.
  * @param facetId (string) The unique identifier of the facet (e.g., `"1"`).
@@ -114,12 +138,24 @@ export const deselectAllFacetValues = createAction(
  */
 export const updateFacetSortCriterion = createAction(
   'facet/updateSortCriterion',
-  (payload: {facetId: string; criterion: FacetSortCriterion}) =>
+  (payload: UpdateFacetSortCriterionActionCreatorPayload) =>
     validatePayload(payload, {
       facetId: facetIdDefinition,
       criterion: new Value<FacetSortCriterion>({required: true}),
     })
 );
+
+export interface UpdateFacetNumberOfValuesActionCreatorPayload {
+  /**
+   * The unique identifier of the facet (e.g., `"1"`).
+   */
+  facetId: string;
+
+  /**
+   * The new number of facet values (e.g., `10`).
+   */
+  numberOfValues: number;
+}
 
 /**
  * Updates the number of values of a facet.
@@ -128,12 +164,24 @@ export const updateFacetSortCriterion = createAction(
  */
 export const updateFacetNumberOfValues = createAction(
   'facet/updateNumberOfValues',
-  (payload: {facetId: string; numberOfValues: number}) =>
+  (payload: UpdateFacetNumberOfValuesActionCreatorPayload) =>
     validatePayload(payload, {
       facetId: facetIdDefinition,
       numberOfValues: new NumberValue({required: true, min: 1}),
     })
 );
+
+export interface UpdateFacetIsFieldExpandedActionCreatorPayload {
+  /**
+   * The unique identifier of the facet (e.g., `"1"`).
+   */
+  facetId: string;
+
+  /**
+   * Whether to expand or shrink down the facet.
+   */
+  isFieldExpanded: boolean;
+}
 
 /**
  * Whether to expand (show more values than initially configured) or shrink down the facet.
@@ -142,12 +190,24 @@ export const updateFacetNumberOfValues = createAction(
  */
 export const updateFacetIsFieldExpanded = createAction(
   'facet/updateIsFieldExpanded',
-  (payload: {facetId: string; isFieldExpanded: boolean}) =>
+  (payload: UpdateFacetIsFieldExpandedActionCreatorPayload) =>
     validatePayload(payload, {
       facetId: facetIdDefinition,
       isFieldExpanded: new BooleanValue({required: true}),
     })
 );
+
+export interface UpdateFreezeCurrentValuesActionCreatorPayload {
+  /**
+   * The unique identifier of the facet (e.g., `"1"`).
+   */
+  facetId: string;
+
+  /**
+   * Whether the values should be frozen in the next request.
+   */
+  freezeCurrentValues: boolean;
+}
 
 /**
  * Updates the updateFreezeCurrentValues flag of a facet.
@@ -156,7 +216,7 @@ export const updateFacetIsFieldExpanded = createAction(
  */
 export const updateFreezeCurrentValues = createAction(
   'facet/updateFreezeCurrentValues',
-  (payload: {facetId: string; freezeCurrentValues: boolean}) =>
+  (payload: UpdateFreezeCurrentValuesActionCreatorPayload) =>
     validatePayload(payload, {
       facetId: facetIdDefinition,
       freezeCurrentValues: new BooleanValue({required: true}),
