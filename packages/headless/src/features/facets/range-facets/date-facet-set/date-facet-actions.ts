@@ -21,7 +21,7 @@ import {dateFacetValueDefinition} from '../generic/range-facet-validate-payload'
 import {buildDateRange} from '../../../../controllers/facets/range-facet/date-facet/date-range';
 import {DateRangeRequest} from './interfaces/request';
 
-export interface DateFacetRegistrationOptions {
+export interface RegisterDateFacetActionCreatorPayload {
   /**
    * A unique identifier for the facet.
    */
@@ -107,7 +107,7 @@ const dateFacetRegistrationOptionsDefinition = {
 };
 
 export function validateManualDateRanges(
-  options: Pick<DateFacetRegistrationOptions, 'currentValues'>
+  options: Pick<RegisterDateFacetActionCreatorPayload, 'currentValues'>
 ) {
   if (!options.currentValues) {
     return;
@@ -125,11 +125,11 @@ export function validateManualDateRanges(
 
 /**
  * Registers a date facet.
- * @param (DateFacetRegistrationOptions) The options to register the facet with.
+ * @param (RegisterDateFacetActionCreatorPayload) The options to register the facet with.
  */
 export const registerDateFacet = createAction(
   'dateFacet/register',
-  (payload: DateFacetRegistrationOptions) => {
+  (payload: RegisterDateFacetActionCreatorPayload) => {
     try {
       validatePayloadAndThrow(payload, dateFacetRegistrationOptionsDefinition);
       validateManualDateRanges(payload);

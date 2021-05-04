@@ -8,7 +8,7 @@ import {
   DateFacetValue,
 } from '../../../../features/facets/range-facets/date-facet-set/interfaces/response';
 import {
-  DateFacetRegistrationOptions,
+  RegisterDateFacetActionCreatorPayload,
   registerDateFacet,
 } from '../../../../features/facets/range-facets/date-facet-set/date-facet-actions';
 import {
@@ -142,7 +142,7 @@ export function buildDateFacet(
   const dispatch = engine.dispatch;
 
   const facetId = determineFacetId(engine, props.options);
-  const options: DateFacetRegistrationOptions = {
+  const options: RegisterDateFacetActionCreatorPayload = {
     currentValues: [],
     ...props.options,
     facetId,

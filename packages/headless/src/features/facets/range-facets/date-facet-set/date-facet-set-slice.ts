@@ -5,7 +5,7 @@ import {
   toggleSelectDateFacetValue,
   deselectAllDateFacetValues,
   updateDateFacetSortCriterion,
-  DateFacetRegistrationOptions,
+  RegisterDateFacetActionCreatorPayload,
 } from './date-facet-actions';
 import {change} from '../../../history/history-actions';
 import {executeSearch} from '../../../search/search-actions';
@@ -71,7 +71,7 @@ export const dateFacetSetReducer = createReducer(
 );
 
 function buildDateFacetRequest(
-  config: DateFacetRegistrationOptions
+  config: RegisterDateFacetActionCreatorPayload
 ): DateFacetRequest {
   return {
     ...defaultRangeFacetOptions,
