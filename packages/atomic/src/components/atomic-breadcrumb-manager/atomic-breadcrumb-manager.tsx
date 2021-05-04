@@ -45,7 +45,7 @@ export class AtomicBreadcrumbManager implements InitializableComponent {
   @State() public error!: Error;
 
   /**
-   * Number of breadcrumbs to be shown before collapsing.
+   * Number of breadcrumbs to display when collapsed.
    */
   @Prop() public collapseThreshold = 5;
   /**

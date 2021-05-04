@@ -123,7 +123,7 @@ export class AtomicCategoryFacet
   /**
    * The number of values to request for this facet. Also determines the number of additional values to request each time this facet is expanded, and the number of values to display when this facet is collapsed.
    */
-  @Prop() public numberOfValues = 5;
+  @Prop() public numberOfValues = 8;
   /**
    * Whether this facet should contain a search box.
    */
@@ -257,7 +257,7 @@ export class AtomicCategoryFacet
 
     return (
       <button
-        class="value-button text-primary"
+        class="show-more"
         part="show-more"
         onClick={() => this.facet.showMoreValues()}
       >
@@ -273,7 +273,7 @@ export class AtomicCategoryFacet
 
     return (
       <button
-        class="value-button text-primary"
+        class="show-less"
         part="show-less"
         onClick={() => this.facet.showLessValues()}
       >
@@ -325,7 +325,7 @@ export class AtomicCategoryFacet
 
   public renderSearchResult(searchResult: CategoryFacetSearchResult) {
     return [
-      <div class="flex" aria-hidden="true">
+      <div class="flex items-baseline" aria-hidden="true">
         <span
           part="value-label"
           class="ellipsed font-bold"
@@ -380,7 +380,7 @@ export class AtomicCategoryFacet
         hasActiveValues={this.facetState.hasActiveValues}
       >
         {this.facetSearch?.render()}
-        <div class="mt-1">
+        <div class="mt-1 lg:text-sm">
           {this.allCategoriesButton}
           <div>{this.parents}</div>
           <div class={this.parents.length ? 'pl-9' : 'pl-0'}>

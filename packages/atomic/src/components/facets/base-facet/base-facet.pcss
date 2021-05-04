@@ -13,3 +13,32 @@
 .value-button {
   @apply w-full flex items-center text-left py-1;
 }
+
+.show-more, .show-less {
+  @apply w-full text-base text-left mt-1 text-primary;
+}
+
+.show-more::before, .show-less::before {
+  @apply text-lg w-4 inline-block;
+}
+
+.show-more::before {
+  content: '+';
+}
+
+.show-less::before {
+  content: '-';
+}
+
+.checkbox {
+  @apply w-5 h-5 flex-none rounded bg-background relative border border-divider;
+}
+
+.checked {
+    @apply bg-primary border-none;
+}
+
+.checked:before {
+  @apply box-content absolute top-0.5 left-1.5 block w-1.5 h-2.5 border-on-primary border-2 border-t-0 border-l-0 transform rotate-45;
+  content: '';
+}

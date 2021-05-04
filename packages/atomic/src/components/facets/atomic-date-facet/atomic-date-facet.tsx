@@ -86,7 +86,7 @@ export class AtomicDateFacet implements InitializableComponent, BaseFacetState {
   /**
    * The number of values to request for this facet, when there are no manual ranges.
    */
-  @Prop({mutable: true}) public numberOfValues = 10;
+  @Prop({mutable: true}) public numberOfValues = 8;
 
   private buildManualRanges() {
     const options = Array.from(this.host.querySelectorAll('atomic-date-range'));

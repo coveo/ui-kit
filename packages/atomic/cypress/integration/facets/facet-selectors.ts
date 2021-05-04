@@ -3,7 +3,7 @@ import {IAlias, aliasNoAtSignBuilder} from '../../utils/componentUtils';
 export const FacetSelectors = {
   facetStandard: 'atomic-facet',
   facetSearchbox: 'input[part="search-input"]',
-  checkbox: 'input[type="checkbox"]',
+  checkbox: 'button[role="checkbox"]',
   label: 'label',
   labelText: 'label span:nth-child(1)',
   labelCount: 'label span:nth-child(2)',
