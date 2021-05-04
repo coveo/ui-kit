@@ -8,7 +8,7 @@ import {
   updateFacetNumberOfValues,
   updateFacetIsFieldExpanded,
   updateFreezeCurrentValues,
-  FacetRegistrationOptions,
+  RegisterFacetActionCreatorPayload,
 } from './facet-set-actions';
 import {executeSearch} from '../../search/search-actions';
 import {selectFacetSearchResult} from '../facet-search-set/specific/specific-facet-search-actions';
@@ -188,7 +188,9 @@ export const defaultFacetOptions: FacetOptionalParameters = {
   sortCriteria: 'automatic',
 };
 
-function buildFacetRequest(config: FacetRegistrationOptions): FacetRequest {
+function buildFacetRequest(
+  config: RegisterFacetActionCreatorPayload
+): FacetRequest {
   return {
     ...defaultFacetOptions,
     type: 'specific',

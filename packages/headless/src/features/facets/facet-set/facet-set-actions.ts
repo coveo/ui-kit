@@ -12,7 +12,7 @@ import {FacetValue} from './interfaces/response';
 import {facetIdDefinition} from '../generic/facet-actions-validation';
 import {facetValueDefinition} from './facet-set-validate-payload';
 
-export interface FacetRegistrationOptions {
+export interface RegisterFacetActionCreatorPayload {
   /**
    * A unique identifier for the facet.
    * */
@@ -76,11 +76,11 @@ const facetRegistrationOptionsDefinition = {
 };
 /**
  * Registers a facet in the facet set.
- * @param (FacetRegistrationOptions) The options to register the facet with.
+ * @param (RegisterFacetActionCreatorPayload) The options to register the facet with.
  */
 export const registerFacet = createAction(
   'facet/register',
-  (payload: FacetRegistrationOptions) =>
+  (payload: RegisterFacetActionCreatorPayload) =>
     validatePayload(payload, facetRegistrationOptionsDefinition)
 );
 
