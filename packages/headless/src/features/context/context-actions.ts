@@ -35,13 +35,25 @@ export const setContext = createAction(
   }
 );
 
+export interface AddContextActionCreatorPayload {
+  /**
+   * The name of the key to store the context value in.
+   */
+  contextKey: string;
+
+  /**
+   * The context value.
+   */
+  contextValue: ContextValue;
+}
+
 /**
  * Adds a new context value.
  * @param payload ({contextKey: string; contextValue: ContextValue}) The key-value pair to add to the context (e.g., `{contextKey: "age", contextValue: "18-35"}`).
  */
 export const addContext = createAction(
   'context/add',
-  (payload: {contextKey: string; contextValue: ContextValue}) =>
+  (payload: AddContextActionCreatorPayload) =>
     nonEmptyPayload(payload.contextKey, payload.contextValue)
 );
 

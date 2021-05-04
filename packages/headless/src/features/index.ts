@@ -73,6 +73,8 @@ export namespace ContextActions {
   export const removeContext = removeContextAlias;
 }
 
+export * from './context/context-actions-loader';
+
 import {
   enableDebug as enableDebugAlias,
   disableDebug as disableDebugAlias,
@@ -81,6 +83,8 @@ export namespace DebugActions {
   export const enableDebug = enableDebugAlias;
   export const disableDebug = disableDebugAlias;
 }
+
+export * from './debug/debug-actions-loader';
 
 import {
   registerDateFacet as registerDateFacetAlias,
