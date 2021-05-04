@@ -35,16 +35,24 @@ export interface SearchBoxOptions {
    * @defaultValue `5`
    */
   numberOfSuggestions?: number;
+
+  /**
+   * Specifies whether to clear filters when the user enters a new search query
+   *
+   * @defaultValue 'false'
+   */
+  clearFiltersOnNewQuery?: boolean;
 }
 
 type DefaultSearchBoxOptions = Pick<
   SearchBoxOptions,
-  'enableQuerySyntax' | 'numberOfSuggestions'
+  'enableQuerySyntax' | 'numberOfSuggestions' | 'clearFiltersOnNewQuery'
 >;
 
 export const defaultSearchBoxOptions: Required<DefaultSearchBoxOptions> = {
   enableQuerySyntax: false,
   numberOfSuggestions: 5,
+  clearFiltersOnNewQuery: false,
 };
 
 const openCloseDelimitersDefinition = {
@@ -71,6 +79,7 @@ export const searchBoxOptionDefinitions = {
       }),
     },
   }),
+  clearFiltersOnNewQuery: new BooleanValue(),
 };
 
 export const searchBoxOptionsSchema = new Schema<Required<SearchBoxOptions>>(
