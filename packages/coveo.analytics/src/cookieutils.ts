@@ -1,3 +1,10 @@
+interface CookieDetails {
+    name: string;
+    value: string;
+    expires: string;
+    domain: string;
+}
+
 // Code originally taken from : https://developers.livechatinc.com/blog/setting-cookies-to-subdomains-in-javascript/
 export class Cookie {
     static set(name: string, value: string, expiration?: number) {
@@ -29,14 +36,14 @@ export class Cookie {
             domainParts.shift();
             domain = '.' + domainParts.join('.');
 
-            document.cookie = name + '=' + value + expires + '; path=/; domain=' + domain;
+            writeCookie({name, value, expires, domain});
 
             // check if cookie was successfuly set to the given domain
             // (otherwise it was a Top-Level Domain)
             if (Cookie.get(name) == null || Cookie.get(name) != value) {
                 // append "." to current domain
                 domain = '.' + host;
-                document.cookie = name + '=' + value + expires + '; path=/; domain=' + domain;
+                writeCookie({name, value, expires, domain});
             }
         }
     }
@@ -58,4 +65,9 @@ export class Cookie {
     static erase(name: string) {
         Cookie.set(name, '', -1);
     }
+}
+
+function writeCookie(details: CookieDetails) {
+    const {name, value, expires, domain} = details;
+    document.cookie = `${name}=${value}${expires}; path=/; domain=${domain}; SameSite=Lax`;
 }

@@ -10,7 +10,7 @@ describe('CookieStorage', () => {
         expect(storage.getItem(key)).toBe(someData);
     });
 
-    test('removeItem removes the cookie', () => {
+    it('removeItem removes the cookie', () => {
         const storage = new CookieStorage();
         storage.setItem(key, someData);
         storage.removeItem(key);
@@ -35,7 +35,7 @@ describe('CookieAndLocalStorage', () => {
         expect(localStorage.getItem(key)).toBe(someData);
     });
 
-    test('removeItem removes the cookie and local storage', () => {
+    it('removeItem removes the cookie and local storage', () => {
         storage.setItem(key, someData);
         storage.removeItem(key);
 
