@@ -1,9 +1,5 @@
 import {createAction} from '@reduxjs/toolkit';
 import {CategoryFacetValue} from './interfaces/response';
-import {
-  deselectAllFacetValues,
-  updateFacetNumberOfValues,
-} from '../facet-set/facet-set-actions';
 import {CategoryFacetSortCriterion} from './interfaces/request';
 import {
   serializeSchemaValidationError,
@@ -110,6 +106,23 @@ export const registerCategoryFacet = createAction(
     validatePayload(payload, registerCategoryFacetPayloadDefinition)
 );
 
+export interface ToggleSelectCategoryFacetValueActionCreatorPayload {
+  /**
+   * The unique identifier of the facet (e.g., `"1"`).
+   */
+  facetId: string;
+
+  /**
+   * The target category facet value.
+   */
+  selection: CategoryFacetValue;
+
+  /**
+   * The number of child values to display.
+   */
+  retrieveCount: number;
+}
+
 /**
  * Toggles a category facet value.
  * @param facetId (string) The unique identifier of the facet (e.g., `"1"`).
@@ -117,11 +130,7 @@ export const registerCategoryFacet = createAction(
  */
 export const toggleSelectCategoryFacetValue = createAction(
   'categoryFacet/toggleSelectValue',
-  (payload: {
-    facetId: string;
-    selection: CategoryFacetValue;
-    retrieveCount: number;
-  }) => {
+  (payload: ToggleSelectCategoryFacetValueActionCreatorPayload) => {
     try {
       validatePayloadAndThrow(payload.facetId, requiredNonEmptyString);
       validateCategoryFacetValue(payload.selection);
@@ -135,13 +144,47 @@ export const toggleSelectCategoryFacetValue = createAction(
 /** Deselects all values of a category facet.
  * @param facetId (string) The unique identifier of the facet (e.g., `"1"`).
  */
-export const deselectAllCategoryFacetValues = deselectAllFacetValues;
+export const deselectAllCategoryFacetValues = createAction(
+  'categoryFacet/deselectAll',
+  (payload: string) => validatePayload(payload, facetIdDefinition)
+);
+
+export interface UpdateCategoryFacetNumberOfValuesActionCreatorPayload {
+  /**
+   * The unique identifier of the facet (e.g., `"1"`).
+   */
+  facetId: string;
+
+  /**
+   * The new number of facet values (e.g., `10`).
+   */
+  numberOfValues: number;
+}
 
 /** Updates the number of values of a category facet.
  * @param facetId (string) The unique identifier of the facet (e.g., `"1"`).
  * @param numberOfValues (number) The new number of facet values (e.g., `10`).
  */
-export const updateCategoryFacetNumberOfValues = updateFacetNumberOfValues;
+export const updateCategoryFacetNumberOfValues = createAction(
+  'categoryFacet/updateNumberOfValues',
+  (payload: UpdateCategoryFacetNumberOfValuesActionCreatorPayload) =>
+    validatePayload(payload, {
+      facetId: facetIdDefinition,
+      numberOfValues: new NumberValue({required: true, min: 1}),
+    })
+);
+
+export interface UpdateCategoryFacetSortCriterionActionCreatorPayload {
+  /**
+   * The unique identifier of the facet (e.g., `"1"`).
+   */
+  facetId: string;
+
+  /**
+   * The criterion by which to sort the facet.
+   */
+  criterion: CategoryFacetSortCriterion;
+}
 
 /**
  * Updates the the sort criterion for the category facet
@@ -150,7 +193,7 @@ export const updateCategoryFacetNumberOfValues = updateFacetNumberOfValues;
  */
 export const updateCategoryFacetSortCriterion = createAction(
   'categoryFacet/updateSortCriterion',
-  (payload: {facetId: string; criterion: CategoryFacetSortCriterion}) =>
+  (payload: UpdateCategoryFacetSortCriterionActionCreatorPayload) =>
     validatePayload(payload, {
       facetId: facetIdDefinition,
       criterion: new Value<CategoryFacetSortCriterion>(),

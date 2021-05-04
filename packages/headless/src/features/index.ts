@@ -20,6 +20,8 @@ export namespace CategoryFacetSetActions {
   export const updateCategoryFacetSortCriterion = updateCategoryFacetSortCriterionAlias;
 }
 
+export * from './facets/category-facet-set/category-facet-set-actions-loader';
+
 import {
   registerFacet as registerFacetAlias,
   toggleSelectFacetValue as toggleSelectFacetValueAlias,
