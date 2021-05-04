@@ -16,7 +16,7 @@
 
 ### `getTemplate() => Promise<ResultTemplate<string> | null>`
 
-
+Gets the appropriate result template based on conditions applied.
 
 #### Returns
 

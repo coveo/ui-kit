@@ -22,7 +22,7 @@
 
 ### `executeFirstSearch() => Promise<void>`
 
-
+Executes the first search and logs the interface load event to analytics, after initializing connection to the Headless engine.
 
 #### Returns
 
@@ -32,7 +32,7 @@ Type: `Promise<void>`
 
 ### `initialize(options: InitializationOptions) => Promise<void>`
 
-
+Initializes the connection with Headless engine using options for `accessToken` (required), `organizationId` (required), `renewAccessToken`, and `platformUrl`
 
 #### Returns
 

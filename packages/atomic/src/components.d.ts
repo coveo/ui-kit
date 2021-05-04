@@ -33,6 +33,9 @@ export namespace Components {
           * Whether this facet should contain a search box.
          */
         "enableFacetSearch": boolean;
+        /**
+          * Specifies a unique identifier for the facet
+         */
         "facetId": string;
         /**
           * Specifies the index field whose values the facet should use
@@ -64,6 +67,9 @@ export namespace Components {
           * The format that the date will be displayed in. See https://day.js.org/docs/en/display/format for formatting details.
          */
         "dateFormat": string;
+        /**
+          * Specifies a unique identifier for the facet
+         */
         "facetId": string;
         /**
           * Specifies the index field whose values the facet should use
@@ -99,6 +105,9 @@ export namespace Components {
           * Whether this facet should contain a search box.
          */
         "enableFacetSearch": boolean;
+        /**
+          * Specifies a unique identifier for the facet
+         */
         "facetId": string;
         /**
           * The field whose values you want to display in the facet.
@@ -149,6 +158,9 @@ export namespace Components {
         "enableSearchTips": boolean;
     }
     interface AtomicNumericFacet {
+        /**
+          * Specifies a unique identifier for the facet
+         */
         "facetId": string;
         /**
           * Specifies the index field whose values the facet should use.
@@ -296,6 +308,9 @@ export namespace Components {
           * Functions that must return true on results for the result template to apply.  For example, a template with the following only applies to results whose `title` contains `singapore`: `[(result) => /singapore/i.test(result.title)]`
          */
         "conditions": ResultTemplateCondition[];
+        /**
+          * Gets the appropriate result template based on conditions applied.
+         */
         "getTemplate": () => Promise<ResultTemplate<string> | null>;
     }
     interface AtomicResultText {
@@ -341,11 +356,17 @@ export namespace Components {
           * The search interface Headless engine.
          */
         "engine"?: Engine;
+        /**
+          * Executes the first search and logs the interface load event to analytics, after initializing connection to the Headless engine.
+         */
         "executeFirstSearch": () => Promise<void>;
         /**
           * The search interface i18next instance.
          */
         "i18n": i18n;
+        /**
+          * Initializes the connection with Headless engine using options for `accessToken` (required), `organizationId` (required), `renewAccessToken`, and `platformUrl`
+         */
         "initialize": (options: InitializationOptions) => Promise<void>;
         /**
           * The search interface language.
@@ -678,6 +699,9 @@ declare namespace LocalJSX {
           * Whether this facet should contain a search box.
          */
         "enableFacetSearch"?: boolean;
+        /**
+          * Specifies a unique identifier for the facet
+         */
         "facetId"?: string;
         /**
           * Specifies the index field whose values the facet should use
@@ -709,6 +733,9 @@ declare namespace LocalJSX {
           * The format that the date will be displayed in. See https://day.js.org/docs/en/display/format for formatting details.
          */
         "dateFormat"?: string;
+        /**
+          * Specifies a unique identifier for the facet
+         */
         "facetId"?: string;
         /**
           * Specifies the index field whose values the facet should use
@@ -744,6 +771,9 @@ declare namespace LocalJSX {
           * Whether this facet should contain a search box.
          */
         "enableFacetSearch"?: boolean;
+        /**
+          * Specifies a unique identifier for the facet
+         */
         "facetId"?: string;
         /**
           * The field whose values you want to display in the facet.
@@ -794,6 +824,9 @@ declare namespace LocalJSX {
         "enableSearchTips"?: boolean;
     }
     interface AtomicNumericFacet {
+        /**
+          * Specifies a unique identifier for the facet
+         */
         "facetId"?: string;
         /**
           * Specifies the index field whose values the facet should use.

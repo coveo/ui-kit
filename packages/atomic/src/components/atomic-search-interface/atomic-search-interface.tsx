@@ -144,6 +144,9 @@ export class AtomicSearchInterface {
     this.hangingComponentsInitialization.push(event);
   }
 
+  /**
+   * Initializes the connection with Headless engine using options for `accessToken` (required), `organizationId` (required), `renewAccessToken`, and `platformUrl`.
+   */
   @Method() public async initialize(options: InitializationOptions) {
     if (this.engine) {
       this.engine.logger.warn(
@@ -161,6 +164,10 @@ export class AtomicSearchInterface {
     this.initialized = true;
   }
 
+  /**
+   *
+   * Executes the first search and logs the interface load event to analytics, after initializing connection to the Headless engine.
+   */
   @Method() public async executeFirstSearch() {
     if (!this.engine) {
       console.error(

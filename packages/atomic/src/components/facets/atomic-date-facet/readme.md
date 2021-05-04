@@ -11,7 +11,7 @@ a button which opens a facet modal in mobile browsers.
 | Property         | Attribute          | Description                                                                                                          | Type     | Default        |
 | ---------------- | ------------------ | -------------------------------------------------------------------------------------------------------------------- | -------- | -------------- |
 | `dateFormat`     | `date-format`      | The format that the date will be displayed in. See https://day.js.org/docs/en/display/format for formatting details. | `string` | `'DD/MM/YYYY'` |
-| `facetId`        | `facet-id`         |                                                                                                                      | `string` | `''`           |
+| `facetId`        | `facet-id`         | Specifies a unique identifier for the facet                                                                          | `string` | `''`           |
 | `field`          | `field`            | Specifies the index field whose values the facet should use                                                          | `string` | `''`           |
 | `label`          | `label`            | The non-localized label for the facet                                                                                | `string` | `'noLabel'`    |
 | `numberOfValues` | `number-of-values` | The number of values to request for this facet, when there are no manual ranges.                                     | `number` | `10`           |
