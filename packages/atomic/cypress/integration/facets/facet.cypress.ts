@@ -120,10 +120,10 @@ describe('Standard Facet', () => {
       cy.get(FacetAlias.facetSecondValue).find(FacetSelectors.label).click();
       cy.get(FacetAlias.facetFirstValue)
         .find(FacetSelectors.checkbox)
-        .should('be.checked');
+        .should('have.class', 'checked');
       cy.get(FacetAlias.facetSecondValue)
         .find(FacetSelectors.checkbox)
-        .should('be.checked');
+        .should('have.class', 'checked');
       cy.getAnalyticsAt('@coveoAnalytics', 2).then((analyticsBody) => {
         expect(analyticsBody).to.have.property('actionCause', 'facetSelect');
         expect(analyticsBody.facetState).to.have.lengthOf(2);

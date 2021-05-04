@@ -13,15 +13,14 @@ export const FacetValue: FunctionalComponent<FacetValueProps> = (props) => {
   const id = randomID('facet-value-');
   return (
     <li part="value" class="flex flex-row items-center">
-      <input
-        type="checkbox"
-        checked={props.isSelected}
-        class="w-5 h-5 flex-none rounded cursor-pointer"
+      <button
         id={id}
-        name={id}
+        role="checkbox"
         onClick={() => props.facetValueSelected()}
+        aria-checked={props.isSelected.toString()}
+        class={`checkbox ${props.isSelected ? 'checked' : ''}`}
         aria-label={props.ariaLabel}
-      />
+      ></button>
       <label
         htmlFor={id}
         class="w-full flex pl-3 text-on-background cursor-pointer ellipsed lg:text-sm py-1.5"
