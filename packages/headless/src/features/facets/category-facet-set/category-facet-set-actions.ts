@@ -21,7 +21,7 @@ import {
 } from '@coveo/bueno';
 import {validateCategoryFacetValue} from './category-facet-validate-payload';
 
-export interface CategoryFacetRegistrationOptions {
+export interface RegisterCategoryFacetActionCreatorPayload {
   /**
    * A unique identifier for the controller. By default, a random unique identifier is generated.
    * */
@@ -88,7 +88,7 @@ export interface CategoryFacetRegistrationOptions {
   sortCriteria?: CategoryFacetSortCriterion;
 }
 
-const categoryFacetRegistrationOptionsDefinition = {
+const registerCategoryFacetPayloadDefinition = {
   facetId: facetIdDefinition,
   field: requiredNonEmptyString,
   delimitingCharacter: new StringValue({required: false, emptyAllowed: true}),
@@ -102,12 +102,12 @@ const categoryFacetRegistrationOptionsDefinition = {
 
 /**
  * Registers a category facet in the category facet set.
- * @param (CategoryFacetRegistrationOptions) The options to register the category facet with.
+ * @param (RegisterCategoryFacetActionCreatorPayload) The options to register the category facet with.
  */
 export const registerCategoryFacet = createAction(
   'categoryFacet/register',
-  (payload: CategoryFacetRegistrationOptions) =>
-    validatePayload(payload, categoryFacetRegistrationOptionsDefinition)
+  (payload: RegisterCategoryFacetActionCreatorPayload) =>
+    validatePayload(payload, registerCategoryFacetPayloadDefinition)
 );
 
 /**

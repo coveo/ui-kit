@@ -5,7 +5,7 @@ import {
   deselectAllCategoryFacetValues,
   updateCategoryFacetNumberOfValues,
   updateCategoryFacetSortCriterion,
-  CategoryFacetRegistrationOptions,
+  RegisterCategoryFacetActionCreatorPayload,
 } from './category-facet-set-actions';
 import {buildMockCategoryFacetRequest} from '../../../test/mock-category-facet-request';
 import {change} from '../../history/history-actions';
@@ -45,7 +45,7 @@ describe('category facet slice', () => {
   });
 
   it('#registerCategoryFacet with an unregistered id adds a category facet with correct defaults', () => {
-    const options: CategoryFacetRegistrationOptions = {
+    const options: RegisterCategoryFacetActionCreatorPayload = {
       facetId,
       field: '',
     };
@@ -95,7 +95,7 @@ describe('category facet slice', () => {
   });
 
   it('#registerCategoryFacet with a registered id does not overwrite a category facet', () => {
-    const options: CategoryFacetRegistrationOptions = {
+    const options: RegisterCategoryFacetActionCreatorPayload = {
       facetId,
       field: 'b',
     };
