@@ -3,7 +3,6 @@ import {createAction} from '@reduxjs/toolkit';
 import {DateFacetRegistrationOptions} from './interfaces/options';
 import {DateFacetValue} from './interfaces/response';
 import {updateRangeFacetSortCriterion} from '../generic/range-facet-actions';
-import {deselectAllFacetValues} from '../../facet-set/facet-set-actions';
 import {
   validatePayload,
   requiredNonEmptyString,
@@ -100,4 +99,7 @@ export const updateDateFacetSortCriterion = updateRangeFacetSortCriterion;
 /** Deselects all values of a date facet.
  * @param facetId (string) The unique identifier of the facet (e.g., `"1"`).
  */
-export const deselectAllDateFacetValues = deselectAllFacetValues;
+export const deselectAllDateFacetValues = createAction(
+  'dateFacet/deselectAll',
+  (payload: string) => validatePayload(payload, facetIdDefinition)
+);
