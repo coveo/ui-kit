@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.13.0-alpha.2](https://github.com/coveo/ui-kit/compare/v0.13.0-alpha.1...v0.13.0-alpha.2) (2021-05-04)
+
+
+### Bug Fixes
+
+* **headless:** make ec_thumbnails array ([#761](https://github.com/coveo/ui-kit/issues/761)) ([117435a](https://github.com/coveo/ui-kit/commit/117435a45e0e8281adbfee4e8da0622a872da5e2))
+
+
+### Features
+
+* **atomic:** update general facet style for V0  ([#752](https://github.com/coveo/ui-kit/issues/752)) ([6c21035](https://github.com/coveo/ui-kit/commit/6c210354dd6eb29d3bce73975959132f9066f664))
+
+
+
+
+
 # [0.13.0-alpha.1](https://github.com/coveo/ui-kit/compare/v0.13.0-alpha.0...v0.13.0-alpha.1) (2021-05-04)
 
 **Note:** Version bump only for package ui-kit
