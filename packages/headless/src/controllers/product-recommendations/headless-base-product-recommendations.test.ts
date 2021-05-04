@@ -8,7 +8,6 @@ import {
   ProductRecommendationsList,
   ProductRecommendationsListOptions,
 } from './headless-base-product-recommendations';
-import {buildMockProductRecommendationsState} from '../../test/mock-product-recommendations-state';
 import {Action} from 'redux';
 import {
   getProductRecommendations,
@@ -21,7 +20,6 @@ import {configuration} from '../../app/reducers';
 import {productRecommendationsReducer} from '../../features/product-recommendations/product-recommendations-slice';
 
 describe('headless product-recommendations', () => {
-  let state: ProductRecommendationsAppState;
   let productRecommendations: ProductRecommendationsList;
   let engine: MockEngine<ProductRecommendationsAppState>;
 
@@ -30,8 +28,7 @@ describe('headless product-recommendations', () => {
   };
 
   beforeEach(() => {
-    state = buildMockProductRecommendationsState();
-    engine = buildMockProductRecommendationsAppEngine({state});
+    engine = buildMockProductRecommendationsAppEngine();
     productRecommendations = buildBaseProductRecommendationsList(engine, {
       options: baseOptions,
     });

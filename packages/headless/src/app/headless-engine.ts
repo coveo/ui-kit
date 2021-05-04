@@ -32,6 +32,11 @@ import {
   ThunkExtraArguments,
 } from './thunk-extra-arguments';
 import {SearchAppState} from '../state/search-app-state';
+import {pipeline, searchHub} from './reducers';
+
+const headlessReducers = {pipeline, searchHub};
+type HeadlessReducers = typeof headlessReducers;
+type HeadlessState = StateFromReducersMapObject<HeadlessReducers>;
 
 /**
  * The global headless engine options.
@@ -97,7 +102,7 @@ export interface HeadlessConfigurationOptions
  * The engine for powering search experiences.
  */
 export interface Engine<State = SearchAppState>
-  extends CoreEngine<State, SearchThunkExtraArguments> {}
+  extends CoreEngine<State & HeadlessState, SearchThunkExtraArguments> {}
 
 export interface SearchThunkExtraArguments extends ThunkExtraArguments {
   searchAPIClient: SearchAPIClient;
@@ -122,7 +127,12 @@ export class HeadlessEngine<Reducers extends ReducersMapObject>
       searchAPIClient: this.createSearchAPIClient(),
     };
 
-    this.engine = buildEngine(options, thunkArguments);
+    const augmentedOptions: HeadlessOptions<Reducers & HeadlessReducers> = {
+      ...options,
+      reducers: {...headlessReducers, ...options.reducers},
+    };
+
+    this.engine = buildEngine(augmentedOptions, thunkArguments);
 
     if (options.configuration.search) {
       this.engine.dispatch(

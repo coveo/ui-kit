@@ -1,20 +1,11 @@
-import {
-  updateAnalyticsConfiguration,
-  updateBasicConfiguration,
-} from '../features/configuration/configuration-actions';
-import {buildMockStore} from '../test/mock-store';
 import {buildMockThunkExtraArguments} from '../test/mock-thunk-extra-arguments';
 import {buildEngine, CoreEngine, EngineOptions} from './engine';
-import {searchAppReducers} from './search-app-reducers';
-import * as Store from './store';
 
 describe('engine', () => {
-  let options: EngineOptions<typeof searchAppReducers>;
+  let options: EngineOptions<{}>;
   let engine: CoreEngine;
 
   function initEngine() {
-    jest.spyOn(Store, 'configureStore').mockReturnValue(buildMockStore());
-
     const thunkArguments = buildMockThunkExtraArguments();
     engine = buildEngine(options, thunkArguments);
   }
@@ -26,37 +17,37 @@ describe('engine', () => {
         accessToken: 'token',
         platformUrl: 'https://www.coveo.com/',
       },
-      reducers: searchAppReducers,
+      reducers: {},
     };
 
     initEngine();
   });
 
-  it('dispatches #updateBasicConfiguration with the correct params', () => {
-    expect(engine.dispatch).toHaveBeenCalledWith(
-      updateBasicConfiguration({
-        accessToken: options.configuration.accessToken,
-        organizationId: options.configuration.organizationId,
-        platformUrl: options.configuration.platformUrl,
-      })
-    );
-  });
-
-  it(`when no #analytics configuration is specified,
-  it does not dispatch #updateAnalyticsConfiguration`, () => {
-    expect(engine.dispatch).not.toHaveBeenCalledWith(
-      updateAnalyticsConfiguration({})
-    );
-  });
-
-  it(`when an #analytics configuration is specified,
-  it dispatches #updateAnalyticsConfiguration`, () => {
-    options.configuration.analytics = {enabled: true};
+  it('when no reducers are specified, it still registers the configuration correctly', () => {
+    options.reducers = {};
     initEngine();
 
-    expect(engine.dispatch).toHaveBeenLastCalledWith(
-      updateAnalyticsConfiguration({enabled: true})
+    const {configuration} = engine.state;
+    expect(configuration.accessToken).toBe(options.configuration.accessToken);
+    expect(configuration.organizationId).toBe(
+      options.configuration.organizationId
     );
+    expect(configuration.platformUrl).toBe(options.configuration.platformUrl);
+  });
+
+  it('when an #analytics configuration is specified, it registers the configuration', () => {
+    const enabled = true;
+    const originLevel2 = 'tab';
+    const originLevel3 = 'referrer';
+
+    options.configuration.analytics = {enabled, originLevel2, originLevel3};
+    initEngine();
+
+    const {analytics} = engine.state.configuration;
+
+    expect(analytics.enabled).toBe(enabled);
+    expect(analytics.originLevel2).toBe(originLevel2);
+    expect(analytics.originLevel3).toBe(originLevel3);
   });
 
   it(`when renewAccessToken is not defined in the config

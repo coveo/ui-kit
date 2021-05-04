@@ -18,6 +18,10 @@ import {Store, configureStore} from './store';
 import {LoggerOptions} from './logger';
 import {Logger} from 'pino';
 import {ThunkExtraArguments} from './thunk-extra-arguments';
+import {configuration, version} from './reducers';
+
+const coreReducers = {configuration, version};
+type CoreState = StateFromReducersMapObject<typeof coreReducers>;
 
 type EngineDispatch<
   State,
@@ -39,7 +43,7 @@ export interface CoreEngine<
    *
    * @returns For convenience, the action object that was just dispatched.
    */
-  dispatch: EngineDispatch<State, ExtraArguments>;
+  dispatch: EngineDispatch<State & CoreState, ExtraArguments>;
   /**
    * Adds a change listener. It will be called any time an action is
    * dispatched, and some part of the state tree may potentially have changed.
@@ -52,7 +56,7 @@ export interface CoreEngine<
   /**
    * The complete headless state tree.
    */
-  state: State;
+  state: State & CoreState;
   /**
    * The redux store.
    */
@@ -148,7 +152,7 @@ function buildCoreEngine<
   thunkExtraArguments: ExtraArguments
 ): CoreEngine<StateFromReducersMapObject<Reducers>, ExtraArguments> {
   const {configuration, reducers} = options;
-  const reducerManager = createReducerManager(reducers);
+  const reducerManager = createReducerManager({...coreReducers, ...reducers});
   const logger = thunkExtraArguments.logger;
   const store = createStore(options, thunkExtraArguments, reducerManager);
 
