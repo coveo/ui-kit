@@ -45,6 +45,7 @@ import {
   search,
 } from '../../app/reducers';
 import {loadReducerError} from '../../utils/errors';
+import {deselectAllFacets} from '../../features/facets/generic/facet-actions';
 
 export {SearchBoxOptions, SuggestionHighlightingOptions, Delimiters};
 
@@ -207,6 +208,7 @@ export function buildSearchBox(
     },
 
     submit() {
+      dispatch(deselectAllFacets());
       performSearch(logSearchboxSubmit());
     },
 
