@@ -1,7 +1,7 @@
 const util = require('util');
 const fs = require('fs');
 const mkdir = util.promisify(fs.mkdir);
-const rmdir = util.promisify(fs.rmdir);
+const rm = util.promisify(fs.rm);
 const readFile = util.promisify(fs.readFile);
 const writeFile = util.promisify(fs.writeFile);
 
@@ -28,7 +28,7 @@ async function splitLocales() {
 
   const langFolderPath = 'src/components/atomic-search-interface/lang/';
 
-  await rmdir(langFolderPath, {recursive: true});
+  await rm(langFolderPath, {recursive: true, force: true});
   await mkdir(langFolderPath, {recursive: true});
 
   Object.entries(localesMap).forEach(async ([localeKey, localeData]) => {
