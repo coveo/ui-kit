@@ -95,4 +95,7 @@ export const updateNumericFacetSortCriterion = updateRangeFacetSortCriterion;
 /** Deselects all values of a numeric facet.
  * @param facetId (string) The unique identifier of the facet (e.g., `"1"`).
  */
-export const deselectAllNumericFacetValues = deselectAllFacetValues;
+export const deselectAllNumericFacetValues = createAction(
+  'numericFacet/deselectAll',
+  (payload: string) => validatePayload(payload, facetIdDefinition)
+);
