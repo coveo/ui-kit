@@ -2,6 +2,7 @@ import {Engine} from '@coveo/headless';
 import {ComponentInterface, getElement, h} from '@stencil/core';
 import {i18n, StringMap} from 'i18next';
 import {ObservableMap} from '@stencil/store';
+import {buildCustomEvent} from './event-utils';
 
 export type FacetState = {
   label: string;
@@ -83,8 +84,9 @@ export function InitializeBindings() {
 
     component.componentWillLoad = function () {
       const element = getElement(this);
-      const event = new CustomEvent('atomic/initializeComponent', {
-        detail: (bindings: Bindings) => {
+      const event = buildCustomEvent(
+        'atomic/initializeComponent',
+        (bindings: Bindings) => {
           this.bindings = bindings;
 
           try {
@@ -92,14 +94,8 @@ export function InitializeBindings() {
           } catch (e) {
             this.error = e;
           }
-        },
-        // Event will bubble up the DOM until it is caught
-        bubbles: true,
-        // Allows to verify if event is caught (cancelled). If it's not caught, it won't be initialized.
-        cancelable: true,
-        // Allows to compose Atomic components inside one another, event will go across DOM/Shadow DOM
-        composed: true,
-      });
+        }
+      );
 
       const canceled = element.dispatchEvent(event);
       if (canceled) {
