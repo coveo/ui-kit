@@ -19,6 +19,8 @@ import {RangeFacetSortCriterion} from '../generic/interfaces/request';
 import {dateFacetValueDefinition} from '../generic/range-facet-validate-payload';
 import {buildDateRange} from '../../../../controllers/facets/range-facet/date-facet/date-range';
 import {DateRangeRequest} from './interfaces/request';
+import {updateRangeFacetSortCriterion} from '../generic/range-facet-actions';
+import {deselectAllFacetValues} from '../../facet-set/facet-set-actions';
 
 export interface RegisterDateFacetActionCreatorPayload {
   /**
@@ -181,19 +183,9 @@ export interface UpdateDateFacetSortCriterionActionCreatorPayload {
  * @param facetId (string) The unique identifier of the facet (e.g., `"1"`).
  * @param criterion (RangeFacetSortCriterion) The target criterion.
  */
-export const updateDateFacetSortCriterion = createAction(
-  'dateFacet/updateSortCriterion',
-  (payload: UpdateDateFacetSortCriterionActionCreatorPayload) =>
-    validatePayload(payload, {
-      facetId: facetIdDefinition,
-      criterion: new Value<RangeFacetSortCriterion>({required: true}),
-    })
-);
+export const updateDateFacetSortCriterion = updateRangeFacetSortCriterion;
 
 /** Deselects all values of a date facet.
  * @param facetId (string) The unique identifier of the facet (e.g., `"1"`).
  */
-export const deselectAllDateFacetValues = createAction(
-  'dateFacet/deselectAll',
-  (payload: string) => validatePayload(payload, facetIdDefinition)
-);
+export const deselectAllDateFacetValues = deselectAllFacetValues;
