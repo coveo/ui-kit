@@ -215,7 +215,7 @@ describe('headless searchBox', () => {
       expect(action).toBe(undefined);
     });
   });
-  //ADD CLEARFILTERONNEWSQUERY TEST HERE?
+
   describe('#selectSuggestion', () => {
     it('dispatches a selectQuerySuggestion action', () => {
       const value = 'i like this expression';
