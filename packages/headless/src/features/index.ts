@@ -122,6 +122,9 @@ import {registerFieldsToInclude as registerFieldsToIncludeAlias} from './fields/
 export namespace FieldActions {
   export const registerFieldsToInclude = registerFieldsToIncludeAlias;
 }
+
+export * from './fields/fields-actions-loader';
+
 import {
   snapshot as snapshotAlias,
   back as backAlias,

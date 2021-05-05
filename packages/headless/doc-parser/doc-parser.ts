@@ -311,6 +311,9 @@ const actionLoaderConfiguration: ActionLoaderConfiguration[] = [
   {
     initializer: 'loadNumericFacetSetActions',
   },
+  {
+    initializer: 'loadFieldActions',
+  },
 ];
 
 const controllers = controllerConfiguration.map((controller) =>
