@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.13.0-alpha.6](https://github.com/coveo/ui-kit/compare/v0.13.0-alpha.5...v0.13.0-alpha.6) (2021-05-05)
+
+
+### Features
+
+* **atomic,headless:** clearFiltersOnNewQuery ([#770](https://github.com/coveo/ui-kit/issues/770)) ([6bd5f1b](https://github.com/coveo/ui-kit/commit/6bd5f1b0279b1fb2164872caf5bd240a0d59d52c))
+
+
+
+
+
 # [0.13.0-alpha.5](https://github.com/coveo/ui-kit/compare/v0.13.0-alpha.4...v0.13.0-alpha.5) (2021-05-05)
 
 **Note:** Version bump only for package ui-kit
