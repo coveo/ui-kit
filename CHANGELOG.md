@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.13.0-alpha.3](https://github.com/coveo/ui-kit/compare/v0.13.0-alpha.2...v0.13.0-alpha.3) (2021-05-05)
+
+
+### Bug Fixes
+
+* **atomic:** prevent e2e tests, which rebuilds files ([#767](https://github.com/coveo/ui-kit/issues/767)) ([67ce054](https://github.com/coveo/ui-kit/commit/67ce054466dda5456da32d245d4f36efc8970fe4))
+
+
+
+
+
 # [0.13.0-alpha.2](https://github.com/coveo/ui-kit/compare/v0.13.0-alpha.1...v0.13.0-alpha.2) (2021-05-04)
 
 
