@@ -89,7 +89,7 @@ export interface SearchBox extends Controller {
   selectSuggestion(value: string): void;
 
   /**
-   * Triggers a search query.
+   * Deselects all facets and triggers a search query.
    */
   submit(): void;
 
@@ -172,11 +172,9 @@ export function buildSearchBox(
   const getValue = () => engine.state.querySet[options.id];
 
   const performSearch = (analytics: SearchAction) => {
-    const {enableQuerySyntax, clearFiltersOnNewQuery} = options;
+    const {enableQuerySyntax} = options;
 
-    if (clearFiltersOnNewQuery) {
-      dispatch(deselectAllFacets());
-    }
+    dispatch(deselectAllFacets());
     dispatch(updateQuery({q: getValue(), enableQuerySyntax}));
     dispatch(updatePage(1));
     dispatch(executeSearch(analytics));

@@ -235,21 +235,10 @@ describe('headless searchBox', () => {
   });
 
   describe('when calling submit', () => {
-    it('when clearFiltersOnNewQuery is set to true, it deselects all facets', () => {
-      props.options!.clearFiltersOnNewQuery = true;
-      initController();
-
+    it('it deselects all facets', () => {
       searchBox.submit();
 
       expect(engine.actions).toContainEqual(deselectAllFacets());
-    });
-
-    it('when clearFiltersOnNewQuery is set to false, it does not deselect all facets', () => {
-      props.options!.clearFiltersOnNewQuery = false;
-      initController();
-
-      searchBox.submit();
-      expect(engine.actions).not.toContain(deselectAllFacets());
     });
 
     it('dispatches updateQuery with the correct parameters', () => {

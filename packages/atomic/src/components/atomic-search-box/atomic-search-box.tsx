@@ -50,10 +50,6 @@ export class AtomicSearchBox {
    * Whether the submit button should be placed before the input.
    */
   @Prop() leadingSubmitButton = false;
-  /**
-   * Whether the filters should be cleared upon a new search.
-   */
-  @Prop() clearFiltersOnNewQuery = true;
 
   private searchBox!: SearchBox;
   private inputRef!: HTMLInputElement;
@@ -115,7 +111,6 @@ export class AtomicSearchBox {
             close: '</span>',
           },
         },
-        clearFiltersOnNewQuery: this.clearFiltersOnNewQuery,
       },
     });
   }
