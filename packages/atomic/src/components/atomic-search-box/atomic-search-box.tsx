@@ -51,7 +51,7 @@ export class AtomicSearchBox {
    */
   @Prop() leadingSubmitButton = false;
   /**
-   * Whether the filters should be cleared upon a new search
+   * Whether the filters should be cleared upon a new search.
    */
   @Prop() clearFiltersOnNewQuery = true;
 

@@ -37,7 +37,7 @@ export interface SearchBoxOptions {
   numberOfSuggestions?: number;
 
   /**
-   * Specifies whether to clear filters when the user enters a new search query
+   * Whether the filters should be cleared upon a new search.
    *
    * @defaultValue 'false'
    */

@@ -172,8 +172,8 @@ export function buildSearchBox(
   const getValue = () => engine.state.querySet[options.id];
 
   const performSearch = (analytics: SearchAction) => {
-    const {enableQuerySyntax} = options;
-    const {clearFiltersOnNewQuery} = options;
+    const {enableQuerySyntax, clearFiltersOnNewQuery} = options;
+
     if (clearFiltersOnNewQuery) {
       dispatch(deselectAllFacets());
     }
