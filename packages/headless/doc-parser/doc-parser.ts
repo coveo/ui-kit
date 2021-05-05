@@ -302,6 +302,9 @@ const actionLoaderConfiguration: ActionLoaderConfiguration[] = [
   {
     initializer: 'loadCategoryFacetSetActions',
   },
+  {
+    initializer: 'loadFacetSetActions',
+  },
 ];
 
 const controllers = controllerConfiguration.map((controller) =>

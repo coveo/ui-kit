@@ -8,6 +8,7 @@ import {
   updateFacetNumberOfValues,
   updateFacetIsFieldExpanded,
   updateFreezeCurrentValues,
+  RegisterFacetActionCreatorPayload,
 } from './facet-set-actions';
 import {buildMockFacetValue} from '../../../test/mock-facet-value';
 import {buildMockSearch} from '../../../test/mock-search';
@@ -16,7 +17,6 @@ import {executeSearch} from '../../search/search-actions';
 import {logSearchEvent} from '../../analytics/analytics-actions';
 import {buildMockFacetValueRequest} from '../../../test/mock-facet-value-request';
 import {buildMockFacetSearchResult} from '../../../test/mock-facet-search-result';
-import {FacetRegistrationOptions} from './interfaces/options';
 import {FacetResponse} from './interfaces/response';
 import {buildMockFacetRequest} from '../../../test/mock-facet-request';
 import {selectFacetSearchResult} from '../facet-search-set/specific/specific-facet-search-actions';
@@ -30,8 +30,8 @@ describe('facet-set slice', () => {
   let state: FacetSetState;
 
   function buildRegistrationOptions(
-    config: Partial<FacetRegistrationOptions>
-  ): FacetRegistrationOptions {
+    config: Partial<RegisterFacetActionCreatorPayload>
+  ): RegisterFacetActionCreatorPayload {
     return {
       facetId: '',
       field: '',
