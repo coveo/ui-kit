@@ -9,7 +9,7 @@
   },
   "types": "./dist/definitions/index.d.ts",
   "license": "Apache-2.0",
-  "version": "0.13.0-alpha.2",
+  "version": "0.13.0-alpha.5",
   "files": [
     "dist/",
     "case-assist/"
@@ -30,7 +30,7 @@
     "doc:parse": "ts-node --project ./doc-parser/tsconfig.build.json ./doc-parser/doc-parser.ts"
   },
   "dependencies": {
-    "@coveo/bueno": "^0.12.0",
+    "@coveo/bueno": "^0.13.0-alpha.5",
     "@reduxjs/toolkit": "^1.5.0",
     "@types/pino": "^6.3.4",
     "@types/redux-mock-store": "^1.0.2",
