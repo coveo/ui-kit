@@ -29,6 +29,7 @@ import {
   querySuggest,
   search,
 } from '../../app/reducers';
+import {deselectAllFacets} from '../../features/facets/generic/facet-actions';
 
 describe('headless searchBox', () => {
   const id = 'search-box-123';
@@ -214,7 +215,7 @@ describe('headless searchBox', () => {
       expect(action).toBe(undefined);
     });
   });
-
+  //ADD CLEARFILTERONNEWSQUERY TEST HERE?
   describe('#selectSuggestion', () => {
     it('dispatches a selectQuerySuggestion action', () => {
       const value = 'i like this expression';
@@ -234,6 +235,23 @@ describe('headless searchBox', () => {
   });
 
   describe('when calling submit', () => {
+    it('deselects all facets if clearFiltersOnNewQuery is set to true', () => {
+      props.options!.clearFiltersOnNewQuery = true;
+      initController();
+
+      searchBox.submit();
+
+      expect(engine.actions).toContain(deselectAllFacets());
+    });
+
+    it('does not deselect all facets if clearFiltersOnNewQuery is set to false', () => {
+      props.options!.clearFiltersOnNewQuery = false;
+      initController();
+
+      searchBox.submit();
+      expect(engine.actions).not.toContain(deselectAllFacets());
+    });
+
     it('dispatches updateQuery with the correct parameters', () => {
       const expectedQuery = state.querySet[id];
       searchBox.submit();
