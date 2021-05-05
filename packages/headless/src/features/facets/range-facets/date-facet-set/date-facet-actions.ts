@@ -182,7 +182,7 @@ export interface UpdateDateFacetSortCriterionActionCreatorPayload {
  * @param criterion (RangeFacetSortCriterion) The target criterion.
  */
 export const updateDateFacetSortCriterion = createAction(
-  'rangeFacet/updateSortCriterion',
+  'dateFacet/updateSortCriterion',
   (payload: UpdateDateFacetSortCriterionActionCreatorPayload) =>
     validatePayload(payload, {
       facetId: facetIdDefinition,
