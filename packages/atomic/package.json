@@ -51,7 +51,6 @@
     "@types/jest": "^26.0.14",
     "@types/mustache": "^4.0.1",
     "@types/postcss-import": "^12.0.0",
-    "@types/puppeteer": "5.4.0",
     "autoprefixer": "^10.2.4",
     "axe-core": "^4.1.1",
     "cross-fetch": "^3.0.6",
@@ -62,7 +61,6 @@
     "jest": "^26.4.2",
     "jest-cli": "^26.4.2",
     "postcss-import": "^14.0.0",
-    "puppeteer": "5.5.0",
     "rollup": "^2.18.2",
     "rollup-plugin-html": "^0.2.1",
     "rollup-plugin-typescript2": "^0.27.0"
