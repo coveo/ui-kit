@@ -7,7 +7,7 @@ import {
   toggleSelectNumericFacetValue,
   updateNumericFacetSortCriterion,
   deselectAllNumericFacetValues,
-  NumericFacetRegistrationOptions,
+  RegisterNumericFacetActionCreatorPayload,
 } from './numeric-facet-actions';
 import {buildMockNumericFacetRequest} from '../../../../test/mock-numeric-facet-request';
 import {change} from '../../../history/history-actions';
@@ -36,7 +36,7 @@ describe('numeric-facet-set slice', () => {
 
   it('#registerNumericFacet registers a numeric facet', () => {
     const facetId = '1';
-    const options: NumericFacetRegistrationOptions = {
+    const options: RegisterNumericFacetActionCreatorPayload = {
       facetId,
       field: '',
       generateAutomaticRanges: true,

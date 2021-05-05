@@ -8,7 +8,7 @@ import {
   NumericFacetValue,
 } from '../../../../features/facets/range-facets/numeric-facet-set/interfaces/response';
 import {
-  NumericFacetRegistrationOptions,
+  RegisterNumericFacetActionCreatorPayload,
   registerNumericFacet,
 } from '../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions';
 import {
@@ -141,7 +141,7 @@ export function buildNumericFacet(
   const dispatch = engine.dispatch;
 
   const facetId = determineFacetId(engine, props.options);
-  const options: NumericFacetRegistrationOptions = {
+  const options: RegisterNumericFacetActionCreatorPayload = {
     currentValues: [],
     ...props.options,
     facetId,

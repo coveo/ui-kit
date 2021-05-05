@@ -14,7 +14,7 @@ import {AutomaticRangeFacetOptions} from './interfaces/options';
 import {buildMockNumericFacetValue} from '../../../../test/mock-numeric-facet-value';
 import {NumericFacetValue} from '../numeric-facet-set/interfaces/response';
 import {buildMockNumericFacetResponse} from '../../../../test/mock-numeric-facet-response';
-import {NumericFacetRegistrationOptions} from '../numeric-facet-set/numeric-facet-actions';
+import {RegisterNumericFacetActionCreatorPayload} from '../numeric-facet-set/numeric-facet-actions';
 
 describe('range facet reducers', () => {
   let state: Record<string, NumericFacetRequest> = {};
@@ -35,7 +35,7 @@ describe('range facet reducers', () => {
       };
     }
 
-    function register(options: NumericFacetRegistrationOptions) {
+    function register(options: RegisterNumericFacetActionCreatorPayload) {
       const request = buildMockNumericFacetRequest(options);
       registerRangeFacet<NumericFacetRequest>(state, request);
     }
@@ -71,7 +71,7 @@ describe('range facet reducers', () => {
     it(`when #generateAutomaticRanges is false, and the number of hard-coded ranges is not equal to the #numberOfValues,
     it sets #numberOfValues to the number of hard-coded ranges`, () => {
       const facetId = '1';
-      const options: NumericFacetRegistrationOptions = {
+      const options: RegisterNumericFacetActionCreatorPayload = {
         facetId,
         field: '',
         generateAutomaticRanges: false,
@@ -87,7 +87,7 @@ describe('range facet reducers', () => {
     it(`when #generateAutomaticRanges is true, and the number of hard-coded ranges is greater than the #numberOfValues,
     it sets #numberOfValues to the number of hard-coded ranges`, () => {
       const facetId = '1';
-      const options: NumericFacetRegistrationOptions = {
+      const options: RegisterNumericFacetActionCreatorPayload = {
         facetId,
         field: '',
         generateAutomaticRanges: true,

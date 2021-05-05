@@ -18,7 +18,7 @@ import {RangeFacetSortCriterion} from '../generic/interfaces/request';
 import {numericFacetValueDefinition} from '../generic/range-facet-validate-payload';
 import {NumericRangeRequest} from './interfaces/request';
 
-export interface NumericFacetRegistrationOptions {
+export interface RegisterNumericFacetActionCreatorPayload {
   /**
    * A unique identifier for the numeric facet.
    */
@@ -104,7 +104,7 @@ const numericFacetRegistrationOptionsDefinition = {
 };
 
 export function validateManualNumericRanges(
-  options: Pick<NumericFacetRegistrationOptions, 'currentValues'>
+  options: Pick<RegisterNumericFacetActionCreatorPayload, 'currentValues'>
 ) {
   if (!options.currentValues) {
     return;
@@ -121,11 +121,11 @@ export function validateManualNumericRanges(
 
 /**
  * Registers a numeric facet.
- * @param (NumericFacetRegistrationOptions) The options to register the facet with.
+ * @param (RegisterNumericFacetActionCreatorPayload) The options to register the facet with.
  */
 export const registerNumericFacet = createAction(
   'numericFacet/register',
-  (payload: NumericFacetRegistrationOptions) => {
+  (payload: RegisterNumericFacetActionCreatorPayload) => {
     try {
       validatePayload(payload, numericFacetRegistrationOptionsDefinition);
       validateManualNumericRanges(payload);

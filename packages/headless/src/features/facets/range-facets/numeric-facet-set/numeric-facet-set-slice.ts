@@ -5,7 +5,7 @@ import {
   toggleSelectNumericFacetValue,
   deselectAllNumericFacetValues,
   updateNumericFacetSortCriterion,
-  NumericFacetRegistrationOptions,
+  RegisterNumericFacetActionCreatorPayload,
 } from './numeric-facet-actions';
 import {change} from '../../../history/history-actions';
 import {executeSearch} from '../../../search/search-actions';
@@ -74,7 +74,7 @@ export const numericFacetSetReducer = createReducer(
 );
 
 function buildNumericFacetRequest(
-  config: NumericFacetRegistrationOptions
+  config: RegisterNumericFacetActionCreatorPayload
 ): NumericFacetRequest {
   return {
     ...defaultRangeFacetOptions,
