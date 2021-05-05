@@ -324,6 +324,10 @@ export namespace Components {
     }
     interface AtomicSearchBox {
         /**
+          * Whether the filters should be cleared upon a new search
+         */
+        "clearFiltersOnNewQuery": boolean;
+        /**
           * Whether the submit button should be placed before the input.
          */
         "leadingSubmitButton": boolean;
@@ -967,6 +971,10 @@ declare namespace LocalJSX {
         "initialChoice"?: number;
     }
     interface AtomicSearchBox {
+        /**
+          * Whether the filters should be cleared upon a new search
+         */
+        "clearFiltersOnNewQuery"?: boolean;
         /**
           * Whether the submit button should be placed before the input.
          */

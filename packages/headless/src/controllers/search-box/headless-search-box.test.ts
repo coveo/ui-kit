@@ -241,7 +241,7 @@ describe('headless searchBox', () => {
 
       searchBox.submit();
 
-      expect(engine.actions).toContain(deselectAllFacets());
+      expect(engine.actions).toContainEqual(deselectAllFacets());
     });
 
     it('does not deselect all facets if clearFiltersOnNewQuery is set to false', () => {
