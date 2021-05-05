@@ -1,7 +1,6 @@
 import dayjs from 'dayjs';
 import {createAction} from '@reduxjs/toolkit';
 import {DateFacetValue} from './interfaces/response';
-import {updateRangeFacetSortCriterion} from '../generic/range-facet-actions';
 import {
   validatePayload,
   requiredNonEmptyString,
@@ -140,6 +139,18 @@ export const registerDateFacet = createAction(
   }
 );
 
+export interface ToggleSelectDateFacetValueActionCreatorPayload {
+  /**
+   * The unique identifier of the facet (e.g., `"1"`).
+   */
+  facetId: string;
+
+  /**
+   * The target date facet value.
+   */
+  selection: DateFacetValue;
+}
+
 /**
  * Toggles a date facet value.
  * @param facetId (string) The unique identifier of the facet (e.g., `"1"`).
@@ -147,18 +158,37 @@ export const registerDateFacet = createAction(
  */
 export const toggleSelectDateFacetValue = createAction(
   'dateFacet/toggleSelectValue',
-  (payload: {facetId: string; selection: DateFacetValue}) =>
+  (payload: ToggleSelectDateFacetValueActionCreatorPayload) =>
     validatePayload(payload, {
       facetId: facetIdDefinition,
       selection: new RecordValue({values: dateFacetValueDefinition}),
     })
 );
 
+export interface UpdateDateFacetSortCriterionActionCreatorPayload {
+  /**
+   * The unique identifier of the facet (e.g., `"1"`).
+   */
+  facetId: string;
+
+  /**
+   * The target criterion.
+   */
+  criterion: RangeFacetSortCriterion;
+}
+
 /** Updates the sort criterion of a date facet.
  * @param facetId (string) The unique identifier of the facet (e.g., `"1"`).
  * @param criterion (RangeFacetSortCriterion) The target criterion.
  */
-export const updateDateFacetSortCriterion = updateRangeFacetSortCriterion;
+export const updateDateFacetSortCriterion = createAction(
+  'rangeFacet/updateSortCriterion',
+  (payload: UpdateDateFacetSortCriterionActionCreatorPayload) =>
+    validatePayload(payload, {
+      facetId: facetIdDefinition,
+      criterion: new Value<RangeFacetSortCriterion>({required: true}),
+    })
+);
 
 /** Deselects all values of a date facet.
  * @param facetId (string) The unique identifier of the facet (e.g., `"1"`).

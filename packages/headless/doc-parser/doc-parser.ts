@@ -305,6 +305,9 @@ const actionLoaderConfiguration: ActionLoaderConfiguration[] = [
   {
     initializer: 'loadFacetSetActions',
   },
+  {
+    initializer: 'loadDateFacetSetActions',
+  },
 ];
 
 const controllers = controllerConfiguration.map((controller) =>

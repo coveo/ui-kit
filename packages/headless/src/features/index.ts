@@ -102,6 +102,9 @@ export namespace DateFacetActions {
   export const updateDateFacetSortCriterion = updateDateFacetSortCriterionAlias;
   export const deselectAllDateFacetValues = deselectAllDateFacetValuesAlias;
 }
+
+export * from './facets/range-facets/date-facet-set/date-facet-actions-loader';
+
 import {
   enableDidYouMean as enableDidYouMeanAlias,
   applyDidYouMeanCorrection as applyDidYouMeanCorrectionAlias,
