@@ -324,7 +324,7 @@ export namespace Components {
     }
     interface AtomicSearchBox {
         /**
-          * Whether the filters should be cleared upon a new search
+          * Whether the filters should be cleared upon a new search.
          */
         "clearFiltersOnNewQuery": boolean;
         /**
@@ -972,7 +972,7 @@ declare namespace LocalJSX {
     }
     interface AtomicSearchBox {
         /**
-          * Whether the filters should be cleared upon a new search
+          * Whether the filters should be cleared upon a new search.
          */
         "clearFiltersOnNewQuery"?: boolean;
         /**
