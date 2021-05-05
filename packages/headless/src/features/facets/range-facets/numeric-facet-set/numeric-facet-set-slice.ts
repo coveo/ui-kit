@@ -5,11 +5,11 @@ import {
   toggleSelectNumericFacetValue,
   deselectAllNumericFacetValues,
   updateNumericFacetSortCriterion,
+  NumericFacetRegistrationOptions,
 } from './numeric-facet-actions';
 import {change} from '../../../history/history-actions';
 import {executeSearch} from '../../../search/search-actions';
 import {NumericFacetResponse, NumericFacetValue} from './interfaces/response';
-import {NumericFacetRegistrationOptions} from './interfaces/options';
 import {
   registerRangeFacet,
   toggleSelectRangeValue,

@@ -6,7 +6,6 @@ import {
   handleRangeFacetSearchParameterRestoration,
 } from './range-facet-reducers';
 import {buildMockNumericFacetRequest} from '../../../../test/mock-numeric-facet-request';
-import {NumericFacetRegistrationOptions} from '../numeric-facet-set/interfaces/options';
 import {
   NumericFacetRequest,
   NumericRangeRequest,
@@ -15,6 +14,7 @@ import {AutomaticRangeFacetOptions} from './interfaces/options';
 import {buildMockNumericFacetValue} from '../../../../test/mock-numeric-facet-value';
 import {NumericFacetValue} from '../numeric-facet-set/interfaces/response';
 import {buildMockNumericFacetResponse} from '../../../../test/mock-numeric-facet-response';
+import {NumericFacetRegistrationOptions} from '../numeric-facet-set/numeric-facet-actions';
 
 describe('range facet reducers', () => {
   let state: Record<string, NumericFacetRequest> = {};

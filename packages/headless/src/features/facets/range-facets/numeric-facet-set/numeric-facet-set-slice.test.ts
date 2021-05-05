@@ -7,8 +7,8 @@ import {
   toggleSelectNumericFacetValue,
   updateNumericFacetSortCriterion,
   deselectAllNumericFacetValues,
+  NumericFacetRegistrationOptions,
 } from './numeric-facet-actions';
-import {NumericFacetRegistrationOptions} from './interfaces/options';
 import {buildMockNumericFacetRequest} from '../../../../test/mock-numeric-facet-request';
 import {change} from '../../../history/history-actions';
 import {buildMockNumericFacetValue} from '../../../../test/mock-numeric-facet-value';
