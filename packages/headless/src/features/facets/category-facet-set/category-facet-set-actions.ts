@@ -19,7 +19,7 @@ import {validateCategoryFacetValue} from './category-facet-validate-payload';
 
 export interface RegisterCategoryFacetActionCreatorPayload {
   /**
-   * A unique identifier for the controller. By default, a random unique identifier is generated.
+   * A unique identifier for the facet.
    * */
   facetId: string;
 
