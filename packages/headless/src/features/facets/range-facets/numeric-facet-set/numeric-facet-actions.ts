@@ -16,6 +16,8 @@ import {
 import {RangeFacetSortCriterion} from '../generic/interfaces/request';
 import {numericFacetValueDefinition} from '../generic/range-facet-validate-payload';
 import {NumericRangeRequest} from './interfaces/request';
+import {updateRangeFacetSortCriterion} from '../generic/range-facet-actions';
+import {deselectAllFacetValues} from '../../facet-set/facet-set-actions';
 
 export interface RegisterNumericFacetActionCreatorPayload {
   /**
@@ -177,19 +179,9 @@ export interface UpdateNumericFacetSortCriterionActionCreatorPayload {
  * @param facetId (string) The unique identifier of the facet (e.g., `"1"`).
  * @param criterion (RangeFacetSortCriterion) The target criterion.
  */
-export const updateNumericFacetSortCriterion = createAction(
-  'numericFacet/updateSortCriterion',
-  (payload: UpdateNumericFacetSortCriterionActionCreatorPayload) =>
-    validatePayload(payload, {
-      facetId: facetIdDefinition,
-      criterion: new Value<RangeFacetSortCriterion>({required: true}),
-    })
-);
+export const updateNumericFacetSortCriterion = updateRangeFacetSortCriterion;
 
 /** Deselects all values of a numeric facet.
  * @param facetId (string) The unique identifier of the facet (e.g., `"1"`).
  */
-export const deselectAllNumericFacetValues = createAction(
-  'numericFacet/deselectAll',
-  (payload: string) => validatePayload(payload, facetIdDefinition)
-);
+export const deselectAllNumericFacetValues = deselectAllFacetValues;
