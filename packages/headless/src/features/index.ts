@@ -109,6 +109,8 @@ export namespace DidYouMeanActions {
   export const disableDidYouMean = disableDidYouMeanAlias;
 }
 
+export * from './did-you-mean/did-you-mean-actions-loader';
+
 import {registerFieldsToInclude as registerFieldsToIncludeAlias} from './fields/fields-actions';
 export namespace FieldActions {
   export const registerFieldsToInclude = registerFieldsToIncludeAlias;

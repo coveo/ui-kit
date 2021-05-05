@@ -296,6 +296,9 @@ const actionLoaderConfiguration: ActionLoaderConfiguration[] = [
   {
     initializer: 'loadDebugActions',
   },
+  {
+    initializer: 'loadDidYouMeanActions',
+  },
 ];
 
 const controllers = controllerConfiguration.map((controller) =>
