@@ -20,6 +20,8 @@ export namespace CategoryFacetSetActions {
   export const updateCategoryFacetSortCriterion = updateCategoryFacetSortCriterionAlias;
 }
 
+export * from './facets/category-facet-set/category-facet-set-actions-loader';
+
 import {
   registerFacet as registerFacetAlias,
   toggleSelectFacetValue as toggleSelectFacetValueAlias,
@@ -38,6 +40,8 @@ export namespace FacetActions {
   export const updateFreezeCurrentValues = updateFreezeCurrentValuesAlias;
   export const deselectAllFacetValues = deselectAllFacetValuesAlias;
 }
+
+export * from './facets/facet-set/facet-set-actions-loader';
 
 import {
   updateBasicConfiguration as updateBasicConfigurationAlias,

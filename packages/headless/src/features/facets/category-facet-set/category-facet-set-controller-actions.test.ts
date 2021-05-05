@@ -50,7 +50,7 @@ describe('category facet controller actions', () => {
         type: 'categoryFacetController/executeDeselectAll/pending',
       }),
       expect.objectContaining({
-        type: 'facet/deselectAll',
+        type: 'categoryFacet/deselectAll',
         payload: facetId,
       }),
       expect.objectContaining({

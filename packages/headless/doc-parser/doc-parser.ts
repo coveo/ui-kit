@@ -299,6 +299,12 @@ const actionLoaderConfiguration: ActionLoaderConfiguration[] = [
   {
     initializer: 'loadDidYouMeanActions',
   },
+  {
+    initializer: 'loadCategoryFacetSetActions',
+  },
+  {
+    initializer: 'loadFacetSetActions',
+  },
 ];
 
 const controllers = controllerConfiguration.map((controller) =>
