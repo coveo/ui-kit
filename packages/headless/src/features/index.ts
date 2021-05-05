@@ -147,6 +147,8 @@ export namespace NumericFacetActions {
   export const updateNumericFacetSortCriterion = updateNumericFacetSortCriterionAlias;
 }
 
+export * from './facets/range-facets/numeric-facet-set/numeric-facet-actions-loader';
+
 export {
   ResultTemplatesManager,
   buildResultTemplatesManager,

@@ -1,6 +1,5 @@
 import {createAction} from '@reduxjs/toolkit';
 import {NumericFacetValue} from './interfaces/response';
-import {updateRangeFacetSortCriterion} from '../generic/range-facet-actions';
 import {
   validatePayload,
   requiredNonEmptyString,
@@ -136,6 +135,18 @@ export const registerNumericFacet = createAction(
   }
 );
 
+export interface ToggleSelectNumericFacetValueActionCreatorPayload {
+  /**
+   * The unique identifier of the facet (e.g., `"1"`).
+   */
+  facetId: string;
+
+  /**
+   * The target numeric facet value.
+   */
+  selection: NumericFacetValue;
+}
+
 /**
  * Toggles a numeric facet value.
  * @param facetId (string) The unique identifier of the facet (e.g., `"1"`).
@@ -143,18 +154,37 @@ export const registerNumericFacet = createAction(
  */
 export const toggleSelectNumericFacetValue = createAction(
   'numericFacet/toggleSelectValue',
-  (payload: {facetId: string; selection: NumericFacetValue}) =>
+  (payload: ToggleSelectNumericFacetValueActionCreatorPayload) =>
     validatePayload(payload, {
       facetId: facetIdDefinition,
       selection: new RecordValue({values: numericFacetValueDefinition}),
     })
 );
 
+export interface UpdateNumericFacetSortCriterionActionCreatorPayload {
+  /**
+   * The unique identifier of the facet (e.g., `"1"`).
+   */
+  facetId: string;
+
+  /**
+   * The target criterion.
+   */
+  criterion: RangeFacetSortCriterion;
+}
+
 /** Updates the sort criterion of a numeric facet.
  * @param facetId (string) The unique identifier of the facet (e.g., `"1"`).
  * @param criterion (RangeFacetSortCriterion) The target criterion.
  */
-export const updateNumericFacetSortCriterion = updateRangeFacetSortCriterion;
+export const updateNumericFacetSortCriterion = createAction(
+  'numericFacet/updateSortCriterion',
+  (payload: UpdateNumericFacetSortCriterionActionCreatorPayload) =>
+    validatePayload(payload, {
+      facetId: facetIdDefinition,
+      criterion: new Value<RangeFacetSortCriterion>({required: true}),
+    })
+);
 
 /** Deselects all values of a numeric facet.
  * @param facetId (string) The unique identifier of the facet (e.g., `"1"`).
