@@ -109,7 +109,7 @@ export class AtomicResultsPerPage implements InitializableComponent {
         part={`page-button ${isSelected && 'active-page-button'}`}
         onClick={() => this.resultPerPage.set(choice)}
       >
-        {choice}
+        {choice.toLocaleString(this.bindings.i18n.language)}
       </button>
     );
   }

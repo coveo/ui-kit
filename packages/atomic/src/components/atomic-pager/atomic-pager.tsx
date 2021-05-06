@@ -136,7 +136,7 @@ export class AtomicPager implements InitializableComponent {
             this.pager.selectPage(page);
           }}
         >
-          {page}
+          {page.toLocaleString(this.bindings.i18n.language)}
         </button>
       </li>
     );
