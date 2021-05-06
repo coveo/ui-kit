@@ -11,6 +11,7 @@ import {filterProtocol} from '../../../utils/xss-utils';
  */
 @Component({
   tag: 'atomic-result-link',
+  styleUrl: 'atomic-result-link.pcss',
   shadow: false,
 })
 export class AtomicResultValue {
