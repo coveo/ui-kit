@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.13.0-alpha.8](https://github.com/coveo/ui-kit/compare/v0.13.0-alpha.7...v0.13.0-alpha.8) (2021-05-06)
+
+
+### Bug Fixes
+
+* **atomic:** use event to resolve parent result ([#771](https://github.com/coveo/ui-kit/issues/771)) ([0635c40](https://github.com/coveo/ui-kit/commit/0635c402160a7cdae2d42d921d855f4b53704311))
+
+
+
+
+
 # [0.13.0-alpha.7](https://github.com/coveo/ui-kit/compare/v0.13.0-alpha.6...v0.13.0-alpha.7) (2021-05-06)
 
 
