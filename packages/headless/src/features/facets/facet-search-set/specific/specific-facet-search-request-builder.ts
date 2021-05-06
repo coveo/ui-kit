@@ -13,6 +13,7 @@ export const buildSpecificFacetSearchRequest = (
     .filter((v) => v.state !== 'idle')
     .map((facetValue) => facetValue.value);
   const newQuery = '*' + query + '*';
+
   return {
     url: state.configuration.search.apiBaseUrl,
     accessToken: state.configuration.accessToken,
