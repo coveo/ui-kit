@@ -20,11 +20,11 @@ export const FacetPlaceholder: FunctionalComponent<FacetPlaceholderProps> = ({
   return (
     <div
       part="placeholder"
-      class="p-7 animate-pulse border border-divider rounded-xl mb-4"
+      class="p-4 animate-pulse border border-divider rounded-3xl mb-4 w-32 lg:rounded-xl lg:p-7 lg:w-auto"
       aria-hidden="true"
     >
-      <div class="h-3 mb-2 bg-divider w-5/6"></div>
-      {facetValues}
+      <div class="h-3 bg-divider w-5/6"></div>
+      <div class="mt-2 hidden lg:block">{facetValues}</div>
     </div>
   );
 };
