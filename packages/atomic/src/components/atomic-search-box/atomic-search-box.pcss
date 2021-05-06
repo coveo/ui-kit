@@ -22,6 +22,9 @@
 }
 
 .suggestion.active, .suggestion:hover {
-  @apply bg-primary text-on-primary;
+  @apply bg-primary text-on-primary border-primary;
 }
 
+.suggestion:last-child {
+  @apply border-b rounded-b;
+}
