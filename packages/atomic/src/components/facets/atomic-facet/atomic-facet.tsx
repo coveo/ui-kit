@@ -92,7 +92,6 @@ export class AtomicFacet
   };
 
   @State() public isExpanded = false;
-  @State() public facetSearchQuery = '';
 
   @Prop({mutable: true, reflect: true}) public facetId = '';
   /**
@@ -203,7 +202,7 @@ export class AtomicFacet
           class="ellipsed font-bold"
           innerHTML={FacetSearch.highlightSearchResult(
             searchResult.displayValue,
-            this.facetSearchQuery
+            this.facetState.facetSearch.query
           )}
         />
         <span part="value-count" class="value-count">

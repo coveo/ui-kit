@@ -17,7 +17,6 @@ export interface FacetSearchStrings extends ComboboxStrings {
 
 export interface FacetSearchComponent {
   strings: FacetSearchStrings;
-  facetSearchQuery: string;
   facet: Facet | CategoryFacet;
   renderSearchResult: (searchResult: FacetSearchResult) => HTMLLIElement[];
   ariaLabelForSearchResult: (searchResult: FacetSearchResult) => string;
@@ -83,7 +82,6 @@ export class FacetSearch {
   }
 
   private set text(text: string) {
-    this.component.facetSearchQuery = text;
     this.facetSearchController.updateText(text);
   }
 
@@ -128,7 +126,7 @@ export class FacetSearch {
   }
 
   private get clearButton() {
-    if (this.component.facetSearchQuery === '') {
+    if (this.facetSearchState.query === '') {
       return;
     }
 
@@ -167,7 +165,7 @@ export class FacetSearch {
           'placeholder-on-background-variant flex-grow outline-none focus:outline-none mx-2'
         }
         placeholder={this.strings.placeholder()}
-        value={this.component.facetSearchQuery}
+        value={this.facetSearchState.query}
       />
     );
   }
@@ -190,7 +188,7 @@ export class FacetSearch {
 
   private get showNoValuesFound() {
     return (
-      this.component.facetSearchQuery !== '' &&
+      this.facetSearchState.query !== '' &&
       !this.facetSearchResults.length &&
       !this.facetSearchState.isLoading
     );

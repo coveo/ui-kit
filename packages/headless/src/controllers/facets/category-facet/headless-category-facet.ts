@@ -185,6 +185,11 @@ export interface CategoryFacetSearchState {
    * Whether more values are available.
    * */
   moreValuesAvailable: boolean;
+
+  /**
+   * The query.
+   */
+  query: string;
 }
 
 export interface CategoryFacetSearchResult {
