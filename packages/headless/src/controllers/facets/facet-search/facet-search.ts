@@ -37,14 +37,13 @@ export function buildGenericFacetSearch<T extends FacetSearchState>(
   const dispatch = engine.dispatch;
   const {options, getFacetSearch} = props;
   const {facetId} = options;
-  let query = '';
 
   return {
     /** Updates the facet search query.
      * @param text The new query.
      */
     updateText(text: string) {
-      query = text;
+      const query = text;
       dispatch(
         updateFacetSearch({
           facetId,
@@ -85,7 +84,8 @@ export function buildGenericFacetSearch<T extends FacetSearchState>(
     },
 
     get state() {
-      const {response, isLoading} = getFacetSearch();
+      const {response, isLoading, options} = getFacetSearch();
+      const {query} = options;
       const values: GenericFacetSearchResults = response.values;
 
       return {
