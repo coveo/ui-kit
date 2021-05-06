@@ -122,6 +122,9 @@ import {registerFieldsToInclude as registerFieldsToIncludeAlias} from './fields/
 export namespace FieldActions {
   export const registerFieldsToInclude = registerFieldsToIncludeAlias;
 }
+
+export * from './fields/fields-actions-loader';
+
 import {
   snapshot as snapshotAlias,
   back as backAlias,
@@ -146,6 +149,8 @@ export namespace NumericFacetActions {
   export const toggleSelectNumericFacetValue = toggleSelectNumericFacetValueAlias;
   export const updateNumericFacetSortCriterion = updateNumericFacetSortCriterionAlias;
 }
+
+export * from './facets/range-facets/numeric-facet-set/numeric-facet-actions-loader';
 
 export {
   ResultTemplatesManager,
