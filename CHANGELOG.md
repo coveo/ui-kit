@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.13.0-alpha.7](https://github.com/coveo/ui-kit/compare/v0.13.0-alpha.6...v0.13.0-alpha.7) (2021-05-06)
+
+
+### Bug Fixes
+
+* **atomic:** fix facet placeholder in mobile mode ([#774](https://github.com/coveo/ui-kit/issues/774)) ([3772ffe](https://github.com/coveo/ui-kit/commit/3772ffe75c853aecc61bffa080d98a68f0be4111))
+* **atomic:** prevent result template  text elements from overflowing ([#775](https://github.com/coveo/ui-kit/issues/775)) ([5a38a87](https://github.com/coveo/ui-kit/commit/5a38a878e26897542a52c372ede5bc1d35683835))
+
+
+
+
+
 # [0.13.0-alpha.6](https://github.com/coveo/ui-kit/compare/v0.13.0-alpha.5...v0.13.0-alpha.6) (2021-05-05)
 
 
