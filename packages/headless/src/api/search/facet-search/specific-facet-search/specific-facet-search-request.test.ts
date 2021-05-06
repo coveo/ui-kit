@@ -40,7 +40,7 @@ describe('#buildSpecificFacetSearchRequest', () => {
     const query = 'hello';
     state.facetSearchSet[id].options.query = query;
 
-    expect(buildParms().query).toEqual(query);
+    expect(buildParms().query).toEqual('*' + query + '*');
   });
 
   it('retrieves the #field from the facetSet', () => {

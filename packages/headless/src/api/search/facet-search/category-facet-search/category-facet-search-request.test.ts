@@ -41,7 +41,7 @@ describe('#buildCategoryFacetSearchRequest', () => {
     const query = 'hello';
     state.categoryFacetSearchSet[id].options.query = query;
 
-    expect(buildParms().query).toEqual(query);
+    expect(buildParms().query).toEqual('*' + query + '*');
   });
 
   it('retrieves the #basePath fron the categoryFacetSet', () => {
