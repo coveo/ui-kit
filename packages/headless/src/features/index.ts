@@ -184,6 +184,8 @@ export namespace PipelineActions {
   export const setPipeline = setPipelineAlias;
 }
 
+export * from './pipeline/pipeline-actions-loader';
+
 import {updateQuery as updateQueryAlias} from './query/query-actions';
 export namespace QueryActions {
   export const updateQuery = updateQueryAlias;
