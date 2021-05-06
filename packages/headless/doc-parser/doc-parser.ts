@@ -314,6 +314,9 @@ const actionLoaderConfiguration: ActionLoaderConfiguration[] = [
   {
     initializer: 'loadFieldActions',
   },
+  {
+    initializer: 'loadHistoryActions',
+  },
 ];
 
 const controllers = controllerConfiguration.map((controller) =>

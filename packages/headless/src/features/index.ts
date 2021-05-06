@@ -137,6 +137,9 @@ export namespace HistoryActions {
   export const change = changeAlias;
   export const forward = forwardAlias;
 }
+
+export * from './history/history-actions-loader';
+
 import {
   registerNumericFacet as registerNumericFacetAlias,
   deselectAllNumericFacetValues as deselectAllNumericFacetValuesAlias,
