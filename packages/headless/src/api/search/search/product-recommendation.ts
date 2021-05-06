@@ -48,7 +48,7 @@ export interface ProductRecommendation {
    *
    * From the `ec_thumbnails` field.
    */
-  ec_thumbnails?: string;
+  ec_thumbnails?: string[];
   /**
    * Additional product images in URL format.
    *

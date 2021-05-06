@@ -30,6 +30,8 @@ import {FacetPlaceholder} from '../atomic-facet-placeholder/atomic-facet-placeho
  * The `atomic-numeric-facet` component displays values as numeric ranges. In mobile browsers, this is rendered as a button which opens a facet modal.
  *
  * @part facet - The wrapper for the entire facet
+ * @part label - The label of the facet
+ * @part modal-button - The button to open the facet modal (mobile only)
  * @part close-button - The button to close the facet when displayed modally (mobile only)
  * @part clear-button - The button that resets the actively selected facet values
  *
@@ -81,7 +83,7 @@ export class AtomicNumericFacet
   /**
    * The number of values to request for this facet, when there are no manual ranges.
    */
-  @Prop({mutable: true}) public numberOfValues = 10;
+  @Prop({mutable: true}) public numberOfValues = 8;
 
   private buildManualRanges() {
     const options = Array.from(

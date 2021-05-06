@@ -45,7 +45,7 @@ export class AtomicBreadcrumbManager implements InitializableComponent {
   @State() public error!: Error;
 
   /**
-   * Number of breadcrumbs to be shown before collapsing.
+   * Number of breadcrumbs to display when collapsed.
    */
   @Prop() public collapseThreshold = 5;
   /**
@@ -80,7 +80,7 @@ export class AtomicBreadcrumbManager implements InitializableComponent {
     return (
       <button
         part="breadcrumb"
-        class="inline-grid grid-flow-col"
+        class="inline-grid grid-flow-col text-on-background-variant hover:text-primary-variant"
         aria-label={this.strings.breadcrumb({value})}
         title={value}
         onClick={() =>
@@ -118,11 +118,7 @@ export class AtomicBreadcrumbManager implements InitializableComponent {
   }
 
   private getBreadcrumbValueWrapper(children: VNode[]) {
-    return (
-      <li class="mr-3 text-on-background-variant hover:text-primary-variant">
-        {children}
-      </li>
-    );
+    return <li class="mr-3">{children}</li>;
   }
 
   private getBreadcrumbValues(

@@ -10,7 +10,7 @@ A component that creates breadcrumbs that display the currently active facet val
 | Property            | Attribute            | Description                                                             | Type     | Default |
 | ------------------- | -------------------- | ----------------------------------------------------------------------- | -------- | ------- |
 | `categoryDivider`   | `category-divider`   | Character that divides each path segment in a category facet breadcrumb | `string` | `'/'`   |
-| `collapseThreshold` | `collapse-threshold` | Number of breadcrumbs to be shown before collapsing.                    | `number` | `5`     |
+| `collapseThreshold` | `collapse-threshold` | Number of breadcrumbs to display when collapsed.                        | `number` | `5`     |
 
 
 ## Shadow Parts

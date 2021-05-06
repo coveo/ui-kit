@@ -16,7 +16,7 @@ A hierarchical category facet component. It is displayed as a facet in desktop b
 | `field`               | `field`                | Specifies the index field whose values the facet should use                                                                                                                                                    | `string`                          | `''`            |
 | `filterByBasePath`    | `filter-by-base-path`  | Whether to use basePath as a filter for the results.                                                                                                                                                           | `boolean`                         | `true`          |
 | `label`               | `label`                | The non-localized label for the facet                                                                                                                                                                          | `string`                          | `'noLabel'`     |
-| `numberOfValues`      | `number-of-values`     | The number of values to request for this facet. Also determines the number of additional values to request each time this facet is expanded, and the number of values to display when this facet is collapsed. | `number`                          | `5`             |
+| `numberOfValues`      | `number-of-values`     | The number of values to request for this facet. Also determines the number of additional values to request each time this facet is expanded, and the number of values to display when this facet is collapsed. | `number`                          | `8`             |
 | `sortCriteria`        | `sort-criteria`        | The sort criterion to apply to the returned facet values. Possible values are 'alphanumeric', and 'occurrences''.                                                                                              | `"alphanumeric" \| "occurrences"` | `'occurrences'` |
 
 
@@ -30,6 +30,8 @@ A hierarchical category facet component. It is displayed as a facet in desktop b
 | `"clear-button"`              | The button that resets the actively selected facet values          |
 | `"close-button"`              | The button to close the facet when displayed modally (mobile only) |
 | `"facet"`                     | The wrapper for the entire facet                                   |
+| `"label"`                     | The label of the facet                                             |
+| `"modal-button"`              | The button to open the facet modal (mobile only)                   |
 | `"parent"`                    | A parent element                                                   |
 | `"placeholder"`               | The placeholder shown before the first search is executed.         |
 | `"search-icon"`               | The magnifier icon of the input                                    |
@@ -37,6 +39,7 @@ A hierarchical category facet component. It is displayed as a facet in desktop b
 | `"search-input-clear-button"` | The clear button of the input                                      |
 | `"search-no-results"`         | The label displayed when a search returns no results               |
 | `"search-result"`             | A search result                                                    |
+| `"search-result-path"`        | The search result path                                             |
 | `"search-results"`            | The list of search results                                         |
 | `"show-less"`                 | The show less button                                               |
 | `"show-more"`                 | The show more results button                                       |

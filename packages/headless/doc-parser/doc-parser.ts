@@ -1,15 +1,19 @@
 import {ApiModel} from '@microsoft/api-extractor-model';
 import {writeFileSync} from 'fs';
 import {
+  ActionLoaderConfiguration,
+  resolveActionLoader,
+} from './src/headless-export-resolvers/action-loader-resolver';
+import {
   ControllerConfiguration,
   resolveController,
-} from './src/controller-resolver';
+} from './src/headless-export-resolvers/controller-resolver';
 
 const apiModel = new ApiModel();
 const apiPackage = apiModel.loadPackage('temp/headless.api.json');
 const entryPoint = apiPackage.entryPoints[0];
 
-const controllers: ControllerConfiguration[] = [
+const controllerConfiguration: ControllerConfiguration[] = [
   {
     initializer: 'buildHistoryManager',
     samplePaths: {
@@ -287,8 +291,19 @@ const controllers: ControllerConfiguration[] = [
   },
 ];
 
-const result = controllers.map((controller) =>
+const actionLoaderConfiguration: ActionLoaderConfiguration[] = [
+  {
+    initializer: 'loadSearchActions',
+  },
+];
+
+const controllers = controllerConfiguration.map((controller) =>
   resolveController(entryPoint, controller)
 );
+const actionLoaders = actionLoaderConfiguration.map((loader) =>
+  resolveActionLoader(entryPoint, loader)
+);
+
+const result = {controllers, actionLoaders};
 
 writeFileSync('dist/parsed_doc.json', JSON.stringify(result, null, 2));

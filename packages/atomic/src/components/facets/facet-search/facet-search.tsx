@@ -11,21 +11,19 @@ type FacetSearchResult = CategoryFacetSearchResult;
 
 export interface FacetSearchStrings extends ComboboxStrings {
   placeholder: () => string;
-  showMore: () => string;
   noValuesFound: () => string;
+  clear: () => string;
 }
 
 export interface FacetSearchComponent {
   strings: FacetSearchStrings;
   facetSearchQuery: string;
-  showFacetSearchResults: boolean;
   facet: Facet | CategoryFacet;
   renderSearchResult: (searchResult: FacetSearchResult) => HTMLLIElement[];
   ariaLabelForSearchResult: (searchResult: FacetSearchResult) => string;
 }
 
 export class FacetSearch {
-  private static ShowMoreResultsValue = -1;
   private inputRef!: HTMLInputElement;
   private valuesRef!: HTMLElement;
   private containerRef!: HTMLElement;
@@ -38,19 +36,13 @@ export class FacetSearch {
       containerRef: () => this.containerRef,
       inputRef: () => this.inputRef,
       valuesRef: () => this.valuesRef,
-      onChange: (value) => {
-        this.component.showFacetSearchResults = true;
-        this.text = value;
-      },
+      onChange: (value) => this.onChange(value),
       onSubmit: () => {},
       onSelectValue: (element) => {
         const value = (element as HTMLLIElement).value;
-        if (value === FacetSearch.ShowMoreResultsValue) {
-          return this.facetSearchController.showMoreResults();
-        }
         this.onSelectValue(value);
       },
-      onBlur: () => (this.component.showFacetSearchResults = false),
+      onBlur: () => this.onBlur(),
       activeClass: 'active-search-result',
       activePartName: 'active-search-result',
     });
@@ -93,19 +85,45 @@ export class FacetSearch {
   private set text(text: string) {
     this.component.facetSearchQuery = text;
     this.facetSearchController.updateText(text);
+  }
+
+  private triggerSearch() {
     this.facetSearchController.search();
+    this.scrollTop();
+  }
+
+  private onChange(value: string) {
+    this.text = value;
+    this.triggerSearch();
   }
 
   public onSelectValue(index: number) {
     this.facetSearchController.select(this.facetSearchResults[index]);
     this.text = '';
-    this.combobox.onInputBlur();
+    this.inputRef.blur();
   }
 
   private onFocus() {
-    this.component.showFacetSearchResults = true;
-    if (this.facetSearchState.values.length === 0) {
-      this.facetSearchController.search();
+    this.triggerSearch();
+  }
+
+  private onBlur() {
+    this.facetSearchController.clear();
+    this.text = '';
+  }
+
+  private scrollTop() {
+    this.valuesRef.scrollTo({top: 0});
+  }
+
+  private onScroll() {
+    const scrollPixelBuffer = 50;
+    const scrollEndReached =
+      this.valuesRef.scrollTop + this.valuesRef.clientHeight >=
+      this.valuesRef.scrollHeight - scrollPixelBuffer;
+
+    if (this.facetSearchState.moreValuesAvailable && scrollEndReached) {
+      this.facetSearchController.showMoreResults();
     }
   }
 
@@ -119,9 +137,11 @@ export class FacetSearch {
         type="button"
         part="search-input-clear-button"
         class="clear-button mr-2"
+        aria-label={this.strings.clear()}
         onClick={() => {
           this.text = '';
           this.inputRef.focus();
+          this.triggerSearch();
         }}
       >
         <div
@@ -152,38 +172,7 @@ export class FacetSearch {
     );
   }
 
-  // TODO: remove show more
-  private get showMoreSearchResults() {
-    if (!this.facetSearchState.moreValuesAvailable) {
-      return null;
-    }
-
-    return (
-      <li class="search-result text-primary">
-        <button
-          onClick={() => this.facetSearchController.showMoreResults()}
-          onMouseDown={(e) => e.preventDefault()}
-          value={FacetSearch.ShowMoreResultsValue}
-        >
-          {this.strings.showMore()}
-        </button>
-      </li>
-    );
-  }
-
   private get resultList() {
-    if (
-      this.component.showFacetSearchResults &&
-      !this.facetSearchResults.length &&
-      !this.facetSearchState.isLoading
-    ) {
-      return (
-        <li part="search-no-results" class="search-result">
-          {this.strings.noValuesFound()}
-        </li>
-      );
-    }
-
     return this.facetSearchResults.map((searchResult, index) => (
       <li part="search-result" class="search-result">
         <button
@@ -199,34 +188,49 @@ export class FacetSearch {
     ));
   }
 
+  private get showNoValuesFound() {
+    return (
+      this.component.facetSearchQuery !== '' &&
+      !this.facetSearchResults.length &&
+      !this.facetSearchState.isLoading
+    );
+  }
+
+  private get noValuesFound() {
+    if (this.showNoValuesFound) {
+      return (
+        <div part="search-no-results" class="search-results">
+          {this.strings.noValuesFound()}
+        </div>
+      );
+    }
+  }
+
   private get searchResults() {
-    const showResults = this.component.showFacetSearchResults;
     return (
       <ul
         part="search-results"
-        class={'search-results ' + (showResults ? 'block' : 'hidden')}
+        class="search-results"
         ref={(el) => (this.valuesRef = el as HTMLElement)}
+        onScroll={() => this.onScroll()}
       >
         {this.resultList}
-        {this.showMoreSearchResults}
       </ul>
     );
   }
 
   private get inputWrapperClasses() {
-    const hasValues =
-      this.facetSearchState.values.length > 0 &&
-      this.component.showFacetSearchResults;
-
+    const isOpen =
+      this.showNoValuesFound || this.facetSearchState.values.length;
     return (
-      'input-wrapper flex flex-grow items-center border border-divider rounded ' +
-      (hasValues ? 'rounded-br-none	rounded-bl-none' : '')
+      'input-wrapper flex flex-grow items-center border border-divider rounded-md ' +
+      (isOpen ? 'rounded-br-none	rounded-bl-none' : '')
     );
   }
 
   public render() {
     return (
-      <div class="combobox relative flex flex-grow">
+      <div class="combobox relative flex flex-grow mb-2 mt-3">
         <div
           class={this.inputWrapperClasses}
           ref={(el) => (this.containerRef = el as HTMLElement)}
@@ -239,6 +243,7 @@ export class FacetSearch {
           {this.input}
           {this.clearButton}
         </div>
+        {this.noValuesFound}
         {this.searchResults}
       </div>
     );

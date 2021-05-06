@@ -14,7 +14,7 @@ A facet component. It is displayed as a facet in desktop browsers and as a butto
 | `facetId`             | `facet-id`             |                                                                                                                                                                                                                | `string`                                                    | `''`          |
 | `field`               | `field`                | The field whose values you want to display in the facet.                                                                                                                                                       | `string`                                                    | `''`          |
 | `label`               | `label`                | The non-localized label for the facet.                                                                                                                                                                         | `string`                                                    | `'noLabel'`   |
-| `numberOfValues`      | `number-of-values`     | The number of values to request for this facet. Also determines the number of additional values to request each time this facet is expanded, and the number of values to display when this facet is collapsed. | `number`                                                    | `10`          |
+| `numberOfValues`      | `number-of-values`     | The number of values to request for this facet. Also determines the number of additional values to request each time this facet is expanded, and the number of values to display when this facet is collapsed. | `number`                                                    | `8`           |
 | `sortCriteria`        | `sort-criteria`        | The sort criterion to apply to the returned facet values. Possible values are 'score', 'numeric', 'occurrences', and 'automatic'.                                                                              | `"alphanumeric" \| "automatic" \| "occurrences" \| "score"` | `'automatic'` |
 
 
@@ -26,6 +26,8 @@ A facet component. It is displayed as a facet in desktop browsers and as a butto
 | `"clear-button"`              | The button that resets the actively selected facet values          |
 | `"close-button"`              | The button to close the facet when displayed modally (mobile only) |
 | `"facet"`                     | The wrapper for the entire facet                                   |
+| `"label"`                     | The label of the facet                                             |
+| `"modal-button"`              | The button to open the facet modal (mobile only)                   |
 | `"placeholder"`               | The placeholder shown before the first search is executed.         |
 | `"search-icon"`               | The magnifier icon of the input                                    |
 | `"search-input"`              | The search input                                                   |

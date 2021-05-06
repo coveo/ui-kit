@@ -36,6 +36,8 @@ import {FacetPlaceholder} from '../atomic-facet-placeholder/atomic-facet-placeho
  * An `atomic-facet` displays a facet of the results for the current query. In mobile browsers, this is rendered as a button which opens a facet modal.
  *
  * @part facet - The wrapper for the entire facet
+ * @part label - The label of the facet
+ * @part modal-button - The button to open the facet modal (mobile only)
  * @part close-button - The button to close the facet when displayed modally (mobile only)
  * @part clear-button - The button that resets the actively selected facet values
  *
@@ -91,7 +93,6 @@ export class AtomicFacet
 
   @State() public isExpanded = false;
   @State() public facetSearchQuery = '';
-  @State() public showFacetSearchResults = false;
 
   @Prop({mutable: true, reflect: true}) public facetId = '';
   /**
@@ -109,7 +110,7 @@ export class AtomicFacet
   /**
    * The number of values to request for this facet. Also determines the number of additional values to request each time this facet is expanded, and the number of values to display when this facet is collapsed.
    */
-  @Prop() public numberOfValues = 10;
+  @Prop() public numberOfValues = 8;
   /**
    * Whether this facet should contain a search box.
    */
@@ -126,6 +127,7 @@ export class AtomicFacet
       delimitingCharacter: this.delimitingCharacter,
       numberOfValues: this.numberOfValues,
       sortCriteria: this.sortCriteria,
+      facetSearch: {numberOfValues: this.numberOfValues * 2},
     };
     this.facet = buildFacet(this.bindings.engine, {options});
     this.strings[this.label] = () => this.bindings.i18n.t(this.label);
@@ -168,7 +170,7 @@ export class AtomicFacet
 
     return (
       <button
-        class="value-button text-primary"
+        class="show-more"
         part="show-more"
         onClick={() => this.facet.showMoreValues()}
       >
@@ -184,7 +186,7 @@ export class AtomicFacet
 
     return (
       <button
-        class="value-button text-primary"
+        class="show-less"
         part="show-less"
         onClick={() => this.facet.showLessValues()}
       >
@@ -195,7 +197,7 @@ export class AtomicFacet
 
   public renderSearchResult(searchResult: SpecificFacetSearchResult) {
     return (
-      <div class="flex" aria-hidden>
+      <div class="flex items-baseline" aria-hidden="true">
         <span
           part="value-label"
           class="ellipsed font-bold"

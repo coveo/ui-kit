@@ -29,6 +29,7 @@ import {
   querySuggest,
   search,
 } from '../../app/reducers';
+import {deselectAllFacets} from '../../features/facets/generic/facet-actions';
 
 describe('headless searchBox', () => {
   const id = 'search-box-123';
@@ -234,6 +235,12 @@ describe('headless searchBox', () => {
   });
 
   describe('when calling submit', () => {
+    it('it deselects all facets', () => {
+      searchBox.submit();
+
+      expect(engine.actions).toContainEqual(deselectAllFacets());
+    });
+
     it('dispatches updateQuery with the correct parameters', () => {
       const expectedQuery = state.querySet[id];
       searchBox.submit();

@@ -1,9 +1,8 @@
-import {Engine} from '../../../app/engine';
+import {Engine} from '../../../app/headless-engine';
 import {
   buildController,
   Controller,
 } from '../../controller/headless-controller';
-import {CategoryFacetRegistrationOptions} from '../../../features/facets/category-facet-set/interfaces/options';
 import {
   registerCategoryFacet,
   updateCategoryFacetNumberOfValues,
@@ -19,7 +18,6 @@ import {
 import {defaultCategoryFacetOptions} from '../../../features/facets/category-facet-set/category-facet-set-slice';
 import {CategoryFacetSortCriterion} from '../../../features/facets/category-facet-set/interfaces/request';
 import {categoryFacetRequestSelector} from '../../../features/facets/category-facet-set/category-facet-set-selectors';
-import {FacetSearchOptions} from '../../../features/facets/facet-search-set/facet-search-request-options';
 import {buildCategoryFacetSearch} from '../facet-search/category/headless-category-facet-search';
 import {updateFacetOptions} from '../../../features/facet-options/facet-options-actions';
 import {
@@ -48,6 +46,7 @@ import {
   search,
 } from '../../../app/reducers';
 import {loadReducerError} from '../../../utils/errors';
+import {defaultFacetSearchOptions} from '../../../features/facets/facet-search-set/facet-search-reducer-helpers';
 
 export {CategoryFacetValue, CategoryFacetOptions, CategoryFacetSearchOptions};
 
@@ -164,6 +163,11 @@ export interface CategoryFacetSearch {
    * @param value - The search result to select.
    * */
   select(value: CategoryFacetSearchResult): void;
+
+  /**
+   * Resets the query and empties the values.
+   * */
+  clear(): void;
 }
 
 export interface CategoryFacetSearchState {
@@ -226,7 +230,8 @@ export function buildCategoryFacet(
   const getState = () => engine.state;
 
   const facetId = determineFacetId(engine, props.options);
-  const options: Required<CategoryFacetRegistrationOptions> = {
+  const options: Required<CategoryFacetOptions> = {
+    facetSearch: {...defaultFacetSearchOptions},
     ...defaultCategoryFacetOptions,
     ...props.options,
     facetId,
@@ -240,11 +245,8 @@ export function buildCategoryFacet(
   );
 
   const createFacetSearch = () => {
-    const {facetSearch} = props.options;
-    const facetSearchOptions: FacetSearchOptions = {
-      facetId,
-      ...facetSearch,
-    };
+    const {facetId, facetSearch} = options;
+    const facetSearchOptions = {facetId, ...facetSearch};
 
     return buildCategoryFacetSearch(engine, {options: facetSearchOptions});
   };

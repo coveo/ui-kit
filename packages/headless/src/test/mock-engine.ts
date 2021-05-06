@@ -1,6 +1,6 @@
-import {Engine} from '../app/engine';
+import {Engine} from '../app/headless-engine';
 import {createMockState} from './mock-state';
-import configureStore, {MockStoreEnhanced} from 'redux-mock-store';
+import configureStore from 'redux-mock-store';
 import {
   AnyAction,
   ThunkDispatch,
@@ -21,6 +21,8 @@ import {
 } from '../app/logger-middlewares';
 import {validatePayloadAndThrow} from '../utils/validate-payload';
 import {buildMockSearchAPIClient} from './mock-search-api-client';
+import {getSearchHubInitialState} from '../features/search-hub/search-hub-state';
+import {getPipelineInitialState} from '../features/pipeline/pipeline-state';
 
 type AsyncActionCreator<ThunkArg> = ActionCreatorWithPreparedPayload<
   [string, ThunkArg],
@@ -36,14 +38,12 @@ export type AppState =
   | ProductRecommendationsAppState;
 
 export interface MockEngine<T extends AppState> extends Engine<T> {
-  mockStore: MockStore;
   actions: AnyAction[];
   findAsyncAction: <ThunkArg>(
     action: AsyncActionCreator<ThunkArg>
   ) => ReturnType<AsyncActionCreator<ThunkArg>> | undefined;
 }
 
-type MockStore = MockStoreEnhanced<AppState, DispatchExts>;
 type DispatchExts = ThunkDispatch<AppState, void, AnyAction>;
 
 const mockRenewAccessToken = async () => '';
@@ -76,9 +76,12 @@ function buildMockEngine<T extends AppState>(
   const unsubscribe = () => {};
 
   return {
-    mockStore: store,
     store,
-    state: mockState(),
+    state: {
+      ...mockState(),
+      searchHub: getSearchHubInitialState(),
+      pipeline: getPipelineInitialState(),
+    },
     subscribe: jest.fn(() => unsubscribe),
     get dispatch() {
       return store.dispatch;

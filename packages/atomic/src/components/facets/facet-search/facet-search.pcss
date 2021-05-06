@@ -3,17 +3,13 @@
 }
 
 .search-results {
-  @apply z-10 absolute w-full bg-background border-divider-t-0 empty:border-none rounded-b overflow-y-scroll left-0;
-  max-height: var(--atomic-facet-search-max-height, 250px);
+  @apply text-sm z-10 absolute w-full bg-background border border-divider border-t-0 empty:border-none rounded-b-md overflow-y-auto left-0;
+  max-height: var(--atomic-facet-search-max-height, 260px);
   top: var(--atomic-facet-search-height, 30px);
 }
 
 .search-result {
-  @apply px-2 py-1 text-sm flex flex-col justify-center text-left;
-}
-
-.border-divider-t-0 {
-  @apply border-solid border-divider border-l border-r border-b border-t-0;
+  @apply px-2 py-1 flex flex-col justify-center text-left;
 }
 
 .active-search-result, .search-result:hover {

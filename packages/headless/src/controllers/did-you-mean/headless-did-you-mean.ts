@@ -1,4 +1,4 @@
-import {Engine} from '../../app/engine';
+import {Engine} from '../../app/headless-engine';
 import {buildController, Controller} from '../controller/headless-controller';
 import {
   applyDidYouMeanCorrection,

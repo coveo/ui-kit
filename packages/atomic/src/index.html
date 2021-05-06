@@ -53,10 +53,9 @@
       }
 
       atomic-search-interface {
-        /* TODO: adjust according to breakpoints */
-        grid-template-columns: 1fr minmax(150px, 300px) minmax(500px, 950px) 1fr;
+        grid-template-columns: 1fr minmax(150px, 325px) minmax(500px, 925px) 1fr;
         grid-template-rows: 22px 50px 22px 1fr;
-        gap: 20px;
+        column-gap: 20px;
         display: grid;
         margin: 0 auto;
       }
@@ -76,11 +75,13 @@
       atomic-facet-manager {
         grid-column: 2 / auto;
         grid-row: 4 / auto;
+        margin-top: 15px;
       }
 
       .results-container {
         grid-column: 3 / auto;
         grid-row: 4 / auto;
+        margin-top: 15px;
       }
 
       .side-by-side-container {
@@ -104,6 +105,69 @@
 
       atomic-breadcrumb-manager {
         margin: 10px 0;
+      }
+
+      @media only screen and (max-width: 1023px) {
+        atomic-search-interface {
+          grid-template-rows: 16px 50px 16px auto 1fr;
+          grid-template-columns: minmax(0, 100%);
+        }
+
+        atomic-facet-manager,
+        .header,
+        atomic-search-box,
+        .results-container {
+          grid-column: 1 / auto;
+        }
+
+        atomic-breadcrumb-manager,
+        atomic-query-summary,
+        atomic-no-results,
+        atomic-did-you-mean,
+        atomic-query-error,
+        atomic-sort-dropdown,
+        atomic-facet-manager {
+          padding: 0 15px;
+        }
+
+        atomic-atomic-breadcrumb-manager,
+        atomic-query-summary,
+        atomic-no-results,
+        atomic-query-error,
+        atomic-sort-dropdown {
+          margin-bottom: 10px;
+        }
+
+        atomic-facet-manager {
+          grid-row: 4 / auto;
+          display: flex;
+          flex-wrap: wrap;
+        }
+
+        .results-container {
+          grid-row: 5 / auto;
+          margin-top: 0;
+        }
+
+        atomic-facet,
+        atomic-numeric-facet,
+        atomic-date-facet,
+        atomic-category-facet {
+          margin: 0 10px 0 0;
+        }
+
+        atomic-search-box {
+          justify-self: center;
+          min-width: 80%;
+          max-width: 80%;
+        }
+      }
+
+      @media only screen and (max-width: 640px) {
+        .side-by-side-container {
+          flex-direction: column;
+          align-items: flex-start;
+        }
       }
 
       :root {

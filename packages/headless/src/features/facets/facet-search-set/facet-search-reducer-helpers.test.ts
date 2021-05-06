@@ -4,6 +4,9 @@ import {
   handleFacetSearchPending,
   handleFacetSearchRejected,
   handleFacetSearchFulfilled,
+  handleFacetSearchClear,
+  handleFacetSearchSetClear,
+  defaultFacetSearchOptions,
 } from './facet-search-reducer-helpers';
 import {buildMockFacetSearchResponse} from '../../../test/mock-facet-search-response';
 import {buildMockFacetSearchResult} from '../../../test/mock-facet-search-result';
@@ -16,6 +19,10 @@ import {
 } from './specific/specific-facet-search-set-state';
 
 describe('FacetSearch slice', () => {
+  const buildEmptyResponse = (): SpecificFacetSearchResponse => ({
+    moreValuesAvailable: false,
+    values: [],
+  });
   const facetId = '1';
   let state: SpecificFacetSearchSetState;
 
@@ -24,11 +31,6 @@ describe('FacetSearch slice', () => {
   });
 
   describe('#handleFacetSearchRegistration', () => {
-    const buildEmptyResponse = (): SpecificFacetSearchResponse => ({
-      moreValuesAvailable: false,
-      values: [],
-    });
-
     it('when the id is unregistered, it registers a facet search with the passed id and options', () => {
       handleFacetSearchRegistration(state, {facetId}, buildEmptyResponse);
       expect(state[facetId].options).toEqual({
@@ -46,7 +48,9 @@ describe('FacetSearch slice', () => {
 
     it('when the id already exists, it does not overwrite the existing facet', () => {
       state[facetId] = buildMockFacetSearch();
-      const options = buildMockFacetSearchRequestOptions({numberOfValues: 5});
+      const options = buildMockFacetSearchRequestOptions({
+        numberOfValues: 5,
+      });
 
       handleFacetSearchRegistration(
         state,
@@ -125,6 +129,60 @@ describe('FacetSearch slice', () => {
       const response = buildMockFacetSearchResponse();
       handleFacetSearchFulfilled(state, {facetId, response});
       expect(state[facetId]).toBe(undefined);
+    });
+  });
+
+  describe('#handleFacetSearchClearResults', () => {
+    it('when the id is registered, it updates the facetSearch response to an empty response', () => {
+      state[facetId] = buildMockFacetSearch();
+      handleFacetSearchClear(state, {facetId}, buildEmptyResponse);
+      expect(state[facetId].response).toEqual(buildEmptyResponse());
+    });
+
+    it('when the id is registered, it sets isLoading state to false', () => {
+      state[facetId] = buildMockFacetSearch({isLoading: true});
+
+      handleFacetSearchClear(state, {facetId}, buildEmptyResponse);
+      expect(state[facetId].isLoading).toBe(false);
+    });
+
+    it('when the id is registered, it resets the query', () => {
+      state[facetId] = buildMockFacetSearch({
+        options: buildMockFacetSearchRequestOptions({query: '*hello*'}),
+      });
+
+      handleFacetSearchClear(state, {facetId}, buildEmptyResponse);
+      expect(state[facetId].options.query).toBe(
+        defaultFacetSearchOptions.query
+      );
+    });
+
+    it('when the id is unregistered, it does nothing', () => {
+      handleFacetSearchClear(state, {facetId}, buildEmptyResponse);
+      expect(state[facetId]).toBe(undefined);
+    });
+  });
+
+  describe('#handleFacetSearchSetClear', () => {
+    it('it updates all facetSearch responses to an empty response', () => {
+      const anotherFacetId = '2';
+      state[facetId] = buildMockFacetSearch({
+        options: buildMockFacetSearchRequestOptions({query: '*hello*'}),
+      });
+      state[anotherFacetId] = buildMockFacetSearch({
+        options: buildMockFacetSearchRequestOptions({query: '*bye*'}),
+      });
+      handleFacetSearchSetClear(state, buildEmptyResponse);
+
+      expect(state[facetId].response).toEqual(buildEmptyResponse());
+      expect(state[facetId].options.query).toEqual(
+        defaultFacetSearchOptions.query
+      );
+      expect(state[anotherFacetId].response).toEqual(buildEmptyResponse());
+      expect(state[anotherFacetId].options.query).toEqual(
+        defaultFacetSearchOptions.query
+      );
+      expect(state[anotherFacetId].response).toEqual(buildEmptyResponse());
     });
   });
 });

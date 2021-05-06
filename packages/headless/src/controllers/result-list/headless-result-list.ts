@@ -1,4 +1,4 @@
-import {Engine} from '../../app/engine';
+import {Engine} from '../../app/headless-engine';
 import {ConfigurationSection, SearchSection} from '../../state/state-sections';
 import {buildController, Controller} from '../controller/headless-controller';
 import {fetchMoreResults} from '../../features/search/search-actions';

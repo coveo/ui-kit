@@ -79,7 +79,7 @@ export function assertBasicFacetFunctionality(field: string) {
 
   cy.get(FacetAlias.facetFirstValue)
     .find(FacetSelectors.checkbox)
-    .should('be.checked');
+    .should('have.class', 'checked');
   assertNonZeroFacetCount();
 }
 
@@ -162,7 +162,7 @@ export function assertDeselectFacet(field: string) {
   cy.get(FacetAlias.facetFirstValue).find(FacetSelectors.label).click();
   cy.get(FacetAlias.facetFirstValue)
     .find(FacetSelectors.checkbox)
-    .should('not.be.checked');
+    .should('not.have.class', 'checked');
   cy.wait('@coveoAnalytics').then(({request}) => {
     expect(request.body).to.have.property('actionCause', 'facetDeselect');
     expect(request.body.customData).to.have.property('facetField', field);
@@ -186,10 +186,10 @@ export function assertClearAllFacet() {
 
   cy.get(FacetAlias.facetFirstValue)
     .find(FacetSelectors.checkbox)
-    .should('not.be.checked');
+    .should('not.have.class', 'checked');
   cy.get(FacetAlias.facetSecondValue)
     .find(FacetSelectors.checkbox)
-    .should('not.be.checked');
+    .should('not.have.class', 'checked');
 }
 
 export function assertNonZeroFacetCount(selector?: string) {
@@ -299,4 +299,22 @@ export function assertHightlightedText(text: string) {
       expect(i.toLowerCase()).not.to.contains(text.toLowerCase());
     });
   });
+}
+
+export function clickOnCategoryFacetWithValue(value: string) {
+  cy.get(FacetAlias.facetUL)
+    .find(FacetSelectors.categoryFacetNextLevelButton)
+    .contains(value)
+    .click();
+}
+
+export function clickOnNthCategoryFacet(number: number) {
+  cy.get(FacetAlias.facetUL)
+    .find(FacetSelectors.categoryFacetNextLevelButton)
+    .eq(number)
+    .click();
+}
+
+export function clickOnNthFacet(number: number) {
+  cy.get(FacetAlias.facetUL).find(FacetSelectors.checkbox).eq(number).click();
 }

@@ -14,7 +14,7 @@ a button which opens a facet modal in mobile browsers.
 | `facetId`        | `facet-id`         |                                                                                                                      | `string` | `''`           |
 | `field`          | `field`            | Specifies the index field whose values the facet should use                                                          | `string` | `''`           |
 | `label`          | `label`            | The non-localized label for the facet                                                                                | `string` | `'noLabel'`    |
-| `numberOfValues` | `number-of-values` | The number of values to request for this facet, when there are no manual ranges.                                     | `number` | `10`           |
+| `numberOfValues` | `number-of-values` | The number of values to request for this facet, when there are no manual ranges.                                     | `number` | `8`            |
 
 
 ## Shadow Parts
@@ -24,6 +24,8 @@ a button which opens a facet modal in mobile browsers.
 | `"clear-button"` | The button that resets the actively selected facet values          |
 | `"close-button"` | The button to close the facet when displayed modally (mobile only) |
 | `"facet"`        | The wrapper for the entire facet                                   |
+| `"label"`        | The label of the facet                                             |
+| `"modal-button"` | The button to open the facet modal (mobile only)                   |
 | `"placeholder"`  | The placeholder shown before the first search is executed.         |
 | `"value"`        | A single facet value                                               |
 | `"value-count"`  | The facet value count                                              |

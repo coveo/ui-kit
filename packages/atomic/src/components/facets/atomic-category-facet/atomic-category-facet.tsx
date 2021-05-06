@@ -41,6 +41,8 @@ const PATH_MAX_LENGTH = 3;
  * The `atomic-category-facet` displays a facet of values in a hierarchical fashion. In mobile browsers, this is rendered as a button which opens a facet modal.
  *
  * @part facet - The wrapper for the entire facet
+ * @part label - The label of the facet
+ * @part modal-button - The button to open the facet modal (mobile only)
  * @part close-button - The button to close the facet when displayed modally (mobile only)
  * @part clear-button - The button that resets the actively selected facet values
  *
@@ -49,6 +51,7 @@ const PATH_MAX_LENGTH = 3;
  * @part search-input-clear-button - The clear button of the input
  * @part search-results - The list of search results
  * @part search-result - A search result
+ * @part search-result-path - The search result path
  * @part active-search-result - The currently active search result
  *
  * @part parent - A parent element
@@ -103,7 +106,6 @@ export class AtomicCategoryFacet
 
   @State() public isExpanded = false;
   @State() public facetSearchQuery = '';
-  @State() public showFacetSearchResults = false;
 
   @Prop({mutable: true, reflect: true}) public facetId = '';
   /**
@@ -121,7 +123,7 @@ export class AtomicCategoryFacet
   /**
    * The number of values to request for this facet. Also determines the number of additional values to request each time this facet is expanded, and the number of values to display when this facet is collapsed.
    */
-  @Prop() public numberOfValues = 5;
+  @Prop() public numberOfValues = 8;
   /**
    * Whether this facet should contain a search box.
    */
@@ -155,6 +157,7 @@ export class AtomicCategoryFacet
       numberOfValues: this.numberOfValues,
       basePath: this.formattedBasePath,
       filterByBasePath: this.filterByBasePath,
+      facetSearch: {numberOfValues: this.numberOfValues * 2},
     };
     this.facet = buildCategoryFacet(this.bindings.engine, {options});
     this.strings[this.label] = () => this.bindings.i18n.t(this.label);
@@ -194,7 +197,7 @@ export class AtomicCategoryFacet
 
   private buildActiveParent(parent: CategoryFacetValue) {
     return (
-      <div part="parent active-parent" class="value-button font-bold ml-6">
+      <div part="active-parent" class="value-button font-bold ml-6">
         <span part="value-label" class="ellipsed">
           {parent.value}
         </span>
@@ -254,7 +257,7 @@ export class AtomicCategoryFacet
 
     return (
       <button
-        class="value-button text-primary"
+        class="show-more"
         part="show-more"
         onClick={() => this.facet.showMoreValues()}
       >
@@ -270,7 +273,7 @@ export class AtomicCategoryFacet
 
     return (
       <button
-        class="value-button text-primary"
+        class="show-less"
         part="show-less"
         onClick={() => this.facet.showLessValues()}
       >
@@ -322,7 +325,7 @@ export class AtomicCategoryFacet
 
   public renderSearchResult(searchResult: CategoryFacetSearchResult) {
     return [
-      <div class="flex" aria-hidden>
+      <div class="flex items-baseline" aria-hidden="true">
         <span
           part="value-label"
           class="ellipsed font-bold"
@@ -337,8 +340,9 @@ export class AtomicCategoryFacet
       </div>,
       <div
         class="flex text-on-background-variant"
-        aria-hidden
+        aria-hidden="true"
         title={searchResult.path.join(SEPARATOR)}
+        part="search-result-path"
       >
         {this.renderPath(searchResult.path)}
       </div>,
@@ -376,7 +380,7 @@ export class AtomicCategoryFacet
         hasActiveValues={this.facetState.hasActiveValues}
       >
         {this.facetSearch?.render()}
-        <div class="mt-1">
+        <div class="mt-1 lg:text-sm">
           {this.allCategoriesButton}
           <div>{this.parents}</div>
           <div class={this.parents.length ? 'pl-9' : 'pl-0'}>

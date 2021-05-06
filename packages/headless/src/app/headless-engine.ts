@@ -21,12 +21,22 @@ import {
   PostprocessQuerySuggestResponseMiddleware,
   PostprocessSearchResponseMiddleware,
 } from '../api/search/search-api-client-middleware';
-import {buildEngine, Engine, EngineOptions} from './engine';
+import {buildEngine, CoreEngine, EngineOptions} from './engine';
 import {
   engineConfigurationOptionDefinitions,
   EngineConfigurationOptions,
 } from './engine-configuration-options';
 import {buildLogger} from './logger';
+import {
+  buildThunkExtraArguments,
+  ThunkExtraArguments,
+} from './thunk-extra-arguments';
+import {SearchAppState} from '../state/search-app-state';
+import {pipeline, searchHub} from './reducers';
+
+const headlessReducers = {pipeline, searchHub};
+type HeadlessReducers = typeof headlessReducers;
+type HeadlessState = StateFromReducersMapObject<HeadlessReducers>;
 
 /**
  * The global headless engine options.
@@ -89,6 +99,16 @@ export interface HeadlessConfigurationOptions
 }
 
 /**
+ * The engine for powering search experiences.
+ */
+export interface Engine<State = SearchAppState>
+  extends CoreEngine<State & HeadlessState, SearchThunkExtraArguments> {}
+
+export interface SearchThunkExtraArguments extends ThunkExtraArguments {
+  searchAPIClient: SearchAPIClient;
+}
+
+/**
  * The global headless engine.
  * You should instantiate one `HeadlessEngine` class per application and share it.
  * Every headless controller requires an instance of `Engine` as a parameter.
@@ -99,11 +119,20 @@ export class HeadlessEngine<Reducers extends ReducersMapObject>
   private engine: Engine<StateFromReducersMapObject<Reducers>>;
 
   constructor(private options: HeadlessOptions<Reducers>) {
+    this.logger = buildLogger(options.loggerOptions);
     this.validateConfiguration(options);
 
-    this.logger = buildLogger(options.loggerOptions);
-    const searchAPIClient = this.createSearchAPIClient();
-    this.engine = buildEngine(options, {searchAPIClient}, this.logger);
+    const thunkArguments = {
+      ...buildThunkExtraArguments(options.configuration, this.logger),
+      searchAPIClient: this.createSearchAPIClient(),
+    };
+
+    const augmentedOptions: HeadlessOptions<Reducers & HeadlessReducers> = {
+      ...options,
+      reducers: {...headlessReducers, ...options.reducers},
+    };
+
+    this.engine = buildEngine(augmentedOptions, thunkArguments);
 
     if (options.configuration.search) {
       this.engine.dispatch(

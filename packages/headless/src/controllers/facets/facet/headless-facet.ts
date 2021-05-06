@@ -2,7 +2,7 @@ import {
   buildController,
   Controller,
 } from '../../controller/headless-controller';
-import {Engine} from '../../../app/engine';
+import {Engine} from '../../../app/headless-engine';
 import {
   registerFacet,
   deselectAllFacetValues,
@@ -172,6 +172,11 @@ export interface FacetSearch {
    * @param value - The search result to select.
    * */
   select(value: SpecificFacetSearchResult): void;
+
+  /**
+   * Resets the query and empties the values.
+   * */
+  clear(): void;
 }
 
 export interface FacetSearchState {

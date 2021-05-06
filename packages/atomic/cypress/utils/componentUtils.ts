@@ -8,10 +8,18 @@ export function doSortAlphanumeric(originalValues: string[]) {
     .sort((first, second) => first.localeCompare(second));
 }
 
-export const aliasNoAtSignBuilder = (alaisWithAtSign: IAlias) => {
-  const alaisNoAtSign = Object.assign({}, alaisWithAtSign);
-  Object.keys(alaisNoAtSign).forEach((key: string) => {
-    alaisNoAtSign[key] = alaisNoAtSign[key].split('@')[1];
+export function doSortOccurences(originalValues: string[]) {
+  return originalValues
+    .concat()
+    .sort((first, second) =>
+      second.localeCompare(first, 'en', {numeric: true})
+    );
+}
+
+export const aliasNoAtSignBuilder = (aliasWithAtSign: IAlias) => {
+  const aliasNoAtSign = Object.assign({}, aliasWithAtSign);
+  Object.keys(aliasNoAtSign).forEach((key: string) => {
+    aliasNoAtSign[key] = aliasNoAtSign[key].split('@')[1];
   });
-  return alaisNoAtSign;
+  return aliasNoAtSign;
 };

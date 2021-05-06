@@ -17,7 +17,6 @@ describe('logActionErrorMiddleware', () => {
   it(`when a action has a serialized SchemaValidationError
   it should not pass through the middleware`, () => {
     const e = buildMockSearchAppEngine();
-    const {dispatch, mockStore: store} = e;
 
     const action = {
       type: 'foo',
@@ -25,14 +24,13 @@ describe('logActionErrorMiddleware', () => {
         new SchemaValidationError('no bueno')
       ),
     };
-    dispatch(action);
-    expect(store.getActions()).not.toContain(action);
+    e.dispatch(action);
+    expect(e.actions).not.toContain(action);
   });
 
   it(`when a action has a serialized Error of any type but SchemaValidationError
   it should pass through the middleware`, () => {
     const e = buildMockSearchAppEngine();
-    const {dispatch, mockStore: store} = e;
 
     const action = {
       type: 'foo',
@@ -41,8 +39,8 @@ describe('logActionErrorMiddleware', () => {
         message: 'You obviously did something wrong',
       },
     };
-    dispatch(action);
-    expect(store.getActions()).toContain(action);
+    e.dispatch(action);
+    expect(e.actions).toContain(action);
   });
 
   it(`when a action has an error parameter
