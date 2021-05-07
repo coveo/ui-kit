@@ -344,6 +344,9 @@ const actionLoaderConfiguration: ActionLoaderConfiguration[] = [
   {
     initializer: 'loadSearchHubActions',
   },
+  {
+    initializer: 'loadSortCriteriaActions',
+  },
 ];
 
 const controllers = controllerConfiguration.map((controller) =>
