@@ -275,6 +275,8 @@ export namespace SortCriterionActions {
   export const updateSortCriterion = updateSortCriterionAlias;
 }
 
+export * from './sort-criteria/sort-criteria-actions-loader';
+
 import {
   buildRecommendationRequest as buildRecommendationRequestAlias,
   getRecommendations as getRecommendationsAlias,
