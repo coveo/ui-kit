@@ -1,21 +1,10 @@
-@import "../../global/global.pcss";
-
-:host {
-  display: block;
-}
+@import "../atomic-results-per-page/atomic-results-per-page.pcss";
 
 /**
  * @prop --atomic-pagination-button-size: Size of the pagination buttons
  * @prop --atomic-pagination-button-border-radius: Border radius of the pagination button
  * @prop --atomic-pagination-font-size: Font size of the pagination
  */
- button {
-  min-width: var(--atomic-pagination-button-size, 32px);
-  height: var(--atomic-pagination-button-size, 32px);
-  line-height: var(--atomic-pagination-button-size, 32px);
-  font-size: var(--atomic-pagination-font-size);
-  border-radius:var(--atomic-pagination-button-border-radius, 50%);
-}
 
 svg {
   width: var(--atomic-pagination-button-size, 32px);
