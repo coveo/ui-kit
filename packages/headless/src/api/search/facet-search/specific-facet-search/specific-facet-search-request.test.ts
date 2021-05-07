@@ -16,7 +16,7 @@ describe('#buildSpecificFacetSearchRequest', () => {
     state.facetSearchSet[id] = buildMockFacetSearch();
   }
 
-  function buildParms() {
+  function buildParams() {
     return buildSpecificFacetSearchRequest(id, state);
   }
 
@@ -26,35 +26,35 @@ describe('#buildSpecificFacetSearchRequest', () => {
     const captions = {a: 'A'};
     state.facetSearchSet[id].options.captions = captions;
 
-    expect(buildParms().captions).toEqual(captions);
+    expect(buildParams().captions).toEqual(captions);
   });
 
   it('retrieves the #numberOfValues from the facetSearchSet', () => {
     const numberOfValues = 5;
     state.facetSearchSet[id].options.numberOfValues = numberOfValues;
 
-    expect(buildParms().numberOfValues).toEqual(numberOfValues);
+    expect(buildParams().numberOfValues).toEqual(numberOfValues);
   });
 
   it('retrieves the #query from the facetSearchSet', () => {
     const query = 'hello';
     state.facetSearchSet[id].options.query = query;
 
-    expect(buildParms().query).toEqual(query);
+    expect(buildParams().query).toEqual(`*${query}*`);
   });
 
   it('retrieves the #field from the facetSet', () => {
     const field = 'author';
     state.facetSet[id].field = field;
 
-    expect(buildParms().field).toBe(field);
+    expect(buildParams().field).toBe(field);
   });
 
   it('retrieves the #delimitingCharacter from the facetSet', () => {
     const char = '|';
     state.facetSet[id].delimitingCharacter = char;
 
-    expect(buildParms().delimitingCharacter).toBe(char);
+    expect(buildParams().delimitingCharacter).toBe(char);
   });
 
   it('builds the #ignoreValues from the facetSet non-idle #currentValues', () => {
@@ -65,14 +65,14 @@ describe('#buildSpecificFacetSearchRequest', () => {
     });
     state.facetSet[id].currentValues = [idle, selected];
 
-    expect(buildParms().ignoreValues).toEqual([selected.value]);
+    expect(buildParams().ignoreValues).toEqual([selected.value]);
   });
 
   it('sets the #searchContext to the search request params', () => {
     const facet = state.facetSet[id];
     const request = buildMockSearchRequest({facets: [facet]});
 
-    expect(buildParms().searchContext).toEqual({
+    expect(buildParams().searchContext).toEqual({
       ...request,
       visitorId: expect.any(String),
     });

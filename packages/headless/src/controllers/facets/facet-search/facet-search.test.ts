@@ -49,13 +49,13 @@ describe('FacetSearch', () => {
     initFacetSearch();
   });
 
-  it('#updateText dispatches #updateFacetSearch with the text wrapped by asterixes and resets number of results', () => {
+  it('#updateText dispatches #updateFacetSearch and resets number of results', () => {
     const text = 'apple';
     controller.updateText(text);
 
     const action = updateFacetSearch({
       facetId,
-      query: `*${text}*`,
+      query: text,
       numberOfValues,
     });
 
@@ -137,6 +137,7 @@ describe('FacetSearch', () => {
     const facetSearchState = {
       ...buildMockFacetSearchResponse(),
       isLoading: false,
+      query: '',
     };
 
     engine.state.facetSearchSet[facetId] = buildMockFacetSearch(

@@ -43,11 +43,10 @@ export function buildGenericFacetSearch<T extends FacetSearchState>(
      * @param text The new query.
      */
     updateText(text: string) {
-      const query = `*${text}*`;
       dispatch(
         updateFacetSearch({
           facetId,
-          query,
+          query: text,
           numberOfValues: getFacetSearch().initialNumberOfValues,
         })
       );
@@ -84,13 +83,15 @@ export function buildGenericFacetSearch<T extends FacetSearchState>(
     },
 
     get state() {
-      const {response, isLoading} = getFacetSearch();
+      const {response, isLoading, options} = getFacetSearch();
+      const {query} = options;
       const values: GenericFacetSearchResults = response.values;
 
       return {
         ...response,
         values,
         isLoading,
+        query,
       };
     },
   };

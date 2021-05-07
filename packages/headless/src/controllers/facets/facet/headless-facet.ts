@@ -194,6 +194,9 @@ export interface FacetSearchState {
    * Whether more values are available.
    * */
   moreValuesAvailable: boolean;
+
+  /** The current query in the facet search box. */
+  query: string;
 }
 
 export interface SpecificFacetSearchResult {
