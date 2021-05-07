@@ -347,6 +347,9 @@ const actionLoaderConfiguration: ActionLoaderConfiguration[] = [
   {
     initializer: 'loadSortCriteriaActions',
   },
+  {
+    initializer: 'loadBreadcrumbActions',
+  },
 ];
 
 const controllers = controllerConfiguration.map((controller) =>

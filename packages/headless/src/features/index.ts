@@ -324,6 +324,8 @@ export namespace BreadcrumbActions {
   export const deselectAllFacets = deselectAllFacetsAlias;
 }
 
+export * from './facets/generic/breadcrumb-actions-loader';
+
 import {
   getResultProperty as getResultPropertyAlias,
   fieldsMustBeDefined as fieldsMustBeDefinedAlias,
