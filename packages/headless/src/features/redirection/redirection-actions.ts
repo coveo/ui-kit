@@ -19,13 +19,20 @@ export type RedirectionState = ConfigurationSection &
   QuerySection &
   Partial<ContextSection & SearchHubSection & PipelineSection>;
 
+export interface CheckForRedirectionActionCreatorPayload {
+  /**
+   * The default URL to redirect the user to.
+   */
+  defaultRedirectionUrl: string;
+}
+
 /**
  * Preprocesses the query for the current headless state, and updates the redirection URL if a redirect trigger was fired in the query pipeline.
  * @param defaultRedirectionUrl (string) The default URL to which to redirect the user.
  */
 export const checkForRedirection = createAsyncThunk<
   string,
-  {defaultRedirectionUrl: string},
+  CheckForRedirectionActionCreatorPayload,
   AsyncThunkSearchOptions<RedirectionState>
 >(
   'redirection/check',
