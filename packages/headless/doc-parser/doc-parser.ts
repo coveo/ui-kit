@@ -341,6 +341,9 @@ const actionLoaderConfiguration: ActionLoaderConfiguration[] = [
   {
     initializer: 'loadRedirectionActions',
   },
+  {
+    initializer: 'loadSearchHubActions',
+  },
 ];
 
 const controllers = controllerConfiguration.map((controller) =>

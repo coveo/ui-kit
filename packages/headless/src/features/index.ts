@@ -264,6 +264,8 @@ export namespace SearchHubActions {
   export const setSearchHub = setSearchHubAlias;
 }
 
+export * from './search-hub/search-hub-actions-loader';
+
 import {
   registerSortCriterion as registerSortCriterionAlias,
   updateSortCriterion as updateSortCriterionAlias,
