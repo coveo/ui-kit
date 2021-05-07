@@ -75,7 +75,7 @@ export const BaseFacet: FunctionalComponent<BaseFacetProps> = (
   const facetWrapperDesktop =
     'lg:h-auto lg:w-auto lg:static lg:block lg:border lg:border-divider lg:rounded-xl';
   const facetWrapperMobile =
-    'box-border p-5 h-screen w-screen fixed object-left-top bg-background top-0 left-0 z-10';
+    'box-border p-5 h-screen w-screen overflow-auto fixed object-left-top bg-background top-0 left-0 z-10';
 
   return (
     <div class="facet mb-4" part="facet">
