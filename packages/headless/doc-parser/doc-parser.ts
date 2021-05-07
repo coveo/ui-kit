@@ -320,6 +320,9 @@ const actionLoaderConfiguration: ActionLoaderConfiguration[] = [
   {
     initializer: 'loadPaginationActions',
   },
+  {
+    initializer: 'loadPipelineActions',
+  },
 ];
 
 const controllers = controllerConfiguration.map((controller) =>
