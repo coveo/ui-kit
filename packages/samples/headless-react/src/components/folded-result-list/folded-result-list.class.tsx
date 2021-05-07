@@ -1,6 +1,7 @@
 import {Component, ContextType} from 'react';
 import {
   buildFoldedResultList,
+  Collection,
   FoldedResult,
   FoldedResultList as FoldedResultListController,
   FoldedResultListState,
@@ -31,7 +32,13 @@ export class FoldedResultList extends Component<{}, FoldedResultListState> {
     this.setState(this.controller.state);
   }
 
-  private renderFoldedResult(result: FoldedResult) {
+  private isCollection(
+    result: Collection | FoldedResult
+  ): result is Collection {
+    return 'moreResultsAvailable' in result;
+  }
+
+  private renderFoldedResult(result: Collection | FoldedResult) {
     return (
       <li key={result.uniqueId}>
         <article>
@@ -43,6 +50,14 @@ export class FoldedResultList extends Component<{}, FoldedResultListState> {
           <ul>
             {result.children.map((child) => this.renderFoldedResult(child))}
           </ul>
+          {this.isCollection(result) && result.moreResultsAvailable ? (
+            <button
+              disabled={result.isLoadingMoreResults}
+              onClick={() => this.controller.loadAll(result)}
+            >
+              Show more
+            </button>
+          ) : null}
         </article>
       </li>
     );

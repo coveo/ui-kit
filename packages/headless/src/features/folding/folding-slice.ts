@@ -2,8 +2,13 @@ import {createReducer} from '@reduxjs/toolkit';
 import {Result} from '../../api/search/search/result';
 import {isArray, removeDuplicates} from '../../utils/utils';
 import {executeSearch, fetchMoreResults} from '../search/search-actions';
-import {registerFolding} from './folding-actions';
 import {
+  collectionMoreResultsAvailableBuffer,
+  loadAll,
+  registerFolding,
+} from './folding-actions';
+import {
+  Collection,
   FoldedResult,
   FoldingFields,
   getFoldingInitialState,
@@ -37,70 +42,113 @@ function areDefinedAndEqual<T>(
   return (value1 || value2) !== undefined && value1 === value2;
 }
 
-function flattenResultTree(result: ResultWithFolding): ResultWithFolding[] {
-  const results = [result];
-  if (result.parentResult) {
-    results.unshift(result.parentResult);
+function getFoldedResults(result: ResultWithFolding): ResultWithFolding[] {
+  if (!result.childResults) {
+    return [];
   }
-  if (result.childResults?.length) {
-    results.push(
-      ...result.childResults.flatMap((childResult) =>
-        flattenResultTree(childResult)
-      )
-    );
-  }
-  return results;
+  return result.childResults.flatMap((childResult) => [
+    childResult,
+    ...getFoldedResults(childResult),
+  ]);
 }
 
-function foldResult(
-  source: ResultWithFolding,
+function addChildren(
+  parent: ResultWithFolding,
   results: ResultWithFolding[],
   fields: FoldingFields
 ): FoldedResult {
-  const sourceChildValue = getChildField(source, fields);
+  const sourceChildValue = getChildField(parent, fields);
   return {
-    ...source,
+    ...parent,
     children: sourceChildValue
       ? results
           .filter((result) => {
             const isSameResultAsSource =
-              getChildField(result, fields) === getChildField(source, fields);
+              getChildField(result, fields) === getChildField(parent, fields);
             const isChildOfSource =
               getParentField(result, fields) === sourceChildValue;
             return isChildOfSource && !isSameResultAsSource;
           })
-          .map((result) => foldResult(result, results, fields))
+          .map((result) => addChildren(result, results, fields))
       : [],
   };
 }
 
-function createCollection(
+function createCollectionFromResults(
+  results: ResultWithFolding[],
+  fields: FoldingFields,
+  moreResultsAvailable: boolean
+): Collection | null {
+  const rootResult = results.find((result) => {
+    const hasNoParent = getParentField(result, fields) === undefined;
+    const isParentOfItself = areDefinedAndEqual(
+      getParentField(result, fields),
+      getChildField(result, fields)
+    );
+    return hasNoParent || isParentOfItself;
+  });
+
+  if (!rootResult) {
+    return null;
+  }
+
+  return {
+    ...addChildren(rootResult, results, fields),
+    moreResultsAvailable,
+    isLoadingMoreResults: false,
+  };
+}
+
+function createCollectionFromResult(
   relevantResult: ResultWithFolding,
-  fields: FoldingFields
-): FoldedResult {
-  const flattenedResults = removeDuplicates(
-    flattenResultTree(relevantResult),
+  fields: FoldingFields,
+  numberOfFoldedResults: number
+): Collection {
+  const foldedResults = getFoldedResults(relevantResult);
+
+  const moreResultsAvailable = foldedResults.length > numberOfFoldedResults;
+
+  const foldedResultsWithoutBuffer = moreResultsAvailable
+    ? foldedResults.slice(
+        0,
+        foldedResults.length - collectionMoreResultsAvailableBuffer
+      )
+    : foldedResults;
+
+  const parentResults = [relevantResult, ...foldedResults]
+    .filter((result) => result.parentResult)
+    .map((result) => result.parentResult!);
+
+  const resultsInCollection = removeDuplicates(
+    [relevantResult, ...foldedResultsWithoutBuffer, ...parentResults],
     (result) => result.uniqueId
   );
 
-  const topLevelResult =
-    flattenedResults.find((result) => {
-      const hasNoParent = getParentField(result, fields) === undefined;
-      const isParentOfItself = areDefinedAndEqual(
-        getParentField(result, fields),
-        getChildField(result, fields)
-      );
-      return hasNoParent || isParentOfItself;
-    }) ?? relevantResult;
+  const collection = createCollectionFromResults(
+    resultsInCollection,
+    fields,
+    moreResultsAvailable
+  );
 
-  return foldResult(topLevelResult, flattenedResults, fields);
+  if (collection) {
+    return collection;
+  }
+
+  return {
+    ...addChildren(relevantResult, resultsInCollection, fields),
+    moreResultsAvailable,
+    isLoadingMoreResults: false,
+  };
 }
 
 function createCollections(
   results: ResultWithFolding[],
-  fields: FoldingFields
-): FoldedResult[] {
-  return results.map((result) => createCollection(result, fields));
+  fields: FoldingFields,
+  numberOfFoldedResults: number
+) {
+  return results.map((result) =>
+    createCollectionFromResult(result, fields, numberOfFoldedResults)
+  );
 }
 
 export const foldingReducer = createReducer(
@@ -111,7 +159,8 @@ export const foldingReducer = createReducer(
         state.collections = state.enabled
           ? createCollections(
               payload.response.results as ResultWithFolding[],
-              state.fields
+              state.fields,
+              state.numberOfFoldedResults
             )
           : [];
       })
@@ -121,7 +170,8 @@ export const foldingReducer = createReducer(
               ...state.collections,
               ...createCollections(
                 payload.response.results as ResultWithFolding[],
-                state.fields
+                state.fields,
+                state.numberOfFoldedResults
               ),
             ]
           : [];
@@ -140,5 +190,40 @@ export const foldingReducer = createReducer(
               numberOfFoldedResults:
                 payload.numberOfFoldedResults ?? state.numberOfFoldedResults,
             }
+      )
+      .addCase(loadAll.pending, (state, {meta}) => {
+        const collectionId = meta.arg;
+
+        return {
+          ...state,
+          collections: state.collections.map((collection) =>
+            collection.raw[state.fields.collection] === collectionId
+              ? {...collection, isLoadingMoreResults: true}
+              : collection
+          ),
+        };
+      })
+      .addCase(loadAll.rejected, (state, {payload}) => ({
+        ...state,
+        collections: state.collections.map((collection) =>
+          collection.raw[state.fields.collection] === payload?.collectionId
+            ? {...collection, isLoadingMoreResults: false}
+            : collection
+        ),
+      }))
+      .addCase(
+        loadAll.fulfilled,
+        (state, {payload: {collectionId, results}}) => ({
+          ...state,
+          collections: state.collections.map((collection) =>
+            collection.raw[state.fields.collection] === collectionId
+              ? createCollectionFromResults(
+                  results as ResultWithFolding[],
+                  state.fields,
+                  false
+                ) ?? collection
+              : collection
+          ),
+        })
       )
 );

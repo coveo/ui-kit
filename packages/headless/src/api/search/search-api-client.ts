@@ -36,9 +36,12 @@ import {SearchThunkExtraArguments} from '../../app/headless-engine';
 
 export type AllSearchAPIResponse = Plan | Search | QuerySuggest;
 
-export interface AsyncThunkSearchOptions<T extends Partial<SearchAppState>> {
+export interface AsyncThunkSearchOptions<
+  T extends Partial<SearchAppState>,
+  E = SearchAPIErrorWithStatusCode
+> {
   state: T;
-  rejectValue: SearchAPIErrorWithStatusCode;
+  rejectValue: E;
   extra: SearchThunkExtraArguments;
 }
 
