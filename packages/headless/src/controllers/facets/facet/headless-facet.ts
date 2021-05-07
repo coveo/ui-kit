@@ -195,7 +195,7 @@ export interface FacetSearchState {
    * */
   moreValuesAvailable: boolean;
 
-  /** The query */
+  /** The current query in the facet search box. */
   query: string;
 }
 

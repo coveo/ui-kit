@@ -55,7 +55,7 @@ describe('FacetSearch', () => {
 
     const action = updateFacetSearch({
       facetId,
-      query: `${text}`,
+      query: text,
       numberOfValues,
     });
 

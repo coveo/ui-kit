@@ -187,7 +187,7 @@ export interface CategoryFacetSearchState {
   moreValuesAvailable: boolean;
 
   /**
-   * The query.
+   * The current query in the facet search box.
    */
   query: string;
 }
