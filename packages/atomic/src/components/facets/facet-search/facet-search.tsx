@@ -125,8 +125,12 @@ export class FacetSearch {
     }
   }
 
+  private get isEmptyQuery() {
+    return this.facetSearchState.query === '';
+  }
+
   private get clearButton() {
-    if (this.facetSearchState.query === '') {
+    if (this.isEmptyQuery) {
       return;
     }
 
