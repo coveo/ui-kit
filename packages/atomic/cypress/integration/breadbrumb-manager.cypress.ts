@@ -2,7 +2,6 @@ import {setUpPage} from '../utils/setupComponent';
 import {
   facetValueShouldDisplayInBreadcrumb,
   clickOnCategoryFacetWithValue,
-  clickOnNthCategoryFacet,
   clickOnNthFacet,
 } from './facets/facet-utils';
 import {
@@ -24,7 +23,7 @@ const categoryFacetProp = {
   label: 'Atlas',
 };
 
-describe.skip('Breadcrumb Manager Test Suites', () => {
+describe('Breadcrumb Manager Test Suites', () => {
   function setupComponents(attributes: string) {
     setUpPage(`
       <atomic-breadcrumb-manager ${attributes}></atomic-breadcrumb-manager>
@@ -49,6 +48,11 @@ describe.skip('Breadcrumb Manager Test Suites', () => {
       createBreadcrumbShadowAlias();
       facetValueShouldDisplayInBreadcrumb(FacetAlias.facetFirstValue, 1);
       cy.get(BreadcrumbAlias.breadcrumbs).should('have.length', 1);
+
+      cy.getAnalyticsAt('@coveoAnalytics', 1).then((analyticsBody) => {
+        expect(analyticsBody).to.have.property('actionCause', 'facetSelect');
+        expect(analyticsBody.facetState).to.have.lengthOf(1);
+      });
     });
 
     it('should remove the breadcrumb when deselected in the facet', () => {
@@ -56,6 +60,10 @@ describe.skip('Breadcrumb Manager Test Suites', () => {
       createBreadcrumbShadowAlias();
       cy.get(FacetAlias.facetFirstValue).find(FacetSelectors.label).click();
       cy.get(BreadcrumbAlias.breadcrumbs).should('have.length', 0);
+
+      cy.getAnalyticsAt('@coveoAnalytics', 2).then((analyticsBody) => {
+        expect(analyticsBody).to.have.property('actionCause', 'facetDeselect');
+      });
     });
 
     it('should remove the breadcrumb when it is clicked', () => {
@@ -63,17 +71,13 @@ describe.skip('Breadcrumb Manager Test Suites', () => {
       createBreadcrumbShadowAlias();
       cy.get(BreadcrumbAlias.breadcrumbs).first().click();
       cy.get(BreadcrumbAlias.breadcrumbs).should('have.length', 0);
-    });
 
-    it('should display multiple fields from a regular and category facet', () => {
-      cy.get(FacetAlias.facetFirstValue).find(FacetSelectors.label).click();
-      cy.get(FacetAlias.facetSecondValue).find(FacetSelectors.label).click();
-      createAliasShadow(categoryFacetProp.field, FacetSelectors.categoryFacet);
-      createAliasFacetUL(categoryFacetProp.field, FacetSelectors.categoryFacet);
-      clickOnNthCategoryFacet(0);
-      // cy.pause();
-      // createBreadcrumbShadowAlias();
-      // cy.get(BreadcrumbAlias.breadcrumbs).should('have.length', 3);
+      cy.getAnalyticsAt('@coveoAnalytics', 2).then((analyticsBody) => {
+        expect(analyticsBody).to.have.property(
+          'actionCause',
+          'breadcrumbFacet'
+        );
+      });
     });
 
     it('should remove all breadcrumbs on clicking "Clear All Filters"', () => {
@@ -82,26 +86,13 @@ describe.skip('Breadcrumb Manager Test Suites', () => {
       cy.get(BreadcrumbAlias.breadcrumbClearAllFilter).should('be.visible');
       cy.get(BreadcrumbAlias.breadcrumbClearAllFilter).click();
       cy.get(BreadcrumbAlias.breadcrumbs).should('have.length', 0);
-    });
 
-    it('should hide 2 fields when 7 are slected', () => {
-      for (let n = 0; n < 7; n++) {
-        clickOnNthFacet(n);
-        cy.wait(100);
-      }
-      createBreadcrumbShadowAlias();
-      cy.get(BreadcrumbAlias.breadcrumbs).should('have.length', 5);
-    });
-
-    it('should display all fields on clicking "Show More"', () => {
-      for (let n = 0; n < 7; n++) {
-        clickOnNthFacet(n);
-        cy.wait(150);
-      }
-      createBreadcrumbShadowAlias();
-      cy.get(BreadcrumbAlias.showMoreButton).click();
-      createBreadcrumbShadowAlias();
-      cy.get(BreadcrumbAlias.breadcrumbs).should('have.length', 7);
+      cy.getAnalyticsAt('@coveoAnalytics', 2).then((analyticsBody) => {
+        expect(analyticsBody).to.have.property(
+          'actionCause',
+          'breadcrumbResetAll'
+        );
+      });
     });
 
     it('should use "/" as separator for category facet subcategories', () => {
@@ -122,17 +113,28 @@ describe.skip('Breadcrumb Manager Test Suites', () => {
 
   describe('Custom properties test ()', () => {
     beforeEach(() => {
-      setupComponents('collapse-threshold=4 category-divider=";"');
+      setupComponents('collapse-threshold=3 category-divider=";"');
       createAliasFacetUL(numericFacetProp.field, FacetSelectors.numericFacet);
     });
 
-    it('should hide 3 fields when 7 are selected', () => {
-      for (let n = 0; n < 7; n++) {
+    it.skip('should hide 2 fields when 5 are selected', () => {
+      for (let n = 0; n < 5; n++) {
         clickOnNthFacet(n);
-        cy.wait(150);
+        cy.wait(250);
       }
       createBreadcrumbShadowAlias();
-      cy.get(BreadcrumbAlias.breadcrumbs).should('have.length', 4);
+      cy.get(BreadcrumbAlias.breadcrumbs).should('have.length', 3);
+    });
+
+    it('should display all fields on clicking "Show More"', () => {
+      for (let n = 0; n < 5; n++) {
+        clickOnNthFacet(n);
+        cy.wait(250);
+      }
+      createBreadcrumbShadowAlias();
+      cy.get(BreadcrumbAlias.showMoreButton).click();
+      createBreadcrumbShadowAlias();
+      cy.get(BreadcrumbAlias.breadcrumbs).should('have.length', 5);
     });
 
     it('should use ";" as a custom separator for category facet subcategories', () => {
