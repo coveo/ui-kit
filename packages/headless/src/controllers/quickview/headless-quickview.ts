@@ -53,6 +53,11 @@ export interface QuickviewState {
    * `true` if content is being fetched, and `false` otherwise.
    */
   isLoading: boolean;
+
+  /**
+   * The maximum file size in MB rendered by the quick view window.
+   */
+  maximumFileSize: number;
 }
 
 /**
