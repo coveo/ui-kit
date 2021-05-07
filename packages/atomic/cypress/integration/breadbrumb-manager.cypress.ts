@@ -120,7 +120,7 @@ describe('Breadcrumb Manager Test Suites', () => {
     it.skip('should hide 2 fields when 5 are selected', () => {
       for (let n = 0; n < 5; n++) {
         clickOnNthFacet(n);
-        cy.wait(250);
+        cy.wait(150);
       }
       createBreadcrumbShadowAlias();
       cy.get(BreadcrumbAlias.breadcrumbs).should('have.length', 3);
@@ -129,7 +129,7 @@ describe('Breadcrumb Manager Test Suites', () => {
     it('should display all fields on clicking "Show More"', () => {
       for (let n = 0; n < 5; n++) {
         clickOnNthFacet(n);
-        cy.wait(250);
+        cy.wait(150);
       }
       createBreadcrumbShadowAlias();
       cy.get(BreadcrumbAlias.showMoreButton).click();
