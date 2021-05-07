@@ -287,6 +287,7 @@ export {
 } from './quickview/headless-quickview';
 
 export {
+  Collection,
   FoldedResult,
   FoldedResultList,
   FoldingOptions,

@@ -7,6 +7,17 @@ export interface FoldedResult extends Result {
   children: FoldedResult[];
 }
 
+export interface Collection extends FoldedResult {
+  /**
+   * Whether more results are available in the collection.
+   */
+  moreResultsAvailable: boolean;
+  /**
+   * Whether there is an ongoing query to add more results to the collection.
+   */
+  isLoadingMoreResults: boolean;
+}
+
 export interface FoldingFields {
   collection: string;
   parent: string;
@@ -17,7 +28,7 @@ export interface FoldingState {
   enabled: boolean;
   fields: FoldingFields;
   numberOfFoldedResults: number;
-  collections: FoldedResult[];
+  collections: Collection[];
 }
 
 export const getFoldingInitialState: () => FoldingState = () => ({

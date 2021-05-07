@@ -3,9 +3,10 @@ import {Engine} from '../../app/headless-engine';
 import {search, configuration, folding} from '../../app/reducers';
 import {
   foldingOptionsSchemaDefinition,
+  loadAll,
   registerFolding,
 } from '../../features/folding/folding-actions';
-import {FoldedResult} from '../../features/folding/folding-state';
+import {Collection, FoldedResult} from '../../features/folding/folding-state';
 import {
   ConfigurationSection,
   FoldingSection,
@@ -20,7 +21,7 @@ import {
   ResultListState,
 } from '../result-list/headless-result-list';
 
-export {FoldedResult};
+export {Collection, FoldedResult};
 
 const optionsSchema = new Schema<Required<FoldingOptions>>(
   foldingOptionsSchemaDefinition
@@ -69,6 +70,10 @@ export interface FoldedResultListProps {
  */
 export interface FoldedResultList extends ResultList {
   /**
+   * Loads all the folded results for a given collection.
+   */
+  loadAll(collection: string | Collection): void;
+  /**
    * The state of the `FoldedResultList` controller.
    */
   state: FoldedResultListState;
@@ -81,7 +86,7 @@ export interface FoldedResultListState extends ResultListState {
   /**
    * The hierarchical collections of results.
    * */
-  results: FoldedResult[];
+  results: Collection[];
 }
 
 /**
@@ -116,6 +121,15 @@ export function buildFoldedResultList(
 
   return {
     ...controller,
+
+    loadAll: (collection) =>
+      dispatch(
+        loadAll(
+          typeof collection === 'string'
+            ? collection
+            : (collection.raw[engine.state.folding.fields.collection] as string)
+        )
+      ),
 
     get state() {
       const state = getState();
