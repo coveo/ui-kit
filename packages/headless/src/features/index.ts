@@ -303,6 +303,8 @@ export namespace ProductRecommendationsActions {
   export type StateNeededByGetProductRecommendations = StateNeededByGetProductRecommendationsAlias;
 }
 
+export * from './product-recommendations/product-recommendations-actions-loader';
+
 import {deselectAllFacets as deselectAllFacetsAlias} from './facets/generic/facet-actions';
 export namespace BreadcrumbActions {
   export const deselectAllFacets = deselectAllFacetsAlias;
