@@ -191,6 +191,8 @@ export namespace QueryActions {
   export const updateQuery = updateQueryAlias;
 }
 
+export * from './query/query-actions-loader';
+
 import {
   registerQuerySetQuery as registerQuerySetQueryAlias,
   updateQuerySetQuery as updateQuerySetQueryAlias,
