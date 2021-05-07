@@ -329,6 +329,9 @@ const actionLoaderConfiguration: ActionLoaderConfiguration[] = [
   {
     initializer: 'loadQueryActions',
   },
+  {
+    initializer: 'loadQuerySetActions',
+  },
 ];
 
 const controllers = controllerConfiguration.map((controller) =>

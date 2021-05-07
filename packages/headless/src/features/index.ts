@@ -202,6 +202,8 @@ export namespace QuerySetActions {
   export const updateQuerySetQuery = updateQuerySetQueryAlias;
 }
 
+export * from './query-set/query-set-actions-loader';
+
 import {
   registerQuerySuggest as registerQuerySuggestAlias,
   buildQuerySuggestRequest as buildQuerySuggestRequestAlias,
