@@ -286,6 +286,8 @@ export namespace RecommendationActions {
   export type StateNeededByGetRecommendations = StateNeededByGetRecommendationsAlias;
 }
 
+export * from './recommendation/recommendation-actions-loader';
+
 import {
   setProductRecommendationsBrandFilter as setProductRecommendationsBrandFilterAlias,
   buildProductRecommendationsRequest as buildProductRecommendationsRequestAlias,
