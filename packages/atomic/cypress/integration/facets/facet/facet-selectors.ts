@@ -14,17 +14,17 @@ export const FacetSelector = {
   facetValues: (field = facetField, type = facetComponent) =>
     FacetSelector.shadow(field, type).find('ul').find('li'),
   valueLabels: (field = facetField, type = facetComponent) =>
-    FacetSelector.shadow(field, type).find('label span:nth-child(1)'),
+    FacetSelector.shadow(field, type).find('[part="value-label"]'),
   valueCounts: (field = facetField, type = facetComponent) =>
-    FacetSelector.shadow(field, type).find('label span:nth-child(2)'),
+    FacetSelector.shadow(field, type).find('[part="value-count"]'),
   facetSearchBox: (field = facetField, type = facetComponent) =>
-    FacetSelector.shadow(field, type).find('input[part="search-input"]'),
+    FacetSelector.shadow(field, type).find('[part="search-input"]'),
   showMoreButton: (field = facetField, type = facetComponent) =>
-    FacetSelector.shadow(field, type).find('button[part="show-more"]'),
+    FacetSelector.shadow(field, type).find('[part="show-more"]'),
   showLessButton: (field = facetField, type = facetComponent) =>
-    FacetSelector.shadow(field, type).find('button[part="show-less"]'),
+    FacetSelector.shadow(field, type).find('[part="show-less"]'),
   facetClearAllFilter: (field = facetField, type = facetComponent) =>
-    FacetSelector.shadow(field, type).find('button[part="clear-button"]'),
+    FacetSelector.shadow(field, type).find('[part="clear-button"]'),
   facetValueAtIndex: (
     index: number,
     field = facetField,
@@ -44,10 +44,10 @@ export const FacetSelector = {
     type = facetComponent
   ) =>
     FacetSelector.facetValueAtIndex(index, field, type).find(
-      'label span[part="value-label"]'
+      '[part="value-label"]'
     ),
   facetPlaceHolder: (field = facetField, type = facetComponent) =>
-    FacetSelector.shadow(field, type).find('div[part="placeholder"]'),
+    FacetSelector.shadow(field, type).find('[part="placeholder"]'),
 };
 
 export const FacetSelectors = {

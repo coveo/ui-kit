@@ -30,17 +30,13 @@ export interface NumericFacetSetupOptions {
   executeFirstSearch: boolean;
 }
 
-export function generateDateRangeHtml(numericRanges: NumericRange[] | []) {
-  if (!Array.isArray(numericRanges) || !numericRanges.length) {
-    return null;
-  } else {
-    return numericRanges
-      .map(
-        (r: NumericRange) =>
-          `<atomic-numeric-range start=${r.start} end=${r.end} end-inclusive="true"></atomic-numeric-range>`
-      )
-      .join();
-  }
+export function generateDateRangeHtml(numericRanges: NumericRange[]) {
+  return numericRanges
+    .map(
+      (r: NumericRange) =>
+        `<atomic-numeric-range start=${r.start} end=${r.end}></atomic-numeric-range>`
+    )
+    .join();
 }
 
 export function setupNumericFacet(

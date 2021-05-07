@@ -3,11 +3,11 @@ export const breadcrumbComponent = 'atomic-breadcrumb-manager';
 export const BreadcrumbSelector = {
   shadow: () => cy.get(breadcrumbComponent).shadow(),
   breadcrumbClearAllFilter: () =>
-    BreadcrumbSelector.shadow().find('button[part="breadcrumb-clear-all"]'),
+    BreadcrumbSelector.shadow().find('[part="breadcrumb-clear-all"]'),
   breadcrumbTitles: () =>
-    BreadcrumbSelector.shadow().find('button[part="breadcrumb"][title]'),
+    BreadcrumbSelector.shadow().find('[part="breadcrumb"][title]'),
   breadcrumbShowMoreButton: () =>
-    BreadcrumbSelector.shadow().find('button[part="breadcrumb"]'),
+    BreadcrumbSelector.shadow().find('[part="breadcrumb"]'),
   breadcrumbValueAtIndex: (facetLabel: string, index: number) =>
     BreadcrumbSelector.shadow()
       .find(`span[title="${facetLabel}"]`)

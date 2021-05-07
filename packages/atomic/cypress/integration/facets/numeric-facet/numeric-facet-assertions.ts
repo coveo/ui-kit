@@ -10,16 +10,15 @@ import {
 export function assertNumericFacetValueOnUrl(
   index = 0,
   field = numericField,
-  type = numericFacetComponent,
   valueSeparator = 'to'
 ) {
-  it('Should reflected selected facetValue on Url', () => {
-    FacetSelector.facetValueLabelAtIndex(index, field, type)
+  it('should reflected selected facetValue on Url', () => {
+    FacetSelector.facetValueLabelAtIndex(index, field, numericFacetComponent)
       .invoke('text')
       .then((txt) => {
         const facetValueInApiFormat = convertFacetValueToAPIformat(
           txt,
-          type,
+          numericFacetComponent,
           valueSeparator
         );
         const urlHash = `#nf[${field.toLowerCase()}]=${encodeURI(
@@ -31,12 +30,11 @@ export function assertNumericFacetValueOnUrl(
 }
 
 export function assertCustomRangeDisplay(ranges = numericRanges) {
-  it('Should generate all manually specified ranges', () => {
+  it('should generate all manually specified ranges', () => {
     FacetSelector.valueLabels(numericField, numericFacetComponent).as(
       'numericFacetAllValueLabels'
     );
     cy.getTextOfAllElements('@numericFacetAllValueLabels').then((elements) => {
-      console.log(elements);
       ranges.forEach((r: NumericRange) => {
         const facetValueConverted = convertRangeToFacetValue(r);
         expect(elements).to.include(facetValueConverted);

@@ -14,7 +14,7 @@ export function assertDateFacetValueOnUrl(
   type = dateFacetComponent,
   valueSeparator = 'to'
 ) {
-  it('Should reflected selected facetValue on Url', () => {
+  it('should reflected selected facetValue on Url', () => {
     FacetSelector.facetValueLabelAtIndex(index, field, type)
       .invoke('text')
       .then((txt) => {
@@ -31,13 +31,12 @@ export function assertDateFacetValueOnUrl(
   });
 }
 
-export function assertCustomRangeDisplay(ranges = dateRanges) {
-  it('Should generate all manually specified ranges', () => {
+export function assertDateRangeDisplay(ranges = dateRanges) {
+  it('should generate all manually specified ranges', () => {
     FacetSelector.valueLabels(dateField, dateFacetComponent).as(
       'dateFacetAllValueLabels'
     );
     cy.getTextOfAllElements('@dateFacetAllValueLabels').then((elements) => {
-      console.log(elements);
       ranges.forEach((r: DateRange) => {
         const facetValueConverted = convertDateToFacetValue(r);
         expect(elements).to.include(facetValueConverted);

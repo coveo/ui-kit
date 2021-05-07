@@ -30,17 +30,13 @@ export interface DateFacetSetupOptions {
   executeFirstSearch: boolean;
 }
 
-export function generateDateRangeHtml(dateRanges: DateRange[] | []) {
-  if (!Array.isArray(dateRanges) || !dateRanges.length) {
-    return null;
-  } else {
-    return dateRanges
-      .map(
-        (r: DateRange) =>
-          `<atomic-date-range start=${r.start} end=${r.end} end-inclusive="true"></atomic-date-range>`
-      )
-      .join();
-  }
+export function generateDateRangeHtml(dateRanges: DateRange[]) {
+  return dateRanges
+    .map(
+      (r: DateRange) =>
+        `<atomic-date-range start=${r.start} end=${r.end}></atomic-date-range>`
+    )
+    .join();
 }
 
 export function setupDateFacet(options: Partial<DateFacetSetupOptions> = {}) {
@@ -81,7 +77,6 @@ export function convertDateToFacetValue(
 
 export function convertDateFormatLabel(date: string, formatType?: string) {
   formatType = formatType ? formatType : 'DD/MM/YYYY';
-  console.log(formatType);
   const splitDate = date.split('/');
   const year = splitDate[2];
   let month = splitDate[1];

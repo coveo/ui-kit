@@ -13,7 +13,7 @@ import {
 import {facetComponent, FacetSelector} from './facet-selectors';
 
 export function assertAccessibility(facetComponent: string) {
-  it('Component should pass accessibility tests', () => {
+  it('should pass accessibility tests', () => {
     cy.checkA11y(facetComponent);
   });
 }
@@ -23,7 +23,7 @@ export function assertContainsLabel(
   field = facetField,
   type = facetComponent
 ) {
-  it(`Component should contain "${label}" as its label`, () => {
+  it(`should contain "${label}" as its label`, () => {
     FacetSelector.label(field, type).should('contain.text', label);
   });
 }
@@ -32,7 +32,7 @@ export function assertNonZeroFacetCount(
   field = facetField,
   type = facetComponent
 ) {
-  it('Component should not render any Facet with zero facet count', () => {
+  it('should not render any Facet with zero facet count', () => {
     FacetSelector.valueCounts(field, type).as('facetAllValueCounts');
     cy.getTextOfAllElements('@facetAllValueCounts').then((counts) => {
       expect(counts).not.to.include('0');
@@ -45,7 +45,7 @@ export function assertDisplayFacetSearchbox(
   field = facetField,
   type = facetComponent
 ) {
-  it('Component should contain facet searchbox', () => {
+  it('should contain facet searchbox', () => {
     FacetSelector.facetSearchBox(field, type).should(
       display ? 'be.visible' : 'not.exist'
     );
@@ -57,7 +57,7 @@ export function assertDisplayShowMoreButton(
   field = facetField,
   type = facetComponent
 ) {
-  it(`Component ${should(display)} contain Show More button`, () => {
+  it(`${should(display)} contain Show More button`, () => {
     FacetSelector.showMoreButton(field, type).should(
       display ? 'be.visible' : 'not.exist'
     );
@@ -69,7 +69,7 @@ export function assertDisplayShowLessButton(
   field = facetField,
   type = facetComponent
 ) {
-  it(`Component ${should(display)} contain Show Less button`, () => {
+  it(`${should(display)} contain Show Less button`, () => {
     FacetSelector.showLessButton(field, type).should(
       display ? 'be.visible' : 'not.exist'
     );
@@ -81,7 +81,7 @@ export function assertFacetNumberOfValueEqual(
   field = facetField,
   type = facetComponent
 ) {
-  it(`Component should contain "${totalNumber}" facet values`, () => {
+  it(`should contain "${totalNumber}" facet values`, () => {
     FacetSelector.valueLabels(field, type)
       .its('length')
       .should('eq', totalNumber);
@@ -93,7 +93,7 @@ export function assertFacetNumberOfValueGreaterThan(
   field = facetField,
   type = facetComponent
 ) {
-  it(`Component should contain more than "${totalNumber}" facet values`, () => {
+  it(`should contain more than "${totalNumber}" facet values`, () => {
     FacetSelector.facetValues(field, type)
       .its('length')
       .should('be.gt', totalNumber);
@@ -132,7 +132,7 @@ export function assertBreadcrumbDisplayFacetValueAtIndex(
   field = facetField,
   type = facetComponent
 ) {
-  it(`Should trigger breadcrumb and display correctly facetValue at ${index} position`, () => {
+  it(`should trigger breadcrumb and display correctly facetValue at ${index} position`, () => {
     BreadcrumbSelector.breadcrumbClearAllFilter().should('be.visible');
     FacetSelector.facetValueLabelAtIndex(index, field, type)
       .invoke('text')
@@ -145,7 +145,7 @@ export function assertBreadcrumbDisplayFacetValueAtIndex(
 }
 
 export function assertFacetValueOnUrl() {
-  it('Should reflected selected facetValue on Url', () => {
+  it('should reflected selected facetValue on Url', () => {
     FacetSelector.facetValueLabelAtIndex(0)
       .invoke('text')
       .then((txt) => {
@@ -156,7 +156,7 @@ export function assertFacetValueOnUrl() {
 }
 
 export function assertMultipleSelectedFacetValueOnUrl() {
-  it('It should reflect multiple selected facetValues on URL', () => {
+  it('should reflect multiple selected facetValues on URL', () => {
     FacetSelector.facetValueLabelAtIndex(0)
       .invoke('text')
       .then((fv1) => {
@@ -175,7 +175,7 @@ export function assertAnalyticLogFacetSelect(
   type = facetComponent,
   index = 0
 ) {
-  it('It should log the facet select results to UA ', () => {
+  it('should log the facet select results to UA ', () => {
     cy.wait(RouteAlias.analytics).then((intercept) => {
       const analyticsBody = intercept.request.body;
       expect(analyticsBody).to.have.property('actionCause', 'facetSelect');
@@ -194,7 +194,7 @@ export function assertAnalyticLogFacetSelect(
 }
 
 export function assertAnalyticLogFacetDeselect(field = facetField) {
-  it('It should log the facet deselect results to UA ', () => {
+  it('should log the facet deselect results to UA ', () => {
     cy.wait(RouteAlias.analytics).then((intercept) => {
       const analyticsBody = intercept.request.body;
       expect(analyticsBody).to.have.property('actionCause', 'facetDeselect');
@@ -204,7 +204,7 @@ export function assertAnalyticLogFacetDeselect(field = facetField) {
 }
 
 export function assertAnalyticLogMultipleFacetsSelect() {
-  it('It should log the 2nd facet select results to UA ', () => {
+  it('should log the 2nd facet select results to UA ', () => {
     cy.wait(RouteAlias.analytics).then(({request}) => {
       const analyticsBody = request.body;
       expect(analyticsBody).to.have.property('actionCause', 'facetSelect');
@@ -214,7 +214,7 @@ export function assertAnalyticLogMultipleFacetsSelect() {
 }
 
 export function assertAnalyticLogShowMoreShowLess(button: string) {
-  it(`It should log the ${button} results to UA`, () => {
+  it(`should log the ${button} results to UA`, () => {
     cy.wait(RouteAlias.analytics).then(({request}) => {
       const analyticsBody = request.body;
       expect(analyticsBody).to.have.property(
@@ -226,7 +226,7 @@ export function assertAnalyticLogShowMoreShowLess(button: string) {
 }
 
 export function assertAnalyticLogClearAllFacets() {
-  it('It should log the clearAllFacets results to UA', () => {
+  it('should log the clearAllFacets results to UA', () => {
     cy.wait(RouteAlias.analytics).then(({request}) => {
       const analyticsBody = request.body;
       expect(analyticsBody).to.have.property('actionCause', 'facetClearAll');
@@ -237,7 +237,7 @@ export function assertAnalyticLogClearAllFacets() {
 
 export function assertFacetSortCriteria(sortOption: string) {
   describe(`Facet with "${sortOption}" sort-criteria`, () => {
-    it(`It should use "${sortOption}" sort for custom setting`, () => {
+    it(`should use "${sortOption}" sort for custom setting`, () => {
       setupFacet({attributes: `sort-criteria="${sortOption}"`});
       cy.wait(RouteAlias.search).then((intercept) => {
         const requestBody = intercept.request.body.facets[0];
@@ -262,7 +262,7 @@ export function assertDisplayFacet(
   field = facetField,
   type = facetComponent
 ) {
-  it(`It ${should(display)} display the facet`, () => {
+  it(`${should(display)} display the facet`, () => {
     FacetSelector.wrapper(field, type).should(
       display ? 'be.visible' : 'not.exist'
     );
@@ -282,10 +282,9 @@ export function assertContainsComponentError(
 }
 
 export function assertAnalyticLogFacetInInterfaceLoadEvent(field = facetField) {
-  it('It should include facetState in UA interfaceLoad event', () => {
+  it('should include facetState in UA interfaceLoad event', () => {
     cy.wait('@coveoAnalytics').then(({request}) => {
       const analyticsBody = request.body;
-      console.log('analyticsBody', analyticsBody);
       expect(analyticsBody).to.have.property('actionCause', 'interfaceLoad');
       expect(analyticsBody.facetState[0]).to.have.property('state', 'selected');
       expect(analyticsBody.facetState[0]).to.have.property('field', field);
@@ -297,7 +296,7 @@ export function assertRenderPlaceHolder(
   field = facetField,
   type = facetComponent
 ) {
-  it('It should render a placeholder', () => {
+  it('should render a placeholder', () => {
     FacetSelector.facetPlaceHolder(field, type).should('be.visible');
   });
 }
