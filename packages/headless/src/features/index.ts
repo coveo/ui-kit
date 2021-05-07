@@ -177,10 +177,14 @@ export namespace PaginationActions {
   export const updatePage = updatePageAlias;
 }
 
+export * from './pagination/pagination-actions-loader';
+
 import {setPipeline as setPipelineAlias} from './pipeline/pipeline-actions';
 export namespace PipelineActions {
   export const setPipeline = setPipelineAlias;
 }
+
+export * from './pipeline/pipeline-actions-loader';
 
 import {updateQuery as updateQueryAlias} from './query/query-actions';
 export namespace QueryActions {

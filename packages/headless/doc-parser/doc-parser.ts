@@ -317,6 +317,12 @@ const actionLoaderConfiguration: ActionLoaderConfiguration[] = [
   {
     initializer: 'loadHistoryActions',
   },
+  {
+    initializer: 'loadPaginationActions',
+  },
+  {
+    initializer: 'loadPipelineActions',
+  },
 ];
 
 const controllers = controllerConfiguration.map((controller) =>
