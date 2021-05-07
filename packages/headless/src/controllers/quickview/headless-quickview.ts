@@ -94,11 +94,13 @@ export function buildQuickview(
       const preview = getState().resultPreview;
       const content = uniqueId === preview.uniqueId ? preview.content : '';
       const isLoading = preview.isLoading;
+      const maximumFileSize = preview.maximumFileSize;
 
       return {
         content,
         resultHasPreview,
         isLoading,
+        maximumFileSize,
       };
     },
   };
