@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.13.0-alpha.10](https://github.com/coveo/ui-kit/compare/v0.13.0-alpha.9...v0.13.0-alpha.10) (2021-05-07)
+
+
+### Bug Fixes
+
+* **atomic:** allow to scroll down mobile facets ([#784](https://github.com/coveo/ui-kit/issues/784)) ([5dc15b5](https://github.com/coveo/ui-kit/commit/5dc15b50c19fc523bcc9ce079589ac04adf61fd3))
+
+
+
+
+
 # [0.13.0-alpha.9](https://github.com/coveo/ui-kit/compare/v0.13.0-alpha.8...v0.13.0-alpha.9) (2021-05-07)
 
 
