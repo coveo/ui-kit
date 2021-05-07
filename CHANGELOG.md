@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.13.0-alpha.9](https://github.com/coveo/ui-kit/compare/v0.13.0-alpha.8...v0.13.0-alpha.9) (2021-05-07)
+
+
+### Bug Fixes
+
+* **atomic:** various styling issues ([#782](https://github.com/coveo/ui-kit/issues/782)) ([1f74679](https://github.com/coveo/ui-kit/commit/1f74679d644d6b46d82f57c1616a63f7ed00d46d))
+
+
+
+
+
 # [0.13.0-alpha.8](https://github.com/coveo/ui-kit/compare/v0.13.0-alpha.7...v0.13.0-alpha.8) (2021-05-06)
 
 
