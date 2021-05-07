@@ -192,7 +192,7 @@ export class FacetSearch {
 
   private get showNoValuesFound() {
     return (
-      this.facetSearchState.query !== '' &&
+      !this.isEmptyQuery &&
       !this.facetSearchResults.length &&
       !this.facetSearchState.isLoading
     );
