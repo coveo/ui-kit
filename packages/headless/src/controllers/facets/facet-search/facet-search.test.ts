@@ -137,7 +137,7 @@ describe('FacetSearch', () => {
     const facetSearchState = {
       ...buildMockFacetSearchResponse(),
       isLoading: false,
-      query: '**',
+      query: '',
     };
 
     engine.state.facetSearchSet[facetId] = buildMockFacetSearch(

@@ -317,12 +317,15 @@ describe('search api client', () => {
 
         const request = (PlatformClient.call as jest.Mock).mock.calls[0][0];
 
+        const {query} = facetSearchState.options;
+        const newQuery = `*${query}*`;
+
         expect(request).toMatchObject({
           requestParams: {
             type: 'specific',
             captions: facetSearchState.options.captions,
             numberOfValues: facetSearchState.options.numberOfValues,
-            query: facetSearchState.options.query,
+            query: newQuery,
             field: facetState.field,
             delimitingCharacter: facetState.delimitingCharacter,
             ignoreValues: [],
@@ -351,13 +354,16 @@ describe('search api client', () => {
 
         const request = (PlatformClient.call as jest.Mock).mock.calls[0][0];
 
+        const {query} = categoryFacetSearch.options;
+        const newQuery = `*${query}*`;
+
         expect(request).toMatchObject({
           requestParams: {
             type: 'hierarchical',
             basePath: categoryFacet.basePath,
             captions: categoryFacetSearch.options.captions,
             numberOfValues: categoryFacetSearch.options.numberOfValues,
-            query: categoryFacetSearch.options.query,
+            query: newQuery,
             field: categoryFacet.field,
             delimitingCharacter: categoryFacet.delimitingCharacter,
             ignorePaths: [],

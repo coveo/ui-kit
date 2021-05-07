@@ -6,7 +6,7 @@ export function buildMockFacetSearchRequestOptions(
   return {
     captions: {},
     numberOfValues: 0,
-    query: '**',
+    query: '',
     ...config,
   };
 }
