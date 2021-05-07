@@ -227,6 +227,8 @@ export namespace QuerySuggestActions {
   export const unregisterQuerySuggest = unregisterQuerySuggestAlias;
 }
 
+export * from './query-suggest/query-suggest-actions-loader';
+
 import {
   checkForRedirection as checkForRedirectionAlias,
   RedirectionState as RedirectionStateAlias,
