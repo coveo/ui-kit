@@ -29,7 +29,7 @@ export class AtomicResult {
   @Prop() content!: string;
 
   @Listen('atomic/resolveResult')
-  public handleInitialization(event: CustomEvent) {
+  public resolveResult(event: CustomEvent) {
     event.preventDefault();
     event.stopPropagation();
     event.detail(this.result);

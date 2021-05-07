@@ -38,6 +38,10 @@
     @apply bg-primary border-none;
 }
 
+.checked + label {
+  @apply font-bold;
+}
+
 .checked:before {
   @apply box-content absolute top-0.5 left-1.5 block w-1.5 h-2.5 border-on-primary border-2 border-t-0 border-l-0 transform rotate-45;
   content: '';

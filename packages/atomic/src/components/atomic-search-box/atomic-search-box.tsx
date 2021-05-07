@@ -88,7 +88,7 @@ export class AtomicSearchBox {
       onBlur: () => {
         this.shouldShowSuggestions = false;
       },
-      activeClass: 'bg-primary text-on-primary',
+      activeClass: 'active',
       activePartName: 'active-suggestion',
     });
   }
@@ -202,7 +202,7 @@ export class AtomicSearchBox {
           onMouseDown={(e) => e.preventDefault()}
           part="suggestion"
           id={id}
-          class="suggestion h-9 px-2 cursor-pointer text-left text-sm bg-transparent border-none shadow-none flex flex-row items-center"
+          class="suggestion h-9 px-2 cursor-pointer text-left text-sm flex flex-row items-center border-l border-r border-divider"
           value={index}
         >
           <pre class="font-sans" innerHTML={suggestion.highlightedValue}></pre>
@@ -215,10 +215,9 @@ export class AtomicSearchBox {
     return (
       <ul
         part="suggestions"
-        class={
-          'suggestions box-border w-full p-0 my-0 flex flex-col bg-background border border-divider border-t-0 rounded-b list-none absolute z-50 empty:border-none ' +
-          (this.shouldShowSuggestions ? 'block' : 'hidden')
-        }
+        class={`suggestions w-full p-0 my-0 flex flex-col bg-background list-none absolute z-50 ${
+          this.shouldShowSuggestions ? 'block' : 'hidden'
+        }`}
         ref={(el) => (this.valuesRef = el as HTMLElement)}
       >
         {this.suggestions}
