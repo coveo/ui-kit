@@ -48,7 +48,7 @@ function getFoldedResults(result: ResultWithFolding): ResultWithFolding[] {
   ]);
 }
 
-function addChildren(
+function withChildren(
   parent: ResultWithFolding,
   results: ResultWithFolding[],
   fields: FoldingFields
@@ -65,17 +65,13 @@ function addChildren(
               getParentField(result, fields) === sourceChildValue;
             return isChildOfSource && !isSameResultAsSource;
           })
-          .map((result) => addChildren(result, results, fields))
+          .map((result) => withChildren(result, results, fields))
       : [],
   };
 }
 
-function createCollectionFromResults(
-  results: ResultWithFolding[],
-  fields: FoldingFields,
-  moreResultsAvailable: boolean
-): Collection | null {
-  const rootResult = results.find((result) => {
+function getRootResult(results: ResultWithFolding[], fields: FoldingFields) {
+  return results.find((result) => {
     const hasNoParent = getParentField(result, fields) === undefined;
     const isParentOfItself = areDefinedAndEqual(
       getParentField(result, fields),
@@ -83,16 +79,6 @@ function createCollectionFromResults(
     );
     return hasNoParent || isParentOfItself;
   });
-
-  if (!rootResult) {
-    return null;
-  }
-
-  return {
-    ...addChildren(rootResult, results, fields),
-    moreResultsAvailable,
-    isLoadingMoreResults: false,
-  };
 }
 
 function createCollectionFromResult(
@@ -120,18 +106,12 @@ function createCollectionFromResult(
     (result) => result.uniqueId
   );
 
-  const collection = createCollectionFromResults(
-    resultsInCollection,
-    fields,
-    moreResultsAvailable
-  );
-
-  if (collection) {
-    return collection;
-  }
-
   return {
-    ...addChildren(relevantResult, resultsInCollection, fields),
+    ...withChildren(
+      getRootResult(resultsInCollection, fields) ?? relevantResult,
+      resultsInCollection,
+      fields
+    ),
     moreResultsAvailable,
     isLoadingMoreResults: false,
   };
@@ -211,15 +191,29 @@ export const foldingReducer = createReducer(
         loadAll.fulfilled,
         (state, {payload: {collectionId, results}}) => ({
           ...state,
-          collections: state.collections.map((collection) =>
-            collection.raw[state.fields.collection] === collectionId
-              ? createCollectionFromResults(
-                  results as ResultWithFolding[],
-                  state.fields,
-                  false
-                ) ?? collection
-              : collection
-          ),
+          collections: state.collections.map((collection) => {
+            const isCollectionToUpdate =
+              collection.raw[state.fields.collection] === collectionId;
+            if (!isCollectionToUpdate) {
+              return collection;
+            }
+            const rootResult = getRootResult(
+              results as ResultWithFolding[],
+              state.fields
+            );
+            if (!rootResult) {
+              return collection;
+            }
+            return {
+              ...withChildren(
+                rootResult,
+                results as ResultWithFolding[],
+                state.fields
+              ),
+              moreResultsAvailable: false,
+              isLoadingMoreResults: false,
+            };
+          }),
         })
       )
 );
