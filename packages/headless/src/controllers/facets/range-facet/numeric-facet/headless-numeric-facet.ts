@@ -3,12 +3,14 @@ import {
   NumericFacetRequest,
   NumericRangeRequest,
 } from '../../../../features/facets/range-facets/numeric-facet-set/interfaces/request';
-import {NumericFacetRegistrationOptions} from '../../../../features/facets/range-facets/numeric-facet-set/interfaces/options';
 import {
   NumericFacetResponse,
   NumericFacetValue,
 } from '../../../../features/facets/range-facets/numeric-facet-set/interfaces/response';
-import {registerNumericFacet} from '../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions';
+import {
+  RegisterNumericFacetActionCreatorPayload,
+  registerNumericFacet,
+} from '../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions';
 import {
   assertRangeFacetOptions,
   buildRangeFacet,
@@ -139,7 +141,7 @@ export function buildNumericFacet(
   const dispatch = engine.dispatch;
 
   const facetId = determineFacetId(engine, props.options);
-  const options: NumericFacetRegistrationOptions = {
+  const options: RegisterNumericFacetActionCreatorPayload = {
     currentValues: [],
     ...props.options,
     facetId,
