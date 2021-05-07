@@ -240,6 +240,8 @@ export namespace RedirectionActions {
   export const buildPlanRequest = buildPlanRequestAlias;
 }
 
+export * from './redirection/redirection-actions-loader';
+
 import {
   StateNeededByExecuteSearch as StateNeededByExecuteSearchAlias,
   ExecuteSearchThunkReturn as ExecuteSearchThunkReturnAlias,

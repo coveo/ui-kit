@@ -338,6 +338,9 @@ const actionLoaderConfiguration: ActionLoaderConfiguration[] = [
   {
     initializer: 'loadRecommendationActions',
   },
+  {
+    initializer: 'loadRedirectionActions',
+  },
 ];
 
 const controllers = controllerConfiguration.map((controller) =>
