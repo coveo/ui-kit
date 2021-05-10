@@ -291,16 +291,7 @@ export const buildSearchRequest = (
       facets: getFacets(state),
     }),
     ...(state.fields && {
-      fieldsToInclude: [
-        ...state.fields.fieldsToInclude,
-        ...(state.folding?.enabled
-          ? [
-              state.folding.fields.collection,
-              state.folding.fields.parent,
-              state.folding.fields.child,
-            ]
-          : []),
-      ],
+      fieldsToInclude: state.fields.fieldsToInclude,
     }),
     ...(state.pagination && {
       numberOfResults: state.pagination.numberOfResults,
