@@ -137,6 +137,9 @@ export namespace HistoryActions {
   export const change = changeAlias;
   export const forward = forwardAlias;
 }
+
+export * from './history/history-actions-loader';
+
 import {
   registerNumericFacet as registerNumericFacetAlias,
   deselectAllNumericFacetValues as deselectAllNumericFacetValuesAlias,
@@ -174,15 +177,21 @@ export namespace PaginationActions {
   export const updatePage = updatePageAlias;
 }
 
+export * from './pagination/pagination-actions-loader';
+
 import {setPipeline as setPipelineAlias} from './pipeline/pipeline-actions';
 export namespace PipelineActions {
   export const setPipeline = setPipelineAlias;
 }
 
+export * from './pipeline/pipeline-actions-loader';
+
 import {updateQuery as updateQueryAlias} from './query/query-actions';
 export namespace QueryActions {
   export const updateQuery = updateQueryAlias;
 }
+
+export * from './query/query-actions-loader';
 
 import {
   registerQuerySetQuery as registerQuerySetQueryAlias,
@@ -192,6 +201,8 @@ export namespace QuerySetActions {
   export const registerQuerySetQuery = registerQuerySetQueryAlias;
   export const updateQuerySetQuery = updateQuerySetQueryAlias;
 }
+
+export * from './query-set/query-set-actions-loader';
 
 import {
   registerQuerySuggest as registerQuerySuggestAlias,
@@ -216,6 +227,8 @@ export namespace QuerySuggestActions {
   export const unregisterQuerySuggest = unregisterQuerySuggestAlias;
 }
 
+export * from './query-suggest/query-suggest-actions-loader';
+
 import {
   checkForRedirection as checkForRedirectionAlias,
   RedirectionState as RedirectionStateAlias,
@@ -226,6 +239,8 @@ export namespace RedirectionActions {
   export type RedirectionState = RedirectionStateAlias;
   export const buildPlanRequest = buildPlanRequestAlias;
 }
+
+export * from './redirection/redirection-actions-loader';
 
 import {
   StateNeededByExecuteSearch as StateNeededByExecuteSearchAlias,
@@ -249,6 +264,8 @@ export namespace SearchHubActions {
   export const setSearchHub = setSearchHubAlias;
 }
 
+export * from './search-hub/search-hub-actions-loader';
+
 import {
   registerSortCriterion as registerSortCriterionAlias,
   updateSortCriterion as updateSortCriterionAlias,
@@ -257,6 +274,8 @@ export namespace SortCriterionActions {
   export const registerSortCriterion = registerSortCriterionAlias;
   export const updateSortCriterion = updateSortCriterionAlias;
 }
+
+export * from './sort-criteria/sort-criteria-actions-loader';
 
 import {
   buildRecommendationRequest as buildRecommendationRequestAlias,
@@ -272,6 +291,8 @@ export namespace RecommendationActions {
   export const setRecommendationId = setRecommendationIdAlias;
   export type StateNeededByGetRecommendations = StateNeededByGetRecommendationsAlias;
 }
+
+export * from './recommendation/recommendation-actions-loader';
 
 import {
   setProductRecommendationsBrandFilter as setProductRecommendationsBrandFilterAlias,
@@ -295,6 +316,8 @@ export namespace ProductRecommendationsActions {
   export const setProductRecommendationsSkus = setProductRecommendationsSkusAlias;
   export type StateNeededByGetProductRecommendations = StateNeededByGetProductRecommendationsAlias;
 }
+
+export * from './product-recommendations/product-recommendations-actions-loader';
 
 import {deselectAllFacets as deselectAllFacetsAlias} from './facets/generic/facet-actions';
 export namespace BreadcrumbActions {

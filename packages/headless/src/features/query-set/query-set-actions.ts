@@ -9,6 +9,19 @@ const querySetDefinition = {
   id: requiredNonEmptyString,
   query: requiredEmptyAllowedString,
 };
+
+export interface RegisterQuerySetQueryActionCreatorPayload {
+  /**
+   * The unique identifier of the target query.
+   */
+  id: string;
+
+  /**
+   * The initial basic query expression.
+   */
+  query: string;
+}
+
 /**
  * Registers a query in the query set.
  * @param id (string) The unique identifier of the target query.
@@ -16,9 +29,21 @@ const querySetDefinition = {
  */
 export const registerQuerySetQuery = createAction(
   'querySet/register',
-  (payload: {id: string; query: string}) =>
+  (payload: RegisterQuerySetQueryActionCreatorPayload) =>
     validatePayload(payload, querySetDefinition)
 );
+
+export interface UpdateQuerySetQueryActionCreatorPayload {
+  /**
+   * The unique identifier of the target query.
+   */
+  id: string;
+
+  /**
+   * The new basic query expression.
+   */
+  query: string;
+}
 
 /**
  * Updates a query in the query set.
@@ -27,6 +52,6 @@ export const registerQuerySetQuery = createAction(
  */
 export const updateQuerySetQuery = createAction(
   'querySet/update',
-  (payload: {id: string; query: string}) =>
+  (payload: UpdateQuerySetQueryActionCreatorPayload) =>
     validatePayload(payload, querySetDefinition)
 );

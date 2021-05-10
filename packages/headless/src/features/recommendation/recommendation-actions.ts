@@ -41,12 +41,19 @@ export interface GetRecommendationsThunkReturn {
   duration: number;
 }
 
+export interface SetRecommendationIdActionCreatorPayload {
+  /**
+   * The recommendation identifier.
+   */
+  id: string;
+}
+
 /**
  * Set recommendation identifier.
  */
 export const setRecommendationId = createAction(
   'recommendation/set',
-  (payload: {id: string}) =>
+  (payload: SetRecommendationIdActionCreatorPayload) =>
     validatePayload(payload, {
       id: requiredNonEmptyString,
     })
