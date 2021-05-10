@@ -264,6 +264,8 @@ export namespace SearchHubActions {
   export const setSearchHub = setSearchHubAlias;
 }
 
+export * from './search-hub/search-hub-actions-loader';
+
 import {
   registerSortCriterion as registerSortCriterionAlias,
   updateSortCriterion as updateSortCriterionAlias,
@@ -272,6 +274,8 @@ export namespace SortCriterionActions {
   export const registerSortCriterion = registerSortCriterionAlias;
   export const updateSortCriterion = updateSortCriterionAlias;
 }
+
+export * from './sort-criteria/sort-criteria-actions-loader';
 
 import {
   buildRecommendationRequest as buildRecommendationRequestAlias,
