@@ -14,20 +14,16 @@ export interface ResultWithFolding extends Result {
   childResults: ResultWithFolding[];
 }
 
-function getRawValue(result: ResultWithFolding, field: string) {
-  const rawValue = result.raw[field] as string | [string] | undefined;
+function getParentField(result: ResultWithFolding, fields: FoldingFields) {
+  return result.raw[fields.parent];
+}
+
+function getChildField(result: ResultWithFolding, fields: FoldingFields) {
+  const rawValue = result.raw[fields.child] as string | [string] | undefined;
   if (isArray(rawValue)) {
     return rawValue[0];
   }
   return rawValue;
-}
-
-function getParentField(result: ResultWithFolding, fields: FoldingFields) {
-  return getRawValue(result, fields.parent);
-}
-
-function getChildField(result: ResultWithFolding, fields: FoldingFields) {
-  return getRawValue(result, fields.child);
 }
 
 function areDefinedAndEqual<T>(
