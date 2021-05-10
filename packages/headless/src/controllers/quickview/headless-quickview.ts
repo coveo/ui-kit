@@ -57,7 +57,7 @@ export interface QuickviewState {
   /**
    * The maximum file size in MB rendered by the quick view window.
    */
-  maximumFileSize: number;
+  maximumPreviewSize: number;
 }
 
 /**
@@ -94,13 +94,13 @@ export function buildQuickview(
       const preview = getState().resultPreview;
       const content = uniqueId === preview.uniqueId ? preview.content : '';
       const isLoading = preview.isLoading;
-      const maximumFileSize = preview.maximumFileSize;
+      const maximumPreviewSize = preview.maximumPreviewSize;
 
       return {
         content,
         resultHasPreview,
         isLoading,
-        maximumFileSize,
+        maximumPreviewSize,
       };
     },
   };

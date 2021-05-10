@@ -8,6 +8,9 @@ import {
   buildResultPreviewRequest,
   StateNeededByHtmlEndpoint,
 } from './result-preview-request-builder';
+import {createAction} from '@reduxjs/toolkit';
+import {validatePayload} from '../../utils/validate-payload';
+import {NumberValue} from '@coveo/bueno';
 
 interface FetchResultContentResponse {
   content: string;
@@ -34,4 +37,14 @@ export const fetchResultContent = createAsyncThunk<
       uniqueId: options.uniqueId,
     };
   }
+);
+
+/**
+ * Updates the maximum preview size allowed for rendering in quick view.
+ * @param maximumPreviewSize (number) The new maximum preview size allowed for rendering in quick view.
+ */
+export const updateMaximumPreviewSize = createAction(
+  'quickview/updatemaximumPreviewSize',
+  (payload: number) =>
+    validatePayload(payload, new NumberValue({required: true, min: 0}))
 );

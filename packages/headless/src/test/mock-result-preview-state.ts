@@ -7,7 +7,7 @@ export function buildMockResultPreviewState(
     content: '',
     uniqueId: '',
     isLoading: false,
-    maximumFileSize: 50,
+    maximumPreviewSize: 50,
     ...config,
   };
 }
