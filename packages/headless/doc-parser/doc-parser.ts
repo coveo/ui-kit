@@ -323,6 +323,12 @@ const actionLoaderConfiguration: ActionLoaderConfiguration[] = [
   {
     initializer: 'loadPipelineActions',
   },
+  {
+    initializer: 'loadProductRecommendationsActions',
+  },
+  {
+    initializer: 'loadQueryActions',
+  },
 ];
 
 const controllers = controllerConfiguration.map((controller) =>

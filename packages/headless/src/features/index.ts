@@ -191,6 +191,8 @@ export namespace QueryActions {
   export const updateQuery = updateQueryAlias;
 }
 
+export * from './query/query-actions-loader';
+
 import {
   registerQuerySetQuery as registerQuerySetQueryAlias,
   updateQuerySetQuery as updateQuerySetQueryAlias,
@@ -302,6 +304,8 @@ export namespace ProductRecommendationsActions {
   export const setProductRecommendationsSkus = setProductRecommendationsSkusAlias;
   export type StateNeededByGetProductRecommendations = StateNeededByGetProductRecommendationsAlias;
 }
+
+export * from './product-recommendations/product-recommendations-actions-loader';
 
 import {deselectAllFacets as deselectAllFacetsAlias} from './facets/generic/facet-actions';
 export namespace BreadcrumbActions {
