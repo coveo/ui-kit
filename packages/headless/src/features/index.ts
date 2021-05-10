@@ -240,6 +240,8 @@ export namespace RedirectionActions {
   export const buildPlanRequest = buildPlanRequestAlias;
 }
 
+export * from './redirection/redirection-actions-loader';
+
 import {
   StateNeededByExecuteSearch as StateNeededByExecuteSearchAlias,
   ExecuteSearchThunkReturn as ExecuteSearchThunkReturnAlias,
@@ -262,6 +264,8 @@ export namespace SearchHubActions {
   export const setSearchHub = setSearchHubAlias;
 }
 
+export * from './search-hub/search-hub-actions-loader';
+
 import {
   registerSortCriterion as registerSortCriterionAlias,
   updateSortCriterion as updateSortCriterionAlias,
@@ -270,6 +274,8 @@ export namespace SortCriterionActions {
   export const registerSortCriterion = registerSortCriterionAlias;
   export const updateSortCriterion = updateSortCriterionAlias;
 }
+
+export * from './sort-criteria/sort-criteria-actions-loader';
 
 import {
   buildRecommendationRequest as buildRecommendationRequestAlias,
@@ -285,6 +291,8 @@ export namespace RecommendationActions {
   export const setRecommendationId = setRecommendationIdAlias;
   export type StateNeededByGetRecommendations = StateNeededByGetRecommendationsAlias;
 }
+
+export * from './recommendation/recommendation-actions-loader';
 
 import {
   setProductRecommendationsBrandFilter as setProductRecommendationsBrandFilterAlias,
