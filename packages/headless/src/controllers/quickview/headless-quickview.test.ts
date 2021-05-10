@@ -131,4 +131,14 @@ describe('Quickview', () => {
 
     expect(quickview.state.isLoading).toBe(false);
   });
+
+  it(`when the resultPreview state #maximumFileSize is 100,
+  #state.maximumFileSize is 100`, () => {
+    engine.state.resultPreview = buildMockResultPreviewState({
+      maximumFileSize: 100,
+    });
+    initQuickview();
+
+    expect(quickview.state.maximumFileSize).toBe(100);
+  });
 });
