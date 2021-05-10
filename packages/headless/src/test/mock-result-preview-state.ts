@@ -7,7 +7,6 @@ export function buildMockResultPreviewState(
     content: '',
     uniqueId: '',
     isLoading: false,
-    maximumPreviewSize: 50,
     ...config,
   };
 }

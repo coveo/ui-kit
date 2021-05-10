@@ -22,6 +22,11 @@ export interface QuickviewOptions {
    * The result to retrieve a quickview for.
    */
   result: Result;
+
+  /**
+   * The maximum file size in MB rendered by the quick view window.
+   */
+  maximumPreviewSize: number;
 }
 
 export interface Quickview extends Controller {
@@ -53,11 +58,6 @@ export interface QuickviewState {
    * `true` if content is being fetched, and `false` otherwise.
    */
   isLoading: boolean;
-
-  /**
-   * The maximum file size in MB rendered by the quick view window.
-   */
-  maximumPreviewSize: number;
 }
 
 /**
@@ -94,13 +94,11 @@ export function buildQuickview(
       const preview = getState().resultPreview;
       const content = uniqueId === preview.uniqueId ? preview.content : '';
       const isLoading = preview.isLoading;
-      const maximumPreviewSize = preview.maximumPreviewSize;
 
       return {
         content,
         resultHasPreview,
         isLoading,
-        maximumPreviewSize,
       };
     },
   };

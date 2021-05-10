@@ -2,7 +2,6 @@ export interface ResultPreviewState {
   uniqueId: string;
   content: string;
   isLoading: boolean;
-  maximumPreviewSize: number;
 }
 
 export function getResultPreviewInitialState(): ResultPreviewState {
@@ -10,6 +9,5 @@ export function getResultPreviewInitialState(): ResultPreviewState {
     uniqueId: '',
     content: '',
     isLoading: false,
-    maximumPreviewSize: 0,
   };
 }

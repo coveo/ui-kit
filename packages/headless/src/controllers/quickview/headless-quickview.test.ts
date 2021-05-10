@@ -27,6 +27,7 @@ describe('Quickview', () => {
     engine = buildMockSearchAppEngine();
     options = {
       result: buildMockResult(),
+      maximumPreviewSize: 0,
     };
 
     initQuickview();
@@ -132,13 +133,11 @@ describe('Quickview', () => {
     expect(quickview.state.isLoading).toBe(false);
   });
 
-  it(`when the resultPreview state #maximumPreviewSize is 100,
-  #state.maximumPreviewSize is 100`, () => {
-    engine.state.resultPreview = buildMockResultPreviewState({
-      maximumPreviewSize: 100,
-    });
+  it(`when the resultPreview is initialized,
+  #options.maximumPreviewSize is 0`, () => {
+    engine.state.resultPreview = buildMockResultPreviewState();
     initQuickview();
 
-    expect(quickview.state.maximumPreviewSize).toBe(100);
+    expect(options.maximumPreviewSize).toBe(0);
   });
 });

@@ -18,7 +18,6 @@ describe('ResultPreview', () => {
       uniqueId: '',
       content: '',
       isLoading: false,
-      maximumPreviewSize: 50,
     });
   });
 

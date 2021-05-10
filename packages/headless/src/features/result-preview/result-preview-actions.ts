@@ -44,7 +44,7 @@ export const fetchResultContent = createAsyncThunk<
  * @param maximumPreviewSize (number) The new maximum preview size allowed for rendering in quick view.
  */
 export const updateMaximumPreviewSize = createAction(
-  'quickview/updatemaximumPreviewSize',
+  'quickview/updateMaximumPreviewSize',
   (payload: number) =>
     validatePayload(payload, new NumberValue({required: true, min: 0}))
 );
