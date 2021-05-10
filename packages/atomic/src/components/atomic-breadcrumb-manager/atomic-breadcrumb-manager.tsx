@@ -24,7 +24,7 @@ import dayjs from 'dayjs';
  * The `atomic-breadcrumb-manager` component creates breadcrumbs which display a summary of the currently active facet values.
  *
  * @part breadcrumb-clear-all - The clear all breadcrumbs button
- * @part breadcrumb-label - Label for the breadcrumb's label
+ * @part breadcrumb-label - Label attribute for the breadcrumb's label
  * @part breadcrumbs - The list of breadcrumb values following the label
  * @part breadcrumb - An individual breadcrumb
  */
@@ -45,7 +45,7 @@ export class AtomicBreadcrumbManager implements InitializableComponent {
   @State() public error!: Error;
 
   /**
-   * Number of breadcrumbs to be shown before collapsing.
+   * Number of breadcrumbs to be shown before collapsing
    */
   @Prop() public collapseThreshold = 5;
   /**
