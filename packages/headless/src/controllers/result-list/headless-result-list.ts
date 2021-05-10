@@ -3,7 +3,7 @@ import {ConfigurationSection, SearchSection} from '../../state/state-sections';
 import {buildController, Controller} from '../controller/headless-controller';
 import {fetchMoreResults} from '../../features/search/search-actions';
 import {registerFieldsToInclude} from '../../features/fields/fields-actions';
-import {Schema, ArrayValue, StringValue, SchemaDefinition} from '@coveo/bueno';
+import {Schema, ArrayValue, StringValue} from '@coveo/bueno';
 import {validateOptions} from '../../utils/validate-payload';
 import {
   buildSearchStatus,
@@ -13,9 +13,7 @@ import {Result} from '../../api/search/search/result';
 import {configuration, search} from '../../app/reducers';
 import {loadReducerError} from '../../utils/errors';
 
-export const resultListOptionsSchemaDefinition: SchemaDefinition<Required<
-  ResultListOptions
->> = {
+const optionsSchema = new Schema<ResultListOptions>({
   fieldsToInclude: new ArrayValue({
     required: false,
     each: new StringValue<string>({
@@ -23,11 +21,7 @@ export const resultListOptionsSchemaDefinition: SchemaDefinition<Required<
       emptyAllowed: false,
     }),
   }),
-};
-
-const optionsSchema = new Schema<ResultListOptions>(
-  resultListOptionsSchemaDefinition
-);
+});
 
 export interface ResultListOptions {
   /**

@@ -1,5 +1,5 @@
 import {Schema} from '@coveo/bueno';
-import {Engine} from '../../app/engine';
+import {Engine} from '../../app/headless-engine';
 import {search, configuration, folding} from '../../app/reducers';
 import {
   foldingOptionsSchemaDefinition,
@@ -17,44 +17,44 @@ import {
   buildResultList,
   ResultList,
   ResultListOptions,
-  resultListOptionsSchemaDefinition,
   ResultListState,
 } from '../result-list/headless-result-list';
 
 export {FoldedResult};
 
-const optionsSchema = new Schema<Required<FoldedResultListOptions>>({
-  ...resultListOptionsSchemaDefinition,
-  ...foldingOptionsSchemaDefinition,
-});
+const optionsSchema = new Schema<Required<FoldingOptions>>(
+  foldingOptionsSchemaDefinition
+);
+
+export interface FoldingOptions {
+  /**
+   * The name of the field on which to do the folding. The folded result list component will use the values of this field to resolve the collections of result items.
+   *
+   * @defaultValue `foldingcollection`
+   */
+  collectionField?: string;
+  /**
+   * The name of the field that determines whether a certain result is a top result containing other child results within a collection.
+   *
+   * @defaultValue `foldingparent`
+   */
+  parentField?: string;
+  /**
+   * The name of the field that uniquely identifies a result within a collection.
+   *
+   * @defaultValue `foldingchild`
+   */
+  childField?: string;
+  /**
+   * The number of child results to fold under the root collection element, before expansion.
+   *
+   * @defaultValue `2`
+   */
+  numberOfFoldedResults?: number;
+}
 
 export interface FoldedResultListOptions extends ResultListOptions {
-  folding: {
-    /**
-     * The name of the field on which to do the folding. The folded result list component will use the values of this field to resolve the collections of result items.
-     *
-     * @defaultValue `foldingcollection`
-     */
-    collectionField?: string;
-    /**
-     * The name of the field that determines whether a certain result is a top result containing other child results within a collection.
-     *
-     * @defaultValue `foldingparent`
-     */
-    parentField?: string;
-    /**
-     * The name of the field that uniquely identifies a result within a collection.
-     *
-     * @defaultValue `foldingchild`
-     */
-    childField?: string;
-    /**
-     * The number of child results to fold under the root collection element, before expansion.
-     *
-     * @defaultValue `2`
-     */
-    numberOfFoldedResults?: number;
-  };
+  folding?: FoldingOptions;
 }
 
 export interface FoldedResultListProps {
@@ -103,12 +103,14 @@ export function buildFoldedResultList(
   const {dispatch} = engine;
   const getState = () => engine.state;
 
-  const options = validateOptions(
-    engine,
-    optionsSchema,
-    props.options,
-    'buildFoldedResultList'
-  );
+  const options = props.options?.folding
+    ? validateOptions(
+        engine,
+        optionsSchema,
+        props.options!.folding!,
+        'buildFoldedResultList'
+      )
+    : {};
 
   dispatch(registerFolding({...options}));
 
