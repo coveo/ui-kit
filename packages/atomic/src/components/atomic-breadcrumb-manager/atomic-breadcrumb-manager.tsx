@@ -21,7 +21,7 @@ import mainclear from '../../images/main-clear.svg';
 import dayjs from 'dayjs';
 
 /**
- * The `atomic-breadcrumb-manager` component creates breadcrumbs which display a summary of the currently active facet values.
+ * The `atomic-breadcrumb-manager` component creates breadcrumbs that display a summary of the currently active facet values.
  *
  * @part breadcrumb-clear-all - The clear all breadcrumbs button
  * @part breadcrumb-label - Label attribute for the breadcrumb's label

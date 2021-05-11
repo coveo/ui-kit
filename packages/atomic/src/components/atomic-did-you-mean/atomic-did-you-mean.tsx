@@ -14,7 +14,7 @@ import {sanitize} from '../../utils/xss-utils';
  *
  * @part no-results - The text displayed for no results
  * @part auto-corrected - The text displayed for the automatically corrected query
- * @part correction-btn - The button that allows to manually correct a query
+ * @part correction-btn - The button used to manually correct a query
  * @part highlight - The query highlights
  */
 @Component({
