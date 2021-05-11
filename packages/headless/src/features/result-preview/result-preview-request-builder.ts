@@ -24,7 +24,7 @@ export function buildResultPreviewRequest(
     accessToken,
     organizationId,
     enableNavigation: false,
-    requestedOutputSize: 0,
+    requestedOutputSize: options.requestedOutputSize || 0,
     q,
     ...options,
   };

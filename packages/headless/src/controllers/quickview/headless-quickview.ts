@@ -78,14 +78,16 @@ export function buildQuickview(
   const {dispatch} = engine;
   const getState = () => engine.state;
   const controller = buildController(engine);
-  const result = props.options.result;
+  const {result, maximumPreviewSize} = props.options;
   const uniqueId = result.uniqueId;
 
   return {
     ...controller,
 
     fetchResultContent() {
-      dispatch(fetchResultContent({uniqueId}));
+      dispatch(
+        fetchResultContent({uniqueId, requestedOutputSize: maximumPreviewSize})
+      );
       dispatch(logDocumentQuickview(result));
     },
 

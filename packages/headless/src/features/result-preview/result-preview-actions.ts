@@ -40,7 +40,7 @@ export const fetchResultContent = createAsyncThunk<
 );
 
 /**
- * Updates the maximum preview size allowed for rendering in quick view.
+ * Updates the maximum preview size allowed for rendering in quickview.
  * @param maximumPreviewSize (number) The new maximum preview size allowed for rendering in quick view.
  */
 export const updateMaximumPreviewSize = createAction(
