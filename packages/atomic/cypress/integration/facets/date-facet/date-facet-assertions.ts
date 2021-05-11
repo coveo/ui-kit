@@ -52,8 +52,8 @@ export function assertCustomDateFormatRangeAtIndex(
   field = dateField
 ) {
   it(`Date facet at index ${index} should generate correct format ${dateFormat}`, () => {
-    const formatedStart = convertDateFormatLabel(dateRange.start, dateFormat);
-    const formatedEnd = convertDateFormatLabel(dateRange.end, dateFormat);
+    const formatedStart = convertDateFormatLabel(dateRange.start);
+    const formatedEnd = convertDateFormatLabel(dateRange.end);
     const formatedLabel = `${formatedStart} to ${formatedEnd}`;
     FacetSelector.facetValueAtIndex(index, field, dateFacetComponent).should(
       'contain.text',

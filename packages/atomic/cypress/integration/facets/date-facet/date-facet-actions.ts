@@ -75,19 +75,10 @@ export function convertDateToFacetValue(
   return `${range.start}${valueSeparator}${range.end}`;
 }
 
-export function convertDateFormatLabel(date: string, formatType?: string) {
-  formatType = formatType ? formatType : 'DD/MM/YYYY';
-  const splitDate = date.split('/');
-  const year = splitDate[2];
-  let month = splitDate[1];
-  const day = splitDate[0];
+export function convertDateFormatLabel(date: string) {
+  const [day, month, year] = date.split('/');
   const generateDate = new Date(Number(year), Number(month) - 1, Number(day));
-  switch (formatType) {
-    case 'DD/MMM/YYYY': {
-      month = generateDate.toLocaleString('en', {month: 'short'});
-      return `${day}/${month}/${year}`;
-    }
-    default:
-      return date;
-  }
+  const generatedMonth = generateDate.toLocaleString('en', {month: 'short'});
+
+  return `${day}/${generatedMonth}/${year}`;
 }
