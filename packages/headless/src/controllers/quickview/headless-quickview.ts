@@ -24,7 +24,7 @@ export interface QuickviewOptions {
   result: Result;
 
   /**
-   * The maximum file size in MB rendered by the quick view window.
+   * The maximum file size in bytes rendered by the quickview window.
    */
   maximumPreviewSize: number;
 }
