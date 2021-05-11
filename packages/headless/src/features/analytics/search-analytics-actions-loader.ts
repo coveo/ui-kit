@@ -31,6 +31,10 @@ import {
   logNumericFacetBreadcrumb,
   LogNumericFacetBreadcrumbActionCreatorPayload,
 } from '../facets/range-facets/numeric-facet-set/numeric-facet-analytics-actions';
+import {
+  logNavigateBackward,
+  logNavigateForward,
+} from '../history/history-analytics-actions';
 
 export {
   LogCategoryFacetBreadcrumbActionCreatorPayload,
@@ -270,6 +274,32 @@ export interface SearchAnalyticsActionCreators {
     void,
     AsyncThunkAnalyticsOptions<StateNeededByAnalyticsProvider>
   >;
+
+  /**
+   * The event to log when going to the previous state of the search interface.
+   *
+   * @returns A dispatchable action.
+   */
+  logNavigateBackward(): AsyncThunkAction<
+    {
+      analyticsType: AnalyticsType.Search;
+    },
+    void,
+    AsyncThunkAnalyticsOptions<StateNeededByAnalyticsProvider>
+  >;
+
+  /**
+   * The event to log when going to the next state of the search interface.
+   *
+   * @returns A dispatchable action.
+   */
+  logNavigateForward(): AsyncThunkAction<
+    {
+      analyticsType: AnalyticsType.Search;
+    },
+    void,
+    AsyncThunkAnalyticsOptions<StateNeededByAnalyticsProvider>
+  >;
 }
 
 /**
@@ -299,5 +329,7 @@ export function loadSearchAnalyticsActions(
     logFacetUpdateSort,
     logDateFacetBreadcrumb,
     logNumericFacetBreadcrumb,
+    logNavigateBackward,
+    logNavigateForward,
   };
 }
