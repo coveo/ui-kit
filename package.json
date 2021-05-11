@@ -27,7 +27,7 @@
   },
   "devDependencies": {
     "@actions/github": "^4.0.0",
-    "@commitlint/config-conventional": "^11.0.0",
+    "@commitlint/config-conventional": "^12.1.1",
     "@commitlint/config-lerna-scopes": "^10.0.0",
     "@commitlint/lint": "^9.1.1",
     "@octokit/rest": "^18.0.15",
