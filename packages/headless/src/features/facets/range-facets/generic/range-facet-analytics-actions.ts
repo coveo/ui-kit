@@ -10,7 +10,7 @@ import {
   rangeFacetSelectionPayloadDefinition,
 } from './range-facet-validate-payload';
 
-const getRangeFacetMetadata = (
+export const getRangeFacetMetadata = (
   state: Partial<SearchAppState>,
   {facetId, selection}: RangeFacetSelectionPayload
 ): FacetRangeMetadata => {
