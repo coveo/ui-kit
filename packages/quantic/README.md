@@ -50,9 +50,15 @@ Start the server.
 - You can also run this command from the command line. `sfdx force:lightning:lwc:start`
 - View the server at http://localhost:3333/.
 
+## Use Quantic From Source
+
+After you have cloned the repository and have run `npm install`, run the following commands:
+
+- `npm run copy:staticresources`
+- `sfdx force:source:deploy -m LightningComponentBundle`
+
 ## Other useful commands
 
-- Deploy source code to your salesforce organization: `sfdx force:source:deploy -m LightningComponentBundle`.
 - `-m LightningComponentBundle` can be changed for different types of "resources". To know which name, check the related `meta.xml` file for each type of resource.
 - Create new web components. In VS Code, press Command + Shift P, enter sfdx, and select SFDX: Create Lightning Web Component.
 
