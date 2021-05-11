@@ -11,8 +11,15 @@ import {
 } from '../../analytics/analytics-utils';
 import {facetIdDefinition} from '../generic/facet-actions-validation';
 
-export interface CategoryFacetBreadcrumbPayload {
+export interface LogCategoryFacetBreadcrumbActionCreatorPayload {
+  /**
+   * The category facet id.
+   */
   categoryFacetId: string;
+
+  /**
+   * The category facet selected path.
+   */
   categoryFacetPath: string[];
 }
 
@@ -26,7 +33,10 @@ const categoryFacetBreadcrumbPayloadDefinition = {
 
 const getCategoryFacetMetadata = (
   state: Partial<SearchAppState>,
-  {categoryFacetId, categoryFacetPath}: CategoryFacetBreadcrumbPayload
+  {
+    categoryFacetId,
+    categoryFacetPath,
+  }: LogCategoryFacetBreadcrumbActionCreatorPayload
 ): CategoryFacetMetadata => {
   const facet = state.categoryFacetSet![categoryFacetId]!;
   const categoryFacetField = facet?.request.field;
@@ -41,10 +51,10 @@ const getCategoryFacetMetadata = (
 
 /**
  * Logs a category facet breadcrumb event.
- * @param payload (CategoryFacetBreadcrumbPayload) Object specifying the target facet and path.
+ * @param payload (LogCategoryFacetBreadcrumbActionCreatorPayload) Object specifying the target facet and path.
  */
 export const logCategoryFacetBreadcrumb = (
-  payload: CategoryFacetBreadcrumbPayload
+  payload: LogCategoryFacetBreadcrumbActionCreatorPayload
 ) =>
   makeAnalyticsAction(
     'analytics/categoryFacet/breadcrumb',

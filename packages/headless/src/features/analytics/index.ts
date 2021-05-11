@@ -133,3 +133,5 @@ export namespace SearchAnalyticsActions {
   export const logFetchMoreResults = logFetchMoreResultsAlias;
   export const logQueryError = logQueryErrorAlias;
 }
+
+export * from './search-analytics-actions-loader';

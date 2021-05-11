@@ -17,12 +17,11 @@ import {
 import {getDateFacetSetInitialState} from '../range-facets/date-facet-set/date-facet-set-state';
 import {DateFacetRequest} from '../range-facets/date-facet-set/interfaces/request';
 import {DateFacetValue} from '../range-facets/date-facet-set/interfaces/response';
-import {RangeFacetSortCriterion} from '../range-facets/generic/interfaces/request';
 import {NumericFacetRequest} from '../range-facets/numeric-facet-set/interfaces/request';
 import {NumericFacetValue} from '../range-facets/numeric-facet-set/interfaces/response';
 import {getNumericFacetSetInitialState} from '../range-facets/numeric-facet-set/numeric-facet-set-state';
 import {getFacetSetInitialState} from './facet-set-state';
-import {FacetRequest, FacetSortCriterion} from './interfaces/request';
+import {FacetRequest} from './interfaces/request';
 import {FacetValue} from './interfaces/response';
 import {categoryFacetSelectedValuesSelector} from '../category-facet-set/category-facet-set-selectors';
 
@@ -31,11 +30,6 @@ export type SectionNeededForFacetMetadata = FacetSection &
   DateFacetSection &
   NumericFacetSection &
   SearchSection;
-
-export type FacetUpdateSortMetadata = {
-  facetId: string;
-  criterion: FacetSortCriterion | RangeFacetSortCriterion;
-};
 
 export type FacetSelectionChangeMetadata = {
   facetId: string;
