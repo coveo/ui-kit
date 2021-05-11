@@ -2,6 +2,7 @@ import {
   BaseParam,
   ContextParam,
   DebugParam,
+  FoldingParam,
   LocaleParam,
   NumberOfResultsParam,
   VisitorIDParam,
@@ -38,4 +39,5 @@ export type SearchRequest = BaseParam &
   FacetOptionsParam &
   VisitorIDParam &
   DebugParam &
-  LocaleParam;
+  LocaleParam &
+  FoldingParam;
