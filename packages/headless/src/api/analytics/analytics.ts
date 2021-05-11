@@ -18,6 +18,7 @@ import {
   RecommendationSection,
   SearchHubSection,
   SearchSection,
+  AdvancedSearchQueriesSection,
 } from '../../state/state-sections';
 import {ContextPayload} from '../../features/context/context-state';
 import {PreprocessRequest} from '../preprocess-request';
@@ -36,7 +37,8 @@ export type StateNeededByAnalyticsProvider = ConfigurationSection &
       QuerySection &
       ContextSection &
       RecommendationSection &
-      SectionNeededForFacetMetadata
+      SectionNeededForFacetMetadata &
+      AdvancedSearchQueriesSection
   >;
 
 export class AnalyticsProvider implements SearchPageClientProvider {
@@ -84,12 +86,8 @@ export class AnalyticsProvider implements SearchPageClientProvider {
   }
 
   public getOriginLevel2() {
-    // TODO: When tab implemented;
-    // Configurable on headless engine, optionally
-    // Need to use tabs as originLevel2, in priority if they exists/available.
-    // Otherwise, use configured originLevel2 on the engine.
-    // Ultimate fallback should be `default`;
-    return this.state.configuration.analytics.originLevel2 || 'default';
+    const {advancedSearchQueries, configuration} = this.state;
+    return advancedSearchQueries?.cq || configuration.analytics.originLevel2;
   }
 
   public getOriginLevel3() {

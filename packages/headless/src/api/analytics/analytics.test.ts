@@ -13,6 +13,8 @@ import {getSearchInitialState} from '../../features/search/search-state';
 import {getPipelineInitialState} from '../../features/pipeline/pipeline-state';
 import {getSearchHubInitialState} from '../../features/search-hub/search-hub-state';
 import {buildMockFacetResponse} from '../../test/mock-facet-response';
+import {buildMockAdvancedSearchQueriesState} from '../../test/mock-advanced-search-queries-state';
+import {buildMockAnalyticsConfiguration} from '../../test/mock-analytics-configuration';
 
 describe('analytics', () => {
   const logger = pino({level: 'silent'});
@@ -168,6 +170,54 @@ describe('analytics', () => {
       };
       const provider = new AnalyticsProvider(state);
       expect(provider.getLanguage()).toEqual('en');
+    });
+
+    it('when no cq or originLevel2 is configured, the originLevel2 value is "default"', () => {
+      const state: StateNeededByAnalyticsProvider = {
+        configuration: getConfigurationInitialState(),
+      };
+
+      const provider = new AnalyticsProvider(state);
+      expect(provider.getOriginLevel2()).toBe('default');
+    });
+
+    it('when a cq is defined, the originLevel2 is the cq expression', () => {
+      const cq = '@filetype=="youtubevideo"';
+      const state: StateNeededByAnalyticsProvider = {
+        configuration: getConfigurationInitialState(),
+        advancedSearchQueries: buildMockAdvancedSearchQueriesState({cq}),
+      };
+
+      const provider = new AnalyticsProvider(state);
+
+      expect(provider.getOriginLevel2()).toBe(cq);
+    });
+
+    it('when the cq is an empty string, the originLevel2 is the value in the configuration slice', () => {
+      const configuration = getConfigurationInitialState();
+      const state: StateNeededByAnalyticsProvider = {
+        configuration,
+        advancedSearchQueries: buildMockAdvancedSearchQueriesState({cq: ''}),
+      };
+
+      const provider = new AnalyticsProvider(state);
+      expect(provider.getOriginLevel2()).toBe(
+        configuration.analytics.originLevel2
+      );
+    });
+
+    it(`when a cq is not defined, but an originLevel2 is configured,
+    the originLevel2 is the configured value`, () => {
+      const originLevel2 = 'youtube';
+      const state: StateNeededByAnalyticsProvider = {
+        configuration: {
+          ...getConfigurationInitialState(),
+          analytics: buildMockAnalyticsConfiguration({originLevel2}),
+        },
+      };
+
+      const provider = new AnalyticsProvider(state);
+      expect(provider.getOriginLevel2()).toBe(originLevel2);
     });
   });
 });
