@@ -289,6 +289,7 @@ export {
 export {
   FoldedResult,
   FoldedResultList,
+  FoldingOptions,
   FoldedResultListOptions,
   FoldedResultListProps,
   FoldedResultListState,
