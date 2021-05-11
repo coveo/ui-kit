@@ -7,4 +7,6 @@ updates:
     directory: "/"
     schedule:
       interval: "monthly"
+    commit-message:
+      prefix: "https://coveord.atlassian.net/browse/KIT-282"
 
