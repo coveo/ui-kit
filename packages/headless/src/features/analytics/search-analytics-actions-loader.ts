@@ -23,12 +23,22 @@ import {
   LogFacetSelectActionCreatorPayload,
   LogFacetUpdateSortActionCreatorPayload,
 } from '../facets/facet-set/facet-set-analytics-actions';
+import {
+  logDateFacetBreadcrumb,
+  LogDateFacetBreadcrumbActionCreatorPayload,
+} from '../facets/range-facets/date-facet-set/date-facet-analytics-actions';
+import {
+  logNumericFacetBreadcrumb,
+  LogNumericFacetBreadcrumbActionCreatorPayload,
+} from '../facets/range-facets/numeric-facet-set/numeric-facet-analytics-actions';
 
 export {
   LogCategoryFacetBreadcrumbActionCreatorPayload,
   LogFacetDeselectActionCreatorPayload,
   LogFacetSelectActionCreatorPayload,
   LogFacetUpdateSortActionCreatorPayload,
+  LogDateFacetBreadcrumbActionCreatorPayload,
+  LogNumericFacetBreadcrumbActionCreatorPayload,
 };
 
 /**
@@ -213,8 +223,46 @@ export interface SearchAnalyticsActionCreators {
     AsyncThunkAnalyticsOptions<StateNeededByAnalyticsProvider>
   >;
 
+  /**
+   * The event to log when the facet sort criterion is changed.
+   *
+   * @param payload - The action creator payload.
+   * @returns A dispatchable action.
+   */
   logFacetUpdateSort(
     payload: LogFacetUpdateSortActionCreatorPayload
+  ): AsyncThunkAction<
+    {
+      analyticsType: AnalyticsType.Search;
+    },
+    void,
+    AsyncThunkAnalyticsOptions<StateNeededByAnalyticsProvider>
+  >;
+
+  /**
+   * The event to log when a date facet breadcrumb is deselected.
+   *
+   * @param payload - The action creator payload.
+   * @returns A dispatchable action.
+   */
+  logDateFacetBreadcrumb(
+    payload: LogDateFacetBreadcrumbActionCreatorPayload
+  ): AsyncThunkAction<
+    {
+      analyticsType: AnalyticsType.Search;
+    },
+    void,
+    AsyncThunkAnalyticsOptions<StateNeededByAnalyticsProvider>
+  >;
+
+  /**
+   * The event to log when a numeric facet breadcrumb is deselected.
+   *
+   * @param payload - The action creator payload.
+   * @returns A dispatchable action.
+   */
+  logNumericFacetBreadcrumb(
+    payload: LogNumericFacetBreadcrumbActionCreatorPayload
   ): AsyncThunkAction<
     {
       analyticsType: AnalyticsType.Search;
@@ -249,5 +297,7 @@ export function loadSearchAnalyticsActions(
     logFacetShowLess,
     logFacetShowMore,
     logFacetUpdateSort,
+    logDateFacetBreadcrumb,
+    logNumericFacetBreadcrumb,
   };
 }
