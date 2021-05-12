@@ -310,7 +310,7 @@ describe('Date Facet Test Suites', () => {
       setupIntercept();
       cy.visit(
         buildTestUrl(
-          `df[${dateField}]=2006/01/01@00:00:00..2009/01/01@00:00:00`
+          `df[${dateField}]=2000/01/01@00:00:00..2004/01/01@00:00:00`
         )
       );
       injectComponent(
