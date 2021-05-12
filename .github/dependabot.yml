@@ -8,5 +8,5 @@ updates:
     schedule:
       interval: "monthly"
     commit-message:
-      prefix: "KIT-282\n"
+      prefix: "ci(J:KIT-282):"
 
