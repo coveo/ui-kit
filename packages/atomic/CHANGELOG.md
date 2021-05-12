@@ -3,6 +3,41 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.14.0-alpha.1](https://github.com/coveo/ui-kit/compare/v0.14.0-alpha.0...v0.14.0-alpha.1) (2021-05-12)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [0.14.0-alpha.0](https://github.com/coveo/ui-kit/compare/v0.13.2-alpha.1...v0.14.0-alpha.0) (2021-05-11)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [0.13.1](https://github.com/coveo/ui-kit/compare/v0.13.1-alpha.0...v0.13.1) (2021-05-07)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [0.13.1-alpha.0](https://github.com/coveo/ui-kit/compare/v0.13.0...v0.13.1-alpha.0) (2021-05-07)
+
+
+### Bug Fixes
+
+* **atomic:** category facet x overflow & breadcrumb x position ([#790](https://github.com/coveo/ui-kit/issues/790)) ([b373b5c](https://github.com/coveo/ui-kit/commit/b373b5c904c435b47403cac554cff249d567c3f0))
+
+
+
+
+
 # [0.13.0](https://github.com/coveo/ui-kit/compare/v0.13.0-alpha.10...v0.13.0) (2021-05-07)
 
 

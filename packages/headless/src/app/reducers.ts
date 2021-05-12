@@ -13,6 +13,7 @@ import {facetSetReducer} from '../features/facets/facet-set/facet-set-slice';
 import {dateFacetSetReducer} from '../features/facets/range-facets/date-facet-set/date-facet-set-slice';
 import {numericFacetSetReducer} from '../features/facets/range-facets/numeric-facet-set/numeric-facet-set-slice';
 import {fieldsReducer} from '../features/fields/fields-slice';
+import {foldingReducer} from '../features/folding/folding-slice';
 import {redo, snapshot, undo} from '../features/history/history-actions';
 import {historyReducer} from '../features/history/history-slice';
 import {paginationReducer} from '../features/pagination/pagination-slice';
@@ -34,6 +35,7 @@ export const pagination = paginationReducer;
 export const facetSet = facetSetReducer;
 export const facetSearchSet = specificFacetSearchSetReducer;
 export const search = searchReducer;
+export const folding = foldingReducer;
 
 export const dateFacetSet = dateFacetSetReducer;
 export const facetOrder = facetOrderReducer;

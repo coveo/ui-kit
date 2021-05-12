@@ -278,6 +278,17 @@ const controllerConfiguration: ControllerConfiguration[] = [
       ],
     },
   },
+  {
+    initializer: 'buildFoldedResultList',
+    samplePaths: {
+      react_class: [
+        'packages/samples/headless-react/src/components/folded-result-list/folded-result-list.class.tsx',
+      ],
+      react_fn: [
+        'packages/samples/headless-react/src/components/folded-result-list/folded-result-list.fn.tsx',
+      ],
+    },
+  },
 ];
 
 const actionLoaderConfiguration: ActionLoaderConfiguration[] = [

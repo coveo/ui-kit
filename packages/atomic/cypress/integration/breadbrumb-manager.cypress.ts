@@ -11,7 +11,7 @@ import {
   FacetAlias,
   createAliasFacetUL,
   createAliasShadow,
-} from './facets/facet-selectors';
+} from './facets/facet/facet-selectors';
 
 const numericFacetProp = {
   field: 'size',

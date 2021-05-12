@@ -28,6 +28,7 @@ import {
   debug,
   resultPreview,
   version,
+  folding,
 } from './reducers';
 
 /**
@@ -60,4 +61,5 @@ export const searchAppReducers: ReducersMapObject<SearchAppState> = {
   debug,
   resultPreview,
   version,
+  folding,
 };

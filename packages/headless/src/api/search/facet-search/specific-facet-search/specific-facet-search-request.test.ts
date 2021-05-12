@@ -1,10 +1,10 @@
 import {createMockState} from '../../../../test/mock-state';
 import {buildMockFacetValueRequest} from '../../../../test/mock-facet-value-request';
-import {buildMockSearchRequest} from '../../../../test/mock-search-request';
 import {buildMockFacetRequest} from '../../../../test/mock-facet-request';
 import {buildMockFacetSearch} from '../../../../test/mock-facet-search';
 import {SearchAppState} from '../../../../state/search-app-state';
 import {buildSpecificFacetSearchRequest} from '../../../../features/facets/facet-search-set/specific/specific-facet-search-request-builder';
+import {buildSearchRequest} from '../../../../features/search/search-actions';
 
 describe('#buildSpecificFacetSearchRequest', () => {
   const id = '1';
@@ -70,7 +70,7 @@ describe('#buildSpecificFacetSearchRequest', () => {
 
   it('sets the #searchContext to the search request params', () => {
     const facet = state.facetSet[id];
-    const request = buildMockSearchRequest({facets: [facet]});
+    const request = {...buildSearchRequest(state), facets: [facet]};
 
     expect(buildParams().searchContext).toEqual({
       ...request,

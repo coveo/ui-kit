@@ -285,3 +285,13 @@ export {
   QuickviewState,
   buildQuickview,
 } from './quickview/headless-quickview';
+
+export {
+  FoldedResult,
+  FoldedResultList,
+  FoldingOptions,
+  FoldedResultListOptions,
+  FoldedResultListProps,
+  FoldedResultListState,
+  buildFoldedResultList,
+} from './folded-result-list/headless-folded-result-list';
