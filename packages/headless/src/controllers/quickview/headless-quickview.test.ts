@@ -50,6 +50,7 @@ describe('Quickview', () => {
 
   describe('#fetchResultContent', () => {
     const uniqueId = '1';
+    const requestedOutputSize = 0;
 
     beforeEach(() => {
       options.result = buildMockResult({uniqueId});
@@ -60,7 +61,7 @@ describe('Quickview', () => {
 
     it('dispatches a #fetchResultContent action with the result uniqueId', () => {
       const action = engine.findAsyncAction(fetchResultContent.pending);
-      expect(action?.meta.arg).toEqual({uniqueId});
+      expect(action?.meta.arg).toEqual({uniqueId, requestedOutputSize});
     });
 
     it('dispatches a document quickview click event', () => {
