@@ -35,6 +35,12 @@ import {
   logNavigateBackward,
   logNavigateForward,
 } from '../history/history-analytics-actions';
+import {
+  logPageNext,
+  logPageNumber,
+  logPagePrevious,
+  logPagerResize,
+} from '../pagination/pagination-analytics-actions';
 
 export {
   LogCategoryFacetBreadcrumbActionCreatorPayload,
@@ -300,6 +306,58 @@ export interface SearchAnalyticsActionCreators {
     void,
     AsyncThunkAnalyticsOptions<StateNeededByAnalyticsProvider>
   >;
+
+  /**
+   * The event to log when navigating to the next page of results.
+   *
+   * @returns A dispatchable action.
+   */
+  logPageNext(): AsyncThunkAction<
+    {
+      analyticsType: AnalyticsType.Search;
+    },
+    void,
+    AsyncThunkAnalyticsOptions<StateNeededByAnalyticsProvider>
+  >;
+
+  /**
+   * The event to log when selecting a page in the pager.
+   *
+   * @returns A dispatchable action.
+   */
+  logPageNumber(): AsyncThunkAction<
+    {
+      analyticsType: AnalyticsType.Search;
+    },
+    void,
+    AsyncThunkAnalyticsOptions<StateNeededByAnalyticsProvider>
+  >;
+
+  /**
+   * The event to log when navigating to the previous page of results.
+   *
+   * @returns A dispatchable action.
+   */
+  logPagePrevious(): AsyncThunkAction<
+    {
+      analyticsType: AnalyticsType.Search;
+    },
+    void,
+    AsyncThunkAnalyticsOptions<StateNeededByAnalyticsProvider>
+  >;
+
+  /**
+   * The event to log when changing the number of results per page.
+   *
+   * @returns A dispatchable action.
+   */
+  logPagerResize(): AsyncThunkAction<
+    {
+      analyticsType: AnalyticsType.Search;
+    },
+    void,
+    AsyncThunkAnalyticsOptions<StateNeededByAnalyticsProvider>
+  >;
 }
 
 /**
@@ -331,5 +389,9 @@ export function loadSearchAnalyticsActions(
     logNumericFacetBreadcrumb,
     logNavigateBackward,
     logNavigateForward,
+    logPageNext,
+    logPageNumber,
+    logPagePrevious,
+    logPagerResize,
   };
 }
