@@ -101,8 +101,6 @@ export function buildQuickview(
         content,
         resultHasPreview,
         isLoading,
-        //test with this
-        maximumPreviewSize,
       };
     },
   };
