@@ -13,7 +13,6 @@ import {
   logFacetBreadcrumb,
   logFacetClearAll,
   logFacetDeselect,
-  logFacetSearch,
   logFacetSelect,
   logFacetShowLess,
   logFacetShowMore,
@@ -41,6 +40,12 @@ import {
   logPagePrevious,
   logPagerResize,
 } from '../pagination/pagination-analytics-actions';
+import {logSearchboxSubmit} from '../query/query-analytics-actions';
+import {
+  logQuerySuggestionClick,
+  LogQuerySuggestionClickActionCreatorPayload,
+} from '../query-suggest/query-suggest-analytics-actions';
+import {logResultsSort} from '../sort-criteria/sort-criteria-analytics-actions';
 
 export {
   LogCategoryFacetBreadcrumbActionCreatorPayload,
@@ -49,6 +54,7 @@ export {
   LogFacetUpdateSortActionCreatorPayload,
   LogDateFacetBreadcrumbActionCreatorPayload,
   LogNumericFacetBreadcrumbActionCreatorPayload,
+  LogQuerySuggestionClickActionCreatorPayload,
 };
 
 /**
@@ -161,22 +167,6 @@ export interface SearchAnalyticsActionCreators {
    */
   logFacetDeselect(
     payload: LogFacetDeselectActionCreatorPayload
-  ): AsyncThunkAction<
-    {
-      analyticsType: AnalyticsType.Search;
-    },
-    void,
-    AsyncThunkAnalyticsOptions<StateNeededByAnalyticsProvider>
-  >;
-
-  /**
-   * The event to log when searching through facet values.
-   *
-   * @param facetId - The facet id.
-   * @returns A dispatchable action.
-   */
-  logFacetSearch(
-    facetId: string
   ): AsyncThunkAction<
     {
       analyticsType: AnalyticsType.Search;
@@ -358,6 +348,48 @@ export interface SearchAnalyticsActionCreators {
     void,
     AsyncThunkAnalyticsOptions<StateNeededByAnalyticsProvider>
   >;
+
+  /**
+   * The event to log when performing a search using a search box.
+   *
+   * @returns A dispatchable action.
+   */
+  logSearchboxSubmit(): AsyncThunkAction<
+    {
+      analyticsType: AnalyticsType.Search;
+    },
+    void,
+    AsyncThunkAnalyticsOptions<StateNeededByAnalyticsProvider>
+  >;
+
+  /**
+   * The event to log when a query suggestion is selected.
+   *
+   * @param payload - The action creator payload.
+   * @returns A dispatchable action.
+   */
+  logQuerySuggestionClick(
+    payload: LogQuerySuggestionClickActionCreatorPayload
+  ): AsyncThunkAction<
+    {
+      analyticsType: AnalyticsType.Search;
+    },
+    void,
+    AsyncThunkAnalyticsOptions<StateNeededByAnalyticsProvider>
+  >;
+
+  /**
+   * The event to log when the results sort criterion is changed.
+   *
+   * @returns A dispatchable action.
+   */
+  logResultsSort(): AsyncThunkAction<
+    {
+      analyticsType: AnalyticsType.Search;
+    },
+    void,
+    AsyncThunkAnalyticsOptions<StateNeededByAnalyticsProvider>
+  >;
 }
 
 /**
@@ -380,7 +412,6 @@ export function loadSearchAnalyticsActions(
     logFacetBreadcrumb,
     logFacetClearAll,
     logFacetDeselect,
-    logFacetSearch,
     logFacetSelect,
     logFacetShowLess,
     logFacetShowMore,
@@ -393,5 +424,8 @@ export function loadSearchAnalyticsActions(
     logPageNumber,
     logPagePrevious,
     logPagerResize,
+    logSearchboxSubmit,
+    logQuerySuggestionClick,
+    logResultsSort,
   };
 }
