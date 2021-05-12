@@ -26,7 +26,7 @@ export interface QuickviewOptions {
   /**
    * The maximum file size in bytes rendered by the quickview window.
    */
-  maximumPreviewSize: number;
+  maximumPreviewSize?: number;
 }
 
 export interface Quickview extends Controller {
@@ -101,6 +101,8 @@ export function buildQuickview(
         content,
         resultHasPreview,
         isLoading,
+        //test with this
+        maximumPreviewSize,
       };
     },
   };
