@@ -23,3 +23,10 @@ export interface NumberOfResultsParam {
 export interface VisitorIDParam {
   visitorId?: string;
 }
+
+export interface FoldingParam {
+  filterField?: string;
+  parentField?: string;
+  childField?: string;
+  filterFieldRange?: number;
+}

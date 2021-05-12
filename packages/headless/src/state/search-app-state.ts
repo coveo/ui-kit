@@ -25,6 +25,7 @@ import {
   ResultPreviewSection,
   VersionSection,
   HistorySection,
+  FoldingSection,
 } from './state-sections';
 
 export type SearchParametersState = FacetSection &
@@ -54,4 +55,5 @@ export type SearchAppState = SearchParametersState &
   FieldsSection &
   FacetOrderSection &
   VersionSection &
-  HistorySection;
+  HistorySection &
+  FoldingSection;

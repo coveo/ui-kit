@@ -3,6 +3,33 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.14.0-alpha.1](https://github.com/coveo/ui-kit/compare/v0.14.0-alpha.0...v0.14.0-alpha.1) (2021-05-12)
+
+**Note:** Version bump only for package ui-kit
+
+
+
+
+
+# [0.14.0-alpha.0](https://github.com/coveo/ui-kit/compare/v0.13.2-alpha.1...v0.14.0-alpha.0) (2021-05-11)
+
+
+### Features
+
+* **headless:** added folding ([#740](https://github.com/coveo/ui-kit/issues/740)) ([06f52e8](https://github.com/coveo/ui-kit/commit/06f52e8f564ddf1bcdccf2f143b1119ffce40656))
+
+
+
+
+
+## [0.13.2-alpha.1](https://github.com/coveo/ui-kit/compare/v0.13.2-alpha.0...v0.13.2-alpha.1) (2021-05-11)
+
+**Note:** Version bump only for package ui-kit
+
+
+
+
+
 ## [0.13.2-alpha.0](https://github.com/coveo/ui-kit/compare/v0.13.1...v0.13.2-alpha.0) (2021-05-11)
 
 **Note:** Version bump only for package ui-kit
