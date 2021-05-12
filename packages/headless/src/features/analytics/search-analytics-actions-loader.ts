@@ -49,6 +49,7 @@ import {logResultsSort} from '../sort-criteria/sort-criteria-analytics-actions';
 
 export {
   LogCategoryFacetBreadcrumbActionCreatorPayload,
+  LogFacetBreadcrumbActionCreatorPayload,
   LogFacetDeselectActionCreatorPayload,
   LogFacetSelectActionCreatorPayload,
   LogFacetUpdateSortActionCreatorPayload,
