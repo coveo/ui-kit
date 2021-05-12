@@ -117,7 +117,7 @@ describe('Breadcrumb Manager Test Suites', () => {
       createAliasFacetUL(numericFacetProp.field, FacetSelectors.numericFacet);
     });
 
-    it.skip('should hide 2 fields when 5 are selected', () => {
+    it('should hide 2 fields when 5 are selected', () => {
       for (let n = 0; n < 5; n++) {
         clickOnNthFacet(n);
         cy.wait(150);
@@ -126,7 +126,7 @@ describe('Breadcrumb Manager Test Suites', () => {
       cy.get(BreadcrumbAlias.breadcrumbs).should('have.length', 3);
     });
 
-    it('should display all fields on clicking "Show More"', () => {
+    it('should reveal collapsed breadbrumbs on clicking "Show More" button', () => {
       for (let n = 0; n < 5; n++) {
         clickOnNthFacet(n);
         cy.wait(150);
