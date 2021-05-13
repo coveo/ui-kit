@@ -4,7 +4,6 @@ import {Result} from '../../api/search/search/result';
 import {Engine} from '../../app/headless-engine';
 import {logDocumentOpen} from '../result/result-analytics-actions';
 import {AnalyticsType, AsyncThunkAnalyticsOptions} from './analytics-utils';
-import {logDocumentQuickview} from '../result-preview/result-preview-analytics-actions';
 
 /**
  * The click analytics action creators.
@@ -17,22 +16,6 @@ export interface ClickAnalyticsActionCreators {
    * @returns A dispatchable action.
    */
   logDocumentOpen(
-    result: Result
-  ): AsyncThunkAction<
-    {
-      analyticsType: AnalyticsType.Click;
-    },
-    void,
-    AsyncThunkAnalyticsOptions<StateNeededByAnalyticsProvider>
-  >;
-
-  /**
-   * The event to log when a result is previewed.
-   *
-   * @param result - The previewed result.
-   * @returns A dispatchable action.
-   */
-  logDocumentQuickview(
     result: Result
   ): AsyncThunkAction<
     {
@@ -56,6 +39,5 @@ export function loadClickAnalyticsActions(
 
   return {
     logDocumentOpen,
-    logDocumentQuickview,
   };
 }
