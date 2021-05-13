@@ -295,6 +295,78 @@ const actionLoaderConfiguration: ActionLoaderConfiguration[] = [
   {
     initializer: 'loadSearchActions',
   },
+  {
+    initializer: 'loadAdvancedSearchQueryActions',
+  },
+  {
+    initializer: 'loadConfigurationActions',
+  },
+  {
+    initializer: 'loadContextActions',
+  },
+  {
+    initializer: 'loadDebugActions',
+  },
+  {
+    initializer: 'loadDidYouMeanActions',
+  },
+  {
+    initializer: 'loadCategoryFacetSetActions',
+  },
+  {
+    initializer: 'loadFacetSetActions',
+  },
+  {
+    initializer: 'loadDateFacetSetActions',
+  },
+  {
+    initializer: 'loadNumericFacetSetActions',
+  },
+  {
+    initializer: 'loadFieldActions',
+  },
+  {
+    initializer: 'loadHistoryActions',
+  },
+  {
+    initializer: 'loadPaginationActions',
+  },
+  {
+    initializer: 'loadPipelineActions',
+  },
+  {
+    initializer: 'loadProductRecommendationsActions',
+  },
+  {
+    initializer: 'loadQueryActions',
+  },
+  {
+    initializer: 'loadQuerySetActions',
+  },
+  {
+    initializer: 'loadQuerySuggestActions',
+  },
+  {
+    initializer: 'loadRecommendationActions',
+  },
+  {
+    initializer: 'loadRedirectionActions',
+  },
+  {
+    initializer: 'loadSearchHubActions',
+  },
+  {
+    initializer: 'loadSortCriteriaActions',
+  },
+  {
+    initializer: 'loadBreadcrumbActions',
+  },
+  {
+    initializer: 'loadSearchAnalyticsActions',
+  },
+  {
+    initializer: 'loadClickAnalyticsActions',
+  },
 ];
 
 const controllers = controllerConfiguration.map((controller) =>

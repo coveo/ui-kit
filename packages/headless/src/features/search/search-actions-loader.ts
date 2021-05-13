@@ -20,13 +20,13 @@ export interface SearchActionCreators {
    * @example
    *
    * ```js
-   * const {logInterfaceLoad} = loadAnalyticsSearchActions(engine);
+   * const {logInterfaceLoad} = loadSearchAnalyticsActions(engine);
    * const {executeSearch} = loadSearchActions(engine);
    *
    * engine.dispatch(executeSearch(interfaceLoad()));
    * ```
    *
-   * @param analyticsSearchAction - The analytics action to log after a successful query. See `loadAnalyticsSearchActions` for possible values.
+   * @param analyticsSearchAction - The analytics action to log after a successful query. See `loadSearchAnalyticsActions` for possible values.
    * @returns A dispatchable action.
    */
   executeSearch(
@@ -50,10 +50,10 @@ export interface SearchActionCreators {
 }
 
 /**
- * Loads the `search` reducer and returns possible search action creators.
+ * Loads the `search` reducer and returns possible action creators.
  *
  * @param engine - The headless engine.
- * @returns An object holding the search action creators.
+ * @returns An object holding the action creators.
  */
 export function loadSearchActions(
   engine: Engine<object>
