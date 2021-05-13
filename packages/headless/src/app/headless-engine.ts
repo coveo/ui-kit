@@ -32,9 +32,9 @@ import {
   ThunkExtraArguments,
 } from './thunk-extra-arguments';
 import {SearchAppState} from '../state/search-app-state';
-import {pipeline, searchHub} from './reducers';
+import {debug, pipeline, searchHub} from './reducers';
 
-const headlessReducers = {pipeline, searchHub};
+const headlessReducers = {debug, pipeline, searchHub};
 type HeadlessReducers = typeof headlessReducers;
 type HeadlessState = StateFromReducersMapObject<HeadlessReducers>;
 

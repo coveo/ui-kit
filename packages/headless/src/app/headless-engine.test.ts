@@ -1,3 +1,4 @@
+import {enableDebug} from '../features/debug/debug-actions';
 import {HeadlessEngine, HeadlessOptions, Engine} from './headless-engine';
 
 describe('headless engine', () => {
@@ -29,6 +30,15 @@ describe('headless engine', () => {
 
     expect(engine.state.pipeline).toBe(pipeline);
     expect(engine.state.searchHub).toBe(searchHub);
+  });
+
+  it('given no reducers, it is still possible to toggle debug mode', () => {
+    options.reducers = {};
+    initEngine();
+
+    expect(engine.state.debug).toBe(false);
+    engine.dispatch(enableDebug());
+    expect(engine.state.debug).toBe(true);
   });
 
   it('should throw an error if the engine is constructed with invalid options', () => {
