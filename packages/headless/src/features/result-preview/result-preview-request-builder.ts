@@ -24,8 +24,8 @@ export function buildResultPreviewRequest(
     accessToken,
     organizationId,
     enableNavigation: false,
-    requestedOutputSize: options.requestedOutputSize || 0,
     q,
     ...options,
+    requestedOutputSize: options.requestedOutputSize || 0,
   };
 }
