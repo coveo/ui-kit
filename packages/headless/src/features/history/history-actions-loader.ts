@@ -1,6 +1,6 @@
 import {AsyncThunkAction} from '@reduxjs/toolkit';
 import {Engine} from '../../app/headless-engine';
-import {history} from '../../app/reducers';
+import {facetOrder, history} from '../../app/reducers';
 import {back, forward} from './history-actions';
 
 /**
@@ -31,7 +31,7 @@ export interface HistoryActionCreators {
 export function loadHistoryActions(
   engine: Engine<object>
 ): HistoryActionCreators {
-  engine.addReducers({history});
+  engine.addReducers({history, facetOrder});
 
   return {
     back,
