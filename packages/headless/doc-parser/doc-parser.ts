@@ -350,6 +350,12 @@ const actionLoaderConfiguration: ActionLoaderConfiguration[] = [
   {
     initializer: 'loadBreadcrumbActions',
   },
+  {
+    initializer: 'loadSearchAnalyticsActions',
+  },
+  {
+    initializer: 'loadClickAnalyticsActions',
+  },
 ];
 
 const controllers = controllerConfiguration.map((controller) =>
