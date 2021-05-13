@@ -27,9 +27,6 @@
         "source": "packages/headless/dist/browser",
         "parameters": {
           "acl": "public-read"
-        },
-        "qa": {
-          "directory": "proda/StaticCDN/headless/beta"
         }
       }
     },
@@ -41,9 +38,6 @@
         "source": "packages/atomic/dist/atomic",
         "parameters": {
           "acl": "public-read"
-        },
-        "qa": {
-          "directory": "proda/StaticCDN/atomic/beta"
         }
       }
     },
@@ -55,9 +49,6 @@
         "source": "packages/headless/dist/browser",
         "parameters": {
           "acl": "public-read"
-        },
-        "qa": {
-          "disabled": true
         }
       }
     },
@@ -69,9 +60,6 @@
         "source": "packages/atomic/dist/atomic",
         "parameters": {
           "acl": "public-read"
-        },
-        "qa": {
-          "disabled": true
         }
       }
     },
