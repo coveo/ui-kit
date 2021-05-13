@@ -1,6 +1,7 @@
 {
   "product": "ui-kit",
   "team_name": "searchui",
+  "development_workflow": "gitflow",
   "general": {
     "aws_regions": {
       "sequential": ["us-east-1"]
@@ -9,9 +10,12 @@
       "sequential": ["dev", "qa", "prd"]
     },
     "team_jenkins": "searchuibuilds",
-    "start_environment_automatically": false,
+    "start_environment_automatically": true,
     "notifications": {
       "slack_channels": ["#searchuibuilds"]
+    },
+    "prd": {
+      "start_environment_automatically": false
     }
   },
   "ordered_phases": [
@@ -23,6 +27,9 @@
         "source": "packages/headless/dist/browser",
         "parameters": {
           "acl": "public-read"
+        },
+        "qa": {
+          "directory": "proda/StaticCDN/headless/beta"
         }
       }
     },
@@ -34,6 +41,9 @@
         "source": "packages/atomic/dist/atomic",
         "parameters": {
           "acl": "public-read"
+        },
+        "qa": {
+          "directory": "proda/StaticCDN/atomic/beta"
         }
       }
     },
@@ -41,13 +51,13 @@
       "id": "deploy-headless-to-s3-version",
       "s3": {
         "bucket": "{terraform.infra.infra.bucket_binaries}",
-        "directory": "proda/StaticCDN/headless/v$[PRERELEASE]",
+        "directory": "proda/StaticCDN/headless/v$[VERSION]",
         "source": "packages/headless/dist/browser",
         "parameters": {
           "acl": "public-read"
         },
-        "prd": {
-          "directory": "proda/StaticCDN/headless/v$[VERSION]"
+        "qa": {
+          "disabled": true
         }
       }
     },
@@ -55,13 +65,23 @@
       "id": "deploy-atomic-to-s3-version",
       "s3": {
         "bucket": "{terraform.infra.infra.bucket_binaries}",
-        "directory": "proda/StaticCDN/atomic/v$[PRERELEASE]",
+        "directory": "proda/StaticCDN/atomic/v$[VERSION]",
         "source": "packages/atomic/dist/atomic",
         "parameters": {
           "acl": "public-read"
         },
-        "prd": {
-          "directory": "proda/StaticCDN/atomic/v$[VERSION]"
+        "qa": {
+          "disabled": true
+        }
+      }
+    },
+    {
+      "id": "wait-for-dev-deployment-request",
+      "manual": {
+        "disabled": true,
+        "message": "Deploy v${VERSION} → v${RELEASE_VERSION}?",
+        "dev": {
+          "disabled": false
         }
       }
     },
@@ -70,7 +90,7 @@
       "team_jenkins": {
         "disabled": true,
         "job_name": "ui-kit-qa-release",
-        "qa": {
+        "dev": {
           "disabled": false
         }
       }

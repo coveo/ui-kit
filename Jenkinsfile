@@ -66,12 +66,16 @@ node('linux && docker') {
       return
     }
 
-    withDockerContainer(image: 'node:14', args: '-u=root') {
-      stage('Npm publish') {
-        withCredentials([
-        string(credentialsId: 'NPM_TOKEN', variable: 'NPM_TOKEN')]) {
-          sh "echo //registry.npmjs.org/:_authToken=${NPM_TOKEN} > ~/.npmrc"
-          sh 'npm run npm:publish:alpha || true'
+    def isRelease = tag ==~ /^v[0-9]+\.[0-9]+\.[0-9]+$/
+
+    if (!isRelease) {
+      withDockerContainer(image: 'node:14', args: '-u=root') {
+        stage('Npm publish alpha') {
+          withCredentials([
+          string(credentialsId: 'NPM_TOKEN', variable: 'NPM_TOKEN')]) {
+            sh "echo //registry.npmjs.org/:_authToken=${NPM_TOKEN} > ~/.npmrc"
+            sh 'npm run npm:publish:alpha || true'
+          }
         }
       }
     }
@@ -89,9 +93,18 @@ node('linux && docker') {
 
       stage('Deployment pipeline upload') {
         lerna = readJSON file: 'lerna.json'
-        prereleaseVersion = lerna.version
-        version = prereleaseVersion.split('-alpha')[0]
-        sh "deployment-package package create --with-deploy --resolve COMMIT_HASH=${commitHash} --resolve VERSION=${version} --resolve PRERELEASE=${prereleaseVersion}  || true"
+        version = lerna.version
+        releaseVersion = version.split('-alpha')[0]
+        sh """\
+          deployment-package package create
+            --with-deploy
+            --package-name ui-kit/v${version}
+            --target-environment ${isRelease ? 'prd' : 'dev'}
+            --resolve COMMIT_HASH=${commitHash}
+            --resolve VERSION=${version}
+            --resolve RELEASE_VERSION=${releaseVersion}
+          || true
+        """.replace('\n', ' ').replaceAll(/\s\s+/, ' ')
       }
     }
   }
