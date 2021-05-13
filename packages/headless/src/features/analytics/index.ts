@@ -135,3 +135,4 @@ export namespace SearchAnalyticsActions {
 }
 
 export * from './search-analytics-actions-loader';
+export * from './click-analytics-actions-loader';
