@@ -9,7 +9,7 @@ import {buildInteractiveResult, Engine, Result} from '@coveo/headless';
  * @param selector Optional. Css selector that selects all links to the document. Default: "a" tags with the clickUri as "href" parameter.
  */
 export function bindLogDocumentOpenOnResult(
-  engine: Engine,
+  engine: Engine<object>,
   result: Result,
   resultElement: Element | ShadowRoot,
   selector?: string

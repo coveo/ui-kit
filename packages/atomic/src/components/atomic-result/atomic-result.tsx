@@ -21,7 +21,7 @@ export class AtomicResult {
   /**
    * The Headless Engine.
    */
-  @Prop() engine!: Engine;
+  @Prop() engine!: Engine<object>;
 
   /**
    * The result content to display.
