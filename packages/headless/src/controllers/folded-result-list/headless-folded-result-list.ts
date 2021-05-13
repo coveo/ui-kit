@@ -3,7 +3,7 @@ import {Engine} from '../../app/headless-engine';
 import {search, configuration, folding} from '../../app/reducers';
 import {
   foldingOptionsSchemaDefinition,
-  loadAll,
+  loadCollection,
   registerFolding,
 } from '../../features/folding/folding-actions';
 import {Collection, FoldedResult} from '../../features/folding/folding-state';
@@ -72,7 +72,7 @@ export interface FoldedResultList extends ResultList {
   /**
    * Loads all the folded results for a given collection.
    */
-  loadAll(collection: Collection): void;
+  loadCollection(collection: Collection): void;
   /**
    * The state of the `FoldedResultList` controller.
    */
@@ -122,9 +122,9 @@ export function buildFoldedResultList(
   return {
     ...controller,
 
-    loadAll: (collection) =>
+    loadCollection: (collection) =>
       dispatch(
-        loadAll(
+        loadCollection(
           collection.raw[engine.state.folding.fields.collection] as string
         )
       ),

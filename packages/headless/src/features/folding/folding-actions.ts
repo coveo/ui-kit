@@ -40,12 +40,12 @@ export interface RegisterFoldingActionCreatorPayload {
   numberOfFoldedResults?: number;
 }
 
-export interface LoadAllFulfilledReturn {
+export interface LoadCollectionFulfilledReturn {
   results: Result[];
   collectionId: CollectionId;
 }
 
-export interface LoadAllRejectedReturn {
+export interface LoadCollectionRejectedReturn {
   collectionId: CollectionId;
   error: SearchAPIErrorWithStatusCode;
 }
@@ -65,15 +65,15 @@ export const registerFolding = createAction(
     validatePayload(payload, foldingOptionsSchemaDefinition)
 );
 
-export const loadAll = createAsyncThunk<
-  LoadAllFulfilledReturn,
+export const loadCollection = createAsyncThunk<
+  LoadCollectionFulfilledReturn,
   CollectionId,
   AsyncThunkSearchOptions<
     ConfigurationSection & FoldingSection,
-    LoadAllRejectedReturn
+    LoadCollectionRejectedReturn
   >
 >(
-  'folding/loadAll',
+  'folding/loadCollection',
   async (
     collectionId: CollectionId,
     {getState, rejectWithValue, extra: {searchAPIClient}}

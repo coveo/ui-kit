@@ -4,7 +4,7 @@ import {isArray, removeDuplicates} from '../../utils/utils';
 import {executeSearch, fetchMoreResults} from '../search/search-actions';
 import {
   collectionMoreResultsAvailableBuffer,
-  loadAll,
+  loadCollection,
   registerFolding,
 } from './folding-actions';
 import {
@@ -167,7 +167,7 @@ export const foldingReducer = createReducer(
                 payload.numberOfFoldedResults ?? state.numberOfFoldedResults,
             }
       )
-      .addCase(loadAll.pending, (state, {meta}) => {
+      .addCase(loadCollection.pending, (state, {meta}) => {
         const collectionId = meta.arg;
 
         return {
@@ -179,7 +179,7 @@ export const foldingReducer = createReducer(
           ),
         };
       })
-      .addCase(loadAll.rejected, (state, {payload}) => ({
+      .addCase(loadCollection.rejected, (state, {payload}) => ({
         ...state,
         collections: state.collections.map((collection) =>
           collection.raw[state.fields.collection] === payload?.collectionId
@@ -188,7 +188,7 @@ export const foldingReducer = createReducer(
         ),
       }))
       .addCase(
-        loadAll.fulfilled,
+        loadCollection.fulfilled,
         (state, {payload: {collectionId, results}}) => ({
           ...state,
           collections: state.collections.map((collection) => {
