@@ -45,7 +45,6 @@ import {extractHistory} from '../history/history-state';
 import {sortFacets} from '../../utils/facet-utils';
 import {getSearchInitialState} from './search-state';
 import {logFetchMoreResults, logQueryError} from './search-analytics-actions';
-import {collectionMoreResultsAvailableBuffer} from '../folding/folding-actions';
 
 export type StateNeededByExecuteSearch = ConfigurationSection &
   Partial<
@@ -318,9 +317,7 @@ export const buildSearchRequest = (
       filterField: state.folding.fields.collection,
       childField: state.folding.fields.parent,
       parentField: state.folding.fields.child,
-      filterFieldRange:
-        state.folding.numberOfFoldedResults +
-        collectionMoreResultsAvailableBuffer,
+      filterFieldRange: state.folding.filterFieldRange,
     }),
   };
 };

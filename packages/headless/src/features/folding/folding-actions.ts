@@ -9,8 +9,6 @@ import {Result} from '../../api/search/search/result';
 import {ConfigurationSection, FoldingSection} from '../../state/state-sections';
 import {validatePayload} from '../../utils/validate-payload';
 
-export const collectionMoreResultsAvailableBuffer = 1;
-
 export type CollectionId = string;
 
 export interface RegisterFoldingActionCreatorPayload {

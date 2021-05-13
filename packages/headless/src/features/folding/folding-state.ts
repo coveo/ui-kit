@@ -27,7 +27,7 @@ export interface FoldingFields {
 export interface FoldingState {
   enabled: boolean;
   fields: FoldingFields;
-  numberOfFoldedResults: number;
+  filterFieldRange: number;
   collections: Collection[];
 }
 
@@ -38,6 +38,6 @@ export const getFoldingInitialState: () => FoldingState = () => ({
     parent: 'foldingparent',
     child: 'foldingchild',
   },
-  numberOfFoldedResults: 2,
+  filterFieldRange: 3,
   collections: [],
 });

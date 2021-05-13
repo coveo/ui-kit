@@ -2,11 +2,7 @@ import {createReducer} from '@reduxjs/toolkit';
 import {Result} from '../../api/search/search/result';
 import {isArray, removeDuplicates} from '../../utils/utils';
 import {executeSearch, fetchMoreResults} from '../search/search-actions';
-import {
-  collectionMoreResultsAvailableBuffer,
-  loadCollection,
-  registerFolding,
-} from './folding-actions';
+import {loadCollection, registerFolding} from './folding-actions';
 import {
   Collection,
   FoldedResult,
@@ -18,6 +14,8 @@ export interface ResultWithFolding extends Result {
   parentResult: ResultWithFolding | null;
   childResults: ResultWithFolding[];
 }
+
+const collectionMoreResultsAvailableBuffer = 1;
 
 function getParentField(result: ResultWithFolding, fields: FoldingFields) {
   return result.raw[fields.parent];
@@ -136,7 +134,7 @@ export const foldingReducer = createReducer(
           ? createCollections(
               payload.response.results as ResultWithFolding[],
               state.fields,
-              state.numberOfFoldedResults
+              state.filterFieldRange
             )
           : [];
       })
@@ -147,7 +145,7 @@ export const foldingReducer = createReducer(
               ...createCollections(
                 payload.response.results as ResultWithFolding[],
                 state.fields,
-                state.numberOfFoldedResults
+                state.filterFieldRange - collectionMoreResultsAvailableBuffer
               ),
             ]
           : [];
@@ -163,8 +161,10 @@ export const foldingReducer = createReducer(
                 parent: payload.parentField ?? state.fields.parent,
                 child: payload.childField ?? state.fields.child,
               },
-              numberOfFoldedResults:
-                payload.numberOfFoldedResults ?? state.numberOfFoldedResults,
+              filterFieldRange: payload.numberOfFoldedResults
+                ? payload.numberOfFoldedResults +
+                  collectionMoreResultsAvailableBuffer
+                : state.filterFieldRange,
             }
       )
       .addCase(loadCollection.pending, (state, {meta}) => {
