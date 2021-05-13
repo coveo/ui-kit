@@ -72,7 +72,7 @@ export interface FoldedResultList extends ResultList {
   /**
    * Loads all the folded results for a given collection.
    */
-  loadAll(collection: string | Collection): void;
+  loadAll(collection: Collection): void;
   /**
    * The state of the `FoldedResultList` controller.
    */
@@ -125,9 +125,7 @@ export function buildFoldedResultList(
     loadAll: (collection) =>
       dispatch(
         loadAll(
-          typeof collection === 'string'
-            ? collection
-            : (collection.raw[engine.state.folding.fields.collection] as string)
+          collection.raw[engine.state.folding.fields.collection] as string
         )
       ),
 
