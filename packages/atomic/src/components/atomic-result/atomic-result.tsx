@@ -19,7 +19,7 @@ export class AtomicResult {
   @Prop() result!: Result;
 
   /**
-   * The Headless Engine.
+   * The Headless engine.
    */
   @Prop() engine!: Engine;
 

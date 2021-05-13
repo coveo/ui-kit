@@ -39,7 +39,7 @@ export type InitializationOptions = Pick<
 >;
 
 /**
- * The `atomic-search-interface` component is parent to all other atomic components in a search page. This component handles the headless engine and localization configurations.
+ * The `atomic-search-interface` component is the parent to all other atomic components in a search page. It handles the headless engine and localization configurations.
  */
 @Component({
   tag: 'atomic-search-interface',
@@ -69,7 +69,7 @@ export class AtomicSearchInterface {
   @Prop({reflect: true}) public searchHub = 'default';
 
   /**
-   * The level of messages you want to be logged in the console.
+   * The severity level of the messages to log in the console.
    */
   @Prop() public logLevel?: LogLevel;
 
@@ -89,7 +89,7 @@ export class AtomicSearchInterface {
   @Prop({mutable: true}) public engine?: Engine;
 
   /**
-   * Whether the state should be reflected in the url parameters.
+   * Whether the state should be reflected in the URL parameters.
    */
   @Prop() public reflectStateInUrl = true;
 

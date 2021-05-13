@@ -45,11 +45,11 @@ export class AtomicBreadcrumbManager implements InitializableComponent {
   @State() public error!: Error;
 
   /**
-   * Number of breadcrumbs to be shown before collapsing
+   * The number of breadcrumbs to be shown before collapsing
    */
   @Prop() public collapseThreshold = 5;
   /**
-   * Character that divides each path segment in a category facet breadcrumb
+   * A character that divides each path segment in a category facet breadcrumb
    */
   @Prop() public categoryDivider = '/';
 

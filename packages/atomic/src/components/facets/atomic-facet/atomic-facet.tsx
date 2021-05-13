@@ -35,26 +35,26 @@ import {FacetPlaceholder} from '../atomic-facet-placeholder/atomic-facet-placeho
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
  * An `atomic-facet` displays a facet of the results for the current query. In mobile browsers, this is rendered as a button that opens a facet modal.
  *
- * @part facet - The wrapper for the entire facet
- * @part label - The label of the facet
- * @part modal-button - The button to open the facet modal (mobile only)
- * @part close-button - The button to close the facet when displayed modally (mobile only)
- * @part clear-button - The button that resets the actively selected facet values
+ * @part facet - The wrapper for the entire facet.
+ * @part label - The label of the facet.
+ * @part modal-button - The button to open the facet modal (mobile only).
+ * @part close-button - The button to close the facet when displayed modally (mobile only).
+ * @part clear-button - The button that resets the actively selected facet values.
  *
- * @part search-input - The search input
- * @part search-icon - The magnifier icon of the input
- * @part search-input-clear-button - The clear button of the input
- * @part search-results - The list of search results
- * @part search-result - A search result
- * @part search-no-results - The label displayed when a search returns no results
- * @part active-search-result - The currently active search result
+ * @part search-input - The search input.
+ * @part search-icon - The magnifier icon of the input.
+ * @part search-input-clear-button - The clear button of the input.
+ * @part search-results - The list of search results.
+ * @part search-result - A search result.
+ * @part search-no-results - The label displayed when a search returns no results.
+ * @part active-search-result - The currently active search result.
 
  * @part placeholder - The placeholder shown before the first search is executed.
- * @part value - A single facet value
- * @part value-label - The facet value label
- * @part value-count - The facet value count
- * @part show-more - The show more results button
- * @part show-less - The show less button
+ * @part value - A single facet value.
+ * @part value-label - The facet value label.
+ * @part value-count - The facet value count.
+ * @part show-more - The show more results button.
+ * @part show-less - The show less button.
  *
  */
 @Component({

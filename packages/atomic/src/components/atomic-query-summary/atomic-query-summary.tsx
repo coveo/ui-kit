@@ -22,12 +22,12 @@ interface Summary {
 }
 
 /**
- * The `atomic-query-summary` component displays information about the current range of results, and the request duration (e.g., "Results 1-10 of 123 in 0.47 seconds").
+ * The `atomic-query-summary` component displays information about the current range of results and the request duration (e.g., "Results 1-10 of 123 in 0.47 seconds").
  *
  * @part container - The container of the whole summary
- * @part results - The results container
+ * @part results - The container for the results
  * @part no-results - The container when there are no results
- * @part duration - The duration container
+ * @part duration - The container for the duration
  * @part highlight - The summary highlights
  * @part placeholder - The initialization placeholder
  */

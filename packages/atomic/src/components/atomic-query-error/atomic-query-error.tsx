@@ -13,12 +13,12 @@ const noEndpointsException = 'NoEndpointsException';
 const invalidTokenException = 'InvalidTokenException';
 
 /**
- * The `atomic-query-error` component handlies fatal errors when doing a query on the index / Search API. When the error is known, it displays a relevant documentation link for debugging purposes. When the error is unknown, it displays a small text area with the JSON content of the error.
+ * The `atomic-query-error` component handles fatal errors when performing a query on the index or Search API. When the error is known, it displays a link to relevant documentation link for debugging purposes. When the error is unknown, it displays a small text area with the JSON content of the error.
  *
  * @part title - The title of the error.
  * @part description - A description of the error.
- * @part doc-link - A relevant documentation link.
- * @part more-info-btn - The button allowing to display error information.
+ * @part doc-link - A link to the relevant documentation.
+ * @part more-info-btn - A button to request additional error information.
  * @part error-info - The additional error information.
  */
 @Component({
