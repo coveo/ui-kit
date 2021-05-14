@@ -5,6 +5,7 @@ import {executeSearch, fetchMoreResults} from '../search/search-actions';
 import {loadCollection, registerFolding} from './folding-actions';
 import {
   Collection,
+  CollectionId,
   FoldedResult,
   FoldingFields,
   getFoldingInitialState,
@@ -17,8 +18,12 @@ export interface ResultWithFolding extends Result {
 
 const collectionMoreResultsAvailableBuffer = 1;
 
+function getCollectionField(result: ResultWithFolding, fields: FoldingFields) {
+  return result.raw[fields.collection] as string | undefined;
+}
+
 function getParentField(result: ResultWithFolding, fields: FoldingFields) {
-  return result.raw[fields.parent];
+  return result.raw[fields.parent] as string | undefined;
 }
 
 function getChildField(result: ResultWithFolding, fields: FoldingFields) {
@@ -88,16 +93,14 @@ function createCollectionFromResult(
 
   const moreResultsAvailable = foldedResults.length > numberOfFoldedResults;
 
-  const foldedResultsWithoutBuffer = moreResultsAvailable
-    ? foldedResults.slice(
-        0,
-        foldedResults.length - collectionMoreResultsAvailableBuffer
-      )
-    : foldedResults;
-
   const parentResults = [relevantResult, ...foldedResults]
     .filter((result) => result.parentResult)
     .map((result) => result.parentResult!);
+
+  const foldedResultsWithoutBuffer = foldedResults.slice(
+    0,
+    numberOfFoldedResults
+  );
 
   const resultsInCollection = removeDuplicates(
     [relevantResult, ...foldedResultsWithoutBuffer, ...parentResults],
@@ -120,9 +123,19 @@ function createCollections(
   fields: FoldingFields,
   numberOfFoldedResults: number
 ) {
-  return results.map((result) =>
-    createCollectionFromResult(result, fields, numberOfFoldedResults)
-  );
+  const collections: Record<CollectionId, Collection> = {};
+  results.forEach((result) => {
+    const collectionId = getCollectionField(result, fields);
+    if (!collectionId) {
+      return;
+    }
+    collections[collectionId] = createCollectionFromResult(
+      result,
+      fields,
+      numberOfFoldedResults
+    );
+  });
+  return collections;
 }
 
 export const foldingReducer = createReducer(
@@ -134,28 +147,28 @@ export const foldingReducer = createReducer(
           ? createCollections(
               payload.response.results as ResultWithFolding[],
               state.fields,
-              state.filterFieldRange
+              state.filterFieldRange - collectionMoreResultsAvailableBuffer
             )
-          : [];
+          : {};
       })
       .addCase(fetchMoreResults.fulfilled, (state, {payload}) => {
         state.collections = state.enabled
-          ? [
+          ? {
               ...state.collections,
               ...createCollections(
                 payload.response.results as ResultWithFolding[],
                 state.fields,
                 state.filterFieldRange - collectionMoreResultsAvailableBuffer
               ),
-            ]
-          : [];
+            }
+          : {};
       })
       .addCase(registerFolding, (state, {payload}) =>
         state.enabled
           ? state
           : {
               enabled: true,
-              collections: [],
+              collections: {},
               fields: {
                 collection: payload.collectionField ?? state.fields.collection,
                 parent: payload.parentField ?? state.fields.parent,
@@ -172,48 +185,50 @@ export const foldingReducer = createReducer(
 
         return {
           ...state,
-          collections: state.collections.map((collection) =>
-            collection.raw[state.fields.collection] === collectionId
-              ? {...collection, isLoadingMoreResults: true}
-              : collection
-          ),
+          collections: {
+            ...state.collections,
+            [collectionId]: {
+              ...state.collections[collectionId],
+              isLoadingMoreResults: true,
+            },
+          },
         };
       })
       .addCase(loadCollection.rejected, (state, {payload}) => ({
         ...state,
-        collections: state.collections.map((collection) =>
-          collection.raw[state.fields.collection] === payload?.collectionId
-            ? {...collection, isLoadingMoreResults: false}
-            : collection
-        ),
+        collections: {
+          ...state.collections,
+          [payload!.collectionId]: {
+            ...state.collections[payload!.collectionId],
+            isLoadingMoreResults: false,
+          },
+        },
       }))
       .addCase(
         loadCollection.fulfilled,
-        (state, {payload: {collectionId, results}}) => ({
-          ...state,
-          collections: state.collections.map((collection) => {
-            const isCollectionToUpdate =
-              collection.raw[state.fields.collection] === collectionId;
-            if (!isCollectionToUpdate) {
-              return collection;
-            }
-            const rootResult = getRootResult(
-              results as ResultWithFolding[],
-              state.fields
-            );
-            if (!rootResult) {
-              return collection;
-            }
-            return {
-              ...withChildren(
-                rootResult,
-                results as ResultWithFolding[],
-                state.fields
-              ),
-              moreResultsAvailable: false,
-              isLoadingMoreResults: false,
-            };
-          }),
-        })
+        (state, {payload: {collectionId, results}}) => {
+          const rootResult = getRootResult(
+            results as ResultWithFolding[],
+            state.fields
+          );
+          if (!rootResult) {
+            return state;
+          }
+          return {
+            ...state,
+            collections: {
+              ...state.collections,
+              [collectionId]: {
+                ...withChildren(
+                  rootResult,
+                  results as ResultWithFolding[],
+                  state.fields
+                ),
+                moreResultsAvailable: false,
+                isLoadingMoreResults: false,
+              },
+            },
+          };
+        }
       )
 );

@@ -5,6 +5,7 @@ import {
   FoldedResult,
   FoldedResultList as FoldedResultListController,
   FoldedResultListState,
+  Result,
   Unsubscribe,
 } from '@coveo/headless';
 import {ResultLink} from '../result-list/result-link';
@@ -32,13 +33,19 @@ export class FoldedResultList extends Component<{}, FoldedResultListState> {
     this.setState(this.controller.state);
   }
 
+  private isFoldedResult(
+    result: Collection | FoldedResult | Result
+  ): result is Collection | FoldedResult {
+    return 'children' in result;
+  }
+
   private isCollection(
-    result: Collection | FoldedResult
+    result: Collection | FoldedResult | Result
   ): result is Collection {
     return 'moreResultsAvailable' in result;
   }
 
-  private renderFoldedResult(result: Collection | FoldedResult) {
+  private renderFoldedResult(result: Collection | FoldedResult | Result) {
     return (
       <li key={result.uniqueId}>
         <article>
@@ -48,12 +55,13 @@ export class FoldedResultList extends Component<{}, FoldedResultListState> {
           </h3>
           <p>{result.excerpt}</p>
           <ul>
-            {result.children.map((child) => this.renderFoldedResult(child))}
+            {this.isFoldedResult(result) &&
+              result.children.map((child) => this.renderFoldedResult(child))}
           </ul>
           {this.isCollection(result) && result.moreResultsAvailable ? (
             <button
               disabled={result.isLoadingMoreResults}
-              onClick={() => this.controller.loadAll(result)}
+              onClick={() => this.controller.loadCollection(result)}
             >
               Show more
             </button>

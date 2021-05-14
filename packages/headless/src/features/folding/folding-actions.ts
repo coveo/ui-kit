@@ -8,8 +8,7 @@ import {SearchAPIErrorWithStatusCode} from '../../api/search/search-api-error-re
 import {Result} from '../../api/search/search/result';
 import {ConfigurationSection, FoldingSection} from '../../state/state-sections';
 import {validatePayload} from '../../utils/validate-payload';
-
-export type CollectionId = string;
+import {CollectionId} from './folding-state';
 
 export interface RegisterFoldingActionCreatorPayload {
   /**

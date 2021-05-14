@@ -1,5 +1,7 @@
 import {Result} from '../../api/search/search/result';
 
+export type CollectionId = string;
+
 export interface FoldedResult extends Result {
   /**
    * The children of this result sorted in the same order as the search results.
@@ -28,7 +30,7 @@ export interface FoldingState {
   enabled: boolean;
   fields: FoldingFields;
   filterFieldRange: number;
-  collections: Collection[];
+  collections: Record<CollectionId, Collection>;
 }
 
 export const getFoldingInitialState: () => FoldingState = () => ({
@@ -39,5 +41,5 @@ export const getFoldingInitialState: () => FoldingState = () => ({
     child: 'foldingchild',
   },
   filterFieldRange: 3,
-  collections: [],
+  collections: {},
 });
