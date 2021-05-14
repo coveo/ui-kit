@@ -3,6 +3,221 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.14.0-alpha.4](https://github.com/coveo/ui-kit/compare/v0.14.0-alpha.3...v0.14.0-alpha.4) (2021-05-13)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [0.14.0-alpha.3](https://github.com/coveo/ui-kit/compare/v0.14.0-alpha.2...v0.14.0-alpha.3) (2021-05-13)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [0.14.0-alpha.2](https://github.com/coveo/ui-kit/compare/v0.14.0-alpha.1...v0.14.0-alpha.2) (2021-05-12)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [0.14.0-alpha.1](https://github.com/coveo/ui-kit/compare/v0.14.0-alpha.0...v0.14.0-alpha.1) (2021-05-12)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [0.14.0-alpha.0](https://github.com/coveo/ui-kit/compare/v0.13.2-alpha.1...v0.14.0-alpha.0) (2021-05-11)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [0.13.1](https://github.com/coveo/ui-kit/compare/v0.13.1-alpha.0...v0.13.1) (2021-05-07)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+## [0.13.1-alpha.0](https://github.com/coveo/ui-kit/compare/v0.13.0...v0.13.1-alpha.0) (2021-05-07)
+
+
+### Bug Fixes
+
+* **atomic:** category facet x overflow & breadcrumb x position ([#790](https://github.com/coveo/ui-kit/issues/790)) ([b373b5c](https://github.com/coveo/ui-kit/commit/b373b5c904c435b47403cac554cff249d567c3f0))
+
+
+
+
+
+# [0.13.0](https://github.com/coveo/ui-kit/compare/v0.13.0-alpha.10...v0.13.0) (2021-05-07)
+
+
+### Features
+
+* **atomic,headless:** expose facetSearch query in controllers state ([#778](https://github.com/coveo/ui-kit/issues/778)) ([aaf253b](https://github.com/coveo/ui-kit/commit/aaf253bad592e0888efa9f4291c26d5865caa53d))
+
+
+
+
+
+# [0.13.0-alpha.10](https://github.com/coveo/ui-kit/compare/v0.13.0-alpha.9...v0.13.0-alpha.10) (2021-05-07)
+
+
+### Bug Fixes
+
+* **atomic:** allow to scroll down mobile facets ([#784](https://github.com/coveo/ui-kit/issues/784)) ([5dc15b5](https://github.com/coveo/ui-kit/commit/5dc15b50c19fc523bcc9ce079589ac04adf61fd3))
+
+
+
+
+
+# [0.13.0-alpha.9](https://github.com/coveo/ui-kit/compare/v0.13.0-alpha.8...v0.13.0-alpha.9) (2021-05-07)
+
+
+### Bug Fixes
+
+* **atomic:** various styling issues ([#782](https://github.com/coveo/ui-kit/issues/782)) ([1f74679](https://github.com/coveo/ui-kit/commit/1f74679d644d6b46d82f57c1616a63f7ed00d46d))
+
+
+
+
+
+# [0.13.0-alpha.8](https://github.com/coveo/ui-kit/compare/v0.13.0-alpha.7...v0.13.0-alpha.8) (2021-05-06)
+
+
+### Bug Fixes
+
+* **atomic:** use event to resolve parent result ([#771](https://github.com/coveo/ui-kit/issues/771)) ([0635c40](https://github.com/coveo/ui-kit/commit/0635c402160a7cdae2d42d921d855f4b53704311))
+
+
+
+
+
+# [0.13.0-alpha.7](https://github.com/coveo/ui-kit/compare/v0.13.0-alpha.6...v0.13.0-alpha.7) (2021-05-06)
+
+
+### Bug Fixes
+
+* **atomic:** fix facet placeholder in mobile mode ([#774](https://github.com/coveo/ui-kit/issues/774)) ([3772ffe](https://github.com/coveo/ui-kit/commit/3772ffe75c853aecc61bffa080d98a68f0be4111))
+* **atomic:** prevent result template  text elements from overflowing ([#775](https://github.com/coveo/ui-kit/issues/775)) ([5a38a87](https://github.com/coveo/ui-kit/commit/5a38a878e26897542a52c372ede5bc1d35683835))
+
+
+
+
+
+# [0.13.0-alpha.6](https://github.com/coveo/ui-kit/compare/v0.13.0-alpha.5...v0.13.0-alpha.6) (2021-05-05)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [0.13.0-alpha.5](https://github.com/coveo/ui-kit/compare/v0.13.0-alpha.4...v0.13.0-alpha.5) (2021-05-05)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [0.13.0-alpha.4](https://github.com/coveo/ui-kit/compare/v0.13.0-alpha.3...v0.13.0-alpha.4) (2021-05-05)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [0.13.0-alpha.3](https://github.com/coveo/ui-kit/compare/v0.13.0-alpha.2...v0.13.0-alpha.3) (2021-05-05)
+
+
+### Bug Fixes
+
+* **atomic:** prevent e2e tests, which rebuilds files ([#767](https://github.com/coveo/ui-kit/issues/767)) ([67ce054](https://github.com/coveo/ui-kit/commit/67ce054466dda5456da32d245d4f36efc8970fe4))
+
+
+
+
+
+# [0.13.0-alpha.2](https://github.com/coveo/ui-kit/compare/v0.13.0-alpha.1...v0.13.0-alpha.2) (2021-05-04)
+
+
+### Features
+
+* **atomic:** update general facet style for V0  ([#752](https://github.com/coveo/ui-kit/issues/752)) ([6c21035](https://github.com/coveo/ui-kit/commit/6c210354dd6eb29d3bce73975959132f9066f664))
+
+
+
+
+
+# [0.13.0-alpha.1](https://github.com/coveo/ui-kit/compare/v0.13.0-alpha.0...v0.13.0-alpha.1) (2021-05-04)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [0.13.0-alpha.0](https://github.com/coveo/ui-kit/compare/v0.12.0...v0.13.0-alpha.0) (2021-04-30)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [0.12.0](https://github.com/coveo/ui-kit/compare/v0.12.0-alpha.0...v0.12.0) (2021-04-29)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
+# [0.12.0-alpha.0](https://github.com/coveo/ui-kit/compare/v0.11.1-alpha.0...v0.12.0-alpha.0) (2021-04-29)
+
+
+### Features
+
+* **atomic:** set headless language config on atomic language change ([#746](https://github.com/coveo/ui-kit/issues/746)) ([e895404](https://github.com/coveo/ui-kit/commit/e895404d311b5eac19245b46ff7f842979b968d6))
+
+
+
+
+
+## [0.11.1-alpha.0](https://github.com/coveo/ui-kit/compare/v0.11.0...v0.11.1-alpha.0) (2021-04-29)
+
+
+### Bug Fixes
+
+* **atomic:** fix wrap for facet mobile ([#748](https://github.com/coveo/ui-kit/issues/748)) ([e9d8fcf](https://github.com/coveo/ui-kit/commit/e9d8fcf958c31ad84017c330c3177c280ed0c299))
+
+
+
+
+
+# [0.11.0](https://github.com/coveo/ui-kit/compare/v0.11.0-alpha.13...v0.11.0) (2021-04-29)
+
+**Note:** Version bump only for package @coveo/atomic
+
+
+
+
+
 # [0.11.0-alpha.13](https://github.com/coveo/ui-kit/compare/v0.11.0-alpha.12...v0.11.0-alpha.13) (2021-04-29)
 
 **Note:** Version bump only for package @coveo/atomic

@@ -8,7 +8,6 @@
     <script type="module" src="/build/atomic.esm.js"></script>
     <script nomodule src="/build/atomic.js"></script>
     <link rel="stylesheet" href="/themes/default.css" />
-    <link rel="stylesheet" href="https://use.typekit.net/bqa0xml.css" />
     <script>
       (async () => {
         await customElements.whenDefined('atomic-search-interface');
@@ -53,7 +52,7 @@
       }
 
       atomic-search-interface {
-        grid-template-columns: 1fr minmax(150px, 300px) minmax(500px, 950px) 1fr;
+        grid-template-columns: 1fr minmax(150px, 325px) minmax(500px, 925px) 1fr;
         grid-template-rows: 22px 50px 22px 1fr;
         column-gap: 20px;
         display: grid;
@@ -98,6 +97,10 @@
         padding-top: 13px;
       }
 
+      atomic-sort-dropdown {
+        margin-left: 15px;
+      }
+
       atomic-result-list {
         display: block;
         margin-top: 10px;
@@ -107,7 +110,7 @@
         margin: 10px 0;
       }
 
-      @media only screen and (max-width: 1024px) {
+      @media only screen and (max-width: 1023px) {
         atomic-search-interface {
           grid-template-rows: 16px 50px 16px auto 1fr;
           grid-template-columns: minmax(0, 100%);
@@ -141,6 +144,7 @@
         atomic-facet-manager {
           grid-row: 4 / auto;
           display: flex;
+          flex-wrap: wrap;
         }
 
         .results-container {
@@ -167,11 +171,6 @@
           flex-direction: column;
           align-items: flex-start;
         }
-      }
-
-      :root {
-        --atomic-font-family: 'canada-type-gibson';
-        --atomic-font-bold: 600;
       }
     </style>
   </head>

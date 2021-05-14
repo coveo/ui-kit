@@ -21,6 +21,7 @@ import {
   FacetOrderSection,
   FacetSection,
   FieldsSection,
+  FoldingSection,
   NumericFacetSection,
   PaginationSection,
   PipelineSection,
@@ -64,7 +65,8 @@ export type StateNeededByExecuteSearch = ConfigurationSection &
       FacetOptionsSection &
       FacetOrderSection &
       DebugSection &
-      SearchSection
+      SearchSection &
+      FoldingSection
   >;
 
 export interface ExecuteSearchThunkReturn {
@@ -310,6 +312,12 @@ export const buildSearchRequest = (
     }),
     ...(state.facetOptions && {
       facetOptions: state.facetOptions,
+    }),
+    ...(state.folding?.enabled && {
+      filterField: state.folding.fields.collection,
+      childField: state.folding.fields.parent,
+      parentField: state.folding.fields.child,
+      filterFieldRange: state.folding.numberOfFoldedResults,
     }),
   };
 };

@@ -20,8 +20,8 @@ import {
 import {CoveoSearchPageClient, SearchPageClientProvider} from 'coveo.analytics';
 import {SearchEventResponse} from 'coveo.analytics/dist/definitions/events';
 import {AsyncThunkAction, createAsyncThunk} from '@reduxjs/toolkit';
-import {ThunkExtraArguments} from '../../app/store';
 import {requiredNonEmptyString} from '../../utils/validate-payload';
+import {ThunkExtraArguments} from '../../app/thunk-extra-arguments';
 
 export enum AnalyticsType {
   Search,

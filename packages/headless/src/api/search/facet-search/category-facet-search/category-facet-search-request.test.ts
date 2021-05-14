@@ -1,11 +1,11 @@
 import {createMockState} from '../../../../test/mock-state';
-import {buildMockSearchRequest} from '../../../../test/mock-search-request';
 import {buildMockCategoryFacetSearch} from '../../../../test/mock-category-facet-search';
 import {buildMockCategoryFacetValueRequest} from '../../../../test/mock-category-facet-value-request';
 import {SearchAppState} from '../../../../state/search-app-state';
 import {buildCategoryFacetSearchRequest} from '../../../../features/facets/facet-search-set/category/category-facet-search-request-builder';
 import {buildMockCategoryFacetSlice} from '../../../../test/mock-category-facet-slice';
 import {buildMockCategoryFacetRequest} from '../../../../test/mock-category-facet-request';
+import {buildSearchRequest} from '../../../../features/search/search-actions';
 
 describe('#buildCategoryFacetSearchRequest', () => {
   const id = '1';
@@ -17,7 +17,7 @@ describe('#buildCategoryFacetSearchRequest', () => {
     state.categoryFacetSearchSet[id] = buildMockCategoryFacetSearch();
   }
 
-  function buildParms() {
+  function buildParams() {
     return buildCategoryFacetSearchRequest(id, state);
   }
 
@@ -27,21 +27,21 @@ describe('#buildCategoryFacetSearchRequest', () => {
     const captions = {a: 'A'};
     state.categoryFacetSearchSet[id].options.captions = captions;
 
-    expect(buildParms().captions).toEqual(captions);
+    expect(buildParams().captions).toEqual(captions);
   });
 
   it('retrieves the #numberOfValues from the categoryFacetSearchSet', () => {
     const numberOfValues = 5;
     state.categoryFacetSearchSet[id].options.numberOfValues = numberOfValues;
 
-    expect(buildParms().numberOfValues).toEqual(numberOfValues);
+    expect(buildParams().numberOfValues).toEqual(numberOfValues);
   });
 
   it('retrieves the #query from the categoryFacetSearchSet', () => {
     const query = 'hello';
     state.categoryFacetSearchSet[id].options.query = query;
 
-    expect(buildParms().query).toEqual(query);
+    expect(buildParams().query).toEqual(`*${query}*`);
   });
 
   it('retrieves the #basePath fron the categoryFacetSet', () => {
@@ -49,7 +49,7 @@ describe('#buildCategoryFacetSearchRequest', () => {
     const request = buildMockCategoryFacetRequest({basePath});
     state.categoryFacetSet[id] = buildMockCategoryFacetSlice({request});
 
-    expect(buildParms().basePath).toBe(basePath);
+    expect(buildParams().basePath).toBe(basePath);
   });
 
   it('retrieves the #field from the categoryFacetSet', () => {
@@ -57,7 +57,7 @@ describe('#buildCategoryFacetSearchRequest', () => {
     const request = buildMockCategoryFacetRequest({field});
     state.categoryFacetSet[id] = buildMockCategoryFacetSlice({request});
 
-    expect(buildParms().field).toBe(field);
+    expect(buildParams().field).toBe(field);
   });
 
   it('retrieves the #delimitingCharacter from the categoryFacetSet', () => {
@@ -65,14 +65,14 @@ describe('#buildCategoryFacetSearchRequest', () => {
     const request = buildMockCategoryFacetRequest({delimitingCharacter});
     state.categoryFacetSet[id] = buildMockCategoryFacetSlice({request});
 
-    expect(buildParms().delimitingCharacter).toBe(delimitingCharacter);
+    expect(buildParams().delimitingCharacter).toBe(delimitingCharacter);
   });
 
   it('sets the #searchContext to the search request params', () => {
     const facet = state.categoryFacetSet[id]!.request;
-    const request = buildMockSearchRequest({facets: [facet]});
+    const request = {...buildSearchRequest(state), facets: [facet]};
 
-    expect(buildParms().searchContext).toEqual({
+    expect(buildParams().searchContext).toEqual({
       ...request,
       visitorId: expect.any(String),
     });
@@ -80,7 +80,7 @@ describe('#buildCategoryFacetSearchRequest', () => {
 
   it('#ignorePaths is empty when currentValues is empty', () => {
     state.categoryFacetSet[id]!.request.currentValues = [];
-    expect(buildParms().ignorePaths).toEqual([]);
+    expect(buildParams().ignorePaths).toEqual([]);
   });
 
   it('#ignorePaths returns the correct path when currentValues has one level', () => {
@@ -90,7 +90,7 @@ describe('#buildCategoryFacetSearchRequest', () => {
         state: 'selected',
       }),
     ];
-    expect(buildParms().ignorePaths).toEqual([['level1']]);
+    expect(buildParams().ignorePaths).toEqual([['level1']]);
   });
 
   it('#ignorePaths returns the correct path when currentValues has more than one level', () => {
@@ -105,6 +105,6 @@ describe('#buildCategoryFacetSearchRequest', () => {
         ],
       }),
     ];
-    expect(buildParms().ignorePaths).toEqual([['level1', 'level2']]);
+    expect(buildParams().ignorePaths).toEqual([['level1', 'level2']]);
   });
 });

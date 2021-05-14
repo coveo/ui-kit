@@ -1,4 +1,4 @@
-import {Engine} from '../../../app/engine';
+import {Engine} from '../../../app/headless-engine';
 import {updateFacetSearch} from '../../../features/facets/facet-search-set/specific/specific-facet-search-actions';
 import {executeSearch} from '../../../features/search/search-actions';
 import {logFacetSelect} from '../../../features/facets/facet-set/facet-set-analytics-actions';
@@ -43,11 +43,10 @@ export function buildGenericFacetSearch<T extends FacetSearchState>(
      * @param text The new query.
      */
     updateText(text: string) {
-      const query = `*${text}*`;
       dispatch(
         updateFacetSearch({
           facetId,
-          query,
+          query: text,
           numberOfValues: getFacetSearch().initialNumberOfValues,
         })
       );
@@ -84,13 +83,15 @@ export function buildGenericFacetSearch<T extends FacetSearchState>(
     },
 
     get state() {
-      const {response, isLoading} = getFacetSearch();
+      const {response, isLoading, options} = getFacetSearch();
+      const {query} = options;
       const values: GenericFacetSearchResults = response.values;
 
       return {
         ...response,
         values,
         isLoading,
+        query,
       };
     },
   };

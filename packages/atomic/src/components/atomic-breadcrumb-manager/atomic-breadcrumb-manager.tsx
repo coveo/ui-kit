@@ -45,7 +45,7 @@ export class AtomicBreadcrumbManager implements InitializableComponent {
   @State() public error!: Error;
 
   /**
-   * The number of breadcrumbs to be shown before collapsing.
+   * Number of breadcrumbs to display when collapsed.
    */
   @Prop() public collapseThreshold = 5;
   /**
@@ -90,7 +90,7 @@ export class AtomicBreadcrumbManager implements InitializableComponent {
         <span class="ellipsed">{value}</span>
         <div
           role="button"
-          class="pt-1 w-2.5 ml-1.5 flex-shrink-0"
+          class="w-2.5 ml-1.5 flex-shrink-0 self-center"
           innerHTML={mainclear}
         />
       </button>

@@ -18,3 +18,18 @@ export function arrayEquals<T>(firstArray: T[], secondArray: T[]) {
 export function isEmptyString(str: string) {
   return str.trim() === '';
 }
+
+export function removeDuplicates<T>(
+  arr: T[],
+  getIdentifier: (value: T, index: number) => string
+) {
+  return Object.values(
+    arr.reduce(
+      (existingValues, value, index) => ({
+        ...existingValues,
+        [getIdentifier(value, index)]: value,
+      }),
+      <Record<string, T>>{}
+    )
+  );
+}

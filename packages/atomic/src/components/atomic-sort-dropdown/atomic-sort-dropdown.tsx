@@ -113,7 +113,7 @@ export class AtomicSortDropdown implements InitializableComponent {
   private renderLabel() {
     return (
       <label
-        class="text-on-background text-sm mr-2"
+        class="text-on-background text-sm m-2"
         part="label"
         htmlFor={this.id}
       >
@@ -123,21 +123,23 @@ export class AtomicSortDropdown implements InitializableComponent {
   }
 
   private renderSelect() {
-    return [
-      <select
-        id={this.id}
-        class="flex-grow appearance-none rounded bg-background text-secondary font-bold border border-divider py-3 pl-4 pr-24"
-        part="select"
-        aria-label={this.strings.sortBy()}
-        onChange={(option) => this.select(option)}
-      >
-        {this.options.map((option) => this.buildOption(option))}
-      </select>,
-      <div
-        class="absolute pointer-events-none right-3 fill-current w-3"
-        innerHTML={Arrow}
-      ></div>,
-    ];
+    return (
+      <div class="relative">
+        <select
+          id={this.id}
+          class="flex-grow appearance-none rounded bg-background text-secondary font-bold border border-divider py-3 pl-4 pr-24"
+          part="select"
+          aria-label={this.strings.sortBy()}
+          onChange={(option) => this.select(option)}
+        >
+          {this.options.map((option) => this.buildOption(option))}
+        </select>
+        <div
+          class="absolute pointer-events-none top-5 right-3 fill-current w-3"
+          innerHTML={Arrow}
+        ></div>
+      </div>
+    );
   }
 
   public render() {
@@ -160,7 +162,7 @@ export class AtomicSortDropdown implements InitializableComponent {
     }
 
     return [
-      <div class="flex items-center relative">
+      <div class="flex items-center flex-wrap">
         {this.renderLabel()}
         {this.renderSelect()}
       </div>,

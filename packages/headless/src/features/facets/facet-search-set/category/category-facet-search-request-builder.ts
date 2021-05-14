@@ -15,6 +15,7 @@ export const buildCategoryFacetSearchRequest = (
   const searchContext = buildSearchRequest(state);
   const path = getPathToSelectedCategoryFacetItem(categoryFacet);
   const ignorePaths = path.length ? [path] : [];
+  const newQuery = `*${query}*`;
 
   return {
     url: state.configuration.search.apiBaseUrl,
@@ -23,7 +24,7 @@ export const buildCategoryFacetSearchRequest = (
     basePath,
     captions,
     numberOfValues,
-    query,
+    query: newQuery,
     field,
     delimitingCharacter,
     ignorePaths,

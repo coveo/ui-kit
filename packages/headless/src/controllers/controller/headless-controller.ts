@@ -1,5 +1,5 @@
 import {Unsubscribe} from '@reduxjs/toolkit';
-import {Engine} from '../../app/engine';
+import {Engine} from '../../app/headless-engine';
 
 export interface Controller {
   /**
@@ -12,7 +12,9 @@ export interface Controller {
   readonly state: {};
 }
 
-export function buildController<T>(engine: Engine<T>): Controller {
+export function buildController<T extends object>(
+  engine: Engine<T>
+): Controller {
   let prevState = '{}';
 
   const hasStateChanged = (currentState: Record<string, unknown>): boolean => {

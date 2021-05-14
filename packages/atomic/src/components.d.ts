@@ -16,7 +16,7 @@ export namespace Components {
          */
         "categoryDivider": string;
         /**
-          * Number of breadcrumbs to be shown before collapsing.
+          * Number of breadcrumbs to display when collapsed.
          */
         "collapseThreshold": number;
     }
@@ -682,7 +682,7 @@ declare namespace LocalJSX {
          */
         "categoryDivider"?: string;
         /**
-          * Number of breadcrumbs to be shown before collapsing.
+          * Number of breadcrumbs to display when collapsed.
          */
         "collapseThreshold"?: number;
     }

@@ -7,16 +7,13 @@ import {
   buildUserInterestRecommendationsList,
   UserInterestRecommendationsList,
 } from './headless-user-interest-recommendations';
-import {buildMockProductRecommendationsState} from '../../test/mock-product-recommendations-state';
 
 describe('headless user-interest-recommendations', () => {
-  let state: ProductRecommendationsAppState;
   let userInterestRecommender: UserInterestRecommendationsList;
   let engine: MockEngine<ProductRecommendationsAppState>;
 
   beforeEach(() => {
-    state = buildMockProductRecommendationsState();
-    engine = buildMockProductRecommendationsAppEngine({state});
+    engine = buildMockProductRecommendationsAppEngine();
     userInterestRecommender = buildUserInterestRecommendationsList(engine, {
       options: {},
     });

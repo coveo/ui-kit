@@ -9,11 +9,9 @@ import {
   deselectAllCategoryFacetValues,
   updateCategoryFacetNumberOfValues,
   updateCategoryFacetSortCriterion,
+  RegisterCategoryFacetActionCreatorPayload,
 } from './category-facet-set-actions';
-import {
-  CategoryFacetRegistrationOptions,
-  CategoryFacetOptionalParameters,
-} from './interfaces/options';
+import {CategoryFacetOptionalParameters} from './interfaces/options';
 import {change} from '../../history/history-actions';
 import {CategoryFacetResponse, CategoryFacetValue} from './interfaces/response';
 import {
@@ -182,7 +180,7 @@ export const defaultCategoryFacetOptions: CategoryFacetOptionalParameters = {
 };
 
 function buildCategoryFacetRequest(
-  config: CategoryFacetRegistrationOptions
+  config: RegisterCategoryFacetActionCreatorPayload
 ): CategoryFacetRequest {
   return {
     ...defaultCategoryFacetOptions,

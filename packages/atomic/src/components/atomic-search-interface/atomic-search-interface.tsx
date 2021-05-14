@@ -110,6 +110,11 @@ export class AtomicSearchInterface {
 
   @Watch('language')
   public updateLanguage() {
+    this.engine?.dispatch(
+      ConfigurationActions.updateSearchConfiguration({
+        locale: this.language,
+      })
+    );
     new Backend(this.i18n.services, this.i18nBackendOptions).read(
       this.language,
       'translation',
@@ -198,6 +203,7 @@ export class AtomicSearchInterface {
           search: {
             searchHub: this.searchHub,
             pipeline: this.pipeline,
+            locale: this.language,
           },
         },
         reducers: searchAppReducers,

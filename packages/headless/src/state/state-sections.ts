@@ -23,6 +23,7 @@ import {FacetOrderState} from '../features/facets/facet-order/facet-order-state'
 import {ResultPreviewState} from '../features/result-preview/result-preview-state';
 import {StateWithHistory} from '../app/undoable';
 import {HistoryState} from '../features/history/history-state';
+import {FoldingState} from '../features/folding/folding-state';
 
 export interface QuerySection {
   /**
@@ -171,6 +172,13 @@ export interface SearchSection {
    * The information related to the search endpoint.
    */
   search: SearchState;
+}
+
+export interface FoldingSection {
+  /**
+   * The information needed to fold results into collections.
+   */
+  folding: FoldingState;
 }
 
 export interface DidYouMeanSection {

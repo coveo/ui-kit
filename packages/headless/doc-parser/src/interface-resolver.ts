@@ -15,7 +15,7 @@ import {
 } from '@microsoft/api-extractor-model';
 import {DocComment} from '@microsoft/tsdoc';
 import {findApi} from './api-finder';
-import {AnyEntity, EntityWithTypeAlias} from './entity';
+import {AnyEntity, Entity, EntityWithTypeAlias} from './entity';
 import {
   buildEntity,
   buildFuncEntity,
@@ -164,11 +164,7 @@ function buildEntityFromPropertyAndResolveTypeAlias(
   p: ApiPropertySignature
 ): EntityWithTypeAlias {
   const entity = buildEntityFromProperty(p);
-  const searchableTypeName = extractSearchableTypeName(p.propertyTypeExcerpt);
-  const typeAlias = findApi(entry, searchableTypeName) as ApiTypeAlias;
-  const type = typeAlias.typeExcerpt.text;
-
-  return {...entity, kind: 'primitive-with-type-alias', type};
+  return tryToResolveTypeAlias(entry, entity, p.propertyTypeExcerpt);
 }
 
 function isIndexSignature(m: ApiItem): m is ApiIndexSignature {
@@ -224,6 +220,10 @@ function resolveMethodReturnType(
     return buildReturnTypeEntity(m);
   }
 
+  if (isTypeAlias(typeExcerpt)) {
+    return buildReturnTypeEntity(m);
+  }
+
   if (isReference(typeExcerpt)) {
     return buildObjEntityFromReturnType(entry, m, ancestorNames);
   }
@@ -254,7 +254,7 @@ export function resolveParameter(
   const type = p.parameterTypeExcerpt.text;
 
   if (isTypeAlias(typeExcerpt)) {
-    return buildEntityFromParamAndResolveTypeAlias(entry, p);
+    return buildEntityFromParamWithTypeAlias(entry, p);
   }
 
   if (isUnionType(type)) {
@@ -268,14 +268,28 @@ export function resolveParameter(
   return buildParamEntity(p);
 }
 
-function buildEntityFromParamAndResolveTypeAlias(
+function buildEntityFromParamWithTypeAlias(
   entry: ApiEntryPoint,
   p: Parameter
 ): EntityWithTypeAlias {
   const entity = buildParamEntity(p);
-  const searchableTypeName = extractSearchableTypeName(p.parameterTypeExcerpt);
-  const typeAlias = findApi(entry, searchableTypeName) as ApiTypeAlias;
-  const type = typeAlias.typeExcerpt.text;
+  return tryToResolveTypeAlias(entry, entity, p.parameterTypeExcerpt);
+}
+
+function tryToResolveTypeAlias(
+  entry: ApiEntryPoint,
+  entity: Entity,
+  typeExcerpt: Excerpt
+): EntityWithTypeAlias {
+  const searchableTypeName = extractSearchableTypeName(typeExcerpt);
+  let type: string;
+
+  try {
+    const typeAlias = findApi(entry, searchableTypeName) as ApiTypeAlias;
+    type = typeAlias.typeExcerpt.text;
+  } catch {
+    type = typeExcerpt.text;
+  }
 
   return {...entity, kind: 'primitive-with-type-alias', type};
 }

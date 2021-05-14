@@ -27,19 +27,4 @@ export const CategoryFacetSelectors = {
     CategoryFacetSelectors.shadow().find('[part="show-more"]'),
   showLessButton: () =>
     CategoryFacetSelectors.shadow().find('[part="show-less"]'),
-  searchInput: () =>
-    CategoryFacetSelectors.shadow().find('[part="search-input"]'),
-  searchResults: () =>
-    CategoryFacetSelectors.shadow().find('[part="search-results"]'),
 };
-
-export const canadaHierarchy = [
-  'North America',
-  'Canada',
-  'Quebec',
-  'Montreal',
-];
-export const canadaHierarchyIndex = [0, 1, 0, 4];
-export const togoHierarchy = ['Africa', 'Togo', 'Lome'];
-export const hierarchicalField = 'geographicalhierarchy';
-export const defaultNumberOfValues = 5;

@@ -2,7 +2,7 @@ import {
   buildController,
   Controller,
 } from '../../controller/headless-controller';
-import {Engine} from '../../../app/engine';
+import {Engine} from '../../../app/headless-engine';
 import {
   registerFacet,
   deselectAllFacetValues,
@@ -194,6 +194,9 @@ export interface FacetSearchState {
    * Whether more values are available.
    * */
   moreValuesAvailable: boolean;
+
+  /** The current query in the facet search box. */
+  query: string;
 }
 
 export interface SpecificFacetSearchResult {

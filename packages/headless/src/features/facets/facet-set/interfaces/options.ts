@@ -1,7 +1,5 @@
 import {FacetRequest} from './request';
 
-type FacetRequiredParameters = Pick<FacetRequest, 'facetId' | 'field'>;
-
 export type FacetOptionalParameters = Pick<
   FacetRequest,
   | 'delimitingCharacter'
@@ -10,6 +8,3 @@ export type FacetOptionalParameters = Pick<
   | 'numberOfValues'
   | 'sortCriteria'
 >;
-
-export type FacetRegistrationOptions = FacetRequiredParameters &
-  Partial<FacetOptionalParameters>;

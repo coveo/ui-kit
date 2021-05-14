@@ -1,4 +1,4 @@
-import {Component, h, Prop, Element} from '@stencil/core';
+import {Component, h, Prop, Element, Listen} from '@stencil/core';
 import {Result, Engine} from '@coveo/headless';
 import {bindLogDocumentOpenOnResult} from '../../utils/result-utils';
 
@@ -27,6 +27,13 @@ export class AtomicResult {
    * The result content to display.
    */
   @Prop() content!: string;
+
+  @Listen('atomic/resolveResult')
+  public resolveResult(event: CustomEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+    event.detail(this.result);
+  }
 
   private unbindLogDocumentOpen = () => {};
 

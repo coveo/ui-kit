@@ -8,10 +8,8 @@ import {
   FrequentlyViewedTogetherList,
   FrequentlyViewedTogetherListOptions,
 } from './headless-frequently-viewed-together';
-import {buildMockProductRecommendationsState} from '../../test/mock-product-recommendations-state';
 
 describe('headless frequently-viewed-together', () => {
-  let state: ProductRecommendationsAppState;
   let frequentlyViewedTogether: FrequentlyViewedTogetherList;
   let engine: MockEngine<ProductRecommendationsAppState>;
 
@@ -20,8 +18,7 @@ describe('headless frequently-viewed-together', () => {
   };
 
   beforeEach(() => {
-    state = buildMockProductRecommendationsState();
-    engine = buildMockProductRecommendationsAppEngine({state});
+    engine = buildMockProductRecommendationsAppEngine();
     frequentlyViewedTogether = buildFrequentlyViewedTogetherList(engine, {
       options: baseOptions,
     });

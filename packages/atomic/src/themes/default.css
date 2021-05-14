@@ -23,8 +23,11 @@
   --atomic-border-radius-full: 100%;
   --atomic-divider: #c5cacf;
 
-  /* Others */
-  --atomic-font-family: Lato, Arial, Helvetica, sans-serif;
-  --atomic-icon-size: 30px;
+  /* Fonts */
+  --atomic-font-family: -apple-system, BlinkMacSystemFont, avenir next, avenir, segoe ui, helvetica neue, helvetica,
+    Ubuntu, roboto, noto, arial, sans-serif; /* Following https://systemfontstack.com/ */
   --atomic-font-bold: 700;
+
+  /* Others */
+  --atomic-icon-size: 30px;
 }

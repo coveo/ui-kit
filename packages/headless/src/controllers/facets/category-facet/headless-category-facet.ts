@@ -1,4 +1,4 @@
-import {Engine} from '../../../app/engine';
+import {Engine} from '../../../app/headless-engine';
 import {
   buildController,
   Controller,
@@ -185,6 +185,11 @@ export interface CategoryFacetSearchState {
    * Whether more values are available.
    * */
   moreValuesAvailable: boolean;
+
+  /**
+   * The current query in the facet search box.
+   */
+  query: string;
 }
 
 export interface CategoryFacetSearchResult {

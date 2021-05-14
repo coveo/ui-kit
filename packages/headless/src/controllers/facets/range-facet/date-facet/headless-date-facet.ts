@@ -2,13 +2,15 @@ import {
   DateFacetRequest,
   DateRangeRequest,
 } from '../../../../features/facets/range-facets/date-facet-set/interfaces/request';
-import {Engine} from '../../../../app/engine';
-import {DateFacetRegistrationOptions} from '../../../../features/facets/range-facets/date-facet-set/interfaces/options';
+import {Engine} from '../../../../app/headless-engine';
 import {
   DateFacetResponse,
   DateFacetValue,
 } from '../../../../features/facets/range-facets/date-facet-set/interfaces/response';
-import {registerDateFacet} from '../../../../features/facets/range-facets/date-facet-set/date-facet-actions';
+import {
+  RegisterDateFacetActionCreatorPayload,
+  registerDateFacet,
+} from '../../../../features/facets/range-facets/date-facet-set/date-facet-actions';
 import {
   assertRangeFacetOptions,
   buildRangeFacet,
@@ -140,7 +142,7 @@ export function buildDateFacet(
   const dispatch = engine.dispatch;
 
   const facetId = determineFacetId(engine, props.options);
-  const options: DateFacetRegistrationOptions = {
+  const options: RegisterDateFacetActionCreatorPayload = {
     currentValues: [],
     ...props.options,
     facetId,

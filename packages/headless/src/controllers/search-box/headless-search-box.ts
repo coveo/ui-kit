@@ -5,7 +5,7 @@ import {
   registerQuerySuggest,
   selectQuerySuggestion,
 } from '../../features/query-suggest/query-suggest-actions';
-import {Engine} from '../../app/engine';
+import {Engine} from '../../app/headless-engine';
 import {updateQuery} from '../../features/query/query-actions';
 import {
   registerQuerySetQuery,
@@ -45,6 +45,7 @@ import {
   search,
 } from '../../app/reducers';
 import {loadReducerError} from '../../utils/errors';
+import {deselectAllFacets} from '../../features/facets/generic/facet-actions';
 
 export {SearchBoxOptions, SuggestionHighlightingOptions, Delimiters};
 
@@ -88,7 +89,7 @@ export interface SearchBox extends Controller {
   selectSuggestion(value: string): void;
 
   /**
-   * Triggers a search query.
+   * Deselects all facets and triggers a search query.
    */
   submit(): void;
 
@@ -173,6 +174,7 @@ export function buildSearchBox(
   const performSearch = (analytics: SearchAction) => {
     const {enableQuerySyntax} = options;
 
+    dispatch(deselectAllFacets());
     dispatch(updateQuery({q: getValue(), enableQuerySyntax}));
     dispatch(updatePage(1));
     dispatch(executeSearch(analytics));

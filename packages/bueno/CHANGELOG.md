@@ -3,6 +3,54 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.14.0-alpha.3](https://github.com/coveo/ui-kit/compare/v0.14.0-alpha.2...v0.14.0-alpha.3) (2021-05-13)
+
+**Note:** Version bump only for package @coveo/bueno
+
+
+
+
+
+# [0.13.0](https://github.com/coveo/ui-kit/compare/v0.13.0-alpha.10...v0.13.0) (2021-05-07)
+
+**Note:** Version bump only for package @coveo/bueno
+
+
+
+
+
+# [0.13.0-alpha.5](https://github.com/coveo/ui-kit/compare/v0.13.0-alpha.4...v0.13.0-alpha.5) (2021-05-05)
+
+**Note:** Version bump only for package @coveo/bueno
+
+
+
+
+
+# [0.12.0](https://github.com/coveo/ui-kit/compare/v0.12.0-alpha.0...v0.12.0) (2021-04-29)
+
+**Note:** Version bump only for package @coveo/bueno
+
+
+
+
+
+# [0.12.0-alpha.0](https://github.com/coveo/ui-kit/compare/v0.11.1-alpha.0...v0.12.0-alpha.0) (2021-04-29)
+
+**Note:** Version bump only for package @coveo/bueno
+
+
+
+
+
+# [0.11.0](https://github.com/coveo/ui-kit/compare/v0.11.0-alpha.13...v0.11.0) (2021-04-29)
+
+**Note:** Version bump only for package @coveo/bueno
+
+
+
+
+
 # [0.11.0-alpha.8](https://github.com/coveo/ui-kit/compare/v0.11.0-alpha.7...v0.11.0-alpha.8) (2021-04-21)
 
 **Note:** Version bump only for package @coveo/bueno

@@ -12,11 +12,11 @@ type FacetSearchResult = CategoryFacetSearchResult;
 export interface FacetSearchStrings extends ComboboxStrings {
   placeholder: () => string;
   noValuesFound: () => string;
+  clear: () => string;
 }
 
 export interface FacetSearchComponent {
   strings: FacetSearchStrings;
-  facetSearchQuery: string;
   facet: Facet | CategoryFacet;
   renderSearchResult: (searchResult: FacetSearchResult) => HTMLLIElement[];
   ariaLabelForSearchResult: (searchResult: FacetSearchResult) => string;
@@ -82,7 +82,6 @@ export class FacetSearch {
   }
 
   private set text(text: string) {
-    this.component.facetSearchQuery = text;
     this.facetSearchController.updateText(text);
   }
 
@@ -126,8 +125,12 @@ export class FacetSearch {
     }
   }
 
+  private get isEmptyQuery() {
+    return this.facetSearchState.query === '';
+  }
+
   private get clearButton() {
-    if (this.component.facetSearchQuery === '') {
+    if (this.isEmptyQuery) {
       return;
     }
 
@@ -136,6 +139,7 @@ export class FacetSearch {
         type="button"
         part="search-input-clear-button"
         class="clear-button mr-2"
+        aria-label={this.strings.clear()}
         onClick={() => {
           this.text = '';
           this.inputRef.focus();
@@ -165,7 +169,7 @@ export class FacetSearch {
           'placeholder-on-background-variant flex-grow outline-none focus:outline-none mx-2'
         }
         placeholder={this.strings.placeholder()}
-        value={this.component.facetSearchQuery}
+        value={this.facetSearchState.query}
       />
     );
   }
@@ -188,7 +192,7 @@ export class FacetSearch {
 
   private get showNoValuesFound() {
     return (
-      this.component.facetSearchQuery !== '' &&
+      !this.isEmptyQuery &&
       !this.facetSearchResults.length &&
       !this.facetSearchState.isLoading
     );
@@ -197,7 +201,7 @@ export class FacetSearch {
   private get noValuesFound() {
     if (this.showNoValuesFound) {
       return (
-        <div part="search-no-results" class="search-results px-2 py-1 text-sm">
+        <div part="search-no-results" class="search-results">
           {this.strings.noValuesFound()}
         </div>
       );
@@ -221,14 +225,14 @@ export class FacetSearch {
     const isOpen =
       this.showNoValuesFound || this.facetSearchState.values.length;
     return (
-      'input-wrapper flex flex-grow items-center border border-divider rounded ' +
+      'input-wrapper flex flex-grow items-center border border-divider rounded-md ' +
       (isOpen ? 'rounded-br-none	rounded-bl-none' : '')
     );
   }
 
   public render() {
     return (
-      <div class="combobox relative flex flex-grow">
+      <div class="combobox relative flex flex-grow mb-2 mt-3">
         <div
           class={this.inputWrapperClasses}
           ref={(el) => (this.containerRef = el as HTMLElement)}

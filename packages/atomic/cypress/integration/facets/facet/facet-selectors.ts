@@ -1,9 +1,59 @@
-import {IAlias, aliasNoAtSignBuilder} from '../../utils/componentUtils';
+import {IAlias, aliasNoAtSignBuilder} from '../../../utils/componentUtils';
+import {facetField} from './facet-actions';
+export const facetComponent = 'atomic-facet';
+export const numericFacetComponent = 'atomic-numeric-facet';
+export const dateFacetComponent = 'atomic-date-facet';
+
+export const FacetSelector = {
+  shadow: (field = facetField, type = facetComponent) =>
+    cy.get(`${type}[field="${field}"]`).shadow(),
+  wrapper: (field = facetField, type = facetComponent) =>
+    FacetSelector.shadow(field, type).find('[part="facet"]'),
+  label: (field = facetField, type = facetComponent) =>
+    FacetSelector.shadow(field, type).find('[part="label"]'),
+  facetValues: (field = facetField, type = facetComponent) =>
+    FacetSelector.shadow(field, type).find('ul').find('li'),
+  valueLabels: (field = facetField, type = facetComponent) =>
+    FacetSelector.shadow(field, type).find('[part="value-label"]'),
+  valueCounts: (field = facetField, type = facetComponent) =>
+    FacetSelector.shadow(field, type).find('[part="value-count"]'),
+  facetSearchBox: (field = facetField, type = facetComponent) =>
+    FacetSelector.shadow(field, type).find('[part="search-input"]'),
+  showMoreButton: (field = facetField, type = facetComponent) =>
+    FacetSelector.shadow(field, type).find('[part="show-more"]'),
+  showLessButton: (field = facetField, type = facetComponent) =>
+    FacetSelector.shadow(field, type).find('[part="show-less"]'),
+  facetClearAllFilter: (field = facetField, type = facetComponent) =>
+    FacetSelector.shadow(field, type).find('[part="clear-button"]'),
+  facetValueAtIndex: (
+    index: number,
+    field = facetField,
+    type = facetComponent
+  ) => FacetSelector.facetValues(field, type).eq(index),
+  facetCheckboxAtIndex: (
+    index: number,
+    field = facetField,
+    type = facetComponent
+  ) =>
+    FacetSelector.facetValueAtIndex(index, field, type).find(
+      'button[role="checkbox"]'
+    ),
+  facetValueLabelAtIndex: (
+    index: number,
+    field = facetField,
+    type = facetComponent
+  ) =>
+    FacetSelector.facetValueAtIndex(index, field, type).find(
+      '[part="value-label"]'
+    ),
+  facetPlaceHolder: (field = facetField, type = facetComponent) =>
+    FacetSelector.shadow(field, type).find('[part="placeholder"]'),
+};
 
 export const FacetSelectors = {
   facetStandard: 'atomic-facet',
   facetSearchbox: 'input[part="search-input"]',
-  checkbox: 'input[type="checkbox"]',
+  checkbox: 'button[role="checkbox"]',
   label: 'label',
   labelText: 'label span:nth-child(1)',
   labelCount: 'label span:nth-child(2)',

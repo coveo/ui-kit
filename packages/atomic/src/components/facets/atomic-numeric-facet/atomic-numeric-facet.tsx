@@ -87,7 +87,7 @@ export class AtomicNumericFacet
   /**
    * The number of values to request for this facet, when there are no manual ranges.
    */
-  @Prop({mutable: true}) public numberOfValues = 10;
+  @Prop({mutable: true}) public numberOfValues = 8;
 
   private buildManualRanges() {
     const options = Array.from(
