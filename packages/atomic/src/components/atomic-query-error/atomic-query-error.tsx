@@ -19,7 +19,7 @@ const invalidTokenException = 'InvalidTokenException';
  * @part description - A description of the error.
  * @part doc-link - A link to the relevant documentation.
  * @part more-info-btn - A button to request additional error information.
- * @part error-info - The additional error information.
+ * @part error-info - Additional error information.
  */
 @Component({
   tag: 'atomic-query-error',

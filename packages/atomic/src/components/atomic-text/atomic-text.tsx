@@ -25,11 +25,11 @@ export class AtomicText implements InitializableComponent {
   @State() public error!: Error;
 
   /**
-   * String key value
+   * The string key value.
    */
   @Prop() public value!: string;
   /**
-   * Count value used for plurals
+   * The count value used for plurals.
    */
   @Prop() public count?: number;
 

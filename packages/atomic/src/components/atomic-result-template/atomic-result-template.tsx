@@ -21,7 +21,7 @@ export class AtomicResultTemplate {
   @State() private error?: Error;
 
   /**
-   * A function that must return true on results for the result template to apply
+   * A function that must return true on results for the result template to apply.
    *
    * For example, a template with the following condition only applies to results whose `title` contains `singapore`:
    * `[(result) => /singapore/i.test(result.title)]`
@@ -29,20 +29,16 @@ export class AtomicResultTemplate {
   @Prop() public conditions: ResultTemplateCondition[] = [];
 
   /**
-   * Fields and field values that results must match for the result template to apply
+   * Fields and field values that results must match for the result template to apply.
    *
-   * For example, a template with the following attribute only applies
-   * to result items whose `filetype` is `lithiummessage` or `YouTubePlaylist`:
-   * `must-match-filetype="lithiummessage,YouTubePlaylist"`
+   * For example, a template with the following attribute only applies to result items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`
    */
   @MapProp() public mustMatch: Record<string, string[]> = {};
 
   /**
-   * Fields and field values that results must not match for the result template to apply
+   * Fields and field values that results must not match for the result template to apply.
    *
-   * For example, a template with the following attribute only applies
-   * to result items whose `filetype` is not `lithiummessage`:
-   * `must-not-match-filetype="lithiummessage"`
+   * For example, a template with the following attribute only applies to result items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage"`
    */
   @MapProp() public mustNotMatch: Record<string, string[]> = {};
 

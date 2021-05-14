@@ -13,12 +13,12 @@ import Arrow from '../../../images/arrow-right.svg';
 
 /**
  * The `atomic-result-printable-uri` component displays the URI, or path, to access a result.
- * @part result-printable-uri-list - A list of results as printable URIs
- * @part result-printable-uri-list-expanded - The expanded list of printable URIs
- * @part result-printable-uri-list-element - An element in the list of printable URIs
- * @part result-printable-uri-link - A clickable link in a printable URI result
- * @part result-printable-uri-list-ellipsis - The clickable ellipsis of a result URI
- * @part result-printable-uri-list-separator - The visual separator between each part of the URI
+ * @part result-printable-uri-list - A list of results as printable URIs.
+ * @part result-printable-uri-list-expanded - The expanded list of printable URIs.
+ * @part result-printable-uri-list-element - An element in the list of printable URIs.
+ * @part result-printable-uri-link - A clickable link in a printable URI result.
+ * @part result-printable-uri-list-ellipsis - The clickable ellipsis of a result URI.
+ * @part result-printable-uri-list-separator - The visual separator between each part of the URI.
  */
 @Component({
   tag: 'atomic-result-printable-uri',

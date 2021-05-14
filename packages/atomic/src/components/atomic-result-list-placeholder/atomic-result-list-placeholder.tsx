@@ -14,7 +14,7 @@ import {
 /**
  * The `atomic-result-list-placeholder` component provides an intermediate visual state that is rendered before the first results are available.
  *
- * @part result - The placeholder for a single result
+ * @part result - The placeholder for a single result.
  */
 @Component({
   tag: 'atomic-result-list-placeholder',

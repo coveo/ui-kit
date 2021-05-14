@@ -18,10 +18,10 @@ import {
 /**
  * The `atomic-results-per-page` component determines how many results to display per page.
  *
- * @part label - The "Results per page" label
- * @part buttons - The list of buttons
- * @part page-button - The page button
- * @part active-page-button - The active page button
+ * @part label - The "Results per page" label.
+ * @part buttons - The list of buttons.
+ * @part page-button - The page button.
+ * @part active-page-button - The active page button.
  */
 @Component({
   tag: 'atomic-results-per-page',
@@ -54,8 +54,7 @@ export class AtomicResultsPerPage implements InitializableComponent {
    */
   @Prop() choicesDisplayed = '10,25,50,100';
   /**
-   * The initial selection for the number of result per page. This should be part of the `choicesDisplayed` option.
-   * By default, this is set to the first value in `choicesDisplayed`.
+   * The initial selection for the number of result per page. This should be part of the `choicesDisplayed` option. By default, this is set to the first value in `choicesDisplayed`.
    */
   @Prop() initialChoice?: number;
 

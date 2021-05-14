@@ -14,13 +14,13 @@ import SearchIcon from 'coveo-styleguide/resources/icons/svg/search.svg';
 /**
  * The `atomic-search-box` component creates a search box with built-in support for query suggestions.
  *
- * @part submit-button - The search box submit button
- * @part search-input - The search box input
- * @part input-wrapper - The wrapper for the searchbox input area
- * @part clear-button - The button to clear the search box of input
- * @part suggestions - A list of suggested query corrections
- * @part suggestion - A suggested query correction
- * @part active-suggestion - The currently active suggestion
+ * @part submit-button - The search box submit button.
+ * @part search-input - The search box input.
+ * @part input-wrapper - The wrapper for the searchbox input area.
+ * @part clear-button - The button to clear the search box of input.
+ * @part suggestions - A list of suggested query corrections.
+ * @part suggestion - A suggested query correction.
+ * @part active-suggestion - The currently active suggestion.
  */
 @Component({
   tag: 'atomic-search-box',

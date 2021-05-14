@@ -20,15 +20,15 @@ export class AtomicFieldCondition {
   @Element() host!: HTMLElement;
 
   /**
-   * Verifies if the specified fields are defined
+   * Verifies wheter the specified fields are defined.
    */
   @Prop() ifDefined?: string;
   /**
-   * Verifies if the specified fields are not defined
+   * Verifies whether the specified fields are not defined.
    */
   @Prop() ifNotDefined?: string;
   /**
-   * A list of conditions that must be fulfilled for this template to be selected
+   * A list of conditions that must be fulfilled for this template to be selected.
    */
   @Prop() conditions: ResultTemplateCondition[] = [];
   @MapProp() mustMatch: Record<string, string[]> = {};
