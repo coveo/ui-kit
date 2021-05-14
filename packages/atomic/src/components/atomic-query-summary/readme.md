@@ -14,14 +14,14 @@
 
 ## Shadow Parts
 
-| Part            | Description                             |
-| --------------- | --------------------------------------- |
-| `"container"`   | The container of the whole summary      |
-| `"duration"`    | The duration container                  |
-| `"highlight"`   | The summary highlights                  |
-| `"no-results"`  | The container when there are no results |
-| `"placeholder"` | The initialization placeholder          |
-| `"results"`     | The results container                   |
+| Part            | Description                                                                    |
+| --------------- | ------------------------------------------------------------------------------ |
+| `"container"`   | The container for the whole summary.                                           |
+| `"duration"`    | The container for the duration.                                                |
+| `"highlight"`   | The summary highlights.                                                        |
+| `"no-results"`  | The container for when there are no results.                                   |
+| `"placeholder"` | The query summary placeholder used while the search interface is initializing. |
+| `"results"`     | The container for the results.                                                 |
 
 
 ## Dependencies

@@ -7,12 +7,12 @@
 
 ## Shadow Parts
 
-| Part               | Description                                              |
-| ------------------ | -------------------------------------------------------- |
-| `"auto-corrected"` | The text displayed for the automatically corrected query |
-| `"correction-btn"` | The button that allows to manually correct a query       |
-| `"highlight"`      | The query highlights                                     |
-| `"no-results"`     | The text displayed for no results                        |
+| Part               | Description                                               |
+| ------------------ | --------------------------------------------------------- |
+| `"auto-corrected"` | The text displayed for the automatically corrected query. |
+| `"correction-btn"` | The button used to manually correct a query.              |
+| `"highlight"`      | The query highlights.                                     |
+| `"no-results"`     | The text displayed when there are no results.             |
 
 
 ## Dependencies

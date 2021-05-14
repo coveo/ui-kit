@@ -7,10 +7,10 @@
 
 ## Properties
 
-| Property             | Attribute | Description                  | Type                  | Default     |
-| -------------------- | --------- | ---------------------------- | --------------------- | ----------- |
-| `count`              | `count`   | Count value used for plurals | `number \| undefined` | `undefined` |
-| `value` _(required)_ | `value`   | String key value             | `string`              | `undefined` |
+| Property             | Attribute | Description                       | Type                  | Default     |
+| -------------------- | --------- | --------------------------------- | --------------------- | ----------- |
+| `count`              | `count`   | The count value used for plurals. | `number \| undefined` | `undefined` |
+| `value` _(required)_ | `value`   | The string key value.             | `string`              | `undefined` |
 
 
 ## Dependencies

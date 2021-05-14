@@ -7,9 +7,9 @@
 
 ## Shadow Parts
 
-| Part       | Description                         |
-| ---------- | ----------------------------------- |
-| `"result"` | The placeholder for a single result |
+| Part       | Description                          |
+| ---------- | ------------------------------------ |
+| `"result"` | The placeholder for a single result. |
 
 
 ## Dependencies

@@ -7,11 +7,11 @@
 
 ## Shadow Parts
 
-| Part            | Description                    |
-| --------------- | ------------------------------ |
-| `"label"`       | The "Sort by" label            |
-| `"placeholder"` | The initialization placeholder |
-| `"select"`      | The select element             |
+| Part            | Description                                                               |
+| --------------- | ------------------------------------------------------------------------- |
+| `"label"`       | The "Sort by" label of the `<select>` element.                            |
+| `"placeholder"` | The drop-down placeholder for while the search interface is initializing. |
+| `"select"`      | The `<select>` element of the drop-down list.                             |
 
 
 ## Dependencies

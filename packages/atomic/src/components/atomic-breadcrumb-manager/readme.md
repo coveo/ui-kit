@@ -7,20 +7,20 @@ A component that creates breadcrumbs that display the currently active facet val
 
 ## Properties
 
-| Property            | Attribute            | Description                                                             | Type     | Default |
-| ------------------- | -------------------- | ----------------------------------------------------------------------- | -------- | ------- |
-| `categoryDivider`   | `category-divider`   | Character that divides each path segment in a category facet breadcrumb | `string` | `'/'`   |
-| `collapseThreshold` | `collapse-threshold` | Number of breadcrumbs to display when collapsed.                        | `number` | `5`     |
+| Property            | Attribute            | Description                                                                | Type     | Default |
+| ------------------- | -------------------- | -------------------------------------------------------------------------- | -------- | ------- |
+| `categoryDivider`   | `category-divider`   | A character that divides each path segment in a category facet breadcrumb. | `string` | `'/'`   |
+| `collapseThreshold` | `collapse-threshold` | Number of breadcrumbs to display when collapsed.                           | `number` | `5`     |
 
 
 ## Shadow Parts
 
-| Part                     | Description                                       |
-| ------------------------ | ------------------------------------------------- |
-| `"breadcrumb"`           | An individual breadcrumb                          |
-| `"breadcrumb-clear-all"` | The clear all breadcrumbs button                  |
-| `"breadcrumb-label"`     | Label for the breadcrumb's label                  |
-| `"breadcrumbs"`          | The list of breadcrumb values following the label |
+| Part                     | Description                                        |
+| ------------------------ | -------------------------------------------------- |
+| `"breadcrumb"`           | An individual breadcrumb.                          |
+| `"breadcrumb-clear-all"` | The clear all breadcrumbs button.                  |
+| `"breadcrumb-label"`     | Label attribute for the breadcrumb's label.        |
+| `"breadcrumbs"`          | The list of breadcrumb values following the label. |
 
 
 ## Dependencies
