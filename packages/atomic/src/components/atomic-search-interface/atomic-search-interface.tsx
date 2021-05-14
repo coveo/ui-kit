@@ -150,7 +150,7 @@ export class AtomicSearchInterface {
   }
 
   /**
-   * Initializes the connection with Headless engine using options for `accessToken` (required), `organizationId` (required), `renewAccessToken`, and `platformUrl`.
+   * Initializes the connection with the Headless engine using options for `accessToken` (required), `organizationId` (required), `renewAccessToken`, and `platformUrl`.
    */
   @Method() public async initialize(options: InitializationOptions) {
     if (this.engine) {

@@ -94,7 +94,7 @@ export class AtomicFacet
   @State() public isExpanded = false;
 
   /**
-   * Specifies a unique identifier for the facet
+   * Specifies a unique identifier for the facet.
    */
   @Prop({mutable: true, reflect: true}) public facetId = '';
   /**
