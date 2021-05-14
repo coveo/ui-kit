@@ -46,13 +46,13 @@ const PATH_MAX_LENGTH = 3;
  * @part close-button - The button to close the facet when displayed modally (mobile only).
  * @part clear-button - The button that resets the actively selected facet values.
  *
- * @part search-input - The search input
- * @part search-icon - The magnifier icon of the input
- * @part search-input-clear-button - The clear button of the input
- * @part search-results - The list of search results
- * @part search-result - A search result
- * @part search-result-path - The search result path
- * @part active-search-result - The currently active search result
+ * @part search-input - The search input.
+ * @part search-icon - The magnifier icon of the input.
+ * @part search-input-clear-button - The clear button of the input.
+ * @part search-results - The list of search results.
+ * @part search-result - A search result.
+ * @part search-result-path - The search result path.
+ * @part active-search-result - The currently active search result.
  *
  * @part parent - A parent element.
  * @part active-parent - The currently active parent element.
