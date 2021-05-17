@@ -24,7 +24,7 @@ export interface QuickviewOptions {
   result: Result;
 
   /**
-   * The maximum file size in bytes rendered by the quickview window.
+   * The maximum preview size to retrieve, in bytes. By default, the full preview is retrieved.
    */
   maximumPreviewSize?: number;
 }
