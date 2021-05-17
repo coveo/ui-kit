@@ -1,5 +1,9 @@
 import {Engine} from '../../app/headless-engine';
-import {ConfigurationSection, SearchSection} from '../../state/state-sections';
+import {
+  ConfigurationSection,
+  FieldsSection,
+  SearchSection,
+} from '../../state/state-sections';
 import {buildController, Controller} from '../controller/headless-controller';
 import {fetchMoreResults} from '../../features/search/search-actions';
 import {registerFieldsToInclude} from '../../features/fields/fields-actions';
@@ -10,7 +14,7 @@ import {
   SearchStatusState,
 } from '../search-status/headless-search-status';
 import {Result} from '../../api/search/search/result';
-import {configuration, search} from '../../app/reducers';
+import {configuration, fields, search} from '../../app/reducers';
 import {loadReducerError} from '../../utils/errors';
 
 const optionsSchema = new Schema<ResultListOptions>({
@@ -170,7 +174,7 @@ export function buildResultList(
 
 function loadResultListReducers(
   engine: Engine<object>
-): engine is Engine<SearchSection & ConfigurationSection> {
-  engine.addReducers({search, configuration});
+): engine is Engine<SearchSection & ConfigurationSection & FieldsSection> {
+  engine.addReducers({search, configuration, fields});
   return true;
 }

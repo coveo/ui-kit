@@ -1,5 +1,5 @@
 import {Engine} from '../../app/headless-engine';
-import {configuration, history} from '../../app/reducers';
+import {configuration, facetOrder, history} from '../../app/reducers';
 import {StateWithHistory} from '../../app/undoable';
 import {back, forward} from '../../features/history/history-actions';
 import {
@@ -80,6 +80,6 @@ export function buildHistoryManager(engine: Engine<object>): HistoryManager {
 function loadHistoryManagerReducers(
   engine: Engine<object>
 ): engine is Engine<HistorySection & ConfigurationSection> {
-  engine.addReducers({history, configuration});
+  engine.addReducers({history, configuration, facetOrder});
   return true;
 }

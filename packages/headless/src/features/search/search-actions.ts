@@ -268,6 +268,8 @@ const shouldReExecuteTheQueryWithCorrections = (
 export const buildSearchRequest = (
   state: StateNeededByExecuteSearch
 ): SearchRequest => {
+  const facets = getFacets(state);
+
   return {
     accessToken: state.configuration.accessToken,
     organizationId: state.configuration.organizationId,
@@ -287,9 +289,7 @@ export const buildSearchRequest = (
     ...(state.didYouMean && {
       enableDidYouMean: state.didYouMean.enableDidYouMean,
     }),
-    ...(state.facetSet && {
-      facets: getFacets(state),
-    }),
+    ...(facets.length && {facets}),
     ...(state.fields && {
       fieldsToInclude: state.fields.fieldsToInclude,
     }),

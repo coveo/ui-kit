@@ -14,7 +14,7 @@ describe('No Results Test Suites', () => {
 
   it('should be visible when there are no results', () => {
     cy.visit('http://localhost:3333/pages/test.html#q=gahaiusdhgaiuewjfsf');
-    injectComponent(component());
+    injectComponent(component() + searchBox);
     cy.wait(wait);
     cy.get('atomic-no-results').should('be.visible');
   });

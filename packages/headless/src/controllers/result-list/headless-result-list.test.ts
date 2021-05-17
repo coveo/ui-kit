@@ -5,7 +5,7 @@ import {registerFieldsToInclude} from '../../features/fields/fields-actions';
 import {SchemaValidationError} from '@coveo/bueno';
 import {fetchMoreResults} from '../../features/search/search-actions';
 import {buildMockResult} from '../../test';
-import {configuration, search} from '../../app/reducers';
+import {configuration, fields, search} from '../../app/reducers';
 
 describe('ResultList', () => {
   let engine: MockEngine<SearchAppState>;
@@ -24,7 +24,11 @@ describe('ResultList', () => {
 
   it('it adds the correct reducers to engine', () => {
     buildResultList(engine);
-    expect(engine.addReducers).toHaveBeenCalledWith({configuration, search});
+    expect(engine.addReducers).toHaveBeenCalledWith({
+      configuration,
+      search,
+      fields,
+    });
   });
 
   it('initializes correctly with no fields to include', () => {

@@ -82,6 +82,11 @@ describe('search request', () => {
     expect(facets).toContainEqual(request);
   });
 
+  it('when no facets are configured, the #searchRequestParams does not contain a #facets key', () => {
+    const request = buildSearchRequest(state);
+    expect(request.facets).toBe(undefined);
+  });
+
   it(`when there are facets ids in the same order as the facetOrder array,
   #searchRequestParams orders the facets in the same order as the response`, () => {
     const facetId1 = '1';
