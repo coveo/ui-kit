@@ -52,7 +52,7 @@ describe('Query Summary Test Suites', () => {
       cy.visit(
         'http://localhost:3333/pages/test.html#q=<script>alert("hello");</script>'
       );
-      injectComponent(component());
+      injectComponent(component() + searchBox);
       cy.wait(wait);
       contentShouldMatch('No results for <script>alert("hello");</script>');
     });
