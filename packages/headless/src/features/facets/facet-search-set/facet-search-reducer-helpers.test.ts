@@ -80,16 +80,24 @@ describe('FacetSearch slice', () => {
   });
 
   describe('#handleFacetSearchPending', () => {
+    const requestId = 'unique_id';
     it('when the id is unregistered, it does nothing', () => {
-      handleFacetSearchPending(state, facetId);
+      handleFacetSearchPending(state, facetId, requestId);
       expect(state[facetId]).toBe(undefined);
     });
 
     it('when the id is registered, it sets the isLoading state to true', () => {
       state[facetId] = buildMockFacetSearch();
 
-      handleFacetSearchPending(state, facetId);
+      handleFacetSearchPending(state, facetId, requestId);
       expect(state[facetId].isLoading).toBe(true);
+    });
+
+    it('sets the requestId in the state', () => {
+      state[facetId] = buildMockFacetSearch();
+
+      handleFacetSearchPending(state, facetId, requestId);
+      expect(state[facetId].requestId).toBe(requestId);
     });
   });
 
@@ -107,27 +115,35 @@ describe('FacetSearch slice', () => {
   });
 
   describe('#handleFacetSearchFulfilled', () => {
-    it('when the id is registered, it updates the facetSearch response', () => {
-      state[facetId] = buildMockFacetSearch();
+    const requestId = 'unique_id';
+
+    it('when the id is registered & the requestId matches, it updates the facetSearch response', () => {
+      state[facetId] = buildMockFacetSearch({requestId});
 
       const values = [buildMockFacetSearchResult()];
       const response = buildMockFacetSearchResponse({values});
 
-      handleFacetSearchFulfilled(state, {facetId, response});
+      handleFacetSearchFulfilled(state, {facetId, response}, requestId);
       expect(state[facetId].response).toEqual(response);
     });
 
-    it('when the id is registered, it sets isLoading state to false', () => {
-      state[facetId] = buildMockFacetSearch({isLoading: true});
+    it('when the id is registered & the requestId matches, it sets isLoading state to false', () => {
+      state[facetId] = buildMockFacetSearch({isLoading: true, requestId});
       const response = buildMockFacetSearchResponse();
 
-      handleFacetSearchFulfilled(state, {facetId, response});
+      handleFacetSearchFulfilled(state, {facetId, response}, requestId);
       expect(state[facetId].isLoading).toBe(false);
     });
 
     it('when the id is unregistered, it does nothing', () => {
       const response = buildMockFacetSearchResponse();
-      handleFacetSearchFulfilled(state, {facetId, response});
+      handleFacetSearchFulfilled(state, {facetId, response}, requestId);
+      expect(state[facetId]).toBe(undefined);
+    });
+
+    it('when the requestId does not match, it does nothing', () => {
+      const response = buildMockFacetSearchResponse();
+      handleFacetSearchFulfilled(state, {facetId, response}, requestId);
       expect(state[facetId]).toBe(undefined);
     });
   });
@@ -137,6 +153,12 @@ describe('FacetSearch slice', () => {
       state[facetId] = buildMockFacetSearch();
       handleFacetSearchClear(state, {facetId}, buildEmptyResponse);
       expect(state[facetId].response).toEqual(buildEmptyResponse());
+    });
+
+    it('when the id is registered, it updates the requestId to an undefined value', () => {
+      state[facetId] = buildMockFacetSearch();
+      handleFacetSearchClear(state, {facetId}, buildEmptyResponse);
+      expect(state[facetId].requestId).toBeUndefined();
     });
 
     it('when the id is registered, it sets isLoading state to false', () => {

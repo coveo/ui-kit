@@ -18,6 +18,10 @@ export type FacetSearchState<T extends FacetSearchResponse> = {
   /** The initial maximum number of values to fetch.
    */
   initialNumberOfValues: number;
+  /**
+   * The unique identifier of the current request.
+   */
+  requestId?: string;
 };
 
 export type FacetSearchSetState<T extends FacetSearchResponse> = Record<
@@ -64,7 +68,8 @@ export function handleFacetSearchUpdate<T extends FacetSearchResponse>(
 
 export function handleFacetSearchPending<T extends FacetSearchResponse>(
   state: FacetSearchSetState<T>,
-  facetId: string
+  facetId: string,
+  requestId: string
 ) {
   const search = state[facetId];
 
@@ -72,6 +77,7 @@ export function handleFacetSearchPending<T extends FacetSearchResponse>(
     return;
   }
 
+  search.requestId = requestId;
   search.isLoading = true;
 }
 
@@ -90,7 +96,8 @@ export function handleFacetSearchRejected<T extends FacetSearchResponse>(
 
 export function handleFacetSearchFulfilled<T extends FacetSearchResponse>(
   state: FacetSearchSetState<T>,
-  payload: {facetId: string; response: T}
+  payload: {facetId: string; response: T},
+  requestId: string
 ) {
   const {facetId, response} = payload;
   const search = state[facetId];
@@ -98,6 +105,11 @@ export function handleFacetSearchFulfilled<T extends FacetSearchResponse>(
   if (!search) {
     return;
   }
+
+  if (search.requestId !== requestId) {
+    return;
+  }
+
   search.isLoading = false;
   search.response = response;
 }
@@ -114,6 +126,7 @@ export function handleFacetSearchClear<T extends FacetSearchResponse>(
     return;
   }
 
+  search.requestId = undefined;
   search.isLoading = false;
   search.response = buildEmptyResponse();
   search.options.numberOfValues = search.initialNumberOfValues;
