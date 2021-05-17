@@ -116,11 +116,6 @@ export function validateManualDateRanges(
 
   options.currentValues.forEach((value) => {
     const {start, end} = buildDateRange(value);
-    if (dayjs(start).isSame(dayjs(), 'day') && dayjs(end).isValid) {
-      throw new Error(
-        `The date range with end value ${value.end} has no start value`
-      );
-    }
     if (dayjs(start).isAfter(dayjs(end))) {
       throw new Error(
         `The start value is greater than the end value for the date range ${value.start} to ${value.end}`

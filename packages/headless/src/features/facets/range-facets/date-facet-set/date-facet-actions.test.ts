@@ -29,24 +29,7 @@ describe('validateManualDateRanges', () => {
           }),
         ],
       })
-    ).toThrow(
-      'The start value is greater than the end value for the date range 2021/01/02@00:00:00 to 2021/01/01@00:00:00'
-    );
-  });
-
-  it('should throw when the start value is not set (start becomes current date)', () => {
-    expect(() =>
-      validateManualDateRanges({
-        currentValues: [
-          buildMockDateFacetValue({
-            start: new Date().toDateString(),
-            end: '2021/01/01@00:00:00',
-          }),
-        ],
-      })
-    ).toThrow(
-      'The date range with end value 2021/01/01@00:00:00 has no start value'
-    );
+    ).toThrow();
   });
 
   it('should throw when the start or the end is invalid', () => {
