@@ -309,7 +309,7 @@ export namespace Components {
          */
         "conditions": ResultTemplateCondition[];
         /**
-          * Gets the appropriate result template based on conditions applied
+          * Gets the appropriate result template based on conditions applied.
          */
         "getTemplate": () => Promise<ResultTemplate<string> | null>;
     }

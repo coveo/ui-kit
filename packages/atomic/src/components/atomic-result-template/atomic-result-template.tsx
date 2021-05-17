@@ -78,7 +78,7 @@ export class AtomicResultTemplate {
   }
 
   /**
-   * Gets the appropriate result template based on conditions applied
+   * Gets the appropriate result template based on conditions applied.
    */
   @Method() public async getTemplate(): Promise<ResultTemplate<string> | null> {
     if (this.error) {
