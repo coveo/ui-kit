@@ -20,7 +20,7 @@ export interface Bindings {
   /**
    * Headless Engine instance.
    */
-  engine: Engine<object>;
+  engine: Engine;
   /**
    * i18n instance, for localization.
    */

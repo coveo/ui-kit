@@ -205,7 +205,7 @@ export namespace Components {
         /**
           * The Headless Engine.
          */
-        "engine": Engine<object>;
+        "engine": Engine;
         /**
           * The result item.
          */
@@ -340,7 +340,7 @@ export namespace Components {
         /**
           * The search interface Headless engine.
          */
-        "engine"?: Engine<object>;
+        "engine"?: Engine;
         "executeFirstSearch": () => Promise<void>;
         /**
           * The search interface i18next instance.
@@ -850,7 +850,7 @@ declare namespace LocalJSX {
         /**
           * The Headless Engine.
          */
-        "engine": Engine<object>;
+        "engine": Engine;
         /**
           * The result item.
          */
@@ -984,7 +984,7 @@ declare namespace LocalJSX {
         /**
           * The search interface Headless engine.
          */
-        "engine"?: Engine<object>;
+        "engine"?: Engine;
         /**
           * The search interface i18next instance.
          */

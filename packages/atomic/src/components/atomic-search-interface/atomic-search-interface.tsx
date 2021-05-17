@@ -11,6 +11,7 @@ import {
 } from '@stencil/core';
 import {
   HeadlessEngine,
+  searchAppReducers,
   Engine,
   SearchActions,
   HeadlessConfigurationOptions,
@@ -85,7 +86,7 @@ export class AtomicSearchInterface {
   /**
    * The search interface Headless engine.
    */
-  @Prop({mutable: true}) public engine?: Engine<object>;
+  @Prop({mutable: true}) public engine?: Engine;
 
   /**
    * Whether the state should be reflected in the url parameters.
@@ -198,7 +199,7 @@ export class AtomicSearchInterface {
             locale: this.language,
           },
         },
-        reducers: {},
+        reducers: searchAppReducers,
         loggerOptions: {
           level: this.logLevel,
         },
