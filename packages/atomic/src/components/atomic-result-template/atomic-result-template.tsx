@@ -7,7 +7,7 @@ import {
 import {MapProp} from '../../utils/props-utils';
 
 /**
- * The `atomic-result-template` component is used to determine the format of query results depending on defined conditions. A `template` element must be a child of an `atomic-result-template` and an `atomic-result-list` must be the parent of each `atomic-result-template`.
+ * The `atomic-result-template` component determines the format of the query results, depending on the conditions that are defined for each template. A `template` element must be the child of an `atomic-result-template`, and an `atomic-result-list` must be the parent of each `atomic-result-template`.
  */
 @Component({
   tag: 'atomic-result-template',
@@ -21,9 +21,9 @@ export class AtomicResultTemplate {
   @State() private error?: Error;
 
   /**
-   * Functions that must return true on results for the result template to apply.
+   * A function that must return true on results for the result template to apply.
    *
-   * For example, a template with the following only applies to results whose `title` contains `singapore`:
+   * For example, a template with the following condition only applies to results whose `title` contains `singapore`:
    * `[(result) => /singapore/i.test(result.title)]`
    */
   @Prop() public conditions: ResultTemplateCondition[] = [];
@@ -31,18 +31,14 @@ export class AtomicResultTemplate {
   /**
    * Fields and field values that results must match for the result template to apply.
    *
-   * For example, a template with the following attribute only applies
-   * to result items whose `filetype` is `lithiummessage` or `YouTubePlaylist`:
-   * `must-match-filetype="lithiummessage,YouTubePlaylist"`
+   * For example, a template with the following attribute only applies to result items whose `filetype` is `lithiummessage` or `YouTubePlaylist`: `must-match-filetype="lithiummessage,YouTubePlaylist"`
    */
   @MapProp() public mustMatch: Record<string, string[]> = {};
 
   /**
    * Fields and field values that results must not match for the result template to apply.
    *
-   * For example, a template with the following attribute only applies
-   * to result items whose `filetype` is not `lithiummessage`:
-   * `must-not-match-filetype="lithiummessage"`
+   * For example, a template with the following attribute only applies to result items whose `filetype` is not `lithiummessage`: `must-not-match-filetype="lithiummessage"`
    */
   @MapProp() public mustNotMatch: Record<string, string[]> = {};
 
@@ -81,6 +77,9 @@ export class AtomicResultTemplate {
     }
   }
 
+  /**
+   * Gets the appropriate result template based on conditions applied.
+   */
   @Method() public async getTemplate(): Promise<ResultTemplate<string> | null> {
     if (this.error) {
       return null;

@@ -10,9 +10,9 @@
 | Part              | Description                                       |
 | ----------------- | ------------------------------------------------- |
 | `"description"`   | A description of the error.                       |
-| `"doc-link"`      | A relevant documentation link.                    |
-| `"error-info"`    | The additional error information.                 |
-| `"more-info-btn"` | The button allowing to display error information. |
+| `"doc-link"`      | A link to the relevant documentation.             |
+| `"error-info"`    | Additional error information.                     |
+| `"more-info-btn"` | A button to request additional error information. |
 | `"title"`         | The title of the error.                           |
 
 

@@ -14,13 +14,13 @@ import SearchIcon from 'coveo-styleguide/resources/icons/svg/search.svg';
 /**
  * The `atomic-search-box` component creates a search box with built-in support for query suggestions.
  *
- * @part submit-button - The search box submit button
- * @part search-input - The search box input
- * @part input-wrapper - The wrapper for the searchbox input
- * @part clear-button - The clear button for the input of the searchbox
- * @part suggestions - The list of suggestions
- * @part suggestion - The suggestion
- * @part active-suggestion - The currently active suggestion
+ * @part submit-button - The search box submit button.
+ * @part search-input - The search box input.
+ * @part input-wrapper - The wrapper for the searchbox input area.
+ * @part clear-button - The button to clear the search box of input.
+ * @part suggestions - A list of suggested query corrections.
+ * @part suggestion - A suggested query correction.
+ * @part active-suggestion - The currently active suggestion.
  */
 @Component({
   tag: 'atomic-search-box',
@@ -39,15 +39,15 @@ export class AtomicSearchBox {
     querySuggestionList: () => this.bindings.i18n.t('querySuggestionList'),
   };
   /**
-   * Maximum number of suggestions to display.
+   * The maximum number of suggestions to display.
    */
   @Prop() numberOfSuggestions = 5;
   /**
-   * The placeholder for the search box input.
+   * The placeholder text to display in the search box input area.
    */
   @Prop() placeholder = '';
   /**
-   * Whether the submit button should be placed before the input.
+   * Whether the submit button is placed before the input.
    */
   @Prop() leadingSubmitButton = false;
 

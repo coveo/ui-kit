@@ -7,16 +7,16 @@
 
 ## Properties
 
-| Property     | Attribute | Description                                                                                                                                                                                                                          | Type                        | Default |
-| ------------ | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------- | ------- |
-| `conditions` | --        | Functions that must return true on results for the result template to apply.  For example, a template with the following only applies to results whose `title` contains `singapore`: `[(result) => /singapore/i.test(result.title)]` | `ResultTemplateCondition[]` | `[]`    |
+| Property     | Attribute | Description                                                                                                                                                                                                                                     | Type                        | Default |
+| ------------ | --------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------- | ------- |
+| `conditions` | --        | A function that must return true on results for the result template to apply.  For example, a template with the following condition only applies to results whose `title` contains `singapore`: `[(result) => /singapore/i.test(result.title)]` | `ResultTemplateCondition[]` | `[]`    |
 
 
 ## Methods
 
 ### `getTemplate() => Promise<ResultTemplate<string> | null>`
 
-
+Gets the appropriate result template based on conditions applied.
 
 #### Returns
 

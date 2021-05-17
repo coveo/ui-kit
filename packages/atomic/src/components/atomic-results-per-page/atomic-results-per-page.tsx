@@ -16,12 +16,12 @@ import {
 } from '../../utils/initialization-utils';
 
 /**
- * The `atomic-results-per-page` component allows the customization of how many results to display per page.
+ * The `atomic-results-per-page` component determines how many results to display per page.
  *
- * @part label - The "Results per page" label
- * @part buttons - The list of buttons
- * @part page-button - The page button
- * @part active-page-button - The active page button
+ * @part label - The "Results per page" label.
+ * @part buttons - The list of buttons.
+ * @part page-button - The page button.
+ * @part active-page-button - The active page button.
  */
 @Component({
   tag: 'atomic-results-per-page',
@@ -50,12 +50,11 @@ export class AtomicResultsPerPage implements InitializableComponent {
   @State() public error!: Error;
 
   /**
-   * List of possible results per page choices, separated by commas.
+   * A list of choices for the number of results to display per page, separated by commas.
    */
   @Prop() choicesDisplayed = '10,25,50,100';
   /**
-   * Initial choice for the number of result per page. Should be part of the `choicesDisplayed` option.
-   * By default, the first value of choices displayed.
+   * The initial selection for the number of result per page. This should be part of the `choicesDisplayed` option. By default, this is set to the first value in `choicesDisplayed`.
    */
   @Prop() initialChoice?: number;
 

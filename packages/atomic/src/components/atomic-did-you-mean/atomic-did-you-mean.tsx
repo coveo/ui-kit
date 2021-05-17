@@ -12,10 +12,10 @@ import {sanitize} from '../../utils/xss-utils';
 /**
  * The `atomic-did-you-mean` component is responsible for handling query corrections. When a query returns no result but finds a possible query correction, the component either suggests the correction or automatically triggers a new query with the suggested term.
  *
- * @part no-results - The text displayed for no results
- * @part auto-corrected - The text displayed for the automatically corrected query
- * @part correction-btn - The button that allows to manually correct a query
- * @part highlight - The query highlights
+ * @part no-results - The text displayed when there are no results.
+ * @part auto-corrected - The text displayed for the automatically corrected query.
+ * @part correction-btn - The button used to manually correct a query.
+ * @part highlight - The query highlights.
  */
 @Component({
   tag: 'atomic-did-you-mean',

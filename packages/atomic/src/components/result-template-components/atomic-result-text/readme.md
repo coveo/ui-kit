@@ -7,18 +7,18 @@
 
 ## Properties
 
-| Property             | Attribute          | Description                                                                                                                                                                                                          | Type                  | Default     |
-| -------------------- | ------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------- | ----------- |
-| `default`            | `default`          | The locale key for the text to display when the configured field has no value.                                                                                                                                       | `string \| undefined` | `undefined` |
-| `field` _(required)_ | `field`            | The result field which the component should use. Will look in the Result object first and then in the Result.raw object for the fields. It is important to include the necessary fields in the ResultList component. | `string`              | `undefined` |
-| `shouldHighlight`    | `should-highlight` | If true, will look for the corresponding highlight property use it if available.                                                                                                                                     | `boolean`             | `true`      |
+| Property             | Attribute          | Description                                                                                                                                                                                                               | Type                  | Default     |
+| -------------------- | ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------- | ----------- |
+| `default`            | `default`          | The locale key for the text to display when the configured field has no value.                                                                                                                                            | `string \| undefined` | `undefined` |
+| `field` _(required)_ | `field`            | The result field which the component should use. This will look in the Result object first, and then in the Result.raw object for the fields. It is important to include the necessary field in the ResultList component. | `string`              | `undefined` |
+| `shouldHighlight`    | `should-highlight` | If this is set to true, it will look for the corresponding highlight property and use it if available.                                                                                                                    | `boolean`             | `true`      |
 
 
 ## Shadow Parts
 
-| Part                      | Description                                   |
-| ------------------------- | --------------------------------------------- |
-| `"result-text-highlight"` | The highlighted elements from the text value. |
+| Part                      | Description                             |
+| ------------------------- | --------------------------------------- |
+| `"result-text-highlight"` | The highlighted elements from the text. |
 
 
 ## Dependencies

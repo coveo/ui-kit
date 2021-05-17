@@ -12,7 +12,7 @@ import { InitializationOptions } from "./components/atomic-search-interface/atom
 export namespace Components {
     interface AtomicBreadcrumbManager {
         /**
-          * Character that divides each path segment in a category facet breadcrumb
+          * A character that divides each path segment in a category facet breadcrumb.
          */
         "categoryDivider": string;
         /**
@@ -26,16 +26,19 @@ export namespace Components {
          */
         "basePath": string;
         /**
-          * The character that separates values of a multi-value field
+          * The character that separates values of a multi-value field.
          */
         "delimitingCharacter": string;
         /**
           * Whether this facet should contain a search box.
          */
         "enableFacetSearch": boolean;
+        /**
+          * Specifies a unique identifier for the facet.
+         */
         "facetId": string;
         /**
-          * Specifies the index field whose values the facet should use
+          * Specifies the index field whose values the facet should use.
          */
         "field": string;
         /**
@@ -43,7 +46,7 @@ export namespace Components {
          */
         "filterByBasePath": boolean;
         /**
-          * The non-localized label for the facet
+          * The non-localized label for the facet.
          */
         "label": string;
         /**
@@ -51,7 +54,7 @@ export namespace Components {
          */
         "numberOfValues": number;
         /**
-          * The sort criterion to apply to the returned facet values. Possible values are 'alphanumeric', and 'occurrences''.
+          * The sort criterion to apply to the returned facet values. Possible values are `alphanumeric`, and `occurrences`.
          */
         "sortCriteria": CategoryFacetSortCriterion;
     }
@@ -64,13 +67,16 @@ export namespace Components {
           * The format that the date will be displayed in. See https://day.js.org/docs/en/display/format for formatting details.
          */
         "dateFormat": string;
+        /**
+          * Specifies a unique identifier for the facet.
+         */
         "facetId": string;
         /**
-          * Specifies the index field whose values the facet should use
+          * Specifies the index field whose values the facet should use.
          */
         "field": string;
         /**
-          * The non-localized label for the facet
+          * The non-localized label for the facet.
          */
         "label": string;
         /**
@@ -99,6 +105,9 @@ export namespace Components {
           * Whether this facet should contain a search box.
          */
         "enableFacetSearch": boolean;
+        /**
+          * Specifies a unique identifier for the facet.
+         */
         "facetId": string;
         /**
           * The field whose values you want to display in the facet.
@@ -121,15 +130,15 @@ export namespace Components {
     }
     interface AtomicFieldCondition {
         /**
-          * A list of conditions that must be fulfilled for this template to be selected
+          * A list of conditions that must be fulfilled for this template to be selected.
          */
         "conditions": ResultTemplateCondition[];
         /**
-          * Verifies if the specified fields are defined
+          * Verifies wheter the specified fields are defined.
          */
         "ifDefined"?: string;
         /**
-          * Verifies if the specified fields are not defined
+          * Verifies whether the specified fields are not defined.
          */
         "ifNotDefined"?: string;
     }
@@ -149,6 +158,9 @@ export namespace Components {
         "enableSearchTips": boolean;
     }
     interface AtomicNumericFacet {
+        /**
+          * Specifies a unique identifier for the facet.
+         */
         "facetId": string;
         /**
           * Specifies the index field whose values the facet should use.
@@ -169,7 +181,7 @@ export namespace Components {
          */
         "end": number;
         /**
-          * Specifies whether or not the end value should be included in the range.
+          * Specifies whether the end value should be included in the range.
          */
         "endInclusive": boolean;
         /**
@@ -203,7 +215,7 @@ export namespace Components {
          */
         "content": string;
         /**
-          * The Headless Engine.
+          * The Headless engine.
          */
         "engine": Engine;
         /**
@@ -213,7 +225,7 @@ export namespace Components {
     }
     interface AtomicResultDate {
         /**
-          * The result field which the component should use. Will look in the Result object first and then in the Result.raw object for the fields. It is important to include the necessary fields in the ResultList component.
+          * The result field which the component should use. This will look for the field in the Result object first, and then in the Result.raw object. It is important to include the necessary field in the ResultList component.
          */
         "field": string;
         /**
@@ -223,19 +235,19 @@ export namespace Components {
     }
     interface AtomicResultIcon {
         /**
-          * Allow to specify the icon to display from the list of available icons.  By default, will parse the `objecttype` field and the `filetype` field to find a matching icon. If none are available, will use the `custom` icon.
+          * Specifies the icon to display from the list of available icons.  By default, this will parse the `objecttype` and `filetype` fields to find a matching icon. If none are available, it will use the `custom` icon.
          */
         "icon"?: string;
     }
     interface AtomicResultImage {
         /**
-          * The result field which the component should use. Will look in the Result object first and then in the Result.raw object for the fields. It is important to include the necessary fields in the ResultList component.
+          * The result field which the component should use. This will look for the field in the Result object first, then in the Result.raw object. It is important to include the necessary field in the ResultList component.
          */
         "field": string;
     }
     interface AtomicResultLink {
         /**
-          * Where to display the linked URL, as the name for a browsing context (a tab, window, or <iframe>).  The following keywords have special meanings for where to load the URL: - _self: the current browsing context. (Default) - _blank: usually a new tab, but users can configure browsers to open a new window instead. - _parent: the parent browsing context of the current one. If no parent, behaves as _self. - _top: the topmost browsing context (the "highest" context that’s an ancestor of the current one). If no ancestors, behaves as _self.
+          * Where to display the linked URL, as the name for a browsing context (a tab, window, or <iframe>).  The following keywords have special meanings: - _self: the current browsing context. (Default) - _blank: usually a new tab, but users can configure their browsers to open a new window instead. - _parent: the parent of the current browsing context. If there's no parent, this behaves as `_self`. - _top: the topmost browsing context (the "highest" context that’s an ancestor of the current one). If there are no ancestors, this behaves as `_self`.
          */
         "target": string;
     }
@@ -249,7 +261,7 @@ export namespace Components {
     }
     interface AtomicResultNumber {
         /**
-          * The result field which the component should use. Will look in the Result object first and then in the Result.raw object for the fields. It is important to include the necessary fields in the ResultList component.
+          * The result field which the component should use. This will look for the fields in the Result object first, and then in the Result.raw object. It is important to include the necessary field in the ResultList component.
          */
         "field": string;
         /**
@@ -279,13 +291,13 @@ export namespace Components {
          */
         "currency": string;
         /**
-          * The result field which the component should use. Will look in the Result object first and then in the Result.raw object for the fields. It is important to include the necessary fields in the ResultList component.
+          * The result field which the component should use. This will look in the Result object first, and then in the Result.raw object for the fields. It is important to include the necessary field in the ResultList component.
          */
         "field": string;
     }
     interface AtomicResultPrintableUri {
         /**
-          * The maximum number of Uri parts to display, has to be over the minimum of `3` in order to be effective. Putting `Infinity` will disable the ellipsis.
+          * The maximum number of Uri parts to display. This has to be over the minimum of `3` in order to be effective. Putting `Infinity` will disable the ellipsis.
          */
         "maxNumberOfParts": number;
     }
@@ -293,9 +305,12 @@ export namespace Components {
     }
     interface AtomicResultTemplate {
         /**
-          * Functions that must return true on results for the result template to apply.  For example, a template with the following only applies to results whose `title` contains `singapore`: `[(result) => /singapore/i.test(result.title)]`
+          * A function that must return true on results for the result template to apply.  For example, a template with the following condition only applies to results whose `title` contains `singapore`: `[(result) => /singapore/i.test(result.title)]`
          */
         "conditions": ResultTemplateCondition[];
+        /**
+          * Gets the appropriate result template based on conditions applied.
+         */
         "getTemplate": () => Promise<ResultTemplate<string> | null>;
     }
     interface AtomicResultText {
@@ -304,35 +319,35 @@ export namespace Components {
          */
         "default"?: string;
         /**
-          * The result field which the component should use. Will look in the Result object first and then in the Result.raw object for the fields. It is important to include the necessary fields in the ResultList component.
+          * The result field which the component should use. This will look in the Result object first, and then in the Result.raw object for the fields. It is important to include the necessary field in the ResultList component.
          */
         "field": string;
         /**
-          * If true, will look for the corresponding highlight property use it if available.
+          * If this is set to true, it will look for the corresponding highlight property and use it if available.
          */
         "shouldHighlight": boolean;
     }
     interface AtomicResultsPerPage {
         /**
-          * List of possible results per page choices, separated by commas.
+          * A list of choices for the number of results to display per page, separated by commas.
          */
         "choicesDisplayed": string;
         /**
-          * Initial choice for the number of result per page. Should be part of the `choicesDisplayed` option. By default, the first value of choices displayed.
+          * The initial selection for the number of result per page. This should be part of the `choicesDisplayed` option. By default, this is set to the first value in `choicesDisplayed`.
          */
         "initialChoice"?: number;
     }
     interface AtomicSearchBox {
         /**
-          * Whether the submit button should be placed before the input.
+          * Whether the submit button is placed before the input.
          */
         "leadingSubmitButton": boolean;
         /**
-          * Maximum number of suggestions to display.
+          * The maximum number of suggestions to display.
          */
         "numberOfSuggestions": number;
         /**
-          * The placeholder for the search box input.
+          * The placeholder text to display in the search box input area.
          */
         "placeholder": string;
     }
@@ -341,18 +356,24 @@ export namespace Components {
           * The search interface Headless engine.
          */
         "engine"?: Engine;
+        /**
+          * Executes the first search and logs the interface load event to analytics, after initializing connection to the Headless engine.
+         */
         "executeFirstSearch": () => Promise<void>;
         /**
           * The search interface i18next instance.
          */
         "i18n": i18n;
+        /**
+          * Initializes the connection with the Headless engine using options for `accessToken` (required), `organizationId` (required), `renewAccessToken`, and `platformUrl`.
+         */
         "initialize": (options: InitializationOptions) => Promise<void>;
         /**
           * The search interface language.
          */
         "language": string;
         /**
-          * The level of messages you want to be logged in the console.
+          * The severity level of the messages to log in the console.
          */
         "logLevel"?: LogLevel;
         /**
@@ -360,7 +381,7 @@ export namespace Components {
          */
         "pipeline": string;
         /**
-          * Whether the state should be reflected in the url parameters.
+          * Whether the state should be reflected in the URL parameters.
          */
         "reflectStateInUrl": boolean;
         /**
@@ -376,17 +397,17 @@ export namespace Components {
          */
         "caption": string;
         /**
-          * The sort criterion/criteria expression the end user can select/toggle between.  The available sort criteria are: - `relevancy` - `date ascending`/`date descending` - `qre` - `field ascending`/`field descending`, where you must replace `field` with the name of a sortable field in your index (e.g., `criteria="size ascending"`).  You can specify multiple sort criteria to be used in the same request by separating them with a comma (e.g., `criteria="size ascending, date ascending"` ).
+          * One or more sort criteria that the end user can select or toggle between.  The available sort criteria are: - `relevancy` - `date ascending`/`date descending` - `qre` - `<FIELD> ascending`/`<FIELD> descending`, where you replace `<FIELD>` with the name of a sortable field in your index (e.g., `criteria="size ascending"`).  You can specify multiple sort criteria to be used in the same request by separating them with a comma (e.g., `criteria="size ascending, date ascending"`).
          */
         "expression": string;
     }
     interface AtomicText {
         /**
-          * Count value used for plurals
+          * The count value used for plurals.
          */
         "count"?: number;
         /**
-          * String key value
+          * The string key value.
          */
         "value": string;
     }
@@ -657,7 +678,7 @@ declare global {
 declare namespace LocalJSX {
     interface AtomicBreadcrumbManager {
         /**
-          * Character that divides each path segment in a category facet breadcrumb
+          * A character that divides each path segment in a category facet breadcrumb.
          */
         "categoryDivider"?: string;
         /**
@@ -671,16 +692,19 @@ declare namespace LocalJSX {
          */
         "basePath"?: string;
         /**
-          * The character that separates values of a multi-value field
+          * The character that separates values of a multi-value field.
          */
         "delimitingCharacter"?: string;
         /**
           * Whether this facet should contain a search box.
          */
         "enableFacetSearch"?: boolean;
+        /**
+          * Specifies a unique identifier for the facet.
+         */
         "facetId"?: string;
         /**
-          * Specifies the index field whose values the facet should use
+          * Specifies the index field whose values the facet should use.
          */
         "field"?: string;
         /**
@@ -688,7 +712,7 @@ declare namespace LocalJSX {
          */
         "filterByBasePath"?: boolean;
         /**
-          * The non-localized label for the facet
+          * The non-localized label for the facet.
          */
         "label"?: string;
         /**
@@ -696,7 +720,7 @@ declare namespace LocalJSX {
          */
         "numberOfValues"?: number;
         /**
-          * The sort criterion to apply to the returned facet values. Possible values are 'alphanumeric', and 'occurrences''.
+          * The sort criterion to apply to the returned facet values. Possible values are `alphanumeric`, and `occurrences`.
          */
         "sortCriteria"?: CategoryFacetSortCriterion;
     }
@@ -709,13 +733,16 @@ declare namespace LocalJSX {
           * The format that the date will be displayed in. See https://day.js.org/docs/en/display/format for formatting details.
          */
         "dateFormat"?: string;
+        /**
+          * Specifies a unique identifier for the facet.
+         */
         "facetId"?: string;
         /**
-          * Specifies the index field whose values the facet should use
+          * Specifies the index field whose values the facet should use.
          */
         "field"?: string;
         /**
-          * The non-localized label for the facet
+          * The non-localized label for the facet.
          */
         "label"?: string;
         /**
@@ -744,6 +771,9 @@ declare namespace LocalJSX {
           * Whether this facet should contain a search box.
          */
         "enableFacetSearch"?: boolean;
+        /**
+          * Specifies a unique identifier for the facet.
+         */
         "facetId"?: string;
         /**
           * The field whose values you want to display in the facet.
@@ -766,15 +796,15 @@ declare namespace LocalJSX {
     }
     interface AtomicFieldCondition {
         /**
-          * A list of conditions that must be fulfilled for this template to be selected
+          * A list of conditions that must be fulfilled for this template to be selected.
          */
         "conditions"?: ResultTemplateCondition[];
         /**
-          * Verifies if the specified fields are defined
+          * Verifies wheter the specified fields are defined.
          */
         "ifDefined"?: string;
         /**
-          * Verifies if the specified fields are not defined
+          * Verifies whether the specified fields are not defined.
          */
         "ifNotDefined"?: string;
     }
@@ -794,6 +824,9 @@ declare namespace LocalJSX {
         "enableSearchTips"?: boolean;
     }
     interface AtomicNumericFacet {
+        /**
+          * Specifies a unique identifier for the facet.
+         */
         "facetId"?: string;
         /**
           * Specifies the index field whose values the facet should use.
@@ -814,7 +847,7 @@ declare namespace LocalJSX {
          */
         "end": number;
         /**
-          * Specifies whether or not the end value should be included in the range.
+          * Specifies whether the end value should be included in the range.
          */
         "endInclusive"?: boolean;
         /**
@@ -848,7 +881,7 @@ declare namespace LocalJSX {
          */
         "content": string;
         /**
-          * The Headless Engine.
+          * The Headless engine.
          */
         "engine": Engine;
         /**
@@ -858,7 +891,7 @@ declare namespace LocalJSX {
     }
     interface AtomicResultDate {
         /**
-          * The result field which the component should use. Will look in the Result object first and then in the Result.raw object for the fields. It is important to include the necessary fields in the ResultList component.
+          * The result field which the component should use. This will look for the field in the Result object first, and then in the Result.raw object. It is important to include the necessary field in the ResultList component.
          */
         "field"?: string;
         /**
@@ -868,19 +901,19 @@ declare namespace LocalJSX {
     }
     interface AtomicResultIcon {
         /**
-          * Allow to specify the icon to display from the list of available icons.  By default, will parse the `objecttype` field and the `filetype` field to find a matching icon. If none are available, will use the `custom` icon.
+          * Specifies the icon to display from the list of available icons.  By default, this will parse the `objecttype` and `filetype` fields to find a matching icon. If none are available, it will use the `custom` icon.
          */
         "icon"?: string;
     }
     interface AtomicResultImage {
         /**
-          * The result field which the component should use. Will look in the Result object first and then in the Result.raw object for the fields. It is important to include the necessary fields in the ResultList component.
+          * The result field which the component should use. This will look for the field in the Result object first, then in the Result.raw object. It is important to include the necessary field in the ResultList component.
          */
         "field": string;
     }
     interface AtomicResultLink {
         /**
-          * Where to display the linked URL, as the name for a browsing context (a tab, window, or <iframe>).  The following keywords have special meanings for where to load the URL: - _self: the current browsing context. (Default) - _blank: usually a new tab, but users can configure browsers to open a new window instead. - _parent: the parent browsing context of the current one. If no parent, behaves as _self. - _top: the topmost browsing context (the "highest" context that’s an ancestor of the current one). If no ancestors, behaves as _self.
+          * Where to display the linked URL, as the name for a browsing context (a tab, window, or <iframe>).  The following keywords have special meanings: - _self: the current browsing context. (Default) - _blank: usually a new tab, but users can configure their browsers to open a new window instead. - _parent: the parent of the current browsing context. If there's no parent, this behaves as `_self`. - _top: the topmost browsing context (the "highest" context that’s an ancestor of the current one). If there are no ancestors, this behaves as `_self`.
          */
         "target"?: string;
     }
@@ -894,7 +927,7 @@ declare namespace LocalJSX {
     }
     interface AtomicResultNumber {
         /**
-          * The result field which the component should use. Will look in the Result object first and then in the Result.raw object for the fields. It is important to include the necessary fields in the ResultList component.
+          * The result field which the component should use. This will look for the fields in the Result object first, and then in the Result.raw object. It is important to include the necessary field in the ResultList component.
          */
         "field": string;
         /**
@@ -924,13 +957,13 @@ declare namespace LocalJSX {
          */
         "currency"?: string;
         /**
-          * The result field which the component should use. Will look in the Result object first and then in the Result.raw object for the fields. It is important to include the necessary fields in the ResultList component.
+          * The result field which the component should use. This will look in the Result object first, and then in the Result.raw object for the fields. It is important to include the necessary field in the ResultList component.
          */
         "field"?: string;
     }
     interface AtomicResultPrintableUri {
         /**
-          * The maximum number of Uri parts to display, has to be over the minimum of `3` in order to be effective. Putting `Infinity` will disable the ellipsis.
+          * The maximum number of Uri parts to display. This has to be over the minimum of `3` in order to be effective. Putting `Infinity` will disable the ellipsis.
          */
         "maxNumberOfParts"?: number;
     }
@@ -938,7 +971,7 @@ declare namespace LocalJSX {
     }
     interface AtomicResultTemplate {
         /**
-          * Functions that must return true on results for the result template to apply.  For example, a template with the following only applies to results whose `title` contains `singapore`: `[(result) => /singapore/i.test(result.title)]`
+          * A function that must return true on results for the result template to apply.  For example, a template with the following condition only applies to results whose `title` contains `singapore`: `[(result) => /singapore/i.test(result.title)]`
          */
         "conditions"?: ResultTemplateCondition[];
     }
@@ -948,35 +981,35 @@ declare namespace LocalJSX {
          */
         "default"?: string;
         /**
-          * The result field which the component should use. Will look in the Result object first and then in the Result.raw object for the fields. It is important to include the necessary fields in the ResultList component.
+          * The result field which the component should use. This will look in the Result object first, and then in the Result.raw object for the fields. It is important to include the necessary field in the ResultList component.
          */
         "field": string;
         /**
-          * If true, will look for the corresponding highlight property use it if available.
+          * If this is set to true, it will look for the corresponding highlight property and use it if available.
          */
         "shouldHighlight"?: boolean;
     }
     interface AtomicResultsPerPage {
         /**
-          * List of possible results per page choices, separated by commas.
+          * A list of choices for the number of results to display per page, separated by commas.
          */
         "choicesDisplayed"?: string;
         /**
-          * Initial choice for the number of result per page. Should be part of the `choicesDisplayed` option. By default, the first value of choices displayed.
+          * The initial selection for the number of result per page. This should be part of the `choicesDisplayed` option. By default, this is set to the first value in `choicesDisplayed`.
          */
         "initialChoice"?: number;
     }
     interface AtomicSearchBox {
         /**
-          * Whether the submit button should be placed before the input.
+          * Whether the submit button is placed before the input.
          */
         "leadingSubmitButton"?: boolean;
         /**
-          * Maximum number of suggestions to display.
+          * The maximum number of suggestions to display.
          */
         "numberOfSuggestions"?: number;
         /**
-          * The placeholder for the search box input.
+          * The placeholder text to display in the search box input area.
          */
         "placeholder"?: string;
     }
@@ -994,7 +1027,7 @@ declare namespace LocalJSX {
          */
         "language"?: string;
         /**
-          * The level of messages you want to be logged in the console.
+          * The severity level of the messages to log in the console.
          */
         "logLevel"?: LogLevel;
         /**
@@ -1002,7 +1035,7 @@ declare namespace LocalJSX {
          */
         "pipeline"?: string;
         /**
-          * Whether the state should be reflected in the url parameters.
+          * Whether the state should be reflected in the URL parameters.
          */
         "reflectStateInUrl"?: boolean;
         /**
@@ -1018,17 +1051,17 @@ declare namespace LocalJSX {
          */
         "caption": string;
         /**
-          * The sort criterion/criteria expression the end user can select/toggle between.  The available sort criteria are: - `relevancy` - `date ascending`/`date descending` - `qre` - `field ascending`/`field descending`, where you must replace `field` with the name of a sortable field in your index (e.g., `criteria="size ascending"`).  You can specify multiple sort criteria to be used in the same request by separating them with a comma (e.g., `criteria="size ascending, date ascending"` ).
+          * One or more sort criteria that the end user can select or toggle between.  The available sort criteria are: - `relevancy` - `date ascending`/`date descending` - `qre` - `<FIELD> ascending`/`<FIELD> descending`, where you replace `<FIELD>` with the name of a sortable field in your index (e.g., `criteria="size ascending"`).  You can specify multiple sort criteria to be used in the same request by separating them with a comma (e.g., `criteria="size ascending, date ascending"`).
          */
         "expression": string;
     }
     interface AtomicText {
         /**
-          * Count value used for plurals
+          * The count value used for plurals.
          */
         "count"?: number;
         /**
-          * String key value
+          * The string key value.
          */
         "value": string;
     }

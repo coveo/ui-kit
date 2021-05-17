@@ -5,7 +5,7 @@ import {sanitize} from '../../../utils/xss-utils';
 
 /**
  * The `atomic-result-text` component renders the value of a string result field.
- * @part result-text-highlight - The highlighted elements from the text value.
+ * @part result-text-highlight - The highlighted elements from the text.
  */
 @Component({
   tag: 'atomic-result-text',
@@ -20,12 +20,12 @@ export class AtomicResultText {
 
   /**
    * The result field which the component should use.
-   * Will look in the Result object first and then in the Result.raw object for the fields.
-   * It is important to include the necessary fields in the ResultList component.
+   * This will look in the Result object first, and then in the Result.raw object for the fields.
+   * It is important to include the necessary field in the ResultList component.
    */
   @Prop() public field!: string;
   /**
-   * If true, will look for the corresponding highlight property use it if available.
+   * If this is set to true, it will look for the corresponding highlight property and use it if available.
    */
   @Prop() public shouldHighlight = true;
 

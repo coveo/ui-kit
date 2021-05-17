@@ -40,28 +40,28 @@ const PATH_MAX_LENGTH = 3;
 /**
  * The `atomic-category-facet` displays a facet of values in a hierarchical fashion. In mobile browsers, this is rendered as a button which opens a facet modal.
  *
- * @part facet - The wrapper for the entire facet
- * @part label - The label of the facet
- * @part modal-button - The button to open the facet modal (mobile only)
- * @part close-button - The button to close the facet when displayed modally (mobile only)
- * @part clear-button - The button that resets the actively selected facet values
+ * @part facet - The wrapper for the entire facet.
+ * @part label - The label of the facet.
+ * @part modal-button - The button to open the facet modal (mobile only).
+ * @part close-button - The button to close the facet when displayed modally (mobile only).
+ * @part clear-button - The button that resets the actively selected facet values.
  *
- * @part search-input - The search input
- * @part search-icon - The magnifier icon of the input
- * @part search-input-clear-button - The clear button of the input
- * @part search-results - The list of search results
- * @part search-result - A search result
- * @part search-result-path - The search result path
- * @part active-search-result - The currently active search result
+ * @part search-input - The search input.
+ * @part search-icon - The magnifier icon of the input.
+ * @part search-input-clear-button - The clear button of the input.
+ * @part search-results - The list of search results.
+ * @part search-result - A search result.
+ * @part search-result-path - The search result path.
+ * @part active-search-result - The currently active search result.
  *
- * @part parent - A parent element
- * @part active-parent - The currently active parent element
- * @part child - A child element
- * @part value-label - The facet value label
- * @part value-count - The facet value count
- * @part show-more - The show more results button
- * @part show-less - The show less button
- * @part search-no-results - The label displayed when a search returns no results
+ * @part parent - A parent element.
+ * @part active-parent - The currently active parent element.
+ * @part child - A child element.
+ * @part value-label - The facet value label.
+ * @part value-count - The facet value count.
+ * @part show-more - The show more results button.
+ * @part show-less - The show less button.
+ * @part search-no-results - The label displayed when a search returns no results.
  * @part placeholder - The placeholder shown before the first search is executed.
  *
  */
@@ -106,17 +106,20 @@ export class AtomicCategoryFacet
 
   @State() public isExpanded = false;
 
+  /**
+   * Specifies a unique identifier for the facet.
+   */
   @Prop({mutable: true, reflect: true}) public facetId = '';
   /**
-   * Specifies the index field whose values the facet should use
+   * Specifies the index field whose values the facet should use.
    */
   @Prop() public field = '';
   /**
-   * The non-localized label for the facet
+   * The non-localized label for the facet.
    */
   @Prop() public label = 'noLabel';
   /**
-   * The character that separates values of a multi-value field
+   * The character that separates values of a multi-value field.
    */
   @Prop() public delimitingCharacter = ';';
   /**
@@ -128,7 +131,7 @@ export class AtomicCategoryFacet
    */
   @Prop() public enableFacetSearch = false;
   /**
-   * The sort criterion to apply to the returned facet values. Possible values are 'alphanumeric', and 'occurrences''.
+   * The sort criterion to apply to the returned facet values. Possible values are `alphanumeric`, and `occurrences`.
    */
   @Prop() public sortCriteria: CategoryFacetSortCriterion = 'occurrences';
   /**

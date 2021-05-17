@@ -15,7 +15,7 @@ import {
 import DetailsIcon from 'coveo-styleguide/resources/icons/svg/details.svg';
 
 /**
- * The ResultQuickview component renders a preview of the result.
+ * The `atomic-result-quickview` component renders a preview of the result.
  */
 @Component({
   tag: 'atomic-result-quickview',

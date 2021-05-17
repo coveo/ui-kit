@@ -15,12 +15,12 @@
 
 ## Shadow Parts
 
-| Part                  | Description                     |
-| --------------------- | ------------------------------- |
-| `"cancel-button"`     | The "Cancel last action" button |
-| `"tips-list"`         | The tips list                   |
-| `"tips-list-element"` | The tips list elements          |
-| `"tips-title"`        | The "Search tips" title         |
+| Part                  | Description                      |
+| --------------------- | -------------------------------- |
+| `"cancel-button"`     | The "Cancel last action" button. |
+| `"tips-list"`         | The tips list.                   |
+| `"tips-list-element"` | The tips list elements.          |
+| `"tips-title"`        | The "Search tips" title.         |
 
 
 ## Dependencies

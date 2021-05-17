@@ -9,7 +9,7 @@
 
 | Property             | Attribute | Description                                                                                                                                                                                                          | Type     | Default     |
 | -------------------- | --------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- | ----------- |
-| `field` _(required)_ | `field`   | The result field which the component should use. Will look in the Result object first and then in the Result.raw object for the fields. It is important to include the necessary fields in the ResultList component. | `string` | `undefined` |
+| `field` _(required)_ | `field`   | The result field which the component should use. This will look for the field in the Result object first, then in the Result.raw object. It is important to include the necessary field in the ResultList component. | `string` | `undefined` |
 
 
 ## Shadow Parts
