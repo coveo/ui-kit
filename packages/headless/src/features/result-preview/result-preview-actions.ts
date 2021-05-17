@@ -8,9 +8,6 @@ import {
   buildResultPreviewRequest,
   StateNeededByHtmlEndpoint,
 } from './result-preview-request-builder';
-import {createAction} from '@reduxjs/toolkit';
-import {validatePayload} from '../../utils/validate-payload';
-import {NumberValue} from '@coveo/bueno';
 
 interface FetchResultContentResponse {
   content: string;
