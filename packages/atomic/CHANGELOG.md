@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.14.0-alpha.6](https://github.com/coveo/ui-kit/compare/v0.14.0-alpha.5...v0.14.0-alpha.6) (2021-05-17)
+
+
+### Bug Fixes
+
+* **headless:** register missing reducers when needed ([#818](https://github.com/coveo/ui-kit/issues/818)) ([ee9cc89](https://github.com/coveo/ui-kit/commit/ee9cc8965a7bcaeab69693a432eb29a580a2f8de))
+
+
+
+
+
 # [0.14.0-alpha.5](https://github.com/coveo/ui-kit/compare/v0.14.0-alpha.4...v0.14.0-alpha.5) (2021-05-17)
 
 **Note:** Version bump only for package @coveo/atomic

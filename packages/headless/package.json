@@ -9,7 +9,7 @@
   },
   "types": "./dist/definitions/index.d.ts",
   "license": "Apache-2.0",
-  "version": "0.14.0-alpha.4",
+  "version": "0.14.0-alpha.6",
   "files": [
     "dist/",
     "case-assist/"
