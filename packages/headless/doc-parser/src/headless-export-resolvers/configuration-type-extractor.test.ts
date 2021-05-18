@@ -1,9 +1,9 @@
 import {buildMockEntity} from '../../mocks/mock-entity';
 import {buildMockFuncEntity} from '../../mocks/mock-func-entity';
 import {buildMockObjEntity} from '../../mocks/mock-obj-entity';
-import {extractControllerTypes} from './controller-type-extractor';
+import {extractTypesFromConfiguration} from './configuration-type-extractor';
 
-describe('#extractControllerTypes', () => {
+describe('#extractTypesFromConfiguration', () => {
   it('extracts object entities on a controller #options interface', () => {
     const engine = buildMockEntity({name: 'engine'});
 
@@ -36,7 +36,7 @@ describe('#extractControllerTypes', () => {
       params: [engine, props],
     });
 
-    const result = extractControllerTypes(initializer, []);
+    const result = extractTypesFromConfiguration(initializer, []);
     const expected = buildMockObjEntity({
       name: 'FacetSearchOptions',
       members: [query],
