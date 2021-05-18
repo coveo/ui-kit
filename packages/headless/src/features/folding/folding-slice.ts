@@ -6,6 +6,7 @@ import {loadCollection, registerFolding} from './folding-actions';
 import {
   Collection,
   CollectionId,
+  collectionMoreResultsAvailableBuffer,
   FoldedResult,
   FoldingFields,
   getFoldingInitialState,
@@ -15,8 +16,6 @@ export interface ResultWithFolding extends Result {
   parentResult: ResultWithFolding | null;
   childResults: ResultWithFolding[];
 }
-
-const collectionMoreResultsAvailableBuffer = 1;
 
 function getCollectionField(result: ResultWithFolding, fields: FoldingFields) {
   return result.raw[fields.collection] as string | undefined;
@@ -91,13 +90,22 @@ function createCollectionFromResult(
 ): Collection {
   const foldedResults = getFoldedResults(relevantResult);
 
-  const moreResultsAvailable = foldedResults.length > numberOfFoldedResults;
-
   const parentResults = [relevantResult, ...foldedResults]
     .filter((result) => result.parentResult)
     .map((result) => result.parentResult!);
 
-  const foldedResultsWithoutBuffer = foldedResults.slice(
+  const foldedResultsExcludingParentsAndRelevantResult = foldedResults.filter(
+    (foldedResult) =>
+      !parentResults.find(
+        (parentResult) => parentResult.uniqueId === foldedResult.uniqueId
+      ) && foldedResult.uniqueId !== relevantResult.uniqueId
+  );
+
+  const moreResultsAvailable =
+    foldedResultsExcludingParentsAndRelevantResult.length >
+    numberOfFoldedResults;
+
+  const foldedResultsWithoutBuffer = foldedResultsExcludingParentsAndRelevantResult.slice(
     0,
     numberOfFoldedResults
   );

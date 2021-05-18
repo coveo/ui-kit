@@ -1,5 +1,7 @@
 import {Result} from '../../api/search/search/result';
 
+export const collectionMoreResultsAvailableBuffer = 5;
+
 export type CollectionId = string;
 
 export interface FoldedResult extends Result {
@@ -40,6 +42,6 @@ export const getFoldingInitialState: () => FoldingState = () => ({
     parent: 'foldingparent',
     child: 'foldingchild',
   },
-  filterFieldRange: 3,
+  filterFieldRange: 2 + collectionMoreResultsAvailableBuffer,
   collections: {},
 });
