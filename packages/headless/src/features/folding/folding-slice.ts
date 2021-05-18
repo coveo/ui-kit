@@ -40,17 +40,19 @@ function areDefinedAndEqual<T>(
   return (value1 || value2) !== undefined && value1 === value2;
 }
 
-function getFoldedResults(result: ResultWithFolding): ResultWithFolding[] {
+function getChildResultsRecursively(
+  result: ResultWithFolding
+): ResultWithFolding[] {
   if (!result.childResults) {
     return [];
   }
   return result.childResults.flatMap((childResult) => [
     childResult,
-    ...getFoldedResults(childResult),
+    ...getChildResultsRecursively(childResult),
   ]);
 }
 
-function getChildren(
+function resolveChildrenFromFields(
   parent: ResultWithFolding,
   results: ResultWithFolding[],
   fields: FoldingFields
@@ -67,12 +69,15 @@ function getChildren(
         })
         .map((result) => ({
           ...result,
-          children: getChildren(result, results, fields),
+          children: resolveChildrenFromFields(result, results, fields),
         }))
     : [];
 }
 
-function getRootResult(results: ResultWithFolding[], fields: FoldingFields) {
+function resolveRootFromFields(
+  results: ResultWithFolding[],
+  fields: FoldingFields
+) {
   return results.find((result) => {
     const hasNoParent = getParentField(result, fields) === undefined;
     const isParentOfItself = areDefinedAndEqual(
@@ -99,7 +104,7 @@ function getAllIncludedResultsFrom(
   relevantResult: ResultWithFolding,
   numberOfFoldedResults: number
 ) {
-  const foldedResults = getFoldedResults(relevantResult);
+  const foldedResults = getChildResultsRecursively(relevantResult);
 
   const parentResults = [relevantResult, ...foldedResults]
     .filter((result) => result.parentResult)
@@ -138,11 +143,15 @@ function createCollectionFromResult(
   );
 
   const rootResult =
-    getRootResult(resultsInCollection, fields) ?? relevantResult;
+    resolveRootFromFields(resultsInCollection, fields) ?? relevantResult;
 
   return {
     ...rootResult,
-    children: getChildren(rootResult, resultsInCollection, fields),
+    children: resolveChildrenFromFields(
+      rootResult,
+      resultsInCollection,
+      fields
+    ),
     moreResultsAvailable,
     isLoadingMoreResults: false,
   };
@@ -237,7 +246,7 @@ export const foldingReducer = createReducer(
       .addCase(
         loadCollection.fulfilled,
         (state, {payload: {collectionId, results}}) => {
-          const rootResult = getRootResult(
+          const rootResult = resolveRootFromFields(
             results as ResultWithFolding[],
             state.fields
           );
@@ -250,7 +259,7 @@ export const foldingReducer = createReducer(
               ...state.collections,
               [collectionId]: {
                 ...rootResult,
-                children: getChildren(
+                children: resolveChildrenFromFields(
                   rootResult,
                   results as ResultWithFolding[],
                   state.fields
