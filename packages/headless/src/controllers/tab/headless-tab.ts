@@ -101,15 +101,6 @@ export function buildTab(engine: Engine<object>, props: TabProps): Tab {
     throw loadReducerError;
   }
 
-  if (!props.options.id) {
-    /**
-     * @deprecated - Make #id option required and remove log.
-     */
-    console.warn(
-      'The #id option on the Tab controller will be required in the future. Please specify it.'
-    );
-  }
-
   const controller = buildController(engine);
   const {dispatch} = engine;
   const getState = () => engine.state;
@@ -126,6 +117,15 @@ export function buildTab(engine: Engine<object>, props: TabProps): Tab {
     props.initialState,
     'buildTab'
   );
+
+  if (!props.options.id) {
+    /**
+     * @deprecated - Make #id option required and remove log.
+     */
+    console.warn(
+      'The #id option on the Tab controller will be required in the future. Please specify it.'
+    );
+  }
 
   if (initialState.isActive) {
     const {id} = options;

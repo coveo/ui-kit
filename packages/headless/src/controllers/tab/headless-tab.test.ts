@@ -42,6 +42,11 @@ describe('Tab', () => {
     });
   });
 
+  it('when the #id option is an empty string, it throws', () => {
+    props.options.id = '';
+    expect(() => initTab()).toThrow();
+  });
+
   describe('initalization', () => {
     it('calls #registerAdvancedSearchQueries if isActive is true', () => {
       props.initialState!.isActive = true;
