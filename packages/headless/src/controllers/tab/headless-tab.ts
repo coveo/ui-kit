@@ -17,6 +17,7 @@ import {
 } from '../../utils/validate-payload';
 import {advancedSearchQueries, configuration} from '../../app/reducers';
 import {loadReducerError} from '../../utils/errors';
+import {setOriginLevel2} from '../../features/configuration/configuration-actions';
 
 export interface TabOptions {
   /**
@@ -27,6 +28,11 @@ export interface TabOptions {
    * `@objecttype==Message`
    */
   expression: string;
+
+  /**
+   * A unique identifier for the tab. The value will used as the originLevel2 when the tab is active.
+   */
+  id?: string;
 }
 
 export interface TabInitialState {
@@ -37,8 +43,9 @@ export interface TabInitialState {
   isActive: boolean;
 }
 
-const optionsSchema = new Schema({
-  expression: new StringValue(),
+const optionsSchema = new Schema<Required<TabOptions>>({
+  expression: new StringValue({required: true, emptyAllowed: true}),
+  id: new StringValue({required: false, emptyAllowed: false}),
 });
 
 const initialStateSchema = new Schema({
@@ -94,6 +101,15 @@ export function buildTab(engine: Engine<object>, props: TabProps): Tab {
     throw loadReducerError;
   }
 
+  if (!props.options.id) {
+    /**
+     * @deprecated - Make #id option required and remove log.
+     */
+    console.warn(
+      'The #id option on the Tab controller will be required in the future. Please specify it.'
+    );
+  }
+
   const controller = buildController(engine);
   const {dispatch} = engine;
   const getState = () => engine.state;
@@ -112,6 +128,9 @@ export function buildTab(engine: Engine<object>, props: TabProps): Tab {
   );
 
   if (initialState.isActive) {
+    const {id} = options;
+
+    id && dispatch(setOriginLevel2({originLevel2: id}));
     dispatch(registerAdvancedSearchQueries({cq: options.expression}));
   }
 
@@ -119,6 +138,9 @@ export function buildTab(engine: Engine<object>, props: TabProps): Tab {
     ...controller,
 
     select() {
+      const {id} = options;
+
+      id && dispatch(setOriginLevel2({originLevel2: id}));
       dispatch(updateAdvancedSearchQueries({cq: options.expression}));
       dispatch(executeSearch(logInterfaceChange()));
     },
