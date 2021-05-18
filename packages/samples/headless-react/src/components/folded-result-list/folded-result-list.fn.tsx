@@ -1,9 +1,7 @@
 import {useEffect, useState, FunctionComponent} from 'react';
 import {
-  Collection,
   FoldedResult,
   FoldedResultList as HeadlessFoldedResultList,
-  Result,
 } from '@coveo/headless';
 import {ResultLink} from '../result-list/result-link';
 
@@ -19,20 +17,8 @@ export const FoldedResultList: FunctionComponent<FoldedResultListProps> = (
 
   useEffect(() => controller.subscribe(() => setState(controller.state)), []);
 
-  function isFoldedResult(
-    result: Collection | FoldedResult | Result
-  ): result is Collection | FoldedResult {
-    return 'children' in result;
-  }
-
-  function isCollection(
-    result: Collection | FoldedResult | Result
-  ): result is Collection {
-    return 'moreResultsAvailable' in result;
-  }
-
-  function renderFoldedResult(result: Collection | FoldedResult | Result) {
-    return (
+  function renderResults(results: FoldedResult[]) {
+    return results.map((result) => (
       <li key={result.uniqueId}>
         <article>
           <h3>
@@ -40,21 +26,10 @@ export const FoldedResultList: FunctionComponent<FoldedResultListProps> = (
             <ResultLink result={result}>{result.title}</ResultLink>
           </h3>
           <p>{result.excerpt}</p>
-          <ul>
-            {isFoldedResult(result) &&
-              result.children.map((child) => renderFoldedResult(child))}
-          </ul>
-          {isCollection(result) && result.moreResultsAvailable ? (
-            <button
-              disabled={result.isLoadingMoreResults}
-              onClick={() => controller.loadCollection(result)}
-            >
-              Show more
-            </button>
-          ) : null}
+          <ul>{renderResults(result.children)}</ul>
         </article>
       </li>
-    );
+    ));
   }
 
   if (!state.results.length) {
@@ -64,7 +39,26 @@ export const FoldedResultList: FunctionComponent<FoldedResultListProps> = (
   return (
     <div>
       <ul style={{textAlign: 'left'}}>
-        {state.results.map((result) => renderFoldedResult(result))}
+        {state.results.map((result) => (
+          <li key={result.uniqueId}>
+            <article>
+              <h3>
+                {/* Make sure to log analytics when the result link is clicked. */}
+                <ResultLink result={result}>{result.title}</ResultLink>
+              </h3>
+              <p>{result.excerpt}</p>
+              <ul>{renderResults(result.children)}</ul>
+              {result.moreResultsAvailable && (
+                <button
+                  disabled={result.isLoadingMoreResults}
+                  onClick={() => controller.loadCollection(result)}
+                >
+                  Show more
+                </button>
+              )}
+            </article>
+          </li>
+        ))}
       </ul>
     </div>
   );

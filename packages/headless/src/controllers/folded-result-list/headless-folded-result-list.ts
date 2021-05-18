@@ -1,5 +1,4 @@
 import {Schema} from '@coveo/bueno';
-import {Result} from '../../api/search/search/result';
 import {Engine} from '../../app/headless-engine';
 import {search, configuration, folding} from '../../app/reducers';
 import {
@@ -87,7 +86,7 @@ export interface FoldedResultListState extends ResultListState {
   /**
    * The ordered list of results and collections.
    * */
-  results: (Collection | Result)[];
+  results: Collection[];
 }
 
 /**
@@ -139,10 +138,15 @@ export function buildFoldedResultList(
           const collectionId = result.raw[state.folding.fields.collection] as
             | string
             | undefined;
-          if (!collectionId) {
-            return result;
+          if (!collectionId || !state.folding.collections[collectionId]) {
+            return {
+              ...result,
+              moreResultsAvailable: false,
+              isLoadingMoreResults: false,
+              children: [],
+            };
           }
-          return state.folding.collections[collectionId] ?? result;
+          return state.folding.collections[collectionId];
         }),
       };
     },
