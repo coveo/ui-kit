@@ -53,7 +53,7 @@ export interface FacetOptionsParam {
 }
 
 export interface TabParam {
-  tab?: string;
+  tab: string;
 }
 
 export interface RecommendationParam {
