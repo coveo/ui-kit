@@ -50,26 +50,26 @@ function getFoldedResults(result: ResultWithFolding): ResultWithFolding[] {
   ]);
 }
 
-function withChildren(
+function getChildren(
   parent: ResultWithFolding,
   results: ResultWithFolding[],
   fields: FoldingFields
-): FoldedResult {
+): FoldedResult[] {
   const sourceChildValue = getChildField(parent, fields);
-  return {
-    ...parent,
-    children: sourceChildValue
-      ? results
-          .filter((result) => {
-            const isSameResultAsSource =
-              getChildField(result, fields) === getChildField(parent, fields);
-            const isChildOfSource =
-              getParentField(result, fields) === sourceChildValue;
-            return isChildOfSource && !isSameResultAsSource;
-          })
-          .map((result) => withChildren(result, results, fields))
-      : [],
-  };
+  return sourceChildValue
+    ? results
+        .filter((result) => {
+          const isSameResultAsSource =
+            getChildField(result, fields) === getChildField(parent, fields);
+          const isChildOfSource =
+            getParentField(result, fields) === sourceChildValue;
+          return isChildOfSource && !isSameResultAsSource;
+        })
+        .map((result) => ({
+          ...result,
+          children: getChildren(result, results, fields),
+        }))
+    : [];
 }
 
 function getRootResult(results: ResultWithFolding[], fields: FoldingFields) {
@@ -83,44 +83,66 @@ function getRootResult(results: ResultWithFolding[], fields: FoldingFields) {
   });
 }
 
-function createCollectionFromResult(
+function getExpensiveFoldedResults(
   relevantResult: ResultWithFolding,
-  fields: FoldingFields,
+  foldedResults: ResultWithFolding[],
+  parentResults: ResultWithFolding[]
+) {
+  const isIncludedForFree = (result: ResultWithFolding) =>
+    relevantResult.uniqueId === result.uniqueId ||
+    !!parentResults.find((parent) => parent.uniqueId === result.uniqueId);
+
+  return foldedResults.filter((result) => !isIncludedForFree(result));
+}
+
+function getAllIncludedResultsFrom(
+  relevantResult: ResultWithFolding,
   numberOfFoldedResults: number
-): Collection {
+) {
   const foldedResults = getFoldedResults(relevantResult);
 
   const parentResults = [relevantResult, ...foldedResults]
     .filter((result) => result.parentResult)
     .map((result) => result.parentResult!);
 
-  const foldedResultsExcludingParentsAndRelevantResult = foldedResults.filter(
-    (foldedResult) =>
-      !parentResults.find(
-        (parentResult) => parentResult.uniqueId === foldedResult.uniqueId
-      ) && foldedResult.uniqueId !== relevantResult.uniqueId
+  const expensiveFoldedResults = getExpensiveFoldedResults(
+    relevantResult,
+    foldedResults,
+    parentResults
   );
 
   const moreResultsAvailable =
-    foldedResultsExcludingParentsAndRelevantResult.length >
-    numberOfFoldedResults;
+    expensiveFoldedResults.length > numberOfFoldedResults;
 
-  const foldedResultsWithoutBuffer = foldedResultsExcludingParentsAndRelevantResult.slice(
+  const foldedResultsToDisplay = expensiveFoldedResults.slice(
     0,
     numberOfFoldedResults
   );
 
   const resultsInCollection = removeDuplicates(
-    [relevantResult, ...foldedResultsWithoutBuffer, ...parentResults],
+    [relevantResult, ...foldedResultsToDisplay, ...parentResults],
     (result) => result.uniqueId
   );
 
+  return {resultsInCollection, moreResultsAvailable};
+}
+
+function createCollectionFromResult(
+  relevantResult: ResultWithFolding,
+  fields: FoldingFields,
+  numberOfFoldedResults: number
+): Collection {
+  const {resultsInCollection, moreResultsAvailable} = getAllIncludedResultsFrom(
+    relevantResult,
+    numberOfFoldedResults
+  );
+
+  const rootResult =
+    getRootResult(resultsInCollection, fields) ?? relevantResult;
+
   return {
-    ...withChildren(
-      getRootResult(resultsInCollection, fields) ?? relevantResult,
-      resultsInCollection,
-      fields
-    ),
+    ...rootResult,
+    children: getChildren(rootResult, resultsInCollection, fields),
     moreResultsAvailable,
     isLoadingMoreResults: false,
   };
@@ -227,7 +249,8 @@ export const foldingReducer = createReducer(
             collections: {
               ...state.collections,
               [collectionId]: {
-                ...withChildren(
+                ...rootResult,
+                children: getChildren(
                   rootResult,
                   results as ResultWithFolding[],
                   state.fields
