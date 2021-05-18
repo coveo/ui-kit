@@ -7,7 +7,7 @@ import {
   SamplePaths,
   CodeSampleInfo,
 } from '../code-sample-resolver';
-import {extractControllerTypes} from '../controller-type-extractor';
+import {extractControllerTypes} from './controller-type-extractor';
 import {resolveInitializer} from './initializer-resolver';
 
 export interface ControllerConfiguration {

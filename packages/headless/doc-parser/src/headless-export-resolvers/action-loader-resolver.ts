@@ -1,6 +1,7 @@
 import {ApiEntryPoint} from '@microsoft/api-extractor-model';
 import {FuncEntity} from '../entity';
 import {resolveInitializer} from './initializer-resolver';
+import {extractControllerTypes} from './controller-type-extractor';
 
 export interface ActionLoaderConfiguration {
   initializer: string;
@@ -15,5 +16,6 @@ export function resolveActionLoader(
   config: ActionLoaderConfiguration
 ): ActionLoader {
   const initializer = resolveInitializer(entry, config.initializer);
+  extractControllerTypes(initializer, []);
   return {initializer};
 }

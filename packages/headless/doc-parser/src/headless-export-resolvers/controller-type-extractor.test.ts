@@ -1,6 +1,6 @@
-import {buildMockEntity} from '../mocks/mock-entity';
-import {buildMockFuncEntity} from '../mocks/mock-func-entity';
-import {buildMockObjEntity} from '../mocks/mock-obj-entity';
+import {buildMockEntity} from '../../mocks/mock-entity';
+import {buildMockFuncEntity} from '../../mocks/mock-func-entity';
+import {buildMockObjEntity} from '../../mocks/mock-obj-entity';
 import {extractControllerTypes} from './controller-type-extractor';
 
 describe('#extractControllerTypes', () => {
