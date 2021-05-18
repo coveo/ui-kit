@@ -41,6 +41,9 @@ export class AtomicResultQuickview implements InitializableComponent {
 
   @ResultContext() private result!: Result;
 
+  /**
+   * The maximum preview size to retrieve, in bytes. By default, the full preview is retrieved.
+   */
   @Prop() public maximumPreviewSize? = 0;
 
   @Element() private host!: HTMLElement;

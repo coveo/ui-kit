@@ -290,6 +290,9 @@ export namespace Components {
         "maxNumberOfParts": number;
     }
     interface AtomicResultQuickview {
+        /**
+          * The maximum preview size to retrieve, in bytes. By default, the full preview is retrieved.
+         */
         "maximumPreviewSize"?: number | undefined;
     }
     interface AtomicResultTemplate {
@@ -936,6 +939,9 @@ declare namespace LocalJSX {
         "maxNumberOfParts"?: number;
     }
     interface AtomicResultQuickview {
+        /**
+          * The maximum preview size to retrieve, in bytes. By default, the full preview is retrieved.
+         */
         "maximumPreviewSize"?: number | undefined;
     }
     interface AtomicResultTemplate {
