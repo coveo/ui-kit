@@ -155,10 +155,10 @@ describe('FacetSearch slice', () => {
       expect(state[facetId].response).toEqual(buildEmptyResponse());
     });
 
-    it('when the id is registered, it updates the requestId to an undefined value', () => {
+    it('when the id is registered, it updates the requestId to an empty string', () => {
       state[facetId] = buildMockFacetSearch();
       handleFacetSearchClear(state, {facetId}, buildEmptyResponse);
-      expect(state[facetId].requestId).toBeUndefined();
+      expect(state[facetId].requestId).toBe('');
     });
 
     it('when the id is registered, it sets isLoading state to false', () => {

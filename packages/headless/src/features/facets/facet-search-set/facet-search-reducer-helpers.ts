@@ -21,7 +21,7 @@ export type FacetSearchState<T extends FacetSearchResponse> = {
   /**
    * The unique identifier of the current request.
    */
-  requestId?: string;
+  requestId: string;
 };
 
 export type FacetSearchSetState<T extends FacetSearchResponse> = Record<
@@ -49,6 +49,7 @@ export function handleFacetSearchRegistration<T extends FacetSearchResponse>(
     isLoading,
     response,
     initialNumberOfValues: options.numberOfValues,
+    requestId: '',
   };
 }
 
@@ -126,7 +127,7 @@ export function handleFacetSearchClear<T extends FacetSearchResponse>(
     return;
   }
 
-  search.requestId = undefined;
+  search.requestId = '';
   search.isLoading = false;
   search.response = buildEmptyResponse();
   search.options.numberOfValues = search.initialNumberOfValues;
