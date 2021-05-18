@@ -94,5 +94,13 @@ describe('url manager', () => {
       );
       testExecuteSearch();
     });
+
+    it(`when synchronizing with an unchanged fragment
+    should not execute a search`, () => {
+      engine.state.query.q = 'test';
+
+      manager.synchronize('q=test');
+      expect(engine.findAsyncAction(executeSearch.pending)).toBeFalsy();
+    });
   });
 });
