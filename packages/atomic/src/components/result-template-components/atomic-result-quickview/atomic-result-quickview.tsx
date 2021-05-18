@@ -1,4 +1,4 @@
-import {Component, State, h, Element} from '@stencil/core';
+import {Component, State, h, Element, Prop} from '@stencil/core';
 import {
   Result,
   buildQuickview,
@@ -41,7 +41,7 @@ export class AtomicResultQuickview implements InitializableComponent {
 
   @ResultContext() private result!: Result;
 
-  private maximumPreviewSize?: number;
+  @Prop() public maximumPreviewSize? = 0;
 
   @Element() private host!: HTMLElement;
 

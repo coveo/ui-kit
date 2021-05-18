@@ -290,6 +290,7 @@ export namespace Components {
         "maxNumberOfParts": number;
     }
     interface AtomicResultQuickview {
+        "maximumPreviewSize"?: number | undefined;
     }
     interface AtomicResultTemplate {
         /**
@@ -935,6 +936,7 @@ declare namespace LocalJSX {
         "maxNumberOfParts"?: number;
     }
     interface AtomicResultQuickview {
+        "maximumPreviewSize"?: number | undefined;
     }
     interface AtomicResultTemplate {
         /**
