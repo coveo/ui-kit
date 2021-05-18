@@ -86,7 +86,7 @@ describe('url manager', () => {
 
     it(`when removing any parameter
     should restore the right parameters and execute a search`, () => {
-      initUrlManager('q=test');
+      engine.state.query.q = 'test';
 
       manager.synchronize('');
       testLatestRestoreSearchParameters(
