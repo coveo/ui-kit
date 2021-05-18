@@ -52,6 +52,10 @@ export interface FacetOptionsParam {
   facetOptions?: FacetOptions;
 }
 
+export interface TabParam {
+  tab?: string;
+}
+
 export interface RecommendationParam {
   recommendation: string;
 }

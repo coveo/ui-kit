@@ -137,4 +137,10 @@ describe('search request', () => {
     state.configuration.analytics.enabled = false;
     expect(buildSearchRequest(state).visitorId).not.toBeDefined();
   });
+
+  it('#searchRequest.tab holds the #originLevel2', () => {
+    const originLevel2 = 'youtube';
+    state.configuration.analytics.originLevel2 = originLevel2;
+    expect(buildSearchRequest(state).tab).toBe(originLevel2);
+  });
 });
