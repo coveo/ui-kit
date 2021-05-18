@@ -5,6 +5,13 @@
 <!-- Auto Generated Below -->
 
 
+## Properties
+
+| Property             | Attribute              | Description                                                                                | Type                  | Default |
+| -------------------- | ---------------------- | ------------------------------------------------------------------------------------------ | --------------------- | ------- |
+| `maximumPreviewSize` | `maximum-preview-size` | The maximum preview size to retrieve, in bytes. By default, the full preview is retrieved. | `number \| undefined` | `0`     |
+
+
 ## Dependencies
 
 ### Depends on

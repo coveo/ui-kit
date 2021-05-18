@@ -22,6 +22,11 @@ export interface QuickviewOptions {
    * The result to retrieve a quickview for.
    */
   result: Result;
+
+  /**
+   * The maximum preview size to retrieve, in bytes. By default, the full preview is retrieved.
+   */
+  maximumPreviewSize?: number;
 }
 
 export interface Quickview extends Controller {
@@ -73,14 +78,16 @@ export function buildQuickview(
   const {dispatch} = engine;
   const getState = () => engine.state;
   const controller = buildController(engine);
-  const result = props.options.result;
+  const {result, maximumPreviewSize} = props.options;
   const uniqueId = result.uniqueId;
 
   return {
     ...controller,
 
     fetchResultContent() {
-      dispatch(fetchResultContent({uniqueId}));
+      dispatch(
+        fetchResultContent({uniqueId, requestedOutputSize: maximumPreviewSize})
+      );
       dispatch(logDocumentQuickview(result));
     },
 
