@@ -31,14 +31,18 @@ export const specificFacetSearchSetReducer = createReducer(
       })
       .addCase(executeFacetSearch.pending, (state, action) => {
         const facetId = action.meta.arg;
-        handleFacetSearchPending(state, facetId);
+        handleFacetSearchPending(state, facetId, action.meta.requestId);
       })
       .addCase(executeFacetSearch.rejected, (state, action) => {
         const facetId = action.meta.arg;
         handleFacetSearchRejected(state, facetId);
       })
       .addCase(executeFacetSearch.fulfilled, (state, action) => {
-        handleFacetSearchFulfilled(state, action.payload);
+        handleFacetSearchFulfilled(
+          state,
+          action.payload,
+          action.meta.requestId
+        );
       })
       .addCase(clearFacetSearch, (state, {payload}) => {
         handleFacetSearchClear(state, payload, buildEmptyResponse);
