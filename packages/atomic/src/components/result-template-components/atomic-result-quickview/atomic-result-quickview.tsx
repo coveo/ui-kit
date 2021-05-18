@@ -41,14 +41,17 @@ export class AtomicResultQuickview implements InitializableComponent {
 
   @ResultContext() private result!: Result;
 
+  private maximumPreviewSize?: number;
+
   @Element() private host!: HTMLElement;
 
   public initialize() {
     const engine = this.bindings.engine;
     const result = this.result;
+    const maximumPreviewSize = this.maximumPreviewSize;
 
     this.quickview = buildQuickview(engine, {
-      options: {result},
+      options: {result, maximumPreviewSize},
     });
   }
 
