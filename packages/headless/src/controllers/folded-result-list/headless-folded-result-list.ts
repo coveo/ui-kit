@@ -84,7 +84,7 @@ export interface FoldedResultList extends ResultList {
  * */
 export interface FoldedResultListState extends ResultListState {
   /**
-   * The ordered list of results and collections.
+   * The ordered list of collections.
    * */
   results: Collection[];
 }
