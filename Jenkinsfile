@@ -59,7 +59,7 @@ node('linux && docker') {
         stage('Commit bumped version') {
             withCredentials([
             usernameColonPassword(credentialsId: 'github-commit-token', variable: 'GH_CREDENTIALS')]) {
-              sh 'npm run bump:version:pre'
+              sh 'npm run bump:version'
             }
         }
       }
