@@ -1,7 +1,6 @@
 {
   "product": "ui-kit",
   "team_name": "searchui",
-  "development_workflow": "gitflow",
   "general": {
     "aws_regions": {
       "sequential": ["us-east-1"]
@@ -10,12 +9,9 @@
       "sequential": ["dev", "qa", "prd"]
     },
     "team_jenkins": "searchuibuilds",
-    "start_environment_automatically": true,
+    "start_environment_automatically": false,
     "notifications": {
       "slack_channels": ["#searchuibuilds"]
-    },
-    "prd": {
-      "start_environment_automatically": false
     }
   },
   "ordered_phases": [
@@ -27,9 +23,6 @@
         "source": "packages/headless/dist/browser",
         "parameters": {
           "acl": "public-read"
-        },
-        "qa": {
-          "directory": "proda/StaticCDN/headless/beta"
         }
       }
     },
@@ -41,9 +34,6 @@
         "source": "packages/atomic/dist/atomic",
         "parameters": {
           "acl": "public-read"
-        },
-        "qa": {
-          "directory": "proda/StaticCDN/atomic/beta"
         }
       }
     },
@@ -51,13 +41,13 @@
       "id": "deploy-headless-to-s3-version",
       "s3": {
         "bucket": "{terraform.infra.infra.bucket_binaries}",
-        "directory": "proda/StaticCDN/headless/v$[VERSION]",
+        "directory": "proda/StaticCDN/headless/v$[PRERELEASE]",
         "source": "packages/headless/dist/browser",
         "parameters": {
           "acl": "public-read"
         },
-        "qa": {
-          "disabled": true
+        "prd": {
+          "directory": "proda/StaticCDN/headless/v$[VERSION]"
         }
       }
     },
@@ -65,23 +55,13 @@
       "id": "deploy-atomic-to-s3-version",
       "s3": {
         "bucket": "{terraform.infra.infra.bucket_binaries}",
-        "directory": "proda/StaticCDN/atomic/v$[VERSION]",
+        "directory": "proda/StaticCDN/atomic/v$[PRERELEASE]",
         "source": "packages/atomic/dist/atomic",
         "parameters": {
           "acl": "public-read"
         },
-        "qa": {
-          "disabled": true
-        }
-      }
-    },
-    {
-      "id": "wait-for-dev-deployment-request",
-      "manual": {
-        "disabled": true,
-        "message": "Deploy v${VERSION} → v${RELEASE_VERSION}?",
-        "dev": {
-          "disabled": false
+        "prd": {
+          "directory": "proda/StaticCDN/atomic/v$[VERSION]"
         }
       }
     },
@@ -90,7 +70,7 @@
       "team_jenkins": {
         "disabled": true,
         "job_name": "ui-kit-qa-release",
-        "dev": {
+        "qa": {
           "disabled": false
         }
       }
