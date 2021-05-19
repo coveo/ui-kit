@@ -1,7 +1,7 @@
-import {FuncEntity, isObjectEntity, ObjEntity} from './entity';
-import {extractTypes} from './extractor';
+import {FuncEntity, isObjectEntity, ObjEntity} from '../entity';
+import {extractTypes} from '../extractor';
 
-export function extractControllerTypes(
+export function extractTypesFromConfiguration(
   initializer: FuncEntity,
   utils: FuncEntity[]
 ) {
