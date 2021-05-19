@@ -29,13 +29,27 @@ export class AtomicDateRange {
 
   validateStart() {
     if (!this.start) {
-      throw new Error('The date range has no start date value');
+      this.throwMissingDateRangeError('start');
     }
   }
 
   validateEnd() {
     if (!this.end) {
-      throw new Error('The date range has no end date value');
+      this.throwMissingDateRangeError('end');
+    }
+  }
+
+  throwMissingDateRangeError(option: 'start' | 'end') {
+    if (option === 'start') {
+      throw new Error(
+        'The <atomic-date-range> has no start date. Please specify the "start" attribute.'
+      );
+    } else if (option === 'end') {
+      throw new Error(
+        'The <atomic-date-range> has no end date. Please specify the "end" attribute.'
+      );
+    } else {
+      return;
     }
   }
 }
