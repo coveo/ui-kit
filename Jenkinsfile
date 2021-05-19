@@ -99,7 +99,7 @@ node('linux && docker') {
           deployment-package package create
             --with-deploy
             --package-name ui-kit/v${version}
-            --target-environment ${isRelease ? 'qa' : 'dev'}
+            --target-environment ${isRelease ? 'prd' : 'dev'}
             --resolve COMMIT_HASH=${commitHash}
             --resolve VERSION=${version}
             --resolve RELEASE_VERSION=${releaseVersion}
