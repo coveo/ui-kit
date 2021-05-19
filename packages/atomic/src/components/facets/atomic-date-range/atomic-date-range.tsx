@@ -40,16 +40,8 @@ export class AtomicDateRange {
   }
 
   throwMissingDateRangeError(option: 'start' | 'end') {
-    if (option === 'start') {
-      throw new Error(
-        'The <atomic-date-range> has no start date. Please specify the "start" attribute.'
-      );
-    } else if (option === 'end') {
-      throw new Error(
-        'The <atomic-date-range> has no end date. Please specify the "end" attribute.'
-      );
-    } else {
-      return;
-    }
+    throw new Error(
+      `The <atomic-date-range> has no ${option} date. Please specify the "${option}" attribute.`
+    );
   }
 }
