@@ -10,6 +10,7 @@ export function buildMockCategoryFacetSearch(
     isLoading: false,
     response: buildMockCategoryFacetSearchResponse(),
     initialNumberOfValues: buildMockFacetSearchRequestOptions().numberOfValues,
+    requestId: '',
     ...config,
   };
 }

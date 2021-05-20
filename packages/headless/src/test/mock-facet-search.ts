@@ -10,6 +10,7 @@ export function buildMockFacetSearch(
     isLoading: false,
     response: buildMockFacetSearchResponse(),
     initialNumberOfValues: 0,
+    requestId: '',
     ...config,
   };
 }

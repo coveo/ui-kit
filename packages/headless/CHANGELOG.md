@@ -3,6 +3,44 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.14.1](https://github.com/coveo/ui-kit/compare/v0.14.0...v0.14.1) (2021-05-19)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+# [0.14.0](https://github.com/coveo/ui-kit/compare/v0.14.0-alpha.8...v0.14.0) (2021-05-19)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+# [0.14.0-alpha.8](https://github.com/coveo/ui-kit/compare/v0.14.0-alpha.7...v0.14.0-alpha.8) (2021-05-18)
+
+
+### Bug Fixes
+
+* **headless:** prevent facet search race conditions ([#821](https://github.com/coveo/ui-kit/issues/821)) ([273f210](https://github.com/coveo/ui-kit/commit/273f210fce4a12def258de97aaad6d2200666d29))
+
+
+
+
+
+# [0.14.0-alpha.7](https://github.com/coveo/ui-kit/compare/v0.14.0-alpha.6...v0.14.0-alpha.7) (2021-05-18)
+
+
+### Features
+
+* **atomic,headless:** quickview maximumDocumentSize parameter ([#800](https://github.com/coveo/ui-kit/issues/800)) ([7e8061f](https://github.com/coveo/ui-kit/commit/7e8061fccac9051fd4c4895b38afb03edabedf88))
+
+
+
+
+
 # [0.14.0-alpha.6](https://github.com/coveo/ui-kit/compare/v0.14.0-alpha.5...v0.14.0-alpha.6) (2021-05-17)
 
 

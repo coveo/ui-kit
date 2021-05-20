@@ -32,12 +32,11 @@ async function checkoutLatestMaster() {
   await exec('git pull origin master');
 }
 
-/**
- * @param {'pre' | 'graduate'} versionType
- */
-async function bumpVersionAndPush(versionType) {
+async function bumpVersionAndPush() {
   try {
-    await exec(`npm run version:${versionType} -- --yes`);
+    await exec(
+      `npx lerna version --conventional-commits --conventional-graduate --yes`
+    );
   } catch (e) {
     console.error(
       'Failed to bump version. Exiting to not publish local changes.',
@@ -49,7 +48,6 @@ async function bumpVersionAndPush(versionType) {
 
 async function main() {
   try {
-    const doGraduate = process.argv[2] === '--graduate';
     await authenticateGitClient();
 
     const buildCommitHash = await getHeadCommitHash();
@@ -65,17 +63,14 @@ async function main() {
 
     const headCommitTag = await getHeadCommitTag();
 
-    if (doGraduate) {
-      return await bumpVersionAndPush('graduate');
-    }
-    if (!headCommitTag) {
-      return await bumpVersionAndPush('pre');
+    if (headCommitTag) {
+      console.log(
+        'Build commit is tagged and not being graduated. Skipping version bump.'
+      );
+      return;
     }
 
-    console.log('Build commit is tagged and not being graduated. Skipping version bump.');
-    return;
-
-    
+    await bumpVersionAndPush();
   } catch (e) {
     console.error(e);
   }

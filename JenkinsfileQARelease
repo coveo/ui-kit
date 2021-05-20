@@ -6,17 +6,6 @@ node('linux && docker') {
       sh 'npm run setup'
     }
 
-    /**
-     * The build versions must be bumped before building ui-kit in order
-     * to expose the correct versions in headless and atomic.
-     */
-    stage('Graduate') {
-      withCredentials([
-      usernameColonPassword(credentialsId: 'github-commit-token', variable: 'GH_CREDENTIALS')]) {
-        sh 'npm run bump:version:graduate'
-      }
-    }
-
     stage('Build') {
       sh 'npm run build'
     }

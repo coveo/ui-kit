@@ -1,4 +1,4 @@
-import {Component, State, h, Element} from '@stencil/core';
+import {Component, State, h, Element, Prop} from '@stencil/core';
 import {
   Result,
   buildQuickview,
@@ -41,14 +41,20 @@ export class AtomicResultQuickview implements InitializableComponent {
 
   @ResultContext() private result!: Result;
 
+  /**
+   * The maximum preview size to retrieve, in bytes. By default, the full preview is retrieved.
+   */
+  @Prop() public maximumPreviewSize? = 0;
+
   @Element() private host!: HTMLElement;
 
   public initialize() {
     const engine = this.bindings.engine;
     const result = this.result;
+    const maximumPreviewSize = this.maximumPreviewSize;
 
     this.quickview = buildQuickview(engine, {
-      options: {result},
+      options: {result, maximumPreviewSize},
     });
   }
 
