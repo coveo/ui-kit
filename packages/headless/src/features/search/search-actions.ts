@@ -276,6 +276,7 @@ export const buildSearchRequest = (
     url: state.configuration.search.apiBaseUrl,
     locale: state.configuration.search.locale,
     debug: state.debug,
+    tab: state.configuration.analytics.originLevel2,
     ...(state.configuration.analytics.enabled && {
       visitorId: getVisitorID(),
     }),

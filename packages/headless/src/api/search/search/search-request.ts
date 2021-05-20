@@ -20,6 +20,7 @@ import {
   QueryParam,
   SearchHubParam,
   SortCriteriaParam,
+  TabParam,
 } from '../search-api-params';
 
 export type SearchRequest = BaseParam &
@@ -40,4 +41,5 @@ export type SearchRequest = BaseParam &
   VisitorIDParam &
   DebugParam &
   LocaleParam &
-  FoldingParam;
+  FoldingParam &
+  TabParam;
