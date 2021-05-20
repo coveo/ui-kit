@@ -45,6 +45,13 @@ export interface UrlManager extends Controller {
    * @param fragment The part of the url that contains search parameters.  E.g., `q=windmill&f[author]=Cervantes`
    */
   synchronize(fragment: string): void;
+  /**
+   * Checks whether the specified fragment matches the value in state.
+   *
+   * @param fragment The part of the url that contains search parameters.  E.g., `q=windmill&f[author]=Cervantes`
+   * @returns `true` if the passed fragment matches the value in state, and `false` otherwise.
+   */
+  hasFragment(fragment: string): boolean;
 }
 
 export interface UrlManagerState {
@@ -98,6 +105,10 @@ export function buildUrlManager(
     },
 
     synchronize(fragment: string) {
+      if (this.hasFragment(fragment)) {
+        return;
+      }
+
       const initialParameters = initialSearchParameterSelector(engine.state);
       const previousParameters = {
         ...initialParameters,
@@ -112,12 +123,19 @@ export function buildUrlManager(
         executeSearch(logParametersChange(previousParameters, newParameters))
       );
     },
+
+    hasFragment(fragment: string) {
+      return this.state.fragment === decodeFragment(fragment);
+    },
   };
 }
 
+function decodeFragment(fragment: string) {
+  return decodeURIComponent(fragment);
+}
+
 function fragmentActiveSearchParameters(fragment: string) {
-  const decodedState = decodeURIComponent(fragment);
-  return buildSearchParameterSerializer().deserialize(decodedState);
+  return buildSearchParameterSerializer().deserialize(decodeFragment(fragment));
 }
 
 function loadUrlManagerReducers(

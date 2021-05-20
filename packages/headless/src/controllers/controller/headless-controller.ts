@@ -15,7 +15,7 @@ export interface Controller {
 export function buildController<T extends object>(
   engine: Engine<T>
 ): Controller {
-  let prevState = '{}';
+  let prevState: string;
 
   const hasStateChanged = (currentState: Record<string, unknown>): boolean => {
     try {
@@ -35,6 +35,7 @@ export function buildController<T extends object>(
   return {
     subscribe(listener: () => void) {
       listener();
+      prevState = JSON.stringify(this.state);
       return engine.subscribe(() => {
         if (hasStateChanged(this.state)) {
           listener();
