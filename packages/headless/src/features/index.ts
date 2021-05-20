@@ -358,15 +358,15 @@ export namespace RecommendationActions {
 
 export {
   /**
-   * @deprecated - The interface is moving to a dedicated sub-package. Please access it using "import {...} from @coveo/headless/recommendation".
+   * @deprecated - The interface is moving to a dedicated sub-package. Please access it using "import {...} from '@coveo/headless/recommendation'".
    */
   RecommendationActionCreators,
   /**
-   * @deprecated - The interface is moving to a dedicated sub-package. Please access it using "import {...} from @coveo/headless/recommendation".
+   * @deprecated - The interface is moving to a dedicated sub-package. Please access it using "import {...} from '@coveo/headless/recommendation'".
    */
   SetRecommendationIdActionCreatorPayload,
   /**
-   * @deprecated - The function is moving to a dedicated sub-package. Please access it using "import {...} from @coveo/headless/recommendation".
+   * @deprecated - The function is moving to a dedicated sub-package. Please access it using "import {...} from '@coveo/headless/recommendation'".
    */
   loadRecommendationActions,
 } from './recommendation/recommendation-actions-loader';
