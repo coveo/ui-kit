@@ -18,6 +18,7 @@ import {toggleSelectFacetValue} from './../facets/facet-set/facet-set-actions';
 import {toggleSelectCategoryFacetValue} from '../facets/category-facet-set/category-facet-set-actions';
 import {toggleSelectDateFacetValue} from '../facets/range-facets/date-facet-set/date-facet-actions';
 import {toggleSelectNumericFacetValue} from '../facets/range-facets/numeric-facet-set/numeric-facet-actions';
+import {Action} from '@reduxjs/toolkit';
 
 describe('pagination slice', () => {
   let state: PaginationState;
@@ -25,6 +26,16 @@ describe('pagination slice', () => {
   function determinePage(state: PaginationState) {
     const {firstResult, numberOfResults} = state;
     return calculatePage(firstResult, numberOfResults);
+  }
+
+  function testResetPagination(action: Action) {
+    state.firstResult = 10;
+    state.numberOfResults = 10;
+    const nextState = paginationReducer(state, action);
+
+    expect(nextState.firstResult).toEqual(
+      getPaginationInitialState().firstResult
+    );
   }
 
   beforeEach(() => {
@@ -184,47 +195,20 @@ describe('pagination slice', () => {
   });
 
   describe('restore pagination on  facet toggle actions', () => {
-    it('when on page 2, and a facet is toggled, #firstResult is set to 0', () => {
-      state.firstResult = 10;
-      state.numberOfResults = 10;
-      expect(determinePage(state)).toBe(2);
-
-      const nextState = paginationReducer(state, toggleSelectFacetValue);
-
-      expect(nextState.firstResult).toEqual(0);
+    it('when a facet is toggled, #firstResult is set to 0', () => {
+      testResetPagination(toggleSelectFacetValue);
     });
 
-    it('when on page 3, and a date facet is toggled, #firstResult is set to 0', () => {
-      state.firstResult = 20;
-      state.numberOfResults = 10;
-      expect(determinePage(state)).toBe(3);
-
-      const nextState = paginationReducer(state, toggleSelectDateFacetValue);
-
-      expect(nextState.firstResult).toEqual(0);
+    it('when a date facet is toggled, #firstResult is set to 0', () => {
+      testResetPagination(toggleSelectDateFacetValue);
     });
 
-    it('when on page 2, and a category facet is toggled, #firstResult is set to 0', () => {
-      state.firstResult = 10;
-      state.numberOfResults = 10;
-      expect(determinePage(state)).toBe(2);
-
-      const nextState = paginationReducer(
-        state,
-        toggleSelectCategoryFacetValue
-      );
-
-      expect(nextState.firstResult).toEqual(0);
+    it('when a category facet is toggled, #firstResult is set to 0', () => {
+      testResetPagination(toggleSelectCategoryFacetValue);
     });
 
-    it('when on page 4, and a numeric facet is toggled, #firstResult is set to 0', () => {
-      state.firstResult = 30;
-      state.numberOfResults = 10;
-      expect(determinePage(state)).toBe(4);
-
-      const nextState = paginationReducer(state, toggleSelectNumericFacetValue);
-
-      expect(nextState.firstResult).toEqual(0);
+    it('when a numeric facet is toggled, #firstResult is set to 0', () => {
+      testResetPagination(toggleSelectNumericFacetValue);
     });
   });
 });

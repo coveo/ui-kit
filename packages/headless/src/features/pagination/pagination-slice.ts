@@ -76,16 +76,16 @@ export const paginationReducer = createReducer(
         state.totalCountFiltered = response.totalCountFiltered;
       })
       .addCase(toggleSelectFacetValue, (state) => {
-        state.firstResult = 0;
+        state.firstResult = getPaginationInitialState().firstResult;
       })
       .addCase(toggleSelectCategoryFacetValue, (state) => {
-        state.firstResult = 0;
+        state.firstResult = getPaginationInitialState().firstResult;
       })
       .addCase(toggleSelectDateFacetValue, (state) => {
-        state.firstResult = 0;
+        state.firstResult = getPaginationInitialState().firstResult;
       })
       .addCase(toggleSelectNumericFacetValue, (state) => {
-        state.firstResult = 0;
+        state.firstResult = getPaginationInitialState().firstResult;
       });
   }
 );
