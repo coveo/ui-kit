@@ -14,6 +14,10 @@ import {logSearchboxSubmit} from '../query/query-analytics-actions';
 import {getPaginationInitialState, PaginationState} from './pagination-state';
 import {getHistoryInitialState} from '../history/history-state';
 import {restoreSearchParameters} from '../search-parameters/search-parameter-actions';
+import {toggleSelectFacetValue} from './../facets/facet-set/facet-set-actions';
+import {toggleSelectCategoryFacetValue} from '../facets/category-facet-set/category-facet-set-actions';
+import {toggleSelectDateFacetValue} from '../facets/range-facets/date-facet-set/date-facet-actions';
+import {toggleSelectNumericFacetValue} from '../facets/range-facets/numeric-facet-set/numeric-facet-actions';
 
 describe('pagination slice', () => {
   let state: PaginationState;
@@ -176,6 +180,51 @@ describe('pagination slice', () => {
       state.numberOfResults = 1;
       const finalState = paginationReducer(state, restoreSearchParameters({}));
       expect(finalState.numberOfResults).toEqual(state.numberOfResults);
+    });
+  });
+
+  describe('restore pagination on  facet toggle actions', () => {
+    it('when on page 2, and a facet is toggled, #firstResult is set to 0', () => {
+      state.firstResult = 10;
+      state.numberOfResults = 10;
+      expect(determinePage(state)).toBe(2);
+
+      const nextState = paginationReducer(state, toggleSelectFacetValue);
+
+      expect(nextState.firstResult).toEqual(0);
+    });
+
+    it('when on page 3, and a date facet is toggled, #firstResult is set to 0', () => {
+      state.firstResult = 20;
+      state.numberOfResults = 10;
+      expect(determinePage(state)).toBe(3);
+
+      const nextState = paginationReducer(state, toggleSelectDateFacetValue);
+
+      expect(nextState.firstResult).toEqual(0);
+    });
+
+    it('when on page 2, and a category facet is toggled, #firstResult is set to 0', () => {
+      state.firstResult = 10;
+      state.numberOfResults = 10;
+      expect(determinePage(state)).toBe(2);
+
+      const nextState = paginationReducer(
+        state,
+        toggleSelectCategoryFacetValue
+      );
+
+      expect(nextState.firstResult).toEqual(0);
+    });
+
+    it('when on page 4, and a numeric facet is toggled, #firstResult is set to 0', () => {
+      state.firstResult = 30;
+      state.numberOfResults = 10;
+      expect(determinePage(state)).toBe(4);
+
+      const nextState = paginationReducer(state, toggleSelectNumericFacetValue);
+
+      expect(nextState.firstResult).toEqual(0);
     });
   });
 });
