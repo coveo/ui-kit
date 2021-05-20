@@ -18,6 +18,7 @@ import {
 import {advancedSearchQueries, configuration} from '../../app/reducers';
 import {loadReducerError} from '../../utils/errors';
 import {setOriginLevel2} from '../../features/configuration/configuration-actions';
+import {getConfigurationInitialState} from '../../features/configuration/configuration-state';
 
 export interface TabOptions {
   /**
@@ -30,7 +31,7 @@ export interface TabOptions {
   expression: string;
 
   /**
-   * A unique identifier for the tab. The value will used as the originLevel2 when the tab is active.
+   * A unique identifier for the tab. The value will be used as the originLevel2 when the tab is active.
    */
   id?: string;
 }
@@ -97,6 +98,8 @@ export interface TabState {
  * @returns A `Tab` controller instance.
  */
 export function buildTab(engine: Engine<object>, props: TabProps): Tab {
+  assertIdNotEqualToDefaultOriginLevel2(props.options.id);
+
   if (!loadTabReducers(engine)) {
     throw loadReducerError;
   }
@@ -160,4 +163,14 @@ function loadTabReducers(
 ): engine is Engine<ConfigurationSection & AdvancedSearchQueriesSection> {
   engine.addReducers({configuration, advancedSearchQueries});
   return true;
+}
+
+function assertIdNotEqualToDefaultOriginLevel2(id: string | undefined) {
+  const defaultOriginLevel2 = getConfigurationInitialState().analytics
+    .originLevel2;
+  if (id === defaultOriginLevel2) {
+    throw new Error(
+      `The #id option on the Tab controller cannot use the reserved value "${defaultOriginLevel2}". Please specify a different value.`
+    );
+  }
 }

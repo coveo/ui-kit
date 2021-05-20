@@ -8,6 +8,7 @@ import {SearchAppState} from '../../state/search-app-state';
 import {buildMockAdvancedSearchQueriesState} from '../../test/mock-advanced-search-queries-state';
 import {advancedSearchQueries, configuration} from '../../app/reducers';
 import {setOriginLevel2} from '../../features/configuration/configuration-actions';
+import {getConfigurationInitialState} from '../../features/configuration/configuration-state';
 
 describe('Tab', () => {
   const expression = 'abc123';
@@ -44,6 +45,11 @@ describe('Tab', () => {
 
   it('when the #id option is an empty string, it throws', () => {
     props.options.id = '';
+    expect(() => initTab()).toThrow();
+  });
+
+  it('when the #id option is set to default originLevel2 value, it throws', () => {
+    props.options.id = getConfigurationInitialState().analytics.originLevel2;
     expect(() => initTab()).toThrow();
   });
 
