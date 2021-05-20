@@ -11,6 +11,10 @@ import {executeSearch} from '../search/search-actions';
 import {change} from '../history/history-actions';
 import {getPaginationInitialState, PaginationState} from './pagination-state';
 import {restoreSearchParameters} from '../search-parameters/search-parameter-actions';
+import {toggleSelectFacetValue} from './../facets/facet-set/facet-set-actions';
+import {toggleSelectCategoryFacetValue} from '../facets/category-facet-set/category-facet-set-actions';
+import {toggleSelectDateFacetValue} from '../facets/range-facets/date-facet-set/date-facet-actions';
+import {toggleSelectNumericFacetValue} from '../facets/range-facets/numeric-facet-set/numeric-facet-actions';
 
 export const minimumPage = 1;
 export const maximumNumberOfResultsFromIndex = 1000;
@@ -70,6 +74,18 @@ export const paginationReducer = createReducer(
       .addCase(executeSearch.fulfilled, (state, action) => {
         const {response} = action.payload;
         state.totalCountFiltered = response.totalCountFiltered;
+      })
+      .addCase(toggleSelectFacetValue, (state) => {
+        state.firstResult = 0;
+      })
+      .addCase(toggleSelectCategoryFacetValue, (state) => {
+        state.firstResult = 0;
+      })
+      .addCase(toggleSelectDateFacetValue, (state) => {
+        state.firstResult = 0;
+      })
+      .addCase(toggleSelectNumericFacetValue, (state) => {
+        state.firstResult = 0;
       });
   }
 );
