@@ -41,6 +41,10 @@ export interface EngineConfigurationOptions {
    */
   platformUrl?: string;
   /**
+   * The Engine name (e.g., myEngine)
+   */
+  name?: string;
+  /**
    * Allows configuring options related to analytics.
    */
   analytics?: {
