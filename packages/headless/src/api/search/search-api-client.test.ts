@@ -7,6 +7,7 @@ import {
   NoopPreprocessRequestMiddleware,
   PlatformClient,
   PlatformClientCallOptions,
+  PlatformClientErrorResponse,
 } from '../platform-client';
 import {createMockState} from '../../test/mock-state';
 import {createMockRecommendationState} from '../../test/mock-recommendation-state';
@@ -35,6 +36,7 @@ import {buildMockSearchAPIClient} from '../../test/mock-search-api-client';
 import {NoopPreprocessRequest} from '../preprocess-request';
 import {Response} from 'cross-fetch';
 import {buildResultPreviewRequest} from '../../features/result-preview/result-preview-request-builder';
+import {buildDisconnectedError} from './search-api-error-response';
 
 jest.mock('../platform-client');
 describe('search api client', () => {
@@ -215,6 +217,17 @@ describe('search api client', () => {
       expect(thirdRequest.signal.aborted).toBe(false);
     });
 
+    it(`when calling SearchAPIClient.search without an internet connection
+    should return an error`, async (done) => {
+      (PlatformClient.call as jest.Mock).mockReturnValue(
+        PlatformClientErrorResponse.Disconnected
+      );
+
+      const response = await searchAPIClient.search(buildSearchRequest(state));
+      expect(response).toEqual({error: buildDisconnectedError()});
+      done();
+    });
+
     it(`when calling SearchAPIClient.plan
     should call PlatformClient.call with the right options`, () => {
       const req = buildPlanRequest(state);
@@ -241,6 +254,17 @@ describe('search api client', () => {
       };
 
       expect(request).toMatchObject(expectedRequest);
+    });
+
+    it(`when calling SearchAPIClient.plan without an internet connection
+    should return an error`, async (done) => {
+      (PlatformClient.call as jest.Mock).mockReturnValue(
+        PlatformClientErrorResponse.Disconnected
+      );
+
+      const response = await searchAPIClient.plan(buildSearchRequest(state));
+      expect(response).toEqual({error: buildDisconnectedError()});
+      done();
     });
 
     it(`when calling SearchAPIClient.querySuggest
@@ -275,6 +299,22 @@ describe('search api client', () => {
       };
 
       expect(request).toMatchObject(expectedRequest);
+    });
+
+    it(`when calling SearchAPIClient.querySuggest without an internet connection
+    should return an error`, async (done) => {
+      const id = 'someid123';
+      const qs = buildMockQuerySuggest({id, q: 'some query', count: 11});
+      state.querySuggest[id] = qs;
+      const req = buildQuerySuggestRequest(id, state);
+
+      (PlatformClient.call as jest.Mock).mockReturnValue(
+        PlatformClientErrorResponse.Disconnected
+      );
+
+      const response = await searchAPIClient.querySuggest(req);
+      expect(response).toEqual({error: buildDisconnectedError()});
+      done();
     });
 
     describe('SearchAPIClient.facetSearch', () => {
@@ -482,12 +522,25 @@ describe('search api client', () => {
         const payload = encodeUTF16('hello');
         const headers = {'content-type': 'text/html; charset=UTF-16'};
         const response = new Response(payload, {headers});
-        PlatformClient.call = () => Promise.resolve(response);
+        (PlatformClient.call as jest.Mock).mockReturnValue(response);
 
         const req = buildResultPreviewRequest(state, {uniqueId: '1'});
         const res = await searchAPIClient.html(req);
 
         expect(res.success).toBe('hello');
+      });
+
+      it(`without an internet connection
+    should return an error`, async (done) => {
+        (PlatformClient.call as jest.Mock).mockReturnValue(
+          PlatformClientErrorResponse.Disconnected
+        );
+
+        const response = await searchAPIClient.html(
+          buildResultPreviewRequest(state, {uniqueId: '1'})
+        );
+        expect(response).toEqual({error: buildDisconnectedError()});
+        done();
       });
     });
   });
