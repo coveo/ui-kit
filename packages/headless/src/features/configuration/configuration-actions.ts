@@ -31,7 +31,7 @@ export interface UpdateBasicConfigurationActionCreatorPayload {
   platformUrl?: string;
 
   /**
-   * The Engine name
+   * The Engine name (e.g., myEngine).
    */
   name?: string;
 }
