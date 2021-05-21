@@ -221,28 +221,11 @@ export const foldingReducer = createReducer(
       )
       .addCase(loadCollection.pending, (state, {meta}) => {
         const collectionId = meta.arg;
-
-        return {
-          ...state,
-          collections: {
-            ...state.collections,
-            [collectionId]: {
-              ...state.collections[collectionId],
-              isLoadingMoreResults: true,
-            },
-          },
-        };
+        state.collections[collectionId].isLoadingMoreResults = true;
       })
-      .addCase(loadCollection.rejected, (state, {payload}) => ({
-        ...state,
-        collections: {
-          ...state.collections,
-          [payload!.collectionId]: {
-            ...state.collections[payload!.collectionId],
-            isLoadingMoreResults: false,
-          },
-        },
-      }))
+      .addCase(loadCollection.rejected, (state, {payload}) => {
+        state.collections[payload!.collectionId].isLoadingMoreResults = false;
+      })
       .addCase(
         loadCollection.fulfilled,
         (state, {payload: {collectionId, results}}) => {
@@ -251,23 +234,17 @@ export const foldingReducer = createReducer(
             state.fields
           );
           if (!rootResult) {
-            return state;
+            return;
           }
-          return {
-            ...state,
-            collections: {
-              ...state.collections,
-              [collectionId]: {
-                ...rootResult,
-                children: resolveChildrenFromFields(
-                  rootResult,
-                  results as ResultWithFolding[],
-                  state.fields
-                ),
-                moreResultsAvailable: false,
-                isLoadingMoreResults: false,
-              },
-            },
+          state.collections[collectionId] = {
+            ...rootResult,
+            children: resolveChildrenFromFields(
+              rootResult,
+              results as ResultWithFolding[],
+              state.fields
+            ),
+            moreResultsAvailable: false,
+            isLoadingMoreResults: false,
           };
         }
       )
