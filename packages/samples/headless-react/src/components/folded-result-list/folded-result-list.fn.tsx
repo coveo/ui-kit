@@ -17,7 +17,7 @@ export const FoldedResultList: FunctionComponent<FoldedResultListProps> = (
 
   useEffect(() => controller.subscribe(() => setState(controller.state)), []);
 
-  function renderResults(results: FoldedResult[]) {
+  function renderFoldedResults(results: FoldedResult[]) {
     return results.map((result) => (
       <li key={result.uniqueId}>
         <article>
@@ -26,7 +26,7 @@ export const FoldedResultList: FunctionComponent<FoldedResultListProps> = (
             <ResultLink result={result}>{result.title}</ResultLink>
           </h3>
           <p>{result.excerpt}</p>
-          <ul>{renderResults(result.children)}</ul>
+          <ul>{renderFoldedResults(result.children)}</ul>
         </article>
       </li>
     ));
@@ -47,7 +47,7 @@ export const FoldedResultList: FunctionComponent<FoldedResultListProps> = (
                 <ResultLink result={result}>{result.title}</ResultLink>
               </h3>
               <p>{result.excerpt}</p>
-              <ul>{renderResults(result.children)}</ul>
+              <ul>{renderFoldedResults(result.children)}</ul>
               {result.moreResultsAvailable && (
                 <button
                   disabled={result.isLoadingMoreResults}

@@ -31,7 +31,7 @@ export class FoldedResultList extends Component<{}, FoldedResultListState> {
     this.setState(this.controller.state);
   }
 
-  private renderResults(results: FoldedResult[]) {
+  private renderFoldedResults(results: FoldedResult[]) {
     return results.map((result) => (
       <li key={result.uniqueId}>
         <article>
@@ -40,7 +40,7 @@ export class FoldedResultList extends Component<{}, FoldedResultListState> {
             <ResultLink result={result}>{result.title}</ResultLink>
           </h3>
           <p>{result.excerpt}</p>
-          <ul>{this.renderResults(result.children)}</ul>
+          <ul>{this.renderFoldedResults(result.children)}</ul>
         </article>
       </li>
     ));
@@ -66,7 +66,7 @@ export class FoldedResultList extends Component<{}, FoldedResultListState> {
                   <ResultLink result={result}>{result.title}</ResultLink>
                 </h3>
                 <p>{result.excerpt}</p>
-                <ul>{this.renderResults(result.children)}</ul>
+                <ul>{this.renderFoldedResults(result.children)}</ul>
                 {result.moreResultsAvailable && (
                   <button
                     disabled={result.isLoadingMoreResults}
