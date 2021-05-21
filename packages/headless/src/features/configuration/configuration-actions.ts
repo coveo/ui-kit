@@ -29,6 +29,11 @@ export interface UpdateBasicConfigurationActionCreatorPayload {
    * The Plaform URL to use (e.g., `https://platform.cloud.coveo.com`).
    */
   platformUrl?: string;
+
+  /**
+   * The Engine name
+   */
+  name?: string;
 }
 
 /**
@@ -44,6 +49,7 @@ export const updateBasicConfiguration = createAction(
       accessToken: new StringValue({emptyAllowed: false}),
       organizationId: new StringValue({emptyAllowed: false}),
       platformUrl: new StringValue({url: true, emptyAllowed: false}),
+      name: new StringValue({emptyAllowed: false}),
     })
 );
 

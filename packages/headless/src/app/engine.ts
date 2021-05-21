@@ -125,6 +125,7 @@ export function buildEngine<
     accessToken,
     organizationId,
     platformUrl,
+    name,
     analytics,
   } = options.configuration;
 
@@ -133,6 +134,7 @@ export function buildEngine<
       accessToken,
       organizationId,
       platformUrl,
+      name,
     })
   );
 
