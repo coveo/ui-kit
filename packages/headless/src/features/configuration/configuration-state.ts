@@ -75,6 +75,7 @@ export const analyticsAPIEndpoint = '/rest/ua';
 export const getConfigurationInitialState: () => ConfigurationState = () => ({
   organizationId: '',
   accessToken: '',
+  name: '',
   platformUrl: platformUrl(),
   search: {
     apiBaseUrl: `${platformUrl()}${searchAPIEndpoint}`,
