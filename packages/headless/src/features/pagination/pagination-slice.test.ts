@@ -32,6 +32,7 @@ import {
 } from '../facets/range-facets/numeric-facet-set/numeric-facet-actions';
 import {deselectAllFacets} from '../facets/generic/facet-actions';
 import {selectFacetSearchResult} from '../facets/facet-search-set/specific/specific-facet-search-actions';
+import {selectCategoryFacetSearchResult} from '../facets/facet-search-set/category/category-facet-search-actions';
 import {Action} from '@reduxjs/toolkit';
 
 describe('pagination slice', () => {
@@ -227,6 +228,10 @@ describe('pagination slice', () => {
 
     it('when a facet search result is selected, #firstResult is set to 0', () => {
       testResetPagination(selectFacetSearchResult);
+    });
+
+    it('when a category facet search result is selected, #firstResult is set to 0', () => {
+      testResetPagination(selectCategoryFacetSearchResult);
     });
 
     it('when all facet values are deselected, #firstResult is set to 0', () => {

@@ -23,6 +23,7 @@ import {toggleSelectDateFacetValue} from '../facets/range-facets/date-facet-set/
 import {toggleSelectNumericFacetValue} from '../facets/range-facets/numeric-facet-set/numeric-facet-actions';
 import {deselectAllFacets} from '../facets/generic/facet-actions';
 import {selectFacetSearchResult} from '../facets/facet-search-set/specific/specific-facet-search-actions';
+import {selectCategoryFacetSearchResult} from '../facets/facet-search-set/category/category-facet-search-actions';
 
 export const minimumPage = 1;
 export const maximumNumberOfResultsFromIndex = 1000;
@@ -84,31 +85,38 @@ export const paginationReducer = createReducer(
         state.totalCountFiltered = response.totalCountFiltered;
       })
       .addCase(deselectAllFacetValues, (state) => {
-        state.firstResult = getPaginationInitialState().firstResult;
+        handlePaginationReset(state);
       })
       .addCase(toggleSelectFacetValue, (state) => {
-        state.firstResult = getPaginationInitialState().firstResult;
+        handlePaginationReset(state);
       })
       .addCase(deselectAllCategoryFacetValues, (state) => {
-        state.firstResult = getPaginationInitialState().firstResult;
+        handlePaginationReset(state);
       })
       .addCase(toggleSelectCategoryFacetValue, (state) => {
-        state.firstResult = getPaginationInitialState().firstResult;
+        handlePaginationReset(state);
+      })
+      .addCase(selectCategoryFacetSearchResult, (state) => {
+        handlePaginationReset(state);
       })
       .addCase(toggleSelectDateFacetValue, (state) => {
-        state.firstResult = getPaginationInitialState().firstResult;
+        handlePaginationReset(state);
       })
       .addCase(toggleSelectNumericFacetValue, (state) => {
-        state.firstResult = getPaginationInitialState().firstResult;
+        handlePaginationReset(state);
       })
       .addCase(deselectAllFacets, (state) => {
-        state.firstResult = getPaginationInitialState().firstResult;
+        handlePaginationReset(state);
       })
       .addCase(selectFacetSearchResult, (state) => {
-        state.firstResult = getPaginationInitialState().firstResult;
+        handlePaginationReset(state);
       });
   }
 );
+
+function handlePaginationReset(state: PaginationState) {
+  state.firstResult = getPaginationInitialState().firstResult;
+}
 
 function determineCurrentPage(state: PaginationState) {
   const {firstResult, numberOfResults} = state;
