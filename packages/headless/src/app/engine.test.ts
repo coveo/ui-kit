@@ -16,6 +16,7 @@ describe('engine', () => {
         organizationId: 'orgId',
         accessToken: 'token',
         platformUrl: 'https://www.coveo.com/',
+        name: 'myEngine',
       },
       reducers: {},
     };
