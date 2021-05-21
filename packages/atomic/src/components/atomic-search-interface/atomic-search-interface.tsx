@@ -37,6 +37,8 @@ export type InitializationOptions = Pick<
   'accessToken' | 'organizationId' | 'renewAccessToken' | 'platformUrl'
 >;
 
+// comment.
+
 /**
  * The `atomic-search-interface` component is the parent to all other atomic components in a search page. It handles the headless engine and localization configurations.
  */
