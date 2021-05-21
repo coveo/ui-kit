@@ -1,7 +1,7 @@
 import 'isomorphic-fetch';
 import * as fetchMock from 'fetch-mock';
 import {DefaultEventResponse} from '../src/events';
-import type {getCurrentClient} from "../src/coveoua/library";
+import type {getCurrentClient} from '../src/coveoua/library';
 import coveoua from '../src/coveoua/browser';
 
 declare const self: any;
@@ -139,6 +139,57 @@ describe('ec events', () => {
         });
     });
 
+    it('can send a product quickview event', async () => {
+        coveoua('ec:addProduct', {name: 'wow', id: 'something', brand: 'brand', unknown: 'ok'});
+        coveoua('ec:setAction', 'quickview');
+        await coveoua('send', 'event');
+
+        const [body] = getParsedBody();
+
+        expect(body).toEqual({
+            ...defaultContextValues,
+            t: 'event',
+            pr1nm: 'wow',
+            pr1id: 'something',
+            pr1br: 'brand',
+            pa: 'quickview',
+        });
+    });
+
+    it('can send a product bookmark add event', async () => {
+        coveoua('ec:addProduct', {name: 'wow', id: 'something', brand: 'brand', unknown: 'ok'});
+        coveoua('ec:setAction', 'bookmark_add');
+        await coveoua('send', 'event');
+
+        const [body] = getParsedBody();
+
+        expect(body).toEqual({
+            ...defaultContextValues,
+            t: 'event',
+            pr1nm: 'wow',
+            pr1id: 'something',
+            pr1br: 'brand',
+            pa: 'bookmark_add',
+        });
+    });
+
+    it('can send a product bookmark remove event', async () => {
+        coveoua('ec:addProduct', {name: 'wow', id: 'something', brand: 'brand', unknown: 'ok'});
+        coveoua('ec:setAction', 'bookmark_remove');
+        await coveoua('send', 'event');
+
+        const [body] = getParsedBody();
+
+        expect(body).toEqual({
+            ...defaultContextValues,
+            t: 'event',
+            pr1nm: 'wow',
+            pr1id: 'something',
+            pr1br: 'brand',
+            pa: 'bookmark_remove',
+        });
+    });
+
     it('can send a pageview event with options', async () => {
         await coveoua('send', 'pageview', 'page', {
             title: 'wow',
@@ -266,10 +317,10 @@ describe('ec events', () => {
             },
         });
 
-        const firstPayloadToCompare = returnCommonAttributes(firstPayload, ["tm", "z"]);
-        const secondPayloadToCompare = returnCommonAttributes(secondPayload, ["tm", "z"]);
-        const firstAfterPayloadToCompare = returnCommonAttributes(firstAfterPayload, ["tm", "z"]);
-        const secondAfterPayloadToCompare = returnCommonAttributes(secondAfterPayload, ["tm", "z"]);
+        const firstPayloadToCompare = returnCommonAttributes(firstPayload, ['tm', 'z']);
+        const secondPayloadToCompare = returnCommonAttributes(secondPayload, ['tm', 'z']);
+        const firstAfterPayloadToCompare = returnCommonAttributes(firstAfterPayload, ['tm', 'z']);
+        const secondAfterPayloadToCompare = returnCommonAttributes(secondAfterPayload, ['tm', 'z']);
 
         expect(firstPayloadToCompare).toEqual(secondPayloadToCompare);
         expect(firstPayloadToCompare.dl).toBe(initialLocation);
@@ -310,10 +361,10 @@ describe('ec events', () => {
             },
         });
 
-        const firstParametersToCompare = returnCommonAttributes(firstParameters, ["time", "eventId"]);
-        const secondParametersToCompare = returnCommonAttributes(secondParameters, ["time", "eventId"]);
-        const firstAfterParametersToCompare = returnCommonAttributes(firstAfterParameters, ["time", "eventId"]);
-        const secondAfterParametersToCompare = returnCommonAttributes(secondAfterParameters, ["time", "eventId"]);
+        const firstParametersToCompare = returnCommonAttributes(firstParameters, ['time', 'eventId']);
+        const secondParametersToCompare = returnCommonAttributes(secondParameters, ['time', 'eventId']);
+        const firstAfterParametersToCompare = returnCommonAttributes(firstAfterParameters, ['time', 'eventId']);
+        const secondAfterParametersToCompare = returnCommonAttributes(secondAfterParameters, ['time', 'eventId']);
 
         expect(firstParametersToCompare).toEqual(secondParametersToCompare);
         expect(firstParametersToCompare.location).toBe(initialLocation);
@@ -328,7 +379,7 @@ describe('ec events', () => {
         const parameters = await client.getParameters('pageview', {});
         const payload = await client.getPayload('pageview', {});
 
-        const firstParametersToCompare = returnCommonAttributes(parameters, ["time", "eventId"]);
+        const firstParametersToCompare = returnCommonAttributes(parameters, ['time', 'eventId']);
 
         expect(firstParametersToCompare).toEqual({
             hitType: payload.t,
@@ -341,7 +392,7 @@ describe('ec events', () => {
             title: payload.dt,
             userAgent: payload.ua,
             language: payload.ul,
-            visitorId: payload.cid
+            visitorId: payload.cid,
         });
     });
 
@@ -353,8 +404,8 @@ describe('ec events', () => {
 
         const [pageView, secondPageView] = getParsedBody();
 
-        const firstParametersToCompare = returnCommonAttributes(firstParameters, ["time", "eventId"]);
-        const secondParametersToCompare = returnCommonAttributes(secondParameters, ["time", "eventId"]);
+        const firstParametersToCompare = returnCommonAttributes(firstParameters, ['time', 'eventId']);
+        const secondParametersToCompare = returnCommonAttributes(secondParameters, ['time', 'eventId']);
 
         expect(firstParametersToCompare).toEqual({
             hitType: pageView.t,
@@ -367,7 +418,7 @@ describe('ec events', () => {
             title: pageView.dt,
             userAgent: pageView.ua,
             language: pageView.ul,
-            visitorId: pageView.cid
+            visitorId: pageView.cid,
         });
 
         expect(secondParametersToCompare).toEqual({
@@ -381,7 +432,7 @@ describe('ec events', () => {
             title: secondPageView.dt,
             userAgent: secondPageView.ua,
             language: secondPageView.ul,
-            visitorId: secondPageView.cid
+            visitorId: secondPageView.cid,
         });
     });
 
@@ -393,12 +444,12 @@ describe('ec events', () => {
 
         const [pageView, secondPageView] = getParsedBody();
 
-        const firstPayloadToCompare = returnCommonAttributes(firstPayload, ["tm", "z"]);
-        const secondPayloadToCompare = returnCommonAttributes(secondPayload, ["tm", "z"]);
+        const firstPayloadToCompare = returnCommonAttributes(firstPayload, ['tm', 'z']);
+        const secondPayloadToCompare = returnCommonAttributes(secondPayload, ['tm', 'z']);
 
-        const pageViewToCompare = returnCommonAttributes(pageView, ["tm", "z"]);
+        const pageViewToCompare = returnCommonAttributes(pageView, ['tm', 'z']);
 
-        const secondPageViewToCompare = returnCommonAttributes(secondPageView, ["tm", "z"]);
+        const secondPageViewToCompare = returnCommonAttributes(secondPageView, ['tm', 'z']);
 
         expect(firstPayloadToCompare).toEqual(pageViewToCompare);
         expect(secondPayloadToCompare).toEqual(secondPageViewToCompare);
@@ -803,7 +854,7 @@ describe('ec events', () => {
     };
 
     const returnCommonAttributes = <T>(payload: T, attributesToRemove: Array<keyof T>) => {
-        attributesToRemove.forEach(attribute => delete payload[attribute]);
+        attributesToRemove.forEach((attribute) => delete payload[attribute]);
         return payload;
-    }
+    };
 });

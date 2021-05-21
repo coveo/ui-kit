@@ -70,6 +70,8 @@ const reviewActionsKeysMapping: {[name: string]: string} = {
 
 export const commerceActionKeysMappingPerAction: Record<string, {[name: string]: string}> = {
     add: productActionsKeysMapping,
+    bookmark_add: productActionsKeysMapping,
+    bookmark_remove: productActionsKeysMapping,
     click: productActionsKeysMapping,
     checkout: productActionsKeysMapping,
     checkout_option: productActionsKeysMapping,
@@ -84,6 +86,7 @@ export const commerceActionKeysMappingPerAction: Record<string, {[name: string]:
         ...productActionsKeysMapping,
         ...transactionActionsKeysMapping,
     },
+    quickview: productActionsKeysMapping,
     quote: {
         ...productActionsKeysMapping,
         ...quoteActionsKeysMapping,
