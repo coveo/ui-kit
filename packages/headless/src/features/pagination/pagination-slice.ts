@@ -1,4 +1,4 @@
-import {AnyAction, createReducer} from '@reduxjs/toolkit';
+import {createReducer} from '@reduxjs/toolkit';
 import {
   registerNumberOfResults,
   updateNumberOfResults,
@@ -11,6 +11,18 @@ import {executeSearch} from '../search/search-actions';
 import {change} from '../history/history-actions';
 import {getPaginationInitialState, PaginationState} from './pagination-state';
 import {restoreSearchParameters} from '../search-parameters/search-parameter-actions';
+import {
+  deselectAllFacetValues,
+  toggleSelectFacetValue,
+} from './../facets/facet-set/facet-set-actions';
+import {
+  deselectAllCategoryFacetValues,
+  toggleSelectCategoryFacetValue,
+} from '../facets/category-facet-set/category-facet-set-actions';
+import {toggleSelectDateFacetValue} from '../facets/range-facets/date-facet-set/date-facet-actions';
+import {toggleSelectNumericFacetValue} from '../facets/range-facets/numeric-facet-set/numeric-facet-actions';
+import {deselectAllFacets} from '../facets/generic/facet-actions';
+import {selectFacetSearchResult} from '../facets/facet-search-set/specific/specific-facet-search-actions';
 
 export const minimumPage = 1;
 export const maximumNumberOfResultsFromIndex = 1000;
@@ -71,20 +83,32 @@ export const paginationReducer = createReducer(
         const {response} = action.payload;
         state.totalCountFiltered = response.totalCountFiltered;
       })
-      .addMatcher(isFacetAction, (state, action) => {
-        console.log(action.type);
+      .addCase(deselectAllFacetValues, (state) => {
+        state.firstResult = getPaginationInitialState().firstResult;
+      })
+      .addCase(toggleSelectFacetValue, (state) => {
+        state.firstResult = getPaginationInitialState().firstResult;
+      })
+      .addCase(deselectAllCategoryFacetValues, (state) => {
+        state.firstResult = getPaginationInitialState().firstResult;
+      })
+      .addCase(toggleSelectCategoryFacetValue, (state) => {
+        state.firstResult = getPaginationInitialState().firstResult;
+      })
+      .addCase(toggleSelectDateFacetValue, (state) => {
+        state.firstResult = getPaginationInitialState().firstResult;
+      })
+      .addCase(toggleSelectNumericFacetValue, (state) => {
+        state.firstResult = getPaginationInitialState().firstResult;
+      })
+      .addCase(deselectAllFacets, (state) => {
+        state.firstResult = getPaginationInitialState().firstResult;
+      })
+      .addCase(selectFacetSearchResult, (state) => {
         state.firstResult = getPaginationInitialState().firstResult;
       });
   }
 );
-
-function isFacetAction(action: AnyAction) {
-  return (
-    !action.type.includes('analytics') &&
-    (action.type.includes('facet') || action.type.includes('Facet')) &&
-    (action.type.includes('toggle') || action.type.includes('deselect'))
-  );
-}
 
 function determineCurrentPage(state: PaginationState) {
   const {firstResult, numberOfResults} = state;
