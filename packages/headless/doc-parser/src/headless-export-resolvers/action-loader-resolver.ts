@@ -1,6 +1,7 @@
 import {ApiEntryPoint} from '@microsoft/api-extractor-model';
-import {FuncEntity} from '../entity';
+import {FuncEntity, ObjEntity} from '../entity';
 import {resolveInitializer} from './initializer-resolver';
+import {extractTypesFromConfiguration} from './configuration-type-extractor';
 
 export interface ActionLoaderConfiguration {
   initializer: string;
@@ -8,6 +9,7 @@ export interface ActionLoaderConfiguration {
 
 interface ActionLoader {
   initializer: FuncEntity;
+  extractedTypes: ObjEntity[];
 }
 
 export function resolveActionLoader(
@@ -15,5 +17,6 @@ export function resolveActionLoader(
   config: ActionLoaderConfiguration
 ): ActionLoader {
   const initializer = resolveInitializer(entry, config.initializer);
-  return {initializer};
+  const extractedTypes = extractTypesFromConfiguration(initializer, []);
+  return {initializer, extractedTypes};
 }
