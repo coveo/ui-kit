@@ -11,7 +11,7 @@ export interface FoldedResult extends Result {
   children: FoldedResult[];
 }
 
-export interface Collection extends FoldedResult {
+export interface FoldedCollection extends FoldedResult {
   /**
    * Whether more results are available in the collection.
    */
@@ -32,7 +32,7 @@ export interface FoldingState {
   enabled: boolean;
   fields: FoldingFields;
   filterFieldRange: number;
-  collections: Record<CollectionId, Collection>;
+  collections: Record<CollectionId, FoldedCollection>;
 }
 
 export const getFoldingInitialState: () => FoldingState = () => ({

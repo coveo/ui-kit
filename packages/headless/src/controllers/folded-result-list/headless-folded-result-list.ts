@@ -6,7 +6,10 @@ import {
   loadCollection,
   registerFolding,
 } from '../../features/folding/folding-actions';
-import {Collection, FoldedResult} from '../../features/folding/folding-state';
+import {
+  FoldedCollection,
+  FoldedResult,
+} from '../../features/folding/folding-state';
 import {
   ConfigurationSection,
   FoldingSection,
@@ -21,7 +24,7 @@ import {
   ResultListState,
 } from '../result-list/headless-result-list';
 
-export {Collection, FoldedResult};
+export {FoldedCollection as Collection, FoldedResult};
 
 const optionsSchema = new Schema<Required<FoldingOptions>>(
   foldingOptionsSchemaDefinition
@@ -72,7 +75,7 @@ export interface FoldedResultList extends ResultList {
   /**
    * Loads all the folded results for a given collection.
    */
-  loadCollection(collection: Collection): void;
+  loadCollection(collection: FoldedCollection): void;
   /**
    * The state of the `FoldedResultList` controller.
    */
@@ -86,7 +89,7 @@ export interface FoldedResultListState extends ResultListState {
   /**
    * The ordered list of collections.
    * */
-  results: Collection[];
+  results: FoldedCollection[];
 }
 
 /**

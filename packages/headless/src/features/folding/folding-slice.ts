@@ -4,7 +4,7 @@ import {isArray, removeDuplicates} from '../../utils/utils';
 import {executeSearch, fetchMoreResults} from '../search/search-actions';
 import {loadCollection, registerFolding} from './folding-actions';
 import {
-  Collection,
+  FoldedCollection,
   CollectionId,
   collectionMoreResultsAvailableBuffer,
   FoldedResult,
@@ -136,7 +136,7 @@ function createCollectionFromResult(
   relevantResult: ResultWithFolding,
   fields: FoldingFields,
   numberOfFoldedResults: number
-): Collection {
+): FoldedCollection {
   const {resultsInCollection, moreResultsAvailable} = getAllIncludedResultsFrom(
     relevantResult,
     numberOfFoldedResults
@@ -162,7 +162,7 @@ function createCollections(
   fields: FoldingFields,
   numberOfFoldedResults: number
 ) {
-  const collections: Record<CollectionId, Collection> = {};
+  const collections: Record<CollectionId, FoldedCollection> = {};
   results.forEach((result) => {
     const collectionId = getCollectionField(result, fields);
     if (!collectionId) {
