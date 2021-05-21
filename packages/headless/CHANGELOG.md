@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.0.0-alpha.0](https://github.com/coveo/ui-kit/compare/v0.14.2...v1.0.0-alpha.0) (2021-05-21)
+
+
+### Bug Fixes
+
+* **atomic,headless:** change update hash strategy of the url manager ([#825](https://github.com/coveo/ui-kit/issues/825)) ([83b91ab](https://github.com/coveo/ui-kit/commit/83b91ab6ba954bcfbca8d79f292a03c09ab90ed9))
+* **headless:** modifying filters (facets) should reset the pagination ([#829](https://github.com/coveo/ui-kit/issues/829)) ([b787e56](https://github.com/coveo/ui-kit/commit/b787e56fb7f65ca570fc81500172485a2f5f0a82))
+
+
+### Features
+
+* **headless:** add #id option to tab controller; send originLevel2 as #tab parameter ([#828](https://github.com/coveo/ui-kit/issues/828)) ([cc96af1](https://github.com/coveo/ui-kit/commit/cc96af1ed25d44707c54c189f8d85b198db6b129))
+
+
+
+
+
+
 ## [0.14.1](https://github.com/coveo/ui-kit/compare/v0.14.0...v0.14.1) (2021-05-19)
 
 **Note:** Version bump only for package @coveo/headless
