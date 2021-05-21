@@ -33,19 +33,10 @@ async function checkoutLatestMaster() {
   await exec('git pull origin master');
 }
 
-/**
- * @returns {Promise<string[]>}
- */
-async function getPackagesToBump() {
-  const {stdout} = await exec('git ls-files | grep -e "/package.json$"');
-  const packages = stdout.trim().split('\n').map(filePath => JSON.parse(readFileSync(filePath).toString()));
-  return packages.filter((npmPackage) => npmPackage.version && !npmPackage.private).map(({name}) => name)
-}
-
 async function bumpVersionAndPush() {
   try {
     await exec(
-      `npx lerna version --conventional-commits --conventional-graduate=${(await getPackagesToBump()).join(',')} --yes`
+      'npx lerna version --conventional-commits --conventional-graduate --yes'
     );
   } catch (e) {
     console.error(
