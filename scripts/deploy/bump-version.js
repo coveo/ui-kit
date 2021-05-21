@@ -1,5 +1,4 @@
 const {promisify} = require('util');
-const {readFileSync} = require('fs');
 const exec = promisify(require('child_process').exec);
 
 async function authenticateGitClient() {
