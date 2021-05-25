@@ -7,12 +7,12 @@ import {CategoryFacetSetState} from '../facets/category-facet-set/category-facet
 import {AdvancedSearchQueriesState} from '../advanced-search-queries/advanced-search-queries-state';
 import {partitionIntoParentsAndValues} from '../facets/category-facet-set/category-facet-utils';
 import {getHistoryInitialState, HistoryState} from './history-state';
-import {arrayEquals} from '../../utils/utils';
 import {snapshot} from './history-actions';
 import {
   BaseFacetValueRequest,
   CurrentValues,
 } from '../facets/facet-api/request';
+import {arrayEqualSorted} from '../../utils/compare-utils';
 
 export const historyReducer = createReducer(
   getHistoryInitialState(),
@@ -125,6 +125,6 @@ const isPipelineEqual = (current: string, next: string) => current === next;
 const isSearchHubEqual = (current: string, next: string) => current === next;
 
 const isFacetOrderEqual = (current: string[], next: string[]) =>
-  arrayEquals(current, next);
+  arrayEqualSorted(current, next);
 
 const isDebugEqual = (current: boolean, next: boolean) => current === next;
