@@ -34,6 +34,7 @@ describe('engine', () => {
       options.configuration.organizationId
     );
     expect(configuration.platformUrl).toBe(options.configuration.platformUrl);
+    expect(configuration.name).toBe(options.configuration.name);
   });
 
   it('when an #analytics configuration is specified, it registers the configuration', () => {
@@ -90,5 +91,12 @@ describe('engine', () => {
     jest.advanceTimersByTime(1000);
     expect(await engine.renewAccessToken()).toBe('newToken');
     done();
+  });
+
+  it("when no name is specified, the engine's name is initialized to the empty string default value: ", () => {
+    options.configuration.name = undefined;
+    initEngine();
+
+    expect(engine.state.configuration.name).toBe('');
   });
 });
