@@ -25,6 +25,7 @@ export type RangeFacet = ReturnType<typeof buildRangeFacet>;
 
 export type RangeFacetProps<T extends RangeFacetRequest> = {
   facetId: string;
+  rangeAlgorithm: string;
   getRequest: () => T;
 };
 
@@ -37,7 +38,7 @@ export function buildRangeFacet<
 ) {
   type RangeFacetValue = R['values'][0];
 
-  const {facetId, getRequest} = props;
+  const {facetId, rangeAlgorithm, getRequest} = props;
   const controller = buildController(engine);
   const dispatch = engine.dispatch;
 
@@ -74,12 +75,16 @@ export function buildRangeFacet<
       const sortCriterion = request.sortCriteria;
       const values: R['values'] = response ? response.values : [];
       const isLoading = engine.state.search.isLoading;
+      const rangeAlgorithm = request.generateAutomaticRanges
+        ? 'equiprobable'
+        : 'even';
       const hasActiveValues = values.some(
         (facetValue: RangeFacetValue) => facetValue.state !== 'idle'
       );
 
       return {
         facetId,
+        rangeAlgorithm,
         values,
         sortCriterion,
         hasActiveValues,
