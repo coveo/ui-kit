@@ -93,7 +93,7 @@ describe('engine', () => {
     done();
   });
 
-  it("when no name is specified, the engine's name is initialized to the empty string default value: ", () => {
+  it("when no name is specified, the engine's name is initialized to the empty string default value: ''", () => {
     options.configuration.name = undefined;
     initEngine();
 
