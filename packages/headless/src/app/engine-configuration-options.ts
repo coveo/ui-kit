@@ -89,6 +89,10 @@ export const engineConfigurationOptionDefinitions: SchemaDefinition<EngineConfig
     required: false,
     emptyAllowed: false,
   }),
+  name: new StringValue({
+    required: false,
+    emptyAllowed: false,
+  }),
   analytics: new RecordValue({
     options: {
       required: false,

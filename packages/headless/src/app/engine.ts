@@ -125,9 +125,10 @@ export function buildEngine<
     accessToken,
     organizationId,
     platformUrl,
-    name,
+    //name,
     analytics,
   } = options.configuration;
+  const name = options.configuration.name || '';
 
   engine.dispatch(
     updateBasicConfiguration({

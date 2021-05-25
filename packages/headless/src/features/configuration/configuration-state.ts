@@ -16,6 +16,10 @@ export interface ConfigurationState {
    */
   platformUrl: string;
   /**
+   * The Engine name (e.g., myEngine). Specifying your Engine name will help in debugging when using an application with multiple Redux stores.
+   */
+  name?: string;
+  /**
    * The global headless engine Search API configuration.
    */
   search: {
@@ -76,6 +80,7 @@ export const getConfigurationInitialState: () => ConfigurationState = () => ({
   organizationId: '',
   accessToken: '',
   platformUrl: platformUrl(),
+  name: '',
   search: {
     apiBaseUrl: `${platformUrl()}${searchAPIEndpoint}`,
     locale: 'en-US',
