@@ -16,7 +16,6 @@ describe('engine', () => {
         organizationId: 'orgId',
         accessToken: 'token',
         platformUrl: 'https://www.coveo.com/',
-        name: 'myEngine',
       },
       reducers: {},
     };
@@ -34,7 +33,6 @@ describe('engine', () => {
       options.configuration.organizationId
     );
     expect(configuration.platformUrl).toBe(options.configuration.platformUrl);
-    expect(configuration.name).toBe(options.configuration.name);
   });
 
   it('when an #analytics configuration is specified, it registers the configuration', () => {
@@ -91,6 +89,13 @@ describe('engine', () => {
     jest.advanceTimersByTime(1000);
     expect(await engine.renewAccessToken()).toBe('newToken');
     done();
+  });
+
+  it("when name is specified in the config, the engine's name is initialized to the config's value", () => {
+    options.configuration.name = 'myEngine';
+    initEngine();
+
+    expect(engine.state.configuration.name).toBe(options.configuration.name);
   });
 
   it("when no name is specified, the engine's name is initialized to the default value: 'coveo-headless'", () => {
