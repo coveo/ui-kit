@@ -14,6 +14,26 @@ import {logSearchboxSubmit} from '../query/query-analytics-actions';
 import {getPaginationInitialState, PaginationState} from './pagination-state';
 import {getHistoryInitialState} from '../history/history-state';
 import {restoreSearchParameters} from '../search-parameters/search-parameter-actions';
+import {
+  deselectAllFacetValues,
+  toggleSelectFacetValue,
+} from './../facets/facet-set/facet-set-actions';
+import {
+  deselectAllCategoryFacetValues,
+  toggleSelectCategoryFacetValue,
+} from '../facets/category-facet-set/category-facet-set-actions';
+import {
+  deselectAllDateFacetValues,
+  toggleSelectDateFacetValue,
+} from '../facets/range-facets/date-facet-set/date-facet-actions';
+import {
+  toggleSelectNumericFacetValue,
+  deselectAllNumericFacetValues,
+} from '../facets/range-facets/numeric-facet-set/numeric-facet-actions';
+import {deselectAllFacets} from '../facets/generic/facet-actions';
+import {selectFacetSearchResult} from '../facets/facet-search-set/specific/specific-facet-search-actions';
+import {selectCategoryFacetSearchResult} from '../facets/facet-search-set/category/category-facet-search-actions';
+import {Action} from '@reduxjs/toolkit';
 
 describe('pagination slice', () => {
   let state: PaginationState;
@@ -21,6 +41,16 @@ describe('pagination slice', () => {
   function determinePage(state: PaginationState) {
     const {firstResult, numberOfResults} = state;
     return calculatePage(firstResult, numberOfResults);
+  }
+
+  function testResetPagination(action: Action) {
+    state.firstResult = 10;
+    state.numberOfResults = 10;
+    const nextState = paginationReducer(state, action);
+
+    expect(nextState.firstResult).toEqual(
+      getPaginationInitialState().firstResult
+    );
   }
 
   beforeEach(() => {
@@ -176,6 +206,52 @@ describe('pagination slice', () => {
       state.numberOfResults = 1;
       const finalState = paginationReducer(state, restoreSearchParameters({}));
       expect(finalState.numberOfResults).toEqual(state.numberOfResults);
+    });
+  });
+
+  describe('restore pagination on  facet toggle actions', () => {
+    it('when a facet is toggled, #firstResult is set to 0', () => {
+      testResetPagination(toggleSelectFacetValue);
+    });
+
+    it('when a date facet is toggled, #firstResult is set to 0', () => {
+      testResetPagination(toggleSelectDateFacetValue);
+    });
+
+    it('when a category facet is toggled, #firstResult is set to 0', () => {
+      testResetPagination(toggleSelectCategoryFacetValue);
+    });
+
+    it('when a numeric facet is toggled, #firstResult is set to 0', () => {
+      testResetPagination(toggleSelectNumericFacetValue);
+    });
+
+    it('when a facet search result is selected, #firstResult is set to 0', () => {
+      testResetPagination(selectFacetSearchResult);
+    });
+
+    it('when a category facet search result is selected, #firstResult is set to 0', () => {
+      testResetPagination(selectCategoryFacetSearchResult);
+    });
+
+    it('when all facet values are deselected, #firstResult is set to 0', () => {
+      testResetPagination(deselectAllFacetValues);
+    });
+
+    it('when all category facet values are deselected, #firstResult is set to 0', () => {
+      testResetPagination(deselectAllCategoryFacetValues);
+    });
+
+    it('when all date facet values are deselected, #firstResult is set to 0', () => {
+      testResetPagination(deselectAllDateFacetValues);
+    });
+
+    it('when all numeric facet values are deselected, #firstResult is set to 0', () => {
+      testResetPagination(deselectAllNumericFacetValues);
+    });
+
+    it('when all facets are deselected, #firstResult is set to 0', () => {
+      testResetPagination(deselectAllFacets);
     });
   });
 });
