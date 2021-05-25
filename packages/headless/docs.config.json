@@ -142,6 +142,27 @@
   },
   "controllers": [
     {
+      "name": "UrlManager",
+      "initialize": {
+        "initializer": {
+          "name": "buildUrlManager",
+          "source": "src/controllers/url-manager/headless-url-manager.ts"
+        },
+        "others": []
+      },
+      "state": "UrlManagerState",
+      "others": [
+        {
+          "name": "UrlManagerProps",
+          "source": "src/controllers/url-manager/headless-url-manager.ts"
+        },
+        {
+          "name": "UrlManagerInitialState",
+          "source": "src/controllers/url-manager/headless-url-manager.ts"
+        }
+      ]
+    },
+    {
       "name": "BreadcrumbManager",
       "initialize": {
         "initializer": {
