@@ -1,6 +1,6 @@
-import {deepObjectEqualUnsorted} from './compare-utils';
+import {deepEqualAnyOrder} from './compare-utils';
 
-describe('deepObjectEqualUnsorted', () => {
+describe('deepEqualAnyOrder', () => {
   describe('with an object containing primitive values', () => {
     const objectA = {
       a0: {
@@ -25,7 +25,7 @@ describe('deepObjectEqualUnsorted', () => {
           b1: 2,
         },
       };
-      expect(deepObjectEqualUnsorted(objectA, objectB)).toBe(true);
+      expect(deepEqualAnyOrder(objectA, objectB)).toBe(true);
     });
 
     it(`when properties are of the same value but in a different order
@@ -40,7 +40,7 @@ describe('deepObjectEqualUnsorted', () => {
           a1: 'a',
         },
       };
-      expect(deepObjectEqualUnsorted(objectA, objectB)).toBe(true);
+      expect(deepEqualAnyOrder(objectA, objectB)).toBe(true);
     });
 
     it(`when properties are of different values
@@ -55,7 +55,7 @@ describe('deepObjectEqualUnsorted', () => {
           b1: 3,
         },
       };
-      expect(deepObjectEqualUnsorted(objectA, objectB)).toBe(false);
+      expect(deepEqualAnyOrder(objectA, objectB)).toBe(false);
     });
   });
 
@@ -73,7 +73,7 @@ describe('deepObjectEqualUnsorted', () => {
           a1: ['c', 'x', 'b'],
         },
       };
-      expect(deepObjectEqualUnsorted(objectA, objectB)).toBe(true);
+      expect(deepEqualAnyOrder(objectA, objectB)).toBe(true);
     });
 
     it(`when array values are different
@@ -83,7 +83,7 @@ describe('deepObjectEqualUnsorted', () => {
           a1: ['y', 'w', 'v'],
         },
       };
-      expect(deepObjectEqualUnsorted(objectA, objectB)).toBe(false);
+      expect(deepEqualAnyOrder(objectA, objectB)).toBe(false);
     });
 
     it(`when array values are the same & in a different order
@@ -93,7 +93,7 @@ describe('deepObjectEqualUnsorted', () => {
           a1: ['b', 'c', 'x'],
         },
       };
-      expect(deepObjectEqualUnsorted(objectA, objectB)).toBe(true);
+      expect(deepEqualAnyOrder(objectA, objectB)).toBe(true);
     });
   });
 
@@ -117,7 +117,7 @@ describe('deepObjectEqualUnsorted', () => {
           ],
         },
       };
-      expect(deepObjectEqualUnsorted(objectA, objectB)).toBe(true);
+      expect(deepEqualAnyOrder(objectA, objectB)).toBe(true);
     });
 
     it(`when array values are different
@@ -130,7 +130,7 @@ describe('deepObjectEqualUnsorted', () => {
           ],
         },
       };
-      expect(deepObjectEqualUnsorted(objectA, objectB)).toBe(false);
+      expect(deepEqualAnyOrder(objectA, objectB)).toBe(false);
     });
 
     it(`when array values are the same & in a different order
@@ -143,7 +143,7 @@ describe('deepObjectEqualUnsorted', () => {
           ],
         },
       };
-      expect(deepObjectEqualUnsorted(objectA, objectB)).toBe(true);
+      expect(deepEqualAnyOrder(objectA, objectB)).toBe(true);
     });
   });
 });

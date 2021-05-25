@@ -7,7 +7,7 @@ export function arrayEqualSorted<T>(firstArray: T[], secondArray: T[]) {
   );
 }
 
-export const deepObjectEqualUnsorted = createCustomEqual(
+export const deepEqualAnyOrder = createCustomEqual(
   (deepEqual) => (firstObject, secondObject) => {
     if (Array.isArray(firstObject) && Array.isArray(secondObject)) {
       if (firstObject.length !== secondObject.length) {

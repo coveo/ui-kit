@@ -11,7 +11,7 @@ import {buildSearchParameterManager} from '../search-parameter-manager/headless-
 import {configuration} from '../../app/reducers';
 import {initialSearchParameterSelector} from '../../features/search-parameters/search-parameter-selectors';
 import {loadReducerError} from '../../utils/errors';
-import {deepObjectEqualUnsorted} from '../../utils/compare-utils';
+import {deepEqualAnyOrder} from '../../utils/compare-utils';
 import {logParametersChange} from '../../features/search-parameters/search-parameter-analytics-actions';
 
 export interface UrlManagerProps {
@@ -143,7 +143,7 @@ function compareFragments(fragment1: string, fragment2: string) {
 
   const params1 = convertFragmentToParameters(fragment1);
   const params2 = convertFragmentToParameters(fragment2);
-  return deepObjectEqualUnsorted(params1, params2);
+  return deepEqualAnyOrder(params1, params2);
 }
 
 function decodeFragment(fragment: string) {
