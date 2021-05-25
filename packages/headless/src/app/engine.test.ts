@@ -93,10 +93,10 @@ describe('engine', () => {
     done();
   });
 
-  it("when no name is specified, the engine's name is initialized to the empty string default value: ''", () => {
+  it("when no name is specified, the engine's name is initialized to the default value: 'coveo-headless'", () => {
     options.configuration.name = undefined;
     initEngine();
 
-    expect(engine.state.configuration.name).toBe('');
+    expect(engine.state.configuration.name).toBe('coveo-headless');
   });
 });

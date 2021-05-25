@@ -125,10 +125,9 @@ export function buildEngine<
     accessToken,
     organizationId,
     platformUrl,
-    //name,
     analytics,
   } = options.configuration;
-  const name = options.configuration.name || '';
+  const name = options.configuration.name || 'coveo-headless';
 
   engine.dispatch(
     updateBasicConfiguration({

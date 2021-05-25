@@ -17,6 +17,7 @@ export interface ConfigurationState {
   platformUrl: string;
   /**
    * The Engine name (e.g., myEngine). Specifying your Engine name will help in debugging when using an application with multiple Redux stores.
+   * @default 'coveo-headless'
    */
   name?: string;
   /**
