@@ -17,6 +17,7 @@ interface ConfigureStoreOptions<Reducers extends ReducersMapObject> {
   preloadedState?: StateFromReducersMapObject<Reducers>;
   middlewares?: Middleware[];
   thunkExtraArguments: ThunkExtraArguments;
+  name: string;
 }
 
 export function configureStore<Reducers extends ReducersMapObject>({
@@ -24,6 +25,7 @@ export function configureStore<Reducers extends ReducersMapObject>({
   preloadedState,
   middlewares = [],
   thunkExtraArguments,
+  name,
 }: ConfigureStoreOptions<Reducers>) {
   return configureStoreToolkit({
     reducer,
@@ -33,6 +35,7 @@ export function configureStore<Reducers extends ReducersMapObject>({
         (state as {history?: unknown}).history
           ? {...state, history: '<<OMIT>>'}
           : state,
+      name,
     },
     middleware: (getDefaultMiddleware) => [
       logActionErrorMiddleware(thunkExtraArguments.logger),
