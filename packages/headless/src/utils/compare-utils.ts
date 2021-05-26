@@ -1,6 +1,6 @@
 import {createCustomEqual} from 'fast-equals';
 
-export function arrayEqualSorted<T>(firstArray: T[], secondArray: T[]) {
+export function arrayEqual<T>(firstArray: T[], secondArray: T[]) {
   return (
     firstArray.length === secondArray.length &&
     firstArray.findIndex((val, i) => secondArray[i] !== val) === -1

@@ -12,7 +12,7 @@ import {
   BaseFacetValueRequest,
   CurrentValues,
 } from '../facets/facet-api/request';
-import {arrayEqualSorted} from '../../utils/compare-utils';
+import {arrayEqual} from '../../utils/compare-utils';
 
 export const historyReducer = createReducer(
   getHistoryInitialState(),
@@ -125,6 +125,6 @@ const isPipelineEqual = (current: string, next: string) => current === next;
 const isSearchHubEqual = (current: string, next: string) => current === next;
 
 const isFacetOrderEqual = (current: string[], next: string[]) =>
-  arrayEqualSorted(current, next);
+  arrayEqual(current, next);
 
 const isDebugEqual = (current: boolean, next: boolean) => current === next;
