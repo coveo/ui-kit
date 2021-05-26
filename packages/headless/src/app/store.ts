@@ -35,7 +35,7 @@ export function configureStore<Reducers extends ReducersMapObject>({
         (state as {history?: unknown}).history
           ? {...state, history: '<<OMIT>>'}
           : state,
-      name: name || 'coveo-headless',
+      name: name,
     },
     middleware: (getDefaultMiddleware) => [
       logActionErrorMiddleware(thunkExtraArguments.logger),

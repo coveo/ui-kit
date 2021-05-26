@@ -29,11 +29,6 @@ export interface UpdateBasicConfigurationActionCreatorPayload {
    * The Plaform URL to use (e.g., `https://platform.cloud.coveo.com`).
    */
   platformUrl?: string;
-
-  /**
-   * The Engine name (e.g., myEngine).
-   */
-  name?: string;
 }
 
 /**
@@ -41,7 +36,6 @@ export interface UpdateBasicConfigurationActionCreatorPayload {
  * @param accessToken (string) The access token to use to authenticate requests against the Coveo Cloud endpoints. Typically, this will be an API key or search token that grants the privileges to execute queries and push usage analytics data in the target Coveo Cloud organization.
  * @param organizationId (string) The unique identifier of the target Coveo Cloud organization (e.g., `mycoveocloudorganizationg8tp8wu3`)
  * @param platformUrl (string) The Plaform URL to use (e.g., `https://platform.cloud.coveo.com`).
- * @param name (string) The name given to the Engine object (e.g., `myEngine`).
  */
 export const updateBasicConfiguration = createAction(
   'configuration/updateBasicConfiguration',
@@ -50,7 +44,6 @@ export const updateBasicConfiguration = createAction(
       accessToken: new StringValue({emptyAllowed: false}),
       organizationId: new StringValue({emptyAllowed: false}),
       platformUrl: new StringValue({url: true, emptyAllowed: false}),
-      name: new StringValue({emptyAllowed: false}),
     })
 );
 

@@ -120,6 +120,7 @@ export function buildEngine<
   options: EngineOptions<Reducers>,
   thunkExtraArguments: ExtraArguments
 ): CoreEngine<StateFromReducersMapObject<Reducers>, ExtraArguments> {
+  options.configuration.name ? options.configuration.name : 'coveo-headless';
   const engine = buildCoreEngine(options, thunkExtraArguments);
   const {
     accessToken,
@@ -127,14 +128,12 @@ export function buildEngine<
     platformUrl,
     analytics,
   } = options.configuration;
-  const name = options.configuration.name || 'coveo-headless';
 
   engine.dispatch(
     updateBasicConfiguration({
       accessToken,
       organizationId,
       platformUrl,
-      name,
     })
   );
 
@@ -191,13 +190,15 @@ function createStore<
   thunkExtraArguments: ExtraArguments,
   reducerManager: ReducerManager
 ) {
-  const {preloadedState, middlewares} = options;
+  const {preloadedState, middlewares, configuration} = options;
+  const name = configuration.name!;
 
   return configureStore({
     preloadedState,
     reducer: reducerManager.combinedReducer,
     middlewares,
     thunkExtraArguments,
+    name,
   });
 }
 
