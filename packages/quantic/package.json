@@ -8,7 +8,7 @@
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "git+https://olamothe@bitbucket.org/coveord/ui-kit.git"
+    "url": "git+https://olamothe@github.com/coveo/ui-kit.git"
   },
   "scripts": {
     "test": "npm run test:lint && npm run test:typings && npm run test:unit",

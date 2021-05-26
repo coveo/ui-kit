@@ -6,7 +6,7 @@ A web-component library for building modern UIs interfacing with the Coveo platf
 
 ## Getting Started
 
-Once you have cloned the repo, follow the instructions in the top-level [README.md](https://bitbucket.org/coveord/ui-kit/src/master/README.md) to install dependencies and link packages.
+Once you have cloned the repo, follow the instructions in the top-level [README.md](https://github.com/coveo/ui-kit/src/master/README.md) to install dependencies and link packages.
 
 To start the project in development mode, run:
 

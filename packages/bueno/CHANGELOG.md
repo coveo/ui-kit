@@ -207,7 +207,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-# [0.1.0-alpha.50](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.49...v0.1.0-alpha.50) (2020-11-13)
+# [0.1.0-alpha.50](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.49...v0.1.0-alpha.50) (2020-11-13)
 
 **Note:** Version bump only for package @coveo/bueno
 
@@ -215,7 +215,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-# [0.1.0-alpha.49](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.48...v0.1.0-alpha.49) (2020-11-12)
+# [0.1.0-alpha.49](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.48...v0.1.0-alpha.49) (2020-11-12)
 
 **Note:** Version bump only for package @coveo/bueno
 
@@ -223,51 +223,51 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-# [0.1.0-alpha.47](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.46...v0.1.0-alpha.47) (2020-11-11)
+# [0.1.0-alpha.47](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.46...v0.1.0-alpha.47) (2020-11-11)
 
 
 ### Features
 
-* **bueno:** add constrainTo option to StringValue ([8f56ff1](https://bitbucket.org/coveord/ui-kit/commits/8f56ff1f3330ac258840bff5d9b3fc24710ebf1c))
+* **bueno:** add constrainTo option to StringValue ([8f56ff1](https://github.com/coveo/ui-kit/commits/8f56ff1f3330ac258840bff5d9b3fc24710ebf1c))
 
 
 
 
 
-# [0.1.0-alpha.45](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.44...v0.1.0-alpha.45) (2020-11-11)
-
-
-### Features
-
-* **bueno:** added ValueConfig to RecordValue ([9829eca](https://bitbucket.org/coveord/ui-kit/commits/9829ecae1d2f7be5ff06d62273025744b6470687))
-
-
-
-
-
-# [0.1.0-alpha.39](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.38...v0.1.0-alpha.39) (2020-11-09)
+# [0.1.0-alpha.45](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.44...v0.1.0-alpha.45) (2020-11-11)
 
 
 ### Features
 
-* **bueno:** add context message to #schema.validate, validate ResultsPerPage initialState ([d02dcee](https://bitbucket.org/coveord/ui-kit/commits/d02dceef7f5db7c89396bfdff0d3bb28120d2e72))
+* **bueno:** added ValueConfig to RecordValue ([9829eca](https://github.com/coveo/ui-kit/commits/9829ecae1d2f7be5ff06d62273025744b6470687))
 
 
 
 
 
-# [0.1.0-alpha.38](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.37...v0.1.0-alpha.38) (2020-11-06)
+# [0.1.0-alpha.39](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.38...v0.1.0-alpha.39) (2020-11-09)
 
 
 ### Features
 
-* **bueno:** allow  RecordValue<string, ArrayValue> ([de086b0](https://bitbucket.org/coveord/ui-kit/commits/de086b07f4f984885510843c969dedec8921f7e9))
+* **bueno:** add context message to #schema.validate, validate ResultsPerPage initialState ([d02dcee](https://github.com/coveo/ui-kit/commits/d02dceef7f5db7c89396bfdff0d3bb28120d2e72))
 
 
 
 
 
-# [0.1.0-alpha.35](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.34...v0.1.0-alpha.35) (2020-11-04)
+# [0.1.0-alpha.38](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.37...v0.1.0-alpha.38) (2020-11-06)
+
+
+### Features
+
+* **bueno:** allow  RecordValue<string, ArrayValue> ([de086b0](https://github.com/coveo/ui-kit/commits/de086b07f4f984885510843c969dedec8921f7e9))
+
+
+
+
+
+# [0.1.0-alpha.35](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.34...v0.1.0-alpha.35) (2020-11-04)
 
 **Note:** Version bump only for package @coveo/bueno
 
@@ -275,7 +275,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-# [0.1.0-alpha.32](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.31...v0.1.0-alpha.32) (2020-11-03)
+# [0.1.0-alpha.32](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.31...v0.1.0-alpha.32) (2020-11-03)
 
 **Note:** Version bump only for package @coveo/bueno
 
@@ -283,7 +283,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-# [0.1.0-alpha.26](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.25...v0.1.0-alpha.26) (2020-10-29)
+# [0.1.0-alpha.26](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.25...v0.1.0-alpha.26) (2020-10-29)
 
 **Note:** Version bump only for package @coveo/bueno
 
@@ -291,7 +291,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-# [0.1.0-alpha.24](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.23...v0.1.0-alpha.24) (2020-10-28)
+# [0.1.0-alpha.24](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.23...v0.1.0-alpha.24) (2020-10-28)
 
 **Note:** Version bump only for package @coveo/bueno
 
