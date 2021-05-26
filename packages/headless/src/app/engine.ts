@@ -120,7 +120,7 @@ export function buildEngine<
   options: EngineOptions<Reducers>,
   thunkExtraArguments: ExtraArguments
 ): CoreEngine<StateFromReducersMapObject<Reducers>, ExtraArguments> {
-  options.configuration.name ? options.configuration.name : 'coveo-headless';
+  options.configuration.name = options.configuration.name || 'coveo-headless';
   const engine = buildCoreEngine(options, thunkExtraArguments);
   const {
     accessToken,

@@ -1,5 +1,6 @@
 import {buildMockThunkExtraArguments} from '../test/mock-thunk-extra-arguments';
 import {buildEngine, CoreEngine, EngineOptions} from './engine';
+import * as Store from '../app/store';
 
 describe('engine', () => {
   let options: EngineOptions<{}>;
@@ -91,17 +92,31 @@ describe('engine', () => {
     done();
   });
 
-  it("when name is specified in the config, the engine's store name is initialized to the config's value", () => {
+  it("when name is specified in the config, the engine's store name is initialized with the config's value", () => {
     options.configuration.name = 'myEngine';
+    const spy = jest.spyOn(Store, 'configureStore');
     initEngine();
 
-    expect(engine.store.getState.name).toBe(options.configuration.name);
+    expect(spy).toHaveBeenCalledWith(
+      expect.objectContaining({
+        name: options.configuration.name,
+      })
+    );
+    spy.mockReset();
+    spy.mockRestore();
   });
 
   it("when no name is specified, the engine's store name is initialized to the default value: 'coveo-headless'", () => {
     options.configuration.name = undefined;
+    const spy = jest.spyOn(Store, 'configureStore');
     initEngine();
 
-    expect(engine.store.getState.name).toBe('coveo-headless');
+    expect(spy).toHaveBeenCalledWith(
+      expect.objectContaining({
+        name: 'coveo-headless',
+      })
+    );
+    spy.mockReset();
+    spy.mockRestore();
   });
 });
