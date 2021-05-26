@@ -120,7 +120,6 @@ export function buildEngine<
   options: EngineOptions<Reducers>,
   thunkExtraArguments: ExtraArguments
 ): CoreEngine<StateFromReducersMapObject<Reducers>, ExtraArguments> {
-  options.configuration.name = options.configuration.name || 'coveo-headless';
   const engine = buildCoreEngine(options, thunkExtraArguments);
   const {
     accessToken,
@@ -191,7 +190,7 @@ function createStore<
   reducerManager: ReducerManager
 ) {
   const {preloadedState, middlewares, configuration} = options;
-  const name = configuration.name!;
+  const name = configuration.name || 'coveo-headless';
 
   return configureStore({
     preloadedState,

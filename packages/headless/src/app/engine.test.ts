@@ -99,15 +99,12 @@ describe('engine', () => {
 
     expect(spy).toHaveBeenCalledWith(
       expect.objectContaining({
-        name: options.configuration.name,
+        name: 'myEngine',
       })
     );
-    spy.mockReset();
-    spy.mockRestore();
   });
 
   it("when no name is specified, the engine's store name is initialized to the default value: 'coveo-headless'", () => {
-    options.configuration.name = undefined;
     const spy = jest.spyOn(Store, 'configureStore');
     initEngine();
 
@@ -116,7 +113,5 @@ describe('engine', () => {
         name: 'coveo-headless',
       })
     );
-    spy.mockReset();
-    spy.mockRestore();
   });
 });
