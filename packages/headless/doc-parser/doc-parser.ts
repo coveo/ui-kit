@@ -257,6 +257,10 @@ const controllerConfiguration: ControllerConfiguration[] = [
     },
   },
   {
+    initializer: 'buildSearchParameterManager',
+    samplePaths: {},
+  },
+  {
     initializer: 'buildUrlManager',
     samplePaths: {
       react_class: [
