@@ -30,7 +30,7 @@
     "doc:parse": "ts-node --project ./doc-parser/tsconfig.build.json ./doc-parser/doc-parser.ts"
   },
   "dependencies": {
-    "@coveo/bueno": "^0.13.0",
+    "@coveo/bueno": "^0.14.0",
     "@reduxjs/toolkit": "^1.5.0",
     "@types/pino": "^6.3.4",
     "@types/redux-mock-store": "^1.0.2",
@@ -59,7 +59,6 @@
     "concurrently": "^6.0.1",
     "jest": "^26.4.2",
     "jest-fetch-mock": "^3.0.3",
-    "lodash.memoize": "^4.1.2",
     "rollup": "^2.18.2",
     "rollup-plugin-dts": "^2.0.1",
     "rollup-plugin-size-snapshot": "^0.11.0",

@@ -81,7 +81,7 @@ export function buildUrlManager(
 
   const completeParameters = (fragment: string) => ({
     ...initialSearchParameterSelector(engine.state),
-    ...convertFragmentToParameters(fragment),
+    ...deserializeFragment(fragment),
   });
 
   const controller = buildController(engine);
@@ -89,7 +89,7 @@ export function buildUrlManager(
   let previousFragment = decodeFragment(props.initialState.fragment);
   const searchParameterManager = buildSearchParameterManager(engine, {
     initialState: {
-      parameters: convertFragmentToParameters(previousFragment),
+      parameters: deserializeFragment(previousFragment),
     },
   });
 
@@ -99,7 +99,7 @@ export function buildUrlManager(
     subscribe(listener: () => void) {
       const strictListener = () => {
         const newFragment = this.state.fragment;
-        if (!compareFragments(previousFragment, newFragment)) {
+        if (!areFragmentsEquivalent(previousFragment, newFragment)) {
           previousFragment = newFragment;
           listener();
         }
@@ -118,7 +118,7 @@ export function buildUrlManager(
 
     synchronize(fragment: string) {
       const newFragment = decodeFragment(fragment);
-      if (compareFragments(previousFragment, newFragment)) {
+      if (areFragmentsEquivalent(previousFragment, newFragment)) {
         return;
       }
 
@@ -136,13 +136,13 @@ export function buildUrlManager(
   };
 }
 
-function compareFragments(fragment1: string, fragment2: string) {
+function areFragmentsEquivalent(fragment1: string, fragment2: string) {
   if (fragment1 === fragment2) {
     return true;
   }
 
-  const params1 = convertFragmentToParameters(fragment1);
-  const params2 = convertFragmentToParameters(fragment2);
+  const params1 = deserializeFragment(fragment1);
+  const params2 = deserializeFragment(fragment2);
   return deepEqualAnyOrder(params1, params2);
 }
 
@@ -150,7 +150,7 @@ function decodeFragment(fragment: string) {
   return decodeURIComponent(fragment);
 }
 
-function convertFragmentToParameters(fragment: string) {
+function deserializeFragment(fragment: string) {
   return buildSearchParameterSerializer().deserialize(fragment);
 }
 
