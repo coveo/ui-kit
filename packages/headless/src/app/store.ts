@@ -17,7 +17,7 @@ interface ConfigureStoreOptions<Reducers extends ReducersMapObject> {
   preloadedState?: StateFromReducersMapObject<Reducers>;
   middlewares?: Middleware[];
   thunkExtraArguments: ThunkExtraArguments;
-  name?: string;
+  name: string;
 }
 
 export function configureStore<Reducers extends ReducersMapObject>({
