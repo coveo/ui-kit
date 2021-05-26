@@ -257,13 +257,13 @@ const controllerConfiguration: ControllerConfiguration[] = [
     },
   },
   {
-    initializer: 'buildSearchParameterManager',
+    initializer: 'buildUrlManager',
     samplePaths: {
       react_class: [
-        'packages/samples/headless-react/src/components/search-parameter-manager/search-parameter-manager.ts',
+        'packages/samples/headless-react/src/components/url-manager/url-manager.ts',
       ],
       react_fn: [
-        'packages/samples/headless-react/src/components/search-parameter-manager/search-parameter-manager.ts',
+        'packages/samples/headless-react/src/components/url-manager/url-manager.ts',
       ],
     },
   },
