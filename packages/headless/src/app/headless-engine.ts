@@ -1,8 +1,6 @@
 import {ReducersMapObject, StateFromReducersMapObject} from '@reduxjs/toolkit';
 import {
   updateSearchConfiguration,
-  disableAnalytics,
-  enableAnalytics,
   localeValidation,
 } from '../features/configuration/configuration-actions';
 import {SearchAPIClient} from '../api/search/search-api-client';
@@ -219,14 +217,14 @@ export class HeadlessEngine<Reducers extends ReducersMapObject>
    * Enable analytics tracking
    */
   public enableAnalytics() {
-    this.dispatch(enableAnalytics());
+    this.engine.enableAnalytics();
   }
 
   /**
    * Disable analytics tracking
    */
   public disableAnalytics() {
-    this.dispatch(disableAnalytics());
+    this.engine.disableAnalytics();
   }
 
   get store() {

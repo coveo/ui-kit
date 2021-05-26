@@ -104,7 +104,7 @@ import {
   StandaloneSearchBox as HeadlessStandaloneSearchBox,
   buildStandaloneSearchBox,
 } from '@coveo/headless';
-import {bindSearchParametersToURI} from '../components/search-parameter-manager/search-parameter-manager';
+import {bindUrlManager} from '../components/url-manager/url-manager';
 import {setContext} from '../components/context/context';
 import {dateRanges} from '../components/date-facet/date-utils';
 
@@ -153,7 +153,7 @@ export class SearchPage extends Component {
   private readonly relevanceInspector: HeadlessRelevanceInspector;
   private readonly standaloneSearchBox: HeadlessStandaloneSearchBox;
 
-  private stopUpdatingSearchParameters?: Unsubscribe;
+  private unsubscribeUrlManager!: Unsubscribe;
 
   constructor(props: {}) {
     super(props);
@@ -271,15 +271,13 @@ export class SearchPage extends Component {
   }
 
   componentDidMount() {
-    // Search parameters are restored once `SearchParametersManager` is registered,
-    // which in this sample corresponds with when `bindSearchParametersToURI is called.
+    // Search parameters, defined in the url's hash, are restored once `UrlManager` is registered.
     // Beware not to restore search parameters until all components are registered,
     // otherwise some components such as facets may not work when the page loads.
     // In this sample, `SearchPage.componentDidMount` happens to be executed after
     // all components are registered, but depending on your implementation this may
     // not be your case.
-    const {autoUpdateURI} = bindSearchParametersToURI(this.engine);
-    this.stopUpdatingSearchParameters = autoUpdateURI();
+    this.unsubscribeUrlManager = bindUrlManager(this.engine);
 
     // A search should not be executed until the search parameters are restored.
     this.executeInitialSearch();
@@ -288,7 +286,7 @@ export class SearchPage extends Component {
   }
 
   componentWillUnmount() {
-    this.stopUpdatingSearchParameters!();
+    this.unsubscribeUrlManager();
   }
 
   private executeInitialSearch() {
