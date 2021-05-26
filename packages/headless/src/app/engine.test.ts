@@ -91,17 +91,17 @@ describe('engine', () => {
     done();
   });
 
-  it("when name is specified in the config, the engine's name is initialized to the config's value", () => {
+  it("when name is specified in the config, the engine's store name is initialized to the config's value", () => {
     options.configuration.name = 'myEngine';
     initEngine();
 
-    expect(engine.state.configuration.name).toBe(options.configuration.name);
+    expect(engine.store.getState.name).toBe(options.configuration.name);
   });
 
-  it("when no name is specified, the engine's name is initialized to the default value: 'coveo-headless'", () => {
+  it("when no name is specified, the engine's store name is initialized to the default value: 'coveo-headless'", () => {
     options.configuration.name = undefined;
     initEngine();
 
-    expect(engine.state.configuration.name).toBe('coveo-headless');
+    expect(engine.store.getState.name).toBe('coveo-headless');
   });
 });

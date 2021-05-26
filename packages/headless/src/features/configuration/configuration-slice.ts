@@ -31,9 +31,6 @@ export const configurationReducer = createReducer(
           state.search.apiBaseUrl = `${action.payload.platformUrl}${searchAPIEndpoint}`;
           state.analytics.apiBaseUrl = `${action.payload.platformUrl}${analyticsAPIEndpoint}`;
         }
-        if (action.payload.name) {
-          state.name = action.payload.name;
-        }
       })
       .addCase(updateSearchConfiguration, (state, action) => {
         if (action.payload.apiBaseUrl) {
