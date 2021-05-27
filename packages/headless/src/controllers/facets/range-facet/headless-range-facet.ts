@@ -10,8 +10,14 @@ import {
 } from '../../../features/facets/facet-set/facet-set-analytics-actions';
 import {executeSearch} from '../../../features/search/search-actions';
 import {baseFacetResponseSelector} from '../../../features/facets/facet-set/facet-set-selectors';
-import {RangeFacetSortCriterion} from '../../../features/facets/range-facets/generic/interfaces/request';
-import {updateRangeFacetSortCriterion} from '../../../features/facets/range-facets/generic/range-facet-actions';
+import {
+  RangeFacetSortCriterion,
+  RangeFacetRangeAlgorithm,
+} from '../../../features/facets/range-facets/generic/interfaces/request';
+import {
+  updateRangeFacetSortCriterion,
+  updateRangeFacetRangeAlgorithm,
+} from '../../../features/facets/range-facets/generic/range-facet-actions';
 import {deselectAllFacetValues} from '../../../features/facets/facet-set/facet-set-actions';
 import {updateFacetOptions} from '../../../features/facet-options/facet-options-actions';
 import {
@@ -63,6 +69,15 @@ export function buildRangeFacet<
 
     isSortedBy(criterion: RangeFacetSortCriterion) {
       return this.state.sortCriterion === criterion;
+    },
+
+    updateRangeAlgorithm(rangeAlgorithm: RangeFacetRangeAlgorithm) {
+      dispatch(updateRangeFacetRangeAlgorithm({facetId, rangeAlgorithm}));
+      dispatch(updateFacetOptions({freezeFacetOrder: true}));
+    },
+
+    isRangeAlgorithm(rangeAlgorithm: RangeFacetRangeAlgorithm) {
+      return this.state.rangeAlgorithm === rangeAlgorithm;
     },
 
     get state() {
