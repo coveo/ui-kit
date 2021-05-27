@@ -41,9 +41,6 @@ export const config: Config = {
       copy: [{src: 'themes'}],
     },
     {
-      type: 'docs-readme',
-    },
-    {
       type: 'docs-json',
       file: './docs/atomic-docs.json',
     },
