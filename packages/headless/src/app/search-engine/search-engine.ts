@@ -4,9 +4,9 @@ import {
   NoopPostprocessQuerySuggestResponseMiddleware,
   NoopPostprocessSearchResponseMiddleware,
 } from '../../api/search/search-api-client-middleware';
-import {buildEngine, EngineOptions} from '../engine';
+import {buildEngine, EngineOptions, ExternalEngineOptions} from '../engine';
 import {Engine} from '../headless-engine';
-import {buildLogger, LoggerOptions} from '../logger';
+import {buildLogger} from '../logger';
 import {buildThunkExtraArguments} from '../thunk-extra-arguments';
 import {Logger} from 'pino';
 import {NoopPreprocessRequest} from '../../api/preprocess-request';
@@ -21,25 +21,23 @@ import {
 import {executeSearch} from '../../features/search/search-actions';
 import {logInterfaceLoad} from '../../features/analytics/analytics-actions';
 import {firstSearchExecutedSelector} from '../../features/search/search-selectors';
+import {SearchAppState} from '../../state/search-app-state';
 
 const searchEngineReducers = {debug, pipeline, searchHub, search};
 type SearchEngineReducers = typeof searchEngineReducers;
-type SearchEngineState = StateFromReducersMapObject<SearchEngineReducers>;
+type SearchEngineState = StateFromReducersMapObject<SearchEngineReducers> &
+  Partial<SearchAppState>;
 
 export interface SearchEngine extends Engine<SearchEngineState> {
   executeFirstSearch(): void;
 }
 
-export interface SearchEngineOptions {
+export interface SearchEngineOptions
+  extends ExternalEngineOptions<SearchEngineState> {
   /**
    * The search engine configuration options.
    */
   configuration: SearchEngineConfiguration;
-
-  /**
-   * The logger options.
-   */
-  loggerOptions?: LoggerOptions;
 }
 
 export function buildSearchEngine(options: SearchEngineOptions): SearchEngine {

@@ -85,11 +85,8 @@ export interface CoreEngine<
   disableAnalytics(): void;
 }
 
-export interface EngineOptions<Reducers extends ReducersMapObject> {
-  /**
-   * The global headless engine configuration options.
-   */
-  configuration: EngineConfigurationOptions;
+export interface EngineOptions<Reducers extends ReducersMapObject>
+  extends ExternalEngineOptions<StateFromReducersMapObject<Reducers>> {
   /**
    * Map object of reducers.
    * A reducer is a pure function that takes the previous state and an action, and returns the next state.
@@ -99,13 +96,21 @@ export interface EngineOptions<Reducers extends ReducersMapObject> {
    * [Redux documentation on reducers.](https://redux.js.org/glossary#reducer)
    */
   reducers: Reducers;
+}
+
+export interface ExternalEngineOptions<State extends object> {
+  /**
+   * The global headless engine configuration options.
+   */
+  configuration: EngineConfigurationOptions;
+
   /**
    * The initial headless state.
    * You may optionally specify it to hydrate the state
    * from the server in universal apps, or to restore a previously serialized
    * user session.
    */
-  preloadedState?: StateFromReducersMapObject<Reducers>;
+  preloadedState?: State;
   /**
    * List of additional middlewares.
    * A middleware is a higher-order function that composes a dispatch function to return a new dispatch function.
@@ -116,7 +121,7 @@ export interface EngineOptions<Reducers extends ReducersMapObject> {
    * ```
    * [Redux documentation on middlewares.](https://redux.js.org/glossary#middleware)
    */
-  middlewares?: Middleware<{}, StateFromReducersMapObject<Reducers>>[];
+  middlewares?: Middleware<{}, State>[];
   /**
    * The logger options.
    */
