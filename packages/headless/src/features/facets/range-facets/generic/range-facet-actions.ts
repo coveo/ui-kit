@@ -1,4 +1,7 @@
-import {RangeFacetSortCriterion} from './interfaces/request';
+import {
+  RangeFacetRangeAlgorithm,
+  RangeFacetSortCriterion,
+} from './interfaces/request';
 import {createAction} from '@reduxjs/toolkit';
 import {validatePayload} from '../../../../utils/validate-payload';
 import {facetIdDefinition} from '../../generic/facet-actions-validation';
@@ -15,5 +18,19 @@ export const updateRangeFacetSortCriterion = createAction(
     validatePayload(payload, {
       facetId: facetIdDefinition,
       criterion: new Value<RangeFacetSortCriterion>({required: true}),
+    })
+);
+
+/**
+ * Updates the range algorithm of a range facet.
+ * @param facetId (string) The unique identifier of the facet (e.g., `"1"`).
+ * @param rangeAlgorithm (RangeFacetRangeAlgorithm) The target range algorithm.
+ */
+export const updateRangeFacetRangeAlgorithm = createAction(
+  'rangeFacet/updateRangeAlgorithm',
+  (payload: {facetId: string; rangeAlgorithm: RangeFacetRangeAlgorithm}) =>
+    validatePayload(payload, {
+      facetId: facetIdDefinition,
+      rangeAlgorithm: new Value<RangeFacetRangeAlgorithm>({required: true}),
     })
 );
