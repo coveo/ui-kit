@@ -41,6 +41,11 @@ export interface EngineConfigurationOptions {
    */
   platformUrl?: string;
   /**
+   * The Engine name (e.g., myEngine). Specifying your Engine name will help in debugging when using an application with multiple Redux stores.
+   * @defaultValue 'coveo-headless'
+   */
+  name?: string;
+  /**
    * Allows configuring options related to analytics.
    */
   analytics?: {
@@ -82,6 +87,10 @@ export const engineConfigurationOptionDefinitions: SchemaDefinition<EngineConfig
   organizationId: requiredNonEmptyString,
   accessToken: requiredNonEmptyString,
   platformUrl: new StringValue({
+    required: false,
+    emptyAllowed: false,
+  }),
+  name: new StringValue({
     required: false,
     emptyAllowed: false,
   }),

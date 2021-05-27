@@ -206,6 +206,7 @@ export class HeadlessEngine<Reducers extends ReducersMapObject>
     return {
       organizationId: 'searchuisamples',
       accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
+      name: 'sampleName',
       search: {
         pipeline: 'default',
         searchHub: 'default',

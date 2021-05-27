@@ -1,5 +1,6 @@
 import {buildMockThunkExtraArguments} from '../test/mock-thunk-extra-arguments';
 import {buildEngine, CoreEngine, EngineOptions} from './engine';
+import * as Store from '../app/store';
 
 describe('engine', () => {
   let options: EngineOptions<{}>;
@@ -109,5 +110,28 @@ describe('engine', () => {
     jest.advanceTimersByTime(1000);
     expect(await engine.renewAccessToken()).toBe('newToken');
     done();
+  });
+
+  it("when name is specified in the config, the engine's store name is initialized with the config's value", () => {
+    options.configuration.name = 'myEngine';
+    const spy = jest.spyOn(Store, 'configureStore');
+    initEngine();
+
+    expect(spy).toHaveBeenCalledWith(
+      expect.objectContaining({
+        name: 'myEngine',
+      })
+    );
+  });
+
+  it("when no name is specified, the engine's store name is initialized to the default value: 'coveo-headless'", () => {
+    const spy = jest.spyOn(Store, 'configureStore');
+    initEngine();
+
+    expect(spy).toHaveBeenCalledWith(
+      expect.objectContaining({
+        name: 'coveo-headless',
+      })
+    );
   });
 });
