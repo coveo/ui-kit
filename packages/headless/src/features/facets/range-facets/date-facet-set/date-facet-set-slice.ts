@@ -6,6 +6,7 @@ import {
   deselectAllDateFacetValues,
   updateDateFacetSortCriterion,
   RegisterDateFacetActionCreatorPayload,
+  updateDateFacetRangeAlgorithm,
 } from './date-facet-actions';
 import {change} from '../../../history/history-actions';
 import {executeSearch} from '../../../search/search-actions';
@@ -58,6 +59,16 @@ export const dateFacetSetReducer = createReducer(
       })
       .addCase(updateDateFacetSortCriterion, (state, action) => {
         handleFacetSortCriterionUpdate<DateFacetRequest>(state, action.payload);
+      })
+      .addCase(updateDateFacetRangeAlgorithm, (state, action) => {
+        const {facetId, rangeAlgorithm} = action.payload;
+        const facetRequest = state[facetId];
+
+        if (!facetRequest) {
+          return;
+        }
+
+        facetRequest.rangeAlgorithm = rangeAlgorithm;
       })
       .addCase(executeSearch.fulfilled, (state, action) => {
         const facets = action.payload.response.facets as DateFacetResponse[];
