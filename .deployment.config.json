@@ -3,15 +3,23 @@
   "team_name": "searchui",
   "general": {
     "aws_regions": {
-      "sequential": ["us-east-1"]
+      "sequential": [
+        "us-east-1"
+      ]
     },
     "environments_order": {
-      "sequential": ["dev", "qa", "prd"]
+      "sequential": [
+        "dev",
+        "qa",
+        "prd"
+      ]
     },
     "team_jenkins": "searchuibuilds",
     "start_environment_automatically": false,
     "notifications": {
-      "slack_channels": ["#searchuibuilds"]
+      "slack_channels": [
+        "#searchuibuilds"
+      ]
     }
   },
   "ordered_phases": [
@@ -104,7 +112,10 @@
     ]
   },
   "veracode": {
-    "no_scan": true
+    "sandbox_name": "UI Kit",
+    "app_name": "JSUI",
+    "source": "veracode",
+    "scan_include_patterns": "*"
   },
   "observatory": {
     "no_endpoint": true
