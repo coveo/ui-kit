@@ -51,6 +51,26 @@ describe('engine', () => {
     expect(analytics.originLevel3).toBe(originLevel3);
   });
 
+  it('calling #enableAnalytics sets #analytics.enabled to true', () => {
+    options.configuration.analytics = {enabled: false};
+    initEngine();
+
+    engine.enableAnalytics();
+
+    const {analytics} = engine.state.configuration;
+    expect(analytics.enabled).toBe(true);
+  });
+
+  it('calling #disableAnalytics sets #analytics.enabled to false', () => {
+    options.configuration.analytics = {enabled: true};
+    initEngine();
+
+    engine.disableAnalytics();
+
+    const {analytics} = engine.state.configuration;
+    expect(analytics.enabled).toBe(false);
+  });
+
   it(`when renewAccessToken is not defined in the config
   renewAccessToken should return an empty string`, async (done) => {
     expect(await engine.renewAccessToken()).toBe('');

@@ -9,6 +9,8 @@ import {
 } from '@reduxjs/toolkit';
 import {debounce} from 'ts-debounce';
 import {
+  disableAnalytics,
+  enableAnalytics,
   updateAnalyticsConfiguration,
   updateBasicConfiguration,
 } from '../features/configuration/configuration-actions';
@@ -73,6 +75,14 @@ export interface CoreEngine<
    * Adds the specified reducers to the store.
    */
   addReducers(reducers: ReducersMapObject): void;
+  /**
+   * Enable analytics tracking
+   */
+  enableAnalytics(): void;
+  /**
+   * Disable analytics tracking
+   */
+  disableAnalytics(): void;
 }
 
 export interface EngineOptions<Reducers extends ReducersMapObject> {
@@ -170,6 +180,14 @@ function buildCoreEngine<
     dispatch: store.dispatch,
 
     subscribe: store.subscribe,
+
+    enableAnalytics() {
+      store.dispatch(enableAnalytics());
+    },
+
+    disableAnalytics() {
+      store.dispatch(disableAnalytics());
+    },
 
     get state() {
       return store.getState();
