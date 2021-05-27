@@ -11,23 +11,26 @@ import {buildThunkExtraArguments} from './thunk-extra-arguments';
 import {Logger} from 'pino';
 import {NoopPreprocessRequest} from '../api/preprocess-request';
 import {NoopPreprocessRequestMiddleware} from '../api/platform-client';
-import {debug, pipeline, searchHub} from './reducers';
+import {debug, pipeline, search, searchHub} from './reducers';
 import {StateFromReducersMapObject} from 'redux';
 import {updateSearchConfiguration} from '../features/configuration/configuration-actions';
 import {
   SearchEngineConfiguration,
   searchEngineConfigurationSchema,
 } from './search-engine-configuration-options';
+import {executeSearch} from '../features/search/search-actions';
+import {logInterfaceLoad} from '../features/analytics/analytics-actions';
+import {firstSearchExecutedSelector} from '../features/search/search-selectors';
 
-const searchEngineReducers = {debug, pipeline, searchHub};
+const searchEngineReducers = {debug, pipeline, searchHub, search};
 type SearchEngineReducers = typeof searchEngineReducers;
 type SearchEngineState = StateFromReducersMapObject<SearchEngineReducers>;
 
-interface SearchEngine extends Engine<SearchEngineState> {
+export interface SearchEngine extends Engine<SearchEngineState> {
   executeFirstSearch(): void;
 }
 
-interface SearchEngineOptions {
+export interface SearchEngineOptions {
   /**
    * The search engine configuration options.
    */
@@ -74,7 +77,21 @@ export function buildSearchEngine(options: SearchEngineOptions): SearchEngine {
 
   return {
     ...engine,
-    executeFirstSearch: () => {},
+
+    get state() {
+      return engine.state;
+    },
+
+    executeFirstSearch() {
+      const firstSearchExecuted = firstSearchExecutedSelector(engine.state);
+
+      if (firstSearchExecuted) {
+        return;
+      }
+
+      const action = executeSearch(logInterfaceLoad());
+      engine.dispatch(action);
+    },
   };
 }
 
