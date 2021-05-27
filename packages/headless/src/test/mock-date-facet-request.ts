@@ -14,6 +14,7 @@ export function buildMockDateFacetRequest(
     preventAutoSelect: false,
     sortCriteria: 'ascending',
     type: 'dateRange',
+    rangeAlgorithm: 'equiprobable',
     ...config,
   };
 }
