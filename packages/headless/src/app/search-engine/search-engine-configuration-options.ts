@@ -3,12 +3,12 @@ import {
   PostprocessFacetSearchResponseMiddleware,
   PostprocessQuerySuggestResponseMiddleware,
   PostprocessSearchResponseMiddleware,
-} from '../api/search/search-api-client-middleware';
-import {localeValidation} from '../features/configuration/configuration-actions';
+} from '../../api/search/search-api-client-middleware';
+import {localeValidation} from '../../features/configuration/configuration-actions';
 import {
   engineConfigurationOptionDefinitions,
   EngineConfigurationOptions,
-} from './engine-configuration-options';
+} from '../engine-configuration-options';
 
 export interface SearchEngineConfiguration extends EngineConfigurationOptions {
   /**

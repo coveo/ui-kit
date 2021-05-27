@@ -1,26 +1,26 @@
-import {SearchAPIClient} from '../api/search/search-api-client';
+import {SearchAPIClient} from '../../api/search/search-api-client';
 import {
   NoopPostprocessFacetSearchResponseMiddleware,
   NoopPostprocessQuerySuggestResponseMiddleware,
   NoopPostprocessSearchResponseMiddleware,
-} from '../api/search/search-api-client-middleware';
-import {buildEngine, EngineOptions} from './engine';
-import {Engine} from './headless-engine';
-import {buildLogger, LoggerOptions} from './logger';
-import {buildThunkExtraArguments} from './thunk-extra-arguments';
+} from '../../api/search/search-api-client-middleware';
+import {buildEngine, EngineOptions} from '../engine';
+import {Engine} from '../headless-engine';
+import {buildLogger, LoggerOptions} from '../logger';
+import {buildThunkExtraArguments} from '../thunk-extra-arguments';
 import {Logger} from 'pino';
-import {NoopPreprocessRequest} from '../api/preprocess-request';
-import {NoopPreprocessRequestMiddleware} from '../api/platform-client';
-import {debug, pipeline, search, searchHub} from './reducers';
+import {NoopPreprocessRequest} from '../../api/preprocess-request';
+import {NoopPreprocessRequestMiddleware} from '../../api/platform-client';
+import {debug, pipeline, search, searchHub} from '../reducers';
 import {StateFromReducersMapObject} from 'redux';
-import {updateSearchConfiguration} from '../features/configuration/configuration-actions';
+import {updateSearchConfiguration} from '../../features/configuration/configuration-actions';
 import {
   SearchEngineConfiguration,
   searchEngineConfigurationSchema,
 } from './search-engine-configuration-options';
-import {executeSearch} from '../features/search/search-actions';
-import {logInterfaceLoad} from '../features/analytics/analytics-actions';
-import {firstSearchExecutedSelector} from '../features/search/search-selectors';
+import {executeSearch} from '../../features/search/search-actions';
+import {logInterfaceLoad} from '../../features/analytics/analytics-actions';
+import {firstSearchExecutedSelector} from '../../features/search/search-selectors';
 
 const searchEngineReducers = {debug, pipeline, searchHub, search};
 type SearchEngineReducers = typeof searchEngineReducers;

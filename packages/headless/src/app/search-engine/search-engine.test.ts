@@ -1,4 +1,4 @@
-import {setSearchHub} from '../features/search-hub/search-hub-actions';
+import {setSearchHub} from '../../features/search-hub/search-hub-actions';
 import {
   buildSearchEngine,
   SearchEngine,
