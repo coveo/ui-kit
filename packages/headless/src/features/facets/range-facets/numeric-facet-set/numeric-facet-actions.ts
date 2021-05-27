@@ -189,6 +189,7 @@ export const updateNumericFacetSortCriterion = updateRangeFacetSortCriterion;
  * @param rangeAlgorithm (RangeFacetRangeAlgorithm) The target range algorithm.
  */
 export const updateNumericFacetRangeAlgorithm = updateRangeFacetRangeAlgorithm;
+
 /** Deselects all values of a numeric facet.
  * @param facetId (string) The unique identifier of the facet (e.g., `"1"`).
  */
