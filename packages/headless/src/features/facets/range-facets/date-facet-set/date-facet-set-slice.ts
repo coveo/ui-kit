@@ -78,6 +78,7 @@ function buildDateFacetRequest(
     currentValues: [],
     preventAutoSelect: false,
     type: 'dateRange',
+    rangeAlgorithm: 'equiprobable',
     ...config,
   };
 }
