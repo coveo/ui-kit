@@ -189,10 +189,25 @@ export {
 } from './breadcrumb-manager/headless-breadcrumb-manager';
 
 export {
+  /**
+   * @deprecated - The interface is moving to a dedicated sub-package. Please access it using "import {...} from '@coveo/headless/recommendation'".
+   */
   RecommendationListOptions,
+  /**
+   * @deprecated - The interface is moving to a dedicated sub-package. Please access it using "import {...} from '@coveo/headless/recommendation'".
+   */
   RecommendationListProps,
+  /**
+   * @deprecated - The interface is moving to a dedicated sub-package. Please access it using "import {...} from '@coveo/headless/recommendation'".
+   */
   RecommendationListState,
+  /**
+   * @deprecated - The interface is moving to a dedicated sub-package. Please access it using "import {...} from '@coveo/headless/recommendation'".
+   */
   RecommendationList,
+  /**
+   * @deprecated - The function is moving to a dedicated sub-package. Please access it using "import {...} from '@coveo/headless/recommendation'".
+   */
   buildRecommendationList,
 } from './recommendation/headless-recommendation';
 

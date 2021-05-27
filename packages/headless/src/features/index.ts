@@ -356,7 +356,20 @@ export namespace RecommendationActions {
   export type StateNeededByGetRecommendations = StateNeededByGetRecommendationsAlias;
 }
 
-export * from './recommendation/recommendation-actions-loader';
+export {
+  /**
+   * @deprecated - The interface is moving to a dedicated sub-package. Please access it using "import {...} from '@coveo/headless/recommendation'".
+   */
+  RecommendationActionCreators,
+  /**
+   * @deprecated - The interface is moving to a dedicated sub-package. Please access it using "import {...} from '@coveo/headless/recommendation'".
+   */
+  SetRecommendationIdActionCreatorPayload,
+  /**
+   * @deprecated - The function is moving to a dedicated sub-package. Please access it using "import {...} from '@coveo/headless/recommendation'".
+   */
+  loadRecommendationActions,
+} from './recommendation/recommendation-actions-loader';
 
 import {
   setProductRecommendationsBrandFilter as setProductRecommendationsBrandFilterAlias,

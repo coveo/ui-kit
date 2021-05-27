@@ -12,7 +12,8 @@
   "version": "0.14.1",
   "files": [
     "dist/",
-    "case-assist/"
+    "case-assist/",
+    "recommendation/"
   ],
   "scripts": {
     "start": "concurrently \"npm run typedefinitions -- -w\" \"rollup -c -w\"",
