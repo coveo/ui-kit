@@ -8,7 +8,10 @@ import {
   RangeFacet,
   RangeFacetProps,
 } from './headless-range-facet';
-import {updateRangeFacetSortCriterion} from '../../../features/facets/range-facets/generic/range-facet-actions';
+import {
+  updateRangeFacetRangeAlgorithm,
+  updateRangeFacetSortCriterion,
+} from '../../../features/facets/range-facets/generic/range-facet-actions';
 import {NumericFacetRequest} from '../../../features/facets/range-facets/numeric-facet-set/interfaces/request';
 import {buildMockNumericFacetRequest} from '../../../test/mock-numeric-facet-request';
 import {deselectAllFacetValues} from '../../../features/facets/facet-set/facet-set-actions';
@@ -168,6 +171,43 @@ describe('range facet', () => {
       initRangeFacet();
 
       expect(rangeFacet.isSortedBy(criterion)).toBe(false);
+    });
+  });
+
+  describe('#updateRangeAlgorithm', () => {
+    it('dispatches #updateRangeFacetRangeAlgorithm', () => {
+      const rangeAlgorithm = 'even';
+      rangeFacet.updateRangeAlgorithm(rangeAlgorithm);
+      const action = updateRangeFacetRangeAlgorithm({facetId, rangeAlgorithm});
+
+      expect(engine.actions).toContainEqual(action);
+    });
+
+    it('dispatches a #updateFacetOptions action with #freezeFacetOrder true', () => {
+      rangeFacet.updateRangeAlgorithm('even');
+
+      expect(engine.actions).toContainEqual(
+        updateFacetOptions({freezeFacetOrder: true})
+      );
+    });
+  });
+
+  describe('#isRangeAlgorithm', () => {
+    it('when the passed range algorithm matches the active range algorithm, it returns true', () => {
+      const rangeAlgorithm = 'even';
+      props.getRequest = () => buildMockNumericFacetRequest({rangeAlgorithm});
+      initRangeFacet();
+
+      expect(rangeFacet.isRangeAlgorithm(rangeAlgorithm)).toBe(true);
+    });
+
+    it('when the passed range algorithm does not match the active range algorithm, it returns false', () => {
+      const rangeAlgorithm = 'even';
+      props.getRequest = () =>
+        buildMockNumericFacetRequest({rangeAlgorithm: 'equiprobable'});
+      initRangeFacet();
+
+      expect(rangeFacet.isRangeAlgorithm(rangeAlgorithm)).toBe(false);
     });
   });
 });
