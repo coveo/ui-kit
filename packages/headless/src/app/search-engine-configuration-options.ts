@@ -77,7 +77,7 @@ export const searchEngineConfigurationSchema = new Schema<
   }),
 });
 
-export function sampleSearchEngineConfiguration(): SearchEngineConfiguration {
+export function getSampleSearchEngineConfiguration(): SearchEngineConfiguration {
   return {
     organizationId: 'searchuisamples',
     accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',

@@ -4,7 +4,7 @@ import {
   SearchEngine,
   SearchEngineOptions,
 } from './search-engine';
-import {sampleSearchEngineConfiguration} from './search-engine-configuration-options';
+import {getSampleSearchEngineConfiguration} from './search-engine-configuration-options';
 
 describe('buildSearchEngine', () => {
   let options: SearchEngineOptions;
@@ -16,7 +16,7 @@ describe('buildSearchEngine', () => {
 
   beforeEach(() => {
     options = {
-      configuration: sampleSearchEngineConfiguration(),
+      configuration: getSampleSearchEngineConfiguration(),
       loggerOptions: {level: 'silent'},
     };
 

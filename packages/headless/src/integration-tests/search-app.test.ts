@@ -1,18 +1,16 @@
+import {buildSearchEngine} from '../app/search-engine';
+import {getSampleSearchEngineConfiguration} from '../app/search-engine-configuration-options';
 import {
   buildDateSortCriterion,
   buildRelevanceSortCriterion,
   SortOrder,
 } from '../features/sort-criteria/criteria';
 import {
-  HeadlessEngine,
-  searchAppReducers,
   buildSearchBox,
   buildResultList,
   buildFacet,
   buildSort,
   buildCategoryFacet,
-  SearchActions,
-  AnalyticsActions,
   Result,
   CategoryFacetValue,
   FacetValue,
@@ -21,9 +19,8 @@ import {
 const sleep = (seconds: number) =>
   new Promise((resolve) => setTimeout(resolve, seconds * 1000));
 
-const engine = new HeadlessEngine({
-  configuration: HeadlessEngine.getSampleConfiguration(),
-  reducers: searchAppReducers,
+const engine = buildSearchEngine({
+  configuration: getSampleSearchEngineConfiguration(),
   loggerOptions: {level: 'silent'},
 });
 
@@ -37,10 +34,7 @@ const sort = buildSort(engine);
 
 describe('search app', () => {
   beforeAll(async () => {
-    const analytics = AnalyticsActions.logInterfaceLoad();
-    const action = SearchActions.executeSearch(analytics);
-    engine.dispatch(action);
-
+    engine.executeFirstSearch();
     await sleep(2);
   });
 
