@@ -2,13 +2,23 @@ import {
   BaseFacetRequest,
   SortCriteria,
   BaseFacetValueRequest,
+  RangeAlgorithm,
 } from '../../../facet-api/request';
 
 export const rangeFacetSortCriteria: RangeFacetSortCriterion[] = [
   'ascending',
   'descending',
 ];
+/**
+ * Whether the range algorithm proposes ranges based on an even split of the interval or equiprobable intervals that each contain the same amount of results.
+ */
+export const rangeFacetRangeAlgorithm: RangeFacetRangeAlgorithm[] = [
+  'even',
+  'equiprobable',
+];
+
 export type RangeFacetSortCriterion = 'ascending' | 'descending';
+export type RangeFacetRangeAlgorithm = 'even' | 'equiprobable';
 
 export interface AutomaticRanges<T extends boolean> {
   /** Whether the index should automatically create range values.
@@ -33,7 +43,10 @@ export interface RangeRequest<T extends string | number>
 export interface BaseRangeFacetRequest
   extends BaseFacetRequest,
     AutomaticRanges<boolean>,
-    SortCriteria<RangeFacetSortCriterion> {
+    SortCriteria<RangeFacetSortCriterion>,
+    RangeAlgorithm<RangeFacetRangeAlgorithm> {
   /** @defaultValue `ascending` */
   sortCriteria: RangeFacetSortCriterion;
+  /** @defaultValue `equiprobable` */
+  rangeAlgorithm: RangeFacetRangeAlgorithm;
 }
