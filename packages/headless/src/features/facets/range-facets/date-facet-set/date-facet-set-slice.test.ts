@@ -5,7 +5,6 @@ import {
   updateDateFacetSortCriterion,
   deselectAllDateFacetValues,
   RegisterDateFacetActionCreatorPayload,
-  updateDateFacetRangeAlgorithm,
 } from './date-facet-actions';
 import {buildMockDateFacetRequest} from '../../../../test/mock-date-facet-request';
 import {change} from '../../../history/history-actions';
@@ -141,16 +140,6 @@ describe('date-facet-set slice', () => {
     expect(FacetReducers.handleFacetSortCriterionUpdate).toHaveBeenCalledTimes(
       1
     );
-  });
-
-  it('#updateDateFacetRangeAlgorithm updates #DateFacetRequest.rangeAlgorithm to the correct value', () => {
-    state['1'] = buildMockDateFacetRequest();
-    const action = updateDateFacetRangeAlgorithm({
-      facetId: '1',
-      rangeAlgorithm: 'even',
-    });
-    const finalState = dateFacetSetReducer(state, action);
-    expect(finalState['1'].rangeAlgorithm).toBe('even');
   });
 
   it('#executeSearch.fulfilled calls #onRangeFacetRequestFulfilled', () => {

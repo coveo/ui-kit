@@ -16,10 +16,7 @@ import {
 import {RangeFacetSortCriterion} from '../generic/interfaces/request';
 import {numericFacetValueDefinition} from '../generic/range-facet-validate-payload';
 import {NumericRangeRequest} from './interfaces/request';
-import {
-  updateRangeFacetRangeAlgorithm,
-  updateRangeFacetSortCriterion,
-} from '../generic/range-facet-actions';
+import {updateRangeFacetSortCriterion} from '../generic/range-facet-actions';
 import {deselectAllFacetValues} from '../../facet-set/facet-set-actions';
 
 export interface RegisterNumericFacetActionCreatorPayload {
@@ -183,12 +180,6 @@ export interface UpdateNumericFacetSortCriterionActionCreatorPayload {
  * @param criterion (RangeFacetSortCriterion) The target criterion.
  */
 export const updateNumericFacetSortCriterion = updateRangeFacetSortCriterion;
-
-/** Updates the range algorithm of a numeric facet.
- * @param facetId (string) The unique identifier of the facet (e.g., `"1"`).
- * @param rangeAlgorithm (RangeFacetRangeAlgorithm) The target range algorithm.
- */
-export const updateNumericFacetRangeAlgorithm = updateRangeFacetRangeAlgorithm;
 
 /** Deselects all values of a numeric facet.
  * @param facetId (string) The unique identifier of the facet (e.g., `"1"`).

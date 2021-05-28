@@ -8,7 +8,6 @@ import {
   updateNumericFacetSortCriterion,
   deselectAllNumericFacetValues,
   RegisterNumericFacetActionCreatorPayload,
-  updateNumericFacetRangeAlgorithm,
 } from './numeric-facet-actions';
 import {buildMockNumericFacetRequest} from '../../../../test/mock-numeric-facet-request';
 import {change} from '../../../history/history-actions';
@@ -144,16 +143,6 @@ describe('numeric-facet-set slice', () => {
     expect(FacetReducers.handleFacetSortCriterionUpdate).toHaveBeenCalledTimes(
       1
     );
-  });
-
-  it('#updateNumericFacetRangeAlgorithm updates #NumericFacetRequest.rangeAlgorithm to the correct value', () => {
-    state['1'] = buildMockNumericFacetRequest();
-    const action = updateNumericFacetRangeAlgorithm({
-      facetId: '1',
-      rangeAlgorithm: 'even',
-    });
-    const finalState = numericFacetSetReducer(state, action);
-    expect(finalState['1'].rangeAlgorithm).toBe('even');
   });
 
   it('#executeSearch.fulfilled calls #onRangeFacetRequestFulfilled', () => {
