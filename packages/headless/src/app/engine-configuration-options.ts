@@ -14,7 +14,7 @@ import {requiredNonEmptyString} from '../utils/validate-payload';
 /**
  * The global headless engine configuration options.
  */
-export interface EngineConfigurationOptions {
+export interface EngineConfiguration {
   /**
    * The unique identifier of the target Coveo Cloud organization (e.g., `mycoveocloudorganizationg8tp8wu3`)
    */
@@ -83,7 +83,7 @@ export interface EngineConfigurationOptions {
   };
 }
 
-export const engineConfigurationOptionDefinitions: SchemaDefinition<EngineConfigurationOptions> = {
+export const engineConfigurationDefinitions: SchemaDefinition<EngineConfiguration> = {
   organizationId: requiredNonEmptyString,
   accessToken: requiredNonEmptyString,
   platformUrl: new StringValue({

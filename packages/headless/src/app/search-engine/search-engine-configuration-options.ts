@@ -7,11 +7,11 @@ import {
 } from '../../api/search/search-api-client-middleware';
 import {localeValidation} from '../../features/configuration/configuration-actions';
 import {
-  engineConfigurationOptionDefinitions,
-  EngineConfigurationOptions,
+  engineConfigurationDefinitions,
+  EngineConfiguration,
 } from '../engine-configuration-options';
 
-export interface SearchEngineConfiguration extends EngineConfigurationOptions {
+export interface SearchEngineConfiguration extends EngineConfiguration {
   /**
    * The global headless engine configuration options specific to the SearchAPI.
    */
@@ -61,7 +61,7 @@ export interface SearchConfigurationOptions {
 export const searchEngineConfigurationSchema = new Schema<
   SearchEngineConfiguration
 >({
-  ...engineConfigurationOptionDefinitions,
+  ...engineConfigurationDefinitions,
   search: new RecordValue({
     options: {
       required: false,

@@ -15,8 +15,8 @@ import {
 } from '../api/search/search-api-client-middleware';
 import {buildEngine, CoreEngine, EngineOptions} from './engine';
 import {
-  engineConfigurationOptionDefinitions,
-  EngineConfigurationOptions,
+  engineConfigurationDefinitions,
+  EngineConfiguration,
 } from './engine-configuration-options';
 import {buildLogger} from './logger';
 import {
@@ -45,8 +45,7 @@ export interface HeadlessOptions<Reducers extends ReducersMapObject>
 /**
  * The global headless engine configuration options.
  */
-export interface HeadlessConfigurationOptions
-  extends EngineConfigurationOptions {
+export interface HeadlessConfigurationOptions extends EngineConfiguration {
   /**
    * The global headless engine configuration options specific to the SearchAPI.
    */
@@ -107,7 +106,7 @@ export class HeadlessEngine<Reducers extends ReducersMapObject>
       Please use the "preprocessRequest" option instead, which works for both the Search and Analytics API requests.`);
     }
     const configurationSchema = new Schema<HeadlessConfigurationOptions>({
-      ...engineConfigurationOptionDefinitions,
+      ...engineConfigurationDefinitions,
       search: new RecordValue({
         options: {
           required: false,

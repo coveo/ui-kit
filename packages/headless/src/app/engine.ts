@@ -14,7 +14,7 @@ import {
   updateAnalyticsConfiguration,
   updateBasicConfiguration,
 } from '../features/configuration/configuration-actions';
-import {EngineConfigurationOptions} from './engine-configuration-options';
+import {EngineConfiguration} from './engine-configuration-options';
 import {createReducerManager, ReducerManager} from './reducer-manager';
 import {Store, configureStore} from './store';
 import {LoggerOptions} from './logger';
@@ -102,7 +102,7 @@ export interface ExternalEngineOptions<State extends object> {
   /**
    * The global headless engine configuration options.
    */
-  configuration: EngineConfigurationOptions;
+  configuration: EngineConfiguration;
 
   /**
    * The initial headless state.
@@ -225,7 +225,7 @@ function createStore<
 }
 
 function createRenewAccessTokenFunction(
-  configuration: EngineConfigurationOptions,
+  configuration: EngineConfiguration,
   dispatch: Dispatch<AnyAction>
 ) {
   let accessTokenRenewalsAttempts = 0;
