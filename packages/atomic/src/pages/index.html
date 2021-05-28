@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
-    <title>Atomic Components</title>
+    <title>Coveo Atomic</title>
 
     <script type="module" src="/build/atomic.esm.js"></script>
     <script nomodule src="/build/atomic.js"></script>
@@ -14,40 +14,15 @@
         await customElements.whenDefined('atomic-search-interface');
         const searchInterface = document.querySelector('#search');
 
-        // Initialization
         await searchInterface.initialize({
           accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
           organizationId: 'searchuisamples',
         });
 
-        // Trigger a first search
         searchInterface.executeFirstSearch();
-
-        // Add/modify a translation
-        // searchInterface.i18n.addResource('en', 'translation', 'search', 'Make me feel lucky!');
-        // Change the language of the interface dynamically
-        // searchInterface.language = 'fr';
-        // Interact with the engine
-        // searchInterface.engine.dispatch(...);
-        // Get all strings for a language/namespace
-        // const allStrings = searchInterface.i18n.getResourceBundle('en', 'translation');
       })();
     </script>
     <style>
-      /* Example on how to customize CSS variables */
-      /* :root {
-        --atomic-primary: red;
-        --atomic-font-family: "Comic Sans MS", "Comic Sans", cursive;
-        --atomic-secondary: green;
-      } */
-
-      /* Example on how to customize result templates CSS parts */
-      /* atomic-result::part(result-link):hover {
-        color: orange;
-      } */
-    </style>
-    <style>
-      /* Example of generic layout styling  */
       body {
         margin: 0;
       }
