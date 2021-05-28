@@ -1,4 +1,11 @@
 import {
+  CategoryFacet,
+  Facet,
+  ResultList,
+  SearchBox,
+  Sort,
+} from '../controllers';
+import {
   buildDateSortCriterion,
   buildRelevanceSortCriterion,
   SortOrder,
@@ -21,25 +28,43 @@ import {
 const sleep = (seconds: number) =>
   new Promise((resolve) => setTimeout(resolve, seconds * 1000));
 
-const engine = new HeadlessEngine({
-  configuration: HeadlessEngine.getSampleConfiguration(),
-  reducers: searchAppReducers,
-  loggerOptions: {level: 'silent'},
-});
-
-const searchBox = buildSearchBox(engine);
-const resultList = buildResultList(engine);
-const facet = buildFacet(engine, {options: {field: 'author'}});
-const categoryFacet = buildCategoryFacet(engine, {
-  options: {field: 'geographicalhierarchy'},
-});
-const sort = buildSort(engine);
-
 describe('search app', () => {
-  beforeAll(async () => {
+  let engine: HeadlessEngine<{}>;
+  let searchBox: SearchBox;
+  let resultList: ResultList;
+  let facet: Facet;
+  let categoryFacet: CategoryFacet;
+  let sort: Sort;
+
+  function initEngine() {
+    engine = new HeadlessEngine({
+      configuration: HeadlessEngine.getSampleConfiguration(),
+      reducers: searchAppReducers,
+      loggerOptions: {level: 'silent'},
+    });
+  }
+
+  function initControllers() {
+    searchBox = buildSearchBox(engine);
+    resultList = buildResultList(engine);
+    facet = buildFacet(engine, {options: {field: 'author'}});
+    categoryFacet = buildCategoryFacet(engine, {
+      options: {field: 'geographicalhierarchy'},
+    });
+    sort = buildSort(engine);
+  }
+
+  function executeFirstSearch() {
     const analytics = AnalyticsActions.logInterfaceLoad();
     const action = SearchActions.executeSearch(analytics);
     engine.dispatch(action);
+  }
+
+  beforeAll(async () => {
+    initEngine();
+    initControllers();
+
+    executeFirstSearch();
 
     await sleep(2);
   });
