@@ -6,6 +6,7 @@ export type HTTPContentType =
   | 'text/html';
 import {backOff} from 'exponential-backoff';
 import {Logger} from 'pino';
+import {ExpiredTokenError} from '../utils/errors';
 import {canBeFormUrlEncoded, encodeAsFormUrl} from './form-url-encoder';
 import {PlatformRequestOptions, PreprocessRequest} from './preprocess-request';
 
@@ -79,11 +80,7 @@ export class PlatformClient {
       });
       if (response.status === 419) {
         logger.info('Platform renewing token');
-        const accessToken = await processedOptions.renewAccessToken();
-
-        if (accessToken !== '') {
-          return PlatformClient.call({...processedOptions, accessToken});
-        }
+        throw new ExpiredTokenError();
       }
 
       logger.info({response, requestInfo}, 'Platform response');
@@ -91,6 +88,10 @@ export class PlatformClient {
       return response;
     } catch (error) {
       if (error.name === 'AbortError') {
+        throw error;
+      }
+
+      if (error instanceof ExpiredTokenError) {
         throw error;
       }
 

@@ -21,6 +21,9 @@ import {LoggerOptions} from './logger';
 import {Logger} from 'pino';
 import {ThunkExtraArguments} from './thunk-extra-arguments';
 import {configuration, version} from './reducers';
+import {createRenewAccessTokenMiddleware} from './renew-access-token-middleware';
+import {logActionErrorMiddleware} from './logger-middlewares';
+import {analyticsMiddleware} from './analytics-middleware';
 
 const coreReducers = {configuration, version};
 type CoreState = StateFromReducersMapObject<typeof coreReducers>;
@@ -207,8 +210,9 @@ function createStore<
   thunkExtraArguments: ExtraArguments,
   reducerManager: ReducerManager
 ) {
-  const {preloadedState, middlewares, configuration} = options;
+  const {preloadedState, configuration} = options;
   const name = configuration.name || 'coveo-headless';
+  const middlewares = createMiddleware(options, thunkExtraArguments.logger);
 
   return configureStore({
     preloadedState,
@@ -249,4 +253,19 @@ function createRenewAccessTokenFunction(
       return '';
     }
   };
+}
+
+function createMiddleware<Reducers extends ReducersMapObject>(
+  options: EngineOptions<Reducers>,
+  logger: Logger
+) {
+  const renewFn =
+    options.configuration.renewAccessToken || (() => Promise.resolve(''));
+  const renewTokenMiddleware = createRenewAccessTokenMiddleware(renewFn);
+
+  return [
+    renewTokenMiddleware,
+    logActionErrorMiddleware(logger),
+    analyticsMiddleware,
+  ].concat(options.middlewares || []);
 }
