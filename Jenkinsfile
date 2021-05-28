@@ -81,6 +81,9 @@ node('linux && docker') {
       stage('Veracode package') {
         sh 'rm -rf veracode && mkdir veracode'
 
+        sh 'mkdir veracode/bueno'
+        sh 'cp -R packages/bueno/src packages/bueno/package.json packages/bueno/package-lock.json veracode/bueno'
+
         sh 'mkdir veracode/headless'
         sh 'cp -R packages/headless/src packages/headless/package.json packages/headless/package-lock.json veracode/headless'
 
