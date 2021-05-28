@@ -10,6 +10,7 @@ import * as BackOff from 'exponential-backoff';
 jest.mock('cross-fetch');
 import fetch from 'cross-fetch';
 import {NoopPreprocessRequest} from './preprocess-request';
+import {ExpiredTokenError} from '../utils/errors';
 const {Response} = jest.requireActual('node-fetch');
 const mockFetch = fetch as jest.Mock;
 
@@ -153,29 +154,17 @@ describe('PlatformClient call', () => {
     );
   });
 
-  it(`when status is 419
-  should renewToken and retry call with new token`, async (done) => {
-    mockFetch
-      .mockReturnValueOnce(
-        Promise.resolve(new Response(JSON.stringify({}), {status: 419}))
-      )
-      .mockReturnValueOnce(
-        Promise.resolve(new Response(JSON.stringify({}), {status: 200}))
-      );
+  it('when status is 419 should throw a TokenExpiredError', async (done) => {
+    mockFetch.mockReturnValueOnce(
+      Promise.resolve(new Response(JSON.stringify({}), {status: 419}))
+    );
 
-    await platformCall();
-
-    expect(mockFetch).toHaveBeenNthCalledWith(2, platformUrl(), {
-      body: JSON.stringify({
-        test: 123,
-      }),
-      headers: {
-        Authorization: 'Bearer accessToken2',
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
-    });
-    done();
+    try {
+      await platformCall();
+    } catch (e) {
+      expect(e.name).toEqual(new ExpiredTokenError().name);
+      done();
+    }
   });
 
   it('when status is 429 should try exponential backOff', async (done) => {
