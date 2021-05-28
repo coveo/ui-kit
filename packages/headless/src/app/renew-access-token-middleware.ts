@@ -1,4 +1,4 @@
-import {Middleware} from 'redux';
+import {Middleware} from '@reduxjs/toolkit';
 import {debounce} from 'ts-debounce';
 import {updateBasicConfiguration} from '../features/configuration/configuration-actions';
 import {ExpiredTokenError} from '../utils/errors';
