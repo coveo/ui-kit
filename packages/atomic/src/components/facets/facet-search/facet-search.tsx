@@ -166,7 +166,7 @@ export class FacetSearch {
         onKeyDown={(e) => this.combobox.onInputKeydown(e)}
         type="text"
         class={
-          'placeholder-on-background-variant flex-grow outline-none focus:outline-none mx-2'
+          'placeholder-neutral-dark flex-grow outline-none focus:outline-none mx-2'
         }
         placeholder={this.strings.placeholder()}
         value={this.facetSearchState.query}
@@ -225,7 +225,7 @@ export class FacetSearch {
     const isOpen =
       this.showNoValuesFound || this.facetSearchState.values.length;
     return (
-      'input-wrapper flex flex-grow items-center border border-divider rounded-md ' +
+      'input-wrapper flex flex-grow items-center border border-neutral rounded ' +
       (isOpen ? 'rounded-br-none	rounded-bl-none' : '')
     );
   }
@@ -239,7 +239,7 @@ export class FacetSearch {
         >
           <div
             part="search-icon"
-            class={'ml-2 w-3 h-3 text-on-background-variant fill-current'}
+            class={'ml-2 w-3 h-3 text-neutral-dark fill-current'}
             innerHTML={SearchIcon}
           />
           {this.input}
