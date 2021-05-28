@@ -39,7 +39,7 @@ export function createRenewAccessTokenMiddleware(
     }
 
     store.dispatch(updateBasicConfiguration({accessToken}));
-    return next(action);
+    store.dispatch(action);
   };
 }
 
