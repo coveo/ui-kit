@@ -1,6 +1,13 @@
 {
   "product": "ui-kit",
   "team_name": "searchui",
+  "certifiers": {
+    "dev": [
+      {
+        "system_certifier": "veracode"
+      }
+    ]
+  },
   "general": {
     "aws_regions": {
       "sequential": [
