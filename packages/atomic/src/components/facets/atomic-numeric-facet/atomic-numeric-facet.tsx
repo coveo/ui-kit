@@ -9,6 +9,7 @@ import {
   SearchStatusState,
   SearchStatus,
   buildSearchStatus,
+  RangeFacetRangeAlgorithm,
 } from '@coveo/headless';
 import {
   Bindings,
@@ -88,6 +89,10 @@ export class AtomicNumericFacet
    * The number of values to request for this facet, when there are no manual ranges.
    */
   @Prop({mutable: true}) public numberOfValues = 8;
+  /**
+   * The algorithm used to generate the ranges for this facet, when there are no manual ranges.
+   */
+  @Prop() public rangeAlgorithm: RangeFacetRangeAlgorithm = 'equiprobable';
 
   private buildManualRanges() {
     const options = Array.from(
@@ -111,6 +116,7 @@ export class AtomicNumericFacet
       generateAutomaticRanges: manualRanges.length === 0,
       currentValues: manualRanges,
       numberOfValues: this.numberOfValues,
+      rangeAlgorithm: this.rangeAlgorithm,
     };
 
     this.facet = buildNumericFacet(this.bindings.engine, {options});

@@ -10,6 +10,7 @@ import {
   SearchStatusState,
   SearchStatus,
   buildSearchStatus,
+  RangeFacetRangeAlgorithm,
 } from '@coveo/headless';
 import {
   Bindings,
@@ -91,6 +92,10 @@ export class AtomicDateFacet implements InitializableComponent, BaseFacetState {
    * The number of values to request for this facet, when there are no manual ranges.
    */
   @Prop({mutable: true}) public numberOfValues = 8;
+  /**
+   * The algorithm used to generate the ranges for this facet, when there are no manual ranges.
+   */
+  @Prop() public rangeAlgorithm: RangeFacetRangeAlgorithm = 'equiprobable';
 
   private buildManualRanges() {
     const options = Array.from(this.host.querySelectorAll('atomic-date-range'));
@@ -110,6 +115,7 @@ export class AtomicDateFacet implements InitializableComponent, BaseFacetState {
       generateAutomaticRanges: manualRanges.length === 0,
       currentValues: manualRanges,
       numberOfValues: this.numberOfValues,
+      rangeAlgorithm: this.rangeAlgorithm,
     };
     this.strings[this.label] = () => this.bindings.i18n.t(this.label);
     this.facet = buildDateFacet(this.bindings.engine, {options});

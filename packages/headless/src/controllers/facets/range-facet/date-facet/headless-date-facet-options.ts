@@ -9,6 +9,8 @@ import {
 import {facetValueStates} from '../../../../features/facets/facet-api/value';
 import {DateRangeRequest} from '../../../../features/facets/range-facets/date-facet-set/interfaces/request';
 import {
+  rangeFacetRangeAlgorithm,
+  RangeFacetRangeAlgorithm,
   rangeFacetSortCriteria,
   RangeFacetSortCriterion,
 } from '../../../../features/facets/range-facets/generic/interfaces/request';
@@ -92,6 +94,13 @@ export interface DateFacetOptions {
    * @defaultValue `ascending`
    */
   sortCriteria?: RangeFacetSortCriterion;
+
+  /**
+   * The range algorithm applied when ranges are automatically generated.
+   *
+   * @defaultValue `equiprobable`
+   */
+  rangeAlgorithm?: RangeFacetRangeAlgorithm;
 }
 
 const dateRangeRequestDefinition: SchemaDefinition<DateRangeRequest> = {
@@ -112,6 +121,7 @@ export const dateFacetOptionsSchema = new Schema<Required<DateFacetOptions>>({
     each: new RecordValue({values: dateRangeRequestDefinition}),
   }),
   sortCriteria: new StringValue({constrainTo: rangeFacetSortCriteria}),
+  rangeAlgorithm: new StringValue({constrainTo: rangeFacetRangeAlgorithm}),
 });
 
 export function validateDateFacetOptions(

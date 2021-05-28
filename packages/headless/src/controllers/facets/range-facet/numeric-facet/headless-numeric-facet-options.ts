@@ -9,6 +9,8 @@ import {
 } from '@coveo/bueno';
 import {facetValueStates} from '../../../../features/facets/facet-api/value';
 import {
+  rangeFacetRangeAlgorithm,
+  RangeFacetRangeAlgorithm,
   rangeFacetSortCriteria,
   RangeFacetSortCriterion,
 } from '../../../../features/facets/range-facets/generic/interfaces/request';
@@ -96,6 +98,13 @@ export interface NumericFacetOptions {
    * @defaultValue `ascending`
    */
   sortCriteria?: RangeFacetSortCriterion;
+
+  /**
+   * The range algorithm applied when ranges are automatically generated.
+   *
+   * @defaultValue `equiprobable`
+   */
+  rangeAlgorithm?: RangeFacetRangeAlgorithm;
 }
 
 const numericRangeRequestDefinition: SchemaDefinition<NumericRangeRequest> = {
@@ -118,6 +127,7 @@ export const numericFacetOptionsSchema = new Schema<
     each: new RecordValue({values: numericRangeRequestDefinition}),
   }),
   sortCriteria: new StringValue({constrainTo: rangeFacetSortCriteria}),
+  rangeAlgorithm: new StringValue({constrainTo: rangeFacetRangeAlgorithm}),
 });
 
 export function validateNumericFacetOptions(
