@@ -45,36 +45,36 @@ node('linux && docker') {
       }
     }
 
-    if (!isMaster) {
-      return
-    }
+    // if (!isMaster) {
+    //   return
+    // }
 
     stage('Clean working directory') {
       sh 'git checkout -- .'
       sh 'git clean -f'
     }
 
-    if (!isBump) {
-      withDockerContainer(image: 'node:14', args: '-u=root') {
-        stage('Commit bumped version') {
-            withCredentials([
-            usernameColonPassword(credentialsId: 'github-commit-token', variable: 'GH_CREDENTIALS')]) {
-              sh 'npm run bump:version'
-            }
-        }
-      }
-      return
-    }
+    // if (!isBump) {
+    //   withDockerContainer(image: 'node:14', args: '-u=root') {
+    //     stage('Commit bumped version') {
+    //         withCredentials([
+    //         usernameColonPassword(credentialsId: 'github-commit-token', variable: 'GH_CREDENTIALS')]) {
+    //           sh 'npm run bump:version'
+    //         }
+    //     }
+    //   }
+    //   return
+    // }
 
-    withDockerContainer(image: 'node:14', args: '-u=root') {
-      stage('Npm publish') {
-        withCredentials([
-        string(credentialsId: 'NPM_TOKEN', variable: 'NPM_TOKEN')]) {
-          sh "echo //registry.npmjs.org/:_authToken=${NPM_TOKEN} > ~/.npmrc"
-          sh 'npm run npm:publish:alpha || true'
-        }
-      }
-    }
+    // withDockerContainer(image: 'node:14', args: '-u=root') {
+    //   stage('Npm publish') {
+    //     withCredentials([
+    //     string(credentialsId: 'NPM_TOKEN', variable: 'NPM_TOKEN')]) {
+    //       sh "echo //registry.npmjs.org/:_authToken=${NPM_TOKEN} > ~/.npmrc"
+    //       sh 'npm run npm:publish:alpha || true'
+    //     }
+    //   }
+    // }
 
     withDockerContainer(image: '458176070654.dkr.ecr.us-east-1.amazonaws.com/jenkins/deployment_package:v7') {
       stage('Veracode package') {
