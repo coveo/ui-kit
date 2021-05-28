@@ -57,10 +57,11 @@ node('linux && docker') {
     if (!isBump) {
       withDockerContainer(image: 'node:14', args: '-u=root') {
         stage('Commit bumped version') {
-            withCredentials([
-            usernameColonPassword(credentialsId: 'github-commit-token', variable: 'GH_CREDENTIALS')]) {
-              sh 'npm run bump:version'
-            }
+          sh 'git clean -dfX'
+          withCredentials([
+          usernameColonPassword(credentialsId: 'github-commit-token', variable: 'GH_CREDENTIALS')]) {
+            sh 'npm run bump:version'
+          }
         }
       }
       return
