@@ -244,6 +244,9 @@ export class HeadlessEngine<Reducers extends ReducersMapObject>
     return this.engine.state;
   }
 
+  /**
+   * @deprecated - Calling this function directly is not needed because Headless handles token renewal internally. The function will be removed in the next major version.
+   */
   public async renewAccessToken() {
     return await this.engine.renewAccessToken();
   }
