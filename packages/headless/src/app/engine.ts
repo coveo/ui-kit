@@ -68,6 +68,8 @@ export interface CoreEngine<
   store: Store;
   /**
    * A function for headless to call to retrieve a refreshed access token.
+   *
+   * @deprecated - Calling this function directly is not needed because Headless handles token renewal internally. The function will be removed in the next major version.
    */
   renewAccessToken: () => Promise<string>;
   /**
