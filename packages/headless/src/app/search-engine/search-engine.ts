@@ -17,7 +17,7 @@ import {updateSearchConfiguration} from '../../features/configuration/configurat
 import {
   SearchEngineConfiguration,
   searchEngineConfigurationSchema,
-} from './search-engine-configuration-options';
+} from './search-engine-configuration';
 import {executeSearch} from '../../features/search/search-actions';
 import {logInterfaceLoad} from '../../features/analytics/analytics-actions';
 import {firstSearchExecutedSelector} from '../../features/search/search-selectors';

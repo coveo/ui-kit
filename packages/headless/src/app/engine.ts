@@ -14,7 +14,7 @@ import {
   updateAnalyticsConfiguration,
   updateBasicConfiguration,
 } from '../features/configuration/configuration-actions';
-import {EngineConfiguration} from './engine-configuration-options';
+import {EngineConfiguration} from './engine-configuration';
 import {createReducerManager, ReducerManager} from './reducer-manager';
 import {Store, configureStore} from './store';
 import {LoggerOptions} from './logger';

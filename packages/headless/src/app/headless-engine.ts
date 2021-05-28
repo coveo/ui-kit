@@ -17,7 +17,7 @@ import {buildEngine, CoreEngine, EngineOptions} from './engine';
 import {
   engineConfigurationDefinitions,
   EngineConfiguration,
-} from './engine-configuration-options';
+} from './engine-configuration';
 import {buildLogger} from './logger';
 import {
   buildThunkExtraArguments,
@@ -25,7 +25,7 @@ import {
 } from './thunk-extra-arguments';
 import {SearchAppState} from '../state/search-app-state';
 import {debug, pipeline, searchHub} from './reducers';
-import {SearchConfigurationOptions} from './search-engine/search-engine-configuration-options';
+import {SearchConfigurationOptions} from './search-engine/search-engine-configuration';
 
 const headlessReducers = {debug, pipeline, searchHub};
 type HeadlessReducers = typeof headlessReducers;

@@ -4,7 +4,7 @@ import {
   SearchEngine,
   SearchEngineOptions,
 } from './search-engine';
-import {getSampleSearchEngineConfiguration} from './search-engine-configuration-options';
+import {getSampleSearchEngineConfiguration} from './search-engine-configuration';
 
 describe('buildSearchEngine', () => {
   let options: SearchEngineOptions;

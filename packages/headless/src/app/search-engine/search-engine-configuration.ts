@@ -9,7 +9,7 @@ import {localeValidation} from '../../features/configuration/configuration-actio
 import {
   engineConfigurationDefinitions,
   EngineConfiguration,
-} from '../engine-configuration-options';
+} from '../engine-configuration';
 
 export interface SearchEngineConfiguration extends EngineConfiguration {
   /**
