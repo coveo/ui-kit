@@ -41,16 +41,13 @@ export const config: Config = {
       copy: [{src: 'themes'}],
     },
     {
-      type: 'docs-readme',
-    },
-    {
       type: 'docs-json',
       file: './docs/atomic-docs.json',
     },
     {
       type: 'www',
       serviceWorker: null, // disable service workers
-      copy: [{src: 'pages'}, {src: 'themes'}],
+      copy: [{src: 'pages', keepDirStructure: false}, {src: 'themes'}],
     },
   ],
   testing: {
