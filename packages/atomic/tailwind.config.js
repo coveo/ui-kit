@@ -42,7 +42,6 @@ module.exports = {
       ...theme('colors'),
     }),
     fontFamily: {
-      // Following https://systemfontstack.com/
       sans: `var(--atomic-font-family)`,
     },
   },
