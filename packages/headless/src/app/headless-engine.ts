@@ -1,31 +1,23 @@
 import {ReducersMapObject, StateFromReducersMapObject} from '@reduxjs/toolkit';
 import {
   updateSearchConfiguration,
-  disableAnalytics,
-  enableAnalytics,
   localeValidation,
 } from '../features/configuration/configuration-actions';
 import {SearchAPIClient} from '../api/search/search-api-client';
 import {Logger} from 'pino';
-import {
-  NoopPreprocessRequestMiddleware,
-  PreprocessRequestMiddleware,
-} from '../api/platform-client';
+import {NoopPreprocessRequestMiddleware} from '../api/platform-client';
 import {NoopPreprocessRequest} from '../api/preprocess-request';
 import {RecordValue, Schema, StringValue} from '@coveo/bueno';
 import {
   NoopPostprocessFacetSearchResponseMiddleware,
   NoopPostprocessQuerySuggestResponseMiddleware,
   NoopPostprocessSearchResponseMiddleware,
-  PostprocessFacetSearchResponseMiddleware,
-  PostprocessQuerySuggestResponseMiddleware,
-  PostprocessSearchResponseMiddleware,
 } from '../api/search/search-api-client-middleware';
 import {buildEngine, CoreEngine, EngineOptions} from './engine';
 import {
-  engineConfigurationOptionDefinitions,
-  EngineConfigurationOptions,
-} from './engine-configuration-options';
+  engineConfigurationDefinitions,
+  EngineConfiguration,
+} from './engine-configuration';
 import {buildLogger} from './logger';
 import {
   buildThunkExtraArguments,
@@ -33,6 +25,7 @@ import {
 } from './thunk-extra-arguments';
 import {SearchAppState} from '../state/search-app-state';
 import {debug, pipeline, searchHub} from './reducers';
+import {SearchConfigurationOptions} from './search-engine/search-engine-configuration';
 
 const headlessReducers = {debug, pipeline, searchHub};
 type HeadlessReducers = typeof headlessReducers;
@@ -52,50 +45,11 @@ export interface HeadlessOptions<Reducers extends ReducersMapObject>
 /**
  * The global headless engine configuration options.
  */
-export interface HeadlessConfigurationOptions
-  extends EngineConfigurationOptions {
+export interface HeadlessConfigurationOptions extends EngineConfiguration {
   /**
    * The global headless engine configuration options specific to the SearchAPI.
    */
-  search?: {
-    /**
-     * Specifies the name of the query pipeline to use for the query. If not specified, the default query pipeline will be used.
-     */
-    pipeline?: string;
-    /**
-     * The first level of origin of the request, typically the identifier of the graphical search interface from which the request originates.
-     * Coveo Machine Learning models use this information to provide contextually relevant output.
-     * Notes:
-     *    This parameter will be overridden if the search request is authenticated by a search token that enforces a specific searchHub.
-     *    When logging a Search usage analytics event for a query, the originLevel1 field of that event should be set to the value of the searchHub search request parameter.
-     */
-    searchHub?: string;
-    /**
-     * The locale of the current user. Must comply with IETF’s BCP 47 definition: https://www.rfc-editor.org/rfc/bcp/bcp47.txt.
-     *
-     * Notes:
-     *  Coveo Machine Learning models use this information to provide contextually relevant output.
-     *  Moreover, this information can be referred to in query expressions and QPL statements by using the $locale object.
-     */
-    locale?: string;
-    /**
-     * Allows for augmenting a request (search, facet-search, query-suggest, etc.) before it is sent.
-     * @deprecated Use `preprocessRequest` instead.
-     */
-    preprocessRequestMiddleware?: PreprocessRequestMiddleware;
-    /**
-     * Allows for augmenting a search response before the state is updated.
-     */
-    preprocessSearchResponseMiddleware?: PostprocessSearchResponseMiddleware;
-    /**
-     * Allows for augmenting a facet-search response before the state is updated.
-     */
-    preprocessFacetSearchResponseMiddleware?: PostprocessFacetSearchResponseMiddleware;
-    /**
-     * Allows for augmenting a query-suggest response before the state is updated.
-     */
-    preprocessQuerySuggestResponseMiddleware?: PostprocessQuerySuggestResponseMiddleware;
-  };
+  search?: SearchConfigurationOptions;
 }
 
 /**
@@ -152,7 +106,7 @@ export class HeadlessEngine<Reducers extends ReducersMapObject>
       Please use the "preprocessRequest" option instead, which works for both the Search and Analytics API requests.`);
     }
     const configurationSchema = new Schema<HeadlessConfigurationOptions>({
-      ...engineConfigurationOptionDefinitions,
+      ...engineConfigurationDefinitions,
       search: new RecordValue({
         options: {
           required: false,
@@ -208,6 +162,7 @@ export class HeadlessEngine<Reducers extends ReducersMapObject>
     return {
       organizationId: 'searchuisamples',
       accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
+      name: 'sampleName',
       search: {
         pipeline: 'default',
         searchHub: 'default',
@@ -219,14 +174,14 @@ export class HeadlessEngine<Reducers extends ReducersMapObject>
    * Enable analytics tracking
    */
   public enableAnalytics() {
-    this.dispatch(enableAnalytics());
+    this.engine.enableAnalytics();
   }
 
   /**
    * Disable analytics tracking
    */
   public disableAnalytics() {
-    this.dispatch(disableAnalytics());
+    this.engine.disableAnalytics();
   }
 
   get store() {

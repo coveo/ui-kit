@@ -255,10 +255,6 @@ export class AtomicSearchInterface {
   }
 
   private updateHash() {
-    if (this.urlManager.hasFragment(this.fragment)) {
-      return;
-    }
-
     history.pushState(
       null,
       document.title,

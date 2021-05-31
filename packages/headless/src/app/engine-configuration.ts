@@ -14,7 +14,7 @@ import {requiredNonEmptyString} from '../utils/validate-payload';
 /**
  * The global headless engine configuration options.
  */
-export interface EngineConfigurationOptions {
+export interface EngineConfiguration {
   /**
    * The unique identifier of the target Coveo Cloud organization (e.g., `mycoveocloudorganizationg8tp8wu3`)
    */
@@ -40,6 +40,11 @@ export interface EngineConfigurationOptions {
    * The platformUrl() helper method can be useful to know what url is available.
    */
   platformUrl?: string;
+  /**
+   * The Engine name (e.g., myEngine). Specifying your Engine name will help in debugging when using an application with multiple Redux stores.
+   * @defaultValue 'coveo-headless'
+   */
+  name?: string;
   /**
    * Allows configuring options related to analytics.
    */
@@ -78,10 +83,14 @@ export interface EngineConfigurationOptions {
   };
 }
 
-export const engineConfigurationOptionDefinitions: SchemaDefinition<EngineConfigurationOptions> = {
+export const engineConfigurationDefinitions: SchemaDefinition<EngineConfiguration> = {
   organizationId: requiredNonEmptyString,
   accessToken: requiredNonEmptyString,
   platformUrl: new StringValue({
+    required: false,
+    emptyAllowed: false,
+  }),
+  name: new StringValue({
     required: false,
     emptyAllowed: false,
   }),

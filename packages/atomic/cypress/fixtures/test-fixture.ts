@@ -1,3 +1,5 @@
+import {buildTestUrl} from '../utils/setupComponent';
+
 type SearchInterface = HTMLElement & {
   initialize: (opts: {
     accessToken: string;
@@ -12,7 +14,7 @@ export type TagProps = Record<string, string>;
 
 export class TestFixture {
   private aliases: TestFeature[] = [];
-  private testURL = 'http://localhost:3333/pages/test.html';
+  private testURL = buildTestUrl();
   private execFirstSearch = true;
 
   constructor() {

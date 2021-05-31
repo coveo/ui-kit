@@ -3,6 +3,7 @@ import {
   setUpPage,
   injectComponent,
   shouldRenderErrorComponent,
+  buildTestUrl,
 } from '../utils/setupComponent';
 import {createAliasNavigation, PagerSelectors} from './pager-selectors';
 
@@ -101,7 +102,7 @@ describe('Pager Test Suites', () => {
 
   describe('Pager should load from url', () => {
     it('should activate correct page number', async () => {
-      cy.visit('http://localhost:3333/pages/test.html#firstResult=20');
+      cy.visit(buildTestUrl('firstResult=20'));
       injectComponent('<atomic-pager></atomic-pager>');
       cy.wait(1000);
       createAliasNavigation();
