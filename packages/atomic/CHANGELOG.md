@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.15.0](https://github.com/coveo/ui-kit/compare/v0.14.2...v0.15.0) (2021-05-31)
+
+
+### Bug Fixes
+
+* **atomic,headless:** change update hash strategy of the url manager ([#825](https://github.com/coveo/ui-kit/issues/825)) ([83b91ab](https://github.com/coveo/ui-kit/commit/83b91ab6ba954bcfbca8d79f292a03c09ab90ed9))
+* **atomic,headless:** url manager only updates when the paramaters values change and not their order ([#834](https://github.com/coveo/ui-kit/issues/834)) ([5afb188](https://github.com/coveo/ui-kit/commit/5afb18815d7705fe287418cefec0721b8a781cd7))
+
+
+### Features
+
+* **atomic:** prepare the terrain for v1 ([#840](https://github.com/coveo/ui-kit/issues/840)) ([173a109](https://github.com/coveo/ui-kit/commit/173a109938963756a6a873e2103f451bf38aadf1))
+
+
+
+
+
 ## [0.14.2](https://github.com/coveo/ui-kit/compare/v0.14.1...v0.14.2) (2021-05-19)
 
 
