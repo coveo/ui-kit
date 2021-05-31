@@ -57,7 +57,6 @@ node('linux && docker') {
     if (!isBump) {
       withDockerContainer(image: 'node:14', args: '-u=root') {
         stage('Commit bumped version') {
-          sh 'npx husky uninstall'
           sh 'git clean -xfd -e node_modules/ -e .husky'
           withCredentials([
           usernameColonPassword(credentialsId: 'github-commit-token', variable: 'GH_CREDENTIALS')]) {
