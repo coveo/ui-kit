@@ -9,6 +9,7 @@ import {localeValidation} from '../../features/configuration/configuration-actio
 import {
   engineConfigurationDefinitions,
   EngineConfiguration,
+  getSampleEngineConfiguration,
 } from '../engine-configuration';
 
 export interface SearchEngineConfiguration extends EngineConfiguration {
@@ -82,8 +83,7 @@ export const searchEngineConfigurationSchema = new Schema<
 
 export function getSampleSearchEngineConfiguration(): SearchEngineConfiguration {
   return {
-    organizationId: 'searchuisamples',
-    accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
+    ...getSampleEngineConfiguration(),
     search: {
       pipeline: 'default',
       searchHub: 'default',
