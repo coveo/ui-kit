@@ -81,7 +81,6 @@ function buildNumericFacetRequest(
     currentValues: [],
     preventAutoSelect: false,
     type: 'numericalRange',
-    rangeAlgorithm: 'equiprobable',
     ...config,
   };
 }
