@@ -15,7 +15,10 @@ import {
   ArrayValue,
 } from '@coveo/bueno';
 import {facetIdDefinition} from '../../generic/facet-actions-validation';
-import {RangeFacetSortCriterion} from '../generic/interfaces/request';
+import {
+  RangeFacetSortCriterion,
+  RangeFacetRangeAlgorithm,
+} from '../generic/interfaces/request';
 import {dateFacetValueDefinition} from '../generic/range-facet-validate-payload';
 import {buildDateRange} from '../../../../controllers/facets/range-facet/date-facet/date-range';
 import {DateRangeRequest} from './interfaces/request';
@@ -84,6 +87,13 @@ export interface RegisterDateFacetActionCreatorPayload {
    * @defaultValue `ascending`
    */
   sortCriteria?: RangeFacetSortCriterion;
+
+  /**
+   * The range algorithm to apply to automatically generated ranges for the range facet.
+   *
+   * @defaultValue `equiprobable`
+   */
+  rangeAlgorithm?: RangeFacetRangeAlgorithm;
 }
 
 const dateRangeRequestDefinition = {
@@ -105,6 +115,7 @@ const dateFacetRegistrationOptionsDefinition = {
   injectionDepth: new NumberValue({required: false, min: 0}),
   numberOfValues: new NumberValue({required: false, min: 1}),
   sortCriteria: new Value<RangeFacetSortCriterion>({required: false}),
+  rangeAlgorithm: new Value<RangeFacetRangeAlgorithm>({required: false}),
 };
 
 export function validateManualDateRanges(
