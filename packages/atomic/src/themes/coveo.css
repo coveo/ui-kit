@@ -1,18 +1,18 @@
 :root {
   /* Primary colors */
-  --atomic-primary: #1372ec;
-  --atomic-primary-light: #68a0ff;
-  --atomic-primary-dark: #0048b9;
+  --atomic-primary: #752e9c;
+  --atomic-primary-light: #9a52c1;
+  --atomic-primary-dark: #451c5c;
   --atomic-on-primary: #ffffff;
 
   /* Secondary colors */
-  --atomic-secondary: #1d4f76;
-  --atomic-secondary-light: #507ba5;
-  --atomic-secondary-dark: #00274a;
+  --atomic-secondary: #1372ec;
+  --atomic-secondary-light: #399ffe;
+  --atomic-secondary-dark: #1a50ad;
   --atomic-on-secondary: #ffffff;
 
   /* Neutral colors */
-  --atomic-neutral-dark: #6b6b6b;
+  --atomic-neutral-dark: #8e959d;
   --atomic-neutral: #e5e8e8;
   --atomic-neutral-light: #f6f7f9;
 
@@ -23,8 +23,8 @@
   --atomic-error: #ce3f00;
 
   /* Border radius */
-  --atomic-border-radius: 4px;
-  --atomic-border-radius-lg: 16px;
+  --atomic-border-radius: 0.25rem;
+  --atomic-border-radius-lg: 0.5rem;
 
   /* Font */
   --atomic-font-family: canada-type-gibson, sans-serif;
