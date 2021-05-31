@@ -1,6 +1,6 @@
 {
-  "private": true,
   "name": "coveo-atomic-example-070-alpha33",
+  "version": "0.15.0",
   "description": "",
   "keywords": [],
   "author": "Coveo",
@@ -9,6 +9,9 @@
     "url": "https://github.com/codesandbox-app/static-template/issues"
   },
   "homepage": "https://github.com/codesandbox-app/static-template#readme",
+  "scripts": {
+    "prepublishOnly": "exit 1"
+  },
   "devDependencies": {
     "serve": "^11.2.0"
   }
