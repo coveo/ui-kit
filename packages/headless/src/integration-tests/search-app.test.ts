@@ -1,4 +1,9 @@
 import {
+  buildSearchEngine,
+  SearchEngine,
+} from '../app/search-engine/search-engine';
+import {getSampleSearchEngineConfiguration} from '../app/search-engine/search-engine-configuration';
+import {
   CategoryFacet,
   Facet,
   ResultList,
@@ -11,15 +16,11 @@ import {
   SortOrder,
 } from '../features/sort-criteria/criteria';
 import {
-  HeadlessEngine,
-  searchAppReducers,
   buildSearchBox,
   buildResultList,
   buildFacet,
   buildSort,
   buildCategoryFacet,
-  SearchActions,
-  AnalyticsActions,
   Result,
   CategoryFacetValue,
   FacetValue,
@@ -28,8 +29,8 @@ import {
 const sleep = (seconds: number) =>
   new Promise((resolve) => setTimeout(resolve, seconds * 1000));
 
-const configuration = HeadlessEngine.getSampleConfiguration();
-let engine: HeadlessEngine<{}>;
+const configuration = getSampleSearchEngineConfiguration();
+let engine: SearchEngine;
 let searchBox: SearchBox;
 let resultList: ResultList;
 let facet: Facet;
@@ -37,9 +38,8 @@ let categoryFacet: CategoryFacet;
 let sort: Sort;
 
 function initEngine() {
-  engine = new HeadlessEngine({
-    configuration,
-    reducers: searchAppReducers,
+  engine = buildSearchEngine({
+    configuration: getSampleSearchEngineConfiguration(),
     loggerOptions: {level: 'silent'},
   });
 }
@@ -54,18 +54,12 @@ function initControllers() {
   sort = buildSort(engine);
 }
 
-function executeFirstSearch() {
-  const analytics = AnalyticsActions.logInterfaceLoad();
-  const action = SearchActions.executeSearch(analytics);
-  engine.dispatch(action);
-}
-
 describe('search app', () => {
   beforeAll(async () => {
     initEngine();
     initControllers();
-    executeFirstSearch();
 
+    engine.executeFirstSearch();
     await sleep(2);
   });
 
@@ -163,17 +157,18 @@ describe('search app', () => {
 });
 
 describe('search app with expired token and #renewAccessToken configured to return a valid token', () => {
-  const validToken = HeadlessEngine.getSampleConfiguration().accessToken;
+  const expiredToken =
+    'eyJhbGciOiJIUzI1NiJ9.eyJsaWNlbnNlRGVmaW5pdGlvbktleSI6InN0cmluZyIsInY4Ijp0cnVlLCJyb2xlcyI6WyJxdWVyeUV4ZWN1dG9yIl0sInVzZXJEaXNwbGF5TmFtZSI6IkF0b21pYyBDeXByZXNzIEUyRSBUZXN0IiwidXNlcnR5cGUiOiJzdHJpbmciLCJzYWxlc2ZvcmNlQ29tbXVuaXR5Ijoic3RyaW5nIiwiY29tbWVyY2UiOnt9LCJzYWxlc2ZvcmNlVXNlciI6InN0cmluZyIsInBpcGVsaW5lIjoiIiwidXNlckdyb3VwcyI6W10sInNlYXJjaEh1YiI6ImRlZmF1bHQiLCJzYWxlc2ZvcmNlT3JnYW5pemF0aW9uSWQiOiIwMERmMjMwOTAwMThXNWJFQUciLCJjYW5TZWVVc2VyUHJvZmlsZU9mIjpbXSwib3JnYW5pemF0aW9uIjoic2VhcmNodWlzYW1wbGVzIiwidXNlcklkcyI6W3siYXV0aENvb2tpZSI6IiIsInByb3ZpZGVyIjoiRW1haWwgU2VjdXJpdHkgUHJvdmlkZXIiLCJuYW1lIjoiY3lwcmVzc0B0ZXN0LmNvbSIsInR5cGUiOiJVc2VyIiwiaW5mb3MiOnt9fV0sImV4cCI6MTYyMjIyODY4OSwiaWF0IjoxNjIyMjI3Nzg5LCJzYWxlc2ZvcmNlRmFsbGJhY2tUb0FkbWluIjp0cnVlfQ.X4GQe8T0uwZi1WnHIyEvdT_HpgwqFX6kaua8jIZcxAw';
+  const validToken = getSampleSearchEngineConfiguration().accessToken;
 
   beforeAll(async () => {
-    configuration.accessToken =
-      'eyJhbGciOiJIUzI1NiJ9.eyJsaWNlbnNlRGVmaW5pdGlvbktleSI6InN0cmluZyIsInY4Ijp0cnVlLCJyb2xlcyI6WyJxdWVyeUV4ZWN1dG9yIl0sInVzZXJEaXNwbGF5TmFtZSI6IkF0b21pYyBDeXByZXNzIEUyRSBUZXN0IiwidXNlcnR5cGUiOiJzdHJpbmciLCJzYWxlc2ZvcmNlQ29tbXVuaXR5Ijoic3RyaW5nIiwiY29tbWVyY2UiOnt9LCJzYWxlc2ZvcmNlVXNlciI6InN0cmluZyIsInBpcGVsaW5lIjoiIiwidXNlckdyb3VwcyI6W10sInNlYXJjaEh1YiI6ImRlZmF1bHQiLCJzYWxlc2ZvcmNlT3JnYW5pemF0aW9uSWQiOiIwMERmMjMwOTAwMThXNWJFQUciLCJjYW5TZWVVc2VyUHJvZmlsZU9mIjpbXSwib3JnYW5pemF0aW9uIjoic2VhcmNodWlzYW1wbGVzIiwidXNlcklkcyI6W3siYXV0aENvb2tpZSI6IiIsInByb3ZpZGVyIjoiRW1haWwgU2VjdXJpdHkgUHJvdmlkZXIiLCJuYW1lIjoiY3lwcmVzc0B0ZXN0LmNvbSIsInR5cGUiOiJVc2VyIiwiaW5mb3MiOnt9fV0sImV4cCI6MTYyMjIyODY4OSwiaWF0IjoxNjIyMjI3Nzg5LCJzYWxlc2ZvcmNlRmFsbGJhY2tUb0FkbWluIjp0cnVlfQ.X4GQe8T0uwZi1WnHIyEvdT_HpgwqFX6kaua8jIZcxAw';
+    configuration.accessToken = expiredToken;
     configuration.renewAccessToken = () => Promise.resolve(validToken);
 
     initEngine();
     initControllers();
-    executeFirstSearch();
 
+    engine.executeFirstSearch();
     await sleep(2);
   });
 

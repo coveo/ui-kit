@@ -57,10 +57,11 @@ node('linux && docker') {
     if (!isBump) {
       withDockerContainer(image: 'node:14', args: '-u=root') {
         stage('Commit bumped version') {
-            withCredentials([
-            usernameColonPassword(credentialsId: 'github-commit-token', variable: 'GH_CREDENTIALS')]) {
-              sh 'npm run bump:version'
-            }
+          sh 'git clean -xfd -e node_modules/ -e .husky'
+          withCredentials([
+          usernameColonPassword(credentialsId: 'github-commit-token', variable: 'GH_CREDENTIALS')]) {
+            sh 'npm run bump:version'
+          }
         }
       }
       return
@@ -79,6 +80,9 @@ node('linux && docker') {
     withDockerContainer(image: '458176070654.dkr.ecr.us-east-1.amazonaws.com/jenkins/deployment_package:v7') {
       stage('Veracode package') {
         sh 'rm -rf veracode && mkdir veracode'
+
+        sh 'mkdir veracode/bueno'
+        sh 'cp -R packages/bueno/src packages/bueno/package.json packages/bueno/package-lock.json veracode/bueno'
 
         sh 'mkdir veracode/headless'
         sh 'cp -R packages/headless/src packages/headless/package.json packages/headless/package-lock.json veracode/headless'

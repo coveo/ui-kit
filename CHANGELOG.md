@@ -3,6 +3,58 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.15.4](https://github.com/coveo/ui-kit/compare/v0.15.3...v0.15.4) (2021-06-01)
+
+**Note:** Version bump only for package ui-kit
+
+
+
+
+
+## [0.15.3](https://github.com/coveo/ui-kit/compare/v0.15.2...v0.15.3) (2021-06-01)
+
+**Note:** Version bump only for package ui-kit
+
+
+
+
+
+## [0.15.2](https://github.com/coveo/ui-kit/compare/v0.15.1...v0.15.2) (2021-05-31)
+
+**Note:** Version bump only for package ui-kit
+
+
+
+
+
+## [0.15.1](https://github.com/coveo/ui-kit/compare/v0.15.0...v0.15.1) (2021-05-31)
+
+**Note:** Version bump only for package ui-kit
+
+
+
+
+
+# [0.15.0](https://github.com/coveo/ui-kit/compare/v0.14.2...v0.15.0) (2021-05-31)
+
+
+### Bug Fixes
+
+* **atomic,headless:** change update hash strategy of the url manager ([#825](https://github.com/coveo/ui-kit/issues/825)) ([83b91ab](https://github.com/coveo/ui-kit/commit/83b91ab6ba954bcfbca8d79f292a03c09ab90ed9))
+* **atomic,headless:** url manager only updates when the paramaters values change and not their order ([#834](https://github.com/coveo/ui-kit/issues/834)) ([5afb188](https://github.com/coveo/ui-kit/commit/5afb18815d7705fe287418cefec0721b8a781cd7))
+* **headless:** modifying filters (facets) should reset the pagination ([#829](https://github.com/coveo/ui-kit/issues/829)) ([b787e56](https://github.com/coveo/ui-kit/commit/b787e56fb7f65ca570fc81500172485a2f5f0a82))
+
+
+### Features
+
+* **atomic:** prepare the terrain for v1 ([#840](https://github.com/coveo/ui-kit/issues/840)) ([173a109](https://github.com/coveo/ui-kit/commit/173a109938963756a6a873e2103f451bf38aadf1))
+* **headless:** add #id option to tab controller; send originLevel2 as #tab parameter ([#828](https://github.com/coveo/ui-kit/issues/828)) ([cc96af1](https://github.com/coveo/ui-kit/commit/cc96af1ed25d44707c54c189f8d85b198db6b129))
+* **headless:** allow configuration option to allow to specify redux dev tool "store name" ([#835](https://github.com/coveo/ui-kit/issues/835)) ([3da7472](https://github.com/coveo/ui-kit/commit/3da7472ac9ea9c5d4cb279c5e252bf9f0cafc8ba))
+
+
+
+
+
 ## [0.14.2](https://github.com/coveo/ui-kit/compare/v0.14.1...v0.14.2) (2021-05-19)
 
 

@@ -1,4 +1,8 @@
-import {injectComponent, setUpPage} from '../utils/setupComponent';
+import {
+  buildTestUrl,
+  injectComponent,
+  setUpPage,
+} from '../utils/setupComponent';
 import {generateAliasForSearchBox} from './search-box-selectors';
 
 describe('No Results Test Suites', () => {
@@ -13,14 +17,14 @@ describe('No Results Test Suites', () => {
   });
 
   it('should be visible when there are no results', () => {
-    cy.visit('http://localhost:3333/pages/test.html#q=gahaiusdhgaiuewjfsf');
+    cy.visit(buildTestUrl('q=gahaiusdhgaiuewjfsf'));
     injectComponent(component() + searchBox);
     cy.wait(wait);
     cy.get('atomic-no-results').should('be.visible');
   });
 
   it('cancel button should not be visible when there is no history', () => {
-    cy.visit('http://localhost:3333/pages/test.html#q=gahaiusdhgaiuewjfsf');
+    cy.visit(buildTestUrl('q=gahaiusdhgaiuewjfsf'));
     injectComponent(component());
     cy.wait(wait);
     cy.get('atomic-no-results').shadow().get('button').should('not.exist');
