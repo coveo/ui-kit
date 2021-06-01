@@ -56,7 +56,7 @@ export class AtomicFacet implements InitializableComponent {
   @State()
   private searchStatusState!: SearchStatusState;
   @State() public error!: Error;
-  @State() isCollapsed = false;
+  @State() private isCollapsed = false;
 
   /**
    * Specifies a unique identifier for the facet.
@@ -77,11 +77,12 @@ export class AtomicFacet implements InitializableComponent {
   @Prop() public numberOfValues = 8;
   /**
    * Whether this facet should contain a search box.
+   * When "true", the search is only enabled when more facet values are available.
    */
   @Prop() public withSearch = true;
   /**
    * The sort criterion to apply to the returned facet values.
-   * Possible values are 'score', 'numeric', 'occurrences', and 'automatic'.
+   * Possible values are 'score', 'alphanumeric', 'occurrences', and 'automatic'.
    */
   @Prop() public sortCriteria: FacetSortCriterion = 'automatic';
   /**
