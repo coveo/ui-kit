@@ -31,12 +31,18 @@ type ProductRecommendationEngineState = StateFromReducersMapObject<
 > &
   Partial<ProductRecommendationsAppState>;
 
+/**
+ * The engine for powering production recommendation experiences.
+ */
 export interface ProductRecommendationEngine
   extends CoreEngine<
     ProductRecommendationEngineState,
     SearchThunkExtraArguments
   > {}
 
+/**
+ * The product recommendation engine configuration options.
+ */
 export interface ProductRecommendationEngineOptions
   extends ExternalEngineOptions<ProductRecommendationEngineState> {
   /**
@@ -45,6 +51,12 @@ export interface ProductRecommendationEngineOptions
   configuration: ProductRecommendationEngineConfiguration;
 }
 
+/**
+ * Creates a product recommendation engine instance.
+ *
+ * @param options - The product recommendation engine options.
+ * @returns A product recommendation engine instance.
+ */
 export function buildProductRecommendationEngine(
   options: ProductRecommendationEngineOptions
 ): ProductRecommendationEngine {
