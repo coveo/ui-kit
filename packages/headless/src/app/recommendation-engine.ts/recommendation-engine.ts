@@ -26,9 +26,15 @@ type RecommendationEngineState = StateFromReducersMapObject<
 > &
   Partial<RecommendationAppState>;
 
+/**
+ * The engine for powering recommendation experiences.
+ */
 export interface RecommendationEngine
   extends Engine<RecommendationEngineState> {}
 
+/**
+ * The recommendation engine configuration options.
+ */
 export interface RecommendationEngineOptions
   extends ExternalEngineOptions<RecommendationEngineState> {
   /**
@@ -37,6 +43,12 @@ export interface RecommendationEngineOptions
   configuration: RecommendationEngineConfiguration;
 }
 
+/**
+ * Creates a recommendation engine instance.
+ *
+ * @param options - The recommendation engine options.
+ * @returns A recommendation engine instance.
+ */
 export function buildRecommendationEngine(
   options: RecommendationEngineOptions
 ): RecommendationEngine {
