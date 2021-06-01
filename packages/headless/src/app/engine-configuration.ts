@@ -111,3 +111,10 @@ export const engineConfigurationDefinitions: SchemaDefinition<EngineConfiguratio
     },
   }),
 };
+
+export function getSampleEngineConfiguration(): EngineConfiguration {
+  return {
+    organizationId: 'searchuisamples',
+    accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
+  };
+}
