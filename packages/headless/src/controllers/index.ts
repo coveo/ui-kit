@@ -220,51 +220,144 @@ export {
 } from './standalone-search-box/headless-standalone-search-box';
 
 export {
+  /**
+   * @deprecated - The interface is moving to a dedicated sub-package. Please access it using "import {...} from '@coveo/headless/product-recommendation'".
+   */
   FrequentlyBoughtTogetherListOptions,
+  /**
+   * @deprecated - The interface is moving to a dedicated sub-package. Please access it using "import {...} from '@coveo/headless/product-recommendation'".
+   */
   FrequentlyBoughtTogetherListProps,
+  /**
+   * @deprecated - The interface is moving to a dedicated sub-package. Please access it using "import {...} from '@coveo/headless/product-recommendation'".
+   */
   FrequentlyBoughtTogetherListState,
+  /**
+   * @deprecated - The interface is moving to a dedicated sub-package. Please access it using "import {...} from '@coveo/headless/product-recommendation'".
+   */
   FrequentlyBoughtTogetherList,
+  /**
+   * @deprecated - The function is moving to a dedicated sub-package. Please access it using "import {...} from '@coveo/headless/product-recommendation'".
+   */
   buildFrequentlyBoughtTogetherList,
 } from './product-recommendations/headless-frequently-bought-together';
 
 export {
+  /**
+   * @deprecated - The interface is moving to a dedicated sub-package. Please access it using "import {...} from '@coveo/headless/product-recommendation'".
+   */
   CartRecommendationsListOptions,
+  /**
+   * @deprecated - The interface is moving to a dedicated sub-package. Please access it using "import {...} from '@coveo/headless/product-recommendation'".
+   */
   CartRecommendationsListProps,
+  /**
+   * @deprecated - The interface is moving to a dedicated sub-package. Please access it using "import {...} from '@coveo/headless/product-recommendation'".
+   */
   CartRecommendationsListState,
+  /**
+   * @deprecated - The interface is moving to a dedicated sub-package. Please access it using "import {...} from '@coveo/headless/product-recommendation'".
+   */
   ProductRecommendation,
+  /**
+   * @deprecated - The interface is moving to a dedicated sub-package. Please access it using "import {...} from '@coveo/headless/product-recommendation'".
+   */
   CartRecommendationsList,
+  /**
+   * @deprecated - The function is moving to a dedicated sub-package. Please access it using "import {...} from '@coveo/headless/product-recommendation'".
+   */
   buildCartRecommendationsList,
 } from './product-recommendations/headless-cart-recommendations';
 
 export {
+  /**
+   * @deprecated - The interface is moving to a dedicated sub-package. Please access it using "import {...} from '@coveo/headless/product-recommendation'".
+   */
   FrequentlyViewedTogetherListOptions,
+  /**
+   * @deprecated - The interface is moving to a dedicated sub-package. Please access it using "import {...} from '@coveo/headless/product-recommendation'".
+   */
   FrequentlyViewedTogetherListProps,
+  /**
+   * @deprecated - The interface is moving to a dedicated sub-package. Please access it using "import {...} from '@coveo/headless/product-recommendation'".
+   */
   FrequentlyViewedTogetherListState,
+  /**
+   * @deprecated - The interface is moving to a dedicated sub-package. Please access it using "import {...} from '@coveo/headless/product-recommendation'".
+   */
   FrequentlyViewedTogetherList,
+  /**
+   * @deprecated - The function is moving to a dedicated sub-package. Please access it using "import {...} from '@coveo/headless/product-recommendation'".
+   */
   buildFrequentlyViewedTogetherList,
 } from './product-recommendations/headless-frequently-viewed-together';
 
 export {
+  /**
+   * @deprecated - The interface is moving to a dedicated sub-package. Please access it using "import {...} from '@coveo/headless/product-recommendation'".
+   */
   PopularBoughtRecommendationsListOptions,
+  /**
+   * @deprecated - The interface is moving to a dedicated sub-package. Please access it using "import {...} from '@coveo/headless/product-recommendation'".
+   */
   PopularBoughtRecommendationsListProps,
+  /**
+   * @deprecated - The interface is moving to a dedicated sub-package. Please access it using "import {...} from '@coveo/headless/product-recommendation'".
+   */
   PopularBoughtRecommendationsListState,
+  /**
+   * @deprecated - The interface is moving to a dedicated sub-package. Please access it using "import {...} from '@coveo/headless/product-recommendation'".
+   */
   PopularBoughtRecommendationsList,
+  /**
+   * @deprecated - The function is moving to a dedicated sub-package. Please access it using "import {...} from '@coveo/headless/product-recommendation'".
+   */
   buildPopularBoughtRecommendationsList,
 } from './product-recommendations/headless-popular-bought-recommendations';
 
 export {
+  /**
+   * @deprecated - The interface is moving to a dedicated sub-package. Please access it using "import {...} from '@coveo/headless/product-recommendation'".
+   */
   PopularViewedRecommendationsListOptions,
+  /**
+   * @deprecated - The interface is moving to a dedicated sub-package. Please access it using "import {...} from '@coveo/headless/product-recommendation'".
+   */
   PopularViewedRecommendationsListProps,
+  /**
+   * @deprecated - The interface is moving to a dedicated sub-package. Please access it using "import {...} from '@coveo/headless/product-recommendation'".
+   */
   PopularViewedRecommendationsListState,
+  /**
+   * @deprecated - The interface is moving to a dedicated sub-package. Please access it using "import {...} from '@coveo/headless/product-recommendation'".
+   */
   PopularViewedRecommendationsList,
+  /**
+   * @deprecated - The function is moving to a dedicated sub-package. Please access it using "import {...} from '@coveo/headless/product-recommendation'".
+   */
   buildPopularViewedRecommendationsList,
 } from './product-recommendations/headless-popular-viewed-recommendations';
 
 export {
+  /**
+   * @deprecated - The interface is moving to a dedicated sub-package. Please access it using "import {...} from '@coveo/headless/product-recommendation'".
+   */
   UserInterestRecommendationsListOptions,
+  /**
+   * @deprecated - The interface is moving to a dedicated sub-package. Please access it using "import {...} from '@coveo/headless/product-recommendation'".
+   */
   UserInterestRecommendationsListProps,
+  /**
+   * @deprecated - The interface is moving to a dedicated sub-package. Please access it using "import {...} from '@coveo/headless/product-recommendation'".
+   */
   UserInterestRecommendationsListState,
+  /**
+   * @deprecated - The interface is moving to a dedicated sub-package. Please access it using "import {...} from '@coveo/headless/product-recommendation'".
+   */
   UserInterestRecommendationsList,
+  /**
+   * @deprecated - The function is moving to a dedicated sub-package. Please access it using "import {...} from '@coveo/headless/product-recommendation'".
+   */
   buildUserInterestRecommendationsList,
 } from './product-recommendations/headless-user-interest-recommendations';
 

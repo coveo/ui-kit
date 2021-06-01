@@ -52,6 +52,10 @@ const nodejs = [
     input: 'src/recommendation.index.ts',
     outDir: 'dist/recommendation'
   },
+  {
+    input: 'src/product-recommendation.index.ts',
+    outDir: 'dist/product-recommendation'
+  },
 ].map(buildNodeConfiguration);
 
 function buildNodeConfiguration({input, outDir}) {
@@ -98,6 +102,13 @@ const browser = [
     output: [
       buildUmdOutput('dist/browser/recommendation', 'CoveoHeadlessRecommendation'),
       buildEsmOutput('dist/browser/recommendation')
+    ]
+  },
+  {
+    input: 'src/product-recommendation.index.ts',
+    output: [
+      buildUmdOutput('dist/browser/product-recommendation', 'CoveoHeadlessProductRecommendation'),
+      buildEsmOutput('dist/browser/product-recommendation')
     ]
   },
 ].map(buildBrowserConfiguration);
