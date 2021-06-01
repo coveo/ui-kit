@@ -96,7 +96,7 @@ export class AtomicResultsPerPage implements InitializableComponent {
   private buildChoice(choice: number) {
     const isSelected = this.resultPerPage.isSetTo(choice);
     const classes = isSelected
-      ? 'text-on-primary bg-primary hover:bg-primary-variant'
+      ? 'text-on-primary bg-primary hover:bg-primary-light'
       : 'text-on-background';
 
     return (

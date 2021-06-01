@@ -68,7 +68,7 @@ export class AtomicQueryError implements InitializableComponent {
     return (
       <pre
         part="error-info"
-        class="text-left border border-divider bg-background-variant p-3 rounded my-4 whitespace-pre-wrap"
+        class="text-left border border-neutral bg-neutral-light p-3 rounded my-4 whitespace-pre-wrap"
       >
         <code>{JSON.stringify(this.queryErrorState.error, null, 2)}</code>
       </pre>
@@ -125,7 +125,7 @@ export class AtomicQueryError implements InitializableComponent {
           <a
             href={this.link}
             part="doc-link"
-            class="text-primary hover:underline visited:text-visited"
+            class="text-primary hover:underline"
           >
             {this.strings.helpLink()}
           </a>
