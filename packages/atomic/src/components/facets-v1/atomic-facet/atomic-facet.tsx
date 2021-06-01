@@ -19,7 +19,7 @@ import {
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import {FacetPlaceholder} from '../../facets/atomic-facet-placeholder/atomic-facet-placeholder';
-import {FacetWrapper} from '../facet-wrapper/facet-wrapper';
+import {FacetContainer} from '../facet-container/facet-container';
 import {FacetHeader} from '../facet-header/facet-header';
 import {FacetSearchInput} from '../facet-search-input/facet-search-input';
 import {FacetValueCheckbox} from '../facet-value-checkbox/facet-value-checkbox';
@@ -69,11 +69,12 @@ export class AtomicFacet implements InitializableComponent {
   @Prop() public numberOfValues = 8;
   /**
    * Whether this facet should contain a search box.
+   * When "true", the search is only enabled when more facet values are available.
    */
   @Prop() public withSearch = true;
   /**
    * The sort criterion to apply to the returned facet values.
-   * Possible values are 'score', 'numeric', 'occurrences', and 'automatic'.
+   * Possible values are 'score', 'alphanumeric', 'occurrences', and 'automatic'.
    */
   @Prop() public sortCriteria: FacetSortCriterion = 'automatic';
   /**
@@ -143,7 +144,7 @@ export class AtomicFacet implements InitializableComponent {
     }
 
     return (
-      <FacetWrapper>
+      <FacetContainer>
         <FacetHeader label={this.strings[this.label]()}></FacetHeader>
         {this.shouldDisplaySearch && (
           <FacetSearchInput
@@ -157,7 +158,7 @@ export class AtomicFacet implements InitializableComponent {
         {this.facetState.canShowMoreValues && (
           <FacetShowMore label={this.strings.showMore()}></FacetShowMore>
         )}
-      </FacetWrapper>
+      </FacetContainer>
     );
   }
 }
