@@ -20,10 +20,7 @@ import {
 } from '../../../utils/initialization-utils';
 import {FacetPlaceholder} from '../../facets/atomic-facet-placeholder/atomic-facet-placeholder';
 import {FacetContainer} from '../facet-container/facet-container';
-import {
-  FacetHeader,
-  loadFacetHeaderStrings,
-} from '../facet-header/facet-header';
+import {FacetHeader} from '../facet-header/facet-header';
 import {FacetSearchInput} from '../facet-search-input/facet-search-input';
 import {FacetValueCheckbox} from '../facet-value-checkbox/facet-value-checkbox';
 import {FacetValueLink} from '../facet-value-link/facet-value-link';
@@ -116,15 +113,6 @@ export class AtomicFacet implements InitializableComponent {
     this.bindings.store.state.facets[this.facetId] = {
       label: this.label,
     };
-    this.loadStrings();
-  }
-
-  private loadStrings() {
-    loadFacetHeaderStrings({
-      i18n: this.bindings.i18n,
-      stringsState: this.strings,
-      label: this.label,
-    });
   }
 
   private get numberOfSelectedValues() {
@@ -135,7 +123,8 @@ export class AtomicFacet implements InitializableComponent {
   private renderHeader() {
     return (
       <FacetHeader
-        stringsState={this.strings}
+        i18n={this.bindings.i18n}
+        label={this.label}
         onClearFilters={() => this.facet.deselectAll()}
         numberOfSelectedValues={this.numberOfSelectedValues}
         isCollapsed={this.isCollapsed}
