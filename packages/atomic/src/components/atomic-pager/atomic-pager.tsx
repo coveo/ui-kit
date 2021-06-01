@@ -78,7 +78,7 @@ export class AtomicPager implements InitializableComponent {
           class={`text-primary ${
             options.disabled
               ? 'opacity-50 cursor-not-allowed'
-              : 'hover:text-primary-variant'
+              : 'hover:text-primary-light'
           }`}
           disabled={options.disabled}
           aria-label={options.ariaLabel}
@@ -122,7 +122,7 @@ export class AtomicPager implements InitializableComponent {
   private buildPage(page: number) {
     const isSelected = this.pager.isCurrentPage(page);
     const classes = isSelected
-      ? 'text-on-primary bg-primary hover:bg-primary-variant'
+      ? 'text-on-primary bg-primary hover:bg-primary-light'
       : 'text-on-background';
 
     return (

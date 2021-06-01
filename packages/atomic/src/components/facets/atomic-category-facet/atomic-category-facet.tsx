@@ -341,7 +341,7 @@ export class AtomicCategoryFacet
         </span>
       </div>,
       <div
-        class="flex text-on-background-variant"
+        class="flex text-neutral-dark"
         aria-hidden="true"
         title={searchResult.path.join(SEPARATOR)}
         part="search-result-path"

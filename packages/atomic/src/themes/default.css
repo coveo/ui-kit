@@ -1,31 +1,36 @@
+/* The default theme is a more basic, higher contrast theme */
 :root {
-  /* Colors */
-  --atomic-primary: #1372ec;
-  --atomic-primary-variant: #215cd3;
+  /* Primary colors */
+  --atomic-primary: #303f9f;
+  --atomic-primary-light: #666ad1;
+  --atomic-primary-dark: #001970;
   --atomic-on-primary: #ffffff;
-  --atomic-secondary: #333357;
-  --atomic-secondary-variant: #333357;
+
+  /* Secondary colors */
+  --atomic-secondary: #1565c0;
+  --atomic-secondary-light: #5e92f3;
+  --atomic-secondary-dark: #003c8f;
   --atomic-on-secondary: #ffffff;
+
+  /* Neutral colors */
+  --atomic-neutral-dark: #424242;
+  --atomic-neutral: #757575;
+  --atomic-neutral-light: #e0e0e0;
+
+  /* Semantic colors */
   --atomic-background: #ffffff;
-  --atomic-background-variant: #f6f7f9;
-  --atomic-on-background: #282829;
-  --atomic-on-background-variant: #6b6b6b;
+  --atomic-on-background: #000000;
+  --atomic-success: #12a244;
   --atomic-error: #ce3f00;
-  --atomic-on-error: #ffffff;
-  --atomic-visited: #9333ea;
 
-  /* Border */
-  --atomic-border-radius-sm: 0.125rem;
+  /* Border radius */
   --atomic-border-radius: 0.25rem;
-  --atomic-border-radius-md: 0.375rem;
   --atomic-border-radius-lg: 0.5rem;
-  --atomic-border-radius-xl: 0.75rem;
-  --atomic-border-radius-full: 100%;
-  --atomic-divider: #c5cacf;
 
-  /* Fonts */
+  /* Font */
   --atomic-font-family: -apple-system, BlinkMacSystemFont, avenir next, avenir, segoe ui, helvetica neue, helvetica,
     Ubuntu, roboto, noto, arial, sans-serif; /* Following https://systemfontstack.com/ */
+  --atomic-font-normal: 400;
   --atomic-font-bold: 700;
 
   /* Others */
