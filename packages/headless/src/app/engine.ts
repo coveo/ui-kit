@@ -262,8 +262,10 @@ function createMiddleware<Reducers extends ReducersMapObject>(
   logger: Logger
 ) {
   const {renewAccessToken} = options.configuration;
-  const renewFn = renewAccessToken || (() => Promise.resolve(''));
-  const renewTokenMiddleware = createRenewAccessTokenMiddleware(renewFn);
+  const renewTokenMiddleware = createRenewAccessTokenMiddleware(
+    logger,
+    renewAccessToken
+  );
 
   return [
     renewTokenMiddleware,
