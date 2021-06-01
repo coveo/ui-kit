@@ -28,7 +28,7 @@
     "@coveo/headless": "^0.15.3"
   },
   "devDependencies": {
-    "@salesforce/eslint-config-lwc": "^0.7.0",
+    "@salesforce/eslint-config-lwc": "^2.0.0",
     "@salesforce/sfdx-lwc-jest": "^0.12.3",
     "@types/jest": "^26.0.15",
     "eslint": "^7.11.0",
