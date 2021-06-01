@@ -47,6 +47,6 @@ export interface BaseRangeFacetRequest
     RangeAlgorithm<RangeFacetRangeAlgorithm> {
   /** @defaultValue `ascending` */
   sortCriteria: RangeFacetSortCriterion;
-  /** @defaultValue `equiprobable` */
+  /** @defaultValue `even` */
   rangeAlgorithm: RangeFacetRangeAlgorithm;
 }

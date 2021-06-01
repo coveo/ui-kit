@@ -54,7 +54,7 @@ describe('range facet reducers', () => {
         numberOfValues: 8,
         sortCriteria: 'ascending',
         type: 'numericalRange',
-        rangeAlgorithm: 'equiprobable',
+        rangeAlgorithm: 'even',
         ...options,
       });
     });

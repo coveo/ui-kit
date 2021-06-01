@@ -11,7 +11,7 @@ export const defaultRangeFacetOptions: RangeFacetOptionalParameters = {
   injectionDepth: 1000,
   numberOfValues: 8,
   sortCriteria: 'ascending',
-  rangeAlgorithm: 'equiprobable',
+  rangeAlgorithm: 'even',
 };
 
 export function registerRangeFacet<T extends RangeFacetRequest>(

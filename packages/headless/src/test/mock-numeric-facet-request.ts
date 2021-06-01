@@ -14,7 +14,7 @@ export function buildMockNumericFacetRequest(
     preventAutoSelect: false,
     sortCriteria: 'ascending',
     type: 'numericalRange',
-    rangeAlgorithm: 'equiprobable',
+    rangeAlgorithm: 'even',
     ...config,
   };
 }

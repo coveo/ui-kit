@@ -54,7 +54,7 @@ describe('date-facet-set slice', () => {
       preventAutoSelect: false,
       sortCriteria: 'ascending',
       type: 'dateRange',
-      rangeAlgorithm: 'equiprobable',
+      rangeAlgorithm: 'even',
     });
   });
 

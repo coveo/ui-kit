@@ -102,7 +102,7 @@ export interface NumericFacetOptions {
   /**
    * The range algorithm applied when ranges are automatically generated.
    *
-   * @defaultValue `equiprobable`
+   * @defaultValue `even`
    */
   rangeAlgorithm?: RangeFacetRangeAlgorithm;
 }

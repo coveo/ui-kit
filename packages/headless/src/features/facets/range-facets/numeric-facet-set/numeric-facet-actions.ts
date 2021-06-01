@@ -88,7 +88,7 @@ export interface RegisterNumericFacetActionCreatorPayload {
   /**
    * The range algorithm to apply to automatically generated ranges for the range facet.
    *
-   * @defaultValue `equiprobable`
+   * @defaultValue `even`
    */
   rangeAlgorithm?: RangeFacetRangeAlgorithm;
 }

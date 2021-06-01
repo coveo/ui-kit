@@ -92,7 +92,7 @@ export class AtomicNumericFacet
   /**
    * The algorithm used to generate the ranges for this facet, when there are no manual ranges.
    */
-  @Prop() public rangeAlgorithm: RangeFacetRangeAlgorithm = 'equiprobable';
+  @Prop() public rangeAlgorithm: RangeFacetRangeAlgorithm = 'even';
 
   private buildManualRanges() {
     const options = Array.from(
