@@ -21,6 +21,9 @@ import {LoggerOptions} from './logger';
 import {Logger} from 'pino';
 import {ThunkExtraArguments} from './thunk-extra-arguments';
 import {configuration, version} from './reducers';
+import {createRenewAccessTokenMiddleware} from './renew-access-token-middleware';
+import {logActionErrorMiddleware} from './logger-middlewares';
+import {analyticsMiddleware} from './analytics-middleware';
 
 const coreReducers = {configuration, version};
 type CoreState = StateFromReducersMapObject<typeof coreReducers>;
@@ -65,6 +68,8 @@ export interface CoreEngine<
   store: Store;
   /**
    * A function for headless to call to retrieve a refreshed access token.
+   *
+   * @deprecated - Calling this function directly is not needed because Headless handles token renewal internally. The function will be removed in the next major version.
    */
   renewAccessToken: () => Promise<string>;
   /**
@@ -212,8 +217,9 @@ function createStore<
   thunkExtraArguments: ExtraArguments,
   reducerManager: ReducerManager
 ) {
-  const {preloadedState, middlewares, configuration} = options;
+  const {preloadedState, configuration} = options;
   const name = configuration.name || 'coveo-headless';
+  const middlewares = createMiddleware(options, thunkExtraArguments.logger);
 
   return configureStore({
     preloadedState,
@@ -254,4 +260,21 @@ function createRenewAccessTokenFunction(
       return '';
     }
   };
+}
+
+function createMiddleware<Reducers extends ReducersMapObject>(
+  options: EngineOptions<Reducers>,
+  logger: Logger
+) {
+  const {renewAccessToken} = options.configuration;
+  const renewTokenMiddleware = createRenewAccessTokenMiddleware(
+    logger,
+    renewAccessToken
+  );
+
+  return [
+    renewTokenMiddleware,
+    logActionErrorMiddleware(logger),
+    analyticsMiddleware,
+  ].concat(options.middlewares || []);
 }
