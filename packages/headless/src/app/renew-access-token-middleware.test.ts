@@ -24,6 +24,10 @@ describe('createRenewAccessTokenMiddleware', () => {
     );
   }
 
+  function buildArrayWithLengthEqualToNumberOfRetries() {
+    return new Array(5).fill(0);
+  }
+
   beforeEach(() => {
     logger = pino({level: 'silent'});
     store = {
@@ -98,8 +102,9 @@ describe('createRenewAccessTokenMiddleware', () => {
 
       const middleware = createRenewAccessTokenMiddleware(logger, renewFn);
 
-      await callMiddleware(middleware, action);
-      await callMiddleware(middleware, action);
+      const array = buildArrayWithLengthEqualToNumberOfRetries();
+      const promises = array.map(() => callMiddleware(middleware, action));
+      await Promise.all(promises);
 
       (store.dispatch as jest.Mock).mockReset();
 
@@ -127,8 +132,9 @@ describe('createRenewAccessTokenMiddleware', () => {
     const middleware = createRenewAccessTokenMiddleware(logger, renewFn);
 
     jest.useFakeTimers();
-    await callMiddleware(middleware, action);
-    await callMiddleware(middleware, action);
+    const array = buildArrayWithLengthEqualToNumberOfRetries();
+    const promises = array.map(() => callMiddleware(middleware, action));
+    await Promise.all(promises);
 
     (store.dispatch as jest.Mock).mockReset();
 

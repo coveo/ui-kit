@@ -34,7 +34,7 @@ export function createRenewAccessTokenMiddleware(
       return payload;
     }
 
-    if (accessTokenRenewalsAttempts >= 2) {
+    if (accessTokenRenewalsAttempts >= 5) {
       logger.warn(
         'Attempted to renew the token but was not successful. Please check the #renewAccessToken function.'
       );
