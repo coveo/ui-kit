@@ -20,7 +20,10 @@ import {
 } from '../../../utils/initialization-utils';
 import {FacetPlaceholder} from '../../facets/atomic-facet-placeholder/atomic-facet-placeholder';
 import {FacetContainer} from '../facet-container/facet-container';
-import {FacetHeader} from '../facet-header/facet-header';
+import {
+  FacetHeader,
+  loadFacetHeaderStrings,
+} from '../facet-header/facet-header';
 import {FacetSearchInput} from '../facet-search-input/facet-search-input';
 import {FacetValueCheckbox} from '../facet-value-checkbox/facet-value-checkbox';
 import {FacetValueLink} from '../facet-value-link/facet-value-link';
@@ -95,22 +98,8 @@ export class AtomicFacet implements InitializableComponent {
   @BindStateToI18n()
   @State()
   public strings: I18nState = {
-    label: () => this.bindings.i18n.t(this.label),
     showMore: () => this.bindings.i18n.t('showMore'),
     showLess: () => this.bindings.i18n.t('showLess'),
-    clearFilters: () =>
-      this.bindings.i18n.t('clearFilters', {
-        count: this.numberOfSelectedValues,
-      }),
-    clearFiltersAria: () =>
-      this.bindings.i18n.t('clearFiltersForFacet', {
-        count: this.numberOfSelectedValues,
-        label: this.strings.label(),
-      }),
-    collapseAria: () =>
-      this.bindings.i18n.t(this.isCollapsed ? 'expandFacet' : 'collapseFacet', {
-        label: this.strings.label(),
-      }),
   };
 
   public initialize() {
@@ -127,6 +116,15 @@ export class AtomicFacet implements InitializableComponent {
     this.bindings.store.state.facets[this.facetId] = {
       label: this.label,
     };
+    this.loadStrings();
+  }
+
+  private loadStrings() {
+    loadFacetHeaderStrings({
+      i18n: this.bindings.i18n,
+      stringsState: this.strings,
+      label: this.label,
+    });
   }
 
   private get numberOfSelectedValues() {
@@ -137,12 +135,9 @@ export class AtomicFacet implements InitializableComponent {
   private renderHeader() {
     return (
       <FacetHeader
-        label={this.strings.label()}
-        clearFilters={this.strings.clearFilters()}
-        clearFiltersAria={this.strings.clearFiltersAria()}
-        collapseAria={this.strings.collapseAria()}
+        stringsState={this.strings}
         onClearFilters={() => this.facet.deselectAll()}
-        hasActiveValues={this.facetState.hasActiveValues}
+        numberOfSelectedValues={this.numberOfSelectedValues}
         isCollapsed={this.isCollapsed}
         onToggleCollapse={() => (this.isCollapsed = !this.isCollapsed)}
       ></FacetHeader>
