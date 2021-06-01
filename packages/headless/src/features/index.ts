@@ -64,7 +64,7 @@ import {
   setOriginLevel3 as setOriginLevel3Alias,
 } from './configuration/configuration-actions';
 /**
- * @deprecated - This namespace will be removed. Please use `loadConfigurationActions` instead.
+ * @deprecated - This namespace will be removed. Please use `loadConfigurationActions` or `loadSearchConfigurationActions` instead.
  */
 export namespace ConfigurationActions {
   export const updateBasicConfiguration = updateBasicConfigurationAlias;
@@ -78,6 +78,7 @@ export namespace ConfigurationActions {
 }
 
 export * from './configuration/configuration-actions-loader';
+export * from './configuration/search-configuration-actions-loader';
 
 import {
   setContext as setContextAlias,
