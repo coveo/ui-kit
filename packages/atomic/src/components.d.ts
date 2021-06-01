@@ -128,6 +128,36 @@ export namespace Components {
     }
     interface AtomicFacetManager {
     }
+    interface AtomicFacetV1 {
+        /**
+          * Whether to display the facet values as checkboxes (multiple selection), links (single selection) or boxes (multiple selection). Possible values are 'checkbox', 'link', and 'box'.
+         */
+        "displayValuesAs": 'checkbox' | 'link' | 'box';
+        /**
+          * Specifies a unique identifier for the facet.
+         */
+        "facetId"?: string;
+        /**
+          * The field whose values you want to display in the facet.
+         */
+        "field": string;
+        /**
+          * The non-localized label for the facet.
+         */
+        "label": string;
+        /**
+          * The number of values to request for this facet. Also determines the number of additional values to request each time more values are shown.
+         */
+        "numberOfValues": number;
+        /**
+          * The sort criterion to apply to the returned facet values. Possible values are 'score', 'numeric', 'occurrences', and 'automatic'.
+         */
+        "sortCriteria": FacetSortCriterion;
+        /**
+          * Whether this facet should contain a search box.
+         */
+        "withSearch": boolean;
+    }
     interface AtomicFieldCondition {
         /**
           * A list of conditions that must be fulfilled for this template to be selected.
@@ -465,6 +495,12 @@ declare global {
         prototype: HTMLAtomicFacetManagerElement;
         new (): HTMLAtomicFacetManagerElement;
     };
+    interface HTMLAtomicFacetV1Element extends Components.AtomicFacetV1, HTMLStencilElement {
+    }
+    var HTMLAtomicFacetV1Element: {
+        prototype: HTMLAtomicFacetV1Element;
+        new (): HTMLAtomicFacetV1Element;
+    };
     interface HTMLAtomicFieldConditionElement extends Components.AtomicFieldCondition, HTMLStencilElement {
     }
     var HTMLAtomicFieldConditionElement: {
@@ -648,6 +684,7 @@ declare global {
         "atomic-did-you-mean": HTMLAtomicDidYouMeanElement;
         "atomic-facet": HTMLAtomicFacetElement;
         "atomic-facet-manager": HTMLAtomicFacetManagerElement;
+        "atomic-facet-v1": HTMLAtomicFacetV1Element;
         "atomic-field-condition": HTMLAtomicFieldConditionElement;
         "atomic-frequently-bought-together": HTMLAtomicFrequentlyBoughtTogetherElement;
         "atomic-modal": HTMLAtomicModalElement;
@@ -797,6 +834,36 @@ declare namespace LocalJSX {
         "sortCriteria"?: FacetSortCriterion;
     }
     interface AtomicFacetManager {
+    }
+    interface AtomicFacetV1 {
+        /**
+          * Whether to display the facet values as checkboxes (multiple selection), links (single selection) or boxes (multiple selection). Possible values are 'checkbox', 'link', and 'box'.
+         */
+        "displayValuesAs"?: 'checkbox' | 'link' | 'box';
+        /**
+          * Specifies a unique identifier for the facet.
+         */
+        "facetId"?: string;
+        /**
+          * The field whose values you want to display in the facet.
+         */
+        "field": string;
+        /**
+          * The non-localized label for the facet.
+         */
+        "label"?: string;
+        /**
+          * The number of values to request for this facet. Also determines the number of additional values to request each time more values are shown.
+         */
+        "numberOfValues"?: number;
+        /**
+          * The sort criterion to apply to the returned facet values. Possible values are 'score', 'numeric', 'occurrences', and 'automatic'.
+         */
+        "sortCriteria"?: FacetSortCriterion;
+        /**
+          * Whether this facet should contain a search box.
+         */
+        "withSearch"?: boolean;
     }
     interface AtomicFieldCondition {
         /**
@@ -1082,6 +1149,7 @@ declare namespace LocalJSX {
         "atomic-did-you-mean": AtomicDidYouMean;
         "atomic-facet": AtomicFacet;
         "atomic-facet-manager": AtomicFacetManager;
+        "atomic-facet-v1": AtomicFacetV1;
         "atomic-field-condition": AtomicFieldCondition;
         "atomic-frequently-bought-together": AtomicFrequentlyBoughtTogether;
         "atomic-modal": AtomicModal;
@@ -1125,6 +1193,7 @@ declare module "@stencil/core" {
             "atomic-did-you-mean": LocalJSX.AtomicDidYouMean & JSXBase.HTMLAttributes<HTMLAtomicDidYouMeanElement>;
             "atomic-facet": LocalJSX.AtomicFacet & JSXBase.HTMLAttributes<HTMLAtomicFacetElement>;
             "atomic-facet-manager": LocalJSX.AtomicFacetManager & JSXBase.HTMLAttributes<HTMLAtomicFacetManagerElement>;
+            "atomic-facet-v1": LocalJSX.AtomicFacetV1 & JSXBase.HTMLAttributes<HTMLAtomicFacetV1Element>;
             "atomic-field-condition": LocalJSX.AtomicFieldCondition & JSXBase.HTMLAttributes<HTMLAtomicFieldConditionElement>;
             "atomic-frequently-bought-together": LocalJSX.AtomicFrequentlyBoughtTogether & JSXBase.HTMLAttributes<HTMLAtomicFrequentlyBoughtTogetherElement>;
             "atomic-modal": LocalJSX.AtomicModal & JSXBase.HTMLAttributes<HTMLAtomicModalElement>;
