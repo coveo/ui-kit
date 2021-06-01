@@ -60,7 +60,7 @@
     "eslint-plugin-cypress": "^2.11.1",
     "html-loader-jest": "^0.2.1",
     "jest": "^26.4.2",
-    "jest-cli": "^26.4.2",
+    "jest-cli": "^27.0.3",
     "postcss-import": "^14.0.2",
     "puppeteer": "^9.1.1",
     "rollup": "^2.18.2",
