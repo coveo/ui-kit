@@ -19,7 +19,7 @@ import {
   InitializeBindings,
 } from '../../../utils/initialization-utils';
 import {FacetPlaceholder} from '../../facets/atomic-facet-placeholder/atomic-facet-placeholder';
-import {FacetWrapper} from '../facet-wrapper/facet-wrapper';
+import {FacetContainer} from '../facet-container/facet-container';
 import {FacetHeader} from '../facet-header/facet-header';
 import {FacetSearchInput} from '../facet-search-input/facet-search-input';
 import {FacetValueCheckbox} from '../facet-value-checkbox/facet-value-checkbox';
@@ -208,14 +208,14 @@ export class AtomicFacet implements InitializableComponent {
     }
 
     return (
-      <FacetWrapper>
+      <FacetContainer>
         {this.renderHeader()}
         {!this.isCollapsed && [
           this.renderSearchInput(),
           this.renderValues(),
           this.renderShowMoreLess(),
         ]}
-      </FacetWrapper>
+      </FacetContainer>
     );
   }
 }
