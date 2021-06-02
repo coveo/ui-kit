@@ -24,7 +24,7 @@ import {
   ResultListState,
 } from '../result-list/headless-result-list';
 
-export {FoldedCollection as Collection, FoldedResult};
+export {FoldedCollection, FoldedResult};
 
 const optionsSchema = new Schema<Required<FoldingOptions>>(
   foldingOptionsSchemaDefinition

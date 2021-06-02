@@ -6,7 +6,6 @@ import {loadCollection, registerFolding} from './folding-actions';
 import {
   FoldedCollection,
   CollectionId,
-  collectionMoreResultsAvailableBuffer,
   FoldedResult,
   FoldingFields,
   getFoldingInitialState,
@@ -88,59 +87,26 @@ function resolveRootFromFields(
   });
 }
 
-function getExpensiveFoldedResults(
-  relevantResult: ResultWithFolding,
-  foldedResults: ResultWithFolding[],
-  parentResults: ResultWithFolding[]
-) {
-  const isIncludedForFree = (result: ResultWithFolding) =>
-    relevantResult.uniqueId === result.uniqueId ||
-    !!parentResults.find((parent) => parent.uniqueId === result.uniqueId);
-
-  return foldedResults.filter((result) => !isIncludedForFree(result));
-}
-
-function getAllIncludedResultsFrom(
-  relevantResult: ResultWithFolding,
-  numberOfFoldedResults: number
-) {
+function getAllIncludedResultsFrom(relevantResult: ResultWithFolding) {
   const foldedResults = getChildResultsRecursively(relevantResult);
 
   const parentResults = [relevantResult, ...foldedResults]
     .filter((result) => result.parentResult)
     .map((result) => result.parentResult!);
 
-  const expensiveFoldedResults = getExpensiveFoldedResults(
-    relevantResult,
-    foldedResults,
-    parentResults
-  );
-
-  const moreResultsAvailable =
-    expensiveFoldedResults.length > numberOfFoldedResults;
-
-  const foldedResultsToDisplay = expensiveFoldedResults.slice(
-    0,
-    numberOfFoldedResults
-  );
-
   const resultsInCollection = removeDuplicates(
-    [relevantResult, ...foldedResultsToDisplay, ...parentResults],
+    [relevantResult, ...foldedResults, ...parentResults],
     (result) => result.uniqueId
   );
 
-  return {resultsInCollection, moreResultsAvailable};
+  return resultsInCollection;
 }
 
 function createCollectionFromResult(
   relevantResult: ResultWithFolding,
-  fields: FoldingFields,
-  numberOfFoldedResults: number
+  fields: FoldingFields
 ): FoldedCollection {
-  const {resultsInCollection, moreResultsAvailable} = getAllIncludedResultsFrom(
-    relevantResult,
-    numberOfFoldedResults
-  );
+  const resultsInCollection = getAllIncludedResultsFrom(relevantResult);
 
   const rootResult =
     resolveRootFromFields(resultsInCollection, fields) ?? relevantResult;
@@ -152,15 +118,14 @@ function createCollectionFromResult(
       resultsInCollection,
       fields
     ),
-    moreResultsAvailable,
+    moreResultsAvailable: true,
     isLoadingMoreResults: false,
   };
 }
 
 function createCollections(
   results: ResultWithFolding[],
-  fields: FoldingFields,
-  numberOfFoldedResults: number
+  fields: FoldingFields
 ) {
   const collections: Record<CollectionId, FoldedCollection> = {};
   results.forEach((result) => {
@@ -168,11 +133,7 @@ function createCollections(
     if (!collectionId) {
       return;
     }
-    collections[collectionId] = createCollectionFromResult(
-      result,
-      fields,
-      numberOfFoldedResults
-    );
+    collections[collectionId] = createCollectionFromResult(result, fields);
   });
   return collections;
 }
@@ -185,8 +146,7 @@ export const foldingReducer = createReducer(
         state.collections = state.enabled
           ? createCollections(
               payload.response.results as ResultWithFolding[],
-              state.fields,
-              state.filterFieldRange - collectionMoreResultsAvailableBuffer
+              state.fields
             )
           : {};
       })
@@ -196,8 +156,7 @@ export const foldingReducer = createReducer(
               ...state.collections,
               ...createCollections(
                 payload.response.results as ResultWithFolding[],
-                state.fields,
-                state.filterFieldRange - collectionMoreResultsAvailableBuffer
+                state.fields
               ),
             }
           : {};
@@ -213,10 +172,8 @@ export const foldingReducer = createReducer(
                 parent: payload.parentField ?? state.fields.parent,
                 child: payload.childField ?? state.fields.child,
               },
-              filterFieldRange: payload.numberOfFoldedResults
-                ? payload.numberOfFoldedResults +
-                  collectionMoreResultsAvailableBuffer
-                : state.filterFieldRange,
+              filterFieldRange:
+                payload.numberOfFoldedResults ?? state.filterFieldRange,
             }
       )
       .addCase(loadCollection.pending, (state, {meta}) => {
