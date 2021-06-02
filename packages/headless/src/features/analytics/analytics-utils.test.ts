@@ -28,4 +28,20 @@ describe('analytics-utils', () => {
       partialDocumentInformation(result, createMockState()).documentAuthor
     ).toBe('unknown');
   });
+
+  it('should extract sourceName information from source field', () => {
+    const result = buildMockResult();
+    result.raw.source = 'mysource';
+    expect(
+      partialDocumentInformation(result, createMockState()).sourceName
+    ).toBe('mysource');
+  });
+
+  it('should extract sourceName information when there is no source field', () => {
+    const result = buildMockResult();
+    delete result.raw['source'];
+    expect(
+      partialDocumentInformation(result, createMockState()).sourceName
+    ).toBe('unknown');
+  });
 });
