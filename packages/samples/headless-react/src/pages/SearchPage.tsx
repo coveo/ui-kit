@@ -280,6 +280,7 @@ export class SearchPage extends Component {
     this.engine = new HeadlessEngine({
       configuration: HeadlessEngine.getSampleConfiguration(),
       reducers: searchAppReducers,
+      preloadedState: (window as any).HEADLESS_STATE,
     });
   }
 

@@ -33,9 +33,15 @@ app.get('/', async (req, res) => {
       return res.status(500).send('Internal error');
     }
 
-    return res.send(
-      data.replace('<div id="root"></div>', `<div id="root">${app}</div>`)
-    );
+    const state = JSON.stringify(engine.state);
+    const page = data
+      .replace('<div id="root"></div>', `<div id="root">${app}</div>`)
+      .replace(
+        '<script id="ssr"></script>',
+        `<script id="ssr">window.HEADLESS_STATE = ${state}</script>`
+      );
+
+    return res.send(page);
   });
 });
 
