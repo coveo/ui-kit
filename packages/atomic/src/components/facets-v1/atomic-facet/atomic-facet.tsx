@@ -31,6 +31,13 @@ import {FacetShowMore} from '../facet-show-more/facet-show-more';
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
  * An `atomic-facet` displays a facet of the results for the current query. In mobile browsers, this is rendered as a button that opens a facet modal.
+ *
+ * @part facet - The wrapper for the entire facet.
+ *
+ * @part label-button - The button that displays the label and allows to expand/collapse the facet.
+ * @part label-button-icon - The label button icon.
+ * @part clear-button - The button that resets the actively selected facet values.
+ * @part clear-button-icon - The clear button icon.
  */
 @Component({
   tag: 'atomic-facet-v1', // TODO: remove v1 when old facets are removed
@@ -49,6 +56,7 @@ export class AtomicFacet implements InitializableComponent {
   @State()
   private searchStatusState!: SearchStatusState;
   @State() public error!: Error;
+  @State() private isCollapsed = false;
 
   /**
    * Specifies a unique identifier for the facet.
@@ -102,18 +110,44 @@ export class AtomicFacet implements InitializableComponent {
     };
     this.facet = buildFacet(this.bindings.engine, {options});
     this.facetId = this.facet.state.facetId;
-
-    this.strings[this.label] = () => this.bindings.i18n.t(this.label);
     this.bindings.store.state.facets[this.facetId] = {
       label: this.label,
     };
   }
 
-  private get shouldDisplaySearch() {
-    return this.withSearch && this.facetState.canShowMoreValues;
+  private get numberOfSelectedValues() {
+    return this.facetState.values.filter(({state}) => state === 'selected')
+      .length;
   }
 
-  private renderFacetValue(facetValue: FacetValue) {
+  private renderHeader() {
+    return (
+      <FacetHeader
+        i18n={this.bindings.i18n}
+        label={this.label}
+        onClearFilters={() => this.facet.deselectAll()}
+        numberOfSelectedValues={this.numberOfSelectedValues}
+        isCollapsed={this.isCollapsed}
+        onToggleCollapse={() => (this.isCollapsed = !this.isCollapsed)}
+      ></FacetHeader>
+    );
+  }
+
+  private renderSearchInput() {
+    const shouldDisplaySearch =
+      this.withSearch && this.facetState.canShowMoreValues;
+    if (!shouldDisplaySearch) {
+      return;
+    }
+
+    return (
+      <FacetSearchInput
+        query={this.facetState.facetSearch.query}
+      ></FacetSearchInput>
+    );
+  }
+
+  private renderValue(facetValue: FacetValue) {
     switch (this.displayValuesAs) {
       case 'checkbox':
         return (
@@ -124,6 +158,21 @@ export class AtomicFacet implements InitializableComponent {
       case 'box':
         return <FacetValueBox value={facetValue.value}></FacetValueBox>;
     }
+  }
+
+  private renderValues() {
+    return this.facetState.values.map((value) => this.renderValue(value));
+  }
+
+  private renderShowMoreLess() {
+    return [
+      this.facetState.canShowLessValues && (
+        <FacetShowLess label={this.strings.showLess()}></FacetShowLess>
+      ),
+      this.facetState.canShowMoreValues && (
+        <FacetShowMore label={this.strings.showMore()}></FacetShowMore>
+      ),
+    ];
   }
 
   public render() {
@@ -145,19 +194,12 @@ export class AtomicFacet implements InitializableComponent {
 
     return (
       <FacetContainer>
-        <FacetHeader label={this.strings[this.label]()}></FacetHeader>
-        {this.shouldDisplaySearch && (
-          <FacetSearchInput
-            query={this.facetState.facetSearch.query}
-          ></FacetSearchInput>
-        )}
-        {this.facetState.values.map((value) => this.renderFacetValue(value))}
-        {this.facetState.canShowLessValues && (
-          <FacetShowLess label={this.strings.showLess()}></FacetShowLess>
-        )}
-        {this.facetState.canShowMoreValues && (
-          <FacetShowMore label={this.strings.showMore()}></FacetShowMore>
-        )}
+        {this.renderHeader()}
+        {!this.isCollapsed && [
+          this.renderSearchInput(),
+          this.renderValues(),
+          this.renderShowMoreLess(),
+        ]}
       </FacetContainer>
     );
   }

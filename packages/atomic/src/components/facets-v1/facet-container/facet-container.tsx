@@ -1,6 +1,7 @@
 import {FunctionalComponent, h} from '@stencil/core';
 
-// TODO: add style & part
 export const FacetContainer: FunctionalComponent = (_, children) => (
-  <div>{children}</div>
+  <div class="border border-neutral rounded-lg p-6" part="facet">
+    {children}
+  </div>
 );
