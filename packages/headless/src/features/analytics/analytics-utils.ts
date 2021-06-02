@@ -130,7 +130,7 @@ export const partialDocumentInformation = (
     documentUriHash: result.raw.urihash,
     documentUrl: result.clickUri,
     rankingModifier: result.rankingModifier || '',
-    sourceName: result.raw.sourcetype || '',
+    sourceName: getSourceName(result),
     queryPipeline: state.pipeline || getPipelineInitialState(),
   };
 };
@@ -181,6 +181,14 @@ function getDocumentAuthor(result: Result) {
   }
 
   return Array.isArray(author) ? author.join(';') : `${author}`;
+}
+
+function getSourceName(result: Result) {
+  const source = result.raw['source'];
+  if (isNullOrUndefined(source)) {
+    return 'unknown';
+  }
+  return source;
 }
 
 export const validateResultPayload = (result: Result) =>
