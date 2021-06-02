@@ -5,13 +5,26 @@ import express from 'express';
 import ReactDOMServer from 'react-dom/server';
 
 import App from '../src/App';
-// import {AppContext} from '../src/context/engine'
+import {AppContext} from '../src/context/engine';
+import {
+  HeadlessEngine,
+  searchAppReducers,
+  SearchActions,
+  AnalyticsActions,
+} from '@coveo/headless';
 
 const PORT = 8000;
 const app = express();
 
-app.get('/', (req, res) => {
-  const app = ReactDOMServer.renderToString(<App />);
+app.get('/', async (req, res) => {
+  const engine = new HeadlessEngine({
+    configuration: HeadlessEngine.getSampleConfiguration(),
+    reducers: searchAppReducers,
+  });
+
+  renderServerSide(engine);
+  await firstSearchExecuted(engine);
+  const app = renderServerSide(engine);
 
   const indexFile = path.resolve('./build/index.html');
   fs.readFile(indexFile, 'utf8', (err, data) => {
@@ -25,6 +38,26 @@ app.get('/', (req, res) => {
     );
   });
 });
+
+function renderServerSide(engine: HeadlessEngine<typeof searchAppReducers>) {
+  return ReactDOMServer.renderToString(
+    <AppContext.Provider value={{engine}}>
+      <App />
+    </AppContext.Provider>
+  );
+}
+
+function firstSearchExecuted(engine: HeadlessEngine<typeof searchAppReducers>) {
+  return new Promise((resolve) => {
+    engine.subscribe(
+      () => engine.state.search.response.searchUid && resolve(true)
+    );
+    const action = SearchActions.executeSearch(
+      AnalyticsActions.logInterfaceChange()
+    );
+    engine.dispatch(action);
+  });
+}
 
 app.use(express.static('./build'));
 

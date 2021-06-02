@@ -1,7 +1,7 @@
 // import './SearchPage.css';
-import {Component} from 'react';
+import {Component, useContext} from 'react';
 import filesize from 'filesize';
-import {AppContext} from '../context/engine';
+import {AppContext, AppContextType} from '../context/engine';
 
 import {RecommendationList} from '../components/recommendation-list/recommendation-list.class';
 import {RecommendationList as RecommendationListFn} from '../components/recommendation-list/recommendation-list.fn';
@@ -122,7 +122,9 @@ const initialCriterion = criteria[0][1];
 const resultsPerPageOptions = [10, 25, 50, 100];
 
 export class SearchPage extends Component {
-  private readonly engine: Engine;
+  static contextType = AppContext;
+
+  private engine!: Engine;
   private readonly recommendationEngine: Engine<RecommendationAppState>;
 
   private readonly recommendationList: HeadlessRecommendationList;
@@ -155,13 +157,10 @@ export class SearchPage extends Component {
 
   private unsubscribeUrlManager!: Unsubscribe;
 
-  constructor(props: {}) {
-    super(props);
+  constructor(props: {}, context: AppContextType) {
+    super(props, context);
 
-    this.engine = new HeadlessEngine({
-      configuration: HeadlessEngine.getSampleConfiguration(),
-      reducers: searchAppReducers,
-    });
+    this.initEngine();
 
     this.recommendationEngine = new HeadlessEngine({
       configuration: HeadlessEngine.getSampleConfiguration(),
@@ -270,6 +269,20 @@ export class SearchPage extends Component {
     });
   }
 
+  initEngine() {
+    const {engine} = this.context;
+
+    if (engine) {
+      this.engine = engine;
+      return;
+    }
+
+    this.engine = new HeadlessEngine({
+      configuration: HeadlessEngine.getSampleConfiguration(),
+      reducers: searchAppReducers,
+    });
+  }
+
   componentDidMount() {
     // Search parameters, defined in the url's hash, are restored once `UrlManager` is registered.
     // Beware not to restore search parameters until all components are registered,
@@ -290,6 +303,10 @@ export class SearchPage extends Component {
   }
 
   private executeInitialSearch() {
+    if (this.engine.state.search.response.searchUid) {
+      return;
+    }
+
     this.engine.dispatch(
       SearchActions.executeSearch(AnalyticsActions.logInterfaceLoad())
     );
