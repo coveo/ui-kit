@@ -30,7 +30,7 @@ export class AtomicFacetManager implements InitializableComponent {
   @Element() private host!: HTMLDivElement;
 
   @BindStateToController('facetManager', {
-    onUpdateCallbackMethod: 'onFacetManagerUpdate',
+    onUpdateCallbackMethod: 'sortFacets',
   })
   @State()
   public facetManagerState!: FacetManagerState;
@@ -38,10 +38,10 @@ export class AtomicFacetManager implements InitializableComponent {
 
   public initialize() {
     this.facetManager = buildFacetManager(this.bindings.engine);
-  }
 
-  public onFacetManagerUpdate() {
-    this.sortFacets();
+    // A rerender has to be triggered for the facets to be visually updated
+    // Since the FacetManager only reorders slot, we need to manually update when language changes.
+    this.bindings.i18n.on('languageChanged', () => this.sortFacets());
   }
 
   private sortFacets() {
