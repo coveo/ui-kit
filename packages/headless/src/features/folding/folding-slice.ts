@@ -67,7 +67,7 @@ function resolveChildrenFromFields(
           return isChildOfSource && !isSameResultAsSource;
         })
         .map((result) => ({
-          ...result,
+          result,
           children: resolveChildrenFromFields(result, results, fields),
         }))
     : [];
@@ -112,7 +112,7 @@ function createCollectionFromResult(
     resolveRootFromFields(resultsInCollection, fields) ?? relevantResult;
 
   return {
-    ...rootResult,
+    result: rootResult,
     children: resolveChildrenFromFields(
       rootResult,
       resultsInCollection,
@@ -194,7 +194,7 @@ export const foldingReducer = createReducer(
             return;
           }
           state.collections[collectionId] = {
-            ...rootResult,
+            result: rootResult,
             children: resolveChildrenFromFields(
               rootResult,
               results as ResultWithFolding[],

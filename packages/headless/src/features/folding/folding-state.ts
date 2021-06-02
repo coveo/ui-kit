@@ -2,7 +2,11 @@ import {Result} from '../../api/search/search/result';
 
 export type CollectionId = string;
 
-export interface FoldedResult extends Result {
+export interface FoldedResult {
+  /**
+   * The result at this position in the collection.
+   */
+  result: Result;
   /**
    * The children of this result sorted in the same order as the search results.
    */

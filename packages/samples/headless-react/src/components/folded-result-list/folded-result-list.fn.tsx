@@ -18,7 +18,7 @@ export const FoldedResultList: FunctionComponent<FoldedResultListProps> = (
   useEffect(() => controller.subscribe(() => setState(controller.state)), []);
 
   function renderFoldedResults(results: FoldedResult[]) {
-    return results.map((result) => (
+    return results.map(({result, children}) => (
       <li key={result.uniqueId}>
         <article>
           <h3>
@@ -26,7 +26,7 @@ export const FoldedResultList: FunctionComponent<FoldedResultListProps> = (
             <ResultLink result={result}>{result.title}</ResultLink>
           </h3>
           <p>{result.excerpt}</p>
-          <ul>{renderFoldedResults(result.children)}</ul>
+          <ul>{renderFoldedResults(children)}</ul>
         </article>
       </li>
     ));
@@ -39,19 +39,21 @@ export const FoldedResultList: FunctionComponent<FoldedResultListProps> = (
   return (
     <div>
       <ul style={{textAlign: 'left'}}>
-        {state.results.map((result) => (
-          <li key={result.uniqueId}>
+        {state.results.map((collection) => (
+          <li key={collection.result.uniqueId}>
             <article>
               <h3>
                 {/* Make sure to log analytics when the result link is clicked. */}
-                <ResultLink result={result}>{result.title}</ResultLink>
+                <ResultLink result={collection.result}>
+                  {collection.result.title}
+                </ResultLink>
               </h3>
-              <p>{result.excerpt}</p>
-              <ul>{renderFoldedResults(result.children)}</ul>
-              {result.moreResultsAvailable && (
+              <p>{collection.result.excerpt}</p>
+              <ul>{renderFoldedResults(collection.children)}</ul>
+              {collection.moreResultsAvailable && (
                 <button
-                  disabled={result.isLoadingMoreResults}
-                  onClick={() => controller.loadCollection(result)}
+                  disabled={collection.isLoadingMoreResults}
+                  onClick={() => controller.loadCollection(collection)}
                 >
                   Show more
                 </button>

@@ -32,7 +32,7 @@ export class FoldedResultList extends Component<{}, FoldedResultListState> {
   }
 
   private renderFoldedResults(results: FoldedResult[]) {
-    return results.map((result) => (
+    return results.map(({result, children}) => (
       <li key={result.uniqueId}>
         <article>
           <h3>
@@ -40,7 +40,7 @@ export class FoldedResultList extends Component<{}, FoldedResultListState> {
             <ResultLink result={result}>{result.title}</ResultLink>
           </h3>
           <p>{result.excerpt}</p>
-          <ul>{this.renderFoldedResults(result.children)}</ul>
+          <ul>{this.renderFoldedResults(children)}</ul>
         </article>
       </li>
     ));
@@ -58,19 +58,21 @@ export class FoldedResultList extends Component<{}, FoldedResultListState> {
     return (
       <div>
         <ul style={{textAlign: 'left'}}>
-          {this.state.results.map((result) => (
-            <li key={result.uniqueId}>
+          {this.state.results.map((collection) => (
+            <li key={collection.result.uniqueId}>
               <article>
                 <h3>
                   {/* Make sure to log analytics when the result link is clicked. */}
-                  <ResultLink result={result}>{result.title}</ResultLink>
+                  <ResultLink result={collection.result}>
+                    {collection.result.title}
+                  </ResultLink>
                 </h3>
-                <p>{result.excerpt}</p>
-                <ul>{this.renderFoldedResults(result.children)}</ul>
-                {result.moreResultsAvailable && (
+                <p>{collection.result.excerpt}</p>
+                <ul>{this.renderFoldedResults(collection.children)}</ul>
+                {collection.moreResultsAvailable && (
                   <button
-                    disabled={result.isLoadingMoreResults}
-                    onClick={() => this.controller.loadCollection(result)}
+                    disabled={collection.isLoadingMoreResults}
+                    onClick={() => this.controller.loadCollection(collection)}
                   >
                     Show more
                   </button>

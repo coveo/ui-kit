@@ -59,7 +59,7 @@ function emulateAPIFolding(
 }
 
 function extractHierarchy(root: FoldedResult): Hierarchy {
-  const part: Hierarchy = {name: root.title};
+  const part: Hierarchy = {name: root.result.title};
   if (root.children.length) {
     part.children = root.children.map((child) => extractHierarchy(child));
   }

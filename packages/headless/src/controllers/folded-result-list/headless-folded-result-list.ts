@@ -17,12 +17,12 @@ import {
 } from '../../state/state-sections';
 import {loadReducerError} from '../../utils/errors';
 import {validateOptions} from '../../utils/validate-payload';
+import {Controller} from '../controller/headless-controller';
 import {
   buildResultList,
-  ResultList,
   ResultListOptions,
-  ResultListState,
 } from '../result-list/headless-result-list';
+import {SearchStatusState} from '../search-status/headless-search-status';
 
 export {FoldedCollection, FoldedResult};
 
@@ -71,7 +71,14 @@ export interface FoldedResultListProps {
 /**
  * The `FoldedResultList` headless controller re-organizes results into hierarchical collections (a.k.a. threads).
  */
-export interface FoldedResultList extends ResultList {
+export interface FoldedResultList extends Controller {
+  /**
+   * Using the same parameters as the last successful query, fetch another batch of results, if available.
+   * Particularly useful for infinite scrolling, for example.
+   *
+   * This method is not compatible with the `Pager` controller.
+   */
+  fetchMoreResults(): void;
   /**
    * Loads all the folded results for a given collection.
    */
@@ -85,11 +92,21 @@ export interface FoldedResultList extends ResultList {
 /**
  * A scoped and simplified part of the headless state that is relevant to the `FoldedResultList` controller.
  * */
-export interface FoldedResultListState extends ResultListState {
+export interface FoldedResultListState extends SearchStatusState {
   /**
    * The ordered list of collections.
    * */
   results: FoldedCollection[];
+  /**
+   * The unique identifier of the last executed search.
+   */
+  searchUid: string;
+  /**
+   * Whether more results are available, using the same parameters as the last successful query.
+   *
+   * This property is not compatible with the `Pager` controller.
+   */
+  moreResultsAvailable: boolean;
 }
 
 /**
@@ -128,7 +145,9 @@ export function buildFoldedResultList(
     loadCollection: (collection) =>
       dispatch(
         loadCollection(
-          collection.raw[engine.state.folding.fields.collection] as string
+          collection.result.raw[
+            engine.state.folding.fields.collection
+          ] as string
         )
       ),
 
@@ -143,7 +162,7 @@ export function buildFoldedResultList(
             | undefined;
           if (!collectionId || !state.folding.collections[collectionId]) {
             return {
-              ...result,
+              result,
               moreResultsAvailable: false,
               isLoadingMoreResults: false,
               children: [],
