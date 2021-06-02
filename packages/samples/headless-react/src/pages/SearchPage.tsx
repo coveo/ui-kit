@@ -1,4 +1,4 @@
-import './SearchPage.css';
+// import './SearchPage.css';
 import {Component} from 'react';
 import filesize from 'filesize';
 import {AppContext} from '../context/engine';

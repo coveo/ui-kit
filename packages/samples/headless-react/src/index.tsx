@@ -1,12 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
+// import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
 const strictMode = true;
 
-ReactDOM.render(
+ReactDOM.hydrate(
   strictMode ? (
     <React.StrictMode>
       <App />
