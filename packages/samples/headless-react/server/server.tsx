@@ -13,7 +13,7 @@ import {
   AnalyticsActions,
 } from '@coveo/headless';
 
-const PORT = 8000;
+const PORT = 3000;
 const app = express();
 
 app.get('/', async (req, res) => {
