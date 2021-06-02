@@ -1,5 +1,5 @@
 // import './SearchPage.css';
-import {Component, useContext} from 'react';
+import {Component} from 'react';
 import filesize from 'filesize';
 import {AppContext, AppContextType} from '../context/engine';
 
