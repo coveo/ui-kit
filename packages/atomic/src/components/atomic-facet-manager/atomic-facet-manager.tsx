@@ -44,7 +44,6 @@ export class AtomicFacetManager implements InitializableComponent {
   }
 
   private sortFacets = () => {
-    console.log('sort!');
     const payload = this.facets.map((f) => ({facetId: f.facetId, payload: f}));
     const sortedFacets = this.facetManager.sort(payload).map((f) => f.payload);
 
