@@ -3,6 +3,9 @@ import {
   FacetManager,
   buildFacetManager,
   FacetManagerState,
+  buildSearchStatus,
+  SearchStatus,
+  SearchStatusState,
 } from '@coveo/headless';
 import {
   Bindings,
@@ -26,6 +29,11 @@ interface FacetElement extends HTMLElement {
 export class AtomicFacetManager implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;
   private facetManager!: FacetManager;
+  public searchStatus!: SearchStatus;
+
+  @BindStateToController('searchStatus')
+  @State()
+  private searchStatusState!: SearchStatusState;
 
   @Element() private host!: HTMLDivElement;
 
@@ -37,6 +45,7 @@ export class AtomicFacetManager implements InitializableComponent {
   @State() public error!: Error;
 
   public initialize() {
+    this.searchStatus = buildSearchStatus(this.bindings.engine);
     this.facetManager = buildFacetManager(this.bindings.engine);
 
     // An update has to be forced for the facets to be visually updated, without being interacted with.
@@ -44,6 +53,9 @@ export class AtomicFacetManager implements InitializableComponent {
   }
 
   private sortFacets = () => {
+    if (!this.searchStatusState.firstSearchExecuted) {
+      return;
+    }
     const payload = this.facets.map((f) => ({facetId: f.facetId, payload: f}));
     const sortedFacets = this.facetManager.sort(payload).map((f) => f.payload);
 
