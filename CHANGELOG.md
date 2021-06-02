@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.16.0](https://github.com/coveo/ui-kit/compare/v0.15.6...v0.16.0) (2021-06-02)
+
+
+### Features
+
+* **atomic:** add new facet header + wrapper ([#858](https://github.com/coveo/ui-kit/issues/858)) ([c6301ec](https://github.com/coveo/ui-kit/commit/c6301ecd5926638a99fd295f4add6fdf6d80be26))
+
+
+
+
+
 ## [0.15.6](https://github.com/coveo/ui-kit/compare/v0.15.5...v0.15.6) (2021-06-01)
 
 **Note:** Version bump only for package ui-kit
