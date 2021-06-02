@@ -3,6 +3,36 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.16.2](https://github.com/coveo/ui-kit/compare/v0.16.1...v0.16.2) (2021-06-02)
+
+
+### Bug Fixes
+
+* **headless:** fix invalid field usage for sourceName click event ([#860](https://github.com/coveo/ui-kit/issues/860)) ([4b49540](https://github.com/coveo/ui-kit/commit/4b49540b9bb12fff4d65702ed782866c92e8b2e6))
+
+
+
+
+
+## [0.16.1](https://github.com/coveo/ui-kit/compare/v0.16.0...v0.16.1) (2021-06-02)
+
+**Note:** Version bump only for package ui-kit
+
+
+
+
+
+# [0.16.0](https://github.com/coveo/ui-kit/compare/v0.15.6...v0.16.0) (2021-06-02)
+
+
+### Features
+
+* **atomic:** add new facet header + wrapper ([#858](https://github.com/coveo/ui-kit/issues/858)) ([c6301ec](https://github.com/coveo/ui-kit/commit/c6301ecd5926638a99fd295f4add6fdf6d80be26))
+
+
+
+
+
 ## [0.15.6](https://github.com/coveo/ui-kit/compare/v0.15.5...v0.15.6) (2021-06-01)
 
 **Note:** Version bump only for package ui-kit
