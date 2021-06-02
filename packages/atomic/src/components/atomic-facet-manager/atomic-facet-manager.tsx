@@ -39,17 +39,17 @@ export class AtomicFacetManager implements InitializableComponent {
   public initialize() {
     this.facetManager = buildFacetManager(this.bindings.engine);
 
-    // A rerender has to be triggered for the facets to be visually updated
-    // Since the FacetManager only reorders slot, we need to manually update when language changes.
-    this.bindings.i18n.on('languageChanged', () => this.sortFacets());
+    // An update has to be forced for the facets to be visually updated, without being interacted with.
+    this.bindings.i18n.on('languageChanged', this.sortFacets);
   }
 
-  private sortFacets() {
+  private sortFacets = () => {
+    console.log('sort!');
     const payload = this.facets.map((f) => ({facetId: f.facetId, payload: f}));
     const sortedFacets = this.facetManager.sort(payload).map((f) => f.payload);
 
     this.host.append(...sortedFacets);
-  }
+  };
 
   private get facets() {
     const facets: FacetElement[] = [];
@@ -64,6 +64,10 @@ export class AtomicFacetManager implements InitializableComponent {
 
   private isPseudoFacet(el: Element): el is FacetElement {
     return 'facetId' in el;
+  }
+
+  disconnectedCallback() {
+    this.bindings.i18n.off('languageChanged', this.sortFacets);
   }
 
   public render() {
