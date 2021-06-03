@@ -20,11 +20,11 @@ import ArrowLeftIcon from 'coveo-styleguide/resources/icons/svg/arrow-left-round
 /**
  * The `atomic-pager` provides buttons that allow the end user to navigate through the different result pages.
  *
- * @part buttons - The list of buttons
- * @part previous-button - The previous button
- * @part next-button - The next button
- * @part page-button - The page button
- * @part active-page-button - The active page button
+ * @part buttons - The list of buttons.
+ * @part previous-button - The previous button.
+ * @part next-button - The next button.
+ * @part page-button - The page button.
+ * @part active-page-button - The active page button.
  */
 @Component({
   tag: 'atomic-pager',
@@ -78,7 +78,7 @@ export class AtomicPager implements InitializableComponent {
           class={`text-primary ${
             options.disabled
               ? 'opacity-50 cursor-not-allowed'
-              : 'hover:text-primary-variant'
+              : 'hover:text-primary-light'
           }`}
           disabled={options.disabled}
           aria-label={options.ariaLabel}
@@ -122,7 +122,7 @@ export class AtomicPager implements InitializableComponent {
   private buildPage(page: number) {
     const isSelected = this.pager.isCurrentPage(page);
     const classes = isSelected
-      ? 'text-on-primary bg-primary hover:bg-primary-variant'
+      ? 'text-on-primary bg-primary hover:bg-primary-light'
       : 'text-on-background';
 
     return (

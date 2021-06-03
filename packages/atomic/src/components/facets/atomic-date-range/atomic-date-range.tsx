@@ -15,9 +15,33 @@ export class AtomicDateRange {
    * It can be expressed as a Javascript date, as a number using epoch time or as a string using the ISO 8601 format.
    */
   @Prop() public start!: Date | string | number;
+
   /**
    * The ending date for the range.
    * It can be expressed as a Javascript date, as a number using epoch time or as a string using the ISO 8601 format.
    */
   @Prop() public end!: Date | string | number;
+
+  connectedCallback() {
+    this.validateStart();
+    this.validateEnd();
+  }
+
+  validateStart() {
+    if (!this.start) {
+      this.throwMissingDateRangeError('start');
+    }
+  }
+
+  validateEnd() {
+    if (!this.end) {
+      this.throwMissingDateRangeError('end');
+    }
+  }
+
+  throwMissingDateRangeError(option: 'start' | 'end') {
+    throw new Error(
+      `The <atomic-date-range> has no ${option} date. Please specify the "${option}" attribute.`
+    );
+  }
 }

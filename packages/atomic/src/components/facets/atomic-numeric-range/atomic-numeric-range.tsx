@@ -19,7 +19,7 @@ export class AtomicNumericRange {
    */
   @Prop() public end!: number;
   /**
-   * Specifies whether or not the end value should be included in the range.
+   * Specifies whether the end value should be included in the range.
    */
   @Prop() public endInclusive = false;
 }

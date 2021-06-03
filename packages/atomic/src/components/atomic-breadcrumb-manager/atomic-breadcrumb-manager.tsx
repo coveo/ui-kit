@@ -21,12 +21,12 @@ import mainclear from '../../images/main-clear.svg';
 import dayjs from 'dayjs';
 
 /**
- * The `atomic-breadcrumb-manager` component creates breadcrumbs which display a summary of the currently active facet values.
+ * The `atomic-breadcrumb-manager` component creates breadcrumbs that display a summary of the currently active facet values.
  *
- * @part breadcrumb-clear-all - The clear all breadcrumbs button
- * @part breadcrumb-label - Label for the breadcrumb's label
- * @part breadcrumbs - The list of breadcrumb values following the label
- * @part breadcrumb - An individual breadcrumb
+ * @part breadcrumb-clear-all - The clear all breadcrumbs button.
+ * @part breadcrumb-label - Label attribute for the breadcrumb's label.
+ * @part breadcrumbs - The list of breadcrumb values following the label.
+ * @part breadcrumb - An individual breadcrumb.
  */
 
 @Component({
@@ -49,7 +49,7 @@ export class AtomicBreadcrumbManager implements InitializableComponent {
    */
   @Prop() public collapseThreshold = 5;
   /**
-   * Character that divides each path segment in a category facet breadcrumb
+   * A character that divides each path segment in a category facet breadcrumb.
    */
   @Prop() public categoryDivider = '/';
 
@@ -80,7 +80,7 @@ export class AtomicBreadcrumbManager implements InitializableComponent {
     return (
       <button
         part="breadcrumb"
-        class="inline-grid grid-flow-col text-on-background-variant hover:text-primary-variant"
+        class="inline-grid grid-flow-col text-neutral-dark hover:text-primary-light"
         aria-label={this.strings.breadcrumb({value})}
         title={value}
         onClick={() =>

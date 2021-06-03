@@ -27,6 +27,7 @@ describe('Quickview', () => {
     engine = buildMockSearchAppEngine();
     options = {
       result: buildMockResult(),
+      maximumPreviewSize: 0,
     };
 
     initQuickview();
@@ -49,6 +50,7 @@ describe('Quickview', () => {
 
   describe('#fetchResultContent', () => {
     const uniqueId = '1';
+    const requestedOutputSize = 0;
 
     beforeEach(() => {
       options.result = buildMockResult({uniqueId});
@@ -59,7 +61,7 @@ describe('Quickview', () => {
 
     it('dispatches a #fetchResultContent action with the result uniqueId', () => {
       const action = engine.findAsyncAction(fetchResultContent.pending);
-      expect(action?.meta.arg).toEqual({uniqueId});
+      expect(action?.meta.arg).toEqual({uniqueId, requestedOutputSize});
     });
 
     it('dispatches a document quickview click event', () => {
@@ -130,5 +132,13 @@ describe('Quickview', () => {
     initQuickview();
 
     expect(quickview.state.isLoading).toBe(false);
+  });
+
+  it(`when the resultPreview is initialized,
+  #options.maximumPreviewSize is 0`, () => {
+    engine.state.resultPreview = buildMockResultPreviewState();
+    initQuickview();
+
+    expect(options.maximumPreviewSize).toBe(0);
   });
 });

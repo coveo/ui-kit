@@ -73,7 +73,7 @@ describe('url manager', () => {
   });
 
   describe('synchronize with parameter', () => {
-    it(`when adding any parameter
+    it(`when adding a parameter
     should restore the right parameters and execute a search`, () => {
       manager.synchronize('q=test');
 
@@ -84,15 +84,59 @@ describe('url manager', () => {
       testExecuteSearch();
     });
 
-    it(`when removing any parameter
+    it(`when removing a parameter
     should restore the right parameters and execute a search`, () => {
       initUrlManager('q=test');
-
       manager.synchronize('');
+
       testLatestRestoreSearchParameters(
         initialSearchParameterSelector(engine.state)
       );
       testExecuteSearch();
+    });
+
+    it(`when the fragment is unchanged
+    should not execute a search`, () => {
+      initUrlManager('q=test');
+      manager.synchronize('q=test');
+
+      expect(engine.findAsyncAction(executeSearch.pending)).toBeFalsy();
+    });
+
+    it(`when a parameter's value changes
+    should restore the right parameters and execute a search`, () => {
+      initUrlManager('q=books');
+      manager.synchronize('q=movies');
+
+      testLatestRestoreSearchParameters({
+        ...initialSearchParameterSelector(engine.state),
+        q: 'movies',
+      });
+      testExecuteSearch();
+    });
+
+    it(`when a different parameters order changes
+    should not execute a search`, () => {
+      initUrlManager('q=books&sortCriteria=author ascending');
+      manager.synchronize('sortCriteria=author ascending&q=books');
+
+      expect(engine.findAsyncAction(executeSearch.pending)).toBeFalsy();
+    });
+
+    it(`when repetitive parameters order changes
+    should not execute a search`, () => {
+      initUrlManager('f[author]=Cervantes&f[writer]=Kafka');
+      manager.synchronize('f[writer]=Kafka&f[author]=Cervantes');
+
+      expect(engine.findAsyncAction(executeSearch.pending)).toBeFalsy();
+    });
+
+    it(`when a parameter's values order changes
+    should not execute a search`, () => {
+      initUrlManager('f[author]=Kafka,Cervantes');
+      manager.synchronize('f[author]=Cervantes,Kafka');
+
+      expect(engine.findAsyncAction(executeSearch.pending)).toBeFalsy();
     });
   });
 });

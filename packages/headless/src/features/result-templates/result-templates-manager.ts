@@ -10,6 +10,9 @@ import {
 import {Engine} from '../../app/headless-engine';
 import {registerFieldsToInclude} from '../fields/fields-actions';
 import {SearchAppState} from '../../state/search-app-state';
+import {fields} from '../../app/reducers';
+import {loadReducerError} from '../../utils/errors';
+import {FieldsSection} from '../../state/state-sections';
 
 const prioritySchema = new Schema({
   priority: new NumberValue({required: false, default: 0, min: 0}),
@@ -49,6 +52,10 @@ export function buildResultTemplatesManager<
    */
   State extends object = SearchAppState
 >(engine: Engine<State>): ResultTemplatesManager<Content> {
+  if (!loadResultTemplatesManagerReducers(engine)) {
+    throw loadReducerError;
+  }
+
   const templates: Required<ResultTemplate<Content>>[] = [];
   const validateTemplates = (templates: ResultTemplate<Content>[]) => {
     templates.forEach((template) => {
@@ -101,4 +108,11 @@ export function buildResultTemplatesManager<
       return template ? template.content : null;
     },
   };
+}
+
+function loadResultTemplatesManagerReducers(
+  engine: Engine<object>
+): engine is Engine<FieldsSection> {
+  engine.addReducers({fields});
+  return true;
 }

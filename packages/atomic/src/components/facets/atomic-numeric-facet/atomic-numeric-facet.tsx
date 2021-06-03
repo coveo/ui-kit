@@ -29,16 +29,16 @@ import {FacetPlaceholder} from '../atomic-facet-placeholder/atomic-facet-placeho
 /**
  * The `atomic-numeric-facet` component displays values as numeric ranges. In mobile browsers, this is rendered as a button which opens a facet modal.
  *
- * @part facet - The wrapper for the entire facet
- * @part label - The label of the facet
- * @part modal-button - The button to open the facet modal (mobile only)
- * @part close-button - The button to close the facet when displayed modally (mobile only)
- * @part clear-button - The button that resets the actively selected facet values
+ * @part facet - The wrapper for the entire facet.
+ * @part label - The label of the facet.
+ * @part modal-button - The button to open the facet modal (mobile only).
+ * @part close-button - The button to close the facet when displayed modally (mobile only).
+ * @part clear-button - The button that resets the actively selected facet values.
  *
  * @part placeholder - The placeholder shown before the first search is executed.
- * @part value - A single facet value
- * @part value-label - The facet value label
- * @part value-count - The facet value count
+ * @part value - A single facet value.
+ * @part value-label - The facet value label.
+ * @part value-count - The facet value count.
  *
  */
 
@@ -71,6 +71,10 @@ export class AtomicNumericFacet
   };
 
   @State() public isExpanded = false;
+
+  /**
+   * Specifies a unique identifier for the facet.
+   */
   @Prop({mutable: true, reflect: true}) public facetId = '';
   /**
    * Specifies the index field whose values the facet should use.

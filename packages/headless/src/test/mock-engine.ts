@@ -23,6 +23,7 @@ import {validatePayloadAndThrow} from '../utils/validate-payload';
 import {buildMockSearchAPIClient} from './mock-search-api-client';
 import {getSearchHubInitialState} from '../features/search-hub/search-hub-state';
 import {getPipelineInitialState} from '../features/pipeline/pipeline-state';
+import {getDebugInitialState} from '../features/debug/debug-state';
 
 type AsyncActionCreator<ThunkArg> = ActionCreatorWithPreparedPayload<
   [string, ThunkArg],
@@ -81,6 +82,7 @@ function buildMockEngine<T extends AppState>(
       ...mockState(),
       searchHub: getSearchHubInitialState(),
       pipeline: getPipelineInitialState(),
+      debug: getDebugInitialState(),
     },
     subscribe: jest.fn(() => unsubscribe),
     get dispatch() {
@@ -97,6 +99,8 @@ function buildMockEngine<T extends AppState>(
     renewAccessToken: mockRenewAccessToken,
     logger,
     addReducers: jest.fn(),
+    enableAnalytics: jest.fn(),
+    disableAnalytics: jest.fn(),
   };
 }
 

@@ -31,9 +31,9 @@ interface SortDropdownOption {
 /**
  * The `atomic-sort-dropdown` component renders a dropdown that the end user can interact with to select the criteria to use when sorting query results.
  *
- * @part label - The "Sort by" label
- * @part select - The select element
- * @part placeholder - The initialization placeholder
+ * @part label - The "Sort by" label of the `<select>` element.
+ * @part select - The `<select>` element of the drop-down list.
+ * @part placeholder - The drop-down placeholder for while the search interface is initializing.
  */
 @Component({
   tag: 'atomic-sort-dropdown',
@@ -127,7 +127,7 @@ export class AtomicSortDropdown implements InitializableComponent {
       <div class="relative">
         <select
           id={this.id}
-          class="flex-grow appearance-none rounded bg-background text-secondary font-bold border border-divider py-3 pl-4 pr-24"
+          class="flex-grow appearance-none rounded bg-background text-secondary font-bold border border-neutral py-3 pl-4 pr-24"
           part="select"
           aria-label={this.strings.sortBy()}
           onChange={(option) => this.select(option)}
@@ -152,7 +152,7 @@ export class AtomicSortDropdown implements InitializableComponent {
         <div
           part="placeholder"
           aria-hidden
-          class="h-6 my-2 w-44 bg-divider animate-pulse"
+          class="h-6 my-2 w-44 bg-neutral-light animate-pulse"
         ></div>
       );
     }

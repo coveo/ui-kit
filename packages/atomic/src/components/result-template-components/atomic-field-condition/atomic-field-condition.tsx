@@ -8,10 +8,9 @@ import {ResultContext} from '../result-template-decorators';
 import {MapProp} from '../../../utils/props-utils';
 
 /**
- * The `atomic-field-condition` component takes a list of conditions that, if fulfilled, apply the
- * template in which it is defined.
- * @MapProp name: mustMatch;attr: must-match;docs: Creates a condition that verifies if a field's value contains any of the specified values;type: Record<string, string[]> ;default: {}
- * @MapProp name: mustNotMatch;attr: must-not-match;docs: Creates a condition that verifies if a field's value contains any of the specified values;type: Record<string, string[]> ;default: {}
+ * The `atomic-field-condition` component takes a list of conditions that, if fulfilled, apply the template in which it's defined.
+ * @MapProp name: mustMatch;attr: must-match;docs: Creates a condition which verifies that a field's value contains any of the specified values.;type: Record<string, string[]> ;default: {}
+ * @MapProp name: mustNotMatch;attr: must-not-match;docs: Creates a condition which verifies that a field's value doesn't contain any of the specified values.;type: Record<string, string[]> ;default: {}
  */
 @Component({
   tag: 'atomic-field-condition',
@@ -21,15 +20,15 @@ export class AtomicFieldCondition {
   @Element() host!: HTMLElement;
 
   /**
-   * Verifies if the specified fields are defined
+   * Verifies wheter the specified fields are defined.
    */
   @Prop() ifDefined?: string;
   /**
-   * Verifies if the specified fields are not defined
+   * Verifies whether the specified fields are not defined.
    */
   @Prop() ifNotDefined?: string;
   /**
-   * A list of conditions that must be fulfilled for this template to be selected
+   * A list of conditions that must be fulfilled for this template to be selected.
    */
   @Prop() conditions: ResultTemplateCondition[] = [];
   @MapProp() mustMatch: Record<string, string[]> = {};

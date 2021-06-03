@@ -11,7 +11,7 @@ import {
 } from '../../features/history/history-state';
 import {SearchAppState} from '../../state/search-app-state';
 import {buildHistoryManager, HistoryManager} from './headless-history-manager';
-import {configuration, history} from '../../app/reducers';
+import {configuration, facetOrder, history} from '../../app/reducers';
 
 describe('History Manager', () => {
   let engine: MockEngine<SearchAppState>;
@@ -30,6 +30,7 @@ describe('History Manager', () => {
     expect(engine.addReducers).toHaveBeenCalledWith({
       configuration,
       history,
+      facetOrder,
     });
   });
 

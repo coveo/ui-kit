@@ -1,15 +1,15 @@
 {
   "name": "headless-react",
-  "version": "0.14.0-alpha.3",
+  "version": "0.16.2",
   "dependencies": {
-    "@coveo/headless": "^0.14.0-alpha.3",
+    "@coveo/headless": "^0.16.2",
     "@testing-library/jest-dom": "^5.11.9",
     "@testing-library/react": "^11.2.3",
     "@testing-library/user-event": "^13.1.8",
     "@types/jest": "^26.0.20",
     "@types/node": "^12.19.15",
     "@types/react": "^16.14.2",
-    "@types/react-dom": "^16.9.10",
+    "@types/react-dom": "^17.0.5",
     "dayjs": "^1.10.4",
     "filesize": "^6.1.0",
     "react": "^17.0.1",
