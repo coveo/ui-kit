@@ -204,10 +204,13 @@ export class SearchPage extends Component {
     this.facetManager = buildFacetManager(this.engine);
 
     this.geographyFacet = buildCategoryFacet(this.engine, {
-      options: {field: 'geographicalhierarchy'},
+      options: {
+        field: 'geographicalhierarchy',
+        facetId: 'geographicalhierarchy-2',
+      },
     });
     this.objectTypeFacet = buildFacet(this.engine, {
-      options: {field: 'objecttype'},
+      options: {field: 'objecttype', facetId: 'objecttype-2'},
     });
 
     this.fileSizeAutomaticNumericFacet = buildNumericFacet(this.engine, {
