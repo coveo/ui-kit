@@ -11,6 +11,7 @@ import {
   searchAppReducers,
   SearchActions,
   AnalyticsActions,
+  buildSearchStatus,
 } from '@coveo/headless';
 
 const PORT = 3000;
@@ -55,8 +56,9 @@ function renderServerSide(engine: HeadlessEngine<typeof searchAppReducers>) {
 
 function firstSearchExecuted(engine: HeadlessEngine<typeof searchAppReducers>) {
   return new Promise((resolve) => {
-    engine.subscribe(
-      () => engine.state.search.response.searchUid && resolve(true)
+    const searchStatus = buildSearchStatus(engine);
+    searchStatus.subscribe(
+      () => searchStatus.state.firstSearchExecuted && resolve(true)
     );
     const action = SearchActions.executeSearch(
       AnalyticsActions.logInterfaceChange()

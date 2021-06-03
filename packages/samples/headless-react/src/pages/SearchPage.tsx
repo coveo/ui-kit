@@ -314,7 +314,9 @@ export class SearchPage extends Component {
   }
 
   private executeInitialSearch() {
-    if (this.engine.state.search.response.searchUid) {
+    const searchStatus = buildSearchStatus(this.engine);
+
+    if (searchStatus.state.firstSearchExecuted) {
       return;
     }
 
