@@ -85,6 +85,7 @@ export const loadCollection = createAsyncThunk<
     } = getState();
 
     const response = await searchAPIClient.search({
+      tab: '',
       accessToken,
       organizationId,
       url: apiBaseUrl,

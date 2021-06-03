@@ -81,6 +81,8 @@ export interface FoldedResultList extends Controller {
   fetchMoreResults(): void;
   /**
    * Loads all the folded results for a given collection.
+   *
+   * @param collection - The collection for which to load more results.
    */
   loadCollection(collection: FoldedCollection): void;
   /**
