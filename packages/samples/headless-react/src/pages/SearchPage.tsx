@@ -103,10 +103,17 @@ import {
   buildRelevanceInspector,
   StandaloneSearchBox as HeadlessStandaloneSearchBox,
   buildStandaloneSearchBox,
+  SearchAppState,
 } from '@coveo/headless';
 import {bindUrlManager} from '../components/url-manager/url-manager';
 import {setContext} from '../components/context/context';
 import {dateRanges} from '../components/date-facet/date-utils';
+
+declare global {
+  interface Window {
+    HEADLESS_STATE: SearchAppState;
+  }
+}
 
 const [KB, MB, GB] = [1e3, 1e6, 1e9];
 
@@ -283,7 +290,7 @@ export class SearchPage extends Component {
     this.engine = new HeadlessEngine({
       configuration: HeadlessEngine.getSampleConfiguration(),
       reducers: searchAppReducers,
-      preloadedState: (window as any).HEADLESS_STATE,
+      preloadedState: window.HEADLESS_STATE,
     });
   }
 
