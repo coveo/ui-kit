@@ -1,22 +1,26 @@
 import {
-  AdvancedQueryParam,
   BaseParam,
-  ConstantQueryParam,
   ContextParam,
+  DebugParam,
+  FoldingParam,
+  LocaleParam,
+  NumberOfResultsParam,
+  VisitorIDParam,
+} from '../../platform-service-params';
+import {
+  AdvancedQueryParam,
+  ConstantQueryParam,
   EnableDidYouMeanParam,
   EnableQuerySyntaxParam,
   FacetOptionsParam,
   FacetsParam,
   FieldsToIncludeParam,
   FirstResultParam,
-  NumberOfResultsParam,
   PipelineParam,
   QueryParam,
   SearchHubParam,
   SortCriteriaParam,
-  VisitorIDParam,
-  DebugParam,
-  LocaleParam,
+  TabParam,
 } from '../search-api-params';
 
 export type SearchRequest = BaseParam &
@@ -36,4 +40,6 @@ export type SearchRequest = BaseParam &
   FacetOptionsParam &
   VisitorIDParam &
   DebugParam &
-  LocaleParam;
+  LocaleParam &
+  FoldingParam &
+  TabParam;

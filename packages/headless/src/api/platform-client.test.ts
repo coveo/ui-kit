@@ -1,8 +1,8 @@
 import {
   platformUrl,
   PlatformClient,
-  PreprocessRequestMiddleware,
   NoopPreprocessRequestMiddleware,
+  PlatformClientCallOptions,
 } from './platform-client';
 import pino from 'pino';
 import * as BackOff from 'exponential-backoff';
@@ -10,6 +10,7 @@ import * as BackOff from 'exponential-backoff';
 jest.mock('cross-fetch');
 import fetch from 'cross-fetch';
 import {NoopPreprocessRequest} from './preprocess-request';
+import {ExpiredTokenError} from '../utils/errors';
 const {Response} = jest.requireActual('node-fetch');
 const mockFetch = fetch as jest.Mock;
 
@@ -48,7 +49,7 @@ describe('platformUrl helper', () => {
 });
 
 describe('PlatformClient call', () => {
-  function platformCall(middleware?: PreprocessRequestMiddleware) {
+  function platformCall(options: Partial<PlatformClientCallOptions> = {}) {
     return PlatformClient.call({
       accessToken: 'accessToken1',
       contentType: 'application/json',
@@ -58,10 +59,10 @@ describe('PlatformClient call', () => {
       },
       url: platformUrl(),
       renewAccessToken: async () => 'accessToken2',
-      deprecatedPreprocessRequest:
-        middleware || NoopPreprocessRequestMiddleware,
+      deprecatedPreprocessRequest: NoopPreprocessRequestMiddleware,
       preprocessRequest: NoopPreprocessRequest,
       logger: pino({level: 'silent'}),
+      ...options,
     });
   }
 
@@ -93,15 +94,15 @@ describe('PlatformClient call', () => {
     mockFetch.mockReturnValue(
       Promise.resolve(new Response(JSON.stringify({})))
     );
-
-    await platformCall((request) => {
+    const middleware = (request: PlatformClientCallOptions) => {
       return {
         ...request,
         headers: {
           test: 'header',
         },
       };
-    });
+    };
+    await platformCall({deprecatedPreprocessRequest: middleware});
 
     expect(mockFetch).toHaveBeenCalledWith(platformUrl(), {
       body: JSON.stringify({
@@ -117,29 +118,53 @@ describe('PlatformClient call', () => {
     done();
   });
 
-  it(`when status is 419
-  should renewToken and retry call with new token`, async (done) => {
-    mockFetch
-      .mockReturnValueOnce(
-        Promise.resolve(new Response(JSON.stringify({}), {status: 419}))
-      )
-      .mockReturnValueOnce(
-        Promise.resolve(new Response(JSON.stringify({}), {status: 200}))
-      );
-
-    await platformCall();
-
-    expect(mockFetch).toHaveBeenNthCalledWith(2, platformUrl(), {
-      body: JSON.stringify({
-        test: 123,
-      }),
-      headers: {
-        Authorization: 'Bearer accessToken2',
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
+  it(`when the contentType is www-url-form-encoded and the #requestParams can be encoded,
+  it encodes the body as a url`, async () => {
+    await platformCall({
+      contentType: 'application/x-www-form-urlencoded',
+      requestParams: {q: 'hello', page: 5},
     });
-    done();
+
+    expect(mockFetch).toHaveBeenCalledWith(
+      platformUrl(),
+      expect.objectContaining({body: 'q=hello&page=5'})
+    );
+  });
+
+  it(`when the contentType is www-url-form-encoded and the #requestParams cannot be encoded,
+  it sends an empty string`, async () => {
+    await platformCall({
+      contentType: 'application/x-www-form-urlencoded',
+      requestParams: {q: {}},
+    });
+
+    expect(mockFetch).toHaveBeenCalledWith(
+      platformUrl(),
+      expect.objectContaining({body: ''})
+    );
+  });
+
+  it('when the contentType is unrecognized, it encodes the request params as JSON', async () => {
+    const requestParams = {q: 'a'};
+    await platformCall({contentType: undefined, requestParams});
+
+    expect(mockFetch).toHaveBeenCalledWith(
+      platformUrl(),
+      expect.objectContaining({body: JSON.stringify(requestParams)})
+    );
+  });
+
+  it('when status is 419 should throw a TokenExpiredError', async (done) => {
+    mockFetch.mockReturnValueOnce(
+      Promise.resolve(new Response(JSON.stringify({}), {status: 419}))
+    );
+
+    try {
+      await platformCall();
+    } catch (e) {
+      expect(e.name).toEqual(new ExpiredTokenError().name);
+      done();
+    }
   });
 
   it('when status is 429 should try exponential backOff', async (done) => {
@@ -168,7 +193,7 @@ describe('PlatformClient call', () => {
     spy.mockRejectedValueOnce(expectedResponse);
 
     const response = await platformCall();
-    expect(response.response).toBe(expectedResponse);
+    expect(response).toBe(expectedResponse);
     done();
   });
 
@@ -179,12 +204,7 @@ describe('PlatformClient call', () => {
     mockFetch.mockRejectedValue(fetchError);
     const response = await platformCall();
 
-    expect(response.response).toBe(fetchError);
-    expect(response.body).toEqual({
-      name: fetchError.name,
-      message: fetchError.message,
-      stack: fetchError.stack,
-    });
+    expect(response).toBe(fetchError);
     done();
   });
 

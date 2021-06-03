@@ -15,13 +15,12 @@ import {
 } from '../../utils/initialization-utils';
 
 /**
- * The NoResults displays search tips and a "Cancel last action" button when there are no results.
- * It will also display any additional content slotted inside of its element.
+ * The `atomic-no-results` component displays search tips and a "Cancel last action" button when there are no results. Any additional content slotted inside of its element will be displayed as well.
  *
- * @part tips-title - The "Search tips" title
- * @part tips-list - The tips list
- * @part tips-list-element - The tips list elements
- * @part cancel-button - The "Cancel last action" button
+ * @part tips-title - The "Search tips" title.
+ * @part tips-list - The tips list.
+ * @part tips-list-element - The tips list elements.
+ * @part cancel-button - The "Cancel last action" button.
  */
 @Component({
   tag: 'atomic-no-results',

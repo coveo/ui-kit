@@ -22,6 +22,14 @@ import {buildMockQuerySuggest} from '../../test/mock-query-suggest';
 import {buildMockSearchAppEngine, MockEngine} from '../../test/mock-engine';
 import {updatePage} from '../../features/pagination/pagination-actions';
 import {SearchAppState} from '../../state/search-app-state';
+import {
+  configuration,
+  query,
+  querySet,
+  querySuggest,
+  search,
+} from '../../app/reducers';
+import {deselectAllFacets} from '../../features/facets/generic/facet-actions';
 
 describe('headless searchBox', () => {
   const id = 'search-box-123';
@@ -74,6 +82,16 @@ describe('headless searchBox', () => {
     engine = buildMockSearchAppEngine({state});
     searchBox = buildSearchBox(engine, props);
   }
+
+  it('it adds the correct reducers to engine', () => {
+    expect(engine.addReducers).toHaveBeenCalledWith({
+      query,
+      querySuggest,
+      configuration,
+      querySet,
+      search,
+    });
+  });
 
   describe('validating options', () => {
     it(`when passing an invalid id as option
@@ -217,6 +235,12 @@ describe('headless searchBox', () => {
   });
 
   describe('when calling submit', () => {
+    it('it deselects all facets', () => {
+      searchBox.submit();
+
+      expect(engine.actions).toContainEqual(deselectAllFacets());
+    });
+
     it('dispatches updateQuery with the correct parameters', () => {
       const expectedQuery = state.querySet[id];
       searchBox.submit();

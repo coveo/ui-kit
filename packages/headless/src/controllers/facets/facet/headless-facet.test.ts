@@ -20,6 +20,12 @@ import {SearchAppState} from '../../../state/search-app-state';
 import * as FacetIdDeterminor from '../_common/facet-id-determinor';
 import {buildMockFacetSearch} from '../../../test/mock-facet-search';
 import * as FacetSearch from '../facet-search/specific/headless-facet-search';
+import {
+  configuration,
+  facetSearchSet,
+  facetSet,
+  search,
+} from '../../../app/reducers';
 
 describe('facet', () => {
   const facetId = '1';
@@ -41,7 +47,7 @@ describe('facet', () => {
   beforeEach(() => {
     options = {
       facetId,
-      field: '',
+      field: 'author',
       sortCriteria: 'score',
       facetSearch: {},
     };
@@ -54,6 +60,15 @@ describe('facet', () => {
 
   it('renders', () => {
     expect(facet).toBeTruthy();
+  });
+
+  it('it adds the correct reducers to engine', () => {
+    expect(engine.addReducers).toHaveBeenCalledWith({
+      facetSet,
+      configuration,
+      facetSearchSet,
+      search,
+    });
   });
 
   it('exposes a #subscribe method', () => {
@@ -72,14 +87,6 @@ describe('facet', () => {
   });
 
   it('registers a facet with the passed options and the default values of unspecified options', () => {
-    options = {
-      facetId,
-      field: 'author',
-      sortCriteria: 'automatic',
-      facetSearch: {},
-    };
-    initFacet();
-
     const action = registerFacet({
       ...options,
       facetId,

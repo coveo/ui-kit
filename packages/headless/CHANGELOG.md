@@ -3,6 +3,450 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.16.2](https://github.com/coveo/ui-kit/compare/v0.16.1...v0.16.2) (2021-06-02)
+
+
+### Bug Fixes
+
+* **headless:** fix invalid field usage for sourceName click event ([#860](https://github.com/coveo/ui-kit/issues/860)) ([4b49540](https://github.com/coveo/ui-kit/commit/4b49540b9bb12fff4d65702ed782866c92e8b2e6))
+
+
+
+
+
+## [0.16.1](https://github.com/coveo/ui-kit/compare/v0.16.0...v0.16.1) (2021-06-02)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+# [0.16.0](https://github.com/coveo/ui-kit/compare/v0.15.6...v0.16.0) (2021-06-02)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+## [0.15.6](https://github.com/coveo/ui-kit/compare/v0.15.5...v0.15.6) (2021-06-01)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+## [0.15.5](https://github.com/coveo/ui-kit/compare/v0.15.4...v0.15.5) (2021-06-01)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+## [0.15.3](https://github.com/coveo/ui-kit/compare/v0.15.2...v0.15.3) (2021-06-01)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+## [0.15.2](https://github.com/coveo/ui-kit/compare/v0.15.1...v0.15.2) (2021-05-31)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+# [0.15.0](https://github.com/coveo/ui-kit/compare/v0.14.2...v0.15.0) (2021-05-31)
+
+
+### Bug Fixes
+
+* **atomic,headless:** change update hash strategy of the url manager ([#825](https://github.com/coveo/ui-kit/issues/825)) ([83b91ab](https://github.com/coveo/ui-kit/commit/83b91ab6ba954bcfbca8d79f292a03c09ab90ed9))
+* **atomic,headless:** url manager only updates when the paramaters values change and not their order ([#834](https://github.com/coveo/ui-kit/issues/834)) ([5afb188](https://github.com/coveo/ui-kit/commit/5afb18815d7705fe287418cefec0721b8a781cd7))
+* **headless:** modifying filters (facets) should reset the pagination ([#829](https://github.com/coveo/ui-kit/issues/829)) ([b787e56](https://github.com/coveo/ui-kit/commit/b787e56fb7f65ca570fc81500172485a2f5f0a82))
+
+
+### Features
+
+* **headless:** add #id option to tab controller; send originLevel2 as #tab parameter ([#828](https://github.com/coveo/ui-kit/issues/828)) ([cc96af1](https://github.com/coveo/ui-kit/commit/cc96af1ed25d44707c54c189f8d85b198db6b129))
+* **headless:** allow configuration option to allow to specify redux dev tool "store name" ([#835](https://github.com/coveo/ui-kit/issues/835)) ([3da7472](https://github.com/coveo/ui-kit/commit/3da7472ac9ea9c5d4cb279c5e252bf9f0cafc8ba))
+
+
+
+
+
+## [0.14.1](https://github.com/coveo/ui-kit/compare/v0.14.0...v0.14.1) (2021-05-19)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+# [0.14.0](https://github.com/coveo/ui-kit/compare/v0.14.0-alpha.8...v0.14.0) (2021-05-19)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+# [0.14.0-alpha.8](https://github.com/coveo/ui-kit/compare/v0.14.0-alpha.7...v0.14.0-alpha.8) (2021-05-18)
+
+
+### Bug Fixes
+
+* **headless:** prevent facet search race conditions ([#821](https://github.com/coveo/ui-kit/issues/821)) ([273f210](https://github.com/coveo/ui-kit/commit/273f210fce4a12def258de97aaad6d2200666d29))
+
+
+
+
+
+# [0.14.0-alpha.7](https://github.com/coveo/ui-kit/compare/v0.14.0-alpha.6...v0.14.0-alpha.7) (2021-05-18)
+
+
+### Features
+
+* **atomic,headless:** quickview maximumDocumentSize parameter ([#800](https://github.com/coveo/ui-kit/issues/800)) ([7e8061f](https://github.com/coveo/ui-kit/commit/7e8061fccac9051fd4c4895b38afb03edabedf88))
+
+
+
+
+
+# [0.14.0-alpha.6](https://github.com/coveo/ui-kit/compare/v0.14.0-alpha.5...v0.14.0-alpha.6) (2021-05-17)
+
+
+### Bug Fixes
+
+* **headless:** register missing reducers when needed ([#818](https://github.com/coveo/ui-kit/issues/818)) ([ee9cc89](https://github.com/coveo/ui-kit/commit/ee9cc8965a7bcaeab69693a432eb29a580a2f8de))
+
+
+
+
+
+# [0.14.0-alpha.4](https://github.com/coveo/ui-kit/compare/v0.14.0-alpha.3...v0.14.0-alpha.4) (2021-05-13)
+
+
+### Features
+
+* **headless:** add advanced search query action loader ([#757](https://github.com/coveo/ui-kit/issues/757)) ([5b1911c](https://github.com/coveo/ui-kit/commit/5b1911c3c0ceb19683ceac4d8a4bb62d00e338a8))
+
+
+
+
+
+# [0.14.0-alpha.3](https://github.com/coveo/ui-kit/compare/v0.14.0-alpha.2...v0.14.0-alpha.3) (2021-05-13)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+# [0.14.0-alpha.0](https://github.com/coveo/ui-kit/compare/v0.13.2-alpha.1...v0.14.0-alpha.0) (2021-05-11)
+
+
+### Features
+
+* **headless:** added folding ([#740](https://github.com/coveo/ui-kit/issues/740)) ([06f52e8](https://github.com/coveo/ui-kit/commit/06f52e8f564ddf1bcdccf2f143b1119ffce40656))
+
+
+
+
+
+# [0.13.0](https://github.com/coveo/ui-kit/compare/v0.13.0-alpha.10...v0.13.0) (2021-05-07)
+
+
+### Features
+
+* **atomic,headless:** expose facetSearch query in controllers state ([#778](https://github.com/coveo/ui-kit/issues/778)) ([aaf253b](https://github.com/coveo/ui-kit/commit/aaf253bad592e0888efa9f4291c26d5865caa53d))
+
+
+
+
+
+# [0.13.0-alpha.7](https://github.com/coveo/ui-kit/compare/v0.13.0-alpha.6...v0.13.0-alpha.7) (2021-05-06)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+# [0.13.0-alpha.6](https://github.com/coveo/ui-kit/compare/v0.13.0-alpha.5...v0.13.0-alpha.6) (2021-05-05)
+
+
+### Features
+
+* **atomic,headless:** clearFiltersOnNewQuery ([#770](https://github.com/coveo/ui-kit/issues/770)) ([6bd5f1b](https://github.com/coveo/ui-kit/commit/6bd5f1b0279b1fb2164872caf5bd240a0d59d52c))
+
+
+
+
+
+# [0.13.0-alpha.5](https://github.com/coveo/ui-kit/compare/v0.13.0-alpha.4...v0.13.0-alpha.5) (2021-05-05)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+# [0.13.0-alpha.2](https://github.com/coveo/ui-kit/compare/v0.13.0-alpha.1...v0.13.0-alpha.2) (2021-05-04)
+
+
+### Bug Fixes
+
+* **headless:** make ec_thumbnails array ([#761](https://github.com/coveo/ui-kit/issues/761)) ([117435a](https://github.com/coveo/ui-kit/commit/117435a45e0e8281adbfee4e8da0622a872da5e2))
+
+
+
+
+
+# [0.13.0-alpha.1](https://github.com/coveo/ui-kit/compare/v0.13.0-alpha.0...v0.13.0-alpha.1) (2021-05-04)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+# [0.13.0-alpha.0](https://github.com/coveo/ui-kit/compare/v0.12.0...v0.13.0-alpha.0) (2021-04-30)
+
+
+### Features
+
+* add loadSearchActions ([#742](https://github.com/coveo/ui-kit/issues/742)) ([68cd845](https://github.com/coveo/ui-kit/commit/68cd845307f7ac08befba455dfe6d7ec6bc6e11d))
+
+
+
+
+
+# [0.12.0](https://github.com/coveo/ui-kit/compare/v0.12.0-alpha.0...v0.12.0) (2021-04-29)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+# [0.12.0-alpha.0](https://github.com/coveo/ui-kit/compare/v0.11.1-alpha.0...v0.12.0-alpha.0) (2021-04-29)
+
+
+### Features
+
+* **atomic:** set headless language config on atomic language change ([#746](https://github.com/coveo/ui-kit/issues/746)) ([e895404](https://github.com/coveo/ui-kit/commit/e895404d311b5eac19245b46ff7f842979b968d6))
+
+
+
+
+
+# [0.11.0](https://github.com/coveo/ui-kit/compare/v0.11.0-alpha.13...v0.11.0) (2021-04-29)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+# [0.11.0-alpha.12](https://github.com/coveo/ui-kit/compare/v0.11.0-alpha.11...v0.11.0-alpha.12) (2021-04-29)
+
+
+### Bug Fixes
+
+* **headless:** fix create engine logger before validation ([#745](https://github.com/coveo/ui-kit/issues/745)) ([c02f9cb](https://github.com/coveo/ui-kit/commit/c02f9cbf6f3f5b5408b8b5c8038677f56da0a783))
+
+
+
+
+
+# [0.11.0-alpha.10](https://github.com/coveo/ui-kit/compare/v0.11.0-alpha.9...v0.11.0-alpha.10) (2021-04-27)
+
+
+### Features
+
+* **headless:** add clear method to facet search  ([#738](https://github.com/coveo/ui-kit/issues/738)) ([795804e](https://github.com/coveo/ui-kit/commit/795804ebe555ee9842d3ec2eca2cb3fadcbd74b6))
+
+
+
+
+
+# [0.11.0-alpha.8](https://github.com/coveo/ui-kit/compare/v0.11.0-alpha.7...v0.11.0-alpha.8) (2021-04-21)
+
+
+### Features
+
+* **headless:** add case assist API client ([#711](https://github.com/coveo/ui-kit/issues/711)) ([f632af1](https://github.com/coveo/ui-kit/commit/f632af1207794f038444431fef27c751d8a11556))
+
+
+
+
+
+# [0.11.0-alpha.5](https://github.com/coveo/ui-kit/compare/v0.11.0-alpha.4...v0.11.0-alpha.5) (2021-04-19)
+
+
+### Bug Fixes
+
+* **atomic:** add original query to did you mean controller ([#675](https://github.com/coveo/ui-kit/issues/675)) ([abe9f22](https://github.com/coveo/ui-kit/commit/abe9f22b25aaf6769247e978864beb7c95a5e000))
+
+
+
+
+
+# [0.11.0-alpha.3](https://github.com/coveo/ui-kit/compare/v0.11.0-alpha.2...v0.11.0-alpha.3) (2021-04-16)
+
+
+### Bug Fixes
+
+* **headless:** add wildcards in facet search initially query ([#714](https://github.com/coveo/ui-kit/issues/714)) ([f703d4e](https://github.com/coveo/ui-kit/commit/f703d4ec4a16d11d251572ceae454a463c55dd9d))
+
+
+
+
+
+# [0.11.0-alpha.2](https://github.com/coveo/ui-kit/compare/v0.11.0-alpha.1...v0.11.0-alpha.2) (2021-04-15)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+# [0.10.0](https://github.com/coveo/ui-kit/compare/v0.10.0-alpha.20...v0.10.0) (2021-04-14)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+# [0.10.0-alpha.17](https://github.com/coveo/ui-kit/compare/v0.10.0-alpha.16...v0.10.0-alpha.17) (2021-04-13)
+
+
+### Features
+
+* **atomic:** use the getFacetState method of the SearchPageClientProvider ([#696](https://github.com/coveo/ui-kit/issues/696)) ([729163e](https://github.com/coveo/ui-kit/commit/729163eb111e4e1d65755db96b7e850163f82319))
+
+
+
+
+
+# [0.10.0-alpha.16](https://github.com/coveo/ui-kit/compare/v0.10.0-alpha.15...v0.10.0-alpha.16) (2021-04-13)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+# [0.10.0-alpha.15](https://github.com/coveo/ui-kit/compare/v0.10.0-alpha.14...v0.10.0-alpha.15) (2021-04-12)
+
+
+### Features
+
+* **atomic:** add path to CategoryFacet search ([#690](https://github.com/coveo/ui-kit/issues/690)) ([9b7b002](https://github.com/coveo/ui-kit/commit/9b7b0028c510bf61950206e6d81421ed6e9282d3))
+* **headless:** log document quickview event ([#694](https://github.com/coveo/ui-kit/issues/694)) ([14227e8](https://github.com/coveo/ui-kit/commit/14227e8e20a966c3f4a96e59eb1227b312f833cf))
+
+
+
+
+
+# [0.10.0-alpha.14](https://github.com/coveo/ui-kit/compare/v0.10.0-alpha.13...v0.10.0-alpha.14) (2021-04-12)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+# [0.10.0-alpha.13](https://github.com/coveo/ui-kit/compare/v0.10.0-alpha.12...v0.10.0-alpha.13) (2021-04-12)
+
+
+### Features
+
+* **headless:** expose debug actions ([#692](https://github.com/coveo/ui-kit/issues/692)) ([dc156d0](https://github.com/coveo/ui-kit/commit/dc156d0d507a8568b41557ee5e98d856b156320d))
+
+
+
+
+
+# [0.10.0-alpha.12](https://github.com/coveo/ui-kit/compare/v0.10.0-alpha.11...v0.10.0-alpha.12) (2021-04-09)
+
+
+### Features
+
+* **headless:** add isLoading to Quickview controller ([#686](https://github.com/coveo/ui-kit/issues/686)) ([8596c33](https://github.com/coveo/ui-kit/commit/8596c337545ad96e25d13c77e7057f22ca300af9))
+
+
+
+
+
+# [0.10.0-alpha.11](https://github.com/coveo/ui-kit/compare/v0.10.0-alpha.10...v0.10.0-alpha.11) (2021-04-09)
+
+
+### Features
+
+* **atomic:** Add quickview and modal components ([#672](https://github.com/coveo/ui-kit/issues/672)) ([4c7d99b](https://github.com/coveo/ui-kit/commit/4c7d99bd9e7e29f01d1b4c33f1262543101322c7))
+
+
+
+
+
+# [0.10.0-alpha.10](https://github.com/coveo/ui-kit/compare/v0.10.0-alpha.9...v0.10.0-alpha.10) (2021-04-08)
+
+
+### Bug Fixes
+
+* **headless:** add full path as UA category facet value ([#677](https://github.com/coveo/ui-kit/issues/677)) ([800c7c7](https://github.com/coveo/ui-kit/commit/800c7c709344b2b180c2f36abad196297017ceaa))
+
+
+
+
+
+# [0.10.0-alpha.7](https://github.com/coveo/ui-kit/compare/v0.10.0-alpha.6...v0.10.0-alpha.7) (2021-04-06)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+# [0.10.0-alpha.6](https://github.com/coveo/ui-kit/compare/v0.10.0-alpha.5...v0.10.0-alpha.6) (2021-04-06)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+# [0.10.0-alpha.4](https://github.com/coveo/ui-kit/compare/v0.10.0-alpha.3...v0.10.0-alpha.4) (2021-03-31)
+
+
+### Features
+
+* **headless:** add Quickview controller ([#627](https://github.com/coveo/ui-kit/issues/627)) ([6e9fbf3](https://github.com/coveo/ui-kit/commit/6e9fbf3fb824f09d48b451e8d61523ba9a1127b4))
+
+
+
+
+
+# [0.10.0-alpha.3](https://github.com/coveo/ui-kit/compare/v0.10.0-alpha.2...v0.10.0-alpha.3) (2021-03-31)
+
+
+### Bug Fixes
+
+* **headless:** throw error when start of range is greater than the end of the range ([#639](https://github.com/coveo/ui-kit/issues/639)) ([0753563](https://github.com/coveo/ui-kit/commit/075356395387b701d01e8f52d17675655f3fbfdb))
+
+
+
+
+
 # [0.10.0-alpha.0](https://github.com/coveo/ui-kit/compare/v0.9.0...v0.10.0-alpha.0) (2021-03-30)
 
 
@@ -1298,206 +1742,111 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-# [0.1.0-alpha.62](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.61...v0.1.0-alpha.62) (2020-11-23)
+# [0.1.0-alpha.62](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.61...v0.1.0-alpha.62) (2020-11-23)
 
 
 ### Features
 
-* **headless:** expose hook to preprocess analytics events ([2012fe7](https://bitbucket.org/coveord/ui-kit/commits/2012fe795d74a6e21ed2c1d1c91e32ce7d19d3d0))
+* **headless:** expose hook to preprocess analytics events ([2012fe7](https://github.com/coveo/ui-kit/commits/2012fe795d74a6e21ed2c1d1c91e32ce7d19d3d0))
 
 
 
 
 
-# [0.1.0-alpha.61](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.60...v0.1.0-alpha.61) (2020-11-20)
+# [0.1.0-alpha.61](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.60...v0.1.0-alpha.61) (2020-11-20)
 
 
 ### Bug Fixes
 
-* **headless:** move numberOfSuggestions condition to #showSuggestions ([618d69b](https://bitbucket.org/coveord/ui-kit/commits/618d69b4fdabe7a38dbfeab218ad63d58cf57a9f))
+* **headless:** move numberOfSuggestions condition to #showSuggestions ([618d69b](https://github.com/coveo/ui-kit/commits/618d69b4fdabe7a38dbfeab218ad63d58cf57a9f))
 
 
 
 
 
-# [0.1.0-alpha.60](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.59...v0.1.0-alpha.60) (2020-11-20)
+# [0.1.0-alpha.60](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.59...v0.1.0-alpha.60) (2020-11-20)
 
 
 ### Bug Fixes
 
-* **headless:** make standalone search-box options optional ([1c7e4cd](https://bitbucket.org/coveord/ui-kit/commits/1c7e4cdecbc5a533a8f910d19cba1516a516235e))
+* **headless:** make standalone search-box options optional ([1c7e4cd](https://github.com/coveo/ui-kit/commits/1c7e4cdecbc5a533a8f910d19cba1516a516235e))
 
 
 
 
 
-# [0.1.0-alpha.58](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.57...v0.1.0-alpha.58) (2020-11-19)
-
-
-### Features
-
-* **headless:** add enableQuerySyntax parameter on SearchBox & Standalone SearchBox ([417a6b3](https://bitbucket.org/coveord/ui-kit/commits/417a6b3835e66af4cf2f859dffe58a8f32262ee8))
-
-
-
-
-
-# [0.1.0-alpha.57](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.56...v0.1.0-alpha.57) (2020-11-19)
+# [0.1.0-alpha.58](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.57...v0.1.0-alpha.58) (2020-11-19)
 
 
 ### Features
 
-* **atomic:** various improvements for the feedback demo (mostly customization) ([e928bf2](https://bitbucket.org/coveord/ui-kit/commits/e928bf26c78e29fb713d1d514b53f7b399097442))
+* **headless:** add enableQuerySyntax parameter on SearchBox & Standalone SearchBox ([417a6b3](https://github.com/coveo/ui-kit/commits/417a6b3835e66af4cf2f859dffe58a8f32262ee8))
 
 
 
 
 
-# [0.1.0-alpha.56](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.55...v0.1.0-alpha.56) (2020-11-19)
-
-**Note:** Version bump only for package @coveo/headless
-
-
-
-
-
-# [0.1.0-alpha.55](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.54...v0.1.0-alpha.55) (2020-11-18)
-
-**Note:** Version bump only for package @coveo/headless
-
-
-
-
-
-# [0.1.0-alpha.53](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.52...v0.1.0-alpha.53) (2020-11-17)
+# [0.1.0-alpha.57](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.56...v0.1.0-alpha.57) (2020-11-19)
 
 
 ### Features
 
-* **headless:**  Actions payload validation ([0a38be5](https://bitbucket.org/coveord/ui-kit/commits/0a38be552a86da06dcb7eb5387890f5dbfce4cf6))
+* **atomic:** various improvements for the feedback demo (mostly customization) ([e928bf2](https://github.com/coveo/ui-kit/commits/e928bf26c78e29fb713d1d514b53f7b399097442))
 
 
 
 
 
-# [0.1.0-alpha.52](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.51...v0.1.0-alpha.52) (2020-11-16)
+# [0.1.0-alpha.56](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.55...v0.1.0-alpha.56) (2020-11-19)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+# [0.1.0-alpha.55](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.54...v0.1.0-alpha.55) (2020-11-18)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+# [0.1.0-alpha.53](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.52...v0.1.0-alpha.53) (2020-11-17)
 
 
 ### Features
 
-* **headless:** validate facet controller options ([b93463e](https://bitbucket.org/coveord/ui-kit/commits/b93463e4b70acde18922aa424ca19498b18e5805))
+* **headless:**  Actions payload validation ([0a38be5](https://github.com/coveo/ui-kit/commits/0a38be552a86da06dcb7eb5387890f5dbfce4cf6))
 
 
 
 
 
-# [0.1.0-alpha.51](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.50...v0.1.0-alpha.51) (2020-11-13)
-
-
-### Features
-
-* **atomic:** add styling for results ([3c31eee](https://bitbucket.org/coveord/ui-kit/commits/3c31eeee6cc299ec20624b42733a0443bb7be43b))
-
-
-
-
-
-# [0.1.0-alpha.50](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.49...v0.1.0-alpha.50) (2020-11-13)
-
-**Note:** Version bump only for package @coveo/headless
-
-
-
-
-
-# [0.1.0-alpha.49](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.48...v0.1.0-alpha.49) (2020-11-12)
-
-**Note:** Version bump only for package @coveo/headless
-
-
-
-
-
-# [0.1.0-alpha.48](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.47...v0.1.0-alpha.48) (2020-11-12)
-
-**Note:** Version bump only for package @coveo/headless
-
-
-
-
-
-# [0.1.0-alpha.47](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.46...v0.1.0-alpha.47) (2020-11-11)
-
-**Note:** Version bump only for package @coveo/headless
-
-
-
-
-
-# [0.1.0-alpha.46](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.45...v0.1.0-alpha.46) (2020-11-11)
-
-**Note:** Version bump only for package @coveo/headless
-
-
-
-
-
-# [0.1.0-alpha.45](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.44...v0.1.0-alpha.45) (2020-11-11)
-
-**Note:** Version bump only for package @coveo/headless
-
-
-
-
-
-# [0.1.0-alpha.42](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.41...v0.1.0-alpha.42) (2020-11-11)
+# [0.1.0-alpha.52](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.51...v0.1.0-alpha.52) (2020-11-16)
 
 
 ### Features
 
-* **headless:** make store accessible from HeadlessEngine ([d29969c](https://bitbucket.org/coveord/ui-kit/commits/d29969c6ca6d2612850947d90efb78d75183cee1))
+* **headless:** validate facet controller options ([b93463e](https://github.com/coveo/ui-kit/commits/b93463e4b70acde18922aa424ca19498b18e5805))
 
 
 
 
 
-# [0.1.0-alpha.41](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.40...v0.1.0-alpha.41) (2020-11-10)
-
-**Note:** Version bump only for package @coveo/headless
-
-
-
-
-
-# [0.1.0-alpha.40](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.39...v0.1.0-alpha.40) (2020-11-10)
-
-**Note:** Version bump only for package @coveo/headless
-
-
-
-
-
-# [0.1.0-alpha.39](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.38...v0.1.0-alpha.39) (2020-11-09)
+# [0.1.0-alpha.51](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.50...v0.1.0-alpha.51) (2020-11-13)
 
 
 ### Features
 
-* **atomic:** Add Search Box interactivity and remove sub components ([34867ec](https://bitbucket.org/coveord/ui-kit/commits/34867ec9bc6bc8cfdf961de2b5c36b94aa005e70))
-* **bueno:** add context message to #schema.validate, validate ResultsPerPage initialState ([d02dcee](https://bitbucket.org/coveord/ui-kit/commits/d02dceef7f5db7c89396bfdff0d3bb28120d2e72))
+* **atomic:** add styling for results ([3c31eee](https://github.com/coveo/ui-kit/commits/3c31eeee6cc299ec20624b42733a0443bb7be43b))
 
 
 
 
 
-# [0.1.0-alpha.38](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.37...v0.1.0-alpha.38) (2020-11-06)
-
-**Note:** Version bump only for package @coveo/headless
-
-
-
-
-
-# [0.1.0-alpha.37](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.36...v0.1.0-alpha.37) (2020-11-05)
+# [0.1.0-alpha.50](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.49...v0.1.0-alpha.50) (2020-11-13)
 
 **Note:** Version bump only for package @coveo/headless
 
@@ -1505,7 +1854,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-# [0.1.0-alpha.36](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.35...v0.1.0-alpha.36) (2020-11-05)
+# [0.1.0-alpha.49](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.48...v0.1.0-alpha.49) (2020-11-12)
 
 **Note:** Version bump only for package @coveo/headless
 
@@ -1513,7 +1862,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-# [0.1.0-alpha.35](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.34...v0.1.0-alpha.35) (2020-11-04)
+# [0.1.0-alpha.48](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.47...v0.1.0-alpha.48) (2020-11-12)
 
 **Note:** Version bump only for package @coveo/headless
 
@@ -1521,7 +1870,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-# [0.1.0-alpha.34](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.33...v0.1.0-alpha.34) (2020-11-04)
+# [0.1.0-alpha.47](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.46...v0.1.0-alpha.47) (2020-11-11)
 
 **Note:** Version bump only for package @coveo/headless
 
@@ -1529,26 +1878,113 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-# [0.1.0-alpha.33](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.32...v0.1.0-alpha.33) (2020-11-04)
+# [0.1.0-alpha.46](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.45...v0.1.0-alpha.46) (2020-11-11)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+# [0.1.0-alpha.45](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.44...v0.1.0-alpha.45) (2020-11-11)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+# [0.1.0-alpha.42](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.41...v0.1.0-alpha.42) (2020-11-11)
+
+
+### Features
+
+* **headless:** make store accessible from HeadlessEngine ([d29969c](https://github.com/coveo/ui-kit/commits/d29969c6ca6d2612850947d90efb78d75183cee1))
+
+
+
+
+
+# [0.1.0-alpha.41](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.40...v0.1.0-alpha.41) (2020-11-10)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+# [0.1.0-alpha.40](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.39...v0.1.0-alpha.40) (2020-11-10)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+# [0.1.0-alpha.39](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.38...v0.1.0-alpha.39) (2020-11-09)
+
+
+### Features
+
+* **atomic:** Add Search Box interactivity and remove sub components ([34867ec](https://github.com/coveo/ui-kit/commits/34867ec9bc6bc8cfdf961de2b5c36b94aa005e70))
+* **bueno:** add context message to #schema.validate, validate ResultsPerPage initialState ([d02dcee](https://github.com/coveo/ui-kit/commits/d02dceef7f5db7c89396bfdff0d3bb28120d2e72))
+
+
+
+
+
+# [0.1.0-alpha.38](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.37...v0.1.0-alpha.38) (2020-11-06)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+# [0.1.0-alpha.37](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.36...v0.1.0-alpha.37) (2020-11-05)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+# [0.1.0-alpha.36](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.35...v0.1.0-alpha.36) (2020-11-05)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+# [0.1.0-alpha.35](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.34...v0.1.0-alpha.35) (2020-11-04)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+# [0.1.0-alpha.34](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.33...v0.1.0-alpha.34) (2020-11-04)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+# [0.1.0-alpha.33](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.32...v0.1.0-alpha.33) (2020-11-04)
 
 
 ### Bug Fixes
 
-* **headless:** Fix missing export ([fac1eab](https://bitbucket.org/coveord/ui-kit/commits/fac1eab260ed649301ce0104aac6817195937bde))
+* **headless:** Fix missing export ([fac1eab](https://github.com/coveo/ui-kit/commits/fac1eab260ed649301ce0104aac6817195937bde))
 
 
 
 
 
-# [0.1.0-alpha.32](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.31...v0.1.0-alpha.32) (2020-11-03)
-
-**Note:** Version bump only for package @coveo/headless
-
-
-
-
-
-# [0.1.0-alpha.30](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.29...v0.1.0-alpha.30) (2020-11-03)
+# [0.1.0-alpha.32](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.31...v0.1.0-alpha.32) (2020-11-03)
 
 **Note:** Version bump only for package @coveo/headless
 
@@ -1556,91 +1992,91 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-# [0.1.0-alpha.29](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.28...v0.1.0-alpha.29) (2020-10-30)
+# [0.1.0-alpha.30](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.29...v0.1.0-alpha.30) (2020-11-03)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+# [0.1.0-alpha.29](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.28...v0.1.0-alpha.29) (2020-10-30)
 
 
 ### Bug Fixes
 
-* **headless:** Fix typo recommendationAppReducers ([4dab140](https://bitbucket.org/coveord/ui-kit/commits/4dab1401410799a4d13166b922d37abf17827992))
+* **headless:** Fix typo recommendationAppReducers ([4dab140](https://github.com/coveo/ui-kit/commits/4dab1401410799a4d13166b922d37abf17827992))
 
 
 
 
 
-# [0.1.0-alpha.28](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.27...v0.1.0-alpha.28) (2020-10-29)
-
-
-### Features
-
-* **headless:** add recommendation controller ([1e50a46](https://bitbucket.org/coveord/ui-kit/commits/1e50a461e38617a15cc64a3155f05bfb85100f70))
-
-
-
-
-
-# [0.1.0-alpha.27](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.26...v0.1.0-alpha.27) (2020-10-29)
-
-**Note:** Version bump only for package @coveo/headless
-
-
-
-
-
-# [0.1.0-alpha.26](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.25...v0.1.0-alpha.26) (2020-10-29)
-
-**Note:** Version bump only for package @coveo/headless
-
-
-
-
-
-# [0.1.0-alpha.24](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.23...v0.1.0-alpha.24) (2020-10-28)
-
-**Note:** Version bump only for package @coveo/headless
-
-
-
-
-
-# [0.1.0-alpha.23](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.22...v0.1.0-alpha.23) (2020-10-27)
-
-**Note:** Version bump only for package @coveo/headless
-
-
-
-
-
-# [0.1.0-alpha.22](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.21...v0.1.0-alpha.22) (2020-10-27)
+# [0.1.0-alpha.28](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.27...v0.1.0-alpha.28) (2020-10-29)
 
 
 ### Features
 
-* **atomic:** document slots & add examples ([b8627a5](https://bitbucket.org/coveord/ui-kit/commits/b8627a5ea8e7d508331969a2e41533b3fa7d07c8))
+* **headless:** add recommendation controller ([1e50a46](https://github.com/coveo/ui-kit/commits/1e50a461e38617a15cc64a3155f05bfb85100f70))
 
 
 
 
 
-# [0.1.0-alpha.21](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.20...v0.1.0-alpha.21) (2020-10-27)
+# [0.1.0-alpha.27](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.26...v0.1.0-alpha.27) (2020-10-29)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+# [0.1.0-alpha.26](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.25...v0.1.0-alpha.26) (2020-10-29)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+# [0.1.0-alpha.24](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.23...v0.1.0-alpha.24) (2020-10-28)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+# [0.1.0-alpha.23](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.22...v0.1.0-alpha.23) (2020-10-27)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+# [0.1.0-alpha.22](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.21...v0.1.0-alpha.22) (2020-10-27)
+
+
+### Features
+
+* **atomic:** document slots & add examples ([b8627a5](https://github.com/coveo/ui-kit/commits/b8627a5ea8e7d508331969a2e41533b3fa7d07c8))
+
+
+
+
+
+# [0.1.0-alpha.21](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.20...v0.1.0-alpha.21) (2020-10-27)
 
 
 ### Bug Fixes
 
-* **headless:** history undo/redo ([ed5a183](https://bitbucket.org/coveord/ui-kit/commits/ed5a18320d1d71ffd16e33ba1b2752832481da71))
+* **headless:** history undo/redo ([ed5a183](https://github.com/coveo/ui-kit/commits/ed5a18320d1d71ffd16e33ba1b2752832481da71))
 
 
 
 
 
-# [0.1.0-alpha.19](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.18...v0.1.0-alpha.19) (2020-10-26)
-
-**Note:** Version bump only for package @coveo/headless
-
-
-
-
-
-# [0.1.0-alpha.18](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.17...v0.1.0-alpha.18) (2020-10-23)
+# [0.1.0-alpha.19](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.18...v0.1.0-alpha.19) (2020-10-26)
 
 **Note:** Version bump only for package @coveo/headless
 
@@ -1648,7 +2084,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-# [0.1.0-alpha.17](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.16...v0.1.0-alpha.17) (2020-10-23)
+# [0.1.0-alpha.18](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.17...v0.1.0-alpha.18) (2020-10-23)
 
 **Note:** Version bump only for package @coveo/headless
 
@@ -1656,7 +2092,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-# [0.1.0-alpha.16](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.15...v0.1.0-alpha.16) (2020-10-22)
+# [0.1.0-alpha.17](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.16...v0.1.0-alpha.17) (2020-10-23)
 
 **Note:** Version bump only for package @coveo/headless
 
@@ -1664,7 +2100,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-# [0.1.0-alpha.15](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.14...v0.1.0-alpha.15) (2020-10-22)
+# [0.1.0-alpha.16](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.15...v0.1.0-alpha.16) (2020-10-22)
 
 **Note:** Version bump only for package @coveo/headless
 
@@ -1672,7 +2108,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-# [0.1.0-alpha.14](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.13...v0.1.0-alpha.14) (2020-10-22)
+# [0.1.0-alpha.15](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.14...v0.1.0-alpha.15) (2020-10-22)
 
 **Note:** Version bump only for package @coveo/headless
 
@@ -1680,7 +2116,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-# [0.1.0-alpha.13](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.12...v0.1.0-alpha.13) (2020-10-22)
+# [0.1.0-alpha.14](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.13...v0.1.0-alpha.14) (2020-10-22)
 
 **Note:** Version bump only for package @coveo/headless
 
@@ -1688,7 +2124,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-# [0.1.0-alpha.12](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.11...v0.1.0-alpha.12) (2020-10-22)
+# [0.1.0-alpha.13](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.12...v0.1.0-alpha.13) (2020-10-22)
 
 **Note:** Version bump only for package @coveo/headless
 
@@ -1696,7 +2132,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-# [0.1.0-alpha.11](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.10...v0.1.0-alpha.11) (2020-10-21)
+# [0.1.0-alpha.12](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.11...v0.1.0-alpha.12) (2020-10-22)
 
 **Note:** Version bump only for package @coveo/headless
 
@@ -1704,7 +2140,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-# [0.1.0-alpha.10](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.9...v0.1.0-alpha.10) (2020-10-21)
+# [0.1.0-alpha.11](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.10...v0.1.0-alpha.11) (2020-10-21)
 
 **Note:** Version bump only for package @coveo/headless
 
@@ -1712,7 +2148,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-# [0.1.0-alpha.9](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.8...v0.1.0-alpha.9) (2020-10-20)
+# [0.1.0-alpha.10](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.9...v0.1.0-alpha.10) (2020-10-21)
 
 **Note:** Version bump only for package @coveo/headless
 
@@ -1720,18 +2156,26 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-# [0.1.0-alpha.8](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.7...v0.1.0-alpha.8) (2020-10-20)
+# [0.1.0-alpha.9](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.8...v0.1.0-alpha.9) (2020-10-20)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+# [0.1.0-alpha.8](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.7...v0.1.0-alpha.8) (2020-10-20)
 
 
 ### Features
 
-* **headless:** basic recommendation state + reducers ([51717fd](https://bitbucket.org/coveord/ui-kit/commits/51717fd006d147a029a8c588ea6e5ee0c5400bce))
+* **headless:** basic recommendation state + reducers ([51717fd](https://github.com/coveo/ui-kit/commits/51717fd006d147a029a8c588ea6e5ee0c5400bce))
 
 
 
 
 
-# [0.1.0-alpha.7](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.6...v0.1.0-alpha.7) (2020-10-20)
+# [0.1.0-alpha.7](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.6...v0.1.0-alpha.7) (2020-10-20)
 
 **Note:** Version bump only for package @coveo/headless
 
@@ -1739,12 +2183,12 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-# [0.1.0-alpha.6](https://bitbucket.org/coveord/ui-kit/compare/v0.1.0-alpha.5...v0.1.0-alpha.6) (2020-10-19)
+# [0.1.0-alpha.6](https://github.com/coveo/ui-kit/compare/v0.1.0-alpha.5...v0.1.0-alpha.6) (2020-10-19)
 
 
 ### Features
 
-* **headless:** Refactor cq and aq as string in an single object ([7b0010a](https://bitbucket.org/coveord/ui-kit/commits/7b0010a4b75f8e1faef28a9211cc6596cc8f3bd8))
+* **headless:** Refactor cq and aq as string in an single object ([7b0010a](https://github.com/coveo/ui-kit/commits/7b0010a4b75f8e1faef28a9211cc6596cc8f3bd8))
 
 
 
@@ -1755,8 +2199,8 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ### Features
 
-* **headless:** add support for analytics originLevel1/2/3 ([9795647](https://bitbucket.org/coveord/ui-kit/commits/979564732ebce12778cdd1caa2e858606ee28e06))
-* **headless:** add visitorId to send to the searchAPI ([9ab80e1](https://bitbucket.org/coveord/ui-kit/commits/9ab80e1dcef0d7045d5622fcad488c1d6eedd369))
+* **headless:** add support for analytics originLevel1/2/3 ([9795647](https://github.com/coveo/ui-kit/commits/979564732ebce12778cdd1caa2e858606ee28e06))
+* **headless:** add visitorId to send to the searchAPI ([9ab80e1](https://github.com/coveo/ui-kit/commits/9ab80e1dcef0d7045d5622fcad488c1d6eedd369))
 
 
 
@@ -1785,7 +2229,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ### Features
 
-* **headless:** add support for analytics originLevel1/2/3 ([9795647](https://bitbucket.org/coveord/ui-kit/commits/979564732ebce12778cdd1caa2e858606ee28e06))
+* **headless:** add support for analytics originLevel1/2/3 ([9795647](https://github.com/coveo/ui-kit/commits/979564732ebce12778cdd1caa2e858606ee28e06))
 
 
 

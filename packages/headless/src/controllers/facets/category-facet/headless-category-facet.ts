@@ -3,7 +3,6 @@ import {
   buildController,
   Controller,
 } from '../../controller/headless-controller';
-import {CategoryFacetRegistrationOptions} from '../../../features/facets/category-facet-set/interfaces/options';
 import {
   registerCategoryFacet,
   updateCategoryFacetNumberOfValues,
@@ -19,7 +18,6 @@ import {
 import {defaultCategoryFacetOptions} from '../../../features/facets/category-facet-set/category-facet-set-slice';
 import {CategoryFacetSortCriterion} from '../../../features/facets/category-facet-set/interfaces/request';
 import {categoryFacetRequestSelector} from '../../../features/facets/category-facet-set/category-facet-set-selectors';
-import {FacetSearchOptions} from '../../../features/facets/facet-search-set/facet-search-request-options';
 import {buildCategoryFacetSearch} from '../facet-search/category/headless-category-facet-search';
 import {updateFacetOptions} from '../../../features/facet-options/facet-options-actions';
 import {
@@ -41,6 +39,14 @@ import {
 } from './headless-category-facet-options';
 import {determineFacetId} from '../_common/facet-id-determinor';
 import {CategoryFacetValue} from '../../../features/facets/category-facet-set/interfaces/response';
+import {
+  categoryFacetSearchSet,
+  categoryFacetSet,
+  configuration,
+  search,
+} from '../../../app/reducers';
+import {loadReducerError} from '../../../utils/errors';
+import {defaultFacetSearchOptions} from '../../../features/facets/facet-search-set/facet-search-reducer-helpers';
 
 export {CategoryFacetValue, CategoryFacetOptions, CategoryFacetSearchOptions};
 
@@ -157,6 +163,11 @@ export interface CategoryFacetSearch {
    * @param value - The search result to select.
    * */
   select(value: CategoryFacetSearchResult): void;
+
+  /**
+   * Resets the query and empties the values.
+   * */
+  clear(): void;
 }
 
 export interface CategoryFacetSearchState {
@@ -174,6 +185,11 @@ export interface CategoryFacetSearchState {
    * Whether more values are available.
    * */
   moreValuesAvailable: boolean;
+
+  /**
+   * The current query in the facet search box.
+   */
+  query: string;
 }
 
 export interface CategoryFacetSearchResult {
@@ -207,19 +223,20 @@ export interface CategoryFacetSearchResult {
  * @returns A `CategoryFacet` controller instance.
  * */
 export function buildCategoryFacet(
-  engine: Engine<
-    CategoryFacetSection &
-      SearchSection &
-      ConfigurationSection &
-      CategoryFacetSearchSection
-  >,
+  engine: Engine<object>,
   props: CategoryFacetProps
 ): CategoryFacet {
+  if (!loadCategoryFacetReducers(engine)) {
+    throw loadReducerError;
+  }
+
   const controller = buildController(engine);
   const {dispatch} = engine;
+  const getState = () => engine.state;
 
   const facetId = determineFacetId(engine, props.options);
-  const options: Required<CategoryFacetRegistrationOptions> = {
+  const options: Required<CategoryFacetOptions> = {
+    facetSearch: {...defaultFacetSearchOptions},
     ...defaultCategoryFacetOptions,
     ...props.options,
     facetId,
@@ -233,11 +250,8 @@ export function buildCategoryFacet(
   );
 
   const createFacetSearch = () => {
-    const {facetSearch} = props.options;
-    const facetSearchOptions: FacetSearchOptions = {
-      facetId,
-      ...facetSearch,
-    };
+    const {facetId, facetSearch} = options;
+    const facetSearchOptions = {facetId, ...facetSearch};
 
     return buildCategoryFacetSearch(engine, {options: facetSearchOptions});
   };
@@ -307,7 +321,7 @@ export function buildCategoryFacet(
       const response = getResponse();
 
       const {parents, values} = partitionIntoParentsAndValues(response?.values);
-      const isLoading = engine.state.search.isLoading;
+      const isLoading = getState().search.isLoading;
       const hasActiveValues = parents.length !== 0;
       const canShowMoreValues =
         parents.length > 0
@@ -328,4 +342,21 @@ export function buildCategoryFacet(
       };
     },
   };
+}
+
+function loadCategoryFacetReducers(
+  engine: Engine<object>
+): engine is Engine<
+  CategoryFacetSection &
+    CategoryFacetSearchSection &
+    ConfigurationSection &
+    SearchSection
+> {
+  engine.addReducers({
+    categoryFacetSet,
+    categoryFacetSearchSet,
+    configuration,
+    search,
+  });
+  return true;
 }

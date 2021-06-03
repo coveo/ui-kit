@@ -7,4 +7,6 @@ updates:
     directory: "/"
     schedule:
       interval: "monthly"
+    commit-message:
+      prefix: "ci(J:KIT-282)"
 

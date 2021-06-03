@@ -21,6 +21,7 @@ import {
   FacetOrderSection,
   FacetSection,
   FieldsSection,
+  FoldingSection,
   NumericFacetSection,
   PaginationSection,
   PipelineSection,
@@ -64,7 +65,8 @@ export type StateNeededByExecuteSearch = ConfigurationSection &
       FacetOptionsSection &
       FacetOrderSection &
       DebugSection &
-      SearchSection
+      SearchSection &
+      FoldingSection
   >;
 
 export interface ExecuteSearchThunkReturn {
@@ -76,6 +78,8 @@ export interface ExecuteSearchThunkReturn {
   queryExecuted: string;
   /** Whether the query was automatically corrected. */
   automaticallyCorrected: boolean;
+  /** The original query that was performed when an automatic correction is executed.*/
+  originalQuery: string;
   /** The analytics action to log after the query. */
   analyticsAction: SearchAction;
 }
@@ -127,10 +131,10 @@ export const executeSearch = createAsyncThunk<
         ...fetched,
         response: fetched.response.success,
         automaticallyCorrected: false,
+        originalQuery: getOriginalQuery(state),
         analyticsAction,
       };
     }
-
     const {correctedQuery} = fetched.response.success.queryCorrections[0];
     const retried = await automaticallyRetryQueryWithCorrection(
       extra.searchAPIClient,
@@ -165,6 +169,7 @@ export const executeSearch = createAsyncThunk<
         queryCorrections: fetched.response.success.queryCorrections,
       },
       automaticallyCorrected: true,
+      originalQuery: getOriginalQuery(state),
       analyticsAction: logDidYouMeanAutomatic(),
     };
   }
@@ -198,6 +203,7 @@ export const fetchMoreResults = createAsyncThunk<
       ...fetched,
       response: fetched.response.success,
       automaticallyCorrected: false,
+      originalQuery: getOriginalQuery(state),
       analyticsAction: logFetchMoreResults(),
     };
   }
@@ -262,12 +268,15 @@ const shouldReExecuteTheQueryWithCorrections = (
 export const buildSearchRequest = (
   state: StateNeededByExecuteSearch
 ): SearchRequest => {
+  const facets = getFacets(state);
+
   return {
     accessToken: state.configuration.accessToken,
     organizationId: state.configuration.organizationId,
     url: state.configuration.search.apiBaseUrl,
     locale: state.configuration.search.locale,
     debug: state.debug,
+    tab: state.configuration.analytics.originLevel2,
     ...(state.configuration.analytics.enabled && {
       visitorId: getVisitorID(),
     }),
@@ -281,9 +290,7 @@ export const buildSearchRequest = (
     ...(state.didYouMean && {
       enableDidYouMean: state.didYouMean.enableDidYouMean,
     }),
-    ...(state.facetSet && {
-      facets: getFacets(state),
-    }),
+    ...(facets.length && {facets}),
     ...(state.fields && {
       fieldsToInclude: state.fields.fieldsToInclude,
     }),
@@ -306,6 +313,12 @@ export const buildSearchRequest = (
     }),
     ...(state.facetOptions && {
       facetOptions: state.facetOptions,
+    }),
+    ...(state.folding?.enabled && {
+      filterField: state.folding.fields.collection,
+      childField: state.folding.fields.parent,
+      parentField: state.folding.fields.child,
+      filterFieldRange: state.folding.numberOfFoldedResults,
     }),
   };
 };
@@ -354,3 +367,6 @@ const addEntryInActionsHistory = (state: StateNeededByExecuteSearch) => {
     });
   }
 };
+
+const getOriginalQuery = (state: StateNeededByExecuteSearch) =>
+  state.query?.q !== undefined ? state.query.q : '';

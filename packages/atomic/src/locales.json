@@ -185,6 +185,10 @@
     "en": "Page {{page}}",
     "fr": "Page {{page}}"
   },
+  "noValuesFound": {
+    "en": "No values found.",
+    "fr": "Aucune valeur trouvée."
+  },
   "resultsPerPage": {
     "en": "Results per page",
     "fr": "Résultats par page",
@@ -267,6 +271,30 @@
   "mostRecent": {
     "en": "Most recent",
     "fr": "Plus récents"
+  },
+  "clearFilters": {
+    "en": "Clear {{count}} filter",
+    "fr": "Enlever {{count}} filtre"
+  },
+  "clearFilters_plural": {
+    "en": "Clear {{count}} filters",
+    "fr": "Enlever {{count}} filtres"
+  },
+  "clearFiltersForFacet": {
+    "en": "Clear {{count}} filter for {{label}} facet",
+    "fr": "Enlever {{count}} filtre pour la facette {{label}}"
+  },
+  "clearFiltersForFacet_plural": {
+    "en": "Clear {{count}} filters for {{label}} facet",
+    "fr": "Enlever {{count}} filtres pour la facette {{label}}"
+  },
+  "collapseFacet": {
+    "en": "Collapse {{label}} facet",
+    "fr": "Réduire la facette {{label}}"
+  },
+  "expandFacet": {
+    "en": "Expand {{label}} facet",
+    "fr": "Agrandir la facette {{label}}"
   },
   "showingResultsOf": {
     "en": "Result {{first}} of {{total}}",
@@ -801,6 +829,10 @@
     "zh-cn": "{{value}} 更多...",
     "zh-tw": "{{value}} 更多..."
   },
+  "showNMoreFilters": {
+    "en": "Show {{value}} more filters",
+    "fr": "Montrer {{value}} filtres de plus"
+  },
   "queryAutoCorrectedTo": {
     "en": "Query was automatically corrected to {{query}}",
     "fr": "La requête a été corrigée automatiquement à {{query}}",
@@ -851,8 +883,24 @@
     "zh-cn": "您要找的是不是： {{query}}",
     "zh-tw": "您要找的是不是： {{query}}"
   },
+  "noLabel": {
+    "en": "No label",
+    "fr": "Sans titre"
+  },
   "to": {
     "en": "{{- start}} to {{- end}}",
     "fr": "{{- start}} à {{- end}}"
+  },
+  "in": {
+    "en": "in",
+    "fr": "dans"
+  },
+  "under": {
+    "en": "{{child}} under {{parent}}",
+    "fr": "{{child}} sous {{parent}}"
+  },
+  "previewResult": {
+    "en": "Preview the result",
+    "fr": "Prévisualiser le résultat"
   }
 }

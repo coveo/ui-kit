@@ -36,17 +36,31 @@ export interface GetProductRecommendationsThunkReturn {
   duration: number;
 }
 
+export interface SetProductRecommendationsRecommenderIdActionCreatorPayload {
+  /**
+   * The recommender id, used to determine the machine-learning model that should fulfill the request.
+   */
+  id: string;
+}
+
 export const setProductRecommendationsRecommenderId = createAction(
   'productrecommendations/setId',
-  (payload: {id: string}) =>
+  (payload: SetProductRecommendationsRecommenderIdActionCreatorPayload) =>
     validatePayload(payload, {
       id: requiredNonEmptyString,
     })
 );
 
+export interface SetProductRecommendationsSkusActionCreatorPayload {
+  /**
+   * The skus to retrieve recommendations for.
+   */
+  skus: string[];
+}
+
 export const setProductRecommendationsSkus = createAction(
   'productrecommendations/setSku',
-  (payload: {skus: string[]}) =>
+  (payload: SetProductRecommendationsSkusActionCreatorPayload) =>
     validatePayload(payload, {
       skus: new ArrayValue({
         required: true,
@@ -56,25 +70,46 @@ export const setProductRecommendationsSkus = createAction(
     })
 );
 
+export interface SetProductRecommendationsBrandFilterActionCreatorPayload {
+  /**
+   * The brand to filter recommendations by.
+   */
+  brand: string;
+}
+
 export const setProductRecommendationsBrandFilter = createAction(
   'productrecommendations/setBrand',
-  (payload: {brand: string}) =>
+  (payload: SetProductRecommendationsBrandFilterActionCreatorPayload) =>
     validatePayload(payload, {
       brand: new StringValue({required: true, emptyAllowed: true}),
     })
 );
 
+export interface SetProductRecommendationsCategoryFilterActionCreatorPayload {
+  /**
+   * The category to filter recommendations by.
+   */
+  category: string;
+}
+
 export const setProductRecommendationsCategoryFilter = createAction(
   'productrecommendations/setCategory',
-  (payload: {category: string}) =>
+  (payload: SetProductRecommendationsCategoryFilterActionCreatorPayload) =>
     validatePayload(payload, {
       category: new StringValue({required: true, emptyAllowed: true}),
     })
 );
 
+export interface SetProductRecommendationsAdditionalFieldsActionCreatorPayload {
+  /**
+   * The additional result fields to request.
+   */
+  additionalFields: string[];
+}
+
 export const setProductRecommendationsAdditionalFields = createAction(
   'productrecommendations/setAdditionalFields',
-  (payload: {additionalFields: string[]}) =>
+  (payload: SetProductRecommendationsAdditionalFieldsActionCreatorPayload) =>
     validatePayload(payload, {
       additionalFields: new ArrayValue({
         required: true,
@@ -83,9 +118,18 @@ export const setProductRecommendationsAdditionalFields = createAction(
     })
 );
 
+export interface SetProductRecommendationsMaxNumberOfRecommendationsActionCreatorPayload {
+  /**
+   * The maximum number of recommendations to return.
+   */
+  number: number;
+}
+
 export const setProductRecommendationsMaxNumberOfRecommendations = createAction(
   'productrecommendations/setMaxNumberOfRecommendations',
-  (payload: {number: number}) =>
+  (
+    payload: SetProductRecommendationsMaxNumberOfRecommendationsActionCreatorPayload
+  ) =>
     validatePayload(payload, {
       number: new NumberValue({required: true, max: 50, min: 1}),
     })
@@ -137,7 +181,7 @@ const mapResultToProductResult = (
     ec_category: result.raw.ec_category as string,
     ec_price,
     ec_shortdesc: result.raw.ec_shortdesc as string,
-    ec_thumbnails: result.raw.ec_thumbnails as string,
+    ec_thumbnails: result.raw.ec_thumbnails as string[],
     ec_images: result.raw.ec_images as string[],
     ec_promo_price:
       ec_promo_price === undefined ||

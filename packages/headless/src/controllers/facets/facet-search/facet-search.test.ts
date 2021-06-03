@@ -12,11 +12,15 @@ import {
 } from './facet-search';
 import {SpecificFacetSearchState} from '../../../features/facets/facet-search-set/specific/specific-facet-search-set-state';
 import {updateFacetOptions} from '../../../features/facet-options/facet-options-actions';
-import {executeFacetSearch} from '../../../features/facets/facet-search-set/generic/generic-facet-search-actions';
+import {
+  clearFacetSearch,
+  executeFacetSearch,
+} from '../../../features/facets/facet-search-set/generic/generic-facet-search-actions';
 import {SearchAppState} from '../../../state/search-app-state';
 
 describe('FacetSearch', () => {
   const facetId = '1';
+  const numberOfValues = 7;
   let props: GenericFacetSearchProps<SpecificFacetSearchState>;
   let engine: MockEngine<SearchAppState>;
   let controller: GenericFacetSearch;
@@ -26,8 +30,13 @@ describe('FacetSearch', () => {
   }
 
   function getFacetSearch() {
-    const options = buildMockFacetSearchRequestOptions({numberOfValues: 5});
-    return buildMockFacetSearch({options});
+    const options = buildMockFacetSearchRequestOptions({
+      numberOfValues,
+    });
+    return buildMockFacetSearch({
+      options,
+      initialNumberOfValues: numberOfValues,
+    });
   }
 
   beforeEach(() => {
@@ -40,14 +49,14 @@ describe('FacetSearch', () => {
     initFacetSearch();
   });
 
-  it('#updateText dispatches #updateFacetSearch with the text wrapped by asterixes and resets number of results', () => {
+  it('#updateText dispatches #updateFacetSearch and resets number of results', () => {
     const text = 'apple';
     controller.updateText(text);
 
     const action = updateFacetSearch({
       facetId,
-      query: `*${text}*`,
-      numberOfValues: 10,
+      query: text,
+      numberOfValues,
     });
 
     expect(engine.actions).toContainEqual(action);
@@ -55,15 +64,19 @@ describe('FacetSearch', () => {
 
   describe('#showMoreResults', () => {
     beforeEach(() => {
-      const options = buildMockFacetSearchRequestOptions({numberOfValues: 5});
-      engine.state.facetSearchSet[facetId] = buildMockFacetSearch({options});
+      const options = buildMockFacetSearchRequestOptions({
+        numberOfValues,
+      });
+      engine.state.facetSearchSet[facetId] = buildMockFacetSearch({
+        options,
+      });
       controller.showMoreResults();
     });
 
     it('#showMoreResults dispatches #updateFacetSearch', () => {
       const incrementAction = updateFacetSearch({
         facetId,
-        numberOfValues: 15,
+        numberOfValues: numberOfValues * 2,
       });
 
       expect(engine.actions).toContainEqual(incrementAction);
@@ -107,10 +120,24 @@ describe('FacetSearch', () => {
     });
   });
 
+  it('#clear dispatches #clearFacetSearch', () => {
+    const options = buildMockFacetSearchRequestOptions();
+    engine.state.facetSearchSet[facetId] = buildMockFacetSearch({
+      options,
+    });
+    controller.clear();
+    const clearFacetSearchAction = clearFacetSearch({
+      facetId,
+    });
+
+    expect(engine.actions).toContainEqual(clearFacetSearchAction);
+  });
+
   it('calling #state returns the response', () => {
     const facetSearchState = {
       ...buildMockFacetSearchResponse(),
       isLoading: false,
+      query: '',
     };
 
     engine.state.facetSearchSet[facetId] = buildMockFacetSearch(

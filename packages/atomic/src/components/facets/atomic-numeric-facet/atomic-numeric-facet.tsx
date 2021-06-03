@@ -6,6 +6,9 @@ import {
   NumericFacetState,
   NumericFacetOptions,
   NumericFacetValue,
+  SearchStatusState,
+  SearchStatus,
+  buildSearchStatus,
 } from '@coveo/headless';
 import {
   Bindings,
@@ -21,18 +24,24 @@ import {
   BaseFacetController,
   BaseFacetState,
 } from '../base-facet/base-facet';
+import {FacetPlaceholder} from '../atomic-facet-placeholder/atomic-facet-placeholder';
 
 /**
- * A facet who's values are expressed as numeric ranges. It is displayed as a regular facet in desktop browsers and as
- * a button which opens a facet modal in mobile browsers.
+ * The `atomic-numeric-facet` component displays values as numeric ranges. In mobile browsers, this is rendered as a button which opens a facet modal.
  *
- * @part facet - The wrapping div for the entire facet
- * @part facet-values - The list of facet values
- * @part facet-value - A single facet value
- * @part close-button - The button to close the facet when displayed modally (mobile only)
- * @part reset-button - The button that resets the actively selected facet values
+ * @part facet - The wrapper for the entire facet.
+ * @part label - The label of the facet.
+ * @part modal-button - The button to open the facet modal (mobile only).
+ * @part close-button - The button to close the facet when displayed modally (mobile only).
+ * @part clear-button - The button that resets the actively selected facet values.
+ *
+ * @part placeholder - The placeholder shown before the first search is executed.
+ * @part value - A single facet value.
+ * @part value-label - The facet value label.
+ * @part value-count - The facet value count.
  *
  */
+
 @Component({
   tag: 'atomic-numeric-facet',
   styleUrl: 'atomic-numeric-facet.pcss',
@@ -43,10 +52,14 @@ export class AtomicNumericFacet
   @Element() host!: HTMLElement;
   @InitializeBindings() public bindings!: Bindings;
   private facet!: NumericFacet;
+  public searchStatus!: SearchStatus;
 
   @BindStateToController('facet', {subscribeOnConnectedCallback: true})
   @State()
   private facetState!: NumericFacetState;
+  @BindStateToController('searchStatus')
+  @State()
+  private searchStatusState!: SearchStatusState;
   @State() public error!: Error;
 
   @BindStateToI18n()
@@ -58,6 +71,10 @@ export class AtomicNumericFacet
   };
 
   @State() public isExpanded = false;
+
+  /**
+   * Specifies a unique identifier for the facet.
+   */
   @Prop({mutable: true, reflect: true}) public facetId = '';
   /**
    * Specifies the index field whose values the facet should use.
@@ -66,7 +83,11 @@ export class AtomicNumericFacet
   /**
    * The non-localized label for the facet.
    */
-  @Prop() public label = 'No label';
+  @Prop() public label = 'noLabel';
+  /**
+   * The number of values to request for this facet, when there are no manual ranges.
+   */
+  @Prop({mutable: true}) public numberOfValues = 8;
 
   private buildManualRanges() {
     const options = Array.from(
@@ -78,12 +99,18 @@ export class AtomicNumericFacet
   }
 
   public initialize() {
+    this.searchStatus = buildSearchStatus(this.bindings.engine);
     const manualRanges = this.buildManualRanges();
+    if (manualRanges.length) {
+      this.numberOfValues = manualRanges.length;
+    }
+
     const options: NumericFacetOptions = {
       facetId: this.facetId,
       field: this.field,
       generateAutomaticRanges: manualRanges.length === 0,
       currentValues: manualRanges,
+      numberOfValues: this.numberOfValues,
     };
 
     this.facet = buildNumericFacet(this.bindings.engine, {options});
@@ -114,7 +141,9 @@ export class AtomicNumericFacet
       <FacetValue
         label={value}
         isSelected={isSelected}
-        numberOfResults={item.numberOfResults}
+        numberOfResults={item.numberOfResults.toLocaleString(
+          this.bindings.i18n.language
+        )}
         facetValueSelected={() => {
           this.facet.toggleSelect(item);
         }}
@@ -134,19 +163,30 @@ export class AtomicNumericFacet
   }
 
   public render() {
-    if (!this.facetState.hasActiveValues && this.totalNumberOfResults === 0) {
-      return null;
+    if (this.searchStatusState.hasError) {
+      return;
     }
+
+    if (!this.searchStatusState.firstSearchExecuted) {
+      return (
+        <FacetPlaceholder
+          numberOfValues={this.numberOfValues}
+        ></FacetPlaceholder>
+      );
+    }
+
+    if (!this.facetState.hasActiveValues && this.totalNumberOfResults === 0) {
+      return;
+    }
+
     return (
       <BaseFacet
         controller={new BaseFacetController(this)}
         label={this.strings[this.label]()}
         hasActiveValues={this.facetState.hasActiveValues}
-        deselectAll={() => this.facet.deselectAll()}
+        clearAll={() => this.facet.deselectAll()}
       >
-        <ul part="facet-values" class="list-none p-0">
-          {this.values}
-        </ul>
+        <ul>{this.values}</ul>
       </BaseFacet>
     );
   }

@@ -37,6 +37,15 @@ import {
   SuggestionHighlightingOptions,
   Delimiters,
 } from '../../utils/highlight';
+import {
+  configuration,
+  query,
+  querySet,
+  querySuggest,
+  search,
+} from '../../app/reducers';
+import {loadReducerError} from '../../utils/errors';
+import {deselectAllFacets} from '../../features/facets/generic/facet-actions';
 
 export {SearchBoxOptions, SuggestionHighlightingOptions, Delimiters};
 
@@ -80,7 +89,7 @@ export interface SearchBox extends Controller {
   selectSuggestion(value: string): void;
 
   /**
-   * Triggers a search query.
+   * Deselects all facets and triggers a search query.
    */
   submit(): void;
 
@@ -130,17 +139,16 @@ export interface Suggestion {
  * @returns A `SearchBox` controller instance.
  */
 export function buildSearchBox(
-  engine: Engine<
-    QuerySection &
-      QuerySuggestionSection &
-      ConfigurationSection &
-      QuerySetSection &
-      SearchSection
-  >,
+  engine: Engine<object>,
   props: SearchBoxProps = {}
 ): SearchBox {
+  if (!loadSearchBoxReducers(engine)) {
+    throw loadReducerError;
+  }
+
   const controller = buildController(engine);
   const {dispatch} = engine;
+  const getState = () => engine.state;
 
   const id = props.options?.id || randomID('search_box');
   const options: Required<SearchBoxOptions> = {
@@ -166,6 +174,7 @@ export function buildSearchBox(
   const performSearch = (analytics: SearchAction) => {
     const {enableQuerySyntax} = options;
 
+    dispatch(deselectAllFacets());
     dispatch(updateQuery({q: getValue(), enableQuerySyntax}));
     dispatch(updatePage(1));
     dispatch(executeSearch(analytics));
@@ -204,7 +213,7 @@ export function buildSearchBox(
     },
 
     get state() {
-      const state = engine.state;
+      const state = getState();
       const querySuggestState = state.querySuggest[options.id];
       const suggestions = getSuggestions(
         querySuggestState,
@@ -235,4 +244,17 @@ function getSuggestions(
     ),
     rawValue: completion.expression,
   }));
+}
+
+function loadSearchBoxReducers(
+  engine: Engine<object>
+): engine is Engine<
+  QuerySection &
+    QuerySuggestionSection &
+    ConfigurationSection &
+    QuerySetSection &
+    SearchSection
+> {
+  engine.addReducers({query, querySuggest, configuration, querySet, search});
+  return true;
 }

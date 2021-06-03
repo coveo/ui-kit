@@ -7,7 +7,7 @@ import {
 } from '../../../utils/initialization-utils';
 
 /**
- * The ResultPrice component renders the value of a price result field.
+ * The `atomic-result-price` component renders the value of a price result field.
  */
 @Component({
   tag: 'atomic-result-price',
@@ -23,8 +23,8 @@ export class AtomicResultPrice {
 
   /**
    * The result field which the component should use.
-   * Will look in the Result object first and then in the Result.raw object for the fields.
-   * It is important to include the necessary fields in the ResultList component.
+   * This will look in the Result object first, and then in the Result.raw object for the fields.
+   * It is important to include the necessary field in the ResultList component.
    */
   @Prop() field = 'ec_price';
   /**

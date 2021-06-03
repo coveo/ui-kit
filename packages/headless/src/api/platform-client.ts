@@ -1,8 +1,13 @@
 import fetch from 'cross-fetch';
 export type HttpMethods = 'POST' | 'GET' | 'DELETE' | 'PUT';
-export type HTTPContentTypes = 'application/json' | 'text/html';
+export type HTTPContentType =
+  | 'application/json'
+  | 'application/x-www-form-urlencoded'
+  | 'text/html';
 import {backOff} from 'exponential-backoff';
 import {Logger} from 'pino';
+import {ExpiredTokenError} from '../utils/errors';
+import {canBeFormUrlEncoded, encodeAsFormUrl} from './form-url-encoder';
 import {PlatformRequestOptions, PreprocessRequest} from './preprocess-request';
 
 function isThrottled(status: number): boolean {
@@ -12,10 +17,13 @@ function isThrottled(status: number): boolean {
 export interface PlatformClientCallOptions {
   url: string;
   method: HttpMethods;
-  contentType: HTTPContentTypes;
+  contentType: HTTPContentType;
   headers?: Record<string, string>;
   requestParams: unknown;
   accessToken: string;
+  /**
+   * @deprecated - Please configure this option when configuring the engine. It will be removed from `PlatformClientCallOptions` in the next major version.
+   */
   renewAccessToken: () => Promise<string>;
   preprocessRequest: PreprocessRequest;
   deprecatedPreprocessRequest: PreprocessRequestMiddleware;
@@ -37,27 +45,15 @@ export const NoopPreprocessRequestMiddleware: PreprocessRequestMiddleware = (
 ) => request;
 
 export class PlatformClient {
-  static async call<ResponseType>(
-    options: PlatformClientCallOptions
-  ): Promise<PlatformResponse<ResponseType>> {
+  static async call(options: PlatformClientCallOptions): Promise<Response> {
     // TODO: use options directly when removing deprecatedPreprocessRequest
     const processedOptions = {
       ...options,
       ...(await options.deprecatedPreprocessRequest(options)),
     };
 
+    const defaultRequestOptions = buildDefaultRequestOptions(processedOptions);
     const {preprocessRequest, logger} = options;
-    const defaultRequestOptions: PlatformRequestOptions = {
-      url: processedOptions.url,
-      method: processedOptions.method,
-      headers: {
-        'Content-Type': processedOptions.contentType,
-        Authorization: `Bearer ${processedOptions.accessToken}`,
-        ...processedOptions.headers,
-      },
-      body: JSON.stringify(processedOptions.requestParams),
-      signal: processedOptions.signal,
-    };
 
     const requestInfo: PlatformRequestOptions = {
       ...defaultRequestOptions,
@@ -65,6 +61,7 @@ export class PlatformClient {
         ? await preprocessRequest(defaultRequestOptions, 'searchApiFetch')
         : {}),
     };
+
     logger.info(requestInfo, 'Platform request');
 
     const {url, ...requestData} = requestInfo;
@@ -86,42 +83,22 @@ export class PlatformClient {
       });
       if (response.status === 419) {
         logger.info('Platform renewing token');
-        const accessToken = await processedOptions.renewAccessToken();
-
-        if (accessToken !== '') {
-          return PlatformClient.call({...processedOptions, accessToken});
-        }
+        throw new ExpiredTokenError();
       }
 
-      const body = (await response.json()) as ResponseType;
+      logger.info({response, requestInfo}, 'Platform response');
 
-      logger.info({response, body, requestInfo}, 'Platform response');
-
-      return {
-        response,
-        body,
-      };
+      return response;
     } catch (error) {
-      if (error.body) {
-        return {
-          response: error,
-          body: await error.json(),
-        };
-      }
-
       if (error.name === 'AbortError') {
         throw error;
       }
 
-      // Transform an error to an object https://stackoverflow.com/a/26199752
-      const errorObj = JSON.parse(
-        JSON.stringify(error, Object.getOwnPropertyNames(error))
-      );
+      if (error instanceof ExpiredTokenError) {
+        throw error;
+      }
 
-      return {
-        response: error,
-        body: errorObj,
-      };
+      return error;
     }
   }
 }
@@ -148,4 +125,38 @@ export function platformUrl<E extends PlatformEnvironment = 'prod'>(options?: {
       : `-${options.region}`;
 
   return `https://platform${urlEnv}${urlRegion}.cloud.coveo.com`;
+}
+
+function buildDefaultRequestOptions(
+  options: PlatformClientCallOptions
+): PlatformRequestOptions {
+  const {
+    url,
+    method,
+    requestParams,
+    contentType,
+    accessToken,
+    signal,
+  } = options;
+  const body = encodeBody(requestParams, contentType);
+
+  return {
+    url,
+    method,
+    headers: {
+      'Content-Type': contentType,
+      Authorization: `Bearer ${accessToken}`,
+      ...options.headers,
+    },
+    body,
+    signal,
+  };
+}
+
+function encodeBody(body: unknown, contentType: HTTPContentType) {
+  if (contentType === 'application/x-www-form-urlencoded') {
+    return canBeFormUrlEncoded(body) ? encodeAsFormUrl(body) : '';
+  }
+
+  return JSON.stringify(body);
 }

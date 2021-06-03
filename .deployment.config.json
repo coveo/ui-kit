@@ -3,15 +3,23 @@
   "team_name": "searchui",
   "general": {
     "aws_regions": {
-      "sequential": ["us-east-1"]
+      "sequential": [
+        "us-east-1"
+      ]
     },
     "environments_order": {
-      "sequential": ["dev", "qa", "prd"]
+      "sequential": [
+        "dev",
+        "qa",
+        "prd"
+      ]
     },
     "team_jenkins": "searchuibuilds",
     "start_environment_automatically": false,
     "notifications": {
-      "slack_channels": ["#searchuibuilds"]
+      "slack_channels": [
+        "#searchuibuilds"
+      ]
     }
   },
   "ordered_phases": [
@@ -21,6 +29,17 @@
         "bucket": "{terraform.infra.infra.bucket_binaries}",
         "directory": "proda/StaticCDN/headless/latest",
         "source": "packages/headless/dist/browser",
+        "parameters": {
+          "acl": "public-read"
+        }
+      }
+    },
+    {
+      "id": "deploy-atomic-to-s3-latest",
+      "s3": {
+        "bucket": "{terraform.infra.infra.bucket_binaries}",
+        "directory": "proda/StaticCDN/atomic/latest",
+        "source": "packages/atomic/dist/atomic",
         "parameters": {
           "acl": "public-read"
         }
@@ -37,6 +56,20 @@
         },
         "prd": {
           "directory": "proda/StaticCDN/headless/v$[VERSION]"
+        }
+      }
+    },
+    {
+      "id": "deploy-atomic-to-s3-version",
+      "s3": {
+        "bucket": "{terraform.infra.infra.bucket_binaries}",
+        "directory": "proda/StaticCDN/atomic/v$[PRERELEASE]",
+        "source": "packages/atomic/dist/atomic",
+        "parameters": {
+          "acl": "public-read"
+        },
+        "prd": {
+          "directory": "proda/StaticCDN/atomic/v$[VERSION]"
         }
       }
     },
@@ -71,11 +104,18 @@
       {
         "directory": "packages/headless",
         "project_name": "headless-engine"
+      },
+      {
+        "directory": "packages/atomic",
+        "project_name": "atomic"
       }
     ]
   },
   "veracode": {
-    "no_scan": true
+    "sandbox_name": "UI Kit",
+    "app_name": "JSUI",
+    "source": "veracode",
+    "scan_include_patterns": "*"
   },
   "observatory": {
     "no_endpoint": true

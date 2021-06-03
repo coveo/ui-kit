@@ -1,13 +1,9 @@
 /* eslint-disable node/no-unpublished-import */
-import * as HeadlessTypes from './force-app/main/default/staticresources/coveoheadless/index';
-export * from './force-app/main/default/staticresources/coveoheadless/index';
+import * as HeadlessTypes from './force-app/main/default/staticresources/coveoheadless/definitions/index';
+export * from './force-app/main/default/staticresources/coveoheadless/definitions/index';
 import {LightningElement} from 'lwc';
-import {HeadlessEngine} from '../headless/dist/index';
 import {Deferred} from 'utils';
 declare global {
-  // eslint-disable-next-line no-undef
-  const CoveoHeadless: typeof HeadlessTypes;
-
   interface Window {
     coveoHeadless: {
       [engineId: string]: {
@@ -21,8 +17,8 @@ declare global {
               configuration: HeadlessConfigurationOptions;
               reducers: Reducers;
             };
-        engine: HeadlessEngine;
         initializedCallback?: Function;
+        engine: HeadlessTypes.HeadlessEngine;
       };
     };
   }

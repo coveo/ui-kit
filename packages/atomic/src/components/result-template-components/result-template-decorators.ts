@@ -1,25 +1,35 @@
+import {Result} from '@coveo/headless';
 import {ComponentInterface, getElement} from '@stencil/core';
+import {buildCustomEvent} from '../../utils/event-utils';
+
+export class MissingResultParentError extends Error {
+  constructor(elementName: string) {
+    super(
+      `The "${elementName}" element must be the child of an "atomic-result" element.`
+    );
+  }
+}
 
 export function ResultContext() {
   return (component: ComponentInterface, resultVariable: string) => {
-    const {render} = component;
-    component.render = function () {
+    const {connectedCallback} = component;
+    component.connectedCallback = function () {
       const element = getElement(this);
-      const parentResultComponent = (element.getRootNode() as ShadowRoot)
-        .host as HTMLAtomicResultElement;
-      if (
-        !parentResultComponent ||
-        parentResultComponent.nodeName !== 'ATOMIC-RESULT'
-      ) {
-        console.error(
-          `The "${element.nodeName.toLowerCase()}" component has to be used inside a template element 
-          https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template`
+      const event = buildCustomEvent(
+        'atomic/resolveResult',
+        (result: Result) => {
+          this[resultVariable] = result;
+        }
+      );
+
+      const canceled = element.dispatchEvent(event);
+      if (canceled) {
+        this.error = new MissingResultParentError(
+          element.nodeName.toLowerCase()
         );
-        element.remove();
-        return null;
+        return;
       }
-      component[resultVariable] = parentResultComponent.result;
-      return render && render.call(this);
+      return connectedCallback && connectedCallback.call(this);
     };
   };
 }

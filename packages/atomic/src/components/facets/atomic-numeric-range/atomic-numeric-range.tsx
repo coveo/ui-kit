@@ -1,8 +1,7 @@
 import {Component, Element, Prop} from '@stencil/core';
 
 /**
- * Component that defines a numeric facet range.
- * Has to be used inside an `atomic-numeric-facet` component.
+ * The `atomic-numeric-range` component defines the range of an `atomic-numeric-facet`, and therefore must be defined within an `atomic-numeric-facet` component.
  */
 @Component({
   tag: 'atomic-numeric-range',
@@ -20,7 +19,7 @@ export class AtomicNumericRange {
    */
   @Prop() public end!: number;
   /**
-   * Specifies whether or not the end value should be included in the range.
+   * Specifies whether the end value should be included in the range.
    */
   @Prop() public endInclusive = false;
 }

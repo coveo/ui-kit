@@ -7,16 +7,13 @@ import {
   buildCartRecommendationsList,
   CartRecommendationsList,
 } from './headless-cart-recommendations';
-import {buildMockProductRecommendationsState} from '../../test/mock-product-recommendations-state';
 
 describe('headless cart-recommendations', () => {
-  let state: ProductRecommendationsAppState;
   let cartRecommender: CartRecommendationsList;
   let engine: MockEngine<ProductRecommendationsAppState>;
 
   beforeEach(() => {
-    state = buildMockProductRecommendationsState();
-    engine = buildMockProductRecommendationsAppEngine({state});
+    engine = buildMockProductRecommendationsAppEngine();
     cartRecommender = buildCartRecommendationsList(engine, {
       options: {},
     });

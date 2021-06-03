@@ -1,15 +1,19 @@
 import {ApiModel} from '@microsoft/api-extractor-model';
 import {writeFileSync} from 'fs';
 import {
+  ActionLoaderConfiguration,
+  resolveActionLoader,
+} from './src/headless-export-resolvers/action-loader-resolver';
+import {
   ControllerConfiguration,
   resolveController,
-} from './src/controller-resolver';
+} from './src/headless-export-resolvers/controller-resolver';
 
 const apiModel = new ApiModel();
 const apiPackage = apiModel.loadPackage('temp/headless.api.json');
 const entryPoint = apiPackage.entryPoints[0];
 
-const controllers: ControllerConfiguration[] = [
+const controllerConfiguration: ControllerConfiguration[] = [
   {
     initializer: 'buildHistoryManager',
     samplePaths: {
@@ -254,19 +258,131 @@ const controllers: ControllerConfiguration[] = [
   },
   {
     initializer: 'buildSearchParameterManager',
+    samplePaths: {},
+  },
+  {
+    initializer: 'buildUrlManager',
     samplePaths: {
       react_class: [
-        'packages/samples/headless-react/src/components/search-parameter-manager/search-parameter-manager.ts',
+        'packages/samples/headless-react/src/components/url-manager/url-manager.ts',
       ],
       react_fn: [
-        'packages/samples/headless-react/src/components/search-parameter-manager/search-parameter-manager.ts',
+        'packages/samples/headless-react/src/components/url-manager/url-manager.ts',
+      ],
+    },
+  },
+  {
+    initializer: 'buildQuickview',
+    samplePaths: {
+      react_class: [
+        'packages/samples/headless-react/src/components/quickview/quickview.class.tsx',
+      ],
+      react_fn: [
+        'packages/samples/headless-react/src/components/quickview/quickview.fn.tsx',
+      ],
+    },
+  },
+  {
+    initializer: 'buildFoldedResultList',
+    samplePaths: {
+      react_class: [
+        'packages/samples/headless-react/src/components/folded-result-list/folded-result-list.class.tsx',
+      ],
+      react_fn: [
+        'packages/samples/headless-react/src/components/folded-result-list/folded-result-list.fn.tsx',
       ],
     },
   },
 ];
 
-const result = controllers.map((controller) =>
+const actionLoaderConfiguration: ActionLoaderConfiguration[] = [
+  {
+    initializer: 'loadSearchActions',
+  },
+  {
+    initializer: 'loadAdvancedSearchQueryActions',
+  },
+  {
+    initializer: 'loadConfigurationActions',
+  },
+  {
+    initializer: 'loadSearchConfigurationActions',
+  },
+  {
+    initializer: 'loadContextActions',
+  },
+  {
+    initializer: 'loadDebugActions',
+  },
+  {
+    initializer: 'loadDidYouMeanActions',
+  },
+  {
+    initializer: 'loadCategoryFacetSetActions',
+  },
+  {
+    initializer: 'loadFacetSetActions',
+  },
+  {
+    initializer: 'loadDateFacetSetActions',
+  },
+  {
+    initializer: 'loadNumericFacetSetActions',
+  },
+  {
+    initializer: 'loadFieldActions',
+  },
+  {
+    initializer: 'loadHistoryActions',
+  },
+  {
+    initializer: 'loadPaginationActions',
+  },
+  {
+    initializer: 'loadPipelineActions',
+  },
+  {
+    initializer: 'loadProductRecommendationsActions',
+  },
+  {
+    initializer: 'loadQueryActions',
+  },
+  {
+    initializer: 'loadQuerySetActions',
+  },
+  {
+    initializer: 'loadQuerySuggestActions',
+  },
+  {
+    initializer: 'loadRecommendationActions',
+  },
+  {
+    initializer: 'loadRedirectionActions',
+  },
+  {
+    initializer: 'loadSearchHubActions',
+  },
+  {
+    initializer: 'loadSortCriteriaActions',
+  },
+  {
+    initializer: 'loadBreadcrumbActions',
+  },
+  {
+    initializer: 'loadSearchAnalyticsActions',
+  },
+  {
+    initializer: 'loadClickAnalyticsActions',
+  },
+];
+
+const controllers = controllerConfiguration.map((controller) =>
   resolveController(entryPoint, controller)
 );
+const actionLoaders = actionLoaderConfiguration.map((loader) =>
+  resolveActionLoader(entryPoint, loader)
+);
+
+const result = {controllers, actionLoaders};
 
 writeFileSync('dist/parsed_doc.json', JSON.stringify(result, null, 2));

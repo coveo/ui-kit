@@ -14,6 +14,8 @@ import {
   QueryCorrection,
   WordCorrection,
 } from '../../api/search/search/query-corrections';
+import {loadReducerError} from '../../utils/errors';
+import {configuration, didYouMean} from '../../app/reducers';
 
 export {QueryCorrection, WordCorrection};
 
@@ -34,7 +36,10 @@ export interface DidYouMeanState {
    * The correction that was applied to the query. If no correction was applied, will default to an empty string.
    */
   wasCorrectedTo: string;
-
+  /**
+   * The original query that was performed, without any automatic correction applied.
+   */
+  originalQuery: string;
   /**
    * Specifies if the query was automatically corrected by Headless.
    *
@@ -60,21 +65,26 @@ export interface DidYouMeanState {
  *
  * @param engine - The headless engine.
  */
-export function buildDidYouMean(
-  engine: Engine<ConfigurationSection & DidYouMeanSection>
-): DidYouMean {
+export function buildDidYouMean(engine: Engine<object>): DidYouMean {
+  if (!loadDidYouMeanReducers(engine)) {
+    throw loadReducerError;
+  }
+
   const controller = buildController(engine);
   const {dispatch} = engine;
 
   dispatch(enableDidYouMean());
 
+  const getState = () => engine.state;
+
   return {
     ...controller,
 
     get state() {
-      const state = engine.state;
+      const state = getState();
 
       return {
+        originalQuery: state.didYouMean.originalQuery,
         wasCorrectedTo: state.didYouMean.wasCorrectedTo,
         wasAutomaticallyCorrected: state.didYouMean.wasAutomaticallyCorrected,
         queryCorrection: state.didYouMean.queryCorrection,
@@ -91,4 +101,11 @@ export function buildDidYouMean(
       dispatch(executeSearch(logDidYouMeanClick()));
     },
   };
+}
+
+function loadDidYouMeanReducers(
+  engine: Engine<object>
+): engine is Engine<ConfigurationSection & DidYouMeanSection> {
+  engine.addReducers({configuration, didYouMean});
+  return true;
 }

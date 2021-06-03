@@ -15,6 +15,10 @@ import {
   validateInitialState,
   validateOptions,
 } from '../../utils/validate-payload';
+import {advancedSearchQueries, configuration} from '../../app/reducers';
+import {loadReducerError} from '../../utils/errors';
+import {setOriginLevel2} from '../../features/configuration/configuration-actions';
+import {getConfigurationInitialState} from '../../features/configuration/configuration-state';
 
 export interface TabOptions {
   /**
@@ -25,6 +29,11 @@ export interface TabOptions {
    * `@objecttype==Message`
    */
   expression: string;
+
+  /**
+   * A unique identifier for the tab. The value will be used as the originLevel2 when the tab is active.
+   */
+  id?: string;
 }
 
 export interface TabInitialState {
@@ -35,8 +44,9 @@ export interface TabInitialState {
   isActive: boolean;
 }
 
-const optionsSchema = new Schema({
-  expression: new StringValue(),
+const optionsSchema = new Schema<Required<TabOptions>>({
+  expression: new StringValue({required: true, emptyAllowed: true}),
+  id: new StringValue({required: false, emptyAllowed: false}),
 });
 
 const initialStateSchema = new Schema({
@@ -87,12 +97,16 @@ export interface TabState {
  * @param props - The configurable `Tab` properties.
  * @returns A `Tab` controller instance.
  */
-export function buildTab(
-  engine: Engine<ConfigurationSection & AdvancedSearchQueriesSection>,
-  props: TabProps
-): Tab {
+export function buildTab(engine: Engine<object>, props: TabProps): Tab {
+  assertIdNotEqualToDefaultOriginLevel2(props.options.id);
+
+  if (!loadTabReducers(engine)) {
+    throw loadReducerError;
+  }
+
   const controller = buildController(engine);
   const {dispatch} = engine;
+  const getState = () => engine.state;
 
   const options = validateOptions(
     engine,
@@ -107,7 +121,19 @@ export function buildTab(
     'buildTab'
   );
 
+  if (!props.options.id) {
+    /**
+     * @deprecated - Make #id option required and remove log.
+     */
+    console.warn(
+      'The #id option on the Tab controller will be required in the future. Please specify it.'
+    );
+  }
+
   if (initialState.isActive) {
+    const {id} = options;
+
+    id && dispatch(setOriginLevel2({originLevel2: id}));
     dispatch(registerAdvancedSearchQueries({cq: options.expression}));
   }
 
@@ -115,16 +141,36 @@ export function buildTab(
     ...controller,
 
     select() {
+      const {id} = options;
+
+      id && dispatch(setOriginLevel2({originLevel2: id}));
       dispatch(updateAdvancedSearchQueries({cq: options.expression}));
       dispatch(executeSearch(logInterfaceChange()));
     },
 
     get state() {
       const isActive =
-        engine.state.advancedSearchQueries.cq === options.expression;
+        getState().advancedSearchQueries.cq === options.expression;
       return {
         isActive,
       };
     },
   };
+}
+
+function loadTabReducers(
+  engine: Engine<object>
+): engine is Engine<ConfigurationSection & AdvancedSearchQueriesSection> {
+  engine.addReducers({configuration, advancedSearchQueries});
+  return true;
+}
+
+function assertIdNotEqualToDefaultOriginLevel2(id: string | undefined) {
+  const defaultOriginLevel2 = getConfigurationInitialState().analytics
+    .originLevel2;
+  if (id === defaultOriginLevel2) {
+    throw new Error(
+      `The #id option on the Tab controller cannot use the reserved value "${defaultOriginLevel2}". Please specify a different value.`
+    );
+  }
 }

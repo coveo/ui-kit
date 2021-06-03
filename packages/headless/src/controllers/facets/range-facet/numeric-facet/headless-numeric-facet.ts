@@ -3,12 +3,14 @@ import {
   NumericFacetRequest,
   NumericRangeRequest,
 } from '../../../../features/facets/range-facets/numeric-facet-set/interfaces/request';
-import {NumericFacetRegistrationOptions} from '../../../../features/facets/range-facets/numeric-facet-set/interfaces/options';
 import {
   NumericFacetResponse,
   NumericFacetValue,
 } from '../../../../features/facets/range-facets/numeric-facet-set/interfaces/response';
-import {registerNumericFacet} from '../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions';
+import {
+  RegisterNumericFacetActionCreatorPayload,
+  registerNumericFacet,
+} from '../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-actions';
 import {
   assertRangeFacetOptions,
   buildRangeFacet,
@@ -19,15 +21,16 @@ import {
   SearchSection,
 } from '../../../../state/state-sections';
 import {executeToggleNumericFacetSelect} from '../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-controller-actions';
-import {validateOptions} from '../../../../utils/validate-payload';
 import {
   NumericFacetOptions,
-  numericFacetOptionsSchema,
+  validateNumericFacetOptions,
 } from './headless-numeric-facet-options';
 import {determineFacetId} from '../../_common/facet-id-determinor';
 import {buildNumericRange, NumericRangeOptions} from './numeric-range';
 import {Controller} from '../../../controller/headless-controller';
 import {RangeFacetSortCriterion} from '../../../../features/facets/range-facets/generic/interfaces/request';
+import {configuration, numericFacetSet, search} from '../../../../app/reducers';
+import {loadReducerError} from '../../../../utils/errors';
 
 export {
   buildNumericRange,
@@ -126,27 +129,25 @@ export interface NumericFacetState {
  * @returns A `NumericFacet` controller instance.
  */
 export function buildNumericFacet(
-  engine: Engine<NumericFacetSection & ConfigurationSection & SearchSection>,
+  engine: Engine<object>,
   props: NumericFacetProps
 ): NumericFacet {
+  if (!loadNumericFacetReducers(engine)) {
+    throw loadReducerError;
+  }
+
   assertRangeFacetOptions(props.options, 'buildNumericFacet');
 
   const dispatch = engine.dispatch;
 
   const facetId = determineFacetId(engine, props.options);
-  const options: NumericFacetRegistrationOptions = {
+  const options: RegisterNumericFacetActionCreatorPayload = {
     currentValues: [],
     ...props.options,
     facetId,
   };
 
-  validateOptions(
-    engine,
-    numericFacetOptionsSchema,
-    options,
-    'buildNumericFacet'
-  );
-
+  validateNumericFacetOptions(engine, options);
   dispatch(registerNumericFacet(options));
 
   const rangeFacet = buildRangeFacet<NumericFacetRequest, NumericFacetResponse>(
@@ -166,4 +167,13 @@ export function buildNumericFacet(
       return rangeFacet.state;
     },
   };
+}
+
+function loadNumericFacetReducers(
+  engine: Engine<object>
+): engine is Engine<
+  NumericFacetSection & ConfigurationSection & SearchSection
+> {
+  engine.addReducers({numericFacetSet, configuration, search});
+  return true;
 }

@@ -4,7 +4,7 @@ import dayjs from 'dayjs';
 import {ResultContext} from '../result-template-decorators';
 
 /**
- * The ResulDate component renders the value of a date result field.
+ * The `atomic-result-date` component renders the value of a date result field.
  */
 @Component({
   tag: 'atomic-result-date',
@@ -17,8 +17,8 @@ export class AtomicResultDate {
 
   /**
    * The result field which the component should use.
-   * Will look in the Result object first and then in the Result.raw object for the fields.
-   * It is important to include the necessary fields in the ResultList component.
+   * This will look for the field in the Result object first, and then in the Result.raw object.
+   * It is important to include the necessary field in the ResultList component.
    */
   @Prop() field = 'date';
   /**

@@ -12,9 +12,6 @@ import {
 } from '../../analytics/analytics-utils';
 import {
   buildFacetBaseMetadata,
-  FacetSelectionChangeMetadata,
-  FacetUpdateSortMetadata,
-  buildFacetStateMetadata,
   getStateNeededForFacetMetadata,
   buildFacetSelectionChangeMetadata,
 } from './facet-set-analytics-actions-utils';
@@ -67,15 +64,30 @@ export const logFacetSearch = (facetId: string) =>
       validatePayload(facetId, facetIdDefinition);
       const stateForAnalytics = getStateNeededForFacetMetadata(state);
       const metadata = buildFacetBaseMetadata(facetId, stateForAnalytics);
-      const facetState = buildFacetStateMetadata(stateForAnalytics);
-      return client.logFacetSearch(metadata, facetState);
+
+      return client.logFacetSearch(metadata);
     }
   )();
+
+export interface LogFacetUpdateSortActionCreatorPayload {
+  /**
+   * The facet id.
+   */
+  facetId: string;
+
+  /**
+   * The updated sort criterion.
+   */
+  criterion: FacetSortCriterion | RangeFacetSortCriterion;
+}
+
 /**
  * Logs a facet sort event.
- * @param payload (FacetUpdateSortMetadata) Object specifying the facet and sort criterion.
+ * @param payload (LogFacetUpdateSortActionCreatorPayload) Object specifying the facet and sort criterion.
  */
-export const logFacetUpdateSort = (payload: FacetUpdateSortMetadata) =>
+export const logFacetUpdateSort = (
+  payload: LogFacetUpdateSortActionCreatorPayload
+) =>
   makeAnalyticsAction(
     'analytics/facet/sortChange',
     AnalyticsType.Search,
@@ -92,9 +104,8 @@ export const logFacetUpdateSort = (payload: FacetUpdateSortMetadata) =>
 
       const base = buildFacetBaseMetadata(facetId, stateForAnalytics);
       const metadata = {...base, criteria: criterion};
-      const facetState = buildFacetStateMetadata(stateForAnalytics);
 
-      return client.logFacetUpdateSort(metadata, facetState);
+      return client.logFacetUpdateSort(metadata);
     }
   )();
 
@@ -111,17 +122,28 @@ export const logFacetClearAll = (facetId: string) =>
 
       const stateForAnalytics = getStateNeededForFacetMetadata(state);
       const metadata = buildFacetBaseMetadata(facetId, stateForAnalytics);
-      const facetState = buildFacetStateMetadata(stateForAnalytics);
 
-      return client.logFacetClearAll(metadata, facetState);
+      return client.logFacetClearAll(metadata);
     }
   )();
 
+export interface LogFacetSelectActionCreatorPayload {
+  /**
+   * The facet id.
+   */
+  facetId: string;
+
+  /**
+   * The facet value that was selected.
+   */
+  facetValue: string;
+}
+
 /**
  * Logs a facet value selection event.
- * @param payload (FacetSelectionChangeMetadata) Object specifying the target facet and value.
+ * @param payload (LogFacetSelectActionCreatorPayload) Object specifying the target facet and value.
  */
-export const logFacetSelect = (payload: FacetSelectionChangeMetadata) =>
+export const logFacetSelect = (payload: LogFacetSelectActionCreatorPayload) =>
   makeAnalyticsAction(
     'analytics/facet/select',
     AnalyticsType.Search,
@@ -136,17 +158,30 @@ export const logFacetSelect = (payload: FacetSelectionChangeMetadata) =>
         payload,
         stateForAnalytics
       );
-      const facetState = buildFacetStateMetadata(stateForAnalytics);
 
-      return client.logFacetSelect(metadata, facetState);
+      return client.logFacetSelect(metadata);
     }
   )();
 
+export interface LogFacetDeselectActionCreatorPayload {
+  /**
+   * The facet id.
+   */
+  facetId: string;
+
+  /**
+   * The facet value that was deselected.
+   */
+  facetValue: string;
+}
+
 /**
  * Logs a facet deselect event.
- * @param payload (FacetSelectionChangeMetadata) Object specifying the target facet and value.
+ * @param payload (LogFacetDeselectActionCreatorPayload) Object specifying the target facet and value.
  */
-export const logFacetDeselect = (payload: FacetSelectionChangeMetadata) =>
+export const logFacetDeselect = (
+  payload: LogFacetDeselectActionCreatorPayload
+) =>
   makeAnalyticsAction(
     'analytics/facet/deselect',
     AnalyticsType.Search,
@@ -160,17 +195,30 @@ export const logFacetDeselect = (payload: FacetSelectionChangeMetadata) =>
         payload,
         stateForAnalytics
       );
-      const facetState = buildFacetStateMetadata(stateForAnalytics);
 
-      return client.logFacetDeselect(metadata, facetState);
+      return client.logFacetDeselect(metadata);
     }
   )();
 
+export interface LogFacetBreadcrumbActionCreatorPayload {
+  /**
+   * The facet id associated with the breadcrumb.
+   */
+  facetId: string;
+
+  /**
+   * The facet value displayed in the breadcrumb.
+   */
+  facetValue: string;
+}
+
 /**
  * Logs a facet breadcrumb event.
- * @param payload (FacetSelectionChangeMetadata) Object specifying the target facet and value.
+ * @param payload (LogFacetBreadcrumbActionCreatorPayload) Object specifying the target facet and value.
  */
-export const logFacetBreadcrumb = (payload: FacetSelectionChangeMetadata) =>
+export const logFacetBreadcrumb = (
+  payload: LogFacetBreadcrumbActionCreatorPayload
+) =>
   makeAnalyticsAction(
     'analytics/facet/breadcrumb',
     AnalyticsType.Search,
@@ -179,13 +227,11 @@ export const logFacetBreadcrumb = (payload: FacetSelectionChangeMetadata) =>
         facetId: facetIdDefinition,
         facetValue: requiredNonEmptyString,
       });
-      const stateForAnalytics = getStateNeededForFacetMetadata(state);
       const metadata = buildFacetSelectionChangeMetadata(
         payload,
         getStateNeededForFacetMetadata(state)
       );
-      const facetState = buildFacetStateMetadata(stateForAnalytics);
 
-      return client.logBreadcrumbFacet(metadata, facetState);
+      return client.logBreadcrumbFacet(metadata);
     }
   )();

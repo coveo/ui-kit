@@ -31,20 +31,21 @@ import i18next, {i18n} from 'i18next';
 import Backend, {BackendOptions} from 'i18next-http-backend';
 import {createStore} from '@stencil/store';
 import {setCoveoGlobal} from '../../global/environment';
-import {defer} from '../../utils/utils';
 
 export type InitializationOptions = Pick<
   HeadlessConfigurationOptions,
   'accessToken' | 'organizationId' | 'renewAccessToken' | 'platformUrl'
 >;
 
+/**
+ * The `atomic-search-interface` component is the parent to all other atomic components in a search page. It handles the headless engine and localization configurations.
+ */
 @Component({
   tag: 'atomic-search-interface',
   shadow: true,
   assetsDirs: ['lang'],
 })
 export class AtomicSearchInterface {
-  private updatingHash = false;
   private urlManager!: UrlManager;
   private unsubscribeUrlManager: Unsubscribe = () => {};
   private hangingComponentsInitialization: InitializeEvent[] = [];
@@ -66,7 +67,7 @@ export class AtomicSearchInterface {
   @Prop({reflect: true}) public searchHub = 'default';
 
   /**
-   * The level of messages you want to be logged in the console.
+   * The severity level of the messages to log in the console.
    */
   @Prop() public logLevel?: LogLevel;
 
@@ -86,7 +87,7 @@ export class AtomicSearchInterface {
   @Prop({mutable: true}) public engine?: Engine;
 
   /**
-   * Whether the state should be reflected in the url parameters.
+   * Whether the state should be reflected in the URL parameters.
    */
   @Prop() public reflectStateInUrl = true;
 
@@ -107,7 +108,25 @@ export class AtomicSearchInterface {
 
   @Watch('language')
   public updateLanguage() {
-    this.i18n.changeLanguage(this.language);
+    this.engine?.dispatch(
+      ConfigurationActions.updateSearchConfiguration({
+        locale: this.language,
+      })
+    );
+    new Backend(this.i18n.services, this.i18nBackendOptions).read(
+      this.language,
+      'translation',
+      (_, data) => {
+        this.i18n.addResourceBundle(
+          this.language,
+          'translation',
+          data,
+          true,
+          false
+        );
+        this.i18n.changeLanguage(this.language);
+      }
+    );
   }
 
   public disconnectedCallback() {
@@ -128,6 +147,9 @@ export class AtomicSearchInterface {
     this.hangingComponentsInitialization.push(event);
   }
 
+  /**
+   * Initializes the connection with the Headless engine using options for `accessToken` (required), `organizationId` (required), `renewAccessToken`, and `platformUrl`.
+   */
   @Method() public async initialize(options: InitializationOptions) {
     if (this.engine) {
       this.engine.logger.warn(
@@ -145,6 +167,10 @@ export class AtomicSearchInterface {
     this.initialized = true;
   }
 
+  /**
+   *
+   * Executes the first search and logs the interface load event to analytics, after initializing connection to the Headless engine.
+   */
   @Method() public async executeFirstSearch() {
     if (!this.engine) {
       console.error(
@@ -175,6 +201,7 @@ export class AtomicSearchInterface {
           search: {
             searchHub: this.searchHub,
             pipeline: this.pipeline,
+            locale: this.language,
           },
         },
         reducers: searchAppReducers,
@@ -193,9 +220,7 @@ export class AtomicSearchInterface {
       debug: this.logLevel === 'debug',
       lng: this.language,
       fallbackLng: ['en'],
-      backend: {
-        loadPath: `${getAssetPath('./lang/')}{{lng}}.json`,
-      } as BackendOptions,
+      backend: this.i18nBackendOptions,
     });
   }
 
@@ -209,7 +234,7 @@ export class AtomicSearchInterface {
     );
   }
 
-  private get hash() {
+  private get fragment() {
     return window.location.hash.slice(1);
   }
 
@@ -219,7 +244,7 @@ export class AtomicSearchInterface {
     }
 
     this.urlManager = buildUrlManager(this.engine!, {
-      initialState: {fragment: this.hash},
+      initialState: {fragment: this.fragment},
     });
 
     this.unsubscribeUrlManager = this.urlManager.subscribe(() =>
@@ -230,18 +255,15 @@ export class AtomicSearchInterface {
   }
 
   private updateHash() {
-    this.updatingHash = true;
-    defer(() => (this.updatingHash = false));
-    const hash = this.urlManager.state.fragment;
-    window.location.hash = hash;
+    history.pushState(
+      null,
+      document.title,
+      `#${this.urlManager.state.fragment}`
+    );
   }
 
   private onHashChange = () => {
-    if (this.updatingHash) {
-      return;
-    }
-
-    this.urlManager.synchronize(this.hash);
+    this.urlManager.synchronize(this.fragment);
   };
 
   public render() {
@@ -262,5 +284,11 @@ export class AtomicSearchInterface {
       ),
       <slot></slot>,
     ];
+  }
+
+  private get i18nBackendOptions(): BackendOptions {
+    return {
+      loadPath: `${getAssetPath('./lang/')}{{lng}}.json`,
+    };
   }
 }

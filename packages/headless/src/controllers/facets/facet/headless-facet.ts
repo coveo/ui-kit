@@ -42,6 +42,13 @@ import {
 } from './headless-facet-options';
 import {determineFacetId} from '../_common/facet-id-determinor';
 import {FacetValueState} from '../../../features/facets/facet-api/value';
+import {
+  configuration,
+  facetSearchSet,
+  facetSet,
+  search,
+} from '../../../app/reducers';
+import {loadReducerError} from '../../../utils/errors';
 
 export {FacetOptions, FacetSearchOptions, FacetValueState};
 
@@ -165,6 +172,11 @@ export interface FacetSearch {
    * @param value - The search result to select.
    * */
   select(value: SpecificFacetSearchResult): void;
+
+  /**
+   * Resets the query and empties the values.
+   * */
+  clear(): void;
 }
 
 export interface FacetSearchState {
@@ -182,6 +194,9 @@ export interface FacetSearchState {
    * Whether more values are available.
    * */
   moreValuesAvailable: boolean;
+
+  /** The current query in the facet search box. */
+  query: string;
 }
 
 export interface SpecificFacetSearchResult {
@@ -226,12 +241,11 @@ export interface FacetValue {
  * @param props - The configurable `Facet` properties.
  * @returns A `Facet` controller instance.
  * */
-export function buildFacet(
-  engine: Engine<
-    FacetSection & ConfigurationSection & FacetSearchSection & SearchSection
-  >,
-  props: FacetProps
-): Facet {
+export function buildFacet(engine: Engine<object>, props: FacetProps): Facet {
+  if (!loadFacetReducers(engine)) {
+    throw loadReducerError;
+  }
+
   const {dispatch} = engine;
   const controller = buildController(engine);
 
@@ -267,6 +281,8 @@ export function buildFacet(
 
     return initialNumberOfValues < currentValues.length && hasIdleValues;
   };
+
+  const getState = () => engine.state;
 
   dispatch(registerFacet(options));
   const facetSearch = createFacetSearch();
@@ -330,7 +346,7 @@ export function buildFacet(
       const request = getRequest();
       const response = getResponse();
 
-      const isLoading = engine.state.search.isLoading;
+      const isLoading = getState().search.isLoading;
       const sortCriterion = request.sortCriteria;
       const values = response ? response.values : [];
       const hasActiveValues = values.some(
@@ -350,4 +366,13 @@ export function buildFacet(
       };
     },
   };
+}
+
+function loadFacetReducers(
+  engine: Engine<object>
+): engine is Engine<
+  FacetSection & ConfigurationSection & FacetSearchSection & SearchSection
+> {
+  engine.addReducers({facetSet, configuration, facetSearchSet, search});
+  return true;
 }

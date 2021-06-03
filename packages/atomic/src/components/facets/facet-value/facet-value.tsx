@@ -1,36 +1,35 @@
-import {h} from '@stencil/core';
+import {h, FunctionalComponent} from '@stencil/core';
 import {randomID} from '../../../utils/utils';
 
 export type FacetValueProps = {
   facetValueSelected: VoidFunction;
   label: string;
-  numberOfResults: number;
+  numberOfResults: string;
   isSelected: boolean;
   ariaLabel: string;
 };
 
-export const FacetValue = (props: FacetValueProps) => {
-  const id = randomID('input');
+export const FacetValue: FunctionalComponent<FacetValueProps> = (props) => {
+  const id = randomID('facet-value-');
   return (
-    <li
-      part="facet-value"
-      class="flex flex-row items-center py-2 lg:py-1 cursor-pointer text-lg lg:text-base"
-      aria-label={props.ariaLabel}
-    >
-      <input
-        type="checkbox"
-        checked={props.isSelected}
-        class="facet-value-checkbox w-5 h-5"
+    <li part="value" class="flex flex-row items-center">
+      <button
         id={id}
-        name={id}
+        role="checkbox"
         onClick={() => props.facetValueSelected()}
-      />
+        aria-checked={props.isSelected.toString()}
+        class={`checkbox ${props.isSelected ? 'checked' : ''}`}
+        aria-label={props.ariaLabel}
+      ></button>
       <label
         htmlFor={id}
-        class="ml-3 flex flex-row text-on-background flex-grow cursor-pointer"
+        class="w-full flex pl-3 text-on-background cursor-pointer ellipsed lg:text-sm py-1.5"
+        title={props.label}
       >
-        <span class="my-auto">{props.label}</span>
-        <span class="ml-auto my-auto self-end text-on-background-variant">
+        <span part="value-label" class="ellipsed">
+          {props.label}
+        </span>
+        <span part="value-count" class="value-count">
           {props.numberOfResults}
         </span>
       </label>

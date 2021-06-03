@@ -57,7 +57,7 @@ describe('validatePayloadAndThrow', () => {
 });
 
 describe('validateOptions', () => {
-  let engine: Engine<unknown>;
+  let engine: Engine<object>;
   const schema = new Schema({
     id: new NumberValue({max: 10}),
   });
@@ -86,7 +86,7 @@ describe('validateOptions', () => {
 });
 
 describe('validateInitialState', () => {
-  let engine: Engine<unknown>;
+  let engine: Engine<object>;
   const schema = new Schema({
     id: new NumberValue({max: 10}),
   });

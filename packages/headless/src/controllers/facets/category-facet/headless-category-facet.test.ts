@@ -30,6 +30,13 @@ import {updateFacetOptions} from '../../../features/facet-options/facet-options-
 import {SearchAppState} from '../../../state/search-app-state';
 import * as FacetIdDeterminor from '../_common/facet-id-determinor';
 import {buildMockCategoryFacetSlice} from '../../../test/mock-category-facet-slice';
+import {
+  categoryFacetSearchSet,
+  categoryFacetSet,
+  configuration,
+  search,
+} from '../../../app/reducers';
+import {defaultFacetSearchOptions} from '../../../features/facets/facet-search-set/facet-search-reducer-helpers';
 
 describe('category facet', () => {
   const facetId = '1';
@@ -60,6 +67,15 @@ describe('category facet', () => {
     initCategoryFacet();
   });
 
+  it('it adds the correct reducers to engine', () => {
+    expect(engine.addReducers).toHaveBeenCalledWith({
+      configuration,
+      categoryFacetSet,
+      categoryFacetSearchSet,
+      search,
+    });
+  });
+
   it('it calls #determineFacetId with the correct params', () => {
     jest.spyOn(FacetIdDeterminor, 'determineFacetId');
 
@@ -77,9 +93,10 @@ describe('category facet', () => {
 
   it('registers a category facet with the passed options and default optional parameters', () => {
     const action = registerCategoryFacet({
-      facetId,
       ...defaultCategoryFacetOptions,
+      facetSearch: {...defaultFacetSearchOptions},
       ...options,
+      facetId,
     });
     expect(engine.actions).toContainEqual(action);
   });

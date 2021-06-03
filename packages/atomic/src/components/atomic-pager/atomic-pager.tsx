@@ -18,13 +18,13 @@ import ArrowRightIcon from 'coveo-styleguide/resources/icons/svg/arrow-right-rou
 import ArrowLeftIcon from 'coveo-styleguide/resources/icons/svg/arrow-left-rounded.svg';
 
 /**
- * The Pager provides buttons that allow the end user to navigate through the different result pages.
+ * The `atomic-pager` provides buttons that allow the end user to navigate through the different result pages.
  *
- * @part buttons - The list of buttons
- * @part previous-button - The previous button
- * @part next-button - The next button
- * @part page-button - The page button
- * @part active-page-button - The active page button
+ * @part buttons - The list of buttons.
+ * @part previous-button - The previous button.
+ * @part next-button - The next button.
+ * @part page-button - The page button.
+ * @part active-page-button - The active page button.
  */
 @Component({
   tag: 'atomic-pager',
@@ -56,10 +56,6 @@ export class AtomicPager implements InitializableComponent {
    * Specifies how many page buttons to display in the pager.
    */
   @Prop() numberOfPages = 5;
-  /**
-   * Specifies whether the **Previous** and **Next** buttons should appear at each end of the pager when appropriate.
-   */
-  @Prop() enableNavigationButtons = true;
 
   public initialize() {
     this.searchStatus = buildSearchStatus(this.bindings.engine);
@@ -82,7 +78,7 @@ export class AtomicPager implements InitializableComponent {
           class={`text-primary ${
             options.disabled
               ? 'opacity-50 cursor-not-allowed'
-              : 'hover:text-primary-variant'
+              : 'hover:text-primary-light'
           }`}
           disabled={options.disabled}
           aria-label={options.ariaLabel}
@@ -126,7 +122,7 @@ export class AtomicPager implements InitializableComponent {
   private buildPage(page: number) {
     const isSelected = this.pager.isCurrentPage(page);
     const classes = isSelected
-      ? 'text-on-primary bg-primary hover:bg-primary-variant'
+      ? 'text-on-primary bg-primary hover:bg-primary-light'
       : 'text-on-background';
 
     return (
@@ -140,7 +136,7 @@ export class AtomicPager implements InitializableComponent {
             this.pager.selectPage(page);
           }}
         >
-          {page}
+          {page.toLocaleString(this.bindings.i18n.language)}
         </button>
       </li>
     );
@@ -152,11 +148,11 @@ export class AtomicPager implements InitializableComponent {
     }
 
     return (
-      <nav aria-label={this.strings.pagination()} class="items-center ">
-        <ul part="buttons" class="flex justify-between space-x-2">
-          {this.enableNavigationButtons && this.previousButton}
+      <nav aria-label={this.strings.pagination()} class="items-center">
+        <ul part="buttons" class="flex space-x-2 flex-wrap">
+          {this.previousButton}
           {this.pages}
-          {this.enableNavigationButtons && this.nextButton}
+          {this.nextButton}
         </ul>
       </nav>
     );

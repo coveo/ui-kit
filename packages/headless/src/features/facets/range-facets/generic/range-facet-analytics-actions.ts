@@ -1,20 +1,8 @@
 import {FacetRangeMetadata} from 'coveo.analytics/src/searchPage/searchPageEvents';
 import {SearchAppState} from '../../../../state/search-app-state';
-import {validatePayload} from '../../../../utils/validate-payload';
-import {
-  AnalyticsType,
-  makeAnalyticsAction,
-} from '../../../analytics/analytics-utils';
-import {
-  buildFacetStateMetadata,
-  getStateNeededForFacetMetadata,
-} from '../../facet-set/facet-set-analytics-actions-utils';
-import {
-  RangeFacetSelectionPayload,
-  rangeFacetSelectionPayloadDefinition,
-} from './range-facet-validate-payload';
+import {RangeFacetSelectionPayload} from './range-facet-validate-payload';
 
-const getRangeFacetMetadata = (
+export const getRangeFacetMetadata = (
   state: Partial<SearchAppState>,
   {facetId, selection}: RangeFacetSelectionPayload
 ): FacetRangeMetadata => {
@@ -30,25 +18,3 @@ const getRangeFacetMetadata = (
     facetRangeStart: `${selection.start}`,
   };
 };
-
-/**
- * Logs a range facet breadcrumb event.
- * @param payload (RangeFacetSelectionPayload) Object specifying the target facet and selection.
- */
-export const logRangeFacetBreadcrumb = (payload: RangeFacetSelectionPayload) =>
-  makeAnalyticsAction(
-    'analytics/rangeFacet/breadcrumb',
-    AnalyticsType.Search,
-    (client, state) => {
-      validatePayload(
-        payload,
-        rangeFacetSelectionPayloadDefinition(payload.selection)
-      );
-      const metadata = getRangeFacetMetadata(state, payload);
-      const facetState = buildFacetStateMetadata(
-        getStateNeededForFacetMetadata(state)
-      );
-
-      return client.logBreadcrumbFacet(metadata, facetState);
-    }
-  )();

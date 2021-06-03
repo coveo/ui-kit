@@ -20,7 +20,8 @@ import {
 import {CoveoSearchPageClient, SearchPageClientProvider} from 'coveo.analytics';
 import {SearchEventResponse} from 'coveo.analytics/dist/definitions/events';
 import {AsyncThunkAction, createAsyncThunk} from '@reduxjs/toolkit';
-import {ThunkExtraArguments} from '../../app/store';
+import {requiredNonEmptyString} from '../../utils/validate-payload';
+import {ThunkExtraArguments} from '../../app/thunk-extra-arguments';
 
 export enum AnalyticsType {
   Search,
@@ -129,7 +130,7 @@ export const partialDocumentInformation = (
     documentUriHash: result.raw.urihash,
     documentUrl: result.clickUri,
     rankingModifier: result.rankingModifier || '',
-    sourceName: result.raw.sourcetype || '',
+    sourceName: getSourceName(result),
     queryPipeline: state.pipeline || getPipelineInitialState(),
   };
 };
@@ -140,11 +141,6 @@ export const documentIdentifier = (result: Result): DocumentIdentifier => {
     contentIDValue: result.raw.permanentid || '',
   };
 };
-
-const requiredNonEmptyString = new StringValue({
-  required: true,
-  emptyAllowed: false,
-});
 
 const rawPartialDefinition = {
   urihash: new StringValue(),
@@ -185,6 +181,14 @@ function getDocumentAuthor(result: Result) {
   }
 
   return Array.isArray(author) ? author.join(';') : `${author}`;
+}
+
+function getSourceName(result: Result) {
+  const source = result.raw['source'];
+  if (isNullOrUndefined(source)) {
+    return 'unknown';
+  }
+  return source;
 }
 
 export const validateResultPayload = (result: Result) =>

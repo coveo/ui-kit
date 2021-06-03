@@ -27,6 +27,8 @@ import {
   validateInitialState,
   validateOptions,
 } from '../../utils/validate-payload';
+import {configuration, pagination} from '../../app/reducers';
+import {loadReducerError} from '../../utils/errors';
 
 export interface PagerInitialState {
   /**
@@ -136,9 +138,13 @@ export interface PagerState {
  * @returns A `Pager` controller instance.
  * */
 export function buildPager(
-  engine: Engine<PaginationSection & ConfigurationSection>,
+  engine: Engine<object>,
   props: PagerProps = {}
 ): Pager {
+  if (!loadPagerReducers(engine)) {
+    throw loadReducerError;
+  }
+
   const controller = buildController(engine);
   const {dispatch} = engine;
 
@@ -210,4 +216,11 @@ export function buildPager(
       return page === this.state.currentPage;
     },
   };
+}
+
+function loadPagerReducers(
+  engine: Engine<object>
+): engine is Engine<PaginationSection & ConfigurationSection> {
+  engine.addReducers({configuration, pagination});
+  return true;
 }

@@ -1,5 +1,9 @@
 import {Engine} from '../../app/headless-engine';
-import {ConfigurationSection, SearchSection} from '../../state/state-sections';
+import {
+  ConfigurationSection,
+  FieldsSection,
+  SearchSection,
+} from '../../state/state-sections';
 import {buildController, Controller} from '../controller/headless-controller';
 import {fetchMoreResults} from '../../features/search/search-actions';
 import {registerFieldsToInclude} from '../../features/fields/fields-actions';
@@ -10,6 +14,8 @@ import {
   SearchStatusState,
 } from '../search-status/headless-search-status';
 import {Result} from '../../api/search/search/result';
+import {configuration, fields, search} from '../../app/reducers';
+import {loadReducerError} from '../../utils/errors';
 
 const optionsSchema = new Schema<ResultListOptions>({
   fieldsToInclude: new ArrayValue({
@@ -83,12 +89,17 @@ export interface ResultListState extends SearchStatusState {
  * @returns A `ResultList` controller instance.
  */
 export function buildResultList(
-  engine: Engine<SearchSection & ConfigurationSection>,
+  engine: Engine<object>,
   props?: ResultListProps
 ): ResultList {
+  if (!loadResultListReducers(engine)) {
+    throw loadReducerError;
+  }
+
   const controller = buildController(engine);
   const searchStatus = buildSearchStatus(engine);
   const {dispatch} = engine;
+  const getState = () => engine.state;
 
   const options = validateOptions(
     engine,
@@ -147,7 +158,7 @@ export function buildResultList(
     ...controller,
 
     get state() {
-      const state = engine.state;
+      const state = getState();
 
       return {
         ...searchStatus.state,
@@ -159,4 +170,11 @@ export function buildResultList(
 
     fetchMoreResults: triggerFetchMoreResult,
   };
+}
+
+function loadResultListReducers(
+  engine: Engine<object>
+): engine is Engine<SearchSection & ConfigurationSection & FieldsSection> {
+  engine.addReducers({search, configuration, fields});
+  return true;
 }

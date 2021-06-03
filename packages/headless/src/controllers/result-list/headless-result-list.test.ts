@@ -5,6 +5,7 @@ import {registerFieldsToInclude} from '../../features/fields/fields-actions';
 import {SchemaValidationError} from '@coveo/bueno';
 import {fetchMoreResults} from '../../features/search/search-actions';
 import {buildMockResult} from '../../test';
+import {configuration, fields, search} from '../../app/reducers';
 
 describe('ResultList', () => {
   let engine: MockEngine<SearchAppState>;
@@ -19,6 +20,15 @@ describe('ResultList', () => {
 
   afterEach(() => {
     jest.useRealTimers();
+  });
+
+  it('it adds the correct reducers to engine', () => {
+    buildResultList(engine);
+    expect(engine.addReducers).toHaveBeenCalledWith({
+      configuration,
+      search,
+      fields,
+    });
   });
 
   it('initializes correctly with no fields to include', () => {

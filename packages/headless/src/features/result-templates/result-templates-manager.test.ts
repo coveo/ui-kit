@@ -4,14 +4,20 @@ import {
 } from './result-templates-manager';
 import {buildMockResult} from '../../test/mock-result';
 import {buildMockSearchAppEngine} from '../../test/mock-engine';
+import {Engine} from '../../app/headless-engine';
+import {fields} from '../../app/reducers';
 
 describe('result template manager', () => {
   let resultTemplateManager: ResultTemplatesManager<string>;
+  let engine: Engine;
 
   beforeEach(() => {
-    resultTemplateManager = buildResultTemplatesManager(
-      buildMockSearchAppEngine()
-    );
+    engine = buildMockSearchAppEngine();
+    resultTemplateManager = buildResultTemplatesManager(engine);
+  });
+
+  it('adds the correct reducers to the engine', () => {
+    expect(engine.addReducers).toHaveBeenCalledWith({fields});
   });
 
   describe('registration & selection', () => {

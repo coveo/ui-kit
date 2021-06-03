@@ -23,6 +23,8 @@ import {getFacetOptionsInitialState} from '../features/facet-options/facet-optio
 import {getHistoryInitialState} from '../features/history/history-state';
 import {getDebugInitialState} from '../features/debug/debug-state';
 import {getFacetOrderInitialState} from '../features/facets/facet-order/facet-order-state';
+import {getResultPreviewInitialState} from '../features/result-preview/result-preview-state';
+import {getFoldingInitialState} from '../features/folding/folding-state';
 
 export function createMockState(
   config: Partial<SearchAppState> = {}
@@ -52,7 +54,9 @@ export function createMockState(
     facetOrder: getFacetOrderInitialState(),
     searchHub: getSearchHubInitialState(),
     debug: getDebugInitialState(),
+    resultPreview: getResultPreviewInitialState(),
     version: 'unit-testing-version',
+    folding: getFoldingInitialState(),
     ...config,
   };
 }

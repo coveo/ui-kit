@@ -4,8 +4,8 @@ import {
   toggleSelectDateFacetValue,
   updateDateFacetSortCriterion,
   deselectAllDateFacetValues,
+  RegisterDateFacetActionCreatorPayload,
 } from './date-facet-actions';
-import {DateFacetRegistrationOptions} from './interfaces/options';
 import {buildMockDateFacetRequest} from '../../../../test/mock-date-facet-request';
 import {change} from '../../../history/history-actions';
 import * as RangeFacetReducers from '../generic/range-facet-reducers';
@@ -36,7 +36,7 @@ describe('date-facet-set slice', () => {
 
   it('#registerDateFacet registers a date facet', () => {
     const facetId = '1';
-    const options: DateFacetRegistrationOptions = {
+    const options: RegisterDateFacetActionCreatorPayload = {
       facetId,
       field: '',
       generateAutomaticRanges: true,

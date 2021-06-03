@@ -3,12 +3,9 @@ import {
   setUpPage,
   injectComponent,
   shouldRenderErrorComponent,
+  buildTestUrl,
 } from '../utils/setupComponent';
-import {
-  createAliasLi,
-  createAliasNavigation,
-  PagerSelectors,
-} from './pager-selectors';
+import {createAliasNavigation, PagerSelectors} from './pager-selectors';
 
 describe('Pager Test Suites', () => {
   function setupPager(attributes = '') {
@@ -105,43 +102,12 @@ describe('Pager Test Suites', () => {
 
   describe('Pager should load from url', () => {
     it('should activate correct page number', async () => {
-      cy.visit('http://localhost:3333/pages/test.html#firstResult=20');
+      cy.visit(buildTestUrl('firstResult=20'));
       injectComponent('<atomic-pager></atomic-pager>');
       cy.wait(1000);
       createAliasNavigation();
       cy.get('@pagerLi').get(PagerSelectors.pager).should('be.visible');
       checkPagerSelected('3', true);
-    });
-  });
-
-  describe('Option enableNavigationButton', () => {
-    it('should load without navigation buttons when when prop is false_boolean', () => {
-      setupPager('enable-navigation-buttons=false');
-      createAliasLi();
-      cy.get('@pagerLi').get(PagerSelectors.buttonNext).should('not.exist');
-      cy.get('@pagerLi').get(PagerSelectors.buttonPrevious).should('not.exist');
-    });
-
-    it('should load without navigation buttons when user goes to page 2', () => {
-      setupPager('enable-navigation-buttons=false');
-      createAliasLi();
-      cy.get('@pagerLi').find('button').contains('2').click();
-      checkPagerSelected('2', true);
-      cy.get('@pagerLi').get(PagerSelectors.buttonNext).should('not.exist');
-      cy.get('@pagerLi').get(PagerSelectors.buttonPrevious).should('not.exist');
-    });
-
-    it('should load without navigation buttons when prop is "false"_string', () => {
-      setupPager('enable-navigation-buttons="false"');
-      createAliasLi();
-      cy.get('@pagerLi').get(PagerSelectors.buttonNext).should('not.exist');
-      cy.get('@pagerLi').get(PagerSelectors.buttonPrevious).should('not.exist');
-    });
-
-    it('should fallback to default when prop is invalid', () => {
-      setupPager('enable-navigation-buttons="dadaf"');
-      createAliasNavigation();
-      componentLoaded(5);
     });
   });
 

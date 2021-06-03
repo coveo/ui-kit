@@ -24,7 +24,7 @@ export class BaseFacetController {
 
 type BaseFacetProps = {
   controller: BaseFacetController;
-  deselectAll: VoidFunction;
+  clearAll?: VoidFunction;
   label: string;
   hasActiveValues: boolean;
 };
@@ -37,7 +37,7 @@ export const BaseFacet: FunctionalComponent<BaseFacetProps> = (
     <button
       part="close-button"
       onClick={() => props.controller.closeModal()}
-      class="ml-2"
+      class="ml-2 lg:hidden"
     >
       <div
         class="h-5 w-5 text-on-background fill-current"
@@ -46,41 +46,55 @@ export const BaseFacet: FunctionalComponent<BaseFacetProps> = (
     </button>
   ) : null;
 
-  const resetButton = props.hasActiveValues ? (
+  const clearButton =
+    props.clearAll && props.hasActiveValues ? (
+      <button
+        part="clear-button"
+        onClick={() => props.clearAll!()}
+        class="block text-primary mr-2 lg:mr-0 text-sm"
+      >
+        {props.controller.state.strings.clear()}
+      </button>
+    ) : null;
+
+  const modalButton = (
     <button
-      part="reset-button"
-      onClick={() => props.deselectAll()}
-      class="block text-primary mr-2 lg:mr-0 text-sm"
+      title={props.label}
+      part="modal-button"
+      class={`rounded-lg text-left border-solid bg-background px-4 h-9 outline-none focus:outline-none lg:hidden cursor-pointer ellipsed w-full ${
+        props.hasActiveValues
+          ? 'border-2 border-primary text-primary'
+          : 'border border-neutral text-on-background'
+      }`}
+      onClick={() => props.controller.openModal()}
     >
-      {props.controller.state.strings.clear()}
+      {props.label}
     </button>
-  ) : null;
+  );
+
+  const facetWrapperDesktop =
+    'lg:h-auto lg:w-auto lg:static lg:block lg:border lg:border-neutral lg:rounded-lg lg:overflow-visible';
+  const facetWrapperMobile =
+    'box-border p-5 h-screen w-screen overflow-auto overflow-x-hidden fixed object-left-top bg-background top-0 left-0 z-10';
 
   return (
     <div class="facet mb-4" part="facet">
-      <button
-        class={
-          'facet-button border-solid bg-transparent px-4 h-9 outline-none focus:outline-none lg:hidden cursor-pointer ' +
-          (props.hasActiveValues
-            ? 'border-2 border-primary text-primary'
-            : 'border border-divider text-on-background-variant')
-        }
-        onClick={() => props.controller.openModal()}
-      >
-        {props.label}
-      </button>
+      {modalButton}
       <div
-        class={
-          'content box-border p-3 lg:p-0 lg:block h-screen w-screen lg:h-auto lg:w-auto fixed object-left-top bg-background top-0 left-0 lg:static z-10 ' +
-          (props.controller.state.isExpanded ? 'block' : 'hidden')
-        }
+        class={`${facetWrapperMobile} ${facetWrapperDesktop} ${
+          props.controller.state.isExpanded ? 'block' : 'hidden'
+        }`}
       >
-        <div class="flex flex-row items-center pb-2 mb-2 border-b border-solid border-divider">
-          <span class="font-semibold text-on-background-variant text-base lg:text-sm">
+        <div class="flex flex-row items-center mb-2">
+          <span
+            title={props.label}
+            part="label"
+            class="font-bold text-on-background ellipsed w-full"
+          >
             {props.label}
           </span>
           <span class="flex flex-row ml-auto">
-            {resetButton}
+            {clearButton}
             {closeButton}
           </span>
         </div>

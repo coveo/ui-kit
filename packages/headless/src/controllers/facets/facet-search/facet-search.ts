@@ -6,7 +6,10 @@ import {SpecificFacetSearchState} from '../../../features/facets/facet-search-se
 import {CategoryFacetSearchState} from '../../../features/facets/facet-search-set/category/category-facet-search-set-state';
 import {FacetSearchOptions} from '../../../features/facets/facet-search-set/facet-search-request-options';
 import {updateFacetOptions} from '../../../features/facet-options/facet-options-actions';
-import {executeFacetSearch} from '../../../features/facets/facet-search-set/generic/generic-facet-search-actions';
+import {
+  clearFacetSearch,
+  executeFacetSearch,
+} from '../../../features/facets/facet-search-set/generic/generic-facet-search-actions';
 import {
   CategoryFacetSearchSection,
   ConfigurationSection,
@@ -33,32 +36,29 @@ export function buildGenericFacetSearch<T extends FacetSearchState>(
 
   const dispatch = engine.dispatch;
   const {options, getFacetSearch} = props;
-
-  const facetId = options.facetId;
-  const initialNumberOfValues = options.numberOfValues || 10;
+  const {facetId} = options;
 
   return {
     /** Updates the facet search query.
      * @param text The new query.
      */
     updateText(text: string) {
-      const query = `*${text}*`;
       dispatch(
         updateFacetSearch({
           facetId,
-          query,
-          numberOfValues: initialNumberOfValues,
+          query: text,
+          numberOfValues: getFacetSearch().initialNumberOfValues,
         })
       );
     },
 
     /** Increases number of results returned by numberOfResults */
     showMoreResults() {
-      const {numberOfValues} = getFacetSearch().options;
+      const {initialNumberOfValues, options} = getFacetSearch();
       dispatch(
         updateFacetSearch({
           facetId,
-          numberOfValues: numberOfValues + initialNumberOfValues,
+          numberOfValues: options.numberOfValues + initialNumberOfValues,
         })
       );
       dispatch(executeFacetSearch(facetId));
@@ -77,14 +77,21 @@ export function buildGenericFacetSearch<T extends FacetSearchState>(
       dispatch(executeSearch(logFacetSelect({facetId, facetValue})));
     },
 
+    /** Resets the query and empties the values. */
+    clear() {
+      dispatch(clearFacetSearch({facetId}));
+    },
+
     get state() {
-      const {response, isLoading} = getFacetSearch();
+      const {response, isLoading, options} = getFacetSearch();
+      const {query} = options;
       const values: GenericFacetSearchResults = response.values;
 
       return {
         ...response,
         values,
         isLoading,
+        query,
       };
     },
   };

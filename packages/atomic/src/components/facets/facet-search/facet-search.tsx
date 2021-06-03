@@ -1,122 +1,149 @@
 import {h} from '@stencil/core';
-
-import ClearIcon from 'coveo-styleguide/resources/icons/svg/clear.svg';
-import {Combobox} from '../../../utils/combobox';
-import {I18nState} from '../../../utils/initialization-utils';
-import {
-  CategoryFacet,
-  CategoryFacetState,
-  Facet,
-  FacetState,
-} from '@coveo/headless';
-import {BaseFacetSearchResult} from '@coveo/headless/dist/api/search/facet-search/base/base-facet-search-response';
-import {randomID} from '../../../utils/utils';
-import {CategoryFacetSearchResult} from '@coveo/headless/dist/api/search/facet-search/category-facet-search/category-facet-search-response';
 import SearchIcon from 'coveo-styleguide/resources/icons/svg/search.svg';
+import ClearIcon from 'coveo-styleguide/resources/icons/svg/clear.svg';
+import {Combobox, ComboboxStrings} from '../../../utils/combobox';
+import {Facet, CategoryFacet, CategoryFacetSearchResult} from '@coveo/headless';
+import {randomID} from '../../../utils/utils';
 import {sanitize} from '../../../utils/xss-utils';
 import {regexEncode} from '../../../utils/string-utils';
 
-export interface FacetSearchState {
-  strings: I18nState;
-  facetSearchQuery: string;
-  showFacetSearchResults: boolean;
+type FacetSearchResult = CategoryFacetSearchResult;
+
+export interface FacetSearchStrings extends ComboboxStrings {
+  placeholder: () => string;
+  noValuesFound: () => string;
+  clear: () => string;
+}
+
+export interface FacetSearchComponent {
+  strings: FacetSearchStrings;
   facet: Facet | CategoryFacet;
-  facetState: FacetState | CategoryFacetState;
+  renderSearchResult: (searchResult: FacetSearchResult) => HTMLLIElement[];
+  ariaLabelForSearchResult: (searchResult: FacetSearchResult) => string;
 }
-
-export class FacetSearchController {
-  constructor(public state: FacetSearchState) {}
-
-  public get facetSearch() {
-    return this.state.facet.facetSearch;
-  }
-
-  public get facetSearchState() {
-    return this.state.facetState.facetSearch;
-  }
-
-  public get strings() {
-    return this.state.strings;
-  }
-
-  public set text(text: string) {
-    this.state.facetSearchQuery = text;
-    this.facetSearch.updateText(text);
-    this.facetSearch.search();
-  }
-}
-
-export type FacetSearchProps = {
-  controller: FacetSearchController;
-};
 
 export class FacetSearch {
-  private static ShowMoreResultsValue = -1;
   private inputRef!: HTMLInputElement;
   private valuesRef!: HTMLElement;
   private containerRef!: HTMLElement;
   private combobox: Combobox;
 
-  constructor(private props: FacetSearchProps) {
+  constructor(public component: FacetSearchComponent) {
     this.combobox = new Combobox({
       id: randomID('facet-search'),
-      strings: props.controller.state.strings,
+      strings: this.component.strings,
       containerRef: () => this.containerRef,
       inputRef: () => this.inputRef,
       valuesRef: () => this.valuesRef,
-      onChange: (value) => {
-        this.props.controller.state.showFacetSearchResults = true;
-        this.props.controller.text = value;
-      },
-      onSubmit: () => props.controller.facetSearch.search(),
+      onChange: (value) => this.onChange(value),
+      onSubmit: () => {},
       onSelectValue: (element) => {
         const value = (element as HTMLLIElement).value;
-        if (value === FacetSearch.ShowMoreResultsValue) {
-          return this.props.controller.facetSearch.showMoreResults();
-        }
-        this.onSelectValue(
-          this.props.controller.facetSearchState.values[value]
-        );
+        this.onSelectValue(value);
       },
-      onBlur: () => {
-        props.controller.state.showFacetSearchResults = false;
-      },
-      activeClass: 'active',
-      activePartName: 'active-suggestion',
+      onBlur: () => this.onBlur(),
+      activeClass: 'active-search-result',
+      activePartName: 'active-search-result',
     });
   }
 
-  private onSelectValue(value: BaseFacetSearchResult) {
-    this.props.controller.facetSearch.select(
-      value as CategoryFacetSearchResult
+  public static highlightSearchResult(resultValue: string, query: string) {
+    const sanitizedResult = sanitize(resultValue);
+    if (query.trim() === '') {
+      return sanitizedResult;
+    }
+
+    const search = regexEncode(query);
+    const regex = new RegExp(`(${search})`, 'i');
+    return sanitize(resultValue).replace(
+      regex,
+      '<span class="font-normal">$1</span>'
     );
-    this.props.controller.text = '';
-    this.combobox.onInputBlur();
   }
 
   public updateCombobox() {
     this.combobox.updateAccessibilityAttributes();
   }
 
+  private get facetSearchController() {
+    return this.component.facet.facetSearch;
+  }
+
+  private get facetSearchState() {
+    return this.component.facet.state.facetSearch;
+  }
+
+  private get facetSearchResults() {
+    return this.component.facet.state.facetSearch.values as FacetSearchResult[];
+  }
+
+  private get strings() {
+    return this.component.strings;
+  }
+
+  private set text(text: string) {
+    this.facetSearchController.updateText(text);
+  }
+
+  private triggerSearch() {
+    this.facetSearchController.search();
+    this.scrollTop();
+  }
+
+  private onChange(value: string) {
+    this.text = value;
+    this.triggerSearch();
+  }
+
+  public onSelectValue(index: number) {
+    this.facetSearchController.select(this.facetSearchResults[index]);
+    this.text = '';
+    this.inputRef.blur();
+  }
+
   private onFocus() {
-    this.props.controller.state.showFacetSearchResults = true;
-    if (this.props.controller.facetSearchState.values.length === 0) {
-      this.props.controller.facetSearch.search();
+    this.triggerSearch();
+  }
+
+  private onBlur() {
+    this.facetSearchController.clear();
+    this.text = '';
+  }
+
+  private scrollTop() {
+    this.valuesRef.scrollTo({top: 0});
+  }
+
+  private onScroll() {
+    const scrollPixelBuffer = 50;
+    const scrollEndReached =
+      this.valuesRef.scrollTop + this.valuesRef.clientHeight >=
+      this.valuesRef.scrollHeight - scrollPixelBuffer;
+
+    if (this.facetSearchState.moreValuesAvailable && scrollEndReached) {
+      this.facetSearchController.showMoreResults();
     }
   }
 
+  private get isEmptyQuery() {
+    return this.facetSearchState.query === '';
+  }
+
   private get clearButton() {
-    if (this.props.controller.state.facetSearchQuery === '') {
-      return null;
+    if (this.isEmptyQuery) {
+      return;
     }
+
     return (
       <button
         type="button"
-        part="clear-button"
+        part="search-input-clear-button"
         class="clear-button mr-2"
+        aria-label={this.strings.clear()}
         onClick={() => {
-          this.props.controller.text = '';
+          this.text = '';
           this.inputRef.focus();
+          this.triggerSearch();
         }}
       >
         <div
@@ -139,107 +166,87 @@ export class FacetSearch {
         onKeyDown={(e) => this.combobox.onInputKeydown(e)}
         type="text"
         class={
-          'search-input placeholder-on-background-variant flex-grow outline-none focus:outline-none mx-2'
+          'placeholder-neutral-dark flex-grow outline-none focus:outline-none mx-2'
         }
-        placeholder={this.props.controller.strings.placeholder()}
-        value={this.props.controller.state.facetSearchQuery}
+        placeholder={this.strings.placeholder()}
+        value={this.facetSearchState.query}
       />
     );
   }
 
-  private highlightSuggestion(suggestion: string) {
-    const search = regexEncode(this.props.controller.state.facetSearchQuery);
-    const regex = new RegExp(`(${search})`, 'ig');
-    return sanitize(suggestion).replace(regex, '<b>$1</b>');
-  }
-
-  private get suggestions() {
-    return (this.props.controller.facetSearchState
-      .values as BaseFacetSearchResult[]).map((suggestion, index) => {
-      return (
-        <li
-          onClick={() => this.onSelectValue(suggestion)}
+  private get resultList() {
+    return this.facetSearchResults.map((searchResult, index) => (
+      <li part="search-result" class="search-result">
+        <button
+          onClick={() => this.onSelectValue(index)}
           onMouseDown={(e) => e.preventDefault()}
-          part="suggestion"
-          class="suggestion cursor-pointer flex flex-row items-center px-2 text-sm"
+          part="search-result-button"
           value={index}
+          aria-label={this.component.ariaLabelForSearchResult(searchResult)}
         >
-          <span
-            class="label whitespace-nowrap overflow-ellipsis overflow-hidden"
-            innerHTML={this.highlightSuggestion(suggestion.displayValue)}
-          />
-          <span class="number-of-values ml-auto text-on-background-variant">
-            {suggestion.count}
-          </span>
-        </li>
-      );
-    });
-  }
-
-  private get showMoreSearchResults() {
-    if (!this.props.controller.facetSearchState.moreValuesAvailable) {
-      return null;
-    }
-
-    return (
-      <li
-        onClick={() => this.props.controller.facetSearch.showMoreResults()}
-        onMouseDown={(e) => e.preventDefault()}
-        part="suggestion"
-        class="suggestion cursor-pointer flex flex-row items-center px-2 text-sm text-primary"
-        value={FacetSearch.ShowMoreResultsValue}
-      >
-        <button onMouseDown={(e) => e.preventDefault()}>
-          {this.props.controller.strings.showMore()}
+          {this.component.renderSearchResult(searchResult)}
         </button>
       </li>
+    ));
+  }
+
+  private get showNoValuesFound() {
+    return (
+      !this.isEmptyQuery &&
+      !this.facetSearchResults.length &&
+      !this.facetSearchState.isLoading
     );
   }
 
-  private get suggestionList() {
-    const showResults = this.props.controller.state.showFacetSearchResults;
+  private get noValuesFound() {
+    if (this.showNoValuesFound) {
+      return (
+        <div part="search-no-results" class="search-results">
+          {this.strings.noValuesFound()}
+        </div>
+      );
+    }
+  }
+
+  private get searchResults() {
     return (
       <ul
-        part="suggestions"
-        class={
-          'suggestions z-10 absolute w-full bg-background border-divider-t-0 empty:border-none rounded-b ' +
-          (showResults ? 'block' : 'hidden')
-        }
+        part="search-results"
+        class="search-results"
         ref={(el) => (this.valuesRef = el as HTMLElement)}
+        onScroll={() => this.onScroll()}
       >
-        {this.suggestions}
-        {this.showMoreSearchResults}
+        {this.resultList}
       </ul>
     );
   }
 
   private get inputWrapperClasses() {
-    const hasValues =
-      this.props.controller.facetSearchState.values.length > 0 &&
-      this.props.controller.state.showFacetSearchResults;
-
+    const isOpen =
+      this.showNoValuesFound || this.facetSearchState.values.length;
     return (
-      'input-wrapper flex flex-grow items-center apply-border-divider rounded ' +
-      (hasValues ? 'has-values' : '')
+      'input-wrapper flex flex-grow items-center border border-neutral rounded ' +
+      (isOpen ? 'rounded-br-none	rounded-bl-none' : '')
     );
   }
 
   public render() {
-    console.log(this.props.controller.facetSearchState);
     return (
-      <div class="combobox relative flex flex-grow">
+      <div class="combobox relative flex flex-grow mb-2 mt-3">
         <div
           class={this.inputWrapperClasses}
           ref={(el) => (this.containerRef = el as HTMLElement)}
         >
           <div
-            class={'ml-2 w-3 h-3 text-on-background-variant fill-current'}
+            part="search-icon"
+            class={'ml-2 w-3 h-3 text-neutral-dark fill-current'}
             innerHTML={SearchIcon}
           />
           {this.input}
           {this.clearButton}
         </div>
-        {this.suggestionList}
+        {this.noValuesFound}
+        {this.searchResults}
       </div>
     );
   }

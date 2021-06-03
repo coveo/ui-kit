@@ -10,9 +10,14 @@ describe('Controller', () => {
     return (engine.subscribe as jest.Mock).mock.calls.map((args) => args[0]);
   }
 
+  function updateControllerState(state: object) {
+    jest.spyOn(cmp, 'state', 'get').mockReturnValue(state);
+  }
+
   beforeEach(() => {
     engine = buildMockSearchAppEngine();
     cmp = buildController(engine);
+    updateControllerState({property: 'initial value'});
   });
 
   it('calling #subscribe invokes the passed listener immediately', () => {
@@ -40,9 +45,10 @@ describe('Controller', () => {
     const listener = jest.fn();
     cmp.subscribe(listener);
 
+    updateControllerState({property: 'new value'});
     const [firstListener] = registeredListeners();
-    jest.spyOn(cmp, 'state', 'get').mockReturnValue({foo: 'bar'});
     firstListener();
+
     expect(listener).toHaveBeenCalledTimes(2);
   });
 

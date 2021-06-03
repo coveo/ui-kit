@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
+    <title>Coveo Atomic</title>
+
+    <script type="module" src="/build/atomic.esm.js"></script>
+    <script nomodule src="/build/atomic.js"></script>
+    <link rel="stylesheet" href="/themes/coveo.css" />
+    <script>
+      (async () => {
+        await customElements.whenDefined('atomic-search-interface');
+        const searchInterface = document.querySelector('#search');
+
+        await searchInterface.initialize({
+          accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
+          organizationId: 'searchuisamples',
+        });
+
+        searchInterface.executeFirstSearch();
+      })();
+    </script>
+    <style>
+      body {
+        margin: 0;
+      }
+
+      atomic-search-interface {
+        grid-template-columns: 1fr minmax(150px, 325px) minmax(500px, 925px) 1fr;
+        grid-template-rows: 22px 50px 22px 1fr;
+        column-gap: 20px;
+        display: grid;
+        margin: 0 auto;
+      }
+
+      .header {
+        background-color: var(--atomic-neutral-light);
+        grid-column: 1 / span 4;
+        grid-row: 1 / span 3;
+      }
+
+      atomic-search-box {
+        grid-column: 3 / auto;
+        grid-row: 2 / auto;
+        max-width: 650px;
+      }
+
+      atomic-facet-manager {
+        grid-column: 2 / auto;
+        grid-row: 4 / auto;
+        margin-top: 15px;
+      }
+
+      .results-container {
+        grid-column: 3 / auto;
+        grid-row: 4 / auto;
+        margin-top: 15px;
+      }
+
+      .side-by-side-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .footer-item {
+        margin: 30px 0;
+      }
+
+      atomic-facet-manager {
+        padding-top: 13px;
+      }
+
+      atomic-sort-dropdown {
+        margin-left: 15px;
+      }
+
+      atomic-result-list {
+        display: block;
+        margin-top: 10px;
+      }
+
+      atomic-breadcrumb-manager {
+        margin: 10px 0;
+      }
+
+      @media only screen and (max-width: 1023px) {
+        atomic-search-interface {
+          grid-template-rows: 16px 50px 16px auto 1fr;
+          grid-template-columns: minmax(0, 100%);
+        }
+
+        atomic-facet-manager,
+        .header,
+        atomic-search-box,
+        .results-container {
+          grid-column: 1 / auto;
+        }
+
+        atomic-breadcrumb-manager,
+        atomic-query-summary,
+        atomic-no-results,
+        atomic-did-you-mean,
+        atomic-query-error,
+        atomic-sort-dropdown,
+        atomic-facet-manager {
+          padding: 0 15px;
+        }
+
+        atomic-atomic-breadcrumb-manager,
+        atomic-query-summary,
+        atomic-no-results,
+        atomic-query-error,
+        atomic-sort-dropdown {
+          margin-bottom: 10px;
+        }
+
+        atomic-facet-manager {
+          grid-row: 4 / auto;
+          display: flex;
+          flex-wrap: wrap;
+        }
+
+        .results-container {
+          grid-row: 5 / auto;
+          margin-top: 0;
+        }
+
+        atomic-facet,
+        atomic-numeric-facet,
+        atomic-date-facet,
+        atomic-category-facet {
+          margin: 0 10px 0 0;
+        }
+
+        atomic-search-box {
+          justify-self: center;
+          min-width: 80%;
+          max-width: 80%;
+        }
+      }
+
+      @media only screen and (max-width: 640px) {
+        .side-by-side-container {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <atomic-search-interface id="search">
+      <div class="header"></div>
+      <atomic-search-box></atomic-search-box>
+      <atomic-facet-manager>
+        <atomic-facet field="author" label="Authors"></atomic-facet>
+        <atomic-numeric-facet field="size" label="File sizes">
+          <atomic-numeric-range start="0" end="10"></atomic-numeric-range>
+          <atomic-numeric-range start="10" end="20"></atomic-numeric-range>
+          <atomic-numeric-range start="20" end="30"></atomic-numeric-range>
+          <atomic-numeric-range start="30" end="40"></atomic-numeric-range>
+          <atomic-numeric-range start="40" end="50"></atomic-numeric-range>
+        </atomic-numeric-facet>
+        <atomic-date-facet field="date" label="Date"></atomic-date-facet>
+        <atomic-category-facet field="geographicalhierarchy" label="World Atlas" enable-facet-search>
+        </atomic-category-facet>
+      </atomic-facet-manager>
+      <div class="results-container">
+        <atomic-breadcrumb-manager></atomic-breadcrumb-manager>
+        <atomic-did-you-mean></atomic-did-you-mean>
+        <atomic-query-error></atomic-query-error>
+        <div class="side-by-side-container">
+          <atomic-query-summary></atomic-query-summary>
+          <atomic-sort-dropdown>
+            <atomic-sort-expression caption="relevance" expression="relevancy"></atomic-sort-expression>
+            <atomic-sort-expression caption="mostRecent" expression="date descending"></atomic-sort-expression>
+          </atomic-sort-dropdown>
+        </div>
+        <atomic-no-results></atomic-no-results>
+        <atomic-result-list></atomic-result-list>
+        <div class="footer-item side-by-side-container">
+          <atomic-pager></atomic-pager>
+          <atomic-results-per-page></atomic-results-per-page>
+        </div>
+      </div>
+    </atomic-search-interface>
+  </body>
+</html>

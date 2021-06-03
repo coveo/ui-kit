@@ -4,13 +4,13 @@ import {ResultContext} from '../result-template-decorators';
 import {filterProtocol} from '../../../utils/xss-utils';
 
 /**
- * The ResultLink component automatically transform a search result title into a clickable link pointing to the
- * original item.
+ * The `atomic-result-link` component automatically transforms a search result title into a clickable link that points to the original item.
  * @part result-link - The result link
  * @slot default - Allow to display alternative content inside the link
  */
 @Component({
   tag: 'atomic-result-link',
+  styleUrl: 'atomic-result-link.pcss',
   shadow: false,
 })
 export class AtomicResultValue {
@@ -21,11 +21,11 @@ export class AtomicResultValue {
   /**
    * Where to display the linked URL, as the name for a browsing context (a tab, window, or <iframe>).
    *
-   * The following keywords have special meanings for where to load the URL:
+   * The following keywords have special meanings:
    * - _self: the current browsing context. (Default)
-   * - _blank: usually a new tab, but users can configure browsers to open a new window instead.
-   * - _parent: the parent browsing context of the current one. If no parent, behaves as _self.
-   * - _top: the topmost browsing context (the "highest" context that’s an ancestor of the current one). If no ancestors, behaves as _self.
+   * - _blank: usually a new tab, but users can configure their browsers to open a new window instead.
+   * - _parent: the parent of the current browsing context. If there's no parent, this behaves as `_self`.
+   * - _top: the topmost browsing context (the "highest" context that’s an ancestor of the current one). If there are no ancestors, this behaves as `_self`.
    */
   @Prop() target = '_self';
 

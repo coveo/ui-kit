@@ -12,6 +12,8 @@ import {buildMockSearchState} from '../../test/mock-search-state';
 import {getSearchInitialState} from '../../features/search/search-state';
 import {getPipelineInitialState} from '../../features/pipeline/pipeline-state';
 import {getSearchHubInitialState} from '../../features/search-hub/search-hub-state';
+import {buildMockFacetResponse} from '../../test/mock-facet-response';
+import {buildMockAnalyticsConfiguration} from '../../test/mock-analytics-configuration';
 
 describe('analytics', () => {
   const logger = pino({level: 'silent'});
@@ -100,6 +102,34 @@ describe('analytics', () => {
       expect(provider.getPipeline()).toEqual(pipeline);
     });
 
+    it('when facets are provided, #getFacetState returns the facet state', () => {
+      const state: StateNeededByAnalyticsProvider = {
+        ...baseState,
+        search: {
+          ...getSearchInitialState(),
+          response: buildMockSearchResponse({
+            facets: [
+              buildMockFacetResponse({
+                values: [
+                  {numberOfResults: 1, value: 'helloooo', state: 'selected'},
+                ],
+              }),
+            ],
+          }),
+        },
+      };
+      const provider = new AnalyticsProvider(state);
+      expect(provider.getFacetState().length).toBe(1);
+    });
+
+    it('when facets are not provided, #getFacetState returns an empty facet state', () => {
+      const state: StateNeededByAnalyticsProvider = {
+        ...baseState,
+      };
+      const provider = new AnalyticsProvider(state);
+      expect(provider.getFacetState()).toEqual([]);
+    });
+
     it('when a searchHub is not provided, #getOriginLevel1 returns the default searchHub', () => {
       const provider = new AnalyticsProvider(baseState);
       expect(provider.getOriginLevel1()).toEqual(getSearchHubInitialState());
@@ -113,6 +143,31 @@ describe('analytics', () => {
       };
       const provider = new AnalyticsProvider(state);
       expect(provider.getOriginLevel1()).toEqual(searchHub);
+    });
+
+    describe('#getOriginLevel2', () => {
+      it('when an originLevel2 is not set, #getOriginLevel2 returns "default"', () => {
+        const state: StateNeededByAnalyticsProvider = {
+          configuration: getConfigurationInitialState(),
+        };
+        const provider = new AnalyticsProvider(state);
+
+        expect(provider.getOriginLevel2()).toBe('default');
+      });
+
+      it('when an originLevel2 is set, #getOriginLevel2 returns the value', () => {
+        const originLevel2 = 'youtube';
+        const state: StateNeededByAnalyticsProvider = {
+          configuration: {
+            ...getConfigurationInitialState(),
+            analytics: buildMockAnalyticsConfiguration({originLevel2}),
+          },
+        };
+
+        const provider = new AnalyticsProvider(state);
+
+        expect(provider.getOriginLevel2()).toBe(originLevel2);
+      });
     });
 
     it('when a locale search parameter is configured, #getLanguage returns the correct value', () => {
