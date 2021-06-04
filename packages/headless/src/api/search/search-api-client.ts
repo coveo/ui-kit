@@ -43,6 +43,9 @@ export interface AsyncThunkSearchOptions<T extends Partial<SearchAppState>> {
 }
 
 export interface SearchAPIClientOptions {
+  /**
+   * @deprecated - Token renewal is now managed using middleware to avoid a circular dependency. Please remove this option in preparation for v1.
+   */
   renewAccessToken: () => Promise<string>;
   logger: Logger;
   preprocessRequest: PreprocessRequest;

@@ -84,12 +84,7 @@ export class AnalyticsProvider implements SearchPageClientProvider {
   }
 
   public getOriginLevel2() {
-    // TODO: When tab implemented;
-    // Configurable on headless engine, optionally
-    // Need to use tabs as originLevel2, in priority if they exists/available.
-    // Otherwise, use configured originLevel2 on the engine.
-    // Ultimate fallback should be `default`;
-    return this.state.configuration.analytics.originLevel2 || 'default';
+    return this.state.configuration.analytics.originLevel2;
   }
 
   public getOriginLevel3() {

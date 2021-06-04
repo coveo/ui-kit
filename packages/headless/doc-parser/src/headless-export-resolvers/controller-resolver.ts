@@ -7,7 +7,7 @@ import {
   SamplePaths,
   CodeSampleInfo,
 } from '../code-sample-resolver';
-import {extractControllerTypes} from '../controller-type-extractor';
+import {extractTypesFromConfiguration} from './configuration-type-extractor';
 import {resolveInitializer} from './initializer-resolver';
 
 export interface ControllerConfiguration {
@@ -29,7 +29,7 @@ export function resolveController(
 ): Controller {
   const initializer = resolveInitializer(entry, config.initializer);
   const utils = (config.utils || []).map((util) => resolveUtility(entry, util));
-  const extractedTypes = extractControllerTypes(initializer, utils);
+  const extractedTypes = extractTypesFromConfiguration(initializer, utils);
   const codeSampleInfo = resolveCodeSamplePaths(config.samplePaths);
 
   return {initializer, extractedTypes, utils, codeSampleInfo};

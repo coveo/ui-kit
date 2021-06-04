@@ -1,0 +1,10 @@
+{
+  "private": true,
+  "name": "product-recommendation",
+  "description": "Headless Product Recommendation Module",
+  "main": "../dist/product-recommendation/headless.js",
+  "module": "../dist/product-recommendation/headless.esm.js",
+  "browser": "../dist/browser/product-recommendation/headless.esm.js",
+  "types": "../dist/definitions/product-recommendation.index.d.ts",
+  "license": "Apache-2.0"
+}

@@ -31,7 +31,6 @@ import i18next, {i18n} from 'i18next';
 import Backend, {BackendOptions} from 'i18next-http-backend';
 import {createStore} from '@stencil/store';
 import {setCoveoGlobal} from '../../global/environment';
-import {defer} from '../../utils/utils';
 
 export type InitializationOptions = Pick<
   HeadlessConfigurationOptions,
@@ -47,7 +46,6 @@ export type InitializationOptions = Pick<
   assetsDirs: ['lang'],
 })
 export class AtomicSearchInterface {
-  private updatingHash = false;
   private urlManager!: UrlManager;
   private unsubscribeUrlManager: Unsubscribe = () => {};
   private hangingComponentsInitialization: InitializeEvent[] = [];
@@ -236,7 +234,7 @@ export class AtomicSearchInterface {
     );
   }
 
-  private get hash() {
+  private get fragment() {
     return window.location.hash.slice(1);
   }
 
@@ -246,7 +244,7 @@ export class AtomicSearchInterface {
     }
 
     this.urlManager = buildUrlManager(this.engine!, {
-      initialState: {fragment: this.hash},
+      initialState: {fragment: this.fragment},
     });
 
     this.unsubscribeUrlManager = this.urlManager.subscribe(() =>
@@ -257,18 +255,15 @@ export class AtomicSearchInterface {
   }
 
   private updateHash() {
-    this.updatingHash = true;
-    defer(() => (this.updatingHash = false));
-    const hash = this.urlManager.state.fragment;
-    window.location.hash = hash;
+    history.pushState(
+      null,
+      document.title,
+      `#${this.urlManager.state.fragment}`
+    );
   }
 
   private onHashChange = () => {
-    if (this.updatingHash) {
-      return;
-    }
-
-    this.urlManager.synchronize(this.hash);
+    this.urlManager.synchronize(this.fragment);
   };
 
   public render() {

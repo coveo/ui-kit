@@ -80,7 +80,7 @@ export class AtomicBreadcrumbManager implements InitializableComponent {
     return (
       <button
         part="breadcrumb"
-        class="inline-grid grid-flow-col text-on-background-variant hover:text-primary-variant"
+        class="inline-grid grid-flow-col text-neutral-dark hover:text-primary-light"
         aria-label={this.strings.breadcrumb({value})}
         title={value}
         onClick={() =>

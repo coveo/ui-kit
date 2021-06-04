@@ -47,7 +47,15 @@ const nodejs = [
   {
     input: 'src/case-assist.index.ts',
     outDir: 'dist/case-assist'
-  }
+  },
+  {
+    input: 'src/recommendation.index.ts',
+    outDir: 'dist/recommendation'
+  },
+  {
+    input: 'src/product-recommendation.index.ts',
+    outDir: 'dist/product-recommendation'
+  },
 ].map(buildNodeConfiguration);
 
 function buildNodeConfiguration({input, outDir}) {
@@ -88,7 +96,21 @@ const browser = [
       buildUmdOutput('dist/browser/case-assist', 'CoveoHeadlessCaseAssist'),
       buildEsmOutput('dist/browser/case-assist')
     ]
-  }
+  },
+  {
+    input: 'src/recommendation.index.ts',
+    output: [
+      buildUmdOutput('dist/browser/recommendation', 'CoveoHeadlessRecommendation'),
+      buildEsmOutput('dist/browser/recommendation')
+    ]
+  },
+  {
+    input: 'src/product-recommendation.index.ts',
+    output: [
+      buildUmdOutput('dist/browser/product-recommendation', 'CoveoHeadlessProductRecommendation'),
+      buildEsmOutput('dist/browser/product-recommendation')
+    ]
+  },
 ].map(buildBrowserConfiguration);
 
 function buildBrowserConfiguration({input, output}) {

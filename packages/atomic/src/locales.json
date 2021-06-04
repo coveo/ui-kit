@@ -272,6 +272,30 @@
     "en": "Most recent",
     "fr": "Plus récents"
   },
+  "clearFilters": {
+    "en": "Clear {{count}} filter",
+    "fr": "Enlever {{count}} filtre"
+  },
+  "clearFilters_plural": {
+    "en": "Clear {{count}} filters",
+    "fr": "Enlever {{count}} filtres"
+  },
+  "clearFiltersForFacet": {
+    "en": "Clear {{count}} filter for {{label}} facet",
+    "fr": "Enlever {{count}} filtre pour la facette {{label}}"
+  },
+  "clearFiltersForFacet_plural": {
+    "en": "Clear {{count}} filters for {{label}} facet",
+    "fr": "Enlever {{count}} filtres pour la facette {{label}}"
+  },
+  "collapseFacet": {
+    "en": "Collapse {{label}} facet",
+    "fr": "Réduire la facette {{label}}"
+  },
+  "expandFacet": {
+    "en": "Expand {{label}} facet",
+    "fr": "Agrandir la facette {{label}}"
+  },
   "showingResultsOf": {
     "en": "Result {{first}} of {{total}}",
     "fr": "Résultat {{first}} de {{total}}",

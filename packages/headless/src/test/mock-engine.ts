@@ -99,6 +99,8 @@ function buildMockEngine<T extends AppState>(
     renewAccessToken: mockRenewAccessToken,
     logger,
     addReducers: jest.fn(),
+    enableAnalytics: jest.fn(),
+    disableAnalytics: jest.fn(),
   };
 }
 

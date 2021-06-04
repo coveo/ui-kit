@@ -9,16 +9,21 @@ import {
 } from '@reduxjs/toolkit';
 import {debounce} from 'ts-debounce';
 import {
+  disableAnalytics,
+  enableAnalytics,
   updateAnalyticsConfiguration,
   updateBasicConfiguration,
 } from '../features/configuration/configuration-actions';
-import {EngineConfigurationOptions} from './engine-configuration-options';
+import {EngineConfiguration} from './engine-configuration';
 import {createReducerManager, ReducerManager} from './reducer-manager';
 import {Store, configureStore} from './store';
 import {LoggerOptions} from './logger';
 import {Logger} from 'pino';
 import {ThunkExtraArguments} from './thunk-extra-arguments';
 import {configuration, version} from './reducers';
+import {createRenewAccessTokenMiddleware} from './renew-access-token-middleware';
+import {logActionErrorMiddleware} from './logger-middlewares';
+import {analyticsMiddleware} from './analytics-middleware';
 
 const coreReducers = {configuration, version};
 type CoreState = StateFromReducersMapObject<typeof coreReducers>;
@@ -63,6 +68,8 @@ export interface CoreEngine<
   store: Store;
   /**
    * A function for headless to call to retrieve a refreshed access token.
+   *
+   * @deprecated - Calling this function directly is not needed because Headless handles token renewal internally. The function will be removed in the next major version.
    */
   renewAccessToken: () => Promise<string>;
   /**
@@ -73,13 +80,18 @@ export interface CoreEngine<
    * Adds the specified reducers to the store.
    */
   addReducers(reducers: ReducersMapObject): void;
+  /**
+   * Enable analytics tracking
+   */
+  enableAnalytics(): void;
+  /**
+   * Disable analytics tracking
+   */
+  disableAnalytics(): void;
 }
 
-export interface EngineOptions<Reducers extends ReducersMapObject> {
-  /**
-   * The global headless engine configuration options.
-   */
-  configuration: EngineConfigurationOptions;
+export interface EngineOptions<Reducers extends ReducersMapObject>
+  extends ExternalEngineOptions<StateFromReducersMapObject<Reducers>> {
   /**
    * Map object of reducers.
    * A reducer is a pure function that takes the previous state and an action, and returns the next state.
@@ -89,13 +101,21 @@ export interface EngineOptions<Reducers extends ReducersMapObject> {
    * [Redux documentation on reducers.](https://redux.js.org/glossary#reducer)
    */
   reducers: Reducers;
+}
+
+export interface ExternalEngineOptions<State extends object> {
+  /**
+   * The global headless engine configuration options.
+   */
+  configuration: EngineConfiguration;
+
   /**
    * The initial headless state.
    * You may optionally specify it to hydrate the state
    * from the server in universal apps, or to restore a previously serialized
    * user session.
    */
-  preloadedState?: StateFromReducersMapObject<Reducers>;
+  preloadedState?: State;
   /**
    * List of additional middlewares.
    * A middleware is a higher-order function that composes a dispatch function to return a new dispatch function.
@@ -106,7 +126,7 @@ export interface EngineOptions<Reducers extends ReducersMapObject> {
    * ```
    * [Redux documentation on middlewares.](https://redux.js.org/glossary#middleware)
    */
-  middlewares?: Middleware<{}, StateFromReducersMapObject<Reducers>>[];
+  middlewares?: Middleware<{}, State>[];
   /**
    * The logger options.
    */
@@ -171,6 +191,14 @@ function buildCoreEngine<
 
     subscribe: store.subscribe,
 
+    enableAnalytics() {
+      store.dispatch(enableAnalytics());
+    },
+
+    disableAnalytics() {
+      store.dispatch(disableAnalytics());
+    },
+
     get state() {
       return store.getState();
     },
@@ -189,18 +217,21 @@ function createStore<
   thunkExtraArguments: ExtraArguments,
   reducerManager: ReducerManager
 ) {
-  const {preloadedState, middlewares} = options;
+  const {preloadedState, configuration} = options;
+  const name = configuration.name || 'coveo-headless';
+  const middlewares = createMiddleware(options, thunkExtraArguments.logger);
 
   return configureStore({
     preloadedState,
     reducer: reducerManager.combinedReducer,
     middlewares,
     thunkExtraArguments,
+    name,
   });
 }
 
 function createRenewAccessTokenFunction(
-  configuration: EngineConfigurationOptions,
+  configuration: EngineConfiguration,
   dispatch: Dispatch<AnyAction>
 ) {
   let accessTokenRenewalsAttempts = 0;
@@ -229,4 +260,21 @@ function createRenewAccessTokenFunction(
       return '';
     }
   };
+}
+
+function createMiddleware<Reducers extends ReducersMapObject>(
+  options: EngineOptions<Reducers>,
+  logger: Logger
+) {
+  const {renewAccessToken} = options.configuration;
+  const renewTokenMiddleware = createRenewAccessTokenMiddleware(
+    logger,
+    renewAccessToken
+  );
+
+  return [
+    renewTokenMiddleware,
+    logActionErrorMiddleware(logger),
+    analyticsMiddleware,
+  ].concat(options.middlewares || []);
 }
