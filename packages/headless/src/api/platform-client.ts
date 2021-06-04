@@ -40,14 +40,8 @@ export const NoopPreprocessRequestMiddleware: PreprocessRequestMiddleware = (
   request
 ) => request;
 
-export enum PlatformClientErrorResponse {
-  Disconnected,
-}
-
 export class PlatformClient {
-  static async call(
-    options: PlatformClientCallOptions
-  ): Promise<Response | PlatformClientErrorResponse> {
+  static async call(options: PlatformClientCallOptions): Promise<Response> {
     // TODO: use options directly when removing deprecatedPreprocessRequest
     const processedOptions = {
       ...options,
@@ -82,15 +76,7 @@ export class PlatformClient {
           shouldRetry && logger.info('Platform retrying request');
           return shouldRetry;
         },
-      }).catch((error: Error) => {
-        if (error.message !== 'Failed to fetch') {
-          throw error;
-        }
-        return PlatformClientErrorResponse.Disconnected;
       });
-      if (typeof response === 'number') {
-        return response;
-      }
       if (response.status === 419) {
         logger.info('Platform renewing token');
         const accessToken = await processedOptions.renewAccessToken();

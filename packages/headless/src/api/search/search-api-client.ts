@@ -1,6 +1,5 @@
 import {
   PlatformClient,
-  PlatformClientErrorResponse,
   PlatformResponse,
   PreprocessRequestMiddleware,
 } from '../platform-client';
@@ -14,7 +13,6 @@ import {Search, SearchResponseSuccess} from './search/search-response';
 import {
   SearchAPIErrorWithStatusCode,
   SearchAPIErrorWithExceptionInBody,
-  buildDisconnectedError,
 } from './search-api-error-response';
 import {PlanRequest} from './plan/plan-request';
 import {QuerySuggestRequest} from './query-suggest/query-suggest-request';
@@ -35,7 +33,6 @@ import {findEncoding} from './encoding-finder';
 import {TextDecoder} from 'web-encoding';
 import {BaseParam} from '../platform-service-params';
 import {SearchThunkExtraArguments} from '../../app/headless-engine';
-import {FacetSearchResponse} from './facet-search/facet-search-response';
 
 export type AllSearchAPIResponse = Plan | Search | QuerySuggest;
 
@@ -71,10 +68,6 @@ export class SearchAPIClient {
       ...this.options,
     });
 
-    if (response === PlatformClientErrorResponse.Disconnected) {
-      return {error: buildDisconnectedError()};
-    }
-
     const body = await response.json();
 
     if (isSuccessPlanResponse(body)) {
@@ -94,12 +87,6 @@ export class SearchAPIClient {
       requestParams: pickNonBaseParams(req),
       ...this.options,
     });
-
-    if (response === PlatformClientErrorResponse.Disconnected) {
-      return {
-        error: buildDisconnectedError(),
-      };
-    }
 
     const body = await response.json();
     const payload = {response, body};
@@ -135,12 +122,6 @@ export class SearchAPIClient {
       signal: this.searchAbortController?.signal,
     });
 
-    if (response === PlatformClientErrorResponse.Disconnected) {
-      return {
-        error: buildDisconnectedError(),
-      };
-    }
-
     this.searchAbortController = null;
 
     const body = await response.json();
@@ -160,16 +141,12 @@ export class SearchAPIClient {
     };
   }
 
-  async facetSearch(req: FacetSearchRequest): Promise<FacetSearchResponse> {
+  async facetSearch(req: FacetSearchRequest) {
     const response = await PlatformClient.call({
       ...baseSearchRequest(req, 'POST', 'application/json', '/facet'),
       requestParams: pickNonBaseParams(req),
       ...this.options,
     });
-
-    if (response === PlatformClientErrorResponse.Disconnected) {
-      throw response;
-    }
 
     const body = await response.json();
     const payload = {response, body};
@@ -187,10 +164,6 @@ export class SearchAPIClient {
       requestParams: pickNonBaseParams(req),
       ...this.options,
     });
-
-    if (response === PlatformClientErrorResponse.Disconnected) {
-      throw response;
-    }
 
     const body = await response.json();
 
@@ -215,12 +188,6 @@ export class SearchAPIClient {
       ...this.options,
     });
 
-    if (response === PlatformClientErrorResponse.Disconnected) {
-      return {
-        error: buildDisconnectedError(),
-      };
-    }
-
     const encoding = findEncoding(response);
     const buffer = await response.arrayBuffer();
     const decoder = new TextDecoder(encoding);
@@ -239,10 +206,6 @@ export class SearchAPIClient {
       requestParams: pickNonBaseParams(req),
       ...this.options,
     });
-
-    if (response === PlatformClientErrorResponse.Disconnected) {
-      throw response;
-    }
 
     const body = await response.json();
 

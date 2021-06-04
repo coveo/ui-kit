@@ -3,7 +3,6 @@ import {
   PlatformClient,
   NoopPreprocessRequestMiddleware,
   PlatformClientCallOptions,
-  PlatformClientErrorResponse,
 } from './platform-client';
 import pino from 'pino';
 import * as BackOff from 'exponential-backoff';
@@ -231,15 +230,5 @@ describe('PlatformClient call', () => {
       expect(error).toBe(abortError);
       done();
     }
-  });
-
-  it('should return Disconnected when unable to fetch', async (done) => {
-    const fetchError = new TypeError('Failed to fetch');
-    fetchError.name = 'TypeError';
-    mockFetch.mockRejectedValue(fetchError);
-
-    const result = await platformCall();
-    expect(result).toEqual(PlatformClientErrorResponse.Disconnected);
-    done();
   });
 });

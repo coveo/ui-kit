@@ -1,9 +1,5 @@
 import {buildMockCaseAssistAPIClient} from '../../../test/mock-case-assist-api-client';
-import {
-  PlatformClient,
-  PlatformClientErrorResponse,
-} from '../../platform-client';
-import {buildDisconnectedError} from '../../search/search-api-error-response';
+import {PlatformClient} from '../../platform-client';
 import {CaseAssistAPIClient} from './case-assist-api-client';
 import {GetCaseClassificationsRequest} from './get-case-classifications/get-case-classifications-request';
 import {GetDocumentSuggestionsRequest} from './get-document-suggestions/get-document-suggestions-request';
@@ -148,18 +144,6 @@ describe('case assist api client', () => {
         success: expectedBody,
       });
     });
-
-    it(`without an internet connection
-    should return an error`, async (done) => {
-      PlatformClient.call = () =>
-        Promise.resolve(PlatformClientErrorResponse.Disconnected);
-
-      const response = await client.getCaseClassifications(
-        buildGetCaseClassificationsRequest()
-      );
-      expect(response).toEqual({error: buildDisconnectedError()});
-      done();
-    });
   });
 
   describe('getDocumentSuggestions', () => {
@@ -286,18 +270,6 @@ describe('case assist api client', () => {
       expect(response).toMatchObject({
         success: expectedBody,
       });
-    });
-
-    it(`without an internet connection
-    should return an error`, async (done) => {
-      PlatformClient.call = () =>
-        Promise.resolve(PlatformClientErrorResponse.Disconnected);
-
-      const response = await client.getDocumentSuggestions(
-        buildGetDocumentSuggestionsRequest()
-      );
-      expect(response).toEqual({error: buildDisconnectedError()});
-      done();
     });
   });
 });
