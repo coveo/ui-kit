@@ -38,6 +38,10 @@ import {FacetShowMore} from '../facet-show-more/facet-show-more';
  * @part label-button-icon - The label button icon.
  * @part clear-button - The button that resets the actively selected facet values.
  * @part clear-button-icon - The clear button icon.
+ *
+ * @part search-input - The search input.
+ * @part search-icon - The magnifier icon of the input.
+ * @part search-clear-button - The clear button of the input.
  */
 @Component({
   tag: 'atomic-facet-v1', // TODO: remove v1 when old facets are removed
@@ -142,6 +146,8 @@ export class AtomicFacet implements InitializableComponent {
 
     return (
       <FacetSearchInput
+        i18n={this.bindings.i18n}
+        label={this.label}
         query={this.facetState.facetSearch.query}
       ></FacetSearchInput>
     );
