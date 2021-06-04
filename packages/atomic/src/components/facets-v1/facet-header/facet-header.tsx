@@ -26,7 +26,7 @@ export const FacetHeader: FunctionalComponent<{
   return [
     <button
       part="label-button"
-      class="flex justify-between w-full py-1 text-on-background hover:text-primary"
+      class="flex justify-between w-full py-1 text-on-background text-lg hover:text-primary"
       title={props.isCollapsed ? expandFacet : collapseFacet}
       onClick={() => props.onToggleCollapse()}
     >
