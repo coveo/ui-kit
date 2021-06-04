@@ -1,9 +1,11 @@
 import {Logger} from 'pino';
+import {DisconnectedError} from '../../../utils/errors';
 import {
   NoopPreprocessRequestMiddleware,
   PlatformClient,
 } from '../../platform-client';
 import {PreprocessRequest} from '../../preprocess-request';
+import {buildDisconnectedError} from '../../search/search-api-error-response';
 import {
   buildGetCaseClassificationsRequest,
   GetCaseClassificationsRequest,
@@ -81,6 +83,13 @@ export class CaseAssistAPIClient {
       ...this.defaultClientHooks,
     });
 
+    if (response instanceof Error) {
+      if (response instanceof DisconnectedError) {
+        return {error: buildDisconnectedError()};
+      }
+      throw response;
+    }
+
     const body = await response.json();
     return response.ok
       ? {success: body as GetCaseClassificationsResponse}
@@ -103,6 +112,13 @@ export class CaseAssistAPIClient {
       ...this.options,
       ...this.defaultClientHooks,
     });
+
+    if (response instanceof Error) {
+      if (response instanceof DisconnectedError) {
+        return {error: buildDisconnectedError()};
+      }
+      throw response;
+    }
 
     const body = await response.json();
     return response.ok

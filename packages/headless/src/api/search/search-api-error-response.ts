@@ -9,3 +9,11 @@ export interface SearchAPIErrorWithStatusCode {
 export interface SearchAPIErrorWithExceptionInBody {
   exception: QueryException;
 }
+
+export function buildDisconnectedError(): SearchAPIErrorWithStatusCode {
+  return {
+    statusCode: 0,
+    type: 'Disconnected',
+    message: 'Could not connect',
+  };
+}
