@@ -1,3 +1,11 @@
+export {
+  ProductRecommendationEngine,
+  ProductRecommendationEngineOptions,
+  ProductRecommendationEngineConfiguration,
+  buildProductRecommendationEngine,
+  getSampleProductRecommendationEngineConfiguration,
+} from './app/product-recommendation-engine/product-recommendation-engine';
+
 // Actions
 export * from './features/configuration/configuration-actions-loader';
 export * from './features/product-recommendations/product-recommendations-actions-loader';

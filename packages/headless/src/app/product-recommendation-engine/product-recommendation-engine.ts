@@ -24,6 +24,11 @@ import {
 } from './product-recommendation-engine-configuration';
 import {SearchThunkExtraArguments} from '../headless-engine';
 
+export {
+  ProductRecommendationEngineConfiguration,
+  getSampleProductRecommendationEngineConfiguration,
+} from './product-recommendation-engine-configuration';
+
 const productRecommendationEngineReducers = {searchHub};
 type ProductRecommendationEngineReducers = typeof productRecommendationEngineReducers;
 type ProductRecommendationEngineState = StateFromReducersMapObject<
