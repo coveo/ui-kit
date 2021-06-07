@@ -21,6 +21,7 @@ export {
   SearchEngineOptions,
   SearchEngineConfiguration,
   buildSearchEngine,
+  getSampleSearchEngineConfiguration,
 } from './app/search-engine/search-engine';
 
 export {LogLevel} from './app/logger';

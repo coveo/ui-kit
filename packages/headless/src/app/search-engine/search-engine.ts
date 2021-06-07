@@ -21,6 +21,7 @@ import {updateSearchConfiguration} from '../../features/configuration/configurat
 import {
   SearchEngineConfiguration,
   searchEngineConfigurationSchema,
+  getSampleSearchEngineConfiguration,
 } from './search-engine-configuration';
 import {executeSearch} from '../../features/search/search-actions';
 import {logInterfaceLoad} from '../../features/analytics/analytics-actions';
@@ -28,7 +29,7 @@ import {firstSearchExecutedSelector} from '../../features/search/search-selector
 import {SearchAppState} from '../../state/search-app-state';
 import {SearchThunkExtraArguments} from '../headless-engine';
 
-export {SearchEngineConfiguration};
+export {SearchEngineConfiguration, getSampleSearchEngineConfiguration};
 
 const searchEngineReducers = {debug, pipeline, searchHub, search};
 type SearchEngineReducers = typeof searchEngineReducers;
