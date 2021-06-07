@@ -1,0 +1,24 @@
+/**
+ * @prop --atomic-facet-checkbox-size: Size of the checkbox.
+ */
+.checkbox {
+  width: var(--atomic-facet-checkbox-size, 16px);
+  height: var(--atomic-facet-checkbox-size, 16px);
+}
+
+
+/**
+ * @prop --atomic-facet-checkbox-thickness: Thickness of the checkbox check.
+ */
+.checked:before {
+  border-width: var(--atomic-facet-checkbox-thickness, 1px);
+  @apply box-content block border-on-primary border-t-0 border-l-0 transform rotate-45;
+  content: '';
+  width: 20%;
+  height: 60%;
+  margin-top: 15%;
+}
+
+.checkbox:focus + label .value-label, .checkbox:hover + label .value-label, label:hover .value-label {
+    @apply text-primary-light underline;
+}

@@ -48,6 +48,11 @@ import {AtomicBaseFacet} from '../facet-common';
  * @part search-input - The search input.
  * @part search-icon - The magnifier icon of the input.
  * @part search-clear-button - The clear button of the input.
+ *
+ * @part values - The facet values.
+ * @part value - A single facet value.
+ * @part value-label - The facet value label.
+ * @part value-count - The facet value count.
  */
 @Component({
   tag: 'atomic-facet-v1', // TODO: remove v1 when old facets are removed
@@ -184,11 +189,17 @@ export class AtomicFacet
     );
   }
 
-  private renderValue(facetValue: FacetValue) {
+  private renderValue(facetValue: FacetValue, onClick: () => void) {
     switch (this.displayValuesAs) {
       case 'checkbox':
         return (
-          <FacetValueCheckbox value={facetValue.value}></FacetValueCheckbox>
+          <FacetValueCheckbox
+            value={facetValue.value}
+            numberOfResults={facetValue.numberOfResults}
+            state={facetValue.state}
+            i18n={this.bindings.i18n}
+            onClick={onClick}
+          ></FacetValueCheckbox>
         );
       case 'link':
         return <FacetValueLink value={facetValue.value}></FacetValueLink>;
@@ -198,16 +209,25 @@ export class AtomicFacet
   }
 
   private renderValues() {
-    return this.facetState.values.map((value) => this.renderValue(value));
+    return (
+      <ul part="values">
+        {this.facetState.values.map((value) =>
+          this.renderValue(value, () => this.facet.toggleSelect(value))
+        )}
+      </ul>
+    );
   }
 
   private renderSearchResults() {
     return this.facetState.facetSearch.values.map((value) =>
-      this.renderValue({
-        state: 'idle',
-        numberOfResults: value.count,
-        value: value.rawValue,
-      })
+      this.renderValue(
+        {
+          state: 'idle',
+          numberOfResults: value.count,
+          value: value.rawValue,
+        },
+        () => this.facet.facetSearch.select(value)
+      )
     );
   }
 
