@@ -32,6 +32,7 @@ import {
   shouldUpdateFacetSearchComponent,
   shouldDisplaySearchResults,
 } from '../facet-search/facet-search-utils';
+import {AtomicBaseFacet} from '../facet-common';
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
@@ -53,7 +54,8 @@ import {
   styleUrl: 'atomic-facet.pcss',
   shadow: true,
 })
-export class AtomicFacet implements InitializableComponent {
+export class AtomicFacet
+  implements InitializableComponent, AtomicBaseFacet<Facet, FacetState> {
   @InitializeBindings() public bindings!: Bindings;
   public facet!: Facet;
   public searchStatus!: SearchStatus;
@@ -63,9 +65,9 @@ export class AtomicFacet implements InitializableComponent {
   public facetState!: FacetState;
   @BindStateToController('searchStatus')
   @State()
-  private searchStatusState!: SearchStatusState;
+  public searchStatusState!: SearchStatusState;
   @State() public error!: Error;
-  @State() private isCollapsed = false;
+  @State() public isCollapsed = false;
 
   /**
    * Specifies a unique identifier for the facet.
@@ -124,7 +126,11 @@ export class AtomicFacet implements InitializableComponent {
     };
   }
 
-  public componentShouldUpdate(next: unknown, prev: unknown, propName: string) {
+  public componentShouldUpdate(
+    next: unknown,
+    prev: unknown,
+    propName: keyof AtomicFacet
+  ) {
     if (propName === 'facetState') {
       return shouldUpdateFacetSearchComponent(
         (next as FacetState).facetSearch,
