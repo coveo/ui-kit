@@ -96,7 +96,7 @@ export interface DateFacetOptions {
   sortCriteria?: RangeFacetSortCriterion;
 
   /**
-   * The range algorithm applied when ranges are automatically generated.
+   * The algorithm that's used for generating the ranges of this facet when they aren't manually defined. The default value of `"even"` generates equally sized facet ranges across all of the results. The value `"equiprobable"` generates facet ranges which vary in size but have a more balanced number of results within each range.
    *
    * @defaultValue `even`
    */

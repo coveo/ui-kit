@@ -123,9 +123,7 @@ export class AtomicSearchBox {
   }
 
   private get submitButton() {
-    let roundedClasses = this.leadingSubmitButton
-      ? 'rounded-l-lg'
-      : 'rounded-r-lg';
+    let roundedClasses = this.leadingSubmitButton ? 'rounded-l' : 'rounded-r';
 
     if (this.searchBoxState.suggestions.length && this.shouldShowSuggestions) {
       roundedClasses += ' rounded-bl-none rounded-br-none';
@@ -202,7 +200,7 @@ export class AtomicSearchBox {
           onMouseDown={(e) => e.preventDefault()}
           part="suggestion"
           id={id}
-          class="suggestion h-9 px-2 cursor-pointer text-left text-sm flex flex-row items-center border-l border-r border-divider"
+          class="suggestion h-9 px-2 cursor-pointer text-left text-sm flex flex-row items-center border-l border-r border-neutral"
           value={index}
         >
           <pre class="font-sans" innerHTML={suggestion.highlightedValue}></pre>
@@ -227,8 +225,8 @@ export class AtomicSearchBox {
 
   private renderInputWrapper() {
     let roundedClasses = this.leadingSubmitButton
-      ? 'border-l-0 rounded-r-lg'
-      : 'border-r-0 rounded-l-lg';
+      ? 'border-l-0 rounded-r'
+      : 'border-r-0 rounded-l';
 
     if (this.searchBoxState.suggestions.length && this.shouldShowSuggestions) {
       roundedClasses += ' rounded-bl-none rounded-br-none';
@@ -238,7 +236,7 @@ export class AtomicSearchBox {
       <div
         part="input-wrapper"
         ref={(el) => (this.containerRef = el as HTMLElement)}
-        class={`input-wrapper flex flex-grow items-center border border-divider bg-white ${roundedClasses}`}
+        class={`input-wrapper flex flex-grow items-center border border-neutral bg-white ${roundedClasses}`}
       >
         {this.input}
         {this.clearButton}
@@ -248,7 +246,7 @@ export class AtomicSearchBox {
 
   public render() {
     return (
-      <div class="search-box relative w-full box-border flex items-center border-divider">
+      <div class="search-box relative w-full box-border flex items-center border-neutral">
         {this.leadingSubmitButton && this.submitButton}
         <div class="combobox flex flex-grow h-full">
           {this.renderInputWrapper()}

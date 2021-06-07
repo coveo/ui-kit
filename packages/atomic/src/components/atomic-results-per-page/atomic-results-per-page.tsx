@@ -56,7 +56,7 @@ export class AtomicResultsPerPage implements InitializableComponent {
   /**
    * The initial selection for the number of result per page. This should be part of the `choicesDisplayed` option. By default, this is set to the first value in `choicesDisplayed`.
    */
-  @Prop() initialChoice?: number;
+  @Prop({mutable: true}) initialChoice?: number;
 
   public initialize() {
     this.choices = this.validateChoicesDisplayed();
@@ -96,7 +96,7 @@ export class AtomicResultsPerPage implements InitializableComponent {
   private buildChoice(choice: number) {
     const isSelected = this.resultPerPage.isSetTo(choice);
     const classes = isSelected
-      ? 'text-on-primary bg-primary hover:bg-primary-variant'
+      ? 'text-on-primary bg-primary hover:bg-primary-light'
       : 'text-on-background';
 
     return (

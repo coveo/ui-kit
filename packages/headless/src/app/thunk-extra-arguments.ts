@@ -2,7 +2,7 @@ import {AnalyticsClientSendEventHook} from 'coveo.analytics';
 import {Logger} from 'pino';
 import {PreprocessRequest} from '../api/preprocess-request';
 import {validatePayloadAndThrow} from '../utils/validate-payload';
-import {EngineConfigurationOptions} from './engine-configuration-options';
+import {EngineConfiguration} from './engine-configuration';
 import {NoopPreprocessRequest} from '../api/preprocess-request';
 
 export interface ThunkExtraArguments {
@@ -13,7 +13,7 @@ export interface ThunkExtraArguments {
 }
 
 export function buildThunkExtraArguments(
-  configuration: EngineConfigurationOptions,
+  configuration: EngineConfiguration,
   logger: Logger
 ): ThunkExtraArguments {
   const analyticsClientMiddleware = getAnalyticsClientMiddleware(configuration);
@@ -29,13 +29,13 @@ export function buildThunkExtraArguments(
 }
 
 function getAnalyticsClientMiddleware(
-  configuration: EngineConfigurationOptions
+  configuration: EngineConfiguration
 ): AnalyticsClientSendEventHook {
   const {analytics} = configuration;
   const NoopAnalyticsMiddleware = (_: string, p: any) => p;
   return analytics?.analyticsClientMiddleware || NoopAnalyticsMiddleware;
 }
 
-function getPreprocessRequest(configuration: EngineConfigurationOptions) {
+function getPreprocessRequest(configuration: EngineConfiguration) {
   return configuration.preprocessRequest || NoopPreprocessRequest;
 }

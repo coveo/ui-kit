@@ -8,10 +8,11 @@ import {executeSearch} from '../../features/search/search-actions';
 import {ConfigurationSection} from '../../state/state-sections';
 import {buildSearchParameterSerializer} from '../../features/search-parameters/search-parameter-serializer';
 import {buildSearchParameterManager} from '../search-parameter-manager/headless-search-parameter-manager';
-import {logParametersChange} from '../../features/search-parameters/search-parameter-analytics-actions';
-import {initialSearchParameterSelector} from '../../features/search-parameters/search-parameter-selectors';
 import {configuration} from '../../app/reducers';
+import {initialSearchParameterSelector} from '../../features/search-parameters/search-parameter-selectors';
 import {loadReducerError} from '../../utils/errors';
+import {deepEqualAnyOrder} from '../../utils/compare-utils';
+import {logParametersChange} from '../../features/search-parameters/search-parameter-analytics-actions';
 
 export interface UrlManagerProps {
   /**
@@ -40,18 +41,12 @@ export interface UrlManager extends Controller {
    * The state relevant to the `UrlManager` controller.
    * */
   state: UrlManagerState;
+
   /**
    * Updates the search parameters in state with those from the url & launches a search.
    * @param fragment The part of the url that contains search parameters.  E.g., `q=windmill&f[author]=Cervantes`
    */
   synchronize(fragment: string): void;
-  /**
-   * Checks whether the specified fragment matches the value in state.
-   *
-   * @param fragment The part of the url that contains search parameters.  E.g., `q=windmill&f[author]=Cervantes`
-   * @returns `true` if the passed fragment matches the value in state, and `false` otherwise.
-   */
-  hasFragment(fragment: string): boolean;
 }
 
 export interface UrlManagerState {
@@ -77,9 +72,6 @@ export function buildUrlManager(
     throw loadReducerError;
   }
 
-  const {dispatch} = engine;
-  const controller = buildController(engine);
-
   validateInitialState(
     engine,
     initialStateSchema,
@@ -87,14 +79,34 @@ export function buildUrlManager(
     'buildUrlManager'
   );
 
+  const completeParameters = (fragment: string) => ({
+    ...initialSearchParameterSelector(engine.state),
+    ...deserializeFragment(fragment),
+  });
+
+  const controller = buildController(engine);
+  const {dispatch} = engine;
+  let previousFragment = decodeFragment(props.initialState.fragment);
   const searchParameterManager = buildSearchParameterManager(engine, {
     initialState: {
-      parameters: fragmentActiveSearchParameters(props.initialState.fragment),
+      parameters: deserializeFragment(previousFragment),
     },
   });
 
   return {
     ...controller,
+
+    subscribe(listener: () => void) {
+      const strictListener = () => {
+        const newFragment = this.state.fragment;
+        if (!areFragmentsEquivalent(previousFragment, newFragment)) {
+          previousFragment = newFragment;
+          listener();
+        }
+      };
+      strictListener();
+      return engine.subscribe(strictListener);
+    },
 
     get state() {
       return {
@@ -105,37 +117,41 @@ export function buildUrlManager(
     },
 
     synchronize(fragment: string) {
-      if (this.hasFragment(fragment)) {
+      const newFragment = decodeFragment(fragment);
+      if (areFragmentsEquivalent(previousFragment, newFragment)) {
         return;
       }
 
-      const initialParameters = initialSearchParameterSelector(engine.state);
-      const previousParameters = {
-        ...initialParameters,
-        ...searchParameterManager.state.parameters,
-      };
-      const newParameters = {
-        ...initialParameters,
-        ...fragmentActiveSearchParameters(fragment),
-      };
-      dispatch(restoreSearchParameters(newParameters));
+      const completePreviousParameters = completeParameters(previousFragment);
+      const completeNewParameters = completeParameters(newFragment);
+      previousFragment = newFragment;
+
+      dispatch(restoreSearchParameters(completeNewParameters));
       dispatch(
-        executeSearch(logParametersChange(previousParameters, newParameters))
+        executeSearch(
+          logParametersChange(completePreviousParameters, completeNewParameters)
+        )
       );
     },
-
-    hasFragment(fragment: string) {
-      return this.state.fragment === decodeFragment(fragment);
-    },
   };
+}
+
+function areFragmentsEquivalent(fragment1: string, fragment2: string) {
+  if (fragment1 === fragment2) {
+    return true;
+  }
+
+  const params1 = deserializeFragment(fragment1);
+  const params2 = deserializeFragment(fragment2);
+  return deepEqualAnyOrder(params1, params2);
 }
 
 function decodeFragment(fragment: string) {
   return decodeURIComponent(fragment);
 }
 
-function fragmentActiveSearchParameters(fragment: string) {
-  return buildSearchParameterSerializer().deserialize(decodeFragment(fragment));
+function deserializeFragment(fragment: string) {
+  return buildSearchParameterSerializer().deserialize(fragment);
 }
 
 function loadUrlManagerReducers(

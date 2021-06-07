@@ -3,6 +3,7 @@ import {buildController, Controller} from '../controller/headless-controller';
 import {SearchSection} from '../../state/state-sections';
 import {search} from '../../app/reducers';
 import {loadReducerError} from '../../utils/errors';
+import {firstSearchExecutedSelector} from '../../features/search/search-selectors';
 
 /**
  * The `SearchStatus` controller provides information on the status of the search.
@@ -60,7 +61,7 @@ export function buildSearchStatus(engine: Engine<object>): SearchStatus {
         hasError: state.search.error !== null,
         isLoading: state.search.isLoading,
         hasResults: !!state.search.results.length,
-        firstSearchExecuted: state.search.response.searchUid !== '',
+        firstSearchExecuted: firstSearchExecutedSelector(state),
       };
     },
   };
