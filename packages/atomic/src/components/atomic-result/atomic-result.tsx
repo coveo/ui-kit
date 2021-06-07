@@ -1,5 +1,5 @@
 import {Component, h, Prop, Element, Listen} from '@stencil/core';
-import {Result, Engine} from '@coveo/headless';
+import {Result, SearchEngine} from '@coveo/headless';
 import {bindLogDocumentOpenOnResult} from '../../utils/result-utils';
 
 /**
@@ -21,7 +21,7 @@ export class AtomicResult {
   /**
    * The Headless engine.
    */
-  @Prop() engine!: Engine;
+  @Prop() engine!: SearchEngine;
 
   /**
    * The result content to display.

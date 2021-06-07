@@ -21,7 +21,7 @@ export class AtomicRelevanceInspector {
   @State() relevanceInspectorState!: RelevanceInspectorState;
 
   /**
-   * The Atomic interface bindings, namely the Headless Engine and i18n instances.
+   * The Atomic interface bindings, namely the search engine and i18n instances.
    */
   @Prop() bindings!: Bindings;
 
