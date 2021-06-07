@@ -33,6 +33,10 @@ type HeadlessState = StateFromReducersMapObject<HeadlessReducers>;
 
 /**
  * The global headless engine options.
+ *
+ * @deprecated - For a search app, use `SearchEngineOptions`.
+ * For a recommendation, use `RecommendationEngineOptions` from "@coveo/headless/recommendation".
+ * For a product recommendation, use `ProductRecommendationEngineOptions` from "@coveo/headless/product-recommendation".
  */
 export interface HeadlessOptions<Reducers extends ReducersMapObject>
   extends EngineOptions<Reducers> {
@@ -44,6 +48,10 @@ export interface HeadlessOptions<Reducers extends ReducersMapObject>
 
 /**
  * The global headless engine configuration options.
+ *
+ * @deprecated - For a search app, use `SearchEngineConfiguration`.
+ * For a recommendation, use `RecommendationEngineConfiguration` from "@coveo/headless/recommendation".
+ * For a product recommendation, use `ProductRecommendationEngineConfiguration` from "@coveo/headless/product-recommendation".
  */
 export interface HeadlessConfigurationOptions extends EngineConfiguration {
   /**
@@ -54,6 +62,10 @@ export interface HeadlessConfigurationOptions extends EngineConfiguration {
 
 /**
  * The engine for powering search experiences.
+ *
+ * @deprecated - For a search app, use `SearchEngine`.
+ * For a recommendation, use `RecommendationEngine` from "@coveo/headless/recommendation".
+ * For a product recommendation, use `ProductRecommendationEngine` from "@coveo/headless/product-recommendation".
  */
 export interface Engine<State = SearchAppState>
   extends CoreEngine<State & HeadlessState, SearchThunkExtraArguments> {}
@@ -66,6 +78,10 @@ export interface SearchThunkExtraArguments extends ThunkExtraArguments {
  * The global headless engine.
  * You should instantiate one `HeadlessEngine` class per application and share it.
  * Every headless controller requires an instance of `Engine` as a parameter.
+ *
+ * @deprecated - For a search app, use `buildSearchEngine`.
+ * For a recommendation, use `buildRecommendationEngine` from "@coveo/headless/recommendation".
+ * For a product recommendation, use `buildProductRecommendationEngine` from "@coveo/headless/product-recommendation".
  */
 export class HeadlessEngine<Reducers extends ReducersMapObject>
   implements Engine<StateFromReducersMapObject<Reducers>> {
