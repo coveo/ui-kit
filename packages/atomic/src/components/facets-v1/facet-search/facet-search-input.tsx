@@ -29,9 +29,7 @@ export const FacetSearchInput: FunctionalComponent<FacetSearchInputProps> = (
         placeholder={search}
         aria-label={facetSearch}
         value={props.query}
-        onInput={(e) =>
-          props.onChange((e.target as HTMLInputElement).value.trim())
-        }
+        onInput={(e) => props.onChange((e.target as HTMLInputElement).value)}
         ref={(ref) => (inputRef = ref)}
       ></input>
       <div class="input-ring w-full h-full absolute inset-0 pointer-events-none rounded opacity-40"></div>
