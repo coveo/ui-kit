@@ -5,7 +5,7 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { CategoryFacetSortCriterion, Engine, FacetSortCriterion, LogLevel, Result, ResultTemplate, ResultTemplateCondition } from "@coveo/headless";
+import { CategoryFacetSortCriterion, Engine, FacetSortCriterion, LogLevel, RangeFacetRangeAlgorithm, Result, ResultTemplate, ResultTemplateCondition } from "@coveo/headless";
 import { Bindings } from "./utils/initialization-utils";
 import { i18n } from "i18next";
 import { InitializationOptions } from "./components/atomic-search-interface/atomic-search-interface";
@@ -83,6 +83,10 @@ export namespace Components {
           * The number of values to request for this facet, when there are no manual ranges.
          */
         "numberOfValues": number;
+        /**
+          * The algorithm used to generate the ranges for this facet, when there are no manual ranges.
+         */
+        "rangeAlgorithm": RangeFacetRangeAlgorithm;
     }
     interface AtomicDateRange {
         /**
@@ -204,6 +208,10 @@ export namespace Components {
           * The number of values to request for this facet, when there are no manual ranges.
          */
         "numberOfValues": number;
+        /**
+          * The algorithm used to generate the ranges for this facet, when there are no manual ranges.
+         */
+        "rangeAlgorithm": RangeFacetRangeAlgorithm;
     }
     interface AtomicNumericRange {
         /**
@@ -790,6 +798,10 @@ declare namespace LocalJSX {
           * The number of values to request for this facet, when there are no manual ranges.
          */
         "numberOfValues"?: number;
+        /**
+          * The algorithm used to generate the ranges for this facet, when there are no manual ranges.
+         */
+        "rangeAlgorithm"?: RangeFacetRangeAlgorithm;
     }
     interface AtomicDateRange {
         /**
@@ -911,6 +923,10 @@ declare namespace LocalJSX {
           * The number of values to request for this facet, when there are no manual ranges.
          */
         "numberOfValues"?: number;
+        /**
+          * The algorithm used to generate the ranges for this facet, when there are no manual ranges.
+         */
+        "rangeAlgorithm"?: RangeFacetRangeAlgorithm;
     }
     interface AtomicNumericRange {
         /**
