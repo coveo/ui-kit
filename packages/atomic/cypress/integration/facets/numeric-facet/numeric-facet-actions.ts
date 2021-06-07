@@ -85,6 +85,10 @@ export function convertFacetValueToRange(
   facetValue: string,
   valueSeparator?: string
 ) {
-  valueSeparator = valueSeparator ? valueSeparator : 'to';
+  valueSeparator = valueSeparator ? valueSeparator : ' to ';
   const splitFacetValue = facetValue.split(valueSeparator);
+  return {
+    start: Number(splitFacetValue[0]),
+    end: Number(splitFacetValue[1]),
+  };
 }

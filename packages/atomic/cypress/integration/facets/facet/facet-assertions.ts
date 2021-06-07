@@ -1,4 +1,3 @@
-import {RangeFacetRangeAlgorithm} from '@coveo/headless';
 import {doSortAlphanumeric} from '../../../utils/componentUtils';
 import {RouteAlias} from '../../../utils/setupComponent';
 import {BreadcrumbSelector} from '../../breadcrumb-manager-selectors';

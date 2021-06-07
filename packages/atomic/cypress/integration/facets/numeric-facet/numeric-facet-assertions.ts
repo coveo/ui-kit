@@ -2,6 +2,7 @@ import {convertFacetValueToAPIformat} from '../facet/facet-actions';
 import {FacetSelector, numericFacetComponent} from '../facet/facet-selectors';
 import {
   convertRangeToFacetValue,
+  convertFacetValueToRange,
   numericField,
   NumericRange,
   numericRanges,
@@ -52,10 +53,29 @@ export function assertRangesGeneratedWithAlgorithm(
       'numericFacetAllValueLabels'
     );
     cy.getTextOfAllElements('@numericFacetAllValueLabels').then((elements) => {
-      // ranges.forEach((r: NumericRange) => {
-      //   const facetValueConverted = convertRangeToFacetValue(r);
-      //   expect(elements).to.include(facetValueConverted);
-      // });
+      if (rangeAlgorithm === 'even') {
+        const firstRange = convertFacetValueToRange(elements[0]);
+        elements.forEach((element: string) => {
+          const rangeConverted = convertFacetValueToRange(element);
+          expect(firstRange.end - firstRange.start).equals(
+            rangeConverted.end - rangeConverted.start
+          );
+        });
+      }
+      if (rangeAlgorithm === 'equiprobable') {
+        let allRangesEqual = true;
+        elements.forEach((element: string) => {
+          const currentRangeConverted = convertFacetValueToRange(element);
+          elements.forEach((otherElements: string) => {
+            const rangeConverted = convertFacetValueToRange(otherElements);
+            allRangesEqual =
+              currentRangeConverted.end - currentRangeConverted.start ===
+              rangeConverted.end - rangeConverted.start;
+            if (!allRangesEqual) return;
+          });
+          expect(allRangesEqual).equals(false);
+        });
+      }
     });
   });
 }
