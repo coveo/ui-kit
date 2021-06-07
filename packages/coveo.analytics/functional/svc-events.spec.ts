@@ -1,7 +1,8 @@
-import 'isomorphic-fetch';
-import * as fetchMock from 'fetch-mock';
 import {DefaultEventResponse} from '../src/events';
 import coveoua from '../src/coveoua/browser';
+import {mockFetch} from '../tests/fetchMock';
+
+const {fetchMock, fetchMockBeforeEach} = mockFetch();
 
 describe('svc events', () => {
     const initialLocation = `${window.location}`;
@@ -29,6 +30,8 @@ describe('svc events', () => {
     };
 
     beforeEach(() => {
+        fetchMockBeforeEach();
+
         changeDocumentLocation(initialLocation);
         const address = `${anEndpoint}/rest/v15/analytics/collect`;
         fetchMock.reset();

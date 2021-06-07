@@ -1,8 +1,10 @@
-import * as fetchMock from 'fetch-mock';
 import {CoveoSearchPageClient, SearchPageClientProvider} from './searchPageClient';
 import {SearchPageEvents, PartialDocumentInformation, CustomEventsTypes} from './searchPageEvents';
 import CoveoAnalyticsClient from '../client/analytics';
 import {NoopAnalytics} from '../client/noopAnalytics';
+import {mockFetch} from '../../tests/fetchMock';
+
+const {fetchMock, fetchMockBeforeEach} = mockFetch();
 
 describe('SearchPageClient', () => {
     const fakeDocInfo = {
@@ -55,6 +57,8 @@ describe('SearchPageClient', () => {
     };
 
     beforeEach(() => {
+        fetchMockBeforeEach();
+
         client = initClient();
         fetchMock.mock(/.*/, {
             visitId: 'visit-id',

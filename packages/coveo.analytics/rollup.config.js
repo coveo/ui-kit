@@ -1,27 +1,36 @@
 import typescript from 'rollup-plugin-typescript2';
 import {uglify} from 'rollup-plugin-uglify';
 import serve from 'rollup-plugin-serve';
+import commonjs from '@rollup/plugin-commonjs';
+import {nodeResolve} from '@rollup/plugin-node-resolve';
+import alias from '@rollup/plugin-alias';
+import {resolve} from 'path';
+
+const browserFetch = () =>
+    alias({
+        entries: [
+            {
+                find: 'cross-fetch',
+                replacement: resolve(__dirname, './bundle/browser-fetch.ts'),
+            },
+        ],
+    });
 
 const tsPlugin = () =>
     typescript({
         useTsconfigDeclarationDir: true,
     });
 
-const umdConfig = {
-    format: 'umd',
-    name: 'coveoua',
-};
-
-const browser = {
+const browserUMD = {
     input: './src/coveoua/browser.ts',
-    output: [
-        {
-            ...umdConfig,
-            file: './dist/coveoua.js',
-            sourcemap: true,
-        },
-    ],
+    output: {
+        file: './dist/coveoua.js',
+        format: 'umd',
+        name: 'coveoua',
+        sourcemap: true,
+    },
     plugins: [
+        browserFetch(),
         tsPlugin(),
         uglify(),
         process.env.SERVE
@@ -37,24 +46,23 @@ const browser = {
     ],
 };
 
-const libUMD = {
+const nodeCJS = {
     input: './src/coveoua/library.ts',
-    output: [
-        {
-            ...umdConfig,
-            file: './dist/library.js',
-        },
-    ],
-    plugins: [tsPlugin()],
+    output: {
+        file: './dist/library.js',
+        format: 'cjs',
+    },
+    plugins: [nodeResolve({mainFields: ['main']}), commonjs(), tsPlugin()],
 };
 
-const libESM = {
+const browserESM = {
     input: './src/coveoua/headless.ts',
     output: {
         file: './dist/library.es.js',
         format: 'es',
     },
     plugins: [
+        browserFetch(),
         typescript({
             useTsconfigDeclarationDir: true,
             tsconfigOverride: {compilerOptions: {target: 'es6'}},
@@ -76,4 +84,4 @@ const libRN = {
     ],
 };
 
-export default [browser, libUMD, libESM, libRN];
+export default [browserUMD, nodeCJS, browserESM, libRN];

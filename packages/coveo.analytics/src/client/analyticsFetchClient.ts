@@ -5,6 +5,7 @@ import {
     PreprocessAnalyticsRequest,
 } from './analyticsRequestClient';
 import {AnyEventResponse, EventType, IRequestPayload} from '../events';
+import {fetch} from 'cross-fetch';
 
 export interface IAnalyticsFetchClientOptions {
     baseUrl: string;
