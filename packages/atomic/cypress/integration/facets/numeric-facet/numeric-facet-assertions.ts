@@ -46,36 +46,24 @@ export function assertCustomRangeDisplay(ranges = numericRanges) {
 }
 
 export function assertRangesGeneratedWithAlgorithm(
-  rangeAlgorithm: RangeFacetRangeAlgorithm
+  rangeAlgorithm: RangeFacetRangeAlgorithm,
+  field: string
 ) {
   it(`Facet ranges should be generated using the ${rangeAlgorithm} range algorithm`, () => {
-    FacetSelector.valueLabels(numericField, numericFacetComponent).as(
+    FacetSelector.valueLabels(field, numericFacetComponent).as(
       'numericFacetAllValueLabels'
     );
+    const differences: Number[] = [];
+    let allRangesEqual = false;
     cy.getTextOfAllElements('@numericFacetAllValueLabels').then((elements) => {
-      if (rangeAlgorithm === 'even') {
-        const firstRange = convertFacetValueToRange(elements[0]);
-        elements.forEach((element: string) => {
-          const rangeConverted = convertFacetValueToRange(element);
-          expect(firstRange.end - firstRange.start).equals(
-            rangeConverted.end - rangeConverted.start
-          );
-        });
-      }
-      if (rangeAlgorithm === 'equiprobable') {
-        let allRangesEqual = true;
-        elements.forEach((element: string) => {
-          const currentRangeConverted = convertFacetValueToRange(element);
-          elements.forEach((otherElements: string) => {
-            const rangeConverted = convertFacetValueToRange(otherElements);
-            allRangesEqual =
-              currentRangeConverted.end - currentRangeConverted.start ===
-              rangeConverted.end - rangeConverted.start;
-            if (!allRangesEqual) return;
-          });
-          expect(allRangesEqual).equals(false);
-        });
-      }
+      elements.forEach((element: string) => {
+        const range = convertFacetValueToRange(element);
+        differences.push(range.end - range.start);
+      });
+      allRangesEqual = differences.every((x) => differences[0] === x);
+      rangeAlgorithm === 'even'
+        ? expect(allRangesEqual).equals(true)
+        : expect(allRangesEqual).equals(false);
     });
   });
 }

@@ -295,7 +295,10 @@ describe('Numeric Facet Test Suites', () => {
       'ytlikecount',
       numericFacetComponent
     );
-    NumericFacetAssertions.assertRangesGeneratedWithAlgorithm('even');
+    NumericFacetAssertions.assertRangesGeneratedWithAlgorithm(
+      'even',
+      'ytlikecount'
+    );
   });
 
   describe('Numeric facet with equiprobable as algorithm choice for automatic range creation', () => {
@@ -307,7 +310,10 @@ describe('Numeric Facet Test Suites', () => {
       'ytlikecount',
       numericFacetComponent
     );
-    NumericFacetAssertions.assertRangesGeneratedWithAlgorithm('equiprobable');
+    NumericFacetAssertions.assertRangesGeneratedWithAlgorithm(
+      'equiprobable',
+      'ytlikecount'
+    );
   });
 
   describe('When no first search has yet been executed', () => {

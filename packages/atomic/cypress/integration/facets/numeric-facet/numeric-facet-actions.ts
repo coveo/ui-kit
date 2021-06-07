@@ -57,7 +57,7 @@ export function setupNumericFacet(
     `<atomic-breadcrumb-manager></atomic-breadcrumb-manager>     
   <atomic-numeric-facet field="${setupOptions.field}" label="${
       setupOptions.label
-    }" ${setupOptions.attributes} rang-algorithm="${
+    }" ${setupOptions.attributes} range-algorithm="${
       setupOptions.rangeAlgorithm
     }">${generateDateRangeHtml(setupOptions.ranges)}</atomic-numeric-facet>`,
     setupOptions.executeFirstSearch
@@ -88,7 +88,7 @@ export function convertFacetValueToRange(
   valueSeparator = valueSeparator ? valueSeparator : ' to ';
   const splitFacetValue = facetValue.split(valueSeparator);
   return {
-    start: Number(splitFacetValue[0]),
-    end: Number(splitFacetValue[1]),
+    start: Number(splitFacetValue[0].replace(',', '')),
+    end: Number(splitFacetValue[1].replace(',', '')),
   };
 }
