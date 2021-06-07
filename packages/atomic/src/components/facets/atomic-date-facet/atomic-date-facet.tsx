@@ -93,7 +93,7 @@ export class AtomicDateFacet implements InitializableComponent, BaseFacetState {
    */
   @Prop({mutable: true}) public numberOfValues = 8;
   /**
-   * The algorithm used to generate the ranges for this facet, when there are no manual ranges.
+   * The algorithm that's used for generating the ranges of this facet when they aren't manually defined. The default value of `"even"` generates equally sized facet ranges across all of the results. The value `"equiprobable"` generates facet ranges which vary in size, but have a more balanced number of results in each facet range.
    */
   @Prop() public rangeAlgorithm: RangeFacetRangeAlgorithm = 'even';
 
