@@ -47,13 +47,9 @@ import {RelevanceInspector as RelevanceInspectorFn} from '../components/relevanc
 import {StandaloneSearchBox} from '../components/standalone-search-box/standalone-search-box.class';
 import {StandaloneSearchBox as StandaloneSearchBoxFn} from '../components/standalone-search-box/standalone-search-box.fn';
 import {
-  HeadlessEngine,
-  Engine,
   SearchEngine,
   buildSearchEngine,
   getSampleSearchEngineConfiguration,
-  recommendationAppReducers,
-  RecommendationAppState,
   Unsubscribe,
   RecommendationList as HeadlessRecommendationList,
   buildRecommendationList,
@@ -104,6 +100,11 @@ import {
   StandaloneSearchBox as HeadlessStandaloneSearchBox,
   buildStandaloneSearchBox,
 } from '@coveo/headless';
+import {
+  RecommendationEngine,
+  buildRecommendationEngine,
+  getSampleRecommendationEngineConfiguration,
+} from '@coveo/headless/recommendation';
 import {bindUrlManager} from '../components/url-manager/url-manager';
 import {setContext} from '../components/context/context';
 import {dateRanges} from '../components/date-facet/date-utils';
@@ -123,7 +124,7 @@ const resultsPerPageOptions = [10, 25, 50, 100];
 
 export class SearchPage extends Component {
   private readonly engine: SearchEngine;
-  private readonly recommendationEngine: Engine<RecommendationAppState>;
+  private readonly recommendationEngine: RecommendationEngine;
 
   private readonly recommendationList: HeadlessRecommendationList;
   private readonly tabs: {
@@ -162,9 +163,8 @@ export class SearchPage extends Component {
       configuration: getSampleSearchEngineConfiguration(),
     });
 
-    this.recommendationEngine = new HeadlessEngine({
-      configuration: HeadlessEngine.getSampleConfiguration(),
-      reducers: recommendationAppReducers,
+    this.recommendationEngine = buildRecommendationEngine({
+      configuration: getSampleRecommendationEngineConfiguration(),
     });
 
     this.recommendationList = buildRecommendationList(
