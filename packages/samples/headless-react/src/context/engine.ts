@@ -2,7 +2,7 @@ import {Engine, RecommendationAppState} from '@coveo/headless';
 import {createContext} from 'react';
 
 export interface AppContextType {
-  engine: Engine;
+  engine: Engine<object>;
   recommendationEngine: Engine<RecommendationAppState>;
 }
 

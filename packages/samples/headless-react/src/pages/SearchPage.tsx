@@ -49,11 +49,11 @@ import {StandaloneSearchBox as StandaloneSearchBoxFn} from '../components/standa
 import {
   HeadlessEngine,
   Engine,
-  searchAppReducers,
+  SearchEngine,
+  buildSearchEngine,
+  getSampleSearchEngineConfiguration,
   recommendationAppReducers,
   RecommendationAppState,
-  SearchActions,
-  AnalyticsActions,
   Unsubscribe,
   RecommendationList as HeadlessRecommendationList,
   buildRecommendationList,
@@ -122,7 +122,7 @@ const initialCriterion = criteria[0][1];
 const resultsPerPageOptions = [10, 25, 50, 100];
 
 export class SearchPage extends Component {
-  private readonly engine: Engine;
+  private readonly engine: SearchEngine;
   private readonly recommendationEngine: Engine<RecommendationAppState>;
 
   private readonly recommendationList: HeadlessRecommendationList;
@@ -158,9 +158,8 @@ export class SearchPage extends Component {
   constructor(props: {}) {
     super(props);
 
-    this.engine = new HeadlessEngine({
-      configuration: HeadlessEngine.getSampleConfiguration(),
-      reducers: searchAppReducers,
+    this.engine = buildSearchEngine({
+      configuration: getSampleSearchEngineConfiguration(),
     });
 
     this.recommendationEngine = new HeadlessEngine({
@@ -290,9 +289,7 @@ export class SearchPage extends Component {
   }
 
   private executeInitialSearch() {
-    this.engine.dispatch(
-      SearchActions.executeSearch(AnalyticsActions.logInterfaceLoad())
-    );
+    this.engine.executeFirstSearch();
   }
 
   private updateAnalyticsContext() {

@@ -1,7 +1,7 @@
 import {buildContext, Engine} from '@coveo/headless';
 
 export function setContext(
-  engine: Engine,
+  engine: Engine<object>,
   ageGroup: string,
   interests: string[]
 ) {

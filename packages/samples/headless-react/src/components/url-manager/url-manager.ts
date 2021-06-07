@@ -5,7 +5,7 @@ import {buildUrlManager, Engine} from '@coveo/headless';
  *
  * Additionally, a search should not be executed until search parameters are restored.
  */
-export function bindUrlManager(engine: Engine) {
+export function bindUrlManager(engine: Engine<object>) {
   const fragment = () => window.location.hash.slice(1);
 
   const urlManager = buildUrlManager(engine, {
