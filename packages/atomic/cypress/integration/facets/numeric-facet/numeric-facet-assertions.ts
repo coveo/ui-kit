@@ -6,6 +6,7 @@ import {
   NumericRange,
   numericRanges,
 } from './numeric-facet-actions';
+import {RangeFacetRangeAlgorithm} from '@coveo/headless';
 
 export function assertNumericFacetValueOnUrl(
   index = 0,
@@ -39,6 +40,22 @@ export function assertCustomRangeDisplay(ranges = numericRanges) {
         const facetValueConverted = convertRangeToFacetValue(r);
         expect(elements).to.include(facetValueConverted);
       });
+    });
+  });
+}
+
+export function assertRangesGeneratedWithAlgorithm(
+  rangeAlgorithm: RangeFacetRangeAlgorithm
+) {
+  it(`Facet ranges should be generated using the ${rangeAlgorithm} range algorithm`, () => {
+    FacetSelector.valueLabels(numericField, numericFacetComponent).as(
+      'numericFacetAllValueLabels'
+    );
+    cy.getTextOfAllElements('@numericFacetAllValueLabels').then((elements) => {
+      // ranges.forEach((r: NumericRange) => {
+      //   const facetValueConverted = convertRangeToFacetValue(r);
+      //   expect(elements).to.include(facetValueConverted);
+      // });
     });
   });
 }
