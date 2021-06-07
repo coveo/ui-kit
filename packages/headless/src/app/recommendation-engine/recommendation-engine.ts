@@ -1,11 +1,17 @@
 import {StateFromReducersMapObject} from '@reduxjs/toolkit';
-import {buildEngine, EngineOptions, ExternalEngineOptions} from '../engine';
-import {Engine} from '../headless-engine';
+import {
+  buildEngine,
+  CoreEngine,
+  EngineOptions,
+  ExternalEngineOptions,
+} from '../engine';
+import {SearchThunkExtraArguments} from '../headless-engine';
 import {RecommendationAppState} from '../../state/recommendation-app-state';
 import {debug, pipeline, searchHub} from '../reducers';
 import {
   RecommendationEngineConfiguration,
   recommendationEngineConfigurationSchema,
+  getSampleRecommendationEngineConfiguration,
 } from './recommendation-engine-configuration';
 import {buildLogger} from '../logger';
 import {Logger} from 'pino';
@@ -19,6 +25,11 @@ import {NoopPreprocessRequestMiddleware} from '../../api/platform-client';
 import {NoopPreprocessRequest} from '../../api/preprocess-request';
 import {SearchAPIClient} from '../../api/search/search-api-client';
 
+export {
+  RecommendationEngineConfiguration,
+  getSampleRecommendationEngineConfiguration,
+};
+
 const recommendationEngineReducers = {debug, pipeline, searchHub};
 type RecommendationEngineReducers = typeof recommendationEngineReducers;
 type RecommendationEngineState = StateFromReducersMapObject<
@@ -30,7 +41,7 @@ type RecommendationEngineState = StateFromReducersMapObject<
  * The engine for powering recommendation experiences.
  */
 export interface RecommendationEngine
-  extends Engine<RecommendationEngineState> {}
+  extends CoreEngine<RecommendationEngineState, SearchThunkExtraArguments> {}
 
 /**
  * The recommendation engine configuration options.

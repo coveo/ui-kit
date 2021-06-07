@@ -5,6 +5,14 @@ export {
   Engine,
 } from './app/headless-engine';
 
+export {
+  RecommendationEngine,
+  RecommendationEngineOptions,
+  RecommendationEngineConfiguration,
+  buildRecommendationEngine,
+  getSampleRecommendationEngineConfiguration,
+} from './app/recommendation-engine/recommendation-engine';
+
 export {recommendationAppReducers} from './app/recommendation-app-reducers';
 
 // Actions
