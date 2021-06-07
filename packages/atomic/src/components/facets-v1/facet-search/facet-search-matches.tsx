@@ -8,16 +8,24 @@ interface FacetSearchMatchesProps {
   hasMoreMatches: boolean;
 }
 
+function matchesFound(
+  key: 'moreMatchesFor' | 'noMatchesFoundFor',
+  query: string,
+  i18n: i18n
+) {
+  return i18n.t(key, {
+    query: query,
+    interpolation: {escapeValue: false},
+  });
+}
+
 export const FacetSearchMatches: FunctionalComponent<FacetSearchMatchesProps> = (
   props
 ) => {
   if (!props.numberOfMatches) {
     return (
       <div class="ellipsed p-3 bg-neutral-light text-neutral-dark text-sm">
-        {props.i18n.t('noMatchesFoundFor', {
-          query: props.query,
-          interpolation: {escapeValue: false},
-        })}
+        {matchesFound('noMatchesFoundFor', props.query, props.i18n)}
       </div>
     );
   }
@@ -25,10 +33,7 @@ export const FacetSearchMatches: FunctionalComponent<FacetSearchMatchesProps> = 
   if (props.hasMoreMatches) {
     return (
       <div class="ellipsed mt-3 text-neutral-dark text-sm">
-        {props.i18n.t('moreMatchesFor', {
-          query: props.query,
-          interpolation: {escapeValue: false},
-        })}
+        {matchesFound('moreMatchesFor', props.query, props.i18n)}
       </div>
     );
   }
