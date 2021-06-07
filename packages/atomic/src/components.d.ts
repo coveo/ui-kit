@@ -5,7 +5,7 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { CategoryFacetSortCriterion, Engine, FacetSortCriterion, LogLevel, Result, ResultTemplate, ResultTemplateCondition } from "@coveo/headless";
+import { CategoryFacetSortCriterion, Engine, FacetSortCriterion, LogLevel, Result, ResultTemplate, ResultTemplateCondition, SearchEngine } from "@coveo/headless";
 import { Bindings } from "./utils/initialization-utils";
 import { i18n } from "i18next";
 import { InitializationOptions } from "./components/atomic-search-interface/atomic-search-interface";
@@ -389,7 +389,7 @@ export namespace Components {
         /**
           * The search interface Headless engine.
          */
-        "engine"?: Engine;
+        "engine"?: SearchEngine;
         /**
           * Executes the first search and logs the interface load event to analytics, after initializing connection to the Headless engine.
          */
@@ -1092,7 +1092,7 @@ declare namespace LocalJSX {
         /**
           * The search interface Headless engine.
          */
-        "engine"?: Engine;
+        "engine"?: SearchEngine;
         /**
           * The search interface i18next instance.
          */

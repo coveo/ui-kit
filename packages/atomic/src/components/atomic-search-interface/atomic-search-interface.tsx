@@ -10,17 +10,14 @@ import {
   getAssetPath,
 } from '@stencil/core';
 import {
-  HeadlessEngine,
-  searchAppReducers,
-  Engine,
-  SearchActions,
-  HeadlessConfigurationOptions,
-  AnalyticsActions,
-  ConfigurationActions,
   LogLevel,
   Unsubscribe,
   buildUrlManager,
   UrlManager,
+  buildSearchEngine,
+  SearchEngine,
+  loadSearchConfigurationActions,
+  SearchEngineConfiguration,
 } from '@coveo/headless';
 import {
   AtomicStore,
@@ -33,7 +30,7 @@ import {createStore} from '@stencil/store';
 import {setCoveoGlobal} from '../../global/environment';
 
 export type InitializationOptions = Pick<
-  HeadlessConfigurationOptions,
+  SearchEngineConfiguration,
   'accessToken' | 'organizationId' | 'renewAccessToken' | 'platformUrl'
 >;
 
@@ -84,7 +81,7 @@ export class AtomicSearchInterface {
   /**
    * The search interface Headless engine.
    */
-  @Prop({mutable: true}) public engine?: Engine;
+  @Prop({mutable: true}) public engine?: SearchEngine;
 
   /**
    * Whether the state should be reflected in the URL parameters.
@@ -98,8 +95,11 @@ export class AtomicSearchInterface {
   @Watch('searchHub')
   @Watch('pipeline')
   public updateSearchConfiguration() {
+    const {updateSearchConfiguration} = loadSearchConfigurationActions(
+      this.engine!
+    );
     this.engine?.dispatch(
-      ConfigurationActions.updateSearchConfiguration({
+      updateSearchConfiguration({
         pipeline: this.pipeline,
         searchHub: this.searchHub,
       })
@@ -108,11 +108,15 @@ export class AtomicSearchInterface {
 
   @Watch('language')
   public updateLanguage() {
+    const {updateSearchConfiguration} = loadSearchConfigurationActions(
+      this.engine!
+    );
     this.engine?.dispatch(
-      ConfigurationActions.updateSearchConfiguration({
+      updateSearchConfiguration({
         locale: this.language,
       })
     );
+
     new Backend(this.i18n.services, this.i18nBackendOptions).read(
       this.language,
       'translation',
@@ -188,14 +192,12 @@ export class AtomicSearchInterface {
       return;
     }
 
-    this.engine.dispatch(
-      SearchActions.executeSearch(AnalyticsActions.logInterfaceLoad())
-    );
+    this.engine.executeFirstSearch();
   }
 
   private initEngine(options: InitializationOptions) {
     try {
-      this.engine = new HeadlessEngine({
+      this.engine = buildSearchEngine({
         configuration: {
           ...options,
           search: {
@@ -204,7 +206,6 @@ export class AtomicSearchInterface {
             locale: this.language,
           },
         },
-        reducers: searchAppReducers,
         loggerOptions: {
           level: this.logLevel,
         },
