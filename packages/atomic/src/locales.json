@@ -689,7 +689,7 @@
     "fr": "Impossible de se connecter."
   },
   "checkYourConnection": {
-    "en": "Your query could not be sent. You may have lost your internet connection.",
+    "en": "Your query couldn't be sent. Verify your internet connection.",
     "fr": "Votre requête n'a pas plus être envoyée. Peut-être que vous avez perdu votre connexion internet."
   },
   "noEndpoints": {
