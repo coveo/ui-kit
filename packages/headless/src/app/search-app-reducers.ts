@@ -33,6 +33,8 @@ import {
 
 /**
  * Map of reducers that make up the SearchAppState.
+ *
+ * @deprecated - Please use `buildSearchEngine` instead of `HeadlessEngine` to instantiate an engine. The new approach no longer requires configuring reducers, so `searchAppReducers` will be removed in the next major version.
  */
 export const searchAppReducers: ReducersMapObject<SearchAppState> = {
   configuration,
