@@ -13,7 +13,7 @@ import {Search, SearchResponseSuccess} from './search/search-response';
 import {
   SearchAPIErrorWithStatusCode,
   SearchAPIErrorWithExceptionInBody,
-  buildDisconnectedError,
+  buildAPIResponseFromErrorOrThrow,
 } from './search-api-error-response';
 import {PlanRequest} from './plan/plan-request';
 import {QuerySuggestRequest} from './query-suggest/query-suggest-request';
@@ -34,7 +34,6 @@ import {findEncoding} from './encoding-finder';
 import {TextDecoder} from 'web-encoding';
 import {BaseParam} from '../platform-service-params';
 import {SearchThunkExtraArguments} from '../../app/headless-engine';
-import {DisconnectedError} from '../../utils/errors';
 
 export type AllSearchAPIResponse = Plan | Search | QuerySuggest;
 
@@ -74,10 +73,7 @@ export class SearchAPIClient {
     });
 
     if (response instanceof Error) {
-      if (response instanceof DisconnectedError) {
-        return {error: buildDisconnectedError()};
-      }
-      throw response;
+      return buildAPIResponseFromErrorOrThrow(response);
     }
 
     const body = await response.json();
@@ -101,10 +97,7 @@ export class SearchAPIClient {
     });
 
     if (response instanceof Error) {
-      if (response instanceof DisconnectedError) {
-        return {error: buildDisconnectedError()};
-      }
-      throw response;
+      return buildAPIResponseFromErrorOrThrow(response);
     }
 
     const body = await response.json();
@@ -142,10 +135,7 @@ export class SearchAPIClient {
     });
 
     if (response instanceof Error) {
-      if (response instanceof DisconnectedError) {
-        return {error: buildDisconnectedError()};
-      }
-      throw response;
+      return buildAPIResponseFromErrorOrThrow(response);
     }
 
     this.searchAbortController = null;
