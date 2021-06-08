@@ -5,10 +5,6 @@ import {
   setProductRecommendationsRecommenderId,
   setProductRecommendationsAdditionalFields,
 } from '../../features/product-recommendations/product-recommendations-actions';
-import {
-  ConfigurationSection,
-  ProductRecommendationsSection,
-} from '../../state/state-sections';
 import {buildController} from '../controller/headless-controller';
 import {
   ArrayValue,
@@ -134,9 +130,7 @@ export const buildBaseProductRecommendationsList = (
 
 function loadBaseProductRecommendationsReducers(
   engine: ProductRecommendationEngine
-): engine is ProductRecommendationEngine<
-  ProductRecommendationsSection & ConfigurationSection
-> {
+): engine is ProductRecommendationEngine {
   engine.addReducers({productRecommendations, configuration});
   return true;
 }

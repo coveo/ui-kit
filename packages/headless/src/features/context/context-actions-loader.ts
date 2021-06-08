@@ -48,9 +48,7 @@ export interface ContextActionCreators {
  * @param engine - The headless engine.
  * @returns An object holding the action creators.
  */
-export function loadContextActions(
-  engine: CoreEngine<object>
-): ContextActionCreators {
+export function loadContextActions(engine: CoreEngine): ContextActionCreators {
   engine.addReducers({context});
 
   return {
