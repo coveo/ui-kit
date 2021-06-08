@@ -58,8 +58,12 @@
     "fr": "Rechercher des valeurs dans la facette {{label}}"
   },
   "facetValue": {
-    "en": "Inclusion filter on {{value}}; {{numberOfResults}} results",
-    "fr": "Filtre d'inclusion sur {{value}}; {{numberOfResults}} résultats"
+    "en": "Inclusion filter on {{value}}; {{count}} result",
+    "fr": "Filtre d'inclusion sur {{value}}; {{count}} résultat"
+  },
+  "facetValue_plural": {
+    "en": "Inclusion filter on {{value}}; {{count}} results",
+    "fr": "Filtre d'inclusion sur {{value}}; {{count}} résultats"
   },
   "removeFilterOn": {
     "en": "Remove inclusion filter on {{value}}",
