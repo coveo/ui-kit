@@ -7,7 +7,7 @@ import {
 } from '../engine';
 import {SearchThunkExtraArguments} from '../headless-engine';
 import {RecommendationAppState} from '../../state/recommendation-app-state';
-import {debug, pipeline, searchHub} from '../reducers';
+import {debug, pipeline, recommendation, searchHub} from '../reducers';
 import {
   RecommendationEngineConfiguration,
   recommendationEngineConfigurationSchema,
@@ -30,7 +30,12 @@ export {
   getSampleRecommendationEngineConfiguration,
 };
 
-const recommendationEngineReducers = {debug, pipeline, searchHub};
+const recommendationEngineReducers = {
+  debug,
+  pipeline,
+  searchHub,
+  recommendation,
+};
 type RecommendationEngineReducers = typeof recommendationEngineReducers;
 type RecommendationEngineState = StateFromReducersMapObject<
   RecommendationEngineReducers
