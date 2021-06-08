@@ -144,14 +144,15 @@ export function buildFoldedResultList(
   return {
     ...controller,
 
-    loadCollection: (collection) =>
+    loadCollection: (collection) => {
       dispatch(
         loadCollection(
           collection.result.raw[
             engine.state.folding.fields.collection
           ] as string
         )
-      ),
+      );
+    },
 
     get state() {
       const state = getState();

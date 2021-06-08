@@ -57,20 +57,21 @@ function resolveChildrenFromFields(
   fields: FoldingFields
 ): FoldedResult[] {
   const sourceChildValue = getChildField(parent, fields);
-  return sourceChildValue
-    ? results
-        .filter((result) => {
-          const isSameResultAsSource =
-            getChildField(result, fields) === getChildField(parent, fields);
-          const isChildOfSource =
-            getParentField(result, fields) === sourceChildValue;
-          return isChildOfSource && !isSameResultAsSource;
-        })
-        .map((result) => ({
-          result,
-          children: resolveChildrenFromFields(result, results, fields),
-        }))
-    : [];
+  if (!sourceChildValue) {
+    return [];
+  }
+  return results
+    .filter((result) => {
+      const isSameResultAsSource =
+        getChildField(result, fields) === getChildField(parent, fields);
+      const isChildOfSource =
+        getParentField(result, fields) === sourceChildValue;
+      return isChildOfSource && !isSameResultAsSource;
+    })
+    .map((result) => ({
+      result,
+      children: resolveChildrenFromFields(result, results, fields),
+    }));
 }
 
 function resolveRootFromFields(
@@ -133,6 +134,9 @@ function createCollections(
     if (!collectionId) {
       return;
     }
+    if (!getChildField(result, fields)) {
+      return;
+    }
     collections[collectionId] = createCollectionFromResult(result, fields);
   });
   return collections;
@@ -180,8 +184,9 @@ export const foldingReducer = createReducer(
         const collectionId = meta.arg;
         state.collections[collectionId].isLoadingMoreResults = true;
       })
-      .addCase(loadCollection.rejected, (state, {payload}) => {
-        state.collections[payload!.collectionId].isLoadingMoreResults = false;
+      .addCase(loadCollection.rejected, (state, {meta}) => {
+        const collectionId = meta.arg;
+        state.collections[collectionId].isLoadingMoreResults = false;
       })
       .addCase(
         loadCollection.fulfilled,

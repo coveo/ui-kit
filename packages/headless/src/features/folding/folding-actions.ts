@@ -4,7 +4,6 @@ import {
   AsyncThunkSearchOptions,
   isErrorResponse,
 } from '../../api/search/search-api-client';
-import {SearchAPIErrorWithStatusCode} from '../../api/search/search-api-error-response';
 import {Result} from '../../api/search/search/result';
 import {ConfigurationSection, FoldingSection} from '../../state/state-sections';
 import {validatePayload} from '../../utils/validate-payload';
@@ -42,11 +41,6 @@ export interface LoadCollectionFulfilledReturn {
   collectionId: CollectionId;
 }
 
-export interface LoadCollectionRejectedReturn {
-  collectionId: CollectionId;
-  error: SearchAPIErrorWithStatusCode;
-}
-
 export const foldingOptionsSchemaDefinition: SchemaDefinition<Required<
   RegisterFoldingActionCreatorPayload
 >> = {
@@ -65,10 +59,7 @@ export const registerFolding = createAction(
 export const loadCollection = createAsyncThunk<
   LoadCollectionFulfilledReturn,
   CollectionId,
-  AsyncThunkSearchOptions<
-    ConfigurationSection & FoldingSection,
-    LoadCollectionRejectedReturn
-  >
+  AsyncThunkSearchOptions<ConfigurationSection & FoldingSection>
 >(
   'folding/loadCollection',
   async (
@@ -94,7 +85,7 @@ export const loadCollection = createAsyncThunk<
     });
 
     if (isErrorResponse(response)) {
-      return rejectWithValue({collectionId, error: response.error});
+      return rejectWithValue(response.error);
     }
 
     return {collectionId, results: response.success.results};
