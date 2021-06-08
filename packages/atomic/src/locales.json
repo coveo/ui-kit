@@ -131,6 +131,14 @@
     "zh-cn": "显示较少的值",
     "zh-tw": "顯示較少的值"
   },
+  "showLessFacetResults": {
+    "en": "Show fewer results for {{label}} facet",
+    "fr": "Afficher moins de résultats pour la facette {{label}}"
+  },
+  "showMoreFacetResults": {
+    "en": "Show more results for {{label}} facet",
+    "fr": "Afficher plus de résultats pour la facette {{label}}"
+  },
   "pagination": {
     "en": "Pagination",
     "fr": "Pagination"
