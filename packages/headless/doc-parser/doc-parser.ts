@@ -374,6 +374,9 @@ const actionLoaderConfiguration: ActionLoaderConfiguration[] = [
   {
     initializer: 'loadClickAnalyticsActions',
   },
+  {
+    initializer: 'loadCustomAnalyticsActions',
+  },
 ];
 
 const controllers = controllerConfiguration.map((controller) =>
