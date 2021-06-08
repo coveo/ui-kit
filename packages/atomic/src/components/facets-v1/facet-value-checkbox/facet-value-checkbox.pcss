@@ -6,7 +6,6 @@
   height: var(--atomic-facet-checkbox-size, 16px);
 }
 
-
 /**
  * @prop --atomic-facet-checkbox-thickness: Thickness of the checkbox check.
  */
@@ -19,6 +18,8 @@
   margin-top: 15%;
 }
 
-.checkbox:focus + label .value-label, .checkbox:hover + label .value-label, label:hover .value-label {
-    @apply text-primary-light underline;
+.checkbox:focus + label .value-label,
+.checkbox:hover + label .value-label,
+label:hover .value-label {
+  @apply text-primary-light underline;
 }
