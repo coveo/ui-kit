@@ -39,9 +39,9 @@ type ProductRecommendationEngineState = StateFromReducersMapObject<
 /**
  * The engine for powering production recommendation experiences.
  */
-export interface ProductRecommendationEngine
+export interface ProductRecommendationEngine<State extends object = {}>
   extends CoreEngine<
-    ProductRecommendationEngineState,
+    State & ProductRecommendationEngineState,
     SearchThunkExtraArguments
   > {}
 

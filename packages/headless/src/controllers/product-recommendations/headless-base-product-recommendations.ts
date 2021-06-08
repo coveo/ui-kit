@@ -1,4 +1,3 @@
-import {Engine} from '../../app/headless-engine';
 import {
   getProductRecommendations as updateProductRecommendations,
   setProductRecommendationsSkus,
@@ -21,6 +20,7 @@ import {
 import {validateOptions} from '../../utils/validate-payload';
 import {configuration, productRecommendations} from '../../app/reducers';
 import {loadReducerError} from '../../utils/errors';
+import {ProductRecommendationEngine} from '../../app/product-recommendation-engine/product-recommendation-engine';
 
 export const baseProductRecommendationsOptionsSchema = {
   additionalFields: new ArrayValue<string>({
@@ -61,7 +61,7 @@ export type ProductRecommendationsList = ReturnType<
 export type ProductRecommendationsListState = ProductRecommendationsList['state'];
 
 export const buildBaseProductRecommendationsList = (
-  engine: Engine<object>,
+  engine: ProductRecommendationEngine,
   props: ProductRecommendationsListProps = {}
 ) => {
   if (!loadBaseProductRecommendationsReducers(engine)) {
@@ -133,8 +133,10 @@ export const buildBaseProductRecommendationsList = (
 };
 
 function loadBaseProductRecommendationsReducers(
-  engine: Engine<object>
-): engine is Engine<ProductRecommendationsSection & ConfigurationSection> {
+  engine: ProductRecommendationEngine
+): engine is ProductRecommendationEngine<
+  ProductRecommendationsSection & ConfigurationSection
+> {
   engine.addReducers({productRecommendations, configuration});
   return true;
 }
