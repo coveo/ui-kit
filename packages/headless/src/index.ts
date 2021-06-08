@@ -80,7 +80,10 @@ export {CategoryFacetValue} from './features/facets/category-facet-set/interface
 export {DateFacetValue} from './features/facets/range-facets/date-facet-set/interfaces/response';
 export {FacetSortCriterion} from './features/facets/facet-set/interfaces/request';
 export {NumericFacetValue} from './features/facets/range-facets/numeric-facet-set/interfaces/response';
-export {RangeFacetSortCriterion} from './features/facets/range-facets/generic/interfaces/request';
+export {
+  RangeFacetSortCriterion,
+  RangeFacetRangeAlgorithm,
+} from './features/facets/range-facets/generic/interfaces/request';
 export {buildSearchParameterSerializer} from './features/search-parameters/search-parameter-serializer';
 export * as HighlightUtils from './utils/highlight';
 export {HighlightKeyword} from './utils/highlight';

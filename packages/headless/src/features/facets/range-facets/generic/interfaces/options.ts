@@ -8,7 +8,11 @@ type RangeFacetRequiredParameters = Pick<
 
 export type RangeFacetOptionalParameters = Pick<
   RangeFacetRequest,
-  'filterFacetCount' | 'injectionDepth' | 'numberOfValues' | 'sortCriteria'
+  | 'filterFacetCount'
+  | 'injectionDepth'
+  | 'numberOfValues'
+  | 'sortCriteria'
+  | 'rangeAlgorithm'
 >;
 
 export type ManualRangeFacetOptions<

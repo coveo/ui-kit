@@ -91,3 +91,8 @@ export interface SortCriteria<
   /** The sort criterion to apply to the returned facet values. */
   sortCriteria: T;
 }
+
+export interface RangeAlgorithm<T extends 'even' | 'equiprobable'> {
+  /** The range algorithm to apply to automatically generated ranges for range facet. */
+  rangeAlgorithm: T;
+}
