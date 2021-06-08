@@ -692,6 +692,14 @@
     "en": "Collapsed URI parts",
     "fr": "Segments d'URI réduits"
   },
+  "disconnected": {
+    "en": "Could not connect.",
+    "fr": "Impossible de se connecter."
+  },
+  "checkYourConnection": {
+    "en": "Your query couldn't be sent. Verify your internet connection.",
+    "fr": "Votre requête n'a pas plus être envoyée. Peut-être que vous avez perdu votre connexion internet."
+  },
   "noEndpoints": {
     "en": "The Coveo Organization has no registered endpoints.",
     "fr": "L'organisation Coveo n'a pas de point de terminaison unique."
