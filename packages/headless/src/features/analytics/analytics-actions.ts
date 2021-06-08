@@ -80,11 +80,26 @@ export const logClickEvent = (p: ClickEventPayload) =>
     }
   )();
 
+export interface LogCustomEventActionCreatorPayload {
+  /**
+   * The event cause identifier of the custom action
+   */
+  evt: string;
+  /**
+   * The event type identifier of the custom action
+   */
+  type: string;
+  /**
+   * The event metadata.
+   * */
+  meta?: Record<string, unknown>;
+}
+
 /**
  * Logs a custom event.
  * @param p (CustomEventPayload) The custom event payload.
  */
-export const logCustomEvent = (p: CustomEventPayload) =>
+export const logCustomEvent = (p: LogCustomEventActionCreatorPayload) =>
   makeAnalyticsAction(
     'analytics/generic/custom',
     AnalyticsType.Custom,

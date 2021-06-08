@@ -2,9 +2,12 @@ import {AsyncThunkAction} from '@reduxjs/toolkit';
 import {StateNeededByAnalyticsProvider} from '../../api/analytics/analytics';
 import {Engine} from '../../app/headless-engine';
 import {AnalyticsType, AsyncThunkAnalyticsOptions} from './analytics-utils';
-import {logCustomEvent, CustomEventPayload} from './analytics-actions';
+import {
+  logCustomEvent,
+  LogCustomEventActionCreatorPayload,
+} from './analytics-actions';
 
-export {CustomEventPayload};
+export {LogCustomEventActionCreatorPayload};
 
 /**
  * The custom analytics action creators.
@@ -17,7 +20,7 @@ export interface CustomAnalyticsActionCreators {
    * @returns A dispatchable action.
    */
   logCustomEvent(
-    payload: CustomEventPayload
+    payload: LogCustomEventActionCreatorPayload
   ): AsyncThunkAction<
     {
       analyticsType: AnalyticsType.Custom;
