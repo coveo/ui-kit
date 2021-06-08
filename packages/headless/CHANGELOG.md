@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.19.0](https://github.com/coveo/ui-kit/compare/v0.18.0...v0.19.0) (2021-06-08)
+
+
+### Features
+
+* **headless:** added folding show more ([#862](https://github.com/coveo/ui-kit/issues/862)) ([e0cc1dc](https://github.com/coveo/ui-kit/commit/e0cc1dcfe959f531070d85382da9b7742f2da594))
+* **headless,atomic:** added error when losing connection ([#865](https://github.com/coveo/ui-kit/issues/865)) ([37e0dc6](https://github.com/coveo/ui-kit/commit/37e0dc6cbfbfca4b6d9c60c8bd2b2958ea00092f))
+
+
+
+
+
 # [0.18.0](https://github.com/coveo/ui-kit/compare/v0.17.0...v0.18.0) (2021-06-08)
 
 **Note:** Version bump only for package @coveo/headless
