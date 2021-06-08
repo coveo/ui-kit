@@ -30,13 +30,13 @@ describe('Query Summary Test Suites', () => {
     it('with a query yielding a single result', () => {
       cy.visit(
         buildTestUrl(
-          "q=Alice's%20Adventures%20in%20Wonderland%20by%20Lewis%20Carroll.pdf"
+          "q=Queen's%20Gambit%20sparks%20world%20of%20online%20chess%20celebrities"
         )
       );
       injectComponent(component() + searchBox);
       cy.wait(wait);
       contentShouldMatch(
-        /^Result 1 of [\d,]+ for Alice's Adventures in Wonderland by Lewis Carroll\.pdf in [\d.]+ seconds$/
+        /^Result 1 of [\d,]+ for Queen's Gambit sparks world of online chess celebrities in [\d.]+ seconds$/
       );
     });
 

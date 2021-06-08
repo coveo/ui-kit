@@ -1,6 +1,13 @@
 import {NumberValue, SchemaDefinition, StringValue} from '@coveo/bueno';
-import {createAction} from '@reduxjs/toolkit';
+import {createAction, createAsyncThunk} from '@reduxjs/toolkit';
+import {
+  AsyncThunkSearchOptions,
+  isErrorResponse,
+} from '../../api/search/search-api-client';
+import {Result} from '../../api/search/search/result';
+import {ConfigurationSection, FoldingSection} from '../../state/state-sections';
 import {validatePayload} from '../../utils/validate-payload';
+import {CollectionId} from './folding-state';
 
 export interface RegisterFoldingActionCreatorPayload {
   /**
@@ -29,6 +36,11 @@ export interface RegisterFoldingActionCreatorPayload {
   numberOfFoldedResults?: number;
 }
 
+export interface LoadCollectionFulfilledReturn {
+  results: Result[];
+  collectionId: CollectionId;
+}
+
 export const foldingOptionsSchemaDefinition: SchemaDefinition<Required<
   RegisterFoldingActionCreatorPayload
 >> = {
@@ -42,4 +54,40 @@ export const registerFolding = createAction(
   'folding/register',
   (payload: RegisterFoldingActionCreatorPayload) =>
     validatePayload(payload, foldingOptionsSchemaDefinition)
+);
+
+export const loadCollection = createAsyncThunk<
+  LoadCollectionFulfilledReturn,
+  CollectionId,
+  AsyncThunkSearchOptions<ConfigurationSection & FoldingSection>
+>(
+  'folding/loadCollection',
+  async (
+    collectionId: CollectionId,
+    {getState, rejectWithValue, extra: {searchAPIClient}}
+  ) => {
+    const {
+      folding: {fields},
+      configuration: {
+        accessToken,
+        organizationId,
+        search: {apiBaseUrl},
+      },
+    } = getState();
+
+    const response = await searchAPIClient.search({
+      tab: '',
+      accessToken,
+      organizationId,
+      url: apiBaseUrl,
+      aq: `@${fields.collection} = ${collectionId}`,
+      numberOfResults: 100,
+    });
+
+    if (isErrorResponse(response)) {
+      return rejectWithValue(response.error);
+    }
+
+    return {collectionId, results: response.success.results};
+  }
 );

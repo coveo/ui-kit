@@ -91,9 +91,9 @@ describe('RelevanceInspector', () => {
   when calling logInformation()
   it should log info to the console`, () => {
     engine.state.debug = true;
-    spyOn(engine.logger, 'info');
+    spyOn(console, 'log');
     relevanceInspector.logInformation();
-    expect(engine.logger.info).toHaveBeenCalledWith(
+    expect(console.log).toHaveBeenCalledWith(
       relevanceInspector.state,
       'Relevance inspector information for new query'
     );

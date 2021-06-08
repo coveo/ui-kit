@@ -51,7 +51,7 @@ export const BaseFacet: FunctionalComponent<BaseFacetProps> = (
       <button
         part="clear-button"
         onClick={() => props.clearAll!()}
-        class="block text-primary mr-2 lg:mr-0 text-sm"
+        class="block text-primary mr-2 lg:mr-0"
       >
         {props.controller.state.strings.clear()}
       </button>
