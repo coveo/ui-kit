@@ -21,12 +21,18 @@ import {
 import {FacetPlaceholder} from '../../facets/atomic-facet-placeholder/atomic-facet-placeholder';
 import {FacetContainer} from '../facet-container/facet-container';
 import {FacetHeader} from '../facet-header/facet-header';
-import {FacetSearchInput} from '../facet-search-input/facet-search-input';
+import {FacetSearchInput} from '../facet-search/facet-search-input';
 import {FacetValueCheckbox} from '../facet-value-checkbox/facet-value-checkbox';
 import {FacetValueLink} from '../facet-value-link/facet-value-link';
 import {FacetValueBox} from '../facet-value-box/facet-value-box';
 import {FacetShowLess} from '../facet-show-less/facet-show-less';
 import {FacetShowMore} from '../facet-show-more/facet-show-more';
+import {FacetSearchMatches} from '../facet-search/facet-search-matches';
+import {
+  shouldUpdateFacetSearchComponent,
+  shouldDisplaySearchResults,
+} from '../facet-search/facet-search-utils';
+import {AtomicBaseFacet} from '../facet-common';
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
@@ -38,13 +44,18 @@ import {FacetShowMore} from '../facet-show-more/facet-show-more';
  * @part label-button-icon - The label button icon.
  * @part clear-button - The button that resets the actively selected facet values.
  * @part clear-button-icon - The clear button icon.
+ *
+ * @part search-input - The search box input.
+ * @part search-icon - The search box submit button.
+ * @part search-clear-button - The button to clear the search box of input.
  */
 @Component({
   tag: 'atomic-facet-v1', // TODO: remove v1 when old facets are removed
   styleUrl: 'atomic-facet.pcss',
   shadow: true,
 })
-export class AtomicFacet implements InitializableComponent {
+export class AtomicFacet
+  implements InitializableComponent, AtomicBaseFacet<Facet, FacetState> {
   @InitializeBindings() public bindings!: Bindings;
   public facet!: Facet;
   public searchStatus!: SearchStatus;
@@ -54,9 +65,9 @@ export class AtomicFacet implements InitializableComponent {
   public facetState!: FacetState;
   @BindStateToController('searchStatus')
   @State()
-  private searchStatusState!: SearchStatusState;
+  public searchStatusState!: SearchStatusState;
   @State() public error!: Error;
-  @State() private isCollapsed = false;
+  @State() public isCollapsed = false;
 
   /**
    * Specifies a unique identifier for the facet.
@@ -115,6 +126,21 @@ export class AtomicFacet implements InitializableComponent {
     };
   }
 
+  public componentShouldUpdate(
+    next: unknown,
+    prev: unknown,
+    propName: keyof AtomicFacet
+  ) {
+    if (propName === 'facetState') {
+      return shouldUpdateFacetSearchComponent(
+        (next as FacetState).facetSearch,
+        (prev as FacetState).facetSearch
+      );
+    }
+
+    return true;
+  }
+
   private get numberOfSelectedValues() {
     return this.facetState.values.filter(({state}) => state === 'selected')
       .length;
@@ -142,7 +168,18 @@ export class AtomicFacet implements InitializableComponent {
 
     return (
       <FacetSearchInput
+        i18n={this.bindings.i18n}
+        label={this.label}
         query={this.facetState.facetSearch.query}
+        onChange={(value) => {
+          if (value === '') {
+            this.facet.facetSearch.clear();
+            return;
+          }
+          this.facet.facetSearch.updateText(value);
+          this.facet.facetSearch.search();
+        }}
+        onClear={() => this.facet.facetSearch.clear()}
       ></FacetSearchInput>
     );
   }
@@ -162,6 +199,27 @@ export class AtomicFacet implements InitializableComponent {
 
   private renderValues() {
     return this.facetState.values.map((value) => this.renderValue(value));
+  }
+
+  private renderSearchResults() {
+    return this.facetState.facetSearch.values.map((value) =>
+      this.renderValue({
+        state: 'idle',
+        numberOfResults: value.count,
+        value: value.rawValue,
+      })
+    );
+  }
+
+  private renderMatches() {
+    return (
+      <FacetSearchMatches
+        i18n={this.bindings.i18n}
+        query={this.facetState.facetSearch.query}
+        numberOfMatches={this.facetState.facetSearch.values.length}
+        hasMoreMatches={this.facetState.facetSearch.moreValuesAvailable}
+      ></FacetSearchMatches>
+    );
   }
 
   private renderShowMoreLess() {
@@ -197,8 +255,9 @@ export class AtomicFacet implements InitializableComponent {
         {this.renderHeader()}
         {!this.isCollapsed && [
           this.renderSearchInput(),
-          this.renderValues(),
-          this.renderShowMoreLess(),
+          shouldDisplaySearchResults(this.facetState.facetSearch)
+            ? [this.renderSearchResults(), this.renderMatches()]
+            : [this.renderValues(), this.renderShowMoreLess()],
         ]}
       </FacetContainer>
     );

@@ -3,6 +3,33 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.18.0](https://github.com/coveo/ui-kit/compare/v0.17.0...v0.18.0) (2021-06-08)
+
+
+### Features
+
+* **atomic:** add facet search input + matches  ([#864](https://github.com/coveo/ui-kit/issues/864)) ([16ddd5d](https://github.com/coveo/ui-kit/commit/16ddd5d1014c1d79369fd85335742e6f2f8ed563))
+
+
+
+
+
+# [0.17.0](https://github.com/coveo/ui-kit/compare/v0.16.2...v0.17.0) (2021-06-07)
+
+
+### Bug Fixes
+
+* **atomic:** re-render FacetManager's content when language changes ([#861](https://github.com/coveo/ui-kit/issues/861)) ([aae598d](https://github.com/coveo/ui-kit/commit/aae598d1a5092811c5b6a67bf91688308a58f91e))
+
+
+### Features
+
+* **headless:** allow algorithm choice for Range Facets (equiprobable vs even distribution) ([#843](https://github.com/coveo/ui-kit/issues/843)) ([b1c5051](https://github.com/coveo/ui-kit/commit/b1c50513e0e24745ac90692a0ef32a62be6d8a75))
+
+
+
+
+
 ## [0.16.2](https://github.com/coveo/ui-kit/compare/v0.16.1...v0.16.2) (2021-06-02)
 
 

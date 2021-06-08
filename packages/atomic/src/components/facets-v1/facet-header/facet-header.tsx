@@ -26,7 +26,7 @@ export const FacetHeader: FunctionalComponent<{
   return [
     <button
       part="label-button"
-      class="flex justify-between w-full py-1 text-on-background hover:text-primary"
+      class="flex justify-between w-full py-1 text-on-background text-lg hover:text-primary"
       title={props.isCollapsed ? expandFacet : collapseFacet}
       onClick={() => props.onToggleCollapse()}
     >
@@ -40,7 +40,7 @@ export const FacetHeader: FunctionalComponent<{
     props.numberOfSelectedValues > 0 && (
       <button
         part="clear-button"
-        class="flex w-full p-1 text-secondary hover:text-secondary-light text-xs"
+        class="flex w-full p-1 text-secondary hover:text-secondary-light text-sm"
         title={clearFiltersForFacet}
         onClick={() => props.onClearFilters()}
       >
