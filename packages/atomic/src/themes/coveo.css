@@ -31,6 +31,11 @@
   --atomic-font-normal: 300;
   --atomic-font-bold: 500;
 
+  /* Text size */
+  --atomic-text-base: 0.875rem; /* 14px */
+  --atomic-text-sm: 0.75rem; /* 12px */
+  --atomic-text-lg: 1rem; /* 16px */
+
   /* Others */
   --atomic-icon-size: 30px;
 }

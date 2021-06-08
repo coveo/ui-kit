@@ -306,7 +306,7 @@ export class AtomicBreadcrumbManager implements InitializableComponent {
       return;
     }
     return (
-      <div class="flex justify-between text-sm">
+      <div class="flex justify-between">
         <ul class="flex flex-col">
           {this.facetBreadcrumbs}
           {this.numericFacetBreadcrumbs}
