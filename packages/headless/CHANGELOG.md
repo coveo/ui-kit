@@ -3,6 +3,48 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.20.0](https://github.com/coveo/ui-kit/compare/v0.19.0...v0.20.0) (2021-06-08)
+
+
+### Bug Fixes
+
+* **headless:** use console.log for RelevanceInspector and deprecate logging method + option ([#870](https://github.com/coveo/ui-kit/issues/870)) ([ae2d6fb](https://github.com/coveo/ui-kit/commit/ae2d6fb9b9e89aa44cf0b57723f66deecc1671e5))
+
+
+
+
+
+# [0.19.0](https://github.com/coveo/ui-kit/compare/v0.18.0...v0.19.0) (2021-06-08)
+
+
+### Features
+
+* **headless:** added folding show more ([#862](https://github.com/coveo/ui-kit/issues/862)) ([e0cc1dc](https://github.com/coveo/ui-kit/commit/e0cc1dcfe959f531070d85382da9b7742f2da594))
+* **headless,atomic:** added error when losing connection ([#865](https://github.com/coveo/ui-kit/issues/865)) ([37e0dc6](https://github.com/coveo/ui-kit/commit/37e0dc6cbfbfca4b6d9c60c8bd2b2958ea00092f))
+
+
+
+
+
+# [0.18.0](https://github.com/coveo/ui-kit/compare/v0.17.0...v0.18.0) (2021-06-08)
+
+**Note:** Version bump only for package @coveo/headless
+
+
+
+
+
+# [0.17.0](https://github.com/coveo/ui-kit/compare/v0.16.2...v0.17.0) (2021-06-07)
+
+
+### Features
+
+* **headless:** allow algorithm choice for Range Facets (equiprobable vs even distribution) ([#843](https://github.com/coveo/ui-kit/issues/843)) ([b1c5051](https://github.com/coveo/ui-kit/commit/b1c50513e0e24745ac90692a0ef32a62be6d8a75))
+
+
+
+
+
 ## [0.16.2](https://github.com/coveo/ui-kit/compare/v0.16.1...v0.16.2) (2021-06-02)
 
 

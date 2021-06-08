@@ -1,61 +1,69 @@
+import {AnyAction} from 'redux';
 import {buildMockResultWithFolding} from '../../test/mock-result-with-folding';
 import {buildMockSearch} from '../../test/mock-search';
 import {buildMockSearchResponse} from '../../test/mock-search-response';
-import {executeSearch, fetchMoreResults} from '../search/search-actions';
-import {foldingReducer} from './folding-slice';
-import {
-  FoldedResult,
-  FoldingState,
-  getFoldingInitialState,
-} from './folding-state';
+import {executeSearch} from '../search/search-actions';
+import {foldingReducer, ResultWithFolding} from './folding-slice';
+import {FoldedResult, FoldingState} from './folding-state';
 
-function getEncyclopediaCollection() {
-  const collection = 'encyclopedia';
+interface Hierarchy {
+  name: string;
+  children?: Hierarchy[];
+}
 
-  const animalsResult = buildMockResultWithFolding({
-    uniqueId: '_animals',
-    raw: {urihash: '', collection, id: ['animals']},
-  });
-
-  const ballPythonsResult = buildMockResultWithFolding({
-    uniqueId: '_ballPythons',
-    raw: {urihash: '', collection, parent: 'reptiles'},
-  });
-
-  const geckosResult = buildMockResultWithFolding({
-    uniqueId: '_geckos',
-    raw: {urihash: '', collection, parent: 'reptiles'},
-  });
-
-  const mammalsResult = buildMockResultWithFolding({
-    uniqueId: '_mammals',
+function buildMockResultsFromHierarchy(
+  collectionName: string,
+  root: Hierarchy,
+  parentName?: string
+): ResultWithFolding[] {
+  const result = buildMockResultWithFolding({
+    uniqueId: root.name,
+    title: root.name,
     raw: {
       urihash: '',
-      collection,
-      parent: 'animals',
+      collection: collectionName,
+      id: root.name,
     },
-    parentResult: {...animalsResult},
   });
 
-  const relevantResult = buildMockResultWithFolding({
-    uniqueId: '_reptiles',
-    raw: {
-      urihash: '',
-      collection,
-      id: ['reptiles'],
-      parent: 'animals',
-    },
-    parentResult: {...animalsResult},
-    childResults: [mammalsResult, ballPythonsResult, geckosResult],
-  });
+  if (parentName) {
+    result.raw.parent = parentName;
+  }
 
-  return {
-    animalsResult,
-    relevantResult,
-    ballPythonsResult,
-    geckosResult,
-    mammalsResult,
-  };
+  return [
+    result,
+    ...(root.children ?? []).flatMap((child) =>
+      buildMockResultsFromHierarchy(collectionName, child, root.name)
+    ),
+  ];
+}
+
+function emulateAPIFolding(
+  results: ResultWithFolding[],
+  target: ResultWithFolding
+): ResultWithFolding {
+  const newResult: ResultWithFolding = {...target};
+
+  newResult.childResults = results
+    .filter((result) => result.raw.parent === target.raw.id)
+    .map((result) => emulateAPIFolding(results, result));
+
+  if (target.raw.parent) {
+    newResult.parentResult = {
+      ...results.find((result) => result.raw.id === target.raw.parent)!,
+    };
+    newResult.childResults.push({...newResult.parentResult});
+  }
+
+  return newResult;
+}
+
+function extractHierarchy(root: FoldedResult): Hierarchy {
+  const part: Hierarchy = {name: root.result.title};
+  if (root.children.length) {
+    part.children = root.children.map((child) => extractHierarchy(child));
+  }
+  return part;
 }
 
 describe('folding slice', () => {
@@ -63,101 +71,74 @@ describe('folding slice', () => {
     expect(foldingReducer(undefined, {type: ''}).enabled).toBeFalsy();
   });
 
-  it('should correctly fold hierarchical results', () => {
-    const {
-      animalsResult,
-      relevantResult,
-      ballPythonsResult,
-      geckosResult,
-      mammalsResult,
-    } = getEncyclopediaCollection();
-
-    const otherResult = buildMockResultWithFolding();
-
-    const initialState: FoldingState = {
-      ...getFoldingInitialState(),
-      enabled: true,
-      fields: {collection: 'collection', parent: 'parent', child: 'id'},
-    };
-
-    const action = executeSearch.fulfilled(
-      buildMockSearch({
-        response: buildMockSearchResponse({
-          results: [relevantResult, otherResult],
-        }),
-      }),
-      '',
-      null as never
-    );
-
-    const expectedHierarchy = {
-      ...animalsResult,
+  describe('with folding enabled', () => {
+    const testThreadHierarchy: Hierarchy = {
+      name: 'some-question',
       children: [
         {
-          ...relevantResult,
+          name: 'first-answer',
           children: [
-            {...ballPythonsResult, children: []},
-            {...geckosResult, children: []},
+            {
+              name: 'comment-questionning-the-answer',
+              children: [
+                {name: 'comment-justifying-the-answer'},
+                {
+                  name: 'some-deleted-answer',
+                  children: [{name: 'comment-that-has-no-context-anymore'}],
+                },
+              ],
+            },
           ],
         },
-        {...mammalsResult, children: []},
+        {
+          name: 'better-response',
+        },
       ],
     };
 
-    const expectedOtherResult = {...otherResult, children: []};
+    let state: FoldingState;
 
-    const results = foldingReducer(initialState, action).collections;
+    function dispatch(action: AnyAction) {
+      state = foldingReducer(state, action);
+    }
 
-    expect(results).toEqual([expectedHierarchy, expectedOtherResult]);
-  });
+    function dispatchSearch(results: ResultWithFolding[]) {
+      dispatch(
+        executeSearch.fulfilled(
+          buildMockSearch({
+            response: buildMockSearchResponse({
+              results,
+            }),
+          }),
+          '',
+          null as never
+        )
+      );
+    }
 
-  it('should correctly fold new hierarchical results', () => {
-    const {
-      animalsResult,
-      relevantResult,
-      ballPythonsResult,
-      geckosResult,
-      mammalsResult,
-    } = getEncyclopediaCollection();
+    beforeEach(() => {
+      state = {
+        enabled: true,
+        collections: {},
+        fields: {collection: 'collection', parent: 'parent', child: 'id'},
+        filterFieldRange: -1234,
+      };
+    });
 
-    const foldedOtherResult: FoldedResult = {
-      ...buildMockResultWithFolding(),
-      children: [],
-    };
+    it('should correctly fold a single collection from the root', () => {
+      const results = buildMockResultsFromHierarchy(
+        'thread',
+        testThreadHierarchy
+      );
+      const resultReturnedByIndex = emulateAPIFolding(
+        results,
+        results.find((result) => result.title === 'some-question')!
+      );
 
-    const initialState: FoldingState = {
-      ...getFoldingInitialState(),
-      enabled: true,
-      fields: {collection: 'collection', parent: 'parent', child: 'id'},
-      collections: [foldedOtherResult],
-    };
+      dispatchSearch([resultReturnedByIndex]);
 
-    const action = fetchMoreResults.fulfilled(
-      buildMockSearch({
-        response: buildMockSearchResponse({
-          results: [relevantResult],
-        }),
-      }),
-      '',
-      null as never
-    );
-
-    const expectedHierarchy = {
-      ...animalsResult,
-      children: [
-        {
-          ...relevantResult,
-          children: [
-            {...ballPythonsResult, children: []},
-            {...geckosResult, children: []},
-          ],
-        },
-        {...mammalsResult, children: []},
-      ],
-    };
-
-    const results = foldingReducer(initialState, action).collections;
-
-    expect(results).toEqual([foldedOtherResult, expectedHierarchy]);
+      const collection = Object.values(state.collections)[0];
+      expect(extractHierarchy(collection)).toEqual(testThreadHierarchy);
+    });
   });
 });

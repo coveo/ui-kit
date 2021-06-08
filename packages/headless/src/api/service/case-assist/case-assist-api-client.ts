@@ -4,6 +4,7 @@ import {
   PlatformClient,
 } from '../../platform-client';
 import {PreprocessRequest} from '../../preprocess-request';
+import {buildAPIResponseFromErrorOrThrow} from '../../search/search-api-error-response';
 import {
   buildGetCaseClassificationsRequest,
   GetCaseClassificationsRequest,
@@ -81,6 +82,10 @@ export class CaseAssistAPIClient {
       ...this.defaultClientHooks,
     });
 
+    if (response instanceof Error) {
+      return buildAPIResponseFromErrorOrThrow(response);
+    }
+
     const body = await response.json();
     return response.ok
       ? {success: body as GetCaseClassificationsResponse}
@@ -103,6 +108,10 @@ export class CaseAssistAPIClient {
       ...this.options,
       ...this.defaultClientHooks,
     });
+
+    if (response instanceof Error) {
+      return buildAPIResponseFromErrorOrThrow(response);
+    }
 
     const body = await response.json();
     return response.ok

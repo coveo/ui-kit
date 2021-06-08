@@ -112,11 +112,7 @@ export class AtomicSortDropdown implements InitializableComponent {
 
   private renderLabel() {
     return (
-      <label
-        class="text-on-background text-sm m-2"
-        part="label"
-        htmlFor={this.id}
-      >
+      <label class="text-on-background m-2" part="label" htmlFor={this.id}>
         {this.strings.sortBy()}
       </label>
     );

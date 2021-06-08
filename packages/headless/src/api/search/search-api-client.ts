@@ -13,6 +13,7 @@ import {Search, SearchResponseSuccess} from './search/search-response';
 import {
   SearchAPIErrorWithStatusCode,
   SearchAPIErrorWithExceptionInBody,
+  buildAPIResponseFromErrorOrThrow,
 } from './search-api-error-response';
 import {PlanRequest} from './plan/plan-request';
 import {QuerySuggestRequest} from './query-suggest/query-suggest-request';
@@ -71,6 +72,10 @@ export class SearchAPIClient {
       ...this.options,
     });
 
+    if (response instanceof Error) {
+      return buildAPIResponseFromErrorOrThrow(response);
+    }
+
     const body = await response.json();
 
     if (isSuccessPlanResponse(body)) {
@@ -90,6 +95,10 @@ export class SearchAPIClient {
       requestParams: pickNonBaseParams(req),
       ...this.options,
     });
+
+    if (response instanceof Error) {
+      return buildAPIResponseFromErrorOrThrow(response);
+    }
 
     const body = await response.json();
     const payload = {response, body};
@@ -125,6 +134,10 @@ export class SearchAPIClient {
       signal: this.searchAbortController?.signal,
     });
 
+    if (response instanceof Error) {
+      return buildAPIResponseFromErrorOrThrow(response);
+    }
+
     this.searchAbortController = null;
 
     const body = await response.json();
@@ -151,6 +164,10 @@ export class SearchAPIClient {
       ...this.options,
     });
 
+    if (response instanceof Error) {
+      throw response;
+    }
+
     const body = await response.json();
     const payload = {response, body};
 
@@ -167,6 +184,10 @@ export class SearchAPIClient {
       requestParams: pickNonBaseParams(req),
       ...this.options,
     });
+
+    if (response instanceof Error) {
+      throw response;
+    }
 
     const body = await response.json();
 
@@ -191,6 +212,10 @@ export class SearchAPIClient {
       ...this.options,
     });
 
+    if (response instanceof Error) {
+      throw response;
+    }
+
     const encoding = findEncoding(response);
     const buffer = await response.arrayBuffer();
     const decoder = new TextDecoder(encoding);
@@ -209,6 +234,10 @@ export class SearchAPIClient {
       requestParams: pickNonBaseParams(req),
       ...this.options,
     });
+
+    if (response instanceof Error) {
+      throw response;
+    }
 
     const body = await response.json();
 

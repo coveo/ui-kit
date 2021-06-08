@@ -17,18 +17,20 @@ export const FoldedResultList: FunctionComponent<FoldedResultListProps> = (
 
   useEffect(() => controller.subscribe(() => setState(controller.state)), []);
 
-  const renderFoldedResult = (result: FoldedResult) => (
-    <li key={result.uniqueId}>
-      <article>
-        <h3>
-          {/* Make sure to log analytics when the result link is clicked. */}
-          <ResultLink result={result}>{result.title}</ResultLink>
-        </h3>
-        <p>{result.excerpt}</p>
-        <ul>{result.children.map((child) => renderFoldedResult(child))}</ul>
-      </article>
-    </li>
-  );
+  function renderFoldedResults(results: FoldedResult[]) {
+    return results.map(({result, children}) => (
+      <li key={result.uniqueId}>
+        <article>
+          <h3>
+            {/* Make sure to log analytics when the result link is clicked. */}
+            <ResultLink result={result}>{result.title}</ResultLink>
+          </h3>
+          <p>{result.excerpt}</p>
+          <ul>{renderFoldedResults(children)}</ul>
+        </article>
+      </li>
+    ));
+  }
 
   if (!state.results.length) {
     return <div>No results</div>;
@@ -37,7 +39,28 @@ export const FoldedResultList: FunctionComponent<FoldedResultListProps> = (
   return (
     <div>
       <ul style={{textAlign: 'left'}}>
-        {state.results.map((result) => renderFoldedResult(result))}
+        {state.results.map((collection) => (
+          <li key={collection.result.uniqueId}>
+            <article>
+              <h3>
+                {/* Make sure to log analytics when the result link is clicked. */}
+                <ResultLink result={collection.result}>
+                  {collection.result.title}
+                </ResultLink>
+              </h3>
+              <p>{collection.result.excerpt}</p>
+              <ul>{renderFoldedResults(collection.children)}</ul>
+              {collection.moreResultsAvailable && (
+                <button
+                  disabled={collection.isLoadingMoreResults}
+                  onClick={() => controller.loadCollection(collection)}
+                >
+                  Show more
+                </button>
+              )}
+            </article>
+          </li>
+        ))}
       </ul>
     </div>
   );

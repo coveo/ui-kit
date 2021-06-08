@@ -58,8 +58,12 @@
     "fr": "Rechercher des valeurs dans la facette {{label}}"
   },
   "facetValue": {
-    "en": "Inclusion filter on {{value}}; {{numberOfResults}} results",
-    "fr": "Filtre d'inclusion sur {{value}}; {{numberOfResults}} résultats"
+    "en": "Inclusion filter on {{value}}; {{count}} result",
+    "fr": "Filtre d'inclusion sur {{value}}; {{count}} résultat"
+  },
+  "facetValue_plural": {
+    "en": "Inclusion filter on {{value}}; {{count}} results",
+    "fr": "Filtre d'inclusion sur {{value}}; {{count}} résultats"
   },
   "removeFilterOn": {
     "en": "Remove inclusion filter on {{value}}",
@@ -476,6 +480,14 @@
     "fr": "Aucun résultat",
     "es-es": "No hay resultados"
   },
+  "moreMatchesFor": {
+    "en": "More matches for {{query}}",
+    "fr": "Plus de correspondances pour {{query}}"
+  },
+  "noMatchesFoundFor": {
+    "en": "No matches found for {{query}}",
+    "fr": "Aucune correspondance trouvée pour {{query}}"
+  },
   "cancelLastAction": {
     "en": "Cancel last action",
     "fr": "Annuler la dernière action",
@@ -683,6 +695,14 @@
   "collapsedUriParts": {
     "en": "Collapsed URI parts",
     "fr": "Segments d'URI réduits"
+  },
+  "disconnected": {
+    "en": "Could not connect.",
+    "fr": "Impossible de se connecter."
+  },
+  "checkYourConnection": {
+    "en": "Your query couldn't be sent. Verify your internet connection.",
+    "fr": "Votre requête n'a pas plus être envoyée. Peut-être que vous avez perdu votre connexion internet."
   },
   "noEndpoints": {
     "en": "The Coveo Organization has no registered endpoints.",

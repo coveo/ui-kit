@@ -1,15 +1,16 @@
-@import "../../global/global.pcss";
+@import '../../global/global.pcss';
 
 /**
  * @prop --atomic-submit-button-size: The size of the submit button inside the search box.
  * @prop --atomic-search-box-height: The height of the search box.
  */
 .submit-button {
-  width: var(--atomic-submit-button-size, 48px)
+  width: var(--atomic-submit-button-size, 3rem);
 }
 
-.search-box, .suggestion {
-  height: var(--atomic-search-box-height, 48px);
+.search-box,
+.suggestion {
+  height: var(--atomic-search-box-height, 3rem);
 }
 
 .input-wrapper.leading-submit {
@@ -17,11 +18,12 @@
 }
 
 .suggestions {
-  top: var(--atomic-search-box-height, 48px);
+  top: var(--atomic-search-box-height, 3rem);
   left: 0;
 }
 
-.suggestion.active, .suggestion:hover {
+.suggestion.active,
+.suggestion:hover {
   @apply bg-primary text-on-primary border-primary;
 }
 
