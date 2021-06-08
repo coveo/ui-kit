@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.18.0](https://github.com/coveo/ui-kit/compare/v0.17.0...v0.18.0) (2021-06-08)
+
+**Note:** Version bump only for package coveo-atomic-example-070-alpha33
+
+
+
+
+
 # [0.17.0](https://github.com/coveo/ui-kit/compare/v0.16.2...v0.17.0) (2021-06-07)
 
 **Note:** Version bump only for package coveo-atomic-example-070-alpha33
