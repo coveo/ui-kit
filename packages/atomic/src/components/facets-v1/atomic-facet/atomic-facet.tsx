@@ -45,9 +45,9 @@ import {AtomicBaseFacet} from '../facet-common';
  * @part clear-button - The button that resets the actively selected facet values.
  * @part clear-button-icon - The clear button icon.
  *
- * @part search-input - The search input.
- * @part search-icon - The magnifier icon of the input.
- * @part search-clear-button - The clear button of the input.
+ * @part search-input - The search box input.
+ * @part search-icon - The search box submit button.
+ * @part search-clear-button - The button to clear the search box of input.
  */
 @Component({
   tag: 'atomic-facet-v1', // TODO: remove v1 when old facets are removed
