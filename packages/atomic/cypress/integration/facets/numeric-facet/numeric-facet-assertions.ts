@@ -54,13 +54,12 @@ export function assertRangesGeneratedWithAlgorithm(
       'numericFacetAllValueLabels'
     );
     const differences: Number[] = [];
-    let allRangesEqual = false;
     cy.getTextOfAllElements('@numericFacetAllValueLabels').then((elements) => {
       elements.forEach((element: string) => {
         const range = convertFacetValueToRange(element);
         differences.push(range.end - range.start);
       });
-      allRangesEqual = differences.every((x) => differences[0] === x);
+      const allRangesEqual = differences.every((x) => differences[0] === x);
       rangeAlgorithm === 'even'
         ? expect(allRangesEqual).equals(true)
         : expect(allRangesEqual).equals(false);
