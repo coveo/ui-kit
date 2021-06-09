@@ -1,4 +1,4 @@
-import {Schema, StringValue} from '@coveo/bueno';
+import {Schema, Value} from '@coveo/bueno';
 import {Engine} from '../../app/headless-engine';
 import {
   ConfigurationSection,
@@ -7,57 +7,40 @@ import {
 import {configuration, redirection} from '../../app/reducers';
 import {buildController, Controller} from '../controller/headless-controller';
 import {loadReducerError} from '../../utils/errors';
-import {
-  validateInitialState,
-  validateOptions,
-} from '../../utils/validate-payload';
+import {validateOptions} from '../../utils/validate-payload';
 
-export interface RedirectionInitialState {
-  /**
-   * The initial url used for the redirection.
-   **/
-  redirectTo?: string;
-}
-
-export interface RedirectionOptions {
+export interface RedirectionTriggerOptions {
   /**
    * The function used to handle whenever the `Redirection` controller's state's `redirectTo` value changes.
    */
-  function: Function;
+  onRedirect(): void;
 }
 
-export interface RedirectionProps {
+export interface RedirectionTriggerProps {
   /**
    * The options for the `Redirection` controller.
    */
-  options?: RedirectionOptions;
-  /**
-   * The initial state that should be applied to the `Redirection` controller.
-   */
-  initialState?: RedirectionInitialState;
+  options?: RedirectionTriggerOptions;
 }
 
 const optionsSchema = new Schema({
-  function: new Function(),
+  onRedirect: new Value({required: true}),
 });
 
-const initialStateSchema = new Schema({
-  redirectTo: new StringValue({emptyAllowed: true}),
-});
 /**
  * The `Redirection` controller handles redirection actions.
  */
-export interface Redirection extends Controller {
+export interface RedirectionTrigger extends Controller {
   /**
    * the state of the Redirection controller.
    */
-  state: RedirectionState;
+  state: RedirectionTriggerState;
 }
 
 /**
- * A scoped and simplified part of the headless state that is relevant to the `Pager` controller.
+ * A scoped and simplified part of the headless state that is relevant to the `Redirection` controller.
  */
-export interface RedirectionState {
+export interface RedirectionTriggerState {
   /**
    * The url used for the redirection.
    */
@@ -73,8 +56,8 @@ export interface RedirectionState {
  * */
 export function buildRedirection(
   engine: Engine<object>,
-  props: RedirectionProps = {}
-): Redirection {
+  props: RedirectionTriggerProps = {}
+): RedirectionTrigger {
   if (!loadRedirectionReducers(engine)) {
     throw loadReducerError;
   }
@@ -87,21 +70,16 @@ export function buildRedirection(
     optionsSchema,
     props.options,
     'buildRedirection'
-  ) as Required<RedirectionOptions>;
-  const initialState = validateInitialState(
-    engine,
-    initialStateSchema,
-    props.initialState,
-    'buildRedirection'
-  );
-  const redirectTo = initialState.redirectTo;
+  ) as Required<RedirectionTriggerOptions>;
+
+  const state = engine.state.redirection;
 
   return {
     ...controller,
 
     get state() {
       return {
-        redirectTo,
+        state,
       };
     },
   };
