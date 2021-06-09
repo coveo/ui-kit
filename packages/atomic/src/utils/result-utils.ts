@@ -1,15 +1,15 @@
-import {buildInteractiveResult, Engine, Result} from '@coveo/headless';
+import {buildInteractiveResult, SearchEngine, Result} from '@coveo/headless';
 
 /**
  * Binds the logging of document
  * @returns An unbind function for the events
- * @param engine An instance of an Headless Engine
+ * @param engine A headless search engine instance.
  * @param result The result object
  * @param resultElement Parent result element
  * @param selector Optional. Css selector that selects all links to the document. Default: "a" tags with the clickUri as "href" parameter.
  */
 export function bindLogDocumentOpenOnResult(
-  engine: Engine,
+  engine: SearchEngine,
   result: Result,
   resultElement: Element | ShadowRoot,
   selector?: string

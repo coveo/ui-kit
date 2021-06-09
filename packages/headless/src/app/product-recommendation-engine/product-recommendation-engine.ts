@@ -16,7 +16,7 @@ import {
   ExternalEngineOptions,
 } from '../engine';
 import {buildLogger} from '../logger';
-import {searchHub} from '../reducers';
+import {productRecommendations, searchHub} from '../reducers';
 import {buildThunkExtraArguments} from '../thunk-extra-arguments';
 import {
   ProductRecommendationEngineConfiguration,
@@ -24,7 +24,12 @@ import {
 } from './product-recommendation-engine-configuration';
 import {SearchThunkExtraArguments} from '../headless-engine';
 
-const productRecommendationEngineReducers = {searchHub};
+export {
+  ProductRecommendationEngineConfiguration,
+  getSampleProductRecommendationEngineConfiguration,
+} from './product-recommendation-engine-configuration';
+
+const productRecommendationEngineReducers = {searchHub, productRecommendations};
 type ProductRecommendationEngineReducers = typeof productRecommendationEngineReducers;
 type ProductRecommendationEngineState = StateFromReducersMapObject<
   ProductRecommendationEngineReducers

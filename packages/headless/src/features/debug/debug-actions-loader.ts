@@ -1,5 +1,5 @@
 import {PayloadAction} from '@reduxjs/toolkit';
-import {Engine} from '../../app/headless-engine';
+import {CoreEngine} from '../../app/engine';
 import {debug} from '../../app/reducers';
 import {disableDebug, enableDebug} from './debug-actions';
 
@@ -28,7 +28,7 @@ export interface DebugActionCreators {
  * @param engine - The headless engine.
  * @returns An object holding the action creators.
  */
-export function loadDebugActions(engine: Engine<object>): DebugActionCreators {
+export function loadDebugActions(engine: CoreEngine): DebugActionCreators {
   engine.addReducers({debug});
 
   return {

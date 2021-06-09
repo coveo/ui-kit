@@ -5,7 +5,7 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { CategoryFacetSortCriterion, Engine, FacetSortCriterion, LogLevel, RangeFacetRangeAlgorithm, Result, ResultTemplate, ResultTemplateCondition } from "@coveo/headless";
+import { CategoryFacetSortCriterion, FacetSortCriterion, LogLevel, RangeFacetRangeAlgorithm, Result, ResultTemplate, ResultTemplateCondition, SearchEngine } from "@coveo/headless";
 import { Bindings } from "./utils/initialization-utils";
 import { i18n } from "i18next";
 import { InitializationOptions } from "./components/atomic-search-interface/atomic-search-interface";
@@ -84,7 +84,7 @@ export namespace Components {
          */
         "numberOfValues": number;
         /**
-          * The algorithm used to generate the ranges for this facet, when there are no manual ranges.
+          * The algorithm that's used for generating the ranges of this facet when they aren't manually defined. The default value of `"even"` generates equally sized facet ranges across all of the results. The value `"equiprobable"` generates facet ranges which vary in size, but have a more balanced number of results in each facet range.
          */
         "rangeAlgorithm": RangeFacetRangeAlgorithm;
     }
@@ -209,7 +209,7 @@ export namespace Components {
          */
         "numberOfValues": number;
         /**
-          * The algorithm used to generate the ranges for this facet, when there are no manual ranges.
+          * The algorithm that's used for generating the ranges of this facet when they aren't manually defined. The default value of `"even"` generates equally sized facet ranges across all of the results. The value `"equiprobable"` generates facet ranges which vary in size but have a more balanced number of results within each range.
          */
         "rangeAlgorithm": RangeFacetRangeAlgorithm;
     }
@@ -243,7 +243,7 @@ export namespace Components {
     }
     interface AtomicRelevanceInspector {
         /**
-          * The Atomic interface bindings, namely the Headless Engine and i18n instances.
+          * The Atomic interface bindings, namely the headless search engine and i18n instances.
          */
         "bindings": Bindings;
     }
@@ -253,9 +253,9 @@ export namespace Components {
          */
         "content": string;
         /**
-          * The Headless engine.
+          * The headless search engine.
          */
-        "engine": Engine;
+        "engine": SearchEngine;
         /**
           * The result item.
          */
@@ -395,11 +395,11 @@ export namespace Components {
     }
     interface AtomicSearchInterface {
         /**
-          * The search interface Headless engine.
+          * The search interface headless engine.
          */
-        "engine"?: Engine;
+        "engine"?: SearchEngine;
         /**
-          * Executes the first search and logs the interface load event to analytics, after initializing connection to the Headless engine.
+          * Executes the first search and logs the interface load event to analytics, after initializing connection to the headless search engine.
          */
         "executeFirstSearch": () => Promise<void>;
         /**
@@ -407,7 +407,7 @@ export namespace Components {
          */
         "i18n": i18n;
         /**
-          * Initializes the connection with the Headless engine using options for `accessToken` (required), `organizationId` (required), `renewAccessToken`, and `platformUrl`.
+          * Initializes the connection with the headless search engine using options for `accessToken` (required), `organizationId` (required), `renewAccessToken`, and `platformUrl`.
          */
         "initialize": (options: InitializationOptions) => Promise<void>;
         /**
@@ -799,7 +799,7 @@ declare namespace LocalJSX {
          */
         "numberOfValues"?: number;
         /**
-          * The algorithm used to generate the ranges for this facet, when there are no manual ranges.
+          * The algorithm that's used for generating the ranges of this facet when they aren't manually defined. The default value of `"even"` generates equally sized facet ranges across all of the results. The value `"equiprobable"` generates facet ranges which vary in size, but have a more balanced number of results in each facet range.
          */
         "rangeAlgorithm"?: RangeFacetRangeAlgorithm;
     }
@@ -924,7 +924,7 @@ declare namespace LocalJSX {
          */
         "numberOfValues"?: number;
         /**
-          * The algorithm used to generate the ranges for this facet, when there are no manual ranges.
+          * The algorithm that's used for generating the ranges of this facet when they aren't manually defined. The default value of `"even"` generates equally sized facet ranges across all of the results. The value `"equiprobable"` generates facet ranges which vary in size but have a more balanced number of results within each range.
          */
         "rangeAlgorithm"?: RangeFacetRangeAlgorithm;
     }
@@ -958,7 +958,7 @@ declare namespace LocalJSX {
     }
     interface AtomicRelevanceInspector {
         /**
-          * The Atomic interface bindings, namely the Headless Engine and i18n instances.
+          * The Atomic interface bindings, namely the headless search engine and i18n instances.
          */
         "bindings": Bindings;
     }
@@ -968,9 +968,9 @@ declare namespace LocalJSX {
          */
         "content": string;
         /**
-          * The Headless engine.
+          * The headless search engine.
          */
-        "engine": Engine;
+        "engine": SearchEngine;
         /**
           * The result item.
          */
@@ -1106,9 +1106,9 @@ declare namespace LocalJSX {
     }
     interface AtomicSearchInterface {
         /**
-          * The search interface Headless engine.
+          * The search interface headless engine.
          */
-        "engine"?: Engine;
+        "engine"?: SearchEngine;
         /**
           * The search interface i18next instance.
          */

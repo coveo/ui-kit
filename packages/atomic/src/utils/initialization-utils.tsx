@@ -1,4 +1,4 @@
-import {Engine} from '@coveo/headless';
+import {SearchEngine} from '@coveo/headless';
 import {ComponentInterface, getElement, h, forceUpdate} from '@stencil/core';
 import {i18n, TOptions} from 'i18next';
 import {ObservableMap} from '@stencil/store';
@@ -18,9 +18,9 @@ export type AtomicStore = {
  */
 export interface Bindings {
   /**
-   * Headless Engine instance.
+   * A headless search engine instance.
    */
-  engine: Engine;
+  engine: SearchEngine;
   /**
    * i18n instance, for localization.
    */

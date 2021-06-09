@@ -47,13 +47,9 @@ import {RelevanceInspector as RelevanceInspectorFn} from '../components/relevanc
 import {StandaloneSearchBox} from '../components/standalone-search-box/standalone-search-box.class';
 import {StandaloneSearchBox as StandaloneSearchBoxFn} from '../components/standalone-search-box/standalone-search-box.fn';
 import {
-  HeadlessEngine,
-  Engine,
-  searchAppReducers,
-  recommendationAppReducers,
-  RecommendationAppState,
-  SearchActions,
-  AnalyticsActions,
+  SearchEngine,
+  buildSearchEngine,
+  getSampleSearchEngineConfiguration,
   Unsubscribe,
   RecommendationList as HeadlessRecommendationList,
   buildRecommendationList,
@@ -104,6 +100,11 @@ import {
   StandaloneSearchBox as HeadlessStandaloneSearchBox,
   buildStandaloneSearchBox,
 } from '@coveo/headless';
+import {
+  RecommendationEngine,
+  buildRecommendationEngine,
+  getSampleRecommendationEngineConfiguration,
+} from '@coveo/headless/recommendation';
 import {bindUrlManager} from '../components/url-manager/url-manager';
 import {setContext} from '../components/context/context';
 import {dateRanges} from '../components/date-facet/date-utils';
@@ -122,8 +123,8 @@ const initialCriterion = criteria[0][1];
 const resultsPerPageOptions = [10, 25, 50, 100];
 
 export class SearchPage extends Component {
-  private readonly engine: Engine;
-  private readonly recommendationEngine: Engine<RecommendationAppState>;
+  private readonly engine: SearchEngine;
+  private readonly recommendationEngine: RecommendationEngine;
 
   private readonly recommendationList: HeadlessRecommendationList;
   private readonly tabs: {
@@ -158,14 +159,12 @@ export class SearchPage extends Component {
   constructor(props: {}) {
     super(props);
 
-    this.engine = new HeadlessEngine({
-      configuration: HeadlessEngine.getSampleConfiguration(),
-      reducers: searchAppReducers,
+    this.engine = buildSearchEngine({
+      configuration: getSampleSearchEngineConfiguration(),
     });
 
-    this.recommendationEngine = new HeadlessEngine({
-      configuration: HeadlessEngine.getSampleConfiguration(),
-      reducers: recommendationAppReducers,
+    this.recommendationEngine = buildRecommendationEngine({
+      configuration: getSampleRecommendationEngineConfiguration(),
     });
 
     this.recommendationList = buildRecommendationList(
@@ -290,9 +289,7 @@ export class SearchPage extends Component {
   }
 
   private executeInitialSearch() {
-    this.engine.dispatch(
-      SearchActions.executeSearch(AnalyticsActions.logInterfaceLoad())
-    );
+    this.engine.executeFirstSearch();
   }
 
   private updateAnalyticsContext() {

@@ -4,8 +4,12 @@ import {
   NoopPostprocessQuerySuggestResponseMiddleware,
   NoopPostprocessSearchResponseMiddleware,
 } from '../../api/search/search-api-client-middleware';
-import {buildEngine, EngineOptions, ExternalEngineOptions} from '../engine';
-import {Engine} from '../headless-engine';
+import {
+  buildEngine,
+  CoreEngine,
+  EngineOptions,
+  ExternalEngineOptions,
+} from '../engine';
 import {buildLogger} from '../logger';
 import {buildThunkExtraArguments} from '../thunk-extra-arguments';
 import {Logger} from 'pino';
@@ -17,18 +21,23 @@ import {updateSearchConfiguration} from '../../features/configuration/configurat
 import {
   SearchEngineConfiguration,
   searchEngineConfigurationSchema,
+  getSampleSearchEngineConfiguration,
 } from './search-engine-configuration';
 import {executeSearch} from '../../features/search/search-actions';
 import {logInterfaceLoad} from '../../features/analytics/analytics-actions';
 import {firstSearchExecutedSelector} from '../../features/search/search-selectors';
 import {SearchAppState} from '../../state/search-app-state';
+import {SearchThunkExtraArguments} from '../headless-engine';
+
+export {SearchEngineConfiguration, getSampleSearchEngineConfiguration};
 
 const searchEngineReducers = {debug, pipeline, searchHub, search};
 type SearchEngineReducers = typeof searchEngineReducers;
 type SearchEngineState = StateFromReducersMapObject<SearchEngineReducers> &
   Partial<SearchAppState>;
 
-export interface SearchEngine extends Engine<SearchEngineState> {
+export interface SearchEngine
+  extends CoreEngine<SearchEngineState, SearchThunkExtraArguments> {
   executeFirstSearch(): void;
 }
 

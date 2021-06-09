@@ -15,6 +15,15 @@ export {
   HeadlessEngine,
   Engine,
 } from './app/headless-engine';
+
+export {
+  SearchEngine,
+  SearchEngineOptions,
+  SearchEngineConfiguration,
+  buildSearchEngine,
+  getSampleSearchEngineConfiguration,
+} from './app/search-engine/search-engine';
+
 export {LogLevel} from './app/logger';
 
 export {searchAppReducers} from './app/search-app-reducers';
