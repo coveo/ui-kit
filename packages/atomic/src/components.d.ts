@@ -84,7 +84,7 @@ export namespace Components {
          */
         "numberOfValues": number;
         /**
-          * The algorithm used to generate the ranges for this facet, when there are no manual ranges.
+          * The algorithm that's used for generating the ranges of this facet when they aren't manually defined. The default value of `"even"` generates equally sized facet ranges across all of the results. The value `"equiprobable"` generates facet ranges which vary in size, but have a more balanced number of results in each facet range.
          */
         "rangeAlgorithm": RangeFacetRangeAlgorithm;
     }
@@ -209,7 +209,7 @@ export namespace Components {
          */
         "numberOfValues": number;
         /**
-          * The algorithm used to generate the ranges for this facet, when there are no manual ranges.
+          * The algorithm that's used for generating the ranges of this facet when they aren't manually defined. The default value of `"even"` generates equally sized facet ranges across all of the results. The value `"equiprobable"` generates facet ranges which vary in size but have a more balanced number of results within each range.
          */
         "rangeAlgorithm": RangeFacetRangeAlgorithm;
     }
@@ -799,7 +799,7 @@ declare namespace LocalJSX {
          */
         "numberOfValues"?: number;
         /**
-          * The algorithm used to generate the ranges for this facet, when there are no manual ranges.
+          * The algorithm that's used for generating the ranges of this facet when they aren't manually defined. The default value of `"even"` generates equally sized facet ranges across all of the results. The value `"equiprobable"` generates facet ranges which vary in size, but have a more balanced number of results in each facet range.
          */
         "rangeAlgorithm"?: RangeFacetRangeAlgorithm;
     }
@@ -924,7 +924,7 @@ declare namespace LocalJSX {
          */
         "numberOfValues"?: number;
         /**
-          * The algorithm used to generate the ranges for this facet, when there are no manual ranges.
+          * The algorithm that's used for generating the ranges of this facet when they aren't manually defined. The default value of `"even"` generates equally sized facet ranges across all of the results. The value `"equiprobable"` generates facet ranges which vary in size but have a more balanced number of results within each range.
          */
         "rangeAlgorithm"?: RangeFacetRangeAlgorithm;
     }
