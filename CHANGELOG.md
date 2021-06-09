@@ -3,6 +3,33 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.21.0](https://github.com/coveo/ui-kit/compare/v0.20.0...v0.21.0) (2021-06-09)
+
+
+### Features
+
+* **atomic:** add new facet show more/less buttons  ([#871](https://github.com/coveo/ui-kit/issues/871)) ([44c27bd](https://github.com/coveo/ui-kit/commit/44c27bdd2e32c2eae772d720278d0b0c2a78c6bd))
+
+
+
+
+
+# [0.20.0](https://github.com/coveo/ui-kit/compare/v0.19.0...v0.20.0) (2021-06-08)
+
+
+### Bug Fixes
+
+* **headless:** use console.log for RelevanceInspector and deprecate logging method + option ([#870](https://github.com/coveo/ui-kit/issues/870)) ([ae2d6fb](https://github.com/coveo/ui-kit/commit/ae2d6fb9b9e89aa44cf0b57723f66deecc1671e5))
+
+
+### Features
+
+* **atomic:** add new facet checkbox values ([#869](https://github.com/coveo/ui-kit/issues/869)) ([f1b8e6a](https://github.com/coveo/ui-kit/commit/f1b8e6a080cea86dc36ecda749c8afecb5346191))
+
+
+
+
+
 # [0.19.0](https://github.com/coveo/ui-kit/compare/v0.18.0...v0.19.0) (2021-06-08)
 
 
