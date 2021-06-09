@@ -30,7 +30,7 @@ import {
   shouldUpdateFacetSearchComponent,
   shouldDisplaySearchResults,
 } from '../facet-search/facet-search-utils';
-import {AtomicBaseFacet} from '../facet-common';
+import {BaseFacet} from '../facet-common';
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
@@ -62,7 +62,7 @@ import {AtomicBaseFacet} from '../facet-common';
   shadow: true,
 })
 export class AtomicFacet
-  implements InitializableComponent, AtomicBaseFacet<Facet, FacetState> {
+  implements InitializableComponent, BaseFacet<Facet, FacetState> {
   @InitializeBindings() public bindings!: Bindings;
   public facet!: Facet;
   public searchStatus!: SearchStatus;
@@ -185,11 +185,12 @@ export class AtomicFacet
   }
 
   private renderValue(facetValue: FacetValue, onClick: () => void) {
+    const displayValue = this.bindings.i18n.t(facetValue.value);
     switch (this.displayValuesAs) {
       case 'checkbox':
         return (
           <FacetValueCheckbox
-            value={facetValue.value}
+            displayValue={displayValue}
             numberOfResults={facetValue.numberOfResults}
             state={facetValue.state}
             i18n={this.bindings.i18n}
@@ -199,7 +200,7 @@ export class AtomicFacet
       case 'link':
         return (
           <FacetValueLink
-            value={facetValue.value}
+            displayValue={displayValue}
             numberOfResults={facetValue.numberOfResults}
             state={facetValue.state}
             i18n={this.bindings.i18n}

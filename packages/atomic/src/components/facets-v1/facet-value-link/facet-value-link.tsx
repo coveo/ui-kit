@@ -1,23 +1,11 @@
-import {FacetValueState} from '@coveo/headless';
 import {FunctionalComponent, h} from '@stencil/core';
-import {i18n} from 'i18next';
+import {FacetValueProps} from '../facet-common';
 
-interface FacetValueLinkProps {
-  i18n: i18n;
-  value: string;
-  numberOfResults: number;
-  state: FacetValueState;
-  onClick(): void;
-}
-
-export const FacetValueLink: FunctionalComponent<FacetValueLinkProps> = (
-  props
-) => {
+export const FacetValueLink: FunctionalComponent<FacetValueProps> = (props) => {
   const isSelected = props.state === 'selected';
-  const displayValue = props.i18n.t(props.value);
   const count = props.numberOfResults.toLocaleString(props.i18n.language);
   const ariaLabel = props.i18n.t('facetValue', {
-    value: displayValue,
+    value: props.displayValue,
     count: props.numberOfResults,
   });
   return (
@@ -29,11 +17,11 @@ export const FacetValueLink: FunctionalComponent<FacetValueLinkProps> = (
         aria-label={ariaLabel}
       >
         <span
-          title={displayValue}
+          title={props.displayValue}
           part="value-label"
           class={`value-label ellipsed ${isSelected ? 'font-bold' : ''}`}
         >
-          {displayValue}
+          {props.displayValue}
         </span>
         <span
           part="value-count"
