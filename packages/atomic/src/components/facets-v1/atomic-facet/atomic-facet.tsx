@@ -47,10 +47,14 @@ import {BaseFacet} from '../facet-common';
  * @part search-icon - The search box submit button.
  * @part search-clear-button - The button to clear the search box of input.
  *
- * @part values - The facet values.
- * @part value - A single facet value.
- * @part value-label - The facet value label.
- * @part value-count - The facet value count.
+ * @part values - The facet values container.
+ * @part value-label - The facet value label, common for all displays.
+ * @part value-count - The facet value count, common for all displays.
+ *
+ * @part value-checkbox - The facet value checkbox, available when display is 'checkbox'.
+ * @part value-checkbox-label - The facet value checkbox clickable label, available when display is 'checkbox'.
+ * @part value-link - The facet value when display is 'link'.
+ * @part value-box - The facet value when display is 'box'.
  *
  * @part show-more - The show more results button.
  * @part show-less - The show less results button.
@@ -141,9 +145,8 @@ export class AtomicFacet
     return true;
   }
 
-  private get numberOfSelectedValues() {
-    return this.facetState.values.filter(({state}) => state === 'selected')
-      .length;
+  private get selectedValues() {
+    return this.facetState.values.filter(({state}) => state === 'selected');
   }
 
   private renderHeader() {
@@ -152,7 +155,7 @@ export class AtomicFacet
         i18n={this.bindings.i18n}
         label={this.label}
         onClearFilters={() => this.facet.deselectAll()}
-        numberOfSelectedValues={this.numberOfSelectedValues}
+        numberOfSelectedValues={this.selectedValues.length}
         isCollapsed={this.isCollapsed}
         onToggleCollapse={() => (this.isCollapsed = !this.isCollapsed)}
       ></FacetHeader>
@@ -186,13 +189,14 @@ export class AtomicFacet
 
   private renderValue(facetValue: FacetValue, onClick: () => void) {
     const displayValue = this.bindings.i18n.t(facetValue.value);
+    const isSelected = facetValue.state === 'selected';
     switch (this.displayValuesAs) {
       case 'checkbox':
         return (
           <FacetValueCheckbox
             displayValue={displayValue}
             numberOfResults={facetValue.numberOfResults}
-            state={facetValue.state}
+            isSelected={isSelected}
             i18n={this.bindings.i18n}
             onClick={onClick}
           ></FacetValueCheckbox>
@@ -202,7 +206,7 @@ export class AtomicFacet
           <FacetValueLink
             displayValue={displayValue}
             numberOfResults={facetValue.numberOfResults}
-            state={facetValue.state}
+            isSelected={isSelected}
             i18n={this.bindings.i18n}
             onClick={() => {
               this.deselectValues();
@@ -215,7 +219,7 @@ export class AtomicFacet
           <FacetValueBox
             displayValue={displayValue}
             numberOfResults={facetValue.numberOfResults}
-            state={facetValue.state}
+            isSelected={isSelected}
             i18n={this.bindings.i18n}
             onClick={onClick}
           ></FacetValueBox>
@@ -226,13 +230,11 @@ export class AtomicFacet
   private deselectValues() {
     const action = loadFacetSetActions(this.bindings.engine)
       .toggleSelectFacetValue;
-    this.facetState.values
-      .filter((value) => value.state === 'selected')
-      .forEach((value) =>
-        this.bindings.engine.dispatch(
-          action({facetId: this.facetId!, selection: value})
-        )
-      );
+    this.selectedValues.forEach((value) =>
+      this.bindings.engine.dispatch(
+        action({facetId: this.facetId!, selection: value})
+      )
+    );
   }
 
   private renderValuesContainer(children: VNode[]) {

@@ -1,8 +1,4 @@
-import {
-  FacetValueState,
-  SearchStatus,
-  SearchStatusState,
-} from '@coveo/headless';
+import {SearchStatus, SearchStatusState} from '@coveo/headless';
 import {i18n} from 'i18next';
 
 export interface BaseFacet<Facet, FacetState> {
@@ -20,6 +16,6 @@ export interface FacetValueProps {
   i18n: i18n;
   displayValue: string;
   numberOfResults: number;
-  state: FacetValueState;
+  isSelected: boolean;
   onClick(): void;
 }
