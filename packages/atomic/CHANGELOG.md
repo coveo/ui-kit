@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.21.0](https://github.com/coveo/ui-kit/compare/v0.20.0...v0.21.0) (2021-06-09)
+
+
+### Features
+
+* **atomic:** add new facet show more/less buttons  ([#871](https://github.com/coveo/ui-kit/issues/871)) ([44c27bd](https://github.com/coveo/ui-kit/commit/44c27bdd2e32c2eae772d720278d0b0c2a78c6bd))
+
+
+
+
+
 # [0.20.0](https://github.com/coveo/ui-kit/compare/v0.19.0...v0.20.0) (2021-06-08)
 
 
