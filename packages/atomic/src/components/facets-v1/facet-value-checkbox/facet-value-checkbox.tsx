@@ -13,14 +13,14 @@ export const FacetValueCheckbox: FunctionalComponent<FacetValueProps> = (
     count: props.numberOfResults,
   });
   return (
-    <li part="value" class="flex flex-row items-center">
+    <li key={props.displayValue} part="value" class="flex items-center">
       <button
         id={id}
         role="checkbox"
         onClick={() => props.onClick()}
         aria-checked={isSelected.toString()}
-        class={`checkbox flex justify-center rounded border border-neutral-dark focus:outline-none focus:border-primary-light ${
-          isSelected ? 'checked bg-primary border-none' : ''
+        class={`value-box flex justify-center rounded border border-neutral-dark focus:outline-none focus:border-primary-light ${
+          isSelected ? 'selected bg-primary border-none' : ''
         }`}
         aria-label={ariaLabel}
       ></button>

@@ -1,4 +1,4 @@
-import {Component, h, State, Prop} from '@stencil/core';
+import {Component, h, State, Prop, VNode} from '@stencil/core';
 import {
   Facet,
   buildFacet,
@@ -211,7 +211,15 @@ export class AtomicFacet
           ></FacetValueLink>
         );
       case 'box':
-        return <FacetValueBox value={facetValue.value}></FacetValueBox>;
+        return (
+          <FacetValueBox
+            displayValue={displayValue}
+            numberOfResults={facetValue.numberOfResults}
+            state={facetValue.state}
+            i18n={this.bindings.i18n}
+            onClick={onClick}
+          ></FacetValueBox>
+        );
     }
   }
 
@@ -227,25 +235,36 @@ export class AtomicFacet
       );
   }
 
-  private renderValues() {
+  private renderValuesContainer(children: VNode[]) {
+    const classes = `mt-3 ${
+      this.displayValuesAs === 'box' ? 'box-container' : ''
+    }`;
     return (
-      <ul part="values" class="mt-3">
-        {this.facetState.values.map((value) =>
-          this.renderValue(value, () => this.facet.toggleSelect(value))
-        )}
+      <ul part="values" class={classes}>
+        {children}
       </ul>
     );
   }
 
+  private renderValues() {
+    return this.renderValuesContainer(
+      this.facetState.values.map((value) =>
+        this.renderValue(value, () => this.facet.toggleSelect(value))
+      )
+    );
+  }
+
   private renderSearchResults() {
-    return this.facetState.facetSearch.values.map((value) =>
-      this.renderValue(
-        {
-          state: 'idle',
-          numberOfResults: value.count,
-          value: value.rawValue,
-        },
-        () => this.facet.facetSearch.select(value)
+    return this.renderValuesContainer(
+      this.facetState.facetSearch.values.map((value) =>
+        this.renderValue(
+          {
+            state: 'idle',
+            numberOfResults: value.count,
+            value: value.rawValue,
+          },
+          () => this.facet.facetSearch.select(value)
+        )
       )
     );
   }

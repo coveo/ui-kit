@@ -9,10 +9,10 @@ export const FacetValueLink: FunctionalComponent<FacetValueProps> = (props) => {
     count: props.numberOfResults,
   });
   return (
-    <li part="value" class="flex flex-row items-center">
+    <li key={props.displayValue} part="value">
       <button
         onClick={() => props.onClick()}
-        class="link-value w-full flex py-2.5 text-on-background ellipsed focus:outline-none"
+        class="link-value w-full flex items-center py-2.5 text-on-background ellipsed focus:outline-none"
         aria-pressed={isSelected.toString()}
         aria-label={ariaLabel}
       >
