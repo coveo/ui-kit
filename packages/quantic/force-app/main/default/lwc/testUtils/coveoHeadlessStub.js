@@ -1,15 +1,7 @@
-export class MockEngine {
-  static getSampleConfiguration() {
-    return {}
+function buildSearchEngine() {
+  return {
+    executeFirstSearch() {}
   }
 }
 
-export const CoveoHeadlessStub = {
-  HeadlessEngine: MockEngine,
-  SearchActions: {
-    executeSearch: () => {}
-  },
-  AnalyticsActions: {
-    logInterfaceLoad: () => {}
-  }
-}
+export const CoveoHeadlessStub = {buildSearchEngine}

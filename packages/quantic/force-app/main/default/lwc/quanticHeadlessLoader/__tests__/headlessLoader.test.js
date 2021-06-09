@@ -6,7 +6,7 @@ import {
   getHeadlessEngine,
   initializeWithHeadless
 } from '../quanticHeadlessLoader';
-import { CoveoHeadlessStub, MockEngine } from '../../testUtils/coveoHeadlessStub';
+import { CoveoHeadlessStub } from '../../testUtils/coveoHeadlessStub';
 import {Deferred} from '../../quanticUtils/quanticUtils';
 
 describe('c/quanticHeadlessLoader', () => {
@@ -229,7 +229,7 @@ describe('c/quanticHeadlessLoader', () => {
       it('should init the engine return a promise that resolves to that instance', async () => {
         const engine = await getHeadlessEngine(testId);
 
-        expect(engine).toBeInstanceOf(MockEngine);
+        expect(engine).toEqual(CoveoHeadlessStub.buildSearchEngine());
       });
     });
 
@@ -294,7 +294,7 @@ describe('c/quanticHeadlessLoader', () => {
         await initializeWithHeadless(testElement, testId, initialize);
         const engine = await window.coveoHeadless[testId].engine;
 
-        expect(engine).toBeInstanceOf(MockEngine);
+        expect(engine).toEqual(CoveoHeadlessStub.buildSearchEngine());
         expect(initialize).toHaveBeenCalled();
         assertComponentIsSetInitialized(testElement, testId);
       });
