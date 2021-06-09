@@ -178,12 +178,13 @@ describe('c/quanticHeadlessLoader', () => {
           ];
         });
 
-        it('should set the component to initialized', () => {
+        it('should set the component to initialized', async () => {
           setComponentInitialized(testElement, testId);
   
           assertComponentIsSetInitialized(testElement, testId);
           jest.runAllTimers();
-          expect(window.coveoHeadless[testId].engine.executeFirstSearch).not.toBeCalled();
+          const engine = await window.coveoHeadless[testId].engine;
+          expect(engine.executeFirstSearch).not.toBeCalled();
         });
       });
 
@@ -204,7 +205,8 @@ describe('c/quanticHeadlessLoader', () => {
           assertComponentIsSetInitialized(testElement, testId);
           jest.runAllTimers();
           await window.coveoHeadless.engine;
-          expect(window.coveoHeadless[testId].engine.executeFirstSearch).toBeCalled();
+          const engine = await window.coveoHeadless[testId].engine;
+          expect(engine.executeFirstSearch).toBeCalled();
         });
       });
     });
