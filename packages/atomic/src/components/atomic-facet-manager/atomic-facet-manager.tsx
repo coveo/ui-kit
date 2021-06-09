@@ -23,7 +23,7 @@ interface FacetElement extends HTMLElement {
  */
 @Component({
   tag: 'atomic-facet-manager',
-  shadow: true,
+  shadow: false,
 })
 export class AtomicFacetManager implements InitializableComponent {
   @InitializeBindings() public bindings!: Bindings;
