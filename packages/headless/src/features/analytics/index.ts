@@ -187,4 +187,4 @@ export namespace SearchAnalyticsActions {
 
 export * from './search-analytics-actions-loader';
 export * from './click-analytics-actions-loader';
-export * from './custom-analytics-actions-loader';
+export * from './generic-analytics-actions-loader';

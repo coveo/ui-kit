@@ -375,7 +375,7 @@ const actionLoaderConfiguration: ActionLoaderConfiguration[] = [
     initializer: 'loadClickAnalyticsActions',
   },
   {
-    initializer: 'loadCustomAnalyticsActions',
+    initializer: 'loadGenericAnalyticsActions',
   },
 ];
 

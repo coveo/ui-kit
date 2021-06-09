@@ -18,9 +18,9 @@ export {
 };
 
 /**
- * The custom analytics action creators.
+ * The generic analytics action creators.
  */
-export interface CustomAnalyticsActionCreators {
+export interface GenericAnalyticsActionCreators {
   /**
    * Creates a search analytics event.
    *
@@ -71,14 +71,14 @@ export interface CustomAnalyticsActionCreators {
 }
 
 /**
- * Returns possible custom analytics action creators.
+ * Returns possible generic analytics action creators.
  *
  * @param engine - The headless engine.
  * @returns An object holding the action creators.
  */
-export function loadCustomAnalyticsActions(
+export function loadGenericAnalyticsActions(
   engine: Engine<object>
-): CustomAnalyticsActionCreators {
+): GenericAnalyticsActionCreators {
   engine.addReducers({});
 
   return {
