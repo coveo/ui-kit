@@ -285,8 +285,8 @@
     "fr": "Plus récents"
   },
   "clearFilters": {
-    "en": "Clear {{count}} filter",
-    "fr": "Enlever {{count}} filtre"
+    "en": "Clear filter",
+    "fr": "Enlever le filtre"
   },
   "clearFilters_plural": {
     "en": "Clear {{count}} filters",

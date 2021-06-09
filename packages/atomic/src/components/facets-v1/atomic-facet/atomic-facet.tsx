@@ -9,6 +9,7 @@ import {
   SearchStatusState,
   buildSearchStatus,
   FacetValue,
+  loadFacetSetActions,
 } from '@coveo/headless';
 import {
   Bindings,
@@ -196,15 +197,38 @@ export class AtomicFacet
           ></FacetValueCheckbox>
         );
       case 'link':
-        return <FacetValueLink value={facetValue.value}></FacetValueLink>;
+        return (
+          <FacetValueLink
+            value={facetValue.value}
+            numberOfResults={facetValue.numberOfResults}
+            state={facetValue.state}
+            i18n={this.bindings.i18n}
+            onClick={() => {
+              this.deselectValues();
+              onClick();
+            }}
+          ></FacetValueLink>
+        );
       case 'box':
         return <FacetValueBox value={facetValue.value}></FacetValueBox>;
     }
   }
 
+  private deselectValues() {
+    const action = loadFacetSetActions(this.bindings.engine)
+      .toggleSelectFacetValue;
+    this.facetState.values
+      .filter((value) => value.state === 'selected')
+      .forEach((value) =>
+        this.bindings.engine.dispatch(
+          action({facetId: this.facetId!, selection: value})
+        )
+      );
+  }
+
   private renderValues() {
     return (
-      <ul part="values">
+      <ul part="values" class="mt-3">
         {this.facetState.values.map((value) =>
           this.renderValue(value, () => this.facet.toggleSelect(value))
         )}
