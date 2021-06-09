@@ -44,7 +44,7 @@ export interface RedirectionTriggerState {
   /**
    * The url used for the redirection.
    */
-  redirectTo?: string;
+  redirectTo: string;
 }
 
 /**
@@ -72,14 +72,14 @@ export function buildRedirection(
     'buildRedirection'
   ) as Required<RedirectionTriggerOptions>;
 
-  const state = engine.state.redirection;
+  const redirectTo = engine.state.redirection.redirectTo!;
 
   return {
     ...controller,
 
     get state() {
       return {
-        state,
+        redirectTo,
       };
     },
   };
