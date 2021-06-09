@@ -5,6 +5,9 @@ import {
   getSampleEngineConfiguration,
 } from '../engine-configuration';
 
+/**
+ * The recommendation engine configuration.
+ */
 export interface RecommendationEngineConfiguration extends EngineConfiguration {
   /**
    * Specifies the name of the query pipeline to use for the query. If not specified, the default query pipeline will be used.
@@ -29,6 +32,11 @@ export const recommendationEngineConfigurationSchema = new Schema<
   searchHub: new StringValue({required: false, emptyAllowed: false}),
 });
 
+/**
+ * Creates a sample recommendation engine configuration.
+ *
+ * @returns The sample recommendation engine configuration.
+ */
 export function getSampleRecommendationEngineConfiguration(): RecommendationEngineConfiguration {
   return {
     ...getSampleEngineConfiguration(),
