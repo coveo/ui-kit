@@ -17,11 +17,11 @@ export const FacetShowMoreLess: FunctionalComponent<FacetShowMoreProps> = (
 ) => {
   const label = props.i18n.t(props.label);
   const showMore = props.i18n.t('showMore');
-  const showMoreFacetResults = props.i18n.t('showMoreFacetResults', {
+  const showMoreFacetValues = props.i18n.t('showMoreFacetValues', {
     label,
   });
   const showLess = props.i18n.t('showLess');
-  const showLessFacetResults = props.i18n.t('showLessFacetResults', {
+  const showLessFacetValues = props.i18n.t('showLessFacetValues', {
     label,
   });
   const btnClasses =
@@ -32,7 +32,7 @@ export const FacetShowMoreLess: FunctionalComponent<FacetShowMoreProps> = (
       <button
         part="show-less"
         class={`show-less ${btnClasses}`}
-        aria-label={showLessFacetResults}
+        aria-label={showLessFacetValues}
         onClick={() => props.onShowLess()}
       >
         <div
@@ -47,7 +47,7 @@ export const FacetShowMoreLess: FunctionalComponent<FacetShowMoreProps> = (
       <button
         part="show-more"
         class={`show-more ${btnClasses}`}
-        aria-label={showMoreFacetResults}
+        aria-label={showMoreFacetValues}
         onClick={() => props.onShowMore()}
       >
         <div
