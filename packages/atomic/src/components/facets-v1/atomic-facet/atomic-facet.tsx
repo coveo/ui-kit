@@ -145,8 +145,9 @@ export class AtomicFacet
     return true;
   }
 
-  private get selectedValues() {
-    return this.facetState.values.filter(({state}) => state === 'selected');
+  private get numberOfSelectedValues() {
+    return this.facetState.values.filter(({state}) => state === 'selected')
+      .length;
   }
 
   private renderHeader() {
@@ -155,7 +156,7 @@ export class AtomicFacet
         i18n={this.bindings.i18n}
         label={this.label}
         onClearFilters={() => this.facet.deselectAll()}
-        numberOfSelectedValues={this.selectedValues.length}
+        numberOfSelectedValues={this.numberOfSelectedValues}
         isCollapsed={this.isCollapsed}
         onToggleCollapse={() => (this.isCollapsed = !this.isCollapsed)}
       ></FacetHeader>
@@ -209,7 +210,7 @@ export class AtomicFacet
             isSelected={isSelected}
             i18n={this.bindings.i18n}
             onClick={() => {
-              this.deselectValues();
+              this.deselectOtherValues(facetValue);
               onClick();
             }}
           ></FacetValueLink>
@@ -227,10 +228,14 @@ export class AtomicFacet
     }
   }
 
-  private deselectValues() {
+  private deselectOtherValues(facetValue: FacetValue) {
     const action = loadFacetSetActions(this.bindings.engine)
       .toggleSelectFacetValue;
-    this.selectedValues.forEach((value) =>
+    const otherSelectedValues = this.facetState.values.filter(
+      ({state, value}) => state !== 'idle' && value !== facetValue.value
+    );
+
+    otherSelectedValues.forEach((value) =>
       this.bindings.engine.dispatch(
         action({facetId: this.facetId!, selection: value})
       )
