@@ -3,7 +3,7 @@ import {buildInteractiveResult, SearchEngine, Result} from '@coveo/headless';
 /**
  * Binds the logging of document
  * @returns An unbind function for the events
- * @param engine A search engine instance.
+ * @param engine A headless search engine instance.
  * @param result The result object
  * @param resultElement Parent result element
  * @param selector Optional. Css selector that selects all links to the document. Default: "a" tags with the clickUri as "href" parameter.

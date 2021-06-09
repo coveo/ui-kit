@@ -18,7 +18,7 @@ export type AtomicStore = {
  */
 export interface Bindings {
   /**
-   * A search engine instance.
+   * A headless search engine instance.
    */
   engine: SearchEngine;
   /**

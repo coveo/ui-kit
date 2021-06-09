@@ -35,7 +35,7 @@ export type InitializationOptions = Pick<
 >;
 
 /**
- * The `atomic-search-interface` component is the parent to all other atomic components in a search page. It handles the headless engine and localization configurations.
+ * The `atomic-search-interface` component is the parent to all other atomic components in a search page. It handles the headless search engine and localization configurations.
  */
 @Component({
   tag: 'atomic-search-interface',
@@ -79,7 +79,7 @@ export class AtomicSearchInterface {
   @Prop({reflect: true}) public language = 'en';
 
   /**
-   * The search interface Headless engine.
+   * The search interface headless engine.
    */
   @Prop({mutable: true}) public engine?: SearchEngine;
 
@@ -152,7 +152,7 @@ export class AtomicSearchInterface {
   }
 
   /**
-   * Initializes the connection with the Headless engine using options for `accessToken` (required), `organizationId` (required), `renewAccessToken`, and `platformUrl`.
+   * Initializes the connection with the headless search engine using options for `accessToken` (required), `organizationId` (required), `renewAccessToken`, and `platformUrl`.
    */
   @Method() public async initialize(options: InitializationOptions) {
     if (this.engine) {
@@ -173,7 +173,7 @@ export class AtomicSearchInterface {
 
   /**
    *
-   * Executes the first search and logs the interface load event to analytics, after initializing connection to the Headless engine.
+   * Executes the first search and logs the interface load event to analytics, after initializing connection to the headless search engine.
    */
   @Method() public async executeFirstSearch() {
     if (!this.engine) {

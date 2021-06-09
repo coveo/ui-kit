@@ -4,6 +4,9 @@ import {buildUrlManager, SearchEngine} from '@coveo/headless';
  * Search parameters, defined in the url's hash, should not be restored until all components are registered.
  *
  * Additionally, a search should not be executed until search parameters are restored.
+ *
+ * @param engine - A headless search engine instance.
+ * @returns An unsubscribe function to remove attached event listeners.
  */
 export function bindUrlManager(engine: SearchEngine) {
   const fragment = () => window.location.hash.slice(1);

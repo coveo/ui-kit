@@ -19,7 +19,7 @@ export class AtomicResult {
   @Prop() result!: Result;
 
   /**
-   * The Headless engine.
+   * The headless search engine.
    */
   @Prop() engine!: SearchEngine;
 
