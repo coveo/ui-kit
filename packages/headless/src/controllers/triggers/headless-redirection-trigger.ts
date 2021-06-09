@@ -69,10 +69,14 @@ export function buildRedirection(
     engine,
     optionsSchema,
     props.options,
-    'buildRedirection'
+    'buildRedirectionTrigger'
   ) as Required<RedirectionTriggerOptions>;
 
   const redirectTo = engine.state.redirection.redirectTo!;
+  const {onRedirect} = options;
+  if (redirectTo !== '') {
+    onRedirect();
+  }
 
   return {
     ...controller,
