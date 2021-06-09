@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.22.0](https://github.com/coveo/ui-kit/compare/v0.21.0...v0.22.0) (2021-06-09)
+
+
+### Features
+
+* **headless:** expose and migrate to new engines ([#872](https://github.com/coveo/ui-kit/issues/872)) ([23e61b3](https://github.com/coveo/ui-kit/commit/23e61b3f344b9e3f20995a21a6958711f64481d5))
+* **headless:** expose generic analytics actions via loader function ([#873](https://github.com/coveo/ui-kit/issues/873)) ([b61e099](https://github.com/coveo/ui-kit/commit/b61e0990e577c3dec4a972bbcf44fa7659ab1951))
+
+
+
+
+
 # [0.21.0](https://github.com/coveo/ui-kit/compare/v0.20.0...v0.21.0) (2021-06-09)
 
 
