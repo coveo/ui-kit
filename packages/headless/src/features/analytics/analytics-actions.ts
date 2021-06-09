@@ -45,11 +45,22 @@ const validateEvent = (p: {evt: string; type?: string}) =>
     type: new StringValue({required: false, emptyAllowed: false}),
   });
 
+export interface LogSearchEventActionCreatorPayload {
+  /**
+   * The identifier of the search action (e.g., `interfaceLoad`).
+   * */
+  evt: string;
+  /**
+   * The event metadata.
+   * */
+  meta?: Record<string, unknown>;
+}
+
 /**
  * Logs a search event.
  * @param p (SearchEventPayload) The search event payload.
  */
-export const logSearchEvent = (p: SearchEventPayload) =>
+export const logSearchEvent = (p: LogSearchEventActionCreatorPayload) =>
   makeAnalyticsAction(
     'analytics/generic/search',
     AnalyticsType.Search,
@@ -60,11 +71,23 @@ export const logSearchEvent = (p: SearchEventPayload) =>
     }
   )();
 
+export interface LogClickEventActionCreatorPayload {
+  /**
+   * The identifier of the click action (e.g., `documentOpen`).
+   * */
+  evt: string;
+
+  /**
+   * The result associated with the click event.
+   */
+  result: Result;
+}
+
 /**
  * Logs a click event.
  * @param p (ClickEventPayload) The click event payload.
  */
-export const logClickEvent = (p: ClickEventPayload) =>
+export const logClickEvent = (p: LogClickEventActionCreatorPayload) =>
   makeAnalyticsAction(
     'analytics/generic/click',
     AnalyticsType.Click,
