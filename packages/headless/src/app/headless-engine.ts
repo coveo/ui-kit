@@ -89,6 +89,12 @@ export class HeadlessEngine<Reducers extends ReducersMapObject>
   private engine: Engine<StateFromReducersMapObject<Reducers>>;
 
   constructor(private options: HeadlessOptions<Reducers>) {
+    console.warn(
+      'The HeadlessEngine class is deprecated and will be removed in the next major version. Please use either:\n',
+      'import {buildSearchEngine} from "@coveo/headless" or,\n',
+      'import {buildRecommendationEngine} from "@coveo/headless/recommendation" or,\n',
+      'import {buildProductRecommendationEngine} from "@coveo/headless/product-recommendation".'
+    );
     this.logger = buildLogger(options.loggerOptions);
     this.validateConfiguration(options);
 
@@ -175,6 +181,13 @@ export class HeadlessEngine<Reducers extends ReducersMapObject>
    * @returns A configuration with sample data for testing purposes.
    */
   static getSampleConfiguration(): HeadlessConfigurationOptions {
+    console.warn(
+      'The HeadlessEngine.getSampleConfiguration static method is deprecated and will be removed in the next major version. Please use either:\n',
+      'import {getSampleSearchEngineConfiguration} from "@coveo/headless" or,\n',
+      'import {getSampleRecommendationEngineConfiguration} from "@coveo/headless/recommendation" or,\n',
+      'import {getSampleProductRecommendationEngineConfiguration} from "@coveo/headless/product-recommendation".'
+    );
+
     return {
       organizationId: 'searchuisamples',
       accessToken: 'xx564559b1-0045-48e1-953c-3addd1ee4457',
