@@ -8,6 +8,7 @@ import {configuration, redirection} from '../../app/reducers';
 import {buildController, Controller} from '../controller/headless-controller';
 import {loadReducerError} from '../../utils/errors';
 import {validateOptions} from '../../utils/validate-payload';
+import {logTriggerRedirect} from '../../features/redirection/redirection-analytics-actions';
 
 export interface RedirectionTriggerOptions {
   /**
@@ -76,6 +77,7 @@ export function buildRedirection(
   const {onRedirect} = options;
   if (redirectTo !== '') {
     onRedirect();
+    dispatch(logTriggerRedirect);
   }
 
   return {
