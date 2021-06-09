@@ -13,8 +13,6 @@ import {
 import {
   Bindings,
   BindStateToController,
-  BindStateToI18n,
-  I18nState,
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
@@ -25,8 +23,7 @@ import {FacetSearchInput} from '../facet-search/facet-search-input';
 import {FacetValueCheckbox} from '../facet-value-checkbox/facet-value-checkbox';
 import {FacetValueLink} from '../facet-value-link/facet-value-link';
 import {FacetValueBox} from '../facet-value-box/facet-value-box';
-import {FacetShowLess} from '../facet-show-less/facet-show-less';
-import {FacetShowMore} from '../facet-show-more/facet-show-more';
+import {FacetShowMoreLess} from '../facet-show-more-less/facet-show-more-less';
 import {FacetSearchMatches} from '../facet-search/facet-search-matches';
 import {
   shouldUpdateFacetSearchComponent,
@@ -53,6 +50,10 @@ import {AtomicBaseFacet} from '../facet-common';
  * @part value - A single facet value.
  * @part value-label - The facet value label.
  * @part value-count - The facet value count.
+ *
+ * @part show-more - The show more results button.
+ * @part show-less - The show less results button.
+ * @part show-more-less-icon - The icons of the show more & show less buttons.
  */
 @Component({
   tag: 'atomic-facet-v1', // TODO: remove v1 when old facets are removed
@@ -107,13 +108,6 @@ export class AtomicFacet
    */
   @Prop() public displayValuesAs: 'checkbox' | 'link' | 'box' = 'checkbox';
   // @Prop() public customSort?: string; TODO: add customSort to headless
-
-  @BindStateToI18n()
-  @State()
-  public strings: I18nState = {
-    showMore: () => this.bindings.i18n.t('showMore'),
-    showLess: () => this.bindings.i18n.t('showLess'),
-  };
 
   public initialize() {
     this.searchStatus = buildSearchStatus(this.bindings.engine);
@@ -243,14 +237,20 @@ export class AtomicFacet
   }
 
   private renderShowMoreLess() {
-    return [
-      this.facetState.canShowLessValues && (
-        <FacetShowLess label={this.strings.showLess()}></FacetShowLess>
-      ),
-      this.facetState.canShowMoreValues && (
-        <FacetShowMore label={this.strings.showMore()}></FacetShowMore>
-      ),
-    ];
+    return (
+      <FacetShowMoreLess
+        label={this.label}
+        i18n={this.bindings.i18n}
+        onShowMore={() => {
+          this.facet.showMoreValues();
+        }}
+        onShowLess={() => {
+          this.facet.showLessValues();
+        }}
+        canShowLessValues={this.facetState.canShowLessValues}
+        canShowMoreValues={this.facetState.canShowMoreValues}
+      ></FacetShowMoreLess>
+    );
   }
 
   public render() {
