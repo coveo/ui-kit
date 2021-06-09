@@ -1,6 +1,6 @@
 function buildSearchEngine() {
   return {
-    executeFirstSearch() {}
+    executeFirstSearch: jest.fn(() => {})
   }
 }
 
