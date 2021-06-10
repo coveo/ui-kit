@@ -92,7 +92,7 @@ describe('Facet v1 Test Suites', () => {
           describe('verify rendering', () => {
             before(setupClearCheckboxValues);
 
-            FacetAssertions.assertDisplayClearButton(true);
+            FacetAssertions.assertDisplayClearButton(false);
             FacetAssertions.assertNumberOfSelectedCheckboxValues(0);
             FacetAssertions.assertNumberOfIdleCheckboxValues(
               defaultNumberOfValues
