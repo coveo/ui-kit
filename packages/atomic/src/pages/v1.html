@@ -77,6 +77,10 @@
         margin-top: 15px;
       }
 
+      atomic-facet-manager > * {
+        margin: 16px 0 0 0;
+      }
+
       .results-container {
         grid-column: 3 / auto;
         grid-row: 4 / auto;
@@ -91,10 +95,6 @@
 
       .footer-item {
         margin: 30px 0;
-      }
-
-      atomic-facet-manager {
-        padding-top: 13px;
       }
 
       atomic-sort-dropdown {
@@ -147,13 +147,13 @@
           flex-wrap: wrap;
         }
 
+        atomic-facet-manager > * {
+          margin: 0 10px 0 0;
+        }
+
         .results-container {
           grid-row: 5 / auto;
           margin-top: 0;
-        }
-
-        atomic-facet-v1 {
-          margin: 0 10px 0 0;
         }
 
         atomic-search-box {
@@ -178,6 +178,8 @@
       <atomic-search-box></atomic-search-box>
       <atomic-facet-manager>
         <atomic-facet-v1 field="author" label="Authors"></atomic-facet-v1>
+        <atomic-facet-v1 field="objecttype" label="Type" display-values-as="link"></atomic-facet-v1>
+        <atomic-facet-v1 field="year" label="Year" display-values-as="box"></atomic-facet-v1>
       </atomic-facet-manager>
       <div class="results-container">
         <atomic-breadcrumb-manager></atomic-breadcrumb-manager>

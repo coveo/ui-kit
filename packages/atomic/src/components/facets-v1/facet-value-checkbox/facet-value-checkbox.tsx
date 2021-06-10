@@ -1,46 +1,43 @@
-import {FacetValueState} from '@coveo/headless';
 import {FunctionalComponent, h} from '@stencil/core';
-import {i18n} from 'i18next';
 import {randomID} from '../../../utils/utils';
+import {FacetValueProps} from '../facet-common';
 
-interface FacetValueCheckboxProps {
-  i18n: i18n;
-  value: string;
-  numberOfResults: number;
-  state: FacetValueState;
-  onClick(): void;
-}
-
-export const FacetValueCheckbox: FunctionalComponent<FacetValueCheckboxProps> = (
+export const FacetValueCheckbox: FunctionalComponent<FacetValueProps> = (
   props
 ) => {
   const id = randomID('facet-value-');
-  const isSelected = props.state === 'selected';
-  const displayValue = props.i18n.t(props.value);
   const count = props.numberOfResults.toLocaleString(props.i18n.language);
   const ariaLabel = props.i18n.t('facetValue', {
-    value: displayValue,
+    value: props.displayValue,
     count: props.numberOfResults,
   });
+
   return (
-    <li part="value" class="flex flex-row items-center">
+    <li key={props.displayValue} class="flex items-center">
       <button
         id={id}
         role="checkbox"
+        part="value-checkbox"
         onClick={() => props.onClick()}
-        aria-checked={isSelected.toString()}
-        class={`checkbox flex justify-center rounded border border-neutral-dark focus:outline-none focus:border-primary-light ${
-          isSelected ? 'checked bg-primary border-none' : ''
+        aria-checked={props.isSelected.toString()}
+        class={`value-checkbox flex justify-center rounded focus:outline-none focus:border-primary-light ${
+          props.isSelected
+            ? 'selected bg-primary'
+            : 'border border-neutral-dark'
         }`}
         aria-label={ariaLabel}
       ></button>
       <label
         htmlFor={id}
+        part="value-checkbox-label"
         class="w-full flex pl-2 py-2.5 text-on-background cursor-pointer ellipsed"
-        title={displayValue}
       >
-        <span part="value-label" class="value-label ellipsed">
-          {displayValue}
+        <span
+          title={props.displayValue}
+          part="value-label"
+          class="value-label ellipsed"
+        >
+          {props.displayValue}
         </span>
         <span
           part="value-count"
