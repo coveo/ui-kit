@@ -19,7 +19,7 @@ export const redirectionReducer = createReducer(
         const redirectTriggers: Trigger[] = action.payload.response.triggers.filter(
           (trigger) => isTriggerRedirect(trigger)
         );
-        state.redirectTo = redirectTriggers
+        state.redirectTo = redirectTriggers.length
           ? (redirectTriggers[0] as TriggerRedirect).content
           : '';
       })
