@@ -342,9 +342,6 @@ const actionLoaderConfiguration: ActionLoaderConfiguration[] = [
     initializer: 'loadPipelineActions',
   },
   {
-    initializer: 'loadProductRecommendationsActions',
-  },
-  {
     initializer: 'loadQueryActions',
   },
   {
@@ -352,9 +349,6 @@ const actionLoaderConfiguration: ActionLoaderConfiguration[] = [
   },
   {
     initializer: 'loadQuerySuggestActions',
-  },
-  {
-    initializer: 'loadRecommendationActions',
   },
   {
     initializer: 'loadRedirectionActions',
