@@ -75,13 +75,20 @@ export function buildRedirection(
 
   const redirectTo = engine.state.redirection.redirectTo!;
   const {onRedirect} = options;
-  if (redirectTo !== '') {
-    onRedirect();
-    dispatch(logTriggerRedirect);
-  }
 
   return {
     ...controller,
+
+    subscribe() {
+      const strictListener = () => {
+        if (redirectTo !== '') {
+          onRedirect();
+          dispatch(logTriggerRedirect);
+        }
+      };
+      strictListener();
+      return engine.subscribe(strictListener);
+    },
 
     get state() {
       return {
