@@ -35,11 +35,7 @@ const cancelInitialSearch = (engineId) => {
  */
 const executeInitialSearch = (engineId) => {
   window.coveoHeadless[engineId].engine.then((engine) => {
-    engine.dispatch(
-      CoveoHeadless.SearchActions.executeSearch(
-        CoveoHeadless.AnalyticsActions.logInterfaceLoad()
-      )
-    );
+    engine.executeFirstSearch();
   });
 };
 
@@ -107,11 +103,7 @@ async function initEngine(engineId) {
       throw new Error('Engine configuration has not been set.');
     }
     const configuration = await window.coveoHeadless[engineId].config.promise;
-
-    return new CoveoHeadless.HeadlessEngine({
-      configuration,
-      reducers: CoveoHeadless.searchAppReducers,
-    });
+    return CoveoHeadless.buildSearchEngine({configuration})
   } catch (error) {
     throw new Error('Fatal error: unable to initialize Coveo Headless: ' + error);
   }
