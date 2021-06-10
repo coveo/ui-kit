@@ -12,6 +12,9 @@ import {
   getSampleEngineConfiguration,
 } from '../engine-configuration';
 
+/**
+ * The search engine configuration.
+ */
 export interface SearchEngineConfiguration extends EngineConfiguration {
   /**
    * The global headless engine configuration options specific to the SearchAPI.
@@ -81,6 +84,11 @@ export const searchEngineConfigurationSchema = new Schema<
   }),
 });
 
+/**
+ * Creates a sample search engine configuration.
+ *
+ * @returns The sample search engine configuration.
+ */
 export function getSampleSearchEngineConfiguration(): SearchEngineConfiguration {
   return {
     ...getSampleEngineConfiguration(),

@@ -46,7 +46,7 @@ export interface ProductRecommendationEngine
   > {}
 
 /**
- * The product recommendation engine configuration options.
+ * The product recommendation engine options.
  */
 export interface ProductRecommendationEngineOptions
   extends ExternalEngineOptions<ProductRecommendationEngineState> {
