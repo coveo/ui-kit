@@ -52,10 +52,10 @@ export interface RedirectionTriggerState {
  * Creates a `RedirectionTrigger` controller instance.
  *
  * @param engine - The headless engine.
- * @param props - The configurable `Redirection` properties.
- * @returns A `Redirection` controller instance.
+ * @param props - The configurable `RedirectionTrigger` properties.
+ * @returns A `RedirectionTrigger` controller instance.
  * */
-export function buildRedirection(
+export function buildRedirectionTrigger(
   engine: Engine<object>,
   props: RedirectionTriggerProps = {}
 ): RedirectionTrigger {
