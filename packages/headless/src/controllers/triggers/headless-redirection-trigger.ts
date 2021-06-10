@@ -12,14 +12,14 @@ import {logTriggerRedirect} from '../../features/redirection/redirection-analyti
 
 export interface RedirectionTriggerOptions {
   /**
-   * The function used to handle whenever the `Redirection` controller's state's `redirectTo` value changes.
+   * The function used to handle whenever the `RedirectionTrigger` controller's state's `redirectTo` value changes.
    */
   onRedirect(): void;
 }
 
 export interface RedirectionTriggerProps {
   /**
-   * The options for the `Redirection` controller.
+   * The options for the `RedirectionTrigger` controller.
    */
   options?: RedirectionTriggerOptions;
 }
@@ -29,17 +29,17 @@ const optionsSchema = new Schema({
 });
 
 /**
- * The `Redirection` controller handles redirection actions.
+ * The `RedirectionTrigger` controller handles redirection actions.
  */
 export interface RedirectionTrigger extends Controller {
   /**
-   * the state of the Redirection controller.
+   * the state of the `RedirectionTrigger` controller.
    */
   state: RedirectionTriggerState;
 }
 
 /**
- * A scoped and simplified part of the headless state that is relevant to the `Redirection` controller.
+ * A scoped and simplified part of the headless state that is relevant to the `RedirectionTrigger` controller.
  */
 export interface RedirectionTriggerState {
   /**
@@ -49,7 +49,7 @@ export interface RedirectionTriggerState {
 }
 
 /**
- * Creates a `Redirection` controller instance.
+ * Creates a `RedirectionTrigger` controller instance.
  *
  * @param engine - The headless engine.
  * @param props - The configurable `Redirection` properties.
