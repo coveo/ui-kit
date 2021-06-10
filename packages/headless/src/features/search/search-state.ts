@@ -40,6 +40,7 @@ export function getSearchInitialState(): SearchState {
       totalCountFiltered: 0,
       facets: [],
       queryCorrections: [],
+      triggers: [],
     },
     duration: 0,
     queryExecuted: '',
