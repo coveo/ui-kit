@@ -62,7 +62,7 @@ export class TestFixture {
     });
 
     if (this.execFirstSearch) {
-      cy.wait(`@${this.interceptAliases.Search}`);
+      cy.wait(TestFixture.interceptAliases.Search);
     }
 
     this.aliases.forEach((alias) => alias(this));
@@ -70,11 +70,11 @@ export class TestFixture {
     return this;
   }
 
-  public get interceptAliases() {
+  public static get interceptAliases() {
     return {
-      UA: 'coveoAnalytics',
-      QuerySuggestions: 'coveoQuerySuggest',
-      Search: 'coveoSearch',
+      UA: '@coveoAnalytics',
+      QuerySuggestions: '@coveoQuerySuggest',
+      Search: '@coveoSearch',
     };
   }
 
@@ -88,17 +88,17 @@ export class TestFixture {
     cy.intercept({
       method: 'POST',
       path: '**/rest/ua/v15/analytics/*',
-    }).as(this.interceptAliases.UA);
+    }).as(TestFixture.interceptAliases.UA.substring(1));
 
     cy.intercept({
       method: 'POST',
       path: '**/rest/search/v2/querySuggest?*',
-    }).as(this.interceptAliases.QuerySuggestions);
+    }).as(TestFixture.interceptAliases.QuerySuggestions.substring(1));
 
     cy.intercept({
       method: 'POST',
       url: '**/rest/search/v2?*',
-    }).as(this.interceptAliases.Search);
+    }).as(TestFixture.interceptAliases.Search.substring(1));
   }
 }
 
