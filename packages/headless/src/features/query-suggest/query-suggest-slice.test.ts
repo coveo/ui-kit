@@ -10,9 +10,6 @@ import {
 import {buildMockQuerySuggest} from '../../test/mock-query-suggest';
 import {updateQuerySetQuery} from '../query-set/query-set-actions';
 import {QuerySuggestSet, QuerySuggestState} from './query-suggest-state';
-import {executeSearch} from '../search/search-actions';
-import {buildMockSearch} from '../../test/mock-search';
-import {logSearchboxSubmit} from '../query/query-analytics-actions';
 
 describe('querySuggest slice', () => {
   const id = 'searchBox_1234';
@@ -54,7 +51,7 @@ describe('querySuggest slice', () => {
 
   it('should handle selectQuerySuggestion on existing state', () => {
     const expectedState = addToDefaultState({
-      completions: [],
+      completions: getCompletions(),
       q: 'some expression',
     });
 
@@ -72,10 +69,15 @@ describe('querySuggest slice', () => {
   });
 
   it('should handle clearQuerySuggest on existing state', () => {
-    const expectedState = addToDefaultState({completions: [], q: ''});
+    const expectedState = addToDefaultState({
+      completions: [],
+      q: '',
+      partialQueries: [],
+    });
     const existingState = addToDefaultState({
       completions: getCompletions(),
       q: 'some query',
+      partialQueries: ['s', 'so', 'som', 'some'],
     });
     expect(querySuggestReducer(existingState, clearQuerySuggest({id}))).toEqual(
       expectedState
@@ -186,15 +188,19 @@ describe('querySuggest slice', () => {
         );
         expect(nextState[id]?.partialQueries).toEqual([q]);
       });
-    });
-  });
 
-  it('#executeSearch.fulfilled causes the partialQueries array to be reset', () => {
-    const query = 'query';
-    const initialState = addToDefaultState({partialQueries: [query]});
-    const search = buildMockSearch();
-    const action = executeSearch.fulfilled(search, '', logSearchboxSubmit());
-    const finalState = querySuggestReducer(initialState, action);
-    expect(finalState[id]?.partialQueries).toEqual([]);
+      it('should encode `;` characters in the list of partialQueries', () => {
+        const q = ';';
+        const existingState = addToDefaultState({
+          q,
+          currentRequestId: 'the_right_id',
+        });
+        const nextState = querySuggestReducer(
+          existingState,
+          fetchQuerySuggestionsFulfilledAction
+        );
+        expect(nextState[id]?.partialQueries).toEqual([encodeURIComponent(q)]);
+      });
+    });
   });
 });
