@@ -19,9 +19,7 @@ export {
 export {LogLevel} from './app/logger';
 
 // State
-export {ProductRecommendationsAppState} from './state/product-recommendations-app-state';
 export {SearchParametersState, SearchAppState} from './state/search-app-state';
-export {RecommendationAppState} from './state/recommendation-app-state';
 
 // Controllers
 export * from './controllers/index';

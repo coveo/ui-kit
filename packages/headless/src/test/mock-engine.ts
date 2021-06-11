@@ -1,4 +1,3 @@
-import {Engine} from '../app/headless-engine';
 import {createMockState} from './mock-state';
 import configureStore from 'redux-mock-store';
 import {
@@ -25,6 +24,9 @@ import {getSearchHubInitialState} from '../features/search-hub/search-hub-state'
 import {getPipelineInitialState} from '../features/pipeline/pipeline-state';
 import {getDebugInitialState} from '../features/debug/debug-state';
 import {SearchEngine} from '../app/search-engine/search-engine';
+import {RecommendationEngine} from '../app/recommendation-engine/recommendation-engine';
+import {CoreEngine} from '../app/engine';
+import {ProductRecommendationEngine} from '../app/product-recommendation-engine/product-recommendation-engine';
 
 type AsyncActionCreator<ThunkArg> = ActionCreatorWithPreparedPayload<
   [string, ThunkArg],
@@ -39,7 +41,7 @@ export type AppState =
   | RecommendationAppState
   | ProductRecommendationsAppState;
 
-export interface MockEngine<T extends AppState> extends Engine<T> {
+export interface MockEngine<T extends AppState> extends CoreEngine<T> {
   actions: AnyAction[];
   findAsyncAction: <ThunkArg>(
     action: AsyncActionCreator<ThunkArg>
@@ -62,28 +64,42 @@ export interface MockSearchEngine
     MEngine {}
 
 export function buildMockSearchAppEngine(
-  config: Partial<Engine<SearchAppState>> = {}
+  config: Partial<SearchEngine<SearchAppState>> = {}
 ): MockSearchEngine {
+  const engine = buildMockEngine(config, createMockState);
   return {
-    ...buildMockEngine(config, createMockState),
+    ...engine,
+    get actions() {
+      return engine.actions;
+    },
     executeFirstSearch: jest.fn(),
   };
 }
 
+export interface MockRecommendationEngine
+  extends RecommendationEngine,
+    MEngine {}
+
 export function buildMockRecommendationAppEngine(
-  config: Partial<Engine<RecommendationAppState>> = {}
-): MockEngine<RecommendationAppState> {
+  config: Partial<RecommendationEngine<RecommendationAppState>> = {}
+): MockRecommendationEngine {
   return buildMockEngine(config, createMockRecommendationState);
 }
 
+export interface MockProductRecommendationEngine
+  extends ProductRecommendationEngine,
+    MEngine {}
+
 export function buildMockProductRecommendationsAppEngine(
-  config: Partial<Engine<ProductRecommendationsAppState>> = {}
-): MockEngine<ProductRecommendationsAppState> {
+  config: Partial<
+    ProductRecommendationEngine<ProductRecommendationsAppState>
+  > = {}
+): MockProductRecommendationEngine {
   return buildMockEngine(config, buildMockProductRecommendationsState);
 }
 
 function buildMockEngine<T extends AppState>(
-  config: Partial<Engine<T>> = {},
+  config: Partial<CoreEngine<T>> = {},
   mockState: () => T
 ): MockEngine<T> {
   const logger = pino({level: 'silent'});
@@ -110,12 +126,12 @@ function buildMockEngine<T extends AppState>(
       const action = this.actions.find((a) => a.type === actionCreator.type);
       return isAsyncAction<ThunkArg>(action) ? action : undefined;
     },
-    ...config,
     renewAccessToken: mockRenewAccessToken,
     logger,
     addReducers: jest.fn(),
     enableAnalytics: jest.fn(),
     disableAnalytics: jest.fn(),
+    ...config,
   };
 }
 

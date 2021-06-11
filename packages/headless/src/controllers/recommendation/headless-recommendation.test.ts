@@ -1,6 +1,6 @@
 import {
   buildMockRecommendationAppEngine,
-  MockEngine,
+  MockRecommendationEngine,
 } from '../../test/mock-engine';
 import {RecommendationAppState} from '../../state/recommendation-app-state';
 import {
@@ -19,7 +19,7 @@ import {recommendationReducer} from '../../features/recommendation/recommendatio
 describe('headless recommendation', () => {
   let state: RecommendationAppState;
   let recommendation: RecommendationList;
-  let engine: MockEngine<RecommendationAppState>;
+  let engine: MockRecommendationEngine;
 
   beforeEach(() => {
     state = createMockRecommendationState();
