@@ -94,7 +94,8 @@ node('linux && docker') {
       stage('Deployment pipeline upload') {
         lerna = readJSON file: 'lerna.json'
         version = lerna.version
-        sh "deployment-package package create --with-deploy --version ${version} --resolve COMMIT_HASH=${commitHash} --resolve VERSION=${version}  || true"
+        (minor, major) = (version =~ /^([^\.]*)\.[^\.]*/)[0]
+        sh "deployment-package package create --with-deploy --version ${version} --resolve COMMIT_HASH=${commitHash} --resolve MINORVERSION=${minor} --resolve MAJORVERSION=${major} || true"
       }
     }
   }
