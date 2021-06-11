@@ -1,6 +1,6 @@
 import {Result} from '../../api/search/search/result';
-import {Engine} from '../../app/headless-engine';
 import {configuration} from '../../app/reducers';
+import {SearchEngine} from '../../app/search-engine/search-engine';
 import {logDocumentOpen} from '../../features/result/result-analytics-actions';
 import {ConfigurationSection} from '../../state/state-sections';
 import {loadReducerError} from '../../utils/errors';
@@ -64,7 +64,7 @@ export interface InteractiveResult {
  * @returns An `InteractiveResult` controller instance.
  */
 export function buildInteractiveResult(
-  engine: Engine<object>,
+  engine: SearchEngine,
   props: InteractiveResultProps
 ): InteractiveResult {
   if (!loadInteractiveResultReducers(engine)) {
@@ -106,8 +106,8 @@ export function buildInteractiveResult(
 }
 
 function loadInteractiveResultReducers(
-  engine: Engine<object>
-): engine is Engine<ConfigurationSection> {
+  engine: SearchEngine
+): engine is SearchEngine<ConfigurationSection> {
   engine.addReducers({configuration});
   return true;
 }
