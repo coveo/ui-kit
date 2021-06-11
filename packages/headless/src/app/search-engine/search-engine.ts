@@ -27,7 +27,7 @@ import {executeSearch} from '../../features/search/search-actions';
 import {logInterfaceLoad} from '../../features/analytics/analytics-actions';
 import {firstSearchExecutedSelector} from '../../features/search/search-selectors';
 import {SearchAppState} from '../../state/search-app-state';
-import {SearchThunkExtraArguments} from '../headless-engine';
+import {SearchThunkExtraArguments} from '../search-thunk-extra-arguments';
 
 export {SearchEngineConfiguration, getSampleSearchEngineConfiguration};
 

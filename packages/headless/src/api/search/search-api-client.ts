@@ -33,7 +33,7 @@ import {HtmlRequest} from './html/html-request';
 import {findEncoding} from './encoding-finder';
 import {TextDecoder} from 'web-encoding';
 import {BaseParam} from '../platform-service-params';
-import {SearchThunkExtraArguments} from '../../app/headless-engine';
+import {SearchThunkExtraArguments} from '../../app/search-thunk-extra-arguments';
 
 export type AllSearchAPIResponse = Plan | Search | QuerySuggest;
 

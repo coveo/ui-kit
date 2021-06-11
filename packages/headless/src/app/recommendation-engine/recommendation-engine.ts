@@ -5,7 +5,7 @@ import {
   EngineOptions,
   ExternalEngineOptions,
 } from '../engine';
-import {SearchThunkExtraArguments} from '../headless-engine';
+import {SearchThunkExtraArguments} from '../search-thunk-extra-arguments';
 import {RecommendationAppState} from '../../state/recommendation-app-state';
 import {debug, pipeline, recommendation, searchHub} from '../reducers';
 import {

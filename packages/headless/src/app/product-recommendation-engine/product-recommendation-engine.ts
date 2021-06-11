@@ -22,7 +22,7 @@ import {
   ProductRecommendationEngineConfiguration,
   productRecommendationEngineConfigurationSchema,
 } from './product-recommendation-engine-configuration';
-import {SearchThunkExtraArguments} from '../headless-engine';
+import {SearchThunkExtraArguments} from '../search-thunk-extra-arguments';
 
 export {
   ProductRecommendationEngineConfiguration,
