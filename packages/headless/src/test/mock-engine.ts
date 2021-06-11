@@ -33,19 +33,12 @@ type AsyncActionCreator<ThunkArg> = ActionCreatorWithPreparedPayload<
   {arg: ThunkArg; requestId: string}
 >;
 
-export type AppState =
+type AppState =
   | SearchAppState
   | RecommendationAppState
   | ProductRecommendationsAppState;
 
-export interface MockEngine<T extends AppState> extends CoreEngine<T> {
-  actions: AnyAction[];
-  findAsyncAction: <ThunkArg>(
-    action: AsyncActionCreator<ThunkArg>
-  ) => ReturnType<AsyncActionCreator<ThunkArg>> | undefined;
-}
-
-interface MEngine {
+interface MockEngine {
   actions: AnyAction[];
   findAsyncAction: <ThunkArg>(
     action: AsyncActionCreator<ThunkArg>
@@ -58,7 +51,7 @@ const mockRenewAccessToken = async () => '';
 
 export interface MockSearchEngine
   extends SearchEngine<SearchAppState>,
-    MEngine {}
+    MockEngine {}
 
 export function buildMockSearchAppEngine(
   config: Partial<SearchEngine<SearchAppState>> = {}
@@ -66,16 +59,13 @@ export function buildMockSearchAppEngine(
   const engine = buildMockEngine(config, createMockState);
   return {
     ...engine,
-    get actions() {
-      return engine.actions;
-    },
     executeFirstSearch: jest.fn(),
   };
 }
 
 export interface MockRecommendationEngine
   extends RecommendationEngine,
-    MEngine {}
+    MockEngine {}
 
 export function buildMockRecommendationAppEngine(
   config: Partial<RecommendationEngine<RecommendationAppState>> = {}
@@ -85,7 +75,7 @@ export function buildMockRecommendationAppEngine(
 
 export interface MockProductRecommendationEngine
   extends ProductRecommendationEngine,
-    MEngine {}
+    MockEngine {}
 
 export function buildMockProductRecommendationsAppEngine(
   config: Partial<
@@ -98,7 +88,7 @@ export function buildMockProductRecommendationsAppEngine(
 function buildMockEngine<T extends AppState>(
   config: Partial<CoreEngine<T>> = {},
   mockState: () => T
-): MockEngine<T> {
+) {
   const logger = pino({level: 'silent'});
   const storeConfiguration = configureMockStore(logger);
   const store = storeConfiguration(config.state || mockState());
