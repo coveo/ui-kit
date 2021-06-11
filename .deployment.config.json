@@ -49,7 +49,7 @@
       "id": "deploy-headless-to-s3-version",
       "s3": {
         "bucket": "{terraform.infra.infra.bucket_binaries}",
-        "directory": "proda/StaticCDN/headless/v$[PRERELEASE]",
+        "directory": "proda/StaticCDN/headless/v$[VERSION]",
         "source": "packages/headless/dist/browser",
         "parameters": {
           "acl": "public-read"
@@ -63,7 +63,7 @@
       "id": "deploy-atomic-to-s3-version",
       "s3": {
         "bucket": "{terraform.infra.infra.bucket_binaries}",
-        "directory": "proda/StaticCDN/atomic/v$[PRERELEASE]",
+        "directory": "proda/StaticCDN/atomic/v$[VERSION]",
         "source": "packages/atomic/dist/atomic",
         "parameters": {
           "acl": "public-read"
