@@ -39,8 +39,8 @@ type SearchEngineState = StateFromReducersMapObject<SearchEngineReducers> &
 /**
  * The engine for powering search experiences.
  */
-export interface SearchEngine
-  extends CoreEngine<SearchEngineState, SearchThunkExtraArguments> {
+export interface SearchEngine<State extends object = {}>
+  extends CoreEngine<State & SearchEngineState, SearchThunkExtraArguments> {
   executeFirstSearch(): void;
 }
 

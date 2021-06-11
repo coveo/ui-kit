@@ -7,8 +7,8 @@ import {QueryRankingExpression} from '../../api/search/search/query-ranking-expr
 import {Result} from '../../api/search/search/result';
 import {SearchResponseSuccessWithDebugInfo} from '../../api/search/search/search-response';
 import {SecurityIdentity} from '../../api/search/search/security-identity';
-import {Engine} from '../../app/headless-engine';
 import {configuration, debug, search} from '../../app/reducers';
+import {SearchEngine} from '../../app/search-engine/search-engine';
 import {
   AnalyticsType,
   makeNoopAnalyticsAction,
@@ -175,7 +175,7 @@ export interface QueryExpressions {
  * @returns A `RelevanceInspector` controller instance.
  */
 export function buildRelevanceInspector(
-  engine: Engine<object>,
+  engine: SearchEngine,
   props: RelevanceInspectorProps = {}
 ): RelevanceInspector {
   if (!loadRelevanceInspectorReducers(engine)) {
@@ -302,8 +302,8 @@ export function buildRelevanceInspector(
 }
 
 function loadRelevanceInspectorReducers(
-  engine: Engine<object>
-): engine is Engine<DebugSection & SearchSection & ConfigurationSection> {
+  engine: SearchEngine
+): engine is SearchEngine<DebugSection & SearchSection & ConfigurationSection> {
   engine.addReducers({
     debug,
     search,

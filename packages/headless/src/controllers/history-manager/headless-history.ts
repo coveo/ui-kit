@@ -1,4 +1,4 @@
-import {Engine} from '../../app/headless-engine';
+import {SearchEngine} from '../../app/search-engine/search-engine';
 import {buildHistoryManager} from './headless-history-manager';
 
 /**
@@ -23,7 +23,7 @@ export type HistoryState = History['state'];
  *
  * @deprecated The `buildHistory` controller will be removed in a future release. Please use `buildHistoryManager` instead.
  */
-export const buildHistory = (engine: Engine) => {
+export const buildHistory = (engine: SearchEngine) => {
   engine.logger.warn(
     'The "buildHistory" controller will be removed in a future release. Please use "buildHistoryManager" instead.'
   );

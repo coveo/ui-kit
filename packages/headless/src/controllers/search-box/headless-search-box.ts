@@ -5,7 +5,6 @@ import {
   registerQuerySuggest,
   selectQuerySuggestion,
 } from '../../features/query-suggest/query-suggest-actions';
-import {Engine} from '../../app/headless-engine';
 import {updateQuery} from '../../features/query/query-actions';
 import {
   registerQuerySetQuery,
@@ -46,6 +45,7 @@ import {
 } from '../../app/reducers';
 import {loadReducerError} from '../../utils/errors';
 import {deselectAllFacets} from '../../features/facets/generic/facet-actions';
+import {SearchEngine} from '../../app/search-engine/search-engine';
 
 export {SearchBoxOptions, SuggestionHighlightingOptions, Delimiters};
 
@@ -139,7 +139,7 @@ export interface Suggestion {
  * @returns A `SearchBox` controller instance.
  */
 export function buildSearchBox(
-  engine: Engine<object>,
+  engine: SearchEngine,
   props: SearchBoxProps = {}
 ): SearchBox {
   if (!loadSearchBoxReducers(engine)) {
@@ -247,8 +247,8 @@ function getSuggestions(
 }
 
 function loadSearchBoxReducers(
-  engine: Engine<object>
-): engine is Engine<
+  engine: SearchEngine
+): engine is SearchEngine<
   QuerySection &
     QuerySuggestionSection &
     ConfigurationSection &

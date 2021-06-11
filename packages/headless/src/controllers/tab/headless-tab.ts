@@ -1,4 +1,3 @@
-import {Engine} from '../../app/headless-engine';
 import {buildController, Controller} from '../controller/headless-controller';
 import {executeSearch} from '../../features/search/search-actions';
 import {logInterfaceChange} from '../../features/analytics/analytics-actions';
@@ -19,6 +18,7 @@ import {advancedSearchQueries, configuration} from '../../app/reducers';
 import {loadReducerError} from '../../utils/errors';
 import {setOriginLevel2} from '../../features/configuration/configuration-actions';
 import {getConfigurationInitialState} from '../../features/configuration/configuration-state';
+import {SearchEngine} from '../../app/search-engine/search-engine';
 
 export interface TabOptions {
   /**
@@ -97,7 +97,7 @@ export interface TabState {
  * @param props - The configurable `Tab` properties.
  * @returns A `Tab` controller instance.
  */
-export function buildTab(engine: Engine<object>, props: TabProps): Tab {
+export function buildTab(engine: SearchEngine, props: TabProps): Tab {
   assertIdNotEqualToDefaultOriginLevel2(props.options.id);
 
   if (!loadTabReducers(engine)) {
@@ -159,8 +159,8 @@ export function buildTab(engine: Engine<object>, props: TabProps): Tab {
 }
 
 function loadTabReducers(
-  engine: Engine<object>
-): engine is Engine<ConfigurationSection & AdvancedSearchQueriesSection> {
+  engine: SearchEngine
+): engine is SearchEngine<ConfigurationSection & AdvancedSearchQueriesSection> {
   engine.addReducers({configuration, advancedSearchQueries});
   return true;
 }
