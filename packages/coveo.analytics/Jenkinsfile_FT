@@ -19,7 +19,7 @@ pipeline {
     booleanParam(name: 'ONLY_SEND_SLACK_ON_FAILURE', defaultValue: true, description: 'Whether to only send a slack message on failure')
     string(name: 'VERSION', defaultValue: '2', description: 'The version to test')
     string(name: 'TOKEN_ID', defaultValue: 'coveo-analytics-send-to-dev-commercestore-api-key', description: 'The API Key used to push analytics')
-    string(name: 'ENDPOINT', defaultValue: 'https://platformdev.cloud.coveo.com/rest/ua', description: 'The endpoint on which to send the analytics')
+    string(name: 'ENDPOINT', defaultValue: 'https://analyticsdev.cloud.coveo.com/rest/ua', description: 'The endpoint on which to send the analytics')
     choice(name: 'targetEnv', choices: ['dev', 'prd'], description: 'The target environment')
   }
 
