@@ -7,7 +7,7 @@ export default class QuanticResultLink extends LightningElement {
   /** @type {string} */
   @api engineId;
 
-  /** @type {import("coveo").Engine} */
+  /** @type {import("coveo").SearchEngine} */
   engine;
 
   connectedCallback() {
@@ -19,7 +19,7 @@ export default class QuanticResultLink extends LightningElement {
   }
 
   /**
-   * @param {import("coveo").Engine} engine
+   * @param {import("coveo").SearchEngine} engine
    */
   @api
   initialize(engine) {
@@ -34,7 +34,7 @@ export default class QuanticResultLink extends LightningElement {
   /**
    * Binds the logging of document
    * @returns An unbind function for the events
-   * @param {import("coveo").Engine} engine An instance of an Headless Engine
+   * @param {import("coveo").SearchEngine} engine An instance of an Headless Engine
    * @param {import("coveo").Result} result The result object
    * @param {import("lwc").ShadowRootTheGoodPart} resultElement Parent result element
    * @param {string} selector Optional. Css selector that selects all links to the document. Default: "a" tags with the clickUri as "href" parameter.

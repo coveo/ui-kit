@@ -36,11 +36,17 @@ type SearchEngineReducers = typeof searchEngineReducers;
 type SearchEngineState = StateFromReducersMapObject<SearchEngineReducers> &
   Partial<SearchAppState>;
 
+/**
+ * The engine for powering search experiences.
+ */
 export interface SearchEngine
   extends CoreEngine<SearchEngineState, SearchThunkExtraArguments> {
   executeFirstSearch(): void;
 }
 
+/**
+ * The search engine options.
+ */
 export interface SearchEngineOptions
   extends ExternalEngineOptions<SearchEngineState> {
   /**
@@ -49,6 +55,12 @@ export interface SearchEngineOptions
   configuration: SearchEngineConfiguration;
 }
 
+/**
+ * Creates a search engine instance.
+ *
+ * @param options - The search engine options.
+ * @returns A search engine instance.
+ */
 export function buildSearchEngine(options: SearchEngineOptions): SearchEngine {
   const logger = buildLogger(options.loggerOptions);
   validateConfiguration(options.configuration, logger);

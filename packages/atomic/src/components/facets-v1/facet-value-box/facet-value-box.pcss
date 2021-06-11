@@ -1,0 +1,14 @@
+/**
+ * @prop --atomic-facet-boxes-per-row: Number of facet values to display per row, when the display is 'box'
+ * @prop --atomic-facet-boxes-gap: Gap value for facet values, when the display is 'box'
+ */
+.box-container {
+  @apply grid;
+  grid-template-columns: repeat(var(--atomic-facet-boxes-per-row, 4), minmax(0, 1fr));
+  gap: var(--atomic-facet-boxes-gap, 0.5rem);
+}
+
+.value-box:hover .value-label,
+.value-box:focus .value-label {
+  @apply text-primary-light underline;
+}

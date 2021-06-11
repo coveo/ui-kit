@@ -3,6 +3,44 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.23.2](https://github.com/coveo/ui-kit/compare/v0.23.1...v0.23.2) (2021-06-10)
+
+**Note:** Version bump only for package ui-kit
+
+
+
+
+
+## [0.23.1](https://github.com/coveo/ui-kit/compare/v0.23.0...v0.23.1) (2021-06-10)
+
+**Note:** Version bump only for package ui-kit
+
+
+
+
+
+# [0.23.0](https://github.com/coveo/ui-kit/compare/v0.22.1...v0.23.0) (2021-06-10)
+
+
+### Features
+
+* **atomic:** add new facet link & box values  ([#874](https://github.com/coveo/ui-kit/issues/874)) ([1aeb7ce](https://github.com/coveo/ui-kit/commit/1aeb7ceb14c6ba8d0910cf94d3fcea1ca9d0d99d))
+
+
+
+
+
+## [0.22.1](https://github.com/coveo/ui-kit/compare/v0.22.0...v0.22.1) (2021-06-10)
+
+
+### Bug Fixes
+
+* **atomic,headless:** add new packages to dev files being copied ([#880](https://github.com/coveo/ui-kit/issues/880)) ([36ab657](https://github.com/coveo/ui-kit/commit/36ab6579cf0e301275bfde1f4d668e505842b323))
+
+
+
+
+
 # [0.22.0](https://github.com/coveo/ui-kit/compare/v0.21.0...v0.22.0) (2021-06-09)
 
 

@@ -49,7 +49,7 @@ export interface RecommendationEngine
   extends CoreEngine<RecommendationEngineState, SearchThunkExtraArguments> {}
 
 /**
- * The recommendation engine configuration options.
+ * The recommendation engine options.
  */
 export interface RecommendationEngineOptions
   extends ExternalEngineOptions<RecommendationEngineState> {
