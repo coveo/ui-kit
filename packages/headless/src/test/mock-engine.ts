@@ -20,9 +20,6 @@ import {
 } from '../app/logger-middlewares';
 import {validatePayloadAndThrow} from '../utils/validate-payload';
 import {buildMockSearchAPIClient} from './mock-search-api-client';
-import {getSearchHubInitialState} from '../features/search-hub/search-hub-state';
-import {getPipelineInitialState} from '../features/pipeline/pipeline-state';
-import {getDebugInitialState} from '../features/debug/debug-state';
 import {SearchEngine} from '../app/search-engine/search-engine';
 import {RecommendationEngine} from '../app/recommendation-engine/recommendation-engine';
 import {CoreEngine} from '../app/engine';
@@ -109,12 +106,7 @@ function buildMockEngine<T extends AppState>(
 
   return {
     store,
-    state: {
-      ...mockState(),
-      searchHub: getSearchHubInitialState(),
-      pipeline: getPipelineInitialState(),
-      debug: getDebugInitialState(),
-    },
+    state: mockState(),
     subscribe: jest.fn(() => unsubscribe),
     get dispatch() {
       return store.dispatch;
