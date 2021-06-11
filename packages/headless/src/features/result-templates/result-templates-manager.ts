@@ -7,12 +7,11 @@ import {
   SchemaValidationError,
   StringValue,
 } from '@coveo/bueno';
-import {Engine} from '../../app/headless-engine';
 import {registerFieldsToInclude} from '../fields/fields-actions';
-import {SearchAppState} from '../../state/search-app-state';
 import {fields} from '../../app/reducers';
 import {loadReducerError} from '../../utils/errors';
 import {FieldsSection} from '../../state/state-sections';
+import {CoreEngine} from '../../app/engine';
 
 const prioritySchema = new Schema({
   priority: new NumberValue({required: false, default: 0, min: 0}),
@@ -45,13 +44,9 @@ export interface ResultTemplatesManager<Content = unknown> {
  * @param engine (HeadlessEngine) The `HeadlessEngine` instance of your application.
  * @returns (ResultTemplatesManager<Content, State>) A new result templates manager.
  */
-export function buildResultTemplatesManager<
-  Content = unknown,
-  /**
-   * @deprecated The "State" generic is no longer needed and will be removed in the next major version. Please do not specify it.
-   */
-  State extends object = SearchAppState
->(engine: Engine<State>): ResultTemplatesManager<Content> {
+export function buildResultTemplatesManager<Content = unknown>(
+  engine: CoreEngine
+): ResultTemplatesManager<Content> {
   if (!loadResultTemplatesManagerReducers(engine)) {
     throw loadReducerError;
   }
@@ -111,8 +106,8 @@ export function buildResultTemplatesManager<
 }
 
 function loadResultTemplatesManagerReducers(
-  engine: Engine<object>
-): engine is Engine<FieldsSection> {
+  engine: CoreEngine
+): engine is CoreEngine<FieldsSection> {
   engine.addReducers({fields});
   return true;
 }
