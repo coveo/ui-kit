@@ -38,14 +38,12 @@ import {buildResultPreviewRequest} from '../../features/result-preview/result-pr
 
 jest.mock('../platform-client');
 describe('search api client', () => {
-  const renewAccessToken = async () => 'newToken';
   const logger = pino({level: 'silent'});
   let searchAPIClient: SearchAPIClient;
   let state: SearchAppState;
 
   function buildSearchAPIClient(options?: Partial<SearchAPIClientOptions>) {
     searchAPIClient = buildMockSearchAPIClient({
-      renewAccessToken,
       logger,
       ...options,
     });
@@ -174,7 +172,6 @@ describe('search api client', () => {
         url: `${
           state.configuration.search.apiBaseUrl
         }?${getOrganizationIdQueryParam(req)}`,
-        renewAccessToken,
         logger,
         requestParams: {
           q: state.query.q,
@@ -228,7 +225,6 @@ describe('search api client', () => {
         url: `${
           state.configuration.search.apiBaseUrl
         }/plan?${getOrganizationIdQueryParam(req)}`,
-        renewAccessToken,
         logger,
         requestParams: {
           q: state.query.q,
@@ -260,7 +256,6 @@ describe('search api client', () => {
         url: `${
           state.configuration.search.apiBaseUrl
         }/querySuggest?${getOrganizationIdQueryParam(req)}`,
-        renewAccessToken,
         logger,
         requestParams: {
           q: state.querySuggest[id]!.q,
@@ -298,7 +293,6 @@ describe('search api client', () => {
           url: `${
             state.configuration.search.apiBaseUrl
           }/facet?${getOrganizationIdQueryParam(req)}`,
-          renewAccessToken,
         });
       });
 
@@ -388,7 +382,6 @@ describe('search api client', () => {
           url: `${
             recommendationState.configuration.search.apiBaseUrl
           }?${getOrganizationIdQueryParam(req)}`,
-          renewAccessToken,
           logger,
           requestParams: {
             recommendation: recommendationState.recommendation.id,
@@ -437,7 +430,6 @@ describe('search api client', () => {
           url: `${
             productRecommendationsState.configuration.search.apiBaseUrl
           }?${getOrganizationIdQueryParam(req)}`,
-          renewAccessToken,
           logger,
           requestParams: {
             recommendation:
