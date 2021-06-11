@@ -15,7 +15,6 @@ export function buildMockSearchAPIClient(
   options?: Partial<SearchAPIClientOptions>
 ) {
   return new SearchAPIClient({
-    renewAccessToken: async () => '',
     logger: pino({level: 'silent'}),
     preprocessRequest: NoopPreprocessRequest,
     deprecatedPreprocessRequest: NoopPreprocessRequestMiddleware,

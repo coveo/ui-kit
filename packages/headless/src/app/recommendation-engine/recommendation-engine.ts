@@ -74,15 +74,7 @@ export function buildRecommendationEngine(
   const logger = buildLogger(options.loggerOptions);
   validateConfiguration(options.configuration, logger);
 
-  const ref = {
-    renewAccessToken: () => Promise.resolve(''),
-  };
-
-  const searchAPIClient = createSearchAPIClient(
-    options.configuration,
-    logger,
-    ref
-  );
+  const searchAPIClient = createSearchAPIClient(options.configuration, logger);
 
   const thunkArguments = {
     ...buildThunkExtraArguments(options.configuration, logger),
@@ -95,7 +87,6 @@ export function buildRecommendationEngine(
   };
 
   const engine = buildEngine(augmentedOptions, thunkArguments);
-  ref.renewAccessToken = engine.renewAccessToken;
 
   return {
     ...engine,
@@ -120,12 +111,10 @@ function validateConfiguration(
 
 function createSearchAPIClient(
   configuration: RecommendationEngineConfiguration,
-  logger: Logger,
-  ref: {renewAccessToken: () => Promise<string>}
+  logger: Logger
 ) {
   return new SearchAPIClient({
     logger,
-    renewAccessToken: () => ref.renewAccessToken(),
     preprocessRequest: configuration.preprocessRequest || NoopPreprocessRequest,
     deprecatedPreprocessRequest: NoopPreprocessRequestMiddleware,
     postprocessSearchResponseMiddleware: NoopPostprocessSearchResponseMiddleware,
