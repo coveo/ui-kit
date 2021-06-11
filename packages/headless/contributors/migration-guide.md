@@ -15,3 +15,4 @@ import {loadSearchActions} from '@coveo/headless';
 const actions =  loadSearchActions(engine);
 actions.executeSearch(...)
 ```
+- The `renewAccessToken` concept is now only exposed as an engine configuration option. When the function is specified, a headless engine will call it to obtain a new token if it detects a `419` HTTP status code.
