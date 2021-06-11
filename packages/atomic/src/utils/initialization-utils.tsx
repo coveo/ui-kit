@@ -166,30 +166,14 @@ export function BindStateToController(
   controllerProperty: string,
   options?: {
     /**
-     * Whether the component should resubscribe when disconnected and reconnected from the DOM
-     */
-    subscribeOnConnectedCallback?: boolean;
-    /**
      * Component's method to be called when state is updated.
      */
     onUpdateCallbackMethod?: string;
   }
 ) {
   return (component: InitializableComponent, stateProperty: string) => {
-    const {connectedCallback, disconnectedCallback, initialize} = component;
-    let unsubscribe = () => {};
-
-    component.connectedCallback = function () {
-      if (options?.subscribeOnConnectedCallback && this[controllerProperty]) {
-        unsubscribe = this[controllerProperty].subscribe(() => {
-          this[stateProperty] = this[controllerProperty].state;
-          options?.onUpdateCallbackMethod &&
-            this[options.onUpdateCallbackMethod] &&
-            this[options.onUpdateCallbackMethod]();
-        });
-      }
-      connectedCallback && connectedCallback.call(this);
-    };
+    const {disconnectedCallback, initialize} = component;
+    let unsubscribeController = () => {};
 
     component.initialize = function () {
       initialize && initialize.call(this);
@@ -218,15 +202,19 @@ export function BindStateToController(
         );
       }
 
-      unsubscribe = this[controllerProperty].subscribe(() => {
+      unsubscribeController = this[controllerProperty].subscribe(() => {
         this[stateProperty] = this[controllerProperty].state;
         options?.onUpdateCallbackMethod &&
           this[options.onUpdateCallbackMethod]();
       });
     };
 
+    const disconnectUnsubscribeDelay = 100;
     component.disconnectedCallback = function () {
-      unsubscribe();
+      setTimeout(() => {
+        const isStillInDOM = document.contains(getElement(this));
+        !isStillInDOM && unsubscribeController();
+      }, disconnectUnsubscribeDelay);
       disconnectedCallback && disconnectedCallback.call(this);
     };
   };

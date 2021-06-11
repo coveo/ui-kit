@@ -54,7 +54,7 @@ export class AtomicDateFacet implements InitializableComponent, BaseFacetState {
   private facet!: DateFacet;
   public searchStatus!: SearchStatus;
 
-  @BindStateToController('facet', {subscribeOnConnectedCallback: true})
+  @BindStateToController('facet')
   @State()
   private facetState!: DateFacetState;
   @State() public error!: Error;
