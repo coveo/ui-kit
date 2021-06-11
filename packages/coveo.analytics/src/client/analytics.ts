@@ -34,9 +34,9 @@ import {isReactNative, ReactNativeRuntimeWarning} from '../react-native/react-na
 export const Version = 'v15';
 
 export const Endpoints = {
-    default: 'https://platform.cloud.coveo.com/rest/ua',
-    production: 'https://platform.cloud.coveo.com/rest/ua',
-    hipaa: 'https://platformhipaa.cloud.coveo.com/rest/ua',
+    default: 'https://analytics.cloud.coveo.com/rest/ua',
+    production: 'https://analytics.cloud.coveo.com/rest/ua',
+    hipaa: 'https://analyticshipaa.cloud.coveo.com/rest/ua',
 };
 
 export interface ClientOptions {
@@ -200,47 +200,41 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
         this.storage.setItem('visitorId', visitorId);
     }
 
-    async resolveParameters(eventType: EventType | string,
-        ...payload: VariableArgumentsPayload) {
-            const {
-                variableLengthArgumentsNames = [],
-                addVisitorIdParameter = false,
-                usesMeasurementProtocol = false,
-            } = this.eventTypeMapping[eventType] || {};
+    async resolveParameters(eventType: EventType | string, ...payload: VariableArgumentsPayload) {
+        const {variableLengthArgumentsNames = [], addVisitorIdParameter = false, usesMeasurementProtocol = false} =
+            this.eventTypeMapping[eventType] || {};
 
-            const processVariableArgumentNamesStep: ProcessPayloadStep = (currentPayload) =>
+        const processVariableArgumentNamesStep: ProcessPayloadStep = (currentPayload) =>
             variableLengthArgumentsNames.length > 0
                 ? this.parseVariableArgumentsPayload(variableLengthArgumentsNames, currentPayload)
                 : currentPayload[0];
-            const addVisitorIdStep: AsyncProcessPayloadStep = async (currentPayload) => ({
-                ...currentPayload,
-                visitorId: addVisitorIdParameter ? await this.getCurrentVisitorId() : '',
-            });
-            const setAnonymousUserStep: ProcessPayloadStep = (currentPayload) =>
-                usesMeasurementProtocol ? this.ensureAnonymousUserWhenUsingApiKey(currentPayload) : currentPayload;
-            const processBeforeSendHooksStep: AsyncProcessPayloadStep = (currentPayload) =>
-                this.beforeSendHooks.reduce(async (promisePayload, current) => {
-                    const payload = await promisePayload;
-                    return await current(eventType, payload);
-                }, currentPayload);
+        const addVisitorIdStep: AsyncProcessPayloadStep = async (currentPayload) => ({
+            ...currentPayload,
+            visitorId: addVisitorIdParameter ? await this.getCurrentVisitorId() : '',
+        });
+        const setAnonymousUserStep: ProcessPayloadStep = (currentPayload) =>
+            usesMeasurementProtocol ? this.ensureAnonymousUserWhenUsingApiKey(currentPayload) : currentPayload;
+        const processBeforeSendHooksStep: AsyncProcessPayloadStep = (currentPayload) =>
+            this.beforeSendHooks.reduce(async (promisePayload, current) => {
+                const payload = await promisePayload;
+                return await current(eventType, payload);
+            }, currentPayload);
 
-            const parametersToSend = await [
-                processVariableArgumentNamesStep,
-                addVisitorIdStep,
-                setAnonymousUserStep,
-                processBeforeSendHooksStep,
-            ].reduce(async (payloadPromise, step) => {
-                const payload = await payloadPromise;
-                return await step(payload);
-            }, Promise.resolve(payload));
+        const parametersToSend = await [
+            processVariableArgumentNamesStep,
+            addVisitorIdStep,
+            setAnonymousUserStep,
+            processBeforeSendHooksStep,
+        ].reduce(async (payloadPromise, step) => {
+            const payload = await payloadPromise;
+            return await step(payload);
+        }, Promise.resolve(payload));
 
-            return parametersToSend;
-        }
+        return parametersToSend;
+    }
 
     async resolvePayloadForParameters(eventType: EventType | string, parameters: any) {
-        const {
-            usesMeasurementProtocol = false,
-        } = this.eventTypeMapping[eventType] || {};
+        const {usesMeasurementProtocol = false} = this.eventTypeMapping[eventType] || {};
 
         const cleanPayloadStep: ProcessPayloadStep = (currentPayload) =>
             this.removeEmptyPayloadValues(currentPayload, eventType);
@@ -270,9 +264,7 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
         eventType: EventType | string,
         ...payload: VariableArgumentsPayload
     ): Promise<AnyEventResponse | void> {
-        const {
-            newEventType: eventTypeToSend = eventType as EventType,
-        } = this.eventTypeMapping[eventType] || {};
+        const {newEventType: eventTypeToSend = eventType as EventType} = this.eventTypeMapping[eventType] || {};
 
         const parametersToSend = await this.resolveParameters(eventType, ...payload);
         const payloadToSend = await this.resolvePayloadForParameters(eventType, parametersToSend);
@@ -284,7 +276,7 @@ export class CoveoAnalyticsClient implements AnalyticsClient, VisitorIdProvider 
         });
 
         await Promise.all(this.afterSendHooks.map((hook) => hook(eventType, parametersToSend)));
-        
+
         await this.deferExecution();
 
         return await this.sendFromBufferWithFetch();

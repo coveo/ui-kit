@@ -39,7 +39,7 @@ class TestPluginWithSpy extends TestPlugin {
 
 describe('simpleanalytics', () => {
     const analyticsClientMock = createAnalyticsClientMock();
-    const analyticsEndpoint = 'https://platform.cloud.coveo.com/rest/ua/v15/analytics';
+    const analyticsEndpoint = 'https://analytics.cloud.coveo.com/rest/ua/v15/analytics';
     const someRandomEventName = 'kawabunga';
 
     beforeEach(() => {
@@ -75,42 +75,42 @@ describe('simpleanalytics', () => {
             expect(() => handleOneAnalyticsEvent('init', 'SOME TOKEN')).not.toThrow();
         });
 
-        it('default to platform.cloud.coveo.com when no endpoint is given', async () => {
+        it('default to analytics.cloud.coveo.com when no endpoint is given', async () => {
             handleOneAnalyticsEvent('init', 'SOME TOKEN');
 
             await handleOneAnalyticsEvent('send', 'pageview');
 
             expect(fetchMock.calls().length).toBe(1);
             const foo = fetchMock.lastUrl();
-            expect(fetchMock.lastUrl()).toMatch(/^https:\/\/platform\.cloud\.coveo\.com\/rest\/ua/);
+            expect(fetchMock.lastUrl()).toMatch(/^https:\/\/analytics\.cloud\.coveo\.com\/rest\/ua/);
         });
 
-        it('default to platform.cloud.coveo.com when the endpoint is an empty string', async () => {
+        it('default to analytics.cloud.coveo.com when the endpoint is an empty string', async () => {
             handleOneAnalyticsEvent('init', 'SOME TOKEN', '');
 
             await handleOneAnalyticsEvent('send', 'pageview');
 
             expect(fetchMock.calls().length).toBe(1);
             const foo = fetchMock.lastUrl();
-            expect(fetchMock.lastUrl()).toMatch(/^https:\/\/platform\.cloud\.coveo\.com\/rest\/ua/);
+            expect(fetchMock.lastUrl()).toMatch(/^https:\/\/analytics\.cloud\.coveo\.com\/rest\/ua/);
         });
 
-        it('default to platform.cloud.coveo.com when an options object is given but does not include an endpoint', async () => {
+        it('default to analytics.cloud.coveo.com when an options object is given but does not include an endpoint', async () => {
             handleOneAnalyticsEvent('init', 'SOME TOKEN', {});
 
             await handleOneAnalyticsEvent('send', 'pageview');
 
             expect(fetchMock.calls().length).toBe(1);
-            expect(fetchMock.lastUrl()).toMatch(/^https:\/\/platform\.cloud\.coveo\.com\/rest\/ua/);
+            expect(fetchMock.lastUrl()).toMatch(/^https:\/\/analytics\.cloud\.coveo\.com\/rest\/ua/);
         });
 
-        it('default to platform.cloud.coveo.com when an options object is given but the endpoint property is falsy', async () => {
+        it('default to analytics.cloud.coveo.com when an options object is given but the endpoint property is falsy', async () => {
             handleOneAnalyticsEvent('init', 'SOME TOKEN', {endpoint: ''});
 
             await handleOneAnalyticsEvent('send', 'pageview');
 
             expect(fetchMock.calls().length).toBe(1);
-            expect(fetchMock.lastUrl()).toMatch(/^https:\/\/platform\.cloud\.coveo\.com\/rest\/ua/);
+            expect(fetchMock.lastUrl()).toMatch(/^https:\/\/analytics\.cloud\.coveo\.com\/rest\/ua/);
         });
 
         it('uses the endpoint given if its a non-empty string', async () => {
