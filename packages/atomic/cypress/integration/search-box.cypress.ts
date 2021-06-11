@@ -92,9 +92,6 @@ describe('Search Box Test Suites', () => {
       cy.get('@searchBoxFirstDiv')
         .find('.search-input')
         .type('te', {delay: 1000});
-      cy.wait('@coveoQuerySuggest');
-
-      await getApiResponseBody('@coveoQuerySuggest');
 
       cy.get('@searchBoxFirstDiv')
         .find(SearchBoxSelectors.querySuggestionList)
