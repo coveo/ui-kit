@@ -19,7 +19,10 @@ import {
   updateQuerySetQuery,
 } from '../../features/query-set/query-set-actions';
 import {buildMockQuerySuggest} from '../../test/mock-query-suggest';
-import {buildMockSearchAppEngine, MockEngine} from '../../test/mock-engine';
+import {
+  buildMockSearchAppEngine,
+  MockSearchEngine,
+} from '../../test/mock-engine';
 import {updatePage} from '../../features/pagination/pagination-actions';
 import {SearchAppState} from '../../state/search-app-state';
 import {
@@ -35,7 +38,7 @@ describe('headless searchBox', () => {
   const id = 'search-box-123';
   let state: SearchAppState;
 
-  let engine: MockEngine<SearchAppState>;
+  let engine: MockSearchEngine;
   let searchBox: SearchBox;
   let props: SearchBoxProps;
 

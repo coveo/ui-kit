@@ -4,11 +4,13 @@ import {buildMockResult} from '../../test/mock-result';
 import {buildMockSearch} from '../../test/mock-search';
 import {executeSearch, fetchMoreResults} from './search-actions';
 import {logSearchboxSubmit} from '../query/query-analytics-actions';
-import {buildMockSearchAppEngine, MockEngine} from '../../test/mock-engine';
+import {
+  buildMockSearchAppEngine,
+  MockSearchEngine,
+} from '../../test/mock-engine';
 import {PlatformClient} from '../../api/platform-client';
 import {createMockState} from '../../test/mock-state';
 import {getSearchInitialState, SearchState} from './search-state';
-import {SearchAppState} from '../../state/search-app-state';
 import {Result} from '../../api/search/search/result';
 import {applyDidYouMeanCorrection} from '../did-you-mean/did-you-mean-actions';
 import {AnalyticsType, makeAnalyticsAction} from '../analytics/analytics-utils';
@@ -159,7 +161,7 @@ describe('search-slice', () => {
   });
 
   describe('should dispatch a logQueryError action', () => {
-    let e: MockEngine<SearchAppState>;
+    let e: MockSearchEngine;
     beforeEach(() => {
       e = buildMockSearchAppEngine({state: createMockState()});
       PlatformClient.call = jest.fn().mockImplementation(() => {
@@ -223,7 +225,7 @@ describe('search-slice', () => {
   });
 
   describe('when did you mean is enabled and a search is executed', () => {
-    let e: MockEngine<SearchAppState>;
+    let e: MockSearchEngine;
 
     beforeEach(() => {
       const state = createMockState();

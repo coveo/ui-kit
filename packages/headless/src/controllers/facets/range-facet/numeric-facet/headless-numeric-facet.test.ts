@@ -5,7 +5,7 @@ import {
   buildNumericRange,
 } from './headless-numeric-facet';
 import {
-  MockEngine,
+  MockSearchEngine,
   buildMockSearchAppEngine,
 } from '../../../../test/mock-engine';
 import {createMockState} from '../../../../test/mock-state';
@@ -25,7 +25,7 @@ describe('numeric facet', () => {
   const facetId = '1';
   let options: NumericFacetOptions;
   let state: SearchAppState;
-  let engine: MockEngine<SearchAppState>;
+  let engine: MockSearchEngine;
   let numericFacet: NumericFacet;
 
   function initNumericFacet() {

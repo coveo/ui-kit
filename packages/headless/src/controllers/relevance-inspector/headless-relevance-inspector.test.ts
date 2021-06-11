@@ -3,8 +3,10 @@ import {
   RelevanceInspector,
   RelevanceInspectorProps,
 } from './headless-relevance-inspector';
-import {buildMockSearchAppEngine, MockEngine} from '../../test/mock-engine';
-import {SearchAppState} from '../../state/search-app-state';
+import {
+  buildMockSearchAppEngine,
+  MockSearchEngine,
+} from '../../test/mock-engine';
 import {disableDebug, enableDebug} from '../../features/debug/debug-actions';
 import {createMockState} from '../../test';
 import {buildMockSearchResponseWithDebugInfo} from '../../test/mock-search-response';
@@ -13,7 +15,7 @@ import {executeSearch} from '../../features/search/search-actions';
 import {configuration, debug, search} from '../../app/reducers';
 
 describe('RelevanceInspector', () => {
-  let engine: MockEngine<SearchAppState>;
+  let engine: MockSearchEngine;
   let relevanceInspector: RelevanceInspector;
 
   beforeEach(() => {

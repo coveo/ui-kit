@@ -1,11 +1,13 @@
-import {buildMockSearchAppEngine, MockEngine} from '../../test/mock-engine';
-import {SearchAppState} from '../../state/search-app-state';
+import {
+  buildMockSearchAppEngine,
+  MockSearchEngine,
+} from '../../test/mock-engine';
 import {buildSearchStatus} from './headless-search-status';
 import {buildMockResult} from '../../test';
 import {search} from '../../app/reducers';
 
 describe('SearchStatus', () => {
-  let engine: MockEngine<SearchAppState>;
+  let engine: MockSearchEngine;
 
   beforeEach(() => {
     engine = buildMockSearchAppEngine();

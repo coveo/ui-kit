@@ -24,6 +24,7 @@ import {buildMockSearchAPIClient} from './mock-search-api-client';
 import {getSearchHubInitialState} from '../features/search-hub/search-hub-state';
 import {getPipelineInitialState} from '../features/pipeline/pipeline-state';
 import {getDebugInitialState} from '../features/debug/debug-state';
+import {SearchEngine} from '../app/search-engine/search-engine';
 
 type AsyncActionCreator<ThunkArg> = ActionCreatorWithPreparedPayload<
   [string, ThunkArg],
@@ -45,14 +46,28 @@ export interface MockEngine<T extends AppState> extends Engine<T> {
   ) => ReturnType<AsyncActionCreator<ThunkArg>> | undefined;
 }
 
+interface MEngine {
+  actions: AnyAction[];
+  findAsyncAction: <ThunkArg>(
+    action: AsyncActionCreator<ThunkArg>
+  ) => ReturnType<AsyncActionCreator<ThunkArg>> | undefined;
+}
+
 type DispatchExts = ThunkDispatch<AppState, void, AnyAction>;
 
 const mockRenewAccessToken = async () => '';
 
+export interface MockSearchEngine
+  extends SearchEngine<SearchAppState>,
+    MEngine {}
+
 export function buildMockSearchAppEngine(
   config: Partial<Engine<SearchAppState>> = {}
-): MockEngine<SearchAppState> {
-  return buildMockEngine(config, createMockState);
+): MockSearchEngine {
+  return {
+    ...buildMockEngine(config, createMockState),
+    executeFirstSearch: jest.fn(),
+  };
 }
 
 export function buildMockRecommendationAppEngine(
