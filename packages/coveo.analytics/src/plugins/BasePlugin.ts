@@ -115,9 +115,15 @@ export abstract class BasePlugin {
         */
         return {
             pageViewId: eventType === BasePluginEventTypes.pageview ? this.nextPageViewId : this.pageViewId,
-            referrer: eventType === BasePluginEventTypes.pageview && this.hasSentFirstPageView ? this.currentLocation : this.lastReferrer,
-            location: eventType === BasePluginEventTypes.pageview ? this.getCurrentLocationFromPayload(payload) : this.currentLocation,
-        }
+            referrer:
+                eventType === BasePluginEventTypes.pageview && this.hasSentFirstPageView
+                    ? this.currentLocation
+                    : this.lastReferrer,
+            location:
+                eventType === BasePluginEventTypes.pageview
+                    ? this.getCurrentLocationFromPayload(payload)
+                    : this.currentLocation,
+        };
     }
 
     private getCurrentLocationFromPayload(payload: any) {

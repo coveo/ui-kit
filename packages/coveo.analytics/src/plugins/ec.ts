@@ -97,7 +97,7 @@ export class ECPlugin extends BasePlugin {
         this.client.registerAfterSendEventHook((eventType, ...[payload]) => {
             if (allECEventTypes.indexOf(eventType) !== -1) {
                 this.updateLocationInformation(eventType, payload);
-            };
+            }
             return payload;
         });
     }

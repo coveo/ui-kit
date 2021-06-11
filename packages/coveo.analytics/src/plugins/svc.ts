@@ -55,7 +55,7 @@ export class SVCPlugin extends BasePlugin {
         this.client.registerAfterSendEventHook((eventType, ...[payload]) => {
             if (allSVCEventTypes.indexOf(eventType) !== -1) {
                 this.updateLocationInformation(eventType, payload);
-            };
+            }
             return payload;
         });
     }
