@@ -171,13 +171,13 @@ export function buildSearchBox(
 
   const getValue = () => engine.state.querySet[options.id];
 
-  const performSearch = (analytics: SearchAction) => {
+  const performSearch = async (analytics: SearchAction) => {
     const {enableQuerySyntax} = options;
 
     dispatch(deselectAllFacets());
     dispatch(updateQuery({q: getValue(), enableQuerySyntax}));
     dispatch(updatePage(1));
-    dispatch(executeSearch(analytics));
+    await dispatch(executeSearch(analytics));
   };
 
   return {
@@ -205,11 +205,16 @@ export function buildSearchBox(
 
     selectSuggestion(value: string) {
       dispatch(selectQuerySuggestion({id, expression: value}));
-      performSearch(logQuerySuggestionClick({id, suggestion: value}));
+      performSearch(logQuerySuggestionClick({id, suggestion: value})).then(
+        () => {
+          dispatch(clearQuerySuggest({id}));
+        }
+      );
     },
 
     submit() {
       performSearch(logSearchboxSubmit());
+      dispatch(clearQuerySuggest({id}));
     },
 
     get state() {
