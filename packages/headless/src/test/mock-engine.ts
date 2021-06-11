@@ -56,7 +56,7 @@ export interface MockSearchEngine
 export function buildMockSearchAppEngine(
   config: Partial<SearchEngine<SearchAppState>> = {}
 ): MockSearchEngine {
-  const engine = buildMockEngine(config, createMockState);
+  const engine = buildMockCoreEngine(config, createMockState);
   return {
     ...engine,
     executeFirstSearch: jest.fn(),
@@ -70,7 +70,7 @@ export interface MockRecommendationEngine
 export function buildMockRecommendationAppEngine(
   config: Partial<RecommendationEngine<RecommendationAppState>> = {}
 ): MockRecommendationEngine {
-  return buildMockEngine(config, createMockRecommendationState);
+  return buildMockCoreEngine(config, createMockRecommendationState);
 }
 
 export interface MockProductRecommendationEngine
@@ -82,13 +82,15 @@ export function buildMockProductRecommendationsAppEngine(
     ProductRecommendationEngine<ProductRecommendationsAppState>
   > = {}
 ): MockProductRecommendationEngine {
-  return buildMockEngine(config, buildMockProductRecommendationsState);
+  return buildMockCoreEngine(config, buildMockProductRecommendationsState);
 }
 
-function buildMockEngine<T extends AppState>(
+interface MockCoreEngine<T> extends CoreEngine<T>, MockEngine {}
+
+function buildMockCoreEngine<T extends AppState>(
   config: Partial<CoreEngine<T>> = {},
   mockState: () => T
-) {
+): MockCoreEngine<T> {
   const logger = pino({level: 'silent'});
   const storeConfiguration = configureMockStore(logger);
   const store = storeConfiguration(config.state || mockState());
