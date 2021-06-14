@@ -1,4 +1,3 @@
-import {Schema, Value} from '@coveo/bueno';
 import {Engine} from '../../app/headless-engine';
 import {
   ConfigurationSection,
@@ -7,26 +6,7 @@ import {
 import {configuration, redirection} from '../../app/reducers';
 import {buildController, Controller} from '../controller/headless-controller';
 import {loadReducerError} from '../../utils/errors';
-import {validateOptions} from '../../utils/validate-payload';
 import {logTriggerRedirect} from '../../features/redirection/redirection-analytics-actions';
-
-export interface RedirectionTriggerOptions {
-  /**
-   * The function used to handle whenever the `RedirectionTrigger` controller's state's `redirectTo` value changes.
-   */
-  onRedirect(): void;
-}
-
-export interface RedirectionTriggerProps {
-  /**
-   * The options for the `RedirectionTrigger` controller.
-   */
-  options?: RedirectionTriggerOptions;
-}
-
-const optionsSchema = new Schema({
-  onRedirect: new Value({required: true}),
-});
 
 /**
  * The `RedirectionTrigger` controller handles redirection actions.
@@ -52,12 +32,10 @@ export interface RedirectionTriggerState {
  * Creates a `RedirectionTrigger` controller instance.
  *
  * @param engine - The headless engine.
- * @param props - The configurable `RedirectionTrigger` properties.
  * @returns A `RedirectionTrigger` controller instance.
  * */
 export function buildRedirectionTrigger(
-  engine: Engine<object>,
-  props: RedirectionTriggerProps = {}
+  engine: Engine<object>
 ): RedirectionTrigger {
   if (!loadRedirectionReducers(engine)) {
     throw loadReducerError;
@@ -66,24 +44,17 @@ export function buildRedirectionTrigger(
   const controller = buildController(engine);
   const {dispatch} = engine;
 
-  const options = validateOptions(
-    engine,
-    optionsSchema,
-    props.options,
-    'buildRedirectionTrigger'
-  ) as Required<RedirectionTriggerOptions>;
-
-  const redirectTo = engine.state.redirection.redirectTo!;
-  const {onRedirect} = options;
+  let redirectTo = engine.state.redirection.redirectTo!;
 
   return {
     ...controller,
 
-    subscribe() {
+    subscribe(listener: () => void) {
       const strictListener = () => {
+        redirectTo = engine.state.redirection.redirectTo!;
         if (redirectTo !== '') {
-          onRedirect();
           dispatch(logTriggerRedirect);
+          listener();
         }
       };
       strictListener();
