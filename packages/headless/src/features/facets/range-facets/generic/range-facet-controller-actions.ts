@@ -10,8 +10,9 @@ import {
 } from './range-facet-validate-payload';
 
 /**
- * Executes a search with the appropriate analytics for a toggle range facet value
+ * Toggles the facet value and then executes a search with the appropriate analytics tag.
  * @param payload (RangeFacetSelectionPayload) Object specifying the target facet and selection.
+ * @param selection (RangeFacetValue) The target range facet value.
  */
 export const executeToggleRangeFacetSelect = createAsyncThunk<
   void,

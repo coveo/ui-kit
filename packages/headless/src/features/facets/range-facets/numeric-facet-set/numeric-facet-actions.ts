@@ -174,6 +174,20 @@ export const toggleSelectNumericFacetValue = createAction(
     })
 );
 
+/**
+ * Toggles a numeric facet value ensuring other values are deselected.
+ * @param facetId (string) The unique identifier of the facet (e.g., `"1"`).
+ * @param selection (NumericFacetValue) The target numeric facet value.
+ */
+export const toggleSingleSelectNumericFacetValue = createAction(
+  'numericFacet/toggleSingleSelectNumericFacetValue',
+  (payload: ToggleSelectNumericFacetValueActionCreatorPayload) =>
+    validatePayload(payload, {
+      facetId: facetIdDefinition,
+      selection: new RecordValue({values: numericFacetValueDefinition}),
+    })
+);
+
 export interface UpdateNumericFacetSortCriterionActionCreatorPayload {
   /**
    * The unique identifier of the facet (e.g., `"1"`).

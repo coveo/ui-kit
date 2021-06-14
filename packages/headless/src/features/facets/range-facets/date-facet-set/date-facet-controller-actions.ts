@@ -6,7 +6,10 @@ import {
   DateFacetSection,
 } from '../../../../state/state-sections';
 import {executeToggleRangeFacetSelect} from '../generic/range-facet-controller-actions';
-import {toggleSelectDateFacetValue} from './date-facet-actions';
+import {
+  toggleSelectDateFacetValue,
+  toggleSingleSelectDateFacetValue,
+} from './date-facet-actions';
 import {facetIdDefinition} from '../../generic/facet-actions-validation';
 import {RecordValue} from '@coveo/bueno';
 import {dateFacetValueDefinition} from '../generic/range-facet-validate-payload';
@@ -33,6 +36,27 @@ export const executeToggleDateFacetSelect = createAsyncThunk<
   (payload, {dispatch, extra: {validatePayload}}) => {
     validatePayload(payload, definition);
     dispatch(toggleSelectDateFacetValue(payload));
+    dispatch(executeToggleRangeFacetSelect(payload));
+  }
+);
+
+/**
+ * Toggles the date facet value, deselect other facet values, and then executes a search with the appropriate analytics tag.
+ * @param facetId (string) The unique identifier of the facet (e.g., `"1"`).
+ * @param selection (DateFacetValue) The target date facet value.
+ */
+export const executeToggleDateFacetSingleSelect = createAsyncThunk<
+  void,
+  {
+    facetId: string;
+    selection: DateFacetValue;
+  },
+  AsyncThunkSearchOptions<ConfigurationSection & DateFacetSection>
+>(
+  'dateFacet/executeToggleSingleSelect',
+  (payload, {dispatch, extra: {validatePayload}}) => {
+    validatePayload(payload, definition);
+    dispatch(toggleSingleSelectDateFacetValue(payload));
     dispatch(executeToggleRangeFacetSelect(payload));
   }
 );

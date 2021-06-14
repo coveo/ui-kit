@@ -8,7 +8,10 @@ import {
 import {getAnalyticsActionForToggleFacetSelect} from './facet-set-utils';
 import {updateFacetOptions} from '../../facet-options/facet-options-actions';
 import {executeSearch} from '../../search/search-actions';
-import {toggleSelectFacetValue} from './facet-set-actions';
+import {
+  toggleSelectFacetValue,
+  toggleSingleSelectFacetValue,
+} from './facet-set-actions';
 import {facetIdDefinition} from '../generic/facet-actions-validation';
 import {RecordValue} from '@coveo/bueno';
 import {facetValueDefinition} from './facet-set-validate-payload';
@@ -39,6 +42,32 @@ export const executeToggleFacetSelect = createAsyncThunk<
     );
     validatePayload({facetId, selection}, definition);
     dispatch(toggleSelectFacetValue({facetId, selection}));
+    dispatch(updateFacetOptions({freezeFacetOrder: true}));
+    dispatch(executeSearch(analyticsAction));
+  }
+);
+
+/**
+ * Toggles the facet value, deselect other facet values, and then executes a search with the appropriate analytics tag.
+ * @param facetId (string) The unique identifier of the facet (e.g., `"1"`).
+ * @param selection (FacetValue) The target facet value.
+ */
+export const executeToggleFacetSingleSelect = createAsyncThunk<
+  void,
+  {
+    facetId: string;
+    selection: FacetValue;
+  },
+  AsyncThunkSearchOptions<FacetSection & ConfigurationSection>
+>(
+  'facet/executeToggleFacetSingleSelect',
+  ({facetId, selection}, {dispatch, extra: {validatePayload}}) => {
+    const analyticsAction = getAnalyticsActionForToggleFacetSelect(
+      facetId,
+      selection
+    );
+    validatePayload({facetId, selection}, definition);
+    dispatch(toggleSingleSelectFacetValue({facetId, selection}));
     dispatch(updateFacetOptions({freezeFacetOrder: true}));
     dispatch(executeSearch(analyticsAction));
   }

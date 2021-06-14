@@ -178,6 +178,20 @@ export const toggleSelectDateFacetValue = createAction(
     })
 );
 
+/**
+ * Toggles a date facet value ensuring other values are deselected.
+ * @param facetId (string) The unique identifier of the facet (e.g., `"1"`).
+ * @param selection (DateFacetValue) The target date facet value.
+ */
+export const toggleSingleSelectDateFacetValue = createAction(
+  'dateFacet/toggleSingleSelectDateFacetValue',
+  (payload: ToggleSelectDateFacetValueActionCreatorPayload) =>
+    validatePayload(payload, {
+      facetId: facetIdDefinition,
+      selection: new RecordValue({values: dateFacetValueDefinition}),
+    })
+);
+
 export interface UpdateDateFacetSortCriterionActionCreatorPayload {
   /**
    * The unique identifier of the facet (e.g., `"1"`).

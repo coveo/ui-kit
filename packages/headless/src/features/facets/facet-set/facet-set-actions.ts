@@ -111,6 +111,20 @@ export const toggleSelectFacetValue = createAction(
 );
 
 /**
+ * Toggles a facet value ensuring other values are deselected.
+ * @param facetId (string) The unique identifier of the facet (e.g., `"1"`).
+ * @param selection (FacetValue) The target facet value.
+ */
+export const toggleSingleSelectFacetValue = createAction(
+  'facet/toggleSingleSelectFacetValue',
+  (payload: ToggleSelectFacetValueActionCreatorPayload) =>
+    validatePayload(payload, {
+      facetId: facetIdDefinition,
+      selection: new RecordValue({values: facetValueDefinition}),
+    })
+);
+
+/**
  * Deselects all values of a facet.
  * @param facetId (string) The unique identifier of the facet (e.g., `"1"`).
  */

@@ -16,8 +16,6 @@ const definition = {
   selection: new RecordValue({values: numericFacetValueDefinition}),
 };
 
-const executeToggleNumericFacetSelectType = 'numericFacet/executeToggleSelect';
-
 /**
  * Toggles the numeric facet value and then executes a search with the appropriate analytics tag.
  * @param facetId (string) The unique identifier of the facet (e.g., `"1"`).
@@ -31,7 +29,28 @@ export const executeToggleNumericFacetSelect = createAsyncThunk<
   },
   AsyncThunkSearchOptions<ConfigurationSection & NumericFacetSection>
 >(
-  executeToggleNumericFacetSelectType,
+  'numericFacet/executeToggleSelect',
+  (payload, {dispatch, extra: {validatePayload}}) => {
+    validatePayload(payload, definition);
+    dispatch(toggleSelectNumericFacetValue(payload));
+    dispatch(executeToggleRangeFacetSelect(payload));
+  }
+);
+
+/**
+ * Toggles the numeric facet value, deselect other facet values, and then executes a search with the appropriate analytics tag.
+ * @param facetId (string) The unique identifier of the facet (e.g., `"1"`).
+ * @param selection (NumericFacetValue) The target numeric facet value.
+ */
+export const executeToggleNumericFacetSingleSelect = createAsyncThunk<
+  void,
+  {
+    facetId: string;
+    selection: NumericFacetValue;
+  },
+  AsyncThunkSearchOptions<ConfigurationSection & NumericFacetSection>
+>(
+  'numericFacet/executeToggleSingleSelect',
   (payload, {dispatch, extra: {validatePayload}}) => {
     validatePayload(payload, definition);
     dispatch(toggleSelectNumericFacetValue(payload));
