@@ -15,7 +15,6 @@ describe('Facet v1 Test Suites', () => {
   describe('with checkbox values', () => {
     function setupWithCheckboxValues() {
       new TestFixture().with(addFacet({field, label})).init();
-      cy.wait(TestFixture.interceptAliases.UA);
     }
 
     describe('verify rendering', () => {
@@ -116,7 +115,6 @@ describe('Facet v1 Test Suites', () => {
       new TestFixture()
         .with(addFacet({field, label, 'display-values-as': 'link'}))
         .init();
-      cy.wait(TestFixture.interceptAliases.UA);
     }
 
     describe('verify rendering', () => {
@@ -207,7 +205,6 @@ describe('Facet v1 Test Suites', () => {
       new TestFixture()
         .with(addFacet({field, label, 'display-values-as': 'box'}))
         .init();
-      cy.wait(TestFixture.interceptAliases.UA);
     }
 
     describe('verify rendering', () => {
@@ -297,7 +294,6 @@ describe('Facet v1 Test Suites', () => {
   describe('when selecting the "Show more" button', () => {
     function setupSelectShowMore() {
       new TestFixture().with(addFacet({field, label})).init();
-      cy.wait(TestFixture.interceptAliases.UA);
       FacetSelectors.showMoreButton().click();
       cy.wait(TestFixture.interceptAliases.Search);
     }
@@ -346,7 +342,6 @@ describe('Facet v1 Test Suites', () => {
   describe('when selecting the label button to collapse', () => {
     function setupSelectLabelCollapse() {
       new TestFixture().with(addFacet({field, label})).init();
-      cy.wait(TestFixture.interceptAliases.UA);
       selectIdleCheckboxValueAt(0);
       cy.wait(TestFixture.interceptAliases.Search);
       FacetSelectors.labelButton().click();
@@ -385,7 +380,6 @@ describe('Facet v1 Test Suites', () => {
       new TestFixture()
         .with(addFacet({field, label, 'number-of-values': numberOfValues}))
         .init();
-      cy.wait(TestFixture.interceptAliases.UA);
     }
 
     before(setupCustomNumberOfValues);
@@ -412,7 +406,6 @@ describe('Facet v1 Test Suites', () => {
       new TestFixture()
         .with(addFacet({field, label, 'sort-criteria': 'alphanumeric'}))
         .init();
-      cy.wait(TestFixture.interceptAliases.UA);
     });
 
     FacetAssertions.assertValuesSortedAlphanumerically();
@@ -423,7 +416,6 @@ describe('Facet v1 Test Suites', () => {
       new TestFixture()
         .with(addFacet({field, label, 'sort-criteria': 'occurrences'}))
         .init();
-      cy.wait(TestFixture.interceptAliases.UA);
     });
 
     FacetAssertions.assertValuesSortedByOccurences();

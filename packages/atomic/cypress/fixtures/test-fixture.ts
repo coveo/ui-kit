@@ -63,6 +63,7 @@ export class TestFixture {
 
     if (this.execFirstSearch) {
       cy.wait(TestFixture.interceptAliases.Search);
+      cy.wait(TestFixture.interceptAliases.UA);
     }
 
     this.aliases.forEach((alias) => alias(this));
