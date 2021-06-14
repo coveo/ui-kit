@@ -42,7 +42,6 @@ export function buildCategoryFacetSearch(
         selectCategoryFacetSearchResult({
           facetId,
           value,
-          retrieveCount: options.numberOfValues,
         })
       );
       genericFacetSearch.select(value);
