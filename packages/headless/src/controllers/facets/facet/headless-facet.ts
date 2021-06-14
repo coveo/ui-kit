@@ -31,7 +31,10 @@ import {
   SearchSection,
 } from '../../../state/state-sections';
 import {isFacetValueSelected} from '../../../features/facets/facet-set/facet-set-utils';
-import {executeToggleFacetSelect} from '../../../features/facets/facet-set/facet-set-controller-actions';
+import {
+  executeToggleFacetSelect,
+  executeToggleFacetSingleSelect,
+} from '../../../features/facets/facet-set/facet-set-controller-actions';
 import {validateOptions} from '../../../utils/validate-payload';
 import {defaultFacetOptions} from '../../../features/facets/facet-set/facet-set-slice';
 import {defaultFacetSearchOptions} from '../../../features/facets/facet-search-set/facet-search-reducer-helpers';
@@ -74,6 +77,13 @@ export interface Facet extends Controller {
    * @param selection - The facet value to toggle.
    */
   toggleSelect(selection: FacetValue): void;
+
+  /**
+   * Toggles the specified facet value, deselecting others.
+   *
+   * @param selection - The facet value to toggle.
+   */
+  toggleSingleSelect(selection: FacetValue): void;
 
   /**
    * Checks whether the specified facet value is selected.
@@ -295,6 +305,11 @@ export function buildFacet(engine: Engine<object>, props: FacetProps): Facet {
 
     toggleSelect: (selection: FacetValue) =>
       dispatch(executeToggleFacetSelect({facetId: options.facetId, selection})),
+
+    toggleSingleSelect: (selection: FacetValue) =>
+      dispatch(
+        executeToggleFacetSingleSelect({facetId: options.facetId, selection})
+      ),
 
     isValueSelected: isFacetValueSelected,
 

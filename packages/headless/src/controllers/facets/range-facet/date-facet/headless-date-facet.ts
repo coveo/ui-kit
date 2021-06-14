@@ -20,7 +20,10 @@ import {
   DateFacetSection,
   SearchSection,
 } from '../../../../state/state-sections';
-import {executeToggleDateFacetSelect} from '../../../../features/facets/range-facets/date-facet-set/date-facet-controller-actions';
+import {
+  executeToggleDateFacetSelect,
+  executeToggleDateFacetSingleSelect,
+} from '../../../../features/facets/range-facets/date-facet-set/date-facet-controller-actions';
 
 import {
   DateFacetOptions,
@@ -85,6 +88,13 @@ export interface DateFacet extends Controller {
    * @param selection - The facet value to toggle.
    */
   toggleSelect(selection: DateFacetValue): void;
+
+  /**
+   * Toggles the specified facet value, deselecting others.
+   *
+   * @param selection - The facet value to toggle.
+   */
+  toggleSingleSelect(selection: DateFacetValue): void;
 
   /**
    * The state of the `DateFacet` controller.
@@ -164,6 +174,10 @@ export function buildDateFacet(
 
     toggleSelect(selection: DateFacetValue) {
       dispatch(executeToggleDateFacetSelect({facetId, selection}));
+    },
+
+    toggleSingleSelect(selection: DateFacetValue) {
+      dispatch(executeToggleDateFacetSingleSelect({facetId, selection}));
     },
 
     get state() {

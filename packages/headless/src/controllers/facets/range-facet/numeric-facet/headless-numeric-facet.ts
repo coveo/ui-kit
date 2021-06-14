@@ -20,7 +20,10 @@ import {
   NumericFacetSection,
   SearchSection,
 } from '../../../../state/state-sections';
-import {executeToggleNumericFacetSelect} from '../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-controller-actions';
+import {
+  executeToggleNumericFacetSelect,
+  executeToggleNumericFacetSingleSelect,
+} from '../../../../features/facets/range-facets/numeric-facet-set/numeric-facet-controller-actions';
 import {
   NumericFacetOptions,
   validateNumericFacetOptions,
@@ -84,6 +87,13 @@ export interface NumericFacet extends Controller {
    * @param selection - The facet value to toggle.
    */
   toggleSelect(selection: NumericFacetValue): void;
+
+  /**
+   * Toggles the specified facet value, deselecting others.
+   *
+   * @param selection - The facet value to toggle.
+   */
+  toggleSingleSelect(selection: NumericFacetValue): void;
 
   /**
    * The state of the `NumericFacet` controller.
@@ -162,6 +172,9 @@ export function buildNumericFacet(
     ...rangeFacet,
     toggleSelect: (selection: NumericFacetValue) =>
       dispatch(executeToggleNumericFacetSelect({facetId, selection})),
+
+    toggleSingleSelect: (selection: NumericFacetValue) =>
+      dispatch(executeToggleNumericFacetSingleSelect({facetId, selection})),
 
     get state() {
       return rangeFacet.state;
