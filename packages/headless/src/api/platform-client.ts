@@ -21,10 +21,6 @@ export interface PlatformClientCallOptions {
   headers?: Record<string, string>;
   requestParams: unknown;
   accessToken: string;
-  /**
-   * @deprecated - Please configure this option when configuring the engine. It will be removed from `PlatformClientCallOptions` in the next major version.
-   */
-  renewAccessToken: () => Promise<string>;
   preprocessRequest: PreprocessRequest;
   deprecatedPreprocessRequest: PreprocessRequestMiddleware;
   logger: Logger;

@@ -47,8 +47,6 @@ interface MockEngine {
 
 type DispatchExts = ThunkDispatch<AppState, void, AnyAction>;
 
-const mockRenewAccessToken = async () => '';
-
 export interface MockSearchEngine
   extends SearchEngine<SearchAppState>,
     MockEngine {}
@@ -110,7 +108,6 @@ function buildMockCoreEngine<T extends AppState>(
       const action = this.actions.find((a) => a.type === actionCreator.type);
       return isAsyncAction<ThunkArg>(action) ? action : undefined;
     },
-    renewAccessToken: mockRenewAccessToken,
     logger,
     addReducers: jest.fn(),
     enableAnalytics: jest.fn(),

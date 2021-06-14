@@ -1,10 +1,9 @@
-import {PayloadAction, AsyncThunkAction} from '@reduxjs/toolkit';
+import {PayloadAction} from '@reduxjs/toolkit';
 import {CoreEngine} from '../../app/engine';
 import {configuration} from '../../app/reducers';
 import {
   disableAnalytics,
   enableAnalytics,
-  renewAccessToken,
   setOriginLevel2,
   SetOriginLevel2ActionCreatorPayload,
   setOriginLevel3,
@@ -41,16 +40,6 @@ export interface ConfigurationActionCreators {
    * @returns A dispatchable action.
    */
   enableAnalytics(): PayloadAction;
-
-  /**
-   * Renews the accessToken specified in the global headless engine configuration.
-   *
-   * @param renew - A function that fetches a new access token. The function must return a Promise that resolves to a string (the new access token).
-   * @returns A dispatchable action.
-   * */
-  renewAccessToken(
-    renew: () => Promise<string>
-  ): AsyncThunkAction<string, () => Promise<string>, {}>;
 
   /**
    * Sets originLevel2 for analytics tracking.
@@ -107,7 +96,6 @@ export function loadConfigurationActions(
   return {
     disableAnalytics,
     enableAnalytics,
-    renewAccessToken,
     setOriginLevel2,
     setOriginLevel3,
     updateAnalyticsConfiguration,
