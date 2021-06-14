@@ -266,5 +266,10 @@ describe('headless searchBox', () => {
       );
       expect(action).toBeTruthy();
     });
+
+    it('it dispatches a clear suggestions action', () => {
+      searchBox.submit();
+      expect(engine.actions).toContainEqual(clearQuerySuggest({id}));
+    });
   });
 });

@@ -37,6 +37,7 @@ import {BaseFacet} from '../facet-common';
  * An `atomic-facet` displays a facet of the results for the current query. In mobile browsers, this is rendered as a button that opens a facet modal.
  *
  * @part facet - The wrapper for the entire facet.
+ * @part placeholder - The placeholder shown before the first search is executed.
  *
  * @part label-button - The button that displays the label and allows to expand/collapse the facet.
  * @part label-button-icon - The label button icon.

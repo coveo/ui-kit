@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.23.4](https://github.com/coveo/ui-kit/compare/v0.23.3...v0.23.4) (2021-06-14)
+
+**Note:** Version bump only for package ui-kit
+
+
+
+
+
+## [0.23.3](https://github.com/coveo/ui-kit/compare/v0.23.2...v0.23.3) (2021-06-11)
+
+
+### Bug Fixes
+
+* **headless:** fix analytics payload for query suggestion selection ([#881](https://github.com/coveo/ui-kit/issues/881)) ([2b74297](https://github.com/coveo/ui-kit/commit/2b7429777c7c8d2e860fdbb579a4471fe7401c02))
+
+
+
+
+
 ## [0.23.2](https://github.com/coveo/ui-kit/compare/v0.23.1...v0.23.2) (2021-06-10)
 
 **Note:** Version bump only for package ui-kit
