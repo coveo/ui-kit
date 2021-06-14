@@ -39,3 +39,5 @@ const messagesTab = buildTab(engine, {
   },
 })
 ```
+
+- The `hideSuggestions` method on the `SearchBox` controller has been removed. Please use CSS to hide query suggestions on blur instead of clearing them from the Headless store. This avoids needing a request on focus, creating an unnecessary delay before users can see the suggestions.

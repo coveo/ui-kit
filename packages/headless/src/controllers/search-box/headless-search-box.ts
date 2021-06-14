@@ -1,7 +1,6 @@
 import {
   fetchQuerySuggestions,
   clearQuerySuggest,
-  clearQuerySuggestCompletions,
   registerQuerySuggest,
   selectQuerySuggestion,
 } from '../../features/query-suggest/query-suggest-actions';
@@ -68,13 +67,6 @@ export interface SearchBox extends Controller {
    * Clears the search box text and the suggestions.
    */
   clear(): void;
-
-  /**
-   * Clears the suggestions.
-   *
-   * @deprecated Suggestions should be hidden using CSS instead for an optimal user experience.
-   */
-  hideSuggestions(): void;
 
   /**
    * Shows the suggestions for the current search box value.
@@ -191,10 +183,6 @@ export function buildSearchBox(
     clear() {
       dispatch(updateQuerySetQuery({id, query: ''}));
       dispatch(clearQuerySuggest({id}));
-    },
-
-    hideSuggestions() {
-      dispatch(clearQuerySuggestCompletions({id}));
     },
 
     showSuggestions() {
