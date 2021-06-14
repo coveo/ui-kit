@@ -52,6 +52,7 @@ export function buildRedirectionTrigger(
     subscribe(listener: () => void) {
       const strictListener = () => {
         redirectTo = engine.state.redirection.redirectTo!;
+        //this.state.redirectTo = redirectTo;
         if (
           redirectTo !== '' &&
           redirectTo !== null //&&

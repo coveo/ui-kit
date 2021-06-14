@@ -29,7 +29,7 @@ describe('RedirectionTrigger', () => {
     initRedirectTrigger();
     spyObject = {
       onRedirect: () => {
-        console.log('yo');
+        console.log('yooo');
       },
     };
   });
@@ -65,7 +65,7 @@ describe('RedirectionTrigger', () => {
 
   it('when the #engine.state.redirection.redirectTo is not updated, it does not call #onRedirect and dispatch #logTriggerRedirect', () => {
     jest.spyOn(spyObject, 'onRedirect');
-    engine.state.redirection.redirectTo = '';
+    engine.state.redirection.redirectTo = 'https://www.coveo.com';
     redirectionTrigger.subscribe(spyObject.onRedirect);
 
     expect(spyObject.onRedirect).not.toHaveBeenCalled();
