@@ -1,4 +1,3 @@
-import {Engine} from '../../../../app/headless-engine';
 import {
   NumericFacetRequest,
   NumericRangeRequest,
@@ -31,6 +30,7 @@ import {Controller} from '../../../controller/headless-controller';
 import {RangeFacetSortCriterion} from '../../../../features/facets/range-facets/generic/interfaces/request';
 import {configuration, numericFacetSet, search} from '../../../../app/reducers';
 import {loadReducerError} from '../../../../utils/errors';
+import {SearchEngine} from '../../../../app/search-engine/search-engine';
 
 export {
   buildNumericRange,
@@ -129,7 +129,7 @@ export interface NumericFacetState {
  * @returns A `NumericFacet` controller instance.
  */
 export function buildNumericFacet(
-  engine: Engine<object>,
+  engine: SearchEngine,
   props: NumericFacetProps
 ): NumericFacet {
   if (!loadNumericFacetReducers(engine)) {
@@ -170,8 +170,8 @@ export function buildNumericFacet(
 }
 
 function loadNumericFacetReducers(
-  engine: Engine<object>
-): engine is Engine<
+  engine: SearchEngine
+): engine is SearchEngine<
   NumericFacetSection & ConfigurationSection & SearchSection
 > {
   engine.addReducers({numericFacetSet, configuration, search});

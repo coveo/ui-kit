@@ -16,7 +16,7 @@ export default class QuanticSearchInterface extends LightningElement {
   /** @type {string} */
   @api engineId;
 
-  /** @type {import("coveo").HeadlessConfigurationOptions} */
+  /** @type {import("coveo").SearchEngineConfiguration} */
   fullConfig;
 
   @wire(getHeadlessConfiguration)

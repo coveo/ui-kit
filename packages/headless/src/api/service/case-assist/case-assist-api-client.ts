@@ -22,7 +22,6 @@ import {GetDocumentSuggestionsResponse} from './get-document-suggestions/get-doc
 export interface CaseAssistAPIClientOptions {
   logger: Logger;
   preprocessRequest: PreprocessRequest;
-  renewAccessToken: () => Promise<string>;
 }
 
 /**

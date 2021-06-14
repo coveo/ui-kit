@@ -22,7 +22,7 @@ import {
   ProductRecommendationEngineConfiguration,
   productRecommendationEngineConfigurationSchema,
 } from './product-recommendation-engine-configuration';
-import {SearchThunkExtraArguments} from '../headless-engine';
+import {SearchThunkExtraArguments} from '../search-thunk-extra-arguments';
 
 export {
   ProductRecommendationEngineConfiguration,
@@ -39,9 +39,9 @@ type ProductRecommendationEngineState = StateFromReducersMapObject<
 /**
  * The engine for powering production recommendation experiences.
  */
-export interface ProductRecommendationEngine
+export interface ProductRecommendationEngine<State extends object = {}>
   extends CoreEngine<
-    ProductRecommendationEngineState,
+    State & ProductRecommendationEngineState,
     SearchThunkExtraArguments
   > {}
 
@@ -68,15 +68,7 @@ export function buildProductRecommendationEngine(
   const logger = buildLogger(options.loggerOptions);
   validateConfiguration(options.configuration, logger);
 
-  const ref = {
-    renewAccessToken: () => Promise.resolve(''),
-  };
-
-  const searchAPIClient = createSearchAPIClient(
-    options.configuration,
-    logger,
-    ref
-  );
+  const searchAPIClient = createSearchAPIClient(options.configuration, logger);
 
   const thunkArguments = {
     ...buildThunkExtraArguments(options.configuration, logger),
@@ -89,7 +81,6 @@ export function buildProductRecommendationEngine(
   };
 
   const engine = buildEngine(augmentedOptions, thunkArguments);
-  ref.renewAccessToken = engine.renewAccessToken;
 
   return {
     ...engine,
@@ -114,12 +105,10 @@ function validateConfiguration(
 
 function createSearchAPIClient(
   configuration: ProductRecommendationEngineConfiguration,
-  logger: Logger,
-  ref: {renewAccessToken: () => Promise<string>}
+  logger: Logger
 ) {
   return new SearchAPIClient({
     logger,
-    renewAccessToken: () => ref.renewAccessToken(),
     preprocessRequest: configuration.preprocessRequest || NoopPreprocessRequest,
     deprecatedPreprocessRequest: NoopPreprocessRequestMiddleware,
     postprocessSearchResponseMiddleware: NoopPostprocessSearchResponseMiddleware,

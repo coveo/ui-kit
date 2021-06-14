@@ -1,6 +1,6 @@
 import {PayloadAction} from '@reduxjs/toolkit';
-import {Engine} from '../../../../app/headless-engine';
 import {dateFacetSet} from '../../../../app/reducers';
+import {SearchEngine} from '../../../../app/search-engine/search-engine';
 import {
   deselectAllDateFacetValues,
   registerDateFacet,
@@ -67,7 +67,7 @@ export interface DateFacetSetActionCreators {
  * @returns An object holding the action creators.
  */
 export function loadDateFacetSetActions(
-  engine: Engine<object>
+  engine: SearchEngine
 ): DateFacetSetActionCreators {
   engine.addReducers({dateFacetSet});
 

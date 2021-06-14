@@ -10,7 +10,6 @@ export function buildMockCaseAssistAPIClient(
 ) {
   return new CaseAssistAPIClient({
     preprocessRequest: NoopPreprocessRequest,
-    renewAccessToken: async () => '',
     logger: pino({level: 'silent'}),
     ...options,
   });

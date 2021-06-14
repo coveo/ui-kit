@@ -1,6 +1,6 @@
 import {PayloadAction} from '@reduxjs/toolkit';
-import {Engine} from '../../app/headless-engine';
 import {query} from '../../app/reducers';
+import {SearchEngine} from '../../app/search-engine/search-engine';
 import {updateQuery, UpdateQueryActionCreatorPayload} from './query-actions';
 
 export {UpdateQueryActionCreatorPayload};
@@ -26,7 +26,7 @@ export interface QueryActionCreators {
  * @param engine - The headless engine.
  * @returns An object holding the action creators.
  */
-export function loadQueryActions(engine: Engine<object>): QueryActionCreators {
+export function loadQueryActions(engine: SearchEngine): QueryActionCreators {
   engine.addReducers({query});
 
   return {

@@ -1,6 +1,5 @@
 import {restoreSearchParameters} from '../../features/search-parameters/search-parameter-actions';
-import {SearchAppState} from '../../state/search-app-state';
-import {buildMockSearchAppEngine, MockEngine} from '../../test';
+import {buildMockSearchAppEngine, MockSearchEngine} from '../../test';
 import {buildMockCategoryFacetRequest} from '../../test/mock-category-facet-request';
 import {buildMockCategoryFacetSlice} from '../../test/mock-category-facet-slice';
 import {buildMockCategoryFacetValueRequest} from '../../test/mock-category-facet-value-request';
@@ -18,7 +17,7 @@ import {
 } from './headless-search-parameter-manager';
 
 describe('search parameter manager', () => {
-  let engine: MockEngine<SearchAppState>;
+  let engine: MockSearchEngine;
   let props: SearchParameterManagerProps;
   let manager: SearchParameterManager;
 

@@ -1,7 +1,7 @@
 import {AsyncThunkAction, PayloadAction} from '@reduxjs/toolkit';
 import {AsyncThunkSearchOptions} from '../../api/search/search-api-client';
-import {Engine} from '../../app/headless-engine';
 import {querySuggest} from '../../app/reducers';
+import {SearchEngine} from '../../app/search-engine/search-engine';
 import {
   clearQuerySuggest,
   ClearQuerySuggestActionCreatorPayload,
@@ -78,7 +78,7 @@ export interface QuerySuggestActionCreators {
  * @returns An object holding the action creators.
  */
 export function loadQuerySuggestActions(
-  engine: Engine<object>
+  engine: SearchEngine
 ): QuerySuggestActionCreators {
   engine.addReducers({querySuggest});
 

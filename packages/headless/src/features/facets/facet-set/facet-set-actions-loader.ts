@@ -1,6 +1,6 @@
 import {PayloadAction} from '@reduxjs/toolkit';
-import {Engine} from '../../../app/headless-engine';
 import {facetSet} from '../../../app/reducers';
+import {SearchEngine} from '../../../app/search-engine/search-engine';
 import {
   deselectAllFacetValues,
   registerFacet,
@@ -106,7 +106,7 @@ export interface FacetSetActionCreators {
  * @returns An object holding the action creators.
  */
 export function loadFacetSetActions(
-  engine: Engine<object>
+  engine: SearchEngine
 ): FacetSetActionCreators {
   engine.addReducers({facetSet});
 

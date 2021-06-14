@@ -1,6 +1,6 @@
 import {
   buildMockSearchAppEngine,
-  MockEngine,
+  MockSearchEngine,
 } from '../../../../test/mock-engine';
 import {
   registerCategoryFacetSearch,
@@ -14,13 +14,12 @@ import {
 import {buildMockCategoryFacetSearch} from '../../../../test/mock-category-facet-search';
 import {buildMockCategoryFacetSearchResult} from '../../../../test/mock-category-facet-search-result';
 import {executeSearch} from '../../../../features/search/search-actions';
-import {SearchAppState} from '../../../../state/search-app-state';
 import {defaultFacetSearchOptions} from '../../../../features/facets/facet-search-set/facet-search-reducer-helpers';
 
 describe('CategoryFacetSearch', () => {
   const facetId = '1';
   let props: CategoryFacetSearchProps;
-  let engine: MockEngine<SearchAppState>;
+  let engine: MockSearchEngine;
   let controller: CategoryFacetSearch;
 
   function initEngine() {
