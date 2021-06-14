@@ -9,6 +9,7 @@ import {
   ToggleSelectNumericFacetValueActionCreatorPayload,
   updateNumericFacetSortCriterion,
   UpdateNumericFacetSortCriterionActionCreatorPayload,
+  toggleSingleSelectNumericFacetValue,
 } from './numeric-facet-actions';
 
 export {
@@ -50,6 +51,16 @@ export interface NumericFacetSetActionCreators {
   ): PayloadAction<ToggleSelectNumericFacetValueActionCreatorPayload>;
 
   /**
+   * Toggles a numeric facet value.
+   *
+   * @param payload - The action creator payload.
+   * @returns A dispatchable action.
+   */
+  toggleSingleSelectNumericFacetValue(
+    payload: ToggleSelectNumericFacetValueActionCreatorPayload
+  ): PayloadAction<ToggleSelectNumericFacetValueActionCreatorPayload>;
+
+  /**
    * Updates the sort criterion of a numeric facet.
    *
    * @param payload - The action creator payload.
@@ -76,5 +87,6 @@ export function loadNumericFacetSetActions(
     registerNumericFacet,
     toggleSelectNumericFacetValue,
     updateNumericFacetSortCriterion,
+    toggleSingleSelectNumericFacetValue,
   };
 }

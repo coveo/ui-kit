@@ -9,6 +9,7 @@ import {
   ToggleSelectDateFacetValueActionCreatorPayload,
   updateDateFacetSortCriterion,
   UpdateDateFacetSortCriterionActionCreatorPayload,
+  toggleSingleSelectDateFacetValue,
 } from './date-facet-actions';
 
 export {
@@ -50,6 +51,16 @@ export interface DateFacetSetActionCreators {
   ): PayloadAction<ToggleSelectDateFacetValueActionCreatorPayload>;
 
   /**
+   * Toggles a date facet value ensuring other values are deselected.
+   *
+   * @param payload - The action creator payload.
+   * @returns A dispatchable action.
+   */
+  toggleSingleSelectDateFacetValue(
+    payload: ToggleSelectDateFacetValueActionCreatorPayload
+  ): PayloadAction<ToggleSelectDateFacetValueActionCreatorPayload>;
+
+  /**
    * Updates the sort criterion of a date facet.
    *
    * @param payload - The action creator payload.
@@ -76,5 +87,6 @@ export function loadDateFacetSetActions(
     registerDateFacet,
     toggleSelectDateFacetValue,
     updateDateFacetSortCriterion,
+    toggleSingleSelectDateFacetValue,
   };
 }

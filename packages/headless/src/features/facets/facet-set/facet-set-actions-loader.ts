@@ -15,6 +15,7 @@ import {
   UpdateFacetSortCriterionActionCreatorPayload,
   updateFreezeCurrentValues,
   UpdateFreezeCurrentValuesActionCreatorPayload,
+  toggleSingleSelectFacetValue,
 } from './facet-set-actions';
 
 export {
@@ -55,6 +56,16 @@ export interface FacetSetActionCreators {
    * @returns A dispatchable action.
    */
   toggleSelectFacetValue(
+    payload: ToggleSelectFacetValueActionCreatorPayload
+  ): PayloadAction<ToggleSelectFacetValueActionCreatorPayload>;
+
+  /**
+   * Toggles a facet value ensuring other values are deselected.
+   *
+   * @param payload - The action creator payload.
+   * @returns A dispatchable action.
+   */
+  toggleSingleSelectFacetValue(
     payload: ToggleSelectFacetValueActionCreatorPayload
   ): PayloadAction<ToggleSelectFacetValueActionCreatorPayload>;
 
@@ -118,5 +129,6 @@ export function loadFacetSetActions(
     updateFacetNumberOfValues,
     updateFacetSortCriterion,
     updateFreezeCurrentValues,
+    toggleSingleSelectFacetValue,
   };
 }
