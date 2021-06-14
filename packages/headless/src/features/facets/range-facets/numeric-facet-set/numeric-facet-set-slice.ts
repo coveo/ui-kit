@@ -6,6 +6,7 @@ import {
   deselectAllNumericFacetValues,
   updateNumericFacetSortCriterion,
   RegisterNumericFacetActionCreatorPayload,
+  toggleSingleSelectNumericFacetValue,
 } from './numeric-facet-actions';
 import {change} from '../../../history/history-actions';
 import {executeSearch} from '../../../search/search-actions';
@@ -17,6 +18,7 @@ import {
   handleRangeFacetDeselectAll,
   defaultRangeFacetOptions,
   handleRangeFacetSearchParameterRestoration,
+  toggleSingleSelectRangeValue,
 } from '../generic/range-facet-reducers';
 import {handleFacetSortCriterionUpdate} from '../../generic/facet-reducer-helpers';
 import {getNumericFacetSetInitialState} from './numeric-facet-set-state';
@@ -43,6 +45,14 @@ export const numericFacetSetReducer = createReducer(
       .addCase(toggleSelectNumericFacetValue, (state, action) => {
         const {facetId, selection} = action.payload;
         toggleSelectRangeValue<NumericFacetRequest, NumericFacetValue>(
+          state,
+          facetId,
+          selection
+        );
+      })
+      .addCase(toggleSingleSelectNumericFacetValue, (state, action) => {
+        const {facetId, selection} = action.payload;
+        toggleSingleSelectRangeValue<NumericFacetRequest, NumericFacetValue>(
           state,
           facetId,
           selection

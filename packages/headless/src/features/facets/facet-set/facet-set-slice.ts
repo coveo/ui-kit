@@ -9,6 +9,7 @@ import {
   updateFacetIsFieldExpanded,
   updateFreezeCurrentValues,
   RegisterFacetActionCreatorPayload,
+  toggleSingleSelectFacetValue,
 } from './facet-set-actions';
 import {executeSearch} from '../../search/search-actions';
 import {selectFacetSearchResult} from '../facet-search-set/specific/specific-facet-search-actions';
@@ -81,6 +82,29 @@ export const facetSetReducer = createReducer(
         }
 
         const isSelected = targetValue.state === 'selected';
+        targetValue.state = isSelected ? 'idle' : 'selected';
+
+        facetRequest.freezeCurrentValues = true;
+        facetRequest.preventAutoSelect = true;
+      })
+      .addCase(toggleSingleSelectFacetValue, (state, action) => {
+        const {facetId, selection} = action.payload;
+        const facetRequest = state[facetId];
+
+        if (!facetRequest) {
+          return;
+        }
+
+        const targetValue = facetRequest.currentValues.find(
+          (req) => req.value === selection.value
+        );
+
+        if (!targetValue) {
+          return;
+        }
+
+        const isSelected = targetValue.state === 'selected';
+        facetRequest.currentValues.forEach((value) => (value.state = 'idle'));
         targetValue.state = isSelected ? 'idle' : 'selected';
 
         facetRequest.freezeCurrentValues = true;

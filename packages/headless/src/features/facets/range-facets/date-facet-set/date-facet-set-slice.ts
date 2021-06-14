@@ -6,6 +6,7 @@ import {
   deselectAllDateFacetValues,
   updateDateFacetSortCriterion,
   RegisterDateFacetActionCreatorPayload,
+  toggleSingleSelectDateFacetValue,
 } from './date-facet-actions';
 import {change} from '../../../history/history-actions';
 import {executeSearch} from '../../../search/search-actions';
@@ -13,6 +14,7 @@ import {DateFacetResponse, DateFacetValue} from './interfaces/response';
 import {
   registerRangeFacet,
   toggleSelectRangeValue,
+  toggleSingleSelectRangeValue,
   onRangeFacetRequestFulfilled,
   handleRangeFacetDeselectAll,
   defaultRangeFacetOptions,
@@ -43,6 +45,14 @@ export const dateFacetSetReducer = createReducer(
       .addCase(toggleSelectDateFacetValue, (state, action) => {
         const {facetId, selection} = action.payload;
         toggleSelectRangeValue<DateFacetRequest, DateFacetValue>(
+          state,
+          facetId,
+          selection
+        );
+      })
+      .addCase(toggleSingleSelectDateFacetValue, (state, action) => {
+        const {facetId, selection} = action.payload;
+        toggleSingleSelectRangeValue<DateFacetRequest, DateFacetValue>(
           state,
           facetId,
           selection
