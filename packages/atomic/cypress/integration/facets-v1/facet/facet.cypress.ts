@@ -352,19 +352,17 @@ describe('Facet v1 Test Suites', () => {
       FacetSelectors.labelButton().click();
     }
 
-    describe('verify rendering', () => {
-      before(setupSelectLabelCollapse);
+    before(setupSelectLabelCollapse);
 
-      FacetAssertions.assertAccessibility();
-      FacetAssertions.assertContainsComponentError(false);
-      FacetAssertions.assertDisplayFacet(true);
-      FacetAssertions.assertDisplayClearButton(true);
-      FacetAssertions.assertDisplaySearchInput(false);
-      FacetAssertions.assertDisplayValues(false);
-      FacetAssertions.assertDisplayShowMoreButton(false);
-      FacetAssertions.assertDisplayShowLessButton(false);
-      FacetAssertions.assertLabelContains(label);
-    });
+    FacetAssertions.assertAccessibility();
+    FacetAssertions.assertContainsComponentError(false);
+    FacetAssertions.assertDisplayFacet(true);
+    FacetAssertions.assertDisplayClearButton(true);
+    FacetAssertions.assertDisplaySearchInput(false);
+    FacetAssertions.assertDisplayValues(false);
+    FacetAssertions.assertDisplayShowMoreButton(false);
+    FacetAssertions.assertDisplayShowLessButton(false);
+    FacetAssertions.assertLabelContains(label);
 
     describe('when selecting the label button to expand', () => {
       function setupSelectLabelExpand() {
@@ -372,22 +370,64 @@ describe('Facet v1 Test Suites', () => {
         FacetSelectors.labelButton().click();
       }
 
-      describe('verify rendering', () => {
-        before(setupSelectLabelExpand);
+      before(setupSelectLabelExpand);
 
-        FacetAssertions.assertDisplayClearButton(true);
-        FacetAssertions.assertDisplaySearchInput(true);
-        FacetAssertions.assertDisplayValues(true);
-        FacetAssertions.assertDisplayShowMoreButton(true);
-      });
+      FacetAssertions.assertDisplayClearButton(true);
+      FacetAssertions.assertDisplaySearchInput(true);
+      FacetAssertions.assertDisplayValues(true);
+      FacetAssertions.assertDisplayShowMoreButton(true);
     });
   });
 
-  describe.skip('with custom #numberOfValues', () => {});
+  describe('with custom #numberOfValues', () => {
+    const numberOfValues = 2;
+    function setupCustomNumberOfValues() {
+      new TestFixture()
+        .with(addFacet({field, label, 'number-of-values': numberOfValues}))
+        .init();
+      cy.wait(TestFixture.interceptAliases.UA);
+    }
 
-  describe.skip('with custom #sortCriteria, alphanumeric', () => {});
+    before(setupCustomNumberOfValues);
 
-  describe.skip('with custom #sortCriteria, occurrences', () => {});
+    FacetAssertions.assertNumberOfIdleCheckboxValues(numberOfValues);
+    FacetAssertions.assertDisplayShowMoreButton(true);
+    FacetAssertions.assertDisplayShowLessButton(false);
+
+    describe('when selecting the "Show More" button', () => {
+      before(() => {
+        setupCustomNumberOfValues();
+        FacetSelectors.showMoreButton().click();
+        cy.wait(TestFixture.interceptAliases.UA);
+      });
+
+      FacetAssertions.assertNumberOfIdleCheckboxValues(numberOfValues * 2);
+      FacetAssertions.assertDisplayShowMoreButton(true);
+      FacetAssertions.assertDisplayShowLessButton(true);
+    });
+  });
+
+  describe('with custom #sortCriteria, alphanumeric', () => {
+    before(() => {
+      new TestFixture()
+        .with(addFacet({field, label, 'sort-criteria': 'alphanumeric'}))
+        .init();
+      cy.wait(TestFixture.interceptAliases.UA);
+    });
+
+    FacetAssertions.assertValuesSortedAlphanumerically();
+  });
+
+  describe('with custom #sortCriteria, occurrences', () => {
+    before(() => {
+      new TestFixture()
+        .with(addFacet({field, label, 'sort-criteria': 'occurrences'}))
+        .init();
+      cy.wait(TestFixture.interceptAliases.UA);
+    });
+
+    FacetAssertions.assertValuesSortedByOccurences();
+  });
 
   describe.skip('with #withSearch to false', () => {});
 
