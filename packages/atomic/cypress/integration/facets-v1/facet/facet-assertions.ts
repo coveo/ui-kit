@@ -1,5 +1,8 @@
 import {TestFixture} from '../../../fixtures/test-fixture';
-import {doSortAlphanumeric} from '../../../utils/componentUtils';
+import {
+  doSortAlphanumeric,
+  doSortOccurences,
+} from '../../../utils/componentUtils';
 import {ComponentErrorSelectors} from '../../component-error-selectors';
 import {facetComponent, FacetSelectors} from './facet-selectors';
 
@@ -52,6 +55,56 @@ export function assertNumberOfIdleCheckboxValues(value: number) {
     }
 
     FacetSelectors.idleCheckboxValue().should('not.exist');
+  });
+}
+
+export function assertNumberOfSelectedLinkValues(value: number) {
+  it(`should display ${value} number of selected link values`, () => {
+    if (value > 0) {
+      FacetSelectors.selectedLinkValue().its('length').should('eq', value);
+      return;
+    }
+
+    FacetSelectors.selectedLinkValue().should('not.exist');
+  });
+}
+
+export function assertNumberOfIdleLinkValues(value: number) {
+  it(`should display ${value} number of idle link values`, () => {
+    if (value > 0) {
+      FacetSelectors.idleLinkValue().its('length').should('eq', value);
+      return;
+    }
+
+    FacetSelectors.idleLinkValue().should('not.exist');
+  });
+}
+
+export function assertNumberOfSelectedBoxValues(value: number) {
+  it(`should display ${value} number of selected box values`, () => {
+    if (value > 0) {
+      FacetSelectors.selectedBoxValue().its('length').should('eq', value);
+      return;
+    }
+
+    FacetSelectors.selectedBoxValue().should('not.exist');
+  });
+}
+
+export function assertNumberOfIdleBoxValues(value: number) {
+  it(`should display ${value} number of idle box values`, () => {
+    if (value > 0) {
+      FacetSelectors.idleBoxValue().its('length').should('eq', value);
+      return;
+    }
+
+    FacetSelectors.idleBoxValue().should('not.exist');
+  });
+}
+
+export function assertDisplayValues(display: boolean) {
+  it(`${should(display)} display facet values`, () => {
+    FacetSelectors.values().should(display ? 'be.visible' : 'not.exist');
   });
 }
 
@@ -122,6 +175,15 @@ export function assertValuesSortedAlphanumerically() {
     FacetSelectors.valueLabel().as('facetAllValuesLabel');
     cy.getTextOfAllElements('@facetAllValuesLabel').then((originalValues) => {
       expect(originalValues).to.eql(doSortAlphanumeric(originalValues));
+    });
+  });
+}
+
+export function assertValuesSortedByOccurences() {
+  it('values should be ordered by occurences', () => {
+    FacetSelectors.valueCount().as('facetAllValuesCount');
+    cy.getTextOfAllElements('@facetAllValuesCount').then((originalValues) => {
+      expect(originalValues).to.eql(doSortOccurences(originalValues));
     });
   });
 }

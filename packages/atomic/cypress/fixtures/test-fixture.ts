@@ -10,7 +10,7 @@ type SearchInterface = HTMLElement & {
 
 export type TestFeature = (e: TestFixture) => void | Promise<void>;
 
-export type TagProps = Record<string, string>;
+export type TagProps = Record<string, string | number>;
 
 export class TestFixture {
   private aliases: TestFeature[] = [];
@@ -63,6 +63,7 @@ export class TestFixture {
 
     if (this.execFirstSearch) {
       cy.wait(TestFixture.interceptAliases.Search);
+      cy.wait(TestFixture.interceptAliases.UA);
     }
 
     this.aliases.forEach((alias) => alias(this));
