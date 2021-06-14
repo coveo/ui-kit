@@ -49,13 +49,13 @@
       "id": "deploy-headless-minor-to-s3-version",
       "s3": {
         "bucket": "{terraform.infra.infra.bucket_binaries}",
-        "directory": "proda/StaticCDN/headless/v$[MINOR]",
+        "directory": "proda/StaticCDN/headless/v$[MINORVERSION]",
         "source": "packages/headless/dist/browser",
         "parameters": {
           "acl": "public-read"
         },
         "prd": {
-          "directory": "proda/StaticCDN/headless/v$[MINOR]"
+          "directory": "proda/StaticCDN/headless/v$[MINORVERSION]"
         }
       }
     },
@@ -63,13 +63,13 @@
       "id": "deploy-headless-major-to-s3-version",
       "s3": {
         "bucket": "{terraform.infra.infra.bucket_binaries}",
-        "directory": "proda/StaticCDN/headless/v$[MAJOR]",
+        "directory": "proda/StaticCDN/headless/v$[MAJORVERSION]",
         "source": "packages/headless/dist/browser",
         "parameters": {
           "acl": "public-read"
         },
         "prd": {
-          "directory": "proda/StaticCDN/headless/v$[MAJOR]"
+          "directory": "proda/StaticCDN/headless/v$[MAJORVERSION]"
         }
       }
     },
@@ -77,13 +77,13 @@
       "id": "deploy-atomic-minor-to-s3-version",
       "s3": {
         "bucket": "{terraform.infra.infra.bucket_binaries}",
-        "directory": "proda/StaticCDN/atomic/v$[MINOR]",
+        "directory": "proda/StaticCDN/atomic/v$[MINORVERSION]",
         "source": "packages/atomic/dist/atomic",
         "parameters": {
           "acl": "public-read"
         },
         "prd": {
-          "directory": "proda/StaticCDN/atomic/v$[MINOR]"
+          "directory": "proda/StaticCDN/atomic/v$[MINORVERSION]"
         }
       }
     },
@@ -91,13 +91,13 @@
       "id": "deploy-atomic-major-to-s3-version",
       "s3": {
         "bucket": "{terraform.infra.infra.bucket_binaries}",
-        "directory": "proda/StaticCDN/atomic/v$[MAJOR]",
+        "directory": "proda/StaticCDN/atomic/v$[MAJORVERSION]",
         "source": "packages/atomic/dist/atomic",
         "parameters": {
           "acl": "public-read"
         },
         "prd": {
-          "directory": "proda/StaticCDN/atomic/v$[MAJOR]"
+          "directory": "proda/StaticCDN/atomic/v$[MAJORVERSION]"
         }
       }
     },
