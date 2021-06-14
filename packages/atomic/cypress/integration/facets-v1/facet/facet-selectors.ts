@@ -11,6 +11,14 @@ export const FacetSelectors = {
     FacetSelectors.shadow().find(
       '[part="value-checkbox"][aria-checked="false"]'
     ),
+  selectedLinkValue: () =>
+    FacetSelectors.shadow().find('[part="value-link"][aria-pressed="true"]'),
+  idleLinkValue: () =>
+    FacetSelectors.shadow().find('[part="value-link"][aria-pressed="false"]'),
+  selectedBoxValue: () =>
+    FacetSelectors.shadow().find('[part="value-box"][aria-pressed="true"]'),
+  idleBoxValue: () =>
+    FacetSelectors.shadow().find('[part="value-box"][aria-pressed="false"]'),
   showMoreButton: () => FacetSelectors.shadow().find('[part="show-more"]'),
   showLessButton: () => FacetSelectors.shadow().find('[part="show-less"]'),
   clearButton: () => FacetSelectors.shadow().find('[part="clear-button"]'),

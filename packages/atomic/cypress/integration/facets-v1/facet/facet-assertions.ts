@@ -55,6 +55,50 @@ export function assertNumberOfIdleCheckboxValues(value: number) {
   });
 }
 
+export function assertNumberOfSelectedLinkValues(value: number) {
+  it(`should display ${value} number of selected link values`, () => {
+    if (value > 0) {
+      FacetSelectors.selectedLinkValue().its('length').should('eq', value);
+      return;
+    }
+
+    FacetSelectors.selectedLinkValue().should('not.exist');
+  });
+}
+
+export function assertNumberOfIdleLinkValues(value: number) {
+  it(`should display ${value} number of idle link values`, () => {
+    if (value > 0) {
+      FacetSelectors.idleLinkValue().its('length').should('eq', value);
+      return;
+    }
+
+    FacetSelectors.idleLinkValue().should('not.exist');
+  });
+}
+
+export function assertNumberOfSelectedBoxValues(value: number) {
+  it(`should display ${value} number of selected box values`, () => {
+    if (value > 0) {
+      FacetSelectors.selectedBoxValue().its('length').should('eq', value);
+      return;
+    }
+
+    FacetSelectors.selectedBoxValue().should('not.exist');
+  });
+}
+
+export function assertNumberOfIdleBoxValues(value: number) {
+  it(`should display ${value} number of idle box values`, () => {
+    if (value > 0) {
+      FacetSelectors.idleBoxValue().its('length').should('eq', value);
+      return;
+    }
+
+    FacetSelectors.idleBoxValue().should('not.exist');
+  });
+}
+
 export function assertDisplayShowMoreButton(display: boolean) {
   it(`${should(display)} display a "Show more" button`, () => {
     FacetSelectors.showMoreButton().should(
