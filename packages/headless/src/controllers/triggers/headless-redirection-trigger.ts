@@ -57,7 +57,7 @@ export function buildRedirectionTrigger(
           redirectTo !== null //&&
           //redirectTo !== this.state.redirectTo
         ) {
-          dispatch(logTriggerRedirect);
+          dispatch(logTriggerRedirect());
           listener();
         }
       };

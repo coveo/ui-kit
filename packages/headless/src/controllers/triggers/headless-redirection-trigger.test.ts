@@ -18,6 +18,12 @@ describe('RedirectionTrigger', () => {
     redirectionTrigger = buildRedirectionTrigger(engine);
   }
 
+  function getLogTriggerRedirectAction() {
+    return engine.actions.find(
+      (a) => a.type === logTriggerRedirect.pending.type
+    );
+  }
+
   beforeEach(() => {
     engine = buildMockSearchAppEngine();
     initRedirectTrigger();
@@ -52,26 +58,17 @@ describe('RedirectionTrigger', () => {
     engine.state.redirection.redirectTo = 'https://www.coveo.com';
     console.log('engine: ', engine.state.redirection);
     console.log('controller', redirectionTrigger.state);
-    //console.log(engine.state.redirection);
-    //console.log(engine.actions);
-    // const action = engine.actions.find(
-    //   (a) => a.type === logTriggerRedirect.fulfilled.type
-    // );
 
     expect(spyObject.onRedirect).toHaveBeenCalled();
-    //expect(engine.findAsyncAction(logTriggerRedirect.pending)).toBeTruthy();
-    //expect(engine.actions).toContainEqual(action);
+    expect(getLogTriggerRedirectAction()).toBeTruthy();
   });
 
   it('when the #engine.state.redirection.redirectTo is not updated, it does not call #onRedirect and dispatch #logTriggerRedirect', () => {
     jest.spyOn(spyObject, 'onRedirect');
     engine.state.redirection.redirectTo = '';
     redirectionTrigger.subscribe(spyObject.onRedirect);
-    const action = engine.actions.find(
-      (a) => a.type === logTriggerRedirect.pending.type
-    );
 
     expect(spyObject.onRedirect).not.toHaveBeenCalled();
-    expect(engine.actions).not.toContainEqual(action);
+    expect(getLogTriggerRedirectAction()).toBeFalsy();
   });
 });
