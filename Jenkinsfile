@@ -95,7 +95,7 @@ node('linux && docker') {
         lerna = readJSON file: 'lerna.json'
         version = lerna.version
         (minor, major) = (version =~ /^([^\.]*)\.[^\.]*/)[0]
-        sh "deployment-package package create --with-deploy --resolve COMMIT_HASH=${commitHash} --resolve MINORVERSION=${minor} --resolve MAJORVERSION=${major} || true"
+        sh "deployment-package package create --with-deploy --version ${version} --resolve COMMIT_HASH=${commitHash} --resolve MINORVERSION=${minor} --resolve MAJORVERSION=${major} || true"
       }
     }
   }
