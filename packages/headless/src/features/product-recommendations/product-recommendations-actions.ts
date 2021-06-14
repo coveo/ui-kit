@@ -151,13 +151,14 @@ export const getProductRecommendations = createAsyncThunk<
     if (isErrorResponse(fetched)) {
       return rejectWithValue(fetched.error);
     }
+
+    const additionalFields =
+      state.productRecommendations.additionalFields || [];
+
     return {
-      recommendations: fetched.success.results.map((result) => ({
-        ...mapResultToDeprecatedProductResult(result),
-        ...mapResultToProductResult(result, {
-          additionalFields: state.productRecommendations.additionalFields || [],
-        }),
-      })),
+      recommendations: fetched.success.results.map((result) =>
+        mapResultToProductResult(result, {additionalFields})
+      ),
       analyticsAction: logProductRecommendations(),
       searchUid: fetched.success.searchUid,
       duration,
@@ -198,32 +199,6 @@ const mapResultToProductResult = (
       (all, field) => ({...all, [field]: result.raw[field]}),
       {}
     ),
-  };
-};
-
-const mapResultToDeprecatedProductResult = (
-  result: Result
-): Partial<ProductRecommendation> => {
-  const price = result.raw.ec_price as number | undefined;
-  const promoPrice = result.raw.ec_promo_price as number | undefined;
-  const inStock = result.raw.ec_in_stock as string | undefined;
-  return {
-    sku: result.raw.permanentid!,
-    name: result.raw.ec_name as string,
-    link: result.clickUri,
-    brand: result.raw.ec_brand as string,
-    category: result.raw.ec_category as string,
-    price,
-    shortDescription: result.raw.ec_shortdesc as string,
-    thumbnailUrl: result.raw.ec_thumbnail as string,
-    imageUrls: result.raw.ec_images as string[],
-    promoPrice:
-      promoPrice === undefined || (price !== undefined && promoPrice >= price)
-        ? undefined
-        : promoPrice,
-    inStock:
-      inStock === undefined ? undefined : inStock.toLowerCase() === 'yes',
-    rating: result.raw.ec_rating as number,
   };
 };
 
