@@ -209,12 +209,8 @@ export function BindStateToController(
       });
     };
 
-    const disconnectUnsubscribeDelay = 100;
     component.disconnectedCallback = function () {
-      setTimeout(() => {
-        const isStillInDOM = document.contains(getElement(this));
-        !isStillInDOM && unsubscribeController();
-      }, disconnectUnsubscribeDelay);
+      !getElement(this).isConnected && unsubscribeController();
       disconnectedCallback && disconnectedCallback.call(this);
     };
   };
