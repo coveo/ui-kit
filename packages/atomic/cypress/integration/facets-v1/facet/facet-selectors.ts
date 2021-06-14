@@ -19,6 +19,7 @@ export const FacetSelectors = {
     FacetSelectors.shadow().find('[part="value-box"][aria-pressed="true"]'),
   idleBoxValue: () =>
     FacetSelectors.shadow().find('[part="value-box"][aria-pressed="false"]'),
+  values: () => FacetSelectors.shadow().find('[part="values"]'),
   showMoreButton: () => FacetSelectors.shadow().find('[part="show-more"]'),
   showLessButton: () => FacetSelectors.shadow().find('[part="show-less"]'),
   clearButton: () => FacetSelectors.shadow().find('[part="clear-button"]'),

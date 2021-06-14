@@ -99,6 +99,12 @@ export function assertNumberOfIdleBoxValues(value: number) {
   });
 }
 
+export function assertDisplayValues(display: boolean) {
+  it(`${should(display)} display facet values`, () => {
+    FacetSelectors.values().should(display ? 'be.visible' : 'not.exist');
+  });
+}
+
 export function assertDisplayShowMoreButton(display: boolean) {
   it(`${should(display)} display a "Show more" button`, () => {
     FacetSelectors.showMoreButton().should(

@@ -24,6 +24,7 @@ describe('Facet v1 Test Suites', () => {
       FacetAssertions.assertAccessibility();
       FacetAssertions.assertContainsComponentError(false);
       FacetAssertions.assertDisplayFacet(true);
+      FacetAssertions.assertDisplayValues(true);
       FacetAssertions.assertDisplayPlaceholder(false);
       FacetAssertions.assertNumberOfSelectedCheckboxValues(0);
       FacetAssertions.assertNumberOfIdleCheckboxValues(defaultNumberOfValues);
@@ -122,6 +123,7 @@ describe('Facet v1 Test Suites', () => {
       before(setupWithLinkValues);
 
       FacetAssertions.assertAccessibility();
+      FacetAssertions.assertDisplayValues(true);
       FacetAssertions.assertNumberOfSelectedLinkValues(0);
       FacetAssertions.assertNumberOfIdleLinkValues(defaultNumberOfValues);
       FacetAssertions.assertDisplayClearButton(false);
@@ -212,6 +214,7 @@ describe('Facet v1 Test Suites', () => {
       before(setupWithBoxValues);
 
       FacetAssertions.assertAccessibility();
+      FacetAssertions.assertDisplayValues(true);
       FacetAssertions.assertNumberOfSelectedBoxValues(0);
       FacetAssertions.assertNumberOfIdleBoxValues(defaultNumberOfValues);
       FacetAssertions.assertDisplayClearButton(false);
@@ -340,7 +343,45 @@ describe('Facet v1 Test Suites', () => {
     });
   });
 
-  describe.skip('when being collapsed', () => {});
+  describe('when selecting the label button to collapse', () => {
+    function setupSelectLabelCollapse() {
+      new TestFixture().with(addFacet({field, label})).init();
+      cy.wait(TestFixture.interceptAliases.UA);
+      selectIdleCheckboxValueAt(0);
+      cy.wait(TestFixture.interceptAliases.Search);
+      FacetSelectors.labelButton().click();
+    }
+
+    describe('verify rendering', () => {
+      before(setupSelectLabelCollapse);
+
+      FacetAssertions.assertAccessibility();
+      FacetAssertions.assertContainsComponentError(false);
+      FacetAssertions.assertDisplayFacet(true);
+      FacetAssertions.assertDisplayClearButton(true);
+      FacetAssertions.assertDisplaySearchInput(false);
+      FacetAssertions.assertDisplayValues(false);
+      FacetAssertions.assertDisplayShowMoreButton(false);
+      FacetAssertions.assertDisplayShowLessButton(false);
+      FacetAssertions.assertLabelContains(label);
+    });
+
+    describe('when selecting the label button to expand', () => {
+      function setupSelectLabelExpand() {
+        setupSelectLabelCollapse();
+        FacetSelectors.labelButton().click();
+      }
+
+      describe('verify rendering', () => {
+        before(setupSelectLabelExpand);
+
+        FacetAssertions.assertDisplayClearButton(true);
+        FacetAssertions.assertDisplaySearchInput(true);
+        FacetAssertions.assertDisplayValues(true);
+        FacetAssertions.assertDisplayShowMoreButton(true);
+      });
+    });
+  });
 
   describe.skip('with custom #numberOfValues', () => {});
 
