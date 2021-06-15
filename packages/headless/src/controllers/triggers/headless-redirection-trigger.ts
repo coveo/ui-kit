@@ -35,7 +35,7 @@ export interface RedirectionTriggerState {
  * @returns A `RedirectionTrigger` controller instance.
  * */
 export function buildRedirectionTrigger(
-  engine: Engine<object>
+  engine: Engine<RedirectionSection & ConfigurationSection>
 ): RedirectionTrigger {
   if (!loadRedirectionReducers(engine)) {
     throw loadReducerError;
@@ -44,25 +44,24 @@ export function buildRedirectionTrigger(
   const controller = buildController(engine);
   const {dispatch} = engine;
 
-  let redirectTo = engine.state.redirection.redirectTo!;
+  let redirectTo = '';
 
   return {
     ...controller,
 
     subscribe(listener: () => void) {
       const strictListener = () => {
-        redirectTo = engine.state.redirection.redirectTo!;
-        //this.state.redirectTo = redirectTo;
-        if (
-          redirectTo !== '' &&
-          redirectTo !== null //&&
-          //redirectTo !== this.state.redirectTo
-        ) {
-          dispatch(logTriggerRedirect());
+        const redirectToEngine = engine.state.redirection.redirectTo!;
+        console.log('engine state:', redirectToEngine);
+        console.log('controller state:', this.state.redirectTo);
+        if (redirectToEngine && redirectToEngine !== this.state.redirectTo) {
           listener();
+          dispatch(logTriggerRedirect());
         }
       };
       strictListener();
+      redirectTo = engine.state.redirection.redirectTo!;
+      console.log('controller state afterwards:', this.state.redirectTo);
       return engine.subscribe(strictListener);
     },
 

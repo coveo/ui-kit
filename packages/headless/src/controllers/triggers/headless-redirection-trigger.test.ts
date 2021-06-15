@@ -1,6 +1,7 @@
 import {
   RedirectionTrigger,
   buildRedirectionTrigger,
+  RedirectionTriggerState,
 } from './headless-redirection-trigger';
 import {buildMockSearchAppEngine, MockEngine} from '../../test/mock-engine';
 import {SearchAppState} from '../../state/search-app-state';
@@ -10,9 +11,6 @@ import {logTriggerRedirect} from '../../features/redirection/redirection-analyti
 describe('RedirectionTrigger', () => {
   let engine: MockEngine<SearchAppState>;
   let redirectionTrigger: RedirectionTrigger;
-  let spyObject: {
-    onRedirect: () => void;
-  };
 
   function initRedirectTrigger() {
     redirectionTrigger = buildRedirectionTrigger(engine);
@@ -24,14 +22,13 @@ describe('RedirectionTrigger', () => {
     );
   }
 
+  function updateControllerState(state: RedirectionTriggerState) {
+    jest.spyOn(redirectionTrigger, 'state', 'get').mockReturnValue(state);
+  }
+
   beforeEach(() => {
     engine = buildMockSearchAppEngine();
     initRedirectTrigger();
-    spyObject = {
-      onRedirect: () => {
-        console.log('yooo');
-      },
-    };
   });
 
   it('initializes', () => {
@@ -49,26 +46,30 @@ describe('RedirectionTrigger', () => {
     expect(redirectionTrigger.subscribe).toBeTruthy();
   });
 
-  it('when the #engine.state.redirection.redirectTo is updated, it calls #onRedirect and dispatches #logTriggerRedirect', () => {
-    jest.spyOn(spyObject, 'onRedirect');
-    engine.state.redirection.redirectTo = 'a';
-    console.log('engine: ', engine.state.redirection);
-    console.log('controller', redirectionTrigger.state);
-    redirectionTrigger.subscribe(spyObject.onRedirect);
-    engine.state.redirection.redirectTo = 'https://www.coveo.com';
-    console.log('engine: ', engine.state.redirection);
-    console.log('controller', redirectionTrigger.state);
+  it('when the #engine.state.redirection.redirectTo is already initialized, it calls #onRedirect and dispatches #logTriggerRedirect', () => {
+    const listener = jest.fn();
+    engine.state.redirection.redirectTo = 'https://www.google.com';
+    redirectionTrigger.subscribe(listener);
 
-    expect(spyObject.onRedirect).toHaveBeenCalled();
+    expect(listener).toHaveBeenCalledTimes(1);
     expect(getLogTriggerRedirectAction()).toBeTruthy();
   });
 
-  it('when the #engine.state.redirection.redirectTo is not updated, it does not call #onRedirect and dispatch #logTriggerRedirect', () => {
-    jest.spyOn(spyObject, 'onRedirect');
-    engine.state.redirection.redirectTo = 'https://www.coveo.com';
-    redirectionTrigger.subscribe(spyObject.onRedirect);
+  it('when the #engine.state.redirection.redirectTo is not updated, it does not call #onRedirect and does not dispatch #logTriggerRedirect', () => {
+    const listener = jest.fn();
+    redirectionTrigger.subscribe(listener);
 
-    expect(spyObject.onRedirect).not.toHaveBeenCalled();
+    expect(listener).not.toHaveBeenCalled();
     expect(getLogTriggerRedirectAction()).toBeFalsy();
+  });
+
+  it('when the #engine.state.redirection.redirectTo is updated, it calls #onRedirect and dispatches #logTriggerRedirect', () => {
+    const listener = jest.fn();
+    engine.state.redirection.redirectTo = 'https://www.google.com';
+    redirectionTrigger.subscribe(listener);
+    updateControllerState({redirectTo: 'https://www.coveo.com'});
+
+    expect(listener).toHaveBeenCalledTimes(2);
+    expect(getLogTriggerRedirectAction()).toBeTruthy();
   });
 });
