@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.23.5](https://github.com/coveo/ui-kit/compare/v0.23.4...v0.23.5) (2021-06-15)
+
+
+### Bug Fixes
+
+* **atomic:** unsubscribe controllers after delay, if element is still removed from the DOM ([#885](https://github.com/coveo/ui-kit/issues/885)) ([d827428](https://github.com/coveo/ui-kit/commit/d8274288f8a02c99c5473d270183c732bd5323c2))
+
+
+
+
+
 ## [0.23.4](https://github.com/coveo/ui-kit/compare/v0.23.3...v0.23.4) (2021-06-14)
 
 **Note:** Version bump only for package @coveo/atomic

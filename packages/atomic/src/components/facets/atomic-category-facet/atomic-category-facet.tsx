@@ -77,7 +77,7 @@ export class AtomicCategoryFacet
   public facet!: CategoryFacet;
   public searchStatus!: SearchStatus;
 
-  @BindStateToController('facet', {subscribeOnConnectedCallback: true})
+  @BindStateToController('facet')
   @State()
   public facetState!: CategoryFacetState;
   @BindStateToController('searchStatus')
