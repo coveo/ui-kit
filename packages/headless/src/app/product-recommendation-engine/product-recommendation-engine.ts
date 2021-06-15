@@ -1,6 +1,5 @@
 import {Logger} from 'pino';
 import {StateFromReducersMapObject} from '@reduxjs/toolkit';
-import {NoopPreprocessRequestMiddleware} from '../../api/platform-client';
 import {NoopPreprocessRequest} from '../../api/preprocess-request';
 import {SearchAPIClient} from '../../api/search/search-api-client';
 import {
@@ -110,7 +109,6 @@ function createSearchAPIClient(
   return new SearchAPIClient({
     logger,
     preprocessRequest: configuration.preprocessRequest || NoopPreprocessRequest,
-    deprecatedPreprocessRequest: NoopPreprocessRequestMiddleware,
     postprocessSearchResponseMiddleware: NoopPostprocessSearchResponseMiddleware,
     postprocessFacetSearchResponseMiddleware: NoopPostprocessFacetSearchResponseMiddleware,
     postprocessQuerySuggestResponseMiddleware: NoopPostprocessQuerySuggestResponseMiddleware,
