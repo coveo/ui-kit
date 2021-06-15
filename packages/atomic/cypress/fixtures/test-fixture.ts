@@ -14,21 +14,11 @@ export type TagProps = Record<string, string | number>;
 
 export class TestFixture {
   private aliases: TestFeature[] = [];
-  private testURL = buildTestUrl();
   private execFirstSearch = true;
-
-  constructor() {
-    cy.visit(this.testURL).injectAxe();
-    this.intercept();
-
-    cy.document().then((doc) => {
-      const searchInterface = doc.createElement(
-        'atomic-search-interface'
-      ) as SearchInterface;
-      doc.body.appendChild(searchInterface);
-      cy.get('atomic-search-interface').as(this.elementAliases.SearchInterface);
-    });
-  }
+  private searchInterface = document.createElement(
+    'atomic-search-interface'
+  ) as SearchInterface;
+  private hash = '';
 
   public with(feat: TestFeature) {
     feat(this);
@@ -40,12 +30,30 @@ export class TestFixture {
     return this;
   }
 
+  public withHash(hash: string) {
+    this.hash = hash;
+    return this;
+  }
+
+  public withElement(e: HTMLElement) {
+    this.searchInterface.append(e);
+    return this;
+  }
+
   public withAlias(aliasFn: TestFeature) {
     this.aliases.push(aliasFn);
     return this;
   }
 
   public init() {
+    cy.visit(buildTestUrl(this.hash)).injectAxe();
+    this.intercept();
+
+    cy.document().then((doc) => {
+      doc.body.appendChild(this.searchInterface);
+      cy.get('atomic-search-interface').as(this.elementAliases.SearchInterface);
+    });
+
     cy.get(`@${this.elementAliases.SearchInterface}`).then(($si) => {
       const searchInterfaceComponent = $si.get()[0] as SearchInterface;
 
@@ -103,16 +111,10 @@ export class TestFixture {
   }
 }
 
-export const addElement = (env: TestFixture, e: HTMLElement) => {
-  cy.get(`@${env.elementAliases.SearchInterface}`).then(($si) => {
-    $si.append(e);
-  });
-};
-
 export const addTag = (env: TestFixture, tag: string, props: TagProps) => {
   const e = document.createElement(tag);
   for (const [k, v] of Object.entries(props)) {
-    e.setAttribute(k, v);
+    e.setAttribute(k, v.toString());
   }
-  addElement(env, e);
+  env.withElement(e);
 };

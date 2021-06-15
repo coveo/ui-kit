@@ -215,3 +215,9 @@ export function assertLogFacetShowLess(field: string) {
     });
   });
 }
+
+export function assertFirstValueContains(value: string) {
+  it(`first child value should contain ${value}`, () => {
+    FacetSelectors.valueLabel().first().contains(value);
+  });
+}

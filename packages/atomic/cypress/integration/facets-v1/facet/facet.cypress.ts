@@ -421,13 +421,63 @@ describe('Facet v1 Test Suites', () => {
     FacetAssertions.assertValuesSortedByOccurences();
   });
 
-  describe.skip('with #withSearch to false', () => {});
+  describe('with #withSearch to false', () => {
+    before(() => {
+      new TestFixture()
+        .with(addFacet({field, label, 'with-search': 'false'}))
+        .init();
+    });
 
-  describe.skip('when no search has yet been executed', () => {});
+    FacetAssertions.assertDisplayFacet(true);
+    FacetAssertions.assertDisplaySearchInput(false);
+  });
 
-  describe.skip('with an invalid option', () => {});
+  describe('when no search has yet been executed', () => {
+    before(() => {
+      new TestFixture()
+        .with(addFacet({field, label}))
+        .withoutFirstAutomaticSearch()
+        .init();
+    });
 
-  describe.skip('when field returns no results', () => {});
+    FacetAssertions.assertDisplayFacet(false);
+    FacetAssertions.assertDisplayPlaceholder(true);
+  });
 
-  describe.skip('with a selected path in the URL', () => {});
+  describe('with an invalid option', () => {
+    before(() => {
+      new TestFixture()
+        .with(addFacet({field, label, 'sort-criteria': 'nononono'}))
+        .init();
+    });
+
+    FacetAssertions.assertDisplayFacet(false);
+    FacetAssertions.assertContainsComponentError(true);
+  });
+
+  describe('when field returns no results', () => {
+    before(() => {
+      new TestFixture()
+        .with(addFacet({field: 'notanactualfield', label}))
+        .init();
+    });
+
+    FacetAssertions.assertDisplayFacet(false);
+    FacetAssertions.assertDisplayPlaceholder(false);
+    FacetAssertions.assertContainsComponentError(false);
+  });
+
+  describe('with a selected path in the URL', () => {
+    before(() => {
+      new TestFixture()
+        .with(addFacet({field, label}))
+        .withHash(`f[${field}]=Cervantes`)
+        .init();
+    });
+
+    FacetAssertions.assertDisplayFacet(true);
+    FacetAssertions.assertNumberOfSelectedCheckboxValues(1);
+    FacetAssertions.assertNumberOfIdleCheckboxValues(defaultNumberOfValues - 1);
+    FacetAssertions.assertFirstValueContains('Cervantes');
+  });
 });
