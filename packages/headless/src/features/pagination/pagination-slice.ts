@@ -14,15 +14,25 @@ import {restoreSearchParameters} from '../search-parameters/search-parameter-act
 import {
   deselectAllFacetValues,
   toggleSelectFacetValue,
+  toggleSingleSelectFacetValue,
 } from './../facets/facet-set/facet-set-actions';
 import {
   deselectAllCategoryFacetValues,
   toggleSelectCategoryFacetValue,
 } from '../facets/category-facet-set/category-facet-set-actions';
-import {toggleSelectDateFacetValue} from '../facets/range-facets/date-facet-set/date-facet-actions';
-import {toggleSelectNumericFacetValue} from '../facets/range-facets/numeric-facet-set/numeric-facet-actions';
+import {
+  toggleSelectDateFacetValue,
+  toggleSingleSelectDateFacetValue,
+} from '../facets/range-facets/date-facet-set/date-facet-actions';
+import {
+  toggleSelectNumericFacetValue,
+  toggleSingleSelectNumericFacetValue,
+} from '../facets/range-facets/numeric-facet-set/numeric-facet-actions';
 import {deselectAllFacets} from '../facets/generic/facet-actions';
-import {selectFacetSearchResult} from '../facets/facet-search-set/specific/specific-facet-search-actions';
+import {
+  selectFacetSearchResult,
+  singleSelectFacetSearchResult,
+} from '../facets/facet-search-set/specific/specific-facet-search-actions';
 import {selectCategoryFacetSearchResult} from '../facets/facet-search-set/category/category-facet-search-actions';
 
 export const minimumPage = 1;
@@ -90,6 +100,9 @@ export const paginationReducer = createReducer(
       .addCase(toggleSelectFacetValue, (state) => {
         handlePaginationReset(state);
       })
+      .addCase(toggleSingleSelectFacetValue, (state) => {
+        handlePaginationReset(state);
+      })
       .addCase(deselectAllCategoryFacetValues, (state) => {
         handlePaginationReset(state);
       })
@@ -105,10 +118,19 @@ export const paginationReducer = createReducer(
       .addCase(toggleSelectNumericFacetValue, (state) => {
         handlePaginationReset(state);
       })
+      .addCase(toggleSingleSelectDateFacetValue, (state) => {
+        handlePaginationReset(state);
+      })
+      .addCase(toggleSingleSelectNumericFacetValue, (state) => {
+        handlePaginationReset(state);
+      })
       .addCase(deselectAllFacets, (state) => {
         handlePaginationReset(state);
       })
       .addCase(selectFacetSearchResult, (state) => {
+        handlePaginationReset(state);
+      })
+      .addCase(singleSelectFacetSearchResult, (state) => {
         handlePaginationReset(state);
       });
   }
