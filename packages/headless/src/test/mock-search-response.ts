@@ -13,6 +13,13 @@ export function buildMockSearchResponse(
     totalCountFiltered: 0,
     facets: [],
     queryCorrections: [emptyCorrection()],
+    questionAnswer: {
+      answerSnippet: '',
+      documentId: {contentIdKey: '', contentIdValue: ''},
+      question: '',
+      relatedQuestions: [],
+      score: 0,
+    },
     ...config,
   };
 }

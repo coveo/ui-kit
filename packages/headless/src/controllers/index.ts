@@ -404,3 +404,16 @@ export {
   FoldedResultListState,
   buildFoldedResultList,
 } from './folded-result-list/headless-folded-result-list';
+
+export {
+  SmartSnippet,
+  SmartSnippetState,
+  buildSmartSnippet,
+} from './smart-snippet/headless-smart-snippet';
+
+export {
+  SmartSnippetSuggestions,
+  SmartSnippetSuggestionsDocumentId,
+  SmartSnippetSuggestionsState,
+  buildSmartSnippetSuggestions,
+} from './smart-snippet-suggestions/headless-smart-snippet-suggestions';
