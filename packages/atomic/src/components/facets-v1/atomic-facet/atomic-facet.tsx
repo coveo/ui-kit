@@ -47,6 +47,8 @@ import {BaseFacet} from '../facet-common';
  * @part search-input - The search box input.
  * @part search-icon - The search box submit button.
  * @part search-clear-button - The button to clear the search box of input.
+ * @part more-matches - The label indicating there are more matches for the current facet search query.
+ * @part no-matches - The label indicating there are no matches for the current facet search query.
  *
  * @part values - The facet values container.
  * @part value-label - The facet value label, common for all displays.

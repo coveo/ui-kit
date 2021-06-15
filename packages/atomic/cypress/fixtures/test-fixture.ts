@@ -84,6 +84,7 @@ export class TestFixture {
       UA: '@coveoAnalytics',
       QuerySuggestions: '@coveoQuerySuggest',
       Search: '@coveoSearch',
+      FacetSearch: '@coveoFacetSearch',
     };
   }
 
@@ -108,6 +109,11 @@ export class TestFixture {
       method: 'POST',
       url: '**/rest/search/v2?*',
     }).as(TestFixture.interceptAliases.Search.substring(1));
+
+    cy.intercept({
+      method: 'POST',
+      path: '**/rest/search/v2/facet?*',
+    }).as(TestFixture.interceptAliases.FacetSearch.substring(1));
   }
 }
 

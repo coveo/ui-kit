@@ -137,8 +137,42 @@ export function assertLabelContains(label: string) {
 }
 
 export function assertDisplaySearchInput(display: boolean) {
-  it(`${should(display)} display a the facet search input`, () => {
+  it(`${should(display)} display the facet search input`, () => {
     FacetSelectors.searchInput().should(display ? 'be.visible' : 'not.exist');
+  });
+}
+
+export function assertDisplaySearchClearButton(display: boolean) {
+  it(`${should(display)} display the facet search clear button`, () => {
+    FacetSelectors.searchClearButton().should(
+      display ? 'be.visible' : 'not.exist'
+    );
+  });
+}
+
+export function assertSearchInputEmpty() {}
+
+export function assertDisplayMoreMatchesFound(display: boolean) {
+  it(`${should(display)} display the "More matches for" label`, () => {
+    FacetSelectors.moreMatches().should(display ? 'be.visible' : 'not.exist');
+  });
+}
+
+export function assertDisplayNoMatchesFound(display: boolean) {
+  it(`${should(display)} display the "No matches found for" label`, () => {
+    FacetSelectors.noMatches().should(display ? 'be.visible' : 'not.exist');
+  });
+}
+
+export function assertMoreMatchesFoundContainsQuery(query: string) {
+  it(`"More matches for" label should have the query ${query}`, () => {
+    FacetSelectors.moreMatches().contains(query);
+  });
+}
+
+export function assertNoMatchesFoundContainsQuery(query: string) {
+  it(`"No matches found for" label should have the query ${query}`, () => {
+    FacetSelectors.noMatches().contains(query);
   });
 }
 
@@ -219,5 +253,15 @@ export function assertLogFacetShowLess(field: string) {
 export function assertFirstValueContains(value: string) {
   it(`first child value should contain ${value}`, () => {
     FacetSelectors.valueLabel().first().contains(value);
+  });
+}
+
+export function assertLogFacetSearch(field: string) {
+  it('should log the facet search to UA', () => {
+    cy.wait(TestFixture.interceptAliases.UA).then((intercept) => {
+      const analyticsBody = intercept.request.body;
+      expect(analyticsBody).to.have.property('actionCause', 'facetSearch');
+      expect(analyticsBody.customData).to.have.property('facetField', field);
+    });
   });
 }
