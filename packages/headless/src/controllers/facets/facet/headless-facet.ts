@@ -184,6 +184,11 @@ export interface FacetSearch {
   select(value: SpecificFacetSearchResult): void;
 
   /**
+   * Selects a search result while deselecting facet values.
+   * */
+  singleSelect(value: SpecificFacetSearchResult): void;
+
+  /**
    * Resets the query and empties the values.
    * */
   clear(): void;

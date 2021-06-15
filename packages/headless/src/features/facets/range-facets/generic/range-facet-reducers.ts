@@ -5,6 +5,8 @@ import {
   RangeValueRequest,
 } from './interfaces/range-facet';
 import {RangeFacetOptionalParameters} from './interfaces/options';
+import {NumericRangeRequest} from '../numeric-facet-set/interfaces/request';
+import {DateRangeRequest} from '../date-facet-set/interfaces/request';
 
 export const defaultRangeFacetOptions: RangeFacetOptionalParameters = {
   filterFacetCount: true,
@@ -67,7 +69,9 @@ export function toggleSingleSelectRangeValue<
   }
 
   const isSelected = value.state === 'selected';
-  request.currentValues.forEach((value) => (value.state = 'idle'));
+  request.currentValues.forEach(
+    (value: DateRangeRequest | NumericRangeRequest) => (value.state = 'idle')
+  );
   value.state = isSelected ? 'idle' : 'selected';
 
   request.preventAutoSelect = true;

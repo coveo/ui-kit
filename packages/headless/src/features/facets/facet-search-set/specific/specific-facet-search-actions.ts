@@ -54,3 +54,13 @@ export const selectFacetSearchResult = createAction(
   (payload: selectFacetSearchResultPayload) =>
     validatePayload(payload, selectFacetSearchResultPayloadDefinition)
 );
+
+/**
+ * Selects a facet search result, deselecting other facet values.
+ * @param (selectFacetSearchResultPayload) An object that specifies the target facet and facet search result.
+ */
+export const singleSelectFacetSearchResult = createAction(
+  'facetSearch/singleSelectFacetSearchResult',
+  (payload: selectFacetSearchResultPayload) =>
+    validatePayload(payload, selectFacetSearchResultPayloadDefinition)
+);

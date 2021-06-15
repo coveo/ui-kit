@@ -2,6 +2,7 @@ import {Engine} from '../../../../app/headless-engine';
 import {
   registerFacetSearch,
   selectFacetSearchResult,
+  singleSelectFacetSearchResult,
 } from '../../../../features/facets/facet-search-set/specific/specific-facet-search-actions';
 import {buildGenericFacetSearch} from '../facet-search';
 import {FacetSearchOptions} from '../../../../features/facets/facet-search-set/facet-search-request-options';
@@ -42,6 +43,11 @@ export function buildFacetSearch(
      */
     select(value: SpecificFacetSearchResult) {
       dispatch(selectFacetSearchResult({facetId, value}));
+      genericFacetSearch.select(value);
+    },
+
+    singleSelect(value: SpecificFacetSearchResult) {
+      dispatch(singleSelectFacetSearchResult({facetId, value}));
       genericFacetSearch.select(value);
     },
 
