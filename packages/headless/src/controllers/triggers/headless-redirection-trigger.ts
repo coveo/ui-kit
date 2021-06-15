@@ -25,7 +25,7 @@ export interface RedirectionTriggerState {
   /**
    * The url used for the redirection.
    */
-  redirectTo: string;
+  redirectTo: string | null;
 }
 
 /**
@@ -44,30 +44,31 @@ export function buildRedirectionTrigger(
   const controller = buildController(engine);
   const {dispatch} = engine;
 
-  let redirectTo = '';
+  let previousRedirectTo = '';
 
   return {
     ...controller,
 
     subscribe(listener: () => void) {
       const strictListener = () => {
-        const redirectToEngine = engine.state.redirection.redirectTo!;
-        console.log('engine state:', redirectToEngine);
-        console.log('controller state:', this.state.redirectTo);
-        if (redirectToEngine && redirectToEngine !== this.state.redirectTo) {
+        const hasChanged = previousRedirectTo !== this.state.redirectTo;
+        console.log('prev value', previousRedirectTo);
+        console.log('current controller state', this.state.redirectTo);
+        previousRedirectTo = this.state.redirectTo!;
+        console.log('updated prev value', previousRedirectTo);
+
+        if (hasChanged && this.state.redirectTo) {
           listener();
           dispatch(logTriggerRedirect());
         }
       };
       strictListener();
-      redirectTo = engine.state.redirection.redirectTo!;
-      console.log('controller state afterwards:', this.state.redirectTo);
       return engine.subscribe(strictListener);
     },
 
     get state() {
       return {
-        redirectTo,
+        redirectTo: engine.state.redirection.redirectTo,
       };
     },
   };
