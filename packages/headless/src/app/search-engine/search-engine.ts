@@ -14,7 +14,6 @@ import {buildLogger} from '../logger';
 import {buildThunkExtraArguments} from '../thunk-extra-arguments';
 import {Logger} from 'pino';
 import {NoopPreprocessRequest} from '../../api/preprocess-request';
-import {NoopPreprocessRequestMiddleware} from '../../api/platform-client';
 import {debug, pipeline, search, searchHub} from '../reducers';
 import {StateFromReducersMapObject} from 'redux';
 import {updateSearchConfiguration} from '../../features/configuration/configuration-actions';
@@ -125,7 +124,6 @@ function createSearchAPIClient(
   return new SearchAPIClient({
     logger,
     preprocessRequest: configuration.preprocessRequest || NoopPreprocessRequest,
-    deprecatedPreprocessRequest: NoopPreprocessRequestMiddleware,
     postprocessSearchResponseMiddleware:
       search?.preprocessSearchResponseMiddleware ||
       NoopPostprocessSearchResponseMiddleware,

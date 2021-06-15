@@ -1,7 +1,6 @@
 import {createReducer} from '@reduxjs/toolkit';
 import {
   clearQuerySuggest,
-  clearQuerySuggestCompletions,
   fetchQuerySuggestions,
   registerQuerySuggest,
   selectQuerySuggestion,
@@ -56,9 +55,6 @@ export const querySuggestReducer = createReducer(
         state[id]!.q = '';
         state[id]!.completions = [];
         state[id]!.partialQueries = [];
-      })
-      .addCase(clearQuerySuggestCompletions, (state, action) => {
-        state[action.payload.id]!.completions = [];
       })
       .addCase(selectQuerySuggestion, (state, action) => {
         const {id, expression} = action.payload;

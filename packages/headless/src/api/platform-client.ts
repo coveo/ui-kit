@@ -22,7 +22,6 @@ export interface PlatformClientCallOptions {
   requestParams: unknown;
   accessToken: string;
   preprocessRequest: PreprocessRequest;
-  deprecatedPreprocessRequest: PreprocessRequestMiddleware;
   logger: Logger;
   signal?: AbortSignal;
 }
@@ -31,14 +30,6 @@ export interface PlatformResponse<T> {
   body: T;
   response: Response;
 }
-
-export type PreprocessRequestMiddleware = (
-  request: PlatformClientCallOptions
-) => PlatformClientCallOptions | Promise<PlatformClientCallOptions>;
-
-export const NoopPreprocessRequestMiddleware: PreprocessRequestMiddleware = (
-  request
-) => request;
 
 export type PlatformClientCallError =
   | ExpiredTokenError
@@ -49,13 +40,7 @@ export class PlatformClient {
   static async call(
     options: PlatformClientCallOptions
   ): Promise<Response | PlatformClientCallError> {
-    // TODO: use options directly when removing deprecatedPreprocessRequest
-    const processedOptions = {
-      ...options,
-      ...(await options.deprecatedPreprocessRequest(options)),
-    };
-
-    const defaultRequestOptions = buildDefaultRequestOptions(processedOptions);
+    const defaultRequestOptions = buildDefaultRequestOptions(options);
     const {preprocessRequest, logger} = options;
 
     const requestInfo: PlatformRequestOptions = {

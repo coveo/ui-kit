@@ -7,7 +7,6 @@ import {
 import {
   registerQuerySuggest,
   clearQuerySuggest,
-  clearQuerySuggestCompletions,
   fetchQuerySuggestions,
   selectQuerySuggestion,
 } from '../../features/query-suggest/query-suggest-actions';
@@ -183,12 +182,6 @@ describe('headless searchBox', () => {
     should dispatch a clearQuerySuggest action`, () => {
     searchBox.clear();
     expect(engine.actions).toContainEqual(clearQuerySuggest({id}));
-  });
-
-  it(`when calling hideSuggestions
-    should dispatch a clearQuerySuggestCompletions action`, () => {
-    searchBox.hideSuggestions();
-    expect(engine.actions).toContainEqual(clearQuerySuggestCompletions({id}));
   });
 
   describe('#showSuggestions', () => {

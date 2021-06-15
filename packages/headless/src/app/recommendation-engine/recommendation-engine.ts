@@ -21,7 +21,6 @@ import {
   NoopPostprocessQuerySuggestResponseMiddleware,
   NoopPostprocessSearchResponseMiddleware,
 } from '../../api/search/search-api-client-middleware';
-import {NoopPreprocessRequestMiddleware} from '../../api/platform-client';
 import {NoopPreprocessRequest} from '../../api/preprocess-request';
 import {SearchAPIClient} from '../../api/search/search-api-client';
 
@@ -116,7 +115,6 @@ function createSearchAPIClient(
   return new SearchAPIClient({
     logger,
     preprocessRequest: configuration.preprocessRequest || NoopPreprocessRequest,
-    deprecatedPreprocessRequest: NoopPreprocessRequestMiddleware,
     postprocessSearchResponseMiddleware: NoopPostprocessSearchResponseMiddleware,
     postprocessFacetSearchResponseMiddleware: NoopPostprocessFacetSearchResponseMiddleware,
     postprocessQuerySuggestResponseMiddleware: NoopPostprocessQuerySuggestResponseMiddleware,
