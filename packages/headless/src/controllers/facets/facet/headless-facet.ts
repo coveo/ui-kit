@@ -185,6 +185,8 @@ export interface FacetSearch {
 
   /**
    * Selects a search result while deselecting facet values.
+   *
+   * @param value - The search result to select.
    * */
   singleSelect(value: SpecificFacetSearchResult): void;
 
