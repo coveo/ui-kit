@@ -14,7 +14,6 @@ import {DateFacetResponse, DateFacetValue} from './interfaces/response';
 import {
   registerRangeFacet,
   toggleSelectRangeValue,
-  toggleSingleSelectRangeValue,
   onRangeFacetRequestFulfilled,
   handleRangeFacetDeselectAll,
   defaultRangeFacetOptions,
@@ -47,15 +46,17 @@ export const dateFacetSetReducer = createReducer(
         toggleSelectRangeValue<DateFacetRequest, DateFacetValue>(
           state,
           facetId,
-          selection
+          selection,
+          false
         );
       })
       .addCase(toggleSingleSelectDateFacetValue, (state, action) => {
         const {facetId, selection} = action.payload;
-        toggleSingleSelectRangeValue<DateFacetRequest, DateFacetValue>(
+        toggleSelectRangeValue<DateFacetRequest, DateFacetValue>(
           state,
           facetId,
-          selection
+          selection,
+          true
         );
       })
       .addCase(deselectAllDateFacetValues, (state, action) => {

@@ -33,7 +33,12 @@ export function registerRangeFacet<T extends RangeFacetRequest>(
 export function toggleSelectRangeValue<
   T extends RangeFacetRequest,
   U extends RangeFacetValue
->(state: Record<string, T>, facetId: string, selection: U) {
+>(
+  state: Record<string, T>,
+  facetId: string,
+  selection: U,
+  setValuesToIdle: boolean
+) {
   const request = state[facetId];
 
   if (!request) {
@@ -47,31 +52,10 @@ export function toggleSelectRangeValue<
   }
 
   const isSelected = value.state === 'selected';
-  value.state = isSelected ? 'idle' : 'selected';
-
-  request.preventAutoSelect = true;
-}
-
-export function toggleSingleSelectRangeValue<
-  T extends RangeFacetRequest,
-  U extends RangeFacetValue
->(state: Record<string, T>, facetId: string, selection: U) {
-  const request = state[facetId];
-
-  if (!request) {
-    return;
-  }
-
-  const value = findRange(request.currentValues, selection);
-
-  if (!value) {
-    return;
-  }
-
-  const isSelected = value.state === 'selected';
-  request.currentValues.forEach(
-    (value: DateRangeRequest | NumericRangeRequest) => (value.state = 'idle')
-  );
+  setValuesToIdle &&
+    request.currentValues.forEach(
+      (value: DateRangeRequest | NumericRangeRequest) => (value.state = 'idle')
+    );
   value.state = isSelected ? 'idle' : 'selected';
 
   request.preventAutoSelect = true;

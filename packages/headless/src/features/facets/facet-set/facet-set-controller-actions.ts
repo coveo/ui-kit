@@ -1,5 +1,4 @@
-import {createAsyncThunk} from '@reduxjs/toolkit';
-import {FacetValue} from './interfaces/response';
+import {AnyAction, createAsyncThunk, ThunkDispatch} from '@reduxjs/toolkit';
 import {AsyncThunkSearchOptions} from '../../../api/search/search-api-client';
 import {
   ConfigurationSection,
@@ -11,6 +10,7 @@ import {executeSearch} from '../../search/search-actions';
 import {
   toggleSelectFacetValue,
   toggleSingleSelectFacetValue,
+  ToggleSelectFacetValueActionCreatorPayload,
 } from './facet-set-actions';
 import {facetIdDefinition} from '../generic/facet-actions-validation';
 import {RecordValue} from '@coveo/bueno';
@@ -28,22 +28,14 @@ const definition = {
  */
 export const executeToggleFacetSelect = createAsyncThunk<
   void,
-  {
-    facetId: string;
-    selection: FacetValue;
-  },
+  ToggleSelectFacetValueActionCreatorPayload,
   AsyncThunkSearchOptions<FacetSection & ConfigurationSection>
 >(
   'facet/executeToggleSelect',
-  ({facetId, selection}, {dispatch, extra: {validatePayload}}) => {
-    const analyticsAction = getAnalyticsActionForToggleFacetSelect(
-      facetId,
-      selection
-    );
-    validatePayload({facetId, selection}, definition);
-    dispatch(toggleSelectFacetValue({facetId, selection}));
-    dispatch(updateFacetOptions({freezeFacetOrder: true}));
-    dispatch(executeSearch(analyticsAction));
+  (payload, {dispatch, extra: {validatePayload}}) => {
+    validatePayload(payload, definition);
+    dispatch(toggleSelectFacetValue(payload));
+    commonExecuteToggleFacet(payload, dispatch);
   }
 );
 
@@ -54,21 +46,25 @@ export const executeToggleFacetSelect = createAsyncThunk<
  */
 export const executeToggleFacetSingleSelect = createAsyncThunk<
   void,
-  {
-    facetId: string;
-    selection: FacetValue;
-  },
+  ToggleSelectFacetValueActionCreatorPayload,
   AsyncThunkSearchOptions<FacetSection & ConfigurationSection>
 >(
   'facet/executeToggleFacetSingleSelect',
-  ({facetId, selection}, {dispatch, extra: {validatePayload}}) => {
-    const analyticsAction = getAnalyticsActionForToggleFacetSelect(
-      facetId,
-      selection
-    );
-    validatePayload({facetId, selection}, definition);
-    dispatch(toggleSingleSelectFacetValue({facetId, selection}));
-    dispatch(updateFacetOptions({freezeFacetOrder: true}));
-    dispatch(executeSearch(analyticsAction));
+  (payload, {dispatch, extra: {validatePayload}}) => {
+    validatePayload(payload, definition);
+    dispatch(toggleSingleSelectFacetValue(payload));
+    commonExecuteToggleFacet(payload, dispatch);
   }
 );
+
+function commonExecuteToggleFacet(
+  {facetId, selection}: ToggleSelectFacetValueActionCreatorPayload,
+  dispatch: ThunkDispatch<never, never, AnyAction>
+) {
+  const analyticsAction = getAnalyticsActionForToggleFacetSelect(
+    facetId,
+    selection
+  );
+  dispatch(updateFacetOptions({freezeFacetOrder: true}));
+  dispatch(executeSearch(analyticsAction));
+}

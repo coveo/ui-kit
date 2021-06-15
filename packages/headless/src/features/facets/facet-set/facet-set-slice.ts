@@ -10,6 +10,7 @@ import {
   updateFreezeCurrentValues,
   RegisterFacetActionCreatorPayload,
   toggleSingleSelectFacetValue,
+  ToggleSelectFacetValueActionCreatorPayload,
 } from './facet-set-actions';
 import {executeSearch} from '../../search/search-actions';
 import {
@@ -24,7 +25,7 @@ import {
   handleFacetDeselectAll,
   handleFacetUpdateNumberOfValues,
 } from '../generic/facet-reducer-helpers';
-import {getFacetSetInitialState} from './facet-set-state';
+import {FacetSetState, getFacetSetInitialState} from './facet-set-state';
 import {deselectAllFacets} from '../generic/facet-actions';
 import {restoreSearchParameters} from '../../search-parameters/search-parameter-actions';
 import {SpecificFacetSearchResult} from '../../../api/search/facet-search/specific-facet-search/specific-facet-search-response';
@@ -70,49 +71,10 @@ export const facetSetReducer = createReducer(
         });
       })
       .addCase(toggleSelectFacetValue, (state, action) => {
-        const {facetId, selection} = action.payload;
-        const facetRequest = state[facetId];
-
-        if (!facetRequest) {
-          return;
-        }
-
-        const targetValue = facetRequest.currentValues.find(
-          (req) => req.value === selection.value
-        );
-
-        if (!targetValue) {
-          return;
-        }
-
-        const isSelected = targetValue.state === 'selected';
-        targetValue.state = isSelected ? 'idle' : 'selected';
-
-        facetRequest.freezeCurrentValues = true;
-        facetRequest.preventAutoSelect = true;
+        handleSelectFacetValue(state, action.payload, false);
       })
       .addCase(toggleSingleSelectFacetValue, (state, action) => {
-        const {facetId, selection} = action.payload;
-        const facetRequest = state[facetId];
-
-        if (!facetRequest) {
-          return;
-        }
-
-        const targetValue = facetRequest.currentValues.find(
-          (req) => req.value === selection.value
-        );
-
-        if (!targetValue) {
-          return;
-        }
-
-        const isSelected = targetValue.state === 'selected';
-        facetRequest.currentValues.forEach((value) => (value.state = 'idle'));
-        targetValue.state = isSelected ? 'idle' : 'selected';
-
-        facetRequest.freezeCurrentValues = true;
-        facetRequest.preventAutoSelect = true;
+        handleSelectFacetValue(state, action.payload, true);
       })
       .addCase(updateFreezeCurrentValues, (state, action) => {
         const {facetId, freezeCurrentValues} = action.payload;
@@ -195,6 +157,35 @@ export const facetSetReducer = createReducer(
       });
   }
 );
+
+function handleSelectFacetValue(
+  state: FacetSetState,
+  payload: ToggleSelectFacetValueActionCreatorPayload,
+  setValuesToIdle: boolean
+) {
+  const {facetId, selection} = payload;
+  const facetRequest = state[facetId];
+
+  if (!facetRequest) {
+    return;
+  }
+
+  const targetValue = facetRequest.currentValues.find(
+    (req) => req.value === selection.value
+  );
+
+  if (!targetValue) {
+    return;
+  }
+
+  const isSelected = targetValue.state === 'selected';
+  setValuesToIdle &&
+    facetRequest.currentValues.forEach((value) => (value.state = 'idle'));
+  targetValue.state = isSelected ? 'idle' : 'selected';
+
+  facetRequest.freezeCurrentValues = true;
+  facetRequest.preventAutoSelect = true;
+}
 
 function handleSelectSearchResult(
   facetRequest: FacetRequest,
