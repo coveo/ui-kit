@@ -20,7 +20,7 @@ const selectFacetSearchResultPayloadDefinition = {
   }),
 };
 
-type selectFacetSearchResultPayload = {
+export type SelectFacetSearchResultPayload = {
   facetId: string;
   value: SpecificFacetSearchResult;
 };
@@ -51,7 +51,7 @@ export const updateFacetSearch = createAction(
  */
 export const selectFacetSearchResult = createAction(
   'facetSearch/toggleSelectValue',
-  (payload: selectFacetSearchResultPayload) =>
+  (payload: SelectFacetSearchResultPayload) =>
     validatePayload(payload, selectFacetSearchResultPayloadDefinition)
 );
 
@@ -61,6 +61,6 @@ export const selectFacetSearchResult = createAction(
  */
 export const singleSelectFacetSearchResult = createAction(
   'facetSearch/singleSelectFacetSearchResult',
-  (payload: selectFacetSearchResultPayload) =>
+  (payload: SelectFacetSearchResultPayload) =>
     validatePayload(payload, selectFacetSearchResultPayloadDefinition)
 );

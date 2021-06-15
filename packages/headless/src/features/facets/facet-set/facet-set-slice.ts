@@ -15,6 +15,7 @@ import {
 import {executeSearch} from '../../search/search-actions';
 import {
   selectFacetSearchResult,
+  SelectFacetSearchResultPayload,
   singleSelectFacetSearchResult,
 } from '../facet-search-set/specific/specific-facet-search-actions';
 import {FacetRequest, FacetValueRequest} from './interfaces/request';
@@ -28,7 +29,6 @@ import {
 import {FacetSetState, getFacetSetInitialState} from './facet-set-state';
 import {deselectAllFacets} from '../generic/facet-actions';
 import {restoreSearchParameters} from '../../search-parameters/search-parameter-actions';
-import {SpecificFacetSearchResult} from '../../../api/search/facet-search/specific-facet-search/specific-facet-search-response';
 
 export const facetSetReducer = createReducer(
   getFacetSetInitialState(),
@@ -134,36 +134,19 @@ export const facetSetReducer = createReducer(
         });
       })
       .addCase(selectFacetSearchResult, (state, action) => {
-        const {facetId, value} = action.payload;
-        const facetRequest = state[facetId];
-
-        if (!facetRequest) {
-          return;
-        }
-
-        handleSelectSearchResult(facetRequest, value);
+        handleSelectSearchResult(state, action.payload, false);
       })
       .addCase(singleSelectFacetSearchResult, (state, action) => {
-        const {facetId, value} = action.payload;
-        const facetRequest = state[facetId];
-
-        if (!facetRequest) {
-          return;
-        }
-
-        const {currentValues} = facetRequest;
-        currentValues.map((value) => (value.state = 'idle'));
-        handleSelectSearchResult(facetRequest, value);
+        handleSelectSearchResult(state, action.payload, true);
       });
   }
 );
 
 function handleSelectFacetValue(
   state: FacetSetState,
-  payload: ToggleSelectFacetValueActionCreatorPayload,
+  {facetId, selection}: ToggleSelectFacetValueActionCreatorPayload,
   setValuesToIdle: boolean
 ) {
-  const {facetId, selection} = payload;
   const facetRequest = state[facetId];
 
   if (!facetRequest) {
@@ -188,11 +171,19 @@ function handleSelectFacetValue(
 }
 
 function handleSelectSearchResult(
-  facetRequest: FacetRequest,
-  value: SpecificFacetSearchResult
+  state: FacetSetState,
+  {facetId, value}: SelectFacetSearchResultPayload,
+  setValuesToIdle: boolean
 ) {
-  const {rawValue} = value;
+  const facetRequest = state[facetId];
+
+  if (!facetRequest) {
+    return;
+  }
+
   const {currentValues} = facetRequest;
+  setValuesToIdle && currentValues.map((value) => (value.state = 'idle'));
+  const {rawValue} = value;
   const matchingValue = currentValues.find((v) => v.value === rawValue);
 
   if (matchingValue) {
