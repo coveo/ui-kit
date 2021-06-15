@@ -72,7 +72,7 @@ export class AtomicFacet
   public facet!: Facet;
   public searchStatus!: SearchStatus;
 
-  @BindStateToController('facet', {subscribeOnConnectedCallback: true})
+  @BindStateToController('facet')
   @State()
   public facetState!: FacetState;
   @BindStateToController('searchStatus')
