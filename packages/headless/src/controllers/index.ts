@@ -2,7 +2,6 @@ export {Controller, buildController} from './controller/headless-controller';
 
 export {
   RelevanceInspectorInitialState,
-  RelevanceInspectorOptions,
   RelevanceInspectorProps,
   RelevanceInspectorState,
   RelevanceInspector,

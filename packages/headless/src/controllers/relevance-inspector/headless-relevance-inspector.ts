@@ -9,10 +9,6 @@ import {SearchResponseSuccessWithDebugInfo} from '../../api/search/search/search
 import {SecurityIdentity} from '../../api/search/search/security-identity';
 import {configuration, debug, search} from '../../app/reducers';
 import {SearchEngine} from '../../app/search-engine/search-engine';
-import {
-  AnalyticsType,
-  makeNoopAnalyticsAction,
-} from '../../features/analytics/analytics-utils';
 import {enableDebug, disableDebug} from '../../features/debug/debug-actions';
 import {rankingInformationSelector} from '../../features/debug/debug-selectors';
 import {
@@ -21,17 +17,13 @@ import {
   RankingInformation,
   TermWeightReport,
 } from '../../features/debug/ranking-info-parser';
-import {executeSearch} from '../../features/search/search-actions';
 import {
   ConfigurationSection,
   DebugSection,
   SearchSection,
 } from '../../state/state-sections';
 import {loadReducerError} from '../../utils/errors';
-import {
-  validateInitialState,
-  validateOptions,
-} from '../../utils/validate-payload';
+import {validateInitialState} from '../../utils/validate-payload';
 import {buildController, Controller} from '../controller/headless-controller';
 
 export {
@@ -50,19 +42,10 @@ export interface RelevanceInspectorProps {
    * The initial state that should be applied to the `RelevanceInspector` controller.
    */
   initialState?: RelevanceInspectorInitialState;
-
-  /**
-   * The options for the `RelevanceInspector` controller.
-   */
-  options?: RelevanceInspectorOptions;
 }
 
 const initialStateSchema = new Schema({
   enabled: new BooleanValue({default: false}),
-});
-
-const optionsSchema = new Schema({
-  automaticallyLogInformation: new BooleanValue({default: true}),
 });
 
 export interface RelevanceInspectorInitialState {
@@ -70,14 +53,6 @@ export interface RelevanceInspectorInitialState {
    * Whether debug mode should be enabled.
    * */
   enabled?: boolean;
-}
-
-export interface RelevanceInspectorOptions {
-  /**
-   * Whether to automatically log state to console on new responses.
-   * @deprecated Subscribe to the state changes instead if you wish to log the debug output.
-   * */
-  automaticallyLogInformation?: boolean;
 }
 
 /**
@@ -93,12 +68,6 @@ export interface RelevanceInspector extends Controller {
    * Disables debug mode.
    */
   disable(): void;
-
-  /**
-   * Logs debug information to the console.
-   * @deprecated Subscribe to the state changes instead if you wish to log the debug output.
-   */
-  logInformation(): void;
 
   /**
    * The state of the `RelevanceInspector` controller.
@@ -182,7 +151,6 @@ export function buildRelevanceInspector(
     throw loadReducerError;
   }
 
-  let prevSearchUid = '';
   const controller = buildController(engine);
   const {dispatch} = engine;
   const getState = () => engine.state;
@@ -193,20 +161,6 @@ export function buildRelevanceInspector(
     props.initialState,
     'buildRelevanceInspector'
   );
-  const options = validateOptions(
-    engine,
-    optionsSchema,
-    props.options,
-    'buildRelevanceInspector'
-  );
-
-  const hasNewResponse = (currentSearchUid: string): boolean => {
-    const hasChanged = currentSearchUid !== prevSearchUid;
-    prevSearchUid = currentSearchUid;
-    return hasChanged;
-  };
-
-  let logOnNextResponse = false;
 
   if (initialState.enabled) {
     dispatch(enableDebug());
@@ -253,50 +207,6 @@ export function buildRelevanceInspector(
 
     disable() {
       dispatch(disableDebug());
-    },
-
-    logInformation() {
-      if (this.state.isEnabled) {
-        console.log(
-          this.state,
-          'Relevance inspector information for new query'
-        );
-        return;
-      }
-
-      engine.logger.warn(
-        'Relevance inspector "logInformation" has been called without debug being enabled. Enabling debug and triggering a query'
-      );
-      logOnNextResponse = true;
-      this.enable();
-      dispatch(executeSearch(makeNoopAnalyticsAction(AnalyticsType.Search)()));
-    },
-
-    subscribe(listener: () => void) {
-      const unsubscribeLogListener = engine.subscribe(() => {
-        if (
-          hasNewResponse(engine.state.search.response.searchUid) &&
-          this.state.isEnabled &&
-          (options.automaticallyLogInformation || logOnNextResponse)
-        ) {
-          logOnNextResponse = false;
-          this.logInformation();
-        }
-      });
-
-      const getState = () => this.state;
-
-      const unsubscribeStateListener = {
-        ...controller,
-        get state() {
-          return getState();
-        },
-      }.subscribe(listener);
-
-      return () => {
-        unsubscribeLogListener();
-        unsubscribeStateListener();
-      };
     },
   };
 }
