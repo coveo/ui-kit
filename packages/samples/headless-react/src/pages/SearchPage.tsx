@@ -51,8 +51,6 @@ import {
   buildSearchEngine,
   getSampleSearchEngineConfiguration,
   Unsubscribe,
-  RecommendationList as HeadlessRecommendationList,
-  buildRecommendationList,
   Tab as HeadlessTab,
   buildTab,
   BreadcrumbManager as HeadlessBreadcrumbManager,
@@ -104,6 +102,8 @@ import {
   RecommendationEngine,
   buildRecommendationEngine,
   getSampleRecommendationEngineConfiguration,
+  buildRecommendationList,
+  RecommendationList as HeadlessRecommendationList,
 } from '@coveo/headless/recommendation';
 import {bindUrlManager} from '../components/url-manager/url-manager';
 import {setContext} from '../components/context/context';
