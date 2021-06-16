@@ -412,7 +412,7 @@ export {
 } from './smart-snippet/headless-smart-snippet';
 
 export {
-  SmartSnippetSuggestions,
-  SmartSnippetSuggestionsState,
-  buildSmartSnippetSuggestions,
-} from './smart-snippet-suggestions/headless-smart-snippet-suggestions';
+  SmartSnippetQuestionsList,
+  SmartSnippetQuestionsListState,
+  buildSmartSnippetQuestionsList,
+} from './smart-snippet-questions-list/headless-smart-snippet-questions-list';

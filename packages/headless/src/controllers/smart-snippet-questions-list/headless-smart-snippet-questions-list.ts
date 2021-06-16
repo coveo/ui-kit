@@ -5,13 +5,13 @@ import {SearchEngine} from '../../app/search-engine/search-engine';
 import {QuestionAnswerDocumentIdentifier} from '../../api/search/search/question-answering';
 
 /**
- * The `SmartSnippetSuggestions` controller allows to manage additional queries for which a SmartSnippet model can provide relevant excerpts.
+ * The `SmartSnippetQuestionsList` controller allows to manage additional queries for which a SmartSnippet model can provide relevant excerpts.
  */
-export interface SmartSnippetSuggestions extends Controller {
+export interface SmartSnippetQuestionsList extends Controller {
   /**
-   * The state of the SmartSnippet controller.
+   * The state of the SmartSnippetQuestionsList controller.
    * */
-  state: SmartSnippetSuggestionsState;
+  state: SmartSnippetQuestionsListState;
   /**
    * Expand the specified snippet suggestion.
    */
@@ -23,16 +23,16 @@ export interface SmartSnippetSuggestions extends Controller {
 }
 
 /**
- * A scoped and simplified part of the headless state that is relevant to the `SmartSnippet` controller.
+ * A scoped and simplified part of the headless state that is relevant to the `SmartSnippetQuestionsList` controller.
  */
-export interface SmartSnippetSuggestionsState {
+export interface SmartSnippetQuestionsListState {
   /**
    * The related questions for the current query
    */
-  relatedQuestions: SmartSnippetSuggestionsRelatedQuestions[];
+  relatedQuestions: SmartSnippetRelatedQuestion[];
 }
 
-export interface SmartSnippetSuggestionsRelatedQuestions {
+export interface SmartSnippetRelatedQuestion {
   /**
    * The question related to the smart snippet.
    */
@@ -54,15 +54,15 @@ export interface SmartSnippetSuggestionsRelatedQuestions {
 }
 
 /**
- * Creates a `SmartSnippet` controller instance.
+ * Creates a `SmartSnippetQuestionsList` controller instance.
  *
  * @param engine - The headless engine.
- * @returns A `SmartSnippet` controller instance.
+ * @returns A `SmartSnippetQuestionsList` controller instance.
  * */
-export function buildSmartSnippetSuggestions(
+export function buildSmartSnippetQuestionsList(
   engine: SearchEngine
-): SmartSnippetSuggestions {
-  if (!loadSmartSnippetSuggestionsReducers(engine)) {
+): SmartSnippetQuestionsList {
+  if (!loadSmartSnippetQuestionsListReducer(engine)) {
     throw loadReducerError;
   }
 
@@ -74,7 +74,7 @@ export function buildSmartSnippetSuggestions(
     get state() {
       return {
         // TODO
-      } as SmartSnippetSuggestionsState;
+      } as SmartSnippetQuestionsListState;
     },
 
     expand(_: QuestionAnswerDocumentIdentifier) {
@@ -86,7 +86,7 @@ export function buildSmartSnippetSuggestions(
   };
 }
 
-function loadSmartSnippetSuggestionsReducers(
+function loadSmartSnippetQuestionsListReducer(
   engine: SearchEngine
 ): engine is SearchEngine {
   engine.addReducers({search});
