@@ -150,7 +150,11 @@ export function assertDisplaySearchClearButton(display: boolean) {
   });
 }
 
-export function assertSearchInputEmpty() {}
+export function assertSearchInputEmpty() {
+  it('the search input should be empty', () => {
+    FacetSelectors.searchInput().invoke('val').should('be.empty');
+  });
+}
 
 export function assertDisplayMoreMatchesFound(display: boolean) {
   it(`${should(display)} display the "More matches for" label`, () => {
