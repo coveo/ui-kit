@@ -33,7 +33,7 @@ export interface TabOptions {
   /**
    * A unique identifier for the tab. The value will be used as the originLevel2 when the tab is active.
    */
-  id?: string;
+  id: string;
 }
 
 export interface TabInitialState {
@@ -46,7 +46,7 @@ export interface TabInitialState {
 
 const optionsSchema = new Schema<Required<TabOptions>>({
   expression: new StringValue({required: true, emptyAllowed: true}),
-  id: new StringValue({required: false, emptyAllowed: false}),
+  id: new StringValue({required: true, emptyAllowed: false}),
 });
 
 const initialStateSchema = new Schema({
@@ -120,15 +120,6 @@ export function buildTab(engine: SearchEngine, props: TabProps): Tab {
     props.initialState,
     'buildTab'
   );
-
-  if (!props.options.id) {
-    /**
-     * @deprecated - Make #id option required and remove log.
-     */
-    console.warn(
-      'The #id option on the Tab controller will be required in the future. Please specify it.'
-    );
-  }
 
   if (initialState.isActive) {
     const {id} = options;

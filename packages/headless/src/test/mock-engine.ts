@@ -83,7 +83,7 @@ export function buildMockProductRecommendationsAppEngine(
   return buildMockCoreEngine(config, buildMockProductRecommendationsState);
 }
 
-interface MockCoreEngine<T> extends CoreEngine<T>, MockEngine {}
+interface MockCoreEngine<T extends object> extends CoreEngine<T>, MockEngine {}
 
 function buildMockCoreEngine<T extends AppState>(
   config: Partial<CoreEngine<T>> = {},

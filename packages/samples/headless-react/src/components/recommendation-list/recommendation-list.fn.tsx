@@ -1,6 +1,6 @@
 import {useEffect, useState, FunctionComponent} from 'react';
 import {ResultLink} from '../result-list/result-link';
-import {RecommendationList as HeadlessRecommendationList} from '@coveo/headless';
+import {RecommendationList as HeadlessRecommendationList} from '@coveo/headless/recommendation';
 
 interface RecommendationListProps {
   controller: HeadlessRecommendationList;

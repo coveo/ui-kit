@@ -6,7 +6,7 @@ import {
   RecommendationListOptions,
   RecommendationListState,
   Unsubscribe,
-} from '@coveo/headless';
+} from '@coveo/headless/recommendation';
 import {AppContext} from '../../context/engine';
 
 export class RecommendationList extends Component<

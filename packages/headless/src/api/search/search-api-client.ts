@@ -1,8 +1,4 @@
-import {
-  PlatformClient,
-  PlatformResponse,
-  PreprocessRequestMiddleware,
-} from '../platform-client';
+import {PlatformClient, PlatformResponse} from '../platform-client';
 import {PlanResponseSuccess, Plan} from './plan/plan-response';
 import {
   QuerySuggestSuccessResponse,
@@ -46,7 +42,6 @@ export interface AsyncThunkSearchOptions<T extends Partial<SearchAppState>> {
 export interface SearchAPIClientOptions {
   logger: Logger;
   preprocessRequest: PreprocessRequest;
-  deprecatedPreprocessRequest: PreprocessRequestMiddleware;
   postprocessSearchResponseMiddleware: PostprocessSearchResponseMiddleware;
   postprocessQuerySuggestResponseMiddleware: PostprocessQuerySuggestResponseMiddleware;
   postprocessFacetSearchResponseMiddleware: PostprocessFacetSearchResponseMiddleware;
