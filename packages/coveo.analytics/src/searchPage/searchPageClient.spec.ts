@@ -1,5 +1,10 @@
 import {CoveoSearchPageClient, SearchPageClientProvider} from './searchPageClient';
-import {SearchPageEvents, PartialDocumentInformation, CustomEventsTypes} from './searchPageEvents';
+import {
+    SearchPageEvents,
+    PartialDocumentInformation,
+    CustomEventsTypes,
+    SmartSnippetFeedbackReason,
+} from './searchPageEvents';
 import CoveoAnalyticsClient from '../client/analytics';
 import {NoopAnalytics} from '../client/noopAnalytics';
 import {mockFetch} from '../../tests/fetchMock';
@@ -414,6 +419,58 @@ describe('SearchPageClient', () => {
     it('should send proper payload for #fetchMoreResults', async () => {
         await client.logFetchMoreResults();
         expectMatchCustomEventPayload(SearchPageEvents.pagerScrolling, {type: 'getMoreResults'});
+    });
+
+    it('should send proper payload for #logLikeSmartSnippet', async () => {
+        await client.logLikeSmartSnippet();
+        expectMatchCustomEventPayload(SearchPageEvents.likeSmartSnippet);
+    });
+
+    it('should send proper payload for #logDislikeSmartSnippet', async () => {
+        await client.logDislikeSmartSnippet();
+        expectMatchCustomEventPayload(SearchPageEvents.dislikeSmartSnippet);
+    });
+
+    it('should send proper payload for #logExpandSmartSnippet', async () => {
+        await client.logExpandSmartSnippet();
+        expectMatchCustomEventPayload(SearchPageEvents.expandSmartSnippet);
+    });
+
+    it('should send proper payload for #logCollapseSmartSnippet', async () => {
+        await client.logCollapseSmartSnippet();
+        expectMatchCustomEventPayload(SearchPageEvents.collapseSmartSnippet);
+    });
+
+    it('should send proper payload for #logOpenSmartSnippetFeedbackModal', async () => {
+        await client.logOpenSmartSnippetFeedbackModal();
+        expectMatchCustomEventPayload(SearchPageEvents.openSmartSnippetFeedbackModal);
+    });
+
+    it('should send proper payload for #logCloseSmartSnippetFeedbackModal', async () => {
+        await client.logCloseSmartSnippetFeedbackModal();
+        expectMatchCustomEventPayload(SearchPageEvents.closeSmartSnippetFeedbackModal);
+    });
+
+    it('should send proper payload for #logSmartSnippetFeedbackReason', async () => {
+        await client.logSmartSnippetFeedbackReason(SmartSnippetFeedbackReason.DoesNotAnswer, 'this is irrelevant');
+        expectMatchCustomEventPayload(SearchPageEvents.sendSmartSnippetReason, {
+            details: 'this is irrelevant',
+            reason: SmartSnippetFeedbackReason.DoesNotAnswer,
+        });
+    });
+
+    it('should send proper payload for #logExpandSmartSnippetSuggestion', async () => {
+        await client.logExpandSmartSnippetSuggestion({contentIdKey: 'permanentid', contentIdValue: 'foo'});
+        expectMatchCustomEventPayload(SearchPageEvents.expandSmartSnippetSuggestion, {
+            documentId: {contentIdKey: 'permanentid', contentIdValue: 'foo'},
+        });
+    });
+
+    it('should send proper payload for #logCollapseSmartSnippetSuggestion', async () => {
+        await client.logCollapseSmartSnippetSuggestion({contentIdKey: 'permanentid', contentIdValue: 'foo'});
+        expectMatchCustomEventPayload(SearchPageEvents.collapseSmartSnippetSuggestion, {
+            documentId: {contentIdKey: 'permanentid', contentIdValue: 'foo'},
+        });
     });
 
     it('should send proper payload for #logCustomEventWithType', async () => {

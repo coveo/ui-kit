@@ -157,6 +157,42 @@ export enum SearchPageEvents {
      * Identifies the search event that gets logged when a user action (that is not a query) reloads the Recommendations panel with new recommendations.
      */
     recommendationInterfaceLoad = 'recommendationInterfaceLoad',
+    /**
+     * Identifies the custom event that gets logged when a user identifies a smart snippet answer as relevant.
+     */
+    likeSmartSnippet = 'likeSmartSnippet',
+    /**
+     * Identifies the custom event that gets logged when a user identifies a smart snippet answer as irrelevant.
+     */
+    dislikeSmartSnippet = 'dislikeSmartSnippet',
+    /**
+     * Identifies the custom event that gets logged when a user expand a smart snippet answer.
+     */
+    expandSmartSnippet = 'expandSmartSnippet',
+    /**
+     * Identifies the custom event that gets logged when a user collapse a smart snippet answer.
+     */
+    collapseSmartSnippet = 'collapseSmartSnippet',
+    /**
+     * Identifies the custom event that gets logged when a user open a smart snippet explanation modal for feedback.
+     */
+    openSmartSnippetFeedbackModal = 'openSmartSnippetFeedbackModal',
+    /**
+     * Identifies the custom event that gets logged when a user close a smart snippet explanation modal for feedback.
+     */
+    closeSmartSnippetFeedbackModal = 'closeSmartSnippetFeedbackModal',
+    /**
+     * Identifies the custom event that gets logged when a user sends an explanation for a smart snippet irrelevant answer.
+     */
+    sendSmartSnippetReason = 'sendSmartSnippetReason',
+    /**
+     * Identifies the custom event that gets logged when a snippet suggestion for a related question is expanded.
+     */
+    expandSmartSnippetSuggestion = 'expandSmartSnippetSuggestion',
+    /**
+     * Identifies the custom event that gets logged when a snippet suggestion for a related question is collapsed.
+     */
+    collapseSmartSnippetSuggestion = 'collapseSmartSnippetSuggestion',
 }
 
 export const CustomEventsTypes: Partial<Record<SearchPageEvents, string>> = {
@@ -177,6 +213,15 @@ export const CustomEventsTypes: Partial<Record<SearchPageEvents, string>> = {
     [SearchPageEvents.facetShowLess]: 'facet',
     [SearchPageEvents.facetShowMore]: 'facet',
     [SearchPageEvents.recommendation]: 'recommendation',
+    [SearchPageEvents.likeSmartSnippet]: 'smartSnippet',
+    [SearchPageEvents.dislikeSmartSnippet]: 'smartSnippet',
+    [SearchPageEvents.expandSmartSnippet]: 'smartSnippet',
+    [SearchPageEvents.collapseSmartSnippet]: 'smartSnippet',
+    [SearchPageEvents.openSmartSnippetFeedbackModal]: 'smartSnippet',
+    [SearchPageEvents.closeSmartSnippetFeedbackModal]: 'smartSnippet',
+    [SearchPageEvents.sendSmartSnippetReason]: 'smartSnippet',
+    [SearchPageEvents.expandSmartSnippetSuggestion]: 'smartSnippetSuggestions',
+    [SearchPageEvents.collapseSmartSnippetSuggestion]: 'smartSnippetSuggestions',
 };
 
 export interface FacetMetadata {
@@ -266,6 +311,18 @@ export interface QueryErrorMeta {
     dq: string;
     errorType: string;
     errorMessage: string;
+}
+
+export enum SmartSnippetFeedbackReason {
+    DoesNotAnswer = 'does_not_answer',
+    PartiallyAnswers = 'partially_answers',
+    WasNotAQuestion = 'was_not_a_question',
+    Other = 'other',
+}
+
+export interface SmartSnippetSuggestionMeta {
+    contentIdKey: string;
+    contentIdValue: string;
 }
 
 export type PartialDocumentInformation = Omit<DocumentInformation, 'actionCause' | 'searchQueryUid'>;

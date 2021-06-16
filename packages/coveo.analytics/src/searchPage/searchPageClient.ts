@@ -20,6 +20,8 @@ import {
     FacetSortMeta,
     QueryErrorMeta,
     FacetStateMetadata,
+    SmartSnippetFeedbackReason,
+    SmartSnippetSuggestionMeta,
 } from './searchPageEvents';
 import {NoopAnalytics} from '../client/noopAnalytics';
 import {formatOmniboxMetadata} from '../formatting/format-omnibox-metadata';
@@ -222,6 +224,42 @@ export class CoveoSearchPageClient {
     public async logQueryErrorClear() {
         await this.logCustomEvent(SearchPageEvents.queryErrorClear);
         return this.logSearchEvent(SearchPageEvents.queryErrorClear);
+    }
+
+    public logLikeSmartSnippet() {
+        return this.logCustomEvent(SearchPageEvents.likeSmartSnippet);
+    }
+
+    public logDislikeSmartSnippet() {
+        return this.logCustomEvent(SearchPageEvents.dislikeSmartSnippet);
+    }
+
+    public logExpandSmartSnippet() {
+        return this.logCustomEvent(SearchPageEvents.expandSmartSnippet);
+    }
+
+    public logCollapseSmartSnippet() {
+        return this.logCustomEvent(SearchPageEvents.collapseSmartSnippet);
+    }
+
+    public logOpenSmartSnippetFeedbackModal() {
+        return this.logCustomEvent(SearchPageEvents.openSmartSnippetFeedbackModal);
+    }
+
+    public logCloseSmartSnippetFeedbackModal() {
+        return this.logCustomEvent(SearchPageEvents.closeSmartSnippetFeedbackModal);
+    }
+
+    public logSmartSnippetFeedbackReason(reason: SmartSnippetFeedbackReason, details?: string) {
+        return this.logCustomEvent(SearchPageEvents.sendSmartSnippetReason, {reason, details});
+    }
+
+    public logExpandSmartSnippetSuggestion(documentId: SmartSnippetSuggestionMeta) {
+        return this.logCustomEvent(SearchPageEvents.expandSmartSnippetSuggestion, {documentId});
+    }
+
+    public logCollapseSmartSnippetSuggestion(documentId: SmartSnippetSuggestionMeta) {
+        return this.logCustomEvent(SearchPageEvents.collapseSmartSnippetSuggestion, {documentId});
     }
 
     public logCustomEvent(event: SearchPageEvents, metadata?: Record<string, any>) {
