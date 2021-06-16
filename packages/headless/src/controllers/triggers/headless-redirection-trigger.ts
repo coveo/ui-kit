@@ -52,10 +52,7 @@ export function buildRedirectionTrigger(
     subscribe(listener: () => void) {
       const strictListener = () => {
         const hasChanged = previousRedirectTo !== this.state.redirectTo;
-        console.log('prev value', previousRedirectTo);
-        console.log('current controller state', this.state.redirectTo);
         previousRedirectTo = this.state.redirectTo!;
-        console.log('updated prev value', previousRedirectTo);
 
         if (hasChanged && this.state.redirectTo) {
           listener();
