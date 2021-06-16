@@ -404,3 +404,9 @@ export {
   FoldedResultListState,
   buildFoldedResultList,
 } from './folded-result-list/headless-folded-result-list';
+
+export {
+  RedirectionTrigger,
+  RedirectionTriggerState,
+  buildRedirectionTrigger,
+} from './triggers/headless-redirection-trigger';
