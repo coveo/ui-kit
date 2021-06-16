@@ -159,6 +159,63 @@ describe('facet', () => {
     });
   });
 
+  describe('#toggleSingleSelect when the value state is "idle"', () => {
+    const facetValue = () => buildMockFacetValue({value: 'TED', state: 'idle'});
+
+    it('dispatches a #toggleSelect action with the passed facet value', () => {
+      facet.toggleSingleSelect(facetValue());
+
+      expect(engine.actions).toContainEqual(
+        toggleSelectFacetValue({facetId, selection: facetValue()})
+      );
+    });
+
+    it('dispatches #updateFacetOptions with #freezeFacetOrder true', () => {
+      facet.toggleSingleSelect(facetValue());
+
+      expect(engine.actions).toContainEqual(
+        updateFacetOptions({freezeFacetOrder: true})
+      );
+    });
+
+    it('dispatches a search', () => {
+      facet.toggleSingleSelect(facetValue());
+
+      const action = engine.actions.find(
+        (a) => a.type === executeSearch.pending.type
+      );
+      expect(action).toBeTruthy();
+    });
+  });
+
+  describe('#toggleSingleSelect when the value state is not "idle"', () => {
+    const facetValue = () =>
+      buildMockFacetValue({value: 'TED', state: 'selected'});
+
+    it('dispatches a #deselectAllFacetValues action', () => {
+      facet.toggleSingleSelect(facetValue());
+
+      expect(engine.actions).toContainEqual(deselectAllFacetValues(facetId));
+    });
+
+    it('dispatches #updateFacetOptions with #freezeFacetOrder true', () => {
+      facet.toggleSingleSelect(facetValue());
+
+      expect(engine.actions).toContainEqual(
+        updateFacetOptions({freezeFacetOrder: true})
+      );
+    });
+
+    it('dispatches a search', () => {
+      facet.toggleSingleSelect(facetValue());
+
+      const action = engine.actions.find(
+        (a) => a.type === executeSearch.pending.type
+      );
+      expect(action).toBeTruthy();
+    });
+  });
+
   it('#isValueSelected returns true when the passed value is selected', () => {
     const facetValue = buildMockFacetValue({state: 'selected'});
     expect(facet.isValueSelected(facetValue)).toBe(true);
