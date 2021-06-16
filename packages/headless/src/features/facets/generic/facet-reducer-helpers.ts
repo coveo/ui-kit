@@ -1,6 +1,5 @@
 import {AnyFacetRequest} from './interfaces/generic-facet-request';
 import {FacetRequest} from '../facet-set/interfaces/request';
-import {CategoryFacetRequest} from '../category-facet-set/interfaces/request';
 
 export function handleFacetSortCriterionUpdate<T extends AnyFacetRequest>(
   state: Record<string, T>,
@@ -16,14 +15,17 @@ export function handleFacetSortCriterionUpdate<T extends AnyFacetRequest>(
   facetRequest.sortCriteria = criterion;
 }
 
-export function handleFacetDeselectAll<
-  T extends FacetRequest | CategoryFacetRequest
->(facetRequest: T | undefined) {
+export function handleFacetDeselectAll<T extends FacetRequest>(
+  facetRequest: T | undefined
+) {
   if (!facetRequest) {
     return;
   }
 
-  facetRequest.currentValues = [];
+  facetRequest.currentValues = facetRequest.currentValues.map((value) => ({
+    ...value,
+    state: 'idle',
+  }));
   facetRequest.preventAutoSelect = true;
 }
 

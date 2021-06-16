@@ -176,6 +176,8 @@ export const facetSetReducer = createReducer(
           ...valuesAfter,
         ];
         facetRequest.numberOfValues = facetRequest.currentValues.length;
+        facetRequest.freezeCurrentValues = true;
+        facetRequest.preventAutoSelect = true;
       });
   }
 );
