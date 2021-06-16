@@ -138,7 +138,7 @@ describe('Facet v1 Test Suites', () => {
         });
 
         describe('when selecting for a search result', () => {
-          function setupSelectSearcResult() {
+          function setupSelectSearchResult() {
             setupSearchFor();
             cy.wait(TestFixture.interceptAliases.UA);
             selectIdleCheckboxValueAt(5);
@@ -146,7 +146,7 @@ describe('Facet v1 Test Suites', () => {
           }
 
           describe('verify rendering', () => {
-            before(setupSelectSearcResult);
+            before(setupSelectSearchResult);
 
             FacetAssertions.assertNumberOfIdleCheckboxValues(
               defaultNumberOfValues - 2
@@ -160,7 +160,7 @@ describe('Facet v1 Test Suites', () => {
           });
 
           describe('verify analytics', () => {
-            before(setupSelectSearcResult);
+            before(setupSelectSearchResult);
             FacetAssertions.assertLogFacetSelect(field, 0);
           });
         });
@@ -339,7 +339,7 @@ describe('Facet v1 Test Suites', () => {
         });
 
         describe('when selecting for a search result', () => {
-          function setupSelectSearcResult() {
+          function setupSelectSearchResult() {
             setupSearchFor();
             cy.wait(TestFixture.interceptAliases.UA);
             selectIdleLinkValueAt(5);
@@ -347,7 +347,7 @@ describe('Facet v1 Test Suites', () => {
           }
 
           describe('verify rendering', () => {
-            before(setupSelectSearcResult);
+            before(setupSelectSearchResult);
 
             FacetAssertions.assertNumberOfIdleLinkValues(
               defaultNumberOfValues - 1
@@ -357,7 +357,7 @@ describe('Facet v1 Test Suites', () => {
           });
 
           describe('verify analytics', () => {
-            before(setupSelectSearcResult);
+            before(setupSelectSearchResult);
             FacetAssertions.assertLogFacetSelect(field, 0);
           });
         });
@@ -476,7 +476,7 @@ describe('Facet v1 Test Suites', () => {
         });
 
         describe('when selecting for a search result', () => {
-          function setupSelectSearcResult() {
+          function setupSelectSearchResult() {
             setupSearchFor();
             cy.wait(TestFixture.interceptAliases.UA);
             selectIdleBoxValueAt(5);
@@ -484,7 +484,7 @@ describe('Facet v1 Test Suites', () => {
           }
 
           describe('verify rendering', () => {
-            before(setupSelectSearcResult);
+            before(setupSelectSearchResult);
 
             FacetAssertions.assertNumberOfIdleBoxValues(
               defaultNumberOfValues - 2
@@ -494,7 +494,7 @@ describe('Facet v1 Test Suites', () => {
           });
 
           describe('verify analytics', () => {
-            before(setupSelectSearcResult);
+            before(setupSelectSearchResult);
             FacetAssertions.assertLogFacetSelect(field, 0);
           });
         });
