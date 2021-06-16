@@ -4,6 +4,12 @@ import {search} from '../../app/reducers';
 import {loadReducerError} from '../../utils/errors';
 import {SearchSection} from '../../state/state-sections';
 import {QuestionAnswerDocumentIdentifier} from '../../api/search/search/question-answering';
+import {
+  logCollapseSmartSnippet,
+  logDislikeSmartSnippet,
+  logExpandSmartSnippet,
+  logLikeSmartSnippet,
+} from '../../features/question-answering/question-answering-analytics-actions';
 
 /**
  * The `SmartSnippet` controller allows to manage the excerpt of a document that would be most likely to answer a particular query .
@@ -55,6 +61,14 @@ export interface SmartSnippetState {
    * Determines of there is an available answer for the current query.
    */
   answerFound: boolean;
+  /**
+   * Determines if the snippet was liked, or upvoted by the end user.
+   */
+  liked: boolean;
+  /**
+   * Determines if the snippet was disliked, or downvoted by the end user.
+   */
+  disliked: boolean;
 }
 
 /**
@@ -80,16 +94,20 @@ export function buildSmartSnippet(engine: Engine<object>): SmartSnippet {
     },
 
     expand() {
-      // TODO
+      engine.dispatch(logExpandSmartSnippet());
+      // TODO manage state expanded
     },
     collapse() {
-      // TODO
+      engine.dispatch(logCollapseSmartSnippet());
+      // TODO manage state expanded
     },
     thumbsUp() {
-      // TODO
+      engine.dispatch(logLikeSmartSnippet());
+      // TODO manage state liked
     },
     thumbsDown() {
-      // TODO
+      engine.dispatch(logDislikeSmartSnippet());
+      // TODO manage state disliked
     },
   };
 }
