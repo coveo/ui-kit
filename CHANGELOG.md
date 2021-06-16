@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.23.6](https://github.com/coveo/ui-kit/compare/v0.23.5...v0.23.6) (2021-06-16)
+
+**Note:** Version bump only for package ui-kit
+
+
+
+
+
 ## [0.23.5](https://github.com/coveo/ui-kit/compare/v0.23.4...v0.23.5) (2021-06-15)
 
 
