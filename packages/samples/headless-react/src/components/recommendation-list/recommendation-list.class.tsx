@@ -1,13 +1,15 @@
 import {Component, ContextType} from 'react';
-import {ResultLink} from '../result-list/result-link';
 import {
   buildRecommendationList,
   RecommendationList as HeadlessRecommendationList,
   RecommendationListOptions,
   RecommendationListState,
+  Result,
   Unsubscribe,
 } from '@coveo/headless';
+import {loadClickAnalyticsActions} from '@coveo/headless/recommendation';
 import {AppContext} from '../../context/engine';
+import {filterProtocol} from '../../utils/filter-protocol';
 
 export class RecommendationList extends Component<
   RecommendationListOptions,
@@ -35,6 +37,17 @@ export class RecommendationList extends Component<
 
   private updateState() {
     this.setState(this.controller.state);
+  }
+
+  private logClick(recommendation: Result) {
+    const engine = this.context.recommendationEngine;
+
+    if (!engine) {
+      return;
+    }
+
+    const {logRecommendationOpen} = loadClickAnalyticsActions(engine);
+    engine.dispatch(logRecommendationOpen(recommendation));
   }
 
   render() {
@@ -65,9 +78,15 @@ export class RecommendationList extends Component<
               <article>
                 <h2>
                   {/* Make sure to log analytics when the result link is clicked. */}
-                  <ResultLink result={recommendation}>
+                  <a
+                    href={filterProtocol(recommendation.clickUri)} // Filters out dangerous URIs that can create XSS attacks such as `javascript:`.
+                    onClick={() => this.logClick(recommendation)}
+                    onContextMenu={() => this.logClick(recommendation)}
+                    onMouseDown={() => this.logClick(recommendation)}
+                    onMouseUp={() => this.logClick(recommendation)}
+                  >
                     {recommendation.title}
-                  </ResultLink>
+                  </a>
                 </h2>
                 <p>{recommendation.excerpt}</p>
               </article>
