@@ -108,7 +108,7 @@ describe('range facet reducers', () => {
       const value = buildMockNumericFacetValue({state: 'idle'});
       state[id] = buildMockNumericFacetRequest({currentValues: [value]});
 
-      toggleSelectRangeValue(state, id, value);
+      toggleSelectRangeValue(state, id, value, false);
       expect(value.state).toBe('selected');
     });
 
@@ -118,7 +118,7 @@ describe('range facet reducers', () => {
       const value = buildMockNumericFacetValue({state: 'selected'});
       state[id] = buildMockNumericFacetRequest({currentValues: [value]});
 
-      toggleSelectRangeValue(state, id, value);
+      toggleSelectRangeValue(state, id, value, false);
       expect(value.state).toBe('idle');
     });
 
@@ -129,7 +129,7 @@ describe('range facet reducers', () => {
 
       state[id] = buildMockNumericFacetRequest({currentValues: [value]});
 
-      toggleSelectRangeValue(state, id, candidate);
+      toggleSelectRangeValue(state, id, candidate, false);
       expect(value.state).toBe('idle');
     });
 
@@ -140,7 +140,7 @@ describe('range facet reducers', () => {
 
       state[id] = buildMockNumericFacetRequest({currentValues: [value]});
 
-      toggleSelectRangeValue(state, id, candidate);
+      toggleSelectRangeValue(state, id, candidate, false);
       expect(value.state).toBe('idle');
     });
 
@@ -151,7 +151,7 @@ describe('range facet reducers', () => {
 
       state[id] = buildMockNumericFacetRequest({currentValues: [value]});
 
-      toggleSelectRangeValue(state, id, candidate);
+      toggleSelectRangeValue(state, id, candidate, false);
       expect(value.state).toBe('selected');
     });
 
@@ -161,7 +161,7 @@ describe('range facet reducers', () => {
       const value = buildMockNumericFacetValue({state: 'selected'});
       state[id] = buildMockNumericFacetRequest({currentValues: [value]});
 
-      toggleSelectRangeValue(state, id, value);
+      toggleSelectRangeValue(state, id, value, false);
       expect(state[id].preventAutoSelect).toBe(true);
     });
   });
@@ -169,7 +169,7 @@ describe('range facet reducers', () => {
   it('dispatching #toggleSelectFacetValue with an unregistered id does not throw', () => {
     const value = buildMockNumericFacetValue();
     expect(() =>
-      toggleSelectRangeValue(state, 'unknownId', value)
+      toggleSelectRangeValue(state, 'unknownId', value, false)
     ).not.toThrow();
   });
 
