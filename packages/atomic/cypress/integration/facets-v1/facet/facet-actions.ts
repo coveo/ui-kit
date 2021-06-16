@@ -19,3 +19,17 @@ export function selectIdleLinkValueAt(index: number) {
 export function selectIdleBoxValueAt(index: number) {
   FacetSelectors.idleBoxValue().eq(index).click();
 }
+
+export function typeFacetSearchQuery(query: string) {
+  const characters = Array.from(query);
+  characters.forEach((character, index) => {
+    // https://github.com/cypress-io/cypress/issues/5827
+    FacetSelectors.searchInput()
+      .should('not.be.disabled')
+      .type(character, {force: true, delay: 100});
+    cy.wait(TestFixture.interceptAliases.FacetSearch);
+    if (index < characters.length) {
+      cy.wait(TestFixture.interceptAliases.UA);
+    }
+  });
+}

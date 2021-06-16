@@ -8,6 +8,7 @@ import {
   selectIdleCheckboxValueAt,
   selectIdleLinkValueAt,
   selectIdleBoxValueAt,
+  typeFacetSearchQuery,
 } from './facet-actions';
 import * as FacetAssertions from './facet-assertions';
 
@@ -107,6 +108,124 @@ describe('Facet v1 Test Suites', () => {
           });
         });
       });
+
+      describe('when searching for a value that returns results', () => {
+        const query = 'bbc';
+        function setupSearchFor() {
+          setupSelectCheckboxValue();
+          typeFacetSearchQuery(query);
+        }
+
+        describe('verify rendering', () => {
+          before(setupSearchFor);
+
+          FacetAssertions.assertAccessibility();
+          FacetAssertions.assertNumberOfIdleCheckboxValues(
+            defaultNumberOfValues
+          );
+          FacetAssertions.assertNumberOfSelectedCheckboxValues(0);
+          FacetAssertions.assertDisplayMoreMatchesFound(true);
+          FacetAssertions.assertDisplayNoMatchesFound(false);
+          FacetAssertions.assertMoreMatchesFoundContainsQuery(query);
+          FacetAssertions.assertDisplayShowMoreButton(false);
+          FacetAssertions.assertDisplaySearchClearButton(true);
+        });
+
+        describe('verify analytics', () => {
+          before(setupSearchFor);
+
+          FacetAssertions.assertLogFacetSearch(field);
+        });
+
+        describe('when selecting for a search result', () => {
+          function setupSelectSearchResult() {
+            setupSearchFor();
+            cy.wait(TestFixture.interceptAliases.UA);
+            selectIdleCheckboxValueAt(5);
+            cy.wait(TestFixture.interceptAliases.Search);
+          }
+
+          describe('verify rendering', () => {
+            before(setupSelectSearchResult);
+
+            FacetAssertions.assertNumberOfIdleCheckboxValues(
+              defaultNumberOfValues - 2
+            );
+            FacetAssertions.assertNumberOfSelectedCheckboxValues(2);
+            FacetAssertions.assertDisplayMoreMatchesFound(false);
+            FacetAssertions.assertDisplayNoMatchesFound(false);
+            FacetAssertions.assertDisplayShowMoreButton(true);
+            FacetAssertions.assertSearchInputEmpty();
+            FacetAssertions.assertDisplaySearchClearButton(false);
+          });
+
+          describe('verify analytics', () => {
+            before(setupSelectSearchResult);
+            FacetAssertions.assertLogFacetSelect(field, 0);
+          });
+        });
+
+        describe('when clearing the facet search results', () => {
+          function setupClearFacetSearchResults() {
+            setupSearchFor();
+            cy.wait(TestFixture.interceptAliases.UA);
+            FacetSelectors.searchClearButton().click();
+          }
+
+          describe('verify rendering', () => {
+            before(setupClearFacetSearchResults);
+
+            FacetAssertions.assertNumberOfIdleCheckboxValues(
+              defaultNumberOfValues - 1
+            );
+            FacetAssertions.assertNumberOfSelectedCheckboxValues(1);
+            FacetAssertions.assertDisplayMoreMatchesFound(false);
+            FacetAssertions.assertDisplayNoMatchesFound(false);
+            FacetAssertions.assertDisplayShowMoreButton(true);
+            FacetAssertions.assertSearchInputEmpty();
+            FacetAssertions.assertDisplaySearchClearButton(false);
+          });
+        });
+      });
+
+      describe('when searching for a value that returns a single result', () => {
+        const query = 'amoreau';
+        function setupSearchForSingleValue() {
+          setupSelectCheckboxValue();
+          typeFacetSearchQuery(query);
+        }
+
+        describe('verify rendering', () => {
+          before(setupSearchForSingleValue);
+
+          FacetAssertions.assertAccessibility();
+          FacetAssertions.assertNumberOfIdleCheckboxValues(1);
+          FacetAssertions.assertNumberOfSelectedCheckboxValues(0);
+          FacetAssertions.assertDisplayMoreMatchesFound(false);
+          FacetAssertions.assertDisplayNoMatchesFound(false);
+          FacetAssertions.assertDisplaySearchClearButton(true);
+        });
+      });
+
+      describe('when searching for a value that returns no results', () => {
+        const query = 'nonono';
+        function setupSearchForNoValues() {
+          setupSelectCheckboxValue();
+          typeFacetSearchQuery(query);
+        }
+
+        describe('verify rendering', () => {
+          before(setupSearchForNoValues);
+
+          FacetAssertions.assertAccessibility();
+          FacetAssertions.assertNumberOfIdleCheckboxValues(0);
+          FacetAssertions.assertNumberOfSelectedCheckboxValues(0);
+          FacetAssertions.assertDisplayMoreMatchesFound(false);
+          FacetAssertions.assertDisplayNoMatchesFound(true);
+          FacetAssertions.assertNoMatchesFoundContainsQuery(query);
+          FacetAssertions.assertDisplaySearchClearButton(true);
+        });
+      });
     });
   });
 
@@ -194,6 +313,52 @@ describe('Facet v1 Test Suites', () => {
             before(setupClearLinkValues);
 
             FacetAssertions.assertLogClearFacetValues(field);
+          });
+        });
+      });
+
+      describe('when searching for a value that returns results', () => {
+        const query = 'bbc';
+        function setupSearchFor() {
+          setupSelectLinkValue();
+          typeFacetSearchQuery(query);
+        }
+
+        describe('verify rendering', () => {
+          before(setupSearchFor);
+
+          FacetAssertions.assertAccessibility();
+          FacetAssertions.assertNumberOfIdleLinkValues(defaultNumberOfValues);
+          FacetAssertions.assertNumberOfSelectedLinkValues(0);
+        });
+
+        describe('verify analytics', () => {
+          before(setupSearchFor);
+
+          FacetAssertions.assertLogFacetSearch(field);
+        });
+
+        describe('when selecting for a search result', () => {
+          function setupSelectSearchResult() {
+            setupSearchFor();
+            cy.wait(TestFixture.interceptAliases.UA);
+            selectIdleLinkValueAt(5);
+            cy.wait(TestFixture.interceptAliases.Search);
+          }
+
+          describe('verify rendering', () => {
+            before(setupSelectSearchResult);
+
+            FacetAssertions.assertNumberOfIdleLinkValues(
+              defaultNumberOfValues - 1
+            );
+            FacetAssertions.assertNumberOfSelectedLinkValues(1);
+            FacetAssertions.assertSearchInputEmpty();
+          });
+
+          describe('verify analytics', () => {
+            before(setupSelectSearchResult);
+            FacetAssertions.assertLogFacetSelect(field, 0);
           });
         });
       });
@@ -285,6 +450,52 @@ describe('Facet v1 Test Suites', () => {
             before(setupClearBoxValues);
 
             FacetAssertions.assertLogClearFacetValues(field);
+          });
+        });
+      });
+
+      describe('when searching for a value that returns results', () => {
+        const query = 'bbc';
+        function setupSearchFor() {
+          setupSelectBoxValue();
+          typeFacetSearchQuery(query);
+        }
+
+        describe('verify rendering', () => {
+          before(setupSearchFor);
+
+          FacetAssertions.assertAccessibility();
+          FacetAssertions.assertNumberOfIdleBoxValues(defaultNumberOfValues);
+          FacetAssertions.assertNumberOfSelectedBoxValues(0);
+        });
+
+        describe('verify analytics', () => {
+          before(setupSearchFor);
+
+          FacetAssertions.assertLogFacetSearch(field);
+        });
+
+        describe('when selecting for a search result', () => {
+          function setupSelectSearchResult() {
+            setupSearchFor();
+            cy.wait(TestFixture.interceptAliases.UA);
+            selectIdleBoxValueAt(5);
+            cy.wait(TestFixture.interceptAliases.Search);
+          }
+
+          describe('verify rendering', () => {
+            before(setupSelectSearchResult);
+
+            FacetAssertions.assertNumberOfIdleBoxValues(
+              defaultNumberOfValues - 2
+            );
+            FacetAssertions.assertNumberOfSelectedBoxValues(2);
+            FacetAssertions.assertSearchInputEmpty();
+          });
+
+          describe('verify analytics', () => {
+            before(setupSelectSearchResult);
+            FacetAssertions.assertLogFacetSelect(field, 0);
           });
         });
       });
@@ -421,13 +632,63 @@ describe('Facet v1 Test Suites', () => {
     FacetAssertions.assertValuesSortedByOccurences();
   });
 
-  describe.skip('with #withSearch to false', () => {});
+  describe('with #withSearch to false', () => {
+    before(() => {
+      new TestFixture()
+        .with(addFacet({field, label, 'with-search': 'false'}))
+        .init();
+    });
 
-  describe.skip('when no search has yet been executed', () => {});
+    FacetAssertions.assertDisplayFacet(true);
+    FacetAssertions.assertDisplaySearchInput(false);
+  });
 
-  describe.skip('with an invalid option', () => {});
+  describe('when no search has yet been executed', () => {
+    before(() => {
+      new TestFixture()
+        .with(addFacet({field, label}))
+        .withoutFirstAutomaticSearch()
+        .init();
+    });
 
-  describe.skip('when field returns no results', () => {});
+    FacetAssertions.assertDisplayFacet(false);
+    FacetAssertions.assertDisplayPlaceholder(true);
+  });
 
-  describe.skip('with a selected path in the URL', () => {});
+  describe('with an invalid option', () => {
+    before(() => {
+      new TestFixture()
+        .with(addFacet({field, label, 'sort-criteria': 'nononono'}))
+        .init();
+    });
+
+    FacetAssertions.assertDisplayFacet(false);
+    FacetAssertions.assertContainsComponentError(true);
+  });
+
+  describe('when field returns no results', () => {
+    before(() => {
+      new TestFixture()
+        .with(addFacet({field: 'notanactualfield', label}))
+        .init();
+    });
+
+    FacetAssertions.assertDisplayFacet(false);
+    FacetAssertions.assertDisplayPlaceholder(false);
+    FacetAssertions.assertContainsComponentError(false);
+  });
+
+  describe('with a selected path in the URL', () => {
+    before(() => {
+      new TestFixture()
+        .with(addFacet({field, label}))
+        .withHash(`f[${field}]=Cervantes`)
+        .init();
+    });
+
+    FacetAssertions.assertDisplayFacet(true);
+    FacetAssertions.assertNumberOfSelectedCheckboxValues(1);
+    FacetAssertions.assertNumberOfIdleCheckboxValues(defaultNumberOfValues - 1);
+    FacetAssertions.assertFirstValueContains('Cervantes');
+  });
 });
