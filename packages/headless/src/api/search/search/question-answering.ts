@@ -1,13 +1,14 @@
+export interface QuestionAnswerDocumentIdentifier {
+  contentIdKey: string;
+  contentIdValue: string;
+}
 export interface QuestionAnswer {
   question: string;
   answerSnippet: string;
-  documentId: {
-    contentIdKey: string;
-    contentIdValue: string;
-  };
+  documentId: QuestionAnswerDocumentIdentifier;
   score: number;
 }
 
-export interface QuestionsAndAnswers extends QuestionAnswer {
+export interface QuestionsAnswers extends QuestionAnswer {
   relatedQuestions: QuestionAnswer[];
 }

@@ -1,13 +1,8 @@
-import {Engine} from '../../app/headless-engine';
 import {buildController, Controller} from '../controller/headless-controller';
 import {search} from '../../app/reducers';
 import {loadReducerError} from '../../utils/errors';
-import {SearchSection} from '../../state/state-sections';
-
-export interface SmartSnippetSuggestionsDocumentId {
-  contentIdKey: string;
-  contentItValue: string;
-}
+import {SearchEngine} from '../../app/search-engine/search-engine';
+import {QuestionAnswerDocumentIdentifier} from '../../api/search/search/question-answering';
 
 /**
  * The `SmartSnippetSuggestions` controller allows to manage additional queries for which a SmartSnippet model can provide relevant excerpts.
@@ -20,11 +15,11 @@ export interface SmartSnippetSuggestions extends Controller {
   /**
    * Expand the specified snippet suggestion.
    */
-  expand(identifier: SmartSnippetSuggestionsDocumentId): void;
+  expand(identifier: QuestionAnswerDocumentIdentifier): void;
   /**
    * Collapse the specified snippet suggestion.
    */
-  collapse(identifier: SmartSnippetSuggestionsDocumentId): void;
+  collapse(identifier: QuestionAnswerDocumentIdentifier): void;
 }
 
 /**
@@ -34,24 +29,28 @@ export interface SmartSnippetSuggestionsState {
   /**
    * The related questions for the current query
    */
-  relatedQuestions: {
-    /**
-     * The question related to the smart snippet.
-     */
-    question: string;
-    /**
-     * The answer, or snippet, related to the question.
-     */
-    answer: string;
-    /**
-     * The index identifier for the document that provided the answer.
-     */
-    documentId: SmartSnippetSuggestionsDocumentId;
-    /**
-     * Determines if the snippet is currently expanded.
-     */
-    expanded: boolean;
-  }[];
+  relatedQuestions: SmartSnippetSuggestionsRelatedQuestions[];
+}
+
+export interface SmartSnippetSuggestionsRelatedQuestions {
+  /**
+   * The question related to the smart snippet.
+   */
+  question: string;
+  /**
+   * The answer, or snippet, related to the question.
+   *
+   * This can contain HTML markup, depending on the source of the answer.
+   */
+  answer: string;
+  /**
+   * The index identifier for the document that provided the answer.
+   */
+  documentId: QuestionAnswerDocumentIdentifier;
+  /**
+   * Determines if the snippet is currently expanded.
+   */
+  expanded: boolean;
 }
 
 /**
@@ -61,7 +60,7 @@ export interface SmartSnippetSuggestionsState {
  * @returns A `SmartSnippet` controller instance.
  * */
 export function buildSmartSnippetSuggestions(
-  engine: Engine<object>
+  engine: SearchEngine
 ): SmartSnippetSuggestions {
   if (!loadSmartSnippetSuggestionsReducers(engine)) {
     throw loadReducerError;
@@ -78,18 +77,18 @@ export function buildSmartSnippetSuggestions(
       } as SmartSnippetSuggestionsState;
     },
 
-    expand(_: SmartSnippetSuggestionsDocumentId) {
+    expand(_: QuestionAnswerDocumentIdentifier) {
       // TODO
     },
-    collapse(_: SmartSnippetSuggestionsDocumentId) {
+    collapse(_: QuestionAnswerDocumentIdentifier) {
       // TODO
     },
   };
 }
 
 function loadSmartSnippetSuggestionsReducers(
-  engine: Engine<object>
-): engine is Engine<SearchSection> {
+  engine: SearchEngine
+): engine is SearchEngine {
   engine.addReducers({search});
   return true;
 }

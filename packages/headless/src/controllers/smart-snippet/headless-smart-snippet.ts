@@ -3,6 +3,7 @@ import {buildController, Controller} from '../controller/headless-controller';
 import {search} from '../../app/reducers';
 import {loadReducerError} from '../../utils/errors';
 import {SearchSection} from '../../state/state-sections';
+import {QuestionAnswerDocumentIdentifier} from '../../api/search/search/question-answering';
 
 /**
  * The `SmartSnippet` controller allows to manage the excerpt of a document that would be most likely to answer a particular query .
@@ -45,14 +46,15 @@ export interface SmartSnippetState {
   /**
    * The index identifier for the document that provided the answer.
    */
-  documentId: {
-    contentIdKey: string;
-    contentItValue: string;
-  };
+  documentId: QuestionAnswerDocumentIdentifier;
   /**
    * Determines if the snippet is currently expanded.
    */
   expanded: boolean;
+  /**
+   * Determines of there is an available answer for the current query.
+   */
+  answerFound: boolean;
 }
 
 /**

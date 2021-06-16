@@ -413,7 +413,6 @@ export {
 
 export {
   SmartSnippetSuggestions,
-  SmartSnippetSuggestionsDocumentId,
   SmartSnippetSuggestionsState,
   buildSmartSnippetSuggestions,
 } from './smart-snippet-suggestions/headless-smart-snippet-suggestions';

@@ -8,7 +8,7 @@ import {AnyFacetResponse} from '../../../features/facets/generic/interfaces/gene
 import {QueryRankingExpression} from './query-ranking-expression';
 import {SecurityIdentity} from './security-identity';
 import {ExecutionReport} from './execution-report';
-import {QuestionsAndAnswers} from './question-answering';
+import {QuestionsAnswers} from './question-answering';
 
 export interface SearchResponseSuccess {
   results: Result[];
@@ -16,7 +16,7 @@ export interface SearchResponseSuccess {
   totalCountFiltered: number;
   facets: AnyFacetResponse[];
   queryCorrections: QueryCorrection[];
-  questionAnswer?: QuestionsAndAnswers;
+  questionAnswer: QuestionsAnswers;
 }
 
 export interface SearchResponseSuccessWithDebugInfo

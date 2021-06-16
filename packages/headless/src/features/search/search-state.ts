@@ -32,6 +32,19 @@ export interface SearchState {
   results: Result[];
 }
 
+export function emptyQuestionAnswer() {
+  return {
+    answerSnippet: '',
+    documentId: {
+      contentIdKey: '',
+      contentIdValue: '',
+    },
+    question: '',
+    relatedQuestions: [],
+    score: 0,
+  };
+}
+
 export function getSearchInitialState(): SearchState {
   return {
     response: {
@@ -40,16 +53,7 @@ export function getSearchInitialState(): SearchState {
       totalCountFiltered: 0,
       facets: [],
       queryCorrections: [],
-      questionAnswer: {
-        answerSnippet: '',
-        documentId: {
-          contentIdKey: '',
-          contentIdValue: '',
-        },
-        question: '',
-        relatedQuestions: [],
-        score: 0,
-      },
+      questionAnswer: emptyQuestionAnswer(),
     },
     duration: 0,
     queryExecuted: '',
