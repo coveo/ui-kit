@@ -37,12 +37,18 @@ describe('generic facet reducers', () => {
 
   describe('#handleFacetDeselectAll', () => {
     describe('when the request is defined', () => {
-      it('sets #currentValues to an empty array', () => {
+      it('sets all #currentValues state to idle', () => {
         const value = buildMockFacetValueRequest();
-        const request = buildMockFacetRequest({currentValues: [value]});
+        const anotherValue = buildMockFacetValueRequest({value: 'hello'});
+        const request = buildMockFacetRequest({
+          currentValues: [value, anotherValue],
+        });
 
         handleFacetDeselectAll<FacetRequest>(request);
-        expect(request.currentValues).toEqual([]);
+        expect(request.currentValues).toEqual([
+          {...value, state: 'idle'},
+          {...anotherValue, state: 'idle'},
+        ]);
       });
 
       it('sets #preventAutoSelect to true on the request', () => {
