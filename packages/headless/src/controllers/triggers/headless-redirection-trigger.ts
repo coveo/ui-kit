@@ -44,7 +44,7 @@ export function buildRedirectionTrigger(
   const controller = buildController(engine);
   const {dispatch} = engine;
 
-  let previousRedirectTo = '';
+  let previousRedirectTo: string | null = null;
 
   return {
     ...controller,
@@ -52,7 +52,7 @@ export function buildRedirectionTrigger(
     subscribe(listener: () => void) {
       const strictListener = () => {
         const hasChanged = previousRedirectTo !== this.state.redirectTo;
-        previousRedirectTo = this.state.redirectTo!;
+        previousRedirectTo = this.state.redirectTo;
 
         if (hasChanged && this.state.redirectTo) {
           listener();
