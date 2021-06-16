@@ -73,6 +73,10 @@ export class CoveoSearchPageClient {
         return this.logCustomEvent(SearchPageEvents.recommendation);
     }
 
+    public logRecommendationOpen(info: PartialDocumentInformation, identifier: DocumentIdentifier) {
+        return this.logClickEvent(SearchPageEvents.recommendationOpen, info, identifier);
+    }
+
     public logFetchMoreResults() {
         return this.logCustomEvent(SearchPageEvents.pagerScrolling, {type: 'getMoreResults'});
     }

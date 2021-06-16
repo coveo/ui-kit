@@ -191,7 +191,7 @@ describe('SearchPageClient', () => {
         expectMatchDocumentPayload(SearchPageEvents.documentQuickview, fakeDocInfo, fakeDocID);
     });
 
-    it('should send proper payload for ', async () => {
+    it('should send proper payload for #documentOpen', async () => {
         await client.logDocumentOpen(fakeDocInfo, fakeDocID);
         expectMatchDocumentPayload(SearchPageEvents.documentOpen, fakeDocInfo, fakeDocID);
     });
@@ -414,6 +414,11 @@ describe('SearchPageClient', () => {
     it('should send proper payload for #logRecommendation', async () => {
         await client.logRecommendation();
         expectMatchCustomEventPayload(SearchPageEvents.recommendation);
+    });
+
+    it('should send proper payload for #recommendationOpen', async () => {
+        await client.logRecommendationOpen(fakeDocInfo, fakeDocID);
+        expectMatchDocumentPayload(SearchPageEvents.recommendationOpen, fakeDocInfo, fakeDocID);
     });
 
     it('should send proper payload for #fetchMoreResults', async () => {

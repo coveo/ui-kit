@@ -158,6 +158,10 @@ export enum SearchPageEvents {
      */
     recommendationInterfaceLoad = 'recommendationInterfaceLoad',
     /**
+     * Identifies the click event that gets logged when a user clicks a recommendation in the Recommendations panel.
+     */
+    recommendationOpen = 'recommendationOpen',
+    /**
      * Identifies the custom event that gets logged when a user identifies a smart snippet answer as relevant.
      */
     likeSmartSnippet = 'likeSmartSnippet',
