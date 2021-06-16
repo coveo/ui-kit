@@ -3,7 +3,7 @@ import {
   AnalyticsType,
   documentIdentifier,
   makeAnalyticsAction,
-  partialDocumentInformation,
+  partialRecommendationInformation,
   validateResultPayload,
 } from '../analytics/analytics-utils';
 
@@ -23,7 +23,7 @@ export const logRecommendationOpen = (result: Result) =>
     (client, state) => {
       validateResultPayload(result);
       return client.logRecommendationOpen(
-        partialDocumentInformation(result, state),
+        partialRecommendationInformation(result, state),
         documentIdentifier(result)
       );
     }
