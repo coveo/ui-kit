@@ -25,6 +25,10 @@ export const FacetSelectors = {
   clearButton: () => FacetSelectors.shadow().find('[part="clear-button"]'),
   labelButton: () => FacetSelectors.shadow().find('[part="label-button"]'),
   searchInput: () => FacetSelectors.shadow().find('[part="search-input"]'),
+  searchClearButton: () =>
+    FacetSelectors.shadow().find('[part="search-clear-button"]'),
+  moreMatches: () => FacetSelectors.shadow().find('[part="more-matches"]'),
+  noMatches: () => FacetSelectors.shadow().find('[part="no-matches"]'),
   valueLabel: () => FacetSelectors.shadow().find('[part="value-label"]'),
   valueCount: () => FacetSelectors.shadow().find('[part="value-count"]'),
   facetValueLabelAtIndex: (index: number) =>
