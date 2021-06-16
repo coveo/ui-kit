@@ -41,3 +41,5 @@ export {
   ContextPayload,
   buildContext,
 } from './controllers/context/headless-context';
+
+export {Result} from './api/search/search/result';
