@@ -46,6 +46,8 @@ import {RelevanceInspector} from '../components/relevance-inspector/relevance-in
 import {RelevanceInspector as RelevanceInspectorFn} from '../components/relevance-inspector/relevance-inspector.fn';
 import {StandaloneSearchBox} from '../components/standalone-search-box/standalone-search-box.class';
 import {StandaloneSearchBox as StandaloneSearchBoxFn} from '../components/standalone-search-box/standalone-search-box.fn';
+import {RedirectionTrigger} from '../components/triggers/redirection-trigger.class';
+import {RedirectionTrigger as RedirectionTriggerFn} from '../components/triggers/redirection-trigger.fn';
 import {
   HeadlessEngine,
   Engine,
@@ -103,6 +105,8 @@ import {
   buildRelevanceInspector,
   StandaloneSearchBox as HeadlessStandaloneSearchBox,
   buildStandaloneSearchBox,
+  RedirectionTrigger as HeadlessRedirectionTrigger,
+  buildRedirectionTrigger,
 } from '@coveo/headless';
 import {bindUrlManager} from '../components/url-manager/url-manager';
 import {setContext} from '../components/context/context';
@@ -152,6 +156,7 @@ export class SearchPage extends Component {
   private readonly historyManager: HeadlessHistoryManager;
   private readonly relevanceInspector: HeadlessRelevanceInspector;
   private readonly standaloneSearchBox: HeadlessStandaloneSearchBox;
+  private readonly redirectionTrigger: HeadlessRedirectionTrigger;
 
   private unsubscribeUrlManager!: Unsubscribe;
 
@@ -268,6 +273,8 @@ export class SearchPage extends Component {
     this.standaloneSearchBox = buildStandaloneSearchBox(this.engine, {
       options: {redirectionUrl: 'https://mywebsite.com/search'},
     });
+
+    this.redirectionTrigger = buildRedirectionTrigger(this.engine);
   }
 
   componentDidMount() {
@@ -434,6 +441,12 @@ export class SearchPage extends Component {
           <Section title="standalone-search-box">
             <StandaloneSearchBox />
             <StandaloneSearchBoxFn controller={this.standaloneSearchBox} />
+          </Section>
+          <Section title="redirection-trigger">
+            <RedirectionTrigger></RedirectionTrigger>
+            <RedirectionTriggerFn
+              controller={this.redirectionTrigger}
+            ></RedirectionTriggerFn>
           </Section>
         </AppContext.Provider>
       </div>

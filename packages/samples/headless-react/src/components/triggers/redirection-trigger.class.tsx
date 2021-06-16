@@ -40,10 +40,6 @@ export class RedirectionTrigger extends Component<{}, RedirectionTriggerState> {
       return null;
     }
 
-    return (
-      <div>
-        <button></button>
-      </div>
-    );
+    return <div></div>;
   }
 }

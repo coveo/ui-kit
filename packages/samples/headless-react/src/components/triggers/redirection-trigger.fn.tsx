@@ -22,9 +22,5 @@ export const RedirectionTrigger: FunctionComponent<HeadlessRedirectionTriggerPro
     return null;
   }
 
-  return (
-    <div>
-      <button></button>
-    </div>
-  );
+  return <div></div>;
 };
