@@ -411,6 +411,7 @@ export {
   buildRedirectionTrigger,
 } from './triggers/headless-redirection-trigger';
 
+export {
   SmartSnippet,
   SmartSnippetState,
   buildSmartSnippet,
@@ -421,4 +422,3 @@ export {
   SmartSnippetQuestionsListState,
   buildSmartSnippetQuestionsList,
 } from './smart-snippet-questions-list/headless-smart-snippet-questions-list';
-
