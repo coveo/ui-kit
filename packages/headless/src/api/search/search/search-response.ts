@@ -9,6 +9,7 @@ import {QueryRankingExpression} from './query-ranking-expression';
 import {SecurityIdentity} from './security-identity';
 import {ExecutionReport} from './execution-report';
 import {Trigger} from './../trigger';
+import {QuestionsAnswers} from './question-answering';
 
 export interface SearchResponseSuccess {
   results: Result[];
@@ -17,6 +18,7 @@ export interface SearchResponseSuccess {
   facets: AnyFacetResponse[];
   queryCorrections: QueryCorrection[];
   triggers: Trigger[];
+  questionAnswer: QuestionsAnswers;
 }
 
 export interface SearchResponseSuccessWithDebugInfo

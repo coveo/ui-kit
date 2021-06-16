@@ -1,5 +1,5 @@
-@import "tailwindcss/base";
-@import "tailwindcss/utilities";
+@import 'tailwindcss/base';
+@import 'tailwindcss/utilities';
 
 :host {
   display: block;
@@ -13,5 +13,13 @@
 
   .ellipsed {
     @apply whitespace-nowrap overflow-ellipsis overflow-hidden;
+  }
+
+  .with-parentheses::before {
+    content: '(';
+  }
+
+  .with-parentheses::after {
+    content: ')';
   }
 }

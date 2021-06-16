@@ -46,30 +46,58 @@
       }
     },
     {
-      "id": "deploy-headless-to-s3-version",
+      "id": "deploy-headless-minor-to-s3-version",
       "s3": {
         "bucket": "{terraform.infra.infra.bucket_binaries}",
-        "directory": "proda/StaticCDN/headless/v$[PRERELEASE]",
+        "directory": "proda/StaticCDN/headless/v$[MINORVERSION]",
         "source": "packages/headless/dist/browser",
         "parameters": {
           "acl": "public-read"
         },
         "prd": {
-          "directory": "proda/StaticCDN/headless/v$[VERSION]"
+          "directory": "proda/StaticCDN/headless/v$[MINORVERSION]"
         }
       }
     },
     {
-      "id": "deploy-atomic-to-s3-version",
+      "id": "deploy-headless-major-to-s3-version",
       "s3": {
         "bucket": "{terraform.infra.infra.bucket_binaries}",
-        "directory": "proda/StaticCDN/atomic/v$[PRERELEASE]",
+        "directory": "proda/StaticCDN/headless/v$[MAJORVERSION]",
+        "source": "packages/headless/dist/browser",
+        "parameters": {
+          "acl": "public-read"
+        },
+        "prd": {
+          "directory": "proda/StaticCDN/headless/v$[MAJORVERSION]"
+        }
+      }
+    },
+    {
+      "id": "deploy-atomic-minor-to-s3-version",
+      "s3": {
+        "bucket": "{terraform.infra.infra.bucket_binaries}",
+        "directory": "proda/StaticCDN/atomic/v$[MINORVERSION]",
         "source": "packages/atomic/dist/atomic",
         "parameters": {
           "acl": "public-read"
         },
         "prd": {
-          "directory": "proda/StaticCDN/atomic/v$[VERSION]"
+          "directory": "proda/StaticCDN/atomic/v$[MINORVERSION]"
+        }
+      }
+    },
+    {
+      "id": "deploy-atomic-major-to-s3-version",
+      "s3": {
+        "bucket": "{terraform.infra.infra.bucket_binaries}",
+        "directory": "proda/StaticCDN/atomic/v$[MAJORVERSION]",
+        "source": "packages/atomic/dist/atomic",
+        "parameters": {
+          "acl": "public-read"
+        },
+        "prd": {
+          "directory": "proda/StaticCDN/atomic/v$[MAJORVERSION]"
         }
       }
     },

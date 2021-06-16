@@ -1,5 +1,5 @@
 import {PayloadAction} from '@reduxjs/toolkit';
-import {Engine} from '../../app/headless-engine';
+import {CoreEngine} from '../../app/engine';
 import {advancedSearchQueries} from '../../app/reducers';
 import {
   updateAdvancedSearchQueries,
@@ -41,7 +41,7 @@ export interface AdvancedSearchQueryActionCreators {
  * @returns An object holding the action creators.
  */
 export function loadAdvancedSearchQueryActions(
-  engine: Engine<object>
+  engine: CoreEngine
 ): AdvancedSearchQueryActionCreators {
   engine.addReducers({advancedSearchQueries});
 

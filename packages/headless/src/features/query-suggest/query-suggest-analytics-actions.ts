@@ -29,7 +29,8 @@ export const logQuerySuggestionClick = (
 
         const payload: OmniboxSuggestionsMetadata = {
           suggestionRanking: suggestions.indexOf(suggestion),
-          partialQuery: querySuggest.q,
+          partialQuery:
+            querySuggest.partialQueries[querySuggest.partialQueries.length - 1],
           partialQueries: querySuggest.partialQueries,
           suggestions,
         };

@@ -1,6 +1,6 @@
 import {AsyncThunkAction, PayloadAction} from '@reduxjs/toolkit';
 import {AsyncThunkSearchOptions} from '../../api/search/search-api-client';
-import {Engine} from '../../app/headless-engine';
+import {RecommendationEngine} from '../../app/recommendation-engine/recommendation-engine';
 import {recommendation} from '../../app/reducers';
 import {
   getRecommendations,
@@ -45,7 +45,7 @@ export interface RecommendationActionCreators {
  * @returns An object holding the action creators.
  */
 export function loadRecommendationActions(
-  engine: Engine<object>
+  engine: RecommendationEngine
 ): RecommendationActionCreators {
   engine.addReducers({recommendation});
 

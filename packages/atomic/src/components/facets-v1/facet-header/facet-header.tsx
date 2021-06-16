@@ -29,6 +29,7 @@ export const FacetHeader: FunctionalComponent<{
       class="flex justify-between w-full py-1 text-on-background text-lg hover:text-primary"
       title={props.isCollapsed ? expandFacet : collapseFacet}
       onClick={() => props.onToggleCollapse()}
+      aria-expanded={(!props.isCollapsed).toString()}
     >
       <span class="ellipsed">{label}</span>
       <span

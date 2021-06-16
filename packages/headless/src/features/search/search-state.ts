@@ -32,6 +32,19 @@ export interface SearchState {
   results: Result[];
 }
 
+export function emptyQuestionAnswer() {
+  return {
+    answerSnippet: '',
+    documentId: {
+      contentIdKey: '',
+      contentIdValue: '',
+    },
+    question: '',
+    relatedQuestions: [],
+    score: 0,
+  };
+}
+
 export function getSearchInitialState(): SearchState {
   return {
     response: {
@@ -41,6 +54,7 @@ export function getSearchInitialState(): SearchState {
       facets: [],
       queryCorrections: [],
       triggers: [],
+      questionAnswer: emptyQuestionAnswer(),
     },
     duration: 0,
     queryExecuted: '',

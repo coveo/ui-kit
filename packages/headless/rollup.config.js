@@ -164,16 +164,25 @@ function buildEsmOutput(outDir) {
   }
 }
 
-
-
 // For Atomic's development purposes only
-const dev = buildBrowserConfiguration({
-  input: 'src/index.ts',
-  output: [
-    buildEsmOutput('../atomic/src/external-builds')
-  ]
-});
-
+const dev = [
+  {
+    input: 'src/index.ts',
+    output: [buildEsmOutput('../atomic/src/external-builds')],
+  },
+  {
+    input: 'src/case-assist.index.ts',
+    output: [buildEsmOutput('../atomic/src/external-builds/case-assist')],
+  },
+  {
+    input: 'src/recommendation.index.ts',
+    output: [buildEsmOutput('../atomic/src/external-builds/recommendation')],
+  },
+  {
+    input: 'src/product-recommendation.index.ts',
+    output: [buildEsmOutput('../atomic/src/external-builds/product-recommendation')],
+  },
+].map(buildBrowserConfiguration);
 
 // Api-extractor cannot resolve import() types, so we use dts to create a file that api-extractor
 // can consume. When the api-extractor limitation is resolved, this step will not be necessary.
@@ -184,6 +193,6 @@ const typeDefinitions = {
   plugins: [dts()]
 }
 
-const config = isProduction ? [...nodejs, typeDefinitions, ...browser] : [dev];
+const config = isProduction ? [...nodejs, typeDefinitions, ...browser] : dev;
 
 export default config;

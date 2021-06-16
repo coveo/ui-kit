@@ -410,3 +410,15 @@ export {
   RedirectionTriggerState,
   buildRedirectionTrigger,
 } from './triggers/headless-redirection-trigger';
+
+  SmartSnippet,
+  SmartSnippetState,
+  buildSmartSnippet,
+} from './smart-snippet/headless-smart-snippet';
+
+export {
+  SmartSnippetQuestionsList,
+  SmartSnippetQuestionsListState,
+  buildSmartSnippetQuestionsList,
+} from './smart-snippet-questions-list/headless-smart-snippet-questions-list';
+

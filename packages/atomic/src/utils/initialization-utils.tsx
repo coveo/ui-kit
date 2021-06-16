@@ -1,4 +1,4 @@
-import {Engine} from '@coveo/headless';
+import {SearchEngine} from '@coveo/headless';
 import {ComponentInterface, getElement, h, forceUpdate} from '@stencil/core';
 import {i18n, TOptions} from 'i18next';
 import {ObservableMap} from '@stencil/store';
@@ -18,9 +18,9 @@ export type AtomicStore = {
  */
 export interface Bindings {
   /**
-   * Headless Engine instance.
+   * A headless search engine instance.
    */
-  engine: Engine;
+  engine: SearchEngine;
   /**
    * i18n instance, for localization.
    */
@@ -166,30 +166,14 @@ export function BindStateToController(
   controllerProperty: string,
   options?: {
     /**
-     * Whether the component should resubscribe when disconnected and reconnected from the DOM
-     */
-    subscribeOnConnectedCallback?: boolean;
-    /**
      * Component's method to be called when state is updated.
      */
     onUpdateCallbackMethod?: string;
   }
 ) {
   return (component: InitializableComponent, stateProperty: string) => {
-    const {connectedCallback, disconnectedCallback, initialize} = component;
-    let unsubscribe = () => {};
-
-    component.connectedCallback = function () {
-      if (options?.subscribeOnConnectedCallback && this[controllerProperty]) {
-        unsubscribe = this[controllerProperty].subscribe(() => {
-          this[stateProperty] = this[controllerProperty].state;
-          options?.onUpdateCallbackMethod &&
-            this[options.onUpdateCallbackMethod] &&
-            this[options.onUpdateCallbackMethod]();
-        });
-      }
-      connectedCallback && connectedCallback.call(this);
-    };
+    const {disconnectedCallback, initialize} = component;
+    let unsubscribeController = () => {};
 
     component.initialize = function () {
       initialize && initialize.call(this);
@@ -218,7 +202,7 @@ export function BindStateToController(
         );
       }
 
-      unsubscribe = this[controllerProperty].subscribe(() => {
+      unsubscribeController = this[controllerProperty].subscribe(() => {
         this[stateProperty] = this[controllerProperty].state;
         options?.onUpdateCallbackMethod &&
           this[options.onUpdateCallbackMethod]();
@@ -226,7 +210,7 @@ export function BindStateToController(
     };
 
     component.disconnectedCallback = function () {
-      unsubscribe();
+      !getElement(this).isConnected && unsubscribeController();
       disconnectedCallback && disconnectedCallback.call(this);
     };
   };

@@ -1,4 +1,4 @@
-import {Component, h, State, Prop} from '@stencil/core';
+import {Component, h, State, Prop, VNode} from '@stencil/core';
 import {
   Facet,
   buildFacet,
@@ -9,12 +9,11 @@ import {
   SearchStatusState,
   buildSearchStatus,
   FacetValue,
+  loadFacetSetActions,
 } from '@coveo/headless';
 import {
   Bindings,
   BindStateToController,
-  BindStateToI18n,
-  I18nState,
   InitializableComponent,
   InitializeBindings,
 } from '../../../utils/initialization-utils';
@@ -25,20 +24,20 @@ import {FacetSearchInput} from '../facet-search/facet-search-input';
 import {FacetValueCheckbox} from '../facet-value-checkbox/facet-value-checkbox';
 import {FacetValueLink} from '../facet-value-link/facet-value-link';
 import {FacetValueBox} from '../facet-value-box/facet-value-box';
-import {FacetShowLess} from '../facet-show-less/facet-show-less';
-import {FacetShowMore} from '../facet-show-more/facet-show-more';
+import {FacetShowMoreLess} from '../facet-show-more-less/facet-show-more-less';
 import {FacetSearchMatches} from '../facet-search/facet-search-matches';
 import {
   shouldUpdateFacetSearchComponent,
   shouldDisplaySearchResults,
 } from '../facet-search/facet-search-utils';
-import {AtomicBaseFacet} from '../facet-common';
+import {BaseFacet} from '../facet-common';
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
  * An `atomic-facet` displays a facet of the results for the current query. In mobile browsers, this is rendered as a button that opens a facet modal.
  *
  * @part facet - The wrapper for the entire facet.
+ * @part placeholder - The placeholder shown before the first search is executed.
  *
  * @part label-button - The button that displays the label and allows to expand/collapse the facet.
  * @part label-button-icon - The label button icon.
@@ -48,6 +47,21 @@ import {AtomicBaseFacet} from '../facet-common';
  * @part search-input - The search box input.
  * @part search-icon - The search box submit button.
  * @part search-clear-button - The button to clear the search box of input.
+ * @part more-matches - The label indicating there are more matches for the current facet search query.
+ * @part no-matches - The label indicating there are no matches for the current facet search query.
+ *
+ * @part values - The facet values container.
+ * @part value-label - The facet value label, common for all displays.
+ * @part value-count - The facet value count, common for all displays.
+ *
+ * @part value-checkbox - The facet value checkbox, available when display is 'checkbox'.
+ * @part value-checkbox-label - The facet value checkbox clickable label, available when display is 'checkbox'.
+ * @part value-link - The facet value when display is 'link'.
+ * @part value-box - The facet value when display is 'box'.
+ *
+ * @part show-more - The show more results button.
+ * @part show-less - The show less results button.
+ * @part show-more-less-icon - The icons of the show more & show less buttons.
  */
 @Component({
   tag: 'atomic-facet-v1', // TODO: remove v1 when old facets are removed
@@ -55,12 +69,12 @@ import {AtomicBaseFacet} from '../facet-common';
   shadow: true,
 })
 export class AtomicFacet
-  implements InitializableComponent, AtomicBaseFacet<Facet, FacetState> {
+  implements InitializableComponent, BaseFacet<Facet, FacetState> {
   @InitializeBindings() public bindings!: Bindings;
   public facet!: Facet;
   public searchStatus!: SearchStatus;
 
-  @BindStateToController('facet', {subscribeOnConnectedCallback: true})
+  @BindStateToController('facet')
   @State()
   public facetState!: FacetState;
   @BindStateToController('searchStatus')
@@ -102,13 +116,6 @@ export class AtomicFacet
    */
   @Prop() public displayValuesAs: 'checkbox' | 'link' | 'box' = 'checkbox';
   // @Prop() public customSort?: string; TODO: add customSort to headless
-
-  @BindStateToI18n()
-  @State()
-  public strings: I18nState = {
-    showMore: () => this.bindings.i18n.t('showMore'),
-    showLess: () => this.bindings.i18n.t('showLess'),
-  };
 
   public initialize() {
     this.searchStatus = buildSearchStatus(this.bindings.engine);
@@ -184,30 +191,91 @@ export class AtomicFacet
     );
   }
 
-  private renderValue(facetValue: FacetValue) {
+  private renderValue(facetValue: FacetValue, onClick: () => void) {
+    const displayValue = this.bindings.i18n.t(facetValue.value);
+    const isSelected = facetValue.state === 'selected';
     switch (this.displayValuesAs) {
       case 'checkbox':
         return (
-          <FacetValueCheckbox value={facetValue.value}></FacetValueCheckbox>
+          <FacetValueCheckbox
+            displayValue={displayValue}
+            numberOfResults={facetValue.numberOfResults}
+            isSelected={isSelected}
+            i18n={this.bindings.i18n}
+            onClick={onClick}
+          ></FacetValueCheckbox>
         );
       case 'link':
-        return <FacetValueLink value={facetValue.value}></FacetValueLink>;
+        return (
+          <FacetValueLink
+            displayValue={displayValue}
+            numberOfResults={facetValue.numberOfResults}
+            isSelected={isSelected}
+            i18n={this.bindings.i18n}
+            onClick={() => {
+              this.deselectOtherValues(facetValue);
+              onClick();
+            }}
+          ></FacetValueLink>
+        );
       case 'box':
-        return <FacetValueBox value={facetValue.value}></FacetValueBox>;
+        return (
+          <FacetValueBox
+            displayValue={displayValue}
+            numberOfResults={facetValue.numberOfResults}
+            isSelected={isSelected}
+            i18n={this.bindings.i18n}
+            onClick={onClick}
+          ></FacetValueBox>
+        );
     }
   }
 
+  private deselectOtherValues(facetValue: FacetValue) {
+    const action = loadFacetSetActions(this.bindings.engine)
+      .toggleSelectFacetValue;
+    const otherSelectedValues = this.facetState.values.filter(
+      ({state, value}) => state !== 'idle' && value !== facetValue.value
+    );
+
+    otherSelectedValues.forEach((value) =>
+      this.bindings.engine.dispatch(
+        action({facetId: this.facetId!, selection: value})
+      )
+    );
+  }
+
+  private renderValuesContainer(children: VNode[]) {
+    const classes = `mt-3 ${
+      this.displayValuesAs === 'box' ? 'box-container' : ''
+    }`;
+    return (
+      <ul part="values" class={classes}>
+        {children}
+      </ul>
+    );
+  }
+
   private renderValues() {
-    return this.facetState.values.map((value) => this.renderValue(value));
+    return this.renderValuesContainer(
+      this.facetState.values.map((value) =>
+        this.renderValue(value, () => this.facet.toggleSelect(value))
+      )
+    );
   }
 
   private renderSearchResults() {
-    return this.facetState.facetSearch.values.map((value) =>
-      this.renderValue({
-        state: 'idle',
-        numberOfResults: value.count,
-        value: value.rawValue,
-      })
+    return this.renderValuesContainer(
+      this.facetState.facetSearch.values.map((value) =>
+        this.renderValue(
+          {
+            state: 'idle',
+            numberOfResults: value.count,
+            value: value.rawValue,
+          },
+          () => this.facet.facetSearch.select(value)
+        )
+      )
     );
   }
 
@@ -223,14 +291,20 @@ export class AtomicFacet
   }
 
   private renderShowMoreLess() {
-    return [
-      this.facetState.canShowLessValues && (
-        <FacetShowLess label={this.strings.showLess()}></FacetShowLess>
-      ),
-      this.facetState.canShowMoreValues && (
-        <FacetShowMore label={this.strings.showMore()}></FacetShowMore>
-      ),
-    ];
+    return (
+      <FacetShowMoreLess
+        label={this.label}
+        i18n={this.bindings.i18n}
+        onShowMore={() => {
+          this.facet.showMoreValues();
+        }}
+        onShowLess={() => {
+          this.facet.showLessValues();
+        }}
+        canShowLessValues={this.facetState.canShowLessValues}
+        canShowMoreValues={this.facetState.canShowMoreValues}
+      ></FacetShowMoreLess>
+    );
   }
 
   public render() {
