@@ -141,7 +141,7 @@ describe('Facet v1 Test Suites', () => {
           function setupSelectSearcResult() {
             setupSearchFor();
             cy.wait(TestFixture.interceptAliases.UA);
-            selectIdleCheckboxValueAt(3);
+            selectIdleCheckboxValueAt(5);
             cy.wait(TestFixture.interceptAliases.Search);
           }
 
@@ -316,6 +316,52 @@ describe('Facet v1 Test Suites', () => {
           });
         });
       });
+
+      describe('when searching for a value that returns results', () => {
+        const query = 'bbc';
+        function setupSearchFor() {
+          setupSelectLinkValue();
+          typeFacetSearchQuery(query);
+        }
+
+        describe('verify rendering', () => {
+          before(setupSearchFor);
+
+          FacetAssertions.assertAccessibility();
+          FacetAssertions.assertNumberOfIdleLinkValues(defaultNumberOfValues);
+          FacetAssertions.assertNumberOfSelectedLinkValues(0);
+        });
+
+        describe('verify analytics', () => {
+          before(setupSearchFor);
+
+          FacetAssertions.assertLogFacetSearch(field);
+        });
+
+        describe('when selecting for a search result', () => {
+          function setupSelectSearcResult() {
+            setupSearchFor();
+            cy.wait(TestFixture.interceptAliases.UA);
+            selectIdleLinkValueAt(5);
+            cy.wait(TestFixture.interceptAliases.Search);
+          }
+
+          describe('verify rendering', () => {
+            before(setupSelectSearcResult);
+
+            FacetAssertions.assertNumberOfIdleLinkValues(
+              defaultNumberOfValues - 1
+            );
+            FacetAssertions.assertNumberOfSelectedLinkValues(1);
+            FacetAssertions.assertSearchInputEmpty();
+          });
+
+          describe('verify analytics', () => {
+            before(setupSelectSearcResult);
+            FacetAssertions.assertLogFacetSelect(field, 0);
+          });
+        });
+      });
     });
   });
 
@@ -404,6 +450,52 @@ describe('Facet v1 Test Suites', () => {
             before(setupClearBoxValues);
 
             FacetAssertions.assertLogClearFacetValues(field);
+          });
+        });
+      });
+
+      describe('when searching for a value that returns results', () => {
+        const query = 'bbc';
+        function setupSearchFor() {
+          setupSelectBoxValue();
+          typeFacetSearchQuery(query);
+        }
+
+        describe('verify rendering', () => {
+          before(setupSearchFor);
+
+          FacetAssertions.assertAccessibility();
+          FacetAssertions.assertNumberOfIdleBoxValues(defaultNumberOfValues);
+          FacetAssertions.assertNumberOfSelectedBoxValues(0);
+        });
+
+        describe('verify analytics', () => {
+          before(setupSearchFor);
+
+          FacetAssertions.assertLogFacetSearch(field);
+        });
+
+        describe('when selecting for a search result', () => {
+          function setupSelectSearcResult() {
+            setupSearchFor();
+            cy.wait(TestFixture.interceptAliases.UA);
+            selectIdleBoxValueAt(5);
+            cy.wait(TestFixture.interceptAliases.Search);
+          }
+
+          describe('verify rendering', () => {
+            before(setupSelectSearcResult);
+
+            FacetAssertions.assertNumberOfIdleBoxValues(
+              defaultNumberOfValues - 2
+            );
+            FacetAssertions.assertNumberOfSelectedBoxValues(2);
+            FacetAssertions.assertSearchInputEmpty();
+          });
+
+          describe('verify analytics', () => {
+            before(setupSelectSearcResult);
+            FacetAssertions.assertLogFacetSelect(field, 0);
           });
         });
       });
