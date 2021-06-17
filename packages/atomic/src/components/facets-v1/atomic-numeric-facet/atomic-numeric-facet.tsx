@@ -213,13 +213,19 @@ export class AtomicNumericFacet
 
   private renderValues() {
     return this.renderValuesContainer(
-      this.facetState.values.map((value) =>
+      this.valuesToRender.map((value) =>
         this.renderValue(value, () =>
           this.displayValuesAs === 'link'
             ? this.facet.toggleSingleSelect(value)
             : this.facet.toggleSelect(value)
         )
       )
+    );
+  }
+
+  private get valuesToRender() {
+    return this.facetState.values.filter(
+      (value) => value.numberOfResults || value.state !== 'idle'
     );
   }
 
@@ -236,7 +242,7 @@ export class AtomicNumericFacet
       );
     }
 
-    if (!this.facetState.values.length) {
+    if (!this.valuesToRender.length) {
       return;
     }
 
