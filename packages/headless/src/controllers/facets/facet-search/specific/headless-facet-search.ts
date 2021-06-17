@@ -38,7 +38,7 @@ export function buildFacetSearch(
     ...genericFacetSearch,
 
     /**
-     * Selects the provided value if unselected
+     * Selects the provided value.
      * @param result A single specificFacetSearchResult object
      */
     select(value: SpecificFacetSearchResult) {
@@ -47,7 +47,7 @@ export function buildFacetSearch(
     },
 
     /**
-     * Selects the provided value if unselected, deselecting other values.
+     * Selects the provided value, and deselects other values.
      * @param result A single specificFacetSearchResult object
      */
     singleSelect(value: SpecificFacetSearchResult) {

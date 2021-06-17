@@ -166,18 +166,20 @@ export function buildNumericFacet(
     }
   );
 
+  const handleToggleSelect = (selection: NumericFacetValue) => {
+    dispatch(executeToggleNumericFacetSelect({facetId, selection}));
+  };
+
   return {
     ...rangeFacet,
     toggleSelect: (selection: NumericFacetValue) =>
-      dispatch(executeToggleNumericFacetSelect({facetId, selection})),
+      handleToggleSelect(selection),
 
     toggleSingleSelect(selection: NumericFacetValue) {
-      if (selection.state !== 'idle') {
-        rangeFacet.deselectAll();
-        return;
+      if (selection.state === 'idle') {
+        dispatch(deselectAllFacetValues(facetId));
       }
 
-      dispatch(deselectAllFacetValues(facetId));
       dispatch(executeToggleNumericFacetSelect({facetId, selection}));
     },
 

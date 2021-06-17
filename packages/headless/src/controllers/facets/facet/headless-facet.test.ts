@@ -26,6 +26,7 @@ import {
   facetSet,
   search,
 } from '../../../app/reducers';
+import {FacetValue} from '../../../features/facets/facet-set/interfaces/response';
 
 describe('facet', () => {
   const facetId = '1';
@@ -159,9 +160,7 @@ describe('facet', () => {
     });
   });
 
-  describe('#toggleSingleSelect when the value state is "idle"', () => {
-    const facetValue = () => buildMockFacetValue({value: 'TED', state: 'idle'});
-
+  function testCommonToggleSingleSelect(facetValue: () => FacetValue) {
     it('dispatches a #toggleSelect action with the passed facet value', () => {
       facet.toggleSingleSelect(facetValue());
 
@@ -186,33 +185,32 @@ describe('facet', () => {
       );
       expect(action).toBeTruthy();
     });
-  });
+  }
 
-  describe('#toggleSingleSelect when the value state is not "idle"', () => {
-    const facetValue = () =>
-      buildMockFacetValue({value: 'TED', state: 'selected'});
+  describe('#toggleSingleSelect when the value state is "idle"', () => {
+    const facetValue = () => buildMockFacetValue({value: 'TED', state: 'idle'});
+
+    testCommonToggleSingleSelect(facetValue);
 
     it('dispatches a #deselectAllFacetValues action', () => {
       facet.toggleSingleSelect(facetValue());
 
       expect(engine.actions).toContainEqual(deselectAllFacetValues(facetId));
     });
+  });
 
-    it('dispatches #updateFacetOptions with #freezeFacetOrder true', () => {
+  describe('#toggleSingleSelect when the value state is not "idle"', () => {
+    const facetValue = () =>
+      buildMockFacetValue({value: 'TED', state: 'selected'});
+
+    testCommonToggleSingleSelect(facetValue);
+
+    it('does not dispatch a #deselectAllFacetValues action', () => {
       facet.toggleSingleSelect(facetValue());
 
-      expect(engine.actions).toContainEqual(
-        updateFacetOptions({freezeFacetOrder: true})
+      expect(engine.actions).not.toContainEqual(
+        deselectAllFacetValues(facetId)
       );
-    });
-
-    it('dispatches a search', () => {
-      facet.toggleSingleSelect(facetValue());
-
-      const action = engine.actions.find(
-        (a) => a.type === executeSearch.pending.type
-      );
-      expect(action).toBeTruthy();
     });
   });
 

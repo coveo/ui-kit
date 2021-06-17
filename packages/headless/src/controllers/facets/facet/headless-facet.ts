@@ -302,10 +302,8 @@ export function buildFacet(engine: Engine<object>, props: FacetProps): Facet {
   const facetSearch = createFacetSearch();
   const {state, ...restOfFacetSearch} = facetSearch;
 
-  const handleFacetDeselectAll = () => {
-    dispatch(deselectAllFacetValues(facetId));
-    dispatch(updateFacetOptions({freezeFacetOrder: true}));
-    dispatch(executeSearch(logFacetClearAll(facetId)));
+  const handleToggleSelect = (selection: FacetValue) => {
+    dispatch(executeToggleFacetSelect({facetId: options.facetId, selection}));
   };
 
   return {
@@ -313,23 +311,22 @@ export function buildFacet(engine: Engine<object>, props: FacetProps): Facet {
 
     facetSearch: restOfFacetSearch,
 
-    toggleSelect: (selection: FacetValue) =>
-      dispatch(executeToggleFacetSelect({facetId: options.facetId, selection})),
+    toggleSelect: (selection: FacetValue) => handleToggleSelect(selection),
 
     toggleSingleSelect: (selection: FacetValue) => {
-      if (selection.state !== 'idle') {
-        handleFacetDeselectAll();
-        return;
+      if (selection.state === 'idle') {
+        dispatch(deselectAllFacetValues(facetId));
       }
 
-      dispatch(deselectAllFacetValues(facetId));
-      dispatch(executeToggleFacetSelect({facetId: options.facetId, selection}));
+      handleToggleSelect(selection);
     },
 
     isValueSelected: isFacetValueSelected,
 
     deselectAll() {
-      handleFacetDeselectAll();
+      dispatch(deselectAllFacetValues(facetId));
+      dispatch(updateFacetOptions({freezeFacetOrder: true}));
+      dispatch(executeSearch(logFacetClearAll(facetId)));
     },
 
     sortBy(criterion: FacetSortCriterion) {

@@ -167,21 +167,21 @@ export function buildDateFacet(
     }
   );
 
+  const handleToggleSelect = (selection: DateFacetValue) => {
+    dispatch(executeToggleDateFacetSelect({facetId, selection}));
+  };
+
   return {
     ...rangeFacet,
 
-    toggleSelect(selection: DateFacetValue) {
-      dispatch(executeToggleDateFacetSelect({facetId, selection}));
-    },
+    toggleSelect: (selection: DateFacetValue) => handleToggleSelect(selection),
 
-    toggleSingleSelect(selection: DateFacetValue) {
-      if (selection.state !== 'idle') {
-        rangeFacet.deselectAll();
-        return;
+    toggleSingleSelect: (selection: DateFacetValue) => {
+      if (selection.state === 'idle') {
+        dispatch(deselectAllFacetValues(facetId));
       }
 
-      dispatch(deselectAllFacetValues(facetId));
-      dispatch(executeToggleDateFacetSelect({facetId, selection}));
+      handleToggleSelect(selection);
     },
 
     get state() {

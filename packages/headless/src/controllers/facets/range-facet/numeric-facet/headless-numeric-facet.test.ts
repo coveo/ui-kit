@@ -22,6 +22,7 @@ import {SearchAppState} from '../../../../state/search-app-state';
 import * as FacetIdDeterminor from '../../_common/facet-id-determinor';
 import {configuration, numericFacetSet, search} from '../../../../app/reducers';
 import {updateFacetOptions} from '../../../../features/facet-options/facet-options-actions';
+import {NumericFacetValue} from '../../../../features/facets/range-facets/numeric-facet-set/interfaces/response';
 
 describe('numeric facet', () => {
   const facetId = '1';
@@ -115,9 +116,7 @@ describe('numeric facet', () => {
     });
   });
 
-  describe('#toggleSingleSelect when the value state is "idle"', () => {
-    const facetValue = () => buildMockNumericFacetValue({state: 'idle'});
-
+  function testCommonToggleSingleSelect(facetValue: () => NumericFacetValue) {
     it('dispatches a #toggleSelect action with the passed facet value', () => {
       numericFacet.toggleSingleSelect(facetValue());
 
@@ -142,10 +141,12 @@ describe('numeric facet', () => {
       );
       expect(action).toBeTruthy();
     });
-  });
+  }
 
-  describe('#toggleSingleSelect when the value state is not "idle"', () => {
-    const facetValue = () => buildMockNumericFacetValue({state: 'selected'});
+  describe('#toggleSingleSelect when the value state is "idle"', () => {
+    const facetValue = () => buildMockNumericFacetValue({state: 'idle'});
+
+    testCommonToggleSingleSelect(facetValue);
 
     it('dispatches a #deselectAllFacetValues action', () => {
       numericFacet.toggleSingleSelect(facetValue());
@@ -154,22 +155,19 @@ describe('numeric facet', () => {
         deselectAllNumericFacetValues(facetId)
       );
     });
+  });
 
-    it('dispatches #updateFacetOptions with #freezeFacetOrder true', () => {
+  describe('#toggleSingleSelect when the value state is not "idle"', () => {
+    const facetValue = () => buildMockNumericFacetValue({state: 'selected'});
+
+    testCommonToggleSingleSelect(facetValue);
+
+    it('does not dispatch a #deselectAllFacetValues action', () => {
       numericFacet.toggleSingleSelect(facetValue());
 
-      expect(engine.actions).toContainEqual(
-        updateFacetOptions({freezeFacetOrder: true})
+      expect(engine.actions).not.toContainEqual(
+        deselectAllNumericFacetValues(facetId)
       );
-    });
-
-    it('dispatches a search', () => {
-      numericFacet.toggleSingleSelect(facetValue());
-
-      const action = engine.actions.find(
-        (a) => a.type === executeSearch.pending.type
-      );
-      expect(action).toBeTruthy();
     });
   });
 
