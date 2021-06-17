@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.24.0](https://github.com/coveo/ui-kit/compare/v0.23.6...v0.24.0) (2021-06-17)
+
+
+### Bug Fixes
+
+* **headless:** prevented folding loop & added tests ([#894](https://github.com/coveo/ui-kit/issues/894)) ([b6d5542](https://github.com/coveo/ui-kit/commit/b6d5542165c6daf41055876b1c9d59a6a3c2e578))
+
+
+### Features
+
+* **headless:** initial support for question answering ([#897](https://github.com/coveo/ui-kit/issues/897)) ([45e7d64](https://github.com/coveo/ui-kit/commit/45e7d6490cde5fefd371795d3adb853629d9b05e))
+
+
+
+
+
 ## [0.23.3](https://github.com/coveo/ui-kit/compare/v0.23.2...v0.23.3) (2021-06-11)
 
 
