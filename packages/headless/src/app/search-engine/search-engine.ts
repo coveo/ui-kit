@@ -33,14 +33,20 @@ export {SearchEngineConfiguration, getSampleSearchEngineConfiguration};
 
 const searchEngineReducers = {debug, pipeline, searchHub, search};
 type SearchEngineReducers = typeof searchEngineReducers;
-type SearchEngineState = StateFromReducersMapObject<SearchEngineReducers> &
-  Partial<SearchAppState>;
+type SearchEngineState<AvailableSection> = StateFromReducersMapObject<
+  SearchEngineReducers
+> &
+  Partial<SearchAppState> &
+  AvailableSection;
 
 /**
  * The engine for powering search experiences.
  */
-export interface SearchEngine
-  extends CoreEngine<SearchEngineState, SearchThunkExtraArguments> {
+export interface SearchEngine<AvailableSection = {}>
+  extends CoreEngine<
+    SearchEngineState<AvailableSection>,
+    SearchThunkExtraArguments
+  > {
   executeFirstSearch(): void;
 }
 
@@ -48,7 +54,7 @@ export interface SearchEngine
  * The search engine options.
  */
 export interface SearchEngineOptions
-  extends ExternalEngineOptions<SearchEngineState> {
+  extends ExternalEngineOptions<SearchEngineState<{}>> {
   /**
    * The search engine configuration options.
    */
