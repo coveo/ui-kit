@@ -35,7 +35,7 @@ export interface RedirectionTriggerState {
  * @returns A `RedirectionTrigger` controller instance.
  * */
 export function buildRedirectionTrigger(
-  engine: Engine<RedirectionSection & ConfigurationSection>
+  engine: Engine<object>
 ): RedirectionTrigger {
   if (!loadRedirectionReducers(engine)) {
     throw loadReducerError;
@@ -43,6 +43,8 @@ export function buildRedirectionTrigger(
 
   const controller = buildController(engine);
   const {dispatch} = engine;
+
+  const getState = () => engine.state;
 
   let previousRedirectTo: string | null = null;
 
@@ -65,7 +67,7 @@ export function buildRedirectionTrigger(
 
     get state() {
       return {
-        redirectTo: engine.state.redirection.redirectTo,
+        redirectTo: getState().redirection.redirectTo,
       };
     },
   };
