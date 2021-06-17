@@ -44,7 +44,7 @@ describe('generic facet reducers', () => {
           currentValues: [value, anotherValue],
         });
 
-        handleFacetDeselectAll<FacetRequest>(request);
+        handleFacetDeselectAll(request);
         expect(request.currentValues).toEqual([
           {...value, state: 'idle'},
           {...anotherValue, state: 'idle'},
@@ -60,7 +60,9 @@ describe('generic facet reducers', () => {
     });
 
     it('when the request is not defined, it does not throw', () => {
-      expect(() => handleFacetDeselectAll(undefined)).not.toThrow();
+      expect(() =>
+        handleFacetDeselectAll((undefined as unknown) as FacetRequest)
+      ).not.toThrow();
     });
   });
 

@@ -66,7 +66,7 @@ describe('FacetSearch', () => {
       controller.select(value);
     });
 
-    it('#select dispatches #selectFacetSearchResult action', () => {
+    it('dispatches #selectFacetSearchResult action', () => {
       const action = selectFacetSearchResult({
         facetId,
         value,
@@ -74,7 +74,7 @@ describe('FacetSearch', () => {
       expect(engine.actions).toContainEqual(action);
     });
 
-    it('#select dispatches #executeSearch action', () => {
+    it('dispatches #executeSearch action', () => {
       const action = engine.actions.find(
         (a) => a.type === executeSearch.pending.type
       );
@@ -89,12 +89,12 @@ describe('FacetSearch', () => {
       controller.singleSelect(value);
     });
 
-    it('#select dispatches #deselectAllFacetValues action', () => {
+    it('dispatches #deselectAllFacetValues action', () => {
       const action = deselectAllFacetValues(facetId);
       expect(engine.actions).toContainEqual(action);
     });
 
-    it('#select dispatches #selectFacetSearchResult action', () => {
+    it('dispatches #selectFacetSearchResult action', () => {
       const action = selectFacetSearchResult({
         facetId,
         value,
@@ -102,7 +102,7 @@ describe('FacetSearch', () => {
       expect(engine.actions).toContainEqual(action);
     });
 
-    it('#select dispatches #executeSearch action', () => {
+    it('dispatches #executeSearch action', () => {
       const action = engine.actions.find(
         (a) => a.type === executeSearch.pending.type
       );
