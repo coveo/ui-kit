@@ -76,9 +76,9 @@ pipeline {
   post {
     always {
       script {
-        if (!params.ONLY_SEND_SLACK_ON_FAILURE || currentBuild.currentResult != 'SUCCESS') {
-          def color = currentBuild.currentResult == 'SUCCESS' ? '#00FF00' : '#FF0000';
-          def message = "coveo.analytics health check ${currentBuild.currentResult} on version ${env.VERSION} (<${env.BUILD_URL}|#${env.BUILD_NUMBER}>)"
+        if (!params.ONLY_SEND_SLACK_ON_FAILURE || currentBuild.result != 'SUCCESS' || (currentBuild.result == 'SUCCESS' && currentBuild.previousBuild != null && currentBuild.previousBuild.result != 'SUCCESS')) {
+          def color = currentBuild.result == 'SUCCESS' ? '#00FF00' : '#FF0000';
+          def message = "coveo.analytics health check ${currentBuild.result} on version ${env.VERSION} (<${env.BUILD_URL}|#${env.BUILD_NUMBER}>)"
           notifySlack(
             color: color,
             message: message
