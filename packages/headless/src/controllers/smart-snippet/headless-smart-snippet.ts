@@ -31,11 +31,11 @@ export interface SmartSnippet extends Controller {
   /**
    * Allows the user to signal that a particular answer was relevant.
    */
-  thumbsUp(): void;
+  like(): void;
   /**
    * Allows the user to signal that a particular answer was not relevant.
    */
-  thumbsDown(): void;
+  dislike(): void;
 }
 
 /**
@@ -102,11 +102,11 @@ export function buildSmartSnippet(engine: Engine<object>): SmartSnippet {
       engine.dispatch(logCollapseSmartSnippet());
       // TODO manage state expanded
     },
-    thumbsUp() {
+    like() {
       engine.dispatch(logLikeSmartSnippet());
       // TODO manage state liked
     },
-    thumbsDown() {
+    dislike() {
       engine.dispatch(logDislikeSmartSnippet());
       // TODO manage state disliked
     },
