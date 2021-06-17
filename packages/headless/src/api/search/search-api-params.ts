@@ -56,6 +56,10 @@ export interface TabParam {
   tab: string;
 }
 
+export interface ReferrerParam {
+  referrer: string;
+}
+
 export interface RecommendationParam {
   recommendation: string;
 }
