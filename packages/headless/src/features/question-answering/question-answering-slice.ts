@@ -14,7 +14,7 @@ import {
   QuestionAnsweringRelatedQuestionState,
 } from './question-answering-state';
 
-const findRelatedQuestionIdx = (
+export const findRelatedQuestionIdx = (
   relatedQuestions: QuestionAnsweringRelatedQuestionState[],
   identifier: QuestionAnswerDocumentIdentifier
 ) =>

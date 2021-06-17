@@ -1,3 +1,7 @@
+import {buildMockSearch} from '../../test/mock-search';
+import {buildMockSearchResponse} from '../../test/mock-search-response';
+import {executeSearch} from '../search/search-actions';
+import {emptyQuestionAnswer} from '../search/search-state';
 import {
   collapseSmartSnippet,
   collapseSmartSnippetRelatedQuestion,
@@ -79,5 +83,44 @@ describe('question answering slice', () => {
       })
     );
     expect(resulting.relatedQuestions[1].expanded).toBe(false);
+  });
+
+  it('should handle executeSearch to populate relatedQuestions', () => {
+    const searchAction = executeSearch.fulfilled(
+      buildMockSearch({
+        response: buildMockSearchResponse({
+          questionAnswer: {
+            ...emptyQuestionAnswer(),
+            relatedQuestions: [
+              {
+                documentId: {contentIdKey: 'foo', contentIdValue: 'bar'},
+                score: 123,
+                answerSnippet: 'answer 1',
+                question: 'question 1',
+              },
+              {
+                documentId: {contentIdKey: 'buzz', contentIdValue: 'bazz'},
+                score: 321,
+                answerSnippet: 'answer 2',
+                question: 'question 2',
+              },
+            ],
+          },
+        }),
+      }),
+      '',
+      null as never
+    );
+    const resulting = questionAnsweringReducer(state, searchAction);
+    expect(resulting.relatedQuestions[0]).toMatchObject({
+      contentIdKey: 'foo',
+      contentIdValue: 'bar',
+      expanded: false,
+    });
+    expect(resulting.relatedQuestions[1]).toMatchObject({
+      contentIdKey: 'buzz',
+      contentIdValue: 'bazz',
+      expanded: false,
+    });
   });
 });
