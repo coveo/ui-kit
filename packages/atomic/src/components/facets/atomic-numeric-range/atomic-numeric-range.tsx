@@ -11,6 +11,10 @@ export class AtomicNumericRange {
   @Element() public host!: HTMLElement;
 
   /**
+   * The non-localized label for the facet. When defined, it will appear instead of the formatted value.
+   */
+  @Prop() public label?: string;
+  /**
    * The starting value for the numeric range.
    */
   @Prop() public start!: number;

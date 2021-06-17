@@ -257,6 +257,10 @@ export namespace Components {
          */
         "endInclusive": boolean;
         /**
+          * The non-localized label for the facet. When defined, it will appear instead of the formatted value.
+         */
+        "label"?: string;
+        /**
           * The starting value for the numeric range.
          */
         "start": number;
@@ -1012,6 +1016,10 @@ declare namespace LocalJSX {
           * Specifies whether the end value should be included in the range.
          */
         "endInclusive"?: boolean;
+        /**
+          * The non-localized label for the facet. When defined, it will appear instead of the formatted value.
+         */
+        "label"?: string;
         /**
           * The starting value for the numeric range.
          */
