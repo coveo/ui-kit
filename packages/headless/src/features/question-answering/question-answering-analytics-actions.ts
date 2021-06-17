@@ -3,6 +3,9 @@ import {validatePayload} from '../../utils/validate-payload';
 import {AnalyticsType, makeAnalyticsAction} from '../analytics/analytics-utils';
 import {RecordValue, StringValue} from '@coveo/bueno';
 
+export interface LogSmartSnippetSuggestionActionCreatorPayload
+  extends QuestionAnswerDocumentIdentifier {}
+
 const documentIdentifierPayloadDefinition = () =>
   new RecordValue({
     values: {
@@ -46,7 +49,7 @@ export const logDislikeSmartSnippet = makeAnalyticsAction(
 );
 
 export const logExpandSmartSnippetSuggestion = (
-  payload: QuestionAnswerDocumentIdentifier
+  payload: LogSmartSnippetSuggestionActionCreatorPayload
 ) =>
   makeAnalyticsAction(
     'analytics/smartSnippetSuggestion/expand',
@@ -58,7 +61,7 @@ export const logExpandSmartSnippetSuggestion = (
   )();
 
 export const logCollapseSmartSnippetSuggestion = (
-  payload: QuestionAnswerDocumentIdentifier
+  payload: LogSmartSnippetSuggestionActionCreatorPayload
 ) =>
   makeAnalyticsAction(
     'analytics/smartSnippetSuggestion/expand',

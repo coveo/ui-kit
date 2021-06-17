@@ -53,8 +53,8 @@ import {
   logLikeSmartSnippet,
   logCollapseSmartSnippetSuggestion,
   logExpandSmartSnippetSuggestion,
+  LogSmartSnippetSuggestionActionCreatorPayload,
 } from '../question-answering/question-answering-analytics-actions';
-import {QuestionAnswerDocumentIdentifier} from '../../api/search/search/question-answering';
 
 export {
   LogCategoryFacetBreadcrumbActionCreatorPayload,
@@ -65,6 +65,7 @@ export {
   LogDateFacetBreadcrumbActionCreatorPayload,
   LogNumericFacetBreadcrumbActionCreatorPayload,
   LogQuerySuggestionClickActionCreatorPayload,
+  LogSmartSnippetSuggestionActionCreatorPayload,
 };
 
 /**
@@ -460,7 +461,7 @@ export interface SearchAnalyticsActionCreators {
    * @returns A dispatchable action.
    */
   logExpandSmartSnippetSuggestion(
-    payload: QuestionAnswerDocumentIdentifier
+    payload: LogSmartSnippetSuggestionActionCreatorPayload
   ): AsyncThunkAction<
     {
       analyticsType: AnalyticsType.Custom;
@@ -472,10 +473,11 @@ export interface SearchAnalyticsActionCreators {
   /**
    * The event to log when a smart snippet suggestion, or related question, is collapsed.
    *
+   * @param payload - The action creation payload.
    * @returns A dispatchable action.
    */
   logCollapseSmartSnippetSuggestion(
-    payload: QuestionAnswerDocumentIdentifier
+    payload: LogSmartSnippetSuggestionActionCreatorPayload
   ): AsyncThunkAction<
     {
       analyticsType: AnalyticsType.Custom;

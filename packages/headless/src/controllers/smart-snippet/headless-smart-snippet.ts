@@ -4,6 +4,7 @@ import {search} from '../../app/reducers';
 import {loadReducerError} from '../../utils/errors';
 import {SearchSection} from '../../state/state-sections';
 import {QuestionAnswerDocumentIdentifier} from '../../api/search/search/question-answering';
+export {QuestionAnswerDocumentIdentifier} from '../../api/search/search/question-answering';
 import {
   logCollapseSmartSnippet,
   logDislikeSmartSnippet,

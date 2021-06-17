@@ -3,6 +3,7 @@ import {search} from '../../app/reducers';
 import {loadReducerError} from '../../utils/errors';
 import {SearchEngine} from '../../app/search-engine/search-engine';
 import {QuestionAnswerDocumentIdentifier} from '../../api/search/search/question-answering';
+export {QuestionAnswerDocumentIdentifier} from '../../api/search/search/question-answering';
 import {
   logCollapseSmartSnippetSuggestion,
   logExpandSmartSnippetSuggestion,
