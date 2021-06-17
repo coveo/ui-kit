@@ -20,6 +20,7 @@ import {
   logFacetUpdateSort,
   logFacetShowMore,
   logFacetShowLess,
+  logFacetDeselect,
 } from '../../../features/facets/facet-set/facet-set-analytics-actions';
 import {buildFacetSearch} from '../facet-search/specific/headless-facet-search';
 import {FacetSortCriterion} from '../../../features/facets/facet-set/interfaces/request';
@@ -49,6 +50,7 @@ import {
   search,
 } from '../../../app/reducers';
 import {loadReducerError} from '../../../utils/errors';
+import {SearchAction} from '../../../features/analytics/analytics-utils';
 
 export {FacetOptions, FacetSearchOptions, FacetValueState};
 
@@ -302,10 +304,10 @@ export function buildFacet(engine: Engine<object>, props: FacetProps): Facet {
   const facetSearch = createFacetSearch();
   const {state, ...restOfFacetSearch} = facetSearch;
 
-  const handleFacetDeselectAll = () => {
+  const handleFacetDeselectAll = (analyticsAction: SearchAction) => {
     dispatch(deselectAllFacetValues(facetId));
     dispatch(updateFacetOptions({freezeFacetOrder: true}));
-    dispatch(executeSearch(logFacetClearAll(facetId)));
+    dispatch(executeSearch(analyticsAction));
   };
 
   return {
@@ -318,7 +320,9 @@ export function buildFacet(engine: Engine<object>, props: FacetProps): Facet {
 
     toggleSingleSelect: (selection: FacetValue) => {
       if (selection.state !== 'idle') {
-        handleFacetDeselectAll();
+        handleFacetDeselectAll(
+          logFacetDeselect({facetId, facetValue: selection.value})
+        );
         return;
       }
 
@@ -329,7 +333,7 @@ export function buildFacet(engine: Engine<object>, props: FacetProps): Facet {
     isValueSelected: isFacetValueSelected,
 
     deselectAll() {
-      handleFacetDeselectAll();
+      handleFacetDeselectAll(logFacetClearAll(facetId));
     },
 
     sortBy(criterion: FacetSortCriterion) {

@@ -19,7 +19,7 @@ import {
   SearchSection,
 } from '../../../state/state-sections';
 import {isRangeFacetValueSelected} from '../../../features/facets/range-facets/generic/range-facet-utils';
-import {executeToggleRangeFacetSelect} from '../../../features/facets/range-facets/generic/range-facet-controller-actions';
+import {SearchAction} from '../../../features/analytics/analytics-utils';
 
 export type RangeFacet = ReturnType<typeof buildRangeFacet>;
 
@@ -44,15 +44,12 @@ export function buildRangeFacet<
   return {
     ...controller,
 
-    toggleSelect: (selection: RangeFacetValue) =>
-      dispatch(executeToggleRangeFacetSelect({facetId, selection})),
-
     isValueSelected: isRangeFacetValueSelected,
 
-    deselectAll() {
+    deselectAll(analyticsAction: SearchAction = logFacetClearAll(facetId)) {
       dispatch(deselectAllFacetValues(facetId));
       dispatch(updateFacetOptions({freezeFacetOrder: true}));
-      dispatch(executeSearch(logFacetClearAll(facetId)));
+      dispatch(executeSearch(analyticsAction));
     },
 
     sortBy(criterion: RangeFacetSortCriterion) {

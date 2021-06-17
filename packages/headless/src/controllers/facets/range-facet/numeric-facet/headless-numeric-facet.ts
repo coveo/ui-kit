@@ -32,6 +32,7 @@ import {RangeFacetSortCriterion} from '../../../../features/facets/range-facets/
 import {configuration, numericFacetSet, search} from '../../../../app/reducers';
 import {loadReducerError} from '../../../../utils/errors';
 import {deselectAllFacetValues} from '../../../../features/facets/facet-set/facet-set-actions';
+import {logFacetDeselect} from '../../../../features/facets/facet-set/facet-set-analytics-actions';
 
 export {
   buildNumericRange,
@@ -173,7 +174,12 @@ export function buildNumericFacet(
 
     toggleSingleSelect(selection: NumericFacetValue) {
       if (selection.state !== 'idle') {
-        rangeFacet.deselectAll();
+        rangeFacet.deselectAll(
+          logFacetDeselect({
+            facetId,
+            facetValue: `${selection.start}..${selection.end}`,
+          })
+        );
         return;
       }
 

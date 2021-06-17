@@ -54,26 +54,6 @@ describe('range facet', () => {
     expect(rangeFacet.state.values).toEqual(values);
   });
 
-  describe('#toggleSelect', () => {
-    beforeEach(() => {
-      const value = buildMockNumericFacetValue();
-      rangeFacet.toggleSelect(value);
-    });
-
-    it('dispatches a #updateFacetOptions action with #freezeFacetOrder true', () => {
-      expect(engine.actions).toContainEqual(
-        updateFacetOptions({freezeFacetOrder: true})
-      );
-    });
-
-    it('dispatches a search', () => {
-      const action = engine.actions.find(
-        (a) => a.type === executeSearch.pending.type
-      );
-      expect(action).toBeTruthy();
-    });
-  });
-
   it('when the value is selected, #isValueSelected returns `true`', () => {
     const value = buildMockNumericFacetValue({state: 'selected'});
     expect(rangeFacet.isValueSelected(value)).toBe(true);
