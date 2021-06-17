@@ -1,28 +1,9 @@
-import {QuestionAnswerDocumentIdentifier} from '../../api/search/search/question-answering';
 import {validatePayload} from '../../utils/validate-payload';
 import {AnalyticsType, makeAnalyticsAction} from '../analytics/analytics-utils';
-import {RecordValue, StringValue} from '@coveo/bueno';
-
-export interface LogSmartSnippetSuggestionActionCreatorPayload
-  extends QuestionAnswerDocumentIdentifier {}
-
-const documentIdentifierPayloadDefinition = () =>
-  new RecordValue({
-    values: {
-      documentId: new RecordValue({
-        values: {
-          contentIdKey: new StringValue({required: true, emptyAllowed: false}),
-          contentIdValue: new StringValue({
-            required: true,
-            emptyAllowed: false,
-          }),
-        },
-      }),
-    },
-    options: {
-      required: true,
-    },
-  });
+import {
+  documentIdentifierPayloadDefinition,
+  QuestionAnsweringDocumentIdentifierActionCreatorPayload,
+} from './question-answering-common';
 
 export const logExpandSmartSnippet = makeAnalyticsAction(
   'analytics/smartSnippet/expand',
@@ -49,7 +30,7 @@ export const logDislikeSmartSnippet = makeAnalyticsAction(
 );
 
 export const logExpandSmartSnippetSuggestion = (
-  payload: LogSmartSnippetSuggestionActionCreatorPayload
+  payload: QuestionAnsweringDocumentIdentifierActionCreatorPayload
 ) =>
   makeAnalyticsAction(
     'analytics/smartSnippetSuggestion/expand',
@@ -61,7 +42,7 @@ export const logExpandSmartSnippetSuggestion = (
   )();
 
 export const logCollapseSmartSnippetSuggestion = (
-  payload: LogSmartSnippetSuggestionActionCreatorPayload
+  payload: QuestionAnsweringDocumentIdentifierActionCreatorPayload
 ) =>
   makeAnalyticsAction(
     'analytics/smartSnippetSuggestion/expand',
