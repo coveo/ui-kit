@@ -134,7 +134,7 @@ describe('Category Facet Search Test Suites', () => {
         CategoryFacetSearchAssertions.assertActiveResult(togoHierarchy[0]);
       });
 
-      describe('when selecting the current selected result by pressing the enter key', () => {
+      describe.skip('when selecting the current selected result by pressing the enter key', () => {
         function setupPressEnter() {
           setupWithFacetSearch();
 

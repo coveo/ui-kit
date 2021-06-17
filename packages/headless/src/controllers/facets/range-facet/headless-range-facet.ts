@@ -19,7 +19,6 @@ import {
   SearchSection,
 } from '../../../state/state-sections';
 import {isRangeFacetValueSelected} from '../../../features/facets/range-facets/generic/range-facet-utils';
-import {executeToggleRangeFacetSelect} from '../../../features/facets/range-facets/generic/range-facet-controller-actions';
 
 export type RangeFacet = ReturnType<typeof buildRangeFacet>;
 
@@ -43,9 +42,6 @@ export function buildRangeFacet<
 
   return {
     ...controller,
-
-    toggleSelect: (selection: RangeFacetValue) =>
-      dispatch(executeToggleRangeFacetSelect({facetId, selection})),
 
     isValueSelected: isRangeFacetValueSelected,
 
