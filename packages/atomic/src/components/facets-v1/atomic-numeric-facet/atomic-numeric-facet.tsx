@@ -156,7 +156,7 @@ export class AtomicNumericFacet
     );
   }
 
-  private compareRanges(
+  private areRangesEqual(
     firstRange: NumericRangeRequest,
     secondRange: NumericRangeRequest
   ) {
@@ -169,7 +169,7 @@ export class AtomicNumericFacet
 
   private renderValue(facetValue: NumericFacetValue, onClick: () => void) {
     const manualRangeLabel = this.manualRanges.find((range) =>
-      this.compareRanges(range, facetValue)
+      this.areRangesEqual(range, facetValue)
     )?.label;
     const displayValue = manualRangeLabel
       ? this.bindings.i18n.t(manualRangeLabel)
