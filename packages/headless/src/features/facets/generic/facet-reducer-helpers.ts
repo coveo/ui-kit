@@ -15,9 +15,7 @@ export function handleFacetSortCriterionUpdate<T extends AnyFacetRequest>(
   facetRequest.sortCriteria = criterion;
 }
 
-export function handleFacetDeselectAll<T extends FacetRequest>(
-  facetRequest: T | undefined
-) {
+export function handleFacetDeselectAll(facetRequest: FacetRequest) {
   if (!facetRequest) {
     return;
   }

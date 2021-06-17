@@ -20,7 +20,6 @@ import {
   logFacetUpdateSort,
   logFacetShowMore,
   logFacetShowLess,
-  logFacetDeselect,
 } from '../../../features/facets/facet-set/facet-set-analytics-actions';
 import {buildFacetSearch} from '../facet-search/specific/headless-facet-search';
 import {FacetSortCriterion} from '../../../features/facets/facet-set/interfaces/request';
@@ -50,7 +49,6 @@ import {
   search,
 } from '../../../app/reducers';
 import {loadReducerError} from '../../../utils/errors';
-import {SearchAction} from '../../../features/analytics/analytics-utils';
 
 export {FacetOptions, FacetSearchOptions, FacetValueState};
 
@@ -304,10 +302,8 @@ export function buildFacet(engine: Engine<object>, props: FacetProps): Facet {
   const facetSearch = createFacetSearch();
   const {state, ...restOfFacetSearch} = facetSearch;
 
-  const handleFacetDeselectAll = (analyticsAction: SearchAction) => {
-    dispatch(deselectAllFacetValues(facetId));
-    dispatch(updateFacetOptions({freezeFacetOrder: true}));
-    dispatch(executeSearch(analyticsAction));
+  const handleToggleSelect = (selection: FacetValue) => {
+    dispatch(executeToggleFacetSelect({facetId: options.facetId, selection}));
   };
 
   return {
@@ -315,25 +311,22 @@ export function buildFacet(engine: Engine<object>, props: FacetProps): Facet {
 
     facetSearch: restOfFacetSearch,
 
-    toggleSelect: (selection: FacetValue) =>
-      dispatch(executeToggleFacetSelect({facetId: options.facetId, selection})),
+    toggleSelect: (selection: FacetValue) => handleToggleSelect(selection),
 
     toggleSingleSelect: (selection: FacetValue) => {
-      if (selection.state !== 'idle') {
-        handleFacetDeselectAll(
-          logFacetDeselect({facetId, facetValue: selection.value})
-        );
-        return;
+      if (selection.state === 'idle') {
+        dispatch(deselectAllFacetValues(facetId));
       }
 
-      dispatch(deselectAllFacetValues(facetId));
-      dispatch(executeToggleFacetSelect({facetId: options.facetId, selection}));
+      handleToggleSelect(selection);
     },
 
     isValueSelected: isFacetValueSelected,
 
     deselectAll() {
-      handleFacetDeselectAll(logFacetClearAll(facetId));
+      dispatch(deselectAllFacetValues(facetId));
+      dispatch(updateFacetOptions({freezeFacetOrder: true}));
+      dispatch(executeSearch(logFacetClearAll(facetId)));
     },
 
     sortBy(criterion: FacetSortCriterion) {

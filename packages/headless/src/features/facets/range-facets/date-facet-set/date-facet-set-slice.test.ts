@@ -115,7 +115,7 @@ describe('date-facet-set slice', () => {
     ).toHaveBeenCalledTimes(1);
   });
 
-  it('dispatching #deselectAllFacets calls #handleFacetDeselectAll for every date facet', () => {
+  it('dispatching #deselectAllFacets calls #handleRangeFacetDeselectAll for every date facet', () => {
     jest.spyOn(RangeFacetReducers, 'handleRangeFacetDeselectAll');
 
     state['1'] = buildMockDateFacetRequest();

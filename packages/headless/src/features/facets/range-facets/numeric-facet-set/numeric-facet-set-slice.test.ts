@@ -118,7 +118,7 @@ describe('numeric-facet-set slice', () => {
     ).toHaveBeenCalledTimes(1);
   });
 
-  it('dispatching #deselectAllFacets calls #handleFacetDeselectAll for every numeric facet', () => {
+  it('dispatching #deselectAllFacets calls #handleRangeFacetDeselectAll for every numeric facet', () => {
     jest.spyOn(RangeFacetReducers, 'handleRangeFacetDeselectAll');
 
     state['1'] = buildMockNumericFacetRequest();

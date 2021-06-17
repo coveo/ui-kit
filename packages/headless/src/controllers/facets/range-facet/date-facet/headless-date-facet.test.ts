@@ -22,6 +22,7 @@ import * as FacetIdDeterminor from '../../_common/facet-id-determinor';
 import {buildMockDateFacetRequest} from '../../../../test/mock-date-facet-request';
 import {configuration, dateFacetSet, search} from '../../../../app/reducers';
 import {updateFacetOptions} from '../../../../features/facet-options/facet-options-actions';
+import {DateFacetValue} from '../../../../features/facets/range-facets/date-facet-set/interfaces/response';
 
 describe('date facet', () => {
   const facetId = '1';
@@ -108,9 +109,7 @@ describe('date facet', () => {
     });
   });
 
-  describe('#toggleSingleSelect when the value state is "idle"', () => {
-    const facetValue = () => buildMockDateFacetValue({state: 'idle'});
-
+  function testCommonToggleSingleSelect(facetValue: () => DateFacetValue) {
     it('dispatches a #toggleSelect action with the passed facet value', () => {
       dateFacet.toggleSingleSelect(facetValue());
 
@@ -135,10 +134,12 @@ describe('date facet', () => {
       );
       expect(action).toBeTruthy();
     });
-  });
+  }
 
-  describe('#toggleSingleSelect when the value state is not "idle"', () => {
-    const facetValue = () => buildMockDateFacetValue({state: 'selected'});
+  describe('#toggleSingleSelect when the value state is "idle"', () => {
+    const facetValue = () => buildMockDateFacetValue({state: 'idle'});
+
+    testCommonToggleSingleSelect(facetValue);
 
     it('dispatches a #deselectAllFacetValues action', () => {
       dateFacet.toggleSingleSelect(facetValue());
@@ -147,22 +148,19 @@ describe('date facet', () => {
         deselectAllDateFacetValues(facetId)
       );
     });
+  });
 
-    it('dispatches #updateFacetOptions with #freezeFacetOrder true', () => {
+  describe('#toggleSingleSelect when the value state is not "idle"', () => {
+    const facetValue = () => buildMockDateFacetValue({state: 'selected'});
+
+    testCommonToggleSingleSelect(facetValue);
+
+    it('does not dispatch a #deselectAllFacetValues action', () => {
       dateFacet.toggleSingleSelect(facetValue());
 
-      expect(engine.actions).toContainEqual(
-        updateFacetOptions({freezeFacetOrder: true})
+      expect(engine.actions).not.toContainEqual(
+        deselectAllDateFacetValues(facetId)
       );
-    });
-
-    it('dispatches a search', () => {
-      dateFacet.toggleSingleSelect(facetValue());
-
-      const action = engine.actions.find(
-        (a) => a.type === executeSearch.pending.type
-      );
-      expect(action).toBeTruthy();
     });
   });
 

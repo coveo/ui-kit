@@ -19,7 +19,6 @@ import {
   SearchSection,
 } from '../../../state/state-sections';
 import {isRangeFacetValueSelected} from '../../../features/facets/range-facets/generic/range-facet-utils';
-import {SearchAction} from '../../../features/analytics/analytics-utils';
 
 export type RangeFacet = ReturnType<typeof buildRangeFacet>;
 
@@ -46,10 +45,10 @@ export function buildRangeFacet<
 
     isValueSelected: isRangeFacetValueSelected,
 
-    deselectAll(analyticsAction: SearchAction = logFacetClearAll(facetId)) {
+    deselectAll() {
       dispatch(deselectAllFacetValues(facetId));
       dispatch(updateFacetOptions({freezeFacetOrder: true}));
-      dispatch(executeSearch(analyticsAction));
+      dispatch(executeSearch(logFacetClearAll(facetId)));
     },
 
     sortBy(criterion: RangeFacetSortCriterion) {
