@@ -26,6 +26,7 @@ import {
   facetSet,
   search,
 } from '../../../app/reducers';
+import {FacetValue} from '../../../features/facets/facet-set/interfaces/response';
 
 describe('facet', () => {
   const facetId = '1';
@@ -156,6 +157,60 @@ describe('facet', () => {
         (a) => a.type === executeSearch.pending.type
       );
       expect(action).toBeTruthy();
+    });
+  });
+
+  function testCommonToggleSingleSelect(facetValue: () => FacetValue) {
+    it('dispatches a #toggleSelect action with the passed facet value', () => {
+      facet.toggleSingleSelect(facetValue());
+
+      expect(engine.actions).toContainEqual(
+        toggleSelectFacetValue({facetId, selection: facetValue()})
+      );
+    });
+
+    it('dispatches #updateFacetOptions with #freezeFacetOrder true', () => {
+      facet.toggleSingleSelect(facetValue());
+
+      expect(engine.actions).toContainEqual(
+        updateFacetOptions({freezeFacetOrder: true})
+      );
+    });
+
+    it('dispatches a search', () => {
+      facet.toggleSingleSelect(facetValue());
+
+      const action = engine.actions.find(
+        (a) => a.type === executeSearch.pending.type
+      );
+      expect(action).toBeTruthy();
+    });
+  }
+
+  describe('#toggleSingleSelect when the value state is "idle"', () => {
+    const facetValue = () => buildMockFacetValue({value: 'TED', state: 'idle'});
+
+    testCommonToggleSingleSelect(facetValue);
+
+    it('dispatches a #deselectAllFacetValues action', () => {
+      facet.toggleSingleSelect(facetValue());
+
+      expect(engine.actions).toContainEqual(deselectAllFacetValues(facetId));
+    });
+  });
+
+  describe('#toggleSingleSelect when the value state is not "idle"', () => {
+    const facetValue = () =>
+      buildMockFacetValue({value: 'TED', state: 'selected'});
+
+    testCommonToggleSingleSelect(facetValue);
+
+    it('does not dispatch a #deselectAllFacetValues action', () => {
+      facet.toggleSingleSelect(facetValue());
+
+      expect(engine.actions).not.toContainEqual(
+        deselectAllFacetValues(facetId)
+      );
     });
   });
 

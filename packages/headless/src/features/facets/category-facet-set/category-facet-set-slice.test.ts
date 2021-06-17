@@ -19,7 +19,6 @@ import {
   CategoryFacetSetState,
   getCategoryFacetSetInitialState,
 } from './category-facet-set-state';
-import {deselectAllFacets} from '../generic/facet-actions';
 import {getHistoryInitialState} from '../../history/history-state';
 import {restoreSearchParameters} from '../../search-parameters/search-parameter-actions';
 import * as CategoryFacetReducerHelpers from './category-facet-reducer-helpers';
@@ -29,6 +28,7 @@ import {buildMockSearch} from '../../../test/mock-search';
 import {logSearchEvent} from '../../analytics/analytics-actions';
 import {buildMockCategoryFacetResponse} from '../../../test/mock-category-facet-response';
 import {buildMockCategoryFacetSlice} from '../../../test/mock-category-facet-slice';
+import {deselectAllFacets} from '../generic/facet-actions';
 
 describe('category facet slice', () => {
   const facetId = '1';
@@ -178,49 +178,73 @@ describe('category facet slice', () => {
     });
   });
 
-  describe('#deselectAllCategoryFacetValues', () => {
-    it('calls #handleFacetDeselectAll', () => {
-      const spy = jest.spyOn(FacetReducers, 'handleFacetDeselectAll');
-      state[facetId] = buildMockCategoryFacetSlice();
-      const action = deselectAllCategoryFacetValues(facetId);
-      categoryFacetSetReducer(state, action);
+  describe('deselecting values', () => {
+    const initialNumberOfValues = 5;
+    const anotherFacetId = 'anotherfacet';
 
-      expect(spy).toHaveBeenCalledTimes(1);
-    });
-
-    it('sets the request #numberOfValues to the initial number', () => {
-      const initialNumberOfValues = 5;
+    beforeEach(() => {
       const request = buildMockCategoryFacetRequest({
         numberOfValues: initialNumberOfValues + 1,
+        currentValues: [buildMockCategoryFacetValueRequest()],
       });
-
       state[facetId] = buildMockCategoryFacetSlice({
         request,
         initialNumberOfValues,
       });
-
-      const action = deselectAllCategoryFacetValues(facetId);
-      const finalState = categoryFacetSetReducer(state, action);
-
-      expect(finalState[facetId]?.request.numberOfValues).toBe(
-        initialNumberOfValues
-      );
+      state[anotherFacetId] = buildMockCategoryFacetSlice({
+        request,
+        initialNumberOfValues,
+      });
     });
-  });
 
-  it('dispatching #deselectAllFacets calls #handleFacetDeselectAll for every category facet', () => {
-    const spy = jest.spyOn(FacetReducers, 'handleFacetDeselectAll');
-    spy.mockReset();
+    describe('#deselectAllCategoryFacetValues', () => {
+      let newState: CategoryFacetSetState;
 
-    const request = buildMockCategoryFacetRequest();
-    const slice = buildMockCategoryFacetSlice({request});
+      beforeEach(() => {
+        const action = deselectAllCategoryFacetValues(facetId);
+        newState = categoryFacetSetReducer(state, action);
+      });
 
-    state['1'] = {...slice};
-    state['2'] = {...slice};
-    state['3'] = {...slice};
-    categoryFacetSetReducer(state, deselectAllFacets());
+      it('sets #currentValues to an empty array', () => {
+        expect(newState[facetId]?.request.currentValues).toEqual([]);
+      });
 
-    expect(spy).toHaveBeenCalledTimes(3);
+      it('sets #preventAutoSelect to true on the request', () => {
+        expect(newState[facetId]?.request.preventAutoSelect).toBe(true);
+      });
+
+      it('sets the request #numberOfValues to the initial number', () => {
+        expect(newState[facetId]?.request.numberOfValues).toBe(
+          initialNumberOfValues
+        );
+      });
+    });
+
+    describe('#deselectAllFacets', () => {
+      let newState: CategoryFacetSetState;
+      beforeEach(() => {
+        newState = categoryFacetSetReducer(state, deselectAllFacets());
+      });
+
+      it('sets #currentValues to an empty array for all facets', () => {
+        expect(newState[facetId]?.request.currentValues).toEqual([]);
+        expect(newState[anotherFacetId]?.request.currentValues).toEqual([]);
+      });
+
+      it('sets #preventAutoSelect to true on the request for all facets', () => {
+        expect(newState[facetId]?.request.preventAutoSelect).toBe(true);
+        expect(newState[anotherFacetId]?.request.preventAutoSelect).toBe(true);
+      });
+
+      it('sets the request #numberOfValues to the initial number for all facets', () => {
+        expect(newState[facetId]?.request.numberOfValues).toBe(
+          initialNumberOfValues
+        );
+        expect(newState[anotherFacetId]?.request.numberOfValues).toBe(
+          initialNumberOfValues
+        );
+      });
+    });
   });
 
   it('dispatching #updateCategoryFacetNumberOfValues calls #handleFacetUpdateNumberOfValues if there are no nested children', () => {

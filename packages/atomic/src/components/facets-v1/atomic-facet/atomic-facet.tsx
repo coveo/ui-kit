@@ -9,7 +9,6 @@ import {
   SearchStatusState,
   buildSearchStatus,
   FacetValue,
-  loadFacetSetActions,
 } from '@coveo/headless';
 import {
   Bindings,
@@ -34,7 +33,7 @@ import {BaseFacet} from '../facet-common';
 
 /**
  * A facet is a list of values for a certain field occurring in the results, ordered using a configurable criteria (e.g., number of occurrences).
- * An `atomic-facet` displays a facet of the results for the current query. In mobile browsers, this is rendered as a button that opens a facet modal.
+ * An `atomic-facet` displays a facet of the results for the current query.
  *
  * @part facet - The wrapper for the entire facet.
  * @part placeholder - The placeholder shown before the first search is executed.
@@ -212,10 +211,7 @@ export class AtomicFacet
             numberOfResults={facetValue.numberOfResults}
             isSelected={isSelected}
             i18n={this.bindings.i18n}
-            onClick={() => {
-              this.deselectOtherValues(facetValue);
-              onClick();
-            }}
+            onClick={onClick}
           ></FacetValueLink>
         );
       case 'box':
@@ -229,20 +225,6 @@ export class AtomicFacet
           ></FacetValueBox>
         );
     }
-  }
-
-  private deselectOtherValues(facetValue: FacetValue) {
-    const action = loadFacetSetActions(this.bindings.engine)
-      .toggleSelectFacetValue;
-    const otherSelectedValues = this.facetState.values.filter(
-      ({state, value}) => state !== 'idle' && value !== facetValue.value
-    );
-
-    otherSelectedValues.forEach((value) =>
-      this.bindings.engine.dispatch(
-        action({facetId: this.facetId!, selection: value})
-      )
-    );
   }
 
   private renderValuesContainer(children: VNode[]) {
@@ -259,7 +241,11 @@ export class AtomicFacet
   private renderValues() {
     return this.renderValuesContainer(
       this.facetState.values.map((value) =>
-        this.renderValue(value, () => this.facet.toggleSelect(value))
+        this.renderValue(value, () =>
+          this.displayValuesAs === 'link'
+            ? this.facet.toggleSingleSelect(value)
+            : this.facet.toggleSelect(value)
+        )
       )
     );
   }
@@ -273,7 +259,10 @@ export class AtomicFacet
             numberOfResults: value.count,
             value: value.rawValue,
           },
-          () => this.facet.facetSearch.select(value)
+          () =>
+            this.displayValuesAs === 'link'
+              ? this.facet.facetSearch.singleSelect(value)
+              : this.facet.facetSearch.select(value)
         )
       )
     );

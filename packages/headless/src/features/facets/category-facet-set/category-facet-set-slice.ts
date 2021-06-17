@@ -14,10 +14,7 @@ import {
 import {CategoryFacetOptionalParameters} from './interfaces/options';
 import {change} from '../../history/history-actions';
 import {CategoryFacetResponse, CategoryFacetValue} from './interfaces/response';
-import {
-  handleFacetDeselectAll,
-  handleFacetUpdateNumberOfValues,
-} from '../generic/facet-reducer-helpers';
+import {handleFacetUpdateNumberOfValues} from '../generic/facet-reducer-helpers';
 import {selectCategoryFacetSearchResult} from '../facet-search-set/category/category-facet-search-actions';
 import {
   CategoryFacetSetState,
@@ -251,5 +248,6 @@ function handleCategoryFacetDeselectAll(
   }
 
   slice.request.numberOfValues = slice.initialNumberOfValues;
-  handleFacetDeselectAll<CategoryFacetRequest>(slice.request);
+  slice.request.currentValues = [];
+  slice.request.preventAutoSelect = true;
 }

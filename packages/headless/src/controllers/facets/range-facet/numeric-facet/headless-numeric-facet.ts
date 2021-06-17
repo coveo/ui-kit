@@ -31,6 +31,7 @@ import {Controller} from '../../../controller/headless-controller';
 import {RangeFacetSortCriterion} from '../../../../features/facets/range-facets/generic/interfaces/request';
 import {configuration, numericFacetSet, search} from '../../../../app/reducers';
 import {loadReducerError} from '../../../../utils/errors';
+import {deselectAllFacetValues} from '../../../../features/facets/facet-set/facet-set-actions';
 
 export {
   buildNumericRange,
@@ -84,6 +85,13 @@ export interface NumericFacet extends Controller {
    * @param selection - The facet value to toggle.
    */
   toggleSelect(selection: NumericFacetValue): void;
+
+  /**
+   * Toggles the specified facet value, deselecting others.
+   *
+   * @param selection - The facet value to toggle.
+   */
+  toggleSingleSelect(selection: NumericFacetValue): void;
 
   /**
    * The state of the `NumericFacet` controller.
@@ -158,10 +166,22 @@ export function buildNumericFacet(
     }
   );
 
+  const handleToggleSelect = (selection: NumericFacetValue) => {
+    dispatch(executeToggleNumericFacetSelect({facetId, selection}));
+  };
+
   return {
     ...rangeFacet,
     toggleSelect: (selection: NumericFacetValue) =>
-      dispatch(executeToggleNumericFacetSelect({facetId, selection})),
+      handleToggleSelect(selection),
+
+    toggleSingleSelect(selection: NumericFacetValue) {
+      if (selection.state === 'idle') {
+        dispatch(deselectAllFacetValues(facetId));
+      }
+
+      dispatch(executeToggleNumericFacetSelect({facetId, selection}));
+    },
 
     get state() {
       return rangeFacet.state;
