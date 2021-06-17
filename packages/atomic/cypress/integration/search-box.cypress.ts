@@ -80,7 +80,7 @@ describe('Search Box Test Suites', () => {
         actionCause: 'searchboxSubmit',
       };
 
-      const analytics = await getAnalyticsAt('@coveoAnalytics', 1);
+      const analytics = await getAnalyticsAt('@coveoAnalytics', 0);
       expect(analytics.response.statusCode).to.eq(200);
       expect(analytics.request.body).to.have.property(
         'actionCause',
@@ -103,7 +103,7 @@ describe('Search Box Test Suites', () => {
         actionCause: 'omniboxAnalytics',
       };
 
-      const analytics = await getAnalyticsAt('@coveoAnalytics', 1);
+      const analytics = await getAnalyticsAt('@coveoAnalytics', 0);
       expect(analytics.response.statusCode).to.eq(200);
 
       expect(analytics.request.body).to.have.property(

@@ -76,6 +76,13 @@ export interface Facet extends Controller {
   toggleSelect(selection: FacetValue): void;
 
   /**
+   * Toggles the specified facet value, deselecting others.
+   *
+   * @param selection - The facet value to toggle.
+   */
+  toggleSingleSelect(selection: FacetValue): void;
+
+  /**
    * Checks whether the specified facet value is selected.
    *
    * @param value - The facet value to check.
@@ -172,6 +179,13 @@ export interface FacetSearch {
    * @param value - The search result to select.
    * */
   select(value: SpecificFacetSearchResult): void;
+
+  /**
+   * Selects a search result while deselecting facet values.
+   *
+   * @param value - The search result to select.
+   * */
+  singleSelect(value: SpecificFacetSearchResult): void;
 
   /**
    * Resets the query and empties the values.
@@ -288,13 +302,24 @@ export function buildFacet(engine: SearchEngine, props: FacetProps): Facet {
   const facetSearch = createFacetSearch();
   const {state, ...restOfFacetSearch} = facetSearch;
 
+  const handleToggleSelect = (selection: FacetValue) => {
+    dispatch(executeToggleFacetSelect({facetId: options.facetId, selection}));
+  };
+
   return {
     ...controller,
 
     facetSearch: restOfFacetSearch,
 
-    toggleSelect: (selection: FacetValue) =>
-      dispatch(executeToggleFacetSelect({facetId: options.facetId, selection})),
+    toggleSelect: (selection: FacetValue) => handleToggleSelect(selection),
+
+    toggleSingleSelect: (selection: FacetValue) => {
+      if (selection.state === 'idle') {
+        dispatch(deselectAllFacetValues(facetId));
+      }
+
+      handleToggleSelect(selection);
+    },
 
     isValueSelected: isFacetValueSelected,
 

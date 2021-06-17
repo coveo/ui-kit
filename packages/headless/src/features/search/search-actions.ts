@@ -277,6 +277,7 @@ export const buildSearchRequest = (
     locale: state.configuration.search.locale,
     debug: state.debug,
     tab: state.configuration.analytics.originLevel2,
+    referrer: state.configuration.analytics.originLevel3,
     ...(state.configuration.analytics.enabled && {
       visitorId: getVisitorID(),
     }),

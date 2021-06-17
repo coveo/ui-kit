@@ -55,7 +55,7 @@ export class AtomicNumericFacet
   private facet!: NumericFacet;
   public searchStatus!: SearchStatus;
 
-  @BindStateToController('facet', {subscribeOnConnectedCallback: true})
+  @BindStateToController('facet')
   @State()
   private facetState!: NumericFacetState;
   @BindStateToController('searchStatus')

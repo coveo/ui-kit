@@ -32,6 +32,7 @@ import {RangeFacetSortCriterion} from '../../../../features/facets/range-facets/
 import {configuration, dateFacetSet, search} from '../../../../app/reducers';
 import {loadReducerError} from '../../../../utils/errors';
 import {SearchEngine} from '../../../../app/search-engine/search-engine';
+import {deselectAllFacetValues} from '../../../../features/facets/facet-set/facet-set-actions';
 
 export {
   DateFacetOptions,
@@ -85,6 +86,13 @@ export interface DateFacet extends Controller {
    * @param selection - The facet value to toggle.
    */
   toggleSelect(selection: DateFacetValue): void;
+
+  /**
+   * Toggles the specified facet value, deselecting others.
+   *
+   * @param selection - The facet value to toggle.
+   */
+  toggleSingleSelect(selection: DateFacetValue): void;
 
   /**
    * The state of the `DateFacet` controller.
@@ -159,11 +167,21 @@ export function buildDateFacet(
     }
   );
 
+  const handleToggleSelect = (selection: DateFacetValue) => {
+    dispatch(executeToggleDateFacetSelect({facetId, selection}));
+  };
+
   return {
     ...rangeFacet,
 
-    toggleSelect(selection: DateFacetValue) {
-      dispatch(executeToggleDateFacetSelect({facetId, selection}));
+    toggleSelect: (selection: DateFacetValue) => handleToggleSelect(selection),
+
+    toggleSingleSelect: (selection: DateFacetValue) => {
+      if (selection.state === 'idle') {
+        dispatch(deselectAllFacetValues(facetId));
+      }
+
+      handleToggleSelect(selection);
     },
 
     get state() {

@@ -15,6 +15,7 @@ import {
 import {executeSearch} from '../../../../features/search/search-actions';
 import {buildMockFacetSearchResult} from '../../../../test/mock-facet-search-result';
 import {CategoryFacetSearchResult} from '../../category-facet/headless-category-facet';
+import {deselectAllFacetValues} from '../../../../features/facets/facet-set/facet-set-actions';
 
 describe('FacetSearch', () => {
   const facetId = '1';
@@ -64,7 +65,7 @@ describe('FacetSearch', () => {
       controller.select(value);
     });
 
-    it('#select dispatches #selectFacetSearchResult action', () => {
+    it('dispatches #selectFacetSearchResult action', () => {
       const action = selectFacetSearchResult({
         facetId,
         value,
@@ -72,7 +73,35 @@ describe('FacetSearch', () => {
       expect(engine.actions).toContainEqual(action);
     });
 
-    it('#select dispatches #executeSearch action', () => {
+    it('dispatches #executeSearch action', () => {
+      const action = engine.actions.find(
+        (a) => a.type === executeSearch.pending.type
+      );
+      expect(action).toBeTruthy();
+    });
+  });
+
+  describe('#singleSelect', () => {
+    const value = buildMockFacetSearchResult();
+
+    beforeEach(() => {
+      controller.singleSelect(value);
+    });
+
+    it('dispatches #deselectAllFacetValues action', () => {
+      const action = deselectAllFacetValues(facetId);
+      expect(engine.actions).toContainEqual(action);
+    });
+
+    it('dispatches #selectFacetSearchResult action', () => {
+      const action = selectFacetSearchResult({
+        facetId,
+        value,
+      });
+      expect(engine.actions).toContainEqual(action);
+    });
+
+    it('dispatches #executeSearch action', () => {
       const action = engine.actions.find(
         (a) => a.type === executeSearch.pending.type
       );

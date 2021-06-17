@@ -77,6 +77,7 @@ export const loadCollection = createAsyncThunk<
 
     const response = await searchAPIClient.search({
       tab: '',
+      referrer: '',
       accessToken,
       organizationId,
       url: apiBaseUrl,

@@ -54,10 +54,14 @@ function getChildResultsRecursively(
 function resolveChildrenFromFields(
   parent: ResultWithFolding,
   results: ResultWithFolding[],
-  fields: FoldingFields
+  fields: FoldingFields,
+  resolvedAncestors: string[] = []
 ): FoldedResult[] {
   const sourceChildValue = getChildField(parent, fields);
   if (!sourceChildValue) {
+    return [];
+  }
+  if (resolvedAncestors.indexOf(sourceChildValue) !== -1) {
     return [];
   }
   return results
@@ -70,7 +74,10 @@ function resolveChildrenFromFields(
     })
     .map((result) => ({
       result,
-      children: resolveChildrenFromFields(result, results, fields),
+      children: resolveChildrenFromFields(result, results, fields, [
+        ...resolvedAncestors,
+        sourceChildValue,
+      ]),
     }));
 }
 

@@ -11,6 +11,7 @@ import {
 import {createMockState} from '../../../../test/mock-state';
 import {executeSearch} from '../../../../features/search/search-actions';
 import {
+  deselectAllDateFacetValues,
   registerDateFacet,
   toggleSelectDateFacetValue,
 } from '../../../../features/facets/range-facets/date-facet-set/date-facet-actions';
@@ -20,6 +21,8 @@ import {SearchAppState} from '../../../../state/search-app-state';
 import * as FacetIdDeterminor from '../../_common/facet-id-determinor';
 import {buildMockDateFacetRequest} from '../../../../test/mock-date-facet-request';
 import {configuration, dateFacetSet, search} from '../../../../app/reducers';
+import {updateFacetOptions} from '../../../../features/facet-options/facet-options-actions';
+import {DateFacetValue} from '../../../../features/facets/range-facets/date-facet-set/interfaces/response';
 
 describe('date facet', () => {
   const facetId = '1';
@@ -103,6 +106,61 @@ describe('date facet', () => {
         (a) => a.type === executeSearch.pending.type
       );
       expect(action).toBeTruthy();
+    });
+  });
+
+  function testCommonToggleSingleSelect(facetValue: () => DateFacetValue) {
+    it('dispatches a #toggleSelect action with the passed facet value', () => {
+      dateFacet.toggleSingleSelect(facetValue());
+
+      expect(engine.actions).toContainEqual(
+        toggleSelectDateFacetValue({facetId, selection: facetValue()})
+      );
+    });
+
+    it('dispatches #updateFacetOptions with #freezeFacetOrder true', () => {
+      dateFacet.toggleSingleSelect(facetValue());
+
+      expect(engine.actions).toContainEqual(
+        updateFacetOptions({freezeFacetOrder: true})
+      );
+    });
+
+    it('dispatches a search', () => {
+      dateFacet.toggleSingleSelect(facetValue());
+
+      const action = engine.actions.find(
+        (a) => a.type === executeSearch.pending.type
+      );
+      expect(action).toBeTruthy();
+    });
+  }
+
+  describe('#toggleSingleSelect when the value state is "idle"', () => {
+    const facetValue = () => buildMockDateFacetValue({state: 'idle'});
+
+    testCommonToggleSingleSelect(facetValue);
+
+    it('dispatches a #deselectAllFacetValues action', () => {
+      dateFacet.toggleSingleSelect(facetValue());
+
+      expect(engine.actions).toContainEqual(
+        deselectAllDateFacetValues(facetId)
+      );
+    });
+  });
+
+  describe('#toggleSingleSelect when the value state is not "idle"', () => {
+    const facetValue = () => buildMockDateFacetValue({state: 'selected'});
+
+    testCommonToggleSingleSelect(facetValue);
+
+    it('does not dispatch a #deselectAllFacetValues action', () => {
+      dateFacet.toggleSingleSelect(facetValue());
+
+      expect(engine.actions).not.toContainEqual(
+        deselectAllDateFacetValues(facetId)
+      );
     });
   });
 
