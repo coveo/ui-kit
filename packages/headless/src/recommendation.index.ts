@@ -1,3 +1,5 @@
+export {Unsubscribe} from '@reduxjs/toolkit';
+
 export {
   RecommendationEngine,
   RecommendationEngineOptions,

@@ -51,8 +51,6 @@ import {
   buildSearchEngine,
   getSampleSearchEngineConfiguration,
   Unsubscribe,
-  RecommendationList as HeadlessRecommendationList,
-  buildRecommendationList,
   Tab as HeadlessTab,
   buildTab,
   BreadcrumbManager as HeadlessBreadcrumbManager,
@@ -104,6 +102,8 @@ import {
   RecommendationEngine,
   buildRecommendationEngine,
   getSampleRecommendationEngineConfiguration,
+  buildRecommendationList,
+  RecommendationList as HeadlessRecommendationList,
 } from '@coveo/headless/recommendation';
 import {bindUrlManager} from '../components/url-manager/url-manager';
 import {setContext} from '../components/context/context';
@@ -174,13 +174,20 @@ export class SearchPage extends Component {
     this.tabs = {
       all: buildTab(this.engine, {
         initialState: {isActive: true},
-        options: {expression: ''},
+        options: {
+          id: 'all',
+          expression: '',
+        },
       }),
       messages: buildTab(this.engine, {
-        options: {expression: '@objecttype==Message'},
+        options: {
+          id: 'messages',
+          expression: '@objecttype==Message',
+        },
       }),
       confluence: buildTab(this.engine, {
         options: {
+          id: 'confluence',
           expression:
             '@connectortype==Confluence2Crawler AND NOT @documenttype==Space',
         },
@@ -310,9 +317,16 @@ export class SearchPage extends Component {
         <AppContext.Provider value={{engine: this.engine}}>
           <Section title="tabs">
             <nav>
-              <Tab active>All</Tab>
-              <Tab expression="@objecttype==Message">Messages</Tab>
-              <Tab expression="@connectortype==Confluence2Crawler AND NOT @documenttype==Space">
+              <Tab id="all" expression="" active>
+                All
+              </Tab>
+              <Tab id="messages" expression="@objecttype==Message">
+                Messages
+              </Tab>
+              <Tab
+                id="confluence"
+                expression="@connectortype==Confluence2Crawler AND NOT @documenttype==Space"
+              >
                 Confluence
               </Tab>
             </nav>

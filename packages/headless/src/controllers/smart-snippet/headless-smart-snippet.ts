@@ -1,4 +1,3 @@
-import {Engine} from '../../app/headless-engine';
 import {buildController, Controller} from '../controller/headless-controller';
 import {search} from '../../app/reducers';
 import {loadReducerError} from '../../utils/errors';
@@ -11,6 +10,7 @@ import {
   logExpandSmartSnippet,
   logLikeSmartSnippet,
 } from '../../features/question-answering/question-answering-analytics-actions';
+import {SearchEngine} from '../../app/search-engine/search-engine';
 
 /**
  * The `SmartSnippet` controller allows to manage the excerpt of a document that would be most likely to answer a particular query .
@@ -78,7 +78,7 @@ export interface SmartSnippetState {
  * @param engine - The headless engine.
  * @returns A `SmartSnippet` controller instance.
  * */
-export function buildSmartSnippet(engine: Engine<object>): SmartSnippet {
+export function buildSmartSnippet(engine: SearchEngine): SmartSnippet {
   if (!loadSmartSnippetReducers(engine)) {
     throw loadReducerError;
   }
@@ -114,8 +114,8 @@ export function buildSmartSnippet(engine: Engine<object>): SmartSnippet {
 }
 
 function loadSmartSnippetReducers(
-  engine: Engine<object>
-): engine is Engine<SearchSection> {
+  engine: SearchEngine
+): engine is SearchEngine<SearchSection> {
   engine.addReducers({search});
   return true;
 }

@@ -67,7 +67,6 @@ describe('CategoryFacetSearch', () => {
       const action = selectCategoryFacetSearchResult({
         facetId,
         value,
-        retrieveCount: defaultFacetSearchOptions.numberOfValues,
       });
       expect(engine.actions).toContainEqual(action);
     });
@@ -78,7 +77,6 @@ describe('CategoryFacetSearch', () => {
       const action = selectCategoryFacetSearchResult({
         facetId,
         value,
-        retrieveCount: defaultFacetSearchOptions.numberOfValues,
       });
       expect(engine.actions).toContainEqual(action);
     });

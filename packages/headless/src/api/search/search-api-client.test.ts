@@ -3,11 +3,7 @@ import {
   SearchAPIClient,
   SearchAPIClientOptions,
 } from './search-api-client';
-import {
-  NoopPreprocessRequestMiddleware,
-  PlatformClient,
-  PlatformClientCallOptions,
-} from '../platform-client';
+import {PlatformClient, PlatformClientCallOptions} from '../platform-client';
 import {createMockState} from '../../test/mock-state';
 import {createMockRecommendationState} from '../../test/mock-recommendation-state';
 import {buildMockQuerySuggest} from '../../test/mock-query-suggest';
@@ -193,7 +189,6 @@ describe('search api client', () => {
           visitorId: expect.any(String),
         },
         preprocessRequest: NoopPreprocessRequest,
-        deprecatedPreprocessRequest: NoopPreprocessRequestMiddleware,
       };
 
       expect(request).toMatchObject(expectedRequest);
@@ -234,7 +229,6 @@ describe('search api client', () => {
           searchHub: state.searchHub,
         },
         preprocessRequest: NoopPreprocessRequest,
-        deprecatedPreprocessRequest: NoopPreprocessRequestMiddleware,
       };
 
       expect(request).toMatchObject(expectedRequest);
@@ -267,7 +261,6 @@ describe('search api client', () => {
           actionsHistory: expect.any(Array),
         },
         preprocessRequest: NoopPreprocessRequest,
-        deprecatedPreprocessRequest: NoopPreprocessRequestMiddleware,
       };
 
       expect(request).toMatchObject(expectedRequest);
@@ -406,7 +399,6 @@ describe('search api client', () => {
             referrer: originLevel3,
           },
           preprocessRequest: NoopPreprocessRequest,
-          deprecatedPreprocessRequest: NoopPreprocessRequestMiddleware,
         };
         const request = (PlatformClient.call as jest.Mock).mock.calls[0][0];
 
@@ -463,7 +455,6 @@ describe('search api client', () => {
             },
           },
           preprocessRequest: NoopPreprocessRequest,
-          deprecatedPreprocessRequest: NoopPreprocessRequestMiddleware,
         };
 
         expect(request).toMatchObject(expectedRequest);
