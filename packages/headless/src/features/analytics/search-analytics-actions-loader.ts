@@ -49,9 +49,11 @@ import {logResultsSort} from '../sort-criteria/sort-criteria-analytics-actions';
 import {
   logCollapseSmartSnippet,
   logExpandSmartSnippet,
-  logSmartSnippetExplanationFeedback,
-  logSmartSnippetNegativeFeedback,
-  logSmartSnippetPositiveFeedback,
+  logDislikeSmartSnippet,
+  logLikeSmartSnippet,
+  logCollapseSmartSnippetSuggestion,
+  logExpandSmartSnippetSuggestion,
+  LogSmartSnippetSuggestionActionCreatorPayload,
 } from '../question-answering/question-answering-analytics-actions';
 
 export {
@@ -63,6 +65,7 @@ export {
   LogDateFacetBreadcrumbActionCreatorPayload,
   LogNumericFacetBreadcrumbActionCreatorPayload,
   LogQuerySuggestionClickActionCreatorPayload,
+  LogSmartSnippetSuggestionActionCreatorPayload,
 };
 
 /**
@@ -426,24 +429,11 @@ export interface SearchAnalyticsActionCreators {
   >;
 
   /**
-   * The event to log when a user provides detailed feedback for a given smart snippet answer.
-   *
-   * @returns A dispatchable action.
-   */
-  logSmartSnippetExplanationFeedback(): AsyncThunkAction<
-    {
-      analyticsType: AnalyticsType.Custom;
-    },
-    void,
-    AsyncThunkAnalyticsOptions<StateNeededByAnalyticsProvider>
-  >;
-
-  /**
    * The event to log when a user provides negative feedback for a given smart snippet answer.
    *
    * @returns A dispatchable action.
    */
-  logSmartSnippetNegativeFeedback(): AsyncThunkAction<
+  logDislikeSmartSnippet(): AsyncThunkAction<
     {
       analyticsType: AnalyticsType.Custom;
     },
@@ -456,7 +446,39 @@ export interface SearchAnalyticsActionCreators {
    *
    * @returns A dispatchable action.
    */
-  logSmartSnippetPositiveFeedback(): AsyncThunkAction<
+  logLikeSmartSnippet(): AsyncThunkAction<
+    {
+      analyticsType: AnalyticsType.Custom;
+    },
+    void,
+    AsyncThunkAnalyticsOptions<StateNeededByAnalyticsProvider>
+  >;
+
+  /**
+   * The event to log when a query suggestion is selected.
+   *
+   * @param payload - The action creator payload.
+   * @returns A dispatchable action.
+   */
+  logExpandSmartSnippetSuggestion(
+    payload: LogSmartSnippetSuggestionActionCreatorPayload
+  ): AsyncThunkAction<
+    {
+      analyticsType: AnalyticsType.Custom;
+    },
+    void,
+    AsyncThunkAnalyticsOptions<StateNeededByAnalyticsProvider>
+  >;
+
+  /**
+   * The event to log when a smart snippet suggestion, or related question, is collapsed.
+   *
+   * @param payload - The action creation payload.
+   * @returns A dispatchable action.
+   */
+  logCollapseSmartSnippetSuggestion(
+    payload: LogSmartSnippetSuggestionActionCreatorPayload
+  ): AsyncThunkAction<
     {
       analyticsType: AnalyticsType.Custom;
     },
@@ -500,10 +522,11 @@ export function loadSearchAnalyticsActions(
     logSearchboxSubmit,
     logQuerySuggestionClick,
     logResultsSort,
-    logCollapseSmartSnippet,
+    logDislikeSmartSnippet,
+    logLikeSmartSnippet,
     logExpandSmartSnippet,
-    logSmartSnippetExplanationFeedback,
-    logSmartSnippetNegativeFeedback,
-    logSmartSnippetPositiveFeedback,
+    logCollapseSmartSnippet,
+    logExpandSmartSnippetSuggestion,
+    logCollapseSmartSnippetSuggestion,
   };
 }

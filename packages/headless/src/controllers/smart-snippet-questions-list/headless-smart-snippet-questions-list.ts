@@ -3,6 +3,11 @@ import {search} from '../../app/reducers';
 import {loadReducerError} from '../../utils/errors';
 import {SearchEngine} from '../../app/search-engine/search-engine';
 import {QuestionAnswerDocumentIdentifier} from '../../api/search/search/question-answering';
+export {QuestionAnswerDocumentIdentifier} from '../../api/search/search/question-answering';
+import {
+  logCollapseSmartSnippetSuggestion,
+  logExpandSmartSnippetSuggestion,
+} from '../../features/question-answering/question-answering-analytics-actions';
 
 /**
  * The `SmartSnippetQuestionsList` controller allows to manage additional queries for which a SmartSnippet model can provide relevant excerpts.
@@ -77,11 +82,13 @@ export function buildSmartSnippetQuestionsList(
       } as SmartSnippetQuestionsListState;
     },
 
-    expand(_: QuestionAnswerDocumentIdentifier) {
-      // TODO
+    expand(documentIdentifier: QuestionAnswerDocumentIdentifier) {
+      engine.dispatch(logExpandSmartSnippetSuggestion(documentIdentifier));
+      // TODO manage state expanded.
     },
-    collapse(_: QuestionAnswerDocumentIdentifier) {
-      // TODO
+    collapse(documentIdentifier: QuestionAnswerDocumentIdentifier) {
+      engine.dispatch(logCollapseSmartSnippetSuggestion(documentIdentifier));
+      // TODO manage state expanded
     },
   };
 }
