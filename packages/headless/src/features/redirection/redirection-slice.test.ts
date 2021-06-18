@@ -15,13 +15,6 @@ import {SearchAppState} from '../../state/search-app-state';
 import pino from 'pino';
 import {validatePayloadAndThrow} from '../../utils/validate-payload';
 import {buildMockSearchAPIClient} from '../../test/mock-search-api-client';
-import {buildMockSearchResponse} from '../../test/mock-search-response';
-import {buildMockSearch} from '../../test/mock-search';
-import {buildMockTriggerRedirect} from '../../test/mock-trigger-redirect';
-import {buildMockTriggerNotify} from '../../test/mock-trigger-notify';
-import {buildMockTriggerQuery} from '../../test/mock-trigger-query';
-import {executeSearch} from '../search/search-actions';
-import {logSearchboxSubmit} from '../query/query-analytics-actions';
 
 describe('redirection slice', () => {
   it('should have initial state', () => {
@@ -123,67 +116,5 @@ describe('redirection slice', () => {
     expect(response.payload).toBe('https://www.coveo.com');
     expect(getLogTriggerRedirectAction()).toBeTruthy();
     done();
-  });
-
-  it('when a executeSearch fulfilled is received and the payload does not contain any Trigger objects, it does not update `state.redirectTo`', () => {
-    const state = getRedirectionInitialState();
-    const response = buildMockSearchResponse();
-    const searchState = buildMockSearch({
-      response,
-    });
-
-    const action = executeSearch.fulfilled(
-      searchState,
-      '',
-      logSearchboxSubmit()
-    );
-    const finalState = redirectionReducer(state, action);
-
-    expect(finalState.redirectTo).toEqual('');
-  });
-
-  it('when a executeSearch fulfilled is received and the payload does not contain any TriggerRedirect objects, it does not update `state.redirectTo`', () => {
-    const state = getRedirectionInitialState();
-    const triggers = [
-      buildMockTriggerNotify({content: 'notification'}),
-      buildMockTriggerQuery({content: 'query'}),
-    ];
-    const response = buildMockSearchResponse({
-      triggers,
-    });
-    const searchState = buildMockSearch({
-      response,
-    });
-
-    const action = executeSearch.fulfilled(
-      searchState,
-      '',
-      logSearchboxSubmit()
-    );
-    const finalState = redirectionReducer(state, action);
-
-    expect(finalState.redirectTo).toEqual('');
-  });
-
-  it('when a executeSearch fulfilled is received and the payload contains TriggerRedirect objects, it updates `state.redirectTo`', () => {
-    const state = getRedirectionInitialState();
-    const triggers = [
-      buildMockTriggerRedirect({content: 'https://www.coveo.com'}),
-    ];
-    const response = buildMockSearchResponse({
-      triggers,
-    });
-    const searchState = buildMockSearch({
-      response,
-    });
-
-    const action = executeSearch.fulfilled(
-      searchState,
-      '',
-      logSearchboxSubmit()
-    );
-    const finalState = redirectionReducer(state, action);
-
-    expect(finalState.redirectTo).toEqual('https://www.coveo.com');
   });
 });

@@ -4,7 +4,7 @@ import {
 } from './headless-redirection-trigger';
 import {buildMockSearchAppEngine, MockEngine} from '../../test/mock-engine';
 import {SearchAppState} from '../../state/search-app-state';
-import {redirection, configuration} from '../../app/reducers';
+import {trigger, configuration} from '../../app/reducers';
 import {logTriggerRedirect} from '../../features/redirection/redirection-analytics-actions';
 
 describe('RedirectionTrigger', () => {
@@ -36,7 +36,7 @@ describe('RedirectionTrigger', () => {
 
   it('it adds the correct reducers to the engine', () => {
     expect(engine.addReducers).toHaveBeenCalledWith({
-      redirection,
+      trigger,
       configuration,
     });
   });

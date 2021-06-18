@@ -28,6 +28,7 @@ import {resultPreviewReducer} from '../features/result-preview/result-preview-sl
 import {searchHubReducer} from '../features/search-hub/search-hub-slice';
 import {searchReducer} from '../features/search/search-slice';
 import {sortCriteriaReducer} from '../features/sort-criteria/sort-criteria-slice';
+import {triggerReducer} from '../features/triggers/triggers-slice';
 import {undoable} from './undoable';
 
 export const configuration = configurationReducer;
@@ -57,6 +58,7 @@ export const searchHub = searchHubReducer;
 export const debug = debugReducer;
 export const resultPreview = resultPreviewReducer;
 export const version = versionReducer;
+export const trigger = triggerReducer;
 
 export const history = undoable({
   actionTypes: {
