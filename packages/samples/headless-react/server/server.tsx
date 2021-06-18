@@ -7,20 +7,18 @@ import ReactDOMServer from 'react-dom/server';
 import App from '../src/App';
 import {AppContext} from '../src/context/engine';
 import {
-  HeadlessEngine,
-  searchAppReducers,
-  SearchActions,
-  AnalyticsActions,
+  buildSearchEngine,
+  getSampleSearchEngineConfiguration,
   buildSearchStatus,
+  SearchEngine,
 } from '@coveo/headless';
 
 const PORT = 3000;
 const app = express();
 
 app.get('/', async (req, res) => {
-  const engine = new HeadlessEngine({
-    configuration: HeadlessEngine.getSampleConfiguration(),
-    reducers: searchAppReducers,
+  const engine = buildSearchEngine({
+    configuration: getSampleSearchEngineConfiguration(),
   });
 
   renderServerSide(engine);
@@ -46,7 +44,7 @@ app.get('/', async (req, res) => {
   });
 });
 
-function renderServerSide(engine: HeadlessEngine<typeof searchAppReducers>) {
+function renderServerSide(engine: SearchEngine) {
   return ReactDOMServer.renderToString(
     <AppContext.Provider value={{engine}}>
       <App />
@@ -54,16 +52,13 @@ function renderServerSide(engine: HeadlessEngine<typeof searchAppReducers>) {
   );
 }
 
-function firstSearchExecuted(engine: HeadlessEngine<typeof searchAppReducers>) {
+function firstSearchExecuted(engine: SearchEngine) {
   return new Promise((resolve) => {
     const searchStatus = buildSearchStatus(engine);
     searchStatus.subscribe(
       () => searchStatus.state.firstSearchExecuted && resolve(true)
     );
-    const action = SearchActions.executeSearch(
-      AnalyticsActions.logInterfaceChange()
-    );
-    engine.dispatch(action);
+    engine.executeFirstSearch();
   });
 }
 
