@@ -5,7 +5,6 @@ import express from 'express';
 import ReactDOMServer from 'react-dom/server';
 
 import App from '../src/App';
-import {AppContext} from '../src/context/engine';
 import {
   buildSearchEngine,
   getSampleSearchEngineConfiguration,
@@ -45,11 +44,7 @@ app.get('/', async (req, res) => {
 });
 
 function renderServerSide(engine: SearchEngine) {
-  return ReactDOMServer.renderToString(
-    <AppContext.Provider value={{engine}}>
-      <App />
-    </AppContext.Provider>
-  );
+  return ReactDOMServer.renderToString(<App engine={engine} />);
 }
 
 function firstSearchExecuted(engine: SearchEngine) {

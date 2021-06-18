@@ -1,6 +1,6 @@
 import {Component} from 'react';
 import filesize from 'filesize';
-import {AppContext, AppContextType} from '../context/engine';
+import {AppContext} from '../context/engine';
 
 import {RecommendationList} from '../components/recommendation-list/recommendation-list.class';
 import {RecommendationList as RecommendationListFn} from '../components/recommendation-list/recommendation-list.fn';
@@ -129,6 +129,10 @@ const initialCriterion = criteria[0][1];
 
 const resultsPerPageOptions = [10, 25, 50, 100];
 
+export interface SearchPageProps {
+  engine?: SearchEngine;
+}
+
 export class SearchPage extends Component {
   private engine!: SearchEngine;
   private readonly recommendationEngine: RecommendationEngine;
@@ -163,10 +167,10 @@ export class SearchPage extends Component {
 
   private unsubscribeUrlManager!: Unsubscribe;
 
-  constructor(props: {}) {
+  constructor(props: SearchPageProps) {
     super(props);
 
-    this.initEngine();
+    this.initEngine(props);
 
     this.recommendationEngine = buildRecommendationEngine({
       configuration: getSampleRecommendationEngineConfiguration(),
@@ -277,11 +281,9 @@ export class SearchPage extends Component {
     });
   }
 
-  initEngine() {
-    const {engine} = this.context;
-
-    if (engine) {
-      this.engine = engine;
+  initEngine(props: SearchPageProps) {
+    if (props.engine) {
+      this.engine = props.engine;
       return;
     }
 
