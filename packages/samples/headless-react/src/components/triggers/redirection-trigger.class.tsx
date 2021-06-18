@@ -16,30 +16,24 @@ export class RedirectionTrigger extends Component<{}, RedirectionTriggerState> {
 
   componentDidMount() {
     this.controller = buildRedirectionTrigger(this.context.engine!);
-    this.updateState();
-    this.unsubscribe = this.controller.subscribe(() => this.updateState());
+    this.redirect();
+    this.unsubscribe = this.controller.subscribe(() => this.redirect());
   }
 
   componentWillUnmount() {
     this.unsubscribe();
   }
 
-  componentDidUpdate() {
-    if (!this.state?.redirectTo) {
-      return;
-    }
-    window.location.href = this.state.redirectTo;
-  }
-
-  private updateState() {
-    this.setState(this.controller.state);
+  private redirect() {
+    this.setState(this.controller.state, () => {
+      if (!this.controller.state.redirectTo) {
+        return;
+      }
+      window.location.href = this.controller.state.redirectTo;
+    });
   }
 
   render() {
-    if (!this.state) {
-      return null;
-    }
-
-    return <div></div>;
+    return null;
   }
 }

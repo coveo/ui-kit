@@ -11,16 +11,17 @@ export const RedirectionTrigger: FunctionComponent<HeadlessRedirectionTriggerPro
   const {controller} = props;
   const [state, setState] = useState(controller.state);
 
-  useEffect(() => controller.subscribe(() => setState(controller.state)), []);
+  useEffect(() => controller.subscribe(() => redirect()), []);
+  useEffect(() => redirect(), [state.redirectTo]);
 
-  if (!state) {
-    return null;
-  }
+  const redirect = () => {
+    setState(props.controller.state);
+    console.log(state);
+    console.log(props.controller.state);
+    if (state.redirectTo) {
+      window.location.href = controller.state.redirectTo!;
+    }
+  };
 
-  if (state.redirectTo) {
-    window.location.href = state.redirectTo;
-    return null;
-  }
-
-  return <div></div>;
+  return null;
 };
