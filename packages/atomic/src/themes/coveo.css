@@ -35,9 +35,6 @@
   --atomic-text-base: 0.875rem; /* 14px */
   --atomic-text-sm: 0.75rem; /* 12px */
   --atomic-text-lg: 1rem; /* 16px */
-
-  /* Others */
-  --atomic-icon-size: 30px;
 }
 
 /* TODO: bundle font KIT-708 */
