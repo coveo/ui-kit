@@ -112,7 +112,7 @@ import {dateRanges} from '../components/date-facet/date-utils';
 declare global {
   interface Window {
     // Injected during server-side rendering.
-    HEADLESS_STATE: SearchAppState;
+    HEADLESS_STATE?: SearchAppState;
   }
 }
 
@@ -289,6 +289,7 @@ export class SearchPage extends Component {
 
     this.engine = buildSearchEngine({
       configuration: getSampleSearchEngineConfiguration(),
+      preloadedState: window.HEADLESS_STATE,
     });
   }
 
