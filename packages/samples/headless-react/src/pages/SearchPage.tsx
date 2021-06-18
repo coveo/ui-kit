@@ -1,4 +1,3 @@
-import './SearchPage.css';
 import {Component} from 'react';
 import filesize from 'filesize';
 import {AppContext, AppContextType} from '../context/engine';
@@ -112,6 +111,7 @@ import {dateRanges} from '../components/date-facet/date-utils';
 
 declare global {
   interface Window {
+    // The global is injected during server-side rendering.
     HEADLESS_STATE: SearchAppState;
   }
 }
