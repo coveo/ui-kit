@@ -47,7 +47,7 @@ describe('RedirectionTrigger', () => {
 
   it('when the #engine.state.redirection.redirectTo is already initialized, it calls #onRedirect and dispatches #logTriggerRedirect', () => {
     const listener = jest.fn();
-    engine.state.redirection.redirectTo = 'https://www.google.com';
+    engine.state.trigger.redirectTo = 'https://www.google.com';
     redirectionTrigger.subscribe(listener);
 
     expect(listener).toHaveBeenCalledTimes(1);
@@ -64,9 +64,9 @@ describe('RedirectionTrigger', () => {
 
   it('when the #engine.state.redirection.redirectTo is updated, it calls #onRedirect and dispatches #logTriggerRedirect', () => {
     const listener = jest.fn();
-    engine.state.redirection.redirectTo = 'https://www.google.com';
+    engine.state.trigger.redirectTo = 'https://www.google.com';
     redirectionTrigger.subscribe(listener);
-    engine.state.redirection.redirectTo = 'https://www.coveo.com';
+    engine.state.trigger.redirectTo = 'https://www.coveo.com';
     const [firstListener] = registeredListeners();
     firstListener();
 
